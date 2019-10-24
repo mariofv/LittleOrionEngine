@@ -2,6 +2,8 @@
 #include "Module.h"
 #include "Globals.h"
 #include <GL/glew.h>
+#include "MathGeoLib/include/Geometry/Frustum.h"
+#include "MathGeoLib/include/MathGeoLib.h"
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -21,5 +23,7 @@ public:
 
 private:
 	GLuint vbo;
-
+	float4x4 proj;
+	float4x4 view;
+	float4x4 model;
 };
