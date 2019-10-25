@@ -328,4 +328,4 @@ ASALocalRun/
 # MFractors (Xamarin productivity tool) working folder 
 .mfractor/
 
-!glew-2.1.0/*
+!glew-2.1.0/**
