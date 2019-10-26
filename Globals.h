@@ -13,9 +13,13 @@ enum update_status
 	UPDATE_ERROR
 };
 
+// Paths -------
+# define DEFAULT_VERTEX_SHADER_PATH "./default.vs"
+# define DEFAULT_FRAGMENT_SHADER_PATH "./default.fs"
+
 // Configuration -----------
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
 #define FULLSCREEN false
 #define VSYNC true
-#define TITLE "Super Awesome Engine"
+#define TITLE "Orion Engine"

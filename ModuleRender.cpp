@@ -76,7 +76,6 @@ bool ModuleRender::CleanUp()
 {
 	LOG("Destroying renderer");
 
-	//Destroy window
 
 	return true;
 }

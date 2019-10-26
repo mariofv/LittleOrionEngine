@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleRenderExercise.h"
 #include "ModuleRender.h"
+#include "ModuleProgram.h"
 #include "ModuleWindow.h"
 #include "SDL.h"
 
@@ -91,9 +92,7 @@ bool ModuleRenderExercise::Init()
 
 update_status ModuleRenderExercise::PreUpdate()
 {
-	
-	
-
+	glUseProgram(App->program->shader_program);
 	return UPDATE_CONTINUE;
 }
 
