@@ -91,6 +91,7 @@ update_status ModuleRenderExercise::PreUpdate()
 		GL_TRUE, 
 		&proj[0][0]
 	);
+	glUniform1f(glGetUniformLocation(App->program->shader_program, "u_time"), SDL_GetTicks());
 
 	return UPDATE_CONTINUE;
 }
