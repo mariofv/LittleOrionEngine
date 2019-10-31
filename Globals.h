@@ -18,6 +18,7 @@ enum update_status
 # define DEFAULT_FRAGMENT_SHADER_PATH "./default.fs"
 # define WOBBLE_VERTEX_SHADER_PATH "./wobble.vs"
 # define WOBBLE_FRAGMENT_SHADER_PATH "./wobble.fs"
+# define LENA_TEXTURE_PATH "./lena.png"
 
 // Configuration -----------
 #define SCREEN_WIDTH 640

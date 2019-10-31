@@ -60,7 +60,7 @@ bool ModuleProgram::CleanUp()
 bool ModuleProgram::initVertexShader()
 {
 	LOG("Loading vertex shader");
-	const char *vertex_shader_loaded_file = loadFile(WOBBLE_VERTEX_SHADER_PATH);
+	const char *vertex_shader_loaded_file = loadFile(DEFAULT_VERTEX_SHADER_PATH);
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	if (vertex_shader == 0) {
 		LOG("Error creating vertex shader");
@@ -88,7 +88,7 @@ bool ModuleProgram::initVertexShader()
 bool ModuleProgram::initFragmentShader()
 {
 	LOG("Loading fragment shader");
-	const char *fragment_shader_loaded_file = loadFile(WOBBLE_FRAGMENT_SHADER_PATH);
+	const char *fragment_shader_loaded_file = loadFile(DEFAULT_FRAGMENT_SHADER_PATH);
 	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (fragment_shader == 0) {
 		LOG("Error creating fragment shader");
