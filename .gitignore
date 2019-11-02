@@ -329,3 +329,4 @@ ASALocalRun/
 .mfractor/
 
 !glew-2.1.0/**
+!DevIL/**

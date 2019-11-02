@@ -36,7 +36,7 @@ bool ModuleRenderExercise::Init()
 
 	
 	// Init VBO, VAO & EBO
-	glGenBuffers(1, &vao);
+	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
 
@@ -53,10 +53,9 @@ bool ModuleRenderExercise::Init()
 
 	// 4. then set the vertex attributes pointers
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)0); // position
-	glVertexAttribPointer(1, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))); // uv
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 5 * sizeof(float), (void*)(3 * sizeof(float))); // uv
 	glEnableVertexAttribArray(0);
-
-
+	glEnableVertexAttribArray(1);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
@@ -77,7 +76,6 @@ bool ModuleRenderExercise::Init()
 
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, App->texture->texture_width, App->texture->texture_height, 0, GL_RGB, GL_UNSIGNED_BYTE, App->texture->texture_data);
 	glGenerateMipmap(GL_TEXTURE_2D);
-	
 
 	return true;
 }
@@ -132,9 +130,12 @@ bool ModuleRenderExercise::CleanUp()
 
 	glDisableVertexAttribArray(0);
 	glDisableVertexAttribArray(1);
-	 
+
 	glBindVertexArray(0);
-	
+
+	glDeleteBuffers(1, &vbo);
+	glDeleteBuffers(1, &ebo);
+
 	return true;
 }
 
