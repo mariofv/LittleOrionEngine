@@ -1,11 +1,11 @@
 #include <stdlib.h>
-#include "Application.h"
-#include "ModuleRender.h"
-#include "Globals.h"
+#include "Engine/Application.h"
+#include "Engine/ModuleRender.h"
+#include "Engine/Globals.h"
 
-#include "SDL/include/SDL.h"
-#pragma comment( lib, "SDL/libx86/SDL2.lib" )
-#pragma comment( lib, "SDL/libx86/SDL2main.lib" )
+#include "SDL.h"
+#pragma comment( lib, "Libraries/SDL/libx86/SDL2.lib" )
+#pragma comment( lib, "Libraries/SDL/libx86/SDL2main.lib" ) //TODO: Why is this needed?
 
 enum main_states
 {
