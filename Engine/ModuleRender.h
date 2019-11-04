@@ -21,4 +21,5 @@ public:
 
 private:
 	void* context;
+	int num_rendered_frames;
 };
