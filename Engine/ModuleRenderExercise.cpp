@@ -109,7 +109,9 @@ update_status ModuleRenderExercise::PreUpdate()
 // Called every draw update
 update_status ModuleRenderExercise::Update()
 {
+	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
+	glUniform1i(glGetUniformLocation(App->program->shader_program,"texture0"),0);
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
