@@ -53,6 +53,7 @@ update_status ModuleEditor::PreUpdate()
 update_status ModuleEditor::Update()
 {
 	EngineUI::ShowEngineUI();
+	//ImGui::ShowDemoWindow();
 	return UPDATE_CONTINUE;
 }
 

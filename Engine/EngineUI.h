@@ -9,9 +9,11 @@ public:
 	const static void ShowEngineUI();
 
 private:
-	const static void ShowLog();
+	const static void ShowConfigurationWindow();
+	const static void ShowWindowOptions();
 
-	const static void ShowAppInfo();
+	const static void ShowDebugWindow();
+	const static void ShowConsole();
 	const static void ShowFPSGraph();
 };
 
