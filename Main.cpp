@@ -101,6 +101,5 @@ int main(int argc, char ** argv)
 	}
 
 	delete App;
-	LOG("Bye :)\n");
 	return main_return;
 }

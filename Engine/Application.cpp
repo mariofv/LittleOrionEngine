@@ -7,6 +7,7 @@
 #include "ModuleProgram.h"
 #include "ModuleTexture.h"
 #include "ModuleEditor.h"
+#include "EngineLog.h"
 
 using namespace std;
 
@@ -20,6 +21,8 @@ Application::Application()
 	modules.push_back(program = new ModuleProgram());
 	modules.push_back(texture = new ModuleTexture());
 	modules.push_back(exercise = new ModuleRenderExercise());
+
+	log = new EngineLog();
 }
 
 Application::~Application()
@@ -60,8 +63,10 @@ bool Application::CleanUp()
 {
 	bool ret = true;
 
-	for(list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
+	for (list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
 		ret = (*it)->CleanUp();
+
+	delete log;
 
 	return ret;
 }

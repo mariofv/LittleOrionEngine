@@ -13,6 +13,8 @@ class ModuleProgram;
 class ModuleTexture;
 class ModuleEditor;
 
+class EngineLog;
+
 class Application
 {
 public:
@@ -32,6 +34,8 @@ public:
 	ModuleProgram* program = nullptr;
 	ModuleTexture* texture = nullptr;
 	ModuleEditor* editor = nullptr;
+
+	EngineLog* log = nullptr;
 
 private:
 
