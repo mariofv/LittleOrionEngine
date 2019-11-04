@@ -8,7 +8,6 @@
 
 ModuleRender::ModuleRender()
 {
-	num_rendered_frames = 0;
 }
 
 // Destructor
@@ -63,8 +62,6 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
-	++num_rendered_frames;
-	//App->log->logFPS(num_rendered_frames * 1000.f / SDL_GetTicks());
 	return UPDATE_CONTINUE;
 }
 

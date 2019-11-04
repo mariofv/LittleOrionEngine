@@ -21,6 +21,17 @@ public:
 	// Called before quitting
 	bool CleanUp();
 
+	void setResizable(const bool resizable) const;
+	void setBordered(const bool bordered) const;
+
+	void setWindowed() const;
+	void setFullScreenDesktop() const;
+	void setFullScreen() const;
+
+	void setWidth(const int width);
+	void setHeight(const int height);
+	void setBrightness(const float brightness) const;
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window = NULL;
@@ -30,6 +41,14 @@ public:
 
 	// OpenGL context
 	SDL_GLContext glcontext;
+
+public:
+	int screen_width;
+	int screen_height;
+
+private:
+	int height;
+	int width;
 };
 
 #endif // __ModuleWindow_H__

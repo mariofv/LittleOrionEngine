@@ -25,13 +25,23 @@ bool ModuleWindow::Init()
 	else
 	{
 		//Create window
-		int width = SCREEN_WIDTH;
-		int height = SCREEN_HEIGHT;
+		width = SCREEN_WIDTH;
+		height = SCREEN_HEIGHT;
 		Uint32 flags = SDL_WINDOW_SHOWN |  SDL_WINDOW_OPENGL;
 
-		if(FULLSCREEN == true)
+		if(FULLSCREEN)
 		{
 			flags |= SDL_WINDOW_FULLSCREEN;
+		}
+
+		if (RESIZABLE)
+		{
+			flags |= SDL_WINDOW_RESIZABLE;
+		}
+
+		if (!BORDERED)
+		{
+			flags |= SDL_WINDOW_BORDERLESS;
 		}
 
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
@@ -51,6 +61,12 @@ bool ModuleWindow::Init()
 			glcontext = SDL_GL_CreateContext(window);
 		}
 	}
+
+
+	SDL_DisplayMode DM;
+	SDL_GetDesktopDisplayMode(0, &DM);
+	screen_width = DM.w;
+	screen_height = DM.h;
 
 	return ret;
 }
@@ -74,3 +90,55 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
+void ModuleWindow::setResizable(const bool resizable) const
+{
+	if (resizable) {
+		SDL_SetWindowResizable(window, SDL_TRUE);
+	}
+	else {
+		SDL_SetWindowResizable(window, SDL_FALSE);
+	}
+}
+
+void ModuleWindow::setBordered(const bool bordered) const
+{
+	if (bordered) {
+		SDL_SetWindowBordered(window, SDL_TRUE);
+	}
+	else {
+		SDL_SetWindowBordered(window, SDL_FALSE);
+	}
+}
+
+void ModuleWindow::setWindowed() const
+{
+	SDL_SetWindowFullscreen(window, 0);
+
+}
+
+void ModuleWindow::setFullScreenDesktop() const
+{
+	SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
+}
+
+void ModuleWindow::setFullScreen() const
+{
+	SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
+}
+
+void ModuleWindow::setHeight(const int height)
+{
+	this->height = height;
+	SDL_SetWindowSize(window, width, height);
+}
+
+void ModuleWindow::setWidth(const int width)
+{
+	this->width = width;
+	SDL_SetWindowSize(window, width, height);
+}
+
+void ModuleWindow::setBrightness(const float brightness) const
+{
+	SDL_SetWindowBrightness(window, brightness);
+}

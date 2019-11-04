@@ -23,6 +23,10 @@ enum update_status
 // Configuration -----------
 #define SCREEN_WIDTH 640
 #define SCREEN_HEIGHT 480
+
 #define FULLSCREEN false
+#define RESIZABLE true
+#define BORDERED true
+
 #define VSYNC true
 #define TITLE "Orion Engine"

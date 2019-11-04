@@ -11,9 +11,17 @@ EngineUI::EngineUI()
 {
 }
 
-
 EngineUI::~EngineUI()
 {
+}
+
+const void EngineUI::InitUI()
+{
+	window_options::fullscreen = FULLSCREEN;
+	window_options::bordered = BORDERED;
+	window_options::resizable = RESIZABLE;
+	SDL_GetWindowSize(App->window->window, &window_options::width, &window_options::height);
+	window_options::brightness = SDL_GetWindowBrightness(App->window->window);
 }
 
 const void EngineUI::ShowEngineUI()
@@ -33,18 +41,47 @@ const void EngineUI::ShowConfigurationWindow()
 
 const void EngineUI::ShowWindowOptions()
 {
-	bool fullscreen = FULLSCREEN;
-	bool bordered = false;
 	if (ImGui::CollapsingHeader("Window")) {
-		if (ImGui::Checkbox("Bordered", &bordered))
+		if (ImGui::SliderFloat("Brightness", &window_options::brightness, 0, 1))
 		{
-			bordered = !bordered;
-			if (bordered) {
-				SDL_SetWindowBordered(App->window->window, SDL_TRUE);
+			App->window->setBrightness(window_options::brightness);
+		}
+
+		if (ImGui::SliderInt("Width", &window_options::width, SCREEN_WIDTH, App->window->screen_width))
+		{
+			App->window->setWidth(window_options::width);
+		}
+
+		if (ImGui::SliderInt("Height", &window_options::height, SCREEN_HEIGHT, App->window->screen_height))
+		{
+			App->window->setHeight(window_options::height);
+		}
+
+		if (ImGui::Combo("Window style", &window_options::fullscreen, "Windowed\0Fullscreen desktop\0Fullscreen\0"))
+		{
+			switch (window_options::fullscreen)
+			{
+			case 0:
+				App->window->setWindowed();
+				break;
+			case 1:
+				App->window->setFullScreenDesktop();
+				break;
+			case 2:
+				App->window->setFullScreen();
+				break;
 			}
-			else {
-				SDL_SetWindowBordered(App->window->window, SDL_FALSE);
-			}
+		}
+
+		if (ImGui::Checkbox("Bordered", &window_options::bordered))
+		{
+			App->window->setBordered(window_options::bordered);
+		}
+		ImGui::SameLine();
+
+		if (ImGui::Checkbox("Resizable", &window_options::resizable))
+		{
+			App->window->setResizable(window_options::resizable);
 		}
 	}
 	
@@ -72,6 +109,8 @@ const void EngineUI::ShowConsole()
 
 const void EngineUI::ShowFPSGraph()
 {
+	App->log->logFPS(ImGui::GetIO().Framerate);
+
 	if (ImGui::CollapsingHeader("FPS")) {
 		char title[25];
 		std::vector<float> fps_log = App->log->getFPSData();

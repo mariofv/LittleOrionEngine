@@ -38,6 +38,8 @@ bool ModuleEditor::Init()
 		return false;
 	}
 
+	EngineUI::InitUI();
+
 	return true;
 }
 
