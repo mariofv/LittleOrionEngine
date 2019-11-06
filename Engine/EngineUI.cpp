@@ -172,30 +172,54 @@ const void EngineUI::ShowAboutWindow()
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Orion Engine");
 		ImGui::TextWrapped("3D engine developed during the Master's Degree in AAA Videogames Development.");
 
+
 		ImGui::Separator();
+
 
 		ImGui::Text("Authors:");
 		ImGui::SameLine();
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Mario Fernandez Villalba");
 		
+
 		ImGui::Separator();
+
 
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Libraries");
 		
-		ImGui::Bullet(); 
-		ImGui::Text("SDL 2.0");
+		if (ImGui::MenuItem("SDL 2.0")) 
+		{
+			ShellExecuteA(NULL, "open", "https://www.libsdl.org/", NULL, NULL, SW_SHOWNORMAL);
+		}
 
-		ImGui::Bullet(); 
-		ImGui::Text("glew 2.1.0");
+		if (ImGui::MenuItem("glew 2.1.0"))
+		{
+			ShellExecuteA(NULL, "open", "http://glew.sourceforge.net/", NULL, NULL, SW_SHOWNORMAL);
+		}
 
-		ImGui::Bullet();
-		ImGui::Text("MathGeoLib 1.5");
+		if (ImGui::MenuItem("MathGeoLib 1.5"))
+		{
+			ShellExecuteA(NULL, "open", "https://github.com/juj/MathGeoLib", NULL, NULL, SW_SHOWNORMAL);
+		}
 
-		ImGui::Bullet();
-		ImGui::Text("ImGui 1.73");
-		
-		ImGui::Bullet();
-		ImGui::Text("DevIL 1.8");
+		if (ImGui::MenuItem("ImGui 1.73"))
+		{
+			ShellExecuteA(NULL, "open", "https://github.com/ocornut/imgui", NULL, NULL, SW_SHOWNORMAL);
+		}
+
+		if (ImGui::MenuItem("DevIL 1.8"))
+		{
+			ShellExecuteA(NULL, "open", "http://openil.sourceforge.net/", NULL, NULL, SW_SHOWNORMAL);
+		}
+
+
+		ImGui::Separator();
+
+
+		if (ImGui::MenuItem("LICENSE"))
+		{
+			ShellExecuteA(NULL, "open", "https://github.com/mariofv/OrionEngine/blob/master/LICENSE", NULL, NULL, SW_SHOWNORMAL);
+		}
+		ImGui::TextWrapped("Orion Engine is licensed under the MIT License, see LICENSE for more information.");
 	}
 	ImGui::End();
 }
