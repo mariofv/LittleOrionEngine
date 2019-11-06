@@ -329,3 +329,4 @@ ASALocalRun/
 .mfractor/
 
 !Libraries/**
+imgui.ini
