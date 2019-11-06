@@ -125,6 +125,24 @@ void ModuleCamera::MoveDown(const float distance)
 	generateMatrices();
 }
 
+void ModuleCamera::MoveFoward(const float distance)
+{
+	float3 new_camera_pos = camera_frustum.pos;
+	new_camera_pos = new_camera_pos + camera_frustum.front.ScaledToLength(distance);
+	camera_frustum.pos = new_camera_pos;
+
+	generateMatrices();
+}
+
+void ModuleCamera::MoveBackward(const float distance)
+{
+	float3 new_camera_pos = camera_frustum.pos;
+	new_camera_pos = new_camera_pos - camera_frustum.front.ScaledToLength(distance);
+	camera_frustum.pos = new_camera_pos;
+
+	generateMatrices();
+}
+
 void ModuleCamera::generateMatrices()
 {
 	proj = camera_frustum.ProjectionMatrix();

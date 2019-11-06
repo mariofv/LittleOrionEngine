@@ -68,6 +68,16 @@ update_status ModuleInput::Update()
 		App->cameras->MoveDown(0.1f);
 	}
 
+	if (keyboard[SDL_SCANCODE_W])
+	{
+		App->cameras->MoveFoward(0.1f);
+	}
+
+	if (keyboard[SDL_SCANCODE_S])
+	{
+		App->cameras->MoveBackward(0.1f);
+	}
+
 	return UPDATE_CONTINUE;
 }
 
