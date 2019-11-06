@@ -17,6 +17,9 @@ EngineUI::~EngineUI()
 
 const void EngineUI::InitUI()
 {
+	ui_flags::show_configuration_window = false;
+	ui_flags::show_debug_window = false;
+
 	window_options::fullscreen = FULLSCREEN;
 	window_options::bordered = BORDERED;
 	window_options::resizable = RESIZABLE;
@@ -26,8 +29,27 @@ const void EngineUI::InitUI()
 
 const void EngineUI::ShowEngineUI()
 {
-	ShowConfigurationWindow();
-	ShowDebugWindow();
+	ShowMainMenu();
+	
+	if (ui_flags::show_configuration_window)
+	{
+		ShowConfigurationWindow();
+	}
+	if (ui_flags::show_debug_window)
+	{
+		ShowDebugWindow();
+	}
+}
+
+const void EngineUI::ShowMainMenu()
+{
+	if (ImGui::BeginMainMenuBar())
+	{
+		ImGui::MenuItem("Config", (const char*)0, &ui_flags::show_configuration_window);
+		ImGui::MenuItem("Debug", (const char*)0, &ui_flags::show_debug_window);
+		ImGui::EndMainMenuBar();
+	}
+	
 }
 
 const void EngineUI::ShowConfigurationWindow()
@@ -122,7 +144,6 @@ const void EngineUI::ShowFPSGraph()
 		sprintf_s(title, "Framerate %.1f", fps_log[fps_log.size() - 1]);
 		ImGui::PlotHistogram("###framerate", &fps_log[0], fps_log.size(), 0, title, 0.f, 100.f, ImVec2(310, 100));
 	}
-	
 }
 
 const void EngineUI::ShowMSGraph()

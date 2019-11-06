@@ -1,5 +1,10 @@
 #pragma once
 
+namespace ui_flags {
+	static bool show_configuration_window;
+	static bool show_debug_window;
+}
+
 namespace window_options {
 	static int fullscreen;
 	static bool bordered;
@@ -21,6 +26,8 @@ public:
 	const static void InitUI();
 
 private:
+	const static void ShowMainMenu();
+
 	const static void ShowConfigurationWindow();
 	const static void ShowWindowOptions();
 
