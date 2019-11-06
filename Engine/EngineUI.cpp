@@ -19,6 +19,7 @@ const void EngineUI::InitUI()
 {
 	ui_flags::show_configuration_window = false;
 	ui_flags::show_debug_window = false;
+	ui_flags::show_about_window = false;
 
 	window_options::fullscreen = FULLSCREEN;
 	window_options::bordered = BORDERED;
@@ -39,6 +40,10 @@ const void EngineUI::ShowEngineUI()
 	{
 		ShowDebugWindow();
 	}
+	if (ui_flags::show_about_window)
+	{
+		ShowAboutWindow();
+	}
 }
 
 const void EngineUI::ShowMainMenu()
@@ -47,6 +52,7 @@ const void EngineUI::ShowMainMenu()
 	{
 		ImGui::MenuItem("Config", (const char*)0, &ui_flags::show_configuration_window);
 		ImGui::MenuItem("Debug", (const char*)0, &ui_flags::show_debug_window);
+		ImGui::MenuItem("About", (const char*)0, &ui_flags::show_about_window);
 		ImGui::EndMainMenuBar();
 	}
 	
@@ -157,5 +163,39 @@ const void EngineUI::ShowMSGraph()
 		sprintf_s(title, "Miliseconds %.1f", ms_log[ms_log.size() - 1]);
 		ImGui::PlotHistogram("###miliseconds", &ms_log[0], ms_log.size(), 0, title, 0.f, 100.f, ImVec2(310, 100));
 	}
-	
+}
+
+const void EngineUI::ShowAboutWindow()
+{
+	if (ImGui::Begin("About")) 
+	{
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Orion Engine");
+		ImGui::TextWrapped("3D engine developed during the Master's Degree in AAA Videogames Development.");
+
+		ImGui::Separator();
+
+		ImGui::Text("Authors:");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Mario Fernandez Villalba");
+		
+		ImGui::Separator();
+
+		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Libraries");
+		
+		ImGui::Bullet(); 
+		ImGui::Text("SDL 2.0");
+
+		ImGui::Bullet(); 
+		ImGui::Text("glew 2.1.0");
+
+		ImGui::Bullet();
+		ImGui::Text("MathGeoLib 1.5");
+
+		ImGui::Bullet();
+		ImGui::Text("ImGui 1.73");
+		
+		ImGui::Bullet();
+		ImGui::Text("DevIL 1.8");
+	}
+	ImGui::End();
 }

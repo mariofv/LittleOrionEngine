@@ -3,6 +3,7 @@
 namespace ui_flags {
 	static bool show_configuration_window;
 	static bool show_debug_window;
+	static bool show_about_window;
 }
 
 namespace window_options {
@@ -35,5 +36,7 @@ private:
 	const static void ShowConsole();
 	const static void ShowFPSGraph();
 	const static void ShowMSGraph();	
+
+	const static void ShowAboutWindow();
 };
 
