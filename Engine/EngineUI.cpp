@@ -1,6 +1,7 @@
 ﻿#include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleCamera.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
 #include "imgui.h"
@@ -16,7 +17,7 @@ EngineUI::~EngineUI()
 {
 }
 
-const void EngineUI::InitUI()
+void EngineUI::InitUI()
 {
 	ui_flags::show_configuration_window = false;
 	ui_flags::show_debug_window = false;
@@ -27,9 +28,11 @@ const void EngineUI::InitUI()
 	window_options::resizable = RESIZABLE;
 	SDL_GetWindowSize(App->window->window, &window_options::width, &window_options::height);
 	window_options::brightness = SDL_GetWindowBrightness(App->window->window);
+
+
 }
 
-const void EngineUI::ShowEngineUI()
+void EngineUI::ShowEngineUI()
 {
 	ShowMainMenu();
 	
@@ -47,7 +50,7 @@ const void EngineUI::ShowEngineUI()
 	}
 }
 
-const void EngineUI::ShowMainMenu()
+void EngineUI::ShowMainMenu()
 {
 	if (ImGui::BeginMainMenuBar())
 	{
@@ -59,16 +62,17 @@ const void EngineUI::ShowMainMenu()
 	
 }
 
-const void EngineUI::ShowConfigurationWindow()
+void EngineUI::ShowConfigurationWindow()
 {
 	if (ImGui::Begin("Configuration"))
 	{
 		ShowWindowOptions();
+		ShowCameraOptions();
 	}
 	ImGui::End();
 }
 
-const void EngineUI::ShowWindowOptions()
+void EngineUI::ShowWindowOptions()
 {
 	if (ImGui::CollapsingHeader("Window")) {
 		if (ImGui::SliderFloat("Brightness", &window_options::brightness, 0, 1))
@@ -116,7 +120,33 @@ const void EngineUI::ShowWindowOptions()
 	
 }
 
-const void EngineUI::ShowDebugWindow()
+void EngineUI::ShowCameraOptions()
+{
+	if (ImGui::CollapsingHeader("Camera"))
+	{
+		if (ImGui::SliderFloat("FOV", &camera_options::fov, 0, 2*3.14f))
+		{
+			App->cameras->SetFOV(camera_options::fov);
+		}
+
+		if (ImGui::SliderFloat("Aspect Ratio", &camera_options::aspect_ratio, 0, 10))
+		{
+			App->cameras->SetAspectRatio(camera_options::aspect_ratio);
+		}
+
+		if (ImGui::SliderFloat("Near plane", &camera_options::near_plane, 1, camera_options::far_plane + 1))
+		{
+			App->cameras->SetNearDistance(camera_options::near_plane);
+		}
+
+		if (ImGui::SliderFloat("Far plane", &camera_options::far_plane, camera_options::near_plane + 1, camera_options::near_plane + 1000))
+		{
+			App->cameras->SetFarDistance(camera_options::far_plane);
+		}
+	}
+}
+
+void EngineUI::ShowDebugWindow()
 {
 	if (ImGui::Begin("Debug"))
 	{
@@ -127,7 +157,7 @@ const void EngineUI::ShowDebugWindow()
 	ImGui::End();
 }
 
-const void EngineUI::ShowConsole()
+void EngineUI::ShowConsole()
 {
 	if (ImGui::CollapsingHeader("Console")) 
 	{
@@ -137,7 +167,7 @@ const void EngineUI::ShowConsole()
 	}
 }
 
-const void EngineUI::ShowPerformanceGraphs()
+void EngineUI::ShowPerformanceGraphs()
 {
 	if (ImGui::CollapsingHeader("Performance Graphs")) {
 		ShowFPSGraph();
@@ -146,7 +176,7 @@ const void EngineUI::ShowPerformanceGraphs()
 	}
 }
 
-const void EngineUI::ShowFPSGraph()
+void EngineUI::ShowFPSGraph()
 {
 	App->log->logFPS(ImGui::GetIO().Framerate);
 
@@ -159,7 +189,7 @@ const void EngineUI::ShowFPSGraph()
 	}
 }
 
-const void EngineUI::ShowMSGraph()
+void EngineUI::ShowMSGraph()
 {
 	App->log->logMS(1000.f/ImGui::GetIO().Framerate);
 
@@ -172,7 +202,7 @@ const void EngineUI::ShowMSGraph()
 	}
 }
 
-const void EngineUI::ShowHardware()
+void EngineUI::ShowHardware()
 {
 	if (ImGui::CollapsingHeader("Hardware"))
 	{
@@ -242,7 +272,7 @@ const void EngineUI::ShowHardware()
 	}
 }
 
-const void EngineUI::ShowAboutWindow()
+void EngineUI::ShowAboutWindow()
 {
 	if (ImGui::Begin("About")) 
 	{

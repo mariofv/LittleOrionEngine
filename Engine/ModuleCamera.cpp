@@ -17,22 +17,20 @@ bool ModuleCamera::Init()
 {
 	int windowWidth, windowHeight;
 	SDL_GetWindowSize(App->window->window, &windowWidth, &windowHeight);
-	float aspect_ratio = (float)windowWidth / windowHeight;
+	
+	aspect_ratio = (float)windowWidth / windowHeight;
 
 	// CREATES PROJECTION MATRIX
-	Frustum frustum;
-	frustum.type = FrustumType::PerspectiveFrustum;
-	frustum.pos = float3::zero;
-	frustum.front = -float3::unitZ;
-	frustum.up = float3::unitY;
-	frustum.nearPlaneDistance = 1.f;
-	frustum.farPlaneDistance = 100.0f;
-	frustum.verticalFov = math::pi / 4.0f;
-	frustum.horizontalFov = 2.f * atanf(tanf(frustum.verticalFov * 0.5f) * aspect_ratio);
-	proj = frustum.ProjectionMatrix();
+	camera_frustum.type = FrustumType::PerspectiveFrustum;
+	camera_frustum.pos = float3::zero;
+	camera_frustum.front = -float3::unitZ;
+	camera_frustum.up = float3::unitY;
+	camera_frustum.nearPlaneDistance = 1.f;
+	camera_frustum.farPlaneDistance = 100.0f;
+	camera_frustum.verticalFov = math::pi / 4.0f;
+	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
 
-	// CREATES VIEW MATRIX
-	view = frustum.ViewMatrix();
+	generateMatrices();
 
 	return true;
 }
@@ -58,4 +56,59 @@ update_status ModuleCamera::PostUpdate()
 bool ModuleCamera::CleanUp()
 {
 	return true;
+}
+
+void ModuleCamera::SetFOV(const float fov)
+{
+	camera_frustum.verticalFov = fov;
+	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
+
+	generateMatrices();
+}
+
+void ModuleCamera::SetAspectRatio(const float aspect_ratio)
+{
+	this->aspect_ratio = aspect_ratio;
+	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
+
+	generateMatrices();
+}
+
+void ModuleCamera::SetNearDistance(const float distance)
+{
+	camera_frustum.nearPlaneDistance = distance;
+
+	generateMatrices();
+}
+
+void ModuleCamera::SetFarDistance(const float distance)
+{
+	camera_frustum.farPlaneDistance = distance;
+
+	generateMatrices();
+}
+
+void ModuleCamera::SetPosition(const float3 position)
+{
+	camera_frustum.pos = position;
+
+	generateMatrices();
+}
+
+void ModuleCamera::SetOrientation(const float3 orientation)
+{
+
+	generateMatrices();
+}
+
+void ModuleCamera::LookAt(const float x, const float y, const float z)
+{
+	generateMatrices();
+
+}
+
+void ModuleCamera::generateMatrices()
+{
+	proj = camera_frustum.ProjectionMatrix();
+	view = camera_frustum.ViewMatrix();
 }

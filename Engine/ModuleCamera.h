@@ -15,6 +15,16 @@ public:
 	update_status Update();
 	update_status PostUpdate();
 	bool CleanUp();
+	
+	void SetFOV(const float fov);
+	void SetAspectRatio(const float aspect_ratio);
+	void SetNearDistance(const float distance);
+	void SetFarDistance(const float distance);
+	void SetPosition(const float3 position);
+	void SetOrientation(const float3 orientation);
+	void LookAt(const float x, const float y, const float z);
+private:
+	void generateMatrices();
 
 public:
 	float4x4 proj;
@@ -22,4 +32,5 @@ public:
 
 private:
 	Frustum camera_frustum;
+	float aspect_ratio;
 };

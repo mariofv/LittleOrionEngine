@@ -1,5 +1,6 @@
 #pragma once
 
+//TODO: Cambiar de static a no static
 namespace ui_flags {
 	static bool show_configuration_window;
 	static bool show_debug_window;
@@ -17,28 +18,37 @@ namespace window_options {
 	static float brightness;
 }
 
+namespace camera_options {
+	static float fov;
+	static float aspect_ratio;
+
+	static float near_plane;
+	static float far_plane;
+}
+
 class EngineUI
 {
 public:
 	EngineUI();
 	~EngineUI();
 
-	const static void ShowEngineUI();
-	const static void InitUI();
+	static void ShowEngineUI();
+	static void InitUI();
 
 private:
-	const static void ShowMainMenu();
+	static void ShowMainMenu();
 
-	const static void ShowConfigurationWindow();
-	const static void ShowWindowOptions();
+	static void ShowConfigurationWindow();
+	static void ShowWindowOptions();
+	static void ShowCameraOptions();
 
-	const static void ShowDebugWindow();
-	const static void ShowConsole();
-	const static void ShowPerformanceGraphs();
-	const static void ShowFPSGraph();
-	const static void ShowMSGraph();	
-	const static void ShowHardware();
+	static void ShowDebugWindow();
+	static void ShowConsole();
+	static void ShowPerformanceGraphs();
+	static void ShowFPSGraph();
+	static void ShowMSGraph();	
+	static void ShowHardware();
 
-	const static void ShowAboutWindow();
+	static void ShowAboutWindow();
 };
 
