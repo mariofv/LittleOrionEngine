@@ -77,6 +77,8 @@ bool ModuleRenderExercise::Init()
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, lenna_texture->width, lenna_texture->height, 0, GL_RGB, GL_UNSIGNED_BYTE, lenna_texture->data);
 	glGenerateMipmap(GL_TEXTURE_2D);
 
+	glBindTexture(GL_TEXTURE_2D, 0);
+
 	delete lenna_texture;
 
 	return true;
@@ -139,6 +141,8 @@ bool ModuleRenderExercise::CleanUp()
 
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
+
+	glDeleteTextures(1, &texture);
 
 	return true;
 }
