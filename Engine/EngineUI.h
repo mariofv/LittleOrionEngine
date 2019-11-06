@@ -27,8 +27,6 @@ private:
 	const static void ShowDebugWindow();
 	const static void ShowConsole();
 	const static void ShowFPSGraph();
-
-	
-	
+	const static void ShowMSGraph();	
 };
 

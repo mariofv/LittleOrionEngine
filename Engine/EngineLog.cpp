@@ -42,7 +42,25 @@ void EngineLog::logFPS(const float fps)
 	}
 }
 
+void EngineLog::logMS(const float ms)
+{
+	if (ms_log.size() < 100)
+	{
+		ms_log.push_back(ms);
+	}
+	else
+	{
+		rotate(ms_log.begin(), ms_log.begin() + 1, ms_log.end());
+		ms_log[99] = ms;
+	}
+}
+
 const std::vector<float> EngineLog::getFPSData() const
 {
 	return fps_log;
+}
+
+const std::vector<float> EngineLog::getMSData() const
+{
+	return ms_log;
 }

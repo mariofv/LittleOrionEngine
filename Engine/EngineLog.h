@@ -16,11 +16,15 @@ public:
 	bool hasPendingData();
 	const char* getData() const;
 
-	void logFPS(const float dps);
+	void logFPS(const float fps);
 	const std::vector<float> getFPSData() const;
+
+	void logMS(const float ms);
+	const std::vector<float> getMSData() const;
 
 private:
 	ImGuiTextBuffer buffer;
 
 	std::vector<float> fps_log;
+	std::vector<float> ms_log;
 };
