@@ -17,7 +17,7 @@ public:
 
 	// Called before quitting
 	bool Init();
-
+	update_status Update();
 	// Called before quitting
 	bool CleanUp();
 
@@ -31,6 +31,8 @@ public:
 	void setWidth(const int width);
 	void setHeight(const int height);
 	void setBrightness(const float brightness) const;
+
+	void WindowResized(const unsigned width, const unsigned height);
 
 public:
 	//The window we'll be rendering to

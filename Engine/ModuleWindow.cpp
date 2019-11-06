@@ -1,6 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleRender.h"
+#include "ModuleCamera.h"
 
 ModuleWindow::ModuleWindow()
 {
@@ -70,6 +72,12 @@ bool ModuleWindow::Init()
 
 	return ret;
 }
+
+update_status ModuleWindow::Update()
+{
+	return UPDATE_CONTINUE;
+}
+
 
 // Called before quitting
 bool ModuleWindow::CleanUp()
@@ -141,4 +149,9 @@ void ModuleWindow::setWidth(const int width)
 void ModuleWindow::setBrightness(const float brightness) const
 {
 	SDL_SetWindowBrightness(window, brightness);
+}
+
+void ModuleWindow::WindowResized(const unsigned width, const unsigned height)
+{
+	App->cameras->SetAspectRatio((float)width / height);
 }

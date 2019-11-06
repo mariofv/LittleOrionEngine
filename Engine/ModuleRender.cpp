@@ -119,8 +119,3 @@ void ModuleRender::renderGrid()
 	glLineWidth(1.0f);
 }
 
-void ModuleRender::WindowResized(unsigned width, unsigned height)
-{
-
-}
-
