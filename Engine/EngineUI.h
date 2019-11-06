@@ -34,8 +34,10 @@ private:
 
 	const static void ShowDebugWindow();
 	const static void ShowConsole();
+	const static void ShowPerformanceGraphs();
 	const static void ShowFPSGraph();
 	const static void ShowMSGraph();	
+	const static void ShowHardware();
 
 	const static void ShowAboutWindow();
 };

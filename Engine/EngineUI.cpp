@@ -1,4 +1,4 @@
-#include "Globals.h"
+﻿#include "Globals.h"
 #include "Application.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
@@ -6,6 +6,8 @@
 
 #include "ModuleWindow.h"
 #include "SDL.h"
+#include <GL/glew.h>
+
 
 EngineUI::EngineUI()
 {
@@ -120,11 +122,8 @@ const void EngineUI::ShowDebugWindow()
 	if (ImGui::Begin("Debug"))
 	{
 		ShowConsole();
-		if (ImGui::CollapsingHeader("Performance Graphs")) {
-			ShowFPSGraph();
-			ImGui::SameLine();
-			ShowMSGraph();
-		}
+		ShowPerformanceGraphs();
+		ShowHardware();
 	}
 	ImGui::End();
 }
@@ -136,6 +135,15 @@ const void EngineUI::ShowConsole()
 		if (App->log->hasPendingData()) {
 			ImGui::TextUnformatted(App->log->getData());
 		}
+	}
+}
+
+const void EngineUI::ShowPerformanceGraphs()
+{
+	if (ImGui::CollapsingHeader("Performance Graphs")) {
+		ShowFPSGraph();
+		ImGui::SameLine();
+		ShowMSGraph();
 	}
 }
 
@@ -162,6 +170,76 @@ const void EngineUI::ShowMSGraph()
 	{
 		sprintf_s(title, "Miliseconds %.1f", ms_log[ms_log.size() - 1]);
 		ImGui::PlotHistogram("###miliseconds", &ms_log[0], ms_log.size(), 0, title, 0.f, 100.f, ImVec2(310, 100));
+	}
+}
+
+const void EngineUI::ShowHardware()
+{
+	if (ImGui::CollapsingHeader("Hardware"))
+	{
+		char tmp_string[4096];
+
+		ImGui::Text("CPUs:");
+		ImGui::SameLine();
+		int num_cpus = SDL_GetCPUCount();
+		int cpu_cache_line_size = SDL_GetCPUCacheLineSize();
+		sprintf_s(tmp_string, "%d (Cache: %d bytes)", num_cpus, cpu_cache_line_size);
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
+
+		ImGui::Text("System RAM:");
+		ImGui::SameLine();
+		float system_ram = SDL_GetSystemRAM()/1000.f;
+		sprintf_s(tmp_string, "%.2f GB", system_ram);
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
+
+		ImGui::Text("Caps:");
+		if (SDL_Has3DNow()) {
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "3DNow");
+		}
+		if (SDL_HasAVX()) {
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "AVX") ;
+		}
+		if (SDL_HasAVX2()) {
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "AVX2");
+		}
+		if (SDL_HasMMX()) {
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "MMX") ;
+		}
+		if (SDL_HasRDTSC()) {
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "RDTSC");
+		}
+		if (SDL_HasSSE()) {
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "SSE");
+		}
+		if (SDL_HasSSE2()) {
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "SSE2");
+		}
+		if (SDL_HasSSE3()) {
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "SSE3");
+		}
+		if (SDL_HasSSE41()) {
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "SSE41");
+		}
+		if (SDL_HasSSE42()) {
+			ImGui::SameLine();
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "SSE42");
+		}
+
+		ImGui::Separator();
+
+		ImGui::Text("GPU:");
+		ImGui::SameLine();
+		sprintf_s(tmp_string, "%s %s", glGetString(GL_VENDOR), glGetString(GL_RENDERER));
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
 	}
 }
 
