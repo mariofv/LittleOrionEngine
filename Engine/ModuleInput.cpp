@@ -88,6 +88,16 @@ update_status ModuleInput::Update()
 		App->cameras->MoveRight(0.1f);
 	}
 
+	if (keyboard[SDL_SCANCODE_UP])
+	{
+		App->cameras->RotatePitch(0.1f);
+	}
+
+	if (keyboard[SDL_SCANCODE_DOWN])
+	{
+		App->cameras->RotatePitch(-0.1f);
+	}
+
 	return UPDATE_CONTINUE;
 }
 

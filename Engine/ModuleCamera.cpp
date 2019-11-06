@@ -19,6 +19,7 @@ bool ModuleCamera::Init()
 	SDL_GetWindowSize(App->window->window, &windowWidth, &windowHeight);
 	
 	aspect_ratio = (float)windowWidth / windowHeight;
+	pitch_angle = 0;
 
 	// CREATES PROJECTION MATRIX
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
@@ -152,6 +153,20 @@ void ModuleCamera::MoveRight(const float distance)
 
 	generateMatrices();
 }
+
+void ModuleCamera::RotatePitch(const float angle)
+{
+	if (pitch_angle + angle >= math::pi/2 || pitch_angle + angle <= -math::pi / 2) {
+		return;
+	}
+	pitch_angle += angle;
+	float3x3 rotation_matrix = float3x3::RotateX(angle);
+	camera_frustum.up = rotation_matrix * camera_frustum.up;
+	camera_frustum.front = rotation_matrix * camera_frustum.front;
+
+	generateMatrices();
+}
+
 
 void ModuleCamera::generateMatrices()
 {

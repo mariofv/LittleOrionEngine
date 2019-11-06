@@ -31,6 +31,8 @@ public:
 	void MoveLeft(const float distance);
 	void MoveRight(const float distance);
 
+	void RotatePitch(const float angle);
+
 private:
 	void generateMatrices();
 
@@ -40,5 +42,7 @@ public:
 
 private:
 	Frustum camera_frustum;
+	
 	float aspect_ratio;
+	float pitch_angle;
 };
