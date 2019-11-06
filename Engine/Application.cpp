@@ -7,6 +7,7 @@
 #include "ModuleProgram.h"
 #include "ModuleTexture.h"
 #include "ModuleEditor.h"
+#include "ModuleCamera.h"
 #include "EngineLog.h"
 
 using namespace std;
@@ -20,6 +21,7 @@ Application::Application()
 	modules.push_back(input = new ModuleInput());
 	modules.push_back(program = new ModuleProgram());
 	modules.push_back(texture = new ModuleTexture());
+	modules.push_back(cameras = new ModuleCamera());
 	modules.push_back(exercise = new ModuleRenderExercise());
 
 	log = new EngineLog();
