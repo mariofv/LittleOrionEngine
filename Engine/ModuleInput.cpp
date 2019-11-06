@@ -1,6 +1,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleInput.h"
+#include "ModuleWindow.h"
+#include "ModuleCamera.h"
 #include "SDL.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
@@ -33,11 +35,38 @@ update_status ModuleInput::Update()
 {
 	SDL_PumpEvents();
 
+	update_status ret;
+
 	SDL_Event event;
-	SDL_PollEvent(&event);
-	ImGui_ImplSDL2_ProcessEvent(&event);
+	while (SDL_PollEvent(&event) != 0)
+	{
+		ImGui_ImplSDL2_ProcessEvent(&event);
+
+		// Esc button is pressed
+		switch (event.type)
+		{
+		case SDL_QUIT:
+			return UPDATE_STOP;
+			break;
+
+		case SDL_WINDOWEVENT:
+			if (event.window.event == SDL_WINDOWEVENT_RESIZED || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+				App->window->WindowResized(event.window.data1, event.window.data2);
+			break;
+		}
+	}
 
 	keyboard = SDL_GetKeyboardState(NULL);
+
+	if (keyboard[SDL_SCANCODE_Q]) 
+	{
+		App->cameras->MoveUp(0.1f);
+	}
+
+	if (keyboard[SDL_SCANCODE_E])
+	{
+		App->cameras->MoveDown(0.1f);
+	}
 
 	return UPDATE_CONTINUE;
 }

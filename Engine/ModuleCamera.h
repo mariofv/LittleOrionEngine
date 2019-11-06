@@ -23,6 +23,10 @@ public:
 	void SetPosition(const float3 position);
 	void SetOrientation(const float3 orientation);
 	void LookAt(const float x, const float y, const float z);
+
+	void MoveUp(float distance);
+	void MoveDown(float distance);
+
 private:
 	void generateMatrices();
 

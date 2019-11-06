@@ -107,6 +107,24 @@ void ModuleCamera::LookAt(const float x, const float y, const float z)
 
 }
 
+void ModuleCamera::MoveUp(const float distance)
+{
+	float3 new_camera_pos = camera_frustum.pos;
+	new_camera_pos.y = new_camera_pos.y + distance;
+	camera_frustum.pos = new_camera_pos;
+
+	generateMatrices();
+}
+
+void ModuleCamera::MoveDown(const float distance)
+{
+	float3 new_camera_pos = camera_frustum.pos;
+	new_camera_pos.y = new_camera_pos.y - distance;
+	camera_frustum.pos = new_camera_pos;
+
+	generateMatrices();
+}
+
 void ModuleCamera::generateMatrices()
 {
 	proj = camera_frustum.ProjectionMatrix();
