@@ -15,20 +15,8 @@ ModuleProgram::~ModuleProgram()
 // Called before render is available
 bool ModuleProgram::Init()
 {
-	if (!initVertexShader())
-	{
-		return false;
-	}
-
-	if (!initFragmentShader())
-	{
-		return false;
-	}
-
-	if (!initProgram())
-	{
-		return false;
-	}
+	loadProgram(default_program, DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH);
+	loadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH); // TODO: Exit when error in loading
 
 	return true;
 }
@@ -53,14 +41,36 @@ update_status ModuleProgram::PostUpdate()
 // Called before quitting
 bool ModuleProgram::CleanUp()
 {
-	glDeleteProgram(shader_program);
+	glDeleteProgram(default_program);
+	glDeleteProgram(texture_program);
 	return true;
 }
 
-bool ModuleProgram::initVertexShader()
+bool ModuleProgram::loadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name)
+{
+	GLuint vertex_shader;
+	GLuint fragment_shader;
+
+	if (!initVertexShader(vertex_shader, vertex_shader_file_name))
+	{
+		return false;
+	}
+
+	if (!initFragmentShader(fragment_shader, fragment_shader_file_name))
+	{
+		return false;
+	}
+
+	if (!initProgram(shader_program, vertex_shader, fragment_shader))
+	{
+		return false;
+	}
+}
+
+bool ModuleProgram::initVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name)
 {
 	LOG("Loading vertex shader");
-	const char *vertex_shader_loaded_file = loadFile(DEFAULT_VERTEX_SHADER_PATH);
+	const char *vertex_shader_loaded_file = loadFile(vertex_shader_file_name);
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	if (vertex_shader == 0) {
 		LOG("Error creating vertex shader");
@@ -85,10 +95,10 @@ bool ModuleProgram::initVertexShader()
 	return true;
 }
 
-bool ModuleProgram::initFragmentShader()
+bool ModuleProgram::initFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name)
 {
 	LOG("Loading fragment shader");
-	const char *fragment_shader_loaded_file = loadFile(DEFAULT_FRAGMENT_SHADER_PATH);
+	const char *fragment_shader_loaded_file = loadFile(fragment_shader_file_name);
 	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (fragment_shader == 0) {
 		LOG("Error creating fragment shader");
@@ -113,7 +123,7 @@ bool ModuleProgram::initFragmentShader()
 	return true;
 }
 
-bool ModuleProgram::initProgram()
+bool ModuleProgram::initProgram(GLuint &shader_program, const GLuint vertex_shader, const GLuint fragment_shader)
 {
 	LOG("Creating shader program");
 	shader_program = glCreateProgram();

@@ -86,39 +86,68 @@ bool ModuleRenderExercise::Init()
 
 update_status ModuleRenderExercise::PreUpdate()
 {
-	glUseProgram(App->program->shader_program);
-	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->shader_program, "model"),
-		1,
-		GL_TRUE,
-		&model[0][0]
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->shader_program,"view"),
-		1,
-		GL_TRUE,
-		&view[0][0]
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->shader_program,"proj"),
-		1,
-		GL_TRUE, 
-		&proj[0][0]
-	);
-	glUniform1i(glGetUniformLocation(App->program->shader_program, "u_time"), SDL_GetTicks());
-
+	
 	return UPDATE_CONTINUE;
 }
 
 // Called every draw update
 update_status ModuleRenderExercise::Update()
 {
+	glUseProgram(App->program->default_program);
+
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->default_program, "model"),
+		1,
+		GL_TRUE,
+		&model[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->default_program, "view"),
+		1,
+		GL_TRUE,
+		&view[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->default_program, "proj"),
+		1,
+		GL_TRUE,
+		&proj[0][0]
+	);
+
+	App->renderer->renderGrid(); // TODO: Cambiar colors :D
+
+	glUseProgram(0);
+
+	glUseProgram(App->program->texture_program);
+
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->texture_program, "model"),
+		1,
+		GL_TRUE,
+		&model[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->texture_program, "view"),
+		1,
+		GL_TRUE,
+		&view[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->texture_program, "proj"),
+		1,
+		GL_TRUE,
+		&proj[0][0]
+	);
+	glUniform1i(glGetUniformLocation(App->program->texture_program, "u_time"), SDL_GetTicks());
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
-	glUniform1i(glGetUniformLocation(App->program->shader_program,"texture0"),0);
+	glUniform1i(glGetUniformLocation(App->program->texture_program,"texture0"),0);
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+
+	glUseProgram(0);
 
 	return UPDATE_CONTINUE;
 }
