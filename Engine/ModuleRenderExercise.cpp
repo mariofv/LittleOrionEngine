@@ -63,7 +63,7 @@ bool ModuleRenderExercise::Init()
 
 
 	// LOADS TEXTURE
-	App->texture->loadTexture(LENA_TEXTURE_PATH); // TODO: MEMORY LEAK HERE, PENDING TO FREE IMAGE DATA 
+	Texture *lenna_texture = App->texture->loadTexture(LENA_TEXTURE_PATH);
 
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -74,8 +74,10 @@ bool ModuleRenderExercise::Init()
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, App->texture->texture_width, App->texture->texture_height, 0, GL_RGB, GL_UNSIGNED_BYTE, App->texture->texture_data);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, lenna_texture->width, lenna_texture->height, 0, GL_RGB, GL_UNSIGNED_BYTE, lenna_texture->data);
 	glGenerateMipmap(GL_TEXTURE_2D);
+
+	delete lenna_texture;
 
 	return true;
 }

@@ -1,10 +1,9 @@
 ﻿#include "Globals.h"
 #include "Application.h"
+#include "ModuleWindow.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
 #include "imgui.h"
-
-#include "ModuleWindow.h"
 #include "SDL.h"
 #include <GL/glew.h>
 

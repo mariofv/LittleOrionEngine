@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "Texture.h"
 #include <GL/glew.h>
 
 struct SDL_Texture;
@@ -19,10 +20,6 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	void loadTexture(const char* texture_path);
-
-public:
-	const unsigned char* texture_data;
-	int texture_width;
-	int texture_height;
+	
+	Texture* loadTexture(const char* texture_path) const;
 };

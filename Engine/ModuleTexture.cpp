@@ -51,7 +51,7 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
-void ModuleTexture::loadTexture(const char* texture_path)
+Texture* ModuleTexture::loadTexture(const char* texture_path) const
 {
 	ILuint image;
 	ilGenImages(1, &image);
@@ -62,18 +62,9 @@ void ModuleTexture::loadTexture(const char* texture_path)
 	ILenum error;
 	error = ilGetError();
 
-	ILinfo ImageInfo;
-	iluGetImageInfo(&ImageInfo);
-	if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
-	{
-		iluFlipImage();
-	}
+	Texture *loaded_texture = new Texture(image);
 
-	texture_data = (unsigned char*)ilGetData();
-	texture_width = ilGetInteger(IL_IMAGE_WIDTH);
-	texture_height = ilGetInteger(IL_IMAGE_HEIGHT);
-
-	return;
+	return loaded_texture;
 }
 
 
