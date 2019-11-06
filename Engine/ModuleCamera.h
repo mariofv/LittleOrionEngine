@@ -28,6 +28,8 @@ public:
 	void MoveDown(const float distance);
 	void MoveFoward(const float distance);
 	void MoveBackward(const float distance);
+	void MoveLeft(const float distance);
+	void MoveRight(const float distance);
 
 private:
 	void generateMatrices();

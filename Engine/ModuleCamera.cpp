@@ -127,18 +127,28 @@ void ModuleCamera::MoveDown(const float distance)
 
 void ModuleCamera::MoveFoward(const float distance)
 {
-	float3 new_camera_pos = camera_frustum.pos;
-	new_camera_pos = new_camera_pos + camera_frustum.front.ScaledToLength(distance);
-	camera_frustum.pos = new_camera_pos;
+	camera_frustum.pos = camera_frustum.pos + camera_frustum.front.ScaledToLength(distance);
 
 	generateMatrices();
 }
 
 void ModuleCamera::MoveBackward(const float distance)
 {
-	float3 new_camera_pos = camera_frustum.pos;
-	new_camera_pos = new_camera_pos - camera_frustum.front.ScaledToLength(distance);
-	camera_frustum.pos = new_camera_pos;
+	camera_frustum.pos = camera_frustum.pos - camera_frustum.front.ScaledToLength(distance);
+
+	generateMatrices();
+}
+
+void ModuleCamera::MoveLeft(const float distance)
+{
+	camera_frustum.pos = camera_frustum.pos - camera_frustum.WorldRight().ScaledToLength(distance);
+
+	generateMatrices();
+}
+
+void ModuleCamera::MoveRight(const float distance)
+{
+	camera_frustum.pos = camera_frustum.pos + camera_frustum.WorldRight().ScaledToLength(distance);
 
 	generateMatrices();
 }
