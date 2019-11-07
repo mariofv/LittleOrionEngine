@@ -145,7 +145,7 @@ update_status ModuleRenderExercise::Update()
 		&App->cameras->proj[0][0]
 	);
 	glUniform1i(glGetUniformLocation(App->program->texture_program, "u_time"), SDL_GetTicks());
-
+	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture);
 	glUniform1i(glGetUniformLocation(App->program->texture_program,"texture0"),0);

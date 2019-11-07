@@ -80,7 +80,9 @@
     <ClInclude Include="Engine\EngineLog.h" />
     <ClInclude Include="Engine\EngineUI.h" />
     <ClInclude Include="Engine\Globals.h" />
+    <ClInclude Include="Engine\Mesh.h" />
     <ClInclude Include="Engine\ModuleCamera.h" />
+    <ClInclude Include="Engine\ModuleModelLoader.h" />
     <ClInclude Include="Libraries\imgui\imconfig.h" />
     <ClInclude Include="Libraries\imgui\imgui.h" />
     <ClInclude Include="Libraries\imgui\imgui_impl_opengl3.h" />
@@ -164,7 +166,9 @@
     <ClCompile Include="Engine\EngineLog.cpp" />
     <ClCompile Include="Engine\EngineUI.cpp" />
     <ClCompile Include="Engine\log.cpp" />
+    <ClCompile Include="Engine\Mesh.cpp" />
     <ClCompile Include="Engine\ModuleCamera.cpp" />
+    <ClCompile Include="Engine\ModuleModelLoader.cpp" />
     <ClCompile Include="Libraries\imgui\imgui.cpp" />
     <ClCompile Include="Libraries\imgui\imgui_demo.cpp" />
     <ClCompile Include="Libraries\imgui\imgui_draw.cpp" />

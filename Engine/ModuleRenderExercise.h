@@ -22,8 +22,8 @@ public:
 	bool CleanUp();
 
 private:
-	GLuint vbo;
 	GLuint vao;
+	GLuint vbo;
 	GLuint ebo;
 	GLuint texture;
 

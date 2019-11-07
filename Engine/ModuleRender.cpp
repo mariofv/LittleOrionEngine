@@ -3,9 +3,12 @@
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
 #include "ModuleProgram.h"
-#include "EngineLog.h"
+#include "ModuleCamera.h"
+#include "ModuleModelLoader.h"
 #include "SDL.h"
 #include <GL/glew.h>
+#include "MathGeoLib.h"
+#include <assimp/scene.h>
 
 ModuleRender::ModuleRender()
 {
@@ -63,6 +66,38 @@ update_status ModuleRender::PreUpdate()
 update_status ModuleRender::Update()
 {
 	
+	glUseProgram(App->program->texture_program);
+	// CREATES MODEL MATRIX
+	float4x4 model = float4x4::FromTRS(
+		float3(0.0f, 0.0f, -4.0f),
+		float3x3::RotateY(0),
+		float3(1.0f, 1.0f, 1.0f)
+	);
+
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->texture_program, "model"),
+		1,
+		GL_TRUE,
+		&model[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->texture_program, "view"),
+		1,
+		GL_TRUE,
+		&App->cameras->view[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->texture_program, "proj"),
+		1,
+		GL_TRUE,
+		&App->cameras->proj[0][0]
+	);
+
+	for (unsigned int i = 0; i < App->model_loader->meshes.size(); ++i)
+	{
+		App->model_loader->meshes[i]->Render(App->program->texture_program);
+	}
+	glUseProgram(0);
 
 	return UPDATE_CONTINUE;
 }

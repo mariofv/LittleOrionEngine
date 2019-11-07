@@ -26,6 +26,7 @@ enum update_status
 # define WOBBLE_FRAGMENT_SHADER_PATH "./wobble.fs"
 
 # define LENA_TEXTURE_PATH "./lena.png"
+#define HOUSE_MODEL_PATH "./baker_house/BakerHouse.fbx"
 
 // Configuration -----------
 #define SCREEN_WIDTH 640
