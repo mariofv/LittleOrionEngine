@@ -69,7 +69,7 @@ bool ModuleRenderExercise::Init()
 
 
 	// LOADS TEXTURE
-	Texture *lenna_texture = App->texture->loadTexture(LENA_TEXTURE_PATH);
+	const Texture *lenna_texture = App->texture->loadTexture(LENA_TEXTURE_PATH);
 
 	glGenTextures(1, &texture);
 	glBindTexture(GL_TEXTURE_2D, texture);
@@ -166,7 +166,6 @@ update_status ModuleRenderExercise::PostUpdate()
 // Called before quitting
 bool ModuleRenderExercise::CleanUp()
 {
-	// TODO: CLEAN UP VAOS AND VBOS
 	glBindVertexArray(vao);
 
 	glDisableVertexAttribArray(0);

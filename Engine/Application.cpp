@@ -35,6 +35,8 @@ Application::~Application()
     {
         delete *it;
     }
+
+	delete log;
 }
 
 bool Application::Init()
@@ -69,8 +71,6 @@ bool Application::CleanUp()
 
 	for (list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
 		ret = (*it)->CleanUp();
-
-	delete log;
 
 	return ret;
 }

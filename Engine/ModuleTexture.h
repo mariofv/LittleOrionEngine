@@ -2,7 +2,6 @@
 #include "Module.h"
 #include "Globals.h"
 #include "Texture.h"
-#include <GL/glew.h>
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -21,5 +20,5 @@ public:
 	bool CleanUp();
 
 	
-	Texture* loadTexture(const char* texture_path) const;
+	const Texture* loadTexture(const char* texture_path) const;
 };

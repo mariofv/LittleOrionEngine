@@ -151,7 +151,7 @@ void ModuleWindow::setBrightness(const float brightness) const
 	SDL_SetWindowBrightness(window, brightness);
 }
 
-void ModuleWindow::WindowResized(const unsigned width, const unsigned height)
+void ModuleWindow::WindowResized(const unsigned width, const unsigned height) const
 {
 	App->cameras->SetAspectRatio((float)width / height);
 }

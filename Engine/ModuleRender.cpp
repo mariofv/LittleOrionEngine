@@ -117,7 +117,7 @@ bool ModuleRender::CleanUp()
 	return true;
 }
 
-void ModuleRender::renderGrid()
+void ModuleRender::renderGrid() const
 {
 	glLineWidth(1.0f);
 	float d = 200.0f;

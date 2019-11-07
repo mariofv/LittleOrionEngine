@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleTexture.h"
+#include <GL/glew.h>
 #include <IL/il.h>
 #include <IL/ilu.h>
 #include <IL/ilut.h>
@@ -51,7 +52,7 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
-Texture* ModuleTexture::loadTexture(const char* texture_path) const
+const Texture* ModuleTexture::loadTexture(const char* texture_path) const
 {
 	ILuint image;
 	ilGenImages(1, &image);

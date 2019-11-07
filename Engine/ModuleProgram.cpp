@@ -44,10 +44,11 @@ bool ModuleProgram::CleanUp()
 {
 	glDeleteProgram(default_program);
 	glDeleteProgram(texture_program);
+	glDeleteProgram(primitive_program);
 	return true;
 }
 
-bool ModuleProgram::loadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name)
+bool ModuleProgram::loadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name) const
 {
 	GLuint vertex_shader;
 	GLuint fragment_shader;
@@ -66,9 +67,11 @@ bool ModuleProgram::loadProgram(GLuint &shader_program, const char* vertex_shade
 	{
 		return false;
 	}
+
+	return true;
 }
 
-bool ModuleProgram::initVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name)
+bool ModuleProgram::initVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const
 {
 	LOG("Loading vertex shader");
 	const char *vertex_shader_loaded_file = loadFile(vertex_shader_file_name);
@@ -96,7 +99,7 @@ bool ModuleProgram::initVertexShader(GLuint &vertex_shader, const char* vertex_s
 	return true;
 }
 
-bool ModuleProgram::initFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name)
+bool ModuleProgram::initFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const
 {
 	LOG("Loading fragment shader");
 	const char *fragment_shader_loaded_file = loadFile(fragment_shader_file_name);
@@ -124,7 +127,7 @@ bool ModuleProgram::initFragmentShader(GLuint &fragment_shader, const char* frag
 	return true;
 }
 
-bool ModuleProgram::initProgram(GLuint &shader_program, const GLuint vertex_shader, const GLuint fragment_shader)
+bool ModuleProgram::initProgram(GLuint &shader_program, const GLuint vertex_shader, const GLuint fragment_shader) const
 {
 	LOG("Creating shader program");
 	shader_program = glCreateProgram();
@@ -161,7 +164,7 @@ bool ModuleProgram::initProgram(GLuint &shader_program, const GLuint vertex_shad
 	return true;
 }
 
-const char* ModuleProgram::loadFile(const char* file_name)
+const char* ModuleProgram::loadFile(const char* file_name) const
 {
 	char* data = nullptr;
 	FILE* file = nullptr;

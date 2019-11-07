@@ -71,6 +71,10 @@ bool ModuleModelLoader::CleanUp()
 	glDeleteTextures(scene->mNumMaterials, textures);
 	delete[] textures;
 
+	for (unsigned int i = 0; i < meshes.size(); ++i) 
+	{
+		delete meshes[i];
+	}
 	meshes.clear();
 
 	return true;
@@ -160,7 +164,7 @@ void ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const GLuin
 	char file_path[1024] = "./baker_house/";
 	strcat(file_path, file.data);
 
-	Texture *material_texture = App->texture->loadTexture(file_path);
+	const Texture *material_texture = App->texture->loadTexture(file_path);
 	//delete[] file_path; TODO: Ask what to do with this pointer
 
 	glBindTexture(GL_TEXTURE_2D, texture);

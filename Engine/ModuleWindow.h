@@ -32,7 +32,7 @@ public:
 	void setHeight(const int height);
 	void setBrightness(const float brightness) const;
 
-	void WindowResized(const unsigned width, const unsigned height);
+	void WindowResized(const unsigned width, const unsigned height) const;
 
 public:
 	//The window we'll be rendering to

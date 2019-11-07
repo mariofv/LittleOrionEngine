@@ -16,5 +16,5 @@ public:
 	bool CleanUp();
 
 private:
-	const Uint8 *keyboard = NULL;
+	const Uint8 *keyboard = nullptr;
 };

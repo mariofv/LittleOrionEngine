@@ -17,6 +17,6 @@ void log(const char file[], int line, const char* format, ...)
 
 	if (App != nullptr) 
 	{
-		App->log->logLine(tmp_string2);
+		App->log->logLine(tmp_string2); // TODO: Improve this
 	}
 }

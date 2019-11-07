@@ -18,7 +18,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	void renderGrid();
+	void renderGrid() const;
 
 private:
 

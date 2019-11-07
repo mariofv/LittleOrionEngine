@@ -20,11 +20,11 @@ public:
 	bool CleanUp();
 
 private:
-	bool loadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
-	bool initVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name);
-	bool initFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name);
-	bool initProgram(GLuint &shader_program, const GLuint vertex_shader, const GLuint fragment_shader);
-	const char* loadFile(const char *file_name);
+	bool loadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name) const;
+	bool initVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const;
+	bool initFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const;
+	bool initProgram(GLuint &shader_program, const GLuint vertex_shader, const GLuint fragment_shader) const;
+	const char* loadFile(const char *file_name) const;
 
 public:
 	GLuint default_program;

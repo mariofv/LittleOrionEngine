@@ -19,7 +19,7 @@ void EngineLog::logLine(const char* line)
 	buffer.append(line);
 }
 
-bool EngineLog::hasPendingData()
+bool EngineLog::hasPendingData() 
 {
 	return !buffer.empty();
 }

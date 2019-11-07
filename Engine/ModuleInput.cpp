@@ -7,6 +7,7 @@
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 
+//TODO: Camera speed must be elsewhere
 ModuleInput::ModuleInput()
 {}
 
@@ -53,6 +54,7 @@ update_status ModuleInput::Update()
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
 				App->window->WindowResized(event.window.data1, event.window.data2);
 			break;
+
 		case SDL_MOUSEMOTION:
 			if (event.motion.state & SDL_BUTTON_LMASK) {
 				if (math::Abs(event.motion.xrel) > 1.5) {
