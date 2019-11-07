@@ -53,6 +53,27 @@ update_status ModuleInput::Update()
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
 				App->window->WindowResized(event.window.data1, event.window.data2);
 			break;
+		case SDL_MOUSEMOTION:
+			if (event.motion.state & SDL_BUTTON_LMASK) {
+				if (math::Abs(event.motion.xrel) > 1.5) {
+					App->cameras->RotateYaw(event.motion.xrel * -0.01f);
+				}
+
+				if (math::Abs(event.motion.yrel) > 1.5) {
+					App->cameras->RotatePitch(event.motion.yrel * -0.01f);
+				}
+
+			}
+			break;
+		case SDL_MOUSEWHEEL:
+			if (event.wheel.y > 0) 
+			{
+				App->cameras->MoveFoward(1.f);
+			}
+			else if (event.wheel.y < 0) // scroll down
+			{
+				App->cameras->MoveBackward(1.f);
+			}
 		}
 	}
 
