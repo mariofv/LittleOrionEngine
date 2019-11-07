@@ -99,28 +99,28 @@ update_status ModuleRenderExercise::PreUpdate()
 // Called every draw update
 update_status ModuleRenderExercise::Update()
 {
-	glUseProgram(App->program->default_program);
+	glUseProgram(App->program->primitive_program);
 
 	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->default_program, "model"),
+		glGetUniformLocation(App->program->primitive_program, "model"),
 		1,
 		GL_TRUE,
 		&model[0][0]
 	);
 	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->default_program, "view"),
+		glGetUniformLocation(App->program->primitive_program, "view"),
 		1,
 		GL_TRUE,
 		&App->cameras->view[0][0]
 	);
 	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->default_program, "proj"),
+		glGetUniformLocation(App->program->primitive_program, "proj"),
 		1,
 		GL_TRUE,
 		&App->cameras->proj[0][0]
 	);
 
-	App->renderer->renderGrid(); // TODO: Cambiar colors :D
+	App->renderer->renderGrid();
 
 	glUseProgram(0);
 

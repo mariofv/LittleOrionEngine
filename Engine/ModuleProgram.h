@@ -29,5 +29,6 @@ private:
 public:
 	GLuint default_program;
 	GLuint texture_program;
+	GLuint primitive_program;
 
 };

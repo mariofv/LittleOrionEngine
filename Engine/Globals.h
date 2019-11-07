@@ -16,6 +16,10 @@ enum update_status
 // Paths -------
 # define DEFAULT_VERTEX_SHADER_PATH "./default.vs"
 # define DEFAULT_FRAGMENT_SHADER_PATH "./default.fs"
+
+# define PRIMITIVE_VERTEX_SHADER_PATH "./primitive.vs"
+# define PRIMITIVE_FRAGMENT_SHADER_PATH "./primitive.fs"
+
 # define TEXTURE_FRAGMENT_SHADER_PATH "./texture.fs"
 
 # define WOBBLE_VERTEX_SHADER_PATH "./wobble.vs"

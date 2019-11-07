@@ -17,6 +17,7 @@ bool ModuleProgram::Init()
 {
 	loadProgram(default_program, DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH);
 	loadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH); // TODO: Exit when error in loading
+	loadProgram(primitive_program, PRIMITIVE_VERTEX_SHADER_PATH, PRIMITIVE_FRAGMENT_SHADER_PATH);
 
 	return true;
 }
