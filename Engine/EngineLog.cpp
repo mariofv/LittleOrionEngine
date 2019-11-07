@@ -3,6 +3,9 @@
 #include "imgui.h"
 #include <algorithm>
 
+// TODO: Add function to LOG OpenGL errors
+// TODO: Change default constructors to Class() = default
+
 EngineLog::EngineLog()
 {
 }

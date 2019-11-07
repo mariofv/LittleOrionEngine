@@ -113,7 +113,6 @@ bool ModuleRender::CleanUp()
 {
 	LOG("Destroying renderer");
 
-
 	return true;
 }
 

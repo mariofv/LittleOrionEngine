@@ -3,6 +3,7 @@
 #include "Globals.h"
 #include <IL/il.h>
 
+
 class Texture
 {
 public:

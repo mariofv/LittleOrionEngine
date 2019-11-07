@@ -6,7 +6,7 @@
 #include "SDL.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
-
+#include <GL/glew.h>
 //TODO: Camera speed must be elsewhere
 ModuleInput::ModuleInput()
 {}

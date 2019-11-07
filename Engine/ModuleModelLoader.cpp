@@ -77,6 +77,8 @@ bool ModuleModelLoader::CleanUp()
 	}
 	meshes.clear();
 
+	//delete scene; // TODO: Why this is memory leak
+
 	return true;
 }
 
@@ -154,14 +156,13 @@ void ModuleModelLoader::LoadMeshData(const aiMesh *mesh, const GLuint &vao, cons
 	glBindVertexArray(0);
 }
 */
-
 void ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const GLuint &texture)
 {
 	aiString file;
 	aiTextureMapping mapping = aiTextureMapping_UV;
 	material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, 0);
 
-	char file_path[1024] = "./baker_house/";
+	char file_path[1024] = "./baker_house/"; //TODO: Look for model path in order to get its textures
 	strcat(file_path, file.data);
 
 	const Texture *material_texture = App->texture->loadTexture(file_path);
