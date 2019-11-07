@@ -32,6 +32,8 @@ public:
 	void MoveRight(const float distance);
 
 	void RotatePitch(const float angle);
+	void RotateYaw(const float angle);
+
 
 private:
 	void generateMatrices();

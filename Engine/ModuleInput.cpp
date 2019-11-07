@@ -98,6 +98,16 @@ update_status ModuleInput::Update()
 		App->cameras->RotatePitch(-0.1f);
 	}
 
+	if (keyboard[SDL_SCANCODE_LEFT])
+	{
+		App->cameras->RotateYaw(0.1f);
+	}
+
+	if (keyboard[SDL_SCANCODE_RIGHT])
+	{
+		App->cameras->RotateYaw(-0.1f);
+	}
+
 	return UPDATE_CONTINUE;
 }
 

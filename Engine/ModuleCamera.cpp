@@ -160,7 +160,17 @@ void ModuleCamera::RotatePitch(const float angle)
 		return;
 	}
 	pitch_angle += angle;
-	float3x3 rotation_matrix = float3x3::RotateX(angle);
+	float3x3 rotation_matrix = float3x3::identity;
+	rotation_matrix.SetRotatePart(camera_frustum.WorldRight(), angle);
+	camera_frustum.up = rotation_matrix * camera_frustum.up;
+	camera_frustum.front = rotation_matrix * camera_frustum.front;
+
+	generateMatrices();
+}
+
+void ModuleCamera::RotateYaw(const float angle)
+{
+	float3x3 rotation_matrix = float3x3::RotateY(angle);
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
 
