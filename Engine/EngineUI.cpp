@@ -318,6 +318,11 @@ void EngineUI::ShowAboutWindow()
 			ShellExecuteA(NULL, "open", "http://openil.sourceforge.net/", NULL, NULL, SW_SHOWNORMAL);
 		}
 
+		if (ImGui::MenuItem("assimp 3.3.1"))
+		{
+			ShellExecuteA(NULL, "open", "https://github.com/assimp/assimp", NULL, NULL, SW_SHOWNORMAL);
+		}
+
 
 		ImGui::Separator();
 
