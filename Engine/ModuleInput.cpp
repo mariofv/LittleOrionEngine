@@ -76,6 +76,18 @@ update_status ModuleInput::Update()
 			{
 				App->cameras->MoveBackward(1.f);
 			}
+			break;
+		case (SDL_DROPFILE): {      
+			char *dropped_filedir = event.drop.file;
+			SDL_ShowSimpleMessageBox(
+				SDL_MESSAGEBOX_INFORMATION,
+				"File dropped on window",
+				dropped_filedir,
+				App->window->window
+			);
+			SDL_free(dropped_filedir);    
+			break;
+		}
 		}
 	}
 
