@@ -162,7 +162,7 @@ void ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const GLuin
 	aiTextureMapping mapping = aiTextureMapping_UV;
 	material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, 0);
 
-	char file_path[1024] = "./baker_house/"; //TODO: Look for model path in order to get its textures
+	char file_path[1024] = "./resources/models/baker_house/"; //TODO: Look for model path in order to get its textures
 	strcat(file_path, file.data);
 
 	const Texture *material_texture = App->texture->loadTexture(file_path);

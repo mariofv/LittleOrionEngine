@@ -14,19 +14,19 @@ enum update_status
 };
 
 // Paths -------
-# define DEFAULT_VERTEX_SHADER_PATH "./default.vs"
-# define DEFAULT_FRAGMENT_SHADER_PATH "./default.fs"
+# define DEFAULT_VERTEX_SHADER_PATH "./shaders/default.vs"
+# define DEFAULT_FRAGMENT_SHADER_PATH "./shaders/default.fs"
 
-# define PRIMITIVE_VERTEX_SHADER_PATH "./primitive.vs"
-# define PRIMITIVE_FRAGMENT_SHADER_PATH "./primitive.fs"
+# define PRIMITIVE_VERTEX_SHADER_PATH "./shaders/primitive.vs"
+# define PRIMITIVE_FRAGMENT_SHADER_PATH "./shaders/primitive.fs"
 
-# define TEXTURE_FRAGMENT_SHADER_PATH "./texture.fs"
+# define TEXTURE_FRAGMENT_SHADER_PATH "./shaders/texture.fs"
 
-# define WOBBLE_VERTEX_SHADER_PATH "./wobble.vs"
-# define WOBBLE_FRAGMENT_SHADER_PATH "./wobble.fs"
+# define WOBBLE_VERTEX_SHADER_PATH "./shaders/wobble.vs"
+# define WOBBLE_FRAGMENT_SHADER_PATH "./shaders/wobble.fs"
 
-# define LENA_TEXTURE_PATH "./lena.png"
-#define HOUSE_MODEL_PATH "./baker_house/BakerHouse.fbx"
+# define LENA_TEXTURE_PATH "./resources/textures/lena.png"
+#define HOUSE_MODEL_PATH "./resources/models/baker_house/BakerHouse.fbx"
 
 // Configuration -----------
 #define SCREEN_WIDTH 640
