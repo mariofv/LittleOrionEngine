@@ -46,6 +46,8 @@ bool ModuleRender::Init()
 	LOG("OpenGL version supported %s", glGetString(GL_VERSION));
 	LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
+	glEnable(GL_DEPTH_TEST);
+
 	return true;
 }
 
@@ -58,7 +60,7 @@ update_status ModuleRender::PreUpdate()
 
 	// CLEAR COLOR AND DEPTH BUFFER
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-	
+
 	return UPDATE_CONTINUE;
 }
 

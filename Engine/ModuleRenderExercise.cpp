@@ -121,7 +121,7 @@ update_status ModuleRenderExercise::Update()
 	);
 
 	App->renderer->renderGrid();
-
+	/*
 	glUseProgram(0);
 
 	glUseProgram(App->program->texture_program);
@@ -154,7 +154,7 @@ update_status ModuleRenderExercise::Update()
 	glBindVertexArray(0);
 
 	glUseProgram(0);
-
+	*/
 	return UPDATE_CONTINUE;
 }
 
