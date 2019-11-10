@@ -10,7 +10,6 @@
 #include "imgui_impl_sdl.h"
 #include <GL/glew.h>
 
-//TODO: Camera speed must be elsewhere
 ModuleInput::ModuleInput()
 {}
 
@@ -61,11 +60,11 @@ update_status ModuleInput::Update()
 		case SDL_MOUSEMOTION:
 			if (event.motion.state & SDL_BUTTON_LMASK) {
 				if (math::Abs(event.motion.xrel) > 1.5) {
-					App->cameras->RotateYaw(event.motion.xrel * -0.01f);
+					App->cameras->RotateYaw(event.motion.xrel);
 				}
 
 				if (math::Abs(event.motion.yrel) > 1.5) {
-					App->cameras->RotatePitch(event.motion.yrel * -0.01f);
+					App->cameras->RotatePitch(event.motion.yrel);
 				}
 
 			}
@@ -73,11 +72,11 @@ update_status ModuleInput::Update()
 		case SDL_MOUSEWHEEL:
 			if (event.wheel.y > 0) 
 			{
-				App->cameras->MoveFoward(1.f);
+				App->cameras->MoveFoward();
 			}
 			else if (event.wheel.y < 0) // scroll down
 			{
-				App->cameras->MoveBackward(1.f);
+				App->cameras->MoveBackward();
 			}
 			break;
 		case (SDL_DROPFILE): {      
@@ -93,53 +92,55 @@ update_status ModuleInput::Update()
 
 	if (keyboard[SDL_SCANCODE_Q]) 
 	{
-		App->cameras->MoveUp(0.1f);
+		App->cameras->MoveUp();
 	}
 
 	if (keyboard[SDL_SCANCODE_E])
 	{
-		App->cameras->MoveDown(0.1f);
+		App->cameras->MoveDown();
 	}
 
 	if (keyboard[SDL_SCANCODE_W])
 	{
-		App->cameras->MoveFoward(0.1f);
+		App->cameras->MoveFoward();
 	}
 
 	if (keyboard[SDL_SCANCODE_S])
 	{
-		App->cameras->MoveBackward(0.1f);
+		App->cameras->MoveBackward();
 	}
 
 	if (keyboard[SDL_SCANCODE_A])
 	{
-		App->cameras->MoveLeft(0.1f);
+		App->cameras->MoveLeft();
 	}
 
 	if (keyboard[SDL_SCANCODE_D])
 	{
-		App->cameras->MoveRight(0.1f);
+		App->cameras->MoveRight();
 	}
 
 	if (keyboard[SDL_SCANCODE_UP])
 	{
-		App->cameras->RotatePitch(0.1f);
+		App->cameras->RotatePitch(1.f);
 	}
 
 	if (keyboard[SDL_SCANCODE_DOWN])
 	{
-		App->cameras->RotatePitch(-0.1f);
+		App->cameras->RotatePitch(1.f);
 	}
 
 	if (keyboard[SDL_SCANCODE_LEFT])
 	{
-		App->cameras->RotateYaw(0.1f);
+		App->cameras->RotateYaw(1.f);
 	}
 
 	if (keyboard[SDL_SCANCODE_RIGHT])
 	{
-		App->cameras->RotateYaw(-0.1f);
+		App->cameras->RotateYaw(1.f);
 	}
+
+	App->cameras->SetSpeedUp(keyboard[SDL_SCANCODE_LSHIFT]);
 
 	return UPDATE_CONTINUE;
 }

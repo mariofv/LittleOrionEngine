@@ -108,8 +108,9 @@ void ModuleCamera::LookAt(const float x, const float y, const float z)
 
 }
 
-void ModuleCamera::MoveUp(const float distance)
+void ModuleCamera::MoveUp()
 {
+	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
 	float3 new_camera_pos = camera_frustum.pos;
 	new_camera_pos.y = new_camera_pos.y + distance;
 	camera_frustum.pos = new_camera_pos;
@@ -117,8 +118,9 @@ void ModuleCamera::MoveUp(const float distance)
 	generateMatrices();
 }
 
-void ModuleCamera::MoveDown(const float distance)
+void ModuleCamera::MoveDown()
 {
+	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
 	float3 new_camera_pos = camera_frustum.pos;
 	new_camera_pos.y = new_camera_pos.y - distance;
 	camera_frustum.pos = new_camera_pos;
@@ -126,29 +128,33 @@ void ModuleCamera::MoveDown(const float distance)
 	generateMatrices();
 }
 
-void ModuleCamera::MoveFoward(const float distance)
+void ModuleCamera::MoveFoward()
 {
+	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
 	camera_frustum.pos = camera_frustum.pos + camera_frustum.front.ScaledToLength(distance);
 
 	generateMatrices();
 }
 
-void ModuleCamera::MoveBackward(const float distance)
+void ModuleCamera::MoveBackward()
 {
+	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
 	camera_frustum.pos = camera_frustum.pos - camera_frustum.front.ScaledToLength(distance);
 
 	generateMatrices();
 }
 
-void ModuleCamera::MoveLeft(const float distance)
+void ModuleCamera::MoveLeft()
 {
+	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
 	camera_frustum.pos = camera_frustum.pos - camera_frustum.WorldRight().ScaledToLength(distance);
 
 	generateMatrices();
 }
 
-void ModuleCamera::MoveRight(const float distance)
+void ModuleCamera::MoveRight()
 {
+	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
 	camera_frustum.pos = camera_frustum.pos + camera_frustum.WorldRight().ScaledToLength(distance);
 
 	generateMatrices();
@@ -156,12 +162,13 @@ void ModuleCamera::MoveRight(const float distance)
 
 void ModuleCamera::RotatePitch(const float angle)
 {
-	if (pitch_angle + angle >= math::pi/2 || pitch_angle + angle <= -math::pi / 2) {
+	const float adjusted_angle = angle * -CAMERA_ROTATION_SPEED;
+	if (pitch_angle + adjusted_angle >= math::pi/2 || pitch_angle + adjusted_angle <= -math::pi / 2) {
 		return;
 	}
-	pitch_angle += angle;
+	pitch_angle += adjusted_angle;
 	float3x3 rotation_matrix = float3x3::identity;
-	rotation_matrix.SetRotatePart(camera_frustum.WorldRight(), angle);
+	rotation_matrix.SetRotatePart(camera_frustum.WorldRight(), adjusted_angle);
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
 
@@ -170,13 +177,18 @@ void ModuleCamera::RotatePitch(const float angle)
 
 void ModuleCamera::RotateYaw(const float angle)
 {
-	float3x3 rotation_matrix = float3x3::RotateY(angle);
+	const float adjusted_angle = angle * -CAMERA_ROTATION_SPEED;
+	float3x3 rotation_matrix = float3x3::RotateY(adjusted_angle);
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
 
 	generateMatrices();
 }
 
+void ModuleCamera::SetSpeedUp(const bool is_speeding_up)
+{
+	speed_up = is_speeding_up ? SPEED_UP_FACTOR : 1;
+}
 
 void ModuleCamera::generateMatrices()
 {

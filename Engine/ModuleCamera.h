@@ -24,21 +24,26 @@ public:
 	void SetOrientation(const float3 orientation);
 	void LookAt(const float x, const float y, const float z);
 
-	void MoveUp(const float distance);
-	void MoveDown(const float distance);
-	void MoveFoward(const float distance);
-	void MoveBackward(const float distance);
-	void MoveLeft(const float distance);
-	void MoveRight(const float distance);
+	void MoveUp();
+	void MoveDown();
+	void MoveFoward();
+	void MoveBackward();
+	void MoveLeft();
+	void MoveRight();
 
 	void RotatePitch(const float angle);
 	void RotateYaw(const float angle);
 
+	void SetSpeedUp(const bool is_speeding_up);
 
 private:
 	void generateMatrices();
 
 public:
+	#define CAMERA_MOVEMENT_SPEED 0.1f
+	#define CAMERA_ROTATION_SPEED 0.01f
+	#define SPEED_UP_FACTOR 10
+
 	float4x4 proj;
 	float4x4 view;
 
@@ -47,4 +52,5 @@ private:
 	
 	float aspect_ratio;
 	float pitch_angle;
+	float speed_up;
 };
