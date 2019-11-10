@@ -22,8 +22,8 @@ bool ModuleRenderExercise::Init()
 {
 	// CREATES MODEL MATRIX
 	model = float4x4::FromTRS(
-		float3(0.0f, 0.0f, -4.0f),
-		float3x3::RotateY(0),
+		float3(0.0f, 0.0f, 0.0f),
+		float3x3::identity,
 		float3(1.0f, 1.0f, 1.0f)
 	);
 

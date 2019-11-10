@@ -71,8 +71,8 @@ update_status ModuleRender::Update()
 	glUseProgram(App->program->texture_program);
 	// CREATES MODEL MATRIX
 	float4x4 model = float4x4::FromTRS(
-		float3(0.0f, 0.0f, -4.0f),
-		float3x3::RotateY(0),
+		float3(0.0f, 0.0f, 0.0f),
+		float3x3::identity,
 		float3(1.0f, 1.0f, 1.0f)
 	);
 
@@ -100,6 +100,8 @@ update_status ModuleRender::Update()
 		App->model_loader->meshes[i]->Render(App->program->texture_program);
 	}
 	glUseProgram(0);
+
+	App->model_loader->model_bounding_box->Render(App->program->default_program);
 
 	return UPDATE_CONTINUE;
 }

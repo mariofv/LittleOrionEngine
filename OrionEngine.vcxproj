@@ -76,6 +76,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\BoundingBox.h" />
     <ClInclude Include="Engine\Application.h" />
     <ClInclude Include="Engine\EngineLog.h" />
     <ClInclude Include="Engine\EngineUI.h" />
@@ -162,6 +163,7 @@
     <ClInclude Include="Engine\Texture.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\BoundingBox.cpp" />
     <ClCompile Include="Engine\Application.cpp" />
     <ClCompile Include="Engine\EngineLog.cpp" />
     <ClCompile Include="Engine\EngineUI.cpp" />
