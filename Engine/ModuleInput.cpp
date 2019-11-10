@@ -2,11 +2,14 @@
 #include "Application.h"
 #include "ModuleInput.h"
 #include "ModuleWindow.h"
+#include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
+
 #include "SDL.h"
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include <GL/glew.h>
+
 //TODO: Camera speed must be elsewhere
 ModuleInput::ModuleInput()
 {}
@@ -79,12 +82,7 @@ update_status ModuleInput::Update()
 			break;
 		case (SDL_DROPFILE): {      
 			char *dropped_filedir = event.drop.file;
-			SDL_ShowSimpleMessageBox(
-				SDL_MESSAGEBOX_INFORMATION,
-				"File dropped on window",
-				dropped_filedir,
-				App->window->window
-			);
+			App->model_loader->SwapCurrentModel(dropped_filedir);
 			SDL_free(dropped_filedir);    
 			break;
 		}

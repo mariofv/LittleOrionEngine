@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include <GL/glew.h>
 #include <vector>
+#include <string>
 
 struct aiMesh;
 struct aiMaterial;
@@ -21,17 +22,19 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
+	void SwapCurrentModel(const char *new_model_file_path);
+
 public:
 	std::vector<Mesh*> meshes;
-	/*
-	GLuint *vaos = nullptr;
-	GLuint *vbos = nullptr;
-	GLuint *ibos = nullptr;
-	*/
 	GLuint *textures = nullptr;
 	const aiScene* scene = nullptr;
 
 private:
+	void UnloadCurrentModel();
+	bool LoadModel(const char *new_model_file_path);
+
 	void LoadMeshData(const aiMesh *mesh);
-	void LoadMaterialData(const aiMaterial *material, const GLuint &texture);
+	void LoadMaterialData(const aiMaterial *material, const GLuint &texture, std::string model_base_path);
+
+	std::string GetModelBasePath(const char *model_file_path) const;
 };

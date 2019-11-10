@@ -3,6 +3,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleTexture.h"
 #include "Texture.h"
+
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -11,7 +12,7 @@
 
 ModuleModelLoader::ModuleModelLoader()
 {
-
+	
 }
 
 // Destructor
@@ -22,28 +23,7 @@ ModuleModelLoader::~ModuleModelLoader()
 // Called before render is available
 bool ModuleModelLoader::Init()
 {
-	LOG("Loading house baker model");
-	scene = aiImportFile(HOUSE_MODEL_PATH, aiProcessPreset_TargetRealtime_MaxQuality);
-	if (scene == NULL) 
-	{
-		const char *error = aiGetErrorString();
-		LOG("Error loading model %s", HOUSE_MODEL_PATH);
-		LOG(error);
-		return false;
-	}
-
-	textures = new GLuint[scene->mNumMaterials];
-	glGenTextures(scene->mNumMaterials, textures);
-	for (unsigned i = 0; i < scene->mNumMaterials; ++i)
-	{
-		LoadMaterialData(scene->mMaterials[i], textures[i]);
-	}
-
-	for (unsigned int i = 0; i < scene->mNumMeshes; ++i)
-	{
-		LoadMeshData(scene->mMeshes[i]);
-	}
-
+	LoadModel(HOUSE_MODEL_PATH);
 	return true;
 }
 
@@ -68,10 +48,23 @@ update_status ModuleModelLoader::PostUpdate()
 // Called before quitting
 bool ModuleModelLoader::CleanUp()
 {
+	UnloadCurrentModel();
+	return true;
+}
+
+
+void ModuleModelLoader::SwapCurrentModel(const char *new_model_file_path)
+{
+	UnloadCurrentModel();
+	LoadModel(new_model_file_path);
+}
+
+void ModuleModelLoader::UnloadCurrentModel()
+{
 	glDeleteTextures(scene->mNumMaterials, textures);
 	delete[] textures;
 
-	for (unsigned int i = 0; i < meshes.size(); ++i) 
+	for (unsigned int i = 0; i < meshes.size(); ++i)
 	{
 		delete meshes[i];
 	}
@@ -79,12 +72,43 @@ bool ModuleModelLoader::CleanUp()
 
 	//delete scene; // TODO: Why this is memory leak
 
-	return true;
+}
+
+bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
+{
+	LOG("Assimp: Loading model %s", new_model_file_path);
+	scene = aiImportFile(new_model_file_path, aiProcessPreset_TargetRealtime_MaxQuality);
+	if (scene == NULL)
+	{
+		const char *error = aiGetErrorString();
+		LOG("Assimp: Error loading model %s ", new_model_file_path);
+		LOG(error);
+		return false;
+	}
+
+	LOG("Loading model materials");
+	textures = new GLuint[scene->mNumMaterials];
+	glGenTextures(scene->mNumMaterials, textures);
+	std::string model_base_path = GetModelBasePath(new_model_file_path);
+	for (unsigned i = 0; i < scene->mNumMaterials; ++i)
+	{
+		LOG("Loading material %d", i);
+		LoadMaterialData(scene->mMaterials[i], textures[i], model_base_path);
+	}
+
+	LOG("Loading model meshes");
+	for (unsigned int i = 0; i < scene->mNumMeshes; ++i)
+	{
+		LOG("Loading mesh %d", i);
+		LoadMeshData(scene->mMeshes[i]);
+	}
+
 }
 
 void ModuleModelLoader::LoadMeshData(const aiMesh *mesh)
 {
 	std::vector<Mesh::Vertex> vertices;
+	LOG("Loading mesh vertices");
 	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
 	{
 		Mesh::Vertex vertex;
@@ -93,6 +117,7 @@ void ModuleModelLoader::LoadMeshData(const aiMesh *mesh)
 		vertices.push_back(vertex);
 	}
 
+	LOG("Loading mesh indices");
 	std::vector<unsigned int> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; ++i)
 	{
@@ -102,72 +127,22 @@ void ModuleModelLoader::LoadMeshData(const aiMesh *mesh)
 		indices.push_back(mesh->mFaces[i].mIndices[2]);
 	}
 
+	LOG("Mesh uses material %d", mesh->mMaterialIndex);
 	std::vector<unsigned int> mesh_textures;
 	mesh_textures.push_back(textures[mesh->mMaterialIndex]);
 
 	meshes.push_back(new Mesh(vertices, indices, mesh_textures));
 }
 
-/*
-void ModuleModelLoader::LoadMeshData(const aiMesh *mesh, const GLuint &vao, const GLuint &vbo, const GLuint &ibo)
-{
-	glBindVertexArray(vao);
-
-	// LOAD POSITIONS AND TEXTURE COORDINATES
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 5 * mesh->mNumVertices, NULL, GL_STATIC_DRAW);
-
-	// Add vertex positions
-	glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(float) * 3 * mesh->mNumVertices, mesh->mVertices);
-
-	// Add texture coordinates
-	float* mapped_buffer = (float *)glMapBufferRange(GL_ARRAY_BUFFER, sizeof(float) * 3 * mesh->mNumVertices, sizeof(float) * 2 * mesh->mNumVertices, GL_MAP_WRITE_BIT);
-	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
-	{
-		memcpy(&mapped_buffer[i * 2], &mesh->mTextureCoords[0][i], sizeof(float)*2);
-	}
-	glUnmapBuffer(GL_ARRAY_BUFFER);
-	glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-	// LOAD INDICES
-	int num_three_vertex_faces = 0;
-	for (unsigned int i = 0; i < mesh->mNumFaces; ++i)
-	{
-		if (mesh->mFaces[i].mNumIndices == 3) {
-			++num_three_vertex_faces;
-		}
-	}
-	
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ibo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(unsigned int) * 3 * num_three_vertex_faces, NULL, GL_STATIC_DRAW);
-	unsigned int* mapped_buffer_i = (unsigned int *)glMapBufferRange(GL_ELEMENT_ARRAY_BUFFER, 0, sizeof(unsigned int) * 3 * num_three_vertex_faces, GL_MAP_WRITE_BIT);
-	for (unsigned int i = 0; i < mesh->mNumFaces; ++i)
-	{
-		assert(mesh->mFaces[i].mNumIndices == 3);
-		memcpy(&mapped_buffer_i[i * 3], &mesh->mFaces[i].mIndices, sizeof(unsigned int) * 3);
-	}
-	glUnmapBuffer(GL_ELEMENT_ARRAY_BUFFER);
-
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 0, (void*)0); // position
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 0, (void*)(3 * sizeof(float) * mesh->mNumVertices)); // uv
-	glEnableVertexAttribArray(0);
-	glEnableVertexAttribArray(1);
-
-	glBindVertexArray(0);
-}
-*/
-void ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const GLuint &texture)
+void ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const GLuint &texture, std::string model_base_path)
 {
 	aiString file;
 	aiTextureMapping mapping = aiTextureMapping_UV;
 	material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, 0);
 
-	char file_path[1024] = "./resources/models/baker_house/"; //TODO: Look for model path in order to get its textures
-	strcat(file_path, file.data);
-
-	const Texture *material_texture = App->texture->loadTexture(file_path);
-	//delete[] file_path; TODO: Ask what to do with this pointer
-
+	model_base_path = model_base_path + file.data;
+	LOG("Loading material texture %s.", model_base_path.c_str());
+	const Texture *material_texture = App->texture->loadTexture(model_base_path.c_str());
 	glBindTexture(GL_TEXTURE_2D, texture);
 
 	// set the texture wrapping/filtering options (on the currently bound texture object)
@@ -182,4 +157,14 @@ void ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const GLuin
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	delete material_texture;
+}
+
+std::string ModuleModelLoader::GetModelBasePath(const char *model_file_path) const
+{
+	std::string file_string = std::string(model_file_path);
+	
+	std::size_t found = file_string.find_last_of("/\\");
+	std::string model_base_path = file_string.substr(0, found + 1);
+
+	return model_base_path;
 }

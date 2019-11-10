@@ -27,6 +27,7 @@ enum update_status
 
 # define LENA_TEXTURE_PATH "./resources/textures/lena.png"
 #define HOUSE_MODEL_PATH "./resources/models/baker_house/BakerHouse.fbx"
+#define UMBREON_MODEL_PATH "./resources/models/Umbreon/Umbreon.fbx"
 
 // Configuration -----------
 #define SCREEN_WIDTH 640
