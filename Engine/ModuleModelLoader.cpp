@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleModelLoader.h"
+#include "ModuleCamera.h"
 #include "ModuleTexture.h"
 #include "Texture.h"
 
@@ -110,7 +111,7 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 
 	LOG("Computing model bounding box");
 	ComputeBoundingBox();
-
+	//App->cameras->LookAt(model_bounding_box->center);
 	return true;
 }
 

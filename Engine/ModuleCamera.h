@@ -22,6 +22,7 @@ public:
 	void SetFarDistance(const float distance);
 	void SetPosition(const float3 position);
 	void SetOrientation(const float3 orientation);
+	void LookAt(const float3 focus);
 	void LookAt(const float x, const float y, const float z);
 
 	void MoveUp();

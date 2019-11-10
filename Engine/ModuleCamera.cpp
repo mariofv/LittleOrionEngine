@@ -23,7 +23,7 @@ bool ModuleCamera::Init()
 
 	// CREATES PROJECTION MATRIX
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
-	camera_frustum.pos = float3::zero;
+	camera_frustum.pos = float3::unitX;
 	camera_frustum.front = -float3::unitZ;
 	camera_frustum.up = float3::unitY;
 	camera_frustum.nearPlaneDistance = 1.f;
@@ -98,14 +98,24 @@ void ModuleCamera::SetPosition(const float3 position)
 
 void ModuleCamera::SetOrientation(const float3 orientation)
 {
+	float3x3 rotation_matrix = float3x3::LookAt(camera_frustum.front, orientation, camera_frustum.up, float3::unitY);
+	camera_frustum.front = rotation_matrix * camera_frustum.front;
+	camera_frustum.up = rotation_matrix * camera_frustum.up;
+
+	generateMatrices();
+}
+
+void ModuleCamera::LookAt(const float3 focus)
+{
+	float3 look_direction = (focus - camera_frustum.pos).Normalized();
+	SetOrientation(look_direction);
 
 	generateMatrices();
 }
 
 void ModuleCamera::LookAt(const float x, const float y, const float z)
 {
-	generateMatrices();
-
+	LookAt(float3(x, y, z));
 }
 
 void ModuleCamera::MoveUp()

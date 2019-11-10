@@ -15,15 +15,13 @@ public:
 	void Render(GLuint shader_program) const;
 
 public:
-
+	float3 size;
+	float3 center;
+	float4x4 model_matrix;
 private:
 	GLuint vao;
 	GLuint vbo;
 	GLuint ebo;
-
-	float3 size;
-	float3 center;
-	float4x4 model_matrix;
 };
 
 #endif // _BOUNDINGBOX_H

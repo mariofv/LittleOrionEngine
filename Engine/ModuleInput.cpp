@@ -140,6 +140,11 @@ update_status ModuleInput::Update()
 		App->cameras->RotateYaw(1.f);
 	}
 
+	if (keyboard[SDL_SCANCODE_F])
+	{
+		App->cameras->LookAt(App->model_loader->model_bounding_box->center);
+	}
+
 	App->cameras->SetSpeedUp(keyboard[SDL_SCANCODE_LSHIFT]);
 
 	return UPDATE_CONTINUE;
