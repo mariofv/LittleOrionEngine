@@ -140,23 +140,28 @@ void ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const GLuin
 	aiTextureMapping mapping = aiTextureMapping_UV;
 	material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, 0);
 
+	LOG("Loading material texture in described path %s.", file.data);
+	if (App->texture->loadTexture(file.data, texture))
+	{
+		LOG("Material loaded correctly.");
+		return;
+	}
+
 	model_base_path = model_base_path + file.data;
-	LOG("Loading material texture %s.", model_base_path.c_str());
-	const Texture *material_texture = App->texture->loadTexture(model_base_path.c_str());
-	glBindTexture(GL_TEXTURE_2D, texture);
+	LOG("Loading material texture in model folder path %s.", model_base_path.c_str());
+	if (App->texture->loadTexture(model_base_path.c_str(), texture))
+	{
+		LOG("Material loaded correctly.");
+		return;
+	}
 
-	// set the texture wrapping/filtering options (on the currently bound texture object)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, material_texture->width, material_texture->height, 0, GL_RGB, GL_UNSIGNED_BYTE, material_texture->data);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	delete material_texture;
+	std::string textures_path = std::string("./Textures/") + file.data;
+	LOG("Loading material texture in textures folder %s.", textures_path.c_str());
+	if (App->texture->loadTexture(textures_path.c_str(), texture))
+	{
+		LOG("Material loaded correctly.");
+		return;
+	}
 }
 
 std::string ModuleModelLoader::GetModelBasePath(const char *model_file_path) const
