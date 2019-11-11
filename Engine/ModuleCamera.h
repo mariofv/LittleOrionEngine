@@ -48,6 +48,8 @@ public:
 
 	void Center(const BoundingBox *bounding_box);
 
+	void ShowCameraOptions();
+
 private:
 	void generateMatrices();
 

@@ -4,6 +4,7 @@
 #include "ModuleCamera.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
+
 #include "imgui.h"
 #include "SDL.h"
 #include <GL/glew.h>
@@ -22,12 +23,6 @@ void EngineUI::InitUI()
 	show_configuration_window = false;
 	show_debug_window = false;
 	show_about_window = false;
-
-	fullscreen = FULLSCREEN;
-	bordered = BORDERED;
-	resizable = RESIZABLE;
-	SDL_GetWindowSize(App->window->window, &width, &height);
-	brightness = SDL_GetWindowBrightness(App->window->window);
 }
 
 void EngineUI::ShowEngineUI()
@@ -64,85 +59,13 @@ void EngineUI::ShowConfigurationWindow()
 {
 	if (ImGui::Begin("Configuration"))
 	{
-		ShowWindowOptions();
-		ShowCameraOptions();
+		App->window->ShowWindowOptions();
+		App->cameras->ShowCameraOptions();
 	}
 	ImGui::End();
 }
 
-void EngineUI::ShowWindowOptions()
-{
-	if (ImGui::CollapsingHeader("Window")) {
-		if (ImGui::SliderFloat("Brightness", &brightness, 0, 1))
-		{
-			App->window->setBrightness(brightness);
-		}
 
-		if (ImGui::SliderInt("Width", &width, SCREEN_WIDTH, App->window->screen_width))
-		{
-			App->window->setWidth(width);
-		}
-
-		if (ImGui::SliderInt("Height", &height, SCREEN_HEIGHT, App->window->screen_height))
-		{
-			App->window->setHeight(height);
-		}
-
-		if (ImGui::Combo("Window style", &fullscreen, "Windowed\0Fullscreen desktop\0Fullscreen\0"))
-		{
-			switch (fullscreen)
-			{
-			case 0:
-				App->window->setWindowed();
-				break;
-			case 1:
-				App->window->setFullScreenDesktop();
-				break;
-			case 2:
-				App->window->setFullScreen();
-				break;
-			}
-		}
-
-		if (ImGui::Checkbox("Bordered", &bordered))
-		{
-			App->window->setBordered(bordered);
-		}
-		ImGui::SameLine();
-
-		if (ImGui::Checkbox("Resizable", &resizable))
-		{
-			App->window->setResizable(resizable);
-		}
-	}
-	
-}
-
-void EngineUI::ShowCameraOptions()
-{
-	if (ImGui::CollapsingHeader("Camera"))
-	{
-		if (ImGui::SliderFloat("FOV", &fov, 0, 2*3.14f))
-		{
-			App->cameras->SetFOV(fov);
-		}
-
-		if (ImGui::SliderFloat("Aspect Ratio", &aspect_ratio, 0, 10))
-		{
-			App->cameras->SetAspectRatio(aspect_ratio);
-		}
-
-		if (ImGui::SliderFloat("Near plane", &near_plane, 1, far_plane + 1))
-		{
-			App->cameras->SetNearDistance(near_plane);
-		}
-
-		if (ImGui::SliderFloat("Far plane", &far_plane, near_plane + 1, near_plane + 1000))
-		{
-			App->cameras->SetFarDistance(far_plane);
-		}
-	}
-}
 
 void EngineUI::ShowDebugWindow()
 {

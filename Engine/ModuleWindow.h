@@ -32,7 +32,9 @@ public:
 	void setHeight(const int height);
 	void setBrightness(const float brightness) const;
 
-	void WindowResized(const unsigned width, const unsigned height) const;
+	void WindowResized(const unsigned width, const unsigned height);
+
+	void ShowWindowOptions();
 
 public:
 	//The window we'll be rendering to
@@ -51,6 +53,12 @@ public:
 private:
 	int height;
 	int width;
+
+	int fullscreen;
+	bool bordered;
+	bool resizable;
+
+	float brightness;
 };
 
 #endif // __ModuleWindow_H__

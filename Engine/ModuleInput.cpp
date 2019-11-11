@@ -59,7 +59,7 @@ update_status ModuleInput::Update()
 			break;
 
 		case SDL_MOUSEMOTION:
-			if (event.motion.state & SDL_BUTTON_LMASK) {
+			if (event.motion.state & SDL_BUTTON_RMASK) {
 				if (math::Abs(event.motion.xrel) > 1.5) {
 					App->cameras->MouseXMotion(event.motion.xrel);
 				}

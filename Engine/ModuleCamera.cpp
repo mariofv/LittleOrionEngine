@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "ModuleCamera.h"
 #include "ModuleWindow.h"
+
+#include "imgui.h"
 #include "SDL.h"
 
 ModuleCamera::ModuleCamera()
@@ -267,4 +269,30 @@ void ModuleCamera::generateMatrices()
 {
 	proj = camera_frustum.ProjectionMatrix();
 	view = camera_frustum.ViewMatrix();
+}
+
+void ModuleCamera::ShowCameraOptions()
+{
+	if (ImGui::CollapsingHeader("Camera"))
+	{
+		if (ImGui::SliderFloat("FOV", &camera_frustum.horizontalFov, 0, 2 * 3.14f))
+		{
+			App->cameras->SetFOV(camera_frustum.horizontalFov);
+		}
+
+		if (ImGui::SliderFloat("Aspect Ratio", &aspect_ratio, 0, 10))
+		{
+			App->cameras->SetAspectRatio(aspect_ratio);
+		}
+
+		if (ImGui::SliderFloat("Near plane", &camera_frustum.nearPlaneDistance, 1, camera_frustum.farPlaneDistance + 1))
+		{
+			App->cameras->SetNearDistance(camera_frustum.nearPlaneDistance);
+		}
+
+		if (ImGui::SliderFloat("Far plane", &camera_frustum.farPlaneDistance, camera_frustum.nearPlaneDistance + 1, camera_frustum.nearPlaneDistance + 1000))
+		{
+			App->cameras->SetFarDistance(camera_frustum.farPlaneDistance);
+		}
+	}
 }
