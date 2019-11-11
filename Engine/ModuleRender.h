@@ -20,8 +20,8 @@ public:
 
 	void renderGrid() const;
 
-private:
-
+public:
+	bool bounding_box_visible = false;
 private:
 	void* context;
 };

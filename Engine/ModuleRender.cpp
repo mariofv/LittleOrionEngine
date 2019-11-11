@@ -101,7 +101,10 @@ update_status ModuleRender::Update()
 	}
 	glUseProgram(0);
 
-	App->model_loader->model_bounding_box->Render(App->program->default_program);
+	if (bounding_box_visible)
+	{
+		App->model_loader->model_bounding_box->Render(App->program->default_program);
+	}
 
 	return UPDATE_CONTINUE;
 }

@@ -4,6 +4,7 @@
 #include "ModuleWindow.h"
 #include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
+#include "ModuleRender.h"
 
 #include "SDL.h"
 #include "imgui.h"
@@ -90,6 +91,14 @@ update_status ModuleInput::Update()
 			{
 				App->cameras->SetSpeedUp(true);
 			}
+			else if (event.key.keysym.sym == SDLK_f)
+			{
+				App->cameras->LookAt(App->model_loader->model_bounding_box->center);
+			}
+			else if (event.key.keysym.sym == SDLK_b)
+			{
+				App->renderer->bounding_box_visible = !App->renderer->bounding_box_visible;
+			}
 			break;
 
 		case SDL_KEYUP:
@@ -100,10 +109,6 @@ update_status ModuleInput::Update()
 			else if (event.key.keysym.sym == SDLK_LSHIFT)
 			{
 				App->cameras->SetSpeedUp(false);
-			}
-			else if (event.key.keysym.sym == SDLK_f)
-			{
-				App->cameras->LookAt(App->model_loader->model_bounding_box->center);
 			}
 			break;
 
