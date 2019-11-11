@@ -262,7 +262,7 @@ void ModuleCamera::SetOrbit(const bool is_orbiting)
 
 void ModuleCamera::SetSpeedUp(const bool is_speeding_up)
 {
-	speed_up = is_speeding_up ? SPEED_UP_FACTOR : 1;
+	speed_up = is_speeding_up ? SPEED_UP_FACTOR : 1.f;
 }
 
 void ModuleCamera::generateMatrices()

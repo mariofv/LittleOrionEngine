@@ -11,6 +11,7 @@
 #include "ModuleModelLoader.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
+#include "TimerUs.h"
 
 using namespace std;
 
@@ -29,6 +30,8 @@ Application::Application()
 	
 	log = new EngineLog();
 	ui = new EngineUI();
+
+	app_timer = new TimerUs();
 }
 
 Application::~Application()
@@ -40,14 +43,20 @@ Application::~Application()
 
 	delete ui;
 	delete log;
+	delete app_timer;
 }
 
 bool Application::Init()
 {
 	bool ret = true;
 
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
+	app_timer->Start();
+	for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it) 
+	{
 		ret = (*it)->Init();
+	}
+
+	const float elapsed_time = app_timer->Read();
 
 	return ret;
 }

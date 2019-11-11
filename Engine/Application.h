@@ -1,6 +1,7 @@
 #pragma once
 
-#include<list>
+#include <list>
+
 #include "Globals.h"
 #include "Module.h"
 
@@ -17,6 +18,8 @@ class ModuleModelLoader;
 
 class EngineLog;
 class EngineUI;
+
+class TimerUs;
 
 class Application
 {
@@ -42,6 +45,8 @@ public:
 
 	EngineUI* ui = nullptr;
 	EngineLog* log = nullptr;
+
+	TimerUs *app_timer = nullptr;
 
 private:
 

@@ -161,6 +161,8 @@
     <ClInclude Include="Engine\ModuleTexture.h" />
     <ClInclude Include="Engine\ModuleWindow.h" />
     <ClInclude Include="Engine\Texture.h" />
+    <ClInclude Include="Engine\Timer.h" />
+    <ClInclude Include="Engine\TimerUs.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\BoundingBox.cpp" />
@@ -218,6 +220,8 @@
     <ClCompile Include="Engine\ModuleTexture.cpp" />
     <ClCompile Include="Engine\ModuleWindow.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
+    <ClCompile Include="Engine\Timer.cpp" />
+    <ClCompile Include="Engine\TimerUs.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Libraries\MathGeoLib\include\Geometry\KDTree.inl" />
