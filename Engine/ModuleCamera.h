@@ -1,6 +1,8 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "BoundingBox.h"
+
 #include "Geometry/Frustum.h"
 #include "MathGeoLib.h"
 
@@ -37,13 +39,15 @@ public:
 
 	void SetSpeedUp(const bool is_speeding_up);
 
+	void Center(const BoundingBox *bounding_box);
+
 private:
 	void generateMatrices();
 
 public:
-	#define CAMERA_MOVEMENT_SPEED 0.1f
+	#define CAMERA_MOVEMENT_SPEED 0.25f
 	#define CAMERA_ROTATION_SPEED 0.01f
-	#define SPEED_UP_FACTOR 10
+	#define SPEED_UP_FACTOR 2
 
 	float4x4 proj;
 	float4x4 view;

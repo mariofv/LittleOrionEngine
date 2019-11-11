@@ -118,6 +118,20 @@ void ModuleCamera::LookAt(const float x, const float y, const float z)
 	LookAt(float3(x, y, z));
 }
 
+void ModuleCamera::Center(const BoundingBox *bounding_box)
+{
+	// Adapt size to bounding box
+	float containing_sphere_radius = bounding_box->size.Length()/2;
+	camera_frustum.farPlaneDistance = 25 * containing_sphere_radius;
+
+	// Move position visualize bounding box
+	camera_frustum.pos = float3::unitY * containing_sphere_radius/2 + float3::unitZ * -3 * containing_sphere_radius; //TODO: Change magic numbers here
+	camera_frustum.up = float3::unitY;
+	camera_frustum.front = float3::unitZ;
+
+	generateMatrices();
+}
+
 void ModuleCamera::MoveUp()
 {
 	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;

@@ -122,7 +122,7 @@ update_status ModuleInput::Update()
 
 	if (keyboard[SDL_SCANCODE_UP])
 	{
-		App->cameras->RotatePitch(1.f);
+		App->cameras->RotatePitch(-1.f);
 	}
 
 	if (keyboard[SDL_SCANCODE_DOWN])
@@ -132,7 +132,7 @@ update_status ModuleInput::Update()
 
 	if (keyboard[SDL_SCANCODE_LEFT])
 	{
-		App->cameras->RotateYaw(1.f);
+		App->cameras->RotateYaw(-1.f);
 	}
 
 	if (keyboard[SDL_SCANCODE_RIGHT])
