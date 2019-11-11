@@ -165,7 +165,7 @@ void ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const GLuin
 		return;
 	}
 
-	std::string textures_path = std::string("./Textures/") + file.data;
+	std::string textures_path = std::string("./resources/textures/") + file.data;
 	LOG("Loading material texture in textures folder %s.", textures_path.c_str());
 	if (App->texture->loadTexture(textures_path.c_str(), texture))
 	{
