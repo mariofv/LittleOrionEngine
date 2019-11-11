@@ -19,32 +19,30 @@ EngineUI::~EngineUI()
 
 void EngineUI::InitUI()
 {
-	ui_flags::show_configuration_window = false;
-	ui_flags::show_debug_window = false;
-	ui_flags::show_about_window = false;
+	show_configuration_window = false;
+	show_debug_window = false;
+	show_about_window = false;
 
-	window_options::fullscreen = FULLSCREEN;
-	window_options::bordered = BORDERED;
-	window_options::resizable = RESIZABLE;
-	SDL_GetWindowSize(App->window->window, &window_options::width, &window_options::height);
-	window_options::brightness = SDL_GetWindowBrightness(App->window->window);
-
-
+	fullscreen = FULLSCREEN;
+	bordered = BORDERED;
+	resizable = RESIZABLE;
+	SDL_GetWindowSize(App->window->window, &width, &height);
+	brightness = SDL_GetWindowBrightness(App->window->window);
 }
 
 void EngineUI::ShowEngineUI()
 {
 	ShowMainMenu();
 	
-	if (ui_flags::show_configuration_window)
+	if (show_configuration_window)
 	{
 		ShowConfigurationWindow();
 	}
-	if (ui_flags::show_debug_window)
+	if (show_debug_window)
 	{
 		ShowDebugWindow();
 	}
-	if (ui_flags::show_about_window)
+	if (show_about_window)
 	{
 		ShowAboutWindow();
 	}
@@ -54,9 +52,9 @@ void EngineUI::ShowMainMenu()
 {
 	if (ImGui::BeginMainMenuBar())
 	{
-		ImGui::MenuItem("Config", (const char*)0, &ui_flags::show_configuration_window);
-		ImGui::MenuItem("Debug", (const char*)0, &ui_flags::show_debug_window);
-		ImGui::MenuItem("About", (const char*)0, &ui_flags::show_about_window);
+		ImGui::MenuItem("Config", (const char*)0, &show_configuration_window);
+		ImGui::MenuItem("Debug", (const char*)0, &show_debug_window);
+		ImGui::MenuItem("About", (const char*)0, &show_about_window);
 		ImGui::EndMainMenuBar();
 	}
 	
@@ -75,24 +73,24 @@ void EngineUI::ShowConfigurationWindow()
 void EngineUI::ShowWindowOptions()
 {
 	if (ImGui::CollapsingHeader("Window")) {
-		if (ImGui::SliderFloat("Brightness", &window_options::brightness, 0, 1))
+		if (ImGui::SliderFloat("Brightness", &brightness, 0, 1))
 		{
-			App->window->setBrightness(window_options::brightness);
+			App->window->setBrightness(brightness);
 		}
 
-		if (ImGui::SliderInt("Width", &window_options::width, SCREEN_WIDTH, App->window->screen_width))
+		if (ImGui::SliderInt("Width", &width, SCREEN_WIDTH, App->window->screen_width))
 		{
-			App->window->setWidth(window_options::width);
+			App->window->setWidth(width);
 		}
 
-		if (ImGui::SliderInt("Height", &window_options::height, SCREEN_HEIGHT, App->window->screen_height))
+		if (ImGui::SliderInt("Height", &height, SCREEN_HEIGHT, App->window->screen_height))
 		{
-			App->window->setHeight(window_options::height);
+			App->window->setHeight(height);
 		}
 
-		if (ImGui::Combo("Window style", &window_options::fullscreen, "Windowed\0Fullscreen desktop\0Fullscreen\0"))
+		if (ImGui::Combo("Window style", &fullscreen, "Windowed\0Fullscreen desktop\0Fullscreen\0"))
 		{
-			switch (window_options::fullscreen)
+			switch (fullscreen)
 			{
 			case 0:
 				App->window->setWindowed();
@@ -106,15 +104,15 @@ void EngineUI::ShowWindowOptions()
 			}
 		}
 
-		if (ImGui::Checkbox("Bordered", &window_options::bordered))
+		if (ImGui::Checkbox("Bordered", &bordered))
 		{
-			App->window->setBordered(window_options::bordered);
+			App->window->setBordered(bordered);
 		}
 		ImGui::SameLine();
 
-		if (ImGui::Checkbox("Resizable", &window_options::resizable))
+		if (ImGui::Checkbox("Resizable", &resizable))
 		{
-			App->window->setResizable(window_options::resizable);
+			App->window->setResizable(resizable);
 		}
 	}
 	
@@ -124,24 +122,24 @@ void EngineUI::ShowCameraOptions()
 {
 	if (ImGui::CollapsingHeader("Camera"))
 	{
-		if (ImGui::SliderFloat("FOV", &camera_options::fov, 0, 2*3.14f))
+		if (ImGui::SliderFloat("FOV", &fov, 0, 2*3.14f))
 		{
-			App->cameras->SetFOV(camera_options::fov);
+			App->cameras->SetFOV(fov);
 		}
 
-		if (ImGui::SliderFloat("Aspect Ratio", &camera_options::aspect_ratio, 0, 10))
+		if (ImGui::SliderFloat("Aspect Ratio", &aspect_ratio, 0, 10))
 		{
-			App->cameras->SetAspectRatio(camera_options::aspect_ratio);
+			App->cameras->SetAspectRatio(aspect_ratio);
 		}
 
-		if (ImGui::SliderFloat("Near plane", &camera_options::near_plane, 1, camera_options::far_plane + 1))
+		if (ImGui::SliderFloat("Near plane", &near_plane, 1, far_plane + 1))
 		{
-			App->cameras->SetNearDistance(camera_options::near_plane);
+			App->cameras->SetNearDistance(near_plane);
 		}
 
-		if (ImGui::SliderFloat("Far plane", &camera_options::far_plane, camera_options::near_plane + 1, camera_options::near_plane + 1000))
+		if (ImGui::SliderFloat("Far plane", &far_plane, near_plane + 1, near_plane + 1000))
 		{
-			App->cameras->SetFarDistance(camera_options::far_plane);
+			App->cameras->SetFarDistance(far_plane);
 		}
 	}
 }

@@ -1,29 +1,12 @@
-#pragma once
+#ifndef _ENGINEUI_H_
+#define _ENGINEUI_H_
+
+#include "Application.h"
+#include "Globals.h"
 
 //TODO: Cambiar de static a no static
 namespace ui_flags {
-	static bool show_configuration_window;
-	static bool show_debug_window;
-	static bool show_about_window;
-}
-
-namespace window_options {
-	static int fullscreen;
-	static bool bordered;
-	static bool resizable;
-
-	static int height;
-	static int width;
-
-	static float brightness;
-}
-
-namespace camera_options {
-	static float fov;
-	static float aspect_ratio;
-
-	static float near_plane;
-	static float far_plane;
+	
 }
 
 class EngineUI
@@ -32,23 +15,44 @@ public:
 	EngineUI();
 	~EngineUI();
 
-	static void ShowEngineUI();
-	static void InitUI();
+	void ShowEngineUI();
+	void InitUI();
 
 private:
-	static void ShowMainMenu();
+	void ShowMainMenu();
 
-	static void ShowConfigurationWindow();
-	static void ShowWindowOptions();
-	static void ShowCameraOptions();
+	void ShowConfigurationWindow();
+	void ShowWindowOptions();
+	void ShowCameraOptions();
 
-	static void ShowDebugWindow();
-	static void ShowConsole();
-	static void ShowPerformanceGraphs();
-	static void ShowFPSGraph();
-	static void ShowMSGraph();	
-	static void ShowHardware();
+	void ShowDebugWindow();
+	void ShowConsole();
+	void ShowPerformanceGraphs();
+	void ShowFPSGraph();
+	void ShowMSGraph();	
+	void ShowHardware();
 
-	static void ShowAboutWindow();
+	void ShowAboutWindow();
+
+private:
+	bool show_configuration_window = false;
+	bool show_debug_window = false;
+	bool show_about_window = false;
+
+	int fullscreen;
+	bool bordered;
+	bool resizable;
+
+	int height;
+	int width;
+
+	float brightness;
+
+	float fov;
+	float aspect_ratio;
+
+	float near_plane;
+	float far_plane;
 };
 
+#endif //_ENGINEUI_H_

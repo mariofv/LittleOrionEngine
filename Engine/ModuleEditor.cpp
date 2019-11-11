@@ -2,12 +2,13 @@
 #include "Application.h"
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
+#include "EngineUI.h"
+
 #include "SDL.h"
 #include <GL/glew.h>
 #include "imgui.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_sdl.h"
-#include "EngineUI.h"
 
 ModuleEditor::ModuleEditor()
 {
@@ -38,7 +39,7 @@ bool ModuleEditor::Init()
 		return false;
 	}
 
-	EngineUI::InitUI();
+	App->ui->InitUI();
 
 	return true;
 }
@@ -54,7 +55,7 @@ update_status ModuleEditor::PreUpdate()
 // Called every draw update
 update_status ModuleEditor::Update()
 {
-	EngineUI::ShowEngineUI();
+	App->ui->ShowEngineUI();
 	//ImGui::ShowDemoWindow();
 	return UPDATE_CONTINUE;
 }

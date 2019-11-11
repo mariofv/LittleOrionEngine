@@ -9,6 +9,7 @@
 #include "ModuleEditor.h"
 #include "ModuleCamera.h"
 #include "ModuleModelLoader.h"
+#include "EngineUI.h"
 #include "EngineLog.h"
 
 using namespace std;
@@ -25,8 +26,9 @@ Application::Application()
 	modules.push_back(cameras = new ModuleCamera());
 	modules.push_back(model_loader = new ModuleModelLoader());
 	modules.push_back(exercise = new ModuleRenderExercise());
-
+	
 	log = new EngineLog();
+	ui = new EngineUI();
 }
 
 Application::~Application()
@@ -36,6 +38,7 @@ Application::~Application()
         delete *it;
     }
 
+	delete ui;
 	delete log;
 }
 
