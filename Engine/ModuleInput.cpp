@@ -60,15 +60,16 @@ update_status ModuleInput::Update()
 		case SDL_MOUSEMOTION:
 			if (event.motion.state & SDL_BUTTON_LMASK) {
 				if (math::Abs(event.motion.xrel) > 1.5) {
-					App->cameras->RotateYaw(event.motion.xrel);
+					App->cameras->MouseXMotion(event.motion.xrel);
 				}
 
 				if (math::Abs(event.motion.yrel) > 1.5) {
-					App->cameras->RotatePitch(event.motion.yrel);
+					App->cameras->MouseYMotion(event.motion.yrel);
 				}
 
 			}
 			break;
+
 		case SDL_MOUSEWHEEL:
 			if (event.wheel.y > 0) 
 			{
@@ -79,12 +80,38 @@ update_status ModuleInput::Update()
 				App->cameras->MoveBackward();
 			}
 			break;
-		case (SDL_DROPFILE): {      
+
+		case SDL_KEYDOWN:
+			if (event.key.keysym.sym == SDLK_LALT)
+			{
+				App->cameras->SetOrbit(true);
+			}
+			else if (event.key.keysym.sym == SDLK_LSHIFT)
+			{
+				App->cameras->SetSpeedUp(true);
+			}
+			break;
+
+		case SDL_KEYUP:
+			if (event.key.keysym.sym == SDLK_LALT)
+			{
+				App->cameras->SetOrbit(false);
+			}
+			else if (event.key.keysym.sym == SDLK_LSHIFT)
+			{
+				App->cameras->SetSpeedUp(false);
+			}
+			else if (event.key.keysym.sym == SDLK_f)
+			{
+				App->cameras->LookAt(App->model_loader->model_bounding_box->center);
+			}
+			break;
+
+		case SDL_DROPFILE:
 			char *dropped_filedir = event.drop.file;
 			App->model_loader->SwapCurrentModel(dropped_filedir);
-			SDL_free(dropped_filedir);    
+			SDL_free(dropped_filedir);
 			break;
-		}
 		}
 	}
 
@@ -139,13 +166,6 @@ update_status ModuleInput::Update()
 	{
 		App->cameras->RotateYaw(1.f);
 	}
-
-	if (keyboard[SDL_SCANCODE_F])
-	{
-		App->cameras->LookAt(App->model_loader->model_bounding_box->center);
-	}
-
-	App->cameras->SetSpeedUp(keyboard[SDL_SCANCODE_LSHIFT]);
 
 	return UPDATE_CONTINUE;
 }

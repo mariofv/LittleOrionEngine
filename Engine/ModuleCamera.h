@@ -34,10 +34,17 @@ public:
 	void MoveLeft();
 	void MoveRight();
 
+	void MouseXMotion(const float x_motion);
+	void MouseYMotion(const float y_motion);
+
 	void RotatePitch(const float angle);
 	void RotateYaw(const float angle);
 
+	void OrbitX(const float angle);
+	void OrbitY(const float angle);
+
 	void SetSpeedUp(const bool is_speeding_up);
+	void SetOrbit(const bool is_orbiting);
 
 	void Center(const BoundingBox *bounding_box);
 
@@ -57,5 +64,7 @@ private:
 	
 	float aspect_ratio;
 	float pitch_angle;
+
+	bool is_orbiting;
 	float speed_up;
 };

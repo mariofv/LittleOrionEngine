@@ -20,6 +20,8 @@ bool ModuleCamera::Init()
 	
 	aspect_ratio = (float)windowWidth / windowHeight;
 	pitch_angle = 0;
+	speed_up = 1;
+	is_orbiting = false;
 
 	// CREATES PROJECTION MATRIX
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
@@ -124,8 +126,9 @@ void ModuleCamera::Center(const BoundingBox *bounding_box)
 	float containing_sphere_radius = bounding_box->size.Length()/2;
 	camera_frustum.farPlaneDistance = 25 * containing_sphere_radius;
 
+	// TODO: Change magic numbers here. Also we are assuming that object is always centered in (0,0,0)!
 	// Move position visualize bounding box
-	camera_frustum.pos = float3::unitY * containing_sphere_radius/2 + float3::unitZ * -3 * containing_sphere_radius; //TODO: Change magic numbers here
+	camera_frustum.pos = float3::unitY * containing_sphere_radius/2 + float3::unitZ * -3 * containing_sphere_radius; 
 	camera_frustum.up = float3::unitY;
 	camera_frustum.front = float3::unitZ;
 
@@ -155,7 +158,7 @@ void ModuleCamera::MoveDown()
 void ModuleCamera::MoveFoward()
 {
 	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
-	camera_frustum.pos = camera_frustum.pos + camera_frustum.front.ScaledToLength(distance);
+	camera_frustum.pos += camera_frustum.front.ScaledToLength(distance);
 
 	generateMatrices();
 }
@@ -163,7 +166,7 @@ void ModuleCamera::MoveFoward()
 void ModuleCamera::MoveBackward()
 {
 	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
-	camera_frustum.pos = camera_frustum.pos - camera_frustum.front.ScaledToLength(distance);
+	camera_frustum.pos -= camera_frustum.front.ScaledToLength(distance);
 
 	generateMatrices();
 }
@@ -171,7 +174,7 @@ void ModuleCamera::MoveBackward()
 void ModuleCamera::MoveLeft()
 {
 	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
-	camera_frustum.pos = camera_frustum.pos - camera_frustum.WorldRight().ScaledToLength(distance);
+	camera_frustum.pos -= camera_frustum.WorldRight().ScaledToLength(distance);
 
 	generateMatrices();
 }
@@ -182,6 +185,16 @@ void ModuleCamera::MoveRight()
 	camera_frustum.pos = camera_frustum.pos + camera_frustum.WorldRight().ScaledToLength(distance);
 
 	generateMatrices();
+}
+
+void ModuleCamera::MouseXMotion(const float x_motion)
+{
+	is_orbiting ? OrbitX(x_motion) : RotateYaw(x_motion);
+}
+
+void ModuleCamera::MouseYMotion(const float y_motion)
+{
+	is_orbiting ? OrbitY(y_motion) : RotatePitch(y_motion);
 }
 
 void ModuleCamera::RotatePitch(const float angle)
@@ -207,6 +220,38 @@ void ModuleCamera::RotateYaw(const float angle)
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
 
 	generateMatrices();
+}
+
+void ModuleCamera::OrbitX(const float angle)
+{
+	const float adjusted_angle = angle * -CAMERA_ROTATION_SPEED;
+	float3x3 rotation_matrix = float3x3::RotateY(adjusted_angle);
+	camera_frustum.up = rotation_matrix * camera_frustum.up;
+	camera_frustum.front = rotation_matrix * camera_frustum.front;
+	camera_frustum.pos = rotation_matrix * camera_frustum.pos;
+
+	LookAt(float3::zero); // TODO: There must be a way to orbit around a focus point, ask this
+
+	generateMatrices();
+}
+
+void ModuleCamera::OrbitY(const float angle)
+{
+	const float adjusted_angle = angle * -CAMERA_ROTATION_SPEED;
+	float3x3 rotation_matrix = float3x3::identity;
+	rotation_matrix.SetRotatePart(camera_frustum.WorldRight(), adjusted_angle);
+	camera_frustum.up = rotation_matrix * camera_frustum.up;
+	camera_frustum.front = rotation_matrix * camera_frustum.front;
+	camera_frustum.pos = rotation_matrix * camera_frustum.pos;
+
+	LookAt(float3::zero);
+
+	generateMatrices();
+}
+
+void ModuleCamera::SetOrbit(const bool is_orbiting)
+{
+	this->is_orbiting = is_orbiting;
 }
 
 void ModuleCamera::SetSpeedUp(const bool is_speeding_up)
