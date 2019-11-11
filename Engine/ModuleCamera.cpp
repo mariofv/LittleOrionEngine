@@ -19,7 +19,6 @@ bool ModuleCamera::Init()
 	SDL_GetWindowSize(App->window->window, &windowWidth, &windowHeight);
 	
 	aspect_ratio = (float)windowWidth / windowHeight;
-	pitch_angle = 0;
 	speed_up = 1;
 	is_orbiting = false;
 
@@ -200,10 +199,10 @@ void ModuleCamera::MouseYMotion(const float y_motion)
 void ModuleCamera::RotatePitch(const float angle)
 {
 	const float adjusted_angle = angle * -CAMERA_ROTATION_SPEED;
-	if (pitch_angle + adjusted_angle >= math::pi/2 || pitch_angle + adjusted_angle <= -math::pi / 2) {
+	const float current_angle = asinf(camera_frustum.front.y / camera_frustum.front.Length());
+	if (abs(current_angle + adjusted_angle) >= math::pi / 2) {
 		return;
 	}
-	pitch_angle += adjusted_angle;
 	float3x3 rotation_matrix = float3x3::identity;
 	rotation_matrix.SetRotatePart(camera_frustum.WorldRight(), adjusted_angle);
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
@@ -238,6 +237,11 @@ void ModuleCamera::OrbitX(const float angle)
 void ModuleCamera::OrbitY(const float angle)
 {
 	const float adjusted_angle = angle * -CAMERA_ROTATION_SPEED;
+	const float current_angle = asinf(camera_frustum.front.y / camera_frustum.front.Length());
+	if (abs(current_angle + adjusted_angle) >= math::pi / 2) {
+		return;
+	}
+
 	float3x3 rotation_matrix = float3x3::identity;
 	rotation_matrix.SetRotatePart(camera_frustum.WorldRight(), adjusted_angle);
 	camera_frustum.up = rotation_matrix * camera_frustum.up;

@@ -63,7 +63,6 @@ private:
 	Frustum camera_frustum;
 	
 	float aspect_ratio;
-	float pitch_angle;
 
 	bool is_orbiting;
 	float speed_up;
