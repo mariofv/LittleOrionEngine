@@ -17,19 +17,15 @@ private:
 	void ShowMainMenu();
 
 	void ShowConfigurationWindow();
-
-	void ShowDebugWindow();
-	void ShowConsole();
-	void ShowPerformanceGraphs();
-	void ShowFPSGraph();
-	void ShowMSGraph();	
 	void ShowHardware();
+
+	void ShowConsoleWindow();
 
 	void ShowAboutWindow();
 
 private:
 	bool show_configuration_window = false;
-	bool show_debug_window = false;
+	bool show_console_window = false;
 	bool show_about_window = false;
 };
 

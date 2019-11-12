@@ -19,6 +19,11 @@ public:
 	float RealTimeSinceStartup();
 	float Time();
 
+	void SetMaxFPS(const int fps);
+	void SetTimeScale(const float time_scale);
+
+	void ShowTimeOptions();
+
 public:
 	long frame_count = 0;
 
@@ -33,4 +38,6 @@ private:
 
 	float frame_start_time = 0.f;
 	float real_frame_start_time = 0.f;
+
+	int max_fps = 60;
 };

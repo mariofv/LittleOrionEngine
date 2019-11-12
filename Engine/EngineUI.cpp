@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleCamera.h"
+#include "ModuleTime.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
 
@@ -21,7 +22,7 @@ EngineUI::~EngineUI()
 void EngineUI::InitUI()
 {
 	show_configuration_window = false;
-	show_debug_window = false;
+	show_console_window = false;
 	show_about_window = false;
 }
 
@@ -33,9 +34,9 @@ void EngineUI::ShowEngineUI()
 	{
 		ShowConfigurationWindow();
 	}
-	if (show_debug_window)
+	if (show_console_window)
 	{
-		ShowDebugWindow();
+		ShowConsoleWindow();
 	}
 	if (show_about_window)
 	{
@@ -48,7 +49,7 @@ void EngineUI::ShowMainMenu()
 	if (ImGui::BeginMainMenuBar())
 	{
 		ImGui::MenuItem("Config", (const char*)0, &show_configuration_window);
-		ImGui::MenuItem("Debug", (const char*)0, &show_debug_window);
+		ImGui::MenuItem("Console", (const char*)0, &show_console_window);
 		ImGui::MenuItem("About", (const char*)0, &show_about_window);
 		ImGui::EndMainMenuBar();
 	}
@@ -59,68 +60,23 @@ void EngineUI::ShowConfigurationWindow()
 {
 	if (ImGui::Begin("Configuration"))
 	{
+		ShowHardware();
 		App->window->ShowWindowOptions();
 		App->cameras->ShowCameraOptions();
+		App->time->ShowTimeOptions();
 	}
 	ImGui::End();
 }
 
-
-
-void EngineUI::ShowDebugWindow()
+void EngineUI::ShowConsoleWindow()
 {
-	if (ImGui::Begin("Debug"))
-	{
-		ShowConsole();
-		ShowPerformanceGraphs();
-		ShowHardware();
-	}
-	ImGui::End();
-}
-
-void EngineUI::ShowConsole()
-{
-	if (ImGui::CollapsingHeader("Console")) 
+	if (ImGui::Begin("Console")) 
 	{
 		if (App->engine_log->hasPendingData()) {
 			ImGui::TextUnformatted(App->engine_log->getData());
 		}
 	}
-}
-
-void EngineUI::ShowPerformanceGraphs()
-{
-	if (ImGui::CollapsingHeader("Performance Graphs")) {
-		ShowFPSGraph();
-		ImGui::SameLine();
-		ShowMSGraph();
-	}
-}
-
-void EngineUI::ShowFPSGraph()
-{
-	App->engine_log->logFPS(ImGui::GetIO().Framerate);
-
-	char title[25];
-	std::vector<float> fps_log = App->engine_log->getFPSData();
-	if (fps_log.size() > 0)
-	{
-		sprintf_s(title, "Framerate %.1f", fps_log[fps_log.size() - 1]);
-		ImGui::PlotHistogram("###framerate", &fps_log[0], fps_log.size(), 0, title, 0.f, 100.f, ImVec2(310, 100));
-	}
-}
-
-void EngineUI::ShowMSGraph()
-{
-	App->engine_log->logMS(1000.f/ImGui::GetIO().Framerate);
-
-	char title[25];
-	std::vector<float> ms_log = App->engine_log->getMSData();
-	if (ms_log.size() > 0)
-	{
-		sprintf_s(title, "Miliseconds %.1f", ms_log[ms_log.size() - 1]);
-		ImGui::PlotHistogram("###miliseconds", &ms_log[0], ms_log.size(), 0, title, 0.f, 100.f, ImVec2(310, 100));
-	}
+	ImGui::End();
 }
 
 void EngineUI::ShowHardware()
