@@ -9,6 +9,7 @@
 #include "ModuleEditor.h"
 #include "ModuleCamera.h"
 #include "ModuleModelLoader.h"
+#include "ModuleTime.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
 #include "TimerUs.h"
@@ -20,6 +21,7 @@ Application::Application()
 	// Order matters: they will Init/start/update in this order
 	modules.push_back(window = new ModuleWindow());
 	modules.push_back(editor = new ModuleEditor());
+	modules.push_back(time = new ModuleTime());
 	modules.push_back(renderer = new ModuleRender());
 	modules.push_back(input = new ModuleInput());
 	modules.push_back(program = new ModuleProgram());
@@ -27,7 +29,7 @@ Application::Application()
 	modules.push_back(cameras = new ModuleCamera());
 	modules.push_back(model_loader = new ModuleModelLoader());
 	modules.push_back(exercise = new ModuleRenderExercise());
-	
+		
 	engine_log = new EngineLog();
 	ui = new EngineUI();
 }

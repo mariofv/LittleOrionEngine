@@ -39,8 +39,6 @@ update_status ModuleInput::Update()
 {
 	SDL_PumpEvents();
 
-	update_status ret;
-
 	SDL_Event event;
 	while (SDL_PollEvent(&event) != 0)
 	{

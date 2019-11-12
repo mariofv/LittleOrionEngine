@@ -12,14 +12,35 @@ void Timer::Start()
 	running = true;
 }
 
-const float Timer::Read() const
+float Timer::Read() const
 {
-	float current_time = running ? SDL_GetTicks() - start_time : end_time;
+	float current_time;
+	if (running)
+	{
+		current_time = (paused ? pause_start_time : SDL_GetTicks()) - start_time - pause_time;
+	} 
+	else {
+		current_time = end_time;
+	} 
 	return current_time;
 }
 
-void Timer::Stop()
+void Timer::Resume()
 {
-	end_time = SDL_GetTicks() - start_time;
+	pause_time += (SDL_GetTicks() - pause_start_time);
+	paused = false;
+}
+
+float Timer::Pause()
+{
+	pause_start_time = SDL_GetTicks();
+	paused = true;
+	return pause_start_time - start_time - pause_time;
+}
+
+float Timer::Stop()
+{
+	end_time = SDL_GetTicks() - start_time - pause_time;
 	running = false;
+	return end_time;
 }
