@@ -28,10 +28,8 @@ Application::Application()
 	modules.push_back(model_loader = new ModuleModelLoader());
 	modules.push_back(exercise = new ModuleRenderExercise());
 	
-	log = new EngineLog();
+	engine_log = new EngineLog();
 	ui = new EngineUI();
-
-	app_timer = new TimerUs();
 }
 
 Application::~Application()
@@ -42,21 +40,17 @@ Application::~Application()
     }
 
 	delete ui;
-	delete log;
-	delete app_timer;
+	delete engine_log;
 }
 
 bool Application::Init()
 {
 	bool ret = true;
 
-	app_timer->Start();
 	for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it) 
 	{
 		ret = (*it)->Init();
 	}
-
-	const float elapsed_time = app_timer->Read();
 
 	return ret;
 }

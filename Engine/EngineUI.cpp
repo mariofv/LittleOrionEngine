@@ -82,8 +82,8 @@ void EngineUI::ShowConsole()
 {
 	if (ImGui::CollapsingHeader("Console")) 
 	{
-		if (App->log->hasPendingData()) {
-			ImGui::TextUnformatted(App->log->getData());
+		if (App->engine_log->hasPendingData()) {
+			ImGui::TextUnformatted(App->engine_log->getData());
 		}
 	}
 }
@@ -99,10 +99,10 @@ void EngineUI::ShowPerformanceGraphs()
 
 void EngineUI::ShowFPSGraph()
 {
-	App->log->logFPS(ImGui::GetIO().Framerate);
+	App->engine_log->logFPS(ImGui::GetIO().Framerate);
 
 	char title[25];
-	std::vector<float> fps_log = App->log->getFPSData();
+	std::vector<float> fps_log = App->engine_log->getFPSData();
 	if (fps_log.size() > 0)
 	{
 		sprintf_s(title, "Framerate %.1f", fps_log[fps_log.size() - 1]);
@@ -112,10 +112,10 @@ void EngineUI::ShowFPSGraph()
 
 void EngineUI::ShowMSGraph()
 {
-	App->log->logMS(1000.f/ImGui::GetIO().Framerate);
+	App->engine_log->logMS(1000.f/ImGui::GetIO().Framerate);
 
 	char title[25];
-	std::vector<float> ms_log = App->log->getMSData();
+	std::vector<float> ms_log = App->engine_log->getMSData();
 	if (ms_log.size() > 0)
 	{
 		sprintf_s(title, "Miliseconds %.1f", ms_log[ms_log.size() - 1]);

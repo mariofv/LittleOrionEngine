@@ -44,9 +44,7 @@ public:
 	ModuleModelLoader* model_loader = nullptr;
 
 	EngineUI* ui = nullptr;
-	EngineLog* log = nullptr;
-
-	TimerUs *app_timer = nullptr;
+	EngineLog* engine_log = nullptr;
 
 private:
 
