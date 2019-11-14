@@ -138,7 +138,7 @@ void ModuleCamera::Center(const BoundingBox *bounding_box)
 
 void ModuleCamera::MoveUp()
 {
-	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
+	const float distance = camera_movement_speed * speed_up;
 	float3 new_camera_pos = camera_frustum.pos;
 	new_camera_pos.y = new_camera_pos.y + distance;
 	camera_frustum.pos = new_camera_pos;
@@ -148,7 +148,7 @@ void ModuleCamera::MoveUp()
 
 void ModuleCamera::MoveDown()
 {
-	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
+	const float distance = camera_movement_speed * speed_up;
 	float3 new_camera_pos = camera_frustum.pos;
 	new_camera_pos.y = new_camera_pos.y - distance;
 	camera_frustum.pos = new_camera_pos;
@@ -158,7 +158,7 @@ void ModuleCamera::MoveDown()
 
 void ModuleCamera::MoveFoward()
 {
-	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
+	const float distance = camera_movement_speed * speed_up;
 	camera_frustum.pos += camera_frustum.front.ScaledToLength(distance);
 
 	generateMatrices();
@@ -166,7 +166,7 @@ void ModuleCamera::MoveFoward()
 
 void ModuleCamera::MoveBackward()
 {
-	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
+	const float distance = camera_movement_speed * speed_up;
 	camera_frustum.pos -= camera_frustum.front.ScaledToLength(distance);
 
 	generateMatrices();
@@ -174,7 +174,7 @@ void ModuleCamera::MoveBackward()
 
 void ModuleCamera::MoveLeft()
 {
-	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
+	const float distance = camera_movement_speed * speed_up;
 	camera_frustum.pos -= camera_frustum.WorldRight().ScaledToLength(distance);
 
 	generateMatrices();
@@ -182,7 +182,7 @@ void ModuleCamera::MoveLeft()
 
 void ModuleCamera::MoveRight()
 {
-	const float distance = CAMERA_MOVEMENT_SPEED * speed_up;
+	const float distance = camera_movement_speed * speed_up;
 	camera_frustum.pos = camera_frustum.pos + camera_frustum.WorldRight().ScaledToLength(distance);
 
 	generateMatrices();
@@ -200,7 +200,7 @@ void ModuleCamera::MouseYMotion(const float y_motion)
 
 void ModuleCamera::RotatePitch(const float angle)
 {
-	const float adjusted_angle = angle * -CAMERA_ROTATION_SPEED;
+	const float adjusted_angle = angle * -camera_rotation_speed;
 	const float current_angle = asinf(camera_frustum.front.y / camera_frustum.front.Length());
 	if (abs(current_angle + adjusted_angle) >= math::pi / 2) {
 		return;
@@ -215,7 +215,7 @@ void ModuleCamera::RotatePitch(const float angle)
 
 void ModuleCamera::RotateYaw(const float angle)
 {
-	const float adjusted_angle = angle * -CAMERA_ROTATION_SPEED;
+	const float adjusted_angle = angle * -camera_rotation_speed;
 	float3x3 rotation_matrix = float3x3::RotateY(adjusted_angle);
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
@@ -225,7 +225,7 @@ void ModuleCamera::RotateYaw(const float angle)
 
 void ModuleCamera::OrbitX(const float angle)
 {
-	const float adjusted_angle = angle * -CAMERA_ROTATION_SPEED;
+	const float adjusted_angle = angle * -camera_rotation_speed;
 	float3x3 rotation_matrix = float3x3::RotateY(adjusted_angle);
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
@@ -238,7 +238,7 @@ void ModuleCamera::OrbitX(const float angle)
 
 void ModuleCamera::OrbitY(const float angle)
 {
-	const float adjusted_angle = angle * -CAMERA_ROTATION_SPEED;
+	const float adjusted_angle = angle * -camera_rotation_speed;
 	const float current_angle = asinf(camera_frustum.front.y / camera_frustum.front.Length());
 	if (abs(current_angle + adjusted_angle) >= math::pi / 2) {
 		return;
@@ -275,6 +275,15 @@ void ModuleCamera::ShowCameraOptions()
 {
 	if (ImGui::CollapsingHeader("Camera"))
 	{
+		ImGui::InputFloat3("Front", &camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputFloat3("Up", &camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputFloat3("Position", &camera_frustum.pos[0], 3, ImGuiInputTextFlags_ReadOnly);
+
+		ImGui::Separator();
+
+		ImGui::InputFloat("Mov Speed", &camera_movement_speed, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputFloat("Rot Speed", &camera_rotation_speed, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+		
 		if (ImGui::SliderFloat("FOV", &camera_frustum.horizontalFov, 0, 2 * 3.14f))
 		{
 			App->cameras->SetFOV(camera_frustum.horizontalFov);

@@ -54,8 +54,8 @@ private:
 	void generateMatrices();
 
 public:
-	#define CAMERA_MOVEMENT_SPEED 0.25f
-	#define CAMERA_ROTATION_SPEED 0.01f
+	float camera_movement_speed = 0.25f;
+	float camera_rotation_speed =  0.01f;
 	#define SPEED_UP_FACTOR 2
 
 	float4x4 proj;
