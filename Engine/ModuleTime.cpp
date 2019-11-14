@@ -42,7 +42,7 @@ update_status ModuleTime::Update()
 
 update_status ModuleTime::PostUpdate()
 {
-	delta_time = game_time_clock->Read() - frame_start_time;
+	delta_time = (game_time_clock->Read() - frame_start_time) * time_scale;
 	real_time_delta_time = real_time_clock->Read() - real_frame_start_time;
 
 	if (limit_fps)
@@ -50,9 +50,12 @@ update_status ModuleTime::PostUpdate()
 		float remaining_frame_time = 1000.f / max_fps - real_time_delta_time;
 		SDL_Delay(remaining_frame_time); 
 
-		delta_time = game_time_clock->Read() - frame_start_time;
+		delta_time = (game_time_clock->Read() - frame_start_time) * time_scale;
 		real_time_delta_time = real_time_clock->Read() - real_frame_start_time;
 	}
+
+	time += delta_time;
+	real_time_since_startup += real_time_delta_time;
 
 	App->engine_log->logFPS(1000 / real_time_delta_time);
 	App->engine_log->logMS(real_time_delta_time);
@@ -69,24 +72,44 @@ bool ModuleTime::CleanUp()
 	return true;
 }
 
-float ModuleTime::RealTimeSinceStartup()
-{
-	return real_time_clock->Read();
-}
-
-float ModuleTime::Time()
-{
-	return game_time_clock->Read();
-}
-
 void ModuleTime::SetMaxFPS(const int fps)
 {
 	max_fps = fps;
 }
 
+void ModuleTime::Play()
+{
+	game_time_clock->Resume();
+}
+
+void ModuleTime::Pause()
+{
+	game_time_clock->Pause();
+}
+
 void ModuleTime::SetTimeScale(const float time_scale)
 {
 	this->time_scale = time_scale;
+}
+
+void ModuleTime::ShowTimeControls()
+{
+	if (ImGui::Begin("Time Controls"))
+	{
+		if (ImGui::Button("Play"))
+		{
+			Play();
+		}
+		if (ImGui::Button("Pause"))
+		{
+			Pause();
+		}
+		if (ImGui::Button("Step"))
+		{
+
+		}
+	}
+	ImGui::End();
 }
 
 void ModuleTime::ShowTimeOptions()
@@ -106,10 +129,10 @@ void ModuleTime::ShowTimeOptions()
 		sprintf(frame_info, "Limiting to %d fps means each frame needs to take %f ms", max_fps, 1000.f / max_fps);
 		ImGui::Text(frame_info);
 
-		sprintf_s(frame_info, "Real Time since Start: %.0f Real Time dt: %.0f", RealTimeSinceStartup(), real_time_delta_time);
+		sprintf_s(frame_info, "Real Time since Start: %.0f Real Time dt: %.0f", real_time_since_startup, real_time_delta_time);
 		ImGui::Text(frame_info);
 
-		sprintf_s(frame_info, "Game Time since Start: %.0f Game Time dt: %.0f", Time(), delta_time);
+		sprintf_s(frame_info, "Game Time since Start: %.0f Game Time dt: %.0f", time, delta_time);
 		ImGui::Text(frame_info);
 
 		if (ImGui::SliderFloat("Game Clock Scale", &time_scale, 0.5, 2))

@@ -16,12 +16,13 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	float RealTimeSinceStartup();
-	float Time();
-
 	void SetMaxFPS(const int fps);
 	void SetTimeScale(const float time_scale);
 
+	void Play();
+	void Pause();
+
+	void ShowTimeControls();
 	void ShowTimeOptions();
 
 public:
@@ -35,6 +36,9 @@ public:
 private:
 	Timer *real_time_clock = nullptr;
 	Timer *game_time_clock = nullptr;
+
+	float time = 0.f;
+	float real_time_since_startup = 0.f;
 
 	float frame_start_time = 0.f;
 	float real_frame_start_time = 0.f;

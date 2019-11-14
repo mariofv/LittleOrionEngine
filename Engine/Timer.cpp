@@ -19,7 +19,8 @@ float Timer::Read() const
 	{
 		current_time = (paused ? pause_start_time : SDL_GetTicks()) - start_time - pause_time;
 	} 
-	else {
+	else
+	{
 		current_time = end_time;
 	} 
 	return current_time;
@@ -27,14 +28,20 @@ float Timer::Read() const
 
 void Timer::Resume()
 {
-	pause_time += (SDL_GetTicks() - pause_start_time);
-	paused = false;
+	if (paused)
+	{
+		pause_time += (SDL_GetTicks() - pause_start_time);
+		paused = false;
+	}
 }
 
 float Timer::Pause()
 {
-	pause_start_time = SDL_GetTicks();
-	paused = true;
+	if (!paused)
+	{
+		pause_start_time = SDL_GetTicks();
+		paused = true;
+	}	
 	return pause_start_time - start_time - pause_time;
 }
 

@@ -5,6 +5,8 @@
 #include "ModuleProgram.h"
 #include "ModuleCamera.h"
 #include "ModuleModelLoader.h"
+#include "ModuleTime.h"
+
 #include "SDL.h"
 #include <GL/glew.h>
 #include "MathGeoLib.h"
@@ -69,9 +71,10 @@ update_status ModuleRender::Update()
 {
 	
 	glUseProgram(App->program->texture_program);
+	float i = sin(App->time->frame_count) * App->time->delta_time * 0.01f;
 	// CREATES MODEL MATRIX
 	float4x4 model = float4x4::FromTRS(
-		float3(0.0f, 0.0f, 0.0f),
+		float3(i, 0.0f, 0.0f),
 		float3x3::identity,
 		float3(1.0f, 1.0f, 1.0f)
 	);

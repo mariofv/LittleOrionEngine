@@ -42,6 +42,8 @@ void EngineUI::ShowEngineUI()
 	{
 		ShowAboutWindow();
 	}
+
+	App->time->ShowTimeControls();
 }
 
 void EngineUI::ShowMainMenu()
