@@ -5,6 +5,7 @@
 #include "Timer.h"
 
 #include "imgui.h"
+#include "SDL.h"
 
 ModuleTime::~ModuleTime()
 {
@@ -44,7 +45,16 @@ update_status ModuleTime::PostUpdate()
 	delta_time = game_time_clock->Read() - frame_start_time;
 	real_time_delta_time = real_time_clock->Read() - real_frame_start_time;
 
-	App->engine_log->logFPS(1000/real_time_delta_time);
+	if (limit_fps)
+	{
+		float remaining_frame_time = 1000.f / max_fps - real_time_delta_time;
+		SDL_Delay(remaining_frame_time); 
+
+		delta_time = game_time_clock->Read() - frame_start_time;
+		real_time_delta_time = real_time_clock->Read() - real_frame_start_time;
+	}
+
+	App->engine_log->logFPS(1000 / real_time_delta_time);
 	App->engine_log->logMS(real_time_delta_time);
 
 	return UPDATE_CONTINUE;
@@ -83,6 +93,10 @@ void ModuleTime::ShowTimeOptions()
 {
 	if (ImGui::CollapsingHeader("Timers"))
 	{
+		ImGui::Checkbox("", &limit_fps);
+
+		ImGui::SameLine();
+
 		if (ImGui::SliderInt("Max FPS", &max_fps, 10, 60))
 		{
 			SetMaxFPS(max_fps);
@@ -109,8 +123,8 @@ void ModuleTime::ShowTimeOptions()
 		std::vector<float> ms_data = App->engine_log->getMSData();
 		std::vector<float> frame_data = App->engine_log->getFPSData();
 
-		ImGui::PlotLines("Miliseconds", &ms_data[0], ms_data.size(), 0 , nullptr, 0, (1000.f / max_fps) * 2);
-		ImGui::PlotLines("Frame Rate", &frame_data[0], frame_data.size(), 20, nullptr, max_fps*0.75, max_fps*1.25);
+		ImGui::PlotLines("Miliseconds", &ms_data[0], ms_data.size(), 0 , nullptr, 0, 80);
+		ImGui::PlotLines("Frame Rate", &frame_data[0], frame_data.size(), 20, nullptr, 0, 80);
 	}
 }
 
