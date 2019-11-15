@@ -146,10 +146,20 @@ void ModuleWindow::setHeight(const int height)
 	SDL_SetWindowSize(window, width, height);
 }
 
+float ModuleWindow::getHeight() const
+{
+	return height;
+}
+
 void ModuleWindow::setWidth(const int width)
 {
 	this->width = width;
 	SDL_SetWindowSize(window, width, height);
+}
+
+float ModuleWindow::getWidth() const
+{
+	return width;
 }
 
 void ModuleWindow::setBrightness(const float brightness) const

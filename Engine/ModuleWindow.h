@@ -29,7 +29,10 @@ public:
 	void setFullScreen() const;
 
 	void setWidth(const int width);
+	float getWidth() const;
 	void setHeight(const int height);
+	float getHeight() const;
+
 	void setBrightness(const float brightness) const;
 
 	void WindowResized(const unsigned width, const unsigned height);
