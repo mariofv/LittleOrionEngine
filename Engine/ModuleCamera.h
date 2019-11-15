@@ -34,9 +34,6 @@ public:
 	void MoveLeft();
 	void MoveRight();
 
-	void MouseXMotion(const float x_motion);
-	void MouseYMotion(const float y_motion);
-
 	void RotatePitch(const float angle);
 	void RotateYaw(const float angle);
 

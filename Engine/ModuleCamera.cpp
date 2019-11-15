@@ -195,16 +195,6 @@ void ModuleCamera::MoveRight()
 	generateMatrices();
 }
 
-void ModuleCamera::MouseXMotion(const float x_motion)
-{
-	is_orbiting ? OrbitX(x_motion) : RotateYaw(x_motion);
-}
-
-void ModuleCamera::MouseYMotion(const float y_motion)
-{
-	is_orbiting ? OrbitY(y_motion) : RotatePitch(y_motion);
-}
-
 void ModuleCamera::RotatePitch(const float angle)
 {
 	const float adjusted_angle = angle * -camera_rotation_speed;
@@ -232,6 +222,11 @@ void ModuleCamera::RotateYaw(const float angle)
 
 void ModuleCamera::OrbitX(const float angle)
 {
+	if (!is_orbiting)
+	{
+		return;
+	}
+
 	const float adjusted_angle = angle * -camera_rotation_speed;
 	float3x3 rotation_matrix = float3x3::RotateY(adjusted_angle);
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
@@ -245,6 +240,11 @@ void ModuleCamera::OrbitX(const float angle)
 
 void ModuleCamera::OrbitY(const float angle)
 {
+	if (!is_orbiting)
+	{
+		return;
+	}
+
 	const float adjusted_angle = angle * -camera_rotation_speed;
 	const float current_angle = asinf(camera_frustum.front.y / camera_frustum.front.Length());
 	if (abs(current_angle + adjusted_angle) >= math::pi / 2) {

@@ -59,11 +59,21 @@ update_status ModuleInput::Update()
 		case SDL_MOUSEMOTION:
 			if (event.motion.state & SDL_BUTTON_RMASK) {
 				if (math::Abs(event.motion.xrel) > 1.5) {
-					App->cameras->MouseXMotion(event.motion.xrel);
+					App->cameras->RotateYaw(event.motion.xrel);
 				}
 
 				if (math::Abs(event.motion.yrel) > 1.5) {
-					App->cameras->MouseYMotion(event.motion.yrel);
+					App->cameras->RotatePitch(event.motion.yrel);
+				}
+
+			}
+			else if (event.motion.state & SDL_BUTTON_LMASK) {
+				if (math::Abs(event.motion.xrel) > 1.5) {
+					App->cameras->OrbitX(event.motion.xrel);
+				}
+
+				if (math::Abs(event.motion.yrel) > 1.5) {
+					App->cameras->OrbitY(event.motion.yrel);
 				}
 
 			}
