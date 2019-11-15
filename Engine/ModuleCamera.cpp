@@ -47,7 +47,22 @@ update_status ModuleCamera::PreUpdate()
 // Called every draw update
 update_status ModuleCamera::Update()
 {
+	if (is_focusing)
+	{
+		float3 zooming_direction = desired_focus_position - camera_frustum.pos;
+		float distance_to_desired_zooming_position = zooming_direction.Length();
 
+		if (distance_to_desired_zooming_position - camera_zooming_speed < 0) 
+		{
+			camera_frustum.pos = desired_focus_position;
+			is_focusing = false;
+		}
+		else 
+		{
+			camera_frustum.pos += zooming_direction.ScaledToLength(camera_zooming_speed);
+		}
+		generateMatrices();
+	}
 	return UPDATE_CONTINUE;
 }
 
@@ -129,7 +144,8 @@ void ModuleCamera::Center(const BoundingBox &bounding_box)
 	float containing_sphere_radius = bounding_box.size.Length()/2;
 
 	// Adapt camera speed to bounding box size
-	camera_movement_speed = CAMERA_SPEED_BOUNDING_BOX_RADIUS_FACTOR * containing_sphere_radius;
+	camera_movement_speed = CAMERA_MOVEMENT_SPEED_BOUNDING_BOX_RADIUS_FACTOR * containing_sphere_radius;
+	camera_zooming_speed = CAMERA_ZOOMING_SPEED_BOUNDING_BOX_RADIUS_FACTOR * containing_sphere_radius;
 
 	// Adapt far plane to visualize the whole bounding box
 	camera_frustum.farPlaneDistance = FAR_PLANE_FACTOR * containing_sphere_radius;
@@ -146,7 +162,8 @@ void ModuleCamera::Focus(const BoundingBox &bounding_box)
 	LookAt(bounding_box.center);
 
 	float containing_sphere_radius = bounding_box.size.Length() / 2;
-	camera_frustum.pos = bounding_box.center - BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius * camera_frustum.front;
+	is_focusing = true;
+	desired_focus_position = bounding_box.center - BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius * camera_frustum.front;
 
 	generateMatrices();
 }

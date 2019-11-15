@@ -57,9 +57,11 @@ public:
 	# define FAR_PLANE_FACTOR 25
 	# define BOUNDING_BOX_DISTANCE_FACTOR 3
 	# define INITIAL_HEIGHT_FACTOR 0.5
-	# define CAMERA_SPEED_BOUNDING_BOX_RADIUS_FACTOR 0.077 
+	# define CAMERA_MOVEMENT_SPEED_BOUNDING_BOX_RADIUS_FACTOR 0.077 
+	# define CAMERA_ZOOMING_SPEED_BOUNDING_BOX_RADIUS_FACTOR 1 
 
-	float camera_movement_speed = 0.25f;
+	float camera_movement_speed = 1.0f;
+	float camera_zooming_speed = 1.0f;
 	float camera_rotation_speed =  0.01f;
 
 	float4x4 proj;
@@ -70,6 +72,9 @@ private:
 	
 	float aspect_ratio;
 
-	bool is_orbiting;
+	bool is_orbiting = false;
 	float speed_up;
+
+	bool is_focusing = false;
+	float3 desired_focus_position;
 };
