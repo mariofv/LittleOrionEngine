@@ -12,6 +12,7 @@ public:
 
 	void Resume();
 	float Pause();
+	bool IsPaused() const;
 
 	float Read() const;
 

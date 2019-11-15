@@ -6,7 +6,7 @@
 
 #include "SDL.h"
 #pragma comment( lib, "Libraries/SDL/libx86/SDL2.lib" )
-#pragma comment( lib, "Libraries/SDL/libx86/SDL2main.lib" ) //TODO: Why is this needed?
+#pragma comment( lib, "Libraries/SDL/libx86/SDL2main.lib" )
 
 enum main_states
 {

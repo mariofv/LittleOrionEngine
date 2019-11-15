@@ -28,7 +28,6 @@ bool ModuleTime::Init()
 
 update_status ModuleTime::PreUpdate()
 {
-	++frame_count;
 	frame_start_time = game_time_clock->Read();
 	real_frame_start_time = real_time_clock->Read();
 	return UPDATE_CONTINUE;
@@ -42,6 +41,8 @@ update_status ModuleTime::Update()
 
 update_status ModuleTime::PostUpdate()
 {
+	++frame_count;
+
 	delta_time = (game_time_clock->Read() - frame_start_time) * time_scale;
 	real_time_delta_time = real_time_clock->Read() - real_frame_start_time;
 
@@ -66,6 +67,12 @@ update_status ModuleTime::PostUpdate()
 
 	App->engine_log->logFPS(1000 / real_time_delta_time);
 	App->engine_log->logMS(real_time_delta_time);
+
+	if (stepping_frame)
+	{
+		stepping_frame = false;
+		game_time_clock->Pause();
+	}
 
 	return UPDATE_CONTINUE;
 }
@@ -94,6 +101,15 @@ void ModuleTime::Pause()
 	game_time_clock->Pause();
 }
 
+void ModuleTime::StepFrame()
+{
+	if (game_time_clock->IsPaused())
+	{
+		game_time_clock->Resume();
+		stepping_frame = true;
+	}
+}
+
 void ModuleTime::SetTimeScale(const float time_scale)
 {
 	this->time_scale = time_scale;
@@ -113,7 +129,7 @@ void ModuleTime::ShowTimeControls()
 		}
 		if (ImGui::Button("Step"))
 		{
-
+			StepFrame();
 		}
 	}
 	ImGui::End();

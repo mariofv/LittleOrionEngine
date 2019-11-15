@@ -231,7 +231,7 @@ void ModuleCamera::OrbitX(const float angle)
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
 	camera_frustum.pos = rotation_matrix * camera_frustum.pos;
 
-	LookAt(float3::zero); // TODO: There must be a way to orbit around a focus point, ask this
+	LookAt(float3::zero); 
 
 	generateMatrices();
 }

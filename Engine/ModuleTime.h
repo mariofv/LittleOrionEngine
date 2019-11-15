@@ -21,6 +21,7 @@ public:
 
 	void Play();
 	void Pause();
+	void StepFrame();
 
 	void ShowTimeControls();
 	void ShowTimeOptions();
@@ -45,4 +46,6 @@ private:
 
 	bool limit_fps = false;
 	int max_fps = 60;
+
+	bool stepping_frame = false;
 };

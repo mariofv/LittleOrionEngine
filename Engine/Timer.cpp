@@ -45,6 +45,11 @@ float Timer::Pause()
 	return pause_start_time - start_time - pause_time;
 }
 
+bool Timer::IsPaused() const
+{
+	return paused;
+}
+
 float Timer::Stop()
 {
 	end_time = SDL_GetTicks() - start_time - pause_time;
