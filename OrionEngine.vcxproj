@@ -47,7 +47,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>$(ProjectDir)Libraries/assimp/include;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/DevIL/include;./Libraries/glew-2.1.0/include;./Libraries/SDL/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Libraries/FontAwesome5/;$(ProjectDir)Libraries/assimp/include;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/DevIL/include;./Libraries/glew-2.1.0/include;./Libraries/SDL/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -64,7 +64,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>$(ProjectDir)Libraries/assimp/include;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/DevIL/include;./Libraries/glew-2.1.0/include;./Libraries/SDL/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Libraries/FontAwesome5/;$(ProjectDir)Libraries/assimp/include;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/DevIL/include;./Libraries/glew-2.1.0/include;./Libraries/SDL/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -85,6 +85,7 @@
     <ClInclude Include="Engine\ModuleCamera.h" />
     <ClInclude Include="Engine\ModuleModelLoader.h" />
     <ClInclude Include="Engine\ModuleTime.h" />
+    <ClInclude Include="Libraries\FontAwesome5\IconsFontAwesome5.h" />
     <ClInclude Include="Libraries\imgui\imconfig.h" />
     <ClInclude Include="Libraries\imgui\imgui.h" />
     <ClInclude Include="Libraries\imgui\imgui_impl_opengl3.h" />

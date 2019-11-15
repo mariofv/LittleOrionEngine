@@ -202,6 +202,15 @@ void EngineUI::ShowAboutWindow()
 			ShellExecuteA(NULL, "open", "https://github.com/assimp/assimp", NULL, NULL, SW_SHOWNORMAL);
 		}
 
+		if (ImGui::MenuItem("Font Awesome 5"))
+		{
+			ShellExecuteA(NULL, "open", "https://github.com/FortAwesome/Font-Awesome", NULL, NULL, SW_SHOWNORMAL);
+		}
+
+		if (ImGui::MenuItem("Icon Font Cpp Headers"))
+		{
+			ShellExecuteA(NULL, "open", "https://github.com/juliettef/IconFontCppHeaders", NULL, NULL, SW_SHOWNORMAL);
+		}
 
 		ImGui::Separator();
 

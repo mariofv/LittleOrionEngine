@@ -6,6 +6,7 @@
 
 #include "imgui.h"
 #include "SDL.h"
+#include "IconsFontAwesome5.h"
 
 ModuleTime::~ModuleTime()
 {
@@ -98,7 +99,13 @@ void ModuleTime::Play()
 
 void ModuleTime::Pause()
 {
-	game_time_clock->Pause();
+	if (game_time_clock->IsPaused())
+	{
+		game_time_clock->Resume();
+	}
+	else {
+		game_time_clock->Pause();
+	}
 }
 
 void ModuleTime::StepFrame()
@@ -106,8 +113,8 @@ void ModuleTime::StepFrame()
 	if (game_time_clock->IsPaused())
 	{
 		game_time_clock->Resume();
-		stepping_frame = true;
 	}
+	stepping_frame = true;
 }
 
 void ModuleTime::SetTimeScale(const float time_scale)
@@ -119,15 +126,21 @@ void ModuleTime::ShowTimeControls()
 {
 	if (ImGui::Begin("Time Controls"))
 	{
-		if (ImGui::Button("Play"))
+		if (ImGui::Button(ICON_FA_PLAY, ImVec2(24,24)))
 		{
 			Play();
 		}
-		if (ImGui::Button("Pause"))
+
+		ImGui::SameLine();
+
+		if (ImGui::Button(ICON_FA_PAUSE, ImVec2(24, 24)))
 		{
 			Pause();
 		}
-		if (ImGui::Button("Step"))
+
+		ImGui::SameLine();
+
+		if (ImGui::Button(ICON_FA_STEP_FORWARD, ImVec2(24, 24)))
 		{
 			StepFrame();
 		}
