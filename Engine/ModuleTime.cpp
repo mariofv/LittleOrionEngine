@@ -49,7 +49,6 @@ update_status ModuleTime::PostUpdate()
 
 	if (limit_fps)
 	{
-		assert(max_fps != 0);
 		float remaining_frame_time = 1000.f / max_fps - real_time_delta_time;
 		if (remaining_frame_time > 0)
 		{

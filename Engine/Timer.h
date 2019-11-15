@@ -17,11 +17,11 @@ public:
 	float Read() const;
 
 private:
-	float start_time = 0;
+	float start_ticks = 0;
 	float end_time = 0;
 
-	float pause_start_time = 0;
-	float pause_time = 0;
+	float pause_start_ticks = 0;
+	float elapsed_while_paused_ticks = 0;
 
 	bool running = false;
 	bool paused = false;
