@@ -14,6 +14,9 @@ enum update_status
 };
 
 // Paths -------
+# define SHADERS_PATH "./shaders/"
+# define TEXTURES_PATH "./resources/textures/"
+
 # define DEFAULT_VERTEX_SHADER_PATH "./shaders/default.vs"
 # define DEFAULT_FRAGMENT_SHADER_PATH "./shaders/default.fs"
 
@@ -26,8 +29,8 @@ enum update_status
 # define WOBBLE_FRAGMENT_SHADER_PATH "./shaders/wobble.fs"
 
 # define LENA_TEXTURE_PATH "./resources/textures/lena.png"
-#define HOUSE_MODEL_PATH "./resources/models/baker_house/BakerHouse.fbx"
-#define UMBREON_MODEL_PATH "./resources/models/Umbreon/Umbreon.fbx"
+# define HOUSE_MODEL_PATH "./resources/models/baker_house/BakerHouse.fbx"
+# define UMBREON_MODEL_PATH "./resources/models/Umbreon/Umbreon.fbx"
 
 // Configuration -----------
 #define SCREEN_WIDTH 640
