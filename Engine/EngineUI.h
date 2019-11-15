@@ -21,11 +21,14 @@ private:
 
 	void ShowConsoleWindow();
 
+	void ShowDebugWindow();
+
 	void ShowAboutWindow();
 
 private:
 	bool show_configuration_window = false;
 	bool show_console_window = false;
+	bool show_debug_window = false;
 	bool show_about_window = false;
 };
 

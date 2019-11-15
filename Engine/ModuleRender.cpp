@@ -71,10 +71,16 @@ update_status ModuleRender::Update()
 {
 	
 	glUseProgram(App->program->texture_program);
-	float i = sin(App->time->time * 0.01f)  *5.f;
+
+	float x_translation = 0.f;
+	if (model_movement)
+	{
+		x_translation = sin(App->time->time * 0.01f)  *5.f;
+	}
+
 	// CREATES MODEL MATRIX
 	float4x4 model = float4x4::FromTRS(
-		float3(i, 0.0f, 0.0f),
+		float3(x_translation, 0.0f, 0.0f),
 		float3x3::identity,
 		float3(1.0f, 1.0f, 1.0f)
 	);

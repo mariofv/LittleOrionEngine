@@ -22,6 +22,8 @@ public:
 
 public:
 	bool bounding_box_visible = false;
+	bool model_movement = false;
+
 private:
 	void* context;
 };

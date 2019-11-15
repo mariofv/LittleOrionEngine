@@ -1,6 +1,7 @@
 ﻿#include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "ModuleRender.h"
 #include "ModuleCamera.h"
 #include "ModuleTime.h"
 #include "EngineUI.h"
@@ -38,6 +39,10 @@ void EngineUI::ShowEngineUI()
 	{
 		ShowConsoleWindow();
 	}
+	if (show_debug_window)
+	{
+		ShowDebugWindow();
+	}
 	if (show_about_window)
 	{
 		ShowAboutWindow();
@@ -52,6 +57,7 @@ void EngineUI::ShowMainMenu()
 	{
 		ImGui::MenuItem("Config", (const char*)0, &show_configuration_window);
 		ImGui::MenuItem("Console", (const char*)0, &show_console_window);
+		ImGui::MenuItem("Debug", (const char*)0, &show_debug_window);
 		ImGui::MenuItem("About", (const char*)0, &show_about_window);
 		ImGui::EndMainMenuBar();
 	}
@@ -149,6 +155,16 @@ void EngineUI::ShowHardware()
 		sprintf_s(tmp_string, "%s %s", glGetString(GL_VENDOR), glGetString(GL_RENDERER));
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
 	}
+}
+
+void EngineUI::ShowDebugWindow()
+{
+	if (ImGui::Begin("Debug"))
+	{
+		ImGui::Checkbox("Move model around", &App->renderer->model_movement);
+		ImGui::Checkbox("Enable model Bounding Box", &App->renderer->bounding_box_visible);
+	}
+	ImGui::End();
 }
 
 void EngineUI::ShowAboutWindow()
