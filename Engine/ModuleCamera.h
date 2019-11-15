@@ -43,7 +43,8 @@ public:
 	void SetSpeedUp(const bool is_speeding_up);
 	void SetOrbit(const bool is_orbiting);
 
-	void Center(const BoundingBox *bounding_box);
+	void Center(const BoundingBox &bounding_box);
+	void Focus(const BoundingBox &bounding_box);
 
 	void ShowCameraOptions();
 
@@ -54,8 +55,8 @@ public:
 	# define SPEED_UP_FACTOR 2
 
 	# define FAR_PLANE_FACTOR 25
-	# define INITIAL_Z_DISTANCE_FACTOR 3
-	# define INITIAL_Y_DISTANCE_FACTOR 0.5
+	# define BOUNDING_BOX_DISTANCE_FACTOR 3
+	# define INITIAL_HEIGHT_FACTOR 0.5
 	# define CAMERA_SPEED_BOUNDING_BOX_RADIUS_FACTOR 0.077 
 
 	float camera_movement_speed = 0.25f;

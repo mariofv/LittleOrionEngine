@@ -111,7 +111,7 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 
 	LOG("Computing model bounding box");
 	ComputeBoundingBox();
-	App->cameras->Center(model_bounding_box);
+	App->cameras->Center(*model_bounding_box);
 	return true;
 }
 
