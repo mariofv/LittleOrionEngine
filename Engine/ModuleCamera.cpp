@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleCamera.h"
 #include "ModuleWindow.h"
+#include "ModuleTime.h"
 
 #include "imgui.h"
 #include "SDL.h"
@@ -51,15 +52,15 @@ update_status ModuleCamera::Update()
 	{
 		float3 zooming_direction = desired_focus_position - camera_frustum.pos;
 		float distance_to_desired_zooming_position = zooming_direction.Length();
-
-		if (distance_to_desired_zooming_position - camera_zooming_speed < 0) 
+		float frame_focusing_distance = App->time->real_time_delta_time * camera_zooming_speed;
+		if (distance_to_desired_zooming_position - frame_focusing_distance < 0) 
 		{
 			camera_frustum.pos = desired_focus_position;
 			is_focusing = false;
 		}
 		else 
 		{
-			camera_frustum.pos += zooming_direction.ScaledToLength(camera_zooming_speed);
+			camera_frustum.pos += zooming_direction.ScaledToLength(frame_focusing_distance);
 		}
 		generateMatrices();
 	}
@@ -171,7 +172,7 @@ void ModuleCamera::Focus(const BoundingBox &bounding_box)
 
 void ModuleCamera::MoveUp()
 {
-	const float distance = camera_movement_speed * speed_up;
+	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	float3 new_camera_pos = camera_frustum.pos;
 	new_camera_pos.y = new_camera_pos.y + distance;
 	camera_frustum.pos = new_camera_pos;
@@ -181,7 +182,7 @@ void ModuleCamera::MoveUp()
 
 void ModuleCamera::MoveDown()
 {
-	const float distance = camera_movement_speed * speed_up;
+	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	float3 new_camera_pos = camera_frustum.pos;
 	new_camera_pos.y = new_camera_pos.y - distance;
 	camera_frustum.pos = new_camera_pos;
@@ -191,7 +192,7 @@ void ModuleCamera::MoveDown()
 
 void ModuleCamera::MoveFoward()
 {
-	const float distance = camera_movement_speed * speed_up;
+	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	camera_frustum.pos += camera_frustum.front.ScaledToLength(distance);
 
 	generateMatrices();
@@ -199,7 +200,7 @@ void ModuleCamera::MoveFoward()
 
 void ModuleCamera::MoveBackward()
 {
-	const float distance = camera_movement_speed * speed_up;
+	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	camera_frustum.pos -= camera_frustum.front.ScaledToLength(distance);
 
 	generateMatrices();
@@ -207,7 +208,7 @@ void ModuleCamera::MoveBackward()
 
 void ModuleCamera::MoveLeft()
 {
-	const float distance = camera_movement_speed * speed_up;
+	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	camera_frustum.pos -= camera_frustum.WorldRight().ScaledToLength(distance);
 
 	generateMatrices();
@@ -215,7 +216,7 @@ void ModuleCamera::MoveLeft()
 
 void ModuleCamera::MoveRight()
 {
-	const float distance = camera_movement_speed * speed_up;
+	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	camera_frustum.pos = camera_frustum.pos + camera_frustum.WorldRight().ScaledToLength(distance);
 
 	generateMatrices();
@@ -223,7 +224,7 @@ void ModuleCamera::MoveRight()
 
 void ModuleCamera::RotatePitch(const float angle)
 {
-	const float adjusted_angle = angle * -camera_rotation_speed;
+	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
 	const float current_angle = asinf(camera_frustum.front.y / camera_frustum.front.Length());
 	if (abs(current_angle + adjusted_angle) >= math::pi / 2) {
 		return;
@@ -238,7 +239,7 @@ void ModuleCamera::RotatePitch(const float angle)
 
 void ModuleCamera::RotateYaw(const float angle)
 {
-	const float adjusted_angle = angle * -camera_rotation_speed;
+	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
 	float3x3 rotation_matrix = float3x3::RotateY(adjusted_angle);
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
@@ -253,7 +254,7 @@ void ModuleCamera::OrbitX(const float angle)
 		return;
 	}
 
-	const float adjusted_angle = angle * -camera_rotation_speed;
+	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
 	float3x3 rotation_matrix = float3x3::RotateY(adjusted_angle);
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
@@ -271,7 +272,7 @@ void ModuleCamera::OrbitY(const float angle)
 		return;
 	}
 
-	const float adjusted_angle = angle * -camera_rotation_speed;
+	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
 	const float current_angle = asinf(camera_frustum.front.y / camera_frustum.front.Length());
 	if (abs(current_angle + adjusted_angle) >= math::pi / 2) {
 		return;
