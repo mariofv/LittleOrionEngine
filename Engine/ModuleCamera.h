@@ -54,9 +54,15 @@ private:
 	void generateMatrices();
 
 public:
+	# define SPEED_UP_FACTOR 2
+
+	# define FAR_PLANE_FACTOR 25
+	# define INITIAL_Z_DISTANCE_FACTOR 3
+	# define INITIAL_Y_DISTANCE_FACTOR 0.5
+	# define CAMERA_SPEED_BOUNDING_BOX_RADIUS_FACTOR 0.077 
+
 	float camera_movement_speed = 0.25f;
 	float camera_rotation_speed =  0.01f;
-	#define SPEED_UP_FACTOR 2
 
 	float4x4 proj;
 	float4x4 view;

@@ -123,13 +123,20 @@ void ModuleCamera::LookAt(const float x, const float y, const float z)
 
 void ModuleCamera::Center(const BoundingBox *bounding_box)
 {
-	// Adapt size to bounding box
 	float containing_sphere_radius = bounding_box->size.Length()/2;
-	camera_frustum.farPlaneDistance = 25 * containing_sphere_radius;
 
-	// TODO: Change magic numbers here. Also we are assuming that object is always centered in (0,0,0)!
-	// Move position visualize bounding box
-	camera_frustum.pos = float3::unitY * containing_sphere_radius/2 + float3::unitZ * -3 * containing_sphere_radius; 
+	// Adapt camera speed to bounding box size
+	camera_movement_speed = CAMERA_SPEED_BOUNDING_BOX_RADIUS_FACTOR * containing_sphere_radius;
+
+	// Adapt far plane to visualize the whole bounding box
+	camera_frustum.farPlaneDistance = FAR_PLANE_FACTOR * containing_sphere_radius;
+
+	// Move camera position to visualize the whole bounding box
+	camera_frustum.pos = float3(
+		0, 
+		INITIAL_Y_DISTANCE_FACTOR * containing_sphere_radius,
+		-INITIAL_Z_DISTANCE_FACTOR * containing_sphere_radius
+	); 
 	camera_frustum.up = float3::unitY;
 	camera_frustum.front = float3::unitZ;
 
