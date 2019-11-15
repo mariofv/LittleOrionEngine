@@ -71,7 +71,7 @@ update_status ModuleRender::Update()
 {
 	
 	glUseProgram(App->program->texture_program);
-	float i = sin(App->time->frame_count) * App->time->delta_time * 0.01f;
+	float i = sin(App->time->time * 0.01f)  *5.f;
 	// CREATES MODEL MATRIX
 	float4x4 model = float4x4::FromTRS(
 		float3(i, 0.0f, 0.0f),

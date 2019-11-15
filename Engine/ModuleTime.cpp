@@ -47,9 +47,16 @@ update_status ModuleTime::PostUpdate()
 
 	if (limit_fps)
 	{
+		assert(max_fps != 0);
 		float remaining_frame_time = 1000.f / max_fps - real_time_delta_time;
-		SDL_Delay(remaining_frame_time); 
-
+		if (remaining_frame_time > 0)
+		{
+			SDL_Delay(remaining_frame_time);
+		}
+		else
+		{
+			// TODO: Ask what happens if the current frame exceded time limit
+		}
 		delta_time = (game_time_clock->Read() - frame_start_time) * time_scale;
 		real_time_delta_time = real_time_clock->Read() - real_frame_start_time;
 	}
@@ -123,6 +130,7 @@ void ModuleTime::ShowTimeOptions()
 		if (ImGui::SliderInt("Max FPS", &max_fps, 10, 60))
 		{
 			SetMaxFPS(max_fps);
+			LOG("He cambiado el tiempo a %f", max_fps)
 		}
 
 		char frame_info[2048];

@@ -29,16 +29,16 @@ public:
 	long frame_count = 0;
 
 	float time_scale = 1.f;
+
 	float delta_time = 0.f;
-	
 	float real_time_delta_time = 0.f;
+
+	float time = 0.f;
+	float real_time_since_startup = 0.f;
 
 private:
 	Timer *real_time_clock = nullptr;
 	Timer *game_time_clock = nullptr;
-
-	float time = 0.f;
-	float real_time_since_startup = 0.f;
 
 	float frame_start_time = 0.f;
 	float real_frame_start_time = 0.f;
