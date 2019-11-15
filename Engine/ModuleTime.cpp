@@ -132,10 +132,25 @@ void ModuleTime::ShowTimeControls()
 
 		ImGui::SameLine();
 
-		if (ImGui::Button(ICON_FA_PAUSE, ImVec2(24, 24)))
+
+		if (game_time_clock->IsPaused())
 		{
-			Pause();
+			// CHANGE DEFAULT BUTTON COLOR TO SELECTED BUTTON COLOR
+			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5816f, 0.94f, 0.9804f)); 
+			if (ImGui::Button(ICON_FA_PAUSE, ImVec2(24, 24)))
+			{
+				Pause();
+			}
+			ImGui::PopStyleColor();
 		}
+		else 
+		{
+			if (ImGui::Button(ICON_FA_PAUSE, ImVec2(24, 24)))
+			{
+				Pause();
+			}
+		}
+		
 
 		ImGui::SameLine();
 
