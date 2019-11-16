@@ -104,7 +104,7 @@ update_status ModuleRenderExercise::Update()
 		&App->cameras->proj[0][0]
 	);
 
-	App->renderer->renderGrid();
+	//App->renderer->renderGrid();
 	/*
 	glUseProgram(0);
 

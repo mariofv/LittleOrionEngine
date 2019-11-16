@@ -8,7 +8,6 @@
 #include "ModuleTime.h"
 
 #include "SDL.h"
-#include <GL/glew.h>
 #include "MathGeoLib.h"
 #include <assimp/scene.h>
 
@@ -50,17 +49,24 @@ bool ModuleRender::Init()
 
 	glEnable(GL_DEPTH_TEST);
 
+	glGenFramebuffers(1, &fbo);
+	GenerateFrameBuffers(App->window->getWidth(), App->window->getHeight());
+
 	return true;
 }
 
 update_status ModuleRender::PreUpdate()
 {
-	// Set viewport
-	int windowWidth, windowHeight;
-	SDL_GetWindowSize(App->window->window, &windowWidth, &windowHeight);
-	glViewport(0, 0, windowWidth, windowHeight);
+	// CLEAR WINDOW COLOR AND DEPTH BUFFER
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// CLEAR COLOR AND DEPTH BUFFER
+	// Bind frame buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	// Set viewport
+	glViewport(0, 0, App->window->getWidth(), App->window->getHeight());
+
+	// CLEAR FRAME_BUFFER COLOR AND DEPTH BUFFER
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	return UPDATE_CONTINUE;
@@ -69,7 +75,8 @@ update_status ModuleRender::PreUpdate()
 // Called every draw update
 update_status ModuleRender::Update()
 {
-	
+	renderGrid();
+
 	glUseProgram(App->program->texture_program);
 
 	float x_translation = 0.f;
@@ -104,6 +111,7 @@ update_status ModuleRender::Update()
 		&App->cameras->proj[0][0]
 	);
 
+
 	for (unsigned int i = 0; i < App->model_loader->meshes.size(); ++i)
 	{
 		App->model_loader->meshes[i]->Render(App->program->texture_program);
@@ -114,6 +122,9 @@ update_status ModuleRender::Update()
 	{
 		App->model_loader->model_bounding_box->Render(App->program->default_program);
 	}
+
+	// Unbind frame buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
 	return UPDATE_CONTINUE;
 }
@@ -128,12 +139,73 @@ update_status ModuleRender::PostUpdate()
 bool ModuleRender::CleanUp()
 {
 	LOG("Destroying renderer");
+	glDeleteTextures(1, &frame_texture);
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteRenderbuffers(1, &rbo);
 
 	return true;
 }
 
+void ModuleRender::GenerateFrameBuffers(const float width, const float height)
+{
+	if (frame_texture != 0)
+	{
+		glDeleteRenderbuffers(1, &rbo);
+	}
+	glGenTextures(1, &frame_texture);
+
+	if (rbo != 0)
+	{
+		glDeleteRenderbuffers(1, &rbo);
+	}
+	glGenRenderbuffers(1, &rbo);
+	
+	
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	
+	glBindTexture(GL_TEXTURE_2D, frame_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frame_texture, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
 void ModuleRender::renderGrid() const
 {
+	glUseProgram(App->program->primitive_program);
+
+	// CREATES MODEL MATRIX
+	float4x4 model = float4x4::FromTRS(
+		float3(0.0f, 0.0f, 0.0f),
+		float3x3::identity,
+		float3(1.0f, 1.0f, 1.0f)
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->primitive_program, "model"),
+		1,
+		GL_TRUE,
+		&model[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->primitive_program, "view"),
+		1,
+		GL_TRUE,
+		&App->cameras->view[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->primitive_program, "proj"),
+		1,
+		GL_TRUE,
+		&App->cameras->proj[0][0]
+	);
+
 	glLineWidth(1.0f);
 	float d = 200.0f;
 	glBegin(GL_LINES);

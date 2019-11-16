@@ -14,6 +14,8 @@ public:
 	void InitUI();
 
 private:
+	void ShowSceneWindow();
+
 	void ShowMainMenu();
 	void ShowFileMenu();
 	void ShowViewMenu();

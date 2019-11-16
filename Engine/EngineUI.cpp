@@ -32,8 +32,10 @@ void EngineUI::InitUI()
 
 void EngineUI::ShowEngineUI()
 {
+	ShowSceneWindow();
+
 	ShowMainMenu();
-	
+
 	if (show_configuration_window)
 	{
 		ShowConfigurationWindow();
@@ -52,6 +54,24 @@ void EngineUI::ShowEngineUI()
 	}
 
 	App->time->ShowTimeControls();
+}
+
+void EngineUI::ShowSceneWindow()
+{
+	if (ImGui::Begin("Scene"))
+	{
+		ImGui::GetWindowDrawList()->AddImage(
+			(void *)App->renderer->frame_texture,
+			ImVec2(ImGui::GetCursorScreenPos()),
+			ImVec2(
+				ImGui::GetCursorScreenPos().x + App->window->getWidth(),
+				ImGui::GetCursorScreenPos().y + App->window->getHeight()
+			), 
+			ImVec2(0, 1), 
+			ImVec2(1, 0)
+		);
+	}
+	ImGui::End();
 }
 
 void EngineUI::ShowMainMenu()
@@ -112,8 +132,11 @@ void EngineUI::ShowConfigurationWindow()
 	if (ImGui::Begin(ICON_FA_COGS " Configuration"))
 	{
 		ShowHardware();
+		ImGui::Spacing();
 		App->window->ShowWindowOptions();
+		ImGui::Spacing();
 		App->cameras->ShowCameraOptions();
+		ImGui::Spacing();
 		App->time->ShowTimeOptions();
 	}
 	ImGui::End();
