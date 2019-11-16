@@ -15,6 +15,9 @@ public:
 
 private:
 	void ShowMainMenu();
+	void ShowFileMenu();
+	void ShowViewMenu();
+	void ShowHelpMenu();
 
 	void ShowConfigurationWindow();
 	void ShowHardware();

@@ -179,7 +179,7 @@ void ModuleTime::ShowTimeControls()
 
 void ModuleTime::ShowTimeOptions()
 {
-	if (ImGui::CollapsingHeader("Timers"))
+	if (ImGui::CollapsingHeader(ICON_FA_CLOCK " Timers"))
 	{
 		ImGui::Checkbox("", &limit_fps);
 

@@ -2,6 +2,8 @@
 #include "Module.h"
 #include "Globals.h"
 
+struct ImFont;
+
 class ModuleEditor : public Module
 {
 public:
@@ -14,5 +16,8 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
+	ImFont* GetFont(Fonts font);
+
 private:
+	void LoadFonts();
 };

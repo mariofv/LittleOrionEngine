@@ -86,6 +86,7 @@
     <ClInclude Include="Engine\ModuleModelLoader.h" />
     <ClInclude Include="Engine\ModuleTime.h" />
     <ClInclude Include="Libraries\FontAwesome5\IconsFontAwesome5.h" />
+    <ClInclude Include="Libraries\FontAwesome5\IconsFontAwesome5Brands.h" />
     <ClInclude Include="Libraries\imgui\imconfig.h" />
     <ClInclude Include="Libraries\imgui\imgui.h" />
     <ClInclude Include="Libraries\imgui\imgui_impl_opengl3.h" />

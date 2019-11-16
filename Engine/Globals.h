@@ -13,6 +13,13 @@ enum update_status
 	UPDATE_ERROR
 };
 
+enum class Fonts
+{
+	FONT_FA = 0,
+	FONT_FAR = 1,
+	FONT_FAB = 2
+};
+
 // Paths -------
 # define SHADERS_PATH "./shaders/"
 # define TEXTURES_PATH "./resources/textures/"

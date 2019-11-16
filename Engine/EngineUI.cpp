@@ -3,6 +3,7 @@
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "ModuleCamera.h"
+#include "ModuleEditor.h"
 #include "ModuleTime.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
@@ -10,6 +11,8 @@
 #include "imgui.h"
 #include "SDL.h"
 #include <GL/glew.h>
+#include "IconsFontAwesome5.h"
+#include "IconsFontAwesome5Brands.h"
 
 
 EngineUI::EngineUI()
@@ -55,18 +58,58 @@ void EngineUI::ShowMainMenu()
 {
 	if (ImGui::BeginMainMenuBar())
 	{
-		ImGui::MenuItem("Config", (const char*)0, &show_configuration_window);
-		ImGui::MenuItem("Console", (const char*)0, &show_console_window);
-		ImGui::MenuItem("Debug", (const char*)0, &show_debug_window);
-		ImGui::MenuItem("About", (const char*)0, &show_about_window);
+		ShowFileMenu();
+		ShowViewMenu();
+		ShowHelpMenu();
 		ImGui::EndMainMenuBar();
+	}	
+}
+
+void EngineUI::ShowFileMenu()
+{
+	if (ImGui::BeginMenu("File"))
+	{
+		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
+		{
+			SDL_Event quit_event;
+			quit_event.type = SDL_QUIT;
+			SDL_PushEvent(&quit_event);
+		}
+
+		ImGui::EndMenu();
 	}
-	
+}
+
+void EngineUI::ShowViewMenu()
+{
+	if (ImGui::BeginMenu("View"))
+	{
+		ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, &show_configuration_window);
+		ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, &show_console_window);
+		ImGui::MenuItem((ICON_FA_BUG " Debug"), (const char*)0, &show_debug_window);
+
+		ImGui::EndMenu();
+	}
+}
+
+void EngineUI::ShowHelpMenu()
+{
+	if (ImGui::BeginMenu("Help"))
+	{
+		ImGui::MenuItem(ICON_FA_QUESTION_CIRCLE " About", (const char*)0, &show_about_window);
+		ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAB));
+		if (ImGui::MenuItem(ICON_FA_GITHUB_ALT " Repository"))
+		{
+			ShellExecuteA(NULL, "open", "https://github.com/mariofv/OrionEngine/", NULL, NULL, SW_SHOWNORMAL);
+		}
+		ImGui::PopFont();
+		ImGui::EndMenu();
+	}
 }
 
 void EngineUI::ShowConfigurationWindow()
 {
-	if (ImGui::Begin("Configuration"))
+	if (ImGui::Begin(ICON_FA_COGS " Configuration"))
 	{
 		ShowHardware();
 		App->window->ShowWindowOptions();
@@ -78,9 +121,10 @@ void EngineUI::ShowConfigurationWindow()
 
 void EngineUI::ShowConsoleWindow()
 {
-	if (ImGui::Begin("Console")) 
+	if (ImGui::Begin(ICON_FA_TERMINAL " Console"))
 	{
-		if (App->engine_log->hasPendingData()) {
+		if (App->engine_log->hasPendingData()) 
+		{
 			ImGui::TextUnformatted(App->engine_log->getData());
 		}
 	}
@@ -89,7 +133,7 @@ void EngineUI::ShowConsoleWindow()
 
 void EngineUI::ShowHardware()
 {
-	if (ImGui::CollapsingHeader("Hardware"))
+	if (ImGui::CollapsingHeader(ICON_FA_HDD " Hardware"))
 	{
 		char tmp_string[4096];
 
@@ -159,7 +203,7 @@ void EngineUI::ShowHardware()
 
 void EngineUI::ShowDebugWindow()
 {
-	if (ImGui::Begin("Debug"))
+	if (ImGui::Begin(ICON_FA_BUG " Debug"))
 	{
 		ImGui::Checkbox("Move model around", &App->renderer->model_movement);
 		ImGui::Checkbox("Enable model Bounding Box", &App->renderer->bounding_box_visible);
@@ -169,7 +213,7 @@ void EngineUI::ShowDebugWindow()
 
 void EngineUI::ShowAboutWindow()
 {
-	if (ImGui::Begin("About")) 
+	if (ImGui::Begin(ICON_FA_QUESTION_CIRCLE " About")) 
 	{
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Orion Engine");
 		ImGui::TextWrapped("3D engine developed during the Master's Degree in AAA Videogames Development.");

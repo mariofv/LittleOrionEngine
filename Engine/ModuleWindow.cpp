@@ -2,9 +2,11 @@
 #include "Application.h"
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
+#include "ModuleEditor.h"
 #include "ModuleCamera.h"
 
 #include "imgui.h"
+#include "IconsFontAwesome5.h"
 
 ModuleWindow::ModuleWindow()
 {
@@ -176,7 +178,8 @@ void ModuleWindow::WindowResized(const unsigned width, const unsigned height)
 
 void ModuleWindow::ShowWindowOptions()
 {
-	if (ImGui::CollapsingHeader("Window")) {
+	ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAR));
+	if (ImGui::CollapsingHeader(ICON_FA_WINDOW_MAXIMIZE " Window")) {
 		if (ImGui::SliderFloat("Brightness", &brightness, 0, 1))
 		{
 			setBrightness(brightness);
@@ -219,5 +222,6 @@ void ModuleWindow::ShowWindowOptions()
 			App->window->setResizable(resizable);
 		}
 	}
+	ImGui::PopFont();
 
 }

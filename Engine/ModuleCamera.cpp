@@ -6,6 +6,7 @@
 
 #include "imgui.h"
 #include "SDL.h"
+#include "IconsFontAwesome5.h"
 
 ModuleCamera::ModuleCamera()
 {
@@ -307,7 +308,7 @@ void ModuleCamera::generateMatrices()
 
 void ModuleCamera::ShowCameraOptions()
 {
-	if (ImGui::CollapsingHeader("Camera"))
+	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera"))
 	{
 		ImGui::InputFloat3("Front", &camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly);
 		ImGui::InputFloat3("Up", &camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly);
