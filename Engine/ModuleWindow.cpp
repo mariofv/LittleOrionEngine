@@ -173,8 +173,6 @@ void ModuleWindow::WindowResized(const unsigned width, const unsigned height)
 {
 	this->width = width;
 	this->height = height;
-	App->cameras->SetAspectRatio((float)width / height);
-	App->renderer->GenerateFrameBuffers(width, height);
 }
 
 void ModuleWindow::ShowWindowOptions()

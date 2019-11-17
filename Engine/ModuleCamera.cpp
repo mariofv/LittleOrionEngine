@@ -154,7 +154,7 @@ void ModuleCamera::Center(const BoundingBox &bounding_box)
 
 	// Move camera position to visualize the whole bounding box
 	camera_frustum.pos = bounding_box.center - camera_frustum.front * BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius;
-	camera_frustum.pos += float3::unitY * INITIAL_HEIGHT_FACTOR * containing_sphere_radius;
+	camera_frustum.pos.y = INITIAL_HEIGHT_FACTOR * containing_sphere_radius;
 
 	generateMatrices();
 }

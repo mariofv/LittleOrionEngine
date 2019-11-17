@@ -20,6 +20,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
+	void GenerateFrameTexture(const float width, const float height);
 	void GenerateFrameBuffers(const float width, const float height);
 	void renderGrid() const;
 

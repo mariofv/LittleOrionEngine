@@ -25,6 +25,7 @@ EngineUI::~EngineUI()
 
 void EngineUI::InitUI()
 {
+	show_scene_window = true;
 	show_configuration_window = false;
 	show_console_window = false;
 	show_about_window = false;
@@ -32,9 +33,12 @@ void EngineUI::InitUI()
 
 void EngineUI::ShowEngineUI()
 {
-	ShowSceneWindow();
-
 	ShowMainMenu();
+
+	if (show_scene_window)
+	{
+		ShowSceneWindow();
+	}
 
 	if (show_configuration_window)
 	{
@@ -54,24 +58,6 @@ void EngineUI::ShowEngineUI()
 	}
 
 	App->time->ShowTimeControls();
-}
-
-void EngineUI::ShowSceneWindow()
-{
-	if (ImGui::Begin("Scene"))
-	{
-		ImGui::GetWindowDrawList()->AddImage(
-			(void *)App->renderer->frame_texture,
-			ImVec2(ImGui::GetCursorScreenPos()),
-			ImVec2(
-				ImGui::GetCursorScreenPos().x + App->window->getWidth(),
-				ImGui::GetCursorScreenPos().y + App->window->getHeight()
-			), 
-			ImVec2(0, 1), 
-			ImVec2(1, 0)
-		);
-	}
-	ImGui::End();
 }
 
 void EngineUI::ShowMainMenu()
@@ -104,6 +90,7 @@ void EngineUI::ShowViewMenu()
 {
 	if (ImGui::BeginMenu("View"))
 	{
+		ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, &show_scene_window);
 		ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, &show_configuration_window);
 		ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, &show_console_window);
 		ImGui::MenuItem((ICON_FA_BUG " Debug"), (const char*)0, &show_debug_window);
@@ -125,6 +112,29 @@ void EngineUI::ShowHelpMenu()
 		ImGui::PopFont();
 		ImGui::EndMenu();
 	}
+}
+
+void EngineUI::ShowSceneWindow()
+{
+	if (ImGui::Begin(ICON_FA_TH " Scene"))
+	{
+		float imgui_window_width = ImGui::GetWindowWidth();
+		float imgui_window_height = ImGui::GetWindowHeight();
+		App->cameras->SetAspectRatio(imgui_window_width / imgui_window_height);
+		App->renderer->GenerateFrameTexture(imgui_window_width, imgui_window_height);
+
+		ImGui::GetWindowDrawList()->AddImage(
+			(void *)App->renderer->frame_texture,
+			ImVec2(ImGui::GetCursorScreenPos()),
+			ImVec2(
+				ImGui::GetCursorScreenPos().x + imgui_window_width,
+				ImGui::GetCursorScreenPos().y + imgui_window_height
+			),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+	}
+	ImGui::End();
 }
 
 void EngineUI::ShowConfigurationWindow()

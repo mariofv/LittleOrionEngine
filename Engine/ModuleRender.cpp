@@ -60,26 +60,51 @@ update_status ModuleRender::PreUpdate()
 	// CLEAR WINDOW COLOR AND DEPTH BUFFER
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	// Bind frame buffer
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-	// Set viewport
-	glViewport(0, 0, App->window->getWidth(), App->window->getHeight());
-
-	// CLEAR FRAME_BUFFER COLOR AND DEPTH BUFFER
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
 	return UPDATE_CONTINUE;
 }
 
 // Called every draw update
 update_status ModuleRender::Update()
 {
+	return UPDATE_CONTINUE;
+}
+
+update_status ModuleRender::PostUpdate()
+{
+	SDL_GL_SwapWindow(App->window->window);
+	return UPDATE_CONTINUE;
+}
+
+// Called before quitting
+bool ModuleRender::CleanUp()
+{
+	LOG("Destroying renderer");
+	glDeleteTextures(1, &frame_texture);
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteRenderbuffers(1, &rbo);
+
+	return true;
+}
+
+void ModuleRender::GenerateFrameTexture(const float width, const float height)
+{
+	GenerateFrameBuffers(width, height);
+
+	// Bind frame buffer
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	// Set viewport
+	glViewport(0, 0, width, height);
+
+	// CLEAR FRAME_BUFFER COLOR AND DEPTH BUFFER
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
 	renderGrid();
 
 	glUseProgram(App->program->texture_program);
 
 	float x_translation = 0.f;
+
 	if (model_movement)
 	{
 		x_translation = sin(App->time->time * 0.01f)  *5.f;
@@ -125,32 +150,13 @@ update_status ModuleRender::Update()
 
 	// Unbind frame buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleRender::PostUpdate()
-{
-	SDL_GL_SwapWindow(App->window->window);
-	return UPDATE_CONTINUE;
-}
-
-// Called before quitting
-bool ModuleRender::CleanUp()
-{
-	LOG("Destroying renderer");
-	glDeleteTextures(1, &frame_texture);
-	glDeleteFramebuffers(1, &fbo);
-	glDeleteRenderbuffers(1, &rbo);
-
-	return true;
 }
 
 void ModuleRender::GenerateFrameBuffers(const float width, const float height)
 {
 	if (frame_texture != 0)
 	{
-		glDeleteRenderbuffers(1, &rbo);
+		glDeleteTextures(1, &frame_texture);
 	}
 	glGenTextures(1, &frame_texture);
 

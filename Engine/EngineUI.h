@@ -31,6 +31,7 @@ private:
 	void ShowAboutWindow();
 
 private:
+	bool show_scene_window = true;
 	bool show_configuration_window = false;
 	bool show_console_window = false;
 	bool show_debug_window = false;
