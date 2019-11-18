@@ -22,5 +22,5 @@ public:
 	bool CleanUp();
 
 	
-	const bool loadTexture(const char* texture_path, const GLuint &texture) const;
+	Texture* loadTexture(const char* texture_path) const;
 };

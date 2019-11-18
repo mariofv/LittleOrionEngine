@@ -9,11 +9,11 @@
 #include <limits>       // std::numeric_limits
 #include <algorithm>    // std::max
 
-Model::Model(const std::vector<Mesh*> meshes, const unsigned int num_materials, GLuint* material_textures)
+Model::Model(const std::vector<Mesh*> meshes, const std::vector<Texture*> material_textures)
 {
 	this->meshes = meshes;
 	this->material_textures = material_textures;
-	this->num_materials = num_materials;
+	num_materials = material_textures.size();
 
 	translation = float3::zero;
 	rotation = float3::zero,
@@ -31,12 +31,15 @@ Model::Model(const std::vector<Mesh*> meshes, const unsigned int num_materials, 
 
 Model::~Model()
 {
-	glDeleteTextures(num_materials, material_textures);
-	delete[] material_textures;
-
 	for (unsigned int i = 0; i < meshes.size(); ++i)
 	{
 		delete meshes[i];
+	}
+	meshes.clear();
+
+	for (unsigned int i = 0; i < material_textures.size(); ++i)
+	{
+		delete material_textures[i];
 	}
 	meshes.clear();
 
@@ -76,7 +79,7 @@ void Model::Render(GLuint shader_program) const
 
 	for (unsigned int i = 0; i < meshes.size(); ++i)
 	{
-		GLuint mesh_texture = material_textures[meshes[i]->material_index];
+		GLuint mesh_texture = material_textures[meshes[i]->material_index]->opengl_texture;
 		meshes[i]->Render(shader_program, mesh_texture);
 	}
 

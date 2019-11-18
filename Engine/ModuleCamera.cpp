@@ -257,8 +257,6 @@ void ModuleCamera::OrbitX(const float angle)
 
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
 	float3x3 rotation_matrix = float3x3::RotateY(adjusted_angle);
-	camera_frustum.up = rotation_matrix * camera_frustum.up;
-	camera_frustum.front = rotation_matrix * camera_frustum.front;
 	camera_frustum.pos = rotation_matrix * camera_frustum.pos;
 
 	LookAt(float3::zero); 
@@ -281,8 +279,6 @@ void ModuleCamera::OrbitY(const float angle)
 
 	float3x3 rotation_matrix = float3x3::identity;
 	rotation_matrix.SetRotatePart(camera_frustum.WorldRight(), adjusted_angle);
-	camera_frustum.up = rotation_matrix * camera_frustum.up;
-	camera_frustum.front = rotation_matrix * camera_frustum.front;
 	camera_frustum.pos = rotation_matrix * camera_frustum.pos;
 
 	LookAt(float3::zero);

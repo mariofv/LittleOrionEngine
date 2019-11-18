@@ -2,6 +2,7 @@
 #define _MODEL_H_
 
 #include "Mesh.h"
+#include "Texture.h"
 #include "BoundingBox.h"
 
 #include "MathGeoLib.h"
@@ -11,7 +12,7 @@ class Model
 {
 public:
 	Model() = default;
-	Model(const std::vector<Mesh*> meshes, const unsigned int num_materials, GLuint* material_textures);
+	Model(const std::vector<Mesh*> meshes, const std::vector<Texture*> material_textures);
 	~Model();
 
 	void Render(GLuint shader_program) const;
@@ -29,7 +30,7 @@ public:
 
 private:
 	std::vector<Mesh*> meshes;
-	GLuint *material_textures = nullptr;
+	std::vector<Texture*> material_textures;
 	
 	int num_materials = 0;
 	int num_vertices = 0;

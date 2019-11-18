@@ -3,7 +3,6 @@
 #include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
 #include "ModuleTexture.h"
-#include "Texture.h"
 
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
@@ -82,12 +81,11 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 
 	LOG("Loading model materials");
 	std::string model_base_path = GetModelBasePath(new_model_file_path);
-	GLuint *textures = new GLuint[scene->mNumMaterials];
-	glGenTextures(scene->mNumMaterials, textures);
+	std::vector<Texture*> material_textures;
 	for (unsigned i = 0; i < scene->mNumMaterials; ++i)
 	{
 		LOG("Loading material %d", i);
-		LoadMaterialData(scene->mMaterials[i], textures[i], model_base_path);
+		material_textures.push_back(LoadMaterialData(scene->mMaterials[i], model_base_path));
 	}
 
 	std::vector<Mesh*> meshes;
@@ -98,7 +96,7 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 		meshes.push_back(LoadMeshData(scene->mMeshes[i]));
 	}
 
-	current_model = new Model(meshes, scene->mNumMaterials, textures);
+	current_model = new Model(meshes, material_textures);
 
 	LOG("Computing model bounding box");
 	current_model->ComputeBoundingBox();
@@ -134,34 +132,41 @@ Mesh* ModuleModelLoader::LoadMeshData(const aiMesh *mesh) const
 	return new Mesh(vertices, indices, mesh->mMaterialIndex);
 }
 
-void ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const GLuint &texture, std::string model_base_path)
+Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, std::string model_base_path)
 {
 	aiString file;
 	aiTextureMapping mapping = aiTextureMapping_UV;
 	material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, 0);
 
+	Texture *material_texture;
+
 	LOG("Loading material texture in described path %s.", file.data);
-	if (App->texture->loadTexture(file.data, texture))
+	material_texture = App->texture->loadTexture(file.data);
+	if (material_texture != nullptr)
 	{
 		LOG("Material loaded correctly.");
-		return;
+		return material_texture;
 	}
 
 	model_base_path = model_base_path + file.data;
 	LOG("Loading material texture in model folder path %s.", model_base_path.c_str());
-	if (App->texture->loadTexture(model_base_path.c_str(), texture))
+	material_texture = App->texture->loadTexture(model_base_path.c_str());
+	if (material_texture != nullptr)
 	{
 		LOG("Material loaded correctly.");
-		return;
+		return material_texture;
 	}
 
 	std::string textures_path = std::string(TEXTURES_PATH) + file.data;
 	LOG("Loading material texture in textures folder %s.", textures_path.c_str());
-	if (App->texture->loadTexture(textures_path.c_str(), texture))
+	material_texture = App->texture->loadTexture(textures_path.c_str());
+	if (material_texture != nullptr)
 	{
 		LOG("Material loaded correctly.");
-		return;
+		return material_texture;
 	}
+
+	return nullptr;
 }
 
 std::string ModuleModelLoader::GetModelBasePath(const char *model_file_path) const

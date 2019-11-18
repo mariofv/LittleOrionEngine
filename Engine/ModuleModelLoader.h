@@ -4,6 +4,7 @@
 #include "Model.h"
 #include "Mesh.h"
 #include "BoundingBox.h"
+#include "Texture.h"
 
 #include <GL/glew.h>
 #include <vector>
@@ -36,7 +37,7 @@ private:
 	bool LoadModel(const char *new_model_file_path);
 
 	Mesh* LoadMeshData(const aiMesh *mesh) const;
-	void LoadMaterialData(const aiMaterial *material, const GLuint &texture, std::string model_base_path);
+	Texture* LoadMaterialData(const aiMaterial *material, std::string model_base_path);
 
 	std::string GetModelBasePath(const char *model_file_path) const;
 };

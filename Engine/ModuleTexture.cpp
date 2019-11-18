@@ -51,7 +51,7 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
-const bool ModuleTexture::loadTexture(const char* texture_path, const GLuint &texture) const
+Texture* ModuleTexture::loadTexture(const char* texture_path) const
 {
 	ILuint image;
 	ilGenImages(1, &image);
@@ -64,25 +64,10 @@ const bool ModuleTexture::loadTexture(const char* texture_path, const GLuint &te
 	if (error == IL_COULD_NOT_OPEN_FILE)
 	{
 		LOG("Error loading texture %s. File not found", texture_path);
-		return false;
+		return nullptr;
 	}
 
-	Texture loaded_texture = Texture(image);
-
-	glBindTexture(GL_TEXTURE_2D, texture);
-
-	// set the texture wrapping/filtering options (on the currently bound texture object)
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, loaded_texture.width, loaded_texture.height, 0, GL_RGB, GL_UNSIGNED_BYTE, loaded_texture.data);
-	glGenerateMipmap(GL_TEXTURE_2D);
-
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	return true;
+	return new Texture(image, texture_path);
 }
 
 
