@@ -11,6 +11,10 @@ Model::Model(const std::vector<Mesh*> meshes, const unsigned int num_materials, 
 	this->meshes = meshes;
 	this->material_textures = material_textures;
 	this->num_materials = num_materials;
+
+	translation = float3::zero;
+	rotation = float3x3::identity,
+	scale = float3::one;
 }
 
 
@@ -31,20 +35,15 @@ Model::~Model()
 
 void Model::Render(GLuint shader_program) const
 {
-	glUseProgram(shader_program);
+	float4x4 model_matrix = float4x4::FromTRS(translation, rotation, scale);
 
-	// CREATES MODEL MATRIX
-	float4x4 model = float4x4::FromTRS(
-		float3(0.0f, 0.0f, 0.0f),
-		float3x3::identity,
-		float3(1.0f, 1.0f, 1.0f)
-	);
+	glUseProgram(shader_program);
 
 	glUniformMatrix4fv(
 		glGetUniformLocation(shader_program, "model"),
 		1,
 		GL_TRUE,
-		&model[0][0]
+		&model_matrix[0][0]
 	);
 	glUniformMatrix4fv(
 		glGetUniformLocation(shader_program, "view"),

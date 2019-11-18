@@ -89,22 +89,15 @@ void ModuleRender::GenerateFrameTexture(const float width, const float height)
 {
 	GenerateFrameBuffers(width, height);
 
-	// Bind frame buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
-	// Set viewport
 	glViewport(0, 0, width, height);
-
-	// CLEAR FRAME_BUFFER COLOR AND DEPTH BUFFER
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
 	renderGrid();
 
-	float x_translation = 0.f;
-
 	if (model_movement)
 	{
-		x_translation = sin(App->time->time * 0.01f)  *5.f;
+		App->model_loader->current_model->translation.x = sin(App->time->time * 0.01f)  *5.f;
 	}
 	App->model_loader->current_model->Render(App->program->texture_program);
 	
@@ -113,7 +106,6 @@ void ModuleRender::GenerateFrameTexture(const float width, const float height)
 		App->model_loader->current_model->bounding_box->Render(App->program->default_program);
 	}
 
-	// Unbind frame buffer
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

@@ -4,6 +4,7 @@
 #include "Mesh.h"
 #include "BoundingBox.h"
 
+#include "MathGeoLib.h"
 #include <GL/glew.h>
 
 class Model
@@ -19,12 +20,17 @@ public:
 	void ComputeBoundingBox();
 
 public:
+	float3 translation;
+	float3x3 rotation;
+	float3 scale;
+	
 	BoundingBox *bounding_box = nullptr;
 
 private:
 	std::vector<Mesh*> meshes;
 	GLuint *material_textures = nullptr;
 	unsigned int num_materials;
+
 };
 
 #endif // _MODEL_H_
