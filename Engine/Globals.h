@@ -39,10 +39,6 @@ enum class Fonts
 # define HOUSE_MODEL_PATH "./resources/models/baker_house/BakerHouse.fbx"
 # define UMBREON_MODEL_PATH "./resources/models/Umbreon/Umbreon.fbx"
 
-// Configuration -----------
-#define SCREEN_WIDTH 640
-#define SCREEN_HEIGHT 480
-
 #define FULLSCREEN false
 #define RESIZABLE true
 #define BORDERED true

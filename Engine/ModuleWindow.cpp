@@ -30,10 +30,15 @@ bool ModuleWindow::Init()
 	}
 	else
 	{
+		SDL_DisplayMode DM;
+		SDL_GetDesktopDisplayMode(0, &DM);
+		screen_width = DM.w;
+		screen_height = DM.h;
+		
 		//Create window
-		width = SCREEN_WIDTH;
-		height = SCREEN_HEIGHT;
-		Uint32 flags = SDL_WINDOW_SHOWN |  SDL_WINDOW_OPENGL;
+		width = screen_width * 0.9;
+		height = screen_height * 0.9;
+		Uint32 flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 
 		if(FULLSCREEN)
 		{
@@ -59,10 +64,6 @@ bool ModuleWindow::Init()
 		}
 		else
 		{
-			//Get window surface
-			
-			screen_surface = SDL_GetWindowSurface(window);
-
 			// Create OpenGL context
 			glcontext = SDL_GL_CreateContext(window);
 		}
@@ -72,11 +73,6 @@ bool ModuleWindow::Init()
 	fullscreen = FULLSCREEN;
 	bordered = BORDERED;
 	resizable = RESIZABLE;
-
-	SDL_DisplayMode DM;
-	SDL_GetDesktopDisplayMode(0, &DM);
-	screen_width = DM.w;
-	screen_height = DM.h;
 
 	return ret;
 }
@@ -184,12 +180,12 @@ void ModuleWindow::ShowWindowOptions()
 			setBrightness(brightness);
 		}
 
-		if (ImGui::SliderInt("Width", &width, SCREEN_WIDTH, screen_width))
+		if (ImGui::SliderInt("Width", &width, screen_width/4, screen_width))
 		{
 			setWidth(width);
 		}
 
-		if (ImGui::SliderInt("Height", &height, SCREEN_HEIGHT, screen_height))
+		if (ImGui::SliderInt("Height", &height, screen_height/4, screen_height))
 		{
 			setHeight(height);
 		}
