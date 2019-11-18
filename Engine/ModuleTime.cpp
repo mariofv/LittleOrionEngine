@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleTime.h"
 #include "ModuleWindow.h"
+#include "EngineUI.h"
 #include "EngineLog.h"
 #include "Timer.h"
 
@@ -129,12 +130,9 @@ void ModuleTime::SetTimeScale(const float time_scale)
 
 void ModuleTime::ShowTimeControls()
 {
-	ImVec2 time_window_size(App->window->getWidth()+ 10, 32);
-	ImGui::SetNextWindowPos(ImVec2(-5, 19));
-	ImGui::SetNextWindowSize(time_window_size);
-
 	if (ImGui::Begin("Time Controls", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar))
 	{
+		ImVec2 time_window_size = ImGui::GetWindowSize();
 
 		ImVec2 play_button_pos((time_window_size.x - 24)*0.5f - 26, (time_window_size.y - 24)*0.5f);
 		ImGui::SetCursorPos(play_button_pos);

@@ -29,14 +29,15 @@ void EngineUI::InitUI()
 {
 	show_scene_window = true;
 	show_model_properties_window = true;
-	show_configuration_window = false;
-	show_console_window = false;
+	show_configuration_window = true;
+	show_console_window = true;
 	show_about_window = false;
 }
 
 void EngineUI::ShowEngineUI()
 {
 	ShowMainMenu();
+	ShowTimeControls();
 
 	if (show_scene_window)
 	{
@@ -44,7 +45,7 @@ void EngineUI::ShowEngineUI()
 	}
 	if (show_model_properties_window)
 	{
-		App->model_loader->current_model->ShowModelProperties();
+		ShowModelPropertiesWindow();
 	}
 	if (show_configuration_window)
 	{
@@ -62,8 +63,6 @@ void EngineUI::ShowEngineUI()
 	{
 		ShowAboutWindow();
 	}
-
-	App->time->ShowTimeControls();
 }
 
 void EngineUI::ShowMainMenu()
@@ -121,8 +120,25 @@ void EngineUI::ShowHelpMenu()
 	}
 }
 
+void EngineUI::ShowTimeControls()
+{
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
+	ImGui::SetNextWindowPos(ImVec2(0, MAIN_MENU_BAR_HEIGHT));
+	ImGui::SetNextWindowSize(ImVec2(App->window->getWidth(), App->window->getHeight()*TIME_BAR_HEIGHT_PROP));
+	App->time->ShowTimeControls();
+	ImGui::PopStyleVar();
+}
+
 void EngineUI::ShowSceneWindow()
 {
+	ImGui::SetNextWindowPos(
+		ImVec2(App->window->getWidth() * CONFIG_WIDTH_PROP, MAIN_MENU_BAR_HEIGHT + App->window->getHeight() * TIME_BAR_HEIGHT_PROP),
+		ImGuiCond_Once
+	);
+	ImGui::SetNextWindowSize(
+		ImVec2(App->window->getWidth() * SCENE_WIDTH_PROP, App->window->getHeight() * SCENE_HEIGHT_PROP),
+		ImGuiCond_Once
+	);
 	if (ImGui::Begin(ICON_FA_TH " Scene"))
 	{
 		float imgui_window_width = ImGui::GetWindowWidth();
@@ -144,8 +160,29 @@ void EngineUI::ShowSceneWindow()
 	ImGui::End();
 }
 
+void EngineUI::ShowModelPropertiesWindow()
+{
+	ImGui::SetNextWindowPos(
+		ImVec2(App->window->getWidth() * (CONFIG_WIDTH_PROP + SCENE_WIDTH_PROP), MAIN_MENU_BAR_HEIGHT + App->window->getHeight() * TIME_BAR_HEIGHT_PROP),
+		ImGuiCond_Once
+	);
+	ImGui::SetNextWindowSize(
+		ImVec2(App->window->getWidth() * MODEL_PROPERTIES_WIDTH_PROP, App->window->getHeight() * MODEL_PROPERTIES_HEIGHT_PROP),
+		ImGuiCond_Once
+	);
+	App->model_loader->current_model->ShowModelProperties();
+}
+
 void EngineUI::ShowConfigurationWindow()
 {
+	ImGui::SetNextWindowPos(
+		ImVec2(0, MAIN_MENU_BAR_HEIGHT + App->window->getHeight() * TIME_BAR_HEIGHT_PROP),
+		ImGuiCond_Once
+	);
+	ImGui::SetNextWindowSize(
+		ImVec2(App->window->getWidth() * CONFIG_WIDTH_PROP, App->window->getHeight() * CONFIG_HEIGHT_PROP),
+		ImGuiCond_Once
+	);
 	if (ImGui::Begin(ICON_FA_COGS " Configuration"))
 	{
 		ShowHardware();
@@ -161,6 +198,14 @@ void EngineUI::ShowConfigurationWindow()
 
 void EngineUI::ShowConsoleWindow()
 {
+	ImGui::SetNextWindowPos(
+		ImVec2(0, MAIN_MENU_BAR_HEIGHT + App->window->getHeight() * (TIME_BAR_HEIGHT_PROP + CONFIG_HEIGHT_PROP)),
+		ImGuiCond_Once
+	);
+	ImGui::SetNextWindowSize(
+		ImVec2(App->window->getWidth(), App->window->getHeight() * 0.25f),
+		ImGuiCond_Once
+	);
 	if (ImGui::Begin(ICON_FA_TERMINAL " Console"))
 	{
 		if (App->engine_log->hasPendingData()) 
