@@ -160,7 +160,29 @@ void Model::ShowModelProperties()
 
 		if (ImGui::CollapsingHeader(ICON_FA_IMAGE" Texture"))
 		{
+			char tmp_string[256];
+			int window_width = ImGui::GetWindowWidth();
 
+			for (unsigned int i = 0; i < num_materials; ++i)
+			{
+				sprintf_s(tmp_string, "Material %d", i);
+				if (ImGui::TreeNode(tmp_string))
+				{
+					ImGui::Text("Texture path: ");
+					ImGui::SameLine();
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), material_textures[i]->texture_path);
+
+					sprintf_s(tmp_string, "%dx%d px", material_textures[i]->width, material_textures[i]->height);
+					ImGui::Text("Texture size: ");
+					ImGui::SameLine();
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
+
+					ImGui::SetCursorPosX(window_width*0.15f);
+					ImGui::Image((void*)(intptr_t)material_textures[0]->opengl_texture, ImVec2(window_width * 0.7f, window_width * 0.7f), ImVec2(0, 1), ImVec2(1, 0));
+					ImGui::TreePop();
+				}
+			}
+			
 		}
 
 		ImGui::End();
