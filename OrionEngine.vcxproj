@@ -160,7 +160,6 @@
     <ClInclude Include="Engine\ModuleInput.h" />
     <ClInclude Include="Engine\ModuleProgram.h" />
     <ClInclude Include="Engine\ModuleRender.h" />
-    <ClInclude Include="Engine\ModuleRenderExercise.h" />
     <ClInclude Include="Engine\ModuleTexture.h" />
     <ClInclude Include="Engine\ModuleWindow.h" />
     <ClInclude Include="Engine\Texture.h" />
@@ -220,7 +219,6 @@
     <ClCompile Include="Engine\ModuleInput.cpp" />
     <ClCompile Include="Engine\ModuleProgram.cpp" />
     <ClCompile Include="Engine\ModuleRender.cpp" />
-    <ClCompile Include="Engine\ModuleRenderExercise.cpp" />
     <ClCompile Include="Engine\ModuleTexture.cpp" />
     <ClCompile Include="Engine\ModuleWindow.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />

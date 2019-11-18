@@ -37,7 +37,6 @@ public:
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
-	ModuleRenderExercise* exercise = nullptr;
 	ModuleProgram* program = nullptr;
 	ModuleTexture* texture = nullptr;
 	ModuleEditor* editor = nullptr;

@@ -3,7 +3,6 @@
 #include "ModuleWindow.h"
 #include "ModuleRender.h"
 #include "ModuleInput.h"
-#include "ModuleRenderExercise.h"
 #include "ModuleProgram.h"
 #include "ModuleTexture.h"
 #include "ModuleEditor.h"
@@ -28,7 +27,6 @@ Application::Application()
 	modules.push_back(texture = new ModuleTexture());
 	modules.push_back(cameras = new ModuleCamera());
 	modules.push_back(model_loader = new ModuleModelLoader());
-	modules.push_back(exercise = new ModuleRenderExercise());
 		
 	engine_log = new EngineLog();
 	ui = new EngineUI();
