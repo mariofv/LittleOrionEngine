@@ -9,11 +9,11 @@ Mesh::Mesh()
 	ebo = 0;
 }
 
-Mesh::Mesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const std::vector<unsigned int> textures)
+Mesh::Mesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int material_index)
 {
 	this->vertices = vertices;
 	this->indices = indices;
-	this->textures = textures;
+	this->material_index = material_index;
 
 	setupMesh();
 }
@@ -22,17 +22,16 @@ Mesh::~Mesh()
 {
 	vertices.clear();
 	indices.clear();
-	textures.clear();
 
 	glDeleteBuffers(1, &vao);
 	glDeleteBuffers(1, &ebo);
 	glDeleteVertexArrays(1, &vao);
 }
 
-void Mesh::Render(const GLuint shader_program)
+void Mesh::Render(const GLuint shader_program, const GLuint texture)
 {
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, textures[0]); // TODO: Adapt for multiple textures
+	glBindTexture(GL_TEXTURE_2D, texture); 
 	glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
 
 	glBindVertexArray(vao);

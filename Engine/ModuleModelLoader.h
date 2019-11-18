@@ -1,6 +1,7 @@
 #pragma once
 #include "Module.h"
 #include "Globals.h"
+#include "Model.h"
 #include "Mesh.h"
 #include "BoundingBox.h"
 
@@ -27,20 +28,15 @@ public:
 	void SwapCurrentModel(const char *new_model_file_path);
 
 public:
-	std::vector<Mesh*> meshes;
-	GLuint *textures = nullptr;
 	const aiScene* scene = nullptr;
-
-	BoundingBox *model_bounding_box = nullptr;
+	Model* current_model = nullptr;
 
 private:
 	void UnloadCurrentModel();
 	bool LoadModel(const char *new_model_file_path);
 
-	void LoadMeshData(const aiMesh *mesh);
+	Mesh* LoadMeshData(const aiMesh *mesh) const;
 	void LoadMaterialData(const aiMaterial *material, const GLuint &texture, std::string model_base_path);
-
-	void ComputeBoundingBox();
 
 	std::string GetModelBasePath(const char *model_file_path) const;
 };

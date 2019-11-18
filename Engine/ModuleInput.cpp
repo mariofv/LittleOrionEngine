@@ -101,7 +101,7 @@ update_status ModuleInput::Update()
 			}
 			else if (event.key.keysym.sym == SDLK_f)
 			{
-				App->cameras->Focus(*App->model_loader->model_bounding_box);
+				App->cameras->Focus(*App->model_loader->current_model->bounding_box);
 			}
 			else if (event.key.keysym.sym == SDLK_b)
 			{

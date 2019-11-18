@@ -50,7 +50,6 @@ bool ModuleRender::Init()
 	glEnable(GL_DEPTH_TEST);
 
 	glGenFramebuffers(1, &fbo);
-	GenerateFrameBuffers(App->window->getWidth(), App->window->getHeight());
 
 	return true;
 }
@@ -101,51 +100,17 @@ void ModuleRender::GenerateFrameTexture(const float width, const float height)
 
 	renderGrid();
 
-	glUseProgram(App->program->texture_program);
-
 	float x_translation = 0.f;
 
 	if (model_movement)
 	{
 		x_translation = sin(App->time->time * 0.01f)  *5.f;
 	}
-
-	// CREATES MODEL MATRIX
-	float4x4 model = float4x4::FromTRS(
-		float3(x_translation, 0.0f, 0.0f),
-		float3x3::identity,
-		float3(1.0f, 1.0f, 1.0f)
-	);
-
-	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->texture_program, "model"),
-		1,
-		GL_TRUE,
-		&model[0][0]
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->texture_program, "view"),
-		1,
-		GL_TRUE,
-		&App->cameras->view[0][0]
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->texture_program, "proj"),
-		1,
-		GL_TRUE,
-		&App->cameras->proj[0][0]
-	);
-
-
-	for (unsigned int i = 0; i < App->model_loader->meshes.size(); ++i)
-	{
-		App->model_loader->meshes[i]->Render(App->program->texture_program);
-	}
-	glUseProgram(0);
-
+	App->model_loader->current_model->Render(App->program->texture_program);
+	
 	if (bounding_box_visible)
 	{
-		App->model_loader->model_bounding_box->Render(App->program->default_program);
+		App->model_loader->current_model->bounding_box->Render(App->program->default_program);
 	}
 
 	// Unbind frame buffer

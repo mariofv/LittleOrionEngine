@@ -14,11 +14,11 @@ public:
 	};
 
 	Mesh();
-	Mesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const std::vector<unsigned int> textures);
+	Mesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int texture_index);
 
 	~Mesh();
 
-	void Render(const GLuint shader_program);
+	void Render(const GLuint shader_program, const GLuint texture);
 
 private:
 	void setupMesh();
@@ -26,7 +26,7 @@ private:
 public:
 	std::vector<Vertex> vertices;
 	std::vector<unsigned int> indices;
-	std::vector<unsigned int> textures;
+	unsigned int material_index;
 
 private:
 	GLuint vao;
