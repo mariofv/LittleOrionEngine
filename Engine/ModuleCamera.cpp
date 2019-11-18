@@ -310,14 +310,14 @@ void ModuleCamera::ShowCameraOptions()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera"))
 	{
-		ImGui::InputFloat3("Front", &camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputFloat3("Up", &camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputFloat3("Position", &camera_frustum.pos[0], 3, ImGuiInputTextFlags_ReadOnly);
+		ImGui::DragFloat3("Front", &camera_frustum.front[0], NULL, NULL, NULL);
+		ImGui::DragFloat3("Up", &camera_frustum.up[0], NULL, NULL, NULL);
+		ImGui::DragFloat3("Position", &camera_frustum.pos[0], NULL, NULL, NULL);
 
 		ImGui::Separator();
 
-		ImGui::InputFloat("Mov Speed", &camera_movement_speed, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputFloat("Rot Speed", &camera_rotation_speed, 0, 0, "%.3f", ImGuiInputTextFlags_ReadOnly);
+		ImGui::DragFloat("Mov Speed", &camera_movement_speed, NULL, NULL, NULL);
+		ImGui::DragFloat("Rot Speed", &camera_rotation_speed, NULL, NULL, NULL);
 		
 		if (ImGui::SliderFloat("FOV", &camera_frustum.horizontalFov, 0, 2 * 3.14f))
 		{

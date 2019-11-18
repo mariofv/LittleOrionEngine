@@ -3,6 +3,9 @@
 #include "Application.h"
 #include "ModuleCamera.h"
 
+#include "imgui.h"
+#include "IconsFontAwesome5.h"
+
 #include <limits>       // std::numeric_limits
 #include <algorithm>    // std::max
 
@@ -13,8 +16,16 @@ Model::Model(const std::vector<Mesh*> meshes, const unsigned int num_materials, 
 	this->num_materials = num_materials;
 
 	translation = float3::zero;
-	rotation = float3x3::identity,
+	rotation = float3::zero,
 	scale = float3::one;
+
+	num_vertices = 0;
+	num_triangles = 0;
+	for (unsigned int i = 0; i < meshes.size(); ++i)
+	{
+		num_vertices += meshes[i]->vertices.size();
+		num_triangles += meshes[i]->indices.size() / 3.f;
+	}
 }
 
 
@@ -35,7 +46,11 @@ Model::~Model()
 
 void Model::Render(GLuint shader_program) const
 {
-	float4x4 model_matrix = float4x4::FromTRS(translation, rotation, scale);
+	float4x4 model_matrix = float4x4::FromTRS(
+		translation, 
+		float3x3::FromEulerXYZ(rotation.x,rotation.y,rotation.z),
+		scale
+	);
 
 	glUseProgram(shader_program);
 
@@ -114,4 +129,37 @@ void Model::ComputeBoundingBox()
 	}
 
 	bounding_box = new BoundingBox(min_coordinates, max_coordinates);
+}
+
+void Model::ShowModelProperties()
+{
+	if (ImGui::Begin(ICON_FA_CUBE" Properties"))
+	{
+		if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform"))
+		{	
+			ImGui::DragFloat3("Translation", &translation[0], NULL, NULL, NULL);
+			ImGui::DragFloat3("Rotation", &rotation[0], NULL, NULL, NULL);
+			ImGui::DragFloat3("Scale", &scale[0], NULL, NULL, NULL);
+		}
+
+		ImGui::Spacing();
+
+		if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Geometry")) {
+		
+			int tmp_num_meshes = meshes.size();
+
+			ImGui::DragInt("# Meshes", &tmp_num_meshes, NULL, NULL, NULL);
+			ImGui::DragInt("# Triangles", &num_triangles, NULL, NULL, NULL);
+			ImGui::DragInt("# Vertices", &num_vertices, NULL, NULL, NULL);
+		}
+
+		ImGui::Spacing();
+
+		if (ImGui::CollapsingHeader(ICON_FA_IMAGE" Texture"))
+		{
+
+		}
+
+		ImGui::End();
+	}
 }

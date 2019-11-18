@@ -61,7 +61,7 @@ update_status ModuleEditor::Update()
 {
 	App->ui->ShowEngineUI();
 	ImGui::ShowStyleEditor();
-	//ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
 	return UPDATE_CONTINUE;
 }
 

@@ -5,6 +5,8 @@
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleTime.h"
+#include "ModuleModelLoader.h"
+#include "Model.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
 
@@ -26,6 +28,7 @@ EngineUI::~EngineUI()
 void EngineUI::InitUI()
 {
 	show_scene_window = true;
+	show_model_properties_window = true;
 	show_configuration_window = false;
 	show_console_window = false;
 	show_about_window = false;
@@ -39,7 +42,10 @@ void EngineUI::ShowEngineUI()
 	{
 		ShowSceneWindow();
 	}
-
+	if (show_model_properties_window)
+	{
+		App->model_loader->current_model->ShowModelProperties();
+	}
 	if (show_configuration_window)
 	{
 		ShowConfigurationWindow();
@@ -91,6 +97,7 @@ void EngineUI::ShowViewMenu()
 	if (ImGui::BeginMenu("View"))
 	{
 		ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, &show_scene_window);
+		ImGui::MenuItem((ICON_FA_CUBE " Properties"), (const char*)0, &show_model_properties_window);
 		ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, &show_configuration_window);
 		ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, &show_console_window);
 		ImGui::MenuItem((ICON_FA_BUG " Debug"), (const char*)0, &show_debug_window);
