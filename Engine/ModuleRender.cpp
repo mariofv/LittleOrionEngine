@@ -47,6 +47,12 @@ bool ModuleRender::Init()
 	LOG("OpenGL version supported %s", glGetString(GL_VERSION));
 	LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
+	if (VSYNC)
+	{
+		SDL_GL_SetSwapInterval(1);
+	}
+
+
 	glEnable(GL_DEPTH_TEST);
 
 	glGenFramebuffers(1, &fbo);
