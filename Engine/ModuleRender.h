@@ -34,6 +34,8 @@ private:
 	void SetStencilTest(const bool gl_stencil_test);
 	void SetBlending(const bool gl_blend);
 	void SetFaceCulling(const bool gl_cull_face);
+	void SetCulledFaces(const GLenum culled_faces) const;
+	void SetFrontFaces(const GLenum front_faces) const;
 	void SetDithering(const bool gl_dither);
 	void SetMinMaxing(const bool gl_minmax);
 	void SetWireframing(const bool gl_wireframe);
@@ -56,7 +58,10 @@ private:
 	bool gl_stencil_test = false;
 	bool gl_blend = false;
 	bool gl_cull_face = false;
+	int culled_faces = 0;
+	int front_faces = 0;
 	bool gl_dither = false;
 	bool gl_minmax = false;
 	bool gl_wireframe = false;
+
 };

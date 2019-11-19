@@ -11,6 +11,7 @@
 #include "MathGeoLib.h"
 #include <assimp/scene.h>
 #include "imgui.h"
+#include "imgui.h"
 #include "IconsFontAwesome5.h"
 
 ModuleRender::ModuleRender()
@@ -185,6 +186,16 @@ void ModuleRender::SetFaceCulling(const bool gl_cull_face)
 	gl_cull_face ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 }
 
+void ModuleRender::SetCulledFaces(const GLenum culled_faces) const
+{
+	glCullFace(culled_faces);
+}
+
+void ModuleRender::SetFrontFaces(const GLenum front_faces) const
+{
+	glFrontFace(front_faces);
+}
+
 void ModuleRender::SetDithering(const bool gl_dither)
 {
 	this->gl_dither = gl_dither;
@@ -276,41 +287,78 @@ void ModuleRender::ShowRenderOptions()
 		{
 			SetVSync(vsync);
 		}
-		if (ImGui::Checkbox("Alpha test", &gl_alpha_test))
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Wireframe", &gl_wireframe))
 		{
-			SetAlphaTest(gl_alpha_test);
+			SetWireframing(gl_wireframe);
 		}
+		ImGui::SameLine();
 		if (ImGui::Checkbox("Depth test", &gl_depth_test))
 		{
 			SetDepthTest(gl_depth_test);
 		}
-		if (ImGui::Checkbox("Scissor test", &gl_scissor_test))
-		{
-			SetScissorTest(gl_scissor_test);
-		}
-		if (ImGui::Checkbox("Stencil test", &gl_stencil_test))
-		{
-			SetStencilTest(gl_stencil_test);
-		}
-		if (ImGui::Checkbox("Blending", &gl_blend))
-		{
-			SetBlending(gl_blend);
-		}
+		ImGui::Separator();
 		if (ImGui::Checkbox("Face culling", &gl_cull_face))
 		{
 			SetFaceCulling(gl_cull_face);
 		}
-		if (ImGui::Checkbox("Dithering", &gl_dither))
+		if (ImGui::Combo("Culled faces", &culled_faces, "Back\0Front\0Front and back\0"))
 		{
-			SetDithering(gl_dither);
+			switch (culled_faces)
+			{
+			case 0:
+				SetCulledFaces(GL_BACK);
+				break;
+			case 1:
+				SetCulledFaces(GL_FRONT);
+				break;
+			case 2:
+				SetCulledFaces(GL_FRONT_AND_BACK);
+				break;
+			}
 		}
-		if (ImGui::Checkbox("Min Maxing", &gl_minmax))
+		if (ImGui::Combo("Front faces", &front_faces, "Counterclockwise\0Clockwise\0"))
 		{
-			SetMinMaxing(gl_minmax);
+			switch (front_faces)
+			{
+			case 0:
+				SetFrontFaces(GL_CCW);
+				break;
+			case 1:
+				SetFrontFaces(GL_CW);
+				break;
+			}
 		}
-		if (ImGui::Checkbox("Wireframe", &gl_wireframe))
+
+		HelpMarker("This settings have no visual impact, WIP.");
+		ImGui::SameLine();
+		if (ImGui::TreeNode("Non-functional settings"))
 		{
-			SetWireframing(gl_wireframe);
+			if (ImGui::Checkbox("Alpha test", &gl_alpha_test))
+			{
+				SetAlphaTest(gl_alpha_test);
+			}
+			if (ImGui::Checkbox("Scissor test", &gl_scissor_test))
+			{
+				SetScissorTest(gl_scissor_test);
+			}
+			if (ImGui::Checkbox("Stencil test", &gl_stencil_test))
+			{
+				SetStencilTest(gl_stencil_test);
+			}
+			if (ImGui::Checkbox("Blending", &gl_blend))
+			{
+				SetBlending(gl_blend);
+			}
+			if (ImGui::Checkbox("Dithering", &gl_dither))
+			{
+				SetDithering(gl_dither);
+			}
+			if (ImGui::Checkbox("Min Maxing", &gl_minmax))
+			{
+				SetMinMaxing(gl_minmax);
+			}
+			ImGui::TreePop();
 		}
 	}
 }
