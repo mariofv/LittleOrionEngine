@@ -148,7 +148,9 @@ Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, std::st
 		return material_texture;
 	}
 
-	model_base_path = model_base_path + file.data;
+	std::string texture_file_name = GetTextureFileName(file.data);
+
+	model_base_path = model_base_path + texture_file_name;
 	LOG("Loading material texture in model folder path %s.", model_base_path.c_str());
 	material_texture = App->texture->loadTexture(model_base_path.c_str());
 	if (material_texture != nullptr)
@@ -157,7 +159,7 @@ Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, std::st
 		return material_texture;
 	}
 
-	std::string textures_path = std::string(TEXTURES_PATH) + file.data;
+	std::string textures_path = std::string(TEXTURES_PATH) + texture_file_name;
 	LOG("Loading material texture in textures folder %s.", textures_path.c_str());
 	material_texture = App->texture->loadTexture(textures_path.c_str());
 	if (material_texture != nullptr)
@@ -177,4 +179,21 @@ std::string ModuleModelLoader::GetModelBasePath(const char *model_file_path) con
 	std::string model_base_path = file_string.substr(0, found + 1);
 
 	return model_base_path;
+}
+
+std::string ModuleModelLoader::GetTextureFileName(const char *texture_file_path) const
+{
+	std::string texture_path_string = std::string(texture_file_path);
+
+	std::size_t found = texture_path_string.find_last_of("/\\");
+	if (found == std::string::npos)
+	{
+		return texture_path_string;
+	}
+	else
+	{
+		std::string texture_filename = texture_path_string.substr(found, texture_path_string.length());
+
+		return texture_filename;
+	}
 }
