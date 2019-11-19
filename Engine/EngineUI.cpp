@@ -33,6 +33,9 @@ void EngineUI::InitUI()
 	show_configuration_window = true;
 	show_console_window = true;
 	show_about_window = false;
+
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
 }
 
 void EngineUI::ShowEngineUI()

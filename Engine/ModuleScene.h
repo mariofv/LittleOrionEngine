@@ -10,7 +10,10 @@ public:
 	ModuleScene() = default;
 	~ModuleScene();
 
-	void ShowSceneWindow() const;
+	void ShowSceneWindow();
+
+public:
+	bool is_hovered = false;
 };
 
 #endif // _MODULSESCENE_H

@@ -5,6 +5,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
 #include "ModuleRender.h"
+#include "ModuleScene.h"
 
 #include "SDL.h"
 #include "imgui.h"
@@ -57,7 +58,7 @@ update_status ModuleInput::Update()
 			break;
 
 		case SDL_MOUSEMOTION:
-			if (event.motion.state & SDL_BUTTON_RMASK) {
+			if (event.motion.state & SDL_BUTTON_RMASK && App->scene->is_hovered) {
 				if (math::Abs(event.motion.xrel) > 1.5) {
 					App->cameras->RotateYaw(event.motion.xrel);
 				}
@@ -67,7 +68,7 @@ update_status ModuleInput::Update()
 				}
 
 			}
-			else if (event.motion.state & SDL_BUTTON_LMASK) {
+			else if (event.motion.state & SDL_BUTTON_LMASK && App->scene->is_hovered) {
 				if (math::Abs(event.motion.xrel) > 1.5) {
 					App->cameras->OrbitX(event.motion.xrel);
 				}
@@ -80,11 +81,11 @@ update_status ModuleInput::Update()
 			break;
 
 		case SDL_MOUSEWHEEL:
-			if (event.wheel.y > 0) 
+			if (event.wheel.y > 0 && App->scene->is_hovered)
 			{
 				App->cameras->MoveFoward();
 			}
-			else if (event.wheel.y < 0) // scroll down
+			else if (event.wheel.y < 0 && App->scene->is_hovered) 
 			{
 				App->cameras->MoveBackward();
 			}
@@ -124,6 +125,7 @@ update_status ModuleInput::Update()
 			char *dropped_filedir = event.drop.file;
 			App->model_loader->SwapCurrentModel(dropped_filedir);
 			SDL_free(dropped_filedir);
+			
 			break;
 		}
 	}

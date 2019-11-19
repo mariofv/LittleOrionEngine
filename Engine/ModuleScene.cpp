@@ -6,10 +6,11 @@
 #include "imgui.h"
 #include "IconsFontAwesome5.h"
 
-void ModuleScene::ShowSceneWindow() const
+void ModuleScene::ShowSceneWindow()
 {
 	if (ImGui::Begin(ICON_FA_TH " Scene"))
 	{
+		is_hovered = ImGui::IsWindowHovered();
 		float imgui_window_width = ImGui::GetWindowWidth();
 		float imgui_window_height = ImGui::GetWindowHeight();
 		App->cameras->SetAspectRatio(imgui_window_width / imgui_window_height);
