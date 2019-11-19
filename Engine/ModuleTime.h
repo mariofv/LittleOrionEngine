@@ -44,7 +44,7 @@ private:
 	float frame_start_time = 0.f;
 	float real_frame_start_time = 0.f;
 
-	bool limit_fps = false;
+	bool limit_fps = true;
 	float last_frame_delay = 0.f;
 
 	int max_fps = 60;
