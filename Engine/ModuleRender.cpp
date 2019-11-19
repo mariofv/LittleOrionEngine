@@ -10,6 +10,8 @@
 #include "SDL.h"
 #include "MathGeoLib.h"
 #include <assimp/scene.h>
+#include "imgui.h"
+#include "IconsFontAwesome5.h"
 
 ModuleRender::ModuleRender()
 {
@@ -47,13 +49,8 @@ bool ModuleRender::Init()
 	LOG("OpenGL version supported %s", glGetString(GL_VERSION));
 	LOG("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
-	if (VSYNC)
-	{
-		SDL_GL_SetSwapInterval(1);
-	}
-
-
-	glEnable(GL_DEPTH_TEST);
+	SetVSync(VSYNC);
+	SetDepthTest(true);
 
 	glGenFramebuffers(1, &fbo);
 
@@ -146,6 +143,66 @@ void ModuleRender::GenerateFrameBuffers(const float width, const float height)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
+void ModuleRender::SetVSync(const bool vsync)
+{
+	this->vsync = vsync;
+	vsync ? SDL_GL_SetSwapInterval(1) : SDL_GL_SetSwapInterval(0);
+}
+
+void ModuleRender::SetAlphaTest(const bool gl_alpha_test)
+{
+	this->gl_alpha_test = gl_alpha_test;
+	gl_alpha_test ? glEnable(GL_ALPHA_TEST) : glDisable(GL_ALPHA_TEST);
+}
+
+void ModuleRender::SetDepthTest(const bool gl_depth_test)
+{
+	this->gl_depth_test = gl_depth_test;
+	gl_depth_test ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
+}
+
+void ModuleRender::SetScissorTest(const bool gl_scissor_test)
+{
+	this->gl_scissor_test = gl_scissor_test;
+	gl_scissor_test ? glEnable(GL_SCISSOR_TEST) : glDisable(GL_SCISSOR_TEST);
+}
+
+void ModuleRender::SetStencilTest(const bool gl_stencil_test)
+{
+	this->gl_stencil_test = gl_stencil_test;
+	gl_stencil_test ? glEnable(GL_STENCIL_TEST) : glDisable(GL_STENCIL_TEST);
+}
+
+void ModuleRender::SetBlending(const bool gl_blend)
+{
+	this->gl_blend = gl_blend;
+	gl_blend ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
+}
+
+void ModuleRender::SetFaceCulling(const bool gl_cull_face)
+{
+	this->gl_cull_face = gl_cull_face;
+	gl_cull_face ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
+}
+
+void ModuleRender::SetDithering(const bool gl_dither)
+{
+	this->gl_dither = gl_dither;
+	gl_dither ? glEnable(GL_DITHER) : glDisable(GL_DITHER);
+}
+
+void ModuleRender::SetMinMaxing(const bool gl_minmax)
+{
+	this->gl_minmax = gl_minmax;
+	gl_minmax ? glEnable(GL_MINMAX) : glDisable(GL_MINMAX);
+}
+
+void ModuleRender::SetWireframing(const bool gl_wireframe)
+{
+	this->gl_wireframe = gl_wireframe;
+	gl_wireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+}
+
 void ModuleRender::renderGrid() const
 {
 	glUseProgram(App->program->primitive_program);
@@ -211,3 +268,49 @@ void ModuleRender::renderGrid() const
 	glLineWidth(1.0f);
 }
 
+void ModuleRender::ShowRenderOptions()
+{
+	if (ImGui::CollapsingHeader(ICON_FA_CLONE " Renderer"))
+	{
+		if (ImGui::Checkbox("VSync", &vsync))
+		{
+			SetVSync(vsync);
+		}
+		if (ImGui::Checkbox("Alpha test", &gl_alpha_test))
+		{
+			SetAlphaTest(gl_alpha_test);
+		}
+		if (ImGui::Checkbox("Depth test", &gl_depth_test))
+		{
+			SetDepthTest(gl_depth_test);
+		}
+		if (ImGui::Checkbox("Scissor test", &gl_scissor_test))
+		{
+			SetScissorTest(gl_scissor_test);
+		}
+		if (ImGui::Checkbox("Stencil test", &gl_stencil_test))
+		{
+			SetStencilTest(gl_stencil_test);
+		}
+		if (ImGui::Checkbox("Blending", &gl_blend))
+		{
+			SetBlending(gl_blend);
+		}
+		if (ImGui::Checkbox("Face culling", &gl_cull_face))
+		{
+			SetFaceCulling(gl_cull_face);
+		}
+		if (ImGui::Checkbox("Dithering", &gl_dither))
+		{
+			SetDithering(gl_dither);
+		}
+		if (ImGui::Checkbox("Min Maxing", &gl_minmax))
+		{
+			SetMinMaxing(gl_minmax);
+		}
+		if (ImGui::Checkbox("Wireframe", &gl_wireframe))
+		{
+			SetWireframing(gl_wireframe);
+		}
+	}
+}

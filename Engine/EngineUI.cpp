@@ -186,10 +186,16 @@ void EngineUI::ShowConfigurationWindow()
 	if (ImGui::Begin(ICON_FA_COGS " Configuration"))
 	{
 		ShowHardware();
+
 		ImGui::Spacing();
 		App->window->ShowWindowOptions();
+
+		ImGui::Spacing();
+		App->renderer->ShowRenderOptions();
+
 		ImGui::Spacing();
 		App->cameras->ShowCameraOptions();
+
 		ImGui::Spacing();
 		App->time->ShowTimeOptions();
 	}
