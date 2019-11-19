@@ -15,6 +15,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 
+	void ShowInputOptions();
+
 private:
 	const Uint8 *keyboard = nullptr;
 };

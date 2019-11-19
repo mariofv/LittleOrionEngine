@@ -7,6 +7,7 @@
 #include "ModuleTime.h"
 #include "ModuleModelLoader.h"
 #include "ModuleScene.h"
+#include "ModuleInput.h"
 #include "Model.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
@@ -184,6 +185,9 @@ void EngineUI::ShowConfigurationWindow()
 
 		ImGui::Spacing();
 		App->time->ShowTimeOptions();
+
+		ImGui::Spacing();
+		App->input->ShowInputOptions();
 	}
 	ImGui::End();
 }

@@ -330,6 +330,7 @@ void ModuleRender::ShowRenderOptions()
 			}
 		}
 
+		ImGui::Separator();
 		HelpMarker("This settings have no visual impact, WIP.");
 		ImGui::SameLine();
 		if (ImGui::TreeNode("Non-functional settings"))

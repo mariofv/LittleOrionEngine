@@ -195,16 +195,20 @@ void ModuleTime::ShowTimeOptions()
 		sprintf(frame_info, "Last frame we delayed for %f ms", last_frame_delay);
 		ImGui::Text(frame_info);
 
+		ImGui::Separator();
+
+		if (ImGui::SliderFloat("Game Clock Scale", &time_scale, 0.5, 2))
+		{
+			SetTimeScale(time_scale);
+		}
+
 		sprintf_s(frame_info, "Real Time since Start: %.0f Real Time dt: %.0f", real_time_since_startup, real_time_delta_time);
 		ImGui::Text(frame_info);
 
 		sprintf_s(frame_info, "Game Time since Start: %.0f Game Time dt: %.0f", time, delta_time);
 		ImGui::Text(frame_info);
 
-		if (ImGui::SliderFloat("Game Clock Scale", &time_scale, 0.5, 2))
-		{
-			SetTimeScale(time_scale);
-		}
+		ImGui::Separator();
 
 		sprintf(frame_info, "FPS: %.0f Frame Count: %d", 1000.f/real_time_delta_time, frame_count);
 		ImGui::Text(frame_info);
