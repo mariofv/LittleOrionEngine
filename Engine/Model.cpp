@@ -166,50 +166,57 @@ void Model::ShowModelProperties()
 			for (unsigned int i = 0; i < num_materials; ++i)
 			{
 				sprintf_s(tmp_string, "Material %d", i);
-				if (ImGui::TreeNode(tmp_string))
+				ImGui::PushStyleVar(ImGuiStyleVar_ChildRounding, 5.0f);
+				ImGui::BeginChild(tmp_string, ImVec2(ImGui::GetWindowWidth()*0.9, 0), true, ImGuiWindowFlags_MenuBar);
+				if (ImGui::BeginMenuBar())
 				{
-					ImGui::Text("Texture path:");
-					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material_textures[i]->texture_path[0]);
-
-					sprintf_s(tmp_string, "%dx%d px", material_textures[i]->width, material_textures[i]->height);
-					ImGui::Text("Texture size:");
-					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
-
-					ImGui::Text("Mipmap:");
-					ImGui::SameLine();
-					if (material_textures[i]->IsMipMapped())
-					{
-						ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Yes");
-					}
-					else
-					{
-						ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "No");
-					}
-					
-					ImGui::Text("Wrap S:");
-					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material_textures[i]->GetWrapS_C_Str()[0]);
-
-					ImGui::Text("Wrap T:");
-					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material_textures[i]->GetWrapT_C_Str()[0]);
-
-					ImGui::Text("Min filter:");
-					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material_textures[i]->GetMinFilter_C_Str()[0]);
-
-					ImGui::Text("Mag filter:");
-					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material_textures[i]->GetMagFilter_C_Str()[0]);
-
-					ImGui::Spacing();
-
-					ImGui::SetCursorPosX(window_width*0.25f);
-					ImGui::Image((void*)(intptr_t)material_textures[0]->opengl_texture, ImVec2(window_width * 0.5f, window_width * 0.5f), ImVec2(0, 1), ImVec2(1, 0));
-					ImGui::TreePop();
+					ImGui::BeginMenu(tmp_string, false);
+					ImGui::EndMenuBar();
 				}
+				
+				ImGui::Text("Texture path:");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material_textures[i]->texture_path[0]);
+
+				sprintf_s(tmp_string, "%dx%d px", material_textures[i]->width, material_textures[i]->height);
+				ImGui::Text("Texture size:");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
+
+				ImGui::Text("Mipmap:");
+				ImGui::SameLine();
+				if (material_textures[i]->IsMipMapped())
+				{
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Yes");
+				}
+				else
+				{
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "No");
+				}
+					
+				ImGui::Text("Wrap S:");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material_textures[i]->GetWrapS_C_Str()[0]);
+
+				ImGui::Text("Wrap T:");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material_textures[i]->GetWrapT_C_Str()[0]);
+
+				ImGui::Text("Min filter:");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material_textures[i]->GetMinFilter_C_Str()[0]);
+
+				ImGui::Text("Mag filter:");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material_textures[i]->GetMagFilter_C_Str()[0]);
+
+				ImGui::Spacing();
+
+				ImGui::SetCursorPosX(window_width*0.25f);
+				ImGui::Image((void*)(intptr_t)material_textures[0]->opengl_texture, ImVec2(window_width * 0.5f, window_width * 0.5f), ImVec2(0, 1), ImVec2(1, 0));
+					
+				ImGui::EndChild();
+				ImGui::PopStyleVar();
 			}
 			
 		}
