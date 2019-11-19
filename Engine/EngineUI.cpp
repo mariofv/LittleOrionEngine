@@ -6,6 +6,7 @@
 #include "ModuleEditor.h"
 #include "ModuleTime.h"
 #include "ModuleModelLoader.h"
+#include "ModuleScene.h"
 #include "Model.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
@@ -139,25 +140,7 @@ void EngineUI::ShowSceneWindow()
 		ImVec2(App->window->getWidth() * SCENE_WIDTH_PROP, App->window->getHeight() * SCENE_HEIGHT_PROP),
 		ImGuiCond_Once
 	);
-	if (ImGui::Begin(ICON_FA_TH " Scene"))
-	{
-		float imgui_window_width = ImGui::GetWindowWidth();
-		float imgui_window_height = ImGui::GetWindowHeight();
-		App->cameras->SetAspectRatio(imgui_window_width / imgui_window_height);
-		App->renderer->GenerateFrameTexture(imgui_window_width, imgui_window_height);
-
-		ImGui::GetWindowDrawList()->AddImage(
-			(void *)App->renderer->frame_texture,
-			ImVec2(ImGui::GetCursorScreenPos()),
-			ImVec2(
-				ImGui::GetCursorScreenPos().x + imgui_window_width,
-				ImGui::GetCursorScreenPos().y + imgui_window_height
-			),
-			ImVec2(0, 1),
-			ImVec2(1, 0)
-		);
-	}
-	ImGui::End();
+	App->scene->ShowSceneWindow();
 }
 
 void EngineUI::ShowModelPropertiesWindow()

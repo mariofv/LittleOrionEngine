@@ -8,6 +8,7 @@
 #include "ModuleEditor.h"
 #include "ModuleCamera.h"
 #include "ModuleModelLoader.h"
+#include "ModuleScene.h"
 #include "ModuleTime.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
@@ -27,6 +28,7 @@ Application::Application()
 	modules.push_back(texture = new ModuleTexture());
 	modules.push_back(cameras = new ModuleCamera());
 	modules.push_back(model_loader = new ModuleModelLoader());
+	modules.push_back(scene = new ModuleScene());
 		
 	engine_log = new EngineLog();
 	ui = new EngineUI();
