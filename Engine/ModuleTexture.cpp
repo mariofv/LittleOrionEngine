@@ -67,7 +67,10 @@ Texture* ModuleTexture::loadTexture(const char* texture_path) const
 		return nullptr;
 	}
 
-	return new Texture(image, texture_path);
+	Texture *loaded_texture = new Texture(image, texture_path);
+	loaded_texture->GenerateMipMap();
+
+	return loaded_texture;
 }
 
 
