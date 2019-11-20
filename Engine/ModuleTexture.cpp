@@ -63,7 +63,7 @@ Texture* ModuleTexture::loadTexture(const char* texture_path) const
 	error = ilGetError();
 	if (error == IL_COULD_NOT_OPEN_FILE)
 	{
-		LOG("Error loading texture %s. File not found", texture_path);
+		OPENGL_LOG_ERROR("Error loading texture %s. File not found", texture_path);
 		return nullptr;
 	}
 

@@ -15,6 +15,7 @@ ModuleProgram::~ModuleProgram()
 // Called before render is available
 bool ModuleProgram::Init()
 {
+	APP_LOG_INFO("Initializing shader programs.")
 	loadProgram(default_program, DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH);
 	loadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH); // TODO: Exit when error in loading
 	loadProgram(primitive_program, PRIMITIVE_VERTEX_SHADER_PATH, PRIMITIVE_FRAGMENT_SHADER_PATH);
@@ -73,17 +74,17 @@ bool ModuleProgram::loadProgram(GLuint &shader_program, const char* vertex_shade
 
 bool ModuleProgram::initVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const
 {
-	LOG("Loading vertex shader");
+	OPENGL_LOG_INFO("Loading vertex shader");
 	const char *vertex_shader_loaded_file = loadFile(vertex_shader_file_name);
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	if (vertex_shader == 0) {
-		LOG("Error creating vertex shader");
+		OPENGL_LOG_ERROR("Error creating vertex shader");
 		return false;
 	}
 	glShaderSource(vertex_shader, 1, &vertex_shader_loaded_file, NULL);
 	delete vertex_shader_loaded_file;
 
-	LOG("Compiling vertex shader");
+	OPENGL_LOG_INFO("Compiling vertex shader");
 	glCompileShader(vertex_shader);
 	int compilation_status;
 	char info_log[512];
@@ -91,8 +92,8 @@ bool ModuleProgram::initVertexShader(GLuint &vertex_shader, const char* vertex_s
 	if (!compilation_status)
 	{
 		glGetShaderInfoLog(vertex_shader, 512, NULL, info_log);
-		LOG("Error compiling vertex shader");
-		LOG(info_log);
+		OPENGL_LOG_ERROR("Error compiling vertex shader");
+		OPENGL_LOG_ERROR(info_log);
 		return false;
 	}
 
@@ -101,17 +102,17 @@ bool ModuleProgram::initVertexShader(GLuint &vertex_shader, const char* vertex_s
 
 bool ModuleProgram::initFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const
 {
-	LOG("Loading fragment shader");
+	OPENGL_LOG_INFO("Loading fragment shader");
 	const char *fragment_shader_loaded_file = loadFile(fragment_shader_file_name);
 	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (fragment_shader == 0) {
-		LOG("Error creating fragment shader");
+		OPENGL_LOG_ERROR("Error creating fragment shader");
 		return false;
 	}
 	glShaderSource(fragment_shader, 1, &fragment_shader_loaded_file, NULL);
 	delete fragment_shader_loaded_file;
 
-	LOG("Compiling fragment shader");
+	OPENGL_LOG_INFO("Compiling fragment shader");
 	glCompileShader(fragment_shader);
 	int compilation_status;
 	char info_log[512];
@@ -119,8 +120,8 @@ bool ModuleProgram::initFragmentShader(GLuint &fragment_shader, const char* frag
 	if (!compilation_status)
 	{
 		glGetShaderInfoLog(fragment_shader, 512, NULL, info_log);
-		LOG("Error compiling fragment shader");
-		LOG(info_log);
+		OPENGL_LOG_ERROR("Error compiling fragment shader");
+		OPENGL_LOG_ERROR(info_log);
 		return false;
 	}
 
@@ -129,26 +130,26 @@ bool ModuleProgram::initFragmentShader(GLuint &fragment_shader, const char* frag
 
 bool ModuleProgram::initProgram(GLuint &shader_program, const GLuint vertex_shader, const GLuint fragment_shader) const
 {
-	LOG("Creating shader program");
+	OPENGL_LOG_INFO("Creating shader program");
 	shader_program = glCreateProgram();
 	if (shader_program == 0) {
-		LOG("Error creating shader program");
+		OPENGL_LOG_ERROR("Error creating shader program");
 		return false;
 	}
 
-	LOG("Attaching vertex shader to shader program");
+	OPENGL_LOG_INFO("Attaching vertex shader to shader program");
 	glAttachShader(shader_program, vertex_shader);
 
-	LOG("Attaching fragment shader to shader program");
+	OPENGL_LOG_INFO("Attaching fragment shader to shader program");
 	glAttachShader(shader_program, fragment_shader);
 
-	LOG("Linking shader program");
+	OPENGL_LOG_INFO("Linking shader program");
 	glLinkProgram(shader_program);
 
-	LOG("Deleting vertex shader");
+	OPENGL_LOG_INFO("Deleting vertex shader");
 	glDeleteShader(vertex_shader);
 
-	LOG("Deleting fragment shader");
+	OPENGL_LOG_INFO("Deleting fragment shader");
 	glDeleteShader(fragment_shader);
 
 	int compilation_status;
@@ -156,8 +157,8 @@ bool ModuleProgram::initProgram(GLuint &shader_program, const GLuint vertex_shad
 	glGetProgramiv(shader_program, GL_LINK_STATUS, &compilation_status);
 	if (!compilation_status) {
 		glGetProgramInfoLog(shader_program, 512, NULL, info_log);
-		LOG("Error linking shader program");
-		LOG(info_log);
+		OPENGL_LOG_ERROR("Error linking shader program");
+		OPENGL_LOG_ERROR(info_log);
 		return false;
 	}
 

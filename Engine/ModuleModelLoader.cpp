@@ -69,36 +69,36 @@ void ModuleModelLoader::UnloadCurrentModel()
 
 bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
-	LOG("Assimp: Loading model %s", new_model_file_path);
+	ASSIMP_LOG_INFO("Assimp: Loading model %s", new_model_file_path);
 	scene = aiImportFile(new_model_file_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene == NULL)
 	{
 		const char *error = aiGetErrorString();
-		LOG("Assimp: Error loading model %s ", new_model_file_path);
-		LOG(error);
+		ASSIMP_LOG_ERROR("Assimp: Error loading model %s ", new_model_file_path);
+		ASSIMP_LOG_ERROR(error);
 		return false;
 	}
 
-	LOG("Loading model materials");
+	ASSIMP_LOG_INFO("Loading model materials");
 	std::string model_base_path = GetModelBasePath(new_model_file_path);
 	std::vector<Texture*> material_textures;
 	for (unsigned i = 0; i < scene->mNumMaterials; ++i)
 	{
-		LOG("Loading material %d", i);
+		ASSIMP_LOG_INFO("Loading material %d", i);
 		material_textures.push_back(LoadMaterialData(scene->mMaterials[i], model_base_path));
 	}
 
 	std::vector<Mesh*> meshes;
-	LOG("Loading model meshes");
+	ASSIMP_LOG_INFO("Loading model meshes");
 	for (unsigned int i = 0; i < scene->mNumMeshes; ++i)
 	{
-		LOG("Loading mesh %d", i);
+		ASSIMP_LOG_INFO("Loading mesh %d", i);
 		meshes.push_back(LoadMeshData(scene->mMeshes[i]));
 	}
 
 	current_model = new Model(meshes, material_textures);
 
-	LOG("Computing model bounding box");
+	ASSIMP_LOG_INFO("Computing model bounding box");
 	current_model->ComputeBoundingBox();
 
 	App->cameras->Center(*current_model->bounding_box);
@@ -108,7 +108,7 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 Mesh* ModuleModelLoader::LoadMeshData(const aiMesh *mesh) const
 {
 	std::vector<Mesh::Vertex> vertices;
-	LOG("Loading mesh vertices");
+	ASSIMP_LOG_INFO("Loading mesh vertices");
 	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
 	{
 		Mesh::Vertex vertex;
@@ -117,7 +117,7 @@ Mesh* ModuleModelLoader::LoadMeshData(const aiMesh *mesh) const
 		vertices.push_back(vertex);
 	}
 
-	LOG("Loading mesh indices");
+	ASSIMP_LOG_INFO("Loading mesh indices");
 	std::vector<unsigned int> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; ++i)
 	{
@@ -127,7 +127,7 @@ Mesh* ModuleModelLoader::LoadMeshData(const aiMesh *mesh) const
 		indices.push_back(mesh->mFaces[i].mIndices[2]);
 	}
 
-	LOG("Mesh uses material %d", mesh->mMaterialIndex);
+	ASSIMP_LOG_INFO("Mesh uses material %d", mesh->mMaterialIndex);
 
 	return new Mesh(vertices, indices, mesh->mMaterialIndex);
 }
@@ -140,31 +140,31 @@ Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, std::st
 
 	Texture *material_texture;
 
-	LOG("Loading material texture in described path %s.", file.data);
+	ASSIMP_LOG_INFO("Loading material texture in described path %s.", file.data);
 	material_texture = App->texture->loadTexture(file.data);
 	if (material_texture != nullptr)
 	{
-		LOG("Material loaded correctly.");
+		ASSIMP_LOG_SUCCESS("Material loaded correctly.");
 		return material_texture;
 	}
 
 	std::string texture_file_name = GetTextureFileName(file.data);
 
 	model_base_path = model_base_path + texture_file_name;
-	LOG("Loading material texture in model folder path %s.", model_base_path.c_str());
+	ASSIMP_LOG_INFO("Loading material texture in model folder path %s.", model_base_path.c_str());
 	material_texture = App->texture->loadTexture(model_base_path.c_str());
 	if (material_texture != nullptr)
 	{
-		LOG("Material loaded correctly.");
+		ASSIMP_LOG_SUCCESS("Material loaded correctly.");
 		return material_texture;
 	}
 
 	std::string textures_path = std::string(TEXTURES_PATH) + texture_file_name;
-	LOG("Loading material texture in textures folder %s.", textures_path.c_str());
+	ASSIMP_LOG_INFO("Loading material texture in textures folder %s.", textures_path.c_str());
 	material_texture = App->texture->loadTexture(textures_path.c_str());
 	if (material_texture != nullptr)
 	{
-		LOG("Material loaded correctly.");
+		ASSIMP_LOG_SUCCESS("Material loaded correctly.");
 		return material_texture;
 	}
 

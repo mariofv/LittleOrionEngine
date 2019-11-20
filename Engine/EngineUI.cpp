@@ -202,14 +202,7 @@ void EngineUI::ShowConsoleWindow()
 		ImVec2(App->window->getWidth(), App->window->getHeight() * 0.25f),
 		ImGuiCond_Once
 	);
-	if (ImGui::Begin(ICON_FA_TERMINAL " Console"))
-	{
-		if (App->engine_log->hasPendingData()) 
-		{
-			ImGui::TextUnformatted(App->engine_log->getData());
-		}
-	}
-	ImGui::End();
+	App->engine_log->ShowConsoleWindow();
 }
 
 void EngineUI::ShowHardware()

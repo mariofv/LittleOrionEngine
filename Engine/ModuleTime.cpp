@@ -19,12 +19,14 @@ ModuleTime::~ModuleTime()
 // Called before render is available
 bool ModuleTime::Init()
 {
-	LOG("Initializing Engine clocks");
+	APP_LOG_INFO("Initializing Engine clocks");
 	real_time_clock = new Timer();
 	game_time_clock = new Timer();
 
 	real_time_clock->Start();
 	game_time_clock->Start();
+
+	APP_LOG_SUCCESS("Engine clocks initialized correctly");
 
 	return true;
 }

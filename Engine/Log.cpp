@@ -2,21 +2,21 @@
 #include "Application.h"
 #include "EngineLog.h"
 
-void log(const char file[], int line, const char* format, ...)
+void log(const EngineLog::LogEntrySource source, const EngineLog::LogEntryType type, const char file[], const int line, const char* format, ...)
 {
-	static char tmp_string[4096];
-	static char tmp_string2[4096];
+	static char message[4096];
+	static char complete_message[4096];
 	static va_list  ap;
 
 	// Construct the string from variable arguments
 	va_start(ap, format);
-	vsprintf_s(tmp_string, 4096, format, ap);
+	vsprintf_s(message, 4096, format, ap);
 	va_end(ap);
-	sprintf_s(tmp_string2, 4096, "\n%s(%d) : %s", file, line, tmp_string);
-	OutputDebugString(tmp_string2);
+	sprintf_s(complete_message, 4096, "\n%s(%d) : %s", file, line, message);
+	OutputDebugString(complete_message);
 
 	if (App != nullptr) 
 	{
-		App->engine_log->logLine(tmp_string2); // TODO: Improve this
+		App->engine_log->log(source, type, file, line, message);
 	}
 }

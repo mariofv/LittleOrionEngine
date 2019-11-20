@@ -31,30 +31,30 @@ int main(int argc, char ** argv)
 		{
 		case MAIN_CREATION:
 
-			LOG("Application Creation --------------");
+			APP_LOG_INFO("Application Creation --------------");
 			main_timer.Start();
 
 			App = new Application();
 
-			LOG("Application Creation ends. Elapsed time: %f ms", main_timer.Read() * 1000);
+			APP_LOG_SUCCESS("Application Creation ends. Elapsed time: %f ms", main_timer.Read() * 1000);
 			state = MAIN_START;
 			break;
 
 		case MAIN_START:
 
-			LOG("Application Init --------------");
+			APP_LOG_INFO("Application Init --------------");
 			main_timer.Start();
 
 			if (App->Init() == false)
 			{
-				LOG("Application Init exits with error -----");
+				APP_LOG_ERROR("Application Init exits with error -----");
 				state = MAIN_EXIT;
 			}
 			else
 			{
-				LOG("Application Init ends. Elapsed time: %f ms", main_timer.Read() * 1000);
+				APP_LOG_SUCCESS("Application Init ends. Elapsed time: %f ms", main_timer.Read() * 1000);
 				state = MAIN_UPDATE;
-				LOG("Application Update --------------");
+				APP_LOG_INFO("Application Update --------------");
 			}
 
 			break;
@@ -64,7 +64,7 @@ int main(int argc, char ** argv)
 			int update_return = App->Update();
 			if (update_return == UPDATE_ERROR)
 			{
-				LOG("Application Update exits with error -----");
+				APP_LOG_ERROR("Application Update exits with error -----");
 				state = MAIN_EXIT;
 			}
 
@@ -75,15 +75,15 @@ int main(int argc, char ** argv)
 
 		case MAIN_FINISH:
 
-			LOG("Application CleanUp --------------");
+			APP_LOG_INFO("Application CleanUp --------------");
 			main_timer.Start();
 			if (App->CleanUp() == false)
 			{
-				LOG("Application CleanUp exits with error -----");
+				APP_LOG_ERROR("Application CleanUp exits with error -----");
 			}
 			else
 			{
-				LOG("Application CleanUp ends. Elapsed time: %f ms", main_timer.Read() * 1000);
+				APP_LOG_SUCCESS("Application CleanUp ends. Elapsed time: %f ms", main_timer.Read() * 1000);
 				main_return = EXIT_SUCCESS;
 			}
 

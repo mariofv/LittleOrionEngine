@@ -24,26 +24,27 @@ ModuleEditor::~ModuleEditor()
 // Called before render is available
 bool ModuleEditor::Init()
 {
-	LOG("Initializing IMGUI editor");
+	APP_LOG_INFO("Initializing IMGUI editor");
 	SDL_GLContext gl_context = ImGui::CreateContext();
 
 	bool err = ImGui_ImplSDL2_InitForOpenGL(App->window->window, gl_context); 
 	if (!err)
 	{
-		LOG("Error initializing IMGUI editor SDL2.")
+		APP_LOG_ERROR("Error initializing IMGUI editor SDL2.")
 		return false;
 	}
 
 	err = ImGui_ImplOpenGL3_Init("#version 330");
 	if (!err)
 	{
-		LOG("Error initializing IMGUI editor OpenGL3.")
+		APP_LOG_ERROR("Error initializing IMGUI editor OpenGL3.")
 		return false;
 	}
 
 	LoadFonts();
-
 	App->ui->InitUI();
+
+	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
 
 	return true;
 }
@@ -61,7 +62,7 @@ update_status ModuleEditor::Update()
 {
 	App->ui->ShowEngineUI();
 	//ImGui::ShowStyleEditor();
-	//ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
 	return UPDATE_CONTINUE;
 }
 
