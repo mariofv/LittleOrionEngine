@@ -6,7 +6,7 @@ void log(const EngineLog::LogEntrySource source, const EngineLog::LogEntryType t
 {
 	static char message[4096];
 	static char complete_message[4096];
-	static va_list  ap;
+	static va_list ap;
 
 	// Construct the string from variable arguments
 	va_start(ap, format);
@@ -20,3 +20,4 @@ void log(const EngineLog::LogEntrySource source, const EngineLog::LogEntryType t
 		App->engine_log->log(source, type, file, line, message);
 	}
 }
+

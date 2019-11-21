@@ -115,7 +115,7 @@ void EngineLog::ShowConsoleWindow()
 		}
 		if (scroll_down)
 		{
-			ImGui::SetScrollHere(1.0f);
+			//ImGui::SetScrollHere(1.0f);
 			scroll_down = false;
 		}
 	}

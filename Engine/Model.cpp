@@ -23,7 +23,7 @@ Model::Model(const std::vector<Mesh*> meshes, const std::vector<Texture*> materi
 	num_triangles = 0;
 	for (unsigned int i = 0; i < meshes.size(); ++i)
 	{
-		num_vertices += meshes[i]->vertices.size();
+		num_vertices += meshes[i]->indices.size();
 		num_triangles += (meshes[i]->indices.size() / 3.f);
 	}
 }
