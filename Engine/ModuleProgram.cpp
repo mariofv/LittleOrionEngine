@@ -17,9 +17,39 @@ ModuleProgram::~ModuleProgram()
 bool ModuleProgram::Init()
 {
 	APP_LOG_SECTION("************ Module Program Init ************");
-	loadProgram(default_program, DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH);
-	loadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH); // TODO: Exit when error in loading
-	loadProgram(primitive_program, PRIMITIVE_VERTEX_SHADER_PATH, PRIMITIVE_FRAGMENT_SHADER_PATH);
+
+	OPENGL_LOG_INIT("Loading default shader program.");
+	if (loadProgram(default_program, DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH))
+	{
+		OPENGL_LOG_SUCCESS("Default shader program loaded correctly.");
+	}
+	else 
+	{
+		OPENGL_LOG_ERROR("Default shader program loaded correctly.");
+		return false;
+	}
+
+	OPENGL_LOG_INIT("Loading texture shader program.");
+	if (loadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH))
+	{
+		OPENGL_LOG_SUCCESS("Default texture program loaded correctly.");
+	}
+	else
+	{
+		OPENGL_LOG_ERROR("Default texture program loaded correctly.");
+		return false;
+	}
+
+	OPENGL_LOG_INIT("Loading primitive shader program.");
+	if (loadProgram(primitive_program, PRIMITIVE_VERTEX_SHADER_PATH, PRIMITIVE_FRAGMENT_SHADER_PATH))
+	{
+		OPENGL_LOG_SUCCESS("Default primitive program loaded correctly.");
+	}
+	else
+	{
+		OPENGL_LOG_ERROR("Default primitive program loaded correctly.");
+		return false;
+	}
 
 	return true;
 }
