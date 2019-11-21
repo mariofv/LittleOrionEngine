@@ -24,7 +24,7 @@ Model::Model(const std::vector<Mesh*> meshes, const std::vector<Texture*> materi
 	for (unsigned int i = 0; i < meshes.size(); ++i)
 	{
 		num_vertices += meshes[i]->vertices.size();
-		num_triangles += meshes[i]->indices.size() / 3.f;
+		num_triangles += (meshes[i]->indices.size() / 3.f);
 	}
 }
 
@@ -79,7 +79,15 @@ void Model::Render(GLuint shader_program) const
 
 	for (unsigned int i = 0; i < meshes.size(); ++i)
 	{
-		GLuint mesh_texture = material_textures[meshes[i]->material_index]->opengl_texture;
+		GLuint mesh_texture;
+		if (material_textures[meshes[i]->material_index] != nullptr)
+		{
+			mesh_texture = material_textures[meshes[i]->material_index]->opengl_texture;
+		}
+		else
+		{
+			mesh_texture = 0;
+		}
 		meshes[i]->Render(shader_program, mesh_texture);
 	}
 
