@@ -88,6 +88,12 @@ void Model::Render(GLuint shader_program) const
 
 }
 
+void Model::SetMaterialTexture(Texture* new_texture)
+{
+	delete material_textures[0];
+	material_textures[0] = new_texture;
+}
+
 void Model::ComputeBoundingBox()
 {
 	const float infinite = std::numeric_limits<float>::infinity();

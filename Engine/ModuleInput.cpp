@@ -128,7 +128,15 @@ update_status ModuleInput::Update()
 
 		case SDL_DROPFILE:
 			char *dropped_filedir = event.drop.file;
-			App->model_loader->SwapCurrentModel(dropped_filedir);
+			switch (GetFileType(dropped_filedir))
+			{
+				case FileType::MODEL:
+					App->model_loader->SwapCurrentModel(dropped_filedir);
+					break;
+				case FileType::TEXTURE:
+					App->model_loader->SwapCurrentModelTexture(dropped_filedir);
+					break;
+			}
 			SDL_free(dropped_filedir);
 			
 			break;
@@ -197,6 +205,36 @@ bool ModuleInput::CleanUp()
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }
+
+ModuleInput::FileType ModuleInput::GetFileType(const char *file_path)
+{
+	std::string file_extension = GetFileExtension(file_path);
+
+	if (
+		file_extension == "png"
+		|| file_extension == "dds"
+	)
+	{
+		return ModuleInput::FileType::TEXTURE;
+	}
+	if (file_extension == "fbx")
+	{
+		return ModuleInput::FileType::MODEL;
+	}
+
+	return ModuleInput::FileType::UNKNOWN;
+}
+
+std::string ModuleInput::GetFileExtension(const char *file_path)
+{
+	std::string file_path_string = std::string(file_path);
+	std::size_t found = file_path_string.find_last_of(".");
+
+	std::string file_extension = file_path_string.substr(found + 1, file_path_string.length());
+
+	return file_extension;
+}
+
 
 void ModuleInput::ShowInputOptions()
 {

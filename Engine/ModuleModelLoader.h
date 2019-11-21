@@ -30,6 +30,7 @@ public:
 	bool CleanUp();
 
 	void SwapCurrentModel(const char *new_model_file_path);
+	void SwapCurrentModelTexture(const char *new_texture_file_path);
 
 public:
 	const aiScene* scene = nullptr;

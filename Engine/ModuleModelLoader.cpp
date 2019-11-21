@@ -58,6 +58,18 @@ void ModuleModelLoader::SwapCurrentModel(const char *new_model_file_path)
 	LoadModel(new_model_file_path);
 }
 
+void ModuleModelLoader::SwapCurrentModelTexture(const char *new_texture_file_path)
+{
+	APP_LOG_INIT("Swaping current model material texture with texture %s", new_texture_file_path)
+	Texture *new_texture = App->texture->loadTexture(new_texture_file_path);
+	current_model->SetMaterialTexture(new_texture);
+	if (new_texture != nullptr)
+	{
+		APP_LOG_SUCCESS("Current model texture swaped correctly.")
+	}
+}
+
+
 void ModuleModelLoader::UnloadCurrentModel()
 {
 	delete current_model;

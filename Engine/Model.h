@@ -18,6 +18,8 @@ public:
 	void Render(GLuint shader_program) const;
 
 public:
+	void SetMaterialTexture(Texture* new_texture);
+
 	void ComputeBoundingBox();
 	void ShowModelProperties();
 
