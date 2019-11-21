@@ -1,6 +1,7 @@
+#include "ModuleTexture.h"
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleTexture.h"
+
 #include <IL/il.h>
 #include <IL/ilu.h>
 #include <IL/ilut.h>
@@ -19,7 +20,9 @@ ModuleTexture::~ModuleTexture()
 // Called before render is available
 bool ModuleTexture::Init()
 {
-	ilInit();
+	APP_LOG_SECTION("************ Module Texture Init ************");
+
+	ilInit(); //TODO: CHECK ERRORS HERE
 	iluInit();
 	ilutInit();
 	return true;

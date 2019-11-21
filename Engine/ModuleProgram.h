@@ -1,6 +1,9 @@
-#pragma once
+#ifndef _MODULEPROGRAM_H_
+#define _MODULEPROGRAM_H_
+
 #include "Module.h"
 #include "Globals.h"
+
 #include <GL/glew.h>
 
 struct SDL_Texture;
@@ -32,3 +35,5 @@ public:
 	GLuint primitive_program;
 
 };
+
+#endif //_MODULEPROGRAM_H_

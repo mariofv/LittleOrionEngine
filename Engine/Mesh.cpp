@@ -1,6 +1,6 @@
+#include "Mesh.h"
 #include "Application.h"
 #include "Globals.h"
-#include "Mesh.h"
 
 Mesh::Mesh()
 {

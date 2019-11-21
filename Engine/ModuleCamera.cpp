@@ -1,6 +1,6 @@
+#include "ModuleCamera.h"
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleCamera.h"
 #include "ModuleWindow.h"
 #include "ModuleTime.h"
 
@@ -19,6 +19,7 @@ ModuleCamera::~ModuleCamera()
 
 bool ModuleCamera::Init()
 {
+	APP_LOG_SECTION("************ Module Camera Init ************");
 	int windowWidth, windowHeight;
 	SDL_GetWindowSize(App->window->window, &windowWidth, &windowHeight);
 	
@@ -26,7 +27,6 @@ bool ModuleCamera::Init()
 	speed_up = 1;
 	is_orbiting = false;
 
-	// CREATES PROJECTION MATRIX
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
 	camera_frustum.pos = float3::unitX;
 	camera_frustum.front = -float3::unitZ;

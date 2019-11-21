@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _MODULECAMERA_H_
+#define _MODULECAMERA_H_
+
 #include "Module.h"
 #include "Globals.h"
 #include "BoundingBox.h"
@@ -78,3 +80,5 @@ private:
 	bool is_focusing = false;
 	float3 desired_focus_position;
 };
+
+#endif //_MODULECAMERA_H_

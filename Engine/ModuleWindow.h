@@ -1,7 +1,8 @@
-#ifndef __ModuleWindow_H__
-#define __ModuleWindow_H__
+#ifndef _MODULEWINDOW_H_
+#define _MODULEWINDOW_H_
 
 #include "Module.h"
+
 #include "SDL.h"
 
 class Application;
@@ -64,4 +65,4 @@ private:
 	float brightness;
 };
 
-#endif // __ModuleWindow_H__
+#endif // _MODULEWINDOW_H_

@@ -20,7 +20,9 @@ ModuleWindow::~ModuleWindow()
 // Called before render is available
 bool ModuleWindow::Init()
 {
-	APP_LOG_INFO("Init SDL window & surface");
+	APP_LOG_SECTION("************ Module Window Init ************");
+
+	APP_LOG_INIT("Init SDL window & surface.");
 	bool ret = true;
 
 	if(SDL_Init(SDL_INIT_VIDEO) < 0)
@@ -73,6 +75,8 @@ bool ModuleWindow::Init()
 	fullscreen = FULLSCREEN;
 	bordered = BORDERED;
 	resizable = RESIZABLE;
+
+	APP_LOG_SUCCESS("SDL window & surface initialized correctly.");
 
 	return ret;
 }

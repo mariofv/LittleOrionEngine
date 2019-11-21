@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _TEXTURE_H_
+#define _TEXTURE_H_
+
 #include "Module.h"
 #include "Globals.h"
 
@@ -57,3 +59,5 @@ private:
 	GLenum min_filter;	
 	GLenum mag_filter;
 };
+
+#endif //_TEXTURE_H_

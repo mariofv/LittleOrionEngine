@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _GLOBALS_H_
+#define _GLOBALS_H_
+
 #include "EngineLog.h"
 
 #include "imgui.h"
@@ -6,16 +8,19 @@
 #include <windows.h>
 #include <stdio.h>
 
-
+#define APP_LOG_SECTION(format, ...) log(EngineLog::LogEntrySource::APP_LOG, EngineLog::LogEntryType::LOG_SECTION, __FILE__, __LINE__, format, __VA_ARGS__);
 #define APP_LOG_INFO(format, ...) log(EngineLog::LogEntrySource::APP_LOG, EngineLog::LogEntryType::LOG_INFO, __FILE__, __LINE__, format, __VA_ARGS__);
+#define APP_LOG_INIT(format, ...) log(EngineLog::LogEntrySource::APP_LOG, EngineLog::LogEntryType::LOG_INIT, __FILE__, __LINE__, format, __VA_ARGS__);
 #define APP_LOG_SUCCESS(format, ...) log(EngineLog::LogEntrySource::APP_LOG, EngineLog::LogEntryType::LOG_SUCCESS, __FILE__, __LINE__, format, __VA_ARGS__);
 #define APP_LOG_ERROR(format, ...) log(EngineLog::LogEntrySource::APP_LOG, EngineLog::LogEntryType::LOG_ERROR, __FILE__, __LINE__, format, __VA_ARGS__);
 
 #define OPENGL_LOG_INFO(format, ...) log(EngineLog::LogEntrySource::OPENGL_LOG, EngineLog::LogEntryType::LOG_INFO, __FILE__, __LINE__, format, __VA_ARGS__);
+#define OPENGL_LOG_INIT(format, ...) log(EngineLog::LogEntrySource::OPENGL_LOG, EngineLog::LogEntryType::LOG_INIT, __FILE__, __LINE__, format, __VA_ARGS__);
 #define OPENGL_LOG_SUCCESS(format, ...) log(EngineLog::LogEntrySource::OPENGL_LOG, EngineLog::LogEntryType::LOG_SUCCESS, __FILE__, __LINE__, format, __VA_ARGS__);
 #define OPENGL_LOG_ERROR(format, ...) log(EngineLog::LogEntrySource::OPENGL_LOG, EngineLog::LogEntryType::LOG_ERROR, __FILE__, __LINE__, format, __VA_ARGS__);
 
 #define ASSIMP_LOG_INFO(format, ...) log(EngineLog::LogEntrySource::ASSIMP_LOG, EngineLog::LogEntryType::LOG_INFO, __FILE__, __LINE__, format, __VA_ARGS__);
+#define ASSIMP_LOG_INIT(format, ...) log(EngineLog::LogEntrySource::ASSIMP_LOG, EngineLog::LogEntryType::LOG_INIT, __FILE__, __LINE__, format, __VA_ARGS__);
 #define ASSIMP_LOG_SUCCESS(format, ...) log(EngineLog::LogEntrySource::ASSIMP_LOG, EngineLog::LogEntryType::LOG_SUCCESS, __FILE__, __LINE__, format, __VA_ARGS__);
 #define ASSIMP_LOG_ERROR(format, ...) log(EngineLog::LogEntrySource::ASSIMP_LOG, EngineLog::LogEntryType::LOG_ERROR, __FILE__, __LINE__, format, __VA_ARGS__);
 
@@ -73,3 +78,5 @@ enum class Fonts
 
 #define VSYNC true
 #define TITLE "Orion Engine"
+
+#endif //_GLOBALS_H_

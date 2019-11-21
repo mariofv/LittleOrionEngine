@@ -1,9 +1,10 @@
-#pragma once
-
-#include <list>
+#ifndef _APPLICATION_H_
+#define _APPLICATION_H_
 
 #include "Globals.h"
 #include "Module.h"
+
+#include <list>
 
 class ModuleRender;
 class ModuleWindow;
@@ -56,3 +57,5 @@ private:
 };
 
 extern Application* App;
+
+#endif // _APPLICATION_H_

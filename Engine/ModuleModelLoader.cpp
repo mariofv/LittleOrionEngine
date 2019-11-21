@@ -1,6 +1,6 @@
+#include "ModuleModelLoader.h"
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
 #include "ModuleTexture.h"
 
@@ -23,14 +23,13 @@ ModuleModelLoader::~ModuleModelLoader()
 // Called before render is available
 bool ModuleModelLoader::Init()
 {
+	APP_LOG_SECTION("************ Module ModelLoader Init ************");
 	LoadModel(HOUSE_MODEL_PATH);
 	return true;
 }
 
 update_status ModuleModelLoader::PreUpdate()
 {
-	
-
 	return UPDATE_CONTINUE;
 }
 
@@ -140,7 +139,7 @@ Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, std::st
 
 	Texture *material_texture;
 
-	ASSIMP_LOG_INFO("Loading material texture in described path %s.", file.data);
+	ASSIMP_LOG_INIT("Loading material texture in described path %s.", file.data);
 	material_texture = App->texture->loadTexture(file.data);
 	if (material_texture != nullptr)
 	{
@@ -151,7 +150,7 @@ Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, std::st
 	std::string texture_file_name = GetTextureFileName(file.data);
 
 	model_base_path = model_base_path + texture_file_name;
-	ASSIMP_LOG_INFO("Loading material texture in model folder path %s.", model_base_path.c_str());
+	ASSIMP_LOG_INIT("Loading material texture in model folder path %s.", model_base_path.c_str());
 	material_texture = App->texture->loadTexture(model_base_path.c_str());
 	if (material_texture != nullptr)
 	{
@@ -160,7 +159,7 @@ Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, std::st
 	}
 
 	std::string textures_path = std::string(TEXTURES_PATH) + texture_file_name;
-	ASSIMP_LOG_INFO("Loading material texture in textures folder %s.", textures_path.c_str());
+	ASSIMP_LOG_INIT("Loading material texture in textures folder %s.", textures_path.c_str());
 	material_texture = App->texture->loadTexture(textures_path.c_str());
 	if (material_texture != nullptr)
 	{

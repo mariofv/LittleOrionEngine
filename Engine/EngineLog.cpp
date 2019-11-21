@@ -24,6 +24,7 @@ void EngineLog::log(const LogEntrySource source, const LogEntryType type, const 
 {
 	LogEntry *new_log_entry = new LogEntry(source, type, file, line, message);
 	text_log.push_back(new_log_entry);
+	scroll_down = true;
 }
 
 void EngineLog::logFPS(const float fps)
@@ -62,7 +63,7 @@ std::vector<float> EngineLog::getMSData() const
 	return ms_log;
 }
 
-void EngineLog::ShowConsoleWindow() const
+void EngineLog::ShowConsoleWindow()
 {
 	char tmp_string[64];
 	if (ImGui::Begin(ICON_FA_TERMINAL " Console"))
@@ -72,15 +73,15 @@ void EngineLog::ShowConsoleWindow() const
 			switch (text_log[i]->source)
 			{
 				case LogEntrySource::APP_LOG:
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "[APP]");
+					ImGui::Text("[APP]");
 					ImGui::SameLine();
 					break;
 				case LogEntrySource::OPENGL_LOG:
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "[OPENGL]");
+					ImGui::TextColored(ImVec4(0.33f, 0.51f, 0.63f, 1.0f), "[OPENGL]");
 					ImGui::SameLine();
 					break;
 				case LogEntrySource::ASSIMP_LOG:
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "[ASSIMP]");
+					ImGui::TextColored(ImVec4(1.0f, 0.52f, 0.24f, 1.0f), "[ASSIMP]");
 					ImGui::SameLine();
 					break;
 				default:
@@ -95,16 +96,27 @@ void EngineLog::ShowConsoleWindow() const
 
 			switch (text_log[i]->type)
 			{
-			case LogEntryType::LOG_ERROR:
-				ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), text_log[i]->message.c_str());
-				break;
-			case LogEntryType::LOG_SUCCESS:
-				ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), text_log[i]->message.c_str());
-				break;
-			default:
-				ImGui::Text(text_log[i]->message.c_str());
-				break;
+				case LogEntryType::LOG_SECTION:
+					ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), text_log[i]->message.c_str());
+					break;
+				case LogEntryType::LOG_INIT:
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), text_log[i]->message.c_str());
+					break;
+				case LogEntryType::LOG_SUCCESS:
+					ImGui::TextColored(ImVec4(0.0f, 1.0f, 0.0f, 1.0f), text_log[i]->message.c_str());
+					break;
+				case LogEntryType::LOG_ERROR:
+					ImGui::TextColored(ImVec4(1.0f, 0.0f, 0.0f, 1.0f), text_log[i]->message.c_str());
+					break;
+				default:
+					ImGui::Text(text_log[i]->message.c_str());
+					break;
 			}
+		}
+		if (scroll_down)
+		{
+			ImGui::SetScrollHere(1.0f);
+			scroll_down = false;
 		}
 	}
 	ImGui::End();

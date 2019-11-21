@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _MODULEMODELLOADER_H_
+#define _MODULEMODELLOADER_H_
+
 #include "Module.h"
 #include "Globals.h"
 #include "Model.h"
@@ -7,6 +9,7 @@
 #include "Texture.h"
 
 #include <GL/glew.h>
+
 #include <vector>
 #include <string>
 
@@ -42,3 +45,5 @@ private:
 	std::string GetModelBasePath(const char *model_file_path) const;
 	std::string GetTextureFileName(const char *texture_file_path) const;
 };
+
+#endif //_MODULEMODELLOADER_H_

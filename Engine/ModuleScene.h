@@ -8,7 +8,7 @@ class ModuleScene : public Module
 {
 public:
 	ModuleScene() = default;
-	~ModuleScene();
+	~ModuleScene() = default;
 
 	void ShowSceneWindow();
 

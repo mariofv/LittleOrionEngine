@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _MODULETIME_H_
+#define _MODULETIME_H_
+
 #include "Module.h"
 #include "Globals.h"
 
@@ -51,3 +53,5 @@ private:
 
 	bool stepping_frame = false;
 };
+
+#endif

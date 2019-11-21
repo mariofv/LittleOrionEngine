@@ -199,7 +199,7 @@ void EngineUI::ShowConsoleWindow()
 		ImGuiCond_Once
 	);
 	ImGui::SetNextWindowSize(
-		ImVec2(App->window->getWidth(), App->window->getHeight() * 0.25f),
+		ImVec2(App->window->getWidth(), App->window->getHeight() * (0.98 - (TIME_BAR_HEIGHT_PROP + CONFIG_HEIGHT_PROP))),
 		ImGuiCond_Once
 	);
 	App->engine_log->ShowConsoleWindow();

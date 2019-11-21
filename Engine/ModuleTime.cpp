@@ -1,6 +1,6 @@
+#include "ModuleTime.h"
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleTime.h"
 #include "ModuleWindow.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
@@ -19,7 +19,9 @@ ModuleTime::~ModuleTime()
 // Called before render is available
 bool ModuleTime::Init()
 {
-	APP_LOG_INFO("Initializing Engine clocks");
+	APP_LOG_SECTION("************ Module Time Init ************");
+
+	APP_LOG_INIT("Initializing Engine clocks");
 	real_time_clock = new Timer();
 	game_time_clock = new Timer();
 

@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _ENGINELOG_H_
+#define _ENGINELOG_H_
 
 #include "Globals.h"
 #include "imgui.h"
@@ -11,7 +12,9 @@ class EngineLog
 public:
 	enum class LogEntryType
 	{
+		LOG_SECTION,
 		LOG_INFO,
+		LOG_INIT,
 		LOG_SUCCESS,
 		LOG_ERROR
 	};
@@ -52,11 +55,15 @@ public:
 	void logMS(const float ms);
 	std::vector<float> getMSData() const;
 	
-	void ShowConsoleWindow() const;
+	void ShowConsoleWindow();
 
 private:
 	std::vector<LogEntry*> text_log;
 
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;
+
+	bool scroll_down = false;
 };
+
+#endif //_ENGINELOG_H_

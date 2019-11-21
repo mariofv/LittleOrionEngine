@@ -24,7 +24,9 @@ ModuleEditor::~ModuleEditor()
 // Called before render is available
 bool ModuleEditor::Init()
 {
-	APP_LOG_INFO("Initializing IMGUI editor");
+	APP_LOG_SECTION("************ Module Editor Init ************");
+
+	APP_LOG_INIT("Initializing IMGUI editor");
 	SDL_GLContext gl_context = ImGui::CreateContext();
 
 	bool err = ImGui_ImplSDL2_InitForOpenGL(App->window->window, gl_context); 

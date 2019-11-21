@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _MODULEEDITOR_H_
+#define _MODULEEDITOR_H_
+
 #include "Module.h"
 #include "Globals.h"
 
@@ -21,3 +23,5 @@ public:
 private:
 	void LoadFonts();
 };
+
+#endif //_MODULEEDITOR_H_

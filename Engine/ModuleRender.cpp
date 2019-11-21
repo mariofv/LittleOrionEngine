@@ -26,7 +26,9 @@ ModuleRender::~ModuleRender()
 // Called before render is available
 bool ModuleRender::Init()
 {
-	APP_LOG_INFO("Creating Renderer context");
+	APP_LOG_SECTION("************ Module Render Init ************");
+
+	OPENGL_LOG_INIT("Creating Glew Renderer context");
 	SDL_GL_SetAttribute(SDL_GL_CONTEXT_PROFILE_MASK, SDL_GL_CONTEXT_PROFILE_COMPATIBILITY);
 	SDL_GL_SetAttribute(SDL_GL_DOUBLEBUFFER, 1);
 	SDL_GL_SetAttribute(SDL_GL_DEPTH_SIZE, 24);
@@ -39,7 +41,7 @@ bool ModuleRender::Init()
 	// … check for errors
 	if (GLEW_OK != err)
 	{
-		OPENGL_LOG_ERROR("Error initializing GLUT");
+		OPENGL_LOG_ERROR("Error initializing Glew");
 		return false;
 		
 	}
@@ -54,6 +56,8 @@ bool ModuleRender::Init()
 	SetDepthTest(true);
 
 	glGenFramebuffers(1, &fbo);
+
+	OPENGL_LOG_SUCCESS("Glew initialized correctly.")
 
 	return true;
 }

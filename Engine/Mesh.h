@@ -1,9 +1,13 @@
-#pragma once
+#ifndef _MESH_H_
+#define _MESH_H_
+
 #include "Module.h"
 #include "Globals.h"
-#include <vector>
+
 #include <GL/glew.h>
 #include "MathGeoLib.h"
+
+#include <vector>
 
 class Mesh
 {
@@ -33,3 +37,5 @@ private:
 	GLuint vbo;
 	GLuint ebo;
 };
+
+#endif //_MESH_H_

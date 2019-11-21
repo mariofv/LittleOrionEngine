@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleProgram.h"
+
 #include "SDL.h"
 
 ModuleProgram::ModuleProgram()
@@ -15,7 +16,7 @@ ModuleProgram::~ModuleProgram()
 // Called before render is available
 bool ModuleProgram::Init()
 {
-	APP_LOG_INFO("Initializing shader programs.")
+	APP_LOG_SECTION("************ Module Program Init ************");
 	loadProgram(default_program, DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH);
 	loadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH); // TODO: Exit when error in loading
 	loadProgram(primitive_program, PRIMITIVE_VERTEX_SHADER_PATH, PRIMITIVE_FRAGMENT_SHADER_PATH);

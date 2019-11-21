@@ -1,10 +1,12 @@
-#include <stdlib.h>
 #include "Engine/Application.h"
 #include "Engine/ModuleWindow.h"
 #include "Engine/Globals.h"
 #include "Engine/TimerUs.h"
 
 #include "SDL.h"
+
+#include <stdlib.h>
+
 #pragma comment( lib, "Libraries/SDL/libx86/SDL2.lib" )
 #pragma comment( lib, "Libraries/SDL/libx86/SDL2main.lib" )
 
@@ -31,7 +33,7 @@ int main(int argc, char ** argv)
 		{
 		case MAIN_CREATION:
 
-			APP_LOG_INFO("Application Creation --------------");
+			APP_LOG_SECTION("-------------- Application Creation --------------");
 			main_timer.Start();
 
 			App = new Application();
@@ -42,7 +44,7 @@ int main(int argc, char ** argv)
 
 		case MAIN_START:
 
-			APP_LOG_INFO("Application Init --------------");
+			APP_LOG_SECTION("-------------- Application Init --------------");
 			main_timer.Start();
 
 			if (App->Init() == false)
@@ -54,9 +56,8 @@ int main(int argc, char ** argv)
 			{
 				APP_LOG_SUCCESS("Application Init ends. Elapsed time: %f ms", main_timer.Read() * 1000);
 				state = MAIN_UPDATE;
-				APP_LOG_INFO("Application Update --------------");
+				APP_LOG_SECTION("-------------- Application Update --------------");
 			}
-
 			break;
 
 		case MAIN_UPDATE:
@@ -69,13 +70,15 @@ int main(int argc, char ** argv)
 			}
 
 			if (update_return == UPDATE_STOP)
+			{
 				state = MAIN_FINISH;
+			}
 		}
 			break;
 
 		case MAIN_FINISH:
 
-			APP_LOG_INFO("Application CleanUp --------------");
+			APP_LOG_SECTION("-------------- Application CleanUp --------------");
 			main_timer.Start();
 			if (App->CleanUp() == false)
 			{

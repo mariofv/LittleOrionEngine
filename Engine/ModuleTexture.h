@@ -1,4 +1,6 @@
-#pragma once
+#ifndef _MODULETEXTURE_H_
+#define _MODULETEXTURE_H_
+
 #include "Module.h"
 #include "Globals.h"
 #include "Texture.h"
@@ -24,3 +26,5 @@ public:
 	
 	Texture* loadTexture(const char* texture_path) const;
 };
+
+#endif _MODULETEXTURE_H_
