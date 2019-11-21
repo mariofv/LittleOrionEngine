@@ -68,39 +68,45 @@ void ModuleModelLoader::UnloadCurrentModel()
 
 bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
-	ASSIMP_LOG_INFO("Assimp: Loading model %s", new_model_file_path);
+	ASSIMP_LOG_INIT("Loading model %s.", new_model_file_path);
 	scene = aiImportFile(new_model_file_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene == NULL)
 	{
 		const char *error = aiGetErrorString();
-		ASSIMP_LOG_ERROR("Assimp: Error loading model %s ", new_model_file_path);
+		ASSIMP_LOG_ERROR("Error loading model %s ", new_model_file_path);
 		ASSIMP_LOG_ERROR(error);
 		return false;
 	}
 
-	ASSIMP_LOG_INFO("Loading model materials");
+
+	ASSIMP_LOG_INFO("Loading model materials.");
 	std::string model_base_path = GetModelBasePath(new_model_file_path);
 	std::vector<Texture*> material_textures;
 	for (unsigned i = 0; i < scene->mNumMaterials; ++i)
 	{
-		ASSIMP_LOG_INFO("Loading material %d", i);
+		ASSIMP_LOG_INFO("Loading material %d.", i);
 		material_textures.push_back(LoadMaterialData(scene->mMaterials[i], model_base_path));
 	}
+	ASSIMP_LOG_INFO("Model materials loaded correctly.");
 
+
+	ASSIMP_LOG_INFO("Loading model meshes.");
 	std::vector<Mesh*> meshes;
-	ASSIMP_LOG_INFO("Loading model meshes");
 	for (unsigned int i = 0; i < scene->mNumMeshes; ++i)
 	{
 		ASSIMP_LOG_INFO("Loading mesh %d", i);
 		meshes.push_back(LoadMeshData(scene->mMeshes[i]));
 	}
+	ASSIMP_LOG_INFO("Model meshes loaded correctly.");
+
 
 	current_model = new Model(meshes, material_textures);
-
-	ASSIMP_LOG_INFO("Computing model bounding box");
+	ASSIMP_LOG_INFO("Computing model bounding box.");
 	current_model->ComputeBoundingBox();
 
 	App->cameras->Center(*current_model->bounding_box);
+
+	ASSIMP_LOG_SUCCESS("Model %s loaded correctly.", new_model_file_path);
 	return true;
 }
 
