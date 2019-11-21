@@ -9,6 +9,8 @@
 #include "Texture.h"
 
 #include <GL/glew.h>
+#include "assimp/LogStream.hpp"
+#include "assimp/Logger.hpp"
 
 #include <vector>
 #include <string>
@@ -16,6 +18,37 @@
 struct aiMesh;
 struct aiMaterial;
 struct aiScene;
+
+class AssimpStream : public Assimp::LogStream
+{
+public:
+	AssimpStream() = default;
+	~AssimpStream() = default;
+
+	int severety;
+
+	void write(const char* message)
+	{
+		switch (severety)
+		{
+		case Assimp::Logger::Debugging:
+			ASSIMP_LOG_INFO("%s", message);
+			break;
+		case Assimp::Logger::Info:
+			ASSIMP_LOG_INFO("%s", message);
+			break;
+		case Assimp::Logger::Err:
+			ASSIMP_LOG_ERROR("%s", message);
+			break;
+		case Assimp::Logger::Warn:
+			ASSIMP_LOG_INIT("%s", message); // Actually not an itialization entry, I use this type of entry because the yellow color
+			break;
+
+		}
+
+	}
+};
+
 
 class ModuleModelLoader : public Module
 {
