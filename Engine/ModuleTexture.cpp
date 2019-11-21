@@ -22,9 +22,12 @@ bool ModuleTexture::Init()
 {
 	APP_LOG_SECTION("************ Module Texture Init ************");
 
-	ilInit(); //TODO: CHECK ERRORS HERE
+	APP_LOG_INIT("Initializing DevIL image loader.")
+	ilInit();
 	iluInit();
 	ilutInit();
+	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
+
 	return true;
 }
 
