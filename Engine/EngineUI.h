@@ -40,16 +40,16 @@ public:
 	
 	#define TIME_BAR_HEIGHT_PROP 0.03
 
-	#define CONFIG_HEIGHT_PROP 0.72
+	#define CONFIG_HEIGHT_PROP 0.67
 	#define CONFIG_WIDTH_PROP 0.25
 
-	#define SCENE_HEIGHT_PROP 0.72
+	#define SCENE_HEIGHT_PROP 0.67
 	#define SCENE_WIDTH_PROP 0.45
 
-	#define MODEL_PROPERTIES_HEIGHT_PROP 0.72
+	#define MODEL_PROPERTIES_HEIGHT_PROP 0.67
 	#define MODEL_PROPERTIES_WIDTH_PROP 0.3
 
-	#define CONSOLE_HEIGHT_PROP 0.25
+	#define CONSOLE_HEIGHT_PROP 0.3
 
 private:
 	bool show_scene_window = true;
