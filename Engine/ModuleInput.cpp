@@ -41,7 +41,7 @@ bool ModuleInput::Init()
 }
 
 // Called every draw update
-update_status ModuleInput::Update()
+update_status ModuleInput::PreUpdate()
 {
 	SDL_PumpEvents();
 
@@ -96,6 +96,20 @@ update_status ModuleInput::Update()
 			}
 			break;
 
+		case SDL_MOUSEBUTTONDOWN:
+			if (event.button.button == SDL_BUTTON_RIGHT)
+			{
+				App->cameras->SetMovement(true);
+			}
+			break;
+
+		case SDL_MOUSEBUTTONUP:
+			if (event.button.button == SDL_BUTTON_RIGHT)
+			{
+				App->cameras->SetMovement(false);
+			}
+			break;
+
 		case SDL_KEYDOWN:
 			if (event.key.keysym.sym == SDLK_LALT)
 			{
@@ -145,56 +159,58 @@ update_status ModuleInput::Update()
 
 	keyboard = SDL_GetKeyboardState(NULL);
 
-	if (keyboard[SDL_SCANCODE_Q]) 
+	if (App->cameras->MovementEnabled())
 	{
-		App->cameras->MoveUp();
-	}
+		if (keyboard[SDL_SCANCODE_Q]) 
+		{
+			App->cameras->MoveUp();
+		}
 
-	if (keyboard[SDL_SCANCODE_E])
-	{
-		App->cameras->MoveDown();
-	}
+		if (keyboard[SDL_SCANCODE_E])
+		{
+			App->cameras->MoveDown();
+		}
 
-	if (keyboard[SDL_SCANCODE_W])
-	{
-		App->cameras->MoveFoward();
-	}
+		if (keyboard[SDL_SCANCODE_W])
+		{
+			App->cameras->MoveFoward();
+		}
 
-	if (keyboard[SDL_SCANCODE_S])
-	{
-		App->cameras->MoveBackward();
-	}
+		if (keyboard[SDL_SCANCODE_S])
+		{
+			App->cameras->MoveBackward();
+		}
 
-	if (keyboard[SDL_SCANCODE_A])
-	{
-		App->cameras->MoveLeft();
-	}
+		if (keyboard[SDL_SCANCODE_A])
+		{
+			App->cameras->MoveLeft();
+		}
 
-	if (keyboard[SDL_SCANCODE_D])
-	{
-		App->cameras->MoveRight();
-	}
+		if (keyboard[SDL_SCANCODE_D])
+		{
+			App->cameras->MoveRight();
+		}
 
-	if (keyboard[SDL_SCANCODE_UP])
-	{
-		App->cameras->RotatePitch(-1.f);
-	}
+		if (keyboard[SDL_SCANCODE_UP])
+		{
+			App->cameras->RotatePitch(-1.f);
+		}
 
-	if (keyboard[SDL_SCANCODE_DOWN])
-	{
-		App->cameras->RotatePitch(1.f);
-	}
+		if (keyboard[SDL_SCANCODE_DOWN])
+		{
+			App->cameras->RotatePitch(1.f);
+		}
 
-	if (keyboard[SDL_SCANCODE_LEFT])
-	{
-		App->cameras->RotateYaw(-1.f);
-	}
+		if (keyboard[SDL_SCANCODE_LEFT])
+		{
+			App->cameras->RotateYaw(-1.f);
+		}
 
-	if (keyboard[SDL_SCANCODE_RIGHT])
-	{
-		App->cameras->RotateYaw(1.f);
+		if (keyboard[SDL_SCANCODE_RIGHT])
+		{
+			App->cameras->RotateYaw(1.f);
+		}
 	}
-
 	return UPDATE_CONTINUE;
 }
 

@@ -48,6 +48,9 @@ public:
 	void Center(const BoundingBox &bounding_box);
 	void Focus(const BoundingBox &bounding_box);
 
+	void SetMovement(const bool movement_enabled);
+	bool MovementEnabled() const;
+
 	void ShowCameraOptions();
 
 private:
@@ -73,6 +76,8 @@ private:
 	Frustum camera_frustum;
 	
 	float aspect_ratio;
+
+	bool movement_enabled = false;
 
 	bool is_orbiting = false;
 	float speed_up;

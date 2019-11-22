@@ -296,6 +296,16 @@ void ModuleCamera::SetSpeedUp(const bool is_speeding_up)
 	speed_up = is_speeding_up ? SPEED_UP_FACTOR : 1.f;
 }
 
+void ModuleCamera::SetMovement(const bool movement_enabled)
+{
+	this->movement_enabled = movement_enabled;
+}
+
+bool ModuleCamera::MovementEnabled() const
+{
+	return movement_enabled;
+}
+
 void ModuleCamera::generateMatrices()
 {
 	proj = camera_frustum.ProjectionMatrix();
