@@ -329,40 +329,72 @@ void EngineUI::ShowAboutWindow()
 		{
 			ShellExecuteA(NULL, "open", "https://www.libsdl.org/", NULL, NULL, SW_SHOWNORMAL);
 		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+		}
 
 		if (ImGui::MenuItem("glew 2.1.0"))
 		{
 			ShellExecuteA(NULL, "open", "http://glew.sourceforge.net/", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 		}
 
 		if (ImGui::MenuItem("MathGeoLib 1.5"))
 		{
 			ShellExecuteA(NULL, "open", "https://github.com/juj/MathGeoLib", NULL, NULL, SW_SHOWNORMAL);
 		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+		}
 
 		if (ImGui::MenuItem("ImGui 1.73"))
 		{
 			ShellExecuteA(NULL, "open", "https://github.com/ocornut/imgui", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 		}
 
 		if (ImGui::MenuItem("DevIL 1.8"))
 		{
 			ShellExecuteA(NULL, "open", "http://openil.sourceforge.net/", NULL, NULL, SW_SHOWNORMAL);
 		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+		}
 
 		if (ImGui::MenuItem("assimp 5.0"))
 		{
 			ShellExecuteA(NULL, "open", "https://github.com/assimp/assimp", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 		}
 
 		if (ImGui::MenuItem("Font Awesome 5"))
 		{
 			ShellExecuteA(NULL, "open", "https://github.com/FortAwesome/Font-Awesome", NULL, NULL, SW_SHOWNORMAL);
 		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+		}
 
 		if (ImGui::MenuItem("Icon Font Cpp Headers"))
 		{
 			ShellExecuteA(NULL, "open", "https://github.com/juliettef/IconFontCppHeaders", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 		}
 
 		ImGui::Separator();
@@ -371,6 +403,10 @@ void EngineUI::ShowAboutWindow()
 		if (ImGui::MenuItem("LICENSE"))
 		{
 			ShellExecuteA(NULL, "open", "https://github.com/mariofv/OrionEngine/blob/master/LICENSE", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 		}
 		ImGui::TextWrapped("Orion Engine is licensed under the MIT License, see LICENSE for more information.");
 	}
