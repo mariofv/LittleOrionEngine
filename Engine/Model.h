@@ -24,10 +24,10 @@ public:
 	void ShowModelProperties();
 
 public:
-	float3 translation;
-	float3 rotation;
-	float3 scale;
-	
+	float3 translation = float3::zero;
+	float3 rotation = float3::zero;
+	float3 scale = float3::one;
+
 	BoundingBox *bounding_box = nullptr;
 
 private:

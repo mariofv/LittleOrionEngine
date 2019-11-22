@@ -8,15 +8,6 @@
 #include "SDL.h"
 #include "IconsFontAwesome5.h"
 
-ModuleCamera::ModuleCamera()
-{
-}
-
-// Destructor
-ModuleCamera::~ModuleCamera()
-{
-}
-
 bool ModuleCamera::Init()
 {
 	APP_LOG_SECTION("************ Module Camera Init ************");

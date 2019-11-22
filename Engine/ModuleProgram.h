@@ -13,8 +13,8 @@ struct SDL_Rect;
 class ModuleProgram : public Module
 {
 public:
-	ModuleProgram();
-	~ModuleProgram();
+	ModuleProgram() = default;
+	~ModuleProgram() = default;
 
 	bool Init();
 	update_status PreUpdate();
@@ -30,9 +30,9 @@ private:
 	const char* loadFile(const char *file_name) const;
 
 public:
-	GLuint default_program;
-	GLuint texture_program;
-	GLuint primitive_program;
+	GLuint default_program = 0;
+	GLuint texture_program = 0;
+	GLuint primitive_program = 0;
 
 };
 

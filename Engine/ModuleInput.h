@@ -10,8 +10,8 @@ struct SDL_Cursor;
 class ModuleInput : public Module
 {
 public:
-	ModuleInput();
-	~ModuleInput();
+	ModuleInput() = default;
+	~ModuleInput() = default;
 
 	bool Init();
 	update_status PreUpdate();

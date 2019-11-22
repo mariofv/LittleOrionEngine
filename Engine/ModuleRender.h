@@ -13,8 +13,8 @@ struct SDL_Rect;
 class ModuleRender : public Module
 {
 public:
-	ModuleRender();
-	~ModuleRender();
+	ModuleRender() = default;
+	~ModuleRender() = default;
 
 	bool Init();
 	update_status PreUpdate();
@@ -46,10 +46,10 @@ public:
 	bool bounding_box_visible = false;
 	bool model_movement = false;
 
-	GLuint frame_texture;
+	GLuint frame_texture = 0;
 private:
-	GLuint fbo;
-	GLuint rbo;
+	GLuint fbo = 0;
+	GLuint rbo = 0;
 
 	void* context = nullptr;
 

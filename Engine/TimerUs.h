@@ -11,7 +11,7 @@ public:
 	TimerUs() = default;
 	~TimerUs() = default;
 
-	void Start() ;
+	void Start();
 	float Read() const;
 	void Stop();
 

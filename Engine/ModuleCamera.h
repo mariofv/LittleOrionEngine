@@ -11,8 +11,8 @@
 class ModuleCamera : public Module
 {
 public:
-	ModuleCamera();
-	~ModuleCamera();
+	ModuleCamera() = default;
+	~ModuleCamera() = default;
 	
 	bool Init();
 	update_status PreUpdate();
@@ -75,7 +75,7 @@ public:
 private:
 	Frustum camera_frustum;
 	
-	float aspect_ratio;
+	float aspect_ratio = 1.f;
 
 	bool movement_enabled = false;
 

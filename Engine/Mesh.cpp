@@ -2,13 +2,6 @@
 #include "Application.h"
 #include "Globals.h"
 
-Mesh::Mesh()
-{
-	vao = 0;
-	vbo = 0;
-	ebo = 0;
-}
-
 Mesh::Mesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int material_index)
 {
 	this->vertices = vertices;

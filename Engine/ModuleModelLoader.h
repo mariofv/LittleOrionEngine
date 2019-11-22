@@ -26,7 +26,7 @@ public:
 	AssimpStream(const unsigned int severety):severety(severety){}
 	~AssimpStream() = default;
 
-	unsigned int severety;
+	unsigned int severety = 0;
 
 	void write(const char* message)
 	{
@@ -54,8 +54,8 @@ public:
 class ModuleModelLoader : public Module
 {
 public:
-	ModuleModelLoader();
-	~ModuleModelLoader();
+	ModuleModelLoader() = default;
+	~ModuleModelLoader() = default;
 
 	bool Init();
 	update_status PreUpdate();

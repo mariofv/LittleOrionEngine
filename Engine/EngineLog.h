@@ -2,7 +2,9 @@
 #define _ENGINELOG_H_
 
 #include "Globals.h"
+
 #include "imgui.h"
+
 #include <vector>
 
 struct ImGuiTextBuffer;
@@ -41,11 +43,11 @@ public:
 		LogEntrySource source = LogEntrySource::APP_LOG;
 		const char *file = nullptr;
 		int line = 0;
-		std::string message;
+		std::string message = "";
 	};
 
 
-	EngineLog();
+	EngineLog() = default;
 	~EngineLog();
 
 	void log(const LogEntrySource source, const LogEntryType type, const char* file, const int line, const char* message);

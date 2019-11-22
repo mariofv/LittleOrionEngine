@@ -68,15 +68,6 @@ static void APIENTRY openglCallbackFunction(
 	}
 }
 
-ModuleRender::ModuleRender()
-{
-}
-
-// Destructor
-ModuleRender::~ModuleRender()
-{
-}
-
 // Called before render is available
 bool ModuleRender::Init()
 {

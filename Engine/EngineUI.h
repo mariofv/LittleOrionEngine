@@ -7,8 +7,8 @@
 class EngineUI
 {
 public:
-	EngineUI();
-	~EngineUI();
+	EngineUI() = default;
+	~EngineUI() = default;
 
 	void ShowEngineUI();
 	void InitUI();

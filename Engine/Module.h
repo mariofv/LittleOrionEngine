@@ -9,9 +9,7 @@ class Module
 {
 public:
 
-	Module()
-	{
-	}
+	Module() = default;
 
 	virtual bool Init() 
 	{

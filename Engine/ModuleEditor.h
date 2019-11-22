@@ -9,8 +9,8 @@ struct ImFont;
 class ModuleEditor : public Module
 {
 public:
-	ModuleEditor();
-	~ModuleEditor();
+	ModuleEditor() = default;
+	~ModuleEditor() = default;
 
 	bool Init();
 	update_status PreUpdate();

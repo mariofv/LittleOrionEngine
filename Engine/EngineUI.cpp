@@ -18,15 +18,6 @@
 #include "IconsFontAwesome5.h"
 #include "IconsFontAwesome5Brands.h"
 
-
-EngineUI::EngineUI()
-{
-}
-
-EngineUI::~EngineUI()
-{
-}
-
 void EngineUI::InitUI()
 {
 	show_scene_window = true;

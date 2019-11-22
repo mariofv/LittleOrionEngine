@@ -6,14 +6,12 @@
 
 #include <algorithm>
 
-EngineLog::EngineLog()
-{
-}
 
 EngineLog::~EngineLog()
 {
 	text_log.clear();
 	fps_log.clear();
+	ms_log.clear();
 }
 
 

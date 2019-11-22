@@ -12,15 +12,6 @@
 #include "IconsFontAwesome5.h"
 #include "IconsFontAwesome5Brands.h"
 
-ModuleEditor::ModuleEditor()
-{
-}
-
-// Destructor
-ModuleEditor::~ModuleEditor()
-{
-}
-
 // Called before render is available
 bool ModuleEditor::Init()
 {

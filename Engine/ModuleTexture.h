@@ -14,8 +14,8 @@ struct SDL_Rect;
 class ModuleTexture : public Module
 {
 public:
-	ModuleTexture();
-	~ModuleTexture();
+	ModuleTexture() = default;
+	~ModuleTexture() = default;
 
 	bool Init();
 	update_status PreUpdate();
@@ -27,4 +27,4 @@ public:
 	Texture* loadTexture(const char* texture_path) const;
 };
 
-#endif _MODULETEXTURE_H_
+#endif //_MODULETEXTURE_H_

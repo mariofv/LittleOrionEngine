@@ -7,16 +7,6 @@
 #include <IL/ilut.h>
 #include "SDL.h"
 
-ModuleTexture::ModuleTexture()
-{
-
-}
-
-// Destructor
-ModuleTexture::~ModuleTexture()
-{
-}
-
 // Called before render is available
 bool ModuleTexture::Init()
 {

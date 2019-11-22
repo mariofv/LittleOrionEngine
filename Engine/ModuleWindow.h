@@ -11,10 +11,8 @@ class ModuleWindow : public Module
 {
 public:
 
-	ModuleWindow();
-
-	// Destructor
-	virtual ~ModuleWindow();
+	ModuleWindow() = default;
+	virtual ~ModuleWindow() = default;
 
 	// Called before quitting
 	bool Init();
@@ -42,27 +40,27 @@ public:
 
 public:
 	//The window we'll be rendering to
-	SDL_Window* window = NULL;
+	SDL_Window* window = nullptr;
 
 	//The surface contained by the window
-	SDL_Surface* screen_surface = NULL;
+	SDL_Surface* screen_surface = nullptr;
 
 	// OpenGL context
 	SDL_GLContext glcontext;
 
 public:
-	int screen_width;
-	int screen_height;
+	int screen_width = 0;
+	int screen_height = 0;
 
 private:
-	int height;
-	int width;
+	int height = 0;
+	int width = 0;
 
-	int fullscreen;
-	bool bordered;
-	bool resizable;
+	int fullscreen = -1;
+	bool bordered = false;
+	bool resizable = false;
 
-	float brightness;
+	float brightness = 1.f;
 };
 
 #endif // _MODULEWINDOW_H_

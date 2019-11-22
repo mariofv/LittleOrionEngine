@@ -13,13 +13,6 @@
 #include "IconsFontAwesome5.h"
 #include <GL/glew.h>
 
-ModuleInput::ModuleInput()
-{}
-
-// Destructor
-ModuleInput::~ModuleInput()
-{}
-
 // Called before render is available
 bool ModuleInput::Init()
 {

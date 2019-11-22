@@ -11,16 +11,6 @@
 #include <assimp/material.h>
 #include <assimp/mesh.h>
 
-ModuleModelLoader::ModuleModelLoader()
-{
-	
-}
-
-// Destructor
-ModuleModelLoader::~ModuleModelLoader()
-{
-}
-
 // Called before render is available
 bool ModuleModelLoader::Init()
 {

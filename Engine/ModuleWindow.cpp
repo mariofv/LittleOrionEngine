@@ -8,15 +8,6 @@
 #include "imgui.h"
 #include "IconsFontAwesome5.h"
 
-ModuleWindow::ModuleWindow()
-{
-}
-
-// Destructor
-ModuleWindow::~ModuleWindow()
-{
-}
-
 // Called before render is available
 bool ModuleWindow::Init()
 {
