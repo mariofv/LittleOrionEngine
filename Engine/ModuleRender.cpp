@@ -164,10 +164,8 @@ void ModuleRender::GenerateFrameTexture(const float width, const float height)
 
 	renderGrid();
 
-	if (model_movement)
-	{
-		App->model_loader->current_model->translation.x = sin(App->time->time * 0.01f)  *5.f;
-	}
+	App->model_loader->current_model->translation.x = model_movement ? sin(App->time->time * 0.01f)  *5.f : 0.f;
+	App->model_loader->current_model->bounding_box->center.x = model_movement ? sin(App->time->time * 0.01f)  *5.f : 0.f;
 	App->model_loader->current_model->Render(App->program->texture_program);
 	
 	if (bounding_box_visible)

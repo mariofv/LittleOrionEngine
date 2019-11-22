@@ -17,7 +17,7 @@ public:
 public:
 	float3 size;
 	float3 center;
-	float4x4 model_matrix;
+
 private:
 	GLuint vao;
 	GLuint vbo;

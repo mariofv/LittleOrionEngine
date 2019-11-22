@@ -51,7 +51,6 @@ BoundingBox::BoundingBox(const float3 min_coords, const float3 max_coords)
 	
 	size = max_coords - min_coords;
 	center = (max_coords + min_coords)/2;
-	model_matrix = float4x4::FromTRS(center, float4x4::identity, size);
 }
 
 BoundingBox::~BoundingBox()
@@ -65,7 +64,7 @@ void BoundingBox::Render(GLuint shader_program) const
 {
 	glUseProgram(shader_program);
 
-	float4x4 model = model_matrix; // TODO: Ask why is not possible to pass a class member memory direction
+	float4x4 model = float4x4::FromTRS(center, float4x4::identity, size);
 
 	glUniformMatrix4fv(
 		glGetUniformLocation(shader_program, "model"),
