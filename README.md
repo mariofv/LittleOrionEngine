@@ -67,22 +67,22 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
     * Debug messages are captured from Assimp and OpenGL.
     * Filter messages by soruce!
     * Model texture can be overwritten dragging and dropping a png file into the engine window.
-* [0.1.3 wow UI, so much configuration options](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.4-alpha)
+* [0.1.3 wow UI, so much configuration options](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.3-alpha)
     * New gorgeous GUI.
     * Lots of new configuration options for different modules (camera, render, ...).
     * Scene is rendered in a separate window.
     * Model properties are shown in a new window.
     * Camera speed and focus is calculated regarding the loaded model size.
-* [0.1.2 Time starts to flow, impending new GUI shows in the horizon...](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.4-alpha)
+* [0.1.2 Time starts to flow, impending new GUI shows in the horizon...](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.2-alpha)
     * Added time module, that controls time flow. It implements two clocks, the real time clock and the game clock.
     * Time can be paused and stepped foward one frame. Also time scale can be changed.
     * FPS can be limited.
     * Started new implementation of GUI. Added some new info to camera config.
-* [0.1.1 This is about model loading and a camera](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.4-alpha)
+* [0.1.1 This is about model loading and a camera](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.1-alpha)
     * Improved model loading. Is possible to load models dragging and dropping their .fbx files into the engine's window. Camera will be scaled accordingly to new model dimensions.
     * Improved camera controls. Pressing F will focus the camera on the loaded model. Also, pressing Alt will make the camera orbit around the current model.
     * Added bounding box. Pressing B will enable/disable the bounding box of the current model.
-* [0.1.0 Here comes the base version!](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.4-alpha)
+* [0.1.0 Here comes the base version!](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.0-alpha)
     * It can load models from fbx files using a diffuse texture.
     * Camera can be controlled in Unity-like style.
     * Engine has basic UI with several config and debug options.
