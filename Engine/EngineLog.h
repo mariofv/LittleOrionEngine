@@ -56,6 +56,7 @@ public:
 	std::vector<float> getMSData() const;
 	
 	void ShowConsoleWindow();
+	void ShowFilterButton(const char* button_label, const ImVec4 color, bool &filter);
 
 private:
 	std::vector<LogEntry*> text_log;
@@ -64,6 +65,9 @@ private:
 	std::vector<float> ms_log;
 
 	bool scroll_down = false;
+	bool app_filter = false;
+	bool assimp_filter = false;
+	bool opengl_filter = false;
 };
 
 #endif //_ENGINELOG_H_
