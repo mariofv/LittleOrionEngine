@@ -272,6 +272,25 @@ void EngineUI::ShowHardware()
 		ImGui::SameLine();
 		sprintf_s(tmp_string, "%s %s", glGetString(GL_VENDOR), glGetString(GL_RENDERER));
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
+
+		int vram_budget, vram_available;
+		glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &vram_budget);
+		glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &vram_available);
+
+		ImGui::Text("VRAM Budget:");
+		ImGui::SameLine();
+		sprintf_s(tmp_string, "%.2f MB", vram_budget/1000.f);
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
+
+		ImGui::Text("VRAM Usage:");
+		ImGui::SameLine();
+		sprintf_s(tmp_string, "%.2f MB", (vram_budget - vram_available) / 1000.f);
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
+
+		ImGui::Text("VRAM Available:");
+		ImGui::SameLine();
+		sprintf_s(tmp_string, "%.2f MB", vram_available / 1000.f);
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
 	}
 }
 
