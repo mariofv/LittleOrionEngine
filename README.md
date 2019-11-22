@@ -18,8 +18,6 @@
   </a>
 </p>
 
-One to two paragraph statement about your product and what it does.
-
 ![](https://github.com/mariofv/OrionEngine/blob/master/Media/engine_usage_v0_1_5-alpha.gif)
 
 ## Installation
@@ -46,6 +44,17 @@ Because this is a academic project is not possible to contribute directly to thi
 | [![Mario Fernández Villalba](https://github.com/mariofv.png?size=100)](https://github.com/mariofv) |
 | ---- |
 | [Mario Fernández Villalba](https://github.com/mariofv/) |
+
+## Built With
+
+* [SDL 2.0](https://www.libsdl.org/) - Used to manage window creation and input.
+* [glew 2.1.0](http://glew.sourceforge.net/) - Used to manage OpenGL extensions.
+* [MathGeoLib 3.0.0](https://github.com/juj/MathGeoLib/) - Used to do the maths.
+* [Dear ImGui 1.73](https://github.com/ocornut/imgui/) - Used to build the GUI.
+* [DevIL 1.8](http://openil.sourceforge.net/) - Used to load images.
+* [assimp 5.0](https://github.com/assimp/assimp/) - Used to load 3D models.
+* [Font Awesome 5](https://github.com/FortAwesome/Font-Awesome) - Used to display fancy icons.
+* [Icon Font Cpp Headers](https://github.com/juliettef/IconFontCppHeaders/) - Used to import Font Awesome icons in C++.
 
 ## License
 
