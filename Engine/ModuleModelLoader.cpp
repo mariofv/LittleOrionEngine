@@ -82,9 +82,7 @@ void ModuleModelLoader::SwapCurrentModelTexture(const char *new_texture_file_pat
 void ModuleModelLoader::UnloadCurrentModel()
 {
 	delete current_model;
-
-	//delete scene; // TODO: Why this is memory leak
-
+	aiReleaseImport(scene);
 }
 
 bool ModuleModelLoader::LoadModel(const char *new_model_file_path)

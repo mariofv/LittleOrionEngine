@@ -66,10 +66,6 @@ void ModuleTime::EndFrame()
 			SDL_Delay(remaining_frame_time);
 			last_frame_delay = remaining_frame_time;
 		}
-		else
-		{
-			// TODO: Ask what happens if the current frame exceded time limit
-		}
 		delta_time = (game_time_clock->Read() - frame_start_time) * time_scale;
 		real_time_delta_time = real_time_clock->Read() - real_frame_start_time;
 	}
