@@ -212,12 +212,17 @@ ModuleInput::FileType ModuleInput::GetFileType(const char *file_path)
 
 	if (
 		file_extension == "png"
+		|| file_extension == "PNG"
 		|| file_extension == "dds"
+		|| file_extension == "DDS"
 	)
 	{
 		return ModuleInput::FileType::TEXTURE;
 	}
-	if (file_extension == "fbx")
+	if (
+		file_extension == "fbx"
+		|| file_extension == "FBX"
+	)
 	{
 		return ModuleInput::FileType::MODEL;
 	}

@@ -73,6 +73,8 @@ Texture* ModuleTexture::loadTexture(const char* texture_path) const
 		return nullptr;
 	}
 
+	ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
+
 	Texture *loaded_texture = new Texture(image, texture_path);
 	loaded_texture->GenerateMipMap();
 
