@@ -28,6 +28,9 @@ public:
 	void ShowTimeControls();
 	void ShowTimeOptions();
 
+	void EndFrame();
+
+
 public:
 	long frame_count = 0;
 
@@ -46,7 +49,7 @@ private:
 	float frame_start_time = 0.f;
 	float real_frame_start_time = 0.f;
 
-	bool limit_fps = true;
+	bool limit_fps = false;
 	float last_frame_delay = 0.f;
 
 	int max_fps = 60;

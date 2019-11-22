@@ -48,6 +48,11 @@ update_status ModuleTime::Update()
 
 update_status ModuleTime::PostUpdate()
 {
+	return UPDATE_CONTINUE;
+}
+
+void ModuleTime::EndFrame()
+{
 	++frame_count;
 
 	delta_time = (game_time_clock->Read() - frame_start_time) * time_scale;
@@ -84,8 +89,6 @@ update_status ModuleTime::PostUpdate()
 		stepping_frame = false;
 		game_time_clock->Pause();
 	}
-
-	return UPDATE_CONTINUE;
 }
 
 // Called before quitting

@@ -139,6 +139,7 @@ update_status ModuleRender::Update()
 update_status ModuleRender::PostUpdate()
 {
 	SDL_GL_SwapWindow(App->window->window);
+	App->time->EndFrame();
 	return UPDATE_CONTINUE;
 }
 
