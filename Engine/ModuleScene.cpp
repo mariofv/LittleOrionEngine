@@ -27,5 +27,9 @@ void ModuleScene::ShowSceneWindow()
 			ImVec2(1, 0)
 		);
 	}
+	if (App->cameras->MovementEnabled() && is_hovered)
+	{
+		ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
+	}
 	ImGui::End();
 }

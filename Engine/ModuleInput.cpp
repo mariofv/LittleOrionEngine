@@ -97,7 +97,7 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
-			if (event.button.button == SDL_BUTTON_RIGHT)
+			if (event.button.button == SDL_BUTTON_RIGHT && App->scene->is_hovered)
 			{
 				App->cameras->SetMovement(true);
 			}
@@ -190,26 +190,26 @@ update_status ModuleInput::PreUpdate()
 		{
 			App->cameras->MoveRight();
 		}
+	}
 
-		if (keyboard[SDL_SCANCODE_UP])
-		{
-			App->cameras->RotatePitch(-1.f);
-		}
+	if (keyboard[SDL_SCANCODE_UP])
+	{
+		App->cameras->RotatePitch(-1.f);
+	}
 
-		if (keyboard[SDL_SCANCODE_DOWN])
-		{
-			App->cameras->RotatePitch(1.f);
-		}
+	if (keyboard[SDL_SCANCODE_DOWN])
+	{
+		App->cameras->RotatePitch(1.f);
+	}
 
-		if (keyboard[SDL_SCANCODE_LEFT])
-		{
-			App->cameras->RotateYaw(-1.f);
-		}
+	if (keyboard[SDL_SCANCODE_LEFT])
+	{
+		App->cameras->RotateYaw(-1.f);
+	}
 
-		if (keyboard[SDL_SCANCODE_RIGHT])
-		{
-			App->cameras->RotateYaw(1.f);
-		}
+	if (keyboard[SDL_SCANCODE_RIGHT])
+	{
+		App->cameras->RotateYaw(1.f);
 	}
 	return UPDATE_CONTINUE;
 }

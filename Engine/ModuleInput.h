@@ -5,6 +5,7 @@
 #include "Globals.h"
 
 typedef unsigned __int8 Uint8;
+struct SDL_Cursor;
 
 class ModuleInput : public Module
 {
@@ -31,8 +32,6 @@ private:
 
 private:
 	const Uint8 *keyboard = nullptr;
-
-
 };
 
 #endif //_MODULEINPUT_H_
