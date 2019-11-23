@@ -20,6 +20,12 @@
 
 ![](https://github.com/mariofv/OrionEngine/blob/master/Media/engine_usage_v0_1_5-alpha.gif)
 
+## Highlights
+- Load and visualize 3D models.
+- Change model texture with one of your choice.
+- Explore the scene using a Unity-like camera.
+- Configure different engine properties: renderer, time management, ...
+
 ## Installation
 
 - Download the last release (or whatever release you want) from the [Releases section](https://github.com/mariofv/OrionEngine/releases).
@@ -27,7 +33,28 @@
 - Execute `OrionEngine.exe`.
 
 ## Usage
+### Model and texture loading
+- In order to load a model drag and drop a `fbx` file into the editor's window to load it. The engine will automatically try to import model materials from the specified path in the `fbx` file.
+- To change the texture of the current model drag and drop a `png` or `dds` file into the editor's window. The engine will overwrite the existing texture with the new one.
 
+### Camera controls
+- To enable camera movement hold `RClick` inside the _Scene_ window.
+- Move mouse to look around.
+- Press `W` `A` `S` `D` to move camera around.
+- Press `Q`/`E` to increase/decrease camera height.
+- Use the mouse wheel to zoom.
+- Hold `LShift`to duplicate camera movement speed.
+- Press `F` to focus in the loaded model.
+- With movement disabled, press `LAlt` + `LClick` to orbit the current object.
+
+### Engine configuration
+In _Configuration_ window you can check and configure Engine properties.
+- **Hardware** shows some current computer hardware and graphical hardware info, like VRAM usage.
+- **Window** configures engine's window properties.
+- **Renderer** configures different `OpenGL` parameters.
+- **Camera** shows camera frustum parameters like up, front and position vectors. Also other frustum parameters like near and far plane can be configured.
+- **Timers** configures engine's time management. Here you can cap FPS, increase/decrease time scale, ...
+- **Input** shows current input info.
 
 ## Development setup
 
@@ -40,7 +67,7 @@ In order to do that assure that you have the following:
 
 Because this is a academic project is not possible to contribute directly to this repo. Said that, feel free to fork it (<https://github.com/mariofv/OrionEngine/fork>) and to expand it in your own way!
 
-## Contributors
+## Authors
 | [![Mario Fernández Villalba](https://github.com/mariofv.png?size=100)](https://github.com/mariofv) |
 | ---- |
 | [Mario Fernández Villalba](https://github.com/mariofv/) |
