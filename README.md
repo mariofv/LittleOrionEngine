@@ -10,7 +10,7 @@
   <a href="https://github.com/mariofv/OrionEngine/network/">
     <img alt="GitHub forks" src="https://img.shields.io/github/forks/mariofv/OrionEngine.svg">
   </a>
-  <a href="">
+  <a href="https://github.com/mariofv/OrionEngine/">
     <img alt="GitHub repo size in bytes" src="https://img.shields.io/github/repo-size/mariofv/OrionEngine.svg">
   </a>
   <a href="https://github.com/mariofv/OrionEngine/blob/master/LICENSE">
