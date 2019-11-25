@@ -12,7 +12,13 @@ class Model
 {
 public:
 	Model() = default;
-	Model(const std::vector<Mesh*> meshes, const std::vector<Texture*> material_textures);
+	Model(
+		const std::vector<Mesh*> meshes, 
+		const std::vector<Texture*> material_textures, 
+		const float3 translation, 
+		const float3 rotation, 
+		const float3 scale
+	);
 	~Model();
 
 	void Render(const GLuint shader_program) const;

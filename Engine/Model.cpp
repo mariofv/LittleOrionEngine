@@ -9,15 +9,20 @@
 #include <limits>       // std::numeric_limits
 #include <algorithm>    // std::max
 
-Model::Model(const std::vector<Mesh*> meshes, const std::vector<Texture*> material_textures)
+Model::Model(
+	const std::vector<Mesh*> meshes,
+	const std::vector<Texture*> material_textures,
+	const float3 translation,
+	const float3 rotation,
+	const float3 scale
+) :
+	meshes(meshes),
+	material_textures(material_textures),
+	translation(translation),
+	rotation(rotation),
+	scale(scale)
 {
-	this->meshes = meshes;
-	this->material_textures = material_textures;
 	num_materials = material_textures.size();
-
-	translation = float3::zero;
-	rotation = float3::zero,
-	scale = float3::one;
 
 	num_vertices = 0;
 	num_triangles = 0;
@@ -50,9 +55,9 @@ Model::~Model()
 void Model::Render(const GLuint shader_program) const
 {
 	float4x4 model_matrix = float4x4::FromTRS(
-		translation, 
-		float3x3::FromEulerXYZ(rotation.x,rotation.y,rotation.z),
-		scale
+		float3::zero, 
+		float3x3::RotateX(0),
+		float3::one
 	);
 
 	glUseProgram(shader_program);

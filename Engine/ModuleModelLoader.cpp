@@ -71,7 +71,6 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 		return false;
 	}
 
-
 	APP_LOG_INFO("Loading model materials.");
 	std::string model_base_path = GetModelBasePath(new_model_file_path);
 	std::vector<Texture*> material_textures;
@@ -93,7 +92,15 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	APP_LOG_INFO("Model meshes loaded correctly.");
 
 
-	current_model = new Model(meshes, material_textures);
+	aiMatrix4x4 transform_matrix = scene->mRootNode->mChildren[0]->mTransformation; // Transformation for the first mesh
+	aiVector3D ai_translation, ai_rotation, ai_scale;
+	transform_matrix.Decompose(ai_scale, ai_rotation, ai_translation);
+	
+	float3 m_translation = float3(ai_translation.x, ai_translation.y, ai_translation.z);
+	float3 m_rotation = float3(math::RadToDeg(ai_rotation.x), math::RadToDeg(ai_rotation.y), math::RadToDeg(ai_rotation.z));
+	float3 m_scale = float3(ai_scale.x, ai_scale.y, ai_scale.z);
+
+	current_model = new Model(meshes, material_textures, m_translation, m_rotation, m_scale);
 	APP_LOG_INFO("Computing model bounding box.");
 	current_model->ComputeBoundingBox();
 
