@@ -21,25 +21,6 @@ bool ModuleTexture::Init()
 	return true;
 }
 
-update_status ModuleTexture::PreUpdate()
-{
-	
-
-	return UPDATE_CONTINUE;
-}
-
-// Called every draw update
-update_status ModuleTexture::Update()
-{
-	
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleTexture::PostUpdate()
-{
-	return UPDATE_CONTINUE;
-}
-
 // Called before quitting
 bool ModuleTexture::CleanUp()
 {

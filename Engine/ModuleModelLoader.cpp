@@ -26,22 +26,6 @@ bool ModuleModelLoader::Init()
 	return true;
 }
 
-update_status ModuleModelLoader::PreUpdate()
-{
-	return UPDATE_CONTINUE;
-}
-
-// Called every draw update
-update_status ModuleModelLoader::Update()
-{
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleModelLoader::PostUpdate()
-{
-	return UPDATE_CONTINUE;
-}
-
 // Called before quitting
 bool ModuleModelLoader::CleanUp()
 {

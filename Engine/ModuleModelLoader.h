@@ -58,9 +58,6 @@ public:
 	~ModuleModelLoader() = default;
 
 	bool Init();
-	update_status PreUpdate();
-	update_status Update();
-	update_status PostUpdate();
 	bool CleanUp();
 
 	void SwapCurrentModel(const char *new_model_file_path);

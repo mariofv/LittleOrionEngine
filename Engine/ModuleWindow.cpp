@@ -72,12 +72,6 @@ bool ModuleWindow::Init()
 	return ret;
 }
 
-update_status ModuleWindow::Update()
-{
-	return UPDATE_CONTINUE;
-}
-
-
 // Called before quitting
 bool ModuleWindow::CleanUp()
 {

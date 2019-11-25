@@ -47,7 +47,7 @@ update_status ModuleInput::PreUpdate()
 		switch (event.type)
 		{
 		case SDL_QUIT:
-			return UPDATE_STOP;
+			return update_status::UPDATE_STOP;
 			break;
 
 		case SDL_WINDOWEVENT:
@@ -204,7 +204,7 @@ update_status ModuleInput::PreUpdate()
 	{
 		App->cameras->RotateYaw(1.f);
 	}
-	return UPDATE_CONTINUE;
+	return update_status::UPDATE_CONTINUE;
 }
 
 // Called before quitting

@@ -15,9 +15,7 @@ public:
 	~ModuleCamera() = default;
 	
 	bool Init();
-	update_status PreUpdate();
 	update_status Update();
-	update_status PostUpdate();
 	bool CleanUp();
 	
 	void SetFOV(const float fov);

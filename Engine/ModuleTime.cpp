@@ -37,19 +37,9 @@ update_status ModuleTime::PreUpdate()
 {
 	frame_start_time = game_time_clock->Read();
 	real_frame_start_time = real_time_clock->Read();
-	return UPDATE_CONTINUE;
+	return update_status::UPDATE_CONTINUE;
 }
 
-// Called every draw update
-update_status ModuleTime::Update()
-{
-	return UPDATE_CONTINUE;
-}
-
-update_status ModuleTime::PostUpdate()
-{
-	return UPDATE_CONTINUE;
-}
 
 void ModuleTime::EndFrame()
 {

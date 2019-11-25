@@ -40,7 +40,7 @@ static void HelpMarker(const char* desc)
 	}
 }
 
-enum update_status
+enum class update_status
 {
 	UPDATE_CONTINUE = 1,
 	UPDATE_STOP,
@@ -69,9 +69,7 @@ enum class Fonts
 # define WOBBLE_VERTEX_SHADER_PATH "./shaders/wobble.vs"
 # define WOBBLE_FRAGMENT_SHADER_PATH "./shaders/wobble.fs"
 
-# define LENA_TEXTURE_PATH "./resources/textures/lena.png"
 # define HOUSE_MODEL_PATH "./resources/models/baker_house/BakerHouse.fbx"
-# define UMBREON_MODEL_PATH "./resources/models/Umbreon/Umbreon.fbx"
 
 #define FULLSCREEN false
 #define RESIZABLE true
