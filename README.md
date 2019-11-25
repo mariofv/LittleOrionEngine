@@ -89,6 +89,10 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 ## Release History
 
+* [Final 0.1 alpha version (this is the one teachers)!](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.5-alpha)
+    * Fixed various bugs.
+    * Several refactors in order to follow good C++ practises.
+    * Super cool README.
 * [0.1.4 New LOG, preparations for final 0.1 alpha version!](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.4-alpha)
     * Revamped log. It displays messages in a clearer and more readable way.
     * Debug messages are captured from Assimp and OpenGL.
