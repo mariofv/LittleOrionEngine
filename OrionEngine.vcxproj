@@ -77,6 +77,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\ComponentTransform.h" />
+    <ClInclude Include="Engine\Component.h" />
     <ClInclude Include="Engine\BoundingBox.h" />
     <ClInclude Include="Engine\Application.h" />
     <ClInclude Include="Engine\EngineLog.h" />
@@ -86,6 +88,7 @@
     <ClInclude Include="Engine\ModuleCamera.h" />
     <ClInclude Include="Engine\ModuleModelLoader.h" />
     <ClInclude Include="Engine\ModuleTime.h" />
+    <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Libraries\FontAwesome5\IconsFontAwesome5.h" />
     <ClInclude Include="Libraries\FontAwesome5\IconsFontAwesome5Brands.h" />
     <ClInclude Include="Libraries\imgui\imconfig.h" />
@@ -170,6 +173,8 @@
     <ClInclude Include="Engine\ModuleScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\ComponentTransform.cpp" />
+    <ClCompile Include="Engine\Component.cpp" />
     <ClCompile Include="Engine\BoundingBox.cpp" />
     <ClCompile Include="Engine\Application.cpp" />
     <ClCompile Include="Engine\EngineLog.cpp" />
@@ -179,6 +184,7 @@
     <ClCompile Include="Engine\ModuleCamera.cpp" />
     <ClCompile Include="Engine\ModuleModelLoader.cpp" />
     <ClCompile Include="Engine\ModuleTime.cpp" />
+    <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="Libraries\imgui\imgui.cpp" />
     <ClCompile Include="Libraries\imgui\imgui_demo.cpp" />
     <ClCompile Include="Libraries\imgui\imgui_draw.cpp" />
