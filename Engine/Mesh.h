@@ -25,7 +25,7 @@ public:
 	void Render(const GLuint shader_program, const GLuint texture) const;
 
 private:
-	void setupMesh();
+	void SetupMesh();
 
 public:
 	std::vector<Vertex> vertices;

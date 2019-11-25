@@ -10,7 +10,7 @@ bool ModuleProgram::Init()
 	APP_LOG_SECTION("************ Module Program Init ************");
 
 	APP_LOG_INIT("Loading default shader program.");
-	if (loadProgram(default_program, DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH))
+	if (LoadProgram(default_program, DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH))
 	{
 		APP_LOG_SUCCESS("Default shader program loaded correctly.");
 	}
@@ -21,7 +21,7 @@ bool ModuleProgram::Init()
 	}
 
 	APP_LOG_INIT("Loading texture shader program.");
-	if (loadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH))
+	if (LoadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH))
 	{
 		APP_LOG_SUCCESS("Default texture program loaded correctly.");
 	}
@@ -32,7 +32,7 @@ bool ModuleProgram::Init()
 	}
 
 	APP_LOG_INIT("Loading primitive shader program.");
-	if (loadProgram(primitive_program, PRIMITIVE_VERTEX_SHADER_PATH, PRIMITIVE_FRAGMENT_SHADER_PATH))
+	if (LoadProgram(primitive_program, PRIMITIVE_VERTEX_SHADER_PATH, PRIMITIVE_FRAGMENT_SHADER_PATH))
 	{
 		APP_LOG_SUCCESS("Default primitive program loaded correctly.");
 	}
@@ -54,22 +54,22 @@ bool ModuleProgram::CleanUp()
 	return true;
 }
 
-bool ModuleProgram::loadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name) const
+bool ModuleProgram::LoadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name) const
 {
 	GLuint vertex_shader;
 	GLuint fragment_shader;
 
-	if (!initVertexShader(vertex_shader, vertex_shader_file_name))
+	if (!InitVertexShader(vertex_shader, vertex_shader_file_name))
 	{
 		return false;
 	}
 
-	if (!initFragmentShader(fragment_shader, fragment_shader_file_name))
+	if (!InitFragmentShader(fragment_shader, fragment_shader_file_name))
 	{
 		return false;
 	}
 
-	if (!initProgram(shader_program, vertex_shader, fragment_shader))
+	if (!InitProgram(shader_program, vertex_shader, fragment_shader))
 	{
 		return false;
 	}
@@ -77,10 +77,10 @@ bool ModuleProgram::loadProgram(GLuint &shader_program, const char* vertex_shade
 	return true;
 }
 
-bool ModuleProgram::initVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const
+bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const
 {
 	APP_LOG_INFO("Loading vertex shader");
-	const char *vertex_shader_loaded_file = loadFile(vertex_shader_file_name);
+	const char *vertex_shader_loaded_file = LoadFile(vertex_shader_file_name);
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	if (vertex_shader == 0) {
 		APP_LOG_ERROR("Error creating vertex shader");
@@ -105,10 +105,10 @@ bool ModuleProgram::initVertexShader(GLuint &vertex_shader, const char* vertex_s
 	return true;
 }
 
-bool ModuleProgram::initFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const
+bool ModuleProgram::InitFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const
 {
 	APP_LOG_INFO("Loading fragment shader");
-	const char *fragment_shader_loaded_file = loadFile(fragment_shader_file_name);
+	const char *fragment_shader_loaded_file = LoadFile(fragment_shader_file_name);
 	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (fragment_shader == 0) {
 		OPENGL_LOG_ERROR("Error creating fragment shader");
@@ -133,7 +133,7 @@ bool ModuleProgram::initFragmentShader(GLuint &fragment_shader, const char* frag
 	return true;
 }
 
-bool ModuleProgram::initProgram(GLuint &shader_program, const GLuint vertex_shader, const GLuint fragment_shader) const
+bool ModuleProgram::InitProgram(GLuint &shader_program, const GLuint vertex_shader, const GLuint fragment_shader) const
 {
 	APP_LOG_INFO("Creating shader program");
 	shader_program = glCreateProgram();
@@ -170,7 +170,7 @@ bool ModuleProgram::initProgram(GLuint &shader_program, const GLuint vertex_shad
 	return true;
 }
 
-const char* ModuleProgram::loadFile(const char* file_name) const
+const char* ModuleProgram::LoadFile(const char* file_name) const
 {
 	char* data = nullptr;
 	FILE* file = nullptr;

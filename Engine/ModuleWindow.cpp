@@ -91,7 +91,7 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
-void ModuleWindow::setResizable(const bool resizable) const
+void ModuleWindow::SetResizable(const bool resizable) const
 {
 	if (resizable) {
 		SDL_SetWindowResizable(window, SDL_TRUE);
@@ -101,7 +101,7 @@ void ModuleWindow::setResizable(const bool resizable) const
 	}
 }
 
-void ModuleWindow::setBordered(const bool bordered) const
+void ModuleWindow::SetBordered(const bool bordered) const
 {
 	if (bordered) {
 		SDL_SetWindowBordered(window, SDL_TRUE);
@@ -111,45 +111,45 @@ void ModuleWindow::setBordered(const bool bordered) const
 	}
 }
 
-void ModuleWindow::setWindowed() const
+void ModuleWindow::SetWindowed() const
 {
 	SDL_SetWindowFullscreen(window, 0);
 
 }
 
-void ModuleWindow::setFullScreenDesktop() const
+void ModuleWindow::SetFullScreenDesktop() const
 {
 	SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN_DESKTOP);
 }
 
-void ModuleWindow::setFullScreen() const
+void ModuleWindow::SetFullScreen() const
 {
 	SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 }
 
-void ModuleWindow::setHeight(const int height)
+void ModuleWindow::SetHeight(const int height)
 {
 	this->height = height;
 	SDL_SetWindowSize(window, width, height);
 }
 
-float ModuleWindow::getHeight() const
+float ModuleWindow::GetHeight() const
 {
 	return height;
 }
 
-void ModuleWindow::setWidth(const int width)
+void ModuleWindow::SetWidth(const int width)
 {
 	this->width = width;
 	SDL_SetWindowSize(window, width, height);
 }
 
-float ModuleWindow::getWidth() const
+float ModuleWindow::GetWidth() const
 {
 	return width;
 }
 
-void ModuleWindow::setBrightness(const float brightness) const
+void ModuleWindow::SetBrightness(const float brightness) const
 {
 	SDL_SetWindowBrightness(window, brightness);
 }
@@ -166,17 +166,17 @@ void ModuleWindow::ShowWindowOptions()
 	if (ImGui::CollapsingHeader(ICON_FA_WINDOW_MAXIMIZE " Window")) {
 		if (ImGui::SliderFloat("Brightness", &brightness, 0, 1))
 		{
-			setBrightness(brightness);
+			SetBrightness(brightness);
 		}
 
 		if (ImGui::SliderInt("Width", &width, screen_width/4, screen_width))
 		{
-			setWidth(width);
+			SetWidth(width);
 		}
 
 		if (ImGui::SliderInt("Height", &height, screen_height/4, screen_height))
 		{
-			setHeight(height);
+			SetHeight(height);
 		}
 
 		if (ImGui::Combo("Window style", &fullscreen, "Windowed\0Fullscreen desktop\0Fullscreen\0"))
@@ -184,26 +184,26 @@ void ModuleWindow::ShowWindowOptions()
 			switch (fullscreen)
 			{
 			case 0:
-				setWindowed();
+				SetWindowed();
 				break;
 			case 1:
-				setFullScreenDesktop();
+				SetFullScreenDesktop();
 				break;
 			case 2:
-				setFullScreen();
+				SetFullScreen();
 				break;
 			}
 		}
 
 		if (ImGui::Checkbox("Bordered", &bordered))
 		{
-			App->window->setBordered(bordered);
+			App->window->SetBordered(bordered);
 		}
 		ImGui::SameLine();
 
 		if (ImGui::Checkbox("Resizable", &resizable))
 		{
-			App->window->setResizable(resizable);
+			App->window->SetResizable(resizable);
 		}
 	}
 	ImGui::PopFont();

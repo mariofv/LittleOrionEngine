@@ -67,8 +67,8 @@ void ModuleTime::EndFrame()
 	time += delta_time;
 	real_time_since_startup += real_time_delta_time;
 
-	App->engine_log->logFPS(1000 / real_time_delta_time);
-	App->engine_log->logMS(real_time_delta_time);
+	App->engine_log->LogFPS(1000 / real_time_delta_time);
+	App->engine_log->LogMS(real_time_delta_time);
 
 	if (stepping_frame)
 	{

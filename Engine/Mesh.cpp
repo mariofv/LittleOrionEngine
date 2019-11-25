@@ -8,7 +8,7 @@ Mesh::Mesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> i
 	this->indices = indices;
 	this->material_index = material_index;
 
-	setupMesh();
+	SetupMesh();
 }
 
 Mesh::~Mesh()
@@ -16,7 +16,7 @@ Mesh::~Mesh()
 	vertices.clear();
 	indices.clear();
 
-	glDeleteBuffers(1, &vao);
+	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 	glDeleteVertexArrays(1, &vao);
 }
@@ -32,7 +32,7 @@ void Mesh::Render(const GLuint shader_program, const GLuint texture) const
 	glBindVertexArray(0);
 }
 
-void Mesh::setupMesh()
+void Mesh::SetupMesh()
 {
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);

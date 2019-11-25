@@ -9,20 +9,25 @@
 
 EngineLog::~EngineLog()
 {
+	for (unsigned int i = 0; i < text_log.size(); ++i)
+	{
+		delete text_log[i];
+	}
+
 	text_log.clear();
 	fps_log.clear();
 	ms_log.clear();
 }
 
 
-void EngineLog::log(const LogEntrySource source, const LogEntryType type, const char* file, const int line, const char* message)
+void EngineLog::Log(const LogEntrySource source, const LogEntryType type, const char* file, const int line, const char* message)
 {
 	LogEntry *new_log_entry = new LogEntry(source, type, file, line, message);
 	text_log.push_back(new_log_entry);
 	scroll_down = true;
 }
 
-void EngineLog::logFPS(const float fps)
+void EngineLog::LogFPS(const float fps)
 {
 	if (fps_log.size() < 100)
 	{
@@ -35,7 +40,7 @@ void EngineLog::logFPS(const float fps)
 	}
 }
 
-void EngineLog::logMS(const float ms)
+void EngineLog::LogMS(const float ms)
 {
 	if (ms_log.size() < 100)
 	{

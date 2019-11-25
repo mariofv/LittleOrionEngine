@@ -17,7 +17,7 @@ void logentry(const EngineLog::LogEntrySource source, const EngineLog::LogEntryT
 
 	if (App != nullptr) 
 	{
-		App->engine_log->log(source, type, file, line, message);
+		App->engine_log->Log(source, type, file, line, message);
 	}
 }
 

@@ -52,7 +52,7 @@ public:
 	void ShowCameraOptions();
 
 private:
-	void generateMatrices();
+	void GenerateMatrices();
 
 public:
 	# define SPEED_UP_FACTOR 2

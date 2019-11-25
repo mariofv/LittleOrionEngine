@@ -17,19 +17,19 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	void setResizable(const bool resizable) const;
-	void setBordered(const bool bordered) const;
+	void SetResizable(const bool resizable) const;
+	void SetBordered(const bool bordered) const;
 
-	void setWindowed() const;
-	void setFullScreenDesktop() const;
-	void setFullScreen() const;
+	void SetWindowed() const;
+	void SetFullScreenDesktop() const;
+	void SetFullScreen() const;
 
-	void setWidth(const int width);
-	float getWidth() const;
-	void setHeight(const int height);
-	float getHeight() const;
+	void SetWidth(const int width);
+	float GetWidth() const;
+	void SetHeight(const int height);
+	float GetHeight() const;
 
-	void setBrightness(const float brightness) const;
+	void SetBrightness(const float brightness) const;
 
 	void WindowResized(const unsigned width, const unsigned height);
 

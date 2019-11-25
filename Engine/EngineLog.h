@@ -50,11 +50,11 @@ public:
 	EngineLog() = default;
 	~EngineLog();
 
-	void log(const LogEntrySource source, const LogEntryType type, const char* file, const int line, const char* message);
-	void logFPS(const float fps);
+	void Log(const LogEntrySource source, const LogEntryType type, const char* file, const int line, const char* message);
+	void LogFPS(const float fps);
 	std::vector<float> getFPSData() const;
 
-	void logMS(const float ms);
+	void LogMS(const float ms);
 	std::vector<float> getMSData() const;
 	
 	void ShowConsoleWindow();

@@ -21,33 +21,34 @@ struct aiScene;
 
 class AssimpStream : public Assimp::LogStream
 {
-public:
-	AssimpStream() = default;
-	AssimpStream(const unsigned int severety):severety(severety){}
-	~AssimpStream() = default;
+	public:
+		AssimpStream() = default;
+		AssimpStream(const unsigned int severety):severety(severety){}
+		~AssimpStream() = default;
 
-	unsigned int severety = 0;
-
-	void write(const char* message)
-	{
-		switch (severety)
+		void write(const char* message)
 		{
-		case Assimp::Logger::Debugging:
-			MYASSIMP_LOG_INFO("%s", message);
-			break;
-		case Assimp::Logger::Info:
-			MYASSIMP_LOG_INFO("%s", message);
-			break;
-		case Assimp::Logger::Err:
-			MYASSIMP_LOG_ERROR("%s", message);
-			break;
-		case Assimp::Logger::Warn:
-			MYASSIMP_LOG_INIT("%s", message); // Actually not an itialization entry, I use this type of entry because the yellow color
-			break;
+			switch (severety)
+			{
+			case Assimp::Logger::Debugging:
+				MYASSIMP_LOG_INFO("%s", message);
+				break;
+			case Assimp::Logger::Info:
+				MYASSIMP_LOG_INFO("%s", message);
+				break;
+			case Assimp::Logger::Err:
+				MYASSIMP_LOG_ERROR("%s", message);
+				break;
+			case Assimp::Logger::Warn:
+				MYASSIMP_LOG_INIT("%s", message); // Actually not an itialization entry, I use this type of entry because the yellow color
+				break;
+
+			}
 
 		}
 
-	}
+	public:
+		unsigned int severety = 0;
 };
 
 

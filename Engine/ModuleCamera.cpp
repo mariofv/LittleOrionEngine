@@ -27,7 +27,7 @@ bool ModuleCamera::Init()
 	camera_frustum.verticalFov = math::pi / 4.0f;
 	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
 
-	generateMatrices();
+	GenerateMatrices();
 
 	return true;
 }
@@ -50,7 +50,7 @@ update_status ModuleCamera::Update()
 		{
 			camera_frustum.pos += zooming_direction.ScaledToLength(frame_focusing_distance);
 		}
-		generateMatrices();
+		GenerateMatrices();
 	}
 	return update_status::UPDATE_CONTINUE;
 }
@@ -67,7 +67,7 @@ void ModuleCamera::SetFOV(const float fov)
 	camera_frustum.verticalFov = fov;
 	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::SetAspectRatio(const float aspect_ratio)
@@ -75,28 +75,28 @@ void ModuleCamera::SetAspectRatio(const float aspect_ratio)
 	this->aspect_ratio = aspect_ratio;
 	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::SetNearDistance(const float distance)
 {
 	camera_frustum.nearPlaneDistance = distance;
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::SetFarDistance(const float distance)
 {
 	camera_frustum.farPlaneDistance = distance;
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::SetPosition(const float3 position)
 {
 	camera_frustum.pos = position;
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::SetOrientation(const float3 orientation)
@@ -105,7 +105,7 @@ void ModuleCamera::SetOrientation(const float3 orientation)
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::LookAt(const float3 focus)
@@ -113,7 +113,7 @@ void ModuleCamera::LookAt(const float3 focus)
 	float3 look_direction = (focus - camera_frustum.pos).Normalized();
 	SetOrientation(look_direction);
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::LookAt(const float x, const float y, const float z)
@@ -139,7 +139,7 @@ void ModuleCamera::Center(const BoundingBox &bounding_box)
 	camera_frustum.pos = bounding_box.center - camera_frustum.front * BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius;
 	camera_frustum.pos.y = INITIAL_HEIGHT_FACTOR * containing_sphere_radius;
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::Focus(const BoundingBox &bounding_box)
@@ -150,7 +150,7 @@ void ModuleCamera::Focus(const BoundingBox &bounding_box)
 	is_focusing = true;
 	desired_focus_position = bounding_box.center - BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius * camera_frustum.front;
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 
@@ -161,7 +161,7 @@ void ModuleCamera::MoveUp()
 	new_camera_pos.y = new_camera_pos.y + distance;
 	camera_frustum.pos = new_camera_pos;
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::MoveDown()
@@ -171,7 +171,7 @@ void ModuleCamera::MoveDown()
 	new_camera_pos.y = new_camera_pos.y - distance;
 	camera_frustum.pos = new_camera_pos;
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::MoveFoward()
@@ -179,7 +179,7 @@ void ModuleCamera::MoveFoward()
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	camera_frustum.pos += camera_frustum.front.ScaledToLength(distance);
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::MoveBackward()
@@ -187,7 +187,7 @@ void ModuleCamera::MoveBackward()
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	camera_frustum.pos -= camera_frustum.front.ScaledToLength(distance);
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::MoveLeft()
@@ -195,7 +195,7 @@ void ModuleCamera::MoveLeft()
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	camera_frustum.pos -= camera_frustum.WorldRight().ScaledToLength(distance);
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::MoveRight()
@@ -203,7 +203,7 @@ void ModuleCamera::MoveRight()
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	camera_frustum.pos = camera_frustum.pos + camera_frustum.WorldRight().ScaledToLength(distance);
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::RotatePitch(const float angle)
@@ -218,7 +218,7 @@ void ModuleCamera::RotatePitch(const float angle)
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::RotateYaw(const float angle)
@@ -228,7 +228,7 @@ void ModuleCamera::RotateYaw(const float angle)
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::OrbitX(const float angle)
@@ -244,7 +244,7 @@ void ModuleCamera::OrbitX(const float angle)
 
 	LookAt(float3::zero); 
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::OrbitY(const float angle)
@@ -266,7 +266,7 @@ void ModuleCamera::OrbitY(const float angle)
 
 	LookAt(float3::zero);
 
-	generateMatrices();
+	GenerateMatrices();
 }
 
 void ModuleCamera::SetOrbit(const bool is_orbiting)
@@ -289,7 +289,7 @@ bool ModuleCamera::MovementEnabled() const
 	return movement_enabled;
 }
 
-void ModuleCamera::generateMatrices()
+void ModuleCamera::GenerateMatrices()
 {
 	proj = camera_frustum.ProjectionMatrix();
 	view = camera_frustum.ViewMatrix();
