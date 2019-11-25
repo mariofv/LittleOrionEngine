@@ -44,7 +44,7 @@ void ModuleModelLoader::SwapCurrentModel(const char *new_model_file_path)
 void ModuleModelLoader::SwapCurrentModelTexture(const char *new_texture_file_path)
 {
 	APP_LOG_INIT("Swaping current model material texture with texture %s", new_texture_file_path)
-	Texture *new_texture = App->texture->loadTexture(new_texture_file_path);
+	Texture *new_texture = App->texture->LoadTexture(new_texture_file_path);
 	current_model->SetMaterialTexture(new_texture);
 	if (new_texture != nullptr)
 	{
@@ -130,7 +130,7 @@ Mesh* ModuleModelLoader::LoadMeshData(const aiMesh *mesh) const
 	return new Mesh(vertices, indices, mesh->mMaterialIndex);
 }
 
-Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, std::string model_base_path)
+Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const std::string model_base_path)
 {
 	aiString file;
 	aiTextureMapping mapping = aiTextureMapping_UV;
@@ -139,7 +139,7 @@ Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, std::st
 	Texture *material_texture;
 
 	APP_LOG_INIT("Loading material texture in described path %s.", file.data);
-	material_texture = App->texture->loadTexture(file.data);
+	material_texture = App->texture->LoadTexture(file.data);
 	if (material_texture != nullptr)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly.");
@@ -148,18 +148,18 @@ Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, std::st
 
 	std::string texture_file_name = GetTextureFileName(file.data);
 
-	model_base_path = model_base_path + texture_file_name;
+	std::string textures_path = model_base_path + texture_file_name;
 	APP_LOG_INIT("Loading material texture in model folder path %s.", model_base_path.c_str());
-	material_texture = App->texture->loadTexture(model_base_path.c_str());
+	material_texture = App->texture->LoadTexture(textures_path.c_str());
 	if (material_texture != nullptr)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly.");
 		return material_texture;
 	}
 
-	std::string textures_path = std::string(TEXTURES_PATH) + texture_file_name;
+	textures_path = std::string(TEXTURES_PATH) + texture_file_name;
 	APP_LOG_INIT("Loading material texture in textures folder %s.", textures_path.c_str());
-	material_texture = App->texture->loadTexture(textures_path.c_str());
+	material_texture = App->texture->LoadTexture(textures_path.c_str());
 	if (material_texture != nullptr)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly.");

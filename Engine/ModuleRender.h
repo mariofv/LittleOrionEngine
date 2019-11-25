@@ -23,7 +23,7 @@ public:
 
 	void GenerateFrameTexture(const float width, const float height);
 	void GenerateFrameBuffers(const float width, const float height);
-	void renderGrid() const;
+	void RenderGrid() const;
 
 	void ShowRenderOptions();
 

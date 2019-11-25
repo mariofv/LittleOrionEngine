@@ -27,7 +27,7 @@ private:
 	void ShowModelPropertiesWindow();
 
 	void ShowConfigurationWindow();
-	void ShowHardware();
+	void ShowHardware() const;
 
 	void ShowConsoleWindow();
 

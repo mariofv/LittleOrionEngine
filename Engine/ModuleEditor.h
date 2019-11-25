@@ -18,7 +18,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
-	ImFont* GetFont(Fonts font);
+	ImFont* GetFont(const Fonts font) const;
 
 private:
 	void LoadFonts();

@@ -72,7 +72,7 @@ private:
 	bool LoadModel(const char *new_model_file_path);
 
 	Mesh* LoadMeshData(const aiMesh *mesh) const;
-	Texture* LoadMaterialData(const aiMaterial *material, std::string model_base_path);
+	Texture* LoadMaterialData(const aiMaterial *material, const std::string model_base_path);
 
 	std::string GetModelBasePath(const char *model_file_path) const;
 	std::string GetTextureFileName(const char *texture_file_path) const;

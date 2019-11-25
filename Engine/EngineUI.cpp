@@ -196,7 +196,7 @@ void EngineUI::ShowConsoleWindow()
 	App->engine_log->ShowConsoleWindow();
 }
 
-void EngineUI::ShowHardware()
+void EngineUI::ShowHardware() const
 {
 	if (ImGui::CollapsingHeader(ICON_FA_HDD " Hardware"))
 	{

@@ -28,7 +28,7 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
-Texture* ModuleTexture::loadTexture(const char* texture_path) const
+Texture* ModuleTexture::LoadTexture(const char* texture_path) const
 {
 	ILuint image;
 	ilGenImages(1, &image);

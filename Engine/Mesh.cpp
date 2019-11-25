@@ -21,7 +21,7 @@ Mesh::~Mesh()
 	glDeleteVertexArrays(1, &vao);
 }
 
-void Mesh::Render(const GLuint shader_program, const GLuint texture)
+void Mesh::Render(const GLuint shader_program, const GLuint texture) const
 {
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, texture); 

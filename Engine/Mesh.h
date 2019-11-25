@@ -22,7 +22,7 @@ public:
 
 	~Mesh();
 
-	void Render(const GLuint shader_program, const GLuint texture);
+	void Render(const GLuint shader_program, const GLuint texture) const;
 
 private:
 	void setupMesh();

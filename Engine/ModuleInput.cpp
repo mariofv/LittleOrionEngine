@@ -215,7 +215,7 @@ bool ModuleInput::CleanUp()
 	return true;
 }
 
-ModuleInput::FileType ModuleInput::GetFileType(const char *file_path)
+ModuleInput::FileType ModuleInput::GetFileType(const char *file_path) const
 {
 	std::string file_extension = GetFileExtension(file_path);
 
@@ -239,7 +239,7 @@ ModuleInput::FileType ModuleInput::GetFileType(const char *file_path)
 	return ModuleInput::FileType::UNKNOWN;
 }
 
-std::string ModuleInput::GetFileExtension(const char *file_path)
+std::string ModuleInput::GetFileExtension(const char *file_path) const
 {
 	std::string file_path_string = std::string(file_path);
 	std::size_t found = file_path_string.find_last_of(".");

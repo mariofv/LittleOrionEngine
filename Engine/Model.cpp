@@ -47,7 +47,7 @@ Model::~Model()
 }
 
 
-void Model::Render(GLuint shader_program) const
+void Model::Render(const GLuint shader_program) const
 {
 	float4x4 model_matrix = float4x4::FromTRS(
 		translation, 
@@ -96,7 +96,7 @@ void Model::Render(GLuint shader_program) const
 
 }
 
-void Model::SetMaterialTexture(Texture* new_texture)
+void Model::SetMaterialTexture(Texture *new_texture)
 {
 	delete material_textures[0];
 	material_textures[0] = new_texture;

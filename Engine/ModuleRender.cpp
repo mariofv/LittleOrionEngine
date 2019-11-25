@@ -147,7 +147,7 @@ void ModuleRender::GenerateFrameTexture(const float width, const float height)
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	renderGrid();
+	RenderGrid();
 
 	App->model_loader->current_model->translation.x = model_movement ? sin(App->time->time * 0.01f)  *5.f : 0.f;
 	App->model_loader->current_model->bounding_box->center.x = model_movement ? sin(App->time->time * 0.01f)  *5.f : 0.f;
@@ -262,7 +262,7 @@ void ModuleRender::SetWireframing(const bool gl_wireframe)
 	gl_wireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-void ModuleRender::renderGrid() const
+void ModuleRender::RenderGrid() const
 {
 	glUseProgram(App->program->primitive_program);
 

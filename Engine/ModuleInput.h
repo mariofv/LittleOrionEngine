@@ -27,8 +27,8 @@ private:
 		UNKNOWN
 	};
 	
-	FileType GetFileType(const char *file_path);
-	std::string GetFileExtension(const char *file_path);
+	FileType GetFileType(const char *file_path) const;
+	std::string GetFileExtension(const char *file_path) const;
 
 private:
 	const Uint8 *keyboard = nullptr;

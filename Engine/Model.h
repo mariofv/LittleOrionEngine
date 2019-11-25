@@ -15,10 +15,10 @@ public:
 	Model(const std::vector<Mesh*> meshes, const std::vector<Texture*> material_textures);
 	~Model();
 
-	void Render(GLuint shader_program) const;
+	void Render(const GLuint shader_program) const;
 
 public:
-	void SetMaterialTexture(Texture* new_texture);
+	void SetMaterialTexture(Texture *new_texture);
 
 	void ComputeBoundingBox();
 	void ShowModelProperties();

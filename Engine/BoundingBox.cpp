@@ -60,7 +60,7 @@ BoundingBox::~BoundingBox()
 	glDeleteVertexArrays(1, &vao);
 }
 
-void BoundingBox::Render(GLuint shader_program) const
+void BoundingBox::Render(const GLuint shader_program) const
 {
 	glUseProgram(shader_program);
 

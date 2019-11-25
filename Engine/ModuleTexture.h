@@ -21,7 +21,7 @@ public:
 	bool CleanUp();
 
 	
-	Texture* loadTexture(const char* texture_path) const;
+	Texture* LoadTexture(const char* texture_path) const;
 };
 
 #endif //_MODULETEXTURE_H_

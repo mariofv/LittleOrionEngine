@@ -75,7 +75,7 @@ bool ModuleEditor::CleanUp()
 	return true;
 }
 
-ImFont* ModuleEditor::GetFont(Fonts font)
+ImFont* ModuleEditor::GetFont(const Fonts font) const
 {
 	ImGuiIO& io = ImGui::GetIO();
 	return io.Fonts->Fonts[static_cast<int>(font)];

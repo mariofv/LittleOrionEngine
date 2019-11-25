@@ -12,7 +12,7 @@ public:
 
 	~BoundingBox();
 
-	void Render(GLuint shader_program) const;
+	void Render(const GLuint shader_program) const;
 
 public:
 	float3 size = float3::zero;
