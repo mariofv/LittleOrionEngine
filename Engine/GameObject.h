@@ -21,6 +21,7 @@ public:
 	void AddChild(GameObject *child);
 	Component* CreateComponent(const Component::ComponentType type);
 
+	void ShowPropertiesWindow();
 	void ShowGameObjectHierarchy();
 
 private:
@@ -35,6 +36,9 @@ public:
 
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;
+
+private:
+	bool active = true;
 };
 
 #endif //_GAMEOBJECT_H_

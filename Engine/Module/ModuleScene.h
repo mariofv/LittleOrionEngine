@@ -23,11 +23,11 @@ public:
 	void ShowSceneWindow();
 
 public:
-	bool is_hovered = false;
+	bool scene_window_is_hovered = false;
 
+	GameObject *selected_game_object = nullptr;
 private:
 	GameObject *root = nullptr;
-	
 	int num_game_objects = 0;
 };
 

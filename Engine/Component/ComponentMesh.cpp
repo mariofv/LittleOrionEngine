@@ -1,5 +1,8 @@
 #include "ComponentMesh.h"
 
+#include "imgui.h"
+#include "IconsFontAwesome5.h"
+
 ComponentMesh::~ComponentMesh()
 {
 	vertices.clear();
@@ -35,6 +38,9 @@ void ComponentMesh::LoadMesh(const std::vector<Vertex> vertices, const std::vect
 	this->vertices = vertices;
 	this->indices = indices;
 	this->material_index = material_index;
+
+	num_vertices = vertices.size();
+	num_triangles = num_vertices / 3;
 
 	SetupMesh();
 }
@@ -73,4 +79,13 @@ void ComponentMesh::SetupMesh()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
 
 	glBindVertexArray(0);
+}
+
+void ComponentMesh::ShowComponentWindow()
+{
+	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::DragInt("# Triangles", &num_triangles, NULL, NULL, NULL);
+		ImGui::DragInt("# Vertices", &num_vertices, NULL, NULL, NULL);
+	}
 }

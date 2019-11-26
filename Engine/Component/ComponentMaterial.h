@@ -18,6 +18,8 @@ public:
 
 	ComponentType GetType() const override;
 
+	void ShowComponentWindow() override;
+
 public:
 	ComponentType type = ComponentType::MATERIAL;
 

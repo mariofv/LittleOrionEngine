@@ -131,17 +131,49 @@ const GLuint GameObject::GetMaterialTexture(const int material_index)
 	return 0;
 }
 
+void GameObject::ShowPropertiesWindow()
+{
+	ImGui::Checkbox("", &active);
+	ImGui::SameLine();
+	std::string game_object_name_label = (std::string(ICON_FA_CUBE) + " " + name);
+	ImGui::Text(game_object_name_label.c_str());
+	
+	ImGui::Spacing();
+	ImGui::Separator();
+
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		if (i != 0)
+		{
+			ImGui::Spacing();
+			ImGui::Separator();
+		}
+		ImGui::Spacing();
+		ImGui::PushID(i);
+		components[i]->ShowComponentWindow();
+		ImGui::PopID();
+	}
+}
+
 void GameObject::ShowGameObjectHierarchy()
 {
 	std::string game_object_name_label = (std::string(ICON_FA_CUBE) + " " + name);
-	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
 	if (children.size() == 0)
 	{
 		flags |= ImGuiTreeNodeFlags_Leaf;
 	}
+	if (App->scene->selected_game_object == this)
+	{
+		flags |= ImGuiTreeNodeFlags_Selected;
+	}
 
 	if (ImGui::TreeNodeEx(game_object_name_label.c_str(), flags))
 	{
+		if (ImGui::IsItemClicked())
+		{
+			App->scene->selected_game_object = this;
+		}
 		ShowGameObjectActionsMenu(game_object_name_label); // THIS IS NEEDED WHEN TREE IS EXPANDED
 		for (int i = 0; i < children.size(); i++)
 		{

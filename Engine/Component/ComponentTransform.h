@@ -22,6 +22,8 @@ public:
 
 	void Render(const GLuint shader_program) const;
 
+	void ShowComponentWindow() override;
+
 private:
 	void GenerateModelMatrix();
 

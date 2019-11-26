@@ -28,6 +28,8 @@ public:
 	void LoadMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int texture_index);
 	void Render(const GLuint shader_program, const GLuint texture) const;
 
+	void ShowComponentWindow() override;
+
 private:
 	void SetupMesh();
 
@@ -40,6 +42,9 @@ private:
 	GLuint vao = 0;
 	GLuint vbo = 0;
 	GLuint ebo = 0;
+
+	int num_triangles = 0;
+	int num_vertices = 0;
 };
 
 #endif //_COMPONENTMESH_H_

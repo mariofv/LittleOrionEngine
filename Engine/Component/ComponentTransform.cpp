@@ -1,5 +1,8 @@
 #include "ComponentTransform.h"
 
+#include "imgui.h"
+#include "IconsFontAwesome5.h"
+
 ComponentTransform::ComponentTransform()
 {
 	GenerateModelMatrix();
@@ -48,4 +51,14 @@ void ComponentTransform::Render(const GLuint shader_program) const
 void ComponentTransform::GenerateModelMatrix()
 {
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
+}
+
+void ComponentTransform::ShowComponentWindow()
+{
+	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::DragFloat3("Translation", &translation[0], NULL, NULL, NULL);
+		ImGui::DragFloat3("Rotation", &rotation.Axis()[0], NULL, NULL, NULL);
+		ImGui::DragFloat3("Scale", &scale[0], NULL, NULL, NULL);
+	}
 }

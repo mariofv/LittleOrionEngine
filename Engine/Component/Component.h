@@ -22,6 +22,8 @@ public:
 
 	virtual ComponentType GetType() const = 0;
 
+	virtual void ShowComponentWindow() = 0;
+
 public:
 	GameObject *owner = nullptr;
 

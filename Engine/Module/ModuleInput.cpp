@@ -56,7 +56,7 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEMOTION:
-			if (event.motion.state & SDL_BUTTON_RMASK && App->scene->is_hovered) {
+			if (event.motion.state & SDL_BUTTON_RMASK && App->scene->scene_window_is_hovered) {
 				if (math::Abs(event.motion.xrel) > 1.5) {
 					App->cameras->RotateYaw(event.motion.xrel);
 				}
@@ -66,7 +66,7 @@ update_status ModuleInput::PreUpdate()
 				}
 
 			}
-			else if (event.motion.state & SDL_BUTTON_LMASK && App->scene->is_hovered) {
+			else if (event.motion.state & SDL_BUTTON_LMASK && App->scene->scene_window_is_hovered) {
 				if (math::Abs(event.motion.xrel) > 1.5) {
 					App->cameras->OrbitX(event.motion.xrel);
 				}
@@ -79,18 +79,18 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEWHEEL:
-			if (event.wheel.y > 0 && App->scene->is_hovered)
+			if (event.wheel.y > 0 && App->scene->scene_window_is_hovered)
 			{
 				App->cameras->MoveFoward();
 			}
-			else if (event.wheel.y < 0 && App->scene->is_hovered) 
+			else if (event.wheel.y < 0 && App->scene->scene_window_is_hovered)
 			{
 				App->cameras->MoveBackward();
 			}
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
-			if (event.button.button == SDL_BUTTON_RIGHT && App->scene->is_hovered)
+			if (event.button.button == SDL_BUTTON_RIGHT && App->scene->scene_window_is_hovered)
 			{
 				App->cameras->SetMovement(true);
 			}
