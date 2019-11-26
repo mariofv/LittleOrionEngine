@@ -30,6 +30,21 @@ ComponentMaterial::~ComponentMaterial()
 	glDeleteTextures(1, &opengl_texture);
 }
 
+void ComponentMaterial::Enable()
+{
+
+}
+
+void ComponentMaterial::Disable()
+{
+
+}
+
+void ComponentMaterial::Update()
+{
+
+}
+
 void ComponentMaterial::InitMaterialTexture()
 {
 	glCreateTextures(GL_TEXTURE_2D, 1, &opengl_texture);

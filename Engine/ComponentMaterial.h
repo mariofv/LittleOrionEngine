@@ -17,6 +17,10 @@ public:
 
 	~ComponentMaterial();
 
+	void Enable() override;
+	void Disable() override;
+	void Update() override;
+
 	void GenerateMipMap();
 	bool IsMipMapped() const;
 

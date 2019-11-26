@@ -6,6 +6,28 @@
 #include "imgui.h"
 #include "IconsFontAwesome5.h"
 
+
+bool ModuleScene::Init()
+{
+	root = new GameObject();
+
+	return true;
+}
+
+bool ModuleScene::CleanUp()
+{
+	delete root;
+
+	return true;
+}
+
+GameObject* ModuleScene::CreateGameObject()
+{
+	GameObject *created_game_object = new GameObject(std::string("GameObject"), *root);
+
+	return created_game_object;
+}
+
 void ModuleScene::ShowSceneWindow()
 {
 	if (ImGui::Begin(ICON_FA_TH " Scene"))

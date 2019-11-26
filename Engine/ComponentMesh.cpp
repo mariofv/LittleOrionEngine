@@ -20,6 +20,21 @@ ComponentMesh::~ComponentMesh()
 	glDeleteVertexArrays(1, &vao);
 }
 
+void ComponentMesh::Enable()
+{
+
+}
+
+void ComponentMesh::Disable()
+{
+
+}
+
+void ComponentMesh::Update()
+{
+
+}
+
 void ComponentMesh::Render(const GLuint shader_program, const GLuint texture) const
 {
 	glActiveTexture(GL_TEXTURE0);

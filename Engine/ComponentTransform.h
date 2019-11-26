@@ -8,13 +8,24 @@
 class ComponentTransform : public Component
 {
 public:
-	ComponentTransform();
-	~ComponentTransform();
+	ComponentTransform() = default;
+	ComponentTransform(const float3 translation, const Quat rotation, const float3 scale);
+
+	~ComponentTransform() = default;
+
+	void Enable() override;
+	void Disable() override;
+	void Update() override;
+
+private:
+	void GenerateModelMatrix();
 
 private:
 	float3 translation = float3::zero;
-	float3 rotation = float3::zero;
+	Quat rotation = Quat::identity;
 	float3 scale = float3::one;
+
+	float4x4 model_matrix = float4x4::identity;
 };
 
 #endif //_COMPONENTTRANSFORM_H_
