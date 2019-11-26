@@ -9,6 +9,9 @@
 #include "ComponentMaterial.h"
 #include "ComponentMesh.h"
 
+#include "imgui.h"
+#include "IconsFontAwesome5.h"
+
 GameObject::GameObject()
 {
 	this->transform = (ComponentTransform*)CreateComponent(Component::ComponentType::TRANSFORM);
@@ -28,10 +31,13 @@ GameObject::~GameObject()
 	{
 		delete components[i];
 	}
+	components.clear();
+
 	for (unsigned int i = 0; i < children.size(); ++i)
 	{
 		delete children[i];
 	}
+	children.clear();
 }
 
 void GameObject::Update()
@@ -124,4 +130,19 @@ const GLuint GameObject::GetMaterialTexture(const int material_index)
 	return 0;
 }
 
-
+void GameObject::ShowGameObjectHierarchy()
+{
+	ImGuiTreeNodeFlags flags = 0;
+	if (children.size() == 0)
+	{
+		flags |= ImGuiTreeNodeFlags_Leaf;
+	}
+	if (ImGui::TreeNodeEx((std::string(ICON_FA_CUBE) + " " + name).c_str(), flags))
+	{
+		for (int i = 0; i < children.size(); i++)
+		{
+			children[i]->ShowGameObjectHierarchy();
+		}
+		ImGui::TreePop();
+	}
+}

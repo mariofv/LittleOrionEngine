@@ -18,6 +18,7 @@ public:
 
 	GameObject* CreateGameObject();
 
+	void ShowHierarchyWindow();
 	void ShowSceneWindow();
 
 public:

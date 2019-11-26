@@ -21,6 +21,8 @@ public:
 	void AddChild(GameObject *child);
 	Component* CreateComponent(const Component::ComponentType type);
 
+	void ShowGameObjectHierarchy();
+
 private:
 	const GLuint GetMaterialTexture(const int material_index);
 

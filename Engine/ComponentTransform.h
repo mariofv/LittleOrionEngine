@@ -24,9 +24,6 @@ public:
 
 private:
 	void GenerateModelMatrix();
-	
-public:
-	ComponentType type = ComponentType::TRANSFORM;
 
 private:
 	float3 translation = float3::zero;

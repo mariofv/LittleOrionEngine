@@ -14,7 +14,7 @@ public:
 	};
 
 	Component() = default;
-	~Component() = default;;
+	virtual ~Component() {};
 
 	virtual void Enable() = 0;
 	virtual void Disable() = 0;

@@ -20,12 +20,6 @@
 
 void EngineUI::InitUI()
 {
-	show_scene_window = true;
-	show_model_properties_window = true;
-	show_configuration_window = true;
-	show_console_window = true;
-	show_about_window = false;
-
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 }
@@ -42,6 +36,10 @@ void EngineUI::ShowEngineUI()
 	if (show_model_properties_window)
 	{
 		ShowModelPropertiesWindow();
+	}
+	if (show_hierarchy_window)
+	{
+		ShowHierarchyWindow();
 	}
 	if (show_configuration_window)
 	{
@@ -125,6 +123,19 @@ void EngineUI::ShowTimeControls()
 	ImGui::PopStyleVar();
 }
 
+void EngineUI::ShowHierarchyWindow()
+{
+	ImGui::SetNextWindowPos(
+		ImVec2(0, MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * TIME_BAR_HEIGHT_PROP),
+		ImGuiCond_Once
+	);
+	ImGui::SetNextWindowSize(
+		ImVec2(App->window->GetWidth() * CONFIG_WIDTH_PROP, App->window->GetHeight() * CONFIG_HEIGHT_PROP),
+		ImGuiCond_Once
+	);
+	App->scene->ShowHierarchyWindow();
+}
+
 void EngineUI::ShowSceneWindow()
 {
 	ImGui::SetNextWindowPos(
@@ -153,14 +164,6 @@ void EngineUI::ShowModelPropertiesWindow()
 
 void EngineUI::ShowConfigurationWindow()
 {
-	ImGui::SetNextWindowPos(
-		ImVec2(0, MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * TIME_BAR_HEIGHT_PROP),
-		ImGuiCond_Once
-	);
-	ImGui::SetNextWindowSize(
-		ImVec2(App->window->GetWidth() * CONFIG_WIDTH_PROP, App->window->GetHeight() * CONFIG_HEIGHT_PROP),
-		ImGuiCond_Once
-	);
 	if (ImGui::Begin(ICON_FA_COGS " Configuration"))
 	{
 		ShowHardware();

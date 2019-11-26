@@ -34,6 +34,18 @@ void ModuleScene::Render() const
 	root->Update();
 }
 
+void ModuleScene::ShowHierarchyWindow()
+{
+	if (ImGui::Begin(ICON_FA_SITEMAP " Hierarchy"))
+	{
+		for (unsigned int i = 0; i < root->children.size(); ++i)
+		{
+			root->children[i]->ShowGameObjectHierarchy();
+		}
+	}
+	ImGui::End();
+}
+
 void ModuleScene::ShowSceneWindow()
 {
 	if (ImGui::Begin(ICON_FA_TH " Scene"))
