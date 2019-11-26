@@ -86,7 +86,6 @@
     <ClInclude Include="Engine\EngineLog.h" />
     <ClInclude Include="Engine\EngineUI.h" />
     <ClInclude Include="Engine\Globals.h" />
-    <ClInclude Include="Engine\Mesh.h" />
     <ClInclude Include="Engine\ModuleCamera.h" />
     <ClInclude Include="Engine\ModuleModelLoader.h" />
     <ClInclude Include="Engine\ModuleTime.h" />
@@ -171,7 +170,6 @@
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Timer.h" />
     <ClInclude Include="Engine\TimerUs.h" />
-    <ClInclude Include="Engine\Model.h" />
     <ClInclude Include="Engine\ModuleScene.h" />
   </ItemGroup>
   <ItemGroup>
@@ -183,7 +181,6 @@
     <ClCompile Include="Engine\EngineLog.cpp" />
     <ClCompile Include="Engine\EngineUI.cpp" />
     <ClCompile Include="Engine\log.cpp" />
-    <ClCompile Include="Engine\Mesh.cpp" />
     <ClCompile Include="Engine\ModuleCamera.cpp" />
     <ClCompile Include="Engine\ModuleModelLoader.cpp" />
     <ClCompile Include="Engine\ModuleTime.cpp" />
@@ -236,7 +233,6 @@
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\Timer.cpp" />
     <ClCompile Include="Engine\TimerUs.cpp" />
-    <ClCompile Include="Engine\Model.cpp" />
     <ClCompile Include="Engine\ModuleScene.cpp" />
   </ItemGroup>
   <ItemGroup>

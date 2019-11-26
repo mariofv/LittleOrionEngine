@@ -3,8 +3,6 @@
 
 #include "Module.h"
 #include "Globals.h"
-#include "Model.h"
-#include "Mesh.h"
 #include "BoundingBox.h"
 #include "Texture.h"
 
