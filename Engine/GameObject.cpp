@@ -82,9 +82,25 @@ void GameObject::Update()
 
 void GameObject::AddChild(GameObject *child)
 {
+	if (child->parent != nullptr)
+	{
+		child->parent->RemoveChild(child);
+	}
+	
 	child->parent = this;
 	children.push_back(child);
 }
+
+void GameObject::RemoveChild(const GameObject *child)
+{
+	std::vector<GameObject*>::iterator found = std::find(children.begin(), children.end(), child);
+	if (found == children.end())
+	{
+		APP_LOG_ERROR("Incosistent GameObject Tree.");
+	}
+	children.erase(found);
+}
+
 
 Component* GameObject::CreateComponent(const Component::ComponentType type)
 {

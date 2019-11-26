@@ -19,6 +19,7 @@ public:
 	void Update();
 
 	void AddChild(GameObject *child);
+	void RemoveChild(const GameObject *child);
 	Component* CreateComponent(const Component::ComponentType type);
 
 	void ShowPropertiesWindow();
