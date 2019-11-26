@@ -7,7 +7,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleTime.h"
 #include "ModuleScene.h"
-#include "ComponentMesh.h"
+#include "Component/ComponentMesh.h"
 
 #include "SDL.h"
 #include "MathGeoLib.h"

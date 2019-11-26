@@ -47,7 +47,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>$(ProjectDir)Libraries/FontAwesome5/;$(ProjectDir)Libraries/assimp/include;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/DevIL/include;./Libraries/glew-2.1.0/include;./Libraries/SDL/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/FontAwesome5/;$(ProjectDir)Libraries/assimp/include;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/DevIL/include;./Libraries/glew-2.1.0/include;./Libraries/SDL/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -65,7 +65,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>$(ProjectDir)Libraries/FontAwesome5/;$(ProjectDir)Libraries/assimp/include;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/DevIL/include;$(ProjectDir)Libraries/glew-2.1.0/include;$(ProjectDir)/Libraries/SDL/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/FontAwesome5/;$(ProjectDir)Libraries/assimp/include;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/DevIL/include;$(ProjectDir)Libraries/glew-2.1.0/include;$(ProjectDir)/Libraries/SDL/include</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -77,18 +77,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\ComponentMaterial.h" />
-    <ClInclude Include="Engine\ComponentMesh.h" />
-    <ClInclude Include="Engine\ComponentTransform.h" />
-    <ClInclude Include="Engine\Component.h" />
+    <ClInclude Include="Engine\Component\ComponentMaterial.h" />
+    <ClInclude Include="Engine\Component\ComponentMesh.h" />
+    <ClInclude Include="Engine\Component\ComponentTransform.h" />
+    <ClInclude Include="Engine\Component\Component.h" />
     <ClInclude Include="Engine\BoundingBox.h" />
     <ClInclude Include="Engine\Application.h" />
     <ClInclude Include="Engine\EngineLog.h" />
     <ClInclude Include="Engine\EngineUI.h" />
     <ClInclude Include="Engine\Globals.h" />
-    <ClInclude Include="Engine\ModuleCamera.h" />
-    <ClInclude Include="Engine\ModuleModelLoader.h" />
-    <ClInclude Include="Engine\ModuleTime.h" />
+    <ClInclude Include="Engine\Module\ModuleCamera.h" />
+    <ClInclude Include="Engine\Module\ModuleModelLoader.h" />
+    <ClInclude Include="Engine\Module\ModuleTime.h" />
     <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Libraries\FontAwesome5\IconsFontAwesome5.h" />
     <ClInclude Include="Libraries\FontAwesome5\IconsFontAwesome5Brands.h" />
@@ -160,30 +160,30 @@
     <ClInclude Include="Libraries\MathGeoLib\include\Math\sse_mathfun.h" />
     <ClInclude Include="Libraries\MathGeoLib\include\Math\TransformOps.h" />
     <ClInclude Include="Libraries\MathGeoLib\include\Time\Clock.h" />
-    <ClInclude Include="Engine\Module.h" />
-    <ClInclude Include="Engine\ModuleEditor.h" />
-    <ClInclude Include="Engine\ModuleInput.h" />
-    <ClInclude Include="Engine\ModuleProgram.h" />
-    <ClInclude Include="Engine\ModuleRender.h" />
-    <ClInclude Include="Engine\ModuleTexture.h" />
-    <ClInclude Include="Engine\ModuleWindow.h" />
+    <ClInclude Include="Engine\Module\Module.h" />
+    <ClInclude Include="Engine\Module\ModuleEditor.h" />
+    <ClInclude Include="Engine\Module\ModuleInput.h" />
+    <ClInclude Include="Engine\Module\ModuleProgram.h" />
+    <ClInclude Include="Engine\Module\ModuleRender.h" />
+    <ClInclude Include="Engine\Module\ModuleTexture.h" />
+    <ClInclude Include="Engine\Module\ModuleWindow.h" />
     <ClInclude Include="Engine\Texture.h" />
     <ClInclude Include="Engine\Timer.h" />
     <ClInclude Include="Engine\TimerUs.h" />
-    <ClInclude Include="Engine\ModuleScene.h" />
+    <ClInclude Include="Engine\Module\ModuleScene.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="Engine\ComponentMaterial.cpp" />
-    <ClCompile Include="Engine\ComponentMesh.cpp" />
-    <ClCompile Include="Engine\ComponentTransform.cpp" />
+    <ClCompile Include="Engine\Component\ComponentMaterial.cpp" />
+    <ClCompile Include="Engine\Component\ComponentMesh.cpp" />
+    <ClCompile Include="Engine\Component\ComponentTransform.cpp" />
     <ClCompile Include="Engine\BoundingBox.cpp" />
     <ClCompile Include="Engine\Application.cpp" />
     <ClCompile Include="Engine\EngineLog.cpp" />
     <ClCompile Include="Engine\EngineUI.cpp" />
     <ClCompile Include="Engine\log.cpp" />
-    <ClCompile Include="Engine\ModuleCamera.cpp" />
-    <ClCompile Include="Engine\ModuleModelLoader.cpp" />
-    <ClCompile Include="Engine\ModuleTime.cpp" />
+    <ClCompile Include="Engine\Module\ModuleCamera.cpp" />
+    <ClCompile Include="Engine\Module\ModuleModelLoader.cpp" />
+    <ClCompile Include="Engine\Module\ModuleTime.cpp" />
     <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="Libraries\imgui\imgui.cpp" />
     <ClCompile Include="Libraries\imgui\imgui_demo.cpp" />
@@ -224,16 +224,16 @@
     <ClCompile Include="Libraries\MathGeoLib\include\Math\SSEMath.cpp" />
     <ClCompile Include="Libraries\MathGeoLib\include\Math\TransformOps.cpp" />
     <ClCompile Include="Libraries\MathGeoLib\include\Time\Clock.cpp" />
-    <ClCompile Include="Engine\ModuleEditor.cpp" />
-    <ClCompile Include="Engine\ModuleInput.cpp" />
-    <ClCompile Include="Engine\ModuleProgram.cpp" />
-    <ClCompile Include="Engine\ModuleRender.cpp" />
-    <ClCompile Include="Engine\ModuleTexture.cpp" />
-    <ClCompile Include="Engine\ModuleWindow.cpp" />
+    <ClCompile Include="Engine\Module\ModuleEditor.cpp" />
+    <ClCompile Include="Engine\Module\ModuleInput.cpp" />
+    <ClCompile Include="Engine\Module\ModuleProgram.cpp" />
+    <ClCompile Include="Engine\Module\ModuleRender.cpp" />
+    <ClCompile Include="Engine\Module\ModuleTexture.cpp" />
+    <ClCompile Include="Engine\Module\ModuleWindow.cpp" />
     <ClCompile Include="Engine\Texture.cpp" />
     <ClCompile Include="Engine\Timer.cpp" />
     <ClCompile Include="Engine\TimerUs.cpp" />
-    <ClCompile Include="Engine\ModuleScene.cpp" />
+    <ClCompile Include="Engine\Module\ModuleScene.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Libraries\MathGeoLib\include\Geometry\KDTree.inl" />

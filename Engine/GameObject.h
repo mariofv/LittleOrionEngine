@@ -2,8 +2,8 @@
 #define _GAMEOBJECT_H_
 
 #include "Globals.h"
-#include "Component.h"
-#include "ComponentTransform.h"
+#include "Component/Component.h"
+#include "Component/ComponentTransform.h"
 
 #include <GL/glew.h>
 
@@ -31,10 +31,10 @@ public:
 	std::string name = "";
 
 	ComponentTransform *transform = nullptr;
-	std::vector<Component*> components;// = std::vector<Component*>();
+	std::vector<Component*> components;
 
 	GameObject* parent = nullptr;
-	std::vector<GameObject*> children;// = std::vector<GameObject*>();
+	std::vector<GameObject*> children;
 };
 
 #endif //_GAMEOBJECT_H_

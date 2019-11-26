@@ -1,7 +1,7 @@
 #include "BoundingBox.h"
 #include "Application.h"
 #include "Globals.h"
-#include "ModuleCamera.h"
+#include "Module/ModuleCamera.h"
 
 
 BoundingBox::BoundingBox(const float3 min_coords, const float3 max_coords)

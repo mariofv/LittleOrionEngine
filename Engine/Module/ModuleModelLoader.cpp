@@ -5,8 +5,8 @@
 #include "ModuleTexture.h"
 #include "ModuleScene.h"
 #include "GameObject.h"
-#include "ComponentMaterial.h"
-#include "ComponentMesh.h"
+#include "Component/ComponentMaterial.h"
+#include "Component/ComponentMesh.h"
 
 #include "assimp/DefaultLogger.hpp"
 #include <assimp/cimport.h>

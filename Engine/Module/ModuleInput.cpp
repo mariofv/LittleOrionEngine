@@ -135,17 +135,6 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_DROPFILE:
 			char *dropped_filedir = event.drop.file;
-			switch (GetFileType(dropped_filedir))
-			{
-				/*
-				case FileType::MODEL:
-					App->model_loader->SwapCurrentModel(dropped_filedir);
-					break;
-				case FileType::TEXTURE:
-					App->model_loader->SwapCurrentModelTexture(dropped_filedir);
-					break;
-					*/ 
-			}
 			SDL_free(dropped_filedir);
 			
 			break;
