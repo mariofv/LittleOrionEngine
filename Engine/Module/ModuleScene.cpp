@@ -23,7 +23,8 @@ bool ModuleScene::CleanUp()
 
 GameObject* ModuleScene::CreateGameObject()
 {
-	GameObject *created_game_object = new GameObject(std::string("GameObject"));
+	std::string created_game_object_name = GetNextGameObjectName();
+	GameObject *created_game_object = new GameObject(created_game_object_name);
 	root->AddChild(created_game_object);
 
 	return created_game_object;
@@ -32,6 +33,14 @@ GameObject* ModuleScene::CreateGameObject()
 void ModuleScene::Render() const
 {
 	root->Update();
+}
+
+std::string ModuleScene::GetNextGameObjectName()
+{
+	char tmp_string[64];
+	sprintf_s(tmp_string, "GameObject (%d)", num_game_objects++);
+
+	return std::string(tmp_string);
 }
 
 void ModuleScene::ShowHierarchyWindow()

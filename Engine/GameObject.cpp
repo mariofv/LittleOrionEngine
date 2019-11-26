@@ -3,6 +3,7 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "Texture.h"
 
@@ -159,7 +160,7 @@ void GameObject::ShowGameObjectActionsMenu(const std::string label)
 	{
 		if (ImGui::Selectable("Create GameObject"))
 		{
-			AddChild(new GameObject("Test"));
+			AddChild(new GameObject(App->scene->GetNextGameObjectName()));
 		}
 		ImGui::EndPopup();
 	}

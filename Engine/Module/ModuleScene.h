@@ -17,6 +17,7 @@ public:
 	void Render() const;
 
 	GameObject* CreateGameObject();
+	std::string GetNextGameObjectName();
 
 	void ShowHierarchyWindow();
 	void ShowSceneWindow();
@@ -26,6 +27,8 @@ public:
 
 private:
 	GameObject *root = nullptr;
+	
+	int num_game_objects = 0;
 };
 
 #endif // _MODULSESCENE_H

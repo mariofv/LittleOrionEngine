@@ -88,6 +88,7 @@ void EngineUI::ShowViewMenu()
 {
 	if (ImGui::BeginMenu("View"))
 	{
+		ImGui::MenuItem((ICON_FA_SITEMAP " Hierarchy"), (const char*)0, &show_hierarchy_window);
 		ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, &show_scene_window);
 		ImGui::MenuItem((ICON_FA_CUBE " Properties"), (const char*)0, &show_model_properties_window);
 		ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, &show_configuration_window);
