@@ -4,11 +4,12 @@
 #include "Component.h"
 
 #include "MathGeoLib.h"
+#include <GL/glew.h>
 
 class ComponentTransform : public Component
 {
 public:
-	ComponentTransform() = default;
+	ComponentTransform();
 	ComponentTransform(const float3 translation, const Quat rotation, const float3 scale);
 
 	~ComponentTransform() = default;
@@ -17,8 +18,15 @@ public:
 	void Disable() override;
 	void Update() override;
 
+	ComponentType GetType() const override;
+
+	void Render(const GLuint shader_program) const;
+
 private:
 	void GenerateModelMatrix();
+	
+public:
+	ComponentType type = ComponentType::TRANSFORM;
 
 private:
 	float3 translation = float3::zero;

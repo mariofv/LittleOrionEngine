@@ -14,6 +14,8 @@ public:
 	bool Init();
 	bool CleanUp();
 
+	void Render() const;
+
 	GameObject* CreateGameObject();
 
 	void ShowSceneWindow();

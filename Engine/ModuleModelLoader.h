@@ -15,6 +15,8 @@
 #include <vector>
 #include <string>
 
+class ComponentMesh;
+
 struct aiMesh;
 struct aiMaterial;
 struct aiScene;
@@ -61,18 +63,14 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	void SwapCurrentModel(const char *new_model_file_path);
-	void SwapCurrentModelTexture(const char *new_texture_file_path);
-
 public:
 	const aiScene* scene = nullptr;
-	Model* current_model = nullptr;
 
 private:
 	void UnloadCurrentModel();
 	bool LoadModel(const char *new_model_file_path);
 
-	Mesh* LoadMeshData(const aiMesh *mesh) const;
+	void LoadMeshData(const aiMesh *mesh, ComponentMesh *mesh_component) const;
 	Texture* LoadMaterialData(const aiMaterial *material, const std::string model_base_path);
 
 	std::string GetModelBasePath(const char *model_file_path) const;

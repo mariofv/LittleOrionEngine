@@ -20,10 +20,13 @@ public:
 	virtual void Disable() = 0;
 	virtual void Update() = 0;
 
+	virtual ComponentType GetType() const = 0;
+
 public:
-	ComponentType ctype;
-	bool active = false;
 	GameObject *owner = nullptr;
+
+private:
+	bool active = true;
 };
 
 #endif //_COMPONENT_H_

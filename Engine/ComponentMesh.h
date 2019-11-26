@@ -17,13 +17,15 @@ public:
 	};
 
 	ComponentMesh() = default;
-	ComponentMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int texture_index);
 	~ComponentMesh();
 
 	void Enable() override;
 	void Disable() override;
 	void Update() override;
 
+	ComponentType GetType() const override;
+
+	void LoadMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int texture_index);
 	void Render(const GLuint shader_program, const GLuint texture) const;
 
 private:

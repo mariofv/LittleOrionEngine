@@ -23,9 +23,15 @@ bool ModuleScene::CleanUp()
 
 GameObject* ModuleScene::CreateGameObject()
 {
-	GameObject *created_game_object = new GameObject(std::string("GameObject"), *root);
+	GameObject *created_game_object = new GameObject(std::string("GameObject"));
+	root->AddChild(created_game_object);
 
 	return created_game_object;
+}
+
+void ModuleScene::Render() const
+{
+	root->Update();
 }
 
 void ModuleScene::ShowSceneWindow()

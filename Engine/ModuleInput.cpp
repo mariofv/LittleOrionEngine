@@ -114,7 +114,7 @@ update_status ModuleInput::PreUpdate()
 			}
 			else if (event.key.keysym.sym == SDLK_f)
 			{
-				App->cameras->Focus(*App->model_loader->current_model->bounding_box);
+				//App->cameras->Focus(*App->model_loader->current_model->bounding_box); TODO THIS
 			}
 			else if (event.key.keysym.sym == SDLK_b)
 			{
@@ -137,12 +137,14 @@ update_status ModuleInput::PreUpdate()
 			char *dropped_filedir = event.drop.file;
 			switch (GetFileType(dropped_filedir))
 			{
+				/*
 				case FileType::MODEL:
 					App->model_loader->SwapCurrentModel(dropped_filedir);
 					break;
 				case FileType::TEXTURE:
 					App->model_loader->SwapCurrentModelTexture(dropped_filedir);
 					break;
+					*/ 
 			}
 			SDL_free(dropped_filedir);
 			

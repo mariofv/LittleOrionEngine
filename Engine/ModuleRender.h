@@ -6,6 +6,8 @@
 
 #include <GL/glew.h>
 
+class ComponentMesh;
+
 struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Rect;
@@ -20,6 +22,8 @@ public:
 	update_status PreUpdate();
 	update_status PostUpdate();
 	bool CleanUp();
+
+	ComponentMesh* CreateComponentMesh() const;
 
 	void GenerateFrameTexture(const float width, const float height);
 	void GenerateFrameBuffers(const float width, const float height);

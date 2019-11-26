@@ -3,25 +3,35 @@
 
 #include "Globals.h"
 #include "Component.h"
+#include "ComponentTransform.h"
+
+#include <GL/glew.h>
 
 #include <vector>
 
 class GameObject
 {
 public:
-	GameObject() = default;
-	GameObject(const std::string name, const GameObject& parent);
+	GameObject();
+	GameObject(const std::string name);
 	~GameObject();
 
 	void Update();
+
+	void AddChild(GameObject *child);
 	Component* CreateComponent(const Component::ComponentType type);
+
+private:
+	const GLuint GetMaterialTexture(const int material_index);
 
 public:
 	std::string name = "";
-	std::vector<Component*> components;
+
+	ComponentTransform *transform = nullptr;
+	std::vector<Component*> components;// = std::vector<Component*>();
 
 	GameObject* parent = nullptr;
-	std::vector<GameObject*> children;
+	std::vector<GameObject*> children;// = std::vector<GameObject*>();
 };
 
 #endif //_GAMEOBJECT_H_

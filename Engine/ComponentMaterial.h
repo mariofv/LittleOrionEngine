@@ -4,64 +4,25 @@
 #include "Component.h"
 #include "Globals.h"
 
-#include <IL/il.h>
-#include <GL/glew.h>
-
-#include <string>
+class Texture;
 
 class ComponentMaterial : public Component
 {
 public:
 	ComponentMaterial() = default;
-	ComponentMaterial(ILuint image, const char* path);
-
 	~ComponentMaterial();
 
 	void Enable() override;
 	void Disable() override;
 	void Update() override;
 
-	void GenerateMipMap();
-	bool IsMipMapped() const;
-
-	void SetWrapS(const GLenum wrap_s);
-	GLenum GetWrapS() const;
-	char* GetWrapS_C_Str() const;
-
-	void SetWrapT(const GLenum wrap_t);
-	GLenum GetWrapT() const;
-	char* GetWrapT_C_Str() const;
-
-	void SetMinFilter(const GLenum min_filter);
-	GLenum GetMinFilter() const;
-	char* GetMinFilter_C_Str() const;
-
-	void SetMagFilter(const GLenum mag_filter);
-	GLenum GetMagFilter() const;
-	char* GetMagFilter_C_Str() const;
-
-private:
-	void InitMaterialTexture();
-	char* GLEnumToString(const GLenum gl_enum) const;
+	ComponentType GetType() const override;
 
 public:
-	ILuint image = 0;
-	GLuint opengl_texture = 0;
+	ComponentType type = ComponentType::MATERIAL;
 
-	const unsigned char* data = nullptr;
-	std::string material_texture_path = "";
-
-	int width = 0;
-	int height = 0;
-
-private:
-	bool mip_map = false;
-
-	GLenum wrap_s;
-	GLenum wrap_t;
-
-	GLenum min_filter;
-	GLenum mag_filter;
+	int index = 0;
+	Texture *texture;
 };
 
 #endif //_COMPONENTMATERIAL_H_

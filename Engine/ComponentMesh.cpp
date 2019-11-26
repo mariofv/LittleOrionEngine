@@ -1,15 +1,5 @@
 #include "ComponentMesh.h"
 
-
-ComponentMesh::ComponentMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int material_index)
-{
-	this->vertices = vertices;
-	this->indices = indices;
-	this->material_index = material_index;
-
-	SetupMesh();
-}
-
 ComponentMesh::~ComponentMesh()
 {
 	vertices.clear();
@@ -33,6 +23,20 @@ void ComponentMesh::Disable()
 void ComponentMesh::Update()
 {
 
+}
+
+Component::ComponentType ComponentMesh::GetType() const
+{
+	return Component::ComponentType::MESH;
+}
+
+void ComponentMesh::LoadMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int material_index)
+{
+	this->vertices = vertices;
+	this->indices = indices;
+	this->material_index = material_index;
+
+	SetupMesh();
 }
 
 void ComponentMesh::Render(const GLuint shader_program, const GLuint texture) const

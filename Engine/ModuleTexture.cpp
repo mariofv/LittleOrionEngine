@@ -1,6 +1,8 @@
 #include "ModuleTexture.h"
 #include "Globals.h"
 #include "Application.h"
+#include "Texture.h"
+#include "ComponentMaterial.h"
 
 #include <IL/il.h>
 #include <IL/ilu.h>
@@ -27,6 +29,12 @@ bool ModuleTexture::CleanUp()
 	
 	return true;
 }
+
+ComponentMaterial* ModuleTexture::CreateComponentMaterial() const
+{
+	return new ComponentMaterial();
+}
+
 
 Texture* ModuleTexture::LoadTexture(const char* texture_path) const
 {

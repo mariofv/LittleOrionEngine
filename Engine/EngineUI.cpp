@@ -148,7 +148,7 @@ void EngineUI::ShowModelPropertiesWindow()
 		ImVec2(App->window->GetWidth() * MODEL_PROPERTIES_WIDTH_PROP, App->window->GetHeight() * MODEL_PROPERTIES_HEIGHT_PROP),
 		ImGuiCond_Once
 	);
-	App->model_loader->current_model->ShowModelProperties();
+	//App->model_loader->current_model->ShowModelProperties();
 }
 
 void EngineUI::ShowConfigurationWindow()

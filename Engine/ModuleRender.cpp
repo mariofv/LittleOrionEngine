@@ -6,6 +6,8 @@
 #include "ModuleCamera.h"
 #include "ModuleModelLoader.h"
 #include "ModuleTime.h"
+#include "ModuleScene.h"
+#include "ComponentMesh.h"
 
 #include "SDL.h"
 #include "MathGeoLib.h"
@@ -139,6 +141,12 @@ bool ModuleRender::CleanUp()
 	return true;
 }
 
+ComponentMesh* ModuleRender::CreateComponentMesh() const
+{
+	return new ComponentMesh();
+}
+
+
 void ModuleRender::GenerateFrameTexture(const float width, const float height)
 {
 	GenerateFrameBuffers(width, height);
@@ -149,14 +157,8 @@ void ModuleRender::GenerateFrameTexture(const float width, const float height)
 
 	RenderGrid();
 
-	App->model_loader->current_model->translation.x = model_movement ? sin(App->time->time * 0.01f)  *5.f : 0.f;
-	App->model_loader->current_model->bounding_box->center.x = model_movement ? sin(App->time->time * 0.01f)  *5.f : 0.f;
-	App->model_loader->current_model->Render(App->program->texture_program);
+	App->scene->Render();
 	
-	if (bounding_box_visible)
-	{
-		App->model_loader->current_model->bounding_box->Render(App->program->default_program);
-	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }

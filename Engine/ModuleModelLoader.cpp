@@ -3,6 +3,10 @@
 #include "Application.h"
 #include "ModuleCamera.h"
 #include "ModuleTexture.h"
+#include "ModuleScene.h"
+#include "GameObject.h"
+#include "ComponentMaterial.h"
+#include "ComponentMesh.h"
 
 #include "assimp/DefaultLogger.hpp"
 #include <assimp/cimport.h>
@@ -21,7 +25,6 @@ bool ModuleModelLoader::Init()
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Info), Assimp::Logger::Info);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Err), Assimp::Logger::Err);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Warn), Assimp::Logger::Warn);
-
 	LoadModel(HOUSE_MODEL_PATH);
 	return true;
 }
@@ -35,27 +38,8 @@ bool ModuleModelLoader::CleanUp()
 }
 
 
-void ModuleModelLoader::SwapCurrentModel(const char *new_model_file_path)
-{
-	UnloadCurrentModel();
-	LoadModel(new_model_file_path);
-}
-
-void ModuleModelLoader::SwapCurrentModelTexture(const char *new_texture_file_path)
-{
-	APP_LOG_INIT("Swaping current model material texture with texture %s", new_texture_file_path)
-	Texture *new_texture = App->texture->LoadTexture(new_texture_file_path);
-	current_model->SetMaterialTexture(new_texture);
-	if (new_texture != nullptr)
-	{
-		APP_LOG_SUCCESS("Current model texture swaped correctly.")
-	}
-}
-
-
 void ModuleModelLoader::UnloadCurrentModel()
 {
-	delete current_model;
 	aiReleaseImport(scene);
 }
 
@@ -71,45 +55,48 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 		return false;
 	}
 
+	GameObject *model_gamobject = App->scene->CreateGameObject();
 
 	APP_LOG_INFO("Loading model materials.");
 	std::string model_base_path = GetModelBasePath(new_model_file_path);
-	std::vector<Texture*> material_textures;
 	for (unsigned i = 0; i < scene->mNumMaterials; ++i)
 	{
 		APP_LOG_INFO("Loading material %d.", i);
-		material_textures.push_back(LoadMaterialData(scene->mMaterials[i], model_base_path));
+		Texture *material_texture = LoadMaterialData(scene->mMaterials[i], model_base_path);
+		ComponentMaterial *material_component = (ComponentMaterial*)model_gamobject->CreateComponent(Component::ComponentType::MATERIAL);
+
+		material_component->index = i;
+		material_component->texture = material_texture;
 	}
 	APP_LOG_INFO("Model materials loaded correctly.");
 
 
 	APP_LOG_INFO("Loading model meshes.");
-	std::vector<Mesh*> meshes;
 	for (unsigned int i = 0; i < scene->mNumMeshes; ++i)
 	{
 		APP_LOG_INFO("Loading mesh %d", i);
-		meshes.push_back(LoadMeshData(scene->mMeshes[i]));
+		ComponentMesh *mesh_component = (ComponentMesh*)model_gamobject->CreateComponent(Component::ComponentType::MESH);
+		LoadMeshData(scene->mMeshes[i], mesh_component);
 	}
 	APP_LOG_INFO("Model meshes loaded correctly.");
 
 
-	current_model = new Model(meshes, material_textures);
 	APP_LOG_INFO("Computing model bounding box.");
-	current_model->ComputeBoundingBox();
+	//current_model->ComputeBoundingBox(); TODO: This
 
-	App->cameras->Center(*current_model->bounding_box);
+	//App->cameras->Center(*current_model->bounding_box);
 
 	APP_LOG_SUCCESS("Model %s loaded correctly.", new_model_file_path);
 	return true;
 }
 
-Mesh* ModuleModelLoader::LoadMeshData(const aiMesh *mesh) const
+void ModuleModelLoader::LoadMeshData(const aiMesh *mesh, ComponentMesh *mesh_component) const
 {
-	std::vector<Mesh::Vertex> vertices;
+	std::vector<ComponentMesh::Vertex> vertices;
 	APP_LOG_INFO("Loading mesh vertices");
 	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
 	{
-		Mesh::Vertex vertex;
+		ComponentMesh::Vertex vertex;
 		vertex.position = float3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
 		vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 		vertices.push_back(vertex);
@@ -127,7 +114,7 @@ Mesh* ModuleModelLoader::LoadMeshData(const aiMesh *mesh) const
 
 	APP_LOG_INFO("Mesh uses material %d", mesh->mMaterialIndex);
 
-	return new Mesh(vertices, indices, mesh->mMaterialIndex);
+	mesh_component->LoadMesh(vertices, indices, mesh->mMaterialIndex);
 }
 
 Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const std::string model_base_path)
