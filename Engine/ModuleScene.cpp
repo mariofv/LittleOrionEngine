@@ -40,10 +40,25 @@ void ModuleScene::ShowHierarchyWindow()
 	{
 		for (unsigned int i = 0; i < root->children.size(); ++i)
 		{
+			ImGui::PushID(i);
 			root->children[i]->ShowGameObjectHierarchy();
+			ImGui::PopID();
+		}
+		
+		ImGui::BeginChild("Hierarchy###"); // This children window is used to create a clickable area for creating game objects in the root node
+		ImGui::EndChild();
+		if (ImGui::BeginPopupContextItem("Hierarchy###"))
+		{
+			if (ImGui::Selectable("Create GameObject"))
+			{
+				CreateGameObject();
+			}
+			ImGui::EndPopup();
 		}
 	}
 	ImGui::End();
+
+	
 }
 
 void ModuleScene::ShowSceneWindow()

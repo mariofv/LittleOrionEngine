@@ -25,6 +25,7 @@ public:
 
 private:
 	const GLuint GetMaterialTexture(const int material_index);
+	void ShowGameObjectActionsMenu(const std::string label);
 
 public:
 	std::string name = "";

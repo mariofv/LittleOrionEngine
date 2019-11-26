@@ -132,17 +132,35 @@ const GLuint GameObject::GetMaterialTexture(const int material_index)
 
 void GameObject::ShowGameObjectHierarchy()
 {
-	ImGuiTreeNodeFlags flags = 0;
+	std::string game_object_name_label = (std::string(ICON_FA_CUBE) + " " + name);
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanAvailWidth;
 	if (children.size() == 0)
 	{
 		flags |= ImGuiTreeNodeFlags_Leaf;
 	}
-	if (ImGui::TreeNodeEx((std::string(ICON_FA_CUBE) + " " + name).c_str(), flags))
+
+	if (ImGui::TreeNodeEx(game_object_name_label.c_str(), flags))
 	{
+		ShowGameObjectActionsMenu(game_object_name_label); // THIS IS NEEDED WHEN TREE IS EXPANDED
 		for (int i = 0; i < children.size(); i++)
 		{
+			ImGui::PushID(i);
 			children[i]->ShowGameObjectHierarchy();
+			ImGui::PopID();
 		}
 		ImGui::TreePop();
+	}
+	ShowGameObjectActionsMenu(game_object_name_label); // THIS IS NEEDED WHEN TREE NODE IS COLLAPSED
+}
+
+void GameObject::ShowGameObjectActionsMenu(const std::string label)
+{
+	if (ImGui::BeginPopupContextItem(label.c_str()))
+	{
+		if (ImGui::Selectable("Create GameObject"))
+		{
+			AddChild(new GameObject("Test"));
+		}
+		ImGui::EndPopup();
 	}
 }
