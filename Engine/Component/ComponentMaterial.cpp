@@ -31,7 +31,7 @@ Component::ComponentType ComponentMaterial::GetType() const
 
 void ComponentMaterial::ShowComponentWindow()
 {
-	if (ImGui::CollapsingHeader(ICON_FA_IMAGE" Material"), ImGuiTreeNodeFlags_DefaultOpen)
+	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		char tmp_string[256];
 		int window_width = ImGui::GetWindowWidth();
@@ -76,6 +76,5 @@ void ComponentMaterial::ShowComponentWindow()
 
 		ImGui::SetCursorPosX(window_width*0.25f);
 		ImGui::Image((void*)(intptr_t)texture->opengl_texture, ImVec2(window_width * 0.5f, window_width * 0.5f), ImVec2(0, 1), ImVec2(1, 0));
-
 	}
 }
