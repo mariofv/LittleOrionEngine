@@ -10,7 +10,7 @@ class ComponentTransform : public Component
 {
 public:
 	ComponentTransform();
-	ComponentTransform(const float3 translation, const Quat rotation, const float3 scale);
+	ComponentTransform(const float3 translation, const float3 rotation, const float3 scale);
 
 	~ComponentTransform() = default;
 
@@ -29,7 +29,7 @@ private:
 
 private:
 	float3 translation = float3::zero;
-	Quat rotation = Quat::identity;
+	float3 rotation = float3::zero;
 	float3 scale = float3::one;
 
 	float4x4 model_matrix = float4x4::identity;

@@ -8,7 +8,7 @@ ComponentTransform::ComponentTransform()
 	GenerateModelMatrix();
 }
 
-ComponentTransform::ComponentTransform(const float3 translation, const Quat rotation, const float3 scale) :
+ComponentTransform::ComponentTransform(const float3 translation, const float3 rotation, const float3 scale) :
 	translation(translation),
 	rotation(rotation),
 	scale(scale)
@@ -50,15 +50,29 @@ void ComponentTransform::Render(const GLuint shader_program) const
 
 void ComponentTransform::GenerateModelMatrix()
 {
-	model_matrix = float4x4::FromTRS(translation, rotation, scale);
+	Quat rotation_quat = Quat::FromEulerXYZ(
+		math::DegToRad(rotation.x),
+		math::DegToRad(rotation.y),
+		math::DegToRad(rotation.z)
+	);
+	model_matrix = float4x4::FromTRS(translation, rotation_quat, scale);
 }
 
 void ComponentTransform::ShowComponentWindow()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::DragFloat3("Translation", &translation[0], NULL, NULL, NULL);
-		ImGui::DragFloat3("Rotation", &rotation.Axis()[0], NULL, NULL, NULL);
-		ImGui::DragFloat3("Scale", &scale[0], NULL, NULL, NULL);
+		if (ImGui::DragFloat3("Translation", &translation[0], 0.01f))
+		{
+			GenerateModelMatrix();
+		}
+		if (ImGui::DragFloat3("Rotation", &rotation[0], 0.1f, -180.f, 180.f))
+		{
+			GenerateModelMatrix();
+		}
+		if (ImGui::DragFloat3("Scale", &scale[0], 0.01f))
+		{
+			GenerateModelMatrix();
+		}
 	}
 }
