@@ -11,6 +11,7 @@
 #include "Component/ComponentMesh.h"
 
 #include "imgui.h"
+#include "imgui_stdlib.h"
 #include "IconsFontAwesome5.h"
 
 GameObject::GameObject()
@@ -134,10 +135,13 @@ const GLuint GameObject::GetMaterialTexture(const int material_index)
 void GameObject::ShowPropertiesWindow()
 {
 	ImGui::Checkbox("", &active);
+
 	ImGui::SameLine();
-	std::string game_object_name_label = (std::string(ICON_FA_CUBE) + " " + name);
-	ImGui::Text(game_object_name_label.c_str());
-	
+	ImGui::Text(ICON_FA_CUBE);
+
+	ImGui::SameLine();
+	ImGui::InputText("###GameObject name Input", &name);
+
 	ImGui::Spacing();
 	ImGui::Separator();
 
