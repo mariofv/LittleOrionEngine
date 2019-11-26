@@ -28,7 +28,6 @@ GameObject::GameObject(const std::string name) :
 
 GameObject::~GameObject()
 {
-	delete transform;
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		delete components[i];
