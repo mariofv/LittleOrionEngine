@@ -40,7 +40,7 @@ public:
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;
 
-	int depth_in_hierarchy = 0;
+	int hierarchy_depth = 0;
 
 private:
 	bool active = true;

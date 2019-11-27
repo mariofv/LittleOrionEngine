@@ -98,7 +98,9 @@ void GameObject::AddChild(GameObject *child)
 	}
 	
 	child->parent = this;
-	child->depth_in_hierarchy = depth_in_hierarchy + 1;
+	child->hierarchy_depth = hierarchy_depth + 1;
+
+	child->transform->ChangeLocalSpace(transform->GetGlobalModelMatrix());
 	children.push_back(child);
 }
 
@@ -111,7 +113,7 @@ void GameObject::RemoveChild(GameObject *child)
 	}
 	children.erase(found);
 	child->parent = nullptr;
-	child->depth_in_hierarchy = 0;
+	child->hierarchy_depth = 0;
 }
 
 
@@ -225,7 +227,7 @@ void GameObject::DragAndDrop(GameObject *game_object)
 {
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 	{
-		ImGui::SetDragDropPayload("DND_GameObject", &game_object, sizeof(GameObject*));    // Set payload to carry the index of our item (could be anything)
+		ImGui::SetDragDropPayload("DND_GameObject", &game_object, sizeof(GameObject*));
 		ImGui::Text("Dragging %s", this->name.c_str());
 		ImGui::EndDragDropSource();
 	}
@@ -233,9 +235,9 @@ void GameObject::DragAndDrop(GameObject *game_object)
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_GameObject"))
 		{
-			IM_ASSERT(payload->DataSize == sizeof(GameObject*));
+			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			if (incoming_game_object->depth_in_hierarchy >= depth_in_hierarchy)
+			if (incoming_game_object->hierarchy_depth >= hierarchy_depth)
 			{
 				incoming_game_object->parent->RemoveChild(incoming_game_object);
 				AddChild(incoming_game_object);

@@ -71,6 +71,22 @@ void ComponentTransform::GenerateGlobalModelMatrix()
 	}
 }
 
+float4x4 ComponentTransform::GetGlobalModelMatrix() const
+{
+	return global_model_matrix;
+}
+
+void ComponentTransform::ChangeLocalSpace(const float4x4 new_local_space)
+{
+	model_matrix = new_local_space.Inverted() * global_model_matrix;
+	Quat tmp_rotation;
+	model_matrix.Decompose(translation, tmp_rotation, scale);
+	rotation = tmp_rotation.ToEulerXYZ();
+	rotation.x = math::RadToDeg(rotation.x);
+	rotation.y = math::RadToDeg(rotation.y);
+	rotation.z = math::RadToDeg(rotation.z);
+}
+
 void ComponentTransform::ShowComponentWindow()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))

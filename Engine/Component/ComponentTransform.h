@@ -21,7 +21,11 @@ public:
 	ComponentType GetType() const override;
 
 	void Render(const GLuint shader_program) const;
+	
 	void GenerateGlobalModelMatrix();
+	void ChangeLocalSpace(const float4x4 new_local_space);
+
+	float4x4 GetGlobalModelMatrix() const;
 
 	void ShowComponentWindow() override;
 

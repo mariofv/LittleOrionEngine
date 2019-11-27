@@ -25,7 +25,8 @@ GameObject* ModuleScene::CreateGameObject()
 {
 	std::string created_game_object_name = GetNextGameObjectName();
 	GameObject *created_game_object = new GameObject(created_game_object_name);
-	created_game_object->depth_in_hierarchy = 1;
+	
+	created_game_object->hierarchy_depth = 1;
 	root->AddChild(created_game_object);
 
 	return created_game_object;
@@ -56,8 +57,22 @@ void ModuleScene::ShowHierarchyWindow()
 			ImGui::PopID();
 		}
 		
-		ImGui::BeginChild("Hierarchy###"); // This children window is used to create a clickable area for creating game objects in the root node
+		ImGui::BeginChild("Hierarchy###"); // This children window is used to create a clickable area for creating and dropping game objects in the root node
 		ImGui::EndChild();
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_GameObject"))
+			{
+				assert(payload->DataSize == sizeof(GameObject*));
+				GameObject *incoming_game_object = *(GameObject**)payload->Data;
+				if (incoming_game_object->hierarchy_depth >= root->hierarchy_depth)
+				{
+					incoming_game_object->parent->RemoveChild(incoming_game_object);
+					root->AddChild(incoming_game_object);
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
 		if (ImGui::BeginPopupContextItem("Hierarchy###"))
 		{
 			if (ImGui::Selectable("Create GameObject"))
