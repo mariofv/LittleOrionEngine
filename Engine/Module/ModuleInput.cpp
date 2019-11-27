@@ -135,6 +135,14 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_DROPFILE:
 			char *dropped_filedir = event.drop.file;
+			switch (GetFileType(dropped_filedir))
+			{
+			case FileType::MODEL:
+				App->model_loader->LoadModel(dropped_filedir);
+				break;
+			default:
+				break;
+			}
 			SDL_free(dropped_filedir);
 			
 			break;

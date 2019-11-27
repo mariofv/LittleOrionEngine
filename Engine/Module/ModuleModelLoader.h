@@ -63,9 +63,10 @@ public:
 	bool Init();
 	bool CleanUp();
 
+	bool LoadModel(const char *new_model_file_path);
+
 private:
 	void UnloadCurrentModel();
-	bool LoadModel(const char *new_model_file_path);
 	void LoadNode(const aiNode &node, GameObject *parent_node, const std::string model_base_path);
 
 	void LoadMeshData(const aiMesh *mesh, ComponentMesh *mesh_component) const;
