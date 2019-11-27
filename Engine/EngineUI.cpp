@@ -133,7 +133,7 @@ void EngineUI::ShowHierarchyWindow()
 		ImVec2(App->window->GetWidth() * CONFIG_WIDTH_PROP, App->window->GetHeight() * CONFIG_HEIGHT_PROP),
 		ImGuiCond_Once
 	);
-	App->scene->ShowHierarchyWindow();
+	App->scene->hierarchy.ShowHierarchyWindow();
 }
 
 void EngineUI::ShowSceneWindow()
@@ -162,9 +162,9 @@ void EngineUI::ShowInspectorWindow()
 
 	if (ImGui::Begin(ICON_FA_INFO_CIRCLE " Inspector"))
 	{
-		if (App->scene->selected_game_object != nullptr)
+		if (App->scene->hierarchy.selected_game_object != nullptr)
 		{
-			App->scene->selected_game_object->ShowPropertiesWindow();
+			App->scene->hierarchy.selected_game_object->ShowPropertiesWindow();
 		}
 		
 	}

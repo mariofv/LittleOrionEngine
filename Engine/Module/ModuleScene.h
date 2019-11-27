@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "GameObject.h"
+#include "Hierarchy.h"
 
 class ModuleScene : public Module
 {
@@ -13,22 +14,20 @@ public:
 
 	bool Init();
 	bool CleanUp();
-
 	void Render() const;
 
 	GameObject* CreateGameObject();
-	std::string GetNextGameObjectName();
 
-	void ShowHierarchyWindow();
+	GameObject* GetRoot() const;
+
 	void ShowSceneWindow();
 
 public:
+	Hierarchy hierarchy;
 	bool scene_window_is_hovered = false;
 
-	GameObject *selected_game_object = nullptr;
 private:
 	GameObject *root = nullptr;
-	int num_game_objects = 0;
 };
 
 #endif // _MODULSESCENE_H

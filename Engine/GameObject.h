@@ -24,12 +24,9 @@ public:
 	Component* CreateComponent(const Component::ComponentType type);
 
 	void ShowPropertiesWindow();
-	void ShowGameObjectHierarchy();
 
 private:
 	const GLuint GetMaterialTexture(const int material_index) const;
-	void DragAndDrop(GameObject *game_object);
-	void ShowGameObjectActionsMenu(const std::string label);
 
 public:
 	std::string name = "";
