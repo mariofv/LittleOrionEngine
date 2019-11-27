@@ -25,6 +25,7 @@ GameObject* ModuleScene::CreateGameObject()
 {
 	std::string created_game_object_name = GetNextGameObjectName();
 	GameObject *created_game_object = new GameObject(created_game_object_name);
+	created_game_object->depth_in_hierarchy = 1;
 	root->AddChild(created_game_object);
 
 	return created_game_object;

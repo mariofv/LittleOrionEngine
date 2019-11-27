@@ -98,10 +98,11 @@ void GameObject::AddChild(GameObject *child)
 	}
 	
 	child->parent = this;
+	child->depth_in_hierarchy = depth_in_hierarchy + 1;
 	children.push_back(child);
 }
 
-void GameObject::RemoveChild(const GameObject *child)
+void GameObject::RemoveChild(GameObject *child)
 {
 	std::vector<GameObject*>::iterator found = std::find(children.begin(), children.end(), child);
 	if (found == children.end())
@@ -109,6 +110,8 @@ void GameObject::RemoveChild(const GameObject *child)
 		APP_LOG_ERROR("Incosistent GameObject Tree.");
 	}
 	children.erase(found);
+	child->parent = nullptr;
+	child->depth_in_hierarchy = 0;
 }
 
 
@@ -187,7 +190,7 @@ void GameObject::ShowPropertiesWindow()
 void GameObject::ShowGameObjectHierarchy()
 {
 	std::string game_object_name_label = (std::string(ICON_FA_CUBE) + " " + name);
-	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 	if (children.size() == 0)
 	{
 		flags |= ImGuiTreeNodeFlags_Leaf;
@@ -199,11 +202,14 @@ void GameObject::ShowGameObjectHierarchy()
 
 	if (ImGui::TreeNodeEx(game_object_name_label.c_str(), flags))
 	{
+		DragAndDrop(this);
+		
 		if (ImGui::IsItemClicked())
 		{
 			App->scene->selected_game_object = this;
 		}
 		ShowGameObjectActionsMenu(game_object_name_label); // THIS IS NEEDED WHEN TREE IS EXPANDED
+
 		for (int i = 0; i < children.size(); i++)
 		{
 			ImGui::PushID(i);
@@ -213,6 +219,31 @@ void GameObject::ShowGameObjectHierarchy()
 		ImGui::TreePop();
 	}
 	ShowGameObjectActionsMenu(game_object_name_label); // THIS IS NEEDED WHEN TREE NODE IS COLLAPSED
+}
+
+void GameObject::DragAndDrop(GameObject *game_object)
+{
+	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+	{
+		ImGui::SetDragDropPayload("DND_GameObject", &game_object, sizeof(GameObject*));    // Set payload to carry the index of our item (could be anything)
+		ImGui::Text("Dragging %s", this->name.c_str());
+		ImGui::EndDragDropSource();
+	}
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_GameObject"))
+		{
+			IM_ASSERT(payload->DataSize == sizeof(GameObject*));
+			GameObject *incoming_game_object = *(GameObject**)payload->Data;
+			if (incoming_game_object->depth_in_hierarchy >= depth_in_hierarchy)
+			{
+				incoming_game_object->parent->RemoveChild(incoming_game_object);
+				AddChild(incoming_game_object);
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+
 }
 
 void GameObject::ShowGameObjectActionsMenu(const std::string label)
