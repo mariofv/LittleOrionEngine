@@ -10,7 +10,7 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject();
-
+	
 	return true;
 }
 
@@ -24,11 +24,8 @@ bool ModuleScene::CleanUp()
 GameObject* ModuleScene::CreateGameObject()
 {
 	std::string created_game_object_name = hierarchy.GetNextGameObjectName();
-	GameObject *created_game_object = new GameObject(created_game_object_name);
+	GameObject *created_game_object = root->CreateChild(created_game_object_name);
 	
-	created_game_object->hierarchy_depth = 1;
-	root->AddChild(created_game_object);
-
 	return created_game_object;
 }
 

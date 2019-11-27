@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Application.h"
+#include "Hierarchy.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
@@ -90,6 +91,31 @@ void GameObject::Render() const
 	}
 }
 
+void GameObject::ChangeParent(GameObject *new_parent)
+{
+	if (new_parent == parent)
+	{
+		return;
+	}
+
+	parent->RemoveChild(this);
+	new_parent->AddChild(this);
+}
+
+
+GameObject* GameObject::CreateChild(std::string name)
+{
+	if (name == "")
+	{
+		name = App->scene->hierarchy.GetNextGameObjectName();
+	}
+
+	GameObject *created_child = new GameObject(name);
+	AddChild(created_child);
+
+	return created_child;
+}
+
 void GameObject::AddChild(GameObject *child)
 {
 	if (child->parent != nullptr)
@@ -98,7 +124,8 @@ void GameObject::AddChild(GameObject *child)
 	}
 	
 	child->parent = this;
-	child->hierarchy_depth = hierarchy_depth + 1;
+	child->UpdateHierarchyDepth();
+	child->UpdateHierarchyBranch();
 
 	child->transform->ChangeLocalSpace(transform->GetGlobalModelMatrix());
 	children.push_back(child);
@@ -143,6 +170,40 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 	components.push_back(created_component);
 
 	return created_component;
+}
+
+bool GameObject::IsAboveInHierarchy(const GameObject &potential_child) const
+{
+	return (
+		this->hierarchy_branch == potential_child.hierarchy_branch
+		&& this->hierarchy_depth < potential_child.hierarchy_depth
+	);
+}
+
+void GameObject::UpdateHierarchyDepth()
+{
+	hierarchy_depth = parent->hierarchy_depth + 1;
+	for (unsigned int i = 0; i < children.size(); ++i)
+	{
+		children[i]->UpdateHierarchyDepth();
+	}
+}
+
+void GameObject::UpdateHierarchyBranch()
+{
+	if (parent->hierarchy_branch == 0) // PARENT IS ROOT GAMEOBJECT
+	{
+		hierarchy_branch = App->scene->hierarchy.GetNextBranch();
+	}
+	else
+	{
+		hierarchy_branch = parent->hierarchy_branch;
+	}
+
+	for (unsigned int i = 0; i < children.size(); ++i)
+	{
+		children[i]->UpdateHierarchyBranch();
+	}
 }
 
 const GLuint GameObject::GetMaterialTexture(const int material_index) const

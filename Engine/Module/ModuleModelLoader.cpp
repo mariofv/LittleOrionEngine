@@ -63,9 +63,6 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 		LoadNode(*scene->mRootNode->mChildren[i], model_root_node, model_base_path);
 	}
 
-	
-
-
 	APP_LOG_INFO("Computing model bounding box.");
 	//current_model->ComputeBoundingBox(); TODO: This
 
@@ -77,8 +74,7 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 
 void ModuleModelLoader::LoadNode(const aiNode &node, GameObject *parent_node, const std::string model_base_path)
 {
-	GameObject *node_game_object = App->scene->CreateGameObject();
-	parent_node->AddChild(node_game_object);
+	GameObject *node_game_object = parent_node->CreateChild();
 
 	APP_LOG_INFO("Loading node meshes.");
 	for (unsigned int i = 0; i < node.mNumMeshes; ++i)

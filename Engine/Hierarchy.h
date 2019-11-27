@@ -12,6 +12,7 @@ public:
 	~Hierarchy();
 
 	std::string GetNextGameObjectName();
+	int GetNextBranch();
 
 	void ShowHierarchyWindow();
 
@@ -23,12 +24,13 @@ private:
 	void DropTarget(GameObject *target_game_object);
 
 	void ShowGameObjectActionsMenu(GameObject *game_object);
+
 public:
 	GameObject *selected_game_object = nullptr;
 
 private:
 	int num_game_objects = 0;
-
+	int branch_counter = 0;
 };
 
 #endif //_HIERARCHY_H_

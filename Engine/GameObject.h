@@ -19,9 +19,16 @@ public:
 	void Update();
 	void Render() const;
 
+	void ChangeParent(GameObject *new_parent);
+	GameObject* CreateChild(std::string name = "");
 	void AddChild(GameObject *child);
 	void RemoveChild(GameObject *child);
+
 	Component* CreateComponent(const Component::ComponentType type);
+
+	bool IsAboveInHierarchy(const GameObject &potential_child) const;
+	void UpdateHierarchyDepth();
+	void UpdateHierarchyBranch();
 
 	void ShowPropertiesWindow();
 
@@ -37,10 +44,11 @@ public:
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;
 
-	int hierarchy_depth = 0;
 
 private:
 	bool active = true;
+	int hierarchy_depth = 0;
+	int hierarchy_branch = 0;
 };
 
 #endif //_GAMEOBJECT_H_

@@ -24,6 +24,11 @@ std::string Hierarchy::GetNextGameObjectName()
 	return std::string(tmp_string);
 }
 
+int Hierarchy::GetNextBranch()
+{
+	return ++branch_counter;
+}
+
 void Hierarchy::ShowHierarchyWindow()
 {
 	if (ImGui::Begin(ICON_FA_SITEMAP " Hierarchy"))
@@ -109,10 +114,9 @@ void Hierarchy::DropTarget(GameObject *target_game_object)
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			if (incoming_game_object->hierarchy_depth >= target_game_object->hierarchy_depth)
+			if (!incoming_game_object->IsAboveInHierarchy(*target_game_object))
 			{
-				incoming_game_object->parent->RemoveChild(incoming_game_object);
-				target_game_object->AddChild(incoming_game_object);
+				incoming_game_object->ChangeParent(target_game_object);
 			}
 		}
 		ImGui::EndDragDropTarget();
@@ -127,7 +131,7 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 	{
 		if (ImGui::Selectable("Create GameObject"))
 		{
-			game_object->AddChild(new GameObject(GetNextGameObjectName()));
+			game_object->CreateChild(GetNextGameObjectName());
 		}
 		ImGui::EndPopup();
 	}
