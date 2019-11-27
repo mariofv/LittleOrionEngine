@@ -1,4 +1,5 @@
 #include "ComponentTransform.h"
+#include "GameObject.h"
 
 #include "imgui.h"
 #include "IconsFontAwesome5.h"
@@ -38,7 +39,7 @@ Component::ComponentType ComponentTransform::GetType() const
 
 void ComponentTransform::Render(const GLuint shader_program) const
 {
-	float4x4 tmp_model_matrix = model_matrix;
+	float4x4 tmp_model_matrix = global_model_matrix;
 
 	glUniformMatrix4fv(
 		glGetUniformLocation(shader_program, "model"),
@@ -56,6 +57,18 @@ void ComponentTransform::GenerateModelMatrix()
 		math::DegToRad(rotation.z)
 	);
 	model_matrix = float4x4::FromTRS(translation, rotation_quat, scale);
+}
+
+void ComponentTransform::GenerateGlobalModelMatrix()
+{
+	if (owner->parent == nullptr)
+	{
+		global_model_matrix = model_matrix;
+	}
+	else
+	{
+		global_model_matrix = owner->parent->transform->global_model_matrix * model_matrix;
+	}
 }
 
 void ComponentTransform::ShowComponentWindow()

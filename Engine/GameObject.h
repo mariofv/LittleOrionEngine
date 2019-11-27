@@ -17,6 +17,7 @@ public:
 	~GameObject();
 
 	void Update();
+	void Render() const;
 
 	void AddChild(GameObject *child);
 	void RemoveChild(const GameObject *child);
@@ -26,7 +27,7 @@ public:
 	void ShowGameObjectHierarchy();
 
 private:
-	const GLuint GetMaterialTexture(const int material_index);
+	const GLuint GetMaterialTexture(const int material_index) const;
 	void ShowGameObjectActionsMenu(const std::string label);
 
 public:

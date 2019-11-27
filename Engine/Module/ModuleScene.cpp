@@ -33,6 +33,7 @@ GameObject* ModuleScene::CreateGameObject()
 void ModuleScene::Render() const
 {
 	root->Update();
+	root->Render();
 }
 
 std::string ModuleScene::GetNextGameObjectName()

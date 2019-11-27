@@ -43,6 +43,17 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
+	transform->GenerateGlobalModelMatrix();
+
+	for (unsigned int i = 0; i < children.size(); ++i)
+	{
+		children[i]->Update();
+	}
+
+}
+
+void GameObject::Render() const
+{
 	GLuint shader_program = App->program->texture_program;
 	glUseProgram(shader_program);
 
@@ -75,9 +86,8 @@ void GameObject::Update()
 
 	for (unsigned int i = 0; i < children.size(); ++i)
 	{
-		children[i]->Update();
+		children[i]->Render();
 	}
-
 }
 
 void GameObject::AddChild(GameObject *child)
@@ -130,7 +140,7 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 	return created_component;
 }
 
-const GLuint GameObject::GetMaterialTexture(const int material_index)
+const GLuint GameObject::GetMaterialTexture(const int material_index) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{

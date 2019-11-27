@@ -21,6 +21,7 @@ public:
 	ComponentType GetType() const override;
 
 	void Render(const GLuint shader_program) const;
+	void GenerateGlobalModelMatrix();
 
 	void ShowComponentWindow() override;
 
@@ -33,6 +34,7 @@ private:
 	float3 scale = float3::one;
 
 	float4x4 model_matrix = float4x4::identity;
+	float4x4 global_model_matrix = float4x4::identity;
 };
 
 #endif //_COMPONENTTRANSFORM_H_
