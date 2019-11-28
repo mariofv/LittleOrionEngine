@@ -25,6 +25,8 @@ private:
 
 	void ShowGameObjectActionsMenu(GameObject *game_object);
 
+	void ProcessMouseInput(GameObject *game_object);
+
 public:
 	GameObject *selected_game_object = nullptr;
 

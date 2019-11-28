@@ -1,5 +1,6 @@
 #include "Hierarchy.h"
 #include "Application.h"
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleScene.h"
 #include "GameObject.h"
 
@@ -68,15 +69,13 @@ void Hierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 		flags |= ImGuiTreeNodeFlags_Selected;
 	}
 
-	if (ImGui::TreeNodeEx(game_object_name_label.c_str(), flags))
-	{
-		DragAndDrop(game_object);
-		ShowGameObjectActionsMenu(game_object);
-		if (ImGui::IsItemClicked())
-		{
-			selected_game_object = game_object;
-		}
+	bool expanded = ImGui::TreeNodeEx(game_object_name_label.c_str(), flags);
+	DragAndDrop(game_object);
+	ShowGameObjectActionsMenu(game_object);
+	ProcessMouseInput(game_object);
 
+	if (expanded)
+	{
 		for (int i = 0; i < game_object->children.size(); i++)
 		{
 			ImGui::PushID(i);
@@ -147,5 +146,21 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 			game_object->MoveDownInHierarchy();
 		}
 		ImGui::EndPopup();
+	}
+}
+
+void Hierarchy::ProcessMouseInput(GameObject *game_object)
+{
+	if (ImGui::IsItemHovered())
+	{
+		if (ImGui::IsMouseClicked(0))
+		{
+			selected_game_object = game_object;
+		}
+
+		if (ImGui::IsMouseDoubleClicked(0))
+		{
+			App->cameras->Center(game_object->bounding_box);
+		}
 	}
 }
