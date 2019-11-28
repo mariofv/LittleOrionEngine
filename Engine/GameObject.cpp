@@ -56,6 +56,11 @@ void GameObject::Update()
 
 void GameObject::Render() const
 {
+	if (!active)
+	{
+		return;
+	}
+
 	GLuint shader_program = App->program->texture_program;
 	glUseProgram(shader_program);
 
@@ -86,7 +91,10 @@ void GameObject::Render() const
 
 	glUseProgram(0);
 
-	App->renderer->bounding_box_renderer->Render(bounding_box, App->program->default_program);
+	if (parent != nullptr) // IS NOT ROOT NODE
+	{
+		App->renderer->bounding_box_renderer->Render(bounding_box, App->program->default_program);
+	}
 
 	for (unsigned int i = 0; i < children.size(); ++i)
 	{
@@ -232,10 +240,8 @@ void GameObject::GenerateBoundingBox()
 	{
 		bounding_box = AABB(float3::zero, float3::zero);
 	}
-	else
-	{
-		bounding_box.TransformAsAABB(transform->GetGlobalModelMatrix());
-	}
+	bounding_box.TransformAsAABB(transform->GetGlobalModelMatrix());
+	
 
 	for (unsigned int i = 0; i < children.size(); ++i)
 	{
