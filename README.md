@@ -89,6 +89,11 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 ## Release History
 
+* [0.2.0 And there were GameObjects](https://github.com/mariofv/OrionEngine/releases/tag/v0.2.0-alpha)
+    * GameObjects come in. Each GameObject represents an entity that can be modified using components.
+    * Components are objects that contain different entities parts, like meshes, materials, etc.  
+    * New hierarchy window that represents the scene GameObject hierarchy.
+    * Revamped properties window. Here component parameters can be modified.
 * [0.1.5 Final alpha version (this is the one teachers)!](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.5-alpha)
     * Fixed various bugs.
     * Several refactors in order to follow good C++ practises.

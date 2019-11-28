@@ -2,7 +2,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "Texture.h"
-#include "ComponentMaterial.h"
+#include "Component/ComponentMaterial.h"
 
 #include <IL/il.h>
 #include <IL/ilu.h>
