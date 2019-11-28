@@ -71,12 +71,11 @@ void Hierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 	if (ImGui::TreeNodeEx(game_object_name_label.c_str(), flags))
 	{
 		DragAndDrop(game_object);
-
+		ShowGameObjectActionsMenu(game_object);
 		if (ImGui::IsItemClicked())
 		{
 			selected_game_object = game_object;
 		}
-		ShowGameObjectActionsMenu(game_object); // THIS IS NEEDED WHEN TREE IS EXPANDED
 
 		for (int i = 0; i < game_object->children.size(); i++)
 		{
@@ -86,7 +85,6 @@ void Hierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 		}
 		ImGui::TreePop();
 	}
-	ShowGameObjectActionsMenu(game_object); // THIS IS NEEDED WHEN TREE NODE IS COLLAPSED
 }
 
 void Hierarchy::DragAndDrop(GameObject *game_object)
@@ -132,6 +130,12 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 		if (ImGui::Selectable("Create GameObject"))
 		{
 			game_object->CreateChild(GetNextGameObjectName());
+		}
+		char tmp_string[256];
+		sprintf_s(tmp_string, "Delete %s", game_object->name.c_str());
+		if (ImGui::Selectable(tmp_string))
+		{
+			delete game_object;
 		}
 		ImGui::EndPopup();
 	}

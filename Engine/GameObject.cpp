@@ -30,6 +30,11 @@ GameObject::GameObject(const std::string name) :
 
 GameObject::~GameObject()
 {
+	if (parent != nullptr)
+	{
+		parent->RemoveChild(this);
+	}
+
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		delete components[i];
