@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "Globals.h"
-#include "BoundingBox.h"
 
 #include "Geometry/Frustum.h"
 #include "MathGeoLib.h"
@@ -43,8 +42,8 @@ public:
 	void SetSpeedUp(const bool is_speeding_up);
 	void SetOrbit(const bool is_orbiting);
 
-	void Center(const BoundingBox &bounding_box);
-	void Focus(const BoundingBox &bounding_box);
+	void Center(const AABB &bounding_box);
+	void Focus(const AABB &bounding_box);
 
 	void SetMovement(const bool movement_enabled);
 	bool MovementEnabled() const;

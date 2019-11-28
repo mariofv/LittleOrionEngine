@@ -77,11 +77,11 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\BoundingBoxRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentMaterial.h" />
     <ClInclude Include="Engine\Component\ComponentMesh.h" />
     <ClInclude Include="Engine\Component\ComponentTransform.h" />
     <ClInclude Include="Engine\Component\Component.h" />
-    <ClInclude Include="Engine\BoundingBox.h" />
     <ClInclude Include="Engine\Application.h" />
     <ClInclude Include="Engine\EngineLog.h" />
     <ClInclude Include="Engine\EngineUI.h" />
@@ -175,10 +175,10 @@
     <ClInclude Include="Engine\Module\ModuleScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\BoundingBoxRenderer.cpp" />
     <ClCompile Include="Engine\Component\ComponentMaterial.cpp" />
     <ClCompile Include="Engine\Component\ComponentMesh.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform.cpp" />
-    <ClCompile Include="Engine\BoundingBox.cpp" />
     <ClCompile Include="Engine\Application.cpp" />
     <ClCompile Include="Engine\EngineLog.cpp" />
     <ClCompile Include="Engine\EngineUI.cpp" />

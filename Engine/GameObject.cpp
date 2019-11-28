@@ -1,6 +1,7 @@
 #include "GameObject.h"
 #include "Application.h"
 #include "Hierarchy.h"
+#include "BoundingBoxRenderer.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
@@ -45,7 +46,7 @@ GameObject::~GameObject()
 void GameObject::Update()
 {
 	transform->GenerateGlobalModelMatrix();
-
+	GenerateBoundingBox();
 	for (unsigned int i = 0; i < children.size(); ++i)
 	{
 		children[i]->Update();
@@ -85,6 +86,8 @@ void GameObject::Render() const
 
 	glUseProgram(0);
 
+	App->renderer->bounding_box_renderer->Render(bounding_box, App->program->default_program);
+
 	for (unsigned int i = 0; i < children.size(); ++i)
 	{
 		children[i]->Render();
@@ -97,7 +100,7 @@ void GameObject::ChangeParent(GameObject *new_parent)
 	{
 		return;
 	}
-
+	
 	parent->RemoveChild(this);
 	new_parent->AddChild(this);
 }
@@ -203,6 +206,40 @@ void GameObject::UpdateHierarchyBranch()
 	for (unsigned int i = 0; i < children.size(); ++i)
 	{
 		children[i]->UpdateHierarchyBranch();
+	}
+}
+
+void GameObject::GenerateBoundingBox()
+{
+	for (unsigned int i = 0; i < children.size(); ++i)
+	{
+		children[i]->GenerateBoundingBox();
+	}
+
+	bool has_meshes = false;
+	bounding_box.SetNegativeInfinity();
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		if (components[i]->GetType() == Component::ComponentType::MESH)
+		{
+			has_meshes = true;
+
+			bounding_box.Enclose(((ComponentMesh*)components[i])->bounding_box);
+		}
+	}
+
+	if (!has_meshes)
+	{
+		bounding_box = AABB(float3::zero, float3::zero);
+	}
+	else
+	{
+		bounding_box.TransformAsAABB(transform->GetGlobalModelMatrix());
+	}
+
+	for (unsigned int i = 0; i < children.size(); ++i)
+	{
+		bounding_box.Enclose(children[i]->bounding_box);
 	}
 }
 

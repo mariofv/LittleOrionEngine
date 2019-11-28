@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "Globals.h"
-#include "BoundingBox.h"
 #include "Texture.h"
 
 #include <GL/glew.h>

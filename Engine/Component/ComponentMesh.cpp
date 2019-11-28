@@ -39,6 +39,8 @@ void ComponentMesh::LoadMesh(const std::vector<Vertex> vertices, const std::vect
 	this->indices = indices;
 	this->material_index = material_index;
 
+	GenerateBoundingBox();
+
 	num_vertices = vertices.size();
 	num_triangles = num_vertices / 3;
 
@@ -79,6 +81,15 @@ void ComponentMesh::SetupMesh()
 	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Vertex), (void*)offsetof(Vertex, tex_coords));
 
 	glBindVertexArray(0);
+}
+
+void ComponentMesh::GenerateBoundingBox()
+{
+	bounding_box.SetNegativeInfinity();
+	for (unsigned int i = 0; i < vertices.size(); ++i)
+	{
+		bounding_box.Enclose(vertices[i].position);
+	}
 }
 
 void ComponentMesh::ShowComponentWindow()

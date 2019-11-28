@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 
 class ComponentMesh;
+class BoundingBoxRenderer;
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -46,6 +47,7 @@ private:
 	void SetWireframing(const bool gl_wireframe);
 
 public:
+	BoundingBoxRenderer *bounding_box_renderer = nullptr;
 	bool bounding_box_visible = false;
 	bool model_movement = false;
 

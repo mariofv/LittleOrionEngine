@@ -8,6 +8,7 @@
 #include "ModuleTime.h"
 #include "ModuleScene.h"
 #include "Component/ComponentMesh.h"
+#include "BoundingBoxRenderer.h"
 
 #include "SDL.h"
 #include "MathGeoLib.h"
@@ -110,6 +111,8 @@ bool ModuleRender::Init()
 
 	glGenFramebuffers(1, &fbo);
 
+	bounding_box_renderer = new BoundingBoxRenderer();
+
 	APP_LOG_SUCCESS("Glew initialized correctly.")
 
 	return true;
@@ -137,6 +140,8 @@ bool ModuleRender::CleanUp()
 	glDeleteTextures(1, &frame_texture);
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteRenderbuffers(1, &rbo);
+
+	delete bounding_box_renderer;
 
 	return true;
 }

@@ -28,6 +28,8 @@ public:
 	void LoadMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int texture_index);
 	void Render(const GLuint shader_program, const GLuint texture) const;
 
+	void GenerateBoundingBox();
+
 	void ShowComponentWindow() override;
 
 private:
@@ -38,6 +40,8 @@ public:
 	std::vector<unsigned int> indices;
 	unsigned int material_index = -1;
 
+	AABB bounding_box;
+
 private:
 	GLuint vao = 0;
 	GLuint vbo = 0;
@@ -45,6 +49,7 @@ private:
 
 	int num_triangles = 0;
 	int num_vertices = 0;
+
 };
 
 #endif //_COMPONENTMESH_H_

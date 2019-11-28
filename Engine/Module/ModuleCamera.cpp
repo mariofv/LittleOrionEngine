@@ -1,8 +1,9 @@
 #include "ModuleCamera.h"
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleWindow.h"
+#include "ModuleScene.h"
 #include "ModuleTime.h"
+#include "ModuleWindow.h"
 
 #include "imgui.h"
 #include "SDL.h"
@@ -121,12 +122,12 @@ void ModuleCamera::LookAt(const float x, const float y, const float z)
 	LookAt(float3(x, y, z));
 }
 
-void ModuleCamera::Center(const BoundingBox &bounding_box)
+void ModuleCamera::Center(const AABB &bounding_box)
 {
 	camera_frustum.up = float3::unitY;
 	camera_frustum.front = float3::unitZ;
 
-	float containing_sphere_radius = bounding_box.size.Length()/2;
+	float containing_sphere_radius = bounding_box.Size().Length()/2;
 
 	// Adapt camera speed to bounding box size
 	camera_movement_speed = CAMERA_MOVEMENT_SPEED_BOUNDING_BOX_RADIUS_FACTOR * containing_sphere_radius;
@@ -136,19 +137,19 @@ void ModuleCamera::Center(const BoundingBox &bounding_box)
 	camera_frustum.farPlaneDistance = FAR_PLANE_FACTOR * containing_sphere_radius;
 
 	// Move camera position to visualize the whole bounding box
-	camera_frustum.pos = bounding_box.center - camera_frustum.front * BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius;
+	camera_frustum.pos = bounding_box.CenterPoint() - camera_frustum.front * BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius;
 	camera_frustum.pos.y = INITIAL_HEIGHT_FACTOR * containing_sphere_radius;
 
 	GenerateMatrices();
 }
 
-void ModuleCamera::Focus(const BoundingBox &bounding_box)
+void ModuleCamera::Focus(const AABB &bounding_box)
 {
-	LookAt(bounding_box.center);
+	LookAt(bounding_box.CenterPoint());
 
-	float containing_sphere_radius = bounding_box.size.Length() / 2;
+	float containing_sphere_radius = bounding_box.Size().Length() / 2;
 	is_focusing = true;
-	desired_focus_position = bounding_box.center - BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius * camera_frustum.front;
+	desired_focus_position = bounding_box.CenterPoint() - BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius * camera_frustum.front;
 
 	GenerateMatrices();
 }

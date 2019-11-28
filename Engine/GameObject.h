@@ -30,6 +30,8 @@ public:
 	void UpdateHierarchyDepth();
 	void UpdateHierarchyBranch();
 
+	void GenerateBoundingBox();
+
 	void ShowPropertiesWindow();
 
 private:
@@ -38,12 +40,14 @@ private:
 public:
 	std::string name = "";
 
-	ComponentTransform *transform = nullptr;
-	std::vector<Component*> components;
-
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;
+	
+	AABB bounding_box;
 
+	ComponentTransform *transform = nullptr;
+
+	std::vector<Component*> components;
 
 private:
 	bool active = true;

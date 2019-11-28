@@ -64,9 +64,9 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	}
 
 	APP_LOG_INFO("Computing model bounding box.");
-	//current_model->ComputeBoundingBox(); TODO: This
+	model_root_node->GenerateBoundingBox();
 
-	//App->cameras->Center(*current_model->bounding_box);
+	App->cameras->Center(model_root_node->bounding_box);
 
 	APP_LOG_SUCCESS("Model %s loaded correctly.", new_model_file_path);
 	return true;
