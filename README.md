@@ -1,4 +1,4 @@
-<h1 align="center" style="border-bottom: none;">Orion Engine</h1>
+<h1 align="center" style="border-bottom: none;">LittleOrion Engine</h1>
 <h3 align="center">C++ 3D Engine developed during the Master's Degree in AAA Videogames Development</h3>
 <p align="center">
   <a href="https://github.com/mariofv/OrionEngine/releases/">
@@ -68,9 +68,9 @@ In order to do that assure that you have the following:
 Because this is a academic project is not possible to contribute directly to this repo. Said that, feel free to fork it (<https://github.com/mariofv/OrionEngine/fork>) and to expand it in your own way!
 
 ## Authors
-| [![Mario Fernández Villalba](https://github.com/mariofv.png?size=100)](https://github.com/mariofv) |
-| ---- |
-| [Mario Fernández Villalba](https://github.com/mariofv/) |
+| [![Mario Fernández Villalba](https://github.com/mariofv.png?size=100)](https://github.com/mariofv) | [![Anabel Hernández Barrera](https://github.com/yalania.png?size=50)](https://github.com/yalania) |
+| ---- | ---- |
+| [Mario Fernández Villalba](https://github.com/mariofv/) | [Anabel Hernández Barrera](https://github.com/yalania/) |
 
 ## Built With
 
