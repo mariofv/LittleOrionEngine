@@ -1,10 +1,10 @@
-#include "BoundingBox.h"
+#include "BoundingBoxRenderer.h"
 #include "Application.h"
 #include "Globals.h"
-#include "ModuleCamera.h"
+#include "Module/ModuleCamera.h"
 
 
-BoundingBox::BoundingBox(const float3 min_coords, const float3 max_coords)
+BoundingBoxRenderer::BoundingBoxRenderer()
 {
 	// Cube 1x1x1, centered on origin
 	const float vertices[] = {
@@ -27,7 +27,7 @@ BoundingBox::BoundingBox(const float3 min_coords, const float3 max_coords)
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);
 	glGenBuffers(1, &ebo);
-	
+
 	glBindVertexArray(vao);
 	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
@@ -42,29 +42,26 @@ BoundingBox::BoundingBox(const float3 min_coords, const float3 max_coords)
 	);
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
-	
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), indices, GL_STATIC_DRAW);
 
-	
+
 	glBindVertexArray(0);
-	
-	size = max_coords - min_coords;
-	center = (max_coords + min_coords)/2;
 }
 
-BoundingBox::~BoundingBox()
+BoundingBoxRenderer::~BoundingBoxRenderer()
 {
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 	glDeleteVertexArrays(1, &vao);
 }
 
-void BoundingBox::Render(const GLuint shader_program) const
+void BoundingBoxRenderer::Render(const AABB bounding_box, const GLuint shader_program) const
 {
 	glUseProgram(shader_program);
 
-	float4x4 model = float4x4::FromTRS(center, float4x4::identity, size);
+	float4x4 model = float4x4::FromTRS(bounding_box.CenterPoint(), float4x4::identity, bounding_box.Size());
 
 	glUniformMatrix4fv(
 		glGetUniformLocation(shader_program, "model"),
@@ -94,5 +91,3 @@ void BoundingBox::Render(const GLuint shader_program) const
 	glBindVertexArray(0);
 	glUseProgram(0);
 }
-
-

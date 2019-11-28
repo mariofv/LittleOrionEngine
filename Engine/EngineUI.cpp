@@ -1,14 +1,13 @@
 ﻿#include "Globals.h"
 #include "Application.h"
-#include "ModuleWindow.h"
-#include "ModuleRender.h"
-#include "ModuleCamera.h"
-#include "ModuleEditor.h"
-#include "ModuleTime.h"
-#include "ModuleModelLoader.h"
-#include "ModuleScene.h"
-#include "ModuleInput.h"
-#include "Model.h"
+#include "Module/ModuleWindow.h"
+#include "Module/ModuleRender.h"
+#include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
+#include "Module/ModuleTime.h"
+#include "Module/ModuleModelLoader.h"
+#include "Module/ModuleScene.h"
+#include "Module/ModuleInput.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
 
@@ -20,12 +19,6 @@
 
 void EngineUI::InitUI()
 {
-	show_scene_window = true;
-	show_model_properties_window = true;
-	show_configuration_window = true;
-	show_console_window = true;
-	show_about_window = false;
-
 	ImGuiIO& io = ImGui::GetIO();
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 }
@@ -39,9 +32,13 @@ void EngineUI::ShowEngineUI()
 	{
 		ShowSceneWindow();
 	}
-	if (show_model_properties_window)
+	if (show_model_inspector_window)
 	{
-		ShowModelPropertiesWindow();
+		ShowInspectorWindow();
+	}
+	if (show_hierarchy_window)
+	{
+		ShowHierarchyWindow();
 	}
 	if (show_configuration_window)
 	{
@@ -91,8 +88,9 @@ void EngineUI::ShowViewMenu()
 {
 	if (ImGui::BeginMenu("View"))
 	{
+		ImGui::MenuItem((ICON_FA_SITEMAP " Hierarchy"), (const char*)0, &show_hierarchy_window);
 		ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, &show_scene_window);
-		ImGui::MenuItem((ICON_FA_CUBE " Properties"), (const char*)0, &show_model_properties_window);
+		ImGui::MenuItem((ICON_FA_INFO " Inspector"), (const char*)0, &show_model_inspector_window);
 		ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, &show_configuration_window);
 		ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, &show_console_window);
 		ImGui::MenuItem((ICON_FA_BUG " Debug"), (const char*)0, &show_debug_window);
@@ -125,6 +123,19 @@ void EngineUI::ShowTimeControls()
 	ImGui::PopStyleVar();
 }
 
+void EngineUI::ShowHierarchyWindow()
+{
+	ImGui::SetNextWindowPos(
+		ImVec2(0, MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * TIME_BAR_HEIGHT_PROP),
+		ImGuiCond_Once
+	);
+	ImGui::SetNextWindowSize(
+		ImVec2(App->window->GetWidth() * CONFIG_WIDTH_PROP, App->window->GetHeight() * CONFIG_HEIGHT_PROP),
+		ImGuiCond_Once
+	);
+	App->scene->hierarchy.ShowHierarchyWindow();
+}
+
 void EngineUI::ShowSceneWindow()
 {
 	ImGui::SetNextWindowPos(
@@ -138,7 +149,7 @@ void EngineUI::ShowSceneWindow()
 	App->scene->ShowSceneWindow();
 }
 
-void EngineUI::ShowModelPropertiesWindow()
+void EngineUI::ShowInspectorWindow()
 {
 	ImGui::SetNextWindowPos(
 		ImVec2(App->window->GetWidth() * (CONFIG_WIDTH_PROP + SCENE_WIDTH_PROP), MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * TIME_BAR_HEIGHT_PROP),
@@ -148,19 +159,20 @@ void EngineUI::ShowModelPropertiesWindow()
 		ImVec2(App->window->GetWidth() * MODEL_PROPERTIES_WIDTH_PROP, App->window->GetHeight() * MODEL_PROPERTIES_HEIGHT_PROP),
 		ImGuiCond_Once
 	);
-	App->model_loader->current_model->ShowModelProperties();
+
+	if (ImGui::Begin(ICON_FA_INFO_CIRCLE " Inspector"))
+	{
+		if (App->scene->hierarchy.selected_game_object != nullptr)
+		{
+			App->scene->hierarchy.selected_game_object->ShowPropertiesWindow();
+		}
+		
+	}
+	ImGui::End();
 }
 
 void EngineUI::ShowConfigurationWindow()
 {
-	ImGui::SetNextWindowPos(
-		ImVec2(0, MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * TIME_BAR_HEIGHT_PROP),
-		ImGuiCond_Once
-	);
-	ImGui::SetNextWindowSize(
-		ImVec2(App->window->GetWidth() * CONFIG_WIDTH_PROP, App->window->GetHeight() * CONFIG_HEIGHT_PROP),
-		ImGuiCond_Once
-	);
 	if (ImGui::Begin(ICON_FA_COGS " Configuration"))
 	{
 		ShowHardware();

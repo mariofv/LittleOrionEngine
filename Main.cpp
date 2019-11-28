@@ -1,7 +1,7 @@
-#include "Engine/Application.h"
-#include "Engine/ModuleWindow.h"
-#include "Engine/Globals.h"
-#include "Engine/TimerUs.h"
+#include "Application.h"
+#include "Module/ModuleWindow.h"
+#include "Globals.h"
+#include "TimerUs.h"
 
 #include "SDL.h"
 

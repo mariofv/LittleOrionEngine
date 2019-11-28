@@ -1,7 +1,6 @@
 #ifndef _TEXTURE_H_
 #define _TEXTURE_H_
 
-#include "Module.h"
 #include "Globals.h"
 
 #include <IL/il.h>

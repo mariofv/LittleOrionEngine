@@ -3,6 +3,10 @@
 #include "Application.h"
 #include "ModuleCamera.h"
 #include "ModuleTexture.h"
+#include "ModuleScene.h"
+#include "GameObject.h"
+#include "Component/ComponentMaterial.h"
+#include "Component/ComponentMesh.h"
 
 #include "assimp/DefaultLogger.hpp"
 #include <assimp/cimport.h>
@@ -21,7 +25,6 @@ bool ModuleModelLoader::Init()
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Info), Assimp::Logger::Info);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Err), Assimp::Logger::Err);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Warn), Assimp::Logger::Warn);
-
 	LoadModel(HOUSE_MODEL_PATH);
 	return true;
 }
@@ -35,27 +38,8 @@ bool ModuleModelLoader::CleanUp()
 }
 
 
-void ModuleModelLoader::SwapCurrentModel(const char *new_model_file_path)
-{
-	UnloadCurrentModel();
-	LoadModel(new_model_file_path);
-}
-
-void ModuleModelLoader::SwapCurrentModelTexture(const char *new_texture_file_path)
-{
-	APP_LOG_INIT("Swaping current model material texture with texture %s", new_texture_file_path)
-	Texture *new_texture = App->texture->LoadTexture(new_texture_file_path);
-	current_model->SetMaterialTexture(new_texture);
-	if (new_texture != nullptr)
-	{
-		APP_LOG_SUCCESS("Current model texture swaped correctly.")
-	}
-}
-
-
 void ModuleModelLoader::UnloadCurrentModel()
 {
-	delete current_model;
 	aiReleaseImport(scene);
 }
 
@@ -71,52 +55,59 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 		return false;
 	}
 
-	APP_LOG_INFO("Loading model materials.");
 	std::string model_base_path = GetModelBasePath(new_model_file_path);
-	std::vector<Texture*> material_textures;
-	for (unsigned i = 0; i < scene->mNumMaterials; ++i)
+	GameObject *model_root_node = App->scene->CreateGameObject();
+
+	for (unsigned int i = 0; i < scene->mRootNode->mNumChildren; ++i)
 	{
-		APP_LOG_INFO("Loading material %d.", i);
-		material_textures.push_back(LoadMaterialData(scene->mMaterials[i], model_base_path));
+		LoadNode(*scene->mRootNode->mChildren[i], model_root_node, model_base_path);
 	}
-	APP_LOG_INFO("Model materials loaded correctly.");
 
-
-	APP_LOG_INFO("Loading model meshes.");
-	std::vector<Mesh*> meshes;
-	for (unsigned int i = 0; i < scene->mNumMeshes; ++i)
-	{
-		APP_LOG_INFO("Loading mesh %d", i);
-		meshes.push_back(LoadMeshData(scene->mMeshes[i]));
-	}
-	APP_LOG_INFO("Model meshes loaded correctly.");
-
-
-	aiMatrix4x4 transform_matrix = scene->mRootNode->mChildren[0]->mTransformation; // Transformation for the first mesh
-	aiVector3D ai_translation, ai_rotation, ai_scale;
-	transform_matrix.Decompose(ai_scale, ai_rotation, ai_translation);
-	
-	float3 m_translation = float3(ai_translation.x, ai_translation.y, ai_translation.z);
-	float3 m_rotation = float3(math::RadToDeg(ai_rotation.x), math::RadToDeg(ai_rotation.y), math::RadToDeg(ai_rotation.z));
-	float3 m_scale = float3(ai_scale.x, ai_scale.y, ai_scale.z);
-
-	current_model = new Model(meshes, material_textures, m_translation, m_rotation, m_scale);
 	APP_LOG_INFO("Computing model bounding box.");
-	current_model->ComputeBoundingBox();
+	model_root_node->GenerateBoundingBox();
 
-	App->cameras->Center(*current_model->bounding_box);
+	App->cameras->Center(model_root_node->bounding_box);
 
 	APP_LOG_SUCCESS("Model %s loaded correctly.", new_model_file_path);
 	return true;
 }
 
-Mesh* ModuleModelLoader::LoadMeshData(const aiMesh *mesh) const
+void ModuleModelLoader::LoadNode(const aiNode &node, GameObject *parent_node, const std::string model_base_path)
 {
-	std::vector<Mesh::Vertex> vertices;
+	GameObject *node_game_object = parent_node->CreateChild();
+
+	APP_LOG_INFO("Loading node meshes.");
+	for (unsigned int i = 0; i < node.mNumMeshes; ++i)
+	{
+		APP_LOG_INFO("Loading mesh %d", i);
+		unsigned int mesh_index = node.mMeshes[i];
+		ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
+		LoadMeshData(scene->mMeshes[mesh_index], mesh_component);
+
+		APP_LOG_INFO("Loading mesh %d material.", i);
+		int mesh_material_index = scene->mMeshes[mesh_index]->mMaterialIndex;
+		Texture *material_texture = LoadMaterialData(scene->mMaterials[mesh_material_index], model_base_path);
+		ComponentMaterial *material_component = (ComponentMaterial*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+
+		material_component->index = mesh_material_index;
+		material_component->texture = material_texture;
+		APP_LOG_INFO("Mesh %d material loaded correctly.", i);
+	}
+	APP_LOG_INFO("Model meshes loaded correctly.");
+
+	for (unsigned int i = 0; i < node.mNumChildren; ++i)
+	{
+		LoadNode(*node.mChildren[i], node_game_object, model_base_path);
+	}
+}
+
+void ModuleModelLoader::LoadMeshData(const aiMesh *mesh, ComponentMesh *mesh_component) const
+{
+	std::vector<ComponentMesh::Vertex> vertices;
 	APP_LOG_INFO("Loading mesh vertices");
 	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
 	{
-		Mesh::Vertex vertex;
+		ComponentMesh::Vertex vertex;
 		vertex.position = float3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
 		vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 		vertices.push_back(vertex);
@@ -134,7 +125,7 @@ Mesh* ModuleModelLoader::LoadMeshData(const aiMesh *mesh) const
 
 	APP_LOG_INFO("Mesh uses material %d", mesh->mMaterialIndex);
 
-	return new Mesh(vertices, indices, mesh->mMaterialIndex);
+	mesh_component->LoadMesh(vertices, indices, mesh->mMaterialIndex);
 }
 
 Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const std::string model_base_path)
@@ -179,7 +170,7 @@ Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const s
 std::string ModuleModelLoader::GetModelBasePath(const char *model_file_path) const
 {
 	std::string file_string = std::string(model_file_path);
-	
+
 	std::size_t found = file_string.find_last_of("/\\");
 	std::string model_base_path = file_string.substr(0, found + 1);
 

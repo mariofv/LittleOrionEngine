@@ -22,9 +22,10 @@ private:
 
 	void ShowTimeControls();
 
+	void ShowHierarchyWindow();
 	void ShowSceneWindow();
-	
-	void ShowModelPropertiesWindow();
+
+	void ShowInspectorWindow();
 
 	void ShowConfigurationWindow();
 	void ShowHardware() const;
@@ -53,8 +54,9 @@ public:
 
 private:
 	bool show_scene_window = true;
-	bool show_model_properties_window = true;
-	bool show_configuration_window = true;
+	bool show_hierarchy_window = true;
+	bool show_model_inspector_window = true;
+	bool show_configuration_window = false;
 	bool show_console_window = true;
 	bool show_debug_window = false;
 	bool show_about_window = false;

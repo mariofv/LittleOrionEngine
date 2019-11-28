@@ -2,7 +2,7 @@
 #define _APPLICATION_H_
 
 #include "Globals.h"
-#include "Module.h"
+#include "Module/Module.h"
 
 #include <list>
 
