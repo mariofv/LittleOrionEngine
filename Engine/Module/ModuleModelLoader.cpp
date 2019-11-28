@@ -83,7 +83,7 @@ void ModuleModelLoader::LoadNode(const aiNode &node, GameObject *parent_node, co
 		unsigned int mesh_index = node.mMeshes[i];
 		ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
 		LoadMeshData(scene->mMeshes[mesh_index], mesh_component);
-		
+
 		APP_LOG_INFO("Loading mesh %d material.", i);
 		int mesh_material_index = scene->mMeshes[mesh_index]->mMaterialIndex;
 		Texture *material_texture = LoadMaterialData(scene->mMaterials[mesh_material_index], model_base_path);
@@ -170,7 +170,7 @@ Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const s
 std::string ModuleModelLoader::GetModelBasePath(const char *model_file_path) const
 {
 	std::string file_string = std::string(model_file_path);
-	
+
 	std::size_t found = file_string.find_last_of("/\\");
 	std::string model_base_path = file_string.substr(0, found + 1);
 

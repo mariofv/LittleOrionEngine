@@ -89,7 +89,7 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
 
 ## Release History
 
-* [Final 0.1 alpha version (this is the one teachers)!](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.5-alpha)
+* [0.1.5 Final alpha version (this is the one teachers)!](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.5-alpha)
     * Fixed various bugs.
     * Several refactors in order to follow good C++ practises.
     * Super cool README.
