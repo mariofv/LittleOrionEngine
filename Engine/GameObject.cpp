@@ -252,7 +252,7 @@ const GLuint GameObject::GetMaterialTexture(const int material_index) const
 			ComponentMaterial* current_material = (ComponentMaterial*)components[i];
 			if (current_material->index == material_index)
 			{
-				return current_material->texture->opengl_texture;
+				return current_material->GetTexture();
 			}
 		}
 	}

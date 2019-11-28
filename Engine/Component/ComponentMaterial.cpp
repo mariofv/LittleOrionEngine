@@ -11,12 +11,12 @@ ComponentMaterial::~ComponentMaterial()
 
 void ComponentMaterial::Enable()
 {
-
+	active = true;
 }
 
 void ComponentMaterial::Disable()
 {
-
+	active = false;
 }
 
 void ComponentMaterial::Update()
@@ -29,10 +29,18 @@ Component::ComponentType ComponentMaterial::GetType() const
 	return Component::ComponentType::MATERIAL;
 }
 
+GLuint ComponentMaterial::GetTexture() const
+{
+	return active ? texture->opengl_texture : 0;
+}
+
 void ComponentMaterial::ShowComponentWindow()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Checkbox("Active", &active);
+		ImGui::Separator();
+
 		char tmp_string[256];
 		int window_width = ImGui::GetWindowWidth();
 

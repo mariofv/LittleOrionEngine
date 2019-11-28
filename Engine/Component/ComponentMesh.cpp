@@ -49,13 +49,16 @@ void ComponentMesh::LoadMesh(const std::vector<Vertex> vertices, const std::vect
 
 void ComponentMesh::Render(const GLuint shader_program, const GLuint texture) const
 {
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
-	glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
+	if (active)
+	{
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
+		glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
 
-	glBindVertexArray(vao);
-	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
+		glBindVertexArray(vao);
+		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+		glBindVertexArray(0);
+	}
 }
 
 void ComponentMesh::SetupMesh()
@@ -96,6 +99,9 @@ void ComponentMesh::ShowComponentWindow()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Checkbox("Active", &active);
+		ImGui::Separator();
+
 		ImGui::DragInt("# Triangles", &num_triangles, NULL, NULL, NULL);
 		ImGui::DragInt("# Vertices", &num_vertices, NULL, NULL, NULL);
 	}

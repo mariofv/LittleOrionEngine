@@ -27,7 +27,7 @@ public:
 public:
 	GameObject *owner = nullptr;
 
-private:
+protected:
 	bool active = true;
 };
 

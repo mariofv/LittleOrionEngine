@@ -4,6 +4,8 @@
 #include "Component.h"
 #include "Globals.h"
 
+#include <GL/glew.h>
+
 class Texture;
 
 class ComponentMaterial : public Component
@@ -17,6 +19,7 @@ public:
 	void Update() override;
 
 	ComponentType GetType() const override;
+	GLuint GetTexture() const;
 
 	void ShowComponentWindow() override;
 
