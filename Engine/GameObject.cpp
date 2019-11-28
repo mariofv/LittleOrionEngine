@@ -16,6 +16,8 @@
 #include "imgui_stdlib.h"
 #include "IconsFontAwesome5.h"
 
+#include <algorithm>
+
 GameObject::GameObject()
 {
 	this->transform = (ComponentTransform*)CreateComponent(Component::ComponentType::TRANSFORM);
@@ -186,6 +188,30 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 	components.push_back(created_component);
 
 	return created_component;
+}
+
+void GameObject::MoveUpInHierarchy()
+{
+	std::vector<GameObject*>::iterator silbings_position = std::find(parent->children.begin(), parent->children.end(), this);
+	if (silbings_position == parent->children.end())
+	{
+		APP_LOG_ERROR("Incosistent GameObject Tree.");
+	}
+
+	std::vector<GameObject*>::iterator swapped_silbing = max(silbings_position - 1, parent->children.begin());
+	std::iter_swap(silbings_position, swapped_silbing);
+}
+
+void GameObject::MoveDownInHierarchy()
+{
+	std::vector<GameObject*>::iterator silbings_position = std::find(parent->children.begin(), parent->children.end(), this);
+	if (silbings_position == parent->children.end())
+	{
+		APP_LOG_ERROR("Incosistent GameObject Tree.");
+	}
+
+	std::vector<GameObject*>::iterator swapped_silbing = min(silbings_position + 1, parent->children.end() - 1);
+	std::iter_swap(silbings_position, swapped_silbing);
 }
 
 bool GameObject::IsAboveInHierarchy(const GameObject &potential_child) const

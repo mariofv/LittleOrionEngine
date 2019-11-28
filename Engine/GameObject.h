@@ -26,6 +26,8 @@ public:
 
 	Component* CreateComponent(const Component::ComponentType type);
 
+	void MoveUpInHierarchy();
+	void MoveDownInHierarchy();
 	bool IsAboveInHierarchy(const GameObject &potential_child) const;
 	void UpdateHierarchyDepth();
 	void UpdateHierarchyBranch();

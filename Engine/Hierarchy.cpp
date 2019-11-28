@@ -127,15 +127,24 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 
 	if (ImGui::BeginPopupContextItem(label.c_str()))
 	{
+		ImGui::Text(game_object->name.c_str());
+		ImGui::Separator();
+
 		if (ImGui::Selectable("Create GameObject"))
 		{
 			game_object->CreateChild(GetNextGameObjectName());
 		}
-		char tmp_string[256];
-		sprintf_s(tmp_string, "Delete %s", game_object->name.c_str());
-		if (ImGui::Selectable(tmp_string))
+		if (ImGui::Selectable("Delete GameObject"))
 		{
 			delete game_object;
+		}
+		if (ImGui::Selectable("Move Up"))
+		{
+			game_object->MoveUpInHierarchy();
+		}
+		if (ImGui::Selectable("Move Down"))
+		{
+			game_object->MoveDownInHierarchy();
 		}
 		ImGui::EndPopup();
 	}
