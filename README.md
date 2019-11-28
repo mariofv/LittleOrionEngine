@@ -94,7 +94,7 @@ This project is licensed under the MIT License - see the [LICENSE](https://githu
     * Components are objects that contain different entities parts, like meshes, materials, etc.  
     * New hierarchy window that represents the scene GameObject hierarchy.
     * Revamped properties window. Here component parameters can be modified.
-* [0.1.5 Final alpha version (this is the one teachers)!](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.5-alpha)
+* [0.1.5 Final 0.1 version (this is the one teachers)!](https://github.com/mariofv/OrionEngine/releases/tag/v0.1.5-alpha)
     * Fixed various bugs.
     * Several refactors in order to follow good C++ practises.
     * Super cool README.
