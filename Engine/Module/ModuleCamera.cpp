@@ -109,6 +109,14 @@ void ModuleCamera::SetOrientation(const float3 orientation)
 	GenerateMatrices();
 }
 
+void ModuleCamera::SetOrthographicSize(const float2 size)
+{
+	camera_frustum.orthographicWidth = size.x;
+	camera_frustum.orthographicHeight = size.y;
+
+	GenerateMatrices();
+}
+
 void ModuleCamera::LookAt(const float3 focus)
 {
 	float3 look_direction = (focus - camera_frustum.pos).Normalized();
@@ -289,6 +297,17 @@ bool ModuleCamera::MovementEnabled() const
 {
 	return movement_enabled;
 }
+void ModuleCamera::SetPerpesctiveView()
+{
+	camera_frustum.type = FrustumType::PerspectiveFrustum;
+	GenerateMatrices();
+}
+
+void ModuleCamera::SetOrthographicView()
+{
+	camera_frustum.type = FrustumType::OrthographicFrustum;
+	GenerateMatrices();
+}
 
 void ModuleCamera::GenerateMatrices()
 {
@@ -328,6 +347,22 @@ void ModuleCamera::ShowCameraOptions()
 		if (ImGui::SliderFloat("Far plane", &camera_frustum.farPlaneDistance, camera_frustum.nearPlaneDistance + 1, camera_frustum.nearPlaneDistance + 1000))
 		{
 			App->cameras->SetFarDistance(camera_frustum.farPlaneDistance);
+		}
+		if (ImGui::SliderFloat("Orthographic Size", &camera_frustum.orthographicHeight, 0, 100))
+		{
+			App->cameras->SetOrthographicSize(float2(camera_frustum.orthographicHeight * aspect_ratio, camera_frustum.orthographicHeight));
+		}
+		if (ImGui::Combo("Front faces", &perpesctive_enable, "Perspective\0Orthographic\0"))
+		{
+			switch (perpesctive_enable)
+			{
+			case 0:
+				SetPerpesctiveView();
+				break;
+			case 1:
+				SetOrthographicView();
+				break;
+			}
 		}
 	}
 }
