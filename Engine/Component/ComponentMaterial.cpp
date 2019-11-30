@@ -1,5 +1,7 @@
 #include "ComponentMaterial.h"
 #include "Texture.h"
+#include "Application.h"
+#include <Module/ModuleTexture.h>
 
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -36,6 +38,10 @@ void ComponentMaterial::Update()
 
 GLuint ComponentMaterial::GetTexture() const
 {
+	if (showCheckerboardTexture)
+	{
+		return App->texture->checkerboardTextureId;
+	}
 	return active ? texture->opengl_texture : 0;
 }
 
@@ -89,5 +95,7 @@ void ComponentMaterial::ShowComponentWindow()
 
 		ImGui::SetCursorPosX(window_width*0.25f);
 		ImGui::Image((void*)(intptr_t)texture->opengl_texture, ImVec2(window_width * 0.5f, window_width * 0.5f), ImVec2(0, 1), ImVec2(1, 0));
+
+		ImGui::Checkbox("Checker Texture", &showCheckerboardTexture);
 	}
 }
