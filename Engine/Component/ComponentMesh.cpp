@@ -3,6 +3,16 @@
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
 
+ComponentMesh::ComponentMesh() : Component(nullptr, ComponentType::MESH)
+{
+
+}
+
+ComponentMesh::ComponentMesh(GameObject * owner) : Component(owner, ComponentType::MESH)
+{
+
+}
+
 ComponentMesh::~ComponentMesh()
 {
 	vertices.clear();
@@ -26,11 +36,6 @@ void ComponentMesh::Disable()
 void ComponentMesh::Update()
 {
 
-}
-
-Component::ComponentType ComponentMesh::GetType() const
-{
-	return Component::ComponentType::MESH;
 }
 
 void ComponentMesh::LoadMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int material_index)

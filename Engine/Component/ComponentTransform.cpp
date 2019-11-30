@@ -4,12 +4,13 @@
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
 
-ComponentTransform::ComponentTransform()
-{
+ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM) {
+
 	GenerateModelMatrix();
 }
 
-ComponentTransform::ComponentTransform(const float3 translation, const float3 rotation, const float3 scale) :
+ComponentTransform::ComponentTransform(GameObject * owner, const float3 translation, const float3 rotation, const float3 scale) :
+	Component(owner, ComponentType::TRANSFORM),
 	translation(translation),
 	rotation(rotation),
 	scale(scale)
@@ -30,11 +31,6 @@ void ComponentTransform::Disable()
 void ComponentTransform::Update()
 {
 
-}
-
-Component::ComponentType ComponentTransform::GetType() const
-{
-	return Component::ComponentType::TRANSFORM;
 }
 
 void ComponentTransform::Render(const GLuint shader_program) const
@@ -67,7 +63,7 @@ void ComponentTransform::GenerateGlobalModelMatrix()
 	}
 	else
 	{
-		global_model_matrix = owner->parent->transform->global_model_matrix * model_matrix;
+		global_model_matrix = owner->parent->transform.global_model_matrix * model_matrix;
 	}
 }
 

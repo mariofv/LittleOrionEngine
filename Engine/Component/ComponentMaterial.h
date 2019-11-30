@@ -11,14 +11,14 @@ class Texture;
 class ComponentMaterial : public Component
 {
 public:
-	ComponentMaterial() = default;
+	ComponentMaterial();
+	ComponentMaterial(GameObject * owner);
 	~ComponentMaterial();
 
 	void Enable() override;
 	void Disable() override;
 	void Update() override;
 
-	ComponentType GetType() const override;
 	GLuint GetTexture() const;
 
 	void ShowComponentWindow() override;

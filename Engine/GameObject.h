@@ -47,7 +47,7 @@ public:
 	
 	AABB bounding_box;
 
-	ComponentTransform *transform = nullptr;
+	ComponentTransform transform;
 
 	std::vector<Component*> components;
 
