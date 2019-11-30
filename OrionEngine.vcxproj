@@ -47,13 +47,13 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/FontAwesome5/;$(ProjectDir)Libraries/assimp/include;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/DevIL/include;./Libraries/glew-2.1.0/include;./Libraries/SDL/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(ProjectDir)Libraries/assimp/lib/;$(SolutionDir)Libraries/DevIL/lib/x86/Release;$(SolutionDir)Libraries/SDL/libx86;$(SolutionDir)Libraries/glew-2.1.0/lib/Release/Win32</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>$(ProjectDir)Libraries/lib/x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;assimp-vc141-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>

@@ -14,7 +14,7 @@
 
 #include "imgui.h"
 #include "imgui_stdlib.h"
-#include "IconsFontAwesome5.h"
+#include <FontAwesome5/IconsFontAwesome5.h>
 
 #include <algorithm>
 

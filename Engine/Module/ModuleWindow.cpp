@@ -6,7 +6,7 @@
 #include "ModuleCamera.h"
 
 #include "imgui.h"
-#include "IconsFontAwesome5.h"
+#include <FontAwesome5/IconsFontAwesome5.h>
 
 // Called before render is available
 bool ModuleWindow::Init()

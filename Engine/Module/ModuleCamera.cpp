@@ -6,8 +6,8 @@
 #include "ModuleWindow.h"
 
 #include "imgui.h"
-#include "SDL.h"
-#include "IconsFontAwesome5.h"
+#include <SDL/SDL.h>
+#include <FontAwesome5/IconsFontAwesome5.h>
 
 bool ModuleCamera::Init()
 {

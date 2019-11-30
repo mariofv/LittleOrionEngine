@@ -7,7 +7,7 @@
 #include <IL/il.h>
 #include <IL/ilu.h>
 #include <IL/ilut.h>
-#include "SDL.h"
+#include <SDL/SDL.h>
 
 // Called before render is available
 bool ModuleTexture::Init()

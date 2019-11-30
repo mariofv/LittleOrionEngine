@@ -7,10 +7,10 @@
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 
-#include "SDL.h"
+#include <SDL/SDL.h>
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
-#include "IconsFontAwesome5.h"
+#include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
 
 // Called before render is available

@@ -3,7 +3,7 @@
 
 #include "Module.h"
 
-#include "SDL.h"
+#include <SDL/SDL.h>
 
 class Application;
 

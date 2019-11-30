@@ -10,12 +10,12 @@
 #include "Component/ComponentMesh.h"
 #include "BoundingBoxRenderer.h"
 
-#include "SDL.h"
+#include <SDL/SDL.h>
 #include "MathGeoLib.h"
 #include <assimp/scene.h>
 #include "imgui.h"
 #include "imgui.h"
-#include "IconsFontAwesome5.h"
+#include <FontAwesome5/IconsFontAwesome5.h>
 
 static void APIENTRY openglCallbackFunction(
 	GLenum source,
