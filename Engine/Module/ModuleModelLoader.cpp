@@ -65,9 +65,9 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	}
 
 	APP_LOG_INFO("Computing model bounding box.");
-	model_root_node->GenerateBoundingBox();
+	model_root_node->aabb_collider.GenerateBoundingBox();
 
-	App->cameras->Center(model_root_node->bounding_box);
+	App->cameras->Center(model_root_node->aabb_collider.bounding_box);
 
 	APP_LOG_SUCCESS("Model %s loaded correctly.", new_model_file_path);
 	return true;

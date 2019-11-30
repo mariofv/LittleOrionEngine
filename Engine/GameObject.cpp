@@ -18,13 +18,14 @@
 
 #include <algorithm>
 
-GameObject::GameObject() : transform(this)
+GameObject::GameObject() : transform(this), aabb_collider(this)
 {
 }
 
 GameObject::GameObject(const std::string name) :
 	name(name),
-	transform(this)
+	transform(this),
+	aabb_collider(this)
 {
 
 }
@@ -53,7 +54,7 @@ GameObject::~GameObject()
 void GameObject::Update()
 {
 	transform.GenerateGlobalModelMatrix();
-	GenerateBoundingBox();
+	aabb_collider.GenerateBoundingBox();
 	for (unsigned int i = 0; i < children.size(); ++i)
 	{
 		children[i]->Update();
@@ -100,7 +101,7 @@ void GameObject::Render() const
 
 	if (parent != nullptr) // IS NOT ROOT NODE
 	{
-		App->renderer->bounding_box_renderer->Render(bounding_box, App->program->default_program);
+		App->renderer->bounding_box_renderer->Render(aabb_collider.bounding_box, App->program->default_program);
 	}
 
 	for (unsigned int i = 0; i < children.size(); ++i)
@@ -188,6 +189,18 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 	return created_component;
 }
 
+Component*  GameObject::GetComponent(const Component::ComponentType type) const
+{
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		if (components[i]->GetType() == Component::ComponentType::MESH)
+		{
+			return components[i];
+		}
+	}
+	return nullptr;
+}
+
 void GameObject::MoveUpInHierarchy()
 {
 	std::vector<GameObject*>::iterator silbings_position = std::find(parent->children.begin(), parent->children.end(), this);
@@ -243,38 +256,6 @@ void GameObject::UpdateHierarchyBranch()
 	for (unsigned int i = 0; i < children.size(); ++i)
 	{
 		children[i]->UpdateHierarchyBranch();
-	}
-}
-
-void GameObject::GenerateBoundingBox()
-{
-	for (unsigned int i = 0; i < children.size(); ++i)
-	{
-		children[i]->GenerateBoundingBox();
-	}
-
-	bool has_meshes = false;
-	bounding_box.SetNegativeInfinity();
-	for (unsigned int i = 0; i < components.size(); ++i)
-	{
-		if (components[i]->GetType() == Component::ComponentType::MESH)
-		{
-			has_meshes = true;
-
-			bounding_box.Enclose(((ComponentMesh*)components[i])->bounding_box);
-		}
-	}
-
-	if (!has_meshes)
-	{
-		bounding_box = AABB(float3::zero, float3::zero);
-	}
-	bounding_box.TransformAsAABB(transform.GetGlobalModelMatrix());
-	
-
-	for (unsigned int i = 0; i < children.size(); ++i)
-	{
-		bounding_box.Enclose(children[i]->bounding_box);
 	}
 }
 

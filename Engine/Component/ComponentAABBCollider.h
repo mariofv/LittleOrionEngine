@@ -2,6 +2,7 @@
 #define _COMPONENTAABBCOLLIDER_H_
 
 #include "Component.h"
+#include "MathGeoLib.h"
 
 class Texture;
 
@@ -15,6 +16,11 @@ public:
 	void Enable() override;
 	void Disable() override;
 	void Update() override;
+
+	void GenerateBoundingBox();
+
+	void ShowComponentWindow(){}
+	AABB bounding_box;
 
 };
 
