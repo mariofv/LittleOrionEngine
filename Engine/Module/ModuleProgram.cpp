@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleProgram.h"
 
-#include "SDL.h"
+#include <SDL/SDL.h>
 
 // Called before render is available
 bool ModuleProgram::Init()

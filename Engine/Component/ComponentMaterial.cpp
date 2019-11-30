@@ -2,7 +2,17 @@
 #include "Texture.h"
 
 #include "imgui.h"
-#include "IconsFontAwesome5.h"
+#include <FontAwesome5/IconsFontAwesome5.h>
+
+ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL)
+{
+
+}
+
+ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, ComponentType::MATERIAL)
+{
+
+}
 
 ComponentMaterial::~ComponentMaterial()
 {
@@ -22,11 +32,6 @@ void ComponentMaterial::Disable()
 void ComponentMaterial::Update()
 {
 
-}
-
-Component::ComponentType ComponentMaterial::GetType() const
-{
-	return Component::ComponentType::MATERIAL;
 }
 
 GLuint ComponentMaterial::GetTexture() const

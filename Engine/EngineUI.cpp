@@ -12,10 +12,10 @@
 #include "EngineLog.h"
 
 #include "imgui.h"
-#include "SDL.h"
+#include <SDL/SDL.h>
 #include <GL/glew.h>
-#include "IconsFontAwesome5.h"
-#include "IconsFontAwesome5Brands.h"
+#include <FontAwesome5/IconsFontAwesome5.h>
+#include <FontAwesome5/IconsFontAwesome5Brands.h>
 
 void EngineUI::InitUI()
 {

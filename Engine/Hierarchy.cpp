@@ -5,7 +5,7 @@
 #include "GameObject.h"
 
 #include "imgui.h"
-#include "IconsFontAwesome5.h"
+#include <FontAwesome5/IconsFontAwesome5.h>
 
 Hierarchy::Hierarchy()
 {
@@ -113,7 +113,7 @@ void Hierarchy::DropTarget(GameObject *target_game_object)
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
 			if (!incoming_game_object->IsAboveInHierarchy(*target_game_object))
 			{
-				incoming_game_object->ChangeParent(target_game_object);
+				incoming_game_object->SetParent(target_game_object);
 			}
 		}
 		ImGui::EndDragDropTarget();
@@ -135,7 +135,7 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 		}
 		if (ImGui::Selectable("Delete GameObject"))
 		{
-			delete game_object;
+			App->scene->RemoveGameObject(game_object);
 		}
 		if (ImGui::Selectable("Move Up"))
 		{

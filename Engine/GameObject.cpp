@@ -14,19 +14,19 @@
 
 #include "imgui.h"
 #include "imgui_stdlib.h"
-#include "IconsFontAwesome5.h"
+#include <FontAwesome5/IconsFontAwesome5.h>
 
 #include <algorithm>
 
-GameObject::GameObject()
+GameObject::GameObject() : transform(this)
 {
-	this->transform = (ComponentTransform*)CreateComponent(Component::ComponentType::TRANSFORM);
 }
 
 GameObject::GameObject(const std::string name) :
-	name(name)
+	name(name),
+	transform(this)
 {
-	this->transform = (ComponentTransform*)CreateComponent(Component::ComponentType::TRANSFORM);
+
 }
 
 
@@ -52,7 +52,7 @@ GameObject::~GameObject()
 
 void GameObject::Update()
 {
-	transform->GenerateGlobalModelMatrix();
+	transform.GenerateGlobalModelMatrix();
 	GenerateBoundingBox();
 	for (unsigned int i = 0; i < children.size(); ++i)
 	{
@@ -71,7 +71,7 @@ void GameObject::Render() const
 	GLuint shader_program = App->program->texture_program;
 	glUseProgram(shader_program);
 
-	transform->Render(shader_program);
+	transform.Render(shader_program);
 	glUniformMatrix4fv(
 		glGetUniformLocation(shader_program, "view"),
 		1,
@@ -109,14 +109,17 @@ void GameObject::Render() const
 	}
 }
 
-void GameObject::ChangeParent(GameObject *new_parent)
+void GameObject::SetParent(GameObject *new_parent)
 {
 	if (new_parent == parent)
 	{
 		return;
 	}
-	
-	parent->RemoveChild(this);
+
+	if (parent != nullptr) 
+	{
+		parent->RemoveChild(this);
+	}
 	new_parent->AddChild(this);
 }
 
@@ -145,7 +148,7 @@ void GameObject::AddChild(GameObject *child)
 	child->UpdateHierarchyDepth();
 	child->UpdateHierarchyBranch();
 
-	child->transform->ChangeLocalSpace(transform->GetGlobalModelMatrix());
+	child->transform.ChangeLocalSpace(transform.GetGlobalModelMatrix());
 	children.push_back(child);
 }
 
@@ -174,11 +177,6 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 	case Component::ComponentType::MESH:
 		created_component = App->renderer->CreateComponentMesh();
 		break;
-
-	case Component::ComponentType::TRANSFORM:
-		created_component = new ComponentTransform();
-		break;
-
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
 		return nullptr;
@@ -271,7 +269,7 @@ void GameObject::GenerateBoundingBox()
 	{
 		bounding_box = AABB(float3::zero, float3::zero);
 	}
-	bounding_box.TransformAsAABB(transform->GetGlobalModelMatrix());
+	bounding_box.TransformAsAABB(transform.GetGlobalModelMatrix());
 	
 
 	for (unsigned int i = 0; i < children.size(); ++i)

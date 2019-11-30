@@ -2,7 +2,7 @@
 #include "EngineLog.h"
 
 #include "imgui.h"
-#include "IconsFontAwesome5.h"
+#include <FontAwesome5/IconsFontAwesome5.h>
 
 #include <algorithm>
 

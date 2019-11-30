@@ -4,13 +4,13 @@
 #include "ModuleWindow.h"
 #include "EngineUI.h"
 
-#include "SDL.h"
+#include <SDL/SDL.h>
 #include <GL/glew.h>
 #include "imgui.h"
 #include "imgui_impl_opengl3.h"
 #include "imgui_impl_sdl.h"
-#include "IconsFontAwesome5.h"
-#include "IconsFontAwesome5Brands.h"
+#include <FontAwesome5/IconsFontAwesome5.h>
+#include <FontAwesome5/IconsFontAwesome5Brands.h>
 
 // Called before render is available
 bool ModuleEditor::Init()

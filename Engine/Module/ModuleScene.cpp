@@ -4,8 +4,8 @@
 #include "ModuleCamera.h"
 
 #include "imgui.h"
-#include "IconsFontAwesome5.h"
-
+#include <FontAwesome5/IconsFontAwesome5.h>
+#include <algorithm>
 
 bool ModuleScene::Init()
 {
@@ -24,9 +24,20 @@ bool ModuleScene::CleanUp()
 GameObject* ModuleScene::CreateGameObject()
 {
 	std::string created_game_object_name = hierarchy.GetNextGameObjectName();
-	GameObject *created_game_object = root->CreateChild(created_game_object_name);
-	
-	return created_game_object;
+	std::unique_ptr<GameObject> created_game_object = std::make_unique<GameObject>(created_game_object_name);
+	created_game_object->SetParent(root);
+
+	GameObject * created_game_object_ptr = created_game_object.get();
+	game_objects_ownership.emplace_back(std::move(created_game_object));
+	return created_game_object_ptr;
+}
+
+void ModuleScene::RemoveGameObject(GameObject * gameObjectToRemove) {
+	auto it = std::remove_if(game_objects_ownership.begin(), game_objects_ownership.end(), [gameObjectToRemove](auto const & gameObject)
+	{
+		return gameObject.get() == gameObjectToRemove;
+	});
+	game_objects_ownership.erase(it);
 }
 
 void ModuleScene::Render() const

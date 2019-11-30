@@ -1,14 +1,13 @@
 #include "Application.h"
-#include "Module/ModuleWindow.h"
 #include "Globals.h"
 #include "TimerUs.h"
 
-#include "SDL.h"
+#include <SDL/SDL.h>
 
 #include <stdlib.h>
 
-#pragma comment( lib, "Libraries/SDL/libx86/SDL2.lib" )
-#pragma comment( lib, "Libraries/SDL/libx86/SDL2main.lib" )
+#pragma comment( lib, "Libraries/lib/x86/SDL2.lib" )
+#pragma comment( lib, "Libraries/lib/x86/SDL2main.lib" )
 
 enum main_states
 {

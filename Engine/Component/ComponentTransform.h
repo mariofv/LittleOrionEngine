@@ -9,16 +9,14 @@
 class ComponentTransform : public Component
 {
 public:
-	ComponentTransform();
-	ComponentTransform(const float3 translation, const float3 rotation, const float3 scale);
+	ComponentTransform(GameObject * owner);
+	ComponentTransform(GameObject * owner,const float3 translation, const float3 rotation, const float3 scale);
 
 	~ComponentTransform() = default;
 
 	void Enable() override;
 	void Disable() override;
 	void Update() override;
-
-	ComponentType GetType() const override;
 
 	void Render(const GLuint shader_program) const;
 	

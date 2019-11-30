@@ -76,6 +76,6 @@ enum class Fonts
 #define BORDERED true
 
 #define VSYNC true
-#define TITLE "Orion Engine"
+#define TITLE "Little Orion Engine"
 
 #endif //_GLOBALS_H_

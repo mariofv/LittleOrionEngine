@@ -17,6 +17,7 @@ public:
 	void Render() const;
 
 	GameObject* CreateGameObject();
+	void RemoveGameObject(GameObject * gameObjectToRemove);
 
 	GameObject* GetRoot() const;
 
@@ -28,6 +29,7 @@ public:
 
 private:
 	GameObject *root = nullptr;
+	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
 };
 
 #endif // _MODULSESCENE_H
