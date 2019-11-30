@@ -17,17 +17,18 @@ using namespace std;
 
 Application::Application()
 {
+	modules.reserve(10);
 	// Order matters: they will Init/start/update in this order
-	modules.push_back(window = new ModuleWindow());
-	modules.push_back(editor = new ModuleEditor());
-	modules.push_back(time = new ModuleTime());
-	modules.push_back(renderer = new ModuleRender());
-	modules.push_back(scene = new ModuleScene());
-	modules.push_back(input = new ModuleInput());
-	modules.push_back(program = new ModuleProgram());
-	modules.push_back(texture = new ModuleTexture());
-	modules.push_back(cameras = new ModuleCamera());
-	modules.push_back(model_loader = new ModuleModelLoader());
+	modules.emplace_back(window = new ModuleWindow());
+	modules.emplace_back(editor = new ModuleEditor());
+	modules.emplace_back(time = new ModuleTime());
+	modules.emplace_back(renderer = new ModuleRender());
+	modules.emplace_back(scene = new ModuleScene());
+	modules.emplace_back(input = new ModuleInput());
+	modules.emplace_back(program = new ModuleProgram());
+	modules.emplace_back(texture = new ModuleTexture());
+	modules.emplace_back(cameras = new ModuleCamera());
+	modules.emplace_back(model_loader = new ModuleModelLoader());
 		
 	engine_log = new EngineLog();
 	ui = new EngineUI();
@@ -35,7 +36,7 @@ Application::Application()
 
 Application::~Application()
 {
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
+	for(vector<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
     {
         delete *it;
     }
@@ -48,7 +49,7 @@ bool Application::Init()
 {
 	bool ret = true;
 
-	for (list<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it) 
+	for (vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it) 
 	{
 		ret = (*it)->Init();
 	}
@@ -60,13 +61,13 @@ update_status Application::Update()
 {
 	update_status ret = update_status::UPDATE_CONTINUE;
 
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
+	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
 		ret = (*it)->PreUpdate();
 
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
+	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
 		ret = (*it)->Update();
 
-	for(list<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
+	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
 		ret = (*it)->PostUpdate();
 
 	return ret;
@@ -76,7 +77,7 @@ bool Application::CleanUp()
 {
 	bool ret = true;
 
-	for (list<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
+	for (vector<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
 		ret = (*it)->CleanUp();
 
 	return ret;

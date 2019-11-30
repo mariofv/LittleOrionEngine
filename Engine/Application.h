@@ -4,7 +4,7 @@
 #include "Globals.h"
 #include "Module/Module.h"
 
-#include <list>
+#include <vector>
 
 class ModuleRender;
 class ModuleWindow;
@@ -52,7 +52,7 @@ public:
 
 private:
 
-	std::list<Module*> modules;
+	std::vector<Module*> modules;
 
 };
 
