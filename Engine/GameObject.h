@@ -32,8 +32,6 @@ public:
 	void UpdateHierarchyDepth();
 	void UpdateHierarchyBranch();
 
-	void GenerateBoundingBox();
-
 	void ShowPropertiesWindow();
 
 private:
