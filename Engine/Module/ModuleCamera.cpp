@@ -306,8 +306,9 @@ void ModuleCamera::ShowCameraOptions()
 
 		ImGui::Separator();
 
-		ImGui::DragFloat("Mov Speed", &camera_movement_speed, NULL, NULL, NULL);
-		ImGui::DragFloat("Rot Speed", &camera_rotation_speed, NULL, NULL, NULL);
+		ImGui::SliderFloat("Mov Speed", &camera_movement_speed, CAMERA_MINIMUN_MOVEMENT_SPEED, CAMERA_MAXIMUN_MOVEMENT_SPEED);
+		ImGui::SliderFloat("Rot Speed", &camera_rotation_speed, CAMERA_MINIMUN_MOVEMENT_SPEED, CAMERA_MAXIMUN_MOVEMENT_SPEED);
+		ImGui::SliderFloat("Zoom Speed", &camera_zooming_speed, CAMERA_MINIMUN_MOVEMENT_SPEED, CAMERA_MAXIMUN_MOVEMENT_SPEED);
 		
 		if (ImGui::SliderFloat("FOV", &camera_frustum.horizontalFov, 0, 2 * 3.14f))
 		{

@@ -61,6 +61,8 @@ public:
 	# define INITIAL_HEIGHT_FACTOR 0.5
 	# define CAMERA_MOVEMENT_SPEED_BOUNDING_BOX_RADIUS_FACTOR 0.005
 	# define CAMERA_ZOOMING_SPEED_BOUNDING_BOX_RADIUS_FACTOR 0.0625 
+	# define CAMERA_MAXIMUN_MOVEMENT_SPEED 1.0f
+	# define CAMERA_MINIMUN_MOVEMENT_SPEED 0.005 
 
 	float camera_movement_speed = 1.0f;
 	float camera_zooming_speed = 1.0f;
