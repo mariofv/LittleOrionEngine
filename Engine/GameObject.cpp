@@ -109,14 +109,17 @@ void GameObject::Render() const
 	}
 }
 
-void GameObject::ChangeParent(GameObject *new_parent)
+void GameObject::SetParent(GameObject *new_parent)
 {
 	if (new_parent == parent)
 	{
 		return;
 	}
-	
-	parent->RemoveChild(this);
+
+	if (parent != nullptr) 
+	{
+		parent->RemoveChild(this);
+	}
 	new_parent->AddChild(this);
 }
 

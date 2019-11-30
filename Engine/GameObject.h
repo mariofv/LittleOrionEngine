@@ -19,7 +19,7 @@ public:
 	void Update();
 	void Render() const;
 
-	void ChangeParent(GameObject *new_parent);
+	void SetParent(GameObject *new_parent);
 	GameObject* CreateChild(std::string name = "");
 	void AddChild(GameObject *child);
 	void RemoveChild(GameObject *child);
