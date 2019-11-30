@@ -384,7 +384,18 @@ void ModuleRender::ShowRenderOptions()
 				break;
 			}
 		}
-
+		if (ImGui::Combo("Filling mode", &filling_mode, "Fill\0Lines\0Vertices"))
+		{
+			if (filling_mode == 0) {
+				glPolygonMode(GL_FRONT, GL_FILL);
+			}
+			if (filling_mode == 1) {
+				glPolygonMode(GL_FRONT, GL_LINE);
+			}
+			if (filling_mode == 2) {
+				glPolygonMode(GL_FRONT, GL_POINT);
+			}
+		}
 		ImGui::Separator();
 		HelpMarker("This settings have no visual impact, WIP.");
 		ImGui::SameLine();
