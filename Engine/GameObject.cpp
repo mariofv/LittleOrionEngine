@@ -101,7 +101,7 @@ void GameObject::Render() const
 
 	if (parent != nullptr) // IS NOT ROOT NODE
 	{
-		App->renderer->bounding_box_renderer->Render(aabb_collider.bounding_box, App->program->default_program);
+		aabb_collider.Render(App->program->default_program);
 	}
 
 	for (unsigned int i = 0; i < children.size(); ++i)
@@ -288,6 +288,11 @@ void GameObject::ShowPropertiesWindow()
 
 	ImGui::Spacing();
 	ImGui::Separator();
+
+	transform.ShowComponentWindow();
+	ImGui::Spacing();
+	ImGui::Separator();
+	aabb_collider.ShowComponentWindow();
 
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{

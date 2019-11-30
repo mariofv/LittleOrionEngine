@@ -1,6 +1,9 @@
 #include "ComponentAABBCollider.h"
 #include "GameObject.h"
-#include "ComponentMesh.h"
+#include "Application.h"
+
+#include "BoundingBoxRenderer.h"
+#include "Module/ModuleRender.h"
 
 ComponentAABBCollider::ComponentAABBCollider() : Component(nullptr, ComponentType::MATERIAL)
 {
@@ -32,6 +35,11 @@ void ComponentAABBCollider::Update()
 
 }
 
+void ComponentAABBCollider::Render(const GLuint shader_program) const
+{
+	App->renderer->bounding_box_renderer->Render(bounding_box, shader_program);
+}
+
 void ComponentAABBCollider::GenerateBoundingBox()
 {
 
@@ -46,7 +54,7 @@ void ComponentAABBCollider::GenerateBoundingBox()
 	has_meshes = ownerMesh != nullptr;
 	if (has_meshes)
 	{
-		bounding_box.Enclose(ownerMesh->bounding_box);
+		bounding_box.Enclose(GenerateBoundingBoxFromVertex(ownerMesh->vertices));
 	}
 	else
 	{
@@ -59,4 +67,15 @@ void ComponentAABBCollider::GenerateBoundingBox()
 	{
 		bounding_box.Enclose(owner->children[i]->aabb_collider.bounding_box);
 	}
+}
+
+AABB ComponentAABBCollider::GenerateBoundingBoxFromVertex(const std::vector<ComponentMesh::Vertex> & vertices)
+{
+	AABB bounding_box;
+	bounding_box.SetNegativeInfinity();
+	for (unsigned int i = 0; i < vertices.size(); ++i)
+	{
+		bounding_box.Enclose(vertices[i].position);
+	}
+	return bounding_box;
 }
