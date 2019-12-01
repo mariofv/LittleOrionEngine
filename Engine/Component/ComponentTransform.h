@@ -41,8 +41,6 @@ private:
 
 	float4x4 model_matrix = float4x4::identity;
 	float4x4 global_model_matrix = float4x4::identity;
-
-	friend class ComponentCamera;
 };
 
 #endif //_COMPONENTTRANSFORM_H_
