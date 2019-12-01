@@ -1,7 +1,6 @@
 #include "GameObject.h"
 #include "Application.h"
 #include "Hierarchy.h"
-#include "BoundingBoxRenderer.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"

@@ -78,7 +78,8 @@ void ComponentAABBCollider::GenerateBoundingBoxFromVertices(const std::vector<Co
 	}
 }
 
-void ComponentAABBCollider::GenerateBoundingBoxFromFrustum(const Frustum & frustum) {
+void ComponentAABBCollider::GenerateBoundingBoxFromFrustum(const Frustum & frustum) 
+{
 	bounding_box.SetNegativeInfinity();
 	for (unsigned int i = 0; i < 8 ; ++i)
 	{
