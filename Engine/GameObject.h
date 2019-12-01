@@ -4,7 +4,7 @@
 #include "Globals.h"
 #include "Component/Component.h"
 #include "Component/ComponentTransform.h"
-
+#include "Component/ComponentAABBCollider.h"
 #include <GL/glew.h>
 
 #include <vector>
@@ -25,14 +25,13 @@ public:
 	void RemoveChild(GameObject *child);
 
 	Component* CreateComponent(const Component::ComponentType type);
+	Component* GetComponent(const Component::ComponentType type) const;
 
 	void MoveUpInHierarchy();
 	void MoveDownInHierarchy();
 	bool IsAboveInHierarchy(const GameObject &potential_child) const;
 	void UpdateHierarchyDepth();
 	void UpdateHierarchyBranch();
-
-	void GenerateBoundingBox();
 
 	void ShowPropertiesWindow();
 
@@ -44,10 +43,10 @@ public:
 
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;
-	
-	AABB bounding_box;
+
 
 	ComponentTransform transform;
+	ComponentAABBCollider aabb_collider;
 
 	std::vector<Component*> components;
 

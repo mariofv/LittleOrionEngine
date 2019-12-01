@@ -10,7 +10,8 @@ public:
 	{
 		MATERIAL,
 		MESH,
-		TRANSFORM
+		TRANSFORM,
+		AABBCOLLIDER
 	};
 
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType) {};

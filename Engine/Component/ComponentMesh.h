@@ -27,8 +27,6 @@ public:
 	void LoadMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int texture_index);
 	void Render(const GLuint shader_program, const GLuint texture) const;
 
-	void GenerateBoundingBox();
-
 	void ShowComponentWindow() override;
 
 private:
