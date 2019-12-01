@@ -2,6 +2,7 @@
 #define _COMPONENTTRANSFORM_H_
 
 #include "Component.h"
+#include "UI/ComponentsUI.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
@@ -39,6 +40,8 @@ private:
 
 	float4x4 model_matrix = float4x4::identity;
 	float4x4 global_model_matrix = float4x4::identity;
+
+	friend void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform);
 };
 
 #endif //_COMPONENTTRANSFORM_H_

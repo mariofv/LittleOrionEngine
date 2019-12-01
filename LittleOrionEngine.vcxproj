@@ -77,6 +77,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\UI\ComponentsUI.h" />
     <ClInclude Include="Engine\BoundingBoxRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentAABBCollider.h" />
     <ClInclude Include="Engine\Component\ComponentCamera.h" />
@@ -177,6 +178,7 @@
     <ClInclude Include="Engine\Module\ModuleScene.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\UI\ComponentsUI.cpp" />
     <ClCompile Include="Engine\BoundingBoxRenderer.cpp" />
     <ClCompile Include="Engine\Component\ComponentAABBCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentCamera.cpp" />
