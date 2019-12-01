@@ -48,8 +48,6 @@ private:
 
 public:
 	BoundingBoxRenderer *bounding_box_renderer = nullptr;
-	bool bounding_box_visible = false;
-	bool model_movement = false;
 
 private:
 	void* context = nullptr;

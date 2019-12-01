@@ -117,10 +117,6 @@ update_status ModuleInput::PreUpdate()
 			{
 				//App->cameras->Focus(*App->model_loader->current_model->bounding_box); TODO THIS
 			}
-			else if (event.key.keysym.sym == SDLK_b)
-			{
-				App->renderer->bounding_box_visible = !App->renderer->bounding_box_visible;
-			}
 			break;
 
 		case SDL_KEYUP:

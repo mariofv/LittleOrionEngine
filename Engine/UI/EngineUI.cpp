@@ -301,8 +301,7 @@ void EngineUI::ShowDebugWindow()
 {
 	if (ImGui::Begin(ICON_FA_BUG " Debug"))
 	{
-		ImGui::Checkbox("Move model around", &App->renderer->model_movement);
-		ImGui::Checkbox("Enable model Bounding Box", &App->renderer->bounding_box_visible);
+
 	}
 	ImGui::End();
 }
