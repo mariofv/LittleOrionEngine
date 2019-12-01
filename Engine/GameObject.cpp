@@ -55,6 +55,12 @@ void GameObject::Update()
 {
 	transform.GenerateGlobalModelMatrix();
 	aabb_collider.GenerateBoundingBox();
+
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		components[i]->Update();
+	}
+
 	for (unsigned int i = 0; i < children.size(); ++i)
 	{
 		children[i]->Update();
