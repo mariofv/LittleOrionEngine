@@ -7,7 +7,6 @@
 #include "Geometry/Frustum.h"
 #include "MathGeoLib.h"
 
-class GameObject;
 class ComponentCamera;
 
 class ModuleCamera : public Module
@@ -34,8 +33,6 @@ public:
 	ComponentCamera *scene_camera = nullptr;
 
 private:
-	GameObject *scene_camera_game_object = nullptr;
-
 	bool movement_enabled = false;
 
 	bool is_orbiting = false;
