@@ -29,7 +29,7 @@ public:
 	void GenerateCheckerboardTexture();
 
 public:
-	GLuint checkerboardTextureId;
+	GLuint checkerboard_texture_id;
 };
 
 #endif //_MODULETEXTURE_H_

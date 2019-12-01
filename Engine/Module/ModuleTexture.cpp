@@ -27,7 +27,7 @@ bool ModuleTexture::Init()
 // Called before quitting
 bool ModuleTexture::CleanUp()
 {
-	glDeleteTextures(1, &checkerboardTextureId);
+	glDeleteTextures(1, &checkerboard_texture_id);
 	return true;
 }
 
@@ -76,8 +76,8 @@ void ModuleTexture::GenerateCheckerboardTexture() {
 		}
 	}
 
-	glGenTextures(1, &checkerboardTextureId);
-	glBindTexture(GL_TEXTURE_2D, checkerboardTextureId);
+	glGenTextures(1, &checkerboard_texture_id);
+	glBindTexture(GL_TEXTURE_2D, checkerboard_texture_id);
 
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);

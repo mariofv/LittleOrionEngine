@@ -40,7 +40,7 @@ GLuint ComponentMaterial::GetTexture() const
 {
 	if (showCheckerboardTexture)
 	{
-		return App->texture->checkerboardTextureId;
+		return App->texture->checkerboard_texture_id;
 	}
 	return active ? texture->opengl_texture : 0;
 }
