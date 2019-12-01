@@ -7,6 +7,9 @@
 #include "Geometry/Frustum.h"
 #include "MathGeoLib.h"
 
+class GameObject;
+class ComponentCamera;
+
 class ModuleCamera : public Module
 {
 public:
@@ -76,6 +79,9 @@ public:
 	float4x4 view;
 
 private:
+	GameObject *scene_camera_game_object = nullptr;
+	ComponentCamera *scene_camera_component = nullptr;
+
 	Frustum camera_frustum;
 	
 	float aspect_ratio = 1.f;

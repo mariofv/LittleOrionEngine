@@ -4,6 +4,8 @@
 #include "ModuleScene.h"
 #include "ModuleTime.h"
 #include "ModuleWindow.h"
+#include "GameObject.h"
+#include "Component/ComponentCamera.h"
 
 #include "imgui.h"
 #include <SDL/SDL.h>
@@ -15,6 +17,9 @@ bool ModuleCamera::Init()
 	int windowWidth, windowHeight;
 	SDL_GetWindowSize(App->window->window, &windowWidth, &windowHeight);
 	
+	scene_camera_game_object = new GameObject();
+	scene_camera_component = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
+
 	aspect_ratio = (float)windowWidth / windowHeight;
 	speed_up = 1;
 	is_orbiting = false;
@@ -60,6 +65,7 @@ update_status ModuleCamera::Update()
 // Called before quitting
 bool ModuleCamera::CleanUp()
 {
+	delete scene_camera_game_object;
 	return true;
 }
 
