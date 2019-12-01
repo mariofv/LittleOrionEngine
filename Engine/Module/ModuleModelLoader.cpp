@@ -5,6 +5,7 @@
 #include "ModuleTexture.h"
 #include "ModuleScene.h"
 #include "GameObject.h"
+#include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 
@@ -67,7 +68,7 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	APP_LOG_INFO("Computing model bounding box.");
 	model_root_node->aabb_collider.GenerateBoundingBox();
 
-	App->cameras->Center(model_root_node->aabb_collider.bounding_box);
+	App->cameras->scene_camera->Center(model_root_node->aabb_collider.bounding_box);
 
 	APP_LOG_SUCCESS("Model %s loaded correctly.", new_model_file_path);
 	return true;

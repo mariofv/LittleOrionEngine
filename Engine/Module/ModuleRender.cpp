@@ -3,10 +3,10 @@
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
 #include "ModuleProgram.h"
-#include "ModuleCamera.h"
 #include "ModuleModelLoader.h"
 #include "ModuleTime.h"
 #include "ModuleScene.h"
+#include "Component/ComponentCamera.h"
 #include "Component/ComponentMesh.h"
 #include "BoundingBoxRenderer.h"
 
@@ -109,8 +109,6 @@ bool ModuleRender::Init()
 	SetVSync(VSYNC);
 	SetDepthTest(true);
 
-	glGenFramebuffers(1, &fbo);
-
 	bounding_box_renderer = new BoundingBoxRenderer();
 
 	APP_LOG_SUCCESS("Glew initialized correctly.")
@@ -137,66 +135,16 @@ update_status ModuleRender::PostUpdate()
 bool ModuleRender::CleanUp()
 {
 	APP_LOG_INFO("Destroying renderer");
-	glDeleteTextures(1, &frame_texture);
-	glDeleteFramebuffers(1, &fbo);
-	glDeleteRenderbuffers(1, &rbo);
 
 	delete bounding_box_renderer;
 
 	return true;
 }
 
-ComponentMesh* ModuleRender::CreateComponentMesh() const
+void ModuleRender::Render(const ComponentCamera &camera) const
 {
-	return new ComponentMesh();
-}
-
-
-void ModuleRender::GenerateFrameTexture(const float width, const float height)
-{
-	GenerateFrameBuffers(width, height);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glViewport(0, 0, width, height);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
-	RenderGrid();
-
-	App->scene->Render();
-	
-
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void ModuleRender::GenerateFrameBuffers(const float width, const float height)
-{
-	if (frame_texture != 0)
-	{
-		glDeleteTextures(1, &frame_texture);
-	}
-	glGenTextures(1, &frame_texture);
-
-	if (rbo != 0)
-	{
-		glDeleteRenderbuffers(1, &rbo);
-	}
-	glGenRenderbuffers(1, &rbo);
-	
-	
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	
-	glBindTexture(GL_TEXTURE_2D, frame_texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, frame_texture, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	RenderGrid(camera);
+	App->scene->Render(camera);
 }
 
 void ModuleRender::SetVSync(const bool vsync)
@@ -269,7 +217,7 @@ void ModuleRender::SetWireframing(const bool gl_wireframe)
 	gl_wireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
-void ModuleRender::RenderGrid() const
+void ModuleRender::RenderGrid(const ComponentCamera &camera) const
 {
 	glUseProgram(App->program->primitive_program);
 
@@ -289,13 +237,13 @@ void ModuleRender::RenderGrid() const
 		glGetUniformLocation(App->program->primitive_program, "view"),
 		1,
 		GL_TRUE,
-		&App->cameras->view[0][0]
+		&camera.GetViewMatrix()[0][0]
 	);
 	glUniformMatrix4fv(
 		glGetUniformLocation(App->program->primitive_program, "proj"),
 		1,
 		GL_TRUE,
-		&App->cameras->proj[0][0]
+		&camera.GetProjectionMatrix()[0][0]
 	);
 
 	glLineWidth(1.0f);
@@ -332,6 +280,11 @@ void ModuleRender::RenderGrid() const
 	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
 	glEnd();
 	glLineWidth(1.0f);
+}
+
+ComponentMesh* ModuleRender::CreateComponentMesh() const
+{
+	return new ComponentMesh();
 }
 
 void ModuleRender::ShowRenderOptions()

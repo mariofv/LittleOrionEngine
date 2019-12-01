@@ -8,6 +8,7 @@
 #include "Module/ModuleTexture.h"
 #include "Texture.h"
 
+#include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 
@@ -61,7 +62,7 @@ void GameObject::Update()
 
 }
 
-void GameObject::Render() const
+void GameObject::Render(const ComponentCamera &camera) const
 {
 	if (!active)
 	{
@@ -76,13 +77,13 @@ void GameObject::Render() const
 		glGetUniformLocation(shader_program, "view"),
 		1,
 		GL_TRUE,
-		&App->cameras->view[0][0]
+		&camera.GetViewMatrix()[0][0]
 	);
 	glUniformMatrix4fv(
 		glGetUniformLocation(shader_program, "proj"),
 		1,
 		GL_TRUE,
-		&App->cameras->proj[0][0]
+		&camera.GetProjectionMatrix()[0][0]
 	);
 
 	for (unsigned int i = 0; i < components.size(); ++i)
@@ -100,12 +101,12 @@ void GameObject::Render() const
 
 	if (parent != nullptr) // IS NOT ROOT NODE
 	{
-		aabb_collider.Render(App->program->default_program);
+		aabb_collider.Render(camera, App->program->default_program);
 	}
 
 	for (unsigned int i = 0; i < children.size(); ++i)
 	{
-		children[i]->Render();
+		children[i]->Render(camera);
 	}
 }
 
@@ -170,6 +171,10 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 	Component *created_component;
 	switch (type)
 	{
+	case Component::ComponentType::CAMERA:
+		created_component = App->cameras->CreateComponentCamera();
+		break;
+
 	case Component::ComponentType::MATERIAL:
 		created_component = App->texture->CreateComponentMaterial();
 		break;

@@ -20,6 +20,8 @@ public:
 
 	void Render(const GLuint shader_program) const;
 	
+	void SetTranslation(const float3 translation);
+
 	void GenerateGlobalModelMatrix();
 	void ChangeLocalSpace(const float4x4 new_local_space);
 

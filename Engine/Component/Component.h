@@ -8,10 +8,11 @@ class Component
 public:
 	enum class ComponentType
 	{
+		AABBCOLLIDER,
+		CAMERA,
 		MATERIAL,
 		MESH,
-		TRANSFORM,
-		AABBCOLLIDER
+		TRANSFORM
 	};
 
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType) {};

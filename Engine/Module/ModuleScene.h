@@ -6,6 +6,8 @@
 #include "GameObject.h"
 #include "Hierarchy.h"
 
+class ComponentCamera;
+
 class ModuleScene : public Module
 {
 public:
@@ -14,7 +16,7 @@ public:
 
 	bool Init();
 	bool CleanUp();
-	void Render() const;
+	void Render(const ComponentCamera &camera) const;
 
 	GameObject* CreateGameObject();
 	void RemoveGameObject(GameObject * gameObjectToRemove);

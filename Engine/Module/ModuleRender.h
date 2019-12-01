@@ -7,6 +7,7 @@
 #include <GL/glew.h>
 
 class ComponentMesh;
+class ComponentCamera;
 class BoundingBoxRenderer;
 
 struct SDL_Texture;
@@ -23,12 +24,11 @@ public:
 	update_status PreUpdate();
 	update_status PostUpdate();
 	bool CleanUp();
+	
+	void Render(const ComponentCamera &camera) const;
+	void RenderGrid(const ComponentCamera &camera) const;
 
 	ComponentMesh* CreateComponentMesh() const;
-
-	void GenerateFrameTexture(const float width, const float height);
-	void GenerateFrameBuffers(const float width, const float height);
-	void RenderGrid() const;
 
 	void ShowRenderOptions();
 
@@ -51,11 +51,7 @@ public:
 	bool bounding_box_visible = false;
 	bool model_movement = false;
 
-	GLuint frame_texture = 0;
 private:
-	GLuint fbo = 0;
-	GLuint rbo = 0;
-
 	void* context = nullptr;
 
 	bool vsync = false;

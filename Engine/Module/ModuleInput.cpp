@@ -4,6 +4,7 @@
 #include "ModuleWindow.h"
 #include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
+#include "Component/ComponentCamera.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 
@@ -58,21 +59,21 @@ update_status ModuleInput::PreUpdate()
 		case SDL_MOUSEMOTION:
 			if (event.motion.state & SDL_BUTTON_RMASK && App->scene->scene_window_is_hovered) {
 				if (math::Abs(event.motion.xrel) > 1.5) {
-					App->cameras->RotateYaw(event.motion.xrel);
+					App->cameras->scene_camera->RotateYaw(event.motion.xrel);
 				}
 
 				if (math::Abs(event.motion.yrel) > 1.5) {
-					App->cameras->RotatePitch(event.motion.yrel);
+					App->cameras->scene_camera->RotatePitch(event.motion.yrel);
 				}
 
 			}
-			else if (event.motion.state & SDL_BUTTON_LMASK && App->scene->scene_window_is_hovered) {
+			else if (event.motion.state & SDL_BUTTON_LMASK && App->scene->scene_window_is_hovered && App->cameras->IsOrbiting()) {
 				if (math::Abs(event.motion.xrel) > 1.5) {
-					App->cameras->OrbitX(event.motion.xrel);
+					App->cameras->scene_camera->OrbitX(event.motion.xrel);
 				}
 
 				if (math::Abs(event.motion.yrel) > 1.5) {
-					App->cameras->OrbitY(event.motion.yrel);
+					App->cameras->scene_camera->OrbitY(event.motion.yrel);
 				}
 
 			}
@@ -81,11 +82,11 @@ update_status ModuleInput::PreUpdate()
 		case SDL_MOUSEWHEEL:
 			if (event.wheel.y > 0 && App->scene->scene_window_is_hovered)
 			{
-				App->cameras->MoveFoward();
+				App->cameras->scene_camera->MoveFoward();
 			}
 			else if (event.wheel.y < 0 && App->scene->scene_window_is_hovered)
 			{
-				App->cameras->MoveBackward();
+				App->cameras->scene_camera->MoveBackward();
 			}
 			break;
 
@@ -110,7 +111,7 @@ update_status ModuleInput::PreUpdate()
 			}
 			else if (event.key.keysym.sym == SDLK_LSHIFT)
 			{
-				App->cameras->SetSpeedUp(true);
+				App->cameras->scene_camera->SetSpeedUp(true);
 			}
 			else if (event.key.keysym.sym == SDLK_f)
 			{
@@ -129,7 +130,7 @@ update_status ModuleInput::PreUpdate()
 			}
 			else if (event.key.keysym.sym == SDLK_LSHIFT)
 			{
-				App->cameras->SetSpeedUp(false);
+				App->cameras->scene_camera->SetSpeedUp(false);
 			}
 			break;
 
@@ -151,57 +152,57 @@ update_status ModuleInput::PreUpdate()
 
 	keyboard = SDL_GetKeyboardState(NULL);
 
-	if (App->cameras->MovementEnabled())
+	if (App->cameras->IsMovementEnabled())
 	{
 		if (keyboard[SDL_SCANCODE_Q]) 
 		{
-			App->cameras->MoveUp();
+			App->cameras->scene_camera->MoveUp();
 		}
 
 		if (keyboard[SDL_SCANCODE_E])
 		{
-			App->cameras->MoveDown();
+			App->cameras->scene_camera->MoveDown();
 		}
 
 		if (keyboard[SDL_SCANCODE_W])
 		{
-			App->cameras->MoveFoward();
+			App->cameras->scene_camera->MoveFoward();
 		}
 
 		if (keyboard[SDL_SCANCODE_S])
 		{
-			App->cameras->MoveBackward();
+			App->cameras->scene_camera->MoveBackward();
 		}
 
 		if (keyboard[SDL_SCANCODE_A])
 		{
-			App->cameras->MoveLeft();
+			App->cameras->scene_camera->MoveLeft();
 		}
 
 		if (keyboard[SDL_SCANCODE_D])
 		{
-			App->cameras->MoveRight();
+			App->cameras->scene_camera->MoveRight();
 		}
 	}
 
 	if (keyboard[SDL_SCANCODE_UP])
 	{
-		App->cameras->RotatePitch(-1.f);
+		App->cameras->scene_camera->RotatePitch(-1.f);
 	}
 
 	if (keyboard[SDL_SCANCODE_DOWN])
 	{
-		App->cameras->RotatePitch(1.f);
+		App->cameras->scene_camera->RotatePitch(1.f);
 	}
 
 	if (keyboard[SDL_SCANCODE_LEFT])
 	{
-		App->cameras->RotateYaw(-1.f);
+		App->cameras->scene_camera->RotateYaw(-1.f);
 	}
 
 	if (keyboard[SDL_SCANCODE_RIGHT])
 	{
-		App->cameras->RotateYaw(1.f);
+		App->cameras->scene_camera->RotateYaw(1.f);
 	}
 	return update_status::UPDATE_CONTINUE;
 }

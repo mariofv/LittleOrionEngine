@@ -1,5 +1,6 @@
 #include "Hierarchy.h"
 #include "Application.h"
+#include "Component/ComponentCamera.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleScene.h"
 #include "GameObject.h"
@@ -160,7 +161,7 @@ void Hierarchy::ProcessMouseInput(GameObject *game_object)
 
 		if (ImGui::IsMouseDoubleClicked(0))
 		{
-			App->cameras->Center(game_object->aabb_collider.bounding_box);
+			App->cameras->scene_camera->Center(game_object->aabb_collider.bounding_box);
 		}
 	}
 }
