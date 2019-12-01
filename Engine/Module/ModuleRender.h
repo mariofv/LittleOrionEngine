@@ -67,6 +67,7 @@ private:
 	bool gl_cull_face = false;
 	int culled_faces = 0;
 	int front_faces = 0;
+	int filling_mode = 0;
 	bool gl_dither = false;
 	bool gl_minmax = false;
 	bool gl_wireframe = false;

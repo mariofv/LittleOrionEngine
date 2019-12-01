@@ -23,6 +23,7 @@ public:
 	void SetFarDistance(const float distance);
 	void SetPosition(const float3 position);
 	void SetOrientation(const float3 orientation);
+	void SetOrthographicSize(const float2 size);
 	void LookAt(const float3 focus);
 	void LookAt(const float x, const float y, const float z);
 
@@ -48,6 +49,9 @@ public:
 	void SetMovement(const bool movement_enabled);
 	bool MovementEnabled() const;
 
+	void SetPerpesctiveView();
+	void SetOrthographicView();
+
 	void ShowCameraOptions();
 
 private:
@@ -61,6 +65,8 @@ public:
 	# define INITIAL_HEIGHT_FACTOR 0.5
 	# define CAMERA_MOVEMENT_SPEED_BOUNDING_BOX_RADIUS_FACTOR 0.005
 	# define CAMERA_ZOOMING_SPEED_BOUNDING_BOX_RADIUS_FACTOR 0.0625 
+	# define CAMERA_MAXIMUN_MOVEMENT_SPEED 1.0f
+	# define CAMERA_MINIMUN_MOVEMENT_SPEED 0.005 
 
 	float camera_movement_speed = 1.0f;
 	float camera_zooming_speed = 1.0f;
@@ -73,6 +79,8 @@ private:
 	Frustum camera_frustum;
 	
 	float aspect_ratio = 1.f;
+	float orthographic_fov_ratio = 3;
+	int perpesctive_enable = 0;
 
 	bool movement_enabled = false;
 

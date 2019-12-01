@@ -25,6 +25,11 @@ public:
 	ComponentMaterial* CreateComponentMaterial() const;
 	
 	Texture* LoadTexture(const char* texture_path) const;
+
+	void GenerateCheckerboardTexture();
+
+public:
+	GLuint checkerboard_texture_id;
 };
 
 #endif //_MODULETEXTURE_H_

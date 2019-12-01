@@ -28,6 +28,8 @@ public:
 
 	int index = 0;
 	Texture *texture;
+
+	bool showCheckerboardTexture = false;
 };
 
 #endif //_COMPONENTMATERIAL_H_
