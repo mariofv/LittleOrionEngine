@@ -37,6 +37,8 @@ private:
 
 	void ShowAboutWindow();
 
+	void ShowAddNewComponentPopup();
+
 public:
 	#define MAIN_MENU_BAR_HEIGHT 19
 	

@@ -34,6 +34,11 @@ update_status ModuleCamera::Update()
 bool ModuleCamera::CleanUp()
 {
 	delete scene_camera;
+	for (auto& camera : cameras )
+	{
+		delete camera;
+	}
+	cameras.clear();
 	return true;
 }
 

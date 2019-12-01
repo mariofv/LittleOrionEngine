@@ -164,7 +164,7 @@ void EngineUI::ShowGameWindow()
 		ImVec2(App->window->GetWidth() * SCENE_WIDTH_PROP, App->window->GetHeight() * SCENE_HEIGHT_PROP),
 		ImGuiCond_Once
 	);
-	App->scene->ShowFrameBufferWindow(App->cameras->active_camera, ICON_FA_TH " Game");
+	App->scene->ShowFrameBufferWindow(App->cameras->active_camera, ICON_FA_GHOST " Game");
 }
 
 void EngineUI::ShowInspectorWindow()
@@ -183,10 +183,18 @@ void EngineUI::ShowInspectorWindow()
 		if (App->scene->hierarchy.selected_game_object != nullptr)
 		{
 			App->scene->hierarchy.selected_game_object->ShowPropertiesWindow();
-			ComponentCamera* selected_camera = static_cast<ComponentCamera*>(App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA));
-			if (selected_camera != nullptr) {
+			
+			Component * selected_camera_component = App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA);
+			if (selected_camera_component != nullptr) {
+				ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
 				App->cameras->active_camera = selected_camera;
 			}
+			ImGui::Separator();
+			ImGui::SetCursorPosX((ImGui::GetWindowWidth() / 2 - 50));
+			if (ImGui::Button("Add component")) {
+				ImGui::OpenPopup("Components_chooser");
+			}
+			ShowAddNewComponentPopup();
 		}
 		
 	}
@@ -436,4 +444,33 @@ void EngineUI::ShowAboutWindow()
 		ImGui::TextWrapped("Orion Engine is licensed under the MIT License, see LICENSE for more information.");
 	}
 	ImGui::End();
+}
+
+void EngineUI::ShowAddNewComponentPopup() {
+
+
+	if (ImGui::BeginPopup("Components_chooser"))
+	{
+
+		const char * components = "Mesh\0Material\0Camera";
+		static int selectedComponent = 0;
+		ImGui::Combo("Component", &selectedComponent, components);
+		if (ImGui::Button("Accept"))
+		{
+			switch (selectedComponent)
+			{
+			case 0:
+				App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::MESH);
+				break;
+			case 1:
+				App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+				break;
+			case 2:
+				App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::CAMERA);
+				break;
+			}
+			ImGui::CloseCurrentPopup();
+		}
+		ImGui::EndPopup();
+	}
 }
