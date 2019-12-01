@@ -161,7 +161,7 @@ void Hierarchy::ProcessMouseInput(GameObject *game_object)
 
 		if (ImGui::IsMouseDoubleClicked(0))
 		{
-			App->cameras->scene_camera_component->Center(game_object->aabb_collider.bounding_box);
+			App->cameras->scene_camera->Center(game_object->aabb_collider.bounding_box);
 		}
 	}
 }

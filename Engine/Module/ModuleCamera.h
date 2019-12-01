@@ -31,7 +31,7 @@ public:
 	void ShowCameraOptions();
 	
 public:
-	ComponentCamera *scene_camera_component = nullptr;
+	ComponentCamera *scene_camera = nullptr;
 
 private:
 	GameObject *scene_camera_game_object = nullptr;

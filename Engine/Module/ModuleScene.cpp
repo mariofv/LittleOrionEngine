@@ -60,10 +60,10 @@ void ModuleScene::ShowSceneWindow()
 
 		float imgui_window_width = ImGui::GetWindowWidth(); 
 		float imgui_window_height = ImGui::GetWindowHeight();
-		App->cameras->scene_camera_component->RecordFrame(imgui_window_width, imgui_window_height);
+		App->cameras->scene_camera->RecordFrame(imgui_window_width, imgui_window_height);
 
 		ImGui::GetWindowDrawList()->AddImage(
-			(void *)App->cameras->scene_camera_component->GetLastRecordedFrame(),
+			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
 			ImVec2(ImGui::GetCursorScreenPos()),
 			ImVec2(
 				ImGui::GetCursorScreenPos().x + imgui_window_width,

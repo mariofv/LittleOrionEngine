@@ -59,21 +59,21 @@ update_status ModuleInput::PreUpdate()
 		case SDL_MOUSEMOTION:
 			if (event.motion.state & SDL_BUTTON_RMASK && App->scene->scene_window_is_hovered) {
 				if (math::Abs(event.motion.xrel) > 1.5) {
-					App->cameras->scene_camera_component->RotateYaw(event.motion.xrel);
+					App->cameras->scene_camera->RotateYaw(event.motion.xrel);
 				}
 
 				if (math::Abs(event.motion.yrel) > 1.5) {
-					App->cameras->scene_camera_component->RotatePitch(event.motion.yrel);
+					App->cameras->scene_camera->RotatePitch(event.motion.yrel);
 				}
 
 			}
 			else if (event.motion.state & SDL_BUTTON_LMASK && App->scene->scene_window_is_hovered && App->cameras->IsOrbiting()) {
 				if (math::Abs(event.motion.xrel) > 1.5) {
-					App->cameras->scene_camera_component->OrbitX(event.motion.xrel);
+					App->cameras->scene_camera->OrbitX(event.motion.xrel);
 				}
 
 				if (math::Abs(event.motion.yrel) > 1.5) {
-					App->cameras->scene_camera_component->OrbitY(event.motion.yrel);
+					App->cameras->scene_camera->OrbitY(event.motion.yrel);
 				}
 
 			}
@@ -82,11 +82,11 @@ update_status ModuleInput::PreUpdate()
 		case SDL_MOUSEWHEEL:
 			if (event.wheel.y > 0 && App->scene->scene_window_is_hovered)
 			{
-				App->cameras->scene_camera_component->MoveFoward();
+				App->cameras->scene_camera->MoveFoward();
 			}
 			else if (event.wheel.y < 0 && App->scene->scene_window_is_hovered)
 			{
-				App->cameras->scene_camera_component->MoveBackward();
+				App->cameras->scene_camera->MoveBackward();
 			}
 			break;
 
@@ -111,7 +111,7 @@ update_status ModuleInput::PreUpdate()
 			}
 			else if (event.key.keysym.sym == SDLK_LSHIFT)
 			{
-				App->cameras->scene_camera_component->SetSpeedUp(true);
+				App->cameras->scene_camera->SetSpeedUp(true);
 			}
 			else if (event.key.keysym.sym == SDLK_f)
 			{
@@ -130,7 +130,7 @@ update_status ModuleInput::PreUpdate()
 			}
 			else if (event.key.keysym.sym == SDLK_LSHIFT)
 			{
-				App->cameras->scene_camera_component->SetSpeedUp(false);
+				App->cameras->scene_camera->SetSpeedUp(false);
 			}
 			break;
 
@@ -156,53 +156,53 @@ update_status ModuleInput::PreUpdate()
 	{
 		if (keyboard[SDL_SCANCODE_Q]) 
 		{
-			App->cameras->scene_camera_component->MoveUp();
+			App->cameras->scene_camera->MoveUp();
 		}
 
 		if (keyboard[SDL_SCANCODE_E])
 		{
-			App->cameras->scene_camera_component->MoveDown();
+			App->cameras->scene_camera->MoveDown();
 		}
 
 		if (keyboard[SDL_SCANCODE_W])
 		{
-			App->cameras->scene_camera_component->MoveFoward();
+			App->cameras->scene_camera->MoveFoward();
 		}
 
 		if (keyboard[SDL_SCANCODE_S])
 		{
-			App->cameras->scene_camera_component->MoveBackward();
+			App->cameras->scene_camera->MoveBackward();
 		}
 
 		if (keyboard[SDL_SCANCODE_A])
 		{
-			App->cameras->scene_camera_component->MoveLeft();
+			App->cameras->scene_camera->MoveLeft();
 		}
 
 		if (keyboard[SDL_SCANCODE_D])
 		{
-			App->cameras->scene_camera_component->MoveRight();
+			App->cameras->scene_camera->MoveRight();
 		}
 	}
 
 	if (keyboard[SDL_SCANCODE_UP])
 	{
-		App->cameras->scene_camera_component->RotatePitch(-1.f);
+		App->cameras->scene_camera->RotatePitch(-1.f);
 	}
 
 	if (keyboard[SDL_SCANCODE_DOWN])
 	{
-		App->cameras->scene_camera_component->RotatePitch(1.f);
+		App->cameras->scene_camera->RotatePitch(1.f);
 	}
 
 	if (keyboard[SDL_SCANCODE_LEFT])
 	{
-		App->cameras->scene_camera_component->RotateYaw(-1.f);
+		App->cameras->scene_camera->RotateYaw(-1.f);
 	}
 
 	if (keyboard[SDL_SCANCODE_RIGHT])
 	{
-		App->cameras->scene_camera_component->RotateYaw(1.f);
+		App->cameras->scene_camera->RotateYaw(1.f);
 	}
 	return update_status::UPDATE_CONTINUE;
 }

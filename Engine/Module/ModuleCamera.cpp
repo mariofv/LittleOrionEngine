@@ -16,7 +16,7 @@ bool ModuleCamera::Init()
 	SDL_GetWindowSize(App->window->window, &windowWidth, &windowHeight);
 	
 	scene_camera_game_object = new GameObject();
-	scene_camera_component = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
+	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 
 	speed_up = 1;
 	is_orbiting = false;
@@ -64,5 +64,5 @@ bool ModuleCamera::IsMovementEnabled() const
 
 void ModuleCamera::ShowCameraOptions()
 {
-	scene_camera_component->ShowComponentWindow();
+	scene_camera->ShowComponentWindow();
 }
