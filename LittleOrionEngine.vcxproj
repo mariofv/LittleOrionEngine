@@ -85,8 +85,8 @@
     <ClInclude Include="Engine\Component\ComponentTransform.h" />
     <ClInclude Include="Engine\Component\Component.h" />
     <ClInclude Include="Engine\Application.h" />
-    <ClInclude Include="Engine\EngineLog.h" />
-    <ClInclude Include="Engine\EngineUI.h" />
+    <ClInclude Include="Engine\UI\EngineLog.h" />
+    <ClInclude Include="Engine\UI\EngineUI.h" />
     <ClInclude Include="Engine\Globals.h" />
     <ClInclude Include="Engine\Module\ModuleCamera.h" />
     <ClInclude Include="Engine\Module\ModuleModelLoader.h" />
@@ -184,8 +184,8 @@
     <ClCompile Include="Engine\Component\ComponentMesh.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform.cpp" />
     <ClCompile Include="Engine\Application.cpp" />
-    <ClCompile Include="Engine\EngineLog.cpp" />
-    <ClCompile Include="Engine\EngineUI.cpp" />
+    <ClCompile Include="Engine\UI\EngineLog.cpp" />
+    <ClCompile Include="Engine\UI\EngineUI.cpp" />
     <ClCompile Include="Engine\log.cpp" />
     <ClCompile Include="Engine\Module\ModuleCamera.cpp" />
     <ClCompile Include="Engine\Module\ModuleModelLoader.cpp" />

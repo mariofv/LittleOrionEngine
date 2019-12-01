@@ -1,6 +1,6 @@
 #include "Globals.h"
 #include "Application.h"
-#include "EngineLog.h"
+#include "UI/EngineLog.h"
 
 void logentry(const EngineLog::LogEntrySource source, const EngineLog::LogEntryType type, const char file[], const int line, const char* format, ...)
 {

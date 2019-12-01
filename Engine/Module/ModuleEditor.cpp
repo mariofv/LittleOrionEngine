@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
-#include "EngineUI.h"
+#include "UI/EngineUI.h"
 
 #include <SDL/SDL.h>
 #include <GL/glew.h>
