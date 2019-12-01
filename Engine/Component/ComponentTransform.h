@@ -21,6 +21,7 @@ public:
 
 	void Render(const GLuint shader_program) const;
 	
+	float3 GetTranslation() const;
 	void SetTranslation(const float3 translation);
 
 	void GenerateGlobalModelMatrix();

@@ -115,7 +115,10 @@ update_status ModuleInput::PreUpdate()
 			}
 			else if (event.key.keysym.sym == SDLK_f)
 			{
-				//App->cameras->Focus(*App->model_loader->current_model->bounding_box); TODO THIS
+				if (App->scene->hierarchy.selected_game_object != nullptr)
+				{
+					App->cameras->scene_camera->Focus(App->scene->hierarchy.selected_game_object->aabb_collider.bounding_box);
+				}
 			}
 			break;
 

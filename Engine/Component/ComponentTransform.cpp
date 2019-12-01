@@ -43,6 +43,11 @@ void ComponentTransform::Render(const GLuint shader_program) const
 	);
 }
 
+float3 ComponentTransform::GetTranslation() const
+{
+	return translation;
+}
+
 void ComponentTransform::SetTranslation(const float3 translation)
 {
 	this->translation = translation;

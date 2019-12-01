@@ -57,7 +57,24 @@ void ComponentCamera::Disable()
 
 void ComponentCamera::Update()
 {
+	if (is_focusing)
+	{
+		float3 zooming_direction = desired_focus_position - owner->transform.GetTranslation();
+		float distance_to_desired_zooming_position = zooming_direction.Length();
+		float frame_focusing_distance = App->time->real_time_delta_time * camera_zooming_speed;
+		if (distance_to_desired_zooming_position - frame_focusing_distance < 0)
+		{
+			owner->transform.SetTranslation(desired_focus_position);
+			is_focusing = false;
+		}
+		else
+		{
+			owner->transform.SetTranslation(owner->transform.GetTranslation() + zooming_direction.ScaledToLength(frame_focusing_distance));
+		}
+	}
 
+	camera_frustum.pos = owner->transform.GetTranslation();
+	GenerateMatrices();
 }
 
 void ComponentCamera::RecordFrame(const float width, const float height)
@@ -122,30 +139,22 @@ void ComponentCamera::SetFOV(const float fov)
 {
 	camera_frustum.verticalFov = fov;
 	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
-
-	GenerateMatrices();
 }
 
 void ComponentCamera::SetAspectRatio(const float aspect_ratio)
 {
 	this->aspect_ratio = aspect_ratio;
 	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
-
-	GenerateMatrices();
 }
 
 void ComponentCamera::SetNearDistance(const float distance)
 {
 	camera_frustum.nearPlaneDistance = distance;
-
-	GenerateMatrices();
 }
 
 void ComponentCamera::SetFarDistance(const float distance)
 {
 	camera_frustum.farPlaneDistance = distance;
-
-	GenerateMatrices();
 }
 
 void ComponentCamera::SetOrientation(const float3 orientation)
@@ -153,16 +162,12 @@ void ComponentCamera::SetOrientation(const float3 orientation)
 	float3x3 rotation_matrix = float3x3::LookAt(camera_frustum.front, orientation, camera_frustum.up, float3::unitY);
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
-
-	GenerateMatrices();
 }
 
 void ComponentCamera::AlignOrientationWithAxis()
 {
 	camera_frustum.up = float3::unitY;
 	camera_frustum.front = float3::unitZ;
-
-	GenerateMatrices();
 }
 
 
@@ -170,16 +175,12 @@ void ComponentCamera::SetOrthographicSize(const float2 size)
 {
 	camera_frustum.orthographicWidth = size.x;
 	camera_frustum.orthographicHeight = size.y;
-
-	GenerateMatrices();
 }
 
 void ComponentCamera::LookAt(const float3 focus)
 {
-	float3 look_direction = (focus - camera_frustum.pos).Normalized();
+	float3 look_direction = (focus - owner->transform.GetTranslation()).Normalized();
 	SetOrientation(look_direction);
-
-	GenerateMatrices();
 }
 
 void ComponentCamera::LookAt(const float x, const float y, const float z)
@@ -189,9 +190,7 @@ void ComponentCamera::LookAt(const float x, const float y, const float z)
 
 void ComponentCamera::SetPosition(const float3 position)
 {
-	camera_frustum.pos = position;
-
-	GenerateMatrices();
+	owner->transform.SetTranslation(position);
 }
 
 void ComponentCamera::Center(const AABB &bounding_box)
@@ -209,10 +208,9 @@ void ComponentCamera::Center(const AABB &bounding_box)
 	camera_frustum.farPlaneDistance = FAR_PLANE_FACTOR * containing_sphere_radius;
 
 	// Move camera position to visualize the whole bounding box
-	camera_frustum.pos = bounding_box.CenterPoint() - camera_frustum.front * BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius;
-	camera_frustum.pos.y = INITIAL_HEIGHT_FACTOR * containing_sphere_radius;
-
-	GenerateMatrices();
+	float3 new_camera_pos = bounding_box.CenterPoint() - camera_frustum.front * BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius;
+	new_camera_pos.y = INITIAL_HEIGHT_FACTOR * containing_sphere_radius;
+	owner->transform.SetTranslation(new_camera_pos);
 }
 
 void ComponentCamera::Focus(const AABB &bounding_box)
@@ -222,72 +220,56 @@ void ComponentCamera::Focus(const AABB &bounding_box)
 	float containing_sphere_radius = bounding_box.Size().Length() / 2;
 	is_focusing = true;
 	desired_focus_position = bounding_box.CenterPoint() - BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius * camera_frustum.front;
-
-	GenerateMatrices();
 }
 
 
 void ComponentCamera::MoveUp()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	float3 new_camera_pos = camera_frustum.pos;
+	float3 new_camera_pos = owner->transform.GetTranslation();
 	new_camera_pos.y = new_camera_pos.y + distance;
-	camera_frustum.pos = new_camera_pos;
-
-	GenerateMatrices();
+	owner->transform.SetTranslation(new_camera_pos);
 }
 
 void ComponentCamera::MoveDown()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	float3 new_camera_pos = camera_frustum.pos;
+	float3 new_camera_pos = owner->transform.GetTranslation();
 	new_camera_pos.y = new_camera_pos.y - distance;
-	camera_frustum.pos = new_camera_pos;
-
-	GenerateMatrices();
+	owner->transform.SetTranslation(new_camera_pos);
 }
 
 void ComponentCamera::MoveFoward()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	camera_frustum.pos += camera_frustum.front.ScaledToLength(distance);
-
-	GenerateMatrices();
+	owner->transform.SetTranslation(owner->transform.GetTranslation() + camera_frustum.front.ScaledToLength(distance));
 }
 
 void ComponentCamera::MoveBackward()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	camera_frustum.pos -= camera_frustum.front.ScaledToLength(distance);
-
-	GenerateMatrices();
+	owner->transform.SetTranslation(owner->transform.GetTranslation() - camera_frustum.front.ScaledToLength(distance));
 }
 
 void ComponentCamera::MoveLeft()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	camera_frustum.pos -= camera_frustum.WorldRight().ScaledToLength(distance);
-
-	GenerateMatrices();
+	owner->transform.SetTranslation(owner->transform.GetTranslation() - camera_frustum.WorldRight().ScaledToLength(distance));
 }
 
 void ComponentCamera::MoveRight()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	camera_frustum.pos = camera_frustum.pos + camera_frustum.WorldRight().ScaledToLength(distance);
-
-	GenerateMatrices();
+	owner->transform.SetTranslation(owner->transform.GetTranslation() + camera_frustum.WorldRight().ScaledToLength(distance));
 }
 
 void ComponentCamera::OrbitX(const float angle)
 {
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
 	float3x3 rotation_matrix = float3x3::RotateY(adjusted_angle);
-	camera_frustum.pos = rotation_matrix * camera_frustum.pos;
+	owner->transform.SetTranslation(rotation_matrix * owner->transform.GetTranslation());
 
 	LookAt(float3::zero);
-
-	GenerateMatrices();
 }
 
 void ComponentCamera::OrbitY(const float angle)
@@ -300,11 +282,9 @@ void ComponentCamera::OrbitY(const float angle)
 
 	float3x3 rotation_matrix = float3x3::identity;
 	rotation_matrix.SetRotatePart(camera_frustum.WorldRight(), adjusted_angle);
-	camera_frustum.pos = rotation_matrix * camera_frustum.pos;
+	owner->transform.SetTranslation(rotation_matrix * owner->transform.GetTranslation());
 
 	LookAt(float3::zero);
-
-	GenerateMatrices();
 }
 
 void ComponentCamera::RotatePitch(const float angle)
@@ -318,8 +298,6 @@ void ComponentCamera::RotatePitch(const float angle)
 	rotation_matrix.SetRotatePart(camera_frustum.WorldRight(), adjusted_angle);
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
-
-	GenerateMatrices();
 }
 
 void ComponentCamera::RotateYaw(const float angle)
@@ -328,20 +306,16 @@ void ComponentCamera::RotateYaw(const float angle)
 	float3x3 rotation_matrix = float3x3::RotateY(adjusted_angle);
 	camera_frustum.up = rotation_matrix * camera_frustum.up;
 	camera_frustum.front = rotation_matrix * camera_frustum.front;
-
-	GenerateMatrices();
 }
 
 void ComponentCamera::SetPerpesctiveView()
 {
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
-	GenerateMatrices();
 }
 
 void ComponentCamera::SetOrthographicView()
 {
 	camera_frustum.type = FrustumType::OrthographicFrustum;
-	GenerateMatrices();
 }
 
 void ComponentCamera::SetSpeedUp(const bool is_speeding_up)
