@@ -77,16 +77,16 @@ bool ModuleCamera::IsMovementEnabled() const
 
 void ModuleCamera::ShowGameWindow() 
 {
-	if (ImGui::Begin(ICON_FA_TH " Scene"))
+	if (ImGui::Begin(ICON_FA_TH " Game"))
 	{
 		game_window_is_hovered = ImGui::IsWindowHovered();
 
 		float imgui_window_width = ImGui::GetWindowWidth();
 		float imgui_window_height = ImGui::GetWindowHeight();
-		scene_camera->RecordFrame(imgui_window_width, imgui_window_height);
+		active_camera->RecordFrame(imgui_window_width, imgui_window_height);
 
 		ImGui::GetWindowDrawList()->AddImage(
-			(void *)scene_camera->GetLastRecordedFrame(),
+			(void *)active_camera->GetLastRecordedFrame(),
 			ImVec2(ImGui::GetCursorScreenPos()),
 			ImVec2(
 				ImGui::GetCursorScreenPos().x + imgui_window_width,

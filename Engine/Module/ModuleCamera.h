@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "Globals.h"
+#include "GameObject.h"
 
 #include "Geometry/Frustum.h"
 #include "MathGeoLib.h"
@@ -34,6 +35,7 @@ public:
 	
 public:
 	ComponentCamera *scene_camera = nullptr;
+	ComponentCamera* active_camera = nullptr;
 
 private:
 	bool movement_enabled = false;

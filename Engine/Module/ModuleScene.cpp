@@ -11,7 +11,10 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject();
-	
+	GameObject * camera = CreateGameObject();
+	camera->name = "Camera";
+	ComponentCamera * component_camera = static_cast<ComponentCamera*>(camera->CreateComponent(Component::ComponentType::CAMERA));
+	App->cameras->active_camera = component_camera;
 	return true;
 }
 
