@@ -91,12 +91,5 @@ void ComponentMesh::SetupMesh()
 
 void ComponentMesh::ShowComponentWindow()
 {
-	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		ImGui::Checkbox("Active", &active);
-		ImGui::Separator();
-
-		ImGui::DragInt("# Triangles", &num_triangles, NULL, NULL, NULL);
-		ImGui::DragInt("# Vertices", &num_vertices, NULL, NULL, NULL);
-	}
+	ComponentsUI::ShowComponentMeshWindow(this);
 }

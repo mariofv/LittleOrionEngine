@@ -2,6 +2,7 @@
 #define _COMPONENTMESH_H_
 
 #include "Component.h"
+#include "UI/ComponentsUI.h"
 
 #include <GL/glew.h>
 #include "MathGeoLib.h"
@@ -47,6 +48,7 @@ private:
 	int num_triangles = 0;
 	int num_vertices = 0;
 
+	friend void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh);
 };
 
 #endif //_COMPONENTMESH_H_

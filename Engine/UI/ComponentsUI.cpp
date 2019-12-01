@@ -1,4 +1,5 @@
 #include "ComponentsUI.h"
+#include "Component/ComponentMesh.h"
 #include "Component/ComponentTransform.h"
 
 #include <imgui.h>
@@ -20,5 +21,17 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 		{
 			transform->GenerateModelMatrix();
 		}
+	}
+}
+
+void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::Checkbox("Active", &mesh->active);
+		ImGui::Separator();
+
+		ImGui::DragInt("# Triangles", &mesh->num_triangles, NULL, NULL, NULL);
+		ImGui::DragInt("# Vertices", &mesh->num_vertices, NULL, NULL, NULL);
 	}
 }
