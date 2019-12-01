@@ -1,4 +1,5 @@
 #include "ComponentsUI.h"
+#include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentTransform.h"
@@ -90,5 +91,59 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 		ImGui::Image((void*)(intptr_t)material->texture->opengl_texture, ImVec2(window_width * 0.5f, window_width * 0.5f), ImVec2(0, 1), ImVec2(1, 0));
 
 		ImGui::Checkbox("Checker Texture", &material->show_checkerboard_texture);
+	}
+}
+
+void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::DragFloat3("Front", &camera->camera_frustum.front[0], NULL, NULL, NULL);
+		ImGui::DragFloat3("Up", &camera->camera_frustum.up[0], NULL, NULL, NULL);
+		ImGui::DragFloat3("Position", &camera->camera_frustum.pos[0], NULL, NULL, NULL);
+
+		ImGui::Separator();
+
+		ImGui::SliderFloat("Mov Speed", &camera->camera_movement_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
+		ImGui::SliderFloat("Rot Speed", &camera->camera_rotation_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
+		ImGui::SliderFloat("Zoom Speed", &camera->camera_zooming_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
+
+		if (ImGui::SliderFloat("FOV", &camera->camera_frustum.horizontalFov, 0, 2 * 3.14f))
+		{
+			camera->SetFOV(camera->camera_frustum.horizontalFov);
+		}
+
+		if (ImGui::SliderFloat("Aspect Ratio", &camera->aspect_ratio, 0, 10))
+		{
+			camera->SetAspectRatio(camera->aspect_ratio);
+		}
+
+		if (ImGui::SliderFloat("Near plane", &camera->camera_frustum.nearPlaneDistance, 1, camera->camera_frustum.farPlaneDistance + 1))
+		{
+			camera->SetNearDistance(camera->camera_frustum.nearPlaneDistance);
+		}
+
+		if (ImGui::SliderFloat("Far plane", &camera->camera_frustum.farPlaneDistance, camera->camera_frustum.nearPlaneDistance + 1, camera->camera_frustum.nearPlaneDistance + 1000))
+		{
+			camera->SetFarDistance(camera->camera_frustum.farPlaneDistance);
+		}
+
+		if (ImGui::SliderFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0, 100))
+		{
+			camera->SetOrthographicSize(float2(camera->camera_frustum.orthographicHeight * camera->aspect_ratio, camera->camera_frustum.orthographicHeight));
+		}
+
+		if (ImGui::Combo("Front faces", &camera->perpesctive_enable, "Perspective\0Orthographic\0"))
+		{
+			switch (camera->perpesctive_enable)
+			{
+			case 0:
+				camera->SetPerpesctiveView();
+				break;
+			case 1:
+				camera->SetOrthographicView();
+				break;
+			}
+		}
 	}
 }

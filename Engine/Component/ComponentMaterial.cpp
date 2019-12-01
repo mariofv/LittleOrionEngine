@@ -3,9 +3,6 @@
 #include "Application.h"
 #include <Module/ModuleTexture.h>
 
-#include "imgui.h"
-#include <FontAwesome5/IconsFontAwesome5.h>
-
 ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL)
 {
 

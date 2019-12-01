@@ -1,6 +1,7 @@
 #ifndef _COMPONENTSUI_H_
 #define _COMPONENTSUI_H_
 
+class ComponentCamera;
 class ComponentMaterial;
 class ComponentMesh;
 class ComponentTransform;
@@ -11,6 +12,7 @@ public:
 	static void ShowComponentTransformWindow(ComponentTransform *transform);
 	static void ShowComponentMeshWindow(ComponentMesh *mesh);
 	static void ShowComponentMaterialWindow(ComponentMaterial *material);
+	static void ShowComponentCameraWindow(ComponentCamera *camera);
 
 
 private:
