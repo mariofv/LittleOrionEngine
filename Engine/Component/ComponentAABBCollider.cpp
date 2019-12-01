@@ -54,7 +54,7 @@ void ComponentAABBCollider::GenerateBoundingBox()
 	has_meshes = ownerMesh != nullptr;
 	if (has_meshes)
 	{
-		GenerateBoundingBoxFromVertex(ownerMesh->vertices);
+		GenerateBoundingBoxFromVertices(ownerMesh->vertices);
 	}
 	else
 	{
