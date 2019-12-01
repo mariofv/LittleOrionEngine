@@ -79,6 +79,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\BoundingBoxRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentAABBCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentCamera.h" />
     <ClInclude Include="Engine\Component\ComponentMaterial.h" />
     <ClInclude Include="Engine\Component\ComponentMesh.h" />
     <ClInclude Include="Engine\Component\ComponentTransform.h" />
@@ -178,6 +179,7 @@
   <ItemGroup>
     <ClCompile Include="Engine\BoundingBoxRenderer.cpp" />
     <ClCompile Include="Engine\Component\ComponentAABBCollider.cpp" />
+    <ClCompile Include="Engine\Component\ComponentCamera.cpp" />
     <ClCompile Include="Engine\Component\ComponentMaterial.cpp" />
     <ClCompile Include="Engine\Component\ComponentMesh.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform.cpp" />
