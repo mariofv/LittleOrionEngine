@@ -2,6 +2,7 @@
 #define _COMPONENTTRANSFORM_H_
 
 #include "Component.h"
+#include "ComponentCamera.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
@@ -20,6 +21,7 @@ public:
 
 	void Render(const GLuint shader_program) const;
 	
+	float3 GetTranslation() const;
 	void SetTranslation(const float3 translation);
 
 	void GenerateGlobalModelMatrix();
@@ -39,6 +41,8 @@ private:
 
 	float4x4 model_matrix = float4x4::identity;
 	float4x4 global_model_matrix = float4x4::identity;
+
+	friend class ComponentCamera;
 };
 
 #endif //_COMPONENTTRANSFORM_H_

@@ -62,20 +62,21 @@ void ComponentCamera::Update()
 {
 	if (is_focusing)
 	{
-		float3 zooming_direction = desired_focus_position - camera_frustum.pos;
+		float3 zooming_direction = desired_focus_position - owner->transform.translation;
 		float distance_to_desired_zooming_position = zooming_direction.Length();
 		float frame_focusing_distance = App->time->real_time_delta_time * camera_zooming_speed;
 		if (distance_to_desired_zooming_position - frame_focusing_distance < 0)
 		{
-			camera_frustum.pos = desired_focus_position;
+			owner->transform.translation = desired_focus_position;
 			is_focusing = false;
 		}
 		else
 		{
-			camera_frustum.pos += zooming_direction.ScaledToLength(frame_focusing_distance);
+			owner->transform.translation += zooming_direction.ScaledToLength(frame_focusing_distance);
 		}
 	}
 
+	camera_frustum.pos = owner->transform.translation;
 	GenerateMatrices();
 }
 
@@ -181,7 +182,7 @@ void ComponentCamera::SetOrthographicSize(const float2 size)
 
 void ComponentCamera::LookAt(const float3 focus)
 {
-	float3 look_direction = (focus - camera_frustum.pos).Normalized();
+	float3 look_direction = (focus - owner->transform.translation).Normalized();
 	SetOrientation(look_direction);
 }
 
@@ -192,7 +193,7 @@ void ComponentCamera::LookAt(const float x, const float y, const float z)
 
 void ComponentCamera::SetPosition(const float3 position)
 {
-	camera_frustum.pos = position;
+	owner->transform.translation = position;
 }
 
 void ComponentCamera::Center(const AABB &bounding_box)
@@ -210,8 +211,8 @@ void ComponentCamera::Center(const AABB &bounding_box)
 	camera_frustum.farPlaneDistance = FAR_PLANE_FACTOR * containing_sphere_radius;
 
 	// Move camera position to visualize the whole bounding box
-	camera_frustum.pos = bounding_box.CenterPoint() - camera_frustum.front * BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius;
-	camera_frustum.pos.y = INITIAL_HEIGHT_FACTOR * containing_sphere_radius;
+	owner->transform.translation = bounding_box.CenterPoint() - camera_frustum.front * BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius;
+	owner->transform.translation.y = INITIAL_HEIGHT_FACTOR * containing_sphere_radius;
 }
 
 void ComponentCamera::Focus(const AABB &bounding_box)
@@ -227,48 +228,48 @@ void ComponentCamera::Focus(const AABB &bounding_box)
 void ComponentCamera::MoveUp()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	float3 new_camera_pos = camera_frustum.pos;
+	float3 new_camera_pos = owner->transform.translation;
 	new_camera_pos.y = new_camera_pos.y + distance;
-	camera_frustum.pos = new_camera_pos;
+	owner->transform.translation = new_camera_pos;
 }
 
 void ComponentCamera::MoveDown()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	float3 new_camera_pos = camera_frustum.pos;
+	float3 new_camera_pos = owner->transform.translation;
 	new_camera_pos.y = new_camera_pos.y - distance;
-	camera_frustum.pos = new_camera_pos;
+	owner->transform.translation = new_camera_pos;
 }
 
 void ComponentCamera::MoveFoward()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	camera_frustum.pos += camera_frustum.front.ScaledToLength(distance);
+	owner->transform.translation += camera_frustum.front.ScaledToLength(distance);
 }
 
 void ComponentCamera::MoveBackward()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	camera_frustum.pos -= camera_frustum.front.ScaledToLength(distance);
+	owner->transform.translation -= camera_frustum.front.ScaledToLength(distance);
 }
 
 void ComponentCamera::MoveLeft()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	camera_frustum.pos -= camera_frustum.WorldRight().ScaledToLength(distance);
+	owner->transform.translation -= camera_frustum.WorldRight().ScaledToLength(distance);
 }
 
 void ComponentCamera::MoveRight()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	camera_frustum.pos = camera_frustum.pos + camera_frustum.WorldRight().ScaledToLength(distance);
+	owner->transform.translation = owner->transform.translation + camera_frustum.WorldRight().ScaledToLength(distance);
 }
 
 void ComponentCamera::OrbitX(const float angle)
 {
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
 	float3x3 rotation_matrix = float3x3::RotateY(adjusted_angle);
-	camera_frustum.pos = rotation_matrix * camera_frustum.pos;
+	owner->transform.translation = rotation_matrix * owner->transform.translation;
 
 	LookAt(float3::zero);
 }
@@ -283,7 +284,7 @@ void ComponentCamera::OrbitY(const float angle)
 
 	float3x3 rotation_matrix = float3x3::identity;
 	rotation_matrix.SetRotatePart(camera_frustum.WorldRight(), adjusted_angle);
-	camera_frustum.pos = rotation_matrix * camera_frustum.pos;
+	owner->transform.translation = rotation_matrix * owner->transform.translation;
 
 	LookAt(float3::zero);
 }
@@ -347,7 +348,7 @@ void ComponentCamera::ShowComponentWindow()
 	{
 		ImGui::DragFloat3("Front", &camera_frustum.front[0], NULL, NULL, NULL);
 		ImGui::DragFloat3("Up", &camera_frustum.up[0], NULL, NULL, NULL);
-		ImGui::DragFloat3("Position", &camera_frustum.pos[0], NULL, NULL, NULL);
+		ImGui::DragFloat3("Position", &owner->transform.translation[0], NULL, NULL, NULL);
 
 		ImGui::Separator();
 
