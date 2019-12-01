@@ -192,7 +192,7 @@ Component*  GameObject::GetComponent(const Component::ComponentType type) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
-		if (components[i]->GetType() == Component::ComponentType::MESH)
+		if (components[i]->GetType() == type)
 		{
 			return components[i];
 		}
