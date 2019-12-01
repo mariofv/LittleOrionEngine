@@ -1,8 +1,5 @@
 #include "ComponentMesh.h"
 
-#include "imgui.h"
-#include <FontAwesome5/IconsFontAwesome5.h>
-
 ComponentMesh::ComponentMesh() : Component(nullptr, ComponentType::MESH)
 {
 
