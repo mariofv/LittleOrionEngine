@@ -11,6 +11,13 @@
 class ComponentAABBCollider : public Component
 {
 public:
+	enum class CollisionState
+	{
+		OUTSIDE,
+		INTSIDE,
+		INTERSECT,
+	};
+
 	ComponentAABBCollider();
 	ComponentAABBCollider(GameObject * owner);
 	~ComponentAABBCollider();
@@ -20,6 +27,8 @@ public:
 	void Update() override;
 
 	void Render(const GLuint shader_program) const;
+
+	ComponentAABBCollider::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
 
 	void GenerateBoundingBox();
 	void GenerateBoundingBoxFromVertices(const std::vector<ComponentMesh::Vertex> & vertices);
