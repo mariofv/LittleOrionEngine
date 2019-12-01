@@ -75,33 +75,6 @@ bool ModuleCamera::IsMovementEnabled() const
 	return movement_enabled;
 }
 
-void ModuleCamera::ShowGameWindow() 
-{
-	if (ImGui::Begin(ICON_FA_TH " Game"))
-	{
-		game_window_is_hovered = ImGui::IsWindowHovered();
-
-		float imgui_window_width = ImGui::GetWindowWidth();
-		float imgui_window_height = ImGui::GetWindowHeight();
-		active_camera->RecordFrame(imgui_window_width, imgui_window_height);
-
-		ImGui::GetWindowDrawList()->AddImage(
-			(void *)active_camera->GetLastRecordedFrame(),
-			ImVec2(ImGui::GetCursorScreenPos()),
-			ImVec2(
-				ImGui::GetCursorScreenPos().x + imgui_window_width,
-				ImGui::GetCursorScreenPos().y + imgui_window_height
-			),
-			ImVec2(0, 1),
-			ImVec2(1, 0)
-		);
-	}
-	if (App->cameras->IsMovementEnabled() && game_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
-	{
-		ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
-	}
-	ImGui::End();
-}
 void ModuleCamera::ShowCameraOptions()
 {
 	scene_camera->ShowComponentWindow();

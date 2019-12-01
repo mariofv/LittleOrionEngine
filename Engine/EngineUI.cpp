@@ -8,6 +8,7 @@
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleInput.h"
+#include "Component/ComponentCamera.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
 
@@ -150,7 +151,7 @@ void EngineUI::ShowSceneWindow()
 		ImVec2(App->window->GetWidth() * SCENE_WIDTH_PROP, App->window->GetHeight() * SCENE_HEIGHT_PROP),
 		ImGuiCond_Once
 	);
-	App->scene->ShowSceneWindow();
+	App->scene->ShowFrameBufferWindow(App->cameras->scene_camera, ICON_FA_TH " Scene");
 }
 
 void EngineUI::ShowGameWindow()
@@ -163,7 +164,7 @@ void EngineUI::ShowGameWindow()
 		ImVec2(App->window->GetWidth() * SCENE_WIDTH_PROP, App->window->GetHeight() * SCENE_HEIGHT_PROP),
 		ImGuiCond_Once
 	);
-	App->cameras->ShowGameWindow();
+	App->scene->ShowFrameBufferWindow(App->cameras->active_camera, ICON_FA_TH " Game");
 }
 
 void EngineUI::ShowInspectorWindow()
@@ -182,6 +183,10 @@ void EngineUI::ShowInspectorWindow()
 		if (App->scene->hierarchy.selected_game_object != nullptr)
 		{
 			App->scene->hierarchy.selected_game_object->ShowPropertiesWindow();
+			ComponentCamera* selected_camera = static_cast<ComponentCamera*>(App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA));
+			if (selected_camera != nullptr) {
+				App->cameras->active_camera = selected_camera;
+			}
 		}
 		
 	}

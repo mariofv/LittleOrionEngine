@@ -23,7 +23,7 @@ public:
 
 	GameObject* GetRoot() const;
 
-	void ShowSceneWindow();
+	void ShowFrameBufferWindow(ComponentCamera * camera_frame_buffer_to_show, const char * title);
 
 public:
 	Hierarchy hierarchy;

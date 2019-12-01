@@ -30,7 +30,6 @@ public:
 	void SetMovement(const bool movement_enabled);
 	bool IsMovementEnabled() const;
 
-	void ShowGameWindow();
 	void ShowCameraOptions();
 	
 public:

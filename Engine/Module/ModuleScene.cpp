@@ -55,18 +55,18 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
-void ModuleScene::ShowSceneWindow()
+void ModuleScene::ShowFrameBufferWindow(ComponentCamera * camera_frame_buffer_to_show, const char * title )
 {
-	if (ImGui::Begin(ICON_FA_TH " Scene"))
+	if (ImGui::Begin(title))
 	{
 		scene_window_is_hovered = ImGui::IsWindowHovered();
 
 		float imgui_window_width = ImGui::GetWindowWidth(); 
 		float imgui_window_height = ImGui::GetWindowHeight();
-		App->cameras->scene_camera->RecordFrame(imgui_window_width, imgui_window_height);
+		camera_frame_buffer_to_show->RecordFrame(imgui_window_width, imgui_window_height);
 
 		ImGui::GetWindowDrawList()->AddImage(
-			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
+			(void *)camera_frame_buffer_to_show->GetLastRecordedFrame(),
 			ImVec2(ImGui::GetCursorScreenPos()),
 			ImVec2(
 				ImGui::GetCursorScreenPos().x + imgui_window_width,

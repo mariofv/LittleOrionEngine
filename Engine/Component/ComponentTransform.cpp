@@ -50,6 +50,10 @@ void ComponentTransform::SetTranslation(const float3 translation)
 	this->translation = translation;
 	GenerateModelMatrix();
 }
+float3 ComponentTransform::GetTranslation() const
+{
+	return translation;
+}
 
 void ComponentTransform::GenerateModelMatrix()
 {

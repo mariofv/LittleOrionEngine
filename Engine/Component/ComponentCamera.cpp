@@ -63,7 +63,11 @@ void ComponentCamera::Disable()
 
 void ComponentCamera::Update()
 {
-
+	if (owner != nullptr) 
+	{
+		camera_frustum.pos = owner->transform.GetTranslation();
+	}
+	
 }
 
 void ComponentCamera::RecordFrame(const float width, const float height)
