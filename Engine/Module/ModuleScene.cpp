@@ -47,6 +47,7 @@ void ModuleScene::RemoveGameObject(GameObject * gameObjectToRemove) {
 void ModuleScene::Render(const ComponentCamera &camera) const
 {
 	root->Update();
+	App->cameras->scene_camera->Update();
 	root->Render(camera);
 }
 

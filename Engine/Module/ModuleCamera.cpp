@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
+#include "GameObject.h"
 #include "Component/ComponentCamera.h"
 
 #include "imgui.h"
@@ -15,11 +16,9 @@ bool ModuleCamera::Init()
 	APP_LOG_SECTION("************ Module Camera Init ************");
 	int windowWidth, windowHeight;
 	SDL_GetWindowSize(App->window->window, &windowWidth, &windowHeight);
-	
-	scene_camera = CreateComponentCamera();
 
-	speed_up = 1;
-	is_orbiting = false;
+	scene_camera_game_object = new GameObject();
+	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 
 	return true;
 }
@@ -33,7 +32,7 @@ update_status ModuleCamera::Update()
 // Called before quitting
 bool ModuleCamera::CleanUp()
 {
-	delete scene_camera;
+	delete scene_camera_game_object;
 	for (auto& camera : cameras )
 	{
 		delete camera;

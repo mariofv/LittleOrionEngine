@@ -10,6 +10,7 @@
 
 
 class ComponentCamera;
+class GameObject;
 
 class ModuleCamera : public Module
 {
@@ -37,6 +38,8 @@ public:
 	ComponentCamera* active_camera = nullptr;
 
 private:
+	GameObject *scene_camera_game_object = nullptr;
+
 	bool movement_enabled = false;
 	bool game_window_is_hovered = false;
 
@@ -44,6 +47,7 @@ private:
 	float speed_up;
 
 	std::vector<ComponentCamera*> cameras;
+
 };
 
 #endif //_MODULECAMERA_H_
