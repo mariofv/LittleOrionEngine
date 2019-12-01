@@ -23,7 +23,6 @@ public:
 	
 	float3 GetTranslation() const;
 	void SetTranslation(const float3 translation);
-	float3 GetTranslation() const;
 
 	void GenerateGlobalModelMatrix();
 	void ChangeLocalSpace(const float4x4 new_local_space);
