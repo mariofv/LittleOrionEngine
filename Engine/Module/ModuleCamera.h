@@ -8,6 +8,7 @@
 #include "MathGeoLib.h"
 
 class ComponentCamera;
+class GameObject;
 
 class ModuleCamera : public Module
 {
@@ -33,10 +34,11 @@ public:
 	ComponentCamera *scene_camera = nullptr;
 
 private:
+	GameObject *scene_camera_game_object = nullptr;
+
 	bool movement_enabled = false;
 
 	bool is_orbiting = false;
-	float speed_up;
 };
 
 #endif //_MODULECAMERA_H_
