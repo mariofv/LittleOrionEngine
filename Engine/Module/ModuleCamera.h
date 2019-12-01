@@ -7,6 +7,7 @@
 #include "Geometry/Frustum.h"
 #include "MathGeoLib.h"
 
+
 class ComponentCamera;
 
 class ModuleCamera : public Module
@@ -19,7 +20,8 @@ public:
 	update_status Update();
 	bool CleanUp();
 	
-	ComponentCamera* CreateComponentCamera() const;
+	ComponentCamera* CreateComponentCamera();
+	void RemoveComponentCamera(ComponentCamera* camera_to_remove);
 
 	void SetOrbit(const bool is_orbiting);
 	bool IsOrbiting() const;
@@ -27,6 +29,7 @@ public:
 	void SetMovement(const bool movement_enabled);
 	bool IsMovementEnabled() const;
 
+	void ShowGameWindow();
 	void ShowCameraOptions();
 	
 public:
@@ -34,9 +37,12 @@ public:
 
 private:
 	bool movement_enabled = false;
+	bool game_window_is_hovered = false;
 
 	bool is_orbiting = false;
 	float speed_up;
+
+	std::vector<ComponentCamera*> cameras;
 };
 
 #endif //_MODULECAMERA_H_

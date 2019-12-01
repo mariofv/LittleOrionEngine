@@ -24,6 +24,7 @@ private:
 
 	void ShowHierarchyWindow();
 	void ShowSceneWindow();
+	void ShowGameWindow();
 
 	void ShowInspectorWindow();
 
@@ -54,6 +55,7 @@ public:
 
 private:
 	bool show_scene_window = true;
+	bool show_game_window = true;
 	bool show_hierarchy_window = true;
 	bool show_model_inspector_window = true;
 	bool show_configuration_window = false;

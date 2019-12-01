@@ -8,6 +8,8 @@
 #include <SDL/SDL.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
+#include <algorithm>
+
 bool ModuleCamera::Init()
 {
 	APP_LOG_SECTION("************ Module Camera Init ************");
@@ -35,9 +37,22 @@ bool ModuleCamera::CleanUp()
 	return true;
 }
 
-ComponentCamera* ModuleCamera::CreateComponentCamera() const
+ComponentCamera* ModuleCamera::CreateComponentCamera()
 {
-	return new ComponentCamera();
+
+	ComponentCamera * new_camera = new ComponentCamera();
+	cameras.push_back(new_camera);
+	return new_camera;
+}
+
+void ModuleCamera::RemoveComponentCamera(ComponentCamera* camera_to_remove)
+{
+
+	auto it = std::remove_if(cameras.begin(), cameras.end(), [camera_to_remove](auto const & camera)
+	{
+		return camera == camera_to_remove;
+	});
+	cameras.erase(it);
 }
 
 void ModuleCamera::SetOrbit(const bool is_orbiting)
@@ -60,6 +75,33 @@ bool ModuleCamera::IsMovementEnabled() const
 	return movement_enabled;
 }
 
+void ModuleCamera::ShowGameWindow() 
+{
+	if (ImGui::Begin(ICON_FA_TH " Scene"))
+	{
+		game_window_is_hovered = ImGui::IsWindowHovered();
+
+		float imgui_window_width = ImGui::GetWindowWidth();
+		float imgui_window_height = ImGui::GetWindowHeight();
+		scene_camera->RecordFrame(imgui_window_width, imgui_window_height);
+
+		ImGui::GetWindowDrawList()->AddImage(
+			(void *)scene_camera->GetLastRecordedFrame(),
+			ImVec2(ImGui::GetCursorScreenPos()),
+			ImVec2(
+				ImGui::GetCursorScreenPos().x + imgui_window_width,
+				ImGui::GetCursorScreenPos().y + imgui_window_height
+			),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+	}
+	if (App->cameras->IsMovementEnabled() && game_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
+	{
+		ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
+	}
+	ImGui::End();
+}
 void ModuleCamera::ShowCameraOptions()
 {
 	scene_camera->ShowComponentWindow();

@@ -32,6 +32,10 @@ void EngineUI::ShowEngineUI()
 	{
 		ShowSceneWindow();
 	}
+	if (show_game_window)
+	{
+		ShowGameWindow();
+	}
 	if (show_model_inspector_window)
 	{
 		ShowInspectorWindow();
@@ -147,6 +151,19 @@ void EngineUI::ShowSceneWindow()
 		ImGuiCond_Once
 	);
 	App->scene->ShowSceneWindow();
+}
+
+void EngineUI::ShowGameWindow()
+{
+	ImGui::SetNextWindowPos(
+		ImVec2(App->window->GetWidth() * CONFIG_WIDTH_PROP, MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * TIME_BAR_HEIGHT_PROP),
+		ImGuiCond_Once
+	);
+	ImGui::SetNextWindowSize(
+		ImVec2(App->window->GetWidth() * SCENE_WIDTH_PROP, App->window->GetHeight() * SCENE_HEIGHT_PROP),
+		ImGuiCond_Once
+	);
+	App->cameras->ShowGameWindow();
 }
 
 void EngineUI::ShowInspectorWindow()
