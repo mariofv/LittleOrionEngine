@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleRender.h"
 #include "ModuleCamera.h"
+#include "Component/ComponentCamera.h"
 
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -40,10 +41,10 @@ void ModuleScene::RemoveGameObject(GameObject * gameObjectToRemove) {
 	game_objects_ownership.erase(it);
 }
 
-void ModuleScene::Render() const
+void ModuleScene::Render(const ComponentCamera &camera) const
 {
 	root->Update();
-	root->Render();
+	root->Render(camera);
 }
 
 GameObject* ModuleScene::GetRoot() const
@@ -56,13 +57,13 @@ void ModuleScene::ShowSceneWindow()
 	if (ImGui::Begin(ICON_FA_TH " Scene"))
 	{
 		scene_window_is_hovered = ImGui::IsWindowHovered();
-		float imgui_window_width = ImGui::GetWindowWidth();
+
+		float imgui_window_width = ImGui::GetWindowWidth(); 
 		float imgui_window_height = ImGui::GetWindowHeight();
-		App->cameras->SetAspectRatio(imgui_window_width / imgui_window_height);
-		App->renderer->GenerateFrameTexture(imgui_window_width, imgui_window_height);
+		App->cameras->scene_camera_component->RecordFrame(imgui_window_width, imgui_window_height);
 
 		ImGui::GetWindowDrawList()->AddImage(
-			(void *)App->renderer->frame_texture,
+			(void *)App->cameras->scene_camera_component->GetLastRecordedFrame(),
 			ImVec2(ImGui::GetCursorScreenPos()),
 			ImVec2(
 				ImGui::GetCursorScreenPos().x + imgui_window_width,
@@ -72,7 +73,7 @@ void ModuleScene::ShowSceneWindow()
 			ImVec2(1, 0)
 		);
 	}
-	if (App->cameras->MovementEnabled() && scene_window_is_hovered)
+	if (App->cameras->IsMovementEnabled() && scene_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
 	{
 		ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
 	}

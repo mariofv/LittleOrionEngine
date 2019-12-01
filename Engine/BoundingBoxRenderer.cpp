@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Globals.h"
 #include "Module/ModuleCamera.h"
+#include "Component/ComponentCamera.h"
 
 
 BoundingBoxRenderer::BoundingBoxRenderer()
@@ -57,7 +58,7 @@ BoundingBoxRenderer::~BoundingBoxRenderer()
 	glDeleteVertexArrays(1, &vao);
 }
 
-void BoundingBoxRenderer::Render(const AABB bounding_box, const GLuint shader_program) const
+void BoundingBoxRenderer::Render(const ComponentCamera &camera, const AABB bounding_box, const GLuint shader_program) const
 {
 	glUseProgram(shader_program);
 
@@ -73,13 +74,13 @@ void BoundingBoxRenderer::Render(const AABB bounding_box, const GLuint shader_pr
 		glGetUniformLocation(shader_program, "view"),
 		1,
 		GL_TRUE,
-		&App->cameras->view[0][0]
+		&camera.GetViewMatrix()[0][0]
 	);
 	glUniformMatrix4fv(
 		glGetUniformLocation(shader_program, "proj"),
 		1,
 		GL_TRUE,
-		&App->cameras->proj[0][0]
+		&camera.GetProjectionMatrix()[0][0]
 	);
 
 	glBindVertexArray(vao);

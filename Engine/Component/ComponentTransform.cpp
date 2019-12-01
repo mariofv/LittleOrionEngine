@@ -45,6 +45,12 @@ void ComponentTransform::Render(const GLuint shader_program) const
 	);
 }
 
+void ComponentTransform::SetTranslation(const float3 translation)
+{
+	this->translation = translation;
+	GenerateModelMatrix();
+}
+
 void ComponentTransform::GenerateModelMatrix()
 {
 	Quat rotation_quat = Quat::FromEulerXYZ(

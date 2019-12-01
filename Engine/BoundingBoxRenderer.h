@@ -4,13 +4,15 @@
 #include "MathGeoLib.h"
 #include <GL/glew.h>
 
+class ComponentCamera;
+
 class BoundingBoxRenderer
 {
 public:
 	BoundingBoxRenderer();
 	~BoundingBoxRenderer();
 
-	void Render(const AABB bounding_box, const GLuint shader_program) const;
+	void Render(const ComponentCamera &camera, const AABB bounding_box, const GLuint shader_program) const;
 
 private:
 	GLuint vao = 0;

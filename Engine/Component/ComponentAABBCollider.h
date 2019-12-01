@@ -7,6 +7,7 @@
 
 #include "GL/glew.h"
 
+class ComponentCamera;
 
 class ComponentAABBCollider : public Component
 {
@@ -26,7 +27,7 @@ public:
 	void Disable() override;
 	void Update() override;
 
-	void Render(const GLuint shader_program) const;
+	void Render(const ComponentCamera &camera, const GLuint shader_program) const;
 
 	ComponentAABBCollider::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
 

@@ -1,4 +1,5 @@
 #include "ComponentAABBCollider.h"
+#include "ComponentCamera.h"
 #include "GameObject.h"
 #include "Application.h"
 
@@ -77,9 +78,10 @@ ComponentAABBCollider::CollisionState ComponentAABBCollider::CheckAABBCollision(
 	// we must be partly in then otherwise
 	return CollisionState::INTERSECT;
 }
-void ComponentAABBCollider::Render(const GLuint shader_program) const
+
+void ComponentAABBCollider::Render(const ComponentCamera &camera, const GLuint shader_program) const
 {
-	App->renderer->bounding_box_renderer->Render(bounding_box, shader_program);
+	App->renderer->bounding_box_renderer->Render(camera, bounding_box, shader_program);
 }
 
 void ComponentAABBCollider::GenerateBoundingBox()

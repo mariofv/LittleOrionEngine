@@ -9,6 +9,8 @@
 
 #include <vector>
 
+class ComponentCamera;
+
 class GameObject
 {
 public:
@@ -17,7 +19,7 @@ public:
 	~GameObject();
 
 	void Update();
-	void Render() const;
+	void Render(const ComponentCamera &camera) const;
 
 	void SetParent(GameObject *new_parent);
 	GameObject* CreateChild(std::string name = "");
