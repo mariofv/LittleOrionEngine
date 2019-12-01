@@ -60,7 +60,22 @@ void ComponentCamera::Disable()
 
 void ComponentCamera::Update()
 {
-
+	if (is_focusing)
+	{
+		float3 zooming_direction = desired_focus_position - camera_frustum.pos;
+		float distance_to_desired_zooming_position = zooming_direction.Length();
+		float frame_focusing_distance = App->time->real_time_delta_time * camera_zooming_speed;
+		if (distance_to_desired_zooming_position - frame_focusing_distance < 0)
+		{
+			camera_frustum.pos = desired_focus_position;
+			is_focusing = false;
+		}
+		else
+		{
+			camera_frustum.pos += zooming_direction.ScaledToLength(frame_focusing_distance);
+		}
+		GenerateMatrices();
+	}
 }
 
 void ComponentCamera::RecordFrame(const float width, const float height)
