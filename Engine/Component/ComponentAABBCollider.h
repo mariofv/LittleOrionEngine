@@ -22,7 +22,8 @@ public:
 	void Render(const GLuint shader_program) const;
 
 	void GenerateBoundingBox();
-	AABB GenerateBoundingBoxFromVertex(const std::vector<ComponentMesh::Vertex> & vertices);
+	void GenerateBoundingBoxFromVertices(const std::vector<ComponentMesh::Vertex> & vertices);
+	void GenerateBoundingBoxFromFrustum(const Frustum & frustum);
 
 	void ShowComponentWindow(){}
 	AABB bounding_box;

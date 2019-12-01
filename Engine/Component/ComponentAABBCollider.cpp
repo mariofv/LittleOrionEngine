@@ -54,7 +54,7 @@ void ComponentAABBCollider::GenerateBoundingBox()
 	has_meshes = ownerMesh != nullptr;
 	if (has_meshes)
 	{
-		bounding_box.Enclose(GenerateBoundingBoxFromVertex(ownerMesh->vertices));
+		GenerateBoundingBoxFromVertex(ownerMesh->vertices);
 	}
 	else
 	{
@@ -69,13 +69,20 @@ void ComponentAABBCollider::GenerateBoundingBox()
 	}
 }
 
-AABB ComponentAABBCollider::GenerateBoundingBoxFromVertex(const std::vector<ComponentMesh::Vertex> & vertices)
+void ComponentAABBCollider::GenerateBoundingBoxFromVertices(const std::vector<ComponentMesh::Vertex> & vertices)
 {
-	AABB bounding_box;
 	bounding_box.SetNegativeInfinity();
 	for (unsigned int i = 0; i < vertices.size(); ++i)
 	{
 		bounding_box.Enclose(vertices[i].position);
 	}
-	return bounding_box;
+}
+
+void ComponentAABBCollider::GenerateBoundingBoxFromFrustum(const Frustum & frustum) {
+	bounding_box.SetNegativeInfinity();
+	for (unsigned int i = 0; i < 8 ; ++i)
+	{
+		bounding_box.Enclose(frustum.CornerPoint(i));
+	}
+		
 }
