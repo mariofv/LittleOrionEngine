@@ -65,8 +65,13 @@ void ComponentCamera::Update()
 
 void ComponentCamera::RecordFrame(const float width, const float height)
 {
-	SetAspectRatio(width/height);
-	GenerateFrameBuffers(width, height); // TODO : Check if width or height changed in last frame
+	if (last_width != width || last_height != height)
+	{
+		last_width = width;
+		last_height = height;
+		SetAspectRatio(width/height);
+		GenerateFrameBuffers(width, height);
+	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 

@@ -87,6 +87,9 @@ private:
 	GLuint rbo = 0;
 	GLuint last_recorded_frame_texture = 0;
 
+	float last_height = 0;
+	float last_width = 0;
+
 	float aspect_ratio = 1.f;
 	float orthographic_fov_ratio = 3;
 	int perpesctive_enable = 0;
