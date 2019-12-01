@@ -56,9 +56,9 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
-void ModuleScene::ShowFrameBufferWindow(ComponentCamera * camera_frame_buffer_to_show, const char * title )
+void ModuleScene::ShowFrameBufferWindow(ComponentCamera * camera_frame_buffer_to_show, const char * title)
 {
-	if (ImGui::Begin(title))
+	if (ImGui::BeginTabItem(title))
 	{
 		scene_window_is_hovered = ImGui::IsWindowHovered();
 
@@ -76,10 +76,11 @@ void ModuleScene::ShowFrameBufferWindow(ComponentCamera * camera_frame_buffer_to
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
+		if (App->cameras->IsMovementEnabled() && scene_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
+		}
+		ImGui::EndTabItem();
 	}
-	if (App->cameras->IsMovementEnabled() && scene_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
-	{
-		ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
-	}
-	ImGui::End();
+
 }

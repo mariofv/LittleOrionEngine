@@ -28,7 +28,7 @@ void EngineUI::ShowEngineUI()
 {
 	ShowMainMenu();
 	ShowTimeControls();
-
+	ImGui::BeginTabBar("views");
 	if (show_scene_window)
 	{
 		ShowSceneWindow();
@@ -37,6 +37,7 @@ void EngineUI::ShowEngineUI()
 	{
 		ShowGameWindow();
 	}
+	ImGui::EndTabBar();
 	if (show_model_inspector_window)
 	{
 		ShowInspectorWindow();
