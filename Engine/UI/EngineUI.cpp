@@ -8,6 +8,7 @@
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleInput.h"
+#include "Component/ComponentCamera.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
 
@@ -27,11 +28,8 @@ void EngineUI::ShowEngineUI()
 {
 	ShowMainMenu();
 	ShowTimeControls();
-
-	if (show_scene_window)
-	{
-		ShowSceneWindow();
-	}
+	ShowMainViewWindow();
+	
 	if (show_model_inspector_window)
 	{
 		ShowInspectorWindow();
@@ -89,7 +87,8 @@ void EngineUI::ShowViewMenu()
 	if (ImGui::BeginMenu("View"))
 	{
 		ImGui::MenuItem((ICON_FA_SITEMAP " Hierarchy"), (const char*)0, &show_hierarchy_window);
-		ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, &show_scene_window);
+		ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, &show_scene_tab);
+		ImGui::MenuItem((ICON_FA_GHOST " Game"), (const char*)0, &show_game_tab);
 		ImGui::MenuItem((ICON_FA_INFO " Inspector"), (const char*)0, &show_model_inspector_window);
 		ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, &show_configuration_window);
 		ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, &show_console_window);
@@ -107,7 +106,7 @@ void EngineUI::ShowHelpMenu()
 		ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAB));
 		if (ImGui::MenuItem(ICON_FA_GITHUB_ALT " Repository"))
 		{
-			ShellExecuteA(NULL, "open", "https://github.com/mariofv/OrionEngine/", NULL, NULL, SW_SHOWNORMAL);
+			ShellExecuteA(NULL, "open", "https://github.com/mariofv/LittleOrionEngine/", NULL, NULL, SW_SHOWNORMAL);
 		}
 		ImGui::PopFont();
 		ImGui::EndMenu();
@@ -136,8 +135,9 @@ void EngineUI::ShowHierarchyWindow()
 	App->scene->hierarchy.ShowHierarchyWindow();
 }
 
-void EngineUI::ShowSceneWindow()
+void EngineUI::ShowMainViewWindow()
 {
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
 	ImGui::SetNextWindowPos(
 		ImVec2(App->window->GetWidth() * CONFIG_WIDTH_PROP, MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * TIME_BAR_HEIGHT_PROP),
 		ImGuiCond_Once
@@ -146,7 +146,35 @@ void EngineUI::ShowSceneWindow()
 		ImVec2(App->window->GetWidth() * SCENE_WIDTH_PROP, App->window->GetHeight() * SCENE_HEIGHT_PROP),
 		ImGuiCond_Once
 	);
-	App->scene->ShowSceneWindow();
+
+	if (ImGui::Begin("MainView", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar))
+	{
+		ImGui::BeginTabBar("MainViewTabs");
+
+		if (show_scene_tab)
+		{
+			ShowSceneTab();
+		}
+		if (show_game_tab)
+		{
+			ShowGameTab();
+		}
+
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
+
+	ImGui::PopStyleVar();
+}
+
+void EngineUI::ShowSceneTab()
+{
+	App->scene->ShowFrameBufferTab(App->cameras->scene_camera, ICON_FA_TH " Scene");
+}
+
+void EngineUI::ShowGameTab()
+{
+	App->scene->ShowFrameBufferTab(App->cameras->active_camera, ICON_FA_GHOST " Game");
 }
 
 void EngineUI::ShowInspectorWindow()
@@ -165,10 +193,51 @@ void EngineUI::ShowInspectorWindow()
 		if (App->scene->hierarchy.selected_game_object != nullptr)
 		{
 			App->scene->hierarchy.selected_game_object->ShowPropertiesWindow();
+			
+			Component * selected_camera_component = App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA);
+			if (selected_camera_component != nullptr) {
+				ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
+				App->cameras->active_camera = selected_camera;
+			}
+
+			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Spacing();
+
+			ShowAddNewComponentButton();
 		}
 		
 	}
 	ImGui::End();
+}
+
+void EngineUI::ShowAddNewComponentButton() 
+{
+	float window_width = ImGui::GetWindowWidth();
+	float button_width = 0.5f * window_width;
+	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
+	ImGui::Button("Add component", ImVec2(button_width, 25));
+
+	if (ImGui::BeginPopupContextItem("Add component", 0))
+	{
+		char tmp_string[128];
+		
+		sprintf_s(tmp_string, "%s Material", ICON_FA_IMAGE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+
+		}
+
+		sprintf_s(tmp_string, "%s Camera", ICON_FA_VIDEO);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::CAMERA);
+
+		}
+
+		ImGui::EndPopup();
+	}
 }
 
 void EngineUI::ShowConfigurationWindow()

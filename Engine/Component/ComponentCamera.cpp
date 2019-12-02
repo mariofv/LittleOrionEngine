@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleTime.h"
+#include "Module/ModuleCamera.h"
 
 ComponentCamera::ComponentCamera() : Component(nullptr, ComponentType::CAMERA)
 {
@@ -43,6 +44,8 @@ ComponentCamera::~ComponentCamera()
 	glDeleteTextures(1, &last_recorded_frame_texture);
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteRenderbuffers(1, &rbo);
+
+	//App->cameras->RemoveComponentCamera(this);
 }
 
 void ComponentCamera::Enable()

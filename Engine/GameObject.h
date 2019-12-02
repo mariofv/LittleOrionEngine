@@ -22,7 +22,6 @@ public:
 	void Render(const ComponentCamera &camera) const;
 
 	void SetParent(GameObject *new_parent);
-	GameObject* CreateChild(std::string name = "");
 	void AddChild(GameObject *child);
 	void RemoveChild(GameObject *child);
 

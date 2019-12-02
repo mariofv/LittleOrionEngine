@@ -9,6 +9,8 @@
 #include <SDL/SDL.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
+#include <algorithm>
+
 bool ModuleCamera::Init()
 {
 	APP_LOG_SECTION("************ Module Camera Init ************");
@@ -31,12 +33,31 @@ update_status ModuleCamera::Update()
 bool ModuleCamera::CleanUp()
 {
 	delete scene_camera_game_object;
+	/*
+	for (auto& camera : cameras )
+	{
+		delete camera;
+	}
+	*/
+	cameras.clear();
+	
 	return true;
 }
 
-ComponentCamera* ModuleCamera::CreateComponentCamera() const
+ComponentCamera* ModuleCamera::CreateComponentCamera()
 {
-	return new ComponentCamera();
+	ComponentCamera * new_camera = new ComponentCamera();
+	cameras.push_back(new_camera);
+	return new_camera;
+}
+
+void ModuleCamera::RemoveComponentCamera(ComponentCamera* camera_to_remove)
+{
+	auto it = std::remove_if(cameras.begin(), cameras.end(), [camera_to_remove](auto const & camera)
+	{
+		return camera == camera_to_remove;
+	});
+	cameras.erase(it);
 }
 
 void ModuleCamera::SetOrbit(const bool is_orbiting)
