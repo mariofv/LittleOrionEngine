@@ -34,8 +34,19 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::Checkbox("Active", &mesh->active);
 		ImGui::Separator();
 
-		ImGui::DragInt("# Triangles", &mesh->num_triangles, NULL, NULL, NULL);
-		ImGui::DragInt("# Vertices", &mesh->num_vertices, NULL, NULL, NULL);
+
+		char tmp_string[16];
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Triangles");
+		ImGui::SameLine();
+		sprintf(tmp_string, "%d", mesh->num_triangles);
+		ImGui::Button(tmp_string);
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Vertices");
+		ImGui::SameLine();
+		sprintf(tmp_string, "%d", mesh->num_vertices);
+		ImGui::Button(tmp_string);
 	}
 }
 
@@ -98,9 +109,8 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::DragFloat3("Front", &camera->camera_frustum.front[0], NULL, NULL, NULL);
-		ImGui::DragFloat3("Up", &camera->camera_frustum.up[0], NULL, NULL, NULL);
-		ImGui::DragFloat3("Position", &camera->camera_frustum.pos[0], NULL, NULL, NULL);
+		ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly);
+		ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly);
 
 		ImGui::Separator();
 
