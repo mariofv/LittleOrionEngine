@@ -18,6 +18,15 @@ bool ModuleScene::Init()
 	return true;
 }
 
+update_status ModuleScene::Update()
+{
+	root->Update();
+	App->cameras->scene_camera->Update();
+
+	return update_status::UPDATE_CONTINUE;
+}
+
+
 bool ModuleScene::CleanUp()
 {
 	delete root;
@@ -55,8 +64,6 @@ void ModuleScene::RemoveGameObject(GameObject * gameObjectToRemove)
 
 void ModuleScene::Render(const ComponentCamera &camera) const
 {
-	root->Update();
-	App->cameras->scene_camera->Update();
 	root->Render(camera);
 }
 

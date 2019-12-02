@@ -70,6 +70,8 @@ update_status Application::Update()
 	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
 		ret = (*it)->PostUpdate();
 
+	App->renderer->Render();
+
 	return ret;
 }
 

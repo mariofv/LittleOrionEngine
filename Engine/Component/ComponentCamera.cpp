@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleScene.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleCamera.h"
 
@@ -95,8 +96,8 @@ void ComponentCamera::RecordFrame(const float width, const float height)
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	App->renderer->Render(*this);
-
+	App->renderer->RenderGrid(*this);
+	App->scene->Render(*this);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

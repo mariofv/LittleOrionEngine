@@ -25,7 +25,7 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 	
-	void Render(const ComponentCamera &camera) const;
+	void Render() const;
 	void RenderGrid(const ComponentCamera &camera) const;
 
 	ComponentMesh* CreateComponentMesh() const;

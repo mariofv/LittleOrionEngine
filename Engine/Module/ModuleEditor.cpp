@@ -53,7 +53,6 @@ update_status ModuleEditor::PreUpdate()
 // Called every draw update
 update_status ModuleEditor::Update()
 {
-	App->ui->ShowEngineUI();
 	
 	//ImGui::ShowStyleEditor();
 	//ImGui::ShowDemoWindow();
@@ -62,9 +61,14 @@ update_status ModuleEditor::Update()
 
 update_status ModuleEditor::PostUpdate()
 {
+	return update_status::UPDATE_CONTINUE;
+}
+
+void ModuleEditor::Render()
+{
+	App->ui->ShowEngineUI();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
-	return update_status::UPDATE_CONTINUE;
 }
 
 // Called before quitting
