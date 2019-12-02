@@ -16,6 +16,7 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	update_status PostUpdate();
+	void Render();
 	bool CleanUp();
 
 	ImFont* GetFont(const Fonts font) const;

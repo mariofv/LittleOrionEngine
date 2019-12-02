@@ -1,11 +1,13 @@
 #include "Globals.h"
 #include "Application.h"
-#include "ModuleRender.h"
-#include "ModuleWindow.h"
-#include "ModuleProgram.h"
+#include "ModuleCamera.h"
+#include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
-#include "ModuleTime.h"
+#include "ModuleProgram.h"
+#include "ModuleRender.h"
 #include "ModuleScene.h"
+#include "ModuleTime.h"
+#include "ModuleWindow.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMesh.h"
 #include "BoundingBoxRenderer.h"
@@ -126,8 +128,7 @@ update_status ModuleRender::PreUpdate()
 
 update_status ModuleRender::PostUpdate()
 {
-	SDL_GL_SwapWindow(App->window->window);
-	App->time->EndFrame();
+	
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -141,10 +142,13 @@ bool ModuleRender::CleanUp()
 	return true;
 }
 
-void ModuleRender::Render(const ComponentCamera &camera) const
+void ModuleRender::Render() const
 {
-	RenderGrid(camera);
-	App->scene->Render(camera);
+	
+	App->editor->Render();
+
+	SDL_GL_SwapWindow(App->window->window);
+	App->time->EndFrame();
 }
 
 void ModuleRender::SetVSync(const bool vsync)

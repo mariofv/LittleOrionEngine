@@ -15,6 +15,7 @@ public:
 	~ModuleScene() = default;
 
 	bool Init();
+	update_status Update() override;
 	bool CleanUp();
 	void Render(const ComponentCamera &camera) const;
 
