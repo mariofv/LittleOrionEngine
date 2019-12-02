@@ -28,16 +28,8 @@ void EngineUI::ShowEngineUI()
 {
 	ShowMainMenu();
 	ShowTimeControls();
-	ImGui::BeginTabBar("views");
-	if (show_scene_window)
-	{
-		ShowSceneWindow();
-	}
-	if (show_game_window)
-	{
-		ShowGameWindow();
-	}
-	ImGui::EndTabBar();
+	ShowMainViewWindow();
+	
 	if (show_model_inspector_window)
 	{
 		ShowInspectorWindow();
@@ -95,7 +87,8 @@ void EngineUI::ShowViewMenu()
 	if (ImGui::BeginMenu("View"))
 	{
 		ImGui::MenuItem((ICON_FA_SITEMAP " Hierarchy"), (const char*)0, &show_hierarchy_window);
-		ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, &show_scene_window);
+		ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, &show_scene_tab);
+		ImGui::MenuItem((ICON_FA_GHOST " Game"), (const char*)0, &show_game_tab);
 		ImGui::MenuItem((ICON_FA_INFO " Inspector"), (const char*)0, &show_model_inspector_window);
 		ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, &show_configuration_window);
 		ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, &show_console_window);
@@ -142,8 +135,9 @@ void EngineUI::ShowHierarchyWindow()
 	App->scene->hierarchy.ShowHierarchyWindow();
 }
 
-void EngineUI::ShowSceneWindow()
+void EngineUI::ShowMainViewWindow()
 {
+	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
 	ImGui::SetNextWindowPos(
 		ImVec2(App->window->GetWidth() * CONFIG_WIDTH_PROP, MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * TIME_BAR_HEIGHT_PROP),
 		ImGuiCond_Once
@@ -152,20 +146,35 @@ void EngineUI::ShowSceneWindow()
 		ImVec2(App->window->GetWidth() * SCENE_WIDTH_PROP, App->window->GetHeight() * SCENE_HEIGHT_PROP),
 		ImGuiCond_Once
 	);
-	App->scene->ShowFrameBufferWindow(App->cameras->scene_camera, ICON_FA_TH " Scene");
+
+	if (ImGui::Begin("MainView", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar))
+	{
+		ImGui::BeginTabBar("MainViewTabs");
+
+		if (show_scene_tab)
+		{
+			ShowSceneTab();
+		}
+		if (show_game_tab)
+		{
+			ShowGameTab();
+		}
+
+		ImGui::EndTabBar();
+	}
+	ImGui::End();
+
+	ImGui::PopStyleVar();
 }
 
-void EngineUI::ShowGameWindow()
+void EngineUI::ShowSceneTab()
 {
-	ImGui::SetNextWindowPos(
-		ImVec2(App->window->GetWidth() * CONFIG_WIDTH_PROP, MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * TIME_BAR_HEIGHT_PROP),
-		ImGuiCond_Once
-	);
-	ImGui::SetNextWindowSize(
-		ImVec2(App->window->GetWidth() * SCENE_WIDTH_PROP, App->window->GetHeight() * SCENE_HEIGHT_PROP),
-		ImGuiCond_Once
-	);
-	App->scene->ShowFrameBufferWindow(App->cameras->active_camera, ICON_FA_GHOST " Game");
+	App->scene->ShowFrameBufferTab(App->cameras->scene_camera, ICON_FA_TH " Scene");
+}
+
+void EngineUI::ShowGameTab()
+{
+	App->scene->ShowFrameBufferTab(App->cameras->active_camera, ICON_FA_GHOST " Game");
 }
 
 void EngineUI::ShowInspectorWindow()

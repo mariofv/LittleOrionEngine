@@ -56,7 +56,7 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
-void ModuleScene::ShowFrameBufferWindow(ComponentCamera * camera_frame_buffer_to_show, const char * title)
+void ModuleScene::ShowFrameBufferTab(ComponentCamera * camera_frame_buffer_to_show, const char * title)
 {
 	if (ImGui::BeginTabItem(title))
 	{
