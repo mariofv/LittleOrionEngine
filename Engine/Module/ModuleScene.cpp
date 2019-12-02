@@ -12,7 +12,7 @@ bool ModuleScene::Init()
 {
 	root = new GameObject();
 	GameObject * camera = CreateGameObject();
-	camera->name = "Camera";
+	camera->name = "Main Camera";
 	ComponentCamera * component_camera = static_cast<ComponentCamera*>(camera->CreateComponent(Component::ComponentType::CAMERA));
 	App->cameras->active_camera = component_camera;
 	return true;
@@ -44,7 +44,8 @@ GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 	return created_game_object_ptr;
 }
 
-void ModuleScene::RemoveGameObject(GameObject * gameObjectToRemove) {
+void ModuleScene::RemoveGameObject(GameObject * gameObjectToRemove)
+{
 	auto it = std::remove_if(game_objects_ownership.begin(), game_objects_ownership.end(), [gameObjectToRemove](auto const & gameObject)
 	{
 		return gameObject.get() == gameObjectToRemove;

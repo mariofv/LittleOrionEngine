@@ -63,7 +63,6 @@ void ComponentCamera::Disable()
 
 void ComponentCamera::Update()
 {
-
 	if (is_focusing)
 	{
 		float3 zooming_direction = desired_focus_position - owner->transform.GetTranslation();

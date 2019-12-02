@@ -53,7 +53,6 @@ ComponentCamera* ModuleCamera::CreateComponentCamera()
 
 void ModuleCamera::RemoveComponentCamera(ComponentCamera* camera_to_remove)
 {
-
 	auto it = std::remove_if(cameras.begin(), cameras.end(), [camera_to_remove](auto const & camera)
 	{
 		return camera == camera_to_remove;
