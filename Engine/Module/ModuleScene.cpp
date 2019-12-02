@@ -11,7 +11,10 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject();
-	
+	GameObject * camera = CreateGameObject();
+	camera->name = "Main Camera";
+	ComponentCamera * component_camera = static_cast<ComponentCamera*>(camera->CreateComponent(Component::ComponentType::CAMERA));
+	App->cameras->active_camera = component_camera;
 	return true;
 }
 
@@ -33,7 +36,16 @@ GameObject* ModuleScene::CreateGameObject()
 	return created_game_object_ptr;
 }
 
-void ModuleScene::RemoveGameObject(GameObject * gameObjectToRemove) {
+GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
+{
+	GameObject * created_game_object_ptr = CreateGameObject();
+	parent->AddChild(created_game_object_ptr);
+
+	return created_game_object_ptr;
+}
+
+void ModuleScene::RemoveGameObject(GameObject * gameObjectToRemove)
+{
 	auto it = std::remove_if(game_objects_ownership.begin(), game_objects_ownership.end(), [gameObjectToRemove](auto const & gameObject)
 	{
 		return gameObject.get() == gameObjectToRemove;
@@ -53,18 +65,18 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
-void ModuleScene::ShowSceneWindow()
+void ModuleScene::ShowFrameBufferTab(ComponentCamera * camera_frame_buffer_to_show, const char * title)
 {
-	if (ImGui::Begin(ICON_FA_TH " Scene"))
+	if (ImGui::BeginTabItem(title))
 	{
-		scene_window_is_hovered = ImGui::IsWindowHovered();
+		scene_window_is_hovered = ImGui::IsWindowHovered(); // TODO: This should be something like ImGui::IsTabHovered (such function doesn't exist though)
 
 		float imgui_window_width = ImGui::GetWindowWidth(); 
 		float imgui_window_height = ImGui::GetWindowHeight();
-		App->cameras->scene_camera->RecordFrame(imgui_window_width, imgui_window_height);
+		camera_frame_buffer_to_show->RecordFrame(imgui_window_width, imgui_window_height);
 
 		ImGui::GetWindowDrawList()->AddImage(
-			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
+			(void *)camera_frame_buffer_to_show->GetLastRecordedFrame(),
 			ImVec2(ImGui::GetCursorScreenPos()),
 			ImVec2(
 				ImGui::GetCursorScreenPos().x + imgui_window_width,
@@ -73,10 +85,11 @@ void ModuleScene::ShowSceneWindow()
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
+		if (App->cameras->IsMovementEnabled() && scene_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
+		}
+		ImGui::EndTabItem();
 	}
-	if (App->cameras->IsMovementEnabled() && scene_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
-	{
-		ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
-	}
-	ImGui::End();
+
 }

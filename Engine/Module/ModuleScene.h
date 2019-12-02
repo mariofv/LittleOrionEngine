@@ -19,11 +19,12 @@ public:
 	void Render(const ComponentCamera &camera) const;
 
 	GameObject* CreateGameObject();
+	GameObject* CreateChildGameObject(GameObject *parent);
 	void RemoveGameObject(GameObject * gameObjectToRemove);
 
 	GameObject* GetRoot() const;
 
-	void ShowSceneWindow();
+	void ShowFrameBufferTab(ComponentCamera * camera_frame_buffer_to_show, const char * title);
 
 public:
 	Hierarchy hierarchy;

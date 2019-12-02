@@ -23,9 +23,13 @@ private:
 	void ShowTimeControls();
 
 	void ShowHierarchyWindow();
-	void ShowSceneWindow();
+	
+	void ShowMainViewWindow();
+	void ShowSceneTab();
+	void ShowGameTab();
 
 	void ShowInspectorWindow();
+	void ShowAddNewComponentButton();
 
 	void ShowConfigurationWindow();
 	void ShowHardware() const;
@@ -35,6 +39,7 @@ private:
 	void ShowDebugWindow();
 
 	void ShowAboutWindow();
+
 
 public:
 	#define MAIN_MENU_BAR_HEIGHT 19
@@ -53,7 +58,8 @@ public:
 	#define CONSOLE_HEIGHT_PROP 0.3
 
 private:
-	bool show_scene_window = true;
+	bool show_scene_tab = true;
+	bool show_game_tab = true;
 	bool show_hierarchy_window = true;
 	bool show_model_inspector_window = true;
 	bool show_configuration_window = false;
