@@ -48,7 +48,7 @@ ComponentCamera::~ComponentCamera()
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteRenderbuffers(1, &rbo);
 
-	App->cameras->RemoveComponentCamera(this);
+	//App->cameras->RemoveComponentCamera(this);
 }
 
 void ComponentCamera::Enable()

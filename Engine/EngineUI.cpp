@@ -106,7 +106,7 @@ void EngineUI::ShowHelpMenu()
 		ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAB));
 		if (ImGui::MenuItem(ICON_FA_GITHUB_ALT " Repository"))
 		{
-			ShellExecuteA(NULL, "open", "https://github.com/mariofv/OrionEngine/", NULL, NULL, SW_SHOWNORMAL);
+			ShellExecuteA(NULL, "open", "https://github.com/mariofv/LittleOrionEngine/", NULL, NULL, SW_SHOWNORMAL);
 		}
 		ImGui::PopFont();
 		ImGui::EndMenu();
@@ -199,16 +199,45 @@ void EngineUI::ShowInspectorWindow()
 				ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
 				App->cameras->active_camera = selected_camera;
 			}
+
+			ImGui::Spacing();
 			ImGui::Separator();
-			ImGui::SetCursorPosX((ImGui::GetWindowWidth() / 2 - 50));
-			if (ImGui::Button("Add component")) {
-				ImGui::OpenPopup("Components_chooser");
-			}
-			ShowAddNewComponentPopup();
+			ImGui::Spacing();
+
+			ShowAddNewComponentButton();
 		}
 		
 	}
 	ImGui::End();
+}
+
+void EngineUI::ShowAddNewComponentButton() 
+{
+	float window_width = ImGui::GetWindowWidth();
+	float button_width = 0.5f * window_width;
+	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
+	ImGui::Button("Add component", ImVec2(button_width, 25));
+
+	if (ImGui::BeginPopupContextItem("Add component", 0))
+	{
+		char tmp_string[128];
+		
+		sprintf_s(tmp_string, "%s Material", ICON_FA_IMAGE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+
+		}
+
+		sprintf_s(tmp_string, "%s Camera", ICON_FA_VIDEO);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::CAMERA);
+
+		}
+
+		ImGui::EndPopup();
+	}
 }
 
 void EngineUI::ShowConfigurationWindow()
@@ -454,33 +483,4 @@ void EngineUI::ShowAboutWindow()
 		ImGui::TextWrapped("Orion Engine is licensed under the MIT License, see LICENSE for more information.");
 	}
 	ImGui::End();
-}
-
-void EngineUI::ShowAddNewComponentPopup() {
-
-
-	if (ImGui::BeginPopup("Components_chooser"))
-	{
-
-		const char * components = "Mesh\0Material\0Camera";
-		static int selectedComponent = 0;
-		ImGui::Combo("Component", &selectedComponent, components);
-		if (ImGui::Button("Accept"))
-		{
-			switch (selectedComponent)
-			{
-			case 0:
-				App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::MESH);
-				break;
-			case 1:
-				App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
-				break;
-			case 2:
-				App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::CAMERA);
-				break;
-			}
-			ImGui::CloseCurrentPopup();
-		}
-		ImGui::EndPopup();
-	}
 }

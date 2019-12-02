@@ -284,11 +284,16 @@ void GameObject::ShowPropertiesWindow()
 
 	ImGui::Spacing();
 	ImGui::Separator();
+	ImGui::Spacing();
 
 	transform.ShowComponentWindow();
+
 	ImGui::Spacing();
 	ImGui::Separator();
+	ImGui::Spacing();
+
 	aabb_collider.ShowComponentWindow();
+
 
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{

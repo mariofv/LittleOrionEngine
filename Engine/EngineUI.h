@@ -29,6 +29,7 @@ private:
 	void ShowGameTab();
 
 	void ShowInspectorWindow();
+	void ShowAddNewComponentButton();
 
 	void ShowConfigurationWindow();
 	void ShowHardware() const;
@@ -39,7 +40,6 @@ private:
 
 	void ShowAboutWindow();
 
-	void ShowAddNewComponentPopup();
 
 public:
 	#define MAIN_MENU_BAR_HEIGHT 19
