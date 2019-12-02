@@ -130,20 +130,6 @@ void GameObject::SetParent(GameObject *new_parent)
 	new_parent->AddChild(this);
 }
 
-
-GameObject* GameObject::CreateChild(std::string name)
-{
-	if (name == "")
-	{
-		name = App->scene->hierarchy.GetNextGameObjectName();
-	}
-
-	GameObject *created_child = new GameObject(name);
-	AddChild(created_child);
-
-	return created_child;
-}
-
 void GameObject::AddChild(GameObject *child)
 {
 	if (child->parent != nullptr)

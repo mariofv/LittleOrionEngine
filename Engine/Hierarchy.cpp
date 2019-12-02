@@ -132,7 +132,7 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 
 		if (ImGui::Selectable("Create GameObject"))
 		{
-			game_object->CreateChild(GetNextGameObjectName());
+			App->scene->CreateChildGameObject(game_object);
 		}
 		if (ImGui::Selectable("Delete GameObject"))
 		{

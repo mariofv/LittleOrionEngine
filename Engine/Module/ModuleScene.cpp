@@ -36,6 +36,14 @@ GameObject* ModuleScene::CreateGameObject()
 	return created_game_object_ptr;
 }
 
+GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
+{
+	GameObject * created_game_object_ptr = CreateGameObject();
+	parent->AddChild(created_game_object_ptr);
+
+	return created_game_object_ptr;
+}
+
 void ModuleScene::RemoveGameObject(GameObject * gameObjectToRemove) {
 	auto it = std::remove_if(game_objects_ownership.begin(), game_objects_ownership.end(), [gameObjectToRemove](auto const & gameObject)
 	{

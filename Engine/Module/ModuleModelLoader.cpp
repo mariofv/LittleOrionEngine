@@ -76,7 +76,8 @@ bool ModuleModelLoader::LoadModel(const char *new_model_file_path)
 
 void ModuleModelLoader::LoadNode(const aiNode &node, GameObject *parent_node, const std::string model_base_path)
 {
-	GameObject *node_game_object = parent_node->CreateChild(std::string(node.mName.data));
+	GameObject *node_game_object = App->scene->CreateChildGameObject(parent_node);
+	node_game_object->name = std::string(node.mName.data);
 
 	APP_LOG_INFO("Loading node meshes.");
 	for (unsigned int i = 0; i < node.mNumMeshes; ++i)
