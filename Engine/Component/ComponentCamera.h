@@ -2,6 +2,7 @@
 #define _COMPONENTCAMERA_H_
 
 #include "Component.h"
+#include "Component/ComponentAABBCollider.h"
 #include "UI/ComponentsUI.h"
 
 #include "MathGeoLib.h"
@@ -57,6 +58,8 @@ public:
 	float4x4 GetViewMatrix() const;
 	float4x4 GetProjectionMatrix() const;
 	void GenerateMatrices();
+
+	ComponentAABBCollider::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
 
 	void ShowComponentWindow() override;
 

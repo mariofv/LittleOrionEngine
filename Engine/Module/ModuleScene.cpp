@@ -64,7 +64,13 @@ void ModuleScene::RemoveGameObject(GameObject * gameObjectToRemove)
 
 void ModuleScene::Render(const ComponentCamera &camera) const
 {
-	root->Render(camera);
+	for (auto &game_object : game_objects_ownership)
+	{
+		if (App->cameras->active_camera->CheckAABBCollision(game_object->aabb_collider.bounding_box) != ComponentAABBCollider::CollisionState::OUTSIDE)
+		{
+			game_object->Render(camera);
+		}
+	}
 }
 
 GameObject* ModuleScene::GetRoot() const

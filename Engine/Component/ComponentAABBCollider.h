@@ -15,7 +15,7 @@ public:
 	enum class CollisionState
 	{
 		OUTSIDE,
-		INTSIDE,
+		INSIDE,
 		INTERSECT,
 	};
 
@@ -29,7 +29,7 @@ public:
 
 	void Render(const ComponentCamera &camera, const GLuint shader_program) const;
 
-	ComponentAABBCollider::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
+	ComponentAABBCollider::CollisionState CheckAABBCollision(const Frustum& frustum) const;
 
 	void GenerateBoundingBox();
 	void GenerateBoundingBoxFromVertices(const std::vector<ComponentMesh::Vertex> & vertices);

@@ -109,11 +109,6 @@ void GameObject::Render(const ComponentCamera &camera) const
 	{
 		aabb_collider.Render(camera, App->program->default_program);
 	}
-
-	for (unsigned int i = 0; i < children.size(); ++i)
-	{
-		children[i]->Render(camera);
-	}
 }
 
 void GameObject::SetParent(GameObject *new_parent)

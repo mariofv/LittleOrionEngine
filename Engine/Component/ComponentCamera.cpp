@@ -98,6 +98,7 @@ void ComponentCamera::RecordFrame(const float width, const float height)
 
 	App->renderer->RenderGrid(*this);
 	App->scene->Render(*this);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -337,12 +338,55 @@ float4x4 ComponentCamera::GetProjectionMatrix() const
 	return proj;
 }
 
+
 void ComponentCamera::GenerateMatrices()
 {
 	proj = camera_frustum.ProjectionMatrix();
 	view = camera_frustum.ViewMatrix();
 }
 
+ComponentAABBCollider::CollisionState ComponentCamera::CheckAABBCollision(const AABB& reference_AABB) const
+{
+	static const size_t number_of_corners = 8;
+	static const size_t number_of_planes = 6;
+
+	//Get refence corners
+	float3 reference_aabb_corners[number_of_corners];
+	reference_AABB.GetCornerPoints(reference_aabb_corners);
+
+	//Get own aabb planes
+	Plane own_frustum_planes[number_of_planes];
+	camera_frustum.GetPlanes(own_frustum_planes);
+
+	//Check if Corners are inside the planes
+	int total_reference_planes_inside = 0;
+	for (int p = 0; p < number_of_planes; ++p)
+	{
+		int points_inside_count = number_of_corners;
+		int is_plane_inside = 1;
+		for (int i = 0; i < number_of_corners; ++i)
+		{
+			if (own_frustum_planes[p].IsOnPositiveSide(reference_aabb_corners[i])) //If true, the point is halfway or outside
+			{
+				// Plane is not inside
+				is_plane_inside = 0;
+				--points_inside_count;
+			}
+		}
+		if (points_inside_count == 0)
+		{
+			return ComponentAABBCollider::CollisionState::OUTSIDE;
+		}
+		total_reference_planes_inside += is_plane_inside;
+	}
+	// so if total_reference_planes_inside is 6, then all are inside the view
+	if (total_reference_planes_inside == 6)
+	{
+		return ComponentAABBCollider::CollisionState::INSIDE;
+	}
+	// we must be partly in then otherwise
+	return ComponentAABBCollider::CollisionState::INTERSECT;
+}
 
 void ComponentCamera::ShowComponentWindow()
 {
