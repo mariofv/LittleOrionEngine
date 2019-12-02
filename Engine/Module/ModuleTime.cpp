@@ -2,8 +2,8 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleWindow.h"
-#include "EngineUI.h"
-#include "EngineLog.h"
+#include "UI/EngineUI.h"
+#include "UI/EngineLog.h"
 #include "Timer.h"
 
 #include "imgui.h"

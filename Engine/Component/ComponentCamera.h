@@ -2,6 +2,7 @@
 #define _COMPONENTCAMERA_H_
 
 #include "Component.h"
+#include "UI/ComponentsUI.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
@@ -63,15 +64,15 @@ private:
 	void GenerateFrameBuffers(const float width, const float height);
 
 public:
-	# define SPEED_UP_FACTOR 2
+	const float SPEED_UP_FACTOR = 2.f;
 
-	# define FAR_PLANE_FACTOR 25
-	# define BOUNDING_BOX_DISTANCE_FACTOR 3
-	# define INITIAL_HEIGHT_FACTOR 0.5
-	# define CAMERA_MOVEMENT_SPEED_BOUNDING_BOX_RADIUS_FACTOR 0.005
-	# define CAMERA_ZOOMING_SPEED_BOUNDING_BOX_RADIUS_FACTOR 0.0625 
-	# define CAMERA_MAXIMUN_MOVEMENT_SPEED 1.0f
-	# define CAMERA_MINIMUN_MOVEMENT_SPEED 0.005 
+	const float FAR_PLANE_FACTOR = 25.f;
+	const float BOUNDING_BOX_DISTANCE_FACTOR = 3.f;
+	const float INITIAL_HEIGHT_FACTOR = 0.5f;
+	const float CAMERA_MOVEMENT_SPEED_BOUNDING_BOX_RADIUS_FACTOR = 0.005f;
+	const float CAMERA_ZOOMING_SPEED_BOUNDING_BOX_RADIUS_FACTOR = 0.0625f;
+	const float CAMERA_MAXIMUN_MOVEMENT_SPEED = 1.0f;
+	const float CAMERA_MINIMUN_MOVEMENT_SPEED = 0.005f;
 	
 	float camera_movement_speed = 1.0f;
 	float camera_zooming_speed = 1.0f;
@@ -99,6 +100,8 @@ private:
 
 	bool is_focusing = false;
 	float3 desired_focus_position = float3::zero;
+
+	friend void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera);
 };
 
 #endif //_COMPONENTCAMERA_H_

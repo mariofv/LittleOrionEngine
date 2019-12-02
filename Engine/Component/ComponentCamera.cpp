@@ -5,9 +5,6 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleCamera.h"
 
-#include "imgui.h"
-#include <FontAwesome5/IconsFontAwesome5.h>
-
 ComponentCamera::ComponentCamera() : Component(nullptr, ComponentType::CAMERA)
 {
 	glGenFramebuffers(1, &fbo);
@@ -348,54 +345,5 @@ void ComponentCamera::GenerateMatrices()
 
 void ComponentCamera::ShowComponentWindow()
 {
-	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		ImGui::DragFloat3("Front", &camera_frustum.front[0], NULL, NULL, NULL);
-		ImGui::DragFloat3("Up", &camera_frustum.up[0], NULL, NULL, NULL);
-		ImGui::DragFloat3("Position", &owner->transform.GetTranslation()[0], NULL, NULL, NULL);
-
-		ImGui::Separator();
-
-		ImGui::SliderFloat("Mov Speed", &camera_movement_speed, CAMERA_MINIMUN_MOVEMENT_SPEED, CAMERA_MAXIMUN_MOVEMENT_SPEED);
-		ImGui::SliderFloat("Rot Speed", &camera_rotation_speed, CAMERA_MINIMUN_MOVEMENT_SPEED, CAMERA_MAXIMUN_MOVEMENT_SPEED);
-		ImGui::SliderFloat("Zoom Speed", &camera_zooming_speed, CAMERA_MINIMUN_MOVEMENT_SPEED, CAMERA_MAXIMUN_MOVEMENT_SPEED);
-
-		if (ImGui::SliderFloat("FOV", &camera_frustum.horizontalFov, 0, 2 * 3.14f))
-		{
-			SetFOV(camera_frustum.horizontalFov);
-		}
-
-		if (ImGui::SliderFloat("Aspect Ratio", &aspect_ratio, 0, 10))
-		{
-			SetAspectRatio(aspect_ratio);
-		}
-
-		if (ImGui::SliderFloat("Near plane", &camera_frustum.nearPlaneDistance, 1, camera_frustum.farPlaneDistance + 1))
-		{
-			SetNearDistance(camera_frustum.nearPlaneDistance);
-		}
-
-		if (ImGui::SliderFloat("Far plane", &camera_frustum.farPlaneDistance, camera_frustum.nearPlaneDistance + 1, camera_frustum.nearPlaneDistance + 1000))
-		{
-			SetFarDistance(camera_frustum.farPlaneDistance);
-		}
-
-		if (ImGui::SliderFloat("Orthographic Size", &camera_frustum.orthographicHeight, 0, 100))
-		{
-			SetOrthographicSize(float2(camera_frustum.orthographicHeight * aspect_ratio, camera_frustum.orthographicHeight));
-		}
-
-		if (ImGui::Combo("Front faces", &perpesctive_enable, "Perspective\0Orthographic\0"))
-		{
-			switch (perpesctive_enable)
-			{
-			case 0:
-				SetPerpesctiveView();
-				break;
-			case 1:
-				SetOrthographicView();
-				break;
-			}
-		}
-	}
+	ComponentsUI::ShowComponentCameraWindow(this);
 }

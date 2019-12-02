@@ -9,8 +9,8 @@
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTime.h"
-#include "EngineUI.h"
-#include "EngineLog.h"
+#include "UI/EngineUI.h"
+#include "UI/EngineLog.h"
 #include "TimerUs.h"
 
 using namespace std;

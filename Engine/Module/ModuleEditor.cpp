@@ -2,7 +2,7 @@
 #include "Application.h"
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
-#include "EngineUI.h"
+#include "UI/EngineUI.h"
 
 #include <SDL/SDL.h>
 #include <GL/glew.h>
@@ -54,6 +54,7 @@ update_status ModuleEditor::PreUpdate()
 update_status ModuleEditor::Update()
 {
 	App->ui->ShowEngineUI();
+	
 	//ImGui::ShowStyleEditor();
 	//ImGui::ShowDemoWindow();
 	return update_status::UPDATE_CONTINUE;

@@ -1,8 +1,6 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
-
-#include "imgui.h"
-#include <FontAwesome5/IconsFontAwesome5.h>
+#include "UI/ComponentsUI.h"
 
 ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM) {
 
@@ -96,19 +94,5 @@ void ComponentTransform::ChangeLocalSpace(const float4x4 new_local_space)
 
 void ComponentTransform::ShowComponentWindow()
 {
-	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if (ImGui::DragFloat3("Translation", &translation[0], 0.01f))
-		{
-			GenerateModelMatrix();
-		}
-		if (ImGui::DragFloat3("Rotation", &rotation[0], 0.1f, -180.f, 180.f))
-		{
-			GenerateModelMatrix();
-		}
-		if (ImGui::DragFloat3("Scale", &scale[0], 0.01f))
-		{
-			GenerateModelMatrix();
-		}
-	}
+	ComponentsUI::ShowComponentTransformWindow(this);
 }
