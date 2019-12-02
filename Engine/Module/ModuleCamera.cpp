@@ -33,17 +33,19 @@ update_status ModuleCamera::Update()
 bool ModuleCamera::CleanUp()
 {
 	delete scene_camera_game_object;
+	/*
 	for (auto& camera : cameras )
 	{
 		delete camera;
 	}
+	*/
 	cameras.clear();
+	
 	return true;
 }
 
 ComponentCamera* ModuleCamera::CreateComponentCamera()
 {
-
 	ComponentCamera * new_camera = new ComponentCamera();
 	cameras.push_back(new_camera);
 	return new_camera;

@@ -60,7 +60,7 @@ void ModuleScene::ShowFrameBufferTab(ComponentCamera * camera_frame_buffer_to_sh
 {
 	if (ImGui::BeginTabItem(title))
 	{
-		scene_window_is_hovered = ImGui::IsWindowHovered();
+		scene_window_is_hovered = ImGui::IsWindowHovered(); // TODO: This should be something like ImGui::IsTabHovered (such function doesn't exist though)
 
 		float imgui_window_width = ImGui::GetWindowWidth(); 
 		float imgui_window_height = ImGui::GetWindowHeight();
