@@ -2,7 +2,7 @@
 #define _COMPONENTCAMERA_H_
 
 #include "Component.h"
-#include "Component/ComponentAABBCollider.h"
+#include "Component/ComponentAABB.h"
 #include "UI/ComponentsUI.h"
 
 #include "MathGeoLib.h"
@@ -60,7 +60,7 @@ public:
 	void GenerateMatrices();
 
 	bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const;
-	ComponentAABBCollider::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
+	ComponentAABB::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
 
 	void ShowComponentWindow() override;
 

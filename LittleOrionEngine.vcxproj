@@ -79,7 +79,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\UI\ComponentsUI.h" />
     <ClInclude Include="Engine\BoundingBoxRenderer.h" />
-    <ClInclude Include="Engine\Component\ComponentAABBCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentAABB.h" />
     <ClInclude Include="Engine\Component\ComponentCamera.h" />
     <ClInclude Include="Engine\Component\ComponentMaterial.h" />
     <ClInclude Include="Engine\Component\ComponentMesh.h" />
@@ -180,7 +180,7 @@
   <ItemGroup>
     <ClCompile Include="Engine\UI\ComponentsUI.cpp" />
     <ClCompile Include="Engine\BoundingBoxRenderer.cpp" />
-    <ClCompile Include="Engine\Component\ComponentAABBCollider.cpp" />
+    <ClCompile Include="Engine\Component\ComponentAABB.cpp" />
     <ClCompile Include="Engine\Component\ComponentCamera.cpp" />
     <ClCompile Include="Engine\Component\ComponentMaterial.cpp" />
     <ClCompile Include="Engine\Component\ComponentMesh.cpp" />

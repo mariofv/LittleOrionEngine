@@ -8,7 +8,7 @@ class Component
 public:
 	enum class ComponentType
 	{
-		AABBCOLLIDER,
+		AABB,
 		CAMERA,
 		MATERIAL,
 		MESH,

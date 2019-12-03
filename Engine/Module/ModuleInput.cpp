@@ -117,7 +117,7 @@ update_status ModuleInput::PreUpdate()
 			{
 				if (App->scene->hierarchy.selected_game_object != nullptr)
 				{
-					App->cameras->scene_camera->Focus(App->scene->hierarchy.selected_game_object->aabb_collider.bounding_box);
+					App->cameras->scene_camera->Focus(App->scene->hierarchy.selected_game_object->aabb.bounding_box);
 				}
 			}
 			break;

@@ -18,14 +18,14 @@
 
 #include <algorithm>
 
-GameObject::GameObject() : transform(this), aabb_collider(this)
+GameObject::GameObject() : transform(this), aabb(this)
 {
 }
 
 GameObject::GameObject(const std::string name) :
 	name(name),
 	transform(this),
-	aabb_collider(this)
+	aabb(this)
 {
 
 }
@@ -58,7 +58,7 @@ bool GameObject::IsEnabled() const
 void GameObject::Update()
 {
 	transform.GenerateGlobalModelMatrix();
-	aabb_collider.GenerateBoundingBox();
+	aabb.GenerateBoundingBox();
 
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
@@ -248,7 +248,7 @@ void GameObject::ShowPropertiesWindow()
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	aabb_collider.ShowComponentWindow();
+	aabb.ShowComponentWindow();
 
 
 	for (unsigned int i = 0; i < components.size(); ++i)

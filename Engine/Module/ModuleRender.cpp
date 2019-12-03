@@ -154,7 +154,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	RenderGrid(camera);
 	for (auto &mesh : meshes)
 	{
-		if (mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb_collider.bounding_box))
+		if (mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
 		{
 			RenderMesh(*mesh, camera);
 		}
@@ -200,7 +200,7 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 
 	if (mesh_game_object.parent != nullptr) // IS NOT ROOT NODE
 	{
-		mesh_game_object.aabb_collider.Render(camera, App->program->default_program);
+		mesh_game_object.aabb.Render(camera, App->program->default_program);
 	}
 }
 

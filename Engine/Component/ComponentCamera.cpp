@@ -345,10 +345,10 @@ void ComponentCamera::GenerateMatrices()
 
 bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
 {
-	return CheckAABBCollision(aabb) != ComponentAABBCollider::CollisionState::OUTSIDE;
+	return CheckAABBCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
 
-ComponentAABBCollider::CollisionState ComponentCamera::CheckAABBCollision(const AABB& reference_AABB) const
+ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const AABB& reference_AABB) const
 {
 	static const size_t number_of_corners = 8;
 	static const size_t number_of_planes = 6;
@@ -378,17 +378,17 @@ ComponentAABBCollider::CollisionState ComponentCamera::CheckAABBCollision(const 
 		}
 		if (points_inside_count == 0)
 		{
-			return ComponentAABBCollider::CollisionState::OUTSIDE;
+			return ComponentAABB::CollisionState::OUTSIDE;
 		}
 		total_reference_planes_inside += is_plane_inside;
 	}
 	// so if total_reference_planes_inside is 6, then all are inside the view
 	if (total_reference_planes_inside == 6)
 	{
-		return ComponentAABBCollider::CollisionState::INSIDE;
+		return ComponentAABB::CollisionState::INSIDE;
 	}
 	// we must be partly in then otherwise
-	return ComponentAABBCollider::CollisionState::INTERSECT;
+	return ComponentAABB::CollisionState::INTERSECT;
 }
 
 void ComponentCamera::ShowComponentWindow()

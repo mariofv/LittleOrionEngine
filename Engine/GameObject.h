@@ -4,7 +4,7 @@
 #include "Globals.h"
 #include "Component/Component.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentAABBCollider.h"
+#include "Component/ComponentAABB.h"
 #include <GL/glew.h>
 
 #include <vector>
@@ -47,7 +47,7 @@ public:
 
 
 	ComponentTransform transform;
-	ComponentAABBCollider aabb_collider;
+	ComponentAABB aabb;
 
 	std::vector<Component*> components;
 
