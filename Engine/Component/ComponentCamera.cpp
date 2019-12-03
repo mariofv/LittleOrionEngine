@@ -343,6 +343,11 @@ void ComponentCamera::GenerateMatrices()
 	view = camera_frustum.ViewMatrix();
 }
 
+bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
+{
+	return CheckAABBCollision(aabb) != ComponentAABBCollider::CollisionState::OUTSIDE;
+}
+
 ComponentAABBCollider::CollisionState ComponentCamera::CheckAABBCollision(const AABB& reference_AABB) const
 {
 	static const size_t number_of_corners = 8;

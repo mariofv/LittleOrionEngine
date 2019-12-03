@@ -59,6 +59,7 @@ public:
 	float4x4 GetProjectionMatrix() const;
 	void GenerateMatrices();
 
+	bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const;
 	ComponentAABBCollider::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
 
 	void ShowComponentWindow() override;
