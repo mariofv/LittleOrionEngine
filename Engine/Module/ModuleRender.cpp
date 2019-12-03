@@ -10,7 +10,7 @@
 #include "ModuleWindow.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMesh.h"
-#include "BoundingBoxRenderer.h"
+#include "GeometryRenderer.h"
 
 #include <SDL/SDL.h>
 #include "MathGeoLib.h"
@@ -111,7 +111,7 @@ bool ModuleRender::Init()
 	SetVSync(VSYNC);
 	SetDepthTest(true);
 
-	bounding_box_renderer = new BoundingBoxRenderer();
+	geometry_renderer = new GeometryRenderer();
 
 	APP_LOG_SUCCESS("Glew initialized correctly.")
 
@@ -137,7 +137,7 @@ bool ModuleRender::CleanUp()
 {
 	APP_LOG_INFO("Destroying renderer");
 
-	delete bounding_box_renderer;
+	delete geometry_renderer;
 
 	return true;
 }
@@ -199,9 +199,9 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 	glUseProgram(0);
 
 
-	if (mesh_game_object.parent != nullptr) // IS NOT ROOT NODE
+	if (!mesh_game_object.aabb.IsEmpty())
 	{
-		bounding_box_renderer->Render(camera, mesh_game_object.parent->aabb.bounding_box, App->program->default_program);
+		geometry_renderer->RenderHexahedron(camera, mesh_game_object.aabb.GetVertices());
 	}
 }
 

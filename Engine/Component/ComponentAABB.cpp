@@ -3,7 +3,6 @@
 #include "GameObject.h"
 #include "Application.h"
 
-#include "BoundingBoxRenderer.h"
 #include "Module/ModuleRender.h"
 
 ComponentAABB::ComponentAABB() : Component(nullptr, ComponentType::MATERIAL)
@@ -61,4 +60,25 @@ void ComponentAABB::GenerateBoundingBoxFromVertices(const std::vector<ComponentM
 	{
 		bounding_box.Enclose(vertices[i].position);
 	}
+}
+
+bool ComponentAABB::IsEmpty() const
+{
+	return bounding_box.Size().Length() == 0;
+}
+
+std::vector<float> ComponentAABB::GetVertices() const
+{
+	float3 tmp_vertices[8];
+	bounding_box.GetCornerPoints(&tmp_vertices[0]);
+
+	std::vector<float> vertices(24);
+	for (unsigned int i = 0; i < 8; ++i)
+	{
+		vertices[i * 3] = tmp_vertices[i].x;
+		vertices[i * 3 + 1] = tmp_vertices[i].y;
+		vertices[i * 3 + 2] = tmp_vertices[i].z;
+	}
+
+	return vertices;
 }

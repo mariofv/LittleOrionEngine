@@ -3,12 +3,12 @@
 
 #include "Module.h"
 #include "Globals.h"
+#include "GeometryRenderer.h"
 
 #include <GL/glew.h>
 
 class ComponentMesh;
 class ComponentCamera;
-class BoundingBoxRenderer;
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -49,7 +49,7 @@ private:
 	void SetWireframing(const bool gl_wireframe);
 
 public:
-	BoundingBoxRenderer *bounding_box_renderer = nullptr;
+	GeometryRenderer *geometry_renderer = nullptr;
 
 private:
 	void* context = nullptr;

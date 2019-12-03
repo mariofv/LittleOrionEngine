@@ -27,12 +27,15 @@ public:
 	void Disable() override;
 	void Update() override;
 
-	void Render(const ComponentCamera &camera, const GLuint shader_program) const;
-
 	void GenerateBoundingBox();
 	void GenerateBoundingBoxFromVertices(const std::vector<ComponentMesh::Vertex> & vertices);
 
+	bool IsEmpty() const;
+	std::vector<float> GetVertices() const;
+
 	void ShowComponentWindow(){}
+
+public:
 	AABB bounding_box;
 
 };
