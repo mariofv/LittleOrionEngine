@@ -343,6 +343,22 @@ void ComponentCamera::GenerateMatrices()
 	view = camera_frustum.ViewMatrix();
 }
 
+std::vector<float> ComponentCamera::GetFrustumVertices() const
+{
+	float3 tmp_vertices[8];
+	camera_frustum.GetCornerPoints(&tmp_vertices[0]);
+
+	std::vector<float> vertices(24);
+	for (unsigned int i = 0; i < 8; ++i)
+	{
+		vertices[i * 3] = tmp_vertices[i].x;
+		vertices[i * 3 + 1] = tmp_vertices[i].y;
+		vertices[i * 3 + 2] = tmp_vertices[i].z;
+	}
+
+	return vertices;
+}
+
 bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
 {
 	return CheckAABBCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;

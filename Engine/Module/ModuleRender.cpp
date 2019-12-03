@@ -152,6 +152,7 @@ void ModuleRender::Render() const
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
 	RenderGrid(camera);
+	geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
 	for (auto &mesh : meshes)
 	{
 		if (mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
