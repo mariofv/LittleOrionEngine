@@ -198,9 +198,10 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 
 	glUseProgram(0);
 
+
 	if (mesh_game_object.parent != nullptr) // IS NOT ROOT NODE
 	{
-		mesh_game_object.aabb.Render(camera, App->program->default_program);
+		bounding_box_renderer->Render(camera, mesh_game_object.parent->aabb.bounding_box, App->program->default_program);
 	}
 }
 

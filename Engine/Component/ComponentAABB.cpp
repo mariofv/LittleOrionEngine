@@ -36,11 +36,6 @@ void ComponentAABB::Update()
 
 }
 
-void ComponentAABB::Render(const ComponentCamera &camera, const GLuint shader_program) const
-{
-	App->renderer->bounding_box_renderer->Render(camera, bounding_box, shader_program);
-}
-
 void ComponentAABB::GenerateBoundingBox()
 {
 	bool has_mesh = false;
