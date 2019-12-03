@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "Module/ModuleRender.h"
-#include "Module/ModuleScene.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleCamera.h"
 
@@ -13,7 +12,7 @@ ComponentCamera::ComponentCamera() : Component(nullptr, ComponentType::CAMERA)
 	aspect_ratio = 1.f;
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
 	camera_frustum.pos = float3::unitX;
-	camera_frustum.front = -float3::unitZ;
+	camera_frustum.front = float3::unitZ;
 	camera_frustum.up = float3::unitY;
 	camera_frustum.nearPlaneDistance = 1.f;
 	camera_frustum.farPlaneDistance = 100.0f;
@@ -30,7 +29,7 @@ ComponentCamera::ComponentCamera(GameObject * owner) : Component(owner, Componen
 	aspect_ratio = 1.f;
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
 	camera_frustum.pos = float3::unitX;
-	camera_frustum.front = -float3::unitZ;
+	camera_frustum.front = float3::unitZ;
 	camera_frustum.up = float3::unitY;
 	camera_frustum.nearPlaneDistance = 1.f;
 	camera_frustum.farPlaneDistance = 100.0f;
@@ -96,8 +95,7 @@ void ComponentCamera::RecordFrame(const float width, const float height)
 	glViewport(0, 0, width, height);
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 
-	App->renderer->RenderGrid(*this);
-	App->scene->Render(*this);
+	App->renderer->RenderFrame(*this);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
@@ -345,7 +343,28 @@ void ComponentCamera::GenerateMatrices()
 	view = camera_frustum.ViewMatrix();
 }
 
-ComponentAABBCollider::CollisionState ComponentCamera::CheckAABBCollision(const AABB& reference_AABB) const
+std::vector<float> ComponentCamera::GetFrustumVertices() const
+{
+	float3 tmp_vertices[8];
+	camera_frustum.GetCornerPoints(&tmp_vertices[0]);
+
+	std::vector<float> vertices(24);
+	for (unsigned int i = 0; i < 8; ++i)
+	{
+		vertices[i * 3] = tmp_vertices[i].x;
+		vertices[i * 3 + 1] = tmp_vertices[i].y;
+		vertices[i * 3 + 2] = tmp_vertices[i].z;
+	}
+
+	return vertices;
+}
+
+bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
+{
+	return CheckAABBCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
+}
+
+ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const AABB& reference_AABB) const
 {
 	static const size_t number_of_corners = 8;
 	static const size_t number_of_planes = 6;
@@ -375,17 +394,17 @@ ComponentAABBCollider::CollisionState ComponentCamera::CheckAABBCollision(const 
 		}
 		if (points_inside_count == 0)
 		{
-			return ComponentAABBCollider::CollisionState::OUTSIDE;
+			return ComponentAABB::CollisionState::OUTSIDE;
 		}
 		total_reference_planes_inside += is_plane_inside;
 	}
 	// so if total_reference_planes_inside is 6, then all are inside the view
 	if (total_reference_planes_inside == 6)
 	{
-		return ComponentAABBCollider::CollisionState::INSIDE;
+		return ComponentAABB::CollisionState::INSIDE;
 	}
 	// we must be partly in then otherwise
-	return ComponentAABBCollider::CollisionState::INTERSECT;
+	return ComponentAABB::CollisionState::INTERSECT;
 }
 
 void ComponentCamera::ShowComponentWindow()

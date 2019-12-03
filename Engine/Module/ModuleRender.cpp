@@ -10,7 +10,7 @@
 #include "ModuleWindow.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMesh.h"
-#include "BoundingBoxRenderer.h"
+#include "GeometryRenderer.h"
 
 #include <SDL/SDL.h>
 #include "MathGeoLib.h"
@@ -111,7 +111,7 @@ bool ModuleRender::Init()
 	SetVSync(VSYNC);
 	SetDepthTest(true);
 
-	bounding_box_renderer = new BoundingBoxRenderer();
+	geometry_renderer = new GeometryRenderer();
 
 	APP_LOG_SUCCESS("Glew initialized correctly.")
 
@@ -137,18 +137,73 @@ bool ModuleRender::CleanUp()
 {
 	APP_LOG_INFO("Destroying renderer");
 
-	delete bounding_box_renderer;
+	delete geometry_renderer;
 
 	return true;
 }
 
 void ModuleRender::Render() const
 {
-	
 	App->editor->Render();
-
 	SDL_GL_SwapWindow(App->window->window);
 	App->time->EndFrame();
+}
+
+void ModuleRender::RenderFrame(const ComponentCamera &camera)
+{
+	RenderGrid(camera);
+	geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
+	for (auto &mesh : meshes)
+	{
+		if (mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
+		{
+			RenderMesh(*mesh, camera);
+		}
+	}
+}
+
+void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const
+{
+	const GameObject& mesh_game_object = *mesh.owner;
+
+	GLuint shader_program = App->program->texture_program;
+	glUseProgram(shader_program);
+
+	glUniformMatrix4fv(
+		glGetUniformLocation(shader_program, "model"),
+		1,
+		GL_TRUE,
+		&mesh_game_object.transform.GetGlobalModelMatrix()[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(shader_program, "view"),
+		1,
+		GL_TRUE,
+		&camera.GetViewMatrix()[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(shader_program, "proj"),
+		1,
+		GL_TRUE,
+		&camera.GetProjectionMatrix()[0][0]
+	);
+
+	int mesh_material_index = mesh.material_index;
+	const GLuint mesh_texture = mesh_game_object.GetMaterialTexture(mesh_material_index);
+	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mesh_texture);
+	glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
+
+	mesh.Render();
+
+	glUseProgram(0);
+
+
+	if (!mesh_game_object.aabb.IsEmpty())
+	{
+		geometry_renderer->RenderHexahedron(camera, mesh_game_object.aabb.GetVertices());
+	}
 }
 
 void ModuleRender::SetVSync(const bool vsync)
@@ -286,9 +341,11 @@ void ModuleRender::RenderGrid(const ComponentCamera &camera) const
 	glLineWidth(1.0f);
 }
 
-ComponentMesh* ModuleRender::CreateComponentMesh() const
+ComponentMesh* ModuleRender::CreateComponentMesh()
 {
-	return new ComponentMesh();
+	ComponentMesh *created_mesh = new ComponentMesh();
+	meshes.push_back(created_mesh);
+	return created_mesh;
 }
 
 void ModuleRender::ShowRenderOptions()

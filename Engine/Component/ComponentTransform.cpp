@@ -31,18 +31,6 @@ void ComponentTransform::Update()
 
 }
 
-void ComponentTransform::Render(const GLuint shader_program) const
-{
-	float4x4 tmp_model_matrix = global_model_matrix;
-
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "model"),
-		1,
-		GL_TRUE,
-		&tmp_model_matrix[0][0]
-	);
-}
-
 float3 ComponentTransform::GetTranslation() const
 {
 	return translation;

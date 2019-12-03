@@ -18,18 +18,17 @@
 
 #include <algorithm>
 
-GameObject::GameObject() : transform(this), aabb_collider(this)
+GameObject::GameObject() : transform(this), aabb(this)
 {
 }
 
 GameObject::GameObject(const std::string name) :
 	name(name),
 	transform(this),
-	aabb_collider(this)
+	aabb(this)
 {
 
 }
-
 
 GameObject::~GameObject()
 {
@@ -51,10 +50,15 @@ GameObject::~GameObject()
 	children.clear();
 }
 
+bool GameObject::IsEnabled() const
+{
+	return active;
+}
+
 void GameObject::Update()
 {
 	transform.GenerateGlobalModelMatrix();
-	aabb_collider.GenerateBoundingBox();
+	aabb.GenerateBoundingBox();
 
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
@@ -66,49 +70,6 @@ void GameObject::Update()
 		children[i]->Update();
 	}
 
-}
-
-void GameObject::Render(const ComponentCamera &camera) const
-{
-	if (!active)
-	{
-		return;
-	}
-
-	GLuint shader_program = App->program->texture_program;
-	glUseProgram(shader_program);
-
-	transform.Render(shader_program);
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "view"),
-		1,
-		GL_TRUE,
-		&camera.GetViewMatrix()[0][0]
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "proj"),
-		1,
-		GL_TRUE,
-		&camera.GetProjectionMatrix()[0][0]
-	);
-
-	for (unsigned int i = 0; i < components.size(); ++i)
-	{
-		if (components[i]->GetType() == Component::ComponentType::MESH)
-		{
-			ComponentMesh* current_mesh = (ComponentMesh*)components[i];
-			int mesh_material_index = current_mesh->material_index;
-			const GLuint mesh_texture = GetMaterialTexture(mesh_material_index);
-			current_mesh->Render(shader_program, mesh_texture);
-		}
-	}
-
-	glUseProgram(0);
-
-	if (parent != nullptr) // IS NOT ROOT NODE
-	{
-		aabb_collider.Render(camera, App->program->default_program);
-	}
 }
 
 void GameObject::SetParent(GameObject *new_parent)
@@ -287,7 +248,7 @@ void GameObject::ShowPropertiesWindow()
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	aabb_collider.ShowComponentWindow();
+	aabb.ShowComponentWindow();
 
 
 	for (unsigned int i = 0; i < components.size(); ++i)

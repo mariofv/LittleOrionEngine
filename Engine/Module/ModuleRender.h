@@ -3,12 +3,12 @@
 
 #include "Module.h"
 #include "Globals.h"
+#include "GeometryRenderer.h"
 
 #include <GL/glew.h>
 
 class ComponentMesh;
 class ComponentCamera;
-class BoundingBoxRenderer;
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -26,9 +26,11 @@ public:
 	bool CleanUp();
 	
 	void Render() const;
+	void RenderFrame(const ComponentCamera &camera);
+	void RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const;
 	void RenderGrid(const ComponentCamera &camera) const;
 
-	ComponentMesh* CreateComponentMesh() const;
+	ComponentMesh* CreateComponentMesh();
 
 	void ShowRenderOptions();
 
@@ -47,7 +49,7 @@ private:
 	void SetWireframing(const bool gl_wireframe);
 
 public:
-	BoundingBoxRenderer *bounding_box_renderer = nullptr;
+	GeometryRenderer *geometry_renderer = nullptr;
 
 private:
 	void* context = nullptr;
@@ -66,6 +68,7 @@ private:
 	bool gl_minmax = false;
 	bool gl_wireframe = false;
 
+	std::vector<ComponentMesh*> meshes;
 };
 
 #endif //_MODULERENDER_H_

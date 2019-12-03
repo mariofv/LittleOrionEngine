@@ -2,7 +2,7 @@
 #define _COMPONENTCAMERA_H_
 
 #include "Component.h"
-#include "Component/ComponentAABBCollider.h"
+#include "Component/ComponentAABB.h"
 #include "UI/ComponentsUI.h"
 
 #include "MathGeoLib.h"
@@ -59,7 +59,9 @@ public:
 	float4x4 GetProjectionMatrix() const;
 	void GenerateMatrices();
 
-	ComponentAABBCollider::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
+	std::vector<float> GetFrustumVertices() const;
+	bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const;
+	ComponentAABB::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
 
 	void ShowComponentWindow() override;
 
@@ -77,8 +79,8 @@ public:
 	const float CAMERA_MAXIMUN_MOVEMENT_SPEED = 1.0f;
 	const float CAMERA_MINIMUN_MOVEMENT_SPEED = 0.005f;
 	
-	float camera_movement_speed = 1.0f;
-	float camera_zooming_speed = 1.0f;
+	float camera_movement_speed = 0.25f;
+	float camera_zooming_speed = 0.25f;
 	float camera_rotation_speed = 0.000625f;
 
 	float4x4 proj;
