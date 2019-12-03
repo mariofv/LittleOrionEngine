@@ -26,6 +26,7 @@ public:
 	bool CleanUp();
 	
 	void Render() const;
+	void RenderFrame(const ComponentCamera &camera);
 	void RenderGrid(const ComponentCamera &camera) const;
 
 	ComponentMesh* CreateComponentMesh() const;

@@ -151,6 +151,13 @@ void ModuleRender::Render() const
 	App->time->EndFrame();
 }
 
+void ModuleRender::RenderFrame(const ComponentCamera &camera)
+{
+	RenderGrid(camera);
+	App->scene->Render(camera);
+}
+
+
 void ModuleRender::SetVSync(const bool vsync)
 {
 	this->vsync = vsync;
