@@ -27,6 +27,7 @@ public:
 	
 	void Render() const;
 	void RenderFrame(const ComponentCamera &camera);
+	void RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const;
 	void RenderGrid(const ComponentCamera &camera) const;
 
 	ComponentMesh* CreateComponentMesh();

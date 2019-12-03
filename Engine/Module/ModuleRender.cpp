@@ -144,9 +144,7 @@ bool ModuleRender::CleanUp()
 
 void ModuleRender::Render() const
 {
-	
 	App->editor->Render();
-
 	SDL_GL_SwapWindow(App->window->window);
 	App->time->EndFrame();
 }
@@ -156,13 +154,63 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	RenderGrid(camera);
 	for (auto &mesh : meshes)
 	{
-		if (App->cameras->active_camera->CheckAABBCollision(mesh->owner->aabb_collider.bounding_box) != ComponentAABBCollider::CollisionState::OUTSIDE)
-		{
-			mesh->owner->Render(camera);
-		}
+		RenderMesh(*mesh, camera);
 	}
 }
 
+void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const
+{
+	if (!mesh.IsEnabled())
+	{
+		return;
+	}
+
+	const GameObject& mesh_game_object = *mesh.owner;
+
+	if (App->cameras->active_camera->CheckAABBCollision(mesh_game_object.aabb_collider.bounding_box) == ComponentAABBCollider::CollisionState::OUTSIDE)
+	{
+		return;
+
+	}
+
+	GLuint shader_program = App->program->texture_program;
+	glUseProgram(shader_program);
+
+	glUniformMatrix4fv(
+		glGetUniformLocation(shader_program, "model"),
+		1,
+		GL_TRUE,
+		&mesh_game_object.transform.GetGlobalModelMatrix()[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(shader_program, "view"),
+		1,
+		GL_TRUE,
+		&camera.GetViewMatrix()[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(shader_program, "proj"),
+		1,
+		GL_TRUE,
+		&camera.GetProjectionMatrix()[0][0]
+	);
+
+	int mesh_material_index = mesh.material_index;
+	const GLuint mesh_texture = mesh_game_object.GetMaterialTexture(mesh_material_index);
+	
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mesh_texture);
+	glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
+
+	mesh.Render();
+
+	glUseProgram(0);
+
+	if (mesh_game_object.parent != nullptr) // IS NOT ROOT NODE
+	{
+		mesh_game_object.aabb_collider.Render(camera, App->program->default_program);
+	}
+}
 
 void ModuleRender::SetVSync(const bool vsync)
 {

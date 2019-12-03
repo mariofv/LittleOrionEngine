@@ -18,8 +18,9 @@ public:
 	GameObject(const std::string name);
 	~GameObject();
 
+	bool IsEnabled() const;
+
 	void Update();
-	void Render(const ComponentCamera &camera) const;
 
 	void SetParent(GameObject *new_parent);
 	void AddChild(GameObject *child);
@@ -34,10 +35,9 @@ public:
 	void UpdateHierarchyDepth();
 	void UpdateHierarchyBranch();
 
-	void ShowPropertiesWindow();
-
-private:
 	const GLuint GetMaterialTexture(const int material_index) const;
+
+	void ShowPropertiesWindow();
 
 public:
 	std::string name = "";

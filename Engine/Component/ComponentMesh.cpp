@@ -47,18 +47,12 @@ void ComponentMesh::LoadMesh(const std::vector<Vertex> vertices, const std::vect
 	SetupMesh();
 }
 
-void ComponentMesh::Render(const GLuint shader_program, const GLuint texture) const
+void ComponentMesh::Render() const
 {
-	if (active)
-	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, texture);
-		glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
-
-		glBindVertexArray(vao);
-		glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
-		glBindVertexArray(0);
-	}
+	glBindVertexArray(vao);
+	glDrawElements(GL_TRIANGLES, indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+	
 }
 
 void ComponentMesh::SetupMesh()
