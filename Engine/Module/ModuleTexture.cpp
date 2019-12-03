@@ -8,6 +8,7 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 #include <SDL/SDL.h>
+#include <algorithm>
 
 // Called before render is available
 bool ModuleTexture::Init()
@@ -31,11 +32,21 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
-ComponentMaterial* ModuleTexture::CreateComponentMaterial() const
+ComponentMaterial* ModuleTexture::CreateComponentMaterial()
 {
-	return new ComponentMaterial();
+	ComponentMaterial * new_material = new ComponentMaterial();
+	materials.push_back(new_material);
+	return new_material;
 }
 
+void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remove)
+{
+	auto it = std::remove_if(materials.begin(), materials.end(), [material_to_remove](auto const & material)
+	{
+		return material == material_to_remove;
+	});
+	materials.erase(it);
+}
 
 Texture* ModuleTexture::LoadTexture(const char* texture_path) const
 {
