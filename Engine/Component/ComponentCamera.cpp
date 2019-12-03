@@ -12,7 +12,7 @@ ComponentCamera::ComponentCamera() : Component(nullptr, ComponentType::CAMERA)
 	aspect_ratio = 1.f;
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
 	camera_frustum.pos = float3::unitX;
-	camera_frustum.front = -float3::unitZ;
+	camera_frustum.front = float3::unitZ;
 	camera_frustum.up = float3::unitY;
 	camera_frustum.nearPlaneDistance = 1.f;
 	camera_frustum.farPlaneDistance = 100.0f;
@@ -29,7 +29,7 @@ ComponentCamera::ComponentCamera(GameObject * owner) : Component(owner, Componen
 	aspect_ratio = 1.f;
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
 	camera_frustum.pos = float3::unitX;
-	camera_frustum.front = -float3::unitZ;
+	camera_frustum.front = float3::unitZ;
 	camera_frustum.up = float3::unitY;
 	camera_frustum.nearPlaneDistance = 1.f;
 	camera_frustum.farPlaneDistance = 100.0f;

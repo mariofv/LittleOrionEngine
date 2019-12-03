@@ -78,8 +78,8 @@ public:
 	const float CAMERA_MAXIMUN_MOVEMENT_SPEED = 1.0f;
 	const float CAMERA_MINIMUN_MOVEMENT_SPEED = 0.005f;
 	
-	float camera_movement_speed = 1.0f;
-	float camera_zooming_speed = 1.0f;
+	float camera_movement_speed = 0.25f;
+	float camera_zooming_speed = 0.25f;
 	float camera_rotation_speed = 0.000625f;
 
 	float4x4 proj;

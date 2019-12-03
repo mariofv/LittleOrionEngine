@@ -43,31 +43,20 @@ void ComponentAABBCollider::Render(const ComponentCamera &camera, const GLuint s
 
 void ComponentAABBCollider::GenerateBoundingBox()
 {
-
-	for (unsigned int i = 0; i < owner->children.size(); ++i)
+	bool has_mesh = false;
+	ComponentMesh * owner_mesh = static_cast<ComponentMesh*>(owner->GetComponent(ComponentType::MESH));
+	has_mesh = owner_mesh != nullptr;
+	
+	if (has_mesh)
 	{
-		owner->children[i]->aabb_collider.GenerateBoundingBox();
-	}
-
-	bool has_meshes = false;
-	bounding_box.SetNegativeInfinity();
-	ComponentMesh * ownerMesh = static_cast<ComponentMesh*>(owner->GetComponent(ComponentType::MESH));
-	has_meshes = ownerMesh != nullptr;
-	if (has_meshes)
-	{
-		GenerateBoundingBoxFromVertices(ownerMesh->vertices);
+		GenerateBoundingBoxFromVertices(owner_mesh->vertices);
 	}
 	else
 	{
 		bounding_box = AABB(float3::zero, float3::zero);
 	}
+	
 	bounding_box.TransformAsAABB(owner->transform.GetGlobalModelMatrix());
-
-
-	for (unsigned int i = 0; i < owner->children.size(); ++i)
-	{
-		bounding_box.Enclose(owner->children[i]->aabb_collider.bounding_box);
-	}
 }
 
 void ComponentAABBCollider::GenerateBoundingBoxFromVertices(const std::vector<ComponentMesh::Vertex> & vertices)
@@ -77,14 +66,4 @@ void ComponentAABBCollider::GenerateBoundingBoxFromVertices(const std::vector<Co
 	{
 		bounding_box.Enclose(vertices[i].position);
 	}
-}
-
-void ComponentAABBCollider::GenerateBoundingBoxFromFrustum(const Frustum & frustum) 
-{
-	bounding_box.SetNegativeInfinity();
-	for (unsigned int i = 0; i < 8 ; ++i)
-	{
-		bounding_box.Enclose(frustum.CornerPoint(i));
-	}
-		
 }

@@ -29,11 +29,8 @@ public:
 
 	void Render(const ComponentCamera &camera, const GLuint shader_program) const;
 
-	ComponentAABBCollider::CollisionState CheckAABBCollision(const Frustum& frustum) const;
-
 	void GenerateBoundingBox();
 	void GenerateBoundingBoxFromVertices(const std::vector<ComponentMesh::Vertex> & vertices);
-	void GenerateBoundingBoxFromFrustum(const Frustum & frustum);
 
 	void ShowComponentWindow(){}
 	AABB bounding_box;
