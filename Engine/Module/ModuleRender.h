@@ -29,7 +29,7 @@ public:
 	void RenderFrame(const ComponentCamera &camera);
 	void RenderGrid(const ComponentCamera &camera) const;
 
-	ComponentMesh* CreateComponentMesh() const;
+	ComponentMesh* CreateComponentMesh();
 
 	void ShowRenderOptions();
 
@@ -67,6 +67,7 @@ private:
 	bool gl_minmax = false;
 	bool gl_wireframe = false;
 
+	std::vector<ComponentMesh*> meshes;
 };
 
 #endif //_MODULERENDER_H_

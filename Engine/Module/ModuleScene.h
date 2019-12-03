@@ -17,7 +17,6 @@ public:
 	bool Init();
 	update_status Update() override;
 	bool CleanUp();
-	void Render(const ComponentCamera &camera) const;
 
 	GameObject* CreateGameObject();
 	GameObject* CreateChildGameObject(GameObject *parent);

@@ -154,7 +154,13 @@ void ModuleRender::Render() const
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
 	RenderGrid(camera);
-	App->scene->Render(camera);
+	for (auto &mesh : meshes)
+	{
+		if (App->cameras->active_camera->CheckAABBCollision(mesh->owner->aabb_collider.bounding_box) != ComponentAABBCollider::CollisionState::OUTSIDE)
+		{
+			mesh->owner->Render(camera);
+		}
+	}
 }
 
 
@@ -293,9 +299,11 @@ void ModuleRender::RenderGrid(const ComponentCamera &camera) const
 	glLineWidth(1.0f);
 }
 
-ComponentMesh* ModuleRender::CreateComponentMesh() const
+ComponentMesh* ModuleRender::CreateComponentMesh()
 {
-	return new ComponentMesh();
+	ComponentMesh *created_mesh = new ComponentMesh();
+	meshes.push_back(created_mesh);
+	return created_mesh;
 }
 
 void ModuleRender::ShowRenderOptions()
