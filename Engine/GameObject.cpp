@@ -78,7 +78,12 @@ void GameObject::Render(const ComponentCamera &camera) const
 	GLuint shader_program = App->program->texture_program;
 	glUseProgram(shader_program);
 
-	transform.Render(shader_program);
+	glUniformMatrix4fv(
+		glGetUniformLocation(shader_program, "model"),
+		1,
+		GL_TRUE,
+		&transform.GetGlobalModelMatrix()[0][0]
+	);
 	glUniformMatrix4fv(
 		glGetUniformLocation(shader_program, "view"),
 		1,
