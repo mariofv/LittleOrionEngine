@@ -39,26 +39,26 @@ ComponentMaterial* ModuleTexture::CreateComponentMaterial() const
 
 Texture* ModuleTexture::LoadTexture(const char* texture_path) const
 {
-	
+	ILuint image;
+	ilGenImages(1, &image);
+	ilBindImage(image);
+
 	int width, height;
-	unsigned char * data = nullptr;
-	bool success = LoadImageData(texture_path, width, height, data);
-	if (!success)
+	unsigned char * data = LoadImageData(texture_path, width, height);
+	if (data == NULL)
 	{
 		return nullptr;
 	}
 	Texture *loaded_texture = new Texture(data, width, height, texture_path);
+	ilDeleteImages(1, &image);
+
 	loaded_texture->GenerateMipMap();
 
 	return loaded_texture;
 }
 
-bool ModuleTexture::LoadImageData(const char* texture_path, int& width, int& height, unsigned char* data) const
+unsigned char* ModuleTexture::LoadImageData(const char* texture_path, int& width, int& height) const
 {
-	ILuint image;
-	ilGenImages(1, &image);
-
-	ilBindImage(image);
 	ilLoadImage(texture_path);
 
 	ILenum error;
@@ -66,7 +66,7 @@ bool ModuleTexture::LoadImageData(const char* texture_path, int& width, int& hei
 	if (error == IL_COULD_NOT_OPEN_FILE)
 	{
 		APP_LOG_ERROR("Error loading texture %s. File not found", texture_path);
-		return false;
+		return nullptr;
 	}
 
 	ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
@@ -78,11 +78,11 @@ bool ModuleTexture::LoadImageData(const char* texture_path, int& width, int& hei
 		iluFlipImage();
 	}
 
-	data = (unsigned char*)ilGetData();
+	unsigned char *data = (unsigned char*)ilGetData();
 	width = ilGetInteger(IL_IMAGE_WIDTH);
 	height = ilGetInteger(IL_IMAGE_HEIGHT);
-	ilDeleteImages(1, &image);
-	return true;
+
+	return data;
 }
 
 void ModuleTexture::GenerateCheckerboardTexture() {
