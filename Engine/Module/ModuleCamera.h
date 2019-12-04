@@ -38,6 +38,7 @@ public:
 	ComponentCamera *scene_camera = nullptr;
 	ComponentCamera* active_camera = nullptr;
 
+	Skybox *skybox = nullptr;
 private:
 	GameObject *scene_camera_game_object = nullptr;
 
@@ -47,7 +48,6 @@ private:
 	bool is_orbiting = false;
 	float speed_up;
 
-	Skybox *skybox = nullptr;
 
 	std::vector<ComponentCamera*> cameras;
 
