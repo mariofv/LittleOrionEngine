@@ -2,16 +2,16 @@
 #define _SKYBOX_H_
 
 #include <vector>
+#include <GL/glew.h>
 
 class Skybox 
 {
 
 public:
-	Skybox(std::vector<std::string> faces);
-	Skybox() = default;
-	~Skybox() = default;
+	Skybox();
+	~Skybox();
+
 private:
-	std::vector<std::string> faces;
-	unsigned int skyboxTexture;
+	GLuint skybox_texture;
 };
 #endif //_SKYBOX_H_

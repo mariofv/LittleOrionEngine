@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "GameObject.h"
+#include "Skybox.h"
 
 #include "Geometry/Frustum.h"
 #include "MathGeoLib.h"
@@ -45,6 +46,8 @@ private:
 
 	bool is_orbiting = false;
 	float speed_up;
+
+	Skybox *skybox = nullptr;
 
 	std::vector<ComponentCamera*> cameras;
 

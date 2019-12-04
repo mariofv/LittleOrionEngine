@@ -4,7 +4,6 @@
 #include "Module.h"
 #include "Globals.h"
 #include "GeometryRenderer.h"
-#include "Skybox.h"
 
 #include <GL/glew.h>
 
@@ -70,7 +69,6 @@ private:
 	bool gl_wireframe = false;
 
 	std::vector<ComponentMesh*> meshes;
-	Skybox skybox;
 };
 
 #endif //_MODULERENDER_H_
