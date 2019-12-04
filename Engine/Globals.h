@@ -69,6 +69,9 @@ enum class Fonts
 # define WOBBLE_VERTEX_SHADER_PATH "./shaders/wobble.vs"
 # define WOBBLE_FRAGMENT_SHADER_PATH "./shaders/wobble.fs"
 
+# define SKYBOX_VERTEX_SHADER_PATH "./shaders/skybox.vs"
+# define SKYBOX_FRAGMENT_SHADER_PATH "./shaders/skybox.fs"
+
 # define HOUSE_MODEL_PATH "./resources/models/baker_house/BakerHouse.fbx"
 
 #define FULLSCREEN false

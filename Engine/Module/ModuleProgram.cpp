@@ -23,22 +23,33 @@ bool ModuleProgram::Init()
 	APP_LOG_INIT("Loading texture shader program.");
 	if (LoadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH))
 	{
-		APP_LOG_SUCCESS("Default texture program loaded correctly.");
+		APP_LOG_SUCCESS("Texture shader program loaded correctly.");
 	}
 	else
 	{
-		APP_LOG_ERROR("Default texture program loaded correctly.");
+		APP_LOG_ERROR("Texture shader program loaded correctly.");
 		return false;
 	}
 
 	APP_LOG_INIT("Loading primitive shader program.");
 	if (LoadProgram(primitive_program, PRIMITIVE_VERTEX_SHADER_PATH, PRIMITIVE_FRAGMENT_SHADER_PATH))
 	{
-		APP_LOG_SUCCESS("Default primitive program loaded correctly.");
+		APP_LOG_SUCCESS("Primitive shader program loaded correctly.");
 	}
 	else
 	{
-		APP_LOG_ERROR("Default primitive program loaded correctly.");
+		APP_LOG_ERROR("Primitive shader program loaded correctly.");
+		return false;
+	}
+
+	APP_LOG_INIT("Loading skybox shader program.");
+	if (LoadProgram(skybox_program, SKYBOX_VERTEX_SHADER_PATH, SKYBOX_FRAGMENT_SHADER_PATH))
+	{
+		APP_LOG_SUCCESS("Skybox shader program loaded correctly.");
+	}
+	else
+	{
+		APP_LOG_ERROR("Skybox shader program loaded correctly.");
 		return false;
 	}
 
@@ -51,6 +62,7 @@ bool ModuleProgram::CleanUp()
 	glDeleteProgram(default_program);
 	glDeleteProgram(texture_program);
 	glDeleteProgram(primitive_program);
+	glDeleteProgram(skybox_program);
 	return true;
 }
 
