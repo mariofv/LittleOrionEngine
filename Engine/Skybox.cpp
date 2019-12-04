@@ -13,24 +13,26 @@ Skybox::Skybox()
 
 void Skybox::LoadDefaultSkybox()
 {
+	std::string cube_face_front_path = "resources/textures/skyboxes/sor_lake1/lake1_ft.jpg";
+	std::string cube_face_back_path = "resources/textures/skyboxes/sor_lake1/lake1_bk.jpg";
 
-	std::string cube_face_front_path = "resources/skyboxes/sor_lake1/lake1_ft.jpg";
-	std::string cube_face_back_path = "resources/skyboxes/sor_lake1/lake1_bk.jpg";
+	std::string cube_face_left_path = "resources/textures/skyboxes/sor_lake1/lake1_lf.jpg";
+	std::string cube_face_right_path = "resources/textures/skyboxes/sor_lake1/lake1_rt.jpg";
 
-	std::string cube_face_left_path = "resources/skyboxes/sor_lake1/lake1_lf.jpg";
-	std::string cube_face_right_path = "resources/skyboxes/sor_lake1/lake1_rt.jpg";
-
-	std::string cube_face_up_path = "resources/skyboxes/sor_lake1/lake1_up.jpg";
-	std::string cube_face_down_path = "resources/skyboxes/sor_lake1/lake1_dn.jpg";
+	std::string cube_face_up_path = "resources/textures/skyboxes/sor_lake1/lake1_up.jpg";
+	std::string cube_face_down_path = "resources/textures/skyboxes/sor_lake1/lake1_dn.jpg";
 
 	std::vector<std::string> faces{
+		cube_face_right_path,
+		cube_face_left_path,
+
+		cube_face_up_path,
+		cube_face_down_path,
+		
 		cube_face_front_path,
 		cube_face_back_path,
-		cube_face_left_path,
-		cube_face_right_path,
-		cube_face_up_path,
-		cube_face_down_path
 	};
+
 	skybox_texture = App->texture->LoadCubemap(faces);
 }
 
@@ -96,11 +98,15 @@ void Skybox::Render(const ComponentCamera & camera) const
 
 	glUseProgram(App->program->skybox_program);
 
+	float4x4 view_matrix = camera.GetViewMatrix();
+	view_matrix.SetRow(3, float4::zero);
+	view_matrix.SetCol(3, float4::zero);
+
 	glUniformMatrix4fv(
 		glGetUniformLocation(App->program->skybox_program, "view"),
 		1,
 		GL_TRUE,
-		&camera.GetViewMatrix()[0][0]
+		&view_matrix[0][0]
 	);
 	glUniformMatrix4fv(
 		glGetUniformLocation(App->program->skybox_program, "proj"),
