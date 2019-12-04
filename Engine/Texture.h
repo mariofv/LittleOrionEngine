@@ -12,7 +12,7 @@ class Texture
 {
 public:
 	Texture() = default;
-	Texture(ILuint image, const char* path);
+	Texture(unsigned char * data, int width, int height, const char* path);
 
 	~Texture();
 
@@ -40,7 +40,6 @@ private:
 	char* GLEnumToString(const GLenum gl_enum) const;
 
 public:
-	ILuint image = 0;
 	GLuint opengl_texture = 0;
 
 	const unsigned char* data = nullptr;

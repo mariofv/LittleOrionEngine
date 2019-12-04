@@ -39,6 +39,22 @@ ComponentMaterial* ModuleTexture::CreateComponentMaterial() const
 
 Texture* ModuleTexture::LoadTexture(const char* texture_path) const
 {
+	
+	int width, height;
+	unsigned char * data = nullptr;
+	bool success = LoadImageData(texture_path, width, height, data);
+	if (!success)
+	{
+		return nullptr;
+	}
+	Texture *loaded_texture = new Texture(data, width, height, texture_path);
+	loaded_texture->GenerateMipMap();
+
+	return loaded_texture;
+}
+
+bool ModuleTexture::LoadImageData(const char* texture_path, int& width, int& height, unsigned char* data) const
+{
 	ILuint image;
 	ilGenImages(1, &image);
 
@@ -50,15 +66,23 @@ Texture* ModuleTexture::LoadTexture(const char* texture_path) const
 	if (error == IL_COULD_NOT_OPEN_FILE)
 	{
 		APP_LOG_ERROR("Error loading texture %s. File not found", texture_path);
-		return nullptr;
+		return false;
 	}
 
 	ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
 
-	Texture *loaded_texture = new Texture(image, texture_path);
-	loaded_texture->GenerateMipMap();
+	ILinfo ImageInfo;
+	iluGetImageInfo(&ImageInfo);
+	if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
+	{
+		iluFlipImage();
+	}
 
-	return loaded_texture;
+	data = (unsigned char*)ilGetData();
+	width = ilGetInteger(IL_IMAGE_WIDTH);
+	height = ilGetInteger(IL_IMAGE_HEIGHT);
+	ilDeleteImages(1, &image);
+	return true;
 }
 
 void ModuleTexture::GenerateCheckerboardTexture() {

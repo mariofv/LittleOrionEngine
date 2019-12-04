@@ -25,6 +25,9 @@ public:
 	ComponentMaterial* CreateComponentMaterial() const;
 	
 	Texture* LoadTexture(const char* texture_path) const;
+	bool LoadImageData(const char* texture_path, int& width, int& height, unsigned char* data) const;
+	//unsigned int LoadCubemap(const char* texture_path) const;
+	//ILuint
 
 	void GenerateCheckerboardTexture();
 
