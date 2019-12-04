@@ -13,14 +13,14 @@ Skybox::Skybox()
 
 void Skybox::LoadDefaultSkybox()
 {
-	std::string cube_face_front_path = "resources/textures/skyboxes/sor_lake1/lake1_ft.jpg";
-	std::string cube_face_back_path = "resources/textures/skyboxes/sor_lake1/lake1_bk.jpg";
+	std::string cube_face_front_path = "resources/textures/skyboxes/ame_nebula/purplenebula_ft.tga";
+	std::string cube_face_back_path = "resources/textures/skyboxes/ame_nebula/purplenebula_bk.tga";
 
-	std::string cube_face_left_path = "resources/textures/skyboxes/sor_lake1/lake1_lf.jpg";
-	std::string cube_face_right_path = "resources/textures/skyboxes/sor_lake1/lake1_rt.jpg";
+	std::string cube_face_left_path = "resources/textures/skyboxes/ame_nebula/purplenebula_rt.tga";
+	std::string cube_face_right_path = "resources/textures/skyboxes/ame_nebula/purplenebula_lf.tga";
 
-	std::string cube_face_up_path = "resources/textures/skyboxes/sor_lake1/lake1_up.jpg";
-	std::string cube_face_down_path = "resources/textures/skyboxes/sor_lake1/lake1_dn.jpg";
+	std::string cube_face_up_path = "resources/textures/skyboxes/ame_nebula/purplenebula_up.tga";
+	std::string cube_face_down_path = "resources/textures/skyboxes/ame_nebula/purplenebula_dn.tga";
 
 	std::vector<std::string> faces{
 		cube_face_right_path,
@@ -40,47 +40,47 @@ void Skybox::GenerateSkyboxCube()
 {
 	float skybox_vertices[] = {
 		// positions          
-		-1.0f,  1.0f, -1.0f,
-		-1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
+		-5.0f,  5.0f, -5.0f,
+		-5.0f, -5.0f, -5.0f,
+		 5.0f, -5.0f, -5.0f,
+		 5.0f, -5.0f, -5.0f,
+		 5.0f,  5.0f, -5.0f,
+		-5.0f,  5.0f, -5.0f,
 
-		-1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f, -1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
+		-5.0f, -5.0f,  5.0f,
+		-5.0f, -5.0f, -5.0f,
+		-5.0f,  5.0f, -5.0f,
+		-5.0f,  5.0f, -5.0f,
+		-5.0f,  5.0f,  5.0f,
+		-5.0f, -5.0f,  5.0f,
 
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
+		 5.0f, -5.0f, -5.0f,
+		 5.0f, -5.0f,  5.0f,
+		 5.0f,  5.0f,  5.0f,
+		 5.0f,  5.0f,  5.0f,
+		 5.0f,  5.0f, -5.0f,
+		 5.0f, -5.0f, -5.0f,
 
-		-1.0f, -1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f,
-		-1.0f, -1.0f,  1.0f,
+		-5.0f, -5.0f,  5.0f,
+		-5.0f,  5.0f,  5.0f,
+		 5.0f,  5.0f,  5.0f,
+		 5.0f,  5.0f,  5.0f,
+		 5.0f, -5.0f,  5.0f,
+		-5.0f, -5.0f,  5.0f,
 
-		-1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f, -1.0f,
-		 1.0f,  1.0f,  1.0f,
-		 1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f,  1.0f,
-		-1.0f,  1.0f, -1.0f,
+		-5.0f,  5.0f, -5.0f,
+		 5.0f,  5.0f, -5.0f,
+		 5.0f,  5.0f,  5.0f,
+		 5.0f,  5.0f,  5.0f,
+		-5.0f,  5.0f,  5.0f,
+		-5.0f,  5.0f, -5.0f,
 
-		-1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f, -1.0f,
-		 1.0f, -1.0f, -1.0f,
-		-1.0f, -1.0f,  1.0f,
-		 1.0f, -1.0f,  1.0f
+		-5.0f, -5.0f, -5.0f,
+		-5.0f, -5.0f,  5.0f,
+		 5.0f, -5.0f, -5.0f,
+		 5.0f, -5.0f, -5.0f,
+		-5.0f, -5.0f,  5.0f,
+		 5.0f, -5.0f,  5.0f
 	};
 
 	glGenVertexArrays(1, &skybox_VAO);
