@@ -138,6 +138,23 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 			camera->SetFarDistance(camera->camera_frustum.farPlaneDistance);
 		}
 
+		ImGui::Separator();
+		int camera_clear_mode = static_cast<int>(camera->camera_clear_mode);
+		if (ImGui::Combo("Clear Mode", &camera_clear_mode, "Color\0Skybox\0"))
+		{
+			switch (camera_clear_mode)
+			{
+			case 0:
+				camera->camera_clear_mode = ComponentCamera::ClearMode::COLOR;
+				break;
+			case 1:
+				camera->camera_clear_mode = ComponentCamera::ClearMode::SKYBOX;
+				break;
+			}
+		}		
+		ImGui::ColorEdit3("Clear Color", camera->camera_clear_color);
+		ImGui::Separator();
+
 		if (ImGui::SliderFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0, 100))
 		{
 			camera->SetOrthographicSize(float2(camera->camera_frustum.orthographicHeight * camera->aspect_ratio, camera->camera_frustum.orthographicHeight));

@@ -93,7 +93,22 @@ void ComponentCamera::RecordFrame(const float width, const float height)
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 	glViewport(0, 0, width, height);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
+	switch (camera_clear_mode)
+	{
+		case ComponentCamera::ClearMode::COLOR:
+			glClearColor(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glClearColor(0.f, 0.f, 0.f, 1.f);
+			break;
+		case ComponentCamera::ClearMode::SKYBOX:
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			App->cameras->skybox->Render(*this);
+			break;
+		default:
+			break;
+	}
+
 
 	App->renderer->RenderFrame(*this);
 

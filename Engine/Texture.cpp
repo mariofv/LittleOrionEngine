@@ -4,29 +4,15 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-Texture::Texture(ILuint image, const char* path)
+Texture::Texture(unsigned char * data, int width, int height, const char* path) : data(data), width(width), height(height), texture_path(path)
 {
-	this->image = image;
-	this->texture_path = path;
-
-	ILinfo ImageInfo;
-	iluGetImageInfo(&ImageInfo);
-	if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
-	{
-		iluFlipImage();
-	}
-
-	data = (unsigned char*)ilGetData();
-	width = ilGetInteger(IL_IMAGE_WIDTH);
-	height = ilGetInteger(IL_IMAGE_HEIGHT);
-
 	InitTexture();
 }
 
 
 Texture::~Texture()
 {
-	ilDeleteImages(1, &image);
+
 	glDeleteTextures(1, &opengl_texture);
 }
 

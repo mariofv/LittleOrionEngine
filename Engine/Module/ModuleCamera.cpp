@@ -20,7 +20,9 @@ bool ModuleCamera::Init()
 	scene_camera_game_object = new GameObject();
 	scene_camera_game_object->transform.SetTranslation(float3(0.5f, 2.f, -15.f));
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
-	
+
+	skybox = new Skybox();
+
 	return true;
 }
 

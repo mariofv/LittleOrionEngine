@@ -11,6 +11,12 @@
 class ComponentCamera : public Component
 {
 public:
+	enum class ClearMode
+	{
+		COLOR = 0,
+		SKYBOX = 1
+	};
+
 	ComponentCamera();
 	ComponentCamera(GameObject * owner);
 
@@ -83,6 +89,8 @@ public:
 	float camera_zooming_speed = 0.25f;
 	float camera_rotation_speed = 0.000625f;
 
+	float camera_clear_color[3] = {0.0f, 0.0f, 0.0f};
+
 	float4x4 proj;
 	float4x4 view;
 
@@ -105,6 +113,8 @@ private:
 
 	bool is_focusing = false;
 	float3 desired_focus_position = float3::zero;
+
+	ClearMode camera_clear_mode = ClearMode::COLOR;
 
 	friend void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera);
 };

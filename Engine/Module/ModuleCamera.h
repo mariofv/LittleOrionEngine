@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "GameObject.h"
+#include "Skybox.h"
 
 #include "Geometry/Frustum.h"
 #include "MathGeoLib.h"
@@ -37,6 +38,7 @@ public:
 	ComponentCamera *scene_camera = nullptr;
 	ComponentCamera* active_camera = nullptr;
 
+	Skybox *skybox = nullptr;
 private:
 	GameObject *scene_camera_game_object = nullptr;
 
@@ -45,6 +47,7 @@ private:
 
 	bool is_orbiting = false;
 	float speed_up;
+
 
 	std::vector<ComponentCamera*> cameras;
 
