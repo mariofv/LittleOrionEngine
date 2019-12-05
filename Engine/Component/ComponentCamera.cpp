@@ -77,6 +77,16 @@ void ComponentCamera::Update()
 	}
 
 	camera_frustum.pos = owner->transform.GetTranslation();
+
+	float3 ownerRotation = owner->transform.GetRotation();
+	Quat rotation_quat = Quat::FromEulerXYZ(
+		math::DegToRad(ownerRotation.x),
+		math::DegToRad(ownerRotation.y),
+		math::DegToRad(ownerRotation.z)
+	);	
+	camera_frustum.up = rotation_quat * float3::unitY;
+	camera_frustum.front = rotation_quat * float3::unitZ;
+
 	GenerateMatrices();
 }
 

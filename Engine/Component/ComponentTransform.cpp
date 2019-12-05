@@ -39,7 +39,18 @@ float3 ComponentTransform::GetTranslation() const
 void ComponentTransform::SetTranslation(const float3 translation)
 {
 	this->translation = translation;
-	GenerateModelMatrix();
+	GenerateModelMatrix(); // TODO: Change this to Update()
+}
+
+float3 ComponentTransform::GetRotation() const
+{
+	return rotation;
+}
+
+void ComponentTransform::SetRotation(const float3 rotation)
+{
+	this->rotation = rotation;
+	GenerateModelMatrix(); // TODO: Change this to Update()
 }
 
 void ComponentTransform::GenerateModelMatrix()
