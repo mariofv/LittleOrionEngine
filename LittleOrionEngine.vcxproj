@@ -77,6 +77,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\OLQuadTreeNode.h" />
     <ClInclude Include="Engine\Skybox.h" />
     <ClInclude Include="Engine\UI\ComponentsUI.h" />
     <ClInclude Include="Engine\GeometryRenderer.h" />
@@ -177,8 +178,10 @@
     <ClInclude Include="Engine\Timer.h" />
     <ClInclude Include="Engine\TimerUs.h" />
     <ClInclude Include="Engine\Module\ModuleScene.h" />
+    <ClInclude Include="Engine\OLQuadTree.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\OLQuadTreeNode.cpp" />
     <ClCompile Include="Engine\Skybox.cpp" />
     <ClCompile Include="Engine\UI\ComponentsUI.cpp" />
     <ClCompile Include="Engine\GeometryRenderer.cpp" />
@@ -246,6 +249,7 @@
     <ClCompile Include="Engine\Timer.cpp" />
     <ClCompile Include="Engine\TimerUs.cpp" />
     <ClCompile Include="Engine\Module\ModuleScene.cpp" />
+    <ClCompile Include="Engine\OLQuadTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Libraries\MathGeoLib\include\Geometry\KDTree.inl" />
