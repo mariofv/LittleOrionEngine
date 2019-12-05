@@ -348,6 +348,15 @@ ComponentMesh* ModuleRender::CreateComponentMesh()
 	return created_mesh;
 }
 
+void ModuleRender::RemoveComponentMesh(ComponentMesh* mesh_to_remove)
+{
+	auto it = std::remove_if(meshes.begin(), meshes.end(), [mesh_to_remove](auto const & mesh)
+	{
+		return mesh == mesh_to_remove;
+	});
+	meshes.erase(it);
+}
+
 void ModuleRender::ShowRenderOptions()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_CLONE " Renderer"))

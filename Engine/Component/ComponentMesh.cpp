@@ -1,4 +1,6 @@
 #include "ComponentMesh.h"
+#include "Application.h"
+#include "Module/ModuleRender.h"
 
 ComponentMesh::ComponentMesh() : Component(nullptr, ComponentType::MESH)
 {
@@ -12,6 +14,7 @@ ComponentMesh::ComponentMesh(GameObject * owner) : Component(owner, ComponentTyp
 
 ComponentMesh::~ComponentMesh()
 {
+	App->renderer->RemoveComponentMesh(this);
 	vertices.clear();
 	indices.clear();
 

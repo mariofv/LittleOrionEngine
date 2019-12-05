@@ -41,11 +41,11 @@ ComponentCamera::ComponentCamera(GameObject * owner) : Component(owner, Componen
 
 ComponentCamera::~ComponentCamera()
 {
+	App->cameras->RemoveComponentCamera(this);
+
 	glDeleteTextures(1, &last_recorded_frame_texture);
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteRenderbuffers(1, &rbo);
-
-	//App->cameras->RemoveComponentCamera(this);
 }
 
 void ComponentCamera::Enable()

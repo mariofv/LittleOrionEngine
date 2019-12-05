@@ -15,6 +15,7 @@ ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, Comp
 
 ComponentMaterial::~ComponentMaterial()
 {
+	App->texture->RemoveComponentMaterial(this);
 	delete texture;
 }
 
