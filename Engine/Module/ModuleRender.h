@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "GeometryRenderer.h"
+#include "OLQuadTree.h"
 
 #include <GL/glew.h>
 
@@ -31,6 +32,7 @@ public:
 	void RenderGrid(const ComponentCamera &camera) const;
 
 	ComponentMesh* CreateComponentMesh();
+	void GenerateQuadTree();
 
 	void ShowRenderOptions();
 
@@ -69,6 +71,7 @@ private:
 	bool gl_wireframe = false;
 
 	std::vector<ComponentMesh*> meshes;
+	OLQuadTree ol_quadtree;
 };
 
 #endif //_MODULERENDER_H_

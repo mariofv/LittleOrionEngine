@@ -2,6 +2,7 @@
 #define _OLQUADTREE_H_
 
 #include "GameObject.h"
+#include "OLQuadTreeNode.h"
 
 #include <MathGeoLib.h>
 
@@ -15,6 +16,13 @@ public:
 	void Clear();
 	void Insert(const GameObject &game_object);
 	void CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera);
+
+private:
+	OLQuadTreeNode* FindLeaf(const AABB &game_object) const;
+
+private:
+	OLQuadTreeNode *root = nullptr;
+	int bucket_size = 1;
 
 };
 

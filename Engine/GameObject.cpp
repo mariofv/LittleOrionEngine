@@ -137,6 +137,9 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 
 	created_component->owner = this;
 	components.push_back(created_component);
+	if (type == Component::ComponentType::MESH) {
+		App->renderer->GenerateQuadTree();
+	}
 
 	return created_component;
 }

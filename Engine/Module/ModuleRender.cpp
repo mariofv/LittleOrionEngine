@@ -443,3 +443,20 @@ void ModuleRender::ShowRenderOptions()
 		}
 	}
 }
+
+void ModuleRender::GenerateQuadTree() {
+	AABB global_AABB;
+	global_AABB.SetNegativeInfinity();
+
+	for (auto & mesh : meshes)
+	{
+		global_AABB.Enclose(mesh->owner->aabb.bounding_box);
+	}
+
+
+	ol_quadtree.Create(global_AABB);
+	for (auto & mesh : meshes)
+	{
+		ol_quadtree.Insert(*mesh->owner);
+	}
+}

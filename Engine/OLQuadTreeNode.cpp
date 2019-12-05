@@ -8,6 +8,13 @@ OLQuadTreeNode::OLQuadTreeNode()
 	std::vector<OLQuadTreeNode*> children;
 }
 
+OLQuadTreeNode::OLQuadTreeNode(const AABB aabb) : box(aabb)
+{
+	OLQuadTreeNode *parent = nullptr;
+	std::vector<OLQuadTreeNode*> children;
+}
+
+
 
 OLQuadTreeNode::~OLQuadTreeNode()
 {
@@ -19,6 +26,7 @@ void OLQuadTreeNode::AddChild(OLQuadTreeNode * new_child)
 	new_child->parent = this;
 	children.push_back(new_child);
 }
+
 void OLQuadTreeNode::RemoveChild(const OLQuadTreeNode * child_to_remove)
 {
 	auto it = std::remove_if(children.begin(), children.end(), [child_to_remove](auto const & child)
@@ -35,4 +43,9 @@ void OLQuadTreeNode::SetParent(OLQuadTreeNode * new_parent)
 		this->parent->RemoveChild(this);
 	}
 	this->parent = new_parent;
+}
+
+bool OLQuadTreeNode::IsLeaf() const
+{
+	return children.size() == 0;
 }
