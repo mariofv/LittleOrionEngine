@@ -160,8 +160,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			RenderMesh(*mesh, camera);
 		}
 	}
-
-	App->cameras->skybox->Render(camera);
 }
 
 void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const
