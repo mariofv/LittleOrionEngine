@@ -77,6 +77,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\OLOctTree.h" />
+    <ClInclude Include="Engine\OLOctTreeNode.h" />
     <ClInclude Include="Engine\OLQuadTreeNode.h" />
     <ClInclude Include="Engine\Skybox.h" />
     <ClInclude Include="Engine\UI\ComponentsUI.h" />
@@ -181,6 +183,8 @@
     <ClInclude Include="Engine\OLQuadTree.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\OLOctTree.cpp" />
+    <ClCompile Include="Engine\OLOctTreeNode.cpp" />
     <ClCompile Include="Engine\OLQuadTreeNode.cpp" />
     <ClCompile Include="Engine\Skybox.cpp" />
     <ClCompile Include="Engine\UI\ComponentsUI.cpp" />
