@@ -151,7 +151,7 @@ void ModuleRender::Render() const
 
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
-	RenderGrid(camera);
+	//RenderGrid(camera);
 	geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
 	for (auto &mesh : meshes)
 	{
@@ -160,6 +160,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			RenderMesh(*mesh, camera);
 		}
 	}
+	GenerateQuadTree();
 	for (auto & ol_quadtree_node : ol_quadtree.flattened_tree) {
 		geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
 	}
@@ -456,8 +457,14 @@ void ModuleRender::GenerateQuadTree()
 
 	for (auto & mesh : meshes)
 	{
-		global_AABB.Enclose(mesh->owner->aabb.bounding_box2D.minPoint);
-		global_AABB.Enclose(mesh->owner->aabb.bounding_box2D.maxPoint);
+		float minX = std::fmin(mesh->owner->aabb.bounding_box2D.minPoint.x, global_AABB.minPoint.x);
+		float minY = std::fmin(mesh->owner->aabb.bounding_box2D.minPoint.y, global_AABB.minPoint.y);
+
+		float maxX = std::fmax(mesh->owner->aabb.bounding_box2D.maxPoint.x, global_AABB.maxPoint.x);
+		float maxY = std::fmax(mesh->owner->aabb.bounding_box2D.maxPoint.y, global_AABB.maxPoint.y);
+		global_AABB.maxPoint = float2(maxX,maxY);
+		global_AABB.minPoint = float2(minX, minY);
+
 	}
 
 	ol_quadtree.Create(global_AABB);
