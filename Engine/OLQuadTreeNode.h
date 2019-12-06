@@ -9,7 +9,7 @@ class OLQuadTreeNode
 public:
 	OLQuadTreeNode();
 	OLQuadTreeNode(const AABB2D aabb);
-	~OLQuadTreeNode();
+	~OLQuadTreeNode() = default;
 
 	void AddChild(OLQuadTreeNode * new_child);
 	void RemoveChild(const OLQuadTreeNode * child_to_remove);

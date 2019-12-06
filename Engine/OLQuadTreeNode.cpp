@@ -3,23 +3,15 @@
 
 OLQuadTreeNode::OLQuadTreeNode()
 {
-	AABB2D box;
-	OLQuadTreeNode *parent = nullptr;
-	std::vector<OLQuadTreeNode*> children;
+	box = AABB2D();
+	parent = nullptr;
 }
 
 OLQuadTreeNode::OLQuadTreeNode(const AABB2D aabb) : box(aabb)
 {
-	OLQuadTreeNode *parent = nullptr;
-	std::vector<OLQuadTreeNode*> children;
+	parent = nullptr;
 }
 
-
-
-OLQuadTreeNode::~OLQuadTreeNode()
-{
-
-}
 
 void OLQuadTreeNode::AddChild(OLQuadTreeNode * new_child)
 {

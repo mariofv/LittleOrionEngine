@@ -7,17 +7,24 @@ OLQuadTree::OLQuadTree()
 
 OLQuadTree::~OLQuadTree()
 {
+	Clear();
 }
 
 void OLQuadTree::Create(AABB2D limits)
 {
+	Clear();
 	root = new OLQuadTreeNode(limits);
 	flattened_tree.push_back(root);
 }
 
 void OLQuadTree::Clear()
 {
-
+	for (auto & node : flattened_tree)
+	{
+		delete node;
+	}
+	flattened_tree.clear();
+	root = nullptr;
 }
 
 void OLQuadTree::Insert(GameObject &game_object)
