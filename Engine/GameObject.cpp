@@ -37,13 +37,13 @@ GameObject::~GameObject()
 		parent->RemoveChild(this);
 	}
 
-	for (unsigned int i = 0; i < components.size(); ++i)
+	for (int i = (components.size() - 1); i >= 0; --i)
 	{
 		delete components[i];
 	}
 	components.clear();
 
-	for (unsigned int i = 0; i < children.size(); ++i)
+	for (int i =  (children.size() - 1); i >= 0 ; --i)
 	{
 		delete children[i];
 	}
