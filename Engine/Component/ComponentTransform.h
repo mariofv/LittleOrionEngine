@@ -18,6 +18,7 @@ public:
 	void Enable() override;
 	void Disable() override;
 	void Update() override;
+	void Delete() override {};
 	
 	float3 GetTranslation() const;
 	void SetTranslation(const float3 translation);

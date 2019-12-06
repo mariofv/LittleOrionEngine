@@ -39,7 +39,7 @@ GameObject::~GameObject()
 
 	for (int i = (components.size() - 1); i >= 0; --i)
 	{
-		delete components[i];
+		components[i]->Delete();
 	}
 	components.clear();
 
@@ -139,6 +139,15 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 	components.push_back(created_component);
 
 	return created_component;
+}
+
+void GameObject::RemoveComponent(Component * component_to_remove) {
+	auto it = std::remove_if(components.begin(), components.end(), [component_to_remove](auto const & component)
+	{
+		return component == component_to_remove;
+	});
+	component_to_remove->Delete();
+	components.erase(it);
 }
 
 Component*  GameObject::GetComponent(const Component::ComponentType type) const

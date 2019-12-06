@@ -58,6 +58,7 @@ void ModuleCamera::RemoveComponentCamera(ComponentCamera* camera_to_remove)
 	{
 		return camera == camera_to_remove;
 	});
+	delete *it;
 	cameras.erase(it);
 }
 

@@ -15,7 +15,6 @@ ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, Comp
 
 ComponentMaterial::~ComponentMaterial()
 {
-	App->texture->RemoveComponentMaterial(this);
 	delete texture;
 }
 
@@ -32,6 +31,11 @@ void ComponentMaterial::Disable()
 void ComponentMaterial::Update()
 {
 
+}
+
+void ComponentMaterial::Delete()
+{
+	App->texture->RemoveComponentMaterial(this);
 }
 
 GLuint ComponentMaterial::GetTexture() const

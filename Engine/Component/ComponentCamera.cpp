@@ -41,8 +41,6 @@ ComponentCamera::ComponentCamera(GameObject * owner) : Component(owner, Componen
 
 ComponentCamera::~ComponentCamera()
 {
-	App->cameras->RemoveComponentCamera(this);
-
 	glDeleteTextures(1, &last_recorded_frame_texture);
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteRenderbuffers(1, &rbo);
@@ -78,6 +76,11 @@ void ComponentCamera::Update()
 
 	camera_frustum.pos = owner->transform.GetTranslation();
 	GenerateMatrices();
+}
+
+void ComponentCamera::Delete()
+{
+	App->cameras->RemoveComponentCamera(this);
 }
 
 void ComponentCamera::RecordFrame(const float width, const float height)

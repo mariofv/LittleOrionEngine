@@ -29,6 +29,10 @@ bool ModuleTexture::Init()
 bool ModuleTexture::CleanUp()
 {
 	glDeleteTextures(1, &checkerboard_texture_id);
+	for (auto& material : materials) {
+		delete material;
+	}
+	materials.clear();
 	return true;
 }
 
@@ -45,6 +49,7 @@ void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remov
 	{
 		return material == material_to_remove;
 	});
+	delete *it;
 	materials.erase(it);
 }
 
