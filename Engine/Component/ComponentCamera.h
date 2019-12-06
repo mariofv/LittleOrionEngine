@@ -85,8 +85,8 @@ public:
 	const float CAMERA_MAXIMUN_MOVEMENT_SPEED = 1.0f;
 	const float CAMERA_MINIMUN_MOVEMENT_SPEED = 0.005f;
 	
-	float camera_movement_speed = 0.25f;
-	float camera_zooming_speed = 0.25f;
+	float camera_movement_speed = 0.15f;
+	float camera_zooming_speed = 0.15f;
 	float camera_rotation_speed = 0.000625f;
 
 	float camera_clear_color[3] = {0.0f, 0.0f, 0.0f};

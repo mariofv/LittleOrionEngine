@@ -160,6 +160,10 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			RenderMesh(*mesh, camera);
 		}
 	}
+	for (auto & ol_quadtree_node : ol_quadtree.flattened_tree) {
+		geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
+	}
+
 }
 
 void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const
@@ -202,8 +206,9 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 
 	if (!mesh_game_object.aabb.IsEmpty())
 	{
-		geometry_renderer->RenderHexahedron(camera, mesh_game_object.aabb.GetVertices());
+		//geometry_renderer->RenderHexahedron(camera, mesh_game_object.aabb.GetVertices());
 	}
+
 }
 
 void ModuleRender::SetVSync(const bool vsync)

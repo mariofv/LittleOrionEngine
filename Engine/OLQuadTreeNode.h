@@ -19,6 +19,8 @@ public:
 	void InsertGameObject(GameObject *game_object);
 	void Split(std::vector<OLQuadTreeNode*> &generated_nodes);
 
+	std::vector<float> GetVertices() const;
+
 public:
 	AABB2D box;
 	OLQuadTreeNode *parent = nullptr;

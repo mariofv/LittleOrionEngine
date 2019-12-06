@@ -73,11 +73,12 @@ bool ComponentAABB::IsEmpty() const
 
 std::vector<float> ComponentAABB::GetVertices() const
 {
-	float3 tmp_vertices[8];
+	static const int num_of_vertices = 8;
+	float3 tmp_vertices[num_of_vertices];
 	bounding_box.GetCornerPoints(&tmp_vertices[0]);
 
-	std::vector<float> vertices(24);
-	for (unsigned int i = 0; i < 8; ++i)
+	std::vector<float> vertices(num_of_vertices * 3);
+	for (unsigned int i = 0; i < num_of_vertices; ++i)
 	{
 		vertices[i * 3] = tmp_vertices[i].x;
 		vertices[i * 3 + 1] = tmp_vertices[i].y;
@@ -86,3 +87,4 @@ std::vector<float> ComponentAABB::GetVertices() const
 
 	return vertices;
 }
+
