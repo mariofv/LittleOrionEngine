@@ -9,7 +9,7 @@ OLQuadTree::~OLQuadTree()
 {
 }
 
-void OLQuadTree::Create(AABB limits)
+void OLQuadTree::Create(AABB2D limits)
 {
 	root = new OLQuadTreeNode(limits);
 	flattened_tree.push_back(root);
@@ -22,9 +22,9 @@ void OLQuadTree::Clear()
 
 void OLQuadTree::Insert(GameObject &game_object)
 {
-	if (root->box.Intersects(game_object.aabb.bounding_box))
+	if (root->box.Intersects(game_object.aabb.bounding_box2D))
 	{
-		OLQuadTreeNode *object_leaf = FindLeaf(game_object.aabb.bounding_box); //TODO: What happens if the object is inside more one node?
+		OLQuadTreeNode *object_leaf = FindLeaf(game_object.aabb.bounding_box2D); //TODO: What happens if the object is inside more one node?
 		assert(object_leaf != nullptr);
 		if (object_leaf->objects.size() == bucket_size)
 		{
@@ -36,7 +36,7 @@ void OLQuadTree::Insert(GameObject &game_object)
 			unsigned int i = 0;
 			while (!inserted && i < 4)
 			{
-				if (generated_nodes[i]->box.Intersects(game_object.aabb.bounding_box))
+				if (generated_nodes[i]->box.Intersects(game_object.aabb.bounding_box2D))
 				{
 					generated_nodes[i]->InsertGameObject(&game_object);
 					inserted = true;
@@ -59,7 +59,7 @@ void OLQuadTree::CollectIntersect(std::vector<GameObject*> &game_objects, const 
 
 }
 
-OLQuadTreeNode* OLQuadTree::FindLeaf(const AABB &game_object_aabb) const
+OLQuadTreeNode* OLQuadTree::FindLeaf(const AABB2D &game_object_aabb) const
 {
 	for (auto &node : flattened_tree)
 	{

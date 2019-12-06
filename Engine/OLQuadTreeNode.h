@@ -8,7 +8,7 @@ class OLQuadTreeNode
 {
 public:
 	OLQuadTreeNode();
-	OLQuadTreeNode(const AABB aabb);
+	OLQuadTreeNode(const AABB2D aabb);
 	~OLQuadTreeNode();
 
 	void AddChild(OLQuadTreeNode * new_child);
@@ -20,7 +20,7 @@ public:
 	void Split(std::vector<OLQuadTreeNode*> &generated_nodes);
 
 public:
-	AABB box;
+	AABB2D box;
 	OLQuadTreeNode *parent = nullptr;
 	std::vector<OLQuadTreeNode*> children;
 

@@ -12,13 +12,13 @@ public:
 	OLQuadTree();
 	~OLQuadTree();
 
-	void Create(AABB limits);
+	void Create(AABB2D limits);
 	void Clear();
 	void Insert(GameObject &game_object);
 	void CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera);
 
 private:
-	OLQuadTreeNode* FindLeaf(const AABB &game_object) const;
+	OLQuadTreeNode* FindLeaf(const AABB2D &game_object) const;
 
 private:
 	OLQuadTreeNode *root = nullptr;

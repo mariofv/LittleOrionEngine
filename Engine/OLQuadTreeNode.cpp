@@ -3,12 +3,12 @@
 
 OLQuadTreeNode::OLQuadTreeNode()
 {
-	AABB box;
+	AABB2D box;
 	OLQuadTreeNode *parent = nullptr;
 	std::vector<OLQuadTreeNode*> children;
 }
 
-OLQuadTreeNode::OLQuadTreeNode(const AABB aabb) : box(aabb)
+OLQuadTreeNode::OLQuadTreeNode(const AABB2D aabb) : box(aabb)
 {
 	OLQuadTreeNode *parent = nullptr;
 	std::vector<OLQuadTreeNode*> children;
@@ -57,5 +57,26 @@ void OLQuadTreeNode::InsertGameObject(GameObject *game_object)
 
 void OLQuadTreeNode::Split(std::vector<OLQuadTreeNode*> &generated_nodes)
 {
+	OLQuadTreeNode *bottom_left_node = new OLQuadTreeNode(AABB2D(box.minPoint, (box.maxPoint + box.minPoint)/2));
 
+	float2 bottom_right_node_min_point = float2((box.maxPoint.x + box.minPoint.x) / 2, box.minPoint.y);
+	float2 bottom_right_node_max_point = float2(box.maxPoint.x, (box.maxPoint.y + box.minPoint.y) / 2);
+	OLQuadTreeNode *bottom_right_node = new OLQuadTreeNode(AABB2D(bottom_right_node_min_point, bottom_right_node_max_point));
+
+	float2 top_left_node_min_point = float2(box.minPoint.x, (box.maxPoint.y + box.minPoint.y) / 2);
+	float2 top_left_node_max_point = float2((box.maxPoint.x + box.minPoint.x) / 2, box.maxPoint.y);
+	OLQuadTreeNode *top_left_node = new OLQuadTreeNode(AABB2D(top_left_node_min_point, top_left_node_max_point));
+
+	OLQuadTreeNode *top_right_node = new OLQuadTreeNode(AABB2D((box.maxPoint + box.minPoint) / 2, box.maxPoint));
+
+	generated_nodes.push_back(bottom_left_node);
+	generated_nodes.push_back(bottom_right_node);
+	generated_nodes.push_back(top_left_node);
+	generated_nodes.push_back(top_right_node);
+
+	for (auto &node : generated_nodes)
+	{
+		AddChild(node);
+	}
 }
+

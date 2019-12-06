@@ -444,15 +444,16 @@ void ModuleRender::ShowRenderOptions()
 	}
 }
 
-void ModuleRender::GenerateQuadTree() {
-	AABB global_AABB;
+void ModuleRender::GenerateQuadTree() 
+{
+	AABB2D global_AABB;
 	global_AABB.SetNegativeInfinity();
 
 	for (auto & mesh : meshes)
 	{
-		global_AABB.Enclose(mesh->owner->aabb.bounding_box);
+		global_AABB.Enclose(mesh->owner->aabb.bounding_box2D.minPoint);
+		global_AABB.Enclose(mesh->owner->aabb.bounding_box2D.maxPoint);
 	}
-
 
 	ol_quadtree.Create(global_AABB);
 	for (auto & mesh : meshes)

@@ -37,6 +37,7 @@ public:
 
 public:
 	AABB bounding_box;
+	AABB2D bounding_box2D;
 
 };
 
