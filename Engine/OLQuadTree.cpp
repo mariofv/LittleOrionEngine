@@ -72,7 +72,7 @@ OLQuadTreeNode* OLQuadTree::FindLeaf(const AABB2D &game_object_aabb) const
 	{
 		if (node->IsLeaf() && node->box.Intersects(game_object_aabb))
 		{
-			return root;
+			return node;
 		}
 	}
 
