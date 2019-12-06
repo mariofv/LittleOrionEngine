@@ -14,7 +14,7 @@ public:
 
 	void Create(AABB limits);
 	void Clear();
-	void Insert(const GameObject &game_object);
+	void Insert(GameObject &game_object);
 	void CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera);
 
 private:
@@ -22,6 +22,7 @@ private:
 
 private:
 	OLQuadTreeNode *root = nullptr;
+	std::vector<OLQuadTreeNode*> flattened_tree;
 	int bucket_size = 1;
 
 };

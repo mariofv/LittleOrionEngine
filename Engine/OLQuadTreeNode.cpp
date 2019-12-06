@@ -49,3 +49,13 @@ bool OLQuadTreeNode::IsLeaf() const
 {
 	return children.size() == 0;
 }
+
+void OLQuadTreeNode::InsertGameObject(GameObject *game_object)
+{
+	objects.push_back(game_object);
+}
+
+void OLQuadTreeNode::Split(std::vector<OLQuadTreeNode*> &generated_nodes)
+{
+
+}
