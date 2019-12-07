@@ -138,7 +138,7 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 	created_component->owner = this;
 	components.push_back(created_component);
 	if (type == Component::ComponentType::MESH) {
-		App->renderer->GenerateQuadTree();
+		//App->renderer->GenerateQuadTree();
 	}
 
 	return created_component;
@@ -240,6 +240,15 @@ void GameObject::ShowPropertiesWindow()
 
 	ImGui::SameLine();
 	ImGui::InputText("###GameObject name Input", &name);
+
+	ImGui::SameLine();
+	if (ImGui::Checkbox("Static", &is_static))
+	{
+		if (is_static)
+		{
+
+		}
+	}
 
 	ImGui::Spacing();
 	ImGui::Separator();

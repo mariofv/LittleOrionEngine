@@ -53,6 +53,7 @@ public:
 
 private:
 	bool active = true;
+	bool is_static = false;
 	int hierarchy_depth = 0;
 	int hierarchy_branch = 0;
 };
