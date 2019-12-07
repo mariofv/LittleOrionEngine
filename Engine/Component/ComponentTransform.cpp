@@ -42,6 +42,12 @@ void ComponentTransform::SetTranslation(const float3 translation)
 	GenerateModelMatrix(); // TODO: Change this to Update()
 }
 
+void ComponentTransform::Translate(const float3 &translation)
+{
+	this->translation += translation;
+	GenerateModelMatrix(); // TODO: Change this to Update()
+}
+
 float3 ComponentTransform::GetRotation() const
 {
 	return rotation;
@@ -50,6 +56,12 @@ float3 ComponentTransform::GetRotation() const
 void ComponentTransform::SetRotation(const float3 rotation)
 {
 	this->rotation = rotation;
+	GenerateModelMatrix(); // TODO: Change this to Update()
+}
+
+void ComponentTransform::Rotate(const float3 &rotation)
+{
+	this->rotation += rotation;
 	GenerateModelMatrix(); // TODO: Change this to Update()
 }
 

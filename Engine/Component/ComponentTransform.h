@@ -21,9 +21,11 @@ public:
 	
 	float3 GetTranslation() const;
 	void SetTranslation(const float3 translation);
+	void Translate(const float3 &translation);
 
 	float3 GetRotation() const;
 	void SetRotation(const float3 rotation);
+	void Rotate(const float3 &rotation);
 
 	void GenerateGlobalModelMatrix();
 	void ChangeLocalSpace(const float4x4 new_local_space);
