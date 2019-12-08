@@ -365,7 +365,8 @@ ComponentMesh* ModuleRender::CreateComponentMesh()
 void ModuleRender::RemoveComponentMesh(ComponentMesh* mesh_to_remove)
 {
 	auto it = std::find(meshes.begin(), meshes.end(), mesh_to_remove);
-	if (it != meshes.end()) {
+	if (it != meshes.end()) 
+	{
 		delete *it;
 		meshes.erase(it);
 	}
