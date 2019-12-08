@@ -95,6 +95,7 @@
     <ClInclude Include="Engine\Module\ModuleTime.h" />
     <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Engine\Hierarchy.h" />
+    <ClInclude Include="Engine\UI\FileExplorerUI.h" />
     <ClInclude Include="Libraries\FontAwesome5\IconsFontAwesome5.h" />
     <ClInclude Include="Libraries\FontAwesome5\IconsFontAwesome5Brands.h" />
     <ClInclude Include="Libraries\imgui\imconfig.h" />
@@ -196,6 +197,7 @@
     <ClCompile Include="Engine\Module\ModuleTime.cpp" />
     <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="Engine\Hierarchy.cpp" />
+    <ClCompile Include="Engine\UI\FileExplorerUI.cpp" />
     <ClCompile Include="Libraries\imgui\imgui.cpp" />
     <ClCompile Include="Libraries\imgui\imgui_demo.cpp" />
     <ClCompile Include="Libraries\imgui\imgui_draw.cpp" />
