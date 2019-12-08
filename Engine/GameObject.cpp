@@ -45,7 +45,8 @@ GameObject::~GameObject()
 
 	for (int i =  (children.size() - 1); i >= 0 ; --i)
 	{
-		delete children[i];
+		children[i]->parent = nullptr;
+		App->scene->RemoveGameObject(children[i]);
 	}
 	children.clear();
 }

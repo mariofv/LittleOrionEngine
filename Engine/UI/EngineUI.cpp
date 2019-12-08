@@ -169,12 +169,17 @@ void EngineUI::ShowMainViewWindow()
 
 void EngineUI::ShowSceneTab()
 {
-	App->scene->ShowFrameBufferTab(App->cameras->scene_camera, ICON_FA_TH " Scene");
+	if (App->cameras->scene_camera != nullptr)
+	{
+		App->scene->ShowFrameBufferTab(*App->cameras->scene_camera, ICON_FA_TH " Scene");
+	}
 }
-
 void EngineUI::ShowGameTab()
 {
-	App->scene->ShowFrameBufferTab(App->cameras->active_camera, ICON_FA_GHOST " Game");
+	if (App->cameras->active_camera != nullptr) 
+	{
+		App->scene->ShowFrameBufferTab(*App->cameras->active_camera, ICON_FA_GHOST " Game");
+	}
 }
 
 void EngineUI::ShowInspectorWindow()

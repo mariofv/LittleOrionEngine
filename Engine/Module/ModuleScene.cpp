@@ -53,7 +53,7 @@ GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 
 void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 {
-	auto it = std::remove_if(game_objects_ownership.begin(), game_objects_ownership.end(), [game_object_to_remove](auto const & game_object) {
+	auto it = std::find_if(game_objects_ownership.begin(), game_objects_ownership.end(), [game_object_to_remove](auto const & game_object) {
 		return game_object_to_remove == game_object.get();
 	});
 	if (it != game_objects_ownership.end()) {
