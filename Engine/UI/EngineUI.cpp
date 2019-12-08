@@ -272,16 +272,20 @@ void EngineUI::ShowFileAndConsoleWindows()
 		ImVec2(App->window->GetWidth(), App->window->GetHeight() * (0.98 - (TIME_BAR_HEIGHT_PROP + CONFIG_HEIGHT_PROP))),
 		ImGuiCond_Once
 	);
-	ImGui::BeginTabBar("Bottom Tab");
-	if (show_file_explorer_window)
+	if (ImGui::Begin("BottomTab", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar))
 	{
-		file_explorer_ui.ShowAssetsFolders();
+		ImGui::BeginTabBar("BottomTab");
+		if (show_file_explorer_window)
+		{
+			file_explorer_ui.ShowAssetsFolders();
+		}
+		if (show_console_window)
+		{
+			App->engine_log->ShowConsoleWindow();
+		}
+		ImGui::EndTabBar();
+		ImGui::End();
 	}
-	if (show_console_window)
-	{
-		App->engine_log->ShowConsoleWindow();
-	}
-	ImGui::EndTabBar();
 
 }
 
