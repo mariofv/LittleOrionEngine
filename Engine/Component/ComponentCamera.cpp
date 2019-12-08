@@ -182,7 +182,7 @@ void ComponentCamera::SetFarDistance(const float distance)
 
 void ComponentCamera::SetOrientation(const float3 orientation)
 {
-	Quat rotation = Quat::LookAt(camera_frustum.front, orientation, camera_frustum.up, float3::unitY);
+	Quat rotation = Quat::LookAt(owner->transform.GetFrontVector(), orientation, owner->transform.GetUpVector(), float3::unitY);
 
 	owner->transform.Rotate(rotation);
 }
@@ -314,7 +314,7 @@ void ComponentCamera::OrbitY(const float angle)
 	float3 cam_focus_vector = owner->transform.GetTranslation() - focus_point;
 
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
-	const float current_angle = asinf(camera_frustum.front.y / camera_frustum.front.Length());
+	const float current_angle = asinf(owner->transform.GetFrontVector().y / owner->transform.GetFrontVector().Length());
 	if (abs(current_angle + adjusted_angle) >= math::pi / 2) {
 		return;
 	}
@@ -330,43 +330,33 @@ void ComponentCamera::RotateCameraWithMouseMotion(const float2 &motion)
 {
 	Quat rotX, rotY;
 
-	if (math::Abs(motion.y) > 1.5) 
-	{
-		rotX = App->cameras->scene_camera->RotatePitch(motion.y);
-	}
-	else
-	{
-		rotX = Quat::identity;
-	}
-
 	if (math::Abs(motion.x) > 1.5)
 	{
-		rotY = App->cameras->scene_camera->RotateYaw(motion.x);
-	}
-	else
-	{
-		rotY = Quat::identity;
+		App->cameras->scene_camera->RotateYaw(motion.x);
 	}
 
-	owner->transform.Rotate(rotY * rotX);
+	if (math::Abs(motion.y) > 1.5) 
+	{
+		App->cameras->scene_camera->RotatePitch(motion.y);
+	}
 }
 
-Quat ComponentCamera::RotatePitch(const float angle)
+void ComponentCamera::RotatePitch(const float angle)
 {
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
-	const float current_angle = asinf(camera_frustum.front.y / camera_frustum.front.Length());
+	const float current_angle = asinf(owner->transform.GetFrontVector().y / owner->transform.GetFrontVector().Length());
 	if (abs(current_angle + adjusted_angle) >= math::pi / 2) { // Avoid Gimbal Lock
-		return Quat::identity;
+		return;
 	}
-	Quat rotation = Quat::RotateAxisAngle(camera_frustum.WorldRight(), adjusted_angle);
-	return rotation;
+	Quat rotation = Quat::RotateAxisAngle(owner->transform.GetRightVector(), adjusted_angle);
+	owner->transform.Rotate(rotation);
 }
 
-Quat ComponentCamera::RotateYaw(const float angle)
+void ComponentCamera::RotateYaw(const float angle)
 {
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
 	Quat rotation = Quat::RotateY(adjusted_angle);
-	return rotation;
+	owner->transform.Rotate(rotation);
 }
 
 void ComponentCamera::SetPerpesctiveView()

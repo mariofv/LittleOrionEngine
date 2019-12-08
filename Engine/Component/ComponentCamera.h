@@ -55,8 +55,8 @@ public:
 	void OrbitY(const float angle);
 
 	void RotateCameraWithMouseMotion(const float2 &motion);
-	Quat RotatePitch(const float angle);
-	Quat RotateYaw(const float angle);
+	void RotatePitch(const float angle);
+	void RotateYaw(const float angle);
 
 	void SetPerpesctiveView();
 	void SetOrthographicView();

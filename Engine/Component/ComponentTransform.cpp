@@ -89,7 +89,7 @@ float3 ComponentTransform::GetFrontVector() const
 
 float3 ComponentTransform::GetRightVector() const
 {
-	return rotation * float3::unitX;
+	return Cross(GetFrontVector(), GetUpVector());
 }
 
 void ComponentTransform::GenerateModelMatrix()
