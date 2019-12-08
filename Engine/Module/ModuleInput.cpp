@@ -110,10 +110,6 @@ update_status ModuleInput::PreUpdate()
 					App->cameras->scene_camera->Focus(App->scene->hierarchy.selected_game_object->aabb.bounding_box);
 				}
 			}
-			else if (event.key.keysym.sym == SDLK_l)
-			{
-				App->cameras->scene_camera->LookAt(float3::zero);
-			}
 			break;
 
 		case SDL_KEYUP:
