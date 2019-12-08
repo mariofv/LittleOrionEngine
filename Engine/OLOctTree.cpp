@@ -26,26 +26,16 @@ void OLOctTree::Insert(GameObject &game_object)
 	{
 		OLOctTreeNode *object_leaf = FindLeaf(game_object.aabb.bounding_box); //TODO: What happens if the object is inside more one node?
 		assert(object_leaf != nullptr);
+		assert(object_leaf->objects.size() <= bucket_size);
+
 		if (object_leaf->objects.size() == bucket_size)
 		{
 			std::vector<OLOctTreeNode*> generated_nodes;
 			object_leaf->Split(generated_nodes);
 			flattened_tree.insert(flattened_tree.end(), generated_nodes.begin(), generated_nodes.end());
-
-			bool inserted = false;
-			unsigned int i = 0;
-			while (!inserted && i < 4)
-			{
-				if (generated_nodes[i]->box.Intersects(game_object.aabb.bounding_box))
-				{
-					generated_nodes[i]->InsertGameObject(&game_object);
-					inserted = true;
-				}
-				++i;
-			}
-			assert(inserted);
+			Insert(game_object);
 		}
-		else
+		else 
 		{
 			object_leaf->InsertGameObject(&game_object);
 		}

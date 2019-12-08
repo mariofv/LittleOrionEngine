@@ -70,6 +70,27 @@ void OLQuadTreeNode::Split(std::vector<OLQuadTreeNode*> &generated_nodes)
 	{
 		AddChild(node);
 	}
+	DistributeGameObjectsAmongChildren();
+}
+
+void OLQuadTreeNode::DistributeGameObjectsAmongChildren()
+{
+	for (auto &game_object : objects)
+	{
+		bool inserted = false;
+		int i = 0;
+		while (!inserted && i < 4)
+		{
+			if (children[i]->box.Intersects(game_object->aabb.bounding_box2D))
+			{
+				children[i]->InsertGameObject(game_object);
+				inserted = true;
+			}
+			++i;
+		}
+		assert(inserted);
+	}
+	objects.clear();
 }
 
 void OLQuadTreeNode::CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera)

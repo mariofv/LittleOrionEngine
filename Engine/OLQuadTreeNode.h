@@ -20,6 +20,7 @@ public:
 
 	void InsertGameObject(GameObject *game_object);
 	void Split(std::vector<OLQuadTreeNode*> &generated_nodes);
+	void DistributeGameObjectsAmongChildren();
 
 	void CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera);
 
