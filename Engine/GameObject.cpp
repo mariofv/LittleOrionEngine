@@ -142,12 +142,11 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 }
 
 void GameObject::RemoveComponent(Component * component_to_remove) {
-	auto it = std::remove_if(components.begin(), components.end(), [component_to_remove](auto const & component)
-	{
-		return component == component_to_remove;
-	});
-	component_to_remove->Delete();
-	components.erase(it);
+	auto it = std::find(components.begin(), components.end(), component_to_remove);
+	if (it != components.end()) {
+		component_to_remove->Delete();
+		components.erase(it);
+	}
 }
 
 Component*  GameObject::GetComponent(const Component::ComponentType type) const

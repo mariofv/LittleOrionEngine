@@ -156,10 +156,20 @@ void ModuleRender::Render() const
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
 	RenderGrid(camera);
-	geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
-	for (auto &mesh : meshes)
+	if (App->cameras->active_camera != nullptr) 
 	{
-		if (mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
+		geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
+
+		for (auto &mesh : meshes)
+		{
+			if (mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
+			{
+				RenderMesh(*mesh, camera);
+			}
+		}
+	}
+	else {
+		for (auto &mesh : meshes)
 		{
 			RenderMesh(*mesh, camera);
 		}
@@ -354,10 +364,7 @@ ComponentMesh* ModuleRender::CreateComponentMesh()
 
 void ModuleRender::RemoveComponentMesh(ComponentMesh* mesh_to_remove)
 {
-	auto it = std::remove_if(meshes.begin(), meshes.end(), [mesh_to_remove](auto const & mesh)
-	{
-		return mesh == mesh_to_remove;
-	});
+	auto it = std::find(meshes.begin(), meshes.end(), mesh_to_remove);
 	if (it != meshes.end()) {
 		delete *it;
 		meshes.erase(it);

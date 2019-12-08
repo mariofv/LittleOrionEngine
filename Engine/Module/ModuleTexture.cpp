@@ -45,10 +45,7 @@ ComponentMaterial* ModuleTexture::CreateComponentMaterial()
 
 void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remove)
 {
-	auto it = std::remove_if(materials.begin(), materials.end(), [material_to_remove](auto const & material)
-	{
-		return material == material_to_remove;
-	});
+	auto it = std::find(materials.begin(), materials.end(), material_to_remove);
 	if (it != materials.end()) {
 		delete *it;
 		materials.erase(it);

@@ -51,11 +51,10 @@ GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 	return created_game_object_ptr;
 }
 
-void ModuleScene::RemoveGameObject(GameObject * gameObjectToRemove)
+void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 {
-	auto it = std::remove_if(game_objects_ownership.begin(), game_objects_ownership.end(), [gameObjectToRemove](auto const & gameObject)
-	{
-		return gameObject.get() == gameObjectToRemove;
+	auto it = std::remove_if(game_objects_ownership.begin(), game_objects_ownership.end(), [game_object_to_remove](auto const & game_object) {
+		return game_object_to_remove == game_object.get();
 	});
 	if (it != game_objects_ownership.end()) {
 		game_objects_ownership.erase(it);
@@ -67,7 +66,7 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
-void ModuleScene::ShowFrameBufferTab(ComponentCamera * camera_frame_buffer_to_show, const char * title)
+void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title)
 {
 	if (ImGui::BeginTabItem(title))
 	{
@@ -75,10 +74,10 @@ void ModuleScene::ShowFrameBufferTab(ComponentCamera * camera_frame_buffer_to_sh
 
 		float imgui_window_width = ImGui::GetWindowWidth(); 
 		float imgui_window_height = ImGui::GetWindowHeight();
-		camera_frame_buffer_to_show->RecordFrame(imgui_window_width, imgui_window_height);
+		camera_frame_buffer_to_show.RecordFrame(imgui_window_width, imgui_window_height);
 
 		ImGui::GetWindowDrawList()->AddImage(
-			(void *)camera_frame_buffer_to_show->GetLastRecordedFrame(),
+			(void *)camera_frame_buffer_to_show.GetLastRecordedFrame(),
 			ImVec2(ImGui::GetCursorScreenPos()),
 			ImVec2(
 				ImGui::GetCursorScreenPos().x + imgui_window_width,
