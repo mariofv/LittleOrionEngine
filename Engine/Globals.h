@@ -55,24 +55,24 @@ enum class Fonts
 };
 
 // Paths -------
-# define SHADERS_PATH "./shaders/"
-# define TEXTURES_PATH "./resources/textures/"
+# define SHADERS_PATH "./Library/Shaders"
+# define TEXTURES_PATH "./Assets/Textures/"
 
-# define DEFAULT_VERTEX_SHADER_PATH "./shaders/default.vs"
-# define DEFAULT_FRAGMENT_SHADER_PATH "./shaders/default.fs"
+# define DEFAULT_VERTEX_SHADER_PATH "./Library/Shaders/default.vs"
+# define DEFAULT_FRAGMENT_SHADER_PATH "./Library/Shaders/default.fs"
 
-# define PRIMITIVE_VERTEX_SHADER_PATH "./shaders/primitive.vs"
-# define PRIMITIVE_FRAGMENT_SHADER_PATH "./shaders/primitive.fs"
+# define PRIMITIVE_VERTEX_SHADER_PATH "./Library/Shaders/primitive.vs"
+# define PRIMITIVE_FRAGMENT_SHADER_PATH "./Library/Shaders/primitive.fs"
 
-# define TEXTURE_FRAGMENT_SHADER_PATH "./shaders/texture.fs"
+# define TEXTURE_FRAGMENT_SHADER_PATH "./Library/Shaders/texture.fs"
 
-# define WOBBLE_VERTEX_SHADER_PATH "./shaders/wobble.vs"
-# define WOBBLE_FRAGMENT_SHADER_PATH "./shaders/wobble.fs"
+# define WOBBLE_VERTEX_SHADER_PATH "./Library/Shaders/wobble.vs"
+# define WOBBLE_FRAGMENT_SHADER_PATH "./Library/Shaders/wobble.fs"
 
-# define SKYBOX_VERTEX_SHADER_PATH "./shaders/skybox.vs"
-# define SKYBOX_FRAGMENT_SHADER_PATH "./shaders/skybox.fs"
+# define SKYBOX_VERTEX_SHADER_PATH "./Library/Shaders/skybox.vs"
+# define SKYBOX_FRAGMENT_SHADER_PATH "./Library/Shaders/skybox.fs"
 
-# define HOUSE_MODEL_PATH "./resources/models/baker_house/BakerHouse.fbx"
+# define HOUSE_MODEL_PATH "./Assets/Models/baker_house/BakerHouse.fbx"
 
 #define FULLSCREEN false
 #define RESIZABLE true
