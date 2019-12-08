@@ -1,5 +1,6 @@
 #include "OLQuadTree.h"
-#include <queue>
+
+#include <algorithm>
 
 OLQuadTree::OLQuadTree()
 {
@@ -63,7 +64,9 @@ void OLQuadTree::Insert(GameObject &game_object)
 
 void OLQuadTree::CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera)
 {
-
+	root->CollectIntersect(game_objects, camera);
+	auto it = std::unique(game_objects.begin(), game_objects.end());
+	game_objects.erase(it, game_objects.end());
 }
 
 OLQuadTreeNode* OLQuadTree::FindLeaf(const AABB2D &game_object_aabb) const

@@ -72,6 +72,25 @@ void OLQuadTreeNode::Split(std::vector<OLQuadTreeNode*> &generated_nodes)
 	}
 }
 
+void OLQuadTreeNode::CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera)
+{
+	if (camera.IsInsideFrustum(box))
+	{
+		for (auto &object : objects)
+		{
+			if (camera.IsInsideFrustum(object->aabb.bounding_box))
+			{
+				objects.push_back(object);
+			}
+		}
+		for (auto &child : children)
+		{
+			child->CollectIntersect(objects, camera);
+		}
+	}
+
+}
+
 std::vector<float> OLQuadTreeNode::GetVertices() const
 {
 	static const int num_of_vertices = 4;

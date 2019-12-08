@@ -2,6 +2,8 @@
 #define _OLQUADTREENODE_H_
 
 #include "GameObject.h"
+#include "Component/ComponentCamera.h"
+
 #include <MathGeoLib.h>
 
 class OLQuadTreeNode
@@ -18,6 +20,8 @@ public:
 
 	void InsertGameObject(GameObject *game_object);
 	void Split(std::vector<OLQuadTreeNode*> &generated_nodes);
+
+	void CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera);
 
 	std::vector<float> GetVertices() const;
 
