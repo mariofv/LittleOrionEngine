@@ -74,14 +74,13 @@ void ComponentCamera::Update()
 		{
 			owner->transform.SetTranslation(owner->transform.GetTranslation() + zooming_direction.ScaledToLength(frame_focusing_distance));
 		}
-	}
+	}	
 
 	camera_frustum.pos = owner->transform.GetTranslation();
+	Quat owner_rotation = owner->transform.GetRotation();
+	camera_frustum.up = owner_rotation * float3::unitY;
+	camera_frustum.front = owner_rotation * float3::unitZ;
 
-	Quat ownerRotation = owner->transform.GetRotation();
-
-	camera_frustum.up = ownerRotation * float3::unitY;
-	camera_frustum.front = ownerRotation * float3::unitZ;
 
 	GenerateMatrices();
 }
@@ -185,7 +184,7 @@ void ComponentCamera::SetOrientation(const float3 orientation)
 {
 	Quat rotation = Quat::LookAt(camera_frustum.front, orientation, camera_frustum.up, float3::unitY);
 
-	owner->transform.SetRotation(rotation);
+	owner->transform.Rotate(rotation);
 }
 
 void ComponentCamera::AlignOrientationWithAxis()
@@ -282,28 +281,49 @@ void ComponentCamera::MoveRight()
 	owner->transform.Translate(camera_frustum.WorldRight().ScaledToLength(distance));
 }
 
+void ComponentCamera::OrbitCameraWithMouseMotion(const float2 &motion)
+{
+	if (math::Abs(motion.y) > 1.5)
+	{
+		App->cameras->scene_camera->OrbitY(motion.y);
+	}
+
+	if (math::Abs(motion.x) > 1.5)
+	{
+		App->cameras->scene_camera->OrbitX(motion.x);
+	}
+}
+
 void ComponentCamera::OrbitX(const float angle)
 {
+	float3 focus_point = float3::zero;
+	float3 cam_focus_vector = owner->transform.GetTranslation() - focus_point;
+
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
 	Quat rotation = Quat::RotateY(adjusted_angle);
-	owner->transform.SetTranslation(rotation * owner->transform.GetTranslation());
 
-	LookAt(float3::zero);
+	cam_focus_vector = rotation * cam_focus_vector;
+	owner->transform.SetTranslation(cam_focus_vector + focus_point);
+
+	LookAt(focus_point);
 }
 
 void ComponentCamera::OrbitY(const float angle)
 {
+	float3 focus_point = float3::zero;
+	float3 cam_focus_vector = owner->transform.GetTranslation() - focus_point;
+
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
 	const float current_angle = asinf(camera_frustum.front.y / camera_frustum.front.Length());
 	if (abs(current_angle + adjusted_angle) >= math::pi / 2) {
 		return;
 	}
+	Quat rotation = Quat::RotateAxisAngle(camera_frustum.WorldRight(), adjusted_angle);
 
-	float3x3 rotation_matrix = float3x3::identity;
-	rotation_matrix.SetRotatePart(camera_frustum.WorldRight(), adjusted_angle);
-	owner->transform.SetTranslation(rotation_matrix * owner->transform.GetTranslation());
+	cam_focus_vector = rotation * cam_focus_vector;
+	owner->transform.SetTranslation(cam_focus_vector + focus_point);
 
-	LookAt(float3::zero);
+	LookAt(focus_point);
 }
 
 void ComponentCamera::RotateCameraWithMouseMotion(const float2 &motion)

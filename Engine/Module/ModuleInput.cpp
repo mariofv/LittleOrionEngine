@@ -62,15 +62,10 @@ update_status ModuleInput::PreUpdate()
 				float2 motion = float2(event.motion.xrel, event.motion.yrel);
 				App->cameras->scene_camera->RotateCameraWithMouseMotion(motion);
 			}
-			else if (event.motion.state & SDL_BUTTON_LMASK && App->scene->scene_window_is_hovered && App->cameras->IsOrbiting()) {
-				if (math::Abs(event.motion.xrel) > 1.5) {
-					App->cameras->scene_camera->OrbitX(event.motion.xrel);
-				}
-
-				if (math::Abs(event.motion.yrel) > 1.5) {
-					App->cameras->scene_camera->OrbitY(event.motion.yrel);
-				}
-
+			else if (event.motion.state & SDL_BUTTON_LMASK && App->scene->scene_window_is_hovered && App->cameras->IsOrbiting()) 
+			{
+				float2 motion = float2(event.motion.xrel, event.motion.yrel);
+				App->cameras->scene_camera->OrbitCameraWithMouseMotion(motion);
 			}
 			break;
 
@@ -114,6 +109,10 @@ update_status ModuleInput::PreUpdate()
 				{
 					App->cameras->scene_camera->Focus(App->scene->hierarchy.selected_game_object->aabb.bounding_box);
 				}
+			}
+			else if (event.key.keysym.sym == SDLK_l)
+			{
+				App->cameras->scene_camera->LookAt(float3::zero);
 			}
 			break;
 
