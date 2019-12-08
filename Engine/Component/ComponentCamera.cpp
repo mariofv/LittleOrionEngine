@@ -434,12 +434,12 @@ ComponentAABB::CollisionState ComponentCamera::CheckAABB2DCollision(const AABB2D
 	static const size_t number_of_corners = 4;
 	static const size_t number_of_planes = 4;
 
+	//Get own aabb planes
+	Plane own_frustum_planes[6];
+	camera_frustum.GetPlanes(own_frustum_planes);
+	
 	//Get refence corners
 	std::vector<float> reference_aabb_corners = OLQuadTree::GetVertices(reference_AABB);
-
-	//Get own aabb planes
-	Plane own_frustum_planes[number_of_planes];
-	camera_frustum.GetPlanes(own_frustum_planes);
 
 	//Check if Corners are inside the planes
 	int total_reference_planes_inside = 0;

@@ -153,14 +153,19 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
 	//RenderGrid(camera);
 	geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
-	for (auto &mesh : meshes)
+	
+	GenerateQuadTree();
+	std::vector<GameObject*> rendered_objects;
+	ol_quadtree.CollectIntersect(rendered_objects, *App->cameras->active_camera);
+	
+	for (auto &object: rendered_objects)
 	{
-		if (mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
+		ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+		if (object_mesh->IsEnabled())
 		{
-			RenderMesh(*mesh, camera);
+			RenderMesh(*object_mesh, camera);
 		}
 	}
-	GenerateQuadTree();
 	for (auto & ol_quadtree_node : ol_quadtree.flattened_tree) {
 		geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
 	}
