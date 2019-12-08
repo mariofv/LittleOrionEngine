@@ -7,7 +7,7 @@ ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, Co
 	GenerateModelMatrix();
 }
 
-ComponentTransform::ComponentTransform(GameObject * owner, const float3 translation, const float3 rotation, const float3 scale) :
+ComponentTransform::ComponentTransform(GameObject * owner, const float3 translation, const Quat rotation, const float3 scale) :
 	Component(owner, ComponentType::TRANSFORM),
 	translation(translation),
 	rotation(rotation),
@@ -48,31 +48,38 @@ void ComponentTransform::Translate(const float3 &translation)
 	GenerateModelMatrix(); // TODO: Change this to Update()
 }
 
-float3 ComponentTransform::GetRotation() const
+Quat ComponentTransform::GetRotation() const
 {
 	return rotation;
 }
 
-void ComponentTransform::SetRotation(const float3 rotation)
+void ComponentTransform::SetRotation(const Quat &rotation)
 {
 	this->rotation = rotation;
 	GenerateModelMatrix(); // TODO: Change this to Update()
 }
 
-void ComponentTransform::Rotate(const float3 &rotation)
+void ComponentTransform::SetRotation(const float3x3 &rotation)
 {
-	this->rotation += rotation;
+	this->rotation = rotation.ToQuat();
+	GenerateModelMatrix(); // TODO: Change this to Update()
+}
+
+void ComponentTransform::Rotate(const Quat &rotation)
+{
+	this->rotation = rotation * this->rotation;
+	GenerateModelMatrix(); // TODO: Change this to Update()
+}
+
+void ComponentTransform::Rotate(const float3x3 &rotation)
+{
+	this->rotation = rotation.ToQuat() * this->rotation;
 	GenerateModelMatrix(); // TODO: Change this to Update()
 }
 
 void ComponentTransform::GenerateModelMatrix()
 {
-	Quat rotation_quat = Quat::FromEulerXYZ(
-		math::DegToRad(rotation.x),
-		math::DegToRad(rotation.y),
-		math::DegToRad(rotation.z)
-	);
-	model_matrix = float4x4::FromTRS(translation, rotation_quat, scale);
+	model_matrix = float4x4::FromTRS(translation, rotation, scale);
 }
 
 void ComponentTransform::GenerateGlobalModelMatrix()
@@ -95,12 +102,8 @@ float4x4 ComponentTransform::GetGlobalModelMatrix() const
 void ComponentTransform::ChangeLocalSpace(const float4x4 new_local_space)
 {
 	model_matrix = new_local_space.Inverted() * global_model_matrix;
-	Quat tmp_rotation;
-	model_matrix.Decompose(translation, tmp_rotation, scale);
-	rotation = tmp_rotation.ToEulerXYZ();
-	rotation.x = math::RadToDeg(rotation.x);
-	rotation.y = math::RadToDeg(rotation.y);
-	rotation.z = math::RadToDeg(rotation.z);
+	model_matrix.Decompose(translation, rotation, scale);
+	
 }
 
 void ComponentTransform::ShowComponentWindow()

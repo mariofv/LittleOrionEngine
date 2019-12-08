@@ -57,15 +57,10 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEMOTION:
-			if (event.motion.state & SDL_BUTTON_RMASK && App->scene->scene_window_is_hovered) {
-				if (math::Abs(event.motion.xrel) > 1.5) {
-					App->cameras->scene_camera->RotateYaw(event.motion.xrel);
-				}
-
-				if (math::Abs(event.motion.yrel) > 1.5) {
-					App->cameras->scene_camera->RotatePitch(event.motion.yrel);
-				}
-
+			if (event.motion.state & SDL_BUTTON_RMASK && App->scene->scene_window_is_hovered) 
+			{
+				float2 motion = float2(event.motion.xrel, event.motion.yrel);
+				App->cameras->scene_camera->RotateCameraWithMouseMotion(motion);
 			}
 			else if (event.motion.state & SDL_BUTTON_LMASK && App->scene->scene_window_is_hovered && App->cameras->IsOrbiting()) {
 				if (math::Abs(event.motion.xrel) > 1.5) {

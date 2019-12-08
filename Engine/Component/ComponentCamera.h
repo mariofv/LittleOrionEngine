@@ -53,8 +53,9 @@ public:
 	void Center(const AABB &bounding_box);
 	void Focus(const AABB &bounding_box);
 
-	void RotatePitch(const float angle);
-	void RotateYaw(const float angle);
+	void RotateCameraWithMouseMotion(const float2 &motion);
+	Quat RotatePitch(const float angle);
+	Quat RotateYaw(const float angle);
 
 	void SetPerpesctiveView();
 	void SetOrthographicView();

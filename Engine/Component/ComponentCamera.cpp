@@ -78,14 +78,10 @@ void ComponentCamera::Update()
 
 	camera_frustum.pos = owner->transform.GetTranslation();
 
-	float3 ownerRotation = owner->transform.GetRotation();
-	Quat rotation_quat = Quat::FromEulerXYZ(
-		math::DegToRad(ownerRotation.x),
-		math::DegToRad(ownerRotation.y),
-		math::DegToRad(ownerRotation.z)
-	);	
-	camera_frustum.up = rotation_quat * float3::unitY;
-	camera_frustum.front = rotation_quat * float3::unitZ;
+	Quat ownerRotation = owner->transform.GetRotation();
+
+	camera_frustum.up = ownerRotation * float3::unitY;
+	camera_frustum.front = ownerRotation * float3::unitZ;
 
 	GenerateMatrices();
 }
@@ -187,15 +183,15 @@ void ComponentCamera::SetFarDistance(const float distance)
 
 void ComponentCamera::SetOrientation(const float3 orientation)
 {
-	float3x3 rotation_matrix = float3x3::LookAt(camera_frustum.front, orientation, camera_frustum.up, float3::unitY);
-	camera_frustum.front = rotation_matrix * camera_frustum.front;
-	camera_frustum.up = rotation_matrix * camera_frustum.up;
+	Quat rotation = Quat::LookAt(camera_frustum.front, orientation, camera_frustum.up, float3::unitY);
+
+	owner->transform.SetRotation(rotation);
 }
 
 void ComponentCamera::AlignOrientationWithAxis()
 {
-	camera_frustum.up = float3::unitY;
-	camera_frustum.front = float3::unitZ;
+	float3x3 rotation_matrix = float3x3::identity;
+	owner->transform.SetRotation(rotation_matrix);
 }
 
 
@@ -223,8 +219,7 @@ void ComponentCamera::SetPosition(const float3 position)
 
 void ComponentCamera::Center(const AABB &bounding_box)
 {
-	camera_frustum.up = float3::unitY;
-	camera_frustum.front = float3::unitZ;
+	AlignOrientationWithAxis();
 
 	float containing_sphere_radius = bounding_box.Size().Length() / 2;
 
@@ -254,48 +249,44 @@ void ComponentCamera::Focus(const AABB &bounding_box)
 void ComponentCamera::MoveUp()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	float3 new_camera_pos = owner->transform.GetTranslation();
-	new_camera_pos.y = new_camera_pos.y + distance;
-	owner->transform.SetTranslation(new_camera_pos);
+	owner->transform.Translate(float3(0, distance, 0));
 }
 
 void ComponentCamera::MoveDown()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	float3 new_camera_pos = owner->transform.GetTranslation();
-	new_camera_pos.y = new_camera_pos.y - distance;
-	owner->transform.SetTranslation(new_camera_pos);
+	owner->transform.Translate(float3(0, -distance, 0));
 }
 
 void ComponentCamera::MoveFoward()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	owner->transform.SetTranslation(owner->transform.GetTranslation() + camera_frustum.front.ScaledToLength(distance));
+	owner->transform.Translate(camera_frustum.front.ScaledToLength(distance));
 }
 
 void ComponentCamera::MoveBackward()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	owner->transform.SetTranslation(owner->transform.GetTranslation() - camera_frustum.front.ScaledToLength(distance));
+	owner->transform.Translate(-camera_frustum.front.ScaledToLength(distance));
 }
 
 void ComponentCamera::MoveLeft()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	owner->transform.SetTranslation(owner->transform.GetTranslation() - camera_frustum.WorldRight().ScaledToLength(distance));
+	owner->transform.Translate(-camera_frustum.WorldRight().ScaledToLength(distance));
 }
 
 void ComponentCamera::MoveRight()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
-	owner->transform.SetTranslation(owner->transform.GetTranslation() + camera_frustum.WorldRight().ScaledToLength(distance));
+	owner->transform.Translate(camera_frustum.WorldRight().ScaledToLength(distance));
 }
 
 void ComponentCamera::OrbitX(const float angle)
 {
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
-	float3x3 rotation_matrix = float3x3::RotateY(adjusted_angle);
-	owner->transform.SetTranslation(rotation_matrix * owner->transform.GetTranslation());
+	Quat rotation = Quat::RotateY(adjusted_angle);
+	owner->transform.SetTranslation(rotation * owner->transform.GetTranslation());
 
 	LookAt(float3::zero);
 }
@@ -315,25 +306,47 @@ void ComponentCamera::OrbitY(const float angle)
 	LookAt(float3::zero);
 }
 
-void ComponentCamera::RotatePitch(const float angle)
+void ComponentCamera::RotateCameraWithMouseMotion(const float2 &motion)
+{
+	Quat rotX, rotY;
+
+	if (math::Abs(motion.y) > 1.5) 
+	{
+		rotX = App->cameras->scene_camera->RotatePitch(motion.y);
+	}
+	else
+	{
+		rotX = Quat::identity;
+	}
+
+	if (math::Abs(motion.x) > 1.5)
+	{
+		rotY = App->cameras->scene_camera->RotateYaw(motion.x);
+	}
+	else
+	{
+		rotY = Quat::identity;
+	}
+
+	owner->transform.Rotate(rotY * rotX);
+}
+
+Quat ComponentCamera::RotatePitch(const float angle)
 {
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
 	const float current_angle = asinf(camera_frustum.front.y / camera_frustum.front.Length());
-	if (abs(current_angle + adjusted_angle) >= math::pi / 2) {
-		return;
+	if (abs(current_angle + adjusted_angle) >= math::pi / 2) { // Avoid Gimbal Lock
+		return Quat::identity;
 	}
-	float3x3 rotation_matrix = float3x3::identity;
-	rotation_matrix.SetRotatePart(camera_frustum.WorldRight(), adjusted_angle);
-	camera_frustum.up = rotation_matrix * camera_frustum.up;
-	camera_frustum.front = rotation_matrix * camera_frustum.front;
+	Quat rotation = Quat::RotateAxisAngle(camera_frustum.WorldRight(), adjusted_angle);
+	return rotation;
 }
 
-void ComponentCamera::RotateYaw(const float angle)
+Quat ComponentCamera::RotateYaw(const float angle)
 {
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
-	float3x3 rotation_matrix = float3x3::RotateY(adjusted_angle);
-	camera_frustum.up = rotation_matrix * camera_frustum.up;
-	camera_frustum.front = rotation_matrix * camera_frustum.front;
+	Quat rotation = Quat::RotateY(adjusted_angle);
+	return rotation;
 }
 
 void ComponentCamera::SetPerpesctiveView()
