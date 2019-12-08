@@ -27,19 +27,15 @@ bool ModuleCamera::Init()
 // Called every draw update
 update_status ModuleCamera::Update()
 {
+	scene_camera->Update();
 	return update_status::UPDATE_CONTINUE;
 }
 
 // Called before quitting
 bool ModuleCamera::CleanUp()
 {
-	delete scene_camera_game_object;
-	/*
-	for (auto& camera : cameras )
-	{
-		delete camera;
-	}
-	*/
+	
+	//Not removing the cameras here because this module would be clearer before scene module
 	cameras.clear();
 	
 	return true;
@@ -58,8 +54,13 @@ void ModuleCamera::RemoveComponentCamera(ComponentCamera* camera_to_remove)
 	{
 		return camera == camera_to_remove;
 	});
-	delete *it;
-	cameras.erase(it);
+	if (*it == active_camera) {
+		active_camera = nullptr;
+	}
+	if (it != cameras.end()) {
+		delete *it;
+		cameras.erase(it);
+	}
 }
 
 void ModuleCamera::SetOrbit(const bool is_orbiting)

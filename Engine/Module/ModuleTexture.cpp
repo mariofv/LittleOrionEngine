@@ -49,8 +49,10 @@ void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remov
 	{
 		return material == material_to_remove;
 	});
-	delete *it;
-	materials.erase(it);
+	if (it != materials.end()) {
+		delete *it;
+		materials.erase(it);
+	}
 }
 
 Texture* ModuleTexture::LoadTexture(const char* texture_path) const

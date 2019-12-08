@@ -21,8 +21,6 @@ bool ModuleScene::Init()
 update_status ModuleScene::Update()
 {
 	root->Update();
-	App->cameras->scene_camera->Update();
-
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -59,7 +57,9 @@ void ModuleScene::RemoveGameObject(GameObject * gameObjectToRemove)
 	{
 		return gameObject.get() == gameObjectToRemove;
 	});
-	game_objects_ownership.erase(it);
+	if (it != game_objects_ownership.end()) {
+		game_objects_ownership.erase(it);
+	}
 }
 
 GameObject* ModuleScene::GetRoot() const

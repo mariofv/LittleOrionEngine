@@ -138,7 +138,8 @@ bool ModuleRender::CleanUp()
 	APP_LOG_INFO("Destroying renderer");
 
 	delete geometry_renderer;
-	for (auto& mesh : meshes) {
+	for (auto& mesh : meshes)
+	{
 		delete mesh;
 	}
 	meshes.clear();
@@ -357,8 +358,10 @@ void ModuleRender::RemoveComponentMesh(ComponentMesh* mesh_to_remove)
 	{
 		return mesh == mesh_to_remove;
 	});
-	delete *it;
-	meshes.erase(it);
+	if (it != meshes.end()) {
+		delete *it;
+		meshes.erase(it);
+	}
 }
 
 void ModuleRender::ShowRenderOptions()
