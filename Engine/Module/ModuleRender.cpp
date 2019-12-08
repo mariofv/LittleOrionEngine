@@ -168,7 +168,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			}
 		}
 	}
-	else {
+	else 
+	{
 		for (auto &mesh : meshes)
 		{
 			RenderMesh(*mesh, camera);
