@@ -29,6 +29,10 @@ public:
 	void Rotate(const Quat &rotation);
 	void Rotate(const float3x3 &rotation);
 
+	float3 GetUpVector() const;
+	float3 GetFrontVector() const;
+	float3 GetRightVector() const;
+
 	void GenerateGlobalModelMatrix();
 	void ChangeLocalSpace(const float4x4 new_local_space);
 

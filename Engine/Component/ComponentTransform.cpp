@@ -77,6 +77,21 @@ void ComponentTransform::Rotate(const float3x3 &rotation)
 	GenerateModelMatrix(); // TODO: Change this to Update()
 }
 
+float3 ComponentTransform::GetUpVector() const
+{
+	return rotation * float3::unitY;
+}
+
+float3 ComponentTransform::GetFrontVector() const
+{
+	return rotation * float3::unitZ;
+}
+
+float3 ComponentTransform::GetRightVector() const
+{
+	return rotation * float3::unitX;
+}
+
 void ComponentTransform::GenerateModelMatrix()
 {
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
