@@ -42,10 +42,8 @@ void EngineUI::ShowEngineUI()
 	{
 		ShowConfigurationWindow();
 	}
-	if (show_console_window)
-	{
-		ShowConsoleWindow();
-	}
+	ShowFileAndConsoleWindows();
+
 	if (show_debug_window)
 	{
 		ShowDebugWindow();
@@ -264,7 +262,7 @@ void EngineUI::ShowConfigurationWindow()
 	ImGui::End();
 }
 
-void EngineUI::ShowConsoleWindow()
+void EngineUI::ShowFileAndConsoleWindows()
 {
 	ImGui::SetNextWindowPos(
 		ImVec2(0, MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * (TIME_BAR_HEIGHT_PROP + CONFIG_HEIGHT_PROP)),
@@ -274,7 +272,17 @@ void EngineUI::ShowConsoleWindow()
 		ImVec2(App->window->GetWidth(), App->window->GetHeight() * (0.98 - (TIME_BAR_HEIGHT_PROP + CONFIG_HEIGHT_PROP))),
 		ImGuiCond_Once
 	);
-	App->engine_log->ShowConsoleWindow();
+	ImGui::BeginTabBar("Bottom Tab");
+	if (show_file_explorer_window)
+	{
+		file_explorer_ui.ShowAssetsFolders();
+	}
+	if (show_console_window)
+	{
+		App->engine_log->ShowConsoleWindow();
+	}
+	ImGui::EndTabBar();
+
 }
 
 void EngineUI::ShowHardware() const

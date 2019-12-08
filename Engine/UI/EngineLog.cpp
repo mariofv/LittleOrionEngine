@@ -66,7 +66,7 @@ std::vector<float> EngineLog::getMSData() const
 void EngineLog::ShowConsoleWindow()
 {
 	char tmp_string[64];
-	if (ImGui::Begin(ICON_FA_TERMINAL " Console"))
+	if (ImGui::BeginTabItem(ICON_FA_TERMINAL " Console"))
 	{		
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Filters");
@@ -77,7 +77,7 @@ void EngineLog::ShowConsoleWindow()
 		ImGui::SameLine();
 		ShowFilterButton("OPENGL", ImVec4(0.13f, 0.31f, 0.43f, 1.0f), opengl_filter);
 		ImGui::Separator();
-
+	
 		if (ImGui::BeginChild(""))
 		{
 			for (int i = 0; i < text_log.size(); ++i)
@@ -112,7 +112,7 @@ void EngineLog::ShowConsoleWindow()
 					sprintf_s(tmp_string, "(%d):", text_log[i]->line);
 					ImGui::TextColored(ImVec4(1.0f, 0.0f, 1.0f, 1.0f), tmp_string);
 					ImGui::SameLine();
-
+			
 					switch (text_log[i]->type)
 					{
 						case LogEntryType::LOG_SECTION:
@@ -138,10 +138,10 @@ void EngineLog::ShowConsoleWindow()
 				ImGui::SetScrollHere(1.0f);
 				scroll_down = false;
 			}
-		}
 		ImGui::EndChild();
+		}
+	ImGui::EndTabItem();
 	}
-	ImGui::End();
 }
 
 void EngineLog::ShowFilterButton(const char* button_label, const ImVec4 color, bool &filter)
