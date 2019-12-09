@@ -18,6 +18,7 @@ class ModuleCamera;
 class ModuleModelLoader;
 class ModuleTime;
 class ModuleScene;
+class ModuleDebug;
 
 class EngineLog;
 class EngineUI;
@@ -46,6 +47,7 @@ public:
 	ModuleModelLoader* model_loader = nullptr;
 	ModuleTime* time = nullptr;
 	ModuleScene* scene = nullptr;
+	ModuleDebug* debug = nullptr;
 
 	EngineUI* ui = nullptr;
 	EngineLog* engine_log = nullptr;
