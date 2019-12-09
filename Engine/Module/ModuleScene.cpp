@@ -15,6 +15,9 @@ bool ModuleScene::Init()
 	camera->name = "Main Camera";
 	ComponentCamera * component_camera = static_cast<ComponentCamera*>(camera->CreateComponent(Component::ComponentType::CAMERA));
 	App->cameras->active_camera = component_camera;
+	App->cameras->active_camera->SetPosition(float3(0.f, 1.f, -10.f));
+	App->cameras->active_camera->SetFarDistance(500);
+
 	return true;
 }
 

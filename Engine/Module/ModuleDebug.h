@@ -27,9 +27,9 @@ public:
 	bool show_quadtree = true;
 
 private:
-	int num_houses = 0;
-	int max_dispersion_x = 0;
-	int max_dispersion_z = 0;
+	int num_houses = 20;
+	int max_dispersion_x = 40;
+	int max_dispersion_z = 40;
 };
 
 #endif //_MODULEDEBUG_H_
