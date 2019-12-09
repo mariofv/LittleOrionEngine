@@ -18,6 +18,7 @@
 #include "imgui.h"
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
+#include "Brofiler/Brofiler.h"
 
 static void APIENTRY openglCallbackFunction(
 	GLenum source,
@@ -144,6 +145,7 @@ bool ModuleRender::CleanUp()
 
 void ModuleRender::Render() const
 {
+	BROFILER_CATEGORY("Render",Profiler::Color::Aqua);
 	App->editor->Render();
 	SDL_GL_SwapWindow(App->window->window);
 	App->time->EndFrame();
@@ -151,6 +153,7 @@ void ModuleRender::Render() const
 
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
+
 	RenderGrid(camera);
 	geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
 	for (auto &mesh : meshes)

@@ -12,6 +12,7 @@
 #include "UI/EngineUI.h"
 #include "UI/EngineLog.h"
 #include "TimerUs.h"
+#include "Brofiler/Brofiler.h"
 
 using namespace std;
 
@@ -59,6 +60,7 @@ bool Application::Init()
 
 update_status Application::Update()
 {
+	BROFILER_FRAME("MainLoop");
 	update_status ret = update_status::UPDATE_CONTINUE;
 
 	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
