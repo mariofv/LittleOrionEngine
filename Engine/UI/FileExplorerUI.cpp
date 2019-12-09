@@ -12,13 +12,14 @@ void FileExplorerUI::ShowAssetsFolders() {
 		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 260)))
 		{
 			WindowShowFilesInFolder(".//Assets//*");
-			ImGui::EndChild();
 		}
+		ImGui::EndChild();
+
 		ImGui::SameLine();
 		if (ImGui::BeginChild("File Explorer", ImVec2(0, 260), true)) {
 			ShowFilesInExplorer(selected_folder);
-			ImGui::EndChild();
 		}
+		ImGui::EndChild();
 		ImGui::EndTabItem();
 	}
 }
@@ -51,8 +52,8 @@ void FileExplorerUI::WindowShowFilesInFolder(const char * path) {
 			{
 				ProcessMouseInput(new_path);
 				WindowShowFilesInFolder(new_path.c_str());
-				ImGui::TreePop();
 			}
+			ImGui::TreePop();
 		}
 	} while (FindNextFile(handle_find, &find_file_data) != 0);
 
