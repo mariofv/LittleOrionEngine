@@ -9,7 +9,16 @@
 
 void FileExplorerUI::ShowAssetsFolders() {
 	if(ImGui::BeginTabItem(ICON_FA_FOLDER_OPEN " Project") ){
-		WindowShowFilesInFolder(".//Assets//*");
+		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 260)))
+		{
+			WindowShowFilesInFolder(".//Assets//*");
+			ImGui::EndChild();
+		}
+		ImGui::SameLine();
+		if (ImGui::BeginChild("File Explorer", ImVec2(0, 260), true)) {
+			ShowFilesInExplorer(selected_folder);
+			ImGui::EndChild();
+		}
 		ImGui::EndTabItem();
 	}
 }
@@ -69,6 +78,35 @@ int FileExplorerUI::GetWindowsSubFolders(const char * path) {
 	return subfolders;
 }
 
+
+void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
+	WIN32_FIND_DATA find_file_data;
+	HANDLE handle_find = FindFirstFile(folder_path.c_str(), &find_file_data);
+	if (handle_find == INVALID_HANDLE_VALUE) {
+		return;
+	}
+	do {
+		if (std::strcmp(find_file_data.cFileName, ".") && std::strcmp(find_file_data.cFileName, ".."))
+		{
+			bool outsideWindow = false;
+			std::string item_name;
+			size_t text_size = ImGui::CalcTextSize(find_file_data.cFileName).x;
+			if (find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
+				item_name = std::string(ICON_FA_FOLDER "\n " + std::string(find_file_data.cFileName));
+				
+			}
+			else
+			{
+				item_name = std::string(ICON_FA_BOX "\n " + std::string(find_file_data.cFileName));
+			}
+			ImGui::Text(item_name.c_str());
+			size_t last_item_width = ImGui::CalcItemWidth();
+
+			ImGui::SameLine();
+		}
+	} while (FindNextFile(handle_find, &find_file_data) != 0);
+
+}
 void FileExplorerUI::ProcessMouseInput(std::string & path)
 {
 	if (ImGui::IsItemHovered())
