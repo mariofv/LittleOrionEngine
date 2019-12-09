@@ -36,6 +36,13 @@ bool ModuleDebug::CleanUp()
 	return true;
 }
 
+void ModuleDebug::Render(const ComponentCamera &camera) const
+{
+	if (show_grid)
+	{
+		RenderGrid(camera);
+	}
+}
 
 void ModuleDebug::RenderGrid(const ComponentCamera &camera) const
 {
@@ -107,7 +114,7 @@ void ModuleDebug::ShowDebugWindow()
 {
 	if (ImGui::Begin(ICON_FA_BUG " Debug"))
 	{
-
+		ImGui::Checkbox("Grid", &show_grid);
 	}
 	ImGui::End();
 }

@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleCamera.h"
+#include "ModuleDebug.h"
 #include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
 #include "ModuleProgram.h"
@@ -151,7 +152,7 @@ void ModuleRender::Render() const
 
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
-	//RenderGrid(camera);
+	App->debug->Render(camera);
 	geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
 	
 	GenerateQuadTree();
