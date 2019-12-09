@@ -30,36 +30,40 @@ void OLQuadTree::Clear()
 
 void OLQuadTree::Insert(GameObject &game_object)
 {
-	if (root->box.Intersects(game_object.aabb.bounding_box2D))
-	{
-		OLQuadTreeNode *object_leaf = FindLeaf(game_object.aabb.bounding_box2D); //TODO: What happens if the object is inside more one node?
-		assert(object_leaf != nullptr);
-		if (object_leaf->objects.size() == bucket_size)
-		{
-			std::vector<OLQuadTreeNode*> generated_nodes;
-			object_leaf->Split(generated_nodes);
-			flattened_tree.insert(flattened_tree.end(), generated_nodes.begin(), generated_nodes.end());
+	assert(root->box.Intersects(game_object.aabb.bounding_box2D));
 
-			bool inserted = false;
-			unsigned int i = 0;
-			while (!inserted && i < 4)
-			{
-				if (generated_nodes[i]->box.Intersects(game_object.aabb.bounding_box2D))
-				{
-					generated_nodes[i]->InsertGameObject(&game_object);
-					inserted = true;
-				}
-				++i;
-			}
-			assert(inserted);
-		}
-		else
+	std::vector<OLQuadTreeNode*> intersecting_leaves;
+	FindLeaves(game_object.aabb.bounding_box2D, intersecting_leaves);
+	assert(intersecting_leaves.size() > 0);
+
+	bool reinsert = false;
+	for (auto &leaf : intersecting_leaves)
+	{
+		if (leaf->depth == max_depth)
 		{
-			object_leaf->InsertGameObject(&game_object);
+			leaf->InsertGameObject(&game_object);
+		}
+		else 
+		{
+			if (leaf->objects.size() == bucket_size)
+			{
+				std::vector<OLQuadTreeNode*> generated_nodes;
+				leaf->Split(generated_nodes);
+				flattened_tree.insert(flattened_tree.end(), generated_nodes.begin(), generated_nodes.end());
+				reinsert = true;
+
+			}
+			else
+			{
+				leaf->InsertGameObject(&game_object);
+			}
 		}
 	}
-	//TODO: What happens if object is outside the tree?
 
+	if (reinsert)
+	{
+		Insert(game_object);
+	}
 }
 
 void OLQuadTree::CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera)
@@ -69,17 +73,15 @@ void OLQuadTree::CollectIntersect(std::vector<GameObject*> &game_objects, const 
 	game_objects.erase(it, game_objects.end());
 }
 
-OLQuadTreeNode* OLQuadTree::FindLeaf(const AABB2D &game_object_aabb) const
+void OLQuadTree::FindLeaves(const AABB2D &game_object_aabb, std::vector<OLQuadTreeNode*> &leaves) const
 {
 	for (auto &node : flattened_tree)
 	{
 		if (node->IsLeaf() && node->box.Intersects(game_object_aabb))
 		{
-			return node;
+			leaves.push_back(node);
 		}
 	}
-
-	return nullptr;
 }
 
 

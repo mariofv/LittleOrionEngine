@@ -29,6 +29,7 @@ public:
 public:
 	AABB2D box;
 	OLQuadTreeNode *parent = nullptr;
+	int depth = 0;
 	std::vector<OLQuadTreeNode*> children;
 
 	std::vector<GameObject*> objects;

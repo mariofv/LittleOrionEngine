@@ -21,13 +21,14 @@ public:
 
 public:
 	std::vector<OLQuadTreeNode*> flattened_tree;
+
 private:
-	OLQuadTreeNode* FindLeaf(const AABB2D &game_object) const;
+	void FindLeaves(const AABB2D &game_object, std::vector<OLQuadTreeNode*> &leaves) const;
 
 private:
 	OLQuadTreeNode *root = nullptr;
-	int bucket_size = 1;
-
+	int bucket_size = 3;
+	int max_depth = 3;
 };
 
 #endif _OLQUADTREE_H_

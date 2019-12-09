@@ -50,16 +50,20 @@ void OLQuadTreeNode::InsertGameObject(GameObject *game_object)
 void OLQuadTreeNode::Split(std::vector<OLQuadTreeNode*> &generated_nodes)
 {
 	OLQuadTreeNode *bottom_left_node = new OLQuadTreeNode(AABB2D(box.minPoint, (box.maxPoint + box.minPoint)/2));
+	bottom_left_node->depth = depth + 1;
 
 	float2 bottom_right_node_min_point = float2((box.maxPoint.x + box.minPoint.x) / 2, box.minPoint.y);
 	float2 bottom_right_node_max_point = float2(box.maxPoint.x, (box.maxPoint.y + box.minPoint.y) / 2);
 	OLQuadTreeNode *bottom_right_node = new OLQuadTreeNode(AABB2D(bottom_right_node_min_point, bottom_right_node_max_point));
+	bottom_right_node->depth = depth + 1;
 
 	float2 top_left_node_min_point = float2(box.minPoint.x, (box.maxPoint.y + box.minPoint.y) / 2);
 	float2 top_left_node_max_point = float2((box.maxPoint.x + box.minPoint.x) / 2, box.maxPoint.y);
 	OLQuadTreeNode *top_left_node = new OLQuadTreeNode(AABB2D(top_left_node_min_point, top_left_node_max_point));
+	top_left_node->depth = depth + 1;
 
 	OLQuadTreeNode *top_right_node = new OLQuadTreeNode(AABB2D((box.maxPoint + box.minPoint) / 2, box.maxPoint));
+	top_right_node->depth = depth + 1;
 
 	generated_nodes.push_back(bottom_left_node);
 	generated_nodes.push_back(bottom_right_node);
@@ -77,20 +81,16 @@ void OLQuadTreeNode::DistributeGameObjectsAmongChildren()
 {
 	for (auto &game_object : objects)
 	{
-		bool inserted = false;
-		int i = 0;
-		while (!inserted && i < 4)
+		for (unsigned int i = 0; i < 4; ++i)
 		{
 			if (children[i]->box.Intersects(game_object->aabb.bounding_box2D))
 			{
 				children[i]->InsertGameObject(game_object);
-				inserted = true;
 			}
-			++i;
 		}
-		assert(inserted);
 	}
 	objects.clear();
+	assert(objects.size() == 0);
 }
 
 void OLQuadTreeNode::CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera)

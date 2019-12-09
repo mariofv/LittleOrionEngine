@@ -44,7 +44,6 @@ void ModuleDebug::CreateHousesRandom() const
 	std::srand(std::time(nullptr)); // use current time as seed for random generator
 	for (unsigned int i = 0; i < num_houses; ++i)
 	{
-
 		GameObject *loaded_house = App->model_loader->LoadModel(HOUSE_MODEL_PATH);
 		int x = std::rand() % max_dispersion_x;
 		int z = std::rand() % max_dispersion_z;
