@@ -18,7 +18,7 @@ public:
 	bool CleanUp();
 	
 	void RenderGrid(const ComponentCamera &camera) const;
-	void ShowDebugOptions();
+	void ShowDebugWindow();
 
 };
 

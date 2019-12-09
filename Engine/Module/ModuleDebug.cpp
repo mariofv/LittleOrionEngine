@@ -3,6 +3,8 @@
 #include "Module/ModuleProgram.h"
 
 #include <GL/glew.h>
+#include <imgui.h>
+#include <FontAwesome5/IconsFontAwesome5.h>
 
 // Called before render is available
 bool ModuleDebug::Init()
@@ -98,4 +100,14 @@ void ModuleDebug::RenderGrid(const ComponentCamera &camera) const
 	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
 	glEnd();
 	glLineWidth(1.0f);
+}
+
+
+void ModuleDebug::ShowDebugWindow()
+{
+	if (ImGui::Begin(ICON_FA_BUG " Debug"))
+	{
+
+	}
+	ImGui::End();
 }

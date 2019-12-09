@@ -1,13 +1,14 @@
 ﻿#include "Globals.h"
 #include "Application.h"
-#include "Module/ModuleWindow.h"
-#include "Module/ModuleRender.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
-#include "Module/ModuleTime.h"
-#include "Module/ModuleModelLoader.h"
-#include "Module/ModuleScene.h"
 #include "Module/ModuleInput.h"
+#include "Module/ModuleModelLoader.h"
+#include "Module/ModuleRender.h"
+#include "Module/ModuleScene.h"
+#include "Module/ModuleTime.h"
+#include "Module/ModuleWindow.h"
 #include "Component/ComponentCamera.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
@@ -48,7 +49,7 @@ void EngineUI::ShowEngineUI()
 	}
 	if (show_debug_window)
 	{
-		ShowDebugWindow();
+		App->debug->ShowDebugWindow();
 	}
 	if (show_about_window)
 	{
@@ -364,15 +365,6 @@ void EngineUI::ShowHardware() const
 		sprintf_s(tmp_string, "%.2f MB", vram_available / 1000.f);
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
 	}
-}
-
-void EngineUI::ShowDebugWindow()
-{
-	if (ImGui::Begin(ICON_FA_BUG " Debug"))
-	{
-
-	}
-	ImGui::End();
 }
 
 void EngineUI::ShowAboutWindow()
