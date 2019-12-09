@@ -4,6 +4,7 @@
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentTransform.h"
 #include "Texture.h"
+#include "Utils.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -16,8 +17,11 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 		{
 			transform->GenerateModelMatrix();
 		}
-		if (ImGui::DragFloat3("Rotation", &transform->rotation[0], 0.1f, -180.f, 180.f))
+
+		float3 temp_rotation = Utils::GenerateDegFloat3FromQuat(transform->rotation);
+		if (ImGui::DragFloat3("Rotation", &temp_rotation[0], 0.1f, -180.f, 180.f))
 		{
+			transform->rotation = Utils::GenerateQuatFromDegFloat3(temp_rotation);
 			transform->GenerateModelMatrix();
 		}
 		if (ImGui::DragFloat3("Scale", &transform->scale[0], 0.01f))

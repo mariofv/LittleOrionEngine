@@ -177,6 +177,7 @@
     <ClInclude Include="Engine\Timer.h" />
     <ClInclude Include="Engine\TimerUs.h" />
     <ClInclude Include="Engine\Module\ModuleScene.h" />
+    <ClInclude Include="Engine\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Skybox.cpp" />
@@ -246,6 +247,7 @@
     <ClCompile Include="Engine\Timer.cpp" />
     <ClCompile Include="Engine\TimerUs.cpp" />
     <ClCompile Include="Engine\Module\ModuleScene.cpp" />
+    <ClCompile Include="Engine\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Libraries\MathGeoLib\include\Geometry\KDTree.inl" />
