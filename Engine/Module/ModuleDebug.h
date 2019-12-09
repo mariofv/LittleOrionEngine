@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "Component/ComponentCamera.h"
+#include "GeometryRenderer.h"
 
 #include <GL/glew.h>
 
@@ -21,8 +22,13 @@ public:
 	void RenderGrid(const ComponentCamera &camera) const;
 	void ShowDebugWindow();
 
+public:
+	GeometryRenderer* geometry_renderer = nullptr;
+
 private:
 	bool show_grid = false;
+	bool show_camera_frustum = true;
+	bool show_quadtree = true;
 };
 
 #endif //_MODULEDEBUG_H_

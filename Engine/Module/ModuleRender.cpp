@@ -112,8 +112,6 @@ bool ModuleRender::Init()
 	SetVSync(VSYNC);
 	SetDepthTest(true);
 
-	geometry_renderer = new GeometryRenderer();
-
 	APP_LOG_SUCCESS("Glew initialized correctly.")
 
 	return true;
@@ -138,8 +136,6 @@ bool ModuleRender::CleanUp()
 {
 	APP_LOG_INFO("Destroying renderer");
 
-	delete geometry_renderer;
-
 	return true;
 }
 
@@ -153,8 +149,7 @@ void ModuleRender::Render() const
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
 	App->debug->Render(camera);
-	geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
-	
+
 	GenerateQuadTree();
 	std::vector<GameObject*> rendered_objects;
 	ol_quadtree.CollectIntersect(rendered_objects, *App->cameras->active_camera);
@@ -167,10 +162,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			RenderMesh(*object_mesh, camera);
 		}
 	}
-	for (auto & ol_quadtree_node : ol_quadtree.flattened_tree) {
-		geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
-	}
-
 }
 
 void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const

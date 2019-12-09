@@ -1,6 +1,10 @@
 #include "ModuleDebug.h"
 #include "Application.h"
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleRender.h"
+#include "OLQuadTree.h"
+#include "OLQuadTreeNode.h"
 
 #include <GL/glew.h>
 #include <imgui.h>
@@ -11,8 +15,9 @@ bool ModuleDebug::Init()
 {
 	APP_LOG_SECTION("************ Module Debug Init ************");
 
+	geometry_renderer = new GeometryRenderer();
 	
-	APP_LOG_SUCCESS("Glew initialized correctly.")
+	APP_LOG_SUCCESS("Module Debug initialized correctly.")
 
 	return true;
 }
@@ -32,7 +37,9 @@ update_status ModuleDebug::PostUpdate()
 bool ModuleDebug::CleanUp()
 {
 	APP_LOG_INFO("Destroying Debug");
-
+	
+	delete geometry_renderer;
+	
 	return true;
 }
 
@@ -41,6 +48,16 @@ void ModuleDebug::Render(const ComponentCamera &camera) const
 	if (show_grid)
 	{
 		RenderGrid(camera);
+	}
+	if (show_camera_frustum)
+	{
+		geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
+	}
+	if (show_quadtree)
+	{
+		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) {
+			geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
+		}
 	}
 }
 
@@ -115,6 +132,8 @@ void ModuleDebug::ShowDebugWindow()
 	if (ImGui::Begin(ICON_FA_BUG " Debug"))
 	{
 		ImGui::Checkbox("Grid", &show_grid);
+		ImGui::Checkbox("Camera Frustum", &show_camera_frustum);
+		ImGui::Checkbox("QuadTree", &show_quadtree);
 	}
 	ImGui::End();
 }
