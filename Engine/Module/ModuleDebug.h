@@ -26,6 +26,10 @@ public:
 	bool show_camera_frustum = true;
 	bool show_quadtree = true;
 
+private:
+	int num_houses = 0;
+	int max_dispersion_x = 0;
+	int max_dispersion_z = 0;
 };
 
 #endif //_MODULEDEBUG_H_
