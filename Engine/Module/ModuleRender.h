@@ -51,7 +51,7 @@ private:
 	void SetWireframing(const bool gl_wireframe);
 
 public:
-	OLQuadTree ol_quadtree;
+	GeometryRenderer* geometry_renderer = nullptr;
 
 private:
 	void* context = nullptr;
@@ -71,6 +71,7 @@ private:
 	bool gl_wireframe = false;
 
 	std::vector<ComponentMesh*> meshes;
+	OLQuadTree ol_quadtree;
 };
 
 #endif //_MODULERENDER_H_

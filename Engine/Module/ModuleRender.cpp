@@ -112,6 +112,8 @@ bool ModuleRender::Init()
 	SetVSync(VSYNC);
 	SetDepthTest(true);
 
+	geometry_renderer = new GeometryRenderer();
+
 	APP_LOG_SUCCESS("Glew initialized correctly.")
 
 	return true;
@@ -135,6 +137,7 @@ update_status ModuleRender::PostUpdate()
 bool ModuleRender::CleanUp()
 {
 	APP_LOG_INFO("Destroying renderer");
+	delete geometry_renderer;
 
 	return true;
 }
@@ -148,7 +151,14 @@ void ModuleRender::Render() const
 
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
-	App->debug->Render(camera);
+	if (App->debug->show_grid)
+	{
+		RenderGrid(camera);
+	}
+	if (App->debug->show_camera_frustum)
+	{
+		geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
+	}
 
 	GenerateQuadTree();
 	std::vector<GameObject*> rendered_objects;
@@ -160,6 +170,13 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		if (object_mesh->IsEnabled())
 		{
 			RenderMesh(*object_mesh, camera);
+		}
+	}
+
+	if (App->debug->show_quadtree)
+	{
+		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) {
+			geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
 		}
 	}
 }
@@ -202,9 +219,9 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 	glUseProgram(0);
 
 
-	if (!mesh_game_object.aabb.IsEmpty())
+	if (App->debug->show_bounding_boxes && !mesh_game_object.aabb.IsEmpty())
 	{
-		//geometry_renderer->RenderHexahedron(camera, mesh_game_object.aabb.GetVertices());
+		geometry_renderer->RenderHexahedron(camera, mesh_game_object.aabb.GetVertices());
 	}
 
 }
