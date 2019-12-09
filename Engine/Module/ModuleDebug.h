@@ -16,6 +16,8 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 	
+	void CreateHousesRandom() const;
+	
 	void ShowDebugWindow();
 
 public:

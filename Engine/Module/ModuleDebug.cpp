@@ -35,6 +35,12 @@ bool ModuleDebug::CleanUp()
 	return true;
 }
 
+void ModuleDebug::CreateHousesRandom() const
+{
+
+}
+
+
 void ModuleDebug::ShowDebugWindow()
 {
 	if (ImGui::Begin(ICON_FA_BUG " Debug"))
@@ -43,6 +49,11 @@ void ModuleDebug::ShowDebugWindow()
 		ImGui::Checkbox("Bounding boxes", &show_bounding_boxes);
 		ImGui::Checkbox("Camera Frustum", &show_camera_frustum);
 		ImGui::Checkbox("QuadTree", &show_quadtree);
+
+		if (ImGui::Button("Create houses scene"))
+		{
+			CreateHousesRandom();
+		}
 	}
 	ImGui::End();
 }
