@@ -7,5 +7,7 @@ public:
 	~FileExplorerUI() = default;
 
 	void ShowAssetsFolders();
+	void WindowShowFilesInFolder(const char * path);
+	int GetWindowsSubFolders(const char * path);
 };
 #endif
