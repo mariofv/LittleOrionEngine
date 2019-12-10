@@ -17,8 +17,10 @@ bool ModuleFileSystem::Exists(const char* file) const
 {
 	return true;
 }
-bool ModuleFileSystem::MakeDirectory(const char* directory)
+bool ModuleFileSystem::MakeDirectory(const std::string & directory, const std::string & directory_name)
 {
+	std::string new_directory = directory + "\\" + directory_name;
+	CreateDirectory(new_directory.c_str(), NULL);
 	return true;
 }
 bool ModuleFileSystem::IsDirectory(const char* file) const 
@@ -63,4 +65,13 @@ std::string ModuleFileSystem::GetFileExtension(const char *file_path) const
 	std::string file_extension = file_path_string.substr(found + 1, file_path_string.length());
 
 	return file_extension;
+}
+
+void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<File> & files)
+{
+
+}
+void ModuleFileSystem::GetAllFilesInPathRecursive(const std::string & path, std::vector<File> & files)
+{
+
 }

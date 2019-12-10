@@ -2,7 +2,8 @@
 #define _ModuleFileSystem_H
 
 #include <Module/Module.h>
-
+#include <string.h>
+#include <vector>
 
 class ModuleFileSystem : public Module
 {
@@ -22,12 +23,14 @@ public:
 
 	bool Remove(const char* file);
 	bool Exists(const char* file) const;
-	bool MakeDirectory(const char* directory);
+	bool MakeDirectory(const std::string & path, const std::string & directory_name = "new folder");
 	bool IsDirectory(const char* file) const;
 	bool Copy(const char* source, const char* destination);
 
 
 	FileType GetFileType(const char *file_path) const;
+	void GetAllFilesInPath(const std::string & path, std::vector<File> & files);
+	void GetAllFilesInPathRecursive(const std::string & path, std::vector<File> & files);
 private:
 	std::string GetFileExtension(const char *file_path) const;
 };
