@@ -28,6 +28,8 @@ public:
 	void Render() const;
 	void RenderFrame(const ComponentCamera &camera);
 	void RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const;
+
+	void InitGrid();
 	void RenderGrid(const ComponentCamera &camera) const;
 
 	ComponentMesh* CreateComponentMesh();
@@ -53,6 +55,10 @@ public:
 
 private:
 	void* context = nullptr;
+
+	GLuint grid_vbo = 0;
+	GLuint grid_vao = 0;
+	GLuint grid_ebo = 0;
 
 	bool vsync = false;
 	bool gl_alpha_test = false;

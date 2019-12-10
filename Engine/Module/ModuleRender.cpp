@@ -112,6 +112,7 @@ bool ModuleRender::Init()
 	SetDepthTest(true);
 
 	geometry_renderer = new GeometryRenderer();
+	InitGrid();
 
 	APP_LOG_SUCCESS("Glew initialized correctly.")
 
@@ -276,9 +277,47 @@ void ModuleRender::SetWireframing(const bool gl_wireframe)
 	gl_wireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
 }
 
+void ModuleRender::InitGrid()
+{
+	float size = 5.f;
+	float vertices[12] =
+	{
+		-size, 0.0f, size,
+		size, 0.0f, size,
+		size, 0.0f, -size,
+		-size, 0.0f, -size
+	};
+
+	unsigned int indices[6] = 
+	{
+		0,1,2,
+		0,2,3
+	};
+
+	glGenVertexArrays(1, &grid_vao);
+	glGenBuffers(1, &grid_vbo);
+	glGenBuffers(1, &grid_ebo);
+
+	glBindVertexArray(grid_vao);
+	glBindBuffer(GL_ARRAY_BUFFER, grid_vbo);
+
+	glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), &vertices[0], GL_STATIC_DRAW);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, grid_ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
+
+	// VERTEX POSITION
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
+
+
+	glBindVertexArray(0);
+}
+
+
 void ModuleRender::RenderGrid(const ComponentCamera &camera) const
 {
-	glUseProgram(App->program->primitive_program);
+	glUseProgram(App->program->grid_program);
 
 	// CREATES MODEL MATRIX
 	float4x4 model = float4x4::FromTRS(
@@ -305,40 +344,12 @@ void ModuleRender::RenderGrid(const ComponentCamera &camera) const
 		&camera.GetProjectionMatrix()[0][0]
 	);
 
-	glLineWidth(1.0f);
-	float d = 200.0f;
-	glBegin(GL_LINES);
-	glColor4f(1.0f, 1.0f, 1.0f, 1.0f);
-	for (float i = -d; i <= d; i += 1.0f)
-	{
-		glVertex3f(i, 0.0f, -d);
-		glVertex3f(i, 0.0f, d);
-		glVertex3f(-d, 0.0f, i);
-		glVertex3f(d, 0.0f, i);
-	}
-	glEnd();
+	glBindVertexArray(grid_vao);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 
-	glLineWidth(2.0f);
-	glBegin(GL_LINES);
-	// red X
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(1.0f, 0.0f, 0.0f);
-	glVertex3f(1.0f, 0.1f, 0.0f); glVertex3f(1.1f, -0.1f, 0.0f);
-	glVertex3f(1.1f, 0.1f, 0.0f); glVertex3f(1.0f, -0.1f, 0.0f);
-	// green Y
-	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 1.0f, 0.0f);
-	glVertex3f(-0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f(0.05f, 1.25f, 0.0f); glVertex3f(0.0f, 1.15f, 0.0f);
-	glVertex3f(0.0f, 1.15f, 0.0f); glVertex3f(0.0f, 1.05f, 0.0f);
-	// blue Z
-	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-	glVertex3f(0.0f, 0.0f, 0.0f); glVertex3f(0.0f, 0.0f, 1.0f);
-	glVertex3f(-0.05f, 0.1f, 1.05f); glVertex3f(0.05f, 0.1f, 1.05f);
-	glVertex3f(0.05f, 0.1f, 1.05f); glVertex3f(-0.05f, -0.1f, 1.05f);
-	glVertex3f(-0.05f, -0.1f, 1.05f); glVertex3f(0.05f, -0.1f, 1.05f);
-	glEnd();
-	glLineWidth(1.0f);
+	glUseProgram(0);
+
 }
 
 ComponentMesh* ModuleRender::CreateComponentMesh()
