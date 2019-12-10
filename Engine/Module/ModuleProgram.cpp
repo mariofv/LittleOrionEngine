@@ -53,6 +53,17 @@ bool ModuleProgram::Init()
 		return false;
 	}
 
+	APP_LOG_INIT("Loading grid shader program.");
+	if (LoadProgram(grid_program, GRID_VERTEX_SHADER_PATH, GRID_FRAGMENT_SHADER_PATH))
+	{
+		APP_LOG_SUCCESS("Grid shader program loaded correctly.");
+	}
+	else
+	{
+		APP_LOG_ERROR("Grid shader program loaded correctly.");
+		return false;
+	}
+
 	return true;
 }
 
@@ -63,6 +74,7 @@ bool ModuleProgram::CleanUp()
 	glDeleteProgram(texture_program);
 	glDeleteProgram(primitive_program);
 	glDeleteProgram(skybox_program);
+	glDeleteProgram(grid_program);
 	return true;
 }
 

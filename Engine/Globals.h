@@ -72,6 +72,9 @@ enum class Fonts
 # define SKYBOX_VERTEX_SHADER_PATH "./shaders/skybox.vs"
 # define SKYBOX_FRAGMENT_SHADER_PATH "./shaders/skybox.fs"
 
+# define GRID_VERTEX_SHADER_PATH "./shaders/grid.vs"
+# define GRID_FRAGMENT_SHADER_PATH "./shaders/grid.fs"
+
 # define HOUSE_MODEL_PATH "./resources/models/baker_house/BakerHouse.fbx"
 
 #define FULLSCREEN false
