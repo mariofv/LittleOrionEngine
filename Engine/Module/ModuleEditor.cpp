@@ -55,7 +55,7 @@ update_status ModuleEditor::Update()
 {
 	
 	//ImGui::ShowStyleEditor();
-	//ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
 	return update_status::UPDATE_CONTINUE;
 }
 

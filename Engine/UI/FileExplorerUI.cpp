@@ -83,6 +83,12 @@ int FileExplorerUI::GetWindowsSubFolders(const char * path) {
 void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 	WIN32_FIND_DATA find_file_data;
 	HANDLE handle_find = FindFirstFile(folder_path.c_str(), &find_file_data);
+
+	ImGuiStyle& style = ImGui::GetStyle();
+	float files_count = 0;
+	ImVec2 text_sz(40, 40);
+	float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+
 	if (handle_find == INVALID_HANDLE_VALUE) {
 		return;
 	}
@@ -91,19 +97,26 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 		{
 			bool outsideWindow = false;
 			std::string item_name;
-			size_t text_size = ImGui::CalcTextSize(find_file_data.cFileName).x;
+			std::string filename = std::string(find_file_data.cFileName);
+			std::string spaces;
+			ImGui::SetWindowFontScale(1.5f);
+			for (size_t i = 0; i < (filename.size()/2); i++)
+			{
+				spaces += " ";
+			}
 			if (find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY) {
-				item_name = std::string(ICON_FA_FOLDER "\n " + std::string(find_file_data.cFileName));
-				
+				item_name = spaces + std::string(ICON_FA_FOLDER "\n " + filename);
 			}
 			else
 			{
-				item_name = std::string(ICON_FA_BOX "\n " + std::string(find_file_data.cFileName));
+				item_name = spaces + std::string(ICON_FA_BOX "\n " + filename);
 			}
-			ImGui::Text(item_name.c_str());
-			size_t last_item_width = ImGui::CalcItemWidth();
-
-			ImGui::SameLine();
+			ImGui::Text(item_name.c_str(), text_sz);
+			++files_count;
+			float last_button_x2 = ImGui::GetItemRectMax().x;
+			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + text_sz.x; // Expected position if next button was on same line
+			if (files_count + 1 < 50 && next_button_x2 < window_visible_x2)
+				ImGui::SameLine();
 		}
 	} while (FindNextFile(handle_find, &find_file_data) != 0);
 
