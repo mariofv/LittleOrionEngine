@@ -48,12 +48,14 @@ void FileExplorerUI::WindowShowFilesInFolder(const char * path) {
 				flags |= ImGuiTreeNodeFlags_Selected;
 				filename = ICON_FA_FOLDER_OPEN " " + std::string(find_file_data.cFileName);
 			}
-			if (ImGui::TreeNodeEx(filename.c_str(),flags))
-			{
+			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
+			if(expanded){
+				ImGui::PushID(filename.c_str());
 				ProcessMouseInput(new_path);
 				WindowShowFilesInFolder(new_path.c_str());
+				ImGui::PopID();
+				ImGui::TreePop();
 			}
-			ImGui::TreePop();
 		}
 	} while (FindNextFile(handle_find, &find_file_data) != 0);
 
