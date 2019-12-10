@@ -7,12 +7,14 @@
 #include "Component/ComponentCamera.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
+#include "ModuleFileSystem.h"
 
 #include <SDL/SDL.h>
 #include "imgui.h"
 #include "imgui_impl_sdl.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
+
 
 // Called before render is available
 bool ModuleInput::Init()
@@ -135,9 +137,9 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_DROPFILE:
 			char *dropped_filedir = event.drop.file;
-			switch (GetFileType(dropped_filedir))
+			switch (App->filesystem->GetFileType(dropped_filedir))
 			{
-			case FileType::MODEL:
+			case ModuleFileSystem::FileType::MODEL:
 				App->model_loader->LoadModel(dropped_filedir);
 				break;
 			default:
@@ -212,40 +214,6 @@ bool ModuleInput::CleanUp()
 	APP_LOG_INFO("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
-}
-
-ModuleInput::FileType ModuleInput::GetFileType(const char *file_path) const
-{
-	std::string file_extension = GetFileExtension(file_path);
-
-	if (
-		file_extension == "png"
-		|| file_extension == "PNG"
-		|| file_extension == "dds"
-		|| file_extension == "DDS"
-	)
-	{
-		return ModuleInput::FileType::TEXTURE;
-	}
-	if (
-		file_extension == "fbx"
-		|| file_extension == "FBX"
-	)
-	{
-		return ModuleInput::FileType::MODEL;
-	}
-
-	return ModuleInput::FileType::UNKNOWN;
-}
-
-std::string ModuleInput::GetFileExtension(const char *file_path) const
-{
-	std::string file_path_string = std::string(file_path);
-	std::size_t found = file_path_string.find_last_of(".");
-
-	std::string file_extension = file_path_string.substr(found + 1, file_path_string.length());
-
-	return file_extension;
 }
 
 

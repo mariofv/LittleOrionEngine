@@ -3,9 +3,16 @@
 
 #include <Module/Module.h>
 
+
 class ModuleFileSystem : public Module
 {
 public:
+	enum class FileType
+	{
+		MODEL,
+		TEXTURE,
+		UNKNOWN
+	};
 	ModuleFileSystem() = default;
 	~ModuleFileSystem() = default;
 
@@ -17,7 +24,14 @@ public:
 	bool IsDirectory(const char* file) const;
 	bool Copy(const char* source, const char* destination);
 
+	FileType GetFileType(const char *file_path) const;
 private:
+	std::string GetFileExtension(const char *file_path) const;
+};
 
+struct File {
+	std::string filename;
+	std::string file_path;
+	ModuleFileSystem::FileType file_type;
 };
 #endif // !_ModuleFileSystem_H
