@@ -99,7 +99,6 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 			std::string item_name;
 			std::string filename = std::string(find_file_data.cFileName);
 			std::string spaces;
-			ImGui::SetWindowFontScale(1.5f);
 			for (size_t i = 0; i < (filename.size()/2); i++)
 			{
 				spaces += " ";

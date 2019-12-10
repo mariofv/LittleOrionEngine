@@ -28,7 +28,7 @@ void EngineUI::ShowEngineUI()
 {
 	ShowMainMenu();
 	ShowTimeControls();
-	//ShowMainViewWindow();
+	ShowMainViewWindow();
 	
 	if (show_model_inspector_window)
 	{

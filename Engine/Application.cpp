@@ -9,6 +9,7 @@
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTime.h"
+#include "Module/ModuleFileSystem.h"
 #include "UI/EngineUI.h"
 #include "UI/EngineLog.h"
 #include "TimerUs.h"
@@ -29,6 +30,7 @@ Application::Application()
 	modules.emplace_back(texture = new ModuleTexture());
 	modules.emplace_back(cameras = new ModuleCamera());
 	modules.emplace_back(model_loader = new ModuleModelLoader());
+	modules.emplace_back(filesystem = new ModuleFileSystem());
 		
 	engine_log = new EngineLog();
 	ui = new EngineUI();
