@@ -6,6 +6,7 @@
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
+#include "ModuleTexture.h"
 #include "ModuleTime.h"
 #include "ModuleWindow.h"
 #include "Component/ComponentCamera.h"
@@ -114,6 +115,9 @@ bool ModuleRender::Init()
 	geometry_renderer = new GeometryRenderer();
 	InitGrid();
 
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
 	APP_LOG_SUCCESS("Glew initialized correctly.")
 
 	return true;
@@ -139,7 +143,9 @@ bool ModuleRender::CleanUp()
 	APP_LOG_INFO("Destroying renderer");
 
 	delete geometry_renderer;
-
+	glDeleteBuffers(1, &grid_vbo);
+	glDeleteBuffers(1, &grid_ebo);
+	glDeleteVertexArrays(1, &grid_vao);
 	return true;
 }
 
@@ -279,14 +285,19 @@ void ModuleRender::SetWireframing(const bool gl_wireframe)
 
 void ModuleRender::InitGrid()
 {
-	float size = 5.f;
-	float vertices[12] =
+	float size = 2048.f;
+	float vertices_data[20] =
 	{
-		-size, 0.0f, size,
-		size, 0.0f, size,
-		size, 0.0f, -size,
-		-size, 0.0f, -size
-	};
+		-size / 2, 0.0f, size / 2,
+		size / 2, 0.0f, size / 2,
+		size / 2, 0.0f, -size / 2,
+		-size / 2, 0.0f, -size / 2,
+
+		0.0, 0.0,
+		100.0, 0.0,
+		100.0, 100.0,
+		0.0, 100.0
+	}; 
 
 	unsigned int indices[6] = 
 	{
@@ -301,7 +312,7 @@ void ModuleRender::InitGrid()
 	glBindVertexArray(grid_vao);
 	glBindBuffer(GL_ARRAY_BUFFER, grid_vbo);
 
-	glBufferData(GL_ARRAY_BUFFER, 12 * sizeof(float), &vertices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ARRAY_BUFFER, 20 * sizeof(float), &vertices_data[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, grid_ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
@@ -310,14 +321,30 @@ void ModuleRender::InitGrid()
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 
+	// VERTEX POSITION
+	glEnableVertexAttribArray(1);
+	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)(12 * sizeof(float)));
 
 	glBindVertexArray(0);
 }
 
 
-void ModuleRender::RenderGrid(const ComponentCamera &camera) const
+void ModuleRender::RenderGrid(const ComponentCamera &camera)
 {
-	glUseProgram(App->program->grid_program);
+	grid_texture = App->texture->LoadTexture(GRID_TEXTURE_PATH);
+
+	grid_texture->SetWrapS(GL_REPEAT);
+	grid_texture->SetWrapT(GL_REPEAT);
+	grid_texture->SetMinFilter(GL_LINEAR_MIPMAP_LINEAR);
+	grid_texture->SetMagFilter(GL_LINEAR);
+
+	glBindTexture(GL_TEXTURE_2D, grid_texture->opengl_texture);
+	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	grid_texture->GenerateMipMap();
+
+	glUseProgram(App->program->texture_program);
 
 	// CREATES MODEL MATRIX
 	float4x4 model = float4x4::FromTRS(
@@ -326,23 +353,27 @@ void ModuleRender::RenderGrid(const ComponentCamera &camera) const
 		float3(1.0f, 1.0f, 1.0f)
 	);
 	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->primitive_program, "model"),
+		glGetUniformLocation(App->program->texture_program, "model"),
 		1,
 		GL_TRUE,
 		&model[0][0]
 	);
 	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->primitive_program, "view"),
+		glGetUniformLocation(App->program->texture_program, "view"),
 		1,
 		GL_TRUE,
 		&camera.GetViewMatrix()[0][0]
 	);
 	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->primitive_program, "proj"),
+		glGetUniformLocation(App->program->texture_program, "proj"),
 		1,
 		GL_TRUE,
 		&camera.GetProjectionMatrix()[0][0]
 	);
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, grid_texture->opengl_texture);
+	glUniform1i(glGetUniformLocation(App->program->texture_program, "texture0"), 0);
 
 	glBindVertexArray(grid_vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
@@ -350,6 +381,7 @@ void ModuleRender::RenderGrid(const ComponentCamera &camera) const
 
 	glUseProgram(0);
 
+	delete grid_texture;
 }
 
 ComponentMesh* ModuleRender::CreateComponentMesh()

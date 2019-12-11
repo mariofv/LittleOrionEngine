@@ -31,7 +31,6 @@ public:
 	GLuint texture_program = 0;
 	GLuint primitive_program = 0;
 	GLuint skybox_program = 0;
-	GLuint grid_program = 0;
 
 };
 
