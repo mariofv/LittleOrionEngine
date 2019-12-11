@@ -25,6 +25,7 @@ public:
 	void Enable() override;
 	void Disable() override;
 	void Update() override;
+	void Delete() override;
 
 	void RecordFrame(const float width, const float height);
 	GLuint GetLastRecordedFrame() const;

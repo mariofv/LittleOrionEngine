@@ -19,6 +19,7 @@ public:
 	void Enable() override;
 	void Disable() override;
 	void Update() override;
+	void Delete() override;
 
 	GLuint GetTexture() const;
 

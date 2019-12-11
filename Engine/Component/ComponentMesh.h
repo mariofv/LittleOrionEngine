@@ -24,6 +24,7 @@ public:
 	void Enable() override;
 	void Disable() override;
 	void Update() override;
+	void Delete() override;
 
 	void LoadMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int texture_index);
 	void Render() const;

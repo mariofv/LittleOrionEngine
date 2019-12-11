@@ -26,6 +26,8 @@ public:
 
 	virtual ComponentType GetType() const { return type; };
 
+	virtual void Delete() = 0;
+
 	virtual void ShowComponentWindow() = 0;
 
 public:
