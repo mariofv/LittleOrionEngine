@@ -17,14 +17,18 @@ public:
 	void Insert(GameObject &game_object);
 	void CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera);
 
+	static std::vector<float> GetVertices(const AABB &box); // TODO: Move to Utils class
+
+public:
+	std::vector<OLOctTreeNode*> flattened_tree;
+
 private:
-	OLOctTreeNode* FindLeaf(const AABB &game_object) const;
+	void FindLeaves(const AABB &game_object, std::vector<OLOctTreeNode*> &leaves) const;
 
 private:
 	OLOctTreeNode *root = nullptr;
-	std::vector<OLOctTreeNode*> flattened_tree;
-	int bucket_size = 1;
-
+	int bucket_size = 3;
+	int max_depth = 3;
 };
 
-#endif _OLOCTTREE_H_
+#endif //_OLOCTTREE_H_
