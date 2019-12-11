@@ -1,4 +1,5 @@
 #include "ModuleFileSystem.h"
+#include <algorithm>
 
 unsigned int ModuleFileSystem::Load(const char* path, const char* file, char** buffer) const
 {
@@ -8,17 +9,34 @@ unsigned int ModuleFileSystem::Save(const char* file, const void* buffer, unsign
 {
 	return 0;
 }
-bool ModuleFileSystem::Remove(const char* file)
+bool ModuleFileSystem::Remove(const std::string & file_path) const
 {
-	return true;
+	return RemoveDirectoryA(file_path.c_str());
 }
 bool ModuleFileSystem::Exists(const char* file) const
 {
 	return true;
 }
-bool ModuleFileSystem::MakeDirectory(const std::string & directory, const std::string & directory_name)
+bool ModuleFileSystem::MakeDirectory(const std::string & path, const std::string & directory_name)
 {
-	std::string new_directory = directory + "\\" + directory_name;
+	std::vector<std::shared_ptr<File>> files;
+	GetAllFilesInPath(path + "//*", files);
+
+	std::vector<std::shared_ptr<File>> same_name_folders;
+	same_name_folders.reserve(files.size());
+
+	std::copy_if(files.begin(), files.end(), std::back_inserter(same_name_folders), [directory_name](const std::shared_ptr<File> file) {
+		return file->file_type == FileType::DIRECTORY && file->filename == directory_name;
+	});
+	std::string new_directory;
+	do {
+		new_directory = path + "//" + directory_name + " (" + std::to_string(same_name_folders.size()) + ")";
+		same_name_folders.clear();
+		std::copy_if(files.begin(), files.end(), std::back_inserter(same_name_folders), [directory_name](const std::shared_ptr<File> file) {
+			return file->file_type == FileType::DIRECTORY && file->filename == directory_name;
+		});
+	} while (same_name_folders.size() != 0);
+
 	CreateDirectory(new_directory.c_str(), NULL);
 	return true;
 }
@@ -91,7 +109,12 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 		{
 			std::shared_ptr<File> new_file = std::make_shared<File>();
 			new_file->filename = find_file_data.cFileName;
-			new_file->file_path = path + "//"+ find_file_data.cFileName;
+
+
+			size_t last_slash_position = path.find_last_of("//");
+			std::string new_path = path.substr(0, last_slash_position-1);
+
+			new_file->file_path = new_path + "//"+ find_file_data.cFileName;
 			new_file->file_type = GetFileType(new_file->filename.c_str(), find_file_data.dwFileAttributes);
 			files.push_back(new_file);
 		}
@@ -123,3 +146,8 @@ size_t ModuleFileSystem::GetNumberOfSubFolders(const std::string & path) const
 
 	return subFiles;
 }
+
+bool ModuleFileSystem::File::operator==(const ModuleFileSystem::File& compare)
+{
+	return this->filename == compare.filename && this->file_path == compare.file_path && this->file_type == compare.file_type;
+};

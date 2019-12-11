@@ -1,6 +1,6 @@
 #include "FileExplorerUI.h"
 #include <Application.h>
-#include <Module/ModuleFileSystem.h>
+
 
 #include "imgui.h"
 #include <SDL/SDL.h>
@@ -10,15 +10,18 @@
 
 void FileExplorerUI::ShowAssetsFolders() {
 	if(ImGui::BeginTabItem(ICON_FA_FOLDER_OPEN " Project") ){
+
 		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 260)))
 		{
+			ShowFileSystemActionsMenu(selected_file);
 			WindowShowFilesInFolder(".//Assets//*");
 		}
 		ImGui::EndChild();
 
 		ImGui::SameLine();
 		if (ImGui::BeginChild("File Explorer", ImVec2(0, 260), true)) {
-			ShowFilesInExplorer(selected_folder);
+			ShowFileSystemActionsMenu(selected_file);
+			ShowFilesInExplorer(selected_file.file_path + "//*");
 		}
 		ImGui::EndChild();
 		ImGui::EndTabItem();
@@ -35,16 +38,14 @@ void FileExplorerUI::WindowShowFilesInFolder(const char * path) {
 		if (file->file_type == ModuleFileSystem::FileType::DIRECTORY) {
 			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
-			size_t last_slash_position = string_path.find_last_of("//");
-			std::string new_path = string_path.substr(0, last_slash_position) + "/" + file->filename + "//*";
-
+			std::string new_path = file->file_path + "//*";
 			size_t subfolders = App->filesystem->GetNumberOfSubFolders(new_path);
 			std::string filename = ICON_FA_FOLDER " " + file->filename;
 			if (subfolders == 0)
 			{
 				flags |= ImGuiTreeNodeFlags_Leaf;
 			}
-			if (selected_folder == new_path)
+			if (selected_file == *file)
 			{
 				flags |= ImGuiTreeNodeFlags_Selected;
 				filename = ICON_FA_FOLDER_OPEN " " + file->filename;
@@ -52,7 +53,7 @@ void FileExplorerUI::WindowShowFilesInFolder(const char * path) {
 			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
 			if (expanded) {
 				ImGui::PushID(filename.c_str());
-				ProcessMouseInput(new_path);
+				ProcessMouseInput(*file);
 				WindowShowFilesInFolder(new_path.c_str());
 				ImGui::PopID();
 				ImGui::TreePop();
@@ -60,9 +61,6 @@ void FileExplorerUI::WindowShowFilesInFolder(const char * path) {
 		}
 	}
 }
-
-
-
 
 void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 	std::vector<std::shared_ptr<ModuleFileSystem::File>> files;
@@ -110,13 +108,44 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 				ImGui::SameLine();
 	}
 }
-void FileExplorerUI::ProcessMouseInput(std::string & path)
+void FileExplorerUI::ProcessMouseInput(ModuleFileSystem::File file)
 {
 	if (ImGui::IsItemHovered())
 	{
 		if (ImGui::IsMouseClicked(0))
 		{
-			selected_folder = path;
+			selected_file = file;
 		}
+	}
+}
+
+void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & file)
+{
+	std::string label("Menu");
+
+	if (ImGui::BeginPopupContextWindow(label.c_str()))
+	{
+	
+		if (ImGui::BeginMenu("Create"))
+		{
+			if (ImGui::Selectable("Folder"))
+			{
+				App->filesystem->MakeDirectory(file.file_path, "new Folder");
+			}
+			if (ImGui::Selectable("Empty File"))
+			{
+			}
+			ImGui::EndMenu();
+		}
+		if (ImGui::Selectable("Delete"))
+		{
+			//bool removed = App->filesystem->Remove(path);
+			int x = 2;
+		}
+		if (ImGui::Selectable("Rename"))
+		{
+		}
+
+		ImGui::EndPopup();
 	}
 }

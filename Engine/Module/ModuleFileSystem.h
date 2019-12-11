@@ -2,7 +2,7 @@
 #define _ModuleFileSystem_H
 
 #include <Module/Module.h>
-#include <string.h>
+#include <string>
 #include <vector>
 #include <memory>
 class ModuleFileSystem : public Module
@@ -23,6 +23,7 @@ public:
 		ModuleFileSystem::FileType file_type;
 		std::vector<std::shared_ptr<File>> childs;
 		std::shared_ptr<File> parent;
+		bool operator==(const File& compare);
 	};
 
 	ModuleFileSystem() = default;
@@ -31,7 +32,7 @@ public:
 	unsigned int Load(const char* path, const char* file, char** buffer) const;
 	unsigned int Save(const char* file, const void* buffer, unsigned int size, bool append = false) const;
 
-	bool Remove(const char* file);
+	bool Remove(const std::string & file_path) const;
 	bool Exists(const char* file) const;
 	bool MakeDirectory(const std::string & path, const std::string & directory_name = "new folder");
 	bool IsDirectory(const char* file) const;
@@ -46,5 +47,6 @@ private:
 	std::string GetFileExtension(const char *file_path) const;
 
 };
+
 
 #endif // !_ModuleFileSystem_H

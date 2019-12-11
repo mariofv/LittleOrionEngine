@@ -1,7 +1,7 @@
 #ifndef _FILEEXPLORESRUI_H_
 #define _FILEEXPLORESRUI_H_
 
-#include <string>
+#include <Module/ModuleFileSystem.h>
 class FileExplorerUI {
 
 public:
@@ -11,10 +11,12 @@ public:
 	void ShowAssetsFolders();
 	void WindowShowFilesInFolder(const char * path);
 
-	void ProcessMouseInput(std::string & path);
+	void ProcessMouseInput(ModuleFileSystem::File file);
 	void ShowFilesInExplorer(std::string & folder_path);
 
+	void ShowFileSystemActionsMenu(const ModuleFileSystem::File & file);
+
 private:
-	std::string selected_folder;
+	ModuleFileSystem::File selected_file;
 };
 #endif
