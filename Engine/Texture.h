@@ -47,7 +47,6 @@ public:
 
 	int width = 0;
 	int height = 0;
-
 private:
 	bool mip_map = false;
 

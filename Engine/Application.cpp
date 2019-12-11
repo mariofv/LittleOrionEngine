@@ -23,11 +23,11 @@ Application::Application()
 	modules.emplace_back(window = new ModuleWindow());
 	modules.emplace_back(editor = new ModuleEditor());
 	modules.emplace_back(time = new ModuleTime());
+	modules.emplace_back(texture = new ModuleTexture());
 	modules.emplace_back(renderer = new ModuleRender());
 	modules.emplace_back(scene = new ModuleScene());
 	modules.emplace_back(input = new ModuleInput());
 	modules.emplace_back(program = new ModuleProgram());
-	modules.emplace_back(texture = new ModuleTexture());
 	modules.emplace_back(cameras = new ModuleCamera());
 	modules.emplace_back(model_loader = new ModuleModelLoader());
 		

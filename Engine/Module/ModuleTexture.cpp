@@ -118,7 +118,7 @@ unsigned char* ModuleTexture::LoadImageData(const char* texture_path, int& width
 		return nullptr;
 	}
 
-	ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 
 	ILinfo ImageInfo;
 	iluGetImageInfo(&ImageInfo);
