@@ -1,4 +1,6 @@
 #include "ComponentMesh.h"
+#include "Application.h"
+#include "Module/ModuleRender.h"
 
 ComponentMesh::ComponentMesh() : Component(nullptr, ComponentType::MESH)
 {
@@ -12,6 +14,7 @@ ComponentMesh::ComponentMesh(GameObject * owner) : Component(owner, ComponentTyp
 
 ComponentMesh::~ComponentMesh()
 {
+
 	vertices.clear();
 	indices.clear();
 
@@ -33,6 +36,11 @@ void ComponentMesh::Disable()
 void ComponentMesh::Update()
 {
 
+}
+
+void ComponentMesh::Delete() 
+{
+	App->renderer->RemoveComponentMesh(this);
 }
 
 void ComponentMesh::LoadMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int material_index)

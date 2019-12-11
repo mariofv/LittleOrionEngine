@@ -31,6 +31,7 @@ public:
 	void RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const;
 
 	ComponentMesh* CreateComponentMesh();
+	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
 
 	void ShowRenderOptions();
 
