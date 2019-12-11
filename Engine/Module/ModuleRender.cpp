@@ -6,7 +6,6 @@
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
-#include "ModuleTexture.h"
 #include "ModuleTime.h"
 #include "ModuleWindow.h"
 #include "Component/ComponentCamera.h"
@@ -113,7 +112,7 @@ bool ModuleRender::Init()
 	SetDepthTest(true);
 
 	geometry_renderer = new GeometryRenderer();
-	InitGrid();
+	grid_renderer = new GridRenderer();
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -143,9 +142,8 @@ bool ModuleRender::CleanUp()
 	APP_LOG_INFO("Destroying renderer");
 
 	delete geometry_renderer;
-	glDeleteBuffers(1, &grid_vbo);
-	glDeleteBuffers(1, &grid_ebo);
-	glDeleteVertexArrays(1, &grid_vao);
+	delete grid_renderer;
+
 	return true;
 }
 
@@ -158,7 +156,7 @@ void ModuleRender::Render() const
 
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
-	RenderGrid(camera);
+	grid_renderer->Render(camera);
 	geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
 	for (auto &mesh : meshes)
 	{
@@ -281,107 +279,6 @@ void ModuleRender::SetWireframing(const bool gl_wireframe)
 {
 	this->gl_wireframe = gl_wireframe;
 	gl_wireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
-}
-
-void ModuleRender::InitGrid()
-{
-	float size = 2048.f;
-	float vertices_data[20] =
-	{
-		-size / 2, 0.0f, size / 2,
-		size / 2, 0.0f, size / 2,
-		size / 2, 0.0f, -size / 2,
-		-size / 2, 0.0f, -size / 2,
-
-		0.0, 0.0,
-		100.0, 0.0,
-		100.0, 100.0,
-		0.0, 100.0
-	}; 
-
-	unsigned int indices[6] = 
-	{
-		0,1,2,
-		0,2,3
-	};
-
-	glGenVertexArrays(1, &grid_vao);
-	glGenBuffers(1, &grid_vbo);
-	glGenBuffers(1, &grid_ebo);
-
-	glBindVertexArray(grid_vao);
-	glBindBuffer(GL_ARRAY_BUFFER, grid_vbo);
-
-	glBufferData(GL_ARRAY_BUFFER, 20 * sizeof(float), &vertices_data[0], GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, grid_ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, 6 * sizeof(unsigned int), &indices[0], GL_STATIC_DRAW);
-
-	// VERTEX POSITION
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-
-	// VERTEX POSITION
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, 2 * sizeof(float), (void*)(12 * sizeof(float)));
-
-	glBindVertexArray(0);
-}
-
-
-void ModuleRender::RenderGrid(const ComponentCamera &camera)
-{
-	grid_texture = App->texture->LoadTexture(GRID_TEXTURE_PATH);
-
-	grid_texture->SetWrapS(GL_REPEAT);
-	grid_texture->SetWrapT(GL_REPEAT);
-	grid_texture->SetMinFilter(GL_LINEAR_MIPMAP_LINEAR);
-	grid_texture->SetMagFilter(GL_LINEAR);
-
-	glBindTexture(GL_TEXTURE_2D, grid_texture->opengl_texture);
-	glTexParameterf(GL_TEXTURE_2D, GL_TEXTURE_MAX_ANISOTROPY_EXT, 16);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	grid_texture->GenerateMipMap();
-
-	glUseProgram(App->program->texture_program);
-
-	// CREATES MODEL MATRIX
-	float4x4 model = float4x4::FromTRS(
-		float3(0.0f, 0.0f, 0.0f),
-		float3x3::identity,
-		float3(1.0f, 1.0f, 1.0f)
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->texture_program, "model"),
-		1,
-		GL_TRUE,
-		&model[0][0]
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->texture_program, "view"),
-		1,
-		GL_TRUE,
-		&camera.GetViewMatrix()[0][0]
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->texture_program, "proj"),
-		1,
-		GL_TRUE,
-		&camera.GetProjectionMatrix()[0][0]
-	);
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, grid_texture->opengl_texture);
-	glUniform1i(glGetUniformLocation(App->program->texture_program, "texture0"), 0);
-
-	glBindVertexArray(grid_vao);
-	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	glBindVertexArray(0);
-
-	glUseProgram(0);
-
-	delete grid_texture;
 }
 
 ComponentMesh* ModuleRender::CreateComponentMesh()

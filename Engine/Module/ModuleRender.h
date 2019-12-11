@@ -4,7 +4,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "GeometryRenderer.h"
-#include "Texture.h"
+#include "GridRenderer.h"
 
 #include <GL/glew.h>
 
@@ -30,9 +30,6 @@ public:
 	void RenderFrame(const ComponentCamera &camera);
 	void RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const;
 
-	void InitGrid();
-	void RenderGrid(const ComponentCamera &camera);
-
 	ComponentMesh* CreateComponentMesh();
 
 	void ShowRenderOptions();
@@ -57,11 +54,6 @@ public:
 private:
 	void* context = nullptr;
 
-	GLuint grid_vbo = 0;
-	GLuint grid_vao = 0;
-	GLuint grid_ebo = 0;
-	Texture* grid_texture = nullptr;
-
 	bool vsync = false;
 	bool gl_alpha_test = false;
 	bool gl_depth_test = false;
@@ -77,6 +69,8 @@ private:
 	bool gl_wireframe = false;
 
 	std::vector<ComponentMesh*> meshes;
+
+	GridRenderer *grid_renderer = nullptr;
 };
 
 #endif //_MODULERENDER_H_
