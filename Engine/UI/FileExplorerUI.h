@@ -10,7 +10,6 @@ public:
 
 	void ShowAssetsFolders();
 	void WindowShowFilesInFolder(const char * path);
-	int GetWindowsSubFolders(const char * path);
 
 	void ProcessMouseInput(std::string & path);
 	void ShowFilesInExplorer(std::string & folder_path);

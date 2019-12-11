@@ -4,17 +4,27 @@
 #include <Module/Module.h>
 #include <string.h>
 #include <vector>
-
+#include <memory>
 class ModuleFileSystem : public Module
 {
+
 public:
 	enum class FileType
 	{
 		MODEL,
 		TEXTURE,
 		DIRECTORY,
+		ARCHIVE,
 		UNKNOWN
 	};
+	struct File {
+		std::string filename;
+		std::string file_path;
+		ModuleFileSystem::FileType file_type;
+		std::vector<std::shared_ptr<File>> childs;
+		std::shared_ptr<File> parent;
+	};
+
 	ModuleFileSystem() = default;
 	~ModuleFileSystem() = default;
 
@@ -28,16 +38,13 @@ public:
 	bool Copy(const char* source, const char* destination);
 
 
-	FileType GetFileType(const char *file_path) const;
-	void GetAllFilesInPath(const std::string & path, std::vector<File> & files);
-	void GetAllFilesInPathRecursive(const std::string & path, std::vector<File> & files);
+	FileType GetFileType(const char *file_path, const DWORD & file_attributes = FILE_ATTRIBUTE_ARCHIVE) const;
+	void GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files) const;
+	void GetAllFilesInPathRecursive(const std::string & path, std::vector<std::shared_ptr<File>> & files) const;
+	size_t GetNumberOfSubFolders(const std::string & path) const;
 private:
 	std::string GetFileExtension(const char *file_path) const;
+
 };
 
-struct File {
-	std::string filename;
-	std::string file_path;
-	ModuleFileSystem::FileType file_type;
-};
 #endif // !_ModuleFileSystem_H
