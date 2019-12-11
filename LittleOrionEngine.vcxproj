@@ -54,7 +54,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(ProjectDir)Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;assimp-vc141-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
@@ -73,7 +73,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>$(ProjectDir)Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;assimp-vc141-mtd.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
@@ -178,6 +178,7 @@
     <ClInclude Include="Engine\Timer.h" />
     <ClInclude Include="Engine\TimerUs.h" />
     <ClInclude Include="Engine\Module\ModuleScene.h" />
+    <ClInclude Include="Engine\Utils.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\GridRenderer.cpp" />
@@ -248,6 +249,7 @@
     <ClCompile Include="Engine\Timer.cpp" />
     <ClCompile Include="Engine\TimerUs.cpp" />
     <ClCompile Include="Engine\Module\ModuleScene.cpp" />
+    <ClCompile Include="Engine\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Libraries\MathGeoLib\include\Geometry\KDTree.inl" />

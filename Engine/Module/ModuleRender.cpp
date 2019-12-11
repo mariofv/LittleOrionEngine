@@ -18,6 +18,7 @@
 #include "imgui.h"
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
+#include "Brofiler/Brofiler.h"
 
 static void APIENTRY openglCallbackFunction(
 	GLenum source,
@@ -89,7 +90,7 @@ bool ModuleRender::Init()
 
 	// Init GLEW library
 	GLenum err = glewInit();
-	// … check for errors
+	// â€¦ check for errors
 	if (GLEW_OK != err)
 	{
 		APP_LOG_ERROR("Error initializing Glew");
@@ -149,6 +150,7 @@ bool ModuleRender::CleanUp()
 
 void ModuleRender::Render() const
 {
+	BROFILER_CATEGORY("Render",Profiler::Color::Aqua);
 	App->editor->Render();
 	SDL_GL_SwapWindow(App->window->window);
 	App->time->EndFrame();
