@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "Module/ModuleModelLoader.h"
+#include "Module/ModuleModelLoader.h"
 
 #include <random>
 #include <ctime>
@@ -63,6 +64,7 @@ void ModuleDebug::ShowDebugWindow()
 		ImGui::Separator();
 		ImGui::Checkbox("Frustum Culling", &frustum_culling);
 		ImGui::Checkbox("QuadTree Culling", &quadtree_culling);
+		ImGui::DragFloat("Rendering time ",&rendering_time,NULL,NULL);
 
 		ImGui::Spacing();
 		ImGui::Separator();

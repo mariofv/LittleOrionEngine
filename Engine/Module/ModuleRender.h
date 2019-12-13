@@ -5,6 +5,7 @@
 #include "Globals.h"
 #include "GeometryRenderer.h"
 #include "OLQuadTree.h"
+#include "Timer.h"
 
 #include <GL/glew.h>
 
@@ -72,6 +73,7 @@ private:
 
 	std::vector<ComponentMesh*> meshes;
 	OLQuadTree ol_quadtree;
+	Timer * rendering_measure_timer = new Timer();
 };
 
 #endif //_MODULERENDER_H_

@@ -138,7 +138,7 @@ bool ModuleRender::CleanUp()
 {
 	APP_LOG_INFO("Destroying renderer");
 	delete geometry_renderer;
-
+	delete rendering_measure_timer;
 	return true;
 }
 
@@ -159,7 +159,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	{
 		geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
 	}
-
+	
+	rendering_measure_timer->Start();
 	if (App->debug->frustum_culling)
 	{
 		for (auto &mesh : meshes)
@@ -201,6 +202,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			}
 		}
 	}
+	rendering_measure_timer->Stop();
+	App->debug->rendering_time = rendering_measure_timer->Read();
 }
 
 void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const

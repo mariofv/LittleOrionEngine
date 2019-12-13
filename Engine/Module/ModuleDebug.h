@@ -28,6 +28,7 @@ public:
 
 	bool frustum_culling = false;
 	bool quadtree_culling = false;
+	float rendering_time = 0;
 
 private:
 	int num_houses = 20;
