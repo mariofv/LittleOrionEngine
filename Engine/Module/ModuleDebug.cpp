@@ -62,7 +62,7 @@ void ModuleDebug::ShowDebugWindow()
 		ImGui::Checkbox("QuadTree", &show_quadtree);
 		ImGui::Separator();
 		ImGui::Checkbox("Frustum Culling", &frustum_culling);
-		ImGui::Checkbox("QuadTree Culling", &quadtre_culling);
+		ImGui::Checkbox("QuadTree Culling", &quadtree_culling);
 
 		ImGui::Spacing();
 		ImGui::Separator();

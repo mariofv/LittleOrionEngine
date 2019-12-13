@@ -162,12 +162,11 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 	if (App->debug->frustum_culling)
 	{
-		for (auto &object : App->scene->game_objects_ownership)
+		for (auto &mesh : meshes)
 		{
-			ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
-			if (object_mesh->IsEnabled() && App->cameras->active_camera->CheckAABBCollision(object->aabb.bounding_box))
+			if (mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
 			{
-				RenderMesh(*object_mesh, camera);
+				RenderMesh(*mesh, camera);
 			}
 		}
 	}
@@ -194,12 +193,11 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		}
 	}
 	else {
-		for (auto &object : App->scene->game_objects_ownership)
+		for (auto &mesh : meshes)
 		{
-			ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
-			if (object_mesh->IsEnabled())
+			if (mesh->IsEnabled())
 			{
-				RenderMesh(*object_mesh, camera);
+				RenderMesh(*mesh, camera);
 			}
 		}
 	}

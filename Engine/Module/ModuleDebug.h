@@ -27,7 +27,7 @@ public:
 	bool show_quadtree = true;
 
 	bool frustum_culling = false;
-	bool quadtre_culling = false;
+	bool quadtree_culling = false;
 
 private:
 	int num_houses = 20;
