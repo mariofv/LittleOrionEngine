@@ -20,6 +20,9 @@ public:
 
 	bool IsEnabled() const;
 
+	void SetStatic(bool is_static);
+	bool IsStatic() const;
+
 	void Update();
 
 	void SetParent(GameObject *new_parent);
@@ -36,6 +39,7 @@ public:
 	void UpdateHierarchyBranch();
 
 	const GLuint GetMaterialTexture(const int material_index) const;
+
 
 	void ShowPropertiesWindow();
 

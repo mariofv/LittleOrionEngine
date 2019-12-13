@@ -55,6 +55,19 @@ bool GameObject::IsEnabled() const
 	return active;
 }
 
+void GameObject::SetStatic(bool is_static)
+{
+	this->is_static = is_static;
+	if (GetComponent(Component::ComponentType::MESH) != nullptr)
+	{
+		App->renderer->GenerateQuadTree();
+	}
+}
+
+bool GameObject::IsStatic() const
+{
+	return is_static;
+}
 void GameObject::Update()
 {
 	transform.GenerateGlobalModelMatrix();

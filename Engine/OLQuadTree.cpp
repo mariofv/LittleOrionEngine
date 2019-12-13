@@ -30,6 +30,10 @@ void OLQuadTree::Clear()
 
 void OLQuadTree::Insert(GameObject &game_object)
 {
+	if (!game_object.IsStatic())
+	{
+		return;
+	}
 	assert(root->box.Intersects(game_object.aabb.bounding_box2D));
 
 	std::vector<OLQuadTreeNode*> intersecting_leaves;

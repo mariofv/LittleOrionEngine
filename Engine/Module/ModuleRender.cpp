@@ -173,7 +173,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	}
 	else if (App->debug->quadtree_culling)
 	{
-		GenerateQuadTree();
 		std::vector<GameObject*> rendered_objects;
 		ol_quadtree.CollectIntersect(rendered_objects, *App->cameras->active_camera);
 
