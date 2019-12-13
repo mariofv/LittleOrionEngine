@@ -31,4 +31,4 @@ private:
 	int max_depth = 3;
 };
 
-#endif _OLQUADTREE_H_
+#endif //_OLQUADTREE_H_

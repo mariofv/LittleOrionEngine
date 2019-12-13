@@ -160,23 +160,45 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
 	}
 
-	GenerateQuadTree();
-	std::vector<GameObject*> rendered_objects;
-	ol_quadtree.CollectIntersect(rendered_objects, *App->cameras->active_camera);
-	
-	for (auto &object: rendered_objects)
+	if (App->debug->frustum_culling)
 	{
-		ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
-		if (object_mesh->IsEnabled())
+		for (auto &mesh : meshes)
 		{
-			RenderMesh(*object_mesh, camera);
+			if (mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
+			{
+				RenderMesh(*mesh, camera);
+			}
 		}
 	}
-
-	if (App->debug->show_quadtree)
+	else if (App->debug->quadtree_culling)
 	{
-		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) {
-			geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
+		GenerateQuadTree();
+		std::vector<GameObject*> rendered_objects;
+		ol_quadtree.CollectIntersect(rendered_objects, *App->cameras->active_camera);
+
+		for (auto &object : rendered_objects)
+		{
+			ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+			if (object_mesh->IsEnabled())
+			{
+				RenderMesh(*object_mesh, camera);
+			}
+		}
+
+		if (App->debug->show_quadtree)
+		{
+			for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) {
+				geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
+			}
+		}
+	}
+	else {
+		for (auto &mesh : meshes)
+		{
+			if (mesh->IsEnabled())
+			{
+				RenderMesh(*mesh, camera);
+			}
 		}
 	}
 }

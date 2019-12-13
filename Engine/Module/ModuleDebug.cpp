@@ -60,6 +60,9 @@ void ModuleDebug::ShowDebugWindow()
 		ImGui::Checkbox("Bounding boxes", &show_bounding_boxes);
 		ImGui::Checkbox("Camera Frustum", &show_camera_frustum);
 		ImGui::Checkbox("QuadTree", &show_quadtree);
+		ImGui::Separator();
+		ImGui::Checkbox("Frustum Culling", &frustum_culling);
+		ImGui::Checkbox("QuadTree Culling", &quadtree_culling);
 
 		ImGui::Spacing();
 		ImGui::Separator();
