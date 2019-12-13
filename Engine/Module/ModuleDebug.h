@@ -26,6 +26,9 @@ public:
 	bool show_camera_frustum = true;
 	bool show_quadtree = true;
 
+	bool frustum_culling = false;
+	bool quadtre_culling = false;
+
 private:
 	int num_houses = 20;
 	int max_dispersion_x = 40;
