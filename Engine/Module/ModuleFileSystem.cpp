@@ -3,32 +3,46 @@
 #include <algorithm>
 #include <SDL/SDL.h>
 
-unsigned int ModuleFileSystem::Load(const char* path, const char* file_name, char** buffer) const
+unsigned int ModuleFileSystem::Load(const char* file_path, char** buffer) const
 {
+
+	SDL_RWops* file = SDL_RWFromFile(file_path, "rb");
+
+	if (file == NULL) {
+		APP_LOG_ERROR("Error: Unable to open file! SDL Error: %s\n", SDL_GetError());
+		SDL_RWclose(file);
+		return 1;
+	}
+	printf("Reading file...!\n");
+	Sint64 res_size = SDL_RWsize(file);
+	SDL_RWread(file, &buffer, sizeof(Sint32), 1);
+
+	SDL_RWclose(file);
 	return 0;
 }
-unsigned int ModuleFileSystem::Save(const char* file_name, const void* buffer, unsigned int size, bool append) const
+unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, unsigned int size, bool append) const
 {
 	SDL_RWops* file;
 	if (append) 
 	{
-		file = SDL_RWFromFile(file_name, "a+b");
+		file = SDL_RWFromFile(file_path, "a+b");
 	}
 	else 
 	{
-		file = SDL_RWFromFile(file_name, "w+b");
+		file = SDL_RWFromFile(file_path, "w+b");
 	}
 
 	if (file != NULL)
 	{
-		APP_LOG_INFO("File opened!\n");
+		APP_LOG_INFO("File %s opened!\n", file_path);
 
 	SDL_RWwrite(file, &buffer, sizeof(buffer), 1);
 
 	}
 	else
 	{
-		APP_LOG_ERROR("Warning: Unable to open file! SDL Error: %s\n", SDL_GetError());
+		APP_LOG_ERROR("Error: Unable to open file! SDL Error: %s\n", SDL_GetError());
+		return 1;
 	}
 	SDL_RWclose(file);
 	return 0;
@@ -40,9 +54,12 @@ bool ModuleFileSystem::Remove(const File & file) const
 	}
 	return DeleteFileA(file.file_path.c_str());
 }
-bool ModuleFileSystem::Exists(const char* file) const
+bool ModuleFileSystem::Exists(const char* file_path) const
 {
-	return true;
+	SDL_RWops* file = SDL_RWFromFile(file_path, "r");
+	bool exists = file != NULL;
+	SDL_RWclose(file);
+	return exists;
 }
 bool ModuleFileSystem::MakeDirectory(const std::string & path, const std::string & directory_name)
 {
@@ -68,10 +85,6 @@ bool ModuleFileSystem::MakeDirectory(const std::string & path, const std::string
 	CreateDirectory(new_directory.c_str(), NULL);
 	return true;
 }
-bool ModuleFileSystem::IsDirectory(const char* file) const 
-{
-	return true;
-}
 bool ModuleFileSystem::Copy(const char* source, const char* destination)
 {
 	return true;
@@ -79,6 +92,11 @@ bool ModuleFileSystem::Copy(const char* source, const char* destination)
 
 ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, const DWORD & file_attributes) const
 {
+
+	if (file_attributes & FILE_ATTRIBUTE_DIRECTORY)
+	{
+		return ModuleFileSystem::FileType::DIRECTORY;
+	}
 	std::string file_extension = GetFileExtension(file_path);
 
 	if (
@@ -99,10 +117,7 @@ ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, 
 	{
 		return ModuleFileSystem::FileType::MODEL;
 	}
-	if (file_extension == "" && file_attributes & FILE_ATTRIBUTE_DIRECTORY) 
-	{
-		return ModuleFileSystem::FileType::DIRECTORY;
-	}
+
 	if (file_extension == "" && file_attributes & FILE_ATTRIBUTE_ARCHIVE)
 	{
 		return ModuleFileSystem::FileType::ARCHIVE;
