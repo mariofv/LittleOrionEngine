@@ -1,4 +1,5 @@
 #include "ModuleFileSystem.h"
+#include "Application.h"
 #include <algorithm>
 
 unsigned int ModuleFileSystem::Load(const char* path, const char* file, char** buffer) const
@@ -112,22 +113,32 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 		bool is_directory = find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
 		if (IsValidFileName(find_file_data.cFileName) && ((directories_only && is_directory) || !directories_only))
 		{
-			std::shared_ptr<File> new_file = std::make_shared<File>();
-
-			new_file->filename = find_file_data.cFileName;
-			new_file->file_path = path + "//" + find_file_data.cFileName;
-			new_file->file_type = GetFileType(new_file->filename.c_str(), find_file_data.dwFileAttributes);
-
+			std::shared_ptr<File> new_file = std::make_shared<File>(find_file_data,path);
 			files.push_back(new_file);
 		}
 	} while (FindNextFile(handle_find, &find_file_data) != 0);
 
 	FindClose(handle_find);
 }
-void ModuleFileSystem::GetAllFilesRecursive(File & root) const
-{
 
-	//GetAllFilesInPath(root.file_path, files);
+std::shared_ptr<ModuleFileSystem::File> ModuleFileSystem::GetFileHierarchyFromPath(const std::string & path) const
+{
+	std::shared_ptr<File> new_file = std::make_shared<File>();
+	new_file->filename = path;
+	GetAllFilesRecursive(new_file);
+	return new_file;
+}
+void ModuleFileSystem::GetAllFilesRecursive(std::shared_ptr<File> root) const
+{
+	std::vector<std::shared_ptr<File>> files;
+	GetAllFilesInPath(root->file_path, files);
+	for (auto & file : files )
+	{
+		file->parent = root;
+		root->childs.push_back(file);
+		GetAllFilesRecursive(file);
+
+	}
 }
 
 size_t ModuleFileSystem::GetNumberOfSubFolders(const std::string & path) const
@@ -160,3 +171,8 @@ bool ModuleFileSystem::File::operator==(const ModuleFileSystem::File& compare)
 {
 	return this->filename == compare.filename && this->file_path == compare.file_path && this->file_type == compare.file_type;
 };
+ModuleFileSystem::File::File(const WIN32_FIND_DATA & windows_file_data, const std::string & path) {
+	this->filename = windows_file_data.cFileName;
+	this->file_path = path + "//" + windows_file_data.cFileName;
+	this->file_type = App->filesystem->GetFileType(filename.c_str(), windows_file_data.dwFileAttributes);
+}

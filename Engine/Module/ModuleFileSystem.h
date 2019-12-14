@@ -18,6 +18,8 @@ public:
 		UNKNOWN
 	};
 	struct File {
+		File() = default;
+		File(const WIN32_FIND_DATA & windows_file_data, const std::string & path);
 		std::string filename;
 		std::string file_path;
 		ModuleFileSystem::FileType file_type;
@@ -37,15 +39,16 @@ public:
 	bool MakeDirectory(const std::string & path, const std::string & directory_name = "new folder");
 	bool IsDirectory(const char* file) const;
 	bool Copy(const char* source, const char* destination);
-
+	std::shared_ptr<File> GetFileHierarchyFromPath(const std::string & path) const;
 	
 	FileType GetFileType(const char *file_path, const DWORD & file_attributes = FILE_ATTRIBUTE_ARCHIVE) const;
 	void GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only = false) const;
 	size_t GetNumberOfSubFolders(const std::string & path) const;
 private:
-	void GetAllFilesRecursive(File & root) const;
+	void GetAllFilesRecursive(std::shared_ptr<File> root) const;
 	bool IsValidFileName(const char * file_name) const;
 	std::string GetFileExtension(const char *file_path) const;
+	
 
 };
 
