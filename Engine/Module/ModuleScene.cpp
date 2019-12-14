@@ -17,7 +17,7 @@ bool ModuleScene::Init()
 	App->cameras->active_camera = component_camera;
 	App->cameras->active_camera->SetPosition(float3(0.f, 1.f, -10.f));
 	App->cameras->active_camera->SetFarDistance(500);
-	App->renderer->GenerateQuadTree();
+	App->renderer->GenerateQuadTree(); // TODO: Move this to load scene and save scene
 	return true;
 }
 

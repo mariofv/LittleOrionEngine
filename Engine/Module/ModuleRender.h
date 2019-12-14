@@ -32,6 +32,7 @@ public:
 	void RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const;
 	void RenderGrid(const ComponentCamera &camera) const;
 
+
 	ComponentMesh* CreateComponentMesh();
 	void GenerateQuadTree();
 
@@ -50,6 +51,8 @@ private:
 	void SetDithering(const bool gl_dither);
 	void SetMinMaxing(const bool gl_minmax);
 	void SetWireframing(const bool gl_wireframe);
+
+	void GetMeshesToRender();
 
 public:
 	GeometryRenderer* geometry_renderer = nullptr;
@@ -72,6 +75,7 @@ private:
 	bool gl_wireframe = false;
 
 	std::vector<ComponentMesh*> meshes;
+	std::vector<ComponentMesh*> meshes_to_render;
 	OLQuadTree ol_quadtree;
 	Timer * rendering_measure_timer = new Timer();
 };

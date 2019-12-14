@@ -42,6 +42,8 @@ public:
 
 
 	void ShowPropertiesWindow();
+private:
+	void SetHierarchyStatic(bool is_static);
 
 public:
 	std::string name = "";

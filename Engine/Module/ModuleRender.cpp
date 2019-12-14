@@ -19,6 +19,7 @@
 #include "imgui.h"
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
+#include <algorithm>
 
 static void APIENTRY openglCallbackFunction(
 	GLenum source,
@@ -105,18 +106,18 @@ bool ModuleRender::Init()
 	APP_LOG_INFO("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	glEnable(GL_DEBUG_OUTPUT);
-	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-	glDebugMessageCallback(openglCallbackFunction, nullptr);
-	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, true);
+glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+glDebugMessageCallback(openglCallbackFunction, nullptr);
+glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, true);
 
-	SetVSync(VSYNC);
-	SetDepthTest(true);
+SetVSync(VSYNC);
+SetDepthTest(true);
 
-	geometry_renderer = new GeometryRenderer();
+geometry_renderer = new GeometryRenderer();
 
-	APP_LOG_SUCCESS("Glew initialized correctly.")
+APP_LOG_SUCCESS("Glew initialized correctly.")
 
-	return true;
+return true;
 }
 
 update_status ModuleRender::PreUpdate()
@@ -129,7 +130,7 @@ update_status ModuleRender::PreUpdate()
 
 update_status ModuleRender::PostUpdate()
 {
-	
+
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -159,19 +160,49 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	{
 		geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
 	}
-	
+
 	rendering_measure_timer->Start();
-	if (App->debug->frustum_culling)
+	GetMeshesToRender();
+	for (auto &mesh : meshes_to_render)
 	{
-		for (auto &mesh : meshes)
-		{
-			if (mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
-			{
-				RenderMesh(*mesh, camera);
-			}
+		RenderMesh(*mesh, camera);
+	}
+	rendering_measure_timer->Stop();
+	App->debug->rendering_time = rendering_measure_timer->Read();
+
+	if (App->debug->show_quadtree)
+	{
+		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) {
+			geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
 		}
 	}
-	else if (App->debug->quadtree_culling)
+}
+
+void ModuleRender::GetMeshesToRender()
+{
+	meshes_to_render.clear();
+
+	std::copy_if(meshes.begin(),
+		meshes.end(),
+		std::back_inserter(meshes_to_render), [](auto mesh) 
+	{ 
+		
+		if (App->debug->frustum_culling && mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
+		{
+			return true;
+		}
+		else if(App->debug->frustum_culling && mesh->IsEnabled() && !App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box)) 
+		{
+			return false;
+		}
+		if (App->debug->quadtree_culling &&  mesh->IsEnabled() && !mesh->owner->IsStatic())
+		{
+			return true;
+		}
+		return !App->debug->quadtree_culling  && mesh->IsEnabled();
+	});
+
+	if (App->debug->quadtree_culling)
 	{
 		std::vector<GameObject*> rendered_objects;
 		ol_quadtree.CollectIntersect(rendered_objects, *App->cameras->active_camera);
@@ -181,28 +212,11 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
 			if (object_mesh->IsEnabled())
 			{
-				RenderMesh(*object_mesh, camera);
-			}
-		}
-
-		if (App->debug->show_quadtree)
-		{
-			for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) {
-				geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
+				meshes_to_render.push_back(object_mesh);
 			}
 		}
 	}
-	else {
-		for (auto &mesh : meshes)
-		{
-			if (mesh->IsEnabled())
-			{
-				RenderMesh(*mesh, camera);
-			}
-		}
-	}
-	rendering_measure_timer->Stop();
-	App->debug->rendering_time = rendering_measure_timer->Read();
+	
 }
 
 void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const

@@ -57,10 +57,17 @@ bool GameObject::IsEnabled() const
 
 void GameObject::SetStatic(bool is_static)
 {
+
+	SetHierarchyStatic(is_static);
+	App->renderer->GenerateQuadTree();
+}
+
+void GameObject::SetHierarchyStatic(bool is_static)
+{
 	this->is_static = is_static;
-	if (GetComponent(Component::ComponentType::MESH) != nullptr)
+	for (auto & child : children)
 	{
-		App->renderer->GenerateQuadTree();
+		child->SetStatic(is_static);
 	}
 }
 
@@ -150,10 +157,6 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 
 	created_component->owner = this;
 	components.push_back(created_component);
-	if (type == Component::ComponentType::MESH) {
-		//App->renderer->GenerateQuadTree();
-	}
-
 	return created_component;
 }
 
@@ -257,10 +260,7 @@ void GameObject::ShowPropertiesWindow()
 	ImGui::SameLine();
 	if (ImGui::Checkbox("Static", &is_static))
 	{
-		if (is_static)
-		{
-
-		}
+		SetStatic(is_static);
 	}
 
 	ImGui::Spacing();

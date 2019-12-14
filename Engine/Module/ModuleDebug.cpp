@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "Module/ModuleModelLoader.h"
-#include "Module/ModuleModelLoader.h"
 
 #include <random>
 #include <ctime>
@@ -49,6 +48,8 @@ void ModuleDebug::CreateHousesRandom() const
 		int x = std::rand() % max_dispersion_x;
 		int z = std::rand() % max_dispersion_z;
 		loaded_house->transform.SetTranslation(float3(x, 0, z));
+		loaded_house->Update();
+		loaded_house->SetStatic(true);
 	}
 }
 
