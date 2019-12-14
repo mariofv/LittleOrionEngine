@@ -1,58 +1,52 @@
 #include "FileExplorerUI.h"
 #include <Application.h>
-
-
 #include "imgui.h"
 #include <SDL/SDL.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
-
 
 void FileExplorerUI::ShowAssetsFolders() {
 	if(ImGui::BeginTabItem(ICON_FA_FOLDER_OPEN " Project") ){
 
 		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 260)))
 		{
-			ShowFileSystemActionsMenu(selected_file);
-			WindowShowFilesInFolder(".//Assets");
+			ShowFileSystemActionsMenu(selected_folder);
+			WindowShowFilesInFolder(*App->filesystem->root_file);
 		}
 		ImGui::EndChild();
 
 		ImGui::SameLine();
 		if (ImGui::BeginChild("File Explorer", ImVec2(0, 260), true)) {
-			ShowFileSystemActionsMenu(selected_file);
-			ShowFilesInExplorer(selected_file.file_path);
+			ShowFileSystemActionsMenu(selected_folder);
+			ShowFilesInExplorer(selected_folder.file_path);
 		}
 		ImGui::EndChild();
 		ImGui::EndTabItem();
 	}
 }
 
-void FileExplorerUI::WindowShowFilesInFolder(const char * path) {
+void FileExplorerUI::WindowShowFilesInFolder(ModuleFileSystem::File & file) {
 
-	std::vector<std::shared_ptr<ModuleFileSystem::File>> files;
-	std::string string_path(path);
-	App->filesystem->GetAllFilesInPath(string_path, files, true);
-	for (auto & file : files )
+	for (auto & child : file.childs )
 	{
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
-		size_t subfolders = App->filesystem->GetNumberOfSubFolders(file->file_path);
-		std::string filename = ICON_FA_FOLDER " " + file->filename;
+		size_t subfolders = App->filesystem->GetNumberOfSubFolders(child->file_path);
+		std::string filename = ICON_FA_FOLDER " " + child->filename;
 		if (subfolders == 0)
 		{
 			flags |= ImGuiTreeNodeFlags_Leaf;
 		}
-		if (selected_file == *file)
+		if (selected_folder == *child)
 		{
 			flags |= ImGuiTreeNodeFlags_Selected;
-			filename = ICON_FA_FOLDER_OPEN " " + file->filename;
+			filename = ICON_FA_FOLDER_OPEN " " + child->filename;
 		}
 		bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
 		if (expanded) {
 			ImGui::PushID(filename.c_str());
-			ProcessMouseInput(*file);
-			WindowShowFilesInFolder(file->file_path.c_str());
+			ProcessMouseInput(*child);
+			WindowShowFilesInFolder(*child);
 			ImGui::PopID();
 			ImGui::TreePop();
 		}
@@ -60,16 +54,13 @@ void FileExplorerUI::WindowShowFilesInFolder(const char * path) {
 }
 
 void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
-	std::vector<std::shared_ptr<ModuleFileSystem::File>> files;
-	std::string string_path(folder_path);
-	App->filesystem->GetAllFilesInPath(string_path, files);
-	
+
 	ImGuiStyle& style = ImGui::GetStyle();
 	size_t files_count = 0;
 	ImVec2 text_sz(40, 40);
 	float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
-	for (auto & file : files)
+	for (auto & file : files_in_selected_folder)
 	{
 			bool outsideWindow = false;
 			std::string item_name;
@@ -111,7 +102,9 @@ void FileExplorerUI::ProcessMouseInput(ModuleFileSystem::File file)
 	{
 		if (ImGui::IsMouseClicked(0))
 		{
-			selected_file = file;
+			files_in_selected_folder.clear();
+			selected_folder = file;
+			App->filesystem->GetAllFilesInPath(selected_folder.file_path, files_in_selected_folder);
 		}
 	}
 }
@@ -151,6 +144,9 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & fi
 		{
 		}
 
+		files_in_selected_folder.clear();
+		App->filesystem->GetAllFilesInPath(selected_folder.file_path, files_in_selected_folder);
+		App->filesystem->RefreshFilesHierarchy();
 		ImGui::EndPopup();
 	}
 }

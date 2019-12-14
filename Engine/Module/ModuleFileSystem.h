@@ -28,6 +28,7 @@ public:
 		bool operator==(const File& compare);
 	};
 
+	bool Init() override;
 	ModuleFileSystem() = default;
 	~ModuleFileSystem() = default;
 
@@ -43,12 +44,16 @@ public:
 	FileType GetFileType(const char *file_path, const DWORD & file_attributes = FILE_ATTRIBUTE_ARCHIVE) const;
 	void GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only = false) const;
 	size_t GetNumberOfSubFolders(const std::string & path) const;
+
+	void RefreshFilesHierarchy();
 private:
 	void GetAllFilesRecursive(std::shared_ptr<File> root) const;
 	bool IsValidFileName(const char * file_name) const;
 	std::string GetFileExtension(const char *file_path) const;
-	
 
+public:
+
+	std::shared_ptr<File> root_file;
 };
 
 

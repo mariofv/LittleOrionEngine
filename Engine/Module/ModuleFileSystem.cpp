@@ -3,6 +3,11 @@
 #include <algorithm>
 #include <SDL/SDL.h>
 
+
+bool ModuleFileSystem::Init() {
+	RefreshFilesHierarchy();
+	return true;
+}
 unsigned int ModuleFileSystem::Load(const char* file_path, char** buffer) const
 {
 
@@ -13,7 +18,6 @@ unsigned int ModuleFileSystem::Load(const char* file_path, char** buffer) const
 		SDL_RWclose(file);
 		return 1;
 	}
-	printf("Reading file...!\n");
 	Sint64 res_size = SDL_RWsize(file);
 	SDL_RWread(file, &buffer, sizeof(Sint32), 1);
 
@@ -162,14 +166,14 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 std::shared_ptr<ModuleFileSystem::File> ModuleFileSystem::GetFileHierarchyFromPath(const std::string & path) const
 {
 	std::shared_ptr<File> new_file = std::make_shared<File>();
-	new_file->filename = path;
+	new_file->file_path = path;
 	GetAllFilesRecursive(new_file);
 	return new_file;
 }
 void ModuleFileSystem::GetAllFilesRecursive(std::shared_ptr<File> root) const
 {
 	std::vector<std::shared_ptr<File>> files;
-	GetAllFilesInPath(root->file_path, files);
+	GetAllFilesInPath(root->file_path, files, true);
 	for (auto & file : files )
 	{
 		file->parent = root;
@@ -213,4 +217,9 @@ ModuleFileSystem::File::File(const WIN32_FIND_DATA & windows_file_data, const st
 	this->filename = windows_file_data.cFileName;
 	this->file_path = path + "//" + windows_file_data.cFileName;
 	this->file_type = App->filesystem->GetFileType(filename.c_str(), windows_file_data.dwFileAttributes);
+}
+
+void ModuleFileSystem::RefreshFilesHierarchy()
+{
+	root_file = GetFileHierarchyFromPath(".//Assets");
 }

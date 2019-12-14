@@ -9,7 +9,7 @@ public:
 	~FileExplorerUI() = default;
 
 	void ShowAssetsFolders();
-	void WindowShowFilesInFolder(const char * path);
+	void WindowShowFilesInFolder(ModuleFileSystem::File & file);
 
 	void ProcessMouseInput(ModuleFileSystem::File file);
 	void ShowFilesInExplorer(std::string & folder_path);
@@ -17,6 +17,8 @@ public:
 	void ShowFileSystemActionsMenu(const ModuleFileSystem::File & file);
 
 private:
-	ModuleFileSystem::File selected_file;
+	ModuleFileSystem::File selected_folder;
+	std::vector<std::shared_ptr<ModuleFileSystem::File>> files_in_selected_folder;
+
 };
 #endif
