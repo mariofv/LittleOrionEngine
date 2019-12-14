@@ -1,12 +1,13 @@
 #include "FileExplorerUI.h"
 #include <Application.h>
+
 #include "imgui.h"
 #include <SDL/SDL.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
 
 void FileExplorerUI::ShowAssetsFolders() {
-	if(ImGui::BeginTabItem(ICON_FA_FOLDER_OPEN " Project") ){
+	if(ImGui::BeginTabItem(ICON_FA_FOLDER_OPEN " Assets") ){
 
 		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 260)))
 		{
@@ -17,7 +18,7 @@ void FileExplorerUI::ShowAssetsFolders() {
 
 		ImGui::SameLine();
 		if (ImGui::BeginChild("File Explorer", ImVec2(0, 260), true)) {
-			ShowFileSystemActionsMenu(selected_folder);
+			ShowFileSystemActionsMenu(selected_file);
 			ShowFilesInExplorer(selected_folder.file_path);
 		}
 		ImGui::EndChild();
@@ -57,12 +58,11 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 
 	ImGuiStyle& style = ImGui::GetStyle();
 	size_t files_count = 0;
-	ImVec2 text_sz(40, 40);
+
 	float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
 
 	for (auto & file : files_in_selected_folder)
 	{
-			bool outsideWindow = false;
 			std::string item_name;
 			std::string filename = std::string(file->filename);
 			std::string spaces;
@@ -88,7 +88,9 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 			else {
 				item_name = spaces + std::string(ICON_FA_BOX "\n " + filename);
 			}
-			ImGui::Text(item_name.c_str(), text_sz);
+			ImVec2 text_sz(ImGui::CalcTextSize(filename.c_str()).x+5,0);
+			ImGui::Selectable(item_name.c_str(), selected_file == *file,ImGuiSelectableFlags_None,text_sz);
+			ProcessMouseInput(*file);
 			++files_count;
 			float last_button_x2 = ImGui::GetItemRectMax().x;
 			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + text_sz.x; // Expected position if next text was on same line
@@ -100,11 +102,15 @@ void FileExplorerUI::ProcessMouseInput(ModuleFileSystem::File file)
 {
 	if (ImGui::IsItemHovered())
 	{
-		if (ImGui::IsMouseClicked(0))
+		if (ImGui::IsMouseClicked(0) && file.file_type == ModuleFileSystem::FileType::DIRECTORY)
 		{
-			files_in_selected_folder.clear();
 			selected_folder = file;
+			files_in_selected_folder.clear();
 			App->filesystem->GetAllFilesInPath(selected_folder.file_path, files_in_selected_folder);
+		}
+		else if(ImGui::IsMouseClicked(0))
+		{
+			selected_file = file;
 		}
 	}
 }

@@ -18,6 +18,7 @@ public:
 
 private:
 	ModuleFileSystem::File selected_folder;
+	ModuleFileSystem::File selected_file;
 	std::vector<std::shared_ptr<ModuleFileSystem::File>> files_in_selected_folder;
 
 };
