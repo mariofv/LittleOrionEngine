@@ -14,14 +14,14 @@ void FileExplorerUI::ShowAssetsFolders() {
 		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 260)))
 		{
 			ShowFileSystemActionsMenu(selected_file);
-			WindowShowFilesInFolder(".//Assets//*");
+			WindowShowFilesInFolder(".//Assets");
 		}
 		ImGui::EndChild();
 
 		ImGui::SameLine();
 		if (ImGui::BeginChild("File Explorer", ImVec2(0, 260), true)) {
 			ShowFileSystemActionsMenu(selected_file);
-			ShowFilesInExplorer(selected_file.file_path + "//*");
+			ShowFilesInExplorer(selected_file.file_path);
 		}
 		ImGui::EndChild();
 		ImGui::EndTabItem();
@@ -38,8 +38,7 @@ void FileExplorerUI::WindowShowFilesInFolder(const char * path) {
 		if (file->file_type == ModuleFileSystem::FileType::DIRECTORY) {
 			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
-			std::string new_path = file->file_path + "//*";
-			size_t subfolders = App->filesystem->GetNumberOfSubFolders(new_path);
+			size_t subfolders = App->filesystem->GetNumberOfSubFolders(file->file_path);
 			std::string filename = ICON_FA_FOLDER " " + file->filename;
 			if (subfolders == 0)
 			{
@@ -54,7 +53,7 @@ void FileExplorerUI::WindowShowFilesInFolder(const char * path) {
 			if (expanded) {
 				ImGui::PushID(filename.c_str());
 				ProcessMouseInput(*file);
-				WindowShowFilesInFolder(new_path.c_str());
+				WindowShowFilesInFolder(file->file_path.c_str());
 				ImGui::PopID();
 				ImGui::TreePop();
 			}

@@ -103,8 +103,10 @@ std::string ModuleFileSystem::GetFileExtension(const char *file_path) const
 
 void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files) const
 {
+	std::string path_all = path + "//*";
+
 	WIN32_FIND_DATA find_file_data;
-	HANDLE handle_find = FindFirstFile(path.c_str(), &find_file_data);
+	HANDLE handle_find = FindFirstFile(path_all.c_str(), &find_file_data);
 	if (handle_find == INVALID_HANDLE_VALUE) {
 		return;
 	}
@@ -115,10 +117,10 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 			new_file->filename = find_file_data.cFileName;
 
 
-			size_t last_slash_position = path.find_last_of("//");
-			std::string new_path = path.substr(0, last_slash_position-1);
+			/*size_t last_slash_position = path.find_last_of("//");
+			std::string new_path = path.substr(0, last_slash_position-1);*/
 
-			new_file->file_path = new_path + "//"+ find_file_data.cFileName;
+			new_file->file_path = path + "//"+ find_file_data.cFileName;
 			new_file->file_type = GetFileType(new_file->filename.c_str(), find_file_data.dwFileAttributes);
 			files.push_back(new_file);
 		}
@@ -133,8 +135,9 @@ void ModuleFileSystem::GetAllFilesInPathRecursive(const std::string & path, std:
 
 size_t ModuleFileSystem::GetNumberOfSubFolders(const std::string & path) const
 {
+	std::string path_all = path + "//*";
 	WIN32_FIND_DATA find_file_data;
-	HANDLE handle_find = FindFirstFile(path.c_str(), &find_file_data);
+	HANDLE handle_find = FindFirstFile(path_all.c_str(), &find_file_data);
 
 	if (handle_find == INVALID_HANDLE_VALUE) {
 		return 0;
