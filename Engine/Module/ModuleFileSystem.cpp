@@ -26,7 +26,8 @@ bool ModuleFileSystem::MakeDirectory(const std::string & path, const std::string
 	same_name_folders.reserve(files.size());
 
 	std::copy_if(files.begin(), files.end(), std::back_inserter(same_name_folders), [directory_name](const std::shared_ptr<File> file) {
-		return file->file_type == FileType::DIRECTORY && file->filename == directory_name;
+		size_t last_bracket = file->filename.find_last_of("(");
+		return file->file_type == FileType::DIRECTORY && file->filename.substr(0,last_bracket - 1) == directory_name;
 	});
 	std::string new_directory;
 	do {
@@ -144,6 +145,7 @@ size_t ModuleFileSystem::GetNumberOfSubFolders(const std::string & path) const
 
 	} while (FindNextFile(handle_find, &find_file_data) != 0);
 
+	FindClose(handle_find);
 	return subFiles;
 }
 
