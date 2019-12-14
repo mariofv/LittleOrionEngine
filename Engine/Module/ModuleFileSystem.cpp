@@ -9,9 +9,12 @@ unsigned int ModuleFileSystem::Save(const char* file, const void* buffer, unsign
 {
 	return 0;
 }
-bool ModuleFileSystem::Remove(const std::string & file_path) const
+bool ModuleFileSystem::Remove(const File & file) const
 {
-	return RemoveDirectoryA(file_path.c_str());
+	if (file.file_type == FileType::DIRECTORY) {
+		return RemoveDirectoryA(file.file_path.c_str());
+	}
+	return DeleteFileA(file.file_path.c_str());
 }
 bool ModuleFileSystem::Exists(const char* file) const
 {

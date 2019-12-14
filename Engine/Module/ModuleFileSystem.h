@@ -32,7 +32,7 @@ public:
 	unsigned int Load(const char* path, const char* file, char** buffer) const;
 	unsigned int Save(const char* file, const void* buffer, unsigned int size, bool append = false) const;
 
-	bool Remove(const std::string & file_path) const;
+	bool Remove(const File & file) const;
 	bool Exists(const char* file) const;
 	bool MakeDirectory(const std::string & path, const std::string & directory_name = "new folder");
 	bool IsDirectory(const char* file) const;

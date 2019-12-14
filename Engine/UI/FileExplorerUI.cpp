@@ -139,8 +139,7 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & fi
 		}
 		if (ImGui::Selectable("Delete"))
 		{
-			//bool removed = App->filesystem->Remove(path);
-			int x = 2;
+			bool removed = App->filesystem->Remove(file);
 		}
 		if (ImGui::Selectable("Rename"))
 		{
