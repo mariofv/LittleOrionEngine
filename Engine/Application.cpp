@@ -13,6 +13,7 @@
 #include "UI/EngineUI.h"
 #include "UI/EngineLog.h"
 #include "TimerUs.h"
+#include "Brofiler/Brofiler.h"
 
 using namespace std;
 
@@ -24,11 +25,11 @@ Application::Application()
 	modules.emplace_back(filesystem = new ModuleFileSystem());
 	modules.emplace_back(editor = new ModuleEditor());
 	modules.emplace_back(time = new ModuleTime());
+	modules.emplace_back(texture = new ModuleTexture());
 	modules.emplace_back(renderer = new ModuleRender());
 	modules.emplace_back(scene = new ModuleScene());
 	modules.emplace_back(input = new ModuleInput());
 	modules.emplace_back(program = new ModuleProgram());
-	modules.emplace_back(texture = new ModuleTexture());
 	modules.emplace_back(cameras = new ModuleCamera());
 	modules.emplace_back(model_loader = new ModuleModelLoader());
 		
@@ -61,6 +62,7 @@ bool Application::Init()
 
 update_status Application::Update()
 {
+	BROFILER_FRAME("MainLoop");
 	update_status ret = update_status::UPDATE_CONTINUE;
 
 	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)

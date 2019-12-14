@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "GeometryRenderer.h"
+#include "GridRenderer.h"
 
 #include <GL/glew.h>
 
@@ -28,9 +29,9 @@ public:
 	void Render() const;
 	void RenderFrame(const ComponentCamera &camera);
 	void RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const;
-	void RenderGrid(const ComponentCamera &camera) const;
 
 	ComponentMesh* CreateComponentMesh();
+	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
 
 	void ShowRenderOptions();
 
@@ -69,6 +70,8 @@ private:
 	bool gl_wireframe = false;
 
 	std::vector<ComponentMesh*> meshes;
+
+	GridRenderer *grid_renderer = nullptr;
 };
 
 #endif //_MODULERENDER_H_

@@ -11,16 +11,28 @@ class ComponentTransform : public Component
 {
 public:
 	ComponentTransform(GameObject * owner);
-	ComponentTransform(GameObject * owner,const float3 translation, const float3 rotation, const float3 scale);
+	ComponentTransform(GameObject * owner,const float3 translation, const Quat rotation, const float3 scale);
 
 	~ComponentTransform() = default;
 
 	void Enable() override;
 	void Disable() override;
 	void Update() override;
+	void Delete() override {};
 	
 	float3 GetTranslation() const;
 	void SetTranslation(const float3 translation);
+	void Translate(const float3 &translation);
+
+	Quat GetRotation() const;
+	void SetRotation(const Quat &rotation);
+	void SetRotation(const float3x3 &rotation);
+	void Rotate(const Quat &rotation);
+	void Rotate(const float3x3 &rotation);
+
+	float3 GetUpVector() const;
+	float3 GetFrontVector() const;
+	float3 GetRightVector() const;
 
 	void GenerateGlobalModelMatrix();
 	void ChangeLocalSpace(const float4x4 new_local_space);
@@ -34,7 +46,7 @@ private:
 
 private:
 	float3 translation = float3::zero;
-	float3 rotation = float3::zero;
+	Quat rotation = Quat::identity;
 	float3 scale = float3::one;
 
 	float4x4 model_matrix = float4x4::identity;
