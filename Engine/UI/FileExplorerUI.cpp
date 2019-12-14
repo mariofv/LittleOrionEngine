@@ -32,31 +32,29 @@ void FileExplorerUI::WindowShowFilesInFolder(const char * path) {
 
 	std::vector<std::shared_ptr<ModuleFileSystem::File>> files;
 	std::string string_path(path);
-	App->filesystem->GetAllFilesInPath(string_path, files);
+	App->filesystem->GetAllFilesInPath(string_path, files, true);
 	for (auto & file : files )
 	{
-		if (file->file_type == ModuleFileSystem::FileType::DIRECTORY) {
-			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
+		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
-			size_t subfolders = App->filesystem->GetNumberOfSubFolders(file->file_path);
-			std::string filename = ICON_FA_FOLDER " " + file->filename;
-			if (subfolders == 0)
-			{
-				flags |= ImGuiTreeNodeFlags_Leaf;
-			}
-			if (selected_file == *file)
-			{
-				flags |= ImGuiTreeNodeFlags_Selected;
-				filename = ICON_FA_FOLDER_OPEN " " + file->filename;
-			}
-			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
-			if (expanded) {
-				ImGui::PushID(filename.c_str());
-				ProcessMouseInput(*file);
-				WindowShowFilesInFolder(file->file_path.c_str());
-				ImGui::PopID();
-				ImGui::TreePop();
-			}
+		size_t subfolders = App->filesystem->GetNumberOfSubFolders(file->file_path);
+		std::string filename = ICON_FA_FOLDER " " + file->filename;
+		if (subfolders == 0)
+		{
+			flags |= ImGuiTreeNodeFlags_Leaf;
+		}
+		if (selected_file == *file)
+		{
+			flags |= ImGuiTreeNodeFlags_Selected;
+			filename = ICON_FA_FOLDER_OPEN " " + file->filename;
+		}
+		bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
+		if (expanded) {
+			ImGui::PushID(filename.c_str());
+			ProcessMouseInput(*file);
+			WindowShowFilesInFolder(file->file_path.c_str());
+			ImGui::PopID();
+			ImGui::TreePop();
 		}
 	}
 }

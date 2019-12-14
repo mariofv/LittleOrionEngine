@@ -83,8 +83,6 @@ ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, 
 	{
 		return ModuleFileSystem::FileType::ARCHIVE;
 	}
-
-
 	return ModuleFileSystem::FileType::UNKNOWN;
 }
 
@@ -101,7 +99,7 @@ std::string ModuleFileSystem::GetFileExtension(const char *file_path) const
 	return file_extension;
 }
 
-void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files) const
+void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only) const
 {
 	std::string path_all = path + "//*";
 
@@ -111,26 +109,25 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 		return;
 	}
 	do {
-		if ( std::strcmp(find_file_data.cFileName, ".") && std::strcmp(find_file_data.cFileName, ".."))
+		bool is_directory = find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
+		if (IsValidFileName(find_file_data.cFileName) && ((directories_only && is_directory) || !directories_only))
 		{
 			std::shared_ptr<File> new_file = std::make_shared<File>();
+
 			new_file->filename = find_file_data.cFileName;
-
-
-			/*size_t last_slash_position = path.find_last_of("//");
-			std::string new_path = path.substr(0, last_slash_position-1);*/
-
-			new_file->file_path = path + "//"+ find_file_data.cFileName;
+			new_file->file_path = path + "//" + find_file_data.cFileName;
 			new_file->file_type = GetFileType(new_file->filename.c_str(), find_file_data.dwFileAttributes);
+
 			files.push_back(new_file);
 		}
 	} while (FindNextFile(handle_find, &find_file_data) != 0);
 
 	FindClose(handle_find);
 }
-void ModuleFileSystem::GetAllFilesInPathRecursive(const std::string & path, std::vector<std::shared_ptr<File>> & files) const
+void ModuleFileSystem::GetAllFilesRecursive(File & root) const
 {
-	//GetAllFilesInPath(path, files);
+
+	//GetAllFilesInPath(root.file_path, files);
 }
 
 size_t ModuleFileSystem::GetNumberOfSubFolders(const std::string & path) const
@@ -144,7 +141,7 @@ size_t ModuleFileSystem::GetNumberOfSubFolders(const std::string & path) const
 	}
 	size_t subFiles = 0;
 	do {
-		if (find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY && std::strcmp(find_file_data.cFileName, ".") && std::strcmp(find_file_data.cFileName, ".."))
+		if (find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY && IsValidFileName(find_file_data.cFileName))
 		{
 			++subFiles;
 		}
@@ -155,6 +152,10 @@ size_t ModuleFileSystem::GetNumberOfSubFolders(const std::string & path) const
 	return subFiles;
 }
 
+bool ModuleFileSystem::IsValidFileName(const char * file_name) const
+{
+	return std::strcmp(file_name, ".") && std::strcmp(file_name, "..");
+}
 bool ModuleFileSystem::File::operator==(const ModuleFileSystem::File& compare)
 {
 	return this->filename == compare.filename && this->file_path == compare.file_path && this->file_type == compare.file_type;

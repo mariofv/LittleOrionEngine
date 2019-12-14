@@ -38,12 +38,13 @@ public:
 	bool IsDirectory(const char* file) const;
 	bool Copy(const char* source, const char* destination);
 
-
+	
 	FileType GetFileType(const char *file_path, const DWORD & file_attributes = FILE_ATTRIBUTE_ARCHIVE) const;
-	void GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files) const;
-	void GetAllFilesInPathRecursive(const std::string & path, std::vector<std::shared_ptr<File>> & files) const;
+	void GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only = false) const;
 	size_t GetNumberOfSubFolders(const std::string & path) const;
 private:
+	void GetAllFilesRecursive(File & root) const;
+	bool IsValidFileName(const char * file_name) const;
 	std::string GetFileExtension(const char *file_path) const;
 
 };
