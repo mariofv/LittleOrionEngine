@@ -31,8 +31,8 @@ public:
 	ModuleFileSystem() = default;
 	~ModuleFileSystem() = default;
 
-	unsigned int Load(const char* path, const char* file, char** buffer) const;
-	unsigned int Save(const char* file, const void* buffer, unsigned int size, bool append = false) const;
+	unsigned int Load(const char* path, const char* file_name, char** buffer) const;
+	unsigned int Save(const char* file_name, const void* buffer, unsigned int size, bool append = false) const;
 
 	bool Remove(const File & file) const;
 	bool Exists(const char* file) const;

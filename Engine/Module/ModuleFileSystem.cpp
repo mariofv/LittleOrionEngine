@@ -1,13 +1,36 @@
 #include "ModuleFileSystem.h"
 #include "Application.h"
 #include <algorithm>
+#include <SDL/SDL.h>
 
-unsigned int ModuleFileSystem::Load(const char* path, const char* file, char** buffer) const
+unsigned int ModuleFileSystem::Load(const char* path, const char* file_name, char** buffer) const
 {
 	return 0;
 }
-unsigned int ModuleFileSystem::Save(const char* file, const void* buffer, unsigned int size, bool append) const
+unsigned int ModuleFileSystem::Save(const char* file_name, const void* buffer, unsigned int size, bool append) const
 {
+	SDL_RWops* file;
+	if (append) 
+	{
+		file = SDL_RWFromFile(file_name, "a+b");
+	}
+	else 
+	{
+		file = SDL_RWFromFile(file_name, "w+b");
+	}
+
+	if (file != NULL)
+	{
+		APP_LOG_INFO("File opened!\n");
+
+	SDL_RWwrite(file, &buffer, sizeof(buffer), 1);
+
+	}
+	else
+	{
+		APP_LOG_ERROR("Warning: Unable to open file! SDL Error: %s\n", SDL_GetError());
+	}
+	SDL_RWclose(file);
 	return 0;
 }
 bool ModuleFileSystem::Remove(const File & file) const

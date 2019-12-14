@@ -131,6 +131,9 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & fi
 			}
 			if (ImGui::Selectable("Empty File"))
 			{
+				char * test = "This is a test text";
+				std::string new_empty_file = file.file_path + "//example.txt";
+				App->filesystem->Save(new_empty_file.c_str(), test, sizeof(test),false);
 			}
 			ImGui::EndMenu();
 		}
@@ -139,6 +142,9 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & fi
 			bool removed = App->filesystem->Remove(file);
 		}
 		if (ImGui::Selectable("Rename"))
+		{
+		}
+		if (ImGui::Selectable("Copy"))
 		{
 		}
 
