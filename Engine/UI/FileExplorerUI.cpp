@@ -105,6 +105,7 @@ void FileExplorerUI::ProcessMouseInput(ModuleFileSystem::File file)
 		if (ImGui::IsMouseClicked(0) && file.file_type == ModuleFileSystem::FileType::DIRECTORY)
 		{
 			selected_folder = file;
+			selected_file = ModuleFileSystem::File();
 			files_in_selected_folder.clear();
 			App->filesystem->GetAllFilesInPath(selected_folder.file_path, files_in_selected_folder);
 		}
@@ -126,7 +127,7 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & fi
 		{
 			if (ImGui::Selectable("Folder"))
 			{
-				App->filesystem->MakeDirectory(file.file_path, "new Folder");
+				MakeDirectoryFromFile(file);
 			}
 			if (ImGui::Selectable("Empty File"))
 			{
@@ -154,5 +155,21 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & fi
 		App->filesystem->GetAllFilesInPath(selected_folder.file_path, files_in_selected_folder);
 		App->filesystem->RefreshFilesHierarchy();
 		ImGui::EndPopup();
+	}
+}
+
+void FileExplorerUI::MakeDirectoryFromFile(const ModuleFileSystem::File & file) const
+{
+	if (!file.file_path.empty() && file.file_type != ModuleFileSystem::FileType::DIRECTORY)
+	{
+		size_t last_slash = file.file_path.find_last_of("//");
+		App->filesystem->MakeDirectory(file.file_path.substr(0, last_slash - 1), "new Folder");
+	}
+	else if(!file.file_path.empty())
+	{
+		App->filesystem->MakeDirectory(file.file_path, "new Folder");
+	}
+	else if(!selected_folder.file_path.empty()){
+		App->filesystem->MakeDirectory(selected_folder.file_path, "new Folder");
 	}
 }

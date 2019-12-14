@@ -68,7 +68,7 @@ bool ModuleFileSystem::Exists(const char* file_path) const
 bool ModuleFileSystem::MakeDirectory(const std::string & path, const std::string & directory_name)
 {
 	std::vector<std::shared_ptr<File>> files;
-	GetAllFilesInPath(path + "//*", files);
+	GetAllFilesInPath(path, files);
 
 	std::vector<std::shared_ptr<File>> same_name_folders;
 	same_name_folders.reserve(files.size());

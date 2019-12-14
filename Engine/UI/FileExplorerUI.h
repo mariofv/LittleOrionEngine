@@ -15,6 +15,7 @@ public:
 	void ShowFilesInExplorer(std::string & folder_path);
 
 	void ShowFileSystemActionsMenu(const ModuleFileSystem::File & file);
+	void MakeDirectoryFromFile(const ModuleFileSystem::File & file) const;
 
 private:
 	ModuleFileSystem::File selected_folder;
