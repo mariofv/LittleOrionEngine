@@ -29,6 +29,7 @@ private:
 	OLQuadTreeNode *root = nullptr;
 	int bucket_size = 3;
 	int max_depth = 3;
+	friend class ModuleDebug;
 };
 
 #endif //_OLQUADTREE_H_

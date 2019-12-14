@@ -78,6 +78,7 @@ private:
 	std::vector<ComponentMesh*> meshes_to_render;
 	OLQuadTree ol_quadtree;
 	Timer * rendering_measure_timer = new Timer();
+	friend class ModuleDebug;
 };
 
 #endif //_MODULERENDER_H_

@@ -2,6 +2,8 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "Module/ModuleModelLoader.h"
+#include "Module/ModuleRender.h"
+#include <OLQuadTree.h>
 
 #include <random>
 #include <ctime>
@@ -66,6 +68,13 @@ void ModuleDebug::ShowDebugWindow()
 		ImGui::Checkbox("Frustum Culling", &frustum_culling);
 		ImGui::Checkbox("QuadTree Culling", &quadtree_culling);
 		ImGui::DragFloat("Rendering time ",&rendering_time,NULL,NULL);
+
+		if (ImGui::SliderInt("Quadtree Depth ", &App->renderer->ol_quadtree.max_depth, 1, 10)) {
+			App->renderer->GenerateQuadTree();
+		}
+		if (ImGui::SliderInt("Quadtree bucket size ", &App->renderer->ol_quadtree.bucket_size, 1, 10)) {
+			App->renderer->GenerateQuadTree();
+		}
 
 		ImGui::Spacing();
 		ImGui::Separator();
