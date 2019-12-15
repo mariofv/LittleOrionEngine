@@ -32,7 +32,7 @@ bool MaterialImporter::Import(const char* texture_path, std::string& output_file
 	//Get new Name
 
 	std::string texture_name_no_extension = file.filename.substr(0, file.filename.find_last_of("."));
-	output_file = LIBRARY_TEXTURES_FOLDER + "//" + texture_name_no_extension + ".png";
+	output_file = LIBRARY_TEXTURES_FOLDER + "//" + texture_name_no_extension + ".dds";
 
 	//Save data
 	ILuint size;

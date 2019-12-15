@@ -40,7 +40,7 @@ unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, u
 	{
 		APP_LOG_INFO("File %s opened!\n", file_path);
 
-	SDL_RWwrite(file, &buffer, sizeof(buffer), 1);
+	SDL_RWwrite(file, &buffer, size, 1);
 
 	}
 	else
