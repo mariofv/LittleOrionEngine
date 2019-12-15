@@ -79,6 +79,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\Importer\Importer.h" />
     <ClInclude Include="Engine\Importer\MaterialImporter.h" />
+    <ClInclude Include="Engine\Importer\MeshImporter.h" />
     <ClInclude Include="Engine\Module\ModuleFileSystem.h" />
     <ClInclude Include="Engine\GridRenderer.h" />
     <ClInclude Include="Engine\Skybox.h" />
@@ -186,6 +187,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Importer\MaterialImporter.cpp" />
+    <ClCompile Include="Engine\Importer\MeshImporter.cpp" />
     <ClCompile Include="Engine\Module\ModuleFileSystem.cpp" />
     <ClCompile Include="Engine\GridRenderer.cpp" />
     <ClCompile Include="Engine\Skybox.cpp" />

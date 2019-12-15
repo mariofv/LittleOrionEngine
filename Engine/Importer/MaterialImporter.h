@@ -13,12 +13,12 @@ class MaterialImporter : Importer
 {
 public:
 	MaterialImporter();
-	bool Import(const char* file, std::string& output_file) const override;
-	Texture* Load(const char* file)  const;
+	bool Import(const char* file_path, std::string& output_file) const override;
+	Texture* Load(const char* file_path)  const;
 	unsigned int LoadCubemap(std::vector<std::string> faces_paths) const;
 
 private:
-	ILubyte* LoadImageData(const char* texture_path, int & width, int & height, int image_type) const;
+	ILubyte* LoadImageData(const char* file_path, int & width, int & height, int image_type) const;
 private:
 	const std::string LIBRARY_TEXTURES_FOLDER = ".//Library//Materials";
 };

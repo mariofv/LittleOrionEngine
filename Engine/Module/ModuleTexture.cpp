@@ -49,7 +49,6 @@ void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remov
 
 Texture* ModuleTexture::LoadTexture(const char* texture_path) const
 {
-
 	std::string ol_texture;
 	bool imported = importer.Import(texture_path, ol_texture);
 	if (!imported)

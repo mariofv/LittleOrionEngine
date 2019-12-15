@@ -13,7 +13,7 @@ MaterialImporter::MaterialImporter()
 	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 }
-bool MaterialImporter::Import(const char* texture_path, std::string& output_file) const
+bool MaterialImporter::Import(const char* file_path, std::string& output_file) const
 {
 	ModuleFileSystem::File file = ModuleFileSystem::File(texture_path);
 	if (file.filename.empty())
@@ -27,7 +27,7 @@ bool MaterialImporter::Import(const char* texture_path, std::string& output_file
 	ilGenImages(1, &image);
 	ilBindImage(image);
 	int width, height;
-	ILubyte * save_data = LoadImageData(texture_path, width, height, IL_RGBA);
+	ILubyte * save_data = LoadImageData(file_path, width, height, IL_RGBA);
 	//Get new Name
 
 	std::string texture_name_no_extension = file.filename.substr(0, file.filename.find_last_of("."));
@@ -49,34 +49,34 @@ bool MaterialImporter::Import(const char* texture_path, std::string& output_file
 	return true;
 }
 
-Texture * MaterialImporter::Load(const char* file)  const {
+Texture * MaterialImporter::Load(const char* file_path)  const {
 	ILuint image;
 	ilGenImages(1, &image);
 	ilBindImage(image);
 
 	int width, height;
-	ILubyte * data = LoadImageData(file, width, height, IL_DDS);
+	ILubyte * data = LoadImageData(file_path, width, height, IL_DDS);
 
 	if (data == NULL)
 	{
 		ilDeleteImages(1, &image);
 		return nullptr;
 	}
-	Texture *loaded_texture = new Texture(data, width, height, file);
+	Texture *loaded_texture = new Texture(data, width, height, file_path);
 	loaded_texture->GenerateMipMap();
 	ilDeleteImages(1, &image);
 	return loaded_texture;
 }
 
-ILubyte * MaterialImporter::LoadImageData(const char* texture_path, int & width, int & height, int image_type ) const
+ILubyte * MaterialImporter::LoadImageData(const char* file_path, int & width, int & height, int image_type ) const
 {
-	ilLoadImage(texture_path);
+	ilLoadImage(file_path);
 
 	ILenum error;
 	error = ilGetError();
 	if (error == IL_COULD_NOT_OPEN_FILE)
 	{
-		APP_LOG_ERROR("Error loading texture %s. File not found", texture_path);
+		APP_LOG_ERROR("Error loading texture %s. File not found", file_path);
 		return nullptr;
 	}
 
