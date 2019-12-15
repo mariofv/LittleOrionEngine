@@ -26,7 +26,7 @@ bool ModuleModelLoader::Init()
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Info), Assimp::Logger::Info);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Err), Assimp::Logger::Err);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Warn), Assimp::Logger::Warn);
-	//LoadModel(HOUSE_MODEL_PATH);
+	LoadModel(HOUSE_MODEL_PATH);
 	return true;
 }
 

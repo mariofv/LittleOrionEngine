@@ -1,7 +1,8 @@
 #include "MaterialImporter.h"
 #include "Module/ModuleFileSystem.h"
 #include <Application.h>
-
+#include <fstream> 
+#include <SDL/SDL.h>
 MaterialImporter::MaterialImporter()
 {
 

@@ -49,7 +49,11 @@ Texture* ModuleTexture::LoadTexture(const char* texture_path) const
 {
 
 	std::string ol_texture;
-	importer.Import(texture_path, ol_texture);
+	bool imported = importer.Import(texture_path, ol_texture);
+	if (!imported)
+	{
+		return nullptr;
+	}
 	ILuint image;
 	ilGenImages(1, &image);
 	ilBindImage(image);
