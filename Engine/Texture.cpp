@@ -4,6 +4,7 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
+
 Texture::Texture(unsigned char * data, int width, int height, const char* path) : data(data), width(width), height(height), texture_path(path)
 {
 	InitTexture();

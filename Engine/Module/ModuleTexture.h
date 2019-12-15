@@ -13,6 +13,7 @@ struct SDL_Rect;
 
 class ComponentMaterial;
 class Texture;
+class MaterialImporter;
 
 class ModuleTexture : public Module
 {
@@ -28,8 +29,6 @@ public:
 	
 	Texture* LoadTexture(const char* texture_path) const;
 	GLuint  LoadCubemap(std::vector<std::string> faces) const;
-	unsigned char* LoadImageData(const char* texture_path, int& width, int& height) const;
-
 	void GenerateCheckerboardTexture();
 
 public:

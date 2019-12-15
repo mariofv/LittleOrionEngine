@@ -2,10 +2,7 @@
 #define _TEXTURE_H_
 
 #include "Globals.h"
-
-#include <IL/il.h>
 #include <GL/glew.h>
-
 #include <string>
 
 class Texture

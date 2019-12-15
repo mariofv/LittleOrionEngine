@@ -4,6 +4,8 @@
 #include "Texture.h"
 #include "Component/ComponentMaterial.h"
 
+#include "Importer/MaterialImporter.h"
+
 #include <SDL/SDL.h>
 #include <algorithm>
 
@@ -54,22 +56,8 @@ Texture* ModuleTexture::LoadTexture(const char* texture_path) const
 	{
 		return nullptr;
 	}
-	ILuint image;
-	ilGenImages(1, &image);
-	ilBindImage(image);
 
-	int width, height;
-	unsigned char * data = LoadImageData(ol_texture.c_str(), width, height);
-	if (data == NULL)
-	{
-		return nullptr;
-	}
-	Texture *loaded_texture = new Texture(data, width, height, ol_texture.c_str());
-	ilDeleteImages(1, &image);
-
-	loaded_texture->GenerateMipMap();
-
-	return loaded_texture;
+	return importer.Load(ol_texture.c_str());
 }
 
 GLuint ModuleTexture::LoadCubemap(std::vector<std::string> faces_paths) const
@@ -83,9 +71,11 @@ GLuint ModuleTexture::LoadCubemap(std::vector<std::string> faces_paths) const
 	int width, height;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
+		std::string ol_texture;
+		bool imported = importer.Import(faces_paths[i].c_str(), ol_texture);
 		ilGenImages(1, &image);
 		ilBindImage(image);
-		unsigned char * data = LoadImageData(faces_paths[i].c_str(), width, height);
+		unsigned char * data = importer.LoadImageData(ol_texture.c_str(), width, height, IL_RGBA);
 
 		if (data)
 		{
@@ -104,29 +94,6 @@ GLuint ModuleTexture::LoadCubemap(std::vector<std::string> faces_paths) const
 	return texture_id;
 }
 
-unsigned char* ModuleTexture::LoadImageData(const char* texture_path, int& width, int& height) const
-{
-	ilLoadImage(texture_path);
-
-	ILenum error;
-	error = ilGetError();
-	if (error == IL_COULD_NOT_OPEN_FILE)
-	{
-		APP_LOG_ERROR("Error loading texture %s. File not found", texture_path);
-		return nullptr;
-	}
-
-	ilConvertImage(IL_DDS, IL_UNSIGNED_BYTE);
-
-	ILinfo ImageInfo;
-	iluGetImageInfo(&ImageInfo);
-
-	unsigned char *data = (unsigned char*)ilGetData();
-	width = ilGetInteger(IL_IMAGE_WIDTH);
-	height = ilGetInteger(IL_IMAGE_HEIGHT);
-
-	return data;
-}
 
 void ModuleTexture::GenerateCheckerboardTexture() {
 	const static int checkerHeight = 64;
