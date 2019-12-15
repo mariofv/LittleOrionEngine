@@ -49,7 +49,6 @@ bool MaterialImporter::Import(const char* texture_path, std::string& output_file
 	return true;
 }
 
-
 Texture * MaterialImporter::Load(const char* file)  const {
 	ILuint image;
 	ilGenImages(1, &image);
@@ -68,6 +67,7 @@ Texture * MaterialImporter::Load(const char* file)  const {
 	ilDeleteImages(1, &image);
 	return loaded_texture;
 }
+
 ILubyte * MaterialImporter::LoadImageData(const char* texture_path, int & width, int & height, int image_type ) const
 {
 	ilLoadImage(texture_path);
@@ -93,4 +93,36 @@ ILubyte * MaterialImporter::LoadImageData(const char* texture_path, int & width,
 	width = ilGetInteger(IL_IMAGE_WIDTH);
 	height = ilGetInteger(IL_IMAGE_HEIGHT);
 	return data;
+}
+
+unsigned int MaterialImporter::LoadCubemap(std::vector<std::string> faces_paths) const
+{
+	unsigned int texture_id;
+
+	glGenTextures(1, &texture_id);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+	ILuint image;
+
+	int width, height;
+	for (unsigned int i = 0; i < faces_paths.size(); i++)
+	{
+		ilGenImages(1, &image);
+		ilBindImage(image);
+		unsigned char * data = LoadImageData(faces_paths[i].c_str(), width, height, IL_DDS);
+
+		if (data)
+		{
+			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
+				0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
+			);
+			ilDeleteImages(1, &image);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	return texture_id;
 }

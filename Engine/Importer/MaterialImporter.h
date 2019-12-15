@@ -15,8 +15,10 @@ public:
 	MaterialImporter();
 	bool Import(const char* file, std::string& output_file) const override;
 	Texture* Load(const char* file)  const;
-	ILubyte * LoadImageData(const char* texture_path, int & width, int & height, int image_type) const;
+	unsigned int LoadCubemap(std::vector<std::string> faces_paths) const;
+
 private:
+	ILubyte* LoadImageData(const char* texture_path, int & width, int & height, int image_type) const;
 private:
 	const std::string LIBRARY_TEXTURES_FOLDER = ".//Library//Materials";
 };

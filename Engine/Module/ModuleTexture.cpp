@@ -62,36 +62,14 @@ Texture* ModuleTexture::LoadTexture(const char* texture_path) const
 
 GLuint ModuleTexture::LoadCubemap(std::vector<std::string> faces_paths) const
 {
-	GLuint texture_id;
-
-	glGenTextures(1, &texture_id);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-	ILuint image;
-	
-	int width, height;
+	std::vector<std::string> faces_paths_dds;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
 		std::string ol_texture;
 		bool imported = importer.Import(faces_paths[i].c_str(), ol_texture);
-		ilGenImages(1, &image);
-		ilBindImage(image);
-		unsigned char * data = importer.LoadImageData(ol_texture.c_str(), width, height, IL_RGBA);
-
-		if (data)
-		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-				0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
-			);
-			ilDeleteImages(1, &image);
-		}
+		faces_paths_dds.push_back(ol_texture);
 	}
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-	return texture_id;
+	return static_cast<GLuint>(importer.LoadCubemap(faces_paths_dds));
 }
 
 
