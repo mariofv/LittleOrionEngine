@@ -14,13 +14,7 @@
 bool ModuleTexture::Init()
 {
 	APP_LOG_SECTION("************ Module Texture Init ************");
-
-	APP_LOG_INIT("Initializing DevIL image loader.")
-	ilInit();
-	iluInit();
-	ilutInit();
 	GenerateCheckerboardTexture();
-	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 	return true;
 }
@@ -56,17 +50,20 @@ void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remov
 
 Texture* ModuleTexture::LoadTexture(const char* texture_path) const
 {
+
+	std::string ol_texture;
+	importer.Import(texture_path, ol_texture);
 	ILuint image;
 	ilGenImages(1, &image);
 	ilBindImage(image);
 
 	int width, height;
-	unsigned char * data = LoadImageData(texture_path, width, height);
+	unsigned char * data = LoadImageData(ol_texture.c_str(), width, height);
 	if (data == NULL)
 	{
 		return nullptr;
 	}
-	Texture *loaded_texture = new Texture(data, width, height, texture_path);
+	Texture *loaded_texture = new Texture(data, width, height, ol_texture.c_str());
 	ilDeleteImages(1, &image);
 
 	loaded_texture->GenerateMipMap();

@@ -20,6 +20,7 @@ public:
 	struct File {
 		File() = default;
 		File(const WIN32_FIND_DATA & windows_file_data, const std::string & path);
+		File(const std::string & path);
 		std::string filename;
 		std::string file_path;
 		ModuleFileSystem::FileType file_type;

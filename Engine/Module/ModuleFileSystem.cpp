@@ -149,6 +149,7 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	WIN32_FIND_DATA find_file_data;
 	HANDLE handle_find = FindFirstFile(path_all.c_str(), &find_file_data);
 	if (handle_find == INVALID_HANDLE_VALUE) {
+		FindClose(handle_find);
 		return;
 	}
 	do {
@@ -190,6 +191,7 @@ size_t ModuleFileSystem::GetNumberOfSubFolders(const std::string & path) const
 	HANDLE handle_find = FindFirstFile(path_all.c_str(), &find_file_data);
 
 	if (handle_find == INVALID_HANDLE_VALUE) {
+		FindClose(handle_find);
 		return 0;
 	}
 	size_t subFiles = 0;
@@ -209,6 +211,12 @@ bool ModuleFileSystem::IsValidFileName(const char * file_name) const
 {
 	return std::strcmp(file_name, ".") && std::strcmp(file_name, "..");
 }
+
+void ModuleFileSystem::RefreshFilesHierarchy()
+{
+	root_file = GetFileHierarchyFromPath(".//Assets");
+}
+
 bool ModuleFileSystem::File::operator==(const ModuleFileSystem::File& compare)
 {
 	return this->filename == compare.filename && this->file_path == compare.file_path && this->file_type == compare.file_type;
@@ -219,7 +227,18 @@ ModuleFileSystem::File::File(const WIN32_FIND_DATA & windows_file_data, const st
 	this->file_type = App->filesystem->GetFileType(filename.c_str(), windows_file_data.dwFileAttributes);
 }
 
-void ModuleFileSystem::RefreshFilesHierarchy()
-{
-	root_file = GetFileHierarchyFromPath(".//Assets");
+ModuleFileSystem::File::File(const std::string & path) {
+
+	WIN32_FIND_DATA find_file_data;
+	HANDLE handle_find = FindFirstFile(path.c_str(), &find_file_data);
+	if (handle_find == INVALID_HANDLE_VALUE) {
+		FindClose(handle_find);
+		return;
+	}
+	this->filename = find_file_data.cFileName;
+	this->file_path = path + "//" + find_file_data.cFileName;
+	this->file_type = App->filesystem->GetFileType(filename.c_str(), find_file_data.dwFileAttributes);
+
 }
+
+
