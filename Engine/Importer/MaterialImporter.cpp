@@ -15,7 +15,7 @@ MaterialImporter::MaterialImporter()
 }
 bool MaterialImporter::Import(const char* file_path, std::string& output_file) const
 {
-	ModuleFileSystem::File file = ModuleFileSystem::File(texture_path);
+	ModuleFileSystem::File file = ModuleFileSystem::File(file_path);
 	if (file.filename.empty())
 	{
 		APP_LOG_SUCCESS("Importing material error: Couldn't find the file to import.")
