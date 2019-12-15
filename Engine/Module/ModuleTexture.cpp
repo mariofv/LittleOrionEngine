@@ -116,14 +116,10 @@ unsigned char* ModuleTexture::LoadImageData(const char* texture_path, int& width
 		return nullptr;
 	}
 
-	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
+	ilConvertImage(IL_DDS, IL_UNSIGNED_BYTE);
 
 	ILinfo ImageInfo;
 	iluGetImageInfo(&ImageInfo);
-	if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
-	{
-		iluFlipImage();
-	}
 
 	unsigned char *data = (unsigned char*)ilGetData();
 	width = ilGetInteger(IL_IMAGE_WIDTH);
