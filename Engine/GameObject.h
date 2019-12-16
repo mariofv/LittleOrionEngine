@@ -59,6 +59,8 @@ public:
 	std::vector<Component*> components;
 
 private:
+	unsigned int UUID = -1;
+
 	bool active = true;
 	bool is_static = false;
 	int hierarchy_depth = 0;

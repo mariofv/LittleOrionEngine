@@ -3,9 +3,11 @@
 
 #include "MathGeoLib.h"
 
+
 class Utils
 {
 public:
+
 	Utils();
 	~Utils();
 

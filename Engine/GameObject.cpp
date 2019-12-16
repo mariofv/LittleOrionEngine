@@ -7,6 +7,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "Texture.h"
+#include "Utils.h"
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
@@ -27,7 +28,6 @@ GameObject::GameObject(const std::string name) :
 	transform(this),
 	aabb(this)
 {
-
 }
 
 GameObject::~GameObject()
