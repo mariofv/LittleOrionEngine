@@ -62,7 +62,7 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	bool LoadModel(const char *new_model_file_path);
+	GameObject* LoadModel(const char *new_model_file_path);
 
 private:
 	void UnloadCurrentModel();

@@ -5,6 +5,8 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleCamera.h"
 
+#include "OLQuadTree.h" //TODO: This is not needed, nly for GetVertices()
+
 ComponentCamera::ComponentCamera() : Component(nullptr, ComponentType::CAMERA)
 {
 	glGenFramebuffers(1, &fbo);
@@ -415,6 +417,11 @@ bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
 	return CheckAABBCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
 
+bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const
+{
+	return CheckAABB2DCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
+}
+
 ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const AABB& reference_AABB) const
 {
 	static const size_t number_of_corners = 8;
@@ -450,7 +457,50 @@ ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const AABB& re
 		total_reference_planes_inside += is_plane_inside;
 	}
 	// so if total_reference_planes_inside is 6, then all are inside the view
-	if (total_reference_planes_inside == 6)
+	if (total_reference_planes_inside == number_of_planes)
+	{
+		return ComponentAABB::CollisionState::INSIDE;
+	}
+	// we must be partly in then otherwise
+	return ComponentAABB::CollisionState::INTERSECT;
+}
+
+ComponentAABB::CollisionState ComponentCamera::CheckAABB2DCollision(const AABB2D& reference_AABB) const
+{
+	static const size_t number_of_corners = 4;
+	static const size_t number_of_planes = 4;
+
+	//Get own aabb planes
+	Plane own_frustum_planes[6];
+	camera_frustum.GetPlanes(own_frustum_planes);
+	
+	//Get refence corners
+	std::vector<float> reference_aabb_corners = OLQuadTree::GetVertices(reference_AABB);
+
+	//Check if Corners are inside the planes
+	int total_reference_planes_inside = 0;
+	for (int p = 0; p < number_of_planes; ++p)
+	{
+		int points_inside_count = number_of_corners;
+		int is_plane_inside = 1;
+		for (int i = 0; i < number_of_corners; ++i)
+		{
+			float3 current_corner = float3(reference_aabb_corners[3 * i], reference_aabb_corners[3 * i + 1], reference_aabb_corners[3 * i + 2]);
+			if (own_frustum_planes[p].IsOnPositiveSide(current_corner)) //If true, the point is halfway or outside
+			{
+				// Plane is not inside
+				is_plane_inside = 0;
+				--points_inside_count;
+			}
+		}
+		if (points_inside_count == 0)
+		{
+			return ComponentAABB::CollisionState::OUTSIDE;
+		}
+		total_reference_planes_inside += is_plane_inside;
+	}
+	// so if total_reference_planes_inside is 6, then all are inside the view
+	if (total_reference_planes_inside == number_of_planes)
 	{
 		return ComponentAABB::CollisionState::INSIDE;
 	}

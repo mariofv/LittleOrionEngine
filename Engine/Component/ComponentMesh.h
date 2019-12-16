@@ -39,8 +39,6 @@ public:
 	std::vector<unsigned int> indices;
 	unsigned int material_index = -1;
 
-	AABB bounding_box;
-
 private:
 	GLuint vao = 0;
 	GLuint vbo = 0;

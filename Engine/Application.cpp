@@ -1,15 +1,16 @@
 #include "Application.h"
-#include "Module/ModuleWindow.h"
-#include "Module/ModuleRender.h"
-#include "Module/ModuleInput.h"
-#include "Module/ModuleProgram.h"
-#include "Module/ModuleTexture.h"
-#include "Module/ModuleEditor.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebug.h"
+#include "Module/ModuleEditor.h"
+#include "Module/ModuleInput.h"
 #include "Module/ModuleModelLoader.h"
+#include "Module/ModuleProgram.h"
+#include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleTexture.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleWindow.h"
 #include "UI/EngineUI.h"
 #include "UI/EngineLog.h"
 #include "TimerUs.h"
@@ -32,6 +33,7 @@ Application::Application()
 	modules.emplace_back(program = new ModuleProgram());
 	modules.emplace_back(cameras = new ModuleCamera());
 	modules.emplace_back(model_loader = new ModuleModelLoader());
+	modules.emplace_back(debug = new ModuleDebug());
 		
 	engine_log = new EngineLog();
 	ui = new EngineUI();
