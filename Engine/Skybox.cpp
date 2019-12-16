@@ -13,14 +13,15 @@ Skybox::Skybox()
 
 void Skybox::LoadDefaultSkybox()
 {
-	std::string cube_face_front_path = "resources/textures/skyboxes/ame_nebula/purplenebula_ft.tga";
-	std::string cube_face_back_path = "resources/textures/skyboxes/ame_nebula/purplenebula_bk.tga";
+	std::string texture_path = std::string(TEXTURES_PATH);
+	std::string cube_face_front_path = texture_path + "/skyboxes/ame_nebula/purplenebula_ft.tga";
+	std::string cube_face_back_path = texture_path + "/skyboxes/ame_nebula/purplenebula_bk.tga";
 
-	std::string cube_face_left_path = "resources/textures/skyboxes/ame_nebula/purplenebula_rt.tga";
-	std::string cube_face_right_path = "resources/textures/skyboxes/ame_nebula/purplenebula_lf.tga";
+	std::string cube_face_left_path = texture_path + "/skyboxes/ame_nebula/purplenebula_rt.tga";
+	std::string cube_face_right_path = texture_path + "/skyboxes/ame_nebula/purplenebula_lf.tga";
 
-	std::string cube_face_up_path = "resources/textures/skyboxes/ame_nebula/purplenebula_up.tga";
-	std::string cube_face_down_path = "resources/textures/skyboxes/ame_nebula/purplenebula_dn.tga";
+	std::string cube_face_up_path = texture_path + "/skyboxes/ame_nebula/purplenebula_up.tga";
+	std::string cube_face_down_path = texture_path + "/skyboxes/ame_nebula/purplenebula_dn.tga";
 
 	std::vector<std::string> faces{
 		cube_face_right_path,

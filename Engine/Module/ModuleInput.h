@@ -20,17 +20,6 @@ public:
 	void ShowInputOptions();
 
 private:
-	enum class FileType
-	{
-		MODEL,
-		TEXTURE,
-		UNKNOWN
-	};
-	
-	FileType GetFileType(const char *file_path) const;
-	std::string GetFileExtension(const char *file_path) const;
-
-private:
 	const Uint8 *keyboard = nullptr;
 };
 

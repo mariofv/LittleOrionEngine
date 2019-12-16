@@ -3,6 +3,7 @@
 
 #include "Application.h"
 #include "Globals.h"
+#include "FileExplorerUI.h"
 
 class EngineUI
 {
@@ -35,7 +36,7 @@ private:
 	void ShowConfigurationWindow();
 	void ShowHardware() const;
 
-	void ShowConsoleWindow();
+	void ShowFileAndConsoleWindows();
 
 	void ShowAboutWindow();
 
@@ -57,12 +58,15 @@ public:
 	#define CONSOLE_HEIGHT_PROP 0.3
 
 private:
+	FileExplorerUI file_explorer_ui;
+
 	bool show_scene_tab = true;
 	bool show_game_tab = true;
 	bool show_hierarchy_window = true;
 	bool show_model_inspector_window = true;
 	bool show_configuration_window = false;
 	bool show_console_window = true;
+	bool show_file_explorer_window = true;
 	bool show_debug_window = false;
 	bool show_about_window = false;
 };
