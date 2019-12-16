@@ -8,6 +8,7 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 #include <SDL/SDL.h>
+#include <algorithm>
 
 // Called before render is available
 bool ModuleTexture::Init()
@@ -28,14 +29,30 @@ bool ModuleTexture::Init()
 bool ModuleTexture::CleanUp()
 {
 	glDeleteTextures(1, &checkerboard_texture_id);
+	for (auto& material : materials) 
+	{
+		delete material;
+	}
+	materials.clear();
 	return true;
 }
 
-ComponentMaterial* ModuleTexture::CreateComponentMaterial() const
+ComponentMaterial* ModuleTexture::CreateComponentMaterial()
 {
-	return new ComponentMaterial();
+	ComponentMaterial * new_material = new ComponentMaterial();
+	materials.push_back(new_material);
+	return new_material;
 }
 
+void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remove)
+{
+	auto it = std::find(materials.begin(), materials.end(), material_to_remove);
+	if (it != materials.end())
+	{
+		delete *it;
+		materials.erase(it);
+	}
+}
 
 Texture* ModuleTexture::LoadTexture(const char* texture_path) const
 {
@@ -101,7 +118,7 @@ unsigned char* ModuleTexture::LoadImageData(const char* texture_path, int& width
 		return nullptr;
 	}
 
-	ilConvertImage(IL_RGB, IL_UNSIGNED_BYTE);
+	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
 
 	ILinfo ImageInfo;
 	iluGetImageInfo(&ImageInfo);

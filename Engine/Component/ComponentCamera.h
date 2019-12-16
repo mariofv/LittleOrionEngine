@@ -25,6 +25,7 @@ public:
 	void Enable() override;
 	void Disable() override;
 	void Update() override;
+	void Delete() override;
 
 	void RecordFrame(const float width, const float height);
 	GLuint GetLastRecordedFrame() const;
@@ -47,12 +48,14 @@ public:
 	void MoveLeft();
 	void MoveRight();
 
-	void OrbitX(const float angle);
-	void OrbitY(const float angle);
-
 	void Center(const AABB &bounding_box);
 	void Focus(const AABB &bounding_box);
 
+	void OrbitCameraWithMouseMotion(const float2 &motion);
+	void OrbitX(const float angle);
+	void OrbitY(const float angle);
+
+	void RotateCameraWithMouseMotion(const float2 &motion);
 	void RotatePitch(const float angle);
 	void RotateYaw(const float angle);
 

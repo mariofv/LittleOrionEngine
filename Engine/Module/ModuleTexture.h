@@ -22,7 +22,8 @@ public:
 	bool Init();
 	bool CleanUp();
 
-	ComponentMaterial* CreateComponentMaterial() const;
+	ComponentMaterial* CreateComponentMaterial();
+	void RemoveComponentMaterial(ComponentMaterial* material_to_remove);
 	
 	Texture* LoadTexture(const char* texture_path) const;
 	GLuint  LoadCubemap(std::vector<std::string> faces) const;
@@ -32,6 +33,7 @@ public:
 
 public:
 	GLuint checkerboard_texture_id;
+	std::vector<ComponentMaterial*> materials;
 };
 
 #endif //_MODULETEXTURE_H_

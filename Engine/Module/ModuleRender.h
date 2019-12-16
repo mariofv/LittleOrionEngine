@@ -6,6 +6,7 @@
 #include "GeometryRenderer.h"
 #include "OLQuadTree.h"
 #include "Timer.h"
+#include "GridRenderer.h"
 
 #include <GL/glew.h>
 
@@ -30,11 +31,11 @@ public:
 	void Render() const;
 	void RenderFrame(const ComponentCamera &camera);
 	void RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const;
-	void RenderGrid(const ComponentCamera &camera) const;
 
 
 	ComponentMesh* CreateComponentMesh();
 	void GenerateQuadTree();
+	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
 
 	void ShowRenderOptions();
 
@@ -74,11 +75,12 @@ private:
 	bool gl_minmax = false;
 	bool gl_wireframe = false;
 
-	std::vector<ComponentMesh*> meshes;
 	std::vector<ComponentMesh*> meshes_to_render;
 	OLQuadTree ol_quadtree;
 	Timer * rendering_measure_timer = new Timer();
 	friend class ModuleDebug;
+
+	GridRenderer *grid_renderer = nullptr;
 };
 
 #endif //_MODULERENDER_H_

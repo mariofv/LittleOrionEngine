@@ -73,6 +73,7 @@ enum class Fonts
 # define SKYBOX_FRAGMENT_SHADER_PATH "./shaders/skybox.fs"
 
 # define HOUSE_MODEL_PATH "./resources/models/baker_house/BakerHouse.fbx"
+# define GRID_TEXTURE_PATH "./resources/textures/grid.png"
 
 #define FULLSCREEN false
 #define RESIZABLE true

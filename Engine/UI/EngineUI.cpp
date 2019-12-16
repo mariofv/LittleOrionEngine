@@ -170,12 +170,36 @@ void EngineUI::ShowMainViewWindow()
 
 void EngineUI::ShowSceneTab()
 {
-	App->scene->ShowFrameBufferTab(App->cameras->scene_camera, ICON_FA_TH " Scene");
+	if (App->cameras->scene_camera != nullptr)
+	{
+		App->scene->ShowFrameBufferTab(*App->cameras->scene_camera, ICON_FA_TH " Scene");
+	}
 }
-
 void EngineUI::ShowGameTab()
 {
-	App->scene->ShowFrameBufferTab(App->cameras->active_camera, ICON_FA_GHOST " Game");
+	static const char * title = ICON_FA_GHOST " Game";
+	if (App->cameras->active_camera != nullptr) 
+	{
+		App->scene->ShowFrameBufferTab(*App->cameras->active_camera, title);
+	}
+	else 
+	{
+		ShowEmptyGameTab(title);
+	}
+}
+
+void EngineUI::ShowEmptyGameTab(const char * title) const
+{
+		if (ImGui::BeginTabItem(title))
+		{
+			int window_width = ImGui::GetWindowWidth();
+			ImGui::Dummy(ImVec2(0, ImGui::GetWindowHeight()*0.40));
+			ImGui::SetCursorPosX(window_width*0.45);
+			ImGui::Text("Display 1");
+			ImGui::SetCursorPosX(window_width*0.40);
+			ImGui::Text("No Cameras Rendering");
+			ImGui::EndTabItem();
+		}
 }
 
 void EngineUI::ShowInspectorWindow()

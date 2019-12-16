@@ -30,6 +30,7 @@ public:
 	void RemoveChild(GameObject *child);
 
 	Component* CreateComponent(const Component::ComponentType type);
+	void RemoveComponent(Component * component);
 	Component* GetComponent(const Component::ComponentType type) const;
 
 	void MoveUpInHierarchy();

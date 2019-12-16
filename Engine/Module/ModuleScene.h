@@ -20,11 +20,11 @@ public:
 
 	GameObject* CreateGameObject();
 	GameObject* CreateChildGameObject(GameObject *parent);
-	void RemoveGameObject(GameObject * gameObjectToRemove);
+	void RemoveGameObject(GameObject * game_object_to_remove);
 
 	GameObject* GetRoot() const;
 
-	void ShowFrameBufferTab(ComponentCamera * camera_frame_buffer_to_show, const char * title);
+	void ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title);
 
 public:
 	Hierarchy hierarchy;
