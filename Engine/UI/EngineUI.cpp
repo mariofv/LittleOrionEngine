@@ -1,13 +1,14 @@
 ﻿#include "Globals.h"
 #include "Application.h"
-#include "Module/ModuleWindow.h"
-#include "Module/ModuleRender.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
-#include "Module/ModuleTime.h"
-#include "Module/ModuleModelLoader.h"
-#include "Module/ModuleScene.h"
 #include "Module/ModuleInput.h"
+#include "Module/ModuleModelLoader.h"
+#include "Module/ModuleRender.h"
+#include "Module/ModuleScene.h"
+#include "Module/ModuleTime.h"
+#include "Module/ModuleWindow.h"
 #include "Component/ComponentCamera.h"
 #include "EngineUI.h"
 #include "EngineLog.h"
@@ -48,7 +49,7 @@ void EngineUI::ShowEngineUI()
 	}
 	if (show_debug_window)
 	{
-		ShowDebugWindow();
+		App->debug->ShowDebugWindow();
 	}
 	if (show_about_window)
 	{
@@ -390,15 +391,6 @@ void EngineUI::ShowHardware() const
 	}
 }
 
-void EngineUI::ShowDebugWindow()
-{
-	if (ImGui::Begin(ICON_FA_BUG " Debug"))
-	{
-
-	}
-	ImGui::End();
-}
-
 void EngineUI::ShowAboutWindow()
 {
 	if (ImGui::Begin(ICON_FA_QUESTION_CIRCLE " About")) 
@@ -486,6 +478,15 @@ void EngineUI::ShowAboutWindow()
 		if (ImGui::MenuItem("Icon Font Cpp Headers"))
 		{
 			ShellExecuteA(NULL, "open", "https://github.com/juliettef/IconFontCppHeaders", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+		}
+
+		if (ImGui::MenuItem("PCG"))
+		{
+			ShellExecuteA(NULL, "open", "http://www.pcg-random.org/", NULL, NULL, SW_SHOWNORMAL);
 		}
 		if (ImGui::IsItemHovered())
 		{

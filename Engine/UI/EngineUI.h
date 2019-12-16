@@ -37,8 +37,6 @@ private:
 
 	void ShowConsoleWindow();
 
-	void ShowDebugWindow();
-
 	void ShowAboutWindow();
 
 

@@ -69,8 +69,12 @@ public:
 	void GenerateMatrices();
 
 	std::vector<float> GetFrustumVertices() const;
+	
 	bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const;
 	ComponentAABB::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
+
+	bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const;
+	ComponentAABB::CollisionState CheckAABB2DCollision(const AABB2D& reference_AABB) const;
 
 	void ShowComponentWindow() override;
 
@@ -88,8 +92,8 @@ public:
 	const float CAMERA_MAXIMUN_MOVEMENT_SPEED = 1.0f;
 	const float CAMERA_MINIMUN_MOVEMENT_SPEED = 0.005f;
 	
-	float camera_movement_speed = 0.25f;
-	float camera_zooming_speed = 0.25f;
+	float camera_movement_speed = 0.15f;
+	float camera_zooming_speed = 0.15f;
 	float camera_rotation_speed = 0.000625f;
 
 	float camera_clear_color[3] = {0.0f, 0.0f, 0.0f};

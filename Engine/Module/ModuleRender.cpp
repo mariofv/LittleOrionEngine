@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleCamera.h"
+#include "ModuleDebug.h"
 #include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
 #include "ModuleProgram.h"
@@ -18,8 +19,9 @@
 #include "imgui.h"
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
+#include <algorithm>
 #include "Brofiler/Brofiler.h"
-
+ 
 static void APIENTRY openglCallbackFunction(
 	GLenum source,
 	GLenum type,
@@ -105,22 +107,22 @@ bool ModuleRender::Init()
 	APP_LOG_INFO("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
 	glEnable(GL_DEBUG_OUTPUT);
-	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-	glDebugMessageCallback(openglCallbackFunction, nullptr);
-	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, true);
+glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+glDebugMessageCallback(openglCallbackFunction, nullptr);
+glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, true);
 
-	SetVSync(VSYNC);
-	SetDepthTest(true);
+SetVSync(VSYNC);
+SetDepthTest(true);
 
-	geometry_renderer = new GeometryRenderer();
-	grid_renderer = new GridRenderer();
+geometry_renderer = new GeometryRenderer();
+grid_renderer = new GridRenderer();
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+glEnable(GL_BLEND);
+glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	APP_LOG_SUCCESS("Glew initialized correctly.")
+APP_LOG_SUCCESS("Glew initialized correctly.")
 
-	return true;
+return true;
 }
 
 update_status ModuleRender::PreUpdate()
@@ -133,7 +135,7 @@ update_status ModuleRender::PreUpdate()
 
 update_status ModuleRender::PostUpdate()
 {
-	
+
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -141,8 +143,8 @@ update_status ModuleRender::PostUpdate()
 bool ModuleRender::CleanUp()
 {
 	APP_LOG_INFO("Destroying renderer");
-
 	delete geometry_renderer;
+	delete rendering_measure_timer;
 	delete grid_renderer;
 	for (auto& mesh : meshes)
 	{
@@ -162,26 +164,71 @@ void ModuleRender::Render() const
 
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
-	if (App->cameras->active_camera != nullptr) 
+	if (App->debug->show_grid)
 	{
-    grid_renderer->Render(camera);
+		grid_renderer->Render(camera);
+	}
+	if (App->debug->show_camera_frustum)
+	{
 		geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
+	}
 
-		for (auto &mesh : meshes)
+	rendering_measure_timer->Start();
+	GetMeshesToRender();
+	for (auto &mesh : meshes_to_render)
+	{
+		RenderMesh(*mesh, camera);
+	}
+	rendering_measure_timer->Stop();
+	App->debug->rendering_time = rendering_measure_timer->Read();
+
+	if (App->debug->show_quadtree)
+	{
+		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) {
+			geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
+		}
+	}
+}
+
+void ModuleRender::GetMeshesToRender()
+{
+	meshes_to_render.clear();
+
+	std::copy_if(meshes.begin(),
+		meshes.end(),
+		std::back_inserter(meshes_to_render), [](auto mesh) 
+	{ 
+		
+		if (App->debug->frustum_culling && mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
 		{
-			if (mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
+			return true;
+		}
+		else if(App->debug->frustum_culling && mesh->IsEnabled() && !App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box)) 
+		{
+			return false;
+		}
+		if (App->debug->quadtree_culling &&  mesh->IsEnabled() && !mesh->owner->IsStatic())
+		{
+			return true;
+		}
+		return !App->debug->quadtree_culling  && mesh->IsEnabled();
+	});
+
+	if (App->debug->quadtree_culling)
+	{
+		std::vector<GameObject*> rendered_objects;
+		ol_quadtree.CollectIntersect(rendered_objects, *App->cameras->active_camera);
+
+		for (auto &object : rendered_objects)
+		{
+			ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+			if (object_mesh->IsEnabled())
 			{
-				RenderMesh(*mesh, camera);
+				meshes_to_render.push_back(object_mesh);
 			}
 		}
 	}
-	else 
-	{
-		for (auto &mesh : meshes)
-		{
-			RenderMesh(*mesh, camera);
-		}
-	}
+	
 }
 
 void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const
@@ -222,10 +269,11 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 	glUseProgram(0);
 
 
-	if (!mesh_game_object.aabb.IsEmpty())
+	if (App->debug->show_bounding_boxes && !mesh_game_object.aabb.IsEmpty())
 	{
 		geometry_renderer->RenderHexahedron(camera, mesh_game_object.aabb.GetVertices());
 	}
+
 }
 
 void ModuleRender::SetVSync(const bool vsync)
@@ -408,5 +456,29 @@ void ModuleRender::ShowRenderOptions()
 			}
 			ImGui::TreePop();
 		}
+	}
+}
+
+void ModuleRender::GenerateQuadTree() 
+{
+	AABB2D global_AABB;
+	global_AABB.SetNegativeInfinity();
+
+	for (auto & mesh : meshes)
+	{
+		float minX = std::fmin(mesh->owner->aabb.bounding_box2D.minPoint.x, global_AABB.minPoint.x);
+		float minY = std::fmin(mesh->owner->aabb.bounding_box2D.minPoint.y, global_AABB.minPoint.y);
+
+		float maxX = std::fmax(mesh->owner->aabb.bounding_box2D.maxPoint.x, global_AABB.maxPoint.x);
+		float maxY = std::fmax(mesh->owner->aabb.bounding_box2D.maxPoint.y, global_AABB.maxPoint.y);
+		global_AABB.maxPoint = float2(maxX,maxY);
+		global_AABB.minPoint = float2(minX, minY);
+
+	}
+
+	ol_quadtree.Create(global_AABB);
+	for (auto & mesh : meshes)
+	{
+		ol_quadtree.Insert(*mesh->owner);
 	}
 }
