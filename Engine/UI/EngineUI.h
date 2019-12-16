@@ -38,8 +38,6 @@ private:
 
 	void ShowFileAndConsoleWindows();
 
-	void ShowDebugWindow();
-
 	void ShowAboutWindow();
 
 

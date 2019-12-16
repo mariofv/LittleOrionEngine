@@ -82,6 +82,10 @@
     <ClInclude Include="Engine\Importer\MeshImporter.h" />
     <ClInclude Include="Engine\Importer\SceneImporter.h" />
     <ClInclude Include="Engine\Module\ModuleFileSystem.h" />
+    <ClInclude Include="Engine\Module\ModuleDebug.h" />
+    <ClInclude Include="Engine\OLOctTree.h" />
+    <ClInclude Include="Engine\OLOctTreeNode.h" />
+    <ClInclude Include="Engine\OLQuadTreeNode.h" />
     <ClInclude Include="Engine\GridRenderer.h" />
     <ClInclude Include="Engine\Skybox.h" />
     <ClInclude Include="Engine\UI\ComponentsUI.h" />
@@ -184,6 +188,7 @@
     <ClInclude Include="Engine\Timer.h" />
     <ClInclude Include="Engine\TimerUs.h" />
     <ClInclude Include="Engine\Module\ModuleScene.h" />
+    <ClInclude Include="Engine\OLQuadTree.h" />
     <ClInclude Include="Engine\Utils.h" />
   </ItemGroup>
   <ItemGroup>
@@ -191,6 +196,10 @@
     <ClCompile Include="Engine\Importer\MeshImporter.cpp" />
     <ClCompile Include="Engine\Importer\SceneImporter.cpp" />
     <ClCompile Include="Engine\Module\ModuleFileSystem.cpp" />
+    <ClCompile Include="Engine\Module\ModuleDebug.cpp" />
+    <ClCompile Include="Engine\OLOctTree.cpp" />
+    <ClCompile Include="Engine\OLOctTreeNode.cpp" />
+    <ClCompile Include="Engine\OLQuadTreeNode.cpp" />
     <ClCompile Include="Engine\GridRenderer.cpp" />
     <ClCompile Include="Engine\Skybox.cpp" />
     <ClCompile Include="Engine\UI\ComponentsUI.cpp" />
@@ -260,6 +269,7 @@
     <ClCompile Include="Engine\Timer.cpp" />
     <ClCompile Include="Engine\TimerUs.cpp" />
     <ClCompile Include="Engine\Module\ModuleScene.cpp" />
+    <ClCompile Include="Engine\OLQuadTree.cpp" />
     <ClCompile Include="Engine\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>

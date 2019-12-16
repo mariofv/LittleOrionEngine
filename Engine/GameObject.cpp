@@ -56,6 +56,26 @@ bool GameObject::IsEnabled() const
 	return active;
 }
 
+void GameObject::SetStatic(bool is_static)
+{
+
+	SetHierarchyStatic(is_static);
+	App->renderer->GenerateQuadTree();
+}
+
+void GameObject::SetHierarchyStatic(bool is_static)
+{
+	this->is_static = is_static;
+	for (auto & child : children)
+	{
+		child->SetStatic(is_static);
+	}
+}
+
+bool GameObject::IsStatic() const
+{
+	return is_static;
+}
 void GameObject::Update()
 {
 	transform.GenerateGlobalModelMatrix();
@@ -138,7 +158,6 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 
 	created_component->owner = this;
 	components.push_back(created_component);
-
 	return created_component;
 }
 
@@ -248,6 +267,12 @@ void GameObject::ShowPropertiesWindow()
 
 	ImGui::SameLine();
 	ImGui::InputText("###GameObject name Input", &name);
+
+	ImGui::SameLine();
+	if (ImGui::Checkbox("Static", &is_static))
+	{
+		SetStatic(is_static);
+	}
 
 	ImGui::Spacing();
 	ImGui::Separator();

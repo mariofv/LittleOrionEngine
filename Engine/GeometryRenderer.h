@@ -38,12 +38,15 @@ public:
 	~GeometryRenderer();
 
 	void InitHexahedron();
+	void InitSquare();
 
 	void RenderGeometry(const ComponentCamera &camera, const GeometryRenderer::Geometry &geometry) const;
 	void RenderHexahedron(const ComponentCamera &camera, const std::vector<float> &vertices);
+	void RenderSquare(const ComponentCamera &camera, const std::vector<float> &vertices);
 
 private:
 	Geometry *hexahedron = nullptr; // Cube like shapes
+	Geometry *square = nullptr; // Cube like shapes
 
 };
 

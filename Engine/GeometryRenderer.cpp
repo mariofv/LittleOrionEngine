@@ -8,11 +8,13 @@
 GeometryRenderer::GeometryRenderer()
 {
 	InitHexahedron();
+	InitSquare();
 }
 
 GeometryRenderer::~GeometryRenderer()
 {
 	delete hexahedron;
+	delete square;
 }
 
 void GeometryRenderer::InitHexahedron()
@@ -30,6 +32,24 @@ void GeometryRenderer::InitHexahedron()
 	glBindVertexArray(hexahedron->vao);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, hexahedron->ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glBindVertexArray(0);
+}
+
+void GeometryRenderer::InitSquare()
+{
+	square = new Geometry;
+
+	square->num_indices = 4;
+	unsigned int indices[] = {
+		0,1,2,3
+	};
+
+	glBindVertexArray(square->vao);
+
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, square->ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(indices), &indices, GL_STATIC_DRAW);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -90,4 +110,53 @@ void GeometryRenderer::RenderHexahedron(const ComponentCamera &camera, const std
 	glBindVertexArray(0);
 
 	RenderGeometry(camera, *hexahedron);
+}
+
+void GeometryRenderer::RenderSquare(const ComponentCamera &camera, const std::vector<float> &vertices)
+{
+	glBindVertexArray(square->vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, square->vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(float) * 12, &vertices[0], GL_STATIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(
+		0,  // attribute
+		3,                  // number of elements per vertex, here (x,y,z)
+		GL_FLOAT,           // the type of each element
+		GL_FALSE,           // take our values as-is
+		0,                  // no extra data between each position
+		0                   // offset of first element
+	);
+
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	glUseProgram(App->program->default_program);
+
+	float4x4 model_matrix = float4x4::identity;
+
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->default_program, "model"),
+		1,
+		GL_TRUE,
+		&model_matrix[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->default_program, "view"),
+		1,
+		GL_TRUE,
+		&camera.GetViewMatrix()[0][0]
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(App->program->default_program, "proj"),
+		1,
+		GL_TRUE,
+		&camera.GetProjectionMatrix()[0][0]
+	);
+
+	glBindVertexArray(square->vao);
+	glDrawElements(GL_LINE_LOOP, 4, GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
+
+	glUseProgram(0);
 }
