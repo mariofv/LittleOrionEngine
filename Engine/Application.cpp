@@ -9,6 +9,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleTime.h"
+#include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
 #include "UI/EngineUI.h"
 #include "UI/EngineLog.h"
@@ -22,6 +23,7 @@ Application::Application()
 	modules.reserve(10);
 	// Order matters: they will Init/start/update in this order
 	modules.emplace_back(window = new ModuleWindow());
+	modules.emplace_back(filesystem = new ModuleFileSystem());
 	modules.emplace_back(editor = new ModuleEditor());
 	modules.emplace_back(time = new ModuleTime());
 	modules.emplace_back(texture = new ModuleTexture());
