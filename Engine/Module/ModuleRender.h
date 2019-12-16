@@ -75,6 +75,7 @@ private:
 	bool gl_minmax = false;
 	bool gl_wireframe = false;
 
+	std::vector<ComponentMesh*> meshes;
 	std::vector<ComponentMesh*> meshes_to_render;
 	OLQuadTree ol_quadtree;
 	Timer * rendering_measure_timer = new Timer();

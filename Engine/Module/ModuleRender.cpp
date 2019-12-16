@@ -166,7 +166,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
 	if (App->debug->show_grid)
 	{
-		RenderGrid(camera);
+		grid_renderer->Render(camera);
 	}
 	if (App->debug->show_camera_frustum)
 	{
