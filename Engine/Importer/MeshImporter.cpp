@@ -1,6 +1,5 @@
 #include "MeshImporter.h"
-#include "Application.h"
-#include "Module/ModuleFileSystem.h"
+
 
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>

@@ -12,5 +12,6 @@ public:
 private:
 	void ImportMesh(const aiMesh* file_path, const std::string& output_file) const;
 	const std::string LIBRARY_MESHES_FOLDER = ".//Library//Meshes";
+
 };
 #endif // !_MESHIMPORTER_H_
