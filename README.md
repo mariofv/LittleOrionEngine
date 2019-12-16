@@ -89,7 +89,14 @@ Because this is a academic project is not possible to contribute directly to thi
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/mariofv/OrionEngine/blob/master/LICENSE) file for details.
 
 ## Release History
-
+* [0.2.1 Speeding up the engine!](https://github.com/mariofv/OrionEngine/releases/tag/v0.2.1-alpha)
+    * New module ModuleCamera. It contains camera frustums that can be attached to GameObjects.
+    * Two new tabs, Scene and Game. The former contains the scene seen from the editor camera while the later contains the scene seen from the game camera.
+    * Frustum culling. With this improvement meshes that are outside camera frustum are discarded in the render process.
+    * Camera clear modes. Camera can be cleared into a skybox or a plain color.
+    * Texture is rendered using a texture instead of OpenGL primitives.
+    * Quadtree and OctTree. With this improvement we can speed up even more the render process by reducing the number of checks.
+    * New module ModuleDebug. It contains usefull Debug functions.
 * [0.2.0 And there were GameObjects](https://github.com/mariofv/OrionEngine/releases/tag/v0.2.0-alpha)
     * GameObjects come in. Each GameObject represents an entity that can be modified using components.
     * Components are objects that contain different entities parts, like meshes, materials, etc.  
