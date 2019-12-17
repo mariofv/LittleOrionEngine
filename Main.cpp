@@ -6,6 +6,7 @@
 #include <pcg_basic.h>
 
 #include <stdlib.h>
+#include <ctime>
 
 #pragma comment( lib, "Libraries/lib/x86/SDL2.lib" )
 #pragma comment( lib, "Libraries/lib/x86/SDL2main.lib" )

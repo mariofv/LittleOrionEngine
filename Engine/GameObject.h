@@ -48,6 +48,7 @@ private:
 
 public:
 	std::string name = "";
+	unsigned int UUID = -1;
 
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;
@@ -59,7 +60,6 @@ public:
 	std::vector<Component*> components;
 
 private:
-	unsigned int UUID = -1;
 
 	bool active = true;
 	bool is_static = false;

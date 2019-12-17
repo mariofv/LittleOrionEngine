@@ -1,6 +1,8 @@
 #ifndef _COMPONENT_H_
 #define _COMPONENT_H_
 
+#include <pcg_basic.h>
+
 class GameObject;
 
 class Component
@@ -15,7 +17,7 @@ public:
 		TRANSFORM
 	};
 
-	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType) {};
+	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
 	virtual ~Component() = default;
 
 	virtual void Enable() = 0;
@@ -31,6 +33,8 @@ public:
 	virtual void ShowComponentWindow() = 0;
 
 public:
+	unsigned int UUID = -1;
+
 	GameObject *owner = nullptr;
 	ComponentType type;
 
