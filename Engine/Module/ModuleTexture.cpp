@@ -3,7 +3,6 @@
 #include "Application.h"
 #include "Texture.h"
 #include "Component/ComponentMaterial.h"
-
 #include "Importer/MaterialImporter.h"
 
 #include <SDL/SDL.h>
@@ -50,13 +49,13 @@ void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remov
 Texture* ModuleTexture::LoadTexture(const char* texture_path) const
 {
 	std::string ol_texture;
-	bool imported = importer.Import(texture_path, ol_texture);
+	bool imported = App->material_importer->Import(texture_path, ol_texture);
 	if (!imported)
 	{
 		return nullptr;
 	}
 
-	return importer.Load(ol_texture.c_str());
+	return App->material_importer->Load(ol_texture.c_str());
 }
 
 GLuint ModuleTexture::LoadCubemap(std::vector<std::string> faces_paths) const
@@ -65,10 +64,10 @@ GLuint ModuleTexture::LoadCubemap(std::vector<std::string> faces_paths) const
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
 		std::string ol_texture;
-		bool imported = importer.Import(faces_paths[i].c_str(), ol_texture);
+		bool imported = App->material_importer->Import(faces_paths[i].c_str(), ol_texture);
 		faces_paths_dds.push_back(ol_texture);
 	}
-	return static_cast<GLuint>(importer.LoadCubemap(faces_paths_dds));
+	return static_cast<GLuint>(App->material_importer->LoadCubemap(faces_paths_dds));
 }
 
 

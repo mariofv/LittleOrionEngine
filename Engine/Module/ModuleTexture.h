@@ -5,7 +5,6 @@
 #include "Globals.h"
 
 #include <GL/glew.h>
-#include "Importer/MaterialImporter.h"
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -34,7 +33,7 @@ public:
 public:
 	GLuint checkerboard_texture_id;
 	std::vector<ComponentMaterial*> materials;
-	MaterialImporter importer;
+
 };
 
 #endif //_MODULETEXTURE_H_

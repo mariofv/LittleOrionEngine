@@ -11,6 +11,8 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
+#include "Importer/SceneImporter.h"
+#include "Importer/MaterialImporter.h"
 #include "UI/EngineUI.h"
 #include "UI/EngineLog.h"
 #include "TimerUs.h"
@@ -37,6 +39,8 @@ Application::Application()
 		
 	engine_log = new EngineLog();
 	ui = new EngineUI();
+	scene_importer = new SceneImporter();
+	material_importer = new MaterialImporter();
 }
 
 Application::~Application()
@@ -48,6 +52,8 @@ Application::~Application()
 
 	delete ui;
 	delete engine_log;
+	delete scene_importer;
+	delete material_importer;
 }
 
 bool Application::Init()
