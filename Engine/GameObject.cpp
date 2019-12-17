@@ -16,17 +16,19 @@
 #include "imgui.h"
 #include "imgui_stdlib.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
+#include <pcg_basic.h>
 
 #include <algorithm>
 
-GameObject::GameObject() : transform(this), aabb(this)
+GameObject::GameObject() : transform(this), aabb(this), UUID(pcg32_random())
 {
 }
 
 GameObject::GameObject(const std::string name) :
 	name(name),
 	transform(this),
-	aabb(this)
+	aabb(this),
+	UUID(pcg32_random())
 {
 }
 
