@@ -1,6 +1,8 @@
 #include "Texture.h"
 #include "MaterialImporter.h"
 
+#include "Application.h"
+
 MaterialImporter::MaterialImporter()
 {
 

@@ -25,7 +25,6 @@ class EngineLog;
 class EngineUI;
 
 
-class SceneImporter;
 class MaterialImporter;
 
 class TimerUs;
@@ -57,7 +56,6 @@ public:
 
 	EngineUI* ui = nullptr;
 	EngineLog* engine_log = nullptr;
-	SceneImporter* scene_importer = nullptr;
 	MaterialImporter* material_importer = nullptr;
 
 private:
