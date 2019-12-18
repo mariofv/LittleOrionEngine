@@ -115,9 +115,9 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 
 	cursor += bytes; // Get vertices
 	bytes = sizeof(ComponentMesh::Vertex) * ranges[1];
-	//memcpy(&component_mesh.vertices.front(), cursor, bytes);
+	memcpy(&component_mesh.vertices.front(), cursor, bytes);
 
-
+	component_mesh.SetupMesh();
 	float time = performance_timer.Read();
 	APP_LOG_SUCCESS("Model %s loaded correctly from own format in %f second .", file_path, time);
 }

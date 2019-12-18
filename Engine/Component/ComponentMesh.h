@@ -31,7 +31,6 @@ public:
 
 	void ShowComponentWindow() override;
 
-private:
 	void SetupMesh();
 
 public:
