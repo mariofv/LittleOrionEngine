@@ -120,7 +120,7 @@ void ModuleModelLoader::LoadMeshData(const aiMesh *mesh, ComponentMesh *mesh_com
 
 	APP_LOG_INFO("Mesh uses material %d", mesh->mMaterialIndex);
 
-	mesh_component->LoadMesh(vertices, indices, mesh->mMaterialIndex);
+	mesh_component->LoadMesh();
 }
 
 Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const std::string model_base_path)

@@ -18,11 +18,11 @@ public:
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType) {};
 	virtual ~Component() = default;
 
-	virtual void Enable() = 0;
-	virtual void Disable() = 0;
+	virtual void Enable() { active = true; };
+	virtual void Disable() { active = false; };
 	virtual bool IsEnabled() const { return active; };
 
-	virtual void Update() = 0;
+	virtual void Update() {};
 
 	virtual ComponentType GetType() const { return type; };
 

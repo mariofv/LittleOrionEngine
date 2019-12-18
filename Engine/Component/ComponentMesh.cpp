@@ -14,7 +14,6 @@ ComponentMesh::ComponentMesh(GameObject * owner) : Component(owner, ComponentTyp
 
 ComponentMesh::~ComponentMesh()
 {
-
 	vertices.clear();
 	indices.clear();
 
@@ -23,32 +22,13 @@ ComponentMesh::~ComponentMesh()
 	glDeleteVertexArrays(1, &vao);
 }
 
-void ComponentMesh::Enable()
-{
-
-}
-
-void ComponentMesh::Disable()
-{
-
-}
-
-void ComponentMesh::Update()
-{
-
-}
-
 void ComponentMesh::Delete() 
 {
 	App->renderer->RemoveComponentMesh(this);
 }
 
-void ComponentMesh::LoadMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int material_index)
+void ComponentMesh::LoadMesh()
 {
-	this->vertices = vertices;
-	this->indices = indices;
-	this->material_index = material_index;
-
 	num_vertices = vertices.size();
 	num_triangles = num_vertices / 3;
 

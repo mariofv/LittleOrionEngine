@@ -15,6 +15,13 @@ MeshImporter::MeshImporter()
 bool MeshImporter::Import(const char* file_path, std::string& output_file)
 {
 	APP_LOG_INIT("Importing model %s.", file_path);
+
+	ModuleFileSystem::File file = ModuleFileSystem::File(file_path);
+	if (file.filename.empty())
+	{
+		APP_LOG_SUCCESS("Importing material error: Couldn't find the file to import.")
+			return false;
+	}
 	performance_timer.Start();
 
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
@@ -27,23 +34,32 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file)
 	}
 
 	float time = performance_timer.Read();
-	APP_LOG_SUCCESS("Model %s loaded correctly in %f second .", file_path, time);
+	APP_LOG_SUCCESS("Model %s loaded correctly from assimp in %f second .", file_path, time);
 
-	for (unsigned int i = 0; i < 1; ++i)
+	std::string filename_no_extension = file.filename.substr(0, file.filename.find_last_of("."));
+	if (scene->mNumMeshes == 1) {
+		output_file = LIBRARY_MESHES_FOLDER + "//" + std::string(filename_no_extension) + ".ol";
+		ImportMesh(scene->mMeshes[0], output_file);
+	}
+	else 
 	{
-		//Get new name
-		ModuleFileSystem::File file = ModuleFileSystem::File(file_path);
-		if (file.filename.empty())
+
+		 output_file = LIBRARY_MESHES_FOLDER + "//" + std::string(scene->mRootNode->mChildren[0]->mName.data) + ".ol";
+		ImportMesh(scene->mMeshes[0], output_file);
+		/*
+		aiNode * root_node = scene->mRootNode;
+		App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER, filename_no_extension);
+		//std::string output_file = LIBRARY_MESHES_FOLDER + "//" + filename_no_extension;
+		for (size_t i = 0; i < root_node->mNumChildren; i++)
 		{
-			APP_LOG_SUCCESS("Importing material error: Couldn't find the file to import.")
-				return false;
-		}
-		output_file = LIBRARY_MESHES_FOLDER + "//" + std::string(scene->mRootNode->mChildren[i]->mName.data) + ".ol";
-		ImportMesh(scene->mMeshes[i], output_file);
+			std::string output_file = LIBRARY_MESHES_FOLDER + "//" + std::string(scene->mRootNode->mChildren[i]->mName.data) + ".ol";
+			ImportMesh(scene->mMeshes[i], output_file);
+		}*/
 	}
 	aiReleaseImport(scene);
 	return true;
 }
+
 
 void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file) const
 {
@@ -117,7 +133,8 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 	bytes = sizeof(ComponentMesh::Vertex) * ranges[1];
 	memcpy(&component_mesh.vertices.front(), cursor, bytes);
 
-	component_mesh.SetupMesh();
+	component_mesh.LoadMesh();
 	float time = performance_timer.Read();
+	free(data);
 	APP_LOG_SUCCESS("Model %s loaded correctly from own format in %f second .", file_path, time);
 }

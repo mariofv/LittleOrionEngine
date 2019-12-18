@@ -14,6 +14,8 @@ public:
 
 private:
 	void ImportMesh(const aiMesh* file_path, const std::string& output_file) const;
+
+private:
 	const std::string LIBRARY_MESHES_FOLDER = ".//Library//Meshes";
 	Timer performance_timer;
 };
