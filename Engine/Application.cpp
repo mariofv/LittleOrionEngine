@@ -12,6 +12,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
 #include "Importer/MaterialImporter.h"
+#include "Importer/MeshImporter.h"
 #include "UI/EngineUI.h"
 #include "UI/EngineLog.h"
 #include "TimerUs.h"
@@ -41,6 +42,7 @@ Application::Application()
 	engine_log = new EngineLog();
 	ui = new EngineUI();
 	material_importer = new MaterialImporter();
+	mesh_importer = new MeshImporter();
 }
 
 Application::~Application()

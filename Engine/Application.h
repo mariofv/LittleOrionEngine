@@ -26,6 +26,7 @@ class EngineUI;
 
 
 class MaterialImporter;
+class MeshImporter;
 
 class TimerUs;
 
@@ -56,6 +57,7 @@ public:
 
 	EngineUI* ui = nullptr;
 	EngineLog* engine_log = nullptr;
+	MeshImporter* mesh_importer = nullptr;
 	MaterialImporter* material_importer = nullptr;
 
 private:

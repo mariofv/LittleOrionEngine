@@ -8,21 +8,33 @@ bool ModuleFileSystem::Init() {
 	RefreshFilesHierarchy();
 	return true;
 }
-unsigned int ModuleFileSystem::Load(const char* file_path, char** buffer) const
+char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
 {
 
-	SDL_RWops* file = SDL_RWFromFile(file_path, "rb");
+	SDL_RWops *rw = SDL_RWFromFile(file_path, "rb");
+	if (rw == NULL) return NULL;
 
-	if (file == NULL) {
-		APP_LOG_ERROR("Error: Unable to open file! SDL Error: %s\n", SDL_GetError());
-		SDL_RWclose(file);
-		return 1;
+	Sint64 res_size = SDL_RWsize(rw);
+	char* res = (char*)malloc(res_size + 1);
+
+	Sint64 nb_read_total = 0, nb_read = 1;
+	char* buf = res;
+	while (nb_read_total < res_size && nb_read != 0) {
+		nb_read = SDL_RWread(rw, buf, 1, (res_size - nb_read_total));
+		nb_read_total += nb_read;
+		buf += nb_read;
 	}
-	Sint64 res_size = SDL_RWsize(file);
-	SDL_RWread(file, &buffer, sizeof(Sint32), 1);
+	SDL_RWclose(rw);
+	if (nb_read_total != res_size) {
+		free(res);
+		return NULL;
+	}
 
-	SDL_RWclose(file);
-	return 0;
+	res[nb_read_total] = '\0';
+	if (size != NULL)
+		size = nb_read_total;
+	return res;
+
 }
 unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, unsigned int size, bool append) const
 {

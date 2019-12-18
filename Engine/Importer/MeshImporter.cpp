@@ -24,7 +24,6 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file) const
 		return false;
 	}
 
-
 	for (unsigned int i = 0; i < scene->mNumMeshes; ++i)
 	{
 		//Get new name
@@ -43,7 +42,15 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file) const
 
 void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file) const
 {
-	size_t num_indices = mesh->mNumFaces;
+	std::vector<unsigned int> indices;
+	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
+	{
+		aiFace face = mesh->mFaces[i];
+		for (unsigned int j = 0; j < face.mNumIndices; j++)
+			indices.push_back(face.mIndices[j]);
+	}
+
+	size_t num_indices = indices.size();
 	size_t num_vertices = mesh->mNumVertices;
 	size_t ranges[2] = { num_indices, num_vertices };
 	size_t size = sizeof(ranges) + sizeof(size_t) * num_indices + sizeof(float) * num_vertices * 3;
@@ -55,7 +62,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 
 	cursor += bytes; // Store indices
 	bytes = sizeof(size_t) * num_indices;
-	memcpy(cursor, mesh->mFaces, bytes);
+	memcpy(cursor, &indices, bytes);
 
 	cursor += bytes; // Store vertices
 	bytes = sizeof(size_t) * num_vertices;

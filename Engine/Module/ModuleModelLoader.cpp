@@ -8,6 +8,7 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
+#include "Importer/MeshImporter.h"
 
 #include "assimp/DefaultLogger.hpp"
 #include <assimp/cimport.h>
@@ -46,6 +47,8 @@ void ModuleModelLoader::UnloadCurrentModel()
 
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
+	std::string model_output;
+	App->mesh_importer->Import(new_model_file_path, model_output);
 	APP_LOG_INIT("Loading model %s.", new_model_file_path);
 	scene = aiImportFile(new_model_file_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene == NULL)
