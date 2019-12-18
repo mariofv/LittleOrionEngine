@@ -50,23 +50,25 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	std::string model_output;
 	App->mesh_importer->Import(new_model_file_path, model_output);
 	APP_LOG_INIT("Loading model %s.", new_model_file_path);
-	scene = aiImportFile(new_model_file_path, aiProcessPreset_TargetRealtime_MaxQuality);
+	/*scene = aiImportFile(new_model_file_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene == NULL)
 	{
 		const char *error = aiGetErrorString();
 		APP_LOG_ERROR("Error loading model %s ", new_model_file_path);
 		APP_LOG_ERROR(error);
 		return nullptr;
-	}
+	}*/
 
 	std::string model_base_path = GetModelBasePath(new_model_file_path);
 	GameObject *model_root_node = App->scene->CreateGameObject();
-	model_root_node->name = std::string(scene->mRootNode->mName.data);
+	model_root_node->name = std::string("RootNode");
+	ComponentMesh *mesh_component = (ComponentMesh*)model_root_node->CreateComponent(Component::ComponentType::MESH);
 
-	for (unsigned int i = 0; i < scene->mRootNode->mNumChildren; ++i)
+	App->mesh_importer->Load( model_output.c_str(), *mesh_component);
+	/*for (unsigned int i = 0; i < scene->mRootNode->mNumChildren; ++i)
 	{
 		LoadNode(*scene->mRootNode->mChildren[i], model_root_node, model_base_path);
-	}
+	}*/
 
 	APP_LOG_SUCCESS("Model %s loaded correctly.", new_model_file_path);
 	return model_root_node;
@@ -85,14 +87,14 @@ void ModuleModelLoader::LoadNode(const aiNode &node, GameObject *parent_node, co
 		ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
 		LoadMeshData(scene->mMeshes[mesh_index], mesh_component);
 
-		APP_LOG_INFO("Loading mesh %d material.", i);
+		/*APP_LOG_INFO("Loading mesh %d material.", i);
 		int mesh_material_index = scene->mMeshes[mesh_index]->mMaterialIndex;
 		Texture *material_texture = LoadMaterialData(scene->mMaterials[mesh_material_index], model_base_path);
 		ComponentMaterial *material_component = (ComponentMaterial*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL);
 
 		material_component->index = mesh_material_index;
 		material_component->texture = material_texture;
-		APP_LOG_INFO("Mesh %d material loaded correctly.", i);
+		APP_LOG_INFO("Mesh %d material loaded correctly.", i);*/
 	}
 	APP_LOG_INFO("Model meshes loaded correctly.");
 
