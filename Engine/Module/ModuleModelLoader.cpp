@@ -48,16 +48,9 @@ void ModuleModelLoader::UnloadCurrentModel()
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
 	std::string model_output;
+
 	App->mesh_importer->Import(new_model_file_path, model_output);
-	APP_LOG_INIT("Loading model %s.", new_model_file_path);
-	/*scene = aiImportFile(new_model_file_path, aiProcessPreset_TargetRealtime_MaxQuality);
-	if (scene == NULL)
-	{
-		const char *error = aiGetErrorString();
-		APP_LOG_ERROR("Error loading model %s ", new_model_file_path);
-		APP_LOG_ERROR(error);
-		return nullptr;
-	}*/
+
 
 	std::string model_base_path = GetModelBasePath(new_model_file_path);
 	GameObject *model_root_node = App->scene->CreateGameObject();
@@ -70,7 +63,6 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 		LoadNode(*scene->mRootNode->mChildren[i], model_root_node, model_base_path);
 	}*/
 
-	APP_LOG_SUCCESS("Model %s loaded correctly.", new_model_file_path);
 	return model_root_node;
 }
 

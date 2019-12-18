@@ -12,8 +12,10 @@ MeshImporter::MeshImporter()
 
 }
 
-bool MeshImporter::Import(const char* file_path, std::string& output_file) const
+bool MeshImporter::Import(const char* file_path, std::string& output_file)
 {
+	APP_LOG_INIT("Importing model %s.", file_path);
+	performance_timer.Start();
 
 	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene == NULL)
@@ -24,6 +26,9 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file) const
 		return false;
 	}
 
+	float time = performance_timer.Read();
+	APP_LOG_SUCCESS("Model %s loaded correctly in %f second .", file_path, time);
+
 	for (unsigned int i = 0; i < 1; ++i)
 	{
 		//Get new name
@@ -33,7 +38,7 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file) const
 			APP_LOG_SUCCESS("Importing material error: Couldn't find the file to import.")
 				return false;
 		}
-		output_file = LIBRARY_MESHES_FOLDER + "//" + std::string(scene->mMeshes[i]->mName.C_Str()) + ".ol";
+		output_file = LIBRARY_MESHES_FOLDER + "//" + std::string(scene->mRootNode->mChildren[i]->mName.data) + ".ol";
 		ImportMesh(scene->mMeshes[i], output_file);
 	}
 	aiReleaseImport(scene);
@@ -87,7 +92,10 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 	delete data;
 }
 
- void MeshImporter::Load(const char* file_path, ComponentMesh & component_mesh) const {
+ void MeshImporter::Load(const char* file_path, ComponentMesh & component_mesh) {
+
+	APP_LOG_INIT("Loading model %s.", file_path);
+	performance_timer.Start();
 	size_t mesh_size;
 	char * data = App->filesystem->Load(file_path, mesh_size);
 	char* cursor = data;
@@ -107,5 +115,9 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 
 	cursor += bytes; // Get vertices
 	bytes = sizeof(ComponentMesh::Vertex) * ranges[1];
-	memcpy(&component_mesh.vertices.front(), cursor, bytes);
+	//memcpy(&component_mesh.vertices.front(), cursor, bytes);
+
+
+	float time = performance_timer.Read();
+	APP_LOG_SUCCESS("Model %s loaded correctly from own format in %f second .", file_path, time);
 }

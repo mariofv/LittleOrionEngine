@@ -13,7 +13,7 @@ class MaterialImporter : Importer
 {
 public:
 	MaterialImporter();
-	bool Import(const char* file_path, std::string& output_file) const override;
+	bool Import(const char* file_path, std::string& output_file) override;
 	Texture* Load(const char* file_path)  const;
 	unsigned int LoadCubemap(std::vector<std::string> faces_paths) const;
 

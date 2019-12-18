@@ -13,7 +13,7 @@ MaterialImporter::MaterialImporter()
 	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 }
-bool MaterialImporter::Import(const char* file_path, std::string& output_file) const
+bool MaterialImporter::Import(const char* file_path, std::string& output_file)
 {
 	ModuleFileSystem::File file = ModuleFileSystem::File(file_path);
 	if (file.filename.empty())

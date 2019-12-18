@@ -76,8 +76,6 @@ private:
 
 public:
 	const aiScene* scene = nullptr;
-
-
 };
 
 #endif //_MODULEMODELLOADER_H_
