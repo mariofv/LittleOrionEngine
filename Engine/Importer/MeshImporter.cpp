@@ -77,11 +77,11 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 
 	cursor += bytes; // Store indices
 	bytes = sizeof(size_t) * num_indices;
-	memcpy(cursor, &indices, bytes);
+	memcpy(cursor, &indices.front(), bytes);
 
 	cursor += bytes; // Store vertices
 	bytes = sizeof(ComponentMesh::Vertex) * num_vertices;
-	memcpy(cursor, &vertices, bytes);
+	memcpy(cursor, &vertices.front(), bytes);
 
 	App->filesystem->Save(output_file.c_str(), data, size);
 	delete data;
@@ -97,13 +97,13 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 	size_t bytes = sizeof(ranges); // First store ranges
 	memcpy(ranges, cursor, bytes);
 
-	component_mesh.indices.reserve(ranges[0]);
+	component_mesh.indices.resize(ranges[0]);
 
 	cursor += bytes; // Get indices
 	bytes = sizeof(size_t) * ranges[0];
 	memcpy(&component_mesh.indices.front(), cursor, bytes);
 
-	component_mesh.vertices.reserve(ranges[1]);
+	component_mesh.vertices.resize(ranges[1]);
 
 	cursor += bytes; // Get vertices
 	bytes = sizeof(ComponentMesh::Vertex) * ranges[1];
