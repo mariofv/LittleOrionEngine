@@ -1,10 +1,11 @@
 #ifndef _COMPONENT_H_
 #define _COMPONENT_H_
 
+#include "Config.h"
+
 #include <pcg_basic.h>
 
 class GameObject;
-class Config;
 
 class Component
 {

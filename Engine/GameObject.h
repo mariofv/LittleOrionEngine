@@ -25,6 +25,9 @@ public:
 
 	void Update();
 
+	void Save();
+	void Load();
+
 	void SetParent(GameObject *new_parent);
 	void AddChild(GameObject *child);
 	void RemoveChild(GameObject *child);

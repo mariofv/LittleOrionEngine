@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Application.h"
+#include "Config.h"
 #include "Hierarchy.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleProgram.h"
@@ -16,6 +17,9 @@
 #include "imgui.h"
 #include "imgui_stdlib.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
+#include <pcg_basic.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/prettywriter.h>
 #include <pcg_basic.h>
 
 #include <algorithm>
@@ -92,6 +96,24 @@ void GameObject::Update()
 	{
 		children[i]->Update();
 	}
+
+}
+
+void GameObject::Save()
+{
+	rapidjson::StringBuffer buffer;
+	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
+
+	Config* c = new Config();
+	transform.Save(*c);
+
+	c->config_document.Accept(writer);
+	const char* post = buffer.GetString();
+
+}
+
+void GameObject::Load()
+{
 
 }
 
