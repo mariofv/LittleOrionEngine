@@ -43,6 +43,17 @@ void ComponentMesh::Delete()
 	App->renderer->RemoveComponentMesh(this);
 }
 
+
+void ComponentMesh::Save(Config& config) const
+{
+
+}
+
+void ComponentMesh::Load(const Config& config)
+{
+
+}
+
 void ComponentMesh::LoadMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int material_index)
 {
 	this->vertices = vertices;

@@ -21,6 +21,9 @@ public:
 	void Update() override;
 	void Delete() override;
 
+	void Save(Config& config) const;
+	void Load(const Config& config);
+
 	GLuint GetTexture() const;
 
 	void ShowComponentWindow() override;

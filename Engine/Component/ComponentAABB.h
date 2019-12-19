@@ -28,6 +28,9 @@ public:
 	void Update() override;
 	void Delete() override {};
 
+	void Save(Config& config) const;
+	void Load(const Config& config);
+
 	void GenerateBoundingBox();
 	void GenerateBoundingBoxFromVertices(const std::vector<ComponentMesh::Vertex> & vertices);
 

@@ -90,6 +90,16 @@ void ComponentCamera::Delete()
 	App->cameras->RemoveComponentCamera(this);
 }
 
+void ComponentCamera::Save(Config& config) const
+{
+
+}
+
+void ComponentCamera::Load(const Config& config)
+{
+
+}
+
 void ComponentCamera::RecordFrame(const float width, const float height)
 {
 	if (last_width != width || last_height != height)

@@ -4,6 +4,7 @@
 #include <pcg_basic.h>
 
 class GameObject;
+class Config;
 
 class Component
 {
@@ -25,10 +26,12 @@ public:
 	virtual bool IsEnabled() const { return active; };
 
 	virtual void Update() = 0;
+	virtual void Delete() = 0;
+
+	virtual void Save(Config& config) const = 0;
+	virtual void Load(const Config &config) = 0;
 
 	virtual ComponentType GetType() const { return type; };
-
-	virtual void Delete() = 0;
 
 	virtual void ShowComponentWindow() = 0;
 

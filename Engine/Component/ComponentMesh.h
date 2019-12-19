@@ -26,6 +26,9 @@ public:
 	void Update() override;
 	void Delete() override;
 
+	void Save(Config& config) const;
+	void Load(const Config& config);
+
 	void LoadMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int texture_index);
 	void Render() const;
 

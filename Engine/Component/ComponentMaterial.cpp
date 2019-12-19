@@ -38,6 +38,16 @@ void ComponentMaterial::Delete()
 	App->texture->RemoveComponentMaterial(this);
 }
 
+void ComponentMaterial::Save(Config& config) const
+{
+
+}
+
+void ComponentMaterial::Load(const Config& config)
+{
+
+}
+
 GLuint ComponentMaterial::GetTexture() const
 {
 	if (show_checkerboard_texture)

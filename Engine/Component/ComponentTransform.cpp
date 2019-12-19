@@ -31,6 +31,16 @@ void ComponentTransform::Update()
 
 }
 
+void ComponentTransform::Save(Config& config) const
+{
+
+}
+
+void ComponentTransform::Load(const Config& config)
+{
+
+}
+
 float3 ComponentTransform::GetTranslation() const
 {
 	return translation;
