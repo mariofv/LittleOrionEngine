@@ -50,7 +50,7 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file)
 		aiNode * root_node = scene->mRootNode;
 		App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER, filename_no_extension);
 		//std::string output_file = LIBRARY_MESHES_FOLDER + "//" + filename_no_extension;
-		for (size_t i = 0; i < root_node->mNumChildren; i++)
+		for (UINT64 i = 0; i < root_node->mNumChildren; i++)
 		{
 			std::string output_file = LIBRARY_MESHES_FOLDER + "//" + std::string(scene->mRootNode->mChildren[i]->mName.data) + ".ol";
 			ImportMesh(scene->mMeshes[i], output_file);
@@ -63,7 +63,7 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file)
 
 void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file) const
 {
-	std::vector<size_t> indices;
+	std::vector<UINT64> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
 		aiFace face = mesh->mFaces[i];
@@ -86,18 +86,18 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 	}
 
 
-	size_t num_indices = indices.size();
-	size_t num_vertices = vertices.size();
-	size_t ranges[2] = { num_indices, num_vertices };
-	size_t size = sizeof(ranges) + sizeof(size_t) * num_indices + sizeof(ComponentMesh::Vertex) * num_vertices;
+	UINT64 num_indices = indices.size();
+	UINT64 num_vertices = vertices.size();
+	UINT64 ranges[2] = { num_indices, num_vertices };
+	UINT64 size = sizeof(ranges) + sizeof(UINT64) * num_indices + sizeof(ComponentMesh::Vertex) * num_vertices;
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
-	size_t bytes = sizeof(ranges); // First store ranges
+	UINT64 bytes = sizeof(ranges); // First store ranges
 	memcpy(cursor, ranges, bytes);
 
 	cursor += bytes; // Store indices
-	bytes = sizeof(size_t) * num_indices;
+	bytes = sizeof(UINT64) * num_indices;
 	memcpy(cursor, &indices.front(), bytes);
 
 	cursor += bytes; // Store vertices
@@ -116,15 +116,15 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 	char * data = App->filesystem->Load(file_path, mesh_size);
 	char* cursor = data;
 
-	size_t ranges[2];
+	UINT64 ranges[2];
 	//Get ranges
-	size_t bytes = sizeof(ranges); // First store ranges
+	UINT64 bytes = sizeof(ranges); // First store ranges
 	memcpy(ranges, cursor, bytes);
 
 	component_mesh.indices.resize(ranges[0]);
 
 	cursor += bytes; // Get indices
-	bytes = sizeof(size_t) * ranges[0];
+	bytes = sizeof(UINT64) * ranges[0];
 	memcpy(&component_mesh.indices.front(), cursor, bytes);
 
 	component_mesh.vertices.resize(ranges[1]);

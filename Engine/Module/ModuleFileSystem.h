@@ -33,7 +33,7 @@ public:
 	ModuleFileSystem() = default;
 	~ModuleFileSystem() = default;
 
-	char*  Load( const char* file_name, size_t & size) const;
+	char* Load( const char* file_name, size_t & size) const;
 	unsigned int Save(const char* file_name, const void* buffer, unsigned int size, bool append = false) const;
 
 	bool Remove(const File & file) const;
