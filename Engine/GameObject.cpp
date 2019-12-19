@@ -108,7 +108,7 @@ void GameObject::Save()
 	transform.Save(*c);
 
 	c->config_document.Accept(writer);
-	const char* post = buffer.GetString();
+	APP_LOG_ERROR(buffer.GetString());
 
 }
 

@@ -18,7 +18,6 @@ public:
 
 public:
 	rapidjson::Document config_document;
-
 };
 
 #endif //_CONFIG_H_
