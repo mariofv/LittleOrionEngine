@@ -29,7 +29,6 @@ private:
 public:
 	GLuint default_program = 0;
 	GLuint texture_program = 0;
-	GLuint primitive_program = 0;
 	GLuint skybox_program = 0;
 
 };
