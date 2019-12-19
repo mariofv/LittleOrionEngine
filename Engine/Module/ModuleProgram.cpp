@@ -16,7 +16,7 @@ bool ModuleProgram::Init()
 	}
 	else 
 	{
-		APP_LOG_ERROR("Default shader program loaded correctly.");
+		APP_LOG_ERROR("Default shader program loaded incorretly.");
 		return false;
 	}
 
@@ -27,7 +27,7 @@ bool ModuleProgram::Init()
 	}
 	else
 	{
-		APP_LOG_ERROR("Texture shader program loaded correctly.");
+		APP_LOG_ERROR("Texture shader program loaded incorretly.");
 		return false;
 	}
 
@@ -38,7 +38,7 @@ bool ModuleProgram::Init()
 	}
 	else
 	{
-		APP_LOG_ERROR("Primitive shader program loaded correctly.");
+		APP_LOG_ERROR("Primitive shader program loaded incorretly.");
 		return false;
 	}
 
@@ -49,7 +49,7 @@ bool ModuleProgram::Init()
 	}
 	else
 	{
-		APP_LOG_ERROR("Skybox shader program loaded correctly.");
+		APP_LOG_ERROR("Skybox shader program loaded incorretly.");
 		return false;
 	}
 

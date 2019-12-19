@@ -1,10 +1,10 @@
 #version 330 core
 
-in vec3 glColor;
+in vec3 color;
 
-out vec4 color;
+out vec4 oColor;
 
 void main()
 {
-    color = vec4(glColor, 1.0);
+    oColor = vec4(color, 1.0);
 }
