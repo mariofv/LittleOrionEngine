@@ -2,12 +2,12 @@
 #include "Application.h"
 #include "ModuleCamera.h"
 #include "ModuleDebug.h"
-#include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 #include "ModuleTime.h"
+#include "ModuleUI.h"
 #include "ModuleWindow.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMesh.h"
@@ -157,7 +157,7 @@ bool ModuleRender::CleanUp()
 void ModuleRender::Render() const
 {
 	BROFILER_CATEGORY("Render",Profiler::Color::Aqua);
-	App->editor->Render();
+	App->ui->Render();
 	SDL_GL_SwapWindow(App->window->window);
 	App->time->EndFrame();
 }

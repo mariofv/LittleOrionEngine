@@ -79,6 +79,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\Module\ModuleFileSystem.h" />
     <ClInclude Include="Engine\Module\ModuleDebug.h" />
+    <ClInclude Include="Engine\Module\ModuleUI.h" />
     <ClInclude Include="Engine\OLOctTree.h" />
     <ClInclude Include="Engine\OLOctTreeNode.h" />
     <ClInclude Include="Engine\OLQuadTreeNode.h" />
@@ -191,6 +192,7 @@
   <ItemGroup>
     <ClCompile Include="Engine\Module\ModuleFileSystem.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebug.cpp" />
+    <ClCompile Include="Engine\Module\ModuleUI.cpp" />
     <ClCompile Include="Engine\OLOctTree.cpp" />
     <ClCompile Include="Engine\OLOctTreeNode.cpp" />
     <ClCompile Include="Engine\OLQuadTreeNode.cpp" />
