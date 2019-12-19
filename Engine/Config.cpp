@@ -24,6 +24,19 @@ void Config::AddInt(int int_to_add, const std::string &name)
 	}
 }
 
+int Config::GetInt(const std::string& name, int opt_value) const
+{
+	if (!config_document.HasMember(name.c_str()))
+	{
+		return opt_value;
+	}
+	else
+	{
+		const rapidjson::Value& current_value = config_document[name.c_str()];
+		return current_value.GetInt();
+	}
+}
+
 void Config::AddFloat(float float_to_add, const std::string& name)
 {
 	if (!config_document.HasMember(name.c_str()))
@@ -35,6 +48,19 @@ void Config::AddFloat(float float_to_add, const std::string& name)
 	{
 		rapidjson::Value& current_value = config_document[name.c_str()];
 		current_value.SetFloat(float_to_add);
+	}
+}
+
+float Config::GetFloat(const std::string& name, float opt_value) const
+{
+	if (!config_document.HasMember(name.c_str()))
+	{
+		return opt_value;
+	}
+	else
+	{
+		const rapidjson::Value& current_value = config_document[name.c_str()];
+		return current_value.GetFloat();
 	}
 }
 
@@ -59,6 +85,23 @@ void Config::AddFloat3(const float3& float3_to_add, const std::string& name)
 	}
 }
 
+void Config::GetFloat3(const std::string& name, float3 &return_value, const float3 &opt_value) const
+{
+	if (!config_document.HasMember(name.c_str()))
+	{
+		return_value = opt_value;
+	}
+	else
+	{
+		const rapidjson::Value& current_value = config_document[name.c_str()];
+		return_value = float3(
+			current_value[0].GetFloat(),
+			current_value[1].GetFloat(),
+			current_value[2].GetFloat()
+		);
+	}
+}
+
 void Config::AddQuat(const Quat& quat_to_add, const std::string& name)
 {
 	if (!config_document.HasMember(name.c_str()))
@@ -79,5 +122,23 @@ void Config::AddQuat(const Quat& quat_to_add, const std::string& name)
 		current_value[1].SetFloat(quat_to_add.y);
 		current_value[2].SetFloat(quat_to_add.z);
 		current_value[3].SetFloat(quat_to_add.w);
+	}
+}
+
+void Config::GetQuat(const std::string& name, Quat& return_value, const Quat& opt_value) const
+{
+	if (!config_document.HasMember(name.c_str()))
+	{
+		return_value = opt_value;
+	}
+	else
+	{
+		const rapidjson::Value& current_value = config_document[name.c_str()];
+		return_value = Quat(
+			current_value[0].GetFloat(),
+			current_value[1].GetFloat(),
+			current_value[2].GetFloat(),
+			current_value[3].GetFloat()
+		);
 	}
 }

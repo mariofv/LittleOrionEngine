@@ -41,7 +41,13 @@ void ComponentTransform::Save(Config& config) const
 
 void ComponentTransform::Load(const Config& config)
 {
+	UUID = config.GetInt("UUID", -1);
+	config.GetFloat3("Translation", translation, float3::zero);
+	config.GetQuat("Rotation", rotation, Quat::identity);
+	config.GetFloat3("Scale", scale, float3::one);
+	assert(UUID != -1);
 
+	GenerateModelMatrix();
 }
 
 float3 ComponentTransform::GetTranslation() const
