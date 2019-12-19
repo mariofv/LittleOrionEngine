@@ -33,7 +33,10 @@ void ComponentTransform::Update()
 
 void ComponentTransform::Save(Config& config) const
 {
-
+	config.AddInt(UUID, "UUID");
+	config.AddFloat3(translation, "Translation");
+	config.AddQuat(rotation, "Rotation");
+	config.AddFloat3(scale, "Scale");
 }
 
 void ComponentTransform::Load(const Config& config)
