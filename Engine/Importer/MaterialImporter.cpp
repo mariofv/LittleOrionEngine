@@ -2,6 +2,7 @@
 #include "MaterialImporter.h"
 
 #include "Application.h"
+#include <algorithm>
 
 MaterialImporter::MaterialImporter()
 {
@@ -49,7 +50,19 @@ bool MaterialImporter::Import(const char* file_path, std::string& output_file)
 	return true;
 }
 
-Texture * MaterialImporter::Load(const char* file_path)  const {
+std::shared_ptr<Texture> MaterialImporter::Load(const char* file_path) {
+
+	//Check if the mesh is already loaded
+	auto it = std::find_if(texture_cache.begin(), texture_cache.end(), [file_path](const std::shared_ptr<Texture> texture)
+	{
+		return texture->texture_path == file_path;
+	});
+	if (it != texture_cache.end())
+	{
+		APP_LOG_INIT("Model %s exists in cache.", file_path);
+		return *it;
+	}
+
 	ILuint image;
 	ilGenImages(1, &image);
 	ilBindImage(image);
@@ -62,9 +75,10 @@ Texture * MaterialImporter::Load(const char* file_path)  const {
 		ilDeleteImages(1, &image);
 		return nullptr;
 	}
-	Texture *loaded_texture = new Texture(data, width, height, file_path);
+	std::shared_ptr<Texture> loaded_texture = std::make_shared<Texture>(data, width, height, file_path);
 	loaded_texture->GenerateMipMap();
 	ilDeleteImages(1, &image);
+	texture_cache.push_back(loaded_texture);
 	return loaded_texture;
 }
 
@@ -125,4 +139,14 @@ unsigned int MaterialImporter::LoadCubemap(std::vector<std::string> faces_paths)
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
 
 	return texture_id;
+}
+
+//Remove the mesh from the cache if the only owner is the cache itself
+void MaterialImporter::RemoveTextureFromCacheIfNeeded(std::shared_ptr<Texture> texture) 
+{
+	auto it = std::find(texture_cache.begin(), texture_cache.end(), texture);
+	if (it != texture_cache.end() && (*it).use_count() <= 2)
+	{
+		(*it).~shared_ptr();
+	}
 }

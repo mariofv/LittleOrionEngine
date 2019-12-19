@@ -123,13 +123,13 @@ void ModuleModelLoader::LoadMeshData(const aiMesh *mesh, ComponentMesh *mesh_com
 	mesh_component->LoadMesh();*/
 }
 
-Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const std::string model_base_path)
+std::shared_ptr<Texture> ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const std::string model_base_path)
 {
 	aiString file;
 	aiTextureMapping mapping = aiTextureMapping_UV;
 	material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, 0);
 
-	Texture *material_texture;
+	std::shared_ptr<Texture> material_texture;
 
 	APP_LOG_INIT("Loading material texture in described path %s.", file.data);
 	material_texture = App->texture->LoadTexture(file.data);

@@ -69,7 +69,7 @@ private:
 	void LoadNode(const aiNode &node, GameObject *parent_node, const std::string model_base_path);
 
 	void LoadMeshData(const aiMesh *mesh, ComponentMesh *mesh_component) const;
-	Texture* LoadMaterialData(const aiMaterial *material, const std::string model_base_path);
+	std::shared_ptr<Texture> LoadMaterialData(const aiMaterial *material, const std::string model_base_path);
 
 	std::string GetModelBasePath(const char *model_file_path) const;
 	std::string GetTextureFileName(const char *texture_file_path) const;

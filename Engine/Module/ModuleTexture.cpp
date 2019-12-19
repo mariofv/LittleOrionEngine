@@ -7,6 +7,7 @@
 
 #include <SDL/SDL.h>
 #include <algorithm>
+#include <memory>
 
 // Called before render is available
 bool ModuleTexture::Init()
@@ -46,7 +47,7 @@ void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remov
 	}
 }
 
-Texture* ModuleTexture::LoadTexture(const char* texture_path) const
+std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 {
 	std::string ol_texture;
 	bool imported = App->material_importer->Import(texture_path, ol_texture);

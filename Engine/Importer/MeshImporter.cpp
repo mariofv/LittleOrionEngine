@@ -110,7 +110,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 
  std::shared_ptr<Mesh> MeshImporter::Load(const char* file_path) {
 	
-	 //Check if the mesh having already loaded
+	 //Check if the mesh is already loaded
 	 auto it = std::find_if(mesh_cache.begin(), mesh_cache.end(), [file_path](const std::shared_ptr<Mesh> mesh) 
 	 {
 		 return mesh->mesh_file_path == file_path;

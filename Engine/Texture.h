@@ -40,7 +40,7 @@ public:
 	GLuint opengl_texture = 0;
 
 	const unsigned char* data = nullptr;
-	std::string texture_path = "";
+	std::string texture_path;
 
 	int width = 0;
 	int height = 0;

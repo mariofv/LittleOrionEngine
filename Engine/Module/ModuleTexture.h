@@ -5,6 +5,7 @@
 #include "Globals.h"
 
 #include <GL/glew.h>
+#include <memory>
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -26,7 +27,7 @@ public:
 	ComponentMaterial* CreateComponentMaterial();
 	void RemoveComponentMaterial(ComponentMaterial* material_to_remove);
 	
-	Texture* LoadTexture(const char* texture_path) const;
+	std::shared_ptr<Texture> LoadTexture(const char* texture_path);
 	GLuint  LoadCubemap(std::vector<std::string> faces) const;
 	void GenerateCheckerboardTexture();
 

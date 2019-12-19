@@ -2,6 +2,7 @@
 #include "Texture.h"
 #include "Application.h"
 #include <Module/ModuleTexture.h>
+#include <Importer/MaterialImporter.h>
 
 ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL)
 {
@@ -15,7 +16,7 @@ ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, Comp
 
 ComponentMaterial::~ComponentMaterial()
 {
-	delete texture;
+	App->material_importer->RemoveTextureFromCacheIfNeeded(texture);
 }
 
 void ComponentMaterial::Enable()
