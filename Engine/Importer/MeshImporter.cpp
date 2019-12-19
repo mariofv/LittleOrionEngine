@@ -109,6 +109,17 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 }
 
  std::shared_ptr<Mesh> MeshImporter::Load(const char* file_path) {
+	
+	 //Check if the mesh having already loaded
+	 auto it = std::find_if(mesh_cache.begin(), mesh_cache.end(), [file_path](const std::shared_ptr<Mesh> mesh) 
+	 {
+		 return mesh->mesh_file_path == file_path;
+	 });
+	 if (it != mesh_cache.end())
+	 {
+		 APP_LOG_INIT("Model %s exists in cache.", file_path);
+		 return *it;
+	 }
 
 	APP_LOG_INIT("Loading model %s.", file_path);
 	performance_timer.Start();
@@ -136,10 +147,20 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 	bytes = sizeof(Mesh::Vertex) * ranges[1];
 	memcpy(&vertices.front(), cursor, bytes);
 
-	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(std::move(vertices), std::move(indices));
+	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(std::move(vertices), std::move(indices), file_path);
+	mesh_cache.push_back(new_mesh);
 	float time = performance_timer.Read();
 	free(data);
 	APP_LOG_SUCCESS("Model %s loaded correctly from own format in %f second .", file_path, time);
 
 	return new_mesh;
 }
+
+ //Remove the mesh from the cache if the only owner is the cache itself
+ void MeshImporter::RemoveMeshFromCacheIfNeeded(std::shared_ptr<Mesh> mesh) {
+	 auto it = std::find(mesh_cache.begin(), mesh_cache.end(), mesh);
+	 if (it != mesh_cache.end() && (*it).use_count() <= 2)
+	 {
+		 (*it).~shared_ptr();
+	 }
+ }

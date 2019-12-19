@@ -12,10 +12,12 @@ public:
 		float2 tex_coords;
 	};
 	Mesh(std::vector<Vertex> && vertices, std::vector<UINT64> && indices);
+	Mesh(std::vector<Vertex> && vertices, std::vector<UINT64> && indices, std::string mesh_file_path);
 	~Mesh();
 
 	std::vector<Vertex> vertices;
 	std::vector<UINT64> indices;
+	std::string mesh_file_path;
 	int num_triangles = 0;
 	int num_vertices = 0;
 };

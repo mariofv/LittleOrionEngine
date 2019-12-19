@@ -1,6 +1,7 @@
 #include "ComponentMesh.h"
 #include "Application.h"
 #include "Module/ModuleRender.h"
+#include "Importer/MeshImporter.h"
 
 ComponentMesh::ComponentMesh(std::shared_ptr<Mesh> mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH)
 {
@@ -28,6 +29,7 @@ ComponentMesh::~ComponentMesh()
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 	glDeleteVertexArrays(1, &vao);
+	App->mesh_importer->RemoveMeshFromCacheIfNeeded(mesh_to_render);
 }
 
 void ComponentMesh::Delete() 
