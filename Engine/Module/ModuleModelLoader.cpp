@@ -55,9 +55,9 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	std::string model_base_path = GetModelBasePath(new_model_file_path);
 	GameObject *model_root_node = App->scene->CreateGameObject();
 	model_root_node->name = std::string("RootNode");
-	ComponentMesh *mesh_component = (ComponentMesh*)model_root_node->CreateComponent(Component::ComponentType::MESH);
 
-	App->mesh_importer->Load( model_output.c_str(), *mesh_component);
+	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load( model_output.c_str());
+	ComponentMesh *mesh_component = (ComponentMesh*)model_root_node->CreateComponent(Component::ComponentType::MESH);
 	/*for (unsigned int i = 0; i < scene->mRootNode->mNumChildren; ++i)
 	{
 		LoadNode(*scene->mRootNode->mChildren[i], model_root_node, model_base_path);
@@ -98,7 +98,7 @@ void ModuleModelLoader::LoadNode(const aiNode &node, GameObject *parent_node, co
 
 void ModuleModelLoader::LoadMeshData(const aiMesh *mesh, ComponentMesh *mesh_component) const
 {
-	std::vector<ComponentMesh::Vertex> vertices;
+	/*std::vector<ComponentMesh::Vertex> vertices;
 	APP_LOG_INFO("Loading mesh vertices");
 	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
 	{
@@ -120,7 +120,7 @@ void ModuleModelLoader::LoadMeshData(const aiMesh *mesh, ComponentMesh *mesh_com
 
 	APP_LOG_INFO("Mesh uses material %d", mesh->mMaterialIndex);
 
-	mesh_component->LoadMesh();
+	mesh_component->LoadMesh();*/
 }
 
 Texture* ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const std::string model_base_path)

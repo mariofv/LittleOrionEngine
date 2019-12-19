@@ -80,6 +80,7 @@
     <ClInclude Include="Engine\Importer\Importer.h" />
     <ClInclude Include="Engine\Importer\MaterialImporter.h" />
     <ClInclude Include="Engine\Importer\MeshImporter.h" />
+    <ClInclude Include="Engine\Mesh.h" />
     <ClInclude Include="Engine\Module\ModuleFileSystem.h" />
     <ClInclude Include="Engine\Module\ModuleDebug.h" />
     <ClInclude Include="Engine\OLOctTree.h" />
@@ -193,6 +194,7 @@
   <ItemGroup>
     <ClCompile Include="Engine\Importer\MaterialImporter.cpp" />
     <ClCompile Include="Engine\Importer\MeshImporter.cpp" />
+    <ClCompile Include="Engine\Mesh.cpp" />
     <ClCompile Include="Engine\Module\ModuleFileSystem.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebug.cpp" />
     <ClCompile Include="Engine\OLOctTree.cpp" />

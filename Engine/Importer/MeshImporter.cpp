@@ -1,5 +1,5 @@
 #include "MeshImporter.h"
-#include "Component/ComponentMesh.h"
+#include "Mesh.h"
 
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
@@ -71,11 +71,11 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 			indices.push_back(face.mIndices[j]);
 	}
 
-	std::vector<ComponentMesh::Vertex> vertices;
+	std::vector<Mesh::Vertex> vertices;
 	vertices.reserve(mesh->mNumVertices);
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
-		ComponentMesh::Vertex new_vertex;
+		Mesh::Vertex new_vertex;
 		new_vertex.position = float3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
 
 		if (mesh->mTextureCoords[i] != NULL)
@@ -89,7 +89,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 	UINT64 num_indices = indices.size();
 	UINT64 num_vertices = vertices.size();
 	UINT64 ranges[2] = { num_indices, num_vertices };
-	UINT64 size = sizeof(ranges) + sizeof(UINT64) * num_indices + sizeof(ComponentMesh::Vertex) * num_vertices;
+	UINT64 size = sizeof(ranges) + sizeof(UINT64) * num_indices + sizeof(Mesh::Vertex) * num_vertices;
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
@@ -101,14 +101,14 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 	memcpy(cursor, &indices.front(), bytes);
 
 	cursor += bytes; // Store vertices
-	bytes = sizeof(ComponentMesh::Vertex) * num_vertices;
+	bytes = sizeof(Mesh::Vertex) * num_vertices;
 	memcpy(cursor, &vertices.front(), bytes);
 
 	App->filesystem->Save(output_file.c_str(), data, size);
 	delete data;
 }
 
- void MeshImporter::Load(const char* file_path, ComponentMesh & component_mesh) {
+ std::shared_ptr<Mesh> MeshImporter::Load(const char* file_path) {
 
 	APP_LOG_INIT("Loading model %s.", file_path);
 	performance_timer.Start();
@@ -121,20 +121,25 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 	UINT64 bytes = sizeof(ranges); // First store ranges
 	memcpy(ranges, cursor, bytes);
 
-	component_mesh.indices.resize(ranges[0]);
+	std::vector<UINT64> indices;
+	std::vector<Mesh::Vertex> vertices;
+
+	indices.resize(ranges[0]);
 
 	cursor += bytes; // Get indices
 	bytes = sizeof(UINT64) * ranges[0];
-	memcpy(&component_mesh.indices.front(), cursor, bytes);
+	memcpy(&indices.front(), cursor, bytes);
 
-	component_mesh.vertices.resize(ranges[1]);
+	vertices.resize(ranges[1]);
 
 	cursor += bytes; // Get vertices
-	bytes = sizeof(ComponentMesh::Vertex) * ranges[1];
-	memcpy(&component_mesh.vertices.front(), cursor, bytes);
+	bytes = sizeof(Mesh::Vertex) * ranges[1];
+	memcpy(&vertices.front(), cursor, bytes);
 
-	component_mesh.LoadMesh();
+	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(std::move(vertices), std::move(indices));
 	float time = performance_timer.Read();
 	free(data);
 	APP_LOG_SUCCESS("Model %s loaded correctly from own format in %f second .", file_path, time);
+
+	return new_mesh;
 }

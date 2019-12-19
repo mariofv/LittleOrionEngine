@@ -5,26 +5,21 @@
 #include "UI/ComponentsUI.h"
 
 #include <GL/glew.h>
-#include "MathGeoLib.h"
-
-#include <vector>
+#include "Mesh.h"
 
 class ComponentMesh : public Component
 {
 public:
-	struct Vertex {
-		float3 position;
-		float2 tex_coords;
-	};
-
+	ComponentMesh(std::shared_ptr<Mesh> mesh_to_render);
+	ComponentMesh(std::shared_ptr<Mesh> mesh_to_render, GameObject * owner);
 	ComponentMesh();
-	ComponentMesh(GameObject * owner);
+
 	~ComponentMesh();
 
 	void Delete() override;
-
-	void LoadMesh();
 	void Render() const;
+
+	void SetMesh(std::shared_ptr<Mesh> mesh_to_render);
 
 	void ShowComponentWindow() override;
 
@@ -32,17 +27,13 @@ private:
 	void SetupMesh();
 
 public:
-	std::vector<Vertex> vertices;
-	std::vector<UINT64> indices;
 	unsigned int material_index = -1;
+	std::shared_ptr<Mesh> mesh_to_render;
 
 private:
 	GLuint vao = 0;
 	GLuint vbo = 0;
 	GLuint ebo = 0;
-
-	int num_triangles = 0;
-	int num_vertices = 0;
 
 	friend void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh);
 };
