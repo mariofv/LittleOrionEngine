@@ -71,6 +71,17 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
+
+void ModuleScene::SaveScene(const char* path)
+{
+
+}
+
+void ModuleScene::LoadScene(const char* path)
+{
+
+}
+
 void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title)
 {
 	if (ImGui::BeginTabItem(title))

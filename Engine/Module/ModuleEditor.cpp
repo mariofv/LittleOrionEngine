@@ -6,7 +6,7 @@
 bool ModuleEditor::Init()
 {
 	APP_LOG_SECTION("************ Module Editor Init ************");
-
+	
 	
 	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
 
