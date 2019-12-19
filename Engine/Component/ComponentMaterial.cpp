@@ -40,12 +40,20 @@ void ComponentMaterial::Delete()
 
 void ComponentMaterial::Save(Config& config) const
 {
-
+	config.AddInt(index, "Index");
+	config.AddString(texture->texture_path, "Path");
+	config.AddBool(show_checkerboard_texture, "Checkboard");
 }
 
 void ComponentMaterial::Load(const Config& config)
 {
+	std::string tmp_path;
 
+	index = config.GetInt("Index", 0);
+	config.GetString("Path", tmp_path, "");
+	show_checkerboard_texture = config.GetBool("Checkboard", true);
+
+	texture = App->texture->LoadTexture(tmp_path.c_str());
 }
 
 GLuint ComponentMaterial::GetTexture() const

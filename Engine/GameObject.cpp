@@ -104,12 +104,23 @@ void GameObject::Save()
 	rapidjson::StringBuffer buffer;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
 
-	Config* c = new Config();
-	transform.Save(*c);
+	Config transform_config;
+	transform.Save(transform_config);
 
-	c->config_document.Accept(writer);
+	transform_config.config_document.Accept(writer);
 	APP_LOG_ERROR(buffer.GetString());
 
+	for (auto& component : components)
+	{
+		rapidjson::StringBuffer buffer_tmp;
+		rapidjson::PrettyWriter<rapidjson::StringBuffer> writer_tmp(buffer_tmp);
+
+		Config component_config;
+		component->Save(component_config);
+
+		component_config.config_document.Accept(writer_tmp);
+		APP_LOG_ERROR(buffer_tmp.GetString());
+	}
 }
 
 void GameObject::Load()

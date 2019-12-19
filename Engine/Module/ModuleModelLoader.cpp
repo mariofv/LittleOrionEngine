@@ -66,6 +66,7 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	}
 
 	APP_LOG_SUCCESS("Model %s loaded correctly.", new_model_file_path);
+
 	return model_root_node;
 }
 
@@ -92,6 +93,7 @@ void ModuleModelLoader::LoadNode(const aiNode &node, GameObject *parent_node, co
 		APP_LOG_INFO("Mesh %d material loaded correctly.", i);
 	}
 	APP_LOG_INFO("Model meshes loaded correctly.");
+	node_game_object->Save();
 
 	for (unsigned int i = 0; i < node.mNumChildren; ++i)
 	{
