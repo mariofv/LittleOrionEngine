@@ -6,14 +6,23 @@
 #include <assimp/scene.h>
 #include <assimp/material.h>
 #include <assimp/mesh.h>
+#include "assimp/DefaultLogger.hpp"
 
 MeshImporter::MeshImporter()
 {
-
+	Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE);
+	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Debugging), Assimp::Logger::Debugging);
+	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Info), Assimp::Logger::Info);
+	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Err), Assimp::Logger::Err);
+	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Warn), Assimp::Logger::Warn);
 }
-
+MeshImporter::~MeshImporter()
+{
+	Assimp::DefaultLogger::kill();
+}
 bool MeshImporter::Import(const char* file_path, std::string& output_file)
 {
+	loaded_meshes_materials.clear();
 	ModuleFileSystem::File file = ModuleFileSystem::File(file_path);
 	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedMesh(file);
 	if (already_imported != nullptr) {
@@ -59,9 +68,19 @@ void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, co
 			std::string mesh_file = output_file + "//" + std::string(root_node->mChildren[i]->mName.data) + ".ol";
 			size_t mesh_index = root_node->mChildren[i]->mMeshes[0];
 			ImportMesh(scene->mMeshes[mesh_index], mesh_file);
+
+			ImportMaterialFromMesh(scene,mesh_index);
 		}
 		ImportNode(root_node->mChildren[i], scene, output_file);
 	}
+}
+void MeshImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_index)
+{
+	int mesh_material_index = scene->mMeshes[mesh_index]->mMaterialIndex;
+	aiString file;
+	aiTextureMapping mapping = aiTextureMapping_UV;
+	scene->mMaterials[mesh_material_index]->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, 0);
+	loaded_meshes_materials.push_back(std::string(file.data));
 }
 
 void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file) const

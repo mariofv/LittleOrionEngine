@@ -10,7 +10,7 @@
 #include "Component/ComponentMesh.h"
 #include "Importer/MeshImporter.h"
 
-#include "assimp/DefaultLogger.hpp"
+
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -21,24 +21,9 @@
 bool ModuleModelLoader::Init()
 {
 	APP_LOG_SECTION("************ Module ModelLoader Init ************");
-
-	Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE);
-	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Debugging), Assimp::Logger::Debugging);
-	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Info), Assimp::Logger::Info);
-	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Err), Assimp::Logger::Err);
-	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Warn), Assimp::Logger::Warn);
 	LoadModel(HOUSE_MODEL_PATH);
 	return true;
 }
-
-// Called before quitting
-bool ModuleModelLoader::CleanUp()
-{
-	Assimp::DefaultLogger::kill();
-	return true;
-}
-
-
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
 	std::string model_output;
@@ -54,39 +39,36 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	App->filesystem->GetAllFilesInPath(model_output, files_in_output_path);
 	for (auto file : files_in_output_path )
 	{
-		LoadNode(model_root_node, file->file_path);
+		LoadNode(model_root_node, file);
 	}
 
 	return model_root_node;
 }
 
-void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::string model_base_path)
+void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<ModuleFileSystem::File> model_base_path)
 {
 	GameObject *node_game_object = App->scene->CreateChildGameObject(parent_node);
 
-	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load(model_base_path.c_str());
+	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load(model_base_path->file_path.c_str());
 	ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
 	mesh_component->SetMesh(mesh_for_component);
+	node_game_object->name = model_base_path->filename_no_extension;
 	node_game_object->Update();
 }
 
-std::shared_ptr<Texture> ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const std::string model_base_path)
+std::shared_ptr<Texture> ModuleModelLoader::LoadMaterialData(const std::string & material_path, const std::string model_base_path)
 {
-	aiString file;
-	aiTextureMapping mapping = aiTextureMapping_UV;
-	material->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, 0);
-
 	std::shared_ptr<Texture> material_texture;
 
-	APP_LOG_INIT("Loading material texture in described path %s.", file.data);
-	material_texture = App->texture->LoadTexture(file.data);
+	APP_LOG_INIT("Loading material texture in described path %s.", material_path);
+	material_texture = App->texture->LoadTexture(material_path.c_str());
 	if (material_texture != nullptr)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly.");
 		return material_texture;
 	}
 
-	std::string texture_file_name = GetTextureFileName(file.data);
+	std::string texture_file_name = GetTextureFileName(material_path.c_str());
 
 	std::string textures_path = model_base_path + texture_file_name;
 	APP_LOG_INIT("Loading material texture in model folder path %s.", model_base_path.c_str());
