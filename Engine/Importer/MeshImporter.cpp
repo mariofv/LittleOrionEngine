@@ -44,17 +44,13 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file)
 	else 
 	{
 
-		 output_file = LIBRARY_MESHES_FOLDER + "//" + std::string(scene->mRootNode->mChildren[0]->mName.data) + ".ol";
-		ImportMesh(scene->mMeshes[0], output_file);
-		/*
 		aiNode * root_node = scene->mRootNode;
-		App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER, filename_no_extension);
-		//std::string output_file = LIBRARY_MESHES_FOLDER + "//" + filename_no_extension;
+		output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER, filename_no_extension);
 		for (UINT64 i = 0; i < root_node->mNumChildren; i++)
 		{
-			std::string output_file = LIBRARY_MESHES_FOLDER + "//" + std::string(scene->mRootNode->mChildren[i]->mName.data) + ".ol";
-			ImportMesh(scene->mMeshes[i], output_file);
-		}*/
+			std::string mesh_file = output_file + "//" + std::string(scene->mRootNode->mChildren[i]->mName.data) + ".ol";
+			ImportMesh(scene->mMeshes[i], mesh_file);
+		}
 	}
 	aiReleaseImport(scene);
 	return true;

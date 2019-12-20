@@ -77,7 +77,8 @@ bool ModuleFileSystem::Exists(const char* file_path) const
 	SDL_RWclose(file);
 	return exists;
 }
-bool ModuleFileSystem::MakeDirectory(const std::string & path, const std::string & directory_name)
+
+std::string ModuleFileSystem::MakeDirectory(const std::string & path, const std::string & directory_name)
 {
 	std::vector<std::shared_ptr<File>> files;
 	GetAllFilesInPath(path, files);
@@ -99,7 +100,7 @@ bool ModuleFileSystem::MakeDirectory(const std::string & path, const std::string
 	} while (same_name_folders.size() != 0);
 
 	CreateDirectory(new_directory.c_str(), NULL);
-	return true;
+	return new_directory;
 }
 bool ModuleFileSystem::Copy(const char* source, const char* destination)
 {
@@ -109,11 +110,11 @@ bool ModuleFileSystem::Copy(const char* source, const char* destination)
 ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, const DWORD & file_attributes) const
 {
 
-	if (file_attributes & FILE_ATTRIBUTE_DIRECTORY)
+	std::string file_extension = GetFileExtension(file_path);
+	if ((file_attributes & FILE_ATTRIBUTE_DIRECTORY ) || (file_extension == "/" ))
 	{
 		return ModuleFileSystem::FileType::DIRECTORY;
 	}
-	std::string file_extension = GetFileExtension(file_path);
 
 	if (
 		file_extension == "png"
@@ -133,7 +134,6 @@ ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, 
 	{
 		return ModuleFileSystem::FileType::MODEL;
 	}
-
 	if (file_extension == "" && file_attributes & FILE_ATTRIBUTE_ARCHIVE)
 	{
 		return ModuleFileSystem::FileType::ARCHIVE;
@@ -145,8 +145,13 @@ ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, 
 std::string ModuleFileSystem::GetFileExtension(const char *file_path) const
 {
 	std::string file_path_string = std::string(file_path);
+	if (file_path_string.back() == '/') 
+	{
+		return std::string("/");
+	}
+
 	std::size_t found = file_path_string.find_last_of(".");
-	if (found == std::string::npos) {
+	if (found == std::string::npos || found == 0) {
 		return "";
 	}
 	std::string file_extension = file_path_string.substr(found + 1, file_path_string.length());

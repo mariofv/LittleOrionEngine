@@ -66,7 +66,7 @@ public:
 
 private:
 	void UnloadCurrentModel();
-	void LoadNode(const aiNode &node, GameObject *parent_node, const std::string model_base_path);
+	void LoadNode(GameObject *parent_node, const std::string model_base_path);
 
 	void LoadMeshData(const aiMesh *mesh, ComponentMesh *mesh_component) const;
 	std::shared_ptr<Texture> LoadMaterialData(const aiMaterial *material, const std::string model_base_path);

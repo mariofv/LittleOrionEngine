@@ -38,7 +38,7 @@ public:
 
 	bool Remove(const File & file) const;
 	bool Exists(const char* file) const;
-	bool MakeDirectory(const std::string & path, const std::string & directory_name = "new folder");
+	std::string MakeDirectory(const std::string & path, const std::string & directory_name = "new folder");
 	bool Copy(const char* source, const char* destination);
 	std::shared_ptr<File> GetFileHierarchyFromPath(const std::string & path) const;
 	

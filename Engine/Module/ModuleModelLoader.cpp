@@ -55,47 +55,30 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	std::string model_base_path = GetModelBasePath(new_model_file_path);
 	GameObject *model_root_node = App->scene->CreateGameObject();
 	model_root_node->name = std::string("RootNode");
+	
+	if (App->filesystem->GetFileType(model_base_path.c_str()) != ModuleFileSystem::FileType::DIRECTORY) {
+		LoadNode(model_root_node, model_base_path.c_str());
+	}
 
-	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load( model_output.c_str());
-	ComponentMesh *mesh_component = (ComponentMesh*)model_root_node->CreateComponent(Component::ComponentType::MESH);
-	mesh_component->mesh_to_render = mesh_for_component;
-	model_root_node->Update();
-	/*for (unsigned int i = 0; i < scene->mRootNode->mNumChildren; ++i)
+	model_output = model_output.substr(0, model_output.size());
+	std::vector<std::shared_ptr<ModuleFileSystem::File>> files_in_output_path;
+	App->filesystem->GetAllFilesInPath(model_output, files_in_output_path);
+	for (auto file : files_in_output_path )
 	{
-		LoadNode(*scene->mRootNode->mChildren[i], model_root_node, model_base_path);
-	}*/
+		LoadNode(model_root_node, file->file_path);
+	}
 
 	return model_root_node;
 }
 
-void ModuleModelLoader::LoadNode(const aiNode &node, GameObject *parent_node, const std::string model_base_path)
+void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::string model_base_path)
 {
 	GameObject *node_game_object = App->scene->CreateChildGameObject(parent_node);
-	node_game_object->name = std::string(node.mName.data);
 
-	APP_LOG_INFO("Loading node meshes.");
-	for (unsigned int i = 0; i < node.mNumMeshes; ++i)
-	{
-		APP_LOG_INFO("Loading mesh %d", i);
-		unsigned int mesh_index = node.mMeshes[i];
-		ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
-		LoadMeshData(scene->mMeshes[mesh_index], mesh_component);
-
-		/*APP_LOG_INFO("Loading mesh %d material.", i);
-		int mesh_material_index = scene->mMeshes[mesh_index]->mMaterialIndex;
-		Texture *material_texture = LoadMaterialData(scene->mMaterials[mesh_material_index], model_base_path);
-		ComponentMaterial *material_component = (ComponentMaterial*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL);
-
-		material_component->index = mesh_material_index;
-		material_component->texture = material_texture;
-		APP_LOG_INFO("Mesh %d material loaded correctly.", i);*/
-	}
-	APP_LOG_INFO("Model meshes loaded correctly.");
-
-	for (unsigned int i = 0; i < node.mNumChildren; ++i)
-	{
-		LoadNode(*node.mChildren[i], node_game_object, model_base_path);
-	}
+	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load(model_base_path.c_str());
+	ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
+	mesh_component->mesh_to_render = mesh_for_component;
+	node_game_object->Update();
 }
 
 void ModuleModelLoader::LoadMeshData(const aiMesh *mesh, ComponentMesh *mesh_component) const
