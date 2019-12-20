@@ -37,8 +37,8 @@ private:
 	char* GLEnumToString(const GLenum gl_enum) const;
 
 public:
-	GLuint opengl_texture = 0;
 
+	GLuint opengl_texture = 0;
 	const unsigned char* data = nullptr;
 	std::string texture_path;
 

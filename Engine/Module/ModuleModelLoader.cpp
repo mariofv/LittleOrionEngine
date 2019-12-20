@@ -58,6 +58,8 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 
 	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load( model_output.c_str());
 	ComponentMesh *mesh_component = (ComponentMesh*)model_root_node->CreateComponent(Component::ComponentType::MESH);
+	mesh_component->mesh_to_render = mesh_for_component;
+	model_root_node->Update();
 	/*for (unsigned int i = 0; i < scene->mRootNode->mNumChildren; ++i)
 	{
 		LoadNode(*scene->mRootNode->mChildren[i], model_root_node, model_base_path);
