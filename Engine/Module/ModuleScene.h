@@ -24,8 +24,8 @@ public:
 
 	GameObject* GetRoot() const;
 
-	void SaveScene(const char* path);
-	void LoadScene(const char* path);
+	void Save();
+	void Load();
 
 	void ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title);
 

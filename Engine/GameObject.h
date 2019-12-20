@@ -25,8 +25,8 @@ public:
 
 	void Update();
 
-	void Save();
-	void Load();
+	void Save(Config& config) const;
+	void Load(const Config& config);
 
 	void SetParent(GameObject *new_parent);
 	void AddChild(GameObject *child);

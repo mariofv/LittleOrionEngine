@@ -99,20 +99,18 @@ void GameObject::Update()
 
 }
 
-void GameObject::Save()
+void GameObject::Save(Config& config) const
 {
-	Config gameobject_config; 
-
-	gameobject_config.AddUInt(UUID, "UUID");
+	config.AddUInt(UUID, "UUID");
 	if (parent != nullptr)
 	{
-		gameobject_config.AddInt(parent->UUID, "ParentUUID");
+		config.AddInt(parent->UUID, "ParentUUID");
 	}
-	gameobject_config.AddString(name, "Name");
+	config.AddString(name, "Name");
 
 	Config transform_config;
 	transform.Save(transform_config);
-	gameobject_config.AddChildConfig(transform_config, "Transform");
+	config.AddChildConfig(transform_config, "Transform");
 
 	std::vector<Config*> gameobject_components_config;
 	for (auto& component : components)
@@ -122,10 +120,10 @@ void GameObject::Save()
 		gameobject_components_config.push_back(component_config);
 		delete component_config;
 	}
-	gameobject_config.AddChildrenConfig(gameobject_components_config, "Components");
+	config.AddChildrenConfig(gameobject_components_config, "Components");
 }
 
-void GameObject::Load()
+void GameObject::Load(const Config& config)
 {
 
 }

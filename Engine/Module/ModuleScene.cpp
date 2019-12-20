@@ -3,6 +3,7 @@
 #include "ModuleRender.h"
 #include "ModuleCamera.h"
 #include "Component/ComponentCamera.h"
+#include "Config.h"
 
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -11,7 +12,6 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject();
-	root->Save();
 	GameObject * camera = CreateGameObject();
 	camera->name = "Main Camera";
 	ComponentCamera * component_camera = static_cast<ComponentCamera*>(camera->CreateComponent(Component::ComponentType::CAMERA));
@@ -73,12 +73,21 @@ GameObject* ModuleScene::GetRoot() const
 }
 
 
-void ModuleScene::SaveScene(const char* path)
+void ModuleScene::Save()
 {
-
+	Config scene_config;
+	std::vector<Config*> game_objects_config(game_objects_ownership.size());
+	for (unsigned int i = 0; i < game_objects_ownership.size(); ++i)
+	{
+		Config* game_object_config = new Config();
+		game_objects_ownership[i]->Save(*game_object_config);
+		game_objects_config.push_back(game_object_config);
+		delete game_object_config;
+	}
+	scene_config.AddChildrenConfig(game_objects_config, "GameObjects");
 }
 
-void ModuleScene::LoadScene(const char* path)
+void ModuleScene::Load()
 {
 
 }
