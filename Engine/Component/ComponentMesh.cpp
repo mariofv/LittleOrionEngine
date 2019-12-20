@@ -56,7 +56,7 @@ void ComponentMesh::SetupMesh()
 	glBufferData(GL_ARRAY_BUFFER, mesh_to_render->vertices.size() * sizeof(Mesh::Vertex), &mesh_to_render->vertices[0], GL_STATIC_DRAW);
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_to_render->indices.size() * sizeof(unsigned int), &mesh_to_render->indices[0], GL_STATIC_DRAW);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_to_render->indices.size() * sizeof(UINT32), &mesh_to_render->indices[0], GL_STATIC_DRAW);
 
 	// VERTEX POSITION
 	glEnableVertexAttribArray(0);

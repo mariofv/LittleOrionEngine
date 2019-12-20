@@ -85,7 +85,7 @@ void MeshImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_inde
 
 void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file) const
 {
-	std::vector<UINT64> indices;
+	std::vector<UINT32> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
 		aiFace face = mesh->mFaces[i];
@@ -104,18 +104,18 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 	}
 
 
-	UINT64 num_indices = indices.size();
-	UINT64 num_vertices = vertices.size();
-	UINT64 ranges[2] = { num_indices, num_vertices };
-	UINT64 size = sizeof(ranges) + sizeof(UINT64) * num_indices + sizeof(Mesh::Vertex) * num_vertices;
+	UINT32 num_indices = indices.size();
+	UINT32 num_vertices = vertices.size();
+	UINT32 ranges[2] = { num_indices, num_vertices };
+	UINT32 size = sizeof(ranges) + sizeof(UINT32) * num_indices + sizeof(Mesh::Vertex) * num_vertices;
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
-	UINT64 bytes = sizeof(ranges); // First store ranges
+	UINT32 bytes = sizeof(ranges); // First store ranges
 	memcpy(cursor, ranges, bytes);
 
 	cursor += bytes; // Store indices
-	bytes = sizeof(UINT64) * num_indices;
+	bytes = sizeof(UINT32) * num_indices;
 	memcpy(cursor, &indices.front(), bytes);
 
 	cursor += bytes; // Store vertices
@@ -145,18 +145,18 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 	char * data = App->filesystem->Load(file_path, mesh_size);
 	char* cursor = data;
 
-	UINT64 ranges[2];
+	UINT32 ranges[2];
 	//Get ranges
-	UINT64 bytes = sizeof(ranges); // First store ranges
+	UINT32 bytes = sizeof(ranges); // First store ranges
 	memcpy(ranges, cursor, bytes);
 
-	std::vector<UINT64> indices;
+	std::vector<UINT32> indices;
 	std::vector<Mesh::Vertex> vertices;
 
 	indices.resize(ranges[0]);
 
 	cursor += bytes; // Get indices
-	bytes = sizeof(UINT64) * ranges[0];
+	bytes = sizeof(UINT32) * ranges[0];
 	memcpy(&indices.front(), cursor, bytes);
 
 	vertices.resize(ranges[1]);

@@ -1,6 +1,6 @@
 #include "Mesh.h"
 
-Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<UINT64> && indices) : 
+Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<UINT32> && indices) : 
 	vertices(vertices), 
 	indices(indices)
 {
@@ -8,7 +8,7 @@ Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<UINT64> && indices) :
 	num_triangles = num_vertices / 3;
 }
 
-Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<UINT64> && indices, std::string mesh_file_path) : vertices(vertices),
+Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<UINT32> && indices, std::string mesh_file_path) : vertices(vertices),
 indices(indices),
 mesh_file_path(mesh_file_path)
 {
