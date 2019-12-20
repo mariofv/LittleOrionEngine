@@ -65,17 +65,10 @@ public:
 	GameObject* LoadModel(const char *new_model_file_path);
 
 private:
-	void UnloadCurrentModel();
 	void LoadNode(GameObject *parent_node, const std::string model_base_path);
-
-	void LoadMeshData(const aiMesh *mesh, ComponentMesh *mesh_component) const;
 	std::shared_ptr<Texture> LoadMaterialData(const aiMaterial *material, const std::string model_base_path);
 
-	std::string GetModelBasePath(const char *model_file_path) const;
 	std::string GetTextureFileName(const char *texture_file_path) const;
-
-public:
-	const aiScene* scene = nullptr;
 };
 
 #endif //_MODULEMODELLOADER_H_

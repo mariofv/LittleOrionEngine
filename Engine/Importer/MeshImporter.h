@@ -5,6 +5,8 @@
 #include <memory>
 
 class aiMesh;
+class aiNode;
+class aiScene;
 class Mesh;
 class MeshImporter : Importer
 {
@@ -16,6 +18,7 @@ public:
 	void RemoveMeshFromCacheIfNeeded(std::shared_ptr<Mesh>);
 private:
 	void ImportMesh(const aiMesh* file_path, const std::string& output_file) const;
+	void ImportNode(const aiNode * root_node, const aiScene* scene, const std::string& output_file);
 	std::shared_ptr<ModuleFileSystem::File> GetAlreadyImportedMesh(const ModuleFileSystem::File & file) const;
 
 private:

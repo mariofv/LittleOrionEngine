@@ -21,14 +21,13 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file)
 		return true;
 	}
 
-
 	output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER, file.filename_no_extension);
 	APP_LOG_INIT("Importing model %s.", file_path);
 
 	if (file.filename.empty())
 	{
-		APP_LOG_SUCCESS("Importing material error: Couldn't find the file to import.")
-			return false;
+		APP_LOG_SUCCESS("Importing mesh error: Couldn't find the file to import.")
+		return false;
 	}
 	performance_timer.Start();
 
@@ -46,15 +45,24 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file)
 
 	
 	aiNode * root_node = scene->mRootNode;
-	for (UINT64 i = 0; i < root_node->mNumChildren; i++)
-	{
-		std::string mesh_file = output_file + "//" + std::string(scene->mRootNode->mChildren[i]->mName.data) + ".ol";
-		ImportMesh(scene->mMeshes[i], mesh_file);
-	}
+	ImportNode(root_node, scene, output_file);
+
 	aiReleaseImport(scene);
 	return true;
 }
-
+void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, const std::string& output_file) 
+{
+	for (size_t i = 0; i < root_node->mNumChildren; i++)
+	{
+		if (root_node->mChildren[i]->mNumMeshes != 0)
+		{
+			std::string mesh_file = output_file + "//" + std::string(root_node->mChildren[i]->mName.data) + ".ol";
+			size_t mesh_index = root_node->mChildren[i]->mMeshes[0];
+			ImportMesh(scene->mMeshes[mesh_index], mesh_file);
+		}
+		ImportNode(root_node->mChildren[i], scene, output_file);
+	}
+}
 
 void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file) const
 {

@@ -34,16 +34,10 @@ bool ModuleModelLoader::Init()
 // Called before quitting
 bool ModuleModelLoader::CleanUp()
 {
-	UnloadCurrentModel();
 	Assimp::DefaultLogger::kill();
 	return true;
 }
 
-
-void ModuleModelLoader::UnloadCurrentModel()
-{
-	aiReleaseImport(scene);
-}
 
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
@@ -51,8 +45,7 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 
 	App->mesh_importer->Import(new_model_file_path, model_output);
 
-
-	std::string model_base_path = GetModelBasePath(new_model_file_path);
+	ModuleFileSystem::File file = ModuleFileSystem::File(new_model_file_path);
 	GameObject *model_root_node = App->scene->CreateGameObject();
 	model_root_node->name = std::string("RootNode");
 
@@ -75,33 +68,6 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::string mode
 	ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
 	mesh_component->SetMesh(mesh_for_component);
 	node_game_object->Update();
-}
-
-void ModuleModelLoader::LoadMeshData(const aiMesh *mesh, ComponentMesh *mesh_component) const
-{
-	/*std::vector<ComponentMesh::Vertex> vertices;
-	APP_LOG_INFO("Loading mesh vertices");
-	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
-	{
-		ComponentMesh::Vertex vertex;
-		vertex.position = float3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
-		vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
-		vertices.push_back(vertex);
-	}
-
-	APP_LOG_INFO("Loading mesh indices");
-	std::vector<unsigned int> indices;
-	for (unsigned int i = 0; i < mesh->mNumFaces; ++i)
-	{
-		assert(mesh->mFaces[i].mNumIndices == 3);
-		indices.push_back(mesh->mFaces[i].mIndices[0]);
-		indices.push_back(mesh->mFaces[i].mIndices[1]);
-		indices.push_back(mesh->mFaces[i].mIndices[2]);
-	}
-
-	APP_LOG_INFO("Mesh uses material %d", mesh->mMaterialIndex);
-
-	mesh_component->LoadMesh();*/
 }
 
 std::shared_ptr<Texture> ModuleModelLoader::LoadMaterialData(const aiMaterial *material, const std::string model_base_path)
@@ -141,16 +107,6 @@ std::shared_ptr<Texture> ModuleModelLoader::LoadMaterialData(const aiMaterial *m
 	}
 
 	return nullptr;
-}
-
-std::string ModuleModelLoader::GetModelBasePath(const char *model_file_path) const
-{
-	std::string file_string = std::string(model_file_path);
-
-	std::size_t found = file_string.find_last_of("/\\");
-	std::string model_base_path = file_string.substr(0, found + 1);
-
-	return model_base_path;
 }
 
 std::string ModuleModelLoader::GetTextureFileName(const char *texture_file_path) const
