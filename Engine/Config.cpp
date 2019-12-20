@@ -29,6 +29,25 @@ int Config::GetInt(const std::string& name, int opt_value) const
 	}
 }
 
+void Config::AddUInt(unsigned int value_to_add, const std::string& name)
+{
+	rapidjson::Value member_name(name.c_str(), config_document.GetAllocator());
+	config_document.AddMember(member_name, value_to_add, config_document.GetAllocator());
+}
+
+int Config::GetUInt(const std::string& name, unsigned int opt_value) const
+{
+	if (!config_document.HasMember(name.c_str()))
+	{
+		return opt_value;
+	}
+	else
+	{
+		const rapidjson::Value& current_value = config_document[name.c_str()];
+		return current_value.GetUint64();
+	}
+}
+
 void Config::AddFloat(float value_to_add, const std::string& name)
 {
 	rapidjson::Value member_name(name.c_str(), config_document.GetAllocator());

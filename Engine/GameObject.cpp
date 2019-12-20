@@ -101,12 +101,9 @@ void GameObject::Update()
 
 void GameObject::Save()
 {
-	rapidjson::StringBuffer buffer;
-	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
-
 	Config gameobject_config; 
 
-	gameobject_config.AddInt(UUID, "UUID");
+	gameobject_config.AddUInt(UUID, "UUID");
 	if (parent != nullptr)
 	{
 		gameobject_config.AddInt(parent->UUID, "ParentUUID");
@@ -126,9 +123,6 @@ void GameObject::Save()
 		delete component_config;
 	}
 	gameobject_config.AddChildrenConfig(gameobject_components_config, "Components");
-
-	gameobject_config.config_document.Accept(writer);
-	APP_LOG_ERROR(buffer.GetString());
 }
 
 void GameObject::Load()

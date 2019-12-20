@@ -92,12 +92,33 @@ void ComponentCamera::Delete()
 
 void ComponentCamera::Save(Config& config) const
 {
-
+	config.AddUInt(camera_frustum.type, "FrustumType");
+	config.AddFloat(camera_frustum.nearPlaneDistance, "NearPlaneDistance");
+	config.AddFloat(camera_frustum.farPlaneDistance, "FarPlaneDistance");
+	config.AddFloat(camera_frustum.verticalFov, "VerticalFOV");
 }
 
 void ComponentCamera::Load(const Config& config)
 {
+	unsigned int frustum_type_int = config.GetUInt("FrustumType", 1);
+	switch (frustum_type_int)
+	{
+	case 1:
+		camera_frustum.type = math::InvalidFrustum;
+		break;
+	case 2:
+		camera_frustum.type = math::OrthographicFrustum;
+		break;
+	case 3:
+		camera_frustum.type = math::PerspectiveFrustum;
+		break;
+	}
+	camera_frustum.nearPlaneDistance = config.GetFloat("NearPlaneDistance", 1.0f);
+	camera_frustum.farPlaneDistance = config.GetFloat("FarPlaneDistance", 100.0f);
+	camera_frustum.verticalFov = config.GetFloat("VerticalFOV", math::pi / 4.0f);
+	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
 
+	GenerateMatrices();
 }
 
 void ComponentCamera::RecordFrame(const float width, const float height)

@@ -13,6 +13,9 @@ public:
 	void AddInt(int value_to_add, const std::string &name);
 	int GetInt(const std::string &name, int opt_value) const;
 
+	void AddUInt(unsigned int value_to_add, const std::string& name);
+	int GetUInt(const std::string& name, unsigned int opt_value) const;
+
 	void AddFloat(float value_to_add, const std::string& name);
 	float GetFloat(const std::string &name, float opt_value) const;
 
