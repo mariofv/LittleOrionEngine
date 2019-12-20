@@ -28,6 +28,10 @@ public:
 	void AddQuat(const Quat & value_to_add, const std::string& name);
 	void GetQuat(const std::string& name, Quat& return_value, const Quat& opt_value) const;
 
+	void AddChildConfig(Config& value_to_add, const std::string& name);
+
+	void AddChildrenConfig(std::vector<Config*> value_to_add, const std::string& name);
+
 public:
 	rapidjson::Document config_document;
 };

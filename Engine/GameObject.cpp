@@ -104,23 +104,31 @@ void GameObject::Save()
 	rapidjson::StringBuffer buffer;
 	rapidjson::PrettyWriter<rapidjson::StringBuffer> writer(buffer);
 
+	Config gameobject_config; 
+
+	gameobject_config.AddInt(UUID, "UUID");
+	if (parent != nullptr)
+	{
+		gameobject_config.AddInt(parent->UUID, "ParentUUID");
+	}
+	gameobject_config.AddString(name, "Name");
+
 	Config transform_config;
 	transform.Save(transform_config);
+	gameobject_config.AddChildConfig(transform_config, "Transform");
 
-	transform_config.config_document.Accept(writer);
-	APP_LOG_ERROR(buffer.GetString());
-
+	std::vector<Config*> gameobject_components_config;
 	for (auto& component : components)
 	{
-		rapidjson::StringBuffer buffer_tmp;
-		rapidjson::PrettyWriter<rapidjson::StringBuffer> writer_tmp(buffer_tmp);
-
-		Config component_config;
-		component->Save(component_config);
-
-		component_config.config_document.Accept(writer_tmp);
-		APP_LOG_ERROR(buffer_tmp.GetString());
+		Config* component_config = new Config();
+		component->Save(*component_config);
+		gameobject_components_config.push_back(component_config);
+		delete component_config;
 	}
+	gameobject_config.AddChildrenConfig(gameobject_components_config, "Components");
+
+	gameobject_config.config_document.Accept(writer);
+	APP_LOG_ERROR(buffer.GetString());
 }
 
 void GameObject::Load()

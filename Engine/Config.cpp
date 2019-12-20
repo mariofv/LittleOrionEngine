@@ -197,3 +197,30 @@ void Config::GetQuat(const std::string& name, Quat& return_value, const Quat& op
 		);
 	}
 }
+
+void Config::AddChildConfig(Config& value_to_add, const std::string& name)
+{
+	if (!config_document.HasMember(name.c_str()))
+	{
+		rapidjson::Value member_name(name.c_str(), config_document.GetAllocator());
+		config_document.AddMember(member_name, value_to_add.config_document, config_document.GetAllocator());
+	}
+	else
+	{
+		rapidjson::Value& current_value = config_document[name.c_str()];
+		//current_value.SetObject(value_to_add.config_document.GetObject());
+	}
+}
+
+
+void Config::AddChildrenConfig(std::vector<Config*> value_to_add, const std::string& name)
+{
+	rapidjson::Value member_name(name.c_str(), config_document.GetAllocator());
+	rapidjson::Value children_configs_value(rapidjson::kArrayType);
+	for (unsigned int i = 0; i < value_to_add.size(); ++i)
+	{
+		children_configs_value.PushBack((rapidjson::Value&)value_to_add[i]->config_document, config_document.GetAllocator());
+	}
+	config_document.AddMember(member_name, children_configs_value, config_document.GetAllocator());
+}
+
