@@ -19,7 +19,7 @@ Texture::~Texture()
 
 void Texture::InitTexture()
 {
-	glCreateTextures(GL_TEXTURE_2D, 1, &opengl_texture);
+	glGenTextures(GL_TEXTURE_2D, &opengl_texture);
 	glBindTexture(GL_TEXTURE_2D, opengl_texture);
 
 	// set the texture wrapping/filtering options (on the currently bound texture object)
