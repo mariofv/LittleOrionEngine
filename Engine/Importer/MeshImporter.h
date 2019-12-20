@@ -16,6 +16,7 @@ public:
 	void RemoveMeshFromCacheIfNeeded(std::shared_ptr<Mesh>);
 private:
 	void ImportMesh(const aiMesh* file_path, const std::string& output_file) const;
+	std::shared_ptr<ModuleFileSystem::File> GetAlreadyImportedMesh(const ModuleFileSystem::File & file) const;
 
 private:
 	const std::string LIBRARY_MESHES_FOLDER = ".//Library//Meshes";

@@ -23,7 +23,10 @@ public:
 		File(const std::string & path);
 		std::string filename;
 		std::string file_path;
+		std::string filename_no_extension;
 		ModuleFileSystem::FileType file_type;
+
+
 		std::vector<std::shared_ptr<File>> childs;
 		std::shared_ptr<File> parent;
 		bool operator==(const File& compare);

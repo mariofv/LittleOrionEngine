@@ -55,10 +55,6 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	std::string model_base_path = GetModelBasePath(new_model_file_path);
 	GameObject *model_root_node = App->scene->CreateGameObject();
 	model_root_node->name = std::string("RootNode");
-	
-	if (App->filesystem->GetFileType(model_base_path.c_str()) != ModuleFileSystem::FileType::DIRECTORY) {
-		LoadNode(model_root_node, model_base_path.c_str());
-	}
 
 	model_output = model_output.substr(0, model_output.size());
 	std::vector<std::shared_ptr<ModuleFileSystem::File>> files_in_output_path;
@@ -77,7 +73,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::string mode
 
 	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load(model_base_path.c_str());
 	ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
-	mesh_component->mesh_to_render = mesh_for_component;
+	mesh_component->SetMesh(mesh_for_component);
 	node_game_object->Update();
 }
 

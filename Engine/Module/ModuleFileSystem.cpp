@@ -242,6 +242,7 @@ ModuleFileSystem::File::File(const WIN32_FIND_DATA & windows_file_data, const st
 	this->filename = windows_file_data.cFileName;
 	this->file_path = path + "//" + windows_file_data.cFileName;
 	this->file_type = App->filesystem->GetFileType(filename.c_str(), windows_file_data.dwFileAttributes);
+	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
 }
 
 ModuleFileSystem::File::File(const std::string & path) {
@@ -255,6 +256,7 @@ ModuleFileSystem::File::File(const std::string & path) {
 	this->filename = find_file_data.cFileName;
 	this->file_path = path + "//" + find_file_data.cFileName;
 	this->file_type = App->filesystem->GetFileType(filename.c_str(), find_file_data.dwFileAttributes);
+	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
 
 }
 

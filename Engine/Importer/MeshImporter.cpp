@@ -14,9 +14,17 @@ MeshImporter::MeshImporter()
 
 bool MeshImporter::Import(const char* file_path, std::string& output_file)
 {
+	ModuleFileSystem::File file = ModuleFileSystem::File(file_path);
+	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedMesh(file);
+	if (already_imported != nullptr) {
+		output_file = already_imported->file_path;
+		return true;
+	}
+
+
+	output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER, file.filename_no_extension);
 	APP_LOG_INIT("Importing model %s.", file_path);
 
-	ModuleFileSystem::File file = ModuleFileSystem::File(file_path);
 	if (file.filename.empty())
 	{
 		APP_LOG_SUCCESS("Importing material error: Couldn't find the file to import.")
@@ -36,21 +44,12 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file)
 	float time = performance_timer.Read();
 	APP_LOG_SUCCESS("Model %s loaded correctly from assimp in %f second .", file_path, time);
 
-	std::string filename_no_extension = file.filename.substr(0, file.filename.find_last_of("."));
-	if (scene->mNumMeshes == 1) {
-		output_file = LIBRARY_MESHES_FOLDER + "//" + std::string(filename_no_extension) + ".ol";
-		ImportMesh(scene->mMeshes[0], output_file);
-	}
-	else 
+	
+	aiNode * root_node = scene->mRootNode;
+	for (UINT64 i = 0; i < root_node->mNumChildren; i++)
 	{
-
-		aiNode * root_node = scene->mRootNode;
-		output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER, filename_no_extension);
-		for (UINT64 i = 0; i < root_node->mNumChildren; i++)
-		{
-			std::string mesh_file = output_file + "//" + std::string(scene->mRootNode->mChildren[i]->mName.data) + ".ol";
-			ImportMesh(scene->mMeshes[i], mesh_file);
-		}
+		std::string mesh_file = output_file + "//" + std::string(scene->mRootNode->mChildren[i]->mName.data) + ".ol";
+		ImportMesh(scene->mMeshes[i], mesh_file);
 	}
 	aiReleaseImport(scene);
 	return true;
@@ -73,11 +72,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 	{
 		Mesh::Vertex new_vertex;
 		new_vertex.position = float3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
-
-		if (mesh->mTextureCoords[i] != NULL)
-		{
-			new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
-		}
+		new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 		vertices.push_back(new_vertex);
 	}
 
@@ -159,4 +154,21 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file
 	 {
 		 (*it).~shared_ptr();
 	 }
+ }
+
+ std::shared_ptr<ModuleFileSystem::File> MeshImporter::GetAlreadyImportedMesh(const ModuleFileSystem::File & file) const{
+	 std::vector<std::shared_ptr<ModuleFileSystem::File>> meshes_already_in_library;
+	 App->filesystem->GetAllFilesInPath(LIBRARY_MESHES_FOLDER, meshes_already_in_library, true);
+
+	 //Check if the mesh is already loaded
+	 auto it = std::find_if(meshes_already_in_library.begin(), meshes_already_in_library.end(), [file](const std::shared_ptr<ModuleFileSystem::File> folder)
+	 {
+		 return folder->filename.find(file.filename_no_extension) != std::string::npos;
+	 });
+
+	 if (it != meshes_already_in_library.end())
+	 {
+		 return *it;
+	 }
+	 return nullptr;
  }
