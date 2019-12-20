@@ -2,9 +2,9 @@
 
 in vec3 glColor;
 
-out vec4 color;
+out vec4 Color;
 
 void main()
 {
-    color = vec4(glColor, 1.0);
+    Color = vec4(glColor, 1.0);
 }

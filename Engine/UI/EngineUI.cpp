@@ -505,6 +505,15 @@ void EngineUI::ShowAboutWindow()
 			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 		}
 
+		if (ImGui::MenuItem("rapidjson"))
+		{
+			ShellExecuteA(NULL, "open", "https://github.com/Tencent/rapidjson/", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+		}
+
 		ImGui::Separator();
 
 
