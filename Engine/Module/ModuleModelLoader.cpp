@@ -9,6 +9,7 @@
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 #include "Importer/MeshImporter.h"
+#include "Importer/MaterialImporter.h"
 
 
 #include <assimp/cimport.h>
@@ -50,10 +51,21 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 	GameObject *node_game_object = App->scene->CreateChildGameObject(parent_node);
 
 	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load(model_base_path->file_path.c_str());
+
 	ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
 	mesh_component->SetMesh(mesh_for_component);
 	node_game_object->name = model_base_path->filename_no_extension;
 	node_game_object->Update();
+
+	if (mesh_for_component->meshes_textures_path.size() > 0)
+	{
+		ComponentMaterial *componentMaterial = (ComponentMaterial*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+		for (auto texture_path : mesh_for_component->meshes_textures_path)
+		{
+			std::shared_ptr<Texture> material_texture = App->material_importer->Load(texture_path.c_str());
+			componentMaterial->texture = material_texture;
+		}
+	}
 }
 
 

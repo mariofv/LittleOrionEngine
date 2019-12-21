@@ -188,7 +188,7 @@ unsigned int MaterialImporter::LoadCubemap(std::vector<std::string> faces_paths)
 void MaterialImporter::RemoveTextureFromCacheIfNeeded(std::shared_ptr<Texture> texture) 
 {
 	auto it = std::find(texture_cache.begin(), texture_cache.end(), texture);
-	if (it != texture_cache.end() && (*it).use_count() <= 2)
+	if (it != texture_cache.end() && (*it).use_count() <= 3)
 	{
 		(*it).~shared_ptr();
 	}

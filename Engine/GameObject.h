@@ -39,7 +39,7 @@ public:
 	void UpdateHierarchyDepth();
 	void UpdateHierarchyBranch();
 
-	const GLuint GetMaterialTexture(const int material_index) const;
+	const GLuint GetMaterialTexture() const;
 
 
 	void ShowPropertiesWindow();

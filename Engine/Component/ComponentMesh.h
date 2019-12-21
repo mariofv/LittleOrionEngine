@@ -27,7 +27,6 @@ private:
 	void SetupMesh();
 
 public:
-	unsigned int material_index = -1;
 	std::shared_ptr<Mesh> mesh_to_render;
 
 private:

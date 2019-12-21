@@ -81,7 +81,7 @@ void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, co
 
 void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string> & loaded_meshes_materials, const std::string& output_file) const
 {
-	std::vector<UINT32> indices;
+	std::vector<uint32_t> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
 		aiFace face = mesh->mFaces[i];
@@ -98,20 +98,20 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 		new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 		vertices.push_back(new_vertex);
 	}
-	std::vector<UINT32> materials_path_size;
-	UINT32 total_meshes_size = 0;
+	std::vector<uint32_t> materials_path_size;
+	uint32_t total_meshes_size = 0;
 	for (auto & path_size : loaded_meshes_materials)
 	{
 		materials_path_size.push_back(path_size.size());
 		total_meshes_size += path_size.size();
 	}
 
-	UINT32 num_indices = indices.size();
-	UINT32 num_vertices = vertices.size();
-	UINT32 num_materials = loaded_meshes_materials.size();
-	UINT32 ranges[3] = { num_indices, num_vertices, num_materials };
+	uint32_t num_indices = indices.size();
+	uint32_t num_vertices = vertices.size();
+	uint32_t num_materials = loaded_meshes_materials.size();
+	uint32_t ranges[3] = { num_indices, num_vertices, num_materials };
 
-	UINT32 size = sizeof(ranges) + sizeof(UINT32) * num_indices + sizeof(Mesh::Vertex) * num_vertices + sizeof(UINT32) * num_materials + total_meshes_size;
+	uint32_t size = sizeof(ranges) + sizeof(uint32_t) * num_indices + sizeof(Mesh::Vertex) * num_vertices + sizeof(uint32_t) * num_materials + total_meshes_size;
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
@@ -119,7 +119,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	memcpy(cursor, ranges, bytes);
 
 	cursor += bytes; // Store indices
-	bytes = sizeof(UINT32) * num_indices;
+	bytes = sizeof(uint32_t) * num_indices;
 	memcpy(cursor, &indices.front(), bytes);
 
 	cursor += bytes; // Store vertices
@@ -127,7 +127,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	memcpy(cursor, &vertices.front(), bytes);
 
 	cursor += bytes; // Store sizes
-	bytes = sizeof(UINT32) * num_materials;
+	bytes = sizeof(uint32_t) * num_materials;
 	memcpy(cursor, &materials_path_size.front(), bytes);
 
 	for (size_t i = 0; i < num_materials; i++)
@@ -161,20 +161,20 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	char * data = App->filesystem->Load(file_path, mesh_size);
 	char* cursor = data;
 
-	UINT32 ranges[3];
+	uint32_t ranges[3];
 	//Get ranges
 	UINT64 bytes = sizeof(ranges); // First store ranges
 	memcpy(ranges, cursor, bytes);
 
-	std::vector<UINT32> indices;
+	std::vector<uint32_t> indices;
 	std::vector<Mesh::Vertex> vertices;
-	std::vector<UINT32> meshes_materials_size;
-	std::vector<std::string> meshes_materials;
+	std::vector<uint32_t> meshes_materials_size;
+	std::vector<std::string> meshes_textures_path;
 
 	indices.resize(ranges[0]);
 
 	cursor += bytes; // Get indices
-	bytes = sizeof(UINT32) * ranges[0];
+	bytes = sizeof(uint32_t) * ranges[0];
 	memcpy(&indices.front(), cursor, bytes);
 
 	vertices.resize(ranges[1]);
@@ -187,10 +187,10 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	meshes_materials_size.resize(ranges[2]);
 
 	cursor += bytes; // Get sizes
-	bytes = sizeof(UINT32) * ranges[2];
+	bytes = sizeof(uint32_t) * ranges[2];
 	memcpy(&meshes_materials_size.front(), cursor, bytes);
 
-	meshes_materials.resize(ranges[2]);
+	meshes_textures_path.resize(ranges[2]);
 	for (size_t i = 0; i < ranges[2]; i++)
 	{
 		cursor += bytes; // Get materials
@@ -198,10 +198,10 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 		std::vector<char> path;
 		path.resize(bytes);
 		memcpy(&path.front(),cursor,bytes);
-		meshes_materials[i] = std::string(path.begin(), path.end());
+		meshes_textures_path[i] = std::string(path.begin(), path.end());
 	}
 
-	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(std::move(vertices), std::move(indices), file_path);
+	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(std::move(vertices), std::move(indices), std::move(meshes_textures_path),file_path);
 	mesh_cache.push_back(new_mesh);
 	float time = performance_timer.Read();
 	free(data);

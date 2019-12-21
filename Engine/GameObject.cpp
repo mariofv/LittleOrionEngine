@@ -241,17 +241,14 @@ void GameObject::UpdateHierarchyBranch()
 	}
 }
 
-const GLuint GameObject::GetMaterialTexture(const int material_index) const
+const GLuint GameObject::GetMaterialTexture() const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		if (components[i]->GetType() == Component::ComponentType::MATERIAL)
 		{
 			ComponentMaterial* current_material = (ComponentMaterial*)components[i];
-			if (current_material->index == material_index)
-			{
-				return current_material->GetTexture();
-			}
+			return current_material->GetTexture();
 		}
 	}
 
