@@ -11,7 +11,6 @@ Config::Config()
 Config::Config(const rapidjson::Value* config_query_value)
 {
 	this->config_query_value = config_query_value;
-
 }
 
 Config::~Config()

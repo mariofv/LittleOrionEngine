@@ -168,7 +168,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	{
 		grid_renderer->Render(camera);
 	}
-	if (App->debug->show_camera_frustum)
+	if (App->debug->show_camera_frustum && App->cameras->active_camera != nullptr)
 	{
 		geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
 	}

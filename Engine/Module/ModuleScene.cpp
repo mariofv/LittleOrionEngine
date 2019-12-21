@@ -108,6 +108,7 @@ void ModuleScene::Load(const SerializedScene& serialized_scene)
 {
 	DeleteCurrentScene();
 	root = new GameObject(0);
+
 	std::vector<Config*> game_objects_config;
 	serialized_scene.GetGameObjectsConfig(game_objects_config);
 }

@@ -1,11 +1,11 @@
 {
     "GameObjects": [
         {
-            "UUID": 1087832374,
-            "ParentUUID": 4177878397,
+            "UUID": 2626831073,
+            "ParentUUID": 0,
             "Name": "Main Camera",
             "Transform": {
-                "UUID": -1266856645,
+                "UUID": -1781630547,
                 "Translation": [
                     0.0,
                     1.0,
@@ -34,11 +34,11 @@
             ]
         },
         {
-            "UUID": 4175058950,
-            "ParentUUID": 4177878397,
+            "UUID": 1944971551,
+            "ParentUUID": 0,
             "Name": "RootNode",
             "Transform": {
-                "UUID": 606544091,
+                "UUID": -656612423,
                 "Translation": [
                     0.0,
                     0.0,
@@ -59,11 +59,11 @@
             "Components": []
         },
         {
-            "UUID": 2287900399,
-            "ParentUUID": 4175058950,
+            "UUID": 2426858573,
+            "ParentUUID": 1944971551,
             "Name": "Chimney",
             "Transform": {
-                "UUID": 120235318,
+                "UUID": -1651896379,
                 "Translation": [
                     0.0,
                     0.0,
@@ -92,11 +92,11 @@
             ]
         },
         {
-            "UUID": 4011558859,
-            "ParentUUID": 4175058950,
+            "UUID": 3842905437,
+            "ParentUUID": 1944971551,
             "Name": "Baker_house",
             "Transform": {
-                "UUID": -1591010881,
+                "UUID": -1537020045,
                 "Translation": [
                     0.0,
                     0.0,
