@@ -36,8 +36,25 @@ public:
 
 	virtual void ShowComponentWindow() = 0;
 
+	static ComponentType GetComponentType(unsigned int component_type_uint)
+	{
+		switch (component_type_uint) 
+		{
+		case 0:
+			return ComponentType::AABB;
+		case 1:
+			return ComponentType::CAMERA;
+		case 2:
+			return ComponentType::MATERIAL;
+		case 3:
+			return ComponentType::MESH;
+		case 4:
+			return ComponentType::TRANSFORM;
+		}
+	}
+
 public:
-	unsigned int UUID = -1;
+	unsigned int UUID = 0;
 
 	GameObject *owner = nullptr;
 	ComponentType type;

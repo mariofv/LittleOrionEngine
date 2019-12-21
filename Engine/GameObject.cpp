@@ -145,16 +145,17 @@ void GameObject::Load(const Config& config)
 	config.GetChildConfig("Transform", transform_config);
 	transform.Load(transform_config);
 
-	/*
-	std::vector<Config*> gameobject_components_config;
-	for (auto& component : components)
+	std::vector<Config> gameobject_components_config;
+	config.GetChildrenConfig("Components", gameobject_components_config);
+	for (unsigned int i = 0; i < gameobject_components_config.size(); ++i)
 	{
-		Config* component_config = new Config(config.allocator);
-		component->Save(*component_config);
-		gameobject_components_config.push_back(component_config);
+		int component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
+		assert(component_type_uint != 0);
+		
+		Component::ComponentType component_type = Component::GetComponentType(component_type_uint);
+		Component* created_component = CreateComponent(component_type);
+		created_component->Load(gameobject_components_config[i]);
 	}
-	config.AddChildrenConfig(gameobject_components_config, "Components");
-	*/
 }
 
 void GameObject::SetParent(GameObject *new_parent)

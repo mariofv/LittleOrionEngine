@@ -40,7 +40,8 @@ void ComponentMaterial::Delete()
 
 void ComponentMaterial::Save(Config& config) const
 {
-	config.AddUInt((unsigned int)type, "ComponentType");
+	config.AddUInt(UUID, "UUID");
+	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddInt(index, "Index");
 	config.AddString(texture->texture_path, "Path");
 	config.AddBool(show_checkerboard_texture, "Checkboard");

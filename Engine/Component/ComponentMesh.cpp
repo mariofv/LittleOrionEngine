@@ -43,14 +43,15 @@ void ComponentMesh::Delete()
 	App->renderer->RemoveComponentMesh(this);
 }
 
-
 void ComponentMesh::Save(Config& config) const
 {
-
+	config.AddUInt(UUID, "UUID");
+	config.AddInt((unsigned int)type, "ComponentType");
 }
 
 void ComponentMesh::Load(const Config& config)
 {
+	UUID = config.GetUInt("UUID", 0);
 
 }
 

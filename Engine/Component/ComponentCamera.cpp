@@ -92,6 +92,7 @@ void ComponentCamera::Delete()
 
 void ComponentCamera::Save(Config& config) const
 {
+	config.AddUInt(UUID, "UUID");
 	config.AddUInt((unsigned int)type, "ComponentType");
 	config.AddUInt(camera_frustum.type, "FrustumType");
 	config.AddFloat(camera_frustum.nearPlaneDistance, "NearPlaneDistance");
