@@ -35,6 +35,8 @@ public:
 
 	void ShowWindowOptions();
 
+private:
+	void InitOpenGLAttributes() const;
 public:
 	//The window we'll be rendering to
 	SDL_Window* window = nullptr;
@@ -45,7 +47,6 @@ public:
 	// OpenGL context
 	SDL_GLContext glcontext;
 
-public:
 	int screen_width = 0;
 	int screen_height = 0;
 
