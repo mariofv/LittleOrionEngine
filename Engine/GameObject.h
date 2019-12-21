@@ -15,6 +15,7 @@ class GameObject
 {
 public:
 	GameObject();
+	GameObject(unsigned int UUID);
 	GameObject(const std::string name);
 	~GameObject();
 

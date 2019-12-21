@@ -28,6 +28,10 @@ GameObject::GameObject() : transform(this), aabb(this), UUID(pcg32_random())
 {
 }
 
+GameObject::GameObject(unsigned int UUID) : transform(this), aabb(this), UUID(UUID)
+{
+}
+
 GameObject::GameObject(const std::string name) :
 	name(name),
 	transform(this),
