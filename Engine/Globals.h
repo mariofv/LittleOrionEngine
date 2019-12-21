@@ -75,6 +75,8 @@ enum class Fonts
 # define HOUSE_MODEL_PATH "./Assets/Models/baker_house/BakerHouse.fbx"
 # define GRID_TEXTURE_PATH "./resources/textures/grid.png"
 
+# define TMP_SCENE_PATH "./Assets/Scenes/tmp_scene.scene"
+
 #define FULLSCREEN false
 #define RESIZABLE true
 #define BORDERED true

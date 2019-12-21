@@ -1,6 +1,7 @@
 #include "ModuleTime.h"
 #include "Globals.h"
 #include "Application.h"
+#include "ModuleEditor.h"
 #include "ModuleWindow.h"
 #include "UI/EngineUI.h"
 #include "UI/EngineLog.h"
@@ -94,11 +95,13 @@ void ModuleTime::Play()
 {
 	if (!game_time_clock->Started())
 	{
+		App->editor->SaveSceneTmp();
 		game_time_clock->Start();
 	}
 	else
 	{
 		game_time_clock->Stop();
+		App->editor->LoadSceneTmp();
 	}
 }
 

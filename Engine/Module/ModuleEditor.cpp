@@ -37,6 +37,8 @@ update_status ModuleEditor::PostUpdate()
 // Called before quitting
 bool ModuleEditor::CleanUp()
 {
+	remove(TMP_SCENE_PATH);
+
 	return true;
 }
 
@@ -64,6 +66,33 @@ void ModuleEditor::SaveScene() const
 
 	std::ofstream scene_file;
 	scene_file.open(path);
+	scene_file << serialized_scene_string;
+	scene_file.close();
+}
+
+void ModuleEditor::LoadSceneTmp() const
+{
+	std::ifstream ifs(TMP_SCENE_PATH);
+	std::string serialized_scene_string(
+		(std::istreambuf_iterator<char>(ifs)),
+		(std::istreambuf_iterator<char>())
+	);
+
+	Config scene_config(serialized_scene_string);
+	App->scene->Load(scene_config);
+
+	remove(TMP_SCENE_PATH);
+}
+
+void ModuleEditor::SaveSceneTmp() const
+{
+	Config scene_config;
+	App->scene->Save(scene_config);
+	std::string serialized_scene_string;
+	scene_config.GetSerializedString(serialized_scene_string);
+
+	std::ofstream scene_file;
+	scene_file.open(TMP_SCENE_PATH);
 	scene_file << serialized_scene_string;
 	scene_file.close();
 }

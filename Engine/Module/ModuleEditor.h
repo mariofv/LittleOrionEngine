@@ -19,6 +19,8 @@ public:
 	void OpenScene() const;
 	void SaveScene() const;
 
+	void LoadSceneTmp() const;
+	void SaveSceneTmp() const;
 };
 
 #endif //_MODULEEDITOR_H_
