@@ -72,6 +72,19 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
+GameObject* ModuleScene::GetGameObject(unsigned int UUID) const
+{
+	for (auto& game_object : game_objects_ownership)
+	{
+		if (game_object->UUID == UUID) 
+		{
+			return game_object.get();
+		}
+	}
+
+	return nullptr;
+}
+
 void ModuleScene::Save(SerializedScene& serialized_scene) const
 {
 	std::vector<Config*> game_objects_config;

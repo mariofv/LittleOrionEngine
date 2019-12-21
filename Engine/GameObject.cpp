@@ -124,7 +124,31 @@ void GameObject::Save(Config& config) const
 
 void GameObject::Load(const Config& config)
 {
+	UUID = config.GetUInt("UUID", 0);
+	assert(UUID != 0);
 
+	unsigned int parent_UUID = config.GetUInt("ParentUUID", 0);
+
+	//TODO: This should be done later on, because its possible to try to load a node that its not already loaded
+	parent = App->scene->GetGameObject(parent_UUID); 
+	assert(parent != nullptr);
+
+	config.GetString("Name", name, "GameObject");
+
+	/*
+	Config transform_config(config.allocator);
+	transform.Save(transform_config);
+	config.AddChildConfig(transform_config, "Transform");
+
+	std::vector<Config*> gameobject_components_config;
+	for (auto& component : components)
+	{
+		Config* component_config = new Config(config.allocator);
+		component->Save(*component_config);
+		gameobject_components_config.push_back(component_config);
+	}
+	config.AddChildrenConfig(gameobject_components_config, "Components");
+	*/
 }
 
 void GameObject::SetParent(GameObject *new_parent)
