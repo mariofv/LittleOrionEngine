@@ -98,13 +98,20 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 		new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 		vertices.push_back(new_vertex);
 	}
-
+	std::vector<UINT32> materials_path_size;
+	UINT32 total_meshes_size = 0;
+	for (auto & path_size : loaded_meshes_materials)
+	{
+		materials_path_size.push_back(path_size.size());
+		total_meshes_size += path_size.size();
+	}
 
 	UINT32 num_indices = indices.size();
 	UINT32 num_vertices = vertices.size();
 	UINT32 num_materials = loaded_meshes_materials.size();
 	UINT32 ranges[3] = { num_indices, num_vertices, num_materials };
-	UINT32 size = sizeof(ranges) + sizeof(UINT32) * num_indices + sizeof(Mesh::Vertex) * num_vertices + sizeof(std::string) * num_materials;
+
+	UINT32 size = sizeof(ranges) + sizeof(UINT32) * num_indices + sizeof(Mesh::Vertex) * num_vertices + sizeof(UINT32) * num_materials + total_meshes_size;
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
@@ -119,9 +126,17 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	bytes = sizeof(Mesh::Vertex) * num_vertices;
 	memcpy(cursor, &vertices.front(), bytes);
 
-	cursor += bytes; // Store materials
-	bytes = sizeof(std::string) * num_materials;
-	memcpy(cursor, &loaded_meshes_materials.front(), bytes);
+	cursor += bytes; // Store sizes
+	bytes = sizeof(UINT32) * num_materials;
+	memcpy(cursor, &materials_path_size.front(), bytes);
+
+	for (size_t i = 0; i < num_materials; i++)
+	{
+		cursor += bytes; // Store materials
+		bytes = materials_path_size.at(i);
+		memcpy(cursor, &loaded_meshes_materials.at(i), bytes);
+	}
+
 
 	App->filesystem->Save(output_file.c_str(), data, size);
 	delete data;
@@ -153,6 +168,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 
 	std::vector<UINT32> indices;
 	std::vector<Mesh::Vertex> vertices;
+	std::vector<UINT32> meshes_materials_size;
 	std::vector<std::string> meshes_materials;
 
 	indices.resize(ranges[0]);
@@ -167,11 +183,20 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	bytes = sizeof(Mesh::Vertex) * ranges[1];
 	memcpy(&vertices.front(), cursor, bytes);
 
-	meshes_materials.resize(ranges[2]);
 
-	/*cursor += bytes; // Get materials
-	bytes = sizeof(std::string) * ranges[2];
-	memcpy(&meshes_materials.front(),cursor,bytes);*/
+	meshes_materials_size.resize(ranges[2]);
+
+	cursor += bytes; // Store sizes
+	bytes = sizeof(UINT32) * ranges[2];
+	memcpy(&meshes_materials_size.front(), cursor, bytes);
+
+	meshes_materials.resize(ranges[2]);
+	for (size_t i = 0; i < ranges[2]; i++)
+	{
+		cursor += bytes; // Get materials
+		bytes = meshes_materials_size.at(i);
+		memcpy(&meshes_materials.at(i),cursor,bytes);
+	}
 
 	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(std::move(vertices), std::move(indices), file_path);
 	mesh_cache.push_back(new_mesh);
