@@ -134,7 +134,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	{
 		cursor += bytes; // Store materials
 		bytes = materials_path_size.at(i);
-		memcpy(cursor, &loaded_meshes_materials.at(i), bytes);
+		memcpy(cursor, loaded_meshes_materials[i].c_str(), bytes);
 	}
 
 
@@ -186,7 +186,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 
 	meshes_materials_size.resize(ranges[2]);
 
-	cursor += bytes; // Store sizes
+	cursor += bytes; // Get sizes
 	bytes = sizeof(UINT32) * ranges[2];
 	memcpy(&meshes_materials_size.front(), cursor, bytes);
 
@@ -194,8 +194,11 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	for (size_t i = 0; i < ranges[2]; i++)
 	{
 		cursor += bytes; // Get materials
-		bytes = meshes_materials_size.at(i);
-		memcpy(&meshes_materials.at(i),cursor,bytes);
+		bytes = meshes_materials_size[i];
+		std::vector<char> path;
+		path.resize(bytes);
+		memcpy(&path.front(),cursor,bytes);
+		meshes_materials[i] = std::string(path.begin(), path.end());
 	}
 
 	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(std::move(vertices), std::move(indices), file_path);
