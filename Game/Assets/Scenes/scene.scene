@@ -1,11 +1,11 @@
 {
     "GameObjects": [
         {
-            "UUID": 3501395537,
-            "ParentUUID": 307541503,
+            "UUID": 574813458,
+            "ParentUUID": 1692969218,
             "Name": "Main Camera",
             "Transform": {
-                "UUID": -1629745214,
+                "UUID": 1902590300,
                 "Translation": [
                     0.0,
                     1.0,
@@ -25,6 +25,7 @@
             },
             "Components": [
                 {
+                    "ComponentType": 1,
                     "FrustumType": 2,
                     "NearPlaneDistance": 1.0,
                     "FarPlaneDistance": 500.0,
@@ -33,11 +34,11 @@
             ]
         },
         {
-            "UUID": 1814984859,
-            "ParentUUID": 307541503,
+            "UUID": 464504467,
+            "ParentUUID": 1692969218,
             "Name": "RootNode",
             "Transform": {
-                "UUID": -478177085,
+                "UUID": -830099884,
                 "Translation": [
                     0.0,
                     0.0,
@@ -58,11 +59,11 @@
             "Components": []
         },
         {
-            "UUID": 2116669575,
-            "ParentUUID": 1814984859,
+            "UUID": 78699370,
+            "ParentUUID": 464504467,
             "Name": "Chimney",
             "Transform": {
-                "UUID": 845700708,
+                "UUID": 1326811899,
                 "Translation": [
                     0.0,
                     0.0,
@@ -83,6 +84,7 @@
             "Components": [
                 {},
                 {
+                    "ComponentType": 2,
                     "Index": 0,
                     "Path": "./Assets/Models/baker_house/Baker_house.png",
                     "Checkboard": false
@@ -90,11 +92,11 @@
             ]
         },
         {
-            "UUID": 274315724,
-            "ParentUUID": 1814984859,
+            "UUID": 563779522,
+            "ParentUUID": 464504467,
             "Name": "Baker_house",
             "Transform": {
-                "UUID": 1330366951,
+                "UUID": 1767633677,
                 "Translation": [
                     0.0,
                     0.0,
@@ -115,6 +117,7 @@
             "Components": [
                 {},
                 {
+                    "ComponentType": 2,
                     "Index": 0,
                     "Path": "./Assets/Models/baker_house/Baker_house.png",
                     "Checkboard": false
