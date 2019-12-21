@@ -45,8 +45,8 @@ public:
 
 	const GLuint GetMaterialTexture(const int material_index) const;
 
-
 	void ShowPropertiesWindow();
+
 private:
 	void SetHierarchyStatic(bool is_static);
 
@@ -56,7 +56,6 @@ public:
 
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;
-
 
 	ComponentTransform transform;
 	ComponentAABB aabb;

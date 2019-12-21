@@ -109,6 +109,7 @@ void ModuleScene::Load(const Config& serialized_scene)
 {
 	DeleteCurrentScene();
 	root = new GameObject(0);
+	App->renderer->GenerateQuadTree(); // TODO: Move this to load scene and save scene
 
 	std::vector<Config> game_objects_config;
 	serialized_scene.GetChildrenConfig("GameObjects", game_objects_config);
