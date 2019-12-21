@@ -94,6 +94,7 @@ void ComponentCamera::Save(Config& config) const
 {
 	config.AddUInt(UUID, "UUID");
 	config.AddUInt((unsigned int)type, "ComponentType");
+	config.AddBool(active, "Active");
 	config.AddUInt(camera_frustum.type, "FrustumType");
 	config.AddFloat(camera_frustum.nearPlaneDistance, "NearPlaneDistance");
 	config.AddFloat(camera_frustum.farPlaneDistance, "FarPlaneDistance");
@@ -104,6 +105,8 @@ void ComponentCamera::Save(Config& config) const
 
 void ComponentCamera::Load(const Config& config)
 {
+	UUID = config.GetUInt("UUID", 0);
+	active = config.GetBool("Active", true);
 	unsigned int frustum_type_int = config.GetUInt("FrustumType", 1);
 	switch (frustum_type_int)
 	{

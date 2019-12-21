@@ -1,13 +1,14 @@
 {
     "GameObjects": [
         {
-            "UUID": 3920750103,
+            "UUID": 1454181091,
             "ParentUUID": 0,
             "Name": "Main Camera",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 2413258940,
+                "UUID": 3438987540,
+                "Active": true,
                 "Translation": [
                     0.0,
                     1.0,
@@ -27,30 +28,32 @@
             },
             "Components": [
                 {
-                    "UUID": 2492902426,
+                    "UUID": 2397623817,
                     "ComponentType": 1,
-                    "FrustumType": 2,
+                    "Active": true,
+                    "FrustumType": 1,
                     "NearPlaneDistance": 1.0,
                     "FarPlaneDistance": 500.0,
                     "VerticalFOV": 0.7853981852531433,
-                    "ClearMode": 1,
+                    "ClearMode": 0,
                     "ClearColor": [
-                        0.6666666269302368,
-                        0.19281044602394105,
-                        0.19281044602394105,
+                        0.0,
+                        0.0,
+                        0.0,
                         1.0
                     ]
                 }
             ]
         },
         {
-            "UUID": 2313604997,
+            "UUID": 3562488366,
             "ParentUUID": 0,
             "Name": "RootNode",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3417684589,
+                "UUID": 3460136072,
+                "Active": true,
                 "Translation": [
                     0.0,
                     0.0,
@@ -71,13 +74,14 @@
             "Components": []
         },
         {
-            "UUID": 4168142612,
-            "ParentUUID": 2313604997,
+            "UUID": 4160078227,
+            "ParentUUID": 3562488366,
             "Name": "Chimney",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3253710649,
+                "UUID": 1260771296,
+                "Active": true,
                 "Translation": [
                     0.0,
                     0.0,
@@ -97,12 +101,14 @@
             },
             "Components": [
                 {
-                    "UUID": 1161956057,
-                    "ComponentType": 3
+                    "UUID": 670089750,
+                    "ComponentType": 3,
+                    "Active": true
                 },
                 {
-                    "UUID": 2772354672,
+                    "UUID": 3641215394,
                     "ComponentType": 2,
+                    "Active": true,
                     "Index": 0,
                     "Path": "./Assets/Models/baker_house/Baker_house.png",
                     "Checkboard": false
@@ -110,13 +116,14 @@
             ]
         },
         {
-            "UUID": 2270262686,
-            "ParentUUID": 2313604997,
+            "UUID": 3959067730,
+            "ParentUUID": 3562488366,
             "Name": "Baker_house",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1279518565,
+                "UUID": 3066668244,
+                "Active": true,
                 "Translation": [
                     0.0,
                     0.0,
@@ -136,12 +143,14 @@
             },
             "Components": [
                 {
-                    "UUID": 2120268754,
-                    "ComponentType": 3
+                    "UUID": 2964987959,
+                    "ComponentType": 3,
+                    "Active": true
                 },
                 {
-                    "UUID": 3292768304,
+                    "UUID": 3578951953,
                     "ComponentType": 2,
+                    "Active": true,
                     "Index": 0,
                     "Path": "./Assets/Models/baker_house/Baker_house.png",
                     "Checkboard": false

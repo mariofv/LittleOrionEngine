@@ -42,6 +42,7 @@ void ComponentMaterial::Save(Config& config) const
 {
 	config.AddUInt(UUID, "UUID");
 	config.AddInt((unsigned int)type, "ComponentType");
+	config.AddBool(active, "Active");
 	config.AddInt(index, "Index");
 	config.AddString(texture->texture_path, "Path");
 	config.AddBool(show_checkerboard_texture, "Checkboard");
@@ -49,13 +50,16 @@ void ComponentMaterial::Save(Config& config) const
 
 void ComponentMaterial::Load(const Config& config)
 {
-	std::string tmp_path;
+	UUID = config.GetUInt("UUID", 0);
+	active = config.GetBool("Active", true);
 
 	index = config.GetInt("Index", 0);
-	config.GetString("Path", tmp_path, "");
-	show_checkerboard_texture = config.GetBool("Checkboard", true);
 
+	std::string tmp_path;
+	config.GetString("Path", tmp_path, "");
 	texture = App->texture->LoadTexture(tmp_path.c_str());
+	
+	show_checkerboard_texture = config.GetBool("Checkboard", true);
 }
 
 GLuint ComponentMaterial::GetTexture() const

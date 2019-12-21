@@ -47,12 +47,13 @@ void ComponentMesh::Save(Config& config) const
 {
 	config.AddUInt(UUID, "UUID");
 	config.AddInt((unsigned int)type, "ComponentType");
+	config.AddBool(active, "Active");
 }
 
 void ComponentMesh::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
-
+	active = config.GetBool("Active", true);
 }
 
 void ComponentMesh::LoadMesh(const std::vector<Vertex> vertices, const std::vector<unsigned int> indices, const unsigned int material_index)
