@@ -16,6 +16,9 @@ public:
 	update_status PostUpdate();
 	bool CleanUp();
 
+	void OpenScene() const;
+	void SaveScene() const;
+
 };
 
 #endif //_MODULEEDITOR_H_

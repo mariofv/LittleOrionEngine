@@ -7,9 +7,9 @@
 class Config
 {
 public:
-	Config();
+	Config(rapidjson::Document::AllocatorType& allocator);
 	~Config();
-
+	
 	void AddInt(int value_to_add, const std::string &name);
 	int GetInt(const std::string &name, int opt_value) const;
 
@@ -33,10 +33,12 @@ public:
 
 	void AddChildConfig(Config& value_to_add, const std::string& name);
 
-	void AddChildrenConfig(std::vector<Config*> value_to_add, const std::string& name);
+	void AddChildrenConfig(std::vector<Config*> &value_to_add, const std::string& name);
 
 public:
-	rapidjson::Document config_document;
+	rapidjson::Value config_value;
+	rapidjson::Document::AllocatorType& allocator;
+
 };
 
 #endif //_CONFIG_H_

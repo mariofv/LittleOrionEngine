@@ -72,22 +72,19 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
-
-void ModuleScene::Save()
+void ModuleScene::Save(SerializedScene& serialized_scene) const
 {
-	Config scene_config;
-	std::vector<Config*> game_objects_config(game_objects_ownership.size());
-	for (unsigned int i = 0; i < game_objects_ownership.size(); ++i)
+	std::vector<Config*> game_objects_config;
+	for (auto &game_object : game_objects_ownership)
 	{
-		Config* game_object_config = new Config();
-		game_objects_ownership[i]->Save(*game_object_config);
+		Config* game_object_config = new Config(serialized_scene.GetSceneAllocator());
+		game_object->Save(*game_object_config);
 		game_objects_config.push_back(game_object_config);
-		delete game_object_config;
 	}
-	scene_config.AddChildrenConfig(game_objects_config, "GameObjects");
+	serialized_scene.AddGameObjectsConfig(game_objects_config);
 }
 
-void ModuleScene::Load()
+void ModuleScene::Load(const SerializedScene& config)
 {
 
 }

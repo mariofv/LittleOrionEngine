@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleUI.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleModelLoader.h"
@@ -70,6 +71,14 @@ void EngineUI::ShowFileMenu()
 {
 	if (ImGui::BeginMenu("File"))
 	{
+		if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Open Scene"))
+		{
+			App->editor->OpenScene();
+		}
+		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
+		{
+			App->editor->SaveScene();
+		}
 		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
 		{
 			SDL_Event quit_event;

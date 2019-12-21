@@ -104,21 +104,20 @@ void GameObject::Save(Config& config) const
 	config.AddUInt(UUID, "UUID");
 	if (parent != nullptr)
 	{
-		config.AddInt(parent->UUID, "ParentUUID");
+		config.AddUInt(parent->UUID, "ParentUUID");
 	}
 	config.AddString(name, "Name");
 
-	Config transform_config;
+	Config transform_config(config.allocator);
 	transform.Save(transform_config);
 	config.AddChildConfig(transform_config, "Transform");
 
 	std::vector<Config*> gameobject_components_config;
 	for (auto& component : components)
 	{
-		Config* component_config = new Config();
+		Config* component_config =  new Config(config.allocator);
 		component->Save(*component_config);
 		gameobject_components_config.push_back(component_config);
-		delete component_config;
 	}
 	config.AddChildrenConfig(gameobject_components_config, "Components");
 }

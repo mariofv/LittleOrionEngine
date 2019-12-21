@@ -1,0 +1,125 @@
+{
+    "GameObjects": [
+        {
+            "UUID": 631242072,
+            "ParentUUID": 609018906,
+            "Name": "Main Camera",
+            "Transform": {
+                "UUID": 925794151,
+                "Translation": [
+                    0.0,
+                    1.0,
+                    -10.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 500.0,
+                    "VerticalFOV": 0.7853981852531433
+                }
+            ]
+        },
+        {
+            "UUID": 2802877096,
+            "ParentUUID": 609018906,
+            "Name": "RootNode",
+            "Transform": {
+                "UUID": 3136440,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": []
+        },
+        {
+            "UUID": 2000541818,
+            "ParentUUID": 2802877096,
+            "Name": "Chimney",
+            "Transform": {
+                "UUID": -1777642522,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {},
+                {
+                    "Index": 0,
+                    "Path": "./Assets/Models/baker_house/Baker_house.png",
+                    "Checkboard": false
+                }
+            ]
+        },
+        {
+            "UUID": 2802727458,
+            "ParentUUID": 2802877096,
+            "Name": "Baker_house",
+            "Transform": {
+                "UUID": 1589067344,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {},
+                {
+                    "Index": 0,
+                    "Path": "./Assets/Models/baker_house/Baker_house.png",
+                    "Checkboard": false
+                }
+            ]
+        }
+    ]
+}
