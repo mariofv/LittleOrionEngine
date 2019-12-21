@@ -46,7 +46,7 @@ void ModuleEditor::OpenScene() const
 
 void ModuleEditor::SaveScene() const
 {
-	const char* path = "./scene.scene";
+	const char* path = "./Assets/Scenes/scene.scene";
 
 	SerializedScene serialized_scene;
 	App->scene->Save(serialized_scene);
