@@ -27,6 +27,7 @@ public:
 private:
 	ILubyte* LoadImageData(const char* file_path, int & width, int & height, int image_type) const;
 	std::string GetTextureFileName(const char *texture_file_path) const;
+	std::shared_ptr<ModuleFileSystem::File> GetAlreadyImportedMaterial(const ModuleFileSystem::File & file) const;
 private:
 	const std::string LIBRARY_TEXTURES_FOLDER = ".//Library//Materials";
 	std::vector<std::shared_ptr<Texture>> texture_cache;

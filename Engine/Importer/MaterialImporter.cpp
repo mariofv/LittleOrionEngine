@@ -24,6 +24,13 @@ bool MaterialImporter::Import(const char* file_path, std::string& output_file)
 		APP_LOG_SUCCESS("Importing material error: Couldn't find the file to import.")
 		return false;
 	}
+
+	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedMaterial(file);
+	if (already_imported != nullptr) {
+		output_file = already_imported->file_path;
+		return true;
+	}
+
 	//Bound image
 
 	ILuint image;
@@ -59,7 +66,10 @@ void MaterialImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_
 	aiString file;
 	aiTextureMapping mapping = aiTextureMapping_UV;
 	scene->mMaterials[mesh_material_index]->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, 0);
-	loaded_meshes_materials.push_back(ImportMaterialData(file.data, model_base_path));
+	if (file.data != "") 
+	{
+		loaded_meshes_materials.push_back(ImportMaterialData(file.data, model_base_path));
+	}
 }
 
 std::string MaterialImporter::ImportMaterialData(const std::string & material_path, const std::string model_base_path) 
@@ -209,4 +219,21 @@ std::string MaterialImporter::GetTextureFileName(const char *texture_file_path) 
 
 		return texture_filename;
 	}
+}
+
+std::shared_ptr<ModuleFileSystem::File> MaterialImporter::GetAlreadyImportedMaterial(const ModuleFileSystem::File & file) const {
+	std::vector<std::shared_ptr<ModuleFileSystem::File>> material_already_in_library;
+	App->filesystem->GetAllFilesInPath(LIBRARY_TEXTURES_FOLDER, material_already_in_library);
+
+	//Check if the mesh is already loaded
+	auto it = std::find_if(material_already_in_library.begin(), material_already_in_library.end(), [file](const std::shared_ptr<ModuleFileSystem::File> texture)
+	{
+		return texture->filename.find(file.filename_no_extension) != std::string::npos;
+	});
+
+	if (it != material_already_in_library.end())
+	{
+		return *it;
+	}
+	return nullptr;
 }

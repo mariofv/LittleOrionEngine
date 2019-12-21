@@ -243,6 +243,7 @@ ModuleFileSystem::File::File(const std::string & path) {
 	this->file_path = path;
 	this->file_type = App->filesystem->GetFileType(filename.c_str(), find_file_data.dwFileAttributes);
 	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
+	std::replace(this->file_path.begin(), this->file_path.end(), '\\', '\/');
 
 }
 
