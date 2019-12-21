@@ -26,6 +26,7 @@ public:
 	GameObject* GetRoot() const;
 	GameObject* GetGameObject(unsigned int UUID) const;
 
+	void DeleteCurrentScene();
 	void Save(SerializedScene& serialized_scene) const;
 	void Load(const SerializedScene& serialized_scene);
 

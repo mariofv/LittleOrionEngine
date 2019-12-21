@@ -31,8 +31,7 @@ update_status ModuleScene::Update()
 
 bool ModuleScene::CleanUp()
 {
-	delete root;
-
+	DeleteCurrentScene();
 	return true;
 }
 
@@ -85,6 +84,12 @@ GameObject* ModuleScene::GetGameObject(unsigned int UUID) const
 	return nullptr;
 }
 
+void ModuleScene::DeleteCurrentScene()
+{
+	delete root;
+	game_objects_ownership.clear();
+}
+
 void ModuleScene::Save(SerializedScene& serialized_scene) const
 {
 	std::vector<Config*> game_objects_config;
@@ -101,6 +106,8 @@ void ModuleScene::Save(SerializedScene& serialized_scene) const
 
 void ModuleScene::Load(const SerializedScene& serialized_scene)
 {
+	DeleteCurrentScene();
+	root = new GameObject(0);
 	std::vector<Config*> game_objects_config;
 	serialized_scene.GetGameObjectsConfig(game_objects_config);
 }
