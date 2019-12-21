@@ -90,7 +90,9 @@ void ModuleScene::Save(SerializedScene& serialized_scene) const
 	std::vector<Config*> game_objects_config;
 	for (auto &game_object : game_objects_ownership)
 	{
-		Config* game_object_config = new Config(serialized_scene.GetSceneAllocator());
+		Config* game_object_config = new Config();
+		game_object_config->SetAllocator(serialized_scene.GetSceneAllocator());
+
 		game_object->Save(*game_object_config);
 		game_objects_config.push_back(game_object_config);
 	}

@@ -108,14 +108,18 @@ void GameObject::Save(Config& config) const
 	}
 	config.AddString(name, "Name");
 
-	Config transform_config(config.allocator);
+	Config transform_config;
+	transform_config.SetAllocator(config.GetAllocator());
+
 	transform.Save(transform_config);
 	config.AddChildConfig(transform_config, "Transform");
 
 	std::vector<Config*> gameobject_components_config;
 	for (auto& component : components)
 	{
-		Config* component_config =  new Config(config.allocator);
+		Config* component_config =  new Config();
+		component_config->SetAllocator(config.GetAllocator());
+
 		component->Save(*component_config);
 		gameobject_components_config.push_back(component_config);
 	}

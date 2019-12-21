@@ -7,9 +7,12 @@
 class Config
 {
 public:
-	Config(rapidjson::Document::AllocatorType& allocator);
+	Config();
 	~Config();
 	
+	void SetAllocator(rapidjson::Document::AllocatorType& allocator);
+	rapidjson::Document::AllocatorType& GetAllocator() const;
+
 	void AddInt(int value_to_add, const std::string &name);
 	int GetInt(const std::string &name, int opt_value) const;
 
@@ -37,7 +40,7 @@ public:
 
 public:
 	rapidjson::Value config_value;
-	rapidjson::Document::AllocatorType& allocator;
+	rapidjson::Document::AllocatorType *allocator = nullptr;
 
 };
 
