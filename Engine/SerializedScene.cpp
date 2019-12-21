@@ -8,6 +8,11 @@ SerializedScene::SerializedScene()
 	scene_document.SetObject();
 }
 
+SerializedScene::SerializedScene(const std::string& serialized_scene_string)
+{
+	scene_document.Parse(serialized_scene_string.c_str());
+}
+
 SerializedScene::~SerializedScene()
 {
 

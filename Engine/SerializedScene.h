@@ -10,6 +10,7 @@ class SerializedScene
 {
 public:
 	SerializedScene();
+	SerializedScene(const std::string& serialized_scene_string);
 	~SerializedScene();
 	
 	void AddGameObjectsConfig(std::vector<Config*> &game_objects_config);

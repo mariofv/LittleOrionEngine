@@ -42,6 +42,15 @@ bool ModuleEditor::CleanUp()
 
 void ModuleEditor::OpenScene() const
 {
+	const char* path = "./Assets/Scenes/scene.scene";
+	std::ifstream ifs(path);
+	std::string serialized_scene_string(
+		(std::istreambuf_iterator<char>(ifs)),
+		(std::istreambuf_iterator<char>())
+	);
+
+	SerializedScene serialized_scene(serialized_scene_string);
+	App->scene->Load(serialized_scene);
 }
 
 void ModuleEditor::SaveScene() const
