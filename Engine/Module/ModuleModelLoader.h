@@ -25,9 +25,6 @@ public:
 
 private:
 	void LoadNode(GameObject *parent_node, const std::shared_ptr<ModuleFileSystem::File> model_base_path);
-	std::shared_ptr<Texture> LoadMaterialData(const std::string & material_path, const std::string model_base_path);
-
-	std::string GetTextureFileName(const char *texture_file_path) const;
 };
 
 #endif //_MODULEMODELLOADER_H_

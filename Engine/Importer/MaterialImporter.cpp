@@ -1,8 +1,11 @@
 #include "Texture.h"
 #include "MaterialImporter.h"
-
 #include "Application.h"
+
 #include <algorithm>
+
+#include <assimp/scene.h>
+#include <assimp/material.h>
 
 MaterialImporter::MaterialImporter()
 {
@@ -50,6 +53,47 @@ bool MaterialImporter::Import(const char* file_path, std::string& output_file)
 	return true;
 }
 
+void MaterialImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* file_path,std::vector<std::string> & loaded_meshes_materials)
+{
+	int mesh_material_index = scene->mMeshes[mesh_index]->mMaterialIndex;
+	std::string model_base_path = std::string(file_path);
+	aiString file;
+	aiTextureMapping mapping = aiTextureMapping_UV;
+	scene->mMaterials[mesh_material_index]->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, 0);
+	loaded_meshes_materials.push_back(ImportMaterialData(file.data, model_base_path));
+}
+
+std::string MaterialImporter::ImportMaterialData(const std::string & material_path, const std::string model_base_path) 
+{
+	std::string material_texture;
+
+	APP_LOG_INIT("Loading material texture in described path %s.", material_path.c_str());
+	bool imported = Import(material_path.c_str(), material_texture);
+	if (imported)
+	{
+		APP_LOG_SUCCESS("Material loaded correctly.");
+		return material_texture;
+	}
+
+	std::string texture_file_name = GetTextureFileName(material_path.c_str());
+	std::string textures_path = model_base_path+ "/" + texture_file_name;
+	APP_LOG_INIT("Loading material texture in model folder path %s.", model_base_path.c_str());
+	imported = Import(textures_path.c_str(), material_texture);
+	if (imported)
+	{
+		APP_LOG_SUCCESS("Material loaded correctly.");
+		return material_texture;
+	}
+
+	textures_path = std::string(TEXTURES_PATH) + texture_file_name;
+	APP_LOG_INIT("Loading material texture in textures folder %s.", textures_path.c_str());
+	imported = Import(textures_path.c_str(), material_texture);
+	if (imported)
+	{
+		APP_LOG_SUCCESS("Material loaded correctly.");
+		return material_texture;
+	}
+}
 std::shared_ptr<Texture> MaterialImporter::Load(const char* file_path) {
 
 	//Check if the mesh is already loaded
@@ -148,5 +192,22 @@ void MaterialImporter::RemoveTextureFromCacheIfNeeded(std::shared_ptr<Texture> t
 	if (it != texture_cache.end() && (*it).use_count() <= 2)
 	{
 		(*it).~shared_ptr();
+	}
+}
+
+std::string MaterialImporter::GetTextureFileName(const char *texture_file_path) const
+{
+	std::string texture_path_string = std::string(texture_file_path);
+
+	std::size_t found = texture_path_string.find_last_of("/\\");
+	if (found == std::string::npos)
+	{
+		return texture_path_string;
+	}
+	else
+	{
+		std::string texture_filename = texture_path_string.substr(found, texture_path_string.length());
+
+		return texture_filename;
 	}
 }

@@ -1,5 +1,7 @@
 #include "MeshImporter.h"
 #include "Mesh.h"
+#include "MaterialImporter.h"
+#include "Application.h"
 
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
@@ -22,7 +24,6 @@ MeshImporter::~MeshImporter()
 }
 bool MeshImporter::Import(const char* file_path, std::string& output_file)
 {
-	loaded_meshes_materials.clear();
 	ModuleFileSystem::File file = ModuleFileSystem::File(file_path);
 	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedMesh(file);
 	if (already_imported != nullptr) {
@@ -54,34 +55,29 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file)
 
 	
 	aiNode * root_node = scene->mRootNode;
-	ImportNode(root_node, scene, output_file);
+	std::string base_path = file.file_path.substr(0, file.file_path.find_last_of("//"));
+	ImportNode(root_node, scene, base_path.c_str(),output_file);
 
 	aiReleaseImport(scene);
 	return true;
 }
-void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, const std::string& output_file) 
+void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file)
 {
 	for (size_t i = 0; i < root_node->mNumChildren; i++)
 	{
 		if (root_node->mChildren[i]->mNumMeshes != 0)
 		{
-			std::string mesh_file = output_file + "//" + std::string(root_node->mChildren[i]->mName.data) + ".ol";
 			size_t mesh_index = root_node->mChildren[i]->mMeshes[0];
-			ImportMesh(scene->mMeshes[mesh_index], mesh_file);
+			std::vector<std::string> loaded_meshes_materials;
+			App->material_importer->ImportMaterialFromMesh(scene,mesh_index, file_path,loaded_meshes_materials);
 
-			ImportMaterialFromMesh(scene,mesh_index);
+			std::string mesh_file = output_file + "//" + std::string(root_node->mChildren[i]->mName.data) + ".ol";
+			ImportMesh(scene->mMeshes[mesh_index], mesh_file);
 		}
-		ImportNode(root_node->mChildren[i], scene, output_file);
+		ImportNode(root_node->mChildren[i], scene, file_path,output_file);
 	}
 }
-void MeshImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_index)
-{
-	int mesh_material_index = scene->mMeshes[mesh_index]->mMaterialIndex;
-	aiString file;
-	aiTextureMapping mapping = aiTextureMapping_UV;
-	scene->mMaterials[mesh_material_index]->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, 0);
-	loaded_meshes_materials.push_back(std::string(file.data));
-}
+
 
 void MeshImporter::ImportMesh(const aiMesh* mesh, const std::string& output_file) const
 {

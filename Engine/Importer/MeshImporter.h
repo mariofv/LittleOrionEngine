@@ -21,12 +21,9 @@ public:
 	std::shared_ptr<Mesh> Load(const char* file_path);
 
 	void RemoveMeshFromCacheIfNeeded(std::shared_ptr<Mesh>);
-
-	std::vector<std::string> loaded_meshes_materials;
 private:
 	void ImportMesh(const aiMesh* file_path, const std::string& output_file) const;
-	void ImportNode(const aiNode * root_node, const aiScene* scene, const std::string& output_file);
-	void ImportMaterialFromMesh(const aiScene* scene, size_t mesh_index);
+	void ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file);
 	std::shared_ptr<ModuleFileSystem::File> GetAlreadyImportedMesh(const ModuleFileSystem::File & file) const;
 
 private:

@@ -254,7 +254,7 @@ ModuleFileSystem::File::File(const std::string & path) {
 		return;
 	}
 	this->filename = find_file_data.cFileName;
-	this->file_path = path + "//" + find_file_data.cFileName;
+	this->file_path = path;
 	this->file_type = App->filesystem->GetFileType(filename.c_str(), find_file_data.dwFileAttributes);
 	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
 
