@@ -1,13 +1,13 @@
 {
     "GameObjects": [
         {
-            "UUID": 1454181091,
+            "UUID": 1977328245,
             "ParentUUID": 0,
             "Name": "Main Camera",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3438987540,
+                "UUID": 43564917,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -28,10 +28,10 @@
             },
             "Components": [
                 {
-                    "UUID": 2397623817,
+                    "UUID": 3145571566,
                     "ComponentType": 1,
                     "Active": true,
-                    "FrustumType": 1,
+                    "FrustumType": 2,
                     "NearPlaneDistance": 1.0,
                     "FarPlaneDistance": 500.0,
                     "VerticalFOV": 0.7853981852531433,
@@ -46,13 +46,13 @@
             ]
         },
         {
-            "UUID": 3562488366,
+            "UUID": 299448246,
             "ParentUUID": 0,
             "Name": "RootNode",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3460136072,
+                "UUID": 3343694533,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -74,13 +74,13 @@
             "Components": []
         },
         {
-            "UUID": 4160078227,
-            "ParentUUID": 3562488366,
+            "UUID": 2956828624,
+            "ParentUUID": 299448246,
             "Name": "Chimney",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1260771296,
+                "UUID": 632023228,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -101,12 +101,12 @@
             },
             "Components": [
                 {
-                    "UUID": 670089750,
+                    "UUID": 3222837358,
                     "ComponentType": 3,
                     "Active": true
                 },
                 {
-                    "UUID": 3641215394,
+                    "UUID": 2565525860,
                     "ComponentType": 2,
                     "Active": true,
                     "Index": 0,
@@ -116,13 +116,13 @@
             ]
         },
         {
-            "UUID": 3959067730,
-            "ParentUUID": 3562488366,
+            "UUID": 1869566641,
+            "ParentUUID": 299448246,
             "Name": "Baker_house",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3066668244,
+                "UUID": 2436181910,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -143,12 +143,12 @@
             },
             "Components": [
                 {
-                    "UUID": 2964987959,
+                    "UUID": 1210630872,
                     "ComponentType": 3,
                     "Active": true
                 },
                 {
-                    "UUID": 3578951953,
+                    "UUID": 1034485765,
                     "ComponentType": 2,
                     "Active": true,
                     "Index": 0,

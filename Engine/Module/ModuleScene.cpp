@@ -93,6 +93,7 @@ void ModuleScene::DeleteCurrentScene()
 {
 	delete root;
 	game_objects_ownership.clear();
+	hierarchy.selected_game_object = nullptr;
 }
 
 void ModuleScene::Save(Config& serialized_scene) const
