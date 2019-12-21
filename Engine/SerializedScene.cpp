@@ -29,6 +29,17 @@ void SerializedScene::AddGameObjectsConfig(std::vector<Config*>& game_objects_co
 	scene_document.AddMember("GameObjects", game_objects_config_array, scene_document.GetAllocator());
 }
 
+void SerializedScene::GetGameObjectsConfig(std::vector<Config*>& game_objects_config) const
+{
+	const rapidjson::Value& game_objects_config_array = scene_document["GameObjects"];
+	game_objects_config = std::vector<Config*>(game_objects_config.size());
+
+	for (auto& game_object_config_value : game_objects_config_array.GetArray())
+	{
+		game_objects_config.push_back(new Config(&game_object_config_value));
+	}
+}
+
 void SerializedScene::GetString(std::string& return_string)
 {
 	rapidjson::StringBuffer buffer;

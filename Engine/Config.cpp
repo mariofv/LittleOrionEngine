@@ -8,6 +8,12 @@ Config::Config()
 	config_value = rapidjson::Value(rapidjson::kObjectType);
 }
 
+Config::Config(const rapidjson::Value* config_query_value)
+{
+	this->config_query_value = config_query_value;
+
+}
+
 Config::~Config()
 {
 
@@ -31,13 +37,13 @@ void Config::AddInt(int value_to_add, const std::string &name)
 
 int Config::GetInt(const std::string& name, int opt_value) const
 {
-	if (!config_value.HasMember(name.c_str()))
+	if (!config_query_value->HasMember(name.c_str()))
 	{
 		return opt_value;
 	}
 	else
 	{
-		const rapidjson::Value& current_value = config_value[name.c_str()];
+		const rapidjson::Value& current_value = (*config_query_value)[name.c_str()];
 		return current_value.GetInt();
 	}
 }
@@ -56,7 +62,7 @@ int Config::GetUInt(const std::string& name, unsigned int opt_value) const
 	}
 	else
 	{
-		const rapidjson::Value& current_value = config_value[name.c_str()];
+		const rapidjson::Value& current_value = (*config_query_value)[name.c_str()];
 		return current_value.GetUint64();
 	}
 }
@@ -75,7 +81,7 @@ float Config::GetFloat(const std::string& name, float opt_value) const
 	}
 	else
 	{
-		const rapidjson::Value& current_value = config_value[name.c_str()];
+		const rapidjson::Value& current_value = (*config_query_value)[name.c_str()];
 		return current_value.GetFloat();
 	}
 }
@@ -94,7 +100,7 @@ bool Config::GetBool(const std::string& name, bool opt_value) const
 	}
 	else
 	{
-		const rapidjson::Value& current_value = config_value[name.c_str()];
+		const rapidjson::Value& current_value = (*config_query_value)[name.c_str()];
 		return current_value.GetBool();
 	}
 }
@@ -114,7 +120,7 @@ void Config::GetString(const std::string& name, std::string& return_value, const
 	}
 	else
 	{
-		const rapidjson::Value& current_value = config_value[name.c_str()];
+		const rapidjson::Value& current_value = (*config_query_value)[name.c_str()];
 		return_value = current_value.GetString();
 	}
 }
@@ -138,7 +144,7 @@ void Config::GetFloat3(const std::string& name, float3 &return_value, const floa
 	}
 	else
 	{
-		const rapidjson::Value& current_value = config_value[name.c_str()];
+		const rapidjson::Value& current_value = (*config_query_value)[name.c_str()];
 		return_value = float3(
 			current_value[0].GetFloat(),
 			current_value[1].GetFloat(),
@@ -167,7 +173,7 @@ void Config::GetQuat(const std::string& name, Quat& return_value, const Quat& op
 	}
 	else
 	{
-		const rapidjson::Value& current_value = config_value[name.c_str()];
+		const rapidjson::Value& current_value = (*config_query_value)[name.c_str()];
 		return_value = Quat(
 			current_value[0].GetFloat(),
 			current_value[1].GetFloat(),

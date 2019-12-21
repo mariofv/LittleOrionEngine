@@ -14,6 +14,7 @@ public:
 	~SerializedScene();
 	
 	void AddGameObjectsConfig(std::vector<Config*> &game_objects_config);
+	void GetGameObjectsConfig(std::vector<Config*> &game_objects_config) const;
 
 	void GetString(std::string& return_string);
 	rapidjson::Document::AllocatorType& GetSceneAllocator();

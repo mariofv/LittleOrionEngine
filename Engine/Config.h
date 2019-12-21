@@ -8,6 +8,7 @@ class Config
 {
 public:
 	Config();
+	Config(const rapidjson::Value* config_query_value);
 	~Config();
 	
 	void SetAllocator(rapidjson::Document::AllocatorType& allocator);
@@ -40,6 +41,7 @@ public:
 
 public:
 	rapidjson::Value config_value;
+	const rapidjson::Value* config_query_value = nullptr;
 	rapidjson::Document::AllocatorType *allocator = nullptr;
 
 };

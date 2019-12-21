@@ -99,9 +99,10 @@ void ModuleScene::Save(SerializedScene& serialized_scene) const
 	serialized_scene.AddGameObjectsConfig(game_objects_config);
 }
 
-void ModuleScene::Load(const SerializedScene& config)
+void ModuleScene::Load(const SerializedScene& serialized_scene)
 {
-
+	std::vector<Config*> game_objects_config;
+	serialized_scene.GetGameObjectsConfig(game_objects_config);
 }
 
 void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title)
