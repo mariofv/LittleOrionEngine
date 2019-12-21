@@ -5,6 +5,10 @@
 
 
 bool ModuleFileSystem::Init() {
+	MakeDirectory(".//", "Assets");
+	MakeDirectory(".//", "Library");
+	MakeDirectory(".//Library", "Materials");
+	MakeDirectory(".//Library", "Meshes");
 	RefreshFilesHierarchy();
 	return true;
 }
@@ -80,25 +84,7 @@ bool ModuleFileSystem::Exists(const char* file_path) const
 
 std::string ModuleFileSystem::MakeDirectory(const std::string & path, const std::string & directory_name)
 {
-	std::vector<std::shared_ptr<File>> files;
-	GetAllFilesInPath(path, files);
-
-	std::vector<std::shared_ptr<File>> same_name_folders;
-	same_name_folders.reserve(files.size());
-
-	std::copy_if(files.begin(), files.end(), std::back_inserter(same_name_folders), [directory_name](const std::shared_ptr<File> file) {
-		size_t last_bracket = file->filename.find_last_of("(");
-		return file->file_type == FileType::DIRECTORY && file->filename.substr(0,last_bracket - 1) == directory_name;
-	});
-	std::string new_directory;
-	do {
-		new_directory = path + "//" + directory_name + " (" + std::to_string(same_name_folders.size()) + ")";
-		same_name_folders.clear();
-		std::copy_if(files.begin(), files.end(), std::back_inserter(same_name_folders), [directory_name](const std::shared_ptr<File> file) {
-			return file->file_type == FileType::DIRECTORY && file->filename == directory_name;
-		});
-	} while (same_name_folders.size() != 0);
-
+	std::string new_directory = path + "//" + directory_name;
 	CreateDirectory(new_directory.c_str(), NULL);
 	return new_directory;
 }
