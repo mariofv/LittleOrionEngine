@@ -38,6 +38,9 @@ public:
 	void AddQuat(const Quat & value_to_add, const std::string& name);
 	void GetQuat(const std::string& name, Quat& return_value, const Quat& opt_value) const;
 
+	void AddColor(const float4& value_to_add, const std::string& name);
+	void GetColor(const std::string& name, float4& return_value, const float4& opt_value) const;
+
 	void AddChildConfig(Config& value_to_add, const std::string& name);
 	void GetChildConfig(const std::string& name, Config& value_to_add) const;
 

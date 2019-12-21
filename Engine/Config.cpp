@@ -197,6 +197,36 @@ void Config::GetQuat(const std::string& name, Quat& return_value, const Quat& op
 	}
 }
 
+void Config::AddColor(const float4& value_to_add, const std::string& name)
+{
+	rapidjson::Value member_name(name.c_str(), *allocator);
+	rapidjson::Value color_value(rapidjson::kArrayType);
+	color_value.PushBack(value_to_add.x, *allocator);
+	color_value.PushBack(value_to_add.y, *allocator);
+	color_value.PushBack(value_to_add.z, *allocator);
+	color_value.PushBack(value_to_add.w, *allocator);
+
+	config_document.AddMember(member_name, color_value, *allocator);
+}
+
+void Config::GetColor(const std::string& name, float4& return_value, const float4& opt_value) const
+{
+	if (!config_document.HasMember(name.c_str()))
+	{
+		return_value = opt_value;
+	}
+	else
+	{
+		const rapidjson::Value& current_value = config_document[name.c_str()];
+		return_value = float4(
+			current_value[0].GetFloat(),
+			current_value[1].GetFloat(),
+			current_value[2].GetFloat(),
+			current_value[3].GetFloat()
+		);
+	}
+}
+
 void Config::AddChildConfig(Config& value_to_add, const std::string& name)
 {
 	rapidjson::Value member_name(name.c_str(), *allocator);

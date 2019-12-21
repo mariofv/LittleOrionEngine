@@ -98,6 +98,8 @@ void ComponentCamera::Save(Config& config) const
 	config.AddFloat(camera_frustum.nearPlaneDistance, "NearPlaneDistance");
 	config.AddFloat(camera_frustum.farPlaneDistance, "FarPlaneDistance");
 	config.AddFloat(camera_frustum.verticalFov, "VerticalFOV");
+	config.AddUInt((unsigned int)camera_clear_mode, "ClearMode");
+	config.AddColor(float4(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f), "ClearColor");
 }
 
 void ComponentCamera::Load(const Config& config)
@@ -119,6 +121,23 @@ void ComponentCamera::Load(const Config& config)
 	camera_frustum.farPlaneDistance = config.GetFloat("FarPlaneDistance", 100.0f);
 	camera_frustum.verticalFov = config.GetFloat("VerticalFOV", math::pi / 4.0f);
 	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
+
+	unsigned int camera_clear_mode_uint = config.GetUInt("ClearMode", 0);
+	switch (camera_clear_mode_uint)
+	{
+	case 0:
+		camera_clear_mode = ClearMode::COLOR;
+		break;
+	case 1:
+		camera_clear_mode = ClearMode::SKYBOX;
+		break;
+	}
+
+	float4 clear_color;
+	config.GetColor("ClearColor", clear_color, float4(0.f, 0.f, 0.f, 1.f));
+	camera_clear_color[0] = clear_color.x,
+	camera_clear_color[1] = clear_color.y,
+	camera_clear_color[2] = clear_color.z,
 
 	GenerateMatrices();
 }
