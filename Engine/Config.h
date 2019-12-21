@@ -8,10 +8,9 @@ class Config
 {
 public:
 	Config();
-	Config(const rapidjson::Value* config_query_value);
+	Config(const std::string& serialized_scene_string);
 	~Config();
 	
-	void SetAllocator(rapidjson::Document::AllocatorType& allocator);
 	rapidjson::Document::AllocatorType& GetAllocator() const;
 
 	void AddInt(int value_to_add, const std::string &name);
@@ -37,12 +36,13 @@ public:
 
 	void AddChildConfig(Config& value_to_add, const std::string& name);
 
-	void AddChildrenConfig(std::vector<Config*> &value_to_add, const std::string& name);
+	void AddChildrenConfig(std::vector<Config>& value_to_add, const std::string& name);
 
-public:
-	rapidjson::Value config_value;
-	const rapidjson::Value* config_query_value = nullptr;
-	rapidjson::Document::AllocatorType *allocator = nullptr;
+	void GetSerializedString(std::string& return_string);
+
+public:;
+	rapidjson::Document config_document;
+	rapidjson::Document::AllocatorType* allocator;
 
 };
 

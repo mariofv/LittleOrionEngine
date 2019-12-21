@@ -5,7 +5,6 @@
 #include "Globals.h"
 #include "GameObject.h"
 #include "Hierarchy.h"
-#include "SerializedScene.h"
 
 class ComponentCamera;
 
@@ -27,8 +26,8 @@ public:
 	GameObject* GetGameObject(unsigned int UUID) const;
 
 	void DeleteCurrentScene();
-	void Save(SerializedScene& serialized_scene) const;
-	void Load(const SerializedScene& serialized_scene);
+	void Save(Config& serialized_scene) const;
+	void Load(const Config& serialized_scene);
 
 	void ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title);
 

@@ -49,18 +49,18 @@ void ModuleEditor::OpenScene() const
 		(std::istreambuf_iterator<char>())
 	);
 
-	SerializedScene serialized_scene(serialized_scene_string);
-	App->scene->Load(serialized_scene);
+	Config scene_config(serialized_scene_string);
+	App->scene->Load(scene_config);
 }
 
 void ModuleEditor::SaveScene() const
 {
 	const char* path = "./Assets/Scenes/scene.scene";
 
-	SerializedScene serialized_scene;
-	App->scene->Save(serialized_scene);
+	Config scene_config;
+	App->scene->Save(scene_config);
 	std::string serialized_scene_string;
-	serialized_scene.GetString(serialized_scene_string);
+	scene_config.GetSerializedString(serialized_scene_string);
 
 	std::ofstream scene_file;
 	scene_file.open(path);

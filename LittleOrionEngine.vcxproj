@@ -85,7 +85,6 @@
     <ClInclude Include="Engine\OLOctTreeNode.h" />
     <ClInclude Include="Engine\OLQuadTreeNode.h" />
     <ClInclude Include="Engine\GridRenderer.h" />
-    <ClInclude Include="Engine\SerializedScene.h" />
     <ClInclude Include="Engine\Skybox.h" />
     <ClInclude Include="Engine\UI\ComponentsUI.h" />
     <ClInclude Include="Engine\GeometryRenderer.h" />
@@ -200,7 +199,6 @@
     <ClCompile Include="Engine\OLOctTreeNode.cpp" />
     <ClCompile Include="Engine\OLQuadTreeNode.cpp" />
     <ClCompile Include="Engine\GridRenderer.cpp" />
-    <ClCompile Include="Engine\SerializedScene.cpp" />
     <ClCompile Include="Engine\Skybox.cpp" />
     <ClCompile Include="Engine\UI\ComponentsUI.cpp" />
     <ClCompile Include="Engine\GeometryRenderer.cpp" />

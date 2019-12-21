@@ -90,27 +90,23 @@ void ModuleScene::DeleteCurrentScene()
 	game_objects_ownership.clear();
 }
 
-void ModuleScene::Save(SerializedScene& serialized_scene) const
+void ModuleScene::Save(Config& serialized_scene) const
 {
-	std::vector<Config*> game_objects_config;
-	for (auto &game_object : game_objects_ownership)
+	std::vector<Config> game_objects_config(game_objects_ownership.size());
+	for (unsigned int i = 0; i < game_objects_ownership.size(); ++i)
 	{
-		Config* game_object_config = new Config();
-		game_object_config->SetAllocator(serialized_scene.GetSceneAllocator());
-
-		game_object->Save(*game_object_config);
-		game_objects_config.push_back(game_object_config);
+		game_objects_ownership[i]->Save(game_objects_config[i]);
 	}
-	serialized_scene.AddGameObjectsConfig(game_objects_config);
+	serialized_scene.AddChildrenConfig(game_objects_config, "GameObjects");
 }
 
-void ModuleScene::Load(const SerializedScene& serialized_scene)
+void ModuleScene::Load(const Config& serialized_scene)
 {
 	DeleteCurrentScene();
 	root = new GameObject(0);
 
 	std::vector<Config*> game_objects_config;
-	serialized_scene.GetGameObjectsConfig(game_objects_config);
+	//serialized_scene.GetGameObjectsConfig(game_objects_config);
 }
 
 void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title)
