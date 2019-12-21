@@ -22,10 +22,10 @@ MeshImporter::~MeshImporter()
 {
 	Assimp::DefaultLogger::kill();
 }
-bool MeshImporter::Import(const char* file_path, std::string& output_file)
+bool MeshImporter::Import(const char* file_path, std::string& output_file) const
 {
 	ModuleFileSystem::File file = ModuleFileSystem::File(file_path);
-	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedMesh(file);
+	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedResource(LIBRARY_MESHES_FOLDER,file);
 	if (already_imported != nullptr) {
 		output_file = already_imported->file_path;
 		return true;
@@ -36,7 +36,8 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file)
 
 	if (file.filename.empty())
 	{
-		APP_LOG_SUCCESS("Importing mesh error: Couldn't find the file to import.")
+		APP_LOG_ERROR("Importing mesh error: Couldn't find the file to import.")
+		App->filesystem->Remove(output_file);
 		return false;
 	}
 	performance_timer.Start();
@@ -47,6 +48,7 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file)
 		const char *error = aiGetErrorString();
 		APP_LOG_ERROR("Error loading model %s ", file_path);
 		APP_LOG_ERROR(error);
+		App->filesystem->Remove(output_file);
 		return false;
 	}
 
@@ -61,7 +63,7 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file)
 	aiReleaseImport(scene);
 	return true;
 }
-void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file)
+void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file) const
 {
 	for (size_t i = 0; i < root_node->mNumChildren; i++)
 	{
@@ -77,7 +79,6 @@ void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, co
 		ImportNode(root_node->mChildren[i], scene, file_path,output_file);
 	}
 }
-
 
 void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string> & loaded_meshes_materials, const std::string& output_file) const
 {
@@ -98,6 +99,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 		new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 		vertices.push_back(new_vertex);
 	}
+
 	std::vector<uint32_t> materials_path_size;
 	uint32_t total_meshes_size = 0;
 	for (auto & path_size : loaded_meshes_materials)
@@ -142,7 +144,8 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	delete data;
 }
 
- std::shared_ptr<Mesh> MeshImporter::Load(const char* file_path) {
+ std::shared_ptr<Mesh> MeshImporter::Load(const char* file_path) const 
+ {
 	
 	 //Check if the mesh is already loaded
 	 auto it = std::find_if(mesh_cache.begin(), mesh_cache.end(), [file_path](const std::shared_ptr<Mesh> mesh) 
@@ -151,11 +154,11 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	 });
 	 if (it != mesh_cache.end())
 	 {
-		 APP_LOG_INIT("Model %s exists in cache.", file_path);
+		 APP_LOG_INFO("Model %s exists in cache.", file_path);
 		 return *it;
 	 }
 
-	APP_LOG_INIT("Loading model %s.", file_path);
+	 APP_LOG_INFO("Loading model %s.", file_path);
 	performance_timer.Start();
 	size_t mesh_size;
 	char * data = App->filesystem->Load(file_path, mesh_size);
@@ -211,27 +214,11 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 }
 
  //Remove the mesh from the cache if the only owner is the cache itself
- void MeshImporter::RemoveMeshFromCacheIfNeeded(std::shared_ptr<Mesh> mesh) {
+ void MeshImporter::RemoveMeshFromCacheIfNeeded(std::shared_ptr<Mesh> mesh) 
+ {
 	 auto it = std::find(mesh_cache.begin(), mesh_cache.end(), mesh);
-	 if (it != mesh_cache.end() && (*it).use_count() <= 2)
+	 if (it != mesh_cache.end() && (*it).use_count() <= 3)
 	 {
 		 (*it).~shared_ptr();
 	 }
- }
-
- std::shared_ptr<ModuleFileSystem::File> MeshImporter::GetAlreadyImportedMesh(const ModuleFileSystem::File & file) const{
-	 std::vector<std::shared_ptr<ModuleFileSystem::File>> meshes_already_in_library;
-	 App->filesystem->GetAllFilesInPath(LIBRARY_MESHES_FOLDER, meshes_already_in_library, true);
-
-	 //Check if the mesh is already loaded
-	 auto it = std::find_if(meshes_already_in_library.begin(), meshes_already_in_library.end(), [file](const std::shared_ptr<ModuleFileSystem::File> folder)
-	 {
-		 return folder->filename.find(file.filename_no_extension) != std::string::npos;
-	 });
-
-	 if (it != meshes_already_in_library.end())
-	 {
-		 return *it;
-	 }
-	 return nullptr;
  }

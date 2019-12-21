@@ -17,19 +17,18 @@ class MeshImporter : Importer
 public:
 	MeshImporter();
 	~MeshImporter();
-	bool Import(const char* file_path, std::string& output_file) override;
-	std::shared_ptr<Mesh> Load(const char* file_path);
+	bool Import(const char* file_path, std::string& output_file) const override;
+	std::shared_ptr<Mesh> Load(const char* file_path) const;
 
 	void RemoveMeshFromCacheIfNeeded(std::shared_ptr<Mesh>);
 private:
 	void ImportMesh(const aiMesh* file_path, const std::vector<std::string> & loaded_meshes_materials, const std::string& output_file) const;
-	void ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file);
-	std::shared_ptr<ModuleFileSystem::File> GetAlreadyImportedMesh(const ModuleFileSystem::File & file) const;
+	void ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file) const;
 
 private:
 	const std::string LIBRARY_MESHES_FOLDER = ".//Library//Meshes";
-	Timer performance_timer;
-	std::vector<std::shared_ptr<Mesh>> mesh_cache;
+	mutable std::vector<std::shared_ptr<Mesh>> mesh_cache;
+	mutable Timer performance_timer;
 };
 
 

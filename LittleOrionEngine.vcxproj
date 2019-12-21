@@ -192,6 +192,7 @@
     <ClInclude Include="Engine\Utils.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Importer\Importer.cpp" />
     <ClCompile Include="Engine\Importer\MaterialImporter.cpp" />
     <ClCompile Include="Engine\Importer\MeshImporter.cpp" />
     <ClCompile Include="Engine\Mesh.cpp" />
