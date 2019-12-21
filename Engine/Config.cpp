@@ -9,6 +9,11 @@ Config::Config()
 	allocator = &config_document.GetAllocator();
 }
 
+Config::Config(const rapidjson::Value& object_value)
+{
+	config_document.CopyFrom(object_value, config_document.GetAllocator());
+}
+
 Config::Config(const std::string& serialized_scene_string)
 {
 	config_document.Parse(serialized_scene_string.c_str());
@@ -18,6 +23,19 @@ Config::Config(const std::string& serialized_scene_string)
 Config::~Config()
 {
 
+}
+
+Config::Config(const Config& other)
+{
+	config_document.CopyFrom(other.config_document, config_document.GetAllocator());
+	allocator = &config_document.GetAllocator();
+}
+
+Config& Config::operator=(const Config& other)
+{
+	config_document.CopyFrom(other.config_document, config_document.GetAllocator());
+	allocator = &config_document.GetAllocator();
+	return *this;
 }
 
 rapidjson::Document::AllocatorType& Config::GetAllocator() const
@@ -187,6 +205,13 @@ void Config::AddChildConfig(Config& value_to_add, const std::string& name)
 	config_document.AddMember(member_name, tmp_value, *allocator);
 }
 
+void Config::GetChildConfig(const std::string& name, Config& value_to_add) const
+{
+	assert(config_document.HasMember(name.c_str()));
+
+	const rapidjson::Value& tmp_value = config_document[name.c_str()];
+	value_to_add = Config(tmp_value);
+}
 
 void Config::AddChildrenConfig(std::vector<Config> &value_to_add, const std::string& name)
 {
@@ -199,6 +224,20 @@ void Config::AddChildrenConfig(std::vector<Config> &value_to_add, const std::str
 		children_configs_value.PushBack(tmp_value.Move(), *allocator);
 	}
 	config_document.AddMember(member_name, children_configs_value, *allocator);
+}
+
+void Config::GetChildrenConfig(const std::string& name, std::vector<Config>& return_value) const
+{
+	assert(config_document.HasMember(name.c_str()));
+
+	const rapidjson::Value& children_configs_value = config_document[name.c_str()];
+	return_value = std::vector<Config>();
+	for (unsigned int i = 0; i < children_configs_value.Size(); ++i)
+	{
+		const rapidjson::Value& tmp_value = children_configs_value[i];
+		Config tmp_config(tmp_value);
+		return_value.push_back(tmp_config);
+	}
 }
 
 void Config::GetSerializedString(std::string& return_string)

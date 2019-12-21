@@ -8,9 +8,13 @@ class Config
 {
 public:
 	Config();
+	Config(const rapidjson::Value& object_value);
 	Config(const std::string& serialized_scene_string);
 	~Config();
 	
+	Config(const Config& other);
+	Config& operator=(const Config& other);
+
 	rapidjson::Document::AllocatorType& GetAllocator() const;
 
 	void AddInt(int value_to_add, const std::string &name);
@@ -35,8 +39,10 @@ public:
 	void GetQuat(const std::string& name, Quat& return_value, const Quat& opt_value) const;
 
 	void AddChildConfig(Config& value_to_add, const std::string& name);
+	void GetChildConfig(const std::string& name, Config& value_to_add) const;
 
 	void AddChildrenConfig(std::vector<Config>& value_to_add, const std::string& name);
+	void GetChildrenConfig(const std::string& name, std::vector<Config>& return_value) const;
 
 	void GetSerializedString(std::string& return_string);
 

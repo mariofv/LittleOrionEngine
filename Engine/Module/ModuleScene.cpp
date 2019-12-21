@@ -73,6 +73,11 @@ GameObject* ModuleScene::GetRoot() const
 
 GameObject* ModuleScene::GetGameObject(unsigned int UUID) const
 {
+	if (UUID == 0)
+	{
+		return root;
+	}
+
 	for (auto& game_object : game_objects_ownership)
 	{
 		if (game_object->UUID == UUID) 
@@ -105,8 +110,13 @@ void ModuleScene::Load(const Config& serialized_scene)
 	DeleteCurrentScene();
 	root = new GameObject(0);
 
-	std::vector<Config*> game_objects_config;
-	//serialized_scene.GetGameObjectsConfig(game_objects_config);
+	std::vector<Config> game_objects_config;
+	serialized_scene.GetChildrenConfig("GameObjects", game_objects_config);
+	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
+	{
+		GameObject* created_game_object = CreateGameObject();
+		created_game_object->Load(game_objects_config[i]);
+	}
 }
 
 void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title)

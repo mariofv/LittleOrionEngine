@@ -132,16 +132,20 @@ void GameObject::Load(const Config& config)
 	unsigned int parent_UUID = config.GetUInt("ParentUUID", 0);
 
 	//TODO: This should be done later on, because its possible to try to load a node that its not already loaded
-	parent = App->scene->GetGameObject(parent_UUID); 
-	assert(parent != nullptr);
+	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID); 
+	assert(game_object_parent != nullptr);
+	if (parent_UUID != 0)
+	{
+		game_object_parent->AddChild(this); //TODO: This should be in scene. Probably D:
+	}
 
 	config.GetString("Name", name, "GameObject");
 
-	/*
-	Config transform_config(config.allocator);
-	transform.Save(transform_config);
-	config.AddChildConfig(transform_config, "Transform");
+	Config transform_config;
+	config.GetChildConfig("Transform", transform_config);
+	transform.Load(transform_config);
 
+	/*
 	std::vector<Config*> gameobject_components_config;
 	for (auto& component : components)
 	{
