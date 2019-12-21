@@ -9,7 +9,6 @@
 
 MaterialImporter::MaterialImporter()
 {
-
 	APP_LOG_INIT("Initializing DevIL image loader.")
 	ilInit();
 	iluInit();
