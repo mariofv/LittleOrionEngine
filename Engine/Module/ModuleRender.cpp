@@ -247,8 +247,7 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 		&camera.GetProjectionMatrix()[0][0]
 	);
 
-	int mesh_material_index = mesh.material_index;
-	const GLuint mesh_texture = mesh_game_object.GetMaterialTexture(mesh_material_index);
+	const GLuint mesh_texture = mesh_game_object.GetMaterialTexture();
 	
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh_texture);

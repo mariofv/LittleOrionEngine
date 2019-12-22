@@ -3,24 +3,17 @@
 #include "Application.h"
 #include "Texture.h"
 #include "Component/ComponentMaterial.h"
+#include "Importer/MaterialImporter.h"
 
-#include <IL/il.h>
-#include <IL/ilu.h>
-#include <IL/ilut.h>
 #include <SDL/SDL.h>
 #include <algorithm>
+#include <memory>
 
 // Called before render is available
 bool ModuleTexture::Init()
 {
 	APP_LOG_SECTION("************ Module Texture Init ************");
-
-	APP_LOG_INIT("Initializing DevIL image loader.")
-	ilInit();
-	iluInit();
-	ilutInit();
 	GenerateCheckerboardTexture();
-	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 	return true;
 }
@@ -54,85 +47,30 @@ void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remov
 	}
 }
 
-Texture* ModuleTexture::LoadTexture(const char* texture_path) const
+std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 {
-	ILuint image;
-	ilGenImages(1, &image);
-	ilBindImage(image);
-
-	int width, height;
-	unsigned char * data = LoadImageData(texture_path, width, height);
-	if (data == NULL)
+	std::string ol_texture;
+	bool imported = App->material_importer->Import(texture_path, ol_texture);
+	if (!imported)
 	{
 		return nullptr;
 	}
-	Texture *loaded_texture = new Texture(data, width, height, texture_path);
-	ilDeleteImages(1, &image);
 
-	loaded_texture->GenerateMipMap();
-
-	return loaded_texture;
+	return App->material_importer->Load(ol_texture.c_str());
 }
 
 GLuint ModuleTexture::LoadCubemap(std::vector<std::string> faces_paths) const
 {
-	GLuint texture_id;
-
-	glGenTextures(1, &texture_id);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-	ILuint image;
-	
-	int width, height;
+	std::vector<std::string> faces_paths_dds;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
-		ilGenImages(1, &image);
-		ilBindImage(image);
-		unsigned char * data = LoadImageData(faces_paths[i].c_str(), width, height);
-
-		if (data)
-		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-				0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
-			);
-			ilDeleteImages(1, &image);
-		}
+		std::string ol_texture;
+		bool imported = App->material_importer->Import(faces_paths[i].c_str(), ol_texture);
+		faces_paths_dds.push_back(ol_texture);
 	}
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-	return texture_id;
+	return static_cast<GLuint>(App->material_importer->LoadCubemap(faces_paths_dds));
 }
 
-unsigned char* ModuleTexture::LoadImageData(const char* texture_path, int& width, int& height) const
-{
-	ilLoadImage(texture_path);
-
-	ILenum error;
-	error = ilGetError();
-	if (error == IL_COULD_NOT_OPEN_FILE)
-	{
-		APP_LOG_ERROR("Error loading texture %s. File not found", texture_path);
-		return nullptr;
-	}
-
-	ilConvertImage(IL_RGBA, IL_UNSIGNED_BYTE);
-
-	ILinfo ImageInfo;
-	iluGetImageInfo(&ImageInfo);
-	if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT)
-	{
-		iluFlipImage();
-	}
-
-	unsigned char *data = (unsigned char*)ilGetData();
-	width = ilGetInteger(IL_IMAGE_WIDTH);
-	height = ilGetInteger(IL_IMAGE_HEIGHT);
-
-	return data;
-}
 
 void ModuleTexture::GenerateCheckerboardTexture() {
 	const static int checkerHeight = 64;

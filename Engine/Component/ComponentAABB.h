@@ -29,7 +29,7 @@ public:
 	void Delete() override {};
 
 	void GenerateBoundingBox();
-	void GenerateBoundingBoxFromVertices(const std::vector<ComponentMesh::Vertex> & vertices);
+	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices);
 
 	bool IsEmpty() const;
 	std::vector<float> GetVertices() const;

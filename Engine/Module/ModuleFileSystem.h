@@ -20,9 +20,13 @@ public:
 	struct File {
 		File() = default;
 		File(const WIN32_FIND_DATA & windows_file_data, const std::string & path);
+		File(const std::string & path);
 		std::string filename;
 		std::string file_path;
+		std::string filename_no_extension;
 		ModuleFileSystem::FileType file_type;
+
+
 		std::vector<std::shared_ptr<File>> childs;
 		std::shared_ptr<File> parent;
 		bool operator==(const File& compare);
@@ -32,12 +36,12 @@ public:
 	ModuleFileSystem() = default;
 	~ModuleFileSystem() = default;
 
-	unsigned int Load( const char* file_name, char** buffer) const;
+	char* Load( const char* file_name, size_t & size) const;
 	unsigned int Save(const char* file_name, const void* buffer, unsigned int size, bool append = false) const;
 
 	bool Remove(const File & file) const;
 	bool Exists(const char* file) const;
-	bool MakeDirectory(const std::string & path, const std::string & directory_name = "new folder");
+	std::string MakeDirectory(const std::string & path, const std::string & directory_name = "new folder");
 	bool Copy(const char* source, const char* destination);
 	std::shared_ptr<File> GetFileHierarchyFromPath(const std::string & path) const;
 	

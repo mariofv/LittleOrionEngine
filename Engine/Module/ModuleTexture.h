@@ -5,6 +5,7 @@
 #include "Globals.h"
 
 #include <GL/glew.h>
+#include <memory>
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -12,6 +13,7 @@ struct SDL_Rect;
 
 class ComponentMaterial;
 class Texture;
+class MaterialImporter;
 
 class ModuleTexture : public Module
 {
@@ -25,15 +27,14 @@ public:
 	ComponentMaterial* CreateComponentMaterial();
 	void RemoveComponentMaterial(ComponentMaterial* material_to_remove);
 	
-	Texture* LoadTexture(const char* texture_path) const;
+	std::shared_ptr<Texture> LoadTexture(const char* texture_path);
 	GLuint  LoadCubemap(std::vector<std::string> faces) const;
-	unsigned char* LoadImageData(const char* texture_path, int& width, int& height) const;
-
 	void GenerateCheckerboardTexture();
 
 public:
 	GLuint checkerboard_texture_id;
 	std::vector<ComponentMaterial*> materials;
+
 };
 
 #endif //_MODULETEXTURE_H_

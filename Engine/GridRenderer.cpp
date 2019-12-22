@@ -3,6 +3,7 @@
 #include "Application.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleProgram.h"
+#include "Importer/MaterialImporter.h"
 
 
 GridRenderer::GridRenderer()
@@ -16,7 +17,7 @@ GridRenderer::~GridRenderer()
 	glDeleteBuffers(1, &vbo);
 	glDeleteBuffers(1, &ebo);
 	glDeleteVertexArrays(1, &vao);
-	delete texture;
+	App->material_importer->RemoveTextureFromCacheIfNeeded(texture);
 }
 
 void GridRenderer::InitGridPlane()
