@@ -53,7 +53,7 @@ void ComponentAABB::GenerateBoundingBox()
 	
 	if (has_mesh)
 	{
-		GenerateBoundingBoxFromVertices(owner_mesh->vertices);
+		GenerateBoundingBoxFromVertices(owner_mesh->mesh_to_render->vertices);
 	}
 	else
 	{
@@ -67,7 +67,7 @@ void ComponentAABB::GenerateBoundingBox()
 	bounding_box2D = AABB2D(min_point2D, max_point2D);
 }
 
-void ComponentAABB::GenerateBoundingBoxFromVertices(const std::vector<ComponentMesh::Vertex> & vertices)
+void ComponentAABB::GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices)
 {
 	bounding_box.SetNegativeInfinity();
 	for (unsigned int i = 0; i < vertices.size(); ++i)

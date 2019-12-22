@@ -6,6 +6,7 @@
 #include "Globals.h"
 
 #include <GL/glew.h>
+#include <memory>
 
 class Texture;
 
@@ -32,7 +33,7 @@ public:
 	ComponentType type = ComponentType::MATERIAL;
 
 	int index = 0;
-	Texture *texture;
+	std::shared_ptr<Texture> texture;
 
 	bool show_checkerboard_texture = false;
 

@@ -26,7 +26,7 @@ private:
 	GLuint vbo = 0;
 	GLuint vao = 0;
 	GLuint ebo = 0;
-	Texture* texture = nullptr;
+	std::shared_ptr<Texture> texture = nullptr;
 
 };
 

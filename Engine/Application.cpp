@@ -12,9 +12,14 @@
 #include "Module/ModuleUI.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
+#include "Importer/MaterialImporter.h"
+#include "Importer/MeshImporter.h"
+#include "UI/EngineUI.h"
 #include "UI/EngineLog.h"
 #include "TimerUs.h"
 #include "Brofiler/Brofiler.h"
+
+#include <unordered_map>
 
 using namespace std;
 
@@ -37,6 +42,9 @@ Application::Application()
 	modules.emplace_back(debug = new ModuleDebug());
 		
 	engine_log = new EngineLog();
+
+	material_importer = new MaterialImporter();
+	mesh_importer = new MeshImporter();
 }
 
 Application::~Application()
@@ -47,6 +55,8 @@ Application::~Application()
     }
 
 	delete engine_log;
+	delete material_importer;
+	delete mesh_importer;
 }
 
 bool Application::Init()

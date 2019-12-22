@@ -133,10 +133,11 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & fi
 			{
 				char * test = "This is a test text";
 				std::string new_empty_file = file.file_path + "//example.txt";
-				App->filesystem->Save(new_empty_file.c_str(), test, sizeof(test),false);
-				char * test2[sizeof(test)];
-				App->filesystem->Load(new_empty_file.c_str(), &test);
-				APP_LOG_INFO("Read: %s",test2);
+				App->filesystem->Save(new_empty_file.c_str(), test, sizeof("This is a test text"),false);
+				size_t size;
+				char * load_test = App->filesystem->Load(new_empty_file.c_str(), size);
+				APP_LOG_INFO("Read: %s", load_test);
+				free(load_test);
 			}
 			ImGui::EndMenu();
 		}

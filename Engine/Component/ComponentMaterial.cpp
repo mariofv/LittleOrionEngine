@@ -2,6 +2,7 @@
 #include "Texture.h"
 #include "Application.h"
 #include <Module/ModuleTexture.h>
+#include <Importer/MaterialImporter.h>
 
 ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL)
 {
@@ -15,7 +16,7 @@ ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, Comp
 
 ComponentMaterial::~ComponentMaterial()
 {
-	delete texture;
+	App->material_importer->RemoveTextureFromCacheIfNeeded(texture);
 }
 
 void ComponentMaterial::Enable()
@@ -57,9 +58,10 @@ void ComponentMaterial::Load(const Config& config)
 
 	std::string tmp_path;
 	config.GetString("Path", tmp_path, "");
-	texture = App->texture->LoadTexture(tmp_path.c_str());
+	texture = App->material_importer->Load(tmp_path.c_str());
 	
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
+
 }
 
 GLuint ComponentMaterial::GetTexture() const

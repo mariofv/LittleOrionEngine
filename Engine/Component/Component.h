@@ -22,11 +22,12 @@ public:
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
 	virtual ~Component() = default;
 
-	virtual void Enable() = 0;
-	virtual void Disable() = 0;
+	virtual void Enable() { active = true; };
+	virtual void Disable() { active = false; };
 	virtual bool IsEnabled() const { return active; };
 
-	virtual void Update() = 0;
+
+	virtual void Update() {};
 	virtual void Delete() = 0;
 
 	virtual void Save(Config& config) const = 0;

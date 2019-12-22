@@ -32,7 +32,7 @@ public:
 	void Load(const Config& config);
 
 	void GenerateBoundingBox();
-	void GenerateBoundingBoxFromVertices(const std::vector<ComponentMesh::Vertex> & vertices);
+	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices);
 
 	bool IsEmpty() const;
 	std::vector<float> GetVertices() const;

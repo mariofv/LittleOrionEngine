@@ -43,13 +43,13 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Triangles");
 		ImGui::SameLine();
-		sprintf(tmp_string, "%d", mesh->num_triangles);
+		sprintf(tmp_string, "%d", mesh->mesh_to_render->num_triangles);
 		ImGui::Button(tmp_string);
 
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Vertices");
 		ImGui::SameLine();
-		sprintf(tmp_string, "%d", mesh->num_vertices);
+		sprintf(tmp_string, "%d", mesh->mesh_to_render->num_vertices);
 		ImGui::Button(tmp_string);
 	}
 }

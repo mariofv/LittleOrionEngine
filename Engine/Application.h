@@ -24,6 +24,10 @@ class ModuleUI;
 
 class EngineLog;
 
+
+class MaterialImporter;
+class MeshImporter;
+
 class TimerUs;
 
 class Application
@@ -53,6 +57,8 @@ public:
 	ModuleUI* ui = nullptr;
 
 	EngineLog* engine_log = nullptr;
+	MeshImporter* mesh_importer = nullptr;
+	MaterialImporter* material_importer = nullptr;
 
 private:
 

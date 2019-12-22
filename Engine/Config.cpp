@@ -122,7 +122,7 @@ bool Config::GetBool(const std::string& name, bool opt_value) const
 void Config::AddString(const std::string value_to_add, const std::string& name)
 {
 	rapidjson::Value member_name(name.c_str(), *allocator);
-	rapidjson::Value string_value(value_to_add.c_str(), *allocator);
+	rapidjson::Value string_value(value_to_add.c_str(), value_to_add.size(), *allocator);
 	config_document.AddMember(member_name, string_value, *allocator);
 }
 
@@ -135,7 +135,11 @@ void Config::GetString(const std::string& name, std::string& return_value, const
 	else
 	{
 		const rapidjson::Value& current_value = config_document[name.c_str()];
-		return_value = current_value.GetString();
+		std::vector<char> path;
+		path.resize(current_value.GetStringLength());
+		memcpy(&path.front(), current_value.GetString(), current_value.GetStringLength());
+		return_value = std::string(path.begin(), path.end());
+		//return_value = std::string(current_value.GetString(), current_value.GetStringLength());
 	}
 }
 
