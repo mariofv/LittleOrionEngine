@@ -3,8 +3,10 @@
 #include "TimerUs.h"
 
 #include <SDL/SDL.h>
+#include <pcg_basic.h>
 
 #include <stdlib.h>
+#include <ctime>
 
 #pragma comment( lib, "Libraries/lib/x86/SDL2.lib" )
 #pragma comment( lib, "Libraries/lib/x86/SDL2main.lib" )
@@ -25,6 +27,9 @@ int main(int argc, char ** argv)
 	int main_return = EXIT_FAILURE;
 	main_states state = MAIN_CREATION;
 	TimerUs main_timer = TimerUs();
+
+	// Random number generator
+	pcg32_srandom(time(NULL), 0);
 
 	while (state != MAIN_EXIT)
 	{

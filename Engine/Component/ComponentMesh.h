@@ -17,6 +17,10 @@ public:
 	~ComponentMesh();
 
 	void Delete() override;
+
+	void Save(Config& config) const;
+	void Load(const Config& config);
+
 	void Render() const;
 
 	void SetMesh(std::shared_ptr<Mesh> mesh_to_render);

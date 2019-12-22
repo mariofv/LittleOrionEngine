@@ -19,6 +19,9 @@ public:
 	void Disable() override;
 	void Update() override;
 	void Delete() override {};
+
+	void Save(Config& config) const;
+	void Load(const Config& config);
 	
 	float3 GetTranslation() const;
 	void SetTranslation(const float3 translation);

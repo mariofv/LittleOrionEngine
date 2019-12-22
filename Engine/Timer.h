@@ -8,6 +8,7 @@ public:
 	~Timer();
 
 	void Start();
+	bool Started();
 	float Stop();
 
 	void Resume();

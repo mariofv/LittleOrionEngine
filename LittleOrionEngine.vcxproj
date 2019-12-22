@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -47,7 +47,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -65,7 +65,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -77,12 +77,14 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Config.h" />
     <ClInclude Include="Engine\Importer\Importer.h" />
     <ClInclude Include="Engine\Importer\MaterialImporter.h" />
     <ClInclude Include="Engine\Importer\MeshImporter.h" />
     <ClInclude Include="Engine\Mesh.h" />
     <ClInclude Include="Engine\Module\ModuleFileSystem.h" />
     <ClInclude Include="Engine\Module\ModuleDebug.h" />
+    <ClInclude Include="Engine\Module\ModuleUI.h" />
     <ClInclude Include="Engine\OLOctTree.h" />
     <ClInclude Include="Engine\OLOctTreeNode.h" />
     <ClInclude Include="Engine\OLQuadTreeNode.h" />
@@ -190,14 +192,17 @@
     <ClInclude Include="Engine\Module\ModuleScene.h" />
     <ClInclude Include="Engine\OLQuadTree.h" />
     <ClInclude Include="Engine\Utils.h" />
+    <ClInclude Include="Libraries\pcg_random\pcg_basic.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Config.cpp" />
     <ClCompile Include="Engine\Importer\Importer.cpp" />
     <ClCompile Include="Engine\Importer\MaterialImporter.cpp" />
     <ClCompile Include="Engine\Importer\MeshImporter.cpp" />
     <ClCompile Include="Engine\Mesh.cpp" />
     <ClCompile Include="Engine\Module\ModuleFileSystem.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebug.cpp" />
+    <ClCompile Include="Engine\Module\ModuleUI.cpp" />
     <ClCompile Include="Engine\OLOctTree.cpp" />
     <ClCompile Include="Engine\OLOctTreeNode.cpp" />
     <ClCompile Include="Engine\OLQuadTreeNode.cpp" />
@@ -227,6 +232,7 @@
     <ClCompile Include="Libraries\imgui\imgui_impl_sdl.cpp" />
     <ClCompile Include="Libraries\imgui\imgui_widgets.cpp" />
     <ClCompile Include="Libraries\imgui\imgui_stdlib.cpp" />
+    <ClCompile Include="Libraries\pcg_random\pcg_basic.c" />
     <ClCompile Include="Main.cpp" />
     <ClCompile Include="Libraries\MathGeoLib\include\Algorithm\Random\LCG.cpp" />
     <ClCompile Include="Libraries\MathGeoLib\include\Geometry\AABB.cpp" />

@@ -201,6 +201,7 @@ void MaterialImporter::RemoveTextureFromCacheIfNeeded(std::shared_ptr<Texture> t
 	if (it != texture_cache.end() && (*it).use_count() <= 3)
 	{
 		(*it).~shared_ptr();
+		texture_cache.erase(it);
 	}
 }
 

@@ -4,8 +4,6 @@
 #include "Module.h"
 #include "Globals.h"
 
-struct ImFont;
-
 class ModuleEditor : public Module
 {
 public:
@@ -16,13 +14,13 @@ public:
 	update_status PreUpdate();
 	update_status Update();
 	update_status PostUpdate();
-	void Render();
 	bool CleanUp();
 
-	ImFont* GetFont(const Fonts font) const;
+	void OpenScene() const;
+	void SaveScene() const;
 
-private:
-	void LoadFonts();
+	void LoadSceneTmp() const;
+	void SaveSceneTmp() const;
 };
 
 #endif //_MODULEEDITOR_H_

@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Application.h"
+#include "Config.h"
 #include "Hierarchy.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleProgram.h"
@@ -7,6 +8,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "Texture.h"
+#include "Utils.h"
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
@@ -15,19 +17,27 @@
 #include "imgui.h"
 #include "imgui_stdlib.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
+#include <pcg_basic.h>
+#include <rapidjson/stringbuffer.h>
+#include <rapidjson/prettywriter.h>
+#include <pcg_basic.h>
 
 #include <algorithm>
 
-GameObject::GameObject() : transform(this), aabb(this)
+GameObject::GameObject() : transform(this), aabb(this), UUID(pcg32_random())
+{
+}
+
+GameObject::GameObject(unsigned int UUID) : transform(this), aabb(this), UUID(UUID)
 {
 }
 
 GameObject::GameObject(const std::string name) :
 	name(name),
 	transform(this),
-	aabb(this)
+	aabb(this),
+	UUID(pcg32_random())
 {
-
 }
 
 GameObject::~GameObject()
@@ -91,6 +101,66 @@ void GameObject::Update()
 		children[i]->Update();
 	}
 
+}
+
+void GameObject::Save(Config& config) const
+{
+	config.AddUInt(UUID, "UUID");
+	if (parent != nullptr)
+	{
+		config.AddUInt(parent->UUID, "ParentUUID");
+	}
+	config.AddString(name, "Name");
+
+	config.AddBool(is_static, "IsStatic");
+	config.AddBool(active, "Active");
+
+	Config transform_config;
+	transform.Save(transform_config);
+	config.AddChildConfig(transform_config, "Transform");
+
+	std::vector<Config> gameobject_components_config(components.size());
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		components[i]->Save(gameobject_components_config[i]);
+	}
+	config.AddChildrenConfig(gameobject_components_config, "Components");
+}
+
+void GameObject::Load(const Config& config)
+{
+	UUID = config.GetUInt("UUID", 0);
+	assert(UUID != 0);
+
+	config.GetString("Name", name, "GameObject");
+
+	unsigned int parent_UUID = config.GetUInt("ParentUUID", 0);
+	//TODO: This should be done later on, because its possible to try to load a node that its not already loaded
+	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID); 
+	assert(game_object_parent != nullptr);
+	if (parent_UUID != 0)
+	{
+		game_object_parent->AddChild(this); //TODO: This should be in scene. Probably D:
+	}
+
+	is_static = config.GetBool("IsStatic", false);
+	active = config.GetBool("Active", true);
+
+	Config transform_config;
+	config.GetChildConfig("Transform", transform_config);
+	transform.Load(transform_config);
+
+	std::vector<Config> gameobject_components_config;
+	config.GetChildrenConfig("Components", gameobject_components_config);
+	for (unsigned int i = 0; i < gameobject_components_config.size(); ++i)
+	{
+		int component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
+		assert(component_type_uint != 0);
+		
+		Component::ComponentType component_type = Component::GetComponentType(component_type_uint);
+		Component* created_component = CreateComponent(component_type);
+		created_component->Load(gameobject_components_config[i]);
+	}
 }
 
 void GameObject::SetParent(GameObject *new_parent)

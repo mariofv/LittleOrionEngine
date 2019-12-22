@@ -35,6 +35,16 @@ void ComponentAABB::Update()
 
 }
 
+void ComponentAABB::Save(Config& config) const
+{
+
+}
+
+void ComponentAABB::Load(const Config& config)
+{
+
+}
+
 void ComponentAABB::GenerateBoundingBox()
 {
 	bool has_mesh = false;

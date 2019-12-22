@@ -15,6 +15,7 @@ class GameObject
 {
 public:
 	GameObject();
+	GameObject(unsigned int UUID);
 	GameObject(const std::string name);
 	~GameObject();
 
@@ -24,6 +25,9 @@ public:
 	bool IsStatic() const;
 
 	void Update();
+
+	void Save(Config& config) const;
+	void Load(const Config& config);
 
 	void SetParent(GameObject *new_parent);
 	void AddChild(GameObject *child);
@@ -41,17 +45,17 @@ public:
 
 	const GLuint GetMaterialTexture() const;
 
-
 	void ShowPropertiesWindow();
+
 private:
 	void SetHierarchyStatic(bool is_static);
 
 public:
 	std::string name = "";
+	unsigned int UUID = -1;
 
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;
-
 
 	ComponentTransform transform;
 	ComponentAABB aabb;
@@ -59,6 +63,7 @@ public:
 	std::vector<Component*> components;
 
 private:
+
 	bool active = true;
 	bool is_static = false;
 	int hierarchy_depth = 0;

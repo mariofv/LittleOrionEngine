@@ -1,6 +1,7 @@
 #include "ModuleTime.h"
 #include "Globals.h"
 #include "Application.h"
+#include "ModuleEditor.h"
 #include "ModuleWindow.h"
 #include "UI/EngineUI.h"
 #include "UI/EngineLog.h"
@@ -26,7 +27,6 @@ bool ModuleTime::Init()
 	game_time_clock = new Timer();
 
 	real_time_clock->Start();
-	game_time_clock->Start();
 
 	APP_LOG_SUCCESS("Engine clocks initialized correctly");
 
@@ -93,11 +93,25 @@ void ModuleTime::SetMaxFPS(const int fps)
 
 void ModuleTime::Play()
 {
-	game_time_clock->Resume();
+	if (!game_time_clock->Started())
+	{
+		App->editor->SaveSceneTmp();
+		game_time_clock->Start();
+	}
+	else
+	{
+		game_time_clock->Stop();
+		App->editor->LoadSceneTmp();
+	}
 }
 
 void ModuleTime::Pause()
 {
+	if (!game_time_clock->Started())
+	{
+		Play();
+	}
+
 	if (game_time_clock->IsPaused())
 	{
 		game_time_clock->Resume();
@@ -109,6 +123,11 @@ void ModuleTime::Pause()
 
 void ModuleTime::StepFrame()
 {
+	if (!game_time_clock->Started())
+	{
+		Play();
+	}
+
 	if (game_time_clock->IsPaused())
 	{
 		game_time_clock->Resume();
@@ -129,9 +148,22 @@ void ModuleTime::ShowTimeControls()
 
 		ImVec2 play_button_pos((time_window_size.x - 24)*0.5f - 26, (time_window_size.y - 24)*0.5f);
 		ImGui::SetCursorPos(play_button_pos);
-		if (ImGui::Button(ICON_FA_PLAY, ImVec2(24,24)))
+		if (game_time_clock->Started())
 		{
-			Play();
+			// CHANGE DEFAULT BUTTON COLOR TO SELECTED BUTTON COLOR
+			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5816f, 0.94f, 0.9804f));
+			if (ImGui::Button(ICON_FA_PLAY, ImVec2(24, 24)))
+			{
+				Play();
+			}
+			ImGui::PopStyleColor();
+		}
+		else
+		{
+			if (ImGui::Button(ICON_FA_PLAY, ImVec2(24, 24)))
+			{
+				Play();
+			}
 		}
 
 		ImGui::SameLine();

@@ -9,6 +9,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleTime.h"
+#include "Module/ModuleUI.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
 #include "Importer/MaterialImporter.h"
@@ -29,6 +30,7 @@ Application::Application()
 	modules.emplace_back(window = new ModuleWindow());
 	modules.emplace_back(filesystem = new ModuleFileSystem());
 	modules.emplace_back(editor = new ModuleEditor());
+	modules.emplace_back(ui = new ModuleUI());
 	modules.emplace_back(time = new ModuleTime());
 	modules.emplace_back(texture = new ModuleTexture());
 	modules.emplace_back(renderer = new ModuleRender());
@@ -40,7 +42,7 @@ Application::Application()
 	modules.emplace_back(debug = new ModuleDebug());
 		
 	engine_log = new EngineLog();
-	ui = new EngineUI();
+
 	material_importer = new MaterialImporter();
 	mesh_importer = new MeshImporter();
 }
@@ -52,9 +54,9 @@ Application::~Application()
         delete *it;
     }
 
-	delete ui;
 	delete engine_log;
 	delete material_importer;
+	delete mesh_importer;
 }
 
 bool Application::Init()

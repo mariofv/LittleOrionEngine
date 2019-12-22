@@ -3,6 +3,7 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleUI.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleRender.h"
@@ -70,6 +71,14 @@ void EngineUI::ShowFileMenu()
 {
 	if (ImGui::BeginMenu("File"))
 	{
+		if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Open Scene"))
+		{
+			App->editor->OpenScene();
+		}
+		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
+		{
+			App->editor->SaveScene();
+		}
 		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
 		{
 			SDL_Event quit_event;
@@ -102,7 +111,7 @@ void EngineUI::ShowHelpMenu()
 	if (ImGui::BeginMenu("Help"))
 	{
 		ImGui::MenuItem(ICON_FA_QUESTION_CIRCLE " About", (const char*)0, &show_about_window);
-		ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAB));
+		ImGui::PushFont(App->ui->GetFont(Fonts::FONT_FAB));
 		if (ImGui::MenuItem(ICON_FA_GITHUB_ALT " Repository"))
 		{
 			ShellExecuteA(NULL, "open", "https://github.com/mariofv/LittleOrionEngine/", NULL, NULL, SW_SHOWNORMAL);

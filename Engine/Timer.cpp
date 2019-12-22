@@ -12,6 +12,11 @@ void Timer::Start()
 	running = true;
 }
 
+bool Timer::Started()
+{
+	return running;
+}
+
 float Timer::Read() const
 {
 	float current_time;
@@ -64,6 +69,7 @@ float Timer::Stop()
 {
 	end_time = SDL_GetTicks() - start_ticks - elapsed_while_paused_ticks;
 	running = false;
+	paused = false;
 
 	return end_time;
 }

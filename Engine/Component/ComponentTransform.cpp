@@ -31,6 +31,26 @@ void ComponentTransform::Update()
 
 }
 
+void ComponentTransform::Save(Config& config) const
+{
+	config.AddUInt(UUID, "UUID");
+	config.AddBool(active, "Active");
+	config.AddFloat3(translation, "Translation");
+	config.AddQuat(rotation, "Rotation");
+	config.AddFloat3(scale, "Scale");
+}
+
+void ComponentTransform::Load(const Config& config)
+{
+	UUID = config.GetUInt("UUID", 0);
+	active = config.GetBool("Active", true);
+	config.GetFloat3("Translation", translation, float3::zero);
+	config.GetQuat("Rotation", rotation, Quat::identity);
+	config.GetFloat3("Scale", scale, float3::one);
+
+	GenerateModelMatrix();
+}
+
 float3 ComponentTransform::GetTranslation() const
 {
 	return translation;

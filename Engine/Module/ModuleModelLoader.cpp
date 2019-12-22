@@ -42,7 +42,6 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	{
 		LoadNode(model_root_node, file);
 	}
-
 	return model_root_node;
 }
 

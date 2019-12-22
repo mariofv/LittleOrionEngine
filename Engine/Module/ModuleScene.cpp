@@ -3,6 +3,7 @@
 #include "ModuleRender.h"
 #include "ModuleCamera.h"
 #include "Component/ComponentCamera.h"
+#include "Config.h"
 
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -10,7 +11,7 @@
 
 bool ModuleScene::Init()
 {
-	root = new GameObject();
+	root = new GameObject(0);
 	GameObject * camera = CreateGameObject();
 	camera->name = "Main Camera";
 	ComponentCamera * component_camera = static_cast<ComponentCamera*>(camera->CreateComponent(Component::ComponentType::CAMERA));
@@ -30,8 +31,7 @@ update_status ModuleScene::Update()
 
 bool ModuleScene::CleanUp()
 {
-	delete root;
-
+	DeleteCurrentScene();
 	return true;
 }
 
@@ -69,6 +69,56 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 GameObject* ModuleScene::GetRoot() const
 {
 	return root;
+}
+
+GameObject* ModuleScene::GetGameObject(unsigned int UUID) const
+{
+	if (UUID == 0)
+	{
+		return root;
+	}
+
+	for (auto& game_object : game_objects_ownership)
+	{
+		if (game_object->UUID == UUID) 
+		{
+			return game_object.get();
+		}
+	}
+
+	return nullptr;
+}
+
+void ModuleScene::DeleteCurrentScene()
+{
+	delete root;
+	game_objects_ownership.clear();
+	hierarchy.selected_game_object = nullptr;
+}
+
+void ModuleScene::Save(Config& serialized_scene) const
+{
+	std::vector<Config> game_objects_config(game_objects_ownership.size());
+	for (unsigned int i = 0; i < game_objects_ownership.size(); ++i)
+	{
+		game_objects_ownership[i]->Save(game_objects_config[i]);
+	}
+	serialized_scene.AddChildrenConfig(game_objects_config, "GameObjects");
+}
+
+void ModuleScene::Load(const Config& serialized_scene)
+{
+	DeleteCurrentScene();
+	root = new GameObject(0);
+	App->renderer->GenerateQuadTree(); // TODO: Move this to load scene and save scene
+
+	std::vector<Config> game_objects_config;
+	serialized_scene.GetChildrenConfig("GameObjects", game_objects_config);
+	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
+	{
+		GameObject* created_game_object = CreateGameObject();
+		created_game_object->Load(game_objects_config[i]);
+	}
 }
 
 void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title)

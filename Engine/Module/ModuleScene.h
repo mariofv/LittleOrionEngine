@@ -23,6 +23,11 @@ public:
 	void RemoveGameObject(GameObject * game_object_to_remove);
 
 	GameObject* GetRoot() const;
+	GameObject* GetGameObject(unsigned int UUID) const;
+
+	void DeleteCurrentScene();
+	void Save(Config& serialized_scene) const;
+	void Load(const Config& serialized_scene);
 
 	void ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title);
 

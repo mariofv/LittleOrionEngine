@@ -37,6 +37,24 @@ void ComponentMesh::Delete()
 	App->renderer->RemoveComponentMesh(this);
 }
 
+void ComponentMesh::Save(Config& config) const
+{
+	config.AddUInt(UUID, "UUID");
+	config.AddInt((unsigned int)type, "ComponentType");
+	config.AddBool(active, "Active");
+	config.AddString(mesh_to_render->mesh_file_path, "MeshPath");
+}
+
+void ComponentMesh::Load(const Config& config)
+{
+	UUID = config.GetUInt("UUID", 0);
+	active = config.GetBool("Active", true);
+
+	std::string mesh_path;
+	config.GetString("MeshPath", mesh_path, "");
+	SetMesh(App->mesh_importer->Load(mesh_path.c_str()));
+}
+
 void ComponentMesh::Render() const
 {
 	glBindVertexArray(vao);
