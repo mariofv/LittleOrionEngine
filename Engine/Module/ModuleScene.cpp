@@ -110,7 +110,6 @@ void ModuleScene::Load(const Config& serialized_scene)
 {
 	DeleteCurrentScene();
 	root = new GameObject(0);
-	App->renderer->GenerateQuadTree(); // TODO: Move this to load scene and save scene
 
 	std::vector<Config> game_objects_config;
 	serialized_scene.GetChildrenConfig("GameObjects", game_objects_config);
@@ -119,6 +118,7 @@ void ModuleScene::Load(const Config& serialized_scene)
 		GameObject* created_game_object = CreateGameObject();
 		created_game_object->Load(game_objects_config[i]);
 	}
+	App->renderer->GenerateQuadTree();
 }
 
 void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title)
