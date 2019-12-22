@@ -1,13 +1,13 @@
 {
     "GameObjects": [
         {
-            "UUID": 1934668712,
+            "UUID": 953407674,
             "ParentUUID": 0,
             "Name": "Main Camera",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1361627541,
+                "UUID": 4279892063,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -28,7 +28,7 @@
             },
             "Components": [
                 {
-                    "UUID": 881561010,
+                    "UUID": 1831537948,
                     "ComponentType": 1,
                     "Active": true,
                     "FrustumType": 2,
@@ -46,13 +46,13 @@
             ]
         },
         {
-            "UUID": 3338525255,
+            "UUID": 1616913888,
             "ParentUUID": 0,
             "Name": "RootNode",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 464668231,
+                "UUID": 2661730681,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -74,13 +74,13 @@
             "Components": []
         },
         {
-            "UUID": 3626449012,
-            "ParentUUID": 3338525255,
+            "UUID": 3862899509,
+            "ParentUUID": 1616913888,
             "Name": "Baker_house",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3656178854,
+                "UUID": 2371841023,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -101,13 +101,13 @@
             },
             "Components": [
                 {
-                    "UUID": 2707079834,
+                    "UUID": 3900636808,
                     "ComponentType": 3,
                     "Active": true,
                     "MeshPath": ".//Library//Meshes//BakerHouse//Baker_house.ol"
                 },
                 {
-                    "UUID": 287991687,
+                    "UUID": 426075868,
                     "ComponentType": 2,
                     "Active": true,
                     "Index": 0,
@@ -117,13 +117,13 @@
             ]
         },
         {
-            "UUID": 1102520414,
-            "ParentUUID": 3338525255,
+            "UUID": 1228092732,
+            "ParentUUID": 1616913888,
             "Name": "Chimney",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1658051431,
+                "UUID": 3656494154,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -144,13 +144,13 @@
             },
             "Components": [
                 {
-                    "UUID": 4166695533,
+                    "UUID": 2583952647,
                     "ComponentType": 3,
                     "Active": true,
                     "MeshPath": ".//Library//Meshes//BakerHouse//Chimney.ol"
                 },
                 {
-                    "UUID": 2114279284,
+                    "UUID": 1354524489,
                     "ComponentType": 2,
                     "Active": true,
                     "Index": 0,
