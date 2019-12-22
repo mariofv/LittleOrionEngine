@@ -143,7 +143,7 @@ void GameObject::Load(const Config& config)
 		game_object_parent->AddChild(this); //TODO: This should be in scene. Probably D:
 	}
 
-	is_static = config.GetBool("IsStatic", false);
+	SetStatic(config.GetBool("IsStatic", false));
 	active = config.GetBool("Active", true);
 
 	Config transform_config;
