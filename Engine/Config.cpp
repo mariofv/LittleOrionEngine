@@ -135,11 +135,7 @@ void Config::GetString(const std::string& name, std::string& return_value, const
 	else
 	{
 		const rapidjson::Value& current_value = config_document[name.c_str()];
-		std::vector<char> path;
-		path.resize(current_value.GetStringLength());
-		memcpy(&path.front(), current_value.GetString(), current_value.GetStringLength());
-		return_value = std::string(path.begin(), path.end());
-		//return_value = std::string(current_value.GetString(), current_value.GetStringLength());
+		return_value = std::string(current_value.GetString(), current_value.GetStringLength());
 	}
 }
 
