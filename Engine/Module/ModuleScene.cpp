@@ -8,6 +8,7 @@
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <algorithm>
+#include <stack>
 
 bool ModuleScene::Init()
 {
@@ -99,10 +100,29 @@ void ModuleScene::DeleteCurrentScene()
 void ModuleScene::Save(Config& serialized_scene) const
 {
 	std::vector<Config> game_objects_config(game_objects_ownership.size());
-	for (unsigned int i = 0; i < game_objects_ownership.size(); ++i)
+	std::stack<GameObject*> pending_objects;
+	unsigned int current_index = 0;
+
+	for (auto& child_game_object : root->children)
 	{
-		game_objects_ownership[i]->Save(game_objects_config[i]);
+		pending_objects.push(child_game_object);
+	}	
+	
+	while (!pending_objects.empty())
+	{
+		GameObject* current_game_object = pending_objects.top();
+		pending_objects.pop();
+
+		current_game_object->Save(game_objects_config[current_index]);
+		++current_index;
+
+		for (auto& child_game_object : current_game_object->children)
+		{
+			pending_objects.push(child_game_object);
+		}
 	}
+	assert(current_index == game_objects_ownership.size());
+
 	serialized_scene.AddChildrenConfig(game_objects_config, "GameObjects");
 }
 

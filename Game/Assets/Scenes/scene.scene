@@ -1,58 +1,13 @@
 {
     "GameObjects": [
         {
-            "UUID": 953407674,
-            "ParentUUID": 0,
-            "Name": "Main Camera",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 4279892063,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    1.0,
-                    -10.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0,
-                    1.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 1831537948,
-                    "ComponentType": 1,
-                    "Active": true,
-                    "FrustumType": 2,
-                    "NearPlaneDistance": 1.0,
-                    "FarPlaneDistance": 500.0,
-                    "VerticalFOV": 0.7853981852531433,
-                    "ClearMode": 0,
-                    "ClearColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "UUID": 1616913888,
+            "UUID": 535646228,
             "ParentUUID": 0,
             "Name": "RootNode",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 2661730681,
+                "UUID": 1142033132,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -74,13 +29,13 @@
             "Components": []
         },
         {
-            "UUID": 3862899509,
-            "ParentUUID": 1616913888,
-            "Name": "Baker_house",
+            "UUID": 979459264,
+            "ParentUUID": 535646228,
+            "Name": "Chimney",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 2371841023,
+                "UUID": 2787006078,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -101,13 +56,13 @@
             },
             "Components": [
                 {
-                    "UUID": 3900636808,
+                    "UUID": 1836849562,
                     "ComponentType": 3,
                     "Active": true,
-                    "MeshPath": ".//Library//Meshes//BakerHouse//Baker_house.ol"
+                    "MeshPath": ".//Library//Meshes//BakerHouse//Chimney.ol"
                 },
                 {
-                    "UUID": 426075868,
+                    "UUID": 2463877390,
                     "ComponentType": 2,
                     "Active": true,
                     "Index": 0,
@@ -117,13 +72,13 @@
             ]
         },
         {
-            "UUID": 1228092732,
-            "ParentUUID": 1616913888,
-            "Name": "Chimney",
+            "UUID": 1676602023,
+            "ParentUUID": 535646228,
+            "Name": "Baker_house",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3656494154,
+                "UUID": 3294950798,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -144,18 +99,63 @@
             },
             "Components": [
                 {
-                    "UUID": 2583952647,
+                    "UUID": 1001316001,
                     "ComponentType": 3,
                     "Active": true,
-                    "MeshPath": ".//Library//Meshes//BakerHouse//Chimney.ol"
+                    "MeshPath": ".//Library//Meshes//BakerHouse//Baker_house.ol"
                 },
                 {
-                    "UUID": 1354524489,
+                    "UUID": 2917749665,
                     "ComponentType": 2,
                     "Active": true,
                     "Index": 0,
                     "Path": ".//Library//Materials//Baker_house.dds",
                     "Checkboard": false
+                }
+            ]
+        },
+        {
+            "UUID": 3169080293,
+            "ParentUUID": 0,
+            "Name": "Main Camera",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1995528611,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    1.0,
+                    -10.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0,
+                    1.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 3436351237,
+                    "ComponentType": 1,
+                    "Active": true,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 500.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
                 }
             ]
         }
