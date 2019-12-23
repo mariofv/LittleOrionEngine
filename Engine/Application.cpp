@@ -1,6 +1,7 @@
 #include "Application.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleModelLoader.h"
@@ -38,6 +39,7 @@ Application::Application()
 	modules.emplace_back(cameras = new ModuleCamera());
 	modules.emplace_back(model_loader = new ModuleModelLoader());
 	modules.emplace_back(debug = new ModuleDebug());
+	modules.emplace_back(debug_draw = new ModuleDebugDraw());
 		
 	engine_log = new EngineLog();
 

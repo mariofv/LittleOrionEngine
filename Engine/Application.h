@@ -20,6 +20,7 @@ class ModuleTime;
 class ModuleScene;
 class ModuleFileSystem;
 class ModuleDebug;
+class ModuleDebugDraw;
 class ModuleUI;
 
 class EngineLog;
@@ -54,6 +55,7 @@ public:
 	ModuleScene* scene = nullptr;
 	ModuleFileSystem* filesystem = nullptr;
 	ModuleDebug* debug = nullptr;
+	ModuleDebugDraw* debug_draw = nullptr;
 	ModuleUI* ui = nullptr;
 
 	EngineLog* engine_log = nullptr;
