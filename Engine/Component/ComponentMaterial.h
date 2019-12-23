@@ -33,7 +33,11 @@ public:
 	ComponentType type = ComponentType::MATERIAL;
 
 	int index = 0;
-	std::shared_ptr<Texture> texture;
+	std::shared_ptr<Texture> texture_diffuse;
+	std::shared_ptr<Texture> texture_ambient;
+	std::shared_ptr<Texture> texture_specular;
+	std::shared_ptr<Texture> texture_emissive;
+	std::shared_ptr<Texture> texture_oclusion;
 
 	bool show_checkerboard_texture = false;
 

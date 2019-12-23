@@ -61,51 +61,24 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 		ImGui::Checkbox("Active", &material->active);
 		ImGui::Separator();
 
+
 		char tmp_string[256];
 		int window_width = ImGui::GetWindowWidth();
-
-		ImGui::Text("Texture path:");
+		ImGui::Image((void*)(intptr_t)material->texture_diffuse->opengl_texture, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
 		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), material->texture->texture_path.c_str());
-
-		sprintf_s(tmp_string, "%dx%d px", material->texture->width, material->texture->height);
-		ImGui::Text("Texture size:");
+		ImGui::BeginGroup();
+		ImGui::Text("Texture:");
 		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), material->texture_diffuse->texture_path.c_str());
+		sprintf_s(tmp_string, "(%dx%d px)", material->texture_diffuse->width, material->texture_diffuse->height);
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
 
-		ImGui::Text("Mipmap:");
-		ImGui::SameLine();
-		if (material->texture->IsMipMapped())
-		{
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Yes");
-		}
-		else
-		{
-			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "No");
-		}
-
-		ImGui::Text("Wrap S:");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material->texture->GetWrapS_C_Str()[0]);
-
-		ImGui::Text("Wrap T:");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material->texture->GetWrapT_C_Str()[0]);
-
-		ImGui::Text("Min filter:");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material->texture->GetMinFilter_C_Str()[0]);
-
-		ImGui::Text("Mag filter:");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), &material->texture->GetMagFilter_C_Str()[0]);
-
+		bool mipmap = material->texture_diffuse->IsMipMapped();
+		ImGui::Checkbox("Mipmap", &mipmap);
 		ImGui::Spacing();
 
-		ImGui::SetCursorPosX(window_width*0.25f);
-		ImGui::Image((void*)(intptr_t)material->texture->opengl_texture, ImVec2(window_width * 0.5f, window_width * 0.5f), ImVec2(0, 1), ImVec2(1, 0));
-
 		ImGui::Checkbox("Checker Texture", &material->show_checkerboard_texture);
+		ImGui::EndGroup();
 	}
 }
 

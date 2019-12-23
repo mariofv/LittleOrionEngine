@@ -16,7 +16,7 @@ ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, Comp
 
 ComponentMaterial::~ComponentMaterial()
 {
-	App->material_importer->RemoveTextureFromCacheIfNeeded(texture);
+	App->material_importer->RemoveTextureFromCacheIfNeeded(texture_diffuse);
 }
 
 void ComponentMaterial::Enable()
@@ -45,7 +45,7 @@ void ComponentMaterial::Save(Config& config) const
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddInt(index, "Index");
-	config.AddString(texture->texture_path, "Path");
+	config.AddString(texture_diffuse->texture_path, "Path");
 	config.AddBool(show_checkerboard_texture, "Checkboard");
 }
 
@@ -58,7 +58,7 @@ void ComponentMaterial::Load(const Config& config)
 
 	std::string tmp_path;
 	config.GetString("Path", tmp_path, "");
-	texture = App->material_importer->Load(tmp_path.c_str());
+	texture_diffuse = App->material_importer->Load(tmp_path.c_str());
 	
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 
@@ -70,7 +70,7 @@ GLuint ComponentMaterial::GetTexture() const
 	{
 		return App->texture->checkerboard_texture_id;
 	}
-	return active ? texture->opengl_texture : 0;
+	return active ? texture_diffuse->opengl_texture : 0;
 }
 
 void ComponentMaterial::ShowComponentWindow()
