@@ -47,7 +47,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/debug-draw;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -65,7 +65,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/debug-draw;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -108,6 +108,7 @@
     <ClInclude Include="Engine\GameObject.h" />
     <ClInclude Include="Engine\Hierarchy.h" />
     <ClInclude Include="Engine\UI\FileExplorerUI.h" />
+    <ClInclude Include="Libraries\debug-draw\debug-draw.hpp" />
     <ClInclude Include="Libraries\FontAwesome5\IconsFontAwesome5.h" />
     <ClInclude Include="Libraries\FontAwesome5\IconsFontAwesome5Brands.h" />
     <ClInclude Include="Libraries\imgui\imconfig.h" />

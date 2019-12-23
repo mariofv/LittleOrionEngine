@@ -83,7 +83,8 @@ Because this is a academic project is not possible to contribute directly to thi
 * [Font Awesome 5](https://github.com/FortAwesome/Font-Awesome) - Used to display fancy icons.
 * [Icon Font Cpp Headers](https://github.com/juliettef/IconFontCppHeaders/) - Used to import Font Awesome icons in C++.
 * [PCG](http://www.pcg-random.org/) - Used to generate **good** random numbers in C++.
-* [rapidjson](https://github.com/Tencent/rapidjson/) - Used to handle json files.
+* [rapidjson 1.1.0](https://github.com/Tencent/rapidjson/) - Used to handle json files.
+* [Debug Draw](https://github.com/glampert/debug-draw/) - Used to draw basic shapes.
 
 ## License
 

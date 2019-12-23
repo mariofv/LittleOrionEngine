@@ -514,9 +514,18 @@ void EngineUI::ShowAboutWindow()
 			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 		}
 
-		if (ImGui::MenuItem("rapidjson"))
+		if (ImGui::MenuItem("rapidjson 1.1.0"))
 		{
 			ShellExecuteA(NULL, "open", "https://github.com/Tencent/rapidjson/", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+		}
+
+		if (ImGui::MenuItem("Debug Draw"))
+		{
+			ShellExecuteA(NULL, "open", "https://github.com/glampert/debug-draw", NULL, NULL, SW_SHOWNORMAL);
 		}
 		if (ImGui::IsItemHovered())
 		{
