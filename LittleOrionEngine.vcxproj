@@ -47,7 +47,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/debug-draw;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/debug-draw;$(ProjectDir)Libraries/par_shapes;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -65,7 +65,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/debug-draw;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/debug-draw;$(ProjectDir)Libraries/par_shapes;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -193,6 +193,7 @@
     <ClInclude Include="Engine\Module\ModuleScene.h" />
     <ClInclude Include="Engine\OLQuadTree.h" />
     <ClInclude Include="Engine\Utils.h" />
+    <ClInclude Include="Libraries\par_shapes\par_shapes.h" />
     <ClInclude Include="Libraries\pcg_random\pcg_basic.h" />
   </ItemGroup>
   <ItemGroup>

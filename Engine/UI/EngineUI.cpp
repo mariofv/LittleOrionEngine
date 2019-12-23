@@ -532,12 +532,22 @@ void EngineUI::ShowAboutWindow()
 			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 		}
 
+		if (ImGui::MenuItem("par_shapes"))
+		{
+			ShellExecuteA(NULL, "open", "https://github.com/prideout/par/blob/master/par_shapes.h", NULL, NULL, SW_SHOWNORMAL);
+		}
+		if (ImGui::IsItemHovered())
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
+		}
+
+
 		ImGui::Separator();
 
 
 		if (ImGui::MenuItem("LICENSE"))
 		{
-			ShellExecuteA(NULL, "open", "https://github.com/mariofv/OrionEngine/blob/master/LICENSE", NULL, NULL, SW_SHOWNORMAL);
+			ShellExecuteA(NULL, "open", "https://github.com/mariofv/LittleOrionEngine/blob/master/LICENSE", NULL, NULL, SW_SHOWNORMAL);
 		}
 		if (ImGui::IsItemHovered())
 		{
