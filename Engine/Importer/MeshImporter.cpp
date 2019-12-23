@@ -51,7 +51,7 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file) const
 		App->filesystem->Remove(output_file);
 		return false;
 	}
-
+	performance_timer.Stop();
 	float time = performance_timer.Read();
 	APP_LOG_SUCCESS("Model %s loaded correctly from assimp in %f second .", file_path, time);
 
@@ -206,6 +206,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 
 	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(std::move(vertices), std::move(indices), std::move(meshes_textures_path),file_path);
 	mesh_cache.push_back(new_mesh);
+	performance_timer.Stop();
 	float time = performance_timer.Read();
 	free(data);
 	APP_LOG_SUCCESS("Model %s loaded correctly from own format in %f second .", file_path, time);
@@ -220,5 +221,6 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	 if (it != mesh_cache.end() && (*it).use_count() <= 3)
 	 {
 		 (*it).~shared_ptr();
+		 mesh_cache.erase(it);
 	 }
  }

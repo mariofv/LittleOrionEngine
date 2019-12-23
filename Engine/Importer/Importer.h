@@ -8,7 +8,6 @@
 class Importer {
 public:
 	virtual bool Import(const char* file, std::string& output_file) const = 0;
-	//virtual bool Import(const void* buffer, size_t size, std::string & output_file) = 0;
 
 protected:
 

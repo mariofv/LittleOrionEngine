@@ -19,8 +19,6 @@
 #include "TimerUs.h"
 #include "Brofiler/Brofiler.h"
 
-#include <unordered_map>
-
 using namespace std;
 
 Application::Application()

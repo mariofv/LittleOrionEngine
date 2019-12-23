@@ -21,7 +21,7 @@ bool MaterialImporter::Import(const char* file_path, std::string& output_file) c
 	ModuleFileSystem::File file = ModuleFileSystem::File(file_path);
 	if (file.filename.empty())
 	{
-		APP_LOG_SUCCESS("Importing material error: Couldn't find the file to import.")
+		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
 		return false;
 	}
 
@@ -105,7 +105,7 @@ std::string MaterialImporter::ImportMaterialData(const std::string & material_pa
 }
 std::shared_ptr<Texture> MaterialImporter::Load(const char* file_path) const{
 
-	//Check if the mesh is already loaded
+	//Check if the texture is already loaded
 	auto it = std::find_if(texture_cache.begin(), texture_cache.end(), [file_path](const std::shared_ptr<Texture> texture)
 	{
 		return texture->texture_path == file_path;
@@ -194,7 +194,7 @@ unsigned int MaterialImporter::LoadCubemap(std::vector<std::string> faces_paths)
 	return texture_id;
 }
 
-//Remove the mesh from the cache if the only owner is the cache itself
+//Remove the material from the cache if the only owner is the cache itself
 void MaterialImporter::RemoveTextureFromCacheIfNeeded(std::shared_ptr<Texture> texture) 
 {
 	auto it = std::find(texture_cache.begin(), texture_cache.end(), texture);
