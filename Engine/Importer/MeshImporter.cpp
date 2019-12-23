@@ -22,9 +22,9 @@ MeshImporter::~MeshImporter()
 {
 	Assimp::DefaultLogger::kill();
 }
-bool MeshImporter::Import(const char* file_path, std::string& output_file) const
+bool MeshImporter::Import(const std::string& file_path, std::string& output_file) const
 {
-	ModuleFileSystem::File file = ModuleFileSystem::File(file_path);
+	ModuleFileSystem::File file(file_path);
 	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedResource(LIBRARY_MESHES_FOLDER,file);
 	if (already_imported != nullptr) {
 		output_file = already_imported->file_path;
@@ -42,7 +42,7 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file) const
 	}
 	performance_timer.Start();
 
-	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFile(file_path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene == NULL)
 	{
 		const char *error = aiGetErrorString();

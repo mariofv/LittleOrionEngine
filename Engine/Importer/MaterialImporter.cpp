@@ -14,9 +14,9 @@ MaterialImporter::MaterialImporter()
 	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 }
-bool MaterialImporter::Import(const char* file_path, std::string& output_file) const
+bool MaterialImporter::Import(const  std::string& file_path, std::string& output_file) const
 {
-	ModuleFileSystem::File file = ModuleFileSystem::File(file_path);
+	ModuleFileSystem::File file(file_path);
 	if (file.filename.empty())
 	{
 		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
@@ -35,7 +35,7 @@ bool MaterialImporter::Import(const char* file_path, std::string& output_file) c
 	ilGenImages(1, &image);
 	ilBindImage(image);
 	int width, height;
-	ILubyte * save_data = LoadImageData(file_path, width, height, IL_RGBA);
+	ILubyte * save_data = LoadImageData(file_path.c_str(), IL_RGBA, width, height);
 	//Get new Name
 
 	std::string texture_name_no_extension = file.filename.substr(0, file.filename.find_last_of("."));
@@ -85,7 +85,7 @@ std::string MaterialImporter::ImportMaterialData(const std::string & material_pa
 	std::string material_texture;
 
 	APP_LOG_INIT("Loading material texture in described path %s.", material_path.c_str());
-	bool imported = Import(material_path.c_str(), material_texture);
+	bool imported = Import(material_path, material_texture);
 	if (imported)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly.");
@@ -95,7 +95,7 @@ std::string MaterialImporter::ImportMaterialData(const std::string & material_pa
 	std::string texture_file_name = GetTextureFileName(material_path.c_str());
 	std::string textures_path = model_base_path+ "/" + texture_file_name;
 	APP_LOG_INIT("Loading material texture in model folder path %s.", model_base_path.c_str());
-	imported = Import(textures_path.c_str(), material_texture);
+	imported = Import(textures_path, material_texture);
 	if (imported)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly.");
@@ -104,7 +104,7 @@ std::string MaterialImporter::ImportMaterialData(const std::string & material_pa
 
 	textures_path = std::string(TEXTURES_PATH) + texture_file_name;
 	APP_LOG_INIT("Loading material texture in textures folder %s.", textures_path.c_str());
-	imported = Import(textures_path.c_str(), material_texture);
+	imported = Import(textures_path, material_texture);
 	if (imported)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly.");
@@ -130,7 +130,7 @@ std::shared_ptr<Texture> MaterialImporter::Load(const char* file_path) const{
 	ilBindImage(image);
 
 	int width, height;
-	ILubyte * data = LoadImageData(file_path, width, height, IL_DDS);
+	ILubyte * data = LoadImageData(file_path, IL_DDS, width, height);
 
 	if (data == NULL)
 	{
@@ -139,12 +139,12 @@ std::shared_ptr<Texture> MaterialImporter::Load(const char* file_path) const{
 	}
 	std::shared_ptr<Texture> loaded_texture = std::make_shared<Texture>(data, width, height, file_path);
 	loaded_texture->GenerateMipMap();
-	ilDeleteImages(1, &image);
 	texture_cache.push_back(loaded_texture);
+	ilDeleteImages(1, &image);
 	return loaded_texture;
 }
 
-ILubyte * MaterialImporter::LoadImageData(const char* file_path, int & width, int & height, int image_type ) const
+ILubyte * MaterialImporter::LoadImageData(const char* file_path, int image_type ,int & width, int & height ) const
 {
 	ilLoadImage(file_path);
 
@@ -184,7 +184,7 @@ unsigned int MaterialImporter::LoadCubemap(std::vector<std::string> faces_paths)
 	{
 		ilGenImages(1, &image);
 		ilBindImage(image);
-		unsigned char * data = LoadImageData(faces_paths[i].c_str(), width, height, IL_DDS);
+		unsigned char * data = LoadImageData(faces_paths[i].c_str(), IL_DDS, width, height);
 
 		if (data)
 		{

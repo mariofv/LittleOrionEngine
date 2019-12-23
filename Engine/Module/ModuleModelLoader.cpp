@@ -11,7 +11,6 @@
 #include "Importer/MeshImporter.h"
 #include "Importer/MaterialImporter.h"
 
-
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -29,9 +28,9 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
 	std::string model_output;
 
-	App->mesh_importer->Import(new_model_file_path, model_output);
+	App->mesh_importer->Import(std::string(new_model_file_path), model_output);
 
-	ModuleFileSystem::File file = ModuleFileSystem::File(new_model_file_path);
+	ModuleFileSystem::File file(new_model_file_path);
 	GameObject *model_root_node = App->scene->CreateGameObject();
 	model_root_node->name = std::string("RootNode");
 
