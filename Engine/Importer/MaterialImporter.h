@@ -2,12 +2,13 @@
 #define _MATERIALIMPORTER_H_
 
 #include "Importer.h"
+#include "Texture.h"
 
 #include <IL/il.h>
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-class Texture;
+#include <assimp/material.h>
 struct aiScene;
 
 class MaterialImporter : Importer
@@ -21,6 +22,7 @@ public:
 	unsigned int LoadCubemap(std::vector<std::string> faces_paths) const;
 
 	void RemoveTextureFromCacheIfNeeded(std::shared_ptr<Texture> texture);
+	Texture::TextureType GetTextureTypeFromAssimpType(aiTextureType type) const;
 
 private:
 	ILubyte* LoadImageData(const char* file_path, int & width, int & height, int image_type) const;

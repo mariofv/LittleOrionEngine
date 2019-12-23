@@ -1,11 +1,9 @@
-#include "Texture.h"
 #include "MaterialImporter.h"
 #include "Application.h"
 
 #include <algorithm>
 
 #include <assimp/scene.h>
-#include <assimp/material.h>
 
 MaterialImporter::MaterialImporter()
 {
@@ -67,18 +65,19 @@ void MaterialImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_
 	for (size_t i = 0; i < AI_TEXTURE_TYPE_MAX; i++)
 	{
 		aiTextureType type = static_cast<aiTextureType>(i);
-		for (unsigned int j = 0; j < scene->mMaterials[mesh_material_index]->GetTextureCount(type); j++)
+		for (size_t j = 0; j < scene->mMaterials[mesh_material_index]->GetTextureCount(type); j++)
 		{
 			aiString file;
 			scene->mMaterials[mesh_material_index]->GetTexture(type, j, &file, &mapping, 0);
 			std::string material_texture = ImportMaterialData(file.data, model_base_path);
+			int texture_type = static_cast<int>(GetTextureTypeFromAssimpType(type));
+			material_texture = std::to_string(texture_type) + ":" + material_texture;
 			if (!material_texture.empty())
 			{
 				loaded_meshes_materials.push_back(material_texture);
 			}
 		}
 	}
-
 }
 
 std::string MaterialImporter::ImportMaterialData(const std::string & material_path, const std::string model_base_path) const
@@ -229,5 +228,33 @@ std::string MaterialImporter::GetTextureFileName(const char *texture_file_path) 
 		std::string texture_filename = texture_path_string.substr(found, texture_path_string.length());
 
 		return texture_filename;
+	}
+}
+
+Texture::TextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureType type) const
+{
+	switch (type)
+	{
+	case aiTextureType_NONE:
+		return Texture::TextureType::NONE;
+		break;
+	case aiTextureType_DIFFUSE:
+		return Texture::TextureType::DIFUSSE;
+		break;
+	case aiTextureType_SPECULAR:
+		return Texture::TextureType::SPECULAR;
+		break;
+	case aiTextureType_AMBIENT:
+		return Texture::TextureType::AMBIENT;
+		break;
+	case aiTextureType_EMISSIVE:
+		return Texture::TextureType::EMISSIVE;
+		break;
+	case aiTextureType_AMBIENT_OCCLUSION:
+		return Texture::TextureType::OCLUSION;
+		break;
+	default:
+		return Texture::TextureType::UNKNOWN;
+		break;
 	}
 }
