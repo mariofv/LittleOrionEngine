@@ -63,13 +63,22 @@ void MaterialImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_
 {
 	int mesh_material_index = scene->mMeshes[mesh_index]->mMaterialIndex;
 	std::string model_base_path = std::string(file_path);
-	aiString file;
 	aiTextureMapping mapping = aiTextureMapping_UV;
-	scene->mMaterials[mesh_material_index]->GetTexture(aiTextureType_DIFFUSE, 0, &file, &mapping, 0);
-	if (file.data != "") 
+	for (size_t i = 0; i < AI_TEXTURE_TYPE_MAX; i++)
 	{
-		loaded_meshes_materials.push_back(ImportMaterialData(file.data, model_base_path));
+		aiTextureType type = static_cast<aiTextureType>(i);
+		for (unsigned int j = 0; j < scene->mMaterials[mesh_material_index]->GetTextureCount(type); j++)
+		{
+			aiString file;
+			scene->mMaterials[mesh_material_index]->GetTexture(type, j, &file, &mapping, 0);
+			std::string material_texture = ImportMaterialData(file.data, model_base_path);
+			if (!material_texture.empty())
+			{
+				loaded_meshes_materials.push_back(material_texture);
+			}
+		}
 	}
+
 }
 
 std::string MaterialImporter::ImportMaterialData(const std::string & material_path, const std::string model_base_path) const
@@ -102,6 +111,7 @@ std::string MaterialImporter::ImportMaterialData(const std::string & material_pa
 		APP_LOG_SUCCESS("Material loaded correctly.");
 		return material_texture;
 	}
+	return material_texture;
 }
 std::shared_ptr<Texture> MaterialImporter::Load(const char* file_path) const{
 
@@ -208,8 +218,8 @@ void MaterialImporter::RemoveTextureFromCacheIfNeeded(std::shared_ptr<Texture> t
 std::string MaterialImporter::GetTextureFileName(const char *texture_file_path) const
 {
 	std::string texture_path_string = std::string(texture_file_path);
-
-	std::size_t found = texture_path_string.find_last_of("/\\");
+	std::replace(texture_path_string.begin(), texture_path_string.end(), '\\', '/');
+	std::size_t found = texture_path_string.find_last_of("/");
 	if (found == std::string::npos)
 	{
 		return texture_path_string;
