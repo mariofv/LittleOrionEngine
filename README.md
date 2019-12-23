@@ -92,6 +92,11 @@ Because this is a academic project is not possible to contribute directly to thi
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/mariofv/LittleOrionEngine/blob/master/LICENSE) file for details.
 
 ## Release History
+* [0.2.2 Binary files and scene serialization](https://github.com/mariofv/LittleOrionEngine/releases/tag/v0.2.2-alpha)
+    * Better resources management.
+    * Assets are transformed to less space-consuming format.
+    * New cache that avoids duplication of resources.
+    * Serialization of a scene, that allows loading and saving scenes.
 * [0.2.1 Speeding up the engine!](https://github.com/mariofv/LittleOrionEngine/releases/tag/v0.2.1-alpha)
     * New module ModuleCamera. It contains camera frustums that can be attached to GameObjects.
     * Two new tabs, Scene and Game. The former contains the scene seen from the editor camera while the later contains the scene seen from the game camera.
