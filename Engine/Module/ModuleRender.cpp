@@ -96,21 +96,25 @@ bool ModuleRender::Init()
 	APP_LOG_INFO("OpenGL version supported %s", glGetString(GL_VERSION));
 	APP_LOG_INFO("GLSL: %s\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
 
+#if OPENGL_MAJOR_VERSION >= 4
+
 	glEnable(GL_DEBUG_OUTPUT);
-glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
-glDebugMessageCallback(openglCallbackFunction, nullptr);
-glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, true);
+	glEnable(GL_DEBUG_OUTPUT_SYNCHRONOUS);
+	glDebugMessageCallback(openglCallbackFunction, nullptr);
+	glDebugMessageControl(GL_DONT_CARE, GL_DONT_CARE, GL_DONT_CARE, 0, NULL, true);
 
-SetVSync(VSYNC);
-SetDepthTest(true);
+#endif // OPENGL_MAJOR_VERSION >= 4
 
-geometry_renderer = new GeometryRenderer();
-grid_renderer = new GridRenderer();
+	SetVSync(VSYNC);
+	SetDepthTest(true);
 
-glEnable(GL_BLEND);
-glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	geometry_renderer = new GeometryRenderer();
+	grid_renderer = new GridRenderer();
 
-APP_LOG_SUCCESS("Glew initialized correctly.")
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+
+	APP_LOG_SUCCESS("Glew initialized correctly.")
 
 return true;
 }

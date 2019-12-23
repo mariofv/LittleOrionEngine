@@ -77,6 +77,9 @@ enum class Fonts
 
 # define TMP_SCENE_PATH "./Assets/Scenes/tmp_scene.scene"
 
+# define OPENGL_MAJOR_VERSION 4
+# define OPENGL_MINOR_VERSION 0
+
 #define FULLSCREEN false
 #define RESIZABLE true
 #define BORDERED true
