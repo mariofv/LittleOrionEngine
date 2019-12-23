@@ -40,6 +40,7 @@ private:
 
 	void ShowAboutWindow();
 
+	void MenuURL(const std::string& text, const std::string& link);
 
 public:
 	#define MAIN_MENU_BAR_HEIGHT 19
