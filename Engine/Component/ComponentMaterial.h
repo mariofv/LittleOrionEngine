@@ -4,11 +4,11 @@
 #include "Component.h"
 #include "UI/ComponentsUI.h"
 #include "Globals.h"
+#include "Texture.h"
 
 #include <GL/glew.h>
 #include <memory>
 
-class Texture;
 
 class ComponentMaterial : public Component
 {
@@ -27,21 +27,25 @@ public:
 
 	GLuint GetTexture() const;
 
+	void SetMaterialTexture(Texture::TextureType type, std::shared_ptr<Texture> & new_texture);
+	const std::shared_ptr<Texture>& GetMaterialTexture(Texture::TextureType type) const;
+
+	void SetMaterialTexture(size_t type, std::shared_ptr<Texture> & new_texture);
+	const std::shared_ptr<Texture>& GetMaterialTexture(size_t type) const;
+
 	void ShowComponentWindow() override;
 
-public:
+private:
 	ComponentType type = ComponentType::MATERIAL;
 
 	int index = 0;
-	std::shared_ptr<Texture> texture_diffuse;
-	std::shared_ptr<Texture> texture_ambient;
-	std::shared_ptr<Texture> texture_specular;
-	std::shared_ptr<Texture> texture_emissive;
-	std::shared_ptr<Texture> texture_oclusion;
+	std::vector<std::shared_ptr<Texture>> textures;
+
 
 	bool show_checkerboard_texture = false;
 
 	friend void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material);
+	friend class ComponentsUI;
 };
 
 #endif //_COMPONENTMATERIAL_H_

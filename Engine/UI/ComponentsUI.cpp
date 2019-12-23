@@ -60,25 +60,33 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 	{
 		ImGui::Checkbox("Active", &material->active);
 		ImGui::Separator();
-
-
-		char tmp_string[256];
 		int window_width = ImGui::GetWindowWidth();
-		ImGui::Image((void*)(intptr_t)material->texture_diffuse->opengl_texture, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
-		ImGui::SameLine();
-		ImGui::BeginGroup();
-		ImGui::Text("Texture:");
-		ImGui::SameLine();
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), material->texture_diffuse->texture_path.c_str());
-		sprintf_s(tmp_string, "(%dx%d px)", material->texture_diffuse->width, material->texture_diffuse->height);
-		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
+		for (auto texture : material->textures)
+		{
+			char tmp_string[256];
+			if (texture.get() != nullptr) {
+				ImGui::Image((void*)(intptr_t)texture->opengl_texture, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
+				ImGui::SameLine();
+				ImGui::BeginGroup();
+				ImGui::Text("Texture:");
+				ImGui::SameLine();
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), texture->texture_path.c_str());
+				sprintf_s(tmp_string, "(%dx%d px)", texture->width, texture->height);
+				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
 
-		bool mipmap = material->texture_diffuse->IsMipMapped();
-		ImGui::Checkbox("Mipmap", &mipmap);
-		ImGui::Spacing();
+				bool mipmap = texture->IsMipMapped();
+				ImGui::Checkbox("Mipmap", &mipmap);
+				ImGui::Spacing();
 
-		ImGui::Checkbox("Checker Texture", &material->show_checkerboard_texture);
-		ImGui::EndGroup();
+				ImGui::Checkbox("Checker Texture", &material->show_checkerboard_texture);
+				ImGui::EndGroup();
+			}
+			else 
+			{
+				ImGui::Image((void*)(intptr_t)0, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
+			}
+			ImGui::Separator();
+		}
 	}
 }
 
