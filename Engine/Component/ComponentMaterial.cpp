@@ -5,12 +5,12 @@
 
 ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL)
 {
-	textures.resize(5);
+	textures.resize(Texture::MAX_TEXTURE_TYPES);
 }
 
 ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, ComponentType::MATERIAL)
 {
-	textures.resize(5);
+	textures.resize(Texture::MAX_TEXTURE_TYPES);
 }
 
 ComponentMaterial::~ComponentMaterial()
@@ -47,10 +47,13 @@ void ComponentMaterial::Save(Config& config) const
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddInt(index, "Index");
-	for (size_t i ; i< textures.size(); i++ )
+	for (size_t i = 0; i< textures.size(); i++ )
 	{
-		std::string id = "Path" + i;
-		config.AddString(textures[i]->texture_path, id);
+		if (textures[i] != nullptr) 
+		{
+			std::string id = "Path" + i;
+			config.AddString(textures[i]->texture_path, id);
+		}
 	}
 	config.AddBool(show_checkerboard_texture, "Checkboard");
 }
@@ -64,12 +67,16 @@ void ComponentMaterial::Load(const Config& config)
 
 	std::string tmp_path;
 	config.GetString("Path", tmp_path, "");
-	for (size_t i; i < textures.size(); i++)
+	textures.resize(Texture::MAX_TEXTURE_TYPES);
+	for (size_t i = 0; i < textures.size(); i++)
 	{
 		std::string id = "Path" + i;
 		std::string tmp_path;
 		config.GetString(id, tmp_path, "");
-		textures[i] = App->material_importer->Load(tmp_path.c_str());
+		if (!tmp_path.empty())
+		{
+			textures[i] = App->material_importer->Load(tmp_path.c_str());
+		}
 	}
 	
 	show_checkerboard_texture = config.GetBool("Checkboard", true);

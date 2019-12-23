@@ -235,9 +235,6 @@ Texture::TextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureTyp
 {
 	switch (type)
 	{
-	case aiTextureType_NONE:
-		return Texture::TextureType::NONE;
-		break;
 	case aiTextureType_DIFFUSE:
 		return Texture::TextureType::DIFUSSE;
 		break;

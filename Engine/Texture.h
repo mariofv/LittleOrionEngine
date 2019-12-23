@@ -10,7 +10,6 @@ class Texture
 public:
 	enum class TextureType
 	{
-		NONE,
 		DIFUSSE,
 		SPECULAR,
 		AMBIENT,
@@ -18,7 +17,7 @@ public:
 		OCLUSION,
 		UNKNOWN
 	};
-
+	static const size_t MAX_TEXTURE_TYPES = static_cast<size_t>(TextureType::UNKNOWN);
 public:
 	Texture() = default;
 	Texture(unsigned char * data, int width, int height, const char* path, TextureType type = TextureType::DIFUSSE);
