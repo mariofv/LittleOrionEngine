@@ -91,6 +91,12 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 			ImVec2 text_sz(ImGui::CalcTextSize(filename.c_str()).x+5,0);
 			ImGui::Selectable(item_name.c_str(), selected_file == *file,ImGuiSelectableFlags_None,text_sz);
 			ProcessMouseInput(*file);
+			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+			{
+				ImGui::SetDragDropPayload("DND_File", &selected_file, sizeof(ModuleFileSystem::File*));
+				ImGui::Text("Dragging %s", selected_file.filename.c_str());
+				ImGui::EndDragDropSource();
+			}
 			++files_count;
 			float last_button_x2 = ImGui::GetItemRectMax().x;
 			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + text_sz.x; // Expected position if next text was on same line

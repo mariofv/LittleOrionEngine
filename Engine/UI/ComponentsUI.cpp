@@ -3,7 +3,9 @@
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentTransform.h"
-#include "Texture.h"
+#include "Application.h"
+#include "Module/ModuleFileSystem.h"
+#include "Module/ModuleTexture.h"
 #include "Utils.h"
 
 #include <imgui.h>
@@ -61,11 +63,14 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 		ImGui::Checkbox("Active", &material->active);
 		ImGui::Separator();
 		int window_width = ImGui::GetWindowWidth();
-		for (auto texture : material->textures)
+		for (size_t i = 0; i < material->textures.size(); ++i)
 		{
+			Texture::TextureType type = static_cast<Texture::TextureType>(i);
 			char tmp_string[256];
-			if (texture.get() != nullptr) {
+			if (material->textures[i].get() != nullptr) {
+				std::shared_ptr<Texture> texture = material->textures[i];
 				ImGui::Image((void*)(intptr_t)texture->opengl_texture, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
+				DropTarget(material, type);
 				ImGui::SameLine();
 				ImGui::BeginGroup();
 				ImGui::Text("Texture:");
@@ -84,12 +89,29 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 			else 
 			{
 				ImGui::Image((void*)(intptr_t)0, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
+				DropTarget(material, type);
 			}
 			ImGui::Separator();
 		}
 	}
 }
-
+void ComponentsUI::DropTarget(ComponentMaterial *material, Texture::TextureType type)
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_File"))
+		{
+			assert(payload->DataSize == sizeof(ModuleFileSystem::File*));
+			ModuleFileSystem::File *incoming_file = *(ModuleFileSystem::File**)payload->Data;
+			if (incoming_file->file_type == ModuleFileSystem::FileType::TEXTURE)
+			{
+				std::shared_ptr<Texture> new_texture = App->texture->LoadTexture(incoming_file->file_path.c_str());
+				material->SetMaterialTexture(type, new_texture);
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
 void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))

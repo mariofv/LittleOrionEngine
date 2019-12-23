@@ -89,7 +89,7 @@ GLuint ComponentMaterial::GetTexture() const
 	{
 		return App->texture->checkerboard_texture_id;
 	}
-	return active ? textures[1]->opengl_texture : 0;
+	return active ? textures[0]->opengl_texture : 0;
 }
 
 void ComponentMaterial::SetMaterialTexture(Texture::TextureType type, std::shared_ptr<Texture> & new_texture)
