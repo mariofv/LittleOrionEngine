@@ -7,11 +7,11 @@
 
 class Importer {
 public:
-	virtual bool Import(const char* file, std::string& output_file) const = 0;
+	virtual bool Import(const std::string& file, std::string& output_file) const = 0;
 
 protected:
 
-	std::shared_ptr<ModuleFileSystem::File> GetAlreadyImportedResource(const std::string path_to_look_in, const ModuleFileSystem::File & file_to_look_for) const;
+	std::shared_ptr<ModuleFileSystem::File> GetAlreadyImportedResource(const std::string & path_to_look_in, const ModuleFileSystem::File & file_to_look_for) const;
 
 };
 #endif // !_IMPORTER_H_

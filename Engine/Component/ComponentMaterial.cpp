@@ -1,22 +1,24 @@
 #include "ComponentMaterial.h"
-#include "Texture.h"
 #include "Application.h"
 #include <Module/ModuleTexture.h>
 #include <Importer/MaterialImporter.h>
 
 ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL)
 {
-
+	textures.resize(Texture::MAX_TEXTURE_TYPES);
 }
 
 ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, ComponentType::MATERIAL)
 {
-
+	textures.resize(Texture::MAX_TEXTURE_TYPES);
 }
 
 ComponentMaterial::~ComponentMaterial()
 {
-	App->material_importer->RemoveTextureFromCacheIfNeeded(texture);
+	for (auto texture : textures)
+	{
+		App->material_importer->RemoveTextureFromCacheIfNeeded(texture);
+	}
 }
 
 void ComponentMaterial::Enable()
@@ -45,7 +47,14 @@ void ComponentMaterial::Save(Config& config) const
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddInt(index, "Index");
-	config.AddString(texture->texture_path, "Path");
+	for (size_t i = 0; i< textures.size(); i++ )
+	{
+		if (textures[i] != nullptr) 
+		{
+			std::string id = "Path" + i;
+			config.AddString(textures[i]->texture_path, id);
+		}
+	}
 	config.AddBool(show_checkerboard_texture, "Checkboard");
 }
 
@@ -58,7 +67,17 @@ void ComponentMaterial::Load(const Config& config)
 
 	std::string tmp_path;
 	config.GetString("Path", tmp_path, "");
-	texture = App->material_importer->Load(tmp_path.c_str());
+	textures.resize(Texture::MAX_TEXTURE_TYPES);
+	for (size_t i = 0; i < textures.size(); i++)
+	{
+		std::string id = "Path" + i;
+		std::string tmp_path;
+		config.GetString(id, tmp_path, "");
+		if (!tmp_path.empty())
+		{
+			textures[i] = App->material_importer->Load(tmp_path.c_str());
+		}
+	}
 	
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 
@@ -70,9 +89,30 @@ GLuint ComponentMaterial::GetTexture() const
 	{
 		return App->texture->checkerboard_texture_id;
 	}
-	return active ? texture->opengl_texture : 0;
+	if (textures[0] != nullptr)
+	{
+		return active ? textures[0]->opengl_texture : 0;
+	}
+	return 0;
 }
 
+void ComponentMaterial::SetMaterialTexture(Texture::TextureType type, std::shared_ptr<Texture> & new_texture)
+{
+	textures[static_cast<int>(type)] = new_texture;
+}
+const std::shared_ptr<Texture>& ComponentMaterial::GetMaterialTexture(Texture::TextureType type) const
+{
+	return textures[static_cast<int>(type)];
+}
+
+void ComponentMaterial::SetMaterialTexture(size_t type, std::shared_ptr<Texture> & new_texture)
+{
+	textures[type] = new_texture;
+}
+const std::shared_ptr<Texture>& ComponentMaterial::GetMaterialTexture(size_t  type) const
+{
+	return textures[type];
+}
 void ComponentMaterial::ShowComponentWindow()
 {
 	ComponentsUI::ShowComponentMaterialWindow(this);

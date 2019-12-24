@@ -73,6 +73,7 @@ enum class Fonts
 # define SKYBOX_FRAGMENT_SHADER_PATH "./Library/Shaders/skybox.fs"
 
 # define HOUSE_MODEL_PATH "./Assets/Models/baker_house/BakerHouse.fbx"
+# define BUNNY_MODEL_PATH "./Assets/Models/ZomBunny/Zombunny.fbx"
 # define GRID_TEXTURE_PATH "./resources/textures/grid.png"
 
 # define TMP_SCENE_PATH "./Assets/Scenes/tmp_scene.scene"

@@ -18,13 +18,15 @@ MeshImporter::MeshImporter()
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Err), Assimp::Logger::Err);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Warn), Assimp::Logger::Warn);
 }
+
 MeshImporter::~MeshImporter()
 {
 	Assimp::DefaultLogger::kill();
 }
-bool MeshImporter::Import(const char* file_path, std::string& output_file) const
+
+bool MeshImporter::Import(const std::string& file_path, std::string& output_file) const
 {
-	ModuleFileSystem::File file = ModuleFileSystem::File(file_path);
+	ModuleFileSystem::File file(file_path);
 	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedResource(LIBRARY_MESHES_FOLDER,file);
 	if (already_imported != nullptr) {
 		output_file = already_imported->file_path;
@@ -42,7 +44,7 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file) const
 	}
 	performance_timer.Start();
 
-	const aiScene* scene = aiImportFile(file_path, aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFile(file_path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
 	if (scene == NULL)
 	{
 		const char *error = aiGetErrorString();
@@ -63,17 +65,18 @@ bool MeshImporter::Import(const char* file_path, std::string& output_file) const
 	aiReleaseImport(scene);
 	return true;
 }
+
 void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file) const
 {
 	for (size_t i = 0; i < root_node->mNumChildren; i++)
 	{
-		if (root_node->mChildren[i]->mNumMeshes != 0)
+		for (size_t j = 0; j < root_node->mChildren[i]->mNumMeshes; ++j)
 		{
-			size_t mesh_index = root_node->mChildren[i]->mMeshes[0];
+			size_t mesh_index = root_node->mChildren[i]->mMeshes[j];
 			std::vector<std::string> loaded_meshes_materials;
 			App->material_importer->ImportMaterialFromMesh(scene,mesh_index, file_path,loaded_meshes_materials);
 
-			std::string mesh_file = output_file + "//" + std::string(root_node->mChildren[i]->mName.data) + ".ol";
+			std::string mesh_file = output_file + "//" + std::string(root_node->mChildren[i]->mName.data) + std::to_string(j) + ".ol";
 			ImportMesh(scene->mMeshes[mesh_index], loaded_meshes_materials, mesh_file);
 		}
 		ImportNode(root_node->mChildren[i], scene, file_path,output_file);

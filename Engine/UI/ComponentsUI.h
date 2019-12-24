@@ -1,6 +1,7 @@
 #ifndef _COMPONENTSUI_H_
 #define _COMPONENTSUI_H_
 
+#include "Texture.h"
 class ComponentCamera;
 class ComponentMaterial;
 class ComponentMesh;
@@ -14,8 +15,10 @@ public:
 	static void ShowComponentMaterialWindow(ComponentMaterial *material);
 	static void ShowComponentCameraWindow(ComponentCamera *camera);
 
-
 private:
+	static void DropTarget(ComponentMaterial *material, Texture::TextureType type);
+	static std::string GetTypeName(Texture::TextureType type);
+
 	ComponentsUI() = default;
 	~ComponentsUI() = default;
 
