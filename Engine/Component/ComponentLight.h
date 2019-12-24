@@ -18,6 +18,10 @@ public:
 	void Load(const Config &config) override;
 
 	void ShowComponentWindow() override;
+
+public:
+	float light_color[3] = { 255.0f, 255.0f, 255.0f };
+	float light_intensity = 1; 
 };
 
 #endif // !_COMPONENTLIGHT_H

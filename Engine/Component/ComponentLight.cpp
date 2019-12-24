@@ -1,6 +1,7 @@
 #include "ComponentLight.h"
 #include "Application.h"
 #include "Module/ModuleTexture.h"
+#include "UI/ComponentsUI.h"
 
 
 ComponentLight::ComponentLight() : Component(nullptr, ComponentType::LIGHT)
@@ -34,5 +35,5 @@ void ComponentLight::Load(const Config& config)
 
 void ComponentLight::ShowComponentWindow()
 {
-
+	ComponentsUI::ShowComponentLightWindow(this);
 }
