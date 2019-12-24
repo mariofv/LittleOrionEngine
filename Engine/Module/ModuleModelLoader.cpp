@@ -31,9 +31,8 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 
 	ModuleFileSystem::File file(new_model_file_path);
 	GameObject *model_root_node = App->scene->CreateGameObject();
-	model_root_node->name = std::string("RootNode");
+	model_root_node->name = std::string(file.filename_no_extension);
 
-	model_output = model_output.substr(0, model_output.size());
 	std::vector<std::shared_ptr<ModuleFileSystem::File>> files_in_output_path;
 	App->filesystem->GetAllFilesInPath(model_output, files_in_output_path);
 	for (auto file : files_in_output_path )
