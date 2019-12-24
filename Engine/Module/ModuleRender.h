@@ -34,8 +34,8 @@ public:
 
 
 	ComponentMesh* CreateComponentMesh();
-	void GenerateQuadTree();
 	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
+	void GenerateQuadTree();
 
 	void ShowRenderOptions();
 

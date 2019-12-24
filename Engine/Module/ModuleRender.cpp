@@ -145,6 +145,7 @@ bool ModuleRender::CleanUp()
 		delete mesh;
 	}
 	meshes.clear();
+	meshes_to_render.clear();
 	return true;
 }
 
@@ -355,7 +356,6 @@ void ModuleRender::RemoveComponentMesh(ComponentMesh* mesh_to_remove)
 		meshes.erase(it);
 	}
 }
-
 void ModuleRender::ShowRenderOptions()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_CLONE " Renderer"))

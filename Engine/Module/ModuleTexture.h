@@ -12,6 +12,7 @@ struct SDL_Renderer;
 struct SDL_Rect;
 
 class ComponentMaterial;
+class ComponentLight;
 class Texture;
 class MaterialImporter;
 
@@ -26,6 +27,9 @@ public:
 
 	ComponentMaterial* CreateComponentMaterial();
 	void RemoveComponentMaterial(ComponentMaterial* material_to_remove);
+
+	ComponentLight* CreateComponentLight();
+	void RemoveComponentLight(ComponentLight* light_to_remove);
 	
 	std::shared_ptr<Texture> LoadTexture(const char* texture_path);
 	GLuint  LoadCubemap(std::vector<std::string> faces) const;
@@ -34,6 +38,7 @@ public:
 public:
 	GLuint checkerboard_texture_id;
 	std::vector<ComponentMaterial*> materials;
+	std::vector<ComponentLight*> lights;
 
 };
 
