@@ -77,6 +77,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Component\ComponentLight.h" />
     <ClInclude Include="Engine\Config.h" />
     <ClInclude Include="Engine\Importer\Importer.h" />
     <ClInclude Include="Engine\Importer\MaterialImporter.h" />
@@ -197,6 +198,7 @@
     <ClInclude Include="Libraries\pcg_random\pcg_basic.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Component\ComponentLight.cpp" />
     <ClCompile Include="Engine\Config.cpp" />
     <ClCompile Include="Engine\Importer\Importer.cpp" />
     <ClCompile Include="Engine\Importer\MaterialImporter.cpp" />
