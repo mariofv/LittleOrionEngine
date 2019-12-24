@@ -17,6 +17,7 @@ public:
 
 private:
 	static void DropTarget(ComponentMaterial *material, Texture::TextureType type);
+	static std::string GetTypeName(Texture::TextureType type);
 
 	ComponentsUI() = default;
 	~ComponentsUI() = default;

@@ -66,32 +66,35 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 		for (size_t i = 0; i < material->textures.size(); ++i)
 		{
 			Texture::TextureType type = static_cast<Texture::TextureType>(i);
-			char tmp_string[256];
-			if (material->textures[i].get() != nullptr) {
-				std::shared_ptr<Texture> texture = material->textures[i];
-				ImGui::Image((void*)(intptr_t)texture->opengl_texture, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
-				DropTarget(material, type);
-				ImGui::SameLine();
-				ImGui::BeginGroup();
-				ImGui::Text("Texture:");
-				ImGui::SameLine();
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), texture->texture_path.c_str());
-				sprintf_s(tmp_string, "(%dx%d px)", texture->width, texture->height);
-				ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
-
-				bool mipmap = texture->IsMipMapped();
-				ImGui::Checkbox("Mipmap", &mipmap);
-				ImGui::Spacing();
-
-				ImGui::Checkbox("Checker Texture", &material->show_checkerboard_texture);
-				ImGui::EndGroup();
-			}
-			else 
+			if (ImGui::CollapsingHeader(GetTypeName(type).c_str()))
 			{
-				ImGui::Image((void*)(intptr_t)0, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
-				DropTarget(material, type);
+				if (material->textures[i].get() != nullptr) {
+					char tmp_string[256];
+					std::shared_ptr<Texture> texture = material->textures[i];
+					ImGui::Image((void*)(intptr_t)texture->opengl_texture, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
+					DropTarget(material, type);
+					ImGui::SameLine();
+					ImGui::BeginGroup();
+					ImGui::Text("Texture:");
+					ImGui::SameLine();
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), texture->texture_path.c_str());
+					sprintf_s(tmp_string, "(%dx%d px)", texture->width, texture->height);
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
+
+					bool mipmap = texture->IsMipMapped();
+					ImGui::Checkbox("Mipmap", &mipmap);
+					ImGui::Spacing();
+
+					ImGui::Checkbox("Checker Texture", &material->show_checkerboard_texture);
+					ImGui::EndGroup();
+				}
+				else
+				{
+					ImGui::Image((void*)0, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.f,1.f,1.f,1.f), ImVec4(1.f, 1.f, 1.f, 1.f));
+					DropTarget(material, type);
+				}
+				ImGui::Separator();
 			}
-			ImGui::Separator();
 		}
 	}
 }
@@ -110,6 +113,28 @@ void ComponentsUI::DropTarget(ComponentMaterial *material, Texture::TextureType 
 			}
 		}
 		ImGui::EndDragDropTarget();
+	}
+}
+
+std::string ComponentsUI::GetTypeName(Texture::TextureType type)
+{
+	switch (type)
+	{
+	case Texture::TextureType::DIFUSSE:
+		return "Difusse";
+		break;
+	case Texture::TextureType::SPECULAR:
+		return "Specular";
+		break;
+	case Texture::TextureType::AMBIENT:
+		return "Ambient";
+		break;
+	case Texture::TextureType::EMISSIVE:
+		return "Emissive";
+		break;
+	case Texture::TextureType::OCLUSION:
+		return "Oclusion";
+		break;
 	}
 }
 void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
