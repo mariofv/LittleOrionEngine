@@ -83,13 +83,20 @@ Because this is a academic project is not possible to contribute directly to thi
 * [Font Awesome 5](https://github.com/FortAwesome/Font-Awesome) - Used to display fancy icons.
 * [Icon Font Cpp Headers](https://github.com/juliettef/IconFontCppHeaders/) - Used to import Font Awesome icons in C++.
 * [PCG](http://www.pcg-random.org/) - Used to generate **good** random numbers in C++.
-* [rapidjson](https://github.com/Tencent/rapidjson/) - Used to handle json files.
+* [rapidjson 1.1.0](https://github.com/Tencent/rapidjson/) - Used to handle json files.
+* [Debug Draw](https://github.com/glampert/debug-draw/) - Used to draw basic shapes.
+* [par_shapes](https://github.com/prideout/par/blob/master/par_shapes.h) - Used to generate basic primitives.
 
 ## License
 
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/mariofv/LittleOrionEngine/blob/master/LICENSE) file for details.
 
 ## Release History
+* [0.2.2 Binary files and scene serialization](https://github.com/mariofv/LittleOrionEngine/releases/tag/v0.2.2-alpha)
+    * Better resources management.
+    * Assets are transformed to less space-consuming format.
+    * New cache that avoids duplication of resources.
+    * Serialization of a scene, that allows loading and saving scenes.
 * [0.2.1 Speeding up the engine!](https://github.com/mariofv/LittleOrionEngine/releases/tag/v0.2.1-alpha)
     * New module ModuleCamera. It contains camera frustums that can be attached to GameObjects.
     * Two new tabs, Scene and Game. The former contains the scene seen from the editor camera while the later contains the scene seen from the game camera.

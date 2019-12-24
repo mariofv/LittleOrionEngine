@@ -110,13 +110,13 @@ void ComponentCamera::Load(const Config& config)
 	unsigned int frustum_type_int = config.GetUInt("FrustumType", 1);
 	switch (frustum_type_int)
 	{
-	case 1:
+	case 0:
 		camera_frustum.type = math::InvalidFrustum;
 		break;
-	case 2:
+	case 1:
 		camera_frustum.type = math::OrthographicFrustum;
 		break;
-	case 3:
+	case 2:
 		camera_frustum.type = math::PerspectiveFrustum;
 		break;
 	}

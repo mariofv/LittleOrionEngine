@@ -68,9 +68,8 @@ bool GameObject::IsEnabled() const
 
 void GameObject::SetStatic(bool is_static)
 {
-
 	SetHierarchyStatic(is_static);
-	App->renderer->GenerateQuadTree();
+	App->renderer->GenerateQuadTree(); // TODO: Check this. This could be called with ungenerated bounding boxes, resulting in a wrong quadtree.
 }
 
 void GameObject::SetHierarchyStatic(bool is_static)
@@ -143,7 +142,7 @@ void GameObject::Load(const Config& config)
 		game_object_parent->AddChild(this); //TODO: This should be in scene. Probably D:
 	}
 
-	is_static = config.GetBool("IsStatic", false);
+	SetStatic(config.GetBool("IsStatic", false));
 	active = config.GetBool("Active", true);
 
 	Config transform_config;
@@ -241,7 +240,7 @@ void GameObject::RemoveComponent(Component * component_to_remove)
 	}
 }
 
-Component*  GameObject::GetComponent(const Component::ComponentType type) const
+Component* GameObject::GetComponent(const Component::ComponentType type) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
