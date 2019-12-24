@@ -5,6 +5,8 @@
 
 #include <GL/glew.h>
 
+class IDebugDrawOpenGLImplementation;
+
 class ModuleDebugDraw : public Module
 {
 public:
@@ -15,6 +17,9 @@ public:
 	update_status PreUpdate();
 	update_status PostUpdate();
 	bool CleanUp();
+
+private:
+	static IDebugDrawOpenGLImplementation* dd_interface_implementation;
 
 };
 

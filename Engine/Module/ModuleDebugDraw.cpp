@@ -1,10 +1,15 @@
 #include "ModuleDebugDraw.h"
+#include "UI/IDebugDrawOpenGLImplementation.h"
+
+IDebugDrawOpenGLImplementation* ModuleDebugDraw::dd_interface_implementation = 0; // TODO: Ask why this is needed
+
 
 // Called before render is available
 bool ModuleDebugDraw::Init()
 {
 	APP_LOG_SECTION("************ Module Debug Draw Init ************");
 
+	dd_interface_implementation = new IDebugDrawOpenGLImplementation();
 	
 	APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
 
