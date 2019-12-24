@@ -10,6 +10,7 @@ public:
 	struct Vertex {
 		float3 position;
 		float2 tex_coords;
+		float3 normals;
 	};
 	Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices);
 	Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path);
