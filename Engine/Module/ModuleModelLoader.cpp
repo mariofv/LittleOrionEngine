@@ -21,7 +21,6 @@
 bool ModuleModelLoader::Init()
 {
 	APP_LOG_SECTION("************ Module ModelLoader Init ************");
-	LoadModel(HOUSE_MODEL_PATH);
 	return true;
 }
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
