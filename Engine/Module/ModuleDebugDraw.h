@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 
 class IDebugDrawOpenGLImplementation;
+class ComponentCamera;
 
 class ModuleDebugDraw : public Module
 {
@@ -14,9 +15,9 @@ public:
 	~ModuleDebugDraw() = default;
 
 	bool Init();
-	update_status PreUpdate();
-	update_status PostUpdate();
 	bool CleanUp();
+
+	void Render(const ComponentCamera& camera);
 
 private:
 	static IDebugDrawOpenGLImplementation* dd_interface_implementation;

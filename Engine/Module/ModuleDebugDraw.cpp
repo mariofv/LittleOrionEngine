@@ -1,5 +1,5 @@
 #include "ModuleDebugDraw.h"
-
+#include "Component/ComponentCamera.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
 #include "UI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
@@ -7,8 +7,7 @@
 #include "GL/glew.h"
 #include <assert.h>
 
-class IDebugDrawOpenGLImplementation final
-    : public dd::RenderInterface
+class IDebugDrawOpenGLImplementation final : public dd::RenderInterface
 {
 public:
 
@@ -579,10 +578,7 @@ const char* IDebugDrawOpenGLImplementation::textFragShaderSrc = "\n"
 "    out_FragColor.a = texture(u_glyphTexture, v_TexCoords).r;\n"
 "}\n";
 
-
-
 IDebugDrawOpenGLImplementation* ModuleDebugDraw::dd_interface_implementation = 0; // TODO: Ask why this is needed
-
 
 // Called before render is available
 bool ModuleDebugDraw::Init()
@@ -590,27 +586,34 @@ bool ModuleDebugDraw::Init()
 	APP_LOG_SECTION("************ Module Debug Draw Init ************");
 
 	dd_interface_implementation = new IDebugDrawOpenGLImplementation();
-	
-	APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
+    dd::initialize(dd_interface_implementation);
+    
+    APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
 
 	return true;
 }
 
-update_status ModuleDebugDraw::PreUpdate()
+void ModuleDebugDraw::Render(const ComponentCamera& camera)
 {
-	return update_status::UPDATE_CONTINUE;
-}
+    math::float4x4 view = camera.GetViewMatrix();
+    math::float4x4 proj = camera.GetProjectionMatrix();
 
-update_status ModuleDebugDraw::PostUpdate()
-{
-	
-	return update_status::UPDATE_CONTINUE;
+    dd_interface_implementation->width = camera.GetWidth();
+    dd_interface_implementation->height = camera.GetHeigt();
+    dd_interface_implementation->mvpMatrix = proj * view;
+
+    dd::flush();
 }
 
 // Called before quitting
 bool ModuleDebugDraw::CleanUp()
 {
-	APP_LOG_INFO("Destroying Debug");
-	
+	APP_LOG_INFO("Destroying Module Debug Draw");
+
+    dd::shutdown();
+
+    delete dd_interface_implementation;
+    dd_interface_implementation = 0;
+
 	return true;
 }

@@ -30,6 +30,9 @@ public:
 	void Save(Config& config) const;
 	void Load(const Config& config);
 
+	float GetWidth() const;
+	float GetHeigt() const;
+
 	void RecordFrame(const float width, const float height);
 	GLuint GetLastRecordedFrame() const;
 

@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleCamera.h"
 #include "ModuleDebug.h"
+#include "ModuleDebugDraw.h"
 #include "ModuleModelLoader.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
@@ -166,6 +167,14 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	{
 		geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
 	}
+	if (App->debug->show_quadtree)
+	{
+		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) {
+			geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
+		}
+	}
+
+	App->debug_draw->Render(camera);
 
 	rendering_measure_timer->Start();
 	GetMeshesToRender();
@@ -175,13 +184,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	}
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
-
-	if (App->debug->show_quadtree)
-	{
-		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) {
-			geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
-		}
-	}
 }
 
 void ModuleRender::GetMeshesToRender()
