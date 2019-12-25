@@ -175,7 +175,10 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	{
 		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) 
 		{
-			geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
+			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
+			float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
+			dd::aabb(quadtree_node_min, quadtree_node_max, float3::one);
+			//geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
 		}
 	}
 
