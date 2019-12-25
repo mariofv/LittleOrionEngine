@@ -17,6 +17,6 @@ typedef       ddMat4x4& ddMat4x4_Out;
 
 #define DEBUG_DRAW_MAT4X4_TYPE_DEFINED 1
 
-#include <debug-draw.hpp>
+#include <debug_draw.hpp>
 
 #endif /* _DEBUGDRAW_H_ */
