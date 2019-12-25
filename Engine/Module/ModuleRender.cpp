@@ -168,11 +168,13 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	}
 	if (App->debug->show_camera_frustum && App->cameras->active_camera != nullptr)
 	{
-		geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
+		dd::frustum(App->cameras->active_camera->GetInverseClipMatrix(), float3::one);
+		//geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
 	}
 	if (App->debug->show_quadtree)
 	{
-		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) {
+		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) 
+		{
 			geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
 		}
 	}

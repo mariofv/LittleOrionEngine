@@ -72,6 +72,7 @@ public:
 
 	float4x4 GetViewMatrix() const;
 	float4x4 GetProjectionMatrix() const;
+	float4x4 GetInverseClipMatrix() const;
 	void GenerateMatrices();
 
 	std::vector<float> GetFrustumVertices() const;

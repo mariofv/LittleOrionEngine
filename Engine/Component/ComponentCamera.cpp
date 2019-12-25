@@ -454,6 +454,10 @@ float4x4 ComponentCamera::GetProjectionMatrix() const
 	return proj;
 }
 
+float4x4 ComponentCamera::GetInverseClipMatrix() const
+{
+	return camera_frustum.ViewProjMatrix().Inverted();
+}
 
 void ComponentCamera::GenerateMatrices()
 {
