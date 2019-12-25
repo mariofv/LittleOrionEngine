@@ -13,6 +13,7 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMesh.h"
 #include "GeometryRenderer.h"
+#include "UI/DebugDraw.h"
 
 #include <SDL/SDL.h>
 #include "MathGeoLib.h"
@@ -161,7 +162,9 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
 	if (App->debug->show_grid)
 	{
-		grid_renderer->Render(camera);
+		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
+		dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
+		//grid_renderer->Render(camera);
 	}
 	if (App->debug->show_camera_frustum && App->cameras->active_camera != nullptr)
 	{
