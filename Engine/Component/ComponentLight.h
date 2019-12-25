@@ -13,9 +13,11 @@ public:
 	
 
 	void Delete() override;
+	void Render() const;
 
 	void Save(Config& config) const override;
 	void Load(const Config &config) override;
+
 
 	void ShowComponentWindow() override;
 

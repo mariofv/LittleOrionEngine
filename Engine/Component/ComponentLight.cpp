@@ -1,6 +1,7 @@
 #include "ComponentLight.h"
 #include "Application.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleProgram.h"
 #include "UI/ComponentsUI.h"
 
 
@@ -16,6 +17,16 @@ ComponentLight::ComponentLight(GameObject * owner) : Component(owner, ComponentT
 void ComponentLight::Delete()
 {
 	App->texture->RemoveComponentLight(this);
+}
+
+void ComponentLight::Render() const
+{
+	//TODO: Modify this once uniform buffer is created
+	size_t size_of_elements_before = 3 * sizeof(float3);
+	/*glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniforms_buffer);
+	glBufferSubData(GL_UNIFORM_BUFFER, size_of_elements_before, 3* sizeof(float), light_color);
+	glBufferSubData(GL_UNIFORM_BUFFER, size_of_elements_before + 3 * sizeof(float), sizeof(float), &light_intensity);
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);*/
 }
 
 void ComponentLight::Save(Config& config) const
