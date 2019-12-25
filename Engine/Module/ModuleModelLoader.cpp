@@ -66,22 +66,22 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 
 GameObject* ModuleModelLoader::LoadSphere()
 {
-
+	return nullptr;
 }
 
 GameObject* ModuleModelLoader::LoadCylinder()
 {
-
+	return nullptr;
 }
 
 GameObject* ModuleModelLoader::LoadTorus()
 {
-
+	return nullptr;
 }
 
 GameObject* ModuleModelLoader::LoadCube()
 {
-
+	return nullptr;
 }
 
 
