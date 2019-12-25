@@ -96,10 +96,8 @@
     <ClInclude Include="Engine\OLOctTree.h" />
     <ClInclude Include="Engine\OLOctTreeNode.h" />
     <ClInclude Include="Engine\OLQuadTreeNode.h" />
-    <ClInclude Include="Engine\GridRenderer.h" />
     <ClInclude Include="Engine\Skybox.h" />
     <ClInclude Include="Engine\UI\ComponentsUI.h" />
-    <ClInclude Include="Engine\GeometryRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentAABB.h" />
     <ClInclude Include="Engine\Component\ComponentCamera.h" />
     <ClInclude Include="Engine\Component\ComponentMaterial.h" />
@@ -217,10 +215,8 @@
     <ClCompile Include="Engine\OLOctTree.cpp" />
     <ClCompile Include="Engine\OLOctTreeNode.cpp" />
     <ClCompile Include="Engine\OLQuadTreeNode.cpp" />
-    <ClCompile Include="Engine\GridRenderer.cpp" />
     <ClCompile Include="Engine\Skybox.cpp" />
     <ClCompile Include="Engine\UI\ComponentsUI.cpp" />
-    <ClCompile Include="Engine\GeometryRenderer.cpp" />
     <ClCompile Include="Engine\Component\ComponentAABB.cpp" />
     <ClCompile Include="Engine\Component\ComponentCamera.cpp" />
     <ClCompile Include="Engine\Component\ComponentMaterial.cpp" />
