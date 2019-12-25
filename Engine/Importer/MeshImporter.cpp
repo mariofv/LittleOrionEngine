@@ -100,6 +100,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 		Mesh::Vertex new_vertex;
 		new_vertex.position = float3(mesh->mVertices[i].x, mesh->mVertices[i].y, mesh->mVertices[i].z);
 		new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+		new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
 		vertices.push_back(new_vertex);
 	}
 
