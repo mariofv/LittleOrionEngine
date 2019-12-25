@@ -62,7 +62,26 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 		std::shared_ptr<Texture> material_texture = App->material_importer->Load(texture_path.c_str());
 		componentMaterial->SetMaterialTexture(std::stoi(texture_type),material_texture);
 	}
-	
+}
+
+GameObject* ModuleModelLoader::LoadSphere()
+{
+
+}
+
+GameObject* ModuleModelLoader::LoadCylinder()
+{
+
+}
+
+GameObject* ModuleModelLoader::LoadTorus()
+{
+
+}
+
+GameObject* ModuleModelLoader::LoadCube()
+{
+
 }
 
 

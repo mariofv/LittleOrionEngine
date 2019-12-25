@@ -23,6 +23,11 @@ public:
 	bool Init();
 	GameObject* LoadModel(const char *new_model_file_path);
 
+	GameObject* LoadSphere();
+	GameObject* LoadCylinder();
+	GameObject* LoadTorus();
+	GameObject* LoadCube();
+
 private:
 	void LoadNode(GameObject *parent_node, const std::shared_ptr<ModuleFileSystem::File> model_base_path);
 };
