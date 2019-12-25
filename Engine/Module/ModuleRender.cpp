@@ -182,8 +182,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		}
 	}
 
-	App->debug_draw->Render(camera);
-
 	rendering_measure_timer->Start();
 	GetMeshesToRender();
 	for (auto &mesh : meshes_to_render)
@@ -192,6 +190,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	}
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
+
+	App->debug_draw->Render(camera);
 }
 
 void ModuleRender::GetMeshesToRender()
@@ -239,6 +239,12 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 {
 	const GameObject& mesh_game_object = *mesh.owner;
 
+	if (App->debug->show_bounding_boxes && !mesh_game_object.aabb.IsEmpty())
+	{
+		dd::aabb(mesh_game_object.aabb.bounding_box.minPoint, mesh_game_object.aabb.bounding_box.maxPoint, float3::one);
+		//geometry_renderer->RenderHexahedron(camera, mesh_game_object.aabb.GetVertices());
+	}
+
 	GLuint shader_program = App->program->texture_program;
 	glUseProgram(shader_program);
 
@@ -270,13 +276,6 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 	mesh.Render();
 
 	glUseProgram(0);
-
-
-	if (App->debug->show_bounding_boxes && !mesh_game_object.aabb.IsEmpty())
-	{
-		geometry_renderer->RenderHexahedron(camera, mesh_game_object.aabb.GetVertices());
-	}
-
 }
 
 void ModuleRender::SetVSync(const bool vsync)
