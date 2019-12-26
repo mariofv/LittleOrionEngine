@@ -76,10 +76,10 @@ enum class Fonts
 # define BUNNY_MODEL_PATH "./Assets/Models/ZomBunny/Zombunny.fbx"
 # define GRID_TEXTURE_PATH "./Resources/Textures/grid.png"
 
-# define PRIMITIVE_CUBE_PATH "./Assets/Resources/Primitives/Cube/Cube.ol"
-# define PRIMITIVE_CYLINDER_PATH "./Assets/Resources/Primitives/Cylinder/Cylinder.ol"
-# define PRIMITIVE_SPHERE_PATH "./Assets/Resources/Primitives/Sphere/Sphere.ol"
-# define PRIMITIVE_TORUS_PATH "./Assets/Resources/Primitives/Torus/Torus.ol"
+# define PRIMITIVE_CUBE_PATH "./Resources/Primitives/Cube/Cube.ol"
+# define PRIMITIVE_CYLINDER_PATH "./Resources/Primitives/Cylinder/Cylinder.ol"
+# define PRIMITIVE_SPHERE_PATH "./Resources/Primitives/Sphere/Sphere.ol"
+# define PRIMITIVE_TORUS_PATH "./Resources/Primitives/Torus/Torus.ol"
 
 # define TMP_SCENE_PATH "./Assets/Scenes/tmp_scene.scene"
 

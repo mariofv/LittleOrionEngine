@@ -64,24 +64,28 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 	}
 }
 
-GameObject* ModuleModelLoader::LoadSphere()
+GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path)
 {
-	return nullptr;
-}
+	ModuleFileSystem::File file(new_model_file_path);
+	GameObject* model_game_object = App->scene->CreateGameObject();
+	model_game_object->name = std::string(file.filename_no_extension);
 
-GameObject* ModuleModelLoader::LoadCylinder()
-{
-	return nullptr;
-}
+	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load(file.file_path.c_str());
 
-GameObject* ModuleModelLoader::LoadTorus()
-{
-	return nullptr;
-}
+	ComponentMesh* mesh_component = (ComponentMesh*)model_game_object->CreateComponent(Component::ComponentType::MESH);
+	mesh_component->SetMesh(mesh_for_component);
+	model_game_object->Update();
 
-GameObject* ModuleModelLoader::LoadCube()
-{
-	return nullptr;
+	ComponentMaterial* componentMaterial = (ComponentMaterial*)model_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+	for (auto texture : mesh_for_component->meshes_textures_path)
+	{
+		size_t separator = texture.find_last_of(":");
+		std::string texture_path = texture.substr(separator + 1, texture.size());
+		std::string texture_type = texture.substr(0, separator);
+		std::shared_ptr<Texture> material_texture = App->material_importer->Load(texture_path.c_str());
+		componentMaterial->SetMaterialTexture(std::stoi(texture_type), material_texture);
+	}
+	return model_game_object;
 }
 
 
