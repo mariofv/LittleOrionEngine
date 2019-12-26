@@ -24,6 +24,7 @@ private:
 	void DropTarget(GameObject *target_game_object);
 
 	void ShowGameObjectActionsMenu(GameObject *game_object);
+	void Show3DObjectCreationMenu();
 
 	void ProcessMouseInput(GameObject *game_object);
 

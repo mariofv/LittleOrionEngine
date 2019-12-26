@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Component/ComponentCamera.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleModelLoader.h"
 #include "Module/ModuleScene.h"
 #include "GameObject.h"
 
@@ -51,6 +52,10 @@ void Hierarchy::ShowHierarchyWindow()
 			{
 				App->scene->CreateGameObject();
 			}
+
+			ImGui::Separator();
+			Show3DObjectCreationMenu();
+
 			ImGui::EndPopup();
 		}
 	}
@@ -147,7 +152,35 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 		{
 			game_object->MoveDownInHierarchy();
 		}
+
+		ImGui::Separator();
+		Show3DObjectCreationMenu();
+	
 		ImGui::EndPopup();
+	}
+}
+
+void Hierarchy::Show3DObjectCreationMenu()
+{
+	if (ImGui::BeginMenu("3D object"))
+	{
+		if (ImGui::Selectable("Cube"))
+		{
+			App->model_loader->LoadCoreModel(PRIMITIVE_CUBE_PATH);
+		}
+		if (ImGui::Selectable("Cylinder"))
+		{
+			App->model_loader->LoadCoreModel(PRIMITIVE_CYLINDER_PATH);
+		}
+		if (ImGui::Selectable("Sphere"))
+		{
+			App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
+		}
+		if (ImGui::Selectable("Torus"))
+		{
+			App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
+		}
+		ImGui::EndMenu();
 	}
 }
 
