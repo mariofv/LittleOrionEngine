@@ -21,20 +21,6 @@ ComponentMaterial::~ComponentMaterial()
 	}
 }
 
-void ComponentMaterial::Enable()
-{
-	active = true;
-}
-
-void ComponentMaterial::Disable()
-{
-	active = false;
-}
-
-void ComponentMaterial::Update()
-{
-
-}
 
 void ComponentMaterial::Delete()
 {
@@ -85,28 +71,24 @@ void ComponentMaterial::Load(const Config& config)
 
 void ComponentMaterial::Render(unsigned int shader_program) const
 {
-
+	glActiveTexture(GL_TEXTURE0);
 	if (textures[Texture::TextureType::DIFUSSE] != nullptr)
 	{
-		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textures[Texture::TextureType::DIFUSSE]->opengl_texture);
 		glUniform1i(glGetUniformLocation(shader_program, "material.diffuse_map"), 0);
 	}
 	if (textures[Texture::TextureType::EMISSIVE] != nullptr)
 	{
-		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textures[Texture::TextureType::EMISSIVE]->opengl_texture);
 		glUniform1i(glGetUniformLocation(shader_program, "material.emissive_map"), 0);
 	}
 	if (textures[Texture::TextureType::OCLUSION] != nullptr)
 	{
-		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textures[Texture::TextureType::OCLUSION]->opengl_texture);
 		glUniform1i(glGetUniformLocation(shader_program, "material.occlusion_map"), 0);
 	}
 	if (textures[Texture::TextureType::SPECULAR] != nullptr)
 	{
-		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, textures[Texture::TextureType::SPECULAR]->opengl_texture);
 		glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 0);
 	}
