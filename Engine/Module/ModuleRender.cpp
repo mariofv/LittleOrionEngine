@@ -179,7 +179,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 	if (App->debug->show_quadtree)
 	{
-		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) {
+		for (auto& ol_quadtree_node : ol_quadtree.flattened_tree) {
 			geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
 		}
 	}
