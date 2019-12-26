@@ -97,7 +97,7 @@ void ComponentMaterial::Render(unsigned int shader_program) const
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh_texture);
-	glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
+	glUniform1i(glGetUniformLocation(shader_program, "material.diffuse_map"), 0);
 }
 
 void ComponentMaterial::SetMaterialTexture(Texture::TextureType type, std::shared_ptr<Texture> & new_texture)
