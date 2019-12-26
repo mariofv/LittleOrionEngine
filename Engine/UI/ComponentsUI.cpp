@@ -97,12 +97,12 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 				}
 				if (type == Texture::TextureType::DIFUSSE)
 				{
-					ImGui::ColorEdit3("Color", material->diffuse_color);
+					ImGui::ColorEdit3("Diffuse Color", material->diffuse_color);
 					ImGui::SliderFloat("k diffuse", &material->k_diffuse, 0, 1);
 				}
 				if (type == Texture::TextureType::EMISSIVE)
 				{
-					ImGui::ColorEdit3("Color", material->emissive_color);
+					ImGui::ColorEdit3("Emissive Color", material->emissive_color);
 				}
 				if (type == Texture::TextureType::OCLUSION)
 				{
@@ -110,7 +110,7 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 				}
 				if (type == Texture::TextureType::SPECULAR)
 				{
-					ImGui::ColorEdit3("Color", material->specular_color);
+					ImGui::ColorEdit3("Specular Color", material->specular_color);
 					ImGui::SliderFloat("k specular", &material->k_specular, 0, 1);
 					ImGui::SliderFloat("Shininess", &material->shininess, 0, 1);
 				}

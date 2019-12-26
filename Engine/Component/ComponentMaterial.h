@@ -33,6 +33,11 @@ public:
 	void ShowComponentWindow() override;
 
 private:
+	void AddDiffuseUniform(unsigned int shader_program) const;
+	void AddEmissiveUniform(unsigned int shader_program) const;
+	void AddSpecularUniform(unsigned int shader_program) const;
+	void AddAmbientOclusionUniform(unsigned int shader_program) const;
+private:
 	ComponentType type = ComponentType::MATERIAL;
 
 	int index = 0;
