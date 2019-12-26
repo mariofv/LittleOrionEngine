@@ -21,6 +21,7 @@ class ModuleScene;
 class ModuleFileSystem;
 class ModuleDebug;
 class ModuleUI;
+class ModuleLight;
 
 class EngineLog;
 
@@ -55,6 +56,7 @@ public:
 	ModuleFileSystem* filesystem = nullptr;
 	ModuleDebug* debug = nullptr;
 	ModuleUI* ui = nullptr;
+	ModuleLight* lights = nullptr;
 
 	EngineLog* engine_log = nullptr;
 	MeshImporter* mesh_importer = nullptr;

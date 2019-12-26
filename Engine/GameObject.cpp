@@ -7,12 +7,14 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleLight.h"
 #include "Texture.h"
 #include "Utils.h"
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
+#include "Component/ComponentLight.h"
 
 #include "imgui.h"
 #include "imgui_stdlib.h"
@@ -219,6 +221,10 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 
 	case Component::ComponentType::MESH:
 		created_component = App->renderer->CreateComponentMesh();
+		break;
+
+	case Component::ComponentType::LIGHT:
+		created_component = App->lights->CreateComponentLight();
 		break;
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");

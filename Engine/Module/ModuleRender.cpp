@@ -145,6 +145,7 @@ bool ModuleRender::CleanUp()
 		delete mesh;
 	}
 	meshes.clear();
+	meshes_to_render.clear();
 	return true;
 }
 
@@ -178,7 +179,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 	if (App->debug->show_quadtree)
 	{
-		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) {
+		for (auto& ol_quadtree_node : ol_quadtree.flattened_tree) {
 			geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
 		}
 	}
@@ -355,7 +356,6 @@ void ModuleRender::RemoveComponentMesh(ComponentMesh* mesh_to_remove)
 		meshes.erase(it);
 	}
 }
-
 void ModuleRender::ShowRenderOptions()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_CLONE " Renderer"))

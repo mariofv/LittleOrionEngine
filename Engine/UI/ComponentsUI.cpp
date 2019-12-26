@@ -3,6 +3,8 @@
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentLight.h"
+
 #include "Application.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleTexture.h"
@@ -204,5 +206,15 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 				break;
 			}
 		}
+	}
+}
+
+
+void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Light", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::ColorEdit3("Color", light->light_color);
+		ImGui::InputFloat("Intensity ", &light->light_intensity);
 	}
 }
