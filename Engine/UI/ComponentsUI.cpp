@@ -128,9 +128,6 @@ std::string ComponentsUI::GetTypeName(Texture::TextureType type)
 	case Texture::TextureType::SPECULAR:
 		return "Specular";
 		break;
-	case Texture::TextureType::AMBIENT:
-		return "Ambient";
-		break;
 	case Texture::TextureType::EMISSIVE:
 		return "Emissive";
 		break;
