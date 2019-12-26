@@ -83,17 +83,21 @@ void ComponentMaterial::Load(const Config& config)
 
 }
 
-GLuint ComponentMaterial::GetTexture() const
+void ComponentMaterial::Render(unsigned int shader_program) const
 {
+	GLuint mesh_texture = 0;
 	if (show_checkerboard_texture)
 	{
-		return App->texture->checkerboard_texture_id;
+		mesh_texture = App->texture->checkerboard_texture_id;
 	}
 	if (textures[0] != nullptr)
 	{
-		return active ? textures[0]->opengl_texture : 0;
+		mesh_texture = active ? textures[0]->opengl_texture : 0;
 	}
-	return 0;
+
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, mesh_texture);
+	glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
 }
 
 void ComponentMaterial::SetMaterialTexture(Texture::TextureType type, std::shared_ptr<Texture> & new_texture)

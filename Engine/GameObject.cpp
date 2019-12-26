@@ -316,18 +316,16 @@ void GameObject::UpdateHierarchyBranch()
 	}
 }
 
-const GLuint GameObject::GetMaterialTexture() const
+void GameObject::RenderMaterialTexture(unsigned int shader_program) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		if (components[i]->GetType() == Component::ComponentType::MATERIAL)
 		{
 			ComponentMaterial* current_material = (ComponentMaterial*)components[i];
-			return current_material->GetTexture();
+			current_material->Render(shader_program);
 		}
 	}
-
-	return 0;
 }
 
 void GameObject::ShowPropertiesWindow()
