@@ -1,12 +1,14 @@
 #include "ModuleFileSystem.h"
 #include "Application.h"
-#include <algorithm>
 #include <SDL/SDL.h>
 
+#include <algorithm>
+#include <cctype>
 
 bool ModuleFileSystem::Init() {
 	MakeDirectory(".//", "Assets");
 	MakeDirectory(".//", "Library");
+	MakeDirectory(".//Assets", "Scenes");
 	MakeDirectory(".//Library", "Materials");
 	MakeDirectory(".//Library", "Meshes");
 	RefreshFilesHierarchy();
@@ -97,6 +99,9 @@ ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, 
 {
 
 	std::string file_extension = GetFileExtension(file_path);
+	std::transform(file_extension.begin(), file_extension.end(), file_extension.begin(),
+		[](unsigned char letter) { return std::tolower(letter); });
+
 	if ((file_attributes & FILE_ATTRIBUTE_DIRECTORY ) || (file_extension == "/" ))
 	{
 		return ModuleFileSystem::FileType::DIRECTORY;
@@ -104,18 +109,16 @@ ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, 
 
 	if (
 		file_extension == "png"
-		|| file_extension == "PNG"
+		|| file_extension == "tif"
 		|| file_extension == "dds"
-		|| file_extension == "DDS"
 		|| file_extension == "tga"
-		|| file_extension == "JPG"
+		|| file_extension == "jpg"
 		)
 	{
 		return ModuleFileSystem::FileType::TEXTURE;
 	}
 	if (
 		file_extension == "fbx"
-		|| file_extension == "FBX"
 		)
 	{
 		return ModuleFileSystem::FileType::MODEL;

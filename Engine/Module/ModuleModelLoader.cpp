@@ -11,7 +11,6 @@
 #include "Importer/MeshImporter.h"
 #include "Importer/MaterialImporter.h"
 
-
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -22,20 +21,18 @@
 bool ModuleModelLoader::Init()
 {
 	APP_LOG_SECTION("************ Module ModelLoader Init ************");
-	LoadModel(HOUSE_MODEL_PATH);
 	return true;
 }
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
 	std::string model_output;
 
-	App->mesh_importer->Import(new_model_file_path, model_output);
+	App->mesh_importer->Import(std::string(new_model_file_path), model_output);
 
-	ModuleFileSystem::File file = ModuleFileSystem::File(new_model_file_path);
+	ModuleFileSystem::File file(new_model_file_path);
 	GameObject *model_root_node = App->scene->CreateGameObject();
-	model_root_node->name = std::string("RootNode");
+	model_root_node->name = std::string(file.filename_no_extension);
 
-	model_output = model_output.substr(0, model_output.size());
 	std::vector<std::shared_ptr<ModuleFileSystem::File>> files_in_output_path;
 	App->filesystem->GetAllFilesInPath(model_output, files_in_output_path);
 	for (auto file : files_in_output_path )
@@ -56,15 +53,16 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 	node_game_object->name = model_base_path->filename_no_extension;
 	node_game_object->Update();
 
-	if (mesh_for_component->meshes_textures_path.size() > 0)
+	ComponentMaterial *componentMaterial = (ComponentMaterial*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+	for (auto texture : mesh_for_component->meshes_textures_path)
 	{
-		ComponentMaterial *componentMaterial = (ComponentMaterial*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL);
-		for (auto texture_path : mesh_for_component->meshes_textures_path)
-		{
-			std::shared_ptr<Texture> material_texture = App->material_importer->Load(texture_path.c_str());
-			componentMaterial->texture = material_texture;
-		}
+		size_t separator = texture.find_last_of(":");
+		std::string texture_path = texture.substr(separator+1, texture.size());
+		std::string texture_type = texture.substr(0, separator);
+		std::shared_ptr<Texture> material_texture = App->material_importer->Load(texture_path.c_str());
+		componentMaterial->SetMaterialTexture(std::stoi(texture_type),material_texture);
 	}
+	
 }
 
 

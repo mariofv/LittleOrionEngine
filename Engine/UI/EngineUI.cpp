@@ -268,6 +268,13 @@ void EngineUI::ShowAddNewComponentButton()
 
 		}
 
+		sprintf_s(tmp_string, "%s Light", ICON_FA_LIGHTBULB);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
+
+		}
+
 		ImGui::EndPopup();
 	}
 }

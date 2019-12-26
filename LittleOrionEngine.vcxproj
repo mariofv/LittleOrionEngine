@@ -84,6 +84,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Component\ComponentLight.h" />
     <ClInclude Include="Engine\Config.h" />
     <ClInclude Include="Engine\Importer\Importer.h" />
     <ClInclude Include="Engine\Importer\MaterialImporter.h" />
@@ -92,6 +93,7 @@
     <ClInclude Include="Engine\Module\ModuleDebugDraw.h" />
     <ClInclude Include="Engine\Module\ModuleFileSystem.h" />
     <ClInclude Include="Engine\Module\ModuleDebug.h" />
+    <ClInclude Include="Engine\Module\ModuleLight.h" />
     <ClInclude Include="Engine\Module\ModuleUI.h" />
     <ClInclude Include="Engine\OLOctTree.h" />
     <ClInclude Include="Engine\OLOctTreeNode.h" />
@@ -203,6 +205,7 @@
     <ClInclude Include="Libraries\pcg_random\pcg_basic.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Component\ComponentLight.cpp" />
     <ClCompile Include="Engine\Config.cpp" />
     <ClCompile Include="Engine\Importer\Importer.cpp" />
     <ClCompile Include="Engine\Importer\MaterialImporter.cpp" />
@@ -211,6 +214,7 @@
     <ClCompile Include="Engine\Module\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\Module\ModuleFileSystem.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebug.cpp" />
+    <ClCompile Include="Engine\Module\ModuleLight.cpp" />
     <ClCompile Include="Engine\Module\ModuleUI.cpp" />
     <ClCompile Include="Engine\OLOctTree.cpp" />
     <ClCompile Include="Engine\OLOctTreeNode.cpp" />

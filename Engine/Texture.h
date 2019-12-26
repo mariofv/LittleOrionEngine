@@ -8,8 +8,19 @@
 class Texture
 {
 public:
+	enum class TextureType
+	{
+		DIFUSSE,
+		SPECULAR,
+		AMBIENT,
+		EMISSIVE,
+		OCLUSION,
+		UNKNOWN
+	};
+	static const size_t MAX_TEXTURE_TYPES = static_cast<size_t>(TextureType::UNKNOWN);
+public:
 	Texture() = default;
-	Texture(unsigned char * data, int width, int height, const char* path);
+	Texture(unsigned char * data, int width, int height, const char* path, TextureType type = TextureType::DIFUSSE);
 
 	~Texture();
 
@@ -38,9 +49,10 @@ private:
 
 public:
 
+	std::string texture_path;
 	GLuint opengl_texture = 0;
 	const unsigned char* data = nullptr;
-	std::string texture_path;
+	TextureType type;
 
 	int width = 0;
 	int height = 0;

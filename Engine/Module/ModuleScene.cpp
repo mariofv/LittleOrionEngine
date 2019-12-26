@@ -1,5 +1,6 @@
 #include "ModuleScene.h"
 #include "Application.h"
+#include "ModuleModelLoader.h"
 #include "ModuleRender.h"
 #include "ModuleCamera.h"
 #include "Component/ComponentCamera.h"
@@ -13,11 +14,14 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
+
+	App->model_loader->LoadModel(BUNNY_MODEL_PATH);
+
 	GameObject * camera = CreateGameObject();
 	camera->name = "Main Camera";
 	ComponentCamera * component_camera = static_cast<ComponentCamera*>(camera->CreateComponent(Component::ComponentType::CAMERA));
 	App->cameras->active_camera = component_camera;
-	App->cameras->active_camera->SetPosition(float3(0.f, 1.f, -10.f));
+	App->cameras->active_camera->SetPosition(float3(0.f, 100.f, -100.f));
 	App->cameras->active_camera->SetFarDistance(500);
 	App->renderer->GenerateQuadTree(); // TODO: Move this to load scene and save scene
 	return true;

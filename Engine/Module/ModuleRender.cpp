@@ -22,7 +22,7 @@
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <algorithm>
 #include "Brofiler/Brofiler.h"
- 
+
 static void APIENTRY openglCallbackFunction(
 	GLenum source,
 	GLenum type,
@@ -44,7 +44,7 @@ static void APIENTRY openglCallbackFunction(
 		case GL_DEBUG_SOURCE_THIRD_PARTY:     sprintf_s(error_source, "Source: Third Party"); break;
 		case GL_DEBUG_SOURCE_APPLICATION:     sprintf_s(error_source, "Source: Application"); break;
 		case GL_DEBUG_SOURCE_OTHER:           sprintf_s(error_source, "Source: Other"); break;
-	} 
+	}
 
 	char error_type[256];
 	switch (type)
@@ -64,16 +64,16 @@ static void APIENTRY openglCallbackFunction(
 	sprintf_s(error_message, "%s %s %s", error_source, error_type, message);
 	switch (severity)
 	{
-	case GL_DEBUG_SEVERITY_HIGH:         	
+	case GL_DEBUG_SEVERITY_HIGH:
 		OPENGL_LOG_ERROR(error_message);
 		break;
-	case GL_DEBUG_SEVERITY_MEDIUM:       
+	case GL_DEBUG_SEVERITY_MEDIUM:
 		OPENGL_LOG_INIT(error_message); // Actually not an itialization entry, I use this type of entry because the yellow color
 		break;
-	case GL_DEBUG_SEVERITY_LOW:          
+	case GL_DEBUG_SEVERITY_LOW:
 		// OPENGL_LOG_INFO(error_message); Too many messages in update
-	case GL_DEBUG_SEVERITY_NOTIFICATION: 
-		return; 
+	case GL_DEBUG_SEVERITY_NOTIFICATION:
+		return;
 	}
 }
 
@@ -88,7 +88,7 @@ bool ModuleRender::Init()
 	{
 		APP_LOG_ERROR("Error initializing Glew");
 		return false;
-		
+
 	}
 
 	APP_LOG_INFO("Using Glew %s", glewGetString(GLEW_VERSION));
@@ -141,6 +141,7 @@ bool ModuleRender::CleanUp()
 		delete mesh;
 	}
 	meshes.clear();
+	meshes_to_render.clear();
 	return true;
 }
 
@@ -165,7 +166,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	}
 	if (App->debug->show_quadtree)
 	{
-		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree) 
+		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree)
 		{
 			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
 			float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
@@ -191,14 +192,14 @@ void ModuleRender::GetMeshesToRender()
 
 	std::copy_if(meshes.begin(),
 		meshes.end(),
-		std::back_inserter(meshes_to_render), [](auto mesh) 
-	{ 
-		
+		std::back_inserter(meshes_to_render), [](auto mesh)
+	{
+
 		if (App->debug->frustum_culling && mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
 		{
 			return true;
 		}
-		else if(App->debug->frustum_culling && mesh->IsEnabled() && !App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box)) 
+		else if(App->debug->frustum_culling && mesh->IsEnabled() && !App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
 		{
 			return false;
 		}
@@ -223,7 +224,7 @@ void ModuleRender::GetMeshesToRender()
 			}
 		}
 	}
-	
+
 }
 
 void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const
@@ -258,7 +259,7 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 	);
 
 	const GLuint mesh_texture = mesh_game_object.GetMaterialTexture();
-	
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, mesh_texture);
 	glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
@@ -348,13 +349,12 @@ ComponentMesh* ModuleRender::CreateComponentMesh()
 void ModuleRender::RemoveComponentMesh(ComponentMesh* mesh_to_remove)
 {
 	auto it = std::find(meshes.begin(), meshes.end(), mesh_to_remove);
-	if (it != meshes.end()) 
+	if (it != meshes.end())
 	{
 		delete *it;
 		meshes.erase(it);
 	}
 }
-
 void ModuleRender::ShowRenderOptions()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_CLONE " Renderer"))
@@ -451,7 +451,7 @@ void ModuleRender::ShowRenderOptions()
 	}
 }
 
-void ModuleRender::GenerateQuadTree() 
+void ModuleRender::GenerateQuadTree()
 {
 	AABB2D global_AABB;
 	global_AABB.SetNegativeInfinity();
