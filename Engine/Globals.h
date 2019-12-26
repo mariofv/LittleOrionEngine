@@ -55,26 +55,31 @@ enum class Fonts
 };
 
 // Paths -------
-# define SHADERS_PATH "./resources/Shaders"
+# define SHADERS_PATH "./Resources/Shaders"
 # define TEXTURES_PATH "./Assets/Textures/"
 
-# define DEFAULT_VERTEX_SHADER_PATH "./resources/Shaders/default.vs"
-# define DEFAULT_FRAGMENT_SHADER_PATH "./resources/Shaders/default.fs"
+# define DEFAULT_VERTEX_SHADER_PATH "./Resources/Shaders/default.vs"
+# define DEFAULT_FRAGMENT_SHADER_PATH "./Resources/Shaders/default.fs"
 
-# define PRIMITIVE_VERTEX_SHADER_PATH "./resources/Shaders/primitive.vs"
-# define PRIMITIVE_FRAGMENT_SHADER_PATH "./resources/Shaders/primitive.fs"
+# define PRIMITIVE_VERTEX_SHADER_PATH "./Resources/Shaders/primitive.vs"
+# define PRIMITIVE_FRAGMENT_SHADER_PATH "./Resources/Shaders/primitive.fs"
 
-# define TEXTURE_FRAGMENT_SHADER_PATH "./resources/Shaders/texture.fs"
+# define TEXTURE_FRAGMENT_SHADER_PATH "./Resources/Shaders/texture.fs"
 
-# define WOBBLE_VERTEX_SHADER_PATH "./resources/Shaders/wobble.vs"
-# define WOBBLE_FRAGMENT_SHADER_PATH "./resources/Shaders/wobble.fs"
+# define WOBBLE_VERTEX_SHADER_PATH "./Resources/Shaders/wobble.vs"
+# define WOBBLE_FRAGMENT_SHADER_PATH "./Resources/Shaders/wobble.fs"
 
-# define SKYBOX_VERTEX_SHADER_PATH "./resources/Shaders/skybox.vs"
-# define SKYBOX_FRAGMENT_SHADER_PATH "./resources/Shaders/skybox.fs"
+# define SKYBOX_VERTEX_SHADER_PATH "./Resources/Shaders/skybox.vs"
+# define SKYBOX_FRAGMENT_SHADER_PATH "./Resources/Shaders/skybox.fs"
 
 # define HOUSE_MODEL_PATH "./Assets/Models/baker_house/BakerHouse.fbx"
 # define BUNNY_MODEL_PATH "./Assets/Models/ZomBunny/Zombunny.fbx"
-# define GRID_TEXTURE_PATH "./resources/textures/grid.png"
+# define GRID_TEXTURE_PATH "./Resources/Textures/grid.png"
+
+# define PRIMITIVE_CUBE_PATH "./Resources/Primitives/Cube/Cube.ol"
+# define PRIMITIVE_CYLINDER_PATH "./Resources/Primitives/Cylinder/Cylinder.ol"
+# define PRIMITIVE_SPHERE_PATH "./Resources/Primitives/Sphere/Sphere.ol"
+# define PRIMITIVE_TORUS_PATH "./Resources/Primitives/Torus/Torus.ol"
 
 # define TMP_SCENE_PATH "./Assets/Scenes/tmp_scene.scene"
 
