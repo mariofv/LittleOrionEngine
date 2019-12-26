@@ -7,6 +7,7 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleLight.h"
 #include "Texture.h"
 #include "Utils.h"
 
@@ -223,7 +224,7 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 		break;
 
 	case Component::ComponentType::LIGHT:
-		created_component = App->texture->CreateComponentLight();
+		created_component = App->lights->CreateComponentLight();
 		break;
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");

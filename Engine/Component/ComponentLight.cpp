@@ -1,6 +1,6 @@
 #include "ComponentLight.h"
 #include "Application.h"
-#include "Module/ModuleTexture.h"
+#include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "UI/ComponentsUI.h"
 
@@ -16,7 +16,7 @@ ComponentLight::ComponentLight(GameObject * owner) : Component(owner, ComponentT
 
 void ComponentLight::Delete()
 {
-	App->texture->RemoveComponentLight(this);
+	App->lights->RemoveComponentLight(this);
 }
 
 void ComponentLight::Render() const

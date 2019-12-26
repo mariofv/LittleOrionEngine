@@ -3,7 +3,6 @@
 #include "Application.h"
 #include "Texture.h"
 #include "Component/ComponentMaterial.h"
-#include "Component/ComponentLight.h"
 #include "Importer/MaterialImporter.h"
 
 #include <SDL/SDL.h>
@@ -28,11 +27,6 @@ bool ModuleTexture::CleanUp()
 		delete material;
 	}
 	materials.clear();
-	for (auto& light : lights)
-	{
-		delete light;
-	}
-	lights.clear();
 	return true;
 }
 
@@ -53,22 +47,6 @@ void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remov
 	}
 }
 
-ComponentLight* ModuleTexture::CreateComponentLight()
-{
-	ComponentLight * created_light = new ComponentLight();
-	lights.push_back(created_light);
-	return created_light;
-}
-
-void ModuleTexture::RemoveComponentLight(ComponentLight* light_to_remove)
-{
-	auto it = std::find(lights.begin(), lights.end(), light_to_remove);
-	if (it != lights.end())
-	{
-		delete *it;
-		lights.erase(it);
-	}
-}
 std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 {
 	std::string ol_texture;
