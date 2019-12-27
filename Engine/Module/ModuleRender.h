@@ -3,10 +3,8 @@
 
 #include "Module.h"
 #include "Globals.h"
-#include "GeometryRenderer.h"
 #include "OLQuadTree.h"
 #include "Timer.h"
-#include "GridRenderer.h"
 
 #include <GL/glew.h>
 
@@ -55,9 +53,6 @@ private:
 
 	void GetMeshesToRender();
 
-public:
-	GeometryRenderer* geometry_renderer = nullptr;
-
 private:
 	void* context = nullptr;
 
@@ -80,8 +75,6 @@ private:
 	OLQuadTree ol_quadtree;
 	Timer * rendering_measure_timer = new Timer();
 	friend class ModuleDebug;
-
-	GridRenderer *grid_renderer = nullptr;
 };
 
 #endif //_MODULERENDER_H_

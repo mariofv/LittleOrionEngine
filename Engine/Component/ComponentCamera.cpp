@@ -145,6 +145,16 @@ void ComponentCamera::Load(const Config& config)
 	GenerateMatrices();
 }
 
+float ComponentCamera::GetWidth() const
+{
+	return last_width;
+}
+
+float ComponentCamera::GetHeigt() const
+{
+	return last_height;
+}
+
 void ComponentCamera::RecordFrame(const float width, const float height)
 {
 	if (last_width != width || last_height != height)
@@ -443,6 +453,10 @@ float4x4 ComponentCamera::GetProjectionMatrix() const
 	return proj;
 }
 
+float4x4 ComponentCamera::GetInverseClipMatrix() const
+{
+	return camera_frustum.ViewProjMatrix().Inverted();
+}
 
 void ComponentCamera::GenerateMatrices()
 {

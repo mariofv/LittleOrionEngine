@@ -72,6 +72,12 @@ enum class Fonts
 # define SKYBOX_VERTEX_SHADER_PATH "./Resources/Shaders/skybox.vs"
 # define SKYBOX_FRAGMENT_SHADER_PATH "./Resources/Shaders/skybox.fs"
 
+# define LINEPOINT_VERTEX_SHADER_PATH "./Resources/Shaders/linepoint.vs"
+# define LINEPOINT_FRAGMENT_SHADER_PATH "./Resources/Shaders/linepoint.fs"
+
+# define TEXT_VERTEX_SHADER_PATH "./Resources/Shaders/text.vs"
+# define TEXT_FRAGMENT_SHADER_PATH "./Resources/Shaders/text.fs"
+
 # define HOUSE_MODEL_PATH "./Assets/Models/baker_house/BakerHouse.fbx"
 # define BUNNY_MODEL_PATH "./Assets/Models/ZomBunny/Zombunny.fbx"
 # define GRID_TEXTURE_PATH "./Resources/Textures/grid.png"

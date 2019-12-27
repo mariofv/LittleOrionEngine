@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "ModuleCamera.h"
 #include "ModuleDebug.h"
+#include "ModuleDebugDraw.h"
 #include "ModuleModelLoader.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
@@ -13,7 +14,7 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
-#include "GeometryRenderer.h"
+#include "UI/DebugDraw.h"
 
 #include <SDL/SDL.h>
 #include "MathGeoLib.h"
@@ -23,7 +24,7 @@
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <algorithm>
 #include "Brofiler/Brofiler.h"
- 
+
 static void APIENTRY openglCallbackFunction(
 	GLenum source,
 	GLenum type,
@@ -45,7 +46,7 @@ static void APIENTRY openglCallbackFunction(
 		case GL_DEBUG_SOURCE_THIRD_PARTY:     sprintf_s(error_source, "Source: Third Party"); break;
 		case GL_DEBUG_SOURCE_APPLICATION:     sprintf_s(error_source, "Source: Application"); break;
 		case GL_DEBUG_SOURCE_OTHER:           sprintf_s(error_source, "Source: Other"); break;
-	} 
+	}
 
 	char error_type[256];
 	switch (type)
@@ -65,16 +66,16 @@ static void APIENTRY openglCallbackFunction(
 	sprintf_s(error_message, "%s %s %s", error_source, error_type, message);
 	switch (severity)
 	{
-	case GL_DEBUG_SEVERITY_HIGH:         	
+	case GL_DEBUG_SEVERITY_HIGH:
 		OPENGL_LOG_ERROR(error_message);
 		break;
-	case GL_DEBUG_SEVERITY_MEDIUM:       
+	case GL_DEBUG_SEVERITY_MEDIUM:
 		OPENGL_LOG_INIT(error_message); // Actually not an itialization entry, I use this type of entry because the yellow color
 		break;
-	case GL_DEBUG_SEVERITY_LOW:          
+	case GL_DEBUG_SEVERITY_LOW:
 		// OPENGL_LOG_INFO(error_message); Too many messages in update
-	case GL_DEBUG_SEVERITY_NOTIFICATION: 
-		return; 
+	case GL_DEBUG_SEVERITY_NOTIFICATION:
+		return;
 	}
 }
 
@@ -89,7 +90,7 @@ bool ModuleRender::Init()
 	{
 		APP_LOG_ERROR("Error initializing Glew");
 		return false;
-		
+
 	}
 
 	APP_LOG_INFO("Using Glew %s", glewGetString(GLEW_VERSION));
@@ -109,9 +110,6 @@ bool ModuleRender::Init()
 
 	SetVSync(VSYNC);
 	SetDepthTest(true);
-
-	geometry_renderer = new GeometryRenderer();
-	grid_renderer = new GridRenderer();
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
@@ -139,9 +137,7 @@ update_status ModuleRender::PostUpdate()
 bool ModuleRender::CleanUp()
 {
 	APP_LOG_INFO("Destroying renderer");
-	delete geometry_renderer;
 	delete rendering_measure_timer;
-	delete grid_renderer;
 	for (auto& mesh : meshes)
 	{
 		delete mesh;
@@ -163,11 +159,21 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
 	if (App->debug->show_grid)
 	{
-		grid_renderer->Render(camera);
+		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
+		dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
 	}
 	if (App->debug->show_camera_frustum && App->cameras->active_camera != nullptr)
 	{
-		geometry_renderer->RenderHexahedron(camera, App->cameras->active_camera->GetFrustumVertices());
+		dd::frustum(App->cameras->active_camera->GetInverseClipMatrix(), float3::one);
+	}
+	if (App->debug->show_quadtree)
+	{
+		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree)
+		{
+			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
+			float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
+			dd::aabb(quadtree_node_min, quadtree_node_max, float3::one);
+		}
 	}
 
 	rendering_measure_timer->Start();
@@ -179,12 +185,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
 
-	if (App->debug->show_quadtree)
-	{
-		for (auto& ol_quadtree_node : ol_quadtree.flattened_tree) {
-			geometry_renderer->RenderSquare(camera, ol_quadtree_node->GetVertices());
-		}
-	}
+	App->debug_draw->Render(camera);
 }
 
 void ModuleRender::GetMeshesToRender()
@@ -193,14 +194,14 @@ void ModuleRender::GetMeshesToRender()
 
 	std::copy_if(meshes.begin(),
 		meshes.end(),
-		std::back_inserter(meshes_to_render), [](auto mesh) 
-	{ 
-		
+		std::back_inserter(meshes_to_render), [](auto mesh)
+	{
+
 		if (App->debug->frustum_culling && mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
 		{
 			return true;
 		}
-		else if(App->debug->frustum_culling && mesh->IsEnabled() && !App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box)) 
+		else if(App->debug->frustum_culling && mesh->IsEnabled() && !App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
 		{
 			return false;
 		}
@@ -225,12 +226,17 @@ void ModuleRender::GetMeshesToRender()
 			}
 		}
 	}
-	
+
 }
 
 void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const
 {
 	const GameObject& mesh_game_object = *mesh.owner;
+
+	if (App->debug->show_bounding_boxes && !mesh_game_object.aabb.IsEmpty())
+	{
+		dd::aabb(mesh_game_object.aabb.bounding_box.minPoint, mesh_game_object.aabb.bounding_box.maxPoint, float3::one);
+	}
 
 	GLuint shader_program = App->program->texture_program;
 	glUseProgram(shader_program);
@@ -260,13 +266,6 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 	mesh.Render();
 
 	glUseProgram(0);
-
-
-	if (App->debug->show_bounding_boxes && !mesh_game_object.aabb.IsEmpty())
-	{
-		geometry_renderer->RenderHexahedron(camera, mesh_game_object.aabb.GetVertices());
-	}
-
 }
 
 void ModuleRender::SetVSync(const bool vsync)
@@ -349,7 +348,7 @@ ComponentMesh* ModuleRender::CreateComponentMesh()
 void ModuleRender::RemoveComponentMesh(ComponentMesh* mesh_to_remove)
 {
 	auto it = std::find(meshes.begin(), meshes.end(), mesh_to_remove);
-	if (it != meshes.end()) 
+	if (it != meshes.end())
 	{
 		delete *it;
 		meshes.erase(it);
@@ -451,7 +450,7 @@ void ModuleRender::ShowRenderOptions()
 	}
 }
 
-void ModuleRender::GenerateQuadTree() 
+void ModuleRender::GenerateQuadTree()
 {
 	AABB2D global_AABB;
 	global_AABB.SetNegativeInfinity();

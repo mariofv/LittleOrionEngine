@@ -30,6 +30,9 @@ public:
 	void Save(Config& config) const;
 	void Load(const Config& config);
 
+	float GetWidth() const;
+	float GetHeigt() const;
+
 	void RecordFrame(const float width, const float height);
 	GLuint GetLastRecordedFrame() const;
 
@@ -69,6 +72,7 @@ public:
 
 	float4x4 GetViewMatrix() const;
 	float4x4 GetProjectionMatrix() const;
+	float4x4 GetInverseClipMatrix() const;
 	void GenerateMatrices();
 
 	std::vector<float> GetFrustumVertices() const;

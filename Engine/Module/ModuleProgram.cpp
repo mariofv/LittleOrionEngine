@@ -42,6 +42,28 @@ bool ModuleProgram::Init()
 		return false;
 	}
 
+	APP_LOG_INIT("Loading linepoint shader program.");
+	if (LoadProgram(linepoint_program, LINEPOINT_VERTEX_SHADER_PATH, LINEPOINT_FRAGMENT_SHADER_PATH))
+	{
+		APP_LOG_SUCCESS("Linepoint shader program loaded correctly.");
+	}
+	else
+	{
+		APP_LOG_ERROR("Linepoint shader program loaded incorretly.");
+		return false;
+	}
+
+	APP_LOG_INIT("Loading text shader program.");
+	if (LoadProgram(skybox_program, TEXT_VERTEX_SHADER_PATH, TEXT_FRAGMENT_SHADER_PATH))
+	{
+		APP_LOG_SUCCESS("Text shader program loaded correctly.");
+	}
+	else
+	{
+		APP_LOG_ERROR("Text shader program loaded incorretly.");
+		return false;
+	}
+
 	return true;
 }
 
