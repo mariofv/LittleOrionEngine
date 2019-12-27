@@ -29,3 +29,14 @@ float3 Utils::GenerateDegFloat3FromQuat(const Quat &rotation)
 
 	return deg_rotation;
 }
+
+float3 Utils::Float3RadToDeg(const float3& rad_float3)
+{
+	float3 deg_float3 = float3(
+		math::RadToDeg(rad_float3.x),
+		math::RadToDeg(rad_float3.y),
+		math::RadToDeg(rad_float3.z)
+	);
+
+	return deg_float3;
+}

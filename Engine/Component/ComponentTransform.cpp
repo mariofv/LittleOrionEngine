@@ -1,5 +1,6 @@
 #include "ComponentTransform.h"
 #include "GameObject.h"
+#include "Utils.h"
 #include "UI/ComponentsUI.h"
 
 ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM) {
@@ -73,27 +74,29 @@ Quat ComponentTransform::GetRotation() const
 	return rotation;
 }
 
-void ComponentTransform::SetRotation(const Quat &rotation)
-{
-	this->rotation = rotation;
-	GenerateModelMatrix(); // TODO: Change this to Update()
-}
-
 void ComponentTransform::SetRotation(const float3x3 &rotation)
 {
 	this->rotation = rotation.ToQuat();
+	rotation_radians = rotation.ToEulerXYZ();
+	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
 	GenerateModelMatrix(); // TODO: Change this to Update()
 }
 
 void ComponentTransform::Rotate(const Quat &rotation)
 {
 	this->rotation = rotation * this->rotation;
+	rotation_radians = rotation * rotation_radians;
+	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
+
 	GenerateModelMatrix(); // TODO: Change this to Update()
 }
 
 void ComponentTransform::Rotate(const float3x3 &rotation)
 {
 	this->rotation = rotation.ToQuat() * this->rotation;
+	rotation_radians = rotation * rotation_radians;
+	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
+
 	GenerateModelMatrix(); // TODO: Change this to Update()
 }
 

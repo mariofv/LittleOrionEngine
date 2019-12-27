@@ -13,6 +13,7 @@ public:
 
 	static Quat GenerateQuatFromDegFloat3(const float3 &rotation);
 	static float3 GenerateDegFloat3FromQuat(const Quat &rotation);
+	static float3 Float3RadToDeg(const float3 &rotation);
 };
 
 #endif //_UTILS_H_
