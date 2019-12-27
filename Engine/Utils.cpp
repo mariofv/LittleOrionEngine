@@ -40,3 +40,14 @@ float3 Utils::Float3RadToDeg(const float3& rad_float3)
 
 	return deg_float3;
 }
+
+float3 Utils::Float3DegToRad(const float3& deg_float3)
+{
+	float3 rad_float3 = float3(
+		math::DegToRad(deg_float3.x),
+		math::DegToRad(deg_float3.y),
+		math::DegToRad(deg_float3.z)
+	);
+
+	return rad_float3;
+}
