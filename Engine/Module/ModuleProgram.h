@@ -30,6 +30,8 @@ public:
 	GLuint default_program = 0;
 	GLuint texture_program = 0;
 	GLuint skybox_program = 0;
+	GLuint linepoint_program = 0;
+	GLuint text_program = 0;
 
 };
 

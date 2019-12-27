@@ -48,7 +48,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/debug-draw;$(ProjectDir)Libraries/par_shapes;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
-      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -56,6 +56,9 @@
       <AdditionalLibraryDirectories>$(ProjectDir)Libraries/lib/x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib</AdditionalDependencies>
     </Link>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <ClCompile>
@@ -66,6 +69,7 @@
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/debug-draw;$(ProjectDir)Libraries/par_shapes;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -75,6 +79,9 @@
       <AdditionalLibraryDirectories>$(ProjectDir)Libraries/lib/x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib</AdditionalDependencies>
     </Link>
+    <ProjectReference>
+      <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
+    </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\ComponentLight.h" />
@@ -83,6 +90,7 @@
     <ClInclude Include="Engine\Importer\MaterialImporter.h" />
     <ClInclude Include="Engine\Importer\MeshImporter.h" />
     <ClInclude Include="Engine\Mesh.h" />
+    <ClInclude Include="Engine\Module\ModuleDebugDraw.h" />
     <ClInclude Include="Engine\Module\ModuleFileSystem.h" />
     <ClInclude Include="Engine\Module\ModuleDebug.h" />
     <ClInclude Include="Engine\Module\ModuleLight.h" />
@@ -90,10 +98,8 @@
     <ClInclude Include="Engine\OLOctTree.h" />
     <ClInclude Include="Engine\OLOctTreeNode.h" />
     <ClInclude Include="Engine\OLQuadTreeNode.h" />
-    <ClInclude Include="Engine\GridRenderer.h" />
     <ClInclude Include="Engine\Skybox.h" />
     <ClInclude Include="Engine\UI\ComponentsUI.h" />
-    <ClInclude Include="Engine\GeometryRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentAABB.h" />
     <ClInclude Include="Engine\Component\ComponentCamera.h" />
     <ClInclude Include="Engine\Component\ComponentMaterial.h" />
@@ -205,6 +211,7 @@
     <ClCompile Include="Engine\Importer\MaterialImporter.cpp" />
     <ClCompile Include="Engine\Importer\MeshImporter.cpp" />
     <ClCompile Include="Engine\Mesh.cpp" />
+    <ClCompile Include="Engine\Module\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\Module\ModuleFileSystem.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebug.cpp" />
     <ClCompile Include="Engine\Module\ModuleLight.cpp" />
@@ -212,10 +219,8 @@
     <ClCompile Include="Engine\OLOctTree.cpp" />
     <ClCompile Include="Engine\OLOctTreeNode.cpp" />
     <ClCompile Include="Engine\OLQuadTreeNode.cpp" />
-    <ClCompile Include="Engine\GridRenderer.cpp" />
     <ClCompile Include="Engine\Skybox.cpp" />
     <ClCompile Include="Engine\UI\ComponentsUI.cpp" />
-    <ClCompile Include="Engine\GeometryRenderer.cpp" />
     <ClCompile Include="Engine\Component\ComponentAABB.cpp" />
     <ClCompile Include="Engine\Component\ComponentCamera.cpp" />
     <ClCompile Include="Engine\Component\ComponentMaterial.cpp" />

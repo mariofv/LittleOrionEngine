@@ -134,8 +134,10 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 
 	cursor += bytes; // Store sizes
 	bytes = sizeof(uint32_t) * num_materials;
-	memcpy(cursor, &materials_path_size.front(), bytes);
-
+	if (bytes != 0)
+	{
+		memcpy(cursor, &materials_path_size.front(), bytes);
+	}
 	for (size_t i = 0; i < num_materials; i++)
 	{
 		cursor += bytes; // Store materials
@@ -151,18 +153,18 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
  std::shared_ptr<Mesh> MeshImporter::Load(const char* file_path) const 
  {
 	
-	 //Check if the mesh is already loaded
-	 auto it = std::find_if(mesh_cache.begin(), mesh_cache.end(), [file_path](const std::shared_ptr<Mesh> mesh) 
-	 {
-		 return mesh->mesh_file_path == file_path;
-	 });
-	 if (it != mesh_cache.end())
-	 {
-		 APP_LOG_INFO("Model %s exists in cache.", file_path);
-		 return *it;
-	 }
+	//Check if the mesh is already loaded
+	auto it = std::find_if(mesh_cache.begin(), mesh_cache.end(), [file_path](const std::shared_ptr<Mesh> mesh) 
+	{
+		return mesh->mesh_file_path == file_path;
+	});
+	if (it != mesh_cache.end())
+	{
+		APP_LOG_INFO("Model %s exists in cache.", file_path);
+		return *it;
+	}
 
-	 APP_LOG_INFO("Loading model %s.", file_path);
+	APP_LOG_INFO("Loading model %s.", file_path);
 	performance_timer.Start();
 	size_t mesh_size;
 	char * data = App->filesystem->Load(file_path, mesh_size);
@@ -191,11 +193,13 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	memcpy(&vertices.front(), cursor, bytes);
 
 
-	meshes_materials_size.resize(ranges[2]);
-
 	cursor += bytes; // Get sizes
 	bytes = sizeof(uint32_t) * ranges[2];
-	memcpy(&meshes_materials_size.front(), cursor, bytes);
+	meshes_materials_size.resize(ranges[2]);
+	if (bytes != 0)
+	{
+		memcpy(&meshes_materials_size.front(), cursor, bytes);
+	}
 
 	meshes_textures_path.resize(ranges[2]);
 	for (size_t i = 0; i < ranges[2]; i++)
