@@ -3,7 +3,7 @@
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "UI/ComponentsUI.h"
-
+#include "GameObject.h"
 
 ComponentLight::ComponentLight() : Component(nullptr, ComponentType::LIGHT)
 {
@@ -19,7 +19,7 @@ void ComponentLight::Delete()
 	App->lights->RemoveComponentLight(this);
 }
 
-void ComponentLight::Render() const
+void ComponentLight::Render(unsigned int shader_program) const
 {
 	//TODO: Modify this once uniform buffer is created
 	size_t size_of_elements_before = 3 * sizeof(float3);
@@ -27,6 +27,10 @@ void ComponentLight::Render() const
 	glBufferSubData(GL_UNIFORM_BUFFER, size_of_elements_before, 3* sizeof(float), light_color);
 	glBufferSubData(GL_UNIFORM_BUFFER, size_of_elements_before + 3 * sizeof(float), sizeof(float), &light_intensity);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);*/
+
+	glUniform1f(glGetUniformLocation(shader_program, "light.light_intensity"), light_intensity);
+	glUniform3fv(glGetUniformLocation(shader_program, "light.light_color"), sizeof(float), (float*)light_color);
+	glUniform3fv(glGetUniformLocation(shader_program, "light.light_position"), sizeof(float), (float*)&owner->transform.GetTranslation());
 }
 
 void ComponentLight::Save(Config& config) const

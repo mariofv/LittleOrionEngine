@@ -201,7 +201,6 @@ void ComponentCamera::GenerateFrameBuffers(const float width, const float height
 	}
 	glGenRenderbuffers(1, &rbo);
 
-
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
