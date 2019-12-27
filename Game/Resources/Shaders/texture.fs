@@ -45,28 +45,23 @@ void main()
 {
     vec4 diffuse_color  = get_diffuse_color(material, texCoord);    
 	vec4 specular_color  = get_specular_color(material, texCoord);    
-	//vec3 occlusion_color = get_occlusion_color(material, texCoord).rgb;    
-	//vec3 emissive_color  = get_emissive_color(material, texCoord).rgb;
-        
-  	
-    // ambient
-    vec3 ambient = light.light_intensity * light.light_color;
+	vec3 occlusion_color = get_occlusion_color(material, texCoord);    
+	vec3 emissive_color  = get_emissive_color(material, texCoord);
   	
     // diffuse 
-    vec3 norm = normalize(normal);
-    vec3 lightDir = normalize(light.light_position - FragPos);
-    float diff = max(dot(norm, lightDir), 0.0);
-    vec3 diffuse = diff * lightColor;
-    
-    // specular
-    float specularStrength = 0.5;
+	vec3 lightDir = light.light_position - FragPos;
+	float diffuse = lambert(lightDir, normal);
+     
+	//specular
     vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 reflectDir = reflect(-lightDir, norm);  
-    float spec = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-    vec3 specular = specularStrength * spec * lightColor;  
-        
-    vec3 result = (ambient + diffuse + specular) * objectColor;
-    FragColor = vec4(result, 1.0);
+    vec3 reflectDir = reflect(-lightDir, normalize(normal));  
+    float specular = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
+
+    vec3 result = emissive_color
+	+diffuse_color.rgb*(occlusion_color*material.k_ambient)
+	+diffuse_color.rgb*diffuse*material.k_diffuse
+	+specular_color.rgb*specular*material.k_specular;
+    FragColor = vec4(result,1.0);
 }
 
 
@@ -88,9 +83,12 @@ vec4 get_specular_color(const Material mat, const vec2 texCoord)
 	return mat.specular_color;
 }
 vec3 get_occlusion_color(const Material mat, const vec2 texCoord)
-{     
-
-	return texture(mat.occlusion_map, texCoord).rgb;  
+{   
+	if(mat.use_occlusion_map)
+	{ 
+		return texture(mat.occlusion_map, texCoord).rgb;  
+	}
+	return vec3(0.0,0.0,0.0);
 		
 }
 vec3 get_emissive_color(const Material mat, const vec2 texCoord)
@@ -102,10 +100,10 @@ vec3 get_emissive_color(const Material mat, const vec2 texCoord)
 	return mat.emissive_color.rgb;
 }
 
-float lambert(vec3 light_position,vec3 norm)
+float lambert(vec3 direcction,vec3 norm)
 {
-  vec3 normal    = normalize(norm);
-  vec3 light_dir = normalize(light_position);
-  float diffuse  = max(0.0, dot(normal, light_dir));
+  vec3 normal   = normalize(norm);
+  vec3 lightDir = normalize(direcction);
+  float diffuse = max(0.0, dot(normal, lightDir));
   return diffuse;
 }
