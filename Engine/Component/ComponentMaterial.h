@@ -43,13 +43,13 @@ private:
 	int index = 0;
 	std::vector<std::shared_ptr<Texture>> textures;
 
-	float diffuse_color[3] = { 255.0f, 255.0f, 255.0f };
-	float emissive_color[3] = { 0.0f, 0.0f, 0.0f };
-	float specular_color[3] = { 0.0f, 0.0f, 0.0f };
+	float diffuse_color[4] = { 1.0f, 1.0f,1.0f,1.0f };
+	float emissive_color[4] = { 0.0f, 0.0f, 0.0f , 1.0f};
+	float specular_color[4] = { 0.0f, 0.0f, 0.0f, 1.0f };
 	float k_diffuse = 1.0f;
-	float shininess = 1.0f;
 	float k_specular = 1.0f;
 	float k_ambient = 1.0f;
+	float shininess = 1.0f;
 
 	bool show_checkerboard_texture = false;
 

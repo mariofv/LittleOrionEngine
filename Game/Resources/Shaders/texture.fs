@@ -88,7 +88,7 @@ vec3 get_occlusion_color(const Material mat, const vec2 texCoord)
 	{ 
 		return texture(mat.occlusion_map, texCoord).rgb;  
 	}
-	return vec3(0.0,0.0,0.0);
+	return vec3(1.0,1.0,1.0);
 		
 }
 vec3 get_emissive_color(const Material mat, const vec2 texCoord)

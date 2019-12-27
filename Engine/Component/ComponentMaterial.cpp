@@ -42,6 +42,18 @@ void ComponentMaterial::Save(Config& config) const
 		}
 	}
 	config.AddBool(show_checkerboard_texture, "Checkboard");
+
+	//k
+	config.AddFloat(k_ambient, "kAmbient");
+	config.AddFloat(k_specular, "kSpecular");
+	config.AddFloat(k_diffuse, "kDiffuse");
+	config.AddFloat(shininess, "shininess");
+
+	//colors
+	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
+	config.AddColor(float4(emissive_color[0], emissive_color[1], emissive_color[2], 1.0f), "emissiveColor");
+	config.AddColor(float4(specular_color[0], specular_color[1], specular_color[2], 1.0f), "specularColor");
+
 }
 
 void ComponentMaterial::Load(const Config& config)
@@ -66,6 +78,36 @@ void ComponentMaterial::Load(const Config& config)
 	}
 	
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
+
+	//k
+	k_ambient = config.GetFloat("kAmbient", 1.0f);
+	k_specular = config.GetFloat( "kSpecular", 1.0f);
+	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
+	shininess = config.GetFloat("shininess", 1.0f);
+
+	//colors
+	float4 diffuse;
+	float4 emissive;
+	float4 specular;
+
+	config.GetColor("difusseColor", diffuse, float4(1.f, 1.f, 1.f, 1.f));
+	config.GetColor("emissiveColor", emissive, float4(0.0f,0.0f,0.0f,1.0f));
+	config.GetColor("specularColor", specular, float4(0.0f,0.0f,0.0f,1.0f));
+	
+	diffuse_color[0] = diffuse.x;
+	diffuse_color[1] = diffuse.y;
+	diffuse_color[2] = diffuse.z;
+	diffuse_color[3] = diffuse.w;
+
+	emissive_color[0] = emissive.x;
+	emissive_color[1] = emissive.y;
+	emissive_color[2] = emissive.z;
+	emissive_color[3] = emissive.w;
+	
+	specular_color[0] = specular.x;
+	specular_color[1] = specular.y;
+	specular_color[2] = specular.z;
+	specular_color[3] = specular.w;
 
 }
 
