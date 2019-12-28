@@ -226,7 +226,6 @@ void ModuleRender::GetMeshesToRender()
 			}
 		}
 	}
-
 }
 
 void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const
@@ -261,7 +260,6 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 	);
 
 	App->lights->lights[0]->Render(shader_program);
-	glUniform3fv(glGetUniformLocation(shader_program, "viewPos"), sizeof(float), (float*)&camera.owner->transform.GetTranslation());
 	mesh_game_object.RenderMaterialTexture(shader_program);
 	mesh.Render();
 
