@@ -33,10 +33,10 @@ public:
 	void ShowComponentWindow() override;
 
 private:
-	void AddDiffuseUniform(unsigned int shader_program) const;
-	void AddEmissiveUniform(unsigned int shader_program) const;
-	void AddSpecularUniform(unsigned int shader_program) const;
-	void AddAmbientOclusionUniform(unsigned int shader_program) const;
+	void AddDiffuseUniforms(unsigned int shader_program) const;
+	void AddEmissiveUniforms(unsigned int shader_program) const;
+	void AddSpecularUniforms(unsigned int shader_program) const;
+	void AddAmbientOclusionUniforms(unsigned int shader_program) const;
 	void BindTexture(Texture::TextureType id) const;
 private:
 	ComponentType type = ComponentType::MATERIAL;

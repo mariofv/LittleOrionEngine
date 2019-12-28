@@ -13,8 +13,8 @@
 bool ModuleTexture::Init()
 {
 	APP_LOG_SECTION("************ Module Texture Init ************");
-	GenerateCheckerboardTexture();
-	GenerateWhiteFallTexture();
+	GenerateTexture(checkerboard_texture_id, PATRON::CHECKBOARD);
+	GenerateTexture(whitefall_texture_id, PATRON::WHITE);
 	return true;
 }
 
@@ -72,39 +72,35 @@ GLuint ModuleTexture::LoadCubemap(std::vector<std::string> faces_paths) const
 	return static_cast<GLuint>(App->material_importer->LoadCubemap(faces_paths_dds));
 }
 
+GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const{
 
-void ModuleTexture::GenerateCheckerboardTexture() {
-	static GLubyte check_image[generate_texture_height][generate_texture_width][3];
-	int i, j, color;
-	for (i = 0; i < generate_texture_height; i++) {
-		for (j = 0; j < generate_texture_width; j++) {
-			color = ((((i & 0x4) == 0) ^ ((j & 0x4)) == 0)) * 255; // 0 -> black or 255 white
-			check_image[i][j][0] = (GLubyte)color; //R
-			check_image[i][j][1] = (GLubyte)color; //G
-			check_image[i][j][2] = (GLubyte)color; //B
-		}
+
+	switch (color_id)
+	{
+	case PATRON::CHECKBOARD:
+		return ((((i & 0x4) == 0) ^ ((j & 0x4)) == 0)) * 255;
+		break;
+	case PATRON::WHITE:
+		return 255;
+		break;
+	default:
+		return 0;
+		break;
 	}
-	GenerateTexture(checkerboard_texture_id, check_image);
 }
 
-void ModuleTexture::GenerateWhiteFallTexture() {
-
-
-	static GLubyte white_image[generate_texture_height][generate_texture_width][3];
-	int i, j, color;
-	for (i = 0; i < generate_texture_height; i++) {
-		for (j = 0; j < generate_texture_width; j++) {
-			color = 255; // 0 -> black or 255 white
-			white_image[i][j][0] = (GLubyte)color; //R
-			white_image[i][j][1] = (GLubyte)color; //G
-			white_image[i][j][2] = (GLubyte)color; //B
-		}
-	}
-	GenerateTexture(whitefall_texture_id, white_image);
-}
-
-void ModuleTexture::GenerateTexture(GLuint &texture_id_to_store, GLubyte image[generate_texture_height][generate_texture_width][3])
+void ModuleTexture::GenerateTexture(GLuint &texture_id_to_store, PATRON color_id)
 {
+	static GLubyte image[generate_texture_height][generate_texture_width][3];
+	int i, j, color;
+	for (i = 0; i < generate_texture_height; i++) {
+		for (j = 0; j < generate_texture_width; j++) {
+			color = GetColor(i,j,color_id),
+			image[i][j][0] = (GLubyte)color; //R
+			image[i][j][1] = (GLubyte)color; //G
+			image[i][j][2] = (GLubyte)color; //B
+		}
+	}
 	glGenTextures(1, &texture_id_to_store);
 	glBindTexture(GL_TEXTURE_2D, texture_id_to_store);
 

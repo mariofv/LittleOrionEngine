@@ -38,9 +38,15 @@ public:
 	const static int generate_texture_width = 64;
 
 private:
-	void GenerateCheckerboardTexture();
-	void GenerateWhiteFallTexture();
-	void GenerateTexture(GLuint &texture_id_to_store, GLubyte image[generate_texture_height][generate_texture_width][3]);
+
+	enum class PATRON
+	{
+		CHECKBOARD,
+		WHITE
+	};
+	void GenerateTexture(GLuint &texture_id_to_store, PATRON color_id);
+	GLubyte GetColor(size_t i, size_t j, PATRON color_id) const;
+
 
 };
 

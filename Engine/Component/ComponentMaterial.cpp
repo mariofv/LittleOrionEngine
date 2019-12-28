@@ -52,7 +52,6 @@ void ComponentMaterial::Save(Config& config) const
 	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
 	config.AddColor(float4(emissive_color[0], emissive_color[1], emissive_color[2], 1.0f), "emissiveColor");
 	config.AddColor(float4(specular_color[0], specular_color[1], specular_color[2], 1.0f), "specularColor");
-
 }
 
 void ComponentMaterial::Load(const Config& config)
@@ -107,19 +106,17 @@ void ComponentMaterial::Load(const Config& config)
 	specular_color[1] = specular.y;
 	specular_color[2] = specular.z;
 	specular_color[3] = specular.w;
-
 }
 
 void ComponentMaterial::Render(unsigned int shader_program) const
 {
-	AddDiffuseUniform(shader_program);
-	AddEmissiveUniform(shader_program);
-	AddSpecularUniform(shader_program);
-	AddAmbientOclusionUniform(shader_program);
-
+	AddDiffuseUniforms(shader_program);
+	AddEmissiveUniforms(shader_program);
+	AddSpecularUniforms(shader_program);
+	AddAmbientOclusionUniforms(shader_program);
 }
 
-void ComponentMaterial::AddDiffuseUniform(unsigned int shader_program) const
+void ComponentMaterial::AddDiffuseUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE0);
 	BindTexture(Texture::TextureType::DIFUSSE);
@@ -128,14 +125,14 @@ void ComponentMaterial::AddDiffuseUniform(unsigned int shader_program) const
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_diffuse"),  k_diffuse);
 
 }
-void ComponentMaterial::AddEmissiveUniform(unsigned int shader_program) const
+void ComponentMaterial::AddEmissiveUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE1);
 	BindTexture(Texture::TextureType::EMISSIVE);
 	glUniform1i(glGetUniformLocation(shader_program, "material.emissive_map"), 1);
 	glUniform3fv(glGetUniformLocation(shader_program, "material.emissive_color"), sizeof(float), (float*)emissive_color);
 }
-void ComponentMaterial::AddSpecularUniform(unsigned int shader_program) const
+void ComponentMaterial::AddSpecularUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE2);
 	BindTexture(Texture::TextureType::SPECULAR);
@@ -144,7 +141,7 @@ void ComponentMaterial::AddSpecularUniform(unsigned int shader_program) const
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), k_specular);
 	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), shininess);
 }
-void ComponentMaterial::AddAmbientOclusionUniform(unsigned int shader_program) const
+void ComponentMaterial::AddAmbientOclusionUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE3);
 	BindTexture(Texture::TextureType::OCLUSION);
