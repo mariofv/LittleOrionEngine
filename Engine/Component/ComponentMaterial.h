@@ -37,6 +37,7 @@ private:
 	void AddEmissiveUniform(unsigned int shader_program) const;
 	void AddSpecularUniform(unsigned int shader_program) const;
 	void AddAmbientOclusionUniform(unsigned int shader_program) const;
+	void BindTexture(Texture::TextureType id) const;
 private:
 	ComponentType type = ComponentType::MATERIAL;
 

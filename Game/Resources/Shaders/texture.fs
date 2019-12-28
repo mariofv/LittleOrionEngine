@@ -18,11 +18,6 @@ struct Material {
 	float k_ambient;    
 	sampler2D emissive_map;    
 	vec4 emissive_color;
-
-	bool use_diffuse_map;
-	bool use_emissive_map;
-	bool use_specular_map;
-	bool use_occlusion_map;
 };
 uniform Material material;
 
@@ -67,37 +62,20 @@ void main()
 
 vec4 get_diffuse_color(const Material mat, const vec2 texCoord)
 {     
-	if(mat.use_diffuse_map)
-	{     
-		return texture(mat.diffuse_map, texCoord)*mat.diffuse_color;    
-	}    
-	return mat.diffuse_color;
+	return texture(mat.diffuse_map, texCoord)*mat.diffuse_color;    
 }
 
 vec4 get_specular_color(const Material mat, const vec2 texCoord)
 {     
-	if(mat.use_specular_map)
-	{     
-		return texture(mat.specular_map, texCoord)*mat.specular_color;    
-	}    
-	return mat.specular_color;
+	return texture(mat.specular_map, texCoord)*mat.specular_color;    
 }
 vec3 get_occlusion_color(const Material mat, const vec2 texCoord)
 {   
-	if(mat.use_occlusion_map)
-	{ 
-		return texture(mat.occlusion_map, texCoord).rgb;  
-	}
-	return vec3(1.0,1.0,1.0);
-		
+	return texture(mat.occlusion_map, texCoord).rgb * vec3(1.0,1.0,1.0);  
 }
 vec3 get_emissive_color(const Material mat, const vec2 texCoord)
 {     
-	if(mat.use_emissive_map)
-	{     
-		return (texture(mat.emissive_map, texCoord)*mat.emissive_color).rgb;    
-	}    
-	return mat.emissive_color.rgb;
+	return (texture(mat.emissive_map, texCoord)*mat.emissive_color).rgb;    
 }
 
 float lambert(vec3 direcction,vec3 norm)

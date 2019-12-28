@@ -28,12 +28,19 @@ public:
 	void RemoveComponentMaterial(ComponentMaterial* material_to_remove);
 	
 	std::shared_ptr<Texture> LoadTexture(const char* texture_path);
-	GLuint  LoadCubemap(std::vector<std::string> faces) const;
-	void GenerateCheckerboardTexture();
-
+	GLuint LoadCubemap(std::vector<std::string> faces) const;
 public:
 	GLuint checkerboard_texture_id;
+	GLuint whitefall_texture_id;
 	std::vector<ComponentMaterial*> materials;
+
+	const static int generate_texture_height = 64;
+	const static int generate_texture_width = 64;
+
+private:
+	void GenerateCheckerboardTexture();
+	void GenerateWhiteFallTexture();
+	void GenerateTexture(GLuint &texture_id_to_store, GLubyte image[generate_texture_height][generate_texture_width][3]);
 
 };
 

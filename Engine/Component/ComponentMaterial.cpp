@@ -21,7 +21,6 @@ ComponentMaterial::~ComponentMaterial()
 	}
 }
 
-
 void ComponentMaterial::Delete()
 {
 	App->texture->RemoveComponentMaterial(this);
@@ -122,62 +121,48 @@ void ComponentMaterial::Render(unsigned int shader_program) const
 
 void ComponentMaterial::AddDiffuseUniform(unsigned int shader_program) const
 {
-	bool use_diffuse_map = false;
-	if (textures[Texture::TextureType::DIFUSSE] != nullptr)
-	{
-		glActiveTexture(GL_TEXTURE0);
-		glBindTexture(GL_TEXTURE_2D, textures[Texture::TextureType::DIFUSSE]->opengl_texture);
-		glUniform1i(glGetUniformLocation(shader_program, "material.diffuse_map"), 0);
-		use_diffuse_map = true;
-	}
-	glUniform1i(glGetUniformLocation(shader_program, "material.use_diffuse_map"), use_diffuse_map);
+	glActiveTexture(GL_TEXTURE0);
+	BindTexture(Texture::TextureType::DIFUSSE);
+	glUniform1i(glGetUniformLocation(shader_program, "material.diffuse_map"), 0);
 	glUniform3fv(glGetUniformLocation(shader_program, "material.diffuse_color"), sizeof(float), (float*)diffuse_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_diffuse"),  k_diffuse);
 
 }
 void ComponentMaterial::AddEmissiveUniform(unsigned int shader_program) const
 {
-	bool use_emissive_map = false;
-	if (textures[Texture::TextureType::EMISSIVE] != nullptr)
-	{
-		glActiveTexture(GL_TEXTURE1);
-		glBindTexture(GL_TEXTURE_2D, textures[Texture::TextureType::EMISSIVE]->opengl_texture);
-		glUniform1i(glGetUniformLocation(shader_program, "material.emissive_map"), 1);
-		use_emissive_map = true;
-	}
-	glUniform1i(glGetUniformLocation(shader_program, "material.use_emissive_map"), use_emissive_map);
+	glActiveTexture(GL_TEXTURE1);
+	BindTexture(Texture::TextureType::EMISSIVE);
+	glUniform1i(glGetUniformLocation(shader_program, "material.emissive_map"), 1);
 	glUniform3fv(glGetUniformLocation(shader_program, "material.emissive_color"), sizeof(float), (float*)emissive_color);
 }
 void ComponentMaterial::AddSpecularUniform(unsigned int shader_program) const
 {
-	bool use_specular_map = false;
-	if (textures[Texture::TextureType::SPECULAR] != nullptr)
-	{
-		glActiveTexture(GL_TEXTURE2);
-		glBindTexture(GL_TEXTURE_2D, textures[Texture::TextureType::SPECULAR]->opengl_texture);
-		glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
-		use_specular_map = true;
-	}
-
-	glUniform1i(glGetUniformLocation(shader_program, "material.use_specular_map"), use_specular_map);
+	glActiveTexture(GL_TEXTURE2);
+	BindTexture(Texture::TextureType::SPECULAR);
+	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
 	glUniform3fv(glGetUniformLocation(shader_program, "material.specular_color"), sizeof(float), (float*)specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), k_specular);
 	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), shininess);
 }
 void ComponentMaterial::AddAmbientOclusionUniform(unsigned int shader_program) const
 {
-	bool use_occlusion_map = false;
-	if (textures[Texture::TextureType::OCLUSION] != nullptr)
-	{
-		glActiveTexture(GL_TEXTURE3);
-		glBindTexture(GL_TEXTURE_2D, textures[Texture::TextureType::OCLUSION]->opengl_texture);
-		glUniform1i(glGetUniformLocation(shader_program, "material.occlusion_map"), 3);
-		use_occlusion_map = true;
-	}
-	glUniform1i(glGetUniformLocation(shader_program, "material.use_occlusion_map"), use_occlusion_map);
+	glActiveTexture(GL_TEXTURE3);
+	BindTexture(Texture::TextureType::OCLUSION);
+	glUniform1i(glGetUniformLocation(shader_program, "material.occlusion_map"), 3);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_ambient"), k_ambient);
 }
 
+void ComponentMaterial::BindTexture(Texture::TextureType id) const
+{
+	if (textures[id] != nullptr)
+	{
+		glBindTexture(GL_TEXTURE_2D, textures[id]->opengl_texture);
+	}
+	else
+	{
+		glBindTexture(GL_TEXTURE_2D, App->texture->whitefall_texture_id);
+	}
+}
 void ComponentMaterial::SetMaterialTexture(Texture::TextureType type, std::shared_ptr<Texture> & new_texture)
 {
 	textures[static_cast<int>(type)] = new_texture;
