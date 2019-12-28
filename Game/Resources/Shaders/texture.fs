@@ -3,6 +3,7 @@
 in vec2 texCoord;
 in vec3 normal;
 in vec3 FragPos;
+in vec3 viewPos;
 
 out vec4 FragColor;
 
@@ -28,7 +29,7 @@ struct Light{
 };
 uniform Light light;
 
-uniform vec3 viewPos;
+uniform mat4 view;
 
 vec4 get_diffuse_color(const Material mat, const vec2 texCoord);
 vec3 get_occlusion_color(const Material mat, const vec2 texCoord);
