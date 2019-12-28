@@ -54,7 +54,7 @@ bool ModuleProgram::Init()
 	}
 
 	APP_LOG_INIT("Loading text shader program.");
-	if (LoadProgram(skybox_program, TEXT_VERTEX_SHADER_PATH, TEXT_FRAGMENT_SHADER_PATH))
+	if (LoadProgram(text_program, TEXT_VERTEX_SHADER_PATH, TEXT_FRAGMENT_SHADER_PATH))
 	{
 		APP_LOG_SUCCESS("Text shader program loaded correctly.");
 	}
@@ -73,6 +73,8 @@ bool ModuleProgram::CleanUp()
 	glDeleteProgram(default_program);
 	glDeleteProgram(texture_program);
 	glDeleteProgram(skybox_program);
+	glDeleteProgram(linepoint_program);
+	glDeleteProgram(texture_program);
 	return true;
 }
 
