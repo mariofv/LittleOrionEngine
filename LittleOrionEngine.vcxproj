@@ -291,6 +291,10 @@
     <ClCompile Include="Engine\Utils.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="Game\Resources\Shaders\flat.fs" />
+    <None Include="Game\Resources\Shaders\flat.vs" />
+    <None Include="Game\Resources\Shaders\gouraund.fs" />
+    <None Include="Game\Resources\Shaders\gouraund.vs" />
     <None Include="Libraries\MathGeoLib\include\Geometry\KDTree.inl" />
     <None Include="Libraries\MathGeoLib\include\Geometry\QuadTree.inl" />
     <None Include="Libraries\MathGeoLib\include\Geometry\TriangleMesh_IntersectRay_AVX.inl" />

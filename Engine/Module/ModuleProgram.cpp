@@ -9,56 +9,43 @@ bool ModuleProgram::Init()
 {
 	APP_LOG_SECTION("************ Module Program Init ************");
 
-	APP_LOG_INIT("Loading default shader program.");
-	if (LoadProgram(default_program, DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH))
-	{
-		APP_LOG_SUCCESS("Default shader program loaded correctly.");
-	}
-	else 
+
+	if (!LoadProgram(default_program, DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH))
 	{
 		APP_LOG_ERROR("Default shader program loaded incorretly.");
 		return false;
 	}
 
-	APP_LOG_INIT("Loading texture shader program.");
-	if (LoadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH))
-	{
-		APP_LOG_SUCCESS("Texture shader program loaded correctly.");
-	}
-	else
+	if (!LoadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH))
 	{
 		APP_LOG_ERROR("Texture shader program loaded incorretly.");
 		return false;
 	}
-
-	APP_LOG_INIT("Loading skybox shader program.");
-	if (LoadProgram(skybox_program, SKYBOX_VERTEX_SHADER_PATH, SKYBOX_FRAGMENT_SHADER_PATH))
-	{
-		APP_LOG_SUCCESS("Skybox shader program loaded correctly.");
-	}
-	else
+	if (!LoadProgram(skybox_program, SKYBOX_VERTEX_SHADER_PATH, SKYBOX_FRAGMENT_SHADER_PATH))
 	{
 		APP_LOG_ERROR("Skybox shader program loaded incorretly.");
 		return false;
 	}
 
-	APP_LOG_INIT("Loading linepoint shader program.");
-	if (LoadProgram(linepoint_program, LINEPOINT_VERTEX_SHADER_PATH, LINEPOINT_FRAGMENT_SHADER_PATH))
-	{
-		APP_LOG_SUCCESS("Linepoint shader program loaded correctly.");
-	}
-	else
+	if (!LoadProgram(linepoint_program, LINEPOINT_VERTEX_SHADER_PATH, LINEPOINT_FRAGMENT_SHADER_PATH))
 	{
 		APP_LOG_ERROR("Linepoint shader program loaded incorretly.");
 		return false;
 	}
 
-	APP_LOG_INIT("Loading text shader program.");
-	if (LoadProgram(text_program, TEXT_VERTEX_SHADER_PATH, TEXT_FRAGMENT_SHADER_PATH))
+	if (!LoadProgram(text_program, TEXT_VERTEX_SHADER_PATH, TEXT_FRAGMENT_SHADER_PATH))
 	{
-		APP_LOG_SUCCESS("Text shader program loaded correctly.");
+		APP_LOG_ERROR("Text shader program loaded incorretly.");
+		return false;
 	}
-	else
+
+	if (!LoadProgram(phong_flat_program, FLAT_VERTEX_SHADER_PATH, FLAT_FRAGMENT_SHADER_PATH))
+	{
+		APP_LOG_ERROR("Phong Flat  shader program loaded incorretly.");
+		return false;
+	}
+
+	if (!LoadProgram(phong_gouraund_program, GOURAUND_VERTEX_SHADER_PATH, GOURAUND_FRAGMENT_SHADER_PATH))
 	{
 		APP_LOG_ERROR("Text shader program loaded incorretly.");
 		return false;
@@ -80,6 +67,7 @@ bool ModuleProgram::CleanUp()
 
 bool ModuleProgram::LoadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name) const
 {
+	APP_LOG_INIT("Loading shader program. With paths: %s,%s", vertex_shader_file_name, fragment_shader_file_name);
 	GLuint vertex_shader;
 	GLuint fragment_shader;
 
@@ -97,7 +85,7 @@ bool ModuleProgram::LoadProgram(GLuint &shader_program, const char* vertex_shade
 	{
 		return false;
 	}
-
+	APP_LOG_SUCCESS("Shader program loaded correctly.");
 	return true;
 }
 

@@ -32,6 +32,8 @@ public:
 	GLuint skybox_program = 0;
 	GLuint linepoint_program = 0;
 	GLuint text_program = 0;
+	GLuint phong_flat_program = 0;
+	GLuint phong_gouraund_program = 0;
 
 };
 
