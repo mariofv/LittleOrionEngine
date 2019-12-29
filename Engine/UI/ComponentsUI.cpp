@@ -22,10 +22,10 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 			transform->GenerateModelMatrix();
 		}
 
-		float3 temp_rotation = Utils::GenerateDegFloat3FromQuat(transform->rotation);
-		if (ImGui::DragFloat3("Rotation", &temp_rotation[0], 0.1f, -180.f, 180.f))
+		if (ImGui::DragFloat3("Rotation", &transform->rotation_degrees[0], 0.1f, -180.f, 180.f))
 		{
-			transform->rotation = Utils::GenerateQuatFromDegFloat3(temp_rotation);
+			transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
+			transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
 			transform->GenerateModelMatrix();
 		}
 		if (ImGui::DragFloat3("Scale", &transform->scale[0], 0.01f))

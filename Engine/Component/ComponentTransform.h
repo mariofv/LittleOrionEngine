@@ -28,7 +28,6 @@ public:
 	void Translate(const float3 &translation);
 
 	Quat GetRotation() const;
-	void SetRotation(const Quat &rotation);
 	void SetRotation(const float3x3 &rotation);
 	void Rotate(const Quat &rotation);
 	void Rotate(const float3x3 &rotation);
@@ -50,6 +49,8 @@ private:
 private:
 	float3 translation = float3::zero;
 	Quat rotation = Quat::identity;
+	float3 rotation_degrees = float3::zero;
+	float3 rotation_radians = float3::zero;
 	float3 scale = float3::one;
 
 	float4x4 model_matrix = float4x4::identity;
