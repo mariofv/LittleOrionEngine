@@ -241,9 +241,6 @@ Texture::TextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureTyp
 	case aiTextureType_SPECULAR:
 		return Texture::TextureType::SPECULAR;
 		break;
-	case aiTextureType_AMBIENT:
-		return Texture::TextureType::AMBIENT;
-		break;
 	case aiTextureType_EMISSIVE:
 		return Texture::TextureType::EMISSIVE;
 		break;

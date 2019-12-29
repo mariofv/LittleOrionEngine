@@ -1,12 +1,21 @@
 #include "ModuleLight.h"
+#include "Application.h"
 #include "Component/ComponentLight.h"
-
+#include "Module/ModuleScene.h"
 
 ModuleLight::~ModuleLight()
 {
 	CleanUp();
 }
 
+
+bool ModuleLight::Init()
+{
+	GameObject * light_gameobject = App->scene->CreateChildGameObject(App->scene->GetRoot());
+	light_gameobject->name = "Light";
+	light_gameobject->CreateComponent(Component::ComponentType::LIGHT);
+	return true;
+}
 bool ModuleLight::CleanUp()
 {
 	for (auto& light : lights)

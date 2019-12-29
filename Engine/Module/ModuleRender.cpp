@@ -10,8 +10,10 @@
 #include "ModuleTime.h"
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
+#include "ModuleLight.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMesh.h"
+#include "Component/ComponentLight.h"
 #include "UI/DebugDraw.h"
 
 #include <SDL/SDL.h>
@@ -258,12 +260,9 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 		&camera.GetProjectionMatrix()[0][0]
 	);
 
-	const GLuint mesh_texture = mesh_game_object.GetMaterialTexture();
-
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, mesh_texture);
-	glUniform1i(glGetUniformLocation(shader_program, "texture0"), 0);
-
+	App->lights->lights[0]->Render(shader_program);
+	glUniform3fv(glGetUniformLocation(shader_program, "viewPos"), sizeof(float), (float*)&camera.owner->transform.GetTranslation());
+	mesh_game_object.RenderMaterialTexture(shader_program);
 	mesh.Render();
 
 	glUseProgram(0);

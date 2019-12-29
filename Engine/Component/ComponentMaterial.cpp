@@ -21,21 +21,6 @@ ComponentMaterial::~ComponentMaterial()
 	}
 }
 
-void ComponentMaterial::Enable()
-{
-	active = true;
-}
-
-void ComponentMaterial::Disable()
-{
-	active = false;
-}
-
-void ComponentMaterial::Update()
-{
-
-}
-
 void ComponentMaterial::Delete()
 {
 	App->texture->RemoveComponentMaterial(this);
@@ -56,6 +41,17 @@ void ComponentMaterial::Save(Config& config) const
 		}
 	}
 	config.AddBool(show_checkerboard_texture, "Checkboard");
+
+	//k
+	config.AddFloat(k_ambient, "kAmbient");
+	config.AddFloat(k_specular, "kSpecular");
+	config.AddFloat(k_diffuse, "kDiffuse");
+	config.AddFloat(shininess, "shininess");
+
+	//colors
+	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
+	config.AddColor(float4(emissive_color[0], emissive_color[1], emissive_color[2], 1.0f), "emissiveColor");
+	config.AddColor(float4(specular_color[0], specular_color[1], specular_color[2], 1.0f), "specularColor");
 }
 
 void ComponentMaterial::Load(const Config& config)
@@ -81,21 +77,89 @@ void ComponentMaterial::Load(const Config& config)
 	
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 
+	//k
+	k_ambient = config.GetFloat("kAmbient", 1.0f);
+	k_specular = config.GetFloat( "kSpecular", 1.0f);
+	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
+	shininess = config.GetFloat("shininess", 1.0f);
+
+	//colors
+	float4 diffuse;
+	float4 emissive;
+	float4 specular;
+
+	config.GetColor("difusseColor", diffuse, float4(1.f, 1.f, 1.f, 1.f));
+	config.GetColor("emissiveColor", emissive, float4(0.0f,0.0f,0.0f,1.0f));
+	config.GetColor("specularColor", specular, float4(0.0f,0.0f,0.0f,1.0f));
+	
+	diffuse_color[0] = diffuse.x;
+	diffuse_color[1] = diffuse.y;
+	diffuse_color[2] = diffuse.z;
+	diffuse_color[3] = diffuse.w;
+
+	emissive_color[0] = emissive.x;
+	emissive_color[1] = emissive.y;
+	emissive_color[2] = emissive.z;
+	emissive_color[3] = emissive.w;
+	
+	specular_color[0] = specular.x;
+	specular_color[1] = specular.y;
+	specular_color[2] = specular.z;
+	specular_color[3] = specular.w;
 }
 
-GLuint ComponentMaterial::GetTexture() const
+void ComponentMaterial::Render(unsigned int shader_program) const
 {
-	if (show_checkerboard_texture)
-	{
-		return App->texture->checkerboard_texture_id;
-	}
-	if (textures[0] != nullptr)
-	{
-		return active ? textures[0]->opengl_texture : 0;
-	}
-	return 0;
+	AddDiffuseUniforms(shader_program);
+	AddEmissiveUniforms(shader_program);
+	AddSpecularUniforms(shader_program);
+	AddAmbientOclusionUniforms(shader_program);
 }
 
+void ComponentMaterial::AddDiffuseUniforms(unsigned int shader_program) const
+{
+	glActiveTexture(GL_TEXTURE0);
+	BindTexture(Texture::TextureType::DIFUSSE);
+	glUniform1i(glGetUniformLocation(shader_program, "material.diffuse_map"), 0);
+	glUniform3fv(glGetUniformLocation(shader_program, "material.diffuse_color"), sizeof(float), (float*)diffuse_color);
+	glUniform1f(glGetUniformLocation(shader_program, "material.k_diffuse"),  k_diffuse);
+
+}
+void ComponentMaterial::AddEmissiveUniforms(unsigned int shader_program) const
+{
+	glActiveTexture(GL_TEXTURE1);
+	BindTexture(Texture::TextureType::EMISSIVE);
+	glUniform1i(glGetUniformLocation(shader_program, "material.emissive_map"), 1);
+	glUniform3fv(glGetUniformLocation(shader_program, "material.emissive_color"), sizeof(float), (float*)emissive_color);
+}
+void ComponentMaterial::AddSpecularUniforms(unsigned int shader_program) const
+{
+	glActiveTexture(GL_TEXTURE2);
+	BindTexture(Texture::TextureType::SPECULAR);
+	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
+	glUniform3fv(glGetUniformLocation(shader_program, "material.specular_color"), sizeof(float), (float*)specular_color);
+	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), k_specular);
+	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), shininess);
+}
+void ComponentMaterial::AddAmbientOclusionUniforms(unsigned int shader_program) const
+{
+	glActiveTexture(GL_TEXTURE3);
+	BindTexture(Texture::TextureType::OCLUSION);
+	glUniform1i(glGetUniformLocation(shader_program, "material.occlusion_map"), 3);
+	glUniform1f(glGetUniformLocation(shader_program, "material.k_ambient"), k_ambient);
+}
+
+void ComponentMaterial::BindTexture(Texture::TextureType id) const
+{
+	if (textures[id] != nullptr)
+	{
+		glBindTexture(GL_TEXTURE_2D, textures[id]->opengl_texture);
+	}
+	else
+	{
+		glBindTexture(GL_TEXTURE_2D, App->texture->whitefall_texture_id);
+	}
+}
 void ComponentMaterial::SetMaterialTexture(Texture::TextureType type, std::shared_ptr<Texture> & new_texture)
 {
 	textures[static_cast<int>(type)] = new_texture;

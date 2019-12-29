@@ -10,7 +10,7 @@ public:
 	ModuleLight() = default;
 	~ModuleLight();
 
-
+	bool Init() override;
 	bool CleanUp() override;
 
 	ComponentLight* CreateComponentLight();

@@ -8,11 +8,10 @@
 class Texture
 {
 public:
-	enum class TextureType
+	enum TextureType
 	{
 		DIFUSSE,
 		SPECULAR,
-		AMBIENT,
 		EMISSIVE,
 		OCLUSION,
 		UNKNOWN

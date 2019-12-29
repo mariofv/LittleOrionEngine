@@ -13,7 +13,7 @@ public:
 	
 
 	void Delete() override;
-	void Render() const;
+	void Render(unsigned int shader_program) const;
 
 	void Save(Config& config) const override;
 	void Load(const Config &config) override;
@@ -22,8 +22,8 @@ public:
 	void ShowComponentWindow() override;
 
 public:
-	float light_color[3] = { 255.0f, 255.0f, 255.0f};
-	float light_intensity = 1; 
+	float light_color[3] = { 1.0f, 1.0f, 1.0f};
+	float light_intensity = 0.1f; 
 };
 
 #endif // !_COMPONENTLIGHT_H

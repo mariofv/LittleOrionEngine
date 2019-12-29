@@ -68,7 +68,7 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 		for (size_t i = 0; i < material->textures.size(); ++i)
 		{
 			Texture::TextureType type = static_cast<Texture::TextureType>(i);
-			if (ImGui::CollapsingHeader(GetTypeName(type).c_str()))
+			if (ImGui::CollapsingHeader(GetTypeName(type).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				if (material->textures[i].get() != nullptr) {
 					char tmp_string[256];
@@ -95,6 +95,26 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 					ImGui::Image((void*)0, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.f,1.f,1.f,1.f), ImVec4(1.f, 1.f, 1.f, 1.f));
 					DropTarget(material, type);
 				}
+				if (type == Texture::TextureType::DIFUSSE)
+				{
+					ImGui::ColorEdit3("Diffuse Color", material->diffuse_color);
+					ImGui::SliderFloat("k diffuse", &material->k_diffuse, 0, 1);
+				}
+				if (type == Texture::TextureType::EMISSIVE)
+				{
+					ImGui::ColorEdit3("Emissive Color", material->emissive_color);
+				}
+				if (type == Texture::TextureType::OCLUSION)
+				{
+					ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1);
+				}
+				if (type == Texture::TextureType::SPECULAR)
+				{
+					ImGui::ColorEdit3("Specular Color", material->specular_color);
+					ImGui::SliderFloat("k specular", &material->k_specular, 0, 1);
+					ImGui::SliderFloat("Shininess", &material->shininess, 0, 1);
+				}
+
 				ImGui::Separator();
 			}
 		}
@@ -127,9 +147,6 @@ std::string ComponentsUI::GetTypeName(Texture::TextureType type)
 		break;
 	case Texture::TextureType::SPECULAR:
 		return "Specular";
-		break;
-	case Texture::TextureType::AMBIENT:
-		return "Ambient";
 		break;
 	case Texture::TextureType::EMISSIVE:
 		return "Emissive";
