@@ -2,7 +2,6 @@
 #include "Application.h"
 #include "Component/ComponentLight.h"
 
-
 ModuleLight::~ModuleLight()
 {
 	CleanUp();

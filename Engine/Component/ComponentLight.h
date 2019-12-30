@@ -13,7 +13,7 @@ public:
 	
 
 	void Delete() override;
-	void Render(unsigned int shader_program) const override;
+	void Render(unsigned int shader_program) const;
 
 	void Save(Config& config) const override;
 	void Load(const Config &config) override;

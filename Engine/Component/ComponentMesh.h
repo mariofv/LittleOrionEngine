@@ -21,7 +21,7 @@ public:
 	void Save(Config& config) const;
 	void Load(const Config& config);
 
-	void Render(unsigned int shader_program) const override;
+	void Render() const;
 
 	void SetMesh(std::shared_ptr<Mesh> mesh_to_render);
 

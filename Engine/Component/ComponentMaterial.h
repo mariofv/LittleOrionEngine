@@ -22,7 +22,7 @@ public:
 	void Save(Config& config) const;
 	void Load(const Config& config);
 
-	void Render(unsigned int shader_program) const override;
+	void Render(unsigned int shader_program) const;
 
 	void SetMaterialTexture(Texture::TextureType type, std::shared_ptr<Texture> & new_texture);
 	const std::shared_ptr<Texture>& GetMaterialTexture(Texture::TextureType type) const;

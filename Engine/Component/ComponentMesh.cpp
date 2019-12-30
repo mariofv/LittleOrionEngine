@@ -56,7 +56,7 @@ void ComponentMesh::Load(const Config& config)
 	SetMesh(App->mesh_importer->Load(mesh_path.c_str()));
 }
 
-void ComponentMesh::Render(unsigned int shader_program) const
+void ComponentMesh::Render() const
 {
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
