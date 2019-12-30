@@ -26,7 +26,7 @@ private:
 	void ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file) const;
 
 private:
-	const std::string LIBRARY_MESHES_FOLDER = ".//Library//Meshes";
+	const std::string LIBRARY_MESHES_FOLDER = "Library/Meshes";
 	mutable std::vector<std::shared_ptr<Mesh>> mesh_cache;
 	mutable Timer performance_timer;
 };

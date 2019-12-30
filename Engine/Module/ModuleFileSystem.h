@@ -51,6 +51,7 @@ public:
 
 	void RefreshFilesHierarchy();
 private:
+	char *save_path = NULL;
 	void GetAllFilesRecursive(std::shared_ptr<File> root) const;
 	bool IsValidFileName(const char * file_name) const;
 	std::string GetFileExtension(const char *file_path) const;

@@ -1,16 +1,25 @@
 #include "ModuleFileSystem.h"
 #include "Application.h"
 #include <SDL/SDL.h>
+#include <physfs/physfs.h>
 
 #include <algorithm>
 #include <cctype>
 
 bool ModuleFileSystem::Init() {
-	MakeDirectory(".//", "Assets");
-	MakeDirectory(".//", "Library");
-	MakeDirectory(".//Assets", "Scenes");
-	MakeDirectory(".//Library", "Materials");
-	MakeDirectory(".//Library", "Meshes");
+	save_path = SDL_GetPrefPath("UPC",TITLE);
+	if (save_path == NULL)
+	{
+		return false;
+	}
+	if (PHYSFS_setWriteDir(".") == 0)
+	{
+		APP_LOG_ERROR("Error creating writing directory: %s", PHYSFS_getLastError());
+		return false;
+	}
+	MakeDirectory("", "Assets");
+	MakeDirectory("", "Library");
+	MakeDirectory("Assets", "Scenes");
 	RefreshFilesHierarchy();
 	return true;
 }
@@ -86,8 +95,12 @@ bool ModuleFileSystem::Exists(const char* file_path) const
 
 std::string ModuleFileSystem::MakeDirectory(const std::string & path, const std::string & directory_name)
 {
-	std::string new_directory = path + "//" + directory_name;
-	CreateDirectory(new_directory.c_str(), NULL);
+	std::string new_directory = path + "/" + directory_name;
+	if (PHYSFS_mkdir(new_directory.c_str()) == 0)
+	{
+		APP_LOG_ERROR("Error creating directory %s : %s", new_directory.c_str(),PHYSFS_getLastError());
+		return "";
+	}
 	return new_directory;
 }
 bool ModuleFileSystem::Copy(const char* source, const char* destination)

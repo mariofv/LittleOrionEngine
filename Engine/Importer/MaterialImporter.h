@@ -29,7 +29,7 @@ private:
 	std::string GetTextureFileName(const char *texture_file_path) const;
 
 private:
-	const std::string LIBRARY_TEXTURES_FOLDER = ".//Library//Materials";
+	const std::string LIBRARY_TEXTURES_FOLDER = "Library/Materials";
 	mutable std::vector<std::shared_ptr<Texture>> texture_cache;
 };
 #endif // !_MATERIALIMPORTER_H_
