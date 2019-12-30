@@ -5,6 +5,9 @@
 #include <string>
 #include <vector>
 #include <memory>
+
+#include <physfs/physfs.h>
+
 class ModuleFileSystem : public Module
 {
 
@@ -19,7 +22,7 @@ public:
 	};
 	struct File {
 		File() = default;
-		File(const WIN32_FIND_DATA & windows_file_data, const std::string & path);
+		File(const std::string & path, const std::string & name);
 		File(const std::string & path);
 		std::string filename;
 		std::string file_path;
@@ -45,7 +48,7 @@ public:
 	bool Copy(const char* source, const char* destination);
 	std::shared_ptr<File> GetFileHierarchyFromPath(const std::string & path) const;
 	
-	FileType GetFileType(const char *file_path, const DWORD & file_attributes = FILE_ATTRIBUTE_ARCHIVE) const;
+	FileType GetFileType(const char *file_path, const PHYSFS_FileType & file_type = PHYSFS_FileType::PHYSFS_FILETYPE_OTHER) const;
 	void GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only = false) const;
 	size_t GetNumberOfSubFolders(const std::string & path) const;
 

@@ -1,7 +1,6 @@
 #include "ModuleFileSystem.h"
 #include "Application.h"
 #include <SDL/SDL.h>
-#include <physfs/physfs.h>
 
 #include <algorithm>
 #include <cctype>
@@ -113,14 +112,14 @@ bool ModuleFileSystem::Copy(const char* source, const char* destination)
 	return true;
 }
 
-ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, const DWORD & file_attributes) const
+ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileType & file_type) const
 {
 
 	std::string file_extension = GetFileExtension(file_path);
 	std::transform(file_extension.begin(), file_extension.end(), file_extension.begin(),
 		[](unsigned char letter) { return std::tolower(letter); });
 
-	if ((file_attributes & FILE_ATTRIBUTE_DIRECTORY ) || (file_extension == "/" ))
+	if ((PHYSFS_FileType::PHYSFS_FILETYPE_DIRECTORY == file_type ) || (file_extension == "/" ))
 	{
 		return ModuleFileSystem::FileType::DIRECTORY;
 	}
@@ -141,7 +140,7 @@ ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, 
 	{
 		return ModuleFileSystem::FileType::MODEL;
 	}
-	if (file_extension == "" && file_attributes & FILE_ATTRIBUTE_ARCHIVE)
+	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{
 		return ModuleFileSystem::FileType::ARCHIVE;
 	}
@@ -166,16 +165,9 @@ std::string ModuleFileSystem::GetFileExtension(const char *file_path) const
 	return file_extension;
 }
 
-static int printDir(void *data, const char *origdir, const char *fname)
-{
-	printf(" * We've got [%s] in [%s].\n", fname, origdir);
-	return 1;  // give me more data, please.
-}
-
 void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only) const
 {
-	std::string path_all = path + "//*";
-	char **files_array = PHYSFS_enumerateFiles("path");
+	char **files_array = PHYSFS_enumerateFiles(path.c_str());
 	if (files_array == NULL)
 	{
 		APP_LOG_ERROR("Error reading directory: %s", PHYSFS_getLastError());
@@ -184,31 +176,14 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	char **i;
 	for (i = files_array; *i != NULL; i++)
 	{
-		PHYSFS_Stat file_info;
-		std::string filepath = "Assets/"+std::string(*i);
-		if (PHYSFS_stat(filepath.c_str(), &file_info) == 0)
+		std::shared_ptr<File> new_file = std::make_shared<File>(path, *i);
+		bool is_directory = new_file->file_type == FileType::DIRECTORY;
+		if (IsValidFileName(*i) && ((directories_only && is_directory) || !directories_only))
 		{
-			APP_LOG_ERROR("Error reading directory: %s", PHYSFS_getLastError());
-		}
-	}
-
-	WIN32_FIND_DATA find_file_data;
-	HANDLE handle_find = FindFirstFile(path_all.c_str(), &find_file_data);
-	if (handle_find == INVALID_HANDLE_VALUE) {
-		FindClose(handle_find);
-		return;
-	}
-	do {
-		bool is_directory = find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
-		if (IsValidFileName(find_file_data.cFileName) && ((directories_only && is_directory) || !directories_only))
-		{
-			std::shared_ptr<File> new_file = std::make_shared<File>(find_file_data,path);
 			files.push_back(new_file);
 		}
-	} while (FindNextFile(handle_find, &find_file_data) != 0);
-
+	}
 	PHYSFS_freeList(files_array);
-	FindClose(handle_find);
 }
 
 std::shared_ptr<ModuleFileSystem::File> ModuleFileSystem::GetFileHierarchyFromPath(const std::string & path) const
@@ -268,10 +243,16 @@ bool ModuleFileSystem::File::operator==(const ModuleFileSystem::File& compare)
 {
 	return this->filename == compare.filename && this->file_path == compare.file_path && this->file_type == compare.file_type;
 };
-ModuleFileSystem::File::File(const WIN32_FIND_DATA & windows_file_data, const std::string & path) {
-	this->filename = windows_file_data.cFileName;
-	this->file_path = path + "//" + windows_file_data.cFileName;
-	this->file_type = App->filesystem->GetFileType(filename.c_str(), windows_file_data.dwFileAttributes);
+ModuleFileSystem::File::File(const std::string & path, const std::string & name) {
+	this->filename = name;
+	this->file_path = path + "/" + name;
+	PHYSFS_Stat file_info;
+	if (PHYSFS_stat(this->file_path.c_str(), &file_info) == 0)
+	{
+		APP_LOG_ERROR("Error getting %s info: %s", this->file_path.c_str(),PHYSFS_getLastError());
+	}
+
+	this->file_type = App->filesystem->GetFileType(filename.c_str(), file_info.filetype);
 	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
 }
 
@@ -285,7 +266,7 @@ ModuleFileSystem::File::File(const std::string & path) {
 	}
 	this->filename = find_file_data.cFileName;
 	this->file_path = path;
-	this->file_type = App->filesystem->GetFileType(filename.c_str(), find_file_data.dwFileAttributes);
+	this->file_type = App->filesystem->GetFileType(filename.c_str());
 	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
 	std::replace(this->file_path.begin(), this->file_path.end(), '\\', '\/');
 
