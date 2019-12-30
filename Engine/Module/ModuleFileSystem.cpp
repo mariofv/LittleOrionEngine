@@ -29,7 +29,6 @@ bool ModuleFileSystem::Init() {
 }
 char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
 {
-
 	SDL_RWops *rw = SDL_RWFromFile(file_path, "rb");
 	if (rw == NULL) return NULL;
 
@@ -84,10 +83,7 @@ unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, u
 }
 bool ModuleFileSystem::Remove(const File & file) const
 {
-	if (file.file_type == FileType::DIRECTORY) {
-		return RemoveDirectoryA(file.file_path.c_str());
-	}
-	return DeleteFileA(file.file_path.c_str());
+	return PHYSFS_delete(file.file_path.c_str()) != 0;
 }
 bool ModuleFileSystem::Exists(const char* file_path) const
 {
@@ -114,7 +110,6 @@ bool ModuleFileSystem::Copy(const char* source, const char* destination)
 
 ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileType & file_type) const
 {
-
 	std::string file_extension = GetFileExtension(file_path);
 	std::transform(file_extension.begin(), file_extension.end(), file_extension.begin(),
 		[](unsigned char letter) { return std::tolower(letter); });
@@ -208,26 +203,27 @@ void ModuleFileSystem::GetAllFilesRecursive(std::shared_ptr<File> root) const
 
 size_t ModuleFileSystem::GetNumberOfSubFolders(const std::string & path) const
 {
-	std::string path_all = path + "//*";
-	WIN32_FIND_DATA find_file_data;
-	HANDLE handle_find = FindFirstFile(path_all.c_str(), &find_file_data);
-
-	if (handle_find == INVALID_HANDLE_VALUE) {
-		FindClose(handle_find);
+	char **files_array = PHYSFS_enumerateFiles(path.c_str());
+	if (files_array == NULL)
+	{
+		APP_LOG_ERROR("Error reading directory: %s", PHYSFS_getLastError());
 		return 0;
 	}
+	char **i;
 	size_t subFiles = 0;
-	do {
-		if (find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY && IsValidFileName(find_file_data.cFileName))
+	for (i = files_array; *i != NULL; i++)
+	{
+		std::shared_ptr<File> new_file = std::make_shared<File>(path, *i);
+		bool is_directory = new_file->file_type == FileType::DIRECTORY;
+		if (IsValidFileName(*i) && is_directory)
 		{
-			++subFiles;
+		++subFiles;
 		}
-
-	} while (FindNextFile(handle_find, &find_file_data) != 0);
-
-	FindClose(handle_find);
+	}
+	PHYSFS_freeList(files_array);
 	return subFiles;
 }
+
 
 bool ModuleFileSystem::IsValidFileName(const char * file_name) const
 {
@@ -258,18 +254,9 @@ ModuleFileSystem::File::File(const std::string & path, const std::string & name)
 
 ModuleFileSystem::File::File(const std::string & path) {
 
-	WIN32_FIND_DATA find_file_data;
-	HANDLE handle_find = FindFirstFile(path.c_str(), &find_file_data);
-	if (handle_find == INVALID_HANDLE_VALUE) {
-		FindClose(handle_find);
-		return;
-	}
-	this->filename = find_file_data.cFileName;
-	this->file_path = path;
-	this->file_type = App->filesystem->GetFileType(filename.c_str());
-	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
-	std::replace(this->file_path.begin(), this->file_path.end(), '\\', '\/');
-
+	std::string name = path.substr(path.find_last_of('/')+1, -1);
+	std::string not_name_path = path.substr(0, path.find_last_of('/'));
+	*this = File(not_name_path,name);
 }
 
 
