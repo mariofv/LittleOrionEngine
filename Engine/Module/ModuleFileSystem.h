@@ -42,10 +42,10 @@ public:
 	char* Load( const char* file_name, size_t & size) const;
 	unsigned int Save(const char* file_name, const void* buffer, unsigned int size, bool append = false) const;
 
-	bool Remove(const File & file) const;
+	bool Remove(const File & file);
 	bool Exists(const char* file) const;
-	std::string MakeDirectory(const std::string & new_directory_full_path) const;
-	bool Copy(const char* source, const char* destination) const;
+	std::string MakeDirectory(const std::string & new_directory_full_path);
+	bool Copy(const char* source, const char* destination);
 	std::shared_ptr<File> GetFileHierarchyFromPath(const std::string & path) const;
 	
 	FileType GetFileType(const char *file_path, const PHYSFS_FileType & file_type = PHYSFS_FileType::PHYSFS_FILETYPE_OTHER) const;

@@ -93,12 +93,7 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 			ImVec2 text_sz(ImGui::CalcTextSize(filename.c_str()).x+5,0);
 			ImGui::Selectable(item_name.c_str(), selected_file == file.get(),ImGuiSelectableFlags_None,text_sz);
 			ProcessMouseInput(file.get());
-			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-			{
-				ImGui::SetDragDropPayload("DND_File", &selected_file, sizeof(ModuleFileSystem::File*));
-				ImGui::Text("Dragging %s", selected_file->filename.c_str());
-				ImGui::EndDragDropSource();
-			}
+			FilesDrag();
 			++files_count;
 			float last_button_x2 = ImGui::GetItemRectMax().x;
 			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + text_sz.x; // Expected position if next text was on same line
@@ -162,7 +157,6 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & fi
 
 		files_in_selected_folder.clear();
 		App->filesystem->GetAllFilesInPath(selected_folder->file_path, files_in_selected_folder);
-		App->filesystem->RefreshFilesHierarchy();
 		ImGui::EndPopup();
 	}
 }
@@ -198,4 +192,14 @@ void FileExplorerUI::CopyFileToSelectedFolder(const char * source) const
 		destination = selected_folder->file_path  + file_name;
 	}
 	App->filesystem->Copy(source, destination.c_str());
+}
+
+void FileExplorerUI::FilesDrag() const
+{
+	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+	{
+		ImGui::SetDragDropPayload("DND_File", &selected_file, sizeof(ModuleFileSystem::File*));
+		ImGui::Text("Dragging %s", selected_file->filename.c_str());
+		ImGui::EndDragDropSource();
+	}
 }

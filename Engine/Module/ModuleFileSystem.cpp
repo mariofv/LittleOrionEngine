@@ -86,9 +86,11 @@ unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, u
 	SDL_RWclose(file);
 	return 0;
 }
-bool ModuleFileSystem::Remove(const File & file) const
+bool ModuleFileSystem::Remove(const File & file)
 {
-	return PHYSFS_delete(file.file_path.c_str()) != 0;
+	bool success = PHYSFS_delete(file.file_path.c_str()) != 0;
+	RefreshFilesHierarchy();
+	return success;
 }
 bool ModuleFileSystem::Exists(const char* file_path) const
 {
@@ -98,20 +100,23 @@ bool ModuleFileSystem::Exists(const char* file_path) const
 	return exists;
 }
 
-std::string ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path) const
+std::string ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path)
 {
 	if (PHYSFS_mkdir(new_directory_full_path.c_str()) == 0)
 	{
 		APP_LOG_ERROR("Error creating directory %s : %s", new_directory_full_path.c_str(), PHYSFS_getLastError());
 		return "";
 	}
+	RefreshFilesHierarchy();
 	return new_directory_full_path;
 }
-bool ModuleFileSystem::Copy(const char* source, const char* destination) const
+bool ModuleFileSystem::Copy(const char* source, const char* destination)
 {
 	size_t file_size;
 	char * buffer = Load(source,file_size);
-	return Save(destination, buffer, file_size,false);
+	bool success = Save(destination, buffer, file_size,false);
+	RefreshFilesHierarchy();
+	return success;
 }
 
 ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileType & file_type) const
