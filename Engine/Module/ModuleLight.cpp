@@ -1,6 +1,7 @@
 #include "ModuleLight.h"
 #include "Application.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentMaterial.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleModelLoader.h"
 

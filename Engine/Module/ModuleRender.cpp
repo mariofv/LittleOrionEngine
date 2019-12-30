@@ -261,7 +261,7 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 
 	App->lights->lights[0]->Render(shader_program);
 	mesh_game_object.RenderMaterialTexture(shader_program);
-	mesh.Render();
+	mesh.Render(shader_program);
 
 	glUseProgram(0);
 }

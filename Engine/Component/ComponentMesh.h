@@ -2,11 +2,11 @@
 #define _COMPONENTMESH_H_
 
 #include "Component.h"
-#include "UI/ComponentsUI.h"
 
 #include <GL/glew.h>
 #include "Mesh.h"
 
+class ComponentsUI;
 class ComponentMesh : public Component
 {
 public:
@@ -21,7 +21,7 @@ public:
 	void Save(Config& config) const;
 	void Load(const Config& config);
 
-	void Render() const;
+	void Render(unsigned int shader_program) const override;
 
 	void SetMesh(std::shared_ptr<Mesh> mesh_to_render);
 
@@ -38,7 +38,7 @@ private:
 	GLuint vbo = 0;
 	GLuint ebo = 0;
 
-	friend void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh);
+	friend class ComponentsUI;
 };
 
 #endif //_COMPONENTMESH_H_

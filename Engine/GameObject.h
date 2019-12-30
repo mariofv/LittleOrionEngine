@@ -5,11 +5,8 @@
 #include "Component/Component.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentAABB.h"
+
 #include <GL/glew.h>
-
-#include <vector>
-
-class ComponentCamera;
 
 class GameObject
 {

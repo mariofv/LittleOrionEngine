@@ -2,10 +2,11 @@
 #define _COMPONENTTRANSFORM_H_
 
 #include "Component.h"
-#include "UI/ComponentsUI.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
+
+class ComponentsUI;
 
 class ComponentTransform : public Component
 {
@@ -15,8 +16,6 @@ public:
 
 	~ComponentTransform() = default;
 
-	void Enable() override;
-	void Disable() override;
 	void Update() override;
 	void Delete() override {};
 
@@ -55,8 +54,8 @@ private:
 
 	float4x4 model_matrix = float4x4::identity;
 	float4x4 global_model_matrix = float4x4::identity;
-
-	friend void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform);
+	
+	friend class ComponentsUI;
 };
 
 #endif //_COMPONENTTRANSFORM_H_

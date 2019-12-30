@@ -1,8 +1,8 @@
+#include "Application.h"
 #include "ComponentAABB.h"
 #include "ComponentCamera.h"
+#include "ComponentMesh.h"
 #include "GameObject.h"
-#include "Application.h"
-
 #include "Module/ModuleRender.h"
 
 ComponentAABB::ComponentAABB() : Component(nullptr, ComponentType::MATERIAL)
@@ -11,26 +11,6 @@ ComponentAABB::ComponentAABB() : Component(nullptr, ComponentType::MATERIAL)
 }
 
 ComponentAABB::ComponentAABB(GameObject * owner) : Component(owner, ComponentType::AABB)
-{
-
-}
-
-ComponentAABB::~ComponentAABB()
-{
-
-}
-
-void ComponentAABB::Enable()
-{
-	active = true;
-}
-
-void ComponentAABB::Disable()
-{
-	active = false;
-}
-
-void ComponentAABB::Update()
 {
 
 }

@@ -17,16 +17,6 @@ ComponentTransform::ComponentTransform(GameObject * owner, const float3 translat
 	GenerateModelMatrix();
 }
 
-void ComponentTransform::Enable()
-{
-
-}
-
-void ComponentTransform::Disable()
-{
-
-}
-
 void ComponentTransform::Update()
 {
 

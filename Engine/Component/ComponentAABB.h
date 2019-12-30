@@ -2,9 +2,9 @@
 #define _COMPONENTAABB_H_
 
 #include "Component.h"
-#include "MathGeoLib.h"
-#include "ComponentMesh.h"
+#include "Mesh.h"
 
+#include "MathGeoLib.h"
 #include "GL/glew.h"
 
 class ComponentCamera;
@@ -21,11 +21,8 @@ public:
 
 	ComponentAABB();
 	ComponentAABB(GameObject * owner);
-	~ComponentAABB();
+	~ComponentAABB() = default;
 
-	void Enable() override;
-	void Disable() override;
-	void Update() override;
 	void Delete() override {};
 
 	void Save(Config& config) const;

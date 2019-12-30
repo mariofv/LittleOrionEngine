@@ -29,6 +29,7 @@ public:
 
 
 	virtual void Update() {};
+	virtual void Render(unsigned int shader_program) const {};
 	virtual void Delete() = 0;
 
 	virtual void Save(Config& config) const = 0;

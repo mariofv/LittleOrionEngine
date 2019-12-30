@@ -3,11 +3,12 @@
 
 #include "Component.h"
 #include "Component/ComponentAABB.h"
-#include "UI/ComponentsUI.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
 
+
+class ComponentsUI;
 class ComponentCamera : public Component
 {
 public:
@@ -22,8 +23,6 @@ public:
 
 	~ComponentCamera();
 
-	void Enable() override;
-	void Disable() override;
 	void Update() override;
 	void Delete() override;
 
@@ -129,8 +128,7 @@ private:
 	float3 desired_focus_position = float3::zero;
 
 	ClearMode camera_clear_mode = ClearMode::COLOR;
-
-	friend void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera);
+	friend class ComponentsUI;
 };
 
 #endif //_COMPONENTCAMERA_H_

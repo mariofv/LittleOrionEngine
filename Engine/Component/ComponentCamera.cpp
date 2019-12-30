@@ -4,6 +4,7 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleCamera.h"
+#include "UI/ComponentsUI.h"
 
 #include "OLQuadTree.h" //TODO: This is not needed, nly for GetVertices()
 
@@ -46,16 +47,6 @@ ComponentCamera::~ComponentCamera()
 	glDeleteTextures(1, &last_recorded_frame_texture);
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteRenderbuffers(1, &rbo);
-}
-
-void ComponentCamera::Enable()
-{
-
-}
-
-void ComponentCamera::Disable()
-{
-
 }
 
 void ComponentCamera::Update()
