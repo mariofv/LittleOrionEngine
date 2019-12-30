@@ -20,6 +20,11 @@ bool ModuleFileSystem::Init() {
 	MakeDirectory("", "Assets");
 	MakeDirectory("", "Library");
 	MakeDirectory("Assets", "Scenes");
+	if (PHYSFS_mount("Assets", "Assets", 1) == 0)
+	{
+		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
+		return false;
+	}
 	RefreshFilesHierarchy();
 	return true;
 }
@@ -161,9 +166,31 @@ std::string ModuleFileSystem::GetFileExtension(const char *file_path) const
 	return file_extension;
 }
 
+static int printDir(void *data, const char *origdir, const char *fname)
+{
+	printf(" * We've got [%s] in [%s].\n", fname, origdir);
+	return 1;  // give me more data, please.
+}
+
 void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only) const
 {
 	std::string path_all = path + "//*";
+	char **files_array = PHYSFS_enumerateFiles("path");
+	if (files_array == NULL)
+	{
+		APP_LOG_ERROR("Error reading directory: %s", PHYSFS_getLastError());
+		return;
+	}
+	char **i;
+	for (i = files_array; *i != NULL; i++)
+	{
+		PHYSFS_Stat file_info;
+		std::string filepath = "Assets/"+std::string(*i);
+		if (PHYSFS_stat(filepath.c_str(), &file_info) == 0)
+		{
+			APP_LOG_ERROR("Error reading directory: %s", PHYSFS_getLastError());
+		}
+	}
 
 	WIN32_FIND_DATA find_file_data;
 	HANDLE handle_find = FindFirstFile(path_all.c_str(), &find_file_data);
@@ -180,6 +207,7 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 		}
 	} while (FindNextFile(handle_find, &find_file_data) != 0);
 
+	PHYSFS_freeList(files_array);
 	FindClose(handle_find);
 }
 
@@ -233,7 +261,7 @@ bool ModuleFileSystem::IsValidFileName(const char * file_name) const
 
 void ModuleFileSystem::RefreshFilesHierarchy()
 {
-	root_file = GetFileHierarchyFromPath(".//Assets");
+	root_file = GetFileHierarchyFromPath("Assets");
 }
 
 bool ModuleFileSystem::File::operator==(const ModuleFileSystem::File& compare)
