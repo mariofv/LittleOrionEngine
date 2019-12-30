@@ -16,6 +16,7 @@ public:
 
 	void ShowFileSystemActionsMenu(const ModuleFileSystem::File & file);
 	void MakeDirectoryFromFile(const ModuleFileSystem::File & file) const;
+	void CopyFileToSelectedFolder(const char * source) const;
 
 private:
 	ModuleFileSystem::File * selected_folder;

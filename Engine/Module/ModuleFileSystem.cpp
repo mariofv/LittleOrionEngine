@@ -73,7 +73,7 @@ unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, u
 
 	if (file != NULL)
 	{
-		APP_LOG_INFO("File %s opened!\n", file_path);
+		APP_LOG_INFO("File %s saved!\n", file_path);
 
 	SDL_RWwrite(file, buffer, size, 1);
 
@@ -98,7 +98,7 @@ bool ModuleFileSystem::Exists(const char* file_path) const
 	return exists;
 }
 
-std::string ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path)
+std::string ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path) const
 {
 	if (PHYSFS_mkdir(new_directory_full_path.c_str()) == 0)
 	{
@@ -107,9 +107,11 @@ std::string ModuleFileSystem::MakeDirectory(const std::string & new_directory_fu
 	}
 	return new_directory_full_path;
 }
-bool ModuleFileSystem::Copy(const char* source, const char* destination)
+bool ModuleFileSystem::Copy(const char* source, const char* destination) const
 {
-	return true;
+	size_t file_size;
+	char * buffer = Load(source,file_size);
+	return Save(destination, buffer, file_size,false);
 }
 
 ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileType & file_type) const

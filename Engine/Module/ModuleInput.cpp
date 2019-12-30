@@ -8,6 +8,9 @@
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 #include "ModuleFileSystem.h"
+#include "ModuleUI.h"
+#include "UI/EngineUI.h"
+#include "UI/FileExplorerUI.h"
 
 #include <SDL/SDL.h>
 #include "imgui.h"
@@ -130,7 +133,8 @@ update_status ModuleInput::PreUpdate()
 			switch (App->filesystem->GetFileType(dropped_filedir))
 			{
 			case ModuleFileSystem::FileType::MODEL:
-				App->model_loader->LoadModel(dropped_filedir);
+				App->ui->editor_ui->file_explorer_ui.CopyFileToSelectedFolder(dropped_filedir);
+				//App->model_loader->LoadModel(dropped_filedir);
 				break;
 			default:
 				break;

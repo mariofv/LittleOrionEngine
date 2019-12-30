@@ -6,6 +6,8 @@
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
 
+#include <algorithm>
+
 void FileExplorerUI::ShowAssetsFolders() {
 	if(ImGui::BeginTabItem(ICON_FA_FOLDER_OPEN " Assets") ){
 
@@ -179,4 +181,21 @@ void FileExplorerUI::MakeDirectoryFromFile(const ModuleFileSystem::File & file) 
 	else if(!selected_folder->file_path.empty()){
 		App->filesystem->MakeDirectory(selected_folder->file_path+ "/new Folder");
 	}
+}
+
+void FileExplorerUI::CopyFileToSelectedFolder(const char * source) const
+{
+	std::string source_string(source);
+	std::replace(source_string.begin(), source_string.end(), '\\', '/');
+	std::string file_name = source_string.substr(source_string.find_last_of('/'), -1);
+	std::string destination;
+	if (selected_folder == nullptr)
+	{
+		destination = "Assets"+ file_name;
+	}
+	else;
+	{
+		destination = selected_folder->file_path  + file_name;
+	}
+	App->filesystem->Copy(source, destination.c_str());
 }
