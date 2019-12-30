@@ -1,24 +1,13 @@
 #include "ModuleLight.h"
 #include "Application.h"
 #include "Component/ComponentLight.h"
-#include "Component/ComponentMaterial.h"
-#include "Module/ModuleScene.h"
-#include "Module/ModuleModelLoader.h"
+
 
 ModuleLight::~ModuleLight()
 {
 	CleanUp();
 }
 
-
-bool ModuleLight::Init()
-{
-	GameObject * light_gameobject = App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
-	light_gameobject->name = "Light";
-	ComponentMaterial * material = (ComponentMaterial*)light_gameobject->CreateComponent(Component::ComponentType::LIGHT);
-	light_gameobject->transform.SetTranslation(float3(4.f,1.5f,-1.5f));
-	return true;
-}
 bool ModuleLight::CleanUp()
 {
 	for (auto& light : lights)

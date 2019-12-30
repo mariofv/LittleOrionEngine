@@ -23,6 +23,12 @@ bool ModuleScene::Init()
 	App->cameras->active_camera = component_camera;
 	App->cameras->active_camera->SetPosition(float3(0.f, 100.f, -100.f));
 	App->cameras->active_camera->SetFarDistance(500);
+
+	GameObject * light_gameobject = App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
+	light_gameobject->name = "Light";
+	light_gameobject->CreateComponent(Component::ComponentType::LIGHT);
+	light_gameobject->transform.SetTranslation(float3(4.f, 1.5f, -1.5f));
+
 	App->renderer->GenerateQuadTree(); // TODO: Move this to load scene and save scene
 	return true;
 }
