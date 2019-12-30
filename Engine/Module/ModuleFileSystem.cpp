@@ -16,20 +16,19 @@ bool ModuleFileSystem::Init() {
 		APP_LOG_ERROR("Error creating writing directory: %s", PHYSFS_getLastError());
 		return false;
 	}
-	MakeDirectory("", "Assets");
-	MakeDirectory("", "Library");
-	MakeDirectory("Assets", "Scenes");
-	MakeDirectory("Library", "Materials");
+	MakeDirectory("Assets");
+	MakeDirectory("Assets/Scenes");
+	MakeDirectory("Library/Materials");
 	if (PHYSFS_mount("Assets", "Assets", 1) == 0)
 	{
 		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
 		return false;
 	}
-	/*if (PHYSFS_mount("Resources", "Resources", 1) == 0)
+	if (PHYSFS_mount("Library", "Library", 1) == 0)
 	{
 		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
 		return false;
-	}*/
+	}
 	RefreshFilesHierarchy();
 	return true;
 }
@@ -99,15 +98,14 @@ bool ModuleFileSystem::Exists(const char* file_path) const
 	return exists;
 }
 
-std::string ModuleFileSystem::MakeDirectory(const std::string & path, const std::string & directory_name)
+std::string ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path)
 {
-	std::string new_directory = path + "/" + directory_name;
-	if (PHYSFS_mkdir(new_directory.c_str()) == 0)
+	if (PHYSFS_mkdir(new_directory_full_path.c_str()) == 0)
 	{
-		APP_LOG_ERROR("Error creating directory %s : %s", new_directory.c_str(),PHYSFS_getLastError());
+		APP_LOG_ERROR("Error creating directory %s : %s", new_directory_full_path.c_str(), PHYSFS_getLastError());
 		return "";
 	}
-	return new_directory;
+	return new_directory_full_path;
 }
 bool ModuleFileSystem::Copy(const char* source, const char* destination)
 {
@@ -170,7 +168,7 @@ std::string ModuleFileSystem::GetFileExtension(const char *file_path) const
 void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only) const
 {
 	char **files_array = PHYSFS_enumerateFiles(path.c_str());
-	if (files_array == NULL)
+	if (*files_array == NULL)
 	{
 		APP_LOG_ERROR("Error reading directory: %s", PHYSFS_getLastError());
 		return;

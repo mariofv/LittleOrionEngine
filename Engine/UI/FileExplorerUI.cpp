@@ -170,13 +170,13 @@ void FileExplorerUI::MakeDirectoryFromFile(const ModuleFileSystem::File & file) 
 	if (!file.file_path.empty() && file.file_type != ModuleFileSystem::FileType::DIRECTORY)
 	{
 		size_t last_slash = file.file_path.find_last_of("/");
-		App->filesystem->MakeDirectory(file.file_path.substr(0, last_slash - 1), "new Folder");
+		App->filesystem->MakeDirectory(file.file_path.substr(0, last_slash - 1)+"/new Folder");
 	}
 	else if(!file.file_path.empty())
 	{
-		App->filesystem->MakeDirectory(file.file_path, "new Folder");
+		App->filesystem->MakeDirectory(file.file_path+"/new Folder");
 	}
 	else if(!selected_folder->file_path.empty()){
-		App->filesystem->MakeDirectory(selected_folder->file_path, "new Folder");
+		App->filesystem->MakeDirectory(selected_folder->file_path+ "/new Folder");
 	}
 }

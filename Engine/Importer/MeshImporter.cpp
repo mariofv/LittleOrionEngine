@@ -33,7 +33,7 @@ bool MeshImporter::Import(const std::string& file_path, std::string& output_file
 		return true;
 	}
 
-	output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER, file.filename_no_extension);
+	output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER+"/"+ file.filename_no_extension);
 	APP_LOG_INIT("Importing model %s.", file_path);
 
 	if (file.filename.empty())
@@ -76,7 +76,7 @@ void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, co
 			std::vector<std::string> loaded_meshes_materials;
 			App->material_importer->ImportMaterialFromMesh(scene,mesh_index, file_path,loaded_meshes_materials);
 
-			std::string mesh_file = output_file + "//" + std::string(root_node->mChildren[i]->mName.data) + std::to_string(j) + ".ol";
+			std::string mesh_file = output_file + "/" + std::string(root_node->mChildren[i]->mName.data) + std::to_string(j) + ".ol";
 			ImportMesh(scene->mMeshes[mesh_index], loaded_meshes_materials, mesh_file);
 		}
 		ImportNode(root_node->mChildren[i], scene, file_path,output_file);
