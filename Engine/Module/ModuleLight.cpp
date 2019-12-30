@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Component/ComponentLight.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleModelLoader.h"
 
 ModuleLight::~ModuleLight()
 {
@@ -11,9 +12,10 @@ ModuleLight::~ModuleLight()
 
 bool ModuleLight::Init()
 {
-	GameObject * light_gameobject = App->scene->CreateChildGameObject(App->scene->GetRoot());
+	GameObject * light_gameobject = App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
 	light_gameobject->name = "Light";
-	light_gameobject->CreateComponent(Component::ComponentType::LIGHT);
+	ComponentMaterial * material = (ComponentMaterial*)light_gameobject->CreateComponent(Component::ComponentType::LIGHT);
+	light_gameobject->transform.SetTranslation(float3(4.f,1.5f,-1.5f));
 	return true;
 }
 bool ModuleLight::CleanUp()
