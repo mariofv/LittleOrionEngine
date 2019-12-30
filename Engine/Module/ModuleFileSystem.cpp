@@ -19,11 +19,17 @@ bool ModuleFileSystem::Init() {
 	MakeDirectory("", "Assets");
 	MakeDirectory("", "Library");
 	MakeDirectory("Assets", "Scenes");
+	MakeDirectory("Library", "Materials");
 	if (PHYSFS_mount("Assets", "Assets", 1) == 0)
 	{
 		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
 		return false;
 	}
+	/*if (PHYSFS_mount("Resources", "Resources", 1) == 0)
+	{
+		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
+		return false;
+	}*/
 	RefreshFilesHierarchy();
 	return true;
 }
@@ -131,6 +137,7 @@ ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, 
 	}
 	if (
 		file_extension == "fbx"
+		|| file_extension == "ol"
 		)
 	{
 		return ModuleFileSystem::FileType::MODEL;
@@ -245,7 +252,7 @@ ModuleFileSystem::File::File(const std::string & path, const std::string & name)
 	PHYSFS_Stat file_info;
 	if (PHYSFS_stat(this->file_path.c_str(), &file_info) == 0)
 	{
-		APP_LOG_ERROR("Error getting %s info: %s", this->file_path.c_str(),PHYSFS_getLastError());
+		APP_LOG_ERROR("Error getting %s file info: %s", this->file_path.c_str(),PHYSFS_getLastError());
 	}
 
 	this->file_type = App->filesystem->GetFileType(filename.c_str(), file_info.filetype);
