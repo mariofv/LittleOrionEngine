@@ -20,6 +20,7 @@ public:
 private:
 	static void DropTarget(ComponentMaterial *material, Texture::TextureType type);
 	static std::string GetTypeName(Texture::TextureType type);
+	static int GetShaderProgramPosition(unsigned int programs);
 
 	ComponentsUI() = default;
 	~ComponentsUI() = default;

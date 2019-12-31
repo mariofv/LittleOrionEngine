@@ -237,7 +237,7 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 		dd::aabb(mesh_game_object.aabb.bounding_box.minPoint, mesh_game_object.aabb.bounding_box.maxPoint, float3::one);
 	}
 
-	GLuint shader_program = App->program->texture_program;
+	GLuint shader_program = mesh.shader_program == 0 ? App->program->texture_program : mesh.shader_program;
 	glUseProgram(shader_program);
 
 	glUniformMatrix4fv(

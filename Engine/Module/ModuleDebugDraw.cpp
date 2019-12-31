@@ -21,12 +21,12 @@ public:
     {
         assert(points != nullptr);
         assert(count > 0 && count <= DEBUG_DRAW_VERTEX_BUFFER_SIZE);
-
+		GLuint shader_program = App->program->linepoint_program;
         glBindVertexArray(linePointVAO);
-        glUseProgram(App->program->linepoint_program);
+        glUseProgram(shader_program);
 
         glUniformMatrix4fv(
-            glGetUniformLocation(App->program->linepoint_program, "u_MvpMatrix"),
+            glGetUniformLocation(shader_program, "u_MvpMatrix"),
             1, GL_TRUE, reinterpret_cast<const float*>(&mvpMatrix)
         );
 
@@ -69,11 +69,12 @@ public:
         assert(lines != nullptr);
         assert(count > 0 && count <= DEBUG_DRAW_VERTEX_BUFFER_SIZE);
 
+		GLuint shader_program = App->program->linepoint_program;
         glBindVertexArray(linePointVAO);
-        glUseProgram(App->program->linepoint_program);
+        glUseProgram(shader_program);
 
         glUniformMatrix4fv(
-            glGetUniformLocation(App->program->linepoint_program, "u_MvpMatrix"),
+            glGetUniformLocation(shader_program, "u_MvpMatrix"),
             1, GL_TRUE, reinterpret_cast<const float*>(&mvpMatrix)
         );
 
@@ -116,16 +117,17 @@ public:
         assert(glyphs != nullptr);
         assert(count > 0 && count <= DEBUG_DRAW_VERTEX_BUFFER_SIZE);
 
+		GLuint shader_program = App->program->text_program;
         glBindVertexArray(textVAO);
-        glUseProgram(App->program->text_program);
+        glUseProgram(shader_program);
 
         // These doesn't have to be reset every draw call, I'm just being lazy ;)
         glUniform1i(
-            glGetUniformLocation(App->program->text_program, "u_glyphTexture"),
+            glGetUniformLocation(shader_program, "u_glyphTexture"),
             0
         );
         glUniform2f(
-            glGetUniformLocation(App->program->text_program, "u_screenDimensions"),
+            glGetUniformLocation(shader_program, "u_screenDimensions"),
             static_cast<GLfloat>(width),
             static_cast<GLfloat>(height)
         );

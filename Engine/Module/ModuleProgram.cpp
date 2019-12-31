@@ -2,18 +2,10 @@
 #include "ModuleProgram.h"
 #include "ModuleFileSystem.h"
 
-#include <SDL/SDL.h>
-
 // Called before render is available
 bool ModuleProgram::Init()
 {
 	APP_LOG_SECTION("************ Module Program Init ************");
-
-
-	if (!LoadProgram(default_program, DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH))
-	{
-		return false;
-	}
 
 	if (!LoadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH))
 	{
@@ -43,27 +35,24 @@ bool ModuleProgram::Init()
 	{
 		return false;
 	}
-
 	return true;
 }
 
 // Called before quitting
 bool ModuleProgram::CleanUp()
 {
-	glDeleteProgram(default_program);
-	glDeleteProgram(texture_program);
-	glDeleteProgram(skybox_program);
-	glDeleteProgram(linepoint_program);
-	glDeleteProgram(texture_program);
+	for ( auto & program : loaded_programs)
+	{
+		glDeleteProgram(program);
+	}
 	return true;
 }
 
-bool ModuleProgram::LoadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name) const
+bool ModuleProgram::LoadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name)
 {
 	APP_LOG_INIT("Loading shader program. With paths: %s,%s", vertex_shader_file_name, fragment_shader_file_name);
 	GLuint vertex_shader;
 	GLuint fragment_shader;
-
 	if (!InitVertexShader(vertex_shader, vertex_shader_file_name))
 	{
 		return false;
@@ -78,6 +67,7 @@ bool ModuleProgram::LoadProgram(GLuint &shader_program, const char* vertex_shade
 	{
 		return false;
 	}
+	loaded_programs.push_back(shader_program);
 	APP_LOG_SUCCESS("Shader program with paths: %s,%s loaded correctly.", vertex_shader_file_name, fragment_shader_file_name);
 	return true;
 }

@@ -96,21 +96,21 @@ void Skybox::GenerateSkyboxCube()
 void Skybox::Render(const ComponentCamera & camera) const
 {
 	glDepthFunc(GL_LEQUAL);
-
-	glUseProgram(App->program->skybox_program);
+	GLuint shader_program = App->program->skybox_program;
+	glUseProgram(shader_program);
 
 	float4x4 view_matrix = camera.GetViewMatrix();
 	view_matrix.SetRow(3, float4::zero);
 	view_matrix.SetCol(3, float4::zero);
 
 	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->skybox_program, "view"),
+		glGetUniformLocation(shader_program, "view"),
 		1,
 		GL_TRUE,
 		&view_matrix[0][0]
 	);
 	glUniformMatrix4fv(
-		glGetUniformLocation(App->program->skybox_program, "proj"),
+		glGetUniformLocation(shader_program, "proj"),
 		1,
 		GL_TRUE,
 		&camera.GetProjectionMatrix()[0][0]

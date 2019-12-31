@@ -8,6 +8,7 @@
 #include "Application.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleProgram.h"
 #include "Utils.h"
 
 #include <imgui.h>
@@ -55,6 +56,23 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::SameLine();
 		sprintf(tmp_string, "%d", mesh->mesh_to_render->num_vertices);
 		ImGui::Button(tmp_string);
+
+		int shader_program = GetShaderProgramPosition(mesh->shader_program);
+		if (ImGui::Combo("Shader", &shader_program, "Flat\0Gouraund\0Default\0"))
+		{
+			switch (shader_program)
+			{
+			case 0:
+				mesh->shader_program = App->program->phong_flat_program;
+				break;
+			case 1:
+				mesh->shader_program = App->program->phong_gouraund_program;
+				break;
+			case 2:
+				mesh->shader_program = App->program->texture_program;
+				break;
+			}
+		}
 	}
 }
 
@@ -233,5 +251,22 @@ void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
 	{
 		ImGui::ColorEdit3("Color", light->light_color);
 		ImGui::InputFloat("Intensity ", &light->light_intensity);
+	}
+}
+
+int ComponentsUI::GetShaderProgramPosition(unsigned int program)
+{
+
+	if (App->program->phong_flat_program == program)
+	{
+		return 0;
+	}
+	if (App->program->phong_gouraund_program == program)
+	{
+		return 1;
+	}
+	if (App->program->texture_program == program)
+	{
+		return 2;
 	}
 }
