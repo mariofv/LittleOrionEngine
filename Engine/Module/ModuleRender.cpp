@@ -140,7 +140,7 @@ bool ModuleRender::CleanUp()
 	delete rendering_measure_timer;
 	for (auto& mesh : meshes)
 	{
-		delete mesh;
+		mesh->owner->RemoveComponent(mesh);
 	}
 	meshes.clear();
 	meshes_to_render.clear();
@@ -259,7 +259,7 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 		&camera.GetProjectionMatrix()[0][0]
 	);
 
-	App->lights->lights[0]->Render(shader_program);
+	App->lights->RenderLight(shader_program);
 	mesh_game_object.RenderMaterialTexture(shader_program);
 	mesh.Render();
 

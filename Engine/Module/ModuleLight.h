@@ -11,6 +11,7 @@ public:
 	~ModuleLight();
 
 	bool CleanUp() override;
+	void RenderLight(unsigned int shader_program) const;
 
 	ComponentLight* CreateComponentLight();
 	void RemoveComponentLight(ComponentLight* light_to_remove);

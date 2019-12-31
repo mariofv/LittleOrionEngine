@@ -1,6 +1,7 @@
 #include "ModuleLight.h"
 #include "Application.h"
 #include "Component/ComponentLight.h"
+#include "GameObject.h"
 
 ModuleLight::~ModuleLight()
 {
@@ -11,12 +12,18 @@ bool ModuleLight::CleanUp()
 {
 	for (auto& light : lights)
 	{
-		delete light;
+		light->owner->RemoveComponent(light);
 	}
 	lights.clear();
 	return true;
 }
-
+void ModuleLight::RenderLight(unsigned int shader_program) const
+{
+	if (lights.size() > 0)
+	{
+		lights[0]->Render(shader_program);
+	}
+}
 ComponentLight* ModuleLight::CreateComponentLight()
 {
 	ComponentLight * created_light = new ComponentLight();

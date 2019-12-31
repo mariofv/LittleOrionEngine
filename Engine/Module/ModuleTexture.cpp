@@ -2,6 +2,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "Texture.h"
+#include "GameObject.h"
 #include "Component/ComponentMaterial.h"
 #include "Importer/MaterialImporter.h"
 
@@ -25,7 +26,7 @@ bool ModuleTexture::CleanUp()
 	glDeleteTextures(1, &whitefall_texture_id);
 	for (auto& material : materials) 
 	{
-		delete material;
+		material->owner->RemoveComponent(material);
 	}
 	materials.clear();
 	return true;
