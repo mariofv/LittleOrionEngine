@@ -58,33 +58,60 @@ Application::~Application()
 
 bool Application::Init()
 {
-	bool ret = true;
+	bool result = true;
 
-	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
+	for (auto &module : modules) 
 	{
-		ret = (*it)->Init();
+		bool ret = module->Init();
+		if (!ret) {
+			result = ret;
+		}
 	}
-
-	return ret;
+	return result;
 }
 
 update_status Application::Update()
 {
 	BROFILER_FRAME("MainLoop");
-	update_status ret = update_status::UPDATE_CONTINUE;
+	update_status result = update_status::UPDATE_CONTINUE;
+	for (auto &module : modules) 
+	{
+		update_status ret = module->PreUpdate();
+		if (ret == update_status::UPDATE_ERROR || ret == update_status::UPDATE_STOP) 
+		{
+			result = ret;
+		}
+	}
+	if (result == update_status::UPDATE_CONTINUE) 
+	{
+		for (auto &module : modules) 
+		{
+			update_status ret = module->Update();
+			if (ret == update_status::UPDATE_ERROR || ret == update_status::UPDATE_STOP) 
+			{
+				result = ret;
+			}
+		}
+	}
 
-	for(std::vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
-		ret = (*it)->PreUpdate();
+	if (result == update_status::UPDATE_CONTINUE) 
+	{
+		for (auto &module : modules) 
+		{
+			update_status ret = module->PostUpdate();
+			if (ret == update_status::UPDATE_ERROR || ret == update_status::UPDATE_STOP) 
+			{
+				result = ret;
+			}
+		}
+	}
 
-	for(std::vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
-		ret = (*it)->Update();
+	if (result == update_status::UPDATE_CONTINUE)
+	{
+		App->renderer->Render();
+	}
 
-	for(std::vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
-		ret = (*it)->PostUpdate();
-
-	App->renderer->Render();
-
-	return ret;
+	return result;
 }
 
 bool Application::CleanUp()
