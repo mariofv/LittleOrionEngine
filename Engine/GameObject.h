@@ -34,8 +34,8 @@ public:
 	void RemoveComponent(Component * component);
 	Component* GetComponent(const Component::ComponentType type) const;
 
-	void MoveUpInHierarchy();
-	void MoveDownInHierarchy();
+	void MoveUpInHierarchy() const;
+	void MoveDownInHierarchy() const;
 	bool IsAboveInHierarchy(const GameObject &potential_child) const;
 	void UpdateHierarchyDepth();
 	void UpdateHierarchyBranch();

@@ -20,11 +20,6 @@ Config::Config(const std::string& serialized_scene_string)
 	allocator = &config_document.GetAllocator();
 }
 
-Config::~Config()
-{
-
-}
-
 Config::Config(const Config& other)
 {
 	config_document.CopyFrom(other.config_document, config_document.GetAllocator());

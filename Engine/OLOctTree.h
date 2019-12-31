@@ -9,7 +9,7 @@
 class OLOctTree
 {
 public:
-	OLOctTree();
+	OLOctTree() = default;
 	~OLOctTree();
 
 	void Create(AABB limits);
@@ -27,8 +27,8 @@ private:
 
 private:
 	OLOctTreeNode *root = nullptr;
-	int bucket_size = 3;
-	int max_depth = 3;
+	const size_t bucket_size = 3;
+	const size_t max_depth = 3;
 };
 
 #endif //_OLOCTTREE_H_

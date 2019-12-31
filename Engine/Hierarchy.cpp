@@ -9,16 +9,6 @@
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
 
-Hierarchy::Hierarchy()
-{
-}
-
-
-Hierarchy::~Hierarchy()
-{
-}
-
-
 std::string Hierarchy::GetNextGameObjectName()
 {
 	char tmp_string[64];
@@ -92,14 +82,14 @@ void Hierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 	}
 }
 
-void Hierarchy::DragAndDrop(GameObject *game_object)
+void Hierarchy::DragAndDrop(GameObject *game_object) const
 {
 	DragSource(game_object);
 	DropTarget(game_object);
 }
 
 
-void Hierarchy::DragSource(GameObject *source_game_object)
+void Hierarchy::DragSource(GameObject *source_game_object) const
 {
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 	{
@@ -109,7 +99,7 @@ void Hierarchy::DragSource(GameObject *source_game_object)
 	}
 }
 
-void Hierarchy::DropTarget(GameObject *target_game_object)
+void Hierarchy::DropTarget(GameObject *target_game_object) const
 {
 	if (ImGui::BeginDragDropTarget())
 	{
@@ -160,7 +150,7 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 	}
 }
 
-void Hierarchy::Show3DObjectCreationMenu()
+void Hierarchy::Show3DObjectCreationMenu() const
 {
 	if (ImGui::BeginMenu("3D object"))
 	{

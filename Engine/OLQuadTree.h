@@ -9,7 +9,7 @@
 class OLQuadTree
 {
 public:
-	OLQuadTree();
+	OLQuadTree() = default;
 	~OLQuadTree();
 
 	void Create(AABB2D limits);
@@ -27,8 +27,8 @@ private:
 
 private:
 	OLQuadTreeNode *root = nullptr;
-	int bucket_size = 3;
-	int max_depth = 3;
+	const size_t bucket_size = 3;
+	const size_t max_depth = 3;
 	friend class ModuleDebug;
 };
 

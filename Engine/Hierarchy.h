@@ -8,8 +8,8 @@ class GameObject;
 class Hierarchy
 {
 public:
-	Hierarchy();
-	~Hierarchy();
+	Hierarchy() = default;
+	~Hierarchy() = default;
 
 	std::string GetNextGameObjectName();
 	int GetNextBranch();
@@ -19,12 +19,12 @@ public:
 private:
 	void ShowGameObjectHierarchy(GameObject *game_object);
 
-	void DragAndDrop(GameObject *game_object);
-	void DragSource(GameObject *source_game_object);
-	void DropTarget(GameObject *target_game_object);
+	void DragAndDrop(GameObject *game_object) const;
+	void DragSource(GameObject *source_game_object) const;
+	void DropTarget(GameObject *target_game_object) const;
 
 	void ShowGameObjectActionsMenu(GameObject *game_object);
-	void Show3DObjectCreationMenu();
+	void Show3DObjectCreationMenu() const;
 
 	void ProcessMouseInput(GameObject *game_object);
 

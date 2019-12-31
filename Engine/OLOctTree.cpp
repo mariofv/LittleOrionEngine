@@ -2,10 +2,6 @@
 
 #include <algorithm>
 
-OLOctTree::OLOctTree()
-{
-}
-
 OLOctTree::~OLOctTree()
 {
 	Clear();

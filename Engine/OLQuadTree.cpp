@@ -2,10 +2,6 @@
 
 #include <algorithm>
 
-OLQuadTree::OLQuadTree()
-{
-}
-
 OLQuadTree::~OLQuadTree()
 {
 	Clear();

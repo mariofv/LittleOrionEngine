@@ -9,7 +9,6 @@
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleLight.h"
 #include "Texture.h"
-#include "Utils.h"
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
@@ -18,6 +17,7 @@
 
 #include "imgui.h"
 #include "imgui_stdlib.h"
+#include "Brofiler/Brofiler.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <pcg_basic.h>
 #include <rapidjson/stringbuffer.h>
@@ -89,6 +89,7 @@ bool GameObject::IsStatic() const
 }
 void GameObject::Update()
 {
+	BROFILER_CATEGORY("GameObject", Profiler::Color::Green);
 	transform.GenerateGlobalModelMatrix();
 	aabb.GenerateBoundingBox();
 
@@ -258,7 +259,7 @@ Component* GameObject::GetComponent(const Component::ComponentType type) const
 	return nullptr;
 }
 
-void GameObject::MoveUpInHierarchy()
+void GameObject::MoveUpInHierarchy() const
 {
 	std::vector<GameObject*>::iterator silbings_position = std::find(parent->children.begin(), parent->children.end(), this);
 	if (silbings_position == parent->children.end())
@@ -270,7 +271,7 @@ void GameObject::MoveUpInHierarchy()
 	std::iter_swap(silbings_position, swapped_silbing);
 }
 
-void GameObject::MoveDownInHierarchy()
+void GameObject::MoveDownInHierarchy() const
 {
 	std::vector<GameObject*>::iterator silbings_position = std::find(parent->children.begin(), parent->children.end(), this);
 	if (silbings_position == parent->children.end())

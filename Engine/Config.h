@@ -10,7 +10,7 @@ public:
 	Config();
 	Config(const rapidjson::Value& object_value);
 	Config(const std::string& serialized_scene_string);
-	~Config();
+	~Config() = default;
 	
 	Config(const Config& other);
 	Config& operator=(const Config& other);
