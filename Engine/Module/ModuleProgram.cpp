@@ -1,6 +1,6 @@
-#include "Globals.h"
 #include "Application.h"
 #include "ModuleProgram.h"
+#include "ModuleFileSystem.h"
 
 #include <SDL/SDL.h>
 
@@ -12,42 +12,35 @@ bool ModuleProgram::Init()
 
 	if (!LoadProgram(default_program, DEFAULT_VERTEX_SHADER_PATH, DEFAULT_FRAGMENT_SHADER_PATH))
 	{
-		APP_LOG_ERROR("Default shader program loaded incorretly.");
 		return false;
 	}
 
 	if (!LoadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH))
 	{
-		APP_LOG_ERROR("Texture shader program loaded incorretly.");
 		return false;
 	}
 	if (!LoadProgram(skybox_program, SKYBOX_VERTEX_SHADER_PATH, SKYBOX_FRAGMENT_SHADER_PATH))
 	{
-		APP_LOG_ERROR("Skybox shader program loaded incorretly.");
 		return false;
 	}
 
 	if (!LoadProgram(linepoint_program, LINEPOINT_VERTEX_SHADER_PATH, LINEPOINT_FRAGMENT_SHADER_PATH))
 	{
-		APP_LOG_ERROR("Linepoint shader program loaded incorretly.");
 		return false;
 	}
 
 	if (!LoadProgram(text_program, TEXT_VERTEX_SHADER_PATH, TEXT_FRAGMENT_SHADER_PATH))
 	{
-		APP_LOG_ERROR("Text shader program loaded incorretly.");
 		return false;
 	}
 
 	if (!LoadProgram(phong_flat_program, FLAT_VERTEX_SHADER_PATH, FLAT_FRAGMENT_SHADER_PATH))
 	{
-		APP_LOG_ERROR("Phong Flat  shader program loaded incorretly.");
 		return false;
 	}
 
 	if (!LoadProgram(phong_gouraund_program, GOURAUND_VERTEX_SHADER_PATH, GOURAUND_FRAGMENT_SHADER_PATH))
 	{
-		APP_LOG_ERROR("Text shader program loaded incorretly.");
 		return false;
 	}
 
@@ -85,17 +78,18 @@ bool ModuleProgram::LoadProgram(GLuint &shader_program, const char* vertex_shade
 	{
 		return false;
 	}
-	APP_LOG_SUCCESS("Shader program loaded correctly.");
+	APP_LOG_SUCCESS("Shader program with paths: %s,%s loaded correctly.", vertex_shader_file_name, fragment_shader_file_name);
 	return true;
 }
 
 bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const
 {
 	APP_LOG_INFO("Loading vertex shader");
-	const char *vertex_shader_loaded_file = LoadFile(vertex_shader_file_name);
+	size_t size;
+	const char *vertex_shader_loaded_file = App->filesystem->Load(vertex_shader_file_name, size);
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	if (vertex_shader == 0) {
-		APP_LOG_ERROR("Error creating vertex shader");
+		APP_LOG_ERROR("Error creating vertex shader %s", vertex_shader_file_name);
 		return false;
 	}
 	glShaderSource(vertex_shader, 1, &vertex_shader_loaded_file, NULL);
@@ -109,7 +103,7 @@ bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const char* vertex_s
 	if (!compilation_status)
 	{
 		glGetShaderInfoLog(vertex_shader, 512, NULL, info_log);
-		APP_LOG_ERROR("Error compiling vertex shader");
+		APP_LOG_ERROR("Error compiling vertex shader %s", vertex_shader_file_name);
 		APP_LOG_ERROR(info_log);
 		return false;
 	}
@@ -120,10 +114,11 @@ bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const char* vertex_s
 bool ModuleProgram::InitFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const
 {
 	APP_LOG_INFO("Loading fragment shader");
-	const char *fragment_shader_loaded_file = LoadFile(fragment_shader_file_name);
+	size_t size;
+	const char *fragment_shader_loaded_file = App->filesystem->Load(fragment_shader_file_name, size);
 	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (fragment_shader == 0) {
-		OPENGL_LOG_ERROR("Error creating fragment shader");
+		OPENGL_LOG_ERROR("Error creating fragment shader %s", fragment_shader_file_name);
 		return false;
 	}
 	glShaderSource(fragment_shader, 1, &fragment_shader_loaded_file, NULL);
@@ -137,7 +132,7 @@ bool ModuleProgram::InitFragmentShader(GLuint &fragment_shader, const char* frag
 	if (!compilation_status)
 	{
 		glGetShaderInfoLog(fragment_shader, 512, NULL, info_log);
-		APP_LOG_ERROR("Error compiling fragment shader");
+		APP_LOG_ERROR("Error compiling fragment shader %s", fragment_shader_file_name);
 		APP_LOG_ERROR(info_log);
 		return false;
 	}
@@ -180,23 +175,4 @@ bool ModuleProgram::InitProgram(GLuint &shader_program, const GLuint vertex_shad
 	}
 
 	return true;
-}
-
-const char* ModuleProgram::LoadFile(const char* file_name) const
-{
-	char* data = nullptr;
-	FILE* file = nullptr;
-	fopen_s(&file, file_name, "rb");
-	if (file)
-	{
-		fseek(file, 0, SEEK_END);
-		int size = ftell(file);
-		rewind(file);
-		data = (char*)malloc(size + 1);
-		fread(data, 1, size, file);
-		data[size] = 0;
-		fclose(file);
-	}
-
-	return data;
 }
