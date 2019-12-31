@@ -188,9 +188,10 @@ unsigned int MaterialImporter::LoadCubemap(std::vector<std::string> faces_paths)
 
 		if (data)
 		{
-			glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,
-				0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data
-			);
+			//TODO: Investigate how to load dds into cubemao array
+			size_t size = ((width / 4) * (height / 4) * 8);
+			glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, width, height, 0, size, data);
+			//glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
 			ilDeleteImages(1, &image);
 		}
 	}
