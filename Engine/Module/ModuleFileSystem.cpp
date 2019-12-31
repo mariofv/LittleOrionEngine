@@ -32,6 +32,15 @@ bool ModuleFileSystem::Init() {
 	RefreshFilesHierarchy();
 	return true;
 }
+bool ModuleFileSystem::CleanUp()
+{
+	return PHYSFS_deinit();
+}
+ModuleFileSystem::~ModuleFileSystem()
+{
+	CleanUp();
+}
+
 char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
 {
 	SDL_RWops *rw = SDL_RWFromFile(file_path, "rb");
