@@ -6,7 +6,7 @@
 #include "Module/ModuleCamera.h"
 #include "UI/ComponentsUI.h"
 
-#include "OLQuadTree.h" //TODO: This is not needed, nly for GetVertices()
+#include "Utils.h"
 
 ComponentCamera::ComponentCamera() : Component(nullptr, ComponentType::CAMERA)
 {
@@ -534,7 +534,7 @@ ComponentAABB::CollisionState ComponentCamera::CheckAABB2DCollision(const AABB2D
 	camera_frustum.GetPlanes(own_frustum_planes);
 	
 	//Get refence corners
-	std::vector<float> reference_aabb_corners = OLQuadTree::GetVertices(reference_AABB);
+	std::vector<float> reference_aabb_corners = Utils::GetVertices(reference_AABB);
 
 	//Check if Corners are inside the planes
 	int total_reference_planes_inside = 0;

@@ -80,21 +80,3 @@ void OLOctTree::FindLeaves(const AABB &game_object_aabb, std::vector<OLOctTreeNo
 	}
 }
 
-
-std::vector<float> OLOctTree::GetVertices(const AABB &box)
-{
-	static const int num_of_vertices = 8;
-	float3 tmp_vertices[num_of_vertices];
-	box.GetCornerPoints(&tmp_vertices[0]);
-
-	std::vector<float> vertices(num_of_vertices * 3);
-	for (unsigned int i = 0; i < num_of_vertices; ++i)
-	{
-		vertices[i * 3] = tmp_vertices[i].x;
-		vertices[i * 3 + 1] = tmp_vertices[i].y;
-		vertices[i * 3 + 2] = tmp_vertices[i].z;
-	}
-
-	return vertices;
-}
-

@@ -17,8 +17,6 @@ public:
 	void Insert(GameObject &game_object);
 	void CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera);
 
-	static std::vector<float> GetVertices(const AABB2D &box); // TODO: Move to Utils class
-
 public:
 	std::vector<OLQuadTreeNode*> flattened_tree;
 
@@ -27,8 +25,8 @@ private:
 
 private:
 	OLQuadTreeNode *root = nullptr;
-	const size_t bucket_size = 3;
-	const size_t max_depth = 3;
+	int bucket_size = 3;
+	int max_depth = 3;
 	friend class ModuleDebug;
 };
 

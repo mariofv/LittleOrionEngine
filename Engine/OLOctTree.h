@@ -17,7 +17,6 @@ public:
 	void Insert(GameObject &game_object);
 	void CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera);
 
-	static std::vector<float> GetVertices(const AABB &box); // TODO: Move to Utils class
 
 public:
 	std::vector<OLOctTreeNode*> flattened_tree;
