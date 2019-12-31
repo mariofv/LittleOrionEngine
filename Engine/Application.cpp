@@ -21,11 +21,10 @@
 #include "TimerUs.h"
 #include "Brofiler/Brofiler.h"
 
-using namespace std;
 
 Application::Application()
 {
-	modules.reserve(10);
+	modules.reserve(15);
 	// Order matters: they will Init/start/update in this order
 	modules.emplace_back(window = new ModuleWindow());
 	modules.emplace_back(filesystem = new ModuleFileSystem());
@@ -43,29 +42,25 @@ Application::Application()
 	modules.emplace_back(debug_draw = new ModuleDebugDraw());
 	modules.emplace_back(lights = new ModuleLight());
 		
-	engine_log = new EngineLog();
+	engine_log = std::make_unique<EngineLog>();
 
-	material_importer = new MaterialImporter();
-	mesh_importer = new MeshImporter();
+	material_importer = std::make_unique<MaterialImporter>();
+	mesh_importer = std::make_unique<MeshImporter>();
 }
 
 Application::~Application()
 {
-	for(vector<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
+	for(std::vector<Module*>::iterator it = modules.begin(); it != modules.end(); ++it)
     {
         delete *it;
     }
-
-	delete engine_log;
-	delete material_importer;
-	delete mesh_importer;
 }
 
 bool Application::Init()
 {
 	bool ret = true;
 
-	for (vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
+	for (std::vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret; ++it)
 	{
 		ret = (*it)->Init();
 	}
@@ -78,13 +73,13 @@ update_status Application::Update()
 	BROFILER_FRAME("MainLoop");
 	update_status ret = update_status::UPDATE_CONTINUE;
 
-	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
+	for(std::vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
 		ret = (*it)->PreUpdate();
 
-	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
+	for(std::vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
 		ret = (*it)->Update();
 
-	for(vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
+	for(std::vector<Module*>::iterator it = modules.begin(); it != modules.end() && ret == update_status::UPDATE_CONTINUE; ++it)
 		ret = (*it)->PostUpdate();
 
 	App->renderer->Render();
@@ -96,7 +91,7 @@ bool Application::CleanUp()
 {
 	bool ret = true;
 
-	for (vector<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
+	for (std::vector<Module*>::reverse_iterator it = modules.rbegin(); it != modules.rend() && ret; ++it)
 		ret = (*it)->CleanUp();
 
 	return ret;

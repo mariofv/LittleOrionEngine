@@ -5,6 +5,7 @@
 #include "Module/Module.h"
 
 #include <vector>
+#include <memory>
 
 class ModuleRender;
 class ModuleWindow;
@@ -60,9 +61,9 @@ public:
 	ModuleUI* ui = nullptr;
 	ModuleLight* lights = nullptr;
 
-	EngineLog* engine_log = nullptr;
-	MeshImporter* mesh_importer = nullptr;
-	MaterialImporter* material_importer = nullptr;
+	std::unique_ptr<EngineLog> engine_log = nullptr;
+	std::unique_ptr<MeshImporter> mesh_importer = nullptr;
+	std::unique_ptr<MaterialImporter> material_importer = nullptr;
 
 private:
 
