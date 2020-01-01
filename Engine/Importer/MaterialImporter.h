@@ -21,7 +21,7 @@ public:
 	std::shared_ptr<Texture> Load(const char* file_path) const;
 	unsigned int LoadCubemap(std::vector<std::string> faces_paths) const;
 
-	void RemoveTextureFromCacheIfNeeded(std::shared_ptr<Texture> texture);
+	void RemoveTextureFromCacheIfNeeded(const std::shared_ptr<Texture> & texture);
 	Texture::TextureType GetTextureTypeFromAssimpType(aiTextureType type) const;
 
 private:

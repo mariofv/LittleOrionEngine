@@ -223,12 +223,11 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 }
 
  //Remove the mesh from the cache if the only owner is the cache itself
- void MeshImporter::RemoveMeshFromCacheIfNeeded(std::shared_ptr<Mesh> mesh) 
+ void MeshImporter::RemoveMeshFromCacheIfNeeded(const std::shared_ptr<Mesh> & mesh) 
  {
 	 auto it = std::find(mesh_cache.begin(), mesh_cache.end(), mesh);
-	 if (it != mesh_cache.end() && (*it).use_count() <= 3)
+	 if (it != mesh_cache.end() && (*it).use_count() <= 2)
 	 {
-		 (*it).~shared_ptr();
 		 mesh_cache.erase(it);
 	 }
  }

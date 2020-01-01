@@ -90,7 +90,7 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 			{
 				if (material->textures[i].get() != nullptr) {
 					char tmp_string[256];
-					std::shared_ptr<Texture> texture = material->textures[i];
+					std::shared_ptr<Texture> & texture = material->textures[i];
 					ImGui::Image((void*)(intptr_t)texture->opengl_texture, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
 					DropTarget(material, type);
 					ImGui::SameLine();
@@ -148,8 +148,7 @@ void ComponentsUI::DropTarget(ComponentMaterial *material, Texture::TextureType 
 			ModuleFileSystem::File *incoming_file = *(ModuleFileSystem::File**)payload->Data;
 			if (incoming_file->file_type == ModuleFileSystem::FileType::TEXTURE)
 			{
-				std::shared_ptr<Texture> new_texture = App->texture->LoadTexture(incoming_file->file_path.c_str());
-				material->SetMaterialTexture(type, new_texture);
+				material->SetMaterialTexture(type, App->texture->LoadTexture(incoming_file->file_path.c_str()));
 			}
 		}
 		ImGui::EndDragDropTarget();

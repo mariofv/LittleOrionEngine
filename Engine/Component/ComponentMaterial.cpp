@@ -15,7 +15,7 @@ ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, Comp
 
 ComponentMaterial::~ComponentMaterial()
 {
-	for (auto texture : textures)
+	for (auto & texture : textures)
 	{
 		App->material_importer->RemoveTextureFromCacheIfNeeded(texture);
 	}

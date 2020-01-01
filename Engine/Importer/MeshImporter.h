@@ -20,7 +20,7 @@ public:
 	bool Import(const  std::string& file_path, std::string& output_file) const override;
 	std::shared_ptr<Mesh> Load(const char* file_path) const;
 
-	void RemoveMeshFromCacheIfNeeded(std::shared_ptr<Mesh>);
+	void RemoveMeshFromCacheIfNeeded(const std::shared_ptr<Mesh> & mesh);
 private:
 	void ImportMesh(const aiMesh* file_path, const std::vector<std::string> & loaded_meshes_materials, const std::string& output_file) const;
 	void ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file) const;
