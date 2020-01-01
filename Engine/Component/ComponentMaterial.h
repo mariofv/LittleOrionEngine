@@ -19,16 +19,14 @@ public:
 
 	void Delete() override;
 
-	void Save(Config& config) const;
-	void Load(const Config& config);
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
 
 	void Render(unsigned int shader_program) const;
 
-	void SetMaterialTexture(Texture::TextureType type, std::shared_ptr<Texture> & new_texture);
-	const std::shared_ptr<Texture>& GetMaterialTexture(Texture::TextureType type) const;
-
-	void SetMaterialTexture(size_t type, std::shared_ptr<Texture> & new_texture);
+	void SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture);
 	const std::shared_ptr<Texture>& GetMaterialTexture(size_t type) const;
+	void RemoveMaterialTexture(size_t type);
 
 	void ShowComponentWindow() override;
 
@@ -56,9 +54,6 @@ private:
 
 	friend void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material);
 	friend class ComponentsUI;
-
-
-
 };
 
 #endif //_COMPONENTMATERIAL_H_

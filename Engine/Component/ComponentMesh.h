@@ -10,20 +10,20 @@ class ComponentsUI;
 class ComponentMesh : public Component
 {
 public:
-	ComponentMesh(std::shared_ptr<Mesh> mesh_to_render);
-	ComponentMesh(std::shared_ptr<Mesh> mesh_to_render, GameObject * owner);
+	ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render);
+	ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner);
 	ComponentMesh();
 
 	~ComponentMesh();
 
 	void Delete() override;
 
-	void Save(Config& config) const;
-	void Load(const Config& config);
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
 
 	void Render() const;
 
-	void SetMesh(std::shared_ptr<Mesh> mesh_to_render);
+	void SetMesh(const std::shared_ptr<Mesh> & mesh_to_render);
 
 	void ShowComponentWindow() override;
 

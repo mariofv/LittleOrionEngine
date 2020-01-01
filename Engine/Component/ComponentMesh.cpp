@@ -4,12 +4,12 @@
 #include "Importer/MeshImporter.h"
 #include "UI/ComponentsUI.h"
 
-ComponentMesh::ComponentMesh(std::shared_ptr<Mesh> mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH)
+ComponentMesh::ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH)
 {
 	SetupMesh();
 }
 
-ComponentMesh::ComponentMesh(std::shared_ptr<Mesh> mesh_to_render, GameObject * owner) : mesh_to_render(mesh_to_render), Component(owner, ComponentType::MESH)
+ComponentMesh::ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner) : mesh_to_render(mesh_to_render), Component(owner, ComponentType::MESH)
 {
 	SetupMesh();
 }
@@ -19,7 +19,7 @@ ComponentMesh::ComponentMesh() : Component(nullptr, ComponentType::MESH)
 
 }
 
-void ComponentMesh::SetMesh(std::shared_ptr<Mesh> mesh_to_render)
+void ComponentMesh::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
 {
 	this->mesh_to_render = mesh_to_render;
 	SetupMesh();

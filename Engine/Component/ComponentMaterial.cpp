@@ -160,16 +160,12 @@ void ComponentMaterial::BindTexture(Texture::TextureType id) const
 		glBindTexture(GL_TEXTURE_2D, App->texture->whitefall_texture_id);
 	}
 }
-void ComponentMaterial::SetMaterialTexture(Texture::TextureType type, std::shared_ptr<Texture> & new_texture)
+void ComponentMaterial::RemoveMaterialTexture(size_t type)
 {
-	textures[static_cast<int>(type)] = new_texture;
+	App->material_importer->RemoveTextureFromCacheIfNeeded(textures[type]);
+	textures[type] = nullptr;
 }
-const std::shared_ptr<Texture>& ComponentMaterial::GetMaterialTexture(Texture::TextureType type) const
-{
-	return textures[static_cast<int>(type)];
-}
-
-void ComponentMaterial::SetMaterialTexture(size_t type, std::shared_ptr<Texture> & new_texture)
+void ComponentMaterial::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture)
 {
 	textures[type] = new_texture;
 }

@@ -7,8 +7,6 @@
 #include "MathGeoLib.h"
 #include "GL/glew.h"
 
-class ComponentCamera;
-
 class ComponentAABB : public Component
 {
 public:
@@ -25,14 +23,13 @@ public:
 
 	void Delete() override {};
 
-	void Save(Config& config) const;
-	void Load(const Config& config);
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
 
 	void GenerateBoundingBox();
 	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices);
 
 	bool IsEmpty() const;
-	std::vector<float> GetVertices() const;
 
 	void ShowComponentWindow(){}
 

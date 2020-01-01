@@ -7,7 +7,6 @@
 #include "MathGeoLib.h"
 #include <GL/glew.h>
 
-
 class ComponentsUI;
 class ComponentCamera : public Component
 {
@@ -26,8 +25,8 @@ public:
 	void Update() override;
 	void Delete() override;
 
-	void Save(Config& config) const;
-	void Load(const Config& config);
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
 
 	float GetWidth() const;
 	float GetHeigt() const;
@@ -72,7 +71,6 @@ public:
 	float4x4 GetViewMatrix() const;
 	float4x4 GetProjectionMatrix() const;
 	float4x4 GetInverseClipMatrix() const;
-	void GenerateMatrices();
 
 	std::vector<float> GetFrustumVertices() const;
 	
@@ -86,6 +84,8 @@ public:
 
 private:
 	void GenerateFrameBuffers(const float width, const float height);
+	void GenerateMatrices();
+	void InitCamera();
 
 public:
 	const float SPEED_UP_FACTOR = 2.f;
