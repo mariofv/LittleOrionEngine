@@ -6,17 +6,43 @@
 #include <cctype>
 
 bool ModuleFileSystem::Init() {
-	MakeDirectory(".//", "Assets");
-	MakeDirectory(".//", "Library");
-	MakeDirectory(".//Assets", "Scenes");
-	MakeDirectory(".//Library", "Materials");
-	MakeDirectory(".//Library", "Meshes");
+	save_path = SDL_GetPrefPath("UPC",TITLE);
+	if (save_path == NULL)
+	{
+		return false;
+	}
+	if (PHYSFS_setWriteDir(".") == 0)
+	{
+		APP_LOG_ERROR("Error creating writing directory: %s", PHYSFS_getLastError());
+		return false;
+	}
+	MakeDirectory("Assets");
+	MakeDirectory("Assets/Scenes");
+	MakeDirectory("Library/Materials");
+	if (PHYSFS_mount("Assets", "Assets", 1) == 0)
+	{
+		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
+		return false;
+	}
+	if (PHYSFS_mount("Library", "Library", 1) == 0)
+	{
+		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
+		return false;
+	}
 	RefreshFilesHierarchy();
 	return true;
 }
+bool ModuleFileSystem::CleanUp()
+{
+	return PHYSFS_deinit();
+}
+ModuleFileSystem::~ModuleFileSystem()
+{
+	CleanUp();
+}
+
 char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
 {
-
 	SDL_RWops *rw = SDL_RWFromFile(file_path, "rb");
 	if (rw == NULL) return NULL;
 
@@ -56,7 +82,7 @@ unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, u
 
 	if (file != NULL)
 	{
-		APP_LOG_INFO("File %s opened!\n", file_path);
+		APP_LOG_INFO("File %s saved!\n", file_path);
 
 	SDL_RWwrite(file, buffer, size, 1);
 
@@ -69,12 +95,11 @@ unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, u
 	SDL_RWclose(file);
 	return 0;
 }
-bool ModuleFileSystem::Remove(const File & file) const
+bool ModuleFileSystem::Remove(const File & file)
 {
-	if (file.file_type == FileType::DIRECTORY) {
-		return RemoveDirectoryA(file.file_path.c_str());
-	}
-	return DeleteFileA(file.file_path.c_str());
+	bool success = PHYSFS_delete(file.file_path.c_str()) != 0;
+	RefreshFilesHierarchy();
+	return success;
 }
 bool ModuleFileSystem::Exists(const char* file_path) const
 {
@@ -84,25 +109,33 @@ bool ModuleFileSystem::Exists(const char* file_path) const
 	return exists;
 }
 
-std::string ModuleFileSystem::MakeDirectory(const std::string & path, const std::string & directory_name)
+std::string ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path)
 {
-	std::string new_directory = path + "//" + directory_name;
-	CreateDirectory(new_directory.c_str(), NULL);
-	return new_directory;
+	if (PHYSFS_mkdir(new_directory_full_path.c_str()) == 0)
+	{
+		APP_LOG_ERROR("Error creating directory %s : %s", new_directory_full_path.c_str(), PHYSFS_getLastError());
+		return "";
+	}
+	RefreshFilesHierarchy();
+	return new_directory_full_path;
 }
 bool ModuleFileSystem::Copy(const char* source, const char* destination)
 {
-	return true;
+	size_t file_size;
+	char * buffer = Load(source,file_size);
+	bool success = Save(destination, buffer, file_size,false);
+	RefreshFilesHierarchy();
+	delete buffer;
+	return success;
 }
 
-ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, const DWORD & file_attributes) const
+ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileType & file_type) const
 {
-
 	std::string file_extension = GetFileExtension(file_path);
 	std::transform(file_extension.begin(), file_extension.end(), file_extension.begin(),
 		[](unsigned char letter) { return std::tolower(letter); });
 
-	if ((file_attributes & FILE_ATTRIBUTE_DIRECTORY ) || (file_extension == "/" ))
+	if ((PHYSFS_FileType::PHYSFS_FILETYPE_DIRECTORY == file_type ) || (file_extension == "/" ))
 	{
 		return ModuleFileSystem::FileType::DIRECTORY;
 	}
@@ -119,11 +152,12 @@ ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, 
 	}
 	if (
 		file_extension == "fbx"
+		|| file_extension == "ol"
 		)
 	{
 		return ModuleFileSystem::FileType::MODEL;
 	}
-	if (file_extension == "" && file_attributes & FILE_ATTRIBUTE_ARCHIVE)
+	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{
 		return ModuleFileSystem::FileType::ARCHIVE;
 	}
@@ -150,24 +184,23 @@ std::string ModuleFileSystem::GetFileExtension(const char *file_path) const
 
 void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only) const
 {
-	std::string path_all = path + "//*";
-
-	WIN32_FIND_DATA find_file_data;
-	HANDLE handle_find = FindFirstFile(path_all.c_str(), &find_file_data);
-	if (handle_find == INVALID_HANDLE_VALUE) {
-		FindClose(handle_find);
+	char **files_array = PHYSFS_enumerateFiles(path.c_str());
+	if (*files_array == NULL)
+	{
+		APP_LOG_ERROR("Error reading directory: %s", PHYSFS_getLastError());
 		return;
 	}
-	do {
-		bool is_directory = find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY;
-		if (IsValidFileName(find_file_data.cFileName) && ((directories_only && is_directory) || !directories_only))
+	char **i;
+	for (i = files_array; *i != NULL; i++)
+	{
+		std::shared_ptr<File> new_file = std::make_shared<File>(path, *i);
+		bool is_directory = new_file->file_type == FileType::DIRECTORY;
+		if (IsValidFileName(*i) && ((directories_only && is_directory) || !directories_only))
 		{
-			std::shared_ptr<File> new_file = std::make_shared<File>(find_file_data,path);
 			files.push_back(new_file);
 		}
-	} while (FindNextFile(handle_find, &find_file_data) != 0);
-
-	FindClose(handle_find);
+	}
+	PHYSFS_freeList(files_array);
 }
 
 std::shared_ptr<ModuleFileSystem::File> ModuleFileSystem::GetFileHierarchyFromPath(const std::string & path) const
@@ -192,26 +225,27 @@ void ModuleFileSystem::GetAllFilesRecursive(std::shared_ptr<File> root) const
 
 size_t ModuleFileSystem::GetNumberOfSubFolders(const std::string & path) const
 {
-	std::string path_all = path + "//*";
-	WIN32_FIND_DATA find_file_data;
-	HANDLE handle_find = FindFirstFile(path_all.c_str(), &find_file_data);
-
-	if (handle_find == INVALID_HANDLE_VALUE) {
-		FindClose(handle_find);
+	char **files_array = PHYSFS_enumerateFiles(path.c_str());
+	if (files_array == NULL)
+	{
+		APP_LOG_ERROR("Error reading directory: %s", PHYSFS_getLastError());
 		return 0;
 	}
+	char **i;
 	size_t subFiles = 0;
-	do {
-		if (find_file_data.dwFileAttributes & FILE_ATTRIBUTE_DIRECTORY && IsValidFileName(find_file_data.cFileName))
+	for (i = files_array; *i != NULL; i++)
+	{
+		std::shared_ptr<File> new_file = std::make_shared<File>(path, *i);
+		bool is_directory = new_file->file_type == FileType::DIRECTORY;
+		if (IsValidFileName(*i) && is_directory)
 		{
-			++subFiles;
+		++subFiles;
 		}
-
-	} while (FindNextFile(handle_find, &find_file_data) != 0);
-
-	FindClose(handle_find);
+	}
+	PHYSFS_freeList(files_array);
 	return subFiles;
 }
+
 
 bool ModuleFileSystem::IsValidFileName(const char * file_name) const
 {
@@ -220,34 +254,31 @@ bool ModuleFileSystem::IsValidFileName(const char * file_name) const
 
 void ModuleFileSystem::RefreshFilesHierarchy()
 {
-	root_file = GetFileHierarchyFromPath(".//Assets");
+	root_file = GetFileHierarchyFromPath("Assets");
 }
 
 bool ModuleFileSystem::File::operator==(const ModuleFileSystem::File& compare)
 {
 	return this->filename == compare.filename && this->file_path == compare.file_path && this->file_type == compare.file_type;
 };
-ModuleFileSystem::File::File(const WIN32_FIND_DATA & windows_file_data, const std::string & path) {
-	this->filename = windows_file_data.cFileName;
-	this->file_path = path + "//" + windows_file_data.cFileName;
-	this->file_type = App->filesystem->GetFileType(filename.c_str(), windows_file_data.dwFileAttributes);
+ModuleFileSystem::File::File(const std::string & path, const std::string & name) {
+	this->filename = name;
+	this->file_path = path + "/" + name;
+	PHYSFS_Stat file_info;
+	if (PHYSFS_stat(this->file_path.c_str(), &file_info) == 0)
+	{
+		APP_LOG_ERROR("Error getting %s file info: %s", this->file_path.c_str(),PHYSFS_getLastError());
+	}
+
+	this->file_type = App->filesystem->GetFileType(filename.c_str(), file_info.filetype);
 	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
 }
 
 ModuleFileSystem::File::File(const std::string & path) {
 
-	WIN32_FIND_DATA find_file_data;
-	HANDLE handle_find = FindFirstFile(path.c_str(), &find_file_data);
-	if (handle_find == INVALID_HANDLE_VALUE) {
-		FindClose(handle_find);
-		return;
-	}
-	this->filename = find_file_data.cFileName;
-	this->file_path = path;
-	this->file_type = App->filesystem->GetFileType(filename.c_str(), find_file_data.dwFileAttributes);
-	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
-	std::replace(this->file_path.begin(), this->file_path.end(), '\\', '\/');
-
+	std::string name = path.substr(path.find_last_of('/')+1, -1);
+	std::string not_name_path = path.substr(0, path.find_last_of('/'));
+	*this = File(not_name_path,name);
 }
 
 

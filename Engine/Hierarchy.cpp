@@ -112,8 +112,22 @@ void Hierarchy::DropTarget(GameObject *target_game_object) const
 				incoming_game_object->SetParent(target_game_object);
 			}
 		}
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_File"))
+		{
+			assert(payload->DataSize == sizeof(ModuleFileSystem::File*));
+			ModuleFileSystem::File *incoming_file = *(ModuleFileSystem::File**)payload->Data;
+			if (incoming_file->file_type == ModuleFileSystem::FileType::MODEL)
+			{
+				GameObject* new_model = App->model_loader->LoadModel(incoming_file->file_path.c_str());
+				if (target_game_object != nullptr)
+				{
+					target_game_object->AddChild(new_model);
+				}
+			}
+		}
 		ImGui::EndDragDropTarget();
 	}
+	
 }
 
 void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)

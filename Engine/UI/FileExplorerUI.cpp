@@ -6,6 +6,8 @@
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
 
+#include <algorithm>
+
 void FileExplorerUI::ShowAssetsFolders() {
 	if(ImGui::BeginTabItem(ICON_FA_FOLDER_OPEN " Assets") ){
 
@@ -91,12 +93,7 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 			ImVec2 text_sz(ImGui::CalcTextSize(filename.c_str()).x+5,0);
 			ImGui::Selectable(item_name.c_str(), selected_file == file.get(),ImGuiSelectableFlags_None,text_sz);
 			ProcessMouseInput(file.get());
-			if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
-			{
-				ImGui::SetDragDropPayload("DND_File", &selected_file, sizeof(ModuleFileSystem::File*));
-				ImGui::Text("Dragging %s", selected_file->filename.c_str());
-				ImGui::EndDragDropSource();
-			}
+			FilesDrag();
 			++files_count;
 			float last_button_x2 = ImGui::GetItemRectMax().x;
 			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + text_sz.x; // Expected position if next text was on same line
@@ -160,7 +157,6 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & fi
 
 		files_in_selected_folder.clear();
 		App->filesystem->GetAllFilesInPath(selected_folder->file_path, files_in_selected_folder);
-		App->filesystem->RefreshFilesHierarchy();
 		ImGui::EndPopup();
 	}
 }
@@ -169,14 +165,41 @@ void FileExplorerUI::MakeDirectoryFromFile(const ModuleFileSystem::File & file) 
 {
 	if (!file.file_path.empty() && file.file_type != ModuleFileSystem::FileType::DIRECTORY)
 	{
-		size_t last_slash = file.file_path.find_last_of("//");
-		App->filesystem->MakeDirectory(file.file_path.substr(0, last_slash - 1), "new Folder");
+		size_t last_slash = file.file_path.find_last_of("/");
+		App->filesystem->MakeDirectory(file.file_path.substr(0, last_slash - 1)+"/new Folder");
 	}
 	else if(!file.file_path.empty())
 	{
-		App->filesystem->MakeDirectory(file.file_path, "new Folder");
+		App->filesystem->MakeDirectory(file.file_path+"/new Folder");
 	}
 	else if(!selected_folder->file_path.empty()){
-		App->filesystem->MakeDirectory(selected_folder->file_path, "new Folder");
+		App->filesystem->MakeDirectory(selected_folder->file_path+ "/new Folder");
+	}
+}
+
+void FileExplorerUI::CopyFileToSelectedFolder(const char * source) const
+{
+	std::string source_string(source);
+	std::replace(source_string.begin(), source_string.end(), '\\', '/');
+	std::string file_name = source_string.substr(source_string.find_last_of('/'), -1);
+	std::string destination;
+	if (selected_folder == nullptr)
+	{
+		destination = "Assets"+ file_name;
+	}
+	else;
+	{
+		destination = selected_folder->file_path  + file_name;
+	}
+	App->filesystem->Copy(source, destination.c_str());
+}
+
+void FileExplorerUI::FilesDrag() const
+{
+	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+	{
+		ImGui::SetDragDropPayload("DND_File", &selected_file, sizeof(ModuleFileSystem::File*));
+		ImGui::Text("Dragging %s", selected_file->filename.c_str());
+		ImGui::EndDragDropSource();
 	}
 }
