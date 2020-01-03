@@ -151,14 +151,20 @@ void ComponentMaterial::AddAmbientOclusionUniforms(unsigned int shader_program) 
 
 void ComponentMaterial::BindTexture(Texture::TextureType id) const
 {
-	if (textures[id] != nullptr)
+	GLuint texture_id;
+	if (show_checkerboard_texture)
 	{
-		glBindTexture(GL_TEXTURE_2D, textures[id]->opengl_texture);
+		texture_id = App->texture->checkerboard_texture_id;
+	}
+	else if (textures[id] != nullptr)
+	{
+		texture_id = textures[id]->opengl_texture;
 	}
 	else
 	{
-		glBindTexture(GL_TEXTURE_2D, App->texture->whitefall_texture_id);
+		texture_id = App->texture->whitefall_texture_id;
 	}
+	glBindTexture(GL_TEXTURE_2D, texture_id);
 }
 void ComponentMaterial::RemoveMaterialTexture(size_t type)
 {

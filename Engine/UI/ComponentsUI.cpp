@@ -89,6 +89,7 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 			if (ImGui::CollapsingHeader(GetTypeName(type).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				if (material->textures[i].get() != nullptr) {
+					ImGui::PushID(i);
 					char tmp_string[256];
 					std::shared_ptr<Texture> & texture = material->textures[i];
 					ImGui::Image((void*)(intptr_t)texture->opengl_texture, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
@@ -103,10 +104,17 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 
 					bool mipmap = texture->IsMipMapped();
 					ImGui::Checkbox("Mipmap", &mipmap);
+					ImGui::SameLine();
+					ImGui::Checkbox("Checker Texture", &material->show_checkerboard_texture);
 					ImGui::Spacing();
 
-					ImGui::Checkbox("Checker Texture", &material->show_checkerboard_texture);
+					if (ImGui::Button(ICON_FA_TIMES) )
+					{
+						material->RemoveMaterialTexture(i);
+					}
+					ImGui::SameLine(); ImGui::Text("Remove Texture");
 					ImGui::EndGroup();
+					ImGui::PopID();
 				}
 				else
 				{
@@ -148,6 +156,7 @@ void ComponentsUI::DropTarget(ComponentMaterial *material, Texture::TextureType 
 			ModuleFileSystem::File *incoming_file = *(ModuleFileSystem::File**)payload->Data;
 			if (incoming_file->file_type == ModuleFileSystem::FileType::TEXTURE)
 			{
+
 				material->SetMaterialTexture(type, App->texture->LoadTexture(incoming_file->file_path.c_str()));
 			}
 		}
