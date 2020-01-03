@@ -22,6 +22,8 @@ ComponentCamera::ComponentCamera(GameObject * owner) : Component(owner, Componen
 
 void ComponentCamera::InitCamera()
 {
+	glGenBuffers(1, &uniform_buffer);
+
 	glGenFramebuffers(1, &fbo);
 
 	aspect_ratio = 1.f;
@@ -37,6 +39,7 @@ void ComponentCamera::InitCamera()
 ComponentCamera::~ComponentCamera()
 {
 	glDeleteTextures(1, &last_recorded_frame_texture);
+	glDeleteBuffers(1, &uniform_buffer);
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteRenderbuffers(1, &rbo);
 }
