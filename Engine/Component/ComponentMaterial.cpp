@@ -121,7 +121,7 @@ void ComponentMaterial::AddDiffuseUniforms(unsigned int shader_program) const
 	glActiveTexture(GL_TEXTURE0);
 	BindTexture(Texture::TextureType::DIFUSSE);
 	glUniform1i(glGetUniformLocation(shader_program, "material.diffuse_map"), 0);
-	glUniform3fv(glGetUniformLocation(shader_program, "material.diffuse_color"), sizeof(float), (float*)diffuse_color);
+	glUniform4fv(glGetUniformLocation(shader_program, "material.diffuse_color"), 1, (float*)diffuse_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_diffuse"),  k_diffuse);
 
 }
@@ -130,14 +130,14 @@ void ComponentMaterial::AddEmissiveUniforms(unsigned int shader_program) const
 	glActiveTexture(GL_TEXTURE1);
 	BindTexture(Texture::TextureType::EMISSIVE);
 	glUniform1i(glGetUniformLocation(shader_program, "material.emissive_map"), 1);
-	glUniform3fv(glGetUniformLocation(shader_program, "material.emissive_color"), sizeof(float), (float*)emissive_color);
+	glUniform4fv(glGetUniformLocation(shader_program, "material.emissive_color"), 1, (float*)emissive_color);
 }
 void ComponentMaterial::AddSpecularUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE2);
 	BindTexture(Texture::TextureType::SPECULAR);
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
-	glUniform3fv(glGetUniformLocation(shader_program, "material.specular_color"), sizeof(float), (float*)specular_color);
+	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), k_specular);
 	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), shininess);
 }

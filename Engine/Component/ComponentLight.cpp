@@ -28,9 +28,11 @@ void ComponentLight::Render(unsigned int shader_program) const
 	glBufferSubData(GL_UNIFORM_BUFFER, size_of_elements_before + 3 * sizeof(float), sizeof(float), &light_intensity);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);*/
 
+	
 	glUniform1f(glGetUniformLocation(shader_program, "light.light_intensity"), light_intensity);
-	glUniform3fv(glGetUniformLocation(shader_program, "light.light_color"), sizeof(float), (float*)light_color);
-	glUniform3fv(glGetUniformLocation(shader_program, "light.light_position"), sizeof(float), (float*)&owner->transform.GetTranslation());
+	glUniform3fv(glGetUniformLocation(shader_program, "light.light_color"), 1, (float*)light_color);
+	glUniform3fv(glGetUniformLocation(shader_program, "light.light_position"), 1, (float*)&owner->transform.GetTranslation());
+	
 }
 
 void ComponentLight::Save(Config& config) const
