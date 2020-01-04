@@ -4,31 +4,34 @@ layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec2 vertex_uv0;
 layout(location = 2) in vec3 vertex_normal;
 
-uniform mat4 proj;
-uniform mat4 view;
-uniform mat4 model;
+layout (std140) uniform Matrices
+{
+  mat4 model;
+  mat4 proj;
+	mat4 view;
+};
 
-struct Material {    
-	sampler2D diffuse_map;    
-	vec4 diffuse_color;   
-	float k_diffuse;    
-	sampler2D specular_map;    
-	vec4 specular_color;    
-	float shininess;   
-	float k_specular;   
-	sampler2D occlusion_map;    
-	float k_ambient;    
-	sampler2D emissive_map;    
+struct Material {
+	sampler2D diffuse_map;
+	vec4 diffuse_color;
+	float k_diffuse;
+	sampler2D specular_map;
+	vec4 specular_color;
+	float shininess;
+	float k_specular;
+	sampler2D occlusion_map;
+	float k_ambient;
+	sampler2D emissive_map;
 	vec4 emissive_color;
 };
 uniform Material material;
 
-struct Light{
+layout (std140) uniform Light
+{
+	float light_intensity;
 	vec3 light_color;
 	vec3 light_position;
-	float light_intensity;
-};
-uniform Light light;
+} light;
 
 flat out float diffuse_intensity;
 flat out float specular_intensity;
@@ -55,7 +58,7 @@ void main()
 
         if(spec > 0.0)
         {
-            specular = pow(spec, material.shininess); 
+            specular = pow(spec, material.shininess);
         }
     }
     diffuse_intensity = material.k_diffuse*diffuse;
