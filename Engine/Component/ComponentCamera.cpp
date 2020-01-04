@@ -449,10 +449,10 @@ void ComponentCamera::GenerateMatrices()
 	
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 
-	size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_OFFSET + sizeof(float4x4);
+	size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
 	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), proj.Transposed().ptr());
 
-	size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_OFFSET + 2 * sizeof(float4x4);
+	size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + 2 * sizeof(float4x4);
 	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), view.Transposed().ptr());
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);

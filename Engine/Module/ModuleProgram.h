@@ -15,10 +15,13 @@ public:
 	{
 		GLuint ubo;
 
-		const size_t MATRICES_OFFSET = 0;
-		const size_t MATRICES_SIZE = 3 * sizeof(float4x4); // Size of model, projection and view matrix
+		const size_t MATRICES_UNIFORMS_OFFSET = 0;
+		const size_t MATRICES_UNIFORMS_SIZE = 3 * sizeof(float4x4); // Size of model, projection and view matrix
 		
-		const size_t UNIFORMS_SIZE = MATRICES_SIZE; // Size for uniform buffer.
+		const size_t LIGHT_UNIFORMS_OFFSET = MATRICES_UNIFORMS_SIZE;
+		const size_t LIGHT_UNIFORMS_SIZE = 7 * sizeof(float); // Size of light intensity (1 float), color (3 floats) and position (3 floats)
+
+		const size_t UNIFORMS_SIZE = MATRICES_UNIFORMS_SIZE + LIGHT_UNIFORMS_SIZE; // Size for uniform buffer.
 	};
 
 	ModuleProgram() = default;

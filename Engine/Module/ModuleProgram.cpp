@@ -61,12 +61,12 @@ void ModuleProgram::InitUniformBuffer()
 	glGenBuffers(1, &uniform_buffer.ubo);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer.ubo);
-
 	glBufferData(GL_UNIFORM_BUFFER, uniform_buffer.UNIFORMS_SIZE, NULL, GL_STATIC_DRAW); // Allocate space in uniform buffer
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	// Bind buffer ranges with binding points. NOTE: ORDER MATTERS!
-	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uniform_buffer.ubo, 0, uniform_buffer.MATRICES_SIZE); // Sets binding point 0 for model, projection and view matrix
+	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uniform_buffer.ubo, uniform_buffer.MATRICES_UNIFORMS_OFFSET, uniform_buffer.MATRICES_UNIFORMS_SIZE); // Sets binding point 0 for model, projection and view matrix
+	glBindBufferRange(GL_UNIFORM_BUFFER, 1, uniform_buffer.ubo, uniform_buffer.LIGHT_UNIFORMS_OFFSET, uniform_buffer.LIGHT_UNIFORMS_SIZE); // Sets binding point 1 for light intensity, color and position
 }
 
 bool ModuleProgram::LoadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name)
@@ -193,4 +193,5 @@ bool ModuleProgram::InitProgram(GLuint &shader_program, const GLuint vertex_shad
 void ModuleProgram::BindUniformBlocks(GLuint shader_program) const
 {
 	glUniformBlockBinding(shader_program, glGetUniformBlockIndex(shader_program, "Matrices"), 0);
+	glUniformBlockBinding(shader_program, glGetUniformBlockIndex(shader_program, "Light"), 1);
 }

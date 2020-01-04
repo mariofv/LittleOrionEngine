@@ -20,19 +20,18 @@ void ComponentLight::Delete()
 }
 
 void ComponentLight::Render(unsigned int shader_program) const
-{
-	//TODO: Modify this once uniform buffer is created
-	size_t size_of_elements_before = 3 * sizeof(float3);
-	/*glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniforms_buffer);
-	glBufferSubData(GL_UNIFORM_BUFFER, size_of_elements_before, 3* sizeof(float), light_color);
-	glBufferSubData(GL_UNIFORM_BUFFER, size_of_elements_before + 3 * sizeof(float), sizeof(float), &light_intensity);
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);*/
+{	
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 
+	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.LIGHT_UNIFORMS_OFFSET, sizeof(float), &light_intensity);
 	
-	glUniform1f(glGetUniformLocation(shader_program, "light.light_intensity"), light_intensity);
-	glUniform3fv(glGetUniformLocation(shader_program, "light.light_color"), 1, (float*)light_color);
-	glUniform3fv(glGetUniformLocation(shader_program, "light.light_position"), 1, (float*)&owner->transform.GetTranslation());
-	
+	size_t light_color_offset = App->program->uniform_buffer.LIGHT_UNIFORMS_OFFSET + sizeof(float);
+	glBufferSubData(GL_UNIFORM_BUFFER, light_color_offset, 3 * sizeof(float), (float*)light_color);
+
+	size_t light_position_offset = App->program->uniform_buffer.LIGHT_UNIFORMS_OFFSET + 4 * sizeof(float);
+	glBufferSubData(GL_UNIFORM_BUFFER, light_position_offset, 3 * sizeof(float), owner->transform.GetTranslation().ptr());
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 void ComponentLight::Save(Config& config) const
