@@ -559,6 +559,12 @@ ComponentAABB::CollisionState ComponentCamera::CheckAABB2DCollision(const AABB2D
 	return ComponentAABB::CollisionState::INTERSECT;
 }
 
+void ComponentCamera::GetRay(const float2& normalized_position, LineSegment &return_value) const
+{
+	return_value = camera_frustum.UnProjectLineSegment(normalized_position.x, normalized_position.y);
+}
+
+
 void ComponentCamera::ShowComponentWindow()
 {
 	ComponentsUI::ShowComponentCameraWindow(this);

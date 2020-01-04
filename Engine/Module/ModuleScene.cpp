@@ -151,14 +151,27 @@ void ModuleScene::Load(const Config& serialized_scene)
 	App->renderer->GenerateQuadTree();
 }
 
+void ModuleScene::MousePicking(const float2& mouse_position)
+{
+	float2 window_center_pos = imgui_window_pos + float2(imgui_window_width, imgui_window_height) / 2;
+
+	float2 window_mouse_position = mouse_position - window_center_pos;
+	float2 window_mouse_position_normalized = float2(window_mouse_position.x * 2 / imgui_window_width, - window_mouse_position.y * 2 / imgui_window_height);
+
+	LineSegment ray;
+	App->cameras->scene_camera->GetRay(window_mouse_position_normalized, ray);
+}
+
 void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title)
 {
 	if (ImGui::BeginTabItem(title))
 	{
 		scene_window_is_hovered = ImGui::IsWindowHovered(); // TODO: This should be something like ImGui::IsTabHovered (such function doesn't exist though)
 
-		float imgui_window_width = ImGui::GetWindowWidth(); 
-		float imgui_window_height = ImGui::GetWindowHeight();
+		imgui_window_pos = float2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+
+		imgui_window_width = ImGui::GetWindowWidth(); 
+		imgui_window_height = ImGui::GetWindowHeight();
 		camera_frame_buffer_to_show.RecordFrame(imgui_window_width, imgui_window_height);
 
 		ImGui::GetWindowDrawList()->AddImage(
@@ -177,5 +190,4 @@ void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_sh
 		}
 		ImGui::EndTabItem();
 	}
-
 }
