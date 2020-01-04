@@ -472,15 +472,39 @@ void ModuleRender::GenerateQuadTree()
 	}
 }
 
-std::vector<GameObject*> ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
+GameObject* ModuleRender::GetRaycastIntertectedObject(LineSegment & ray)
 {
-	std::vector<GameObject*> intersected;
+	std::vector<ComponentMesh*> intersected_meshes;
 	for (auto & mesh : meshes)
 	{
 		if (mesh->owner->aabb.bounding_box.Intersects(ray))
 		{
-			intersected.push_back(mesh->owner);
+			intersected_meshes.push_back(mesh);
 		}
 	}
-	return intersected;
+
+	float3x3 transform_matrix = {
+		App->cameras->scene_camera->GetInverseClipMatrix().Col3(0),
+		App->cameras->scene_camera->GetInverseClipMatrix().Col3(1),
+		App->cameras->scene_camera->GetInverseClipMatrix().Col3(1)
+	};
+	ray.Transform(transform_matrix);
+
+	std::vector<GameObject*> intersected;
+	GameObject* selected;
+	float min_distance = INFINITY;
+	for (auto & mesh : intersected_meshes)
+	{
+		for (auto& triangle : mesh->mesh_to_render->triangles)
+		{
+			float distance;
+			bool intersected = triangle.Intersects(ray, &distance);
+			if (intersected && distance < min_distance)
+			{
+				selected = mesh->owner;
+				min_distance = distance;
+			}
+		}
+	}
+	return selected;
 }
