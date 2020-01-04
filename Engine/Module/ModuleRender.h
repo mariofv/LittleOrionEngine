@@ -56,6 +56,8 @@ private:
 	void GetMeshesToRender();
 
 private:
+	float3 intersection_point;
+
 	void* context = nullptr;
 
 	bool vsync = false;

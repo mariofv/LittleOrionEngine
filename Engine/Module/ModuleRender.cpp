@@ -176,6 +176,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		}
 	}
 
+	dd::sphere(intersection_point, float3(1, 0, 0), 0.75f);
+
 	rendering_measure_timer->Start();
 	GetMeshesToRender();
 	for (auto &mesh : meshes_to_render)
@@ -483,26 +485,26 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(LineSegment & ray)
 		}
 	}
 
-	float3x3 transform_matrix = {
-		App->cameras->scene_camera->GetInverseClipMatrix().Col3(0),
-		App->cameras->scene_camera->GetInverseClipMatrix().Col3(1),
-		App->cameras->scene_camera->GetInverseClipMatrix().Col3(1)
-	};
-	ray.Transform(transform_matrix);
-
 	std::vector<GameObject*> intersected;
-	GameObject* selected;
+	GameObject* selected = nullptr;
 	float min_distance = INFINITY;
 	for (auto & mesh : intersected_meshes)
 	{
+		ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
+
 		for (auto& triangle : mesh->mesh_to_render->triangles)
 		{
 			float distance;
-			bool intersected = triangle.Intersects(ray, &distance);
+			float3 aux_intersection_point;
+			bool intersected = triangle.Intersects(ray, &distance, &aux_intersection_point);
+			
 			if (intersected && distance < min_distance)
 			{
 				selected = mesh->owner;
 				min_distance = distance;
+				float4 aux_asidjai = float4(aux_intersection_point, 1);
+				aux_asidjai = mesh->owner->transform.GetGlobalModelMatrix() * aux_asidjai;
+				intersection_point = float3(aux_asidjai.x, aux_asidjai.y, aux_asidjai.z);
 			}
 		}
 	}
