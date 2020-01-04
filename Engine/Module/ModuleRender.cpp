@@ -239,24 +239,12 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 
 	GLuint shader_program = mesh.shader_program == 0 ? App->program->texture_program : mesh.shader_program;
 	glUseProgram(shader_program);
-
+	
 	glUniformMatrix4fv(
 		glGetUniformLocation(shader_program, "model"),
 		1,
 		GL_TRUE,
 		&mesh_game_object.transform.GetGlobalModelMatrix()[0][0]
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "view"),
-		1,
-		GL_TRUE,
-		&camera.GetViewMatrix()[0][0]
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "proj"),
-		1,
-		GL_TRUE,
-		&camera.GetProjectionMatrix()[0][0]
 	);
 
 	App->lights->RenderLight(shader_program);

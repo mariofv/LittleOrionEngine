@@ -23,9 +23,11 @@ ComponentCamera::ComponentCamera(GameObject * owner) : Component(owner, Componen
 void ComponentCamera::InitCamera()
 {
 	glGenBuffers(1, &uniform_buffer);
+
 	glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer);
 	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(float4x4), NULL, GL_STATIC_DRAW); // allocate space for projection and view matrix
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+	
 	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uniform_buffer, 0, 2 * sizeof(float4x4)); // Sets binding point 0 to the whole buffer
 
 	glGenFramebuffers(1, &fbo);
@@ -454,8 +456,8 @@ void ComponentCamera::GenerateMatrices()
 	view = camera_frustum.ViewMatrix();
 	
 	glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer);
-	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float4x4), &proj);
-	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(float4x4), sizeof(float4x4), &view);
+	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float4x4), proj.Transposed().ptr());
+	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(float4x4), sizeof(float4x4), view.Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 

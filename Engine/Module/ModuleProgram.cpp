@@ -35,6 +35,9 @@ bool ModuleProgram::Init()
 	{
 		return false;
 	}
+
+	glUniformBlockBinding(texture_program, glGetUniformBlockIndex(texture_program, "Matrices"), 0);
+
 	return true;
 }
 
