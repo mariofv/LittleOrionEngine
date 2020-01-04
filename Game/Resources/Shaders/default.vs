@@ -6,11 +6,10 @@ layout(location = 2) in vec3 vertex_normal;
 
 layout (std140) uniform Matrices
 {
+  mat4 model;
   mat4 proj;
 	mat4 view;
 };
-
-uniform mat4 model;
 
 out vec2 texCoord;
 out vec3 normal;

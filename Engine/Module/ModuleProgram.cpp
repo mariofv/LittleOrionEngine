@@ -2,10 +2,14 @@
 #include "ModuleProgram.h"
 #include "ModuleFileSystem.h"
 
+#include "MathGeoLib.h"
+
 // Called before render is available
 bool ModuleProgram::Init()
 {
 	APP_LOG_SECTION("************ Module Program Init ************");
+
+	InitUniformBuffer();
 
 	if (!LoadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH))
 	{
@@ -36,8 +40,6 @@ bool ModuleProgram::Init()
 		return false;
 	}
 
-	glUniformBlockBinding(texture_program, glGetUniformBlockIndex(texture_program, "Matrices"), 0);
-
 	return true;
 }
 
@@ -48,7 +50,23 @@ bool ModuleProgram::CleanUp()
 	{
 		glDeleteProgram(program);
 	}
+
+	glDeleteBuffers(1, &uniform_buffer.ubo);
+
 	return true;
+}
+
+void ModuleProgram::InitUniformBuffer()
+{
+	glGenBuffers(1, &uniform_buffer.ubo);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer.ubo);
+
+	glBufferData(GL_UNIFORM_BUFFER, uniform_buffer.UNIFORMS_SIZE, NULL, GL_STATIC_DRAW); // Allocate space in uniform buffer
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	// Bind buffer ranges with binding points. NOTE: ORDER MATTERS!
+	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uniform_buffer.ubo, 0, uniform_buffer.MATRICES_SIZE); // Sets binding point 0 for model, projection and view matrix
 }
 
 bool ModuleProgram::LoadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name)
@@ -167,5 +185,12 @@ bool ModuleProgram::InitProgram(GLuint &shader_program, const GLuint vertex_shad
 		return false;
 	}
 
+	BindUniformBlocks(shader_program);
+
 	return true;
+}
+
+void ModuleProgram::BindUniformBlocks(GLuint shader_program) const
+{
+	glUniformBlockBinding(shader_program, glGetUniformBlockIndex(shader_program, "Matrices"), 0);
 }

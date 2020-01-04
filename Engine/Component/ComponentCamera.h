@@ -110,7 +110,6 @@ public:
 private:
 	Frustum camera_frustum;
 
-	GLuint uniform_buffer = 0;
 	GLuint fbo = 0;
 	GLuint rbo = 0;
 	GLuint last_recorded_frame_texture = 0;

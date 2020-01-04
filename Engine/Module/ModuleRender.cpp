@@ -239,13 +239,10 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 
 	GLuint shader_program = mesh.shader_program == 0 ? App->program->texture_program : mesh.shader_program;
 	glUseProgram(shader_program);
-	
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "model"),
-		1,
-		GL_TRUE,
-		&mesh_game_object.transform.GetGlobalModelMatrix()[0][0]
-	);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_OFFSET, sizeof(float4x4), mesh_game_object.transform.GetGlobalModelMatrix().Transposed().ptr());
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	App->lights->RenderLight(shader_program);
 	mesh_game_object.RenderMaterialTexture(shader_program);

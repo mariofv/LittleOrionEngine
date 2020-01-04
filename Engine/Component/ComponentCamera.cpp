@@ -1,9 +1,10 @@
 #include "ComponentCamera.h"
 #include "Application.h"
 #include "GameObject.h"
-#include "Module/ModuleRender.h"
-#include "Module/ModuleTime.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleProgram.h"
+#include "Module/ModuleTime.h"
+#include "Module/ModuleRender.h"
 #include "UI/ComponentsUI.h"
 
 #include "Utils.h"
@@ -22,14 +23,6 @@ ComponentCamera::ComponentCamera(GameObject * owner) : Component(owner, Componen
 
 void ComponentCamera::InitCamera()
 {
-	glGenBuffers(1, &uniform_buffer);
-
-	glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer);
-	glBufferData(GL_UNIFORM_BUFFER, 2 * sizeof(float4x4), NULL, GL_STATIC_DRAW); // allocate space for projection and view matrix
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	
-	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uniform_buffer, 0, 2 * sizeof(float4x4)); // Sets binding point 0 to the whole buffer
-
 	glGenFramebuffers(1, &fbo);
 
 	aspect_ratio = 1.f;
@@ -45,7 +38,6 @@ void ComponentCamera::InitCamera()
 ComponentCamera::~ComponentCamera()
 {
 	glDeleteTextures(1, &last_recorded_frame_texture);
-	glDeleteBuffers(1, &uniform_buffer);
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteRenderbuffers(1, &rbo);
 }
@@ -455,9 +447,14 @@ void ComponentCamera::GenerateMatrices()
 	proj = camera_frustum.ProjectionMatrix();
 	view = camera_frustum.ViewMatrix();
 	
-	glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer);
-	glBufferSubData(GL_UNIFORM_BUFFER, 0, sizeof(float4x4), proj.Transposed().ptr());
-	glBufferSubData(GL_UNIFORM_BUFFER, sizeof(float4x4), sizeof(float4x4), view.Transposed().ptr());
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+
+	size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_OFFSET + sizeof(float4x4);
+	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), proj.Transposed().ptr());
+
+	size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_OFFSET + 2 * sizeof(float4x4);
+	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), view.Transposed().ptr());
+
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 

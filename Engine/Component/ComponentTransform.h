@@ -39,7 +39,7 @@ public:
 	void ChangeLocalSpace(const float4x4 new_local_space);
 
 	float4x4 GetGlobalModelMatrix() const;
-
+	
 	void ShowComponentWindow() override;
 
 private:
