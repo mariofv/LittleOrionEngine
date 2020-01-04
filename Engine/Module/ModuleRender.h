@@ -53,7 +53,7 @@ private:
 	void SetMinMaxing(const bool gl_minmax);
 	void SetWireframing(const bool gl_wireframe);
 
-	void GetMeshesToRender();
+	void GetCullingMeshes(const ComponentCamera *camera);
 
 private:
 	float3 intersection_point;

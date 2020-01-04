@@ -179,7 +179,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	dd::sphere(intersection_point, float3(1, 0, 0), 0.75f);
 
 	rendering_measure_timer->Start();
-	GetMeshesToRender();
+	GetCullingMeshes(App->cameras->active_camera);
 	for (auto &mesh : meshes_to_render)
 	{
 		RenderMesh(*mesh, camera);
@@ -190,20 +190,20 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	App->debug_draw->Render(camera);
 }
 
-void ModuleRender::GetMeshesToRender()
+void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 {
 	meshes_to_render.clear();
 
 	std::copy_if(meshes.begin(),
 		meshes.end(),
-		std::back_inserter(meshes_to_render), [](auto mesh)
+		std::back_inserter(meshes_to_render), [camera](auto mesh)
 	{
 
-		if (App->debug->frustum_culling && mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
+		if (App->debug->frustum_culling && mesh->IsEnabled() && camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
 		{
 			return true;
 		}
-		else if(App->debug->frustum_culling && mesh->IsEnabled() && !App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
+		else if(App->debug->frustum_culling && mesh->IsEnabled() && !camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
 		{
 			return false;
 		}
@@ -217,7 +217,7 @@ void ModuleRender::GetMeshesToRender()
 	if (App->debug->quadtree_culling)
 	{
 		std::vector<GameObject*> rendered_objects;
-		ol_quadtree.CollectIntersect(rendered_objects, *App->cameras->active_camera);
+		ol_quadtree.CollectIntersect(rendered_objects, *camera);
 
 		for (auto &object : rendered_objects)
 		{
@@ -476,8 +476,9 @@ void ModuleRender::GenerateQuadTree()
 
 GameObject* ModuleRender::GetRaycastIntertectedObject(LineSegment & ray)
 {
+	GetCullingMeshes(App->cameras->scene_camera);
 	std::vector<ComponentMesh*> intersected_meshes;
-	for (auto & mesh : meshes)
+	for (auto & mesh : meshes_to_render)
 	{
 		if (mesh->owner->aabb.bounding_box.Intersects(ray))
 		{
