@@ -35,6 +35,8 @@ public:
 	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
 	void GenerateQuadTree();
 
+	std::vector<GameObject*> GetRaycastIntertectedObject(const LineSegment & ray);
+
 	void ShowRenderOptions();
 
 private:

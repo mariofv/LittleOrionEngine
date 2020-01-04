@@ -471,3 +471,16 @@ void ModuleRender::GenerateQuadTree()
 		ol_quadtree.Insert(*mesh->owner);
 	}
 }
+
+std::vector<GameObject*> ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
+{
+	std::vector<GameObject*> intersected;
+	for (auto & mesh : meshes)
+	{
+		if (mesh->owner->aabb.bounding_box.Intersects(ray))
+		{
+			intersected.push_back(mesh->owner);
+		}
+	}
+	return intersected;
+}
