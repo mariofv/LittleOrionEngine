@@ -107,13 +107,13 @@ void Skybox::Render(const ComponentCamera & camera) const
 		glGetUniformLocation(shader_program, "view"),
 		1,
 		GL_TRUE,
-		&view_matrix[0][0]
+		view_matrix.ptr()
 	);
 	glUniformMatrix4fv(
 		glGetUniformLocation(shader_program, "proj"),
 		1,
 		GL_TRUE,
-		&camera.GetProjectionMatrix()[0][0]
+		camera.GetProjectionMatrix().ptr()
 	);
 
 
