@@ -177,6 +177,17 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	}
 
 	rendering_measure_timer->Start();
+
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+
+	static size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
+	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), camera.GetProjectionMatrix().Transposed().ptr());
+
+	static size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + 2 * sizeof(float4x4);
+	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), camera.GetViewMatrix().Transposed().ptr());
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
 	GetMeshesToRender();
 	for (auto &mesh : meshes_to_render)
 	{
