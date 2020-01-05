@@ -78,6 +78,12 @@ enum class Fonts
 # define GOURAUND_VERTEX_SHADER_PATH "Resources/Shaders/gouraund.vs"
 # define GOURAUND_FRAGMENT_SHADER_PATH "Resources/Shaders/gouraund.fs"
 
+# define PHONG_VERTEX_SHADER_PATH "Resources/Shaders/phong.vs"
+# define PHONG_FRAGMENT_SHADER_PATH "Resources/Shaders/phong.fs"
+
+# define BLINN_PHONG_VERTEX_SHADER_PATH "Resources/Shaders/blinn_phong.vs"
+# define BLINN_PHONG_FRAGMENT_SHADER_PATH "Resources/Shaders/blinn_phong.fs"
+
 # define HOUSE_MODEL_PATH "Assets/Models/baker_house/BakerHouse.fbx"
 # define BUNNY_MODEL_PATH "Assets/Models/ZomBunny/Zombunny.fbx"
 # define GRID_TEXTURE_PATH "Resources/Textures/grid.png"
