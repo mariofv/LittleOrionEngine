@@ -58,15 +58,22 @@ bool ModuleProgram::CleanUp()
 
 void ModuleProgram::InitUniformBuffer()
 {
+	int uniform_buffer_offset_alignment;
+	glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &uniform_buffer_offset_alignment);
+
+	uniform_buffer.lights_uniform_offset = uniform_buffer_offset_alignment * CeilInt(((float)uniform_buffer.MATRICES_UNIFORMS_SIZE) / uniform_buffer_offset_alignment);
+	
+	uniform_buffer.uniforms_size = uniform_buffer.lights_uniform_offset + uniform_buffer.LIGHT_UNIFORMS_SIZE;
+
 	glGenBuffers(1, &uniform_buffer.ubo);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer.ubo);
-	glBufferData(GL_UNIFORM_BUFFER, uniform_buffer.UNIFORMS_SIZE, NULL, GL_STATIC_DRAW); // Allocate space in uniform buffer
+	glBufferData(GL_UNIFORM_BUFFER, uniform_buffer.uniforms_size, NULL, GL_STATIC_DRAW); // Allocate space in uniform buffer
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	// Bind buffer ranges with binding points. NOTE: ORDER MATTERS!
 	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uniform_buffer.ubo, uniform_buffer.MATRICES_UNIFORMS_OFFSET, uniform_buffer.MATRICES_UNIFORMS_SIZE); // Sets binding point 0 for model, projection and view matrix
-	glBindBufferRange(GL_UNIFORM_BUFFER, 1, uniform_buffer.ubo, uniform_buffer.LIGHT_UNIFORMS_OFFSET, uniform_buffer.LIGHT_UNIFORMS_SIZE); // Sets binding point 1 for light intensity, color and position
+	glBindBufferRange(GL_UNIFORM_BUFFER, 1, uniform_buffer.ubo, uniform_buffer.lights_uniform_offset, uniform_buffer.LIGHT_UNIFORMS_SIZE); // Sets binding point 1 for light intensity, color and position
 }
 
 bool ModuleProgram::LoadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name)

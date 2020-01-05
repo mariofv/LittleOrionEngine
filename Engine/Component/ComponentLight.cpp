@@ -23,12 +23,12 @@ void ComponentLight::Render(unsigned int shader_program) const
 {	
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 
-	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.LIGHT_UNIFORMS_OFFSET, sizeof(float), &light_intensity);
+	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.lights_uniform_offset, sizeof(float), &light_intensity);
 	
-	size_t light_color_offset = App->program->uniform_buffer.LIGHT_UNIFORMS_OFFSET + sizeof(float);
+	size_t light_color_offset = App->program->uniform_buffer.lights_uniform_offset + 4 * sizeof(float);
 	glBufferSubData(GL_UNIFORM_BUFFER, light_color_offset, 3 * sizeof(float), (float*)light_color);
 
-	size_t light_position_offset = App->program->uniform_buffer.LIGHT_UNIFORMS_OFFSET + 4 * sizeof(float);
+	size_t light_position_offset = App->program->uniform_buffer.lights_uniform_offset + 8 * sizeof(float);
 	glBufferSubData(GL_UNIFORM_BUFFER, light_position_offset, 3 * sizeof(float), owner->transform.GetTranslation().ptr());
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
