@@ -61,13 +61,7 @@ enum class Fonts
 # define DEFAULT_VERTEX_SHADER_PATH "Resources/Shaders/default.vs"
 # define DEFAULT_FRAGMENT_SHADER_PATH "Resources/Shaders/default.fs"
 
-# define PRIMITIVE_VERTEX_SHADER_PATH "Resources/Shaders/primitive.vs"
-# define PRIMITIVE_FRAGMENT_SHADER_PATH "Resources/Shaders/primitive.fs"
-
 # define TEXTURE_FRAGMENT_SHADER_PATH "Resources/Shaders/texture.fs"
-
-# define WOBBLE_VERTEX_SHADER_PATH "Resources/Shaders/wobble.vs"
-# define WOBBLE_FRAGMENT_SHADER_PATH "Resources/Shaders/wobble.fs"
 
 # define SKYBOX_VERTEX_SHADER_PATH "Resources/Shaders/skybox.vs"
 # define SKYBOX_FRAGMENT_SHADER_PATH "Resources/Shaders/skybox.fs"

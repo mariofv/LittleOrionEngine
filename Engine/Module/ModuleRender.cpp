@@ -73,7 +73,7 @@ static void APIENTRY openglCallbackFunction(
 		OPENGL_LOG_INIT(error_message); // Actually not an itialization entry, I use this type of entry because the yellow color
 		break;
 	case GL_DEBUG_SEVERITY_LOW:
-		// OPENGL_LOG_INFO(error_message); Too many messages in update
+		//OPENGL_LOG_INFO(error_message); Too many messages in update
 	case GL_DEBUG_SEVERITY_NOTIFICATION:
 		return;
 	}
@@ -240,24 +240,9 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 	GLuint shader_program = mesh.shader_program == 0 ? App->program->texture_program : mesh.shader_program;
 	glUseProgram(shader_program);
 
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "model"),
-		1,
-		GL_TRUE,
-		&mesh_game_object.transform.GetGlobalModelMatrix()[0][0]
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "view"),
-		1,
-		GL_TRUE,
-		&camera.GetViewMatrix()[0][0]
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "proj"),
-		1,
-		GL_TRUE,
-		&camera.GetProjectionMatrix()[0][0]
-	);
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), mesh_game_object.transform.GetGlobalModelMatrix().Transposed().ptr());
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	App->lights->RenderLight(shader_program);
 	mesh_game_object.RenderMaterialTexture(shader_program);

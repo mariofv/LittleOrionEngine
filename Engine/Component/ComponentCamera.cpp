@@ -1,9 +1,10 @@
 #include "ComponentCamera.h"
 #include "Application.h"
 #include "GameObject.h"
-#include "Module/ModuleRender.h"
-#include "Module/ModuleTime.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleProgram.h"
+#include "Module/ModuleTime.h"
+#include "Module/ModuleRender.h"
 #include "UI/ComponentsUI.h"
 
 #include "Utils.h"
@@ -445,6 +446,16 @@ void ComponentCamera::GenerateMatrices()
 {
 	proj = camera_frustum.ProjectionMatrix();
 	view = camera_frustum.ViewMatrix();
+	
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+
+	static size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
+	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), proj.Transposed().ptr());
+
+	static size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + 2 * sizeof(float4x4);
+	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), view.Transposed().ptr());
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
 std::vector<float> ComponentCamera::GetFrustumVertices() const
