@@ -11,7 +11,6 @@ layout (std140) uniform Matrices
 	mat4 view;
 };
 
-
 struct Material {
 	sampler2D diffuse_map;
 	vec4 diffuse_color;
@@ -63,5 +62,5 @@ void main()
         }
     }
     diffuse_intensity = material.k_diffuse*diffuse;
-	specular_intensity = material.k_specular*specular;
+    specular_intensity = material.k_specular*specular;
 }

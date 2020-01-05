@@ -40,6 +40,11 @@ bool ModuleProgram::Init()
 		return false;
 	}
 
+	if (!LoadProgram(phong_phong_program, PHONG_VERTEX_SHADER_PATH, PHONG_FRAGMENT_SHADER_PATH))
+	{
+		return false;
+	}
+
 	return true;
 }
 
