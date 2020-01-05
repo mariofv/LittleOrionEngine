@@ -58,7 +58,7 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::Button(tmp_string);
 
 		int shader_program = GetShaderProgramPosition(mesh->shader_program);
-		if (ImGui::Combo("Shader", &shader_program, "Flat\0Gouraund\0Phong\0Default\0"))
+		if (ImGui::Combo("Shader", &shader_program, "Flat\0Gouraund\0Phong\0Blinn-Phong\0Default\0"))
 		{
 			switch (shader_program)
 			{
@@ -72,6 +72,9 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 				mesh->shader_program = App->program->phong_phong_program;
 				break;
 			case 3:
+				mesh->shader_program = App->program->blinn_phong_phong_program;
+				break;
+			case 4:
 				mesh->shader_program = App->program->texture_program;
 				break;
 			}
@@ -280,8 +283,12 @@ int ComponentsUI::GetShaderProgramPosition(unsigned int program)
 	{
 		return 2;
 	}
-	if (App->program->texture_program == program)
+	if (App->program->blinn_phong_phong_program == program)
 	{
 		return 3;
+	}
+	if (App->program->texture_program == program)
+	{
+		return 4;
 	}
 }
