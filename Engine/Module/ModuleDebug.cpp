@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleScene.h"
 #include <OLQuadTree.h>
 
 #include <random>
@@ -44,6 +45,7 @@ bool ModuleDebug::CleanUp()
 void ModuleDebug::CreateHousesRandom() const
 {
 	std::srand(std::time(nullptr)); // use current time as seed for random generator
+	GameObject *houses = App->scene->CreateGameObject();
 	for (unsigned int i = 0; i < num_houses; ++i)
 	{
 		GameObject *loaded_house = App->model_loader->LoadModel(HOUSE_MODEL_PATH);
@@ -51,8 +53,9 @@ void ModuleDebug::CreateHousesRandom() const
 		int z = std::rand() % max_dispersion_z;
 		loaded_house->transform.SetTranslation(float3(x, 0, z));
 		loaded_house->Update();
-		loaded_house->SetStatic(true);
+		houses->AddChild(loaded_house);
 	}
+	houses->SetStatic(true);
 }
 
 
