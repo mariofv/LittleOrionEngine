@@ -3,7 +3,6 @@
 
 #include "Component.h"
 
-#include <GL/glew.h>
 #include "Mesh.h"
 
 class ComponentsUI;
@@ -27,17 +26,11 @@ public:
 
 	void ShowComponentWindow() override;
 
-private:
-	void SetupMesh();
-
 public:
 	std::shared_ptr<Mesh> mesh_to_render;
 	unsigned int shader_program = 0;
 
 private:
-	GLuint vao = 0;
-	GLuint vbo = 0;
-	GLuint ebo = 0;
 	friend class ComponentsUI;
 };
 
