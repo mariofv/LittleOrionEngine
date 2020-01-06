@@ -114,6 +114,10 @@ bool ModuleRender::Init()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
 	APP_LOG_SUCCESS("Glew initialized correctly.")
 
 return true;
@@ -157,6 +161,8 @@ void ModuleRender::Render() const
 
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
+	glStencilMask(0x00); // make sure we don't update the stencil buffer while drawing debug shapes
+	
 	if (App->debug->show_grid)
 	{
 		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
@@ -261,9 +267,47 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 		&camera.GetProjectionMatrix()[0][0]
 	);
 
+	if (App->scene->hierarchy.selected_game_object == &mesh_game_object)
+	{
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilMask(0xFF);
+	}
+
 	App->lights->RenderLight(shader_program);
 	mesh_game_object.RenderMaterialTexture(shader_program);
 	mesh.Render();
+
+	if (App->scene->hierarchy.selected_game_object == &mesh_game_object)
+	{
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+
+		GLuint outline_shader_program = -1;// App->program->outline_program;
+		glUseProgram(outline_shader_program);
+
+		glUniformMatrix4fv(
+			glGetUniformLocation(outline_shader_program, "model"),
+			1,
+			GL_TRUE,
+			&mesh_game_object.transform.GetGlobalModelMatrix()[0][0]
+		);
+		glUniformMatrix4fv(
+			glGetUniformLocation(outline_shader_program, "view"),
+			1,
+			GL_TRUE,
+			&camera.GetViewMatrix()[0][0]
+		);
+		glUniformMatrix4fv(
+			glGetUniformLocation(outline_shader_program, "proj"),
+			1,
+			GL_TRUE,
+			&camera.GetProjectionMatrix()[0][0]
+		);
+		mesh.Render();
+		glStencilMask(0xFF);
+		glEnable(GL_DEPTH_TEST);
+	}
 
 	glUseProgram(0);
 }
