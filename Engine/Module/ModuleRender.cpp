@@ -540,12 +540,13 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(LineSegment & ray)
 	float min_distance = INFINITY;
 	for (auto & mesh : intersected_meshes)
 	{
-		ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
+		LineSegment transformed_ray = ray;
+		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
 
 		for (auto& triangle : mesh->mesh_to_render->triangles)
 		{
 			float distance;
-			bool intersected = triangle.Intersects(ray, &distance);
+			bool intersected = triangle.Intersects(transformed_ray, &distance);
 			
 			if (intersected && distance < min_distance)
 			{
