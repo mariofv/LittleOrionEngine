@@ -56,8 +56,6 @@ private:
 	void GetCullingMeshes(const ComponentCamera *camera);
 
 private:
-	float3 intersection_point;
-
 	void* context = nullptr;
 
 	bool vsync = false;

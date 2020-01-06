@@ -161,6 +161,7 @@ void ModuleScene::MousePicking(const float2& mouse_position)
 	LineSegment ray;
 	App->cameras->scene_camera->GetRay(window_mouse_position_normalized, ray);
 	GameObject* intersected = App->renderer->GetRaycastIntertectedObject(ray);
+	hierarchy.selected_game_object = intersected;
 }
 
 void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title)

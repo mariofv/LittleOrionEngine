@@ -180,8 +180,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		}
 	}
 
-	dd::sphere(intersection_point, float3(1, 0, 0), 0.75f);
-
 	rendering_measure_timer->Start();
 	GetCullingMeshes(App->cameras->active_camera);
 	for (auto &mesh : meshes_to_render)
@@ -547,16 +545,12 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(LineSegment & ray)
 		for (auto& triangle : mesh->mesh_to_render->triangles)
 		{
 			float distance;
-			float3 aux_intersection_point;
-			bool intersected = triangle.Intersects(ray, &distance, &aux_intersection_point);
+			bool intersected = triangle.Intersects(ray, &distance);
 			
 			if (intersected && distance < min_distance)
 			{
 				selected = mesh->owner;
 				min_distance = distance;
-				float4 aux_asidjai = float4(aux_intersection_point, 1);
-				aux_asidjai = mesh->owner->transform.GetGlobalModelMatrix() * aux_asidjai;
-				intersection_point = float3(aux_asidjai.x, aux_asidjai.y, aux_asidjai.z);
 			}
 		}
 	}
