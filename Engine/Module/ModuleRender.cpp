@@ -114,8 +114,6 @@ bool ModuleRender::Init()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
-	glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
 	APP_LOG_SUCCESS("Glew initialized correctly.")
@@ -269,7 +267,9 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 
 	if (App->scene->hierarchy.selected_game_object == &mesh_game_object)
 	{
+		glEnable(GL_STENCIL_TEST);
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		glStencilMask(0xFF);
 	}
 
@@ -283,14 +283,23 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 		glStencilMask(0x00);
 		glDisable(GL_DEPTH_TEST);
 
-		GLuint outline_shader_program = -1;// App->program->outline_program;
+		GLuint outline_shader_program = App->program->outline_program;
 		glUseProgram(outline_shader_program);
+
+		float4x4 adjusted_model_matrix = mesh_game_object.transform.GetGlobalModelMatrix();
+		float3 model_scale = adjusted_model_matrix.ExtractScale();
+		model_scale += float3(0.01);
+		adjusted_model_matrix = float4x4::FromTRS(
+			adjusted_model_matrix.TranslatePart(),
+			adjusted_model_matrix.RotatePart(),
+			model_scale
+		);
 
 		glUniformMatrix4fv(
 			glGetUniformLocation(outline_shader_program, "model"),
 			1,
 			GL_TRUE,
-			&mesh_game_object.transform.GetGlobalModelMatrix()[0][0]
+			adjusted_model_matrix.ptr()
 		);
 		glUniformMatrix4fv(
 			glGetUniformLocation(outline_shader_program, "view"),
@@ -307,6 +316,7 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 		mesh.Render();
 		glStencilMask(0xFF);
 		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_STENCIL_TEST);
 	}
 
 	glUseProgram(0);

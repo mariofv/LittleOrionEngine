@@ -156,11 +156,11 @@ void ComponentCamera::RecordFrame(const float width, const float height)
 	{
 		case ComponentCamera::ClearMode::COLOR:
 			glClearColor(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f);
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 			glClearColor(0.f, 0.f, 0.f, 1.f);
 			break;
 		case ComponentCamera::ClearMode::SKYBOX:
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 			App->cameras->skybox->Render(*this);
 			break;
 		default:
@@ -195,7 +195,7 @@ void ComponentCamera::GenerateFrameBuffers(const float width, const float height
 	glGenRenderbuffers(1, &rbo);
 
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
 	glBindTexture(GL_TEXTURE_2D, last_recorded_frame_texture);
@@ -206,7 +206,7 @@ void ComponentCamera::GenerateFrameBuffers(const float width, const float height
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
