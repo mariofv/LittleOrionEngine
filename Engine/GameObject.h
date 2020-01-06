@@ -8,6 +8,7 @@
 
 #include <GL/glew.h>
 
+class ComponentCamera;
 class GameObject
 {
 public:
@@ -21,6 +22,7 @@ public:
 	void SetStatic(bool is_static);
 	bool IsStatic() const;
 
+	bool IsVisible(const ComponentCamera & camera) const;
 	void Update();
 
 	void Save(Config& config) const;

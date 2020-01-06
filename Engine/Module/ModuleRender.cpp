@@ -203,11 +203,11 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 		std::back_inserter(meshes_to_render), [camera](auto mesh)
 	{
 
-		if (App->debug->frustum_culling && mesh->IsEnabled() && camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
+		if (App->debug->frustum_culling && mesh->owner->IsVisible(*camera))
 		{
 			return true;
 		}
-		else if(App->debug->frustum_culling && mesh->IsEnabled() && !camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
+		else if(App->debug->frustum_culling && !mesh->owner->IsVisible(*camera))
 		{
 			return false;
 		}
@@ -226,10 +226,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 		for (auto &object : rendered_objects)
 		{
 			ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
-			if (object_mesh->IsEnabled())
-			{
-				meshes_to_render.push_back(object_mesh);
-			}
+			meshes_to_render.push_back(object_mesh);
 		}
 	}
 }
