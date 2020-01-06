@@ -153,10 +153,10 @@ void ModuleScene::Load(const Config& serialized_scene)
 
 void ModuleScene::MousePicking(const float2& mouse_position)
 {
-	float2 window_center_pos = imgui_window_pos + float2(imgui_window_width, imgui_window_height) / 2;
+	float2 window_center_pos = imgui_window_content_pos + float2(imgui_window_content_width, imgui_window_content_height) / 2;
 
 	float2 window_mouse_position = mouse_position - window_center_pos;
-	float2 window_mouse_position_normalized = float2(window_mouse_position.x * 2 / imgui_window_width, - window_mouse_position.y * 2 / imgui_window_height);
+	float2 window_mouse_position_normalized = float2(window_mouse_position.x * 2 / imgui_window_content_width, - window_mouse_position.y * 2 / imgui_window_content_height);
 
 	LineSegment ray;
 	App->cameras->scene_camera->GetRay(window_mouse_position_normalized, ray);
@@ -169,19 +169,28 @@ void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_sh
 	{
 		scene_window_is_hovered = ImGui::IsWindowHovered(); // TODO: This should be something like ImGui::IsTabHovered (such function doesn't exist though)
 
-		imgui_window_pos = float2(ImGui::GetWindowPos().x, ImGui::GetWindowPos().y);
+		ImVec2 imgui_window_pos_ImVec2 = ImGui::GetWindowPos();
+		float2 imgui_window_pos = float2(imgui_window_pos_ImVec2.x, imgui_window_pos_ImVec2.y);
 
-		imgui_window_width = ImGui::GetWindowWidth(); 
-		imgui_window_height = ImGui::GetWindowHeight();
-		camera_frame_buffer_to_show.RecordFrame(imgui_window_width, imgui_window_height);
+		ImVec2 max_point_content_area_ImVec2 = ImGui::GetWindowContentRegionMax();
+		max_point_content_area_ImVec2 = ImVec2(
+			max_point_content_area_ImVec2.x + imgui_window_pos_ImVec2.x,
+			max_point_content_area_ImVec2.y + imgui_window_pos_ImVec2.y
+		); // Pass from window space to screen space
+		float2 max_point_content_area = float2(max_point_content_area_ImVec2.x, max_point_content_area_ImVec2.y);
+
+		ImVec2 window_content_pos_ImVec2 = ImGui::GetCursorScreenPos();
+		imgui_window_content_pos = float2(window_content_pos_ImVec2.x, window_content_pos_ImVec2.y);
+
+		imgui_window_content_width = max_point_content_area.x - imgui_window_content_pos.x;
+		imgui_window_content_height = max_point_content_area.y - imgui_window_content_pos.y;
+
+		camera_frame_buffer_to_show.RecordFrame(imgui_window_content_width, imgui_window_content_height);
 
 		ImGui::GetWindowDrawList()->AddImage(
 			(void *)camera_frame_buffer_to_show.GetLastRecordedFrame(),
-			ImVec2(ImGui::GetCursorScreenPos()),
-			ImVec2(
-				ImGui::GetCursorScreenPos().x + imgui_window_width,
-				ImGui::GetCursorScreenPos().y + imgui_window_height
-			),
+			window_content_pos_ImVec2,
+			max_point_content_area_ImVec2,
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);

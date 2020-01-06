@@ -38,10 +38,10 @@ public:
 	bool scene_window_is_hovered = false;
 
 private:
-	float imgui_window_width = 0;
-	float imgui_window_height = 0;
+	float imgui_window_content_width = 0;
+	float imgui_window_content_height = 0;
 
-	float2 imgui_window_pos = float2::zero;
+	float2 imgui_window_content_pos = float2::zero;
 
 	GameObject *root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
