@@ -9,7 +9,7 @@ layout (std140) uniform Matrices
   mat4 model;
   mat4 proj;
 	mat4 view;
-};
+} matrices;
 
 struct Material {
 	sampler2D diffuse_map;
@@ -39,11 +39,11 @@ out vec2 texCoord;
 
 void main()
 {
-	gl_Position = proj*view*model*vec4(vertex_position, 1.0);
+	gl_Position = matrices.proj*matrices.view*matrices.model*vec4(vertex_position, 1.0);
 	texCoord = vertex_uv0;
 
-	vec3 position    = (model*vec4(vertex_position, 1.0)).xyz;
-	vec3 normal      = (model*vec4(vertex_normal, 0.0)).xyz;
+	vec3 position    = (matrices.model*vec4(vertex_position, 1.0)).xyz;
+	vec3 normal      = (matrices.model*vec4(vertex_normal, 0.0)).xyz;
 
 	vec3 light_dir   = normalize(light.light_position-position);
 	float diffuse    = max(0.0, dot(normal, light_dir));
@@ -51,7 +51,7 @@ void main()
 
     if(diffuse > 0.0 && material.k_specular > 0.0 && material.shininess > 0.0)
     {
-        vec3 view_pos    = transpose(mat3(view))*(-view[3].xyz);
+        vec3 view_pos    = transpose(mat3(matrices.view))*(-matrices.view[3].xyz);
         vec3 view_dir    = normalize(view_pos-position);
         vec3 reflect_dir = reflect(-light_dir, normal);
         float spec       = max(dot(view_dir, reflect_dir), 0.0);

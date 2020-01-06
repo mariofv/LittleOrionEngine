@@ -8,8 +8,8 @@ layout (std140) uniform Matrices
 {
   mat4 model;
   mat4 proj;
-	mat4 view;
-};
+  mat4 view;
+} matrices;
 
 out vec2 texCoord;
 out vec3 normal;
@@ -18,9 +18,9 @@ out vec3 viewPos;
 
 void main()
 {
-  gl_Position = proj*view*model*vec4(vertex_position, 1.0);
-  FragPos = vec3(model * vec4(vertex_position, 1.0));
+  gl_Position = matrices.proj*matrices.view*matrices.model*vec4(vertex_position, 1.0);
+  FragPos = vec3(matrices.model * vec4(vertex_position, 1.0));
   texCoord = vertex_uv0;
-  normal =(model*vec4(vertex_normal, 0.0)).xyz;
-  viewPos = transpose(mat3(view))*(-view[3].xyz);
+  normal =(matrices.model*vec4(vertex_normal, 0.0)).xyz;
+  viewPos = transpose(mat3(matrices.view))*(-matrices.view[3].xyz);
 }

@@ -26,7 +26,7 @@ layout (std140) uniform Matrices
   mat4 model;
   mat4 proj;
 	mat4 view;
-};
+} matrices;
 
 layout (std140) uniform Light
 {
@@ -50,7 +50,7 @@ void main()
 
   if(diffuse > 0.0 && material.k_specular > 0.0 && material.shininess > 0.0)
   {
-      vec3 view_pos    = transpose(mat3(view))*(-view[3].xyz);
+      vec3 view_pos    = transpose(mat3(matrices.proj))*(-matrices.proj[3].xyz);
       vec3 view_dir    = normalize(view_pos-position);
       vec3 reflect_dir = reflect(-light_dir, normalized_normal);
       float spec       = max(dot(view_dir, reflect_dir), 0.0);
