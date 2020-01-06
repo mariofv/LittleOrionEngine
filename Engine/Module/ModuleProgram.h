@@ -78,6 +78,8 @@ public:
 	GLuint text_program = 0;
 	GLuint phong_flat_program = 0;
 	GLuint phong_gouraund_program = 0;
+	GLuint phong_phong_program = 0;
+	GLuint blinn_phong_phong_program = 0;
 
 	std::vector<GLuint> loaded_programs;
 };
