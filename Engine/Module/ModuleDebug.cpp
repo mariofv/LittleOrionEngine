@@ -23,22 +23,10 @@ bool ModuleDebug::Init()
 	return true;
 }
 
-update_status ModuleDebug::PreUpdate()
-{
-	return update_status::UPDATE_CONTINUE;
-}
-
-update_status ModuleDebug::PostUpdate()
-{
-	
-	return update_status::UPDATE_CONTINUE;
-}
-
 // Called before quitting
 bool ModuleDebug::CleanUp()
 {
-	APP_LOG_INFO("Destroying Debug");
-	
+	APP_LOG_INFO("Destroying Debug");	
 	return true;
 }
 

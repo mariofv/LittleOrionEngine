@@ -21,8 +21,8 @@ public:
 	ModuleTexture() = default;
 	~ModuleTexture() = default;
 
-	bool Init();
-	bool CleanUp();
+	bool Init() override;
+	bool CleanUp() override;
 
 	ComponentMaterial* CreateComponentMaterial();
 	void RemoveComponentMaterial(ComponentMaterial* material_to_remove);

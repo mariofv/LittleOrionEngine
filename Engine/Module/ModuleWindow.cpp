@@ -93,7 +93,7 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
-void ModuleWindow::SetResizable(const bool resizable) const
+void ModuleWindow::SetResizable(bool resizable) const
 {
 	if (resizable) {
 		SDL_SetWindowResizable(window, SDL_TRUE);
@@ -103,7 +103,7 @@ void ModuleWindow::SetResizable(const bool resizable) const
 	}
 }
 
-void ModuleWindow::SetBordered(const bool bordered) const
+void ModuleWindow::SetBordered(bool bordered) const
 {
 	if (bordered) {
 		SDL_SetWindowBordered(window, SDL_TRUE);
@@ -129,7 +129,7 @@ void ModuleWindow::SetFullScreen() const
 	SDL_SetWindowFullscreen(window, SDL_WINDOW_FULLSCREEN);
 }
 
-void ModuleWindow::SetHeight(const int height)
+void ModuleWindow::SetHeight(int height)
 {
 	this->height = height;
 	SDL_SetWindowSize(window, width, height);
@@ -140,7 +140,7 @@ float ModuleWindow::GetHeight() const
 	return height;
 }
 
-void ModuleWindow::SetWidth(const int width)
+void ModuleWindow::SetWidth(int width)
 {
 	this->width = width;
 	SDL_SetWindowSize(window, width, height);
@@ -151,12 +151,12 @@ float ModuleWindow::GetWidth() const
 	return width;
 }
 
-void ModuleWindow::SetBrightness(const float brightness) const
+void ModuleWindow::SetBrightness(float brightness) const
 {
 	SDL_SetWindowBrightness(window, brightness);
 }
 
-void ModuleWindow::WindowResized(const unsigned width, const unsigned height)
+void ModuleWindow::WindowResized(unsigned width, unsigned height)
 {
 	this->width = width;
 	this->height = height;

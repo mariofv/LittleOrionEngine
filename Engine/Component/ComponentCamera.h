@@ -56,12 +56,12 @@ public:
 	void Focus(const AABB &bounding_box);
 
 	void OrbitCameraWithMouseMotion(const float2 &motion);
-	void OrbitX(const float angle);
-	void OrbitY(const float angle);
+	void OrbitX(float angle);
+	void OrbitY(float angle);
 
 	void RotateCameraWithMouseMotion(const float2 &motion);
-	void RotatePitch(const float angle);
-	void RotateYaw(const float angle);
+	void RotatePitch(float angle);
+	void RotateYaw(float angle);
 
 	void SetPerpesctiveView();
 	void SetOrthographicView();

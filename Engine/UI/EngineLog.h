@@ -31,7 +31,7 @@ public:
 	struct LogEntry 
 	{
 		LogEntry() = default;
-		LogEntry(const LogEntrySource source, const LogEntryType type, const char *file, const int line, const char *message) :
+		LogEntry(const LogEntrySource source, const LogEntryType type, const char *file, int line, const char *message) :
 			source(source),
 			type(type),
 			file(file),
@@ -50,15 +50,15 @@ public:
 	EngineLog() = default;
 	~EngineLog();
 
-	void Log(const LogEntrySource source, const LogEntryType type, const char* file, const int line, const char* message);
-	void LogFPS(const float fps);
+	void Log(const LogEntrySource source, const LogEntryType type, const char* file, int line, const char* message);
+	void LogFPS(float fps);
 	std::vector<float> getFPSData() const;
 
-	void LogMS(const float ms);
+	void LogMS(float ms);
 	std::vector<float> getMSData() const;
 	
 	void ShowConsoleWindow();
-	void ShowFilterButton(const char* button_label, const ImVec4 color, bool &filter);
+	void ShowFilterButton(const char* button_label, const ImVec4 & color, bool &filter);
 
 private:
 	std::vector<LogEntry*> text_log;

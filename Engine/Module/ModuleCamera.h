@@ -19,17 +19,17 @@ public:
 	ModuleCamera() = default;
 	~ModuleCamera() = default;
 	
-	bool Init();
-	update_status Update();
-	bool CleanUp();
+	bool Init() override;
+	update_status Update() override;
+	bool CleanUp() override;
 	
 	ComponentCamera* CreateComponentCamera();
 	void RemoveComponentCamera(ComponentCamera* camera_to_remove);
 
-	void SetOrbit(const bool is_orbiting);
+	void SetOrbit(bool is_orbiting);
 	bool IsOrbiting() const;
 
-	void SetMovement(const bool movement_enabled);
+	void SetMovement(bool movement_enabled);
 	bool IsMovementEnabled() const;
 
 	void ShowCameraOptions();

@@ -26,7 +26,7 @@ public:
 	GameObject* LoadCoreModel(const char* new_model_file_path);
 
 private:
-	void LoadNode(GameObject *parent_node, const std::shared_ptr<ModuleFileSystem::File> model_base_path);
+	void LoadNode(GameObject *parent_node, const std::shared_ptr<ModuleFileSystem::File> & model_base_path);
 };
 
 #endif //_MODULEMODELLOADER_H_

@@ -86,7 +86,7 @@ bool ModuleTime::CleanUp()
 	return true;
 }
 
-void ModuleTime::SetMaxFPS(const int fps)
+void ModuleTime::SetMaxFPS(int fps)
 {
 	max_fps = fps;
 }
@@ -135,7 +135,7 @@ void ModuleTime::StepFrame()
 	stepping_frame = true;
 }
 
-void ModuleTime::SetTimeScale(const float time_scale)
+void ModuleTime::SetTimeScale(float time_scale)
 {
 	this->time_scale = time_scale;
 }

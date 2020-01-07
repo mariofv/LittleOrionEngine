@@ -14,9 +14,9 @@ public:
 	ModuleScene() = default;
 	~ModuleScene() = default;
 
-	bool Init();
+	bool Init() override;
 	update_status Update() override;
-	bool CleanUp();
+	bool CleanUp() override;
 
 	GameObject* CreateGameObject();
 	GameObject* CreateChildGameObject(GameObject *parent);

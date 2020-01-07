@@ -244,71 +244,71 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh) const
 	mesh.Render();
 }
 
-void ModuleRender::SetVSync(const bool vsync)
+void ModuleRender::SetVSync(bool vsync)
 {
 	this->vsync = vsync;
 	vsync ? SDL_GL_SetSwapInterval(1) : SDL_GL_SetSwapInterval(0);
 }
 
-void ModuleRender::SetAlphaTest(const bool gl_alpha_test)
+void ModuleRender::SetAlphaTest(bool gl_alpha_test)
 {
 	this->gl_alpha_test = gl_alpha_test;
 	gl_alpha_test ? glEnable(GL_ALPHA_TEST) : glDisable(GL_ALPHA_TEST);
 }
 
-void ModuleRender::SetDepthTest(const bool gl_depth_test)
+void ModuleRender::SetDepthTest(bool gl_depth_test)
 {
 	this->gl_depth_test = gl_depth_test;
 	gl_depth_test ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 }
 
-void ModuleRender::SetScissorTest(const bool gl_scissor_test)
+void ModuleRender::SetScissorTest(bool gl_scissor_test)
 {
 	this->gl_scissor_test = gl_scissor_test;
 	gl_scissor_test ? glEnable(GL_SCISSOR_TEST) : glDisable(GL_SCISSOR_TEST);
 }
 
-void ModuleRender::SetStencilTest(const bool gl_stencil_test)
+void ModuleRender::SetStencilTest(bool gl_stencil_test)
 {
 	this->gl_stencil_test = gl_stencil_test;
 	gl_stencil_test ? glEnable(GL_STENCIL_TEST) : glDisable(GL_STENCIL_TEST);
 }
 
-void ModuleRender::SetBlending(const bool gl_blend)
+void ModuleRender::SetBlending(bool gl_blend)
 {
 	this->gl_blend = gl_blend;
 	gl_blend ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
 }
 
-void ModuleRender::SetFaceCulling(const bool gl_cull_face)
+void ModuleRender::SetFaceCulling(bool gl_cull_face)
 {
 	this->gl_cull_face = gl_cull_face;
 	gl_cull_face ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 }
 
-void ModuleRender::SetCulledFaces(const GLenum culled_faces) const
+void ModuleRender::SetCulledFaces(GLenum culled_faces) const
 {
 	glCullFace(culled_faces);
 }
 
-void ModuleRender::SetFrontFaces(const GLenum front_faces) const
+void ModuleRender::SetFrontFaces(GLenum front_faces) const
 {
 	glFrontFace(front_faces);
 }
 
-void ModuleRender::SetDithering(const bool gl_dither)
+void ModuleRender::SetDithering(bool gl_dither)
 {
 	this->gl_dither = gl_dither;
 	gl_dither ? glEnable(GL_DITHER) : glDisable(GL_DITHER);
 }
 
-void ModuleRender::SetMinMaxing(const bool gl_minmax)
+void ModuleRender::SetMinMaxing(bool gl_minmax)
 {
 	this->gl_minmax = gl_minmax;
 	gl_minmax ? glEnable(GL_MINMAX) : glDisable(GL_MINMAX);
 }
 
-void ModuleRender::SetWireframing(const bool gl_wireframe)
+void ModuleRender::SetWireframing(bool gl_wireframe)
 {
 	this->gl_wireframe = gl_wireframe;
 	gl_wireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);

@@ -20,14 +20,14 @@ EngineLog::~EngineLog()
 }
 
 
-void EngineLog::Log(const LogEntrySource source, const LogEntryType type, const char* file, const int line, const char* message)
+void EngineLog::Log(const LogEntrySource source, const LogEntryType type, const char* file, int line, const char* message)
 {
 	LogEntry *new_log_entry = new LogEntry(source, type, file, line, message);
 	text_log.push_back(new_log_entry);
 	scroll_down = true;
 }
 
-void EngineLog::LogFPS(const float fps)
+void EngineLog::LogFPS(float fps)
 {
 	if (fps_log.size() < 100)
 	{
@@ -40,7 +40,7 @@ void EngineLog::LogFPS(const float fps)
 	}
 }
 
-void EngineLog::LogMS(const float ms)
+void EngineLog::LogMS(float ms)
 {
 	if (ms_log.size() < 100)
 	{
@@ -144,7 +144,7 @@ void EngineLog::ShowConsoleWindow()
 	}
 }
 
-void EngineLog::ShowFilterButton(const char* button_label, const ImVec4 color, bool &filter)
+void EngineLog::ShowFilterButton(const char* button_label, const ImVec4 & color, bool &filter)
 {
 	ImVec4 active_color = ImVec4(color.x, color.y + 0.3f, color.z + 0.3f, color.w);
 	ImVec4 hovered_color = ImVec4(color.x, color.y + 0.2f, color.z + 0.2f, color.w);

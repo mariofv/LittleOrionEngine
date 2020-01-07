@@ -14,24 +14,24 @@ public:
 	ModuleWindow() = default;
 	virtual ~ModuleWindow() = default;
 
-	bool Init();
-	bool CleanUp();
+	bool Init() override;
+	bool CleanUp() override;
 
-	void SetResizable(const bool resizable) const;
-	void SetBordered(const bool bordered) const;
+	void SetResizable(bool resizable) const;
+	void SetBordered(bool bordered) const;
 
 	void SetWindowed() const;
 	void SetFullScreenDesktop() const;
 	void SetFullScreen() const;
 
-	void SetWidth(const int width);
+	void SetWidth(int width);
 	float GetWidth() const;
-	void SetHeight(const int height);
+	void SetHeight(int height);
 	float GetHeight() const;
 
-	void SetBrightness(const float brightness) const;
+	void SetBrightness(float brightness) const;
 
-	void WindowResized(const unsigned width, const unsigned height);
+	void WindowResized(unsigned width, unsigned height);
 
 	void ShowWindowOptions();
 

@@ -259,7 +259,7 @@ void ComponentCamera::LookAt(const float3 & focus)
 	SetOrientation(look_direction);
 }
 
-void ComponentCamera::LookAt(const float x, const float y, const float z)
+void ComponentCamera::LookAt(float x, float y, float z)
 {
 	LookAt(float3(x, y, z));
 }
@@ -422,7 +422,7 @@ void ComponentCamera::SetOrthographicView()
 	camera_frustum.type = FrustumType::OrthographicFrustum;
 }
 
-void ComponentCamera::SetSpeedUp(const bool is_speeding_up)
+void ComponentCamera::SetSpeedUp(bool is_speeding_up)
 {
 	speed_up = is_speeding_up ? SPEED_UP_FACTOR : 1.f;
 }

@@ -40,7 +40,7 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	return model_root_node;
 }
 
-void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<ModuleFileSystem::File> model_base_path)
+void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<ModuleFileSystem::File> & model_base_path)
 {
 	GameObject *node_game_object = App->scene->CreateChildGameObject(parent_node);
 

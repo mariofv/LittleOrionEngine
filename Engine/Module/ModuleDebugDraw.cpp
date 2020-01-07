@@ -372,7 +372,7 @@ public:
         return reinterpret_cast<dd::GlyphTextureHandle>(temp);
     }
 
-    static void checkGLError(const char* file, const int line)
+    static void checkGLError(const char* file, int line)
     {
         GLenum err;
         while ((err = glGetError()) != GL_NO_ERROR)
