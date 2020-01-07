@@ -88,7 +88,7 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
-GameObject* ModuleScene::GetGameObject(unsigned int UUID) const
+GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 {
 	if (UUID == 0)
 	{
