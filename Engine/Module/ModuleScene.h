@@ -30,7 +30,7 @@ public:
 	void Load(const Config& serialized_scene);
 
 	void MousePicking(const float2& mouse_position);
-	void DrawGizmo(const ComponentCamera& camera, const GameObject& game_object);
+	void DrawGizmo(const ComponentCamera& camera, GameObject& game_object);
 
 	void ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title);
 

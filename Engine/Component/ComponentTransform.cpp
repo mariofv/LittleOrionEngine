@@ -90,6 +90,13 @@ void ComponentTransform::Rotate(const float3x3 &rotation)
 	GenerateModelMatrix(); // TODO: Change this to Update()
 }
 
+void ComponentTransform::SetScale(const float3 &scale)
+{
+	this->scale = scale;
+	
+	GenerateModelMatrix(); // TODO: Change this to Update()
+}
+
 float3 ComponentTransform::GetUpVector() const
 {
 	return rotation * float3::unitY;

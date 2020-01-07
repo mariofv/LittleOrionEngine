@@ -192,9 +192,6 @@ void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_sh
 		imgui_window_content_width = max_point_content_area.x - imgui_window_content_pos.x;
 		imgui_window_content_height = max_point_content_area.y - imgui_window_content_pos.y;
 
-		ImGuizmo::SetRect(imgui_window_content_pos.x, imgui_window_content_pos.y, imgui_window_content_height, imgui_window_content_height);
-		ImGuizmo::SetDrawlist();
-
 		camera_frame_buffer_to_show.RecordFrame(imgui_window_content_width, imgui_window_content_height);
 
 		ImGui::GetWindowDrawList()->AddImage(
@@ -218,18 +215,33 @@ void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_sh
 	}
 }
 
-void ModuleScene::DrawGizmo(const ComponentCamera& camera, const GameObject& game_object)
+void ModuleScene::DrawGizmo(const ComponentCamera& camera, GameObject& game_object)
 {
+	ImGuizmo::SetRect(imgui_window_content_pos.x, imgui_window_content_pos.y, imgui_window_content_height, imgui_window_content_height);
+	ImGuizmo::SetDrawlist();
 	ImGuizmo::Enable(true);
 	ImGuizmo::SetOrthographic(false);
+
+	float4x4 model_matrix_transposed = game_object.transform.GetGlobalModelMatrix().Transposed();
 
 	ImGuizmo::Manipulate(
 		camera.GetViewMatrix().Transposed().ptr(),
 		camera.GetProjectionMatrix().Transposed().ptr(),
-		ImGuizmo::ROTATE,
+		ImGuizmo::TRANSLATE,
 		ImGuizmo::WORLD,
-		game_object.transform.GetGlobalModelMatrix().Transposed().ptr()
+		model_matrix_transposed.ptr()
 	);
 
 	gizmo_hovered = ImGuizmo::IsOver();
+	if (ImGuizmo::IsUsing())
+	{
+		float3 translation, scale;
+		float3x3 rotation;
+
+		float4x4 new_model_matrix = model_matrix_transposed.Transposed();
+		new_model_matrix.Decompose(translation, rotation, scale);
+		game_object.transform.SetTranslation(translation);
+		//game_object.transform.SetRotation(rotation);
+		//game_object.transform.SetScale(scale);
+	}
 }
