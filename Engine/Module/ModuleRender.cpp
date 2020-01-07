@@ -19,8 +19,8 @@
 #include <SDL/SDL.h>
 #include "MathGeoLib.h"
 #include <assimp/scene.h>
-#include "imgui.h"
-#include "imgui.h"
+#include <imgui.h>
+#include <ImGuizmo.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <algorithm>
 #include "Brofiler/Brofiler.h"
@@ -159,8 +159,8 @@ void ModuleRender::Render() const
 
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
-	glStencilMask(0x00); // make sure we don't update the stencil buffer while drawing debug shapes
-	
+	ImGuizmo::BeginFrame();
+
 	if (App->debug->show_grid)
 	{
 		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
@@ -266,6 +266,19 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		glStencilMask(0xFF);
+
+		//--------------------
+
+		ImGuizmo::Enable(true);
+		ImGuizmo::SetOrthographic(false);
+
+		ImGuizmo::Manipulate(
+			camera.GetViewMatrix().Transposed().ptr(),
+			camera.GetProjectionMatrix().Transposed().ptr(), 
+			ImGuizmo::TRANSLATE, 
+			ImGuizmo::WORLD, 
+			mesh_game_object.transform.GetGlobalModelMatrix().Transposed().ptr()
+		);
 	}
 
 	App->lights->RenderLight(shader_program);

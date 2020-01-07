@@ -6,7 +6,8 @@
 #include "Component/ComponentCamera.h"
 #include "Config.h"
 
-#include "imgui.h"
+#include <imgui.h>
+#include <ImGuizmo.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <algorithm>
 #include <stack>
@@ -185,6 +186,9 @@ void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_sh
 
 		imgui_window_content_width = max_point_content_area.x - imgui_window_content_pos.x;
 		imgui_window_content_height = max_point_content_area.y - imgui_window_content_pos.y;
+
+		ImGuizmo::SetRect(imgui_window_content_pos.x, imgui_window_content_pos.y, imgui_window_content_height, imgui_window_content_height);
+		ImGuizmo::SetDrawlist();
 
 		camera_frame_buffer_to_show.RecordFrame(imgui_window_content_width, imgui_window_content_height);
 
