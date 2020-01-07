@@ -6,6 +6,8 @@
 #include "GameObject.h"
 #include "Hierarchy.h"
 
+#include <ImGuizmo.h>
+
 class ComponentCamera;
 
 class ModuleScene : public Module
@@ -33,6 +35,7 @@ public:
 	void DrawGizmo(const ComponentCamera& camera, GameObject& game_object);
 
 	void ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title);
+	void ShowGizmoControls();
 
 public:
 	Hierarchy hierarchy;
@@ -45,6 +48,7 @@ private:
 	float2 imgui_window_content_pos = float2::zero;
 
 	bool gizmo_hovered = false;
+	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 
 	GameObject *root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;

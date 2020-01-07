@@ -7,7 +7,6 @@
 #include "Config.h"
 
 #include <imgui.h>
-#include <ImGuizmo.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <algorithm>
 #include <stack>
@@ -227,7 +226,7 @@ void ModuleScene::DrawGizmo(const ComponentCamera& camera, GameObject& game_obje
 	ImGuizmo::Manipulate(
 		camera.GetViewMatrix().Transposed().ptr(),
 		camera.GetProjectionMatrix().Transposed().ptr(),
-		ImGuizmo::TRANSLATE,
+		gizmo_operation,
 		ImGuizmo::WORLD,
 		model_matrix_transposed.ptr()
 	);
@@ -240,8 +239,36 @@ void ModuleScene::DrawGizmo(const ComponentCamera& camera, GameObject& game_obje
 
 		float4x4 new_model_matrix = model_matrix_transposed.Transposed();
 		new_model_matrix.Decompose(translation, rotation, scale);
-		game_object.transform.SetTranslation(translation);
-		//game_object.transform.SetRotation(rotation);
-		//game_object.transform.SetScale(scale);
+
+		switch (gizmo_operation)
+		{
+			case ImGuizmo::TRANSLATE:
+				game_object.transform.SetTranslation(translation);
+				break;
+			case ImGuizmo::ROTATE:
+				game_object.transform.SetRotation(rotation);	
+				break;
+			case ImGuizmo::SCALE:
+				game_object.transform.SetScale(scale);
+				break;
+		}
+	}
+}
+
+void ModuleScene::ShowGizmoControls()
+{
+	if (ImGui::Button(ICON_FA_ARROWS_ALT))
+	{
+		gizmo_operation = ImGuizmo::TRANSLATE;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button(ICON_FA_SYNC_ALT))
+	{
+		gizmo_operation = ImGuizmo::ROTATE;
+	}
+	ImGui::SameLine();
+	if (ImGui::Button(ICON_FA_EXPAND_ARROWS_ALT))
+	{
+		gizmo_operation = ImGuizmo::SCALE;
 	}
 }

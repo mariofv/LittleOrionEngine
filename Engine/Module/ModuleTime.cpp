@@ -142,62 +142,58 @@ void ModuleTime::SetTimeScale(const float time_scale)
 
 void ModuleTime::ShowTimeControls()
 {
-	if (ImGui::Begin("Time Controls", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar))
+	ImVec2 time_window_size = ImGui::GetWindowSize();
+
+	ImVec2 play_button_pos((time_window_size.x - 24)*0.5f - 26, (time_window_size.y - 24)*0.5f);
+	ImGui::SetCursorPos(play_button_pos);
+	if (game_time_clock->Started())
 	{
-		ImVec2 time_window_size = ImGui::GetWindowSize();
-
-		ImVec2 play_button_pos((time_window_size.x - 24)*0.5f - 26, (time_window_size.y - 24)*0.5f);
-		ImGui::SetCursorPos(play_button_pos);
-		if (game_time_clock->Started())
+		// CHANGE DEFAULT BUTTON COLOR TO SELECTED BUTTON COLOR
+		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5816f, 0.94f, 0.9804f));
+		if (ImGui::Button(ICON_FA_PLAY, ImVec2(24, 24)))
 		{
-			// CHANGE DEFAULT BUTTON COLOR TO SELECTED BUTTON COLOR
-			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5816f, 0.94f, 0.9804f));
-			if (ImGui::Button(ICON_FA_PLAY, ImVec2(24, 24)))
-			{
-				Play();
-			}
-			ImGui::PopStyleColor();
+			Play();
 		}
-		else
+		ImGui::PopStyleColor();
+	}
+	else
+	{
+		if (ImGui::Button(ICON_FA_PLAY, ImVec2(24, 24)))
 		{
-			if (ImGui::Button(ICON_FA_PLAY, ImVec2(24, 24)))
-			{
-				Play();
-			}
-		}
-
-		ImGui::SameLine();
-
-		ImVec2 pause_button_pos((time_window_size.x - 24)*0.5f, (time_window_size.y - 24)*0.5f);
-		ImGui::SetCursorPos(pause_button_pos);
-		if (game_time_clock->IsPaused())
-		{
-			// CHANGE DEFAULT BUTTON COLOR TO SELECTED BUTTON COLOR
-			ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5816f, 0.94f, 0.9804f)); 
-			if (ImGui::Button(ICON_FA_PAUSE, ImVec2(24, 24)))
-			{
-				Pause();
-			}
-			ImGui::PopStyleColor();
-		}
-		else 
-		{
-			if (ImGui::Button(ICON_FA_PAUSE, ImVec2(24, 24)))
-			{
-				Pause();
-			}
-		}
-		
-		ImGui::SameLine();
-
-		ImVec2 step_button_pos((time_window_size.x - 24)*0.5f + 26, (time_window_size.y - 24)*0.5f);
-		ImGui::SetCursorPos(step_button_pos);
-		if (ImGui::Button(ICON_FA_STEP_FORWARD, ImVec2(24, 24)))
-		{
-			StepFrame();
+			Play();
 		}
 	}
-	ImGui::End();
+
+	ImGui::SameLine();
+
+	ImVec2 pause_button_pos((time_window_size.x - 24)*0.5f, (time_window_size.y - 24)*0.5f);
+	ImGui::SetCursorPos(pause_button_pos);
+	if (game_time_clock->IsPaused())
+	{
+		// CHANGE DEFAULT BUTTON COLOR TO SELECTED BUTTON COLOR
+		ImGui::PushStyleColor(ImGuiCol_Button, (ImVec4)ImColor::HSV(0.5816f, 0.94f, 0.9804f)); 
+		if (ImGui::Button(ICON_FA_PAUSE, ImVec2(24, 24)))
+		{
+			Pause();
+		}
+		ImGui::PopStyleColor();
+	}
+	else 
+	{
+		if (ImGui::Button(ICON_FA_PAUSE, ImVec2(24, 24)))
+		{
+			Pause();
+		}
+	}
+		
+	ImGui::SameLine();
+
+	ImVec2 step_button_pos((time_window_size.x - 24)*0.5f + 26, (time_window_size.y - 24)*0.5f);
+	ImGui::SetCursorPos(step_button_pos);
+	if (ImGui::Button(ICON_FA_STEP_FORWARD, ImVec2(24, 24)))
+	{
+		StepFrame();
+	}
 }
 
 void ModuleTime::ShowTimeOptions()

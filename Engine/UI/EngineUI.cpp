@@ -29,7 +29,7 @@ void EngineUI::InitUI()
 void EngineUI::ShowEngineUI()
 {
 	ShowMainMenu();
-	ShowTimeControls();
+	ShowSceneControls();
 	ShowMainViewWindow();
 	
 	if (show_model_inspector_window)
@@ -121,12 +121,17 @@ void EngineUI::ShowHelpMenu()
 	}
 }
 
-void EngineUI::ShowTimeControls()
+void EngineUI::ShowSceneControls()
 {
 	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
 	ImGui::SetNextWindowPos(ImVec2(0, MAIN_MENU_BAR_HEIGHT));
 	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight()*TIME_BAR_HEIGHT_PROP));
-	App->time->ShowTimeControls();
+	if (ImGui::Begin("Time Controls", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar))
+	{
+		App->scene->ShowGizmoControls();
+		App->time->ShowTimeControls();
+	}
+	ImGui::End();
 	ImGui::PopStyleVar();
 }
 
