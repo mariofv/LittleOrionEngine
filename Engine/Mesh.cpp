@@ -32,15 +32,22 @@ GLuint Mesh::GetVAO() const
 	return vao;
 }
 
-void Mesh::InitMesh()
+std::vector<Triangle> Mesh::GetTriangles() const
 {
-	for (size_t i = 0; i <indices.size(); i += 3)
+	std::vector<Triangle> triangles;
+	triangles.reserve(vertices.size()/3);
+	for (size_t i = 0; i < indices.size(); i += 3)
 	{
 		float3 first_point = vertices[indices[i]].position;
-		float3 second_point =vertices[indices[i + 1]].position;
+		float3 second_point = vertices[indices[i + 1]].position;
 		float3 third_point = vertices[indices[i + 2]].position;
-		triangles.push_back(Triangle(first_point, second_point, third_point));
+		triangles.emplace_back(Triangle(first_point, second_point, third_point));
 	}
+	return triangles;
+}
+
+void Mesh::InitMesh()
+{
 
 	glGenVertexArrays(1, &vao);
 	glGenBuffers(1, &vbo);

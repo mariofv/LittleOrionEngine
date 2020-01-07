@@ -20,12 +20,12 @@ public:
 	~Mesh();
 
 	GLuint GetVAO() const;
+	std::vector<Triangle> GetTriangles() const;
 private:
 	void InitMesh();
 public:
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
-	std::vector<Triangle> triangles;
 	std::string mesh_file_path;
 	std::vector<std::string> meshes_textures_path;
 

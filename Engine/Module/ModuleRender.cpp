@@ -506,12 +506,11 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(LineSegment & ray)
 	{
 		LineSegment transformed_ray = ray;
 		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
-
-		for (auto& triangle : mesh->mesh_to_render->triangles)
+		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
+		for (auto & triangle : triangles)
 		{
 			float distance;
-			bool intersected = triangle.Intersects(transformed_ray, &distance);
-			
+			bool intersected = triangle.Intersects(transformed_ray, &distance);		
 			if (intersected && distance < min_distance)
 			{
 				selected = mesh->owner;

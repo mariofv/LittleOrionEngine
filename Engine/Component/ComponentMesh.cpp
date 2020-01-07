@@ -68,14 +68,15 @@ void ComponentMesh::Render() const
 
 	App->lights->RenderLight();
 	owner->RenderMaterialTexture(program);
-
+	RenderModel();
+	glUseProgram(0);
+}	
+void ComponentMesh::RenderModel() const
+{
 	glBindVertexArray(mesh_to_render->GetVAO());
 	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
-
-	glUseProgram(0);
 }
-
 void ComponentMesh::ShowComponentWindow()
 {
 	ComponentsUI::ShowComponentMeshWindow(this);

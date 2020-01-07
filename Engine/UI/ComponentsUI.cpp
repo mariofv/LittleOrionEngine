@@ -48,7 +48,7 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Triangles");
 		ImGui::SameLine();
-		sprintf(tmp_string, "%d", mesh->mesh_to_render->triangles.size());
+		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size()/3);
 		ImGui::Button(tmp_string);
 
 		ImGui::AlignTextToFramePadding();
