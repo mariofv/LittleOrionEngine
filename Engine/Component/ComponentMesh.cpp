@@ -1,5 +1,8 @@
 #include "ComponentMesh.h"
+#include "GameObject.h"
 #include "Application.h"
+#include "Module/ModuleLight.h"
+#include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Importer/MeshImporter.h"
 #include "UI/ComponentsUI.h"
@@ -49,11 +52,28 @@ void ComponentMesh::Load(const Config& config)
 	SetMesh(App->mesh_importer->Load(mesh_path.c_str()));
 }
 
+bool ComponentMesh::operator <(const ComponentMesh & mesh_to_compare) const
+{
+	return this->shader_program <= mesh_to_compare.shader_program;
+}
 void ComponentMesh::Render() const
 {
+	GLuint program = shader_program == 0 ? App->program->texture_program : shader_program;
+
+	glUseProgram(program);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	App->lights->RenderLight(program);
+	owner->RenderMaterialTexture(program);
+
 	glBindVertexArray(mesh_to_render->GetVAO());
 	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+
+	glUseProgram(0);
 }
 
 void ComponentMesh::ShowComponentWindow()

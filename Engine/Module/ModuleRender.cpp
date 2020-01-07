@@ -127,12 +127,6 @@ update_status ModuleRender::PreUpdate()
 	return update_status::UPDATE_CONTINUE;
 }
 
-update_status ModuleRender::PostUpdate()
-{
-
-	return update_status::UPDATE_CONTINUE;
-}
-
 // Called before quitting
 bool ModuleRender::CleanUp()
 {
@@ -191,7 +185,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	GetMeshesToRender();
 	for (auto &mesh : meshes_to_render)
 	{
-		RenderMesh(*mesh, camera);
+		RenderMesh(*mesh);
 	}
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
@@ -239,7 +233,7 @@ void ModuleRender::GetMeshesToRender()
 	}
 }
 
-void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const
+void ModuleRender::RenderMesh(const ComponentMesh &mesh) const
 {
 	const GameObject& mesh_game_object = *mesh.owner;
 
@@ -247,19 +241,7 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 	{
 		dd::aabb(mesh_game_object.aabb.bounding_box.minPoint, mesh_game_object.aabb.bounding_box.maxPoint, float3::one);
 	}
-
-	GLuint shader_program = mesh.shader_program == 0 ? App->program->texture_program : mesh.shader_program;
-	glUseProgram(shader_program);
-
-	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), mesh_game_object.transform.GetGlobalModelMatrix().Transposed().ptr());
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-	App->lights->RenderLight(shader_program);
-	mesh_game_object.RenderMaterialTexture(shader_program);
 	mesh.Render();
-
-	glUseProgram(0);
 }
 
 void ModuleRender::SetVSync(const bool vsync)

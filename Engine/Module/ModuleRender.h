@@ -23,12 +23,11 @@ public:
 
 	bool Init();
 	update_status PreUpdate();
-	update_status PostUpdate();
 	bool CleanUp();
 	
 	void Render() const;
 	void RenderFrame(const ComponentCamera &camera);
-	void RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const;
+	void RenderMesh(const ComponentMesh &mesh) const;
 
 
 	ComponentMesh* CreateComponentMesh();

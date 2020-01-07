@@ -34,10 +34,8 @@ update_status ModuleCamera::Update()
 	return update_status::UPDATE_CONTINUE;
 }
 
-// Called before quitting
 bool ModuleCamera::CleanUp()
 {
-	//Not removing the cameras here because this module would be clearer before scene module
 	for (auto& camera : cameras)
 	{
 		camera->owner->RemoveComponent(camera);

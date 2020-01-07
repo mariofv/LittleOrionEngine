@@ -23,12 +23,13 @@ public:
 	void Render() const;
 
 	void SetMesh(const std::shared_ptr<Mesh> & mesh_to_render);
+	bool operator <(const ComponentMesh & mesh_to_compare) const;
 
 	void ShowComponentWindow() override;
 
-	unsigned int shader_program = 0;
 	std::shared_ptr<Mesh> mesh_to_render;
 private:
+	unsigned int shader_program = 0;
 	friend class ComponentsUI;
 };
 
