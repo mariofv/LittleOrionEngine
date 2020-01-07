@@ -154,6 +154,11 @@ void ModuleScene::Load(const Config& serialized_scene)
 
 void ModuleScene::MousePicking(const float2& mouse_position)
 {
+	if (gizmo_hovered)
+	{
+		return;
+	}
+
 	float2 window_center_pos = imgui_window_content_pos + float2(imgui_window_content_width, imgui_window_content_height) / 2;
 
 	float2 window_mouse_position = mouse_position - window_center_pos;
@@ -213,7 +218,7 @@ void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_sh
 	}
 }
 
-void ModuleScene::DrawGizmo(const ComponentCamera& camera, const GameObject& game_object) const
+void ModuleScene::DrawGizmo(const ComponentCamera& camera, const GameObject& game_object)
 {
 	ImGuizmo::Enable(true);
 	ImGuizmo::SetOrthographic(false);
@@ -221,8 +226,10 @@ void ModuleScene::DrawGizmo(const ComponentCamera& camera, const GameObject& gam
 	ImGuizmo::Manipulate(
 		camera.GetViewMatrix().Transposed().ptr(),
 		camera.GetProjectionMatrix().Transposed().ptr(),
-		ImGuizmo::TRANSLATE,
+		ImGuizmo::ROTATE,
 		ImGuizmo::WORLD,
 		game_object.transform.GetGlobalModelMatrix().Transposed().ptr()
 	);
+
+	gizmo_hovered = ImGuizmo::IsOver();
 }
