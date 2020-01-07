@@ -145,7 +145,7 @@ bool ModuleRender::CleanUp()
 
 void ModuleRender::Render() const
 {
-	BROFILER_CATEGORY("Render",Profiler::Color::Aqua);
+	BROFILER_CATEGORY("Global Render",Profiler::Color::Aqua);
 	App->ui->Render();
 	SDL_GL_SwapWindow(App->window->window);
 	App->time->EndFrame();
@@ -153,6 +153,7 @@ void ModuleRender::Render() const
 
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
+	BROFILER_CATEGORY("Render Frame", Profiler::Color::Azure);
 	glStencilMask(0x00); // make sure we don't update the stencil buffer while drawing debug shapes
 	
 	if (App->debug->show_grid)
@@ -235,6 +236,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 
 void ModuleRender::RenderMesh(const ComponentMesh &mesh) const
 {
+	BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
 	const GameObject& mesh_game_object = *mesh.owner;
 
 	if (App->debug->show_bounding_boxes && !mesh_game_object.aabb.IsEmpty())

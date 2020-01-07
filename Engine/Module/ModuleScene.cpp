@@ -10,6 +10,7 @@
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <algorithm>
 #include <stack>
+#include "Brofiler/Brofiler.h"
 
 bool ModuleScene::Init()
 {
@@ -35,6 +36,7 @@ bool ModuleScene::Init()
 
 update_status ModuleScene::Update()
 {
+	BROFILER_CATEGORY("Scene Update", Profiler::Color::Crimson);
 	root->Update();
 	return update_status::UPDATE_CONTINUE;
 }

@@ -1,6 +1,7 @@
 #include "OLQuadTree.h"
 
 #include <algorithm>
+#include "Brofiler/Brofiler.h"
 
 OLQuadTree::~OLQuadTree()
 {
@@ -68,6 +69,7 @@ void OLQuadTree::Insert(GameObject &game_object)
 
 void OLQuadTree::CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera)
 {
+	BROFILER_CATEGORY("OLQuadTree collect intersect", Profiler::Color::Yellow);
 	root->CollectIntersect(game_objects, camera);
 	auto it = std::unique(game_objects.begin(), game_objects.end());
 	game_objects.erase(it, game_objects.end());
