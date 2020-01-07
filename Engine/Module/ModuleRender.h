@@ -34,6 +34,8 @@ public:
 	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
 	void GenerateQuadTree();
 
+	GameObject* GetRaycastIntertectedObject(LineSegment & ray);
+
 	void ShowRenderOptions();
 
 private:
@@ -50,7 +52,7 @@ private:
 	void SetMinMaxing(bool gl_minmax);
 	void SetWireframing(bool gl_wireframe);
 
-	void GetMeshesToRender();
+	void GetCullingMeshes(const ComponentCamera *camera);
 
 private:
 	void* context = nullptr;

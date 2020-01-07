@@ -90,6 +90,11 @@ update_status ModuleInput::PreUpdate()
 			{
 				App->cameras->SetMovement(true);
 			}
+			if (event.button.button == SDL_BUTTON_LEFT && App->scene->scene_window_is_hovered)
+			{
+				float2 mouse_position = float2(event.button.x, event.button.y);
+				App->scene->MousePicking(mouse_position);
+			}
 			break;
 
 		case SDL_MOUSEBUTTONUP:

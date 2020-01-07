@@ -84,6 +84,16 @@ bool GameObject::IsStatic() const
 {
 	return is_static;
 }
+
+bool GameObject::IsVisible(const ComponentCamera & camera) const
+{
+	ComponentMesh* mesh = static_cast<ComponentMesh*>(GetComponent(Component::ComponentType::MESH));
+	if ((mesh != nullptr && !mesh->IsEnabled()) || !IsEnabled() || !camera.IsInsideFrustum(aabb.bounding_box))
+	{
+		return false;
+	}
+	return true;
+}
 void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject", Profiler::Color::Green);

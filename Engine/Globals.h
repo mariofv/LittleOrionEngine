@@ -72,6 +72,9 @@ enum class Fonts
 # define TEXT_VERTEX_SHADER_PATH "Resources/Shaders/text.vs"
 # define TEXT_FRAGMENT_SHADER_PATH "Resources/Shaders/text.fs"
 
+# define OUTLINE_VERTEX_SHADER_PATH "Resources/Shaders/outline.vs"
+# define OUTLINE_FRAGMENT_SHADER_PATH "Resources/Shaders/outline.fs"
+
 # define FLAT_VERTEX_SHADER_PATH "Resources/Shaders/flat.vs"
 # define FLAT_FRAGMENT_SHADER_PATH "Resources/Shaders/flat.fs"
 

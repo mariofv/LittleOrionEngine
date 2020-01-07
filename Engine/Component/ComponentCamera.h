@@ -74,11 +74,13 @@ public:
 
 	std::vector<float> GetFrustumVertices() const;
 	
-	bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const;
+	bool IsInsideFrustum(const AABB& aabb) const;
 	ComponentAABB::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
 
-	bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const;
+	bool IsInsideFrustum(const AABB2D& aabb) const;
 	ComponentAABB::CollisionState CheckAABB2DCollision(const AABB2D& reference_AABB) const;
+
+	void GetRay(const float2& normalized_position, LineSegment &return_value) const;
 
 	void ShowComponentWindow() override;
 
