@@ -199,21 +199,30 @@ void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_sh
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
-		/*
 		
-		float4x4 aux = float4x4::identity;
-		ImGuizmo::Manipulate(
-			camera_frame_buffer_to_show.GetViewMatrix().Transposed().ptr(),
-			camera_frame_buffer_to_show.GetProjectionMatrix().Transposed().ptr(),
-			ImGuizmo::TRANSLATE,
-			ImGuizmo::WORLD,
-			aux.ptr()
-		);
-		*/
+		if (hierarchy.selected_game_object != nullptr)
+		{
+			DrawGizmo(camera_frame_buffer_to_show, *hierarchy.selected_game_object);
+		}
+		
 		if (App->cameras->IsMovementEnabled() && scene_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
 		{
 			ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
 		}
 		ImGui::EndTabItem();
 	}
+}
+
+void ModuleScene::DrawGizmo(const ComponentCamera& camera, const GameObject& game_object) const
+{
+	ImGuizmo::Enable(true);
+	ImGuizmo::SetOrthographic(false);
+
+	ImGuizmo::Manipulate(
+		camera.GetViewMatrix().Transposed().ptr(),
+		camera.GetProjectionMatrix().Transposed().ptr(),
+		ImGuizmo::TRANSLATE,
+		ImGuizmo::WORLD,
+		game_object.transform.GetGlobalModelMatrix().Transposed().ptr()
+	);
 }

@@ -264,19 +264,6 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
 		glStencilMask(0xFF);
-
-		//--------------------
-
-		ImGuizmo::Enable(true);
-		ImGuizmo::SetOrthographic(false);
-
-		ImGuizmo::Manipulate(
-			camera.GetViewMatrix().Transposed().ptr(),
-			camera.GetProjectionMatrix().Transposed().ptr(), 
-			ImGuizmo::TRANSLATE, 
-			ImGuizmo::WORLD, 
-			mesh_game_object.transform.GetGlobalModelMatrix().Transposed().ptr()
-		);
 	}
 
 	App->lights->RenderLight(shader_program);
