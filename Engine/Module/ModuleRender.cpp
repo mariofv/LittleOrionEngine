@@ -271,14 +271,15 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh) const
 		);
 
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4),adjusted_model_matrix.ptr());
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4),adjusted_model_matrix.Transposed().ptr());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		mesh.RenderModel();
 		glStencilMask(0xFF);
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_STENCIL_TEST);
-		glUseProgram(0);
 	}
+
+	glUseProgram(0);
 }
 
 void ModuleRender::SetVSync(bool vsync)

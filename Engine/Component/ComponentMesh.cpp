@@ -59,7 +59,6 @@ bool ComponentMesh::operator <(const ComponentMesh & mesh_to_compare) const
 void ComponentMesh::Render() const
 {
 	GLuint program = shader_program == 0 ? App->program->texture_program : shader_program;
-
 	glUseProgram(program);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
