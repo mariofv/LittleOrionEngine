@@ -42,7 +42,7 @@ GameObject::GameObject(const std::string name) :
 {
 }
 
-GameObject::~GameObject()
+void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 {
 	if (parent != nullptr)
 	{
@@ -53,16 +53,13 @@ GameObject::~GameObject()
 	{
 		components[i]->Delete();
 	}
-	components.clear();
-
-	for (int i =  (children.size() - 1); i >= 0 ; --i)
+	for (int i = (children.size() - 1); i >= 0; --i)
 	{
 		children[i]->parent = nullptr;
-		App->scene->RemoveGameObject(children[i]);
+		children_to_remove.push_back(children[i]);
+		children[i]->Delete(children_to_remove);
 	}
-	children.clear();
 }
-
 bool GameObject::IsEnabled() const
 {
 	return active;
@@ -90,8 +87,8 @@ bool GameObject::IsStatic() const
 void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject", Profiler::Color::Green);
-	transform.GenerateGlobalModelMatrix();
-	aabb.GenerateBoundingBox();
+	transform.Update();
+	aabb.Update();
 
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
