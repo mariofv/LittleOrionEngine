@@ -57,7 +57,7 @@ std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 		return nullptr;
 	}
 
-	return App->material_importer->Load(imported.second.c_str());
+	return App->material_importer->Load(imported.second);
 }
 
 GLuint ModuleTexture::LoadCubemap(std::vector<std::string> faces_paths) const

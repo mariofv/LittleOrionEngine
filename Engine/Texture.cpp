@@ -5,7 +5,7 @@
 #include <IL/ilut.h>
 
 
-Texture::Texture(unsigned char * data, int width, int height, const char* path, TextureType type) : data(data), width(width), height(height), texture_path(path), type(type)
+Texture::Texture(unsigned char * data, int width, int height, const std::string& path, TextureType type) : data(data), width(width), height(height), texture_path(path), type(type)
 {
 	InitTexture();
 }

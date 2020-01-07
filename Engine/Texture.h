@@ -19,7 +19,7 @@ public:
 	static const size_t MAX_TEXTURE_TYPES = static_cast<size_t>(TextureType::UNKNOWN);
 public:
 	Texture() = default;
-	Texture(unsigned char * data, int width, int height, const char* path, TextureType type = TextureType::DIFUSSE);
+	Texture(unsigned char * data, int width, int height, const std::string& path, TextureType type = TextureType::DIFUSSE);
 
 	~Texture();
 
