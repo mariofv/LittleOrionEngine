@@ -24,23 +24,22 @@ MeshImporter::~MeshImporter()
 	Assimp::DefaultLogger::kill();
 }
 
-bool MeshImporter::Import(const std::string& file_path, std::string& output_file) const
+std::pair<bool, std::string> MeshImporter::Import(const std::string& file_path) const
 {
 	ModuleFileSystem::File file(file_path);
 	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedResource(LIBRARY_MESHES_FOLDER,file);
 	if (already_imported != nullptr) {
-		output_file = already_imported->file_path;
-		return true;
+		return std::pair<bool, std::string>(true, already_imported->file_path);
 	}
 
-	output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER+"/"+ file.filename_no_extension);
+	std::string output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER+"/"+ file.filename_no_extension);
 	APP_LOG_INIT("Importing model %s.", file_path);
 
 	if (file.filename.empty())
 	{
 		APP_LOG_ERROR("Importing mesh error: Couldn't find the file to import.")
 		App->filesystem->Remove(output_file);
-		return false;
+		return std::pair<bool, std::string>(false, "");
 	}
 	performance_timer.Start();
 
@@ -51,7 +50,7 @@ bool MeshImporter::Import(const std::string& file_path, std::string& output_file
 		APP_LOG_ERROR("Error loading model %s ", file_path);
 		APP_LOG_ERROR(error);
 		App->filesystem->Remove(output_file);
-		return false;
+		return std::pair<bool, std::string>(false, "");
 	}
 	performance_timer.Stop();
 	float time = performance_timer.Read();
@@ -63,7 +62,7 @@ bool MeshImporter::Import(const std::string& file_path, std::string& output_file
 	ImportNode(root_node, scene, base_path.c_str(),output_file);
 
 	aiReleaseImport(scene);
-	return true;
+	return std::pair<bool, std::string>(true, output_file);
 }
 
 void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file) const

@@ -7,7 +7,7 @@
 
 class Importer {
 public:
-	virtual bool Import(const std::string& file, std::string& output_file) const = 0;
+	virtual std::pair<bool, std::string> Import(const std::string& file) const = 0;
 
 protected:
 
