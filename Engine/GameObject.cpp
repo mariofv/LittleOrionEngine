@@ -44,6 +44,7 @@ GameObject::GameObject(const std::string name) :
 
 void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 {
+	children_to_remove.push_back(this);
 	if (parent != nullptr)
 	{
 		parent->RemoveChild(this);
@@ -56,7 +57,6 @@ void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 	for (int i = (children.size() - 1); i >= 0; --i)
 	{
 		children[i]->parent = nullptr;
-		children_to_remove.push_back(children[i]);
 		children[i]->Delete(children_to_remove);
 	}
 }
