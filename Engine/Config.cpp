@@ -57,13 +57,13 @@ int Config::GetInt(const std::string& name, int opt_value) const
 	}
 }
 
-void Config::AddUInt(unsigned int value_to_add, const std::string& name)
+void Config::AddUInt(uint64_t value_to_add, const std::string& name)
 {
 	rapidjson::Value member_name(name.c_str(), *allocator);
 	config_document.AddMember(member_name, value_to_add, *allocator);
 }
 
-int Config::GetUInt(const std::string& name, unsigned int opt_value) const
+uint64_t Config::GetUInt(const std::string& name, unsigned int opt_value) const
 {
 	if (!config_document.HasMember(name.c_str()))
 	{

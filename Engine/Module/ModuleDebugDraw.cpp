@@ -415,8 +415,8 @@ void ModuleDebugDraw::Render(const ComponentCamera& camera)
     math::float4x4 view = camera.GetViewMatrix();
     math::float4x4 proj = camera.GetProjectionMatrix();
 
-    dd_interface_implementation->width = camera.GetWidth();
-    dd_interface_implementation->height = camera.GetHeigt();
+    dd_interface_implementation->width = static_cast<unsigned int>(camera.GetWidth());
+    dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeigt());
     dd_interface_implementation->mvpMatrix = proj * view;
 
     dd::flush();

@@ -80,7 +80,7 @@ void EngineLog::ShowConsoleWindow()
 	
 		if (ImGui::BeginChild(""))
 		{
-			for (int i = 0; i < text_log.size(); ++i)
+			for (size_t i = 0; i < text_log.size(); ++i)
 			{
 				if (
 					(!app_filter && !assimp_filter && !opengl_filter)

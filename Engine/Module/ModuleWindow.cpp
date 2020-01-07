@@ -29,8 +29,8 @@ bool ModuleWindow::Init()
 		screen_height = DM.h;
 		
 		//Create window
-		width = screen_width * 0.9;
-		height = screen_height * 0.9;
+		width = static_cast<int>(screen_width * 0.9f);
+		height = static_cast<int>(screen_height * 0.9f);
 		uint32_t flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
 
 		if(FULLSCREEN)
@@ -137,7 +137,7 @@ void ModuleWindow::SetHeight(int height)
 
 float ModuleWindow::GetHeight() const
 {
-	return height;
+	return static_cast<float>(height);
 }
 
 void ModuleWindow::SetWidth(int width)
@@ -148,7 +148,7 @@ void ModuleWindow::SetWidth(int width)
 
 float ModuleWindow::GetWidth() const
 {
-	return width;
+	return static_cast<float>(width);
 }
 
 void ModuleWindow::SetBrightness(float brightness) const

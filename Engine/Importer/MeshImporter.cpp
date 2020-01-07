@@ -120,7 +120,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
-	UINT64 bytes = sizeof(ranges); // First store ranges
+	size_t bytes = sizeof(ranges); // First store ranges
 	memcpy(cursor, ranges, bytes);
 
 	cursor += bytes; // Store indices
@@ -171,7 +171,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 
 	uint32_t ranges[3];
 	//Get ranges
-	UINT64 bytes = sizeof(ranges); // First store ranges
+	size_t bytes = sizeof(ranges); // First store ranges
 	memcpy(ranges, cursor, bytes);
 
 	std::vector<uint32_t> indices;

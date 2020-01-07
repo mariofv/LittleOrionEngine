@@ -32,13 +32,13 @@ bool ModuleDebug::CleanUp()
 
 void ModuleDebug::CreateHousesRandom() const
 {
-	std::srand(std::time(nullptr)); // use current time as seed for random generator
+	std::srand(static_cast<unsigned int>(std::time(nullptr))); // use current time as seed for random generator
 	GameObject *houses = App->scene->CreateGameObject();
-	for (unsigned int i = 0; i < num_houses; ++i)
+	for (int i = 0; i < num_houses; ++i)
 	{
 		GameObject *loaded_house = App->model_loader->LoadModel(HOUSE_MODEL_PATH);
-		int x = std::rand() % max_dispersion_x;
-		int z = std::rand() % max_dispersion_z;
+		float x = static_cast<float>(std::rand() % max_dispersion_x);
+		float z = static_cast<float>(std::rand() % max_dispersion_z);
 		loaded_house->transform.SetTranslation(float3(x, 0, z));
 		loaded_house->Update();
 		houses->AddChild(loaded_house);

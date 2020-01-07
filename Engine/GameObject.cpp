@@ -133,7 +133,7 @@ void GameObject::Load(const Config& config)
 
 	config.GetString("Name", name, "GameObject");
 
-	unsigned int parent_UUID = config.GetUInt("ParentUUID", 0);
+	uint64_t parent_UUID = config.GetUInt("ParentUUID", 0);
 	//TODO: This should be done later on, because its possible to try to load a node that its not already loaded
 	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID); 
 	assert(game_object_parent != nullptr);
@@ -153,10 +153,10 @@ void GameObject::Load(const Config& config)
 	config.GetChildrenConfig("Components", gameobject_components_config);
 	for (unsigned int i = 0; i < gameobject_components_config.size(); ++i)
 	{
-		int component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
+		uint64_t component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
 		assert(component_type_uint != 0);
 		
-		Component::ComponentType component_type = Component::GetComponentType(component_type_uint);
+		Component::ComponentType component_type = Component::GetComponentType(static_cast<unsigned int>(component_type_uint));
 		Component* created_component = CreateComponent(component_type);
 		created_component->Load(gameobject_components_config[i]);
 	}

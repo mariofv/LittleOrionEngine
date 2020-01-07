@@ -50,7 +50,7 @@ private:
 
 public:
 	std::string name = "";
-	unsigned int UUID = -1;
+	uint64_t UUID = -1;
 
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;

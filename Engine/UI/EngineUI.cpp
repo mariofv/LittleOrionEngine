@@ -199,11 +199,11 @@ void EngineUI::ShowEmptyGameTab(const char * title) const
 {
 		if (ImGui::BeginTabItem(title))
 		{
-			int window_width = ImGui::GetWindowWidth();
-			ImGui::Dummy(ImVec2(0, ImGui::GetWindowHeight()*0.40));
-			ImGui::SetCursorPosX(window_width*0.45);
+			float window_width = ImGui::GetWindowWidth();
+			ImGui::Dummy(ImVec2(0, ImGui::GetWindowHeight()*0.40f));
+			ImGui::SetCursorPosX(window_width*0.45f);
 			ImGui::Text("Display 1");
-			ImGui::SetCursorPosX(window_width*0.40);
+			ImGui::SetCursorPosX(window_width*0.40f);
 			ImGui::Text("No Cameras Rendering");
 			ImGui::EndTabItem();
 		}
@@ -310,7 +310,7 @@ void EngineUI::ShowFileAndConsoleWindows()
 		ImGuiCond_Once
 	);
 	ImGui::SetNextWindowSize(
-		ImVec2(App->window->GetWidth(), App->window->GetHeight() * (0.98 - (TIME_BAR_HEIGHT_PROP + CONFIG_HEIGHT_PROP))),
+		ImVec2(App->window->GetWidth(), App->window->GetHeight() * (0.98f - (TIME_BAR_HEIGHT_PROP + CONFIG_HEIGHT_PROP))),
 		ImGuiCond_Once
 	);
 	if (ImGui::Begin("BottomTab", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar))

@@ -46,10 +46,10 @@ char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
 	SDL_RWops *rw = SDL_RWFromFile(file_path, "rb");
 	if (rw == NULL) return NULL;
 
-	Sint64 res_size = SDL_RWsize(rw);
+	size_t res_size = static_cast<size_t>(SDL_RWsize(rw));
 	char* res = (char*)malloc(res_size + 1);
 
-	Sint64 nb_read_total = 0, nb_read = 1;
+	size_t nb_read_total = 0, nb_read = 1;
 	char* buf = res;
 	while (nb_read_total < res_size && nb_read != 0) {
 		nb_read = SDL_RWread(rw, buf, 1, (res_size - nb_read_total));

@@ -77,13 +77,13 @@ void ComponentCamera::Delete()
 void ComponentCamera::Save(Config& config) const
 {
 	config.AddUInt(UUID, "UUID");
-	config.AddUInt((unsigned int)type, "ComponentType");
+	config.AddUInt((uint64_t)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddUInt(camera_frustum.type, "FrustumType");
 	config.AddFloat(camera_frustum.nearPlaneDistance, "NearPlaneDistance");
 	config.AddFloat(camera_frustum.farPlaneDistance, "FarPlaneDistance");
 	config.AddFloat(camera_frustum.verticalFov, "VerticalFOV");
-	config.AddUInt((unsigned int)camera_clear_mode, "ClearMode");
+	config.AddUInt((uint64_t)camera_clear_mode, "ClearMode");
 	config.AddColor(float4(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f), "ClearColor");
 }
 
@@ -91,7 +91,7 @@ void ComponentCamera::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-	unsigned int frustum_type_int = config.GetUInt("FrustumType", 1);
+	uint64_t frustum_type_int = config.GetUInt("FrustumType", 1);
 	switch (frustum_type_int)
 	{
 	case 0:
@@ -109,7 +109,7 @@ void ComponentCamera::Load(const Config& config)
 	camera_frustum.verticalFov = config.GetFloat("VerticalFOV", math::pi / 4.0f);
 	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
 
-	unsigned int camera_clear_mode_uint = config.GetUInt("ClearMode", 0);
+	uint64_t camera_clear_mode_uint = config.GetUInt("ClearMode", 0);
 	switch (camera_clear_mode_uint)
 	{
 	case 0:

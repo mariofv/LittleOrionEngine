@@ -72,7 +72,7 @@ void Hierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 
 	if (expanded)
 	{
-		for (int i = 0; i < game_object->children.size(); i++)
+		for (size_t i = 0; i < game_object->children.size(); i++)
 		{
 			ImGui::PushID(i);
 			ShowGameObjectHierarchy(game_object->children[i]);
