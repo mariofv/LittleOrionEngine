@@ -159,8 +159,6 @@ void ModuleRender::Render() const
 
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
-	ImGuizmo::BeginFrame();
-
 	if (App->debug->show_grid)
 	{
 		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));

@@ -50,6 +50,7 @@ update_status ModuleUI::PreUpdate()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
 
 	return update_status::UPDATE_CONTINUE;
 }

@@ -199,6 +199,17 @@ void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_sh
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
+		/*
+		
+		float4x4 aux = float4x4::identity;
+		ImGuizmo::Manipulate(
+			camera_frame_buffer_to_show.GetViewMatrix().Transposed().ptr(),
+			camera_frame_buffer_to_show.GetProjectionMatrix().Transposed().ptr(),
+			ImGuizmo::TRANSLATE,
+			ImGuizmo::WORLD,
+			aux.ptr()
+		);
+		*/
 		if (App->cameras->IsMovementEnabled() && scene_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
 		{
 			ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
