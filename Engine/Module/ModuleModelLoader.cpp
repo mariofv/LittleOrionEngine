@@ -25,9 +25,7 @@ bool ModuleModelLoader::Init()
 }
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
-	std::string model_output;
-
-	App->mesh_importer->Import(std::string(new_model_file_path), model_output);
+	std::string model_output = App->mesh_importer->Import(std::string(new_model_file_path)).second;
 
 	ModuleFileSystem::File file(new_model_file_path);
 	GameObject *model_root_node = App->scene->CreateGameObject();
