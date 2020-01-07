@@ -19,7 +19,7 @@ public:
 	Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::vector<std::string> && meshes_textures_path, std::string mesh_file_path);
 	~Mesh();
 
-	void Render() const;
+	GLuint GetVAO() const;
 private:
 	void InitMesh();
 public:

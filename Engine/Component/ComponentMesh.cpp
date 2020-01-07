@@ -51,7 +51,9 @@ void ComponentMesh::Load(const Config& config)
 
 void ComponentMesh::Render() const
 {
-	mesh_to_render->Render();
+	glBindVertexArray(mesh_to_render->GetVAO());
+	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
+	glBindVertexArray(0);
 }
 
 void ComponentMesh::ShowComponentWindow()
