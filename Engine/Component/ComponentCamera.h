@@ -31,20 +31,20 @@ public:
 	float GetWidth() const;
 	float GetHeigt() const;
 
-	void RecordFrame(const float width, const float height);
+	void RecordFrame(float width, float height);
 	GLuint GetLastRecordedFrame() const;
 
-	void SetFOV(const float fov);
-	void SetAspectRatio(const float aspect_ratio);
-	void SetNearDistance(const float distance);
-	void SetFarDistance(const float distance);
-	void SetOrientation(const float3 orientation);
+	void SetFOV(float fov);
+	void SetAspectRatio(float aspect_ratio);
+	void SetNearDistance(float distance);
+	void SetFarDistance(float distance);
+	void SetOrientation(const float3 & orientation);
 	void AlignOrientationWithAxis();
-	void SetOrthographicSize(const float2 size);
-	void LookAt(const float3 focus);
-	void LookAt(const float x, const float y, const float z);
+	void SetOrthographicSize(const float2 & size);
+	void LookAt(const float3 & focus);
+	void LookAt(float x, float y, float z);
 
-	void SetPosition(const float3 position);
+	void SetPosition(const float3 & position);
 	void MoveUp();
 	void MoveDown();
 	void MoveFoward();
@@ -66,7 +66,7 @@ public:
 	void SetPerpesctiveView();
 	void SetOrthographicView();
 
-	void SetSpeedUp(const bool is_speeding_up);
+	void SetSpeedUp(bool is_speeding_up);
 
 	float4x4 GetViewMatrix() const;
 	float4x4 GetProjectionMatrix() const;
@@ -83,7 +83,7 @@ public:
 	void ShowComponentWindow() override;
 
 private:
-	void GenerateFrameBuffers(const float width, const float height);
+	void GenerateFrameBuffers(float width,float height);
 	void GenerateMatrices();
 	void InitCamera();
 

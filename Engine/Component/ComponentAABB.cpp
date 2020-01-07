@@ -11,7 +11,10 @@ ComponentAABB::ComponentAABB(GameObject * owner) : Component(owner, ComponentTyp
 {
 
 }
-
+void ComponentAABB::Update()
+{
+	GenerateBoundingBox();
+}
 void ComponentAABB::Save(Config& config) const
 {
 

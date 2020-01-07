@@ -26,10 +26,8 @@ public:
 
 	void ShowComponentWindow() override;
 
-public:
-	std::shared_ptr<Mesh> mesh_to_render;
 	unsigned int shader_program = 0;
-
+	std::shared_ptr<Mesh> mesh_to_render;
 private:
 	friend class ComponentsUI;
 };

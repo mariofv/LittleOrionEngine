@@ -217,7 +217,7 @@ void ModuleFileSystem::GetAllFilesRecursive(std::shared_ptr<File> root) const
 	for (auto & file : files )
 	{
 		file->parent = root;
-		root->childs.push_back(file);
+		root->children.push_back(file);
 		GetAllFilesRecursive(file);
 
 	}
