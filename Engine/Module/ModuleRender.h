@@ -23,12 +23,11 @@ public:
 
 	bool Init();
 	update_status PreUpdate();
-	update_status PostUpdate();
 	bool CleanUp();
 	
 	void Render() const;
 	void RenderFrame(const ComponentCamera &camera);
-	void RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const;
+	void RenderMesh(const ComponentMesh &mesh) const;
 
 
 	ComponentMesh* CreateComponentMesh();
@@ -40,18 +39,18 @@ public:
 	void ShowRenderOptions();
 
 private:
-	void SetVSync(const bool vsync);
-	void SetAlphaTest(const bool gl_alpha_test);
-	void SetDepthTest(const bool gl_depth_test);
-	void SetScissorTest(const bool gl_scissor_test);
-	void SetStencilTest(const bool gl_stencil_test);
-	void SetBlending(const bool gl_blend);
-	void SetFaceCulling(const bool gl_cull_face);
-	void SetCulledFaces(const GLenum culled_faces) const;
-	void SetFrontFaces(const GLenum front_faces) const;
-	void SetDithering(const bool gl_dither);
-	void SetMinMaxing(const bool gl_minmax);
-	void SetWireframing(const bool gl_wireframe);
+	void SetVSync(bool vsync);
+	void SetAlphaTest(bool gl_alpha_test);
+	void SetDepthTest(bool gl_depth_test);
+	void SetScissorTest(bool gl_scissor_test);
+	void SetStencilTest(bool gl_stencil_test);
+	void SetBlending(bool gl_blend);
+	void SetFaceCulling(bool gl_cull_face);
+	void SetCulledFaces(GLenum culled_faces) const;
+	void SetFrontFaces(GLenum front_faces) const;
+	void SetDithering(bool gl_dither);
+	void SetMinMaxing(bool gl_minmax);
+	void SetWireframing(bool gl_wireframe);
 
 	void GetCullingMeshes(const ComponentCamera *camera);
 

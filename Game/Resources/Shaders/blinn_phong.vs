@@ -9,7 +9,7 @@ layout (std140) uniform Matrices
   mat4 model;
   mat4 proj;
 	mat4 view;
-};
+} matrices;
 
 struct Material {
 	sampler2D diffuse_map;
@@ -32,8 +32,8 @@ out vec3 normal;
 
 void main()
 {
-	gl_Position = proj*view*model*vec4(vertex_position, 1.0);
+	gl_Position = matrices.proj*matrices.view*matrices.model*vec4(vertex_position, 1.0);
 	texCoord = vertex_uv0;
-	position = (model*vec4(vertex_position, 1.0)).xyz;
-	normal = (model*vec4(vertex_normal, 0.0)).xyz;
+	position = (matrices.model*vec4(vertex_position, 1.0)).xyz;
+	normal = (matrices.model*vec4(vertex_normal, 0.0)).xyz;
 }

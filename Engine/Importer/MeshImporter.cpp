@@ -24,23 +24,22 @@ MeshImporter::~MeshImporter()
 	Assimp::DefaultLogger::kill();
 }
 
-bool MeshImporter::Import(const std::string& file_path, std::string& output_file) const
+std::pair<bool, std::string> MeshImporter::Import(const std::string& file_path) const
 {
 	ModuleFileSystem::File file(file_path);
 	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedResource(LIBRARY_MESHES_FOLDER,file);
 	if (already_imported != nullptr) {
-		output_file = already_imported->file_path;
-		return true;
+		return std::pair<bool, std::string>(true, already_imported->file_path);
 	}
 
-	output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER+"/"+ file.filename_no_extension);
+	std::string output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER+"/"+ file.filename_no_extension);
 	APP_LOG_INIT("Importing model %s.", file_path);
 
 	if (file.filename.empty())
 	{
 		APP_LOG_ERROR("Importing mesh error: Couldn't find the file to import.")
 		App->filesystem->Remove(output_file);
-		return false;
+		return std::pair<bool, std::string>(false, "");
 	}
 	performance_timer.Start();
 
@@ -51,7 +50,7 @@ bool MeshImporter::Import(const std::string& file_path, std::string& output_file
 		APP_LOG_ERROR("Error loading model %s ", file_path);
 		APP_LOG_ERROR(error);
 		App->filesystem->Remove(output_file);
-		return false;
+		return std::pair<bool, std::string>(false, "");
 	}
 	performance_timer.Stop();
 	float time = performance_timer.Read();
@@ -63,7 +62,7 @@ bool MeshImporter::Import(const std::string& file_path, std::string& output_file
 	ImportNode(root_node, scene, base_path.c_str(),output_file);
 
 	aiReleaseImport(scene);
-	return true;
+	return std::pair<bool, std::string>(true, output_file);
 }
 
 void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file) const
@@ -121,7 +120,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
-	UINT64 bytes = sizeof(ranges); // First store ranges
+	size_t bytes = sizeof(ranges); // First store ranges
 	memcpy(cursor, ranges, bytes);
 
 	cursor += bytes; // Store indices
@@ -150,7 +149,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	delete data;
 }
 
- std::shared_ptr<Mesh> MeshImporter::Load(const char* file_path) const 
+ std::shared_ptr<Mesh> MeshImporter::Load(const  std::string& file_path) const
  {
 	
 	//Check if the mesh is already loaded
@@ -160,19 +159,19 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	});
 	if (it != mesh_cache.end())
 	{
-		APP_LOG_INFO("Model %s exists in cache.", file_path);
+		APP_LOG_INFO("Model %s exists in cache.", file_path.c_str());
 		return *it;
 	}
 
-	APP_LOG_INFO("Loading model %s.", file_path);
+	APP_LOG_INFO("Loading model %s.", file_path.c_str());
 	performance_timer.Start();
 	size_t mesh_size;
-	char * data = App->filesystem->Load(file_path, mesh_size);
+	char * data = App->filesystem->Load(file_path.c_str(), mesh_size);
 	char* cursor = data;
 
 	uint32_t ranges[3];
 	//Get ranges
-	UINT64 bytes = sizeof(ranges); // First store ranges
+	size_t bytes = sizeof(ranges); // First store ranges
 	memcpy(ranges, cursor, bytes);
 
 	std::vector<uint32_t> indices;

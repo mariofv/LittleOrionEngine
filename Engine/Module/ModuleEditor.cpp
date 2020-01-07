@@ -18,22 +18,6 @@ bool ModuleEditor::Init()
 	return true;
 }
 
-update_status ModuleEditor::PreUpdate()
-{
-	return update_status::UPDATE_CONTINUE;
-}
-
-// Called every draw update
-update_status ModuleEditor::Update()
-{
-	return update_status::UPDATE_CONTINUE;
-}
-
-update_status ModuleEditor::PostUpdate()
-{
-	return update_status::UPDATE_CONTINUE;
-}
-
 // Called before quitting
 bool ModuleEditor::CleanUp()
 {

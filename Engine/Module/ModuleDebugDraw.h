@@ -14,8 +14,8 @@ public:
 	ModuleDebugDraw() = default;
 	~ModuleDebugDraw() = default;
 
-	bool Init();
-	bool CleanUp();
+	bool Init() override;
+	bool CleanUp() override;
 
 	void Render(const ComponentCamera& camera);
 

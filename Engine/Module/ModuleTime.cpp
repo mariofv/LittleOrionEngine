@@ -53,7 +53,7 @@ void ModuleTime::EndFrame()
 		float remaining_frame_time = 1000.f / max_fps - real_time_delta_time;
 		if (remaining_frame_time > 0)
 		{
-			SDL_Delay(remaining_frame_time);
+			SDL_Delay(static_cast<Uint32>(remaining_frame_time));
 			last_frame_delay = remaining_frame_time;
 		}
 		delta_time = (game_time_clock->Read() - frame_start_time) * time_scale;
@@ -86,7 +86,7 @@ bool ModuleTime::CleanUp()
 	return true;
 }
 
-void ModuleTime::SetMaxFPS(const int fps)
+void ModuleTime::SetMaxFPS(int fps)
 {
 	max_fps = fps;
 }
@@ -135,7 +135,7 @@ void ModuleTime::StepFrame()
 	stepping_frame = true;
 }
 
-void ModuleTime::SetTimeScale(const float time_scale)
+void ModuleTime::SetTimeScale(float time_scale)
 {
 	this->time_scale = time_scale;
 }

@@ -73,7 +73,13 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 	});
 	if (it != game_objects_ownership.end())
 	{
-		game_objects_ownership.erase(it);
+		std::vector<GameObject*> children_to_remove;
+		game_object_to_remove->Delete(children_to_remove);
+		game_objects_ownership.erase(std::remove_if(begin(game_objects_ownership), end(game_objects_ownership), [children_to_remove](auto const &  game_object)
+		{
+			return std::find(begin(children_to_remove), end(children_to_remove), game_object.get()) != end(children_to_remove);
+		}
+		), end(game_objects_ownership));
 	}
 }
 
@@ -82,7 +88,7 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
-GameObject* ModuleScene::GetGameObject(unsigned int UUID) const
+GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 {
 	if (UUID == 0)
 	{

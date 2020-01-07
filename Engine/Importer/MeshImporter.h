@@ -17,8 +17,8 @@ class MeshImporter : Importer
 public:
 	MeshImporter();
 	~MeshImporter();
-	bool Import(const  std::string& file_path, std::string& output_file) const override;
-	std::shared_ptr<Mesh> Load(const char* file_path) const;
+	std::pair<bool, std::string> Import(const std::string& file_path) const override;
+	std::shared_ptr<Mesh> Load(const std::string& file_path) const;
 
 	void RemoveMeshFromCacheIfNeeded(const std::shared_ptr<Mesh> & mesh);
 private:

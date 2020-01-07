@@ -3,6 +3,7 @@
 #include "GameObject.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleScene.h"
 #include <OLQuadTree.h>
 
 #include <random>
@@ -22,37 +23,27 @@ bool ModuleDebug::Init()
 	return true;
 }
 
-update_status ModuleDebug::PreUpdate()
-{
-	return update_status::UPDATE_CONTINUE;
-}
-
-update_status ModuleDebug::PostUpdate()
-{
-	
-	return update_status::UPDATE_CONTINUE;
-}
-
 // Called before quitting
 bool ModuleDebug::CleanUp()
 {
-	APP_LOG_INFO("Destroying Debug");
-	
+	APP_LOG_INFO("Destroying Debug");	
 	return true;
 }
 
 void ModuleDebug::CreateHousesRandom() const
 {
-	std::srand(std::time(nullptr)); // use current time as seed for random generator
-	for (unsigned int i = 0; i < num_houses; ++i)
+	std::srand(static_cast<unsigned int>(std::time(nullptr))); // use current time as seed for random generator
+	GameObject *houses = App->scene->CreateGameObject();
+	for (int i = 0; i < num_houses; ++i)
 	{
 		GameObject *loaded_house = App->model_loader->LoadModel(HOUSE_MODEL_PATH);
-		int x = std::rand() % max_dispersion_x;
-		int z = std::rand() % max_dispersion_z;
+		float x = static_cast<float>(std::rand() % max_dispersion_x);
+		float z = static_cast<float>(std::rand() % max_dispersion_z);
 		loaded_house->transform.SetTranslation(float3(x, 0, z));
 		loaded_house->Update();
-		loaded_house->SetStatic(true);
+		houses->AddChild(loaded_house);
 	}
+	houses->SetStatic(true);
 }
 
 

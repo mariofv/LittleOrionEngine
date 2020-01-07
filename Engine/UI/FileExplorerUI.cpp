@@ -30,7 +30,7 @@ void FileExplorerUI::ShowAssetsFolders() {
 
 void FileExplorerUI::WindowShowFilesInFolder(ModuleFileSystem::File & file) {
 
-	for (auto & child : file.childs )
+	for (auto & child : file.children )
 	{
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 

@@ -14,16 +14,16 @@ public:
 	ModuleScene() = default;
 	~ModuleScene() = default;
 
-	bool Init();
+	bool Init() override;
 	update_status Update() override;
-	bool CleanUp();
+	bool CleanUp() override;
 
 	GameObject* CreateGameObject();
 	GameObject* CreateChildGameObject(GameObject *parent);
 	void RemoveGameObject(GameObject * game_object_to_remove);
 
 	GameObject* GetRoot() const;
-	GameObject* GetGameObject(unsigned int UUID) const;
+	GameObject* GetGameObject(uint64_t UUID) const;
 
 	void DeleteCurrentScene();
 	void Save(Config& serialized_scene) const;

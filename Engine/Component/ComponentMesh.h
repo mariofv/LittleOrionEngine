@@ -3,7 +3,6 @@
 
 #include "Component.h"
 
-#include <GL/glew.h>
 #include "Mesh.h"
 
 class ComponentsUI;
@@ -22,22 +21,15 @@ public:
 	void Load(const Config& config) override;
 
 	void Render() const;
+	void RenderModel() const;
 
 	void SetMesh(const std::shared_ptr<Mesh> & mesh_to_render);
+	bool operator <(const ComponentMesh & mesh_to_compare) const;
 
 	void ShowComponentWindow() override;
-
-private:
-	void SetupMesh();
-
-public:
-	std::shared_ptr<Mesh> mesh_to_render;
 	unsigned int shader_program = 0;
-
+	std::shared_ptr<Mesh> mesh_to_render;
 private:
-	GLuint vao = 0;
-	GLuint vbo = 0;
-	GLuint ebo = 0;
 	friend class ComponentsUI;
 };
 

@@ -19,7 +19,7 @@ ComponentTransform::ComponentTransform(GameObject * owner, const float3 translat
 
 void ComponentTransform::Update()
 {
-
+	GenerateGlobalModelMatrix();
 }
 
 void ComponentTransform::Save(Config& config) const

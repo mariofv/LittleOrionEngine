@@ -14,20 +14,20 @@ MaterialImporter::MaterialImporter()
 	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 }
-bool MaterialImporter::Import(const  std::string& file_path, std::string& output_file) const
+std::pair<bool, std::string> MaterialImporter::Import(const  std::string& file_path) const
 {
 	ModuleFileSystem::File file(file_path);
 	if (file.filename.empty())
 	{
 		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
-		return false;
+		return std::pair<bool, std::string>(false,"");
 	}
 
 	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedResource(LIBRARY_TEXTURES_FOLDER, file);
 	if (already_imported != nullptr) {
-		output_file = already_imported->file_path;
-		return true;
+		return std::pair<bool, std::string>(true, already_imported->file_path);
 	}
+
 
 	//Bound image
 
@@ -39,7 +39,7 @@ bool MaterialImporter::Import(const  std::string& file_path, std::string& output
 	//Get new Name
 
 	std::string texture_name_no_extension = file.filename.substr(0, file.filename.find_last_of("."));
-	output_file = LIBRARY_TEXTURES_FOLDER + "//" + texture_name_no_extension + ".dds";
+	std::string output_file = LIBRARY_TEXTURES_FOLDER + "//" + texture_name_no_extension + ".dds";
 
 	//Save data
 	ILuint size;
@@ -54,7 +54,7 @@ bool MaterialImporter::Import(const  std::string& file_path, std::string& output
 		}
 		ilDeleteImages(1, &image);
 	}
-	return true;
+	return std::pair<bool, std::string>(true, output_file);
 }
 
 void MaterialImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* file_path,std::vector<std::string> & loaded_meshes_materials) const
@@ -82,37 +82,35 @@ void MaterialImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_
 
 std::string MaterialImporter::ImportMaterialData(const std::string & material_path, const std::string model_base_path) const
 {
-	std::string material_texture;
-
 	APP_LOG_INIT("Loading material texture in described path %s.", material_path.c_str());
-	bool imported = Import(material_path, material_texture);
-	if (imported)
+	std::pair<bool, std::string> imported = Import(material_path);
+	if (imported.first)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly.");
-		return material_texture;
+		return imported.second;
 	}
 
-	std::string texture_file_name = GetTextureFileName(material_path.c_str());
+	std::string texture_file_name = GetTextureFileName(material_path);
 	std::string textures_path = model_base_path+ "/" + texture_file_name;
 	APP_LOG_INIT("Loading material texture in model folder path %s.", model_base_path.c_str());
-	imported = Import(textures_path, material_texture);
-	if (imported)
+	imported = Import(textures_path);
+	if (imported.first)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly.");
-		return material_texture;
+		return imported.second;
 	}
 
 	textures_path = std::string(TEXTURES_PATH) + texture_file_name;
 	APP_LOG_INIT("Loading material texture in textures folder %s.", textures_path.c_str());
-	imported = Import(textures_path, material_texture);
-	if (imported)
+	imported = Import(textures_path);
+	if (imported.first)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly.");
-		return material_texture;
+		return imported.second;
 	}
-	return material_texture;
+	return "";
 }
-std::shared_ptr<Texture> MaterialImporter::Load(const char* file_path) const{
+std::shared_ptr<Texture> MaterialImporter::Load(const std::string& file_path) const{
 
 	//Check if the texture is already loaded
 	auto it = std::find_if(texture_cache.begin(), texture_cache.end(), [file_path](const std::shared_ptr<Texture> & texture)
@@ -121,7 +119,7 @@ std::shared_ptr<Texture> MaterialImporter::Load(const char* file_path) const{
 	});
 	if (it != texture_cache.end())
 	{
-		APP_LOG_INIT("Model %s exists in cache.", file_path);
+		APP_LOG_INIT("Model %s exists in cache.", file_path.c_str());
 		return *it;
 	}
 
@@ -144,9 +142,9 @@ std::shared_ptr<Texture> MaterialImporter::Load(const char* file_path) const{
 	return loaded_texture;
 }
 
-ILubyte * MaterialImporter::LoadImageData(const char* file_path, int image_type ,int & width, int & height ) const
+ILubyte * MaterialImporter::LoadImageData(const std::string& file_path, int image_type ,int & width, int & height ) const
 {
-	ilLoadImage(file_path);
+	ilLoadImage(file_path.c_str());
 
 	ILenum error;
 	error = ilGetError();
@@ -214,18 +212,17 @@ void MaterialImporter::RemoveTextureFromCacheIfNeeded(const std::shared_ptr<Text
 	}
 }
 
-std::string MaterialImporter::GetTextureFileName(const char *texture_file_path) const
+std::string MaterialImporter::GetTextureFileName(std::string texture_file_path) const
 {
-	std::string texture_path_string = std::string(texture_file_path);
-	std::replace(texture_path_string.begin(), texture_path_string.end(), '\\', '/');
-	std::size_t found = texture_path_string.find_last_of("/");
+	std::replace(texture_file_path.begin(), texture_file_path.end(), '\\', '/');
+	std::size_t found = texture_file_path.find_last_of("/");
 	if (found == std::string::npos)
 	{
-		return texture_path_string;
+		return texture_file_path;
 	}
 	else
 	{
-		std::string texture_filename = texture_path_string.substr(found, texture_path_string.length());
+		std::string texture_filename = texture_file_path.substr(found, texture_file_path.length());
 
 		return texture_filename;
 	}

@@ -48,13 +48,13 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Triangles");
 		ImGui::SameLine();
-		sprintf(tmp_string, "%d", mesh->mesh_to_render->num_triangles);
+		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size()/3);
 		ImGui::Button(tmp_string);
 
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Vertices");
 		ImGui::SameLine();
-		sprintf(tmp_string, "%d", mesh->mesh_to_render->num_vertices);
+		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
 		ImGui::Button(tmp_string);
 
 		int shader_program = GetShaderProgramPosition(mesh->shader_program);
@@ -88,7 +88,7 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 	{
 		ImGui::Checkbox("Active", &material->active);
 		ImGui::Separator();
-		int window_width = ImGui::GetWindowWidth();
+		float window_width = ImGui::GetWindowWidth();
 		for (size_t i = 0; i < material->textures.size(); ++i)
 		{
 			Texture::TextureType type = static_cast<Texture::TextureType>(i);
@@ -186,6 +186,8 @@ std::string ComponentsUI::GetTypeName(Texture::TextureType type)
 	case Texture::TextureType::OCLUSION:
 		return "Oclusion";
 		break;
+	default:
+		return "";
 	}
 }
 void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
@@ -291,4 +293,5 @@ int ComponentsUI::GetShaderProgramPosition(unsigned int program)
 	{
 		return 4;
 	}
+	return -1;
 }

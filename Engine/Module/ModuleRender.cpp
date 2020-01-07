@@ -129,12 +129,6 @@ update_status ModuleRender::PreUpdate()
 	return update_status::UPDATE_CONTINUE;
 }
 
-update_status ModuleRender::PostUpdate()
-{
-
-	return update_status::UPDATE_CONTINUE;
-}
-
 // Called before quitting
 bool ModuleRender::CleanUp()
 {
@@ -194,7 +188,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	GetCullingMeshes(App->cameras->active_camera);
 	for (auto &mesh : meshes_to_render)
 	{
-		RenderMesh(*mesh, camera);
+		RenderMesh(*mesh);
 	}
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
@@ -239,7 +233,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 	}
 }
 
-void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const
+void ModuleRender::RenderMesh(const ComponentMesh &mesh) const
 {
 	const GameObject& mesh_game_object = *mesh.owner;
 
@@ -247,13 +241,6 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 	{
 		dd::aabb(mesh_game_object.aabb.bounding_box.minPoint, mesh_game_object.aabb.bounding_box.maxPoint, float3::one);
 	}
-
-	GLuint shader_program = mesh.shader_program == 0 ? App->program->texture_program : mesh.shader_program;
-	glUseProgram(shader_program);
-
-	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), mesh_game_object.transform.GetGlobalModelMatrix().Transposed().ptr());
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	if (App->scene->hierarchy.selected_game_object == &mesh_game_object)
 	{
@@ -263,8 +250,6 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 		glStencilMask(0xFF);
 	}
 
-	App->lights->RenderLight(shader_program);
-	mesh_game_object.RenderMaterialTexture(shader_program);
 	mesh.Render();
 
 	if (App->scene->hierarchy.selected_game_object == &mesh_game_object)
@@ -285,25 +270,10 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 			model_scale
 		);
 
-		glUniformMatrix4fv(
-			glGetUniformLocation(outline_shader_program, "model"),
-			1,
-			GL_TRUE,
-			adjusted_model_matrix.ptr()
-		);
-		glUniformMatrix4fv(
-			glGetUniformLocation(outline_shader_program, "view"),
-			1,
-			GL_TRUE,
-			&camera.GetViewMatrix()[0][0]
-		);
-		glUniformMatrix4fv(
-			glGetUniformLocation(outline_shader_program, "proj"),
-			1,
-			GL_TRUE,
-			&camera.GetProjectionMatrix()[0][0]
-		);
-		mesh.Render();
+		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4),adjusted_model_matrix.Transposed().ptr());
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		mesh.RenderModel();
 		glStencilMask(0xFF);
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_STENCIL_TEST);
@@ -312,71 +282,71 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 	glUseProgram(0);
 }
 
-void ModuleRender::SetVSync(const bool vsync)
+void ModuleRender::SetVSync(bool vsync)
 {
 	this->vsync = vsync;
 	vsync ? SDL_GL_SetSwapInterval(1) : SDL_GL_SetSwapInterval(0);
 }
 
-void ModuleRender::SetAlphaTest(const bool gl_alpha_test)
+void ModuleRender::SetAlphaTest(bool gl_alpha_test)
 {
 	this->gl_alpha_test = gl_alpha_test;
 	gl_alpha_test ? glEnable(GL_ALPHA_TEST) : glDisable(GL_ALPHA_TEST);
 }
 
-void ModuleRender::SetDepthTest(const bool gl_depth_test)
+void ModuleRender::SetDepthTest(bool gl_depth_test)
 {
 	this->gl_depth_test = gl_depth_test;
 	gl_depth_test ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 }
 
-void ModuleRender::SetScissorTest(const bool gl_scissor_test)
+void ModuleRender::SetScissorTest(bool gl_scissor_test)
 {
 	this->gl_scissor_test = gl_scissor_test;
 	gl_scissor_test ? glEnable(GL_SCISSOR_TEST) : glDisable(GL_SCISSOR_TEST);
 }
 
-void ModuleRender::SetStencilTest(const bool gl_stencil_test)
+void ModuleRender::SetStencilTest(bool gl_stencil_test)
 {
 	this->gl_stencil_test = gl_stencil_test;
 	gl_stencil_test ? glEnable(GL_STENCIL_TEST) : glDisable(GL_STENCIL_TEST);
 }
 
-void ModuleRender::SetBlending(const bool gl_blend)
+void ModuleRender::SetBlending(bool gl_blend)
 {
 	this->gl_blend = gl_blend;
 	gl_blend ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
 }
 
-void ModuleRender::SetFaceCulling(const bool gl_cull_face)
+void ModuleRender::SetFaceCulling(bool gl_cull_face)
 {
 	this->gl_cull_face = gl_cull_face;
 	gl_cull_face ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 }
 
-void ModuleRender::SetCulledFaces(const GLenum culled_faces) const
+void ModuleRender::SetCulledFaces(GLenum culled_faces) const
 {
 	glCullFace(culled_faces);
 }
 
-void ModuleRender::SetFrontFaces(const GLenum front_faces) const
+void ModuleRender::SetFrontFaces(GLenum front_faces) const
 {
 	glFrontFace(front_faces);
 }
 
-void ModuleRender::SetDithering(const bool gl_dither)
+void ModuleRender::SetDithering(bool gl_dither)
 {
 	this->gl_dither = gl_dither;
 	gl_dither ? glEnable(GL_DITHER) : glDisable(GL_DITHER);
 }
 
-void ModuleRender::SetMinMaxing(const bool gl_minmax)
+void ModuleRender::SetMinMaxing(bool gl_minmax)
 {
 	this->gl_minmax = gl_minmax;
 	gl_minmax ? glEnable(GL_MINMAX) : glDisable(GL_MINMAX);
 }
 
-void ModuleRender::SetWireframing(const bool gl_wireframe)
+void ModuleRender::SetWireframing(bool gl_wireframe)
 {
 	this->gl_wireframe = gl_wireframe;
 	gl_wireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -537,12 +507,11 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(LineSegment & ray)
 	{
 		LineSegment transformed_ray = ray;
 		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
-
-		for (auto& triangle : mesh->mesh_to_render->triangles)
+		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
+		for (auto & triangle : triangles)
 		{
 			float distance;
-			bool intersected = triangle.Intersects(transformed_ray, &distance);
-			
+			bool intersected = triangle.Intersects(transformed_ray, &distance);		
 			if (intersected && distance < min_distance)
 			{
 				selected = mesh->owner;

@@ -71,7 +71,7 @@ void ComponentMaterial::Load(const Config& config)
 		config.GetString(id, tmp_path, "");
 		if (!tmp_path.empty())
 		{
-			textures[i] = App->material_importer->Load(tmp_path.c_str());
+			textures[i] = App->material_importer->Load(tmp_path);
 		}
 	}
 	

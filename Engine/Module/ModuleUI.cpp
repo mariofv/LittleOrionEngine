@@ -60,11 +60,6 @@ update_status ModuleUI::Update()
 	return update_status::UPDATE_CONTINUE;
 }
 
-update_status ModuleUI::PostUpdate()
-{
-	return update_status::UPDATE_CONTINUE;
-}
-
 void ModuleUI::Render()
 {
 	editor_ui->ShowEngineUI();
@@ -83,7 +78,7 @@ bool ModuleUI::CleanUp()
 	return true;
 }
 
-ImFont* ModuleUI::GetFont(const Fonts font) const
+ImFont* ModuleUI::GetFont(const Fonts & font) const
 {
 	ImGuiIO& io = ImGui::GetIO();
 	return io.Fonts->Fonts[static_cast<int>(font)];

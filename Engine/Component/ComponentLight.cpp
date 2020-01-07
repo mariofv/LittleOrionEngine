@@ -19,7 +19,7 @@ void ComponentLight::Delete()
 	App->lights->RemoveComponentLight(this);
 }
 
-void ComponentLight::Render(unsigned int shader_program) const
+void ComponentLight::Render() const
 {	
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 

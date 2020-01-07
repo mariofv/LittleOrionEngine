@@ -19,38 +19,37 @@ public:
 	static const size_t MAX_TEXTURE_TYPES = static_cast<size_t>(TextureType::UNKNOWN);
 public:
 	Texture() = default;
-	Texture(unsigned char * data, int width, int height, const char* path, TextureType type = TextureType::DIFUSSE);
+	Texture(unsigned char * data, int width, int height, const std::string& path, TextureType type = TextureType::DIFUSSE);
 
 	~Texture();
 
 	void GenerateMipMap();
 	bool IsMipMapped() const;
 
-	void SetWrapS(const GLenum wrap_s);
+	void SetWrapS(GLenum wrap_s);
 	GLenum GetWrapS() const;
 	char* GetWrapS_C_Str() const;
 
-	void SetWrapT(const GLenum wrap_t);
+	void SetWrapT(GLenum wrap_t);
 	GLenum GetWrapT() const;
 	char* GetWrapT_C_Str() const;
 
-	void SetMinFilter(const GLenum min_filter);
+	void SetMinFilter(GLenum min_filter);
 	GLenum GetMinFilter() const;
 	char* GetMinFilter_C_Str() const;
 
-	void SetMagFilter(const GLenum mag_filter);
+	void SetMagFilter(GLenum mag_filter);
 	GLenum GetMagFilter() const;
 	char* GetMagFilter_C_Str() const;
 
 private:
-	void InitTexture();
-	char* GLEnumToString(const GLenum gl_enum) const;
+	void InitTexture(unsigned char * data);
+	char* GLEnumToString(GLenum gl_enum) const;
 
 public:
 
 	std::string texture_path;
 	GLuint opengl_texture = 0;
-	const unsigned char* data = nullptr;
 	TextureType type;
 
 	int width = 0;
