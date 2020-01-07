@@ -99,7 +99,7 @@ void OLQuadTreeNode::CollectIntersect(std::vector<GameObject*> &game_objects, co
 	{
 		for (auto &object : objects)
 		{
-			if (camera.IsInsideFrustum(object->aabb.bounding_box))
+			if (object->IsVisible(camera))
 			{
 				game_objects.push_back(object);
 			}

@@ -114,6 +114,8 @@ bool ModuleRender::Init()
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+
 	APP_LOG_SUCCESS("Glew initialized correctly.")
 
 return true;
@@ -157,6 +159,8 @@ void ModuleRender::Render() const
 
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
+	glStencilMask(0x00); // make sure we don't update the stencil buffer while drawing debug shapes
+	
 	if (App->debug->show_grid)
 	{
 		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
@@ -177,7 +181,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	}
 
 	rendering_measure_timer->Start();
-
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 
 	static size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
@@ -188,7 +191,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	GetMeshesToRender();
+	GetCullingMeshes(App->cameras->active_camera);
 	for (auto &mesh : meshes_to_render)
 	{
 		RenderMesh(*mesh, camera);
@@ -199,20 +202,20 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	App->debug_draw->Render(camera);
 }
 
-void ModuleRender::GetMeshesToRender()
+void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 {
 	meshes_to_render.clear();
 
 	std::copy_if(meshes.begin(),
 		meshes.end(),
-		std::back_inserter(meshes_to_render), [](auto mesh)
+		std::back_inserter(meshes_to_render), [camera](auto mesh)
 	{
 
-		if (App->debug->frustum_culling && mesh->IsEnabled() && App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
+		if (App->debug->frustum_culling && mesh->owner->IsVisible(*camera))
 		{
 			return true;
 		}
-		else if(App->debug->frustum_culling && mesh->IsEnabled() && !App->cameras->active_camera->IsInsideFrustum(mesh->owner->aabb.bounding_box))
+		else if(App->debug->frustum_culling && !mesh->owner->IsVisible(*camera))
 		{
 			return false;
 		}
@@ -226,15 +229,12 @@ void ModuleRender::GetMeshesToRender()
 	if (App->debug->quadtree_culling)
 	{
 		std::vector<GameObject*> rendered_objects;
-		ol_quadtree.CollectIntersect(rendered_objects, *App->cameras->active_camera);
+		ol_quadtree.CollectIntersect(rendered_objects, *camera);
 
 		for (auto &object : rendered_objects)
 		{
 			ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
-			if (object_mesh->IsEnabled())
-			{
-				meshes_to_render.push_back(object_mesh);
-			}
+			meshes_to_render.push_back(object_mesh);
 		}
 	}
 }
@@ -255,9 +255,59 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), mesh_game_object.transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
+	if (App->scene->hierarchy.selected_game_object == &mesh_game_object)
+	{
+		glEnable(GL_STENCIL_TEST);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
+		glStencilMask(0xFF);
+	}
+
 	App->lights->RenderLight(shader_program);
 	mesh_game_object.RenderMaterialTexture(shader_program);
 	mesh.Render();
+
+	if (App->scene->hierarchy.selected_game_object == &mesh_game_object)
+	{
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+
+		GLuint outline_shader_program = App->program->outline_program;
+		glUseProgram(outline_shader_program);
+
+		float4x4 adjusted_model_matrix = mesh_game_object.transform.GetGlobalModelMatrix();
+		float3 model_scale = adjusted_model_matrix.ExtractScale();
+		model_scale += float3(0.01);
+		adjusted_model_matrix = float4x4::FromTRS(
+			adjusted_model_matrix.TranslatePart(),
+			adjusted_model_matrix.RotatePart(),
+			model_scale
+		);
+
+		glUniformMatrix4fv(
+			glGetUniformLocation(outline_shader_program, "model"),
+			1,
+			GL_TRUE,
+			adjusted_model_matrix.ptr()
+		);
+		glUniformMatrix4fv(
+			glGetUniformLocation(outline_shader_program, "view"),
+			1,
+			GL_TRUE,
+			&camera.GetViewMatrix()[0][0]
+		);
+		glUniformMatrix4fv(
+			glGetUniformLocation(outline_shader_program, "proj"),
+			1,
+			GL_TRUE,
+			&camera.GetProjectionMatrix()[0][0]
+		);
+		mesh.Render();
+		glStencilMask(0xFF);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_STENCIL_TEST);
+	}
 
 	glUseProgram(0);
 }
@@ -466,4 +516,39 @@ void ModuleRender::GenerateQuadTree()
 	{
 		ol_quadtree.Insert(*mesh->owner);
 	}
+}
+
+GameObject* ModuleRender::GetRaycastIntertectedObject(LineSegment & ray)
+{
+	GetCullingMeshes(App->cameras->scene_camera);
+	std::vector<ComponentMesh*> intersected_meshes;
+	for (auto & mesh : meshes_to_render)
+	{
+		if (mesh->owner->aabb.bounding_box.Intersects(ray))
+		{
+			intersected_meshes.push_back(mesh);
+		}
+	}
+
+	std::vector<GameObject*> intersected;
+	GameObject* selected = nullptr;
+	float min_distance = INFINITY;
+	for (auto & mesh : intersected_meshes)
+	{
+		LineSegment transformed_ray = ray;
+		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
+
+		for (auto& triangle : mesh->mesh_to_render->triangles)
+		{
+			float distance;
+			bool intersected = triangle.Intersects(transformed_ray, &distance);
+			
+			if (intersected && distance < min_distance)
+			{
+				selected = mesh->owner;
+				min_distance = distance;
+			}
+		}
+	}
+	return selected;
 }
