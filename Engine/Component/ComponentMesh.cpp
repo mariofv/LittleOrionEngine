@@ -66,7 +66,7 @@ void ComponentMesh::Render() const
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	App->lights->RenderLight(program);
+	App->lights->RenderLight();
 	owner->RenderMaterialTexture(program);
 
 	glBindVertexArray(mesh_to_render->GetVAO());
