@@ -221,37 +221,20 @@ void ModuleScene::DrawGizmo(const ComponentCamera& camera, GameObject& game_obje
 	ImGuizmo::Enable(true);
 	ImGuizmo::SetOrthographic(false);
 
-	float4x4 model_matrix_transposed = game_object.transform.GetGlobalModelMatrix().Transposed();
+	float4x4 model_global_matrix_transposed = game_object.transform.GetGlobalModelMatrix().Transposed();
 
 	ImGuizmo::Manipulate(
 		camera.GetViewMatrix().Transposed().ptr(),
 		camera.GetProjectionMatrix().Transposed().ptr(),
 		gizmo_operation,
 		ImGuizmo::WORLD,
-		model_matrix_transposed.ptr()
+		model_global_matrix_transposed.ptr()
 	);
 
 	gizmo_hovered = ImGuizmo::IsOver();
 	if (ImGuizmo::IsUsing())
 	{
-		float3 translation, scale;
-		float3x3 rotation;
-
-		float4x4 new_model_matrix = model_matrix_transposed.Transposed();
-		new_model_matrix.Decompose(translation, rotation, scale);
-
-		switch (gizmo_operation)
-		{
-			case ImGuizmo::TRANSLATE:
-				game_object.transform.SetTranslation(translation);
-				break;
-			case ImGuizmo::ROTATE:
-				game_object.transform.SetRotation(rotation);	
-				break;
-			case ImGuizmo::SCALE:
-				game_object.transform.SetScale(scale);
-				break;
-		}
+		game_object.transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
 	}
 }
 
