@@ -268,7 +268,7 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh) const
 		object_transform_copy.GenerateGlobalModelMatrix();
 
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), object_transform_copy.GetGlobalModelMatrix().ptr());
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), object_transform_copy.GetGlobalModelMatrix().Transposed().ptr());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		mesh.RenderModel();
 
