@@ -1,6 +1,7 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleEditor.h"
+#include "ModuleFileSystem.h"
 #include "ModuleScene.h"
 #include "Config.h"
 
@@ -29,12 +30,9 @@ bool ModuleEditor::CleanUp()
 void ModuleEditor::OpenScene() const
 {
 	const char* path = "./Assets/Scenes/scene.scene";
-	std::ifstream ifs(path);
-	std::string serialized_scene_string(
-		(std::istreambuf_iterator<char>(ifs)),
-		(std::istreambuf_iterator<char>())
-	);
-
+	size_t readed_bytes;
+	std::string serialized_scene_string = App->filesystem->Load(path, readed_bytes);
+	
 	Config scene_config(serialized_scene_string);
 	App->scene->Load(scene_config);
 }
@@ -56,11 +54,8 @@ void ModuleEditor::SaveScene() const
 
 void ModuleEditor::OpenDefaultScene() const
 {
-	std::ifstream ifs(DEFAULT_SCENE_PATH);
-	std::string serialized_scene_string(
-		(std::istreambuf_iterator<char>(ifs)),
-		(std::istreambuf_iterator<char>())
-	);
+	size_t readed_bytes;
+	std::string serialized_scene_string = App->filesystem->Load(DEFAULT_SCENE_PATH, readed_bytes);
 
 	Config scene_config(serialized_scene_string);
 	App->scene->Load(scene_config);
