@@ -51,7 +51,7 @@ public:
 	
 	FileType GetFileType(const char *file_path, const PHYSFS_FileType & file_type = PHYSFS_FileType::PHYSFS_FILETYPE_OTHER) const;
 	void GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only = false) const;
-	size_t GetNumberOfSubFolders(const std::string & path) const;
+	size_t GetNumberOfFileSubFolders(const std::shared_ptr<ModuleFileSystem::File> & file) const;
 
 	void RefreshFilesHierarchy();
 private:

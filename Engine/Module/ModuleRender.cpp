@@ -138,8 +138,6 @@ bool ModuleRender::CleanUp()
 	{
 		mesh->owner->RemoveComponent(mesh);
 	}
-	meshes.clear();
-	meshes_to_render.clear();
 	return true;
 }
 
@@ -199,6 +197,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 {
+	BROFILER_CATEGORY("Get culling meshes", Profiler::Color::Lavender);
 	meshes_to_render.clear();
 
 	std::copy_if(meshes.begin(),

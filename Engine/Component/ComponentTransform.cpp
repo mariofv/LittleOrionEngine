@@ -46,13 +46,13 @@ float3 ComponentTransform::GetTranslation() const
 void ComponentTransform::SetTranslation(const float3 translation)
 {
 	this->translation = translation;
-	GenerateModelMatrix(); // TODO: Change this to Update()
+	GenerateModelMatrix();
 }
 
 void ComponentTransform::Translate(const float3 &translation)
 {
 	this->translation += translation;
-	GenerateModelMatrix(); // TODO: Change this to Update()
+	GenerateModelMatrix();
 }
 
 Quat ComponentTransform::GetRotation() const
@@ -65,7 +65,7 @@ void ComponentTransform::SetRotation(const float3x3 &rotation)
 	this->rotation = rotation.ToQuat();
 	rotation_radians = rotation.ToEulerXYZ();
 	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
-	GenerateModelMatrix(); // TODO: Change this to Update()
+	GenerateModelMatrix();
 }
 
 void ComponentTransform::Rotate(const Quat &rotation)
@@ -74,7 +74,7 @@ void ComponentTransform::Rotate(const Quat &rotation)
 	rotation_radians = rotation * rotation_radians;
 	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
 
-	GenerateModelMatrix(); // TODO: Change this to Update()
+	GenerateModelMatrix();
 }
 
 void ComponentTransform::Rotate(const float3x3 &rotation)
@@ -83,7 +83,7 @@ void ComponentTransform::Rotate(const float3x3 &rotation)
 	rotation_radians = rotation * rotation_radians;
 	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
 
-	GenerateModelMatrix(); // TODO: Change this to Update()
+	GenerateModelMatrix();
 }
 
 float3 ComponentTransform::GetUpVector() const
