@@ -21,6 +21,7 @@ bool ModuleCamera::Init()
 	scene_camera_game_object->transform.SetTranslation(float3(0.5f, 2.f, -15.f));
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	scene_camera->SetFarDistance(500);
+	scene_camera->depth = -1;
 
 	skybox = new Skybox();
 
@@ -42,6 +43,7 @@ bool ModuleCamera::CleanUp()
 		camera->owner->RemoveComponent(camera);
 	}
 	cameras.clear();
+	main_camera = nullptr;
 	return true;
 }
 
@@ -70,13 +72,16 @@ void ModuleCamera::SelectMainCamera()
 {
 	for (auto& camera : cameras)
 	{
-		if (main_camera == nullptr)
+		if (camera != scene_camera)
 		{
-			main_camera = camera;
-		}
-		else if (main_camera->depth < camera->depth)
-		{
-			main_camera = camera;
+			if (main_camera == nullptr)
+			{
+				main_camera = camera;
+			}
+			else if (main_camera->depth < camera->depth)
+			{
+				main_camera = camera;
+			}
 		}
 	}
 }
