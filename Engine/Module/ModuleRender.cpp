@@ -279,20 +279,16 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 		GLuint outline_shader_program = App->program->outline_program;
 		glUseProgram(outline_shader_program);
 
-		float4x4 adjusted_model_matrix = mesh_game_object.transform.GetGlobalModelMatrix();
-		float3 model_scale = adjusted_model_matrix.ExtractScale();
-		model_scale += float3(0.01);
-		adjusted_model_matrix = float4x4::FromTRS(
-			adjusted_model_matrix.TranslatePart(),
-			adjusted_model_matrix.RotatePart(),
-			model_scale
-		);
+		ComponentTransform object_transform_copy = mesh_game_object.transform;
+		float3 object_scale = object_transform_copy.GetScale();
+		object_transform_copy.SetScale(object_scale*1.01f);
+		object_transform_copy.GenerateGlobalModelMatrix();
 
 		glUniformMatrix4fv(
 			glGetUniformLocation(outline_shader_program, "model"),
 			1,
 			GL_TRUE,
-			adjusted_model_matrix.ptr()
+			object_transform_copy.GetGlobalModelMatrix().ptr()
 		);
 		glUniformMatrix4fv(
 			glGetUniformLocation(outline_shader_program, "view"),

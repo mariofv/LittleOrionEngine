@@ -31,6 +31,7 @@ public:
 	void Rotate(const Quat &rotation);
 	void Rotate(const float3x3 &rotation);
 
+	float3 ComponentTransform::GetScale() const;
 	void SetScale(const float3 &scale);
 
 	float3 GetUpVector() const;
