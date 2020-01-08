@@ -11,10 +11,8 @@ public:
 	ModuleDebug() = default;
 	~ModuleDebug() = default;
 
-	bool Init();
-	update_status PreUpdate();
-	update_status PostUpdate();
-	bool CleanUp();
+	bool Init() override;
+	bool CleanUp() override;
 	
 	void CreateHousesRandom() const;
 	

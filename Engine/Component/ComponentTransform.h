@@ -38,15 +38,15 @@ public:
 	float3 GetFrontVector() const;
 	float3 GetRightVector() const;
 
-	void GenerateGlobalModelMatrix();
 	void ChangeLocalSpace(const float4x4 new_local_space);
 
 	float4x4 GetGlobalModelMatrix() const;
 	void SetGlobalModelMatrix(const float4x4 &new_global_matrix);
-
+  
 	void ShowComponentWindow() override;
 
 private:
+	void GenerateGlobalModelMatrix();
 	void GenerateModelMatrix();
 
 private:

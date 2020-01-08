@@ -17,11 +17,11 @@ bool ModuleLight::CleanUp()
 	lights.clear();
 	return true;
 }
-void ModuleLight::RenderLight(unsigned int shader_program) const
+void ModuleLight::RenderLight() const
 {
 	if (lights.size() > 0)
 	{
-		lights[0]->Render(shader_program);
+		lights[0]->Render();
 	}
 }
 ComponentLight* ModuleLight::CreateComponentLight()

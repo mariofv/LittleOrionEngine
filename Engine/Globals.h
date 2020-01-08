@@ -61,13 +61,7 @@ enum class Fonts
 # define DEFAULT_VERTEX_SHADER_PATH "Resources/Shaders/default.vs"
 # define DEFAULT_FRAGMENT_SHADER_PATH "Resources/Shaders/default.fs"
 
-# define PRIMITIVE_VERTEX_SHADER_PATH "Resources/Shaders/primitive.vs"
-# define PRIMITIVE_FRAGMENT_SHADER_PATH "Resources/Shaders/primitive.fs"
-
 # define TEXTURE_FRAGMENT_SHADER_PATH "Resources/Shaders/texture.fs"
-
-# define WOBBLE_VERTEX_SHADER_PATH "Resources/Shaders/wobble.vs"
-# define WOBBLE_FRAGMENT_SHADER_PATH "Resources/Shaders/wobble.fs"
 
 # define SKYBOX_VERTEX_SHADER_PATH "Resources/Shaders/skybox.vs"
 # define SKYBOX_FRAGMENT_SHADER_PATH "Resources/Shaders/skybox.fs"
@@ -86,6 +80,12 @@ enum class Fonts
 
 # define GOURAUND_VERTEX_SHADER_PATH "Resources/Shaders/gouraund.vs"
 # define GOURAUND_FRAGMENT_SHADER_PATH "Resources/Shaders/gouraund.fs"
+
+# define PHONG_VERTEX_SHADER_PATH "Resources/Shaders/phong.vs"
+# define PHONG_FRAGMENT_SHADER_PATH "Resources/Shaders/phong.fs"
+
+# define BLINN_PHONG_VERTEX_SHADER_PATH "Resources/Shaders/blinn_phong.vs"
+# define BLINN_PHONG_FRAGMENT_SHADER_PATH "Resources/Shaders/blinn_phong.fs"
 
 # define HOUSE_MODEL_PATH "Assets/Models/baker_house/BakerHouse.fbx"
 # define BUNNY_MODEL_PATH "Assets/Models/ZomBunny/Zombunny.fbx"

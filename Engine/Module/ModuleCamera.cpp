@@ -34,10 +34,8 @@ update_status ModuleCamera::Update()
 	return update_status::UPDATE_CONTINUE;
 }
 
-// Called before quitting
 bool ModuleCamera::CleanUp()
 {
-	//Not removing the cameras here because this module would be clearer before scene module
 	for (auto& camera : cameras)
 	{
 		camera->owner->RemoveComponent(camera);
@@ -67,7 +65,7 @@ void ModuleCamera::RemoveComponentCamera(ComponentCamera* camera_to_remove)
 	}
 }
 
-void ModuleCamera::SetOrbit(const bool is_orbiting)
+void ModuleCamera::SetOrbit(bool is_orbiting)
 {
 	this->is_orbiting = is_orbiting;
 }
@@ -77,7 +75,7 @@ bool ModuleCamera::IsOrbiting() const
 	return is_orbiting;
 }
 
-void ModuleCamera::SetMovement(const bool movement_enabled)
+void ModuleCamera::SetMovement(bool movement_enabled)
 {
 	this->movement_enabled = movement_enabled;
 }

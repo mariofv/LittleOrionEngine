@@ -2,10 +2,14 @@
 #include "ModuleProgram.h"
 #include "ModuleFileSystem.h"
 
+#include "MathGeoLib.h"
+
 // Called before render is available
 bool ModuleProgram::Init()
 {
 	APP_LOG_SECTION("************ Module Program Init ************");
+
+	InitUniformBuffer();
 
 	if (!LoadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH))
 	{
@@ -40,6 +44,17 @@ bool ModuleProgram::Init()
 	{
 		return false;
 	}
+
+	if (!LoadProgram(phong_phong_program, PHONG_VERTEX_SHADER_PATH, PHONG_FRAGMENT_SHADER_PATH))
+	{
+		return false;
+	}
+
+	if (!LoadProgram(blinn_phong_phong_program, BLINN_PHONG_VERTEX_SHADER_PATH, BLINN_PHONG_FRAGMENT_SHADER_PATH))
+	{
+		return false;
+	}
+
 	return true;
 }
 
@@ -50,7 +65,30 @@ bool ModuleProgram::CleanUp()
 	{
 		glDeleteProgram(program);
 	}
+
+	glDeleteBuffers(1, &uniform_buffer.ubo);
+
 	return true;
+}
+
+void ModuleProgram::InitUniformBuffer()
+{
+	int uniform_buffer_offset_alignment;
+	glGetIntegerv(GL_UNIFORM_BUFFER_OFFSET_ALIGNMENT, &uniform_buffer_offset_alignment);
+
+	uniform_buffer.lights_uniform_offset = uniform_buffer_offset_alignment * CeilInt(((float)uniform_buffer.MATRICES_UNIFORMS_SIZE) / uniform_buffer_offset_alignment);
+	
+	uniform_buffer.uniforms_size = uniform_buffer.lights_uniform_offset + uniform_buffer.LIGHT_UNIFORMS_SIZE;
+
+	glGenBuffers(1, &uniform_buffer.ubo);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, uniform_buffer.ubo);
+	glBufferData(GL_UNIFORM_BUFFER, uniform_buffer.uniforms_size, NULL, GL_STATIC_DRAW); // Allocate space in uniform buffer
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	// Bind buffer ranges with binding points. NOTE: ORDER MATTERS!
+	glBindBufferRange(GL_UNIFORM_BUFFER, 0, uniform_buffer.ubo, uniform_buffer.MATRICES_UNIFORMS_OFFSET, uniform_buffer.MATRICES_UNIFORMS_SIZE); // Sets binding point 0 for model, projection and view matrix
+	glBindBufferRange(GL_UNIFORM_BUFFER, 1, uniform_buffer.ubo, uniform_buffer.lights_uniform_offset, uniform_buffer.LIGHT_UNIFORMS_SIZE); // Sets binding point 1 for light intensity, color and position
 }
 
 bool ModuleProgram::LoadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name)
@@ -81,14 +119,14 @@ bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const char* vertex_s
 {
 	APP_LOG_INFO("Loading vertex shader");
 	size_t size;
-	const char *vertex_shader_loaded_file = App->filesystem->Load(vertex_shader_file_name, size);
+	char *vertex_shader_loaded_file = App->filesystem->Load(vertex_shader_file_name, size);
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	if (vertex_shader == 0) {
 		APP_LOG_ERROR("Error creating vertex shader %s", vertex_shader_file_name);
 		return false;
 	}
 	glShaderSource(vertex_shader, 1, &vertex_shader_loaded_file, NULL);
-	delete vertex_shader_loaded_file;
+	free(vertex_shader_loaded_file);
 
 	APP_LOG_INFO("Compiling vertex shader");
 	glCompileShader(vertex_shader);
@@ -110,14 +148,14 @@ bool ModuleProgram::InitFragmentShader(GLuint &fragment_shader, const char* frag
 {
 	APP_LOG_INFO("Loading fragment shader");
 	size_t size;
-	const char *fragment_shader_loaded_file = App->filesystem->Load(fragment_shader_file_name, size);
+	char *fragment_shader_loaded_file = App->filesystem->Load(fragment_shader_file_name, size);
 	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (fragment_shader == 0) {
 		OPENGL_LOG_ERROR("Error creating fragment shader %s", fragment_shader_file_name);
 		return false;
 	}
 	glShaderSource(fragment_shader, 1, &fragment_shader_loaded_file, NULL);
-	delete fragment_shader_loaded_file;
+	free(fragment_shader_loaded_file);
 
 	APP_LOG_INFO("Compiling fragment shader");
 	glCompileShader(fragment_shader);
@@ -169,5 +207,13 @@ bool ModuleProgram::InitProgram(GLuint &shader_program, const GLuint vertex_shad
 		return false;
 	}
 
+	BindUniformBlocks(shader_program);
+
 	return true;
+}
+
+void ModuleProgram::BindUniformBlocks(GLuint shader_program) const
+{
+	glUniformBlockBinding(shader_program, glGetUniformBlockIndex(shader_program, "Matrices"), 0);
+	glUniformBlockBinding(shader_program, glGetUniformBlockIndex(shader_program, "Light"), 1);
 }

@@ -10,11 +10,8 @@ public:
 	ModuleEditor() = default;
 	~ModuleEditor() = default;
 
-	bool Init();
-	update_status PreUpdate();
-	update_status Update();
-	update_status PostUpdate();
-	bool CleanUp();
+	bool Init() override;
+	bool CleanUp() override;
 
 	void OpenScene() const;
 	void SaveScene() const;

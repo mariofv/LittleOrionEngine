@@ -48,17 +48,17 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Triangles");
 		ImGui::SameLine();
-		sprintf(tmp_string, "%d", mesh->mesh_to_render->num_triangles);
+		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size()/3);
 		ImGui::Button(tmp_string);
 
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Vertices");
 		ImGui::SameLine();
-		sprintf(tmp_string, "%d", mesh->mesh_to_render->num_vertices);
+		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
 		ImGui::Button(tmp_string);
 
 		int shader_program = GetShaderProgramPosition(mesh->shader_program);
-		if (ImGui::Combo("Shader", &shader_program, "Flat\0Gouraund\0Default\0"))
+		if (ImGui::Combo("Shader", &shader_program, "Flat\0Gouraund\0Phong\0Blinn-Phong\0Default\0"))
 		{
 			switch (shader_program)
 			{
@@ -69,6 +69,12 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 				mesh->shader_program = App->program->phong_gouraund_program;
 				break;
 			case 2:
+				mesh->shader_program = App->program->phong_phong_program;
+				break;
+			case 3:
+				mesh->shader_program = App->program->blinn_phong_phong_program;
+				break;
+			case 4:
 				mesh->shader_program = App->program->texture_program;
 				break;
 			}
@@ -82,7 +88,7 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 	{
 		ImGui::Checkbox("Active", &material->active);
 		ImGui::Separator();
-		int window_width = ImGui::GetWindowWidth();
+		float window_width = ImGui::GetWindowWidth();
 		for (size_t i = 0; i < material->textures.size(); ++i)
 		{
 			Texture::TextureType type = static_cast<Texture::TextureType>(i);
@@ -180,6 +186,8 @@ std::string ComponentsUI::GetTypeName(Texture::TextureType type)
 	case Texture::TextureType::OCLUSION:
 		return "Oclusion";
 		break;
+	default:
+		return "";
 	}
 }
 void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
@@ -273,8 +281,17 @@ int ComponentsUI::GetShaderProgramPosition(unsigned int program)
 	{
 		return 1;
 	}
-	if (App->program->texture_program == program)
+	if (App->program->phong_phong_program == program)
 	{
 		return 2;
 	}
+	if (App->program->blinn_phong_phong_program == program)
+	{
+		return 3;
+	}
+	if (App->program->texture_program == program)
+	{
+		return 4;
+	}
+	return -1;
 }

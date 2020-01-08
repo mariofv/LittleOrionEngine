@@ -58,7 +58,7 @@ public:
 	}
 
 public:
-	unsigned int UUID = 0;
+	uint64_t UUID = 0;
 
 	GameObject *owner = nullptr;
 	ComponentType type;

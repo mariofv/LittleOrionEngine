@@ -15,7 +15,7 @@ public:
 	GameObject();
 	GameObject(unsigned int UUID);
 	GameObject(const std::string name);
-	~GameObject();
+	~GameObject() = default;
 
 	bool IsEnabled() const;
 
@@ -24,6 +24,7 @@ public:
 
 	bool IsVisible(const ComponentCamera & camera) const;
 	void Update();
+	void Delete(std::vector<GameObject*> & children_to_remove);
 
 	void Save(Config& config) const;
 	void Load(const Config& config);
@@ -51,7 +52,7 @@ private:
 
 public:
 	std::string name = "";
-	unsigned int UUID = -1;
+	uint64_t UUID = -1;
 
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;

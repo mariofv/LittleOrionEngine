@@ -1,9 +1,10 @@
 #include "ComponentCamera.h"
 #include "Application.h"
 #include "GameObject.h"
-#include "Module/ModuleRender.h"
-#include "Module/ModuleTime.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleProgram.h"
+#include "Module/ModuleTime.h"
+#include "Module/ModuleRender.h"
 #include "UI/ComponentsUI.h"
 
 #include "Utils.h"
@@ -76,13 +77,13 @@ void ComponentCamera::Delete()
 void ComponentCamera::Save(Config& config) const
 {
 	config.AddUInt(UUID, "UUID");
-	config.AddUInt((unsigned int)type, "ComponentType");
+	config.AddUInt((uint64_t)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddUInt(camera_frustum.type, "FrustumType");
 	config.AddFloat(camera_frustum.nearPlaneDistance, "NearPlaneDistance");
 	config.AddFloat(camera_frustum.farPlaneDistance, "FarPlaneDistance");
 	config.AddFloat(camera_frustum.verticalFov, "VerticalFOV");
-	config.AddUInt((unsigned int)camera_clear_mode, "ClearMode");
+	config.AddUInt((uint64_t)camera_clear_mode, "ClearMode");
 	config.AddColor(float4(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f), "ClearColor");
 }
 
@@ -90,7 +91,7 @@ void ComponentCamera::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-	unsigned int frustum_type_int = config.GetUInt("FrustumType", 1);
+	uint64_t frustum_type_int = config.GetUInt("FrustumType", 1);
 	switch (frustum_type_int)
 	{
 	case 0:
@@ -108,7 +109,7 @@ void ComponentCamera::Load(const Config& config)
 	camera_frustum.verticalFov = config.GetFloat("VerticalFOV", math::pi / 4.0f);
 	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
 
-	unsigned int camera_clear_mode_uint = config.GetUInt("ClearMode", 0);
+	uint64_t camera_clear_mode_uint = config.GetUInt("ClearMode", 0);
 	switch (camera_clear_mode_uint)
 	{
 	case 0:
@@ -138,7 +139,7 @@ float ComponentCamera::GetHeigt() const
 	return last_height;
 }
 
-void ComponentCamera::RecordFrame(const float width, const float height)
+void ComponentCamera::RecordFrame(float width, float height)
 {
 	if (last_width != width || last_height != height)
 	{
@@ -178,7 +179,7 @@ GLuint ComponentCamera::GetLastRecordedFrame() const
 }
 
 
-void ComponentCamera::GenerateFrameBuffers(const float width, const float height)
+void ComponentCamera::GenerateFrameBuffers(float width, float height)
 {
 	if (last_recorded_frame_texture != 0)
 	{
@@ -209,29 +210,29 @@ void ComponentCamera::GenerateFrameBuffers(const float width, const float height
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void ComponentCamera::SetFOV(const float fov)
+void ComponentCamera::SetFOV(float fov)
 {
 	camera_frustum.verticalFov = fov;
 	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
 }
 
-void ComponentCamera::SetAspectRatio(const float aspect_ratio)
+void ComponentCamera::SetAspectRatio(float aspect_ratio)
 {
 	this->aspect_ratio = aspect_ratio;
 	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
 }
 
-void ComponentCamera::SetNearDistance(const float distance)
+void ComponentCamera::SetNearDistance(float distance)
 {
 	camera_frustum.nearPlaneDistance = distance;
 }
 
-void ComponentCamera::SetFarDistance(const float distance)
+void ComponentCamera::SetFarDistance(float distance)
 {
 	camera_frustum.farPlaneDistance = distance;
 }
 
-void ComponentCamera::SetOrientation(const float3 orientation)
+void ComponentCamera::SetOrientation(const float3 & orientation)
 {
 	Quat rotation = Quat::LookAt(owner->transform.GetFrontVector(), orientation, owner->transform.GetUpVector(), float3::unitY);
 
@@ -245,24 +246,24 @@ void ComponentCamera::AlignOrientationWithAxis()
 }
 
 
-void ComponentCamera::SetOrthographicSize(const float2 size)
+void ComponentCamera::SetOrthographicSize(const float2 & size)
 {
 	camera_frustum.orthographicWidth = size.x;
 	camera_frustum.orthographicHeight = size.y;
 }
 
-void ComponentCamera::LookAt(const float3 focus)
+void ComponentCamera::LookAt(const float3 & focus)
 {
 	float3 look_direction = (focus - owner->transform.GetTranslation()).Normalized();
 	SetOrientation(look_direction);
 }
 
-void ComponentCamera::LookAt(const float x, const float y, const float z)
+void ComponentCamera::LookAt(float x, float y, float z)
 {
 	LookAt(float3(x, y, z));
 }
 
-void ComponentCamera::SetPosition(const float3 position)
+void ComponentCamera::SetPosition(const float3 & position)
 {
 	owner->transform.SetTranslation(position);
 }
@@ -345,7 +346,7 @@ void ComponentCamera::OrbitCameraWithMouseMotion(const float2 &motion)
 	}
 }
 
-void ComponentCamera::OrbitX(const float angle)
+void ComponentCamera::OrbitX(float angle)
 {
 	float3 focus_point = float3::zero;
 	float3 cam_focus_vector = owner->transform.GetTranslation() - focus_point;
@@ -359,7 +360,7 @@ void ComponentCamera::OrbitX(const float angle)
 	LookAt(focus_point);
 }
 
-void ComponentCamera::OrbitY(const float angle)
+void ComponentCamera::OrbitY(float angle)
 {
 	float3 focus_point = float3::zero;
 	float3 cam_focus_vector = owner->transform.GetTranslation() - focus_point;
@@ -392,7 +393,7 @@ void ComponentCamera::RotateCameraWithMouseMotion(const float2 &motion)
 	}
 }
 
-void ComponentCamera::RotatePitch(const float angle)
+void ComponentCamera::RotatePitch(float angle)
 {
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
 	const float current_angle = asinf(owner->transform.GetFrontVector().y / owner->transform.GetFrontVector().Length());
@@ -403,7 +404,7 @@ void ComponentCamera::RotatePitch(const float angle)
 	owner->transform.Rotate(rotation);
 }
 
-void ComponentCamera::RotateYaw(const float angle)
+void ComponentCamera::RotateYaw(float angle)
 {
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
 	Quat rotation = Quat::RotateY(adjusted_angle);
@@ -420,7 +421,7 @@ void ComponentCamera::SetOrthographicView()
 	camera_frustum.type = FrustumType::OrthographicFrustum;
 }
 
-void ComponentCamera::SetSpeedUp(const bool is_speeding_up)
+void ComponentCamera::SetSpeedUp(bool is_speeding_up)
 {
 	speed_up = is_speeding_up ? SPEED_UP_FACTOR : 1.f;
 }

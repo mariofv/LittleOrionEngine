@@ -30,7 +30,7 @@ public:
 		ModuleFileSystem::FileType file_type;
 
 
-		std::vector<std::shared_ptr<File>> childs;
+		std::vector<std::shared_ptr<File>> children;
 		std::shared_ptr<File> parent;
 		bool operator==(const File& compare);
 	};

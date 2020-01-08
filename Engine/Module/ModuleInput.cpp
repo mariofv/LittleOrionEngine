@@ -64,12 +64,12 @@ update_status ModuleInput::PreUpdate()
 		case SDL_MOUSEMOTION:
 			if (event.motion.state & SDL_BUTTON_RMASK && App->scene->scene_window_is_hovered) 
 			{
-				float2 motion = float2(event.motion.xrel, event.motion.yrel);
+				float2 motion(event.motion.xrel, event.motion.yrel);
 				App->cameras->scene_camera->RotateCameraWithMouseMotion(motion);
 			}
 			else if (event.motion.state & SDL_BUTTON_LMASK && App->scene->scene_window_is_hovered && App->cameras->IsOrbiting()) 
 			{
-				float2 motion = float2(event.motion.xrel, event.motion.yrel);
+				float2 motion(event.motion.xrel, event.motion.yrel);
 				App->cameras->scene_camera->OrbitCameraWithMouseMotion(motion);
 			}
 			break;

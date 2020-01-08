@@ -42,8 +42,9 @@ GameObject::GameObject(const std::string name) :
 {
 }
 
-GameObject::~GameObject()
+void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 {
+	children_to_remove.push_back(this);
 	if (parent != nullptr)
 	{
 		parent->RemoveChild(this);
@@ -53,16 +54,12 @@ GameObject::~GameObject()
 	{
 		components[i]->Delete();
 	}
-	components.clear();
-
-	for (int i =  (children.size() - 1); i >= 0 ; --i)
+	for (int i = (children.size() - 1); i >= 0; --i)
 	{
 		children[i]->parent = nullptr;
-		App->scene->RemoveGameObject(children[i]);
+		children[i]->Delete(children_to_remove);
 	}
-	children.clear();
 }
-
 bool GameObject::IsEnabled() const
 {
 	return active;
@@ -100,8 +97,8 @@ bool GameObject::IsVisible(const ComponentCamera & camera) const
 void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject", Profiler::Color::Green);
-	transform.GenerateGlobalModelMatrix();
-	aabb.GenerateBoundingBox();
+	transform.Update();
+	aabb.Update();
 
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
@@ -146,7 +143,7 @@ void GameObject::Load(const Config& config)
 
 	config.GetString("Name", name, "GameObject");
 
-	unsigned int parent_UUID = config.GetUInt("ParentUUID", 0);
+	uint64_t parent_UUID = config.GetUInt("ParentUUID", 0);
 	//TODO: This should be done later on, because its possible to try to load a node that its not already loaded
 	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID); 
 	assert(game_object_parent != nullptr);
@@ -166,10 +163,10 @@ void GameObject::Load(const Config& config)
 	config.GetChildrenConfig("Components", gameobject_components_config);
 	for (unsigned int i = 0; i < gameobject_components_config.size(); ++i)
 	{
-		int component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
+		uint64_t component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
 		assert(component_type_uint != 0);
 		
-		Component::ComponentType component_type = Component::GetComponentType(component_type_uint);
+		Component::ComponentType component_type = Component::GetComponentType(static_cast<unsigned int>(component_type_uint));
 		Component* created_component = CreateComponent(component_type);
 		created_component->Load(gameobject_components_config[i]);
 	}

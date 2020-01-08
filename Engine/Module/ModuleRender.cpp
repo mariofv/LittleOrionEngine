@@ -73,7 +73,7 @@ static void APIENTRY openglCallbackFunction(
 		OPENGL_LOG_INIT(error_message); // Actually not an itialization entry, I use this type of entry because the yellow color
 		break;
 	case GL_DEBUG_SEVERITY_LOW:
-		// OPENGL_LOG_INFO(error_message); Too many messages in update
+		//OPENGL_LOG_INFO(error_message); Too many messages in update
 	case GL_DEBUG_SEVERITY_NOTIFICATION:
 		return;
 	}
@@ -129,12 +129,6 @@ update_status ModuleRender::PreUpdate()
 	return update_status::UPDATE_CONTINUE;
 }
 
-update_status ModuleRender::PostUpdate()
-{
-
-	return update_status::UPDATE_CONTINUE;
-}
-
 // Called before quitting
 bool ModuleRender::CleanUp()
 {
@@ -151,7 +145,7 @@ bool ModuleRender::CleanUp()
 
 void ModuleRender::Render() const
 {
-	BROFILER_CATEGORY("Render",Profiler::Color::Aqua);
+	BROFILER_CATEGORY("Global Render",Profiler::Color::Aqua);
 	App->ui->Render();
 	SDL_GL_SwapWindow(App->window->window);
 	App->time->EndFrame();
@@ -159,6 +153,8 @@ void ModuleRender::Render() const
 
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
+	BROFILER_CATEGORY("Render Frame", Profiler::Color::Azure);
+  
 	if (App->debug->show_grid)
 	{
 		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
@@ -179,10 +175,20 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	}
 
 	rendering_measure_timer->Start();
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+
+	static size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
+	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), camera.GetProjectionMatrix().Transposed().ptr());
+
+	static size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + 2 * sizeof(float4x4);
+	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), camera.GetViewMatrix().Transposed().ptr());
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
 	GetCullingMeshes(App->cameras->active_camera);
 	for (auto &mesh : meshes_to_render)
 	{
-		RenderMesh(*mesh, camera);
+		RenderMesh(*mesh);
 	}
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
@@ -227,36 +233,15 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 	}
 }
 
-void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &camera) const
+void ModuleRender::RenderMesh(const ComponentMesh &mesh) const
 {
+	BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
 	const GameObject& mesh_game_object = *mesh.owner;
 
 	if (App->debug->show_bounding_boxes && !mesh_game_object.aabb.IsEmpty())
 	{
 		dd::aabb(mesh_game_object.aabb.bounding_box.minPoint, mesh_game_object.aabb.bounding_box.maxPoint, float3::one);
 	}
-
-	GLuint shader_program = mesh.shader_program == 0 ? App->program->texture_program : mesh.shader_program;
-	glUseProgram(shader_program);
-
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "model"),
-		1,
-		GL_TRUE,
-		&mesh_game_object.transform.GetGlobalModelMatrix()[0][0]
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "view"),
-		1,
-		GL_TRUE,
-		&camera.GetViewMatrix()[0][0]
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "proj"),
-		1,
-		GL_TRUE,
-		&camera.GetProjectionMatrix()[0][0]
-	);
 
 	if (App->scene->hierarchy.selected_game_object == &mesh_game_object)
 	{
@@ -266,8 +251,6 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 		glStencilMask(0xFF);
 	}
 
-	App->lights->RenderLight(shader_program);
-	mesh_game_object.RenderMaterialTexture(shader_program);
 	mesh.Render();
 
 	if (App->scene->hierarchy.selected_game_object == &mesh_game_object)
@@ -284,26 +267,12 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 		object_transform_copy.SetScale(object_scale*1.01f);
 		object_transform_copy.GenerateGlobalModelMatrix();
 
-		glUniformMatrix4fv(
-			glGetUniformLocation(outline_shader_program, "model"),
-			1,
-			GL_TRUE,
-			object_transform_copy.GetGlobalModelMatrix().ptr()
-		);
-		glUniformMatrix4fv(
-			glGetUniformLocation(outline_shader_program, "view"),
-			1,
-			GL_TRUE,
-			&camera.GetViewMatrix()[0][0]
-		);
-		glUniformMatrix4fv(
-			glGetUniformLocation(outline_shader_program, "proj"),
-			1,
-			GL_TRUE,
-			&camera.GetProjectionMatrix()[0][0]
-		);
-		mesh.Render();
-		glStencilMask(0xFF);
+		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), object_transform_copy.GetGlobalModelMatrix().ptr());
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+		mesh.RenderModel();
+
+    glStencilMask(0xFF);
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_STENCIL_TEST);
 	}
@@ -311,71 +280,71 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh, const ComponentCamera &
 	glUseProgram(0);
 }
 
-void ModuleRender::SetVSync(const bool vsync)
+void ModuleRender::SetVSync(bool vsync)
 {
 	this->vsync = vsync;
 	vsync ? SDL_GL_SetSwapInterval(1) : SDL_GL_SetSwapInterval(0);
 }
 
-void ModuleRender::SetAlphaTest(const bool gl_alpha_test)
+void ModuleRender::SetAlphaTest(bool gl_alpha_test)
 {
 	this->gl_alpha_test = gl_alpha_test;
 	gl_alpha_test ? glEnable(GL_ALPHA_TEST) : glDisable(GL_ALPHA_TEST);
 }
 
-void ModuleRender::SetDepthTest(const bool gl_depth_test)
+void ModuleRender::SetDepthTest(bool gl_depth_test)
 {
 	this->gl_depth_test = gl_depth_test;
 	gl_depth_test ? glEnable(GL_DEPTH_TEST) : glDisable(GL_DEPTH_TEST);
 }
 
-void ModuleRender::SetScissorTest(const bool gl_scissor_test)
+void ModuleRender::SetScissorTest(bool gl_scissor_test)
 {
 	this->gl_scissor_test = gl_scissor_test;
 	gl_scissor_test ? glEnable(GL_SCISSOR_TEST) : glDisable(GL_SCISSOR_TEST);
 }
 
-void ModuleRender::SetStencilTest(const bool gl_stencil_test)
+void ModuleRender::SetStencilTest(bool gl_stencil_test)
 {
 	this->gl_stencil_test = gl_stencil_test;
 	gl_stencil_test ? glEnable(GL_STENCIL_TEST) : glDisable(GL_STENCIL_TEST);
 }
 
-void ModuleRender::SetBlending(const bool gl_blend)
+void ModuleRender::SetBlending(bool gl_blend)
 {
 	this->gl_blend = gl_blend;
 	gl_blend ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
 }
 
-void ModuleRender::SetFaceCulling(const bool gl_cull_face)
+void ModuleRender::SetFaceCulling(bool gl_cull_face)
 {
 	this->gl_cull_face = gl_cull_face;
 	gl_cull_face ? glEnable(GL_CULL_FACE) : glDisable(GL_CULL_FACE);
 }
 
-void ModuleRender::SetCulledFaces(const GLenum culled_faces) const
+void ModuleRender::SetCulledFaces(GLenum culled_faces) const
 {
 	glCullFace(culled_faces);
 }
 
-void ModuleRender::SetFrontFaces(const GLenum front_faces) const
+void ModuleRender::SetFrontFaces(GLenum front_faces) const
 {
 	glFrontFace(front_faces);
 }
 
-void ModuleRender::SetDithering(const bool gl_dither)
+void ModuleRender::SetDithering(bool gl_dither)
 {
 	this->gl_dither = gl_dither;
 	gl_dither ? glEnable(GL_DITHER) : glDisable(GL_DITHER);
 }
 
-void ModuleRender::SetMinMaxing(const bool gl_minmax)
+void ModuleRender::SetMinMaxing(bool gl_minmax)
 {
 	this->gl_minmax = gl_minmax;
 	gl_minmax ? glEnable(GL_MINMAX) : glDisable(GL_MINMAX);
 }
 
-void ModuleRender::SetWireframing(const bool gl_wireframe)
+void ModuleRender::SetWireframing(bool gl_wireframe)
 {
 	this->gl_wireframe = gl_wireframe;
 	gl_wireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
@@ -536,12 +505,11 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(LineSegment & ray)
 	{
 		LineSegment transformed_ray = ray;
 		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
-
-		for (auto& triangle : mesh->mesh_to_render->triangles)
+		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
+		for (auto & triangle : triangles)
 		{
 			float distance;
-			bool intersected = triangle.Intersects(transformed_ray, &distance);
-			
+			bool intersected = triangle.Intersects(transformed_ray, &distance);		
 			if (intersected && distance < min_distance)
 			{
 				selected = mesh->owner;

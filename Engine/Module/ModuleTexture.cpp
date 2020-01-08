@@ -51,14 +51,13 @@ void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remov
 
 std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 {
-	std::string ol_texture;
-	bool imported = App->material_importer->Import(texture_path, ol_texture);
-	if (!imported)
+	std::pair<bool, std::string> imported = App->material_importer->Import(texture_path);
+	if (!imported.first)
 	{
 		return nullptr;
 	}
 
-	return App->material_importer->Load(ol_texture.c_str());
+	return App->material_importer->Load(imported.second);
 }
 
 GLuint ModuleTexture::LoadCubemap(std::vector<std::string> faces_paths) const
@@ -66,8 +65,7 @@ GLuint ModuleTexture::LoadCubemap(std::vector<std::string> faces_paths) const
 	std::vector<std::string> faces_paths_dds;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
-		std::string ol_texture;
-		bool imported = App->material_importer->Import(faces_paths[i].c_str(), ol_texture);
+		std::string ol_texture = App->material_importer->Import(faces_paths[i].c_str()).second;
 		faces_paths_dds.push_back(ol_texture);
 	}
 	return static_cast<GLuint>(App->material_importer->LoadCubemap(faces_paths_dds));

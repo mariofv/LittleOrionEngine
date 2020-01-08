@@ -16,99 +16,60 @@ public:
     //
     // dd::RenderInterface overrides:
     //
+	void openGLDraw(const dd::DrawVertex* points, int count, bool depthEnabled, GLenum mode)
+	{
+		assert(points != nullptr);
+		assert(count > 0 && count <= DEBUG_DRAW_VERTEX_BUFFER_SIZE);
+		GLuint shader_program = App->program->linepoint_program;
+		glBindVertexArray(linePointVAO);
+		glUseProgram(shader_program);
 
+		glUniformMatrix4fv(
+			glGetUniformLocation(shader_program, "u_MvpMatrix"),
+			1, GL_TRUE, reinterpret_cast<const float*>(&mvpMatrix)
+		);
+
+		bool already = glIsEnabled(GL_DEPTH_TEST);
+
+		if (depthEnabled)
+		{
+			glEnable(GL_DEPTH_TEST);
+		}
+		else
+		{
+			glDisable(GL_DEPTH_TEST);
+		}
+
+		// NOTE: Could also use glBufferData to take advantage of the buffer orphaning trick...
+		glBindBuffer(GL_ARRAY_BUFFER, linePointVBO);
+		glBufferSubData(GL_ARRAY_BUFFER, 0, count * sizeof(dd::DrawVertex), points);
+
+		// Issue the draw call:
+		glDrawArrays(mode, 0, count);
+
+		glUseProgram(0);
+		glBindVertexArray(0);
+		glBindBuffer(GL_ARRAY_BUFFER, 0);
+		checkGLError(__FILE__, __LINE__);
+
+		if (already)
+		{
+			glEnable(GL_DEPTH_TEST);
+		}
+		else
+		{
+			glDisable(GL_DEPTH_TEST);
+		}
+	}
     void drawPointList(const dd::DrawVertex* points, int count, bool depthEnabled) override
     {
-        assert(points != nullptr);
-        assert(count > 0 && count <= DEBUG_DRAW_VERTEX_BUFFER_SIZE);
-		GLuint shader_program = App->program->linepoint_program;
-        glBindVertexArray(linePointVAO);
-        glUseProgram(shader_program);
-
-        glUniformMatrix4fv(
-            glGetUniformLocation(shader_program, "u_MvpMatrix"),
-            1, GL_TRUE, reinterpret_cast<const float*>(&mvpMatrix)
-        );
-
-        bool already = glIsEnabled(GL_DEPTH_TEST);
-
-        if (depthEnabled)
-        {
-            glEnable(GL_DEPTH_TEST);
-        }
-        else
-        {
-            glDisable(GL_DEPTH_TEST);
-        }
-
-        // NOTE: Could also use glBufferData to take advantage of the buffer orphaning trick...
-        glBindBuffer(GL_ARRAY_BUFFER, linePointVBO);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, count * sizeof(dd::DrawVertex), points);
-
-        // Issue the draw call:
-        glDrawArrays(GL_POINTS, 0, count);
-
-        glUseProgram(0);
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        checkGLError(__FILE__, __LINE__);
-
-        if (already)
-        {
-            glEnable(GL_DEPTH_TEST);
-        }
-        else
-        {
-            glDisable(GL_DEPTH_TEST);
-        }
+		openGLDraw(points,count,depthEnabled,GL_POINTS);
 
     }
 
     void drawLineList(const dd::DrawVertex* lines, int count, bool depthEnabled) override
     {
-        assert(lines != nullptr);
-        assert(count > 0 && count <= DEBUG_DRAW_VERTEX_BUFFER_SIZE);
-
-		GLuint shader_program = App->program->linepoint_program;
-        glBindVertexArray(linePointVAO);
-        glUseProgram(shader_program);
-
-        glUniformMatrix4fv(
-            glGetUniformLocation(shader_program, "u_MvpMatrix"),
-            1, GL_TRUE, reinterpret_cast<const float*>(&mvpMatrix)
-        );
-
-        bool already = glIsEnabled(GL_DEPTH_TEST);
-
-        if (depthEnabled)
-        {
-            glEnable(GL_DEPTH_TEST);
-        }
-        else
-        {
-            glDisable(GL_DEPTH_TEST);
-        }
-
-        // NOTE: Could also use glBufferData to take advantage of the buffer orphaning trick...
-        glBindBuffer(GL_ARRAY_BUFFER, linePointVBO);
-        glBufferSubData(GL_ARRAY_BUFFER, 0, count * sizeof(dd::DrawVertex), lines);
-
-        // Issue the draw call:
-        glDrawArrays(GL_LINES, 0, count);
-
-        glUseProgram(0);
-        glBindVertexArray(0);
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
-        checkGLError(__FILE__, __LINE__);
-
-        if (already)
-        {
-            glEnable(GL_DEPTH_TEST);
-        }
-        else
-        {
-            glDisable(GL_DEPTH_TEST);
-        }
+		openGLDraw(lines, count, depthEnabled, GL_LINES);
 
     }
 
@@ -372,7 +333,7 @@ public:
         return reinterpret_cast<dd::GlyphTextureHandle>(temp);
     }
 
-    static void checkGLError(const char* file, const int line)
+    static void checkGLError(const char* file, int line)
     {
         GLenum err;
         while ((err = glGetError()) != GL_NO_ERROR)
@@ -415,8 +376,8 @@ void ModuleDebugDraw::Render(const ComponentCamera& camera)
     math::float4x4 view = camera.GetViewMatrix();
     math::float4x4 proj = camera.GetProjectionMatrix();
 
-    dd_interface_implementation->width = camera.GetWidth();
-    dd_interface_implementation->height = camera.GetHeigt();
+    dd_interface_implementation->width = static_cast<unsigned int>(camera.GetWidth());
+    dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeigt());
     dd_interface_implementation->mvpMatrix = proj * view;
 
     dd::flush();

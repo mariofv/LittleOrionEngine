@@ -1,35 +1,31 @@
 #include "ComponentMesh.h"
+#include "GameObject.h"
 #include "Application.h"
+#include "Module/ModuleLight.h"
+#include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Importer/MeshImporter.h"
 #include "UI/ComponentsUI.h"
 
 ComponentMesh::ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH)
 {
-	SetupMesh();
 }
 
 ComponentMesh::ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner) : mesh_to_render(mesh_to_render), Component(owner, ComponentType::MESH)
 {
-	SetupMesh();
 }
 
 ComponentMesh::ComponentMesh() : Component(nullptr, ComponentType::MESH)
 {
-
 }
 
 void ComponentMesh::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
 {
 	this->mesh_to_render = mesh_to_render;
-	SetupMesh();
 }
 
 ComponentMesh::~ComponentMesh()
 {
-	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ebo);
-	glDeleteVertexArrays(1, &vao);
 	App->mesh_importer->RemoveMeshFromCacheIfNeeded(mesh_to_render);
 }
 
@@ -56,42 +52,30 @@ void ComponentMesh::Load(const Config& config)
 	SetMesh(App->mesh_importer->Load(mesh_path.c_str()));
 }
 
+bool ComponentMesh::operator <(const ComponentMesh & mesh_to_compare) const
+{
+	return this->shader_program <= mesh_to_compare.shader_program;
+}
 void ComponentMesh::Render() const
 {
-	glBindVertexArray(vao);
+	GLuint program = shader_program == 0 ? App->program->texture_program : shader_program;
+	glUseProgram(program);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+	App->lights->RenderLight();
+	owner->RenderMaterialTexture(program);
+	RenderModel();
+	glUseProgram(0);
+}	
+void ComponentMesh::RenderModel() const
+{
+	glBindVertexArray(mesh_to_render->GetVAO());
 	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
-
-void ComponentMesh::SetupMesh()
-{
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ebo);
-
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-	glBufferData(GL_ARRAY_BUFFER, mesh_to_render->vertices.size() * sizeof(Mesh::Vertex), &mesh_to_render->vertices[0], GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, mesh_to_render->indices.size() * sizeof(uint32_t), &mesh_to_render->indices[0], GL_STATIC_DRAW);
-
-	// VERTEX POSITION
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)0);
-
-	// VERTEX TEXTURE COORDS
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tex_coords));
-
-	// VERTEX NORMALS
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, normals));
-
-	glBindVertexArray(0);
-}
-
 void ComponentMesh::ShowComponentWindow()
 {
 	ComponentsUI::ShowComponentMeshWindow(this);

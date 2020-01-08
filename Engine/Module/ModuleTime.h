@@ -12,12 +12,12 @@ public:
 	ModuleTime() = default;
 	~ModuleTime();
 
-	bool Init();
-	update_status PreUpdate();
-	bool CleanUp();
+	bool Init() override;
+	update_status PreUpdate() override;
+	bool CleanUp() override;
 
-	void SetMaxFPS(const int fps);
-	void SetTimeScale(const float time_scale);
+	void SetMaxFPS(int fps);
+	void SetTimeScale(float time_scale);
 
 	void Play();
 	void Pause();

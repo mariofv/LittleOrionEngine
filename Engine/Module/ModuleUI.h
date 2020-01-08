@@ -13,14 +13,13 @@ public:
 	ModuleUI() = default;
 	~ModuleUI() = default;
 
-	bool Init();
-	update_status PreUpdate();
-	update_status Update();
-	update_status PostUpdate();
+	bool Init() override;
+	update_status PreUpdate() override;
+	update_status Update() override;
 	void Render();
-	bool CleanUp();
+	bool CleanUp() override;
 
-	ImFont* GetFont(const Fonts font) const;
+	ImFont* GetFont(const Fonts & font) const;
 
 private:
 	void LoadFonts();
