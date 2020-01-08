@@ -73,7 +73,7 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 	{
 		return game_object_to_remove == game_object.get();
 	});
-	if (it != game_objects_ownership.end())
+	if (it != game_objects_ownership.end() || game_object_to_remove == root)
 	{
 		std::vector<GameObject*> children_to_remove;
 		game_object_to_remove->Delete(children_to_remove);
@@ -110,8 +110,7 @@ GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 
 void ModuleScene::DeleteCurrentScene()
 {
-	delete root;
-	game_objects_ownership.clear();
+	RemoveGameObject(root);
 	hierarchy.selected_game_object = nullptr;
 }
 
@@ -174,6 +173,7 @@ void ModuleScene::MousePicking(const float2& mouse_position)
 
 void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title)
 {
+	BROFILER_CATEGORY("Show camera tab", Profiler::Color::CadetBlue);
 	if (ImGui::BeginTabItem(title))
 	{
 		scene_window_is_hovered = ImGui::IsWindowHovered(); // TODO: This should be something like ImGui::IsTabHovered (such function doesn't exist though)
