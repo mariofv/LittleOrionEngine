@@ -457,6 +457,7 @@ void EngineUI::ShowAboutWindow()
 		MenuURL("rapidjson 1.1.0", "https://github.com/Tencent/rapidjson/");
 		MenuURL("Debug Draw", "https://github.com/glampert/debug-draw/");
 		MenuURL("par_shapes", "https://github.com/prideout/par/blob/master/par_shapes.h");
+		MenuURL("ImGuizmo", "https://github.com/CedricGuillemet/ImGuizmo");
 
 		ImGui::Separator();
 
