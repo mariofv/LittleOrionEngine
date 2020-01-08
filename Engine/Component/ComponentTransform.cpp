@@ -90,6 +90,19 @@ void ComponentTransform::Rotate(const float3x3 &rotation)
 	GenerateModelMatrix(); // TODO: Change this to Update()
 }
 
+float3 ComponentTransform::ComponentTransform::GetScale() const
+{
+	return scale;
+}
+
+
+void ComponentTransform::SetScale(const float3 &scale)
+{
+	this->scale = scale;
+	
+	GenerateModelMatrix(); // TODO: Change this to Update()
+}
+
 float3 ComponentTransform::GetUpVector() const
 {
 	return rotation * float3::unitY;
@@ -125,6 +138,28 @@ void ComponentTransform::GenerateGlobalModelMatrix()
 float4x4 ComponentTransform::GetGlobalModelMatrix() const
 {
 	return global_model_matrix;
+}
+
+void ComponentTransform::SetGlobalModelMatrix(const float4x4 &new_global_matrix)
+{
+	if (owner->parent == nullptr)
+	{
+		model_matrix = new_global_matrix;
+	}
+	else
+	{
+		model_matrix = owner->parent->transform.global_model_matrix.Inverted() * new_global_matrix;
+	}
+
+	float3 translation, scale;
+	float3x3 rotation;
+
+	model_matrix.Decompose(translation, rotation, scale);
+
+	SetTranslation(translation);
+	SetRotation(rotation);
+	SetScale(scale);
+	
 }
 
 void ComponentTransform::ChangeLocalSpace(const float4x4 new_local_space)

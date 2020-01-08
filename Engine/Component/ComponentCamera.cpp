@@ -168,7 +168,6 @@ void ComponentCamera::RecordFrame(float width, float height)
 			break;
 	}
 
-
 	App->renderer->RenderFrame(*this);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);

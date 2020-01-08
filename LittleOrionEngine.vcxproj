@@ -47,7 +47,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/debug-draw;$(ProjectDir)Libraries/par_shapes;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/ImGuizmo;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/debug-draw;$(ProjectDir)Libraries/par_shapes;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -68,7 +68,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/debug-draw;$(ProjectDir)Libraries/par_shapes;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>$(ProjectDir)Engine/;$(ProjectDir)Libraries/MathGeoLib/include;$(ProjectDir)Libraries/ImGuizmo;$(ProjectDir)Libraries/imgui;$(ProjectDir)Libraries/pcg_random;$(ProjectDir)Libraries/debug-draw;$(ProjectDir)Libraries/par_shapes;$(ProjectDir)Libraries/include/x86</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -119,6 +119,10 @@
     <ClInclude Include="Libraries\debug-draw\debug-draw.hpp" />
     <ClInclude Include="Libraries\FontAwesome5\IconsFontAwesome5.h" />
     <ClInclude Include="Libraries\FontAwesome5\IconsFontAwesome5Brands.h" />
+    <ClInclude Include="Libraries\ImGuizmo\ImCurveEdit.h" />
+    <ClInclude Include="Libraries\ImGuizmo\ImGradient.h" />
+    <ClInclude Include="Libraries\ImGuizmo\ImGuizmo.h" />
+    <ClInclude Include="Libraries\ImGuizmo\ImSequencer.h" />
     <ClInclude Include="Libraries\imgui\imconfig.h" />
     <ClInclude Include="Libraries\imgui\imgui.h" />
     <ClInclude Include="Libraries\imgui\imgui_impl_opengl3.h" />
@@ -236,6 +240,10 @@
     <ClCompile Include="Engine\GameObject.cpp" />
     <ClCompile Include="Engine\Hierarchy.cpp" />
     <ClCompile Include="Engine\UI\FileExplorerUI.cpp" />
+    <ClCompile Include="Libraries\ImGuizmo\ImCurveEdit.cpp" />
+    <ClCompile Include="Libraries\ImGuizmo\ImGradient.cpp" />
+    <ClCompile Include="Libraries\ImGuizmo\ImGuizmo.cpp" />
+    <ClCompile Include="Libraries\ImGuizmo\ImSequencer.cpp" />
     <ClCompile Include="Libraries\imgui\imgui.cpp" />
     <ClCompile Include="Libraries\imgui\imgui_demo.cpp" />
     <ClCompile Include="Libraries\imgui\imgui_draw.cpp" />

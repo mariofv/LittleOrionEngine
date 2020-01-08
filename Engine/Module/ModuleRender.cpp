@@ -19,8 +19,8 @@
 #include <SDL/SDL.h>
 #include "MathGeoLib.h"
 #include <assimp/scene.h>
-#include "imgui.h"
-#include "imgui.h"
+#include <imgui.h>
+#include <ImGuizmo.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <algorithm>
 #include "Brofiler/Brofiler.h"
@@ -154,8 +154,7 @@ void ModuleRender::Render() const
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
 	BROFILER_CATEGORY("Render Frame", Profiler::Color::Azure);
-	glStencilMask(0x00); // make sure we don't update the stencil buffer while drawing debug shapes
-	
+  
 	if (App->debug->show_grid)
 	{
 		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
@@ -263,20 +262,17 @@ void ModuleRender::RenderMesh(const ComponentMesh &mesh) const
 		GLuint outline_shader_program = App->program->outline_program;
 		glUseProgram(outline_shader_program);
 
-		float4x4 adjusted_model_matrix = mesh_game_object.transform.GetGlobalModelMatrix();
-		float3 model_scale = adjusted_model_matrix.ExtractScale();
-		model_scale += float3(0.01);
-		adjusted_model_matrix = float4x4::FromTRS(
-			adjusted_model_matrix.TranslatePart(),
-			adjusted_model_matrix.RotatePart(),
-			model_scale
-		);
+		ComponentTransform object_transform_copy = mesh_game_object.transform;
+		float3 object_scale = object_transform_copy.GetScale();
+		object_transform_copy.SetScale(object_scale*1.01f);
+		object_transform_copy.GenerateGlobalModelMatrix();
 
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4),adjusted_model_matrix.Transposed().ptr());
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), object_transform_copy.GetGlobalModelMatrix().Transposed().ptr());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 		mesh.RenderModel();
-		glStencilMask(0xFF);
+
+    glStencilMask(0xFF);
 		glEnable(GL_DEPTH_TEST);
 		glDisable(GL_STENCIL_TEST);
 	}
