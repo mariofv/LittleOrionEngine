@@ -97,6 +97,7 @@ bool GameObject::IsVisible(const ComponentCamera & camera) const
 void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
+
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		components[i]->Update();

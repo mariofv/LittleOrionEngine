@@ -106,6 +106,10 @@ void ComponentTransform::GenerateModelMatrix()
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
 	GenerateGlobalModelMatrix();
 	owner->aabb.GenerateBoundingBox();
+	for (auto & child : owner->children)
+	{
+		child->transform.GenerateModelMatrix();
+	}
 }
 
 void ComponentTransform::GenerateGlobalModelMatrix()
