@@ -1,8 +1,9 @@
 #include "ModuleScene.h"
 #include "Application.h"
+#include "ModuleCamera.h"
+#include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
 #include "ModuleRender.h"
-#include "ModuleCamera.h"
 #include "Component/ComponentCamera.h"
 #include "Config.h"
 
@@ -15,21 +16,7 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
-
-	App->model_loader->LoadModel(BUNNY_MODEL_PATH);
-
-	GameObject * camera = CreateGameObject();
-	camera->name = "Main Camera";
-	ComponentCamera * component_camera = static_cast<ComponentCamera*>(camera->CreateComponent(Component::ComponentType::CAMERA));
-	App->cameras->active_camera = component_camera;
-	App->cameras->active_camera->SetPosition(float3(0.f, 100.f, -100.f));
-	App->cameras->active_camera->SetFarDistance(500);
-
-	GameObject * light_gameobject = App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
-	light_gameobject->name = "Light";
-	light_gameobject->CreateComponent(Component::ComponentType::LIGHT);
-	light_gameobject->transform.SetTranslation(float3(4.f, 1.5f, -1.5f));
-
+	App->editor->OpenDefaultScene();
 	App->renderer->GenerateQuadTree(); // TODO: Move this to load scene and save scene
 	return true;
 }
