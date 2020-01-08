@@ -46,10 +46,7 @@ void ModuleEditor::SaveScene() const
 	std::string serialized_scene_string;
 	scene_config.GetSerializedString(serialized_scene_string);
 
-	std::ofstream scene_file;
-	scene_file.open(path);
-	scene_file << serialized_scene_string;
-	scene_file.close();
+	App->filesystem->Save(path, serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
 }
 
 void ModuleEditor::OpenDefaultScene() const
@@ -63,11 +60,8 @@ void ModuleEditor::OpenDefaultScene() const
 
 void ModuleEditor::OpenTmpScene() const
 {
-	std::ifstream ifs(TMP_SCENE_PATH);
-	std::string serialized_scene_string(
-		(std::istreambuf_iterator<char>(ifs)),
-		(std::istreambuf_iterator<char>())
-	);
+	size_t readed_bytes;
+	std::string serialized_scene_string = App->filesystem->Load(TMP_SCENE_PATH, readed_bytes);
 
 	Config scene_config(serialized_scene_string);
 	App->scene->Load(scene_config);
@@ -82,8 +76,5 @@ void ModuleEditor::SaveTmpScene() const
 	std::string serialized_scene_string;
 	scene_config.GetSerializedString(serialized_scene_string);
 
-	std::ofstream scene_file;
-	scene_file.open(TMP_SCENE_PATH);
-	scene_file << serialized_scene_string;
-	scene_file.close();
+	App->filesystem->Save(TMP_SCENE_PATH, serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
 }

@@ -97,6 +97,10 @@ GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 
 void ModuleScene::DeleteCurrentScene()
 {
+	for (auto& root_child : root->children)
+	{
+		RemoveGameObject(root_child);
+	}
 	delete root;
 	game_objects_ownership.clear();
 	hierarchy.selected_game_object = nullptr;
