@@ -106,6 +106,8 @@ public:
 
 	float camera_clear_color[3] = {0.0f, 0.0f, 0.0f};
 
+	int depth = 0;
+
 	float4x4 proj;
 	float4x4 view;
 
@@ -128,8 +130,6 @@ private:
 
 	bool is_focusing = false;
 	float3 desired_focus_position = float3::zero;
-
-	int depth = 0;
 
 	ClearMode camera_clear_mode = ClearMode::COLOR;
 	friend class ComponentsUI;

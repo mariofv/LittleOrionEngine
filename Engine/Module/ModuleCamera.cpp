@@ -30,6 +30,7 @@ bool ModuleCamera::Init()
 // Called every draw update
 update_status ModuleCamera::Update()
 {
+	SelectMainCamera();
 	scene_camera->Update();
 	return update_status::UPDATE_CONTINUE;
 }
@@ -54,14 +55,29 @@ ComponentCamera* ModuleCamera::CreateComponentCamera()
 void ModuleCamera::RemoveComponentCamera(ComponentCamera* camera_to_remove)
 {
 	auto it = std::find(cameras.begin(), cameras.end(), camera_to_remove);
-	if (*it == active_camera) 
+	if (*it == main_camera)
 	{
-		active_camera = nullptr;
+		main_camera = nullptr;
 	}
 	if (it != cameras.end()) 
 	{
 		delete *it;
 		cameras.erase(it);
+	}
+}
+
+void ModuleCamera::SelectMainCamera()
+{
+	for (auto& camera : cameras)
+	{
+		if (main_camera == nullptr)
+		{
+			main_camera = camera;
+		}
+		else if (main_camera->depth < camera->depth)
+		{
+			main_camera = camera;
+		}
 	}
 }
 

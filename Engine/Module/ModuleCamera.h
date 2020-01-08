@@ -26,6 +26,8 @@ public:
 	ComponentCamera* CreateComponentCamera();
 	void RemoveComponentCamera(ComponentCamera* camera_to_remove);
 
+	void SelectMainCamera();
+
 	void SetOrbit(bool is_orbiting);
 	bool IsOrbiting() const;
 
@@ -36,9 +38,10 @@ public:
 	
 public:
 	ComponentCamera *scene_camera = nullptr;
-	ComponentCamera* active_camera = nullptr;
+	ComponentCamera* main_camera = nullptr;
 
 	Skybox *skybox = nullptr;
+
 private:
 	GameObject *scene_camera_game_object = nullptr;
 

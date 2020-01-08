@@ -190,9 +190,9 @@ void EngineUI::ShowSceneTab()
 void EngineUI::ShowGameTab()
 {
 	static const char * title = ICON_FA_GHOST " Game";
-	if (App->cameras->active_camera != nullptr) 
+	if (App->cameras->main_camera != nullptr)
 	{
-		App->scene->ShowFrameBufferTab(*App->cameras->active_camera, title);
+		App->scene->ShowFrameBufferTab(*App->cameras->main_camera, title);
 	}
 	else 
 	{
@@ -230,12 +230,6 @@ void EngineUI::ShowInspectorWindow()
 		if (App->scene->hierarchy.selected_game_object != nullptr)
 		{
 			App->scene->hierarchy.selected_game_object->ShowPropertiesWindow();
-			
-			Component * selected_camera_component = App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA);
-			if (selected_camera_component != nullptr) {
-				ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
-				App->cameras->active_camera = selected_camera;
-			}
 
 			ImGui::Spacing();
 			ImGui::Separator();
