@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "Component/ComponentLight.h"
 #include "GameObject.h"
+#include "Brofiler/Brofiler.h"
 
 ModuleLight::~ModuleLight()
 {
@@ -19,6 +20,7 @@ bool ModuleLight::CleanUp()
 }
 void ModuleLight::RenderLight() const
 {
+	BROFILER_CATEGORY("Render Lights", Profiler::Color::White);
 	if (lights.size() > 0)
 	{
 		lights[0]->Render();

@@ -96,7 +96,7 @@ bool GameObject::IsVisible(const ComponentCamera & camera) const
 }
 void GameObject::Update()
 {
-	BROFILER_CATEGORY("GameObject", Profiler::Color::Green);
+	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
 	transform.Update();
 	aabb.Update();
 
