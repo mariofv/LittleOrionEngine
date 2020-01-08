@@ -13,13 +13,8 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void OpenScene() const;
-	void SaveScene() const;
-
-	void OpenDefaultScene() const;
-
-	void OpenTmpScene() const;
-	void SaveTmpScene() const;
+	void OpenScene(const std::string &path) const;
+	void SaveScene(const std::string &path) const;
 };
 
 #endif //_MODULEEDITOR_H_

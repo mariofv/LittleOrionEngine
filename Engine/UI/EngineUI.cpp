@@ -73,11 +73,11 @@ void EngineUI::ShowFileMenu()
 	{
 		if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Open Scene"))
 		{
-			App->editor->OpenScene();
+			App->editor->OpenScene("./Assets/Scenes/scene.scene");
 		}
 		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
 		{
-			App->editor->SaveScene();
+			App->editor->SaveScene("./Assets/Scenes/scene.scene");
 		}
 		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
 		{
