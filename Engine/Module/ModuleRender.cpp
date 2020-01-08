@@ -158,7 +158,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	if (App->debug->show_grid)
 	{
 		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
-		dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
 	}
 	if (App->debug->show_camera_frustum && App->scene->hierarchy.selected_game_object != nullptr)
 	{
