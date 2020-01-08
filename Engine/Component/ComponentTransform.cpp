@@ -2,6 +2,7 @@
 #include "GameObject.h"
 #include "Utils.h"
 #include "UI/ComponentsUI.h"
+#include "Brofiler/Brofiler.h"
 
 ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM) {
 
@@ -15,11 +16,6 @@ ComponentTransform::ComponentTransform(GameObject * owner, const float3 translat
 	scale(scale)
 {
 	GenerateModelMatrix();
-}
-
-void ComponentTransform::Update()
-{
-	GenerateGlobalModelMatrix();
 }
 
 void ComponentTransform::Save(Config& config) const
@@ -108,6 +104,8 @@ float3 ComponentTransform::GetRightVector() const
 void ComponentTransform::GenerateModelMatrix()
 {
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
+	GenerateGlobalModelMatrix();
+	owner->aabb.GenerateBoundingBox();
 }
 
 void ComponentTransform::GenerateGlobalModelMatrix()

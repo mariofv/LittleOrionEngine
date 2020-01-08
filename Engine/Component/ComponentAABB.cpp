@@ -1,6 +1,7 @@
 #include "ComponentAABB.h"
 #include "ComponentMesh.h"
 #include "GameObject.h"
+#include "Brofiler/Brofiler.h"
 
 ComponentAABB::ComponentAABB() : Component(nullptr, ComponentType::MATERIAL)
 {
@@ -10,10 +11,6 @@ ComponentAABB::ComponentAABB() : Component(nullptr, ComponentType::MATERIAL)
 ComponentAABB::ComponentAABB(GameObject * owner) : Component(owner, ComponentType::AABB)
 {
 
-}
-void ComponentAABB::Update()
-{
-	GenerateBoundingBox();
 }
 void ComponentAABB::Save(Config& config) const
 {

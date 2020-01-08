@@ -22,7 +22,7 @@ public:
 	~ComponentAABB() = default;
 
 	void Delete() override {};
-	void Update() override;
+	void GenerateBoundingBox();
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
@@ -33,7 +33,6 @@ public:
 
 private:
 	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices);
-	void GenerateBoundingBox();
 public:
 	AABB bounding_box;
 	AABB2D bounding_box2D;

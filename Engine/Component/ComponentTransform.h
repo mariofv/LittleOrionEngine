@@ -16,7 +16,6 @@ public:
 
 	~ComponentTransform() = default;
 
-	void Update() override;
 	void Delete() override {};
 
 	void Save(Config& config) const override;

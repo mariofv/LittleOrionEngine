@@ -26,18 +26,18 @@
 
 #include <algorithm>
 
-GameObject::GameObject() : transform(this), aabb(this), UUID(pcg32_random())
+GameObject::GameObject() : aabb(this), transform(this), UUID(pcg32_random())
 {
 }
 
-GameObject::GameObject(unsigned int UUID) : transform(this), aabb(this), UUID(UUID)
+GameObject::GameObject(unsigned int UUID) : aabb(this), transform(this),  UUID(UUID)
 {
 }
 
 GameObject::GameObject(const std::string name) :
 	name(name),
-	transform(this),
 	aabb(this),
+	transform(this),
 	UUID(pcg32_random())
 {
 }
@@ -97,9 +97,6 @@ bool GameObject::IsVisible(const ComponentCamera & camera) const
 void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
-	transform.Update();
-	aabb.Update();
-
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		components[i]->Update();
