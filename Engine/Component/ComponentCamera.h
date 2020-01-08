@@ -129,6 +129,8 @@ private:
 	bool is_focusing = false;
 	float3 desired_focus_position = float3::zero;
 
+	int depth = 0;
+
 	ClearMode camera_clear_mode = ClearMode::COLOR;
 	friend class ComponentsUI;
 };

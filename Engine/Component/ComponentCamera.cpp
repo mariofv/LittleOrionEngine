@@ -85,6 +85,7 @@ void ComponentCamera::Save(Config& config) const
 	config.AddFloat(camera_frustum.verticalFov, "VerticalFOV");
 	config.AddUInt((uint64_t)camera_clear_mode, "ClearMode");
 	config.AddColor(float4(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f), "ClearColor");
+	config.AddInt(depth, "Depth");
 }
 
 void ComponentCamera::Load(const Config& config)
@@ -122,9 +123,11 @@ void ComponentCamera::Load(const Config& config)
 
 	float4 clear_color;
 	config.GetColor("ClearColor", clear_color, float4(0.f, 0.f, 0.f, 1.f));
-	camera_clear_color[0] = clear_color.x,
-	camera_clear_color[1] = clear_color.y,
-	camera_clear_color[2] = clear_color.z,
+	camera_clear_color[0] = clear_color.x;
+	camera_clear_color[1] = clear_color.y;
+	camera_clear_color[2] = clear_color.z;
+
+	depth = config.GetInt("Depth", 0);
 
 	GenerateMatrices();
 }
