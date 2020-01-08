@@ -200,6 +200,13 @@ void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_sh
 			ImVec2(1, 0)
 		);
 		
+		ImGuizmo::SetRect(imgui_window_content_pos.x, imgui_window_content_pos.y, imgui_window_content_height, imgui_window_content_height);
+		ImGuizmo::SetDrawlist();
+		ImGuizmo::SetOrthographic(false);
+		ImGuizmo::Enable(true);
+
+		DrawEditorCameraGizmo();
+		
 		if (hierarchy.selected_game_object != nullptr)
 		{
 			DrawGizmo(camera_frame_buffer_to_show, *hierarchy.selected_game_object);
@@ -213,13 +220,29 @@ void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_sh
 	}
 }
 
+void ModuleScene::DrawEditorCameraGizmo()
+{
+	float4x4 old_view_matrix = App->cameras->scene_camera->GetViewMatrix().Transposed();
+	float4x4 transposed_view_matrix = App->cameras->scene_camera->GetViewMatrix().Transposed();
+	bool modified;
+	ImGuizmo::ViewManipulate(
+		transposed_view_matrix.ptr(), 
+		1, 
+		ImVec2(imgui_window_content_pos.x + imgui_window_content_width - 100, imgui_window_content_pos.y),
+		ImVec2(100, 100), 
+		ImGui::ColorConvertFloat4ToU32(ImVec4(1.f, 1.f, 1.f, 0.f)),
+		modified
+	);
+
+	if (modified)
+	{
+		App->cameras->scene_camera->SetViewMatrix(transposed_view_matrix.Transposed());
+	}
+	
+}
+
 void ModuleScene::DrawGizmo(const ComponentCamera& camera, GameObject& game_object)
 {
-	ImGuizmo::SetRect(imgui_window_content_pos.x, imgui_window_content_pos.y, imgui_window_content_height, imgui_window_content_height);
-	ImGuizmo::SetDrawlist();
-	ImGuizmo::Enable(true);
-	ImGuizmo::SetOrthographic(false);
-
 	float4x4 model_global_matrix_transposed = game_object.transform.GetGlobalModelMatrix().Transposed();
 
 	ImGuizmo::Manipulate(

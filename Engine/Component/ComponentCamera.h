@@ -68,6 +68,7 @@ public:
 
 	void SetSpeedUp(bool is_speeding_up);
 
+	void SetViewMatrix(const float4x4& view_matrix);
 	float4x4 GetViewMatrix() const;
 	float4x4 GetProjectionMatrix() const;
 	float4x4 GetInverseClipMatrix() const;

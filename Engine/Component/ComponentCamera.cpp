@@ -429,6 +429,21 @@ void ComponentCamera::SetSpeedUp(bool is_speeding_up)
 	speed_up = is_speeding_up ? SPEED_UP_FACTOR : 1.f;
 }
 
+void ComponentCamera::SetViewMatrix(const float4x4& view_matrix)
+{
+	float3x4 reduced_view_matrix;
+	reduced_view_matrix.SetRow(0, view_matrix.Row3(0).ptr());
+	reduced_view_matrix.SetRow(1, view_matrix.Row3(1).ptr());
+	reduced_view_matrix.SetRow(2, view_matrix.Row3(2).ptr());
+
+	reduced_view_matrix.InverseOrthonormal(); // Transformation to world matrix
+	float3 front = -reduced_view_matrix.Col3(2);
+	
+	Quat rotation = Quat::LookAt(owner->transform.GetFrontVector(), front, owner->transform.GetUpVector(), float3::unitY);
+	owner->transform.Rotate(rotation);
+	
+}
+
 float4x4 ComponentCamera::GetViewMatrix() const
 {
 	return view;
