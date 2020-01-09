@@ -19,11 +19,10 @@ public:
 	static const size_t MAX_TEXTURE_TYPES = static_cast<size_t>(TextureType::UNKNOWN);
 public:
 	Texture() = default;
-	Texture(unsigned char * data, int width, int height, const std::string& path, TextureType type = TextureType::DIFUSSE);
+	Texture(char * data, size_t image_size, int width, int height, const std::string& path, TextureType type = TextureType::DIFUSSE);
 
 	~Texture();
 
-	void GenerateMipMap();
 	bool IsMipMapped() const;
 
 	void SetWrapS(GLenum wrap_s);
@@ -43,7 +42,8 @@ public:
 	char* GetMagFilter_C_Str() const;
 
 private:
-	void InitTexture(unsigned char * data);
+	void GenerateMipMap();
+	void InitTexture(char * data);
 	char* GLEnumToString(GLenum gl_enum) const;
 
 public:
@@ -54,6 +54,7 @@ public:
 
 	int width = 0;
 	int height = 0;
+	size_t image_size;
 private:
 	bool mip_map = false;
 
