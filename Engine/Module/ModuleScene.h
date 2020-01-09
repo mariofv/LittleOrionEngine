@@ -33,10 +33,8 @@ public:
 
 	void MousePicking(const float2& mouse_position);
 	void DrawEditorCameraGizmo();
-	void DrawGizmo(const ComponentCamera& camera, GameObject& game_object);
 
 	void ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title);
-	void ShowGizmoControls();
 
 public:
 	Hierarchy hierarchy;
@@ -47,9 +45,6 @@ private:
 	float imgui_window_content_height = 0;
 
 	float2 imgui_window_content_pos = float2::zero;
-
-	bool gizmo_hovered = false;
-	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 
 	GameObject *root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;

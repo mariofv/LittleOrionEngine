@@ -131,7 +131,7 @@ void EngineUI::ShowSceneControls()
 	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight()*TIME_BAR_HEIGHT_PROP));
 	if (ImGui::Begin("Time Controls", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar))
 	{
-		App->scene->ShowGizmoControls();
+		App->editor->ShowGizmoControls();
 		App->time->ShowTimeControls();
 	}
 	ImGui::End();

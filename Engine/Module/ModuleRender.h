@@ -53,11 +53,10 @@ private:
 
 	void GetCullingMeshes(const ComponentCamera *camera);
 
-public:
-	OLQuadTree ol_quadtree;
-
 private:
 	void* context = nullptr;
+
+	OLQuadTree ol_quadtree;
 
 	bool vsync = false;
 	bool gl_alpha_test = false;
@@ -76,7 +75,9 @@ private:
 	std::vector<ComponentMesh*> meshes;
 	std::vector<ComponentMesh*> meshes_to_render;
 	Timer * rendering_measure_timer = new Timer();
+
 	friend class ModuleDebug;
+	friend class ModuleEditor;
 };
 
 #endif //_MODULERENDER_H_

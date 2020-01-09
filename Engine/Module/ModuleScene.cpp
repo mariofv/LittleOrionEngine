@@ -152,7 +152,7 @@ void ModuleScene::Load(const Config& serialized_scene)
 
 void ModuleScene::MousePicking(const float2& mouse_position)
 {
-	if (gizmo_hovered)
+	if (App->editor->gizmo_hovered)
 	{
 		return;
 	}
@@ -199,19 +199,14 @@ void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_sh
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
-		
 		ImGuizmo::SetRect(imgui_window_content_pos.x, imgui_window_content_pos.y, imgui_window_content_height, imgui_window_content_height);
 		ImGuizmo::SetDrawlist();
 		ImGuizmo::SetOrthographic(false);
 		ImGuizmo::Enable(true);
-
+		
+		App->editor->RenderEditorTools();
 		DrawEditorCameraGizmo();
-		
-		if (hierarchy.selected_game_object != nullptr)
-		{
-			DrawGizmo(camera_frame_buffer_to_show, *hierarchy.selected_game_object);
-		}
-		
+
 		if (App->cameras->IsMovementEnabled() && scene_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
 		{
 			ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
@@ -239,41 +234,4 @@ void ModuleScene::DrawEditorCameraGizmo()
 		App->cameras->scene_camera->SetViewMatrix(transposed_view_matrix.Transposed());
 	}
 	
-}
-
-void ModuleScene::DrawGizmo(const ComponentCamera& camera, GameObject& game_object)
-{
-	float4x4 model_global_matrix_transposed = game_object.transform.GetGlobalModelMatrix().Transposed();
-
-	ImGuizmo::Manipulate(
-		camera.GetViewMatrix().Transposed().ptr(),
-		camera.GetProjectionMatrix().Transposed().ptr(),
-		gizmo_operation,
-		ImGuizmo::WORLD,
-		model_global_matrix_transposed.ptr()
-	);
-
-	gizmo_hovered = ImGuizmo::IsOver();
-	if (ImGuizmo::IsUsing())
-	{
-		game_object.transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
-	}
-}
-
-void ModuleScene::ShowGizmoControls()
-{
-	if (ImGui::Button(ICON_FA_ARROWS_ALT))
-	{
-		gizmo_operation = ImGuizmo::TRANSLATE;
-	}
-	ImGui::SameLine();
-	if (ImGui::Button(ICON_FA_SYNC_ALT))
-	{
-		gizmo_operation = ImGuizmo::ROTATE;
-	}
-	ImGui::SameLine();
-	if (ImGui::Button(ICON_FA_EXPAND_ARROWS_ALT))
-	{
-		gizmo_operation = ImGuizmo::SCALE;
-	}
 }
