@@ -65,7 +65,7 @@ In order to do that assure that you have the following:
 
 ## Contributing
 
-Because this is a academic project is not possible to contribute directly to this repo. Said that, feel free to fork it (<https://github.com/mariofv/OrionEngine/fork>) and to expand it in your own way!
+Because this is a academic project is not possible to contribute directly to this repo. Said that, feel free to fork it (<https://github.com/mariofv/LittleOrionEngine/fork>) and to expand it in your own way!
 
 ## Authors
 | [![Mario Fernández Villalba](https://github.com/mariofv.png?size=100)](https://github.com/mariofv) | [![Anabel Hernández Barrera](https://github.com/yalania.png?size=100)](https://github.com/yalania) |
@@ -86,6 +86,7 @@ Because this is a academic project is not possible to contribute directly to thi
 * [rapidjson 1.1.0](https://github.com/Tencent/rapidjson/) - Used to handle json files.
 * [Debug Draw](https://github.com/glampert/debug-draw/) - Used to draw basic shapes.
 * [par_shapes](https://github.com/prideout/par/blob/master/par_shapes.h) - Used to generate basic primitives.
+* [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo) - Used to draw gizmos.
 
 ## License
 

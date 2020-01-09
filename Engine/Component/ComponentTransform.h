@@ -30,18 +30,22 @@ public:
 	void Rotate(const Quat &rotation);
 	void Rotate(const float3x3 &rotation);
 
+	float3 ComponentTransform::GetScale() const;
+	void SetScale(const float3 &scale);
+
 	float3 GetUpVector() const;
 	float3 GetFrontVector() const;
 	float3 GetRightVector() const;
 
 	void ChangeLocalSpace(const float4x4 new_local_space);
 
+	void GenerateGlobalModelMatrix();
 	float4x4 GetGlobalModelMatrix() const;
-	
+	void SetGlobalModelMatrix(const float4x4 &new_global_matrix);
+  
 	void ShowComponentWindow() override;
 
 private:
-	void GenerateGlobalModelMatrix();
 	void GenerateModelMatrix();
 
 private:

@@ -21,7 +21,7 @@ private:
 	void ShowViewMenu();
 	void ShowHelpMenu();
 
-	void ShowTimeControls();
+	void ShowSceneControls();
 
 	void ShowHierarchyWindow();
 	

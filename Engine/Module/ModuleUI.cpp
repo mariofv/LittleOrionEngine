@@ -6,9 +6,10 @@
 
 #include <SDL/SDL.h>
 #include <GL/glew.h>
-#include "imgui.h"
-#include "imgui_impl_opengl3.h"
-#include "imgui_impl_sdl.h"
+#include <imgui.h>
+#include <imgui_impl_opengl3.h>
+#include <imgui_impl_sdl.h>
+#include <ImGuizmo.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
 #include "Brofiler/Brofiler.h"
@@ -50,6 +51,8 @@ update_status ModuleUI::PreUpdate()
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
+	ImGuizmo::BeginFrame();
+
 	return update_status::UPDATE_CONTINUE;
 }
 
