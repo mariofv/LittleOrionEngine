@@ -145,7 +145,6 @@ void GameObject::Load(const Config& config)
 	config.GetString("Name", name, "GameObject");
 
 	uint64_t parent_UUID = config.GetUInt("ParentUUID", 0);
-	//TODO: This should be done later on, because its possible to try to load a node that its not already loaded
 	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID); 
 	assert(game_object_parent != nullptr);
 	if (parent_UUID != 0)

@@ -60,7 +60,7 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 	{
 		return game_object_to_remove == game_object.get();
 	});
-	if (it != game_objects_ownership.end())
+	if (it != game_objects_ownership.end() || game_object_to_remove == root)
 	{
 		std::vector<GameObject*> children_to_remove;
 		game_object_to_remove->Delete(children_to_remove);
