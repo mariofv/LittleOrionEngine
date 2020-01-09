@@ -4,11 +4,12 @@
 #include "ModuleWindow.h"
 #include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
-#include "Component/ComponentCamera.h"
+#include "ModuleEditor.h"
+#include "ModuleFileSystem.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
-#include "ModuleFileSystem.h"
 #include "ModuleUI.h"
+#include "Component/ComponentCamera.h"
 #include "UI/EngineUI.h"
 #include "UI/FileExplorerUI.h"
 
@@ -62,12 +63,12 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEMOTION:
-			if (event.motion.state & SDL_BUTTON_RMASK && App->scene->scene_window_is_hovered) 
+			if (event.motion.state & SDL_BUTTON_RMASK && App->editor->scene_window_is_hovered) 
 			{
 				float2 motion(event.motion.xrel, event.motion.yrel);
 				App->cameras->scene_camera->RotateCameraWithMouseMotion(motion);
 			}
-			else if (event.motion.state & SDL_BUTTON_LMASK && App->scene->scene_window_is_hovered && App->cameras->IsOrbiting()) 
+			else if (event.motion.state & SDL_BUTTON_LMASK && App->editor->scene_window_is_hovered && App->cameras->IsOrbiting())
 			{
 				float2 motion(event.motion.xrel, event.motion.yrel);
 				App->cameras->scene_camera->OrbitCameraWithMouseMotion(motion);
@@ -75,25 +76,25 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEWHEEL:
-			if (event.wheel.y > 0 && App->scene->scene_window_is_hovered)
+			if (event.wheel.y > 0 && App->editor->scene_window_is_hovered)
 			{
 				App->cameras->scene_camera->MoveFoward();
 			}
-			else if (event.wheel.y < 0 && App->scene->scene_window_is_hovered)
+			else if (event.wheel.y < 0 && App->editor->scene_window_is_hovered)
 			{
 				App->cameras->scene_camera->MoveBackward();
 			}
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
-			if (event.button.button == SDL_BUTTON_RIGHT && App->scene->scene_window_is_hovered)
+			if (event.button.button == SDL_BUTTON_RIGHT && App->editor->scene_window_is_hovered)
 			{
 				App->cameras->SetMovement(true);
 			}
-			if (event.button.button == SDL_BUTTON_LEFT && App->scene->scene_window_is_hovered)
+			if (event.button.button == SDL_BUTTON_LEFT && App->editor->scene_window_is_hovered)
 			{
 				float2 mouse_position = float2(event.button.x, event.button.y);
-				App->scene->MousePicking(mouse_position);
+				App->editor->MousePicking(mouse_position);
 			}
 			break;
 

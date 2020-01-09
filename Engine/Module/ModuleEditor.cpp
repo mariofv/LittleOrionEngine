@@ -33,6 +33,25 @@ bool ModuleEditor::CleanUp()
 	return true;
 }
 
+void ModuleEditor::OpenScene(const std::string &path) const
+{
+	size_t readed_bytes;
+	std::string serialized_scene_string = App->filesystem->Load(path.c_str(), readed_bytes);
+
+	Config scene_config(serialized_scene_string);
+	App->scene->Load(scene_config);
+}
+
+void ModuleEditor::SaveScene(const std::string &path) const
+{
+	Config scene_config;
+	App->scene->Save(scene_config);
+	std::string serialized_scene_string;
+	scene_config.GetSerializedString(serialized_scene_string);
+
+	App->filesystem->Save(path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
+}
+
 void ModuleEditor::RenderEditorTools()
 {
 	if (App->debug->show_grid)
@@ -88,26 +107,124 @@ void ModuleEditor::RenderGizmo()
 	}
 }
 
-
-void ModuleEditor::OpenScene(const std::string &path) const
+void ModuleEditor::RenderEditorCameraGizmo()
 {
-	size_t readed_bytes;
-	std::string serialized_scene_string = App->filesystem->Load(path.c_str(), readed_bytes);
-	
-	Config scene_config(serialized_scene_string);
-	App->scene->Load(scene_config);
+	float4x4 old_view_matrix = App->cameras->scene_camera->GetViewMatrix().Transposed();
+	float4x4 transposed_view_matrix = App->cameras->scene_camera->GetViewMatrix().Transposed();
+	bool modified;
+	ImGuizmo::ViewManipulate(
+		transposed_view_matrix.ptr(),
+		1,
+		ImVec2(scene_window_content_area_pos.x + scene_window_content_area_width - 100, scene_window_content_area_pos.y),
+		ImVec2(100, 100),
+		ImGui::ColorConvertFloat4ToU32(ImVec4(1.f, 1.f, 1.f, 0.f)),
+		modified
+	);
+
+	if (modified)
+	{
+		App->cameras->scene_camera->SetViewMatrix(transposed_view_matrix.Transposed());
+	}
+
 }
 
-void ModuleEditor::SaveScene(const std::string &path) const
+void ModuleEditor::MousePicking(const float2& mouse_position)
 {
-	Config scene_config;
-	App->scene->Save(scene_config);
-	std::string serialized_scene_string;
-	scene_config.GetSerializedString(serialized_scene_string);
+	if (App->editor->gizmo_hovered)
+	{
+		return;
+	}
 
-	App->filesystem->Save(path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
+	float2 window_center_pos = scene_window_content_area_pos + float2(scene_window_content_area_width, scene_window_content_area_height) / 2;
+
+	float2 window_mouse_position = mouse_position - window_center_pos;
+	float2 window_mouse_position_normalized = float2(window_mouse_position.x * 2 / scene_window_content_area_width, -window_mouse_position.y * 2 / scene_window_content_area_height);
+
+	LineSegment ray;
+	App->cameras->scene_camera->GetRay(window_mouse_position_normalized, ray);
+	GameObject* intersected = App->renderer->GetRaycastIntertectedObject(ray);
+	App->scene->hierarchy.selected_game_object = intersected;
 }
 
+void ModuleEditor::ShowSceneTab()
+{
+	if (ImGui::BeginTabItem(ICON_FA_TH " Scene"))
+	{
+		scene_window_is_hovered = ImGui::IsWindowHovered(); // TODO: This should be something like ImGui::IsTabHovered (such function doesn't exist though)
+
+		ImVec2 scene_window_pos_ImVec2 = ImGui::GetWindowPos();
+		float2 scene_window_pos = float2(scene_window_pos_ImVec2.x, scene_window_pos_ImVec2.y);
+
+		ImVec2 scene_window_content_area_max_point_ImVec2 = ImGui::GetWindowContentRegionMax();
+		scene_window_content_area_max_point_ImVec2 = ImVec2(
+			scene_window_content_area_max_point_ImVec2.x + scene_window_pos_ImVec2.x,
+			scene_window_content_area_max_point_ImVec2.y + scene_window_pos_ImVec2.y
+		); // Pass from window space to screen space
+		float2 scene_window_content_area_max_point = float2(scene_window_content_area_max_point_ImVec2.x, scene_window_content_area_max_point_ImVec2.y);
+
+		ImVec2 scene_window_content_area_pos_ImVec2 = ImGui::GetCursorScreenPos();
+		scene_window_content_area_pos = float2(scene_window_content_area_pos_ImVec2.x, scene_window_content_area_pos_ImVec2.y);
+
+		scene_window_content_area_width = scene_window_content_area_max_point.x - scene_window_content_area_pos.x;
+		scene_window_content_area_height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
+
+		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
+
+		ImGui::GetWindowDrawList()->AddImage(
+			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
+			scene_window_content_area_pos_ImVec2,
+			scene_window_content_area_max_point_ImVec2,
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+		ImGuizmo::SetRect(scene_window_content_area_pos.x, scene_window_content_area_pos.y, scene_window_content_area_width, scene_window_content_area_height);
+		ImGuizmo::SetDrawlist();
+		ImGuizmo::SetOrthographic(false);
+		ImGuizmo::Enable(true);
+
+		App->editor->RenderEditorTools();
+		RenderEditorCameraGizmo();
+
+		if (App->cameras->IsMovementEnabled() && scene_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
+		{
+			ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
+		}
+		ImGui::EndTabItem();
+	}
+}
+
+void ModuleEditor::ShowGameTab()
+{
+	if (ImGui::BeginTabItem(ICON_FA_GHOST " Game"))
+	{
+		ImVec2 game_window_pos_ImVec2 = ImGui::GetWindowPos();
+		float2 game_window_pos = float2(game_window_pos_ImVec2.x, game_window_pos_ImVec2.y);
+
+		ImVec2 game_window_content_area_max_point_ImVec2 = ImGui::GetWindowContentRegionMax();
+		game_window_content_area_max_point_ImVec2 = ImVec2(
+			game_window_content_area_max_point_ImVec2.x + game_window_pos_ImVec2.x,
+			game_window_content_area_max_point_ImVec2.y + game_window_pos_ImVec2.y
+		); // Pass from window space to screen space
+		float2 game_window_content_area_max_point = float2(game_window_content_area_max_point_ImVec2.x, game_window_content_area_max_point_ImVec2.y);
+
+		ImVec2 game_window_content_area_pos_ImVec2 = ImGui::GetCursorScreenPos();
+		float2 game_window_content_area_pos = float2(game_window_content_area_pos_ImVec2.x, game_window_content_area_pos_ImVec2.y);
+
+		float game_window_content_area_width = game_window_content_area_max_point.x - game_window_content_area_pos.x;
+		float game_window_content_area_height = game_window_content_area_max_point.y - game_window_content_area_pos.y;
+
+		App->cameras->main_camera->RecordFrame(game_window_content_area_width, game_window_content_area_height);
+
+		ImGui::GetWindowDrawList()->AddImage(
+			(void *)App->cameras->main_camera->GetLastRecordedFrame(),
+			game_window_content_area_pos_ImVec2,
+			game_window_content_area_max_point_ImVec2,
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+		ImGui::EndTabItem();
+	}
+}
 
 void ModuleEditor::ShowGizmoControls()
 {

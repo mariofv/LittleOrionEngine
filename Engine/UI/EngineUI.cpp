@@ -187,25 +187,24 @@ void EngineUI::ShowSceneTab()
 {
 	if (App->cameras->scene_camera != nullptr)
 	{
-		App->scene->ShowFrameBufferTab(*App->cameras->scene_camera, ICON_FA_TH " Scene");
+		App->editor->ShowSceneTab();
 	}
 }
 void EngineUI::ShowGameTab()
 {
-	static const char * title = ICON_FA_GHOST " Game";
 	if (App->cameras->main_camera != nullptr)
 	{
-		App->scene->ShowFrameBufferTab(*App->cameras->main_camera, title);
+		App->editor->ShowGameTab();
 	}
 	else 
 	{
-		ShowEmptyGameTab(title);
+		ShowEmptyGameTab();
 	}
 }
 
-void EngineUI::ShowEmptyGameTab(const char * title) const
+void EngineUI::ShowEmptyGameTab() const
 {
-		if (ImGui::BeginTabItem(title))
+		if (ImGui::BeginTabItem(ICON_FA_GHOST " Game"))
 		{
 			float window_width = ImGui::GetWindowWidth();
 			ImGui::Dummy(ImVec2(0, ImGui::GetWindowHeight()*0.40f));

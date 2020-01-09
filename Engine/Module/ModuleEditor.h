@@ -16,19 +16,32 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void RenderEditorTools();
-	void RenderCameraFrustum() const;
-	void RenderGizmo();
-
 	void OpenScene(const std::string &path) const;
 	void SaveScene(const std::string &path) const;
 
+	void RenderEditorTools();
+	void RenderCameraFrustum() const;
+	void RenderGizmo();
+	void RenderEditorCameraGizmo();
+
+	void MousePicking(const float2& mouse_position);
+
+	void ShowSceneTab();
+	void ShowGameTab();
+
 	void ShowGizmoControls();
 
+public:
+	bool scene_window_is_hovered = false;
 
-	bool gizmo_hovered = false;
 private:
+	float scene_window_content_area_width = 0;
+	float scene_window_content_area_height = 0;
+
+	float2 scene_window_content_area_pos = float2::zero;
+
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
+	bool gizmo_hovered = false;
 
 };
 
