@@ -105,7 +105,7 @@ bool ModuleFileSystem::Exists(const char* file_path) const
 {
 	SDL_RWops* file = SDL_RWFromFile(file_path, "r");
 	bool exists = file != NULL;
-	if (file != NULL) {
+	if (exists) {
 		SDL_RWclose(file);
 	}
 	return exists;
