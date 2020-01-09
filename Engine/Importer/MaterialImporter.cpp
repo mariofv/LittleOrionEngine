@@ -4,7 +4,7 @@
 #include <algorithm>
 
 #include <assimp/scene.h>
-
+#include "Brofiler/Brofiler.h"
 MaterialImporter::MaterialImporter()
 {
 	APP_LOG_INIT("Initializing DevIL image loader.")
@@ -112,6 +112,7 @@ std::string MaterialImporter::ImportMaterialData(const std::string & material_pa
 }
 std::shared_ptr<Texture> MaterialImporter::Load(const std::string& file_path) const{
 
+	BROFILER_CATEGORY("Load Texture", Profiler::Color::BurlyWood);
 	//Check if the texture is already loaded
 	auto it = std::find_if(texture_cache.begin(), texture_cache.end(), [file_path](const std::shared_ptr<Texture> & texture)
 	{
