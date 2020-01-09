@@ -264,8 +264,6 @@ void ModuleEditor::ShowSceneTab()
 {
 	if (ImGui::BeginTabItem(ICON_FA_TH " Scene"))
 	{
-		scene_window_is_hovered = ImGui::IsWindowHovered(); // TODO: This should be something like ImGui::IsTabHovered (such function doesn't exist though)
-
 		ImVec2 scene_window_pos_ImVec2 = ImGui::GetWindowPos();
 		float2 scene_window_pos = float2(scene_window_pos_ImVec2.x, scene_window_pos_ImVec2.y);
 
@@ -292,7 +290,12 @@ void ModuleEditor::ShowSceneTab()
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
-		
+
+		AABB2D content_area = AABB2D(scene_window_content_area_pos, scene_window_content_area_max_point);
+		float2 mouse_pos_f2 = float2(ImGui::GetMousePos().x, ImGui::GetMousePos().y);
+		AABB2D mouse_pos = AABB2D(mouse_pos_f2, mouse_pos_f2);
+		scene_window_is_hovered = content_area.Contains(mouse_pos); // TODO: This seems to be inneficient, check with partner
+
 		App->editor->RenderEditorDraws(); // This should be render after rendering framebuffer texture.
 
 		if (App->cameras->IsMovementEnabled() && scene_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
