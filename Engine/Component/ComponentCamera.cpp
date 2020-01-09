@@ -177,7 +177,7 @@ void ComponentCamera::RecordFrame(float width, float height)
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
-void ComponentCamera::RecordEditorFrame(float width, float height) const
+void ComponentCamera::RecordDebugDraws(float width, float height) const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glViewport(0, 0, width, height);

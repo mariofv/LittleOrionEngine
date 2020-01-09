@@ -29,14 +29,14 @@ public:
 	void ShowGizmoControls();
 
 private:
-	void RenderCameraDisplays() const;
-	void RenderCameraPreview() const;
+	void RenderCameraFrustum() const;
 	void RenderOutline() const;
 	void RenderBoundingBoxes() const;
 
-	void RenderGizmos();
+	void RenderEditorDraws();
 	void RenderGizmo();
 	void RenderEditorCameraGizmo();
+	void RenderCameraPreview() const;
 
 public:
 	bool scene_window_is_hovered = false;

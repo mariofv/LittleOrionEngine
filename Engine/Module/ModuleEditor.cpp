@@ -74,7 +74,7 @@ void ModuleEditor::RenderDebugDraws()
 
 	if (App->scene->hierarchy.selected_game_object != nullptr)
 	{
-		RenderCameraDisplays();
+		RenderCameraFrustum();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 
@@ -86,31 +86,18 @@ void ModuleEditor::RenderDebugDraws()
 	App->debug_draw->Render(*App->cameras->scene_camera);
 }
 
-void ModuleEditor::RenderCameraDisplays() const
+void ModuleEditor::RenderCameraFrustum() const
 {
-	Component * selected_camera_component = App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA);
-	if (selected_camera_component != nullptr) {
-		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
-		
-		if (App->debug->show_camera_frustum)
-		{
-			dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
-		}
-
-		RenderCameraPreview();
+	if (!App->debug->show_camera_frustum)
+	{
+		return;
 	}
-}
 
-void ModuleEditor::RenderCameraPreview() const
-{
 	Component * selected_camera_component = App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA);
 	if (selected_camera_component != nullptr) {
 		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
-		if (ImGui::Begin("Camera preview"))
-		{
 		
-		}
-		ImGui::End();
+		dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
 	}
 }
 
@@ -168,7 +155,7 @@ void ModuleEditor::RenderBoundingBoxes() const
 	}
 }
 
-void ModuleEditor::RenderGizmos()
+void ModuleEditor::RenderEditorDraws()
 {
 	ImGuizmo::SetRect(scene_window_content_area_pos.x, scene_window_content_area_pos.y, scene_window_content_area_width, scene_window_content_area_height);
 	ImGuizmo::SetDrawlist();
@@ -178,6 +165,7 @@ void ModuleEditor::RenderGizmos()
 	if (App->scene->hierarchy.selected_game_object != nullptr)
 	{
 		RenderGizmo();
+		RenderCameraPreview();
 	}
 
 	RenderEditorCameraGizmo();
@@ -223,6 +211,37 @@ void ModuleEditor::RenderEditorCameraGizmo()
 
 }
 
+void ModuleEditor::RenderCameraPreview() const
+{
+	Component * selected_camera_component = App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA);
+	if (selected_camera_component != nullptr) {
+		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
+
+		ImGui::SetCursorPos(ImVec2(scene_window_content_area_width - 200, scene_window_content_area_height - 200));
+		ImGui::BeginChildFrame(ImGui::GetID("Camera Preview"), ImVec2(200, 200), ImGuiWindowFlags_MenuBar);
+		if (ImGui::BeginMenuBar())
+		{
+			ImGui::BeginMenu("Camera Preview", false);
+			ImGui::EndMenuBar();
+		}
+
+		ImVec2 content_area_max_point = ImGui::GetWindowContentRegionMax();
+
+		float width = content_area_max_point.x - ImGui::GetCursorPos().x;
+		float height = content_area_max_point.y - ImGui::GetCursorPos().y;
+
+		App->cameras->main_camera->RecordFrame(width, height);
+		ImGui::Image(
+			(void *)App->cameras->main_camera->GetLastRecordedFrame(),
+			ImVec2(width, height),
+			ImVec2(0, 1),
+			ImVec2(1, 0)
+		);
+
+		ImGui::EndChild();
+	}
+}
+
 void ModuleEditor::MousePicking(const float2& mouse_position)
 {
 	if (App->editor->gizmo_hovered)
@@ -264,8 +283,8 @@ void ModuleEditor::ShowSceneTab()
 		scene_window_content_area_height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
 
 		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
-		App->cameras->scene_camera->RecordEditorFrame(scene_window_content_area_width, scene_window_content_area_height);
-
+		App->cameras->scene_camera->RecordDebugDraws(scene_window_content_area_width, scene_window_content_area_height);
+		
 		ImGui::GetWindowDrawList()->AddImage(
 			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
 			scene_window_content_area_pos_ImVec2,
@@ -273,7 +292,8 @@ void ModuleEditor::ShowSceneTab()
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
-		App->editor->RenderGizmos(); // This should be render after rendering framebuffer texture.
+		
+		App->editor->RenderEditorDraws(); // This should be render after rendering framebuffer texture.
 
 		if (App->cameras->IsMovementEnabled() && scene_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
 		{

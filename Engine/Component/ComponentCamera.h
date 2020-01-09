@@ -32,7 +32,7 @@ public:
 	float GetHeigt() const;
 
 	void RecordFrame(float width, float height);
-	void RecordEditorFrame(float width, float height) const;
+	void RecordDebugDraws(float width, float height) const;
 	GLuint GetLastRecordedFrame() const;
 
 	void SetFOV(float fov);
