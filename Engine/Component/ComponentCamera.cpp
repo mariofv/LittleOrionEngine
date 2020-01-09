@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
@@ -173,6 +174,14 @@ void ComponentCamera::RecordFrame(float width, float height)
 
 	App->renderer->RenderFrame(*this);
 
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void ComponentCamera::RecordEditorFrame(float width, float height) const
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glViewport(0, 0, width, height);
+	App->editor->RenderDebugDraws();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

@@ -19,10 +19,7 @@ public:
 	void OpenScene(const std::string &path) const;
 	void SaveScene(const std::string &path) const;
 
-	void RenderEditorTools();
-	void RenderCameraFrustum() const;
-	void RenderGizmo();
-	void RenderEditorCameraGizmo();
+	void RenderDebugDraws();
 
 	void MousePicking(const float2& mouse_position);
 
@@ -30,6 +27,15 @@ public:
 	void ShowGameTab();
 
 	void ShowGizmoControls();
+
+private:
+	void RenderCameraFrustum() const;
+	void RenderOutline() const;
+	void RenderBoundingBoxes() const;
+
+	void RenderGizmos();
+	void RenderGizmo();
+	void RenderEditorCameraGizmo();
 
 public:
 	bool scene_window_is_hovered = false;

@@ -3,11 +3,14 @@
 #include "Application.h"
 #include "ModuleCamera.h"
 #include "ModuleDebug.h"
+#include "ModuleDebugDraw.h"
 #include "ModuleFileSystem.h"
+#include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
-#include "Config.h"
+#include "Component/ComponentMesh.h"
 
+#include "Config.h"
 #include "Hierarchy.h"
 #include "OLQuadTree.h"
 #include "UI/DebugDraw.h"
@@ -52,7 +55,7 @@ void ModuleEditor::SaveScene(const std::string &path) const
 	App->filesystem->Save(path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
 }
 
-void ModuleEditor::RenderEditorTools()
+void ModuleEditor::RenderDebugDraws()
 {
 	if (App->debug->show_grid)
 	{
@@ -72,8 +75,15 @@ void ModuleEditor::RenderEditorTools()
 	if (App->scene->hierarchy.selected_game_object != nullptr)
 	{
 		RenderCameraFrustum();
-		RenderGizmo();
+		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
+
+	if (App->debug->show_bounding_boxes)
+	{
+		RenderBoundingBoxes();
+	}
+
+	App->debug_draw->Render(*App->cameras->scene_camera);
 }
 
 void ModuleEditor::RenderCameraFrustum() const
@@ -86,6 +96,75 @@ void ModuleEditor::RenderCameraFrustum() const
 			dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
 		}
 	}
+}
+
+void ModuleEditor::RenderOutline() const
+{
+	GameObject* selected_game_object = App->scene->hierarchy.selected_game_object;
+	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH);
+
+	if (selected_object_mesh_component != nullptr)
+	{
+		ComponentMesh* selected_object_mesh = static_cast<ComponentMesh*>(selected_object_mesh_component);
+		glEnable(GL_STENCIL_TEST);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
+		glStencilMask(0xFF);
+
+		selected_object_mesh->Render();
+
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+
+		GLuint outline_shader_program = App->program->outline_program;
+		glUseProgram(outline_shader_program);
+
+		ComponentTransform object_transform_copy = selected_game_object->transform;
+		float3 object_scale = object_transform_copy.GetScale();
+		object_transform_copy.SetScale(object_scale*1.01f);
+		object_transform_copy.GenerateGlobalModelMatrix();
+
+		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), object_transform_copy.GetGlobalModelMatrix().Transposed().ptr());
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		selected_object_mesh->RenderModel();
+
+		glStencilMask(0xFF);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_STENCIL_TEST);
+
+		glUseProgram(0);
+
+	}
+}
+
+void ModuleEditor::RenderBoundingBoxes() const
+{
+	for (auto& mesh : App->renderer->meshes_to_render)
+	{
+		GameObject* mesh_game_object = mesh->owner;
+		if (mesh_game_object->aabb.IsEmpty())
+		{
+			dd::aabb(mesh_game_object->aabb.bounding_box.minPoint, mesh_game_object->aabb.bounding_box.maxPoint, float3::one);
+		}
+	}
+}
+
+void ModuleEditor::RenderGizmos()
+{
+	ImGuizmo::SetRect(scene_window_content_area_pos.x, scene_window_content_area_pos.y, scene_window_content_area_width, scene_window_content_area_height);
+	ImGuizmo::SetDrawlist();
+	ImGuizmo::SetOrthographic(false);
+	ImGuizmo::Enable(true);
+
+	if (App->scene->hierarchy.selected_game_object != nullptr)
+	{
+		RenderGizmo();
+	}
+
+	RenderEditorCameraGizmo();
 }
 
 void ModuleEditor::RenderGizmo()
@@ -169,6 +248,7 @@ void ModuleEditor::ShowSceneTab()
 		scene_window_content_area_height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
 
 		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
+		App->cameras->scene_camera->RecordEditorFrame(scene_window_content_area_width, scene_window_content_area_height);
 
 		ImGui::GetWindowDrawList()->AddImage(
 			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
@@ -177,13 +257,7 @@ void ModuleEditor::ShowSceneTab()
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
-		ImGuizmo::SetRect(scene_window_content_area_pos.x, scene_window_content_area_pos.y, scene_window_content_area_width, scene_window_content_area_height);
-		ImGuizmo::SetDrawlist();
-		ImGuizmo::SetOrthographic(false);
-		ImGuizmo::Enable(true);
-
-		App->editor->RenderEditorTools();
-		RenderEditorCameraGizmo();
+		App->editor->RenderGizmos(); // This should be render after rendering framebuffer texture.
 
 		if (App->cameras->IsMovementEnabled() && scene_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
 		{

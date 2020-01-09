@@ -27,7 +27,6 @@ public:
 	
 	void Render() const;
 	void RenderFrame(const ComponentCamera &camera);
-	void RenderMesh(const ComponentMesh &mesh) const;
 
 	ComponentMesh* CreateComponentMesh();
 	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
