@@ -29,7 +29,6 @@ public:
 	void RenderFrame(const ComponentCamera &camera);
 	void RenderMesh(const ComponentMesh &mesh) const;
 
-
 	ComponentMesh* CreateComponentMesh();
 	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
 	void GenerateQuadTree();
@@ -54,6 +53,9 @@ private:
 
 	void GetCullingMeshes(const ComponentCamera *camera);
 
+public:
+	OLQuadTree ol_quadtree;
+
 private:
 	void* context = nullptr;
 
@@ -73,7 +75,6 @@ private:
 
 	std::vector<ComponentMesh*> meshes;
 	std::vector<ComponentMesh*> meshes_to_render;
-	OLQuadTree ol_quadtree;
 	Timer * rendering_measure_timer = new Timer();
 	friend class ModuleDebug;
 };

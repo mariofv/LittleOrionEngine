@@ -3,6 +3,7 @@
 #include "ModuleCamera.h"
 #include "ModuleDebug.h"
 #include "ModuleDebugDraw.h"
+#include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
@@ -147,6 +148,7 @@ void ModuleRender::Render() const
 {
 	BROFILER_CATEGORY("Global Render",Profiler::Color::Aqua);
 	App->ui->Render();
+	App->editor->RenderEditorTools();
 	SDL_GL_SwapWindow(App->window->window);
 	App->time->EndFrame();
 }
@@ -155,28 +157,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
 	BROFILER_CATEGORY("Render Frame", Profiler::Color::Azure);
   
-	if (App->debug->show_grid)
-	{
-		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
-	}
-	if (App->debug->show_camera_frustum && App->scene->hierarchy.selected_game_object != nullptr)
-	{
-		Component * selected_camera_component = App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA);
-		if (selected_camera_component != nullptr) {
-			ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
-			dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
-		}
-	}
-	if (App->debug->show_quadtree)
-	{
-		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree)
-		{
-			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
-			float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
-			dd::aabb(quadtree_node_min, quadtree_node_max, float3::one);
-		}
-	}
-
 	rendering_measure_timer->Start();
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 
