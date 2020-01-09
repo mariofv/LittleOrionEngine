@@ -145,7 +145,7 @@ void ModuleEditor::RenderBoundingBoxes() const
 	for (auto& mesh : App->renderer->meshes_to_render)
 	{
 		GameObject* mesh_game_object = mesh->owner;
-		if (mesh_game_object->aabb.IsEmpty())
+		if (!mesh_game_object->aabb.IsEmpty())
 		{
 			dd::aabb(mesh_game_object->aabb.bounding_box.minPoint, mesh_game_object->aabb.bounding_box.maxPoint, float3::one);
 		}
