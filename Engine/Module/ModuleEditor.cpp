@@ -74,7 +74,7 @@ void ModuleEditor::RenderDebugDraws()
 
 	if (App->scene->hierarchy.selected_game_object != nullptr)
 	{
-		RenderCameraFrustum();
+		RenderCameraDisplays();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 
@@ -86,15 +86,31 @@ void ModuleEditor::RenderDebugDraws()
 	App->debug_draw->Render(*App->cameras->scene_camera);
 }
 
-void ModuleEditor::RenderCameraFrustum() const
+void ModuleEditor::RenderCameraDisplays() const
 {
-	if (App->debug->show_camera_frustum)
-	{
-		Component * selected_camera_component = App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA);
-		if (selected_camera_component != nullptr) {
-			ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
+	Component * selected_camera_component = App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA);
+	if (selected_camera_component != nullptr) {
+		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
+		
+		if (App->debug->show_camera_frustum)
+		{
 			dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
 		}
+
+		RenderCameraPreview();
+	}
+}
+
+void ModuleEditor::RenderCameraPreview() const
+{
+	Component * selected_camera_component = App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA);
+	if (selected_camera_component != nullptr) {
+		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
+		if (ImGui::Begin("Camera preview"))
+		{
+		
+		}
+		ImGui::End();
 	}
 }
 

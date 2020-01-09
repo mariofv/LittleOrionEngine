@@ -29,7 +29,8 @@ public:
 	void ShowGizmoControls();
 
 private:
-	void RenderCameraFrustum() const;
+	void RenderCameraDisplays() const;
+	void RenderCameraPreview() const;
 	void RenderOutline() const;
 	void RenderBoundingBoxes() const;
 
