@@ -28,7 +28,7 @@ private:
 	void ShowMainViewWindow();
 	void ShowSceneTab();
 	void ShowGameTab();
-	void ShowEmptyGameTab(const char * title) const;
+	void ShowEmptyGameTab() const;
 
 	void ShowInspectorWindow();
 	void ShowAddNewComponentButton();

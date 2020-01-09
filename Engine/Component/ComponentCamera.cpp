@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "GameObject.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
@@ -85,6 +86,7 @@ void ComponentCamera::Save(Config& config) const
 	config.AddFloat(camera_frustum.verticalFov, "VerticalFOV");
 	config.AddUInt((uint64_t)camera_clear_mode, "ClearMode");
 	config.AddColor(float4(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f), "ClearColor");
+	config.AddInt(depth, "Depth");
 }
 
 void ComponentCamera::Load(const Config& config)
@@ -122,9 +124,11 @@ void ComponentCamera::Load(const Config& config)
 
 	float4 clear_color;
 	config.GetColor("ClearColor", clear_color, float4(0.f, 0.f, 0.f, 1.f));
-	camera_clear_color[0] = clear_color.x,
-	camera_clear_color[1] = clear_color.y,
-	camera_clear_color[2] = clear_color.z,
+	camera_clear_color[0] = clear_color.x;
+	camera_clear_color[1] = clear_color.y;
+	camera_clear_color[2] = clear_color.z;
+
+	depth = config.GetInt("Depth", 0);
 
 	GenerateMatrices();
 }
@@ -170,6 +174,14 @@ void ComponentCamera::RecordFrame(float width, float height)
 
 	App->renderer->RenderFrame(*this);
 
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void ComponentCamera::RecordDebugDraws(float width, float height) const
+{
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glViewport(0, 0, width, height);
+	App->editor->RenderDebugDraws();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -333,22 +345,21 @@ void ComponentCamera::MoveRight()
 	owner->transform.Translate(camera_frustum.WorldRight().ScaledToLength(distance));
 }
 
-void ComponentCamera::OrbitCameraWithMouseMotion(const float2 &motion)
+void ComponentCamera::OrbitCameraWithMouseMotion(const float2 &motion, const float3& focus_point)
 {
 	if (math::Abs(motion.y) > 1.5)
 	{
-		App->cameras->scene_camera->OrbitY(motion.y);
+		App->cameras->scene_camera->OrbitY(motion.y, focus_point);
 	}
 
 	if (math::Abs(motion.x) > 1.5)
 	{
-		App->cameras->scene_camera->OrbitX(motion.x);
+		App->cameras->scene_camera->OrbitX(motion.x, focus_point);
 	}
 }
 
-void ComponentCamera::OrbitX(float angle)
+void ComponentCamera::OrbitX(float angle, const float3& focus_point)
 {
-	float3 focus_point = float3::zero;
 	float3 cam_focus_vector = owner->transform.GetTranslation() - focus_point;
 
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
@@ -360,9 +371,8 @@ void ComponentCamera::OrbitX(float angle)
 	LookAt(focus_point);
 }
 
-void ComponentCamera::OrbitY(float angle)
+void ComponentCamera::OrbitY(float angle, const float3& focus_point)
 {
-	float3 focus_point = float3::zero;
 	float3 cam_focus_vector = owner->transform.GetTranslation() - focus_point;
 
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
@@ -424,6 +434,21 @@ void ComponentCamera::SetOrthographicView()
 void ComponentCamera::SetSpeedUp(bool is_speeding_up)
 {
 	speed_up = is_speeding_up ? SPEED_UP_FACTOR : 1.f;
+}
+
+void ComponentCamera::SetViewMatrix(const float4x4& view_matrix)
+{
+	float3x4 reduced_view_matrix;
+	reduced_view_matrix.SetRow(0, view_matrix.Row3(0).ptr());
+	reduced_view_matrix.SetRow(1, view_matrix.Row3(1).ptr());
+	reduced_view_matrix.SetRow(2, view_matrix.Row3(2).ptr());
+
+	reduced_view_matrix.InverseOrthonormal(); // Transformation to world matrix
+	float3 front = -reduced_view_matrix.Col3(2);
+	
+	Quat rotation = Quat::LookAt(owner->transform.GetFrontVector(), front, owner->transform.GetUpVector(), float3::unitY);
+	owner->transform.Rotate(rotation);
+	
 }
 
 float4x4 ComponentCamera::GetViewMatrix() const

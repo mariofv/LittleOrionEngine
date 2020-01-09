@@ -1,8 +1,9 @@
 #include "ModuleScene.h"
 #include "Application.h"
+#include "ModuleCamera.h"
+#include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
 #include "ModuleRender.h"
-#include "ModuleCamera.h"
 #include "Component/ComponentCamera.h"
 #include "Config.h"
 
@@ -15,21 +16,7 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
-
-	App->model_loader->LoadModel(BUNNY_MODEL_PATH);
-
-	GameObject * camera = CreateGameObject();
-	camera->name = "Main Camera";
-	ComponentCamera * component_camera = static_cast<ComponentCamera*>(camera->CreateComponent(Component::ComponentType::CAMERA));
-	App->cameras->active_camera = component_camera;
-	App->cameras->active_camera->SetPosition(float3(0.f, 100.f, -100.f));
-	App->cameras->active_camera->SetFarDistance(500);
-
-	GameObject * light_gameobject = App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
-	light_gameobject->name = "Light";
-	light_gameobject->CreateComponent(Component::ComponentType::LIGHT);
-	light_gameobject->transform.SetTranslation(float3(4.f, 1.5f, -1.5f));
-
+	App->editor->OpenScene(DEFAULT_SCENE_PATH);
 	App->renderer->GenerateQuadTree(); // TODO: Move this to load scene and save scene
 	return true;
 }
@@ -110,8 +97,7 @@ GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 
 void ModuleScene::DeleteCurrentScene()
 {
-	delete root;
-	game_objects_ownership.clear();
+	RemoveGameObject(root);
 	hierarchy.selected_game_object = nullptr;
 }
 
@@ -157,109 +143,4 @@ void ModuleScene::Load(const Config& serialized_scene)
 		created_game_object->Load(game_objects_config[i]);
 	}
 	App->renderer->GenerateQuadTree();
-}
-
-void ModuleScene::MousePicking(const float2& mouse_position)
-{
-	if (gizmo_hovered)
-	{
-		return;
-	}
-
-	float2 window_center_pos = imgui_window_content_pos + float2(imgui_window_content_width, imgui_window_content_height) / 2;
-
-	float2 window_mouse_position = mouse_position - window_center_pos;
-	float2 window_mouse_position_normalized = float2(window_mouse_position.x * 2 / imgui_window_content_width, - window_mouse_position.y * 2 / imgui_window_content_height);
-
-	LineSegment ray;
-	App->cameras->scene_camera->GetRay(window_mouse_position_normalized, ray);
-	GameObject* intersected = App->renderer->GetRaycastIntertectedObject(ray);
-	hierarchy.selected_game_object = intersected;
-}
-
-void ModuleScene::ShowFrameBufferTab(ComponentCamera & camera_frame_buffer_to_show, const char * title)
-{
-	if (ImGui::BeginTabItem(title))
-	{
-		scene_window_is_hovered = ImGui::IsWindowHovered(); // TODO: This should be something like ImGui::IsTabHovered (such function doesn't exist though)
-
-		ImVec2 imgui_window_pos_ImVec2 = ImGui::GetWindowPos();
-		float2 imgui_window_pos = float2(imgui_window_pos_ImVec2.x, imgui_window_pos_ImVec2.y);
-
-		ImVec2 max_point_content_area_ImVec2 = ImGui::GetWindowContentRegionMax();
-		max_point_content_area_ImVec2 = ImVec2(
-			max_point_content_area_ImVec2.x + imgui_window_pos_ImVec2.x,
-			max_point_content_area_ImVec2.y + imgui_window_pos_ImVec2.y
-		); // Pass from window space to screen space
-		float2 max_point_content_area = float2(max_point_content_area_ImVec2.x, max_point_content_area_ImVec2.y);
-
-		ImVec2 window_content_pos_ImVec2 = ImGui::GetCursorScreenPos();
-		imgui_window_content_pos = float2(window_content_pos_ImVec2.x, window_content_pos_ImVec2.y);
-
-		imgui_window_content_width = max_point_content_area.x - imgui_window_content_pos.x;
-		imgui_window_content_height = max_point_content_area.y - imgui_window_content_pos.y;
-
-		camera_frame_buffer_to_show.RecordFrame(imgui_window_content_width, imgui_window_content_height);
-
-		ImGui::GetWindowDrawList()->AddImage(
-			(void *)camera_frame_buffer_to_show.GetLastRecordedFrame(),
-			window_content_pos_ImVec2,
-			max_point_content_area_ImVec2,
-			ImVec2(0, 1),
-			ImVec2(1, 0)
-		);
-		
-		if (hierarchy.selected_game_object != nullptr)
-		{
-			DrawGizmo(camera_frame_buffer_to_show, *hierarchy.selected_game_object);
-		}
-		
-		if (App->cameras->IsMovementEnabled() && scene_window_is_hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
-		{
-			ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
-		}
-		ImGui::EndTabItem();
-	}
-}
-
-void ModuleScene::DrawGizmo(const ComponentCamera& camera, GameObject& game_object)
-{
-	ImGuizmo::SetRect(imgui_window_content_pos.x, imgui_window_content_pos.y, imgui_window_content_height, imgui_window_content_height);
-	ImGuizmo::SetDrawlist();
-	ImGuizmo::Enable(true);
-	ImGuizmo::SetOrthographic(false);
-
-	float4x4 model_global_matrix_transposed = game_object.transform.GetGlobalModelMatrix().Transposed();
-
-	ImGuizmo::Manipulate(
-		camera.GetViewMatrix().Transposed().ptr(),
-		camera.GetProjectionMatrix().Transposed().ptr(),
-		gizmo_operation,
-		ImGuizmo::WORLD,
-		model_global_matrix_transposed.ptr()
-	);
-
-	gizmo_hovered = ImGuizmo::IsOver();
-	if (ImGuizmo::IsUsing())
-	{
-		game_object.transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
-	}
-}
-
-void ModuleScene::ShowGizmoControls()
-{
-	if (ImGui::Button(ICON_FA_ARROWS_ALT))
-	{
-		gizmo_operation = ImGuizmo::TRANSLATE;
-	}
-	ImGui::SameLine();
-	if (ImGui::Button(ICON_FA_SYNC_ALT))
-	{
-		gizmo_operation = ImGuizmo::ROTATE;
-	}
-	ImGui::SameLine();
-	if (ImGui::Button(ICON_FA_EXPAND_ARROWS_ALT))
-	{
-		gizmo_operation = ImGuizmo::SCALE;
-	}
 }

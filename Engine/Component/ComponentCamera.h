@@ -32,6 +32,7 @@ public:
 	float GetHeigt() const;
 
 	void RecordFrame(float width, float height);
+	void RecordDebugDraws(float width, float height) const;
 	GLuint GetLastRecordedFrame() const;
 
 	void SetFOV(float fov);
@@ -55,9 +56,9 @@ public:
 	void Center(const AABB &bounding_box);
 	void Focus(const AABB &bounding_box);
 
-	void OrbitCameraWithMouseMotion(const float2 &motion);
-	void OrbitX(float angle);
-	void OrbitY(float angle);
+	void OrbitCameraWithMouseMotion(const float2 &motion, const float3& focus_point);
+	void OrbitX(float angle, const float3& focus_point);
+	void OrbitY(float angle, const float3& focus_point);
 
 	void RotateCameraWithMouseMotion(const float2 &motion);
 	void RotatePitch(float angle);
@@ -68,6 +69,7 @@ public:
 
 	void SetSpeedUp(bool is_speeding_up);
 
+	void SetViewMatrix(const float4x4& view_matrix);
 	float4x4 GetViewMatrix() const;
 	float4x4 GetProjectionMatrix() const;
 	float4x4 GetInverseClipMatrix() const;
@@ -105,6 +107,8 @@ public:
 	float camera_rotation_speed = 0.000625f;
 
 	float camera_clear_color[3] = {0.0f, 0.0f, 0.0f};
+
+	int depth = 0;
 
 	float4x4 proj;
 	float4x4 view;

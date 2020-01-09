@@ -95,13 +95,14 @@ void ModuleTime::Play()
 {
 	if (!game_time_clock->Started())
 	{
-		App->editor->SaveSceneTmp();
+		App->editor->SaveScene(TMP_SCENE_PATH);
 		game_time_clock->Start();
 	}
 	else
 	{
 		game_time_clock->Stop();
-		App->editor->LoadSceneTmp();
+		App->editor->OpenScene(TMP_SCENE_PATH);
+		remove(TMP_SCENE_PATH);
 	}
 }
 
