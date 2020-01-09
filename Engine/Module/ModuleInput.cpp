@@ -71,7 +71,14 @@ update_status ModuleInput::PreUpdate()
 			else if (event.motion.state & SDL_BUTTON_LMASK && App->editor->scene_window_is_hovered && App->cameras->IsOrbiting())
 			{
 				float2 motion(event.motion.xrel, event.motion.yrel);
-				App->cameras->scene_camera->OrbitCameraWithMouseMotion(motion);
+				if (App->scene->hierarchy.selected_game_object != nullptr)
+				{
+					App->cameras->scene_camera->OrbitCameraWithMouseMotion(motion, App->scene->hierarchy.selected_game_object->transform.GetGlobalTranslation());
+				}
+				else
+				{
+					App->cameras->scene_camera->RotateCameraWithMouseMotion(motion);
+				}
 			}
 			break;
 
@@ -91,7 +98,7 @@ update_status ModuleInput::PreUpdate()
 			{
 				App->cameras->SetMovement(true);
 			}
-			if (event.button.button == SDL_BUTTON_LEFT && App->editor->scene_window_is_hovered)
+			if (event.button.button == SDL_BUTTON_LEFT && App->editor->scene_window_is_hovered && !App->cameras->IsOrbiting())
 			{
 				float2 mouse_position = float2(event.button.x, event.button.y);
 				App->editor->MousePicking(mouse_position);

@@ -22,6 +22,7 @@ public:
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 	
+	float3 ComponentTransform::GetGlobalTranslation() const;
 	float3 GetTranslation() const;
 	void SetTranslation(const float3 translation);
 	void Translate(const float3 &translation);

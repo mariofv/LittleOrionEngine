@@ -345,22 +345,21 @@ void ComponentCamera::MoveRight()
 	owner->transform.Translate(camera_frustum.WorldRight().ScaledToLength(distance));
 }
 
-void ComponentCamera::OrbitCameraWithMouseMotion(const float2 &motion)
+void ComponentCamera::OrbitCameraWithMouseMotion(const float2 &motion, const float3& focus_point)
 {
 	if (math::Abs(motion.y) > 1.5)
 	{
-		App->cameras->scene_camera->OrbitY(motion.y);
+		App->cameras->scene_camera->OrbitY(motion.y, focus_point);
 	}
 
 	if (math::Abs(motion.x) > 1.5)
 	{
-		App->cameras->scene_camera->OrbitX(motion.x);
+		App->cameras->scene_camera->OrbitX(motion.x, focus_point);
 	}
 }
 
-void ComponentCamera::OrbitX(float angle)
+void ComponentCamera::OrbitX(float angle, const float3& focus_point)
 {
-	float3 focus_point = float3::zero;
 	float3 cam_focus_vector = owner->transform.GetTranslation() - focus_point;
 
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
@@ -372,9 +371,8 @@ void ComponentCamera::OrbitX(float angle)
 	LookAt(focus_point);
 }
 
-void ComponentCamera::OrbitY(float angle)
+void ComponentCamera::OrbitY(float angle, const float3& focus_point)
 {
-	float3 focus_point = float3::zero;
 	float3 cam_focus_vector = owner->transform.GetTranslation() - focus_point;
 
 	const float adjusted_angle = App->time->real_time_delta_time * camera_rotation_speed * -angle;
