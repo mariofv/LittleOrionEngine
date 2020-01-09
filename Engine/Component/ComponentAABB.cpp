@@ -11,10 +11,17 @@ ComponentAABB::ComponentAABB(GameObject * owner) : Component(owner, ComponentTyp
 {
 
 }
+
 void ComponentAABB::Update()
 {
 	GenerateBoundingBox();
 }
+
+void ComponentAABB::PostUpdate()
+{
+	GenerateGlobalBoundingBox();
+}
+
 void ComponentAABB::Save(Config& config) const
 {
 
@@ -53,6 +60,15 @@ void ComponentAABB::GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vert
 	for (unsigned int i = 0; i < vertices.size(); ++i)
 	{
 		bounding_box.Enclose(vertices[i].position);
+	}
+}
+
+void ComponentAABB::GenerateGlobalBoundingBox()
+{
+	global_bounding_box = bounding_box;
+	for (auto& child : owner->children)
+	{
+		global_bounding_box.Enclose(child->aabb.global_bounding_box);
 	}
 }
 

@@ -37,6 +37,8 @@ public:
 private:
 	GameObject *root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
+
+	friend class ModuleEditor;
 };
 
 #endif // _MODULSESCENE_H

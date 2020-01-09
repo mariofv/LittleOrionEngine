@@ -20,6 +20,7 @@ public:
 
 public:
 	bool show_bounding_boxes = false;
+	bool show_global_bounding_boxes = false;
 	bool show_grid = true;
 	bool show_camera_frustum = true;
 	bool show_quadtree = false;

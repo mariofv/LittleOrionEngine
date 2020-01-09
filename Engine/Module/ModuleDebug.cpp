@@ -53,6 +53,7 @@ void ModuleDebug::ShowDebugWindow()
 	{
 		ImGui::Checkbox("Grid", &show_grid);
 		ImGui::Checkbox("Bounding boxes", &show_bounding_boxes);
+		ImGui::Checkbox("Global bounding boxes", &show_global_bounding_boxes);
 		ImGui::Checkbox("Camera Frustum", &show_camera_frustum);
 		ImGui::Checkbox("QuadTree", &show_quadtree);
 		ImGui::Separator();

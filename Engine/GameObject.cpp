@@ -110,6 +110,7 @@ void GameObject::Update()
 		children[i]->Update();
 	}
 
+	aabb.PostUpdate();
 }
 
 void GameObject::Save(Config& config) const

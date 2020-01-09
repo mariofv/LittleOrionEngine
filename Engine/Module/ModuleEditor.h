@@ -32,6 +32,7 @@ private:
 	void RenderCameraFrustum() const;
 	void RenderOutline() const;
 	void RenderBoundingBoxes() const;
+	void RenderGlobalBoundingBoxes() const;
 
 	void RenderEditorDraws();
 	void RenderGizmo();

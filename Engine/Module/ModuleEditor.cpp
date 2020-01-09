@@ -83,6 +83,11 @@ void ModuleEditor::RenderDebugDraws()
 		RenderBoundingBoxes();
 	}
 
+	if (App->debug->show_global_bounding_boxes)
+	{
+		RenderGlobalBoundingBoxes();
+	}
+
 	App->debug_draw->Render(*App->cameras->scene_camera);
 }
 
@@ -152,6 +157,14 @@ void ModuleEditor::RenderBoundingBoxes() const
 		{
 			dd::aabb(mesh_game_object->aabb.bounding_box.minPoint, mesh_game_object->aabb.bounding_box.maxPoint, float3::one);
 		}
+	}
+}
+
+void ModuleEditor::RenderGlobalBoundingBoxes() const
+{
+	for (auto& object : App->scene->game_objects_ownership)
+	{
+		dd::aabb(object->aabb.global_bounding_box.minPoint, object->aabb.global_bounding_box.maxPoint, float3::one);
 	}
 }
 
