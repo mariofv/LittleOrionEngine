@@ -454,6 +454,7 @@ void EngineUI::ShowAboutWindow()
 		MenuURL("Debug Draw", "https://github.com/glampert/debug-draw/");
 		MenuURL("par_shapes", "https://github.com/prideout/par/blob/master/par_shapes.h");
 		MenuURL("ImGuizmo", "https://github.com/CedricGuillemet/ImGuizmo");
+		MenuURL("PhysFS 3.0.2", "http://icculus.org/physfs/");
 
 		ImGui::Separator();
 
