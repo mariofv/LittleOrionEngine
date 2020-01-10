@@ -4,7 +4,7 @@
 #include <algorithm>
 
 #include <assimp/scene.h>
-
+#include "Brofiler/Brofiler.h"
 MaterialImporter::MaterialImporter()
 {
 	APP_LOG_INIT("Initializing DevIL image loader.")
@@ -112,6 +112,7 @@ std::string MaterialImporter::ImportMaterialData(const std::string & material_pa
 }
 std::shared_ptr<Texture> MaterialImporter::Load(const std::string& file_path) const{
 
+	BROFILER_CATEGORY("Load Texture", Profiler::Color::BurlyWood);
 	//Check if the texture is already loaded
 	auto it = std::find_if(texture_cache.begin(), texture_cache.end(), [file_path](const std::shared_ptr<Texture> & texture)
 	{
@@ -122,23 +123,14 @@ std::shared_ptr<Texture> MaterialImporter::Load(const std::string& file_path) co
 		APP_LOG_INIT("Model %s exists in cache.", file_path.c_str());
 		return *it;
 	}
+	size_t size;
+	DDS_HEADER ddsHeader;
+	char * data = LoadCompressedDDS(file_path.c_str(), ddsHeader,size);
+	size_t dds_header_offset = sizeof(DDS_HEADER) + magic_number;
 
-	ILuint image;
-	ilGenImages(1, &image);
-	ilBindImage(image);
-
-	int width, height;
-	ILubyte * data = LoadImageData(file_path, IL_DDS, width, height);
-
-	if (data == NULL)
-	{
-		ilDeleteImages(1, &image);
-		return nullptr;
-	}
-	std::shared_ptr<Texture> loaded_texture = std::make_shared<Texture>(data, width, height, file_path);
-	loaded_texture->GenerateMipMap();
+	std::shared_ptr<Texture> loaded_texture = std::make_shared<Texture>(data + dds_header_offset, size - dds_header_offset,ddsHeader.dwWidth, ddsHeader.dwHeight, file_path);
 	texture_cache.push_back(loaded_texture);
-	ilDeleteImages(1, &image);
+	free(data);
 	return loaded_texture;
 }
 
@@ -177,20 +169,16 @@ unsigned int MaterialImporter::LoadCubemap(std::vector<std::string> faces_paths)
 	glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
 	ILuint image;
 
-	int width, height;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
-		ilGenImages(1, &image);
-		ilBindImage(image);
-		unsigned char * data = LoadImageData(faces_paths[i].c_str(), IL_DDS, width, height);
-
+		size_t size;
+		DDS_HEADER ddsHeader;
+		char * data = LoadCompressedDDS(faces_paths[i].c_str(), ddsHeader, size);
+		size_t dds_header_offset = sizeof(DDS_HEADER) + magic_number;
 		if (data)
 		{
-			//TODO: Investigate how to load dds into cubemao array
-			size_t size = ((width / 4) * (height / 4) * 8);
-			glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_COMPRESSED_RGB_S3TC_DXT1_EXT, width, height, 0, size, data);
-			//glTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i,0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
-			ilDeleteImages(1, &image);
+			glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, ddsHeader.dwWidth, ddsHeader.dwHeight, 0, size - dds_header_offset, data + dds_header_offset);
+			free(data);
 		}
 	}
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -248,4 +236,11 @@ Texture::TextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureTyp
 		return Texture::TextureType::UNKNOWN;
 		break;
 	}
+}
+
+char * MaterialImporter::LoadCompressedDDS(const std::string& file_path, DDS_HEADER & dds_header, size_t & dds_content_size) const
+{
+	char * data = App->filesystem->Load(file_path.c_str(), dds_content_size);
+	memcpy(&dds_header, data + magic_number, sizeof(DDS_HEADER));
+	return data;
 }

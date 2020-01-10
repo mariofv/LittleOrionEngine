@@ -18,7 +18,7 @@
 #include "imgui_impl_sdl.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
-
+#include "Brofiler/Brofiler.h"
 
 // Called before render is available
 bool ModuleInput::Init()
@@ -43,6 +43,7 @@ bool ModuleInput::Init()
 // Called every draw update
 update_status ModuleInput::PreUpdate()
 {
+	BROFILER_CATEGORY("Inputs PreUpdate", Profiler::Color::BlueViolet);
 	SDL_PumpEvents();
 
 	SDL_Event event;

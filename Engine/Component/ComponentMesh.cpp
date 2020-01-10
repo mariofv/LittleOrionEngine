@@ -9,10 +9,12 @@
 
 ComponentMesh::ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH)
 {
+	owner->aabb.GenerateBoundingBox();
 }
 
 ComponentMesh::ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner) : mesh_to_render(mesh_to_render), Component(owner, ComponentType::MESH)
 {
+	owner->aabb.GenerateBoundingBox();
 }
 
 ComponentMesh::ComponentMesh() : Component(nullptr, ComponentType::MESH)
@@ -22,6 +24,7 @@ ComponentMesh::ComponentMesh() : Component(nullptr, ComponentType::MESH)
 void ComponentMesh::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
 {
 	this->mesh_to_render = mesh_to_render;
+	owner->aabb.GenerateBoundingBox();
 }
 
 ComponentMesh::~ComponentMesh()

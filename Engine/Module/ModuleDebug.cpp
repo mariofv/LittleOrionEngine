@@ -40,7 +40,6 @@ void ModuleDebug::CreateHousesRandom() const
 		float x = static_cast<float>(std::rand() % max_dispersion_x);
 		float z = static_cast<float>(std::rand() % max_dispersion_z);
 		loaded_house->transform.SetTranslation(float3(x, 0, z));
-		loaded_house->Update();
 		houses->AddChild(loaded_house);
 	}
 	houses->SetStatic(true);

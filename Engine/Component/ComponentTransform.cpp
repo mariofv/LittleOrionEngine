@@ -2,10 +2,11 @@
 #include "GameObject.h"
 #include "Utils.h"
 #include "UI/ComponentsUI.h"
+#include "Brofiler/Brofiler.h"
 
 ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM) {
 
-	GenerateModelMatrix();
+	OnTransformUpdate();
 }
 
 ComponentTransform::ComponentTransform(GameObject * owner, const float3 translation, const Quat rotation, const float3 scale) :
@@ -14,12 +15,7 @@ ComponentTransform::ComponentTransform(GameObject * owner, const float3 translat
 	rotation(rotation),
 	scale(scale)
 {
-	GenerateModelMatrix();
-}
-
-void ComponentTransform::Update()
-{
-	GenerateGlobalModelMatrix();
+	OnTransformUpdate();
 }
 
 void ComponentTransform::Save(Config& config) const
@@ -39,7 +35,7 @@ void ComponentTransform::Load(const Config& config)
 	config.GetQuat("Rotation", rotation, Quat::identity);
 	config.GetFloat3("Scale", scale, float3::one);
 
-	GenerateModelMatrix();
+	OnTransformUpdate();
 }
 
 float3 ComponentTransform::GetGlobalTranslation() const
@@ -55,13 +51,13 @@ float3 ComponentTransform::GetTranslation() const
 void ComponentTransform::SetTranslation(const float3 translation)
 {
 	this->translation = translation;
-	GenerateModelMatrix(); // TODO: Change this to Update()
+	OnTransformUpdate();
 }
 
 void ComponentTransform::Translate(const float3 &translation)
 {
 	this->translation += translation;
-	GenerateModelMatrix(); // TODO: Change this to Update()
+	OnTransformUpdate();
 }
 
 Quat ComponentTransform::GetRotation() const
@@ -74,7 +70,7 @@ void ComponentTransform::SetRotation(const float3x3 &rotation)
 	this->rotation = rotation.ToQuat();
 	rotation_radians = rotation.ToEulerXYZ();
 	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
-	GenerateModelMatrix(); // TODO: Change this to Update()
+	OnTransformUpdate();
 }
 
 void ComponentTransform::Rotate(const Quat &rotation)
@@ -83,7 +79,7 @@ void ComponentTransform::Rotate(const Quat &rotation)
 	rotation_radians = rotation * rotation_radians;
 	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
 
-	GenerateModelMatrix(); // TODO: Change this to Update()
+	OnTransformUpdate();
 }
 
 void ComponentTransform::Rotate(const float3x3 &rotation)
@@ -92,7 +88,7 @@ void ComponentTransform::Rotate(const float3x3 &rotation)
 	rotation_radians = rotation * rotation_radians;
 	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
 
-	GenerateModelMatrix(); // TODO: Change this to Update()
+	OnTransformUpdate();
 }
 
 float3 ComponentTransform::ComponentTransform::GetScale() const
@@ -105,7 +101,7 @@ void ComponentTransform::SetScale(const float3 &scale)
 {
 	this->scale = scale;
 	
-	GenerateModelMatrix(); // TODO: Change this to Update()
+	OnTransformUpdate();
 }
 
 float3 ComponentTransform::GetUpVector() const
@@ -123,9 +119,15 @@ float3 ComponentTransform::GetRightVector() const
 	return Cross(GetFrontVector(), GetUpVector());
 }
 
-void ComponentTransform::GenerateModelMatrix()
+void ComponentTransform::OnTransformUpdate()
 {
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
+	GenerateGlobalModelMatrix();
+	owner->aabb.GenerateBoundingBox();
+	for (auto & child : owner->children)
+	{
+		child->transform.OnTransformUpdate();
+	}
 }
 
 void ComponentTransform::GenerateGlobalModelMatrix()

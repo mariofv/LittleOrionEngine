@@ -139,8 +139,6 @@ bool ModuleRender::CleanUp()
 	{
 		mesh->owner->RemoveComponent(mesh);
 	}
-	meshes.clear();
-	meshes_to_render.clear();
 	return true;
 }
 
@@ -148,6 +146,7 @@ void ModuleRender::Render() const
 {
 	BROFILER_CATEGORY("Global Render",Profiler::Color::Aqua);
 	App->ui->Render();
+	BROFILER_CATEGORY("Swap Window (VSYNC)", Profiler::Color::Aquamarine);
 	SDL_GL_SwapWindow(App->window->window);
 	App->time->EndFrame();
 }
@@ -180,6 +179,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 {
+	BROFILER_CATEGORY("Get culling meshes", Profiler::Color::Lavender);
 	meshes_to_render.clear();
 
 	std::copy_if(meshes.begin(),

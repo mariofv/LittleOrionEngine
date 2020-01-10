@@ -5,7 +5,7 @@
 #include <IL/ilut.h>
 
 
-Texture::Texture(unsigned char * data, int width, int height, const std::string& path, TextureType type) : width(width), height(height), texture_path(path), type(type)
+Texture::Texture(char * data, size_t image_size, int width, int height, const std::string& path, TextureType type) : image_size(image_size), width(width), height(height), texture_path(path), type(type)
 {
 	InitTexture(data);
 }
@@ -17,7 +17,7 @@ Texture::~Texture()
 	glDeleteTextures(1, &opengl_texture);
 }
 
-void Texture::InitTexture(unsigned char * data)
+void Texture::InitTexture(char * data)
 {
 	glGenTextures(1, &opengl_texture);
 	glBindTexture(GL_TEXTURE_2D, opengl_texture);
@@ -35,11 +35,9 @@ void Texture::InitTexture(unsigned char * data)
 	mag_filter = GL_LINEAR;
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
 
-	
-
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
-
+	glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height, 0, image_size, data);
 	glBindTexture(GL_TEXTURE_2D, 0);
+	GenerateMipMap();
 }
 
 void Texture::GenerateMipMap()

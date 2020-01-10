@@ -34,7 +34,7 @@ void FileExplorerUI::WindowShowFilesInFolder(ModuleFileSystem::File & file) {
 	{
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
-		size_t subfolders = App->filesystem->GetNumberOfSubFolders(child->file_path);
+		size_t subfolders = App->filesystem->GetNumberOfFileSubFolders(child);
 		std::string filename = ICON_FA_FOLDER " " + child->filename;
 		if (subfolders == 0)
 		{
@@ -62,7 +62,6 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 	size_t files_count = 0;
 
 	float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-
 	for (auto & file : files_in_selected_folder)
 	{
 			std::string item_name;

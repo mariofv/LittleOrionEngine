@@ -225,26 +225,16 @@ void ModuleFileSystem::GetAllFilesRecursive(std::shared_ptr<File> root) const
 	}
 }
 
-size_t ModuleFileSystem::GetNumberOfSubFolders(const std::string & path) const
+size_t ModuleFileSystem::GetNumberOfFileSubFolders(const std::shared_ptr<ModuleFileSystem::File> & file) const
 {
-	char **files_array = PHYSFS_enumerateFiles(path.c_str());
-	if (files_array == NULL)
-	{
-		APP_LOG_ERROR("Error reading directory: %s", PHYSFS_getLastError());
-		return 0;
-	}
-	char **i;
 	size_t subFiles = 0;
-	for (i = files_array; *i != NULL; i++)
+	for (auto & subFile : file->children)
 	{
-		std::shared_ptr<File> new_file = std::make_shared<File>(path, *i);
-		bool is_directory = new_file->file_type == FileType::DIRECTORY;
-		if (IsValidFileName(*i) && is_directory)
+		if (subFile->file_type == ModuleFileSystem::FileType::DIRECTORY)
 		{
-		++subFiles;
+			subFiles++;
 		}
 	}
-	PHYSFS_freeList(files_array);
 	return subFiles;
 }
 

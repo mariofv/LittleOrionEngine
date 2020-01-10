@@ -57,8 +57,8 @@ public:
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;
 
-	ComponentTransform transform;
 	ComponentAABB aabb;
+	ComponentTransform transform;
 
 	std::vector<Component*> components;
 

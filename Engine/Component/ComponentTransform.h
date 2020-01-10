@@ -16,7 +16,6 @@ public:
 
 	~ComponentTransform() = default;
 
-	void Update() override;
 	void Delete() override {};
 
 	void Save(Config& config) const override;
@@ -48,7 +47,7 @@ public:
 	void ShowComponentWindow() override;
 
 private:
-	void GenerateModelMatrix();
+	void OnTransformChange();
 
 private:
 	float3 translation = float3::zero;

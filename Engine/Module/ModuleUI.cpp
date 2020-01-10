@@ -12,6 +12,7 @@
 #include <ImGuizmo.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
+#include "Brofiler/Brofiler.h"
 
 // Called before render is available
 bool ModuleUI::Init()
@@ -65,6 +66,7 @@ update_status ModuleUI::Update()
 
 void ModuleUI::Render()
 {
+	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
 	editor_ui->ShowEngineUI();
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
