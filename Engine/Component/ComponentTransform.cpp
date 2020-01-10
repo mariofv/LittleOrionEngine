@@ -6,7 +6,7 @@
 
 ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM) {
 
-	OnTransformUpdate();
+	OnTransformChange();
 }
 
 ComponentTransform::ComponentTransform(GameObject * owner, const float3 translation, const Quat rotation, const float3 scale) :
@@ -15,7 +15,7 @@ ComponentTransform::ComponentTransform(GameObject * owner, const float3 translat
 	rotation(rotation),
 	scale(scale)
 {
-	OnTransformUpdate();
+	OnTransformChange();
 }
 
 void ComponentTransform::Save(Config& config) const
@@ -35,7 +35,7 @@ void ComponentTransform::Load(const Config& config)
 	config.GetQuat("Rotation", rotation, Quat::identity);
 	config.GetFloat3("Scale", scale, float3::one);
 
-	OnTransformUpdate();
+	OnTransformChange();
 }
 
 float3 ComponentTransform::GetGlobalTranslation() const
@@ -51,13 +51,13 @@ float3 ComponentTransform::GetTranslation() const
 void ComponentTransform::SetTranslation(const float3 translation)
 {
 	this->translation = translation;
-	OnTransformUpdate();
+	OnTransformChange();
 }
 
 void ComponentTransform::Translate(const float3 &translation)
 {
 	this->translation += translation;
-	OnTransformUpdate();
+	OnTransformChange();
 }
 
 Quat ComponentTransform::GetRotation() const
@@ -70,7 +70,7 @@ void ComponentTransform::SetRotation(const float3x3 &rotation)
 	this->rotation = rotation.ToQuat();
 	rotation_radians = rotation.ToEulerXYZ();
 	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
-	OnTransformUpdate();
+	OnTransformChange();
 }
 
 void ComponentTransform::Rotate(const Quat &rotation)
@@ -79,7 +79,7 @@ void ComponentTransform::Rotate(const Quat &rotation)
 	rotation_radians = rotation * rotation_radians;
 	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
 
-	OnTransformUpdate();
+	OnTransformChange();
 }
 
 void ComponentTransform::Rotate(const float3x3 &rotation)
@@ -88,7 +88,7 @@ void ComponentTransform::Rotate(const float3x3 &rotation)
 	rotation_radians = rotation * rotation_radians;
 	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
 
-	OnTransformUpdate();
+	OnTransformChange();
 }
 
 float3 ComponentTransform::ComponentTransform::GetScale() const
@@ -101,7 +101,7 @@ void ComponentTransform::SetScale(const float3 &scale)
 {
 	this->scale = scale;
 	
-	OnTransformUpdate();
+	OnTransformChange();
 }
 
 float3 ComponentTransform::GetUpVector() const
@@ -119,14 +119,14 @@ float3 ComponentTransform::GetRightVector() const
 	return Cross(GetFrontVector(), GetUpVector());
 }
 
-void ComponentTransform::OnTransformUpdate()
+void ComponentTransform::OnTransformChange()
 {
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
 	GenerateGlobalModelMatrix();
 	owner->aabb.GenerateBoundingBox();
 	for (auto & child : owner->children)
 	{
-		child->transform.OnTransformUpdate();
+		child->transform.OnTransformChange();
 	}
 }
 
