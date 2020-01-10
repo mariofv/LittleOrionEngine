@@ -20,18 +20,18 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 	{
 		if (ImGui::DragFloat3("Translation", &transform->translation[0], 0.01f))
 		{
-			transform->GenerateModelMatrix();
+			transform->OnTransformChange();
 		}
 
 		if (ImGui::DragFloat3("Rotation", &transform->rotation_degrees[0], 0.1f, -180.f, 180.f))
 		{
 			transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
 			transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
-			transform->GenerateModelMatrix();
+			transform->OnTransformChange();
 		}
 		if (ImGui::DragFloat3("Scale", &transform->scale[0], 0.01f))
 		{
-			transform->GenerateModelMatrix();
+			transform->OnTransformChange();
 		}
 	}
 }
