@@ -57,7 +57,11 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 		size_t separator = texture.find_last_of(":");
 		std::string texture_path = texture.substr(separator+1, texture.size());
 		std::string texture_type = texture.substr(0, separator);
-		componentMaterial->SetMaterialTexture(std::stoi(texture_type), App->material_importer->Load(texture_path));
+		std::shared_ptr<Texture> texture = App->material_importer->Load(texture_path);
+		if (texture.get() != nullptr)
+		{
+			componentMaterial->SetMaterialTexture(std::stoi(texture_type), App->material_importer->Load(texture_path));
+		}
 	}
 }
 

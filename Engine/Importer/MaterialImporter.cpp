@@ -126,12 +126,15 @@ std::shared_ptr<Texture> MaterialImporter::Load(const std::string& file_path) co
 	size_t size;
 	DDS_HEADER ddsHeader;
 	char * data = LoadCompressedDDS(file_path.c_str(), ddsHeader,size);
-	size_t dds_header_offset = sizeof(DDS_HEADER) + magic_number;
-
-	std::shared_ptr<Texture> loaded_texture = std::make_shared<Texture>(data + dds_header_offset, size - dds_header_offset,ddsHeader.dwWidth, ddsHeader.dwHeight, file_path);
-	texture_cache.push_back(loaded_texture);
-	free(data);
-	return loaded_texture;
+	if (data)
+	{
+		size_t dds_header_offset = sizeof(DDS_HEADER) + magic_number;
+		std::shared_ptr<Texture> loaded_texture = std::make_shared<Texture>(data + dds_header_offset, size - dds_header_offset, ddsHeader.dwWidth, ddsHeader.dwHeight, file_path);
+		texture_cache.push_back(loaded_texture);
+		free(data);
+		return loaded_texture;
+	}
+	return nullptr;
 }
 
 ILubyte * MaterialImporter::LoadImageData(const std::string& file_path, int image_type ,int & width, int & height ) const
@@ -241,6 +244,9 @@ Texture::TextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureTyp
 char * MaterialImporter::LoadCompressedDDS(const std::string& file_path, DDS_HEADER & dds_header, size_t & dds_content_size) const
 {
 	char * data = App->filesystem->Load(file_path.c_str(), dds_content_size);
-	memcpy(&dds_header, data + magic_number, sizeof(DDS_HEADER));
+	if (data) 
+	{
+		memcpy(&dds_header, data + magic_number, sizeof(DDS_HEADER));
+	}
 	return data;
 }

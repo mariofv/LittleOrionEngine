@@ -22,13 +22,15 @@ public:
 
 	void RemoveMeshFromCacheIfNeeded(const std::shared_ptr<Mesh> & mesh);
 private:
-	void ImportMesh(const aiMesh* file_path, const std::vector<std::string> & loaded_meshes_materials, const std::string& output_file) const;
+	void ImportMesh(const aiMesh* file_path, const std::vector<std::string> & loaded_meshes_materials, const aiVector3t<float> & scale, const std::string& output_file) const;
 	void ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file) const;
 
 private:
 	const std::string LIBRARY_MESHES_FOLDER = "Library/Meshes";
 	mutable std::vector<std::shared_ptr<Mesh>> mesh_cache;
 	mutable Timer performance_timer;
+public:
+	float scale_factor = 100.0f;
 };
 
 
