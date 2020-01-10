@@ -19,10 +19,11 @@ public:
 	void ShowDebugWindow();
 
 public:
-	bool show_bounding_boxes = true;
-	bool show_grid = false;
+	bool show_bounding_boxes = false;
+	bool show_global_bounding_boxes = false;
+	bool show_grid = true;
 	bool show_camera_frustum = true;
-	bool show_quadtree = true;
+	bool show_quadtree = false;
 
 	bool frustum_culling = false;
 	bool quadtree_culling = false;

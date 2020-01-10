@@ -3,6 +3,7 @@
 #include "ModuleCamera.h"
 #include "ModuleDebug.h"
 #include "ModuleDebugDraw.h"
+#include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
@@ -154,25 +155,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 {
 	BROFILER_CATEGORY("Render Frame", Profiler::Color::Azure);
   
-	if (App->debug->show_grid)
-	{
-		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
-		dd::axisTriad(math::float4x4::identity, 0.125f, 1.25f, 0, false);
-	}
-	if (App->debug->show_camera_frustum && App->cameras->active_camera != nullptr)
-	{
-		dd::frustum(App->cameras->active_camera->GetInverseClipMatrix(), float3::one);
-	}
-	if (App->debug->show_quadtree)
-	{
-		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree)
-		{
-			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
-			float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
-			dd::aabb(quadtree_node_min, quadtree_node_max, float3::one);
-		}
-	}
-
 	rendering_measure_timer->Start();
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 
@@ -184,15 +166,15 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	GetCullingMeshes(App->cameras->active_camera);
+	GetCullingMeshes(App->cameras->main_camera);
 	for (auto &mesh : meshes_to_render)
 	{
-		RenderMesh(*mesh);
+		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
+		mesh->Render();
+		glUseProgram(0);
 	}
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
-
-	App->debug_draw->Render(camera);
 }
 
 void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
@@ -231,53 +213,6 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 			meshes_to_render.push_back(object_mesh);
 		}
 	}
-}
-
-void ModuleRender::RenderMesh(const ComponentMesh &mesh) const
-{
-	BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
-	const GameObject& mesh_game_object = *mesh.owner;
-
-	if (App->debug->show_bounding_boxes && !mesh_game_object.aabb.IsEmpty())
-	{
-		dd::aabb(mesh_game_object.aabb.bounding_box.minPoint, mesh_game_object.aabb.bounding_box.maxPoint, float3::one);
-	}
-
-	if (App->scene->hierarchy.selected_game_object == &mesh_game_object)
-	{
-		glEnable(GL_STENCIL_TEST);
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilOp(GL_KEEP, GL_KEEP, GL_REPLACE);
-		glStencilMask(0xFF);
-	}
-
-	mesh.Render();
-
-	if (App->scene->hierarchy.selected_game_object == &mesh_game_object)
-	{
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		glDisable(GL_DEPTH_TEST);
-
-		GLuint outline_shader_program = App->program->outline_program;
-		glUseProgram(outline_shader_program);
-
-		ComponentTransform object_transform_copy = mesh_game_object.transform;
-		float3 object_scale = object_transform_copy.GetScale();
-		object_transform_copy.SetScale(object_scale*1.01f);
-		object_transform_copy.GenerateGlobalModelMatrix();
-
-		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), object_transform_copy.GetGlobalModelMatrix().Transposed().ptr());
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-		mesh.RenderModel();
-
-    glStencilMask(0xFF);
-		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_STENCIL_TEST);
-	}
-
-	glUseProgram(0);
 }
 
 void ModuleRender::SetVSync(bool vsync)

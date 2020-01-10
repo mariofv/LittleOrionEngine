@@ -2094,8 +2094,10 @@ namespace ImGuizmo
       }
    }
 
-   void ViewManipulate(float* view, float length, ImVec2 position, ImVec2 size, ImU32 backgroundColor)
+   void ViewManipulate(float* view, float length, ImVec2 position, ImVec2 size, ImU32 backgroundColor, bool &modified)
    {
+	  modified = false;
+
       static bool isDraging = false;
       static bool isClicking = false;
       static bool isInside = false;
@@ -2267,6 +2269,7 @@ namespace ImGuizmo
          newUp = interpolationUp;
          vec_t newEye = camTarget + newDir * length;
          LookAt(&newEye.x, &camTarget.x, &newUp.x, view);
+		 modified = true;
       }
       isInside = ImRect(position, position + size).Contains(io.MousePos);
 
@@ -2307,6 +2310,7 @@ namespace ImGuizmo
 
          vec_t newEye = camTarget + newDir * length;
          LookAt(&newEye.x, &camTarget.x, &referenceUp.x, view);
+		 modified = true;
       }
    }
 };

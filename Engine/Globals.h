@@ -96,6 +96,8 @@ enum class Fonts
 # define PRIMITIVE_SPHERE_PATH "Resources/Primitives/Sphere/Sphere.ol"
 # define PRIMITIVE_TORUS_PATH "Resources/Primitives/Torus/Torus.ol"
 
+# define SAVED_SCENE_PATH "Assets/Scenes/scene.scene"
+# define DEFAULT_SCENE_PATH "Resources/Scenes/default_scene.scene"
 # define TMP_SCENE_PATH "Assets/Scenes/tmp_scene.scene"
 
 # define OPENGL_MAJOR_VERSION 4

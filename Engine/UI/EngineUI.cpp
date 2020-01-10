@@ -71,13 +71,16 @@ void EngineUI::ShowFileMenu()
 {
 	if (ImGui::BeginMenu("File"))
 	{
-		if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Open Scene"))
+		if (App->filesystem->Exists(SAVED_SCENE_PATH))
 		{
-			App->editor->OpenScene();
+			if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Open Scene"))
+			{
+				App->editor->OpenScene(SAVED_SCENE_PATH);
+			}
 		}
 		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
 		{
-			App->editor->SaveScene();
+			App->editor->SaveScene(SAVED_SCENE_PATH);
 		}
 		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
 		{
@@ -128,7 +131,7 @@ void EngineUI::ShowSceneControls()
 	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight()*TIME_BAR_HEIGHT_PROP));
 	if (ImGui::Begin("Time Controls", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar))
 	{
-		App->scene->ShowGizmoControls();
+		App->editor->ShowGizmoControls();
 		App->time->ShowTimeControls();
 	}
 	ImGui::End();
@@ -184,25 +187,24 @@ void EngineUI::ShowSceneTab()
 {
 	if (App->cameras->scene_camera != nullptr)
 	{
-		App->scene->ShowFrameBufferTab(*App->cameras->scene_camera, ICON_FA_TH " Scene");
+		App->editor->ShowSceneTab();
 	}
 }
 void EngineUI::ShowGameTab()
 {
-	static const char * title = ICON_FA_GHOST " Game";
-	if (App->cameras->active_camera != nullptr) 
+	if (App->cameras->main_camera != nullptr)
 	{
-		App->scene->ShowFrameBufferTab(*App->cameras->active_camera, title);
+		App->editor->ShowGameTab();
 	}
 	else 
 	{
-		ShowEmptyGameTab(title);
+		ShowEmptyGameTab();
 	}
 }
 
-void EngineUI::ShowEmptyGameTab(const char * title) const
+void EngineUI::ShowEmptyGameTab() const
 {
-		if (ImGui::BeginTabItem(title))
+		if (ImGui::BeginTabItem(ICON_FA_GHOST " Game"))
 		{
 			float window_width = ImGui::GetWindowWidth();
 			ImGui::Dummy(ImVec2(0, ImGui::GetWindowHeight()*0.40f));
@@ -230,12 +232,6 @@ void EngineUI::ShowInspectorWindow()
 		if (App->scene->hierarchy.selected_game_object != nullptr)
 		{
 			App->scene->hierarchy.selected_game_object->ShowPropertiesWindow();
-			
-			Component * selected_camera_component = App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA);
-			if (selected_camera_component != nullptr) {
-				ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
-				App->cameras->active_camera = selected_camera;
-			}
 
 			ImGui::Spacing();
 			ImGui::Separator();
@@ -458,6 +454,7 @@ void EngineUI::ShowAboutWindow()
 		MenuURL("Debug Draw", "https://github.com/glampert/debug-draw/");
 		MenuURL("par_shapes", "https://github.com/prideout/par/blob/master/par_shapes.h");
 		MenuURL("ImGuizmo", "https://github.com/CedricGuillemet/ImGuizmo");
+		MenuURL("PhysFS 3.0.2", "http://icculus.org/physfs/");
 
 		ImGui::Separator();
 

@@ -87,6 +87,7 @@ Because this is a academic project is not possible to contribute directly to thi
 * [Debug Draw](https://github.com/glampert/debug-draw/) - Used to draw basic shapes.
 * [par_shapes](https://github.com/prideout/par/blob/master/par_shapes.h) - Used to generate basic primitives.
 * [ImGuizmo](https://github.com/CedricGuillemet/ImGuizmo) - Used to draw gizmos.
+* [PhysFS 3.0.2](http://icculus.org/physfs/) - Used to manage file system.
 
 ## License
 

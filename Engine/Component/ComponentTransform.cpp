@@ -38,6 +38,11 @@ void ComponentTransform::Load(const Config& config)
 	GenerateModelMatrix();
 }
 
+float3 ComponentTransform::GetGlobalTranslation() const
+{
+	return global_model_matrix.TranslatePart();
+}
+
 float3 ComponentTransform::GetTranslation() const
 {
 	return translation;

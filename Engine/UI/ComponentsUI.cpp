@@ -257,6 +257,9 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 				break;
 			}
 		}
+		ImGui::Separator();
+
+		ImGui::DragInt("Depth", &camera->depth, 0.05f);
 	}
 }
 

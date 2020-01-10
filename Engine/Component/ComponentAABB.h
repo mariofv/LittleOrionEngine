@@ -33,8 +33,10 @@ public:
 
 private:
 	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices);
+	void GenerateGlobalBoundingBox();
 public:
 	AABB bounding_box;
+	AABB global_bounding_box;
 	AABB2D bounding_box2D;
 
 };

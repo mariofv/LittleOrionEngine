@@ -21,6 +21,7 @@ bool ModuleCamera::Init()
 	scene_camera_game_object->transform.SetTranslation(float3(0.5f, 2.f, -15.f));
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	scene_camera->SetFarDistance(500);
+	scene_camera->depth = -1;
 
 	skybox = new Skybox();
 
@@ -30,6 +31,7 @@ bool ModuleCamera::Init()
 // Called every draw update
 update_status ModuleCamera::Update()
 {
+	SelectMainCamera();
 	scene_camera->Update();
 	return update_status::UPDATE_CONTINUE;
 }
@@ -41,6 +43,7 @@ bool ModuleCamera::CleanUp()
 		camera->owner->RemoveComponent(camera);
 	}
 	cameras.clear();
+	main_camera = nullptr;
 	return true;
 }
 
@@ -54,14 +57,32 @@ ComponentCamera* ModuleCamera::CreateComponentCamera()
 void ModuleCamera::RemoveComponentCamera(ComponentCamera* camera_to_remove)
 {
 	auto it = std::find(cameras.begin(), cameras.end(), camera_to_remove);
-	if (*it == active_camera) 
+	if (*it == main_camera)
 	{
-		active_camera = nullptr;
+		main_camera = nullptr;
 	}
 	if (it != cameras.end()) 
 	{
 		delete *it;
 		cameras.erase(it);
+	}
+}
+
+void ModuleCamera::SelectMainCamera()
+{
+	for (auto& camera : cameras)
+	{
+		if (camera != scene_camera)
+		{
+			if (main_camera == nullptr)
+			{
+				main_camera = camera;
+			}
+			else if (main_camera->depth < camera->depth)
+			{
+				main_camera = camera;
+			}
+		}
 	}
 }
 

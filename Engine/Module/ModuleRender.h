@@ -27,8 +27,6 @@ public:
 	
 	void Render() const;
 	void RenderFrame(const ComponentCamera &camera);
-	void RenderMesh(const ComponentMesh &mesh) const;
-
 
 	ComponentMesh* CreateComponentMesh();
 	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
@@ -57,6 +55,8 @@ private:
 private:
 	void* context = nullptr;
 
+	OLQuadTree ol_quadtree;
+
 	bool vsync = false;
 	bool gl_alpha_test = false;
 	bool gl_depth_test = false;
@@ -73,9 +73,10 @@ private:
 
 	std::vector<ComponentMesh*> meshes;
 	std::vector<ComponentMesh*> meshes_to_render;
-	OLQuadTree ol_quadtree;
 	Timer * rendering_measure_timer = new Timer();
+
 	friend class ModuleDebug;
+	friend class ModuleEditor;
 };
 
 #endif //_MODULERENDER_H_
