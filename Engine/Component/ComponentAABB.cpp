@@ -43,6 +43,11 @@ void ComponentAABB::GenerateBoundingBox()
 	float2 min_point2D = float2(bounding_box.MinX(), bounding_box.MinZ());
 	float2 max_point2D = float2(bounding_box.MaxX(), bounding_box.MaxZ());
 	bounding_box2D = AABB2D(min_point2D, max_point2D);
+	GenerateGlobalBoundingBox();
+	if (owner->parent != nullptr)
+	{
+		owner->parent->aabb.GenerateGlobalBoundingBox();
+	}
 }
 
 void ComponentAABB::GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices)
