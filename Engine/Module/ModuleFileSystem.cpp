@@ -203,17 +203,23 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	PHYSFS_freeList(files_array);
 }
 
-void ModuleFileSystem::File::FillChilds()
+std::shared_ptr<ModuleFileSystem::File> ModuleFileSystem::GetFileHierarchyFromPath(const std::string & path) const
+{
+	std::shared_ptr<File> new_file = std::make_shared<File>();
+	new_file->file_path = path;
+	GetAllFilesRecursive(new_file);
+	return new_file;
+}
+void ModuleFileSystem::GetAllFilesRecursive(std::shared_ptr<File> root) const
 {
 	std::vector<std::shared_ptr<File>> files;
-	App->filesystem->GetAllFilesInPath(file_path, files, true);
+	GetAllFilesInPath(root->file_path, files, true);
 	for (auto & file : files )
 	{
-		children.push_back(file);
-		if (file->file_type == ModuleFileSystem::FileType::DIRECTORY)
-		{
-			++sub_folders;
-		}
+		file->parent = root;
+		root->children.push_back(file);
+		GetAllFilesRecursive(file);
+
 	}
 }
 
@@ -238,7 +244,7 @@ bool ModuleFileSystem::IsValidFileName(const char * file_name) const
 
 void ModuleFileSystem::RefreshFilesHierarchy()
 {
-	root_file = std::make_shared<File>("Assets");
+	root_file = GetFileHierarchyFromPath("Assets");
 }
 
 bool ModuleFileSystem::File::operator==(const ModuleFileSystem::File& compare)
@@ -256,7 +262,6 @@ ModuleFileSystem::File::File(const std::string & path, const std::string & name)
 
 	this->file_type = App->filesystem->GetFileType(filename.c_str(), file_info.filetype);
 	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
-	FillChilds();
 }
 
 ModuleFileSystem::File::File(const std::string & path) {
