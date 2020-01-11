@@ -16,14 +16,14 @@ MaterialImporter::MaterialImporter()
 }
 std::pair<bool, std::string> MaterialImporter::Import(const  std::string& file_path) const
 {
-	ModuleFileSystem::File file(file_path);
+	File file(file_path);
 	if (file.filename.empty())
 	{
 		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
 		return std::pair<bool, std::string>(false,"");
 	}
 
-	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedResource(LIBRARY_TEXTURES_FOLDER, file);
+	std::shared_ptr<File> already_imported = GetAlreadyImportedResource(LIBRARY_TEXTURES_FOLDER, file);
 	if (already_imported != nullptr) {
 		return std::pair<bool, std::string>(true, already_imported->file_path);
 	}

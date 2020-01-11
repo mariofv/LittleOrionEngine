@@ -146,7 +146,7 @@ update_status ModuleInput::PreUpdate()
 			char *dropped_filedir = event.drop.file;
 			switch (App->filesystem->GetFileType(dropped_filedir))
 			{
-			case ModuleFileSystem::FileType::MODEL:
+			case FileType::MODEL:
 				App->ui->editor_ui->file_explorer_ui.CopyFileToSelectedFolder(dropped_filedir);
 				//App->model_loader->LoadModel(dropped_filedir);
 				break;

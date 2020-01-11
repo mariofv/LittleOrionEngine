@@ -86,6 +86,7 @@
   <ItemGroup>
     <ClInclude Include="Engine\Component\ComponentLight.h" />
     <ClInclude Include="Engine\Config.h" />
+    <ClInclude Include="Engine\Filesystem\File.h" />
     <ClInclude Include="Engine\Importer\Importer.h" />
     <ClInclude Include="Engine\Importer\MaterialImporter.h" />
     <ClInclude Include="Engine\Importer\MeshImporter.h" />
@@ -211,6 +212,7 @@
   <ItemGroup>
     <ClCompile Include="Engine\Component\ComponentLight.cpp" />
     <ClCompile Include="Engine\Config.cpp" />
+    <ClCompile Include="Engine\Filesystem\File.cpp" />
     <ClCompile Include="Engine\Importer\Importer.cpp" />
     <ClCompile Include="Engine\Importer\MaterialImporter.cpp" />
     <ClCompile Include="Engine\Importer\MeshImporter.cpp" />

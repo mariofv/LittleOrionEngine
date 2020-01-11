@@ -7,33 +7,11 @@
 #include <memory>
 
 #include <physfs/physfs.h>
-
+#include "Filesystem/File.h"
 class ModuleFileSystem : public Module
 {
 
 public:
-	enum class FileType
-	{
-		MODEL,
-		TEXTURE,
-		DIRECTORY,
-		ARCHIVE,
-		UNKNOWN
-	};
-	struct File {
-		File() = default;
-		File(const std::string & path, const std::string & name);
-		File(const std::string & path);
-		std::string filename;
-		std::string file_path;
-		std::string filename_no_extension;
-		ModuleFileSystem::FileType file_type;
-
-
-		std::vector<std::shared_ptr<File>> children;
-		std::shared_ptr<File> parent;
-		bool operator==(const File& compare);
-	};
 
 	bool Init() override;
 	bool CleanUp() override;
@@ -51,7 +29,7 @@ public:
 	
 	FileType GetFileType(const char *file_path, const PHYSFS_FileType & file_type = PHYSFS_FileType::PHYSFS_FILETYPE_OTHER) const;
 	void GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only = false) const;
-	size_t GetNumberOfFileSubFolders(const std::shared_ptr<ModuleFileSystem::File> & file) const;
+	size_t GetNumberOfFileSubFolders(const File & file) const;
 
 	void RefreshFilesHierarchy();
 private:

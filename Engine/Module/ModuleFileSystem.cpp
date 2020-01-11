@@ -131,7 +131,7 @@ bool ModuleFileSystem::Copy(const char* source, const char* destination)
 	return success;
 }
 
-ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileType & file_type) const
+FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileType & file_type) const
 {
 	std::string file_extension = GetFileExtension(file_path);
 	std::transform(file_extension.begin(), file_extension.end(), file_extension.begin(),
@@ -139,7 +139,7 @@ ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, 
 
 	if ((PHYSFS_FileType::PHYSFS_FILETYPE_DIRECTORY == file_type ) || (file_extension == "/" ))
 	{
-		return ModuleFileSystem::FileType::DIRECTORY;
+		return FileType::DIRECTORY;
 	}
 
 	if (
@@ -150,20 +150,20 @@ ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, 
 		|| file_extension == "jpg"
 		)
 	{
-		return ModuleFileSystem::FileType::TEXTURE;
+		return FileType::TEXTURE;
 	}
 	if (
 		file_extension == "fbx"
 		|| file_extension == "ol"
 		)
 	{
-		return ModuleFileSystem::FileType::MODEL;
+		return FileType::MODEL;
 	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{
-		return ModuleFileSystem::FileType::ARCHIVE;
+		return FileType::ARCHIVE;
 	}
-	return ModuleFileSystem::FileType::UNKNOWN;
+	return FileType::UNKNOWN;
 }
 
 
@@ -205,7 +205,7 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	PHYSFS_freeList(files_array);
 }
 
-std::shared_ptr<ModuleFileSystem::File> ModuleFileSystem::GetFileHierarchyFromPath(const std::string & path) const
+std::shared_ptr<File> ModuleFileSystem::GetFileHierarchyFromPath(const std::string & path) const
 {
 	std::shared_ptr<File> new_file = std::make_shared<File>();
 	new_file->file_path = path;
@@ -218,19 +218,19 @@ void ModuleFileSystem::GetAllFilesRecursive(std::shared_ptr<File> root) const
 	GetAllFilesInPath(root->file_path, files, true);
 	for (auto & file : files )
 	{
-		file->parent = root;
+		file->parent = root.get();
 		root->children.push_back(file);
 		GetAllFilesRecursive(file);
 
 	}
 }
 
-size_t ModuleFileSystem::GetNumberOfFileSubFolders(const std::shared_ptr<ModuleFileSystem::File> & file) const
+size_t ModuleFileSystem::GetNumberOfFileSubFolders(const File & file) const
 {
 	size_t subFiles = 0;
-	for (auto & subFile : file->children)
+	for (auto & subFile : file.children)
 	{
-		if (subFile->file_type == ModuleFileSystem::FileType::DIRECTORY)
+		if (subFile->file_type == FileType::DIRECTORY)
 		{
 			subFiles++;
 		}
@@ -249,28 +249,6 @@ void ModuleFileSystem::RefreshFilesHierarchy()
 	root_file = GetFileHierarchyFromPath("Assets");
 }
 
-bool ModuleFileSystem::File::operator==(const ModuleFileSystem::File& compare)
-{
-	return this->filename == compare.filename && this->file_path == compare.file_path && this->file_type == compare.file_type;
-};
-ModuleFileSystem::File::File(const std::string & path, const std::string & name) {
-	this->filename = name;
-	this->file_path = path + "/" + name;
-	PHYSFS_Stat file_info;
-	if (PHYSFS_stat(this->file_path.c_str(), &file_info) == 0)
-	{
-		APP_LOG_ERROR("Error getting %s file info: %s", this->file_path.c_str(),PHYSFS_getLastError());
-	}
 
-	this->file_type = App->filesystem->GetFileType(filename.c_str(), file_info.filetype);
-	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
-}
-
-ModuleFileSystem::File::File(const std::string & path) {
-
-	std::string name = path.substr(path.find_last_of('/')+1, -1);
-	std::string not_name_path = path.substr(0, path.find_last_of('/'));
-	*this = File(not_name_path,name);
-}
 
 

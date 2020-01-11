@@ -27,8 +27,8 @@ MeshImporter::~MeshImporter()
 
 std::pair<bool, std::string> MeshImporter::Import(const std::string& file_path) const
 {
-	ModuleFileSystem::File file(file_path);
-	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedResource(LIBRARY_MESHES_FOLDER,file);
+	File file(file_path);
+	std::shared_ptr<File> already_imported = GetAlreadyImportedResource(LIBRARY_MESHES_FOLDER,file);
 	if (already_imported != nullptr) {
 		return std::pair<bool, std::string>(true, already_imported->file_path);
 	}

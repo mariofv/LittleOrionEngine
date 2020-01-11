@@ -28,13 +28,13 @@ void FileExplorerUI::ShowAssetsFolders() {
 	}
 }
 
-void FileExplorerUI::WindowShowFilesInFolder(ModuleFileSystem::File & file) {
+void FileExplorerUI::WindowShowFilesInFolder(File & file) {
 
 	for (auto & child : file.children )
 	{
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
-		size_t subfolders = App->filesystem->GetNumberOfFileSubFolders(child);
+		size_t subfolders = App->filesystem->GetNumberOfFileSubFolders(*child);
 		std::string filename = ICON_FA_FOLDER " " + child->filename;
 		if (subfolders == 0)
 		{
@@ -71,18 +71,18 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 			{
 				spaces += " ";
 			}
-			if (file->file_type == ModuleFileSystem::FileType::DIRECTORY) {
+			if (file->file_type == FileType::DIRECTORY) {
 				item_name = spaces + std::string(ICON_FA_FOLDER "\n " + filename);
 			}
-			else if(file->file_type == ModuleFileSystem::FileType::ARCHIVE)
+			else if(file->file_type == FileType::ARCHIVE)
 			{
 				item_name = spaces + std::string(ICON_FA_ARCHIVE "\n " + filename);
 			}
-			else if (file->file_type == ModuleFileSystem::FileType::TEXTURE)
+			else if (file->file_type == FileType::TEXTURE)
 			{
 				item_name = spaces + std::string(ICON_FA_IMAGE "\n " + filename);
 			}
-			else if (file->file_type == ModuleFileSystem::FileType::MODEL)
+			else if (file->file_type == FileType::MODEL)
 			{
 				item_name = spaces + std::string(ICON_FA_CUBES "\n " + filename);
 			}
@@ -100,11 +100,11 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 				ImGui::SameLine();
 	}
 }
-void FileExplorerUI::ProcessMouseInput(ModuleFileSystem::File * file)
+void FileExplorerUI::ProcessMouseInput(File * file)
 {
 	if (ImGui::IsItemHovered())
 	{
-		if (ImGui::IsMouseClicked(0) && file->file_type == ModuleFileSystem::FileType::DIRECTORY)
+		if (ImGui::IsMouseClicked(0) && file->file_type == FileType::DIRECTORY)
 		{
 			selected_folder = file;
 			selected_file = nullptr;
@@ -118,7 +118,7 @@ void FileExplorerUI::ProcessMouseInput(ModuleFileSystem::File * file)
 	}
 }
 
-void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & file)
+void FileExplorerUI::ShowFileSystemActionsMenu(const File & file)
 {
 	std::string label("Menu");
 
@@ -160,9 +160,9 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & fi
 	}
 }
 
-void FileExplorerUI::MakeDirectoryFromFile(const ModuleFileSystem::File & file) const
+void FileExplorerUI::MakeDirectoryFromFile(const File & file) const
 {
-	if (!file.file_path.empty() && file.file_type != ModuleFileSystem::FileType::DIRECTORY)
+	if (!file.file_path.empty() && file.file_type != FileType::DIRECTORY)
 	{
 		size_t last_slash = file.file_path.find_last_of("/");
 		App->filesystem->MakeDirectory(file.file_path.substr(0, last_slash - 1)+"/new Folder");
@@ -197,7 +197,7 @@ void FileExplorerUI::FilesDrag() const
 {
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 	{
-		ImGui::SetDragDropPayload("DND_File", &selected_file, sizeof(ModuleFileSystem::File*));
+		ImGui::SetDragDropPayload("DND_File", &selected_file, sizeof(File*));
 		ImGui::Text("Dragging %s", selected_file->filename.c_str());
 		ImGui::EndDragDropSource();
 	}

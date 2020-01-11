@@ -11,7 +11,7 @@ public:
 
 protected:
 
-	std::shared_ptr<ModuleFileSystem::File> GetAlreadyImportedResource(const std::string & path_to_look_in, const ModuleFileSystem::File & file_to_look_for) const;
+	std::shared_ptr<File> GetAlreadyImportedResource(const std::string & path_to_look_in, const File & file_to_look_for) const;
 
 };
 #endif // !_IMPORTER_H_
