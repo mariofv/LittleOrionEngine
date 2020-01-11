@@ -27,7 +27,7 @@ public:
 	bool operator <(const ComponentMesh & mesh_to_compare) const;
 
 	void ShowComponentWindow() override;
-	unsigned int shader_program = 0;
+	std::string shader_program = "Default";
 	std::shared_ptr<Mesh> mesh_to_render;
 private:
 	friend class ComponentsUI;

@@ -127,7 +127,7 @@ void ModuleEditor::RenderOutline() const
 		glStencilMask(0x00);
 		glDisable(GL_DEPTH_TEST);
 
-		GLuint outline_shader_program = App->program->outline_program;
+		GLuint outline_shader_program = App->program->loaded_programs.at("Outline");
 		glUseProgram(outline_shader_program);
 
 		ComponentTransform object_transform_copy = selected_game_object->transform;

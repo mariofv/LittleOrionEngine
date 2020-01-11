@@ -55,7 +55,7 @@ enum class Fonts
 };
 
 // Paths -------
-# define SHADERS_PATH "Resources/Shaders"
+# define SHADERS_PATH "Resources/Shaders/shaders.meta"
 # define TEXTURES_PATH "Assets/Textures/"
 
 # define DEFAULT_VERTEX_SHADER_PATH "Resources/Shaders/default.vs"

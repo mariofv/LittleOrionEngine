@@ -57,25 +57,25 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
 		ImGui::Button(tmp_string);
 
-		int shader_program = GetShaderProgramPosition(mesh->shader_program);
+		int shader_program = 0;
 		if (ImGui::Combo("Shader", &shader_program, "Flat\0Gouraund\0Phong\0Blinn-Phong\0Default\0"))
 		{
 			switch (shader_program)
 			{
 			case 0:
-				mesh->shader_program = App->program->phong_flat_program;
+				mesh->shader_program = App->program->loaded_programs.at("Flat");
 				break;
 			case 1:
-				mesh->shader_program = App->program->phong_gouraund_program;
+				mesh->shader_program =App->program->loaded_programs.at("Gouraund");
 				break;
 			case 2:
-				mesh->shader_program = App->program->phong_phong_program;
+				mesh->shader_program = App->program->loaded_programs.at("Phong");
 				break;
 			case 3:
-				mesh->shader_program = App->program->blinn_phong_phong_program;
+				mesh->shader_program = App->program->loaded_programs.at("Blinn Phong");
 				break;
 			case 4:
-				mesh->shader_program = App->program->texture_program;
+				mesh->shader_program = App->program->loaded_programs.at("Default");
 				break;
 			}
 		}
@@ -273,28 +273,3 @@ void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
 	}
 }
 
-int ComponentsUI::GetShaderProgramPosition(unsigned int program)
-{
-
-	if (App->program->phong_flat_program == program)
-	{
-		return 0;
-	}
-	if (App->program->phong_gouraund_program == program)
-	{
-		return 1;
-	}
-	if (App->program->phong_phong_program == program)
-	{
-		return 2;
-	}
-	if (App->program->blinn_phong_phong_program == program)
-	{
-		return 3;
-	}
-	if (App->program->texture_program == program)
-	{
-		return 4;
-	}
-	return -1;
-}

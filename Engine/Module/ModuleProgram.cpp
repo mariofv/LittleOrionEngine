@@ -3,6 +3,7 @@
 #include "ModuleFileSystem.h"
 
 #include "MathGeoLib.h"
+#include "Config.h"
 
 // Called before render is available
 bool ModuleProgram::Init()
@@ -10,51 +11,7 @@ bool ModuleProgram::Init()
 	APP_LOG_SECTION("************ Module Program Init ************");
 
 	InitUniformBuffer();
-
-	if (!LoadProgram(texture_program, DEFAULT_VERTEX_SHADER_PATH, TEXTURE_FRAGMENT_SHADER_PATH))
-	{
-		return false;
-	}
-	if (!LoadProgram(skybox_program, SKYBOX_VERTEX_SHADER_PATH, SKYBOX_FRAGMENT_SHADER_PATH))
-	{
-		return false;
-	}
-
-	if (!LoadProgram(linepoint_program, LINEPOINT_VERTEX_SHADER_PATH, LINEPOINT_FRAGMENT_SHADER_PATH))
-	{
-		return false;
-	}
-
-	if (!LoadProgram(text_program, TEXT_VERTEX_SHADER_PATH, TEXT_FRAGMENT_SHADER_PATH))
-	{
-		return false;
-	}
-
-	if (!LoadProgram(outline_program, OUTLINE_VERTEX_SHADER_PATH, OUTLINE_FRAGMENT_SHADER_PATH))
-	{
-		return false;
-	}
-
-	if (!LoadProgram(phong_flat_program, FLAT_VERTEX_SHADER_PATH, FLAT_FRAGMENT_SHADER_PATH))
-	{
-		return false;
-	}
-
-	if (!LoadProgram(phong_gouraund_program, GOURAUND_VERTEX_SHADER_PATH, GOURAUND_FRAGMENT_SHADER_PATH))
-	{
-		return false;
-	}
-
-	if (!LoadProgram(phong_phong_program, PHONG_VERTEX_SHADER_PATH, PHONG_FRAGMENT_SHADER_PATH))
-	{
-		return false;
-	}
-
-	if (!LoadProgram(blinn_phong_phong_program, BLINN_PHONG_VERTEX_SHADER_PATH, BLINN_PHONG_FRAGMENT_SHADER_PATH))
-	{
-		return false;
-	}
-
+	LoadPrograms(SHADERS_PATH);
 	return true;
 }
 
@@ -63,7 +20,7 @@ bool ModuleProgram::CleanUp()
 {
 	for ( auto & program : loaded_programs)
 	{
-		glDeleteProgram(program);
+		glDeleteProgram(program.second);
 	}
 
 	glDeleteBuffers(1, &uniform_buffer.ubo);
@@ -91,11 +48,12 @@ void ModuleProgram::InitUniformBuffer()
 	glBindBufferRange(GL_UNIFORM_BUFFER, 1, uniform_buffer.ubo, uniform_buffer.lights_uniform_offset, uniform_buffer.LIGHT_UNIFORMS_SIZE); // Sets binding point 1 for light intensity, color and position
 }
 
-bool ModuleProgram::LoadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name)
+bool ModuleProgram::LoadProgram(std::string name, const char* vertex_shader_file_name, const char* fragment_shader_file_name)
 {
 	APP_LOG_INIT("Loading shader program. With paths: %s,%s", vertex_shader_file_name, fragment_shader_file_name);
 	GLuint vertex_shader;
 	GLuint fragment_shader;
+	GLuint shader_program;
 	if (!InitVertexShader(vertex_shader, vertex_shader_file_name))
 	{
 		return false;
@@ -110,7 +68,7 @@ bool ModuleProgram::LoadProgram(GLuint &shader_program, const char* vertex_shade
 	{
 		return false;
 	}
-	loaded_programs.push_back(shader_program);
+	loaded_programs.insert({ name,shader_program });
 	APP_LOG_SUCCESS("Shader program with paths: %s,%s loaded correctly.", vertex_shader_file_name, fragment_shader_file_name);
 	return true;
 }
@@ -216,4 +174,27 @@ void ModuleProgram::BindUniformBlocks(GLuint shader_program) const
 {
 	glUniformBlockBinding(shader_program, glGetUniformBlockIndex(shader_program, "Matrices"), 0);
 	glUniformBlockBinding(shader_program, glGetUniformBlockIndex(shader_program, "Light"), 1);
+}
+
+void ModuleProgram::LoadPrograms(const char* file_path)
+{
+	size_t readed_bytes;
+	char* shaders_file_data = App->filesystem->Load(file_path, readed_bytes);
+	std::string serialized_shaders = shaders_file_data;
+	free(shaders_file_data);
+
+	std::vector<Config> shaders;
+	Config shaders_config(serialized_shaders);
+	shaders_config.GetChildrenConfig("Shaders", shaders);
+	for (unsigned int i = 0; i < shaders.size(); ++i)
+	{
+		std::string name;
+		std::string vertex;
+		std::string fragment;
+		int selectable = shaders[i].GetBool("Selectable", false);
+		shaders[i].GetString("Name", name, "");
+		shaders[i].GetString("Vertex", vertex, "");
+		shaders[i].GetString("Fragment", fragment, "");
+		LoadProgram(name, vertex.c_str(), fragment.c_str());
+	}
 }

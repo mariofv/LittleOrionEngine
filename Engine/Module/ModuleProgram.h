@@ -6,7 +6,7 @@
 
 #include <GL/glew.h>
 #include <MathGeoLib.h>
-
+#include <unordered_map>
 class ModuleProgram : public Module
 {
 public:
@@ -61,7 +61,8 @@ public:
 	bool CleanUp() override;
 
 private:
-	bool LoadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
+	bool LoadProgram(std::string name, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
+	void LoadPrograms(const char* file_path);
 	bool InitVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const;
 	bool InitFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const;
 	bool InitProgram(GLuint &shader_program,GLuint vertex_shader,GLuint fragment_shader) const;
@@ -71,18 +72,7 @@ private:
 
 public:
 	UniformBuffer uniform_buffer;
-
-	GLuint texture_program = 0;
-	GLuint skybox_program = 0;
-	GLuint linepoint_program = 0;
-	GLuint text_program = 0;
-	GLuint outline_program = 0;
-	GLuint phong_flat_program = 0;
-	GLuint phong_gouraund_program = 0;
-	GLuint phong_phong_program = 0;
-	GLuint blinn_phong_phong_program = 0;
-
-	std::vector<GLuint> loaded_programs;
+	std::unordered_map<std::string, GLuint> loaded_programs;
 };
 
 #endif //_MODULEPROGRAM_H_
