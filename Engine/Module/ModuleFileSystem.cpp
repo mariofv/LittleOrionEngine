@@ -197,7 +197,7 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	{
 		std::shared_ptr<File> new_file = std::make_shared<File>(path, *i);
 		bool is_directory = new_file->file_type == FileType::DIRECTORY;
-		if (IsValidFileName(*i) && ((directories_only && is_directory) || !directories_only))
+		if ((directories_only && is_directory) || !directories_only)
 		{
 			files.push_back(new_file);
 		}
@@ -205,20 +205,9 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	PHYSFS_freeList(files_array);
 }
 
-std::shared_ptr<File> ModuleFileSystem::GetFileHierarchyFromPath(const std::string & path) const
-{
-	std::shared_ptr<File> new_file = std::make_shared<File>(path);
-	return new_file;
-}
-
-bool ModuleFileSystem::IsValidFileName(const char * file_name) const
-{
-	return std::strcmp(file_name, ".") && std::strcmp(file_name, "..");
-}
-
 void ModuleFileSystem::RefreshFilesHierarchy()
 {
-	root_file = GetFileHierarchyFromPath("Assets");
+	root_file = std::make_shared<File>("Assets");
 }
 
 
