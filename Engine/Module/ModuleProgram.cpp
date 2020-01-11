@@ -191,10 +191,16 @@ void ModuleProgram::LoadPrograms(const char* file_path)
 		std::string name;
 		std::string vertex;
 		std::string fragment;
-		int selectable = shaders[i].GetBool("Selectable", false);
+		bool selectable = shaders[i].GetBool("Selectable", false);
 		shaders[i].GetString("Name", name, "");
 		shaders[i].GetString("Vertex", vertex, "");
 		shaders[i].GetString("Fragment", fragment, "");
 		LoadProgram(name, vertex.c_str(), fragment.c_str());
+		if (selectable)
+		{
+			char *pc = new char[name.size() + 1];
+			std::strcpy(pc, name.c_str());
+			names.push_back(pc);
+		}
 	}
 }

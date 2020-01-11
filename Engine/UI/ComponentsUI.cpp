@@ -48,7 +48,7 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Triangles");
 		ImGui::SameLine();
-		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size()/3);
+		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size() / 3);
 		ImGui::Button(tmp_string);
 
 		ImGui::AlignTextToFramePadding();
@@ -57,27 +57,20 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
 		ImGui::Button(tmp_string);
 
-		int shader_program = 0;
-		if (ImGui::Combo("Shader", &shader_program, "Flat\0Gouraund\0Phong\0Blinn-Phong\0Default\0"))
+		if (ImGui::BeginCombo("Shader", mesh->shader_program.c_str()))
 		{
-			switch (shader_program)
+			for (auto & program : App->program->names)
 			{
-			case 0:
-				mesh->shader_program = App->program->loaded_programs.at("Flat");
-				break;
-			case 1:
-				mesh->shader_program =App->program->loaded_programs.at("Gouraund");
-				break;
-			case 2:
-				mesh->shader_program = App->program->loaded_programs.at("Phong");
-				break;
-			case 3:
-				mesh->shader_program = App->program->loaded_programs.at("Blinn Phong");
-				break;
-			case 4:
-				mesh->shader_program = App->program->loaded_programs.at("Default");
-				break;
+				bool is_selected = (mesh->shader_program == program);
+				if (ImGui::Selectable(program, is_selected))
+				{
+					mesh->shader_program = program;
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();  
+				}
+
 			}
+			ImGui::EndCombo();
 		}
 	}
 }

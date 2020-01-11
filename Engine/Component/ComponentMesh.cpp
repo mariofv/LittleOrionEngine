@@ -43,6 +43,7 @@ void ComponentMesh::Save(Config& config) const
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddString(mesh_to_render->mesh_file_path, "MeshPath");
+	config.AddString(shader_program, "ShaderProgram");
 }
 
 void ComponentMesh::Load(const Config& config)
@@ -53,6 +54,8 @@ void ComponentMesh::Load(const Config& config)
 	std::string mesh_path;
 	config.GetString("MeshPath", mesh_path, "");
 	SetMesh(App->mesh_importer->Load(mesh_path.c_str()));
+
+	config.GetString("ShaderProgram", shader_program, "Phong");
 }
 
 bool ComponentMesh::operator <(const ComponentMesh & mesh_to_compare) const
@@ -61,7 +64,7 @@ bool ComponentMesh::operator <(const ComponentMesh & mesh_to_compare) const
 }
 void ComponentMesh::Render() const
 {
-	GLuint program = App->program->loaded_programs["Phong"];
+	GLuint program = App->program->loaded_programs[shader_program];
 	glUseProgram(program);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);

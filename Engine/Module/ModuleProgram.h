@@ -73,6 +73,7 @@ private:
 public:
 	UniformBuffer uniform_buffer;
 	std::unordered_map<std::string, GLuint> loaded_programs;
+	std::vector<const char *> names;
 };
 
 #endif //_MODULEPROGRAM_H_
