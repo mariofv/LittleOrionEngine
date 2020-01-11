@@ -64,7 +64,7 @@ bool ComponentMesh::operator <(const ComponentMesh & mesh_to_compare) const
 }
 void ComponentMesh::Render() const
 {
-	GLuint program = App->program->loaded_programs[shader_program];
+	GLuint program = App->program->GetShaderProgramId(shader_program);
 	glUseProgram(program);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);

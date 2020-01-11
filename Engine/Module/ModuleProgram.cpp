@@ -28,6 +28,15 @@ bool ModuleProgram::CleanUp()
 	return true;
 }
 
+unsigned int ModuleProgram::GetShaderProgramId(const std::string & program_name) const
+{
+	if (loaded_programs.count(program_name) > 0)
+	{
+		return loaded_programs.at(program_name);
+	}
+	return  loaded_programs.at("Default");
+}
+
 void ModuleProgram::InitUniformBuffer()
 {
 	int uniform_buffer_offset_alignment;
@@ -178,6 +187,7 @@ void ModuleProgram::BindUniformBlocks(GLuint shader_program) const
 
 void ModuleProgram::LoadPrograms(const char* file_path)
 {
+	names.clear();
 	size_t readed_bytes;
 	char* shaders_file_data = App->filesystem->Load(file_path, readed_bytes);
 	std::string serialized_shaders = shaders_file_data;
