@@ -1,80 +1,26 @@
-#version 330 core
+#version 330
 
-in vec2 texCoord;
-in vec3 normal;
-in vec3 FragPos;
-in vec3 viewPos;
+layout(location = 0) in vec3 vertex_position;
+layout(location = 1) in vec2 vertex_uv0;
+layout(location = 2) in vec3 vertex_normal;
 
-out vec4 FragColor;
-
-struct Material {
-	sampler2D diffuse_map;
-	vec4 diffuse_color;
-	float k_diffuse;
-	sampler2D specular_map;
-	vec4 specular_color;
-	float shininess;
-	float k_specular;
-	sampler2D occlusion_map;
-	float k_ambient;
-	sampler2D emissive_map;
-	vec4 emissive_color;
-};
-uniform Material material;
-
-layout (std140) uniform Light
+layout (std140) uniform Matrices
 {
-	float light_intensity;
-	vec3 light_color;
-	vec3 light_position;
-} light;
+  mat4 model;
+  mat4 proj;
+  mat4 view;
+} matrices;
 
-uniform mat4 view;
-
-vec4 get_diffuse_color(const Material mat, const vec2 texCoord);
-vec3 get_occlusion_color(const Material mat, const vec2 texCoord);
-vec3 get_emissive_color(const Material mat, const vec2 texCoord);
-vec4 get_specular_color(const Material mat, const vec2 texCoord);
-float lambert(vec3 light_position,vec3 norm);
+out vec2 texCoord;
+out vec3 normal;
+out vec3 FragPos;
+out vec3 viewPos;
 
 void main()
 {
-    vec4 diffuse_color  = get_diffuse_color(material, texCoord);
-	vec4 specular_color  = get_specular_color(material, texCoord);
-	vec3 occlusion_color = get_occlusion_color(material, texCoord);
-	vec3 emissive_color  = get_emissive_color(material, texCoord);
-
-    // diffuse
-	vec3 lightDir = light.light_position - FragPos;
-	float diffuse = lambert(lightDir, normal);
-
-	//specular
-    vec3 viewDir = normalize(viewPos - FragPos);
-    vec3 reflectDir = reflect(-lightDir, normalize(normal));
-    float specular = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
-
-    vec3 result = emissive_color
-	+diffuse_color.rgb*(occlusion_color*material.k_ambient)
-	+diffuse_color.rgb*diffuse*material.k_diffuse
-	+specular_color.rgb*specular*material.k_specular;
-    FragColor = vec4(result,1.0);
-}
-
-
-vec4 get_diffuse_color(const Material mat, const vec2 texCoord)
-{
-	return texture(mat.diffuse_map, texCoord)*mat.diffuse_color;
-}
-
-vec4 get_specular_color(const Material mat, const vec2 texCoord)
-{
-	return texture(mat.specular_map, texCoord)*mat.specular_color;
-}
-vec3 get_occlusion_color(const Material mat, const vec2 texCoord)
-{
-	return texture(mat.occlusion_map, texCoord).rgb * vec3(1.0,1.0,1.0);
-}
-vec3 get_emissive_color(const Material mat, const vec2 texCoord)
-{
-	return (texture(mat.emissive_map, texCoord)*mat.emissive_color).rgb;
+  gl_Position = matrices.proj*matrices.view*matrices.model*vec4(vertex_position, 1.0);
+  FragPos = vec3(matrices.model * vec4(vertex_position, 1.0));
+  texCoord = vertex_uv0;
+  normal =(matrices.model*vec4(vertex_normal, 0.0)).xyz;
+  viewPos = transpose(mat3(matrices.view))*(-matrices.view[3].xyz);
 }

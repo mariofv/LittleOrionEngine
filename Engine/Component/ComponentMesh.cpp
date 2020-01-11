@@ -55,7 +55,7 @@ void ComponentMesh::Load(const Config& config)
 	config.GetString("MeshPath", mesh_path, "");
 	SetMesh(App->mesh_importer->Load(mesh_path.c_str()));
 
-	config.GetString("ShaderProgram", shader_program, "Phong");
+	config.GetString("ShaderProgram", shader_program, "Default");
 }
 
 bool ComponentMesh::operator <(const ComponentMesh & mesh_to_compare) const
