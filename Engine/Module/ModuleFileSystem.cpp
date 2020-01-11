@@ -207,37 +207,9 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 
 std::shared_ptr<File> ModuleFileSystem::GetFileHierarchyFromPath(const std::string & path) const
 {
-	std::shared_ptr<File> new_file = std::make_shared<File>();
-	new_file->file_path = path;
-	GetAllFilesRecursive(new_file);
+	std::shared_ptr<File> new_file = std::make_shared<File>(path);
 	return new_file;
 }
-void ModuleFileSystem::GetAllFilesRecursive(std::shared_ptr<File> root) const
-{
-	std::vector<std::shared_ptr<File>> files;
-	GetAllFilesInPath(root->file_path, files, true);
-	for (auto & file : files )
-	{
-		file->parent = root.get();
-		root->children.push_back(file);
-		GetAllFilesRecursive(file);
-
-	}
-}
-
-size_t ModuleFileSystem::GetNumberOfFileSubFolders(const File & file) const
-{
-	size_t subFiles = 0;
-	for (auto & subFile : file.children)
-	{
-		if (subFile->file_type == FileType::DIRECTORY)
-		{
-			subFiles++;
-		}
-	}
-	return subFiles;
-}
-
 
 bool ModuleFileSystem::IsValidFileName(const char * file_name) const
 {

@@ -11,7 +11,8 @@ enum class FileType
 	ARCHIVE,
 	UNKNOWN
 };
-struct File {
+class File {
+public:
 	File() = default;
 	File(const std::string & path, const std::string & name);
 	File(const std::string & path);
@@ -19,11 +20,16 @@ struct File {
 	std::string file_path;
 	std::string filename_no_extension;
 	FileType file_type;
+	size_t subFolders = 0;
 
 
 	std::vector<std::shared_ptr<File>> children;
 	File* parent;
 	bool operator==(const File& compare);
+private:
+	void GetFileInfo();
+	void GetChildren();
+
 };
 
 #endif // !_PATH_H_

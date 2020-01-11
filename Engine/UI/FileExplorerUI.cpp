@@ -34,9 +34,8 @@ void FileExplorerUI::WindowShowFilesInFolder(File & file) {
 	{
 		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
-		size_t subfolders = App->filesystem->GetNumberOfFileSubFolders(*child);
 		std::string filename = ICON_FA_FOLDER " " + child->filename;
-		if (subfolders == 0)
+		if (child->subFolders == 0)
 		{
 			flags |= ImGuiTreeNodeFlags_Leaf;
 		}

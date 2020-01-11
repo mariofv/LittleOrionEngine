@@ -29,12 +29,10 @@ public:
 	
 	FileType GetFileType(const char *file_path, const PHYSFS_FileType & file_type = PHYSFS_FileType::PHYSFS_FILETYPE_OTHER) const;
 	void GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only = false) const;
-	size_t GetNumberOfFileSubFolders(const File & file) const;
 
 	void RefreshFilesHierarchy();
 private:
 	char *save_path = NULL;
-	void GetAllFilesRecursive(std::shared_ptr<File> root) const;
 	bool IsValidFileName(const char * file_name) const;
 	std::string GetFileExtension(const char *file_path) const;
 
