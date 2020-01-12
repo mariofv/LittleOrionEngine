@@ -13,7 +13,7 @@
 
 class ComponentMesh;
 class GameObject;
-
+class File;
 class ModuleModelLoader : public Module
 {
 public:
@@ -22,11 +22,11 @@ public:
 
 	bool Init();
 	GameObject* LoadModel(const char *new_model_file_path);
-
 	GameObject* LoadCoreModel(const char* new_model_file_path);
 
 private:
 	void LoadNode(GameObject *parent_node, const std::shared_ptr<File> & model_base_path);
+	void Import(const File & file) const;
 };
 
 #endif //_MODULEMODELLOADER_H_

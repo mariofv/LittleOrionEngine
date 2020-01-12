@@ -4,10 +4,10 @@
 #include "Module/ModuleFileSystem.h"
 
 #include <algorithm>
-
+class File;
 class Importer {
 public:
-	virtual std::pair<bool, std::string> Import(const std::string& file) const = 0;
+	virtual std::pair<bool, std::string> Import(const File & file) const = 0;
 
 protected:
 

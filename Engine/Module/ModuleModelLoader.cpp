@@ -25,9 +25,9 @@ bool ModuleModelLoader::Init()
 }
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
-	std::string model_output = App->mesh_importer->Import(std::string(new_model_file_path)).second;
-
 	File file(new_model_file_path);
+	std::string model_output = App->mesh_importer->Import(file).second;
+
 	GameObject *model_root_node = App->scene->CreateGameObject();
 	model_root_node->name = std::string(file.filename_no_extension);
 
@@ -89,3 +89,14 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path)
 }
 
 
+void ModuleModelLoader::Import(const File & file) const
+{
+	if (file.file_type == FileType::MODEL)
+	{
+		App->mesh_importer->Import(file);
+	}
+	if (file.file_type == FileType::TEXTURE)
+	{
+		App->material_importer->Import(file);
+	}
+}
