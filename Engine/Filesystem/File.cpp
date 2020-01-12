@@ -35,9 +35,9 @@ void File::GetChildren()
 	{
 		file->parent = this;
 		this->children.push_back(file);
-		file->GetChildren();
 		if (file->file_type == FileType::DIRECTORY)
 		{
+			file->GetChildren();
 			++subFolders;
 		}
 	}

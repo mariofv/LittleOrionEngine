@@ -95,9 +95,13 @@ unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, u
 	SDL_RWclose(file);
 	return 0;
 }
-bool ModuleFileSystem::Remove(const File & file)
+bool ModuleFileSystem::Remove(const File * file)
 {
-	bool success = PHYSFS_delete(file.file_path.c_str()) != 0;
+	if (file == nullptr)
+	{
+		return false;
+	}
+	bool success = PHYSFS_delete(file->file_path.c_str()) != 0;
 	RefreshFilesHierarchy();
 	return success;
 }
@@ -111,14 +115,14 @@ bool ModuleFileSystem::Exists(const char* file_path) const
 	return exists;
 }
 
-std::string ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path)
+File ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path)
 {
 	if (PHYSFS_mkdir(new_directory_full_path.c_str()) == 0)
 	{
 		APP_LOG_ERROR("Error creating directory %s : %s", new_directory_full_path.c_str(), PHYSFS_getLastError());
 		return "";
 	}
-	return new_directory_full_path;
+	return File(new_directory_full_path);
 }
 bool ModuleFileSystem::Copy(const char* source, const char* destination)
 {
@@ -188,7 +192,7 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	char **files_array = PHYSFS_enumerateFiles(path.c_str());
 	if (*files_array == NULL)
 	{
-		APP_LOG_ERROR("Error reading directory: %s", PHYSFS_getLastError());
+		APP_LOG_INFO("Error reading directory: %s", PHYSFS_getLastError());
 		return;
 	}
 	char **i;

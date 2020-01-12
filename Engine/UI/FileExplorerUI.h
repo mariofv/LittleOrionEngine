@@ -9,13 +9,13 @@ public:
 	~FileExplorerUI() = default;
 
 	void ShowAssetsFolders();
-	void ShowFoldersHierarchy(File & file);
+	void ShowFoldersHierarchy(const File & file);
 
 	void ProcessMouseInput(File * file);
 	void ShowFilesInExplorer();
 
-	void ShowFileSystemActionsMenu(const File & file);
-	void MakeDirectoryFromFile(const File & file) const;
+	void ShowFileSystemActionsMenu(const File * file);
+	void MakeDirectoryFromFile(const File * file) const;
 	void CopyFileToSelectedFolder(const char * source) const;
 
 	void FilesDrag() const;

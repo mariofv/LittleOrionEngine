@@ -13,14 +13,14 @@ void FileExplorerUI::ShowAssetsFolders() {
 
 		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 260)))
 		{
-			ShowFileSystemActionsMenu(*selected_folder);
+			ShowFileSystemActionsMenu(selected_folder);
 			ShowFoldersHierarchy(*App->filesystem->assets_file);
 		}
 		ImGui::EndChild();
 
 		ImGui::SameLine();
 		if (ImGui::BeginChild("File Explorer", ImVec2(0, 260), true)) {
-			ShowFileSystemActionsMenu(*selected_file);
+			ShowFileSystemActionsMenu(selected_file);
 			ShowFilesInExplorer();
 		}
 		ImGui::EndChild();
@@ -28,7 +28,7 @@ void FileExplorerUI::ShowAssetsFolders() {
 	}
 }
 
-void FileExplorerUI::ShowFoldersHierarchy(File & file) {
+void FileExplorerUI::ShowFoldersHierarchy(const File & file) {
 
 	for (auto & child : file.children)
 	{
@@ -123,10 +123,10 @@ void FileExplorerUI::ProcessMouseInput(File * file)
 	}
 }
 
-void FileExplorerUI::ShowFileSystemActionsMenu(const File & file)
+void FileExplorerUI::ShowFileSystemActionsMenu(const File * file)
 {
 	std::string label("Menu");
-
+	bool changes = false;
 	if (ImGui::BeginPopupContextWindow(label.c_str()))
 	{
 	
@@ -134,47 +134,48 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const File & file)
 		{
 			if (ImGui::Selectable("Folder"))
 			{
-				MakeDirectoryFromFile(file);
-			}
-			if (ImGui::Selectable("Empty File"))
-			{
-				char * test = "This is a test text";
-				std::string new_empty_file = file.file_path + "//example.txt";
-				App->filesystem->Save(new_empty_file.c_str(), test, sizeof("This is a test text"),false);
-				size_t size;
-				char * load_test = App->filesystem->Load(new_empty_file.c_str(), size);
-				APP_LOG_INFO("Read: %s", load_test);
-				free(load_test);
+				MakeDirectoryFromFile(selected_folder);
+				changes = true;
 			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::Selectable("Delete"))
 		{
-			bool removed = App->filesystem->Remove(file);
+			App->filesystem->Remove(file);
+			selected_file = nullptr;
+			changes = true;
 		}
-		if (ImGui::Selectable("Rename"))
+		if (changes)
+		{
+			App->filesystem->RefreshFilesHierarchy();
+		}
+		/*if (ImGui::Selectable("Rename"))
 		{
 			//TODO
 		}
 		if (ImGui::Selectable("Copy"))
 		{
 			//TODO
-		}
+		}*/
 
 		ImGui::EndPopup();
 	}
 }
 
-void FileExplorerUI::MakeDirectoryFromFile(const File & file) const
+void FileExplorerUI::MakeDirectoryFromFile(const File * file) const
 {
-	if (!file.file_path.empty() && file.file_type != FileType::DIRECTORY)
+	if (file == nullptr)
 	{
-		size_t last_slash = file.file_path.find_last_of("/");
-		App->filesystem->MakeDirectory(file.file_path.substr(0, last_slash - 1)+"/new Folder");
+		return;
 	}
-	else if(!file.file_path.empty())
+	if (!file->file_path.empty() && file->file_type != FileType::DIRECTORY)
 	{
-		App->filesystem->MakeDirectory(file.file_path+"/new Folder");
+		size_t last_slash = file->file_path.find_last_of("/");
+		App->filesystem->MakeDirectory(file->file_path.substr(0, last_slash - 1)+"/new Folder");
+	}
+	else if(!file->file_path.empty())
+	{
+		App->filesystem->MakeDirectory(file->file_path+"/new Folder");
 	}
 	else if(!selected_folder->file_path.empty()){
 		App->filesystem->MakeDirectory(selected_folder->file_path+ "/new Folder");
