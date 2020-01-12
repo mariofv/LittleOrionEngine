@@ -21,6 +21,7 @@
 bool ModuleModelLoader::Init()
 {
 	APP_LOG_SECTION("************ Module ModelLoader Init ************");
+	Import(*App->filesystem->assets_file.get());
 	return true;
 }
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
@@ -91,12 +92,19 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path)
 
 void ModuleModelLoader::Import(const File & file) const
 {
-	if (file.file_type == FileType::MODEL)
+	for (auto & child : file.children)
 	{
-		App->mesh_importer->Import(file);
-	}
-	if (file.file_type == FileType::TEXTURE)
-	{
-		App->material_importer->Import(file);
+		if (child->file_type == FileType::MODEL)
+		{
+			App->mesh_importer->Import(*child.get());
+		}
+		if (child->file_type == FileType::TEXTURE)
+		{
+			App->material_importer->Import(*child.get());
+		}
+		if (child->file_type == FileType::DIRECTORY)
+		{
+			Import(*child.get());
+		}
 	}
 }

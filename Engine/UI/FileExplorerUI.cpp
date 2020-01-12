@@ -14,7 +14,7 @@ void FileExplorerUI::ShowAssetsFolders() {
 		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 260)))
 		{
 			ShowFileSystemActionsMenu(*selected_folder);
-			ShowFoldersHierarchy(*App->filesystem->root_file);
+			ShowFoldersHierarchy(*App->filesystem->assets_file);
 		}
 		ImGui::EndChild();
 

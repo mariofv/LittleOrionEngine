@@ -35,8 +35,7 @@ private:
 	std::string GetFileExtension(const char *file_path) const;
 
 public:
-
-	std::shared_ptr<File> root_file;
+	std::shared_ptr<File> assets_file;
 };
 
 

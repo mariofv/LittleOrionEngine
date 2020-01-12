@@ -118,7 +118,6 @@ std::string ModuleFileSystem::MakeDirectory(const std::string & new_directory_fu
 		APP_LOG_ERROR("Error creating directory %s : %s", new_directory_full_path.c_str(), PHYSFS_getLastError());
 		return "";
 	}
-	RefreshFilesHierarchy();
 	return new_directory_full_path;
 }
 bool ModuleFileSystem::Copy(const char* source, const char* destination)
@@ -207,7 +206,7 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 
 void ModuleFileSystem::RefreshFilesHierarchy()
 {
-	root_file = std::make_shared<File>("Assets");
+	assets_file = std::make_shared<File>("Assets");
 }
 
 
