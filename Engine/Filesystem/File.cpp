@@ -1,18 +1,25 @@
 #include "File.h"
 #include "Application.h"
 #include "Module/ModuleFileSystem.h"
+
 File::File(const std::string & path, const std::string & name) {
 	this->filename = name;
 	this->file_path = path + "/" + name;
+	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
 	GetFileInfo();
+	//TODO: Move this logic to a Path class
 }
 
 File::File(const std::string & path) {
 
 	this->filename = path.substr(path.find_last_of('/') + 1, -1);
 	this->file_path = path;
-	GetChildren();
+	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
 	GetFileInfo();
+	if (file_type == FileType::DIRECTORY)
+	{
+		GetChildren();
+	}
 
 }
 bool File::operator==(const File& compare)
@@ -23,7 +30,7 @@ bool File::operator==(const File& compare)
 void File::GetChildren()
 {
 	std::vector<std::shared_ptr<File>> files;
-	App->filesystem->GetAllFilesInPath(this->file_path, files, true);
+	App->filesystem->GetAllFilesInPath(this->file_path, files);
 	for (auto & file : files)
 	{
 		file->parent = this;
@@ -45,5 +52,4 @@ void File::GetFileInfo()
 	}
 
 	this->file_type = App->filesystem->GetFileType(filename.c_str(), file_info.filetype);
-	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
 }

@@ -9,10 +9,10 @@ public:
 	~FileExplorerUI() = default;
 
 	void ShowAssetsFolders();
-	void WindowShowFilesInFolder(File & file);
+	void ShowFoldersHierarchy(File & file);
 
 	void ProcessMouseInput(File * file);
-	void ShowFilesInExplorer(std::string & folder_path);
+	void ShowFilesInExplorer();
 
 	void ShowFileSystemActionsMenu(const File & file);
 	void MakeDirectoryFromFile(const File & file) const;
@@ -23,7 +23,6 @@ public:
 private:
 	File * selected_folder;
 	File * selected_file;
-	std::vector<std::shared_ptr<File>> files_in_selected_folder;
 
 };
 #endif

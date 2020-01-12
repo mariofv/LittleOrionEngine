@@ -14,54 +14,62 @@ void FileExplorerUI::ShowAssetsFolders() {
 		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 260)))
 		{
 			ShowFileSystemActionsMenu(*selected_folder);
-			WindowShowFilesInFolder(*App->filesystem->root_file);
+			ShowFoldersHierarchy(*App->filesystem->root_file);
 		}
 		ImGui::EndChild();
 
 		ImGui::SameLine();
 		if (ImGui::BeginChild("File Explorer", ImVec2(0, 260), true)) {
 			ShowFileSystemActionsMenu(*selected_file);
-			ShowFilesInExplorer(selected_folder->file_path);
+			ShowFilesInExplorer();
 		}
 		ImGui::EndChild();
 		ImGui::EndTabItem();
 	}
 }
 
-void FileExplorerUI::WindowShowFilesInFolder(File & file) {
+void FileExplorerUI::ShowFoldersHierarchy(File & file) {
 
-	for (auto & child : file.children )
+	for (auto & child : file.children)
 	{
-		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
+		if (child->file_type == FileType::DIRECTORY)
+		{
 
-		std::string filename = ICON_FA_FOLDER " " + child->filename;
-		if (child->subFolders == 0)
-		{
-			flags |= ImGuiTreeNodeFlags_Leaf;
-		}
-		if (selected_folder == child.get())
-		{
-			flags |= ImGuiTreeNodeFlags_Selected;
-			filename = ICON_FA_FOLDER_OPEN " " + child->filename;
-		}
-		bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
-		if (expanded) {
-			ImGui::PushID(filename.c_str());
-			ProcessMouseInput(child.get());
-			WindowShowFilesInFolder(*child);
-			ImGui::PopID();
-			ImGui::TreePop();
+			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
+
+			std::string filename = ICON_FA_FOLDER " " + child->filename;
+			if (child->subFolders == 0)
+			{
+				flags |= ImGuiTreeNodeFlags_Leaf;
+			}
+			if (selected_folder == child.get())
+			{
+				flags |= ImGuiTreeNodeFlags_Selected;
+				filename = ICON_FA_FOLDER_OPEN " " + child->filename;
+			}
+			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
+			if (expanded) {
+				ImGui::PushID(filename.c_str());
+				ProcessMouseInput(child.get());
+				ShowFoldersHierarchy(*child);
+				ImGui::PopID();
+				ImGui::TreePop();
+			}
 		}
 	}
 }
 
-void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
+void FileExplorerUI::ShowFilesInExplorer() {
 
+	if (selected_folder == nullptr)
+	{
+		return;
+	}
 	ImGuiStyle& style = ImGui::GetStyle();
 	size_t files_count = 0;
 
 	float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-	for (auto & file : files_in_selected_folder)
+	for (auto & file : selected_folder->children)
 	{
 			std::string item_name;
 			std::string filename = std::string(file->filename);
@@ -107,8 +115,6 @@ void FileExplorerUI::ProcessMouseInput(File * file)
 		{
 			selected_folder = file;
 			selected_file = nullptr;
-			files_in_selected_folder.clear();
-			App->filesystem->GetAllFilesInPath(selected_folder->file_path, files_in_selected_folder);
 		}
 		else if(ImGui::IsMouseClicked(0))
 		{
@@ -148,13 +154,13 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const File & file)
 		}
 		if (ImGui::Selectable("Rename"))
 		{
+			//TODO
 		}
 		if (ImGui::Selectable("Copy"))
 		{
+			//TODO
 		}
 
-		files_in_selected_folder.clear();
-		App->filesystem->GetAllFilesInPath(selected_folder->file_path, files_in_selected_folder);
 		ImGui::EndPopup();
 	}
 }
