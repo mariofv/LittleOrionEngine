@@ -120,7 +120,7 @@ File ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path
 	if (PHYSFS_mkdir(new_directory_full_path.c_str()) == 0)
 	{
 		APP_LOG_ERROR("Error creating directory %s : %s", new_directory_full_path.c_str(), PHYSFS_getLastError());
-		return "";
+		return File();
 	}
 	return File(new_directory_full_path);
 }

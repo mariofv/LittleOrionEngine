@@ -50,7 +50,7 @@ void FileExplorerUI::ShowFoldersHierarchy(const File & file) {
 			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
 			if (expanded) {
 				ImGui::PushID(filename.c_str());
-				ProcessMouseInput(child.get());
+				ProcessMouseInput(child.get(), true);
 				ShowFoldersHierarchy(*child);
 				ImGui::PopID();
 				ImGui::TreePop();
@@ -98,7 +98,7 @@ void FileExplorerUI::ShowFilesInExplorer() {
 			}
 			ImVec2 text_sz(ImGui::CalcTextSize(filename.c_str()).x+5,0);
 			ImGui::Selectable(item_name.c_str(), selected_file == file.get(),ImGuiSelectableFlags_None,text_sz);
-			ProcessMouseInput(file.get());
+			ProcessMouseInput(file.get(), false);
 			FilesDrag();
 			++files_count;
 			float last_button_x2 = ImGui::GetItemRectMax().x;
@@ -107,16 +107,20 @@ void FileExplorerUI::ShowFilesInExplorer() {
 				ImGui::SameLine();
 	}
 }
-void FileExplorerUI::ProcessMouseInput(File * file)
+void FileExplorerUI::ProcessMouseInput(File * file, bool in_folders_windows)
 {
 	if (ImGui::IsItemHovered())
 	{
-		if (ImGui::IsMouseClicked(0) && file->file_type == FileType::DIRECTORY)
+		if (ImGui::IsMouseClicked(0) && in_folders_windows)
 		{
 			selected_folder = file;
 			selected_file = nullptr;
 		}
-		else if(ImGui::IsMouseClicked(0))
+		else if (ImGui::IsMouseDoubleClicked(0) && file->file_type == FileType::DIRECTORY)
+		{
+			selected_folder = file;
+		}
+		else if(ImGui::IsMouseClicked(0) )
 		{
 			selected_file = file;
 		}
@@ -141,9 +145,12 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const File * file)
 		}
 		if (ImGui::Selectable("Delete"))
 		{
-			App->filesystem->Remove(file);
-			selected_file = nullptr;
-			changes = true;
+			bool success = App->filesystem->Remove(file);
+			if (success)
+			{
+				selected_file = nullptr;
+				changes = true;
+			}
 		}
 		if (changes)
 		{
@@ -162,24 +169,27 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const File * file)
 	}
 }
 
-void FileExplorerUI::MakeDirectoryFromFile(const File * file) const
+void FileExplorerUI::MakeDirectoryFromFile(File * file)
 {
 	if (file == nullptr)
 	{
 		return;
 	}
+	std::shared_ptr<File> new_folder;
 	if (!file->file_path.empty() && file->file_type != FileType::DIRECTORY)
 	{
 		size_t last_slash = file->file_path.find_last_of("/");
-		App->filesystem->MakeDirectory(file->file_path.substr(0, last_slash - 1)+"/new Folder");
+		new_folder = std::make_shared<File>(App->filesystem->MakeDirectory(file->file_path.substr(0, last_slash - 1)+"/new Folder"));
 	}
 	else if(!file->file_path.empty())
 	{
-		App->filesystem->MakeDirectory(file->file_path+"/new Folder");
+		new_folder = std::make_shared<File>(App->filesystem->MakeDirectory(file->file_path+"/new Folder"));
 	}
 	else if(!selected_folder->file_path.empty()){
-		App->filesystem->MakeDirectory(selected_folder->file_path+ "/new Folder");
+		new_folder = std::make_shared<File>(App->filesystem->MakeDirectory(selected_folder->file_path+ "/new Folder"));
 	}
+	file->children.push_back(new_folder);
+	selected_folder = new_folder.get();
 }
 
 void FileExplorerUI::CopyFileToSelectedFolder(const char * source) const

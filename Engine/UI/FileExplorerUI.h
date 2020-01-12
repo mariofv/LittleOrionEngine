@@ -11,11 +11,11 @@ public:
 	void ShowAssetsFolders();
 	void ShowFoldersHierarchy(const File & file);
 
-	void ProcessMouseInput(File * file);
+	void ProcessMouseInput(File * file, bool in_folders_windows);
 	void ShowFilesInExplorer();
 
 	void ShowFileSystemActionsMenu(const File * file);
-	void MakeDirectoryFromFile(const File * file) const;
+	void MakeDirectoryFromFile(File * file);
 	void CopyFileToSelectedFolder(const char * source) const;
 
 	void FilesDrag() const;

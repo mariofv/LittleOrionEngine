@@ -43,7 +43,7 @@ std::pair<bool, std::string> MeshImporter::Import(const File & file) const
 	performance_timer.Start();
 
 	const aiScene* scene = aiImportFile(file.file_path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
-	if (scene == NULL)
+	if (scene == NULL || output_file.file_path.empty())
 	{
 		const char *error = aiGetErrorString();
 		APP_LOG_ERROR("Error loading model %s ", file.file_path.c_str());
