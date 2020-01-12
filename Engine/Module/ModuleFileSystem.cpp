@@ -129,8 +129,11 @@ bool ModuleFileSystem::Copy(const char* source, const char* destination)
 	size_t file_size;
 	char * buffer = Load(source,file_size);
 	bool success = Save(destination, buffer, file_size,false);
-	RefreshFilesHierarchy();
-	delete buffer;
+	free(buffer);
+	if (success)
+	{
+		RefreshFilesHierarchy();
+	}
 	return success;
 }
 

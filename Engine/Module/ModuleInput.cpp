@@ -144,15 +144,7 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_DROPFILE:
 			char *dropped_filedir = event.drop.file;
-			switch (App->filesystem->GetFileType(dropped_filedir))
-			{
-			case FileType::MODEL:
-				App->ui->editor_ui->file_explorer_ui.CopyFileToSelectedFolder(dropped_filedir);
-				//App->model_loader->LoadModel(dropped_filedir);
-				break;
-			default:
-				break;
-			}
+			App->ui->editor_ui->file_explorer_ui.CopyFileToSelectedFolder(dropped_filedir);
 			SDL_free(dropped_filedir);
 			
 			break;
