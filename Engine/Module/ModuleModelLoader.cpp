@@ -18,12 +18,40 @@
 #include <assimp/mesh.h>
 
 // Called before render is available
+
+void Import(const File & file)
+{
+	for (auto & child : file.children)
+	{
+		if (child->file_type == FileType::MODEL)
+		{
+			App->mesh_importer->Import(*child.get());
+		}
+		if (child->file_type == FileType::TEXTURE)
+		{
+			App->material_importer->Import(*child.get());
+		}
+		if (child->file_type == FileType::DIRECTORY)
+		{
+			Import(*child.get());
+		}
+	}
+}
+
 bool ModuleModelLoader::Init()
 {
 	APP_LOG_SECTION("************ Module ModelLoader Init ************");
-	Import(*App->filesystem->assets_file.get());
+	importing = std::thread(Import, *App->filesystem->assets_file.get());
+	return true;
+
+}
+
+bool ModuleModelLoader::CleanUp()
+{
+	importing.detach();
 	return true;
 }
+
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
 	File file(new_model_file_path);
@@ -90,21 +118,3 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path)
 }
 
 
-void ModuleModelLoader::Import(const File & file) const
-{
-	for (auto & child : file.children)
-	{
-		if (child->file_type == FileType::MODEL)
-		{
-			App->mesh_importer->Import(*child.get());
-		}
-		if (child->file_type == FileType::TEXTURE)
-		{
-			App->material_importer->Import(*child.get());
-		}
-		if (child->file_type == FileType::DIRECTORY)
-		{
-			Import(*child.get());
-		}
-	}
-}
