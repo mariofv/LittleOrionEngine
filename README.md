@@ -21,13 +21,12 @@
 ![](https://github.com/mariofv/LittleOrionEngine/blob/master/Media/engine_usage_v0_1_5-alpha.gif)
 
 ## Highlights
-- Load and visualize 3D models.
-- Change model texture with one of your choice.
+- Create, save and load scenes.
+- Create GameObjects and modify their behaviours using Component system.
 - Explore the scene using a Unity-like camera.
 - Configure different engine properties: renderer, time management, ...
 
 ## Installation
-
 - Download the last release (or whatever release you want) from the [Releases section](https://github.com/mariofv/LittleOrionEngine/releases).
 - Extract `Build.zip`.
 - Execute `LittleOrionEngine.exe`.
@@ -57,14 +56,12 @@ In _Configuration_ window you can check and configure Engine properties.
 - **Input** shows current input info.
 
 ## Development setup
-
 In order to do that assure that you have the following:
 - A computer.
 - A graphic card with OpenGL support.
 - [VisualStudio 2017 or above](https://visualstudio.microsoft.com/es/).
 
 ## Contributing
-
 Because this is a academic project is not possible to contribute directly to this repo. Said that, feel free to fork it (<https://github.com/mariofv/LittleOrionEngine/fork>) and to expand it in your own way!
 
 ## Authors
@@ -73,7 +70,6 @@ Because this is a academic project is not possible to contribute directly to thi
 | [Mario Fernández Villalba](https://github.com/mariofv/) | [Anabel Hernández Barrera](https://github.com/yalania/) |
 
 ## Built With
-
 * [SDL 2.0](https://www.libsdl.org/) - Used to manage window creation and input.
 * [glew 2.1.0](http://glew.sourceforge.net/) - Used to manage OpenGL extensions.
 * [MathGeoLib 3.0.0](https://github.com/juj/MathGeoLib/) - Used to do the maths.
@@ -90,7 +86,6 @@ Because this is a academic project is not possible to contribute directly to thi
 * [PhysFS 3.0.2](http://icculus.org/physfs/) - Used to manage file system.
 
 ## License
-
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/mariofv/LittleOrionEngine/blob/master/LICENSE) file for details.
 
 ## Release History
