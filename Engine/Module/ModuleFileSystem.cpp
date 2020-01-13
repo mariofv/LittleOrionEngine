@@ -95,9 +95,13 @@ unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, u
 	SDL_RWclose(file);
 	return 0;
 }
-bool ModuleFileSystem::Remove(const File & file)
+bool ModuleFileSystem::Remove(const File * file)
 {
-	bool success = PHYSFS_delete(file.file_path.c_str()) != 0;
+	if (file == nullptr)
+	{
+		return false;
+	}
+	bool success = PHYSFS_delete(file->file_path.c_str()) != 0;
 	RefreshFilesHierarchy();
 	return success;
 }
@@ -111,27 +115,29 @@ bool ModuleFileSystem::Exists(const char* file_path) const
 	return exists;
 }
 
-std::string ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path)
+File ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path)
 {
 	if (PHYSFS_mkdir(new_directory_full_path.c_str()) == 0)
 	{
 		APP_LOG_ERROR("Error creating directory %s : %s", new_directory_full_path.c_str(), PHYSFS_getLastError());
-		return "";
+		return File();
 	}
-	RefreshFilesHierarchy();
-	return new_directory_full_path;
+	return File(new_directory_full_path);
 }
 bool ModuleFileSystem::Copy(const char* source, const char* destination)
 {
 	size_t file_size;
 	char * buffer = Load(source,file_size);
 	bool success = Save(destination, buffer, file_size,false);
-	RefreshFilesHierarchy();
-	delete buffer;
+	free(buffer);
+	if (success)
+	{
+		RefreshFilesHierarchy();
+	}
 	return success;
 }
 
-ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileType & file_type) const
+FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileType & file_type) const
 {
 	std::string file_extension = GetFileExtension(file_path);
 	std::transform(file_extension.begin(), file_extension.end(), file_extension.begin(),
@@ -139,7 +145,7 @@ ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, 
 
 	if ((PHYSFS_FileType::PHYSFS_FILETYPE_DIRECTORY == file_type ) || (file_extension == "/" ))
 	{
-		return ModuleFileSystem::FileType::DIRECTORY;
+		return FileType::DIRECTORY;
 	}
 
 	if (
@@ -150,20 +156,20 @@ ModuleFileSystem::FileType ModuleFileSystem::GetFileType(const char *file_path, 
 		|| file_extension == "jpg"
 		)
 	{
-		return ModuleFileSystem::FileType::TEXTURE;
+		return FileType::TEXTURE;
 	}
 	if (
 		file_extension == "fbx"
 		|| file_extension == "ol"
 		)
 	{
-		return ModuleFileSystem::FileType::MODEL;
+		return FileType::MODEL;
 	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{
-		return ModuleFileSystem::FileType::ARCHIVE;
+		return FileType::ARCHIVE;
 	}
-	return ModuleFileSystem::FileType::UNKNOWN;
+	return FileType::UNKNOWN;
 }
 
 
@@ -189,7 +195,7 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	char **files_array = PHYSFS_enumerateFiles(path.c_str());
 	if (*files_array == NULL)
 	{
-		APP_LOG_ERROR("Error reading directory: %s", PHYSFS_getLastError());
+		APP_LOG_INFO("Error reading directory: %s", PHYSFS_getLastError());
 		return;
 	}
 	char **i;
@@ -197,7 +203,7 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	{
 		std::shared_ptr<File> new_file = std::make_shared<File>(path, *i);
 		bool is_directory = new_file->file_type == FileType::DIRECTORY;
-		if (IsValidFileName(*i) && ((directories_only && is_directory) || !directories_only))
+		if ((directories_only && is_directory) || !directories_only)
 		{
 			files.push_back(new_file);
 		}
@@ -205,72 +211,11 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	PHYSFS_freeList(files_array);
 }
 
-std::shared_ptr<ModuleFileSystem::File> ModuleFileSystem::GetFileHierarchyFromPath(const std::string & path) const
-{
-	std::shared_ptr<File> new_file = std::make_shared<File>();
-	new_file->file_path = path;
-	GetAllFilesRecursive(new_file);
-	return new_file;
-}
-void ModuleFileSystem::GetAllFilesRecursive(std::shared_ptr<File> root) const
-{
-	std::vector<std::shared_ptr<File>> files;
-	GetAllFilesInPath(root->file_path, files, true);
-	for (auto & file : files )
-	{
-		file->parent = root;
-		root->children.push_back(file);
-		GetAllFilesRecursive(file);
-
-	}
-}
-
-size_t ModuleFileSystem::GetNumberOfFileSubFolders(const std::shared_ptr<ModuleFileSystem::File> & file) const
-{
-	size_t subFiles = 0;
-	for (auto & subFile : file->children)
-	{
-		if (subFile->file_type == ModuleFileSystem::FileType::DIRECTORY)
-		{
-			subFiles++;
-		}
-	}
-	return subFiles;
-}
-
-
-bool ModuleFileSystem::IsValidFileName(const char * file_name) const
-{
-	return std::strcmp(file_name, ".") && std::strcmp(file_name, "..");
-}
-
 void ModuleFileSystem::RefreshFilesHierarchy()
 {
-	root_file = GetFileHierarchyFromPath("Assets");
+	assets_file = std::make_shared<File>("Assets");
 }
 
-bool ModuleFileSystem::File::operator==(const ModuleFileSystem::File& compare)
-{
-	return this->filename == compare.filename && this->file_path == compare.file_path && this->file_type == compare.file_type;
-};
-ModuleFileSystem::File::File(const std::string & path, const std::string & name) {
-	this->filename = name;
-	this->file_path = path + "/" + name;
-	PHYSFS_Stat file_info;
-	if (PHYSFS_stat(this->file_path.c_str(), &file_info) == 0)
-	{
-		APP_LOG_ERROR("Error getting %s file info: %s", this->file_path.c_str(),PHYSFS_getLastError());
-	}
 
-	this->file_type = App->filesystem->GetFileType(filename.c_str(), file_info.filetype);
-	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
-}
-
-ModuleFileSystem::File::File(const std::string & path) {
-
-	std::string name = path.substr(path.find_last_of('/')+1, -1);
-	std::string not_name_path = path.substr(0, path.find_last_of('/'));
-	*this = File(not_name_path,name);
-}
 
 

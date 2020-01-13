@@ -13,56 +13,63 @@ void FileExplorerUI::ShowAssetsFolders() {
 
 		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 260)))
 		{
-			ShowFileSystemActionsMenu(*selected_folder);
-			WindowShowFilesInFolder(*App->filesystem->root_file);
+			ShowFileSystemActionsMenu(selected_folder);
+			ShowFoldersHierarchy(*App->filesystem->assets_file);
 		}
 		ImGui::EndChild();
 
 		ImGui::SameLine();
 		if (ImGui::BeginChild("File Explorer", ImVec2(0, 260), true)) {
-			ShowFileSystemActionsMenu(*selected_file);
-			ShowFilesInExplorer(selected_folder->file_path);
+			ShowFileSystemActionsMenu(selected_file);
+			ShowFilesInExplorer();
 		}
 		ImGui::EndChild();
 		ImGui::EndTabItem();
 	}
 }
 
-void FileExplorerUI::WindowShowFilesInFolder(ModuleFileSystem::File & file) {
+void FileExplorerUI::ShowFoldersHierarchy(const File & file) {
 
-	for (auto & child : file.children )
+	for (auto & child : file.children)
 	{
-		ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
+		if (child->file_type == FileType::DIRECTORY)
+		{
 
-		size_t subfolders = App->filesystem->GetNumberOfFileSubFolders(child);
-		std::string filename = ICON_FA_FOLDER " " + child->filename;
-		if (subfolders == 0)
-		{
-			flags |= ImGuiTreeNodeFlags_Leaf;
-		}
-		if (selected_folder == child.get())
-		{
-			flags |= ImGuiTreeNodeFlags_Selected;
-			filename = ICON_FA_FOLDER_OPEN " " + child->filename;
-		}
-		bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
-		if (expanded) {
-			ImGui::PushID(filename.c_str());
-			ProcessMouseInput(child.get());
-			WindowShowFilesInFolder(*child);
-			ImGui::PopID();
-			ImGui::TreePop();
+			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
+
+			std::string filename = ICON_FA_FOLDER " " + child->filename;
+			if (child->subFolders == 0)
+			{
+				flags |= ImGuiTreeNodeFlags_Leaf;
+			}
+			if (selected_folder == child.get())
+			{
+				flags |= ImGuiTreeNodeFlags_Selected;
+				filename = ICON_FA_FOLDER_OPEN " " + child->filename;
+			}
+			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
+			if (expanded) {
+				ImGui::PushID(filename.c_str());
+				ProcessMouseInput(child.get(), true);
+				ShowFoldersHierarchy(*child);
+				ImGui::PopID();
+				ImGui::TreePop();
+			}
 		}
 	}
 }
 
-void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
+void FileExplorerUI::ShowFilesInExplorer() {
 
+	if (selected_folder == nullptr)
+	{
+		return;
+	}
 	ImGuiStyle& style = ImGui::GetStyle();
 	size_t files_count = 0;
 
 	float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
-	for (auto & file : files_in_selected_folder)
+	for (auto & file : selected_folder->children)
 	{
 			std::string item_name;
 			std::string filename = std::string(file->filename);
@@ -71,18 +78,18 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 			{
 				spaces += " ";
 			}
-			if (file->file_type == ModuleFileSystem::FileType::DIRECTORY) {
+			if (file->file_type == FileType::DIRECTORY) {
 				item_name = spaces + std::string(ICON_FA_FOLDER "\n " + filename);
 			}
-			else if(file->file_type == ModuleFileSystem::FileType::ARCHIVE)
+			else if(file->file_type == FileType::ARCHIVE)
 			{
 				item_name = spaces + std::string(ICON_FA_ARCHIVE "\n " + filename);
 			}
-			else if (file->file_type == ModuleFileSystem::FileType::TEXTURE)
+			else if (file->file_type == FileType::TEXTURE)
 			{
 				item_name = spaces + std::string(ICON_FA_IMAGE "\n " + filename);
 			}
-			else if (file->file_type == ModuleFileSystem::FileType::MODEL)
+			else if (file->file_type == FileType::MODEL)
 			{
 				item_name = spaces + std::string(ICON_FA_CUBES "\n " + filename);
 			}
@@ -91,7 +98,7 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 			}
 			ImVec2 text_sz(ImGui::CalcTextSize(filename.c_str()).x+5,0);
 			ImGui::Selectable(item_name.c_str(), selected_file == file.get(),ImGuiSelectableFlags_None,text_sz);
-			ProcessMouseInput(file.get());
+			ProcessMouseInput(file.get(), false);
 			FilesDrag();
 			++files_count;
 			float last_button_x2 = ImGui::GetItemRectMax().x;
@@ -100,28 +107,30 @@ void FileExplorerUI::ShowFilesInExplorer(std::string & folder_path) {
 				ImGui::SameLine();
 	}
 }
-void FileExplorerUI::ProcessMouseInput(ModuleFileSystem::File * file)
+void FileExplorerUI::ProcessMouseInput(File * file, bool in_folders_windows)
 {
 	if (ImGui::IsItemHovered())
 	{
-		if (ImGui::IsMouseClicked(0) && file->file_type == ModuleFileSystem::FileType::DIRECTORY)
+		if (ImGui::IsMouseClicked(0) && in_folders_windows)
 		{
 			selected_folder = file;
 			selected_file = nullptr;
-			files_in_selected_folder.clear();
-			App->filesystem->GetAllFilesInPath(selected_folder->file_path, files_in_selected_folder);
 		}
-		else if(ImGui::IsMouseClicked(0))
+		else if (ImGui::IsMouseDoubleClicked(0) && file->file_type == FileType::DIRECTORY)
+		{
+			selected_folder = file;
+		}
+		else if(ImGui::IsMouseClicked(0) )
 		{
 			selected_file = file;
 		}
 	}
 }
 
-void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & file)
+void FileExplorerUI::ShowFileSystemActionsMenu(const File * file)
 {
 	std::string label("Menu");
-
+	bool changes = false;
 	if (ImGui::BeginPopupContextWindow(label.c_str()))
 	{
 	
@@ -129,51 +138,58 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const ModuleFileSystem::File & fi
 		{
 			if (ImGui::Selectable("Folder"))
 			{
-				MakeDirectoryFromFile(file);
-			}
-			if (ImGui::Selectable("Empty File"))
-			{
-				char * test = "This is a test text";
-				std::string new_empty_file = file.file_path + "//example.txt";
-				App->filesystem->Save(new_empty_file.c_str(), test, sizeof("This is a test text"),false);
-				size_t size;
-				char * load_test = App->filesystem->Load(new_empty_file.c_str(), size);
-				APP_LOG_INFO("Read: %s", load_test);
-				free(load_test);
+				MakeDirectoryFromFile(selected_folder);
+				changes = true;
 			}
 			ImGui::EndMenu();
 		}
 		if (ImGui::Selectable("Delete"))
 		{
-			bool removed = App->filesystem->Remove(file);
+			bool success = App->filesystem->Remove(file);
+			if (success)
+			{
+				selected_file = nullptr;
+				changes = true;
+			}
 		}
-		if (ImGui::Selectable("Rename"))
+		if (changes)
 		{
+			App->filesystem->RefreshFilesHierarchy();
+		}
+		/*if (ImGui::Selectable("Rename"))
+		{
+			//TODO
 		}
 		if (ImGui::Selectable("Copy"))
 		{
-		}
+			//TODO
+		}*/
 
-		files_in_selected_folder.clear();
-		App->filesystem->GetAllFilesInPath(selected_folder->file_path, files_in_selected_folder);
 		ImGui::EndPopup();
 	}
 }
 
-void FileExplorerUI::MakeDirectoryFromFile(const ModuleFileSystem::File & file) const
+void FileExplorerUI::MakeDirectoryFromFile(File * file)
 {
-	if (!file.file_path.empty() && file.file_type != ModuleFileSystem::FileType::DIRECTORY)
+	if (file == nullptr)
 	{
-		size_t last_slash = file.file_path.find_last_of("/");
-		App->filesystem->MakeDirectory(file.file_path.substr(0, last_slash - 1)+"/new Folder");
+		return;
 	}
-	else if(!file.file_path.empty())
+	std::shared_ptr<File> new_folder;
+	if (!file->file_path.empty() && file->file_type != FileType::DIRECTORY)
 	{
-		App->filesystem->MakeDirectory(file.file_path+"/new Folder");
+		size_t last_slash = file->file_path.find_last_of("/");
+		new_folder = std::make_shared<File>(App->filesystem->MakeDirectory(file->file_path.substr(0, last_slash - 1)+"/new Folder"));
+	}
+	else if(!file->file_path.empty())
+	{
+		new_folder = std::make_shared<File>(App->filesystem->MakeDirectory(file->file_path+"/new Folder"));
 	}
 	else if(!selected_folder->file_path.empty()){
-		App->filesystem->MakeDirectory(selected_folder->file_path+ "/new Folder");
+		new_folder = std::make_shared<File>(App->filesystem->MakeDirectory(selected_folder->file_path+ "/new Folder"));
 	}
+	file->children.push_back(new_folder);
+	selected_folder = new_folder.get();
 }
 
 void FileExplorerUI::CopyFileToSelectedFolder(const char * source) const
@@ -197,7 +213,7 @@ void FileExplorerUI::FilesDrag() const
 {
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 	{
-		ImGui::SetDragDropPayload("DND_File", &selected_file, sizeof(ModuleFileSystem::File*));
+		ImGui::SetDragDropPayload("DND_File", &selected_file, sizeof(File*));
 		ImGui::Text("Dragging %s", selected_file->filename.c_str());
 		ImGui::EndDragDropSource();
 	}

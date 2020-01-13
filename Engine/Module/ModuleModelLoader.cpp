@@ -18,20 +18,49 @@
 #include <assimp/mesh.h>
 
 // Called before render is available
+
+void Import(const File & file)
+{
+	for (auto & child : file.children)
+	{
+		if (child->file_type == FileType::MODEL)
+		{
+			App->mesh_importer->Import(*child.get());
+		}
+		if (child->file_type == FileType::TEXTURE)
+		{
+			App->material_importer->Import(*child.get());
+		}
+		if (child->file_type == FileType::DIRECTORY)
+		{
+			Import(*child.get());
+		}
+	}
+}
+
 bool ModuleModelLoader::Init()
 {
 	APP_LOG_SECTION("************ Module ModelLoader Init ************");
+	importing = std::thread(Import, *App->filesystem->assets_file.get());
+	return true;
+
+}
+
+bool ModuleModelLoader::CleanUp()
+{
+	importing.detach();
 	return true;
 }
+
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
-	std::string model_output = App->mesh_importer->Import(std::string(new_model_file_path)).second;
+	File file(new_model_file_path);
+	std::string model_output = App->mesh_importer->Import(file).second;
 
-	ModuleFileSystem::File file(new_model_file_path);
 	GameObject *model_root_node = App->scene->CreateGameObject();
 	model_root_node->name = std::string(file.filename_no_extension);
 
-	std::vector<std::shared_ptr<ModuleFileSystem::File>> files_in_output_path;
+	std::vector<std::shared_ptr<File>> files_in_output_path;
 	App->filesystem->GetAllFilesInPath(model_output, files_in_output_path);
 	for (auto file : files_in_output_path )
 	{
@@ -40,7 +69,7 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	return model_root_node;
 }
 
-void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<ModuleFileSystem::File> & model_base_path)
+void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<File> & model_base_path)
 {
 	GameObject *node_game_object = App->scene->CreateChildGameObject(parent_node);
 
@@ -67,7 +96,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 
 GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path)
 {
-	ModuleFileSystem::File file(new_model_file_path);
+	File file(new_model_file_path);
 	GameObject* model_game_object = App->scene->CreateGameObject();
 	model_game_object->name = std::string(file.filename_no_extension);
 

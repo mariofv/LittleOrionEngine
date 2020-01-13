@@ -14,16 +14,15 @@ MaterialImporter::MaterialImporter()
 	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 }
-std::pair<bool, std::string> MaterialImporter::Import(const  std::string& file_path) const
+std::pair<bool, std::string> MaterialImporter::Import(const File & file) const
 {
-	ModuleFileSystem::File file(file_path);
 	if (file.filename.empty())
 	{
 		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
 		return std::pair<bool, std::string>(false,"");
 	}
 
-	std::shared_ptr<ModuleFileSystem::File> already_imported = GetAlreadyImportedResource(LIBRARY_TEXTURES_FOLDER, file);
+	std::shared_ptr<File> already_imported = GetAlreadyImportedResource(LIBRARY_TEXTURES_FOLDER, file);
 	if (already_imported != nullptr) {
 		return std::pair<bool, std::string>(true, already_imported->file_path);
 	}
@@ -35,7 +34,7 @@ std::pair<bool, std::string> MaterialImporter::Import(const  std::string& file_p
 	ilGenImages(1, &image);
 	ilBindImage(image);
 	int width, height;
-	ILubyte * save_data = LoadImageData(file_path.c_str(), IL_RGBA, width, height);
+	ILubyte * save_data = LoadImageData(file.file_path.c_str(), IL_RGBA, width, height);
 	//Get new Name
 
 	std::string texture_name_no_extension = file.filename.substr(0, file.filename.find_last_of("."));

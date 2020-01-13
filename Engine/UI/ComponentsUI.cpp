@@ -158,9 +158,9 @@ void ComponentsUI::DropTarget(ComponentMaterial *material, Texture::TextureType 
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_File"))
 		{
-			assert(payload->DataSize == sizeof(ModuleFileSystem::File*));
-			ModuleFileSystem::File *incoming_file = *(ModuleFileSystem::File**)payload->Data;
-			if (incoming_file->file_type == ModuleFileSystem::FileType::TEXTURE)
+			assert(payload->DataSize == sizeof(File*));
+			File *incoming_file = *(File**)payload->Data;
+			if (incoming_file->file_type == FileType::TEXTURE)
 			{
 
 				material->SetMaterialTexture(type, App->texture->LoadTexture(incoming_file->file_path.c_str()));

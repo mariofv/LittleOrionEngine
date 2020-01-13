@@ -4,14 +4,14 @@
 #include "Module/ModuleFileSystem.h"
 
 #include <algorithm>
-
+class File;
 class Importer {
 public:
-	virtual std::pair<bool, std::string> Import(const std::string& file) const = 0;
+	virtual std::pair<bool, std::string> Import(const File & file) const = 0;
 
 protected:
 
-	std::shared_ptr<ModuleFileSystem::File> GetAlreadyImportedResource(const std::string & path_to_look_in, const ModuleFileSystem::File & file_to_look_for) const;
+	std::shared_ptr<File> GetAlreadyImportedResource(const std::string & path_to_look_in, const File & file_to_look_for) const;
 
 };
 #endif // !_IMPORTER_H_

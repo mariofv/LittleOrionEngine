@@ -10,23 +10,25 @@
 #include <vector>
 #include <string>
 #include <memory>
+#include <thread>
 
 class ComponentMesh;
 class GameObject;
-
+class File;
 class ModuleModelLoader : public Module
 {
 public:
 	ModuleModelLoader() = default;
 	~ModuleModelLoader() = default;
 
-	bool Init();
+	bool Init() override;
+	bool CleanUp() override;
 	GameObject* LoadModel(const char *new_model_file_path);
-
 	GameObject* LoadCoreModel(const char* new_model_file_path);
 
 private:
-	void LoadNode(GameObject *parent_node, const std::shared_ptr<ModuleFileSystem::File> & model_base_path);
+	void LoadNode(GameObject *parent_node, const std::shared_ptr<File> & model_base_path);
+	std::thread importing;
 };
 
 #endif //_MODULEMODELLOADER_H_
