@@ -76,18 +76,22 @@ void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, co
 
 			std::string mesh_file = output_file + "/" + std::string(root_node->mChildren[i]->mName.data) + std::to_string(j) + ".ol";
 
-			//Scale
-			aiVector3t<float> scaling, pPosition;
+			// Transformation
+			aiVector3t<float> pScaling, pPosition;
 			aiQuaterniont<float> pRotation;
-			root_node->mChildren[i]->mTransformation.Decompose(scaling,pRotation, pPosition);
-			scaling /= scale_factor;
-			ImportMesh(scene->mMeshes[mesh_index], loaded_meshes_materials,scaling,mesh_file);
+			aiMatrix4x4 node_transformation = root_node->mChildren[i]->mTransformation;
+			node_transformation.Decompose(pScaling, pRotation, pPosition);
+			pScaling *= SCALE_FACTOR;
+
+			node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
+			ImportMesh(scene->mMeshes[mesh_index], loaded_meshes_materials, node_transformation, mesh_file);
 		}
+
 		ImportNode(root_node->mChildren[i], scene, file_path,output_file);
 	}
 }
 
-void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string> & loaded_meshes_materials, const aiVector3t<float> & scale,const std::string& output_file) const
+void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string> & loaded_meshes_materials, const aiMatrix4x4& mesh_transformation, const std::string& output_file) const
 {
 	std::vector<uint32_t> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -102,7 +106,8 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
 		Mesh::Vertex new_vertex;
-		new_vertex.position = float3(mesh->mVertices[i].x *scale.x, mesh->mVertices[i].y*scale.y, mesh->mVertices[i].z*scale.z);
+		aiVector3D transformed_position = mesh_transformation * mesh->mVertices[i];
+		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
 		new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
 		new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
 		vertices.push_back(new_vertex);
