@@ -58,36 +58,40 @@ std::pair<bool, std::string> MeshImporter::Import(const File & file) const
 	
 	aiNode * root_node = scene->mRootNode;
 	std::string base_path = file.file_path.substr(0, file.file_path.find_last_of("//"));
-	ImportNode(root_node, scene, base_path.c_str(),output_file.file_path);
+	aiMatrix4x4 identity_transformation = aiMatrix4x4();
+	ImportNode(root_node, identity_transformation, scene, base_path.c_str(),output_file.file_path);
 
 	aiReleaseImport(scene);
 	return std::pair<bool, std::string>(true, output_file.file_path);
 }
 
-void MeshImporter::ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file) const
+void MeshImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file) const
 {
+	aiMatrix4x4& current_transformtion = parent_transformation * root_node->mTransformation;
+
+	for (size_t i = 0; i < root_node->mNumMeshes; ++i)
+	{
+		size_t mesh_index = root_node->mMeshes[i];
+		std::vector<std::string> loaded_meshes_materials;
+		App->material_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, loaded_meshes_materials);
+
+		std::string mesh_file = output_file + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
+
+		// Transformation
+		aiVector3t<float> pScaling, pPosition;
+		aiQuaterniont<float> pRotation;
+		aiMatrix4x4 node_transformation = current_transformtion;
+		node_transformation.Decompose(pScaling, pRotation, pPosition);
+		pScaling *= SCALE_FACTOR;
+		pPosition *= SCALE_FACTOR;
+
+		node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
+		ImportMesh(scene->mMeshes[mesh_index], loaded_meshes_materials, node_transformation, mesh_file);
+	}
+
 	for (size_t i = 0; i < root_node->mNumChildren; i++)
 	{
-		for (size_t j = 0; j < root_node->mChildren[i]->mNumMeshes; ++j)
-		{
-			size_t mesh_index = root_node->mChildren[i]->mMeshes[j];
-			std::vector<std::string> loaded_meshes_materials;
-			App->material_importer->ImportMaterialFromMesh(scene,mesh_index, file_path,loaded_meshes_materials);
-
-			std::string mesh_file = output_file + "/" + std::string(root_node->mChildren[i]->mName.data) + std::to_string(j) + ".ol";
-
-			// Transformation
-			aiVector3t<float> pScaling, pPosition;
-			aiQuaterniont<float> pRotation;
-			aiMatrix4x4 node_transformation = root_node->mChildren[i]->mTransformation;
-			node_transformation.Decompose(pScaling, pRotation, pPosition);
-			pScaling *= SCALE_FACTOR;
-
-			node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
-			ImportMesh(scene->mMeshes[mesh_index], loaded_meshes_materials, node_transformation, mesh_file);
-		}
-
-		ImportNode(root_node->mChildren[i], scene, file_path,output_file);
+		ImportNode(root_node->mChildren[i], current_transformtion, scene, file_path,output_file);
 	}
 }
 

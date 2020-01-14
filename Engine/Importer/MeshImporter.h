@@ -23,7 +23,7 @@ public:
 	void RemoveMeshFromCacheIfNeeded(const std::shared_ptr<Mesh> & mesh);
 private:
 	void ImportMesh(const aiMesh* file_path, const std::vector<std::string> & loaded_meshes_materials, const aiMatrix4x4& mesh_transformation, const std::string& output_file) const;
-	void ImportNode(const aiNode * root_node, const aiScene* scene, const char* file_path,const std::string& output_file) const;
+	void ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file) const;
 
 public:
 	const float SCALE_FACTOR = 0.01f;
