@@ -55,7 +55,7 @@ enum class Fonts
 };
 
 // Paths -------
-# define SHADERS_PATH "Resources/Shaders/shaders.meta"
+# define SHADERS_PATH "Resources/Shaders/shaders.json"
 # define TEXTURES_PATH "Assets/Textures/"
 
 # define HOUSE_MODEL_PATH "Assets/Models/baker_house/BakerHouse.fbx"
