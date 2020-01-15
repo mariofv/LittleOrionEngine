@@ -64,7 +64,7 @@ void ModuleEditor::RenderDebugDraws()
 {
 	if (App->debug->show_grid)
 	{
-		dd::xzSquareGrid(-100.0f, 100.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
+		dd::xzSquareGrid(-1000.0f, 1000.0f, 0.0f, 10.0f, math::float3(0.65f, 0.65f, 0.65f));
 	}
 
 	if (App->debug->show_quadtree)

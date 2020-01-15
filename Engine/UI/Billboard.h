@@ -20,7 +20,7 @@ private:
 	GLuint vbo = 0;
 	GLuint ebo = 0;
 
-	float size = 1.f;
+	float size = 5.f;
 	Texture* billboard_texture = nullptr;
 
 };
