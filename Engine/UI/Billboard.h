@@ -3,6 +3,7 @@
 
 #include <string>
 #include <MathGeoLib.h>
+#include <GL/glew.h>
 
 class Billboard
 {
@@ -13,6 +14,10 @@ public:
 	void Render(const std::string& texture_path, const float3& position) const;
 
 private:
+	GLuint vao = 0;
+	GLuint vbo = 0;
+	GLuint ebo = 0;
+
 	float size = 10.f;
 
 };
