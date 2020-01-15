@@ -71,9 +71,14 @@ void EngineUI::ShowFileMenu()
 {
 	if (ImGui::BeginMenu("File"))
 	{
+		
+		if (ImGui::MenuItem(ICON_FA_FILE " New Scene"))
+		{
+			App->editor->OpenScene(DEFAULT_SCENE_PATH);
+		}
 		if (App->filesystem->Exists(SAVED_SCENE_PATH))
 		{
-			if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Open Scene"))
+			if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Load Scene"))
 			{
 				App->editor->OpenScene(SAVED_SCENE_PATH);
 			}
