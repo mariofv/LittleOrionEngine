@@ -54,7 +54,6 @@ public:
 	void MoveRight();
 
 	void Center(const AABB &bounding_box);
-	void Focus(const AABB &bounding_box);
 
 	void OrbitCameraWithMouseMotion(const float2 &motion, const float3& focus_point);
 	void OrbitX(float angle, const float3& focus_point);
@@ -93,14 +92,13 @@ private:
 
 public:
 	const float SPEED_UP_FACTOR = 2.f;
-
 	const float BOUNDING_BOX_DISTANCE_FACTOR = 3.f;
-	const float INITIAL_HEIGHT_FACTOR = 0.5f;
-	const float CAMERA_ROTATION_SPEED = 0.000625f;
-	const float CAMERA_MAXIMUN_MOVEMENT_SPEED = 1.0f;
-	const float CAMERA_MINIMUN_MOVEMENT_SPEED = 0.005f;
 	
 	float camera_movement_speed = 0.15f;
+	const float CAMERA_MAXIMUN_MOVEMENT_SPEED = 1.0f;
+	const float CAMERA_MINIMUN_MOVEMENT_SPEED = 0.005f;
+
+	const float CAMERA_ROTATION_SPEED = 0.000625f;
 
 	float camera_clear_color[3] = {0.0f, 0.0f, 0.0f};
 
@@ -127,7 +125,10 @@ private:
 	float speed_up = 1.f;
 
 	bool is_focusing = false;
-	float3 desired_focus_position = float3::zero;
+	const float CENTER_TIME = 250.f;
+	float start_focus_time = 0.f;
+	float3 start_focus_position = float3::zero;
+	float3 goal_focus_position = float3::zero;
 
 	ClearMode camera_clear_mode = ClearMode::COLOR;
 	friend class ComponentsUI;

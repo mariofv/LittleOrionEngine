@@ -47,18 +47,11 @@ void ComponentCamera::Update()
 {
 	if (is_focusing)
 	{
-		float3 zooming_direction = desired_focus_position - owner->transform.GetTranslation();
-		float distance_to_desired_zooming_position = zooming_direction.Length();
-		float frame_focusing_distance = App->time->real_time_delta_time * 1.f;
-		if (distance_to_desired_zooming_position - frame_focusing_distance < 0)
-		{
-			owner->transform.SetTranslation(desired_focus_position);
-			is_focusing = false;
-		}
-		else
-		{
-			owner->transform.SetTranslation(owner->transform.GetTranslation() + zooming_direction.ScaledToLength(frame_focusing_distance));
-		}
+		float focus_progress = math::Min((App->time->real_time_since_startup - start_focus_time) / CENTER_TIME, 1.f);
+		assert(focus_progress >= 0 && focus_progress <= 1.f);
+		float3 new_camera_position = start_focus_position.Lerp(goal_focus_position, focus_progress);
+		owner->transform.SetTranslation(new_camera_position);
+		is_focusing = focus_progress != 1;
 	}	
 
 	camera_frustum.pos = owner->transform.GetTranslation();
@@ -285,11 +278,10 @@ void ComponentCamera::Center(const AABB &bounding_box)
 	float containing_sphere_radius = bounding_box.Size().Length() / 2;
 
 	// Move camera position to visualize the whole bounding box
-	float3 new_camera_pos = bounding_box.CenterPoint() - camera_frustum.front * BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius;
-
-	// Start moving camera animation
 	is_focusing = true;
-	desired_focus_position = new_camera_pos;
+	start_focus_position = owner->transform.GetTranslation();
+	goal_focus_position = bounding_box.CenterPoint() - camera_frustum.front * BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius;;
+	start_focus_time = App->time->real_time_since_startup;
 }
 
 void ComponentCamera::MoveUp()
