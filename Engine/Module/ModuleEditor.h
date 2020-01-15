@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Globals.h"
 #include "Component/ComponentCamera.h"
+#include "UI/Billboard.h"
 
 #include <ImGuizmo.h>
 
@@ -33,6 +34,7 @@ private:
 	void RenderOutline() const;
 	void RenderBoundingBoxes() const;
 	void RenderGlobalBoundingBoxes() const;
+	void RenderBillboards() const;
 
 	void RenderEditorDraws();
 	void RenderGizmo();
@@ -50,6 +52,9 @@ private:
 
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 	bool gizmo_hovered = false;
+
+	Billboard* camera_billboard = nullptr;
+	Billboard* light_billboard = nullptr;
 
 };
 

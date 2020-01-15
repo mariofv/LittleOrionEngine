@@ -14,6 +14,7 @@ struct Billboard
 {
   vec3 center_pos;
   float size;
+  sampler2D texture;
 };
 uniform Billboard billboard;
 
@@ -21,14 +22,6 @@ out vec2 texCoord;
 
 void main()
 {
-  vec3 camera_right = vec3(matrices.view[0][0], matrices.view[1][0], matrices.view[2][0]);
-  vec3 camera_up = vec3(matrices.view[0][1], matrices.view[1][1], matrices.view[2][1]);
-  vec3 billboard_vertex_world_position =
-    billboard.center_pos
-    + camera_right * vertex_position.x * billboard.size
-    + camera_up * vertex_position.y * billboard.size;
-
-	gl_Position = vec4(billboard_vertex_world_position, 1.0);
-	texCoord = vertex_uv0;
-
+  gl_Position = matrices.proj*(matrices.view*vec4(billboard.center_pos,1.0) + vec4(billboard.size*vertex_position, 0.0));
+  texCoord = vec2(vertex_position.x + 0.5, vertex_position.y + 0.5);
 }

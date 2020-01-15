@@ -21,7 +21,8 @@
 bool ModuleEditor::Init()
 {
 	APP_LOG_SECTION("************ Module Editor Init ************");
-	
+	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH);
+	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH);
 	
 	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
 
@@ -32,6 +33,8 @@ bool ModuleEditor::Init()
 bool ModuleEditor::CleanUp()
 {
 	remove(TMP_SCENE_PATH);
+	delete light_billboard;
+	delete camera_billboard;
 
 	return true;
 }
@@ -89,6 +92,8 @@ void ModuleEditor::RenderDebugDraws()
 	{
 		RenderGlobalBoundingBoxes();
 	}
+
+	RenderBillboards();
 
 	App->debug_draw->Render(*App->cameras->scene_camera);
 }
@@ -167,6 +172,22 @@ void ModuleEditor::RenderGlobalBoundingBoxes() const
 	for (auto& object : App->scene->game_objects_ownership)
 	{
 		dd::aabb(object->aabb.global_bounding_box.minPoint, object->aabb.global_bounding_box.maxPoint, float3::one);
+	}
+}
+
+void ModuleEditor::RenderBillboards() const
+{
+	for (auto& object : App->scene->game_objects_ownership)
+	{
+		Component * light_component = object->GetComponent(Component::ComponentType::LIGHT);
+		if (light_component != nullptr) {
+			light_billboard->Render(object->transform.GetGlobalTranslation());
+		}
+
+		Component * camera_component = object->GetComponent(Component::ComponentType::CAMERA);
+		if (camera_component != nullptr) {
+			camera_billboard->Render(object->transform.GetGlobalTranslation());
+		}
 	}
 }
 

@@ -3,10 +3,11 @@
 #include "Application.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
-#include "Texture.h"
 
-Billboard::Billboard()
+Billboard::Billboard(const std::string& texture_path)
 {
+	billboard_texture = App->texture->LoadTexture(texture_path.c_str()).get();
+
 	float vertices[] = {
 		// positions          // texture coords
 		 0.5f,  0.5f, 0.0f,   1.0f, 1.0f,   // top right
@@ -16,8 +17,8 @@ Billboard::Billboard()
 	};
 
 	uint32_t indices[] = {  // note that we start from 0!
-			0, 1, 3,   // first triangle
-			1, 2, 3    // second triangle
+			3, 1, 0,   // first triangle
+			3, 2, 1    // second triangle
 	};
 
 	glGenVertexArrays(1, &vao);
@@ -51,18 +52,16 @@ Billboard::~Billboard()
 	glDeleteVertexArrays(1, &vao);
 }
 
-void Billboard::Render(const std::string& texture_path, const float3& position) const
+void Billboard::Render(const float3& position) const
 {
-	std::shared_ptr<Texture> billboard_texture = App->texture->LoadTexture(texture_path.c_str());
-
 	GLuint shader_program = App->program->billboard_program;
 	glUseProgram(shader_program);
 
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, billboard_texture.get()->opengl_texture);
+	glBindTexture(GL_TEXTURE_2D, billboard_texture->opengl_texture);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture"), 0);
 	glUniform1f(glGetUniformLocation(shader_program, "billboard.size"), size);
-	glUniform4fv(glGetUniformLocation(shader_program, "billboard.center_pos"), 1, position.ptr());
+	glUniform3fv(glGetUniformLocation(shader_program, "billboard.center_pos"), 1, position.ptr());
 
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
