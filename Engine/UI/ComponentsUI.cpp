@@ -200,8 +200,6 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 		ImGui::Separator();
 
 		ImGui::SliderFloat("Mov Speed", &camera->camera_movement_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
-		ImGui::SliderFloat("Rot Speed", &camera->camera_rotation_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
-		ImGui::SliderFloat("Zoom Speed", &camera->camera_zooming_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
 
 		if (ImGui::SliderFloat("FOV", &camera->camera_frustum.horizontalFov, 0, 2 * 3.14f))
 		{

@@ -94,17 +94,13 @@ private:
 public:
 	const float SPEED_UP_FACTOR = 2.f;
 
-	const float FAR_PLANE_FACTOR = 25.f;
 	const float BOUNDING_BOX_DISTANCE_FACTOR = 3.f;
 	const float INITIAL_HEIGHT_FACTOR = 0.5f;
-	const float CAMERA_MOVEMENT_SPEED_BOUNDING_BOX_RADIUS_FACTOR = 0.005f;
-	const float CAMERA_ZOOMING_SPEED_BOUNDING_BOX_RADIUS_FACTOR = 0.0625f;
+	const float CAMERA_ROTATION_SPEED = 0.000625f;
 	const float CAMERA_MAXIMUN_MOVEMENT_SPEED = 1.0f;
 	const float CAMERA_MINIMUN_MOVEMENT_SPEED = 0.005f;
 	
 	float camera_movement_speed = 0.15f;
-	float camera_zooming_speed = 0.15f;
-	float camera_rotation_speed = 0.000625f;
 
 	float camera_clear_color[3] = {0.0f, 0.0f, 0.0f};
 
