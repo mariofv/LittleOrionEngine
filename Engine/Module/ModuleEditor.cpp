@@ -93,9 +93,9 @@ void ModuleEditor::RenderDebugDraws()
 		RenderGlobalBoundingBoxes();
 	}
 
-	RenderBillboards();
-
 	App->debug_draw->Render(*App->cameras->scene_camera);
+
+	RenderBillboards();
 }
 
 void ModuleEditor::RenderCameraFrustum() const
