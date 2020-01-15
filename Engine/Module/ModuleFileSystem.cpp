@@ -18,6 +18,7 @@ bool ModuleFileSystem::Init() {
 	}
 	MakeDirectory("Assets");
 	MakeDirectory("Assets/Scenes");
+	MakeDirectory("Library");
 	if (PHYSFS_mount("Assets", "Assets", 1) == 0)
 	{
 		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());

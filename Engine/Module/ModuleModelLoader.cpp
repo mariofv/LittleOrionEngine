@@ -40,6 +40,7 @@ void Import(const File & file)
 		{
 			Import(*child.get());
 		}
+		App->model_loader->thread_comunication.importing_hash = 0;
 	}
 }
 
@@ -53,13 +54,17 @@ bool ModuleModelLoader::Init()
 
 bool ModuleModelLoader::CleanUp()
 {
-	App->model_loader->thread_comunication.stop_thread = true;
+	thread_comunication.stop_thread = true;
 	importing.join();
 	return true;
 }
 
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
+	while (thread_comunication.importing_hash == std::hash<std::string>{}(new_model_file_path))
+	{
+		Sleep(1000);
+	}
 	File file(new_model_file_path);
 	std::string model_output = App->mesh_importer->Import(file).second;
 
