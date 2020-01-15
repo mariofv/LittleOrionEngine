@@ -35,6 +35,11 @@ bool ModuleProgram::Init()
 		return false;
 	}
 
+	if (!LoadProgram(billboard_program, BILLBOARD_VERTEX_SHADER_PATH, BILLBOARD_FRAGMENT_SHADER_PATH))
+	{
+		return false;
+	}
+
 	if (!LoadProgram(phong_flat_program, FLAT_VERTEX_SHADER_PATH, FLAT_FRAGMENT_SHADER_PATH))
 	{
 		return false;

@@ -55,14 +55,14 @@ void Billboard::Render(const std::string& texture_path, const float3& position) 
 {
 	std::shared_ptr<Texture> billboard_texture = App->texture->LoadTexture(texture_path.c_str());
 
-	//GLuint shader_program = App->program->billboard_program;
-	GLuint shader_program = 0;
+	GLuint shader_program = App->program->billboard_program;
 	glUseProgram(shader_program);
-
-	glUniform1f(glGetUniformLocation(shader_program, "billboard.size"), size);
 
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, billboard_texture.get()->opengl_texture);
+	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture"), 0);
+	glUniform1f(glGetUniformLocation(shader_program, "billboard.size"), size);
+	glUniform4fv(glGetUniformLocation(shader_program, "billboard.center_pos"), 1, position.ptr());
 
 	glBindVertexArray(vao);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
