@@ -88,8 +88,9 @@ enum class Fonts
 # define BLINN_PHONG_FRAGMENT_SHADER_PATH "Resources/Shaders/blinn_phong.fs"
 
 # define HOUSE_MODEL_PATH "Assets/Models/baker_house/BakerHouse.fbx"
-# define BUNNY_MODEL_PATH "Assets/Models/ZomBunny/Zombunny.fbx"
-# define GRID_TEXTURE_PATH "Resources/Textures/grid.png"
+
+# define VIDEO_BILLBOARD_TEXTURE_PATH "Assets/Textures/video-solid.png"
+# define LIGHT_BILLBOARD_TEXTURE_PATH "Assets/Textures/lightbulb-solid.png"
 
 # define PRIMITIVE_CUBE_PATH "Resources/Primitives/Cube/Cube.ol"
 # define PRIMITIVE_CYLINDER_PATH "Resources/Primitives/Cylinder/Cylinder.ol"
