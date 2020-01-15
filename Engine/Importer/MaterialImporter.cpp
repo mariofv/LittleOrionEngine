@@ -27,7 +27,7 @@ std::pair<bool, std::string> MaterialImporter::Import(const File & file) const
 		return std::pair<bool, std::string>(true, already_imported->file_path);
 	}
 
-
+	App->filesystem->MakeDirectory(LIBRARY_TEXTURES_FOLDER);
 	//Bound image
 
 	ILuint image;
@@ -111,6 +111,10 @@ std::string MaterialImporter::ImportMaterialData(const std::string & material_pa
 }
 std::shared_ptr<Texture> MaterialImporter::Load(const std::string& file_path) const{
 
+	if (!App->filesystem->Exists(file_path.c_str()))
+	{
+		return nullptr;
+	}
 	BROFILER_CATEGORY("Load Texture", Profiler::Color::BurlyWood);
 	//Check if the texture is already loaded
 	auto it = std::find_if(texture_cache.begin(), texture_cache.end(), [file_path](const std::shared_ptr<Texture> & texture)

@@ -23,7 +23,7 @@ public:
 
 	bool Remove(const File * file);
 	bool Exists(const char* file) const;
-	File MakeDirectory(const std::string & new_directory_full_path);
+	File MakeDirectory(const std::string & new_directory_full_path) const;
 	bool Copy(const char* source, const char* destination);
 	
 	FileType GetFileType(const char *file_path, const PHYSFS_FileType & file_type = PHYSFS_FileType::PHYSFS_FILETYPE_OTHER) const;

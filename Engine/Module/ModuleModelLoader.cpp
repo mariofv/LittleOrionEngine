@@ -81,6 +81,11 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 
 	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load(model_base_path->file_path.c_str());
 
+	if (mesh_for_component == nullptr)
+	{
+		return;
+	}
+
 	ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
 	mesh_component->SetMesh(mesh_for_component);
 	node_game_object->name = model_base_path->filename_no_extension;
@@ -107,7 +112,10 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path)
 	model_game_object->name = std::string(file.filename_no_extension);
 
 	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load(file.file_path.c_str());
-
+	if (mesh_for_component == nullptr)
+	{
+		return model_game_object;
+	}
 	ComponentMesh* mesh_component = (ComponentMesh*)model_game_object->CreateComponent(Component::ComponentType::MESH);
 	mesh_component->SetMesh(mesh_for_component);
 	model_game_object->Update();

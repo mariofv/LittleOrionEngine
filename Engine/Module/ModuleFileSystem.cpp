@@ -18,7 +18,6 @@ bool ModuleFileSystem::Init() {
 	}
 	MakeDirectory("Assets");
 	MakeDirectory("Assets/Scenes");
-	MakeDirectory("Library/Materials");
 	if (PHYSFS_mount("Assets", "Assets", 1) == 0)
 	{
 		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
@@ -115,7 +114,7 @@ bool ModuleFileSystem::Exists(const char* file_path) const
 	return exists;
 }
 
-File ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path)
+File ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path) const
 {
 	if (PHYSFS_mkdir(new_directory_full_path.c_str()) == 0)
 	{

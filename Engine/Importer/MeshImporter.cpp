@@ -157,6 +157,10 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
  std::shared_ptr<Mesh> MeshImporter::Load(const  std::string& file_path) const
  {
 	 BROFILER_CATEGORY("Load Mesh", Profiler::Color::Brown);
+	 if (!App->filesystem->Exists(file_path.c_str()))
+	 {
+		 return nullptr;
+	 }
 	//Check if the mesh is already loaded
 	auto it = std::find_if(mesh_cache.begin(), mesh_cache.end(), [file_path](const std::shared_ptr<Mesh> mesh) 
 	{
