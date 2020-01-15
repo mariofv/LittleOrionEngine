@@ -126,7 +126,7 @@ update_status ModuleInput::PreUpdate()
 			{
 				if (App->scene->hierarchy.selected_game_object != nullptr)
 				{
-					App->cameras->scene_camera->Center(App->scene->hierarchy.selected_game_object->aabb.bounding_box);
+					App->cameras->scene_camera->Center(App->scene->hierarchy.selected_game_object->aabb.global_bounding_box);
 				}
 			}
 			break;
