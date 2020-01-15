@@ -67,6 +67,7 @@ void Billboard::Render(const float3& position) const
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
+
 	glUseProgram(0);
 }
 

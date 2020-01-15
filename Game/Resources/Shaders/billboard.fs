@@ -14,6 +14,5 @@ uniform Billboard billboard;
 void main()
 {
 	vec4 texture_color = texture(billboard.texture, texCoord);
-	texture_color = mix(texture_color, vec4(1.0), texture_color.w);
 	FragColor =  texture_color;
 }

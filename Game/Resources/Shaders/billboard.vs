@@ -23,5 +23,5 @@ out vec2 texCoord;
 void main()
 {
   gl_Position = matrices.proj*(matrices.view*vec4(billboard.center_pos,1.0) + vec4(billboard.size*vertex_position, 0.0));
-  texCoord = vec2(vertex_position.x + 0.5, vertex_position.y + 0.5);
+  texCoord = vertex_uv0;
 }
