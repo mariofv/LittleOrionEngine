@@ -292,16 +292,6 @@ void ComponentCamera::Center(const AABB &bounding_box)
 	desired_focus_position = new_camera_pos;
 }
 
-void ComponentCamera::Focus(const AABB &bounding_box)
-{
-	LookAt(bounding_box.CenterPoint());
-
-	float containing_sphere_radius = bounding_box.Size().Length() / 2;
-	is_focusing = true;
-	desired_focus_position = bounding_box.CenterPoint() - BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius * camera_frustum.front;
-}
-
-
 void ComponentCamera::MoveUp()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
