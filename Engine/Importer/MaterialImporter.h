@@ -46,7 +46,7 @@ private:
 
 public:
 	MaterialImporter();
-	std::pair<bool, std::string> Import(const std::string& file_path) const override;
+	std::pair<bool, std::string> Import(const File & file) const override;
 	void ImportMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* file_path,std::vector<std::string> & loaded_meshes_materials) const;
 	std::string ImportMaterialData(const std::string& material_path, const std::string model_base_path) const;
 	std::shared_ptr<Texture> Load(const std::string& file_path) const;

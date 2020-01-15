@@ -51,16 +51,16 @@ private:
 	void SetHierarchyStatic(bool is_static);
 
 public:
+	std::vector<Component*> components;
 	std::string name = "";
-	uint64_t UUID = -1;
 
 	GameObject* parent = nullptr;
 	std::vector<GameObject*> children;
 
+	uint64_t UUID = -1;
 	ComponentAABB aabb;
 	ComponentTransform transform;
 
-	std::vector<Component*> components;
 
 private:
 
