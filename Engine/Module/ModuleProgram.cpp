@@ -9,8 +9,6 @@
 bool ModuleProgram::Init()
 {
 	APP_LOG_SECTION("************ Module Program Init ************");
-
-	InitUniformBuffer();
 	LoadPrograms(SHADERS_PATH);
 	return true;
 }
@@ -25,6 +23,11 @@ bool ModuleProgram::CleanUp()
 
 	glDeleteBuffers(1, &uniform_buffer.ubo);
 
+	for (auto & name : names)
+	{
+		delete[] name;
+	}
+	names.clear();
 	return true;
 }
 
@@ -186,8 +189,12 @@ void ModuleProgram::BindUniformBlocks(GLuint shader_program) const
 }
 
 void ModuleProgram::LoadPrograms(const char* file_path)
+
 {
-	names.clear();
+	CleanUp();
+
+	InitUniformBuffer();
+
 	size_t readed_bytes;
 	char* shaders_file_data = App->filesystem->Load(file_path, readed_bytes);
 	std::string serialized_shaders = shaders_file_data;
