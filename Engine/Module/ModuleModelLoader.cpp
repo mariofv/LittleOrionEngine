@@ -23,6 +23,11 @@ void Import(const File & file)
 {
 	for (auto & child : file.children)
 	{
+		if (App->model_loader->thread_comunication.stop_thread)
+		{
+			return;
+		}
+		App->model_loader->thread_comunication.importing_hash = std::hash<std::string>{}(child->file_path);
 		if (child->file_type == FileType::MODEL)
 		{
 			App->mesh_importer->Import(*child.get());
@@ -48,7 +53,8 @@ bool ModuleModelLoader::Init()
 
 bool ModuleModelLoader::CleanUp()
 {
-	importing.detach();
+	App->model_loader->thread_comunication.stop_thread = true;
+	importing.join();
 	return true;
 }
 

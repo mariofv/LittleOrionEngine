@@ -11,6 +11,7 @@
 #include <string>
 #include <memory>
 #include <thread>
+#include <atomic>
 
 class ComponentMesh;
 class GameObject;
@@ -29,6 +30,12 @@ public:
 private:
 	void LoadNode(GameObject *parent_node, const std::shared_ptr<File> & model_base_path);
 	std::thread importing;
+public:
+	struct ThreadComunication
+	{
+		std::atomic_bool stop_thread = false;
+		std::atomic_uint importing_hash = 0;
+	} thread_comunication;
 };
 
 #endif //_MODULEMODELLOADER_H_
