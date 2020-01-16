@@ -28,7 +28,6 @@ uniform Material material;
 
 layout (std140) uniform Light
 {
-	float light_intensity;
 	vec3 light_color;
 	vec3 light_position;
 } light;
@@ -61,6 +60,7 @@ void main()
             specular = pow(spec, material.shininess);
         }
     }
+	
     diffuse_intensity = material.k_diffuse*diffuse;
     specular_intensity = material.k_specular*specular;
 }

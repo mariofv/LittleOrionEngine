@@ -21,15 +21,14 @@ void ComponentLight::Delete()
 
 void ComponentLight::Render() const
 {	
+	float3 light_color_scaled = light_intensity * float3(light_color);
+
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-
-	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.lights_uniform_offset, sizeof(float), &light_intensity);
 	
-	size_t light_color_offset = App->program->uniform_buffer.lights_uniform_offset + 4 * sizeof(float);
-	glBufferSubData(GL_UNIFORM_BUFFER, light_color_offset, 3 * sizeof(float), (float*)light_color);
+	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.lights_uniform_offset, 3 * sizeof(float), light_color_scaled.ptr());
 
-	size_t light_position_offset = App->program->uniform_buffer.lights_uniform_offset + 8 * sizeof(float);
-	glBufferSubData(GL_UNIFORM_BUFFER, light_position_offset, 3 * sizeof(float), owner->transform.GetTranslation().ptr());
+	size_t light_position_offset = App->program->uniform_buffer.lights_uniform_offset + 4 * sizeof(float);
+	glBufferSubData(GL_UNIFORM_BUFFER, light_position_offset, 3 * sizeof(float), owner->transform.GetGlobalTranslation().ptr());
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }

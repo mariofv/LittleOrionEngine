@@ -6,6 +6,12 @@ in vec2 texCoord;
 
 out vec4 FragColor;
 
+layout (std140) uniform Light
+{
+	vec3 light_color;
+	vec3 light_position;
+} light;
+
 struct Material {    
 	sampler2D diffuse_map;    
 	vec4 diffuse_color;   
@@ -33,10 +39,12 @@ void main()
 	vec3 occlusion_color = get_occlusion_color(material, texCoord);    
 	vec3 emissive_color  = get_emissive_color(material, texCoord);
 	
-    vec3 result = emissive_color
-	+diffuse_color.rgb*(occlusion_color*material.k_ambient)
-	+diffuse_color.rgb*diffuse_intensity
-	+specular_color.rgb*specular_intensity;
+    vec3 result = light.light_color * (
+		emissive_color
+		+ diffuse_color.rgb*(occlusion_color*material.k_ambient)
+		+ diffuse_color.rgb*diffuse_intensity
+		+ specular_color.rgb*specular_intensity
+	);
     FragColor = vec4(result,1.0);
 }
 

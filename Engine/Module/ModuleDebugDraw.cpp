@@ -194,11 +194,6 @@ public:
         //std::printf("GLSL_VERSION : %s\n\n", glGetString(GL_SHADING_LANGUAGE_VERSION));
         //std::printf("IDebugDrawOpenGLImplementation initializing ...\n");
 
-        // Default OpenGL states:
-        glEnable(GL_CULL_FACE);
-        glEnable(GL_DEPTH_TEST);
-        glDisable(GL_BLEND);
-
         // This has to be enabled since the point drawing shader will use gl_PointSize.
         glEnable(GL_PROGRAM_POINT_SIZE);
 

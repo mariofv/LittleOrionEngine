@@ -41,13 +41,12 @@ public:
 		/*
 			In order to compute the total Light uniform block size we have to take in account the alignment of each of its elements. 
 			This block has the following elements in this specific order:
-				- float
 				- float[3]
 				- float[3]
 			So, the total size will be the following:
-				total_size = 4 (float size) + 12 (alignment of float[3]) + 16 (float[3] size) + 16 (float[3] size) = 48 bytes = 12 * sizeof(float) 
+				total_size = 16 (float[3] size) + 16 (float[3] size) = 32 bytes = 8 * sizeof(float) 
 		*/
-		const size_t LIGHT_UNIFORMS_SIZE = 12 * sizeof(float); // Size of light intensity, color and position
+		const size_t LIGHT_UNIFORMS_SIZE = 8 * sizeof(float); // Size of light intensity, color and position
 
 
 		/*

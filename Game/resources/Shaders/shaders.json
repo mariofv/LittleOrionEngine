@@ -53,6 +53,12 @@
          "Vertex":"Resources/Shaders/blinn_phong.vs",
          "Fragment":"Resources/Shaders/blinn_phong.fs",
          "Selectable":true
+      },
+      {
+         "Name":"Billboard",
+         "Vertex":"Resources/Shaders/billboard.vs",
+         "Fragment":"Resources/Shaders/billboard.fs",
+         "Selectable":false
       }
    ]
 }
