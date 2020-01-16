@@ -377,17 +377,27 @@ void ModuleEditor::ShowGameTab()
 
 void ModuleEditor::ShowGizmoControls()
 {
-	if (ImGui::Button(ICON_FA_ARROWS_ALT))
+	ImVec2 window_size = ImGui::GetWindowSize();
+
+	ImVec2 translate_control_pos(10, (window_size.y - 24)*0.5f);
+	ImGui::SetCursorPos(translate_control_pos);
+	if (ImGui::Button(ICON_FA_ARROWS_ALT, ImVec2(24, 24)))
 	{
 		gizmo_operation = ImGuizmo::TRANSLATE;
 	}
+
 	ImGui::SameLine();
-	if (ImGui::Button(ICON_FA_SYNC_ALT))
+	ImVec2 rotation_control_pos(36, (window_size.y - 24)*0.5f);
+	ImGui::SetCursorPos(rotation_control_pos);
+	if (ImGui::Button(ICON_FA_SYNC_ALT, ImVec2(24, 24)))
 	{
 		gizmo_operation = ImGuizmo::ROTATE;
 	}
+
 	ImGui::SameLine();
-	if (ImGui::Button(ICON_FA_EXPAND_ARROWS_ALT))
+	ImVec2 scale_control_pos(62, (window_size.y - 24)*0.5f);
+	ImGui::SetCursorPos(scale_control_pos);
+	if (ImGui::Button(ICON_FA_EXPAND_ARROWS_ALT, ImVec2(24, 24)))
 	{
 		gizmo_operation = ImGuizmo::SCALE;
 	}
