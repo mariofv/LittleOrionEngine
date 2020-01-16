@@ -52,10 +52,12 @@ void main()
     vec3 reflectDir = reflect(-lightDir, normalize(normal));
     float specular = pow(max(dot(viewDir, reflectDir), 0.0), material.shininess);
 
-    vec3 result = emissive_color
-	+diffuse_color.rgb*(occlusion_color*material.k_ambient)
-	+diffuse_color.rgb*diffuse*material.k_diffuse
-	+specular_color.rgb*specular*material.k_specular;
+    vec3 result = light.light_color * (
+		emissive_color
+		+ diffuse_color.rgb * (occlusion_color * material.k_ambient)
+		+ diffuse_color.rgb * diffuse * material.k_diffuse
+		+ specular_color.rgb * specular * material.k_specular
+	);
     FragColor = vec4(result,1.0);
 }
 

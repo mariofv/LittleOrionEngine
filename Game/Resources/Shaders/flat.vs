@@ -60,6 +60,7 @@ void main()
             specular = pow(spec, material.shininess);
         }
     }
+	
     diffuse_intensity = material.k_diffuse*diffuse;
     specular_intensity = material.k_specular*specular;
 }

@@ -65,11 +65,12 @@ void main()
 	vec3 occlusion_color = get_occlusion_color(material, texCoord);
 	vec3 emissive_color  = get_emissive_color(material, texCoord);
 
-	vec3 result =
+	vec3 result = light.light_color * (
 		emissive_color
 		+ diffuse_color.rgb * (occlusion_color*material.k_ambient)
 		+ diffuse_color.rgb * material.k_diffuse * diffuse
-		+ specular_color.rgb * material.k_specular * specular;
+		+ specular_color.rgb * material.k_specular * specular
+	);
 
 	FragColor = vec4(result,1.0);
 }
