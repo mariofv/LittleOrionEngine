@@ -23,6 +23,11 @@ void Import(const File & file)
 {
 	for (auto & child : file.children)
 	{
+		if (App->model_loader->thread_comunication.stop_thread)
+		{
+			return;
+		}
+		App->model_loader->thread_comunication.importing_hash = std::hash<std::string>{}(child->file_path);
 		if (child->file_type == FileType::MODEL)
 		{
 			App->mesh_importer->Import(*child.get());
@@ -35,6 +40,7 @@ void Import(const File & file)
 		{
 			Import(*child.get());
 		}
+		App->model_loader->thread_comunication.importing_hash = 0;
 	}
 }
 
@@ -48,12 +54,17 @@ bool ModuleModelLoader::Init()
 
 bool ModuleModelLoader::CleanUp()
 {
-	importing.detach();
+	thread_comunication.stop_thread = true;
+	importing.join();
 	return true;
 }
 
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 {
+	while (thread_comunication.importing_hash == std::hash<std::string>{}(new_model_file_path))
+	{
+		Sleep(1000);
+	}
 	File file(new_model_file_path);
 	std::string model_output = App->mesh_importer->Import(file).second;
 
@@ -74,6 +85,11 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 	GameObject *node_game_object = App->scene->CreateChildGameObject(parent_node);
 
 	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load(model_base_path->file_path.c_str());
+
+	if (mesh_for_component == nullptr)
+	{
+		return;
+	}
 
 	ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
 	mesh_component->SetMesh(mesh_for_component);
@@ -101,7 +117,10 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path)
 	model_game_object->name = std::string(file.filename_no_extension);
 
 	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load(file.file_path.c_str());
-
+	if (mesh_for_component == nullptr)
+	{
+		return model_game_object;
+	}
 	ComponentMesh* mesh_component = (ComponentMesh*)model_game_object->CreateComponent(Component::ComponentType::MESH);
 	mesh_component->SetMesh(mesh_for_component);
 	model_game_object->Update();

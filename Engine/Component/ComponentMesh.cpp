@@ -53,9 +53,17 @@ void ComponentMesh::Load(const Config& config)
 
 	std::string mesh_path;
 	config.GetString("MeshPath", mesh_path, "");
-	SetMesh(App->mesh_importer->Load(mesh_path.c_str()));
-
 	config.GetString("ShaderProgram", shader_program, "Default");
+	std::shared_ptr<Mesh> mesh = App->mesh_importer->Load(mesh_path.c_str());
+	if (mesh != nullptr)
+	{
+		SetMesh(mesh);
+	}
+	else 
+	{
+		SetMesh(App->mesh_importer->Load(PRIMITIVE_CUBE_PATH));
+	}
+
 }
 
 bool ComponentMesh::operator <(const ComponentMesh & mesh_to_compare) const
