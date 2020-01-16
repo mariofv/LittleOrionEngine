@@ -43,6 +43,7 @@ void ComponentMesh::Save(Config& config) const
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddString(mesh_to_render->mesh_file_path, "MeshPath");
+	config.AddString(shader_program, "ShaderProgram");
 }
 
 void ComponentMesh::Load(const Config& config)
@@ -52,6 +53,7 @@ void ComponentMesh::Load(const Config& config)
 
 	std::string mesh_path;
 	config.GetString("MeshPath", mesh_path, "");
+	config.GetString("ShaderProgram", shader_program, "Default");
 	std::shared_ptr<Mesh> mesh = App->mesh_importer->Load(mesh_path.c_str());
 	if (mesh != nullptr)
 	{
@@ -70,7 +72,7 @@ bool ComponentMesh::operator <(const ComponentMesh & mesh_to_compare) const
 }
 void ComponentMesh::Render() const
 {
-	GLuint program = shader_program == 0 ? App->program->texture_program : shader_program;
+	GLuint program = App->program->GetShaderProgramId(shader_program);
 	glUseProgram(program);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);

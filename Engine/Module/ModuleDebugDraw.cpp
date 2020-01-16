@@ -20,7 +20,7 @@ public:
 	{
 		assert(points != nullptr);
 		assert(count > 0 && count <= DEBUG_DRAW_VERTEX_BUFFER_SIZE);
-		GLuint shader_program = App->program->linepoint_program;
+		GLuint shader_program = App->program->GetShaderProgramId("Linepoint");
 		glBindVertexArray(linePointVAO);
 		glUseProgram(shader_program);
 
@@ -78,7 +78,7 @@ public:
         assert(glyphs != nullptr);
         assert(count > 0 && count <= DEBUG_DRAW_VERTEX_BUFFER_SIZE);
 
-		GLuint shader_program = App->program->text_program;
+		GLuint shader_program = App->program->GetShaderProgramId("Text");
         glBindVertexArray(textVAO);
         glUseProgram(shader_program);
 

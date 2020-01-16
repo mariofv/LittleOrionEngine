@@ -6,7 +6,9 @@
 
 #include <GL/glew.h>
 #include <MathGeoLib.h>
+#include <unordered_map>
 
+class ComponentsUI;
 class ModuleProgram : public Module
 {
 public:
@@ -60,29 +62,23 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
+	unsigned int GetShaderProgramId(const std::string & program_name) const;
 private:
-	bool LoadProgram(GLuint &shader_program, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
+	bool LoadProgram(std::string name, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
+	void LoadPrograms(const char* file_path);
 	bool InitVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const;
 	bool InitFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const;
 	bool InitProgram(GLuint &shader_program,GLuint vertex_shader,GLuint fragment_shader) const;
 
 	void InitUniformBuffer();
 	void BindUniformBlocks(GLuint shader_program) const;
+	friend ComponentsUI;
 
 public:
 	UniformBuffer uniform_buffer;
-
-	GLuint texture_program = 0;
-	GLuint skybox_program = 0;
-	GLuint linepoint_program = 0;
-	GLuint text_program = 0;
-	GLuint outline_program = 0;
-	GLuint phong_flat_program = 0;
-	GLuint phong_gouraund_program = 0;
-	GLuint phong_phong_program = 0;
-	GLuint blinn_phong_phong_program = 0;
-
-	std::vector<GLuint> loaded_programs;
+private:
+	std::unordered_map<std::string, GLuint> loaded_programs;
+	std::vector<const char *> names;
 };
 
 #endif //_MODULEPROGRAM_H_

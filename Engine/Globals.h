@@ -55,37 +55,8 @@ enum class Fonts
 };
 
 // Paths -------
-# define SHADERS_PATH "Resources/Shaders"
+# define SHADERS_PATH "Resources/Shaders/shaders.json"
 # define TEXTURES_PATH "Assets/Textures/"
-
-# define DEFAULT_VERTEX_SHADER_PATH "Resources/Shaders/default.vs"
-# define DEFAULT_FRAGMENT_SHADER_PATH "Resources/Shaders/default.fs"
-
-# define TEXTURE_FRAGMENT_SHADER_PATH "Resources/Shaders/texture.fs"
-
-# define SKYBOX_VERTEX_SHADER_PATH "Resources/Shaders/skybox.vs"
-# define SKYBOX_FRAGMENT_SHADER_PATH "Resources/Shaders/skybox.fs"
-
-# define LINEPOINT_VERTEX_SHADER_PATH "Resources/Shaders/linepoint.vs"
-# define LINEPOINT_FRAGMENT_SHADER_PATH "Resources/Shaders/linepoint.fs"
-
-# define TEXT_VERTEX_SHADER_PATH "Resources/Shaders/text.vs"
-# define TEXT_FRAGMENT_SHADER_PATH "Resources/Shaders/text.fs"
-
-# define OUTLINE_VERTEX_SHADER_PATH "Resources/Shaders/outline.vs"
-# define OUTLINE_FRAGMENT_SHADER_PATH "Resources/Shaders/outline.fs"
-
-# define FLAT_VERTEX_SHADER_PATH "Resources/Shaders/flat.vs"
-# define FLAT_FRAGMENT_SHADER_PATH "Resources/Shaders/flat.fs"
-
-# define GOURAUND_VERTEX_SHADER_PATH "Resources/Shaders/gouraund.vs"
-# define GOURAUND_FRAGMENT_SHADER_PATH "Resources/Shaders/gouraund.fs"
-
-# define PHONG_VERTEX_SHADER_PATH "Resources/Shaders/phong.vs"
-# define PHONG_FRAGMENT_SHADER_PATH "Resources/Shaders/phong.fs"
-
-# define BLINN_PHONG_VERTEX_SHADER_PATH "Resources/Shaders/blinn_phong.vs"
-# define BLINN_PHONG_FRAGMENT_SHADER_PATH "Resources/Shaders/blinn_phong.fs"
 
 # define HOUSE_MODEL_PATH "Assets/Models/baker_house/BakerHouse.fbx"
 # define BUNNY_MODEL_PATH "Assets/Models/ZomBunny/Zombunny.fbx"
