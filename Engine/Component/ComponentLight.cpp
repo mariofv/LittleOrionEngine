@@ -28,7 +28,7 @@ void ComponentLight::Render() const
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.lights_uniform_offset, 3 * sizeof(float), light_color_scaled.ptr());
 
 	size_t light_position_offset = App->program->uniform_buffer.lights_uniform_offset + 4 * sizeof(float);
-	glBufferSubData(GL_UNIFORM_BUFFER, light_position_offset, 3 * sizeof(float), owner->transform.GetTranslation().ptr());
+	glBufferSubData(GL_UNIFORM_BUFFER, light_position_offset, 3 * sizeof(float), owner->transform.GetGlobalTranslation().ptr());
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
