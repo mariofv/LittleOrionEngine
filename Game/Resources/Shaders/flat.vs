@@ -28,7 +28,6 @@ uniform Material material;
 
 layout (std140) uniform Light
 {
-	float light_intensity;
 	vec3 light_color;
 	vec3 light_position;
 } light;

@@ -30,7 +30,6 @@ layout (std140) uniform Matrices
 
 layout (std140) uniform Light
 {
-	float light_intensity;
 	vec3 light_color;
 	vec3 light_position;
 } light;
@@ -59,10 +58,7 @@ void main()
       {
           specular = pow(spec, material.shininess);
       }
-  }
-
-	float diffuse_intensity = material.k_diffuse * diffuse;
-  float specular_intensity = material.k_specular * specular;
+  } 
 
 	vec4 diffuse_color  = get_diffuse_color(material, texCoord);
 	vec4 specular_color  = get_specular_color(material, texCoord);
@@ -72,8 +68,8 @@ void main()
 	vec3 result =
 		emissive_color
 		+ diffuse_color.rgb * (occlusion_color*material.k_ambient)
-		+ diffuse_color.rgb * diffuse_intensity
-		+ specular_color.rgb * specular_intensity;
+		+ diffuse_color.rgb * material.k_diffuse * diffuse
+		+ specular_color.rgb * material.k_specular * specular;
 
 	FragColor = vec4(result,1.0);
 }
