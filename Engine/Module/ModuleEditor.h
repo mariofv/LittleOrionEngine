@@ -41,6 +41,8 @@ private:
 	void RenderEditorCameraGizmo();
 	void RenderCameraPreview() const;
 
+	void SceneDropTarget();
+
 public:
 	bool scene_window_is_hovered = false;
 

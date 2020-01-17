@@ -5,6 +5,7 @@
 #include "ModuleDebug.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleFileSystem.h"
+#include "ModuleModelLoader.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
@@ -319,13 +320,13 @@ void ModuleEditor::ShowSceneTab()
 		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
 		App->cameras->scene_camera->RecordDebugDraws(scene_window_content_area_width, scene_window_content_area_height);
 		
-		ImGui::GetWindowDrawList()->AddImage(
+		ImGui::Image(
 			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
-			scene_window_content_area_pos_ImVec2,
-			scene_window_content_area_max_point_ImVec2,
+			ImVec2(scene_window_content_area_width, scene_window_content_area_height),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
+		SceneDropTarget();
 
 		AABB2D content_area = AABB2D(scene_window_content_area_pos, scene_window_content_area_max_point);
 		float2 mouse_pos_f2 = float2(ImGui::GetMousePos().x, ImGui::GetMousePos().y);
@@ -340,6 +341,26 @@ void ModuleEditor::ShowSceneTab()
 		}
 		ImGui::EndTabItem();
 	}
+}
+
+void ModuleEditor::SceneDropTarget()
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_File"))
+		{
+			assert(payload->DataSize == sizeof(File*));
+			File *incoming_file = *(File**)payload->Data;
+			if (incoming_file->file_type == FileType::MODEL)
+			{
+				GameObject* new_model = App->model_loader->LoadModel(incoming_file->file_path.c_str());	
+				App->scene->root->AddChild(new_model);
+				
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+
 }
 
 void ModuleEditor::ShowGameTab()
@@ -364,10 +385,9 @@ void ModuleEditor::ShowGameTab()
 
 		App->cameras->main_camera->RecordFrame(game_window_content_area_width, game_window_content_area_height);
 
-		ImGui::GetWindowDrawList()->AddImage(
+		ImGui::Image(
 			(void *)App->cameras->main_camera->GetLastRecordedFrame(),
-			game_window_content_area_pos_ImVec2,
-			game_window_content_area_max_point_ImVec2,
+			ImVec2(game_window_content_area_width, game_window_content_area_height),
 			ImVec2(0, 1),
 			ImVec2(1, 0)
 		);
