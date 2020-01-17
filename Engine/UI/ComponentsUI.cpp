@@ -6,6 +6,7 @@
 #include "Component/ComponentLight.h"
 
 #include "Application.h"
+#include "GameObject.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleProgram.h"
@@ -44,7 +45,7 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			mesh->Delete();
+			mesh->owner->RemoveComponent(mesh);
 		}
 		ImGui::Separator();
 
@@ -194,7 +195,7 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			camera->Delete();
+			camera->owner->RemoveComponent(camera);
 		}
 		ImGui::Separator();
 
@@ -274,7 +275,7 @@ void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			light->Delete();
+			light->owner->RemoveComponent(light);
 		}
 		ImGui::Separator();
 
