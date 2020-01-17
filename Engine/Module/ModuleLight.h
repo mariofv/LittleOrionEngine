@@ -16,6 +16,8 @@ public:
 	ComponentLight* CreateComponentLight();
 	void RemoveComponentLight(ComponentLight* light_to_remove);
 
+	void RenderDarkness() const;
+
 public:
 	std::vector<ComponentLight*> lights;
 };

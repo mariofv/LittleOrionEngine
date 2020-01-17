@@ -1,8 +1,10 @@
 #include "ModuleLight.h"
 #include "Application.h"
 #include "Component/ComponentLight.h"
+#include "Module/ModuleProgram.h"
 #include "GameObject.h"
-#include "Brofiler/Brofiler.h"
+
+#include <Brofiler/Brofiler.h>
 
 ModuleLight::~ModuleLight()
 {
@@ -18,14 +20,23 @@ bool ModuleLight::CleanUp()
 	lights.clear();
 	return true;
 }
+
 void ModuleLight::RenderLight() const
 {
 	BROFILER_CATEGORY("Render Lights", Profiler::Color::White);
 	if (lights.size() > 0)
 	{
-		lights[0]->Render();
+		if (lights[0]->IsEnabled())
+		{
+			lights[0]->Render();
+		}
+		else
+		{
+			RenderDarkness(); // TODO: This needs to be changed with ambiental light
+		}
 	}
 }
+
 ComponentLight* ModuleLight::CreateComponentLight()
 {
 	ComponentLight * created_light = new ComponentLight();
@@ -41,4 +52,19 @@ void ModuleLight::RemoveComponentLight(ComponentLight* light_to_remove)
 		delete *it;
 		lights.erase(it);
 	}
+}
+
+void ModuleLight::RenderDarkness() const
+{
+	float3 darkness_color = float3(0.f);
+	float3 darkness_position = float3(0.f);
+
+	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+
+	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.lights_uniform_offset, 3 * sizeof(float), darkness_color.ptr());
+
+	size_t light_position_offset = App->program->uniform_buffer.lights_uniform_offset + 4 * sizeof(float);
+	glBufferSubData(GL_UNIFORM_BUFFER, light_position_offset, 3 * sizeof(float), darkness_position.ptr());
+
+	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
