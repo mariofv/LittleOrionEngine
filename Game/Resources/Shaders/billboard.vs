@@ -13,7 +13,8 @@ layout (std140) uniform Matrices
 struct Billboard
 {
   vec3 center_pos;
-  float size;
+  float width;
+  float height;
   sampler2D texture;
 };
 uniform Billboard billboard;
@@ -22,6 +23,6 @@ out vec2 texCoord;
 
 void main()
 {
-  gl_Position = matrices.proj*(matrices.view*vec4(billboard.center_pos,1.0) + vec4(billboard.size*vertex_position, 0.0));
+  gl_Position = matrices.proj*(matrices.view*vec4(billboard.center_pos,1.0) + vec4(billboard.width*vertex_position.x, billboard.height*vertex_position.y, 0.0, 0.0));
   texCoord = vertex_uv0;
 }

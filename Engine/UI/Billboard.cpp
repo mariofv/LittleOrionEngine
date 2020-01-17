@@ -4,7 +4,7 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
 
-Billboard::Billboard(const std::string& texture_path)
+Billboard::Billboard(const std::string& texture_path, float width, float height) : width(width), height(height)
 {
 	billboard_texture = App->texture->LoadTexture(texture_path.c_str()).get();
 
@@ -60,7 +60,8 @@ void Billboard::Render(const float3& position) const
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, billboard_texture->opengl_texture);
 	glUniform1i(glGetUniformLocation(shader_program, "billboard.texture"), 0);
-	glUniform1f(glGetUniformLocation(shader_program, "billboard.size"), size);
+	glUniform1f(glGetUniformLocation(shader_program, "billboard.width"), width);
+	glUniform1f(glGetUniformLocation(shader_program, "billboard.height"), height);
 	glUniform3fv(glGetUniformLocation(shader_program, "billboard.center_pos"), 1, position.ptr());
 
 	glBindVertexArray(vao);

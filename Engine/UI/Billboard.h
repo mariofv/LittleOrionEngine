@@ -10,7 +10,7 @@
 class Billboard
 {
 public:
-	Billboard(const std::string& texture_path);
+	Billboard(const std::string& texture_path, float width, float height);
 	~Billboard();
 
 	void Render(const float3& position) const;
@@ -20,7 +20,8 @@ private:
 	GLuint vbo = 0;
 	GLuint ebo = 0;
 
-	float size = 5.f;
+	float width = 5.f;
+	float height = 5.f;
 	Texture* billboard_texture = nullptr;
 
 };

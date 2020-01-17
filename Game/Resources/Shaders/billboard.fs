@@ -6,7 +6,8 @@ out vec4 FragColor;
 
 struct Billboard {
   vec3 center_pos;
-  float size;
+  float width;
+  float height;
   sampler2D texture;
 };
 uniform Billboard billboard;
