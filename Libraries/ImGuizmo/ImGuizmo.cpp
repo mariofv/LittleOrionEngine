@@ -2100,7 +2100,10 @@ namespace ImGuizmo
 
       static bool isDraging = false;
       static bool isClicking = false;
+      static bool wasClicking = false;
       static bool isInside = false;
+      static bool duringClick = false;
+      static bool startedClickingInside = false;
       static vec_t interpolationUp;
       static vec_t interpolationDir;
       static int interpolationFrames = 0;
@@ -2110,6 +2113,18 @@ namespace ImGuizmo
       gContext.mDrawList->AddRectFilled(position, position + size, backgroundColor);
       matrix_t viewInverse;
       viewInverse.Inverse(*(matrix_t*)view);
+
+	  isInside = ImRect(position, position + size).Contains(io.MousePos);
+	  if (!wasClicking && io.MouseDown[0])
+	  {
+		  wasClicking = true;
+		  startedClickingInside = isInside;
+	  }
+	  if (wasClicking && !io.MouseDown[0])
+	  {
+		  wasClicking = false;
+		  startedClickingInside = false;
+	  }
 
       const vec_t camTarget = viewInverse.v.position - viewInverse.v.dir * length;
 
@@ -2247,7 +2262,7 @@ namespace ImGuizmo
                         interpolationFrames = 40;
                         isClicking = false;
                      }
-                     if (io.MouseDown[0] && !isDraging)
+                     if (io.MouseDown[0] && !isDraging && startedClickingInside)
                      {
                         isClicking = true;
                      }
@@ -2271,10 +2286,9 @@ namespace ImGuizmo
          LookAt(&newEye.x, &camTarget.x, &newUp.x, view);
 		 modified = true;
       }
-      isInside = ImRect(position, position + size).Contains(io.MousePos);
 
       // drag view
-      if (!isDraging && io.MouseDown[0] && isInside && (fabsf(io.MouseDelta.x) > 0.f || fabsf(io.MouseDelta.y) > 0.f))
+      if (!isDraging && io.MouseDown[0] && isInside && startedClickingInside && (fabsf(io.MouseDelta.x) > 0.f || fabsf(io.MouseDelta.y) > 0.f))
       {
          isDraging = true;
          isClicking = false;
