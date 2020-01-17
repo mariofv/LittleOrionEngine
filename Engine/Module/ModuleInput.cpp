@@ -103,6 +103,11 @@ update_status ModuleInput::PreUpdate()
 			{
 				float2 mouse_position = float2(event.button.x, event.button.y);
 				App->editor->MousePicking(mouse_position);
+
+				if (event.button.clicks == 2 && App->scene->hierarchy.selected_game_object != nullptr)
+				{
+					App->cameras->scene_camera->Center(App->scene->hierarchy.selected_game_object->aabb.global_bounding_box);
+				}
 			}
 			break;
 
