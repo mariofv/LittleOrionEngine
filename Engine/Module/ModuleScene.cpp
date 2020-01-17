@@ -16,7 +16,7 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
-	App->editor->OpenScene(DEFAULT_SCENE_PATH);
+	App->editor->OpenScene(ASSIGNMENT_SCENE_PATH);
 	App->renderer->GenerateQuadTree(); // TODO: Move this to load scene and save scene
 	return true;
 }
