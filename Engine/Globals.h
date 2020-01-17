@@ -60,8 +60,8 @@ enum class Fonts
 
 # define HOUSE_MODEL_PATH "Assets/Models/baker_house/BakerHouse.fbx"
 
-# define VIDEO_BILLBOARD_TEXTURE_PATH "Assets/Textures/video-solid.png"
-# define LIGHT_BILLBOARD_TEXTURE_PATH "Assets/Textures/lightbulb-solid.png"
+# define VIDEO_BILLBOARD_TEXTURE_PATH "Resources/Textures/video-solid.png"
+# define LIGHT_BILLBOARD_TEXTURE_PATH "Resources/Textures/lightbulb-solid.png"
 
 # define PRIMITIVE_CUBE_PATH "Resources/Primitives/Cube/Cube.ol"
 # define PRIMITIVE_CYLINDER_PATH "Resources/Primitives/Cylinder/Cylinder.ol"
