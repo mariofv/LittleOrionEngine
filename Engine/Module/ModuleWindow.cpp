@@ -7,6 +7,7 @@
 
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
+#include <SDL_image/SDL_image.h>
 
 // Called before render is available
 bool ModuleWindow::Init()
@@ -51,7 +52,6 @@ bool ModuleWindow::Init()
 		InitOpenGLAttributes();
 
 		window = SDL_CreateWindow(TITLE, SDL_WINDOWPOS_UNDEFINED, SDL_WINDOWPOS_UNDEFINED, width, height, flags);
-
 		if(window == NULL)
 		{
 			APP_LOG_ERROR("Window could not be created! SDL_Error: %s\n", SDL_GetError());
@@ -59,6 +59,9 @@ bool ModuleWindow::Init()
 		}
 		else
 		{
+			SDL_Surface* icon = IMG_Load(APP_ICON_PATH);
+			SDL_SetWindowIcon(window, icon);
+
 			// Create OpenGL context
 			glcontext = SDL_GL_CreateContext(window);
 		}

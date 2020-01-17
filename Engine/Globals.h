@@ -55,6 +55,8 @@ enum class Fonts
 };
 
 // Paths -------
+# define APP_ICON_PATH "Resources/Textures/engine_icon.png"
+
 # define SHADERS_PATH "Resources/Shaders/shaders.json"
 # define TEXTURES_PATH "Assets/Textures/"
 
