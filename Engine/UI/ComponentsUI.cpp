@@ -46,6 +46,7 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		if (ImGui::Button("Delete"))
 		{
 			mesh->owner->RemoveComponent(mesh);
+			return;
 		}
 		ImGui::Separator();
 
@@ -196,6 +197,7 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 		if (ImGui::Button("Delete"))
 		{
 			camera->owner->RemoveComponent(camera);
+			return;
 		}
 		ImGui::Separator();
 
@@ -276,6 +278,7 @@ void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
 		if (ImGui::Button("Delete"))
 		{
 			light->owner->RemoveComponent(light);
+			return;
 		}
 		ImGui::Separator();
 
