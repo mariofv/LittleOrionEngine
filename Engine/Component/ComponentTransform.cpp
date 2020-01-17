@@ -23,7 +23,7 @@ void ComponentTransform::Save(Config& config) const
 	config.AddUInt(UUID, "UUID");
 	config.AddBool(active, "Active");
 	config.AddFloat3(translation, "Translation");
-	config.AddQuat(rotation, "Rotation");
+	config.AddFloat3(rotation_degrees, "Rotation");
 	config.AddFloat3(scale, "Scale");
 }
 
@@ -32,7 +32,9 @@ void ComponentTransform::Load(const Config& config)
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 	config.GetFloat3("Translation", translation, float3::zero);
-	config.GetQuat("Rotation", rotation, Quat::identity);
+	config.GetFloat3("Rotation", rotation_degrees, float3::zero);
+	rotation = Utils::GenerateQuatFromDegFloat3(rotation_degrees);
+	rotation_radians = Utils::Float3DegToRad(rotation_degrees);
 	config.GetFloat3("Scale", scale, float3::one);
 
 	OnTransformChange();

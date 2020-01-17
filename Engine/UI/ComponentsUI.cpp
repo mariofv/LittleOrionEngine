@@ -19,18 +19,18 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::DragFloat3("Translation", &transform->translation[0], 0.01f))
+		if (ImGui::DragFloat3("Translation", transform->translation.ptr(), 0.01f))
 		{
 			transform->OnTransformChange();
 		}
 
-		if (ImGui::DragFloat3("Rotation", &transform->rotation_degrees[0], 0.1f, -180.f, 180.f))
+		if (ImGui::DragFloat3("Rotation", transform->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
 		{
 			transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
 			transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
 			transform->OnTransformChange();
 		}
-		if (ImGui::DragFloat3("Scale", &transform->scale[0], 0.01f))
+		if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
 		{
 			transform->OnTransformChange();
 		}
