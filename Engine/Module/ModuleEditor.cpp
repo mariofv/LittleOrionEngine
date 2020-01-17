@@ -267,9 +267,9 @@ void ModuleEditor::RenderCameraPreview() const
 		float width = content_area_max_point.x - ImGui::GetCursorPos().x;
 		float height = content_area_max_point.y - ImGui::GetCursorPos().y;
 
-		App->cameras->main_camera->RecordFrame(width, height);
+		selected_camera->RecordFrame(width, height);
 		ImGui::Image(
-			(void *)App->cameras->main_camera->GetLastRecordedFrame(),
+			(void *)selected_camera->GetLastRecordedFrame(),
 			ImVec2(width, height),
 			ImVec2(0, 1),
 			ImVec2(1, 0)

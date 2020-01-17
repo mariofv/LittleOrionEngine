@@ -71,9 +71,11 @@ void ModuleCamera::RemoveComponentCamera(ComponentCamera* camera_to_remove)
 
 void ModuleCamera::SelectMainCamera()
 {
+	main_camera = nullptr;
+
 	for (auto& camera : cameras)
 	{
-		if (camera != scene_camera)
+		if (camera->IsEnabled() && camera != scene_camera)
 		{
 			if (main_camera == nullptr)
 			{
