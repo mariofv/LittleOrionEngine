@@ -84,14 +84,6 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::Checkbox("Active", &material->active);
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			material->Delete();
-		}
-		ImGui::Separator();
-
 		float window_width = ImGui::GetWindowWidth();
 		for (size_t i = 0; i < material->textures.size(); ++i)
 		{
