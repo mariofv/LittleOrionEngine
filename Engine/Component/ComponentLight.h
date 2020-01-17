@@ -24,6 +24,7 @@ public:
 public:
 	float light_color[3] = { 1.0f, 1.0f, 1.0f};
 	float light_intensity = 1.f; 
+	friend class ComponentsUI;
 };
 
 #endif // !_COMPONENTLIGHT_H

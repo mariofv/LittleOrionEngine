@@ -41,6 +41,11 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Checkbox("Active", &mesh->active);
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			mesh->Delete();
+		}
 		ImGui::Separator();
 
 
@@ -80,7 +85,13 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Checkbox("Active", &material->active);
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			material->Delete();
+		}
 		ImGui::Separator();
+
 		float window_width = ImGui::GetWindowWidth();
 		for (size_t i = 0; i < material->textures.size(); ++i)
 		{
@@ -187,6 +198,14 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Checkbox("Active", &camera->active);
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			camera->Delete();
+		}
+		ImGui::Separator();
+
 		ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly);
 		ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly);
 
@@ -259,6 +278,14 @@ void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Light", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Checkbox("Active", &light->active);
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			light->Delete();
+		}
+		ImGui::Separator();
+
 		ImGui::ColorEdit3("Color", light->light_color);
 		ImGui::SliderFloat("Intensity ", &light->light_intensity, 0.f, 1.f);
 	}
