@@ -22,8 +22,9 @@ bool ModuleCamera::Init()
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	scene_camera->SetFarDistance(2000);
 	scene_camera->depth = -1;
-
+	
 	skybox = new Skybox();
+	scene_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
 
 	return true;
 }

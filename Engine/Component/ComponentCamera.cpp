@@ -406,6 +406,11 @@ void ComponentCamera::SetOrthographicView()
 	camera_frustum.type = FrustumType::OrthographicFrustum;
 }
 
+void ComponentCamera::SetClearMode(ComponentCamera::ClearMode clear_mode)
+{
+	camera_clear_mode = clear_mode;
+}
+
 void ComponentCamera::SetSpeedUp(bool is_speeding_up)
 {
 	speed_up = is_speeding_up ? SPEED_UP_FACTOR : 1.f;

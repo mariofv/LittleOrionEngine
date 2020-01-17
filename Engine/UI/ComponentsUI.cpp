@@ -221,10 +221,10 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 			switch (camera_clear_mode)
 			{
 			case 0:
-				camera->camera_clear_mode = ComponentCamera::ClearMode::COLOR;
+				camera->SetClearMode(ComponentCamera::ClearMode::COLOR);
 				break;
 			case 1:
-				camera->camera_clear_mode = ComponentCamera::ClearMode::SKYBOX;
+				camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
 				break;
 			}
 		}		

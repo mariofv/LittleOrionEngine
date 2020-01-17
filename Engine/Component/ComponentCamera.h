@@ -66,6 +66,8 @@ public:
 	void SetPerpesctiveView();
 	void SetOrthographicView();
 
+	void SetClearMode(ComponentCamera::ClearMode clear_mode);
+
 	void SetSpeedUp(bool is_speeding_up);
 
 	void SetViewMatrix(const float4x4& view_matrix);
