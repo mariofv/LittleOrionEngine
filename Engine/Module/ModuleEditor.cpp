@@ -119,7 +119,7 @@ void ModuleEditor::RenderOutline() const
 	GameObject* selected_game_object = App->scene->hierarchy.selected_game_object;
 	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH);
 
-	if (selected_object_mesh_component != nullptr)
+	if (selected_object_mesh_component != nullptr && selected_object_mesh_component->IsEnabled())
 	{
 		ComponentMesh* selected_object_mesh = static_cast<ComponentMesh*>(selected_object_mesh_component);
 		glEnable(GL_STENCIL_TEST);

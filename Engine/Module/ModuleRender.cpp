@@ -170,8 +170,11 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	for (auto &mesh : meshes_to_render)
 	{
 		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
-		mesh->Render();
-		glUseProgram(0);
+		if (mesh->IsEnabled())
+		{
+			mesh->Render();
+			glUseProgram(0);
+		}
 	}
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
