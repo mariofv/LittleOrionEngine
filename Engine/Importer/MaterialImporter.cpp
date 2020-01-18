@@ -150,7 +150,7 @@ ILubyte * MaterialImporter::LoadImageData(const std::string& file_path, int imag
 	error = ilGetError();
 	if (error == IL_COULD_NOT_OPEN_FILE)
 	{
-		APP_LOG_ERROR("Error loading texture %s. File not found", file_path);
+		APP_LOG_ERROR("Error loading texture %s. File not found", file_path.c_str());
 		return nullptr;
 	}
 
