@@ -2,8 +2,9 @@
 #include "Globals.h"
 #include "Application.h"
 #include "ModuleCamera.h"
-#include "ModuleTexture.h"
+#include "ModuleEditor.h"
 #include "ModuleScene.h"
+#include "ModuleTexture.h"
 #include "GameObject.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
@@ -56,7 +57,6 @@ bool ModuleModelLoader::Init()
 	APP_LOG_SECTION("************ Module ModelLoader Init ************");
 	importing_thread = std::thread(StartThread, *App->filesystem->assets_file.get());
 	return true;
-
 }
 
 bool ModuleModelLoader::CleanUp()

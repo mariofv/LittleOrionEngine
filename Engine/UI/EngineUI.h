@@ -36,9 +36,11 @@ private:
 	void ShowConfigurationWindow();
 	void ShowHardware() const;
 
+	void ShowAboutWindow();
+	
 	void ShowFileAndConsoleWindows();
 
-	void ShowAboutWindow();
+	void ShowPopups() const;
 
 	void MenuURL(const std::string& text, const std::string& link);
 

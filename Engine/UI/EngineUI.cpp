@@ -28,6 +28,7 @@ void EngineUI::InitUI()
 
 void EngineUI::ShowEngineUI()
 {
+	ShowPopups();
 	ShowMainMenu();
 	ShowSceneControls();
 	ShowMainViewWindow();
@@ -468,6 +469,21 @@ void EngineUI::ShowAboutWindow()
 	}
 	ImGui::End();
 }
+
+void EngineUI::ShowPopups() const
+{
+	ImGui::OpenPopup("Loading Assets");
+
+	if (ImGui::BeginPopupModal("Loading Assets", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		if (App->model_loader->thread_comunication.finished_loading) 
+		{
+			ImGui::CloseCurrentPopup(); 
+		}
+		ImGui::EndPopup();
+	}
+}
+
 
 void EngineUI::MenuURL(const std::string& text, const std::string& link)
 {

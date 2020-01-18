@@ -15,6 +15,7 @@ public:
 	~ModuleEditor() = default;
 
 	bool Init() override;
+	update_status Update() override;
 	bool CleanUp() override;
 
 	void OpenScene(const std::string &path) const;

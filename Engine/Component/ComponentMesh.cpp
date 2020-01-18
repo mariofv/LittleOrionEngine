@@ -70,6 +70,7 @@ bool ComponentMesh::operator <(const ComponentMesh & mesh_to_compare) const
 {
 	return this->shader_program <= mesh_to_compare.shader_program;
 }
+
 void ComponentMesh::Render() const
 {
 	GLuint program = App->program->GetShaderProgramId(shader_program);
@@ -84,12 +85,14 @@ void ComponentMesh::Render() const
 	RenderModel();
 	glUseProgram(0);
 }	
+
 void ComponentMesh::RenderModel() const
 {
 	glBindVertexArray(mesh_to_render->GetVAO());
 	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 }
+
 void ComponentMesh::ShowComponentWindow()
 {
 	ComponentsUI::ShowComponentMeshWindow(this);

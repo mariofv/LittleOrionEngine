@@ -30,6 +30,18 @@ bool ModuleEditor::Init()
 	return true;
 }
 
+update_status ModuleEditor::Update()
+{
+	static bool inital_scene_loaded = false;
+	if (!inital_scene_loaded && App->model_loader->thread_comunication.finished_loading)
+	{
+		OpenScene(ASSIGNMENT_SCENE_PATH);
+		inital_scene_loaded = true;
+	}
+	return update_status::UPDATE_CONTINUE;
+}
+
+
 // Called before quitting
 bool ModuleEditor::CleanUp()
 {
