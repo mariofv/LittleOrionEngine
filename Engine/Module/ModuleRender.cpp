@@ -166,19 +166,17 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	if (App->cameras->main_camera != nullptr)
+	GetCullingMeshes(App->cameras->main_camera);
+	for (auto &mesh : meshes_to_render)
 	{
-		GetCullingMeshes(App->cameras->main_camera);
-		for (auto &mesh : meshes_to_render)
+		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
+		if (mesh->IsEnabled())
 		{
-			BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
-			if (mesh->IsEnabled())
-			{
-				mesh->Render();
-				glUseProgram(0);
-			}
+			mesh->Render();
+			glUseProgram(0);
 		}
 	}
+
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
 }
@@ -188,36 +186,63 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 	BROFILER_CATEGORY("Get culling meshes", Profiler::Color::Lavender);
 	meshes_to_render.clear();
 
-	std::copy_if(meshes.begin(),
-		meshes.end(),
-		std::back_inserter(meshes_to_render), [camera](auto mesh)
+	switch (App->debug->culling_mode)
 	{
+	case ModuleDebug::CullingMode::NONE:
+		std::copy_if(
+			meshes.begin(),
+			meshes.end(),
+			std::back_inserter(meshes_to_render),
+			[camera](auto mesh)
+			{ 
+				return mesh->IsEnabled(); 
+			}
+		);
+		break;
 
-		if (App->debug->frustum_culling && mesh->owner->IsVisible(*camera))
+	case ModuleDebug::CullingMode::FRUSTUM_CULLING:
+		if (camera != nullptr)
 		{
-			return true;
+			std::copy_if(
+				meshes.begin(),
+				meshes.end(),
+				std::back_inserter(meshes_to_render),
+				[camera](auto mesh)
+			{
+				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera);
+			}
+			);
 		}
-		else if(App->debug->frustum_culling && !mesh->owner->IsVisible(*camera))
-		{
-			return false;
-		}
-		if (App->debug->quadtree_culling &&  mesh->IsEnabled() && !mesh->owner->IsStatic())
-		{
-			return true;
-		}
-		return !App->debug->quadtree_culling  && mesh->IsEnabled();
-	});
+		break;
 
-	if (App->debug->quadtree_culling)
-	{
-		std::vector<GameObject*> rendered_objects;
-		ol_quadtree.CollectIntersect(rendered_objects, *camera);
-
-		for (auto &object : rendered_objects)
+	case ModuleDebug::CullingMode::QUADTREE_CULLING:
+		if (camera != nullptr)
 		{
-			ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
-			meshes_to_render.push_back(object_mesh);
+			// First we get all non static objects inside frustum
+			std::copy_if( 
+				meshes.begin(),
+				meshes.end(),
+				std::back_inserter(meshes_to_render),
+				[camera](auto mesh)
+			{
+				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && !mesh->owner->IsStatic();
+			}
+			);
+
+			// Then we add all static objects culled using the quadtree
+			std::vector<GameObject*> rendered_objects;
+			ol_quadtree.CollectIntersect(rendered_objects, *camera);
+
+			for (auto &object : rendered_objects)
+			{
+				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				meshes_to_render.push_back(object_mesh);
+			}
 		}
+		break;
+
+	default:
+		break;
 	}
 }
 

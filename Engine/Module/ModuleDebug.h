@@ -8,6 +8,13 @@
 class ModuleDebug : public Module
 {
 public:
+	enum class CullingMode
+	{
+		NONE,
+		FRUSTUM_CULLING,
+		QUADTREE_CULLING
+	};
+
 	ModuleDebug() = default;
 	~ModuleDebug() = default;
 
@@ -25,8 +32,7 @@ public:
 	bool show_camera_frustum = true;
 	bool show_quadtree = false;
 
-	bool frustum_culling = true;
-	bool quadtree_culling = true;
+	CullingMode culling_mode = CullingMode::NONE;
 	float rendering_time = 0;
 
 private:
