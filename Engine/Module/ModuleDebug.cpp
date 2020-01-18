@@ -56,8 +56,24 @@ void ModuleDebug::ShowDebugWindow()
 		ImGui::Checkbox("Camera Frustum", &show_camera_frustum);
 		ImGui::Checkbox("QuadTree", &show_quadtree);
 		ImGui::Separator();
-		ImGui::Checkbox("Frustum Culling", &frustum_culling);
-		ImGui::Checkbox("QuadTree Culling", &quadtree_culling);
+
+		int culling_mode_int = static_cast<int>(culling_mode);
+		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling"))
+		{
+			switch (culling_mode_int)
+			{
+			case 0:
+				culling_mode = CullingMode::NONE;
+				break;
+			case 1:
+				culling_mode = CullingMode::FRUSTUM_CULLING;
+				break;
+			case 2:
+				culling_mode = CullingMode::QUADTREE_CULLING;
+				break;
+			}
+		}
+
 		ImGui::DragFloat("Rendering time ",&rendering_time,NULL,NULL);
 
 		if (ImGui::SliderInt("Quadtree Depth ", &App->renderer->ol_quadtree.max_depth, 1, 10)) {
