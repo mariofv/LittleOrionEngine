@@ -1,4 +1,6 @@
-<h1 align="center" style="border-bottom: none;">LittleOrion Engine</h1>
+<h1 align="center" style="border-bottom: none;">
+  <a href="https://github.com/mariofv/LittleOrionEngine/">LittleOrion Engine</a>
+</h1>
 <h3 align="center">C++ 3D Engine developed during the Master's Degree in AAA Videogames Development</h3>
 <p align="center">
   <a href="https://github.com/mariofv/LittleOrionEngine/releases/">
