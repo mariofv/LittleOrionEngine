@@ -427,7 +427,7 @@ void ModuleRender::GenerateQuadTree()
 	}
 }
 
-GameObject* ModuleRender::GetRaycastIntertectedObject(LineSegment & ray)
+GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
 {
 	GetCullingMeshes(App->cameras->scene_camera);
 	std::vector<ComponentMesh*> intersected_meshes;

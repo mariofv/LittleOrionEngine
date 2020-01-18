@@ -14,7 +14,7 @@ public:
 	~ModuleInput() = default;
 
 	bool Init() override;
-	update_status PreUpdate();
+	update_status PreUpdate() override;
 	bool CleanUp() override;
 
 	void ShowInputOptions();

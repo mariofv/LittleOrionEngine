@@ -39,7 +39,7 @@ private:
 
 	void RenderEditorDraws();
 	void RenderGizmo();
-	void RenderEditorCameraGizmo();
+	void RenderEditorCameraGizmo() const;
 	void RenderCameraPreview() const;
 
 	void SceneDropTarget();
