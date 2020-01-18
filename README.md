@@ -18,7 +18,7 @@
   </a>
 </p>
 
-![](https://github.com/mariofv/LittleOrionEngine/blob/master/Media/engine_usage_v0_1_5-alpha.gif)
+![](https://github.com/mariofv/LittleOrionEngine/blob/master/Media/engine_usage_v1_0_1.gif)
 
 ## Highlights
 - Create, save and load scenes.
@@ -32,28 +32,7 @@
 - Execute `LittleOrionEngine.exe`.
 
 ## Usage
-### Model and texture loading
-- In order to load a model drag and drop a `fbx` file into the editor's window to load it. The engine will automatically try to import model materials from the specified path in the `fbx` file.
-- To change the texture of the current model drag and drop a `png` or `dds` file into the editor's window. The engine will overwrite the existing texture with the new one.
-
-### Camera controls
-- To enable camera movement hold `RClick` inside the _Scene_ window.
-- Move mouse to look around.
-- Press `W` `A` `S` `D` to move camera around.
-- Press `Q`/`E` to increase/decrease camera height.
-- Use the mouse wheel to zoom.
-- Hold `LShift`to duplicate camera movement speed.
-- Press `F` to focus in the loaded model.
-- With movement disabled, press `LAlt` + `LClick` to orbit the current object.
-
-### Engine configuration
-In _Configuration_ window you can check and configure Engine properties.
-- **Hardware** shows some current computer hardware and graphical hardware info, like VRAM usage.
-- **Window** configures engine's window properties.
-- **Renderer** configures different `OpenGL` parameters.
-- **Camera** shows camera frustum parameters like up, front and position vectors. Also other frustum parameters like near and far plane can be configured.
-- **Timers** configures engine's time management. Here you can cap FPS, increase/decrease time scale, ...
-- **Input** shows current input info.
+Please refer to our [Wiki](https://github.com/mariofv/LittleOrionEngine/wiki) in order to learn how to use the engine.
 
 ## Development setup
 In order to do that assure that you have the following:
@@ -89,6 +68,10 @@ Because this is a academic project is not possible to contribute directly to thi
 This project is licensed under the MIT License - see the [LICENSE](https://github.com/mariofv/LittleOrionEngine/blob/master/LICENSE) file for details.
 
 ## Release History
+* [[1.0.1] Erradicating the bugs and polishing](https://github.com/mariofv/LittleOrionEngine/releases/tag/v1.0.1)
+    * Lots of bug fixes.
+    * Tuned up controls in order to give best user experience.
+    * Performance improvements when loading resources.
 * [[1.0.0] v1.0.0 release is here!](https://github.com/mariofv/LittleOrionEngine/releases/tag/v1.0.0)
     * Mesh materials. It mesh has its own material, that stores different textures and light parameters.
     * New `ComponentLight`, that represents a light source for the scene. It's used along the mesh materials.
