@@ -39,10 +39,10 @@ void File::GetChildren()
 		{
 			file->GetChildren();
 			++sub_folders;
-			sub_files += file->sub_files;
+			total_sub_files_number += file->total_sub_files_number;
 		}
 		else {
-			++sub_files;
+			++total_sub_files_number;
 		}
 	}
 }
