@@ -30,15 +30,21 @@ void Import(const File& file)
 		App->model_loader->thread_comunication.importing_hash = std::hash<std::string>{}(child->file_path);
 		if (child->file_type == FileType::MODEL)
 		{
+			++App->model_loader->thread_comunication.loaded_items;
 			App->mesh_importer->Import(*child.get());
 		}
-		if (child->file_type == FileType::TEXTURE)
+		else if (child->file_type == FileType::TEXTURE)
 		{
+			++App->model_loader->thread_comunication.loaded_items;
 			App->material_importer->Import(*child.get());
 		}
-		if (child->file_type == FileType::DIRECTORY)
+		else if (child->file_type == FileType::DIRECTORY)
 		{
 			Import(*child.get());
+		}
+		else 
+		{
+			++App->model_loader->thread_comunication.loaded_items;
 		}
 		App->model_loader->thread_comunication.importing_hash = 0;
 	}
@@ -48,6 +54,7 @@ void Import(const File& file)
 void StartThread(const File& file)
 {
 	App->model_loader->thread_comunication.finished_loading = false;
+	App->model_loader->thread_comunication.total_items = file.total_sub_files_number;
 	Import(file);
 	App->model_loader->thread_comunication.finished_loading = true;
 }

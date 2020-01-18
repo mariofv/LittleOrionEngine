@@ -39,6 +39,8 @@ public:
 		std::atomic_bool stop_thread = false;
 		std::atomic_bool finished_loading = false;
 		std::atomic_uint importing_hash = 0;
+		std::atomic_uint loaded_items = 0;
+		std::atomic_uint total_items = 0;
 	} thread_comunication;
 };
 

@@ -32,10 +32,12 @@ bool ModuleFileSystem::Init() {
 	RefreshFilesHierarchy();
 	return true;
 }
+
 bool ModuleFileSystem::CleanUp()
 {
 	return PHYSFS_deinit();
 }
+
 ModuleFileSystem::~ModuleFileSystem()
 {
 	CleanUp();
@@ -124,6 +126,7 @@ File ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path
 	}
 	return File(new_directory_full_path);
 }
+
 bool ModuleFileSystem::Copy(const char* source, const char* destination)
 {
 	size_t file_size;

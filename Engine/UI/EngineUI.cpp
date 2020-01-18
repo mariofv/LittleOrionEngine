@@ -474,8 +474,12 @@ void EngineUI::ShowPopups() const
 {
 	ImGui::OpenPopup("Loading Assets");
 
-	if (ImGui::BeginPopupModal("Loading Assets", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	if (ImGui::BeginPopupModal("Loading Assets", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar))
 	{
+		ImGui::Text("Loading Assets");
+		float progress = (float)App->model_loader->thread_comunication.loaded_items / App->model_loader->thread_comunication.total_items;
+		ImGui::ProgressBar(progress);
+
 		if (App->model_loader->thread_comunication.finished_loading) 
 		{
 			ImGui::CloseCurrentPopup(); 
