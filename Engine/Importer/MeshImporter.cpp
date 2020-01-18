@@ -53,7 +53,7 @@ std::pair<bool, std::string> MeshImporter::Import(const File & file) const
 	}
 	performance_timer.Stop();
 	float time = performance_timer.Read();
-	APP_LOG_SUCCESS("Model %s loaded correctly from assimp in %f second .", file.file_path.c_str(), time);
+	APP_LOG_SUCCESS("Model %s loaded correctly from assimp in %f ms.", file.file_path.c_str(), time);
 
 	
 	aiNode * root_node = scene->mRootNode;
@@ -163,7 +163,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	delete data;
 }
 
- std::shared_ptr<Mesh> MeshImporter::Load(const  std::string& file_path) const
+ std::shared_ptr<Mesh> MeshImporter::Load(const std::string& file_path) const
  {
 	 BROFILER_CATEGORY("Load Mesh", Profiler::Color::Brown);
 	 if (!App->filesystem->Exists(file_path.c_str()))
@@ -234,7 +234,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	performance_timer.Stop();
 	float time = performance_timer.Read();
 	free(data);
-	APP_LOG_SUCCESS("Model %s loaded correctly from own format in %f second .", file_path, time);
+	APP_LOG_SUCCESS("Model %s loaded correctly from own format in %.2f ms.", file_path.c_str(), time);
 
 	return new_mesh;
 }
