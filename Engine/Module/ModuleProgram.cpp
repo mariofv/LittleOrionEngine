@@ -184,8 +184,17 @@ bool ModuleProgram::InitProgram(GLuint &shader_program, const GLuint vertex_shad
 
 void ModuleProgram::BindUniformBlocks(GLuint shader_program) const
 {
-	glUniformBlockBinding(shader_program, glGetUniformBlockIndex(shader_program, "Matrices"), 0);
-	glUniformBlockBinding(shader_program, glGetUniformBlockIndex(shader_program, "Light"), 1);
+	GLuint matrices_uniform_block_index = glGetUniformBlockIndex(shader_program, "Matrices");
+	if (matrices_uniform_block_index != GL_INVALID_INDEX)
+	{
+		glUniformBlockBinding(shader_program, matrices_uniform_block_index, 0);
+	}
+
+	GLuint light_uniform_block_index = glGetUniformBlockIndex(shader_program, "Light");
+	if (light_uniform_block_index != GL_INVALID_INDEX)
+	{
+		glUniformBlockBinding(shader_program, light_uniform_block_index, 1);
+	}
 }
 
 void ModuleProgram::LoadPrograms(const char* file_path)
