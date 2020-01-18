@@ -28,7 +28,6 @@ void EngineUI::InitUI()
 
 void EngineUI::ShowEngineUI()
 {
-	ShowPopups();
 	ShowMainMenu();
 	ShowSceneControls();
 	ShowMainViewWindow();
@@ -55,6 +54,8 @@ void EngineUI::ShowEngineUI()
 	{
 		ShowAboutWindow();
 	}
+
+	ShowPopups();
 }
 
 void EngineUI::ShowMainMenu()
@@ -472,7 +473,12 @@ void EngineUI::ShowAboutWindow()
 
 void EngineUI::ShowPopups() const
 {
-	ImGui::OpenPopup("Loading Assets");
+	static bool assets_loading_popup_shown = false;
+	if (!assets_loading_popup_shown)
+	{
+		assets_loading_popup_shown = true;
+		ImGui::OpenPopup("Loading Assets");
+	}
 
 	if (ImGui::BeginPopupModal("Loading Assets", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar))
 	{

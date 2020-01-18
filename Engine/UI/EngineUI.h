@@ -61,8 +61,8 @@ public:
 	#define CONSOLE_HEIGHT_PROP 0.3f
 
 	FileExplorerUI file_explorer_ui;
-private:
 
+private:
 	bool show_scene_tab = true;
 	bool show_game_tab = true;
 	bool show_hierarchy_window = true;
