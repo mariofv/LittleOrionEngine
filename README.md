@@ -50,6 +50,9 @@ Because this is a academic project is not possible to contribute directly to thi
 | ---- | ---- |
 | [Mario Fernández Villalba](https://github.com/mariofv/) | [Anabel Hernández Barrera](https://github.com/yalania/) |
 
+## Developement methodology 
+This project was developed following agile methodologies philosophy. If you are interested to know the tasks distribution don't hesitate to visit our [Trello board](https://trello.com/b/uFhGXWJ1/littleorionengine)!
+
 ## Built With
 * [SDL 2.0](https://www.libsdl.org/) - Used to manage window creation and input.
 * [glew 2.1.0](http://glew.sourceforge.net/) - Used to manage OpenGL extensions.
