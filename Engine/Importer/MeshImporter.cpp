@@ -105,6 +105,12 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 			indices.push_back(face.mIndices[j]);
 	}
 
+	//We only accept triangle formed meshes
+	if (indices.size() % 3 != 0)
+	{
+		APP_LOG_ERROR("Mesh %s have incorrect indices", mesh->mName.C_Str());
+		return;
+	}
 	std::vector<Mesh::Vertex> vertices;
 	vertices.reserve(mesh->mNumVertices);
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
