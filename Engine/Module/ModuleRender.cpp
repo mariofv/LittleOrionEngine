@@ -166,14 +166,17 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	GetCullingMeshes(App->cameras->main_camera);
-	for (auto &mesh : meshes_to_render)
+	if (App->cameras->main_camera != nullptr)
 	{
-		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
-		if (mesh->IsEnabled())
+		GetCullingMeshes(App->cameras->main_camera);
+		for (auto &mesh : meshes_to_render)
 		{
-			mesh->Render();
-			glUseProgram(0);
+			BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
+			if (mesh->IsEnabled())
+			{
+				mesh->Render();
+				glUseProgram(0);
+			}
 		}
 	}
 	rendering_measure_timer->Stop();
