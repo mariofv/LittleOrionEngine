@@ -50,6 +50,7 @@ private:
 	void SetMinMaxing(bool gl_minmax);
 	void SetWireframing(bool gl_wireframe);
 
+	void GetMeshesToRender(const ComponentCamera *camera);
 	void GetCullingMeshes(const ComponentCamera *camera);
 
 private:

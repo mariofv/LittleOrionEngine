@@ -57,6 +57,7 @@ void ModuleDebug::ShowDebugWindow()
 		ImGui::Checkbox("QuadTree", &show_quadtree);
 		ImGui::Separator();
 
+		ImGui::Checkbox("Scene window culling", &culling_scene_mode);
 		int culling_mode_int = static_cast<int>(culling_mode);
 		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling"))
 		{

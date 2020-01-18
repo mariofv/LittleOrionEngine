@@ -166,7 +166,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	GetCullingMeshes(App->cameras->main_camera);
+	GetMeshesToRender(&camera);
 	for (auto &mesh : meshes_to_render)
 	{
 		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
@@ -181,10 +181,23 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	App->debug->rendering_time = rendering_measure_timer->Read();
 }
 
+void ModuleRender::GetMeshesToRender(const ComponentCamera *camera)
+{
+	meshes_to_render.clear();
+
+	if (camera == App->cameras->scene_camera && !App->debug->culling_scene_mode)
+	{
+		meshes_to_render = meshes;
+	}
+	else
+	{
+		GetCullingMeshes(App->cameras->main_camera);
+	}
+}
+
 void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 {
 	BROFILER_CATEGORY("Get culling meshes", Profiler::Color::Lavender);
-	meshes_to_render.clear();
 
 	switch (App->debug->culling_mode)
 	{

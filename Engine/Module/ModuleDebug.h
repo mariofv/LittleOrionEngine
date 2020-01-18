@@ -32,7 +32,8 @@ public:
 	bool show_camera_frustum = true;
 	bool show_quadtree = false;
 
-	CullingMode culling_mode = CullingMode::NONE;
+	bool culling_scene_mode = false;
+	CullingMode culling_mode = CullingMode::QUADTREE_CULLING;
 	float rendering_time = 0;
 
 private:
