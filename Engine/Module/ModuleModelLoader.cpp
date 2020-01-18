@@ -18,51 +18,10 @@
 #include <assimp/material.h>
 #include <assimp/mesh.h>
 
-
-void Import(const File& file)
-{
-	for (auto & child : file.children)
-	{
-		if (App->model_loader->thread_comunication.stop_thread)
-		{
-			return;
-		}
-		App->model_loader->thread_comunication.importing_hash = std::hash<std::string>{}(child->file_path);
-		if (child->file_type == FileType::MODEL)
-		{
-			++App->model_loader->thread_comunication.loaded_items;
-			App->mesh_importer->Import(*child.get());
-		}
-		else if (child->file_type == FileType::TEXTURE)
-		{
-			++App->model_loader->thread_comunication.loaded_items;
-			App->material_importer->Import(*child.get());
-		}
-		else if (child->file_type == FileType::DIRECTORY)
-		{
-			Import(*child.get());
-		}
-		else 
-		{
-			++App->model_loader->thread_comunication.loaded_items;
-		}
-		App->model_loader->thread_comunication.importing_hash = 0;
-	}
-}
-
-// TODO: Change this method to a proper class
-void StartThread(const File& file)
-{
-	App->model_loader->thread_comunication.finished_loading = false;
-	App->model_loader->thread_comunication.total_items = file.total_sub_files_number;
-	Import(file);
-	App->model_loader->thread_comunication.finished_loading = true;
-}
-
 bool ModuleModelLoader::Init()
 {
 	APP_LOG_SECTION("************ Module ModelLoader Init ************");
-	importing_thread = std::thread(StartThread, *App->filesystem->assets_file.get());
+	importing_thread = std::thread(&ModuleModelLoader::StartThread, this);
 	return true;
 }
 
@@ -152,3 +111,37 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path)
 }
 
 
+// TODO: Change this method to a proper class
+void ModuleModelLoader::StartThread()
+{
+	thread_comunication.finished_loading = false;
+	thread_comunication.total_items = App->filesystem->assets_file->total_sub_files_number;
+	Import(*App->filesystem->assets_file.get());
+	thread_comunication.finished_loading = true;
+}
+
+void ModuleModelLoader::Import(const File& file)
+{
+	for (auto & child : file.children)
+	{
+		if (thread_comunication.stop_thread)
+		{
+			return;
+		}
+		thread_comunication.importing_hash = std::hash<std::string>{}(child->file_path);
+		if (child->file_type == FileType::MODEL)
+		{
+			App->mesh_importer->Import(*child.get());
+		}
+		if (child->file_type == FileType::TEXTURE)
+		{
+			App->material_importer->Import(*child.get());
+		}
+		if (child->file_type == FileType::DIRECTORY)
+		{
+			Import(*child.get());
+		}
+		++thread_comunication.loaded_items;
+		thread_comunication.importing_hash = 0;
+	}
+}

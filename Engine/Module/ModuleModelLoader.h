@@ -26,10 +26,11 @@ public:
 	bool CleanUp() override;
 	GameObject* LoadModel(const char *new_model_file_path);
 	GameObject* LoadCoreModel(const char* new_model_file_path);
-
 private:
 	void LoadNode(GameObject *parent_node, const std::shared_ptr<File> & model_base_path);
-	
+
+	void Import(const File& file);
+	void StartThread();
 private:
 	std::thread importing_thread;
 
