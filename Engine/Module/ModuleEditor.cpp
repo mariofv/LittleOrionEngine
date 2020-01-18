@@ -239,7 +239,7 @@ void ModuleEditor::RenderGizmo()
 	}
 }
 
-void ModuleEditor::RenderEditorCameraGizmo()
+void ModuleEditor::RenderEditorCameraGizmo() const
 {
 	float4x4 old_view_matrix = App->cameras->scene_camera->GetViewMatrix().Transposed();
 	float4x4 transposed_view_matrix = App->cameras->scene_camera->GetViewMatrix().Transposed();

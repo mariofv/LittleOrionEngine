@@ -23,7 +23,7 @@ public:
 	
 	float3 ComponentTransform::GetGlobalTranslation() const;
 	float3 GetTranslation() const;
-	void SetTranslation(const float3 translation);
+	void SetTranslation(const float3 &translation);
 	void Translate(const float3 &translation);
 
 	Quat GetRotation() const;
@@ -38,7 +38,7 @@ public:
 	float3 GetFrontVector() const;
 	float3 GetRightVector() const;
 
-	void ChangeLocalSpace(const float4x4 new_local_space);
+	void ChangeLocalSpace(const float4x4 &new_local_space);
 
 	void GenerateGlobalModelMatrix();
 	float4x4 GetGlobalModelMatrix() const;

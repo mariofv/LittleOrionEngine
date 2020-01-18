@@ -32,7 +32,7 @@ bool ModuleModelLoader::CleanUp()
 	return true;
 }
 
-GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
+GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path) const
 {
 	while (thread_comunication.importing_hash == std::hash<std::string>{}(new_model_file_path))
 	{
@@ -54,7 +54,7 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	return model_root_node;
 }
 
-void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<File> & model_base_path)
+void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<File> & model_base_path) const
 {
 	GameObject *node_game_object = App->scene->CreateChildGameObject(parent_node);
 
@@ -84,7 +84,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 	}
 }
 
-GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path)
+GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) const
 {
 	File file(new_model_file_path);
 	GameObject* model_game_object = App->scene->CreateGameObject();

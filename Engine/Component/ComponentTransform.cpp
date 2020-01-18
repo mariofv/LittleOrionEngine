@@ -50,7 +50,7 @@ float3 ComponentTransform::GetTranslation() const
 	return translation;
 }
 
-void ComponentTransform::SetTranslation(const float3 translation)
+void ComponentTransform::SetTranslation(const float3 &translation)
 {
 	this->translation = translation;
 	OnTransformChange();
@@ -171,7 +171,7 @@ void ComponentTransform::SetGlobalModelMatrix(const float4x4 &new_global_matrix)
 	
 }
 
-void ComponentTransform::ChangeLocalSpace(const float4x4 new_local_space)
+void ComponentTransform::ChangeLocalSpace(const float4x4 &new_local_space)
 {
 	model_matrix = new_local_space.Inverted() * global_model_matrix;
 	model_matrix.Decompose(translation, rotation, scale);

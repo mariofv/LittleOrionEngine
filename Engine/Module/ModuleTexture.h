@@ -28,7 +28,7 @@ public:
 	void RemoveComponentMaterial(ComponentMaterial* material_to_remove);
 	
 	std::shared_ptr<Texture> LoadTexture(const char* texture_path);
-	GLuint LoadCubemap(std::vector<std::string> faces) const;
+	GLuint LoadCubemap(const std::vector<std::string> & faces) const;
 public:
 	GLuint checkerboard_texture_id;
 	GLuint whitefall_texture_id;
