@@ -20,7 +20,8 @@ public:
 	std::string file_path;
 	std::string filename_no_extension;
 	FileType file_type;
-	size_t subFolders = 0;
+	size_t sub_folders = 0;
+	size_t total_sub_files_number = 0;
 
 
 	std::vector<std::shared_ptr<File>> children;

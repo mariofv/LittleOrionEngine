@@ -38,7 +38,11 @@ void File::GetChildren()
 		if (file->file_type == FileType::DIRECTORY)
 		{
 			file->GetChildren();
-			++subFolders;
+			++sub_folders;
+			sub_files += file->sub_files;
+		}
+		else {
+			++sub_files;
 		}
 	}
 }

@@ -38,7 +38,7 @@ void FileExplorerUI::ShowFoldersHierarchy(const File & file) {
 			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 
 			std::string filename = ICON_FA_FOLDER " " + child->filename;
-			if (child->subFolders == 0)
+			if (child->sub_folders == 0)
 			{
 				flags |= ImGuiTreeNodeFlags_Leaf;
 			}
