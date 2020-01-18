@@ -17,9 +17,8 @@
 #include <assimp/material.h>
 #include <assimp/mesh.h>
 
-// Called before render is available
 
-void Import(const File & file)
+void Import(const File& file)
 {
 	for (auto & child : file.children)
 	{
@@ -44,10 +43,18 @@ void Import(const File & file)
 	}
 }
 
+// TODO: Change this method to a proper class
+void StartThread(const File& file)
+{
+	App->model_loader->thread_comunication.finished_loading = false;
+	Import(file);
+	App->model_loader->thread_comunication.finished_loading = true;
+}
+
 bool ModuleModelLoader::Init()
 {
 	APP_LOG_SECTION("************ Module ModelLoader Init ************");
-	importing = std::thread(Import, *App->filesystem->assets_file.get());
+	importing_thread = std::thread(StartThread, *App->filesystem->assets_file.get());
 	return true;
 
 }
@@ -55,7 +62,7 @@ bool ModuleModelLoader::Init()
 bool ModuleModelLoader::CleanUp()
 {
 	thread_comunication.stop_thread = true;
-	importing.join();
+	importing_thread.join();
 	return true;
 }
 
@@ -65,6 +72,7 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path)
 	{
 		Sleep(1000);
 	}
+
 	File file(new_model_file_path);
 	std::string model_output = App->mesh_importer->Import(file).second;
 

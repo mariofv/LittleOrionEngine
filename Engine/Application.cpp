@@ -32,10 +32,10 @@ Application::Application()
 	modules.emplace_back(texture = new ModuleTexture());
 	modules.emplace_back(renderer = new ModuleRender());
 	modules.emplace_back(editor = new ModuleEditor());
-	modules.emplace_back(scene = new ModuleScene());
 	modules.emplace_back(program = new ModuleProgram());
 	modules.emplace_back(cameras = new ModuleCamera());
 	modules.emplace_back(model_loader = new ModuleModelLoader());
+	modules.emplace_back(scene = new ModuleScene());
 	modules.emplace_back(debug = new ModuleDebug());
 	modules.emplace_back(debug_draw = new ModuleDebugDraw());
 	modules.emplace_back(lights = new ModuleLight());

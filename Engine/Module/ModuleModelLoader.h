@@ -29,11 +29,15 @@ public:
 
 private:
 	void LoadNode(GameObject *parent_node, const std::shared_ptr<File> & model_base_path);
-	std::thread importing;
+	
+private:
+	std::thread importing_thread;
+
 public:
 	struct ThreadComunication
 	{
 		std::atomic_bool stop_thread = false;
+		std::atomic_bool finished_loading = false;
 		std::atomic_uint importing_hash = 0;
 	} thread_comunication;
 };
