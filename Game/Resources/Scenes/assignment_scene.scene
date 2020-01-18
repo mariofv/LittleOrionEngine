@@ -1,45 +1,18 @@
 {
     "GameObjects": [
         {
-            "UUID": 1956496666,
+            "UUID": 1690967942,
             "ParentUUID": 0,
-            "Name": "Drawers",
+            "Name": "Light",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1094291808,
+                "UUID": 3749479261,
                 "Active": true,
                 "Translation": [
-                    6.377585411071777,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": []
-        },
-        {
-            "UUID": 3722170244,
-            "ParentUUID": 1956496666,
-            "Name": "Drawers0",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2595768688,
-                "Active": true,
-                "Translation": [
-                    5.682145118713379,
-                    0.0,
-                    -4.673527717590332
+                    23.700376510620118,
+                    29.76546859741211,
+                    -15.606746673583985
                 ],
                 "Rotation": [
                     0.0,
@@ -54,213 +27,72 @@
             },
             "Components": [
                 {
-                    "UUID": 1813795259,
-                    "ComponentType": 3,
+                    "UUID": 2143224420,
+                    "ComponentType": 5,
                     "Active": true,
-                    "MeshPath": "Library/Meshes/Drawers/Drawers0.ol",
-                    "ShaderProgram": "Blinn phong"
-                },
-                {
-                    "UUID": 2998507030,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Index": 0,
-                    "Path": "Library/Materials/DrawersDiffuse.dds",
-                    "ath": "Library/Materials/DrawersSpecular.dds",
-                    "h": "Library/Materials/DrawersOcclusion.dds",
-                    "Checkboard": false,
-                    "kAmbient": 1.0,
-                    "kSpecular": 1.0,
-                    "kDiffuse": 1.0,
-                    "shininess": 1.0,
-                    "difusseColor": [
-                        1.0,
-                        1.0,
-                        1.0,
+                    "LightColor": [
+                        0.48712030053138735,
+                        0.7460439205169678,
+                        0.8872548937797546,
                         1.0
                     ],
-                    "emissiveColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "specularColor": [
-                        1.0,
-                        0.9999899864196777,
-                        0.9999899864196777,
-                        1.0
-                    ]
+                    "Intensity": 0.5
                 }
             ]
         },
         {
-            "UUID": 3299622779,
+            "UUID": 172714554,
             "ParentUUID": 0,
-            "Name": "Zombunny",
+            "Name": "Main Camera",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 2599680756,
+                "UUID": 1527511923,
                 "Active": true,
                 "Translation": [
-                    38.0,
-                    0.0,
-                    -30.719999313354493
+                    44.31458282470703,
+                    2.1754932403564455,
+                    -33.430076599121097
                 ],
                 "Rotation": [
                     0.0,
-                    52.79999923706055,
+                    -53.5,
                     0.0
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": []
-        },
-        {
-            "UUID": 1280885850,
-            "ParentUUID": 3299622779,
-            "Name": "Zombunny1",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 804355126,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 2852775768,
-                    "ComponentType": 3,
-                    "Active": true,
-                    "MeshPath": "Library/Meshes/Zombunny/Zombunny1.ol",
-                    "ShaderProgram": "Default"
-                },
-                {
-                    "UUID": 1290707595,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Index": 0,
-                    "Checkboard": false,
-                    "kAmbient": 1.0,
-                    "kSpecular": 1.0,
-                    "kDiffuse": 1.0,
-                    "shininess": 1.0,
-                    "difusseColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "emissiveColor": [
-                        1.0,
-                        0.9999899864196777,
-                        0.9999899864196777,
-                        1.0
-                    ],
-                    "specularColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "UUID": 3873959185,
-            "ParentUUID": 3299622779,
-            "Name": "Zombunny0",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1173893167,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    0.9999998807907105,
-                    1.0,
+                    0.9999999403953552,
+                    0.9999982714653015,
                     0.9999998807907105
                 ]
             },
             "Components": [
                 {
-                    "UUID": 3660233147,
-                    "ComponentType": 3,
+                    "UUID": 3641786684,
+                    "ComponentType": 1,
                     "Active": true,
-                    "MeshPath": "Library/Meshes/Zombunny/Zombunny0.ol",
-                    "ShaderProgram": "Blinn phong"
-                },
-                {
-                    "UUID": 3840434433,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Index": 0,
-                    "Path": "Library/Materials/ZomBunnyDiffuse.dds",
-                    "ath": "Library/Materials/ZomBunnySpecular.dds",
-                    "th": "Library/Materials/ZomBunnyEmissive.dds",
-                    "h": "Library/Materials/ZomBunnyOcclusion.dds",
-                    "Checkboard": false,
-                    "kAmbient": 1.0,
-                    "kSpecular": 1.0,
-                    "kDiffuse": 1.0,
-                    "shininess": 1.0,
-                    "difusseColor": [
-                        1.0,
-                        1.0,
-                        1.0,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 500.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
                         1.0
                     ],
-                    "emissiveColor": [
-                        1.0,
-                        0.9999899864196777,
-                        0.9999899864196777,
-                        1.0
-                    ],
-                    "specularColor": [
-                        1.0,
-                        0.9999899864196777,
-                        0.9999899864196777,
-                        1.0
-                    ]
+                    "Depth": 0
                 }
             ]
         },
         {
-            "UUID": 3160281568,
+            "UUID": 3424589903,
             "ParentUUID": 0,
-            "Name": "Wall",
+            "Name": "Clock",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1044582792,
+                "UUID": 2410576861,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -281,13 +113,13 @@
             "Components": []
         },
         {
-            "UUID": 3376124435,
-            "ParentUUID": 3160281568,
-            "Name": "Wall0",
+            "UUID": 3892377627,
+            "ParentUUID": 3424589903,
+            "Name": "Clock0",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1094675528,
+                "UUID": 1035123077,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -295,9 +127,9 @@
                     0.0
                 ],
                 "Rotation": [
-                    -0.0,
                     0.0,
-                    -0.0
+                    0.0,
+                    0.0
                 ],
                 "Scale": [
                     1.0,
@@ -307,847 +139,25 @@
             },
             "Components": [
                 {
-                    "UUID": 236934638,
+                    "UUID": 49129029,
                     "ComponentType": 3,
                     "Active": true,
-                    "MeshPath": "Library/Meshes/Wall/Wall0.ol",
+                    "MeshPath": "Library/Meshes/Clock/Clock0.ol",
                     "ShaderProgram": "Blinn phong"
                 },
                 {
-                    "UUID": 2099879570,
+                    "UUID": 1036907037,
                     "ComponentType": 2,
                     "Active": true,
                     "Index": 0,
-                    "Path": "Library/Materials/WallDiffuse.dds",
-                    "ath": "Library/Materials/WallSpecular.dds",
-                    "h": "Library/Materials/WallOcclusion.dds",
+                    "Path": "Library/Materials/ClockDiffuse.dds",
+                    "ath": "Library/Materials/ClockSpecular.dds",
+                    "h": "Library/Materials/ClockOcclusion.dds",
                     "Checkboard": false,
                     "kAmbient": 1.0,
                     "kSpecular": 1.0,
                     "kDiffuse": 1.0,
-                    "shininess": 1.0,
-                    "difusseColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "emissiveColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "specularColor": [
-                        1.0,
-                        0.9999899864196777,
-                        0.9999899864196777,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "UUID": 49824752,
-            "ParentUUID": 3160281568,
-            "Name": "Stars0",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3692491958,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 4161482801,
-                    "ComponentType": 3,
-                    "Active": true,
-                    "MeshPath": "Library/Meshes/Wall/Stars0.ol",
-                    "ShaderProgram": "Blinn phong"
-                },
-                {
-                    "UUID": 3486911532,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Index": 0,
-                    "Checkboard": false,
-                    "kAmbient": 1.0,
-                    "kSpecular": 1.0,
-                    "kDiffuse": 1.0,
-                    "shininess": 1.0,
-                    "difusseColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "emissiveColor": [
-                        0.4896097481250763,
-                        0.936274528503418,
-                        0.2478373944759369,
-                        1.0
-                    ],
-                    "specularColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "UUID": 762495827,
-            "ParentUUID": 0,
-            "Name": "SpinningTop",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3182535448,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": []
-        },
-        {
-            "UUID": 2274734165,
-            "ParentUUID": 762495827,
-            "Name": "SpinningTop0",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 380836194,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 1430665836,
-                    "ComponentType": 3,
-                    "Active": true,
-                    "MeshPath": "Library/Meshes/SpinningTop/SpinningTop0.ol",
-                    "ShaderProgram": "Blinn phong"
-                },
-                {
-                    "UUID": 2454273579,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Index": 0,
-                    "Path": "Library/Materials/SpinningTopDiffuse.dds",
-                    "h": "Library/Materials/SpinningTopOcclusion.dds",
-                    "Checkboard": false,
-                    "kAmbient": 1.0,
-                    "kSpecular": 1.0,
-                    "kDiffuse": 1.0,
-                    "shininess": 1.0,
-                    "difusseColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "emissiveColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "specularColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "UUID": 1167675657,
-            "ParentUUID": 0,
-            "Name": "Robot",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 665886760,
-                "Active": true,
-                "Translation": [
-                    14.40999984741211,
-                    0.0,
-                    -9.229999542236329
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": []
-        },
-        {
-            "UUID": 486948958,
-            "ParentUUID": 1167675657,
-            "Name": "Robot0",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3547993465,
-                "Active": true,
-                "Translation": [
-                    11.293000221252442,
-                    0.0,
-                    -12.07699966430664
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 1452496971,
-                    "ComponentType": 3,
-                    "Active": true,
-                    "MeshPath": "Library/Meshes/Robot/Robot0.ol",
-                    "ShaderProgram": "Blinn phong"
-                },
-                {
-                    "UUID": 4249685033,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Index": 0,
-                    "Path": "Library/Materials/RobotDiffuse.dds",
-                    "ath": "Library/Materials/RobotSpecular.dds",
-                    "h": "Library/Materials/RobotOcclusion.dds",
-                    "Checkboard": false,
-                    "kAmbient": 1.0,
-                    "kSpecular": 1.0,
-                    "kDiffuse": 1.0,
-                    "shininess": 1.0,
-                    "difusseColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "emissiveColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "specularColor": [
-                        1.0,
-                        0.9999899864196777,
-                        0.9999899864196777,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "UUID": 3822139888,
-            "ParentUUID": 0,
-            "Name": "Player",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 906211152,
-                "Active": true,
-                "Translation": [
-                    39.90999984741211,
-                    0.0,
-                    -28.229999542236329
-                ],
-                "Rotation": [
-                    0.0,
-                    -135.39999389648438,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": []
-        },
-        {
-            "UUID": 2880867396,
-            "ParentUUID": 3822139888,
-            "Name": "Player0",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3015932553,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 4240644418,
-                    "ComponentType": 3,
-                    "Active": true,
-                    "MeshPath": "Library/Meshes/Player/Player0.ol",
-                    "ShaderProgram": "Blinn phong"
-                },
-                {
-                    "UUID": 2666703853,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Index": 0,
-                    "Path": "Library/Materials/PlayerDiffuse.dds",
-                    "ath": "Library/Materials/PlayerSpecular.dds",
-                    "h": "Library/Materials/PlayerOcclusion.dds",
-                    "Checkboard": false,
-                    "kAmbient": 1.0,
-                    "kSpecular": 1.0,
-                    "kDiffuse": 1.0,
-                    "shininess": 1.0,
-                    "difusseColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "emissiveColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "specularColor": [
-                        1.0,
-                        0.9999899864196777,
-                        0.9999899864196777,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "UUID": 411129028,
-            "ParentUUID": 3822139888,
-            "Name": "Gun0",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2673478096,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 3405866054,
-                    "ComponentType": 3,
-                    "Active": true,
-                    "MeshPath": "Library/Meshes/Player/Gun0.ol",
-                    "ShaderProgram": "Blinn phong"
-                },
-                {
-                    "UUID": 1435279100,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Index": 0,
-                    "Path": "Library/Materials/GunDiffuse.dds",
-                    "ath": "Library/Materials/GunSpecular.dds",
-                    "h": "Library/Materials/GunOcclusion.dds",
-                    "Checkboard": false,
-                    "kAmbient": 1.0,
-                    "kSpecular": 1.0,
-                    "kDiffuse": 1.0,
-                    "shininess": 1.0,
-                    "difusseColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "emissiveColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "specularColor": [
-                        0.9950980544090271,
-                        0.9950881004333496,
-                        0.9950881004333496,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "UUID": 2118646071,
-            "ParentUUID": 0,
-            "Name": "Hearse",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3724224274,
-                "Active": true,
-                "Translation": [
-                    31.322999954223634,
-                    0.0,
-                    -31.242000579833986
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": []
-        },
-        {
-            "UUID": 1354330395,
-            "ParentUUID": 2118646071,
-            "Name": "Hearse0",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1081545611,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 356883829,
-                    "ComponentType": 3,
-                    "Active": true,
-                    "MeshPath": "Library/Meshes/Hearse/Hearse0.ol",
-                    "ShaderProgram": "Blinn phong"
-                },
-                {
-                    "UUID": 3844859639,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Index": 0,
-                    "Path": "Library/Materials/HearseDiffuse.dds",
-                    "ath": "Library/Materials/HearseSpecular.dds",
-                    "h": "Library/Materials/HearseOcclusion.dds",
-                    "Checkboard": false,
-                    "kAmbient": 1.0,
-                    "kSpecular": 1.0,
-                    "kDiffuse": 1.0,
-                    "shininess": 1.0,
-                    "difusseColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "emissiveColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "specularColor": [
-                        1.0,
-                        0.9999899864196777,
-                        0.9999899864196777,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "UUID": 4252975514,
-            "ParentUUID": 0,
-            "Name": "Floor",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 495684728,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": []
-        },
-        {
-            "UUID": 659409697,
-            "ParentUUID": 4252975514,
-            "Name": "Sides0",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 403309853,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 1836452657,
-                    "ComponentType": 3,
-                    "Active": true,
-                    "MeshPath": "Library/Meshes/Floor/Sides0.ol",
-                    "ShaderProgram": "Default"
-                },
-                {
-                    "UUID": 756100013,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Index": 0,
-                    "Checkboard": false,
-                    "kAmbient": 1.0,
-                    "kSpecular": 1.0,
-                    "kDiffuse": 1.0,
-                    "shininess": 1.0,
-                    "difusseColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "emissiveColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "specularColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "UUID": 3826762544,
-            "ParentUUID": 4252975514,
-            "Name": "Planks0",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1403011528,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 1517657635,
-                    "ComponentType": 3,
-                    "Active": true,
-                    "MeshPath": "Library/Meshes/Floor/Planks0.ol",
-                    "ShaderProgram": "Blinn phong"
-                },
-                {
-                    "UUID": 2081493346,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Index": 0,
-                    "Path": "Library/Materials/PlanksDiffuse.dds",
-                    "ath": "Library/Materials/PlanksSpecular.dds",
-                    "h": "Library/Materials/PlanksOcclusion.dds",
-                    "Checkboard": false,
-                    "kAmbient": 1.0,
-                    "kSpecular": 1.0,
-                    "kDiffuse": 1.0,
-                    "shininess": 1.0,
-                    "difusseColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "emissiveColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "specularColor": [
-                        1.0,
-                        0.9999899864196777,
-                        0.9999899864196777,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "UUID": 1414220957,
-            "ParentUUID": 4252975514,
-            "Name": "Base0",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3807174559,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 402287162,
-                    "ComponentType": 3,
-                    "Active": true,
-                    "MeshPath": "Library/Meshes/Floor/Base0.ol",
-                    "ShaderProgram": "Default"
-                },
-                {
-                    "UUID": 23418835,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Index": 0,
-                    "Checkboard": false,
-                    "kAmbient": 1.0,
-                    "kSpecular": 1.0,
-                    "kDiffuse": 1.0,
-                    "shininess": 1.0,
-                    "difusseColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "emissiveColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "specularColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "UUID": 1773033232,
-            "ParentUUID": 0,
-            "Name": "Firetruck",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1651984798,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": []
-        },
-        {
-            "UUID": 605797400,
-            "ParentUUID": 1773033232,
-            "Name": "Firetruck0",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 108783566,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 2251706070,
-                    "ComponentType": 3,
-                    "Active": true,
-                    "MeshPath": "Library/Meshes/Firetruck/Firetruck0.ol",
-                    "ShaderProgram": "Blinn phong"
-                },
-                {
-                    "UUID": 862733699,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Index": 0,
-                    "Path": "Library/Materials/FiretruckDiffuse.dds",
-                    "ath": "Library/Materials/FiretruckSpecular.dds",
-                    "h": "Library/Materials/FiretruckOcclusion.dds",
-                    "Checkboard": false,
-                    "kAmbient": 1.0,
-                    "kSpecular": 1.0,
-                    "kDiffuse": 1.0,
-                    "shininess": 1.0,
+                    "shininess": 0.9380000233650208,
                     "difusseColor": [
                         1.0,
                         1.0,
@@ -1264,13 +274,40 @@
             ]
         },
         {
-            "UUID": 151173210,
-            "ParentUUID": 2498973715,
-            "Name": "Dollhouse0",
+            "UUID": 1773033232,
+            "ParentUUID": 0,
+            "Name": "Firetruck",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 309959607,
+                "UUID": 1651984798,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": []
+        },
+        {
+            "UUID": 605797400,
+            "ParentUUID": 1773033232,
+            "Name": "Firetruck0",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 108783566,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -1290,14 +327,108 @@
             },
             "Components": [
                 {
-                    "UUID": 2701683445,
+                    "UUID": 2251706070,
                     "ComponentType": 3,
                     "Active": true,
-                    "MeshPath": "Library/Meshes/Dollhouse/Dollhouse0.ol",
+                    "MeshPath": "Library/Meshes/Firetruck/Firetruck0.ol",
+                    "ShaderProgram": "Blinn phong"
+                },
+                {
+                    "UUID": 862733699,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Index": 0,
+                    "Path": "Library/Materials/FiretruckDiffuse.dds",
+                    "ath": "Library/Materials/FiretruckSpecular.dds",
+                    "h": "Library/Materials/FiretruckOcclusion.dds",
+                    "Checkboard": false,
+                    "kAmbient": 1.0,
+                    "kSpecular": 1.0,
+                    "kDiffuse": 1.0,
+                    "shininess": 1.0,
+                    "difusseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "emissiveColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "specularColor": [
+                        1.0,
+                        0.9999899864196777,
+                        0.9999899864196777,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "UUID": 4252975514,
+            "ParentUUID": 0,
+            "Name": "Floor",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 495684728,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": []
+        },
+        {
+            "UUID": 1414220957,
+            "ParentUUID": 4252975514,
+            "Name": "Base0",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3807174559,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 402287162,
+                    "ComponentType": 3,
+                    "Active": true,
+                    "MeshPath": "Library/Meshes/Floor/Base0.ol",
                     "ShaderProgram": "Default"
                 },
                 {
-                    "UUID": 3705145431,
+                    "UUID": 23418835,
                     "ComponentType": 2,
                     "Active": true,
                     "Index": 0,
@@ -1328,40 +459,13 @@
             ]
         },
         {
-            "UUID": 3424589903,
-            "ParentUUID": 0,
-            "Name": "Clock",
+            "UUID": 3826762544,
+            "ParentUUID": 4252975514,
+            "Name": "Planks0",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 2410576861,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": []
-        },
-        {
-            "UUID": 3892377627,
-            "ParentUUID": 3424589903,
-            "Name": "Clock0",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1035123077,
+                "UUID": 1403011528,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -1381,25 +485,25 @@
             },
             "Components": [
                 {
-                    "UUID": 49129029,
+                    "UUID": 1517657635,
                     "ComponentType": 3,
                     "Active": true,
-                    "MeshPath": "Library/Meshes/Clock/Clock0.ol",
+                    "MeshPath": "Library/Meshes/Floor/Planks0.ol",
                     "ShaderProgram": "Blinn phong"
                 },
                 {
-                    "UUID": 1036907037,
+                    "UUID": 2081493346,
                     "ComponentType": 2,
                     "Active": true,
                     "Index": 0,
-                    "Path": "Library/Materials/ClockDiffuse.dds",
-                    "ath": "Library/Materials/ClockSpecular.dds",
-                    "h": "Library/Materials/ClockOcclusion.dds",
+                    "Path": "Library/Materials/PlanksDiffuse.dds",
+                    "ath": "Library/Materials/PlanksSpecular.dds",
+                    "h": "Library/Materials/PlanksOcclusion.dds",
                     "Checkboard": false,
                     "kAmbient": 1.0,
                     "kSpecular": 1.0,
                     "kDiffuse": 1.0,
-                    "shininess": 0.9380000233650208,
+                    "shininess": 1.0,
                     "difusseColor": [
                         1.0,
                         1.0,
@@ -1422,63 +526,18 @@
             ]
         },
         {
-            "UUID": 172714554,
-            "ParentUUID": 0,
-            "Name": "Main Camera",
+            "UUID": 659409697,
+            "ParentUUID": 4252975514,
+            "Name": "Sides0",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1527511923,
+                "UUID": 403309853,
                 "Active": true,
                 "Translation": [
-                    44.31458282470703,
-                    2.1754932403564455,
-                    -33.430076599121097
-                ],
-                "Rotation": [
                     0.0,
-                    -53.5,
+                    0.0,
                     0.0
-                ],
-                "Scale": [
-                    0.9999999403953552,
-                    0.9999982714653015,
-                    0.9999998807907105
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 3641786684,
-                    "ComponentType": 1,
-                    "Active": true,
-                    "FrustumType": 2,
-                    "NearPlaneDistance": 1.0,
-                    "FarPlaneDistance": 500.0,
-                    "VerticalFOV": 0.7853981852531433,
-                    "ClearMode": 0,
-                    "ClearColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "Depth": 0
-                }
-            ]
-        },
-        {
-            "UUID": 1690967942,
-            "ParentUUID": 0,
-            "Name": "Light",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3749479261,
-                "Active": true,
-                "Translation": [
-                    23.700376510620118,
-                    29.76546859741211,
-                    -15.606746673583985
                 ],
                 "Rotation": [
                     0.0,
@@ -1493,16 +552,893 @@
             },
             "Components": [
                 {
-                    "UUID": 2143224420,
-                    "ComponentType": 5,
+                    "UUID": 1836452657,
+                    "ComponentType": 3,
                     "Active": true,
-                    "LightColor": [
-                        0.48712030053138735,
-                        0.7460439205169678,
-                        0.8872548937797546,
+                    "MeshPath": "Library/Meshes/Floor/Sides0.ol",
+                    "ShaderProgram": "Default"
+                },
+                {
+                    "UUID": 756100013,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Index": 0,
+                    "Checkboard": false,
+                    "kAmbient": 1.0,
+                    "kSpecular": 1.0,
+                    "kDiffuse": 1.0,
+                    "shininess": 1.0,
+                    "difusseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
                         1.0
                     ],
-                    "Intensity": 0.5
+                    "emissiveColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "specularColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "UUID": 2118646071,
+            "ParentUUID": 0,
+            "Name": "Hearse",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3724224274,
+                "Active": true,
+                "Translation": [
+                    31.322999954223634,
+                    0.0,
+                    -31.242000579833986
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": []
+        },
+        {
+            "UUID": 1354330395,
+            "ParentUUID": 2118646071,
+            "Name": "Hearse0",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1081545611,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 356883829,
+                    "ComponentType": 3,
+                    "Active": true,
+                    "MeshPath": "Library/Meshes/Hearse/Hearse0.ol",
+                    "ShaderProgram": "Blinn phong"
+                },
+                {
+                    "UUID": 3844859639,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Index": 0,
+                    "Path": "Library/Materials/HearseDiffuse.dds",
+                    "ath": "Library/Materials/HearseSpecular.dds",
+                    "h": "Library/Materials/HearseOcclusion.dds",
+                    "Checkboard": false,
+                    "kAmbient": 1.0,
+                    "kSpecular": 1.0,
+                    "kDiffuse": 1.0,
+                    "shininess": 1.0,
+                    "difusseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "emissiveColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "specularColor": [
+                        1.0,
+                        0.9999899864196777,
+                        0.9999899864196777,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "UUID": 3822139888,
+            "ParentUUID": 0,
+            "Name": "Player",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 906211152,
+                "Active": true,
+                "Translation": [
+                    39.90999984741211,
+                    0.0,
+                    -28.229999542236329
+                ],
+                "Rotation": [
+                    0.0,
+                    -135.39999389648438,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": []
+        },
+        {
+            "UUID": 411129028,
+            "ParentUUID": 3822139888,
+            "Name": "Gun0",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2673478096,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 3405866054,
+                    "ComponentType": 3,
+                    "Active": true,
+                    "MeshPath": "Library/Meshes/Player/Gun0.ol",
+                    "ShaderProgram": "Blinn phong"
+                },
+                {
+                    "UUID": 1435279100,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Index": 0,
+                    "Path": "Library/Materials/GunDiffuse.dds",
+                    "ath": "Library/Materials/GunSpecular.dds",
+                    "h": "Library/Materials/GunOcclusion.dds",
+                    "Checkboard": false,
+                    "kAmbient": 1.0,
+                    "kSpecular": 1.0,
+                    "kDiffuse": 1.0,
+                    "shininess": 1.0,
+                    "difusseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "emissiveColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "specularColor": [
+                        0.9950980544090271,
+                        0.9950881004333496,
+                        0.9950881004333496,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "UUID": 2880867396,
+            "ParentUUID": 3822139888,
+            "Name": "Player0",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3015932553,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 4240644418,
+                    "ComponentType": 3,
+                    "Active": true,
+                    "MeshPath": "Library/Meshes/Player/Player0.ol",
+                    "ShaderProgram": "Blinn phong"
+                },
+                {
+                    "UUID": 2666703853,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Index": 0,
+                    "Path": "Library/Materials/PlayerDiffuse.dds",
+                    "ath": "Library/Materials/PlayerSpecular.dds",
+                    "h": "Library/Materials/PlayerOcclusion.dds",
+                    "Checkboard": false,
+                    "kAmbient": 1.0,
+                    "kSpecular": 1.0,
+                    "kDiffuse": 1.0,
+                    "shininess": 1.0,
+                    "difusseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "emissiveColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "specularColor": [
+                        1.0,
+                        0.9999899864196777,
+                        0.9999899864196777,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "UUID": 1167675657,
+            "ParentUUID": 0,
+            "Name": "Robot",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 665886760,
+                "Active": true,
+                "Translation": [
+                    14.40999984741211,
+                    0.0,
+                    -9.229999542236329
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": []
+        },
+        {
+            "UUID": 486948958,
+            "ParentUUID": 1167675657,
+            "Name": "Robot0",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3547993465,
+                "Active": true,
+                "Translation": [
+                    11.293000221252442,
+                    0.0,
+                    -12.07699966430664
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 1452496971,
+                    "ComponentType": 3,
+                    "Active": true,
+                    "MeshPath": "Library/Meshes/Robot/Robot0.ol",
+                    "ShaderProgram": "Blinn phong"
+                },
+                {
+                    "UUID": 4249685033,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Index": 0,
+                    "Path": "Library/Materials/RobotDiffuse.dds",
+                    "ath": "Library/Materials/RobotSpecular.dds",
+                    "h": "Library/Materials/RobotOcclusion.dds",
+                    "Checkboard": false,
+                    "kAmbient": 1.0,
+                    "kSpecular": 1.0,
+                    "kDiffuse": 1.0,
+                    "shininess": 1.0,
+                    "difusseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "emissiveColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "specularColor": [
+                        1.0,
+                        0.9999899864196777,
+                        0.9999899864196777,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "UUID": 762495827,
+            "ParentUUID": 0,
+            "Name": "SpinningTop",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3182535448,
+                "Active": true,
+                "Translation": [
+                    28.988685607910158,
+                    0.0,
+                    -7.40615177154541
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": []
+        },
+        {
+            "UUID": 2274734165,
+            "ParentUUID": 762495827,
+            "Name": "SpinningTop0",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 380836194,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 1430665836,
+                    "ComponentType": 3,
+                    "Active": true,
+                    "MeshPath": "Library/Meshes/SpinningTop/SpinningTop0.ol",
+                    "ShaderProgram": "Blinn phong"
+                },
+                {
+                    "UUID": 2454273579,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Index": 0,
+                    "Path": "Library/Materials/SpinningTopDiffuse.dds",
+                    "h": "Library/Materials/SpinningTopOcclusion.dds",
+                    "Checkboard": false,
+                    "kAmbient": 1.0,
+                    "kSpecular": 1.0,
+                    "kDiffuse": 1.0,
+                    "shininess": 1.0,
+                    "difusseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "emissiveColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "specularColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "UUID": 3160281568,
+            "ParentUUID": 0,
+            "Name": "Wall",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1044582792,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": []
+        },
+        {
+            "UUID": 49824752,
+            "ParentUUID": 3160281568,
+            "Name": "Stars0",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3692491958,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 4161482801,
+                    "ComponentType": 3,
+                    "Active": true,
+                    "MeshPath": "Library/Meshes/Wall/Stars0.ol",
+                    "ShaderProgram": "Blinn phong"
+                },
+                {
+                    "UUID": 3486911532,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Index": 0,
+                    "Checkboard": false,
+                    "kAmbient": 1.0,
+                    "kSpecular": 1.0,
+                    "kDiffuse": 1.0,
+                    "shininess": 1.0,
+                    "difusseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "emissiveColor": [
+                        0.4896097481250763,
+                        0.936274528503418,
+                        0.2478373944759369,
+                        1.0
+                    ],
+                    "specularColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "UUID": 3376124435,
+            "ParentUUID": 3160281568,
+            "Name": "Wall0",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1094675528,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 236934638,
+                    "ComponentType": 3,
+                    "Active": true,
+                    "MeshPath": "Library/Meshes/Wall/Wall0.ol",
+                    "ShaderProgram": "Blinn phong"
+                },
+                {
+                    "UUID": 2099879570,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Index": 0,
+                    "Path": "Library/Materials/WallDiffuse.dds",
+                    "ath": "Library/Materials/WallSpecular.dds",
+                    "h": "Library/Materials/WallOcclusion.dds",
+                    "Checkboard": false,
+                    "kAmbient": 1.0,
+                    "kSpecular": 1.0,
+                    "kDiffuse": 1.0,
+                    "shininess": 1.0,
+                    "difusseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "emissiveColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "specularColor": [
+                        1.0,
+                        0.9999899864196777,
+                        0.9999899864196777,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "UUID": 3299622779,
+            "ParentUUID": 0,
+            "Name": "Zombunny",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2599680756,
+                "Active": true,
+                "Translation": [
+                    38.0,
+                    0.0,
+                    -30.719999313354493
+                ],
+                "Rotation": [
+                    0.0,
+                    52.79999923706055,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": []
+        },
+        {
+            "UUID": 3873959185,
+            "ParentUUID": 3299622779,
+            "Name": "Zombunny0",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1173893167,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    0.9999998807907105,
+                    1.0,
+                    0.9999998807907105
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 3660233147,
+                    "ComponentType": 3,
+                    "Active": true,
+                    "MeshPath": "Library/Meshes/Zombunny/Zombunny0.ol",
+                    "ShaderProgram": "Blinn phong"
+                },
+                {
+                    "UUID": 3840434433,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Index": 0,
+                    "Path": "Library/Materials/ZomBunnyDiffuse.dds",
+                    "ath": "Library/Materials/ZomBunnySpecular.dds",
+                    "th": "Library/Materials/ZomBunnyEmissive.dds",
+                    "h": "Library/Materials/ZomBunnyOcclusion.dds",
+                    "Checkboard": false,
+                    "kAmbient": 1.0,
+                    "kSpecular": 1.0,
+                    "kDiffuse": 1.0,
+                    "shininess": 1.0,
+                    "difusseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "emissiveColor": [
+                        1.0,
+                        0.9999899864196777,
+                        0.9999899864196777,
+                        1.0
+                    ],
+                    "specularColor": [
+                        1.0,
+                        0.9999899864196777,
+                        0.9999899864196777,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "UUID": 1280885850,
+            "ParentUUID": 3299622779,
+            "Name": "Zombunny1",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 804355126,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 2852775768,
+                    "ComponentType": 3,
+                    "Active": true,
+                    "MeshPath": "Library/Meshes/Zombunny/Zombunny1.ol",
+                    "ShaderProgram": "Default"
+                },
+                {
+                    "UUID": 1290707595,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Index": 0,
+                    "Checkboard": false,
+                    "kAmbient": 1.0,
+                    "kSpecular": 1.0,
+                    "kDiffuse": 1.0,
+                    "shininess": 1.0,
+                    "difusseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "emissiveColor": [
+                        1.0,
+                        0.9999899864196777,
+                        0.9999899864196777,
+                        1.0
+                    ],
+                    "specularColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ]
+                }
+            ]
+        },
+        {
+            "UUID": 1956496666,
+            "ParentUUID": 0,
+            "Name": "Drawers",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1094291808,
+                "Active": true,
+                "Translation": [
+                    6.377585411071777,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": []
+        },
+        {
+            "UUID": 3722170244,
+            "ParentUUID": 1956496666,
+            "Name": "Drawers0",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2595768688,
+                "Active": true,
+                "Translation": [
+                    5.682145118713379,
+                    0.0,
+                    -4.673527717590332
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 1813795259,
+                    "ComponentType": 3,
+                    "Active": true,
+                    "MeshPath": "Library/Meshes/Drawers/Drawers0.ol",
+                    "ShaderProgram": "Blinn phong"
+                },
+                {
+                    "UUID": 2998507030,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Index": 0,
+                    "Path": "Library/Materials/DrawersDiffuse.dds",
+                    "ath": "Library/Materials/DrawersSpecular.dds",
+                    "h": "Library/Materials/DrawersOcclusion.dds",
+                    "Checkboard": false,
+                    "kAmbient": 1.0,
+                    "kSpecular": 1.0,
+                    "kDiffuse": 1.0,
+                    "shininess": 1.0,
+                    "difusseColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "emissiveColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "specularColor": [
+                        1.0,
+                        0.9999899864196777,
+                        0.9999899864196777,
+                        1.0
+                    ]
                 }
             ]
         }
