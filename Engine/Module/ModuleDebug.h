@@ -25,8 +25,8 @@ public:
 	bool show_camera_frustum = true;
 	bool show_quadtree = false;
 
-	bool frustum_culling = false;
-	bool quadtree_culling = false;
+	bool frustum_culling = true;
+	bool quadtree_culling = true;
 	float rendering_time = 0;
 
 private:
