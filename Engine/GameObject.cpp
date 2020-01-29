@@ -102,12 +102,6 @@ void GameObject::Update()
 	{
 		components[i]->Update();
 	}
-
-	for (unsigned int i = 0; i < children.size(); ++i)
-	{
-		children[i]->Update();
-	}
-
 }
 
 void GameObject::Save(Config& config) const

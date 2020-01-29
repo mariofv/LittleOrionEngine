@@ -22,7 +22,10 @@ bool ModuleScene::Init()
 update_status ModuleScene::Update()
 {
 	BROFILER_CATEGORY("Scene Update", Profiler::Color::Crimson);
-	root->Update();
+	for (auto & gameObject : game_objects_ownership)
+	{
+		gameObject->Update();
+	}
 	return update_status::UPDATE_CONTINUE;
 }
 
