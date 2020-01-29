@@ -37,6 +37,9 @@ bool ModuleUI::Init()
 	}
 
 	LoadFonts();
+	ImGuiIO& io = ImGui::GetIO();
+	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
+	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	editor_ui = new EngineUI();
 	editor_ui->InitUI();
