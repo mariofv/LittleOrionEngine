@@ -1,8 +1,8 @@
 #ifndef _ENGINEUI_H_
 #define _ENGINEUI_H_
 
-#include "Application.h"
-#include "Globals.h"
+#include "Main/Application.h"
+#include "Main/Globals.h"
 #include "FileExplorerUI.h"
 
 class EngineUI

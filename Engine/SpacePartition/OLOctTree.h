@@ -1,7 +1,7 @@
 #ifndef _OLOCTTREE_H_
 #define _OLOCTTREE_H_
 
-#include "GameObject.h"
+#include "Main/GameObject.h"
 #include "OLOctTreeNode.h"
 
 #include <MathGeoLib.h>

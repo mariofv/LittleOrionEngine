@@ -2,7 +2,7 @@
 #define _MATERIALIMPORTER_H_
 
 #include "Importer.h"
-#include "Texture.h"
+#include "Resource/Texture.h"
 
 #include <IL/il.h>
 #include <IL/ilu.h>

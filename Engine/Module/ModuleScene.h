@@ -2,9 +2,9 @@
 #define _MODULESCENE_H_
 
 #include "Module.h"
-#include "Globals.h"
-#include "GameObject.h"
-#include "Hierarchy.h"
+#include "Main/Globals.h"
+#include "Main/GameObject.h"
+#include "UI/Hierarchy.h"
 
 #include <ImGuizmo.h>
 

@@ -1,8 +1,8 @@
 #include "ModuleTexture.h"
-#include "Globals.h"
-#include "Application.h"
-#include "Texture.h"
-#include "GameObject.h"
+#include "Main/Globals.h"
+#include "Main/Application.h"
+#include "Resource/Texture.h"
+#include "Main/GameObject.h"
 #include "Component/ComponentMaterial.h"
 #include "Importer/MaterialImporter.h"
 

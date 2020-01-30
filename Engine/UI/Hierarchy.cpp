@@ -1,10 +1,10 @@
 #include "Hierarchy.h"
-#include "Application.h"
+#include "Main/Application.h"
 #include "Component/ComponentCamera.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleScene.h"
-#include "GameObject.h"
+#include "Main/GameObject.h"
 
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>

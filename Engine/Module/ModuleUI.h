@@ -2,7 +2,7 @@
 #define _MODULEUI_H_
 
 #include "Module.h"
-#include "Globals.h"
+#include "Main/Globals.h"
 
 class EngineUI;
 struct ImFont;

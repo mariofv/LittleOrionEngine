@@ -1,11 +1,11 @@
 #include "ModuleScene.h"
-#include "Application.h"
+#include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
 #include "ModuleRender.h"
 #include "Component/ComponentCamera.h"
-#include "Config.h"
+#include "Helper/Config.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>

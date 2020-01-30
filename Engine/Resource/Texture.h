@@ -1,7 +1,7 @@
 #ifndef _TEXTURE_H_
 #define _TEXTURE_H_
 
-#include "Globals.h"
+#include "Main/Globals.h"
 #include <GL/glew.h>
 #include <string>
 

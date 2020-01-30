@@ -1,7 +1,7 @@
 #ifndef _OLQUADTREENODE_H_
 #define _OLQUADTREENODE_H_
 
-#include "GameObject.h"
+#include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
 
 #include <MathGeoLib.h>

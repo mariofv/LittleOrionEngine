@@ -2,7 +2,7 @@
 #define _MODULEEDITOR_H_
 
 #include "Module.h"
-#include "Globals.h"
+#include "Main/Globals.h"
 #include "Component/ComponentCamera.h"
 #include "UI/Billboard.h"
 

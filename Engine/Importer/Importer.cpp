@@ -1,6 +1,6 @@
 #include "Importer.h"
 
-#include "Application.h"
+#include "Main/Application.h"
 
 std::shared_ptr<File> Importer::GetAlreadyImportedResource(const std::string & path_to_look_in, const File & file_to_look_for) const
 {

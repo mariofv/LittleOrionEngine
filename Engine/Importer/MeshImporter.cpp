@@ -1,7 +1,7 @@
 #include "MeshImporter.h"
-#include "Mesh.h"
+#include "Resource/Mesh.h"
 #include "MaterialImporter.h"
-#include "Application.h"
+#include "Main/Application.h"
 
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>

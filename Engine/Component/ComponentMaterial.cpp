@@ -1,5 +1,5 @@
 #include "ComponentMaterial.h"
-#include "Application.h"
+#include "Main/Application.h"
 #include <Module/ModuleTexture.h>
 #include <Importer/MaterialImporter.h>
 

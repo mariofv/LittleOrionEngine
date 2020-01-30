@@ -1,6 +1,6 @@
 #include "ComponentTransform.h"
-#include "GameObject.h"
-#include "Utils.h"
+#include "Main/GameObject.h"
+#include "Helper/Utils.h"
 #include "UI/ComponentsUI.h"
 #include "Brofiler/Brofiler.h"
 

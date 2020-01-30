@@ -1,7 +1,7 @@
 #ifndef _OLOCTTREENODE_H_
 #define _OLOCTTREENODE_H_
 
-#include "GameObject.h"
+#include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
 
 #include <MathGeoLib.h>

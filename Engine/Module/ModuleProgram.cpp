@@ -1,9 +1,9 @@
-#include "Application.h"
+#include "Main/Application.h"
 #include "ModuleProgram.h"
 #include "ModuleFileSystem.h"
 
 #include "MathGeoLib.h"
-#include "Config.h"
+#include "Helper/Config.h"
 
 // Called before render is available
 bool ModuleProgram::Init()

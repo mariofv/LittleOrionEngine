@@ -49,12 +49,14 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
+      <PreprocessorDefinitions>_MBCS;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
-      <AdditionalLibraryDirectories>$(ProjectDir)Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;physfs-static.lib</AdditionalDependencies>
+      <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
+      <AdditionalDependencies>opengl32.lib;kernel32.lib;user32.lib;gdi32.lib;winspool.lib;comdlg32.lib;advapi32.lib;shell32.lib;ole32.lib;oleaut32.lib;uuid.lib;odbc32.lib;odbccp32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -84,23 +86,30 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Helper\Config.h" />
+    <ClInclude Include="Engine\Helper\Timer.h" />
+    <ClInclude Include="Engine\Helper\TimerUs.h" />
+    <ClInclude Include="Engine\Helper\Utils.h" />
+    <ClInclude Include="Engine\Main\Application.h" />
+    <ClInclude Include="Engine\Main\GameObject.h" />
+    <ClInclude Include="Engine\Main\Globals.h" />
+    <ClInclude Include="Engine\Resource\Mesh.h" />
+    <ClInclude Include="Engine\Resource\Texture.h" />
+    <ClInclude Include="Engine\SpacePartition\OLOctTree.h" />
+    <ClInclude Include="Engine\SpacePartition\OLOctTreeNode.h" />
+    <ClInclude Include="Engine\SpacePartition\OLQuadTree.h" />
+    <ClInclude Include="Engine\SpacePartition\OLQuadTreeNode.h" />
     <ClInclude Include="Engine\UI\Billboard.h" />
     <ClInclude Include="Engine\Component\ComponentLight.h" />
-    <ClInclude Include="Engine\Config.h" />
     <ClInclude Include="Engine\Filesystem\File.h" />
     <ClInclude Include="Engine\Importer\Importer.h" />
     <ClInclude Include="Engine\Importer\MaterialImporter.h" />
     <ClInclude Include="Engine\Importer\MeshImporter.h" />
-    <ClInclude Include="Engine\Mesh.h" />
     <ClInclude Include="Engine\Module\ModuleDebugDraw.h" />
     <ClInclude Include="Engine\Module\ModuleFileSystem.h" />
     <ClInclude Include="Engine\Module\ModuleDebug.h" />
     <ClInclude Include="Engine\Module\ModuleLight.h" />
     <ClInclude Include="Engine\Module\ModuleUI.h" />
-    <ClInclude Include="Engine\OLOctTree.h" />
-    <ClInclude Include="Engine\OLOctTreeNode.h" />
-    <ClInclude Include="Engine\OLQuadTreeNode.h" />
-    <ClInclude Include="Engine\Skybox.h" />
     <ClInclude Include="Engine\UI\ComponentsUI.h" />
     <ClInclude Include="Engine\Component\ComponentAABB.h" />
     <ClInclude Include="Engine\Component\ComponentCamera.h" />
@@ -108,17 +117,12 @@
     <ClInclude Include="Engine\Component\ComponentMesh.h" />
     <ClInclude Include="Engine\Component\ComponentTransform.h" />
     <ClInclude Include="Engine\Component\Component.h" />
-    <ClInclude Include="Engine\Application.h" />
     <ClInclude Include="Engine\UI\EngineLog.h" />
     <ClInclude Include="Engine\UI\EngineUI.h" />
-    <ClInclude Include="Engine\Globals.h" />
     <ClInclude Include="Engine\Module\ModuleCamera.h" />
     <ClInclude Include="Engine\Module\ModuleModelLoader.h" />
     <ClInclude Include="Engine\Module\ModuleTime.h" />
-    <ClInclude Include="Engine\GameObject.h" />
-    <ClInclude Include="Engine\Hierarchy.h" />
     <ClInclude Include="Engine\UI\FileExplorerUI.h" />
-    <ClInclude Include="Libraries\debug-draw\debug-draw.hpp" />
     <ClInclude Include="Engine\Module\Module.h" />
     <ClInclude Include="Engine\Module\ModuleEditor.h" />
     <ClInclude Include="Engine\Module\ModuleInput.h" />
@@ -126,47 +130,50 @@
     <ClInclude Include="Engine\Module\ModuleRender.h" />
     <ClInclude Include="Engine\Module\ModuleTexture.h" />
     <ClInclude Include="Engine\Module\ModuleWindow.h" />
-    <ClInclude Include="Engine\Texture.h" />
-    <ClInclude Include="Engine\Timer.h" />
-    <ClInclude Include="Engine\TimerUs.h" />
     <ClInclude Include="Engine\Module\ModuleScene.h" />
-    <ClInclude Include="Engine\OLQuadTree.h" />
-    <ClInclude Include="Engine\Utils.h" />
+    <ClInclude Include="Engine\UI\Hierarchy.h" />
+    <ClInclude Include="Engine\UI\Skybox.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Helper\Config.cpp" />
+    <ClCompile Include="Engine\Helper\Timer.cpp" />
+    <ClCompile Include="Engine\Helper\TimerUs.cpp" />
+    <ClCompile Include="Engine\Helper\Utils.cpp" />
+    <ClCompile Include="Engine\Main\Application.cpp" />
+    <ClCompile Include="Engine\Main\GameObject.cpp" />
+    <ClCompile Include="Engine\Main\Log.cpp" />
+    <ClCompile Include="Engine\Main\Main.cpp" />
+    <ClCompile Include="Engine\Resource\Mesh.cpp" />
+    <ClCompile Include="Engine\Resource\Texture.cpp" />
+    <ClCompile Include="Engine\SpacePartition\OLOctTree.cpp" />
+    <ClCompile Include="Engine\SpacePartition\OLOctTreeNode.cpp" />
+    <ClCompile Include="Engine\SpacePartition\OLQuadTree.cpp" />
+    <ClCompile Include="Engine\SpacePartition\OLQuadTreeNode.cpp" />
     <ClCompile Include="Engine\UI\Billboard.cpp" />
     <ClCompile Include="Engine\Component\ComponentLight.cpp" />
-    <ClCompile Include="Engine\Config.cpp" />
     <ClCompile Include="Engine\Filesystem\File.cpp" />
     <ClCompile Include="Engine\Importer\Importer.cpp" />
     <ClCompile Include="Engine\Importer\MaterialImporter.cpp" />
     <ClCompile Include="Engine\Importer\MeshImporter.cpp" />
-    <ClCompile Include="Engine\Mesh.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\Module\ModuleFileSystem.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebug.cpp" />
     <ClCompile Include="Engine\Module\ModuleLight.cpp" />
     <ClCompile Include="Engine\Module\ModuleUI.cpp" />
-    <ClCompile Include="Engine\OLOctTree.cpp" />
-    <ClCompile Include="Engine\OLOctTreeNode.cpp" />
-    <ClCompile Include="Engine\OLQuadTreeNode.cpp" />
-    <ClCompile Include="Engine\Skybox.cpp" />
     <ClCompile Include="Engine\UI\ComponentsUI.cpp" />
     <ClCompile Include="Engine\Component\ComponentAABB.cpp" />
     <ClCompile Include="Engine\Component\ComponentCamera.cpp" />
     <ClCompile Include="Engine\Component\ComponentMaterial.cpp" />
     <ClCompile Include="Engine\Component\ComponentMesh.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform.cpp" />
-    <ClCompile Include="Engine\Application.cpp" />
     <ClCompile Include="Engine\UI\EngineLog.cpp" />
     <ClCompile Include="Engine\UI\EngineUI.cpp" />
-    <ClCompile Include="Engine\log.cpp" />
     <ClCompile Include="Engine\Module\ModuleCamera.cpp" />
     <ClCompile Include="Engine\Module\ModuleModelLoader.cpp" />
     <ClCompile Include="Engine\Module\ModuleTime.cpp" />
-    <ClCompile Include="Engine\GameObject.cpp" />
-    <ClCompile Include="Engine\Hierarchy.cpp" />
     <ClCompile Include="Engine\UI\FileExplorerUI.cpp" />
+    <ClCompile Include="Engine\UI\Hierarchy.cpp" />
+    <ClCompile Include="Engine\UI\Skybox.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGradient.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGuizmo.cpp" />
@@ -211,25 +218,13 @@
     <ClCompile Include="Libraries\include\MathGeoLib\Math\TransformOps.cpp" />
     <ClCompile Include="Libraries\include\MathGeoLib\Time\Clock.cpp" />
     <ClCompile Include="Libraries\include\pcg_random\pcg_basic.c" />
-    <ClCompile Include="Main.cpp" />
     <ClCompile Include="Engine\Module\ModuleEditor.cpp" />
     <ClCompile Include="Engine\Module\ModuleInput.cpp" />
     <ClCompile Include="Engine\Module\ModuleProgram.cpp" />
     <ClCompile Include="Engine\Module\ModuleRender.cpp" />
     <ClCompile Include="Engine\Module\ModuleTexture.cpp" />
     <ClCompile Include="Engine\Module\ModuleWindow.cpp" />
-    <ClCompile Include="Engine\Texture.cpp" />
-    <ClCompile Include="Engine\Timer.cpp" />
-    <ClCompile Include="Engine\TimerUs.cpp" />
     <ClCompile Include="Engine\Module\ModuleScene.cpp" />
-    <ClCompile Include="Engine\OLQuadTree.cpp" />
-    <ClCompile Include="Engine\Utils.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Game\Resources\Shaders\flat.fs" />
-    <None Include="Game\Resources\Shaders\flat.vs" />
-    <None Include="Game\Resources\Shaders\gouraund.fs" />
-    <None Include="Game\Resources\Shaders\gouraund.vs" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -1,8 +1,8 @@
 #include "ModuleCamera.h"
-#include "Globals.h"
-#include "Application.h"
+#include "Main/Globals.h"
+#include "Main/Application.h"
 #include "ModuleWindow.h"
-#include "GameObject.h"
+#include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
 
 #include "imgui.h"

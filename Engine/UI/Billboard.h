@@ -1,7 +1,7 @@
 #ifndef _BILLBOARD_H_
 #define _BILLBOARD_H_
 
-#include "Texture.h"
+#include "Resource/Texture.h"
 
 #include <string>
 #include <MathGeoLib.h>

@@ -1,6 +1,6 @@
 #include "ComponentAABB.h"
 #include "ComponentMesh.h"
-#include "GameObject.h"
+#include "Main/GameObject.h"
 #include "Brofiler/Brofiler.h"
 
 ComponentAABB::ComponentAABB() : Component(nullptr, ComponentType::MATERIAL)

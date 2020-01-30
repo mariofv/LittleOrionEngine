@@ -1,7 +1,7 @@
 #ifndef _OLQUADTREE_H_
 #define _OLQUADTREE_H_
 
-#include "GameObject.h"
+#include "Main/GameObject.h"
 #include "OLQuadTreeNode.h"
 
 #include <MathGeoLib.h>
