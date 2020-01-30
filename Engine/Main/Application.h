@@ -24,6 +24,7 @@ class ModuleDebug;
 class ModuleDebugDraw;
 class ModuleUI;
 class ModuleLight;
+class ModuleResourceManager;
 
 class EngineLog;
 
@@ -60,6 +61,7 @@ public:
 	ModuleDebugDraw* debug_draw = nullptr;
 	ModuleUI* ui = nullptr;
 	ModuleLight* lights = nullptr;
+	ModuleResourceManager* resources = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
 	std::unique_ptr<MeshImporter> mesh_importer = nullptr;
