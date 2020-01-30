@@ -271,6 +271,7 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp">
       <Filter>Engine\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -414,6 +415,7 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Skybox.h">
       <Filter>Engine\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleResourceManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

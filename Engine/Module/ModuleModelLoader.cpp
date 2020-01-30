@@ -5,6 +5,7 @@
 #include "ModuleEditor.h"
 #include "ModuleScene.h"
 #include "ModuleTexture.h"
+#include "ModuleResourceManager.h"
 #include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
@@ -21,26 +22,15 @@
 bool ModuleModelLoader::Init()
 {
 	APP_LOG_SECTION("************ Module ModelLoader Init ************");
-	importing_thread = std::thread(&ModuleModelLoader::StartThread, this);
-	return true;
-}
 
-bool ModuleModelLoader::CleanUp()
-{
-	thread_comunication.stop_thread = true;
-	importing_thread.join();
 	return true;
 }
 
 GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path) const
 {
-	while (thread_comunication.importing_hash == std::hash<std::string>{}(new_model_file_path))
-	{
-		Sleep(1000);
-	}
 
 	File file(new_model_file_path);
-	std::string model_output = App->mesh_importer->Import(file).second;
+	std::string model_output = App->resources->Import(file).second;
 
 	GameObject *model_root_node = App->scene->CreateGameObject();
 	model_root_node->name = std::string(file.filename_no_extension);
@@ -112,36 +102,3 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 
 
 // TODO: Change this method to a proper class
-void ModuleModelLoader::StartThread()
-{
-	thread_comunication.finished_loading = false;
-	thread_comunication.total_items = App->filesystem->assets_file->total_sub_files_number;
-	Import(*App->filesystem->assets_file.get());
-	thread_comunication.finished_loading = true;
-}
-
-void ModuleModelLoader::Import(const File& file)
-{
-	for (auto & child : file.children)
-	{
-		if (thread_comunication.stop_thread)
-		{
-			return;
-		}
-		thread_comunication.importing_hash = std::hash<std::string>{}(child->file_path);
-		if (child->file_type == FileType::MODEL)
-		{
-			App->mesh_importer->Import(*child.get());
-		}
-		if (child->file_type == FileType::TEXTURE)
-		{
-			App->material_importer->Import(*child.get());
-		}
-		if (child->file_type == FileType::DIRECTORY)
-		{
-			Import(*child.get());
-		}
-		++thread_comunication.loaded_items;
-		thread_comunication.importing_hash = 0;
-	}
-}

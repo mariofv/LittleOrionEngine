@@ -5,6 +5,7 @@
 #include "ModuleDebug.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleFileSystem.h"
+#include "ModuleResourceManager.h"
 #include "ModuleModelLoader.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
@@ -33,7 +34,7 @@ bool ModuleEditor::Init()
 update_status ModuleEditor::Update()
 {
 	static bool inital_scene_loaded = false;
-	if (!inital_scene_loaded && App->model_loader->thread_comunication.finished_loading)
+	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
 		OpenScene(ASSIGNMENT_SCENE_PATH);
 		inital_scene_loaded = true;
