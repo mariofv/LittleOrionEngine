@@ -84,6 +84,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="EditorAction.h" />
     <ClInclude Include="Engine\UI\Billboard.h" />
     <ClInclude Include="Engine\Component\ComponentLight.h" />
     <ClInclude Include="Engine\Config.h" />
@@ -211,6 +212,7 @@
     <ClInclude Include="Libraries\pcg_random\pcg_basic.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="EditorAction.cpp" />
     <ClCompile Include="Engine\UI\Billboard.cpp" />
     <ClCompile Include="Engine\Component\ComponentLight.cpp" />
     <ClCompile Include="Engine\Config.cpp" />
