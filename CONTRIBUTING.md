@@ -34,17 +34,19 @@ hotfix/v1.0.1
 ## Naming Style
 Functions are named using [PascalCase](https://techterms.com/definition/pascalcase). Example: 
 ```
-ThisIsAFunction()
+`void ThisIsAFunction();
 ```
 
 
 Variables are named using [snake_case](https://en.wikipedia.org/wiki/Snake_case). Example:
-`this_is_a_variable`
+```
+int this_is_a_variable = 0
+```
 
 ## Identing Style
 Identing is done using [Allman style](https://en.wikipedia.org/wiki/Indentation_style#Allman_style). Example:
 ```
-ThisIsAFunction()
+void ThisIsAFunction()
 {
     // Do something
 }
