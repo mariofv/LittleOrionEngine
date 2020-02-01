@@ -5,7 +5,7 @@
 #include <IL/ilut.h>
 
 
-Texture::Texture(char * data, size_t image_size, int width, int height, const std::string& path, TextureType type) : image_size(image_size), width(width), height(height), texture_path(path), type(type)
+Texture::Texture(char * data, size_t image_size, int width, int height, const std::string& path, TextureType type) : image_size(image_size), width(width), height(height), texture_path(path), type(type), Resource("")
 {
 	InitTexture(data);
 }

@@ -2,21 +2,24 @@
 
 Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices) : 
 	vertices(vertices), 
-	indices(indices)
+	indices(indices),
+	Resource("")
 {
 	InitMesh();
 }
 
 Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path) : vertices(vertices),
 indices(indices),
-mesh_file_path(mesh_file_path)
+mesh_file_path(mesh_file_path),
+Resource("")
 {
 	InitMesh();
 }
 Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::vector<std::string> && meshes_textures_path ,std::string mesh_file_path) : vertices(vertices),
 indices(indices),
 meshes_textures_path(meshes_textures_path),
-mesh_file_path(mesh_file_path)
+mesh_file_path(mesh_file_path),
+Resource("")
 {
 	InitMesh();
 	

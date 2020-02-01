@@ -5,8 +5,8 @@
 #include "MathGeoLib.h"
 
 #include <GL/glew.h>
-
-class Mesh
+#include "Resource.h"
+class Mesh : public Resource
 {
 public:
 	struct Vertex {
