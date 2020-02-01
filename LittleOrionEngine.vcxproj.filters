@@ -241,9 +241,6 @@
     <ClCompile Include="Engine\UI\Hierarchy.cpp">
       <Filter>Engine\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UI\Skybox.cpp">
-      <Filter>Engine\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Helper\Config.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
@@ -270,6 +267,9 @@
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Resources\Texture.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp">
+      <Filter>Engine\UI</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -384,9 +384,6 @@
     <ClInclude Include="Engine\UI\Hierarchy.h">
       <Filter>Engine\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Skybox.h">
-      <Filter>Engine\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Helper\Config.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
@@ -413,6 +410,9 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Texture.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Skybox.h">
+      <Filter>Engine\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

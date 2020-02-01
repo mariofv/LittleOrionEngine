@@ -132,7 +132,7 @@
     <ClInclude Include="Engine\Module\ModuleWindow.h" />
     <ClInclude Include="Engine\Module\ModuleScene.h" />
     <ClInclude Include="Engine\UI\Hierarchy.h" />
-    <ClInclude Include="Engine\UI\Skybox.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Skybox.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Helper\Config.cpp" />
@@ -173,7 +173,7 @@
     <ClCompile Include="Engine\Module\ModuleTime.cpp" />
     <ClCompile Include="Engine\UI\FileExplorerUI.cpp" />
     <ClCompile Include="Engine\UI\Hierarchy.cpp" />
-    <ClCompile Include="Engine\UI\Skybox.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGradient.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGuizmo.cpp" />
