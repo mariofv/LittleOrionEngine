@@ -50,7 +50,6 @@ private:
 
 public:
 
-	std::string texture_path;
 	GLuint opengl_texture = 0;
 	TextureType type;
 

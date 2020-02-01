@@ -42,7 +42,7 @@ void ComponentMesh::Save(Config& config) const
 	config.AddUInt(UUID, "UUID");
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
-	config.AddString(mesh_to_render->mesh_file_path, "MeshPath");
+	config.AddString(mesh_to_render->exported_file, "MeshPath");
 	config.AddString(shader_program, "ShaderProgram");
 }
 

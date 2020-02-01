@@ -121,7 +121,7 @@ std::shared_ptr<Texture> MaterialImporter::Load(const std::string& file_path) co
 	//Check if the texture is already loaded
 	auto it = std::find_if(texture_cache.begin(), texture_cache.end(), [file_path](const std::shared_ptr<Texture> & texture)
 	{
-		return texture->texture_path == file_path;
+		return texture->exported_file == file_path;
 	});
 	if (it != texture_cache.end())
 	{

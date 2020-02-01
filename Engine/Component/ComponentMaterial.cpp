@@ -37,7 +37,7 @@ void ComponentMaterial::Save(Config& config) const
 		if (textures[i] != nullptr) 
 		{
 			std::string id = "Path" + i;
-			config.AddString(textures[i]->texture_path, id);
+			config.AddString(textures[i]->exported_file, id);
 		}
 	}
 	config.AddBool(show_checkerboard_texture, "Checkboard");
