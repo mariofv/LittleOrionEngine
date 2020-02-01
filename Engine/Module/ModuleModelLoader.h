@@ -3,7 +3,7 @@
 
 #include "Module.h"
 #include "Main/Globals.h"
-#include "Resource/Texture.h"
+#include "ResourceManagement/Resources/Texture.h"
 #include "ModuleFileSystem.h"
 
 #include <GL/glew.h>

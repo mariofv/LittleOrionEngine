@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "UI/ComponentsUI.h"
 #include "Main/Globals.h"
-#include "Resource/Texture.h"
+#include "ResourceManagement/Resources/Texture.h"
 
 #include <GL/glew.h>
 #include <memory>

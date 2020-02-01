@@ -93,8 +93,8 @@
     <ClInclude Include="Engine\Main\Application.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
     <ClInclude Include="Engine\Main\Globals.h" />
-    <ClInclude Include="Engine\Resource\Mesh.h" />
-    <ClInclude Include="Engine\Resource\Texture.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Texture.h" />
     <ClInclude Include="Engine\SpacePartition\OLOctTree.h" />
     <ClInclude Include="Engine\SpacePartition\OLOctTreeNode.h" />
     <ClInclude Include="Engine\SpacePartition\OLQuadTree.h" />
@@ -102,9 +102,9 @@
     <ClInclude Include="Engine\UI\Billboard.h" />
     <ClInclude Include="Engine\Component\ComponentLight.h" />
     <ClInclude Include="Engine\Filesystem\File.h" />
-    <ClInclude Include="Engine\Importer\Importer.h" />
-    <ClInclude Include="Engine\Importer\MaterialImporter.h" />
-    <ClInclude Include="Engine\Importer\MeshImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\Importer.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\MeshImporter.h" />
     <ClInclude Include="Engine\Module\ModuleDebugDraw.h" />
     <ClInclude Include="Engine\Module\ModuleFileSystem.h" />
     <ClInclude Include="Engine\Module\ModuleDebug.h" />
@@ -143,8 +143,8 @@
     <ClCompile Include="Engine\Main\GameObject.cpp" />
     <ClCompile Include="Engine\Main\Log.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
-    <ClCompile Include="Engine\Resource\Mesh.cpp" />
-    <ClCompile Include="Engine\Resource\Texture.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Texture.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLOctTree.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLOctTreeNode.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLQuadTree.cpp" />
@@ -152,9 +152,9 @@
     <ClCompile Include="Engine\UI\Billboard.cpp" />
     <ClCompile Include="Engine\Component\ComponentLight.cpp" />
     <ClCompile Include="Engine\Filesystem\File.cpp" />
-    <ClCompile Include="Engine\Importer\Importer.cpp" />
-    <ClCompile Include="Engine\Importer\MaterialImporter.cpp" />
-    <ClCompile Include="Engine\Importer\MeshImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\Importer.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\MeshImporter.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\Module\ModuleFileSystem.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebug.cpp" />

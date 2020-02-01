@@ -14,8 +14,8 @@
 #include "Module/ModuleUI.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
-#include "Importer/MaterialImporter.h"
-#include "Importer/MeshImporter.h"
+#include "ResourceManagement/Importer/MaterialImporter.h"
+#include "ResourceManagement/Importer/MeshImporter.h"
 #include "UI/EngineLog.h"
 #include "Brofiler/Brofiler.h"
 

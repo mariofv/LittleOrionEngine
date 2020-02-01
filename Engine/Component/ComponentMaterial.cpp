@@ -1,7 +1,7 @@
 #include "ComponentMaterial.h"
 #include "Main/Application.h"
 #include <Module/ModuleTexture.h>
-#include <Importer/MaterialImporter.h>
+#include <ResourceManagement/Importer/MaterialImporter.h>
 
 ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL)
 {

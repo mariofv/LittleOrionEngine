@@ -1,10 +1,10 @@
 #include "ModuleTexture.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
-#include "Resource/Texture.h"
+#include "ResourceManagement/Resources/Texture.h"
 #include "Main/GameObject.h"
 #include "Component/ComponentMaterial.h"
-#include "Importer/MaterialImporter.h"
+#include "ResourceManagement/Importer/MaterialImporter.h"
 
 #include <SDL/SDL.h>
 #include <algorithm>
