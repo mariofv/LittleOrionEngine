@@ -54,6 +54,6 @@ void File::GetFileInfo()
 	{
 		APP_LOG_ERROR("Error getting %s file info: %s", this->file_path.c_str(), PHYSFS_getLastError());
 	}
-
+	modification_timestamp = file_info.modtime;
 	this->file_type = App->filesystem->GetFileType(filename.c_str(), file_info.filetype);
 }

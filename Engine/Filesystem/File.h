@@ -22,7 +22,7 @@ public:
 	FileType file_type;
 	size_t sub_folders = 0;
 	size_t total_sub_files_number = 0;
-
+	uint64_t modification_timestamp = 0;
 
 	std::vector<std::shared_ptr<File>> children;
 	File* parent;
