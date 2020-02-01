@@ -416,6 +416,7 @@
       <Filter>Engine\UI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleResourceManager.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

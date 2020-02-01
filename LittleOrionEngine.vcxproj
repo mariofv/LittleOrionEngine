@@ -95,6 +95,7 @@
     <ClInclude Include="Engine\Main\Globals.h" />
     <ClInclude Include="Engine\Module\ModuleResourceManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Texture.h" />
     <ClInclude Include="Engine\SpacePartition\OLOctTree.h" />
     <ClInclude Include="Engine\SpacePartition\OLOctTreeNode.h" />
