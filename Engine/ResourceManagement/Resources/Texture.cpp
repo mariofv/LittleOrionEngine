@@ -5,9 +5,9 @@
 #include <IL/ilut.h>
 
 
-Texture::Texture(char * data, size_t image_size, int width, int height, const std::string& path, TextureType type) : image_size(image_size), width(width), height(height), texture_path(path), type(type), Resource("")
+Texture::Texture(char * data, size_t image_size, int width, int height, const std::string& path, TextureType type) : image_size(image_size), width(width), height(height), texture_path(path), type(type), data(data), Resource("")
 {
-	InitTexture(data);
+	LoadInMemory();
 }
 
 
@@ -17,7 +17,7 @@ Texture::~Texture()
 	glDeleteTextures(1, &opengl_texture);
 }
 
-void Texture::InitTexture(char * data)
+void Texture::LoadInMemory()
 {
 	glGenTextures(1, &opengl_texture);
 	glBindTexture(GL_TEXTURE_2D, opengl_texture);
@@ -139,4 +139,11 @@ char* Texture::GLEnumToString(GLenum gl_enum) const
 		return "Not implemented yet";
 		break;
 	}
+}
+
+
+void Texture::Save(Config& config) const
+{
+}
+void Texture::Load(const Config& config) {
 }

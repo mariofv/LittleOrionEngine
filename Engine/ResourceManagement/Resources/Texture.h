@@ -40,9 +40,12 @@ public:
 	GLenum GetMagFilter() const;
 	char* GetMagFilter_C_Str() const;
 
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
+
 private:
 	void GenerateMipMap();
-	void InitTexture(char * data);
+	void LoadInMemory() override;
 	char* GLEnumToString(GLenum gl_enum) const;
 
 public:
@@ -62,6 +65,7 @@ private:
 
 	GLenum min_filter;	
 	GLenum mag_filter;
+	char * data;
 };
 
 #endif //_TEXTURE_H_

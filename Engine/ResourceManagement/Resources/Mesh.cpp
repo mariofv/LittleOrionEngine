@@ -5,7 +5,7 @@ Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices) :
 	indices(indices),
 	Resource("")
 {
-	InitMesh();
+	LoadInMemory();
 }
 
 Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path) : vertices(vertices),
@@ -13,7 +13,7 @@ indices(indices),
 mesh_file_path(mesh_file_path),
 Resource("")
 {
-	InitMesh();
+	LoadInMemory();
 }
 Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::vector<std::string> && meshes_textures_path ,std::string mesh_file_path) : vertices(vertices),
 indices(indices),
@@ -21,7 +21,7 @@ meshes_textures_path(meshes_textures_path),
 mesh_file_path(mesh_file_path),
 Resource("")
 {
-	InitMesh();
+	LoadInMemory();
 	
 }
 Mesh::~Mesh() {
@@ -49,7 +49,7 @@ std::vector<Triangle> Mesh::GetTriangles() const
 	return triangles;
 }
 
-void Mesh::InitMesh()
+void Mesh::LoadInMemory()
 {
 
 	glGenVertexArrays(1, &vao);
@@ -77,4 +77,10 @@ void Mesh::InitMesh()
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, normals));
 
 	glBindVertexArray(0);
+}
+
+void Mesh::Save(Config& config) const
+{
+}
+void Mesh::Load(const Config& config) {
 }

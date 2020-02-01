@@ -21,8 +21,13 @@ public:
 
 	GLuint GetVAO() const;
 	std::vector<Triangle> GetTriangles() const;
+
+
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
+
 private:
-	void InitMesh();
+	void LoadInMemory() override;
 public:
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;
