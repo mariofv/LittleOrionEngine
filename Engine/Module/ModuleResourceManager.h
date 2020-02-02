@@ -9,6 +9,7 @@
 
 class File;
 class Importer;
+class Timer;
 class ModuleResourceManager : public Module
 {
 public:
@@ -40,8 +41,10 @@ public:
 
 
 private:
+	const size_t importer_interval_millis = 30000;
+	float last_imported_time = 0;
 	std::thread importing_thread;
-
+	std::unique_ptr<Timer> thread_timer = std::make_unique<Timer>();
 	//Importers
 
 	std::unique_ptr<Importer> default_importer = std::make_unique<Importer>();

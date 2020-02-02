@@ -3,6 +3,7 @@
 
 #include "ModuleFileSystem.h"
 #include "Helper/Config.h"
+#include "Helper/Timer.h"
 #include "ResourceManagement/Importer/MaterialImporter.h"
 #include "ResourceManagement/Importer/MeshImporter.h"
 
@@ -11,11 +12,18 @@ bool ModuleResourceManager::Init()
 	APP_LOG_SECTION("************ Module Resource Manager Init ************");
 
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
+	thread_timer->Start();
 	return true;
 }
 
 update_status ModuleResourceManager::PreUpdate()
 {
+
+	if ((thread_timer->Read() - last_imported_time) >= importer_interval_millis)
+	{
+		importing_thread.join();
+		importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
+	}
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -43,6 +51,7 @@ update_status ModuleResourceManager::PreUpdate()
 	 thread_comunication.total_items = App->filesystem->assets_file->total_sub_files_number;
 	 ImportAllFileHierarchy(*App->filesystem->assets_file.get());
 	 thread_comunication.finished_loading = true;
+	 last_imported_time = thread_timer->Read();
  }
 
 void ModuleResourceManager::ImportAllFileHierarchy(const File& file)
