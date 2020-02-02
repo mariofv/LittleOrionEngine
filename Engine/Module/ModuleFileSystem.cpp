@@ -204,11 +204,14 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	char **i;
 	for (i = files_array; *i != NULL; i++)
 	{
-		std::shared_ptr<File> new_file = std::make_shared<File>(path, *i);
-		bool is_directory = new_file->file_type == FileType::DIRECTORY;
-		if ((directories_only && is_directory) || !directories_only)
+		if (std::string(*i).find(".meta") == std::string::npos)
 		{
-			files.push_back(new_file);
+			std::shared_ptr<File> new_file = std::make_shared<File>(path, *i);
+			bool is_directory = new_file->file_type == FileType::DIRECTORY;
+			if ((directories_only && is_directory) || !directories_only)
+			{
+				files.push_back(new_file);
+			}
 		}
 	}
 	PHYSFS_freeList(files_array);

@@ -3,6 +3,19 @@
 #include "Main/Application.h"
 #include "Helper/Config.h"
 
+
+std::pair<bool, std::string> Importer::Import(const File & file) const
+{
+	std::string already_imported = GetAlreadyImportedResource(file);
+	if (!already_imported.empty()) {
+		return std::pair<bool, std::string>(true, already_imported);
+	}
+	std::string uid = "default";
+	SaveMetaFile(file, uid);
+	return std::pair<bool, std::string>(false, uid);
+}
+
+
 std::string Importer::GetAlreadyImportedResource(const File & file_to_look_for) const
 {
 	std::string meta_file_path = GetMetaFilePath(file_to_look_for);
@@ -19,7 +32,7 @@ std::string Importer::GetAlreadyImportedResource(const File & file_to_look_for) 
 
 void Importer::SaveMetaFile(const File & imported_file, const std::string & exported_path) const
 {
-	std::string meta_file_path = GetMetaFilePath(exported_path);
+	std::string meta_file_path = GetMetaFilePath(imported_file);
 
 	Config scene_config;
 	scene_config.AddString( exported_path, "ExportedFile");

@@ -9,6 +9,7 @@
 bool ModuleResourceManager::Init()
 {
 	APP_LOG_SECTION("************ Module Resource Manager Init ************");
+
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 	return true;
 }
@@ -53,11 +54,11 @@ void ModuleResourceManager::ImportAllFileHierarchy(const File& file)
 			 return;
 		 }
 		 thread_comunication.importing_hash = std::hash<std::string>{}(child->file_path);
-		 if (child->file_type == FileType::DIRECTORY)
+		 if (child->file_type == FileType::DIRECTORY && !default_importer->Import(*child.get()).first)
 		 {
 			 ImportAllFileHierarchy(*child.get());
 		 }
-		 else 
+		 else if (child->file_type != FileType::DIRECTORY)
 		 {
 			 InternalImport(*child.get());
 		 }
@@ -70,10 +71,6 @@ void ModuleResourceManager::ImportAllFileHierarchy(const File& file)
 std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& file)
 {
 	std::pair<bool, std::string> result = std::pair<bool, std::string>(false,"");
-	if (result.first)
-	{
-		return result;
-	}
 	if (file.file_type == FileType::MODEL)
 	{
 		result = App->mesh_importer->Import(file);
@@ -82,7 +79,6 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 	{
 		result = App->material_importer->Import(file);
 	}
-
 	return result;
 }
 

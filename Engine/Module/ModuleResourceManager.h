@@ -8,6 +8,7 @@
 #include <atomic>
 
 class File;
+class Importer;
 class ModuleResourceManager : public Module
 {
 public:
@@ -40,6 +41,10 @@ public:
 
 private:
 	std::thread importing_thread;
+
+	//Importers
+
+	std::unique_ptr<Importer> default_importer = std::make_unique<Importer>();
 };
 
 #endif // _MODULERESOURCEMANAGER_H_
