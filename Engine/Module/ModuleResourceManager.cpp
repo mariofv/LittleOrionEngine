@@ -53,7 +53,7 @@ void ModuleResourceManager::ImportAllFileHierarchy(const File& file)
 			 return;
 		 }
 		 thread_comunication.importing_hash = std::hash<std::string>{}(child->file_path);
-		 if (child->file_type == FileType::DIRECTORY && !LookForMetaFile(*child.get()).first)
+		 if (child->file_type == FileType::DIRECTORY)
 		 {
 			 ImportAllFileHierarchy(*child.get());
 		 }
@@ -69,7 +69,7 @@ void ModuleResourceManager::ImportAllFileHierarchy(const File& file)
 
 std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& file)
 {
-	std::pair<bool, std::string> result = LookForMetaFile(file);
+	std::pair<bool, std::string> result = std::pair<bool, std::string>(false,"");
 	if (result.first)
 	{
 		return result;
@@ -86,31 +86,5 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 	return result;
 }
 
-std::pair<bool, std::string> ModuleResourceManager::LookForMetaFile(const File& file)
-{
-	int extension_index = file.file_path.find_last_of(".");
-	extension_index = extension_index != std::string::npos ? extension_index : file.file_path.size();
-	std::string meta_file_path = file.file_path.substr(0, extension_index) + ".meta";
-
-	File meta_file(meta_file_path);
-	if (App->filesystem->Exists(meta_file_path.c_str()) && meta_file.modification_timestamp >= file.modification_timestamp) {
 
 
-		GetUIDFromMeta(meta_file);
-
-		return std::pair<bool, std::string>(true, "");
-	}
-
-	return std::pair<bool, std::string>(false, "");
-}
-
-uint32_t ModuleResourceManager::GetUIDFromMeta(const File& file)
-{
-	size_t readed_bytes;
-	char* meta_file_data = App->filesystem->Load(file.file_path.c_str(), readed_bytes);
-	std::string serialized_string = meta_file_data;
-	free(meta_file_data);
-
-	Config meta_config(serialized_string);
-	return meta_config.GetUInt("UID",0);
-}

@@ -24,9 +24,9 @@ std::pair<bool, std::string> MaterialImporter::Import(const File & file) const
 		return std::pair<bool, std::string>(false,"");
 	}
 
-	std::shared_ptr<File> already_imported = GetAlreadyImportedResource(LIBRARY_TEXTURES_FOLDER, file);
-	if (already_imported != nullptr) {
-		return std::pair<bool, std::string>(true, already_imported->file_path);
+	std::string already_imported = GetAlreadyImportedResource(file);
+	if (!already_imported.empty()) {
+		return std::pair<bool, std::string>(true, already_imported);
 	}
 
 	App->filesystem->MakeDirectory(LIBRARY_TEXTURES_FOLDER);
@@ -55,6 +55,7 @@ std::pair<bool, std::string> MaterialImporter::Import(const File & file) const
 		}
 		ilDeleteImages(1, &image);
 	}
+	SaveMetaFile(file, output_file);
 	return std::pair<bool, std::string>(true, output_file);
 }
 

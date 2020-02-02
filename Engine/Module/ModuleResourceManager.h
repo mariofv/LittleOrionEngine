@@ -27,8 +27,6 @@ private:
 	void ImportAllFileHierarchy(const File& file);
 	void StartThread();
 
-	std::pair<bool, std::string> LookForMetaFile(const File& file);
-	uint32_t GetUIDFromMeta(const File& file);
 public:
 	struct ThreadComunication
 	{

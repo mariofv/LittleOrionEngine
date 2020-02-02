@@ -32,9 +32,9 @@ std::pair<bool, std::string> MeshImporter::Import(const File & file) const
 		APP_LOG_ERROR("Importing mesh error: Couldn't find the file to import.")
 		return std::pair<bool, std::string>(false, "");
 	}
-	std::shared_ptr<File> already_imported = GetAlreadyImportedResource(LIBRARY_MESHES_FOLDER,file);
-	if (already_imported != nullptr) {
-		return std::pair<bool, std::string>(true, already_imported->file_path);
+	std::string already_imported = GetAlreadyImportedResource(file);
+	if (!already_imported.empty()) {
+		return std::pair<bool, std::string>(true, already_imported);
 	}
 
 	File output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER+"/"+ file.filename_no_extension);
@@ -62,6 +62,7 @@ std::pair<bool, std::string> MeshImporter::Import(const File & file) const
 	ImportNode(root_node, identity_transformation, scene, base_path.c_str(),output_file.file_path);
 
 	aiReleaseImport(scene);
+	SaveMetaFile(file, output_file.file_path);
 	return std::pair<bool, std::string>(true, output_file.file_path);
 }
 
