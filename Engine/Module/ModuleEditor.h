@@ -57,6 +57,8 @@ private:
 	bool gizmo_hovered = false;
 	bool gizmo_released = false;
 
+	float3 previous_transform = float3::zero;
+
 	Billboard* camera_billboard = nullptr;
 	Billboard* light_billboard = nullptr;
 

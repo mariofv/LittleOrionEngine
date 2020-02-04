@@ -8,7 +8,7 @@
 class EditorActionTranslate : public EditorAction
 {
 public:
-	EditorActionTranslate();
+	EditorActionTranslate(float3 &previous, float3 &current, GameObject* go);
 	~EditorActionTranslate();
 
 	void Undo();
@@ -17,7 +17,7 @@ public:
 
 
 private:
-	float3 previos_position = float3::zero;
+	float3 previous_position = float3::zero;
 	float3 current_position = float3::zero;
 	GameObject* action_GO;
 };

@@ -233,7 +233,7 @@ void ModuleEditor::RenderGizmo()
 		switch (gizmo_operation)
 		{
 			case ImGuizmo::TRANSLATE:
-				EditorAction* new_action = new EditorActionTranslate();
+				previous_transform = App->scene->hierarchy.selected_game_object->transform.GetTranslation();
 				break;
 			case ImGuizmo::ROTATE:
 				break;
@@ -267,6 +267,10 @@ void ModuleEditor::RenderGizmo()
 	{
 		//Guizmo have been released so an actionTransform have been done
 		//Create action
+		EditorAction* new_action = new EditorActionTranslate(previous_transform,
+			App->scene->hierarchy.selected_game_object->transform.GetTranslation(),
+			App->scene->hierarchy.selected_game_object);
+
 		gizmo_released = false;
 	}
 }
