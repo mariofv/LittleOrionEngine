@@ -224,6 +224,24 @@ void ModuleEditor::RenderGizmo()
 {
 	float4x4 model_global_matrix_transposed = App->scene->hierarchy.selected_game_object->transform.GetGlobalModelMatrix().Transposed();
 
+	if (!gizmo_released && ImGuizmo::IsUsing())
+	{
+		//Save current position/rotation/scale of transform depending on operation
+		switch (gizmo_operation)
+		{
+			case ImGuizmo::TRANSLATE:
+				break;
+			case ImGuizmo::ROTATE:
+				break;
+			case ImGuizmo::SCALE:
+				break;
+			case ImGuizmo::BOUNDS:
+				break;
+			default:
+				break;
+		}
+	}
+
 	ImGuizmo::Manipulate(
 		App->cameras->scene_camera->GetViewMatrix().Transposed().ptr(),
 		App->cameras->scene_camera->GetProjectionMatrix().Transposed().ptr(),
@@ -235,7 +253,14 @@ void ModuleEditor::RenderGizmo()
 	gizmo_hovered = ImGuizmo::IsOver();
 	if (ImGuizmo::IsUsing())
 	{
+		gizmo_released = true;
 		App->scene->hierarchy.selected_game_object->transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
+	}
+	else if(gizmo_released)
+	{
+		//Guizmo have been released so an actionTransform have been done
+		//Create action
+		gizmo_released = false;
 	}
 }
 

@@ -2,8 +2,8 @@
 class EditorAction
 {
 public:
-	EditorAction();
-	virtual ~EditorAction();
+	EditorAction() = default;
+	virtual ~EditorAction() = default;
 
 	virtual void Undo() = 0;
 

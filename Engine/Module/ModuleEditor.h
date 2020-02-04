@@ -55,6 +55,7 @@ private:
 
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 	bool gizmo_hovered = false;
+	bool gizmo_released = false;
 
 	Billboard* camera_billboard = nullptr;
 	Billboard* light_billboard = nullptr;
