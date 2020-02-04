@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _EDITORACTION_H_
+#define _EDITORACTION_H_
 class EditorAction
 {
 public:
@@ -11,3 +12,4 @@ public:
 
 };
 
+#endif _EDITORACTION_H

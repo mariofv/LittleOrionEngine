@@ -11,6 +11,9 @@
 #include "ModuleScene.h"
 #include "Component/ComponentMesh.h"
 
+#include "Actions/EditorActionTranslate.h"
+#include "Actions/EditorAction.h"
+
 #include "Config.h"
 #include "Hierarchy.h"
 #include "OLQuadTree.h"
@@ -230,6 +233,7 @@ void ModuleEditor::RenderGizmo()
 		switch (gizmo_operation)
 		{
 			case ImGuizmo::TRANSLATE:
+				EditorAction* new_action = new EditorActionTranslate();
 				break;
 			case ImGuizmo::ROTATE:
 				break;
@@ -254,6 +258,9 @@ void ModuleEditor::RenderGizmo()
 	if (ImGuizmo::IsUsing())
 	{
 		gizmo_released = true;
+
+
+		//Modify transform
 		App->scene->hierarchy.selected_game_object->transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
 	}
 	else if(gizmo_released)
