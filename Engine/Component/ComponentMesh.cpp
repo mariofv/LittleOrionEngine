@@ -1,6 +1,6 @@
 #include "ComponentMesh.h"
-#include "GameObject.h"
-#include "Application.h"
+#include "Main/GameObject.h"
+#include "Main/Application.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"

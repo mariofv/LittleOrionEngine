@@ -2,9 +2,9 @@
 #define _MODULECAMERA_H_
 
 #include "Module.h"
-#include "Globals.h"
-#include "GameObject.h"
-#include "Skybox.h"
+#include "Main/Globals.h"
+#include "Main/GameObject.h"
+#include "UI/Skybox.h"
 
 #include "Geometry/Frustum.h"
 #include "MathGeoLib.h"

@@ -3,7 +3,7 @@
 
 #include "Component.h"
 
-#include "Mesh.h"
+#include "Resource/Mesh.h"
 
 class ComponentsUI;
 class ComponentMesh : public Component

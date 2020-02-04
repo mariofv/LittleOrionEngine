@@ -1,7 +1,7 @@
 #ifndef _COMPONENTSUI_H_
 #define _COMPONENTSUI_H_
 
-#include "Texture.h"
+#include "Resource/Texture.h"
 class ComponentCamera;
 class ComponentMaterial;
 class ComponentMesh;

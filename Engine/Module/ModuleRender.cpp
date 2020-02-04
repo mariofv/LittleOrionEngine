@@ -1,5 +1,5 @@
-#include "Globals.h"
-#include "Application.h"
+#include "Main/Globals.h"
+#include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleDebug.h"
 #include "ModuleDebugDraw.h"

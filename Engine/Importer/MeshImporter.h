@@ -1,7 +1,7 @@
 #ifndef _MESHIMPORTER_H_
 #define _MESHIMPORTER_H_
 #include "Importer.h"
-#include "Timer.h"
+#include "Helper/Timer.h"
 #include <memory>
 
 #include "assimp/LogStream.hpp"

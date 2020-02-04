@@ -5,12 +5,12 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
 
-#include "Application.h"
-#include "GameObject.h"
+#include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleProgram.h"
-#include "Utils.h"
+#include "Helper/Utils.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>

@@ -1,6 +1,6 @@
 #include "ModuleEditor.h"
-#include "Globals.h"
-#include "Application.h"
+#include "Main/Globals.h"
+#include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleDebug.h"
 #include "ModuleDebugDraw.h"
@@ -11,9 +11,9 @@
 #include "ModuleScene.h"
 #include "Component/ComponentMesh.h"
 
-#include "Config.h"
-#include "Hierarchy.h"
-#include "OLQuadTree.h"
+#include "Helper/Config.h"
+#include "UI/Hierarchy.h"
+#include "SpacePartition/OLQuadTree.h"
 #include "UI/DebugDraw.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>

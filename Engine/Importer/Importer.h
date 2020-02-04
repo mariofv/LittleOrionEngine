@@ -1,6 +1,6 @@
 #ifndef _IMPORTER_H_
 #define _IMPORTER_H_
-#include "Globals.h"
+#include "Main/Globals.h"
 #include "Module/ModuleFileSystem.h"
 
 #include <algorithm>

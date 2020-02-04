@@ -1,7 +1,7 @@
 #ifndef _ENGINELOG_H_
 #define _ENGINELOG_H_
 
-#include "Globals.h"
+#include "Main/Globals.h"
 
 #include "imgui.h"
 

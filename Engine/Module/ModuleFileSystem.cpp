@@ -1,5 +1,5 @@
 #include "ModuleFileSystem.h"
-#include "Application.h"
+#include "Main/Application.h"
 #include <SDL/SDL.h>
 
 #include <algorithm>

@@ -2,8 +2,8 @@
 #define _MODULEMODELLOADER_H_
 
 #include "Module.h"
-#include "Globals.h"
-#include "Texture.h"
+#include "Main/Globals.h"
+#include "Resource/Texture.h"
 #include "ModuleFileSystem.h"
 
 #include <GL/glew.h>
