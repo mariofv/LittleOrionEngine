@@ -19,10 +19,12 @@ EditorActionTranslate::~EditorActionTranslate()
 
 void EditorActionTranslate::Undo()
 {
+	action_GO->transform.SetTranslation(previous_position);
 	return;
 }
 
 void EditorActionTranslate::Redo()
 {
+	action_GO->transform.SetTranslation(current_position);
 	return;
 }

@@ -5,6 +5,8 @@
 #include "Globals.h"
 #include "Component/ComponentCamera.h"
 #include "UI/Billboard.h"
+#include "Actions/EditorAction.h"
+#include <stack>
 
 #include <ImGuizmo.h>
 
@@ -30,6 +32,8 @@ public:
 
 	void ShowGizmoControls();
 
+	void ClearRedoStack();
+
 private:
 	void RenderCameraFrustum() const;
 	void RenderOutline() const;
@@ -46,6 +50,8 @@ private:
 
 public:
 	bool scene_window_is_hovered = false;
+	std::stack<EditorAction*> undoStack;
+	std::stack<EditorAction*> redoStack;
 
 private:
 	float scene_window_content_area_width = 0;

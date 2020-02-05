@@ -258,8 +258,6 @@ void ModuleEditor::RenderGizmo()
 	if (ImGuizmo::IsUsing())
 	{
 		gizmo_released = true;
-
-
 		//Modify transform
 		App->scene->hierarchy.selected_game_object->transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
 	}
@@ -271,6 +269,8 @@ void ModuleEditor::RenderGizmo()
 			App->scene->hierarchy.selected_game_object->transform.GetTranslation(),
 			App->scene->hierarchy.selected_game_object);
 
+		undoStack.push(new_action);
+		ClearRedoStack();
 		gizmo_released = false;
 	}
 }
@@ -468,5 +468,15 @@ void ModuleEditor::ShowGizmoControls()
 	if (ImGui::Button(ICON_FA_EXPAND_ARROWS_ALT, ImVec2(24, 24)))
 	{
 		gizmo_operation = ImGuizmo::SCALE;
+	}
+}
+
+void ModuleEditor::ClearRedoStack()
+{
+	while(!redoStack.empty())
+	{
+		EditorAction* action = redoStack.top();
+		delete action;
+		redoStack.pop();
 	}
 }
