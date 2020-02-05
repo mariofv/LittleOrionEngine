@@ -12,6 +12,7 @@
 #include "Component/ComponentMesh.h"
 
 #include "Actions/EditorActionTranslate.h"
+#include "Actions/EditorActionRotation.h"
 #include "Actions/EditorActionScale.h"
 #include "Actions/EditorAction.h"
 
@@ -237,6 +238,7 @@ void ModuleEditor::RenderGizmo()
 				previous_transform = App->scene->hierarchy.selected_game_object->transform.GetTranslation();
 				break;
 			case ImGuizmo::ROTATE:
+				previous_transform = App->scene->hierarchy.selected_game_object->transform.GetRotationRadiants();
 				break;
 			case ImGuizmo::SCALE:
 				previous_transform = App->scene->hierarchy.selected_game_object->transform.GetScale();
@@ -276,6 +278,9 @@ void ModuleEditor::RenderGizmo()
 					App->scene->hierarchy.selected_game_object);
 				break;
 			case ImGuizmo::ROTATE:
+				new_action = new EditorActionRotation(previous_transform,
+					App->scene->hierarchy.selected_game_object->transform.GetRotationRadiants(),
+					App->scene->hierarchy.selected_game_object);
 				break;
 			case ImGuizmo::SCALE:
 				new_action = new EditorActionScale(previous_transform,

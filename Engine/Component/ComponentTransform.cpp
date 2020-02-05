@@ -67,10 +67,23 @@ Quat ComponentTransform::GetRotation() const
 	return rotation;
 }
 
+float3 ComponentTransform::GetRotationRadiants() const
+{
+	return rotation_radians;
+}
+
 void ComponentTransform::SetRotation(const float3x3 &rotation)
 {
 	this->rotation = rotation.ToQuat();
 	rotation_radians = rotation.ToEulerXYZ();
+	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
+	OnTransformChange();
+}
+
+void ComponentTransform::SetRotation(const float3 & new_rotation)
+{
+	rotation = math::Quat::FromEulerXYZ(new_rotation.x, new_rotation.y, new_rotation.z);
+	rotation_radians = new_rotation;
 	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
 	OnTransformChange();
 }
@@ -83,6 +96,8 @@ void ComponentTransform::Rotate(const Quat &rotation)
 
 	OnTransformChange();
 }
+
+
 
 void ComponentTransform::Rotate(const float3x3 &rotation)
 {
