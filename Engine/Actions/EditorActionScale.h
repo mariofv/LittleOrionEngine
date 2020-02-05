@@ -1,10 +1,14 @@
 #ifndef _EDITORACTIONSCALE_H_
 #define _EDITORACTIONSCALE_H_
 
+#include "EditorAction.h"
+#include "GameObject.h"
+#include "MathGeoLib.h"
+
 class EditorActionScale : public EditorAction 
 {
 public:
-	EditorActionScale();
+	EditorActionScale(float3 &previous, float3 &current, GameObject* go);
 	~EditorActionScale();
 
 	void Undo();

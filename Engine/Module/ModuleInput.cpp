@@ -136,14 +136,9 @@ update_status ModuleInput::PreUpdate()
 			}
 
 			//Undo-Redo
-			if (event.key.keysym.sym == SDLK_LCTRL)
+			if (event.key.keysym.sym == SDLK_z)
 			{
-				App->editor->Undo();
-			}
-
-			if (event.key.keysym.sym == SDLK_LSHIFT)
-			{
-				App->editor->Redo();
+				controlKeyDown = true;
 			}
 
 			break;
@@ -156,6 +151,11 @@ update_status ModuleInput::PreUpdate()
 			else if (event.key.keysym.sym == SDLK_LSHIFT)
 			{
 				App->cameras->scene_camera->SetSpeedUp(false);
+			}
+
+			if (event.key.keysym.sym == SDLK_LCTRL)
+			{
+				controlKeyDown = false;
 			}
 			break;
 
@@ -221,6 +221,18 @@ update_status ModuleInput::PreUpdate()
 	if (keyboard[SDL_SCANCODE_RIGHT])
 	{
 		App->cameras->scene_camera->RotateYaw(1.f);
+	}
+
+	if(controlKeyDown && keyboard[SDL_SCANCODE_LCTRL] && !keyboard[SDL_SCANCODE_LSHIFT])
+	{
+		App->editor->Undo();
+		controlKeyDown = false;
+	}
+
+	if (controlKeyDown && keyboard[SDL_SCANCODE_LSHIFT] && keyboard[SDL_SCANCODE_LCTRL])
+	{
+		App->editor->Redo();
+		controlKeyDown = false;
 	}
 
 
