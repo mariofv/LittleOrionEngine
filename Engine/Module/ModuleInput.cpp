@@ -210,6 +210,18 @@ update_status ModuleInput::PreUpdate()
 	{
 		App->cameras->scene_camera->RotateYaw(1.f);
 	}
+
+	//Undo-Redo
+	if(keyboard[SDL_SCANCODE_LCTRL] && keyboard[SDL_SCANCODE_Z])
+	{
+		App->editor->Undo();
+	}
+
+	if (keyboard[SDL_SCANCODE_LCTRL] && keyboard[SDL_SCANCODE_Z] && keyboard[SDL_SCANCODE_LSHIFT])
+	{
+		App->editor->Redo();
+	}
+
 	return update_status::UPDATE_CONTINUE;
 }
 

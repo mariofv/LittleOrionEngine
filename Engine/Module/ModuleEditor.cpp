@@ -480,3 +480,11 @@ void ModuleEditor::ClearRedoStack()
 		redoStack.pop();
 	}
 }
+
+void ModuleEditor::Undo()
+{
+}
+
+void ModuleEditor::Redo()
+{
+}

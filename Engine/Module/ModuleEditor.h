@@ -33,6 +33,8 @@ public:
 	void ShowGizmoControls();
 
 	void ClearRedoStack();
+	void Undo();
+	void Redo();
 
 private:
 	void RenderCameraFrustum() const;
