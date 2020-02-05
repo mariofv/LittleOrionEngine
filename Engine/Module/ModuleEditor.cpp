@@ -12,6 +12,7 @@
 #include "Component/ComponentMesh.h"
 
 #include "Actions/EditorActionTranslate.h"
+#include "Actions/EditorActionScale.h"
 #include "Actions/EditorAction.h"
 
 #include "Config.h"
@@ -238,6 +239,7 @@ void ModuleEditor::RenderGizmo()
 			case ImGuizmo::ROTATE:
 				break;
 			case ImGuizmo::SCALE:
+				previous_transform = App->scene->hierarchy.selected_game_object->transform.GetScale();
 				break;
 			case ImGuizmo::BOUNDS:
 				break;
@@ -265,13 +267,32 @@ void ModuleEditor::RenderGizmo()
 	{
 		//Guizmo have been released so an actionTransform have been done
 		//Create action
-		EditorAction* new_action = new EditorActionTranslate(previous_transform,
-			App->scene->hierarchy.selected_game_object->transform.GetTranslation(),
-			App->scene->hierarchy.selected_game_object);
-
-		undoStack.push(new_action);
-		ClearRedoStack();
-		gizmo_released = false;
+		EditorAction* new_action = nullptr;
+		switch (gizmo_operation)
+		{
+			case ImGuizmo::TRANSLATE:
+				new_action = new EditorActionTranslate(previous_transform,
+					App->scene->hierarchy.selected_game_object->transform.GetTranslation(),
+					App->scene->hierarchy.selected_game_object);
+				break;
+			case ImGuizmo::ROTATE:
+				break;
+			case ImGuizmo::SCALE:
+				new_action = new EditorActionScale(previous_transform,
+					App->scene->hierarchy.selected_game_object->transform.GetScale(),
+					App->scene->hierarchy.selected_game_object);
+				break;
+			case ImGuizmo::BOUNDS:
+				break;
+			default:
+				break;
+		}
+		if(new_action != nullptr)
+		{
+			undoStack.push(new_action);
+			ClearRedoStack();
+			gizmo_released = false;		
+		}
 	}
 }
 
