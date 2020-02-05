@@ -254,7 +254,7 @@ void ModuleEditor::RenderGizmo()
 		App->cameras->scene_camera->GetViewMatrix().Transposed().ptr(),
 		App->cameras->scene_camera->GetProjectionMatrix().Transposed().ptr(),
 		gizmo_operation,
-		ImGuizmo::WORLD,
+		ImGuizmo::LOCAL,
 		model_global_matrix_transposed.ptr()
 	);
 
