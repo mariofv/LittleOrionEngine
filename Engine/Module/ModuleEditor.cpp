@@ -227,7 +227,7 @@ void ModuleEditor::RenderGizmo()
 {
 	float4x4 model_global_matrix_transposed = App->scene->hierarchy.selected_game_object->transform.GetGlobalModelMatrix().Transposed();
 
-	if (!gizmo_released && ImGuizmo::IsUsing())
+	if (!gizmo_released)
 	{
 		//Save current position/rotation/scale of transform depending on operation
 		switch (gizmo_operation)
@@ -483,8 +483,24 @@ void ModuleEditor::ClearRedoStack()
 
 void ModuleEditor::Undo()
 {
+	if(!undoStack.empty())
+	{
+		EditorAction* action = undoStack.top();
+		action->Undo();
+
+		redoStack.push(action);
+		undoStack.pop();
+	}
 }
 
 void ModuleEditor::Redo()
 {
+	if(!redoStack.empty())
+	{
+		EditorAction* action = redoStack.top();
+		action->Redo();
+
+		undoStack.push(action);
+		redoStack.pop();
+	}
 }
