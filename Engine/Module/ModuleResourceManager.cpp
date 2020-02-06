@@ -82,11 +82,11 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 	std::pair<bool, std::string> result = std::pair<bool, std::string>(false,"");
 	if (file.file_type == FileType::MODEL)
 	{
-		result = App->mesh_importer->Import(file);
+		result = App->model_importer->Import(file);
 	}
 	if (file.file_type == FileType::TEXTURE)
 	{
-		result = App->material_importer->Import(file);
+		result = App->texture_importer->Import(file);
 	}
 	return result;
 }

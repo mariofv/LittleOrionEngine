@@ -1,29 +1,29 @@
-#ifndef _MESHIMPORTER_H_
-#define _MESHIMPORTER_H_
+#ifndef _MODELIMPORTER_H_
+#define _MODELIMPORTER_H_
 #include "Importer.h"
 #include "Helper/Timer.h"
 #include <memory>
 
 #include "assimp/LogStream.hpp"
 #include "assimp/Logger.hpp"
+#include "ModelImporters/MeshImporter.h"
 
-struct aiMesh;
+
 struct aiNode;
 struct aiScene;
 
 class Mesh;
-class MeshImporter : Importer
+class ModelImporter : Importer
 {
 public:
-	MeshImporter();
-	~MeshImporter();
+	ModelImporter();
+	~ModelImporter();
 	std::pair<bool, std::string> Import(const File & file) const override;
 	std::shared_ptr<Mesh> Load(const std::string& file_path) const;
 
 	void RemoveMeshFromCacheIfNeeded(const std::shared_ptr<Mesh> & mesh);
 private:
-	void ImportMesh(const aiMesh* file_path, const std::vector<std::string> & loaded_meshes_materials, const aiMatrix4x4& mesh_transformation, const std::string& output_file) const;
-	void ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file) const;
+		void ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file) const;
 
 public:
 	const float SCALE_FACTOR = 0.01f;
@@ -32,6 +32,7 @@ private:
 	const std::string LIBRARY_MESHES_FOLDER = "Library/Meshes";
 	mutable std::vector<std::shared_ptr<Mesh>> mesh_cache;
 	mutable Timer performance_timer;
+	std::unique_ptr<MeshImporter> meshImporter;
 };
 
 
@@ -64,5 +65,6 @@ public:
 
 public:
 	unsigned int severety = 0;
+	
 };
-#endif // !_MESHIMPORTER_H_
+#endif // !_MODELIMPORTER_H_

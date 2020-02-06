@@ -48,7 +48,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 {
 	GameObject *node_game_object = App->scene->CreateChildGameObject(parent_node);
 
-	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load(model_base_path->file_path.c_str());
+	std::shared_ptr<Mesh> mesh_for_component = App->model_importer->Load(model_base_path->file_path.c_str());
 
 	if (mesh_for_component == nullptr)
 	{
@@ -66,10 +66,10 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 		size_t separator = texture.find_last_of(":");
 		std::string texture_path = texture.substr(separator+1, texture.size());
 		std::string texture_type = texture.substr(0, separator);
-		std::shared_ptr<Texture> texture = App->material_importer->Load(texture_path);
+		std::shared_ptr<Texture> texture = App->texture_importer->Load(texture_path);
 		if (texture.get() != nullptr)
 		{
-			componentMaterial->SetMaterialTexture(std::stoi(texture_type), App->material_importer->Load(texture_path));
+			componentMaterial->SetMaterialTexture(std::stoi(texture_type), App->texture_importer->Load(texture_path));
 		}
 	}
 }
@@ -80,7 +80,7 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 	GameObject* model_game_object = App->scene->CreateGameObject();
 	model_game_object->name = std::string(file.filename_no_extension);
 
-	std::shared_ptr<Mesh> mesh_for_component = App->mesh_importer->Load(file.file_path.c_str());
+	std::shared_ptr<Mesh> mesh_for_component = App->model_importer->Load(file.file_path.c_str());
 	if (mesh_for_component == nullptr)
 	{
 		return model_game_object;
@@ -95,7 +95,7 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 		size_t separator = texture.find_last_of(":");
 		std::string texture_path = texture.substr(separator + 1, texture.size());
 		std::string texture_type = texture.substr(0, separator);
-		componentMaterial->SetMaterialTexture(std::stoi(texture_type), App->material_importer->Load(texture_path));
+		componentMaterial->SetMaterialTexture(std::stoi(texture_type), App->texture_importer->Load(texture_path));
 	}
 	return model_game_object;
 }

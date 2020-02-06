@@ -1,0 +1,4 @@
+#ifndef _MATERIALIMPORTER_H_
+#define _MATERIALIMPORTER_H_
+
+#endif // !_MATERIALIMPORTER_H_

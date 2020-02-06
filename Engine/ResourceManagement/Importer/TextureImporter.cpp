@@ -5,7 +5,7 @@
 
 #include <assimp/scene.h>
 #include "Brofiler/Brofiler.h"
-MaterialImporter::MaterialImporter()
+TextureImporter::TextureImporter()
 {
 	APP_LOG_INIT("Initializing DevIL image loader.")
 	ilInit();
@@ -16,7 +16,7 @@ MaterialImporter::MaterialImporter()
 	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 }
-std::pair<bool, std::string> MaterialImporter::Import(const File & file) const
+std::pair<bool, std::string> TextureImporter::Import(const File & file) const
 {
 	if (file.filename.empty())
 	{
@@ -59,7 +59,7 @@ std::pair<bool, std::string> MaterialImporter::Import(const File & file) const
 	return std::pair<bool, std::string>(true, output_file);
 }
 
-void MaterialImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* file_path,std::vector<std::string> & loaded_meshes_materials) const
+void TextureImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* file_path,std::vector<std::string> & loaded_meshes_materials) const
 {
 	int mesh_material_index = scene->mMeshes[mesh_index]->mMaterialIndex;
 	std::string model_base_path = std::string(file_path);
@@ -82,7 +82,7 @@ void MaterialImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_
 	}
 }
 
-std::string MaterialImporter::ImportMaterialData(const std::string & material_path, const std::string model_base_path) const
+std::string TextureImporter::ImportMaterialData(const std::string & material_path, const std::string model_base_path) const
 {
 	APP_LOG_INIT("Loading material texture in described path %s.", material_path.c_str());
 	std::pair<bool, std::string> imported = Import(material_path);
@@ -112,7 +112,7 @@ std::string MaterialImporter::ImportMaterialData(const std::string & material_pa
 	}
 	return "";
 }
-std::shared_ptr<Texture> MaterialImporter::Load(const std::string& file_path) const{
+std::shared_ptr<Texture> TextureImporter::Load(const std::string& file_path) const{
 
 	if (!App->filesystem->Exists(file_path.c_str()))
 	{
@@ -143,7 +143,7 @@ std::shared_ptr<Texture> MaterialImporter::Load(const std::string& file_path) co
 	return nullptr;
 }
 
-ILubyte * MaterialImporter::LoadImageData(const std::string& file_path, int image_type ,int & width, int & height ) const
+ILubyte * TextureImporter::LoadImageData(const std::string& file_path, int image_type ,int & width, int & height ) const
 {
 	ilLoadImage(file_path.c_str());
 
@@ -170,7 +170,7 @@ ILubyte * MaterialImporter::LoadImageData(const std::string& file_path, int imag
 	return data;
 }
 
-unsigned int MaterialImporter::LoadCubemap(std::vector<std::string> faces_paths) const
+unsigned int TextureImporter::LoadCubemap(std::vector<std::string> faces_paths) const
 {
 	unsigned int texture_id;
 
@@ -200,7 +200,7 @@ unsigned int MaterialImporter::LoadCubemap(std::vector<std::string> faces_paths)
 }
 
 //Remove the material from the cache if the only owner is the cache itself
-void MaterialImporter::RemoveTextureFromCacheIfNeeded(const std::shared_ptr<Texture> & texture) 
+void TextureImporter::RemoveTextureFromCacheIfNeeded(const std::shared_ptr<Texture> & texture) 
 {
 	auto it = std::find(texture_cache.begin(), texture_cache.end(), texture);
 	if (it != texture_cache.end() && (*it).use_count() <= 2)
@@ -209,7 +209,7 @@ void MaterialImporter::RemoveTextureFromCacheIfNeeded(const std::shared_ptr<Text
 	}
 }
 
-std::string MaterialImporter::GetTextureFileName(std::string texture_file_path) const
+std::string TextureImporter::GetTextureFileName(std::string texture_file_path) const
 {
 	std::replace(texture_file_path.begin(), texture_file_path.end(), '\\', '/');
 	std::size_t found = texture_file_path.find_last_of("/");
@@ -225,7 +225,7 @@ std::string MaterialImporter::GetTextureFileName(std::string texture_file_path) 
 	}
 }
 
-Texture::TextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureType type) const
+Texture::TextureType TextureImporter::GetTextureTypeFromAssimpType(aiTextureType type) const
 {
 	switch (type)
 	{
@@ -247,7 +247,7 @@ Texture::TextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureTyp
 	}
 }
 
-char * MaterialImporter::LoadCompressedDDS(const std::string& file_path, DDS_HEADER & dds_header, size_t & dds_content_size) const
+char * TextureImporter::LoadCompressedDDS(const std::string& file_path, DDS_HEADER & dds_header, size_t & dds_content_size) const
 {
 	char * data = App->filesystem->Load(file_path.c_str(), dds_content_size);
 	if (data) 

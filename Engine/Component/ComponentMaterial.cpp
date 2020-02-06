@@ -17,7 +17,7 @@ ComponentMaterial::~ComponentMaterial()
 {
 	for (auto & texture : textures)
 	{
-		App->material_importer->RemoveTextureFromCacheIfNeeded(texture);
+		App->texture_importer->RemoveTextureFromCacheIfNeeded(texture);
 	}
 }
 
@@ -71,7 +71,7 @@ void ComponentMaterial::Load(const Config& config)
 		config.GetString(id, tmp_path, "");
 		if (!tmp_path.empty())
 		{
-			textures[i] = App->material_importer->Load(tmp_path);
+			textures[i] = App->texture_importer->Load(tmp_path);
 		}
 	}
 	
@@ -168,7 +168,7 @@ void ComponentMaterial::BindTexture(Texture::TextureType id) const
 }
 void ComponentMaterial::RemoveMaterialTexture(size_t type)
 {
-	App->material_importer->RemoveTextureFromCacheIfNeeded(textures[type]);
+	App->texture_importer->RemoveTextureFromCacheIfNeeded(textures[type]);
 	textures[type] = nullptr;
 }
 void ComponentMaterial::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture)

@@ -29,8 +29,8 @@ class ModuleResourceManager;
 class EngineLog;
 
 
-class MaterialImporter;
-class MeshImporter;
+class TextureImporter;
+class ModelImporter;
 
 class TimerUs;
 
@@ -64,8 +64,8 @@ public:
 	ModuleResourceManager* resources = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
-	std::unique_ptr<MeshImporter> mesh_importer = nullptr;
-	std::unique_ptr<MaterialImporter> material_importer = nullptr;
+	std::unique_ptr<ModelImporter> model_importer = nullptr;
+	std::unique_ptr<TextureImporter> texture_importer = nullptr;
 
 private:
 

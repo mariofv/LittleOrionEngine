@@ -272,6 +272,8 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\TextureImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -418,6 +420,7 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\TextureImporter.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

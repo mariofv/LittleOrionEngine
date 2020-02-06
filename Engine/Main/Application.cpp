@@ -44,8 +44,8 @@ Application::Application()
 		
 	engine_log = std::make_unique<EngineLog>();
 
-	material_importer = std::make_unique<MaterialImporter>();
-	mesh_importer = std::make_unique<MeshImporter>();
+	texture_importer = std::make_unique<TextureImporter>();
+	model_importer = std::make_unique<ModelImporter>();
 }
 
 Application::~Application()

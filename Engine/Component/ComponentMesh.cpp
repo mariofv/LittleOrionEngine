@@ -29,7 +29,7 @@ void ComponentMesh::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
 
 ComponentMesh::~ComponentMesh()
 {
-	App->mesh_importer->RemoveMeshFromCacheIfNeeded(mesh_to_render);
+	App->model_importer->RemoveMeshFromCacheIfNeeded(mesh_to_render);
 }
 
 void ComponentMesh::Delete() 
@@ -54,14 +54,14 @@ void ComponentMesh::Load(const Config& config)
 	std::string mesh_path;
 	config.GetString("MeshPath", mesh_path, "");
 	config.GetString("ShaderProgram", shader_program, "Default");
-	std::shared_ptr<Mesh> mesh = App->mesh_importer->Load(mesh_path.c_str());
+	std::shared_ptr<Mesh> mesh = App->model_importer->Load(mesh_path.c_str());
 	if (mesh != nullptr)
 	{
 		SetMesh(mesh);
 	}
 	else 
 	{
-		SetMesh(App->mesh_importer->Load(PRIMITIVE_CUBE_PATH));
+		SetMesh(App->model_importer->Load(PRIMITIVE_CUBE_PATH));
 	}
 
 }

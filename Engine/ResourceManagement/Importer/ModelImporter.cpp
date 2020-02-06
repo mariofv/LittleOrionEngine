@@ -7,11 +7,10 @@
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
 #include <assimp/material.h>
-#include <assimp/mesh.h>
 #include "assimp/DefaultLogger.hpp"
 #include "Brofiler/Brofiler.h"
 
-MeshImporter::MeshImporter()
+ModelImporter::ModelImporter()
 {
 	Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Debugging), Assimp::Logger::Debugging);
@@ -20,12 +19,12 @@ MeshImporter::MeshImporter()
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Warn), Assimp::Logger::Warn);
 }
 
-MeshImporter::~MeshImporter()
+ModelImporter::~ModelImporter()
 {
 	Assimp::DefaultLogger::kill();
 }
 
-std::pair<bool, std::string> MeshImporter::Import(const File & file) const
+std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 {
 	if (file.filename.empty())
 	{
@@ -66,7 +65,7 @@ std::pair<bool, std::string> MeshImporter::Import(const File & file) const
 	return std::pair<bool, std::string>(true, output_file.file_path);
 }
 
-void MeshImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file) const
+void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file) const
 {
 	aiMatrix4x4& current_transformtion = parent_transformation * root_node->mTransformation;
 
@@ -74,7 +73,7 @@ void MeshImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent
 	{
 		size_t mesh_index = root_node->mMeshes[i];
 		std::vector<std::string> loaded_meshes_materials;
-		App->material_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, loaded_meshes_materials);
+		App->texture_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, loaded_meshes_materials);
 
 		std::string mesh_file = output_file + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
 
@@ -87,7 +86,7 @@ void MeshImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent
 		pPosition *= SCALE_FACTOR;
 
 		node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
-		ImportMesh(scene->mMeshes[mesh_index], loaded_meshes_materials, node_transformation, mesh_file);
+		meshImporter->ImportMesh(scene->mMeshes[mesh_index], loaded_meshes_materials, node_transformation, mesh_file);
 	}
 
 	for (size_t i = 0; i < root_node->mNumChildren; i++)
@@ -96,81 +95,8 @@ void MeshImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent
 	}
 }
 
-void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string> & loaded_meshes_materials, const aiMatrix4x4& mesh_transformation, const std::string& output_file) const
-{
-	std::vector<uint32_t> indices;
-	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
-	{
-		aiFace face = mesh->mFaces[i];
-		for (unsigned int j = 0; j < face.mNumIndices; j++)
-			indices.push_back(face.mIndices[j]);
-	}
 
-	//We only accept triangle formed meshes
-	if (indices.size() % 3 != 0)
-	{
-		APP_LOG_ERROR("Mesh %s have incorrect indices", mesh->mName.C_Str());
-		return;
-	}
-	std::vector<Mesh::Vertex> vertices;
-	vertices.reserve(mesh->mNumVertices);
-	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
-	{
-		Mesh::Vertex new_vertex;
-		aiVector3D transformed_position = mesh_transformation * mesh->mVertices[i];
-		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
-		new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
-		new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
-		vertices.push_back(new_vertex);
-	}
-
-	std::vector<uint32_t> materials_path_size;
-	uint32_t total_meshes_size = 0;
-	for (auto & path_size : loaded_meshes_materials)
-	{
-		materials_path_size.push_back(path_size.size());
-		total_meshes_size += path_size.size();
-	}
-
-	uint32_t num_indices = indices.size();
-	uint32_t num_vertices = vertices.size();
-	uint32_t num_materials = loaded_meshes_materials.size();
-	uint32_t ranges[3] = { num_indices, num_vertices, num_materials };
-
-	uint32_t size = sizeof(ranges) + sizeof(uint32_t) * num_indices + sizeof(Mesh::Vertex) * num_vertices + sizeof(uint32_t) * num_materials + total_meshes_size;
-
-	char* data = new char[size]; // Allocate
-	char* cursor = data;
-	size_t bytes = sizeof(ranges); // First store ranges
-	memcpy(cursor, ranges, bytes);
-
-	cursor += bytes; // Store indices
-	bytes = sizeof(uint32_t) * num_indices;
-	memcpy(cursor, &indices.front(), bytes);
-
-	cursor += bytes; // Store vertices
-	bytes = sizeof(Mesh::Vertex) * num_vertices;
-	memcpy(cursor, &vertices.front(), bytes);
-
-	cursor += bytes; // Store sizes
-	bytes = sizeof(uint32_t) * num_materials;
-	if (bytes != 0)
-	{
-		memcpy(cursor, &materials_path_size.front(), bytes);
-	}
-	for (size_t i = 0; i < num_materials; i++)
-	{
-		cursor += bytes; // Store materials
-		bytes = materials_path_size.at(i);
-		memcpy(cursor, loaded_meshes_materials[i].c_str(), bytes);
-	}
-
-
-	App->filesystem->Save(output_file.c_str(), data, size);
-	delete data;
-}
-
- std::shared_ptr<Mesh> MeshImporter::Load(const std::string& file_path) const
+ std::shared_ptr<Mesh> ModelImporter::Load(const std::string& file_path) const
  {
 	 BROFILER_CATEGORY("Load Mesh", Profiler::Color::Brown);
 	 if (!App->filesystem->Exists(file_path.c_str()))
@@ -247,7 +173,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 }
 
  //Remove the mesh from the cache if the only owner is the cache itself
- void MeshImporter::RemoveMeshFromCacheIfNeeded(const std::shared_ptr<Mesh> & mesh) 
+ void ModelImporter::RemoveMeshFromCacheIfNeeded(const std::shared_ptr<Mesh> & mesh)
  {
 	 auto it = std::find(mesh_cache.begin(), mesh_cache.end(), mesh);
 	 if (it != mesh_cache.end() && (*it).use_count() <= 2)

@@ -1,5 +1,5 @@
-#ifndef _MATERIALIMPORTER_H_
-#define _MATERIALIMPORTER_H_
+#ifndef _TEXTUREIMPORTER_H_
+#define _TEXTUREIMPORTER_H_
 
 #include "Importer.h"
 #include "ResourceManagement/Resources/Texture.h"
@@ -11,7 +11,7 @@
 #include <assimp/material.h>
 struct aiScene;
 
-class MaterialImporter : Importer
+class TextureImporter : Importer
 {
 
 private:
@@ -45,7 +45,7 @@ private:
 	const uint32_t magic_number = 4;
 
 public:
-	MaterialImporter();
+	TextureImporter();
 	std::pair<bool, std::string> Import(const File & file) const override;
 	void ImportMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* file_path,std::vector<std::string> & loaded_meshes_materials) const;
 	std::string ImportMaterialData(const std::string& material_path, const std::string model_base_path) const;
@@ -65,4 +65,4 @@ private:
 	mutable std::vector<std::shared_ptr<Texture>> texture_cache;
 
 };
-#endif // !_MATERIALIMPORTER_H_
+#endif // !_TEXTUREIMPORTER_H_
