@@ -4,7 +4,7 @@
 #include "ModuleFileSystem.h"
 #include "Helper/Config.h"
 #include "Helper/Timer.h"
-#include "ResourceManagement/Importer/MaterialImporter.h"
+#include "ResourceManagement/Importer/TextureImporter.h"
 #include "ResourceManagement/Importer/ModelImporter.h"
 
 bool ModuleResourceManager::Init()

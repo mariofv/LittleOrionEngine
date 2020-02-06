@@ -1,6 +1,6 @@
 #include "ModelImporter.h"
 #include "ResourceManagement/Resources/Mesh.h"
-#include "MaterialImporter.h"
+#include "TextureImporter.h"
 #include "Main/Application.h"
 
 #include <assimp/cimport.h>

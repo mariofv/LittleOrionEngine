@@ -4,7 +4,7 @@
 #include "ResourceManagement/Resources/Texture.h"
 #include "Main/GameObject.h"
 #include "Component/ComponentMaterial.h"
-#include "ResourceManagement/Importer/MaterialImporter.h"
+#include "ResourceManagement/Importer/TextureImporter.h"
 
 #include <SDL/SDL.h>
 #include <algorithm>

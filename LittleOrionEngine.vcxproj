@@ -94,6 +94,7 @@
     <ClInclude Include="Engine\Main\GameObject.h" />
     <ClInclude Include="Engine\Main\Globals.h" />
     <ClInclude Include="Engine\Module\ModuleResourceManager.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Texture.h" />
@@ -105,7 +106,7 @@
     <ClInclude Include="Engine\Component\ComponentLight.h" />
     <ClInclude Include="Engine\Filesystem\File.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\Importer.h" />
-    <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\TextureImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporter.h" />
     <ClInclude Include="Engine\Module\ModuleDebugDraw.h" />
     <ClInclude Include="Engine\Module\ModuleFileSystem.h" />
@@ -156,7 +157,7 @@
     <ClCompile Include="Engine\Component\ComponentLight.cpp" />
     <ClCompile Include="Engine\Filesystem\File.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\Importer.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\TextureImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporter.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\Module\ModuleFileSystem.cpp" />
