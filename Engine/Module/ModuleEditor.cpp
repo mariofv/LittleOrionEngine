@@ -476,9 +476,9 @@ void ModuleEditor::ClearRedoStack()
 	//TODO: delete all actions when engine closes (delete/add go/comp could end up in memory leak, be careful)
 	while(!redoStack.empty())
 	{
-		EditorAction* action = redoStack.top();
+		EditorAction* action = redoStack.back();
 		delete action;
-		redoStack.pop();
+		redoStack.pop_back();
 	}
 }
 
@@ -486,11 +486,11 @@ void ModuleEditor::Undo()
 {
 	if(!undoStack.empty())
 	{
-		EditorAction* action = undoStack.top();
+		EditorAction* action = undoStack.back();
 		action->Undo();
 
-		redoStack.push(action);
-		undoStack.pop();
+		redoStack.push_back(action);
+		undoStack.pop_back();
 	}
 }
 
@@ -498,16 +498,24 @@ void ModuleEditor::Redo()
 {
 	if(!redoStack.empty())
 	{
-		EditorAction* action = redoStack.top();
+		EditorAction* action = redoStack.back();
 		action->Redo();
 
-		undoStack.push(action);
-		redoStack.pop();
+		undoStack.push_back(action);
+		redoStack.pop_back();
 	}
 }
 
 void ModuleEditor::AddUndoAction(int type)
 {
+	//StackUndoRedo set size maximum
+	if(undoStack.size() >= maximum_size_stack_undo)
+	{
+		EditorAction* action = undoStack.front();
+		delete action;
+		undoStack.erase(undoStack.begin());
+	}
+
 	EditorAction* new_action = nullptr;
 
 	switch (type)
@@ -541,7 +549,7 @@ void ModuleEditor::AddUndoAction(int type)
 	}
 	if (new_action != nullptr)
 	{
-		undoStack.push(new_action);
+		undoStack.push_back(new_action);
 		ClearRedoStack();
 	}
 }

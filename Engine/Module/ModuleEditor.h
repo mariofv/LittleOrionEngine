@@ -6,7 +6,8 @@
 #include "Component/ComponentCamera.h"
 #include "UI/Billboard.h"
 #include "Actions/EditorAction.h"
-#include <stack>
+
+#include <vector>
 
 #include <ImGuizmo.h>
 
@@ -56,8 +57,8 @@ public:
 	bool scene_window_is_hovered = false;
 	bool clicked = false;
 	int type_of_action = 0;
-	std::stack<EditorAction*> undoStack;
-	std::stack<EditorAction*> redoStack;
+	std::vector<EditorAction*> undoStack;
+	std::vector<EditorAction*> redoStack;
 	float3 previous_transform = float3::zero;
 	GameObject* action_game_object;
 
@@ -66,6 +67,7 @@ private:
 	float scene_window_content_area_height = 0;
 
 	float2 scene_window_content_area_pos = float2::zero;
+	int maximum_size_stack_undo = 5;
 
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 	bool gizmo_hovered = false;
