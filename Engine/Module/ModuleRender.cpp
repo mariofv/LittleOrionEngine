@@ -1,4 +1,5 @@
 #include "Globals.h"
+#include "Globals.h"
 #include "Application.h"
 #include "ModuleCamera.h"
 #include "ModuleDebug.h"

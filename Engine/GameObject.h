@@ -18,6 +18,7 @@ public:
 	~GameObject() = default;
 
 	bool IsEnabled() const;
+	void SetEnabled(bool able);
 
 	void SetStatic(bool is_static);
 	bool IsStatic() const;

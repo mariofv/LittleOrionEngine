@@ -73,6 +73,11 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 	}
 }
 
+void ModuleScene::DisableGameObject(GameObject * game_object_to_disable)
+{
+
+}
+
 GameObject* ModuleScene::GetRoot() const
 {
 	return root;

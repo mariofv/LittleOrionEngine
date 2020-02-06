@@ -145,7 +145,9 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 		}
 		if (ImGui::Selectable("Delete GameObject"))
 		{
-			App->scene->RemoveGameObject(game_object);
+			//App->scene->RemoveGameObject(game_object);
+			game_object->SetEnabled(false);
+			game_object->parent->RemoveChild(game_object);
 			selected_game_object = nullptr;
 		}
 		if (ImGui::Selectable("Move Up"))

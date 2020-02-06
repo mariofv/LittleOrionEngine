@@ -65,6 +65,21 @@ bool GameObject::IsEnabled() const
 	return active;
 }
 
+void GameObject::SetEnabled(bool able)
+{
+	active = able;
+	
+	for(auto comp : components)
+	{
+		(able) ? comp->Enable() : comp->Disable();
+	}
+
+	for(auto ch : children)
+	{
+		ch->SetEnabled(able);
+	}
+}
+
 void GameObject::SetStatic(bool is_static)
 {
 	SetHierarchyStatic(is_static);
