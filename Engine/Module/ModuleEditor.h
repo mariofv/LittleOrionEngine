@@ -59,6 +59,7 @@ public:
 	std::stack<EditorAction*> undoStack;
 	std::stack<EditorAction*> redoStack;
 	float3 previous_transform = float3::zero;
+	GameObject* action_game_object;
 
 private:
 	float scene_window_content_area_width = 0;

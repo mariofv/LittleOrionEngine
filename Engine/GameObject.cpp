@@ -384,3 +384,13 @@ void GameObject::ShowPropertiesWindow()
 		ImGui::PopID();
 	}
 }
+
+int GameObject::GetHierarchyDepth() const
+{
+	return hierarchy_depth;
+}
+
+void GameObject::SetHierarchyDepth(int value)
+{
+	hierarchy_depth = value;
+}

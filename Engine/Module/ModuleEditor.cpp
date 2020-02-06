@@ -11,6 +11,7 @@
 #include "ModuleScene.h"
 #include "Component/ComponentMesh.h"
 
+#include "Actions/EditorActionDeleteGameObject.h"
 #include "Actions/EditorActionTranslate.h"
 #include "Actions/EditorActionRotation.h"
 #include "Actions/EditorActionScale.h"
@@ -472,6 +473,7 @@ void ModuleEditor::ShowGizmoControls()
 
 void ModuleEditor::ClearRedoStack()
 {
+	//TODO: delete all actions when engine closes (delete/add go/comp could end up in memory leak, be careful)
 	while(!redoStack.empty())
 	{
 		EditorAction* action = redoStack.top();
@@ -528,6 +530,12 @@ void ModuleEditor::AddUndoAction(int type)
 				App->scene->hierarchy.selected_game_object->transform.GetScale(),
 				App->scene->hierarchy.selected_game_object);
 			break;
+		case 4:
+			//Delete GO
+			new_action = new EditorActionDeleteGameObject(action_game_object,
+				action_game_object->parent, action_game_object->GetHierarchyDepth());
+			break;
+
 		default:
 			break;
 	}

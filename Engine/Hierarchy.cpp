@@ -3,8 +3,12 @@
 #include "Component/ComponentCamera.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleModelLoader.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
 #include "GameObject.h"
+
+#include "Actions/EditorAction.h"
+#include "Actions/EditorActionDeleteGameObject.h"
 
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -146,8 +150,13 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 		if (ImGui::Selectable("Delete GameObject"))
 		{
 			//App->scene->RemoveGameObject(game_object);
+			//Create action delete for Undo/Redo stack
+			App->editor->action_game_object = game_object;
+			App->editor->AddUndoAction(4);
+
 			game_object->SetEnabled(false);
 			game_object->parent->RemoveChild(game_object);
+			
 			selected_game_object = nullptr;
 		}
 		if (ImGui::Selectable("Move Up"))

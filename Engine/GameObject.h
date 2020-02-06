@@ -47,6 +47,8 @@ public:
 	void RenderMaterialTexture(unsigned int shader_program) const;
 
 	void ShowPropertiesWindow();
+	int GetHierarchyDepth() const;
+	void SetHierarchyDepth(int value);
 
 private:
 	void SetHierarchyStatic(bool is_static);
