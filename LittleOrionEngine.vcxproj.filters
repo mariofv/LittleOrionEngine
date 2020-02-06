@@ -259,9 +259,6 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\MeshImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
@@ -272,6 +269,9 @@
       <Filter>Engine\UI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -403,9 +403,6 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\MeshImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
@@ -417,6 +414,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleResourceManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

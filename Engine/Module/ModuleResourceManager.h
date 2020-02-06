@@ -22,7 +22,12 @@ public:
 	bool CleanUp() override;
 
 	std::pair<bool, std::string> Import(const File& file);
-	//Resource Load(const std::string & file);
+
+	/*template<class T>
+	std::shared_ptr<T> Load(const std::string& uid)
+	{
+		return Loader::LoadResource(uid);
+	}*/
 
 private:
 	std::pair<bool, std::string> InternalImport(const File& file);

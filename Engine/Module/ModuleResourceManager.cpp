@@ -5,7 +5,7 @@
 #include "Helper/Config.h"
 #include "Helper/Timer.h"
 #include "ResourceManagement/Importer/MaterialImporter.h"
-#include "ResourceManagement/Importer/MeshImporter.h"
+#include "ResourceManagement/Importer/ModelImporter.h"
 
 bool ModuleResourceManager::Init()
 {

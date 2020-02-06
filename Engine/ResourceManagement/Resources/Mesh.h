@@ -6,6 +6,11 @@
 
 #include <GL/glew.h>
 #include "Resource.h"
+
+namespace Loader
+{
+	//static std::shared_ptr<Mesh> LoadResource(const std::string& uid);
+}
 class Mesh : public Resource
 {
 public:

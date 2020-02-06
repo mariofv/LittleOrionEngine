@@ -106,7 +106,7 @@
     <ClInclude Include="Engine\Filesystem\File.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\Importer.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h" />
-    <ClInclude Include="Engine\ResourceManagement\Importer\MeshImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporter.h" />
     <ClInclude Include="Engine\Module\ModuleDebugDraw.h" />
     <ClInclude Include="Engine\Module\ModuleFileSystem.h" />
     <ClInclude Include="Engine\Module\ModuleDebug.h" />
@@ -157,7 +157,7 @@
     <ClCompile Include="Engine\Filesystem\File.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\Importer.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Importer\MeshImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporter.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\Module\ModuleFileSystem.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebug.cpp" />

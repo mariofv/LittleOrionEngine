@@ -4,7 +4,7 @@
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
-#include "ResourceManagement/Importer/MeshImporter.h"
+#include "ResourceManagement/Importer/ModelImporter.h"
 #include "UI/ComponentsUI.h"
 
 ComponentMesh::ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH)
