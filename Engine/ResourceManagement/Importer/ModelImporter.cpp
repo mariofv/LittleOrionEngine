@@ -73,7 +73,7 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 	{
 		size_t mesh_index = root_node->mMeshes[i];
 		std::vector<std::string> loaded_meshes_materials;
-		App->texture_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, loaded_meshes_materials);
+		material_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, loaded_meshes_materials);
 
 		std::string mesh_file = output_file + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
 
@@ -86,7 +86,7 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 		pPosition *= SCALE_FACTOR;
 
 		node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
-		meshImporter->ImportMesh(scene->mMeshes[mesh_index], loaded_meshes_materials, node_transformation, mesh_file);
+		mesh_importer->ImportMesh(scene->mMeshes[mesh_index], loaded_meshes_materials, node_transformation, mesh_file);
 	}
 
 	for (size_t i = 0; i < root_node->mNumChildren; i++)

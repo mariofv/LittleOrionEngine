@@ -8,9 +8,6 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-#include <assimp/material.h>
-struct aiScene;
-
 class TextureImporter : Importer
 {
 
@@ -47,13 +44,11 @@ private:
 public:
 	TextureImporter();
 	std::pair<bool, std::string> Import(const File & file) const override;
-	void ImportMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* file_path,std::vector<std::string> & loaded_meshes_materials) const;
 	std::string ImportMaterialData(const std::string& material_path, const std::string model_base_path) const;
 	std::shared_ptr<Texture> Load(const std::string& file_path) const;
 	unsigned int LoadCubemap(std::vector<std::string> faces_paths) const;
 
 	void RemoveTextureFromCacheIfNeeded(const std::shared_ptr<Texture> & texture);
-	Texture::TextureType GetTextureTypeFromAssimpType(aiTextureType type) const;
 
 private:
 	ILubyte* LoadImageData(const std::string& file_path, int image_type, int & width, int & height) const;

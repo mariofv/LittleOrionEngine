@@ -7,6 +7,7 @@
 #include "assimp/LogStream.hpp"
 #include "assimp/Logger.hpp"
 #include "ModelImporters/MeshImporter.h"
+#include "ModelImporters/MaterialImporter.h"
 
 
 struct aiNode;
@@ -32,7 +33,8 @@ private:
 	const std::string LIBRARY_MESHES_FOLDER = "Library/Meshes";
 	mutable std::vector<std::shared_ptr<Mesh>> mesh_cache;
 	mutable Timer performance_timer;
-	std::unique_ptr<MeshImporter> meshImporter;
+	std::unique_ptr<MeshImporter> mesh_importer;
+	std::unique_ptr<MaterialImporter> material_importer;
 };
 
 
