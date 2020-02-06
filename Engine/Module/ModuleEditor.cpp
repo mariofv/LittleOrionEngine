@@ -229,7 +229,7 @@ void ModuleEditor::RenderGizmo()
 {
 	float4x4 model_global_matrix_transposed = App->scene->hierarchy.selected_game_object->transform.GetGlobalModelMatrix().Transposed();
 
-	if (!gizmo_released)
+	if (!gizmo_released && !clicked)
 	{
 		//Save current position/rotation/scale of transform depending on operation
 		switch (gizmo_operation)
@@ -269,35 +269,8 @@ void ModuleEditor::RenderGizmo()
 	{
 		//Guizmo have been released so an actionTransform have been done
 		//Create action
-		EditorAction* new_action = nullptr;
-		switch (gizmo_operation)
-		{
-			case ImGuizmo::TRANSLATE:
-				new_action = new EditorActionTranslate(previous_transform,
-					App->scene->hierarchy.selected_game_object->transform.GetTranslation(),
-					App->scene->hierarchy.selected_game_object);
-				break;
-			case ImGuizmo::ROTATE:
-				new_action = new EditorActionRotation(previous_transform,
-					App->scene->hierarchy.selected_game_object->transform.GetRotationRadiants(),
-					App->scene->hierarchy.selected_game_object);
-				break;
-			case ImGuizmo::SCALE:
-				new_action = new EditorActionScale(previous_transform,
-					App->scene->hierarchy.selected_game_object->transform.GetScale(),
-					App->scene->hierarchy.selected_game_object);
-				break;
-			case ImGuizmo::BOUNDS:
-				break;
-			default:
-				break;
-		}
-		if(new_action != nullptr)
-		{
-			undoStack.push(new_action);
-			ClearRedoStack();
-			gizmo_released = false;		
-		}
+		AddUndoAction(gizmo_operation);
+		gizmo_released = false;
 	}
 }
 
@@ -528,5 +501,39 @@ void ModuleEditor::Redo()
 
 		undoStack.push(action);
 		redoStack.pop();
+	}
+}
+
+void ModuleEditor::AddUndoAction(int type)
+{
+	EditorAction* new_action = nullptr;
+
+	switch (type)
+	{
+		case 0:
+			//Translation
+			new_action = new EditorActionTranslate(previous_transform,
+				App->scene->hierarchy.selected_game_object->transform.GetTranslation(),
+				App->scene->hierarchy.selected_game_object);
+			break;
+		case 1:
+			//Rotation
+			new_action = new EditorActionRotation(previous_transform,
+				App->scene->hierarchy.selected_game_object->transform.GetRotationRadiants(),
+				App->scene->hierarchy.selected_game_object);
+			break;
+		case 2:
+			//Scale
+			new_action = new EditorActionScale(previous_transform,
+				App->scene->hierarchy.selected_game_object->transform.GetScale(),
+				App->scene->hierarchy.selected_game_object);
+			break;
+		default:
+			break;
+	}
+	if (new_action != nullptr)
+	{
+		undoStack.push(new_action);
+		ClearRedoStack();
 	}
 }

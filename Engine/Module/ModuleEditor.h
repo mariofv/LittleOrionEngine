@@ -36,6 +36,8 @@ public:
 	void Undo();
 	void Redo();
 
+	void AddUndoAction(int type);
+
 private:
 	void RenderCameraFrustum() const;
 	void RenderOutline() const;
@@ -52,8 +54,11 @@ private:
 
 public:
 	bool scene_window_is_hovered = false;
+	bool clicked = false;
+	int type_of_action = 0;
 	std::stack<EditorAction*> undoStack;
 	std::stack<EditorAction*> redoStack;
+	float3 previous_transform = float3::zero;
 
 private:
 	float scene_window_content_area_width = 0;
@@ -65,7 +70,6 @@ private:
 	bool gizmo_hovered = false;
 	bool gizmo_released = false;
 
-	float3 previous_transform = float3::zero;
 
 	Billboard* camera_billboard = nullptr;
 	Billboard* light_billboard = nullptr;

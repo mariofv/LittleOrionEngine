@@ -10,6 +10,13 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleEditor.h"
+
+#include "Actions/EditorActionTranslate.h"
+#include "Actions/EditorActionRotation.h"
+#include "Actions/EditorActionScale.h"
+#include "Actions/EditorAction.h"
+
 #include "Utils.h"
 
 #include <imgui.h>
@@ -19,9 +26,24 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		//ImGui::IsMouseDown(0);
+		if (App->editor->clicked && !ImGui::IsMouseDragging())
+		{
+			App->editor->AddUndoAction(App->editor->type_of_action);
+			App->editor->clicked = false;
+		}
+
 		if (ImGui::DragFloat3("Translation", transform->translation.ptr(), 0.01f))
 		{
 			transform->OnTransformChange();
+
+			if (!App->editor->clicked && ImGui::IsMouseDragging())
+			{
+				App->editor->clicked = true;
+				App->editor->previous_transform = transform->GetTranslation();
+				App->editor->type_of_action = 0;
+			}
+
 		}
 
 		if (ImGui::DragFloat3("Rotation", transform->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
@@ -29,10 +51,26 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 			transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
 			transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
 			transform->OnTransformChange();
+
+			if (!App->editor->clicked && ImGui::IsMouseDragging())
+			{
+				App->editor->clicked = true;
+				App->editor->previous_transform = transform->GetRotationRadiants();
+				App->editor->type_of_action = 1;
+			}
+
 		}
 		if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
 		{
 			transform->OnTransformChange();
+
+			if (!App->editor->clicked && ImGui::IsMouseDragging())
+			{
+				App->editor->clicked = true;
+				App->editor->previous_transform = transform->GetScale();
+				App->editor->type_of_action = 2;
+			}
+
 		}
 	}
 }
