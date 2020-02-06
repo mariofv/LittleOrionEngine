@@ -1,6 +1,7 @@
 #ifndef _BILLBOARD_H_
 #define _BILLBOARD_H_
 
+#include "Resource/Mesh.h"
 #include "Resource/Texture.h"
 
 #include <string>
@@ -16,9 +17,7 @@ public:
 	void Render(const float3& position) const;
 
 private:
-	GLuint vao = 0;
-	GLuint vbo = 0;
-	GLuint ebo = 0;
+	Mesh* billboard_quad;
 
 	float width = 5.f;
 	float height = 5.f;
