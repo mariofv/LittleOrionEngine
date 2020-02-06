@@ -12,7 +12,8 @@ EditorActionDeleteGameObject::EditorActionDeleteGameObject(GameObject* GO, GameO
 
 EditorActionDeleteGameObject::~EditorActionDeleteGameObject()
 {
-	App->scene->RemoveGameObject(game_object);
+	if(!game_object->IsEnabled())
+		App->scene->RemoveGameObject(game_object);
 }
 
 void EditorActionDeleteGameObject::Undo()
