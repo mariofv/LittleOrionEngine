@@ -11,6 +11,7 @@
 #include "ModuleScene.h"
 #include "Component/ComponentMesh.h"
 
+#include "Actions/EditorActionAddGameObject.h"
 #include "Actions/EditorActionDeleteGameObject.h"
 #include "Actions/EditorActionTranslate.h"
 #include "Actions/EditorActionRotation.h"
@@ -538,6 +539,12 @@ void ModuleEditor::AddUndoAction(int type)
 				App->scene->hierarchy.selected_game_object->transform.GetScale(),
 				App->scene->hierarchy.selected_game_object);
 			break;
+		case 3:
+			//Add GO
+			new_action = new EditorActionAddGameObject(action_game_object
+				,action_game_object->parent,action_game_object->GetHierarchyDepth());
+			break;
+
 		case 4:
 			//Delete GO
 			new_action = new EditorActionDeleteGameObject(action_game_object,

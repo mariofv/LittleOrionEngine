@@ -84,6 +84,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Actions\EditorActionAddGameObject.h" />
     <ClInclude Include="Engine\Actions\EditorActionDeleteGameObject.h" />
     <ClInclude Include="Engine\Actions\EditorActionRotation.h" />
     <ClInclude Include="Engine\Actions\EditorActionScale.h" />
@@ -216,6 +217,7 @@
     <ClInclude Include="Libraries\pcg_random\pcg_basic.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteGameObject.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionRotation.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />

@@ -33,6 +33,8 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 			App->editor->clicked = false;
 		}
 
+		//TODO: look for boolean imgui::dragfloat3
+
 		if (ImGui::DragFloat3("Translation", transform->translation.ptr(), 0.01f))
 		{
 			transform->OnTransformChange();
