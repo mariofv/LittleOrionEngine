@@ -51,6 +51,7 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path) const
 	{
 		LoadNode(model_root_node, file);
 	}
+
 	return model_root_node;
 }
 
@@ -107,6 +108,11 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 		std::string texture_type = texture.substr(0, separator);
 		componentMaterial->SetMaterialTexture(std::stoi(texture_type), App->material_importer->Load(texture_path));
 	}
+
+	//UndoRedo
+	App->editor->action_game_object = model_game_object;
+	App->editor->AddUndoAction(3);
+
 	return model_game_object;
 }
 

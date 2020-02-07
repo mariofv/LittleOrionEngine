@@ -28,8 +28,8 @@ void EditorActionAddGameObject::Undo()
 void EditorActionAddGameObject::Redo()
 {
 	game_object->SetEnabled(true);
-	parent->children.push_back(game_object);
 	game_object->parent = parent;
+	parent->children.push_back(game_object);
 	game_object->SetHierarchyDepth(hierarchy_depth);
 	App->scene->hierarchy.selected_game_object = game_object;
 

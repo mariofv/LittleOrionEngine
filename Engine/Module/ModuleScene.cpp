@@ -48,10 +48,6 @@ GameObject* ModuleScene::CreateGameObject()
 	GameObject * created_game_object_ptr = created_game_object.get();
 	game_objects_ownership.emplace_back(std::move(created_game_object));
 
-	//UndoRedo
-	App->editor->action_game_object = created_game_object_ptr;
-	App->editor->AddUndoAction(3);
-
 	return created_game_object_ptr;
 }
 
