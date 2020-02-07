@@ -34,6 +34,7 @@ public:
 	void ShowGizmoControls();
 
 	void ClearRedoStack();
+	void ClearUndoStack();
 	void Undo();
 	void Redo();
 

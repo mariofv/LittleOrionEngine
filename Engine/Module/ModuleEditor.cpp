@@ -483,6 +483,16 @@ void ModuleEditor::ClearRedoStack()
 	}
 }
 
+void ModuleEditor::ClearUndoStack()
+{
+	while (!undoStack.empty())
+	{
+		EditorAction* action = undoStack.back();
+		delete action;
+		undoStack.pop_back();
+	}
+}
+
 void ModuleEditor::Undo()
 {
 	if(!undoStack.empty())
