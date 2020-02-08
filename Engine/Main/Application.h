@@ -64,7 +64,6 @@ public:
 	ModuleResourceManager* resources = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
-	std::unique_ptr<ModelImporter> model_importer = nullptr;
 
 private:
 

@@ -11,7 +11,7 @@ bool ModuleResourceManager::Init()
 {
 	APP_LOG_SECTION("************ Module Resource Manager Init ************");
 	texture_importer = std::make_unique<TextureImporter>();
-
+	model_importer = std::make_unique<ModelImporter>();
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 	thread_timer->Start();
 	return true;
@@ -83,7 +83,7 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 	std::pair<bool, std::string> result = std::pair<bool, std::string>(false,"");
 	if (file.file_type == FileType::MODEL)
 	{
-		result = App->model_importer->Import(file);
+		result = model_importer->Import(file);
 	}
 	if (file.file_type == FileType::TEXTURE)
 	{
@@ -97,4 +97,9 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 std::shared_ptr<Texture>  ModuleResourceManager::LoadTexture(const std::string& file_path) const
 {
 	return texture_importer->Load(file_path);
+}
+
+std::shared_ptr<Mesh>  ModuleResourceManager::LoadModel(const std::string& file_path) const
+{
+	return model_importer->Load(file_path);
 }

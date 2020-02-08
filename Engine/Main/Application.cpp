@@ -43,7 +43,6 @@ Application::Application()
 	modules.emplace_back(scene = new ModuleScene());
 		
 	engine_log = std::make_unique<EngineLog>();
-	model_importer = std::make_unique<ModelImporter>();
 }
 
 Application::~Application()

@@ -9,9 +9,11 @@
 
 class Texture;
 class File;
+class Mesh;
 class Importer;
 class Timer;
 class TextureImporter;
+class ModelImporter;
 class ModuleResourceManager : public Module
 {
 public:
@@ -25,6 +27,7 @@ public:
 
 	std::pair<bool, std::string> Import(const File& file);
 	std::shared_ptr<Texture> LoadTexture(const std::string& file_path) const;
+	std::shared_ptr<Mesh> LoadModel(const std::string& file_path) const;
 	/*template<class T>
 	std::shared_ptr<T> Load(const std::string& uid)
 	{
@@ -47,6 +50,7 @@ public:
 	} thread_comunication;
 
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
+	std::unique_ptr<ModelImporter> model_importer = nullptr;
 private:
 	const size_t importer_interval_millis = 30000;
 	float last_imported_time = 0;
@@ -55,6 +59,7 @@ private:
 	//Importers
 
 	std::unique_ptr<Importer> default_importer = std::make_unique<Importer>();
+
 };
 
 #endif // _MODULERESOURCEMANAGER_H_

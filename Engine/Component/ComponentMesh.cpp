@@ -4,6 +4,7 @@
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Importer/ModelImporter.h"
 #include "UI/ComponentsUI.h"
 
@@ -29,7 +30,7 @@ void ComponentMesh::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
 
 ComponentMesh::~ComponentMesh()
 {
-	App->model_importer->RemoveMeshFromCacheIfNeeded(mesh_to_render);
+	App->resources->model_importer->RemoveMeshFromCacheIfNeeded(mesh_to_render);
 }
 
 void ComponentMesh::Delete() 
@@ -54,14 +55,14 @@ void ComponentMesh::Load(const Config& config)
 	std::string mesh_path;
 	config.GetString("MeshPath", mesh_path, "");
 	config.GetString("ShaderProgram", shader_program, "Default");
-	std::shared_ptr<Mesh> mesh = App->model_importer->Load(mesh_path.c_str());
+	std::shared_ptr<Mesh> mesh = App->resources->LoadModel(mesh_path.c_str());
 	if (mesh != nullptr)
 	{
 		SetMesh(mesh);
 	}
 	else 
 	{
-		SetMesh(App->model_importer->Load(PRIMITIVE_CUBE_PATH));
+		SetMesh(App->resources->LoadModel(PRIMITIVE_CUBE_PATH));
 	}
 
 }
