@@ -7,9 +7,11 @@
 #include <thread>
 #include <atomic>
 
+class Texture;
 class File;
 class Importer;
 class Timer;
+class TextureImporter;
 class ModuleResourceManager : public Module
 {
 public:
@@ -22,7 +24,7 @@ public:
 	bool CleanUp() override;
 
 	std::pair<bool, std::string> Import(const File& file);
-
+	std::shared_ptr<Texture> LoadTexture(const std::string& file_path) const;
 	/*template<class T>
 	std::shared_ptr<T> Load(const std::string& uid)
 	{
@@ -44,7 +46,7 @@ public:
 		std::atomic_uint total_items = 0;
 	} thread_comunication;
 
-
+	std::unique_ptr<TextureImporter> texture_importer = nullptr;
 private:
 	const size_t importer_interval_millis = 30000;
 	float last_imported_time = 0;

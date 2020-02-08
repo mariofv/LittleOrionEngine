@@ -10,6 +10,7 @@
 bool ModuleResourceManager::Init()
 {
 	APP_LOG_SECTION("************ Module Resource Manager Init ************");
+	texture_importer = std::make_unique<TextureImporter>();
 
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 	thread_timer->Start();
@@ -86,10 +87,14 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 	}
 	if (file.file_type == FileType::TEXTURE)
 	{
-		result = App->texture_importer->Import(file);
+		result = texture_importer->Import(file);
 	}
 	return result;
 }
 
 
 
+std::shared_ptr<Texture>  ModuleResourceManager::LoadTexture(const std::string& file_path) const
+{
+	return texture_importer->Load(file_path);
+}

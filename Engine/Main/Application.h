@@ -29,7 +29,7 @@ class ModuleResourceManager;
 class EngineLog;
 
 
-class TextureImporter;
+
 class ModelImporter;
 
 class TimerUs;
@@ -65,7 +65,6 @@ public:
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
 	std::unique_ptr<ModelImporter> model_importer = nullptr;
-	std::unique_ptr<TextureImporter> texture_importer = nullptr;
 
 private:
 
