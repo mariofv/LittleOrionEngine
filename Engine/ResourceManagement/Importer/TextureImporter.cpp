@@ -94,16 +94,6 @@ std::shared_ptr<Texture> TextureImporter::Load(const std::string& file_path) con
 		return nullptr;
 	}
 	BROFILER_CATEGORY("Load Texture", Profiler::Color::BurlyWood);
-	//Check if the texture is already loaded
-	auto it = std::find_if(texture_cache.begin(), texture_cache.end(), [file_path](const std::shared_ptr<Texture> & texture)
-	{
-		return texture->exported_file == file_path;
-	});
-	if (it != texture_cache.end())
-	{
-		APP_LOG_INIT("Model %s exists in cache.", file_path.c_str());
-		return *it;
-	}
 	size_t size;
 	DDS_HEADER ddsHeader;
 	char * data = LoadCompressedDDS(file_path.c_str(), ddsHeader,size);
@@ -111,7 +101,6 @@ std::shared_ptr<Texture> TextureImporter::Load(const std::string& file_path) con
 	{
 		size_t dds_header_offset = sizeof(DDS_HEADER) + magic_number;
 		std::shared_ptr<Texture> loaded_texture = std::make_shared<Texture>(data + dds_header_offset, size - dds_header_offset, ddsHeader.dwWidth, ddsHeader.dwHeight, file_path);
-		texture_cache.push_back(loaded_texture);
 		free(data);
 		return loaded_texture;
 	}
@@ -175,14 +164,7 @@ unsigned int TextureImporter::LoadCubemap(std::vector<std::string> faces_paths) 
 }
 
 //Remove the material from the cache if the only owner is the cache itself
-void TextureImporter::RemoveTextureFromCacheIfNeeded(const std::shared_ptr<Texture> & texture) 
-{
-	auto it = std::find(texture_cache.begin(), texture_cache.end(), texture);
-	if (it != texture_cache.end() && (*it).use_count() <= 2)
-	{
-		texture_cache.erase(it);
-	}
-}
+
 
 std::string TextureImporter::GetTextureFileName(std::string texture_file_path) const
 {

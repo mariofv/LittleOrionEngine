@@ -10,6 +10,7 @@
 class Texture;
 class File;
 class Mesh;
+class Resource;
 class Importer;
 class Timer;
 class TextureImporter;
@@ -26,6 +27,7 @@ public:
 	bool CleanUp() override;
 
 	std::pair<bool, std::string> Import(const File& file);
+	void RemoveTextureFromCacheIfNeeded(const std::shared_ptr<Texture> & texture);
 	std::shared_ptr<Texture> LoadTexture(const std::string& file_path) const;
 	std::shared_ptr<Mesh> LoadModel(const std::string& file_path) const;
 	/*template<class T>
@@ -59,7 +61,7 @@ private:
 	//Importers
 
 	std::unique_ptr<Importer> default_importer = std::make_unique<Importer>();
-
+	mutable std::vector<std::shared_ptr<Resource>> resource_cache;
 };
 
 #endif // _MODULERESOURCEMANAGER_H_

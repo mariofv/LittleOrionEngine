@@ -92,14 +92,36 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 	return result;
 }
 
-
-
-std::shared_ptr<Texture>  ModuleResourceManager::LoadTexture(const std::string& file_path) const
+std::shared_ptr<Texture> ModuleResourceManager::LoadTexture(const std::string& file_path) const
 {
-	return texture_importer->Load(file_path);
+	//Check if the texture is already loaded
+	auto it = std::find_if(resource_cache.begin(), resource_cache.end(), [file_path](const std::shared_ptr<Resource> & texture)
+	{
+		return texture->exported_file == file_path;
+	});
+	if (it != resource_cache.end())
+	{
+		APP_LOG_INIT("Model %s exists in cache.", file_path.c_str());
+		return std::static_pointer_cast<Texture>(*it);
+	}
+	std::shared_ptr<Texture> texture = texture_importer->Load(file_path);
+	if (texture != nullptr)
+	{
+		resource_cache.push_back(texture);
+	}
+	return texture;
 }
 
 std::shared_ptr<Mesh>  ModuleResourceManager::LoadModel(const std::string& file_path) const
 {
 	return model_importer->Load(file_path);
+}
+
+void ModuleResourceManager::RemoveTextureFromCacheIfNeeded(const std::shared_ptr<Texture> & texture)
+{
+	auto it = std::find(resource_cache.begin(), resource_cache.end(), texture);
+	if (it != resource_cache.end() && (*it).use_count() <= 2)
+	{
+		resource_cache.erase(it);
+	}
 }

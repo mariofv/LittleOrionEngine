@@ -18,7 +18,7 @@ ComponentMaterial::~ComponentMaterial()
 {
 	for (auto & texture : textures)
 	{
-		App->resources->texture_importer->RemoveTextureFromCacheIfNeeded(texture);
+		App->resources->RemoveTextureFromCacheIfNeeded(texture);
 	}
 }
 
@@ -169,7 +169,7 @@ void ComponentMaterial::BindTexture(Texture::TextureType id) const
 }
 void ComponentMaterial::RemoveMaterialTexture(size_t type)
 {
-	App->resources->texture_importer->RemoveTextureFromCacheIfNeeded(textures[type]);
+	App->resources->RemoveTextureFromCacheIfNeeded(textures[type]);
 	textures[type] = nullptr;
 }
 void ComponentMaterial::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture)

@@ -48,8 +48,6 @@ public:
 	std::shared_ptr<Texture> Load(const std::string& file_path) const;
 	unsigned int LoadCubemap(std::vector<std::string> faces_paths) const;
 
-	void RemoveTextureFromCacheIfNeeded(const std::shared_ptr<Texture> & texture);
-
 private:
 	ILubyte* LoadImageData(const std::string& file_path, int image_type, int & width, int & height) const;
 	char * LoadCompressedDDS(const std::string& file_path, DDS_HEADER & dds_header, size_t & dds_content_size) const;
@@ -57,7 +55,6 @@ private:
 
 private:
 	const std::string LIBRARY_TEXTURES_FOLDER = "Library/Materials";
-	mutable std::vector<std::shared_ptr<Texture>> texture_cache;
 
 };
 #endif // !_TEXTUREIMPORTER_H_
