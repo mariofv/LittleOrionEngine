@@ -44,7 +44,10 @@ void Hierarchy::ShowHierarchyWindow()
 		{
 			if (ImGui::Selectable("Create GameObject"))
 			{
-				App->scene->CreateGameObject();
+				GameObject* created_go = App->scene->CreateGameObject();
+				//UndoRedo
+				App->editor->action_game_object = created_go;
+				App->editor->AddUndoAction(3);
 			}
 
 			ImGui::Separator();
@@ -123,9 +126,13 @@ void Hierarchy::DropTarget(GameObject *target_game_object) const
 			if (incoming_file->file_type == FileType::MODEL)
 			{
 				GameObject* new_model = App->model_loader->LoadModel(incoming_file->file_path.c_str());
+
 				if (target_game_object != nullptr)
 				{
 					target_game_object->AddChild(new_model);
+					//UndoRedo
+					App->editor->action_game_object = new_model;
+					App->editor->AddUndoAction(3);
 				}
 			}
 		}
@@ -145,11 +152,13 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 
 		if (ImGui::Selectable("Create GameObject"))
 		{
-			App->scene->CreateChildGameObject(game_object);
+			GameObject* created_go = App->scene->CreateChildGameObject(game_object);
+			//UndoRedo
+			App->editor->action_game_object = created_go;
+			App->editor->AddUndoAction(3);
 		}
 		if (ImGui::Selectable("Delete GameObject"))
 		{
-			//App->scene->RemoveGameObject(game_object);
 			//Create action delete for Undo/Redo stack
 			App->editor->action_game_object = game_object;
 			App->editor->AddUndoAction(4);

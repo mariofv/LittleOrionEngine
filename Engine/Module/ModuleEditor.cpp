@@ -56,6 +56,10 @@ bool ModuleEditor::CleanUp()
 	delete light_billboard;
 	delete camera_billboard;
 
+	//Delete all actions (go are deleted here)
+	ClearRedoStack();
+	ClearUndoStack();
+
 	return true;
 }
 
