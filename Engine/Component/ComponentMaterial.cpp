@@ -2,7 +2,6 @@
 #include "Main/Application.h"
 #include <Module/ModuleTexture.h>
 #include <Module/ModuleResourceManager.h>
-#include <ResourceManagement/Importer/TextureImporter.h>
 
 ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL)
 {
@@ -18,7 +17,7 @@ ComponentMaterial::~ComponentMaterial()
 {
 	for (auto & texture : textures)
 	{
-		App->resources->RemoveTextureFromCacheIfNeeded(texture);
+		App->resources->RemoveResourceFromCacheIfNeeded(texture);
 	}
 }
 
@@ -169,7 +168,7 @@ void ComponentMaterial::BindTexture(Texture::TextureType id) const
 }
 void ComponentMaterial::RemoveMaterialTexture(size_t type)
 {
-	App->resources->RemoveTextureFromCacheIfNeeded(textures[type]);
+	App->resources->RemoveResourceFromCacheIfNeeded(textures[type]);
 	textures[type] = nullptr;
 }
 void ComponentMaterial::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture)

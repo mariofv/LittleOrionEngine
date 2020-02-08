@@ -22,7 +22,6 @@ public:
 	std::pair<bool, std::string> Import(const File & file) const override;
 	std::shared_ptr<Mesh> Load(const std::string& file_path) const;
 
-	void RemoveMeshFromCacheIfNeeded(const std::shared_ptr<Mesh> & mesh);
 private:
 		void ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file) const;
 
@@ -31,7 +30,6 @@ public:
 
 private:
 	const std::string LIBRARY_MESHES_FOLDER = "Library/Meshes";
-	mutable std::vector<std::shared_ptr<Mesh>> mesh_cache;
 	mutable Timer performance_timer;
 	std::unique_ptr<MeshImporter> mesh_importer;
 	std::unique_ptr<MaterialImporter> material_importer;

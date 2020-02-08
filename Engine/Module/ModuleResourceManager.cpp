@@ -4,8 +4,7 @@
 #include "ModuleFileSystem.h"
 #include "Helper/Config.h"
 #include "Helper/Timer.h"
-#include "ResourceManagement/Importer/TextureImporter.h"
-#include "ResourceManagement/Importer/ModelImporter.h"
+#include "ResourceManagement/Resources/Mesh.h"
 
 bool ModuleResourceManager::Init()
 {
@@ -114,12 +113,31 @@ std::shared_ptr<Texture> ModuleResourceManager::LoadTexture(const std::string& f
 
 std::shared_ptr<Mesh>  ModuleResourceManager::LoadModel(const std::string& file_path) const
 {
-	return model_importer->Load(file_path);
+	if (!App->filesystem->Exists(file_path.c_str()))
+	{
+		return nullptr;
+	}
+	//Check if the mesh is already loaded
+	auto it = std::find_if(resource_cache.begin(), resource_cache.end(), [file_path](const std::shared_ptr<Resource> mesh)
+	{
+		return mesh->exported_file == file_path;
+	});
+	if (it != resource_cache.end())
+	{
+		APP_LOG_INFO("Model %s exists in cache.", file_path.c_str());
+		return std::static_pointer_cast<Mesh>(*it);
+	}
+	std::shared_ptr<Mesh> model = model_importer->Load(file_path);
+	if (model != nullptr)
+	{
+		resource_cache.push_back(model);
+	}
+	return model;
 }
 
-void ModuleResourceManager::RemoveTextureFromCacheIfNeeded(const std::shared_ptr<Texture> & texture)
+void ModuleResourceManager::RemoveResourceFromCacheIfNeeded(const std::shared_ptr<Resource> & resource)
 {
-	auto it = std::find(resource_cache.begin(), resource_cache.end(), texture);
+	auto it = std::find(resource_cache.begin(), resource_cache.end(), resource);
 	if (it != resource_cache.end() && (*it).use_count() <= 2)
 	{
 		resource_cache.erase(it);

@@ -5,7 +5,6 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
-#include "ResourceManagement/Importer/ModelImporter.h"
 #include "UI/ComponentsUI.h"
 
 ComponentMesh::ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH)
@@ -30,7 +29,7 @@ void ComponentMesh::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
 
 ComponentMesh::~ComponentMesh()
 {
-	App->resources->model_importer->RemoveMeshFromCacheIfNeeded(mesh_to_render);
+	App->resources->RemoveResourceFromCacheIfNeeded(mesh_to_render);
 }
 
 void ComponentMesh::Delete() 

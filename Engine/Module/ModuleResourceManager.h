@@ -13,8 +13,8 @@ class Mesh;
 class Resource;
 class Importer;
 class Timer;
-class TextureImporter;
-class ModelImporter;
+#include "ResourceManagement/Importer/TextureImporter.h"
+#include "ResourceManagement/Importer/ModelImporter.h"
 class ModuleResourceManager : public Module
 {
 public:
@@ -27,7 +27,7 @@ public:
 	bool CleanUp() override;
 
 	std::pair<bool, std::string> Import(const File& file);
-	void RemoveTextureFromCacheIfNeeded(const std::shared_ptr<Texture> & texture);
+	void RemoveResourceFromCacheIfNeeded(const std::shared_ptr<Resource> & resource);
 	std::shared_ptr<Texture> LoadTexture(const std::string& file_path) const;
 	std::shared_ptr<Mesh> LoadModel(const std::string& file_path) const;
 	/*template<class T>
@@ -52,7 +52,6 @@ public:
 	} thread_comunication;
 
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
-	std::unique_ptr<ModelImporter> model_importer = nullptr;
 private:
 	const size_t importer_interval_millis = 30000;
 	float last_imported_time = 0;
@@ -61,6 +60,7 @@ private:
 	//Importers
 
 	std::unique_ptr<Importer> default_importer = std::make_unique<Importer>();
+	std::unique_ptr<ModelImporter> model_importer = nullptr;
 	mutable std::vector<std::shared_ptr<Resource>> resource_cache;
 };
 

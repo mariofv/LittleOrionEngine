@@ -5,8 +5,8 @@
 #include "ResourceManagement/Resources/Texture.h"
 #include "Main/GameObject.h"
 #include "Component/ComponentMaterial.h"
-#include "ResourceManagement/Importer/TextureImporter.h"
-
+#include <Filesystem/File.h>
+#include <ResourceManagement/Importer/TextureImporter.h>
 #include <SDL/SDL.h>
 #include <algorithm>
 #include <memory>
@@ -52,7 +52,7 @@ void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remov
 
 std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 {
-	std::pair<bool, std::string> imported = App->resources->texture_importer->Import(File(texture_path));
+	std::pair<bool, std::string> imported = App->resources->Import(File(texture_path));
 	if (!imported.first)
 	{
 		return nullptr;
@@ -66,7 +66,7 @@ GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) 
 	std::vector<std::string> faces_paths_dds;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
-		std::string ol_texture = App->resources->texture_importer->Import(File(faces_paths[i])).second;
+		std::string ol_texture = App->resources->Import(File(faces_paths[i])).second;
 		faces_paths_dds.push_back(ol_texture);
 	}
 	return static_cast<GLuint>(App->resources->texture_importer->LoadCubemap(faces_paths_dds));

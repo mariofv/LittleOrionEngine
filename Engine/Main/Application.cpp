@@ -15,8 +15,6 @@
 #include "Module/ModuleUI.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
-#include "ResourceManagement/Importer/TextureImporter.h"
-#include "ResourceManagement/Importer/ModelImporter.h"
 #include "UI/EngineLog.h"
 #include "Brofiler/Brofiler.h"
 

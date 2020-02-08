@@ -10,8 +10,6 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
-#include "ResourceManagement/Importer/ModelImporter.h"
-#include "ResourceManagement/Importer/TextureImporter.h"
 
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>

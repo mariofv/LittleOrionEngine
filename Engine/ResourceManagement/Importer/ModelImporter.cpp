@@ -99,20 +99,7 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
  std::shared_ptr<Mesh> ModelImporter::Load(const std::string& file_path) const
  {
 	 BROFILER_CATEGORY("Load Mesh", Profiler::Color::Brown);
-	 if (!App->filesystem->Exists(file_path.c_str()))
-	 {
-		 return nullptr;
-	 }
-	//Check if the mesh is already loaded
-	auto it = std::find_if(mesh_cache.begin(), mesh_cache.end(), [file_path](const std::shared_ptr<Mesh> mesh) 
-	{
-		return mesh->exported_file == file_path;
-	});
-	if (it != mesh_cache.end())
-	{
-		APP_LOG_INFO("Model %s exists in cache.", file_path.c_str());
-		return *it;
-	}
+
 
 	APP_LOG_INFO("Loading model %s.", file_path.c_str());
 	performance_timer.Start();
@@ -163,7 +150,6 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 	}
 
 	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(std::move(vertices), std::move(indices), std::move(meshes_textures_path),file_path);
-	mesh_cache.push_back(new_mesh);
 	performance_timer.Stop();
 	float time = performance_timer.Read();
 	free(data);
@@ -172,12 +158,3 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 	return new_mesh;
 }
 
- //Remove the mesh from the cache if the only owner is the cache itself
- void ModelImporter::RemoveMeshFromCacheIfNeeded(const std::shared_ptr<Mesh> & mesh)
- {
-	 auto it = std::find(mesh_cache.begin(), mesh_cache.end(), mesh);
-	 if (it != mesh_cache.end() && (*it).use_count() <= 2)
-	 {
-		 mesh_cache.erase(it);
-	 }
- }
