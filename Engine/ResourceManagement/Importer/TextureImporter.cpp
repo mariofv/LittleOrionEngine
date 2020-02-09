@@ -87,25 +87,7 @@ std::string TextureImporter::ImportMaterialData(const std::string & material_pat
 	}
 	return "";
 }
-std::shared_ptr<Texture> TextureImporter::Load(const std::string& file_path) const{
 
-	if (!App->filesystem->Exists(file_path.c_str()))
-	{
-		return nullptr;
-	}
-	BROFILER_CATEGORY("Load Texture", Profiler::Color::BurlyWood);
-	size_t size;
-	DDS_HEADER ddsHeader;
-	char * data = LoadCompressedDDS(file_path.c_str(), ddsHeader,size);
-	if (data)
-	{
-		size_t dds_header_offset = sizeof(DDS_HEADER) + magic_number;
-		std::shared_ptr<Texture> loaded_texture = std::make_shared<Texture>(data + dds_header_offset, size - dds_header_offset, ddsHeader.dwWidth, ddsHeader.dwHeight, file_path);
-		free(data);
-		return loaded_texture;
-	}
-	return nullptr;
-}
 
 ILubyte * TextureImporter::LoadImageData(const std::string& file_path, int image_type ,int & width, int & height ) const
 {
@@ -134,34 +116,7 @@ ILubyte * TextureImporter::LoadImageData(const std::string& file_path, int image
 	return data;
 }
 
-unsigned int TextureImporter::LoadCubemap(std::vector<std::string> faces_paths) const
-{
-	unsigned int texture_id;
 
-	glGenTextures(1, &texture_id);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-	ILuint image;
-
-	for (unsigned int i = 0; i < faces_paths.size(); i++)
-	{
-		size_t size;
-		DDS_HEADER ddsHeader;
-		char * data = LoadCompressedDDS(faces_paths[i].c_str(), ddsHeader, size);
-		size_t dds_header_offset = sizeof(DDS_HEADER) + magic_number;
-		if (data)
-		{
-			glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, ddsHeader.dwWidth, ddsHeader.dwHeight, 0, size - dds_header_offset, data + dds_header_offset);
-			free(data);
-		}
-	}
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-	return texture_id;
-}
 
 //Remove the material from the cache if the only owner is the cache itself
 
@@ -182,12 +137,3 @@ std::string TextureImporter::GetTextureFileName(std::string texture_file_path) c
 	}
 }
 
-char * TextureImporter::LoadCompressedDDS(const std::string& file_path, DDS_HEADER & dds_header, size_t & dds_content_size) const
-{
-	char * data = App->filesystem->Load(file_path.c_str(), dds_content_size);
-	if (data) 
-	{
-		memcpy(&dds_header, data + magic_number, sizeof(DDS_HEADER));
-	}
-	return data;
-}

@@ -1,44 +1,57 @@
+#include "TextureLoader.h"
+#include <Main/Application.h>
+#include <Module/ModuleFileSystem.h>
+#include <GL/glew.h>
+#include "Brofiler/Brofiler.h"
 #include <ResourceManagement/Resources/Texture.h>
 
 
-namespace DDS
+char * TextureLoader::LoadCompressedDDS(const std::string& file_path, DDS::DDS_HEADER & dds_header, size_t & dds_content_size)
 {
-	struct DDS_PIXELFORMAT {
-		uint32_t dwSize;
-		uint32_t dwFlags;
-		uint32_t dwFourCC;
-		uint32_t dwRGBBitCount;
-		uint32_t dwRBitMask;
-		uint32_t dwGBitMask;
-		uint32_t dwBBitMask;
-		uint32_t dwABitMask;
-	};
-	typedef struct {
-		uint32_t           dwSize;
-		uint32_t           dwFlags;
-		uint32_t           dwHeight;
-		uint32_t           dwWidth;
-		uint32_t           dwPitchOrLinearSize;
-		uint32_t           dwDepth;
-		uint32_t           dwMipMapCount;
-		uint32_t           dwReserved1[11];
-		DDS_PIXELFORMAT ddspf;
-		uint32_t           dwCaps;
-		uint32_t           dwCaps2;
-		uint32_t           dwCaps3;
-		uint32_t           dwCaps4;
-		uint32_t           dwReserved2;
-	} DDS_HEADER;
-	const uint32_t magic_number = 4;
+	char * data = App->filesystem->Load(file_path.c_str(), dds_content_size);
+	if (data)
+	{
+		memcpy(&dds_header, data + DDS::magic_number, sizeof(DDS::DDS_HEADER));
+	}
+	return data;
 }
 
-char * LoadCompressedDDS(const std::string& file_path, DDS::DDS_HEADER & dds_header, size_t & dds_content_size)
+unsigned int TextureLoader::LoadCubemap(std::vector<std::string> faces_paths)
 {
+	unsigned int texture_id;
 
+	glGenTextures(1, &texture_id);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+
+	for (unsigned int i = 0; i < faces_paths.size(); i++)
+	{
+		size_t size;
+		DDS::DDS_HEADER ddsHeader;
+		char * data = LoadCompressedDDS(faces_paths[i].c_str(), ddsHeader, size);
+		size_t dds_header_offset = sizeof(DDS::DDS_HEADER) + DDS::magic_number;
+		if (data)
+		{
+			glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, ddsHeader.dwWidth, ddsHeader.dwHeight, 0, size - dds_header_offset, data + dds_header_offset);
+			free(data);
+		}
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	return texture_id;
 }
 
-std::shared_ptr<Texture> Loader::Load(const std::string& file_path) {
+std::shared_ptr<Texture> TextureLoader::Load(const std::string& file_path)
+{
 
+	if (!App->filesystem->Exists(file_path.c_str()))
+	{
+		return nullptr;
+	}
+	BROFILER_CATEGORY("Load Texture", Profiler::Color::BurlyWood);
 	size_t size;
 	DDS::DDS_HEADER ddsHeader;
 	char * data = LoadCompressedDDS(file_path.c_str(), ddsHeader, size);
@@ -51,4 +64,3 @@ std::shared_ptr<Texture> Loader::Load(const std::string& file_path) {
 	}
 	return nullptr;
 }
-

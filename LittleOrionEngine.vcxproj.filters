@@ -275,6 +275,7 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\MeshLoader.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -423,6 +424,7 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

@@ -138,6 +138,7 @@
     <ClInclude Include="Engine\UI\Hierarchy.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Skybox.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Helper\Config.cpp" />
@@ -234,6 +235,7 @@
     <ClCompile Include="Engine\Module\ModuleWindow.cpp" />
     <ClCompile Include="Engine\Module\ModuleScene.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\MeshLoader.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

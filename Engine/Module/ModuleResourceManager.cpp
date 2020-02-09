@@ -108,7 +108,7 @@ std::shared_ptr<Texture> ModuleResourceManager::LoadTexture(const std::string& f
 	{
 		return std::static_pointer_cast<Texture>(resource);
 	}
-	std::shared_ptr<Texture> texture = texture_importer->Load(file_path);
+	std::shared_ptr<Texture> texture =Load<Texture>(file_path);
 	if (texture != nullptr)
 	{
 		resource_cache.push_back(texture);

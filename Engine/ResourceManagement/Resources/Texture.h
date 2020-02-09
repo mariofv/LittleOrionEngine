@@ -5,6 +5,7 @@
 #include <GL/glew.h>
 #include <string>
 #include "Resource.h"
+#include <ResourceManagement/Loaders/TextureLoader.h>
 class Texture : public Resource
 {
 public:
@@ -72,7 +73,7 @@ namespace Loader
 {
 	template<>
 	static std::shared_ptr<Texture> Load(const std::string& uid) {
-		return nullptr;
+		return TextureLoader::Load(uid);
 	}
 }
 

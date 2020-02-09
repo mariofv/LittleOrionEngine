@@ -7,6 +7,7 @@
 #include "Component/ComponentMaterial.h"
 #include <Filesystem/File.h>
 #include <ResourceManagement/Importer/TextureImporter.h>
+#include <ResourceManagement/Loaders/TextureLoader.h>
 #include <SDL/SDL.h>
 #include <algorithm>
 #include <memory>
@@ -69,7 +70,7 @@ GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) 
 		std::string ol_texture = App->resources->Import(File(faces_paths[i])).second;
 		faces_paths_dds.push_back(ol_texture);
 	}
-	return static_cast<GLuint>(App->resources->texture_importer->LoadCubemap(faces_paths_dds));
+	return static_cast<GLuint>(TextureLoader::LoadCubemap(faces_paths_dds));
 }
 
 GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const{
