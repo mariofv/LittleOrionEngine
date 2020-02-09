@@ -107,6 +107,9 @@ GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 
 void ModuleScene::DeleteCurrentScene()
 {
+	//UndoRedo
+	App->editor->ClearUndoRedoStacks();
+
 	RemoveGameObject(root);
 	hierarchy.selected_game_object = nullptr;
 }

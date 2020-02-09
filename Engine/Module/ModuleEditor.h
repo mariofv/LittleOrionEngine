@@ -39,6 +39,8 @@ public:
 	void Redo();
 
 	void AddUndoAction(int type);
+	void DeleteComponentUndo(Component* comp);
+	void ClearUndoRedoStacks();
 
 private:
 	void RenderCameraFrustum() const;
@@ -62,6 +64,7 @@ public:
 	std::vector<EditorAction*> redoStack;
 	float3 previous_transform = float3::zero;
 	GameObject* action_game_object;
+	Component* action_component;
 
 private:
 	float scene_window_content_area_width = 0;

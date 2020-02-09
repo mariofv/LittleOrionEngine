@@ -11,6 +11,7 @@
 #include "ModuleScene.h"
 #include "Component/ComponentMesh.h"
 
+#include "Actions/EditorActionDeleteComponent.h"
 #include "Actions/EditorActionAddGameObject.h"
 #include "Actions/EditorActionDeleteGameObject.h"
 #include "Actions/EditorActionTranslate.h"
@@ -57,8 +58,7 @@ bool ModuleEditor::CleanUp()
 	delete camera_billboard;
 
 	//Delete all actions (go are deleted here)
-	ClearRedoStack();
-	ClearUndoStack();
+	ClearUndoRedoStacks();
 
 	return true;
 }
@@ -569,6 +569,11 @@ void ModuleEditor::AddUndoAction(int type)
 				action_game_object->parent, action_game_object->GetHierarchyDepth());
 			break;
 
+		case 6:
+			//Delete Component
+			new_action = new EditorActionDeleteComponent(action_component);
+			break;
+
 		default:
 			break;
 	}
@@ -577,4 +582,20 @@ void ModuleEditor::AddUndoAction(int type)
 		undoStack.push_back(new_action);
 		ClearRedoStack();
 	}
+}
+
+void ModuleEditor::DeleteComponentUndo(Component * comp)
+{
+	//UndoRedo
+	App->editor->action_component = comp;
+	App->editor->AddUndoAction(6);
+	comp->Disable();
+	auto it = std::find(comp->owner->components.begin(), comp->owner->components.end(), comp);
+	comp->owner->components.erase(it);
+}
+
+void ModuleEditor::ClearUndoRedoStacks()
+{
+	ClearRedoStack();
+	ClearUndoStack();
 }

@@ -8,6 +8,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleLight.h"
+#include "Module/ModuleEditor.h"
 #include "Texture.h"
 
 #include "Component/ComponentCamera.h"
@@ -53,6 +54,7 @@ void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 	for (int i = (components.size() - 1); i >= 0; --i)
 	{
 		components[i]->Delete();
+		components[i] = nullptr;
 	}
 	for (int i = (children.size() - 1); i >= 0; --i)
 	{
