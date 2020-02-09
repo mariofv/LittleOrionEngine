@@ -6,6 +6,7 @@
 #include <memory>
 #include <thread>
 #include <atomic>
+#include <mutex>
 
 class Texture;
 class File;
@@ -45,6 +46,7 @@ private:
 public:
 	struct ThreadComunication
 	{
+		std::mutex thread_mutex;
 		std::atomic_bool stop_thread = false;
 		std::atomic_bool finished_loading = false;
 		std::atomic_uint thread_importing_hash = 0;
