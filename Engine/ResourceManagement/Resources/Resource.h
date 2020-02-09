@@ -2,7 +2,8 @@
 #define _RESOURCE_H_
 
 #include <pcg_basic.h>
-
+#include <memory>
+#include <string>
 class Config;
 class Resource
 {
@@ -23,5 +24,13 @@ private:
 	const char * const UID;
 
 };
+
+namespace Loader
+{
+	template<typename T>
+	static std::shared_ptr<T> Load(const std::string& uid) {
+		return nullptr;
+	};
+}
 #endif // !_RESOURCE_H_
 

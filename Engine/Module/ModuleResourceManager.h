@@ -31,11 +31,11 @@ public:
 	void RemoveResourceFromCacheIfNeeded(const std::shared_ptr<Resource> & resource);
 	std::shared_ptr<Texture> LoadTexture(const std::string& file_path) const;
 	std::shared_ptr<Mesh> LoadModel(const std::string& file_path) const;
-	/*template<class T>
-	std::shared_ptr<T> Load(const std::string& uid)
+	template<typename T>
+	std::shared_ptr<T> Load(const std::string& uid) const
 	{
-		return Loader::LoadResource(uid);
-	}*/
+		return Loader::Load<T>(uid);
+	}
 
 private:
 	std::pair<bool, std::string> InternalImport(const File& file);

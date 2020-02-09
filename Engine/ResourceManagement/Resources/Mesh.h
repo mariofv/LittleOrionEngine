@@ -7,10 +7,6 @@
 #include <GL/glew.h>
 #include "Resource.h"
 
-namespace Loader
-{
-	//static std::shared_ptr<Mesh> LoadResource(const std::string& uid);
-}
 class Mesh : public Resource
 {
 public:
@@ -41,5 +37,13 @@ private:
 	GLuint vbo = 0;
 	GLuint ebo = 0;
 };
+
+namespace Loader
+{
+	template<>
+	static std::shared_ptr<Mesh> Load(const std::string& uid) {
+		return nullptr;
+	}
+}
 #endif // !_MESH_H_
 

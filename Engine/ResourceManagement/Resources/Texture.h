@@ -67,4 +67,13 @@ private:
 	char * data;
 };
 
+
+namespace Loader
+{
+	template<>
+	static std::shared_ptr<Texture> Load(const std::string& uid) {
+		return nullptr;
+	}
+}
+
 #endif //_TEXTURE_H_
