@@ -84,6 +84,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Actions\EditorActionAddComponent.h" />
     <ClInclude Include="Engine\Actions\EditorActionDeleteComponent.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddGameObject.h" />
     <ClInclude Include="Engine\Actions\EditorActionDeleteGameObject.h" />
@@ -218,6 +219,7 @@
     <ClInclude Include="Libraries\pcg_random\pcg_basic.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteGameObject.cpp" />

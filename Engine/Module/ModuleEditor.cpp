@@ -11,6 +11,7 @@
 #include "ModuleScene.h"
 #include "Component/ComponentMesh.h"
 
+#include "Actions/EditorActionAddComponent.h"
 #include "Actions/EditorActionDeleteComponent.h"
 #include "Actions/EditorActionAddGameObject.h"
 #include "Actions/EditorActionDeleteGameObject.h"
@@ -567,6 +568,11 @@ void ModuleEditor::AddUndoAction(int type)
 			//Delete GO
 			new_action = new EditorActionDeleteGameObject(action_game_object,
 				action_game_object->parent, action_game_object->GetHierarchyDepth());
+			break;
+		
+		case 5:
+			//Add Component
+			new_action = new EditorActionAddComponent(action_component);
 			break;
 
 		case 6:

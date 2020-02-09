@@ -260,28 +260,36 @@ void EngineUI::ShowAddNewComponentButton()
 
 	if (ImGui::BeginPopupContextItem("Add component", 0))
 	{
+		Component* comp = nullptr;
+
 		char tmp_string[128];
-		
 		sprintf_s(tmp_string, "%s Material", ICON_FA_IMAGE);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
-
+			comp = App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
 		}
 
 		sprintf_s(tmp_string, "%s Camera", ICON_FA_VIDEO);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::CAMERA);
+			comp = App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::CAMERA);
 
 		}
 
 		sprintf_s(tmp_string, "%s Light", ICON_FA_LIGHTBULB);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
+			comp =App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
 
 		}
+
+		if(comp != nullptr)
+		{
+			//UndoRedo
+			App->editor->action_component = comp;
+			App->editor->AddUndoAction(5);
+		}
+
 
 		ImGui::EndPopup();
 	}
