@@ -38,7 +38,7 @@ std::pair<bool, std::string> TextureImporter::Import(const File & file) const
 	//Get new Name
 
 	std::string texture_name_no_extension = file.filename.substr(0, file.filename.find_last_of("."));
-	std::string output_file = LIBRARY_TEXTURES_FOLDER + "//" + texture_name_no_extension + ".dds";
+	std::string output_file = LIBRARY_TEXTURES_FOLDER + "/" + texture_name_no_extension + ".dds";
 
 	//Save data
 	ILuint size;

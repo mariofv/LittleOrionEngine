@@ -39,6 +39,7 @@ public:
 private:
 	std::pair<bool, std::string> InternalImport(const File& file);
 	void ImportAllFileHierarchy(const File& file);
+	std::shared_ptr<Resource> RetrieveFromCacheIfExist(const std::string& uid) const;
 	void StartThread();
 
 public:
@@ -46,7 +47,8 @@ public:
 	{
 		std::atomic_bool stop_thread = false;
 		std::atomic_bool finished_loading = false;
-		std::atomic_uint importing_hash = 0;
+		std::atomic_uint thread_importing_hash = 0;
+		std::atomic_uint main_importing_hash = 0;
 		std::atomic_uint loaded_items = 0;
 		std::atomic_uint total_items = 0;
 	} thread_comunication;

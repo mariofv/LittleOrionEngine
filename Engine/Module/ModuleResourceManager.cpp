@@ -37,11 +37,14 @@ update_status ModuleResourceManager::PreUpdate()
 
  std::pair<bool, std::string> ModuleResourceManager::Import(const File& file)
  {
-	 while (thread_comunication.importing_hash == std::hash<std::string>{}(file.file_path))
+	 while (thread_comunication.thread_importing_hash == std::hash<std::string>{}(file.file_path))
 	 {
 		 Sleep(1000);
-	 }
-	 return InternalImport(file);
+	 } 
+	 thread_comunication.main_importing_hash = std::hash<std::string>{}(file.file_path);
+	 std::pair<bool, std::string> result = InternalImport(file);
+	 thread_comunication.main_importing_hash = 0;
+	 return result;
  }
 
 
@@ -56,13 +59,19 @@ update_status ModuleResourceManager::PreUpdate()
 
 void ModuleResourceManager::ImportAllFileHierarchy(const File& file)
  {
+
 	 for (auto & child : file.children)
 	 {
 		 if (thread_comunication.stop_thread)
 		 {
 			 return;
 		 }
-		 thread_comunication.importing_hash = std::hash<std::string>{}(child->file_path);
+		 thread_comunication.thread_importing_hash = std::hash<std::string>{}(child->file_path);
+
+		 while (thread_comunication.main_importing_hash == std::hash<std::string>{}(file.file_path))
+		 {
+			 Sleep(1000);
+		 }
 		 if (child->file_type == FileType::DIRECTORY && !default_importer->Import(*child.get()).first)
 		 {
 			 ImportAllFileHierarchy(*child.get());
@@ -72,7 +81,7 @@ void ModuleResourceManager::ImportAllFileHierarchy(const File& file)
 			 InternalImport(*child.get());
 		 }
 		 ++thread_comunication.loaded_items;
-		 thread_comunication.importing_hash = 0;
+		 thread_comunication.thread_importing_hash = 0;
 	 }
  }
 
@@ -93,15 +102,10 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 
 std::shared_ptr<Texture> ModuleResourceManager::LoadTexture(const std::string& file_path) const
 {
-	//Check if the texture is already loaded
-	auto it = std::find_if(resource_cache.begin(), resource_cache.end(), [file_path](const std::shared_ptr<Resource> & texture)
+	std::shared_ptr<Resource> resource = RetrieveFromCacheIfExist(file_path);
+	if (resource != nullptr)
 	{
-		return texture->exported_file == file_path;
-	});
-	if (it != resource_cache.end())
-	{
-		APP_LOG_INIT("Model %s exists in cache.", file_path.c_str());
-		return std::static_pointer_cast<Texture>(*it);
+		return std::static_pointer_cast<Texture>(resource);
 	}
 	std::shared_ptr<Texture> texture = texture_importer->Load(file_path);
 	if (texture != nullptr)
@@ -111,21 +115,12 @@ std::shared_ptr<Texture> ModuleResourceManager::LoadTexture(const std::string& f
 	return texture;
 }
 
-std::shared_ptr<Mesh>  ModuleResourceManager::LoadModel(const std::string& file_path) const
+std::shared_ptr<Mesh> ModuleResourceManager::LoadModel(const std::string& file_path) const
 {
-	if (!App->filesystem->Exists(file_path.c_str()))
+	std::shared_ptr<Resource> resource = RetrieveFromCacheIfExist(file_path);
+	if (resource != nullptr)
 	{
-		return nullptr;
-	}
-	//Check if the mesh is already loaded
-	auto it = std::find_if(resource_cache.begin(), resource_cache.end(), [file_path](const std::shared_ptr<Resource> mesh)
-	{
-		return mesh->exported_file == file_path;
-	});
-	if (it != resource_cache.end())
-	{
-		APP_LOG_INFO("Model %s exists in cache.", file_path.c_str());
-		return std::static_pointer_cast<Mesh>(*it);
+		return std::static_pointer_cast<Mesh>(resource);
 	}
 	std::shared_ptr<Mesh> model = model_importer->Load(file_path);
 	if (model != nullptr)
@@ -142,4 +137,23 @@ void ModuleResourceManager::RemoveResourceFromCacheIfNeeded(const std::shared_pt
 	{
 		resource_cache.erase(it);
 	}
+}
+
+std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(const std::string& uid) const
+{
+	if (!App->filesystem->Exists(uid.c_str()))
+	{
+		return nullptr;
+	}
+	//Check if the resource is already loaded
+	auto it = std::find_if(resource_cache.begin(), resource_cache.end(), [uid](const std::shared_ptr<Resource> resource)
+	{
+		return resource->exported_file == uid;
+	});
+	if (it != resource_cache.end())
+	{
+		APP_LOG_INFO("Resource %s exists in cache.", uid.c_str());
+		return  *it;
+	}
+	return nullptr;
 }
