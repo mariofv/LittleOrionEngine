@@ -123,7 +123,7 @@ std::shared_ptr<Mesh> ModuleResourceManager::LoadModel(const std::string& file_p
 	{
 		return std::static_pointer_cast<Mesh>(resource);
 	}
-	std::shared_ptr<Mesh> model = model_importer->Load(file_path);
+	std::shared_ptr<Mesh> model = Load<Mesh>(file_path);
 	if (model != nullptr)
 	{
 		resource_cache.push_back(model);

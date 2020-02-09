@@ -20,10 +20,8 @@ public:
 	ModelImporter();
 	~ModelImporter();
 	std::pair<bool, std::string> Import(const File & file) const override;
-	std::shared_ptr<Mesh> Load(const std::string& file_path) const;
-
 private:
-		void ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file) const;
+	void ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file) const;
 
 public:
 	const float SCALE_FACTOR = 0.01f;

@@ -6,7 +6,7 @@
 
 #include <GL/glew.h>
 #include "Resource.h"
-
+#include <ResourceManagement/Loaders/MeshLoader.h>
 class Mesh : public Resource
 {
 public:
@@ -42,7 +42,7 @@ namespace Loader
 {
 	template<>
 	static std::shared_ptr<Mesh> Load(const std::string& uid) {
-		return nullptr;
+		return MeshLoader::Load(uid);
 	}
 }
 #endif // !_MESH_H_
