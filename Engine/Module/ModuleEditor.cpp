@@ -9,6 +9,7 @@
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
+#include "ModuleLight.h"
 #include "Component/ComponentMesh.h"
 
 #include "Actions/EditorActionAddComponent.h"
@@ -598,6 +599,15 @@ void ModuleEditor::DeleteComponentUndo(Component * comp)
 	comp->Disable();
 	auto it = std::find(comp->owner->components.begin(), comp->owner->components.end(), comp);
 	comp->owner->components.erase(it);
+
+	if (comp->type == Component::ComponentType::LIGHT)
+	{
+		auto it = std::find(App->lights->lights.begin(), App->lights->lights.end(), (ComponentLight*)comp);
+		if (it != App->lights->lights.end())
+		{
+			App->lights->lights.erase(it);
+		}
+	}
 }
 
 void ModuleEditor::ClearUndoRedoStacks()
