@@ -101,36 +101,6 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 	return result;
 }
 
-std::shared_ptr<Texture> ModuleResourceManager::LoadTexture(const std::string& file_path) const
-{
-	std::shared_ptr<Resource> resource = RetrieveFromCacheIfExist(file_path);
-	if (resource != nullptr)
-	{
-		return std::static_pointer_cast<Texture>(resource);
-	}
-	std::shared_ptr<Texture> texture =Load<Texture>(file_path);
-	if (texture != nullptr)
-	{
-		resource_cache.push_back(texture);
-	}
-	return texture;
-}
-
-std::shared_ptr<Mesh> ModuleResourceManager::LoadModel(const std::string& file_path) const
-{
-	std::shared_ptr<Resource> resource = RetrieveFromCacheIfExist(file_path);
-	if (resource != nullptr)
-	{
-		return std::static_pointer_cast<Mesh>(resource);
-	}
-	std::shared_ptr<Mesh> model = Load<Mesh>(file_path);
-	if (model != nullptr)
-	{
-		resource_cache.push_back(model);
-	}
-	return model;
-}
-
 void ModuleResourceManager::RemoveResourceFromCacheIfNeeded(const std::shared_ptr<Resource> & resource)
 {
 	auto it = std::find(resource_cache.begin(), resource_cache.end(), resource);

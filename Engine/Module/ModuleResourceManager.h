@@ -29,12 +29,20 @@ public:
 
 	std::pair<bool, std::string> Import(const File& file);
 	void RemoveResourceFromCacheIfNeeded(const std::shared_ptr<Resource> & resource);
-	std::shared_ptr<Texture> LoadTexture(const std::string& file_path) const;
-	std::shared_ptr<Mesh> LoadModel(const std::string& file_path) const;
 	template<typename T>
 	std::shared_ptr<T> Load(const std::string& uid) const
 	{
-		return Loader::Load<T>(uid);
+		std::shared_ptr<Resource> cache_resource = RetrieveFromCacheIfExist(uid);
+		if (cache_resource != nullptr)
+		{
+			return std::static_pointer_cast<T>(cache_resource);
+		}
+		std::shared_ptr<T> resource = Loader::Load<T>(uid);
+		if (resource != nullptr)
+		{
+			resource_cache.push_back(resource);
+		}
+		return resource;
 	}
 
 private:
