@@ -12,6 +12,7 @@
 #include "ModuleLight.h"
 #include "Component/ComponentMesh.h"
 
+#include "Actions/EditorActionModifyLight.h"
 #include "Actions/EditorActionAddComponent.h"
 #include "Actions/EditorActionDeleteComponent.h"
 #include "Actions/EditorActionAddGameObject.h"
@@ -579,6 +580,12 @@ void ModuleEditor::AddUndoAction(int type)
 		case 6:
 			//Delete Component
 			new_action = new EditorActionDeleteComponent(action_component);
+			break;
+
+		case 7:
+			//Modify ComponentLight values
+			new_action = new EditorActionModifyLight((ComponentLight*)action_component,
+				previous_light_color, previous_light_intensity);
 			break;
 
 		default:

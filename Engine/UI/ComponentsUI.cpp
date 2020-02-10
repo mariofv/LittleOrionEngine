@@ -26,7 +26,6 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		//ImGui::IsMouseDown(0);
 		if (App->editor->clicked && !ImGui::IsMouseDragging())
 		{
 			App->editor->AddUndoAction(App->editor->type_of_action);
@@ -326,8 +325,41 @@ void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
 		}
 		ImGui::Separator();
 
-		ImGui::ColorEdit3("Color", light->light_color);
-		ImGui::SliderFloat("Intensity ", &light->light_intensity, 0.f, 1.f);
+		if(ImGui::ColorEdit3("Color", light->light_color))
+		{
+			if(!App->editor->clicked_light)
+			{
+				//UndoRedo
+				App->editor->previous_light_color[0] = light->light_color[0];
+				App->editor->previous_light_color[1] = light->light_color[1];
+				App->editor->previous_light_color[2] = light->light_color[2];
+				App->editor->previous_light_intensity = light->light_intensity;
+
+				App->editor->clicked_light = true;
+			}
+		}
+		else if (ImGui::SliderFloat("Intensity ", &light->light_intensity, 0.f, 1.f))
+		{
+			if (!App->editor->clicked_light)
+			{
+				//UndoRedo
+				App->editor->previous_light_color[0] = light->light_color[0];
+				App->editor->previous_light_color[1] = light->light_color[1];
+				App->editor->previous_light_color[2] = light->light_color[2];
+				App->editor->previous_light_intensity = light->light_intensity;
+
+
+				App->editor->clicked_light = true;
+			}
+		}
+		if(App->editor->clicked_light && !ImGui::IsMouseDown(0))
+		{
+			//Push new action
+			App->editor->action_component = light;
+			App->editor->AddUndoAction(7);
+
+			App->editor->clicked_light = false;
+		}
 	}
 }
 

@@ -58,13 +58,21 @@ private:
 
 public:
 	bool scene_window_is_hovered = false;
+	//UndoRedo
 	bool clicked = false;
+	bool clicked_light = false;
 	int type_of_action = 0;
 	std::vector<EditorAction*> undoStack;
 	std::vector<EditorAction*> redoStack;
 	float3 previous_transform = float3::zero;
-	GameObject* action_game_object;
-	Component* action_component;
+	GameObject* action_game_object = nullptr;
+	Component* action_component = nullptr;
+
+
+	float previous_light_color[3];
+	float previous_light_intensity;
+
+
 
 private:
 	float scene_window_content_area_width = 0;
