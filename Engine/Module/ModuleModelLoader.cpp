@@ -97,6 +97,3 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 	}
 	return model_game_object;
 }
-
-
-// TODO: Change this method to a proper class

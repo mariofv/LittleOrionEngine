@@ -201,12 +201,12 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 		APP_LOG_INFO("Error reading directory: %s", PHYSFS_getLastError());
 		return;
 	}
-	char **i;
-	for (i = files_array; *i != NULL; i++)
+	char **filename;
+	for (filename = files_array; *filename != NULL; filename++)
 	{
-		if (std::string(*i).find(".meta") == std::string::npos)
+		if (std::string(*filename).find(".meta") == std::string::npos)
 		{
-			std::shared_ptr<File> new_file = std::make_shared<File>(path, *i);
+			std::shared_ptr<File> new_file = std::make_shared<File>(path, *filename);
 			bool is_directory = new_file->file_type == FileType::DIRECTORY;
 			if ((directories_only && is_directory) || !directories_only)
 			{
