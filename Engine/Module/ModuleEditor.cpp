@@ -12,6 +12,7 @@
 #include "ModuleLight.h"
 #include "Component/ComponentMesh.h"
 
+#include "Actions/EditorActionSetTexture.h"
 #include "Actions/EditorActionModifyLight.h"
 #include "Actions/EditorActionAddComponent.h"
 #include "Actions/EditorActionDeleteComponent.h"
@@ -586,6 +587,11 @@ void ModuleEditor::AddUndoAction(int type)
 			//Modify ComponentLight values
 			new_action = new EditorActionModifyLight((ComponentLight*)action_component,
 				previous_light_color, previous_light_intensity);
+			break;
+
+		case 8:
+			//Modify Textures of component material
+			new_action = new EditorActionSetTexture((ComponentMaterial*)action_component,type_texture);
 			break;
 
 		default:

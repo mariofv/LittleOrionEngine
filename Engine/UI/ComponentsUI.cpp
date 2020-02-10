@@ -200,6 +200,10 @@ void ComponentsUI::DropTarget(ComponentMaterial *material, Texture::TextureType 
 			File *incoming_file = *(File**)payload->Data;
 			if (incoming_file->file_type == FileType::TEXTURE)
 			{
+				//UndoRedo
+				App->editor->type_texture = type;
+				App->editor->action_component = material;
+				App->editor->AddUndoAction(8);
 
 				material->SetMaterialTexture(type, App->texture->LoadTexture(incoming_file->file_path.c_str()));
 			}

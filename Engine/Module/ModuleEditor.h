@@ -72,6 +72,8 @@ public:
 	float previous_light_color[3];
 	float previous_light_intensity;
 
+	Texture::TextureType type_texture;
+
 
 
 private:
