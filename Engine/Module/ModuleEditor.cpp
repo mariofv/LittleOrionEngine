@@ -22,8 +22,8 @@
 bool ModuleEditor::Init()
 {
 	APP_LOG_SECTION("************ Module Editor Init ************");
-	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 3.44f, 5.f);
-	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 5.f, 5.f);
+	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 1.f, 1.45f);
+	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 1.f, 1.f);
 	
 	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
 
