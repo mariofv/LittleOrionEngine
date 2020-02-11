@@ -20,6 +20,7 @@ public:
 
 public:
 	std::vector<ComponentLight*> lights;
+	friend class ModuleEditor;
 };
 
 #endif // !_MODULELIGHT_H_

@@ -464,37 +464,3 @@ void ModuleRender::GenerateQuadTree()
 		ol_quadtree.Insert(*mesh->owner);
 	}
 }
-
-GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
-{
-	GetCullingMeshes(App->cameras->scene_camera);
-	std::vector<ComponentMesh*> intersected_meshes;
-	for (auto & mesh : meshes_to_render)
-	{
-		if (mesh->owner->aabb.bounding_box.Intersects(ray))
-		{
-			intersected_meshes.push_back(mesh);
-		}
-	}
-
-	std::vector<GameObject*> intersected;
-	GameObject* selected = nullptr;
-	float min_distance = INFINITY;
-	for (auto & mesh : intersected_meshes)
-	{
-		LineSegment transformed_ray = ray;
-		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
-		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
-		for (auto & triangle : triangles)
-		{
-			float distance;
-			bool intersected = triangle.Intersects(transformed_ray, &distance);		
-			if (intersected && distance < min_distance)
-			{
-				selected = mesh->owner;
-				min_distance = distance;
-			}
-		}
-	}
-	return selected;
-}
