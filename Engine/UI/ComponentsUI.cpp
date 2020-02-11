@@ -154,6 +154,11 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 
 					if (ImGui::Button(ICON_FA_TIMES) )
 					{
+						//UndoRedo
+						App->editor->type_texture = Texture::TextureType(i);
+						App->editor->action_component = material;
+						App->editor->AddUndoAction(8);
+
 						material->RemoveMaterialTexture(i);
 					}
 					ImGui::SameLine(); ImGui::Text("Remove Texture");
