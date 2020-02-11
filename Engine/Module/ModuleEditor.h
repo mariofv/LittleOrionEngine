@@ -38,7 +38,7 @@ public:
 	void Undo();
 	void Redo();
 
-	void AddUndoAction(int type);
+	void AddUndoAction(const int type);
 	void DeleteComponentUndo(Component* comp);
 	void ClearUndoRedoStacks();
 

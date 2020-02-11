@@ -529,7 +529,7 @@ void ModuleEditor::Redo()
 	}
 }
 
-void ModuleEditor::AddUndoAction(int type)
+void ModuleEditor::AddUndoAction(const int type)
 {
 	//StackUndoRedo set size maximum
 	if(undoStack.size() >= maximum_size_stack_undo)
