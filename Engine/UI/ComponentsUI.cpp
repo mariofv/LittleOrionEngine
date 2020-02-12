@@ -270,6 +270,7 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 
 		if(ImGui::SliderFloat("Mov Speed", &camera->camera_movement_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED))
 		{
+			//TODO: mov speed is changed by imgui before checking if clicked - try to solve it
 			//UndoRedo
 			CheckClickedCamera(camera);
 		}
