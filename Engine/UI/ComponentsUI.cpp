@@ -80,7 +80,12 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::Checkbox("Active", &mesh->active);
+		if(ImGui::Checkbox("Active", &mesh->active))
+		{
+			//UndoRedo
+			App->editor->action_component = mesh;
+			App->editor->AddUndoAction(10);
+		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
@@ -253,7 +258,12 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::Checkbox("Active", &camera->active);
+		if(ImGui::Checkbox("Active", &camera->active))
+		{
+			//UndoRedo
+			App->editor->action_component = camera;
+			App->editor->AddUndoAction(10);
+		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
@@ -365,7 +375,12 @@ void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Light", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::Checkbox("Active", &light->active);
+		if(ImGui::Checkbox("Active", &light->active))
+		{
+			//UndoRedo
+			App->editor->action_component = light;
+			App->editor->AddUndoAction(10);
+		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{

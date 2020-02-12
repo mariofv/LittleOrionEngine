@@ -84,6 +84,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Actions\EditorActionEnableDisableComponent.h" />
     <ClInclude Include="Engine\Actions\EditorActionModifyCamera.h" />
     <ClInclude Include="Engine\Actions\EditorActionSetTexture.h" />
     <ClInclude Include="Engine\Actions\EditorActionModifyLight.h" />
@@ -222,6 +223,7 @@
     <ClInclude Include="Libraries\pcg_random\pcg_basic.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Actions\EditorActionEnableDisableComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionModifyCamera.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionSetTexture.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionModifyLight.cpp" />

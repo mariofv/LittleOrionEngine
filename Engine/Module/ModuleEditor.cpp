@@ -12,6 +12,8 @@
 #include "ModuleLight.h"
 #include "Component/ComponentMesh.h"
 
+
+#include "Actions/EditorActionEnableDisableComponent.h"
 #include "Actions/EditorActionModifyCamera.h"
 #include "Actions/EditorActionSetTexture.h"
 #include "Actions/EditorActionModifyLight.h"
@@ -598,6 +600,11 @@ void ModuleEditor::AddUndoAction(const int type)
 		case 9:
 			//Modify camera settings
 			new_action = new EditorActionModifyCamera((ComponentCamera*)action_component);
+			break;
+
+		case 10:
+			//EnableDisable component
+			new_action = new EditorActionEnableDisableComponent(action_component);
 			break;
 
 		default:
