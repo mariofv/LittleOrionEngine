@@ -258,9 +258,9 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 
 		ImGui::SliderFloat("Mov Speed", &camera->camera_movement_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
 
-		if (ImGui::SliderFloat("FOV", &camera->camera_frustum.horizontalFov, 0, 2 * 3.14f))
+		if (ImGui::SliderFloat("FOV", &camera->camera_frustum.verticalFov, 0, 2 * 3.14f))
 		{
-			camera->SetFOV(camera->camera_frustum.horizontalFov);
+			camera->SetFOV(camera->camera_frustum.verticalFov);
 		}
 
 		if (ImGui::SliderFloat("Aspect Ratio", &camera->aspect_ratio, 0, 10))
