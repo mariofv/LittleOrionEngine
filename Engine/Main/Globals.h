@@ -69,6 +69,7 @@ enum class Fonts
 # define PRIMITIVE_CYLINDER_PATH "Resources/Primitives/Cylinder/Cylinder.ol"
 # define PRIMITIVE_SPHERE_PATH "Resources/Primitives/Sphere/Sphere.ol"
 # define PRIMITIVE_TORUS_PATH "Resources/Primitives/Torus/Torus.ol"
+# define PRIMITIVE_QUAD_PATH "Resources/Primitives/Quad/Quad.ol"
 
 # define DEFAULT_SCENE_PATH "Resources/Scenes/default_scene.scene"
 # define ASSIGNMENT_SCENE_PATH "Resources/Scenes/assignment_scene.scene"

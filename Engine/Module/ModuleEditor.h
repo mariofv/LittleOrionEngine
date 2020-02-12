@@ -24,6 +24,7 @@ public:
 	void RenderDebugDraws();
 
 	void MousePicking(const float2& mouse_position);
+	GameObject* GetRaycastIntertectedObject(const LineSegment & ray);
 
 	void ShowSceneTab();
 	void ShowGameTab();

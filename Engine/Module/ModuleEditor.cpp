@@ -5,12 +5,14 @@
 #include "ModuleDebug.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleFileSystem.h"
+#include "ModuleLight.h"
 #include "ModuleResourceManager.h"
 #include "ModuleModelLoader.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 #include "Component/ComponentMesh.h"
+#include "Component/ComponentLight.h"
 
 #include "Helper/Config.h"
 #include "UI/Hierarchy.h"
@@ -23,8 +25,8 @@
 bool ModuleEditor::Init()
 {
 	APP_LOG_SECTION("************ Module Editor Init ************");
-	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 3.44f, 5.f);
-	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 5.f, 5.f);
+	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 1.f, 1.45f);
+	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 1.f, 1.f);
 	
 	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
 
@@ -191,17 +193,14 @@ void ModuleEditor::RenderGlobalBoundingBoxes() const
 
 void ModuleEditor::RenderBillboards() const
 {
-	for (auto& object : App->scene->game_objects_ownership)
+	for (auto& camera : App->cameras->cameras)
 	{
-		Component * light_component = object->GetComponent(Component::ComponentType::LIGHT);
-		if (light_component != nullptr) {
-			light_billboard->Render(object->transform.GetGlobalTranslation());
-		}
+		camera_billboard->Render(camera->owner->transform.GetGlobalTranslation());	
+	}
 
-		Component * camera_component = object->GetComponent(Component::ComponentType::CAMERA);
-		if (camera_component != nullptr) {
-			camera_billboard->Render(object->transform.GetGlobalTranslation());
-		}
+	for (auto& light: App->lights->lights)
+	{
+		light_billboard->Render(light->owner->transform.GetGlobalTranslation());
 	}
 }
 
@@ -306,8 +305,42 @@ void ModuleEditor::MousePicking(const float2& mouse_position)
 
 	LineSegment ray;
 	App->cameras->scene_camera->GetRay(window_mouse_position_normalized, ray);
-	GameObject* intersected = App->renderer->GetRaycastIntertectedObject(ray);
+	GameObject* intersected = GetRaycastIntertectedObject(ray);
 	App->scene->hierarchy.selected_game_object = intersected;
+}
+
+GameObject* ModuleEditor::GetRaycastIntertectedObject(const LineSegment & ray)
+{
+	App->renderer->GetCullingMeshes(App->cameras->scene_camera);
+	std::vector<ComponentMesh*> intersected_meshes;
+	for (auto & mesh : App->renderer->meshes_to_render)
+	{
+		if (mesh->owner->aabb.bounding_box.Intersects(ray))
+		{
+			intersected_meshes.push_back(mesh);
+		}
+	}
+
+	std::vector<GameObject*> intersected;
+	GameObject* selected = nullptr;
+	float min_distance = INFINITY;
+	for (auto & mesh : intersected_meshes)
+	{
+		LineSegment transformed_ray = ray;
+		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
+		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
+		for (auto & triangle : triangles)
+		{
+			float distance;
+			bool intersected = triangle.Intersects(transformed_ray, &distance);
+			if (intersected && distance < min_distance)
+			{
+				selected = mesh->owner;
+				min_distance = distance;
+			}
+		}
+	}
+	return selected;
 }
 
 void ModuleEditor::ShowSceneTab()

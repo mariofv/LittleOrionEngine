@@ -184,6 +184,10 @@ void Hierarchy::Show3DObjectCreationMenu() const
 		{
 			App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
 		}
+		if (ImGui::Selectable("Quad"))
+		{
+			App->model_loader->LoadCoreModel(PRIMITIVE_QUAD_PATH);
+		}
 		ImGui::EndMenu();
 	}
 }
