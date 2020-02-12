@@ -88,6 +88,7 @@ void ModuleResourceManager::ImportAllFileHierarchy(const File& file)
 
 std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& file)
 {
+	std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
 	std::pair<bool, std::string> result = std::pair<bool, std::string>(false,"");
 	if (file.file_type == FileType::MODEL)
 	{
@@ -95,7 +96,6 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 	}
 	if (file.file_type == FileType::TEXTURE)
 	{
-		std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
 		result = texture_importer->Import(file);
 	}
 	return result;
