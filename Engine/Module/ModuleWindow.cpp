@@ -32,7 +32,7 @@ bool ModuleWindow::Init()
 		//Create window
 		width = static_cast<int>(screen_width * 0.9f);
 		height = static_cast<int>(screen_height * 0.9f);
-		uint32_t flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;
+		uint32_t flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_MAXIMIZED;
 
 		if(FULLSCREEN)
 		{
