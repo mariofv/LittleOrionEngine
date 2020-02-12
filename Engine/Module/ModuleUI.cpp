@@ -96,8 +96,9 @@ ImFont* ModuleUI::GetFont(const Fonts & font) const
 void ModuleUI::LoadFonts()
 {
 	ImGuiIO& io = ImGui::GetIO();
-	io.Fonts->AddFontDefault();
+	
 	// LOADING FONT AWESOME 5 (FONT_FA)
+	io.Fonts->AddFontDefault();
 	static const ImWchar icons_ranges_fa[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
 	ImFontConfig icons_config;
 	icons_config.MergeMode = true;
@@ -105,10 +106,13 @@ void ModuleUI::LoadFonts()
 
 	io.Fonts->AddFontFromFileTTF("./resources/fonts/" FONT_ICON_FILE_NAME_FAS, 12.f, &icons_config, icons_ranges_fa);
 
+
 	// LOADING FONT AWESOME 5 REGULAR (FONT_FAR)
+	io.Fonts->AddFontDefault();
 	io.Fonts->AddFontFromFileTTF("./resources/fonts/" FONT_ICON_FILE_NAME_FAR, 12.f, &icons_config, icons_ranges_fa);
 
 	// LOADING FONT AWESOME 5 BRANDS (FONT_FAB)
+	io.Fonts->AddFontDefault();
 	static const ImWchar icons_ranges_fab[] = { ICON_MIN_FAB, ICON_MAX_FAB, 0 };
 	io.Fonts->AddFontFromFileTTF("./resources/fonts/" FONT_ICON_FILE_NAME_FAB, 12.f, &icons_config, icons_ranges_fab);
 }
