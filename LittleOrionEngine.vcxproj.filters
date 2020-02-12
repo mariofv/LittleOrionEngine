@@ -414,6 +414,9 @@
     <ClInclude Include="Engine\Resource\Mesh.h">
       <Filter>Engine\Resource</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\Panel.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
