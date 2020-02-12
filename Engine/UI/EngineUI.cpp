@@ -19,11 +19,6 @@
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
 
-void EngineUI::InitUI()
-{
-	ImGuiIO& io = ImGui::GetIO();
-	io.ConfigWindowsMoveFromTitleBarOnly = true;
-}
 
 void EngineUI::ShowEngineUI()
 {
@@ -104,7 +99,7 @@ void EngineUI::ShowViewMenu()
 	if (ImGui::BeginMenu("View"))
 	{
 		ImGui::MenuItem((ICON_FA_SITEMAP " Hierarchy"), (const char*)0, &show_hierarchy_window);
-		ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, &show_scene_tab);
+		ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, &show_scene_window);
 		ImGui::MenuItem((ICON_FA_GHOST " Game"), (const char*)0, &show_game_tab);
 		ImGui::MenuItem((ICON_FA_INFO " Inspector"), (const char*)0, &show_model_inspector_window);
 		ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, &show_configuration_window);
@@ -169,14 +164,10 @@ void EngineUI::ShowMainViewWindow()
 		ImGuiCond_Once
 	);
 
-	if (ImGui::Begin("MainView", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar))
+	if (ImGui::Begin("MainView", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar))
 	{
 		ImGui::BeginTabBar("MainViewTabs");
 
-		if (show_scene_tab)
-		{
-			ShowSceneTab();
-		}
 		if (show_game_tab)
 		{
 			ShowGameTab();
@@ -189,13 +180,6 @@ void EngineUI::ShowMainViewWindow()
 	ImGui::PopStyleVar();
 }
 
-void EngineUI::ShowSceneTab()
-{
-	if (App->cameras->scene_camera != nullptr)
-	{
-		App->editor->ShowSceneTab();
-	}
-}
 void EngineUI::ShowGameTab()
 {
 	if (App->cameras->main_camera != nullptr)

@@ -77,7 +77,7 @@ private:
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebug;
-	friend class ModuleEditor;
+	friend class PanelScene;
 };
 
 #endif //_MODULERENDER_H_

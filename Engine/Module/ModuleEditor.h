@@ -3,12 +3,14 @@
 
 #include "Module.h"
 #include "Main/Globals.h"
-#include "Component/ComponentCamera.h"
-#include "UI/Billboard.h"
 
 #include <ImGuizmo.h>
 
 class EngineUI;
+
+class Panel;
+class PanelScene;
+
 struct ImFont;
 
 class ModuleEditor : public Module
@@ -26,11 +28,7 @@ public:
 	void SaveScene(const std::string &path) const;
 
 	void Render();
-	void RenderDebugDraws();
 
-	void MousePicking(const float2& mouse_position);
-
-	void ShowSceneTab();
 	void ShowGameTab();
 
 	void ShowGizmoControls();
@@ -38,36 +36,18 @@ public:
 	ImFont* GetFont(const Fonts & font) const;
 
 private:
-	void RenderCameraFrustum() const;
-	void RenderOutline() const;
-	void RenderBoundingBoxes() const;
-	void RenderGlobalBoundingBoxes() const;
-	void RenderBillboards() const;
-
-	void RenderEditorDraws();
-	void RenderGizmo();
-	void RenderEditorCameraGizmo() const;
-	void RenderCameraPreview() const;
-
-	void SceneDropTarget();
 
 	void LoadFonts();
 
 public:
-	bool scene_window_is_hovered = false;
 	EngineUI* editor_ui = nullptr;
-
-private:
-	float scene_window_content_area_width = 0;
-	float scene_window_content_area_height = 0;
-
-	float2 scene_window_content_area_pos = float2::zero;
+	PanelScene* scene_panel = nullptr;
 
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
-	bool gizmo_hovered = false;
 
-	Billboard* camera_billboard = nullptr;
-	Billboard* light_billboard = nullptr;
+private:
+	std::vector<Panel*> panels;
+
 
 };
 

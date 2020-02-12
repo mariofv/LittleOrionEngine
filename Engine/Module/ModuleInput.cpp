@@ -12,6 +12,7 @@
 #include "Component/ComponentCamera.h"
 #include "UI/EngineUI.h"
 #include "UI/FileExplorerUI.h"
+#include "UI/Panel/PanelScene.h"
 
 #include <SDL/SDL.h>
 #include "imgui.h"
@@ -64,12 +65,12 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEMOTION:
-			if (event.motion.state & SDL_BUTTON_RMASK && App->editor->scene_window_is_hovered) 
+			if (event.motion.state & SDL_BUTTON_RMASK && App->editor->scene_panel->IsHovered()) 
 			{
 				float2 motion(event.motion.xrel, event.motion.yrel);
 				App->cameras->scene_camera->RotateCameraWithMouseMotion(motion);
 			}
-			else if (event.motion.state & SDL_BUTTON_LMASK && App->editor->scene_window_is_hovered && App->cameras->IsOrbiting())
+			else if (event.motion.state & SDL_BUTTON_LMASK && App->editor->scene_panel->IsHovered() && App->cameras->IsOrbiting())
 			{
 				float2 motion(event.motion.xrel, event.motion.yrel);
 				if (App->scene->hierarchy.selected_game_object != nullptr)
@@ -84,25 +85,25 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEWHEEL:
-			if (event.wheel.y > 0 && App->editor->scene_window_is_hovered)
+			if (event.wheel.y > 0 && App->editor->scene_panel->IsHovered())
 			{
 				App->cameras->scene_camera->MoveFoward();
 			}
-			else if (event.wheel.y < 0 && App->editor->scene_window_is_hovered)
+			else if (event.wheel.y < 0 && App->editor->scene_panel->IsHovered())
 			{
 				App->cameras->scene_camera->MoveBackward();
 			}
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
-			if (event.button.button == SDL_BUTTON_RIGHT && App->editor->scene_window_is_hovered)
+			if (event.button.button == SDL_BUTTON_RIGHT && App->editor->scene_panel->IsHovered())
 			{
 				App->cameras->SetMovement(true);
 			}
-			if (event.button.button == SDL_BUTTON_LEFT && App->editor->scene_window_is_hovered && !App->cameras->IsOrbiting())
+			if (event.button.button == SDL_BUTTON_LEFT && App->editor->scene_panel->IsHovered() && !App->cameras->IsOrbiting())
 			{
 				float2 mouse_position = float2(event.button.x, event.button.y);
-				App->editor->MousePicking(mouse_position);
+				App->editor->scene_panel->MousePicking(mouse_position);
 
 				if (event.button.clicks == 2 && App->scene->hierarchy.selected_game_object != nullptr)
 				{

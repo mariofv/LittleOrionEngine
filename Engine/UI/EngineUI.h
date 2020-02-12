@@ -12,7 +12,6 @@ public:
 	~EngineUI() = default;
 
 	void ShowEngineUI();
-	void InitUI();
 
 private:
 
@@ -26,7 +25,6 @@ private:
 	void ShowHierarchyWindow();
 	
 	void ShowMainViewWindow();
-	void ShowSceneTab();
 	void ShowGameTab();
 	void ShowEmptyGameTab() const;
 
@@ -63,7 +61,7 @@ public:
 	FileExplorerUI file_explorer_ui;
 
 private:
-	bool show_scene_tab = true;
+	bool show_scene_window = true;
 	bool show_game_tab = true;
 	bool show_hierarchy_window = true;
 	bool show_model_inspector_window = true;

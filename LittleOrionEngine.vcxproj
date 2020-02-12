@@ -134,6 +134,7 @@
     <ClInclude Include="Engine\UI\Hierarchy.h" />
     <ClInclude Include="Engine\UI\Panel\Panel.h" />
     <ClInclude Include="Engine\UI\Skybox.h" />
+    <ClInclude Include="Engine\UI\Panel\PanelScene.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Helper\Config.cpp" />
@@ -226,6 +227,7 @@
     <ClCompile Include="Engine\Module\ModuleTexture.cpp" />
     <ClCompile Include="Engine\Module\ModuleWindow.cpp" />
     <ClCompile Include="Engine\Module\ModuleScene.cpp" />
+    <ClCompile Include="Engine\UI\Panel\PanelScene.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -271,6 +271,9 @@
     <ClCompile Include="Engine\Resource\Mesh.cpp">
       <Filter>Engine\Resource</Filter>
     </ClCompile>
+    <ClCompile Include="PanelScene.cpp">
+      <Filter>Engine\UI\Panel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -415,7 +418,10 @@
       <Filter>Engine\Resource</Filter>
     </ClInclude>
     <ClInclude Include="Engine\UI\Panel\Panel.h">
-      <Filter>Engine\UI</Filter>
+      <Filter>Engine\UI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="PanelScene.h">
+      <Filter>Engine\UI\Panel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -463,6 +469,9 @@
     </Filter>
     <Filter Include="Engine\Resource">
       <UniqueIdentifier>{621e0eab-6111-4b36-b46d-c82b3b6b0847}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\UI\Panel">
+      <UniqueIdentifier>{cb898d7a-8090-400e-9c95-f05cfa63a85f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
