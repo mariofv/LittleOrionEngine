@@ -24,7 +24,6 @@ void EngineUI::ShowEngineUI()
 {
 	ShowMainMenu();
 	ShowSceneControls();
-	ShowMainViewWindow();
 	
 	if (show_model_inspector_window)
 	{
@@ -152,59 +151,6 @@ void EngineUI::ShowHierarchyWindow()
 	App->scene->hierarchy.ShowHierarchyWindow();
 }
 
-void EngineUI::ShowMainViewWindow()
-{
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
-	ImGui::SetNextWindowPos(
-		ImVec2(App->window->GetWidth() * CONFIG_WIDTH_PROP, MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * TIME_BAR_HEIGHT_PROP),
-		ImGuiCond_Once
-	);
-	ImGui::SetNextWindowSize(
-		ImVec2(App->window->GetWidth() * SCENE_WIDTH_PROP, App->window->GetHeight() * SCENE_HEIGHT_PROP),
-		ImGuiCond_Once
-	);
-
-	if (ImGui::Begin("MainView", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoScrollbar))
-	{
-		ImGui::BeginTabBar("MainViewTabs");
-
-		if (show_game_tab)
-		{
-			ShowGameTab();
-		}
-
-		ImGui::EndTabBar();
-	}
-	ImGui::End();
-
-	ImGui::PopStyleVar();
-}
-
-void EngineUI::ShowGameTab()
-{
-	if (App->cameras->main_camera != nullptr)
-	{
-		App->editor->ShowGameTab();
-	}
-	else 
-	{
-		ShowEmptyGameTab();
-	}
-}
-
-void EngineUI::ShowEmptyGameTab() const
-{
-		if (ImGui::BeginTabItem(ICON_FA_GHOST " Game"))
-		{
-			float window_width = ImGui::GetWindowWidth();
-			ImGui::Dummy(ImVec2(0, ImGui::GetWindowHeight()*0.40f));
-			ImGui::SetCursorPosX(window_width*0.45f);
-			ImGui::Text("Display 1");
-			ImGui::SetCursorPosX(window_width*0.40f);
-			ImGui::Text("No Cameras Rendering");
-			ImGui::EndTabItem();
-		}
-}
 
 void EngineUI::ShowInspectorWindow()
 {

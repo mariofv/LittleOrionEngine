@@ -1,14 +1,13 @@
 #include "ModuleEditor.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
-#include "ModuleCamera.h"
 #include "ModuleModelLoader.h"
 #include "ModuleScene.h"
 #include "ModuleWindow.h"
-#include "Component/ComponentCamera.h"
 
 #include "Helper/Config.h"
 #include "UI/Panel/PanelScene.h"
+#include "UI/Panel/PanelGame.h"
 #include "UI/EngineUI.h"
 
 #include <SDL/SDL.h>
@@ -50,6 +49,7 @@ bool ModuleEditor::Init()
 
 	editor_ui = new EngineUI();
 	panels.push_back(scene_panel = new PanelScene());
+	panels.push_back(game_panel = new PanelGame());
 
 	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
 
@@ -130,37 +130,6 @@ void ModuleEditor::SaveScene(const std::string &path) const
 	App->filesystem->Save(path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
 }
 
-void ModuleEditor::ShowGameTab()
-{
-	if (ImGui::BeginTabItem(ICON_FA_GHOST " Game"))
-	{
-		ImVec2 game_window_pos_ImVec2 = ImGui::GetWindowPos();
-		float2 game_window_pos = float2(game_window_pos_ImVec2.x, game_window_pos_ImVec2.y);
-
-		ImVec2 game_window_content_area_max_point_ImVec2 = ImGui::GetWindowContentRegionMax();
-		game_window_content_area_max_point_ImVec2 = ImVec2(
-			game_window_content_area_max_point_ImVec2.x + game_window_pos_ImVec2.x,
-			game_window_content_area_max_point_ImVec2.y + game_window_pos_ImVec2.y
-		); // Pass from window space to screen space
-		float2 game_window_content_area_max_point = float2(game_window_content_area_max_point_ImVec2.x, game_window_content_area_max_point_ImVec2.y);
-
-		ImVec2 game_window_content_area_pos_ImVec2 = ImGui::GetCursorScreenPos();
-		float2 game_window_content_area_pos = float2(game_window_content_area_pos_ImVec2.x, game_window_content_area_pos_ImVec2.y);
-
-		float game_window_content_area_width = game_window_content_area_max_point.x - game_window_content_area_pos.x;
-		float game_window_content_area_height = game_window_content_area_max_point.y - game_window_content_area_pos.y;
-
-		App->cameras->main_camera->RecordFrame(game_window_content_area_width, game_window_content_area_height);
-
-		ImGui::Image(
-			(void *)App->cameras->main_camera->GetLastRecordedFrame(),
-			ImVec2(game_window_content_area_width, game_window_content_area_height),
-			ImVec2(0, 1),
-			ImVec2(1, 0)
-		);
-		ImGui::EndTabItem();
-	}
-}
 
 void ModuleEditor::ShowGizmoControls()
 {

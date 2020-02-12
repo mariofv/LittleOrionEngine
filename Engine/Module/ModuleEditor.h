@@ -10,6 +10,7 @@ class EngineUI;
 
 class Panel;
 class PanelScene;
+class PanelGame;
 
 struct ImFont;
 
@@ -29,8 +30,6 @@ public:
 
 	void Render();
 
-	void ShowGameTab();
-
 	void ShowGizmoControls();
 
 	ImFont* GetFont(const Fonts & font) const;
@@ -42,6 +41,7 @@ private:
 public:
 	EngineUI* editor_ui = nullptr;
 	PanelScene* scene_panel = nullptr;
+	PanelGame* game_panel = nullptr;
 
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 

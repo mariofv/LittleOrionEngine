@@ -271,7 +271,10 @@
     <ClCompile Include="Engine\Resource\Mesh.cpp">
       <Filter>Engine\Resource</Filter>
     </ClCompile>
-    <ClCompile Include="PanelScene.cpp">
+    <ClCompile Include="Engine\UI\Panel\PanelScene.cpp">
+      <Filter>Engine\UI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\PanelGame.cpp">
       <Filter>Engine\UI\Panel</Filter>
     </ClCompile>
   </ItemGroup>
@@ -420,7 +423,10 @@
     <ClInclude Include="Engine\UI\Panel\Panel.h">
       <Filter>Engine\UI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="PanelScene.h">
+    <ClInclude Include="Engine\UI\Panel\PanelScene.h">
+      <Filter>Engine\UI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\PanelGame.h">
       <Filter>Engine\UI\Panel</Filter>
     </ClInclude>
   </ItemGroup>

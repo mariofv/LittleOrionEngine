@@ -24,10 +24,6 @@ private:
 
 	void ShowHierarchyWindow();
 	
-	void ShowMainViewWindow();
-	void ShowGameTab();
-	void ShowEmptyGameTab() const;
-
 	void ShowInspectorWindow();
 	void ShowAddNewComponentButton();
 
