@@ -12,6 +12,7 @@
 #include "ModuleLight.h"
 #include "Component/ComponentMesh.h"
 
+#include "Actions/EditorActionModifyCamera.h"
 #include "Actions/EditorActionSetTexture.h"
 #include "Actions/EditorActionModifyLight.h"
 #include "Actions/EditorActionAddComponent.h"
@@ -532,7 +533,7 @@ void ModuleEditor::Redo()
 void ModuleEditor::AddUndoAction(const int type)
 {
 	//StackUndoRedo set size maximum
-	if(undoStack.size() >= maximum_size_stack_undo)
+	if(undoStack.size() >= MAXIMUM_SIZE_STACK_UNDO)
 	{
 		EditorAction* action = undoStack.front();
 		delete action;
@@ -592,6 +593,11 @@ void ModuleEditor::AddUndoAction(const int type)
 		case 8:
 			//Modify Textures of component material
 			new_action = new EditorActionSetTexture((ComponentMaterial*)action_component,type_texture);
+			break;
+
+		case 9:
+			//Modify camera settings
+			new_action = new EditorActionModifyCamera((ComponentCamera*)action_component);
 			break;
 
 		default:

@@ -237,6 +237,18 @@ std::string ComponentsUI::GetTypeName(Texture::TextureType type)
 		return "";
 	}
 }
+void ComponentsUI::CheckClickedCamera(ComponentCamera* camera)
+{
+	//UndoRedo
+	if (!App->editor->clicked_camera)
+	{
+		App->editor->clicked_camera = true;
+
+		//Push new action
+		App->editor->action_component = camera;
+		App->editor->AddUndoAction(9);
+	}
+}
 void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))
@@ -256,26 +268,42 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 
 		ImGui::Separator();
 
-		ImGui::SliderFloat("Mov Speed", &camera->camera_movement_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
+		if(ImGui::SliderFloat("Mov Speed", &camera->camera_movement_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED))
+		{
+			//UndoRedo
+			CheckClickedCamera(camera);
+		}
 
 		if (ImGui::SliderFloat("FOV", &camera->camera_frustum.verticalFov, 0, 2 * 3.14f))
 		{
 			camera->SetFOV(camera->camera_frustum.verticalFov);
+
+			//UndoRedo
+			CheckClickedCamera(camera);
 		}
 
 		if (ImGui::SliderFloat("Aspect Ratio", &camera->aspect_ratio, 0, 10))
 		{
 			camera->SetAspectRatio(camera->aspect_ratio);
+
+			//UndoRedo
+			CheckClickedCamera(camera);
 		}
 
 		if (ImGui::SliderFloat("Near plane", &camera->camera_frustum.nearPlaneDistance, 1, camera->camera_frustum.farPlaneDistance + 1))
 		{
 			camera->SetNearDistance(camera->camera_frustum.nearPlaneDistance);
+
+			//UndoRedo
+			CheckClickedCamera(camera);
 		}
 
 		if (ImGui::SliderFloat("Far plane", &camera->camera_frustum.farPlaneDistance, camera->camera_frustum.nearPlaneDistance + 1, camera->camera_frustum.nearPlaneDistance + 1000))
 		{
 			camera->SetFarDistance(camera->camera_frustum.farPlaneDistance);
+
+			//UndoRedo
+			CheckClickedCamera(camera);
 		}
 
 		ImGui::Separator();
@@ -298,6 +326,9 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 		if (ImGui::SliderFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0, 100))
 		{
 			camera->SetOrthographicSize(float2(camera->camera_frustum.orthographicHeight * camera->aspect_ratio, camera->camera_frustum.orthographicHeight));
+
+			//UndoRedo
+			CheckClickedCamera(camera);
 		}
 
 		if (ImGui::Combo("Front faces", &camera->perpesctive_enable, "Perspective\0Orthographic\0"))
@@ -314,7 +345,17 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		ImGui::DragInt("Depth", &camera->depth, 0.05f);
+		if(ImGui::DragInt("Depth", &camera->depth, 0.05f))
+		{
+			//UndoRedo
+			CheckClickedCamera(camera);
+		}
+
+		if(App->editor->clicked_camera && !ImGui::IsMouseDown(0))
+		{
+			App->editor->clicked_camera = false;
+		}
+
 	}
 }
 

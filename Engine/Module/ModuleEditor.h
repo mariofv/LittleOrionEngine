@@ -61,6 +61,7 @@ public:
 	//UndoRedo
 	bool clicked = false;
 	bool clicked_light = false;
+	bool clicked_camera = false;
 	int type_of_action = 0;
 	std::vector<EditorAction*> undoStack;
 	std::vector<EditorAction*> redoStack;
@@ -81,7 +82,7 @@ private:
 	float scene_window_content_area_height = 0;
 
 	float2 scene_window_content_area_pos = float2::zero;
-	int maximum_size_stack_undo = 5;
+	const int MAXIMUM_SIZE_STACK_UNDO = 5;
 
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 	bool gizmo_hovered = false;
