@@ -1,8 +1,8 @@
 #ifndef _BILLBOARD_H_
 #define _BILLBOARD_H_
 
-#include "Resource/Mesh.h"
-#include "Resource/Texture.h"
+#include "ResourceManagement/Resources/Mesh.h"
+#include "ResourceManagement/Resources/Texture.h"
 
 #include <string>
 #include <MathGeoLib.h>

@@ -6,6 +6,7 @@
 #include "Module/ModuleInput.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleModelLoader.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
@@ -14,8 +15,6 @@
 #include "Module/ModuleUI.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
-#include "Importer/MaterialImporter.h"
-#include "Importer/MeshImporter.h"
 #include "UI/EngineLog.h"
 #include "Brofiler/Brofiler.h"
 
@@ -26,6 +25,7 @@ Application::Application()
 	// Order matters: they will Init/start/update in this order
 	modules.emplace_back(window = new ModuleWindow());
 	modules.emplace_back(filesystem = new ModuleFileSystem());
+	modules.emplace_back(resources = new ModuleResourceManager());
 	modules.emplace_back(input = new ModuleInput());
 	modules.emplace_back(ui = new ModuleUI());
 	modules.emplace_back(time = new ModuleTime());
@@ -41,9 +41,6 @@ Application::Application()
 	modules.emplace_back(scene = new ModuleScene());
 		
 	engine_log = std::make_unique<EngineLog>();
-
-	material_importer = std::make_unique<MaterialImporter>();
-	mesh_importer = std::make_unique<MeshImporter>();
 }
 
 Application::~Application()
