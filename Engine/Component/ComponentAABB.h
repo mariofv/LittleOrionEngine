@@ -2,7 +2,7 @@
 #define _COMPONENTAABB_H_
 
 #include "Component.h"
-#include "Resource/Mesh.h"
+#include "ResourceManagement/Resources/Mesh.h"
 
 #include "MathGeoLib.h"
 #include "GL/glew.h"

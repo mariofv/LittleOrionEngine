@@ -8,7 +8,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleLight.h"
-#include "Resource/Texture.h"
+#include "ResourceManagement/Resources/Texture.h"
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
@@ -22,7 +22,6 @@
 #include <pcg_basic.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>
-#include <pcg_basic.h>
 
 #include <algorithm>
 

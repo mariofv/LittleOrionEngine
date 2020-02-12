@@ -196,15 +196,6 @@
     <ClCompile Include="Engine\Filesystem\File.cpp">
       <Filter>Engine\Filesystem</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Importer\Importer.cpp">
-      <Filter>Engine\Importer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Importer\MaterialImporter.cpp">
-      <Filter>Engine\Importer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Importer\MeshImporter.cpp">
-      <Filter>Engine\Importer</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\UI\Billboard.cpp">
       <Filter>Engine\UI</Filter>
     </ClCompile>
@@ -250,9 +241,6 @@
     <ClCompile Include="Engine\UI\Hierarchy.cpp">
       <Filter>Engine\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UI\Skybox.cpp">
-      <Filter>Engine\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Helper\Config.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
@@ -265,12 +253,29 @@
     <ClCompile Include="Engine\Helper\Utils.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Resource\Texture.cpp">
-      <Filter>Engine\Resource</Filter>
+    <ClCompile Include="Engine\ResourceManagement\Importer\Importer.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Resource\Mesh.cpp">
-      <Filter>Engine\Resource</Filter>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Texture.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\TextureImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\MeshLoader.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -345,15 +350,6 @@
     <ClInclude Include="Engine\Filesystem\File.h">
       <Filter>Engine\Filesystem</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Importer\Importer.h">
-      <Filter>Engine\Importer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Importer\MaterialImporter.h">
-      <Filter>Engine\Importer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Importer\MeshImporter.h">
-      <Filter>Engine\Importer</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\UI\Billboard.h">
       <Filter>Engine\UI</Filter>
     </ClInclude>
@@ -393,9 +389,6 @@
     <ClInclude Include="Engine\UI\Hierarchy.h">
       <Filter>Engine\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Skybox.h">
-      <Filter>Engine\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Helper\Config.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
@@ -408,12 +401,30 @@
     <ClInclude Include="Engine\Helper\Utils.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Resource\Texture.h">
-      <Filter>Engine\Resource</Filter>
+    <ClInclude Include="Engine\ResourceManagement\Importer\Importer.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Resource\Mesh.h">
-      <Filter>Engine\Resource</Filter>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Texture.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Skybox.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleResourceManager.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\TextureImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -437,9 +448,6 @@
     <Filter Include="Engine\Filesystem">
       <UniqueIdentifier>{8247727e-b382-43a5-8fe6-cf16522fb498}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Importer">
-      <UniqueIdentifier>{77df864b-d951-40b5-ba86-51b9342f9390}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Main">
       <UniqueIdentifier>{ee0d0ae0-8863-4a59-8425-13870fcc3142}</UniqueIdentifier>
     </Filter>
@@ -458,7 +466,13 @@
     <Filter Include="Engine\Helper">
       <UniqueIdentifier>{2bc4007b-e9fc-444a-a564-71df69ef9649}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Resource">
+    <Filter Include="Engine\ResourceManagement">
+      <UniqueIdentifier>{43b6c14e-b9eb-4025-9f7b-b2e8c1cedd2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\Importer">
+      <UniqueIdentifier>{77df864b-d951-40b5-ba86-51b9342f9390}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\Resources">
       <UniqueIdentifier>{621e0eab-6111-4b36-b46d-c82b3b6b0847}</UniqueIdentifier>
     </Filter>
   </ItemGroup>

@@ -93,8 +93,12 @@
     <ClInclude Include="Engine\Main\Application.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
     <ClInclude Include="Engine\Main\Globals.h" />
-    <ClInclude Include="Engine\Resource\Mesh.h" />
-    <ClInclude Include="Engine\Resource\Texture.h" />
+    <ClInclude Include="Engine\Module\ModuleResourceManager.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Texture.h" />
     <ClInclude Include="Engine\SpacePartition\OLOctTree.h" />
     <ClInclude Include="Engine\SpacePartition\OLOctTreeNode.h" />
     <ClInclude Include="Engine\SpacePartition\OLQuadTree.h" />
@@ -102,9 +106,9 @@
     <ClInclude Include="Engine\UI\Billboard.h" />
     <ClInclude Include="Engine\Component\ComponentLight.h" />
     <ClInclude Include="Engine\Filesystem\File.h" />
-    <ClInclude Include="Engine\Importer\Importer.h" />
-    <ClInclude Include="Engine\Importer\MaterialImporter.h" />
-    <ClInclude Include="Engine\Importer\MeshImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\Importer.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\TextureImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporter.h" />
     <ClInclude Include="Engine\Module\ModuleDebugDraw.h" />
     <ClInclude Include="Engine\Module\ModuleFileSystem.h" />
     <ClInclude Include="Engine\Module\ModuleDebug.h" />
@@ -132,7 +136,9 @@
     <ClInclude Include="Engine\Module\ModuleWindow.h" />
     <ClInclude Include="Engine\Module\ModuleScene.h" />
     <ClInclude Include="Engine\UI\Hierarchy.h" />
-    <ClInclude Include="Engine\UI\Skybox.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Skybox.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Helper\Config.cpp" />
@@ -143,8 +149,11 @@
     <ClCompile Include="Engine\Main\GameObject.cpp" />
     <ClCompile Include="Engine\Main\Log.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
-    <ClCompile Include="Engine\Resource\Mesh.cpp" />
-    <ClCompile Include="Engine\Resource\Texture.cpp" />
+    <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Texture.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLOctTree.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLOctTreeNode.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLQuadTree.cpp" />
@@ -152,9 +161,9 @@
     <ClCompile Include="Engine\UI\Billboard.cpp" />
     <ClCompile Include="Engine\Component\ComponentLight.cpp" />
     <ClCompile Include="Engine\Filesystem\File.cpp" />
-    <ClCompile Include="Engine\Importer\Importer.cpp" />
-    <ClCompile Include="Engine\Importer\MaterialImporter.cpp" />
-    <ClCompile Include="Engine\Importer\MeshImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\Importer.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\TextureImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporter.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebugDraw.cpp" />
     <ClCompile Include="Engine\Module\ModuleFileSystem.cpp" />
     <ClCompile Include="Engine\Module\ModuleDebug.cpp" />
@@ -173,7 +182,7 @@
     <ClCompile Include="Engine\Module\ModuleTime.cpp" />
     <ClCompile Include="Engine\UI\FileExplorerUI.cpp" />
     <ClCompile Include="Engine\UI\Hierarchy.cpp" />
-    <ClCompile Include="Engine\UI\Skybox.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGradient.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGuizmo.cpp" />
@@ -225,6 +234,8 @@
     <ClCompile Include="Engine\Module\ModuleTexture.cpp" />
     <ClCompile Include="Engine\Module\ModuleWindow.cpp" />
     <ClCompile Include="Engine\Module\ModuleScene.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\MeshLoader.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
