@@ -15,7 +15,7 @@ std::shared_ptr<Mesh> MeshLoader::Load(const std::string& file_path)
 	char * data = App->filesystem->Load(file_path.c_str(), mesh_size);
 	char* cursor = data;
 
-	uint32_t ranges[3];
+	uint32_t ranges[2];
 	//Get ranges
 	size_t bytes = sizeof(ranges); // First store ranges
 	memcpy(ranges, cursor, bytes);

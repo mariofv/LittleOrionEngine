@@ -34,7 +34,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_transf
 
 	uint32_t num_indices = indices.size();
 	uint32_t num_vertices = vertices.size();
-	uint32_t ranges[3] = { num_indices, num_vertices };
+	uint32_t ranges[2] = { num_indices, num_vertices };
 
 	uint32_t size = sizeof(ranges) + sizeof(uint32_t) * num_indices + sizeof(Mesh::Vertex) * num_vertices + sizeof(uint32_t);
 
