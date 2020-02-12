@@ -3,7 +3,6 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
-#include "Module/ModuleUI.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleRender.h"
@@ -121,7 +120,7 @@ void EngineUI::ShowHelpMenu()
 	if (ImGui::BeginMenu("Help"))
 	{
 		ImGui::MenuItem(ICON_FA_QUESTION_CIRCLE " About", (const char*)0, &show_about_window);
-		ImGui::PushFont(App->ui->GetFont(Fonts::FONT_FAB));
+		ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAB));
 		if (ImGui::MenuItem(ICON_FA_GITHUB_ALT " Repository"))
 		{
 			ShellExecuteA(NULL, "open", "https://github.com/mariofv/LittleOrionEngine/", NULL, NULL, SW_SHOWNORMAL);

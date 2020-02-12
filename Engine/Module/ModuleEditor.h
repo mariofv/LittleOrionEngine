@@ -8,6 +8,9 @@
 
 #include <ImGuizmo.h>
 
+class EngineUI;
+struct ImFont;
+
 class ModuleEditor : public Module
 {
 public:
@@ -15,12 +18,14 @@ public:
 	~ModuleEditor() = default;
 
 	bool Init() override;
+	update_status PreUpdate() override;
 	update_status Update() override;
 	bool CleanUp() override;
 
 	void OpenScene(const std::string &path) const;
 	void SaveScene(const std::string &path) const;
 
+	void Render();
 	void RenderDebugDraws();
 
 	void MousePicking(const float2& mouse_position);
@@ -29,6 +34,8 @@ public:
 	void ShowGameTab();
 
 	void ShowGizmoControls();
+
+	ImFont* GetFont(const Fonts & font) const;
 
 private:
 	void RenderCameraFrustum() const;
@@ -44,8 +51,11 @@ private:
 
 	void SceneDropTarget();
 
+	void LoadFonts();
+
 public:
 	bool scene_window_is_hovered = false;
+	EngineUI* editor_ui = nullptr;
 
 private:
 	float scene_window_content_area_width = 0;

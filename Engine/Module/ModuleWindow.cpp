@@ -1,8 +1,8 @@
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleCamera.h"
+#include "ModuleEditor.h"
 #include "ModuleRender.h"
-#include "ModuleUI.h"
 #include "ModuleWindow.h"
 
 #include "imgui.h"
@@ -167,7 +167,7 @@ void ModuleWindow::WindowResized(unsigned width, unsigned height)
 
 void ModuleWindow::ShowWindowOptions()
 {
-	ImGui::PushFont(App->ui->GetFont(Fonts::FONT_FAR));
+	ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAR));
 	if (ImGui::CollapsingHeader(ICON_FA_WINDOW_MAXIMIZE " Window")) {
 		if (ImGui::SliderFloat("Brightness", &brightness, 0, 1))
 		{
