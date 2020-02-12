@@ -59,7 +59,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 	node_game_object->Update();
 
 	ComponentMaterial *componentMaterial = (ComponentMaterial*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL);
-	for (auto texture : mesh_for_component->meshes_textures_path)
+	/*for (auto texture : mesh_for_component->meshes_textures_path)
 	{
 		size_t separator = texture.find_last_of(":");
 		std::string texture_path = texture.substr(separator+1, texture.size());
@@ -69,7 +69,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 		{
 			componentMaterial->SetMaterialTexture(std::stoi(texture_type), App->resources->Load<Texture>(texture_path));
 		}
-	}
+	}*/
 }
 
 GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) const
@@ -88,12 +88,5 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 	model_game_object->Update();
 
 	ComponentMaterial* componentMaterial = (ComponentMaterial*)model_game_object->CreateComponent(Component::ComponentType::MATERIAL);
-	for (auto texture : mesh_for_component->meshes_textures_path)
-	{
-		size_t separator = texture.find_last_of(":");
-		std::string texture_path = texture.substr(separator + 1, texture.size());
-		std::string texture_type = texture.substr(0, separator);
-		componentMaterial->SetMaterialTexture(std::stoi(texture_type), App->resources->Load<Texture>(texture_path));
-	}
 	return model_game_object;
 }

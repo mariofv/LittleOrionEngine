@@ -4,7 +4,7 @@
 #include <ResourceManagement/Resources/Mesh.h>
 #include "Module/ModuleFileSystem.h"
 
-void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string> & loaded_meshes_materials, const aiMatrix4x4& mesh_transformation, const std::string& output_file) const
+void MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_transformation, const std::string& output_file) const
 {
 	std::vector<uint32_t> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -32,20 +32,11 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 		vertices.push_back(new_vertex);
 	}
 
-	std::vector<uint32_t> materials_path_size;
-	uint32_t total_meshes_size = 0;
-	for (auto & path_size : loaded_meshes_materials)
-	{
-		materials_path_size.push_back(path_size.size());
-		total_meshes_size += path_size.size();
-	}
-
 	uint32_t num_indices = indices.size();
 	uint32_t num_vertices = vertices.size();
-	uint32_t num_materials = loaded_meshes_materials.size();
-	uint32_t ranges[3] = { num_indices, num_vertices, num_materials };
+	uint32_t ranges[3] = { num_indices, num_vertices };
 
-	uint32_t size = sizeof(ranges) + sizeof(uint32_t) * num_indices + sizeof(Mesh::Vertex) * num_vertices + sizeof(uint32_t) * num_materials + total_meshes_size;
+	uint32_t size = sizeof(ranges) + sizeof(uint32_t) * num_indices + sizeof(Mesh::Vertex) * num_vertices + sizeof(uint32_t);
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
@@ -59,20 +50,6 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const std::vector<std::string>
 	cursor += bytes; // Store vertices
 	bytes = sizeof(Mesh::Vertex) * num_vertices;
 	memcpy(cursor, &vertices.front(), bytes);
-
-	cursor += bytes; // Store sizes
-	bytes = sizeof(uint32_t) * num_materials;
-	if (bytes != 0)
-	{
-		memcpy(cursor, &materials_path_size.front(), bytes);
-	}
-	for (size_t i = 0; i < num_materials; i++)
-	{
-		cursor += bytes; // Store materials
-		bytes = materials_path_size.at(i);
-		memcpy(cursor, loaded_meshes_materials[i].c_str(), bytes);
-	}
-
 
 	App->filesystem->Save(output_file.c_str(), data, size);
 	delete data;

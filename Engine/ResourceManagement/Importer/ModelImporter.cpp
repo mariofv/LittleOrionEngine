@@ -9,6 +9,7 @@
 #include <assimp/material.h>
 #include "assimp/DefaultLogger.hpp"
 #include "Brofiler/Brofiler.h"
+#include "Helper/Config.h"
 
 ModelImporter::ModelImporter()
 {
@@ -37,6 +38,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 	}
 
 	File output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER+"/"+ file.filename_no_extension);
+	File output_file_model = App->filesystem->MakeDirectory(LIBRARY_MODEL_FOLDER + "/" + file.filename_no_extension);
 	APP_LOG_INIT("Importing model %s.", file.file_path.c_str());
 
 	performance_timer.Start();
@@ -86,7 +88,7 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 		pPosition *= SCALE_FACTOR;
 
 		node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
-		mesh_importer->ImportMesh(scene->mMeshes[mesh_index], loaded_meshes_materials, node_transformation, mesh_file);
+		mesh_importer->ImportMesh(scene->mMeshes[mesh_index], node_transformation, mesh_file);
 	}
 
 	for (size_t i = 0; i < root_node->mNumChildren; i++)
