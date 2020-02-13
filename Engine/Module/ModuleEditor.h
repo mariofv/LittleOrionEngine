@@ -45,7 +45,7 @@ public:
 	ImFont* GetFont(const Fonts & font) const;
 
 private:
-
+	bool InitImgui();
 	void LoadFonts();
 
 public:

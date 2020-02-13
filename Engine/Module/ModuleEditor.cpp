@@ -32,7 +32,26 @@
 bool ModuleEditor::Init()
 {
 	APP_LOG_SECTION("************ Module Editor Init ************");
-	
+	bool ret = true;
+	ret = InitImgui();
+
+	editor_ui = new EngineUI();
+	panels.push_back(menu_bar = new PanelMenuBar());
+	panels.push_back(scene_panel = new PanelScene());
+	panels.push_back(game_panel = new PanelGame());
+	panels.push_back(inspector = new PanelInspector());
+	panels.push_back(hierarchy = new PanelHierarchy());
+	panels.push_back(project_explorer = new PanelProjectExplorer());
+	panels.push_back(console = new PanelConsole());
+	panels.push_back(debug_panel = new PanelDebug());
+	panels.push_back(configuration = new PanelConfiguration());
+	panels.push_back(about = new PanelAbout());
+
+	return ret;
+}
+
+bool ModuleEditor::InitImgui()
+{
 	APP_LOG_INIT("Initializing IMGUI editor");
 	SDL_GLContext gl_context = ImGui::CreateContext();
 
@@ -55,21 +74,7 @@ bool ModuleEditor::Init()
 	io.ConfigFlags |= ImGuiConfigFlags_DockingEnable;
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
-	editor_ui = new EngineUI();
-	panels.push_back(menu_bar = new PanelMenuBar());
-	panels.push_back(scene_panel = new PanelScene());
-	panels.push_back(game_panel = new PanelGame());
-	panels.push_back(inspector = new PanelInspector());
-	panels.push_back(hierarchy = new PanelHierarchy());
-	panels.push_back(project_explorer = new PanelProjectExplorer());
-	panels.push_back(console = new PanelConsole());
-	panels.push_back(debug_panel = new PanelDebug());
-	panels.push_back(configuration = new PanelConfiguration());
-	panels.push_back(about = new PanelAbout());
-
 	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
-
-	return true;
 }
 
 update_status ModuleEditor::PreUpdate()
@@ -100,15 +105,28 @@ update_status ModuleEditor::Update()
 void ModuleEditor::Render()
 {
 	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
-	for (auto& panel : panels)
+	
+	ImGui::SetNextWindowPos(ImVec2(0,0));
+	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight()));
+	ImGuiWindowFlags dockspace_flags;
+	dockspace_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoBringToFrontOnFocus;
+	if (ImGui::Begin("DockSpace", NULL, dockspace_flags))
 	{
-		if (panel->IsEnabled())
-		{
-			panel->Render();
-		}
-	}
+		ImGuiID dockspace_id = ImGui::GetID("Editor Dockspace");
+		ImGui::DockSpace(dockspace_id);
 
-	editor_ui->ShowEngineUI();
+		for (auto& panel : panels)
+		{
+			if (panel->IsEnabled())
+			{
+				panel->Render();
+			}
+		}
+
+		editor_ui->ShowEngineUI();
+	}
+	ImGui::End();
+	
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
