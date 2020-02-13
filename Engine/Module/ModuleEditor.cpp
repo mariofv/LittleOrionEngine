@@ -179,7 +179,6 @@ void ModuleEditor::InitEditorDockspace()
 	ImGui::DockBuilderFinish(editor_dockspace_id);
 }
 
-
 // Called before quitting
 bool ModuleEditor::CleanUp()
 {
@@ -188,6 +187,13 @@ bool ModuleEditor::CleanUp()
 	ImGui::DestroyContext();
 
 	remove(TMP_SCENE_PATH);
+
+	delete menu_bar;
+	delete toolbar;
+	for (auto& panel : panels)
+	{
+		delete panel;
+	}
 
 	return true;
 }
