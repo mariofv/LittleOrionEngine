@@ -22,24 +22,8 @@
 
 void EngineUI::ShowEngineUI()
 {
-	ShowSceneControls();
 
 	ShowPopups();
-}
-
-
-void EngineUI::ShowSceneControls()
-{
-	ImGui::PushStyleVar(ImGuiStyleVar_WindowRounding, 0.f);
-	ImGui::SetNextWindowPos(ImVec2(0, MAIN_MENU_BAR_HEIGHT));
-	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight()*TIME_BAR_HEIGHT_PROP));
-	if (ImGui::Begin("Time Controls", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar))
-	{
-		App->editor->ShowGizmoControls();
-		App->time->ShowTimeControls();
-	}
-	ImGui::End();
-	ImGui::PopStyleVar();
 }
 
 void EngineUI::ShowPopups() const

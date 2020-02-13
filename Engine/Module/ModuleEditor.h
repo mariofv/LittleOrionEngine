@@ -10,6 +10,7 @@ class EngineUI;
 
 class Panel;
 class PanelMenuBar;
+class PanelToolBar;
 class PanelScene;
 class PanelGame;
 class PanelInspector;
@@ -40,8 +41,6 @@ public:
 
 	void Render();
 
-	void ShowGizmoControls();
-
 	ImFont* GetFont(const Fonts & font) const;
 
 private:
@@ -53,6 +52,7 @@ public:
 
 	EngineUI* editor_ui = nullptr;
 	PanelMenuBar* menu_bar = nullptr;
+	PanelToolBar* toolbar = nullptr;
 	PanelScene* scene_panel = nullptr;
 	PanelGame* game_panel = nullptr;
 	PanelInspector* inspector = nullptr;

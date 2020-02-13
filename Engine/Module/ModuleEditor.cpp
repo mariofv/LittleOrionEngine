@@ -16,6 +16,7 @@
 #include "UI/Panel/PanelInspector.h"
 #include "UI/Panel/PanelProjectExplorer.h"
 #include "UI/Panel/PanelScene.h"
+#include "UI/Panel/PanelToolBar.h"
 #include "UI/EngineUI.h"
 
 #include <SDL/SDL.h>
@@ -37,6 +38,7 @@ bool ModuleEditor::Init()
 
 	editor_ui = new EngineUI();
 	panels.push_back(menu_bar = new PanelMenuBar());
+	panels.push_back(toolbar = new PanelToolBar());
 	panels.push_back(scene_panel = new PanelScene());
 	panels.push_back(game_panel = new PanelGame());
 	panels.push_back(inspector = new PanelInspector());
@@ -166,36 +168,6 @@ void ModuleEditor::SaveScene(const std::string &path) const
 
 	App->filesystem->Save(path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
 }
-
-
-void ModuleEditor::ShowGizmoControls()
-{
-	ImVec2 window_size = ImGui::GetWindowSize();
-
-	ImVec2 translate_control_pos(10, (window_size.y - 24)*0.5f);
-	ImGui::SetCursorPos(translate_control_pos);
-	if (ImGui::Button(ICON_FA_ARROWS_ALT, ImVec2(24, 24)))
-	{
-		gizmo_operation = ImGuizmo::TRANSLATE;
-	}
-
-	ImGui::SameLine();
-	ImVec2 rotation_control_pos(36, (window_size.y - 24)*0.5f);
-	ImGui::SetCursorPos(rotation_control_pos);
-	if (ImGui::Button(ICON_FA_SYNC_ALT, ImVec2(24, 24)))
-	{
-		gizmo_operation = ImGuizmo::ROTATE;
-	}
-
-	ImGui::SameLine();
-	ImVec2 scale_control_pos(62, (window_size.y - 24)*0.5f);
-	ImGui::SetCursorPos(scale_control_pos);
-	if (ImGui::Button(ICON_FA_EXPAND_ARROWS_ALT, ImVec2(24, 24)))
-	{
-		gizmo_operation = ImGuizmo::SCALE;
-	}
-}
-
 
 ImFont* ModuleEditor::GetFont(const Fonts & font) const
 {

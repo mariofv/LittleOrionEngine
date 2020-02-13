@@ -54,6 +54,7 @@ private:
 	bool stepping_frame = false;
 
 	friend class PanelConfiguration;
+	friend class PanelToolBar;
 };
 
 #endif
