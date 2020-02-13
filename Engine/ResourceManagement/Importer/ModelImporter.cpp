@@ -67,7 +67,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 	ImportNode(root_node, identity_transformation, scene, base_path.c_str(),output_file.file_path, node_config);
 
 	aiReleaseImport(scene);
-	SaveMetaFile(file, output_file_model);
+	//SaveMetaFile(file, output_file_model);
 
 	model.AddChildrenConfig(node_config, "Node");
 	std::string serialized_model_string;
