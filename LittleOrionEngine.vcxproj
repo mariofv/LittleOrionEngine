@@ -141,6 +141,7 @@
     <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Prefab.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Skeleton.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Helper\Config.cpp" />
@@ -240,6 +241,7 @@
     <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Prefab.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Skeleton.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
