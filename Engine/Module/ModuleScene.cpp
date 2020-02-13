@@ -9,8 +9,6 @@
 #include "Helper/Config.h"
 #include "UI/Panel/PanelHierarchy.h"
 
-#include <imgui.h>
-#include <FontAwesome5/IconsFontAwesome5.h>
 #include <algorithm>
 #include <stack>
 #include "Brofiler/Brofiler.h"
