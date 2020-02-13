@@ -20,6 +20,7 @@ class PanelConsole;
 class PanelDebug;
 class PanelConfiguration;
 class PanelAbout;
+class PanelPopups;
 
 class GameObject;
 
@@ -54,7 +55,6 @@ public:
 	GameObject *selected_game_object = nullptr;
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 
-	EngineUI* editor_ui = nullptr;
 	PanelMenuBar* menu_bar = nullptr;
 	PanelToolBar* toolbar = nullptr;
 	PanelScene* scene_panel = nullptr;
@@ -66,6 +66,7 @@ public:
 	PanelDebug* debug_panel = nullptr;
 	PanelConfiguration* configuration = nullptr;
 	PanelAbout* about = nullptr;
+	PanelPopups* popups = nullptr;
 
 private:
 	std::vector<Panel*> panels;

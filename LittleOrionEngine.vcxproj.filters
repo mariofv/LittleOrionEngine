@@ -208,9 +208,6 @@
     <ClCompile Include="Engine\UI\Billboard.cpp">
       <Filter>Engine\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UI\EngineUI.cpp">
-      <Filter>Engine\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\UI\EngineLog.cpp">
       <Filter>Engine\UI</Filter>
     </ClCompile>
@@ -298,6 +295,7 @@
     <ClCompile Include="Engine\UI\Panel\PanelToolBar.cpp">
       <Filter>Engine\UI\Panel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\PanelPopups.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -384,9 +382,6 @@
     <ClInclude Include="Engine\UI\Billboard.h">
       <Filter>Engine\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\EngineUI.h">
-      <Filter>Engine\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\UI\EngineLog.h">
       <Filter>Engine\UI</Filter>
     </ClInclude>
@@ -471,6 +466,7 @@
     <ClInclude Include="Engine\UI\Panel\PanelToolBar.h">
       <Filter>Engine\UI\Panel</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\PanelPopups.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

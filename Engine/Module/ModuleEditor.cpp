@@ -14,10 +14,10 @@
 #include "UI/Panel/PanelMenuBar.h"
 #include "UI/Panel/PanelHierarchy.h"
 #include "UI/Panel/PanelInspector.h"
+#include "UI/Panel/PanelPopups.h"
 #include "UI/Panel/PanelProjectExplorer.h"
 #include "UI/Panel/PanelScene.h"
 #include "UI/Panel/PanelToolBar.h"
-#include "UI/EngineUI.h"
 
 #include <SDL/SDL.h>
 #include <GL/glew.h>
@@ -37,11 +37,10 @@ bool ModuleEditor::Init()
 	bool ret = true;
 	ret = InitImgui();
 
-	editor_ui = new EngineUI();
 	menu_bar = new PanelMenuBar();
 	toolbar = new PanelToolBar();
-	panels.push_back(scene_panel = new PanelScene());
 	panels.push_back(game_panel = new PanelGame());
+	panels.push_back(scene_panel = new PanelScene());
 	panels.push_back(inspector = new PanelInspector());
 	panels.push_back(hierarchy = new PanelHierarchy());
 	panels.push_back(project_explorer = new PanelProjectExplorer());
@@ -49,6 +48,7 @@ bool ModuleEditor::Init()
 	panels.push_back(debug_panel = new PanelDebug());
 	panels.push_back(configuration = new PanelConfiguration());
 	panels.push_back(about = new PanelAbout());
+	panels.push_back(popups = new PanelPopups());
 
 	return ret;
 }
@@ -147,8 +147,6 @@ void ModuleEditor::RenderEditorDockspace()
 				panel->Render();
 			}
 		}
-
-		editor_ui->ShowEngineUI();
 	}
 	ImGui::EndChild();
 }
@@ -185,8 +183,6 @@ void ModuleEditor::InitEditorDockspace()
 // Called before quitting
 bool ModuleEditor::CleanUp()
 {
-	delete editor_ui;
-
 	ImGui_ImplOpenGL3_Shutdown();
 	ImGui_ImplSDL2_Shutdown();
 	ImGui::DestroyContext();
