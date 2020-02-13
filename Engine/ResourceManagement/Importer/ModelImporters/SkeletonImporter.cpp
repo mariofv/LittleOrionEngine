@@ -15,7 +15,7 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 	return true;
 }
 
-void SkeletonImporter::ImportBone(const aiMesh* mesh, const aiNode * previus_node,  Skeleton::Joint & previous_joint, const aiMatrix4x4& parent_transformation, const Skeleton & skeleton) const
+void SkeletonImporter::ImportBone(const aiMesh* mesh, const aiNode * previus_node,  Skeleton::Joint & previous_joint, const aiMatrix4x4& parent_transformation, Skeleton & skeleton) const
 {
 	aiMatrix4x4 current_transformation = parent_transformation * previus_node->mTransformation;
 	for (size_t i = 0; i < previus_node->mNumChildren; i++)
@@ -27,6 +27,7 @@ void SkeletonImporter::ImportBone(const aiMesh* mesh, const aiNode * previus_nod
 		
 			Skeleton::Joint bone{ GetTranform(current_transformation), &previous_joint};
 			next_joint = bone;
+			skeleton.skeleton.push_back(bone);
 		}
 		ImportBone(mesh, previus_node->mChildren[i], next_joint, current_transformation, skeleton);
 	}
