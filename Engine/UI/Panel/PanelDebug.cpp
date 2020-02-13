@@ -18,6 +18,8 @@ void PanelDebug::Render()
 {
 	if (ImGui::Begin(ICON_FA_BUG " Debug"))
 	{
+		hovered = ImGui::IsWindowHovered();
+
 		ImGui::Checkbox("Grid", &App->debug->show_grid);
 		ImGui::Checkbox("Bounding boxes", &App->debug->show_bounding_boxes);
 		ImGui::Checkbox("Global bounding boxes", &App->debug->show_global_bounding_boxes);

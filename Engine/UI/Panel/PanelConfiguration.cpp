@@ -23,6 +23,8 @@ void PanelConfiguration::Render()
 {
 	if (ImGui::Begin(ICON_FA_COGS " Configuration"))
 	{
+		hovered = ImGui::IsWindowHovered();
+
 		ShowHardware();
 
 		ImGui::Spacing();

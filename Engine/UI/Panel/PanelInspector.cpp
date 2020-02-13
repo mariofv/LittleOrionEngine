@@ -17,6 +17,8 @@ void PanelInspector::Render()
 {
 	if (ImGui::Begin(ICON_FA_INFO_CIRCLE " Inspector"))
 	{
+		hovered = ImGui::IsWindowHovered();
+
 		if (App->editor->selected_game_object != nullptr)
 		{
 			App->editor->selected_game_object->ShowPropertiesWindow();

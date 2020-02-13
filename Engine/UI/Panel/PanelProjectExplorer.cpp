@@ -17,7 +17,9 @@ PanelProjectExplorer::PanelProjectExplorer()
 
 void PanelProjectExplorer::Render() 
 {
-	if(ImGui::Begin(ICON_FA_FOLDER_OPEN " Project") ){
+	if(ImGui::Begin(ICON_FA_FOLDER_OPEN " Project"))
+	{
+		hovered = ImGui::IsWindowHovered();
 
 		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 0)))
 		{
@@ -38,7 +40,6 @@ void PanelProjectExplorer::Render()
 
 void PanelProjectExplorer::ShowFoldersHierarchy(const File & file) 
 {
-
 	for (auto & child : file.children)
 	{
 		if (child->file_type == FileType::DIRECTORY)

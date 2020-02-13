@@ -14,6 +14,8 @@ void PanelAbout::Render()
 {
 	if (ImGui::Begin(window_name.c_str()))
 	{
+		hovered = ImGui::IsWindowHovered();
+
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "LittleOrion Engine");
 		ImGui::TextWrapped("3D engine developed during the Master's Degree in AAA Videogames Development.");
 

@@ -16,6 +16,8 @@ PanelConsole::PanelConsole()
 
 void PanelConsole::Render()
 {
+	hovered = ImGui::IsWindowHovered();
+
 	char tmp_string[64];
 	if (ImGui::Begin(ICON_FA_TERMINAL " Console"))
 	{

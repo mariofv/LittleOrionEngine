@@ -21,6 +21,8 @@ void PanelHierarchy::Render()
 {
 	if (ImGui::Begin(ICON_FA_SITEMAP " Hierarchy"))
 	{
+		hovered = ImGui::IsWindowHovered();
+
 		for (unsigned int i = 0; i < App->scene->GetRoot()->children.size(); ++i)
 		{
 			ImGui::PushID(i);

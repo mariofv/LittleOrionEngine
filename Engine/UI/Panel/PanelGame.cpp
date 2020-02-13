@@ -19,6 +19,8 @@ void PanelGame::Render()
 {
 	if (ImGui::Begin(ICON_FA_GHOST " Game"))
 	{
+		hovered = ImGui::IsWindowHovered();
+
 		if (App->cameras->main_camera != nullptr)
 		{
 			ImVec2 game_window_pos_ImVec2 = ImGui::GetWindowPos();
