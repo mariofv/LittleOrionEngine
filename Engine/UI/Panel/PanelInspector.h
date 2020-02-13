@@ -6,8 +6,8 @@
 class PanelInspector : public Panel
 {
 public:
-	PanelInspector();
-	~PanelInspector();
+	PanelInspector() { enabled = true; };
+	~PanelInspector() = default;
 
 	void Render() override;
 

@@ -13,8 +13,8 @@ struct ImGuiTextBuffer;
 class PanelConsole : public Panel
 {
 public:
-	PanelConsole() = default;
-	~PanelConsole();
+	PanelConsole() { enabled = true; };
+	~PanelConsole() = default;
 
 	void Render() override;
 	void ShowFilterButton(const char* button_label, const ImVec4 & color, bool &filter);

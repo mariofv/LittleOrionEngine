@@ -22,19 +22,18 @@
 
 void EngineUI::ShowEngineUI()
 {
-	ShowMainMenu();
 	ShowSceneControls();
 
-	if (show_configuration_window)
+	if (0)
 	{
 		ShowConfigurationWindow();
 	}
 
-	if (show_debug_window)
+	if (0)
 	{
 		App->debug->ShowDebugWindow();
 	}
-	if (show_about_window)
+	if (0)
 	{
 		ShowAboutWindow();
 	}
@@ -42,78 +41,6 @@ void EngineUI::ShowEngineUI()
 	ShowPopups();
 }
 
-void EngineUI::ShowMainMenu()
-{
-	if (ImGui::BeginMainMenuBar())
-	{
-		ShowFileMenu();
-		ShowViewMenu();
-		ShowHelpMenu();
-		ImGui::EndMainMenuBar();
-	}	
-}
-
-void EngineUI::ShowFileMenu()
-{
-	if (ImGui::BeginMenu("File"))
-	{
-		
-		if (ImGui::MenuItem(ICON_FA_FILE " New Scene"))
-		{
-			App->editor->OpenScene(DEFAULT_SCENE_PATH);
-		}
-		if (App->filesystem->Exists(SAVED_SCENE_PATH))
-		{
-			if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Load Scene"))
-			{
-				App->editor->OpenScene(SAVED_SCENE_PATH);
-			}
-		}
-		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
-		{
-			App->editor->SaveScene(SAVED_SCENE_PATH);
-		}
-		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
-		{
-			SDL_Event quit_event;
-			quit_event.type = SDL_QUIT;
-			SDL_PushEvent(&quit_event);
-		}
-
-		ImGui::EndMenu();
-	}
-}
-
-void EngineUI::ShowViewMenu()
-{
-	if (ImGui::BeginMenu("View"))
-	{
-		ImGui::MenuItem((ICON_FA_SITEMAP " Hierarchy"), (const char*)0, &show_hierarchy_window);
-		ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, &show_scene_window);
-		ImGui::MenuItem((ICON_FA_GHOST " Game"), (const char*)0, &show_game_tab);
-		ImGui::MenuItem((ICON_FA_INFO " Inspector"), (const char*)0, &show_model_inspector_window);
-		ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, &show_configuration_window);
-		ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, &show_console_window);
-		ImGui::MenuItem((ICON_FA_BUG " Debug"), (const char*)0, &show_debug_window);
-
-		ImGui::EndMenu();
-	}
-}
-
-void EngineUI::ShowHelpMenu()
-{
-	if (ImGui::BeginMenu("Help"))
-	{
-		ImGui::MenuItem(ICON_FA_QUESTION_CIRCLE " About", (const char*)0, &show_about_window);
-		ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAB));
-		if (ImGui::MenuItem(ICON_FA_GITHUB_ALT " Repository"))
-		{
-			ShellExecuteA(NULL, "open", "https://github.com/mariofv/LittleOrionEngine/", NULL, NULL, SW_SHOWNORMAL);
-		}
-		ImGui::PopFont();
-		ImGui::EndMenu();
-	}
-}
 
 void EngineUI::ShowSceneControls()
 {

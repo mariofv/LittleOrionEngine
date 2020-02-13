@@ -9,7 +9,7 @@ class GameObject;
 class PanelHierarchy : public Panel
 {
 public:
-	PanelHierarchy() = default;
+	PanelHierarchy() { enabled = true; };
 	~PanelHierarchy() = default;
 
 	void Render() override;

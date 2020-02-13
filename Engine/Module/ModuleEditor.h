@@ -9,6 +9,7 @@
 class EngineUI;
 
 class Panel;
+class PanelMenuBar;
 class PanelScene;
 class PanelGame;
 class PanelInspector;
@@ -48,6 +49,7 @@ public:
 	GameObject *selected_game_object = nullptr;
 
 	EngineUI* editor_ui = nullptr;
+	PanelMenuBar* menu_bar = nullptr;
 	PanelScene* scene_panel = nullptr;
 	PanelGame* game_panel = nullptr;
 	PanelInspector* inspector = nullptr;

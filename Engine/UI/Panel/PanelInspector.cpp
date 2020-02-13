@@ -7,15 +7,6 @@
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
-PanelInspector::PanelInspector()
-{
-}
-
-
-PanelInspector::~PanelInspector()
-{
-}
-
 void PanelInspector::Render()
 {
 	if (ImGui::Begin(ICON_FA_INFO_CIRCLE " Inspector"))

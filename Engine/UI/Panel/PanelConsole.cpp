@@ -8,12 +8,6 @@
 
 #include <algorithm>
 
-
-PanelConsole::~PanelConsole()
-{
-}
-
-
 void PanelConsole::Render()
 {
 	char tmp_string[64];

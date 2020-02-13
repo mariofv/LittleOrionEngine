@@ -134,6 +134,7 @@
     <ClInclude Include="Engine\UI\Panel\PanelConsole.h" />
     <ClInclude Include="Engine\UI\Panel\PanelGame.h" />
     <ClInclude Include="Engine\UI\Panel\PanelHierarchy.h" />
+    <ClInclude Include="Engine\UI\Panel\PanelMenuBar.h" />
     <ClInclude Include="Engine\UI\Panel\PanelProjectExplorer.h" />
     <ClInclude Include="Engine\UI\Skybox.h" />
     <ClInclude Include="Engine\UI\Panel\PanelScene.h" />
@@ -179,6 +180,7 @@
     <ClCompile Include="Engine\UI\Panel\PanelConsole.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelGame.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelHierarchy.cpp" />
+    <ClCompile Include="Engine\UI\Panel\PanelMenuBar.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelProjectExplorer.cpp" />
     <ClCompile Include="Engine\UI\Skybox.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp" />

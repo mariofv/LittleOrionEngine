@@ -8,6 +8,7 @@
 #include "Helper/Config.h"
 #include "UI/Panel/PanelConsole.h"
 #include "UI/Panel/PanelGame.h"
+#include "UI/Panel/PanelMenuBar.h"
 #include "UI/Panel/PanelHierarchy.h"
 #include "UI/Panel/PanelInspector.h"
 #include "UI/Panel/PanelProjectExplorer.h"
@@ -52,6 +53,7 @@ bool ModuleEditor::Init()
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	editor_ui = new EngineUI();
+	panels.push_back(menu_bar = new PanelMenuBar());
 	panels.push_back(scene_panel = new PanelScene());
 	panels.push_back(game_panel = new PanelGame());
 	panels.push_back(inspector = new PanelInspector());
@@ -94,7 +96,10 @@ void ModuleEditor::Render()
 	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
 	for (auto& panel : panels)
 	{
-		panel->Render();
+		if (panel->IsEnabled())
+		{
+			panel->Render();
+		}
 	}
 
 	editor_ui->ShowEngineUI();
