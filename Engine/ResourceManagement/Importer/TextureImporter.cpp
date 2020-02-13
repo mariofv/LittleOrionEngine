@@ -5,20 +5,20 @@
 #include "Brofiler/Brofiler.h"
 TextureImporter::TextureImporter()
 {
-	//APP_LOG_INIT("Initializing DevIL image loader.")
+	APP_LOG_INIT("Initializing DevIL image loader.")
 	ilInit();
 	ilEnable(IL_ORIGIN_SET);
 	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
 	iluInit();
 	ilutInit();
-	//APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
+	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 }
 std::pair<bool, std::string> TextureImporter::Import(const File & file) const
 {
 	if (file.filename.empty())
 	{
-		//APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
+		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
 		return std::pair<bool, std::string>(false,"");
 	}
 
@@ -59,30 +59,30 @@ std::pair<bool, std::string> TextureImporter::Import(const File & file) const
 
 std::string TextureImporter::ImportMaterialData(const std::string & material_path, const std::string model_base_path) const
 {
-	//APP_LOG_INIT("Loading material texture in described path %s.", material_path.c_str());
+	APP_LOG_INIT("Loading material texture in described path %s.", material_path.c_str());
 	std::pair<bool, std::string> imported = Import(material_path);
 	if (imported.first)
 	{
-		//APP_LOG_SUCCESS("Material loaded correctly.");
+		APP_LOG_SUCCESS("Material loaded correctly.");
 		return imported.second;
 	}
 
 	std::string texture_file_name = GetTextureFileName(material_path);
 	std::string textures_path = model_base_path+ "/" + texture_file_name;
-	//APP_LOG_INIT("Loading material texture in model folder path %s.", model_base_path.c_str());
+	APP_LOG_INIT("Loading material texture in model folder path %s.", model_base_path.c_str());
 	imported = Import(textures_path);
 	if (imported.first)
 	{
-		//APP_LOG_SUCCESS("Material loaded correctly.");
+		APP_LOG_SUCCESS("Material loaded correctly.");
 		return imported.second;
 	}
 
 	textures_path = std::string(TEXTURES_PATH) + texture_file_name;
-	//APP_LOG_INIT("Loading material texture in textures folder %s.", textures_path.c_str());
+	APP_LOG_INIT("Loading material texture in textures folder %s.", textures_path.c_str());
 	imported = Import(textures_path);
 	if (imported.first)
 	{
-		//APP_LOG_SUCCESS("Material loaded correctly.");
+		APP_LOG_SUCCESS("Material loaded correctly.");
 		return imported.second;
 	}
 	return "";

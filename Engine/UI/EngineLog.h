@@ -6,7 +6,6 @@
 #include "imgui.h"
 
 #include <vector>
-#include <mutex>
 struct ImGuiTextBuffer;
 
 class EngineLog
@@ -66,7 +65,6 @@ private:
 	std::vector<float> fps_log;
 	std::vector<float> ms_log;
 
-	std::mutex thread_mutex;
 	bool scroll_down = false;
 	bool app_filter = false;
 	bool assimp_filter = false;

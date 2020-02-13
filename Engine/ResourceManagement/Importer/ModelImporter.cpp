@@ -13,11 +13,11 @@
 
 ModelImporter::ModelImporter()
 {
-	/*Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE);
+	Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Debugging), Assimp::Logger::Debugging);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Info), Assimp::Logger::Info);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Err), Assimp::Logger::Err);
-	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Warn), Assimp::Logger::Warn);*/
+	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Warn), Assimp::Logger::Warn);
 	App->filesystem->MakeDirectory(LIBRARY_MODEL_FOLDER);
 
 	mesh_importer = std::make_unique<MeshImporter>();
@@ -28,14 +28,14 @@ ModelImporter::ModelImporter()
 
 ModelImporter::~ModelImporter()
 {
-	//Assimp::DefaultLogger::kill();
+	Assimp::DefaultLogger::kill();
 }
 
 std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 {
 	if (file.filename.empty())
 	{
-		//APP_LOG_ERROR("Importing mesh error: Couldn't find the file to import.")
+		APP_LOG_ERROR("Importing mesh error: Couldn't find the file to import.")
 		return std::pair<bool, std::string>(false, "");
 	}
 	std::string already_imported = GetAlreadyImportedResource(file);
@@ -45,7 +45,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 
 	File output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER+"/"+ file.filename_no_extension);
 	std::string output_file_model = LIBRARY_MODEL_FOLDER + "/" + file.filename_no_extension + ".json";
-	//APP_LOG_INIT("Importing model %s.", file.file_path.c_str());
+	APP_LOG_INIT("Importing model %s.", file.file_path.c_str());
 
 	performance_timer.Start();
 
@@ -53,14 +53,14 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 	if (scene == NULL || output_file.file_path.empty())
 	{
 		const char *error = aiGetErrorString();
-		//APP_LOG_ERROR("Error loading model %s ", file.file_path.c_str());
-		//APP_LOG_ERROR(error);
+		APP_LOG_ERROR("Error loading model %s ", file.file_path.c_str());
+		APP_LOG_ERROR(error);
 		App->filesystem->Remove(&output_file);
 		return std::pair<bool, std::string>(false, "");
 	}
 	performance_timer.Stop();
 	float time = performance_timer.Read();
-	//APP_LOG_SUCCESS("Model %s loaded correctly from assimp in %f ms.", file.file_path.c_str(), time);
+	APP_LOG_SUCCESS("Model %s loaded correctly from assimp in %f ms.", file.file_path.c_str(), time);
 
 	
 	aiNode * root_node = scene->mRootNode;

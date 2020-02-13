@@ -84,14 +84,14 @@ unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, u
 
 	if (file != NULL)
 	{
-		//APP_LOG_INFO("File %s saved!\n", file_path);
+		APP_LOG_INFO("File %s saved!\n", file_path);
 
 	SDL_RWwrite(file, buffer, size, 1);
 
 	}
 	else
 	{
-		//APP_LOG_ERROR("Error: Unable to open file! SDL Error: %s\n", SDL_GetError());
+		APP_LOG_ERROR("Error: Unable to open file! SDL Error: %s\n", SDL_GetError());
 		return 1;
 	}
 	SDL_RWclose(file);
@@ -121,7 +121,7 @@ File ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path
 {
 	if (PHYSFS_mkdir(new_directory_full_path.c_str()) == 0)
 	{
-		//APP_LOG_ERROR("Error creating directory %s : %s", new_directory_full_path.c_str(), PHYSFS_getLastError());
+		APP_LOG_ERROR("Error creating directory %s : %s", new_directory_full_path.c_str(), PHYSFS_getLastError());
 		return File();
 	}
 	return File(new_directory_full_path);
