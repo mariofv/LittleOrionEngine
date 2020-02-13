@@ -9,7 +9,7 @@ public:
 	Skeleton(const char * const UID, const std::string & exported_file);
 	~Skeleton() = default;
 	struct Joint {
-		ComponentTransform transform;
+		math::float4x4 transform;
 		Joint * parent; 
 	};
 	std::vector<Joint> skeleton;
