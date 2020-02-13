@@ -1,22 +1,23 @@
 #include "GameObject.h"
 #include "Application.h"
 #include "Helper/Config.h"
-#include "UI/Hierarchy.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
-#include "Module/ModuleLight.h"
 #include "Resource/Texture.h"
+#include "UI/Panel/PanelHierarchy.h"
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
 
-#include "imgui.h"
-#include "imgui_stdlib.h"
+#include <imgui.h>
+#include <imgui_stdlib.h>
 #include "Brofiler/Brofiler.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <pcg_basic.h>
@@ -302,7 +303,7 @@ void GameObject::UpdateHierarchyBranch()
 {
 	if (parent->hierarchy_branch == 0) // PARENT IS ROOT GAMEOBJECT
 	{
-		hierarchy_branch = App->scene->hierarchy.GetNextBranch();
+		hierarchy_branch = App->editor->hierarchy->GetNextBranch();
 	}
 	else
 	{

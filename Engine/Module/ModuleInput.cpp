@@ -1,6 +1,7 @@
+#include "ModuleInput.h"
+
 #include "Main/Globals.h"
 #include "Main/Application.h"
-#include "ModuleInput.h"
 #include "ModuleWindow.h"
 #include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
@@ -73,9 +74,9 @@ update_status ModuleInput::PreUpdate()
 			else if (event.motion.state & SDL_BUTTON_LMASK && App->editor->scene_panel->IsHovered() && App->cameras->IsOrbiting())
 			{
 				float2 motion(event.motion.xrel, event.motion.yrel);
-				if (App->scene->hierarchy.selected_game_object != nullptr)
+				if (App->editor->selected_game_object != nullptr)
 				{
-					App->cameras->scene_camera->OrbitCameraWithMouseMotion(motion, App->scene->hierarchy.selected_game_object->transform.GetGlobalTranslation());
+					App->cameras->scene_camera->OrbitCameraWithMouseMotion(motion, App->editor->selected_game_object->transform.GetGlobalTranslation());
 				}
 				else
 				{
@@ -105,9 +106,9 @@ update_status ModuleInput::PreUpdate()
 				float2 mouse_position = float2(event.button.x, event.button.y);
 				App->editor->scene_panel->MousePicking(mouse_position);
 
-				if (event.button.clicks == 2 && App->scene->hierarchy.selected_game_object != nullptr)
+				if (event.button.clicks == 2 && App->editor->selected_game_object != nullptr)
 				{
-					App->cameras->scene_camera->Center(App->scene->hierarchy.selected_game_object->aabb.global_bounding_box);
+					App->cameras->scene_camera->Center(App->editor->selected_game_object->aabb.global_bounding_box);
 				}
 			}
 			break;
@@ -130,9 +131,9 @@ update_status ModuleInput::PreUpdate()
 			}
 			else if (event.key.keysym.sym == SDLK_f)
 			{
-				if (App->scene->hierarchy.selected_game_object != nullptr)
+				if (App->editor->selected_game_object != nullptr)
 				{
-					App->cameras->scene_camera->Center(App->scene->hierarchy.selected_game_object->aabb.global_bounding_box);
+					App->cameras->scene_camera->Center(App->editor->selected_game_object->aabb.global_bounding_box);
 				}
 			}
 			break;

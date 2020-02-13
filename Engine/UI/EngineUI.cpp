@@ -24,11 +24,7 @@ void EngineUI::ShowEngineUI()
 {
 	ShowMainMenu();
 	ShowSceneControls();
-	
-	if (show_hierarchy_window)
-	{
-		ShowHierarchyWindow();
-	}
+
 	if (show_configuration_window)
 	{
 		ShowConfigurationWindow();
@@ -133,20 +129,6 @@ void EngineUI::ShowSceneControls()
 	ImGui::End();
 	ImGui::PopStyleVar();
 }
-
-void EngineUI::ShowHierarchyWindow()
-{
-	ImGui::SetNextWindowPos(
-		ImVec2(0, MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * TIME_BAR_HEIGHT_PROP),
-		ImGuiCond_Once
-	);
-	ImGui::SetNextWindowSize(
-		ImVec2(App->window->GetWidth() * CONFIG_WIDTH_PROP, App->window->GetHeight() * CONFIG_HEIGHT_PROP),
-		ImGuiCond_Once
-	);
-	App->scene->hierarchy.ShowHierarchyWindow();
-}
-
 
 void EngineUI::ShowConfigurationWindow()
 {

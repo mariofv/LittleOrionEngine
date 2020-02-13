@@ -21,8 +21,6 @@ private:
 	void ShowHelpMenu();
 
 	void ShowSceneControls();
-
-	void ShowHierarchyWindow();
 	
 	void ShowConfigurationWindow();
 	void ShowHardware() const;

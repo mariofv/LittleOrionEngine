@@ -4,7 +4,6 @@
 #include "Module.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
-#include "UI/Hierarchy.h"
 
 #include <ImGuizmo.h>
 
@@ -30,9 +29,6 @@ public:
 	void DeleteCurrentScene();
 	void Save(Config& serialized_scene) const;
 	void Load(const Config& serialized_scene);
-
-public:
-	Hierarchy hierarchy;
 
 private:
 	GameObject *root = nullptr;

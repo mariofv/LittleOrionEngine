@@ -247,9 +247,6 @@
     <ClCompile Include="Engine\Main\Log.cpp">
       <Filter>Engine\Main</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UI\Hierarchy.cpp">
-      <Filter>Engine\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\UI\Skybox.cpp">
       <Filter>Engine\UI</Filter>
     </ClCompile>
@@ -277,7 +274,12 @@
     <ClCompile Include="Engine\UI\Panel\PanelGame.cpp">
       <Filter>Engine\UI\Panel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelInspector.cpp" />
+    <ClCompile Include="Engine\UI\Panel\PanelHierarchy.cpp">
+      <Filter>Engine\UI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\PanelInspector.cpp">
+      <Filter>Engine\UI\Panel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -397,9 +399,6 @@
     <ClInclude Include="Engine\SpacePartition\OLQuadTreeNode.h">
       <Filter>Engine\SpacePartition</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Hierarchy.h">
-      <Filter>Engine\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\UI\Skybox.h">
       <Filter>Engine\UI</Filter>
     </ClInclude>
@@ -430,7 +429,12 @@
     <ClInclude Include="Engine\UI\Panel\PanelGame.h">
       <Filter>Engine\UI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelInspector.h" />
+    <ClInclude Include="Engine\UI\Panel\PanelHierarchy.h">
+      <Filter>Engine\UI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\PanelInspector.h">
+      <Filter>Engine\UI\Panel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

@@ -12,6 +12,9 @@ class Panel;
 class PanelScene;
 class PanelGame;
 class PanelInspector;
+class PanelHierarchy;
+
+class GameObject;
 
 struct ImFont;
 
@@ -40,10 +43,13 @@ private:
 	void LoadFonts();
 
 public:
+	GameObject *selected_game_object = nullptr;
+
 	EngineUI* editor_ui = nullptr;
 	PanelScene* scene_panel = nullptr;
 	PanelGame* game_panel = nullptr;
 	PanelInspector* inspector = nullptr;
+	PanelHierarchy* hierarchy = nullptr;
 
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 

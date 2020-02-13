@@ -16,6 +16,7 @@
 #include "SpacePartition/OLQuadTree.h"
 #include "UI/Billboard.h"
 #include "UI/DebugDraw.h"
+#include "UI/Panel/PanelHierarchy.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -96,7 +97,7 @@ void PanelScene::RenderDebugDraws()
 		}
 	}
 
-	if (App->scene->hierarchy.selected_game_object != nullptr)
+	if (App->editor->selected_game_object != nullptr)
 	{
 		RenderCameraFrustum();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
@@ -124,7 +125,7 @@ void PanelScene::RenderEditorDraws()
 	ImGuizmo::SetOrthographic(false);
 	ImGuizmo::Enable(true);
 
-	if (App->scene->hierarchy.selected_game_object != nullptr)
+	if (App->editor->selected_game_object != nullptr)
 	{
 		RenderGizmo();
 		RenderCameraPreview();
@@ -141,7 +142,7 @@ void PanelScene::RenderCameraFrustum() const
 		return;
 	}
 
-	Component * selected_camera_component = App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA);
+	Component * selected_camera_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::CAMERA);
 	if (selected_camera_component != nullptr) {
 		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
 
@@ -151,7 +152,7 @@ void PanelScene::RenderCameraFrustum() const
 
 void PanelScene::RenderOutline() const
 {
-	GameObject* selected_game_object = App->scene->hierarchy.selected_game_object;
+	GameObject* selected_game_object = App->editor->selected_game_object;
 	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH);
 
 	if (selected_object_mesh_component != nullptr && selected_object_mesh_component->IsEnabled())
@@ -230,7 +231,7 @@ void PanelScene::RenderBillboards() const
 
 void PanelScene::RenderGizmo()
 {
-	float4x4 model_global_matrix_transposed = App->scene->hierarchy.selected_game_object->transform.GetGlobalModelMatrix().Transposed();
+	float4x4 model_global_matrix_transposed = App->editor->selected_game_object->transform.GetGlobalModelMatrix().Transposed();
 
 	ImGuizmo::Manipulate(
 		App->cameras->scene_camera->GetViewMatrix().Transposed().ptr(),
@@ -243,7 +244,7 @@ void PanelScene::RenderGizmo()
 	scene_camera_gizmo_hovered = ImGuizmo::IsOver();
 	if (ImGuizmo::IsUsing())
 	{
-		App->scene->hierarchy.selected_game_object->transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
+		App->editor->selected_game_object->transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
 	}
 }
 
@@ -270,7 +271,7 @@ void PanelScene::RenderSceneCameraGizmo() const
 
 void PanelScene::RenderCameraPreview() const
 {
-	Component * selected_camera_component = App->scene->hierarchy.selected_game_object->GetComponent(Component::ComponentType::CAMERA);
+	Component * selected_camera_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::CAMERA);
 	if (selected_camera_component != nullptr) {
 		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
 
@@ -314,7 +315,7 @@ void PanelScene::MousePicking(const float2& mouse_position)
 	LineSegment ray;
 	App->cameras->scene_camera->GetRay(window_mouse_position_normalized, ray);
 	GameObject* intersected = App->renderer->GetRaycastIntertectedObject(ray);
-	App->scene->hierarchy.selected_game_object = intersected;
+	App->editor->selected_game_object = intersected;
 }
 
 

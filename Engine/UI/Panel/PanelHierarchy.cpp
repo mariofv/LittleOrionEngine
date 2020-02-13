@@ -1,28 +1,17 @@
-#include "Hierarchy.h"
-#include "Main/Application.h"
+#include "PanelHierarchy.h"
+
 #include "Component/ComponentCamera.h"
+#include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleScene.h"
-#include "Main/GameObject.h"
 
-#include "imgui.h"
+#include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
-std::string Hierarchy::GetNextGameObjectName()
-{
-	char tmp_string[64];
-	sprintf_s(tmp_string, "GameObject (%d)", num_game_objects++);
-
-	return std::string(tmp_string);
-}
-
-int Hierarchy::GetNextBranch()
-{
-	return ++branch_counter;
-}
-
-void Hierarchy::ShowHierarchyWindow()
+void PanelHierarchy::Render()
 {
 	if (ImGui::Begin(ICON_FA_SITEMAP " Hierarchy"))
 	{
@@ -52,7 +41,7 @@ void Hierarchy::ShowHierarchyWindow()
 	ImGui::End();
 }
 
-void Hierarchy::ShowGameObjectHierarchy(GameObject *game_object)
+void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 {
 	std::string game_object_name_label = (std::string(ICON_FA_CUBE) + " " + game_object->name);
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
@@ -60,7 +49,7 @@ void Hierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 	{
 		flags |= ImGuiTreeNodeFlags_Leaf;
 	}
-	if (selected_game_object == game_object)
+	if (App->editor->selected_game_object == game_object)
 	{
 		flags |= ImGuiTreeNodeFlags_Selected;
 	}
@@ -82,14 +71,14 @@ void Hierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 	}
 }
 
-void Hierarchy::DragAndDrop(GameObject *game_object) const
+void PanelHierarchy::DragAndDrop(GameObject *game_object) const
 {
 	DragSource(game_object);
 	DropTarget(game_object);
 }
 
 
-void Hierarchy::DragSource(GameObject *source_game_object) const
+void PanelHierarchy::DragSource(GameObject *source_game_object) const
 {
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 	{
@@ -99,7 +88,7 @@ void Hierarchy::DragSource(GameObject *source_game_object) const
 	}
 }
 
-void Hierarchy::DropTarget(GameObject *target_game_object) const
+void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 {
 	if (ImGui::BeginDragDropTarget())
 	{
@@ -130,7 +119,7 @@ void Hierarchy::DropTarget(GameObject *target_game_object) const
 	
 }
 
-void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
+void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 {
 	std::string label = (std::string(ICON_FA_CUBE) + " " + game_object->name);
 
@@ -146,7 +135,7 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 		if (ImGui::Selectable("Delete GameObject"))
 		{
 			App->scene->RemoveGameObject(game_object);
-			selected_game_object = nullptr;
+			App->editor->selected_game_object = nullptr;
 		}
 		if (ImGui::Selectable("Move Up"))
 		{
@@ -164,7 +153,7 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 	}
 }
 
-void Hierarchy::Show3DObjectCreationMenu() const
+void PanelHierarchy::Show3DObjectCreationMenu() const
 {
 	if (ImGui::BeginMenu("3D object"))
 	{
@@ -188,13 +177,13 @@ void Hierarchy::Show3DObjectCreationMenu() const
 	}
 }
 
-void Hierarchy::ProcessMouseInput(GameObject *game_object)
+void PanelHierarchy::ProcessMouseInput(GameObject *game_object)
 {
 	if (ImGui::IsItemHovered())
 	{
 		if (ImGui::IsMouseClicked(0))
 		{
-			selected_game_object = game_object;
+			App->editor->selected_game_object = game_object;
 		}
 
 		if (ImGui::IsMouseDoubleClicked(0))
@@ -202,4 +191,17 @@ void Hierarchy::ProcessMouseInput(GameObject *game_object)
 			App->cameras->scene_camera->Center(game_object->aabb.global_bounding_box);
 		}
 	}
+}
+
+std::string PanelHierarchy::GetNextGameObjectName()
+{
+	char tmp_string[64];
+	sprintf_s(tmp_string, "GameObject (%d)", num_game_objects++);
+
+	return std::string(tmp_string);
+}
+
+int PanelHierarchy::GetNextBranch()
+{
+	return ++branch_counter;
 }

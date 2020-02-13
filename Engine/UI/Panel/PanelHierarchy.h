@@ -1,20 +1,21 @@
-#ifndef _HIERARCHY_H_
-#define _HIERARCHY_H_
+#ifndef _PANELHIERARCHY_H_
+#define _PANELHIERARCHY_H_
 
+#include "Panel.h"
 #include <string>
 
 class GameObject;
 
-class Hierarchy
+class PanelHierarchy : public Panel
 {
 public:
-	Hierarchy() = default;
-	~Hierarchy() = default;
+	PanelHierarchy() = default;
+	~PanelHierarchy() = default;
+
+	void Render() override;
 
 	std::string GetNextGameObjectName();
 	int GetNextBranch();
-
-	void ShowHierarchyWindow();
 
 private:
 	void ShowGameObjectHierarchy(GameObject *game_object);
@@ -28,13 +29,10 @@ private:
 
 	void ProcessMouseInput(GameObject *game_object);
 
-public:
-	GameObject *selected_game_object = nullptr;
-
 private:
 	int num_game_objects = 0;
 	int branch_counter = 0;
 };
 
-#endif //_HIERARCHY_H_
+#endif //_PANELHIERARCHY_H_
 
