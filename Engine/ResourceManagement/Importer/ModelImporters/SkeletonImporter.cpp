@@ -17,7 +17,7 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 	if (skeleton.skeleton.size() > 0)
 	{
 		output_file = LIBRARY_SKELETON_FOLDER + "/" +  mesh->mName.C_Str()+ ".ol";
-		//SaveBinary(skeleton, output_file);
+		SaveBinary(skeleton, output_file);
 	}
 	return true;
 }
@@ -71,7 +71,7 @@ bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& 
 
 	uint32_t num_bones = skeleton.skeleton.size();
 
-	uint32_t size =  sizeof(Skeleton::Joint) * num_bones;
+	uint32_t size = sizeof(uint32_t) + sizeof(Skeleton::Joint) * num_bones;
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;

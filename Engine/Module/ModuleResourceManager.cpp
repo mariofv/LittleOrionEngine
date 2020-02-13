@@ -123,7 +123,7 @@ std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(const 
 	});
 	if (it != resource_cache.end())
 	{
-		APP_LOG_INFO("Resource %s exists in cache.", uid.c_str());
+		//APP_LOG_INFO("Resource %s exists in cache.", uid.c_str());
 		return  *it;
 	}
 	return nullptr;
