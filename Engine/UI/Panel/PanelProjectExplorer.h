@@ -8,7 +8,7 @@ class PanelProjectExplorer : public Panel
 {
 
 public:
-	PanelProjectExplorer() { enabled = true; };
+	PanelProjectExplorer();
 	~PanelProjectExplorer() = default;
 
 	void Render() override;

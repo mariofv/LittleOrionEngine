@@ -13,7 +13,7 @@ struct ImGuiTextBuffer;
 class PanelConsole : public Panel
 {
 public:
-	PanelConsole() { enabled = true; };
+	PanelConsole();
 	~PanelConsole() = default;
 
 	void Render() override;

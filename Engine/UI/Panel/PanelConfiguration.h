@@ -6,7 +6,7 @@
 class PanelConfiguration : public Panel
 {
 public:
-	PanelConfiguration() = default;
+	PanelConfiguration();
 	~PanelConfiguration() = default;
 
 	void Render() override;

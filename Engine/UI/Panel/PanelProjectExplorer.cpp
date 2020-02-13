@@ -9,6 +9,12 @@
 
 #include <algorithm>
 
+PanelProjectExplorer::PanelProjectExplorer()
+{
+	enabled = true;
+	window_name = ICON_FA_FOLDER_OPEN " Project";
+}
+
 void PanelProjectExplorer::Render() 
 {
 	if(ImGui::Begin(ICON_FA_FOLDER_OPEN " Project") ){

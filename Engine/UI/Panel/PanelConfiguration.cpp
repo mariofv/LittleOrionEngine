@@ -14,6 +14,11 @@
 #include <imgui.h>
 #include <SDL/SDL.h>
 
+PanelConfiguration::PanelConfiguration()
+{
+	window_name = ICON_FA_COGS " Configuration";
+}
+
 void PanelConfiguration::Render()
 {
 	if (ImGui::Begin(ICON_FA_COGS " Configuration"))

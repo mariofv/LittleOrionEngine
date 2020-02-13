@@ -9,6 +9,11 @@
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
+PanelDebug::PanelDebug()
+{
+	window_name = ICON_FA_BUG " Debug";
+}
+
 void PanelDebug::Render()
 {
 	if (ImGui::Begin(ICON_FA_BUG " Debug"))

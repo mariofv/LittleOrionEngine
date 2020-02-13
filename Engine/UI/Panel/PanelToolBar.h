@@ -8,7 +8,7 @@
 class PanelToolBar : public Panel
 {
 public:
-	PanelToolBar() { enabled = true; };
+	PanelToolBar();
 	~PanelToolBar() = default;
 
 	void Render() override;

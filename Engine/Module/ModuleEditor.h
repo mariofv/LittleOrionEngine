@@ -44,11 +44,15 @@ public:
 	ImFont* GetFont(const Fonts & font) const;
 
 private:
+	void InitEditorDockspace();
+	void RenderEditorDockspace();
+
 	bool InitImgui();
 	void LoadFonts();
 
 public:
 	GameObject *selected_game_object = nullptr;
+	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 
 	EngineUI* editor_ui = nullptr;
 	PanelMenuBar* menu_bar = nullptr;
@@ -63,10 +67,9 @@ public:
 	PanelConfiguration* configuration = nullptr;
 	PanelAbout* about = nullptr;
 
-	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
-
 private:
 	std::vector<Panel*> panels;
+	ImGuiID editor_dockspace_id;
 };
 
 #endif //_MODULEEDITOR_H_

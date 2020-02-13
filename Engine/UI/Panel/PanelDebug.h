@@ -6,7 +6,7 @@
 class PanelDebug : public Panel
 {
 public:
-	PanelDebug() = default;
+	PanelDebug();
 	~PanelDebug() = default;
 
 	void Render() override;

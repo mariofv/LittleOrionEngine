@@ -5,9 +5,14 @@
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <imgui.h>
 
+PanelAbout::PanelAbout()
+{
+	window_name = ICON_FA_QUESTION_CIRCLE " About";
+}
+
 void PanelAbout::Render()
 {
-	if (ImGui::Begin(ICON_FA_QUESTION_CIRCLE " About"))
+	if (ImGui::Begin(window_name.c_str()))
 	{
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "LittleOrion Engine");
 		ImGui::TextWrapped("3D engine developed during the Master's Degree in AAA Videogames Development.");

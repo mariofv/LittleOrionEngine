@@ -6,7 +6,7 @@
 class PanelGame : public Panel
 {
 public:
-	PanelGame() { enabled = true; };
+	PanelGame();
 	~PanelGame() = default;
 
 	void Render() override;

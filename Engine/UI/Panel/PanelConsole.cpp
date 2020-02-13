@@ -8,6 +8,12 @@
 
 #include <algorithm>
 
+PanelConsole::PanelConsole()
+{
+	enabled = true;
+	window_name = ICON_FA_TERMINAL " Console";
+}
+
 void PanelConsole::Render()
 {
 	char tmp_string[64];

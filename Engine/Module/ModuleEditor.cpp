@@ -22,6 +22,7 @@
 #include <SDL/SDL.h>
 #include <GL/glew.h>
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -117,30 +118,67 @@ void ModuleEditor::Render()
 
 		ImGui::Separator();
 
-		ImGuiWindowFlags dockspace_flags;
-		dockspace_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBringToFrontOnFocus;
-		if (ImGui::BeginChild("DockSpace", ImVec2(0, 0), false, dockspace_flags))
-		{
-			ImGuiID dockspace_id = ImGui::GetID("Editor Dockspace");
-			ImGui::DockSpace(dockspace_id);
-
-			for (auto& panel : panels)
-			{
-				if (panel->IsEnabled())
-				{
-					ImGui::SetNextWindowDockID(dockspace_id, ImGuiCond_FirstUseEver);
-					panel->Render();
-				}
-			}
-
-			editor_ui->ShowEngineUI();
-		}
-		ImGui::EndChild();
+		RenderEditorDockspace();
 	}
 	ImGui::End();
 
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
+}
+
+void ModuleEditor::RenderEditorDockspace()
+{
+	if (ImGui::BeginChild("DockSpace", ImVec2(0, 0), false, ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBringToFrontOnFocus))
+	{
+		editor_dockspace_id = ImGui::GetID("EditorDockspace");
+		bool initialized = ImGui::DockBuilderGetNode(editor_dockspace_id) != NULL;
+		
+		ImGui::DockSpace(editor_dockspace_id);
+
+		if (!initialized)
+		{
+			InitEditorDockspace();
+		}
+
+		for (auto& panel : panels)
+		{
+			if (panel->IsEnabled())
+			{
+				panel->Render();
+			}
+		}
+
+		editor_ui->ShowEngineUI();
+	}
+	ImGui::EndChild();
+}
+
+void ModuleEditor::InitEditorDockspace()
+{
+	ImGui::DockBuilderRemoveNode(editor_dockspace_id); // Clear out existing layout
+	ImGui::DockBuilderAddNode(editor_dockspace_id, ImGuiDockNodeFlags_DockSpace); // Add empty node
+	ImVec2 child_window_size = ImGui::GetWindowSize();
+	ImGui::DockBuilderSetNodeSize(editor_dockspace_id, child_window_size);
+
+	ImGuiID dock_main_id = editor_dockspace_id; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
+
+	ImGuiID dock_id_left;
+	ImGuiID dock_id_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.20f, NULL, &dock_id_left);
+
+	ImGuiID dock_id_left_upper;
+	ImGuiID dock_id_left_bottom = ImGui::DockBuilderSplitNode(dock_id_left, ImGuiDir_Down, 0.25f, NULL, &dock_id_left_upper);
+
+	ImGuiID dock_id_left_upper_right;
+	ImGuiID dock_id_left_upper_left = ImGui::DockBuilderSplitNode(dock_id_left_upper, ImGuiDir_Left, 0.20f, NULL, &dock_id_left_upper_right);
+
+	ImGui::DockBuilderDockWindow(hierarchy->GetWindowName().c_str(), dock_id_left_upper_left);
+	ImGui::DockBuilderDockWindow(scene_panel->GetWindowName().c_str(), dock_id_left_upper_right);
+	ImGui::DockBuilderDockWindow(game_panel->GetWindowName().c_str(), dock_id_left_upper_right);
+	ImGui::DockBuilderDockWindow(inspector->GetWindowName().c_str(), dock_id_right);
+	ImGui::DockBuilderDockWindow(console->GetWindowName().c_str(), dock_id_left_bottom);
+	ImGui::DockBuilderDockWindow(project_explorer->GetWindowName().c_str(), dock_id_left_bottom);
+
+	ImGui::DockBuilderFinish(editor_dockspace_id);
 }
 
 

@@ -9,6 +9,12 @@
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
+PanelGame::PanelGame()
+{
+	enabled = true;
+	window_name = ICON_FA_GHOST " Game";
+}
+
 void PanelGame::Render()
 {
 	if (ImGui::Begin(ICON_FA_GHOST " Game"))

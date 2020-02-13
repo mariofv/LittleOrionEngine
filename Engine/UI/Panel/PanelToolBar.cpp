@@ -9,6 +9,12 @@
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <imgui.h>
 
+PanelToolBar::PanelToolBar()
+{
+	enabled = true;
+	window_name = "Toolbar";
+}
+
 void PanelToolBar::Render()
 {
 	if (ImGui::BeginChild("Toolbar", ImVec2(0, App->window->GetHeight() * 0.025), false, ImGuiWindowFlags_NoDecoration))

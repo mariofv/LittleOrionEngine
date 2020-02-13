@@ -9,7 +9,7 @@ class GameObject;
 class PanelMenuBar : public Panel
 {
 public:
-	PanelMenuBar() { enabled = true; };
+	PanelMenuBar();
 	~PanelMenuBar() = default;
 
 	void Render() override;

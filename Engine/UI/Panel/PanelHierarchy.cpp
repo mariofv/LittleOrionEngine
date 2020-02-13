@@ -11,6 +11,12 @@
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
+PanelHierarchy::PanelHierarchy()
+{
+	enabled = true;
+	window_name = ICON_FA_SITEMAP " Hierarchy";
+}
+
 void PanelHierarchy::Render()
 {
 	if (ImGui::Begin(ICON_FA_SITEMAP " Hierarchy"))

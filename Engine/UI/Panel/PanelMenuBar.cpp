@@ -18,6 +18,12 @@
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
 #include <SDL/SDL.h>
 
+PanelMenuBar::PanelMenuBar()
+{
+	enabled = true;
+	window_name = "MainMenuBar";
+}
+
 void PanelMenuBar::Render()
 {
 	if (ImGui::BeginMainMenuBar())

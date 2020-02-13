@@ -8,7 +8,7 @@
 class PanelAbout : public Panel
 {
 public:
-	PanelAbout() = default;
+	PanelAbout();
 	~PanelAbout() = default;
 
 	void Render() override;

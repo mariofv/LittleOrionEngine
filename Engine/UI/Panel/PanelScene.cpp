@@ -24,6 +24,8 @@
 PanelScene::PanelScene()
 {
 	enabled = true;
+	window_name = ICON_FA_TH " Scene";
+
 	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 3.44f, 5.f);
 	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 5.f, 5.f);
 }
