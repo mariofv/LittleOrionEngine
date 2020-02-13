@@ -64,6 +64,7 @@ void ModuleEditor::OpenScene(const std::string &path) const
 
 	Config scene_config(serialized_scene_string);
 	App->scene->Load(scene_config);
+	App->model_loader->LoadModel(HOUSE_MODEL_PATH);
 }
 
 void ModuleEditor::SaveScene(const std::string &path) const

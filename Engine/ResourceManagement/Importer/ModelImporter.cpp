@@ -67,7 +67,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 	ImportNode(root_node, identity_transformation, scene, base_path.c_str(),output_file.file_path, node_config);
 
 	aiReleaseImport(scene);
-	//SaveMetaFile(file, output_file_model);
+	SaveMetaFile(file, output_file_model);
 
 	model.AddChildrenConfig(node_config, "Node");
 	std::string serialized_model_string;
@@ -109,8 +109,11 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 		pPosition *= SCALE_FACTOR;
 
 		node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
-		mesh_importer->ImportMesh(scene->mMeshes[mesh_index], node_transformation, mesh_file);
-		node.AddString(mesh_file, "Mesh");
+		bool imported = mesh_importer->ImportMesh(scene->mMeshes[mesh_index], node_transformation, mesh_file);
+		if (imported)
+		{
+			node.AddString(mesh_file, "Mesh");
+		}
 		node_config.push_back(node);
 	}
 

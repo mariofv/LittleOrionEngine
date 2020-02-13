@@ -4,7 +4,7 @@
 #include <ResourceManagement/Resources/Mesh.h>
 #include "Module/ModuleFileSystem.h"
 
-void MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_transformation, const std::string& output_file) const
+bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_transformation, const std::string& output_file) const
 {
 	std::vector<uint32_t> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -18,7 +18,7 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_transf
 	if (indices.size() % 3 != 0)
 	{
 		APP_LOG_ERROR("Mesh %s have incorrect indices", mesh->mName.C_Str());
-		return;
+		return false;
 	}
 	std::vector<Mesh::Vertex> vertices;
 	vertices.reserve(mesh->mNumVertices);
@@ -53,4 +53,5 @@ void MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_transf
 
 	App->filesystem->Save(output_file.c_str(), data, size);
 	delete data;
+	return true;
 }

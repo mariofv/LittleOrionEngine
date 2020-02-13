@@ -11,7 +11,7 @@ std::pair<bool, std::string> Importer::Import(const File & file) const
 		return std::pair<bool, std::string>(true, already_imported);
 	}
 	std::string uid = "default";
-	//SaveMetaFile(file, uid);
+	SaveMetaFile(file, uid);
 	return std::pair<bool, std::string>(false, uid);
 }
 
@@ -44,7 +44,7 @@ void Importer::SaveMetaFile(const File & imported_file, const std::string & expo
 }
 
 
-std::string Importer::GetUIDFromMeta(const File& file) const
+std::string Importer::GetUIDFromMeta(const File& file) 
 {
 	size_t readed_bytes;
 	char* meta_file_data = App->filesystem->Load(file.file_path.c_str(), readed_bytes);
@@ -57,7 +57,7 @@ std::string Importer::GetUIDFromMeta(const File& file) const
 	return exported_file;
 }
 
-std::string Importer::GetMetaFilePath(const File& file) const
+std::string Importer::GetMetaFilePath(const File& file)
 {
 	int extension_index = file.file_path.find_last_of(".");
 	extension_index = extension_index != std::string::npos ? extension_index : file.file_path.size();
