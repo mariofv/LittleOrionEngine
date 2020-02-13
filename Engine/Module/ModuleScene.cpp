@@ -1,11 +1,11 @@
 #include "ModuleScene.h"
-#include "Application.h"
+#include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
 #include "ModuleRender.h"
 #include "Component/ComponentCamera.h"
-#include "Config.h"
+#include "Helper/Config.h"
 
 #include "Actions/EditorAction.h"
 #include "Actions/EditorActionAddGameObject.h"

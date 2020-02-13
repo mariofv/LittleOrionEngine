@@ -1,6 +1,6 @@
 #include "ComponentCamera.h"
-#include "Application.h"
-#include "GameObject.h"
+#include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
@@ -8,7 +8,7 @@
 #include "Module/ModuleRender.h"
 #include "UI/ComponentsUI.h"
 
-#include "Utils.h"
+#include "Helper/Utils.h"
 
 ComponentCamera::ComponentCamera() : Component(nullptr, ComponentType::CAMERA)
 {

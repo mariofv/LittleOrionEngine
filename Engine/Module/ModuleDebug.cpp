@@ -1,10 +1,10 @@
 #include "ModuleDebug.h"
-#include "Application.h"
-#include "GameObject.h"
+#include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
-#include <OLQuadTree.h>
+#include "SpacePartition/OLQuadTree.h"
 
 #include <random>
 #include <ctime>

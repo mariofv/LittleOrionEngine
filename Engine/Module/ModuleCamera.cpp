@@ -1,8 +1,8 @@
 #include "ModuleCamera.h"
-#include "Globals.h"
-#include "Application.h"
+#include "Main/Globals.h"
+#include "Main/Application.h"
 #include "ModuleWindow.h"
-#include "GameObject.h"
+#include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
 
 #include "imgui.h"
@@ -23,8 +23,8 @@ bool ModuleCamera::Init()
 	scene_camera->SetFarDistance(2000);
 	scene_camera->depth = -1;
 	
-	skybox = new Skybox();
-	scene_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
+	/*skybox = new Skybox();
+	scene_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);*/
 
 	return true;
 }

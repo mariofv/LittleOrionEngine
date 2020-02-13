@@ -1,11 +1,11 @@
-﻿#include "Globals.h"
-#include "Application.h"
+﻿#include "Main/Globals.h"
+#include "Main/Application.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleUI.h"
 #include "Module/ModuleInput.h"
-#include "Module/ModuleModelLoader.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTime.h"
@@ -491,10 +491,10 @@ void EngineUI::ShowPopups() const
 	if (ImGui::BeginPopupModal("Loading Assets", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar))
 	{
 		ImGui::Text("Loading Assets");
-		float progress = (float)App->model_loader->thread_comunication.loaded_items / App->model_loader->thread_comunication.total_items;
+		float progress = (float)App->resources->thread_comunication.loaded_items / App->resources->thread_comunication.total_items;
 		ImGui::ProgressBar(progress);
 
-		if (App->model_loader->thread_comunication.finished_loading) 
+		if (App->resources->thread_comunication.finished_loading)
 		{
 			ImGui::CloseCurrentPopup(); 
 		}

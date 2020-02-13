@@ -2,7 +2,7 @@
 #define _EDITORACTIONSCALE_H_
 
 #include "EditorAction.h"
-#include "GameObject.h"
+#include "Main/GameObject.h"
 #include "MathGeoLib.h"
 
 class EditorActionScale : public EditorAction 

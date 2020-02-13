@@ -2,7 +2,7 @@
 #define _EDITORACTIONTRANSLATE_H_
 
 #include "EditorAction.h"
-#include "GameObject.h"
+#include "Main/GameObject.h"
 #include "MathGeoLib.h"
 
 class EditorActionTranslate : public EditorAction

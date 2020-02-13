@@ -1,10 +1,10 @@
 #include "ComponentMesh.h"
-#include "GameObject.h"
-#include "Application.h"
+#include "Main/GameObject.h"
+#include "Main/Application.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
-#include "Importer/MeshImporter.h"
+#include "Module/ModuleResourceManager.h"
 #include "UI/ComponentsUI.h"
 
 ComponentMesh::ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH)
@@ -29,7 +29,7 @@ void ComponentMesh::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
 
 ComponentMesh::~ComponentMesh()
 {
-	App->mesh_importer->RemoveMeshFromCacheIfNeeded(mesh_to_render);
+	App->resources->RemoveResourceFromCacheIfNeeded(mesh_to_render);
 }
 
 void ComponentMesh::Delete() 
@@ -42,7 +42,7 @@ void ComponentMesh::Save(Config& config) const
 	config.AddUInt(UUID, "UUID");
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
-	config.AddString(mesh_to_render->mesh_file_path, "MeshPath");
+	config.AddString(mesh_to_render->exported_file, "MeshPath");
 	config.AddString(shader_program, "ShaderProgram");
 }
 
@@ -54,14 +54,14 @@ void ComponentMesh::Load(const Config& config)
 	std::string mesh_path;
 	config.GetString("MeshPath", mesh_path, "");
 	config.GetString("ShaderProgram", shader_program, "Default");
-	std::shared_ptr<Mesh> mesh = App->mesh_importer->Load(mesh_path.c_str());
+	std::shared_ptr<Mesh> mesh = App->resources->Load<Mesh>(mesh_path.c_str());
 	if (mesh != nullptr)
 	{
 		SetMesh(mesh);
 	}
 	else 
 	{
-		SetMesh(App->mesh_importer->Load(PRIMITIVE_CUBE_PATH));
+		SetMesh(App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH));
 	}
 
 }

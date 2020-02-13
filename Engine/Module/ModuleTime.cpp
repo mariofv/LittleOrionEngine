@@ -1,11 +1,11 @@
 #include "ModuleTime.h"
-#include "Globals.h"
-#include "Application.h"
+#include "Main/Globals.h"
+#include "Main/Application.h"
 #include "ModuleEditor.h"
 #include "ModuleWindow.h"
 #include "UI/EngineUI.h"
 #include "UI/EngineLog.h"
-#include "Timer.h"
+#include "Helper/Timer.h"
 
 #include "imgui.h"
 #include <SDL/SDL.h>

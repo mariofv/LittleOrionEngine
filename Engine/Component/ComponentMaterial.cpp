@@ -1,7 +1,7 @@
 #include "ComponentMaterial.h"
-#include "Application.h"
+#include "Main/Application.h"
 #include <Module/ModuleTexture.h>
-#include <Importer/MaterialImporter.h>
+#include <Module/ModuleResourceManager.h>
 
 ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL)
 {
@@ -17,7 +17,7 @@ ComponentMaterial::~ComponentMaterial()
 {
 	for (auto & texture : textures)
 	{
-		App->material_importer->RemoveTextureFromCacheIfNeeded(texture);
+		App->resources->RemoveResourceFromCacheIfNeeded(texture);
 	}
 }
 
@@ -37,7 +37,7 @@ void ComponentMaterial::Save(Config& config) const
 		if (textures[i] != nullptr) 
 		{
 			std::string id = "Path" + i;
-			config.AddString(textures[i]->texture_path, id);
+			config.AddString(textures[i]->exported_file, id);
 		}
 	}
 	config.AddBool(show_checkerboard_texture, "Checkboard");
@@ -71,7 +71,7 @@ void ComponentMaterial::Load(const Config& config)
 		config.GetString(id, tmp_path, "");
 		if (!tmp_path.empty())
 		{
-			textures[i] = App->material_importer->Load(tmp_path);
+			textures[i] = App->resources->Load<Texture>(tmp_path);
 		}
 	}
 	
@@ -168,7 +168,7 @@ void ComponentMaterial::BindTexture(Texture::TextureType id) const
 }
 void ComponentMaterial::RemoveMaterialTexture(size_t type)
 {
-	App->material_importer->RemoveTextureFromCacheIfNeeded(textures[type]);
+	App->resources->RemoveResourceFromCacheIfNeeded(textures[type]);
 	textures[type] = nullptr;
 }
 void ComponentMaterial::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture)

@@ -1,7 +1,7 @@
 #ifndef _COMPONENT_H_
 #define _COMPONENT_H_
 
-#include "Config.h"
+#include "Helper/Config.h"
 
 #include <pcg_basic.h>
 

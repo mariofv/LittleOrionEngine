@@ -1,4 +1,4 @@
-#include "Globals.h"
+#include "Main/Globals.h"
 #include "EngineLog.h"
 
 #include "imgui.h"

@@ -2,7 +2,7 @@
 #define _EDITORACTIONADDGAMEOBJECT_H_
 
 #include "EditorAction.h"
-#include "GameObject.h"
+#include "Main/GameObject.h"
 
 
 class EditorActionAddGameObject : public EditorAction

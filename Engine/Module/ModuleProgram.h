@@ -2,7 +2,7 @@
 #define _MODULEPROGRAM_H_
 
 #include "Module.h"
-#include "Globals.h"
+#include "Main/Globals.h"
 
 #include <GL/glew.h>
 #include <MathGeoLib.h>

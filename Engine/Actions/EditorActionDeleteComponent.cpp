@@ -1,7 +1,7 @@
 #include "EditorActionDeleteComponent.h"
-#include "GameObject.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleLight.h"
-#include "Application.h"
+#include "Main/Application.h"
 
 EditorActionDeleteComponent::EditorActionDeleteComponent(Component* comp)
 {

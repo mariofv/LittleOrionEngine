@@ -2,9 +2,9 @@
 #define _MODULERENDER_H_
 
 #include "Module.h"
-#include "Globals.h"
-#include "OLQuadTree.h"
-#include "Timer.h"
+#include "Main/Globals.h"
+#include "SpacePartition/OLQuadTree.h"
+#include "Helper/Timer.h"
 
 #include <GL/glew.h>
 
@@ -31,8 +31,6 @@ public:
 	ComponentMesh* CreateComponentMesh();
 	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
 	void GenerateQuadTree();
-
-	GameObject* GetRaycastIntertectedObject(const LineSegment & ray);
 
 	void ShowRenderOptions();
 

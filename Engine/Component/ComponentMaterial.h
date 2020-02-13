@@ -3,8 +3,8 @@
 
 #include "Component.h"
 #include "UI/ComponentsUI.h"
-#include "Globals.h"
-#include "Texture.h"
+#include "Main/Globals.h"
+#include "ResourceManagement/Resources/Texture.h"
 
 #include <GL/glew.h>
 #include <memory>

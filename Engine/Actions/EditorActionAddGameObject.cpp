@@ -1,6 +1,6 @@
 #include "EditorActionAddGameObject.h"
 #include "Module/ModuleScene.h"
-#include "Application.h"
+#include "Main/Application.h"
 
 
 EditorActionAddGameObject::EditorActionAddGameObject(GameObject* go, GameObject* new_parent, int depth)

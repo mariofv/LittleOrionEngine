@@ -2,7 +2,7 @@
 #define _EDITORACTIONDELETEGAMEOBJECT_H_
 
 #include "EditorAction.h"
-#include "GameObject.h"
+#include "Main/GameObject.h"
 
 class EditorActionDeleteGameObject : public EditorAction
 {

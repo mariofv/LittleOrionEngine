@@ -5,8 +5,8 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
 
-#include "Application.h"
-#include "GameObject.h"
+#include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleProgram.h"
@@ -17,7 +17,7 @@
 #include "Actions/EditorActionScale.h"
 #include "Actions/EditorAction.h"
 
-#include "Utils.h"
+#include "Helper/Utils.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -123,7 +123,7 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 					ImGui::BeginGroup();
 					ImGui::Text("Texture:");
 					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), texture->texture_path.c_str());
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), texture->exported_file.c_str());
 					sprintf_s(tmp_string, "(%dx%d px)", texture->width, texture->height);
 					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
 

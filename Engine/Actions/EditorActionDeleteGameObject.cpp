@@ -1,6 +1,6 @@
 #include "EditorActionDeleteGameObject.h"
 #include "Module/ModuleScene.h"
-#include "Application.h"
+#include "Main/Application.h"
 
 EditorActionDeleteGameObject::EditorActionDeleteGameObject(GameObject* GO, GameObject* parentGO, int depth)
 {

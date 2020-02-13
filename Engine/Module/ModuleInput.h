@@ -2,7 +2,7 @@
 #define _MODULEINPUT_H_
 
 #include "Module.h"
-#include "Globals.h"
+#include "Main/Globals.h"
 
 typedef unsigned __int8 Uint8;
 struct SDL_Cursor;

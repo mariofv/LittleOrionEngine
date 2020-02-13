@@ -1,7 +1,7 @@
 #include "EditorActionAddComponent.h"
-#include "GameObject.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleLight.h"
-#include "Application.h"
+#include "Main/Application.h"
 
 EditorActionAddComponent::EditorActionAddComponent(Component* comp)
 {

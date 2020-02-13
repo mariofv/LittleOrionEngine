@@ -1,8 +1,8 @@
 #include "ModuleLight.h"
-#include "Application.h"
+#include "Main/Application.h"
 #include "Component/ComponentLight.h"
 #include "Module/ModuleProgram.h"
-#include "GameObject.h"
+#include "Main/GameObject.h"
 
 #include <Brofiler/Brofiler.h>
 

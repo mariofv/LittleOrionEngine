@@ -1,0 +1,502 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <ClCompile Include="Libraries\include\imgui\imgui.cpp">
+      <Filter>Libraries\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\imgui\imgui_demo.cpp">
+      <Filter>Libraries\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\imgui\imgui_draw.cpp">
+      <Filter>Libraries\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\imgui\imgui_impl_opengl3.cpp">
+      <Filter>Libraries\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\imgui\imgui_impl_sdl.cpp">
+      <Filter>Libraries\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\imgui\imgui_stdlib.cpp">
+      <Filter>Libraries\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\imgui\imgui_widgets.cpp">
+      <Filter>Libraries\imgui</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp">
+      <Filter>Libraries\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\ImGuizmo\ImGradient.cpp">
+      <Filter>Libraries\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\ImGuizmo\ImGuizmo.cpp">
+      <Filter>Libraries\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\ImGuizmo\ImSequencer.cpp">
+      <Filter>Libraries\ImGuizmo</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\BitOps.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\TriangleMesh.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Sphere.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Triangle.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Ray.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Polygon.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Polyhedron.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Plane.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\OBB.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\LineSegment.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Line.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Frustum.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Cone.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Cylinder.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Circle.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Capsule.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\AABB.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Algorithm\Random\LCG.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Time\Clock.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\float4x4.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\float4.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\float3x4.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\float3x3.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\float2.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\float3.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\TransformOps.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\SSEMath.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\Quat.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\Polynomial.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\MathOps.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\MathLog.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\MathGeoLib\Math\MathFunc.cpp">
+      <Filter>Libraries\MathGeoLib</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentAABB.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentCamera.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentLight.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentMaterial.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentMesh.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentTransform.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleCamera.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleDebug.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleDebugDraw.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleEditor.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleFileSystem.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleInput.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleLight.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleModelLoader.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleProgram.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleRender.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleScene.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleTexture.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleTime.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleUI.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleWindow.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Filesystem\File.cpp">
+      <Filter>Engine\Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Billboard.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\EngineUI.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\EngineLog.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\ComponentsUI.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\FileExplorerUI.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\pcg_random\pcg_basic.c">
+      <Filter>Libraries\pcg_random</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Main\Main.cpp">
+      <Filter>Engine\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Main\Application.cpp">
+      <Filter>Engine\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Main\GameObject.cpp">
+      <Filter>Engine\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\SpacePartition\OLOctTreeNode.cpp">
+      <Filter>Engine\SpacePartition</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\SpacePartition\OLQuadTree.cpp">
+      <Filter>Engine\SpacePartition</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\SpacePartition\OLQuadTreeNode.cpp">
+      <Filter>Engine\SpacePartition</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\SpacePartition\OLOctTree.cpp">
+      <Filter>Engine\SpacePartition</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Main\Log.cpp">
+      <Filter>Engine\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Hierarchy.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helper\Config.cpp">
+      <Filter>Engine\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helper\Timer.cpp">
+      <Filter>Engine\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helper\TimerUs.cpp">
+      <Filter>Engine\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helper\Utils.cpp">
+      <Filter>Engine\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\Importer.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Texture.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp">
+      <Filter>Engine\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\TextureImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\MeshLoader.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionDeleteComponent.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionDeleteGameObject.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionEnableDisableComponent.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionModifyCamera.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionModifyLight.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionRotation.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionSetTexture.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="Engine\Component\Component.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentAABB.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCamera.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentLight.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentMaterial.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentMesh.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentTransform.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\Module.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleCamera.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleDebug.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleDebugDraw.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleEditor.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleFileSystem.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleInput.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleLight.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleModelLoader.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleProgram.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleRender.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleScene.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleTexture.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleTime.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleUI.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleWindow.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Filesystem\File.h">
+      <Filter>Engine\Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Billboard.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\EngineUI.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\EngineLog.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\ComponentsUI.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\FileExplorerUI.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Main\GameObject.h">
+      <Filter>Engine\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Main\Globals.h">
+      <Filter>Engine\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Main\Application.h">
+      <Filter>Engine\Main</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\SpacePartition\OLOctTree.h">
+      <Filter>Engine\SpacePartition</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\SpacePartition\OLOctTreeNode.h">
+      <Filter>Engine\SpacePartition</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\SpacePartition\OLQuadTree.h">
+      <Filter>Engine\SpacePartition</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\SpacePartition\OLQuadTreeNode.h">
+      <Filter>Engine\SpacePartition</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Hierarchy.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\Config.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\Timer.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\TimerUs.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\Utils.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\Importer.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Texture.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Skybox.h">
+      <Filter>Engine\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleResourceManager.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\TextureImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
+    <ClInclude Include="Engine\Actions\EditorActionTranslate.h" />
+    <ClInclude Include="Engine\Actions\EditorAction.h" />
+    <ClInclude Include="Engine\Actions\EditorActionAddComponent.h" />
+    <ClInclude Include="Engine\Actions\EditorActionAddGameObject.h" />
+    <ClInclude Include="Engine\Actions\EditorActionDeleteComponent.h" />
+    <ClInclude Include="Engine\Actions\EditorActionDeleteGameObject.h" />
+    <ClInclude Include="Engine\Actions\EditorActionEnableDisableComponent.h" />
+    <ClInclude Include="Engine\Actions\EditorActionModifyCamera.h" />
+    <ClInclude Include="Engine\Actions\EditorActionModifyLight.h" />
+    <ClInclude Include="Engine\Actions\EditorActionRotation.h" />
+    <ClInclude Include="Engine\Actions\EditorActionScale.h" />
+    <ClInclude Include="Engine\Actions\EditorActionSetTexture.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <Filter Include="Libraries">
+      <UniqueIdentifier>{bb478bc1-4a47-4104-a525-9a9c1e84ebf0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine">
+      <UniqueIdentifier>{78196238-a4d6-4e0e-ba05-48142ddb16dc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\imgui">
+      <UniqueIdentifier>{5ae1ff27-bee3-4b9f-bf4d-74e8961b09b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\ImGuizmo">
+      <UniqueIdentifier>{4156e7f7-9ca4-4c90-a5c6-6dd08a48b4d9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\MathGeoLib">
+      <UniqueIdentifier>{7aeb874c-0048-442d-a610-13b2f8c71ccf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Component">
+      <UniqueIdentifier>{550cf299-4283-45ac-bf26-ac8d0ea988f8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Filesystem">
+      <UniqueIdentifier>{8247727e-b382-43a5-8fe6-cf16522fb498}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Main">
+      <UniqueIdentifier>{ee0d0ae0-8863-4a59-8425-13870fcc3142}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Module">
+      <UniqueIdentifier>{aa443e3b-8046-4ada-ba17-0c9902910cf3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\UI">
+      <UniqueIdentifier>{0032cc3c-b82d-4579-9ba1-11c9c0786d10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\pcg_random">
+      <UniqueIdentifier>{e3b0e27d-0659-43e6-be7c-5837bfb898b3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\SpacePartition">
+      <UniqueIdentifier>{6b873c35-fc1f-46db-9b9f-e88ffd7aca50}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Helper">
+      <UniqueIdentifier>{2bc4007b-e9fc-444a-a564-71df69ef9649}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement">
+      <UniqueIdentifier>{43b6c14e-b9eb-4025-9f7b-b2e8c1cedd2f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\Importer">
+      <UniqueIdentifier>{77df864b-d951-40b5-ba86-51b9342f9390}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\Resources">
+      <UniqueIdentifier>{621e0eab-6111-4b36-b46d-c82b3b6b0847}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+</Project>

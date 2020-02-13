@@ -2,7 +2,7 @@
 #define _MODULEEDITOR_H_
 
 #include "Module.h"
-#include "Globals.h"
+#include "Main/Globals.h"
 #include "Component/ComponentCamera.h"
 #include "UI/Billboard.h"
 #include "Actions/EditorAction.h"
@@ -27,6 +27,7 @@ public:
 	void RenderDebugDraws();
 
 	void MousePicking(const float2& mouse_position);
+	GameObject* GetRaycastIntertectedObject(const LineSegment & ray);
 
 	void ShowSceneTab();
 	void ShowGameTab();

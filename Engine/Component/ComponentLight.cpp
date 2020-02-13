@@ -1,9 +1,9 @@
 #include "ComponentLight.h"
-#include "Application.h"
+#include "Main/Application.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "UI/ComponentsUI.h"
-#include "GameObject.h"
+#include "Main/GameObject.h"
 
 ComponentLight::ComponentLight() : Component(nullptr, ComponentType::LIGHT)
 {
