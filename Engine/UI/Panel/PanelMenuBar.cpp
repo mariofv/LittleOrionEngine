@@ -3,6 +3,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleFileSystem.h"
+#include "UI/Panel/PanelAbout.h"
 #include "UI/Panel/PanelConfiguration.h"
 #include "UI/Panel/PanelConsole.h"
 #include "UI/Panel/PanelDebug.h"
@@ -104,7 +105,10 @@ void PanelMenuBar::ShowHelpMenu()
 {
 	if (ImGui::BeginMenu("Help"))
 	{
-		//ImGui::MenuItem(ICON_FA_QUESTION_CIRCLE " About", (const char*)0, &show_about_window);
+		if (ImGui::MenuItem(ICON_FA_QUESTION_CIRCLE " About", (const char*)0, App->editor->about->IsEnabled()))
+		{
+			App->editor->about->SwitchEnable();
+		}
 		ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAB));
 		if (ImGui::MenuItem(ICON_FA_GITHUB_ALT " Repository"))
 		{

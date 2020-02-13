@@ -18,6 +18,7 @@ class PanelProjectExplorer;
 class PanelConsole;
 class PanelDebug;
 class PanelConfiguration;
+class PanelAbout;
 
 class GameObject;
 
@@ -60,13 +61,12 @@ public:
 	PanelConsole* console = nullptr;
 	PanelDebug* debug_panel = nullptr;
 	PanelConfiguration* configuration = nullptr;
+	PanelAbout* about = nullptr;
 
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 
 private:
 	std::vector<Panel*> panels;
-
-
 };
 
 #endif //_MODULEEDITOR_H_

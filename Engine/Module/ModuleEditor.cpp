@@ -6,6 +6,7 @@
 #include "ModuleWindow.h"
 
 #include "Helper/Config.h"
+#include "UI/Panel/PanelAbout.h"
 #include "UI/Panel/PanelConfiguration.h"
 #include "UI/Panel/PanelConsole.h"
 #include "UI/Panel/PanelDebug.h"
@@ -64,6 +65,7 @@ bool ModuleEditor::Init()
 	panels.push_back(console = new PanelConsole());
 	panels.push_back(debug_panel = new PanelDebug());
 	panels.push_back(configuration = new PanelConfiguration());
+	panels.push_back(about = new PanelAbout());
 
 	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
 

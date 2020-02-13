@@ -23,10 +23,6 @@
 void EngineUI::ShowEngineUI()
 {
 	ShowSceneControls();
-	if (0)
-	{
-		ShowAboutWindow();
-	}
 
 	ShowPopups();
 }
@@ -44,50 +40,6 @@ void EngineUI::ShowSceneControls()
 	}
 	ImGui::End();
 	ImGui::PopStyleVar();
-}
-
-void EngineUI::ShowAboutWindow()
-{
-	if (ImGui::Begin(ICON_FA_QUESTION_CIRCLE " About")) 
-	{
-		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Orion Engine");
-		ImGui::TextWrapped("3D engine developed during the Master's Degree in AAA Videogames Development.");
-
-
-		ImGui::Separator();
-
-
-		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Authors:");
-		ImGui::Text("Mario Fernandez Villalba");
-		ImGui::Text("Anabel Hernandez Barrera");
-		
-
-		ImGui::Separator();
-
-
-		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "Libraries");
-		
-		MenuURL("SDL 2.0", "https://www.libsdl.org/");
-		MenuURL("glew 2.1.0", "http://glew.sourceforge.net/");
-		MenuURL("MathGeoLib 1.5", "https://github.com/juj/MathGeoLib/");
-		MenuURL("ImGui 1.73", "https://github.com/ocornut/imgui/");
-		MenuURL("DevIL 1.8", "http://openil.sourceforge.net/");
-		MenuURL("assimp 5.0", "https://github.com/assimp/assimp/");
-		MenuURL("Font Awesome 5", "https://github.com/FortAwesome/Font-Awesome/");
-		MenuURL("Icon Font Cpp Headers", "https://github.com/juliettef/IconFontCppHeaders/");
-		MenuURL("PCG", "http://www.pcg-random.org/");
-		MenuURL("rapidjson 1.1.0", "https://github.com/Tencent/rapidjson/");
-		MenuURL("Debug Draw", "https://github.com/glampert/debug-draw/");
-		MenuURL("par_shapes", "https://github.com/prideout/par/blob/master/par_shapes.h");
-		MenuURL("ImGuizmo", "https://github.com/CedricGuillemet/ImGuizmo");
-		MenuURL("PhysFS 3.0.2", "http://icculus.org/physfs/");
-
-		ImGui::Separator();
-
-		MenuURL("LICENSE", "https://github.com/mariofv/LittleOrionEngine/blob/master/LICENSE");
-		ImGui::TextWrapped("Orion Engine is licensed under the MIT License, see LICENSE for more information.");
-	}
-	ImGui::End();
 }
 
 void EngineUI::ShowPopups() const
@@ -110,18 +62,5 @@ void EngineUI::ShowPopups() const
 			ImGui::CloseCurrentPopup(); 
 		}
 		ImGui::EndPopup();
-	}
-}
-
-
-void EngineUI::MenuURL(const std::string& text, const std::string& link)
-{
-	if (ImGui::MenuItem(text.c_str()))
-	{
-		ShellExecuteA(NULL, "open", link.c_str(), NULL, NULL, SW_SHOWNORMAL);
-	}
-	if (ImGui::IsItemHovered())
-	{
-		ImGui::SetMouseCursor(ImGuiMouseCursor_Hand);
 	}
 }

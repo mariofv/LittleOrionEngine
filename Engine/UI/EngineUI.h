@@ -15,11 +15,7 @@ public:
 private:
 	void ShowSceneControls();
 
-	void ShowAboutWindow();
-
 	void ShowPopups() const;
-
-	void MenuURL(const std::string& text, const std::string& link);
 
 public:
 	#define MAIN_MENU_BAR_HEIGHT 19
