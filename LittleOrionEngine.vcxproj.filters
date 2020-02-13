@@ -277,6 +277,7 @@
     <ClCompile Include="Engine\UI\Panel\PanelGame.cpp">
       <Filter>Engine\UI\Panel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\PanelInspector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -429,6 +430,7 @@
     <ClInclude Include="Engine\UI\Panel\PanelGame.h">
       <Filter>Engine\UI\Panel</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\PanelInspector.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

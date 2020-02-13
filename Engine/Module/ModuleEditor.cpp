@@ -6,8 +6,9 @@
 #include "ModuleWindow.h"
 
 #include "Helper/Config.h"
-#include "UI/Panel/PanelScene.h"
 #include "UI/Panel/PanelGame.h"
+#include "UI/Panel/PanelInspector.h"
+#include "UI/Panel/PanelScene.h"
 #include "UI/EngineUI.h"
 
 #include <SDL/SDL.h>
@@ -50,6 +51,7 @@ bool ModuleEditor::Init()
 	editor_ui = new EngineUI();
 	panels.push_back(scene_panel = new PanelScene());
 	panels.push_back(game_panel = new PanelGame());
+	panels.push_back(inspector = new PanelInspector());
 
 	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
 

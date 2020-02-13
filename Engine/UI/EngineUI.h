@@ -24,9 +24,6 @@ private:
 
 	void ShowHierarchyWindow();
 	
-	void ShowInspectorWindow();
-	void ShowAddNewComponentButton();
-
 	void ShowConfigurationWindow();
 	void ShowHardware() const;
 

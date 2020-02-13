@@ -2,8 +2,6 @@
 #define _PANELGAME_H_
 
 #include "Panel.h"
-#include <MathGeoLib.h>
-
 
 class PanelGame : public Panel
 {

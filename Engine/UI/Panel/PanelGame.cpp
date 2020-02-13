@@ -53,8 +53,8 @@ void PanelGame::Render()
 		{
 			ShowEmptyGameWindow();
 		}
-		ImGui::End();
 	}
+	ImGui::End();
 }
 
 

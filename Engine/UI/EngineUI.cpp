@@ -25,10 +25,6 @@ void EngineUI::ShowEngineUI()
 	ShowMainMenu();
 	ShowSceneControls();
 	
-	if (show_model_inspector_window)
-	{
-		ShowInspectorWindow();
-	}
 	if (show_hierarchy_window)
 	{
 		ShowHierarchyWindow();
@@ -151,70 +147,6 @@ void EngineUI::ShowHierarchyWindow()
 	App->scene->hierarchy.ShowHierarchyWindow();
 }
 
-
-void EngineUI::ShowInspectorWindow()
-{
-	ImGui::SetNextWindowPos(
-		ImVec2(App->window->GetWidth() * (CONFIG_WIDTH_PROP + SCENE_WIDTH_PROP), MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * TIME_BAR_HEIGHT_PROP),
-		ImGuiCond_Once
-	);
-	ImGui::SetNextWindowSize(
-		ImVec2(App->window->GetWidth() * MODEL_PROPERTIES_WIDTH_PROP, App->window->GetHeight() * MODEL_PROPERTIES_HEIGHT_PROP),
-		ImGuiCond_Once
-	);
-
-	if (ImGui::Begin(ICON_FA_INFO_CIRCLE " Inspector"))
-	{
-		if (App->scene->hierarchy.selected_game_object != nullptr)
-		{
-			App->scene->hierarchy.selected_game_object->ShowPropertiesWindow();
-
-			ImGui::Spacing();
-			ImGui::Separator();
-			ImGui::Spacing();
-
-			ShowAddNewComponentButton();
-		}
-		
-	}
-	ImGui::End();
-}
-
-void EngineUI::ShowAddNewComponentButton() 
-{
-	float window_width = ImGui::GetWindowWidth();
-	float button_width = 0.5f * window_width;
-	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
-	ImGui::Button("Add component", ImVec2(button_width, 25));
-
-	if (ImGui::BeginPopupContextItem("Add component", 0))
-	{
-		char tmp_string[128];
-		
-		sprintf_s(tmp_string, "%s Material", ICON_FA_IMAGE);
-		if (ImGui::Selectable(tmp_string))
-		{
-			App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
-
-		}
-
-		sprintf_s(tmp_string, "%s Camera", ICON_FA_VIDEO);
-		if (ImGui::Selectable(tmp_string))
-		{
-			App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::CAMERA);
-
-		}
-
-		sprintf_s(tmp_string, "%s Light", ICON_FA_LIGHTBULB);
-		if (ImGui::Selectable(tmp_string))
-		{
-			App->scene->hierarchy.selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
-
-		}
-
-		ImGui::EndPopup();
-	}
-}
 
 void EngineUI::ShowConfigurationWindow()
 {

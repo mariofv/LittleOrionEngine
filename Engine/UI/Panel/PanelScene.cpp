@@ -75,8 +75,8 @@ void PanelScene::Render()
 		{
 			ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
 		}
-		ImGui::End();
 	}
+	ImGui::End();
 }
 
 void PanelScene::RenderDebugDraws()
