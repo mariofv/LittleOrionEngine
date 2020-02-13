@@ -1,6 +1,9 @@
 #include "SkeletonImporter.h"
 #include <assimp/scene.h>
+#include <algorithm>
 
+#include <Main/Application.h>
+#include <Module/ModuleFileSystem.h>
 bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const aiMatrix4x4& mesh_transformation, const std::string& output_file) const
 {
 
@@ -9,9 +12,8 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 	Skeleton skeleton("", "");
 	Skeleton::Joint bone_joint{ GetTranform(bone->mTransformation), nullptr };
 	skeleton.skeleton.push_back(bone_joint);
-	ImportBone(mesh, bone, bone_joint, bone->mTransformation, skeleton);
-
-
+	ImportBone(mesh, bone, skeleton.skeleton.back(), bone->mTransformation, skeleton);
+	SaveBinary(skeleton, output_file);
 	return true;
 }
 
@@ -22,14 +24,14 @@ void SkeletonImporter::ImportBone(const aiMesh* mesh, const aiNode * previus_nod
 	{
 		aiString bone_name = previus_node->mChildren[i]->mName;
 		aiBone * node_bone = GetNodeBone(mesh, bone_name);
-		Skeleton::Joint next_joint = previous_joint;
+		Skeleton::Joint * next_joint = &previous_joint;
 		if (node_bone != nullptr) {
 		
 			Skeleton::Joint bone{ GetTranform(current_transformation), &previous_joint};
-			next_joint = bone;
 			skeleton.skeleton.push_back(bone);
+			next_joint = &skeleton.skeleton.back();
 		}
-		ImportBone(mesh, previus_node->mChildren[i], next_joint, current_transformation, skeleton);
+		ImportBone(mesh, previus_node->mChildren[i], *next_joint, current_transformation, skeleton);
 	}
 }
 aiBone* SkeletonImporter::GetNodeBone(const aiMesh* mesh,  const aiString & boneName) const
@@ -56,7 +58,46 @@ float4x4 SkeletonImporter::GetTranform(const aiMatrix4x4 & current_transform) co
 	math::Quat rotation(pRotation.x, pRotation.y, pRotation.z, pRotation.w);
 	math::float3 translation(pPosition.x, pPosition.y, pPosition.z);
 
-	math::float4x4 transform;
-	transform.FromTRS(translation, rotation, scale);
-	return transform;
+	return math::float4x4::FromTRS(translation, rotation, scale);
+}
+
+bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& output_file) const
+{
+
+	struct B_Bone {
+		float4x4 transform;
+		uint32_t index; 
+	};
+	std::vector<B_Bone> bones;
+
+	for (auto & sk_bone : skeleton.skeleton)
+	{
+
+		auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&sk_bone](const Skeleton::Joint & joint) {
+			&sk_bone == joint.parent;
+		});
+		uint32_t parent_index = -1;
+		if (it != skeleton.skeleton.end())
+		{
+			parent_index = it - skeleton.skeleton.begin();
+		}
+		bones.push_back({sk_bone.transform, parent_index });
+
+	}
+	uint32_t num_bones = skeleton.skeleton.size();
+
+	uint32_t size =  sizeof(B_Bone) * num_bones;
+
+	char* data = new char[size]; // Allocate
+	char* cursor = data;
+	size_t bytes = sizeof(uint32_t); // First store ranges
+	memcpy(cursor, &num_bones, bytes);
+
+	cursor += bytes; // Store bones
+	bytes = sizeof(B_Bone) * num_bones;
+	memcpy(cursor, &bones.front(), bytes);
+
+	App->filesystem->Save(output_file.c_str(), data, size);
+	delete data;
+	return true;
 }
