@@ -7,6 +7,7 @@ class ComponentMaterial;
 class ComponentMesh;
 class ComponentTransform;
 class ComponentLight;
+class Component;
 
 class ComponentsUI
 {
@@ -22,6 +23,8 @@ private:
 	static std::string GetTypeName(Texture::TextureType type);
 
 	static void CheckClickedCamera(ComponentCamera* camera);
+
+	static void CheckClickForUndo(const int type, Component* component);
 	
 
 	ComponentsUI() = default;

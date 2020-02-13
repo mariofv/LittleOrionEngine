@@ -26,53 +26,30 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (App->editor->clicked && !ImGui::IsMouseDragging())
-		{
-			App->editor->AddUndoAction(App->editor->type_of_action);
-			App->editor->clicked = false;
-		}
-
-		//TODO: look for boolean imgui::dragfloat3
 
 		if (ImGui::DragFloat3("Translation", transform->translation.ptr(), 0.01f))
 		{
 			transform->OnTransformChange();
-
-			if (!App->editor->clicked && ImGui::IsMouseDragging())
-			{
-				App->editor->clicked = true;
-				App->editor->previous_transform = transform->GetTranslation();
-				App->editor->type_of_action = 0;
-			}
-
 		}
+		//UndoRedo
+		CheckClickForUndo(0, transform);
 
 		if (ImGui::DragFloat3("Rotation", transform->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
 		{
 			transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
 			transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
 			transform->OnTransformChange();
-
-			if (!App->editor->clicked && ImGui::IsMouseDragging())
-			{
-				App->editor->clicked = true;
-				App->editor->previous_transform = transform->GetRotationRadiants();
-				App->editor->type_of_action = 1;
-			}
-
 		}
+		//UndoRedo
+		CheckClickForUndo(1, transform);
+
 		if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
 		{
 			transform->OnTransformChange();
-
-			if (!App->editor->clicked && ImGui::IsMouseDragging())
-			{
-				App->editor->clicked = true;
-				App->editor->previous_transform = transform->GetScale();
-				App->editor->type_of_action = 2;
-			}
-
 		}
+
+		//UndoRedo
+		CheckClickForUndo(2, transform);
 	}
 }
 
@@ -89,7 +66,6 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			//mesh->owner->RemoveComponent(mesh);
 			App->editor->DeleteComponentUndo(mesh);
 			return;
 		}
@@ -245,14 +221,50 @@ std::string ComponentsUI::GetTypeName(Texture::TextureType type)
 void ComponentsUI::CheckClickedCamera(ComponentCamera* camera)
 {
 	//UndoRedo
-	if (!App->editor->clicked_camera)
+	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
 	{
-		App->editor->clicked_camera = true;
-
 		//Push new action
 		App->editor->action_component = camera;
 		App->editor->AddUndoAction(9);
 	}
+}
+void ComponentsUI::CheckClickForUndo(const int type, Component* component)
+{
+	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
+	{
+
+		switch (type)
+		{
+			case 0:
+				App->editor->previous_transform = ((ComponentTransform*)component)->GetTranslation();
+				break;
+			case 1:
+				App->editor->previous_transform = ((ComponentTransform*)component)->GetRotationRadiants();
+				break;
+			case 2:
+				App->editor->previous_transform = ((ComponentTransform*)component)->GetScale();
+				break;
+			case 7:
+				App->editor->previous_light_color[0] = ((ComponentLight*)component)->light_color[0];
+				App->editor->previous_light_color[1] = ((ComponentLight*)component)->light_color[1];
+				App->editor->previous_light_color[2] = ((ComponentLight*)component)->light_color[2];
+				App->editor->previous_light_intensity = ((ComponentLight*)component)->light_intensity;
+				App->editor->action_component = component;
+				break;
+			default:
+				break;
+		}
+
+
+		App->editor->clicked = true;
+	}
+
+	if (ImGui::IsItemDeactivatedAfterChange())
+	{
+		App->editor->AddUndoAction(type);
+		App->editor->clicked = false;
+	}
+
 }
 void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 {
@@ -267,7 +279,6 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			//camera->owner->RemoveComponent(camera);
 			App->editor->DeleteComponentUndo(camera);
 			return;
 		}
@@ -278,44 +289,42 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 
 		ImGui::Separator();
 
-		if(ImGui::SliderFloat("Mov Speed", &camera->camera_movement_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED))
-		{
-			//TODO: mov speed is changed by imgui before checking if clicked - try to solve it
-			//UndoRedo
-			CheckClickedCamera(camera);
-		}
+		ImGui::SliderFloat("Mov Speed", &camera->camera_movement_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
+		
+		//UndoRedo
+		CheckClickedCamera(camera);
 
 		if (ImGui::SliderFloat("FOV", &camera->camera_frustum.verticalFov, 0, 2 * 3.14f))
 		{
 			camera->SetFOV(camera->camera_frustum.verticalFov);
-
-			//UndoRedo
-			CheckClickedCamera(camera);
 		}
+
+		//UndoRedo
+		CheckClickedCamera(camera);
 
 		if (ImGui::SliderFloat("Aspect Ratio", &camera->aspect_ratio, 0, 10))
 		{
 			camera->SetAspectRatio(camera->aspect_ratio);
-
-			//UndoRedo
-			CheckClickedCamera(camera);
 		}
+
+		//UndoRedo
+		CheckClickedCamera(camera);
 
 		if (ImGui::SliderFloat("Near plane", &camera->camera_frustum.nearPlaneDistance, 1, camera->camera_frustum.farPlaneDistance + 1))
 		{
 			camera->SetNearDistance(camera->camera_frustum.nearPlaneDistance);
-
-			//UndoRedo
-			CheckClickedCamera(camera);
 		}
+
+		//UndoRedo
+		CheckClickedCamera(camera);
 
 		if (ImGui::SliderFloat("Far plane", &camera->camera_frustum.farPlaneDistance, camera->camera_frustum.nearPlaneDistance + 1, camera->camera_frustum.nearPlaneDistance + 1000))
 		{
 			camera->SetFarDistance(camera->camera_frustum.farPlaneDistance);
-
-			//UndoRedo
-			CheckClickedCamera(camera);
 		}
+
+		//UndoRedo
+		CheckClickedCamera(camera);
 
 		ImGui::Separator();
 		int camera_clear_mode = static_cast<int>(camera->camera_clear_mode);
@@ -337,10 +346,10 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 		if (ImGui::SliderFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0, 100))
 		{
 			camera->SetOrthographicSize(float2(camera->camera_frustum.orthographicHeight * camera->aspect_ratio, camera->camera_frustum.orthographicHeight));
-
-			//UndoRedo
-			CheckClickedCamera(camera);
 		}
+
+		//UndoRedo
+		CheckClickedCamera(camera);
 
 		if (ImGui::Combo("Front faces", &camera->perpesctive_enable, "Perspective\0Orthographic\0"))
 		{
@@ -356,16 +365,10 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		if(ImGui::DragInt("Depth", &camera->depth, 0.05f))
-		{
-			//UndoRedo
-			CheckClickedCamera(camera);
-		}
+		ImGui::DragInt("Depth", &camera->depth, 0.05f);
 
-		if(App->editor->clicked_camera && !ImGui::IsMouseDown(0))
-		{
-			App->editor->clicked_camera = false;
-		}
+		//UndoRedo
+		CheckClickedCamera(camera);
 
 	}
 }
@@ -384,48 +387,21 @@ void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			//light->owner->RemoveComponent(light);
 			App->editor->DeleteComponentUndo(light);
 
 			return;
 		}
 		ImGui::Separator();
 
-		if(ImGui::ColorEdit3("Color", light->light_color))
-		{
-			if(!App->editor->clicked_light)
-			{
-				//UndoRedo
-				App->editor->previous_light_color[0] = light->light_color[0];
-				App->editor->previous_light_color[1] = light->light_color[1];
-				App->editor->previous_light_color[2] = light->light_color[2];
-				App->editor->previous_light_intensity = light->light_intensity;
+		ImGui::ColorEdit3("Color", light->light_color);
+		
+		CheckClickForUndo(7, light);
+		
+		ImGui::SliderFloat("Intensity ", &light->light_intensity, 0.f, 1.f);
+	
+		CheckClickForUndo(7, light);
+		
 
-				App->editor->clicked_light = true;
-			}
-		}
-		else if (ImGui::SliderFloat("Intensity ", &light->light_intensity, 0.f, 1.f))
-		{
-			if (!App->editor->clicked_light)
-			{
-				//UndoRedo
-				App->editor->previous_light_color[0] = light->light_color[0];
-				App->editor->previous_light_color[1] = light->light_color[1];
-				App->editor->previous_light_color[2] = light->light_color[2];
-				App->editor->previous_light_intensity = light->light_intensity;
-
-
-				App->editor->clicked_light = true;
-			}
-		}
-		if(App->editor->clicked_light && !ImGui::IsMouseDown(0))
-		{
-			//Push new action
-			App->editor->action_component = light;
-			App->editor->AddUndoAction(7);
-
-			App->editor->clicked_light = false;
-		}
 	}
 }
 
