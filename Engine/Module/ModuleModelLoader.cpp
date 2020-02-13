@@ -90,6 +90,23 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 			componentMaterial->SetMaterialTexture(std::stoi(texture_type), App->resources->Load<Texture>(texture_path));
 		}
 	}
+
+	std::string skeleton_uid;
+	node_config.GetString("Skeleton", skeleton_uid, "");
+
+	if (skeleton_uid != "")
+	{
+		std::shared_ptr<Skeleton> full_skeleton = App->resources->Load<Skeleton>(skeleton_uid.c_str());
+		std::vector<GameObject *> skeleton_gameobjects;
+
+		for (Skeleton::Joint joint : full_skeleton->skeleton)
+		{
+			GameObject * object = LoadCoreModel(PRIMITIVE_CUBE_PATH);
+			//object->transform
+			object->SetParent(parent_node);
+			skeleton_gameobjects.push_back(object);
+		}
+	}
 }
 
 GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) const
