@@ -4,18 +4,19 @@
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleTime.h"
+#include "Module/ModuleWindow.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <imgui.h>
 
 void PanelToolBar::Render()
 {
-	if (ImGui::Begin("Toolbar", NULL, ImGuiWindowFlags_NoDecoration))
+	if (ImGui::BeginChild("Toolbar", ImVec2(0, App->window->GetHeight() * 0.025), false, ImGuiWindowFlags_NoDecoration))
 	{
 		ShowGizmoControls();
 		ShowTimeControls();
 	}
-	ImGui::End();
+	ImGui::EndChild();
 }
 
 void PanelToolBar::ShowGizmoControls()

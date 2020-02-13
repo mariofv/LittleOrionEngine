@@ -83,8 +83,8 @@ void PanelConsole::Render()
 				ImGui::SetScrollHere(1.0f);
 				App->engine_log->scroll_down = false;
 			}
-			ImGui::EndChild();
 		}
+		ImGui::EndChild();
 	}
 	ImGui::End();
 }

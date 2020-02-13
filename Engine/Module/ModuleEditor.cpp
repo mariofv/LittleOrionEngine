@@ -37,8 +37,8 @@ bool ModuleEditor::Init()
 	ret = InitImgui();
 
 	editor_ui = new EngineUI();
-	panels.push_back(menu_bar = new PanelMenuBar());
-	panels.push_back(toolbar = new PanelToolBar());
+	menu_bar = new PanelMenuBar();
+	toolbar = new PanelToolBar();
 	panels.push_back(scene_panel = new PanelScene());
 	panels.push_back(game_panel = new PanelGame());
 	panels.push_back(inspector = new PanelInspector());
@@ -108,27 +108,37 @@ void ModuleEditor::Render()
 {
 	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
 	
-	ImGui::SetNextWindowPos(ImVec2(0,0));
+	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight()));
-	ImGuiWindowFlags dockspace_flags;
-	dockspace_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoBringToFrontOnFocus;
-	if (ImGui::Begin("DockSpace", NULL, dockspace_flags))
+	if (ImGui::Begin("MainWindow", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBringToFrontOnFocus))
 	{
-		ImGuiID dockspace_id = ImGui::GetID("Editor Dockspace");
-		ImGui::DockSpace(dockspace_id);
+		menu_bar->Render();
+		toolbar->Render();
 
-		for (auto& panel : panels)
+		ImGui::Separator();
+
+		ImGuiWindowFlags dockspace_flags;
+		dockspace_flags = ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBringToFrontOnFocus;
+		if (ImGui::BeginChild("DockSpace", ImVec2(0, 0), false, dockspace_flags))
 		{
-			if (panel->IsEnabled())
-			{
-				panel->Render();
-			}
-		}
+			ImGuiID dockspace_id = ImGui::GetID("Editor Dockspace");
+			ImGui::DockSpace(dockspace_id);
 
-		editor_ui->ShowEngineUI();
+			for (auto& panel : panels)
+			{
+				if (panel->IsEnabled())
+				{
+					ImGui::SetNextWindowDockID(dockspace_id, ImGuiCond_FirstUseEver);
+					panel->Render();
+				}
+			}
+
+			editor_ui->ShowEngineUI();
+		}
+		ImGui::EndChild();
 	}
 	ImGui::End();
-	
+
 	ImGui::Render();
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
