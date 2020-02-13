@@ -67,7 +67,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 	ImportNode(root_node, identity_transformation, scene, base_path.c_str(),output_file.file_path, node_config);
 
 	aiReleaseImport(scene);
-	//SaveMetaFile(file, output_file.file_path);
+	//SaveMetaFile(file, output_file_model);
 
 	model.AddChildrenConfig(node_config, "Node");
 	std::string serialized_model_string;
@@ -85,15 +85,18 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 	{
 		Config node;
 		size_t mesh_index = root_node->mMeshes[i];
-		Config materials;
+		std::vector<Config> materials;
 		std::vector<std::string> loaded_meshes_materials;
 		material_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, loaded_meshes_materials);
 
+
 		for (size_t i = 0; i < loaded_meshes_materials.size(); i++)
 		{
-			materials.AddString(loaded_meshes_materials[i],"Texture_material_"+i);
+			Config texture;
+			texture.AddString(loaded_meshes_materials[i], "uid");
+			materials.push_back(texture);
 		}
-		node.AddChildConfig(materials, "Textures");
+		node.AddChildrenConfig(materials, "Textures");
 
 		std::string mesh_file = output_file + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
 
