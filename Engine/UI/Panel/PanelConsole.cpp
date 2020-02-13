@@ -31,6 +31,7 @@ void PanelConsole::Render()
 
 		if (ImGui::BeginChild(""))
 		{
+			/*
 			for (auto& log_entry : App->engine_log->text_log)
 			{
 				if (
@@ -84,6 +85,7 @@ void PanelConsole::Render()
 					}
 				}
 			}
+			*/
 			if (App->engine_log->scroll_down)
 			{
 				ImGui::SetScrollHere(1.0f);
