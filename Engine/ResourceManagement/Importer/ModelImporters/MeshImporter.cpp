@@ -52,6 +52,6 @@ bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_transf
 	memcpy(cursor, &vertices.front(), bytes);
 
 	App->filesystem->Save(output_file.c_str(), data, size);
-	delete data;
+	free(data);
 	return true;
 }

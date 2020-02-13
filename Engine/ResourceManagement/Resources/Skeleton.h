@@ -10,7 +10,7 @@ public:
 	~Skeleton() = default;
 	struct Joint {
 		math::float4x4 transform;
-		Joint * parent; 
+		uint32_t parent_index; 
 	};
 	std::vector<Joint> skeleton;
 
