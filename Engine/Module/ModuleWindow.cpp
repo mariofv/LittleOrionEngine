@@ -5,8 +5,6 @@
 #include "ModuleRender.h"
 #include "ModuleWindow.h"
 
-#include "imgui.h"
-#include <FontAwesome5/IconsFontAwesome5.h>
 #include <SDL_image/SDL_image.h>
 
 // Called before render is available
@@ -163,56 +161,6 @@ void ModuleWindow::WindowResized(unsigned width, unsigned height)
 {
 	this->width = width;
 	this->height = height;
-}
-
-void ModuleWindow::ShowWindowOptions()
-{
-	ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAR));
-	if (ImGui::CollapsingHeader(ICON_FA_WINDOW_MAXIMIZE " Window")) {
-		if (ImGui::SliderFloat("Brightness", &brightness, 0, 1))
-		{
-			SetBrightness(brightness);
-		}
-
-		if (ImGui::SliderInt("Width", &width, screen_width/4, screen_width))
-		{
-			SetWidth(width);
-		}
-
-		if (ImGui::SliderInt("Height", &height, screen_height/4, screen_height))
-		{
-			SetHeight(height);
-		}
-
-		if (ImGui::Combo("Window style", &fullscreen, "Windowed\0Fullscreen desktop\0Fullscreen\0"))
-		{
-			switch (fullscreen)
-			{
-			case 0:
-				SetWindowed();
-				break;
-			case 1:
-				SetFullScreenDesktop();
-				break;
-			case 2:
-				SetFullScreen();
-				break;
-			}
-		}
-
-		if (ImGui::Checkbox("Bordered", &bordered))
-		{
-			App->window->SetBordered(bordered);
-		}
-		ImGui::SameLine();
-
-		if (ImGui::Checkbox("Resizable", &resizable))
-		{
-			App->window->SetResizable(resizable);
-		}
-	}
-	ImGui::PopFont();
-
 }
 
 void ModuleWindow::InitOpenGLAttributes() const

@@ -3,6 +3,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleFileSystem.h"
+#include "UI/Panel/PanelConfiguration.h"
 #include "UI/Panel/PanelConsole.h"
 #include "UI/Panel/PanelDebug.h"
 #include "UI/Panel/PanelGame.h"
@@ -79,12 +80,10 @@ void PanelMenuBar::ShowViewMenu()
 		{
 			App->editor->inspector->SwitchEnable();
 		}
-		/*
-		if (ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, App->editor->hierarchy->IsEnabled()))
+		if (ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, App->editor->configuration->IsEnabled()))
 		{
-			App->editor->hierarchy->SwitchEnable();
+			App->editor->configuration->SwitchEnable();
 		}
-		*/
 		if (ImGui::MenuItem((ICON_FA_FOLDER_OPEN " Explorer"), (const char*)0, App->editor->project_explorer->IsEnabled()))
 		{
 			App->editor->project_explorer->SwitchEnable();

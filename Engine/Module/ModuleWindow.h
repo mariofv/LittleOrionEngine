@@ -33,8 +33,6 @@ public:
 
 	void WindowResized(unsigned width, unsigned height);
 
-	void ShowWindowOptions();
-
 private:
 	void InitOpenGLAttributes() const;
 public:
@@ -59,6 +57,8 @@ private:
 	bool resizable = false;
 
 	float brightness = 1.f;
+
+	friend class PanelConfiguration;
 };
 
 #endif // _MODULEWINDOW_H_

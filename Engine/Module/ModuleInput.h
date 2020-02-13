@@ -17,8 +17,6 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	void ShowInputOptions();
-
 private:
 	const Uint8 *keyboard = nullptr;
 };

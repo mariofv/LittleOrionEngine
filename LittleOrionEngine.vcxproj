@@ -131,6 +131,7 @@
     <ClInclude Include="Engine\Module\ModuleWindow.h" />
     <ClInclude Include="Engine\Module\ModuleScene.h" />
     <ClInclude Include="Engine\UI\Panel\Panel.h" />
+    <ClInclude Include="Engine\UI\Panel\PanelConfiguration.h" />
     <ClInclude Include="Engine\UI\Panel\PanelConsole.h" />
     <ClInclude Include="Engine\UI\Panel\PanelDebug.h" />
     <ClInclude Include="Engine\UI\Panel\PanelGame.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Engine\Module\ModuleCamera.cpp" />
     <ClCompile Include="Engine\Module\ModuleModelLoader.cpp" />
     <ClCompile Include="Engine\Module\ModuleTime.cpp" />
+    <ClCompile Include="Engine\UI\Panel\PanelConfiguration.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelConsole.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelDebug.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelGame.cpp" />

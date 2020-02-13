@@ -34,8 +34,6 @@ public:
 
 	GameObject* GetRaycastIntertectedObject(const LineSegment & ray);
 
-	void ShowRenderOptions();
-
 private:
 	void SetVSync(bool vsync);
 	void SetAlphaTest(bool gl_alpha_test);
@@ -76,6 +74,7 @@ private:
 	std::vector<ComponentMesh*> meshes_to_render;
 	Timer * rendering_measure_timer = new Timer();
 
+	friend class PanelConfiguration;
 	friend class PanelDebug;
 	friend class PanelScene;
 };

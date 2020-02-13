@@ -20,9 +20,6 @@
 #include <SDL/SDL.h>
 #include "MathGeoLib.h"
 #include <assimp/scene.h>
-#include <imgui.h>
-#include <ImGuizmo.h>
-#include <FontAwesome5/IconsFontAwesome5.h>
 #include <algorithm>
 #include "Brofiler/Brofiler.h"
 
@@ -343,101 +340,6 @@ void ModuleRender::RemoveComponentMesh(ComponentMesh* mesh_to_remove)
 	{
 		delete *it;
 		meshes.erase(it);
-	}
-}
-void ModuleRender::ShowRenderOptions()
-{
-	if (ImGui::CollapsingHeader(ICON_FA_CLONE " Renderer"))
-	{
-		if (ImGui::Checkbox("VSync", &vsync))
-		{
-			SetVSync(vsync);
-		}
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Wireframe", &gl_wireframe))
-		{
-			SetWireframing(gl_wireframe);
-		}
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Depth test", &gl_depth_test))
-		{
-			SetDepthTest(gl_depth_test);
-		}
-		ImGui::Separator();
-		if (ImGui::Checkbox("Face culling", &gl_cull_face))
-		{
-			SetFaceCulling(gl_cull_face);
-		}
-		if (ImGui::Combo("Culled faces", &culled_faces, "Back\0Front\0Front and back\0"))
-		{
-			switch (culled_faces)
-			{
-			case 0:
-				SetCulledFaces(GL_BACK);
-				break;
-			case 1:
-				SetCulledFaces(GL_FRONT);
-				break;
-			case 2:
-				SetCulledFaces(GL_FRONT_AND_BACK);
-				break;
-			}
-		}
-		if (ImGui::Combo("Front faces", &front_faces, "Counterclockwise\0Clockwise\0"))
-		{
-			switch (front_faces)
-			{
-			case 0:
-				SetFrontFaces(GL_CCW);
-				break;
-			case 1:
-				SetFrontFaces(GL_CW);
-				break;
-			}
-		}
-		if (ImGui::Combo("Filling mode", &filling_mode, "Fill\0Lines\0Vertices"))
-		{
-			if (filling_mode == 0) {
-				glPolygonMode(GL_FRONT, GL_FILL);
-			}
-			if (filling_mode == 1) {
-				glPolygonMode(GL_FRONT, GL_LINE);
-			}
-			if (filling_mode == 2) {
-				glPolygonMode(GL_FRONT, GL_POINT);
-			}
-		}
-		ImGui::Separator();
-		HelpMarker("This settings have no visual impact, WIP.");
-		ImGui::SameLine();
-		if (ImGui::TreeNode("Non-functional settings"))
-		{
-			if (ImGui::Checkbox("Alpha test", &gl_alpha_test))
-			{
-				SetAlphaTest(gl_alpha_test);
-			}
-			if (ImGui::Checkbox("Scissor test", &gl_scissor_test))
-			{
-				SetScissorTest(gl_scissor_test);
-			}
-			if (ImGui::Checkbox("Stencil test", &gl_stencil_test))
-			{
-				SetStencilTest(gl_stencil_test);
-			}
-			if (ImGui::Checkbox("Blending", &gl_blend))
-			{
-				SetBlending(gl_blend);
-			}
-			if (ImGui::Checkbox("Dithering", &gl_dither))
-			{
-				SetDithering(gl_dither);
-			}
-			if (ImGui::Checkbox("Min Maxing", &gl_minmax))
-			{
-				SetMinMaxing(gl_minmax);
-			}
-			ImGui::TreePop();
-		}
 	}
 }
 

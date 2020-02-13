@@ -14,9 +14,6 @@ public:
 
 private:
 	void ShowSceneControls();
-	
-	void ShowConfigurationWindow();
-	void ShowHardware() const;
 
 	void ShowAboutWindow();
 
