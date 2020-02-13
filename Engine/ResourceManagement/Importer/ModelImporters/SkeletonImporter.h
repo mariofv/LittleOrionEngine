@@ -8,6 +8,6 @@ public:
 	SkeletonImporter() = default;
 	~SkeletonImporter() = default;
 
-	bool ImportSkeleton(const aiScene & scene, const aiMesh* file_path, const aiMatrix4x4& mesh_transformation, const std::string& output_file) const;
+	bool ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const aiMatrix4x4& mesh_transformation, const std::string& output_file) const;
 };
 

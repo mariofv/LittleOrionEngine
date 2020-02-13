@@ -276,6 +276,8 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\MeshLoader.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Prefab.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -425,6 +427,8 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Prefab.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

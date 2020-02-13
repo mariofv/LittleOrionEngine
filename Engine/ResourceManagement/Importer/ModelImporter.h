@@ -8,6 +8,7 @@
 #include "assimp/Logger.hpp"
 #include "ModelImporters/MeshImporter.h"
 #include "ModelImporters/MaterialImporter.h"
+#include "ModelImporters/SkeletonImporter.h"
 
 
 struct aiNode;
@@ -33,6 +34,7 @@ private:
 	mutable Timer performance_timer;
 	std::unique_ptr<MeshImporter> mesh_importer;
 	std::unique_ptr<MaterialImporter> material_importer;
+	std::unique_ptr<SkeletonImporter> skeleton_importer;
 };
 
 

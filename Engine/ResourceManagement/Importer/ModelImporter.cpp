@@ -109,10 +109,17 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 		pPosition *= SCALE_FACTOR;
 
 		node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
-		bool imported = mesh_importer->ImportMesh(scene->mMeshes[mesh_index], node_transformation, mesh_file);
+		aiMesh * importing_mesh = scene->mMeshes[mesh_index];
+		bool imported = mesh_importer->ImportMesh(importing_mesh, node_transformation, mesh_file);
 		if (imported)
 		{
 			node.AddString(mesh_file, "Mesh");
+		}
+
+		if (importing_mesh->HasBones())
+		{
+			std::string skeleton; 
+			skeleton_importer->ImportSkeleton(scene, importing_mesh, node_transformation, skeleton);
 		}
 		node_config.push_back(node);
 	}
