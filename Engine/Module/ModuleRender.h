@@ -76,7 +76,7 @@ private:
 	std::vector<ComponentMesh*> meshes_to_render;
 	Timer * rendering_measure_timer = new Timer();
 
-	friend class ModuleDebug;
+	friend class PanelDebug;
 	friend class PanelScene;
 };
 

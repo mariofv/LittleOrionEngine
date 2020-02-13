@@ -31,10 +31,6 @@ void EngineUI::ShowEngineUI()
 
 	if (0)
 	{
-		App->debug->ShowDebugWindow();
-	}
-	if (0)
-	{
 		ShowAboutWindow();
 	}
 

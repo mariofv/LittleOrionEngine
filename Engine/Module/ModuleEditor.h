@@ -16,6 +16,7 @@ class PanelInspector;
 class PanelHierarchy;
 class PanelProjectExplorer;
 class PanelConsole;
+class PanelDebug;
 
 class GameObject;
 
@@ -56,6 +57,7 @@ public:
 	PanelHierarchy* hierarchy = nullptr;
 	PanelProjectExplorer* project_explorer = nullptr;
 	PanelConsole* console = nullptr;
+	PanelDebug* debug_panel = nullptr;
 
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 

@@ -132,6 +132,7 @@
     <ClInclude Include="Engine\Module\ModuleScene.h" />
     <ClInclude Include="Engine\UI\Panel\Panel.h" />
     <ClInclude Include="Engine\UI\Panel\PanelConsole.h" />
+    <ClInclude Include="Engine\UI\Panel\PanelDebug.h" />
     <ClInclude Include="Engine\UI\Panel\PanelGame.h" />
     <ClInclude Include="Engine\UI\Panel\PanelHierarchy.h" />
     <ClInclude Include="Engine\UI\Panel\PanelMenuBar.h" />
@@ -178,6 +179,7 @@
     <ClCompile Include="Engine\Module\ModuleModelLoader.cpp" />
     <ClCompile Include="Engine\Module\ModuleTime.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelConsole.cpp" />
+    <ClCompile Include="Engine\UI\Panel\PanelDebug.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelGame.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelHierarchy.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelMenuBar.cpp" />

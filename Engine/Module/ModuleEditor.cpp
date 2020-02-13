@@ -7,6 +7,7 @@
 
 #include "Helper/Config.h"
 #include "UI/Panel/PanelConsole.h"
+#include "UI/Panel/PanelDebug.h"
 #include "UI/Panel/PanelGame.h"
 #include "UI/Panel/PanelMenuBar.h"
 #include "UI/Panel/PanelHierarchy.h"
@@ -60,6 +61,7 @@ bool ModuleEditor::Init()
 	panels.push_back(hierarchy = new PanelHierarchy());
 	panels.push_back(project_explorer = new PanelProjectExplorer());
 	panels.push_back(console = new PanelConsole());
+	panels.push_back(debug_panel = new PanelDebug());
 
 	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
 

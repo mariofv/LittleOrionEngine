@@ -4,6 +4,7 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleFileSystem.h"
 #include "UI/Panel/PanelConsole.h"
+#include "UI/Panel/PanelDebug.h"
 #include "UI/Panel/PanelGame.h"
 #include "UI/Panel/PanelHierarchy.h"
 #include "UI/Panel/PanelInspector.h"
@@ -92,12 +93,10 @@ void PanelMenuBar::ShowViewMenu()
 		{
 			App->editor->console->SwitchEnable();
 		}
-		/*
-		if (ImGui::MenuItem((ICON_FA_BUG " Debug"), (const char*)0, App->editor->hierarchy->IsEnabled()))
+		if (ImGui::MenuItem((ICON_FA_BUG " Debug"), (const char*)0, App->editor->debug_panel->IsEnabled()))
 		{
-			App->editor->hierarchy->SwitchEnable();
+			App->editor->debug_panel->SwitchEnable();
 		}
-		*/
 		ImGui::EndMenu();
 	}
 }
