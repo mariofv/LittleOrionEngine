@@ -17,11 +17,11 @@ public:
 	void Render(const float3& position) const;
 
 private:
-	Mesh* billboard_quad;
+	std::shared_ptr<Mesh> billboard_quad;
 
 	float width = 5.f;
 	float height = 5.f;
-	Texture* billboard_texture = nullptr;
+	std::shared_ptr<Texture> billboard_texture = nullptr;
 
 };
 
