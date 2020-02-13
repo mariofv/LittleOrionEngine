@@ -122,7 +122,6 @@
     <ClInclude Include="Engine\Module\ModuleCamera.h" />
     <ClInclude Include="Engine\Module\ModuleModelLoader.h" />
     <ClInclude Include="Engine\Module\ModuleTime.h" />
-    <ClInclude Include="Engine\UI\FileExplorerUI.h" />
     <ClInclude Include="Engine\Module\Module.h" />
     <ClInclude Include="Engine\Module\ModuleEditor.h" />
     <ClInclude Include="Engine\Module\ModuleInput.h" />
@@ -134,6 +133,7 @@
     <ClInclude Include="Engine\UI\Panel\Panel.h" />
     <ClInclude Include="Engine\UI\Panel\PanelGame.h" />
     <ClInclude Include="Engine\UI\Panel\PanelHierarchy.h" />
+    <ClInclude Include="Engine\UI\Panel\PanelProjectExplorer.h" />
     <ClInclude Include="Engine\UI\Skybox.h" />
     <ClInclude Include="Engine\UI\Panel\PanelScene.h" />
     <ClInclude Include="Engine\UI\Panel\PanelInspector.h" />
@@ -175,9 +175,9 @@
     <ClCompile Include="Engine\Module\ModuleCamera.cpp" />
     <ClCompile Include="Engine\Module\ModuleModelLoader.cpp" />
     <ClCompile Include="Engine\Module\ModuleTime.cpp" />
-    <ClCompile Include="Engine\UI\FileExplorerUI.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelGame.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelHierarchy.cpp" />
+    <ClCompile Include="Engine\UI\Panel\PanelProjectExplorer.cpp" />
     <ClCompile Include="Engine\UI\Skybox.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGradient.cpp" />

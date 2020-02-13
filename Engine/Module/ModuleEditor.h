@@ -13,6 +13,7 @@ class PanelScene;
 class PanelGame;
 class PanelInspector;
 class PanelHierarchy;
+class PanelProjectExplorer;
 
 class GameObject;
 
@@ -50,6 +51,7 @@ public:
 	PanelGame* game_panel = nullptr;
 	PanelInspector* inspector = nullptr;
 	PanelHierarchy* hierarchy = nullptr;
+	PanelProjectExplorer* project_explorer = nullptr;
 
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 

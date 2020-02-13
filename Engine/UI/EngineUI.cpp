@@ -29,7 +29,6 @@ void EngineUI::ShowEngineUI()
 	{
 		ShowConfigurationWindow();
 	}
-	ShowFileAndConsoleWindows();
 
 	if (show_debug_window)
 	{
@@ -154,32 +153,6 @@ void EngineUI::ShowConfigurationWindow()
 	ImGui::End();
 }
 
-void EngineUI::ShowFileAndConsoleWindows()
-{
-	ImGui::SetNextWindowPos(
-		ImVec2(0, MAIN_MENU_BAR_HEIGHT + App->window->GetHeight() * (TIME_BAR_HEIGHT_PROP + CONFIG_HEIGHT_PROP)),
-		ImGuiCond_Once
-	);
-	ImGui::SetNextWindowSize(
-		ImVec2(App->window->GetWidth(), App->window->GetHeight() * (0.98f - (TIME_BAR_HEIGHT_PROP + CONFIG_HEIGHT_PROP))),
-		ImGuiCond_Once
-	);
-	if (ImGui::Begin("BottomTab", NULL, ImGuiWindowFlags_NoTitleBar | ImGuiWindowFlags_NoResize | ImGuiWindowFlags_NoMove | ImGuiWindowFlags_NoScrollbar))
-	{
-		ImGui::BeginTabBar("BottomTab");
-		if (show_file_explorer_window)
-		{
-			file_explorer_ui.ShowAssetsFolders();
-		}
-		if (show_console_window)
-		{
-			App->engine_log->ShowConsoleWindow();
-		}
-		ImGui::EndTabBar();
-		ImGui::End();
-	}
-
-}
 
 void EngineUI::ShowHardware() const
 {

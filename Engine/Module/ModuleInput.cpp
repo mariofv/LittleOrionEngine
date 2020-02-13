@@ -12,7 +12,7 @@
 #include "ModuleUI.h"
 #include "Component/ComponentCamera.h"
 #include "UI/EngineUI.h"
-#include "UI/FileExplorerUI.h"
+#include "UI/Panel/PanelProjectExplorer.h"
 #include "UI/Panel/PanelScene.h"
 
 #include <SDL/SDL.h>
@@ -151,7 +151,7 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_DROPFILE:
 			char *dropped_filedir = event.drop.file;
-			App->editor->editor_ui->file_explorer_ui.CopyFileToSelectedFolder(dropped_filedir);
+			App->editor->project_explorer->CopyFileToSelectedFolder(dropped_filedir);
 			SDL_free(dropped_filedir);
 			
 			break;

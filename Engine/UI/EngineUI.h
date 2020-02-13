@@ -3,7 +3,6 @@
 
 #include "Main/Application.h"
 #include "Main/Globals.h"
-#include "FileExplorerUI.h"
 
 class EngineUI
 {
@@ -26,8 +25,6 @@ private:
 	void ShowHardware() const;
 
 	void ShowAboutWindow();
-	
-	void ShowFileAndConsoleWindows();
 
 	void ShowPopups() const;
 
@@ -37,19 +34,6 @@ public:
 	#define MAIN_MENU_BAR_HEIGHT 19
 	
 	#define TIME_BAR_HEIGHT_PROP 0.03f
-
-	#define CONFIG_HEIGHT_PROP 0.67f
-	#define CONFIG_WIDTH_PROP 0.25f
-
-	#define SCENE_HEIGHT_PROP 0.67f
-	#define SCENE_WIDTH_PROP 0.45f
-
-	#define MODEL_PROPERTIES_HEIGHT_PROP 0.67f
-	#define MODEL_PROPERTIES_WIDTH_PROP 0.3f
-
-	#define CONSOLE_HEIGHT_PROP 0.3f
-
-	FileExplorerUI file_explorer_ui;
 
 private:
 	bool show_scene_window = true;

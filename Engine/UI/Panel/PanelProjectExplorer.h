@@ -1,14 +1,18 @@
-#ifndef _FILEEXPLORESRUI_H_
-#define _FILEEXPLORESRUI_H_
+#ifndef _PANELPROJECTEXPLORER_H_
+#define _PANELPROJECTEXPLORER_H_
 
-#include <Module/ModuleFileSystem.h>
-class FileExplorerUI {
+#include "UI/Panel/Panel.h"
+#include "Module/ModuleFileSystem.h"
+
+class PanelProjectExplorer : public Panel
+{
 
 public:
-	FileExplorerUI() = default;
-	~FileExplorerUI() = default;
+	PanelProjectExplorer() = default;
+	~PanelProjectExplorer() = default;
 
-	void ShowAssetsFolders();
+	void Render() override;
+
 	void ShowFoldersHierarchy(const File & file);
 
 	void ProcessMouseInput(File * file, bool in_folders_windows);
@@ -25,4 +29,4 @@ private:
 	File * selected_file;
 
 };
-#endif
+#endif //_PANELPROJECTEXPLORER_H_
