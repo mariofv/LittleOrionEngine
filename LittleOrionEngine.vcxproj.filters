@@ -279,6 +279,7 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Prefab.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Skeleton.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\SkeletonLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -431,6 +432,7 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Prefab.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Skeleton.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\SkeletonLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

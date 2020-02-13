@@ -72,7 +72,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 	ImportNode(root_node, identity_transformation, scene, base_path.c_str(),output_file.file_path, node_config);
 
 	aiReleaseImport(scene);
-	//SaveMetaFile(file, output_file_model);
+	SaveMetaFile(file, output_file_model);
 
 	model.AddChildrenConfig(node_config, "Node");
 	std::string serialized_model_string;
@@ -123,8 +123,9 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 
 		if (importing_mesh->HasBones())
 		{
-			std::string skeleton; 
-			skeleton_importer->ImportSkeleton(scene, importing_mesh, node_transformation, skeleton);
+			std::string skeleton_file; 
+			skeleton_importer->ImportSkeleton(scene, importing_mesh, node_transformation, skeleton_file);
+			node.AddString(skeleton_file, "Skeleton");
 		}
 		node_config.push_back(node);
 	}

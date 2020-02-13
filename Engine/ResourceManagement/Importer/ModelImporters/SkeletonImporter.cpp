@@ -16,6 +16,7 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 
 	if (skeleton.skeleton.size() > 0)
 	{
+		App->filesystem->MakeDirectory(LIBRARY_SKELETON_FOLDER);
 		output_file = LIBRARY_SKELETON_FOLDER + "/" +  mesh->mName.C_Str()+ ".ol";
 		SaveBinary(skeleton, output_file);
 	}

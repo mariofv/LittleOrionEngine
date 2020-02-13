@@ -6,12 +6,15 @@
 class Skeleton : public Resource
 {
 public:
-	Skeleton(const char * const UID, const std::string & exported_file);
-	~Skeleton() = default;
 	struct Joint {
 		math::float4x4 transform;
-		uint32_t parent_index; 
+		uint32_t parent_index;
 	};
+
+	Skeleton(const char * const UID, const std::string & exported_file);
+	Skeleton(std::vector<Joint> && joints, const std::string & exported_file);
+	~Skeleton() = default;
+
 	std::vector<Joint> skeleton;
 
 	void Save(Config& config) const override;
