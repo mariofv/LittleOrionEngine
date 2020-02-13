@@ -16,8 +16,6 @@ protected:
 	std::string GetAlreadyImportedResource(const File & file_to_look_for) const;
 	void SaveMetaFile(const File & imported_file, const std::string & exported_path) const;
 
-private:
-
 	std::string GetUIDFromMeta(const File& file) const;
 	std::string GetMetaFilePath(const File& file) const;
 

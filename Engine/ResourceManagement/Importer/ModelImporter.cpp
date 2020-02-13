@@ -39,7 +39,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 	}
 
 	File output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER+"/"+ file.filename_no_extension);
-	std::string output_file_model = LIBRARY_MODEL_FOLDER + "/" + file.filename_no_extension;
+	std::string output_file_model = LIBRARY_MODEL_FOLDER + "/" + file.filename_no_extension + ".json";
 	APP_LOG_INIT("Importing model %s.", file.file_path.c_str());
 
 	performance_timer.Start();
@@ -63,18 +63,20 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 	aiMatrix4x4 identity_transformation = aiMatrix4x4();
 
 	Config model;
-	ImportNode(root_node, identity_transformation, scene, base_path.c_str(),output_file.file_path, model);
+	std::vector<Config> node_config;
+	ImportNode(root_node, identity_transformation, scene, base_path.c_str(),output_file.file_path, node_config);
 
 	aiReleaseImport(scene);
-	SaveMetaFile(file, output_file.file_path);
+	//SaveMetaFile(file, output_file.file_path);
 
+	model.AddChildrenConfig(node_config, "Node");
 	std::string serialized_model_string;
 	model.GetSerializedString(serialized_model_string);
 	App->filesystem->Save(output_file_model.c_str(), serialized_model_string.c_str(), serialized_model_string.size() + 1);
 	return std::pair<bool, std::string>(true, output_file.file_path);
 }
 
-void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file,  Config & model_import) const
+void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file,  std::vector<Config> & node_config) const
 {
 
 	aiMatrix4x4& current_transformtion = parent_transformation * root_node->mTransformation;
@@ -106,12 +108,12 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 		node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
 		mesh_importer->ImportMesh(scene->mMeshes[mesh_index], node_transformation, mesh_file);
 		node.AddString(mesh_file, "Mesh");
-		model_import.AddChildConfig(node,"Node");
+		node_config.push_back(node);
 	}
 
 	for (size_t i = 0; i < root_node->mNumChildren; i++)
 	{
-		ImportNode(root_node->mChildren[i], current_transformtion, scene, file_path,output_file, model_import);
+		ImportNode(root_node->mChildren[i], current_transformtion, scene, file_path,output_file, node_config);
 	}
 }
 

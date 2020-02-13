@@ -53,7 +53,7 @@ std::pair<bool, std::string> TextureImporter::Import(const File & file) const
 		}
 		ilDeleteImages(1, &image);
 	}
-	SaveMetaFile(file, output_file);
+	//SaveMetaFile(file, output_file);
 	return std::pair<bool, std::string>(true, output_file);
 }
 

@@ -11,7 +11,7 @@ std::pair<bool, std::string> Importer::Import(const File & file) const
 		return std::pair<bool, std::string>(true, already_imported);
 	}
 	std::string uid = "default";
-	SaveMetaFile(file, uid);
+	//SaveMetaFile(file, uid);
 	return std::pair<bool, std::string>(false, uid);
 }
 
