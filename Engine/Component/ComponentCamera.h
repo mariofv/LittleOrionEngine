@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "Component/ComponentAABB.h"
 #include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "UI/Panel/PanelScene.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
@@ -133,6 +134,7 @@ private:
 	ClearMode camera_clear_mode = ClearMode::COLOR;
 
 	friend class PanelComponent;
+	friend class PanelScene;
 };
 
 #endif //_COMPONENTCAMERA_H_

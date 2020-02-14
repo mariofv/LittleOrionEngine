@@ -16,7 +16,6 @@ private:
 
 	void ShowWindowOptions();
 	void ShowRenderOptions();
-	void ShowCameraOptions();
 	void ShowTimeOptions();
 	void ShowInputOptions();
 };

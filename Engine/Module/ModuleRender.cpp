@@ -320,10 +320,36 @@ void ModuleRender::SetMinMaxing(bool gl_minmax)
 	gl_minmax ? glEnable(GL_MINMAX) : glDisable(GL_MINMAX);
 }
 
-void ModuleRender::SetWireframing(bool gl_wireframe)
+void ModuleRender::SetDrawMode(DrawMode draw_mode)
 {
-	this->gl_wireframe = gl_wireframe;
-	gl_wireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	this->draw_mode = draw_mode;
+	switch (draw_mode)
+	{
+	case ModuleRender::DrawMode::SHADED:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		break;
+	case ModuleRender::DrawMode::WIREFRAME:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		break;
+	default:
+		break;
+	}
+}
+
+std::string ModuleRender::GetDrawMode() const
+{
+	switch (draw_mode)
+	{
+	case ModuleRender::DrawMode::SHADED:
+		return "Shaded";
+		break;
+	case ModuleRender::DrawMode::WIREFRAME:
+		return "Wireframe";
+		break;
+	default:
+		return "Unknown";
+		break;
+	}
 }
 
 ComponentMesh* ModuleRender::CreateComponentMesh()

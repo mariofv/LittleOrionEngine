@@ -34,9 +34,6 @@ void PanelConfiguration::Render()
 		ShowRenderOptions();
 
 		ImGui::Spacing();
-		ShowCameraOptions();
-
-		ImGui::Spacing();
 		ShowTimeOptions();
 
 		ImGui::Spacing();
@@ -193,11 +190,6 @@ void PanelConfiguration::ShowRenderOptions()
 			App->renderer->SetVSync(App->renderer->vsync);
 		}
 		ImGui::SameLine();
-		if (ImGui::Checkbox("Wireframe", &App->renderer->gl_wireframe))
-		{
-			App->renderer->SetWireframing(App->renderer->gl_wireframe);
-		}
-		ImGui::SameLine();
 		if (ImGui::Checkbox("Depth test", &App->renderer->gl_depth_test))
 		{
 			App->renderer->SetDepthTest(App->renderer->gl_depth_test);
@@ -280,11 +272,6 @@ void PanelConfiguration::ShowRenderOptions()
 			ImGui::TreePop();
 		}
 	}
-}
-
-void PanelConfiguration::ShowCameraOptions()
-{
-
 }
 
 void PanelConfiguration::ShowTimeOptions()

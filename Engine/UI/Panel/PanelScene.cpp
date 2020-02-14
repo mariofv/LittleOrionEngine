@@ -39,8 +39,10 @@ PanelScene::~PanelScene()
 
 void PanelScene::Render()
 {
-	if (ImGui::Begin(ICON_FA_TH " Scene"))
+	if (ImGui::Begin(ICON_FA_TH " Scene", NULL, ImGuiWindowFlags_MenuBar))
 	{
+		RenderSceneBar();
+
 		ImVec2 scene_window_pos_ImVec2 = ImGui::GetWindowPos();
 		float2 scene_window_pos = float2(scene_window_pos_ImVec2.x, scene_window_pos_ImVec2.y);
 
@@ -59,7 +61,7 @@ void PanelScene::Render()
 
 		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
 		App->cameras->scene_camera->RecordDebugDraws(scene_window_content_area_width, scene_window_content_area_height);
-
+		
 		ImGui::Image(
 			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
 			ImVec2(scene_window_content_area_width, scene_window_content_area_height),
@@ -81,6 +83,43 @@ void PanelScene::Render()
 		}
 	}
 	ImGui::End();
+}
+
+void PanelScene::RenderSceneBar()
+{
+	if (ImGui::BeginMenuBar())
+	{
+		std::string draw_mode = App->renderer->GetDrawMode();
+
+		if (ImGui::BeginMenu((draw_mode + " " ICON_FA_CARET_DOWN).c_str()))
+		{
+			if (ImGui::MenuItem("Shaded", NULL, draw_mode == "Shaded"))
+			{
+				App->renderer->SetDrawMode(ModuleRender::DrawMode::SHADED);
+			}
+			if (ImGui::MenuItem("Wireframe", NULL, draw_mode == "Wireframe"))
+			{
+				App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu(ICON_FA_VIDEO " " ICON_FA_CARET_DOWN))
+		{
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Scene Camera");
+			if (ImGui::SliderFloat("Field of View", &App->cameras->scene_camera->camera_frustum.verticalFov, 0, 3.14f))
+			{
+				App->cameras->scene_camera->SetFOV(App->cameras->scene_camera->camera_frustum.verticalFov);
+			}
+
+			ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), "Navigation");
+			ImGui::DragFloat("Camera Speed", &App->cameras->scene_camera->camera_movement_speed, 0.1f, 0, 10.f);
+			
+			ImGui::EndMenu();
+		}
+		ImGui::EndMenuBar();
+	}
 }
 
 void PanelScene::RenderDebugDraws()

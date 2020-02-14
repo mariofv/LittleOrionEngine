@@ -19,6 +19,8 @@ public:
 	void SceneDropTarget();
 
 private:
+	void RenderSceneBar();
+
 	void RenderEditorDraws();
 
 	void RenderCameraFrustum() const;
