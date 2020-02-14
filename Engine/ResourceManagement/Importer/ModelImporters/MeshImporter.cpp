@@ -27,8 +27,14 @@ bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_transf
 		Mesh::Vertex new_vertex;
 		aiVector3D transformed_position = mesh_transformation * mesh->mVertices[i];
 		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
-		new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
-		new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+		if (mesh->mTextureCoords[0]) 
+		{
+			new_vertex.tex_coords = float2(mesh->mTextureCoords[0][i].x, mesh->mTextureCoords[0][i].y);
+		}
+		if (mesh->mNormals)
+		{
+			new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
+		}
 		vertices.push_back(new_vertex);
 	}
 
