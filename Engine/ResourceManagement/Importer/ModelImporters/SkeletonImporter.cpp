@@ -9,10 +9,14 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 
 	aiString bone_name = mesh->mBones[0]->mName;
 	aiNode * bone = scene->mRootNode->FindNode(bone_name);
+	while (bone->mParent && bone->mParent != scene->mRootNode)
+	{
+		bone = bone->mParent;
+	}
+
 	Skeleton skeleton("", "");
-	Skeleton::Joint bone_joint{ GetTranform(bone->mTransformation), -1, bone_name.C_Str() };
-	skeleton.skeleton.push_back(bone_joint);
-	ImportBone(mesh, bone, skeleton.skeleton.size() - 1, bone->mTransformation, skeleton);
+
+	ImportChildBone(mesh, bone, - 1, bone->mTransformation, skeleton);
 
 	if (skeleton.skeleton.size() > 0)
 	{
@@ -23,28 +27,54 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 	return true;
 }
 
-void SkeletonImporter::ImportBone(const aiMesh* mesh, const aiNode * previus_node,  uint32_t previous_joint_index, const aiMatrix4x4& parent_transformation, Skeleton & skeleton) const
+void SkeletonImporter::ImportChildBone(const aiMesh* mesh, const aiNode * previus_node,  uint32_t previous_joint_index, const aiMatrix4x4& parent_transformation, Skeleton & skeleton) const
+{
+
+	if (previous_joint_index == -1 && std::string(previus_node->mName.C_Str()).find("$Assimp") == std::string::npos) {
+
+		Skeleton::Joint bone{ GetTranform(previus_node->mTransformation), previous_joint_index, std::string(previus_node->mName.C_Str()) };
+		skeleton.skeleton.push_back(bone);
+		previous_joint_index = 0;
+	}
+	aiMatrix4x4 current_transformation = parent_transformation * previus_node->mTransformation;
+
+	for (size_t i = 0; i < previus_node->mNumChildren; i++)
+	{
+		std::string bone_name = std::string(previus_node->mChildren[i]->mName.C_Str());
+		aiBone * node_bone = GetNodeBone(mesh, bone_name);
+		uint32_t next_joint = previous_joint_index;
+		if (node_bone != nullptr || bone_name.find("$Assimp") == std::string::npos) {
+		
+			Skeleton::Joint bone{ GetTranform(current_transformation), previous_joint_index, bone_name};
+			skeleton.skeleton.push_back(bone);
+			next_joint = skeleton.skeleton.size() - 1;
+		}
+		ImportChildBone(mesh, previus_node->mChildren[i], next_joint, current_transformation, skeleton);
+	}
+}
+
+void SkeletonImporter::ImportParentBone(const aiMesh* mesh, const aiNode * previus_node, uint32_t previous_joint_index, const aiMatrix4x4& parent_transformation, Skeleton & skeleton) const
 {
 	aiMatrix4x4 current_transformation = parent_transformation * previus_node->mTransformation;
 	for (size_t i = 0; i < previus_node->mNumChildren; i++)
 	{
-		aiString bone_name = previus_node->mChildren[i]->mName;
+		std::string bone_name = std::string(previus_node->mChildren[i]->mName.C_Str());
 		aiBone * node_bone = GetNodeBone(mesh, bone_name);
 		uint32_t next_joint = previous_joint_index;
-		if (node_bone != nullptr) {
-		
-			Skeleton::Joint bone{ GetTranform(current_transformation), previous_joint_index, bone_name.C_Str()};
+		if (node_bone != nullptr || bone_name.find("$Assimp") == std::string::npos) {
+
+			Skeleton::Joint bone{ GetTranform(current_transformation), previous_joint_index, bone_name };
 			skeleton.skeleton.push_back(bone);
 			next_joint = skeleton.skeleton.size() - 1;
 		}
-		ImportBone(mesh, previus_node->mChildren[i], next_joint, current_transformation, skeleton);
+		ImportChildBone(mesh, previus_node->mChildren[i], next_joint, current_transformation, skeleton);
 	}
 }
-aiBone* SkeletonImporter::GetNodeBone(const aiMesh* mesh,  const aiString & boneName) const
+aiBone* SkeletonImporter::GetNodeBone(const aiMesh* mesh,  const std::string & boneName) const
 {
 	for (size_t i = 0; i < mesh->mNumBones; i++)
 	{
-		if (mesh->mBones[i]->mName == boneName)
+		if (std::string(mesh->mBones[i]->mName.C_Str()) == boneName)
 		{
 			return mesh->mBones[i];
 		}
