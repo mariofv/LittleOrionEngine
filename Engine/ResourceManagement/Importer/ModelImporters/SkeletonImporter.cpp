@@ -15,7 +15,10 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 	}
 
 	Skeleton skeleton("", "");
-	ImportChildBone(mesh, bone, - 1, bone->mTransformation, aiMatrix4x4(),skeleton);
+	aiMatrix4x4 scaled_matrix; 
+	bone->mTransformation.Scaling(aiVector3D(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR), scaled_matrix);
+	scaled_matrix = scaled_matrix * bone->mTransformation;
+	ImportChildBone(mesh, bone, - 1, scaled_matrix, scaled_matrix,skeleton);
 
 	if (skeleton.skeleton.size() > 0)
 	{
@@ -26,12 +29,14 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 	return true;
 }
 
-void SkeletonImporter::ImportChildBone(const aiMesh* mesh, const aiNode * previus_node,  uint32_t previous_joint_index, const aiMatrix4x4& parent_transformation, const aiMatrix4x4& accumulated_local_transformation,Skeleton & skeleton) const
+void SkeletonImporter::ImportChildBone(const aiMesh* mesh, const aiNode * previus_node,  uint32_t previous_joint_index, const aiMatrix4x4& parent_transformation,  aiMatrix4x4& accumulated_local_transformation,Skeleton & skeleton) const
 {
 
 	if (previous_joint_index == -1 && std::string(previus_node->mName.C_Str()).find("$Assimp") == std::string::npos) {
+		aiMatrix4x4 local_transformation = accumulated_local_transformation * previus_node->mTransformation;
+		Skeleton::Joint bone{ GetTranform(local_transformation), GetTranform(local_transformation),previous_joint_index, std::string(previus_node->mName.C_Str()) };
 
-		Skeleton::Joint bone{ GetTranform(previus_node->mTransformation), GetTranform(previus_node->mTransformation),previous_joint_index, std::string(previus_node->mName.C_Str()) };
+		accumulated_local_transformation = aiMatrix4x4();
 		skeleton.skeleton.push_back(bone);
 		previous_joint_index = 0;
 	}
@@ -76,7 +81,6 @@ float4x4 SkeletonImporter::GetTranform(const aiMatrix4x4 & current_transform) co
 	aiQuaterniont<float> pRotation;
 	aiMatrix4x4 node_transformation = current_transform;
 	node_transformation.Decompose(pScaling, pRotation, pPosition);
-
 
 	math::float3 scale(pScaling.x, pScaling.y,pScaling.z);
 	math::Quat rotation(pRotation.x, pRotation.y, pRotation.z, pRotation.w);
