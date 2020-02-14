@@ -44,15 +44,17 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path) const
 
 	std::vector<Config> game_objects_config;
 	prefab_config.GetChildrenConfig("Node", game_objects_config);
+	std::vector<std::string> already_loaded_skeleton;
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
-		LoadNode(model_root_node, game_objects_config[i]);
+		LoadNode(model_root_node, game_objects_config[i], already_loaded_skeleton);
 	}
 
 	return model_root_node;
 }
 
-void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_config) const
+//For now we are representing the animation sketelon in the hierarchy just for visualization and learning, but proabbly this will not be needed in the future
+void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_config,  std::vector<std::string> & already_loaded_skeleton) const
 {
 	GameObject *node_game_object = App->scene->CreateChildGameObject(parent_node);
 	std::string mesh_uid;
@@ -94,7 +96,8 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 	std::string skeleton_uid;
 	node_config.GetString("Skeleton", skeleton_uid, "");
 
-	if (skeleton_uid != "")
+	bool already_loaded = std::find(already_loaded_skeleton.begin(), already_loaded_skeleton.end(), skeleton_uid) != already_loaded_skeleton.end();
+	if (skeleton_uid != "" && !already_loaded)
 	{
 		std::shared_ptr<Skeleton> full_skeleton = App->resources->Load<Skeleton>(skeleton_uid.c_str());
 		std::vector<GameObject *> skeleton_gameobjects;
@@ -104,19 +107,19 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 			GameObject * object = LoadCoreModel(PRIMITIVE_CUBE_PATH);
 
 			//object->transform
-			/*if (joint.parent_index >= skeleton_gameobjects.size())
-			{*/
+			if (joint.parent_index >= skeleton_gameobjects.size())
+			{
 				object->SetParent(parent_node);
-			/*}
+			}
 			else
 			{
 				object->SetParent(skeleton_gameobjects.at(joint.parent_index));
-			}*/
+			}
 
 			float3 translation;
 			float3 scale;
 			float3x3 rotate;
-			joint.transform_global.Decompose(translation, rotate, scale);
+			joint.transform_local.Decompose(translation, rotate, scale);
 
 			object->transform.SetScale(scale);
 			object->transform.SetTranslation(translation);
@@ -125,6 +128,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 
 			skeleton_gameobjects.push_back(object);
 		}
+		already_loaded_skeleton.push_back(skeleton_uid);
 	}
 }
 
