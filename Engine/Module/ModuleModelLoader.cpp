@@ -102,8 +102,18 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 		for (Skeleton::Joint joint : full_skeleton->skeleton)
 		{
 			GameObject * object = LoadCoreModel(PRIMITIVE_CUBE_PATH);
+			object->transform.SetScale(joint.transform.ExtractScale());
+			object->transform.SetTranslation(joint.transform.Col3(3));
+			object->name = joint.name;
 			//object->transform
-			object->SetParent(parent_node);
+			if (joint.parent_index >= skeleton_gameobjects.size())
+			{
+				object->SetParent(parent_node);
+			}
+			else
+			{
+				object->SetParent(skeleton_gameobjects.at(joint.parent_index));
+			}
 			skeleton_gameobjects.push_back(object);
 		}
 	}

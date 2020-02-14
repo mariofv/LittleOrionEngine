@@ -10,6 +10,7 @@ public:
 	struct Joint {
 		math::float4x4 transform;
 		uint32_t parent_index;
+		std::string name;
 	};
 
 	Skeleton(const char * const UID, const std::string & exported_file);

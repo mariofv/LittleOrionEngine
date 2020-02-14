@@ -24,10 +24,21 @@ std::shared_ptr<Skeleton> SkeletonLoader::Load(const std::string& file_path)
 	std::vector<Skeleton::Joint> bones;
 
 	bones.resize(num_bones);
+	cursor += bytes;
+	for (auto & joint : bones)
+	{
 
-	cursor += bytes; // Get bones
-	bytes = sizeof(Skeleton::Joint) * num_bones;
-	memcpy(&bones.front(), cursor, bytes);
+		uint32_t name_size;
+		memcpy(&name_size, cursor, sizeof(uint32_t));
+		cursor += sizeof(uint32_t);
+		joint.name.resize(name_size);
+		memcpy(joint.name.data(), cursor, name_size);
+		cursor += name_size;
+		memcpy(&joint.transform, cursor, sizeof(float4x4));
+		cursor += sizeof(float4x4);
+		memcpy(&joint.parent_index, cursor,sizeof(uint32_t));
+		cursor += sizeof(uint32_t);
+	}
 
 
 	std::shared_ptr<Skeleton> new_skeleton = std::make_shared<Skeleton>(std::move(bones), file_path);

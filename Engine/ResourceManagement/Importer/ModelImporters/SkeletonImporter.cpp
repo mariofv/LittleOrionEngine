@@ -7,10 +7,10 @@
 bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const aiMatrix4x4& mesh_transformation, std::string& output_file) const
 {
 
-	aiString boneName = mesh->mBones[0]->mName;
-	aiNode * bone = scene->mRootNode->FindNode(boneName);
+	aiString bone_name = mesh->mBones[0]->mName;
+	aiNode * bone = scene->mRootNode->FindNode(bone_name);
 	Skeleton skeleton("", "");
-	Skeleton::Joint bone_joint{ GetTranform(bone->mTransformation), -1 };
+	Skeleton::Joint bone_joint{ GetTranform(bone->mTransformation), -1, bone_name.C_Str() };
 	skeleton.skeleton.push_back(bone_joint);
 	ImportBone(mesh, bone, skeleton.skeleton.size() - 1, bone->mTransformation, skeleton);
 
@@ -33,7 +33,7 @@ void SkeletonImporter::ImportBone(const aiMesh* mesh, const aiNode * previus_nod
 		uint32_t next_joint = previous_joint_index;
 		if (node_bone != nullptr) {
 		
-			Skeleton::Joint bone{ GetTranform(current_transformation), previous_joint_index };
+			Skeleton::Joint bone{ GetTranform(current_transformation), previous_joint_index, bone_name.C_Str()};
 			skeleton.skeleton.push_back(bone);
 			next_joint = skeleton.skeleton.size() - 1;
 		}
@@ -72,16 +72,31 @@ bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& 
 
 	uint32_t num_bones = skeleton.skeleton.size();
 
-	uint32_t size = sizeof(uint32_t) + sizeof(Skeleton::Joint) * num_bones;
+	uint32_t size = sizeof(uint32_t);
+
+	for (auto & joint : skeleton.skeleton)
+	{
+		size += sizeof(uint32_t) * 2 + joint.name.size() + sizeof(float4x4);
+	}
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
 	size_t bytes = sizeof(uint32_t); // First store ranges
 	memcpy(cursor, &num_bones, bytes);
-
 	cursor += bytes; // Store bones
-	bytes = sizeof(Skeleton::Joint) * num_bones;
-	memcpy(cursor, &skeleton.skeleton.front(), bytes);
+	for (auto & joint : skeleton.skeleton)
+	{
+
+		uint32_t name_size = joint.name.size();
+		memcpy(cursor, &name_size, sizeof(uint32_t));
+		cursor +=sizeof(uint32_t);
+		memcpy(cursor, joint.name.data(), name_size);
+		cursor += name_size;
+		memcpy(cursor, &joint.transform, sizeof(float4x4));
+		cursor += sizeof(float4x4);
+		memcpy(cursor, &joint.parent_index, sizeof(uint32_t));
+		cursor += sizeof(uint32_t);
+	}
 
 	App->filesystem->Save(output_file.c_str(), data, size);
 	free(data);
