@@ -8,7 +8,7 @@
 class EditorActionAddGameObject : public EditorAction
 {
 public:
-	EditorActionAddGameObject(GameObject* go, GameObject* parent, int depth);
+	EditorActionAddGameObject(GameObject* go, GameObject* par, int depth) : game_object(go), parent(par), hierarchy_depth(depth) {};
 	~EditorActionAddGameObject();
 
 	void Undo();

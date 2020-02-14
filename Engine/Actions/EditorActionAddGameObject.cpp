@@ -3,13 +3,6 @@
 #include "Main/Application.h"
 
 
-EditorActionAddGameObject::EditorActionAddGameObject(GameObject* go, GameObject* new_parent, int depth)
-{
-	game_object = go;
-	parent = new_parent;
-	depth = hierarchy_depth;
-}
-
 
 EditorActionAddGameObject::~EditorActionAddGameObject()
 {

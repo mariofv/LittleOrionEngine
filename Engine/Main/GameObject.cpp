@@ -71,14 +71,14 @@ void GameObject::SetEnabled(bool able)
 {
 	active = able;
 	
-	for(auto comp : components)
+	for(auto component : components)
 	{
-		(able) ? comp->Enable() : comp->Disable();
+		(able) ? component->Enable() : component->Disable();
 	}
 
-	for(auto ch : children)
+	for(auto child : children)
 	{
-		ch->SetEnabled(able);
+		child->SetEnabled(able);
 	}
 }
 

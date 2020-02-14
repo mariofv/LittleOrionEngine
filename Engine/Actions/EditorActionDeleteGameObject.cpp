@@ -2,13 +2,6 @@
 #include "Module/ModuleScene.h"
 #include "Main/Application.h"
 
-EditorActionDeleteGameObject::EditorActionDeleteGameObject(GameObject* GO, GameObject* parentGO, int depth)
-{
-	game_object = GO;
-	parent = parentGO;
-	hierarchy_depth = depth;
-}
-
 
 EditorActionDeleteGameObject::~EditorActionDeleteGameObject()
 {

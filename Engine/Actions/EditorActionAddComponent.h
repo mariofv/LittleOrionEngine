@@ -7,7 +7,7 @@
 class EditorActionAddComponent : public EditorAction
 {
 public:
-	EditorActionAddComponent(Component* comp);
+	EditorActionAddComponent(Component* comp) : component(comp) {};
 	~EditorActionAddComponent();
 
 	void Undo();

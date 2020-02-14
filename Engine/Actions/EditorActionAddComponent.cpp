@@ -3,11 +3,6 @@
 #include "Module/ModuleLight.h"
 #include "Main/Application.h"
 
-EditorActionAddComponent::EditorActionAddComponent(Component* comp)
-{
-	component = comp;
-}
-
 
 EditorActionAddComponent::~EditorActionAddComponent()
 {

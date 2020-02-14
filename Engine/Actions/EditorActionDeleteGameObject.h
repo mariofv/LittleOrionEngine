@@ -7,7 +7,7 @@
 class EditorActionDeleteGameObject : public EditorAction
 {
 public:
-	EditorActionDeleteGameObject(GameObject* GO, GameObject* parentGO, int depth);
+	EditorActionDeleteGameObject(GameObject* go, GameObject* parent_go, int depth) : game_object(go), parent(parent_go), hierarchy_depth(depth) {};
 	~EditorActionDeleteGameObject();
 
 	void Undo();
