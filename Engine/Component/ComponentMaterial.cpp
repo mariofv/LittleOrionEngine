@@ -1,7 +1,8 @@
 #include "ComponentMaterial.h"
+
 #include "Main/Application.h"
-#include <Module/ModuleTexture.h>
-#include <Importer/MaterialImporter.h>
+#include "Module/ModuleTexture.h"
+#include "Importer/MaterialImporter.h"
 
 ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL)
 {
@@ -166,20 +167,19 @@ void ComponentMaterial::BindTexture(Texture::TextureType id) const
 	}
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 }
+
 void ComponentMaterial::RemoveMaterialTexture(size_t type)
 {
 	App->material_importer->RemoveTextureFromCacheIfNeeded(textures[type]);
 	textures[type] = nullptr;
 }
+
 void ComponentMaterial::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture)
 {
 	textures[type] = new_texture;
 }
+
 const std::shared_ptr<Texture>& ComponentMaterial::GetMaterialTexture(size_t  type) const
 {
 	return textures[type];
-}
-void ComponentMaterial::ShowComponentWindow()
-{
-	ComponentsUI::ShowComponentMaterialWindow(this);
 }

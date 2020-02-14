@@ -6,7 +6,6 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
-#include "UI/ComponentsUI.h"
 #include "UI/Panel/PanelScene.h"
 
 #include "Helper/Utils.h"
@@ -568,10 +567,4 @@ ComponentAABB::CollisionState ComponentCamera::CheckAABB2DCollision(const AABB2D
 void ComponentCamera::GetRay(const float2& normalized_position, LineSegment &return_value) const
 {
 	return_value = camera_frustum.UnProjectLineSegment(normalized_position.x, normalized_position.y);
-}
-
-
-void ComponentCamera::ShowComponentWindow()
-{
-	ComponentsUI::ShowComponentCameraWindow(this);
 }

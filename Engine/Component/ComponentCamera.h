@@ -3,11 +3,11 @@
 
 #include "Component.h"
 #include "Component/ComponentAABB.h"
+#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
 
-class ComponentsUI;
 class ComponentCamera : public Component
 {
 public:
@@ -85,8 +85,6 @@ public:
 
 	void GetRay(const float2& normalized_position, LineSegment &return_value) const;
 
-	void ShowComponentWindow() override;
-
 private:
 	void GenerateFrameBuffers(float width,float height);
 	void GenerateMatrices();
@@ -133,7 +131,8 @@ private:
 	float3 goal_focus_position = float3::zero;
 
 	ClearMode camera_clear_mode = ClearMode::COLOR;
-	friend class ComponentsUI;
+
+	friend class PanelComponent;
 };
 
 #endif //_COMPONENTCAMERA_H_

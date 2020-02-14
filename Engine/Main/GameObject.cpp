@@ -16,14 +16,10 @@
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
 
-#include <imgui.h>
-#include <imgui_stdlib.h>
 #include "Brofiler/Brofiler.h"
-#include <FontAwesome5/IconsFontAwesome5.h>
 #include <pcg_basic.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>
-#include <pcg_basic.h>
 
 #include <algorithm>
 
@@ -325,48 +321,5 @@ void GameObject::RenderMaterialTexture(unsigned int shader_program) const
 			ComponentMaterial* current_material = (ComponentMaterial*)components[i];
 			current_material->Render(shader_program);
 		}
-	}
-}
-
-void GameObject::ShowPropertiesWindow()
-{
-	ImGui::Checkbox("", &active);
-
-	ImGui::SameLine();
-	ImGui::Text(ICON_FA_CUBE);
-
-	ImGui::SameLine();
-	ImGui::InputText("###GameObject name Input", &name);
-
-	ImGui::SameLine();
-	if (ImGui::Checkbox("Static", &is_static))
-	{
-		SetStatic(is_static);
-	}
-
-	ImGui::Spacing();
-	ImGui::Separator();
-	ImGui::Spacing();
-
-	transform.ShowComponentWindow();
-
-	ImGui::Spacing();
-	ImGui::Separator();
-	ImGui::Spacing();
-
-	aabb.ShowComponentWindow();
-
-
-	for (unsigned int i = 0; i < components.size(); ++i)
-	{
-		if (i != 0)
-		{
-			ImGui::Spacing();
-			ImGui::Separator();
-		}
-		ImGui::Spacing();
-		ImGui::PushID(i);
-		components[i]->ShowComponentWindow();
-		ImGui::PopID();
 	}
 }

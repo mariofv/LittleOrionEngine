@@ -2,6 +2,7 @@
 #define _PANELINSPECTOR_H_
 
 #include "Panel.h"
+#include "InspectorSubpanel/PanelGameObject.h"
 
 class PanelInspector : public Panel
 {
@@ -11,8 +12,8 @@ public:
 
 	void Render() override;
 
-private:
-	void ShowAddNewComponentButton();
+public:
+	PanelGameObject gameobject_panel;
 
 };
 

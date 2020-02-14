@@ -284,7 +284,7 @@ void PanelConfiguration::ShowRenderOptions()
 
 void PanelConfiguration::ShowCameraOptions()
 {
-	App->cameras->scene_camera->ShowComponentWindow();
+
 }
 
 void PanelConfiguration::ShowTimeOptions()

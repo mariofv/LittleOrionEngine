@@ -1,8 +1,9 @@
 #include "ComponentTransform.h"
+
 #include "Main/GameObject.h"
+#include "Module/ModuleEditor.h"
 #include "Helper/Utils.h"
-#include "UI/ComponentsUI.h"
-#include "Brofiler/Brofiler.h"
+#include <Brofiler/Brofiler.h>
 
 ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM) {
 
@@ -176,9 +177,4 @@ void ComponentTransform::ChangeLocalSpace(const float4x4 &new_local_space)
 	model_matrix = new_local_space.Inverted() * global_model_matrix;
 	model_matrix.Decompose(translation, rotation, scale);
 	
-}
-
-void ComponentTransform::ShowComponentWindow()
-{
-	ComponentsUI::ShowComponentTransformWindow(this);
 }

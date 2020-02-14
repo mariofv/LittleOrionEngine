@@ -1,4 +1,5 @@
-#include "ComponentsUI.h"
+#include "PanelComponent.h"
+
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
@@ -7,15 +8,16 @@
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleFileSystem.h"
-#include "Module/ModuleTexture.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleTexture.h"
 #include "Helper/Utils.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
-void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
+void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -37,7 +39,7 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 	}
 }
 
-void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
+void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -82,7 +84,7 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 	}
 }
 
-void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
+void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -150,7 +152,7 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 		}
 	}
 }
-void ComponentsUI::DropTarget(ComponentMaterial *material, Texture::TextureType type)
+void PanelComponent::DropTarget(ComponentMaterial *material, Texture::TextureType type)
 {
 	if (ImGui::BeginDragDropTarget())
 	{
@@ -168,7 +170,7 @@ void ComponentsUI::DropTarget(ComponentMaterial *material, Texture::TextureType 
 	}
 }
 
-std::string ComponentsUI::GetTypeName(Texture::TextureType type)
+std::string PanelComponent::GetTypeName(Texture::TextureType type)
 {
 	switch (type)
 	{
@@ -188,7 +190,7 @@ std::string ComponentsUI::GetTypeName(Texture::TextureType type)
 		return "";
 	}
 }
-void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
+void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -269,7 +271,7 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 }
 
 
-void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
+void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Light", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -284,6 +286,43 @@ void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
 
 		ImGui::ColorEdit3("Color", light->light_color);
 		ImGui::SliderFloat("Intensity ", &light->light_intensity, 0.f, 1.f);
+	}
+}
+
+
+void PanelComponent::ShowAddNewComponentButton()
+{
+	float window_width = ImGui::GetWindowWidth();
+	float button_width = 0.5f * window_width;
+	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
+	ImGui::Button("Add component", ImVec2(button_width, 25));
+
+	if (ImGui::BeginPopupContextItem("Add component", 0))
+	{
+		char tmp_string[128];
+
+		sprintf_s(tmp_string, "%s Material", ICON_FA_IMAGE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+
+		}
+
+		sprintf_s(tmp_string, "%s Camera", ICON_FA_VIDEO);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::CAMERA);
+
+		}
+
+		sprintf_s(tmp_string, "%s Light", ICON_FA_LIGHTBULB);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
+
+		}
+
+		ImGui::EndPopup();
 	}
 }
 

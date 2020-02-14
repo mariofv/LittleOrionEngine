@@ -225,7 +225,6 @@ ImFont* ModuleEditor::GetFont(const Fonts & font) const
 	return io.Fonts->Fonts[static_cast<int>(font)];
 }
 
-
 void ModuleEditor::LoadFonts()
 {
 	ImGuiIO& io = ImGui::GetIO();
@@ -249,4 +248,3 @@ void ModuleEditor::LoadFonts()
 	static const ImWchar icons_ranges_fab[] = { ICON_MIN_FAB, ICON_MAX_FAB, 0 };
 	io.Fonts->AddFontFromFileTTF("./resources/fonts/" FONT_ICON_FILE_NAME_FAB, 12.f, &icons_config, icons_ranges_fab);
 }
-

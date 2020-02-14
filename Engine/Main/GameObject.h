@@ -45,8 +45,6 @@ public:
 
 	void RenderMaterialTexture(unsigned int shader_program) const;
 
-	void ShowPropertiesWindow();
-
 private:
 	void SetHierarchyStatic(bool is_static);
 
@@ -63,11 +61,12 @@ public:
 
 
 private:
-
 	bool active = true;
 	bool is_static = false;
 	int hierarchy_depth = 0;
 	int hierarchy_branch = 0;
+
+	friend class PanelGameObject;
 };
 
 #endif //_GAMEOBJECT_H_

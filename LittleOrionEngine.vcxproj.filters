@@ -211,9 +211,6 @@
     <ClCompile Include="Engine\UI\EngineLog.cpp">
       <Filter>Engine\UI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UI\ComponentsUI.cpp">
-      <Filter>Engine\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Libraries\include\pcg_random\pcg_basic.c">
       <Filter>Libraries\pcg_random</Filter>
     </ClCompile>
@@ -295,7 +292,15 @@
     <ClCompile Include="Engine\UI\Panel\PanelToolBar.cpp">
       <Filter>Engine\UI\Panel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelPopups.cpp" />
+    <ClCompile Include="Engine\UI\Panel\PanelPopups.cpp">
+      <Filter>Engine\UI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\InspectorSubpanel\PanelComponent.cpp">
+      <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\InspectorSubpanel\PanelGameObject.cpp">
+      <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -385,9 +390,6 @@
     <ClInclude Include="Engine\UI\EngineLog.h">
       <Filter>Engine\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\ComponentsUI.h">
-      <Filter>Engine\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Main\GameObject.h">
       <Filter>Engine\Main</Filter>
     </ClInclude>
@@ -466,7 +468,15 @@
     <ClInclude Include="Engine\UI\Panel\PanelToolBar.h">
       <Filter>Engine\UI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelPopups.h" />
+    <ClInclude Include="Engine\UI\Panel\PanelPopups.h">
+      <Filter>Engine\UI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\InspectorSubpanel\PanelComponent.h">
+      <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\InspectorSubpanel\PanelGameObject.h">
+      <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -516,6 +526,9 @@
     </Filter>
     <Filter Include="Engine\UI\Panel">
       <UniqueIdentifier>{cb898d7a-8090-400e-9c95-f05cfa63a85f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\UI\Panel\InspectorSubpanel">
+      <UniqueIdentifier>{7bf0885e-2c32-4fa2-9d73-f6cb15854163}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
