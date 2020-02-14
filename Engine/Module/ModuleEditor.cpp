@@ -193,7 +193,7 @@ void ModuleEditor::RenderGlobalBoundingBoxes() const
 
 void ModuleEditor::RenderBillboards() const
 {
-	/*for (auto& camera : App->cameras->cameras)
+	for (auto& camera : App->cameras->cameras)
 	{
 		camera_billboard->Render(camera->owner->transform.GetGlobalTranslation());	
 	}
@@ -201,7 +201,7 @@ void ModuleEditor::RenderBillboards() const
 	for (auto& light: App->lights->lights)
 	{
 		light_billboard->Render(light->owner->transform.GetGlobalTranslation());
-	}*/
+	}
 }
 
 void ModuleEditor::RenderEditorDraws()

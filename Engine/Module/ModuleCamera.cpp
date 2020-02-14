@@ -25,6 +25,7 @@ bool ModuleCamera::Init()
 	
 	skybox = new Skybox();
 	scene_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
+
 	return true;
 }
 

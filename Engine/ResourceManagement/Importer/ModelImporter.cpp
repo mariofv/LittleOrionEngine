@@ -124,7 +124,7 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 		if (importing_mesh->HasBones())
 		{
 			std::string skeleton_file; 
-			skeleton_importer->ImportSkeleton(scene, importing_mesh, node_transformation, skeleton_file);
+			skeleton_importer->ImportSkeleton(scene, importing_mesh, skeleton_file);
 			node.AddString(skeleton_file, "Skeleton");
 		}
 		node_config.push_back(node);

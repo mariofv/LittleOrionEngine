@@ -4,7 +4,7 @@
 
 #include <Main/Application.h>
 #include <Module/ModuleFileSystem.h>
-bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const aiMatrix4x4& mesh_transformation, std::string& output_file) const
+bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, std::string& output_file) const
 {
 
 	aiString bone_name = mesh->mBones[0]->mName;

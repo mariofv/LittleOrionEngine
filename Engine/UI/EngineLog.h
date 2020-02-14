@@ -6,6 +6,7 @@
 #include "imgui.h"
 
 #include <vector>
+
 struct ImGuiTextBuffer;
 
 class EngineLog
