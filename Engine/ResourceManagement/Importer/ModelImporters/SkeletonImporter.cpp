@@ -32,7 +32,8 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 void SkeletonImporter::ImportChildBone(const aiMesh* mesh, const aiNode * previus_node,  uint32_t previous_joint_index, const aiMatrix4x4& parent_transformation,  aiMatrix4x4& accumulated_local_transformation,Skeleton & skeleton) const
 {
 
-	if (previous_joint_index == -1 && std::string(previus_node->mName.C_Str()).find("$Assimp") == std::string::npos) {
+	if (previous_joint_index == -1 && std::string(previus_node->mName.C_Str()).find("$Assimp") == std::string::npos) 
+	{
 		aiMatrix4x4 local_transformation = accumulated_local_transformation * previus_node->mTransformation;
 		Skeleton::Joint bone{ GetTranform(local_transformation), GetTranform(local_transformation),previous_joint_index, std::string(previus_node->mName.C_Str()) };
 
@@ -51,7 +52,8 @@ void SkeletonImporter::ImportChildBone(const aiMesh* mesh, const aiNode * previu
 		std::string bone_name = std::string(current_node->mName.C_Str());
 
 		uint32_t next_joint = previous_joint_index;
-		if (bone_name.find("$Assimp") == std::string::npos) {
+		if (bone_name.find("$Assimp") == std::string::npos) 
+		{
 		
 			Skeleton::Joint bone{ GetTranform(current_transformation), GetTranform(local_transformation),previous_joint_index, bone_name};
 			skeleton.skeleton.push_back(bone);
