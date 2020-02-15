@@ -6,9 +6,7 @@
 
 #include "assimp/LogStream.hpp"
 #include "assimp/Logger.hpp"
-#include "ModelImporters/MeshImporter.h"
-#include "ModelImporters/MaterialImporter.h"
-#include "ModelImporters/SkeletonImporter.h"
+
 
 
 struct aiNode;
@@ -16,6 +14,12 @@ struct aiScene;
 class Config;
 class Mesh;
 class GameObject;
+class MeshImporter;
+class MaterialImporter;
+class SkeletonImporter;
+class AnimationImporter;
+
+
 class ModelImporter : Importer
 {
 public:
@@ -35,6 +39,7 @@ private:
 	std::unique_ptr<MeshImporter> mesh_importer;
 	std::unique_ptr<MaterialImporter> material_importer;
 	std::unique_ptr<SkeletonImporter> skeleton_importer;
+	std::unique_ptr<AnimationImporter> animation_importer;
 };
 
 

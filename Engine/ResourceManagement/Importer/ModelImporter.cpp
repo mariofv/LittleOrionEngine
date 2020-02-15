@@ -11,6 +11,12 @@
 #include "Brofiler/Brofiler.h"
 #include "Helper/Config.h"
 
+
+#include "ModelImporters/MeshImporter.h"
+#include "ModelImporters/MaterialImporter.h"
+#include "ModelImporters/SkeletonImporter.h"
+#include "ModelImporters/AnimationImporter.h"
+
 ModelImporter::ModelImporter()
 {
 	Assimp::DefaultLogger::create("", Assimp::Logger::VERBOSE);
@@ -23,6 +29,7 @@ ModelImporter::ModelImporter()
 	mesh_importer = std::make_unique<MeshImporter>();
 	material_importer = std::make_unique<MaterialImporter>();
 	skeleton_importer = std::make_unique<SkeletonImporter>();
+	animation_importer = std::make_unique<AnimationImporter>();
 
 }
 
@@ -71,20 +78,34 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 	std::vector<Config> node_config;
 	ImportNode(root_node, identity_transformation, scene, base_path.c_str(),output_file.file_path, node_config);
 
+	std::vector<Config> animations_config;
+	for (size_t i = 0; i < scene->mNumAnimations; i++)
+	{
+		Config animation_config;
+		std::string animation;
+		animation_importer->ImportAnimation(scene, scene->mAnimations[i], animation);
+		animation_config.AddString(animation, "Animation");
+		animations_config.push_back(animation_config);
+	}
+
 	aiReleaseImport(scene);
-	SaveMetaFile(file, output_file_model);
 
 	model.AddChildrenConfig(node_config, "Node");
+	model.AddChildrenConfig(animations_config, "Animations");
+
+
 	std::string serialized_model_string;
 	model.GetSerializedString(serialized_model_string);
 	App->filesystem->Save(output_file_model.c_str(), serialized_model_string.c_str(), serialized_model_string.size() + 1);
+
+	SaveMetaFile(file, output_file_model);
 	return std::pair<bool, std::string>(true, output_file.file_path);
 }
 
 void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file,  std::vector<Config> & node_config) const
 {
 
-	aiMatrix4x4& current_transformtion = parent_transformation * root_node->mTransformation;
+	aiMatrix4x4& current_transformation = parent_transformation * root_node->mTransformation;
 
 	for (size_t i = 0; i < root_node->mNumMeshes; ++i)
 	{
@@ -108,7 +129,7 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 		// Transformation
 		aiVector3t<float> pScaling, pPosition;
 		aiQuaterniont<float> pRotation;
-		aiMatrix4x4 node_transformation = current_transformtion;
+		aiMatrix4x4 node_transformation = current_transformation;
 		node_transformation.Decompose(pScaling, pRotation, pPosition);
 		pScaling *= SCALE_FACTOR;
 		pPosition *= SCALE_FACTOR;
@@ -132,7 +153,7 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 
 	for (size_t i = 0; i < root_node->mNumChildren; i++)
 	{
-		ImportNode(root_node->mChildren[i], current_transformtion, scene, file_path,output_file, node_config);
+		ImportNode(root_node->mChildren[i], current_transformation, scene, file_path,output_file, node_config);
 	}
 }
 
