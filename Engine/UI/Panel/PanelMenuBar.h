@@ -16,6 +16,7 @@ public:
 
 private:
 	void ShowFileMenu();
+	void ShowGameObjectMenu();
 	void ShowWindowMenu();
 	void ShowHelpMenu();
 };

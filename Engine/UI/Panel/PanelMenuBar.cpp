@@ -2,7 +2,9 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleModelLoader.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleScene.h"
 #include "UI/Panel/PanelAbout.h"
 #include "UI/Panel/PanelConfiguration.h"
 #include "UI/Panel/PanelConsole.h"
@@ -29,6 +31,7 @@ void PanelMenuBar::Render()
 	if (ImGui::BeginMainMenuBar())
 	{
 		ShowFileMenu();
+		ShowGameObjectMenu();
 		ShowWindowMenu();
 		ShowHelpMenu();
 		ImGui::EndMainMenuBar();
@@ -61,6 +64,72 @@ void PanelMenuBar::ShowFileMenu()
 			SDL_Event quit_event;
 			quit_event.type = SDL_QUIT;
 			SDL_PushEvent(&quit_event);
+		}
+
+		ImGui::EndMenu();
+	}
+}
+
+void PanelMenuBar::ShowGameObjectMenu()
+{
+	if (ImGui::BeginMenu("GameObject"))
+	{
+		if (ImGui::Selectable("Create Empty"))
+		{
+			App->scene->CreateGameObject();
+		}
+
+		if (ImGui::Selectable("Create Empty Child"))
+		{
+			if (App->editor->selected_game_object != nullptr)
+			{
+				App->scene->CreateChildGameObject(App->editor->selected_game_object);
+			}
+			else
+			{
+				App->scene->CreateGameObject();
+			}
+		}
+		
+		if (ImGui::BeginMenu("3D Object"))
+		{
+			if (ImGui::Selectable("Cube"))
+			{
+				App->model_loader->LoadCoreModel(PRIMITIVE_CUBE_PATH);
+			}
+			if (ImGui::Selectable("Cylinder"))
+			{
+				App->model_loader->LoadCoreModel(PRIMITIVE_CYLINDER_PATH);
+			}
+			if (ImGui::Selectable("Sphere"))
+			{
+				App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
+			}
+			if (ImGui::Selectable("Torus"))
+			{
+				App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
+			}
+
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::BeginMenu("Light"))
+		{
+			if (ImGui::Selectable("Point Light"))
+			{
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Point Light";
+				created_game_object->CreateComponent(Component::ComponentType::LIGHT);
+			}
+			
+			ImGui::EndMenu();
+		}
+
+		if (ImGui::Selectable("Camera"))
+		{
+			GameObject* created_game_object = App->scene->CreateGameObject();
+			created_game_object->name = "Camera";
+			created_game_object->CreateComponent(Component::ComponentType::CAMERA);
 		}
 
 		ImGui::EndMenu();

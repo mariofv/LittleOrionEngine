@@ -34,18 +34,7 @@ void PanelHierarchy::Render()
 		ImGui::BeginChild("Hierarchy###"); // This children window is used to create a clickable area for creating and dropping game objects in the root node
 		ImGui::EndChild();
 		DropTarget(App->scene->GetRoot());
-		if (ImGui::BeginPopupContextItem("Hierarchy###"))
-		{
-			if (ImGui::Selectable("Create GameObject"))
-			{
-				App->scene->CreateGameObject();
-			}
-
-			ImGui::Separator();
-			Show3DObjectCreationMenu();
-
-			ImGui::EndPopup();
-		}
+		ShowGameObjectActionsMenu(nullptr);
 	}
 	ImGui::End();
 }
@@ -130,59 +119,102 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 
 void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 {
-	std::string label = (std::string(ICON_FA_CUBE) + " " + game_object->name);
+	std::string label = "GameObject Creation Menu";
 
 	if (ImGui::BeginPopupContextItem(label.c_str()))
 	{
-		ImGui::Text(game_object->name.c_str());
-		ImGui::Separator();
-
-		if (ImGui::Selectable("Create GameObject"))
+		if (game_object != nullptr)
 		{
-			App->scene->CreateChildGameObject(game_object);
-		}
-		if (ImGui::Selectable("Delete GameObject"))
-		{
-			App->scene->RemoveGameObject(game_object);
-			App->editor->selected_game_object = nullptr;
-		}
-		if (ImGui::Selectable("Move Up"))
-		{
-			game_object->MoveUpInHierarchy();
-		}
-		if (ImGui::Selectable("Move Down"))
-		{
-			game_object->MoveDownInHierarchy();
+			ImGui::Text(game_object->name.c_str());
+			ImGui::Separator();
 		}
 
-		ImGui::Separator();
-		Show3DObjectCreationMenu();
-	
+		if (game_object != nullptr)
+		{
+			if (ImGui::Selectable("Delete GameObject"))
+			{
+				App->scene->RemoveGameObject(game_object);
+				App->editor->selected_game_object = nullptr;
+			}
+			if (ImGui::Selectable("Move Up"))
+			{
+				game_object->MoveUpInHierarchy();
+			}
+			if (ImGui::Selectable("Move Down"))
+			{
+				game_object->MoveDownInHierarchy();
+			}
+
+			ImGui::Separator();
+		}
+
+		if (ImGui::Selectable("Create Empty"))
+		{
+			game_object != nullptr ? App->scene->CreateChildGameObject(game_object) : App->scene->CreateGameObject();
+		}
+		
+		Show3DObjectCreationMenu(game_object);
+		ShowComponentObjectCreationMenu(game_object);
 		ImGui::EndPopup();
 	}
 }
 
-void PanelHierarchy::Show3DObjectCreationMenu() const
+void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 {
 	if (ImGui::BeginMenu("3D object"))
 	{
+		GameObject* created_game_object = nullptr;
 		if (ImGui::Selectable("Cube"))
 		{
-			App->model_loader->LoadCoreModel(PRIMITIVE_CUBE_PATH);
+			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_CUBE_PATH);
 		}
 		if (ImGui::Selectable("Cylinder"))
 		{
-			App->model_loader->LoadCoreModel(PRIMITIVE_CYLINDER_PATH);
+			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_CYLINDER_PATH);
 		}
 		if (ImGui::Selectable("Sphere"))
 		{
-			App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
+			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
 		}
 		if (ImGui::Selectable("Torus"))
 		{
-			App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
+			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
+		}
+
+		if (game_object != nullptr && created_game_object != nullptr)
+		{
+			created_game_object->SetParent(game_object);
 		}
 		ImGui::EndMenu();
+	}
+}
+
+void PanelHierarchy::ShowComponentObjectCreationMenu(GameObject *game_object) const
+{
+	GameObject* created_game_object = nullptr;
+
+	if (ImGui::BeginMenu("Light"))
+	{
+		if (ImGui::Selectable("Point Light"))
+		{
+			created_game_object = App->scene->CreateGameObject();
+			created_game_object->name = "Point Light";
+			created_game_object->CreateComponent(Component::ComponentType::LIGHT);
+		}
+
+		ImGui::EndMenu();
+	}
+
+	if (ImGui::Selectable("Camera"))
+	{
+		created_game_object = App->scene->CreateGameObject();
+		created_game_object->name = "Camera";
+		created_game_object->CreateComponent(Component::ComponentType::CAMERA);
+	}
+
+	if (game_object != nullptr && created_game_object != nullptr)
+	{
+		created_game_object->SetParent(game_object);
 	}
 }
 

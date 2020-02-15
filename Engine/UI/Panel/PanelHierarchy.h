@@ -25,7 +25,8 @@ private:
 	void DropTarget(GameObject *target_game_object) const;
 
 	void ShowGameObjectActionsMenu(GameObject *game_object);
-	void Show3DObjectCreationMenu() const;
+	void Show3DObjectCreationMenu(GameObject *game_object) const;
+	void ShowComponentObjectCreationMenu(GameObject *game_object) const;
 
 	void ProcessMouseInput(GameObject *game_object);
 
