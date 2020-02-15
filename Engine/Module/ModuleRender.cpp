@@ -254,6 +254,32 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 		}
 		break;
 
+	case ModuleDebug::CullingMode::AABBTREE_CULLING:
+		if (camera != nullptr)
+		{
+			// First we get all static objects inside frustum
+			std::copy_if(
+				meshes.begin(),
+				meshes.end(),
+				std::back_inserter(meshes_to_render),
+				[camera](auto mesh)
+			{
+				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && mesh->owner->IsStatic();
+			}
+			);
+
+			// Then we add all dynamic objects culled using the aabbtree
+			std::vector<GameObject*> rendered_objects;
+			ol_abbtree->GetIntersection(rendered_objects, camera);
+
+			for (auto &object : rendered_objects)
+			{
+				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				meshes_to_render.push_back(object_mesh);
+			}
+		}
+		break;
+
 	default:
 		break;
 	}
@@ -489,4 +515,9 @@ void ModuleRender::DeleteAABBTree()
 void ModuleRender::CreateAABBTree()
 {
 	ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
+}
+
+void ModuleRender::DrawAABBTree() const
+{
+	ol_abbtree->Draw();
 }

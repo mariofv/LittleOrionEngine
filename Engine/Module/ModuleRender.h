@@ -39,6 +39,7 @@ public:
 	void UpdateAABBTree(GameObject* game_object);
 	void DeleteAABBTree();
 	void CreateAABBTree();
+	void DrawAABBTree() const;
 
 	void ShowRenderOptions();
 

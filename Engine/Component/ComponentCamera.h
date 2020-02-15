@@ -88,6 +88,8 @@ public:
 
 	void ShowComponentWindow() override;
 
+	AABB GetMinimalEnclosingAABB() const;
+
 private:
 	void GenerateFrameBuffers(float width,float height);
 	void GenerateMatrices();

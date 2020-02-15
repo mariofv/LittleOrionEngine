@@ -28,7 +28,7 @@ update_status ModuleScene::Update()
 	for (auto & game_object : game_objects_ownership)
 	{
 		game_object->Update();
-		if(game_object->IsStatic())
+		if(!game_object->IsStatic())
 		{
 			App->renderer->UpdateAABBTree(game_object.get());
 		}

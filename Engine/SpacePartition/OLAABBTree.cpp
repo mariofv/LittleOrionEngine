@@ -1,7 +1,7 @@
 #include "OLAABBTree.h"
 #include <assert.h>
 #include <stack>
-
+#include "UI/DebugDraw.h"
 
 
 OLAABBTree::OLAABBTree(unsigned initial_size)
@@ -281,8 +281,11 @@ void OLAABBTree::UpdateLeaf(unsigned leafNodeIndex, const AABB & newAaab)
 	return;
 }
 
-void OLAABBTree::GetIntersection(std::vector<GameObject*>& intersectionGO, AABB * bbox) const
+void OLAABBTree::GetIntersection(std::vector<GameObject*>& intersectionGO, const ComponentCamera* camera) const
 {
+
+	AABB bbox = camera->GetMinimalEnclosingAABB();
+
 	//DFS simulating recursivity using stack
 
 	std::stack<unsigned> stack;
@@ -296,7 +299,7 @@ void OLAABBTree::GetIntersection(std::vector<GameObject*>& intersectionGO, AABB 
 			continue;
 
 		const NodeAABB& node = nodes[nodeIndex];
-		if (bbox->Intersects(node.aabb))
+		if (bbox.Intersects(node.aabb))
 		{
 			if (node.isLeaf())
 			{
@@ -315,6 +318,31 @@ void OLAABBTree::GetIntersection(std::vector<GameObject*>& intersectionGO, AABB 
 
 void OLAABBTree::Draw() const
 {
+	if (root_node_index == AABB_NULL_NODE)
+		return;
+
+	std::stack<NodeAABB> nodeStack;
+	nodeStack.push(nodes[root_node_index]);
+	while (!nodeStack.empty())
+	{
+		NodeAABB node = nodeStack.top();
+		nodeStack.pop();
+
+		if (node.parent_node_index != AABB_NULL_NODE)
+		{
+			NodeAABB parent = nodes[node.parent_node_index];
+			dd::line(node.aabb.CenterPoint(), parent.aabb.CenterPoint(), float3(1.0f, 0.0f, 0.0f));
+		}
+		if (node.left_node_index != AABB_NULL_NODE)
+			nodeStack.push(nodes[node.left_node_index]);
+		if (node.right_node_index != AABB_NULL_NODE)
+			nodeStack.push(nodes[node.right_node_index]);
+
+		dd::aabb(node.aabb.minPoint, node.aabb.maxPoint, float3(1.0f, 0.0f, 0.0f));
+
+	}
+
+	return;
 }
 
 AABB OLAABBTree::MergeAABB(const AABB & first, const AABB & second) const

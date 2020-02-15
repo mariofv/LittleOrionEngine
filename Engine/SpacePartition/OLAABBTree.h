@@ -2,9 +2,12 @@
 #define _OLAABBTREE_H_
 
 #include "Main/GameObject.h"
+#include "Component/ComponentCamera.h"
 #include <MathGeoLib.h>
 #include <map>
 #include <vector>
+
+
 
 const unsigned AABB_NULL_NODE =  0xffffffff;
 
@@ -30,13 +33,11 @@ public:
 	OLAABBTree(unsigned initialSize);
 	~OLAABBTree();
 
-	void ClearAABBTree();
-
 	void Insert(GameObject* go);
 	void Remove(GameObject* go);
 	void UpdateObject(GameObject* go);
 
-	void GetIntersection(std::vector<GameObject*> &intersection_go, AABB* bbox) const;
+	void GetIntersection(std::vector<GameObject*> &intersection_go, const ComponentCamera* camera) const;
 
 	void Draw() const;
 
