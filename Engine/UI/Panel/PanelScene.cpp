@@ -134,6 +134,28 @@ void PanelScene::RenderGizmo()
 {
 	float4x4 model_global_matrix_transposed = App->editor->selected_game_object->transform.GetGlobalModelMatrix().Transposed();
 
+	if (!gizmo_released && !App->editor->clicked)
+	{
+		//Save current position/rotation/scale of transform depending on operation
+		switch (App->editor->gizmo_operation)
+		{
+		case ImGuizmo::TRANSLATE:
+			App->editor->previous_transform = App->editor->selected_game_object->transform.GetTranslation();
+			break;
+		case ImGuizmo::ROTATE:
+			App->editor->previous_transform = App->editor->selected_game_object->transform.GetRotationRadiants();
+			break;
+		case ImGuizmo::SCALE:
+			App->editor->previous_transform = App->editor->selected_game_object->transform.GetScale();
+			break;
+		case ImGuizmo::BOUNDS:
+			break;
+		default:
+			break;
+		}
+	}
+
+
 	ImGuizmo::Manipulate(
 		App->cameras->scene_camera->GetViewMatrix().Transposed().ptr(),
 		App->cameras->scene_camera->GetProjectionMatrix().Transposed().ptr(),
@@ -145,7 +167,34 @@ void PanelScene::RenderGizmo()
 	scene_camera_gizmo_hovered = ImGuizmo::IsOver();
 	if (ImGuizmo::IsUsing())
 	{
+		gizmo_released = true;
+
 		App->editor->selected_game_object->transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
+	}
+	else if (gizmo_released)
+	{
+		//Guizmo have been released so an actionTransform have been done
+		ModuleEditor::UndoActionType action_type;
+		switch (App->editor->gizmo_operation)
+		{
+		case ImGuizmo::TRANSLATE:
+			action_type = ModuleEditor::UndoActionType::TRANSLATION;
+			break;
+
+		case ImGuizmo::ROTATE:
+			action_type = ModuleEditor::UndoActionType::ROTATION;
+			break;
+
+		case ImGuizmo::SCALE:
+			action_type = ModuleEditor::UndoActionType::SCALE;
+			break;
+
+		default:
+			break;
+		}
+
+		App->editor->AddUndoAction(action_type);
+		gizmo_released = false;
 	}
 }
 
@@ -231,8 +280,10 @@ void PanelScene::SceneDropTarget()
 			if (incoming_file->file_type == FileType::MODEL)
 			{
 				GameObject* new_model = App->model_loader->LoadModel(incoming_file->file_path.c_str());
-				App->scene->root->AddChild(new_model);
-
+				App->scene->root->AddChild(new_model); 
+				
+				App->editor->action_game_object = new_model;
+				App->editor->AddUndoAction(ModuleEditor::UndoActionType::ADD_GAMEOBJECT);
 			}
 		}
 		ImGui::EndDragDropTarget();

@@ -1,5 +1,10 @@
 #include "PanelComponent.h"
 
+#include "Actions/EditorActionTranslate.h"
+#include "Actions/EditorActionRotation.h"
+#include "Actions/EditorActionScale.h"
+#include "Actions/EditorAction.h"
+
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
@@ -12,6 +17,8 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
+
+
 #include "Helper/Utils.h"
 
 #include <imgui.h>
@@ -21,10 +28,13 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+
 		if (ImGui::DragFloat3("Translation", transform->translation.ptr(), 0.01f))
 		{
 			transform->OnTransformChange();
 		}
+		//UndoRedo
+		CheckClickForUndo(ModuleEditor::UndoActionType::TRANSLATION, transform);
 
 		if (ImGui::DragFloat3("Rotation", transform->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
 		{
@@ -32,10 +42,16 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
 			transform->OnTransformChange();
 		}
+		//UndoRedo
+		CheckClickForUndo(ModuleEditor::UndoActionType::ROTATION, transform);
+
 		if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
 		{
 			transform->OnTransformChange();
 		}
+
+		//UndoRedo
+		CheckClickForUndo(ModuleEditor::UndoActionType::SCALE, transform);
 	}
 }
 
@@ -43,11 +59,16 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::Checkbox("Active", &mesh->active);
+		if(ImGui::Checkbox("Active", &mesh->active))
+		{
+			//UndoRedo
+			App->editor->action_component = mesh;
+			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
+		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			mesh->owner->RemoveComponent(mesh);
+			App->editor->DeleteComponentUndo(mesh);
 			return;
 		}
 		ImGui::Separator();
@@ -116,6 +137,11 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 
 					if (ImGui::Button(ICON_FA_TIMES) )
 					{
+						//UndoRedo
+						App->editor->type_texture = Texture::TextureType(i);
+						App->editor->action_component = material;
+						App->editor->AddUndoAction(ModuleEditor::UndoActionType::EDIT_COMPONENTMATERIAL);
+
 						material->RemoveMaterialTexture(i);
 					}
 					ImGui::SameLine(); ImGui::Text("Remove Texture");
@@ -162,6 +188,10 @@ void PanelComponent::DropTarget(ComponentMaterial *material, Texture::TextureTyp
 			File *incoming_file = *(File**)payload->Data;
 			if (incoming_file->file_type == FileType::TEXTURE)
 			{
+				//UndoRedo
+				App->editor->type_texture = type;
+				App->editor->action_component = material;
+				App->editor->AddUndoAction(ModuleEditor::UndoActionType::EDIT_COMPONENTMATERIAL);
 
 				material->SetMaterialTexture(type, App->texture->LoadTexture(incoming_file->file_path.c_str()));
 			}
@@ -190,15 +220,21 @@ std::string PanelComponent::GetTypeName(Texture::TextureType type)
 		return "";
 	}
 }
+
 void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::Checkbox("Active", &camera->active);
+		if(ImGui::Checkbox("Active", &camera->active))
+		{
+			//UndoRedo
+			App->editor->action_component = camera;
+			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
+		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			camera->owner->RemoveComponent(camera);
+			App->editor->DeleteComponentUndo(camera);
 			return;
 		}
 		ImGui::Separator();
@@ -208,27 +244,42 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 
 		ImGui::Separator();
 
-		ImGui::SliderFloat("Mov Speed", &camera->camera_movement_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
+		ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f ,camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
+		
+		//UndoRedo
+		CheckClickedCamera(camera);
 
-		if (ImGui::SliderFloat("FOV", &camera->camera_frustum.horizontalFov, 0, 2 * 3.14f))
+		if (ImGui::DragFloat("FOV", &camera->camera_frustum.verticalFov, 0.01f, 0, 2 * 3.14f))
 		{
-			camera->SetFOV(camera->camera_frustum.horizontalFov);
+			camera->SetFOV(camera->camera_frustum.verticalFov);
 		}
 
-		if (ImGui::SliderFloat("Aspect Ratio", &camera->aspect_ratio, 0, 10))
+		//UndoRedo
+		CheckClickedCamera(camera);
+
+		if (ImGui::DragFloat("Aspect Ratio", &camera->aspect_ratio, 0.01f , 0, 10))
 		{
 			camera->SetAspectRatio(camera->aspect_ratio);
 		}
 
-		if (ImGui::SliderFloat("Near plane", &camera->camera_frustum.nearPlaneDistance, 1, camera->camera_frustum.farPlaneDistance + 1))
+		//UndoRedo
+		CheckClickedCamera(camera);
+
+		if (ImGui::DragFloat("Near plane", &camera->camera_frustum.nearPlaneDistance, 0.01f, 1, camera->camera_frustum.farPlaneDistance + 1))
 		{
 			camera->SetNearDistance(camera->camera_frustum.nearPlaneDistance);
 		}
 
-		if (ImGui::SliderFloat("Far plane", &camera->camera_frustum.farPlaneDistance, camera->camera_frustum.nearPlaneDistance + 1, camera->camera_frustum.nearPlaneDistance + 1000))
+		//UndoRedo
+		CheckClickedCamera(camera);
+
+		if (ImGui::DragFloat("Far plane", &camera->camera_frustum.farPlaneDistance, 0.01f, camera->camera_frustum.nearPlaneDistance + 1, camera->camera_frustum.nearPlaneDistance + 1000))
 		{
 			camera->SetFarDistance(camera->camera_frustum.farPlaneDistance);
 		}
+
+		//UndoRedo
+		CheckClickedCamera(camera);
 
 		ImGui::Separator();
 		int camera_clear_mode = static_cast<int>(camera->camera_clear_mode);
@@ -247,10 +298,13 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		ImGui::ColorEdit3("Clear Color", camera->camera_clear_color);
 		ImGui::Separator();
 
-		if (ImGui::SliderFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0, 100))
+		if (ImGui::DragFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0.01f, 0, 100))
 		{
 			camera->SetOrthographicSize(float2(camera->camera_frustum.orthographicHeight * camera->aspect_ratio, camera->camera_frustum.orthographicHeight));
 		}
+
+		//UndoRedo
+		CheckClickedCamera(camera);
 
 		if (ImGui::Combo("Front faces", &camera->perpesctive_enable, "Perspective\0Orthographic\0"))
 		{
@@ -267,25 +321,89 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		ImGui::Separator();
 
 		ImGui::DragInt("Depth", &camera->depth, 0.05f);
+
+		//UndoRedo
+		CheckClickedCamera(camera);
+
 	}
 }
 
+void PanelComponent::CheckClickedCamera(ComponentCamera* camera)
+{
+	//UndoRedo
+	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
+	{
+		//Push new action
+		App->editor->action_component = camera;
+		App->editor->AddUndoAction(ModuleEditor::UndoActionType::EDIT_COMPONENTCAMERA);
+	}
+}
+
+void PanelComponent::CheckClickForUndo(ModuleEditor::UndoActionType  type, Component* component)
+{
+	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
+	{
+		switch (type)
+		{
+		case ModuleEditor::UndoActionType::TRANSLATION:
+			App->editor->previous_transform = ((ComponentTransform*)component)->GetTranslation();
+			break;
+		case ModuleEditor::UndoActionType::ROTATION:
+			App->editor->previous_transform = ((ComponentTransform*)component)->GetRotationRadiants();
+			break;
+		case ModuleEditor::UndoActionType::SCALE:
+			App->editor->previous_transform = ((ComponentTransform*)component)->GetScale();
+			break;
+		case ModuleEditor::UndoActionType::EDIT_COMPONENTLIGHT:
+			App->editor->previous_light_color[0] = ((ComponentLight*)component)->light_color[0];
+			App->editor->previous_light_color[1] = ((ComponentLight*)component)->light_color[1];
+			App->editor->previous_light_color[2] = ((ComponentLight*)component)->light_color[2];
+			App->editor->previous_light_intensity = ((ComponentLight*)component)->light_intensity;
+			App->editor->action_component = component;
+			break;
+		default:
+			break;
+		}
+
+
+		App->editor->clicked = true;
+	}
+
+	if (ImGui::IsItemDeactivatedAfterChange())
+	{
+		App->editor->AddUndoAction(type);
+		App->editor->clicked = false;
+	}
+
+}
 
 void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Light", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::Checkbox("Active", &light->active);
+		if(ImGui::Checkbox("Active", &light->active))
+		{
+			//UndoRedo
+			App->editor->action_component = light;
+			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
+		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			light->owner->RemoveComponent(light);
+			App->editor->DeleteComponentUndo(light);
+
 			return;
 		}
 		ImGui::Separator();
 
 		ImGui::ColorEdit3("Color", light->light_color);
-		ImGui::SliderFloat("Intensity ", &light->light_intensity, 0.f, 1.f);
+		
+		CheckClickForUndo(ModuleEditor::UndoActionType::EDIT_COMPONENTLIGHT, light);
+		
+		ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f);
+
+		CheckClickForUndo(ModuleEditor::UndoActionType::EDIT_COMPONENTLIGHT, light);
+		
 	}
 }
 

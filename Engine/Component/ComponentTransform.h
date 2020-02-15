@@ -26,7 +26,9 @@ public:
 	void Translate(const float3 &translation);
 
 	Quat GetRotation() const;
+	float3 GetRotationRadiants() const;
 	void SetRotation(const float3x3 &rotation);
+	void SetRotation(const float3 &rotation);
 	void Rotate(const Quat &rotation);
 	void Rotate(const float3x3 &rotation);
 

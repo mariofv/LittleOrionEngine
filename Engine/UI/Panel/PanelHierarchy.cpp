@@ -1,11 +1,14 @@
 #include "PanelHierarchy.h"
 
+#include "Actions/EditorAction.h"
+#include "Actions/EditorActionDeleteGameObject.h"
 #include "Component/ComponentCamera.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleModelLoader.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
 
 #include <imgui.h>
@@ -106,9 +109,13 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 			if (incoming_file->file_type == FileType::MODEL)
 			{
 				GameObject* new_model = App->model_loader->LoadModel(incoming_file->file_path.c_str());
+
 				if (target_game_object != nullptr)
 				{
 					target_game_object->AddChild(new_model);
+					//UndoRedo
+					App->editor->action_game_object = new_model;
+					App->editor->AddUndoAction(ModuleEditor::UndoActionType::ADD_GAMEOBJECT);
 				}
 			}
 		}
@@ -134,6 +141,9 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 			if (ImGui::Selectable("Delete GameObject"))
 			{
 				App->scene->RemoveGameObject(game_object);
+				App->editor->action_game_object = game_object;
+				App->editor->AddUndoAction(ModuleEditor::UndoActionType::DELETE_GAMEOBJECT);
+
 				App->editor->selected_game_object = nullptr;
 			}
 			if (ImGui::Selectable("Move Up"))
@@ -150,7 +160,9 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 
 		if (ImGui::Selectable("Create Empty"))
 		{
-			game_object != nullptr ? App->scene->CreateChildGameObject(game_object) : App->scene->CreateGameObject();
+			GameObject* created_go = game_object != nullptr ? App->scene->CreateChildGameObject(game_object) : App->scene->CreateGameObject();
+			App->editor->action_game_object = created_go;
+			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ADD_GAMEOBJECT);
 		}
 		
 		Show3DObjectCreationMenu(game_object);

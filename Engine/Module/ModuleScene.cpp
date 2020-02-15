@@ -44,6 +44,7 @@ GameObject* ModuleScene::CreateGameObject()
 
 	GameObject * created_game_object_ptr = created_game_object.get();
 	game_objects_ownership.emplace_back(std::move(created_game_object));
+
 	return created_game_object_ptr;
 }
 
@@ -73,6 +74,11 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 	}
 }
 
+void ModuleScene::DisableGameObject(GameObject * game_object_to_disable)
+{
+
+}
+
 GameObject* ModuleScene::GetRoot() const
 {
 	return root;
@@ -98,6 +104,9 @@ GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 
 void ModuleScene::DeleteCurrentScene()
 {
+	//UndoRedo
+	App->editor->ClearUndoRedoStacks();
+
 	RemoveGameObject(root);
 	App->editor->selected_game_object = nullptr;
 }
@@ -144,5 +153,6 @@ void ModuleScene::Load(const Config& serialized_scene)
 		created_game_object->Load(game_objects_config[i]);
 	}
 	App->renderer->GenerateQuadTree();
+	App->editor->ClearUndoStack();
 
 }

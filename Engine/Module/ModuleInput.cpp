@@ -134,6 +134,13 @@ update_status ModuleInput::PreUpdate()
 					App->cameras->scene_camera->Center(App->editor->selected_game_object->aabb.global_bounding_box);
 				}
 			}
+
+			//Undo-Redo
+			if (event.key.keysym.sym == SDLK_z)
+			{
+				controlKeyDown = true;
+			}
+
 			break;
 
 		case SDL_KEYUP:
@@ -144,6 +151,11 @@ update_status ModuleInput::PreUpdate()
 			else if (event.key.keysym.sym == SDLK_LSHIFT)
 			{
 				App->cameras->scene_camera->SetSpeedUp(false);
+			}
+
+			if (event.key.keysym.sym == SDLK_LCTRL)
+			{
+				controlKeyDown = false;
 			}
 			break;
 
@@ -210,6 +222,21 @@ update_status ModuleInput::PreUpdate()
 	{
 		App->cameras->scene_camera->RotateYaw(1.f);
 	}
+
+	if(controlKeyDown && keyboard[SDL_SCANCODE_LCTRL] && !keyboard[SDL_SCANCODE_LSHIFT])
+	{
+		App->editor->Undo();
+		controlKeyDown = false;
+	}
+
+	if (controlKeyDown && keyboard[SDL_SCANCODE_LSHIFT] && keyboard[SDL_SCANCODE_LCTRL])
+	{
+		App->editor->Redo();
+		controlKeyDown = false;
+	}
+
+
+
 	return update_status::UPDATE_CONTINUE;
 }
 

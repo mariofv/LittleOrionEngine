@@ -9,6 +9,8 @@
 #include "MathGeoLib.h"
 #include <GL/glew.h>
 
+class EditorActionModifyCamera;
+
 class ComponentCamera : public Component
 {
 public:
@@ -133,6 +135,7 @@ private:
 
 	ClearMode camera_clear_mode = ClearMode::COLOR;
 
+	friend class EditorActionModifyCamera;
 	friend class ModuleDebugDraw;
 	friend class PanelComponent;
 	friend class PanelScene;

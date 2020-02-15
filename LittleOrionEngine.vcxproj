@@ -86,6 +86,18 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Actions\EditorAction.h" />
+    <ClInclude Include="Engine\Actions\EditorActionAddComponent.h" />
+    <ClInclude Include="Engine\Actions\EditorActionAddGameObject.h" />
+    <ClInclude Include="Engine\Actions\EditorActionDeleteComponent.h" />
+    <ClInclude Include="Engine\Actions\EditorActionDeleteGameObject.h" />
+    <ClInclude Include="Engine\Actions\EditorActionEnableDisableComponent.h" />
+    <ClInclude Include="Engine\Actions\EditorActionModifyCamera.h" />
+    <ClInclude Include="Engine\Actions\EditorActionModifyLight.h" />
+    <ClInclude Include="Engine\Actions\EditorActionRotation.h" />
+    <ClInclude Include="Engine\Actions\EditorActionScale.h" />
+    <ClInclude Include="Engine\Actions\EditorActionSetTexture.h" />
+    <ClInclude Include="Engine\Actions\EditorActionTranslate.h" />
     <ClInclude Include="Engine\Helper\Config.h" />
     <ClInclude Include="Engine\Helper\Timer.h" />
     <ClInclude Include="Engine\Helper\TimerUs.h" />
@@ -152,6 +164,17 @@
     <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionDeleteComponent.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionDeleteGameObject.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionEnableDisableComponent.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionModifyCamera.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionModifyLight.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionRotation.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionSetTexture.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
     <ClCompile Include="Engine\Helper\Timer.cpp" />
     <ClCompile Include="Engine\Helper\TimerUs.cpp" />

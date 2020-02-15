@@ -26,6 +26,7 @@ private:
 
 private:
 	bool scene_camera_gizmo_hovered = false;
+	bool gizmo_released = false;
 
 	float scene_window_content_area_width = 0;
 	float scene_window_content_area_height = 0;

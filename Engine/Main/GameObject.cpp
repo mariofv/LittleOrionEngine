@@ -50,6 +50,7 @@ void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 	for (int i = (components.size() - 1); i >= 0; --i)
 	{
 		components[i]->Delete();
+		components[i] = nullptr;
 	}
 	for (int i = (children.size() - 1); i >= 0; --i)
 	{
@@ -60,6 +61,21 @@ void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 bool GameObject::IsEnabled() const
 {
 	return active;
+}
+
+void GameObject::SetEnabled(bool able)
+{
+	active = able;
+	
+	for(auto component : components)
+	{
+		(able) ? component->Enable() : component->Disable();
+	}
+
+	for(auto child : children)
+	{
+		child->SetEnabled(able);
+	}
 }
 
 void GameObject::SetStatic(bool is_static)
@@ -322,4 +338,14 @@ void GameObject::RenderMaterialTexture(unsigned int shader_program) const
 			current_material->Render(shader_program);
 		}
 	}
+}
+
+int GameObject::GetHierarchyDepth() const
+{
+	return hierarchy_depth;
+}
+
+void GameObject::SetHierarchyDepth(int value)
+{
+	hierarchy_depth = value;
 }

@@ -316,6 +316,39 @@
     <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp">
       <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionDeleteComponent.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionDeleteGameObject.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionEnableDisableComponent.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionModifyCamera.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionModifyLight.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionRotation.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionScale.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionSetTexture.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -510,6 +543,42 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorAction.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionAddComponent.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionAddGameObject.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionDeleteComponent.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionDeleteGameObject.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionEnableDisableComponent.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionModifyCamera.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionModifyLight.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionRotation.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionScale.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionSetTexture.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionTranslate.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -571,6 +640,9 @@
     </Filter>
     <Filter Include="Engine\ResourceManagement\Loaders">
       <UniqueIdentifier>{af8a22c1-2b23-42fc-b542-ec1112f7066d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Actions">
+      <UniqueIdentifier>{3f3b0f7b-d67b-4384-a9ba-a7e803bb2a53}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

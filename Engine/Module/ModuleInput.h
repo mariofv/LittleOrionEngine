@@ -18,6 +18,7 @@ public:
 	bool CleanUp() override;
 
 private:
+	bool controlKeyDown = false;
 	const Uint8 *keyboard = nullptr;
 };
 
