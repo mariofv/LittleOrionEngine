@@ -451,6 +451,7 @@ void ModuleEditor::SceneDropTarget()
 			{
 				GameObject* new_model = App->model_loader->LoadModel(incoming_file->file_path.c_str());	
 				App->scene->root->AddChild(new_model);
+				App->renderer->InsertAABBTree(new_model);
 
 				//UndoRedo
 				App->editor->action_game_object = new_model;

@@ -345,6 +345,7 @@ void ModuleRender::RemoveComponentMesh(ComponentMesh* mesh_to_remove)
 		meshes.erase(it);
 	}
 }
+
 void ModuleRender::ShowRenderOptions()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_CLONE " Renderer"))
@@ -463,4 +464,29 @@ void ModuleRender::GenerateQuadTree()
 	{
 		ol_quadtree.Insert(*mesh->owner);
 	}
+}
+
+void ModuleRender::InsertAABBTree(GameObject * game_object)
+{
+	ol_abbtree->Insert(game_object);
+}
+
+void ModuleRender::RemoveAABBTree(GameObject * game_object)
+{
+	ol_abbtree->Remove(game_object);
+}
+
+void ModuleRender::UpdateAABBTree(GameObject* game_object)
+{
+	ol_abbtree->UpdateObject(game_object);
+}
+
+void ModuleRender::DeleteAABBTree()
+{
+	delete ol_abbtree;
+}
+
+void ModuleRender::CreateAABBTree()
+{
+	ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
 }

@@ -2,6 +2,7 @@
 #include "Main/Application.h"
 #include "Component/ComponentCamera.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleRender.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
@@ -130,6 +131,8 @@ void Hierarchy::DropTarget(GameObject *target_game_object) const
 				if (target_game_object != nullptr)
 				{
 					target_game_object->AddChild(new_model);
+					App->renderer->InsertAABBTree(new_model);
+
 					//UndoRedo
 					App->editor->action_game_object = new_model;
 					App->editor->AddUndoAction(3);
@@ -163,6 +166,7 @@ void Hierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 			App->editor->action_game_object = game_object;
 			App->editor->AddUndoAction(4);
 
+			App->renderer->RemoveAABBTree(game_object);
 			game_object->SetEnabled(false);
 			game_object->parent->RemoveChild(game_object);
 			

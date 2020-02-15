@@ -287,6 +287,7 @@
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionSetTexture.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
+    <ClCompile Include="Engine\SpacePartition\OLAABBTree.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -448,6 +449,7 @@
     <ClInclude Include="Engine\Actions\EditorActionRotation.h" />
     <ClInclude Include="Engine\Actions\EditorActionScale.h" />
     <ClInclude Include="Engine\Actions\EditorActionSetTexture.h" />
+    <ClInclude Include="Engine\SpacePartition\OLAABBTree.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

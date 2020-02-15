@@ -12,7 +12,9 @@ public:
 	{
 		NONE,
 		FRUSTUM_CULLING,
-		QUADTREE_CULLING
+		QUADTREE_CULLING,
+		AABB_CULLING,
+		COMBINED_CULLING
 	};
 
 	ModuleDebug() = default;
