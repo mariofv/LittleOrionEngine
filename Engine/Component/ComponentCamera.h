@@ -8,6 +8,7 @@
 #include <GL/glew.h>
 
 class ComponentsUI;
+class EditorActionModifyCamera;
 class ComponentCamera : public Component
 {
 public:
@@ -134,6 +135,7 @@ private:
 
 	ClearMode camera_clear_mode = ClearMode::COLOR;
 	friend class ComponentsUI;
+	friend class EditorActionModifyCamera;
 };
 
 #endif //_COMPONENTCAMERA_H_

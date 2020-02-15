@@ -8,6 +8,8 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleLight.h"
+#include "Module/ModuleEditor.h"
+
 #include "ResourceManagement/Resources/Texture.h"
 
 #include "Component/ComponentCamera.h"
@@ -52,6 +54,7 @@ void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 	for (int i = (components.size() - 1); i >= 0; --i)
 	{
 		components[i]->Delete();
+		components[i] = nullptr;
 	}
 	for (int i = (children.size() - 1); i >= 0; --i)
 	{
@@ -62,6 +65,21 @@ void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 bool GameObject::IsEnabled() const
 {
 	return active;
+}
+
+void GameObject::SetEnabled(bool able)
+{
+	active = able;
+	
+	for(auto component : components)
+	{
+		(able) ? component->Enable() : component->Disable();
+	}
+
+	for(auto child : children)
+	{
+		child->SetEnabled(able);
+	}
 }
 
 void GameObject::SetStatic(bool is_static)
@@ -367,4 +385,14 @@ void GameObject::ShowPropertiesWindow()
 		components[i]->ShowComponentWindow();
 		ImGui::PopID();
 	}
+}
+
+int GameObject::GetHierarchyDepth() const
+{
+	return hierarchy_depth;
+}
+
+void GameObject::SetHierarchyDepth(int value)
+{
+	hierarchy_depth = value;
 }
