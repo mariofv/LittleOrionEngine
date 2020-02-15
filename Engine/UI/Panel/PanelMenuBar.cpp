@@ -71,37 +71,37 @@ void PanelMenuBar::ShowViewMenu()
 {
 	if (ImGui::BeginMenu("View"))
 	{
-		if (ImGui::MenuItem((ICON_FA_SITEMAP " Hierarchy"), (const char*)0, App->editor->hierarchy->IsEnabled()))
+		if (ImGui::MenuItem((ICON_FA_SITEMAP " Hierarchy"), (const char*)0, App->editor->hierarchy->IsOpened()))
 		{
-			App->editor->hierarchy->SwitchEnable();
+			App->editor->hierarchy->SwitchOpen();
 		}
-		if (ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, App->editor->scene_panel->IsEnabled()))
+		if (ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, App->editor->scene_panel->IsOpened()))
 		{
-			App->editor->scene_panel->SwitchEnable();
+			App->editor->scene_panel->SwitchOpen();
 		}
-		if (ImGui::MenuItem((ICON_FA_GHOST " Game"), (const char*)0, App->editor->game_panel->IsEnabled()))
+		if (ImGui::MenuItem((ICON_FA_GHOST " Game"), (const char*)0, App->editor->game_panel->IsOpened()))
 		{
-			App->editor->game_panel->SwitchEnable();
+			App->editor->game_panel->SwitchOpen();
 		}
-		if (ImGui::MenuItem((ICON_FA_INFO " Inspector"), (const char*)0, App->editor->inspector->IsEnabled()))
+		if (ImGui::MenuItem((ICON_FA_INFO " Inspector"), (const char*)0, App->editor->inspector->IsOpened()))
 		{
-			App->editor->inspector->SwitchEnable();
+			App->editor->inspector->SwitchOpen();
 		}
-		if (ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, App->editor->configuration->IsEnabled()))
+		if (ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, App->editor->configuration->IsOpened()))
 		{
-			App->editor->configuration->SwitchEnable();
+			App->editor->configuration->SwitchOpen();
 		}
-		if (ImGui::MenuItem((ICON_FA_FOLDER_OPEN " Explorer"), (const char*)0, App->editor->project_explorer->IsEnabled()))
+		if (ImGui::MenuItem((ICON_FA_FOLDER_OPEN " Explorer"), (const char*)0, App->editor->project_explorer->IsOpened()))
 		{
-			App->editor->project_explorer->SwitchEnable();
+			App->editor->project_explorer->SwitchOpen();
 		}
-		if (ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, App->editor->console->IsEnabled()))
+		if (ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, App->editor->console->IsOpened()))
 		{
-			App->editor->console->SwitchEnable();
+			App->editor->console->SwitchOpen();
 		}
-		if (ImGui::MenuItem((ICON_FA_BUG " Debug"), (const char*)0, App->editor->debug_panel->IsEnabled()))
+		if (ImGui::MenuItem((ICON_FA_BUG " Debug"), (const char*)0, App->editor->debug_panel->IsOpened()))
 		{
-			App->editor->debug_panel->SwitchEnable();
+			App->editor->debug_panel->SwitchOpen();
 		}
 		ImGui::EndMenu();
 	}
@@ -111,9 +111,9 @@ void PanelMenuBar::ShowHelpMenu()
 {
 	if (ImGui::BeginMenu("Help"))
 	{
-		if (ImGui::MenuItem(ICON_FA_QUESTION_CIRCLE " About", (const char*)0, App->editor->about->IsEnabled()))
+		if (ImGui::MenuItem(ICON_FA_QUESTION_CIRCLE " About", (const char*)0, App->editor->about->IsOpened()))
 		{
-			App->editor->about->SwitchEnable();
+			App->editor->about->SwitchOpen();
 		}
 		ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAB));
 		if (ImGui::MenuItem(ICON_FA_GITHUB_ALT " Repository"))

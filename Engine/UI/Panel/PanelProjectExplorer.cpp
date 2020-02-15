@@ -11,13 +11,14 @@
 
 PanelProjectExplorer::PanelProjectExplorer()
 {
+	opened = true;
 	enabled = true;
 	window_name = ICON_FA_FOLDER_OPEN " Project";
 }
 
 void PanelProjectExplorer::Render() 
 {
-	if(ImGui::Begin(ICON_FA_FOLDER_OPEN " Project"))
+	if(ImGui::Begin(ICON_FA_FOLDER_OPEN " Project", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
 

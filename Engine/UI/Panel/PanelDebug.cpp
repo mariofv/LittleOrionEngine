@@ -16,7 +16,7 @@ PanelDebug::PanelDebug()
 
 void PanelDebug::Render()
 {
-	if (ImGui::Begin(ICON_FA_BUG " Debug"))
+	if (ImGui::Begin(ICON_FA_BUG " Debug", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
 

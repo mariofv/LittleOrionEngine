@@ -12,7 +12,7 @@ PanelAbout::PanelAbout()
 
 void PanelAbout::Render()
 {
-	if (ImGui::Begin(window_name.c_str()))
+	if (ImGui::Begin(window_name.c_str(), &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
 

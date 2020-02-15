@@ -13,6 +13,7 @@
 PanelGameObject::PanelGameObject()
 {
 	enabled = true;
+	opened = true;
 	window_name = "GameObject Inspector";
 }
 

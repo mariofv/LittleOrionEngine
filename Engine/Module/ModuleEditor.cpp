@@ -142,7 +142,7 @@ void ModuleEditor::RenderEditorDockspace()
 
 		for (auto& panel : panels)
 		{
-			if (panel->IsEnabled())
+			if (panel->IsOpened())
 			{
 				panel->Render();
 			}

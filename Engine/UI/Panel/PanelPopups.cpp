@@ -8,6 +8,7 @@
 
 PanelPopups::PanelPopups()
 {
+	opened = true;
 	enabled = true;
 	window_name = "Popups";
 }

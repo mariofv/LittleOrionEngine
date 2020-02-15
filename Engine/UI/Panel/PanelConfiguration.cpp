@@ -21,7 +21,7 @@ PanelConfiguration::PanelConfiguration()
 
 void PanelConfiguration::Render()
 {
-	if (ImGui::Begin(ICON_FA_COGS " Configuration"))
+	if (ImGui::Begin(ICON_FA_COGS " Configuration", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
 

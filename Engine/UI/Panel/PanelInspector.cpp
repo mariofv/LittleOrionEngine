@@ -9,13 +9,14 @@
 
 PanelInspector::PanelInspector()
 {
+	opened = true;
 	enabled = true;
 	window_name = ICON_FA_INFO_CIRCLE " Inspector";
 }
 
 void PanelInspector::Render()
 {
-	if (ImGui::Begin(ICON_FA_INFO_CIRCLE " Inspector"))
+	if (ImGui::Begin(ICON_FA_INFO_CIRCLE " Inspector", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
 

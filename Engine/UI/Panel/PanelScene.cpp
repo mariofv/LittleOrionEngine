@@ -17,6 +17,7 @@
 
 PanelScene::PanelScene()
 {
+	opened = true;
 	enabled = true;
 	window_name = ICON_FA_TH " Scene";
 }
@@ -28,7 +29,7 @@ PanelScene::~PanelScene()
 
 void PanelScene::Render()
 {
-	if (ImGui::Begin(ICON_FA_TH " Scene", NULL, ImGuiWindowFlags_MenuBar))
+	if (ImGui::Begin(ICON_FA_TH " Scene", &opened, ImGuiWindowFlags_MenuBar))
 	{
 		RenderSceneBar();
 

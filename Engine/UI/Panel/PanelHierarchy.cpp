@@ -13,13 +13,14 @@
 
 PanelHierarchy::PanelHierarchy()
 {
+	opened = true;
 	enabled = true;
 	window_name = ICON_FA_SITEMAP " Hierarchy";
 }
 
 void PanelHierarchy::Render()
 {
-	if (ImGui::Begin(ICON_FA_SITEMAP " Hierarchy"))
+	if (ImGui::Begin(ICON_FA_SITEMAP " Hierarchy", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
 

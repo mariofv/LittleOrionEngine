@@ -10,6 +10,7 @@
 
 PanelConsole::PanelConsole()
 {
+	opened = true;
 	enabled = true;
 	window_name = ICON_FA_TERMINAL " Console";
 }
@@ -19,7 +20,7 @@ void PanelConsole::Render()
 	hovered = ImGui::IsWindowHovered();
 
 	char tmp_string[64];
-	if (ImGui::Begin(ICON_FA_TERMINAL " Console"))
+	if (ImGui::Begin(ICON_FA_TERMINAL " Console", &opened))
 	{
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Filters");

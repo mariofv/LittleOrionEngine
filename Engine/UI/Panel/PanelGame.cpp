@@ -11,13 +11,14 @@
 
 PanelGame::PanelGame()
 {
+	opened = true;
 	enabled = true;
 	window_name = ICON_FA_GHOST " Game";
 }
 
 void PanelGame::Render()
 {
-	if (ImGui::Begin(ICON_FA_GHOST " Game"))
+	if (ImGui::Begin(ICON_FA_GHOST " Game", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
 
