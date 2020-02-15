@@ -254,6 +254,10 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 		}
 		break;
 
+	case ModuleDebug::CullingMode::OCTTREE_CULLING:
+		//TODO
+		break;
+
 	default:
 		break;
 	}
