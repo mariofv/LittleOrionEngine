@@ -1,10 +1,17 @@
 #pragma once
 #include "Resource.h"
-
+#include <Component/ComponentTransform.h>
 class Animation : public Resource
 {
 public:
-	Animation() = default;
+
+	struct Channel
+	{
+		std::string joint_name;
+		std::vector<float4x4> positions;
+
+	};
+	Animation(const char * const UID, const std::string & exported_file);
 	~Animation() = default;
 
 	void Save(Config& config) const override {};
@@ -12,6 +19,10 @@ public:
 
 private:
 	void LoadInMemory() override {};
+
+public:
+	float duration;
+	float tickts;
 };
 
 

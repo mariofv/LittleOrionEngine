@@ -12,6 +12,7 @@
 #include "Component/ComponentMesh.h"
 #include <ResourceManagement/Importer/Importer.h>
 
+#include <ResourceManagement/Resources/Skeleton.h>
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
