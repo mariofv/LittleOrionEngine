@@ -83,6 +83,7 @@ private:
 	std::vector<ComponentMesh*> meshes_to_render;
 	Timer * rendering_measure_timer = new Timer();
 
+	friend class ModuleDebugDraw;
 	friend class PanelConfiguration;
 	friend class PanelDebug;
 	friend class PanelScene;

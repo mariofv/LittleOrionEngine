@@ -35,6 +35,7 @@ private:
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
 
 	friend class PanelScene;
+	friend class ModuleDebugDraw;
 };
 
 #endif // _MODULSESCENE_H

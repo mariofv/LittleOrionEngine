@@ -133,6 +133,7 @@ private:
 
 	ClearMode camera_clear_mode = ClearMode::COLOR;
 
+	friend class ModuleDebugDraw;
 	friend class PanelComponent;
 	friend class PanelScene;
 };

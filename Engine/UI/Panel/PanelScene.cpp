@@ -1,21 +1,15 @@
 #include "PanelScene.h"
 
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMesh.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
-#include "Module/ModuleDebug.h"
-#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
-#include "SpacePartition/OLQuadTree.h"
-#include "UI/Billboard.h"
-#include "UI/DebugDraw.h"
 #include "UI/Panel/PanelHierarchy.h"
 
 #include <imgui.h>
@@ -25,16 +19,11 @@ PanelScene::PanelScene()
 {
 	enabled = true;
 	window_name = ICON_FA_TH " Scene";
-
-	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 3.44f, 5.f);
-	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 5.f, 5.f);
 }
 
 
 PanelScene::~PanelScene()
 {
-	delete light_billboard;
-	delete camera_billboard;
 }
 
 void PanelScene::Render()
@@ -122,43 +111,6 @@ void PanelScene::RenderSceneBar()
 	}
 }
 
-void PanelScene::RenderDebugDraws()
-{
-	if (App->debug->show_grid)
-	{
-		dd::xzSquareGrid(-1000.0f, 1000.0f, 0.0f, 10.0f, math::float3(0.65f, 0.65f, 0.65f));
-	}
-
-	if (App->debug->show_quadtree)
-	{
-		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree)
-		{
-			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
-			float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
-			dd::aabb(quadtree_node_min, quadtree_node_max, float3::one);
-		}
-	}
-
-	if (App->editor->selected_game_object != nullptr)
-	{
-		RenderCameraFrustum();
-		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
-	}
-
-	if (App->debug->show_bounding_boxes)
-	{
-		RenderBoundingBoxes();
-	}
-
-	if (App->debug->show_global_bounding_boxes)
-	{
-		RenderGlobalBoundingBoxes();
-	}
-
-	App->debug_draw->Render(*App->cameras->scene_camera);
-
-	RenderBillboards();
-}
 
 void PanelScene::RenderEditorDraws()
 {
@@ -174,100 +126,6 @@ void PanelScene::RenderEditorDraws()
 	}
 
 	RenderSceneCameraGizmo();
-}
-
-
-void PanelScene::RenderCameraFrustum() const
-{
-	if (!App->debug->show_camera_frustum)
-	{
-		return;
-	}
-
-	Component * selected_camera_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::CAMERA);
-	if (selected_camera_component != nullptr) {
-		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
-
-		dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
-	}
-}
-
-void PanelScene::RenderOutline() const
-{
-	GameObject* selected_game_object = App->editor->selected_game_object;
-	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH);
-
-	if (selected_object_mesh_component != nullptr && selected_object_mesh_component->IsEnabled())
-	{
-		ComponentMesh* selected_object_mesh = static_cast<ComponentMesh*>(selected_object_mesh_component);
-		glEnable(GL_STENCIL_TEST);
-		glStencilFunc(GL_ALWAYS, 1, 0xFF);
-		glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
-		glStencilMask(0xFF);
-
-		selected_object_mesh->Render();
-
-		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
-		glStencilMask(0x00);
-		glDisable(GL_DEPTH_TEST);
-
-		GLuint outline_shader_program = App->program->GetShaderProgramId("Outline");
-		glUseProgram(outline_shader_program);
-
-		ComponentTransform object_transform_copy = selected_game_object->transform;
-		float3 object_scale = object_transform_copy.GetScale();
-		object_transform_copy.SetScale(object_scale*1.01f);
-		object_transform_copy.GenerateGlobalModelMatrix();
-
-		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), object_transform_copy.GetGlobalModelMatrix().Transposed().ptr());
-		glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-		selected_object_mesh->RenderModel();
-
-		glStencilMask(0xFF);
-		glEnable(GL_DEPTH_TEST);
-		glDisable(GL_STENCIL_TEST);
-
-		glUseProgram(0);
-
-	}
-}
-
-void PanelScene::RenderBoundingBoxes() const
-{
-	for (auto& mesh : App->renderer->meshes_to_render)
-	{
-		GameObject* mesh_game_object = mesh->owner;
-		if (!mesh_game_object->aabb.IsEmpty())
-		{
-			dd::aabb(mesh_game_object->aabb.bounding_box.minPoint, mesh_game_object->aabb.bounding_box.maxPoint, float3::one);
-		}
-	}
-}
-
-void PanelScene::RenderGlobalBoundingBoxes() const
-{
-	for (auto& object : App->scene->game_objects_ownership)
-	{
-		dd::aabb(object->aabb.global_bounding_box.minPoint, object->aabb.global_bounding_box.maxPoint, float3::one);
-	}
-}
-
-void PanelScene::RenderBillboards() const
-{
-	for (auto& object : App->scene->game_objects_ownership)
-	{
-		Component * light_component = object->GetComponent(Component::ComponentType::LIGHT);
-		if (light_component != nullptr) {
-			light_billboard->Render(object->transform.GetGlobalTranslation());
-		}
-
-		Component * camera_component = object->GetComponent(Component::ComponentType::CAMERA);
-		if (camera_component != nullptr) {
-			camera_billboard->Render(object->transform.GetGlobalTranslation());
-		}
-	}
 }
 
 

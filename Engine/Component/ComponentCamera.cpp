@@ -2,11 +2,11 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
-#include "UI/Panel/PanelScene.h"
 
 #include "Helper/Utils.h"
 
@@ -174,7 +174,7 @@ void ComponentCamera::RecordDebugDraws(float width, float height) const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glViewport(0, 0, width, height);
-	App->editor->scene_panel->RenderDebugDraws();
+	App->debug_draw->Render();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
