@@ -24,12 +24,9 @@ class ModuleDebug;
 class ModuleDebugDraw;
 class ModuleUI;
 class ModuleLight;
+class ModuleResourceManager;
 
 class EngineLog;
-
-
-class MaterialImporter;
-class MeshImporter;
 
 class TimerUs;
 
@@ -60,10 +57,9 @@ public:
 	ModuleDebugDraw* debug_draw = nullptr;
 	ModuleUI* ui = nullptr;
 	ModuleLight* lights = nullptr;
+	ModuleResourceManager* resources = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
-	std::unique_ptr<MeshImporter> mesh_importer = nullptr;
-	std::unique_ptr<MaterialImporter> material_importer = nullptr;
 
 private:
 

@@ -1,7 +1,8 @@
 #ifndef _PANELCOMPONENT_H_
 #define _PANELCOMPONENT_H_
 
-#include "Resource/Texture.h"
+#include "ResourceManagement/Resources/Texture.h"
+
 class ComponentCamera;
 class ComponentMaterial;
 class ComponentMesh;

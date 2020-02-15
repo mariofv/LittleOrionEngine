@@ -416,7 +416,7 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
 		for (auto & triangle : triangles)
 		{
 			float distance;
-			bool intersected = triangle.Intersects(transformed_ray, &distance);		
+			bool intersected = triangle.Intersects(transformed_ray, &distance);
 			if (intersected && distance < min_distance)
 			{
 				selected = mesh->owner;

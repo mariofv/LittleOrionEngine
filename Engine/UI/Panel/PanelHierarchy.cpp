@@ -185,6 +185,10 @@ void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 		{
 			created_game_object->SetParent(game_object);
 		}
+		if (ImGui::Selectable("Quad"))
+		{
+			App->model_loader->LoadCoreModel(PRIMITIVE_QUAD_PATH);
+		}
 		ImGui::EndMenu();
 	}
 }

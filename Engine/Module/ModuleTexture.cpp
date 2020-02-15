@@ -1,11 +1,13 @@
 #include "ModuleTexture.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
-#include "Resource/Texture.h"
+#include "Module/ModuleResourceManager.h"
+#include "ResourceManagement/Resources/Texture.h"
 #include "Main/GameObject.h"
 #include "Component/ComponentMaterial.h"
-#include "Importer/MaterialImporter.h"
-
+#include <Filesystem/File.h>
+#include <ResourceManagement/Importer/TextureImporter.h>
+#include <ResourceManagement/Loaders/TextureLoader.h>
 #include <SDL/SDL.h>
 #include <algorithm>
 #include <memory>
@@ -51,13 +53,13 @@ void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remov
 
 std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 {
-	std::pair<bool, std::string> imported = App->material_importer->Import(File(texture_path));
+	std::pair<bool, std::string> imported = App->resources->Import(File(texture_path));
 	if (!imported.first)
 	{
 		return nullptr;
 	}
 
-	return App->material_importer->Load(imported.second);
+	return App->resources->Load<Texture>(imported.second);
 }
 
 GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) const
@@ -65,10 +67,10 @@ GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) 
 	std::vector<std::string> faces_paths_dds;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
-		std::string ol_texture = App->material_importer->Import(File(faces_paths[i])).second;
+		std::string ol_texture = App->resources->Import(File(faces_paths[i])).second;
 		faces_paths_dds.push_back(ol_texture);
 	}
-	return static_cast<GLuint>(App->material_importer->LoadCubemap(faces_paths_dds));
+	return static_cast<GLuint>(TextureLoader::LoadCubemap(faces_paths_dds));
 }
 
 GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const{

@@ -3,8 +3,8 @@
 
 #include "Component.h"
 #include "Main/Globals.h"
-#include "Resource/Texture.h"
 #include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "ResourceManagement/Resources/Texture.h"
 
 #include <GL/glew.h>
 #include <memory>
@@ -34,6 +34,7 @@ private:
 	void AddSpecularUniforms(unsigned int shader_program) const;
 	void AddAmbientOclusionUniforms(unsigned int shader_program) const;
 	void BindTexture(Texture::TextureType id) const;
+
 private:
 	ComponentType type = ComponentType::MATERIAL;
 

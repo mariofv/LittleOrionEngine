@@ -4,8 +4,9 @@
 #include "Main/Globals.h"
 #include <GL/glew.h>
 #include <string>
-
-class Texture
+#include "Resource.h"
+#include <ResourceManagement/Loaders/TextureLoader.h>
+class Texture : public Resource
 {
 public:
 	enum TextureType
@@ -18,7 +19,6 @@ public:
 	};
 	static const size_t MAX_TEXTURE_TYPES = static_cast<size_t>(TextureType::UNKNOWN);
 public:
-	Texture() = default;
 	Texture(char * data, size_t image_size, int width, int height, const std::string& path, TextureType type = TextureType::DIFUSSE);
 
 	~Texture();
@@ -41,14 +41,16 @@ public:
 	GLenum GetMagFilter() const;
 	char* GetMagFilter_C_Str() const;
 
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
+
 private:
 	void GenerateMipMap();
-	void InitTexture(char * data);
+	void LoadInMemory() override;
 	char* GLEnumToString(GLenum gl_enum) const;
 
 public:
 
-	std::string texture_path;
 	GLuint opengl_texture = 0;
 	TextureType type;
 
@@ -63,6 +65,16 @@ private:
 
 	GLenum min_filter;	
 	GLenum mag_filter;
+	char * data;
 };
+
+
+namespace Loader
+{
+	template<>
+	static std::shared_ptr<Texture> Load(const std::string& uid) {
+		return TextureLoader::Load(uid);
+	}
+}
 
 #endif //_TEXTURE_H_

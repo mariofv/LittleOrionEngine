@@ -4,7 +4,7 @@
 #include "Module.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
-#include "UI/Skybox.h"
+#include "ResourceManagement/Resources/Skybox.h"
 
 #include "Geometry/Frustum.h"
 #include "MathGeoLib.h"
@@ -51,7 +51,7 @@ private:
 
 
 	std::vector<ComponentCamera*> cameras;
-
+	friend class ModuleEditor;
 };
 
 #endif //_MODULECAMERA_H_

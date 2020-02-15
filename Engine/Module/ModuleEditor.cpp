@@ -1,7 +1,7 @@
 #include "ModuleEditor.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
-#include "ModuleModelLoader.h"
+#include "ModuleResourceManager.h"
 #include "ModuleScene.h"
 #include "ModuleWindow.h"
 
@@ -97,7 +97,7 @@ update_status ModuleEditor::Update()
 	//ImGui::ShowDemoWindow();
 
 	static bool inital_scene_loaded = false;
-	if (!inital_scene_loaded && App->model_loader->thread_comunication.finished_loading)
+	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
 		OpenScene(ASSIGNMENT_SCENE_PATH);
 		inital_scene_loaded = true;

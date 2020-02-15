@@ -8,7 +8,7 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
-#include "Resource/Texture.h"
+#include "ResourceManagement/Resources/Texture.h"
 #include "UI/Panel/PanelHierarchy.h"
 
 #include "Component/ComponentCamera.h"

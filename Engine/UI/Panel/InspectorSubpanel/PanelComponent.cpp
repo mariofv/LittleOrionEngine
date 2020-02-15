@@ -104,7 +104,7 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 					ImGui::BeginGroup();
 					ImGui::Text("Texture:");
 					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), texture->texture_path.c_str());
+					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), texture->exported_file.c_str());
 					sprintf_s(tmp_string, "(%dx%d px)", texture->width, texture->height);
 					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
 

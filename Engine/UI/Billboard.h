@@ -1,7 +1,8 @@
 #ifndef _BILLBOARD_H_
 #define _BILLBOARD_H_
 
-#include "Resource/Texture.h"
+#include "ResourceManagement/Resources/Mesh.h"
+#include "ResourceManagement/Resources/Texture.h"
 
 #include <string>
 #include <MathGeoLib.h>
@@ -16,13 +17,11 @@ public:
 	void Render(const float3& position) const;
 
 private:
-	GLuint vao = 0;
-	GLuint vbo = 0;
-	GLuint ebo = 0;
+	std::shared_ptr<Mesh> billboard_quad;
 
 	float width = 5.f;
 	float height = 5.f;
-	Texture* billboard_texture = nullptr;
+	std::shared_ptr<Texture> billboard_texture = nullptr;
 
 };
 

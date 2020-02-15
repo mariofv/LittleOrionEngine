@@ -2,7 +2,7 @@
 #define _COMPONENTMESH_H_
 
 #include "Component.h"
-#include "Resource/Mesh.h"
+#include "ResourceManagement/Resources/Mesh.h"
 #include "UI/Panel/InspectorSubpanel/PanelComponent.h"
 
 class ComponentMesh : public Component
