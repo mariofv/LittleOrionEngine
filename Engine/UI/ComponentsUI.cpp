@@ -289,12 +289,12 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 
 		ImGui::Separator();
 
-		ImGui::SliderFloat("Mov Speed", &camera->camera_movement_speed, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
+		ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f ,camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
 		
 		//UndoRedo
 		CheckClickedCamera(camera);
 
-		if (ImGui::SliderFloat("FOV", &camera->camera_frustum.verticalFov, 0, 2 * 3.14f))
+		if (ImGui::DragFloat("FOV", &camera->camera_frustum.verticalFov, 0.01f, 0, 2 * 3.14f))
 		{
 			camera->SetFOV(camera->camera_frustum.verticalFov);
 		}
@@ -302,7 +302,7 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 		//UndoRedo
 		CheckClickedCamera(camera);
 
-		if (ImGui::SliderFloat("Aspect Ratio", &camera->aspect_ratio, 0, 10))
+		if (ImGui::DragFloat("Aspect Ratio", &camera->aspect_ratio, 0.01f , 0, 10))
 		{
 			camera->SetAspectRatio(camera->aspect_ratio);
 		}
@@ -310,7 +310,7 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 		//UndoRedo
 		CheckClickedCamera(camera);
 
-		if (ImGui::SliderFloat("Near plane", &camera->camera_frustum.nearPlaneDistance, 1, camera->camera_frustum.farPlaneDistance + 1))
+		if (ImGui::DragFloat("Near plane", &camera->camera_frustum.nearPlaneDistance, 0.01f, 1, camera->camera_frustum.farPlaneDistance + 1))
 		{
 			camera->SetNearDistance(camera->camera_frustum.nearPlaneDistance);
 		}
@@ -318,7 +318,7 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 		//UndoRedo
 		CheckClickedCamera(camera);
 
-		if (ImGui::SliderFloat("Far plane", &camera->camera_frustum.farPlaneDistance, camera->camera_frustum.nearPlaneDistance + 1, camera->camera_frustum.nearPlaneDistance + 1000))
+		if (ImGui::DragFloat("Far plane", &camera->camera_frustum.farPlaneDistance, 0.01f, camera->camera_frustum.nearPlaneDistance + 1, camera->camera_frustum.nearPlaneDistance + 1000))
 		{
 			camera->SetFarDistance(camera->camera_frustum.farPlaneDistance);
 		}
@@ -343,7 +343,7 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 		ImGui::ColorEdit3("Clear Color", camera->camera_clear_color);
 		ImGui::Separator();
 
-		if (ImGui::SliderFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0, 100))
+		if (ImGui::DragFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0.01f, 0, 100))
 		{
 			camera->SetOrthographicSize(float2(camera->camera_frustum.orthographicHeight * camera->aspect_ratio, camera->camera_frustum.orthographicHeight));
 		}
@@ -397,8 +397,8 @@ void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
 		
 		CheckClickForUndo(7, light);
 		
-		ImGui::SliderFloat("Intensity ", &light->light_intensity, 0.f, 1.f);
-	
+		ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f);
+
 		CheckClickForUndo(7, light);
 		
 
