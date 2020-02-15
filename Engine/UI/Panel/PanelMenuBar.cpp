@@ -29,7 +29,7 @@ void PanelMenuBar::Render()
 	if (ImGui::BeginMainMenuBar())
 	{
 		ShowFileMenu();
-		ShowViewMenu();
+		ShowWindowMenu();
 		ShowHelpMenu();
 		ImGui::EndMainMenuBar();
 	}
@@ -67,42 +67,50 @@ void PanelMenuBar::ShowFileMenu()
 	}
 }
 
-void PanelMenuBar::ShowViewMenu()
+void PanelMenuBar::ShowWindowMenu()
 {
-	if (ImGui::BeginMenu("View"))
+	if (ImGui::BeginMenu("Window"))
 	{
-		if (ImGui::MenuItem((ICON_FA_SITEMAP " Hierarchy"), (const char*)0, App->editor->hierarchy->IsOpened()))
+		if (ImGui::BeginMenu("General"))
 		{
-			App->editor->hierarchy->SwitchOpen();
+			if (ImGui::MenuItem((ICON_FA_SITEMAP " Hierarchy"), (const char*)0, App->editor->hierarchy->IsOpened()))
+			{
+				App->editor->hierarchy->SwitchOpen();
+			}
+			if (ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, App->editor->scene_panel->IsOpened()))
+			{
+				App->editor->scene_panel->SwitchOpen();
+			}
+			if (ImGui::MenuItem((ICON_FA_GHOST " Game"), (const char*)0, App->editor->game_panel->IsOpened()))
+			{
+				App->editor->game_panel->SwitchOpen();
+			}
+			if (ImGui::MenuItem((ICON_FA_INFO " Inspector"), (const char*)0, App->editor->inspector->IsOpened()))
+			{
+				App->editor->inspector->SwitchOpen();
+			}
+			if (ImGui::MenuItem((ICON_FA_FOLDER_OPEN " Explorer"), (const char*)0, App->editor->project_explorer->IsOpened()))
+			{
+				App->editor->project_explorer->SwitchOpen();
+			}
+			if (ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, App->editor->console->IsOpened()))
+			{
+				App->editor->console->SwitchOpen();
+			}
+
+			ImGui::EndMenu();
 		}
-		if (ImGui::MenuItem((ICON_FA_TH " Scene"), (const char*)0, App->editor->scene_panel->IsOpened()))
-		{
-			App->editor->scene_panel->SwitchOpen();
-		}
-		if (ImGui::MenuItem((ICON_FA_GHOST " Game"), (const char*)0, App->editor->game_panel->IsOpened()))
-		{
-			App->editor->game_panel->SwitchOpen();
-		}
-		if (ImGui::MenuItem((ICON_FA_INFO " Inspector"), (const char*)0, App->editor->inspector->IsOpened()))
-		{
-			App->editor->inspector->SwitchOpen();
-		}
+
 		if (ImGui::MenuItem((ICON_FA_COGS " Config"), (const char*)0, App->editor->configuration->IsOpened()))
 		{
 			App->editor->configuration->SwitchOpen();
 		}
-		if (ImGui::MenuItem((ICON_FA_FOLDER_OPEN " Explorer"), (const char*)0, App->editor->project_explorer->IsOpened()))
-		{
-			App->editor->project_explorer->SwitchOpen();
-		}
-		if (ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, App->editor->console->IsOpened()))
-		{
-			App->editor->console->SwitchOpen();
-		}
+
 		if (ImGui::MenuItem((ICON_FA_BUG " Debug"), (const char*)0, App->editor->debug_panel->IsOpened()))
 		{
 			App->editor->debug_panel->SwitchOpen();
 		}
+		
 		ImGui::EndMenu();
 	}
 }

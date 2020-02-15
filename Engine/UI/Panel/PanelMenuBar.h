@@ -16,7 +16,7 @@ public:
 
 private:
 	void ShowFileMenu();
-	void ShowViewMenu();
+	void ShowWindowMenu();
 	void ShowHelpMenu();
 };
 
