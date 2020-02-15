@@ -18,6 +18,7 @@ public:
 	~GameObject() = default;
 
 	bool IsEnabled() const;
+	void SetEnabled(bool able);
 
 	void SetStatic(bool is_static);
 	bool IsStatic() const;
@@ -46,6 +47,8 @@ public:
 	void RenderMaterialTexture(unsigned int shader_program) const;
 
 	void ShowPropertiesWindow();
+	int GetHierarchyDepth() const;
+	void SetHierarchyDepth(int value);
 
 private:
 	void SetHierarchyStatic(bool is_static);

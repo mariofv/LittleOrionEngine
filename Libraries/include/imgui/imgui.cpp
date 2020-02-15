@@ -4762,6 +4762,30 @@ void ImGui::CaptureMouseFromApp(bool capture)
     GImGui->WantCaptureMouseNextFrame = capture ? 1 : 0;
 }
 
+//LOEngine Addition functions
+
+IMGUI_API bool ImGui::IsItemActiveLastFrame()
+{
+	ImGuiContext& g = *GImGui;
+	if (g.ActiveIdPreviousFrame)
+		return g.ActiveIdPreviousFrame == g.CurrentWindow->DC.LastItemId;
+
+	return false;
+}
+
+IMGUI_API bool ImGui::IsItemJustDeactivated()
+{
+	return ImGui::IsItemDeactivatedAfterEdit();
+}
+
+IMGUI_API bool ImGui::IsItemJustActivated()
+{
+	return ImGui::IsItemActive() && !IsItemActiveLastFrame();
+}
+
+
+
+
 bool ImGui::IsItemActive()
 {
     ImGuiContext& g = *GImGui;

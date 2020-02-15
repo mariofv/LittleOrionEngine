@@ -20,6 +20,7 @@ public:
 	void ShowInputOptions();
 
 private:
+	bool controlKeyDown = false;
 	const Uint8 *keyboard = nullptr;
 };
 

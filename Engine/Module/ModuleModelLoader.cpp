@@ -148,5 +148,10 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 	model_game_object->Update();
 
 	ComponentMaterial* componentMaterial = (ComponentMaterial*)model_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+
+	//UndoRedo
+	App->editor->action_game_object = model_game_object;
+	App->editor->AddUndoAction(3);
+
 	return model_game_object;
 }
