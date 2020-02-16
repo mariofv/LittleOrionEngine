@@ -293,6 +293,7 @@
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Animation.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\AnimationLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -460,6 +461,7 @@
     <ClInclude Include="Engine\Actions\EditorActionSetTexture.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Animation.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\AnimationLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

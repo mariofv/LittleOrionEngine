@@ -1,6 +1,7 @@
 #pragma once
 #include "Resource.h"
 #include <Component/ComponentTransform.h>
+#include <ResourceManagement/Loaders/AnimationLoader.h>
 class Animation : public Resource
 {
 public:
@@ -20,6 +21,7 @@ public:
 
 	};
 	Animation(const char * const UID, const std::string & exported_file);
+	Animation(std::vector<Channel> && channels, std::string name, float duration,const std::string & exported_file);
 	~Animation() = default;
 
 	void Save(Config& config) const override {};
@@ -40,6 +42,6 @@ namespace Loader
 {
 	template<>
 	static std::shared_ptr<Animation> Load(const std::string& uid) {
-		return nullptr;//AnimationLoader::Load(uid);
+		return AnimationLoader::Load(uid);
 	}
 }

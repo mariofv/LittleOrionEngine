@@ -86,6 +86,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\AnimationLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Animation.h" />
     <ClInclude Include="Engine\Actions\EditorAction.h" />
@@ -159,6 +160,7 @@
     <ClInclude Include="Engine\ResourceManagement\Loaders\SkeletonLoader.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\AnimationLoader.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Animation.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
