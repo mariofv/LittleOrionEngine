@@ -14,7 +14,7 @@ public:
 	};
 	struct Channel
 	{
-		std::string joint_name;
+		std::string name;
 		std::vector<JointPosition> positions;
 
 
@@ -29,9 +29,10 @@ private:
 	void LoadInMemory() override {};
 
 public:
-	float duration;
-	float tickts;
+
+	std::string name;
 	std::vector<Channel> channels;
+	float duration;
 };
 
 
