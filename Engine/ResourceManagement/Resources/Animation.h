@@ -5,10 +5,18 @@ class Animation : public Resource
 {
 public:
 
+
+	struct JointPosition
+	{
+		float frame;
+		float4x4 position;
+
+	};
 	struct Channel
 	{
 		std::string joint_name;
-		std::vector<float4x4> positions;
+		std::vector<JointPosition> positions;
+
 
 	};
 	Animation(const char * const UID, const std::string & exported_file);
@@ -23,6 +31,7 @@ private:
 public:
 	float duration;
 	float tickts;
+	std::vector<Channel> channels;
 };
 
 

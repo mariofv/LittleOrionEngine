@@ -6,6 +6,7 @@
 struct aiAnimation;
 struct aiScene;
 struct aiNodeAnim;
+class Animation;
 class AnimationImporter
 {
 public:
@@ -16,7 +17,7 @@ public:
 	bool ImportAnimation(const aiScene* scene, const aiAnimation* animation, std::string& output_file) const;
 
 private:
-	void GetCleanAnimation(const aiAnimation* animation, std::unordered_map<std::string, std::vector<aiNodeAnim *>> & aiNode_by_channel) const ;
+	void GetCleanAnimation(const aiAnimation* animation, Animation & own_format_animation) const ;
 };
 #endif
 
