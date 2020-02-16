@@ -6,6 +6,8 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleDebug.h"
+#include "Module/ModuleWindow.h"
 #include "UI/ComponentsUI.h"
 
 #include "Helper/Utils.h"
@@ -22,6 +24,13 @@ ComponentCamera::ComponentCamera(GameObject * owner) : Component(owner, Componen
 	GenerateMatrices();
 }
 
+ComponentCamera::~ComponentCamera()
+{
+	glDeleteTextures(1, &last_recorded_frame_texture);
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteRenderbuffers(1, &rbo);
+}
+
 void ComponentCamera::InitCamera()
 {
 	glGenFramebuffers(1, &fbo);
@@ -35,12 +44,6 @@ void ComponentCamera::InitCamera()
 	camera_frustum.farPlaneDistance = 100.0f;
 	camera_frustum.verticalFov = math::pi / 4.0f;
 	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
-}
-ComponentCamera::~ComponentCamera()
-{
-	glDeleteTextures(1, &last_recorded_frame_texture);
-	glDeleteFramebuffers(1, &fbo);
-	glDeleteRenderbuffers(1, &rbo);
 }
 
 void ComponentCamera::Update()
@@ -183,7 +186,6 @@ GLuint ComponentCamera::GetLastRecordedFrame() const
 	return last_recorded_frame_texture;
 }
 
-
 void ComponentCamera::GenerateFrameBuffers(float width, float height)
 {
 	if (last_recorded_frame_texture != 0)
@@ -249,7 +251,6 @@ void ComponentCamera::AlignOrientationWithAxis()
 	float3x3 rotation_matrix = float3x3::identity;
 	owner->transform.SetRotation(rotation_matrix);
 }
-
 
 void ComponentCamera::SetOrthographicSize(const float2 & size)
 {
@@ -568,7 +569,6 @@ void ComponentCamera::GetRay(const float2& normalized_position, LineSegment &ret
 {
 	return_value = camera_frustum.UnProjectLineSegment(normalized_position.x, normalized_position.y);
 }
-
 
 void ComponentCamera::ShowComponentWindow()
 {
