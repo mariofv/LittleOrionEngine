@@ -526,12 +526,16 @@ void ModuleRender::InsertAABBTree(GameObject * game_object)
 
 void ModuleRender::RemoveAABBTree(GameObject * game_object)
 {
-	ol_abbtree->Remove(game_object);
+	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
+	if (object_mesh != nullptr)
+		ol_abbtree->Remove(game_object);
 }
 
 void ModuleRender::UpdateAABBTree(GameObject* game_object)
 {
-	ol_abbtree->UpdateObject(game_object);
+	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
+	if (object_mesh != nullptr)
+		ol_abbtree->UpdateObject(game_object);
 }
 
 void ModuleRender::DeleteAABBTree()
