@@ -76,49 +76,53 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 void AnimationImporter::TransformPositions(const aiNodeAnim * ai_node, std::unordered_map<float, float4x4> & frames) const
 {
 
-		for (size_t j = 0; j < ai_node->mNumPositionKeys; j++)
+	for (size_t j = 0; j < ai_node->mNumScalingKeys; j++)
+	{
+		if (ai_node->mScalingKeys[j].mTime >= 0)
 		{
 
-			if (ai_node->mPositionKeys[j].mTime >= 0)
+			if (frames.find(ai_node->mScalingKeys[j].mTime) == frames.end())
 			{
-
-				if (frames.find(ai_node->mPositionKeys[j].mTime) == frames.end())
-				{
-					frames[ai_node->mPositionKeys[j].mTime] = float4x4::identity;
-				}
-				aiVector3D position = ai_node->mPositionKeys[j].mValue;
-				frames[ai_node->mPositionKeys[j].mTime].Translate(position.x, position.y, position.z);
+				frames[ai_node->mScalingKeys[j].mTime] = float4x4::identity;
 			}
-
+			aiVector3D scale = ai_node->mScalingKeys[j].mValue;
+			frames[ai_node->mScalingKeys[j].mTime].Scale(scale.x, scale.y, scale.z);
 		}
-		for (size_t j = 0; j < ai_node->mNumRotationKeys; j++)
+	}
+
+	for (size_t j = 0; j < ai_node->mNumRotationKeys; j++)
+	{
+
+		if (ai_node->mRotationKeys[j].mTime >= 0)
 		{
 
-			if (ai_node->mRotationKeys[j].mTime >= 0)
+			if (frames.find(ai_node->mRotationKeys[j].mTime) == frames.end())
 			{
-
-				if (frames.find(ai_node->mRotationKeys[j].mTime) == frames.end())
-				{
-					frames[ai_node->mRotationKeys[j].mTime] = float4x4::identity;
-				}
-				aiQuaternion rotation = ai_node->mRotationKeys[j].mValue;
-				float4x4 rotation_matrix = float4x4::FromQuat(Quat(rotation.x, rotation.y, rotation.z, rotation.w));
-				frames[ai_node->mRotationKeys[j].mTime] = frames[ai_node->mRotationKeys[j].mTime] * rotation_matrix;
+				frames[ai_node->mRotationKeys[j].mTime] = float4x4::identity;
 			}
+			aiQuaternion rotation = ai_node->mRotationKeys[j].mValue;
+			float4x4 rotation_matrix = float4x4::FromQuat(Quat(rotation.x, rotation.y, rotation.z, rotation.w));
+			frames[ai_node->mRotationKeys[j].mTime] = frames[ai_node->mRotationKeys[j].mTime] * rotation_matrix;
 		}
-		for (size_t j = 0; j < ai_node->mNumScalingKeys; j++)
+	}
+
+	for (size_t j = 0; j < ai_node->mNumPositionKeys; j++)
+	{
+
+		if (ai_node->mPositionKeys[j].mTime >= 0)
 		{
-			if (ai_node->mScalingKeys[j].mTime >= 0)
-			{
 
-				if (frames.find(ai_node->mScalingKeys[j].mTime) == frames.end())
-				{
-					frames[ai_node->mScalingKeys[j].mTime] = float4x4::identity;
-				}
-				aiVector3D scale = ai_node->mScalingKeys[j].mValue;
-				frames[ai_node->mScalingKeys[j].mTime].Scale(scale.x, scale.y, scale.z);
+			if (frames.find(ai_node->mPositionKeys[j].mTime) == frames.end())
+			{
+				frames[ai_node->mPositionKeys[j].mTime] = float4x4::identity;
 			}
+			aiVector3D position = ai_node->mPositionKeys[j].mValue;
+			frames[ai_node->mPositionKeys[j].mTime].Translate(position.x, position.y, position.z);
 		}
+
+	}
+
+
 }
 
 void AnimationImporter::SaveBinary(const Animation & animation, const std::string & output_file) const

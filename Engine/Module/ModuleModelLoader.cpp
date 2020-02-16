@@ -117,20 +117,23 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 		{
 			GameObject * object = LoadCoreModel(PRIMITIVE_CUBE_PATH);
 
-			//object->transform
-			if (joint.parent_index >= skeleton_gameobjects.size())
+			// use joint.transform_local and this for local_position
+			if (joint.parent_index == -1)
 			{
 				object->SetParent(parent_node);
 			}
 			else
 			{
-				object->SetParent(skeleton_gameobjects.at(joint.parent_index));
+				object->SetParent(skeleton_gameobjects.at(0));
 			}
+
+
+			//I think animations comes in global position so for testing better use this
 
 			float3 translation;
 			float3 scale;
 			float3x3 rotate;
-			joint.transform_local.Decompose(translation, rotate, scale);
+			joint.transform_global.Decompose(translation, rotate, scale);
 
 			object->transform.SetScale(scale);
 			object->transform.SetTranslation(translation);
