@@ -9,7 +9,9 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 
 	aiString bone_name = mesh->mBones[0]->mName;
 	aiNode * bone = scene->mRootNode->FindNode(bone_name);
-	while (bone->mParent && bone->mParent != scene->mRootNode)
+
+	//bone->mParent->mNumChildren <= 1 arbitrary rule just base in zombunny and player meshes
+	while (bone->mParent && bone->mParent != scene->mRootNode && bone->mParent->mNumChildren <= 1)
 	{
 		bone = bone->mParent;
 	}
@@ -59,6 +61,10 @@ void SkeletonImporter::ImportChildBone(const aiMesh* mesh, const aiNode * previu
 			skeleton.skeleton.push_back(bone);
 			next_joint = skeleton.skeleton.size() - 1;
 			local_transformation = aiMatrix4x4();
+			if (next_joint == 0)
+			{
+				current_transformation = aiMatrix4x4();
+			}
 		}
 		ImportChildBone(mesh, current_node, next_joint, current_transformation, local_transformation,skeleton);
 	}
