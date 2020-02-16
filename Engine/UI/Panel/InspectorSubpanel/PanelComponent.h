@@ -1,7 +1,7 @@
 #ifndef _PANELCOMPONENT_H_
 #define _PANELCOMPONENT_H_
 
-#include "Module/ModuleEditor.h"
+#include "Module/ModuleActions.h"
 #include "ResourceManagement/Resources/Texture.h"
 
 class Component;
@@ -26,7 +26,7 @@ public:
 	void ShowAddNewComponentButton();
 
 	void CheckClickedCamera(ComponentCamera* camera);
-	void CheckClickForUndo(ModuleEditor::UndoActionType type, Component* component);
+	void CheckClickForUndo(ModuleActions::UndoActionType type, Component* component);
 
 private:
 	void DropTarget(ComponentMaterial *material, Texture::TextureType type);

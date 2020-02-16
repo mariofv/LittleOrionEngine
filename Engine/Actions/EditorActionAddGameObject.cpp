@@ -1,4 +1,5 @@
 #include "EditorActionAddGameObject.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
 #include "Main/Application.h"
 
