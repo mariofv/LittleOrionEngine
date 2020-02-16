@@ -303,7 +303,8 @@ void OLAABBTree::GetIntersection(std::vector<GameObject*>& intersectionGO, const
 		{
 			if (node.isLeaf())
 			{
-				intersectionGO.push_back(node.go);
+				if(node.go->IsVisible(*camera))
+					intersectionGO.push_back(node.go);
 			}
 			else
 			{

@@ -60,7 +60,7 @@ void ModuleDebug::ShowDebugWindow()
 
 		ImGui::Checkbox("Scene window culling", &culling_scene_mode);
 		int culling_mode_int = static_cast<int>(culling_mode);
-		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling"))
+		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling\0AabbTree Culling\0Combined Culling"))
 		{
 			switch (culling_mode_int)
 			{
@@ -72,6 +72,12 @@ void ModuleDebug::ShowDebugWindow()
 				break;
 			case 2:
 				culling_mode = CullingMode::QUADTREE_CULLING;
+				break;
+			case 3:
+				culling_mode = CullingMode::AABBTREE_CULLING;
+				break;
+			case 4:
+				culling_mode = CullingMode::COMBINED_CULLING;
 				break;
 			}
 		}

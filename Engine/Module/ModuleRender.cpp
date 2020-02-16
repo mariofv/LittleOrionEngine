@@ -275,8 +275,35 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 			for (auto &object : rendered_objects)
 			{
 				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				if(object_mesh != NULL)
+					meshes_to_render.push_back(object_mesh);
+			}
+		}
+		break;
+	case ModuleDebug::CullingMode::COMBINED_CULLING:
+		if(camera != nullptr)
+		{
+			// We add all static objects culled using the quadtree
+			std::vector<GameObject*> rendered_static_objects;
+			ol_quadtree.CollectIntersect(rendered_static_objects, *camera);
+
+			for (auto &object : rendered_static_objects)
+			{
+				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
 				meshes_to_render.push_back(object_mesh);
 			}
+
+			// Then we add all dynamic objects culled using the aabbtree
+			std::vector<GameObject*> rendered_dynamic_objects;
+			ol_abbtree->GetIntersection(rendered_dynamic_objects, camera);
+
+			for (auto &object : rendered_dynamic_objects)
+			{
+				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				if (object_mesh != NULL)
+					meshes_to_render.push_back(object_mesh);
+			}
+
 		}
 		break;
 
