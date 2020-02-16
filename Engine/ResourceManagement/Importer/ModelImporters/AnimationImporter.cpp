@@ -169,7 +169,7 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 		memcpy(cursor, &positions_size, sizeof(uint32_t));
 		cursor += sizeof(uint32_t);
 
-		memcpy(cursor, &channel.positions, sizeof(Animation::JointPosition) * positions_size);
+		memcpy(cursor, &channel.positions.front(), sizeof(Animation::JointPosition) * positions_size);
 		cursor += sizeof(Animation::JointPosition) * positions_size;
 
 	}

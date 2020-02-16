@@ -53,6 +53,7 @@ std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uid)
 		memcpy(&positions_size, cursor, sizeof(uint32_t));
 		cursor += sizeof(uint32_t);
 
+		channel.positions.resize(positions_size);
 		memcpy(channel.positions.data(), cursor, sizeof(Animation::JointPosition) * positions_size);
 		cursor += sizeof(Animation::JointPosition) * positions_size;
 

@@ -13,6 +13,7 @@
 #include <ResourceManagement/Importer/Importer.h>
 
 #include <ResourceManagement/Resources/Skeleton.h>
+#include <ResourceManagement/Resources/Animation.h>
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -49,6 +50,15 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path) const
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
 		LoadNode(model_root_node, game_objects_config[i], already_loaded_skeleton);
+	}
+
+	std::vector<Config> animation_config;
+	prefab_config.GetChildrenConfig("Animations", animation_config);
+	for (auto animation : animation_config)
+	{
+		std::string animation_uid;
+		animation.GetString("Animation", animation_uid, "");
+		std::shared_ptr<Animation> animation = App->resources->Load<Animation>(animation_uid);
 	}
 
 	return model_root_node;
