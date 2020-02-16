@@ -275,8 +275,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 			for (auto &object : rendered_objects)
 			{
 				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
-				if(object_mesh != NULL)
-					meshes_to_render.push_back(object_mesh);
+				meshes_to_render.push_back(object_mesh);
 			}
 		}
 		break;
@@ -300,8 +299,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 			for (auto &object : rendered_dynamic_objects)
 			{
 				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
-				if (object_mesh != NULL)
-					meshes_to_render.push_back(object_mesh);
+				meshes_to_render.push_back(object_mesh);
 			}
 
 		}
