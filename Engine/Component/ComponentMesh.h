@@ -2,10 +2,9 @@
 #define _COMPONENTMESH_H_
 
 #include "Component.h"
-
 #include "ResourceManagement/Resources/Mesh.h"
+#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
 
-class ComponentsUI;
 class ComponentMesh : public Component
 {
 public:
@@ -26,11 +25,11 @@ public:
 	void SetMesh(const std::shared_ptr<Mesh> & mesh_to_render);
 	bool operator <(const ComponentMesh & mesh_to_compare) const;
 
-	void ShowComponentWindow() override;
 	std::string shader_program = "Default";
 	std::shared_ptr<Mesh> mesh_to_render;
+
 private:
-	friend class ComponentsUI;
+	friend class PanelComponent;
 };
 
 #endif //_COMPONENTMESH_H_

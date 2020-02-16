@@ -8,7 +8,8 @@
 #include <MathGeoLib.h>
 #include <unordered_map>
 
-class ComponentsUI;
+class PanelComponent;
+
 class ModuleProgram : public Module
 {
 public:
@@ -62,6 +63,7 @@ public:
 	bool CleanUp() override;
 
 	unsigned int GetShaderProgramId(const std::string & program_name) const;
+
 private:
 	bool LoadProgram(std::string name, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
 	void LoadPrograms(const char* file_path);
@@ -71,13 +73,15 @@ private:
 
 	void InitUniformBuffer();
 	void BindUniformBlocks(GLuint shader_program) const;
-	friend ComponentsUI;
 
 public:
 	UniformBuffer uniform_buffer;
+
 private:
 	std::unordered_map<std::string, GLuint> loaded_programs;
 	std::vector<const char *> names;
+
+	friend class PanelComponent;
 };
 
 #endif //_MODULEPROGRAM_H_
