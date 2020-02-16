@@ -66,6 +66,8 @@ void OLAABBTree::Insert(GameObject * go)
 {
 	assert(go != nullptr);
 
+	//TODO: aabbtree/quadtree only contain meshes GO?
+
 	unsigned nodeIndex = AllocateNode();
 	NodeAABB& node = nodes[nodeIndex];
 
