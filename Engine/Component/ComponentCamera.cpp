@@ -143,12 +143,13 @@ float ComponentCamera::GetHeigt() const
 
 void ComponentCamera::RecordFrame(float width, float height)
 {
-	if (last_width != width || last_height != height)
+	if (last_width != width || last_height != height || toggle_msaa)
 	{
 		last_width = width;
 		last_height = height;
 		SetAspectRatio(width/height);
 		GenerateFrameBuffers(width, height);
+		toggle_msaa = false;
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
@@ -185,6 +186,7 @@ void ComponentCamera::RecordFrame(float width, float height)
 void ComponentCamera::RecordDebugDraws(float width, float height) const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
 	glViewport(0, 0, width, height);
 	App->editor->RenderDebugDraws();
 
@@ -216,21 +218,52 @@ void ComponentCamera::GenerateFrameBuffers(float width, float height)
 	{
 		glDeleteRenderbuffers(1, &rbo);
 	}
-	glGenRenderbuffers(1, &rbo);
 
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	App->debug->show_msaa ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
+}
+
+void ComponentCamera::CreateFramebuffer(float width, float height)
+{
+	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
 	glBindTexture(GL_TEXTURE_2D, last_recorded_frame_texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void ComponentCamera::CreateMssaFramebuffer(float width, float height)
+{
+	glGenTextures(1, &msfb_color);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msfb_color);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, width, height, GL_TRUE);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, msfb_color, 0);
+
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glGenFramebuffers(1, &msfbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, msfbo);
+
+	glBindTexture(GL_TEXTURE_2D, last_recorded_frame_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

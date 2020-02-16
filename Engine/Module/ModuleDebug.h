@@ -30,8 +30,8 @@ public:
 	bool show_global_bounding_boxes = false;
 	bool show_grid = true;
 	bool show_camera_frustum = true;
+	bool show_msaa = true;
 	bool show_quadtree = false;
-	bool show_msaa = false;
 
 	bool culling_scene_mode = false;
 	CullingMode culling_mode = CullingMode::QUADTREE_CULLING;

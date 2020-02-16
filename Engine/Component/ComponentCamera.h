@@ -89,9 +89,11 @@ public:
 	void ShowComponentWindow() override;
 
 private:
-	void GenerateFrameBuffers(float width,float height);
+	void GenerateFrameBuffers(float width, float height);
 	void GenerateMatrices();
 	void InitCamera();
+	void CreateFramebuffer(float width, float height);
+	void CreateMssaFramebuffer(float width, float height);
 
 public:
 	const float SPEED_UP_FACTOR = 2.f;
@@ -109,6 +111,8 @@ public:
 
 	float4x4 proj;
 	float4x4 view;
+
+	bool toggle_msaa;
 
 private:
 	Frustum camera_frustum;

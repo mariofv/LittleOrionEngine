@@ -4,6 +4,8 @@
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
 #include "SpacePartition/OLQuadTree.h"
 
 #include <random>
@@ -54,7 +56,10 @@ void ModuleDebug::ShowDebugWindow()
 		ImGui::Checkbox("Bounding boxes", &show_bounding_boxes);
 		ImGui::Checkbox("Global bounding boxes", &show_global_bounding_boxes);
 		ImGui::Checkbox("Camera Frustum", &show_camera_frustum);
-		ImGui::Checkbox("MSAA", &show_msaa);
+		if (ImGui::Checkbox("MSAA", &show_msaa))
+		{
+			App->cameras->scene_camera->toggle_msaa = true;
+		}
 		ImGui::Checkbox("QuadTree", &show_quadtree);
 		ImGui::Separator();
 
