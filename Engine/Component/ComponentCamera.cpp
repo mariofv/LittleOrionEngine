@@ -27,8 +27,10 @@ ComponentCamera::ComponentCamera(GameObject * owner) : Component(owner, Componen
 ComponentCamera::~ComponentCamera()
 {
 	glDeleteTextures(1, &last_recorded_frame_texture);
-	glDeleteFramebuffers(1, &fbo);
 	glDeleteRenderbuffers(1, &rbo);
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteFramebuffers(1, &msfbo);
+	glDeleteFramebuffers(1, &msfb_color);
 }
 
 void ComponentCamera::InitCamera()
@@ -170,6 +172,13 @@ void ComponentCamera::RecordFrame(float width, float height)
 
 	App->renderer->RenderFrame(*this);
 
+	if (App->debug->show_msaa)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, msfbo);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -178,6 +187,14 @@ void ComponentCamera::RecordDebugDraws(float width, float height) const
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glViewport(0, 0, width, height);
 	App->editor->RenderDebugDraws();
+
+	if (App->debug->show_msaa)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, msfbo);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

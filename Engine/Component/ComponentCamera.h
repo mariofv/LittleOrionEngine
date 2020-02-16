@@ -113,8 +113,10 @@ public:
 private:
 	Frustum camera_frustum;
 
-	GLuint fbo = 0;
 	GLuint rbo = 0;
+	GLuint fbo = 0;
+	GLuint msfbo = 0;
+	GLuint msfb_color = 0;
 	GLuint last_recorded_frame_texture = 0;
 
 	float last_height = 0;
