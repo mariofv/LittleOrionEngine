@@ -1,6 +1,6 @@
 #ifndef  __TESTSCRIPT_H__
 #define  __TESTSCRIPT_H__
-#include "../../Engine/Component/ComponentScript.h"
+#include "../Engine/Component/ComponentScript.h"
 
 #ifdef TESTSCRIPT_EXPORTS
 #define TESTSCRIPT_API __declspec(dllexport)
