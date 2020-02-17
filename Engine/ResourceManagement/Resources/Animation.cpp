@@ -6,8 +6,8 @@ Animation::Animation(const char * const UID, const std::string & exported_file) 
 
 }
 
-Animation::Animation(std::vector<Channel> && channels, std::string name, float duration, const std::string & exported_file)
-	: channels(channels)
+Animation::Animation(std::vector<KeyFrame> && keyframes, std::string name, float duration, const std::string & exported_file)
+	: keyframes(keyframes)
 	, name(name)
 	, duration(duration)
 	, Resource("", exported_file)

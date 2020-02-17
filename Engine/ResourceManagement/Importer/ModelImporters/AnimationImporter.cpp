@@ -7,6 +7,7 @@
 #include <Module/ModuleFileSystem.h>
 
 #include <random>
+#include <map>
 
 bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, std::string& output_file) const
 {
@@ -51,11 +52,10 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 	}
 
 
+	std::map<float, std::vector<Animation::Channel>> keyframes;
 	//Merge channels
 	for (auto & nodes : aiNode_by_channel)
 	{
-		Animation::Channel channel{ nodes.first };
-
 		std::unordered_map<float, float4x4>  frames;
 		
 		for (auto ai_node : nodes.second)
@@ -63,14 +63,19 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 			TransformPositions(ai_node, frames);
 		}
 
-		for (auto & positions : frames)
+		for (auto & frame : frames)
 		{
 
-			channel.positions.push_back({ positions.first, positions.second });
+			Animation::Channel channel{ nodes.first, frame.second };
+			keyframes[frame.first].push_back(channel);
 		}
-
-		own_format_animation.channels.push_back(channel);
 	}
+
+	for (auto & keyframe : keyframes)
+	{
+		own_format_animation.keyframes.push_back({keyframe.first, keyframe.second});
+	}
+
 }
 
 void AnimationImporter::TransformPositions(const aiNodeAnim * ai_node, std::unordered_map<float, float4x4> & frames) const
@@ -132,14 +137,22 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 {
 
 
-	uint32_t num_channels = animation.channels.size();
+	uint32_t num_channels = animation.keyframes.size();
 
+	// number of keyframes +  name size + name + duration
 	uint32_t size = sizeof(uint32_t)*2 + animation.name.size() + sizeof(float);
 
 
-	for (auto & channel : animation.channels)
+	for (auto & keyframe : animation.keyframes)
 	{
-		size +=  sizeof(uint32_t)*2 + channel.name.size() + sizeof(Animation::JointPosition) * channel.positions.size();
+		//Number of channels + frame 
+		size += sizeof(uint32_t) + sizeof(float);
+
+		for (auto & channel : keyframe.channels)
+		{
+			//name size + name + position
+			size += sizeof(uint32_t)  + channel.name.size() + sizeof(float4x4);
+		}
 	}
 
 	char* data = new char[size]; // Allocate
@@ -162,23 +175,27 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 
 
 
-	for (auto & channel : animation.channels)
+	for (auto & keyframe : animation.keyframes)
 	{
+		memcpy(cursor, &keyframe.frame, sizeof(float));
+		cursor += sizeof(float);
 
-		uint32_t name_size = channel.name.size();
-		memcpy(cursor, &name_size, sizeof(uint32_t));
+		uint32_t number_channels = keyframe.channels.size();
+		memcpy(cursor, &number_channels, sizeof(uint32_t));
 		cursor += sizeof(uint32_t);
 
-		memcpy(cursor, channel.name.data(), name_size);
-		cursor += name_size;
+		for (auto & channel : keyframe.channels)
+		{
+			uint32_t name_size = channel.name.size();
+			memcpy(cursor, &name_size, sizeof(uint32_t));
+			cursor += sizeof(uint32_t);
 
-		uint32_t positions_size = channel.positions.size();
-		memcpy(cursor, &positions_size, sizeof(uint32_t));
-		cursor += sizeof(uint32_t);
+			memcpy(cursor, channel.name.data(), name_size);
+			cursor += name_size;
 
-		memcpy(cursor, &channel.positions.front(), sizeof(Animation::JointPosition) * positions_size);
-		cursor += sizeof(Animation::JointPosition) * positions_size;
-
+			memcpy(cursor, &channel.position, sizeof(float4x4));
+			cursor += sizeof(float4x4);
+		}
 	}
 
 	App->filesystem->Save(output_file.c_str(), data, size);
