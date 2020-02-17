@@ -18,6 +18,12 @@ Feature branches contain a new set of features. Once all changes are implemented
 feature/kickass_new_feature
 ```
 
+### Bug branches
+Bug branches contain fixes for bugs that may appear in feature branches changes that have been merged into `develop`, but not to `release`or `master` branches. The naming style for this branches is `snake_case`. Ex:
+```
+bug/fix-stupid-bug
+```
+
 ### Release branches
 Release branches support preparation of a new production release. They are brached from `develop` when the code is ready to go to production, and basically they contain small bug fixes and changes in meta-data needed for release (*i.e* change version number). The naming style for this branches is `snake_case`. Ex:
 ```
