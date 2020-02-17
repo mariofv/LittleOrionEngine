@@ -2,8 +2,8 @@
 #define _COMPONENTMATERIAL_H_
 
 #include "Component.h"
-#include "UI/ComponentsUI.h"
 #include "Main/Globals.h"
+#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
 #include "ResourceManagement/Resources/Texture.h"
 
 #include <GL/glew.h>
@@ -28,14 +28,13 @@ public:
 	const std::shared_ptr<Texture>& GetMaterialTexture(size_t type) const;
 	void RemoveMaterialTexture(size_t type);
 
-	void ShowComponentWindow() override;
-
 private:
 	void AddDiffuseUniforms(unsigned int shader_program) const;
 	void AddEmissiveUniforms(unsigned int shader_program) const;
 	void AddSpecularUniforms(unsigned int shader_program) const;
 	void AddAmbientOclusionUniforms(unsigned int shader_program) const;
 	void BindTexture(Texture::TextureType id) const;
+
 private:
 	ComponentType type = ComponentType::MATERIAL;
 
@@ -52,8 +51,7 @@ private:
 
 	bool show_checkerboard_texture = false;
 
-	friend void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material);
-	friend class ComponentsUI;
+	friend class PanelComponent;
 };
 
 #endif //_COMPONENTMATERIAL_H_

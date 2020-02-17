@@ -21,6 +21,12 @@ struct SDL_Rect;
 class ModuleRender : public Module
 {
 public:
+	enum class DrawMode
+	{
+		SHADED,
+		WIREFRAME
+	};
+
 	ModuleRender() = default;
 	~ModuleRender() = default;
 
@@ -41,7 +47,7 @@ public:
 	void CreateAABBTree();
 	void DrawAABBTree() const;
 
-	void ShowRenderOptions();
+	GameObject* GetRaycastIntertectedObject(const LineSegment & ray);
 
 private:
 	void SetVSync(bool vsync);
@@ -55,7 +61,9 @@ private:
 	void SetFrontFaces(GLenum front_faces) const;
 	void SetDithering(bool gl_dither);
 	void SetMinMaxing(bool gl_minmax);
-	void SetWireframing(bool gl_wireframe);
+
+	void SetDrawMode(DrawMode draw_mode);
+	std::string GetDrawMode() const;
 
 	void GetMeshesToRender(const ComponentCamera *camera);
 	void GetCullingMeshes(const ComponentCamera *camera);
@@ -78,14 +86,17 @@ private:
 	int filling_mode = 0;
 	bool gl_dither = false;
 	bool gl_minmax = false;
-	bool gl_wireframe = false;
+
+	DrawMode draw_mode = DrawMode::SHADED;
 
 	std::vector<ComponentMesh*> meshes;
 	std::vector<ComponentMesh*> meshes_to_render;
 	Timer * rendering_measure_timer = new Timer();
 
-	friend class ModuleDebug;
-	friend class ModuleEditor;
+	friend class ModuleDebugDraw;
+	friend class PanelConfiguration;
+	friend class PanelDebug;
+	friend class PanelScene;
 };
 
 #endif //_MODULERENDER_H_

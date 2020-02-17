@@ -3,12 +3,14 @@
 
 #include "Component.h"
 #include "Component/ComponentAABB.h"
+#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "UI/Panel/PanelScene.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
 
-class ComponentsUI;
 class EditorActionModifyCamera;
+
 class ComponentCamera : public Component
 {
 public:
@@ -136,8 +138,11 @@ private:
 	float3 goal_focus_position = float3::zero;
 
 	ClearMode camera_clear_mode = ClearMode::COLOR;
-	friend class ComponentsUI;
+
 	friend class EditorActionModifyCamera;
+	friend class ModuleDebugDraw;
+	friend class PanelComponent;
+	friend class PanelScene;
 };
 
 #endif //_COMPONENTCAMERA_H_

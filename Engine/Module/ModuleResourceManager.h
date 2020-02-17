@@ -64,6 +64,7 @@ public:
 	} thread_comunication;
 
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
+
 private:
 	const size_t importer_interval_millis = 30000;
 	float last_imported_time = 0;

@@ -1,11 +1,11 @@
 #include "ComponentMesh.h"
+
 #include "Main/GameObject.h"
 #include "Main/Application.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
-#include "UI/ComponentsUI.h"
 
 ComponentMesh::ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH)
 {
@@ -91,9 +91,4 @@ void ComponentMesh::RenderModel() const
 	glBindVertexArray(mesh_to_render->GetVAO());
 	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
-}
-
-void ComponentMesh::ShowComponentWindow()
-{
-	ComponentsUI::ShowComponentMeshWindow(this);
 }

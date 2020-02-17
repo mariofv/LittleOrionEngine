@@ -1,7 +1,8 @@
 #include "ComponentMaterial.h"
+
 #include "Main/Application.h"
-#include <Module/ModuleTexture.h>
-#include <Module/ModuleResourceManager.h>
+#include "Module/ModuleTexture.h"
+#include "Module/ModuleResourceManager.h"
 
 ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL)
 {
@@ -34,7 +35,7 @@ void ComponentMaterial::Save(Config& config) const
 	config.AddInt(index, "Index");
 	for (size_t i = 0; i< textures.size(); i++ )
 	{
-		if (textures[i] != nullptr) 
+		if (textures[i] != nullptr)
 		{
 			std::string id = "Path" + i;
 			config.AddString(textures[i]->exported_file, id);
@@ -74,7 +75,7 @@ void ComponentMaterial::Load(const Config& config)
 			textures[i] = App->resources->Load<Texture>(tmp_path);
 		}
 	}
-	
+
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 
 	//k
@@ -91,7 +92,7 @@ void ComponentMaterial::Load(const Config& config)
 	config.GetColor("difusseColor", diffuse, float4(1.f, 1.f, 1.f, 1.f));
 	config.GetColor("emissiveColor", emissive, float4(0.0f,0.0f,0.0f,1.0f));
 	config.GetColor("specularColor", specular, float4(0.0f,0.0f,0.0f,1.0f));
-	
+
 	diffuse_color[0] = diffuse.x;
 	diffuse_color[1] = diffuse.y;
 	diffuse_color[2] = diffuse.z;
@@ -101,7 +102,7 @@ void ComponentMaterial::Load(const Config& config)
 	emissive_color[1] = emissive.y;
 	emissive_color[2] = emissive.z;
 	emissive_color[3] = emissive.w;
-	
+
 	specular_color[0] = specular.x;
 	specular_color[1] = specular.y;
 	specular_color[2] = specular.z;
@@ -125,6 +126,7 @@ void ComponentMaterial::AddDiffuseUniforms(unsigned int shader_program) const
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_diffuse"),  k_diffuse);
 
 }
+
 void ComponentMaterial::AddEmissiveUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE1);
@@ -132,6 +134,7 @@ void ComponentMaterial::AddEmissiveUniforms(unsigned int shader_program) const
 	glUniform1i(glGetUniformLocation(shader_program, "material.emissive_map"), 1);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.emissive_color"), 1, (float*)emissive_color);
 }
+
 void ComponentMaterial::AddSpecularUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE2);
@@ -141,6 +144,7 @@ void ComponentMaterial::AddSpecularUniforms(unsigned int shader_program) const
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), k_specular);
 	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), shininess);
 }
+
 void ComponentMaterial::AddAmbientOclusionUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE3);
@@ -166,20 +170,19 @@ void ComponentMaterial::BindTexture(Texture::TextureType id) const
 	}
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 }
+
 void ComponentMaterial::RemoveMaterialTexture(size_t type)
 {
 	App->resources->RemoveResourceFromCacheIfNeeded(textures[type]);
 	textures[type] = nullptr;
 }
+
 void ComponentMaterial::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture)
 {
 	textures[type] = new_texture;
 }
+
 const std::shared_ptr<Texture>& ComponentMaterial::GetMaterialTexture(size_t  type) const
 {
 	return textures[type];
-}
-void ComponentMaterial::ShowComponentWindow()
-{
-	ComponentsUI::ShowComponentMaterialWindow(this);
 }
