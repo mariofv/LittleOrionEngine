@@ -139,23 +139,14 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 			ImGui::Separator();
 		}
 
-<<<<<<< HEAD:Engine/UI/Hierarchy.cpp
-			App->renderer->RemoveAABBTree(game_object);
-			game_object->SetEnabled(false);
-			game_object->parent->RemoveChild(game_object);
-			
-			selected_game_object = nullptr;
-		}
-		if (ImGui::Selectable("Move Up"))
-=======
 		if (game_object != nullptr)
->>>>>>> refs/remotes/origin/feature/engine_ui_refactor:Engine/UI/Panel/PanelHierarchy.cpp
 		{
 			if (ImGui::Selectable("Delete GameObject"))
 			{
 				App->editor->action_game_object = game_object;
 				App->editor->AddUndoAction(ModuleEditor::UndoActionType::DELETE_GAMEOBJECT);
 				
+				App->renderer->RemoveAABBTree(game_object);
 				game_object->SetEnabled(false);
 				game_object->parent->RemoveChild(game_object);
 

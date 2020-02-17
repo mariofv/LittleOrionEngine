@@ -88,8 +88,6 @@ public:
 
 	void GetRay(const float2& normalized_position, LineSegment &return_value) const;
 
-	void ShowComponentWindow() override;
-
 	AABB GetMinimalEnclosingAABB() const;
 
 private:
