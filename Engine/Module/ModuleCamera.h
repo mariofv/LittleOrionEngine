@@ -33,8 +33,6 @@ public:
 
 	void SetMovement(bool movement_enabled);
 	bool IsMovementEnabled() const;
-
-	void ShowCameraOptions();
 	
 public:
 	ComponentCamera *scene_camera = nullptr;

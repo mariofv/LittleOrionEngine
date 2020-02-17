@@ -36,8 +36,6 @@ public:
 
 	virtual ComponentType GetType() const { return type; };
 
-	virtual void ShowComponentWindow() = 0;
-
 	static ComponentType GetComponentType(unsigned int component_type_uint)
 	{
 		switch (component_type_uint) 
