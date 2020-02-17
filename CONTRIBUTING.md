@@ -21,7 +21,7 @@ feature/kickass_new_feature
 ### Bug branches
 Bug branches contain fixes for bugs that may appear in feature branches changes that have been merged into `develop`, but not to `release`or `master` branches. The naming style for this branches is `snake_case`. Ex:
 ```
-bug/fix-stupid-bug
+bug/fix_stupid_bug
 ```
 
 ### Release branches
