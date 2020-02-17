@@ -287,6 +287,8 @@
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionSetTexture.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
+    <ClCompile Include="Engine\Module\ModuleManagerScript.cpp" />
+    <ClCompile Include="Engine\Component\ComponentScript.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -448,6 +450,8 @@
     <ClInclude Include="Engine\Actions\EditorActionRotation.h" />
     <ClInclude Include="Engine\Actions\EditorActionScale.h" />
     <ClInclude Include="Engine\Actions\EditorActionSetTexture.h" />
+    <ClInclude Include="Engine\Module\ModuleManagerScript.h" />
+    <ClInclude Include="Engine\Component\ComponentScript.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
