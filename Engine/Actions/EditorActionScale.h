@@ -9,17 +9,16 @@ class EditorActionScale : public EditorAction
 {
 public:
 	EditorActionScale(float3 &previous, float3 &current, GameObject* go);
-	~EditorActionScale();
+	~EditorActionScale() = default;
 
 	void Undo();
-
 	void Redo();
 
 
 private:
 	float3 previous_scale = float3::zero;
 	float3 current_scale = float3::zero;
-	GameObject* action_GO;
+	uint64_t UUID_go;
 
 };
 

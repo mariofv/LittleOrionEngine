@@ -102,6 +102,22 @@ GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 	return nullptr;
 }
 
+Component * ModuleScene::GetComponent(uint64_t UUID) const
+{
+	for (auto& game_object : game_objects_ownership)
+	{
+		for(auto& component : game_object->components)
+		{
+			if(component->UUID == UUID)
+			{
+				return component;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
 void ModuleScene::DeleteCurrentScene()
 {
 	//UndoRedo
