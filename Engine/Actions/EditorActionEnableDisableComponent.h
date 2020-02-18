@@ -9,14 +9,13 @@ class EditorActionEnableDisableComponent : public EditorAction
 {
 public:
 	EditorActionEnableDisableComponent(Component* comp);
-	~EditorActionEnableDisableComponent();
+	~EditorActionEnableDisableComponent() = default;
 
 	void Undo();
 	void Redo();
 
 private:
-	Component* component;
-
+	uint64_t UUID_COMP;
 };
 
 
