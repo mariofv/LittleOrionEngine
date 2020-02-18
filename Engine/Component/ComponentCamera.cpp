@@ -27,10 +27,10 @@ ComponentCamera::ComponentCamera(GameObject * owner) : Component(owner, Componen
 ComponentCamera::~ComponentCamera()
 {
 	glDeleteTextures(1, &last_recorded_frame_texture);
+	glDeleteTextures(1, &msfb_color);
 	glDeleteRenderbuffers(1, &rbo);
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteFramebuffers(1, &msfbo);
-	glDeleteFramebuffers(1, &msfb_color);
 }
 
 void ComponentCamera::InitCamera()
@@ -219,8 +219,6 @@ void ComponentCamera::GenerateFrameBuffers(float width, float height)
 		glDeleteRenderbuffers(1, &rbo);
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-
 	App->debug->show_msaa ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
 }
 
@@ -230,19 +228,23 @@ void ComponentCamera::CreateFramebuffer(float width, float height)
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 
 	glBindTexture(GL_TEXTURE_2D, last_recorded_frame_texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void ComponentCamera::CreateMssaFramebuffer(float width, float height)
 {
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
 	glGenTextures(1, &msfb_color);
 	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msfb_color);
 	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, width, height, GL_TRUE);
@@ -264,6 +266,7 @@ void ComponentCamera::CreateMssaFramebuffer(float width, float height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
