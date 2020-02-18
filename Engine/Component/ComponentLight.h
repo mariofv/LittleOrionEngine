@@ -11,10 +11,8 @@ public:
 	ComponentLight();
 	ComponentLight(GameObject * owner);
 	~ComponentLight() = default;
-	
 
 	void Delete() override;
-	void Render() const;
 
 	void Save(Config& config) const override;
 	void Load(const Config &config) override;

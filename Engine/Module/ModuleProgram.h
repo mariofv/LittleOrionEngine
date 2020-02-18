@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "Main/Globals.h"
+#include "Module/ModuleLight.h"
 
 #include <GL/glew.h>
 #include <MathGeoLib.h>
@@ -42,12 +43,17 @@ public:
 		/*
 			In order to compute the total Light uniform block size we have to take in account the alignment of each of its elements. 
 			This block has the following elements in this specific order:
-				- float[3]
-				- float[3]
+				- unsigned int
+				- vector<float[3]>[MAX_LIGHTS_RENDERED]
+				- vector<float[3]>[MAX_LIGHTS_RENDERED]
 			So, the total size will be the following:
-				total_size = 16 (float[3] size) + 16 (float[3] size) = 32 bytes = 8 * sizeof(float) 
+				total_size = 
+					4 (uint size) + 12 (alignment for first element of vector<float3>) 
+					+ MAX_LIGHTS_RENDERED * 16 (float[3] size) 
+					+ MAX_LIGHTS_RENDERED * 16 (float[3] size)  
+				= 16 + 32*MAX_LIGHTS_RENDERED bytes = (4 + 8*MAX_LIGHTS_RENDERED) * sizeof(float) 
 		*/
-		const size_t LIGHT_UNIFORMS_SIZE = 8 * sizeof(float); // Size of light intensity, color and position
+		const size_t LIGHT_UNIFORMS_SIZE = (4 + 8 * ModuleLight::MAX_LIGHTS_RENDERED) * sizeof(float); // Size of light intensity, color and position
 
 
 		/*
