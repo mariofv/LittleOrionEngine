@@ -14,6 +14,8 @@ public:
 	void Redo();
 
 private:
+	uint64_t UUID_COMP;
+	Config serialization_component;
 	Component* component;
 };
 
