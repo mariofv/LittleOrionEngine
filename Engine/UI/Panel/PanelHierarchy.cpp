@@ -207,6 +207,12 @@ void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 		{
 			App->model_loader->LoadCoreModel(PRIMITIVE_QUAD_PATH);
 		}
+
+		if(created_game_object != nullptr)
+		{
+			App->renderer->InsertAABBTree(created_game_object);
+		}
+
 		ImGui::EndMenu();
 	}
 }
