@@ -154,7 +154,7 @@ void ComponentCamera::RecordFrame(float width, float height)
 		toggle_msaa = false;
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	App->debug->show_msaa ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 	glViewport(0, 0, width, height);
 
@@ -177,8 +177,8 @@ void ComponentCamera::RecordFrame(float width, float height)
 
 	if (App->debug->show_msaa)
 	{
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, msfbo);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
@@ -187,15 +187,15 @@ void ComponentCamera::RecordFrame(float width, float height)
 
 void ComponentCamera::RecordDebugDraws(float width, float height) const
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	App->debug->show_msaa ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 	glViewport(0, 0, width, height);
 	App->editor->RenderDebugDraws();
 
 	if (App->debug->show_msaa)
 	{
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, fbo);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, msfbo);
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
@@ -255,7 +255,7 @@ void ComponentCamera::CreateMssaFramebuffer(float width, float height)
 	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, msfbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, msfb_color, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
@@ -266,7 +266,7 @@ void ComponentCamera::CreateMssaFramebuffer(float width, float height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
 
-	glBindFramebuffer(GL_FRAMEBUFFER, msfbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
