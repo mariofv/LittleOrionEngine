@@ -11,7 +11,7 @@ public:
 	~ModuleLight();
 
 	bool CleanUp() override;
-	void RenderLight() const;
+	void RenderLight();
 
 	ComponentLight* CreateComponentLight();
 	void RemoveComponentLight(ComponentLight* light_to_remove);
@@ -19,6 +19,9 @@ public:
 	void RenderDarkness() const;
 
 public:
+	const unsigned int MAX_LIGHTS_RENDERED = 10;
+	unsigned int current_lights_rendered = 0;
+
 	std::vector<ComponentLight*> lights;
 	friend class ModuleEditor;
 };

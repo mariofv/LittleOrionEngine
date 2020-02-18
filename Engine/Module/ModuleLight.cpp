@@ -21,21 +21,21 @@ bool ModuleLight::CleanUp()
 	return true;
 }
 
-void ModuleLight::RenderLight() const
+void ModuleLight::RenderLight()
 {
-	bool light_rendered = false;
+	current_lights_rendered = 0;
 
 	BROFILER_CATEGORY("Render Lights", Profiler::Color::White);
-	if (lights.size() > 0)
+	for (auto& light : lights)
 	{
-		if (lights[0]->IsEnabled())
+		if (light->IsEnabled())
 		{
-			lights[0]->Render();
-			light_rendered = true;
+			light->Render();
+			++current_lights_rendered;
 		}
 	}
 
-	if (!light_rendered)
+	if (current_lights_rendered == 0)
 	{
 		RenderDarkness(); // TODO: This needs to be changed with ambiental light
 	}
