@@ -141,11 +141,11 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 		{
 			if (ImGui::Selectable("Delete GameObject"))
 			{
+				//UndoRedo
 				App->actions->action_game_object = game_object;
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::DELETE_GAMEOBJECT);
 				
-				game_object->SetEnabled(false);
-				game_object->parent->RemoveChild(game_object);
+				App->scene->RemoveGameObject(game_object);
 
 				App->editor->selected_game_object = nullptr;
 			}

@@ -48,8 +48,6 @@ public:
 public:
 	// UndoRedo
 	bool clicked = false;
-	bool clicked_light = false;
-	bool clicked_camera = false;
 	std::vector<EditorAction*> undoStack;
 	std::vector<EditorAction*> redoStack;
 	float3 previous_transform = float3::zero;

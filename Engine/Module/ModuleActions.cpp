@@ -132,9 +132,7 @@ void ModuleActions::AddUndoAction(UndoActionType type)
 
 	case UndoActionType::DELETE_GAMEOBJECT:
 		new_action = new EditorActionDeleteGameObject(
-			action_game_object,
-			action_game_object->parent,
-			action_game_object->GetHierarchyDepth()
+			action_game_object
 		);
 		break;
 
