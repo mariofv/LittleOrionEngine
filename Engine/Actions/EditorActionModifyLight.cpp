@@ -11,11 +11,6 @@ EditorActionModifyLight::EditorActionModifyLight(ComponentLight* comp, float col
 	intensity = intens;
 }
 
-
-EditorActionModifyLight::~EditorActionModifyLight()
-{
-}
-
 void EditorActionModifyLight::Undo()
 {
 	ComponentLight* component = (ComponentLight*)App->scene->GetComponent(UUID_COMP);

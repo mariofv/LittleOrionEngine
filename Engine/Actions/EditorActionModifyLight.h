@@ -8,7 +8,7 @@ class EditorActionModifyLight : public EditorAction
 {
 public:
 	EditorActionModifyLight(ComponentLight* comp, float col[3], float intensity);
-	~EditorActionModifyLight();
+	~EditorActionModifyLight() = default;
 
 	void Undo();
 	void Redo();

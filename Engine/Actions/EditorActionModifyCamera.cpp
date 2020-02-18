@@ -1,26 +1,24 @@
 #include "EditorActionModifyCamera.h"
-
+#include "Module/ModuleScene.h"
+#include "Main/Application.h"
 
 
 EditorActionModifyCamera::EditorActionModifyCamera(ComponentCamera* comp)
 {
-	component = comp;
-	mov_speed = component->camera_movement_speed;
-	fov = component->camera_frustum.verticalFov;
-	aspect_ratio = component->aspect_ratio;
-	near_plane = component->camera_frustum.nearPlaneDistance;
-	far_plane = component->camera_frustum.farPlaneDistance;
-	ortographic_size = component->camera_frustum.orthographicHeight;
-	depth = component->depth;
-}
-
-
-EditorActionModifyCamera::~EditorActionModifyCamera()
-{
+	UUID_COMP = comp->UUID;
+	mov_speed = comp->camera_movement_speed;
+	fov = comp->camera_frustum.verticalFov;
+	aspect_ratio = comp->aspect_ratio;
+	near_plane = comp->camera_frustum.nearPlaneDistance;
+	far_plane = comp->camera_frustum.farPlaneDistance;
+	ortographic_size = comp->camera_frustum.orthographicHeight;
+	depth = comp->depth;
 }
 
 void EditorActionModifyCamera::Undo()
 {
+	ComponentCamera* component = (ComponentCamera*)App->scene->GetComponent(UUID_COMP);
+
 	float mov_speed_aux = component->camera_movement_speed;
 	float fov_aux = component->camera_frustum.verticalFov;
 	float aspect_ratio_aux = component->aspect_ratio;
