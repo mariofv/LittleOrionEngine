@@ -5,26 +5,19 @@
 
 
 
-EditorActionAddGameObject::~EditorActionAddGameObject()
+EditorActionAddGameObject::EditorActionAddGameObject(GameObject * go) : game_object(go)
 {
-	if (!game_object->IsEnabled())
-		App->scene->RemoveGameObject(game_object);
+	go->Save(serialization_gameobject);
 }
 
 void EditorActionAddGameObject::Undo()
 {
-	game_object->SetEnabled(false);
-	game_object->parent->RemoveChild(game_object);
-	game_object->SetHierarchyDepth(0);
-	App->editor->selected_game_object = nullptr;
+	App->scene->RemoveGameObject(game_object);
 }
 
 void EditorActionAddGameObject::Redo()
 {
-	game_object->SetEnabled(true);
-	game_object->parent = parent;
-	parent->children.push_back(game_object);
-	game_object->SetHierarchyDepth(hierarchy_depth);
-	App->editor->selected_game_object = game_object;
-
+	GameObject* created_game_object = App->scene->CreateGameObject();
+	created_game_object->Load(serialization_gameobject);
+	game_object = created_game_object;
 }

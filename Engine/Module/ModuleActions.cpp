@@ -124,9 +124,7 @@ void ModuleActions::AddUndoAction(UndoActionType type)
 
 	case UndoActionType::ADD_GAMEOBJECT:
 		new_action = new EditorActionAddGameObject(
-			action_game_object,
-			action_game_object->parent,
-			action_game_object->GetHierarchyDepth()
+			action_game_object
 		);
 		break;
 

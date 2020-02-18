@@ -15,10 +15,13 @@ public:
 
 	void Redo();
 
+	void CheckGO(GameObject* go);
+
 
 private:
 	float3 previous_position = float3::zero;
 	float3 current_position = float3::zero;
 	GameObject* action_GO;
+	uint64_t UUID_go;
 };
 #endif _EDITORACTIONTRANSLATE_H_
