@@ -33,8 +33,6 @@ public:
 	std::vector<OLQuadTreeNode*> children;
 
 	std::vector<GameObject*> objects;
-
-
 };
 
 #endif //_OLQUADTREENODE_H_

@@ -2,6 +2,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTime.h"
@@ -190,6 +191,7 @@ void ComponentCamera::RecordDebugDraws(float width, float height) const
 	App->debug->show_msaa ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 	glViewport(0, 0, width, height);
+
 	App->editor->RenderDebugDraws();
 
 	if (App->debug->show_msaa)

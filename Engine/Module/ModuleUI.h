@@ -4,9 +4,6 @@
 #include "Module.h"
 #include "Main/Globals.h"
 
-class EngineUI;
-struct ImFont;
-
 class ModuleUI : public Module
 {
 public:
@@ -14,19 +11,8 @@ public:
 	~ModuleUI() = default;
 
 	bool Init() override;
-	update_status PreUpdate() override;
 	update_status Update() override;
-	void Render();
 	bool CleanUp() override;
-
-	ImFont* GetFont(const Fonts & font) const;
-
-private:
-	void LoadFonts();
-
-public:
-	EngineUI* editor_ui = nullptr;
-
 };
 
 #endif //_MODULEUI_H_

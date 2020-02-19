@@ -1,9 +1,8 @@
 #include "ComponentLight.h"
 #include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
-#include "UI/ComponentsUI.h"
-#include "Main/GameObject.h"
 
 ComponentLight::ComponentLight() : Component(nullptr, ComponentType::LIGHT)
 {
@@ -56,9 +55,4 @@ void ComponentLight::Load(const Config& config)
 
 	light_intensity = config.GetFloat("Intensity", 1.f);
 
-}
-
-void ComponentLight::ShowComponentWindow()
-{
-	ComponentsUI::ShowComponentLightWindow(this);
 }

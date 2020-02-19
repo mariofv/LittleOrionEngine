@@ -4,7 +4,6 @@
 #include "Module.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
-#include "UI/Hierarchy.h"
 
 #include <ImGuizmo.h>
 
@@ -32,14 +31,12 @@ public:
 	void Save(Config& serialized_scene) const;
 	void Load(const Config& serialized_scene);
 
-public:
-	Hierarchy hierarchy;
-
 private:
 	GameObject *root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
 
-	friend class ModuleEditor;
+	friend class PanelScene;
+	friend class ModuleDebugDraw;
 };
 
 #endif // _MODULSESCENE_H
