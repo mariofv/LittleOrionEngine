@@ -37,7 +37,7 @@ void ModuleLight::Render(GLuint program)
 {
 	RenderDirectionalLight();
 	RenderSpotLight(program);
-
+	RenderPointLight(program);
 	/*
 	BROFILER_CATEGORY("Render Lights", Profiler::Color::White);
 	for (auto& light : lights)
@@ -122,7 +122,26 @@ void ModuleLight::RenderSpotLight(GLuint program)
 }
 void ModuleLight::RenderPointLight(GLuint program)
 {
+	current_number_point_lights_rendered = 0;
+	for (auto& light : lights)
+	{
+		if (light->IsEnabled())
+		{
+			if (light->light_type == ComponentLight::LightType::POINT_LIGHT)
+			{
+				float3 light_color_scaled = light->light_intensity * float3(light->light_color);
 
+				glUniform3fv(glGetUniformLocation(program, "point_light.color"), 1, light_color_scaled.ptr());
+				glUniform3fv(glGetUniformLocation(program, "point_light.position"), 1, light->owner->transform.GetGlobalTranslation().ptr());
+				float constant_value = 1.0F;
+				glUniform1f(glGetUniformLocation(program, "point_light.constant"), constant_value);
+				float linear_value = 0.09F;
+				glUniform1f(glGetUniformLocation(program, "point_light.linear"), linear_value);
+				float quadratic_value = 0.032F;
+				glUniform1f(glGetUniformLocation(program, "point_light.quadratic"), quadratic_value);
+			}
+		}
+	}
 }
 void ModuleLight::RenderLights()
 {

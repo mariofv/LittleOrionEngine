@@ -46,21 +46,36 @@ struct SpotLight
     float linear;
     float quadratic;     
 };
+
+struct  PointLight
+{
+	vec3 color;
+	vec3 position;
+
+	float constant;
+    float linear;
+    float quadratic;
+};
+
 uniform SpotLight spot_light;
+uniform PointLight point_light;
+
 
 vec4 get_diffuse_color(const Material mat, const vec2 texCoord);
 vec3 get_occlusion_color(const Material mat, const vec2 texCoord);
 vec3 get_emissive_color(const Material mat, const vec2 texCoord);
 vec4 get_specular_color(const Material mat, const vec2 texCoord);
+
 vec3 CalculateDirectionalLight(const vec3 normalized_normal);
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal);
+vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal);
 
 void main()
 {
 	vec3 normalized_normal = normalize(normal);
 	vec3 result = CalculateDirectionalLight(normalized_normal);
 	result += CalculateSpotLight(spot_light, normalized_normal);
-	
+	result += CalculatePointLight(point_light, normalized_normal);
 	FragColor = vec4(result,1.0);
 }
 
@@ -156,5 +171,38 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal)
         + diffuse_color.rgb * material.k_diffuse * diffuse*intensity*attenuation
         + specular_color.rgb * material.k_specular * specular*intensity*attenuation
     );
+
+}
+
+vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal)
+{
+	vec3 light_dir   = normalize(point_light.position - position);
+	float diffuse    = max(0.0, dot(normalized_normal, light_dir));
+	float specular   = 0.0;
+
+    vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
+    vec3 view_dir    = normalize(view_pos - position);
+	vec3 half_dir 	 = normalize(light_dir + view_dir);
+    float spec       = max(dot(normalized_normal, half_dir), 0.0);
+	specular		 = pow(spec, material.shininess);
+
+
+	vec4 diffuse_color  = get_diffuse_color(material, texCoord);
+	vec4 specular_color  = get_specular_color(material, texCoord);
+	vec3 occlusion_color = get_occlusion_color(material, texCoord);
+	vec3 emissive_color  = get_emissive_color(material, texCoord);
+
+
+	float distance    = length(point_light.position - position);
+	float attenuation = 1.0 / (point_light.constant + point_light.linear * distance + 
+    		    point_light.quadratic * (distance * distance));    
+
+
+	return point_light.color * (
+		emissive_color
+		+  diffuse_color.rgb * (occlusion_color*material.k_ambient)*attenuation
+		+ diffuse_color.rgb * material.k_diffuse * diffuse * attenuation
+		+ specular_color.rgb * material.k_specular * specular* attenuation
+	);
 
 }
