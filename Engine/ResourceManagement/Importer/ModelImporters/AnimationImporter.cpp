@@ -53,6 +53,7 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 
 
 	std::map<float, std::vector<Animation::Channel>> keyframes;
+
 	//Merge channels
 	for (auto & nodes : aiNode_by_channel)
 	{
@@ -71,6 +72,7 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 		}
 	}
 
+	own_format_animation.keyframes.reserve(keyframes.size());
 	for (auto & keyframe : keyframes)
 	{
 		own_format_animation.keyframes.push_back({keyframe.first, keyframe.second});
