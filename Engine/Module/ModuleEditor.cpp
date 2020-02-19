@@ -95,6 +95,7 @@ bool ModuleEditor::InitImgui()
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
+	return true;
 }
 
 update_status ModuleEditor::PreUpdate()
