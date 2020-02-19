@@ -9,7 +9,7 @@ OLAABBTree::OLAABBTree(unsigned initial_size)
 	node_capacity = initial_size;
 	//Resize
 	nodes.resize(initial_size);
-	for (unsigned node_index = 0; node_index < initial_size; node_index++)
+	for (unsigned node_index = 0; node_index < initial_size; ++node_index)
 	{
 		NodeAABB &node = nodes[node_index];
 		node.next_node_index = node_index + 1;
@@ -35,7 +35,7 @@ unsigned OLAABBTree::AllocateNode()
 		node_capacity += growth_size;
 		nodes.resize(node_capacity);
 		nodes[allocated_node_count - 1].next_node_index = allocated_node_count;
-		for (unsigned nodeIndex = allocated_node_count; nodeIndex < node_capacity; nodeIndex++)
+		for (unsigned nodeIndex = allocated_node_count; nodeIndex < node_capacity; ++nodeIndex)
 		{
 			NodeAABB& node = nodes[nodeIndex];
 			node.next_node_index = nodeIndex + 1;
@@ -47,7 +47,7 @@ unsigned OLAABBTree::AllocateNode()
 	unsigned nodeIndex = next_free_node_index;
 	NodeAABB& allocatedNode = nodes[nodeIndex];
 	next_free_node_index = allocatedNode.next_node_index;
-	allocated_node_count++;
+	++allocated_node_count;
 
 	return nodeIndex;
 }
