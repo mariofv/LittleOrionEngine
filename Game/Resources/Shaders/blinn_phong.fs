@@ -28,18 +28,10 @@ layout (std140) uniform Matrices
 	mat4 view;
 } matrices;
 
-layout (std140) uniform Light
+layout (std140) uniform DirectionalLight
 {
 	vec3 light_color;
 	vec3 direction;
-	vec3 light_position;
-	float cutOff;
-    float outerCutOff;
-	
-	 float constant;
-    float linear;
-    float quadratic;
-	
 } light;
 
 vec4 get_diffuse_color(const Material mat, const vec2 texCoord);
@@ -51,7 +43,7 @@ void main()
 {
 	vec3 normalized_normal = normalize(normal);
 
-	vec3 light_dir   = normalize(light.light_position - position);
+	vec3 light_dir   = normalize(-light.direction );
 	float diffuse    = max(0.0, dot(normalized_normal, light_dir));
 	float specular   = 0.0;
 
@@ -66,26 +58,19 @@ void main()
       {
           specular = pow(spec, material.shininess);
       }
-  } 
+  }
 
 	vec4 diffuse_color  = get_diffuse_color(material, texCoord);
 	vec4 specular_color  = get_specular_color(material, texCoord);
 	vec3 occlusion_color = get_occlusion_color(material, texCoord);
 	vec3 emissive_color  = get_emissive_color(material, texCoord);
 
-	float theta = dot(light_dir, normalize(-light.direction)); 
-    float epsilon = (light.cutOff - light.outerCutOff);
-    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-	
-	float distance    = length(light.light_position - position);
-	float attenuation = 1.0 / (light.constant + light.linear * distance + 
-    		    light.quadratic * (distance * distance));    
 
 	vec3 result = light.light_color * (
 		emissive_color
-		+ diffuse_color.rgb * (occlusion_color*material.k_ambient)*attenuation
-		+ diffuse_color.rgb * material.k_diffuse * diffuse*intensity*attenuation
-		+ specular_color.rgb * material.k_specular * specular*intensity*attenuation
+		+ diffuse_color.rgb * (occlusion_color*material.k_ambient)
+		+ diffuse_color.rgb * material.k_diffuse * diffuse
+		+ specular_color.rgb * material.k_specular * specular
 	);
 
 	FragColor = vec4(result,1.0);

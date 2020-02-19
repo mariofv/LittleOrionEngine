@@ -18,6 +18,8 @@ void ComponentLight::Delete()
 	App->lights->RemoveComponentLight(this);
 }
 
+/*
+<<<<<<< HEAD
 void ComponentLight::Render() const
 {	
 
@@ -55,6 +57,7 @@ void ComponentLight::Render() const
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
+*/
 
 void ComponentLight::Save(Config& config) const
 {
