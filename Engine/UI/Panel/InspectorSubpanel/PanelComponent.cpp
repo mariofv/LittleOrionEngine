@@ -416,6 +416,9 @@ void PanelComponent::ShowAddNewComponentButton()
 	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
 	ImGui::Button("Add component", ImVec2(button_width, 25));
 
+	//UndoRedo
+	Component* component = nullptr;
+
 	if (ImGui::BeginPopupContextItem("Add component", 0))
 	{
 		char tmp_string[128];
@@ -423,25 +426,31 @@ void PanelComponent::ShowAddNewComponentButton()
 		sprintf_s(tmp_string, "%s Material", ICON_FA_IMAGE);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
 
 		}
 
 		sprintf_s(tmp_string, "%s Camera", ICON_FA_VIDEO);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::CAMERA);
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::CAMERA);
 
 		}
 
 		sprintf_s(tmp_string, "%s Light", ICON_FA_LIGHTBULB);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
 
 		}
 
 		ImGui::EndPopup();
+	}
+
+	if(component != nullptr)
+	{
+		App->actions->action_component = component;
+		App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_COMPONENT);
 	}
 }
 

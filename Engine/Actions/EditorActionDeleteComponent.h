@@ -17,7 +17,6 @@ private:
 	uint64_t UUID_OWNER;
 	uint64_t UUID_COMP;
 	Config serialization_component;
-	Component* component;
 	Component::ComponentType type;
 };
 

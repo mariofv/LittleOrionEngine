@@ -1,6 +1,5 @@
 #include "EditorActionDeleteComponent.h"
 #include "Main/GameObject.h"
-#include "Module/ModuleLight.h"
 #include "Main/Application.h"
 #include "Module/ModuleScene.h"
 #include "Component/ComponentCamera.h"
