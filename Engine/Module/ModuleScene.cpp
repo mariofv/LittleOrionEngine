@@ -102,10 +102,26 @@ GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 	return nullptr;
 }
 
+Component * ModuleScene::GetComponent(uint64_t UUID) const
+{
+	for (auto& game_object : game_objects_ownership)
+	{
+		for(auto& component : game_object->components)
+		{
+			if(component->UUID == UUID)
+			{
+				return component;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
 void ModuleScene::DeleteCurrentScene()
 {
 	//UndoRedo
-	App->editor->ClearUndoRedoStacks();
+	App->actions->ClearUndoRedoStacks();
 
 	RemoveGameObject(root);
 	App->editor->selected_game_object = nullptr;
@@ -153,6 +169,6 @@ void ModuleScene::Load(const Config& serialized_scene)
 		created_game_object->Load(game_objects_config[i]);
 	}
 	App->renderer->GenerateQuadTree();
-	App->editor->ClearUndoStack();
+	App->actions->ClearUndoStack();
 
 }

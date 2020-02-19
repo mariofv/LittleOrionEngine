@@ -7,16 +7,16 @@
 class EditorActionDeleteGameObject : public EditorAction
 {
 public:
-	EditorActionDeleteGameObject(GameObject* go, GameObject* parent_go, int depth) : game_object(go), parent(parent_go), hierarchy_depth(depth) {};
-	~EditorActionDeleteGameObject();
+	EditorActionDeleteGameObject(GameObject* go);
+	~EditorActionDeleteGameObject() = default;
 
 	void Undo();
 	void Redo();
 
 private:
+	Config serialized_gameobject;
 	GameObject* game_object = nullptr;
-	GameObject* parent = nullptr;
-	int hierarchy_depth = 0;
+	uint64_t UUID_GO;
 };
 
 #endif _EDITORACTIONDELETEGAMEOBJECT_H_

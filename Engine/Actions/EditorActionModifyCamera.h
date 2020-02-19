@@ -8,15 +8,13 @@ class EditorActionModifyCamera : public EditorAction
 {
 public:
 	EditorActionModifyCamera(ComponentCamera* component);
-	~EditorActionModifyCamera();
+	~EditorActionModifyCamera() = default;
 
 	void Undo();
 	void Redo();
 
 
 private:
-	ComponentCamera* component;
-
 	float mov_speed;
 	float fov;
 	float aspect_ratio;
@@ -24,6 +22,7 @@ private:
 	float far_plane;
 	float ortographic_size;
 	int depth;
+	uint64_t UUID_COMP;
 
 };
 

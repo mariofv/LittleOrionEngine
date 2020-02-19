@@ -5,6 +5,7 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleActions.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleProgram.h"
@@ -134,19 +135,19 @@ void PanelScene::RenderGizmo()
 {
 	float4x4 model_global_matrix_transposed = App->editor->selected_game_object->transform.GetGlobalModelMatrix().Transposed();
 
-	if (!gizmo_released && !App->editor->clicked)
+	if (!gizmo_released && !App->actions->clicked)
 	{
 		//Save current position/rotation/scale of transform depending on operation
 		switch (App->editor->gizmo_operation)
 		{
 		case ImGuizmo::TRANSLATE:
-			App->editor->previous_transform = App->editor->selected_game_object->transform.GetTranslation();
+			App->actions->previous_transform = App->editor->selected_game_object->transform.GetTranslation();
 			break;
 		case ImGuizmo::ROTATE:
-			App->editor->previous_transform = App->editor->selected_game_object->transform.GetRotationRadiants();
+			App->actions->previous_transform = App->editor->selected_game_object->transform.GetRotationRadiants();
 			break;
 		case ImGuizmo::SCALE:
-			App->editor->previous_transform = App->editor->selected_game_object->transform.GetScale();
+			App->actions->previous_transform = App->editor->selected_game_object->transform.GetScale();
 			break;
 		case ImGuizmo::BOUNDS:
 			break;
@@ -174,26 +175,26 @@ void PanelScene::RenderGizmo()
 	else if (gizmo_released)
 	{
 		//Guizmo have been released so an actionTransform have been done
-		ModuleEditor::UndoActionType action_type;
+		ModuleActions::UndoActionType action_type;
 		switch (App->editor->gizmo_operation)
 		{
 		case ImGuizmo::TRANSLATE:
-			action_type = ModuleEditor::UndoActionType::TRANSLATION;
+			action_type = ModuleActions::UndoActionType::TRANSLATION;
 			break;
 
 		case ImGuizmo::ROTATE:
-			action_type = ModuleEditor::UndoActionType::ROTATION;
+			action_type = ModuleActions::UndoActionType::ROTATION;
 			break;
 
 		case ImGuizmo::SCALE:
-			action_type = ModuleEditor::UndoActionType::SCALE;
+			action_type = ModuleActions::UndoActionType::SCALE;
 			break;
 
 		default:
 			break;
 		}
 
-		App->editor->AddUndoAction(action_type);
+		App->actions->AddUndoAction(action_type);
 		gizmo_released = false;
 	}
 }
@@ -282,8 +283,8 @@ void PanelScene::SceneDropTarget()
 				GameObject* new_model = App->model_loader->LoadModel(incoming_file->file_path.c_str());
 				App->scene->root->AddChild(new_model); 
 				
-				App->editor->action_game_object = new_model;
-				App->editor->AddUndoAction(ModuleEditor::UndoActionType::ADD_GAMEOBJECT);
+				App->actions->action_game_object = new_model;
+				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
 			}
 		}
 		ImGui::EndDragDropTarget();

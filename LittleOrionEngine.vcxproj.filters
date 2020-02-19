@@ -349,6 +349,7 @@
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleActions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -579,6 +580,7 @@
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleActions.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
