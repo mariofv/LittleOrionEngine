@@ -47,7 +47,7 @@ public:
 			So, the total size will be the following:
 				total_size = 16 (float[3] size) + 16 (float[3] size) = 32 bytes = 8 * sizeof(float) 
 		*/
-		const size_t LIGHT_UNIFORMS_SIZE = 8 * sizeof(float); // Size of light intensity, color and position
+		const size_t LIGHT_UNIFORMS_SIZE = 17 * sizeof(float); // Size of light intensity, color and position
 
 
 		/*

@@ -645,4 +645,8 @@
       <UniqueIdentifier>{3f3b0f7b-d67b-4384-a9ba-a7e803bb2a53}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Game\Resources\Shaders\direction_light.fs" />
+    <None Include="Game\Resources\Shaders\point_light.fs" />
+  </ItemGroup>
 </Project>

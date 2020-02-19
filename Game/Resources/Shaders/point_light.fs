@@ -1,4 +1,4 @@
-#version 430 core
+#version 330 core
 
 in vec3 position;
 in vec3 normal;
@@ -31,21 +31,18 @@ layout (std140) uniform Matrices
 layout (std140) uniform Light
 {
 	vec3 light_color;
-	vec3 direction;
 	vec3 light_position;
-	float cutOff;
-    float outerCutOff;
-	
 	 float constant;
     float linear;
     float quadratic;
-	
 } light;
+
 
 vec4 get_diffuse_color(const Material mat, const vec2 texCoord);
 vec3 get_occlusion_color(const Material mat, const vec2 texCoord);
 vec3 get_emissive_color(const Material mat, const vec2 texCoord);
 vec4 get_specular_color(const Material mat, const vec2 texCoord);
+const float screenGamma = 2.2; // Assume the monitor is calibrated to the sRGB color space
 
 void main()
 {
@@ -55,39 +52,32 @@ void main()
 	float diffuse    = max(0.0, dot(normalized_normal, light_dir));
 	float specular   = 0.0;
 
-  if(diffuse > 0.0 && material.k_specular > 0.0 && material.shininess > 0.0)
-  {
-      vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-      vec3 view_dir    = normalize(view_pos - position);
-	  vec3 half_dir 	 = normalize(light_dir + view_dir);
-      float spec       = max(dot(normalized_normal, half_dir), 0.0);
+    vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
+    vec3 view_dir    = normalize(view_pos - position);
+	vec3 half_dir 	 = normalize(light_dir + view_dir);
+    float spec       = max(dot(normalized_normal, half_dir), 0.0);
+	specular		 = pow(spec, material.shininess);
 
-      if(spec > 0.0)
-      {
-          specular = pow(spec, material.shininess);
-      }
-  } 
 
 	vec4 diffuse_color  = get_diffuse_color(material, texCoord);
 	vec4 specular_color  = get_specular_color(material, texCoord);
 	vec3 occlusion_color = get_occlusion_color(material, texCoord);
 	vec3 emissive_color  = get_emissive_color(material, texCoord);
 
-	float theta = dot(light_dir, normalize(-light.direction)); 
-    float epsilon = (light.cutOff - light.outerCutOff);
-    float intensity = clamp((theta - light.outerCutOff) / epsilon, 0.0, 1.0);
-	
+
 	float distance    = length(light.light_position - position);
 	float attenuation = 1.0 / (light.constant + light.linear * distance + 
     		    light.quadratic * (distance * distance));    
 
+
 	vec3 result = light.light_color * (
 		emissive_color
-		+ diffuse_color.rgb * (occlusion_color*material.k_ambient)*attenuation
-		+ diffuse_color.rgb * material.k_diffuse * diffuse*intensity*attenuation
-		+ specular_color.rgb * material.k_specular * specular*intensity*attenuation
+		+  diffuse_color.rgb * (occlusion_color*material.k_ambient)*attenuation
+		+ diffuse_color.rgb * material.k_diffuse * diffuse * attenuation
+		+ specular_color.rgb * material.k_specular * specular* attenuation
 	);
 
+	vec3 colorGammaCorrected = pow(result, vec3(1.0 / screenGamma));
 	FragColor = vec4(result,1.0);
 }
 
