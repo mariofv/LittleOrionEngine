@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Main/Globals.h"
 #include "SpacePartition/OLQuadTree.h"
+#include "SpacePartition/OLOctTree.h"
 #include "Helper/Timer.h"
 
 #include <GL/glew.h>
@@ -31,6 +32,7 @@ public:
 	ComponentMesh* CreateComponentMesh();
 	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
 	void GenerateQuadTree();
+	void GenerateOctTree();
 
 	void ShowRenderOptions();
 
@@ -55,6 +57,7 @@ private:
 	void* context = nullptr;
 
 	OLQuadTree ol_quadtree;
+	OLOctTree ol_octtree;
 
 	bool vsync = false;
 	bool gl_alpha_test = false;
