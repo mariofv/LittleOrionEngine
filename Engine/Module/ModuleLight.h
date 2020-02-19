@@ -29,9 +29,8 @@ public:
 
 	void Render(GLuint program);
 	void RenderDirectionalLight();
-	void RenderSpotLight(GLuint program);
-	void RenderPointLight(GLuint program);
-	void RenderLights();
+	void RenderSpotLights(GLuint program);
+	void RenderPointLights(GLuint program);
 	void RenderDarkness() const;
 
 	ComponentLight* CreateComponentLight();

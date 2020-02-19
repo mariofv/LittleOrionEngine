@@ -57,8 +57,11 @@ struct  PointLight
     float quadratic;
 };
 
-uniform SpotLight spot_light;
-uniform PointLight point_light;
+uniform int num_spot_lights;
+uniform SpotLight spot_lights[10];
+
+uniform int num_point_lights;
+uniform PointLight point_lights[10];
 
 
 vec4 get_diffuse_color(const Material mat, const vec2 texCoord);
@@ -74,8 +77,17 @@ void main()
 {
 	vec3 normalized_normal = normalize(normal);
 	vec3 result = CalculateDirectionalLight(normalized_normal);
-	result += CalculateSpotLight(spot_light, normalized_normal);
-	result += CalculatePointLight(point_light, normalized_normal);
+
+	for (int i = 0; i < num_spot_lights; ++i)
+	{
+		result += CalculateSpotLight(spot_lights[i], normalized_normal);
+	}
+
+	for (int i = 0; i < num_point_lights; ++i)
+	{
+		result += CalculatePointLight(point_lights[i], normalized_normal);	
+	}
+
 	FragColor = vec4(result,1.0);
 }
 
