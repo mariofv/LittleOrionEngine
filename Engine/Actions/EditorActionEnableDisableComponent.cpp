@@ -5,12 +5,12 @@
 
 EditorActionEnableDisableComponent::EditorActionEnableDisableComponent(Component* comp)
 {
-	UUID_COMP = comp->UUID;
+	component_UUID = comp->UUID;
 }
 
 void EditorActionEnableDisableComponent::Undo()
 {
-	Component* component = App->scene->GetComponent(UUID_COMP);
+	Component* component = App->scene->GetComponent(component_UUID);
 
 	if(component->IsEnabled())
 	{

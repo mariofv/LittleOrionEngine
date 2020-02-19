@@ -16,7 +16,7 @@ public:
 private:
 	Config serialized_gameobject;
 	GameObject* game_object = nullptr;
-	uint64_t UUID_GO;
+	uint64_t UUID_go;
 };
 
 #endif _EDITORACTIONDELETEGAMEOBJECT_H_

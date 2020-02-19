@@ -22,7 +22,7 @@ private:
 	float far_plane;
 	float ortographic_size;
 	int depth;
-	uint64_t UUID_COMP;
+	uint64_t component_UUID;
 
 };
 

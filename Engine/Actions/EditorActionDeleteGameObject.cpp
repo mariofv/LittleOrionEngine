@@ -7,7 +7,7 @@
 
 EditorActionDeleteGameObject::EditorActionDeleteGameObject(GameObject* go)
 {
-	UUID_GO = go->UUID;
+	UUID_go = go->UUID;
 
 	std::vector<Config> game_objects_config(go->children.size() + 1);
 	std::stack<GameObject*> pending_objects;
@@ -50,7 +50,7 @@ void EditorActionDeleteGameObject::Undo()
 		GameObject* created_game_object = App->scene->CreateGameObject();
 		created_game_object->Load(game_objects_config[i]);
 
-		if(UUID_GO == created_game_object->UUID)
+		if(UUID_go == created_game_object->UUID)
 		{
 			game_object = created_game_object;
 		}

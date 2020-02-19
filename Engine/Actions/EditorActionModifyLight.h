@@ -16,7 +16,7 @@ public:
 private:
 	float color[3];
 	float intensity;
-	uint64_t UUID_COMP;
+	uint64_t component_UUID;
 
 };
 

@@ -5,7 +5,7 @@
 
 EditorActionModifyCamera::EditorActionModifyCamera(ComponentCamera* comp)
 {
-	UUID_COMP = comp->UUID;
+	component_UUID = comp->UUID;
 	mov_speed = comp->camera_movement_speed;
 	fov = comp->camera_frustum.verticalFov;
 	aspect_ratio = comp->aspect_ratio;
@@ -17,7 +17,7 @@ EditorActionModifyCamera::EditorActionModifyCamera(ComponentCamera* comp)
 
 void EditorActionModifyCamera::Undo()
 {
-	ComponentCamera* component = (ComponentCamera*)App->scene->GetComponent(UUID_COMP);
+	ComponentCamera* component = (ComponentCamera*)App->scene->GetComponent(component_UUID);
 
 	float mov_speed_aux = component->camera_movement_speed;
 	float fov_aux = component->camera_frustum.verticalFov;

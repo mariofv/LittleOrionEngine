@@ -14,8 +14,8 @@ public:
 	void Redo();
 
 private:
-	uint64_t UUID_COMP;
-	uint64_t UUID_OWNER;
+	uint64_t component_UUID;
+	uint64_t owner_UUID;
 	Config serialization_component;
 	Component::ComponentType type;
 };
