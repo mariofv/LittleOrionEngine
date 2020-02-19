@@ -5,7 +5,7 @@
 
 #include <vector>
 #include <MathGeoLib.h>
-
+#include <GL/glew.h>
 class ComponentLight;
 
 class ModuleLight : public Module
@@ -27,8 +27,10 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void Render();
+	void Render(GLuint program);
 	void RenderDirectionalLight();
+	void RenderSpotLight(GLuint program);
+	void RenderPointLight(GLuint program);
 	void RenderLights();
 	void RenderDarkness() const;
 

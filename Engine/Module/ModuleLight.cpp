@@ -33,10 +33,10 @@ bool ModuleLight::CleanUp()
 	return true;
 }
 
-void ModuleLight::Render()
+void ModuleLight::Render(GLuint program)
 {
 	RenderDirectionalLight();
-
+	RenderSpotLight(program);
 
 	/*
 	BROFILER_CATEGORY("Render Lights", Profiler::Color::White);
@@ -92,7 +92,38 @@ void ModuleLight::RenderDirectionalLight()
 		}
 	}
 }
+void ModuleLight::RenderSpotLight(GLuint program)
+{
+	current_number_spot_lights_rendered = 0;
+	for (auto& light : lights)
+	{
+		if (light->IsEnabled())
+		{
+			if (light->light_type == ComponentLight::LightType::SPOT_LIGHT)
+			{
+				float3 light_color_scaled = light->light_intensity * float3(light->light_color);
+				
+				glUniform3fv(glGetUniformLocation(program, "spot_light.color"), 1, light_color_scaled.ptr());
+				glUniform3fv(glGetUniformLocation(program, "spot_light.position"), 1, light->owner->transform.GetGlobalTranslation().ptr());
+				glUniform3fv(glGetUniformLocation(program, "spot_light.direction"), 1, light->owner->transform.GetFrontVector().ptr());
+				float cutOff_value = cos((12.5f * 3, 1415) / 180);
+				glUniform1f(glGetUniformLocation(program, "spot_light.cutOff"), cutOff_value);
+				float outerCutOff_value = cos((17.5f * 3, 1415) / 180);
+				glUniform1f(glGetUniformLocation(program, "spot_light.outerCutOff"), outerCutOff_value);
+				float constant_value = 1.0F;
+				glUniform1f(glGetUniformLocation(program, "spot_light.constant"), constant_value);
+				float linear_value = 0.09F;
+				glUniform1f(glGetUniformLocation(program, "spot_light.linear"), linear_value);
+				float quadratic_value = 0.032F;
+				glUniform1f(glGetUniformLocation(program, "spot_light.quadratic"), quadratic_value);
+			}
+		}
+	}
+}
+void ModuleLight::RenderPointLight(GLuint program)
+{
 
+}
 void ModuleLight::RenderLights()
 {
 	/*

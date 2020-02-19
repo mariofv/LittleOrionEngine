@@ -58,7 +58,6 @@ void ComponentLight::Render() const
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 */
-
 void ComponentLight::Save(Config& config) const
 {
 	config.AddUInt(UUID, "UUID");
@@ -82,4 +81,17 @@ void ComponentLight::Load(const Config& config)
 
 	light_intensity = config.GetFloat("Intensity", 1.f);
 
+}
+
+int ComponentLight::GetLightTypeInt() const
+{
+	switch (light_type)
+	{
+	case LightType::POINT_LIGHT:
+		return 0;
+	case LightType::SPOT_LIGHT:
+		return 1;
+	case LightType::DIRECTIONAL_LIGHT:
+		return 2;
+	}
 }

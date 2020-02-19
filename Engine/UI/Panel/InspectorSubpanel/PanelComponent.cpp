@@ -403,6 +403,25 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 		ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f);
 
 		CheckClickForUndo(ModuleEditor::UndoActionType::EDIT_COMPONENTLIGHT, light);
+
+		int light_type = light->GetLightTypeInt();
+
+		if (ImGui::Combo("Light Type", &light_type, "Point\0Spot\0Directional"))
+		{
+			switch (light_type)
+			{
+			case 0:
+				light->light_type = ComponentLight::LightType::POINT_LIGHT;
+				break;
+			case 1:
+				light->light_type = ComponentLight::LightType::SPOT_LIGHT;
+				break;
+			case 2:
+				light->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
+				break;
+			}
+		}
+		
 		
 	}
 }
