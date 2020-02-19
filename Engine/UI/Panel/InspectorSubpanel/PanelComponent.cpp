@@ -1,4 +1,10 @@
-#include "ComponentsUI.h"
+#include "PanelComponent.h"
+
+#include "Actions/EditorActionTranslate.h"
+#include "Actions/EditorActionRotation.h"
+#include "Actions/EditorActionScale.h"
+#include "Actions/EditorAction.h"
+
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
@@ -7,22 +13,18 @@
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
-#include "Module/ModuleFileSystem.h"
-#include "Module/ModuleTexture.h"
-#include "Module/ModuleProgram.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleFileSystem.h"
+#include "Module/ModuleProgram.h"
+#include "Module/ModuleTexture.h"
 
-#include "Actions/EditorActionTranslate.h"
-#include "Actions/EditorActionRotation.h"
-#include "Actions/EditorActionScale.h"
-#include "Actions/EditorAction.h"
 
 #include "Helper/Utils.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
-void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
+void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -32,7 +34,7 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 			transform->OnTransformChange();
 		}
 		//UndoRedo
-		CheckClickForUndo(0, transform);
+		CheckClickForUndo(ModuleEditor::UndoActionType::TRANSLATION, transform);
 
 		if (ImGui::DragFloat3("Rotation", transform->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
 		{
@@ -41,7 +43,7 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 			transform->OnTransformChange();
 		}
 		//UndoRedo
-		CheckClickForUndo(1, transform);
+		CheckClickForUndo(ModuleEditor::UndoActionType::ROTATION, transform);
 
 		if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
 		{
@@ -49,11 +51,11 @@ void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
 		}
 
 		//UndoRedo
-		CheckClickForUndo(2, transform);
+		CheckClickForUndo(ModuleEditor::UndoActionType::SCALE, transform);
 	}
 }
 
-void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
+void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -61,7 +63,7 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 		{
 			//UndoRedo
 			App->editor->action_component = mesh;
-			App->editor->AddUndoAction(10);
+			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
@@ -103,7 +105,7 @@ void ComponentsUI::ShowComponentMeshWindow(ComponentMesh *mesh)
 	}
 }
 
-void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
+void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -138,7 +140,7 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 						//UndoRedo
 						App->editor->type_texture = Texture::TextureType(i);
 						App->editor->action_component = material;
-						App->editor->AddUndoAction(8);
+						App->editor->AddUndoAction(ModuleEditor::UndoActionType::EDIT_COMPONENTMATERIAL);
 
 						material->RemoveMaterialTexture(i);
 					}
@@ -176,7 +178,7 @@ void ComponentsUI::ShowComponentMaterialWindow(ComponentMaterial *material)
 		}
 	}
 }
-void ComponentsUI::DropTarget(ComponentMaterial *material, Texture::TextureType type)
+void PanelComponent::DropTarget(ComponentMaterial *material, Texture::TextureType type)
 {
 	if (ImGui::BeginDragDropTarget())
 	{
@@ -189,7 +191,7 @@ void ComponentsUI::DropTarget(ComponentMaterial *material, Texture::TextureType 
 				//UndoRedo
 				App->editor->type_texture = type;
 				App->editor->action_component = material;
-				App->editor->AddUndoAction(8);
+				App->editor->AddUndoAction(ModuleEditor::UndoActionType::EDIT_COMPONENTMATERIAL);
 
 				material->SetMaterialTexture(type, App->texture->LoadTexture(incoming_file->file_path.c_str()));
 			}
@@ -198,7 +200,7 @@ void ComponentsUI::DropTarget(ComponentMaterial *material, Texture::TextureType 
 	}
 }
 
-std::string ComponentsUI::GetTypeName(Texture::TextureType type)
+std::string PanelComponent::GetTypeName(Texture::TextureType type)
 {
 	switch (type)
 	{
@@ -218,55 +220,8 @@ std::string ComponentsUI::GetTypeName(Texture::TextureType type)
 		return "";
 	}
 }
-void ComponentsUI::CheckClickedCamera(ComponentCamera* camera)
-{
-	//UndoRedo
-	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
-	{
-		//Push new action
-		App->editor->action_component = camera;
-		App->editor->AddUndoAction(9);
-	}
-}
-void ComponentsUI::CheckClickForUndo(const int type, Component* component)
-{
-	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
-	{
 
-		switch (type)
-		{
-			case 0:
-				App->editor->previous_transform = ((ComponentTransform*)component)->GetTranslation();
-				break;
-			case 1:
-				App->editor->previous_transform = ((ComponentTransform*)component)->GetRotationRadiants();
-				break;
-			case 2:
-				App->editor->previous_transform = ((ComponentTransform*)component)->GetScale();
-				break;
-			case 7:
-				App->editor->previous_light_color[0] = ((ComponentLight*)component)->light_color[0];
-				App->editor->previous_light_color[1] = ((ComponentLight*)component)->light_color[1];
-				App->editor->previous_light_color[2] = ((ComponentLight*)component)->light_color[2];
-				App->editor->previous_light_intensity = ((ComponentLight*)component)->light_intensity;
-				App->editor->action_component = component;
-				break;
-			default:
-				break;
-		}
-
-
-		App->editor->clicked = true;
-	}
-
-	if (ImGui::IsItemDeactivatedAfterChange())
-	{
-		App->editor->AddUndoAction(type);
-		App->editor->clicked = false;
-	}
-
-}
-void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
+void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -274,7 +229,7 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 		{
 			//UndoRedo
 			App->editor->action_component = camera;
-			App->editor->AddUndoAction(10);
+			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
@@ -373,8 +328,56 @@ void ComponentsUI::ShowComponentCameraWindow(ComponentCamera *camera)
 	}
 }
 
+void PanelComponent::CheckClickedCamera(ComponentCamera* camera)
+{
+	//UndoRedo
+	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
+	{
+		//Push new action
+		App->editor->action_component = camera;
+		App->editor->AddUndoAction(ModuleEditor::UndoActionType::EDIT_COMPONENTCAMERA);
+	}
+}
 
-void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
+void PanelComponent::CheckClickForUndo(ModuleEditor::UndoActionType  type, Component* component)
+{
+	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
+	{
+		switch (type)
+		{
+		case ModuleEditor::UndoActionType::TRANSLATION:
+			App->editor->previous_transform = ((ComponentTransform*)component)->GetTranslation();
+			break;
+		case ModuleEditor::UndoActionType::ROTATION:
+			App->editor->previous_transform = ((ComponentTransform*)component)->GetRotationRadiants();
+			break;
+		case ModuleEditor::UndoActionType::SCALE:
+			App->editor->previous_transform = ((ComponentTransform*)component)->GetScale();
+			break;
+		case ModuleEditor::UndoActionType::EDIT_COMPONENTLIGHT:
+			App->editor->previous_light_color[0] = ((ComponentLight*)component)->light_color[0];
+			App->editor->previous_light_color[1] = ((ComponentLight*)component)->light_color[1];
+			App->editor->previous_light_color[2] = ((ComponentLight*)component)->light_color[2];
+			App->editor->previous_light_intensity = ((ComponentLight*)component)->light_intensity;
+			App->editor->action_component = component;
+			break;
+		default:
+			break;
+		}
+
+
+		App->editor->clicked = true;
+	}
+
+	if (ImGui::IsItemDeactivatedAfterChange())
+	{
+		App->editor->AddUndoAction(type);
+		App->editor->clicked = false;
+	}
+
+}
+
+void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Light", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -382,7 +385,7 @@ void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
 		{
 			//UndoRedo
 			App->editor->action_component = light;
-			App->editor->AddUndoAction(10);
+			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
@@ -395,13 +398,49 @@ void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
 
 		ImGui::ColorEdit3("Color", light->light_color);
 		
-		CheckClickForUndo(7, light);
+		CheckClickForUndo(ModuleEditor::UndoActionType::EDIT_COMPONENTLIGHT, light);
 		
 		ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f);
 
-		CheckClickForUndo(7, light);
+		CheckClickForUndo(ModuleEditor::UndoActionType::EDIT_COMPONENTLIGHT, light);
 		
+	}
+}
 
+
+void PanelComponent::ShowAddNewComponentButton()
+{
+	float window_width = ImGui::GetWindowWidth();
+	float button_width = 0.5f * window_width;
+	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
+	ImGui::Button("Add component", ImVec2(button_width, 25));
+
+	if (ImGui::BeginPopupContextItem("Add component", 0))
+	{
+		char tmp_string[128];
+
+		sprintf_s(tmp_string, "%s Material", ICON_FA_IMAGE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+
+		}
+
+		sprintf_s(tmp_string, "%s Camera", ICON_FA_VIDEO);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::CAMERA);
+
+		}
+
+		sprintf_s(tmp_string, "%s Light", ICON_FA_LIGHTBULB);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
+
+		}
+
+		ImGui::EndPopup();
 	}
 }
 

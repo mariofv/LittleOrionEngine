@@ -164,7 +164,7 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 
 	//UndoRedo
 	App->editor->action_game_object = model_game_object;
-	App->editor->AddUndoAction(3);
+	App->editor->AddUndoAction(ModuleEditor::UndoActionType::ADD_GAMEOBJECT);
 
 	return model_game_object;
 }
