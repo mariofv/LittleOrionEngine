@@ -182,9 +182,7 @@ void ModuleActions::DeleteComponentUndo(Component * component)
 	//UndoRedo
 	action_component = component;
 	AddUndoAction(UndoActionType::DELETE_COMPONENT);
-	component->Disable();
-	auto it = std::find(component->owner->components.begin(), component->owner->components.end(), component);
-	component->owner->components.erase(it);
+	component->owner->RemoveComponent(component);
 }
 
 void ModuleActions::ClearUndoRedoStacks()
