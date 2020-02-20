@@ -25,11 +25,12 @@ void PanelDebug::Render()
 		ImGui::Checkbox("Global bounding boxes", &App->debug->show_global_bounding_boxes);
 		ImGui::Checkbox("Camera Frustum", &App->debug->show_camera_frustum);
 		ImGui::Checkbox("QuadTree", &App->debug->show_quadtree);
+		ImGui::Checkbox("AABBTree", &App->debug->show_aabbtree);
 		ImGui::Separator();
 
 		ImGui::Checkbox("Scene window culling", &App->debug->culling_scene_mode);
 		int culling_mode_int = static_cast<int>(App->debug->culling_mode);
-		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling"))
+		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling\0OctTree\0AabbTree Culling\0Combined Culling"))
 		{
 			switch (culling_mode_int)
 			{
@@ -41,6 +42,12 @@ void PanelDebug::Render()
 				break;
 			case 2:
 				App->debug->culling_mode = ModuleDebug::CullingMode::QUADTREE_CULLING;
+				break;
+			case 4:
+				App->debug->culling_mode = ModuleDebug::CullingMode::AABBTREE_CULLING;
+				break;
+			case 5:
+				App->debug->culling_mode = ModuleDebug::CullingMode::COMBINED_CULLING;
 				break;
 			}
 		}

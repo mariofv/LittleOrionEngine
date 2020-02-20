@@ -4,9 +4,12 @@
 #include "Module.h"
 #include "Main/Globals.h"
 #include "SpacePartition/OLQuadTree.h"
+#include "SpacePartition/OLAABBTree.h"
 #include "Helper/Timer.h"
 
 #include <GL/glew.h>
+
+const unsigned INITIAL_SIZE_AABBTREE = 10;
 
 class ComponentMesh;
 class ComponentCamera;
@@ -37,6 +40,12 @@ public:
 	ComponentMesh* CreateComponentMesh();
 	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
 	void GenerateQuadTree();
+	void InsertAABBTree(GameObject* game_object);
+	void RemoveAABBTree(GameObject* game_object);
+	void UpdateAABBTree(GameObject* game_object);
+	void DeleteAABBTree();
+	void CreateAABBTree();
+	void DrawAABBTree() const;
 
 	GameObject* GetRaycastIntertectedObject(const LineSegment & ray);
 
@@ -63,6 +72,7 @@ private:
 	void* context = nullptr;
 
 	OLQuadTree ol_quadtree;
+	OLAABBTree* ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
 
 	bool vsync = false;
 	bool gl_alpha_test = false;

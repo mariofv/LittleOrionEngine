@@ -22,9 +22,13 @@ bool ModuleScene::Init()
 update_status ModuleScene::Update()
 {
 	BROFILER_CATEGORY("Scene Update", Profiler::Color::Crimson);
-	for (auto & gameObject : game_objects_ownership)
+	for (auto & game_object : game_objects_ownership)
 	{
-		gameObject->Update();
+		game_object->Update();
+		if(!game_object->IsStatic())
+		{
+			App->renderer->UpdateAABBTree(game_object.get());
+		}
 	}
 	return update_status::UPDATE_CONTINUE;
 }
@@ -106,7 +110,8 @@ void ModuleScene::DeleteCurrentScene()
 {
 	//UndoRedo
 	App->editor->ClearUndoRedoStacks();
-
+	
+	App->renderer->DeleteAABBTree();
 	RemoveGameObject(root);
 	App->editor->selected_game_object = nullptr;
 }
@@ -143,6 +148,7 @@ void ModuleScene::Save(Config& serialized_scene) const
 void ModuleScene::Load(const Config& serialized_scene)
 {
 	DeleteCurrentScene();
+	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 
 	std::vector<Config> game_objects_config;
@@ -151,6 +157,11 @@ void ModuleScene::Load(const Config& serialized_scene)
 	{
 		GameObject* created_game_object = CreateGameObject();
 		created_game_object->Load(game_objects_config[i]);
+
+		if(!created_game_object->IsStatic())
+		{
+			App->renderer->InsertAABBTree(created_game_object);
+		}
 	}
 	App->renderer->GenerateQuadTree();
 	App->editor->ClearUndoStack();
