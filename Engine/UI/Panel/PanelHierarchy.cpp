@@ -114,7 +114,6 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 				if (target_game_object != nullptr)
 				{
 					target_game_object->AddChild(new_model);
-					App->renderer->InsertAABBTree(new_model);
 
 					//UndoRedo
 					App->editor->action_game_object = new_model;
