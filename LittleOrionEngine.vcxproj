@@ -47,7 +47,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./GamePlaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_MBCS;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -98,6 +98,7 @@
     <ClInclude Include="Engine\Actions\EditorActionScale.h" />
     <ClInclude Include="Engine\Actions\EditorActionSetTexture.h" />
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h" />
+    <ClInclude Include="Engine\Component\ComponentScript.h" />
     <ClInclude Include="Engine\Helper\Config.h" />
     <ClInclude Include="Engine\Helper\Timer.h" />
     <ClInclude Include="Engine\Helper\TimerUs.h" />
@@ -105,6 +106,7 @@
     <ClInclude Include="Engine\Main\Application.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
     <ClInclude Include="Engine\Main\Globals.h" />
+    <ClInclude Include="Engine\Module\ModuleManagerScript.h" />
     <ClInclude Include="Engine\Module\ModuleResourceManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.h" />
@@ -175,6 +177,7 @@
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionSetTexture.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
+    <ClCompile Include="Engine\Component\ComponentScript.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
     <ClCompile Include="Engine\Helper\Timer.cpp" />
     <ClCompile Include="Engine\Helper\TimerUs.cpp" />
@@ -183,6 +186,7 @@
     <ClCompile Include="Engine\Main\GameObject.cpp" />
     <ClCompile Include="Engine\Main\Log.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
+    <ClCompile Include="Engine\Module\ModuleManagerScript.cpp" />
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
