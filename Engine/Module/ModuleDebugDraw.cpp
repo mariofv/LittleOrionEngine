@@ -396,6 +396,11 @@ void ModuleDebugDraw::Render()
 		}
 	}
 
+	if(App->debug->show_aabbtree)
+	{
+		App->renderer->DrawAABBTree();
+	}
+
 	if (App->editor->selected_game_object != nullptr)
 	{
 		RenderCameraFrustum();

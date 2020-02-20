@@ -6,6 +6,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleRender.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleEditor.h"
@@ -113,6 +114,8 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 				if (target_game_object != nullptr)
 				{
 					target_game_object->AddChild(new_model);
+					App->renderer->InsertAABBTree(new_model);
+
 					//UndoRedo
 					App->editor->action_game_object = new_model;
 					App->editor->AddUndoAction(ModuleEditor::UndoActionType::ADD_GAMEOBJECT);
@@ -143,6 +146,7 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 				App->editor->action_game_object = game_object;
 				App->editor->AddUndoAction(ModuleEditor::UndoActionType::DELETE_GAMEOBJECT);
 				
+				App->renderer->RemoveAABBTree(game_object);
 				game_object->SetEnabled(false);
 				game_object->parent->RemoveChild(game_object);
 
@@ -203,6 +207,12 @@ void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 		{
 			App->model_loader->LoadCoreModel(PRIMITIVE_QUAD_PATH);
 		}
+
+		if(created_game_object != nullptr)
+		{
+			App->renderer->InsertAABBTree(created_game_object);
+		}
+
 		ImGui::EndMenu();
 	}
 }

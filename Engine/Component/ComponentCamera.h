@@ -88,6 +88,8 @@ public:
 
 	void GetRay(const float2& normalized_position, LineSegment &return_value) const;
 
+	AABB GetMinimalEnclosingAABB() const;
+
 private:
 	void GenerateFrameBuffers(float width, float height);
 	void GenerateMatrices();

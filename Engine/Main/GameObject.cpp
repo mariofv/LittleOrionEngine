@@ -87,6 +87,10 @@ void GameObject::SetStatic(bool is_static)
 void GameObject::SetHierarchyStatic(bool is_static)
 {
 	this->is_static = is_static;
+
+	//AABBTree
+	(is_static) ? App->renderer->RemoveAABBTree(this) : App->renderer->InsertAABBTree(this);
+	
 	for (auto & child : children)
 	{
 		child->SetStatic(is_static);
