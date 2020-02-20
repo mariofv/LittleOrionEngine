@@ -8,6 +8,7 @@ class ComponentMesh;
 class ComponentTransform;
 class ComponentLight;
 class Component;
+class ComponentScript;
 
 class ComponentsUI
 {
@@ -17,6 +18,7 @@ public:
 	static void ShowComponentMaterialWindow(ComponentMaterial *material);
 	static void ShowComponentCameraWindow(ComponentCamera *camera);
 	static void ShowComponentLightWindow(ComponentLight *light);
+	static void ShowComponentScriptWindow(ComponentScript *script);
 
 private:
 	static void DropTarget(ComponentMaterial *material, Texture::TextureType type);

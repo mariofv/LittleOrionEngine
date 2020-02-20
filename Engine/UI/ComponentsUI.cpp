@@ -4,6 +4,7 @@
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentScript.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -20,6 +21,7 @@
 #include "Helper/Utils.h"
 
 #include <imgui.h>
+#include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
 void ComponentsUI::ShowComponentTransformWindow(ComponentTransform *transform)
@@ -403,5 +405,15 @@ void ComponentsUI::ShowComponentLightWindow(ComponentLight *light)
 		
 
 	}
+}
+
+
+ void ComponentsUI::ShowComponentScriptWindow(ComponentScript* script) 
+ {
+	 if (ImGui::CollapsingHeader(ICON_FA_FILE_CODE " Script", ImGuiTreeNodeFlags_DefaultOpen))
+	 {
+		 ImGui::InputText("Script name", &script->name);
+
+	 }
 }
 

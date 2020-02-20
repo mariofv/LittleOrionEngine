@@ -11,9 +11,4 @@ ComponentScript::~ComponentScript()
 {
 }
 
-void ComponentScript::SetAppPointer(Application *App)
-{
-	this->App = App;
-}
-
 

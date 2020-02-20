@@ -16,15 +16,16 @@ public:
 	~ModuleManagerScript() = default;
 
 	bool Init() override;
+	update_status PreUpdate() override;
 	update_status Update() override;
 	bool CleanUp() override;
-	void AppReference() const;
+	ComponentScript* CreateComponentScript();
 public:
 
 	std::vector<ComponentScript*> scripts;
 
 private:
-
+	HINSTANCE gp_dll;
 };
 
 #endif //_MODULEMANAGERSCRIPT_H_

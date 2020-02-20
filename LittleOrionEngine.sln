@@ -5,10 +5,6 @@ VisualStudioVersion = 15.0.28307.757
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LittleOrionEngine", "LittleOrionEngine.vcxproj", "{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Scripts", "Scripts", "{01F34C75-FF6A-4238-938A-9355B81105EC}"
-EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "TestScript", "Scripts\TestScript\TestScript.vcxproj", "{623A5593-6B14-414B-B622-2875D69F0B25}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -23,20 +19,9 @@ Global
 		{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}.Release|Win32.ActiveCfg = Release|Win32
 		{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}.Release|Win32.Build.0 = Release|Win32
 		{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}.Release|x64.ActiveCfg = Release|Win32
-		{623A5593-6B14-414B-B622-2875D69F0B25}.Debug|Win32.ActiveCfg = Debug|Win32
-		{623A5593-6B14-414B-B622-2875D69F0B25}.Debug|Win32.Build.0 = Debug|Win32
-		{623A5593-6B14-414B-B622-2875D69F0B25}.Debug|x64.ActiveCfg = Debug|x64
-		{623A5593-6B14-414B-B622-2875D69F0B25}.Debug|x64.Build.0 = Debug|x64
-		{623A5593-6B14-414B-B622-2875D69F0B25}.Release|Win32.ActiveCfg = Release|Win32
-		{623A5593-6B14-414B-B622-2875D69F0B25}.Release|Win32.Build.0 = Release|Win32
-		{623A5593-6B14-414B-B622-2875D69F0B25}.Release|x64.ActiveCfg = Release|x64
-		{623A5593-6B14-414B-B622-2875D69F0B25}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{623A5593-6B14-414B-B622-2875D69F0B25} = {01F34C75-FF6A-4238-938A-9355B81105EC}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2EEEF8C4-9A5C-46E9-B0EB-673227070C0D}
