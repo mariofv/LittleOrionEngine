@@ -2,11 +2,11 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
-#include "UI/ComponentsUI.h"
 
 #include "Helper/Utils.h"
 
@@ -174,7 +174,7 @@ void ComponentCamera::RecordDebugDraws(float width, float height) const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glViewport(0, 0, width, height);
-	App->editor->RenderDebugDraws();
+	App->debug_draw->Render();
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -567,10 +567,4 @@ ComponentAABB::CollisionState ComponentCamera::CheckAABB2DCollision(const AABB2D
 void ComponentCamera::GetRay(const float2& normalized_position, LineSegment &return_value) const
 {
 	return_value = camera_frustum.UnProjectLineSegment(normalized_position.x, normalized_position.y);
-}
-
-
-void ComponentCamera::ShowComponentWindow()
-{
-	ComponentsUI::ShowComponentCameraWindow(this);
 }

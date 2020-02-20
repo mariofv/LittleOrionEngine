@@ -5,11 +5,8 @@
 #include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
 
-#include "imgui.h"
-#include <SDL/SDL.h>
-#include <FontAwesome5/IconsFontAwesome5.h>
-
 #include <algorithm>
+#include <SDL/SDL.h>
 
 bool ModuleCamera::Init()
 {
@@ -23,8 +20,8 @@ bool ModuleCamera::Init()
 	scene_camera->SetFarDistance(2000);
 	scene_camera->depth = -1;
 	
-	/*skybox = new Skybox();
-	scene_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);*/
+	skybox = new Skybox();
+	scene_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
 
 	return true;
 }
@@ -107,9 +104,4 @@ void ModuleCamera::SetMovement(bool movement_enabled)
 bool ModuleCamera::IsMovementEnabled() const
 {
 	return movement_enabled;
-}
-
-void ModuleCamera::ShowCameraOptions()
-{
-	scene_camera->ShowComponentWindow();
 }

@@ -17,8 +17,6 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	void ShowInputOptions();
-
 private:
 	bool controlKeyDown = false;
 	const Uint8 *keyboard = nullptr;

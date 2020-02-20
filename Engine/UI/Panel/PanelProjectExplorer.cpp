@@ -1,17 +1,28 @@
-#include "FileExplorerUI.h"
+#include "PanelProjectExplorer.h"
+
 #include "Main/Application.h"
 
-#include "imgui.h"
+#include <imgui.h>
 #include <SDL/SDL.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
 
 #include <algorithm>
 
-void FileExplorerUI::ShowAssetsFolders() {
-	if(ImGui::BeginTabItem(ICON_FA_FOLDER_OPEN " Assets") ){
+PanelProjectExplorer::PanelProjectExplorer()
+{
+	opened = true;
+	enabled = true;
+	window_name = ICON_FA_FOLDER_OPEN " Project";
+}
 
-		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 260)))
+void PanelProjectExplorer::Render() 
+{
+	if(ImGui::Begin(ICON_FA_FOLDER_OPEN " Project", &opened))
+	{
+		hovered = ImGui::IsWindowHovered();
+
+		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 0)))
 		{
 			ShowFileSystemActionsMenu(selected_folder);
 			ShowFoldersHierarchy(*App->filesystem->assets_file);
@@ -19,17 +30,17 @@ void FileExplorerUI::ShowAssetsFolders() {
 		ImGui::EndChild();
 
 		ImGui::SameLine();
-		if (ImGui::BeginChild("File Explorer", ImVec2(0, 260), true)) {
+		if (ImGui::BeginChild("File Explorer", ImVec2(0, 0), true)) {
 			ShowFileSystemActionsMenu(selected_file);
 			ShowFilesInExplorer();
 		}
 		ImGui::EndChild();
-		ImGui::EndTabItem();
 	}
+	ImGui::End();
 }
 
-void FileExplorerUI::ShowFoldersHierarchy(const File & file) {
-
+void PanelProjectExplorer::ShowFoldersHierarchy(const File & file) 
+{
 	for (auto & child : file.children)
 	{
 		if (child->file_type == FileType::DIRECTORY)
@@ -59,7 +70,8 @@ void FileExplorerUI::ShowFoldersHierarchy(const File & file) {
 	}
 }
 
-void FileExplorerUI::ShowFilesInExplorer() {
+void PanelProjectExplorer::ShowFilesInExplorer() 
+{
 
 	if (selected_folder == nullptr)
 	{
@@ -107,7 +119,8 @@ void FileExplorerUI::ShowFilesInExplorer() {
 				ImGui::SameLine();
 	}
 }
-void FileExplorerUI::ProcessMouseInput(File * file, bool in_folders_windows)
+
+void PanelProjectExplorer::ProcessMouseInput(File * file, bool in_folders_windows)
 {
 	if (ImGui::IsItemHovered())
 	{
@@ -127,7 +140,7 @@ void FileExplorerUI::ProcessMouseInput(File * file, bool in_folders_windows)
 	}
 }
 
-void FileExplorerUI::ShowFileSystemActionsMenu(const File * file)
+void PanelProjectExplorer::ShowFileSystemActionsMenu(const File * file)
 {
 	std::string label("Menu");
 	bool changes = false;
@@ -169,7 +182,7 @@ void FileExplorerUI::ShowFileSystemActionsMenu(const File * file)
 	}
 }
 
-void FileExplorerUI::MakeDirectoryFromFile(File * file)
+void PanelProjectExplorer::MakeDirectoryFromFile(File * file)
 {
 	if (file == nullptr)
 	{
@@ -192,7 +205,7 @@ void FileExplorerUI::MakeDirectoryFromFile(File * file)
 	selected_folder = new_folder.get();
 }
 
-void FileExplorerUI::CopyFileToSelectedFolder(const char * source) const
+void PanelProjectExplorer::CopyFileToSelectedFolder(const char * source) const
 {
 	std::string source_string(source);
 	std::replace(source_string.begin(), source_string.end(), '\\', '/');
@@ -209,7 +222,7 @@ void FileExplorerUI::CopyFileToSelectedFolder(const char * source) const
 	App->filesystem->Copy(source, destination.c_str());
 }
 
-void FileExplorerUI::FilesDrag() const
+void PanelProjectExplorer::FilesDrag() const
 {
 	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
 	{

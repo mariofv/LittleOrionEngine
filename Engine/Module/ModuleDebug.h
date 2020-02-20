@@ -23,8 +23,6 @@ public:
 	
 	void CreateHousesRandom() const;
 	
-	void ShowDebugWindow();
-
 public:
 	bool show_bounding_boxes = false;
 	bool show_global_bounding_boxes = false;
@@ -40,6 +38,8 @@ private:
 	int num_houses = 20;
 	int max_dispersion_x = 40;
 	int max_dispersion_z = 40;
+
+	friend class PanelDebug;
 };
 
 #endif //_MODULEDEBUG_H_

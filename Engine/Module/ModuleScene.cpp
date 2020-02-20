@@ -1,4 +1,5 @@
 #include "ModuleScene.h"
+
 #include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
@@ -6,12 +7,8 @@
 #include "ModuleRender.h"
 #include "Component/ComponentCamera.h"
 #include "Helper/Config.h"
+#include "UI/Panel/PanelHierarchy.h"
 
-#include "Actions/EditorAction.h"
-#include "Actions/EditorActionAddGameObject.h"
-
-#include <imgui.h>
-#include <FontAwesome5/IconsFontAwesome5.h>
 #include <algorithm>
 #include <stack>
 #include "Brofiler/Brofiler.h"
@@ -41,7 +38,7 @@ bool ModuleScene::CleanUp()
 
 GameObject* ModuleScene::CreateGameObject()
 {
-	std::string created_game_object_name = hierarchy.GetNextGameObjectName();
+	std::string created_game_object_name = App->editor->hierarchy->GetNextGameObjectName();
 	std::unique_ptr<GameObject> created_game_object = std::make_unique<GameObject>(created_game_object_name);
 	created_game_object->SetParent(root);
 
@@ -111,7 +108,7 @@ void ModuleScene::DeleteCurrentScene()
 	App->editor->ClearUndoRedoStacks();
 
 	RemoveGameObject(root);
-	hierarchy.selected_game_object = nullptr;
+	App->editor->selected_game_object = nullptr;
 }
 
 void ModuleScene::Save(Config& serialized_scene) const
