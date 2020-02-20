@@ -3,6 +3,7 @@
 #include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
+#include "Module/ModuleRender.h"
 #include "ModuleScene.h"
 #include "ModuleTexture.h"
 #include "ModuleResourceManager.h"
@@ -79,6 +80,13 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 		{
 			return;
 		}
+
+	ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
+	mesh_component->SetMesh(mesh_for_component);
+	node_game_object->name = model_base_path->filename_no_extension;
+	node_game_object->Update();
+	App->renderer->InsertAABBTree(node_game_object);
+
 
 		ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
 		mesh_component->SetMesh(mesh_for_component);
