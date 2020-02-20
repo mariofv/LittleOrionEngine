@@ -7,7 +7,6 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
-#include "Module/ModuleDebug.h"
 #include "Module/ModuleWindow.h"
 #include "UI/ComponentsUI.h"
 
@@ -155,7 +154,7 @@ void ComponentCamera::RecordFrame(float width, float height)
 		toggle_msaa = false;
 	}
 
-	App->debug->show_msaa ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 	glViewport(0, 0, width, height);
 
@@ -176,7 +175,7 @@ void ComponentCamera::RecordFrame(float width, float height)
 
 	App->renderer->RenderFrame(*this);
 
-	if (App->debug->show_msaa)
+	if (App->renderer->anti_aliasing)
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
@@ -188,13 +187,13 @@ void ComponentCamera::RecordFrame(float width, float height)
 
 void ComponentCamera::RecordDebugDraws(float width, float height) const
 {
-	App->debug->show_msaa ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 	glViewport(0, 0, width, height);
 
-	App->editor->RenderDebugDraws();
+	App->debug_draw->Render();
 
-	if (App->debug->show_msaa)
+	if (App->renderer->anti_aliasing)
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
@@ -223,7 +222,7 @@ void ComponentCamera::GenerateFrameBuffers(float width, float height)
 		glDeleteRenderbuffers(1, &rbo);
 	}
 
-	App->debug->show_msaa ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
+	App->renderer->anti_aliasing ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
 }
 
 void ComponentCamera::CreateFramebuffer(float width, float height)

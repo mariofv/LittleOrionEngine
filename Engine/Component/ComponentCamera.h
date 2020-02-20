@@ -114,7 +114,7 @@ public:
 	float4x4 proj;
 	float4x4 view;
 
-	bool toggle_msaa;
+	bool toggle_msaa = false;
 
 private:
 	Frustum camera_frustum;
