@@ -3,7 +3,7 @@
 #include "Main/GameObject.h"
 #include "Brofiler/Brofiler.h"
 
-ComponentAABB::ComponentAABB() : Component(nullptr, ComponentType::MATERIAL)
+ComponentAABB::ComponentAABB() : Component(nullptr, ComponentType::AABB)
 {
 
 }
