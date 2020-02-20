@@ -68,11 +68,15 @@ private:
 	void GetMeshesToRender(const ComponentCamera *camera);
 	void GetCullingMeshes(const ComponentCamera *camera);
 
+public:
+	bool anti_aliasing = false;
+
 private:
 	void* context = nullptr;
 
 	OLQuadTree ol_quadtree;
 	OLAABBTree* ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
+
 
 	bool vsync = false;
 	bool gl_alpha_test = false;
