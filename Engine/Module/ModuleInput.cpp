@@ -247,3 +247,27 @@ bool ModuleInput::CleanUp()
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
 	return true;
 }
+
+bool ModuleInput::GetKey(int id) const
+{
+	//Returns true while the user holds down the key identified by name.
+	return keyboard_state[id] == KeyState::REPEAT;
+}
+
+bool ModuleInput::GetMouseButtonDown(int id) const
+{
+	//Returns true during the frame the user pressed the given mouse button.
+	return mouseButtons[id - 1] == KeyState::DOWN;
+}
+
+bool ModuleInput::GetKeyDown(int id) const
+{
+	//Returns true during the frame the user starts pressing down the key identified by name.
+	return keyboard_state[id] == KeyState::DOWN;
+}
+
+bool ModuleInput::GetKeyUp(int id) const
+{
+	//Returns true during the frame the user releases the key identified by name.
+	return keyboard_state[id] == KeyState::UP;
+}
