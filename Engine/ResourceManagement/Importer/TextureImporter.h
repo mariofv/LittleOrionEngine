@@ -17,11 +17,13 @@ public:
 	std::string ImportMaterialData(const std::string& material_path, const std::string model_base_path) const;
 
 private:
+	std::string ImportToDDS(const File & file) const;
+	std::string ImportToTGA(const File & file) const;
 	ILubyte* LoadImageData(const std::string& file_path, int image_type, int & width, int & height) const;
 	std::string GetTextureFileName(std::string texture_file_path) const;
 
 private:
 	const std::string LIBRARY_TEXTURES_FOLDER = "Library/Materials";
-
+	friend class TextureLoader;
 };
 #endif // !_TEXTUREIMPORTER_H_

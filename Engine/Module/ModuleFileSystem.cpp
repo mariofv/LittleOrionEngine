@@ -157,6 +157,7 @@ FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileT
 		|| file_extension == "dds"
 		|| file_extension == "tga"
 		|| file_extension == "jpg"
+		|| file_extension == "jfif"
 		)
 	{
 		return FileType::TEXTURE;
