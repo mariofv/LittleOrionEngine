@@ -81,18 +81,13 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 			return;
 		}
 
-	ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
-	mesh_component->SetMesh(mesh_for_component);
-	node_game_object->name = model_base_path->filename_no_extension;
-	node_game_object->Update();
-	App->renderer->InsertAABBTree(node_game_object);
-
-
 		ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
 		mesh_component->SetMesh(mesh_for_component);
 		File file(mesh_uid);
 		node_game_object->name = file.filename_no_extension;
 		node_game_object->Update();
+		App->renderer->InsertAABBTree(node_game_object);
+
 	}
 
 	std::vector<Config> textures;
