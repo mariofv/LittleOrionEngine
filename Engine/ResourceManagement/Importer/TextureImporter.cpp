@@ -32,7 +32,7 @@ std::pair<bool, std::string> TextureImporter::Import(const File & file) const
 	
 	std::string output_file;
 
-	if (file.filename.find("_normal"))
+	if (file.filename.find("_normal") != std::string::npos)
 	{
 		output_file = ImportToTGA(file);
 	}

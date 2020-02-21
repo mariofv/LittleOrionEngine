@@ -1,10 +1,11 @@
 #include "TextureLoader.h"
 #include <Main/Application.h>
 #include <Module/ModuleFileSystem.h>
+#include <Module/ModuleResourceManager.h>
 #include <GL/glew.h>
 #include "Brofiler/Brofiler.h"
 #include <ResourceManagement/Resources/Texture.h>
-
+#include <Helper/Config.h>
 
 char * TextureLoader::LoadCompressedDDS(const std::string& file_path, DDS::DDS_HEADER & dds_header, size_t & dds_content_size)
 {
@@ -52,15 +53,35 @@ std::shared_ptr<Texture> TextureLoader::Load(const std::string& file_path)
 		return nullptr;
 	}
 	BROFILER_CATEGORY("Load Texture", Profiler::Color::BurlyWood);
-	size_t size;
-	DDS::DDS_HEADER ddsHeader;
-	char * data = LoadCompressedDDS(file_path.c_str(), ddsHeader, size);
-	if (data)
+
+	std::shared_ptr<Texture> loaded_texture;
+	Config importing_options;
+	if (file_path.find("_normal") != std::string::npos)
 	{
-		size_t dds_header_offset = sizeof(DDS::DDS_HEADER) + DDS::magic_number;
-		std::shared_ptr<Texture> loaded_texture = std::make_shared<Texture>(data + dds_header_offset, size - dds_header_offset, ddsHeader.dwWidth, ddsHeader.dwHeight, file_path);
-		free(data);
-		return loaded_texture;
+		ILuint image;
+		ilGenImages(1, &image);
+		ilBindImage(image);
+		int width, height;
+		char * data = reinterpret_cast<char*>(App->resources->texture_importer->LoadImageData(file_path,IL_RGB, width, height));
+		loaded_texture = std::make_shared<Texture>(data, 0,width, height, file_path);
+		loaded_texture->normal_map = true;
+		loaded_texture->Load(importing_options);
+		ilDeleteImages(1, &image);
 	}
-	return nullptr;
+	else
+	{
+		size_t size;
+		DDS::DDS_HEADER ddsHeader;
+		char * data = LoadCompressedDDS(file_path.c_str(), ddsHeader, size);
+		if (data)
+		{
+			size_t dds_header_offset = sizeof(DDS::DDS_HEADER) + DDS::magic_number;
+			loaded_texture = std::make_shared<Texture>(data + dds_header_offset, size - dds_header_offset, ddsHeader.dwWidth, ddsHeader.dwHeight, file_path);
+			loaded_texture->Load(importing_options);
+			free(data);
+		}
+	}
+
+
+	return loaded_texture;
 }

@@ -57,6 +57,7 @@ public:
 	int width = 0;
 	int height = 0;
 	size_t image_size;
+	bool normal_map = false;
 private:
 	bool mip_map = false;
 
