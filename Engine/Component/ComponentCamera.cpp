@@ -8,7 +8,6 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleWindow.h"
-#include "UI/ComponentsUI.h"
 
 #include "Helper/Utils.h"
 
