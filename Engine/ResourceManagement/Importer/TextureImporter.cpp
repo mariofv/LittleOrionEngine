@@ -77,7 +77,7 @@ std::string TextureImporter::ImportMaterialData(const std::string & material_pat
 }
 
 
-ILubyte * TextureImporter::LoadImageData(const std::string& file_path, int image_type ,int & width, int & height ) const
+ILubyte * TextureImporter::LoadImageDataInMemory(const std::string& file_path, int image_type ,int & width, int & height ) const
 {
 	ilLoadImage(file_path.c_str());
 
@@ -106,6 +106,7 @@ ILubyte * TextureImporter::LoadImageData(const std::string& file_path, int image
 
 
 
+
 //Remove the material from the cache if the only owner is the cache itself
 
 
@@ -131,7 +132,7 @@ std::string TextureImporter::ImportToDDS(const File & file) const
 	ilGenImages(1, &image);
 	ilBindImage(image);
 	int width, height;
-	ILubyte * save_data = LoadImageData(file.file_path.c_str(), IL_RGBA, width, height);
+	ILubyte * save_data = LoadImageDataInMemory(file.file_path.c_str(), IL_RGBA, width, height);
 	//Get new Name
 
 	std::string texture_name_no_extension = file.filename.substr(0, file.filename.find_last_of("."));

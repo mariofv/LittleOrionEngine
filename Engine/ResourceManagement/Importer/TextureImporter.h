@@ -19,7 +19,7 @@ public:
 private:
 	std::string ImportToDDS(const File & file) const;
 	std::string ImportToTGA(const File & file) const;
-	ILubyte* LoadImageData(const std::string& file_path, int image_type, int & width, int & height) const;
+	ILubyte* LoadImageDataInMemory(const std::string& file_path, int image_type, int & width, int & height) const;
 	std::string GetTextureFileName(std::string texture_file_path) const;
 
 private:
