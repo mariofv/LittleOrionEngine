@@ -10,11 +10,13 @@
 #include "Module/ModuleTexture.h"
 #include "ResourceManagement/Resources/Texture.h"
 #include "UI/Panel/PanelHierarchy.h"
+#include "Module/ModuleScriptManager.h"
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentScript.h"
 
 #include "Brofiler/Brofiler.h"
 #include <pcg_basic.h>
@@ -237,6 +239,9 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 
 	case Component::ComponentType::LIGHT:
 		created_component = App->lights->CreateComponentLight();
+		break;
+	case Component::ComponentType::SCRIPT:
+		created_component = App->scripts->CreateComponentScript();
 		break;
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
