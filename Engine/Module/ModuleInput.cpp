@@ -20,7 +20,6 @@
 #include <GL/glew.h>
 #include "Brofiler/Brofiler.h"
 
-#include <iostream>
 // Called before render is available
 bool ModuleInput::Init()
 {
@@ -88,7 +87,10 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEMOTION:
-			if (event.motion.state & SDL_BUTTON_RMASK && App->editor->scene_panel->IsHovered())
+
+			mouse_position = { event.motion.x, event.motion.y };
+			mouse_motion = { event.motion.xrel , event.motion.yrel};
+			/*if (event.motion.state & SDL_BUTTON_RMASK && App->editor->scene_panel->IsHovered())
 			{
 				float2 motion(event.motion.xrel, event.motion.yrel);
 				App->cameras->scene_camera->RotateCameraWithMouseMotion(motion);
@@ -104,18 +106,20 @@ update_status ModuleInput::PreUpdate()
 				{
 					App->cameras->scene_camera->RotateCameraWithMouseMotion(motion);
 				}
-			}
+			}*/
 			break;
 
 		case SDL_MOUSEWHEEL:
-			if (event.wheel.y > 0 && App->editor->scene_panel->IsHovered())
-			{
-				App->cameras->scene_camera->MoveFoward();
-			}
-			else if (event.wheel.y < 0 && App->editor->scene_panel->IsHovered())
-			{
-				App->cameras->scene_camera->MoveBackward();
-			}
+			mouse_wheel_motion = event.wheel.y;
+
+			//if (event.wheel.y > 0 && App->editor->scene_panel->IsHovered())
+			//{
+			//	App->cameras->scene_camera->MoveFoward();
+			//}
+			//else if (event.wheel.y < 0 && App->editor->scene_panel->IsHovered())
+			//{
+			//	App->cameras->scene_camera->MoveBackward();
+			//}
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
@@ -339,4 +343,19 @@ bool ModuleInput::GetMouseButtonUp(MouseCode mouse)
 {
 	//Returns true during the frame the user releases the given mouse button.
 	return mouse_bible[mouse] == KeyState::UP;
+}
+
+int2 ModuleInput::GetMousePosition() const
+{
+	return mouse_position;
+}
+
+int2 ModuleInput::GetMouseMotion() const
+{
+	return mouse_motion;
+}
+
+Sint32 ModuleInput::GetMouseWheelMotion() const
+{
+	return mouse_wheel_motion;
 }

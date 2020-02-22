@@ -19,6 +19,7 @@
 #include "ModuleResourceManager.h"
 #include "ModuleScene.h"
 #include "ModuleWindow.h"
+#include "ModuleInput.h"
 
 #include "UI/Panel/PanelAbout.h"
 #include "UI/Panel/PanelConfiguration.h"
@@ -119,6 +120,8 @@ update_status ModuleEditor::Update()
 		OpenScene(ASSIGNMENT_SCENE_PATH);
 		inital_scene_loaded = true;
 	}
+
+
 	return update_status::UPDATE_CONTINUE;
 }
 

@@ -6,6 +6,7 @@
 #include <SDL_scancode.h>
 #include <SDL_mouse.h>
 #include <map>
+#include <MathGeoLib.h>
 
 typedef unsigned __int8 Uint8;
 struct SDL_Cursor;
@@ -293,6 +294,12 @@ enum class MouseCode
 	X2Click = SDL_BUTTON_X2
 };
 
+struct int2
+{
+	int32_t x;
+	int32_t y;
+};
+
 class ModuleInput : public Module
 {
 public:
@@ -310,6 +317,9 @@ public:
 	bool GetMouseButton(MouseCode mouse);
 	bool GetMouseButtonDown(MouseCode mouse);
 	bool GetMouseButtonUp(MouseCode mouse);
+	int2 GetMousePosition() const;
+	int2 GetMouseMotion() const;
+	int32_t GetMouseWheelMotion() const;
 
 private:
 	KeyState* keyboard_state;
@@ -318,6 +328,9 @@ private:
 	const Uint8 *keyboard = nullptr;
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseCode, KeyState> mouse_bible;
+	int2 mouse_position;
+	int2 mouse_motion;
+	int32_t mouse_wheel_motion;
 };
 
 #endif //_MODULEINPUT_H_
