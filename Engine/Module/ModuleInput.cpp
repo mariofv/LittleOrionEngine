@@ -98,21 +98,7 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_MOUSEBUTTONDOWN:
 			mouse_bible[(MouseButton)event.button.button] = KeyState::DOWN;
-			
-			if (event.button.clicks == 2)
-			{
-
-			}
-			//if (event.button.button == SDL_BUTTON_LEFT && App->editor->scene_panel->IsHovered() && !App->cameras->IsOrbiting())
-			//{
-			//	float2 mouse_position = float2(event.button.x, event.button.y);
-			//	App->editor->scene_panel->MousePicking(mouse_position);
-
-			//	if (event.button.clicks == 2 && App->editor->selected_game_object != nullptr)
-			//	{
-			//		App->cameras->scene_camera->Center(App->editor->selected_game_object->aabb.global_bounding_box);
-			//	}
-			//}
+			mouse_clicks = event.button.clicks;
 			break;
 
 		case SDL_MOUSEBUTTONUP:
@@ -143,7 +129,7 @@ update_status ModuleInput::PreUpdate()
 		}
 	}
 
-	keyboard = SDL_GetKeyboardState(NULL);
+	const Uint8* keyboard = SDL_GetKeyboardState(NULL);
 
 	if(controlKeyDown && keyboard[SDL_SCANCODE_LCTRL] && !keyboard[SDL_SCANCODE_LSHIFT])
 	{
@@ -248,6 +234,11 @@ iPoint ModuleInput::GetMouseMotion() const
 Sint32 ModuleInput::GetMouseWheelMotion() const
 {
 	return mouse_wheel_motion;
+}
+
+Uint8 ModuleInput::GetMouseClicks() const
+{
+	return mouse_clicks;
 }
 
 // Returns if the mouse is currently being moved

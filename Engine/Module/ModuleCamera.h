@@ -27,13 +27,16 @@ public:
 	ComponentCamera* CreateComponentCamera();
 	void RemoveComponentCamera(ComponentCamera* camera_to_remove);
 
+	bool IsMovementEnabled() const;
+
+private:
 	void SelectMainCamera();
 
 	void SetOrbit(bool is_orbiting);
 	bool IsOrbiting() const;
 
 	void SetMovement(bool movement_enabled);
-	bool IsMovementEnabled() const;
+	void HandleSceneCameraMovements();
 	
 public:
 	ComponentCamera *scene_camera = nullptr;

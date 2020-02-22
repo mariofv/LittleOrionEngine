@@ -30,6 +30,87 @@ bool ModuleCamera::Init()
 
 update_status ModuleCamera::PreUpdate()
 {
+	HandleSceneCameraMovements();
+	return update_status::UPDATE_CONTINUE;
+}
+
+// Called every draw update
+update_status ModuleCamera::Update()
+{
+	SelectMainCamera();
+	scene_camera->Update();
+	return update_status::UPDATE_CONTINUE;
+}
+
+bool ModuleCamera::CleanUp()
+{
+	for (auto& camera : cameras)
+	{
+		camera->owner->RemoveComponent(camera);
+	}
+	cameras.clear();
+	main_camera = nullptr;
+	return true;
+}
+
+ComponentCamera* ModuleCamera::CreateComponentCamera()
+{
+	ComponentCamera * new_camera = new ComponentCamera();
+	cameras.push_back(new_camera);
+	return new_camera;
+}
+
+void ModuleCamera::RemoveComponentCamera(ComponentCamera* camera_to_remove)
+{
+	auto it = std::find(cameras.begin(), cameras.end(), camera_to_remove);
+	if (*it == main_camera)
+	{
+		main_camera = nullptr;
+	}
+	if (it != cameras.end()) 
+	{
+		delete *it;
+		cameras.erase(it);
+	}
+}
+
+void ModuleCamera::SelectMainCamera()
+{
+	main_camera = nullptr;
+
+	for (auto& camera : cameras)
+	{
+		if (camera->IsEnabled() && camera != scene_camera)
+		{
+			if (main_camera == nullptr)
+			{
+				main_camera = camera;
+			}
+			else if (main_camera->depth < camera->depth)
+			{
+				main_camera = camera;
+			}
+		}
+	}
+}
+
+void ModuleCamera::SetOrbit(bool is_orbiting)
+{
+	this->is_orbiting = is_orbiting;
+}
+
+bool ModuleCamera::IsOrbiting() const
+{
+	return is_orbiting;
+}
+
+void ModuleCamera::SetMovement(bool movement_enabled)
+{
+	this->movement_enabled = movement_enabled;
+}
+
+void ModuleCamera::HandleSceneCameraMovements()
+{
 	// Mouse wheel
 	if (App->input->GetMouseWheelMotion() > 0 && App->editor->scene_panel->IsHovered())
 	{
@@ -69,8 +150,7 @@ update_status ModuleCamera::PreUpdate()
 		float2 position = float2(App->input->GetMousePosition().x, App->input->GetMousePosition().y);
 		App->editor->scene_panel->MousePicking(position);
 
-		bool double_click = false;//TODO implement method to check if double clicked
-		if (double_click && App->editor->selected_game_object != nullptr)
+		if (App->input->GetMouseClicks() == 2 && App->editor->selected_game_object != nullptr)
 		{
 			scene_camera->Center(App->editor->selected_game_object->aabb.global_bounding_box);
 		}
@@ -154,82 +234,6 @@ update_status ModuleCamera::PreUpdate()
 	{
 		scene_camera->RotateYaw(1.f);
 	}
-	return update_status::UPDATE_CONTINUE;
-}
-
-// Called every draw update
-update_status ModuleCamera::Update()
-{
-	SelectMainCamera();
-	scene_camera->Update();
-	return update_status::UPDATE_CONTINUE;
-}
-
-bool ModuleCamera::CleanUp()
-{
-	for (auto& camera : cameras)
-	{
-		camera->owner->RemoveComponent(camera);
-	}
-	cameras.clear();
-	main_camera = nullptr;
-	return true;
-}
-
-ComponentCamera* ModuleCamera::CreateComponentCamera()
-{
-	ComponentCamera * new_camera = new ComponentCamera();
-	cameras.push_back(new_camera);
-	return new_camera;
-}
-
-void ModuleCamera::RemoveComponentCamera(ComponentCamera* camera_to_remove)
-{
-	auto it = std::find(cameras.begin(), cameras.end(), camera_to_remove);
-	if (*it == main_camera)
-	{
-		main_camera = nullptr;
-	}
-	if (it != cameras.end()) 
-	{
-		delete *it;
-		cameras.erase(it);
-	}
-}
-
-void ModuleCamera::SelectMainCamera()
-{
-	main_camera = nullptr;
-
-	for (auto& camera : cameras)
-	{
-		if (camera->IsEnabled() && camera != scene_camera)
-		{
-			if (main_camera == nullptr)
-			{
-				main_camera = camera;
-			}
-			else if (main_camera->depth < camera->depth)
-			{
-				main_camera = camera;
-			}
-		}
-	}
-}
-
-void ModuleCamera::SetOrbit(bool is_orbiting)
-{
-	this->is_orbiting = is_orbiting;
-}
-
-bool ModuleCamera::IsOrbiting() const
-{
-	return is_orbiting;
-}
-
-void ModuleCamera::SetMovement(bool movement_enabled)
-{
-	this->movement_enabled = movement_enabled;
 }
 
 bool ModuleCamera::IsMovementEnabled() const

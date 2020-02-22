@@ -320,13 +320,15 @@ public:
 	iPoint GetMousePosition() const;
 	iPoint GetMouseMotion() const;
 	int32_t GetMouseWheelMotion() const;
+
+	Uint8 GetMouseClicks() const;
 	bool IsMouseMoving() const;
 
 private:
 	//KeyState* keyboard_state;
-	KeyState mouseButtons[NUM_MOUSE_BUTTONS];
+	//KeyState mouseButtons[NUM_MOUSE_BUTTONS];
 	bool controlKeyDown = false;
-	const Uint8 *keyboard = nullptr;
+	//const Uint8 *keyboard = nullptr;
 
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseButton, KeyState> mouse_bible;
@@ -336,6 +338,7 @@ private:
 	int32_t mouse_wheel_motion;
 
 	bool mouse_moving;
+	Uint8 mouse_clicks = 0;
 };
 
 #endif //_MODULEINPUT_H
