@@ -230,7 +230,7 @@ void ModuleEditor::OpenScene(const std::string &path) const
 void ModuleEditor::SaveScene(const std::string &path) const
 {
 	Config scene_config;
-	App->scene->Save(scene_config);
+	App->resources->prefab_importer->Save(scene_config, App->scene->GetRoot());
 	std::string serialized_scene_string;
 	scene_config.GetSerializedString(serialized_scene_string);
 

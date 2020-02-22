@@ -16,6 +16,7 @@ class Importer;
 class Timer;
 #include "ResourceManagement/Importer/TextureImporter.h"
 #include "ResourceManagement/Importer/ModelImporter.h"
+#include "ResourceManagement/Importer/PrefabManager.h"
 class ModuleResourceManager : public Module
 {
 public:
@@ -73,6 +74,7 @@ public:
 	} thread_comunication;
 
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
+	std::unique_ptr<PrefabManager> prefab_importer = nullptr;
 
 private:
 	const size_t importer_interval_millis = 30000;

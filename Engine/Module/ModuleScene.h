@@ -28,7 +28,6 @@ public:
 	GameObject* GetGameObject(uint64_t UUID) const;
 
 	void DeleteCurrentScene();
-	void Save(Config& serialized_scene) const;
 	void Load(const Config& serialized_scene);
 
 private:
