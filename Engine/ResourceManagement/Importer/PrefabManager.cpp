@@ -6,8 +6,11 @@
 #include <Module/ModuleScene.h>
 #include <Module/ModuleRender.h>
 
-void PrefabManager::Save(Config& serialized_scene, const GameObject * gameobject_to_save) const
+void PrefabManager::Save(const std::string &path, const GameObject * gameobject_to_save) const
 {
+
+	Config scene_config;
+
 	std::vector<Config> game_objects_config;
 	std::stack<GameObject*> pending_objects;
 
@@ -30,7 +33,12 @@ void PrefabManager::Save(Config& serialized_scene, const GameObject * gameobject
 			pending_objects.push(child_game_object);
 		}
 	}
-	serialized_scene.AddChildrenConfig(game_objects_config, "GameObjects");
+	scene_config.AddChildrenConfig(game_objects_config, "GameObjects");
+
+	std::string serialized_scene_string;
+	scene_config.GetSerializedString(serialized_scene_string);
+
+	App->filesystem->Save(path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
 }
 
 

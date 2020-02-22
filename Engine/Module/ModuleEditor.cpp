@@ -223,12 +223,8 @@ void ModuleEditor::OpenScene(const std::string &path) const
 
 void ModuleEditor::SaveScene(const std::string &path) const
 {
-	Config scene_config;
-	App->resources->prefab_importer->Save(scene_config, App->scene->GetRoot());
-	std::string serialized_scene_string;
-	scene_config.GetSerializedString(serialized_scene_string);
+	App->resources->prefab_importer->Save(path, App->scene->GetRoot());
 
-	App->filesystem->Save(path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
 }
 
 ImFont* ModuleEditor::GetFont(const Fonts & font) const
