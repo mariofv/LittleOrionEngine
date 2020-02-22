@@ -10,6 +10,7 @@
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentScript.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -17,6 +18,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleScriptManager.h"
 
 
 #include "Helper/Utils.h"
@@ -407,15 +409,40 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 	}
 }
 
+void PanelComponent::ShowComponentScriptWindow(ComponentScript *component_script)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_CODE " Script", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::Checkbox("Active", &component_script->active))
+		{
+			//UndoRedo TODO
+			//App->editor->action_component = component_script;
+			//App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			App->editor->DeleteComponentUndo(component_script);
+
+			return;
+		}
+		ImGui::Separator();
+
+		component_script->ShowComponentWindow();
+
+		// to implement CheckClickForUndo(ModuleEditor::UndoActionType::EDIT_COMPONENTSCRIPT, component_script);
+
+	}
+}
 
 void PanelComponent::ShowAddNewComponentButton()
 {
 	float window_width = ImGui::GetWindowWidth();
 	float button_width = 0.5f * window_width;
 	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
-	ImGui::Button("Add component", ImVec2(button_width, 25));
+	ImGui::Button("Add Component", ImVec2(button_width, 25));
 
-	if (ImGui::BeginPopupContextItem("Add component", 0))
+	if (ImGui::BeginPopupContextItem("Add Component", 0))
 	{
 		char tmp_string[128];
 
@@ -442,11 +469,38 @@ void PanelComponent::ShowAddNewComponentButton()
 		sprintf_s(tmp_string, "%s Script", ICON_FA_EDIT);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::SCRIPT);
+			//ShowScriptsCreated();
 
 		}
 
 		ImGui::EndPopup();
 	}
 }
+
+void PanelComponent::ShowScriptsCreated() {
+
+	float window_width = ImGui::GetWindowWidth();
+	float button_width = 0.5f * window_width;
+	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
+	ImGui::Button("Add Script", ImVec2(button_width, 25));
+
+	if (ImGui::BeginPopupContextItem("Add Script", 0))
+	{
+		for (auto script_name : App->scripts->ListScripts) {
+			if (ImGui::Selectable(script_name.c_str()))
+			{
+				ComponentScript* script = (ComponentScript*)App->editor->selected_game_object->CreateComponent(Component::ComponentType::SCRIPT);
+				//script->name = script_name;
+				script->LoadName(script_name);
+		
+			}
+		}
+		
+
+		ImGui::EndPopup();
+	}
+
+}
+
+
 

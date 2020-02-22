@@ -6,11 +6,22 @@
 #define SCRIPT_API __declspec(dllimport)
 #endif
 class GameObject;
+class Application;
+struct ImGuiContext;
+
 class Script 
 {
 public:
-	virtual void Update(GameObject*) {}
-	virtual void OnInspector() {}
+	Script();
+	~Script();
+
+	virtual void Update() {};
+	virtual void OnInspector(ImGuiContext*) {};
+	void AddReferences(GameObject* owner, Application*);
+
+public:
+	GameObject *owner = nullptr;
+	Application *App = nullptr;
 };
 extern "C" SCRIPT_API Script* ScriptDLL();
 typedef Script* (*CREATE_SCRIPT) ();

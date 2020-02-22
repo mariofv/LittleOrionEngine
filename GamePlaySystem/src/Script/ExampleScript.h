@@ -3,8 +3,12 @@
 #include "Script.h"
 class ExampleScript : public Script
 {
-	void Update(GameObject*);
-	void OnInspector();
+public:
+	ExampleScript();
+	~ExampleScript();
+	void Update() override;
+	void OnInspector(ImGuiContext*) override;
+	void Test();
 };
 extern "C" SCRIPT_API ExampleScript* ExampleScriptDLL(); //This is how we are going to load the script
 #endif

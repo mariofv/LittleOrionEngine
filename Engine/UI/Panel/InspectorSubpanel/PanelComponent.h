@@ -10,6 +10,7 @@ class ComponentMaterial;
 class ComponentMesh;
 class ComponentTransform;
 class ComponentLight;
+class ComponentScript;
 
 class PanelComponent
 {
@@ -22,8 +23,11 @@ public:
 	void ShowComponentMaterialWindow(ComponentMaterial *material);
 	void ShowComponentCameraWindow(ComponentCamera *camera);
 	void ShowComponentLightWindow(ComponentLight *light);
+	void ShowComponentScriptWindow(ComponentScript * component_script);
 	
 	void ShowAddNewComponentButton();
+
+	void ShowScriptsCreated();
 
 	void CheckClickedCamera(ComponentCamera* camera);
 	void CheckClickForUndo(ModuleEditor::UndoActionType type, Component* component);

@@ -352,7 +352,7 @@
     <ClCompile Include="Engine\Component\ComponentScript.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Module\ModuleManagerScript.cpp">
+    <ClCompile Include="Engine\Module\ModuleScriptManager.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
   </ItemGroup>
@@ -588,7 +588,7 @@
     <ClInclude Include="Engine\Component\ComponentScript.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Module\ModuleManagerScript.h">
+    <ClInclude Include="Engine\Module\ModuleScriptManager.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
   </ItemGroup>

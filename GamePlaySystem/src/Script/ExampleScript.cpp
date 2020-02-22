@@ -1,17 +1,35 @@
 #include "ExampleScript.h"
+#include "imgui.h"
 
-ExampleScript* CreateExampleScript()
+ExampleScript* ExampleScriptDLL()
 {
-	return new ExampleScript();
+	ExampleScript *instance = new ExampleScript();
+
+	return instance;
 }
 
-void ExampleScript::Update(GameObject* owner)
+ExampleScript::ExampleScript()
+{
+}
+ExampleScript::~ExampleScript()
+{
+}
+
+void ExampleScript::Update()
 {
 	
 
 }
 
-void ExampleScript::OnInspector()
+void ExampleScript::OnInspector(ImGuiContext* context)
 {
+	ImGui::SetCurrentContext(context);
+	ImGui::Text("Testing Inspector");
+	ImGui::Text("By Marco and Jordi guys, we are doing it, yeah!");
+	
+}
 
+void ExampleScript::Test()
+{
+	//TODO
 }
