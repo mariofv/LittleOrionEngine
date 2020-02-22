@@ -44,9 +44,14 @@ ModuleFileSystem::~ModuleFileSystem()
 }
 
 char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
-{
+{ 
 	SDL_RWops *rw = SDL_RWFromFile(file_path, "rb");
-	if (rw == NULL) return NULL;
+	if (rw == NULL)
+	{
+		size = 0;
+		return NULL;
+
+	}
 
 	size_t res_size = static_cast<size_t>(SDL_RWsize(rw));
 	char* res = (char*)malloc(res_size + 1);
@@ -65,14 +70,13 @@ char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
 	}
 
 	res[nb_read_total] = '\0';
-	if (size != NULL)
-		size = nb_read_total;
+	size = nb_read_total;
 	return res;
 
 }
-unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, unsigned int size, bool append) const
+bool ModuleFileSystem::Save(const char* file_path, const void* buffer, unsigned int size, bool append) const
 {
-	if (buffer == nullptr)
+	if (size == 0)
 	{
 		return false;
 	}
@@ -96,10 +100,10 @@ unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, u
 	else
 	{
 		APP_LOG_ERROR("Error: Unable to open file! SDL Error: %s\n", SDL_GetError());
-		return 1;
+		return false;
 	}
 	SDL_RWclose(file);
-	return 0;
+	return true;
 }
 bool ModuleFileSystem::Remove(const File * file)
 {
