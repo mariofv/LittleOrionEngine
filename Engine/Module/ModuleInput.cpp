@@ -35,6 +35,11 @@ bool ModuleInput::Init()
 		ret = false;
 	}
 
+	for (int i = 0; i < MAX_KEYS; ++i)
+	{
+		key_bible[(KeyCode)i] = KeyState::IDLE;
+	}
+
 	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
 
 	return ret;
@@ -168,7 +173,7 @@ update_status ModuleInput::PreUpdate()
 		}
 	}
 
-	keyboard = SDL_GetKeyboardState(NULL);
+	/*keyboard = SDL_GetKeyboardState(NULL);
 
 	if (App->cameras->IsMovementEnabled())
 	{
@@ -233,8 +238,25 @@ update_status ModuleInput::PreUpdate()
 	{
 		App->editor->Redo();
 		controlKeyDown = false;
-	}
+	}*/
 
+	const Uint8* keys = SDL_GetKeyboardState(nullptr);
+
+	for (int i = 0; i < MAX_KEYS; ++i)
+	{
+		keys[i] == 1 ?
+			(key_bible[(KeyCode)i] = (key_bible[(KeyCode)i] == KeyState::IDLE) ? KeyState::DOWN : KeyState::REPEAT) :
+			(key_bible[(KeyCode)i] = (key_bible[(KeyCode)i] == KeyState::REPEAT || key_bible[(KeyCode)i] == KeyState::DOWN) ? KeyState::UP : KeyState::IDLE);
+
+		if (keys[i] == 0)
+		{
+			if (key_bible[(KeyCode)i] == KeyState::REPEAT || key_bible[(KeyCode)i] == KeyState::DOWN)
+				key_bible[(KeyCode)i] = KeyState::UP;
+
+			if (key_bible[(KeyCode)i] == KeyState::UP)
+				key_bible[(KeyCode)i] = KeyState::IDLE;
+		}
+	}
 
 
 	return update_status::UPDATE_CONTINUE;
@@ -248,10 +270,10 @@ bool ModuleInput::CleanUp()
 	return true;
 }
 
-bool ModuleInput::GetKey(int id) const
+bool ModuleInput::GetKey(KeyCode key) 
 {
 	//Returns true while the user holds down the key identified by name.
-	return keyboard_state[id] == KeyState::REPEAT;
+	return key_bible[key] == KeyState::REPEAT;
 }
 
 bool ModuleInput::GetMouseButtonDown(int id) const
@@ -260,14 +282,14 @@ bool ModuleInput::GetMouseButtonDown(int id) const
 	return mouseButtons[id - 1] == KeyState::DOWN;
 }
 
-bool ModuleInput::GetKeyDown(int id) const
+bool ModuleInput::GetKeyDown(KeyCode key) 
 {
 	//Returns true during the frame the user starts pressing down the key identified by name.
-	return keyboard_state[id] == KeyState::DOWN;
+	return key_bible[key] == KeyState::DOWN;
 }
 
-bool ModuleInput::GetKeyUp(int id) const
+bool ModuleInput::GetKeyUp(KeyCode key) 
 {
 	//Returns true during the frame the user releases the key identified by name.
-	return keyboard_state[id] == KeyState::UP;
+	return key_bible[key] == KeyState::UP;
 }
