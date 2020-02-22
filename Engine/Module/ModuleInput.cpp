@@ -129,7 +129,7 @@ update_status ModuleInput::PreUpdate()
 		}
 	}
 
-	const Uint8* keyboard = SDL_GetKeyboardState(NULL);
+	keyboard = SDL_GetKeyboardState(NULL);
 
 	if(controlKeyDown && keyboard[SDL_SCANCODE_LCTRL] && !keyboard[SDL_SCANCODE_LSHIFT])
 	{
@@ -143,7 +143,7 @@ update_status ModuleInput::PreUpdate()
 		controlKeyDown = false;
 	}
 
-	const Uint8* keys = SDL_GetKeyboardState(nullptr);
+	keys = SDL_GetKeyboardState(nullptr);
 
 	for (int i = 0; i < MAX_KEYS; ++i)
 	{

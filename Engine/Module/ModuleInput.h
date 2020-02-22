@@ -328,7 +328,9 @@ private:
 	//KeyState* keyboard_state;
 	//KeyState mouseButtons[NUM_MOUSE_BUTTONS];
 	bool controlKeyDown = false;
-	//const Uint8 *keyboard = nullptr;
+	const Uint8 *keyboard = nullptr;
+
+	const Uint8* keys = nullptr;
 
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseButton, KeyState> mouse_bible;
@@ -337,8 +339,8 @@ private:
 	iPoint mouse_motion;
 	int32_t mouse_wheel_motion;
 
-	bool mouse_moving;
 	Uint8 mouse_clicks = 0;
+	bool mouse_moving;
 };
 
 #endif //_MODULEINPUT_H
