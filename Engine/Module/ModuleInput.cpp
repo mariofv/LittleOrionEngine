@@ -87,8 +87,8 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEMOTION:
-			mouse_position = { event.motion.x, event.motion.y };
-			mouse_motion = { event.motion.xrel, event.motion.yrel };
+			mouse_position = float2(event.motion.x, event.motion.y);
+			mouse_motion = float2(event.motion.xrel, event.motion.yrel);
 			mouse_moving = event.motion.state & SDL_BUTTON_RMASK;
 			break;
 
@@ -219,13 +219,13 @@ bool ModuleInput::GetMouseButtonUp(MouseButton button)
 }
 
 // Returns the current mouse position in pixel coordinates
-iPoint ModuleInput::GetMousePosition() const
+float2 ModuleInput::GetMousePosition() const
 {
 	return mouse_position;
 }
 
 // Returns the current mouse motion in relative coordinates
-iPoint ModuleInput::GetMouseMotion() const
+float2 ModuleInput::GetMouseMotion() const
 {
 	return mouse_motion;
 }

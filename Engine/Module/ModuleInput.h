@@ -317,8 +317,8 @@ public:
 	bool GetMouseButtonDown(MouseButton button); 
 	bool GetMouseButtonUp(MouseButton button);
 
-	iPoint GetMousePosition() const;
-	iPoint GetMouseMotion() const;
+	float2 GetMousePosition() const;
+	float2 GetMouseMotion() const;
 	int32_t GetMouseWheelMotion() const;
 
 	Uint8 GetMouseClicks() const;
@@ -335,8 +335,8 @@ private:
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseButton, KeyState> mouse_bible;
 
-	iPoint mouse_position;
-	iPoint mouse_motion;
+	float2 mouse_position;
+	float2 mouse_motion;
 	int32_t mouse_wheel_motion;
 
 	Uint8 mouse_clicks = 0;

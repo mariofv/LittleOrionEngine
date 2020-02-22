@@ -349,16 +349,16 @@ void PanelConfiguration::ShowInputOptions()
 		if (ImGui::TreeNode("Keyboard, Mouse & Navigation State"))
 		{
 
-			iPoint mouse_pos = App->input->GetMousePosition();
-			iPoint mouse_rel = App->input->GetMouseMotion();
+			float2 mouse_pos = App->input->GetMousePosition();
+			float2 mouse_rel = App->input->GetMouseMotion();
 			if (ImGui::IsMousePosValid())
 			{
-				ImGui::Text("Mouse pos (SDL): (%d, %d)", mouse_pos.x, mouse_pos.y);
+				ImGui::Text("Mouse pos (SDL): (%g, %g)", mouse_pos.x, mouse_pos.y);
 				ImGui::Text("Mouse pos (IMGUI): (%g, %g)", io.MousePos.x, io.MousePos.y);
 			}
 			else
 				ImGui::Text("Mouse pos: <INVALID>");
-			ImGui::Text("Mouse delta (SDL):(%d, %d)", mouse_rel.x, mouse_rel.y);
+			ImGui::Text("Mouse delta (SDL):(%g, %g)", mouse_rel.x, mouse_rel.y);
 			ImGui::Text("Mouse delta (IMGUI): (%g, %g)", io.MouseDelta.x, io.MouseDelta.y);
 			ImGui::Text("Mouse down:");     for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (io.MouseDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("b%d (%.02f secs)", i, io.MouseDownDuration[i]); }
 			ImGui::Text("Mouse clicked:");  for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseClicked(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }

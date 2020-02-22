@@ -124,12 +124,12 @@ void ModuleCamera::HandleSceneCameraMovements()
 	// Mouse motion
 	if (App->input->IsMouseMoving() && App->editor->scene_panel->IsHovered())
 	{
-		float2 motion = float2(App->input->GetMouseMotion().x, App->input->GetMouseMotion().y);
+		float2 motion = App->input->GetMouseMotion();
 		scene_camera->RotateCameraWithMouseMotion(motion);
 	}
 	else if (App->input->IsMouseMoving() && App->editor->scene_panel->IsHovered() && IsOrbiting())
 	{
-		float2 motion = float2(App->input->GetMouseMotion().x, App->input->GetMouseMotion().y);
+		float2 motion = App->input->GetMouseMotion();
 		if (App->editor->selected_game_object != nullptr)
 		{
 			scene_camera->OrbitCameraWithMouseMotion(motion, App->editor->selected_game_object->transform.GetGlobalTranslation());
@@ -147,7 +147,7 @@ void ModuleCamera::HandleSceneCameraMovements()
 	}
 	if (App->input->GetMouseButtonDown(MouseButton::Left) && App->editor->scene_panel->IsHovered() && !IsOrbiting())
 	{
-		float2 position = float2(App->input->GetMousePosition().x, App->input->GetMousePosition().y);
+		float2 position = App->input->GetMousePosition();
 		App->editor->scene_panel->MousePicking(position);
 
 		if (App->input->GetMouseClicks() == 2 && App->editor->selected_game_object != nullptr)
