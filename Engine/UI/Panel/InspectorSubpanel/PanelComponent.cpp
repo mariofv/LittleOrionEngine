@@ -439,6 +439,12 @@ void PanelComponent::ShowAddNewComponentButton()
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
 
 		}
+		sprintf_s(tmp_string, "%s Script", ICON_FA_EDIT);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::SCRIPT);
+
+		}
 
 		ImGui::EndPopup();
 	}
