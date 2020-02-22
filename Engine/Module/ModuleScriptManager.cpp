@@ -1,11 +1,11 @@
-#include "ModuleManagerScript.h"
+#include "ModuleScriptManager.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Component/ComponentScript.h"
 #include "Script/Script.h"
 
-bool ModuleManagerScript::Init()
+bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
 	//TODO: Load all the .dll
@@ -15,7 +15,7 @@ bool ModuleManagerScript::Init()
 }
 
 // Called every draw update
-update_status ModuleManagerScript::PreUpdate()
+update_status ModuleScriptManager::PreUpdate()
 {
 	//TODO Load libray only if file change
 	if (gp_dll)
@@ -31,20 +31,20 @@ update_status ModuleManagerScript::PreUpdate()
 	}
 	return update_status::UPDATE_CONTINUE;
 }
-update_status ModuleManagerScript::Update()
+update_status ModuleScriptManager::Update()
 {
 	
 	
 	return update_status::UPDATE_CONTINUE;
 }
 
-bool ModuleManagerScript::CleanUp()
+bool ModuleScriptManager::CleanUp()
 {
 	FreeLibrary(gp_dll);
 	return true;
 }
 
-ComponentScript* ModuleManagerScript::CreateComponentScript() {
+ComponentScript* ModuleScriptManager::CreateComponentScript() {
 	ComponentScript* new_script = new ComponentScript();
 	scripts.push_back(new_script);
 	return new_script;
