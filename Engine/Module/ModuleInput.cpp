@@ -244,17 +244,27 @@ update_status ModuleInput::PreUpdate()
 
 	for (int i = 0; i < MAX_KEYS; ++i)
 	{
-		keys[i] == 1 ?
-			(key_bible[(KeyCode)i] = (key_bible[(KeyCode)i] == KeyState::IDLE) ? KeyState::DOWN : KeyState::REPEAT) :
-			(key_bible[(KeyCode)i] = (key_bible[(KeyCode)i] == KeyState::REPEAT || key_bible[(KeyCode)i] == KeyState::DOWN) ? KeyState::UP : KeyState::IDLE);
-
-		if (keys[i] == 0)
+		if (keys[i] == 1)
+		{
+			if (key_bible[(KeyCode)i] == KeyState::IDLE)
+			{
+				key_bible[(KeyCode)i] = KeyState::DOWN;
+			}
+			else if (key_bible[(KeyCode)i] == KeyState::DOWN)
+			{
+				key_bible[(KeyCode)i] = KeyState::REPEAT;
+			}
+		}
+		else if (keys[i] == 0)
 		{
 			if (key_bible[(KeyCode)i] == KeyState::REPEAT || key_bible[(KeyCode)i] == KeyState::DOWN)
+			{
 				key_bible[(KeyCode)i] = KeyState::UP;
-
-			if (key_bible[(KeyCode)i] == KeyState::UP)
+			}
+			else if (key_bible[(KeyCode)i] == KeyState::UP)
+			{
 				key_bible[(KeyCode)i] = KeyState::IDLE;
+			}	
 		}
 	}
 
