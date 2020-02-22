@@ -109,10 +109,10 @@ enum class KeyCode
 	Delete = SDL_SCANCODE_DELETE,
 	End = SDL_SCANCODE_END,
 	PageDown = SDL_SCANCODE_PAGEDOWN,
-	ArrowRight = SDL_SCANCODE_RIGHT,
-	ArrowLeft = SDL_SCANCODE_LEFT,
-	ArrowDown = SDL_SCANCODE_DOWN,
-	ArrowUp = SDL_SCANCODE_UP,
+	RightArrow = SDL_SCANCODE_RIGHT,
+	LeftArrow = SDL_SCANCODE_LEFT,
+	DownArrow = SDL_SCANCODE_DOWN,
+	UpArrow = SDL_SCANCODE_UP,
 
 	NumLockClear = SDL_SCANCODE_NUMLOCKCLEAR,
 	KeypadDivide = SDL_SCANCODE_KP_DIVIDE,
@@ -290,13 +290,13 @@ enum class KeyCode
 	AudioFastForward = SDL_SCANCODE_AUDIOFASTFORWARD,
 };
 
-enum class MouseCode
+enum class MouseButton
 {
-	LeftClick = SDL_BUTTON_LEFT,
-	MiddleClick = SDL_BUTTON_MIDDLE,
-	RightClick = SDL_BUTTON_RIGHT,
-	X1CLick = SDL_BUTTON_X1,
-	X2Click = SDL_BUTTON_X2
+	Left = SDL_BUTTON_LEFT,
+	Middle = SDL_BUTTON_MIDDLE,
+	Right = SDL_BUTTON_RIGHT,
+	X1 = SDL_BUTTON_X1,
+	X2 = SDL_BUTTON_X2
 };
 
 class ModuleInput : public Module
@@ -313,26 +313,29 @@ public:
 	bool GetKeyDown(KeyCode key);
 	bool GetKeyUp(KeyCode key);
 
-	bool GetMouseButton(MouseCode mouse);
-	bool GetMouseButtonDown(MouseCode mouse);
-	bool GetMouseButtonUp(MouseCode mouse);
+	bool GetMouseButton(MouseButton button);
+	bool GetMouseButtonDown(MouseButton button); 
+	bool GetMouseButtonUp(MouseButton button);
 
 	iPoint GetMousePosition() const;
 	iPoint GetMouseMotion() const;
 	int32_t GetMouseWheelMotion() const;
+	bool IsMouseMoving() const;
 
 private:
-	KeyState* keyboard_state;
+	//KeyState* keyboard_state;
 	KeyState mouseButtons[NUM_MOUSE_BUTTONS];
 	bool controlKeyDown = false;
 	const Uint8 *keyboard = nullptr;
 
 	std::map<KeyCode, KeyState> key_bible;
-	std::map<MouseCode, KeyState> mouse_bible;
+	std::map<MouseButton, KeyState> mouse_bible;
 
 	iPoint mouse_position;
 	iPoint mouse_motion;
 	int32_t mouse_wheel_motion;
+
+	bool mouse_moving;
 };
 
 #endif //_MODULEINPUT_H

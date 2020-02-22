@@ -20,6 +20,7 @@ public:
 	~ModuleCamera() = default;
 	
 	bool Init() override;
+	update_status PreUpdate() override;
 	update_status Update() override;
 	bool CleanUp() override;
 	

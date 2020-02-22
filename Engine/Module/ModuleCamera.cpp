@@ -1,9 +1,11 @@
 #include "ModuleCamera.h"
+
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleWindow.h"
 #include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
+#include "Module/ModuleInput.h"
 
 #include <algorithm>
 #include <SDL/SDL.h>
@@ -24,6 +26,135 @@ bool ModuleCamera::Init()
 	scene_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
 
 	return true;
+}
+
+update_status ModuleCamera::PreUpdate()
+{
+	// Mouse wheel
+	if (App->input->GetMouseWheelMotion() > 0 && App->editor->scene_panel->IsHovered())
+	{
+		scene_camera->MoveFoward();
+	}
+	else if (App->input->GetMouseWheelMotion() < 0 && App->editor->scene_panel->IsHovered())
+	{
+		scene_camera->MoveBackward();
+	}
+
+	// Mouse motion
+	if (App->input->IsMouseMoving() && App->editor->scene_panel->IsHovered())
+	{
+		float2 motion = float2(App->input->GetMouseMotion().x, App->input->GetMouseMotion().y);
+		scene_camera->RotateCameraWithMouseMotion(motion);
+	}
+	else if (App->input->IsMouseMoving() && App->editor->scene_panel->IsHovered() && IsOrbiting())
+	{
+		float2 motion = float2(App->input->GetMouseMotion().x, App->input->GetMouseMotion().y);
+		if (App->editor->selected_game_object != nullptr)
+		{
+			scene_camera->OrbitCameraWithMouseMotion(motion, App->editor->selected_game_object->transform.GetGlobalTranslation());
+		}
+		else
+		{
+			scene_camera->RotateCameraWithMouseMotion(motion);
+		}
+	}
+
+	// Mouse button down
+	if (App->input->GetMouseButtonDown(MouseButton::Right) && App->editor->scene_panel->IsHovered())
+	{
+		SetMovement(true);
+	}
+	if (App->input->GetMouseButtonDown(MouseButton::Left) && App->editor->scene_panel->IsHovered() && !IsOrbiting())
+	{
+		float2 position = float2(App->input->GetMousePosition().x, App->input->GetMousePosition().y);
+		App->editor->scene_panel->MousePicking(position);
+
+		bool double_click = false;//TODO implement method to check if double clicked
+		if (double_click && App->editor->selected_game_object != nullptr)
+		{
+			scene_camera->Center(App->editor->selected_game_object->aabb.global_bounding_box);
+		}
+	}
+
+	// Mouse button up
+	if (App->input->GetMouseButtonUp(MouseButton::Right))
+	{
+		SetMovement(false);
+	}
+
+	// Key down
+	if (App->input->GetKeyDown(KeyCode::LeftAlt))
+	{
+		SetOrbit(true);
+	}
+	else if (App->input->GetKeyDown(KeyCode::LeftShift))
+	{
+		scene_camera->SetSpeedUp(true);
+	}
+	else if (App->input->GetKeyDown(KeyCode::F))
+	{
+		if (App->editor->selected_game_object != nullptr)
+		{
+			App->cameras->scene_camera->Center(App->editor->selected_game_object->aabb.global_bounding_box);
+		}
+	}
+
+	// Key up
+	if (App->input->GetKeyUp(KeyCode::LeftAlt))
+	{
+		SetOrbit(false);
+	}
+	else if (App->input->GetKeyUp(KeyCode::LeftShift))
+	{
+		scene_camera->SetSpeedUp(false);
+	}
+
+	// Key hold
+	if (IsMovementEnabled())
+	{
+		if (App->input->GetKey(KeyCode::Q))
+		{
+			scene_camera->MoveUp();
+		}
+		if (App->input->GetKey(KeyCode::E))
+		{
+			scene_camera->MoveDown();
+		}
+		if (App->input->GetKey(KeyCode::W))
+		{
+			scene_camera->MoveFoward();
+		}
+		if (App->input->GetKey(KeyCode::S))
+		{
+			scene_camera->MoveBackward();
+		}
+		if (App->input->GetKey(KeyCode::A))
+		{
+			scene_camera->MoveLeft();
+		}
+		if (App->input->GetKey(KeyCode::D))
+		{
+			scene_camera->MoveRight();
+		}
+	}
+
+	if (App->input->GetKey(KeyCode::UpArrow))
+	{
+		scene_camera->RotatePitch(-1.f);
+	}
+	if (App->input->GetKey(KeyCode::DownArrow))
+	{
+		scene_camera->RotatePitch(1.f);
+	}
+	if (App->input->GetKey(KeyCode::LeftArrow))
+	{
+		scene_camera->RotateYaw(-1.f);
+	}
+	if (App->input->GetKey(KeyCode::RightArrow))
+	{
+		scene_camera->RotateYaw(1.f);
+	}
+	return update_status::UPDATE_CONTINUE;
 }
 
 // Called every draw update
