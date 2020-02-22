@@ -72,6 +72,10 @@ char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
 }
 unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, unsigned int size, bool append) const
 {
+	if (buffer == nullptr)
+	{
+		return false;
+	}
 	SDL_RWops* file;
 	if (append) 
 	{
@@ -133,10 +137,6 @@ bool ModuleFileSystem::Copy(const char* source, const char* destination)
 	char * buffer = Load(source,file_size);
 	bool success = Save(destination, buffer, file_size,false);
 	free(buffer);
-	if (success)
-	{
-		RefreshFilesHierarchy();
-	}
 	return success;
 }
 

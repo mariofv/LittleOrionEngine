@@ -155,6 +155,10 @@ std::string TextureImporter::ImportToDDS(const File & file) const
 std::string TextureImporter::ImportToTGA(const File & file) const
 {
 	std::string output_file = LIBRARY_TEXTURES_FOLDER + "/" +file.filename;
-	App->filesystem->Copy(file.file_path.c_str(), output_file.c_str());
+	bool copied = App->filesystem->Copy(file.file_path.c_str(), output_file.c_str());
+	if (!copied)
+	{
+		return "";
+	}
 	return output_file;
 }
