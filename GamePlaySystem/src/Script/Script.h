@@ -17,7 +17,7 @@ public:
 
 	virtual void Update() {};
 	virtual void OnInspector(ImGuiContext*) {};
-	void AddReferences(GameObject* owner, Application*);
+	virtual void AddReferences(GameObject* owner, Application*);
 
 public:
 	GameObject *owner = nullptr;

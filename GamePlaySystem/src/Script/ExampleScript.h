@@ -9,6 +9,7 @@ public:
 	void Update() override;
 	void OnInspector(ImGuiContext*) override;
 	void Test();
+	int i = 0;
 };
 extern "C" SCRIPT_API ExampleScript* ExampleScriptDLL(); //This is how we are going to load the script
 #endif

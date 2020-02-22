@@ -17,7 +17,9 @@ bool ModuleScriptManager::Init()
 
 update_status ModuleScriptManager::Update()
 {
-	
+	for (auto &component_script : scripts) {
+		component_script->Update();
+	}
 
 	return update_status::UPDATE_CONTINUE;
 }
@@ -36,7 +38,7 @@ void ModuleScriptManager::InitResourceScript() {
 			if (script_func != nullptr)
 			{
 				component_script->script = script_func();
-				//component_script->script->AddReferences(component_script->owner, App);
+				component_script->script->AddReferences(component_script->owner, App);
 			}
 		}
 	}
@@ -48,7 +50,7 @@ Script* ModuleScriptManager::CreateResourceScript( std::string script_name, Game
 		if (script_func != nullptr)
 		{
 			Script* script = script_func();
-			//script->AddReferences(owner, App);
+			script->AddReferences(owner, App);
 			return script;
 		}
 		return nullptr;

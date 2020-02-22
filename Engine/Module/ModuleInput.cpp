@@ -119,6 +119,9 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_KEYDOWN:
+			if (event.key.keysym.sym == SDLK_1) {
+				testing = true;
+			}
 			if (event.key.keysym.sym == SDLK_LALT)
 			{
 				App->cameras->SetOrbit(true);
@@ -144,6 +147,9 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_KEYUP:
+			if (event.key.keysym.sym == SDLK_1) {
+				testing = false;
+			}
 			if (event.key.keysym.sym == SDLK_LALT)
 			{
 				App->cameras->SetOrbit(false);

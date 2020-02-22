@@ -16,7 +16,7 @@ public:
 	bool Init() override;
 	update_status PreUpdate() override;
 	bool CleanUp() override;
-
+	bool testing = false;
 private:
 	bool controlKeyDown = false;
 	const Uint8 *keyboard = nullptr;
