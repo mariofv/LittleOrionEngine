@@ -597,6 +597,7 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Skeleton.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Animation.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\PrefabManager.h" />
+    <ClInclude Include="Engine\UI\DebugDraw.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

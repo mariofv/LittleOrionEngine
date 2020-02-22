@@ -134,6 +134,7 @@
     <ClInclude Include="Engine\Module\ModuleDebug.h" />
     <ClInclude Include="Engine\Module\ModuleLight.h" />
     <ClInclude Include="Engine\Module\ModuleUI.h" />
+    <ClInclude Include="Engine\UI\DebugDraw.h" />
     <ClInclude Include="Engine\UI\Panel\InspectorSubpanel\PanelComponent.h" />
     <ClInclude Include="Engine\Component\ComponentAABB.h" />
     <ClInclude Include="Engine\Component\ComponentCamera.h" />

@@ -1,6 +1,8 @@
 #include "PanelProjectExplorer.h"
 
 #include "Main/Application.h"
+#include "Main/GameObject.h"
+#include "Module/ModuleResourceManager.h"
 
 #include <imgui.h>
 #include <SDL/SDL.h>
@@ -35,6 +37,8 @@ void PanelProjectExplorer::Render()
 			ShowFilesInExplorer();
 		}
 		ImGui::EndChild();
+
+		FilesDrop();
 	}
 	ImGui::End();
 }
@@ -229,5 +233,20 @@ void PanelProjectExplorer::FilesDrag() const
 		ImGui::SetDragDropPayload("DND_File", &selected_file, sizeof(File*));
 		ImGui::Text("Dragging %s", selected_file->filename.c_str());
 		ImGui::EndDragDropSource();
+	}
+}
+
+void PanelProjectExplorer::FilesDrop() const
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_GameObject"))
+		{
+			assert(payload->DataSize == sizeof(GameObject*));
+			GameObject *incoming_game_object = *(GameObject**)payload->Data;
+			std::string prefab_path = selected_folder->file_path + "/"+incoming_game_object->name + ".prefab";
+			App->resources->prefab_importer->Save(prefab_path, incoming_game_object);
+		}
+		ImGui::EndDragDropTarget();
 	}
 }

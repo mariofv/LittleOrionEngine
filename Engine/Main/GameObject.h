@@ -63,7 +63,7 @@ public:
 	ComponentAABB aabb;
 	ComponentTransform transform;
 
-
+	bool prefab = false; // This should not be public. Public for now while implementing prefab.
 private:
 	bool active = true;
 	bool is_static = false;
