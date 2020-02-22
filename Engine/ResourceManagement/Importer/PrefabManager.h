@@ -12,6 +12,7 @@ public:
 	~PrefabManager() = default;
 
 	void Save(Config& serialized_scene, const GameObject * gameobject_to_save) const;
+	void Load(const std::string &path) const;
 };
 
 #endif

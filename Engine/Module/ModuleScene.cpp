@@ -5,6 +5,7 @@
 #include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
 #include "ModuleRender.h"
+#include "ModuleResourceManager.h"
 #include "Component/ComponentCamera.h"
 #include "Helper/Config.h"
 #include "UI/Panel/PanelHierarchy.h"
@@ -50,7 +51,6 @@ GameObject* ModuleScene::CreateGameObject()
 
 	GameObject * created_game_object_ptr = created_game_object.get();
 	game_objects_ownership.emplace_back(std::move(created_game_object));
-
 	return created_game_object_ptr;
 }
 
@@ -118,25 +118,14 @@ void ModuleScene::DeleteCurrentScene()
 	App->editor->selected_game_object = nullptr;
 }
 
-void ModuleScene::Load(const Config& serialized_scene)
+void  ModuleScene::NewScene(const std::string &path)
 {
-	DeleteCurrentScene();
+	App->scene->DeleteCurrentScene();
 	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 
-	std::vector<Config> game_objects_config;
-	serialized_scene.GetChildrenConfig("GameObjects", game_objects_config);
-	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
-	{
-		GameObject* created_game_object = CreateGameObject();
-		created_game_object->Load(game_objects_config[i]);
+	App->resources->prefab_importer->Load(path);
 
-		if(!created_game_object->IsStatic())
-		{
-			App->renderer->InsertAABBTree(created_game_object);
-		}
-	}
 	App->renderer->GenerateQuadTree();
 	App->editor->ClearUndoStack();
-
 }
