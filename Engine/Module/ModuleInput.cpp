@@ -20,6 +20,7 @@
 #include <GL/glew.h>
 #include "Brofiler/Brofiler.h"
 
+#include <iostream>
 // Called before render is available
 bool ModuleInput::Init()
 {
@@ -29,7 +30,7 @@ bool ModuleInput::Init()
 	bool ret = true;
 	SDL_Init(0);
 
-	if(SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
+	if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
 		APP_LOG_ERROR("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
@@ -54,6 +55,19 @@ bool ModuleInput::Init()
 update_status ModuleInput::PreUpdate()
 {
 	BROFILER_CATEGORY("Inputs PreUpdate", Profiler::Color::BlueViolet);
+
+	for (auto& mouse : mouse_bible)
+	{
+		if (mouse.second == KeyState::DOWN)
+		{
+			mouse.second = KeyState::REPEAT;
+		}
+		else if (mouse.second == KeyState::UP)
+		{
+			mouse.second = KeyState::IDLE;
+		}
+	}
+
 	SDL_PumpEvents();
 
 	SDL_Event event;
@@ -74,7 +88,7 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEMOTION:
-			if (event.motion.state & SDL_BUTTON_RMASK && App->editor->scene_panel->IsHovered()) 
+			if (event.motion.state & SDL_BUTTON_RMASK && App->editor->scene_panel->IsHovered())
 			{
 				float2 motion(event.motion.xrel, event.motion.yrel);
 				App->cameras->scene_camera->RotateCameraWithMouseMotion(motion);
@@ -106,14 +120,7 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_MOUSEBUTTONDOWN:
 
-			if (mouse_bible[(MouseCode)event.button.button] == KeyState::IDLE)
-			{
-				mouse_bible[(MouseCode)event.button.button] = KeyState::DOWN;
-			}
-			else if (mouse_bible[(MouseCode)event.button.button] == KeyState::DOWN)
-			{
-				mouse_bible[(MouseCode)event.button.button] = KeyState::REPEAT;
-			}
+			mouse_bible[(MouseCode)event.button.button] = KeyState::DOWN;
 
 			//if (event.button.button == SDL_BUTTON_RIGHT && App->editor->scene_panel->IsHovered())
 			//{
@@ -132,15 +139,8 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEBUTTONUP:
-			
-			if (mouse_bible[(MouseCode)event.button.button] ==  KeyState::REPEAT || mouse_bible[(MouseCode)event.button.button] == KeyState::DOWN)
-			{
-				mouse_bible[(MouseCode)event.button.button] = KeyState::UP;
-			}
-			else if (mouse_bible[(MouseCode)event.button.button] == KeyState::UP)
-			{
-				mouse_bible[(MouseCode)event.button.button] = KeyState::IDLE;
-			}
+
+			mouse_bible[(MouseCode)event.button.button] = KeyState::UP;
 
 			//if (event.button.button == SDL_BUTTON_RIGHT)
 			//{
@@ -193,7 +193,7 @@ update_status ModuleInput::PreUpdate()
 			char *dropped_filedir = event.drop.file;
 			App->editor->project_explorer->CopyFileToSelectedFolder(dropped_filedir);
 			SDL_free(dropped_filedir);
-			
+
 			break;
 		}
 	}
@@ -202,7 +202,7 @@ update_status ModuleInput::PreUpdate()
 
 	if (App->cameras->IsMovementEnabled())
 	{
-		if (keyboard[SDL_SCANCODE_Q]) 
+		if (keyboard[SDL_SCANCODE_Q])
 		{
 			App->cameras->scene_camera->MoveUp();
 		}
@@ -289,7 +289,7 @@ update_status ModuleInput::PreUpdate()
 			else if (key_bible[(KeyCode)i] == KeyState::UP)
 			{
 				key_bible[(KeyCode)i] = KeyState::IDLE;
-			}	
+			}
 		}
 	}
 
@@ -305,19 +305,19 @@ bool ModuleInput::CleanUp()
 	return true;
 }
 
-bool ModuleInput::GetKey(KeyCode key) 
+bool ModuleInput::GetKey(KeyCode key)
 {
 	//Returns true while the user holds down the key identified by name.
 	return key_bible[key] == KeyState::REPEAT;
 }
 
-bool ModuleInput::GetKeyDown(KeyCode key) 
+bool ModuleInput::GetKeyDown(KeyCode key)
 {
 	//Returns true during the frame the user starts pressing down the key identified by name.
 	return key_bible[key] == KeyState::DOWN;
 }
 
-bool ModuleInput::GetKeyUp(KeyCode key) 
+bool ModuleInput::GetKeyUp(KeyCode key)
 {
 	//Returns true during the frame the user releases the key identified by name.
 	return key_bible[key] == KeyState::UP;
