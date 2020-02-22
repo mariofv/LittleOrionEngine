@@ -4,6 +4,7 @@
 #include "Module.h"
 #include "Main/Globals.h"
 #include <SDL_scancode.h>
+#include <SDL_mouse.h>
 #include <map>
 
 typedef unsigned __int8 Uint8;
@@ -283,6 +284,14 @@ enum class KeyCode
 	AudioFastForward = SDL_SCANCODE_AUDIOFASTFORWARD,
 };
 
+enum class MouseCode
+{
+	LeftClick = SDL_BUTTON_LEFT,
+	MiddleClick = SDL_BUTTON_MIDDLE,
+	RightClick = SDL_BUTTON_RIGHT,
+	X1CLick = SDL_BUTTON_X1,
+	X2Click = SDL_BUTTON_X2
+};
 
 class ModuleInput : public Module
 {
@@ -295,9 +304,12 @@ public:
 	bool CleanUp() override;
 
 	bool GetKey(KeyCode key);
-	bool GetMouseButtonDown(int id) const;
 	bool GetKeyDown(KeyCode key);
 	bool GetKeyUp(KeyCode key);
+
+	bool GetMouseButton(MouseCode mouse);
+	bool GetMouseButtonDown(MouseCode mouse);
+	bool GetMouseButtonUp(MouseCode mouse);
 
 private:
 	KeyState* keyboard_state;
@@ -305,6 +317,7 @@ private:
 	bool controlKeyDown = false;
 	const Uint8 *keyboard = nullptr;
 	std::map<KeyCode, KeyState> key_bible;
+	std::map<MouseCode, KeyState> mouse_bible;
 };
 
-#endif _MODULEINPUT_H_
+#endif //_MODULEINPUT_H_

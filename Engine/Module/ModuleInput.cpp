@@ -40,6 +40,11 @@ bool ModuleInput::Init()
 		key_bible[(KeyCode)i] = KeyState::IDLE;
 	}
 
+	for (int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
+	{
+		mouse_bible[(MouseCode)i] = KeyState::IDLE;
+	}
+
 	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
 
 	return ret;
@@ -100,27 +105,47 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
-			if (event.button.button == SDL_BUTTON_RIGHT && App->editor->scene_panel->IsHovered())
-			{
-				App->cameras->SetMovement(true);
-			}
-			if (event.button.button == SDL_BUTTON_LEFT && App->editor->scene_panel->IsHovered() && !App->cameras->IsOrbiting())
-			{
-				float2 mouse_position = float2(event.button.x, event.button.y);
-				App->editor->scene_panel->MousePicking(mouse_position);
 
-				if (event.button.clicks == 2 && App->editor->selected_game_object != nullptr)
-				{
-					App->cameras->scene_camera->Center(App->editor->selected_game_object->aabb.global_bounding_box);
-				}
+			if (mouse_bible[(MouseCode)event.button.button] == KeyState::IDLE)
+			{
+				mouse_bible[(MouseCode)event.button.button] = KeyState::DOWN;
 			}
+			else if (mouse_bible[(MouseCode)event.button.button] == KeyState::DOWN)
+			{
+				mouse_bible[(MouseCode)event.button.button] = KeyState::REPEAT;
+			}
+
+			//if (event.button.button == SDL_BUTTON_RIGHT && App->editor->scene_panel->IsHovered())
+			//{
+			//	App->cameras->SetMovement(true);
+			//}
+			//if (event.button.button == SDL_BUTTON_LEFT && App->editor->scene_panel->IsHovered() && !App->cameras->IsOrbiting())
+			//{
+			//	float2 mouse_position = float2(event.button.x, event.button.y);
+			//	App->editor->scene_panel->MousePicking(mouse_position);
+
+			//	if (event.button.clicks == 2 && App->editor->selected_game_object != nullptr)
+			//	{
+			//		App->cameras->scene_camera->Center(App->editor->selected_game_object->aabb.global_bounding_box);
+			//	}
+			//}
 			break;
 
 		case SDL_MOUSEBUTTONUP:
-			if (event.button.button == SDL_BUTTON_RIGHT)
+			
+			if (mouse_bible[(MouseCode)event.button.button] ==  KeyState::REPEAT || mouse_bible[(MouseCode)event.button.button] == KeyState::DOWN)
 			{
-				App->cameras->SetMovement(false);
+				mouse_bible[(MouseCode)event.button.button] = KeyState::UP;
 			}
+			else if (mouse_bible[(MouseCode)event.button.button] == KeyState::UP)
+			{
+				mouse_bible[(MouseCode)event.button.button] = KeyState::IDLE;
+			}
+
+			//if (event.button.button == SDL_BUTTON_RIGHT)
+			//{
+			//	App->cameras->SetMovement(false);
+			//}
 			break;
 
 		case SDL_KEYDOWN:
@@ -286,12 +311,6 @@ bool ModuleInput::GetKey(KeyCode key)
 	return key_bible[key] == KeyState::REPEAT;
 }
 
-bool ModuleInput::GetMouseButtonDown(int id) const
-{
-	//Returns true during the frame the user pressed the given mouse button.
-	return mouseButtons[id - 1] == KeyState::DOWN;
-}
-
 bool ModuleInput::GetKeyDown(KeyCode key) 
 {
 	//Returns true during the frame the user starts pressing down the key identified by name.
@@ -302,4 +321,22 @@ bool ModuleInput::GetKeyUp(KeyCode key)
 {
 	//Returns true during the frame the user releases the key identified by name.
 	return key_bible[key] == KeyState::UP;
+}
+
+bool ModuleInput::GetMouseButton(MouseCode mouse)
+{
+	//Returns whether the given mouse button is held down.
+	return mouse_bible[mouse] == KeyState::REPEAT;
+}
+
+bool ModuleInput::GetMouseButtonDown(MouseCode mouse)
+{
+	//Returns true during the frame the user pressed the given mouse button.
+	return mouse_bible[mouse] == KeyState::DOWN;
+}
+
+bool ModuleInput::GetMouseButtonUp(MouseCode mouse)
+{
+	//Returns true during the frame the user releases the given mouse button.
+	return mouse_bible[mouse] == KeyState::UP;
 }
