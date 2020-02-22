@@ -69,9 +69,10 @@ update_status ModuleInput::PreUpdate()
 		}
 	}
 
-	SDL_PumpEvents();
+	//SDL_PumpEvents();
 
 	SDL_Event event;
+
 	while (SDL_PollEvent(&event) != 0)
 	{
 		ImGui_ImplSDL2_ProcessEvent(&event);
@@ -81,7 +82,6 @@ update_status ModuleInput::PreUpdate()
 		{
 		case SDL_QUIT:
 			return update_status::UPDATE_STOP;
-			break;
 
 		case SDL_WINDOWEVENT:
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
@@ -89,7 +89,6 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEMOTION:
-
 			mouse_position = { event.motion.x, event.motion.y };
 			mouse_motion = { event.motion.xrel, event.motion.yrel };
 
@@ -129,7 +128,6 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
-
 			mouse_bible[(MouseCode)event.button.button] = KeyState::DOWN;
 
 			//if (event.button.button == SDL_BUTTON_RIGHT && App->editor->scene_panel->IsHovered())
@@ -149,7 +147,6 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEBUTTONUP:
-
 			mouse_bible[(MouseCode)event.button.button] = KeyState::UP;
 
 			//if (event.button.button == SDL_BUTTON_RIGHT)
@@ -200,7 +197,7 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_DROPFILE:
-			char *dropped_filedir = event.drop.file;
+			char* dropped_filedir = event.drop.file;
 			App->editor->project_explorer->CopyFileToSelectedFolder(dropped_filedir);
 			SDL_free(dropped_filedir);
 
@@ -314,52 +311,55 @@ bool ModuleInput::CleanUp()
 	return true;
 }
 
+// Returns true while the user holds down the key identified by name
 bool ModuleInput::GetKey(KeyCode key)
 {
-	//Returns true while the user holds down the key identified by name.
 	return key_bible[key] == KeyState::REPEAT;
 }
 
+// Returns true during the frame the user starts pressing down the key identified by name
 bool ModuleInput::GetKeyDown(KeyCode key)
 {
-	//Returns true during the frame the user starts pressing down the key identified by name.
 	return key_bible[key] == KeyState::DOWN;
 }
 
+// Returns true during the frame the user releases the key identified by name
 bool ModuleInput::GetKeyUp(KeyCode key)
 {
-	//Returns true during the frame the user releases the key identified by name.
 	return key_bible[key] == KeyState::UP;
 }
 
+// Returns whether the given mouse button is held down
 bool ModuleInput::GetMouseButton(MouseCode mouse)
 {
-	//Returns whether the given mouse button is held down.
 	return mouse_bible[mouse] == KeyState::REPEAT;
 }
 
+// Returns true during the frame the user pressed the given mouse button
 bool ModuleInput::GetMouseButtonDown(MouseCode mouse)
 {
-	//Returns true during the frame the user pressed the given mouse button.
 	return mouse_bible[mouse] == KeyState::DOWN;
 }
 
+// Returns true during the frame the user releases the given mouse button
 bool ModuleInput::GetMouseButtonUp(MouseCode mouse)
 {
-	//Returns true during the frame the user releases the given mouse button.
 	return mouse_bible[mouse] == KeyState::UP;
 }
 
+// Returns the current mouse position in pixel coordinates
 iPoint ModuleInput::GetMousePosition() const
 {
 	return mouse_position;
 }
 
+// Returns the current mouse motion in relative coordinates
 iPoint ModuleInput::GetMouseMotion() const
 {
 	return mouse_motion;
 }
 
+// Returns the current mouse wheel motion (forward or backward)
 Sint32 ModuleInput::GetMouseWheelMotion() const
 {
 	return mouse_wheel_motion;

@@ -3,11 +3,12 @@
 
 #include "Module.h"
 #include "Main/Globals.h"
+#include "Helper/Point.h"
+
 #include <SDL_scancode.h>
 #include <SDL_mouse.h>
-#include <map>
 #include <MathGeoLib.h>
-#include "Helper/Point.h"
+#include <map>
 
 typedef unsigned __int8 Uint8;
 struct SDL_Cursor;
@@ -17,7 +18,10 @@ const int NUM_MOUSE_BUTTONS = 5;
 
 enum class KeyState
 {
-	IDLE, DOWN, REPEAT, UP
+	IDLE, 
+	DOWN, 
+	REPEAT, 
+	UP
 };
 
 enum class KeyCode
@@ -295,12 +299,6 @@ enum class MouseCode
 	X2Click = SDL_BUTTON_X2
 };
 
-struct int2
-{
-	int32_t x;
-	int32_t y;
-};
-
 class ModuleInput : public Module
 {
 public:
@@ -318,6 +316,7 @@ public:
 	bool GetMouseButton(MouseCode mouse);
 	bool GetMouseButtonDown(MouseCode mouse);
 	bool GetMouseButtonUp(MouseCode mouse);
+
 	iPoint GetMousePosition() const;
 	iPoint GetMouseMotion() const;
 	int32_t GetMouseWheelMotion() const;
@@ -327,11 +326,13 @@ private:
 	KeyState mouseButtons[NUM_MOUSE_BUTTONS];
 	bool controlKeyDown = false;
 	const Uint8 *keyboard = nullptr;
+
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseCode, KeyState> mouse_bible;
+
 	iPoint mouse_position;
 	iPoint mouse_motion;
 	int32_t mouse_wheel_motion;
 };
 
-#endif //_MODULEINPUT_H_
+#endif //_MODULEINPUT_H
