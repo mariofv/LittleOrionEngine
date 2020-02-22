@@ -40,7 +40,7 @@ bool ModuleInput::Init()
 		key_bible[(KeyCode)i] = KeyState::IDLE;
 	}
 
-	for (int i = 0; i < NUM_MOUSE_BUTTONS; ++i)
+	for (int i = 0; i < MAX_MOUSE_BUTTONS; ++i)
 	{
 		mouse_bible[(MouseButton)i] = KeyState::IDLE;
 	}

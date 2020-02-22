@@ -9,11 +9,12 @@
 #include <MathGeoLib.h>
 #include <map>
 
-typedef unsigned __int8 Uint8;
 struct SDL_Cursor;
+typedef int32_t Sint32;
+typedef unsigned __int8 Uint8;
 
 const int MAX_KEYS = 286;
-const int NUM_MOUSE_BUTTONS = 5;
+const int MAX_MOUSE_BUTTONS = 5;
 
 enum class KeyState
 {
@@ -318,20 +319,20 @@ public:
 
 	float2 GetMousePosition() const;
 	float2 GetMouseMotion() const;
-	int32_t GetMouseWheelMotion() const;
+	Sint32 GetMouseWheelMotion() const;
 
 	Uint8 GetMouseClicks() const;
 	bool IsMouseMoving() const;
 
 private:
-	const Uint8 *keys = nullptr;
-
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseButton, KeyState> mouse_bible;
 
+	const Uint8 *keys = nullptr;
+
 	float2 mouse_position;
 	float2 mouse_motion;
-	int32_t mouse_wheel_motion;
+	Sint32 mouse_wheel_motion;
 
 	Uint8 mouse_clicks;
 	bool mouse_moving;
