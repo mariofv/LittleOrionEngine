@@ -7,6 +7,7 @@
 #include <SDL_mouse.h>
 #include <map>
 #include <MathGeoLib.h>
+#include "Helper/Point.h"
 
 typedef unsigned __int8 Uint8;
 struct SDL_Cursor;
@@ -317,8 +318,8 @@ public:
 	bool GetMouseButton(MouseCode mouse);
 	bool GetMouseButtonDown(MouseCode mouse);
 	bool GetMouseButtonUp(MouseCode mouse);
-	int2 GetMousePosition() const;
-	int2 GetMouseMotion() const;
+	iPoint GetMousePosition() const;
+	iPoint GetMouseMotion() const;
 	int32_t GetMouseWheelMotion() const;
 
 private:
@@ -328,8 +329,8 @@ private:
 	const Uint8 *keyboard = nullptr;
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseCode, KeyState> mouse_bible;
-	int2 mouse_position;
-	int2 mouse_motion;
+	iPoint mouse_position;
+	iPoint mouse_motion;
 	int32_t mouse_wheel_motion;
 };
 

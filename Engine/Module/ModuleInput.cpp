@@ -55,6 +55,8 @@ update_status ModuleInput::PreUpdate()
 {
 	BROFILER_CATEGORY("Inputs PreUpdate", Profiler::Color::BlueViolet);
 
+	mouse_motion = { 0, 0 };
+
 	for (auto& mouse : mouse_bible)
 	{
 		if (mouse.second == KeyState::DOWN)
@@ -89,7 +91,11 @@ update_status ModuleInput::PreUpdate()
 		case SDL_MOUSEMOTION:
 
 			mouse_position = { event.motion.x, event.motion.y };
-			mouse_motion = { event.motion.xrel , event.motion.yrel};
+			mouse_motion = { event.motion.xrel, event.motion.yrel };
+
+			//mouse_position = Point(event.motion.x, event.motion.y);
+			//mouse_motion = Point(event.motion.xrel , event.motion.yrel);
+
 			/*if (event.motion.state & SDL_BUTTON_RMASK && App->editor->scene_panel->IsHovered())
 			{
 				float2 motion(event.motion.xrel, event.motion.yrel);
@@ -297,7 +303,6 @@ update_status ModuleInput::PreUpdate()
 		}
 	}
 
-
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -345,12 +350,12 @@ bool ModuleInput::GetMouseButtonUp(MouseCode mouse)
 	return mouse_bible[mouse] == KeyState::UP;
 }
 
-int2 ModuleInput::GetMousePosition() const
+iPoint ModuleInput::GetMousePosition() const
 {
 	return mouse_position;
 }
 
-int2 ModuleInput::GetMouseMotion() const
+iPoint ModuleInput::GetMouseMotion() const
 {
 	return mouse_motion;
 }

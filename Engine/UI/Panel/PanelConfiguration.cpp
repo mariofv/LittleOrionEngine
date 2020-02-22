@@ -349,8 +349,8 @@ void PanelConfiguration::ShowInputOptions()
 		if (ImGui::TreeNode("Keyboard, Mouse & Navigation State"))
 		{
 
-			int2 mouse_pos = App->input->GetMousePosition();
-			int2 mouse_rel = App->input->GetMouseMotion();
+			iPoint mouse_pos = App->input->GetMousePosition();
+			iPoint mouse_rel = App->input->GetMouseMotion();
 			if (ImGui::IsMousePosValid())
 			{
 				ImGui::Text("Mouse pos (SDL): (%d, %d)", mouse_pos.x, mouse_pos.y);
