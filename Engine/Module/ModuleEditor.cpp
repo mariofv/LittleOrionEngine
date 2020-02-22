@@ -104,7 +104,6 @@ update_status ModuleEditor::PreUpdate()
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
 	ImGuizmo::BeginFrame();
-
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -121,6 +120,7 @@ update_status ModuleEditor::Update()
 		inital_scene_loaded = true;
 	}
 
+	HandleInput();
 
 	return update_status::UPDATE_CONTINUE;
 }
@@ -266,6 +266,28 @@ void ModuleEditor::LoadFonts()
 	io.Fonts->AddFontDefault();
 	static const ImWchar icons_ranges_fab[] = { ICON_MIN_FAB, ICON_MAX_FAB, 0 };
 	io.Fonts->AddFontFromFileTTF("./resources/fonts/" FONT_ICON_FILE_NAME_FAB, 12.f, &icons_config, icons_ranges_fab);
+}
+
+void ModuleEditor::HandleInput()
+{
+	if (App->input->GetKeyDown(KeyCode::Z))
+	{
+		control_key_down = true;
+	}
+	if (App->input->GetKeyUp(KeyCode::LeftControl))
+	{
+		control_key_down = false;
+	}
+	if (control_key_down && App->input->GetKey(KeyCode::LeftControl) && !App->input->GetKey(KeyCode::LeftShift))
+	{
+		Undo();
+		control_key_down = false;
+	}
+	if (control_key_down && App->input->GetKey(KeyCode::LeftControl) && App->input->GetKey(KeyCode::LeftShift))
+	{
+		Redo();
+		control_key_down = false;
+	}
 }
 
 void ModuleEditor::ClearRedoStack()

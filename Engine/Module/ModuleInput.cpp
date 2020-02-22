@@ -105,42 +105,12 @@ update_status ModuleInput::PreUpdate()
 			mouse_bible[(MouseButton)event.button.button] = KeyState::UP;
 			break;
 
-		case SDL_KEYDOWN:
-			//Undo-Redo
-			if (event.key.keysym.sym == SDLK_z)
-			{
-				controlKeyDown = true;
-			}
-			break;
-
-		case SDL_KEYUP:
-			//Undo-Redo
-			if (event.key.keysym.sym == SDLK_LCTRL)
-			{
-				controlKeyDown = false;
-			}
-			break;
-
 		case SDL_DROPFILE:
 			char* dropped_filedir = event.drop.file;
 			App->editor->project_explorer->CopyFileToSelectedFolder(dropped_filedir);
 			SDL_free(dropped_filedir);
 			break;
 		}
-	}
-
-	keyboard = SDL_GetKeyboardState(NULL);
-
-	if(controlKeyDown && keyboard[SDL_SCANCODE_LCTRL] && !keyboard[SDL_SCANCODE_LSHIFT])
-	{
-		App->editor->Undo();
-		controlKeyDown = false;
-	}
-
-	if (controlKeyDown && keyboard[SDL_SCANCODE_LSHIFT] && keyboard[SDL_SCANCODE_LCTRL])
-	{
-		App->editor->Redo();
-		controlKeyDown = false;
 	}
 
 	keys = SDL_GetKeyboardState(nullptr);

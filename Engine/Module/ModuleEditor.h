@@ -79,12 +79,15 @@ private:
 	bool InitImgui();
 	void LoadFonts();
 
+	void HandleInput();
+
 public:
 	GameObject *selected_game_object = nullptr;
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 
 	// UndoRedo
 
+	bool control_key_down = false;
 	bool clicked = false;
 	bool clicked_light = false;
 	bool clicked_camera = false;

@@ -3,7 +3,6 @@
 
 #include "Module.h"
 #include "Main/Globals.h"
-#include "Helper/Point.h"
 
 #include <SDL_scancode.h>
 #include <SDL_mouse.h>
@@ -325,12 +324,7 @@ public:
 	bool IsMouseMoving() const;
 
 private:
-	//KeyState* keyboard_state;
-	//KeyState mouseButtons[NUM_MOUSE_BUTTONS];
-	bool controlKeyDown = false;
-	const Uint8 *keyboard = nullptr;
-
-	const Uint8* keys = nullptr;
+	const Uint8 *keys = nullptr;
 
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseButton, KeyState> mouse_bible;
@@ -339,7 +333,7 @@ private:
 	float2 mouse_motion;
 	int32_t mouse_wheel_motion;
 
-	Uint8 mouse_clicks = 0;
+	Uint8 mouse_clicks;
 	bool mouse_moving;
 };
 

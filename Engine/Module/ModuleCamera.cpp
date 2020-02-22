@@ -5,7 +5,7 @@
 #include "ModuleWindow.h"
 #include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
-#include "Module/ModuleInput.h"
+#include "ModuleInput.h"
 
 #include <algorithm>
 #include <SDL/SDL.h>
@@ -217,7 +217,6 @@ void ModuleCamera::HandleSceneCameraMovements()
 			scene_camera->MoveRight();
 		}
 	}
-
 	if (App->input->GetKey(KeyCode::UpArrow))
 	{
 		scene_camera->RotatePitch(-1.f);
