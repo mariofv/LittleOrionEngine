@@ -173,6 +173,12 @@ FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileT
 	{
 		return FileType::MODEL;
 	}
+	if (
+		file_extension == "prefab"
+		)
+	{
+		return FileType::PREFAB;
+	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{
 		return FileType::ARCHIVE;

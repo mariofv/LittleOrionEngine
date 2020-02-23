@@ -169,6 +169,7 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(const File * file)
 				changes = true;
 			}
 		}
+		/*
 		if (changes)
 		{
 			App->filesystem->RefreshFilesHierarchy();
@@ -244,8 +245,11 @@ void PanelProjectExplorer::FilesDrop() const
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			std::string prefab_path = selected_folder->file_path + "/"+incoming_game_object->name + ".prefab";
-			App->resources->prefab_importer->Save(prefab_path, incoming_game_object);
+			if (!incoming_game_object->isPrefab) 
+			{
+				std::string prefab_path = selected_folder->file_path + "/" + incoming_game_object->name + ".prefab";
+				App->resources->prefab_importer->Save(prefab_path, incoming_game_object);
+			}
 		}
 		ImGui::EndDragDropTarget();
 	}

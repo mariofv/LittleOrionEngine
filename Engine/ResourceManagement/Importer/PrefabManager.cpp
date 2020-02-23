@@ -6,13 +6,20 @@
 #include <Module/ModuleScene.h>
 #include <Module/ModuleRender.h>
 
-void PrefabManager::Save(const std::string &path, const GameObject * gameobject_to_save) const
+void PrefabManager::Save(const std::string &path,  GameObject * gameobject_to_save) const
 {
 
 	Config scene_config;
 
 	std::vector<Config> game_objects_config;
 	std::stack<GameObject*> pending_objects;
+
+	if (gameobject_to_save->parent != nullptr)
+	{
+		Config current_gameobject;
+		gameobject_to_save->Save(current_gameobject);
+		game_objects_config.push_back(current_gameobject);
+	}
 
 	for (auto& child_game_object : gameobject_to_save->children)
 	{

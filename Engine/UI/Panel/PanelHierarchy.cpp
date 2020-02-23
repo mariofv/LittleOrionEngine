@@ -11,6 +11,7 @@
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleResourceManager.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -119,6 +120,10 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 					App->editor->action_game_object = new_model;
 					App->editor->AddUndoAction(ModuleEditor::UndoActionType::ADD_GAMEOBJECT);
 				}
+			}
+			if (incoming_file->file_type == FileType::PREFAB)
+			{
+				App->resources->prefab_importer->Load(incoming_file->file_path);
 			}
 		}
 		ImGui::EndDragDropTarget();
