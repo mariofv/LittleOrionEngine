@@ -6,6 +6,7 @@
 #include "Main/GameObject.h"
 
 #include <ImGuizmo.h>
+#include "Component/ComponentCanvas.h"
 
 class ComponentCamera;
 
@@ -33,6 +34,9 @@ public:
 
 private:
 	GameObject *root = nullptr;
+	GameObject* canvasGO = nullptr;
+
+	ComponentCanvas* canvas;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
 
 	friend class PanelScene;

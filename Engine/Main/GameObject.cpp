@@ -15,6 +15,7 @@
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentCanvas.h"
 
 #include "Brofiler/Brofiler.h"
 #include <pcg_basic.h>
@@ -241,6 +242,9 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 
 	case Component::ComponentType::LIGHT:
 		created_component = App->lights->CreateComponentLight();
+		break;
+	case Component::ComponentType::CANVAS:
+		created_component = new ComponentCanvas();
 		break;
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");

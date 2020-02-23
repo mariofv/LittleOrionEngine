@@ -350,6 +350,9 @@
       <Filter>Engine\Actions</Filter>
     </ClCompile>
     <ClCompile Include="Engine\SpacePartition\OLAABBTree.cpp" />
+    <ClCompile Include="Engine\Component\ComponentCanvas.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -581,6 +584,9 @@
       <Filter>Engine\Actions</Filter>
     </ClInclude>
     <ClInclude Include="Engine\SpacePartition\OLAABBTree.h" />
+    <ClInclude Include="Engine\Component\ComponentCanvas.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
