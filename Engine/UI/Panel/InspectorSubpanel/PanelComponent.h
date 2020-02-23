@@ -27,7 +27,7 @@ public:
 	
 	void ShowAddNewComponentButton();
 
-	void ShowScriptsCreated();
+	void ShowScriptsCreated(ComponentScript*);
 
 	void CheckClickedCamera(ComponentCamera* camera);
 	void CheckClickForUndo(ModuleEditor::UndoActionType type, Component* component);

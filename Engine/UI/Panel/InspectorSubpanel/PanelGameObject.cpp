@@ -84,5 +84,4 @@ void PanelGameObject::Render(GameObject* game_object)
 	ImGui::Spacing();
 
 	component_panel.ShowAddNewComponentButton();
-	component_panel.ShowScriptsCreated();
 }

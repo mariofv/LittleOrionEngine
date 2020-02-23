@@ -27,7 +27,10 @@ void ComponentScript::LoadName(std::string script_name) {
 }
 void ComponentScript::Update()
 {
-	script->Update();
+	if (script) 
+	{
+		script->Update();
+	}
 }
 void ComponentScript::Delete()
 {
@@ -36,5 +39,8 @@ void ComponentScript::Delete()
 
 void ComponentScript::ShowComponentWindow()
 {
-	script->OnInspector(ImGui::GetCurrentContext());
+	if (script)
+	{
+		script->OnInspector(ImGui::GetCurrentContext());
+	}
 }

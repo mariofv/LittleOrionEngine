@@ -409,7 +409,7 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 	}
 }
 
-void PanelComponent::ShowComponentScriptWindow(ComponentScript *component_script)
+void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_CODE " Script", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -420,12 +420,14 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript *component_script
 			//App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
 		}
 		ImGui::SameLine();
+		
 		if (ImGui::Button("Delete"))
 		{
 			App->editor->DeleteComponentUndo(component_script);
 
 			return;
 		}
+		ShowScriptsCreated(component_script);
 		ImGui::Separator();
 
 		component_script->ShowComponentWindow();
@@ -469,7 +471,7 @@ void PanelComponent::ShowAddNewComponentButton()
 		sprintf_s(tmp_string, "%s Script", ICON_FA_EDIT);
 		if (ImGui::Selectable(tmp_string))
 		{
-			//ShowScriptsCreated();
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::SCRIPT);
 
 		}
 
@@ -477,27 +479,19 @@ void PanelComponent::ShowAddNewComponentButton()
 	}
 }
 
-void PanelComponent::ShowScriptsCreated() {
+void PanelComponent::ShowScriptsCreated(ComponentScript* component_script) {
 
-	float window_width = ImGui::GetWindowWidth();
-	float button_width = 0.5f * window_width;
-	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
-	ImGui::Button("Add Script", ImVec2(button_width, 25));
-
-	if (ImGui::BeginPopupContextItem("Add Script", 0))
+	if (ImGui::BeginCombo("Add Script", component_script->name.c_str()))
 	{
 		for (auto script_name : App->scripts->ListScripts) {
 			if (ImGui::Selectable(script_name.c_str()))
 			{
-				ComponentScript* script = (ComponentScript*)App->editor->selected_game_object->CreateComponent(Component::ComponentType::SCRIPT);
-				//script->name = script_name;
-				script->LoadName(script_name);
+				component_script->LoadName(script_name);
 		
 			}
 		}
-		
 
-		ImGui::EndPopup();
+		ImGui::EndCombo();
 	}
 
 }
