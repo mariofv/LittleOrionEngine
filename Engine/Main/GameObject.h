@@ -8,7 +8,7 @@
 
 #include <GL/glew.h>
 
-class ComponentCamera;
+class ComponentCamera; 
 class GameObject
 {
 public:
