@@ -597,6 +597,18 @@ void cone(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx,)
           int durationMillis = 0,
           bool depthEnabled = true);
 
+// Add a wireframe open_cylinder to the debug draw queue.
+// The length of the 'dir' vector determines the thickness.
+// 'radius' is in degrees.
+void directional_light(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx, )
+		ddVec3_In apex, 
+		ddMat4x4_In rotation_matrix,
+		ddVec3_In color,
+		const float length,
+		const float radius, 
+		int durationMillis = 0,
+		bool depthEnabled = true);
+
 // Wireframe box from the eight points that define it.
 void box(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx,)
          const ddVec3 points[8],
@@ -3074,6 +3086,56 @@ void cone(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx,) ddVec3_In apex, ddVec3_In
             vecCopy(lastP2, p2);
         }
     }
+}
+
+void directional_light(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx, ) ddVec3_In apex, ddMat4x4_In rotation_matrix, ddVec3_In color,
+	const float length, const float radius, const int durationMillis, const bool depthEnabled)
+{
+	if (!isInitialized(DD_EXPLICIT_CONTEXT_ONLY(ctx)))
+	{
+		return;
+	}
+
+	static const int stepSize = 20;
+	ddVec3 axis[3];
+	ddVec3 top, temp0, temp1, temp2;
+	ddVec3 p1, p2, lastP1, lastP2;
+
+	matTransformPointXYZ(axis[0], ddVec3::unitX, rotation_matrix);
+	matTransformPointXYZ(axis[1], ddVec3::unitY, rotation_matrix);
+	matTransformPointXYZ(axis[2], ddVec3::unitZ, rotation_matrix);
+
+	axis[1][X] = -axis[1][X];
+	axis[1][Y] = -axis[1][Y];
+	axis[1][Z] = -axis[1][Z];
+
+	vecScale(temp1, axis[2], length);
+	vecAdd(top, apex, temp1);
+	vecScale(temp1, axis[1], radius);
+	vecAdd(lastP2, top, temp1);
+
+	vecScale(temp1, axis[1], radius);
+	vecAdd(lastP1, apex, temp1);
+
+	for (int i = stepSize; i <= 360; i += stepSize)
+	{
+		vecScale(temp1, axis[0], floatSin(degreesToRadians(i)));
+		vecScale(temp2, axis[1], floatCos(degreesToRadians(i)));
+		vecAdd(temp0, temp1, temp2);
+
+		vecScale(temp1, temp0, radius);
+		vecScale(temp2, temp0, radius);
+
+		vecAdd(p1, apex, temp1);
+		vecAdd(p2, top, temp2);
+
+		line(DD_EXPLICIT_CONTEXT_ONLY(ctx, ) lastP1, p1, color, durationMillis, depthEnabled);
+		line(DD_EXPLICIT_CONTEXT_ONLY(ctx, ) p1, p2, color, durationMillis, depthEnabled);
+
+		vecCopy(lastP1, p1);
+		vecCopy(lastP2, p2);
+	}
+	
 }
 
 void box(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx,) const ddVec3 points[8], ddVec3_In color,
