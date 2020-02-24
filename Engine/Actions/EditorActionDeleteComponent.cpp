@@ -6,12 +6,10 @@
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
 
-EditorActionDeleteComponent::EditorActionDeleteComponent(Component* comp)
+EditorActionDeleteComponent::EditorActionDeleteComponent(Component* comp) : component_UUID(comp->UUID),
+owner_UUID(comp->owner->UUID), type(comp->type)
 {
-	component_UUID = comp->UUID;
-	owner_UUID = comp->owner->UUID;
 	comp->Save(serialization_component);
-	type = comp->type;
 }
 
 

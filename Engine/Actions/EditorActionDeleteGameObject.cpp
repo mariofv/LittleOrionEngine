@@ -5,10 +5,8 @@
 #include "Main/Application.h"
 #include <stack>
 
-EditorActionDeleteGameObject::EditorActionDeleteGameObject(GameObject* go)
+EditorActionDeleteGameObject::EditorActionDeleteGameObject(GameObject* go) : UUID_go(go->UUID)
 {
-	UUID_go = go->UUID;
-
 	std::vector<Config> game_objects_config(go->children.size() + 1);
 	std::stack<GameObject*> pending_objects;
 	unsigned int current_index = 1;

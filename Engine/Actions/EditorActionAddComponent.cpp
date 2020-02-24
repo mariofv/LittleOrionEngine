@@ -6,12 +6,11 @@
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
 
-EditorActionAddComponent::EditorActionAddComponent(Component * comp)
+EditorActionAddComponent::EditorActionAddComponent(Component * comp) : component_UUID(comp->UUID),
+owner_UUID(comp->owner->UUID), type(comp->type)
+
 {
-	component_UUID = comp->UUID;
-	owner_UUID = comp->owner->UUID;
 	comp->Save(serialization_component);
-	type = comp->type;
 }
 
 void EditorActionAddComponent::Undo()

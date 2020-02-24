@@ -3,10 +3,7 @@
 #include "Main/Application.h"
 
 
-EditorActionEnableDisableComponent::EditorActionEnableDisableComponent(Component* comp)
-{
-	component_UUID = comp->UUID;
-}
+EditorActionEnableDisableComponent::EditorActionEnableDisableComponent(Component* comp) : component_UUID(comp->UUID){}
 
 void EditorActionEnableDisableComponent::Undo()
 {

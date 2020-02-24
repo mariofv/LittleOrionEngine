@@ -3,17 +3,9 @@
 #include "Main/Application.h"
 
 
-EditorActionModifyCamera::EditorActionModifyCamera(ComponentCamera* comp)
-{
-	component_UUID = comp->UUID;
-	mov_speed = comp->camera_movement_speed;
-	fov = comp->camera_frustum.verticalFov;
-	aspect_ratio = comp->aspect_ratio;
-	near_plane = comp->camera_frustum.nearPlaneDistance;
-	far_plane = comp->camera_frustum.farPlaneDistance;
-	ortographic_size = comp->camera_frustum.orthographicHeight;
-	depth = comp->depth;
-}
+EditorActionModifyCamera::EditorActionModifyCamera(ComponentCamera* comp) : component_UUID(comp->UUID), mov_speed(comp->camera_movement_speed),
+fov(comp->camera_frustum.verticalFov), aspect_ratio(comp->aspect_ratio), near_plane(comp->camera_frustum.nearPlaneDistance),
+far_plane(comp->camera_frustum.farPlaneDistance), ortographic_size(comp->camera_frustum.orthographicHeight), depth(comp->depth){}
 
 void EditorActionModifyCamera::Undo()
 {

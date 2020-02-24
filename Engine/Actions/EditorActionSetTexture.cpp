@@ -3,12 +3,8 @@
 #include "Main/Application.h"
 
 
-EditorActionSetTexture::EditorActionSetTexture(ComponentMaterial* comp, Texture::TextureType typo)
-{
-	component_UUID = comp->UUID;
-	type = typo;
-	texture = comp->GetMaterialTexture(type);
-}
+EditorActionSetTexture::EditorActionSetTexture(ComponentMaterial* comp, Texture::TextureType typo) : component_UUID(comp->UUID),
+type(typo), texture(comp->GetMaterialTexture(type)) {}
 
 void EditorActionSetTexture::Undo()
 {

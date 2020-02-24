@@ -2,13 +2,12 @@
 #include "Module/ModuleScene.h"
 #include "Main/Application.h"
 
-EditorActionModifyLight::EditorActionModifyLight(ComponentLight* comp, float col[3], float intens)
+EditorActionModifyLight::EditorActionModifyLight(ComponentLight* comp, float col[3], float intens) : component_UUID(comp->UUID),
+intensity(intens)
 {
-	component_UUID = comp->UUID;
 	color[0] = col[0];
 	color[1] = col[1];
 	color[2] = col[2];
-	intensity = intens;
 }
 
 void EditorActionModifyLight::Undo()
