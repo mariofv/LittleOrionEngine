@@ -350,6 +350,7 @@
       <Filter>Engine\Actions</Filter>
     </ClCompile>
     <ClCompile Include="Engine\SpacePartition\OLAABBTree.cpp" />
+    <ClCompile Include="InputManager.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -581,6 +582,7 @@
       <Filter>Engine\Actions</Filter>
     </ClInclude>
     <ClInclude Include="Engine\SpacePartition\OLAABBTree.h" />
+    <ClInclude Include="InputManager.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
