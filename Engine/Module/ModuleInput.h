@@ -8,6 +8,8 @@
 #include <SDL_mouse.h>
 #include <MathGeoLib.h>
 #include <map>
+#include <string>
+#include <vector>
 
 struct SDL_Cursor;
 typedef int32_t Sint32;
@@ -299,6 +301,13 @@ enum class MouseButton
 	X2 = SDL_BUTTON_X2
 };
 
+struct GameInput
+{
+	std::string name;
+	std::vector<KeyCode> keys;
+	std::vector<MouseButton> mouse_buttons;
+};
+
 class ModuleInput : public Module
 {
 public:
@@ -317,6 +326,12 @@ public:
 	bool GetMouseButtonDown(MouseButton button); 
 	bool GetMouseButtonUp(MouseButton button);
 
+	bool GetGameInput(std::string &name);
+	bool GetGameInputDown(std::string &name);
+	bool GetGameInputUp(std::string &name);
+
+	void CreateGameInput(std::string name, std::vector<KeyCode> keys, std::vector<MouseButton> mouse_buttons);
+
 	float2 GetMousePosition() const;
 	float2 GetMouseMotion() const;
 	Sint32 GetMouseWheelMotion() const;
@@ -327,6 +342,9 @@ public:
 private:
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseButton, KeyState> mouse_bible;
+
+	//Predefined buttons
+	std::map<std::string, GameInput> game_inputs;
 
 	const Uint8 *keys = nullptr;
 

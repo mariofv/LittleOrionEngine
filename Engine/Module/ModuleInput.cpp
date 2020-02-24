@@ -188,6 +188,66 @@ bool ModuleInput::GetMouseButtonUp(MouseButton button)
 	return mouse_bible[button] == KeyState::UP;
 }
 
+bool ModuleInput::GetGameInput(std::string & name)
+{
+	GameInput button = game_inputs[name];
+	for (auto &key : button.keys)
+	{
+		if (GetKey(key))
+			return true;
+	}
+
+	for (auto &mouse : button.mouse_buttons)
+	{
+		if (GetMouseButton(mouse))
+			return true;
+	}
+
+	return false;
+}
+
+bool ModuleInput::GetGameInputDown(std::string & name)
+{
+	GameInput button = game_inputs[name];
+	for (auto &key : button.keys)
+	{
+		if (GetKeyDown(key))
+			return true;
+	}
+
+	for (auto &mouse : button.mouse_buttons)
+	{
+		if (GetMouseButtonDown(mouse))
+			return true;
+	}
+
+	return false;
+}
+
+bool ModuleInput::GetGameInputUp(std::string & name)
+{
+	GameInput button = game_inputs[name];
+	for (auto &key : button.keys)
+	{
+		if (GetKeyUp(key))
+			return true;
+	}
+
+	for (auto &mouse : button.mouse_buttons)
+	{
+		if (GetMouseButtonUp(mouse))
+			return true;
+	}
+
+	return false;
+}
+
+void ModuleInput::CreateGameInput(std::string name, std::vector<KeyCode> keys, std::vector<MouseButton> mouse_buttons)
+{
+	GameInput game_input = {name,keys,mouse_buttons};
+	game_inputs[name] = game_input;
+}
+
 // Returns the current mouse position in pixel coordinates
 float2 ModuleInput::GetMousePosition() const
 {
