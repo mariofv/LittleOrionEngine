@@ -55,14 +55,15 @@ void EditorActionDeleteGameObject::Undo()
 			game_object = created_game_object;
 		}
 
+		if (!game_object->IsStatic())
+			App->renderer->InsertAABBTree(created_game_object);
 	}
-	App->renderer->GenerateQuadTree();
+	
 }
 
 void EditorActionDeleteGameObject::Redo()
 {
 	App->scene->RemoveGameObject(game_object);
-
 	App->editor->selected_game_object = nullptr;
 }
 

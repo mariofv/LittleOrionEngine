@@ -7,6 +7,7 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleWindow.h"
 
 #include "Helper/Utils.h"
 
@@ -22,9 +23,20 @@ ComponentCamera::ComponentCamera(GameObject * owner) : Component(owner, Componen
 	GenerateMatrices();
 }
 
+ComponentCamera::~ComponentCamera()
+{
+	glDeleteTextures(1, &last_recorded_frame_texture);
+	glDeleteTextures(1, &msfb_color);
+
+	glDeleteRenderbuffers(1, &rbo);
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteFramebuffers(1, &msfbo);
+}
+
 void ComponentCamera::InitCamera()
 {
 	glGenFramebuffers(1, &fbo);
+	glGenFramebuffers(1, &msfbo);
 
 	aspect_ratio = 1.f;
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
@@ -35,12 +47,6 @@ void ComponentCamera::InitCamera()
 	camera_frustum.farPlaneDistance = 100.0f;
 	camera_frustum.verticalFov = math::pi / 4.0f;
 	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
-}
-ComponentCamera::~ComponentCamera()
-{
-	glDeleteTextures(1, &last_recorded_frame_texture);
-	glDeleteFramebuffers(1, &fbo);
-	glDeleteRenderbuffers(1, &rbo);
 }
 
 void ComponentCamera::Update()
@@ -138,15 +144,16 @@ float ComponentCamera::GetHeigt() const
 
 void ComponentCamera::RecordFrame(float width, float height)
 {
-	if (last_width != width || last_height != height)
+	if (last_width != width || last_height != height || toggle_msaa)
 	{
 		last_width = width;
 		last_height = height;
 		SetAspectRatio(width/height);
 		GenerateFrameBuffers(width, height);
+		toggle_msaa = false;
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 	glViewport(0, 0, width, height);
 
@@ -167,14 +174,31 @@ void ComponentCamera::RecordFrame(float width, float height)
 
 	App->renderer->RenderFrame(*this);
 
+	if (App->renderer->anti_aliasing)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
 void ComponentCamera::RecordDebugDraws(float width, float height) const
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
 	glViewport(0, 0, width, height);
+
 	App->debug_draw->Render();
+
+	if (App->renderer->anti_aliasing)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -182,7 +206,6 @@ GLuint ComponentCamera::GetLastRecordedFrame() const
 {
 	return last_recorded_frame_texture;
 }
-
 
 void ComponentCamera::GenerateFrameBuffers(float width, float height)
 {
@@ -197,8 +220,13 @@ void ComponentCamera::GenerateFrameBuffers(float width, float height)
 	{
 		glDeleteRenderbuffers(1, &rbo);
 	}
-	glGenRenderbuffers(1, &rbo);
 
+	App->renderer->anti_aliasing ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
+}
+
+void ComponentCamera::CreateFramebuffer(float width, float height)
+{
+	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -210,8 +238,36 @@ void ComponentCamera::GenerateFrameBuffers(float width, float height)
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void ComponentCamera::CreateMssaFramebuffer(float width, float height)
+{
+	glGenTextures(1, &msfb_color);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msfb_color);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, width, height, GL_TRUE);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, msfbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, msfb_color, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glBindTexture(GL_TEXTURE_2D, last_recorded_frame_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -249,7 +305,6 @@ void ComponentCamera::AlignOrientationWithAxis()
 	float3x3 rotation_matrix = float3x3::identity;
 	owner->transform.SetRotation(rotation_matrix);
 }
-
 
 void ComponentCamera::SetOrthographicSize(const float2 & size)
 {
@@ -567,4 +622,9 @@ ComponentAABB::CollisionState ComponentCamera::CheckAABB2DCollision(const AABB2D
 void ComponentCamera::GetRay(const float2& normalized_position, LineSegment &return_value) const
 {
 	return_value = camera_frustum.UnProjectLineSegment(normalized_position.x, normalized_position.y);
+}
+
+AABB ComponentCamera::GetMinimalEnclosingAABB() const
+{
+	return camera_frustum.MinimalEnclosingAABB();
 }

@@ -111,6 +111,7 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Texture.h" />
+    <ClInclude Include="Engine\SpacePartition\OLAABBTree.h" />
     <ClInclude Include="Engine\SpacePartition\OLOctTree.h" />
     <ClInclude Include="Engine\SpacePartition\OLOctTreeNode.h" />
     <ClInclude Include="Engine\SpacePartition\OLQuadTree.h" />
@@ -189,6 +190,7 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Texture.cpp" />
+    <ClCompile Include="Engine\SpacePartition\OLAABBTree.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLOctTree.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLOctTreeNode.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLQuadTree.cpp" />

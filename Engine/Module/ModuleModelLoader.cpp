@@ -4,6 +4,7 @@
 #include "ModuleCamera.h"
 #include "ModuleActions.h"
 #include "ModuleScene.h"
+#include "ModuleRender.h"
 #include "ModuleTexture.h"
 #include "ModuleResourceManager.h"
 #include "Main/GameObject.h"
@@ -58,6 +59,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const std::shared_ptr<
 	mesh_component->SetMesh(mesh_for_component);
 	node_game_object->name = model_base_path->filename_no_extension;
 	node_game_object->Update();
+	App->renderer->InsertAABBTree(node_game_object);
 
 	ComponentMaterial *componentMaterial = (ComponentMaterial*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL);
 	for (auto texture : mesh_for_component->meshes_textures_path)

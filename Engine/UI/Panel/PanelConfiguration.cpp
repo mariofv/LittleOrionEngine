@@ -8,6 +8,8 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
 
+#include "Component/ComponentCamera.h"
+
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
@@ -189,11 +191,20 @@ void PanelConfiguration::ShowRenderOptions()
 		{
 			App->renderer->SetVSync(App->renderer->vsync);
 		}
+
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Depth test", &App->renderer->gl_depth_test))
 		{
 			App->renderer->SetDepthTest(App->renderer->gl_depth_test);
 		}
+
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Anti-aliasing", &App->renderer->anti_aliasing))
+		{
+			App->cameras->scene_camera->toggle_msaa = true;
+			App->cameras->main_camera->toggle_msaa = true;
+		}
+
 		ImGui::Separator();
 		if (ImGui::Checkbox("Face culling", &App->renderer->gl_cull_face))
 		{
