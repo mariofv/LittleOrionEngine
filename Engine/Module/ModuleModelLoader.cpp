@@ -2,9 +2,9 @@
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleCamera.h"
-#include "ModuleEditor.h"
-#include "Module/ModuleRender.h"
+#include "ModuleActions.h"
 #include "ModuleScene.h"
+#include "ModuleRender.h"
 #include "ModuleTexture.h"
 #include "ModuleResourceManager.h"
 #include "Main/GameObject.h"
@@ -100,8 +100,8 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 	}
 
 	//UndoRedo
-	App->editor->action_game_object = model_game_object;
-	App->editor->AddUndoAction(ModuleEditor::UndoActionType::ADD_GAMEOBJECT);
+	App->actions->action_game_object = model_game_object;
+	App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
 
 	return model_game_object;
 }
