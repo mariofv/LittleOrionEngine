@@ -49,7 +49,7 @@ public:
 				total_size = float[3] size + float[3] size 
 				= 32 bytes = 8 * sizeof(float) 
 		*/
-		const size_t LIGHT_UNIFORMS_SIZE = 8 * sizeof(float); // Size of light color, direction
+		const size_t LIGHT_UNIFORMS_SIZE = 8 * sizeof(float); // Size of light color, direction and num directional_lights
 
 		/*
 			Total buffer size depends on the alignment between uniform blocks, so it's size will be computed real time. 

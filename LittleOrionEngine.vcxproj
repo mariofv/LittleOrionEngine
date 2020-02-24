@@ -283,10 +283,6 @@
     <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />
     <ClCompile Include="Engine\Module\ModuleActions.cpp" />
   </ItemGroup>
-  <ItemGroup>
-    <None Include="Game\Resources\Shaders\direction_light.fs" />
-    <None Include="Game\Resources\Shaders\point_light.fs" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

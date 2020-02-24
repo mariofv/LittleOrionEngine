@@ -32,6 +32,7 @@ layout (std140) uniform DirectionalLight
 {
 	vec3 color;
 	vec3 direction;
+	int num_directional_lights;
 } directional_light;
 
 struct SpotLight 
@@ -76,7 +77,13 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal);
 void main()
 {
 	vec3 normalized_normal = normalize(normal);
-	vec3 result = CalculateDirectionalLight(normalized_normal);
+	
+	vec3 result = vec3(0);
+
+	for (int i = 0; i < directional_light.num_directional_lights; ++i)
+	{
+		result += CalculateDirectionalLight(normalized_normal);
+	}
 
 	for (int i = 0; i < num_spot_lights; ++i)
 	{
