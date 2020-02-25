@@ -358,7 +358,7 @@
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="AnimControler.cpp">
+    <ClCompile Include="Engine\Component\AnimControler.cpp">
       <Filter>Engine\Animations</Filter>
     </ClCompile>
   </ItemGroup>
@@ -600,7 +600,7 @@
     <ClInclude Include="Engine\Component\ComponentAnimation.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="AnimControler.h">
+    <ClInclude Include="Engine\Component\AnimControler.h">
       <Filter>Engine\Animations</Filter>
     </ClInclude>
   </ItemGroup>
