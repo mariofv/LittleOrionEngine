@@ -349,14 +349,12 @@
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\SpacePartition\OLAABBTree.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Loaders\AnimationLoader.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Loaders\SkeletonLoader.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Resources\Prefab.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Resources\Skeleton.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Resources\Animation.cpp" />
+    <ClCompile Include="Engine\SpacePartition\OLAABBTree.cpp">
+      <Filter>Engine\SpacePartition</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleActions.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -587,14 +585,12 @@
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\SpacePartition\OLAABBTree.h" />
-    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.h" />
-    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.h" />
-    <ClInclude Include="Engine\ResourceManagement\Loaders\AnimationLoader.h" />
-    <ClInclude Include="Engine\ResourceManagement\Loaders\SkeletonLoader.h" />
-    <ClInclude Include="Engine\ResourceManagement\Resources\Prefab.h" />
-    <ClInclude Include="Engine\ResourceManagement\Resources\Skeleton.h" />
-    <ClInclude Include="Engine\ResourceManagement\Resources\Animation.h" />
+    <ClInclude Include="Engine\SpacePartition\OLAABBTree.h">
+      <Filter>Engine\SpacePartition</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleActions.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

@@ -1,23 +1,11 @@
 #include "ModuleEditor.h"
 
-#include "Actions/EditorActionEnableDisableComponent.h"
-#include "Actions/EditorActionModifyCamera.h"
-#include "Actions/EditorActionSetTexture.h"
-#include "Actions/EditorActionModifyLight.h"
-#include "Actions/EditorActionAddComponent.h"
-#include "Actions/EditorActionDeleteComponent.h"
-#include "Actions/EditorActionAddGameObject.h"
-#include "Actions/EditorActionDeleteGameObject.h"
-#include "Actions/EditorActionTranslate.h"
-#include "Actions/EditorActionRotation.h"
-#include "Actions/EditorActionScale.h"
-#include "Actions/EditorAction.h"
-
 #include "Helper/Config.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleResourceManager.h"
 #include "ModuleScene.h"
+#include "ModuleActions.h"
 #include "ModuleWindow.h"
 
 #include "UI/Panel/PanelAbout.h"
@@ -63,9 +51,6 @@ bool ModuleEditor::Init()
 	panels.push_back(configuration = new PanelConfiguration());
 	panels.push_back(about = new PanelAbout());
 	panels.push_back(popups = new PanelPopups());
-
-	//Delete all actions (go are deleted here)
-	ClearUndoRedoStacks();
 
 	return ret;
 }
@@ -264,162 +249,4 @@ void ModuleEditor::LoadFonts()
 	io.Fonts->AddFontDefault();
 	static const ImWchar icons_ranges_fab[] = { ICON_MIN_FAB, ICON_MAX_FAB, 0 };
 	io.Fonts->AddFontFromFileTTF("./resources/fonts/" FONT_ICON_FILE_NAME_FAB, 12.f, &icons_config, icons_ranges_fab);
-}
-
-void ModuleEditor::ClearRedoStack()
-{
-	//TODO: delete all actions when engine closes (delete/add go/comp could end up in memory leak, be careful)
-	while(!redoStack.empty())
-	{
-		EditorAction* action = redoStack.back();
-		delete action;
-		redoStack.pop_back();
-	}
-}
-
-void ModuleEditor::ClearUndoStack()
-{
-	while (!undoStack.empty())
-	{
-		EditorAction* action = undoStack.back();
-		delete action;
-		undoStack.pop_back();
-	}
-}
-
-void ModuleEditor::Undo()
-{
-	if(!undoStack.empty())
-	{
-		EditorAction* action = undoStack.back();
-		action->Undo();
-
-		redoStack.push_back(action);
-		undoStack.pop_back();
-	}
-}
-
-void ModuleEditor::Redo()
-{
-	if(!redoStack.empty())
-	{
-		EditorAction* action = redoStack.back();
-		action->Redo();
-
-		undoStack.push_back(action);
-		redoStack.pop_back();
-	}
-}
-
-void ModuleEditor::AddUndoAction(UndoActionType type)
-{
-	//StackUndoRedo set size maximum
-	if(undoStack.size() >= MAXIMUM_SIZE_STACK_UNDO)
-	{
-		EditorAction* action = undoStack.front();
-		delete action;
-		undoStack.erase(undoStack.begin());
-	}
-
-	EditorAction* new_action = nullptr;
-
-	switch (type)
-	{
-		case UndoActionType::TRANSLATION:
-			new_action = new EditorActionTranslate(
-				previous_transform,
-				selected_game_object->transform.GetTranslation(),
-				selected_game_object
-			);
-			break;
-
-		case UndoActionType::ROTATION:
-			new_action = new EditorActionRotation(
-				previous_transform,
-				selected_game_object->transform.GetRotationRadiants(),
-				selected_game_object
-			);
-			break;
-
-		case UndoActionType::SCALE:
-			new_action = new EditorActionScale(
-				previous_transform,
-				selected_game_object->transform.GetScale(),
-				selected_game_object
-			);
-			break;
-
-		case UndoActionType::ADD_GAMEOBJECT:
-			new_action = new EditorActionAddGameObject(
-				action_game_object,
-				action_game_object->parent,
-				action_game_object->GetHierarchyDepth()
-			);
-			break;
-
-		case UndoActionType::DELETE_GAMEOBJECT:
-			new_action = new EditorActionDeleteGameObject(
-				action_game_object,
-				action_game_object->parent,
-				action_game_object->GetHierarchyDepth()
-			);
-			break;
-		
-		case UndoActionType::ADD_COMPONENT:
-			new_action = new EditorActionAddComponent(action_component);
-			break;
-
-		case UndoActionType::DELETE_COMPONENT:
-			new_action = new EditorActionDeleteComponent(action_component);
-			break;
-
-		case UndoActionType::EDIT_COMPONENTLIGHT:
-			new_action = new EditorActionModifyLight(
-				(ComponentLight*)action_component,
-				previous_light_color, 
-				previous_light_intensity
-			);
-			break;
-
-		case UndoActionType::EDIT_COMPONENTMATERIAL:
-			new_action = new EditorActionSetTexture(
-				(ComponentMaterial*)action_component,
-				type_texture
-			);
-			break;
-
-		case UndoActionType::EDIT_COMPONENTCAMERA:
-			new_action = new EditorActionModifyCamera(
-				(ComponentCamera*)action_component
-			);
-			break;
-
-		case UndoActionType::ENABLE_DISABLE_COMPONENT:
-			new_action = new EditorActionEnableDisableComponent(action_component);
-			break;
-
-		default:
-			break;
-	}
-	if (new_action != nullptr)
-	{
-		undoStack.push_back(new_action);
-		ClearRedoStack();
-	}
-}
-
-void ModuleEditor::DeleteComponentUndo(Component* component)
-{
-	//UndoRedo
-	App->editor->action_component = component;
-	App->editor->AddUndoAction(UndoActionType::DELETE_COMPONENT);
-	component->Disable();
-	auto it = std::find(component->owner->components.begin(), component->owner->components.end(), component);
-	component->owner->components.erase(it);
-}
-
-void ModuleEditor::ClearUndoRedoStacks()
-{
-	ClearRedoStack();
-	ClearUndoStack();
 }
