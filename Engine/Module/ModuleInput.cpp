@@ -188,7 +188,7 @@ bool ModuleInput::GetMouseButtonUp(MouseButton button)
 	return mouse_bible[button] == KeyState::UP;
 }
 
-bool ModuleInput::GetGameInput(std::string & name)
+bool ModuleInput::GetGameInput(const char* name)
 {
 	GameInput button = game_inputs[name];
 	for (auto &key : button.keys)
@@ -206,7 +206,7 @@ bool ModuleInput::GetGameInput(std::string & name)
 	return false;
 }
 
-bool ModuleInput::GetGameInputDown(std::string & name)
+bool ModuleInput::GetGameInputDown(const char* name)
 {
 	GameInput button = game_inputs[name];
 	for (auto &key : button.keys)
@@ -224,7 +224,7 @@ bool ModuleInput::GetGameInputDown(std::string & name)
 	return false;
 }
 
-bool ModuleInput::GetGameInputUp(std::string & name)
+bool ModuleInput::GetGameInputUp(const char* name)
 {
 	GameInput button = game_inputs[name];
 	for (auto &key : button.keys)

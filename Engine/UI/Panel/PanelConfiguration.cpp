@@ -392,5 +392,11 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("GetMouseDragDelta(0):\n  w/ default threshold: (%.1f, %.1f),\n  w/ zero threshold: (%.1f, %.1f)\nMouseDelta: (%.1f, %.1f)", value_with_lock_threshold.x, value_with_lock_threshold.y, value_raw.x, value_raw.y, mouse_delta.x, mouse_delta.y);
 			ImGui::TreePop();
 		}
+
+		if(ImGui::TreeNode("Game Input"))
+		{
+			
+		}
+		
 	}
 }

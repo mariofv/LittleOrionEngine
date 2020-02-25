@@ -326,9 +326,9 @@ public:
 	bool GetMouseButtonDown(MouseButton button); 
 	bool GetMouseButtonUp(MouseButton button);
 
-	bool GetGameInput(std::string &name);
-	bool GetGameInputDown(std::string &name);
-	bool GetGameInputUp(std::string &name);
+	bool GetGameInput(const char* name);
+	bool GetGameInputDown(const char* name);
+	bool GetGameInputUp(const char* name);
 
 	void CreateGameInput(std::string name, std::vector<KeyCode> keys, std::vector<MouseButton> mouse_buttons);
 

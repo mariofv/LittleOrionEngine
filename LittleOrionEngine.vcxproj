@@ -163,7 +163,6 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Skybox.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
-    <ClInclude Include="InputManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -228,7 +227,6 @@
     <ClCompile Include="Engine\UI\Panel\PanelProjectExplorer.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelToolBar.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp" />
-    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGradient.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGuizmo.cpp" />

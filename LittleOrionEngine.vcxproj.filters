@@ -349,7 +349,6 @@
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
-    <ClCompile Include="InputManager.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLAABBTree.cpp">
       <Filter>Engine\SpacePartition</Filter>
     </ClCompile>
@@ -583,7 +582,6 @@
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="InputManager.h" />
     <ClInclude Include="Engine\SpacePartition\OLAABBTree.h">
       <Filter>Engine\SpacePartition</Filter>
     </ClInclude>
