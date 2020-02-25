@@ -28,8 +28,8 @@ public:
 		float cutoff = cos((17.5f * 3, 1415) / 180);
 
 		float constant = 1.0F;
-		float linear = 0.027F;
-		float quadratic = 0.0028F;
+		float linear = 0.09F;
+		float quadratic = 0.032F;
 	};
 
 	ComponentLight();
