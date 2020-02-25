@@ -17,7 +17,8 @@ public:
 		MATERIAL,
 		MESH,
 		TRANSFORM,
-		LIGHT
+		LIGHT,
+		ANIMATION
 	};
 
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
@@ -52,6 +53,8 @@ public:
 			return ComponentType::TRANSFORM;
 		case 5:
 			return ComponentType::LIGHT;
+		case 6:
+			return ComponentType::ANIMATION;
 		}
 	}
 
