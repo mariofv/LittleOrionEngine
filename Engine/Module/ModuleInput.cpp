@@ -46,6 +46,7 @@ bool ModuleInput::Init()
 	}
 
 	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
+	
 
 	return ret;
 }
