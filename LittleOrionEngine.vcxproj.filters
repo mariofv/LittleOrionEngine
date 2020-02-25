@@ -662,5 +662,8 @@
     <Filter Include="Engine\Actions">
       <UniqueIdentifier>{3f3b0f7b-d67b-4384-a9ba-a7e803bb2a53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Animations">
+      <UniqueIdentifier>{def0a7eb-5fd9-47f1-8d40-947dc459a630}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
 </Project>

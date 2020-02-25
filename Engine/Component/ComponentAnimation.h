@@ -13,8 +13,6 @@ public:
 	/*
 	Controler: AnimControler;
 	Resource: UID;
-	
-	
 	*/
 public:
 	void OnPlay();
