@@ -17,19 +17,19 @@ public:
 
 	struct PointLight
 	{
-		float constant;
-		float linear;
-		float quadratic;
+		float constant = 1.0F;
+		float linear = 0.027F;
+		float quadratic = 0.0028F;
 	};
 
 	struct SpotLight
 	{
-		float outer_cutoff;
-		float cutoff;
+		float outer_cutoff = cos((12.5f * 3, 1415) / 180);
+		float cutoff = cos((17.5f * 3, 1415) / 180);
 
-		float constant;
-		float linear;
-		float quadratic;
+		float constant = 1.0F;
+		float linear = 0.027F;
+		float quadratic = 0.0028F;
 	};
 
 	ComponentLight();

@@ -88,15 +88,15 @@ void ModuleLight::RenderSpotLights(GLuint program)
 				glUniform3fv(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".color").c_str()), 1, light_color_scaled.ptr());
 				glUniform3fv(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".position").c_str()), 1, light->owner->transform.GetGlobalTranslation().ptr());
 				glUniform3fv(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".direction").c_str()), 1, light->owner->transform.GetFrontVector().ptr());
-				float cutOff_value = cos((12.5f * 3, 1415) / 180);
+				float cutOff_value = light->spot_light_parameters.cutoff;
 				glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".cutOff").c_str()), cutOff_value);
-				float outerCutOff_value = cos((17.5f * 3, 1415) / 180);
+				float outerCutOff_value = light->spot_light_parameters.outer_cutoff;
 				glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".outerCutOff").c_str()), outerCutOff_value);
-				float constant_value = 1.0F;
+				float constant_value = light->spot_light_parameters.constant;
 				glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".constant").c_str()), constant_value);
-				float linear_value = 0.027F;
+				float linear_value = light->spot_light_parameters.linear;
 				glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".linear").c_str()), linear_value);
-				float quadratic_value = 0.0028F;
+				float quadratic_value = light->spot_light_parameters.quadratic;
 				glUniform1f(glGetUniformLocation(program, std::string(spot_light_current_uniform_name + ".quadratic").c_str()), quadratic_value);
 
 				++current_number_spot_lights_rendered;
@@ -121,11 +121,11 @@ void ModuleLight::RenderPointLights(GLuint program)
 
 				glUniform3fv(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".color").c_str()), 1, light_color_scaled.ptr());
 				glUniform3fv(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".position").c_str()), 1, light->owner->transform.GetGlobalTranslation().ptr());
-				float constant_value = 1.0F;
+				float constant_value = light->point_light_parameters.constant;
 				glUniform1f(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".constant").c_str()), constant_value);
-				float linear_value = 0.027F;
+				float linear_value = light->point_light_parameters.linear;
 				glUniform1f(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".linear").c_str()), linear_value);
-				float quadratic_value = 0.0028F;
+				float quadratic_value = light->point_light_parameters.quadratic;
 				glUniform1f(glGetUniformLocation(program, std::string(point_light_current_uniform_name + ".quadratic").c_str()), quadratic_value);
 
 				++current_number_point_lights_rendered;
