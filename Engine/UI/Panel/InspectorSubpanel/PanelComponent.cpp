@@ -424,15 +424,23 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 		}
 		if (light->light_type == ComponentLight::LightType::POINT_LIGHT)
 		{
-			ImGui::DragFloat("Linear ", &light->point_light_parameters.linear, 0.01f, 0.f, 1.f);
-			ImGui::DragFloat("Quadratic ", &light->point_light_parameters.quadratic, 0.01f, 0.f, 1.f);
+			ImGui::DragFloat("Range", &light->point_light_parameters.range, 0.1f, 1.f, 100.f);
+			ImGui::DragFloat("Linear", &light->point_light_parameters.linear, 0.01f, 0.f, 1.f);
+			ImGui::DragFloat("Quadratic", &light->point_light_parameters.quadratic, 0.01f, 0.f, 1.f);
 		}
 		if (light->light_type == ComponentLight::LightType::SPOT_LIGHT)
 		{
-			ImGui::DragFloat("CutOff ", &light->spot_light_parameters.cutoff, 0.01f, 0.f, 1.f);
-			ImGui::DragFloat("Outter CutOff ", &light->spot_light_parameters.outer_cutoff, 0.01f, 0.f, 1.f);
-			ImGui::DragFloat("Linear ", &light->spot_light_parameters.linear, 0.01f, 0.f, 1.f);
-			ImGui::DragFloat("Quadratic ", &light->spot_light_parameters.quadratic, 0.01f, 0.f, 1.f);
+			if (ImGui::DragFloat("Spot Angle", &light->spot_light_parameters.spot_angle, 1.f, 1.f, 179.f))
+			{
+				light->spot_light_parameters.SetSpotAngle(light->spot_light_parameters.spot_angle);
+			}
+			if (ImGui::DragFloat("Edge Softness", &light->spot_light_parameters.edge_softness, 0.01f, 0.f, 1.f))
+			{
+				light->spot_light_parameters.SetEdgeSoftness(light->spot_light_parameters.edge_softness);
+			}
+			ImGui::DragFloat("Range", &light->spot_light_parameters.range, 0.1f, 0.f, 100.f);
+			ImGui::DragFloat("Linear", &light->spot_light_parameters.linear, 0.01f, 0.f, 1.f);
+			ImGui::DragFloat("Quadratic", &light->spot_light_parameters.quadratic, 0.01f, 0.f, 1.f);
 		}
 		
 	}

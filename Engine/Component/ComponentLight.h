@@ -5,6 +5,7 @@
 #include "UI/Panel/InspectorSubpanel/PanelComponent.h"
 
 class GameObject;
+
 class ComponentLight : public Component
 {
 public:
@@ -15,21 +16,42 @@ public:
 		DIRECTIONAL_LIGHT
 	};
 
-	struct PointLight
+	class PointLight
 	{
-		float constant = 1.0F;
-		float linear = 0.027F;
-		float quadratic = 0.0028F;
+		public:
+			float range = 1.f;
+			float constant = 1.f;
+			float linear = 0.02f;
+			float quadratic = 0.0028f;
 	};
 
-	struct SpotLight
+	class SpotLight
 	{
-		float outer_cutoff = cos((12.5f * 3, 1415) / 180);
-		float cutoff = cos((17.5f * 3, 1415) / 180);
+		public: 
+			void SetSpotAngle(float new_angle)
+			{
+				spot_angle = new_angle;
+				cutoff = cos(DegToRad(spot_angle / 2.f));
+				outer_cutoff = cos(DegToRad((1 + edge_softness) * spot_angle / 2.f));
+			}
 
-		float constant = 1.0F;
-		float linear = 0.09F;
-		float quadratic = 0.032F;
+			void SetEdgeSoftness(float new_softness)
+			{
+				edge_softness = new_softness;
+				outer_cutoff = cos(DegToRad((1 + edge_softness) * spot_angle / 2.f));
+			}
+
+		public: 
+			float spot_angle = 30.f; // Dear reader do not modify this directly, use SetSpotAngle!
+			float cutoff = cos(DegToRad(30.f)); // Dear reader do not modify this directly, use SetSpotAngle!
+
+			float edge_softness = 0.1f; // Dear reader do not modify this directly, use SetEdgeSoftness!
+			float outer_cutoff = cos(DegToRad(33.f));
+
+			float range = 5.f; // TODO: Realte this to linear quadratic and constant parameters. Not working atm.
+			float linear = 0.09F;
+			float quadratic = 0.032F;
+			float constant = 1.0F;
 	};
 
 	ComponentLight();
