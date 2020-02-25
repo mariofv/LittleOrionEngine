@@ -31,7 +31,6 @@ public:
 	void RenderDirectionalLight();
 	void RenderSpotLights(GLuint program);
 	void RenderPointLights(GLuint program);
-	void RenderDarkness() const;
 
 	ComponentLight* CreateComponentLight();
 	void RemoveComponentLight(ComponentLight* light_to_remove);
@@ -48,10 +47,6 @@ public:
 
 	std::vector<ComponentLight*> lights;
 	friend class ModuleEditor;
-
-private:
-	std::vector<float4> light_positions;
-	std::vector<float4> light_colors;
 };
 
 #endif // !_MODULELIGHT_H_
