@@ -159,6 +159,6 @@ void ModuleLight::SortClosestLights(const float3& position, ComponentLight::Ligh
 
 	std::sort(closest_lights.begin(), closest_lights.end(), [](const std::pair<float, ComponentLight*>& lhs, const std::pair<float, ComponentLight*>& rhs)
 	{
-		return lhs.second < rhs.second;
+		return lhs.first < rhs.first;
 	});
 }
