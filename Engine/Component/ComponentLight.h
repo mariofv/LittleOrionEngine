@@ -19,7 +19,7 @@ public:
 	class PointLight
 	{
 		public:
-			float range = 1.f;
+			float range = 1.f; // TODO: Relate this to linear quadratic and constant parameters. Not working atm.
 			float constant = 1.f;
 			float linear = 0.02f;
 			float quadratic = 0.0028f;
@@ -46,9 +46,9 @@ public:
 			float cutoff = cos(DegToRad(30.f)); // Dear reader do not modify this directly, use SetSpotAngle!
 
 			float edge_softness = 0.1f; // Dear reader do not modify this directly, use SetEdgeSoftness!
-			float outer_cutoff = cos(DegToRad(33.f));
+			float outer_cutoff = cos(DegToRad(33.f)); // Dear reader do not modify this directly, use SetEdgeSoftness!
 
-			float range = 5.f; // TODO: Realte this to linear quadratic and constant parameters. Not working atm.
+			float range = 5.f; // TODO: Relate this to linear quadratic and constant parameters. Not working atm.
 			float linear = 0.09F;
 			float quadratic = 0.032F;
 			float constant = 1.0F;

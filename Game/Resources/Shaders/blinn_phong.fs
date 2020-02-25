@@ -6,7 +6,8 @@ in vec2 texCoord;
 
 out vec4 FragColor;
 
-struct Material {
+struct Material
+{
 	sampler2D diffuse_map;
 	vec4 diffuse_color;
 	float k_diffuse;
@@ -23,8 +24,8 @@ uniform Material material;
 
 layout (std140) uniform Matrices
 {
-  mat4 model;
-  mat4 proj;
+	mat4 model;
+	mat4 proj;
 	mat4 view;
 } matrices;
 
@@ -48,7 +49,7 @@ struct SpotLight
     float quadratic;     
 };
 
-struct  PointLight
+struct PointLight
 {
 	vec3 color;
 	vec3 position;
@@ -64,11 +65,10 @@ uniform SpotLight spot_lights[10];
 uniform int num_point_lights;
 uniform PointLight point_lights[10];
 
-
-vec4 get_diffuse_color(const Material mat, const vec2 texCoord);
-vec3 get_occlusion_color(const Material mat, const vec2 texCoord);
-vec3 get_emissive_color(const Material mat, const vec2 texCoord);
-vec4 get_specular_color(const Material mat, const vec2 texCoord);
+vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
+vec4 GetSpecularColor(const Material mat, const vec2 texCoord);
+vec3 GetOcclusionColor(const Material mat, const vec2 texCoord);
+vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 
 vec3 CalculateDirectionalLight(const vec3 normalized_normal);
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal);
@@ -98,22 +98,22 @@ void main()
 	FragColor = vec4(result,1.0);
 }
 
-vec4 get_diffuse_color(const Material mat, const vec2 texCoord)
+vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 {
 	return texture(mat.diffuse_map, texCoord)*mat.diffuse_color;
 }
 
-vec4 get_specular_color(const Material mat, const vec2 texCoord)
+vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
 {
 	return texture(mat.specular_map, texCoord)*mat.specular_color;
 }
 
-vec3 get_occlusion_color(const Material mat, const vec2 texCoord)
+vec3 GetOcclusionColor(const Material mat, const vec2 texCoord)
 {
 	return texture(mat.occlusion_map, texCoord).rgb * vec3(1.0,1.0,1.0);
 }
 
-vec3 get_emissive_color(const Material mat, const vec2 texCoord)
+vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 {
 	return (texture(mat.emissive_map, texCoord)*mat.emissive_color).rgb;
 }
@@ -125,23 +125,23 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal)
 	float diffuse    = max(0.0, dot(normalized_normal, light_dir));
 	float specular   = 0.0;
 
-  if(diffuse > 0.0 && material.k_specular > 0.0 && material.shininess > 0.0)
-  {
-      vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-      vec3 view_dir    = normalize(view_pos - position);
-	  vec3 half_dir 	 = normalize(light_dir + view_dir);
-      float spec       = max(dot(normalized_normal, half_dir), 0.0);
+	if(diffuse > 0.0 && material.k_specular > 0.0 && material.shininess > 0.0)
+	{
+		vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
+		vec3 view_dir    = normalize(view_pos - position);
+		vec3 half_dir 	 = normalize(light_dir + view_dir);
+		float spec       = max(dot(normalized_normal, half_dir), 0.0);
 
-      if(spec > 0.0)
-      {
-          specular = pow(spec, material.shininess);
-      }
-  }
+		if(spec > 0.0)
+		{
+			specular = pow(spec, material.shininess);
+		}
+	}
 
-	vec4 diffuse_color  = get_diffuse_color(material, texCoord);
-	vec4 specular_color  = get_specular_color(material, texCoord);
-	vec3 occlusion_color = get_occlusion_color(material, texCoord);
-	vec3 emissive_color  = get_emissive_color(material, texCoord);
+	vec4 diffuse_color  = GetDiffuseColor(material, texCoord);
+	vec4 specular_color  = GetSpecularColor(material, texCoord);
+	vec3 occlusion_color = GetOcclusionColor(material, texCoord);
+	vec3 emissive_color  = GetEmissiveColor(material, texCoord);
 
 
 	return directional_light.color * (
@@ -158,23 +158,23 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal)
     float diffuse    = max(0.0, dot(normalized_normal, light_dir));
     float specular   = 0.0;
 
-  if(diffuse > 0.0 && material.k_specular > 0.0 && material.shininess > 0.0)
-  {
-      vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-      vec3 view_dir    = normalize(view_pos - position);
-      vec3 half_dir      = normalize(light_dir + view_dir);
-      float spec       = max(dot(normalized_normal, half_dir), 0.0);
+	if(diffuse > 0.0 && material.k_specular > 0.0 && material.shininess > 0.0)
+	{
+		vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
+		vec3 view_dir    = normalize(view_pos - position);
+		vec3 half_dir      = normalize(light_dir + view_dir);
+		float spec       = max(dot(normalized_normal, half_dir), 0.0);
 
-      if(spec > 0.0)
-      {
-          specular = pow(spec, material.shininess);
-      }
-  } 
+		if(spec > 0.0)
+		{
+			specular = pow(spec, material.shininess);
+		}
+	} 
 
-    vec4 diffuse_color  = get_diffuse_color(material, texCoord);
-    vec4 specular_color  = get_specular_color(material, texCoord);
-    vec3 occlusion_color = get_occlusion_color(material, texCoord);
-    vec3 emissive_color  = get_emissive_color(material, texCoord);
+    vec4 diffuse_color  = GetDiffuseColor(material, texCoord);
+	vec4 specular_color  = GetSpecularColor(material, texCoord);
+	vec3 occlusion_color = GetOcclusionColor(material, texCoord);
+	vec3 emissive_color  = GetEmissiveColor(material, texCoord);
 
     float theta = dot(light_dir, normalize(-spot_light.direction)); 
     float epsilon = (spot_light.cutOff - spot_light.outerCutOff);
@@ -206,10 +206,10 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal)
 	specular		 = pow(spec, material.shininess);
 
 
-	vec4 diffuse_color  = get_diffuse_color(material, texCoord);
-	vec4 specular_color  = get_specular_color(material, texCoord);
-	vec3 occlusion_color = get_occlusion_color(material, texCoord);
-	vec3 emissive_color  = get_emissive_color(material, texCoord);
+	vec4 diffuse_color  = GetDiffuseColor(material, texCoord);
+	vec4 specular_color  = GetSpecularColor(material, texCoord);
+	vec3 occlusion_color = GetOcclusionColor(material, texCoord);
+	vec3 emissive_color  = GetEmissiveColor(material, texCoord);
 
 
 	float distance    = length(point_light.position - position);
