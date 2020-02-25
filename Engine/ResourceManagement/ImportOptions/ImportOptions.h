@@ -4,14 +4,17 @@
 class Config;
 struct ImportOptions
 {
+	ImportOptions() = default;
+	ImportOptions(const std::string & uid, int version);
+	virtual ~ImportOptions() = default;
+
 	std::string uid;
-	long long timestamp;
+	long long timestamp = 0; //PLACEHOLDER
+	int version = 0;
 
-	virtual void Save(Config& config) const = 0;
-	virtual void Load(const Config& config) = 0;
+	virtual void Save(Config& config) const;
+	virtual void Load(const Config& config);
 
-private:
-	static const int IMPORTER_VERSION = 1;
 };
 
 

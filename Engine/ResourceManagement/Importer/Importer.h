@@ -5,6 +5,7 @@
 
 #include <algorithm>
 class File;
+class ImportOptions;
 class Importer {
 public:
 	Importer() = default;
@@ -17,8 +18,10 @@ protected:
 	void SaveMetaFile(const File & imported_file, const std::string & exported_path) const;
 
 public:
-	static std::string GetUIDFromMeta(const File& file);
+	static void GetOptionsFromMeta(const File& file, ImportOptions & options);
 	static std::string GetMetaFilePath(const File& file);
+private:
+	static const int IMPORTER_VERSION = 1;
 };
 #endif // !_IMPORTER_H_
 

@@ -23,7 +23,12 @@ std::string Importer::GetAlreadyImportedResource(const File & file_to_look_for) 
 	File meta_file(meta_file_path);
 	if (App->filesystem->Exists(meta_file_path.c_str()) && meta_file.modification_timestamp >= file_to_look_for.modification_timestamp) {
 	
-		return  GetUIDFromMeta(meta_file);;
+		ImportOptions options;
+		GetOptionsFromMeta(meta_file,options);
+		if (options.version != IMPORTER_VERSION) {
+			return "";
+		}
+		return options.uid;
 	}
 
 	return "";
@@ -37,6 +42,8 @@ void Importer::SaveMetaFile(const File & imported_file, const std::string & expo
 
 
 	Config scene_config;
+	ImportOptions options(exported_path, IMPORTER_VERSION);
+	options.Save(scene_config);
 
 	std::string serialized_scene_string;
 	scene_config.GetSerializedString(serialized_scene_string);
@@ -46,7 +53,7 @@ void Importer::SaveMetaFile(const File & imported_file, const std::string & expo
 }
 
 
-std::string Importer::GetUIDFromMeta(const File& file) 
+void Importer::GetOptionsFromMeta(const File& file, ImportOptions & options)
 {
 	size_t readed_bytes;
 	char* meta_file_data = App->filesystem->Load(file.file_path.c_str(), readed_bytes);
@@ -54,9 +61,7 @@ std::string Importer::GetUIDFromMeta(const File& file)
 	free(meta_file_data);
 
 	Config meta_config(serialized_string);
-	std::string exported_file;
-	meta_config.GetString("ExportedFile", exported_file, "");
-	return exported_file;
+	options.Load(meta_config);
 }
 
 std::string Importer::GetMetaFilePath(const File& file)

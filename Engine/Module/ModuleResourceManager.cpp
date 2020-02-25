@@ -51,6 +51,7 @@ update_status ModuleResourceManager::PreUpdate()
  void ModuleResourceManager::StartThread()
  {
 	 thread_comunication.finished_loading = false;
+	 App->filesystem->RefreshFilesHierarchy();
 	 thread_comunication.total_items = App->filesystem->assets_file->total_sub_files_number;
 	 ImportAllFileHierarchy(*App->filesystem->assets_file.get());
 	 thread_comunication.finished_loading = true;
