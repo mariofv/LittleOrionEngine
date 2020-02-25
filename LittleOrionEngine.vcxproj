@@ -86,6 +86,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="AnimControler.h" />
     <ClInclude Include="Engine\Actions\EditorAction.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddComponent.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddGameObject.h" />
@@ -167,6 +168,7 @@
     <ClInclude Include="Engine\Module\ModuleActions.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="AnimControler.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteComponent.cpp" />
