@@ -2,11 +2,11 @@
 #define _MODULELIGHT_H_
 
 #include "Module.h"
+#include "Component/ComponentLight.h"
 
 #include <vector>
 #include <MathGeoLib.h>
 #include <GL/glew.h>
-class ComponentLight;
 
 class ModuleLight : public Module
 {
@@ -27,13 +27,16 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void Render(GLuint program);
-	void RenderDirectionalLight();
-	void RenderSpotLights(GLuint program);
-	void RenderPointLights(GLuint program);
+	void Render(const float3& mesh_position, GLuint program);
+	void RenderDirectionalLight(const float3& mesh_position);
+	void RenderSpotLights(const float3& mesh_position, GLuint program);
+	void RenderPointLights(const float3& mesh_position, GLuint program);
 
 	ComponentLight* CreateComponentLight();
 	void RemoveComponentLight(ComponentLight* light_to_remove);
+
+private:
+	void SortClosestLights(const float3& position, ComponentLight::LightType light_type);
 
 public:
 	static const unsigned int MAX_DIRECTIONAL_LIGHTS_RENDERED = 1;
@@ -46,6 +49,9 @@ public:
 	int current_number_point_lights_rendered = 0;
 
 	std::vector<ComponentLight*> lights;
+
+private:
+	std::vector< std::pair<float, ComponentLight*> >  closest_lights;
 	friend class ModuleEditor;
 };
 

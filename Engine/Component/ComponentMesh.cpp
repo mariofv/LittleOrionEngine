@@ -80,7 +80,7 @@ void ComponentMesh::Render() const
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	App->lights->Render(program);
+	App->lights->Render(owner->transform.GetGlobalTranslation(), program);
 	owner->RenderMaterialTexture(program);
 	RenderModel();
 	glUseProgram(0);
