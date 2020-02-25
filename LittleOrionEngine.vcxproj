@@ -172,6 +172,7 @@
     <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\PrefabManager.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\PrefabLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -299,6 +300,7 @@
     <ClCompile Include="Engine\ResourceManagement\Loaders\MeshLoader.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\PrefabManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\PrefabLoader.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
