@@ -14,6 +14,7 @@
 class ComponentMesh;
 class GameObject;
 class File;
+class Config;
 class ModuleModelLoader : public Module
 {
 public:

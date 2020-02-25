@@ -25,9 +25,6 @@ public:
 	Animation(std::vector<KeyFrame> && keyframes, std::string name, float duration,const std::string & exported_file);
 	~Animation() = default;
 
-	void Save(Config& config) const override {};
-	void Load(const Config& config) override {};
-
 private:
 	void LoadInMemory() override {};
 

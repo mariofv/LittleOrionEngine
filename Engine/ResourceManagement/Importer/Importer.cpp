@@ -2,7 +2,7 @@
 
 #include "Main/Application.h"
 #include "Helper/Config.h"
-
+#include <ResourceManagement/ImportOptions/ImportOptions.h>
 
 std::pair<bool, std::string> Importer::Import(const File & file) const
 {
@@ -32,11 +32,12 @@ std::string Importer::GetAlreadyImportedResource(const File & file_to_look_for) 
 
 void Importer::SaveMetaFile(const File & imported_file, const std::string & exported_path) const
 {
+
 	std::string meta_file_path = GetMetaFilePath(imported_file);
 
+
 	Config scene_config;
-	scene_config.AddString( exported_path, "ExportedFile");
-	scene_config.AddInt(IMPORTER_VERSION, "ImporterVersion");
+
 	std::string serialized_scene_string;
 	scene_config.GetSerializedString(serialized_scene_string);
 
