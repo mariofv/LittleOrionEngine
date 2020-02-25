@@ -15,7 +15,7 @@ struct Material
 	vec4 specular_color;
 	float shininess;
 	float k_specular;
-	sampler2D occlusion_map;
+	sampler2D occlusion_map; 
 	float k_ambient;
 	sampler2D emissive_map;
 	vec4 emissive_color;
