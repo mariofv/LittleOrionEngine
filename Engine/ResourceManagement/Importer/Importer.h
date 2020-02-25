@@ -19,6 +19,7 @@ protected:
 public:
 	static std::string GetUIDFromMeta(const File& file);
 	static std::string GetMetaFilePath(const File& file);
+	static const int IMPORTER_VERSION = 1;
 
 };
 #endif // !_IMPORTER_H_

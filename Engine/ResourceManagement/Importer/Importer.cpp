@@ -36,6 +36,7 @@ void Importer::SaveMetaFile(const File & imported_file, const std::string & expo
 
 	Config scene_config;
 	scene_config.AddString( exported_path, "ExportedFile");
+	scene_config.AddInt(IMPORTER_VERSION, "ImporterVersion");
 	std::string serialized_scene_string;
 	scene_config.GetSerializedString(serialized_scene_string);
 
