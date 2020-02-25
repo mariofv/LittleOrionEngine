@@ -15,11 +15,6 @@ bool ModuleLight::Init()
 {
 	APP_LOG_SECTION("************ Module Light Init ************");
 
-	/*
-	light_positions = std::vector<float4>(MAX_LIGHTS_RENDERED);
-	light_colors = std::vector<float4>(MAX_LIGHTS_RENDERED);
-	*/
-
 	return true;
 }
 
@@ -134,23 +129,6 @@ void ModuleLight::RenderPointLights(GLuint program)
 	}
 
 	glUniform1i(glGetUniformLocation(program, "num_point_lights"), current_number_point_lights_rendered);
-}
-
-void ModuleLight::RenderDarkness() const
-{
-	/*
-	float3 darkness_color = float3(0.f);
-	float3 darkness_position = float3(0.f);
-
-	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-
-	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.lights_uniform_offset, 3 * sizeof(float), darkness_color.ptr());
-
-	size_t light_position_offset = App->program->uniform_buffer.lights_uniform_offset + 4 * sizeof(float);
-	glBufferSubData(GL_UNIFORM_BUFFER, light_position_offset, 3 * sizeof(float), darkness_position.ptr());
-
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-	*/
 }
 
 ComponentLight* ModuleLight::CreateComponentLight()
