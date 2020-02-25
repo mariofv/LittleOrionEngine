@@ -424,9 +424,8 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 		}
 		if (light->light_type == ComponentLight::LightType::POINT_LIGHT)
 		{
-			ImGui::DragFloat("Range", &light->point_light_parameters.range, 0.1f, 1.f, 100.f);
-			ImGui::DragFloat("Linear", &light->point_light_parameters.linear, 0.01f, 0.f, 1.f);
-			ImGui::DragFloat("Quadratic", &light->point_light_parameters.quadratic, 0.01f, 0.f, 1.f);
+			ImGui::DragFloat("Range", &light->point_light_parameters.range, 10.0f, 7.f, 3250.f);
+			light->point_light_parameters.ChangePointLightAttenuationValues(light->point_light_parameters.range);
 		}
 		if (light->light_type == ComponentLight::LightType::SPOT_LIGHT)
 		{
@@ -438,9 +437,8 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 			{
 				light->spot_light_parameters.SetEdgeSoftness(light->spot_light_parameters.edge_softness);
 			}
-			ImGui::DragFloat("Range", &light->spot_light_parameters.range, 0.1f, 0.f, 100.f);
-			ImGui::DragFloat("Linear", &light->spot_light_parameters.linear, 0.01f, 0.f, 1.f);
-			ImGui::DragFloat("Quadratic", &light->spot_light_parameters.quadratic, 0.01f, 0.f, 1.f);
+			ImGui::DragFloat("Range", &light->spot_light_parameters.range, 10.0f, 7.f, 3250.f);
+			light->spot_light_parameters.ChangeSpotLightAttenuationValues(light->spot_light_parameters.range);
 		}
 		
 	}

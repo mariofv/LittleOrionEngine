@@ -42,3 +42,4 @@ void ComponentLight::Load(const Config& config)
 	light_intensity = config.GetFloat("Intensity", 1.f);
 
 }
+
