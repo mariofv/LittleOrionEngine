@@ -8,14 +8,14 @@ class EditorActionSetTexture : public EditorAction
 {
 public:
 	EditorActionSetTexture(ComponentMaterial* component, Texture::TextureType type);
-	~EditorActionSetTexture();
+	~EditorActionSetTexture() = default;
 
 
 	void Undo();
 	void Redo();
 
 private:
-	ComponentMaterial* component;
+	uint64_t component_UUID;
 	Texture::TextureType type;
 	std::shared_ptr<Texture> texture;
 };

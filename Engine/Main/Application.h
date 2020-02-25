@@ -25,7 +25,11 @@ class ModuleDebugDraw;
 class ModuleUI;
 class ModuleLight;
 class ModuleResourceManager;
+<<<<<<< HEAD
 class ModuleScriptManager;
+=======
+class ModuleActions;
+>>>>>>> refs/remotes/origin/develop
 
 class EngineLog;
 
@@ -60,6 +64,7 @@ public:
 	ModuleLight* lights = nullptr;
 	ModuleResourceManager* resources = nullptr;
 	ModuleScriptManager* scripts = nullptr;
+	ModuleActions* actions = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
 

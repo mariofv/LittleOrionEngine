@@ -251,6 +251,57 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 		}
 		break;
 
+	case ModuleDebug::CullingMode::AABBTREE_CULLING:
+		if (camera != nullptr)
+		{
+			// First we get all static objects inside frustum
+			std::copy_if(
+				meshes.begin(),
+				meshes.end(),
+				std::back_inserter(meshes_to_render),
+				[camera](auto mesh)
+			{
+				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && mesh->owner->IsStatic();
+			}
+			);
+
+			// Then we add all dynamic objects culled using the aabbtree
+			std::vector<GameObject*> rendered_objects;
+			ol_abbtree->GetIntersection(rendered_objects, camera);
+
+			for (auto &object : rendered_objects)
+			{
+				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				meshes_to_render.push_back(object_mesh);
+			}
+		}
+		break;
+	case ModuleDebug::CullingMode::COMBINED_CULLING:
+		if(camera != nullptr)
+		{
+			// We add all static objects culled using the quadtree
+			std::vector<GameObject*> rendered_static_objects;
+			ol_quadtree.CollectIntersect(rendered_static_objects, *camera);
+
+			for (auto &object : rendered_static_objects)
+			{
+				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				meshes_to_render.push_back(object_mesh);
+			}
+
+			// Then we add all dynamic objects culled using the aabbtree
+			std::vector<GameObject*> rendered_dynamic_objects;
+			ol_abbtree->GetIntersection(rendered_dynamic_objects, camera);
+
+			for (auto &object : rendered_dynamic_objects)
+			{
+				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				meshes_to_render.push_back(object_mesh);
+			}
+
+		}
+		break;
+
 	default:
 		break;
 	}
@@ -393,6 +444,42 @@ void ModuleRender::GenerateQuadTree()
 	}
 }
 
+void ModuleRender::InsertAABBTree(GameObject * game_object)
+{
+	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
+	if(object_mesh != nullptr)
+		ol_abbtree->Insert(game_object);
+}
+
+void ModuleRender::RemoveAABBTree(GameObject * game_object)
+{
+	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
+	if (object_mesh != nullptr)
+		ol_abbtree->Remove(game_object);
+}
+
+void ModuleRender::UpdateAABBTree(GameObject* game_object)
+{
+	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
+	if (object_mesh != nullptr)
+		ol_abbtree->UpdateObject(game_object);
+}
+
+void ModuleRender::DeleteAABBTree()
+{
+	delete ol_abbtree;
+}
+
+void ModuleRender::CreateAABBTree()
+{
+	ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
+}
+
+void ModuleRender::DrawAABBTree() const
+{
+	ol_abbtree->Draw();
+}
+
 GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
 {
 	GetCullingMeshes(App->cameras->scene_camera);
@@ -426,3 +513,4 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
 	}
 	return selected;
 }
+

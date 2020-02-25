@@ -22,9 +22,15 @@ bool ModuleScene::Init()
 update_status ModuleScene::Update()
 {
 	BROFILER_CATEGORY("Scene Update", Profiler::Color::Crimson);
-	for (auto & gameObject : game_objects_ownership)
+	for (auto & game_object : game_objects_ownership)
 	{
-		gameObject->Update();
+		game_object->Update();
+		if(!game_object->IsStatic())
+		{
+			ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
+			if(object_mesh != nullptr)
+				App->renderer->UpdateAABBTree(game_object.get());
+		}
 	}
 	return update_status::UPDATE_CONTINUE;
 }
@@ -74,11 +80,6 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 	}
 }
 
-void ModuleScene::DisableGameObject(GameObject * game_object_to_disable)
-{
-
-}
-
 GameObject* ModuleScene::GetRoot() const
 {
 	return root;
@@ -102,12 +103,28 @@ GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 	return nullptr;
 }
 
+Component * ModuleScene::GetComponent(uint64_t UUID) const
+{
+	for (auto& game_object : game_objects_ownership)
+	{
+		for(auto& component : game_object->components)
+		{
+			if(component->UUID == UUID)
+			{
+				return component;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
 void ModuleScene::DeleteCurrentScene()
 {
 	//UndoRedo
-	App->editor->ClearUndoRedoStacks();
-
+	App->actions->ClearUndoRedoStacks();
 	RemoveGameObject(root);
+	App->renderer->DeleteAABBTree();
 	App->editor->selected_game_object = nullptr;
 }
 
@@ -143,6 +160,7 @@ void ModuleScene::Save(Config& serialized_scene) const
 void ModuleScene::Load(const Config& serialized_scene)
 {
 	DeleteCurrentScene();
+	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 
 	std::vector<Config> game_objects_config;
@@ -151,8 +169,13 @@ void ModuleScene::Load(const Config& serialized_scene)
 	{
 		GameObject* created_game_object = CreateGameObject();
 		created_game_object->Load(game_objects_config[i]);
+
+		if(!created_game_object->IsStatic())
+		{
+			App->renderer->InsertAABBTree(created_game_object);
+		}
 	}
 	App->renderer->GenerateQuadTree();
-	App->editor->ClearUndoStack();
+	App->actions->ClearUndoStack();
 
 }

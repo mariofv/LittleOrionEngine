@@ -6,9 +6,11 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleRender.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleActions.h"
 #include "Module/ModuleScene.h"
 
 #include <imgui.h>
@@ -113,9 +115,10 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 				if (target_game_object != nullptr)
 				{
 					target_game_object->AddChild(new_model);
+
 					//UndoRedo
-					App->editor->action_game_object = new_model;
-					App->editor->AddUndoAction(ModuleEditor::UndoActionType::ADD_GAMEOBJECT);
+					App->actions->action_game_object = new_model;
+					App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
 				}
 			}
 		}
@@ -140,11 +143,13 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 		{
 			if (ImGui::Selectable("Delete GameObject"))
 			{
-				App->editor->action_game_object = game_object;
-				App->editor->AddUndoAction(ModuleEditor::UndoActionType::DELETE_GAMEOBJECT);
+				//UndoRedo
+				App->actions->action_game_object = game_object;
+				App->actions->AddUndoAction(ModuleActions::UndoActionType::DELETE_GAMEOBJECT);
 				
-				game_object->SetEnabled(false);
-				game_object->parent->RemoveChild(game_object);
+				App->scene->RemoveGameObject(game_object);
+
+
 
 				App->editor->selected_game_object = nullptr;
 			}
@@ -163,8 +168,8 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 		if (ImGui::Selectable("Create Empty"))
 		{
 			GameObject* created_go = game_object != nullptr ? App->scene->CreateChildGameObject(game_object) : App->scene->CreateGameObject();
-			App->editor->action_game_object = created_go;
-			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ADD_GAMEOBJECT);
+			App->actions->action_game_object = created_go;
+			App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
 		}
 		
 		Show3DObjectCreationMenu(game_object);
@@ -203,6 +208,12 @@ void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 		{
 			App->model_loader->LoadCoreModel(PRIMITIVE_QUAD_PATH);
 		}
+
+		if(created_game_object != nullptr)
+		{
+			App->renderer->InsertAABBTree(created_game_object);
+		}
+
 		ImGui::EndMenu();
 	}
 }
