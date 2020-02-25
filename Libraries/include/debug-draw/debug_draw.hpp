@@ -597,15 +597,28 @@ void cone(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx,)
           int durationMillis = 0,
           bool depthEnabled = true);
 
-// Add a wireframe open_cylinder to the debug draw queue.
-// The length of the 'dir' vector determines the thickness.
-// 'radius' is in degrees.
 void directional_light(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx, )
 		ddVec3_In apex, 
 		ddMat4x4_In rotation_matrix,
 		ddVec3_In color,
 		const float length,
 		const float radius, 
+		int durationMillis = 0,
+		bool depthEnabled = true);
+
+void spot_light(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx, )
+		ddVec3_In apex,
+		ddMat4x4_In rotation_matrix, 
+		ddVec3_In color,
+		const float length, 
+		const float radius, 
+		const int durationMillis = 0,
+		const bool depthEnabled = true);
+
+void point_light(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx, )
+		ddVec3_In center,
+		ddVec3_In color,
+		float radius,
 		int durationMillis = 0,
 		bool depthEnabled = true);
 
@@ -3136,6 +3149,102 @@ void directional_light(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx, ) ddVec3_In a
 		vecCopy(lastP2, p2);
 	}
 	
+}
+
+void spot_light(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx, ) ddVec3_In apex, ddMat4x4_In rotation_matrix, ddVec3_In color,
+	const float length, const float radius, const int durationMillis, const bool depthEnabled)
+{
+	if (!isInitialized(DD_EXPLICIT_CONTEXT_ONLY(ctx)))
+	{
+		return;
+	}
+
+	static const int stepSize = 20;
+	ddVec3 axis[3];
+	ddVec3 top, temp0, temp1, temp2;
+	ddVec3 p1, p2, lastP1, lastP2;
+
+	matTransformPointXYZ(axis[0], ddVec3::unitX, rotation_matrix);
+	matTransformPointXYZ(axis[1], ddVec3::unitY, rotation_matrix);
+	matTransformPointXYZ(axis[2], ddVec3::unitZ, rotation_matrix);
+
+	axis[1][X] = -axis[1][X];
+	axis[1][Y] = -axis[1][Y];
+	axis[1][Z] = -axis[1][Z];
+
+	vecScale(temp1, axis[2], length);
+	vecAdd(top, apex, temp1);
+	vecScale(temp1, axis[1], radius);
+	vecAdd(lastP2, top, temp1);
+
+	for (int i = stepSize; i <= 360; i += stepSize)
+	{
+		vecScale(temp1, axis[0], floatSin(degreesToRadians(i)));
+		vecScale(temp2, axis[1], floatCos(degreesToRadians(i)));
+		vecAdd(temp0, temp1, temp2);
+
+		vecScale(temp0, temp0, radius);
+		vecAdd(p2, top, temp0);
+
+		line(DD_EXPLICIT_CONTEXT_ONLY(ctx, ) lastP2, p2, color, durationMillis, depthEnabled);
+		line(DD_EXPLICIT_CONTEXT_ONLY(ctx, ) p2, apex, color, durationMillis, depthEnabled);
+
+		vecCopy(lastP2, p2);
+	}
+}
+
+void point_light(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx, ) ddVec3_In center, ddVec3_In color,
+	const float radius, const int durationMillis, const bool depthEnabled)
+{
+	ddVec3 left[3], up[3], lastPoint[3];
+	ddVec3 point;
+
+
+	vecSet(up[0], 0.f, radius, 0.f);
+	vecSet(left[0], radius, 0.f, 0.f);
+	vecAdd(lastPoint[0], center, up[0]);
+
+	vecSet(up[1], radius, 0.f, 0.f);
+	vecSet(left[1], 0.f,  0.f, radius);
+	vecAdd(lastPoint[1], center, up[1]);
+
+	vecSet(up[2], 0.f, radius, 0.f);
+	vecSet(left[2], 0.f, 0.f, radius);
+	vecAdd(lastPoint[2], center, up[2]);
+	for (int i = 1; i <= 24; ++i)
+	{
+		const float radians = TAU * i / 24;
+		ddVec3 vs, vc;
+
+		vecScale(vs, left[0], floatSin(radians));
+		vecScale(vc, up[0], floatCos(radians));
+
+		vecAdd(point, center, vs);
+		vecAdd(point, point, vc);
+
+		line(DD_EXPLICIT_CONTEXT_ONLY(ctx, ) lastPoint[0], point, color, durationMillis, depthEnabled);
+		vecCopy(lastPoint[0], point);
+
+
+		vecScale(vs, left[1], floatSin(radians));
+		vecScale(vc, up[1], floatCos(radians));
+
+		vecAdd(point, center, vs);
+		vecAdd(point, point, vc);
+
+		line(DD_EXPLICIT_CONTEXT_ONLY(ctx, ) lastPoint[1], point, color, durationMillis, depthEnabled);
+		vecCopy(lastPoint[1], point);
+
+
+		vecScale(vs, left[2], floatSin(radians));
+		vecScale(vc, up[2], floatCos(radians));
+
+		vecAdd(point, center, vs);
+		vecAdd(point, point, vc);
+
+		line(DD_EXPLICIT_CONTEXT_ONLY(ctx, ) lastPoint[2], point, color, durationMillis, depthEnabled);
+		vecCopy(lastPoint[2], point);
+	}
 }
 
 void box(DD_EXPLICIT_CONTEXT_ONLY(ContextHandle ctx,) const ddVec3 points[8], ddVec3_In color,

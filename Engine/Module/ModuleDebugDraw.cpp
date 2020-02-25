@@ -479,10 +479,10 @@ void ModuleDebugDraw::RenderLightGizmo() const
 			dd::directional_light(selected_light_transform->GetGlobalTranslation(), selected_light_transform->GetRotation().ToFloat4x4(), float3(1.f, 1.f, 0.f), 5.f, gizmo_radius);
 			break;
 		case ComponentLight::LightType::SPOT_LIGHT:
-			dd::cone(selected_light_transform->GetGlobalTranslation(), selected_light_transform->GetFrontVector().ScaledToLength(10.f), float3(1.f, 1.f, 0.f), gizmo_radius, 0.f); // TODO: This should be changed with spot light range
+			dd::spot_light(selected_light_transform->GetGlobalTranslation(), selected_light_transform->GetRotation().ToFloat4x4(), float3(1.f, 1.f, 0.f), 5.f, gizmo_radius); // TODO: This should be changed with spot light range
 			break;
 		case ComponentLight::LightType::POINT_LIGHT:
-			dd::sphere(selected_light_transform->GetGlobalTranslation(), float3(1.f, 1.f, 0.f), gizmo_radius); // TODO: This should be changed with point light 
+			dd::point_light(selected_light_transform->GetGlobalTranslation(), float3(1.f, 1.f, 0.f), gizmo_radius); // TODO: This should be changed with point light 
 			break;
 		default:
 			break;
