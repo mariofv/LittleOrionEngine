@@ -405,7 +405,7 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
-		int light_type = light->GetLightTypeInt();
+		int light_type = static_cast<int>(light->light_type);
 
 		if (ImGui::Combo("Light Type", &light_type, "Point\0Spot\0Directional"))
 		{

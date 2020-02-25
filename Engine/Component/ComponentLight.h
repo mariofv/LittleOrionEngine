@@ -40,8 +40,6 @@ public:
 	void Save(Config& config) const override;
 	void Load(const Config &config) override;
 
-	int GetLightTypeInt() const; //TODO ->refactor this.
-
 public:
 	float light_color[3] = { 1.0f, 1.0f, 1.0f};
 	float light_intensity = 1.f; 
