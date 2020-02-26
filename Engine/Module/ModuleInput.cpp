@@ -298,3 +298,9 @@ void ModuleInput::SaveGameInputs(Config &config)
 
 	config.AddChildrenConfig(game_inputs_configs, "GameInputs");
 }
+
+void ModuleInput::LoadGameInputs()
+{
+	std::vector<Config> game_inputs_configs;
+	//serialized_scene.GetChildrenConfig("GameInputs", game_inputs_configs);
+}

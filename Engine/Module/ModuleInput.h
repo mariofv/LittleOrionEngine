@@ -361,6 +361,7 @@ public:
 
 private:
 	void SaveGameInputs(Config &config);
+	void LoadGameInputs();
 
 private:
 	std::map<KeyCode, KeyState> key_bible;
