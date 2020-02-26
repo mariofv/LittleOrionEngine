@@ -2,7 +2,9 @@
 #define _PANELCONFIGURATION_H_
 
 #include "Panel.h"
+#include "Module/ModuleInput.h"
 #include <vector>
+#include <set>
 
 class PanelConfiguration : public Panel
 {
@@ -265,6 +267,19 @@ private:
 	"AudioRewind",
 	"AudioFastForward" 
 	};
+
+	std::vector<const char*> mouse_keys_string 
+	{
+		"Left",
+		"Middle",
+		"Right"
+	};
+
+	std::set<int> keys;
+	std::set<int> mouse_keys;
+	KeyCode selected_key = KeyCode::None;
+	MouseButton selected_mouse = MouseButton::Left;
+	std::string name_game_input = "";
 };
 
 #endif //_PANELCONFIGURATION_H_

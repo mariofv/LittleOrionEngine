@@ -243,10 +243,9 @@ bool ModuleInput::GetGameInputUp(const char* name)
 	return false;
 }
 
-void ModuleInput::CreateGameInput(std::string name, std::vector<KeyCode> keys, std::vector<MouseButton> mouse_buttons)
+void ModuleInput::CreateGameInput(GameInput game_input)
 {
-	GameInput game_input = {name,keys,mouse_buttons};
-	game_inputs[name] = game_input;
+	game_inputs[game_input.name] = game_input;
 }
 
 // Returns the current mouse position in pixel coordinates

@@ -3,7 +3,6 @@
 #include "Main/Application.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
-#include "Module/ModuleInput.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
@@ -14,6 +13,7 @@
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
 #include <imgui.h>
+#include <imgui_stdlib.h>
 #include <SDL/SDL.h>
 
 PanelConfiguration::PanelConfiguration()
@@ -396,9 +396,20 @@ void PanelConfiguration::ShowInputOptions()
 		if(ImGui::TreeNode("Game Input"))
 		{
 
+			ImGui::InputText("Name: ", &name_game_input);
+
+			ImGui::Separator();
+
+			ImGui::Text("Keys:");
+			for(auto key : keys)
+			{
+				ImGui::Text(game_inputs_strings[(int)key]);
+			}
+
+			ImGui::Separator();
+
 			static const char* item_current = game_inputs_strings[0];
-			KeyCode selected_key = KeyCode::None;
-			if (ImGui::BeginCombo("KeyCode", item_current)) // The second parameter is the label previewed before opening the combo.
+			if (ImGui::BeginCombo("KeyCode", item_current))
 			{
 				for (int n = 0; n < game_inputs_strings.size(); ++n)
 				{
@@ -412,6 +423,62 @@ void PanelConfiguration::ShowInputOptions()
 						ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
 				}
 				ImGui::EndCombo();
+			}
+
+			if(ImGui::Button("Add KeyCode"))
+			{
+				keys.insert((int)selected_key);
+			}
+
+			ImGui::Separator();
+
+			ImGui::Text("Mouse:");
+			for (auto mouse_key : mouse_keys)
+			{
+				ImGui::Text(mouse_keys_string[(int)mouse_key]);
+			}
+
+			ImGui::Separator();
+
+			static const char* mouse_current = mouse_keys_string[0];
+			if (ImGui::BeginCombo("MouseCode", mouse_current))
+			{
+				for (int n = 0; n < mouse_keys_string.size(); ++n)
+				{
+					bool is_selected = (mouse_current == mouse_keys_string[n]);
+					if (ImGui::Selectable(mouse_keys_string[n], is_selected))
+					{
+						mouse_current = mouse_keys_string[n];
+						selected_mouse = MouseButton(n);
+					}
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+				}
+				ImGui::EndCombo();
+			}
+
+			if (ImGui::Button("Add Mouse Button"))
+			{
+				mouse_keys.insert((int)selected_mouse);
+			}
+
+			ImGui::Separator();
+
+			if(ImGui::Button("Create Game Input"))
+			{
+				GameInput game_input;
+				game_input.name = name_game_input;
+				for(auto key : keys)
+				{
+					game_input.keys.push_back((KeyCode)key);
+				}
+
+				for (auto mouse : mouse_keys)
+				{
+					game_input.mouse_buttons.push_back((MouseButton)mouse);
+				}
+
+				App->input->CreateGameInput(game_input);
 			}
 
 			ImGui::TreePop();

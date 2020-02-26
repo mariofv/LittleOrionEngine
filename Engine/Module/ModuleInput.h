@@ -330,7 +330,7 @@ public:
 	bool GetGameInputDown(const char* name);
 	bool GetGameInputUp(const char* name);
 
-	void CreateGameInput(std::string name, std::vector<KeyCode> keys, std::vector<MouseButton> mouse_buttons);
+	void CreateGameInput(GameInput game_input);
 
 	float2 GetMousePosition() const;
 	float2 GetMouseMotion() const;
