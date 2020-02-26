@@ -170,6 +170,7 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Skybox.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
+    <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -296,6 +297,7 @@
     <ClCompile Include="Engine\UI\Panel\PanelInspector.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\MeshLoader.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
