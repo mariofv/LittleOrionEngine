@@ -17,6 +17,8 @@ public:
 	GameObject(const std::string name);
 	~GameObject() = default;
 
+	//TODO: Implement copy and move constructors
+
 	bool IsEnabled() const;
 	void SetEnabled(bool able);
 

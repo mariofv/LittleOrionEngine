@@ -22,6 +22,7 @@ public:
 	GameObject* CreateGameObject();
 	GameObject* CreateChildGameObject(GameObject *parent);
 	void RemoveGameObject(GameObject * game_object_to_remove);
+	void AddGameObject(GameObject game_object_to_remove);
 
 	GameObject* GetRoot() const;
 	GameObject* GetGameObject(uint64_t UUID) const;

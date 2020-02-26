@@ -80,6 +80,14 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 	}
 }
 
+
+void ModuleScene::AddGameObject(GameObject game_object_to_remove)
+{
+	//TODO: Call copy consctructor for gameObject
+	game_objects_ownership.emplace_back(std::make_unique<GameObject>(game_object_to_remove));
+}
+
+
 GameObject* ModuleScene::GetRoot() const
 {
 	return root;
