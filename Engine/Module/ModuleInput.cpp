@@ -246,6 +246,14 @@ bool ModuleInput::GetGameInputUp(const char* name)
 void ModuleInput::CreateGameInput(GameInput game_input)
 {
 	game_inputs[game_input.name] = game_input;
+
+	Config config;
+	SaveGameInputs(config);
+
+	std::string serialized_game_input_string;
+	config.GetSerializedString(serialized_game_input_string);
+
+	App->filesystem->Save(GAME_INPUT_PATH, serialized_game_input_string.c_str(), serialized_game_input_string.size() + 1);
 }
 
 // Returns the current mouse position in pixel coordinates
@@ -275,4 +283,18 @@ Uint8 ModuleInput::GetMouseClicks() const
 bool ModuleInput::IsMouseMoving() const
 {
 	return mouse_moving;
+}
+
+void ModuleInput::SaveGameInputs(Config &config)
+{
+	std::vector<Config> game_inputs_configs;
+
+	for(auto game_input : game_inputs)
+	{
+		Config game_inputs_config;
+		game_input.second.Save(game_inputs_config);
+		game_inputs_configs.push_back(game_inputs_config);
+	}
+
+	config.AddChildrenConfig(game_inputs_configs, "GameInputs");
 }

@@ -430,6 +430,13 @@ void PanelConfiguration::ShowInputOptions()
 				keys.insert((int)selected_key);
 			}
 
+			ImGui::SameLine();
+
+			if(ImGui::Button("Delete Keycodes"))
+			{
+				keys.clear();
+			}
+
 			ImGui::Separator();
 
 			ImGui::Text("Mouse:");
@@ -460,6 +467,13 @@ void PanelConfiguration::ShowInputOptions()
 			if (ImGui::Button("Add Mouse Button"))
 			{
 				mouse_keys.insert((int)selected_mouse);
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Delete Mouse Buttons"))
+			{
+				mouse_keys.clear();
 			}
 
 			ImGui::Separator();

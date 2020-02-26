@@ -3,6 +3,7 @@
 
 #include "Module.h"
 #include "Main/Globals.h"
+#include "Helper/Config.h"
 
 #include <SDL_scancode.h>
 #include <SDL_mouse.h>
@@ -306,6 +307,25 @@ struct GameInput
 	std::string name;
 	std::vector<KeyCode> keys;
 	std::vector<MouseButton> mouse_buttons;
+
+	void Save(Config &config)
+	{
+		config.AddString(name, "Name");
+		config.AddUInt(keys.size(), "SizeKeys");
+		for(unsigned int i = 0; i < keys.size(); ++i)
+		{
+			std::string name("k" + std::to_string(i));
+			
+			config.AddUInt((uint64_t)keys[i], name);
+		}
+
+		config.AddUInt(mouse_buttons.size(), "SizeMouse");
+		for (unsigned int j = 0; j < mouse_buttons.size(); ++j)
+		{
+			std::string name("m" + std::to_string(j));
+			config.AddUInt((uint64_t)mouse_buttons[j], name);
+		}
+	}
 };
 
 class ModuleInput : public Module
@@ -338,6 +358,9 @@ public:
 
 	Uint8 GetMouseClicks() const;
 	bool IsMouseMoving() const;
+
+private:
+	void SaveGameInputs(Config &config);
 
 private:
 	std::map<KeyCode, KeyState> key_bible;
