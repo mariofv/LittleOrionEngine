@@ -395,7 +395,26 @@ void PanelConfiguration::ShowInputOptions()
 
 		if(ImGui::TreeNode("Game Input"))
 		{
-			
+
+			static const char* item_current = game_inputs_strings[0];
+			KeyCode selected_key = KeyCode::None;
+			if (ImGui::BeginCombo("KeyCode", item_current)) // The second parameter is the label previewed before opening the combo.
+			{
+				for (int n = 0; n < game_inputs_strings.size(); ++n)
+				{
+					bool is_selected = (item_current == game_inputs_strings[n]);
+					if (ImGui::Selectable(game_inputs_strings[n], is_selected))
+					{
+						item_current = game_inputs_strings[n];
+						selected_key = KeyCode(n);
+					}
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+				}
+				ImGui::EndCombo();
+			}
+
+			ImGui::TreePop();
 		}
 
 		

@@ -2,6 +2,7 @@
 #define _PANELCONFIGURATION_H_
 
 #include "Panel.h"
+#include <vector>
 
 class PanelConfiguration : public Panel
 {
@@ -19,7 +20,9 @@ private:
 	void ShowTimeOptions();
 	void ShowInputOptions();
 
-	std::vector<std::string> game_inputs_strings{ "A",
+	std::vector<const char*> game_inputs_strings
+	{
+	"A",
 	"B",
 	"C",
 	"D",
@@ -259,8 +262,9 @@ private:
 	"Sleep",
 	"App1",
 	"App2",
-	"AudioRewind" ,
-	"AudioFastForward" };
+	"AudioRewind",
+	"AudioFastForward" 
+	};
 };
 
 #endif //_PANELCONFIGURATION_H_
