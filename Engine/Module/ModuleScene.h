@@ -22,10 +22,10 @@ public:
 	GameObject* CreateGameObject();
 	GameObject* CreateChildGameObject(GameObject *parent);
 	void RemoveGameObject(GameObject * game_object_to_remove);
-	void DisableGameObject(GameObject * game_object_to_disable);
 
 	GameObject* GetRoot() const;
 	GameObject* GetGameObject(uint64_t UUID) const;
+	Component* GetComponent(uint64_t UUID) const;
 
 	void DeleteCurrentScene();
 	void Save(Config& serialized_scene) const;

@@ -13,7 +13,7 @@ bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation*
 {
 	Animation own_format_animation("", "");
 	GetCleanAnimation(animation, own_format_animation);
-	own_format_animation.duration = animation->mDuration;
+	own_format_animation.duration = static_cast<float>(animation->mDuration);
 	own_format_animation.name = std::string(animation->mName.C_Str());
 
 	std::random_device random;
@@ -52,12 +52,12 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 	}
 
 
-	std::map<float, std::vector<Animation::Channel>> keyframes;
+	std::map<double, std::vector<Animation::Channel>> keyframes;
 
 	//Merge channels
 	for (auto & nodes : aiNode_by_channel)
 	{
-		std::unordered_map<float, float4x4>  frames;
+		std::unordered_map<double, float4x4>  frames;
 		
 		for (auto ai_node : nodes.second)
 		{
@@ -75,12 +75,12 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 	own_format_animation.keyframes.reserve(keyframes.size());
 	for (auto & keyframe : keyframes)
 	{
-		own_format_animation.keyframes.push_back({keyframe.first, keyframe.second});
+		own_format_animation.keyframes.push_back({static_cast<float>(keyframe.first), keyframe.second});
 	}
 
 }
 
-void AnimationImporter::TransformPositions(const aiNodeAnim * ai_node, std::unordered_map<float, float4x4> & frames) const
+void AnimationImporter::TransformPositions(const aiNodeAnim * ai_node, std::unordered_map<double, float4x4> & frames) const
 {
 
 	for (size_t j = 0; j < ai_node->mNumScalingKeys; j++)

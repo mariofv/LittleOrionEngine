@@ -80,11 +80,6 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 	}
 }
 
-void ModuleScene::DisableGameObject(GameObject * game_object_to_disable)
-{
-
-}
-
 GameObject* ModuleScene::GetRoot() const
 {
 	return root;
@@ -108,13 +103,28 @@ GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 	return nullptr;
 }
 
+Component * ModuleScene::GetComponent(uint64_t UUID) const
+{
+	for (auto& game_object : game_objects_ownership)
+	{
+		for(auto& component : game_object->components)
+		{
+			if(component->UUID == UUID)
+			{
+				return component;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
 void ModuleScene::DeleteCurrentScene()
 {
 	//UndoRedo
-	App->editor->ClearUndoRedoStacks();
-	
-	App->renderer->DeleteAABBTree();
+	App->actions->ClearUndoRedoStacks();
 	RemoveGameObject(root);
+	App->renderer->DeleteAABBTree();
 	App->editor->selected_game_object = nullptr;
 }
 
@@ -166,6 +176,6 @@ void ModuleScene::Load(const Config& serialized_scene)
 		}
 	}
 	App->renderer->GenerateQuadTree();
-	App->editor->ClearUndoStack();
+	App->actions->ClearUndoStack();
 
 }

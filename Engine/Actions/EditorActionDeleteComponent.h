@@ -8,13 +8,16 @@ class EditorActionDeleteComponent : public EditorAction
 {
 public:
 	EditorActionDeleteComponent(Component* comp);
-	~EditorActionDeleteComponent();
+	~EditorActionDeleteComponent() = default;
 
 	void Undo();
 	void Redo();
 
 private:
-	Component* component;
+	uint64_t owner_UUID;
+	uint64_t component_UUID;
+	Config serialization_component;
+	Component::ComponentType type;
 };
 
 #endif _EDITORACTIONDELETECOMPONENT_H_
