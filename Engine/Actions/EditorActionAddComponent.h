@@ -7,14 +7,17 @@
 class EditorActionAddComponent : public EditorAction
 {
 public:
-	EditorActionAddComponent(Component* comp) : component(comp) {};
-	~EditorActionAddComponent();
+	EditorActionAddComponent(Component* comp);
+	~EditorActionAddComponent() = default;
 
 	void Undo();
 	void Redo();
 
 private:
-	Component* component;
+	uint64_t component_UUID;
+	uint64_t owner_UUID;
+	Config serialization_component;
+	Component::ComponentType type;
 };
 
 #endif _EDITORACTIONADDCOMPONENT_H_

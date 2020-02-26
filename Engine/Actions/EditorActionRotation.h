@@ -9,7 +9,7 @@ class EditorActionRotation : public EditorAction
 {
 public:
 	EditorActionRotation(float3 &previous, float3 &current, GameObject* go);
-	~EditorActionRotation();
+	~EditorActionRotation() = default;
 
 	void Undo();
 	void Redo();
@@ -17,7 +17,7 @@ public:
 private:
 	float3 previous_rotation = float3::zero;
 	float3 current_rotation = float3::zero;
-	GameObject* action_GO;
+	uint64_t UUID_go;
 };
 
 #endif _EDITORACTIONROTATION_H_

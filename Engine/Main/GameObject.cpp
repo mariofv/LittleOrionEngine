@@ -42,6 +42,8 @@ GameObject::GameObject(const std::string name) :
 void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 {
 	children_to_remove.push_back(this);
+	if(!is_static)
+		App->renderer->RemoveAABBTree(this);
 	if (parent != nullptr)
 	{
 		parent->RemoveChild(this);

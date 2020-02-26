@@ -8,16 +8,15 @@
 class EditorActionAddGameObject : public EditorAction
 {
 public:
-	EditorActionAddGameObject(GameObject* go, GameObject* par, int depth) : game_object(go), parent(par), hierarchy_depth(depth) {};
-	~EditorActionAddGameObject();
+	EditorActionAddGameObject(GameObject* go);
+	~EditorActionAddGameObject() = default;
 
 	void Undo();
 	void Redo();
 
 private:
 	GameObject* game_object;
-	GameObject* parent;
-	int hierarchy_depth = 0;
+	Config serialization_gameobject;
 };
 
 #endif _EDITORACTIONADDGAMEOBJECT_H_

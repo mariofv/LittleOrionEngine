@@ -1,11 +1,11 @@
-#include "ModuleCamera.h"
-
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleWindow.h"
+#include "ModuleInput.h"
+#include "ModuleCamera.h"
+#include "ModuleEditor.h"
 #include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
-#include "ModuleInput.h"
 
 #include <algorithm>
 #include <SDL/SDL.h>

@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Libraries\include\imgui\imgui.cpp">
@@ -352,6 +352,33 @@
     <ClCompile Include="Engine\SpacePartition\OLAABBTree.cpp">
       <Filter>Engine\SpacePartition</Filter>
     </ClCompile>
+<<<<<<< HEAD
+=======
+    <ClCompile Include="Engine\Module\ModuleActions.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Animation.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\AnimationLoader.cpp">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\SkeletonLoader.cpp">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Prefab.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Skeleton.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+>>>>>>> refs/remotes/origin/develop
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -585,6 +612,33 @@
     <ClInclude Include="Engine\SpacePartition\OLAABBTree.h">
       <Filter>Engine\SpacePartition</Filter>
     </ClInclude>
+<<<<<<< HEAD
+=======
+    <ClInclude Include="Engine\Module\ModuleActions.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Animation.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\AnimationLoader.h">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\SkeletonLoader.h">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.h">
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.h">
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Prefab.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Skeleton.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+>>>>>>> refs/remotes/origin/develop
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
