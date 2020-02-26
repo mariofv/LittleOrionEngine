@@ -192,7 +192,7 @@ void ModuleCamera::HandleSceneCameraMovements()
 	// Key hold
 	if (IsMovementEnabled())
 	{
-		if (App->input->GetGameInput("Jump"))
+		if (App->input->GetKey(KeyCode::Q))
 		{
 			scene_camera->MoveUp();
 		}
