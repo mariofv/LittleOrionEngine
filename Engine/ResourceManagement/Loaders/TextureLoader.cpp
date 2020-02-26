@@ -69,10 +69,7 @@ std::shared_ptr<Texture> TextureLoader::Load(const std::string& file_path)
 
 		int width, height;
 		std::vector<char> data = LoadImageData(file_path, width, height);
-		loaded_texture = std::make_shared<Texture>(data.data(), 0,width, height, file_path);
-		loaded_texture->normal_map = true;
-		loaded_texture->Load(importing_options);
-
+		loaded_texture = std::make_shared<Texture>(data.data(), 0,width, height, file_path, true);
 	}
 	else
 	{
@@ -81,7 +78,6 @@ std::shared_ptr<Texture> TextureLoader::Load(const std::string& file_path)
 		if (data.size())
 		{
 			loaded_texture = std::make_shared<Texture>(data.data(), data.size(), ddsHeader.dwWidth, ddsHeader.dwHeight, file_path);
-			loaded_texture->Load(importing_options);
 		}
 	}
 

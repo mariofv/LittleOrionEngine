@@ -225,13 +225,13 @@ update_status ModuleInput::PreUpdate()
 
 	if(controlKeyDown && keyboard[SDL_SCANCODE_LCTRL] && !keyboard[SDL_SCANCODE_LSHIFT])
 	{
-		App->editor->Undo();
+		App->actions->Undo();
 		controlKeyDown = false;
 	}
 
 	if (controlKeyDown && keyboard[SDL_SCANCODE_LSHIFT] && keyboard[SDL_SCANCODE_LCTRL])
 	{
-		App->editor->Redo();
+		App->actions->Redo();
 		controlKeyDown = false;
 	}
 

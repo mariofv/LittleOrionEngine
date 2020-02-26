@@ -66,9 +66,3 @@ void Mesh::LoadInMemory()
 
 	glBindVertexArray(0);
 }
-
-void Mesh::Save(Config& config) const
-{
-}
-void Mesh::Load(const Config& config) {
-}

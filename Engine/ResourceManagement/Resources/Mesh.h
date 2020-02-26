@@ -22,10 +22,6 @@ public:
 	GLuint GetVAO() const;
 	std::vector<Triangle> GetTriangles() const;
 
-
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
-
 private:
 	void LoadInMemory() override;
 public:

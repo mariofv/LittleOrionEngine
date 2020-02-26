@@ -19,7 +19,7 @@ public:
 
 private:
 	void GetCleanAnimation(const aiAnimation* animation, Animation & own_format_animation) const ;
-	void TransformPositions(const aiNodeAnim * ai_node, std::unordered_map<float, float4x4> & frames) const;
+	void TransformPositions(const aiNodeAnim * ai_node, std::unordered_map<double, float4x4> & frames) const;
 	void SaveBinary(const Animation & own_format_animation, const std::string & output_file) const;
 
 

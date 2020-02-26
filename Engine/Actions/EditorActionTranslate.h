@@ -9,16 +9,16 @@ class EditorActionTranslate : public EditorAction
 {
 public:
 	EditorActionTranslate(float3 &previous, float3 &current, GameObject* go);
-	~EditorActionTranslate();
+	~EditorActionTranslate() = default;
 
 	void Undo();
-
 	void Redo();
+
 
 
 private:
 	float3 previous_position = float3::zero;
 	float3 current_position = float3::zero;
-	GameObject* action_GO;
+	uint64_t UUID_go;
 };
 #endif _EDITORACTIONTRANSLATE_H_

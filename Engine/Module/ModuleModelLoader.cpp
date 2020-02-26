@@ -2,9 +2,9 @@
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleCamera.h"
-#include "ModuleEditor.h"
-#include "Module/ModuleRender.h"
+#include "ModuleActions.h"
 #include "ModuleScene.h"
+#include "ModuleRender.h"
 #include "ModuleTexture.h"
 #include "ModuleResourceManager.h"
 #include "Main/GameObject.h"
@@ -15,6 +15,7 @@
 
 #include <ResourceManagement/Resources/Skeleton.h>
 #include <ResourceManagement/Resources/Animation.h>
+#include <ResourceManagement/ImportOptions/ImportOptions.h>
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>
@@ -32,10 +33,10 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path) const
 {
 
 	File file(new_model_file_path);
-
-	std::string uuid = Importer::GetUIDFromMeta(Importer::GetMetaFilePath(file));
+	ImportOptions options;
+	Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(file), options);
 	size_t readed_bytes;
-	char* prefab_file_data = App->filesystem->Load(uuid.c_str(), readed_bytes);
+	char* prefab_file_data = App->filesystem->Load(options.uid.c_str(), readed_bytes);
 	std::string serialized_prefab_string = prefab_file_data;
 	free(prefab_file_data);
 
@@ -166,8 +167,8 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 	ComponentMaterial* componentMaterial = (ComponentMaterial*)model_game_object->CreateComponent(Component::ComponentType::MATERIAL);
 
 	//UndoRedo
-	App->editor->action_game_object = model_game_object;
-	App->editor->AddUndoAction(ModuleEditor::UndoActionType::ADD_GAMEOBJECT);
+	App->actions->action_game_object = model_game_object;
+	App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
 
 	return model_game_object;
 }

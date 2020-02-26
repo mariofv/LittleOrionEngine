@@ -10,6 +10,7 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleActions.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
 
@@ -117,8 +118,8 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 					target_game_object->AddChild(new_model);
 
 					//UndoRedo
-					App->editor->action_game_object = new_model;
-					App->editor->AddUndoAction(ModuleEditor::UndoActionType::ADD_GAMEOBJECT);
+					App->actions->action_game_object = new_model;
+					App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
 				}
 			}
 			if (incoming_file->file_type == FileType::PREFAB)
@@ -147,12 +148,13 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 		{
 			if (ImGui::Selectable("Delete GameObject"))
 			{
-				App->editor->action_game_object = game_object;
-				App->editor->AddUndoAction(ModuleEditor::UndoActionType::DELETE_GAMEOBJECT);
+				//UndoRedo
+				App->actions->action_game_object = game_object;
+				App->actions->AddUndoAction(ModuleActions::UndoActionType::DELETE_GAMEOBJECT);
 				
-				App->renderer->RemoveAABBTree(game_object);
-				game_object->SetEnabled(false);
-				game_object->parent->RemoveChild(game_object);
+				App->scene->RemoveGameObject(game_object);
+
+
 
 				App->editor->selected_game_object = nullptr;
 			}
@@ -171,8 +173,8 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 		if (ImGui::Selectable("Create Empty"))
 		{
 			GameObject* created_go = game_object != nullptr ? App->scene->CreateChildGameObject(game_object) : App->scene->CreateGameObject();
-			App->editor->action_game_object = created_go;
-			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ADD_GAMEOBJECT);
+			App->actions->action_game_object = created_go;
+			App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
 		}
 		
 		Show3DObjectCreationMenu(game_object);

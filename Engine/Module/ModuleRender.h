@@ -41,7 +41,7 @@ public:
 	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
 	void GenerateQuadTree();
 	void InsertAABBTree(GameObject* game_object);
-	void RemoveAABBTree(GameObject* game_object);
+	void RemoveAABBTree(GameObject * game_object);
 	void UpdateAABBTree(GameObject* game_object);
 	void DeleteAABBTree();
 	void CreateAABBTree();

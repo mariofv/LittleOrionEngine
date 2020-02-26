@@ -37,7 +37,7 @@ void SkeletonImporter::ImportChildBone(const aiMesh* mesh, const aiNode * previu
 	if (previous_joint_index == -1 && std::string(previus_node->mName.C_Str()).find("$Assimp") == std::string::npos) 
 	{
 		aiMatrix4x4 local_transformation = accumulated_local_transformation * previus_node->mTransformation;
-		Skeleton::Joint bone{ GetTranform(local_transformation), GetTranform(local_transformation),previous_joint_index, std::string(previus_node->mName.C_Str()) };
+		Skeleton::Joint bone{ GetTransform(local_transformation), GetTransform(local_transformation),previous_joint_index, std::string(previus_node->mName.C_Str()) };
 
 		accumulated_local_transformation = aiMatrix4x4();
 		skeleton.skeleton.push_back(bone);
@@ -57,7 +57,7 @@ void SkeletonImporter::ImportChildBone(const aiMesh* mesh, const aiNode * previu
 		if (bone_name.find("$Assimp") == std::string::npos) 
 		{
 		
-			Skeleton::Joint bone{ GetTranform(current_transformation), GetTranform(local_transformation),previous_joint_index, bone_name};
+			Skeleton::Joint bone{ GetTransform(current_transformation), GetTransform(local_transformation),previous_joint_index, bone_name};
 			skeleton.skeleton.push_back(bone);
 			next_joint = skeleton.skeleton.size() - 1;
 			local_transformation = aiMatrix4x4();
@@ -83,7 +83,7 @@ aiBone* SkeletonImporter::GetNodeBone(const aiMesh* mesh,  const std::string & b
 }
 
 
-float4x4 SkeletonImporter::GetTranform(const aiMatrix4x4 & current_transform) const
+float4x4 SkeletonImporter::GetTransform(const aiMatrix4x4 & current_transform) const
 {
 	aiVector3t<float> pScaling, pPosition;
 	aiQuaterniont<float> pRotation;

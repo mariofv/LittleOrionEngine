@@ -5,9 +5,9 @@
 #include <IL/ilut.h>
 
 
-Texture::Texture(char * data, size_t image_size, int width, int height, const std::string& path, TextureType type) : image_size(image_size), width(width), height(height), type(type), data(data), Resource("",path)
+Texture::Texture(char * data, size_t image_size, int width, int height, const std::string& path, bool normal_map,TextureType type) : image_size(image_size), width(width), height(height), normal_map(normal_map),type(type), data(data), Resource("",path)
 {
-
+	LoadInMemory();
 }
 
 
@@ -147,13 +147,4 @@ char* Texture::GLEnumToString(GLenum gl_enum) const
 		return "Not implemented yet";
 		break;
 	}
-}
-
-
-void Texture::Save(Config& config) const
-{
-}
-void Texture::Load(const Config& config) {
-
-	LoadInMemory();
 }

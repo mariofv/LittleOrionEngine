@@ -19,7 +19,7 @@ public:
 	};
 	static const size_t MAX_TEXTURE_TYPES = static_cast<size_t>(TextureType::UNKNOWN);
 public:
-	Texture(char * data, size_t image_size, int width, int height, const std::string& path, TextureType type = TextureType::DIFUSSE);
+	Texture(char * data, size_t image_size, int width, int height, const std::string& path, bool normal_map = false,TextureType type = TextureType::DIFUSSE);
 
 	~Texture();
 
@@ -41,8 +41,6 @@ public:
 	GLenum GetMagFilter() const;
 	char* GetMagFilter_C_Str() const;
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
 
 private:
 	void GenerateMipMap();
