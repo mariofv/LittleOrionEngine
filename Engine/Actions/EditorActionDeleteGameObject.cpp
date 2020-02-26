@@ -5,10 +5,8 @@
 #include "Main/Application.h"
 #include <stack>
 
-EditorActionDeleteGameObject::EditorActionDeleteGameObject(GameObject* go)
+EditorActionDeleteGameObject::EditorActionDeleteGameObject(GameObject* go) : UUID_go(go->UUID)
 {
-	UUID_GO = go->UUID;
-
 	std::vector<Config> game_objects_config(go->children.size() + 1);
 	std::stack<GameObject*> pending_objects;
 	unsigned int current_index = 1;
@@ -50,19 +48,20 @@ void EditorActionDeleteGameObject::Undo()
 		GameObject* created_game_object = App->scene->CreateGameObject();
 		created_game_object->Load(game_objects_config[i]);
 
-		if(UUID_GO == created_game_object->UUID)
+		if(UUID_go == created_game_object->UUID)
 		{
 			game_object = created_game_object;
 		}
 
+		if (!game_object->IsStatic())
+			App->renderer->InsertAABBTree(created_game_object);
 	}
-	App->renderer->GenerateQuadTree();
+	
 }
 
 void EditorActionDeleteGameObject::Redo()
 {
 	App->scene->RemoveGameObject(game_object);
-
 	App->editor->selected_game_object = nullptr;
 }
 

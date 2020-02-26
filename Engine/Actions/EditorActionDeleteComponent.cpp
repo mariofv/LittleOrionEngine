@@ -6,26 +6,24 @@
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
 
-EditorActionDeleteComponent::EditorActionDeleteComponent(Component* comp)
+EditorActionDeleteComponent::EditorActionDeleteComponent(Component* comp) : component_UUID(comp->UUID),
+owner_UUID(comp->owner->UUID), type(comp->type)
 {
-	UUID_COMP = comp->UUID;
-	UUID_OWNER = comp->owner->UUID;
 	comp->Save(serialization_component);
-	type = comp->type;
 }
 
 
 void EditorActionDeleteComponent::Undo()
 {
 	Component* component;
-	GameObject* owner = App->scene->GetGameObject(UUID_OWNER);
+	GameObject* owner = App->scene->GetGameObject(owner_UUID);
 	component = owner->CreateComponent(type);
 	component->Load(serialization_component);
 }
 
 void EditorActionDeleteComponent::Redo()
 {
-	Component* component = App->scene->GetComponent(UUID_COMP);
-	GameObject* owner = App->scene->GetGameObject(UUID_OWNER);
+	Component* component = App->scene->GetComponent(component_UUID);
+	GameObject* owner = App->scene->GetGameObject(owner_UUID);
 	owner->RemoveComponent(component);
 }

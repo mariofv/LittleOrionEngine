@@ -3,12 +3,8 @@
 #include "Main/Application.h"
 
 
-EditorActionRotation::EditorActionRotation(float3 &previous, float3 &current, GameObject* go)
-{
-	previous_rotation = previous;
-	current_rotation = current;
-	UUID_go = go->UUID;
-}
+EditorActionRotation::EditorActionRotation(float3 &previous, float3 &current, GameObject* go) : previous_rotation(previous),
+current_rotation(current), UUID_go(go->UUID) {}
 
 void EditorActionRotation::Undo()
 {

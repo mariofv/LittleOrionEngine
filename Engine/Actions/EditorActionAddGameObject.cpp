@@ -1,6 +1,7 @@
 #include "EditorActionAddGameObject.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleRender.h"
 #include "Main/Application.h"
 
 

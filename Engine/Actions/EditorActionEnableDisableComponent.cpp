@@ -3,14 +3,11 @@
 #include "Main/Application.h"
 
 
-EditorActionEnableDisableComponent::EditorActionEnableDisableComponent(Component* comp)
-{
-	UUID_COMP = comp->UUID;
-}
+EditorActionEnableDisableComponent::EditorActionEnableDisableComponent(Component* comp) : component_UUID(comp->UUID){}
 
 void EditorActionEnableDisableComponent::Undo()
 {
-	Component* component = App->scene->GetComponent(UUID_COMP);
+	Component* component = App->scene->GetComponent(component_UUID);
 
 	if(component->IsEnabled())
 	{

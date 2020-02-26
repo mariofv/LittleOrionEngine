@@ -88,10 +88,14 @@ public:
 
 	void GetRay(const float2& normalized_position, LineSegment &return_value) const;
 
+	AABB GetMinimalEnclosingAABB() const;
+
 private:
-	void GenerateFrameBuffers(float width,float height);
+	void GenerateFrameBuffers(float width, float height);
 	void GenerateMatrices();
 	void InitCamera();
+	void CreateFramebuffer(float width, float height);
+	void CreateMssaFramebuffer(float width, float height);
 
 public:
 	const float SPEED_UP_FACTOR = 2.f;
@@ -110,11 +114,15 @@ public:
 	float4x4 proj;
 	float4x4 view;
 
+	bool toggle_msaa = false;
+
 private:
 	Frustum camera_frustum;
 
-	GLuint fbo = 0;
 	GLuint rbo = 0;
+	GLuint fbo = 0;
+	GLuint msfbo = 0;
+	GLuint msfb_color = 0;
 	GLuint last_recorded_frame_texture = 0;
 
 	float last_height = 0;

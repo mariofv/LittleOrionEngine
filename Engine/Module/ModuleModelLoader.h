@@ -25,7 +25,7 @@ public:
 	GameObject* LoadCoreModel(const char* new_model_file_path) const;
 
 private:
-	void LoadNode(GameObject *parent_node, const std::shared_ptr<File> & model_base_path) const;
+	void LoadNode(GameObject *parent_node, const Config & node_config, std::vector<std::string> & already_loaded_skeleton) const;
 
 };
 

@@ -6,14 +6,20 @@
 
 #include "assimp/LogStream.hpp"
 #include "assimp/Logger.hpp"
-#include "ModelImporters/MeshImporter.h"
-#include "ModelImporters/MaterialImporter.h"
+
 
 
 struct aiNode;
 struct aiScene;
-
+class Config;
 class Mesh;
+class GameObject;
+class MeshImporter;
+class MaterialImporter;
+class SkeletonImporter;
+class AnimationImporter;
+
+
 class ModelImporter : Importer
 {
 public:
@@ -21,16 +27,19 @@ public:
 	~ModelImporter();
 	std::pair<bool, std::string> Import(const File & file) const override;
 private:
-	void ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file) const;
+	void ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file, std::vector<Config> & node_config) const;
 
 public:
 	const float SCALE_FACTOR = 0.01f;
 
 private:
 	const std::string LIBRARY_MESHES_FOLDER = "Library/Meshes";
+	const std::string LIBRARY_MODEL_FOLDER = "Library/Model";
 	mutable Timer performance_timer;
 	std::unique_ptr<MeshImporter> mesh_importer;
 	std::unique_ptr<MaterialImporter> material_importer;
+	std::unique_ptr<SkeletonImporter> skeleton_importer;
+	std::unique_ptr<AnimationImporter> animation_importer;
 };
 
 

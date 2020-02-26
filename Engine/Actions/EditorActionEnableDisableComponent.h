@@ -15,7 +15,7 @@ public:
 	void Redo();
 
 private:
-	uint64_t UUID_COMP;
+	uint64_t component_UUID;
 };
 
 
