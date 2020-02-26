@@ -87,22 +87,6 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::SameLine();
 		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
 		ImGui::Button(tmp_string);
-
-		if (ImGui::BeginCombo("Shader", mesh->shader_program.c_str()))
-		{
-			for (auto & program : App->program->names)
-			{
-				bool is_selected = (mesh->shader_program == program);
-				if (ImGui::Selectable(program, is_selected))
-				{
-					mesh->shader_program = program;
-					if (is_selected)
-						ImGui::SetItemDefaultFocus();  
-				}
-
-			}
-			ImGui::EndCombo();
-		}
 	}
 }
 
@@ -110,6 +94,22 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		if (ImGui::BeginCombo("Shader", material->shader_program.c_str()))
+		{
+			for (auto & program : App->program->names)
+			{
+				bool is_selected = (material->shader_program == program);
+				if (ImGui::Selectable(program, is_selected))
+				{
+					material->shader_program = program;
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();
+				}
+
+			}
+			ImGui::EndCombo();
+		}
+
 		float window_width = ImGui::GetWindowWidth();
 		for (size_t i = 0; i < material->textures.size(); ++i)
 		{

@@ -42,6 +42,7 @@ void ComponentMaterial::Save(Config& config) const
 		}
 	}
 	config.AddBool(show_checkerboard_texture, "Checkboard");
+	config.AddString(shader_program, "ShaderProgram");
 
 	//k
 	config.AddFloat(k_ambient, "kAmbient");
@@ -77,6 +78,7 @@ void ComponentMaterial::Load(const Config& config)
 	}
 
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
+	config.GetString("ShaderProgram", shader_program, "Blinn phong");
 
 	//k
 	k_ambient = config.GetFloat("kAmbient", 1.0f);

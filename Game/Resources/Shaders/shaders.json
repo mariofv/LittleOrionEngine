@@ -28,13 +28,13 @@
          "Name":"Flat",
          "Vertex":"Resources/Shaders/flat.vs",
          "Fragment":"Resources/Shaders/flat.fs",
-         "Selectable":true
+         "Selectable":false
       },
       {
          "Name":"Gouraund",
          "Vertex":"Resources/Shaders/gouraund.vs",
          "Fragment":"Resources/Shaders/gouraund.fs",
-         "Selectable":true
+         "Selectable":false
       },
       {
          "Name":"Phong",

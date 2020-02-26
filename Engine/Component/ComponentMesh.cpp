@@ -1,7 +1,8 @@
 #include "ComponentMesh.h"
 
-#include "Main/GameObject.h"
+#include "Component/ComponentMaterial.h"
 #include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
@@ -43,7 +44,6 @@ void ComponentMesh::Save(Config& config) const
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddString(mesh_to_render->exported_file, "MeshPath");
-	config.AddString(shader_program, "ShaderProgram");
 }
 
 void ComponentMesh::Load(const Config& config)
@@ -53,7 +53,6 @@ void ComponentMesh::Load(const Config& config)
 
 	std::string mesh_path;
 	config.GetString("MeshPath", mesh_path, "");
-	config.GetString("ShaderProgram", shader_program, "Default");
 	std::shared_ptr<Mesh> mesh = App->resources->Load<Mesh>(mesh_path.c_str());
 	if (mesh != nullptr)
 	{
@@ -66,14 +65,10 @@ void ComponentMesh::Load(const Config& config)
 
 }
 
-bool ComponentMesh::operator <(const ComponentMesh & mesh_to_compare) const
-{
-	return this->shader_program <= mesh_to_compare.shader_program;
-}
-
 void ComponentMesh::Render() const
 {
-	GLuint program = App->program->GetShaderProgramId(shader_program);
+	std::string program_name = static_cast<ComponentMaterial*>(owner->GetComponent(ComponentType::MATERIAL))->shader_program;
+	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
