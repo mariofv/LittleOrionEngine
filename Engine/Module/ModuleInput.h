@@ -7,6 +7,7 @@
 
 #include <SDL_scancode.h>
 #include <SDL_mouse.h>
+#include <SDL_gamecontroller.h>
 #include <MathGeoLib.h>
 #include <map>
 #include <string>
@@ -18,6 +19,7 @@ typedef unsigned __int8 Uint8;
 
 const int MAX_KEYS = 286;
 const int MAX_MOUSE_BUTTONS = 5;
+const int MAX_CONTROLLER_BUTTONS = 15;
 
 enum class KeyState
 {
@@ -287,6 +289,26 @@ enum class MouseButton
 	X2 = SDL_BUTTON_X2
 };
 
+enum class ControllerCode
+{
+	Invalid = SDL_CONTROLLER_BUTTON_INVALID,
+	A = SDL_CONTROLLER_BUTTON_A,
+	B = SDL_CONTROLLER_BUTTON_B,
+	X = SDL_CONTROLLER_BUTTON_X,
+	Y = SDL_CONTROLLER_BUTTON_Y,
+	Back = SDL_CONTROLLER_BUTTON_BACK,
+	Guide = SDL_CONTROLLER_BUTTON_GUIDE,
+	Start = SDL_CONTROLLER_BUTTON_START,
+	LeftStick = SDL_CONTROLLER_BUTTON_LEFTSTICK,
+	RightStick = SDL_CONTROLLER_BUTTON_RIGHTSTICK,
+	LeftShoulder = SDL_CONTROLLER_BUTTON_LEFTSHOULDER,
+	RightShoulder = SDL_CONTROLLER_BUTTON_RIGHTSHOULDER,
+	UpDpad = SDL_CONTROLLER_BUTTON_DPAD_UP,
+	DownDpad = SDL_CONTROLLER_BUTTON_DPAD_DOWN,
+	LeftDpad = SDL_CONTROLLER_BUTTON_DPAD_LEFT,
+	RightDpad = SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
+};
+
 struct GameInput
 {
 	std::string name;
@@ -349,6 +371,10 @@ public:
 	bool GetMouseButtonDown(MouseButton button); 
 	bool GetMouseButtonUp(MouseButton button);
 
+	bool GetControllerButton(ControllerCode code);
+	bool GetControllerButtonDown(ControllerCode code);
+	bool GetControllerButtonUp(ControllerCode code);
+
 	bool GetGameInput(const char* name);
 	bool GetGameInputDown(const char* name);
 	bool GetGameInputUp(const char* name);
@@ -369,6 +395,7 @@ private:
 private:
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseButton, KeyState> mouse_bible;
+	std::map<ControllerCode, KeyState> controller_bible;
 
 	//Predefined buttons
 	std::map<std::string, GameInput> game_inputs;
@@ -381,6 +408,7 @@ private:
 
 	Uint8 mouse_clicks;
 	bool mouse_moving;
+
 };
 
 #endif //_MODULEINPUT_H

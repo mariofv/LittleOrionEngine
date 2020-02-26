@@ -45,6 +45,11 @@ bool ModuleInput::Init()
 		mouse_bible[(MouseButton)i] = KeyState::IDLE;
 	}
 
+	for (int i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
+	{
+		controller_bible[(ControllerCode)i] = KeyState::IDLE;
+	}
+
 	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
 	
 	//Load Game Inputs
@@ -79,6 +84,18 @@ update_status ModuleInput::PreUpdate()
 		else if (mouse.second == KeyState::UP)
 		{
 			mouse.second = KeyState::IDLE;
+		}
+	}
+
+	for (auto& controller : controller_bible)
+	{
+		if (controller.second == KeyState::DOWN)
+		{
+			controller.second = KeyState::REPEAT;
+		}
+		else if (controller.second == KeyState::UP)
+		{
+			controller.second = KeyState::IDLE;
 		}
 	}
 
@@ -117,11 +134,20 @@ update_status ModuleInput::PreUpdate()
 			mouse_bible[(MouseButton)event.button.button] = KeyState::UP;
 			break;
 
+		case SDL_CONTROLLERBUTTONDOWN:
+			controller_bible[(ControllerCode)event.cbutton.button] = KeyState::DOWN;
+			break;
+
+		case SDL_CONTROLLERBUTTONUP:
+			controller_bible[(ControllerCode)event.cbutton.button] = KeyState::UP;
+			break;
+
 		case SDL_DROPFILE:
 			char* dropped_filedir = event.drop.file;
 			App->editor->project_explorer->CopyFileToSelectedFolder(dropped_filedir);
 			SDL_free(dropped_filedir);
 			break;
+
 		}
 	}
 
@@ -198,6 +224,21 @@ bool ModuleInput::GetMouseButtonDown(MouseButton button)
 bool ModuleInput::GetMouseButtonUp(MouseButton button)
 {
 	return mouse_bible[button] == KeyState::UP;
+}
+
+bool ModuleInput::GetControllerButton(ControllerCode code)
+{
+	return controller_bible[code] == KeyState::REPEAT;
+}
+
+bool ModuleInput::GetControllerButtonDown(ControllerCode code)
+{
+	return controller_bible[code] == KeyState::DOWN;
+}
+
+bool ModuleInput::GetControllerButtonUp(ControllerCode code)
+{
+	return controller_bible[code] == KeyState::UP;
 }
 
 bool ModuleInput::GetGameInput(const char* name)
