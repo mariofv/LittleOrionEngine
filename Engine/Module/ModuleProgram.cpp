@@ -37,7 +37,7 @@ unsigned int ModuleProgram::GetShaderProgramId(const std::string & program_name)
 	{
 		return loaded_programs.at(program_name);
 	}
-	return  loaded_programs.at("Default");
+	return  loaded_programs.at("Blinn phong");
 }
 
 void ModuleProgram::InitUniformBuffer()

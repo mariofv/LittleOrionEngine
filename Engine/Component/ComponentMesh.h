@@ -25,7 +25,7 @@ public:
 	void SetMesh(const std::shared_ptr<Mesh> & mesh_to_render);
 	bool operator <(const ComponentMesh & mesh_to_compare) const;
 
-	std::string shader_program = "Default";
+	std::string shader_program = "Blinn phong";
 	std::shared_ptr<Mesh> mesh_to_render;
 
 private:
