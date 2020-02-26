@@ -45,6 +45,17 @@ bool ModuleInput::Init()
 		mouse_bible[(MouseButton)i] = KeyState::IDLE;
 	}
 
+	SDL_Init(SDL_INIT_GAMECONTROLLER);
+
+	for (int i = 0; i < SDL_NumJoysticks(); ++i)
+	{
+		if (SDL_IsGameController(i))
+		{
+			controller = SDL_GameControllerOpen(i);
+			break;
+		}
+	}
+
 	for (int i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
 	{
 		controller_bible[(ControllerCode)i] = KeyState::IDLE;
@@ -135,6 +146,7 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_CONTROLLERBUTTONDOWN:
+			//TODO how to handle multiple controllers
 			controller_bible[(ControllerCode)event.cbutton.button] = KeyState::DOWN;
 			break;
 
@@ -147,7 +159,6 @@ update_status ModuleInput::PreUpdate()
 			App->editor->project_explorer->CopyFileToSelectedFolder(dropped_filedir);
 			SDL_free(dropped_filedir);
 			break;
-
 		}
 	}
 
@@ -187,6 +198,7 @@ bool ModuleInput::CleanUp()
 {
 	APP_LOG_INFO("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
+	SDL_GameControllerClose(controller);
 	return true;
 }
 

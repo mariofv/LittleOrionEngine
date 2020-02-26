@@ -409,6 +409,7 @@ private:
 	Uint8 mouse_clicks;
 	bool mouse_moving;
 
+	SDL_GameController* controller = nullptr;
 };
 
 #endif //_MODULEINPUT_H
