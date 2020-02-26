@@ -401,9 +401,9 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Separator();
 
 			ImGui::Text("Keys:");
-			for(auto key : keys)
+			for(auto key : string_keys)
 			{
-				ImGui::Text(game_inputs_strings[(int)key]);
+				ImGui::Text(game_inputs_strings[key]);
 			}
 
 			ImGui::Separator();
@@ -411,13 +411,24 @@ void PanelConfiguration::ShowInputOptions()
 			static const char* item_current = game_inputs_strings[0];
 			if (ImGui::BeginCombo("KeyCode", item_current))
 			{
+
+				unsigned int offset = 4;
 				for (int n = 0; n < game_inputs_strings.size(); ++n)
 				{
+					//Handle offset
+					if (n > FIRST_OFFSET_COND)
+						offset = FIRST_OFFSET;
+					else if (n > SECOND_OFFSET_COND)
+						offset = SECOND_OFFSET;
+					else if (n > THIRD_OFFSET_COND)
+						offset = THIRD_OFFSET;
+
 					bool is_selected = (item_current == game_inputs_strings[n]);
 					if (ImGui::Selectable(game_inputs_strings[n], is_selected))
 					{
 						item_current = game_inputs_strings[n];
-						selected_key = KeyCode(n);
+						selected_key = KeyCode(n + offset);
+						selected_combo = n;
 					}
 					if (is_selected)
 						ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
@@ -428,6 +439,7 @@ void PanelConfiguration::ShowInputOptions()
 			if(ImGui::Button("Add KeyCode"))
 			{
 				keys.insert((int)selected_key);
+				string_keys.insert(selected_combo);
 			}
 
 			ImGui::SameLine();

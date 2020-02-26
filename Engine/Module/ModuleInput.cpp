@@ -47,6 +47,17 @@ bool ModuleInput::Init()
 
 	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
 	
+	//Load Game Inputs
+	size_t readed_bytes;
+	char* scene_file_data = App->filesystem->Load(GAME_INPUT_PATH, readed_bytes);
+	if(scene_file_data != nullptr)
+	{
+		std::string serialized_scene_string = scene_file_data;
+		free(scene_file_data);
+
+		Config input_config(serialized_scene_string);
+		LoadGameInputs(input_config);	
+	}
 
 	return ret;
 }
@@ -299,8 +310,15 @@ void ModuleInput::SaveGameInputs(Config &config)
 	config.AddChildrenConfig(game_inputs_configs, "GameInputs");
 }
 
-void ModuleInput::LoadGameInputs()
+void ModuleInput::LoadGameInputs(Config &serialized_config)
 {
 	std::vector<Config> game_inputs_configs;
-	//serialized_scene.GetChildrenConfig("GameInputs", game_inputs_configs);
+	serialized_config.GetChildrenConfig("GameInputs", game_inputs_configs);
+	for (unsigned int i = 0; i < game_inputs_configs.size(); ++i)
+	{
+		GameInput game_input;
+		game_input.Load(game_inputs_configs[i]);
+
+		game_inputs[game_input.name] = game_input;
+	}
 }

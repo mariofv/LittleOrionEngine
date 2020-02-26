@@ -6,6 +6,7 @@
 #include <vector>
 #include <set>
 
+
 class PanelConfiguration : public Panel
 {
 public:
@@ -150,6 +151,9 @@ private:
 	"Mute",
 	"VolumeUp",
 	"VolumeDown",
+	"LockingCapsLock",
+	"LockingNumLock",
+	"LockingScrollLock",
 	"KeypadComma",
 	"EqualsAs400",
 	"International1",
@@ -275,11 +279,20 @@ private:
 		"Right"
 	};
 
+	std::set<int> string_keys;
 	std::set<int> keys;
 	std::set<int> mouse_keys;
 	KeyCode selected_key = KeyCode::None;
+	unsigned int selected_combo = 0;
 	MouseButton selected_mouse = MouseButton::Left;
 	std::string name_game_input = "";
+
+	const int FIRST_OFFSET_COND = 164;
+	const int SECOND_OFFSET_COND = 221;
+	const int THIRD_OFFSET_COND = 231;	
+	const int FIRST_OFFSET = 15;
+	const int SECOND_OFFSET = 17;
+	const int THIRD_OFFSET = 42;
 };
 
 #endif //_PANELCONFIGURATION_H_

@@ -57,7 +57,6 @@ enum class KeyCode
 	X = SDL_SCANCODE_X,
 	Y = SDL_SCANCODE_Y,
 	Z = SDL_SCANCODE_Z,
-
 	Alpha1 = SDL_SCANCODE_1,
 	Alpha2 = SDL_SCANCODE_2,
 	Alpha3 = SDL_SCANCODE_3,
@@ -68,13 +67,11 @@ enum class KeyCode
 	Alpha8 = SDL_SCANCODE_8,
 	Alpha9 = SDL_SCANCODE_9,
 	Alpha0 = SDL_SCANCODE_0,
-
 	Return = SDL_SCANCODE_RETURN,
 	Escape = SDL_SCANCODE_ESCAPE,
 	BackSpace = SDL_SCANCODE_BACKSPACE,
 	Tab = SDL_SCANCODE_TAB,
 	Space = SDL_SCANCODE_SPACE,
-
 	Minus = SDL_SCANCODE_MINUS,
 	Equals = SDL_SCANCODE_EQUALS,
 	LeftBracket = SDL_SCANCODE_LEFTBRACKET,
@@ -87,9 +84,7 @@ enum class KeyCode
 	Comma = SDL_SCANCODE_COMMA,
 	Period = SDL_SCANCODE_PERIOD,
 	Slash = SDL_SCANCODE_SLASH,
-
 	CapsLock = SDL_SCANCODE_CAPSLOCK,
-
 	F1 = SDL_SCANCODE_F1,
 	F2 = SDL_SCANCODE_F2,
 	F3 = SDL_SCANCODE_F3,
@@ -102,7 +97,6 @@ enum class KeyCode
 	F10 = SDL_SCANCODE_F10,
 	F11 = SDL_SCANCODE_F11,
 	F12 = SDL_SCANCODE_F12,
-
 	PrintScreen = SDL_SCANCODE_PRINTSCREEN,
 	ScrollLock = SDL_SCANCODE_SCROLLLOCK,
 	Pause = SDL_SCANCODE_PAUSE,
@@ -116,7 +110,6 @@ enum class KeyCode
 	LeftArrow = SDL_SCANCODE_LEFT,
 	DownArrow = SDL_SCANCODE_DOWN,
 	UpArrow = SDL_SCANCODE_UP,
-
 	NumLockClear = SDL_SCANCODE_NUMLOCKCLEAR,
 	KeypadDivide = SDL_SCANCODE_KP_DIVIDE,
 	KeypadMultiply = SDL_SCANCODE_KP_MULTIPLY,
@@ -134,7 +127,6 @@ enum class KeyCode
 	Keypad9 = SDL_SCANCODE_KP_9,
 	Keypad0 = SDL_SCANCODE_KP_0,
 	KeypadPeriod = SDL_SCANCODE_KP_PERIOD,
-
 	NonusBackSlash = SDL_SCANCODE_NONUSBACKSLASH,
 	Aplication = SDL_SCANCODE_APPLICATION,
 	Power = SDL_SCANCODE_POWER,
@@ -165,10 +157,11 @@ enum class KeyCode
 	Mute = SDL_SCANCODE_MUTE,
 	VolumeUp = SDL_SCANCODE_VOLUMEUP,
 	VolumeDown = SDL_SCANCODE_VOLUMEDOWN,
-
+	LockingCapsLock = 130,
+	LockingNumLock = 131,
+	LockingScrollLock = 132,
 	KeypadComma = SDL_SCANCODE_KP_COMMA,
 	EqualsAs400 = SDL_SCANCODE_KP_EQUALSAS400,
-
 	International1 = SDL_SCANCODE_INTERNATIONAL1,
 	International2 = SDL_SCANCODE_INTERNATIONAL2,
 	International3 = SDL_SCANCODE_INTERNATIONAL3,
@@ -187,7 +180,6 @@ enum class KeyCode
 	Lang7 = SDL_SCANCODE_LANG7,
 	Lang8 = SDL_SCANCODE_LANG8,
 	Lang9 = SDL_SCANCODE_LANG9,
-
 	AltErase = SDL_SCANCODE_ALTERASE,
 	SysReq = SDL_SCANCODE_SYSREQ,
 	Cancel = SDL_SCANCODE_CANCEL,
@@ -200,7 +192,6 @@ enum class KeyCode
 	ClearAgain = SDL_SCANCODE_CLEARAGAIN,
 	Crsel = SDL_SCANCODE_CRSEL,
 	Exsel = SDL_SCANCODE_EXSEL,
-
 	Keypad00 = SDL_SCANCODE_KP_00,
 	Keypad000 = SDL_SCANCODE_KP_000,
 	ThousandsSeparator = SDL_SCANCODE_THOUSANDSSEPARATOR,
@@ -247,7 +238,6 @@ enum class KeyCode
 	KeypadOctal = SDL_SCANCODE_KP_OCTAL,
 	KeypadDecimal = SDL_SCANCODE_KP_DECIMAL,
 	KeypadHexadecimal = SDL_SCANCODE_KP_HEXADECIMAL,
-
 	LeftControl = SDL_SCANCODE_LCTRL,
 	LeftShift = SDL_SCANCODE_LSHIFT,
 	LeftAlt = SDL_SCANCODE_LALT,
@@ -256,9 +246,7 @@ enum class KeyCode
 	RightShift = SDL_SCANCODE_RSHIFT,
 	RightAlt = SDL_SCANCODE_RALT,
 	RightCommand = SDL_SCANCODE_RGUI,
-
 	Mode = SDL_SCANCODE_MODE,
-
 	AudioNext = SDL_SCANCODE_AUDIONEXT,
 	AudioPrev = SDL_SCANCODE_AUDIOPREV,
 	AudioStop = SDL_SCANCODE_AUDIOSTOP,
@@ -276,7 +264,6 @@ enum class KeyCode
 	AcStop = SDL_SCANCODE_AC_STOP,
 	AcRefresh = SDL_SCANCODE_AC_REFRESH,
 	AcBookmarks = SDL_SCANCODE_AC_BOOKMARKS,
-
 	BrightnessDown = SDL_SCANCODE_BRIGHTNESSDOWN,
 	BrightnessUp = SDL_SCANCODE_BRIGHTNESSUP,
 	DisplaySwitch = SDL_SCANCODE_DISPLAYSWITCH,
@@ -285,10 +272,8 @@ enum class KeyCode
 	IllumUp = SDL_SCANCODE_KBDILLUMUP,
 	Eject = SDL_SCANCODE_EJECT,
 	Sleep = SDL_SCANCODE_SLEEP,
-
 	App1 = SDL_SCANCODE_APP1,
 	App2 = SDL_SCANCODE_APP2,
-
 	AudioRewind = SDL_SCANCODE_AUDIOREWIND,
 	AudioFastForward = SDL_SCANCODE_AUDIOFASTFORWARD,
 };
@@ -314,16 +299,34 @@ struct GameInput
 		config.AddUInt(keys.size(), "SizeKeys");
 		for(unsigned int i = 0; i < keys.size(); ++i)
 		{
-			std::string name("k" + std::to_string(i));
+			std::string name_k("k" + std::to_string(i));
 			
-			config.AddUInt((uint64_t)keys[i], name);
+			config.AddUInt((uint64_t)keys[i], name_k);
 		}
 
 		config.AddUInt(mouse_buttons.size(), "SizeMouse");
 		for (unsigned int j = 0; j < mouse_buttons.size(); ++j)
 		{
-			std::string name("m" + std::to_string(j));
-			config.AddUInt((uint64_t)mouse_buttons[j], name);
+			std::string name_m("m" + std::to_string(j));
+			config.AddUInt((uint64_t)mouse_buttons[j], name_m);
+		}
+	}
+
+	void Load(Config &config)
+	{
+		config.GetString("Name", name, "DefaultName");
+		unsigned int size_keys = config.GetUInt("SizeKeys", 0);
+		for(int i = 0; i < size_keys; ++i)
+		{
+			std::string name_k("k" + std::to_string(i));
+			keys.push_back((KeyCode)config.GetUInt(name_k, 0));
+		}
+
+		unsigned int size_mouse = config.GetUInt("SizeMouse", 0);
+		for (int j = 0; j < size_mouse; ++j)
+		{
+			std::string name_m("m" + std::to_string(j));
+			mouse_buttons.push_back((MouseButton)config.GetUInt(name_m, 0));
 		}
 	}
 };
@@ -361,7 +364,7 @@ public:
 
 private:
 	void SaveGameInputs(Config &config);
-	void LoadGameInputs();
+	void LoadGameInputs(Config &config);
 
 private:
 	std::map<KeyCode, KeyState> key_bible;
