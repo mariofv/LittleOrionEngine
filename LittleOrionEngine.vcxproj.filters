@@ -379,6 +379,8 @@
     <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp">
       <Filter>Engine\ResourceManagement\ImportOptions</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\PrefabManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\PrefabLoader.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -639,6 +641,9 @@
     <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
       <Filter>Engine\ResourceManagement\ImportOptions</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\UI\DebugDraw.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\PrefabManager.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\PrefabLoader.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
