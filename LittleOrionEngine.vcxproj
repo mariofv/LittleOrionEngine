@@ -113,6 +113,7 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Texture.h" />
+    <ClInclude Include="Engine\SpacePartition\OLAABBTree.h" />
     <ClInclude Include="Engine\SpacePartition\OLOctTree.h" />
     <ClInclude Include="Engine\SpacePartition\OLOctTreeNode.h" />
     <ClInclude Include="Engine\SpacePartition\OLQuadTree.h" />
@@ -193,6 +194,7 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Texture.cpp" />
+    <ClCompile Include="Engine\SpacePartition\OLAABBTree.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLOctTree.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLOctTreeNode.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLQuadTree.cpp" />
@@ -284,7 +286,7 @@
     <ClCompile Include="Engine\UI\Panel\PanelScene.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelInspector.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\MeshLoader.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />  
+    <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />
     <ClCompile Include="Engine\Module\ModuleActions.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

@@ -25,11 +25,8 @@ class ModuleDebugDraw;
 class ModuleUI;
 class ModuleLight;
 class ModuleResourceManager;
-<<<<<<< HEAD
 class ModuleScriptManager;
-=======
 class ModuleActions;
->>>>>>> refs/remotes/origin/develop
 
 class EngineLog;
 
