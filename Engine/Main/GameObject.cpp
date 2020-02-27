@@ -115,7 +115,7 @@ bool GameObject::IsVisible(const ComponentCamera & camera) const
 	}
 	return true;
 }
-void GameObject::Update()
+ENGINE_API void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
 
@@ -226,7 +226,7 @@ void GameObject::RemoveChild(GameObject *child)
 }
 
 
-Component* GameObject::CreateComponent(const Component::ComponentType type)
+ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type)
 {
 	Component *created_component;
 	switch (type)
@@ -269,7 +269,7 @@ void GameObject::RemoveComponent(Component * component_to_remove)
 	}
 }
 
-Component* GameObject::GetComponent(const Component::ComponentType type) const
+ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType type) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
