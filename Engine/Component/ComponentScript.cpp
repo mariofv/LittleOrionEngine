@@ -3,7 +3,6 @@
 #include "Module/ModuleRender.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleScriptManager.h"
-//#include "../GamePlaySystem/src/Script/Script.h"
 #include "Script/Script.h"
 #include "imgui.h"
 

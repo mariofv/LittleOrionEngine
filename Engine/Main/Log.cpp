@@ -1,9 +1,13 @@
+
 #include "Globals.h"
 #include "Application.h"
 #include "UI/EngineLog.h"
+#include <mutex>
 
+static std::mutex thread_mutex;
 void logentry(const EngineLog::LogEntrySource source, const EngineLog::LogEntryType type, const char file[], int line, const char* format, ...)
 {
+	std::lock_guard<std::mutex> mutex(thread_mutex);
 	static char message[4096];
 	static char complete_message[4096];
 	static va_list ap;
