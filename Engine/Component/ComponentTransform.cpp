@@ -41,23 +41,24 @@ void ComponentTransform::Load(const Config& config)
 	OnTransformChange();
 }
 
-float3 ComponentTransform::GetGlobalTranslation() const
+ENGINE_API float3 ComponentTransform::GetGlobalTranslation() const
 {
 	return global_model_matrix.TranslatePart();
 }
 
-float3 ComponentTransform::GetTranslation() const
+
+ENGINE_API float3 ComponentTransform::GetTranslation() const
 {
 	return translation;
 }
 
-void ComponentTransform::SetTranslation(const float3 &translation)
+ENGINE_API void ComponentTransform::SetTranslation(const float3 &translation)
 {
 	this->translation = translation;
 	OnTransformChange();
 }
 
-void ComponentTransform::Translate(const float3 &translation)
+ENGINE_API void ComponentTransform::Translate(const float3 &translation)
 {
 	this->translation += translation;
 	OnTransformChange();
