@@ -45,8 +45,12 @@ public:
 	void DeleteComponentUndo(Component* component);
 	void ClearUndoRedoStacks();
 
+private:
+	void HandleInput();
+
 public:
 	// UndoRedo
+	bool control_key_down = false;
 	bool clicked = false;
 	std::vector<EditorAction*> undoStack;
 	std::vector<EditorAction*> redoStack;
