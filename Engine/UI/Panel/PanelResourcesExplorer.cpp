@@ -22,6 +22,20 @@ void PanelResourcesExplorer::Render()
 	{
 		hovered = ImGui::IsWindowHovered();
 
+		resources_explorer_dockspace_id = ImGui::GetID("ResourcesExplorerDockspace");
+		bool initialized = ImGui::DockBuilderGetNode(resources_explorer_dockspace_id) != NULL;
+
+		ImGuiDockNodeFlags resources_explorer_dockspace_flags = ImGuiDockNodeFlags_None;
+		resources_explorer_dockspace_flags |= ImGuiDockNodeFlags_NoWindowMenuButton;
+		resources_explorer_dockspace_flags |= ImGuiDockNodeFlags_NoCloseButton;
+		
+		ImGui::DockSpace(resources_explorer_dockspace_id, ImVec2(0,0), resources_explorer_dockspace_flags);
+
+		if (!initialized)
+		{
+			InitResourceExplorerDockspace();
+		}
+
 		if (ImGui::Begin("Resources Folder Explorer"))
 		{
 			ShowFileSystemActionsMenu(selected_folder);
@@ -49,11 +63,17 @@ void PanelResourcesExplorer::InitResourceExplorerDockspace()
 	ImGuiID dock_main_id = resources_explorer_dockspace_id; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
 
 	ImGuiID dock_id_left;
-	ImGuiID dock_id_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.50f, NULL, &dock_id_left);
+	ImGuiID dock_id_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.80f, NULL, &dock_id_left);
 
 
-	ImGui::DockBuilderDockWindow("Folder Explorer", dock_id_left);
-	ImGui::DockBuilderDockWindow("File Explorer", dock_id_right);
+	ImGui::DockBuilderDockWindow("Resources Folder Explorer", dock_id_left);
+	ImGui::DockBuilderDockWindow("Resources File Explorer", dock_id_right);
+	
+	ImGuiDockNode* left_node = ImGui::DockBuilderGetNode(dock_id_left);
+	left_node->LocalFlags = ImGuiDockNodeFlags_NoTabBar;
+
+	ImGuiDockNode* right_node = ImGui::DockBuilderGetNode(dock_id_right);
+	right_node->LocalFlags |= ImGuiDockNodeFlags_NoTabBar;
 
 	ImGui::DockBuilderFinish(resources_explorer_dockspace_id);
 }
