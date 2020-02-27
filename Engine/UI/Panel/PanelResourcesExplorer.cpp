@@ -101,7 +101,7 @@ void PanelResourcesExplorer::ShowFoldersHierarchy(const File & file)
 			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
 			if (expanded) {
 				ImGui::PushID(filename.c_str());
-				ProcessMouseInput(child.get(), true);
+				ProcessMouseInput(child.get());
 				ShowFoldersHierarchy(*child);
 				ImGui::PopID();
 				ImGui::TreePop();
@@ -148,9 +148,11 @@ void PanelResourcesExplorer::ShowFilesInExplorer()
 void PanelResourcesExplorer::ShowFileIcon(File* file)
 {
 	std::string filename = std::string(file->filename_no_extension);
-	ImGui::BeginChild(filename.c_str(), ImVec2(file_size, file_size), true, ImGuiWindowFlags_NoDecoration);
-	ResourceDragSource(file);
-	
+	if (ImGui::BeginChild(filename.c_str(), ImVec2(file_size, file_size), selected_file == file, ImGuiWindowFlags_NoDecoration))
+	{
+		ResourceDragSource(file);
+		ProcessResourceMouseInput(file);
+
 		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * file_size) * 0.5f);
 		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*file_size, 0.75*file_size)); // TODO: Substitute this with resouce thumbnail
 		ImGui::Spacing();
@@ -169,28 +171,40 @@ void PanelResourcesExplorer::ShowFileIcon(File* file)
 			std::string wrapped_filename = filename.substr(0, string_position_wrap) + "...";
 			ImGui::Text(wrapped_filename.c_str());
 		}
-		//ProcessMouseInput(file-), false);
-	
-	ImGui::EndChild();
+	}
+	ImGui::EndChild();	
 }
 
+void PanelResourcesExplorer::ResourceDragSource(File* file) const
+{
+	if (ImGui::BeginDragDropSource())
+	{
+		ImGui::SetDragDropPayload("DND_File", &file, sizeof(File*));
+		ImGui::Text("Dragging %s", file->filename.c_str());
+		ImGui::EndDragDropSource();
+	}
+}
 
-void PanelResourcesExplorer::ProcessMouseInput(File * file, bool in_folders_windows)
+void PanelResourcesExplorer::ProcessResourceMouseInput(File * file)
+{
+	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(0))
+	{
+		selected_file = file;
+	}
+}
+
+void PanelResourcesExplorer::ProcessMouseInput(File * file)
 {
 	if (ImGui::IsItemHovered())
 	{
-		if (ImGui::IsMouseClicked(0) && in_folders_windows)
+		if (ImGui::IsMouseClicked(0))
 		{
 			selected_folder = file;
 			selected_file = nullptr;
 		}
-		else if (ImGui::IsMouseDoubleClicked(0) && file->file_type == FileType::DIRECTORY)
+		else if (ImGui::IsMouseDoubleClicked(0))
 		{
 			selected_folder = file;
-		}
-		else if(ImGui::IsMouseClicked(0) )
-		{
-			selected_file = file;
 		}
 	}
 }
@@ -275,14 +289,4 @@ void PanelResourcesExplorer::CopyFileToSelectedFolder(const char * source) const
 		destination = selected_folder->file_path  + file_name;
 	}
 	App->filesystem->Copy(source, destination.c_str());
-}
-
-void PanelResourcesExplorer::ResourceDragSource(File* file) const
-{
-	if (ImGui::BeginDragDropSource())
-	{
-		ImGui::SetDragDropPayload("DND_File", &file, sizeof(File*));
-		ImGui::Text("Dragging %s", file->filename.c_str());
-		ImGui::EndDragDropSource();
-	}
 }

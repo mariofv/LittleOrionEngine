@@ -15,7 +15,8 @@ public:
 
 	void ShowFoldersHierarchy(const File& file);
 
-	void ProcessMouseInput(File* file, bool in_folders_windows);
+	void ProcessMouseInput(File* file);
+	void ProcessResourceMouseInput(File* file);
 	void ShowFilesInExplorer();
 
 	void ShowFileSystemActionsMenu(const File* file);
