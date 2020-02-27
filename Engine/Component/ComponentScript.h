@@ -17,10 +17,9 @@ public:
 	void LoadName(std::string script_name);
 	void Update();
 	void Delete();
-
-	void Save(Config& config) const{}
-	void Load(const Config& config) {}
 	void ShowComponentWindow();
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
 	/*virtual void Start() {};
 	virtual void Awake() {};
 	virtual void Update() {};

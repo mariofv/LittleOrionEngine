@@ -11,14 +11,16 @@ bool ModuleScriptManager::Init()
 	//TODO: Load all the .dll
 	gp_dll = LoadLibrary("GamePlaySystem.dll");
 	//TODO: fill / load the component script vector.
-	InitResourceScript();
+	//InitResourceScript();
 	return true;
 }
 
 update_status ModuleScriptManager::Update()
 {
-	for (auto &component_script : scripts) {
-		component_script->Update();
+	if (!scripts.empty()) {
+		for (auto &component_script : scripts) {
+			component_script->Update();
+		}
 	}
 
 	return update_status::UPDATE_CONTINUE;
@@ -59,7 +61,6 @@ Script* ModuleScriptManager::CreateResourceScript( std::string script_name, Game
 }
 ComponentScript* ModuleScriptManager::CreateComponentScript() {
 	ComponentScript* new_script = new ComponentScript();
-	scripts.push_back(new_script);
 	return new_script;
 }
 

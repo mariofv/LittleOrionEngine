@@ -43,3 +43,22 @@ void ComponentScript::ShowComponentWindow()
 		script->OnInspector(ImGui::GetCurrentContext());
 	}
 }
+void ComponentScript::Save(Config & config) const
+{
+	config.AddUInt(UUID, "UUID");
+	config.AddInt((unsigned int)type, "ComponentType");
+	config.AddBool(active, "Active");
+	config.AddString(name, "ScriptName");
+
+}
+
+void ComponentScript::Load(const Config & config)
+{
+	UUID = config.GetUInt("UUID", 0);
+	active = config.GetBool("Active", true);
+
+	config.GetString("ScriptName", this->name, "");
+	LoadName(this->name);
+
+
+}
