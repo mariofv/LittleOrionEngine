@@ -23,6 +23,37 @@ public:
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
 	virtual ~Component() = default;
 
+	//Copy and move
+	Component(const Component& component_to_copy)
+	{
+		*this = component_to_copy;
+	}
+	Component(Component&& component_to_move)
+	{
+		*this = std::move(component_to_move);
+	}
+
+	Component & operator=(const Component & component_to_copy)
+	{
+		this->active = component_to_copy.active;
+		this->UUID = component_to_copy.UUID;
+		this->owner = component_to_copy.owner;
+		this->type = component_to_copy.type;
+		return *this;
+	}
+	Component & operator=(Component && component_to_copy)
+	{
+
+		this->active = component_to_copy.active;
+		this->UUID = component_to_copy.UUID;
+		component_to_copy.UUID = 0;
+
+		this->owner = component_to_copy.owner;
+		component_to_copy.owner = nullptr;
+		this->type = component_to_copy.type;
+		return *this;
+	}
+
 	virtual void Enable() { active = true; };
 	virtual void Disable() { active = false; };
 	virtual bool IsEnabled() const { return active; };

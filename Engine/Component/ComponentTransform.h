@@ -13,6 +13,13 @@ public:
 	ComponentTransform(GameObject * owner);
 	ComponentTransform(GameObject * owner,const float3 translation, const Quat rotation, const float3 scale);
 
+	//Copy and move
+	ComponentTransform(const ComponentTransform& component_to_copy);
+	ComponentTransform(ComponentTransform&& component_to_move);
+
+	ComponentTransform & operator=(const ComponentTransform & component_to_copy);
+	ComponentTransform & operator=(ComponentTransform && component_to_copy);
+
 	~ComponentTransform() = default;
 
 	void Delete() override {};

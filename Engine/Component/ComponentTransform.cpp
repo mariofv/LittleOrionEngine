@@ -19,6 +19,40 @@ ComponentTransform::ComponentTransform(GameObject * owner, const float3 translat
 	OnTransformChange();
 }
 
+//Copy and move
+
+ComponentTransform::ComponentTransform(const ComponentTransform& component_to_copy) : Component(component_to_copy)
+{
+	*this = component_to_copy;
+}
+ComponentTransform::ComponentTransform(ComponentTransform&& component_to_move) : Component(std::move(component_to_move))
+{
+	*this = std::move(component_to_move);
+}
+
+ComponentTransform & ComponentTransform::operator=(const ComponentTransform & component_to_copy)
+{
+	Component::operator=(component_to_copy);
+	this->translation = component_to_copy.translation;
+	this->rotation = component_to_copy.rotation;
+	this->rotation_degrees = component_to_copy.rotation_degrees;
+	this->rotation_radians = component_to_copy.rotation_radians;
+	this->model_matrix = component_to_copy.model_matrix;
+	this->global_model_matrix = component_to_copy.global_model_matrix;
+	return *this;
+}
+ComponentTransform & ComponentTransform::operator=(ComponentTransform && component_to_copy) 
+{
+	Component::operator=(std::move(component_to_copy));
+	this->translation = std::move(component_to_copy.translation);
+	this->rotation = std::move(component_to_copy.rotation);
+	this->rotation_degrees = std::move(component_to_copy.rotation_degrees);
+	this->rotation_radians = std::move(component_to_copy.rotation_radians);
+	this->model_matrix = std::move(component_to_copy.model_matrix);
+	this->global_model_matrix = std::move(component_to_copy.global_model_matrix);
+	return *this;
+}
+
 void ComponentTransform::Save(Config& config) const
 {
 	config.AddUInt(UUID, "UUID");
