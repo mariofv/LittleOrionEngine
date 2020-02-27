@@ -39,6 +39,35 @@ GameObject::GameObject(const std::string name) :
 {
 }
 
+GameObject & GameObject::operator=(const GameObject & gameobject_to_copy)
+{
+	this->components.reserve(gameobject_to_copy.components.size());
+	for (size_t i = 0; i < gameobject_to_copy.components.size(); i++)
+	{
+		Component * copy = this->CreateComponent(gameobject_to_copy.components[i]->type);
+		*copy = *gameobject_to_copy.components[i];
+	}
+	this->name = name;
+	this->SetEnabled(gameobject_to_copy.active);
+	this->SetStatic(gameobject_to_copy.is_static);
+	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
+	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
+	this->isPrefab = isPrefab;
+	return *this;
+}
+GameObject & GameObject::operator=(GameObject && gameobject_to_move)
+{
+	this->components = std::move(gameobject_to_move.components);
+	this->name = name;
+	this->SetEnabled(gameobject_to_move.active);
+	this->SetStatic(gameobject_to_move.is_static);
+	this->hierarchy_depth = gameobject_to_move.hierarchy_depth;
+	this->hierarchy_branch = gameobject_to_move.hierarchy_branch;
+	this->isPrefab = isPrefab;
+	return *this;
+}
+
+
 void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 {
 	children_to_remove.push_back(this);

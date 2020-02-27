@@ -21,6 +21,13 @@ public:
 	ComponentAABB(GameObject * owner);
 	~ComponentAABB() = default;
 
+	//Copy and move
+	ComponentAABB(const ComponentAABB& component_to_copy) = default;
+	ComponentAABB(ComponentAABB&& component_to_move) = default;
+
+	ComponentAABB & operator=(const ComponentAABB & component_to_copy) = default;
+	ComponentAABB & operator=(ComponentAABB && component_to_move) = default;
+
 	void Delete() override {};
 	void GenerateBoundingBox();
 

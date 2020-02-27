@@ -14,11 +14,11 @@ public:
 	ComponentTransform(GameObject * owner,const float3 translation, const Quat rotation, const float3 scale);
 
 	//Copy and move
-	ComponentTransform(const ComponentTransform& component_to_copy);
-	ComponentTransform(ComponentTransform&& component_to_move);
+	ComponentTransform(const ComponentTransform& component_to_copy) = default;
+	ComponentTransform(ComponentTransform&& component_to_move) = default;
 
-	ComponentTransform & operator=(const ComponentTransform & component_to_copy);
-	ComponentTransform & operator=(ComponentTransform && component_to_move);
+	ComponentTransform & operator=(const ComponentTransform & component_to_copy) = default;
+	ComponentTransform & operator=(ComponentTransform && component_to_move) = default;
 
 	~ComponentTransform() = default;
 
