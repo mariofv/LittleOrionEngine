@@ -2,6 +2,8 @@
 #define _MODULERESOURCEMANAGER_H_
 
 #include "Module.h"
+#include "ResourceManagement/Importer/TextureImporter.h"
+#include "ResourceManagement/Importer/ModelImporter.h"
 
 #include <memory>
 #include <thread>
@@ -14,8 +16,7 @@ class Mesh;
 class Resource;
 class Importer;
 class Timer;
-#include "ResourceManagement/Importer/TextureImporter.h"
-#include "ResourceManagement/Importer/ModelImporter.h"
+
 class ModuleResourceManager : public Module
 {
 public:
