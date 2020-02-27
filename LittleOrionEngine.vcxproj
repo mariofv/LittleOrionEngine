@@ -164,6 +164,7 @@
     <ClInclude Include="Engine\UI\Panel\PanelMenuBar.h" />
     <ClInclude Include="Engine\UI\Panel\PanelPopups.h" />
     <ClInclude Include="Engine\UI\Panel\PanelProjectExplorer.h" />
+    <ClInclude Include="Engine\UI\Panel\PanelResourcesExplorer.h" />
     <ClInclude Include="Engine\UI\Panel\PanelToolBar.h" />
     <ClInclude Include="Engine\UI\Panel\PanelScene.h" />
     <ClInclude Include="Engine\UI\Panel\PanelInspector.h" />
@@ -240,6 +241,7 @@
     <ClCompile Include="Engine\UI\Panel\PanelMenuBar.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelPopups.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelProjectExplorer.cpp" />
+    <ClCompile Include="Engine\UI\Panel\PanelResourcesExplorer.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelToolBar.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp" />

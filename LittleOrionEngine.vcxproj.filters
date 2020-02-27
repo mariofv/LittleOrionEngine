@@ -376,6 +376,9 @@
     <ClCompile Include="Engine\Component\ComponentMeshRenderer.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\PanelResourcesExplorer.cpp">
+      <Filter>Engine\UI\Panel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -632,6 +635,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentMeshRenderer.h">
       <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\PanelResourcesExplorer.h">
+      <Filter>Engine\UI\Panel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -19,6 +19,7 @@ class PanelGame;
 class PanelInspector;
 class PanelHierarchy;
 class PanelProjectExplorer;
+class PanelResourcesExplorer;
 class PanelConsole;
 class PanelDebug;
 class PanelConfiguration;
@@ -66,6 +67,7 @@ public:
 	PanelInspector* inspector = nullptr;
 	PanelHierarchy* hierarchy = nullptr;
 	PanelProjectExplorer* project_explorer = nullptr;
+	PanelResourcesExplorer* resources_explorer = nullptr;
 	PanelConsole* console = nullptr;
 	PanelDebug* debug_panel = nullptr;
 	PanelConfiguration* configuration = nullptr;
