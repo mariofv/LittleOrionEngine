@@ -22,6 +22,7 @@ ComponentMaterial::~ComponentMaterial()
 	}
 }
 
+
 void ComponentMaterial::Delete()
 {
 	App->texture->RemoveComponentMaterial(this);

@@ -12,6 +12,12 @@ public:
 	ComponentLight(GameObject * owner);
 	~ComponentLight() = default;
 	
+	//Copy and move
+	ComponentLight(const ComponentLight& component_to_copy);
+	ComponentLight(ComponentLight&& component_to_move);
+
+	ComponentLight & operator=(const ComponentLight & component_to_copy);
+	ComponentLight & operator=(ComponentLight && component_to_move);
 
 	void Delete() override;
 	void Render() const;

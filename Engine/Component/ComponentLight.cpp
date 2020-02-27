@@ -13,6 +13,35 @@ ComponentLight::ComponentLight(GameObject * owner) : Component(owner, ComponentT
 
 }
 
+//Copy and move
+ComponentLight::ComponentLight(const ComponentLight& component_to_copy) : Component(component_to_copy)
+{
+	*this = component_to_copy;
+}
+ComponentLight::ComponentLight(ComponentLight&& component_to_move) : Component(std::move(component_to_move))
+{
+	*this = component_to_move;
+}
+
+ComponentLight & ComponentLight::operator=(const ComponentLight & component_to_copy)
+{
+	this->light_color[0] = component_to_copy.light_color[0];
+	this->light_color[1] = component_to_copy.light_color[1];
+	this->light_color[2] = component_to_copy.light_color[2];
+	this->light_intensity = component_to_copy.light_intensity;
+	return *this;
+}
+ComponentLight & ComponentLight::operator=(ComponentLight && component_to_move)
+{
+
+	this->light_color[0] = component_to_move.light_color[0];
+	this->light_color[1] = component_to_move.light_color[1];
+	this->light_color[2] = component_to_move.light_color[2];
+	this->light_intensity = component_to_move.light_intensity;
+	return *this;
+}
+
+
 void ComponentLight::Delete()
 {
 	App->lights->RemoveComponentLight(this);
