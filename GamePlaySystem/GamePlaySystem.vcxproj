@@ -91,13 +91,13 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;GAMEPLAYSYSTEM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\Libraries\include;..\Libraries\include\SDL;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalDependencies>SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MathGeoLib.lib;imgui.lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;LittleOrionEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>..\Libraries\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
@@ -168,13 +168,6 @@
     <ClInclude Include="src\Script\Script.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="..\Libraries\include\imgui\imgui.cpp" />
-    <ClCompile Include="..\Libraries\include\imgui\imgui_demo.cpp" />
-    <ClCompile Include="..\Libraries\include\imgui\imgui_draw.cpp" />
-    <ClCompile Include="..\Libraries\include\imgui\imgui_impl_opengl3.cpp" />
-    <ClCompile Include="..\Libraries\include\imgui\imgui_impl_sdl.cpp" />
-    <ClCompile Include="..\Libraries\include\imgui\imgui_stdlib.cpp" />
-    <ClCompile Include="..\Libraries\include\imgui\imgui_widgets.cpp" />
     <ClCompile Include="src\Script\ExampleScript.cpp" />
     <ClCompile Include="src\Script\Script.cpp" />
   </ItemGroup>

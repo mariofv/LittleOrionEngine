@@ -10,9 +10,6 @@
     <Filter Include="Libraries">
       <UniqueIdentifier>{72440d45-31b0-4e21-b2ec-c06477de2250}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\ImGUI">
-      <UniqueIdentifier>{1ca0a095-1fb8-4ef1-b979-fae021188545}</UniqueIdentifier>
-    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Script\ExampleScript.h">
@@ -28,27 +25,6 @@
     </ClCompile>
     <ClCompile Include="src\Script\Script.cpp">
       <Filter>src\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Libraries\include\imgui\imgui.cpp">
-      <Filter>Libraries\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Libraries\include\imgui\imgui_demo.cpp">
-      <Filter>Libraries\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Libraries\include\imgui\imgui_draw.cpp">
-      <Filter>Libraries\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Libraries\include\imgui\imgui_impl_opengl3.cpp">
-      <Filter>Libraries\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Libraries\include\imgui\imgui_impl_sdl.cpp">
-      <Filter>Libraries\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Libraries\include\imgui\imgui_stdlib.cpp">
-      <Filter>Libraries\ImGUI</Filter>
-    </ClCompile>
-    <ClCompile Include="..\Libraries\include\imgui\imgui_widgets.cpp">
-      <Filter>Libraries\ImGUI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

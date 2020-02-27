@@ -1,6 +1,6 @@
 #include "ExampleScript.h"
 #include "Main/Application.h"
-//#include "Module/ModuleInput.h"
+#include "Module/ModuleInput.h"
 #include "imgui.h"
 
 ExampleScript* ExampleScriptDLL()
@@ -19,9 +19,9 @@ ExampleScript::~ExampleScript()
 
 void ExampleScript::Update()
 {
-	/*if (App->input->GetKeyDown(KeyCode::A)) {
+	if (App->input->GetKeyDown(KeyCode::A)) {
 		++i;
-	}*/
+	}
 
 }
 

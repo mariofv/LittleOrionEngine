@@ -1,27 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Libraries\include\imgui\imgui.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\imgui\imgui_demo.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\imgui\imgui_draw.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\imgui\imgui_impl_opengl3.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\imgui\imgui_impl_sdl.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\imgui\imgui_stdlib.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\imgui\imgui_widgets.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp">
       <Filter>Libraries\ImGuizmo</Filter>
     </ClCompile>
@@ -33,102 +12,6 @@
     </ClCompile>
     <ClCompile Include="Libraries\include\ImGuizmo\ImSequencer.cpp">
       <Filter>Libraries\ImGuizmo</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\BitOps.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\TriangleMesh.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Sphere.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Triangle.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Ray.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Polygon.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Polyhedron.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Plane.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\OBB.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\LineSegment.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Line.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Frustum.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Cone.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Cylinder.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Circle.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Capsule.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\AABB.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Algorithm\Random\LCG.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Time\Clock.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\float4x4.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\float4.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\float3x4.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\float3x3.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\float2.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\float3.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\TransformOps.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\SSEMath.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\Quat.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\Polynomial.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\MathOps.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\MathLog.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\MathFunc.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentAABB.cpp">
       <Filter>Engine\Component</Filter>
@@ -653,14 +536,8 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{78196238-a4d6-4e0e-ba05-48142ddb16dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\imgui">
-      <UniqueIdentifier>{5ae1ff27-bee3-4b9f-bf4d-74e8961b09b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Libraries\ImGuizmo">
       <UniqueIdentifier>{4156e7f7-9ca4-4c90-a5c6-6dd08a48b4d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\MathGeoLib">
-      <UniqueIdentifier>{7aeb874c-0048-442d-a610-13b2f8c71ccf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Component">
       <UniqueIdentifier>{550cf299-4283-45ac-bf26-ac8d0ea988f8}</UniqueIdentifier>

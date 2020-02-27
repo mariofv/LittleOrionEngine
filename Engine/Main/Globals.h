@@ -1,6 +1,12 @@
 #ifndef _GLOBALS_H_
 #define _GLOBALS_H_
 
+#ifdef ENGINE_EXPORTS
+#define ENGINE_API __declspec(dllexport)
+#else
+#define ENGINE_API __declspec(dllimport)
+#endif
+
 #include "UI/EngineLog.h"
 
 #include "imgui.h"
@@ -86,5 +92,6 @@ enum class Fonts
 
 #define VSYNC true
 #define TITLE "Little Orion Engine"
+
 
 #endif //_GLOBALS_H_
