@@ -18,7 +18,7 @@ public:
 	ComponentTransform(ComponentTransform&& component_to_move);
 
 	ComponentTransform & operator=(const ComponentTransform & component_to_copy);
-	ComponentTransform & operator=(ComponentTransform && component_to_copy);
+	ComponentTransform & operator=(ComponentTransform && component_to_move);
 
 	~ComponentTransform() = default;
 

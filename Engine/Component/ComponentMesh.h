@@ -12,6 +12,13 @@ public:
 	ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner);
 	ComponentMesh();
 
+	//Copy and move
+	ComponentMesh(const ComponentMesh& component_to_copy);
+	ComponentMesh(ComponentMesh&& component_to_move);
+
+	ComponentMesh & operator=(const ComponentMesh & component_to_copy);
+	ComponentMesh & operator=(ComponentMesh && component_to_move);
+
 	~ComponentMesh();
 
 	void Delete() override;

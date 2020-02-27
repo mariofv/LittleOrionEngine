@@ -41,15 +41,15 @@ ComponentTransform & ComponentTransform::operator=(const ComponentTransform & co
 	this->global_model_matrix = component_to_copy.global_model_matrix;
 	return *this;
 }
-ComponentTransform & ComponentTransform::operator=(ComponentTransform && component_to_copy) 
+ComponentTransform & ComponentTransform::operator=(ComponentTransform && component_to_move)
 {
-	Component::operator=(std::move(component_to_copy));
-	this->translation = std::move(component_to_copy.translation);
-	this->rotation = std::move(component_to_copy.rotation);
-	this->rotation_degrees = std::move(component_to_copy.rotation_degrees);
-	this->rotation_radians = std::move(component_to_copy.rotation_radians);
-	this->model_matrix = std::move(component_to_copy.model_matrix);
-	this->global_model_matrix = std::move(component_to_copy.global_model_matrix);
+	Component::operator=(std::move(component_to_move));
+	this->translation = std::move(component_to_move.translation);
+	this->rotation = std::move(component_to_move.rotation);
+	this->rotation_degrees = std::move(component_to_move.rotation_degrees);
+	this->rotation_radians = std::move(component_to_move.rotation_radians);
+	this->model_matrix = std::move(component_to_move.model_matrix);
+	this->global_model_matrix = std::move(component_to_move.global_model_matrix);
 	return *this;
 }
 
