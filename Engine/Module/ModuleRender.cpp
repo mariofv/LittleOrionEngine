@@ -13,7 +13,7 @@
 #include "ModuleWindow.h"
 #include "ModuleLight.h"
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "UI/DebugDraw.h"
 
@@ -245,7 +245,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 
 			for (auto &object : rendered_objects)
 			{
-				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH);
 				meshes_to_render.push_back(object_mesh);
 			}
 		}
@@ -271,7 +271,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 
 			for (auto &object : rendered_objects)
 			{
-				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH);
 				meshes_to_render.push_back(object_mesh);
 			}
 		}
@@ -285,7 +285,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 
 			for (auto &object : rendered_static_objects)
 			{
-				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH);
 				meshes_to_render.push_back(object_mesh);
 			}
 
@@ -295,7 +295,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 
 			for (auto &object : rendered_dynamic_objects)
 			{
-				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH);
 				meshes_to_render.push_back(object_mesh);
 			}
 
@@ -403,14 +403,14 @@ std::string ModuleRender::GetDrawMode() const
 	}
 }
 
-ComponentMesh* ModuleRender::CreateComponentMesh()
+ComponentMeshRenderer* ModuleRender::CreateComponentMesh()
 {
-	ComponentMesh *created_mesh = new ComponentMesh();
+	ComponentMeshRenderer *created_mesh = new ComponentMeshRenderer();
 	meshes.push_back(created_mesh);
 	return created_mesh;
 }
 
-void ModuleRender::RemoveComponentMesh(ComponentMesh* mesh_to_remove)
+void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 {
 	auto it = std::find(meshes.begin(), meshes.end(), mesh_to_remove);
 	if (it != meshes.end())
@@ -483,7 +483,7 @@ void ModuleRender::DrawAABBTree() const
 GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
 {
 	GetCullingMeshes(App->cameras->scene_camera);
-	std::vector<ComponentMesh*> intersected_meshes;
+	std::vector<ComponentMeshRenderer*> intersected_meshes;
 	for (auto & mesh : meshes_to_render)
 	{
 		if (mesh->owner->aabb.bounding_box.Intersects(ray))

@@ -138,7 +138,7 @@
     <ClInclude Include="Engine\Component\ComponentAABB.h" />
     <ClInclude Include="Engine\Component\ComponentCamera.h" />
     <ClInclude Include="Engine\Component\ComponentMaterial.h" />
-    <ClInclude Include="Engine\Component\ComponentMesh.h" />
+    <ClInclude Include="Engine\Component\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentTransform.h" />
     <ClInclude Include="Engine\Component\Component.h" />
     <ClInclude Include="Engine\UI\EngineLog.h" />
@@ -224,7 +224,7 @@
     <ClCompile Include="Engine\Component\ComponentAABB.cpp" />
     <ClCompile Include="Engine\Component\ComponentCamera.cpp" />
     <ClCompile Include="Engine\Component\ComponentMaterial.cpp" />
-    <ClCompile Include="Engine\Component\ComponentMesh.cpp" />
+    <ClCompile Include="Engine\Component\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform.cpp" />
     <ClCompile Include="Engine\UI\EngineLog.cpp" />
     <ClCompile Include="Engine\Module\ModuleCamera.cpp" />

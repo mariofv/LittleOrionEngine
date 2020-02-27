@@ -7,7 +7,7 @@
 class Component;
 class ComponentCamera;
 class ComponentMaterial;
-class ComponentMesh;
+class ComponentMeshRenderer;
 class ComponentTransform;
 class ComponentLight;
 
@@ -18,7 +18,7 @@ public:
 	~PanelComponent() = default;
 
 	void ShowComponentTransformWindow(ComponentTransform *transform);
-	void ShowComponentMeshWindow(ComponentMesh *mesh);
+	void ShowComponentMeshWindow(ComponentMeshRenderer *mesh);
 	void ShowComponentMaterialWindow(ComponentMaterial *material);
 	void ShowComponentCameraWindow(ComponentCamera *camera);
 	void ShowComponentLightWindow(ComponentLight *light);

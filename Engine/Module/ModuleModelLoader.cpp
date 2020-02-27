@@ -10,7 +10,7 @@
 #include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
 #include <ResourceManagement/Importer/Importer.h>
 
 #include <ResourceManagement/Resources/Skeleton.h>
@@ -81,7 +81,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 			return;
 		}
 
-		ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
+		ComponentMeshRenderer *mesh_component = (ComponentMeshRenderer*)node_game_object->CreateComponent(Component::ComponentType::MESH);
 		mesh_component->SetMesh(mesh_for_component);
 		File file(mesh_uid);
 		node_game_object->name = file.filename_no_extension;
@@ -159,7 +159,7 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 	{
 		return model_game_object;
 	}
-	ComponentMesh* mesh_component = (ComponentMesh*)model_game_object->CreateComponent(Component::ComponentType::MESH);
+	ComponentMeshRenderer* mesh_component = (ComponentMeshRenderer*)model_game_object->CreateComponent(Component::ComponentType::MESH);
 	mesh_component->SetMesh(mesh_for_component);
 	model_game_object->Update();
 

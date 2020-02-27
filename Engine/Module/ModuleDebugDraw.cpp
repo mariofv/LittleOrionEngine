@@ -2,7 +2,7 @@
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentLight.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
@@ -510,7 +510,7 @@ void ModuleDebugDraw::RenderOutline() const
 
 	if (selected_object_mesh_component != nullptr && selected_object_mesh_component->IsEnabled())
 	{
-		ComponentMesh* selected_object_mesh = static_cast<ComponentMesh*>(selected_object_mesh_component);
+		ComponentMeshRenderer* selected_object_mesh = static_cast<ComponentMeshRenderer*>(selected_object_mesh_component);
 		glEnable(GL_STENCIL_TEST);
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);

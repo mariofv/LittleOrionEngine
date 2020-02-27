@@ -7,7 +7,7 @@
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
 
@@ -56,7 +56,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 	}
 }
 
-void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
+void PanelComponent::ShowComponentMeshWindow(ComponentMeshRenderer *mesh)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{

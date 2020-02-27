@@ -2,7 +2,7 @@
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Main/GameObject.h"
 
@@ -63,7 +63,7 @@ void PanelGameObject::Render(GameObject* game_object)
 				component_panel.ShowComponentMaterialWindow(static_cast<ComponentMaterial*>(component));
 				break;
 			case Component::ComponentType::MESH:
-				component_panel.ShowComponentMeshWindow(static_cast<ComponentMesh*>(component));
+				component_panel.ShowComponentMeshWindow(static_cast<ComponentMeshRenderer*>(component));
 				break;
 			case Component::ComponentType::LIGHT:
 				component_panel.ShowComponentLightWindow(static_cast<ComponentLight*>(component));

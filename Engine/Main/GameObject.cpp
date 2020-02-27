@@ -13,7 +13,7 @@
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 
 #include "Brofiler/Brofiler.h"
@@ -106,7 +106,7 @@ bool GameObject::IsStatic() const
 
 bool GameObject::IsVisible(const ComponentCamera & camera) const
 {
-	ComponentMesh* mesh = static_cast<ComponentMesh*>(GetComponent(Component::ComponentType::MESH));
+	ComponentMeshRenderer* mesh = static_cast<ComponentMeshRenderer*>(GetComponent(Component::ComponentType::MESH));
 	if ((mesh != nullptr && !mesh->IsEnabled()) || !IsEnabled() || !camera.IsInsideFrustum(aabb.bounding_box))
 	{
 		return false;

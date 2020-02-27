@@ -1,5 +1,5 @@
 #include "ComponentAABB.h"
-#include "ComponentMesh.h"
+#include "ComponentMeshRenderer.h"
 #include "Main/GameObject.h"
 #include "Brofiler/Brofiler.h"
 
@@ -26,7 +26,7 @@ void ComponentAABB::Load(const Config& config)
 void ComponentAABB::GenerateBoundingBox()
 {
 	bool has_mesh = false;
-	ComponentMesh * owner_mesh = static_cast<ComponentMesh*>(owner->GetComponent(ComponentType::MESH));
+	ComponentMeshRenderer * owner_mesh = static_cast<ComponentMeshRenderer*>(owner->GetComponent(ComponentType::MESH));
 	has_mesh = owner_mesh != nullptr;
 	
 	if (has_mesh)

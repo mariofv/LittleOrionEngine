@@ -11,7 +11,7 @@
 
 const unsigned INITIAL_SIZE_AABBTREE = 10;
 
-class ComponentMesh;
+class ComponentMeshRenderer;
 class ComponentCamera;
 
 struct SDL_Texture;
@@ -37,8 +37,8 @@ public:
 	void Render() const;
 	void RenderFrame(const ComponentCamera &camera);
 
-	ComponentMesh* CreateComponentMesh();
-	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
+	ComponentMeshRenderer* CreateComponentMesh();
+	void RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove);
 	void GenerateQuadTree();
 	void InsertAABBTree(GameObject* game_object);
 	void RemoveAABBTree(GameObject * game_object);
@@ -93,8 +93,8 @@ private:
 
 	DrawMode draw_mode = DrawMode::SHADED;
 
-	std::vector<ComponentMesh*> meshes;
-	std::vector<ComponentMesh*> meshes_to_render;
+	std::vector<ComponentMeshRenderer*> meshes;
+	std::vector<ComponentMeshRenderer*> meshes_to_render;
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;

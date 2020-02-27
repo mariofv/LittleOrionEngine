@@ -1,18 +1,18 @@
-#ifndef _COMPONENTMESH_H_
-#define _COMPONENTMESH_H_
+#ifndef _COMPONENTMESHRENDERER_H_
+#define _COMPONENTMESHRENDERER_H_
 
 #include "Component.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "UI/Panel/InspectorSubpanel/PanelComponent.h"
 
-class ComponentMesh : public Component
+class ComponentMeshRenderer : public Component
 {
 public:
-	ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render);
-	ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner);
-	ComponentMesh();
+	ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render);
+	ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner);
+	ComponentMeshRenderer();
 
-	~ComponentMesh();
+	~ComponentMeshRenderer();
 
 	void Delete() override;
 
@@ -31,4 +31,4 @@ private:
 	friend class PanelComponent;
 };
 
-#endif //_COMPONENTMESH_H_
+#endif //_COMPONENTMESHRENDERER_H_
