@@ -17,6 +17,7 @@ public:
 
 public:
 	std::string exported_file;
+
 private:
 	virtual void LoadInMemory() = 0;
 

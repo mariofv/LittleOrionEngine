@@ -23,6 +23,7 @@
 #include "Helper/Utils.h"
 
 #include <imgui.h>
+#include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
 void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
@@ -74,6 +75,13 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMeshRenderer *mesh)
 		}
 		ImGui::Separator();
 
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Mesh");
+		ImGui::SameLine();
+		if (ImGui::Button(mesh->mesh_to_render->exported_file.c_str()))
+		{
+			//TODO: Open Popup where you can select a mesh from a list of loaded meshes.
+		}
 
 		char tmp_string[16];
 		ImGui::AlignTextToFramePadding();
