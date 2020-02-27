@@ -21,7 +21,7 @@ const int MAX_KEYS = 286;
 const int MAX_MOUSE_BUTTONS = 5;
 const int MAX_CONTROLLER_BUTTONS = 15;
 
-enum class KeyState
+enum class KeyState : Uint8
 {
 	IDLE, 
 	DOWN, 
@@ -29,7 +29,7 @@ enum class KeyState
 	UP
 };
 
-enum class KeyCode
+enum class KeyCode : short
 {
 	None = SDL_SCANCODE_UNKNOWN,
 
@@ -280,7 +280,7 @@ enum class KeyCode
 	AudioFastForward = SDL_SCANCODE_AUDIOFASTFORWARD,
 };
 
-enum class MouseButton
+enum class MouseButton : Uint8
 {
 	Left = SDL_BUTTON_LEFT,
 	Middle = SDL_BUTTON_MIDDLE,
@@ -337,15 +337,15 @@ struct GameInput
 	void Load(Config &config)
 	{
 		config.GetString("Name", name, "DefaultName");
-		unsigned int size_keys = config.GetUInt("SizeKeys", 0);
-		for(int i = 0; i < size_keys; ++i)
+		uint64_t size_keys = config.GetUInt("SizeKeys", 0);
+		for(uint64_t i = 0; i < size_keys; ++i)
 		{
 			std::string name_k("k" + std::to_string(i));
 			keys.push_back((KeyCode)config.GetUInt(name_k, 0));
 		}
 
-		unsigned int size_mouse = config.GetUInt("SizeMouse", 0);
-		for (int j = 0; j < size_mouse; ++j)
+		uint64_t size_mouse = config.GetUInt("SizeMouse", 0);
+		for (uint64_t j = 0; j < size_mouse; ++j)
 		{
 			std::string name_m("m" + std::to_string(j));
 			mouse_buttons.push_back((MouseButton)config.GetUInt(name_m, 0));
