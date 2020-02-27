@@ -1,7 +1,9 @@
 #ifndef _COMPONENTSCRIPT_H_
 #define _COMPONENTSCRIPT_H_
+
 #include "Component.h"
 #include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+
 #include <unordered_map>
 #include <string>
 

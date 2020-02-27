@@ -9,7 +9,7 @@ bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
 	//TODO: Load all the .dll
-	gp_dll = LoadLibrary("GamePlaySystem.dll");
+	gameplay_dll = LoadLibrary("GamePlaySystem.dll");
 	//TODO: fill / load the component script vector.
 	//InitResourceScript();
 	return true;
@@ -28,15 +28,17 @@ update_status ModuleScriptManager::Update()
 
 bool ModuleScriptManager::CleanUp()
 {
-	FreeLibrary(gp_dll);
+	FreeLibrary(gameplay_dll);
 	return true;
 }
-void ModuleScriptManager::InitResourceScript() {
-	if (gp_dll != nullptr)
+
+void ModuleScriptManager::InitResourceScript() 
+{
+	if (gameplay_dll != nullptr)
 	{
 		for (auto &component_script : scripts)
 		{
-			CREATE_SCRIPT script_func = (CREATE_SCRIPT)GetProcAddress(gp_dll, (component_script->name + "DLL").c_str());
+			CREATE_SCRIPT script_func = (CREATE_SCRIPT)GetProcAddress(gameplay_dll, (component_script->name + "DLL").c_str());
 			if (script_func != nullptr)
 			{
 				component_script->script = script_func();
@@ -45,10 +47,12 @@ void ModuleScriptManager::InitResourceScript() {
 		}
 	}
 }
-Script* ModuleScriptManager::CreateResourceScript( std::string script_name, GameObject* owner) {
-	if (gp_dll != nullptr)
+
+Script* ModuleScriptManager::CreateResourceScript( const std::string& script_name, GameObject* owner) 
+{
+	if (gameplay_dll != nullptr)
 	{
-		CREATE_SCRIPT script_func = (CREATE_SCRIPT)GetProcAddress(gp_dll, (script_name+"DLL").c_str());
+		CREATE_SCRIPT script_func = (CREATE_SCRIPT)GetProcAddress(gameplay_dll, (script_name+"DLL").c_str());
 		if (script_func != nullptr)
 		{
 			Script* script = script_func();
@@ -59,8 +63,11 @@ Script* ModuleScriptManager::CreateResourceScript( std::string script_name, Game
 	}
 	return nullptr;
 }
-ComponentScript* ModuleScriptManager::CreateComponentScript() {
+
+ComponentScript* ModuleScriptManager::CreateComponentScript()
+{
 	ComponentScript* new_script = new ComponentScript();
+	scripts.push_back(new_script);
 	return new_script;
 }
 

@@ -19,11 +19,14 @@ ComponentScript::ComponentScript(GameObject * owner, std::string script_name) : 
 ComponentScript::~ComponentScript()
 {
 }
-void ComponentScript::LoadName(std::string script_name) {
+
+void ComponentScript::LoadName(std::string script_name) 
+{
 	this->name = script_name;
 	script = App->scripts->CreateResourceScript(script_name, owner);
-	App->scripts->scripts.push_back(this);
+	//App->scripts->scripts.push_back(this);
 }
+
 void ComponentScript::Update()
 {
 	if (script) 
@@ -31,6 +34,7 @@ void ComponentScript::Update()
 		script->Update();
 	}
 }
+
 void ComponentScript::Delete()
 {
 	App->scripts->RemoveComponentScript(this);
@@ -43,6 +47,7 @@ void ComponentScript::ShowComponentWindow()
 		script->OnInspector(ImGui::GetCurrentContext());
 	}
 }
+
 void ComponentScript::Save(Config & config) const
 {
 	config.AddUInt(UUID, "UUID");

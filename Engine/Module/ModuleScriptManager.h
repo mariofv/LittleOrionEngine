@@ -22,11 +22,12 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 	void InitResourceScript();
-	Script* CreateResourceScript(std::string script_name, GameObject * owner);
+	Script * CreateResourceScript(const std::string & script_name, GameObject * owner);
 	ComponentScript* CreateComponentScript();
 	void RemoveComponentScript(ComponentScript* script_to_remove);
+
 private:
-	HINSTANCE gp_dll;
+	HINSTANCE gameplay_dll;
 public:
 
 	std::vector<ComponentScript*> scripts;
@@ -34,7 +35,8 @@ public:
 	std::vector<std::string> ListScripts = {
 		"ExampleScript",
 		"Player",
-		"Testing"
+		"Testing",
+		"Mario"
 	};
 
 

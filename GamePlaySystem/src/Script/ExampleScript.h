@@ -9,6 +9,7 @@ public:
 	void Update() override;
 	void OnInspector(ImGuiContext*) override;
 	void Test();
+
 	int i = 0;
 	float speed = 0.01f;
 };

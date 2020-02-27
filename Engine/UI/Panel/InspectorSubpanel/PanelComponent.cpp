@@ -412,7 +412,7 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 
 void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_CODE " Script", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_EDIT " Script", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (ImGui::Checkbox("Active", &component_script->active))
 		{
