@@ -1,6 +1,7 @@
 #include "PanelResourcesExplorer.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleTexture.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -116,48 +117,63 @@ void PanelResourcesExplorer::ShowFilesInExplorer()
 	{
 		return;
 	}
-	ImGuiStyle& style = ImGui::GetStyle();
-	size_t files_count = 0;
 
-	float window_visible_x2 = ImGui::GetWindowPos().x + ImGui::GetWindowContentRegionMax().x;
+	ImVec2 available_region = ImGui::GetContentRegionAvail();
+	int files_per_line = available_region.x / file_size;
+
+	int current_line = 0;
+	int current_file_in_line = 0;
+	
 	for (auto & file : selected_folder->children)
 	{
-			std::string item_name;
-			std::string filename = std::string(file->filename);
-			std::string spaces;
-			for (size_t i = 0; i < (filename.size()/2); i++)
-			{
-				spaces += " ";
-			}
-			if (file->file_type == FileType::DIRECTORY) {
-				item_name = spaces + std::string(ICON_FA_FOLDER "\n " + filename);
-			}
-			else if(file->file_type == FileType::ARCHIVE)
-			{
-				item_name = spaces + std::string(ICON_FA_ARCHIVE "\n " + filename);
-			}
-			else if (file->file_type == FileType::TEXTURE)
-			{
-				item_name = spaces + std::string(ICON_FA_IMAGE "\n " + filename);
-			}
-			else if (file->file_type == FileType::MODEL)
-			{
-				item_name = spaces + std::string(ICON_FA_CUBES "\n " + filename);
-			}
-			else {
-				item_name = spaces + std::string(ICON_FA_BOX "\n " + filename);
-			}
-			ImVec2 text_sz(ImGui::CalcTextSize(filename.c_str()).x+5,0);
-			ImGui::Selectable(item_name.c_str(), selected_file == file.get(),ImGuiSelectableFlags_None,text_sz);
-			ProcessMouseInput(file.get(), false);
-			FilesDrag();
-			++files_count;
-			float last_button_x2 = ImGui::GetItemRectMax().x;
-			float next_button_x2 = last_button_x2 + style.ItemSpacing.x + text_sz.x; // Expected position if next text was on same line
-			if (files_count + 1 < 50 && next_button_x2 < window_visible_x2)
-				ImGui::SameLine();
+		
+		ImGui::PushID(current_line * files_per_line + current_file_in_line);
+		ShowFileIcon(file.get());
+		ImGui::PopID();
+
+		++current_file_in_line;
+		if (current_file_in_line == files_per_line)
+		{
+			current_file_in_line = 0;
+			++current_line;
+		}
+		else
+		{
+			ImGui::SameLine();
+		}
+
 	}
 }
+
+void PanelResourcesExplorer::ShowFileIcon(File* file)
+{
+	std::string filename = std::string(file->filename_no_extension);
+	ImGui::BeginChild(filename.c_str(), ImVec2(file_size, file_size), true, ImGuiWindowFlags_NoDecoration);
+	ResourceDragSource(file);
+	
+		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * file_size) * 0.5f);
+		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*file_size, 0.75*file_size)); // TODO: Substitute this with resouce thumbnail
+		ImGui::Spacing();
+
+		float text_width = ImGui::CalcTextSize(filename.c_str()).x;
+		if (text_width < file_size)
+		{
+			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - text_width) * 0.5f);
+			ImGui::Text(filename.c_str());
+		}
+		else
+		{
+			int character_width = text_width / filename.length();
+			int string_position_wrap = file_size / character_width - 5;
+			assert(string_position_wrap < filename.length());
+			std::string wrapped_filename = filename.substr(0, string_position_wrap) + "...";
+			ImGui::Text(wrapped_filename.c_str());
+		}
+		//ProcessMouseInput(file-), false);
+	
+	ImGui::EndChild();
+}
+
 
 void PanelResourcesExplorer::ProcessMouseInput(File * file, bool in_folders_windows)
 {
@@ -261,12 +277,12 @@ void PanelResourcesExplorer::CopyFileToSelectedFolder(const char * source) const
 	App->filesystem->Copy(source, destination.c_str());
 }
 
-void PanelResourcesExplorer::FilesDrag() const
+void PanelResourcesExplorer::ResourceDragSource(File* file) const
 {
-	if (ImGui::BeginDragDropSource(ImGuiDragDropFlags_None))
+	if (ImGui::BeginDragDropSource())
 	{
-		ImGui::SetDragDropPayload("DND_File", &selected_file, sizeof(File*));
-		ImGui::Text("Dragging %s", selected_file->filename.c_str());
+		ImGui::SetDragDropPayload("DND_File", &file, sizeof(File*));
+		ImGui::Text("Dragging %s", file->filename.c_str());
 		ImGui::EndDragDropSource();
 	}
 }

@@ -22,12 +22,16 @@ public:
 	void MakeDirectoryFromFile(File* file);
 	void CopyFileToSelectedFolder(const char* source) const;
 
-	void FilesDrag() const;
+	void ResourceDragSource(File* file) const;
 
 private:
 	void InitResourceExplorerDockspace();
 
+	void ShowFileIcon(File* file);
+
 private:
+	float file_size = 150.f;
+
 	File* selected_folder = nullptr;
 	File* selected_file = nullptr;
 
