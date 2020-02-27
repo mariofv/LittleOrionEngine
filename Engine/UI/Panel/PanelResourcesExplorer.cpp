@@ -3,40 +3,59 @@
 #include "Main/Application.h"
 
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <SDL/SDL.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
-
 #include <algorithm>
 
 PanelResourcesExplorer::PanelResourcesExplorer()
 {
 	opened = true;
 	enabled = true;
-	window_name = ICON_FA_FOLDER_OPEN " Resources Explorer";
+	window_name = ICON_FA_FOLDER " Resources Explorer";
 }
 
 void PanelResourcesExplorer::Render()
 {
-	if(ImGui::Begin(ICON_FA_FOLDER_OPEN " Resources Explorer", &opened))
+	if (ImGui::Begin(ICON_FA_FOLDER " Resources Explorer", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
 
-		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 0)))
+		if (ImGui::Begin("Resources Folder Explorer"))
 		{
 			ShowFileSystemActionsMenu(selected_folder);
 			ShowFoldersHierarchy(*App->filesystem->assets_file);
 		}
-		ImGui::EndChild();
+		ImGui::End();
 
 		ImGui::SameLine();
-		if (ImGui::BeginChild("File Explorer", ImVec2(0, 0), true)) {
+		if (ImGui::Begin("Resources File Explorer")) {
 			ShowFileSystemActionsMenu(selected_file);
 			ShowFilesInExplorer();
 		}
-		ImGui::EndChild();
+		ImGui::End();
 	}
 	ImGui::End();
+}
+
+void PanelResourcesExplorer::InitResourceExplorerDockspace()
+{
+	ImGui::DockBuilderRemoveNode(resources_explorer_dockspace_id); // Clear out existing layout
+	ImGui::DockBuilderAddNode(resources_explorer_dockspace_id, ImGuiDockNodeFlags_DockSpace); // Add empty node
+	ImVec2 child_window_size = ImGui::GetWindowSize();
+	ImGui::DockBuilderSetNodeSize(resources_explorer_dockspace_id, child_window_size);
+
+	ImGuiID dock_main_id = resources_explorer_dockspace_id; // This variable will track the document node, however we are not using it here as we aren't docking anything into it.
+
+	ImGuiID dock_id_left;
+	ImGuiID dock_id_right = ImGui::DockBuilderSplitNode(dock_main_id, ImGuiDir_Right, 0.50f, NULL, &dock_id_left);
+
+
+	ImGui::DockBuilderDockWindow("Folder Explorer", dock_id_left);
+	ImGui::DockBuilderDockWindow("File Explorer", dock_id_right);
+
+	ImGui::DockBuilderFinish(resources_explorer_dockspace_id);
 }
 
 void PanelResourcesExplorer::ShowFoldersHierarchy(const File & file)
@@ -46,7 +65,7 @@ void PanelResourcesExplorer::ShowFoldersHierarchy(const File & file)
 		if (child->file_type == FileType::DIRECTORY)
 		{
 
-			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
+			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
 
 			std::string filename = ICON_FA_FOLDER " " + child->filename;
 			if (child->sub_folders == 0)

@@ -47,8 +47,8 @@ bool ModuleEditor::Init()
 	panels.push_back(inspector = new PanelInspector());
 	panels.push_back(hierarchy = new PanelHierarchy());
 	panels.push_back(project_explorer = new PanelProjectExplorer());
-	panels.push_back(resources_explorer = new PanelResourcesExplorer());
 	panels.push_back(console = new PanelConsole());
+	panels.push_back(resources_explorer = new PanelResourcesExplorer());
 	panels.push_back(debug_panel = new PanelDebug());
 	panels.push_back(configuration = new PanelConfiguration());
 	panels.push_back(about = new PanelAbout());

@@ -25,8 +25,13 @@ public:
 	void FilesDrag() const;
 
 private:
+	void InitResourceExplorerDockspace();
+
+private:
 	File* selected_folder = nullptr;
 	File* selected_file = nullptr;
+
+	ImGuiID resources_explorer_dockspace_id;
 
 };
 #endif //_PANELRESOURCESEXPLORER_H_
