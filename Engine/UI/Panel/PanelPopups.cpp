@@ -15,9 +15,15 @@ PanelPopups::PanelPopups()
 
 void PanelPopups::Render()
 {
-	if (!assets_loading_popup_shown)
+	RenderAssetsLoadingPopup();
+	RenderModelSelectorPopup();
+}
+
+void PanelPopups::RenderAssetsLoadingPopup()
+{
+	if (!show_assets_loading_popup)
 	{
-		assets_loading_popup_shown = true;
+		show_assets_loading_popup = true;
 		ImGui::OpenPopup("Loading Assets");
 	}
 
@@ -31,6 +37,23 @@ void PanelPopups::Render()
 		{
 			ImGui::CloseCurrentPopup();
 		}
+		ImGui::EndPopup();
+	}
+}
+
+void PanelPopups::RenderModelSelectorPopup()
+{
+	if (show_mesh_selector_popup)
+	{
+		ImGui::OpenPopup("MeshSelectorPopup");
+		show_mesh_selector_popup = false;
+		mesh_selector_opened = true;
+	}
+
+	if (ImGui::BeginPopupModal("MeshSelectorPopup", &mesh_selector_opened))
+	{
+		ImGui::Text("Loading Assets");
+
 		ImGui::EndPopup();
 	}
 }

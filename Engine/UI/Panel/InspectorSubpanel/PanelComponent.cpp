@@ -11,6 +11,8 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
 
+#include "Helper/Utils.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
@@ -19,8 +21,7 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
 
-
-#include "Helper/Utils.h"
+#include "UI/Panel/PanelPopups.h"
 
 #include <imgui.h>
 #include <imgui_stdlib.h>
@@ -80,7 +81,7 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMeshRenderer *mesh)
 		ImGui::SameLine();
 		if (ImGui::Button(mesh->mesh_to_render->exported_file.c_str()))
 		{
-			//TODO: Open Popup where you can select a mesh from a list of loaded meshes.
+			App->editor->popups->show_mesh_selector_popup = true;
 		}
 
 		char tmp_string[16];

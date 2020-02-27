@@ -14,7 +14,14 @@ public:
 	void Render() override;
 
 private:
-	bool assets_loading_popup_shown = false;
+	void RenderAssetsLoadingPopup();
+	void RenderModelSelectorPopup();
+
+public:
+	bool show_assets_loading_popup = false;
+	bool show_mesh_selector_popup = false;
+
+	bool mesh_selector_opened = true;
 };
 
 #endif //_PANELPOPUPS_H_
