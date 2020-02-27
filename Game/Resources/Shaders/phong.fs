@@ -12,7 +12,6 @@ struct Material {
 	float k_diffuse;
 	sampler2D specular_map;
 	vec4 specular_color;
-	float shininess;
 	float k_specular;
 	sampler2D occlusion_map;
 	float k_ambient;
@@ -128,7 +127,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal)
      vec3 reflect_dir = reflect(-light_dir, normalized_normal);
      float spec       = max(dot(view_dir, reflect_dir), 0.0);
 
-	specular = pow(spec, material.shininess);
+	specular = pow(spec, material.specular_color.w);
 	
 
 	vec4 diffuse_color  = GetDiffuseColor(material, texCoord);
@@ -157,7 +156,7 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal)
      vec3 reflect_dir = reflect(-light_dir, normalized_normal);
      float spec       = max(dot(view_dir, reflect_dir), 0.0);
 
-     specular = pow(spec, material.shininess);
+     specular = pow(spec, material.specular_color.w);
       
   
 
@@ -193,7 +192,7 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal)
      vec3 reflect_dir = reflect(-light_dir, normalized_normal);
      float spec       = max(dot(view_dir, reflect_dir), 0.0);
 
-     specular = pow(spec, material.shininess);
+     specular = pow(spec, material.specular_color.w);
       
 
     vec4 diffuse_color  = GetDiffuseColor(material, texCoord);

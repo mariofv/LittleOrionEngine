@@ -144,7 +144,6 @@ void ComponentMaterial::AddSpecularUniforms(unsigned int shader_program) const
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), k_specular);
-	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), shininess);
 }
 
 void ComponentMaterial::AddAmbientOclusionUniforms(unsigned int shader_program) const
