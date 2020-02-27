@@ -245,7 +245,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 
 			for (auto &object : rendered_objects)
 			{
-				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH);
+				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
 				meshes_to_render.push_back(object_mesh);
 			}
 		}
@@ -271,7 +271,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 
 			for (auto &object : rendered_objects)
 			{
-				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH);
+				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
 				meshes_to_render.push_back(object_mesh);
 			}
 		}
@@ -285,7 +285,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 
 			for (auto &object : rendered_static_objects)
 			{
-				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH);
+				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
 				meshes_to_render.push_back(object_mesh);
 			}
 
@@ -295,7 +295,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 
 			for (auto &object : rendered_dynamic_objects)
 			{
-				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH);
+				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
 				meshes_to_render.push_back(object_mesh);
 			}
 
@@ -446,21 +446,21 @@ void ModuleRender::GenerateQuadTree()
 
 void ModuleRender::InsertAABBTree(GameObject * game_object)
 {
-	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
+	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 	if(object_mesh != nullptr)
 		ol_abbtree->Insert(game_object);
 }
 
 void ModuleRender::RemoveAABBTree(GameObject * game_object)
 {
-	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
+	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 	if (object_mesh != nullptr)
 		ol_abbtree->Remove(game_object);
 }
 
 void ModuleRender::UpdateAABBTree(GameObject* game_object)
 {
-	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
+	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 	if (object_mesh != nullptr)
 		ol_abbtree->UpdateObject(game_object);
 }

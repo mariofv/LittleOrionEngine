@@ -506,7 +506,7 @@ void ModuleDebugDraw::RenderLightGizmo() const
 void ModuleDebugDraw::RenderOutline() const
 {
 	GameObject* selected_game_object = App->editor->selected_game_object;
-	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH);
+	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 
 	if (selected_object_mesh_component != nullptr && selected_object_mesh_component->IsEnabled())
 	{

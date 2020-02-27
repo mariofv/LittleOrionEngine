@@ -81,7 +81,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 			return;
 		}
 
-		ComponentMeshRenderer *mesh_component = (ComponentMeshRenderer*)node_game_object->CreateComponent(Component::ComponentType::MESH);
+		ComponentMeshRenderer *mesh_component = (ComponentMeshRenderer*)node_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
 		mesh_component->SetMesh(mesh_for_component);
 		File file(mesh_uid);
 		node_game_object->name = file.filename_no_extension;
@@ -159,7 +159,7 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 	{
 		return model_game_object;
 	}
-	ComponentMeshRenderer* mesh_component = (ComponentMeshRenderer*)model_game_object->CreateComponent(Component::ComponentType::MESH);
+	ComponentMeshRenderer* mesh_component = (ComponentMeshRenderer*)model_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
 	mesh_component->SetMesh(mesh_for_component);
 	model_game_object->Update();
 

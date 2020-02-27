@@ -62,7 +62,7 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::MATERIAL:
 				component_panel.ShowComponentMaterialWindow(static_cast<ComponentMaterial*>(component));
 				break;
-			case Component::ComponentType::MESH:
+			case Component::ComponentType::MESH_RENDERER:
 				component_panel.ShowComponentMeshWindow(static_cast<ComponentMeshRenderer*>(component));
 				break;
 			case Component::ComponentType::LIGHT:

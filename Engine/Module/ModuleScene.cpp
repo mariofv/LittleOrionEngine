@@ -27,7 +27,7 @@ update_status ModuleScene::Update()
 		game_object->Update();
 		if(!game_object->IsStatic())
 		{
-			ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
+			ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 			if(object_mesh != nullptr)
 				App->renderer->UpdateAABBTree(game_object.get());
 		}

@@ -106,7 +106,7 @@ bool GameObject::IsStatic() const
 
 bool GameObject::IsVisible(const ComponentCamera & camera) const
 {
-	ComponentMeshRenderer* mesh = static_cast<ComponentMeshRenderer*>(GetComponent(Component::ComponentType::MESH));
+	ComponentMeshRenderer* mesh = static_cast<ComponentMeshRenderer*>(GetComponent(Component::ComponentType::MESH_RENDERER));
 	if ((mesh != nullptr && !mesh->IsEnabled()) || !IsEnabled() || !camera.IsInsideFrustum(aabb.bounding_box))
 	{
 		return false;
@@ -237,7 +237,7 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 		created_component = App->texture->CreateComponentMaterial();
 		break;
 
-	case Component::ComponentType::MESH:
+	case Component::ComponentType::MESH_RENDERER:
 		created_component = App->renderer->CreateComponentMesh();
 		break;
 

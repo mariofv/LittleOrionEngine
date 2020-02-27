@@ -26,7 +26,7 @@ void ComponentAABB::Load(const Config& config)
 void ComponentAABB::GenerateBoundingBox()
 {
 	bool has_mesh = false;
-	ComponentMeshRenderer * owner_mesh = static_cast<ComponentMeshRenderer*>(owner->GetComponent(ComponentType::MESH));
+	ComponentMeshRenderer * owner_mesh = static_cast<ComponentMeshRenderer*>(owner->GetComponent(ComponentType::MESH_RENDERER));
 	has_mesh = owner_mesh != nullptr;
 	
 	if (has_mesh)

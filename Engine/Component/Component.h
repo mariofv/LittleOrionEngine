@@ -15,7 +15,7 @@ public:
 		AABB,
 		CAMERA,
 		MATERIAL,
-		MESH,
+		MESH_RENDERER,
 		TRANSFORM,
 		LIGHT
 	};
@@ -47,7 +47,7 @@ public:
 		case 2:
 			return ComponentType::MATERIAL;
 		case 3:
-			return ComponentType::MESH;
+			return ComponentType::MESH_RENDERER;
 		case 4:
 			return ComponentType::TRANSFORM;
 		case 5:
