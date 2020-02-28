@@ -111,18 +111,23 @@ bool ModuleCamera::IsSceneCameraMoving() const
 
 void ModuleCamera::HandleSceneCameraMovements()
 {
+	if (!(App->editor->scene_panel->IsHovered()))
+	{
+		return;
+	}
+
 	// Mouse wheel
-	if (App->input->GetMouseWheelMotion() > 0 && App->editor->scene_panel->IsHovered())
+	if (App->input->GetMouseWheelMotion() > 0)
 	{
 		scene_camera->MoveFoward();
 	}
-	else if (App->input->GetMouseWheelMotion() < 0 && App->editor->scene_panel->IsHovered())
+	else if (App->input->GetMouseWheelMotion() < 0)
 	{
 		scene_camera->MoveBackward();
 	}
 
 	// Mouse motion
-	if (App->input->IsMouseMoving() && App->editor->scene_panel->IsHovered())
+	if (App->input->IsMouseMoving())
 	{
 		float2 motion = App->input->GetMouseMotion();
 		
@@ -144,18 +149,18 @@ void ModuleCamera::HandleSceneCameraMovements()
 	}
 
 	// Mouse button down
-	if (App->input->GetMouseButtonDown(MouseButton::Right) && App->editor->scene_panel->IsHovered())
+	if (App->input->GetMouseButtonDown(MouseButton::Right))
 	{
 		SetMovement(true);
 	}
 
 	// Mouse button down
-	if (App->input->GetMouseButtonDown(MouseButton::Left) && App->editor->scene_panel->IsHovered())
+	if (App->input->GetMouseButtonDown(MouseButton::Left))
 	{
 		orbit_movement_enabled = true;
 	}
 
-	if (App->input->GetMouseButtonDown(MouseButton::Left) && !IsSceneCameraOrbiting() && App->editor->scene_panel->IsHovered())
+	if (App->input->GetMouseButtonDown(MouseButton::Left) && !IsSceneCameraOrbiting())
 	{
 		float2 position = App->input->GetMousePosition();
 		App->editor->scene_panel->MousePicking(position);

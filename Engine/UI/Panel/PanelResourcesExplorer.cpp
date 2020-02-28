@@ -22,6 +22,7 @@ void PanelResourcesExplorer::Render()
 	if (ImGui::Begin(ICON_FA_FOLDER " Resources Explorer", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
+		focused = ImGui::IsWindowFocused();
 
 		resources_explorer_dockspace_id = ImGui::GetID("ResourcesExplorerDockspace");
 		bool initialized = ImGui::DockBuilderGetNode(resources_explorer_dockspace_id) != NULL;

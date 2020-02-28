@@ -65,7 +65,8 @@ void PanelScene::Render()
 		AABB2D content_area = AABB2D(scene_window_content_area_pos, scene_window_content_area_max_point);
 		float2 mouse_pos_f2 = float2(ImGui::GetMousePos().x, ImGui::GetMousePos().y);
 		AABB2D mouse_pos = AABB2D(mouse_pos_f2, mouse_pos_f2);
-		hovered = content_area.Contains(mouse_pos); // TODO: This seems to be inneficient, check with partner
+		hovered = ImGui::IsWindowHovered(); // TODO: This seems to be inneficient, check with partner
+		focused = ImGui::IsWindowFocused();
 
 		RenderEditorDraws(); // This should be render after rendering framebuffer texture.
 

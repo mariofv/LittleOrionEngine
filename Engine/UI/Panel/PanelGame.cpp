@@ -21,6 +21,7 @@ void PanelGame::Render()
 	if (ImGui::Begin(ICON_FA_GHOST " Game", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
+		focused = ImGui::IsWindowFocused();
 
 		if (App->cameras->main_camera != nullptr)
 		{

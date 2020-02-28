@@ -29,6 +29,7 @@ void PanelHierarchy::Render()
 	if (ImGui::Begin(ICON_FA_SITEMAP " Hierarchy", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
+		focused = ImGui::IsWindowFocused();
 
 		for (unsigned int i = 0; i < App->scene->GetRoot()->children.size(); ++i)
 		{

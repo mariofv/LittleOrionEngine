@@ -21,6 +21,7 @@ void PanelProjectExplorer::Render()
 	if(ImGui::Begin(ICON_FA_FOLDER_OPEN " Project", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
+		focused = ImGui::IsWindowFocused();
 
 		if (ImGui::BeginChild("Folder Explorer", ImVec2(ImGui::GetWindowContentRegionWidth() * 0.3f, 0)))
 		{
