@@ -3,7 +3,6 @@
 #include "Main/Application.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
-#include "Module/ModuleInput.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
@@ -14,6 +13,7 @@
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
 #include <imgui.h>
+#include <imgui_stdlib.h>
 #include <SDL/SDL.h>
 
 PanelConfiguration::PanelConfiguration()
@@ -348,11 +348,18 @@ void PanelConfiguration::ShowInputOptions()
 		// Display Keyboard/Mouse state
 		if (ImGui::TreeNode("Keyboard, Mouse & Navigation State"))
 		{
+
+			float2 mouse_pos = App->input->GetMousePosition();
+			float2 mouse_rel = App->input->GetMouseMotion();
 			if (ImGui::IsMousePosValid())
-				ImGui::Text("Mouse pos: (%g, %g)", io.MousePos.x, io.MousePos.y);
+			{
+				ImGui::Text("Mouse pos (SDL): (%g, %g)", mouse_pos.x, mouse_pos.y);
+				ImGui::Text("Mouse pos (IMGUI): (%g, %g)", io.MousePos.x, io.MousePos.y);
+			}
 			else
 				ImGui::Text("Mouse pos: <INVALID>");
-			ImGui::Text("Mouse delta: (%g, %g)", io.MouseDelta.x, io.MouseDelta.y);
+			ImGui::Text("Mouse delta (SDL):(%g, %g)", mouse_rel.x, mouse_rel.y);
+			ImGui::Text("Mouse delta (IMGUI): (%g, %g)", io.MouseDelta.x, io.MouseDelta.y);
 			ImGui::Text("Mouse down:");     for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (io.MouseDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("b%d (%.02f secs)", i, io.MouseDownDuration[i]); }
 			ImGui::Text("Mouse clicked:");  for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseClicked(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
 			ImGui::Text("Mouse dbl-clicked:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseDoubleClicked(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
@@ -385,5 +392,125 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("GetMouseDragDelta(0):\n  w/ default threshold: (%.1f, %.1f),\n  w/ zero threshold: (%.1f, %.1f)\nMouseDelta: (%.1f, %.1f)", value_with_lock_threshold.x, value_with_lock_threshold.y, value_raw.x, value_raw.y, mouse_delta.x, mouse_delta.y);
 			ImGui::TreePop();
 		}
+
+		if(ImGui::TreeNode("Game Input"))
+		{
+
+			ImGui::InputText("Name: ", &name_game_input);
+
+			ImGui::Separator();
+
+			ImGui::Text("Keys:");
+			for(auto key : string_keys)
+			{
+				ImGui::Text(game_inputs_strings[key]);
+			}
+
+			ImGui::Separator();
+
+			static const char* item_current = game_inputs_strings[0];
+			if (ImGui::BeginCombo("KeyCode", item_current))
+			{
+
+				unsigned int offset = 4;
+				for (int n = 0; n < game_inputs_strings.size(); ++n)
+				{
+					//Handle offset
+					if (n > FIRST_OFFSET_COND)
+						offset = FIRST_OFFSET;
+					else if (n > SECOND_OFFSET_COND)
+						offset = SECOND_OFFSET;
+					else if (n > THIRD_OFFSET_COND)
+						offset = THIRD_OFFSET;
+
+					bool is_selected = (item_current == game_inputs_strings[n]);
+					if (ImGui::Selectable(game_inputs_strings[n], is_selected))
+					{
+						item_current = game_inputs_strings[n];
+						selected_key = KeyCode(n + offset);
+						selected_combo = n;
+					}
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+				}
+				ImGui::EndCombo();
+			}
+
+			if(ImGui::Button("Add KeyCode"))
+			{
+				keys.insert((int)selected_key);
+				string_keys.insert(selected_combo);
+			}
+
+			ImGui::SameLine();
+
+			if(ImGui::Button("Delete Keycodes"))
+			{
+				keys.clear();
+			}
+
+			ImGui::Separator();
+
+			ImGui::Text("Mouse:");
+			for (auto mouse_key : mouse_keys)
+			{
+				ImGui::Text(mouse_keys_string[(int)mouse_key]);
+			}
+
+			ImGui::Separator();
+
+			static const char* mouse_current = mouse_keys_string[0];
+			if (ImGui::BeginCombo("MouseCode", mouse_current))
+			{
+				for (int n = 0; n < mouse_keys_string.size(); ++n)
+				{
+					bool is_selected = (mouse_current == mouse_keys_string[n]);
+					if (ImGui::Selectable(mouse_keys_string[n], is_selected))
+					{
+						mouse_current = mouse_keys_string[n];
+						selected_mouse = MouseButton(n);
+					}
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+				}
+				ImGui::EndCombo();
+			}
+
+			if (ImGui::Button("Add Mouse Button"))
+			{
+				mouse_keys.insert((int)selected_mouse);
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Delete Mouse Buttons"))
+			{
+				mouse_keys.clear();
+			}
+
+			ImGui::Separator();
+
+			if(ImGui::Button("Create Game Input"))
+			{
+				GameInput game_input;
+				game_input.name = name_game_input;
+				for(auto key : keys)
+				{
+					game_input.keys.push_back((KeyCode)key);
+				}
+
+				for (auto mouse : mouse_keys)
+				{
+					game_input.mouse_buttons.push_back((MouseButton)mouse);
+				}
+
+				App->input->CreateGameInput(game_input);
+			}
+
+			ImGui::TreePop();
+		}
+
+		
+		
 	}
 }
