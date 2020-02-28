@@ -27,9 +27,9 @@ public:
 	ENGINE_API void Translate(const float3 &translation);
 
 	Quat GetRotation() const;
-	float3 GetRotationRadiants() const;
-	void SetRotation(const float3x3 &rotation);
-	void SetRotation(const float3 &rotation);
+	ENGINE_API float3 GetRotationRadiants() const;
+	ENGINE_API void SetRotation(const float3x3 &rotation);
+	ENGINE_API void SetRotation(const float3 &rotation);
 	void Rotate(const Quat &rotation);
 	void Rotate(const float3x3 &rotation);
 

@@ -23,13 +23,39 @@ ExampleScript::~ExampleScript()
 void ExampleScript::Update()
 {
 	float3 transform = owner->transform.GetTranslation();
+	float3 rotation = owner->transform.GetRotationRadiants();
 	
 	if (App->input->GetKey(KeyCode::A)) 
 	{
 		++i;
 		owner->transform.SetTranslation(float3(transform.x + speed,transform.y,transform.z));
 	}
-	if (App->input->GetKeyDown(KeyCode::S)) 
+	if (App->input->GetKey(KeyCode::W))
+	{
+		++i;
+		owner->transform.SetTranslation(float3(transform.x, transform.y, transform.z + speed));
+	}
+	if (App->input->GetKey(KeyCode::S))
+	{
+		++i;
+		owner->transform.SetTranslation(float3(transform.x, transform.y, transform.z - speed));
+	}
+	if (App->input->GetKey(KeyCode::D))
+	{
+		++i;
+		owner->transform.SetTranslation(float3(transform.x - speed, transform.y, transform.z));
+	}
+	if (App->input->GetKey(KeyCode::E))
+	{
+		++i;
+		owner->transform.SetRotation(float3(rotation.x , rotation.y - speed, rotation.z ));
+	}
+	if (App->input->GetKey(KeyCode::Q))
+	{
+		++i;
+		owner->transform.SetRotation(float3(rotation.x , rotation.y + speed, rotation.z ));
+	}
+	if (App->input->GetKeyDown(KeyCode::C)) 
 	{
 		GameObject* go = App->scene->CreateGameObject();
 	}
