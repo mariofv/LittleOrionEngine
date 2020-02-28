@@ -434,6 +434,11 @@ void ModuleDebugDraw::RenderGrid() const
 {
 	BROFILER_CATEGORY("Render Grid", Profiler::Color::Lavender);
 
+	// TODO: This stills inneficient as fuck :D
+	dd::xzSquareGrid(-1000.0f, 1000.0f, 0.0f, 10.f, math::float3(0.65f));
+
+	// TODO: Rethink dynamic grid because the following code is extremely inefficient
+	/*
 	float camera_distance_to_grid = App->cameras->scene_camera->owner->transform.GetTranslation().y;
 	float camera_distance_to_grid_abs = abs(camera_distance_to_grid);
 	float camera_horizontal_fov = App->cameras->scene_camera->camera_frustum.horizontalFov;
@@ -463,6 +468,7 @@ void ModuleDebugDraw::RenderGrid() const
 
 		dd::xzSquareGrid(-500.0f * current_magnitude, 500.0f * current_magnitude, 0.0f, current_magnitude, math::float3(0.65f));
 	}
+	*/
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
