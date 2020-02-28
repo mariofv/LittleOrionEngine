@@ -553,12 +553,12 @@ void ModuleDebugDraw::RenderOutline() const
 		float4x4 new_transformation_matrix;
 		if (selected_game_object->parent != nullptr)
 		{
-			new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * float4x4::Scale(float3(1.01f)) * selected_game_object->transform.GetModelMatrix();
+			new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * selected_game_object->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
 
 		}
 		else 
 		{
-			new_transformation_matrix = float4x4::Scale(float3(1.01f)) * selected_game_object->transform.GetGlobalModelMatrix();
+			new_transformation_matrix =  selected_game_object->transform.GetGlobalModelMatrix() * float4x4::Scale(float3(1.01f));
 		}
 
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);

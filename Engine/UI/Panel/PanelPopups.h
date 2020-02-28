@@ -19,13 +19,17 @@ private:
 	void RenderModelSelectorPopup();
 
 	void ShowMeshIcon(File* file);
+	void ProcessMeshMouseInput(File * file);
+	void ChangeSelectedObjectMesh() const;
 
 public:
 	bool show_assets_loading_popup = false;
-	bool show_mesh_selector_popup = false;
 
+	bool show_mesh_selector_popup = false;
 	bool mesh_selector_opened = true;
-	float mesh_icon_size = 100.f;
+	float mesh_icon_size = 125.f;
+	File* selected_mesh = nullptr;
+	std::vector<std::shared_ptr<File>> mesh_files;
 };
 
 #endif //_PANELPOPUPS_H_
