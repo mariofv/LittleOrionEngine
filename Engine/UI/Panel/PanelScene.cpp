@@ -68,7 +68,7 @@ void PanelScene::Render()
 
 		RenderEditorDraws(); // This should be render after rendering framebuffer texture.
 
-		if (App->cameras->IsMovementEnabled() && hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
+		if (App->cameras->IsSceneCameraMoving()) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
 		{
 			ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
 		}
