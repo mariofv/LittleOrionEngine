@@ -124,7 +124,7 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 			}
 			if (incoming_file->file_type == FileType::PREFAB)
 			{
-				App->resources->prefab_importer->Load(incoming_file->file_path);
+				App->resources->prefab_manager->Load(incoming_file->file_path);
 			}
 		}
 		ImGui::EndDragDropTarget();

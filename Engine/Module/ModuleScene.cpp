@@ -142,7 +142,7 @@ void  ModuleScene::NewScene(const std::string &path)
 	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 
-	App->resources->prefab_importer->Load(path);
+	App->resources->prefab_manager->Load(path);
 
 	App->renderer->GenerateQuadTree();
 	App->actions->ClearUndoStack();

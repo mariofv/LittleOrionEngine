@@ -3,12 +3,16 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScene.h"
+#include <ResourceManagement/Resources/Prefab.h>
+
 
 #include <imgui.h>
 #include <SDL/SDL.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
 
+#include <memory>
 #include <algorithm>
 
 PanelProjectExplorer::PanelProjectExplorer()
@@ -248,7 +252,14 @@ void PanelProjectExplorer::FilesDrop() const
 			if (!incoming_game_object->isPrefab) 
 			{
 				std::string prefab_path = selected_folder->file_path + "/" + incoming_game_object->name + ".prefab";
-				App->resources->prefab_importer->Save(prefab_path, incoming_game_object);
+				auto & result = App->resources->Import(prefab_path, incoming_game_object);
+				if (result.first)
+				{
+					App->scene->RemoveGameObject(incoming_game_object);
+					std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(result.second);
+					prefab->Instantiate(App->scene->GetRoot());
+
+				}
 			}
 		}
 		ImGui::EndDragDropTarget();

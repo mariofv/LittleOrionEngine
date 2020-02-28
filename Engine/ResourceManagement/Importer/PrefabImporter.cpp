@@ -29,7 +29,7 @@ std::pair<bool, std::string> PrefabImporter::Import(const File & file) const
 	return std::pair<bool, std::string>(true, output_file);
 }
 
-std::pair<bool, std::string> PrefabImporter::Import(const std::string &path, GameObject * gameobject_to_save) const
+std::pair<bool, std::string> PrefabImporter::Import(const File & file, GameObject * gameobject_to_save) const
 {
 	Config scene_config;
 
@@ -67,6 +67,6 @@ std::pair<bool, std::string> PrefabImporter::Import(const std::string &path, Gam
 	std::string serialized_scene_string;
 	scene_config.GetSerializedString(serialized_scene_string);
 
-	App->filesystem->Save(path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
-	return Import(File(path));
+	App->filesystem->Save(file.file_path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
+	return Import(file);
 }

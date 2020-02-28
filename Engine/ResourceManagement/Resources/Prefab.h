@@ -1,10 +1,12 @@
 #ifndef _PREFAB_H_
 #define _PREFAB_H_
 
+#include "Resource.h"
+
 #include <vector>
 #include <memory>
 class GameObject;
-class Prefab
+class Prefab : public Resource
 {
 public:
 	Prefab() = default;
