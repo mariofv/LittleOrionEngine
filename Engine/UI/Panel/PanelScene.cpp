@@ -13,6 +13,7 @@
 #include "Module/ModuleScene.h"
 #include "UI/Panel/PanelHierarchy.h"
 
+#include <Brofiler/Brofiler.h>
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
@@ -116,6 +117,8 @@ void PanelScene::RenderSceneBar()
 
 void PanelScene::RenderEditorDraws()
 {
+	BROFILER_CATEGORY("Render Editor Draws", Profiler::Color::Lavender);
+
 	ImGuizmo::SetRect(scene_window_content_area_pos.x, scene_window_content_area_pos.y, scene_window_content_area_width, scene_window_content_area_height);
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetOrthographic(false);

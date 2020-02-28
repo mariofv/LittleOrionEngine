@@ -477,6 +477,8 @@ void ModuleRender::CreateAABBTree()
 
 void ModuleRender::DrawAABBTree() const
 {
+	BROFILER_CATEGORY("Render AABBTree", Profiler::Color::Lavender);
+
 	ol_abbtree->Draw();
 }
 

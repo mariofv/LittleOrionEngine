@@ -16,8 +16,9 @@
 #define DEBUG_DRAW_IMPLEMENTATION
 #include "UI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
 
-#include "GL/glew.h"
+#include <GL/glew.h>
 #include <assert.h>
+#include <Brofiler/Brofiler.h>
 
 class IDebugDrawOpenGLImplementation final : public dd::RenderInterface
 {
@@ -381,6 +382,8 @@ bool ModuleDebugDraw::Init()
 
 void ModuleDebugDraw::Render()
 {
+	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
+
 	if (App->debug->show_grid)
 	{
 		RenderGrid();
@@ -388,6 +391,8 @@ void ModuleDebugDraw::Render()
 
 	if (App->debug->show_quadtree)
 	{
+		BROFILER_CATEGORY("Render QuadTree", Profiler::Color::Lavender);
+
 		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree)
 		{
 			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
@@ -403,8 +408,10 @@ void ModuleDebugDraw::Render()
 
 	if (App->editor->selected_game_object != nullptr)
 	{
+		BROFILER_CATEGORY("Render Selected GameObject DebugDraws", Profiler::Color::Lavender);
+
 		RenderCameraFrustum();
-    RenderLightGizmo();
+		RenderLightGizmo();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 
@@ -425,6 +432,8 @@ void ModuleDebugDraw::Render()
 
 void ModuleDebugDraw::RenderGrid() const
 {
+	BROFILER_CATEGORY("Render Grid", Profiler::Color::Lavender);
+
 	float camera_distance_to_grid = App->cameras->scene_camera->owner->transform.GetTranslation().y;
 	float camera_distance_to_grid_abs = abs(camera_distance_to_grid);
 	float camera_horizontal_fov = App->cameras->scene_camera->camera_frustum.horizontalFov;
@@ -458,6 +467,8 @@ void ModuleDebugDraw::RenderGrid() const
 
 void ModuleDebugDraw::RenderCameraFrustum() const
 {
+	BROFILER_CATEGORY("Render Selected GameObject Camera Frustum", Profiler::Color::Lavender);
+
 	if (!App->debug->show_camera_frustum)
 	{
 		return;
@@ -473,6 +484,8 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 
 void ModuleDebugDraw::RenderLightGizmo() const	
 {	
+	BROFILER_CATEGORY("Render Selected GameObject Light Gizmo", Profiler::Color::Lavender);
+
 	Component* selected_light_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::LIGHT);	
 	if (selected_light_component != nullptr)
   {	
@@ -505,6 +518,8 @@ void ModuleDebugDraw::RenderLightGizmo() const
 
 void ModuleDebugDraw::RenderOutline() const
 {
+	BROFILER_CATEGORY("Render Outline", Profiler::Color::Lavender);
+
 	GameObject* selected_game_object = App->editor->selected_game_object;
 	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 
@@ -547,6 +562,8 @@ void ModuleDebugDraw::RenderOutline() const
 
 void ModuleDebugDraw::RenderBoundingBoxes() const
 {
+	BROFILER_CATEGORY("Render Bounding Boxes", Profiler::Color::Lavender);
+
 	for (auto& mesh : App->renderer->meshes_to_render)
 	{
 		GameObject* mesh_game_object = mesh->owner;
@@ -559,6 +576,8 @@ void ModuleDebugDraw::RenderBoundingBoxes() const
 
 void ModuleDebugDraw::RenderGlobalBoundingBoxes() const
 {
+	BROFILER_CATEGORY("Render Global Bounding Boxes", Profiler::Color::Lavender);
+
 	for (auto& object : App->scene->game_objects_ownership)
 	{
 		dd::aabb(object->aabb.global_bounding_box.minPoint, object->aabb.global_bounding_box.maxPoint, float3::one);
@@ -567,6 +586,8 @@ void ModuleDebugDraw::RenderGlobalBoundingBoxes() const
 
 void ModuleDebugDraw::RenderBillboards() const
 {
+	BROFILER_CATEGORY("Render Billboards", Profiler::Color::Lavender);
+
 	for (auto& object : App->scene->game_objects_ownership)
 	{
 		Component * light_component = object->GetComponent(Component::ComponentType::LIGHT);
@@ -583,6 +604,8 @@ void ModuleDebugDraw::RenderBillboards() const
 
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 {
+	BROFILER_CATEGORY("Flush Debug Draw", Profiler::Color::Lavender);
+
 	math::float4x4 view = camera.GetViewMatrix();
 	math::float4x4 proj = camera.GetProjectionMatrix();
 
