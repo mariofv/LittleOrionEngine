@@ -129,6 +129,8 @@ void ModuleEditor::Render()
 	ImGui::End();
 
 	ImGui::Render();
+
+	BROFILER_CATEGORY("Render ImGui Draws", Profiler::Color::BlueViolet);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 

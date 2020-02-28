@@ -41,6 +41,8 @@ public:
 
 	void ChangeLocalSpace(const float4x4 &new_local_space);
 
+	float4x4 GetModelMatrix() const;
+	
 	void GenerateGlobalModelMatrix();
 	float4x4 GetGlobalModelMatrix() const;
 	void SetGlobalModelMatrix(const float4x4 &new_global_matrix);

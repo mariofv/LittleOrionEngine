@@ -531,6 +531,8 @@ void ModuleDebugDraw::RenderOutline() const
 
 	if (selected_object_mesh_component != nullptr && selected_object_mesh_component->IsEnabled())
 	{
+		BROFILER_CATEGORY("Render Outline Write Stencil", Profiler::Color::Lavender);
+
 		ComponentMeshRenderer* selected_object_mesh = static_cast<ComponentMeshRenderer*>(selected_object_mesh_component);
 		glEnable(GL_STENCIL_TEST);
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
@@ -543,16 +545,24 @@ void ModuleDebugDraw::RenderOutline() const
 		glStencilMask(0x00);
 		glDisable(GL_DEPTH_TEST);
 
+		BROFILER_CATEGORY("Render Outline Read Stencil", Profiler::Color::Lavender);
+
 		GLuint outline_shader_program = App->program->GetShaderProgramId("Outline");
 		glUseProgram(outline_shader_program);
 
-		ComponentTransform object_transform_copy = selected_game_object->transform;
-		float3 object_scale = object_transform_copy.GetScale();
-		object_transform_copy.SetScale(object_scale*1.01f);
-		object_transform_copy.GenerateGlobalModelMatrix();
+		float4x4 new_transformation_matrix;
+		if (selected_game_object->parent != nullptr)
+		{
+			new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * float4x4::Scale(float3(1.01f)) * selected_game_object->transform.GetModelMatrix();
+
+		}
+		else 
+		{
+			new_transformation_matrix = float4x4::Scale(float3(1.01f)) * selected_game_object->transform.GetGlobalModelMatrix();
+		}
 
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), object_transform_copy.GetGlobalModelMatrix().Transposed().ptr());
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), new_transformation_matrix.Transposed().ptr());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		selected_object_mesh->RenderModel();

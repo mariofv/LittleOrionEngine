@@ -148,6 +148,11 @@ void ComponentTransform::OnTransformChange()
 	}
 }
 
+float4x4 ComponentTransform::GetModelMatrix() const
+{
+	return model_matrix;
+}
+
 void ComponentTransform::GenerateGlobalModelMatrix()
 {
 	if (owner->parent == nullptr)
