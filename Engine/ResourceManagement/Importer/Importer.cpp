@@ -1,6 +1,7 @@
 #include "Importer.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleFileSystem.h"
 #include "Helper/Config.h"
 #include <ResourceManagement/ImportOptions/ImportOptions.h>
 

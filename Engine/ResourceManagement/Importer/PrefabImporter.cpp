@@ -1,15 +1,36 @@
-#include "PrefabManager.h"
-#include "Helper/Config.h"
-#include <stack>
-#include "Main/GameObject.h"
+#include "PrefabImporter.h"
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
-#include <Module/ModuleScene.h>
-#include <Module/ModuleRender.h>
-
-void PrefabManager::Save(const std::string &path,  GameObject * gameobject_to_save) const
+#include "Main/GameObject.h"
+#include "Helper/Config.h"
+#include <stack>
+std::pair<bool, std::string> PrefabImporter::Import(const File & file) const
 {
+	if (file.filename.empty())
+	{
+		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
+			return std::pair<bool, std::string>(false, "");
+	}
 
+	std::string already_imported = GetAlreadyImportedResource(file);
+	if (!already_imported.empty()) {
+		return std::pair<bool, std::string>(true, already_imported);
+	}
+
+	App->filesystem->MakeDirectory(LIBRARY_TEXTURES_FOLDER);
+
+	std::string output_file = LIBRARY_TEXTURES_FOLDER + "/" + file.filename;
+	bool copied = App->filesystem->Copy(file.file_path.c_str(), output_file.c_str());
+	if (!copied)
+	{
+		return std::pair<bool, std::string>(false, "");
+	}
+	SaveMetaFile(file, output_file);
+	return std::pair<bool, std::string>(true, output_file);
+}
+
+std::pair<bool, std::string> PrefabImporter::Import(const std::string &path, GameObject * gameobject_to_save) const
+{
 	Config scene_config;
 
 	std::vector<Config> game_objects_config;
@@ -47,31 +68,5 @@ void PrefabManager::Save(const std::string &path,  GameObject * gameobject_to_sa
 	scene_config.GetSerializedString(serialized_scene_string);
 
 	App->filesystem->Save(path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
-}
-
-
-
-void PrefabManager::Load(const std::string &path) const
-{
-
-	size_t readed_bytes;
-	char* scene_file_data = App->filesystem->Load(path.c_str(), readed_bytes);
-	std::string serialized_scene_string = scene_file_data;
-	free(scene_file_data);
-
-	Config scene_config(serialized_scene_string);
-
-
-	std::vector<Config> game_objects_config;
-	scene_config.GetChildrenConfig("GameObjects", game_objects_config);
-	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
-	{
-		GameObject* created_game_object = App->scene->CreateGameObject();
-		created_game_object->Load(game_objects_config[i]);
-
-		if (!created_game_object->IsStatic())
-		{
-			App->renderer->InsertAABBTree(created_game_object);
-		}
-	}
+	return Import(File(path));
 }

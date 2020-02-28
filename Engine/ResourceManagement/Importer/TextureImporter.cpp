@@ -1,5 +1,6 @@
 #include "TextureImporter.h"
 #include "Main/Application.h"
+#include "Module/ModuleFileSystem.h"
 
 #include <algorithm>
 #include "Brofiler/Brofiler.h"

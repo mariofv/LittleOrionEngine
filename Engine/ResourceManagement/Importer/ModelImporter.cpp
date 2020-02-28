@@ -2,7 +2,7 @@
 #include "ResourceManagement/Resources/Mesh.h"
 #include "TextureImporter.h"
 #include "Main/Application.h"
-
+#include "Module/ModuleFileSystem.h"
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
 #include <assimp/scene.h>

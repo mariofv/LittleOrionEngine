@@ -2,7 +2,7 @@
 class PrefabLoader
 {
 public:
-	PrefabLoader();
-	~PrefabLoader();
+	PrefabLoader() = default;
+	~PrefabLoader() = default;
 };
 
