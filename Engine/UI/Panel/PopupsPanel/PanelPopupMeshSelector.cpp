@@ -20,7 +20,6 @@ void PanelPopupMeshSelector::Render()
 {
 	if (show_mesh_selector_popup)
 	{
-		ImGui::OpenPopup("Select Mesh");
 		show_mesh_selector_popup = false;
 		opened = true;
 
@@ -40,10 +39,18 @@ void PanelPopupMeshSelector::Render()
 		}
 	}
 
+	if (!opened)
+	{
+		return;
+	}
+
 	ImGui::SetNextWindowSize(ImVec2(mesh_icon_size * 4.5, mesh_icon_size * 2 * 1.1f));
 
-	if (ImGui::BeginPopupModal("Select Mesh", &opened))
+	if (ImGui::Begin("Select Mesh", &opened))
 	{
+		hovered = ImGui::IsWindowHovered();
+
+		child_window_focused = false;
 
 		ImVec2 available_region = ImGui::GetContentRegionAvail();
 		int files_per_line = available_region.x / mesh_icon_size;
@@ -70,10 +77,19 @@ void PanelPopupMeshSelector::Render()
 
 		}
 
-		ImGui::EndPopup();
-	}
-}
+		if (child_window_focused)
+		{
+			ImGui::SetWindowFocus();
+		}
+		focused = ImGui::IsWindowFocused();
 
+		if (!focused)
+		{
+			opened = false;
+		}
+	}
+	ImGui::End();
+}
 
 void PanelPopupMeshSelector::ShowMeshIcon(File* file)
 {
@@ -119,8 +135,13 @@ void PanelPopupMeshSelector::ProcessMeshMouseInput(File * file)
 
 		if (ImGui::IsMouseDoubleClicked(0))
 		{
-			ImGui::CloseCurrentPopup();
+			opened = false;
 		}
+	}
+
+	if (ImGui::IsWindowFocused())
+	{
+		child_window_focused = true;
 	}
 }
 

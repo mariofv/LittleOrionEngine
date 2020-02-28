@@ -26,6 +26,8 @@ private:
 	float mesh_icon_size = 125.f;
 	File* selected_mesh = nullptr;
 	std::vector<std::shared_ptr<File>> mesh_files;
+
+	bool child_window_focused = false;
 };
 
 #endif //_PANELPOPUPMESHSELECTOR_H_
