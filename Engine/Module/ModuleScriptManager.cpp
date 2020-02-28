@@ -5,12 +5,18 @@
 #include "Component/ComponentScript.h"
 #include "Script/Script.h"
 
+#include <iostream>
+#include <fstream>
+#include <string>
+
+
 bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
 	//TODO: Load all the .dll
 	gameplay_dll = LoadLibrary("GamePlaySystem.dll");
 	//TODO: fill / load the component script vector.
+	LoadScriptList();
 	//InitResourceScript();
 	return true;
 }
@@ -80,5 +86,19 @@ void ModuleScriptManager::RemoveComponentScript(ComponentScript * script_to_remo
 		scripts.erase(it);
 	}
 }
-
+void ModuleScriptManager::LoadScriptList() 
+{
+	std::ifstream file_scripts(SCRIPT_LIST_PATH);
+	if (!file_scripts)
+		return;
+	scripts_list.clear();
+	std::string script;
+	while (std::getline(file_scripts, script)) 
+	{
+		if (script.size() > 0) 
+		{
+			scripts_list.push_back(script);
+		}
+	}
+}
 

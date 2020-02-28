@@ -81,7 +81,8 @@ enum class Fonts
 # define ASSIGNMENT_SCENE_PATH "Resources/Scenes/assignment_scene.scene"
 # define SAVED_SCENE_PATH "Assets/Scenes/scene.scene"
 # define TMP_SCENE_PATH "Assets/Scenes/tmp_scene.scene"
-# define GAME_INPUT_PATH "Resources/GameInputs/game_inputs.inputs" 
+# define GAME_INPUT_PATH "Resources/GameInputs/game_inputs.inputs"
+# define SCRIPT_LIST_PATH "Resources/Scripts/scripts_list.scripts" 
 
 # define OPENGL_MAJOR_VERSION 4
 # define OPENGL_MINOR_VERSION 0

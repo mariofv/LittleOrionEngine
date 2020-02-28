@@ -25,19 +25,15 @@ public:
 	Script * CreateResourceScript(const std::string & script_name, GameObject * owner);
 	ComponentScript* CreateComponentScript();
 	void RemoveComponentScript(ComponentScript* script_to_remove);
+	void LoadScriptList();
 
 private:
 	HINSTANCE gameplay_dll;
 public:
 
 	std::vector<ComponentScript*> scripts;
-	const std::unordered_map<std::string, ScriptFunction> script_map;
-	std::vector<std::string> ListScripts = {
-		"ExampleScript",
-		"Player",
-		"Testing",
-		"Mario"
-	};
+	//const std::unordered_map<std::string, ScriptFunction> script_map;
+	std::vector<std::string> scripts_list;
 
 
 };

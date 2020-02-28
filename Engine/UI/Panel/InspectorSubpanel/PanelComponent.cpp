@@ -493,7 +493,7 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script) {
 
 	if (ImGui::BeginCombo("Add Script", component_script->name.c_str()))
 	{
-		for (auto script_name : App->scripts->ListScripts) {
+		for (auto script_name : App->scripts->scripts_list) {
 			if (ImGui::Selectable(script_name.c_str()))
 			{
 				component_script->LoadName(script_name);
