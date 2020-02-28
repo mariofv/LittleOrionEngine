@@ -22,6 +22,7 @@
 #include "Module/ModuleTexture.h"
 
 #include "UI/Panel/PanelPopups.h"
+#include "UI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
 
 #include <imgui.h>
 #include <imgui_stdlib.h>
@@ -81,7 +82,7 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMeshRenderer *mesh)
 		ImGui::SameLine();
 		if (ImGui::Button(mesh->mesh_to_render->exported_file.c_str()))
 		{
-			App->editor->popups->show_mesh_selector_popup = true;
+			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
 		}
 
 		char tmp_string[16];

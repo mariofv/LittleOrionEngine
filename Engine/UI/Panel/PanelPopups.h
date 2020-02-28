@@ -2,7 +2,7 @@
 #define _PANELPOPUPS_H_
 
 #include "Panel.h"
-#include "Module/ModuleFileSystem.h"
+#include "PopupsPanel/PanelPopupMeshSelector.h"
 
 #include <string>
 
@@ -16,20 +16,11 @@ public:
 
 private:
 	void RenderAssetsLoadingPopup();
-	void RenderModelSelectorPopup();
-
-	void ShowMeshIcon(File* file);
-	void ProcessMeshMouseInput(File * file);
-	void ChangeSelectedObjectMesh() const;
 
 public:
-	bool show_assets_loading_popup = false;
+	bool show_assets_loading_popup;
+	PanelPopupMeshSelector mesh_selector_popup;
 
-	bool show_mesh_selector_popup = false;
-	bool mesh_selector_opened = true;
-	float mesh_icon_size = 125.f;
-	File* selected_mesh = nullptr;
-	std::vector<std::shared_ptr<File>> mesh_files;
 };
 
 #endif //_PANELPOPUPS_H_

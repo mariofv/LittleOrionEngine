@@ -379,6 +379,9 @@
     <ClCompile Include="Engine\UI\Panel\PanelResourcesExplorer.cpp">
       <Filter>Engine\UI\Panel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp">
+      <Filter>Engine\UI\Panel\PopupsPanel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -639,6 +642,9 @@
     <ClInclude Include="Engine\UI\Panel\PanelResourcesExplorer.h">
       <Filter>Engine\UI\Panel</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.h">
+      <Filter>Engine\UI\Panel\PopupsPanel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -703,6 +709,9 @@
     </Filter>
     <Filter Include="Engine\Actions">
       <UniqueIdentifier>{3f3b0f7b-d67b-4384-a9ba-a7e803bb2a53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\UI\Panel\PopupsPanel">
+      <UniqueIdentifier>{4d3c5294-ef77-4da3-a2bc-ac29c72d5e42}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
