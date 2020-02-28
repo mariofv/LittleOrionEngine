@@ -29,6 +29,7 @@ bool ModuleFileSystem::Init() {
 		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
 		return false;
 	}
+	RefreshFilesHierarchy();
 	return true;
 }
 
