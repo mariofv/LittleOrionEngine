@@ -152,7 +152,7 @@ void ModuleCamera::HandleSceneCameraMovements()
 	// Mouse button down
 	if (App->input->GetMouseButtonDown(MouseButton::Left) && App->editor->scene_panel->IsHovered())
 	{
-		orbit_movement_enabled  = true;
+		orbit_movement_enabled = true;
 	}
 
 	if (App->input->GetMouseButtonDown(MouseButton::Left) && !IsSceneCameraOrbiting() && App->editor->scene_panel->IsHovered())
@@ -164,18 +164,6 @@ void ModuleCamera::HandleSceneCameraMovements()
 		{
 			scene_camera->Center(App->editor->selected_game_object->aabb.global_bounding_box);
 		}
-	}
-
-	// Mouse button up
-	if (App->input->GetMouseButtonUp(MouseButton::Right))
-	{
-		SetMovement(false);
-	}
-
-	// Mouse button up
-	if (App->input->GetMouseButtonUp(MouseButton::Left))
-	{
-		orbit_movement_enabled = false;
 	}
 
 	// Key down
@@ -197,13 +185,25 @@ void ModuleCamera::HandleSceneCameraMovements()
 		}
 	}
 
+	// Mouse button up
+	if (App->input->GetMouseButtonUp(MouseButton::Right))
+	{
+		SetMovement(false);
+	}
+
+	// Mouse button up
+	if (App->input->GetMouseButtonUp(MouseButton::Left))
+	{
+		orbit_movement_enabled = false;
+	}
+
 	// Key up
 	if (App->input->GetKeyUp(KeyCode::LeftAlt))
 	{
 		is_orbiting = false;
 	}
 
-	else if (App->input->GetKeyUp(KeyCode::LeftShift))
+	if (App->input->GetKeyUp(KeyCode::LeftShift))
 	{
 		scene_camera->SetSpeedUp(false);
 	}
