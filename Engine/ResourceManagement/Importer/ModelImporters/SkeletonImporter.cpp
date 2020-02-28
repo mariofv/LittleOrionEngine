@@ -16,7 +16,7 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 		bone = bone->mParent;
 	}
 
-	Skeleton skeleton("", "");
+	Skeleton skeleton(0, "");
 	aiMatrix4x4 scaled_matrix; 
 	bone->mTransformation.Scaling(aiVector3D(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR), scaled_matrix);
 	scaled_matrix = scaled_matrix * bone->mTransformation;

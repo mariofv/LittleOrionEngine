@@ -8,7 +8,7 @@ class Resource
 {
 
 public:
-	Resource(const char * const UID, const std::string & exported_file) : UID(UID), exported_file(exported_file) {};
+	Resource(uint32_t UID, const std::string & exported_file) : UID(UID), exported_file(exported_file) {};
 	virtual ~Resource() = default;
 
 public:
@@ -17,7 +17,7 @@ private:
 	virtual void LoadInMemory() = 0;
 
 private:
-	const char * const UID;
+	const uint32_t UID;
 
 };
 
