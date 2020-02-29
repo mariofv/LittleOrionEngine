@@ -1,39 +1,113 @@
 #include "Material.h"
 
-void Mesh::LoadInMemory()
+#include "Main/Application.h"
+#include "Module/ModuleTexture.h"
+#include "Module/ModuleResourceManager.h"
+
+Material::Material()
 {
+	textures.resize(Texture::MAX_TEXTURE_TYPES);
+}
 
-	glGenVertexArrays(1, &vao);
-	glGenBuffers(1, &vbo);
-	glGenBuffers(1, &ebo);
-
-	glBindVertexArray(vao);
-	glBindBuffer(GL_ARRAY_BUFFER, vbo);
-
-	glBufferData(GL_ARRAY_BUFFER, vertices.size() * sizeof(Mesh::Vertex), vertices.data(), GL_STATIC_DRAW);
-
-	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
-	glBufferData(GL_ELEMENT_ARRAY_BUFFER, indices.size() * sizeof(uint32_t), indices.data(), GL_STATIC_DRAW);
-
-	// VERTEX POSITION
-	glEnableVertexAttribArray(0);
-	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)0);
-
-	// VERTEX TEXTURE COORDS
-	glEnableVertexAttribArray(1);
-	glVertexAttribPointer(1, 2, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tex_coords));
-
-	// VERTEX NORMALS
-	glEnableVertexAttribArray(2);
-	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, normals));
-
-	glBindVertexArray(0);
+Material::~Material()
+{
+	for (auto & texture : textures)
+	{
+		App->resources->RemoveResourceFromCacheIfNeeded(texture);
+	}
 }
 
 void Material::Save(Config& config) const
 {
+	config.AddInt((unsigned int)type, "ComponentType");
+	config.AddInt(index, "Index");
+	for (size_t i = 0; i < textures.size(); i++)
+	{
+		if (textures[i] != nullptr)
+		{
+			std::string id = "Path" + i;
+			config.AddString(textures[i]->exported_file, id);
+		}
+	}
+	config.AddBool(show_checkerboard_texture, "Checkboard");
+	config.AddString(shader_program, "ShaderProgram");
+
+	//k
+	config.AddFloat(k_ambient, "kAmbient");
+	config.AddFloat(k_specular, "kSpecular");
+	config.AddFloat(k_diffuse, "kDiffuse");
+	config.AddFloat(shininess, "shininess");
+
+	//colors
+	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
+	config.AddColor(float4(emissive_color[0], emissive_color[1], emissive_color[2], 1.0f), "emissiveColor");
+	config.AddColor(float4(specular_color[0], specular_color[1], specular_color[2], 1.0f), "specularColor");
 }
 
 void Material::Load(const Config& config)
 {
+	index = config.GetInt("Index", 0);
+
+	std::string tmp_path;
+	config.GetString("Path", tmp_path, "");
+	textures.resize(Texture::MAX_TEXTURE_TYPES);
+	for (size_t i = 0; i < textures.size(); i++)
+	{
+		std::string id = "Path" + i;
+		std::string tmp_path;
+		config.GetString(id, tmp_path, "");
+		if (!tmp_path.empty())
+		{
+			textures[i] = App->resources->Load<Texture>(tmp_path);
+		}
+	}
+
+	show_checkerboard_texture = config.GetBool("Checkboard", true);
+	config.GetString("ShaderProgram", shader_program, "Blinn phong");
+
+	//k
+	k_ambient = config.GetFloat("kAmbient", 1.0f);
+	k_specular = config.GetFloat("kSpecular", 1.0f);
+	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
+	shininess = config.GetFloat("shininess", 1.0f);
+
+	//colors
+	float4 diffuse;
+	float4 emissive;
+	float4 specular;
+
+	config.GetColor("difusseColor", diffuse, float4(1.f, 1.f, 1.f, 1.f));
+	config.GetColor("emissiveColor", emissive, float4(0.0f, 0.0f, 0.0f, 1.0f));
+	config.GetColor("specularColor", specular, float4(0.0f, 0.0f, 0.0f, 1.0f));
+
+	diffuse_color[0] = diffuse.x;
+	diffuse_color[1] = diffuse.y;
+	diffuse_color[2] = diffuse.z;
+	diffuse_color[3] = diffuse.w;
+
+	emissive_color[0] = emissive.x;
+	emissive_color[1] = emissive.y;
+	emissive_color[2] = emissive.z;
+	emissive_color[3] = emissive.w;
+
+	specular_color[0] = specular.x;
+	specular_color[1] = specular.y;
+	specular_color[2] = specular.z;
+	specular_color[3] = specular.w;
+}
+
+void ComponentMaterial::RemoveMaterialTexture(size_t type)
+{
+	App->resources->RemoveResourceFromCacheIfNeeded(textures[type]);
+	textures[type] = nullptr;
+}
+
+void ComponentMaterial::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture)
+{
+	textures[type] = new_texture;
+}
+
+const std::shared_ptr<Texture>& ComponentMaterial::GetMaterialTexture(size_t  type) const
+{
+	return textures[type];
 }
