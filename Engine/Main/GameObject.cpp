@@ -39,6 +39,11 @@ GameObject::GameObject(const std::string name) :
 {
 }
 
+
+GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_to_copy.aabb), transform(gameobject_to_copy.transform), UUID(pcg32_random())
+{
+	*this = gameobject_to_copy;
+}
 GameObject & GameObject::operator=(const GameObject & gameobject_to_copy)
 {
 	this->components.reserve(gameobject_to_copy.components.size());
@@ -47,12 +52,13 @@ GameObject & GameObject::operator=(const GameObject & gameobject_to_copy)
 		Component * copy = this->CreateComponent(gameobject_to_copy.components[i]->type);
 		*copy = *gameobject_to_copy.components[i];
 	}
-	this->name = name;
+	this->name = gameobject_to_copy.name;
 	this->SetEnabled(gameobject_to_copy.active);
 	this->SetStatic(gameobject_to_copy.is_static);
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
 	this->isPrefab = isPrefab;
+	this->parent = nullptr;
 	return *this;
 }
 GameObject & GameObject::operator=(GameObject && gameobject_to_move)
@@ -185,8 +191,8 @@ void GameObject::Load(const Config& config)
 
 	uint64_t parent_UUID = config.GetUInt("ParentUUID", 0);
 	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID); 
-	assert(game_object_parent != nullptr);
-	if (parent_UUID != 0)
+	//assert(game_object_parent != nullptr);
+	if (game_object_parent != nullptr && parent_UUID != 0)
 	{
 		game_object_parent->AddChild(this); //TODO: This should be in scene. Probably D:
 	}
@@ -246,6 +252,7 @@ void GameObject::RemoveChild(GameObject *child)
 	if (found == children.end())
 	{
 		APP_LOG_ERROR("Incosistent GameObject Tree.");
+		return;
 	}
 	children.erase(found);
 	child->parent = nullptr;

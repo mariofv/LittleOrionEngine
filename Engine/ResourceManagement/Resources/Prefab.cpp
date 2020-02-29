@@ -1,19 +1,27 @@
 #include <ResourceManagement/Resources/Prefab.h>
 #include <Main/Application.h>
 #include <Module/ModuleScene.h>
+#include <map>
 
-
-Prefab::Prefab(uint32_t UID, const std::string & exported_file) : Resource(UID, exported_file)
+Prefab::Prefab(std::vector<std::unique_ptr<GameObject>> && gameObjects, uint32_t UID, const std::string & exported_file) : Resource(UID, exported_file), prefab(std::move(gameObjects))
 {
 
 }
-void Prefab::Instantiate(const GameObject * prefab_parent)
+void Prefab::Instantiate(GameObject * prefab_parent)
 {
+	std::map<uint64_t, GameObject*> original_gameObject_reference;
+
 	for (auto & gameObject : prefab)
 	{
-		GameObject copy = *gameObject.get();
-		App->scene->AddGameObject(copy);
+		GameObject* copy_in_scene = App->scene->AddGameObject(*gameObject.get());
+		original_gameObject_reference[gameObject->UUID] = copy_in_scene;
+
+		if (gameObject->parent != nullptr && original_gameObject_reference.find(gameObject->parent->UUID) != original_gameObject_reference.end())
+		{
+			copy_in_scene->SetParent(original_gameObject_reference[gameObject->parent->UUID]);
+		}
 	}
+	++instances_number;
 }
 
 void Prefab::LoadInMemory()

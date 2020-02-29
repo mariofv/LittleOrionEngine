@@ -9,13 +9,14 @@ class GameObject;
 class Prefab : public Resource
 {
 public:
-	Prefab(uint32_t UID, const std::string & exported_file);
+	Prefab(std::vector<std::unique_ptr<GameObject>> && gameObjects, uint32_t UID, const std::string & exported_file);
 	~Prefab() = default;
-	void Instantiate(const GameObject * prefab_parent);
+	void Instantiate(GameObject * prefab_parent);
 
 private:
 	void LoadInMemory();
 	std::vector<std::unique_ptr<GameObject>> prefab;
+	size_t instances_number = 0;
 };
 
 namespace Loader

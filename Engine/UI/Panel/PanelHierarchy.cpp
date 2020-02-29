@@ -13,6 +13,7 @@
 #include "Module/ModuleActions.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
+#include "ResourceManagement/Resources/Prefab.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -124,7 +125,8 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 			}
 			if (incoming_file->file_type == FileType::PREFAB)
 			{
-				App->resources->prefab_manager->Load(incoming_file->file_path);
+				auto prefab = App->resources->Load<Prefab>(incoming_file->file_path);
+				prefab->Instantiate(target_game_object);
 			}
 		}
 		ImGui::EndDragDropTarget();
