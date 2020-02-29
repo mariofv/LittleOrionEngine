@@ -46,7 +46,8 @@ std::shared_ptr<Prefab> PrefabLoader::Load(const std::string& file_path)
 		}
 
 		CreateComponents(game_objects_config[i], created_game_object);
-
+		created_game_object->is_prefab = true;
+		//created_game_object->aabb.GenerateBoundingBox();
 		gameObjects.emplace_back(std::move(created_game_object));
 	}
 

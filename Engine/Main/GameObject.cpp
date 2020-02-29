@@ -42,6 +42,8 @@ GameObject::GameObject(const std::string name) :
 
 GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_to_copy.aabb), transform(gameobject_to_copy.transform), UUID(pcg32_random())
 {
+	transform.owner = this;
+	aabb.owner = this;
 	*this = gameobject_to_copy;
 }
 GameObject & GameObject::operator=(const GameObject & gameobject_to_copy)
@@ -58,7 +60,7 @@ GameObject & GameObject::operator=(const GameObject & gameobject_to_copy)
 	this->SetStatic(gameobject_to_copy.is_static);
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
-	this->isPrefab = isPrefab;
+	this->is_prefab = gameobject_to_copy.is_prefab;
 	this->parent = nullptr;
 	return *this;
 }
@@ -70,7 +72,7 @@ GameObject & GameObject::operator=(GameObject && gameobject_to_move)
 	this->SetStatic(gameobject_to_move.is_static);
 	this->hierarchy_depth = gameobject_to_move.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_move.hierarchy_branch;
-	this->isPrefab = isPrefab;
+	this->is_prefab = gameobject_to_move.is_prefab;
 	return *this;
 }
 

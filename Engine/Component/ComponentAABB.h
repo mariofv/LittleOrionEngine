@@ -36,8 +36,6 @@ public:
 
 	bool IsEmpty() const;
 
-	void ShowComponentWindow(){}
-
 private:
 	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices);
 	void GenerateGlobalBoundingBox();

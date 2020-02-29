@@ -48,7 +48,15 @@ void PanelHierarchy::Render()
 
 void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 {
-	std::string game_object_name_label = (std::string(ICON_FA_CUBE) + " " + game_object->name);
+	std::string game_object_name_label;
+	if (game_object->is_prefab)
+	{
+		game_object_name_label = (std::string(ICON_FA_BOX_OPEN) + " " + game_object->name);
+	}
+	else 
+	{
+		game_object_name_label = (std::string(ICON_FA_CUBE) + " " + game_object->name);
+	}
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 	if (game_object->children.size() == 0)
 	{
