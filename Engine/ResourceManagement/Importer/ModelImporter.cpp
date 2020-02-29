@@ -45,9 +45,9 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 		APP_LOG_ERROR("Importing mesh error: Couldn't find the file to import.")
 		return std::pair<bool, std::string>(false, "");
 	}
-	std::string already_imported = GetAlreadyImportedResource(file);
-	if (!already_imported.empty()) {
-		return std::pair<bool, std::string>(true, already_imported);
+	ImportOptions already_imported = GetAlreadyImportedResource(file);
+	if (already_imported.uid != 0) {
+		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 
 	File output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER+"/"+ file.filename_no_extension);

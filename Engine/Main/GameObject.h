@@ -5,7 +5,7 @@
 #include "Component/Component.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentAABB.h"
-
+#include "ResourceManagement/Resources/Prefab.h"
 #include <GL/glew.h>
 
 class ComponentCamera;
@@ -73,6 +73,7 @@ public:
 	//TODO: Maybe move this to a component editor?
 	bool is_prefab = false; // This should not be public. Public for now while implementing prefab.
 	bool parent_is_prefab = false;
+	Prefab* prefab_reference = nullptr;
 private:
 	bool active = true;
 	bool is_static = false;

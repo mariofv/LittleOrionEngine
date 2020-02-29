@@ -20,10 +20,13 @@ void Prefab::Instantiate(GameObject * prefab_parent)
 		{
 			copy_in_scene->SetParent(original_gameObject_reference[gameObject->parent->UUID]);
 		}
+		else
+		{
+			copy_in_scene->prefab_reference = this;
+			instances.push_back(copy_in_scene);
+		}
 	}
-	++instances_number;
 }
-
 void Prefab::LoadInMemory()
 {
 

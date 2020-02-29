@@ -17,6 +17,13 @@ public:
 	ComponentMaterial(GameObject * owner);
 	~ComponentMaterial();
 
+	//Copy and move
+	ComponentMaterial(const ComponentMaterial& component_to_copy) = default;
+	ComponentMaterial(ComponentMaterial&& component_to_move) = default;
+
+	ComponentMaterial & operator=(const ComponentMaterial & component_to_copy) = default;
+	ComponentMaterial & operator=(ComponentMaterial && component_to_move) = default;
+
 	void Delete() override;
 
 	void Save(Config& config) const override;

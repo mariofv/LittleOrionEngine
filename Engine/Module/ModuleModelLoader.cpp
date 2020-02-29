@@ -36,7 +36,7 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path) const
 	ImportOptions options;
 	Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(file), options);
 	size_t readed_bytes;
-	char* prefab_file_data = App->filesystem->Load(options.uid.c_str(), readed_bytes);
+	char* prefab_file_data = App->filesystem->Load(options.exported_file.c_str(), readed_bytes);
 	std::string serialized_prefab_string = prefab_file_data;
 	free(prefab_file_data);
 

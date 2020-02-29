@@ -235,7 +235,7 @@ void GameObject::SetParent(GameObject *new_parent)
 	GameObject *parent = new_parent;
 	while (parent != App->scene->GetRoot() && !parent_is_prefab)
 	{
-		parent_is_prefab = new_parent->is_prefab ? true : false;
+		parent_is_prefab = parent->is_prefab ? true : false;
 		parent = parent->parent;
 	}
 }

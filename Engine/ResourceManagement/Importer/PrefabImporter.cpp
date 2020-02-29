@@ -12,9 +12,9 @@ std::pair<bool, std::string> PrefabImporter::Import(const File & file) const
 			return std::pair<bool, std::string>(false, "");
 	}
 
-	std::string already_imported = GetAlreadyImportedResource(file);
-	if (!already_imported.empty()) {
-		return std::pair<bool, std::string>(true, already_imported);
+	ImportOptions already_imported = GetAlreadyImportedResource(file);
+	if (already_imported.uid != 0) {
+		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 
 	App->filesystem->MakeDirectory(LIBRARY_TEXTURES_FOLDER);

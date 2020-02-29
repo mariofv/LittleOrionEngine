@@ -5,6 +5,10 @@
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
 #include "Main/GameObject.h"
+#include "Main/Application.h"
+#include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScene.h"
+#include "ResourceManagement/Resources/Prefab.h"
 
 #include <imgui.h>
 #include <imgui_stdlib.h>
@@ -34,6 +38,10 @@ void PanelGameObject::Render(GameObject* game_object)
 	}
 
 	ImGui::Spacing();
+	if (game_object->is_prefab)
+	{
+		ShowPrefabMenu(game_object);
+	}
 	ImGui::Separator();
 	ImGui::Spacing();
 
@@ -80,4 +88,33 @@ void PanelGameObject::Render(GameObject* game_object)
 	ImGui::Spacing();
 
 	component_panel.ShowAddNewComponentButton();
+}
+
+void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
+{
+	ImGui::SameLine();
+	if(ImGui::Button("Apply"))
+	{
+		Prefab *prefab_reference = game_object->prefab_reference;
+		GameObject *parent = game_object->parent;
+		while (parent && !prefab_reference)
+		{
+			prefab_reference = parent->prefab_reference;
+			parent = parent->parent;
+		}
+		auto result = App->resources->Import(prefab_reference->exported_file, game_object);
+		/*if (result.first)
+		{
+			std::shared_ptr<Prefab> new_prefab = App->resources->Load<Prefab>(result.second);
+
+			for (auto old_instance : prefab_reference->instances)
+			{
+
+			}
+		}*/
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Revert"))
+	{
+	}
 }

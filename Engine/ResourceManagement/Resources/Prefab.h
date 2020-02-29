@@ -14,10 +14,11 @@ public:
 	~Prefab() = default;
 	void Instantiate(GameObject * prefab_parent);
 
+	std::vector<GameObject*> instances;
 private:
 	void LoadInMemory();
 	std::vector<std::unique_ptr<GameObject>> prefab;
-	size_t instances_number = 0;
+
 };
 
 namespace Loader

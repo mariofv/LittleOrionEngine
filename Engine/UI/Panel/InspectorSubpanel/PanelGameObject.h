@@ -13,6 +13,7 @@ public:
 	~PanelGameObject() = default;
 
 	void Render(GameObject* game_object);
+	void ShowPrefabMenu(GameObject* game_object);
 	
 
 public:
