@@ -159,6 +159,8 @@ void ModuleScene::Load(const Config& serialized_scene)
 	canvasGO = new GameObject("Canvas");
 	canvasGO->CreateComponent(Component::ComponentType::CANVAS);
 	root->AddChild(canvasGO);
+	
+
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
 		GameObject* created_game_object = CreateGameObject();

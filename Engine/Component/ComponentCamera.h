@@ -115,12 +115,14 @@ public:
 	float4x4 view;
 
 	bool toggle_msaa = false;
-
-private:
+	
 	Frustum camera_frustum;
-
 	GLuint rbo = 0;
 	GLuint fbo = 0;
+private:
+	
+	
+	
 	GLuint msfbo = 0;
 	GLuint msfb_color = 0;
 	GLuint last_recorded_frame_texture = 0;

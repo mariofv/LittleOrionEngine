@@ -31,12 +31,12 @@ public:
 	void DeleteCurrentScene();
 	void Save(Config& serialized_scene) const;
 	void Load(const Config& serialized_scene);
-
+	GameObject* canvasGO = nullptr;
 private:
 	GameObject *root = nullptr;
-	GameObject* canvasGO = nullptr;
+	
 
-	ComponentCanvas* canvas;
+	
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
 
 	friend class PanelScene;

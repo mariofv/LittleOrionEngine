@@ -162,7 +162,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), camera.GetViewMatrix().Transposed().ptr());
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
+	
 	GetMeshesToRender(&camera);
 	for (auto &mesh : meshes_to_render)
 	{
@@ -173,7 +173,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			glUseProgram(0);
 		}
 	}
-
+	ComponentCanvas* canvas = (ComponentCanvas*)App->scene->canvasGO->GetComponent(Component::ComponentType::CANVAS);
+	canvas->Render(&camera);
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
 }

@@ -2,6 +2,7 @@
 #define _COMPONENTCANVAS_H_
 
 #include "Component/Component.h"
+#include "Component/ComponentCamera.h"
 #include "MathGeoLib.h"
 #include <GL/glew.h>
 
@@ -14,7 +15,7 @@ public:
 
 
 	void Delete() override;
-	void Render() const;
+	void Render(const ComponentCamera* cam) const;
 
 	void Save(Config& config) const override;
 	void Load(const Config &config) override;
@@ -22,8 +23,20 @@ public:
 	void ShowComponentWindow();
 
 	void InitCanvas();
+	void GenerateFBOTexture(unsigned w, unsigned h);
 
-	GLuint vbo;
+	
+	unsigned fbo = 0;
+	unsigned rbo = 0;
+	unsigned fb_depth = 0;
+	unsigned fb_tex = 0;
+	unsigned fb_width = 0;
+	unsigned fb_height = 0;
+	ComponentCamera* camera;
+
+
+
+	unsigned quadVAO;
 };
 
 #endif //_COMPONENTCANVAS_H_
