@@ -61,6 +61,7 @@ public:
 
 	virtual void Update() {};
 	virtual void Delete() = 0;
+	virtual Component* Clone() const = 0;
 
 	virtual void Save(Config& config) const = 0;
 	virtual void Load(const Config &config) = 0;

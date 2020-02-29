@@ -18,6 +18,7 @@ public:
 
 	ComponentLight & operator=(const ComponentLight & component_to_copy);
 	ComponentLight & operator=(ComponentLight && component_to_move);
+	Component* Clone() const override;
 
 	void Delete() override;
 	void Render() const;

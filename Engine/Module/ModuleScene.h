@@ -22,7 +22,7 @@ public:
 	GameObject* CreateGameObject();
 	GameObject* CreateChildGameObject(GameObject *parent);
 	void RemoveGameObject(GameObject * game_object_to_remove);
-	GameObject* AddGameObject(GameObject game_object_to_remove);
+	GameObject* AddGameObject(std::unique_ptr<GameObject> & game_object_to_add);
 
 	GameObject* GetRoot() const;
 	GameObject* GetGameObject(uint64_t UUID) const;

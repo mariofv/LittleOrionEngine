@@ -49,8 +49,9 @@ GameObject & GameObject::operator=(const GameObject & gameobject_to_copy)
 	this->components.reserve(gameobject_to_copy.components.size());
 	for (size_t i = 0; i < gameobject_to_copy.components.size(); i++)
 	{
-		Component * copy = this->CreateComponent(gameobject_to_copy.components[i]->type);
-		*copy = *gameobject_to_copy.components[i];
+		Component *copy = gameobject_to_copy.components[i]->Clone();
+		copy->owner = this;
+		this->components.push_back(copy);
 	}
 	this->name = gameobject_to_copy.name;
 	this->SetEnabled(gameobject_to_copy.active);

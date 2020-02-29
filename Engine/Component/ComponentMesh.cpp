@@ -22,32 +22,6 @@ ComponentMesh::ComponentMesh() : Component(nullptr, ComponentType::MESH)
 }
 
 
-ComponentMesh::ComponentMesh(const ComponentMesh& component_to_copy) : Component(component_to_copy)
-{
-	*this = component_to_copy;
-}
-ComponentMesh::ComponentMesh(ComponentMesh&& component_to_move) : Component(std::move(component_to_move))
-{
-	*this = std::move(component_to_move);
-}
-
-ComponentMesh & ComponentMesh::operator=(const ComponentMesh & component_to_copy)
-{
-	Component::operator=(component_to_copy);
-	this->mesh_to_render = component_to_copy.mesh_to_render;
-	this->shader_program = component_to_copy.shader_program;
-	return *this;
-}
-ComponentMesh & ComponentMesh::operator=(ComponentMesh && component_to_move)
-{
-	Component::operator=(std::move(component_to_move));
-	this->mesh_to_render = component_to_move.mesh_to_render;
-	component_to_move.mesh_to_render = nullptr;
-	this->shader_program = component_to_move.shader_program;
-	return *this;
-}
-
-
 void ComponentMesh::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
 {
 	this->mesh_to_render = mesh_to_render;
@@ -118,4 +92,11 @@ void ComponentMesh::RenderModel() const
 	glBindVertexArray(mesh_to_render->GetVAO());
 	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+}
+
+Component* ComponentMesh::Clone() const
+{
+	ComponentMesh * created_component = App->renderer->CreateComponentMesh();
+	*created_component = *this;
+	return created_component;
 }

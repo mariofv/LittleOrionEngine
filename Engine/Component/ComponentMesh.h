@@ -13,11 +13,11 @@ public:
 	ComponentMesh();
 
 	//Copy and move
-	ComponentMesh(const ComponentMesh& component_to_copy);
-	ComponentMesh(ComponentMesh&& component_to_move);
+	ComponentMesh(const ComponentMesh& component_to_copy) = default;
+	ComponentMesh(ComponentMesh&& component_to_move) = default;
 
-	ComponentMesh & operator=(const ComponentMesh & component_to_copy);
-	ComponentMesh & operator=(ComponentMesh && component_to_move);
+	ComponentMesh & operator=(const ComponentMesh & component_to_copy) = default;
+	ComponentMesh & operator=(ComponentMesh && component_to_move) = default;
 
 	~ComponentMesh();
 
@@ -25,6 +25,7 @@ public:
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
+	Component* Clone() const override;
 
 	void Render() const;
 	void RenderModel() const;

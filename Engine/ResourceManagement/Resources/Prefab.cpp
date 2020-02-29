@@ -13,7 +13,7 @@ void Prefab::Instantiate(GameObject * prefab_parent)
 
 	for (auto & gameObject : prefab)
 	{
-		GameObject* copy_in_scene = App->scene->AddGameObject(*gameObject.get());
+		GameObject* copy_in_scene = App->scene->AddGameObject(std::make_unique<GameObject>(*gameObject.get()));
 		original_gameObject_reference[gameObject->UUID] = copy_in_scene;
 
 		if (gameObject->parent != nullptr && original_gameObject_reference.find(gameObject->parent->UUID) != original_gameObject_reference.end())

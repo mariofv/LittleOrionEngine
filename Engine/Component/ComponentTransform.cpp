@@ -194,3 +194,9 @@ void ComponentTransform::ChangeLocalSpace(const float4x4 &new_local_space)
 	model_matrix.Decompose(translation, rotation, scale);
 	
 }
+
+Component* ComponentTransform::Clone() const
+{
+
+	return nullptr;
+}

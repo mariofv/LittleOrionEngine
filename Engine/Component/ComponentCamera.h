@@ -30,6 +30,7 @@ public:
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
+	Component* Clone() const override { return nullptr; };
 
 	float GetWidth() const;
 	float GetHeigt() const;

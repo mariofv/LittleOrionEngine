@@ -41,6 +41,7 @@ public:
 private:
 	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices);
 	void GenerateGlobalBoundingBox();
+	Component* Clone() const override;
 public:
 	AABB bounding_box;
 	AABB global_bounding_box;

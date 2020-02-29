@@ -187,3 +187,10 @@ const std::shared_ptr<Texture>& ComponentMaterial::GetMaterialTexture(size_t  ty
 {
 	return textures[type];
 }
+
+Component* ComponentMaterial::Clone() const
+{
+	ComponentMaterial * created_component = App->texture->CreateComponentMaterial();
+	*created_component = *this;
+	return created_component;
+}

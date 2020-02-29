@@ -27,6 +27,7 @@ public:
 	void SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture);
 	const std::shared_ptr<Texture>& GetMaterialTexture(size_t type) const;
 	void RemoveMaterialTexture(size_t type);
+	Component* Clone() const override;
 
 private:
 	void AddDiffuseUniforms(unsigned int shader_program) const;

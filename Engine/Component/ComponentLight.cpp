@@ -85,3 +85,10 @@ void ComponentLight::Load(const Config& config)
 	light_intensity = config.GetFloat("Intensity", 1.f);
 
 }
+
+Component* ComponentLight::Clone() const
+{
+	ComponentLight * created_component = App->lights->CreateComponentLight();
+	*created_component = *this;
+	return created_component;
+}

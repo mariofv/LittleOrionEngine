@@ -81,10 +81,10 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 }
 
 
-GameObject* ModuleScene::AddGameObject(GameObject game_object_to_remove)
+GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject> & game_object_to_add)
 {
 	//TODO: Call copy consctructor for gameObject
-	game_objects_ownership.emplace_back(std::make_unique<GameObject>(game_object_to_remove));
+	game_objects_ownership.emplace_back(std::move(game_object_to_add));
 	game_objects_ownership.back()->SetParent(root);
 	if (!game_objects_ownership.back()->IsStatic())
 	{
