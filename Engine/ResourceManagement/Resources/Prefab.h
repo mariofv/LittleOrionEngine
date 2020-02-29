@@ -6,6 +6,7 @@
 #include <vector>
 #include <memory>
 class GameObject;
+class Component;
 class Prefab : public Resource
 {
 public:
