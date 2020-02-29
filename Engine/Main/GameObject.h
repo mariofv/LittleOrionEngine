@@ -70,7 +70,9 @@ public:
 	ComponentAABB aabb;
 	ComponentTransform transform;
 
+	//TODO: Maybe move this to a component editor?
 	bool is_prefab = false; // This should not be public. Public for now while implementing prefab.
+	bool parent_is_prefab = false;
 private:
 	bool active = true;
 	bool is_static = false;

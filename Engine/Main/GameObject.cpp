@@ -232,6 +232,12 @@ void GameObject::SetParent(GameObject *new_parent)
 		parent->RemoveChild(this);
 	}
 	new_parent->AddChild(this);
+	GameObject *parent = new_parent;
+	while (parent != App->scene->GetRoot() && !parent_is_prefab)
+	{
+		parent_is_prefab = new_parent->is_prefab ? true : false;
+		parent = parent->parent;
+	}
 }
 
 void GameObject::AddChild(GameObject *child)
@@ -321,6 +327,7 @@ void GameObject::MoveUpInHierarchy() const
 	if (silbings_position == parent->children.end())
 	{
 		APP_LOG_ERROR("Incosistent GameObject Tree.");
+		return;
 	}
 
 	std::vector<GameObject*>::iterator swapped_silbing = max(silbings_position - 1, parent->children.begin());
@@ -333,6 +340,7 @@ void GameObject::MoveDownInHierarchy() const
 	if (silbings_position == parent->children.end())
 	{
 		APP_LOG_ERROR("Incosistent GameObject Tree.");
+		return;
 	}
 
 	std::vector<GameObject*>::iterator swapped_silbing = min(silbings_position + 1, parent->children.end() - 1);
