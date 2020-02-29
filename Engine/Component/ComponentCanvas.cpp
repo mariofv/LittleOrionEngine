@@ -48,28 +48,48 @@ void ComponentCanvas::InitCanvas()
 	//glRectf(cameraVBO., 5.0, 5.0, -5.0);
 
 
+	///
+	
+    //GLfloat vertices[] = { 
+    //     Pos      // Tex
+    //    0.0f, 1.0f, 0.0f, 1.0f,
+    //    1.0f, 0.0f, 1.0f, 0.0f,
+    //    0.0f, 0.0f, 0.0f, 0.0f, 
 
-	GLuint VBO;
-    GLfloat vertices[] = { 
-        // Pos      // Tex
-        0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f,
-        0.0f, 0.0f, 0.0f, 0.0f, 
+    //    0.0f, 1.0f, 0.0f, 1.0f,
+    //    1.0f, 1.0f, 1.0f, 1.0f,
+    //    1.0f, 0.0f, 1.0f, 0.0f
+    //};
+    glGenVertexArrays(1, &this->vao);
+	glBindVertexArray(this->vao);
 
-        0.0f, 1.0f, 0.0f, 1.0f,
-        1.0f, 1.0f, 1.0f, 1.0f,
-        1.0f, 0.0f, 1.0f, 0.0f
-    };
+	glGenBuffers(1, &vbo);
 
-    glGenVertexArrays(1, &this->quadVAO);
-    glGenBuffers(1, &VBO);
+	GLfloat vertices[] = {
+	-0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
+	 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
+	 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
 
-    glBindBuffer(GL_ARRAY_BUFFER, VBO);
-    glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+	 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
+	-0.5f, -0.5f, 1.0f, 1.0f, 1.0f, // Bottom-left
+	-0.5f,  0.5f, 1.0f, 0.0f, 0.0f  // Top-left
+	};
 
-    glBindVertexArray(this->quadVAO);
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(vertices), vertices, GL_STATIC_DRAW);
+
+	glGenBuffers(1, &ebo);
+
+	GLuint elements[] = {
+	0, 1, 2,
+	2, 3, 0
+	};
+	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
+	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
+
+
     glEnableVertexAttribArray(0);
-    glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
+    glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 5 * sizeof(GLfloat), (GLvoid*)0);
     glBindBuffer(GL_ARRAY_BUFFER, 0);
     glBindVertexArray(0);
 }
@@ -91,8 +111,9 @@ void ComponentCanvas::Load(const Config& config)
 void ComponentCanvas::Render(const ComponentCamera* cam) const
 {
 	glBindFramebuffer(GL_FRAMEBUFFER, cam->fbo);
-	glBindVertexArray(this->quadVAO);
+	glBindVertexArray(this->vao);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
+	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	//glBindVertexArray(0);
 	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	glUseProgram(0);

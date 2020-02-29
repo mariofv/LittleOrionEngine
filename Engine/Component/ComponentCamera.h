@@ -17,7 +17,8 @@ public:
 	enum class ClearMode
 	{
 		COLOR = 0,
-		SKYBOX = 1
+		SKYBOX = 1,
+		ORTHO = 2
 	};
 
 	ComponentCamera();

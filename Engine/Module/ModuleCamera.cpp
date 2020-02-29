@@ -81,6 +81,7 @@ void ModuleCamera::SelectMainCamera()
 			else if (main_camera->depth < camera->depth)
 			{
 				main_camera = camera;
+				main_camera->SetClearMode(ComponentCamera::ClearMode::ORTHO);
 			}
 		}
 	}

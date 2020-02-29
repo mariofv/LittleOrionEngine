@@ -36,7 +36,9 @@ public:
 
 
 
-	unsigned quadVAO;
+	unsigned vao;
+	unsigned vbo;
+	unsigned ebo;
 };
 
 #endif //_COMPONENTCANVAS_H_

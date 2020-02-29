@@ -168,6 +168,13 @@ void ComponentCamera::RecordFrame(float width, float height)
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 			App->cameras->skybox->Render(*this);
 			break;
+		case ComponentCamera::ClearMode::ORTHO:
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+			glMatrixMode(GL_PROJECTION);
+			glLoadIdentity();
+			glOrtho(0.0f, width, height, 0.0f, 1.0f, -1.0f);
+			App->cameras->skybox->Render(*this);
+			break;
 		default:
 			break;
 	}
