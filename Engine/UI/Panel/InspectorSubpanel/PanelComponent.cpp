@@ -424,8 +424,10 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 		}
 		if (light->light_type == ComponentLight::LightType::POINT_LIGHT)
 		{
-			ImGui::DragFloat("Range", &light->point_light_parameters.range, 10.0f, 7.f, 3250.f);
-			light->point_light_parameters.ChangePointLightAttenuationValues(light->point_light_parameters.range);
+			if (ImGui::DragFloat("Range", &light->point_light_parameters.range, 1.f, 1.f, 100.f))
+			{
+				light->point_light_parameters.ChangePointLightAttenuationValues(light->point_light_parameters.range);
+			}
 		}
 		if (light->light_type == ComponentLight::LightType::SPOT_LIGHT)
 		{
@@ -437,8 +439,10 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 			{
 				light->spot_light_parameters.SetEdgeSoftness(light->spot_light_parameters.edge_softness);
 			}
-			ImGui::DragFloat("Range", &light->spot_light_parameters.range, 10.0f, 7.f, 3250.f);
-			light->spot_light_parameters.ChangeSpotLightAttenuationValues(light->spot_light_parameters.range);
+			if (ImGui::DragFloat("Range", &light->spot_light_parameters.range, 1.f, 1.f, 100.f))
+			{
+				light->spot_light_parameters.ChangeSpotLightAttenuationValues(light->spot_light_parameters.range);
+			}
 		}
 		
 	}

@@ -19,16 +19,17 @@ public:
 	class PointLight
 	{
 		public:
-			float range = 160.f; 
+			float range = 10.f; 
 			float constant = 1.f;
-			float linear = 0.027f;
-			float quadratic = 0.0028f;
+			float linear = 0.045f;
+			float quadratic = 0.0075f;
 
 		public: 
 			void ChangePointLightAttenuationValues(float range)
 			{
-				linear = 4.5 / range;
-				quadratic = 75.0 / (range*range);
+				float augmented_range = 10 * range;
+				linear = 4.5 / (10 * augmented_range);
+				quadratic = 75.0 / (augmented_range*augmented_range);
 			}
 	};
 
@@ -50,21 +51,22 @@ public:
 
 			void ChangeSpotLightAttenuationValues(float range)
 			{
-				linear = 4.5 / range;
-				quadratic = 75.0 / (range*range);
+				float augmented_range = 10 * range;
+				linear = 4.5 / augmented_range;
+				quadratic = 75.0 / (augmented_range*augmented_range);
 			}
 
 		public: 
 			float spot_angle = 30.f; // Dear reader do not modify this directly, use SetSpotAngle!
-			float cutoff = cos(DegToRad(30.f)); // Dear reader do not modify this directly, use SetSpotAngle!
+			float cutoff = cos(DegToRad(15.f)); // Dear reader do not modify this directly, use SetSpotAngle!
 
 			float edge_softness = 0.1f; // Dear reader do not modify this directly, use SetEdgeSoftness!
-			float outer_cutoff = cos(DegToRad(33.f)); // Dear reader do not modify this directly, use SetEdgeSoftness!
+			float outer_cutoff = cos(DegToRad(16.5f)); // Dear reader do not modify this directly, use SetEdgeSoftness!
 
-			float range = 50.f;
-			float linear = 0.09f;
-			float quadratic = 0.032f;
+			float range = 10.f;
 			float constant = 1.0f;
+			float linear = 0.045f;
+			float quadratic = 0.0075f;
 	};
 
 	ComponentLight();

@@ -56,17 +56,17 @@ void ComponentLight::Load(const Config& config)
 	light_intensity = config.GetFloat("Intensity", 1.f);
 	light_type = static_cast<LightType>(config.GetInt("LightType", static_cast<int>(LightType::DIRECTIONAL_LIGHT)));
 
-	point_light_parameters.range = config.GetFloat("PointLightRange", 160);
+	point_light_parameters.range = config.GetFloat("PointLightRange", 16.f);
 	point_light_parameters.constant = config.GetFloat("PointLightConstant", 1.f);
-	point_light_parameters.linear = config.GetFloat("PointLightLinear", 0.027f);
-	point_light_parameters.quadratic = config.GetFloat("PointLightQuadratic", 0.0028f);
+	point_light_parameters.linear = config.GetFloat("PointLightLinear", 0.045f);
+	point_light_parameters.quadratic = config.GetFloat("PointLightQuadratic", 0.0075f);
 
-	spot_light_parameters.range = config.GetFloat("SpotLightRange", 50.f);
-	spot_light_parameters.constant = config.GetFloat("SpotLightConstant", 0.09f);
-	spot_light_parameters.linear = config.GetFloat("SpotLightLinear", 0.032f);
-	spot_light_parameters.quadratic = config.GetFloat("SpotLightQuadratic", 1.0f);
+	spot_light_parameters.range = config.GetFloat("SpotLightRange", 10.f);
+	spot_light_parameters.constant = config.GetFloat("SpotLightConstant", 1.f);
+	spot_light_parameters.linear = config.GetFloat("SpotLightLinear", 0.045f);
+	spot_light_parameters.quadratic = config.GetFloat("SpotLightQuadratic", 0.0075f);
 	spot_light_parameters.spot_angle = config.GetFloat("SpotLightSpotAngle", 30.f);
-	spot_light_parameters.cutoff = config.GetFloat("SpotLightCutoff", cos(DegToRad(30.f)));
+	spot_light_parameters.cutoff = config.GetFloat("SpotLightCutoff", cos(DegToRad(15.f)));
 	spot_light_parameters.edge_softness = config.GetFloat("SpotLightSoftness", 0.1f);
-	spot_light_parameters.outer_cutoff = config.GetFloat("SpotLightOuterCutoff", cos(DegToRad(33.f)));
+	spot_light_parameters.outer_cutoff = config.GetFloat("SpotLightOuterCutoff", cos(DegToRad(16.5f)));
 }
