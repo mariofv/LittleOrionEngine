@@ -19,6 +19,8 @@ public:
 
 	ComponentTransform & operator=(const ComponentTransform & component_to_copy) = default;
 	ComponentTransform & operator=(ComponentTransform && component_to_move) = default;
+
+
 	Component* Clone() const override;
 
 	~ComponentTransform() = default;

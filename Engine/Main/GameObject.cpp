@@ -49,11 +49,19 @@ GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_
 GameObject & GameObject::operator=(const GameObject & gameobject_to_copy)
 {
 	this->components.reserve(gameobject_to_copy.components.size());
-	for (size_t i = 0; i < gameobject_to_copy.components.size(); i++)
+	for (auto component : gameobject_to_copy.components)
 	{
-		Component *copy = gameobject_to_copy.components[i]->Clone();
-		copy->owner = this;
-		this->components.push_back(copy);
+		Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
+		if (my_component != nullptr)
+		{
+			my_component = component;
+		}
+		else
+		{
+			Component *copy = component->Clone();
+			copy->owner = this;
+			this->components.push_back(copy);
+		}
 	}
 	this->name = gameobject_to_copy.name;
 	this->SetEnabled(gameobject_to_copy.active);
@@ -61,7 +69,6 @@ GameObject & GameObject::operator=(const GameObject & gameobject_to_copy)
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
 	this->is_prefab = gameobject_to_copy.is_prefab;
-	this->parent = nullptr;
 	return *this;
 }
 GameObject & GameObject::operator=(GameObject && gameobject_to_move)

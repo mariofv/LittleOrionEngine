@@ -107,15 +107,14 @@ void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
 		auto result = App->resources->Import(prefab_reference->exported_file, to_reimport);
 		if (result.first)
 		{
-			size_t number_of_instances = prefab_reference->instances.size();
-			/*for (auto old_instance : prefab_reference->instances)
+			for (auto old_instance : prefab_reference->instances)
 			{
-				App->scene->RemoveGameObject(old_instance);
-			}*/
-			std::shared_ptr<Prefab> new_prefab = App->resources->Reload<Prefab>(prefab_reference);
-			for (size_t i = 0; i < number_of_instances; i++)
-			{
-				new_prefab->Instantiate(App->scene->GetRoot());
+				if (game_object == old_instance)
+				{
+					continue;
+				}
+
+
 			}
 		}
 	}
