@@ -22,7 +22,6 @@ ComponentMaterial::~ComponentMaterial()
 	}
 }
 
-
 void ComponentMaterial::Delete()
 {
 	App->texture->RemoveComponentMaterial(this);
@@ -33,7 +32,6 @@ void ComponentMaterial::Save(Config& config) const
 	config.AddUInt(UUID, "UUID");
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
-	config.AddInt(index, "Index");
 	for (size_t i = 0; i< textures.size(); i++ )
 	{
 		if (textures[i] != nullptr)
@@ -60,8 +58,6 @@ void ComponentMaterial::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-
-	index = config.GetInt("Index", 0);
 
 	std::string tmp_path;
 	config.GetString("Path", tmp_path, "");

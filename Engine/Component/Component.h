@@ -33,7 +33,7 @@ public:
 		*this = std::move(component_to_move);
 	}
 
-	Component & operator=(const Component & component_to_copy)
+	virtual Component & operator=(const Component & component_to_copy)
 	{
 		this->active = component_to_copy.active;
 		this->UUID = component_to_copy.UUID;
@@ -41,7 +41,7 @@ public:
 		this->type = component_to_copy.type;
 		return *this;
 	}
-	Component & operator=(Component && component_to_copy)
+	virtual Component & operator=(Component && component_to_copy)
 	{
 
 		this->active = component_to_copy.active;
@@ -62,6 +62,7 @@ public:
 	virtual void Update() {};
 	virtual void Delete() = 0;
 	virtual Component* Clone() const = 0;
+	virtual void Copy(Component * component_to_copy) const = 0;
 
 	virtual void Save(Config& config) const = 0;
 	virtual void Load(const Config &config) = 0;

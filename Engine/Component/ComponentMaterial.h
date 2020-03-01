@@ -21,8 +21,8 @@ public:
 	ComponentMaterial(const ComponentMaterial& component_to_copy) = default;
 	ComponentMaterial(ComponentMaterial&& component_to_move) = default;
 
-	ComponentMaterial & operator=(const ComponentMaterial & component_to_copy) = default;
-	ComponentMaterial & operator=(ComponentMaterial && component_to_move) = default;
+	virtual ComponentMaterial & operator=(const ComponentMaterial & component_to_copy) = default;
+	virtual ComponentMaterial & operator=(ComponentMaterial && component_to_move) = default;
 
 	void Delete() override;
 
@@ -35,6 +35,7 @@ public:
 	const std::shared_ptr<Texture>& GetMaterialTexture(size_t type) const;
 	void RemoveMaterialTexture(size_t type);
 	Component* Clone() const override;
+	void Copy(Component * component_to_copy) const override { *static_cast<ComponentMaterial*>(component_to_copy) = *this; };
 
 private:
 	void AddDiffuseUniforms(unsigned int shader_program) const;
@@ -46,7 +47,6 @@ private:
 private:
 	ComponentType type = ComponentType::MATERIAL;
 
-	int index = 0;
 	std::vector<std::shared_ptr<Texture>> textures;
 
 	float diffuse_color[4] = { 1.0f, 1.0f,1.0f,1.0f };

@@ -628,3 +628,4 @@ AABB ComponentCamera::GetMinimalEnclosingAABB() const
 {
 	return camera_frustum.MinimalEnclosingAABB();
 }
+

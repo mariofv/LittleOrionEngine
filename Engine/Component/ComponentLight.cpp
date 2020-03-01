@@ -92,3 +92,4 @@ Component* ComponentLight::Clone() const
 	*created_component = *this;
 	return created_component;
 }
+

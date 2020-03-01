@@ -77,3 +77,4 @@ Component* ComponentAABB::Clone() const
 {
 	return nullptr;
 }
+

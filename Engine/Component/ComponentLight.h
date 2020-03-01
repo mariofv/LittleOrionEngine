@@ -19,7 +19,7 @@ public:
 	ComponentLight & operator=(const ComponentLight & component_to_copy);
 	ComponentLight & operator=(ComponentLight && component_to_move);
 	Component* Clone() const override;
-
+	void Copy(Component * component_to_copy) const override { *static_cast<ComponentLight*>(component_to_copy) = *this; };
 	void Delete() override;
 	void Render() const;
 

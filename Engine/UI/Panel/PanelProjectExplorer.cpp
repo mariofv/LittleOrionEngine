@@ -249,7 +249,7 @@ void PanelProjectExplorer::FilesDrop() const
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			if (!incoming_game_object->is_prefab)
+			if (incoming_game_object->original_UUID == 0)
 			{
 				std::string prefab_path = selected_folder->file_path + "/" + incoming_game_object->name + ".prefab";
 				auto & result = App->resources->Import(prefab_path, incoming_game_object);

@@ -54,7 +54,8 @@ GameObject & GameObject::operator=(const GameObject & gameobject_to_copy)
 		Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
 		if (my_component != nullptr)
 		{
-			my_component = component;
+			component->Copy(my_component);
+			my_component->owner = this;
 		}
 		else
 		{
@@ -68,21 +69,9 @@ GameObject & GameObject::operator=(const GameObject & gameobject_to_copy)
 	this->SetStatic(gameobject_to_copy.is_static);
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
-	this->is_prefab = gameobject_to_copy.is_prefab;
+	this->original_UUID = gameobject_to_copy.original_UUID;
 	return *this;
 }
-GameObject & GameObject::operator=(GameObject && gameobject_to_move)
-{
-	this->components = std::move(gameobject_to_move.components);
-	this->name = name;
-	this->SetEnabled(gameobject_to_move.active);
-	this->SetStatic(gameobject_to_move.is_static);
-	this->hierarchy_depth = gameobject_to_move.hierarchy_depth;
-	this->hierarchy_branch = gameobject_to_move.hierarchy_branch;
-	this->is_prefab = gameobject_to_move.is_prefab;
-	return *this;
-}
-
 
 void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 {
@@ -242,7 +231,7 @@ void GameObject::SetParent(GameObject *new_parent)
 	GameObject *parent = new_parent;
 	while (parent != App->scene->GetRoot() && !parent_is_prefab)
 	{
-		parent_is_prefab = parent->is_prefab ? true : false;
+		parent_is_prefab = parent->original_UUID != 0 ? true : false;
 		parent = parent->parent;
 	}
 }

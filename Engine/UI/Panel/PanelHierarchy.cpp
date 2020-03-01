@@ -49,7 +49,7 @@ void PanelHierarchy::Render()
 void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 {
 	std::string game_object_name_label;
-	if (game_object->is_prefab)
+	if (game_object->original_UUID != 0)
 	{
 		game_object_name_label = (std::string(ICON_FA_BOX_OPEN) + " " + game_object->name);
 	}
@@ -109,7 +109,7 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			if (!incoming_game_object->IsAboveInHierarchy(*target_game_object) && !(incoming_game_object->is_prefab && incoming_game_object->parent_is_prefab))
+			if (!incoming_game_object->IsAboveInHierarchy(*target_game_object) && !(incoming_game_object->original_UUID != 0 && incoming_game_object->parent_is_prefab))
 			{
 				incoming_game_object->SetParent(target_game_object);
 			}

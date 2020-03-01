@@ -22,7 +22,7 @@ public:
 	GameObject(GameObject&& gameobject_to_move) = default;
 
 	GameObject & operator=(const GameObject & gameobject_to_copy);
-	GameObject & operator=(GameObject && gameobject_to_move);
+	GameObject & operator=(GameObject && gameobject_to_move) = default;
 
 	bool IsEnabled() const;
 	void SetEnabled(bool able);
@@ -71,7 +71,8 @@ public:
 	ComponentTransform transform;
 
 	//TODO: Maybe move this to a component editor?
-	bool is_prefab = false; // This should not be public. Public for now while implementing prefab.
+	// This should not be public. Public for now while implementing prefab.
+	uint64_t original_UUID = 0; 
 	bool parent_is_prefab = false;
 	Prefab* prefab_reference = nullptr;
 private:

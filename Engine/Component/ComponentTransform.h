@@ -22,6 +22,7 @@ public:
 
 
 	Component* Clone() const override;
+	void Copy(Component * component_to_copy) const override { *static_cast<ComponentTransform*>(component_to_copy) = *this; };
 
 	~ComponentTransform() = default;
 

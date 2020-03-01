@@ -26,6 +26,7 @@ public:
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 	Component* Clone() const override;
+	void Copy(Component * component_to_copy) const override { *static_cast<ComponentMesh*>(component_to_copy) = *this; };
 
 	void Render() const;
 	void RenderModel() const;

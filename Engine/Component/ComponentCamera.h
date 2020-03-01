@@ -25,12 +25,20 @@ public:
 
 	~ComponentCamera();
 
+	//Copy and move
+	ComponentCamera(const ComponentCamera& component_to_copy) = default;
+	ComponentCamera(ComponentCamera&& component_to_move) = default;
+
+	ComponentCamera & operator=(const ComponentCamera & component_to_copy) = default;
+	ComponentCamera & operator=(ComponentCamera && component_to_move) = default;
+
 	void Update() override;
 	void Delete() override;
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 	Component* Clone() const override { return nullptr; };
+	void Copy(Component* component_to_copy) const override{  };
 
 	float GetWidth() const;
 	float GetHeigt() const;

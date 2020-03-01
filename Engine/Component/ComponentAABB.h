@@ -27,6 +27,7 @@ public:
 
 	ComponentAABB & operator=(const ComponentAABB & component_to_copy) = default;
 	ComponentAABB & operator=(ComponentAABB && component_to_move) = default;
+	void Copy(Component * component_to_copy) const override { *static_cast<ComponentAABB*>(component_to_copy) = *this; };
 
 	void Delete() override {};
 	void GenerateBoundingBox();
