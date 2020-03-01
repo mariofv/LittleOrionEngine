@@ -95,14 +95,16 @@ void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
 	ImGui::SameLine();
 	if(ImGui::Button("Apply"))
 	{
-		Prefab *prefab_reference = game_object->prefab_reference;
-		GameObject *parent = game_object->parent;
-		while (parent && !prefab_reference)
+
+		GameObject *to_reimport = game_object;
+		Prefab *prefab_reference = to_reimport->prefab_reference;
+
+		while (to_reimport && !to_reimport->prefab_reference)
 		{
-			prefab_reference = parent->prefab_reference;
-			parent = parent->parent;
+			to_reimport = to_reimport->parent;
+			prefab_reference = to_reimport->prefab_reference;
 		}
-		auto result = App->resources->Import(prefab_reference->exported_file, game_object);
+		auto result = App->resources->Import(prefab_reference->exported_file, to_reimport);
 		/*if (result.first)
 		{
 			std::shared_ptr<Prefab> new_prefab = App->resources->Load<Prefab>(result.second);

@@ -16,7 +16,7 @@ void ImportOptions::Save(Config& config) const
 void ImportOptions::Load(const Config& config) {
 
 	version = config.GetInt("ImporterVersion", 0);
-	version = config.GetUInt("UID", uid);
+	uid = config.GetUInt("UID", uid);
 	config.GetString("ExportedFile", exported_file, "");
 	config.GetString("OriginalFile", original_file, "");
 	timestamp = config.GetInt("TimeStamp", 0);

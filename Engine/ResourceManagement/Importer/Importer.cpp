@@ -54,7 +54,6 @@ void Importer::SaveMetaFile(const File & imported_file, const std::string & expo
 	scene_config.GetSerializedString(serialized_scene_string);
 
 	App->filesystem->Save(meta_file_path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
-
 }
 
 
