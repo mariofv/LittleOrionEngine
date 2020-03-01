@@ -35,7 +35,6 @@ std::shared_ptr<Prefab> PrefabLoader::Load(const std::string& file_path)
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
 		std::unique_ptr<GameObject> created_game_object = std::make_unique<GameObject>();
-		LoadBasicParameters(game_objects_config[i], created_game_object);
 		uint64_t parent_UUID = game_objects_config[i].GetUInt("ParentUUID", 0);
 		auto& it = std::find_if(gameObjects.begin(), gameObjects.end(), [parent_UUID](const std::unique_ptr<GameObject>&  gameObject) {
 			return gameObject->UUID == parent_UUID;
@@ -44,7 +43,7 @@ std::shared_ptr<Prefab> PrefabLoader::Load(const std::string& file_path)
 		{
 			created_game_object->SetParent((*it).get());
 		}
-
+		LoadBasicParameters(game_objects_config[i], created_game_object);
 		CreateComponents(game_objects_config[i], created_game_object);
 		created_game_object->is_prefab = true;
 		gameObjects.emplace_back(std::move(created_game_object));
