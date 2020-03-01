@@ -15,7 +15,7 @@ public:
 
 
 	void Delete() override;
-	void Render(const ComponentCamera* cam) const;
+	void Render(const ComponentCamera& cam) const;
 
 	void Save(Config& config) const override;
 	void Load(const Config &config) override;

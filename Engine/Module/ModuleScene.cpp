@@ -158,6 +158,7 @@ void ModuleScene::Load(const Config& serialized_scene)
 	serialized_scene.GetChildrenConfig("GameObjects", game_objects_config);
 	canvasGO = new GameObject("Canvas");
 	canvasGO->CreateComponent(Component::ComponentType::CANVAS);
+	canvasGO->transform.SetTranslation(float3(0.5f, 2.f, -15.f));
 	root->AddChild(canvasGO);
 	
 

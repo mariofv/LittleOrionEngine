@@ -283,7 +283,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 
 		ImGui::Separator();
 		int camera_clear_mode = static_cast<int>(camera->camera_clear_mode);
-		if (ImGui::Combo("Clear Mode", &camera_clear_mode, "Color\0Skybox\0"))
+		if (ImGui::Combo("Clear Mode", &camera_clear_mode, "Color\0Skybox\0Ortho\0"))
 		{
 			switch (camera_clear_mode)
 			{
@@ -292,6 +292,9 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 				break;
 			case 1:
 				camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
+				break;
+			case 2:
+				camera->SetClearMode(ComponentCamera::ClearMode::ORTHO);
 				break;
 			}
 		}		

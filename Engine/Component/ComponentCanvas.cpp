@@ -66,13 +66,10 @@ void ComponentCanvas::InitCanvas()
 	glGenBuffers(1, &vbo);
 
 	GLfloat vertices[] = {
-	-0.5f,  0.5f, 1.0f, 0.0f, 0.0f, // Top-left
-	 0.5f,  0.5f, 0.0f, 1.0f, 0.0f, // Top-right
-	 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
-
-	 0.5f, -0.5f, 0.0f, 0.0f, 1.0f, // Bottom-right
-	-0.5f, -0.5f, 1.0f, 1.0f, 1.0f, // Bottom-left
-	-0.5f,  0.5f, 1.0f, 0.0f, 0.0f  // Top-left
+	 -1.0f,  1.0f, 1.0f, 0.0f, 0.0f, // Top-left
+	 1.0f,  1.0f, 0.0f, 1.0f, 0.0f, // Top-right
+	 1.0f, -1.0f, 0.0f, 0.0f, 1.0f, // Bottom-right
+	-1.0f, -1.0f, 1.0f, 1.0f, 1.0f  // Bottom-left
 	};
 
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, vbo);
@@ -84,6 +81,7 @@ void ComponentCanvas::InitCanvas()
 	0, 1, 2,
 	2, 3, 0
 	};
+
 	glBindBuffer(GL_ELEMENT_ARRAY_BUFFER, ebo);
 	glBufferData(GL_ELEMENT_ARRAY_BUFFER, sizeof(elements), elements, GL_STATIC_DRAW);
 
@@ -108,14 +106,19 @@ void ComponentCanvas::Load(const Config& config)
 {
 
 }
-void ComponentCanvas::Render(const ComponentCamera* cam) const
+void ComponentCanvas::Render(const ComponentCamera& cam) const
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, cam->fbo);
+	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+	glMatrixMode(GL_PROJECTION);
+	glLoadIdentity();
+	glOrtho(0.0f, cam.camera_frustum.orthographicWidth, cam.camera_frustum.orthographicHeight, 0.0f, 1.0f, -1.0f);
+	glMatrixMode(GL_PROJECTION);
+	glDisable(GL_DEPTH_TEST);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, cam.fbo);
 	glBindVertexArray(this->vao);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
-	//glBindVertexArray(0);
-	//glBindBuffer(GL_UNIFORM_BUFFER, 0);
 	glUseProgram(0);
 }
 void ComponentCanvas::Delete()

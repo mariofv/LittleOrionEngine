@@ -172,8 +172,11 @@ void ComponentCamera::RecordFrame(float width, float height)
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 			glMatrixMode(GL_PROJECTION);
 			glLoadIdentity();
-			glOrtho(0.0f, width, height, 0.0f, 1.0f, -1.0f);
-			App->cameras->skybox->Render(*this);
+			glOrtho(this->camera_frustum.pos.x, width, height, this->camera_frustum.pos.y, this->camera_frustum.nearPlaneDistance, -this->camera_frustum.farPlaneDistance);
+			glMatrixMode(GL_PROJECTION);
+			glDisable(GL_DEPTH_TEST);
+			//App->renderer->canvas->Render(*this);
+			//App->cameras->skybox->Render(*this);
 			break;
 		default:
 			break;

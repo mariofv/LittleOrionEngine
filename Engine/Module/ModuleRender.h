@@ -5,6 +5,7 @@
 #include "Main/Globals.h"
 #include "SpacePartition/OLQuadTree.h"
 #include "SpacePartition/OLAABBTree.h"
+#include "Component/ComponentCanvas.h"
 #include "Helper/Timer.h"
 
 #include <GL/glew.h>
@@ -48,7 +49,7 @@ public:
 	void DrawAABBTree() const;
 
 	GameObject* GetRaycastIntertectedObject(const LineSegment & ray);
-
+	ComponentCanvas* canvas = nullptr;
 private:
 	void SetVSync(bool vsync);
 	void SetAlphaTest(bool gl_alpha_test);

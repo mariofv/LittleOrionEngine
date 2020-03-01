@@ -77,11 +77,13 @@ void ModuleCamera::SelectMainCamera()
 			if (main_camera == nullptr)
 			{
 				main_camera = camera;
+				canvas_camera = camera;
+				//scene_camera->SetClearMode(ComponentCamera::ClearMode::ORTHO);
 			}
 			else if (main_camera->depth < camera->depth)
 			{
 				main_camera = camera;
-				main_camera->SetClearMode(ComponentCamera::ClearMode::ORTHO);
+				canvas_camera = camera;
 			}
 		}
 	}
