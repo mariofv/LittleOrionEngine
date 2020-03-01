@@ -78,9 +78,9 @@ public:
 	void Load(const Config &config) override;
 
 public:
-	float light_color[3] = { 1.0f, 1.0f, 1.0f};
+	float light_color[3] = {1.0f, 1.0f, 1.0f};
 	float light_intensity = 1.f; 
-	LightType light_type = LightType::DIRECTIONAL_LIGHT;
+	LightType light_type = LightType::POINT_LIGHT;
 
 	PointLight point_light_parameters;
 	SpotLight spot_light_parameters;

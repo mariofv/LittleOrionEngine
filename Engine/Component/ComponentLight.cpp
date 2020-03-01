@@ -54,7 +54,7 @@ void ComponentLight::Load(const Config& config)
 	light_color[2] = color.z;
 
 	light_intensity = config.GetFloat("Intensity", 1.f);
-	light_type = static_cast<LightType>(config.GetInt("LightType", static_cast<int>(LightType::DIRECTIONAL_LIGHT)));
+	light_type = static_cast<LightType>(config.GetInt("LightType", static_cast<int>(LightType::POINT_LIGHT)));
 
 	point_light_parameters.range = config.GetFloat("PointLightRange", 16.f);
 	point_light_parameters.constant = config.GetFloat("PointLightConstant", 1.f);

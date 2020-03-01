@@ -11,16 +11,6 @@
 class ModuleLight : public Module
 {
 public:
-	struct PointLightParameters
-	{
-		std::vector<float4> light_positions;
-		std::vector<float4> light_colors;
-
-		std::vector<float> light_constants;
-		std::vector<float> light_quadratics;
-		std::vector<float> light_linears;
-	};
-
 	ModuleLight() = default;
 	~ModuleLight();
 
