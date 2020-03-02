@@ -54,8 +54,8 @@ public:
 		return *this;
 	}
 
-	virtual void Enable() { active = true; };
-	virtual void Disable() { active = false; };
+	virtual void Enable() { active = true;};
+	virtual void Disable() { active = false;};
 	virtual bool IsEnabled() const { return active; };
 
 
@@ -94,6 +94,8 @@ public:
 	GameObject *owner = nullptr;
 	ComponentType type;
 
+	bool modified_by_user = false; //This is only for prefab and UI
+	bool added_by_user = false; //This is only for prefab and UI
 protected:
 	bool active = true;
 };

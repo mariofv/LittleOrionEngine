@@ -42,6 +42,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
 			transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
 			transform->OnTransformChange();
+			transform->modified_by_user = true;
 		}
 		//UndoRedo
 		CheckClickForUndo(ModuleActions::UndoActionType::ROTATION, transform);
@@ -49,6 +50,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 		if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
 		{
 			transform->OnTransformChange();
+			transform->modified_by_user = true;
 		}
 
 		//UndoRedo
@@ -65,6 +67,7 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 			//UndoRedo
 			App->actions->action_component = mesh;
 			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+			mesh->modified_by_user = true;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
@@ -95,6 +98,7 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 				bool is_selected = (mesh->shader_program == program);
 				if (ImGui::Selectable(program, is_selected))
 				{
+					mesh->modified_by_user = true;
 					mesh->shader_program = program;
 					if (is_selected)
 						ImGui::SetItemDefaultFocus();  
@@ -144,6 +148,7 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 						App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
 
 						material->RemoveMaterialTexture(i);
+						material->modified_by_user = true;
 					}
 					ImGui::SameLine(); ImGui::Text("Remove Texture");
 					ImGui::EndGroup();
@@ -156,22 +161,22 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 				}
 				if (type == Texture::TextureType::DIFUSSE)
 				{
-					ImGui::ColorEdit3("Diffuse Color", material->diffuse_color);
-					ImGui::SliderFloat("k diffuse", &material->k_diffuse, 0, 1);
+					if (ImGui::ColorEdit3("Diffuse Color", material->diffuse_color)) { material->modified_by_user = true; };
+					if (ImGui::SliderFloat("k diffuse", &material->k_diffuse, 0, 1)) { material->modified_by_user = true; };
 				}
 				if (type == Texture::TextureType::EMISSIVE)
 				{
-					ImGui::ColorEdit3("Emissive Color", material->emissive_color);
+					if (ImGui::ColorEdit3("Emissive Color", material->emissive_color)) {material->modified_by_user = true;}
 				}
 				if (type == Texture::TextureType::OCLUSION)
 				{
-					ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1);
+					if (ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1)){	material->modified_by_user = true;}
 				}
 				if (type == Texture::TextureType::SPECULAR)
 				{
-					ImGui::ColorEdit3("Specular Color", material->specular_color);
-					ImGui::SliderFloat("k specular", &material->k_specular, 0, 1);
-					ImGui::SliderFloat("Shininess", &material->shininess, 0, 1);
+					if(ImGui::ColorEdit3("Specular Color", material->specular_color)) { material->modified_by_user = true; }
+					if (ImGui::SliderFloat("k specular", &material->k_specular, 0, 1)) { material->modified_by_user = true; }
+					if (ImGui::SliderFloat("Shininess", &material->shininess, 0, 1)) { material->modified_by_user = true; }
 				}
 
 				ImGui::Separator();
@@ -195,6 +200,7 @@ void PanelComponent::DropTarget(ComponentMaterial *material, Texture::TextureTyp
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
 
 				material->SetMaterialTexture(type, App->texture->LoadTexture(incoming_file->file_path.c_str()));
+				material->modified_by_user = true;
 			}
 		}
 		ImGui::EndDragDropTarget();
@@ -231,6 +237,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 			//UndoRedo
 			App->actions->action_component = camera;
 			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+			camera->modified_by_user = true;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
@@ -240,12 +247,12 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly);
+		if (ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; };
+		if (ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; };
 
 		ImGui::Separator();
 
-		ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f ,camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
+		if (ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED)) { camera->modified_by_user = true; };
 		
 		//UndoRedo
 		CheckClickedCamera(camera);
@@ -253,6 +260,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		if (ImGui::DragFloat("FOV", &camera->camera_frustum.verticalFov, 0.01f, 0, 2 * 3.14f))
 		{
 			camera->SetFOV(camera->camera_frustum.verticalFov);
+			camera->modified_by_user = true;
 		}
 
 		//UndoRedo
@@ -261,6 +269,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		if (ImGui::DragFloat("Aspect Ratio", &camera->aspect_ratio, 0.01f , 0, 10))
 		{
 			camera->SetAspectRatio(camera->aspect_ratio);
+			camera->modified_by_user = true;
 		}
 
 		//UndoRedo
@@ -269,6 +278,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		if (ImGui::DragFloat("Near plane", &camera->camera_frustum.nearPlaneDistance, 0.01f, 1, camera->camera_frustum.farPlaneDistance + 1))
 		{
 			camera->SetNearDistance(camera->camera_frustum.nearPlaneDistance);
+			camera->modified_by_user = true;
 		}
 
 		//UndoRedo
@@ -277,6 +287,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		if (ImGui::DragFloat("Far plane", &camera->camera_frustum.farPlaneDistance, 0.01f, camera->camera_frustum.nearPlaneDistance + 1, camera->camera_frustum.nearPlaneDistance + 1000))
 		{
 			camera->SetFarDistance(camera->camera_frustum.farPlaneDistance);
+			camera->modified_by_user = true;
 		}
 
 		//UndoRedo
@@ -290,18 +301,21 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 			{
 			case 0:
 				camera->SetClearMode(ComponentCamera::ClearMode::COLOR);
+				camera->modified_by_user = true;
 				break;
 			case 1:
 				camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
+				camera->modified_by_user = true;
 				break;
 			}
 		}		
-		ImGui::ColorEdit3("Clear Color", camera->camera_clear_color);
+		if (ImGui::ColorEdit3("Clear Color", camera->camera_clear_color)) { camera->modified_by_user = true; };
 		ImGui::Separator();
 
 		if (ImGui::DragFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0.01f, 0, 100))
 		{
 			camera->SetOrthographicSize(float2(camera->camera_frustum.orthographicHeight * camera->aspect_ratio, camera->camera_frustum.orthographicHeight));
+			camera->modified_by_user = true;
 		}
 
 		//UndoRedo
@@ -321,7 +335,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		ImGui::DragInt("Depth", &camera->depth, 0.05f);
+		if (ImGui::DragInt("Depth", &camera->depth, 0.05f)) { camera->modified_by_user = true; };
 
 		//UndoRedo
 		CheckClickedCamera(camera);
@@ -387,6 +401,7 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 			//UndoRedo
 			App->actions->action_component = light;
 			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+			light->modified_by_user = true;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
@@ -397,11 +412,11 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 		}
 		ImGui::Separator();
 
-		ImGui::ColorEdit3("Color", light->light_color);
+		if (ImGui::ColorEdit3("Color", light->light_color)) { light->modified_by_user = true; };
 		
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 		
-		ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f);
+		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f)) { light->modified_by_user = true; };
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 		
@@ -443,7 +458,7 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
 
 		}
-
+		component->added_by_user = true;
 		ImGui::EndPopup();
 	}
 

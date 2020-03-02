@@ -52,7 +52,7 @@ GameObject & GameObject::operator<<(const GameObject & gameobject_to_copy)
 	for (auto component : gameobject_to_copy.components)
 	{
 		Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
-		if (my_component != nullptr)
+		if (my_component != nullptr && !my_component->modified_by_user)
 		{
 			component->Copy(my_component);
 			my_component->owner = this;
@@ -72,7 +72,7 @@ GameObject & GameObject::operator<<(const GameObject & gameobject_to_copy)
 		std::back_inserter(components_to_remove),
 		[&gameobject_to_copy](auto component)
 	{
-		return gameobject_to_copy.GetComponent(component->type) == nullptr;
+		return gameobject_to_copy.GetComponent(component->type) == nullptr && !component->added_by_user;
 	}
 	);
 	for (auto component : components_to_remove)
@@ -244,12 +244,6 @@ void GameObject::SetParent(GameObject *new_parent)
 		parent->RemoveChild(this);
 	}
 	new_parent->AddChild(this);
-	GameObject *parent = new_parent;
-	while (parent != App->scene->GetRoot() && !parent_is_prefab)
-	{
-		parent_is_prefab = parent->original_UUID != 0 ? true : false;
-		parent = parent->parent;
-	}
 }
 
 void GameObject::AddChild(GameObject *child)
@@ -265,6 +259,9 @@ void GameObject::AddChild(GameObject *child)
 
 	child->transform.ChangeLocalSpace(transform.GetGlobalModelMatrix());
 	children.push_back(child);
+
+	child->parent_is_prefab =  original_UUID !=0 || parent_is_prefab;
+	added_by_user = child->original_UUID == 0 && parent_is_prefab;
 }
 
 void GameObject::RemoveChild(GameObject *child)

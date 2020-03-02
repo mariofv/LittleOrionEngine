@@ -59,7 +59,7 @@ void Prefab::Rewrite(GameObject * new_reference)
 				{
 					child->original_UUID = child->UUID;
 					GameObject * copy = App->scene->CreateGameObject();
-					copy = child;
+					*copy << *child;
 					copy->SetParent(old_instance);
 				}
 			}

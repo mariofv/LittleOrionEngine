@@ -76,6 +76,7 @@ public:
 	uint64_t original_UUID = 0; 
 	bool parent_is_prefab = false;
 	Prefab* prefab_reference = nullptr;
+	bool added_by_user = false;
 private:
 	bool active = true;
 	bool is_static = false;
