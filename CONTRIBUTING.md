@@ -57,3 +57,36 @@ void ThisIsAFunction()
     // Do something
 }
 ```
+
+## Include order
+Includes have to be split in three different blocks: **Engine includes**, **Library includes** and **C++ includes**. Each block have to be sorted alphabetically. Also, they should be written using absolute paths.
+ 
+### Engine includes
+Engine includes define `#include` pragmas for our own classes. So, everything under `Engine` folder should be in this block. Also, when including in a `.cpp` file the header file should be the first one included.
+ 
+ ### Library includes
+Library includes define `#include` pragmas for all imported libraries, excluding C++ and `std` common libraries. So, libraries like `MathGeoLib` and `assimp` should be there. Also, they are defined using `<>`.
+
+### C++ includes
+C++ includes define `#include` pragmas for C++ and `std` libraries. So, libraries like `vector` and `stdio` should be there. Also, they are defined using `<>`.
+
+Here you have an example of a full include section. Take in account that if any block is to big it could be split in subsections.
+
+```
+#include "PanelConfiguration.h"
+
+#include "Main/Application.h"
+#include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
+#include "Module/ModuleInput.h"
+#include "Module/ModuleRender.h"
+#include "Module/ModuleTime.h"
+#include "Module/ModuleWindow.h"
+
+#include "Component/ComponentCamera.h"
+
+#include <FontAwesome5/IconsFontAwesome5.h>
+#include <GL/glew.h>
+#include <imgui.h>
+#include <SDL/SDL.h>
+```
