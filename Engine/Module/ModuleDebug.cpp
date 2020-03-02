@@ -55,6 +55,7 @@ void ModuleDebug::ShowDebugWindow()
 		ImGui::Checkbox("Global bounding boxes", &show_global_bounding_boxes);
 		ImGui::Checkbox("Camera Frustum", &show_camera_frustum);
 		ImGui::Checkbox("QuadTree", &show_quadtree);
+		ImGui::Checkbox("OctTree", &show_octtree);
 		ImGui::Separator();
 
 		ImGui::Checkbox("Scene window culling", &culling_scene_mode);
