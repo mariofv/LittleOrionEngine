@@ -8,7 +8,7 @@ class PrefabImporter : public Importer
 public:
 	PrefabImporter() = default;
 	~PrefabImporter() = default;
-	std::pair<bool, std::string> Import(const File & file) const override;
+	std::pair<bool, std::string> Import(const File & file, bool force = true) const override;
 	std::pair<bool, std::string> Import(const File & file, GameObject * gameobject_to_save) const;
 
 private:

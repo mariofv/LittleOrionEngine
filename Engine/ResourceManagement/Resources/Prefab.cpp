@@ -1,6 +1,10 @@
-#include <ResourceManagement/Resources/Prefab.h>
-#include <Main/Application.h>
-#include <Module/ModuleScene.h>
+#include "Prefab.h"
+#include "Main/Application.h"
+#include "Main/GameObject.h"
+#include "Module/ModuleScene.h"
+#include "Module/ModuleResourceManager.h"
+
+
 #include <map>
 
 Prefab::Prefab(std::vector<std::unique_ptr<GameObject>> && gameObjects, uint32_t UID, const std::string & exported_file) : Resource(UID, exported_file), prefab(std::move(gameObjects))
@@ -28,7 +32,44 @@ void Prefab::Instantiate(GameObject * prefab_parent)
 		copy_in_scene->transform.Translate(float3::zero); //:D
 	}
 }
-void Prefab::LoadInMemory()
+
+void Prefab::Rewrite(GameObject * new_reference)
+{
+	auto result = App->resources->Import(exported_file, new_reference);
+	if (result.first)
+	{
+		for (auto old_instance : instances)
+		{
+			if (new_reference == old_instance)
+			{
+				continue;
+			}
+			*old_instance << *new_reference;
+			for (auto & child : new_reference->children)
+			{
+				auto it = std::find_if(old_instance->children.begin(), old_instance->children.end(), [child](auto old_instance_child) {
+					return child->original_UUID == old_instance_child->original_UUID;
+				});
+				//TODO: Only copy went their a different, need to implemente == operator in every component ¿?¿
+				if (it != old_instance->children.end())
+				{
+					**it << *child;
+				}
+				else
+				{
+					child->original_UUID = child->UUID;
+					GameObject * copy = App->scene->CreateGameObject();
+					copy = child;
+					copy->SetParent(old_instance);
+				}
+			}
+
+		}
+	}
+}
+
+void Prefab::RecursiveRewrite(GameObject * new_reference)
 {
 
 }
+

@@ -13,10 +13,12 @@ public:
 	Prefab(std::vector<std::unique_ptr<GameObject>> && gameObjects, uint32_t UID, const std::string & exported_file);
 	~Prefab() = default;
 	void Instantiate(GameObject * prefab_parent);
+	void Rewrite(GameObject * new_reference);
 
 	std::vector<GameObject*> instances;
 private:
-	void LoadInMemory();
+	void LoadInMemory() override{};
+	void RecursiveRewrite(GameObject * new_reference);
 	std::vector<std::unique_ptr<GameObject>> prefab;
 
 };

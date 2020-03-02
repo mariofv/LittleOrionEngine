@@ -4,10 +4,10 @@
 #include "Module/ModuleFileSystem.h"
 #include "Helper/Config.h"
 
-std::pair<bool, std::string> Importer::Import(const File & file) const
+std::pair<bool, std::string> Importer::Import(const File & file, bool force) const
 {
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
-	if (already_imported.uid != 0) {
+	if (already_imported.uid != 0 && !force) {
 		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 	std::string uid = "default";

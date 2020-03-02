@@ -44,9 +44,9 @@ GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_
 {
 	transform.owner = this;
 	aabb.owner = this;
-	*this = gameobject_to_copy;
+	*this << gameobject_to_copy;
 }
-GameObject & GameObject::operator=(const GameObject & gameobject_to_copy)
+GameObject & GameObject::operator<<(const GameObject & gameobject_to_copy)
 {
 	this->components.reserve(gameobject_to_copy.components.size());
 	for (auto component : gameobject_to_copy.components)
@@ -64,6 +64,22 @@ GameObject & GameObject::operator=(const GameObject & gameobject_to_copy)
 			this->components.push_back(copy);
 		}
 	}
+
+	std::vector<Component*> components_to_remove;
+	std::copy_if(
+		components.begin(),
+		components.end(),
+		std::back_inserter(components_to_remove),
+		[&gameobject_to_copy](auto component)
+	{
+		return gameobject_to_copy.GetComponent(component->type) == nullptr;
+	}
+	);
+	for (auto component : components_to_remove)
+	{
+		RemoveComponent(component);
+	}
+
 	this->name = gameobject_to_copy.name;
 	this->SetEnabled(gameobject_to_copy.active);
 	this->SetStatic(gameobject_to_copy.is_static);

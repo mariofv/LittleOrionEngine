@@ -4,7 +4,7 @@
 #include "Main/GameObject.h"
 #include "Helper/Config.h"
 #include <stack>
-std::pair<bool, std::string> PrefabImporter::Import(const File & file) const
+std::pair<bool, std::string> PrefabImporter::Import(const File & file, bool force) const
 {
 	if (file.filename.empty())
 	{
@@ -13,7 +13,7 @@ std::pair<bool, std::string> PrefabImporter::Import(const File & file) const
 	}
 
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
-	if (already_imported.uid != 0) {
+	if (already_imported.uid != 0 && !force) {
 		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 

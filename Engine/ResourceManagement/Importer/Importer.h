@@ -9,7 +9,7 @@ class Importer {
 public:
 	Importer() = default;
 	virtual ~Importer() = default;
-	virtual std::pair<bool, std::string> Import(const File & file) const;
+	virtual std::pair<bool, std::string> Import(const File & file, bool force = false) const;
 
 protected:
 

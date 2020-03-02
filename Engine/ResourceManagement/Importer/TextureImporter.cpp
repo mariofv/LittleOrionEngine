@@ -16,7 +16,7 @@ TextureImporter::TextureImporter()
 	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 }
-std::pair<bool, std::string> TextureImporter::Import(const File & file) const
+std::pair<bool, std::string> TextureImporter::Import(const File & file, bool force) const
 {
 	if (file.filename.empty())
 	{
@@ -25,7 +25,7 @@ std::pair<bool, std::string> TextureImporter::Import(const File & file) const
 	}
 
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
-	if (already_imported.uid != 0) {
+	if (already_imported.uid != 0 && !force) {
 		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 

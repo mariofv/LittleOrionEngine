@@ -5,8 +5,6 @@
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
 #include "Main/GameObject.h"
-#include "Main/Application.h"
-#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
@@ -104,37 +102,7 @@ void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
 			to_reimport = to_reimport->parent;
 			prefab_reference = to_reimport->prefab_reference;
 		}
-		auto result = App->resources->Import(prefab_reference->exported_file, to_reimport);
-		if (result.first)
-		{
-			for (auto old_instance : prefab_reference->instances)
-			{
-				if (to_reimport == old_instance)
-				{
-					continue;
-				}
-				old_instance == to_reimport;
-				for (auto & child : to_reimport->children)
-				{
-					auto it = std::find_if(old_instance->children.begin(), old_instance->children.end(), [child](auto old_instance_child) {
-						return child->original_UUID == old_instance_child->original_UUID;
-					});
-					//TODO: Only copy went their a different, need to implemente == operator in every component ¿?¿
-					if (it != old_instance->children.end())
-					{
-						**it = *child;
-					}
-					else 
-					{
-						child->original_UUID = child->UUID;
-						GameObject * copy = App->scene->CreateGameObject();
-						copy = child;
-						copy->SetParent(old_instance);
-					}
-				}
-
-			}
-		}
+		prefab_reference->Rewrite(game_object);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Revert"))

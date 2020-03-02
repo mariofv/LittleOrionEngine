@@ -21,8 +21,9 @@ public:
 	GameObject(const GameObject& gameobject_to_copy);
 	GameObject(GameObject&& gameobject_to_move) = default;
 
-	GameObject & operator=(const GameObject & gameobject_to_copy);
-	GameObject & operator=(GameObject && gameobject_to_move) = default;
+	//GameObject & operator=(const GameObject & gameobject_to_copy) = default;
+	GameObject & operator<<(const GameObject & gameobject_to_copy);
+	//GameObject & operator=(GameObject && gameobject_to_move) = default;
 
 	bool IsEnabled() const;
 	void SetEnabled(bool able);
