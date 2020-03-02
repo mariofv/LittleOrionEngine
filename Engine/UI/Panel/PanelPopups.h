@@ -18,7 +18,7 @@ private:
 	void RenderAssetsLoadingPopup();
 
 public:
-	bool show_assets_loading_popup;
+	bool show_assets_loading_popup = false;
 	PanelPopupMeshSelector mesh_selector_popup;
 
 };
