@@ -1,10 +1,12 @@
 #include "Material.h"
 
+#include "Helper/Config.h"
 #include "Main/Application.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleResourceManager.h"
 
-Material::Material()
+Material::Material(std::string material_file_path) :
+	Resource("", material_file_path)
 {
 	textures.resize(Texture::MAX_TEXTURE_TYPES);
 }
@@ -19,8 +21,6 @@ Material::~Material()
 
 void Material::Save(Config& config) const
 {
-	config.AddInt((unsigned int)type, "ComponentType");
-	config.AddInt(index, "Index");
 	for (size_t i = 0; i < textures.size(); i++)
 	{
 		if (textures[i] != nullptr)
@@ -46,8 +46,6 @@ void Material::Save(Config& config) const
 
 void Material::Load(const Config& config)
 {
-	index = config.GetInt("Index", 0);
-
 	std::string tmp_path;
 	config.GetString("Path", tmp_path, "");
 	textures.resize(Texture::MAX_TEXTURE_TYPES);
@@ -96,18 +94,18 @@ void Material::Load(const Config& config)
 	specular_color[3] = specular.w;
 }
 
-void ComponentMaterial::RemoveMaterialTexture(size_t type)
+void Material::RemoveMaterialTexture(size_t type)
 {
 	App->resources->RemoveResourceFromCacheIfNeeded(textures[type]);
 	textures[type] = nullptr;
 }
 
-void ComponentMaterial::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture)
+void Material::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture)
 {
 	textures[type] = new_texture;
 }
 
-const std::shared_ptr<Texture>& ComponentMaterial::GetMaterialTexture(size_t  type) const
+const std::shared_ptr<Texture>& Material::GetMaterialTexture(size_t  type) const
 {
 	return textures[type];
 }

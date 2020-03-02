@@ -1,18 +1,19 @@
 #ifndef _MATERIAL_H_
 #define _MATERIAL_H_
 
-#include <vector>
-#include "MathGeoLib.h"
-
-#include <GL/glew.h>
 #include "Resource.h"
-#include <ResourceManagement/Loaders/MaterialLoader.h>
+#include "Texture.h"
+#include "ResourceManagement/Loaders/MaterialLoader.h"
+
+#include <vector>
+#include <GL/glew.h>
+#include <MathGeoLib.h>
 
 class Material : public Resource
 {
 public:
-	ComponentMaterial();
-	~ComponentMaterial();
+	Material(std::string material_file_path);
+	~Material();
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
@@ -26,7 +27,6 @@ public:
 	std::string shader_program = "Blinn phong";
 
 private:
-	int index = 0;
 	std::vector<std::shared_ptr<Texture>> textures;
 
 	float diffuse_color[4] = { 1.0f, 1.0f,1.0f,1.0f };
