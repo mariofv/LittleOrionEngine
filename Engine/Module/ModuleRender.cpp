@@ -403,7 +403,7 @@ std::string ModuleRender::GetDrawMode() const
 	}
 }
 
-ComponentMeshRenderer* ModuleRender::CreateComponentMesh()
+ComponentMeshRenderer* ModuleRender::CreateComponentMeshRenderer()
 {
 	ComponentMeshRenderer *created_mesh = new ComponentMeshRenderer();
 	meshes.push_back(created_mesh);

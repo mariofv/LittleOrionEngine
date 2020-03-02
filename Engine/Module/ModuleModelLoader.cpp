@@ -81,8 +81,8 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 			return;
 		}
 
-		ComponentMeshRenderer *mesh_component = (ComponentMeshRenderer*)node_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
-		mesh_component->SetMesh(mesh_for_component);
+		ComponentMeshRenderer *mesh_component_renderer = (ComponentMeshRenderer*)node_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
+		mesh_component_renderer->SetMesh(mesh_for_component);
 		File file(mesh_uid);
 		node_game_object->name = file.filename_no_extension;
 		node_game_object->Update();
@@ -92,7 +92,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 
 	std::vector<Config> textures;
 	node_config.GetChildrenConfig("Textures", textures);
-	ComponentMaterial *componentMaterial = (ComponentMaterial*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+	ComponentMaterial *component_material_renderer = (ComponentMaterial*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL_RENDERER);
 	for (auto texture : textures)
 	{
 		std::string uid;
@@ -103,7 +103,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 		std::shared_ptr<Texture> texture_resource = App->resources->Load<Texture>(texture_path);
 		if (texture_resource.get() != nullptr)
 		{
-			componentMaterial->SetMaterialTexture(std::stoi(texture_type), App->resources->Load<Texture>(texture_path));
+			component_material_renderer->SetMaterialTexture(std::stoi(texture_type), App->resources->Load<Texture>(texture_path));
 		}
 	}
 
@@ -163,7 +163,7 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 	mesh_component->SetMesh(mesh_for_component);
 	model_game_object->Update();
 
-	ComponentMaterial* componentMaterial = (ComponentMaterial*)model_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+	ComponentMaterial* component_material_renderer = (ComponentMaterial*)model_game_object->CreateComponent(Component::ComponentType::MATERIAL_RENDERER);
 
 	//UndoRedo
 	App->actions->action_game_object = model_game_object;

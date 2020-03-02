@@ -18,8 +18,8 @@ public:
 	~PanelComponent() = default;
 
 	void ShowComponentTransformWindow(ComponentTransform *transform);
-	void ShowComponentMeshWindow(ComponentMeshRenderer *mesh);
-	void ShowComponentMaterialWindow(ComponentMaterial *material);
+	void ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh);
+	void ShowComponentMaterialRendererWindow(ComponentMaterial *material);
 	void ShowComponentCameraWindow(ComponentCamera *camera);
 	void ShowComponentLightWindow(ComponentLight *light);
 	

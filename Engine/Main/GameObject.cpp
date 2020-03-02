@@ -233,12 +233,12 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 		created_component = App->cameras->CreateComponentCamera();
 		break;
 
-	case Component::ComponentType::MATERIAL:
-		created_component = App->texture->CreateComponentMaterial();
+	case Component::ComponentType::MATERIAL_RENDERER:
+		created_component = App->texture->CreateComponentMaterialRenderer();
 		break;
 
 	case Component::ComponentType::MESH_RENDERER:
-		created_component = App->renderer->CreateComponentMesh();
+		created_component = App->renderer->CreateComponentMeshRenderer();
 		break;
 
 	case Component::ComponentType::LIGHT:
@@ -338,10 +338,10 @@ void GameObject::RenderMaterialTexture(unsigned int shader_program) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
-		if (components[i]->GetType() == Component::ComponentType::MATERIAL)
+		if (components[i]->GetType() == Component::ComponentType::MATERIAL_RENDERER)
 		{
-			ComponentMaterial* current_material = (ComponentMaterial*)components[i];
-			current_material->Render(shader_program);
+			ComponentMaterial* current_material_renderer = (ComponentMaterial*)components[i];
+			current_material_renderer->Render(shader_program);
 		}
 	}
 }

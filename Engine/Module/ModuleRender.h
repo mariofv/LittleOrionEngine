@@ -37,7 +37,7 @@ public:
 	void Render() const;
 	void RenderFrame(const ComponentCamera &camera);
 
-	ComponentMeshRenderer* CreateComponentMesh();
+	ComponentMeshRenderer* CreateComponentMeshRenderer();
 	void RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove);
 	void GenerateQuadTree();
 	void InsertAABBTree(GameObject* game_object);

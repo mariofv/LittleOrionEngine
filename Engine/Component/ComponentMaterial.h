@@ -39,7 +39,7 @@ public:
 	std::string shader_program = "Blinn phong";
 
 private:
-	ComponentType type = ComponentType::MATERIAL;
+	ComponentType type = ComponentType::MATERIAL_RENDERER;
 
 	int index = 0;
 	std::vector<std::shared_ptr<Texture>> textures;

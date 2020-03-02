@@ -24,7 +24,7 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	ComponentMaterial* CreateComponentMaterial();
+	ComponentMaterial* CreateComponentMaterialRenderer();
 	void RemoveComponentMaterial(ComponentMaterial* material_to_remove);
 	
 	std::shared_ptr<Texture> LoadTexture(const char* texture_path);

@@ -59,7 +59,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 	}
 }
 
-void PanelComponent::ShowComponentMeshWindow(ComponentMeshRenderer *mesh)
+void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -100,7 +100,7 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMeshRenderer *mesh)
 	}
 }
 
-void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
+void PanelComponent::ShowComponentMaterialRendererWindow(ComponentMaterial *material)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -472,7 +472,7 @@ void PanelComponent::ShowAddNewComponentButton()
 		sprintf_s(tmp_string, "%s Material", ICON_FA_IMAGE);
 		if (ImGui::Selectable(tmp_string))
 		{
-			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::MATERIAL_RENDERER);
 
 		}
 

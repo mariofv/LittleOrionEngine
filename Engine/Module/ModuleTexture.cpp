@@ -34,7 +34,7 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
-ComponentMaterial* ModuleTexture::CreateComponentMaterial()
+ComponentMaterial* ModuleTexture::CreateComponentMaterialRenderer()
 {
 	ComponentMaterial * new_material = new ComponentMaterial();
 	materials.push_back(new_material);

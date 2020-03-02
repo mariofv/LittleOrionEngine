@@ -4,12 +4,12 @@
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleResourceManager.h"
 
-ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL)
+ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL_RENDERER)
 {
 	textures.resize(Texture::MAX_TEXTURE_TYPES);
 }
 
-ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, ComponentType::MATERIAL)
+ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, ComponentType::MATERIAL_RENDERER)
 {
 	textures.resize(Texture::MAX_TEXTURE_TYPES);
 }
