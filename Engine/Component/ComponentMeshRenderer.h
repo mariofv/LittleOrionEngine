@@ -3,6 +3,7 @@
 
 #include "Component.h"
 #include "ResourceManagement/Resources/Mesh.h"
+#include "ResourceManagement/Resources/Material.h"
 #include "UI/Panel/InspectorSubpanel/PanelComponent.h"
 
 class ComponentMeshRenderer : public Component
@@ -26,6 +27,7 @@ public:
 
 public:
 	std::shared_ptr<Mesh> mesh_to_render;
+	std::shared_ptr<Material> material_to_render;
 
 private:
 	friend class PanelComponent;
