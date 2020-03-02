@@ -11,7 +11,7 @@ struct SDL_Texture;
 struct SDL_Renderer;
 struct SDL_Rect;
 
-class ComponentMaterial;
+class ComponentMaterialRenderer;
 class Texture;
 class MaterialImporter;
 
@@ -24,15 +24,15 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	ComponentMaterial* CreateComponentMaterialRenderer();
-	void RemoveComponentMaterial(ComponentMaterial* material_to_remove);
+	ComponentMaterialRenderer* CreateComponentMaterialRenderer();
+	void RemoveComponentMaterialRenderer(ComponentMaterialRenderer* material_to_remove);
 	
 	std::shared_ptr<Texture> LoadTexture(const char* texture_path);
 	GLuint LoadCubemap(const std::vector<std::string> & faces) const;
 public:
 	GLuint checkerboard_texture_id;
 	GLuint whitefall_texture_id;
-	std::vector<ComponentMaterial*> materials;
+	std::vector<ComponentMaterialRenderer*> materials;
 
 	const static int generate_texture_height = 64;
 	const static int generate_texture_width = 64;

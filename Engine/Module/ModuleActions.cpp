@@ -154,7 +154,7 @@ void ModuleActions::AddUndoAction(UndoActionType type)
 
 	case UndoActionType::EDIT_COMPONENTMATERIAL:
 		new_action = new EditorActionSetTexture(
-			(ComponentMaterial*)action_component,
+			(ComponentMaterialRenderer*)action_component,
 			type_texture
 		);
 		break;

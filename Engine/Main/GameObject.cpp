@@ -12,7 +12,7 @@
 #include "UI/Panel/PanelHierarchy.h"
 
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMaterial.h"
+#include "Component/ComponentMaterialRenderer.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 
@@ -340,7 +340,7 @@ void GameObject::RenderMaterialTexture(unsigned int shader_program) const
 	{
 		if (components[i]->GetType() == Component::ComponentType::MATERIAL_RENDERER)
 		{
-			ComponentMaterial* current_material_renderer = (ComponentMaterial*)components[i];
+			ComponentMaterialRenderer* current_material_renderer = (ComponentMaterialRenderer*)components[i];
 			current_material_renderer->Render(shader_program);
 		}
 	}

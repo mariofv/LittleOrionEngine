@@ -1,6 +1,6 @@
 #include "ComponentMeshRenderer.h"
 
-#include "Component/ComponentMaterial.h"
+#include "Component/ComponentMaterialRenderer.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleLight.h"
@@ -67,7 +67,7 @@ void ComponentMeshRenderer::Load(const Config& config)
 
 void ComponentMeshRenderer::Render() const
 {
-	std::string program_name = static_cast<ComponentMaterial*>(owner->GetComponent(ComponentType::MATERIAL_RENDERER))->shader_program;
+	std::string program_name = static_cast<ComponentMaterialRenderer*>(owner->GetComponent(ComponentType::MATERIAL_RENDERER))->shader_program;
 	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
 

@@ -1,20 +1,20 @@
-#include "ComponentMaterial.h"
+#include "ComponentMaterialRenderer.h"
 
 #include "Main/Application.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleResourceManager.h"
 
-ComponentMaterial::ComponentMaterial() : Component(nullptr, ComponentType::MATERIAL_RENDERER)
+ComponentMaterialRenderer::ComponentMaterialRenderer() : Component(nullptr, ComponentType::MATERIAL_RENDERER)
 {
 	textures.resize(Texture::MAX_TEXTURE_TYPES);
 }
 
-ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, ComponentType::MATERIAL_RENDERER)
+ComponentMaterialRenderer::ComponentMaterialRenderer(GameObject * owner) : Component(owner, ComponentType::MATERIAL_RENDERER)
 {
 	textures.resize(Texture::MAX_TEXTURE_TYPES);
 }
 
-ComponentMaterial::~ComponentMaterial()
+ComponentMaterialRenderer::~ComponentMaterialRenderer()
 {
 	for (auto & texture : textures)
 	{
@@ -22,12 +22,12 @@ ComponentMaterial::~ComponentMaterial()
 	}
 }
 
-void ComponentMaterial::Delete()
+void ComponentMaterialRenderer::Delete()
 {
-	App->texture->RemoveComponentMaterial(this);
+	App->texture->RemoveComponentMaterialRenderer(this);
 }
 
-void ComponentMaterial::Save(Config& config) const
+void ComponentMaterialRenderer::Save(Config& config) const
 {
 	config.AddUInt(UUID, "UUID");
 	config.AddInt((unsigned int)type, "ComponentType");
@@ -56,7 +56,7 @@ void ComponentMaterial::Save(Config& config) const
 	config.AddColor(float4(specular_color[0], specular_color[1], specular_color[2], 1.0f), "specularColor");
 }
 
-void ComponentMaterial::Load(const Config& config)
+void ComponentMaterialRenderer::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
@@ -111,7 +111,7 @@ void ComponentMaterial::Load(const Config& config)
 	specular_color[3] = specular.w;
 }
 
-void ComponentMaterial::Render(unsigned int shader_program) const
+void ComponentMaterialRenderer::Render(unsigned int shader_program) const
 {
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
@@ -119,7 +119,7 @@ void ComponentMaterial::Render(unsigned int shader_program) const
 	AddAmbientOclusionUniforms(shader_program);
 }
 
-void ComponentMaterial::AddDiffuseUniforms(unsigned int shader_program) const
+void ComponentMaterialRenderer::AddDiffuseUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE0);
 	BindTexture(Texture::TextureType::DIFUSSE);
@@ -129,7 +129,7 @@ void ComponentMaterial::AddDiffuseUniforms(unsigned int shader_program) const
 
 }
 
-void ComponentMaterial::AddEmissiveUniforms(unsigned int shader_program) const
+void ComponentMaterialRenderer::AddEmissiveUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE1);
 	BindTexture(Texture::TextureType::EMISSIVE);
@@ -137,7 +137,7 @@ void ComponentMaterial::AddEmissiveUniforms(unsigned int shader_program) const
 	glUniform4fv(glGetUniformLocation(shader_program, "material.emissive_color"), 1, (float*)emissive_color);
 }
 
-void ComponentMaterial::AddSpecularUniforms(unsigned int shader_program) const
+void ComponentMaterialRenderer::AddSpecularUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE2);
 	BindTexture(Texture::TextureType::SPECULAR);
@@ -147,7 +147,7 @@ void ComponentMaterial::AddSpecularUniforms(unsigned int shader_program) const
 	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), shininess);
 }
 
-void ComponentMaterial::AddAmbientOclusionUniforms(unsigned int shader_program) const
+void ComponentMaterialRenderer::AddAmbientOclusionUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE3);
 	BindTexture(Texture::TextureType::OCLUSION);
@@ -155,7 +155,7 @@ void ComponentMaterial::AddAmbientOclusionUniforms(unsigned int shader_program) 
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_ambient"), k_ambient);
 }
 
-void ComponentMaterial::BindTexture(Texture::TextureType id) const
+void ComponentMaterialRenderer::BindTexture(Texture::TextureType id) const
 {
 	GLuint texture_id;
 	if (show_checkerboard_texture)
@@ -173,18 +173,18 @@ void ComponentMaterial::BindTexture(Texture::TextureType id) const
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 }
 
-void ComponentMaterial::RemoveMaterialTexture(size_t type)
+void ComponentMaterialRenderer::RemoveMaterialTexture(size_t type)
 {
 	App->resources->RemoveResourceFromCacheIfNeeded(textures[type]);
 	textures[type] = nullptr;
 }
 
-void ComponentMaterial::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture)
+void ComponentMaterialRenderer::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture)
 {
 	textures[type] = new_texture;
 }
 
-const std::shared_ptr<Texture>& ComponentMaterial::GetMaterialTexture(size_t  type) const
+const std::shared_ptr<Texture>& ComponentMaterialRenderer::GetMaterialTexture(size_t  type) const
 {
 	return textures[type];
 }

@@ -9,7 +9,7 @@
 #include "ModuleResourceManager.h"
 #include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMaterial.h"
+#include "Component/ComponentMaterialRenderer.h"
 #include "Component/ComponentMeshRenderer.h"
 #include <ResourceManagement/Importer/Importer.h>
 
@@ -92,7 +92,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 
 	std::vector<Config> textures;
 	node_config.GetChildrenConfig("Textures", textures);
-	ComponentMaterial *component_material_renderer = (ComponentMaterial*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL_RENDERER);
+	ComponentMaterialRenderer *component_material_renderer = (ComponentMaterialRenderer*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL_RENDERER);
 	for (auto texture : textures)
 	{
 		std::string uid;
@@ -163,7 +163,7 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 	mesh_component->SetMesh(mesh_for_component);
 	model_game_object->Update();
 
-	ComponentMaterial* component_material_renderer = (ComponentMaterial*)model_game_object->CreateComponent(Component::ComponentType::MATERIAL_RENDERER);
+	ComponentMaterialRenderer* component_material_renderer = (ComponentMaterialRenderer*)model_game_object->CreateComponent(Component::ComponentType::MATERIAL_RENDERER);
 
 	//UndoRedo
 	App->actions->action_game_object = model_game_object;

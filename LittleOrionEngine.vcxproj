@@ -98,6 +98,7 @@
     <ClInclude Include="Engine\Actions\EditorActionScale.h" />
     <ClInclude Include="Engine\Actions\EditorActionSetTexture.h" />
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h" />
+    <ClInclude Include="Engine\Component\ComponentMaterialRenderer.h" />
     <ClInclude Include="Engine\Helper\Config.h" />
     <ClInclude Include="Engine\Helper\Timer.h" />
     <ClInclude Include="Engine\Helper\TimerUs.h" />
@@ -137,7 +138,6 @@
     <ClInclude Include="Engine\UI\Panel\InspectorSubpanel\PanelComponent.h" />
     <ClInclude Include="Engine\Component\ComponentAABB.h" />
     <ClInclude Include="Engine\Component\ComponentCamera.h" />
-    <ClInclude Include="Engine\Component\ComponentMaterial.h" />
     <ClInclude Include="Engine\Component\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentTransform.h" />
     <ClInclude Include="Engine\Component\Component.h" />
@@ -186,6 +186,7 @@
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionSetTexture.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
+    <ClCompile Include="Engine\Component\ComponentMaterialRenderer.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
     <ClCompile Include="Engine\Helper\Timer.cpp" />
     <ClCompile Include="Engine\Helper\TimerUs.cpp" />
@@ -225,7 +226,6 @@
     <ClCompile Include="Engine\UI\Panel\InspectorSubpanel\PanelComponent.cpp" />
     <ClCompile Include="Engine\Component\ComponentAABB.cpp" />
     <ClCompile Include="Engine\Component\ComponentCamera.cpp" />
-    <ClCompile Include="Engine\Component\ComponentMaterial.cpp" />
     <ClCompile Include="Engine\Component\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform.cpp" />
     <ClCompile Include="Engine\UI\EngineLog.cpp" />

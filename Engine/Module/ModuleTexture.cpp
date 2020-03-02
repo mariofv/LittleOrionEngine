@@ -4,7 +4,7 @@
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/Texture.h"
 #include "Main/GameObject.h"
-#include "Component/ComponentMaterial.h"
+#include "Component/ComponentMaterialRenderer.h"
 #include <Filesystem/File.h>
 #include <ResourceManagement/Importer/TextureImporter.h>
 #include <ResourceManagement/Loaders/TextureLoader.h>
@@ -34,14 +34,14 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
-ComponentMaterial* ModuleTexture::CreateComponentMaterialRenderer()
+ComponentMaterialRenderer* ModuleTexture::CreateComponentMaterialRenderer()
 {
-	ComponentMaterial * new_material = new ComponentMaterial();
+	ComponentMaterialRenderer * new_material = new ComponentMaterialRenderer();
 	materials.push_back(new_material);
 	return new_material;
 }
 
-void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remove)
+void ModuleTexture::RemoveComponentMaterialRenderer(ComponentMaterialRenderer* material_to_remove)
 {
 	auto it = std::find(materials.begin(), materials.end(), material_to_remove);
 	if (it != materials.end())

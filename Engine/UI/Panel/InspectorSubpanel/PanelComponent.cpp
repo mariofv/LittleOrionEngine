@@ -6,7 +6,7 @@
 #include "Actions/EditorAction.h"
 
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMaterial.h"
+#include "Component/ComponentMaterialRenderer.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
@@ -100,7 +100,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 	}
 }
 
-void PanelComponent::ShowComponentMaterialRendererWindow(ComponentMaterial *material)
+void PanelComponent::ShowComponentMaterialRendererWindow(ComponentMaterialRenderer *material)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -189,7 +189,7 @@ void PanelComponent::ShowComponentMaterialRendererWindow(ComponentMaterial *mate
 		}
 	}
 }
-void PanelComponent::DropTarget(ComponentMaterial *material, Texture::TextureType type)
+void PanelComponent::DropTarget(ComponentMaterialRenderer *material, Texture::TextureType type)
 {
 	if (ImGui::BeginDragDropTarget())
 	{

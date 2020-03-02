@@ -1,5 +1,5 @@
-#ifndef _COMPONENTMATERIAL_H_
-#define _COMPONENTMATERIAL_H_
+#ifndef _COMPONENTMATERIALRENDERER_H_
+#define _COMPONENTMATERIALRENDERER_H_
 
 #include "Component.h"
 #include "Main/Globals.h"
@@ -10,12 +10,12 @@
 #include <memory>
 
 
-class ComponentMaterial : public Component
+class ComponentMaterialRenderer : public Component
 {
 public:
-	ComponentMaterial();
-	ComponentMaterial(GameObject * owner);
-	~ComponentMaterial();
+	ComponentMaterialRenderer();
+	ComponentMaterialRenderer(GameObject * owner);
+	~ComponentMaterialRenderer();
 
 	void Delete() override;
 
@@ -57,4 +57,4 @@ private:
 	friend class PanelComponent;
 };
 
-#endif //_COMPONENTMATERIAL_H_
+#endif //_COMPONENTMATERIALRENDERER_H_

@@ -2,12 +2,12 @@
 #define _EDITORACTIONSETTEXTURE_H_
 
 #include "EditorAction.h"
-#include "Component/ComponentMaterial.h"
+#include "Component/ComponentMaterialRenderer.h"
 
 class EditorActionSetTexture : public EditorAction
 {
 public:
-	EditorActionSetTexture(ComponentMaterial* component, Texture::TextureType type);
+	EditorActionSetTexture(ComponentMaterialRenderer* component, Texture::TextureType type);
 	~EditorActionSetTexture() = default;
 
 

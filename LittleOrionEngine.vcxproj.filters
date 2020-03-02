@@ -139,9 +139,6 @@
     <ClCompile Include="Engine\Component\ComponentLight.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentMaterial.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Component\ComponentTransform.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
@@ -382,6 +379,9 @@
     <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp">
       <Filter>Engine\UI\Panel\PopupsPanel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentMaterialRenderer.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -394,9 +394,6 @@
       <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentLight.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentMaterial.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentTransform.h">
@@ -644,6 +641,9 @@
     </ClInclude>
     <ClInclude Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.h">
       <Filter>Engine\UI\Panel\PopupsPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentMaterialRenderer.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
