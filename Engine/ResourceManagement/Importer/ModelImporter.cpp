@@ -51,8 +51,8 @@ std::pair<bool, std::string> ModelImporter::Import(const File& file) const
 		return std::pair<bool, std::string>(true, already_imported);
 	}
 
-	File output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER+"/"+ file.filename_no_extension);
-	std::string output_file_model = LIBRARY_MODEL_FOLDER + "/" + file.filename_no_extension + ".json";
+	File output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER"/" + file.filename_no_extension);
+	std::string output_file_model = LIBRARY_MODEL_FOLDER"/" + file.filename_no_extension + ".json";
 	APP_LOG_INIT("Importing model %s.", file.file_path.c_str());
 
 	performance_timer.Start();
@@ -114,7 +114,7 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 		size_t mesh_index = root_node->mMeshes[i];
 
 
-		std::string material_file = LIBRARY_MATERIAL_FOLDER + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
+		std::string material_file = LIBRARY_MATERIAL_FOLDER"/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
 		material_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, material_file.c_str());
 		node.AddString(material_file, "Material");
 

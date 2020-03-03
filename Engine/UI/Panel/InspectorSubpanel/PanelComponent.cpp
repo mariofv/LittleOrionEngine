@@ -89,6 +89,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		ImGui::SameLine();
 		if (ImGui::Button(mesh->material_to_render->exported_file.c_str()))
 		{
+			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
 		}
 
 		char tmp_string[16];

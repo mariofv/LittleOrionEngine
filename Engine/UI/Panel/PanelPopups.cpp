@@ -16,6 +16,7 @@ PanelPopups::PanelPopups()
 void PanelPopups::Render()
 {
 	RenderAssetsLoadingPopup();
+	material_selector_popup.Render();
 	mesh_selector_popup.Render();
 }
 

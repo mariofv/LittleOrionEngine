@@ -33,9 +33,6 @@ public:
 	const float SCALE_FACTOR = 0.01f;
 
 private:
-	const std::string LIBRARY_MATERIAL_FOLDER = "Library/Materials";
-	const std::string LIBRARY_MESHES_FOLDER = "Library/Meshes";
-	const std::string LIBRARY_MODEL_FOLDER = "Library/Model";
 	mutable Timer performance_timer;
 	std::unique_ptr<MeshImporter> mesh_importer;
 	std::unique_ptr<MaterialImporter> material_importer;

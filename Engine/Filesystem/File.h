@@ -7,6 +7,7 @@ enum class FileType
 {
 	MODEL,
 	TEXTURE,
+	MATERIAL,
 	DIRECTORY,
 	ARCHIVE,
 	UNKNOWN

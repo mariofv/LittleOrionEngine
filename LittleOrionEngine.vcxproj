@@ -172,6 +172,7 @@
     <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
     <ClInclude Include="Engine\Module\ModuleActions.h" />
+    <ClInclude Include="Engine\UI\Panel\PopupsPanel\PanelPopupMaterialSelector.h" />
     <ClInclude Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.h" />
   </ItemGroup>
   <ItemGroup>
@@ -245,6 +246,7 @@
     <ClCompile Include="Engine\UI\Panel\PanelResourcesExplorer.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelToolBar.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp" />
+    <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMaterialSelector.cpp" />
     <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGradient.cpp" />

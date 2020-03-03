@@ -2,6 +2,7 @@
 #define _PANELPOPUPS_H_
 
 #include "Panel.h"
+#include "PopupsPanel/PanelPopupMaterialSelector.h"
 #include "PopupsPanel/PanelPopupMeshSelector.h"
 
 #include <string>
@@ -19,6 +20,7 @@ private:
 
 public:
 	bool show_assets_loading_popup = false;
+	PanelPopupMaterialSelector material_selector_popup;
 	PanelPopupMeshSelector mesh_selector_popup;
 
 };
