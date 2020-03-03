@@ -43,6 +43,7 @@ void PanelGameObject::Render(GameObject* game_object)
 	ImGui::Separator();
 	ImGui::Spacing();
 
+	bool has_mesh_renderer = false;
 	for (unsigned int i = 0; i < game_object->components.size(); ++i)
 	{
 		if (i != 0)
@@ -59,10 +60,8 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::CAMERA:
 				component_panel.ShowComponentCameraWindow(static_cast<ComponentCamera*>(component));
 				break;
-			case Component::ComponentType::MATERIAL_RENDERER:
-				component_panel.ShowComponentMaterialRendererWindow(static_cast<ComponentMaterialRenderer*>(component));
-				break;
 			case Component::ComponentType::MESH_RENDERER:
+				has_mesh_renderer = true;
 				component_panel.ShowComponentMeshRendererWindow(static_cast<ComponentMeshRenderer*>(component));
 				break;
 			case Component::ComponentType::LIGHT:
@@ -73,6 +72,11 @@ void PanelGameObject::Render(GameObject* game_object)
 		}
 
 		ImGui::PopID();
+	}
+
+	if (has_mesh_renderer)
+	{
+		component_panel.ShowMaterialWindow(static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER))->material_to_render.get());
 	}
 
 	ImGui::Spacing();

@@ -107,7 +107,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 	}
 }
 
-void PanelComponent::ShowComponentMaterialRendererWindow(ComponentMaterialRenderer *material)
+void PanelComponent::ShowMaterialWindow(Material* material)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
@@ -155,12 +155,14 @@ void PanelComponent::ShowComponentMaterialRendererWindow(ComponentMaterialRender
 
 					if (ImGui::Button(ICON_FA_TIMES) )
 					{
+						/*
 						//UndoRedo
 						App->actions->type_texture = Material::MaterialTextureType(i);
 						App->actions->action_component = material;
 						App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
+						*/
 
-						material->RemoveMaterialTexture(i);
+						material->RemoveMaterialTexture(static_cast<Material::MaterialTextureType>(i));
 					}
 					ImGui::SameLine(); ImGui::Text("Remove Texture");
 					ImGui::EndGroup();
@@ -199,7 +201,7 @@ void PanelComponent::ShowComponentMaterialRendererWindow(ComponentMaterialRender
 		}
 	}
 }
-void PanelComponent::DropTarget(ComponentMaterialRenderer *material, Material::MaterialTextureType type)
+void PanelComponent::DropTarget(Material* material, Material::MaterialTextureType type)
 {
 	if (ImGui::BeginDragDropTarget())
 	{
@@ -209,11 +211,12 @@ void PanelComponent::DropTarget(ComponentMaterialRenderer *material, Material::M
 			File *incoming_file = *(File**)payload->Data;
 			if (incoming_file->file_type == FileType::TEXTURE)
 			{
+				/*
 				//UndoRedo
 				App->actions->type_texture = type;
 				App->actions->action_component = material;
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
-
+				*/
 				material->SetMaterialTexture(type, App->texture->LoadTexture(incoming_file->file_path.c_str()));
 			}
 		}

@@ -19,7 +19,7 @@ public:
 
 	void ShowComponentTransformWindow(ComponentTransform *transform);
 	void ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh);
-	void ShowComponentMaterialRendererWindow(ComponentMaterialRenderer *material);
+	void ShowMaterialWindow(Material* material);
 	void ShowComponentCameraWindow(ComponentCamera *camera);
 	void ShowComponentLightWindow(ComponentLight *light);
 	
@@ -29,7 +29,7 @@ public:
 	void CheckClickForUndo(ModuleActions::UndoActionType type, Component* component);
 
 private:
-	void DropTarget(ComponentMaterialRenderer *material, Material::MaterialTextureType type);
+	void DropTarget(Material* material, Material::MaterialTextureType type);
 	std::string GetTypeName(Material::MaterialTextureType type);
 };
 
