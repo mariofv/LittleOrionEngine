@@ -6,7 +6,7 @@
 
 #include "Actions/EditorActionEnableDisableComponent.h"
 #include "Actions/EditorActionModifyCamera.h"
-#include "Actions/EditorActionSetTexture.h"
+//#include "Actions/EditorActionSetTexture.h"
 #include "Actions/EditorActionModifyLight.h"
 #include "Actions/EditorActionAddComponent.h"
 #include "Actions/EditorActionDeleteComponent.h"
@@ -151,14 +151,14 @@ void ModuleActions::AddUndoAction(UndoActionType type)
 			previous_light_intensity
 		);
 		break;
-
+/*
 	case UndoActionType::EDIT_COMPONENTMATERIAL:
 		new_action = new EditorActionSetTexture(
 			(ComponentMaterialRenderer*)action_component,
 			type_texture
 		);
 		break;
-
+*/
 	case UndoActionType::EDIT_COMPONENTCAMERA:
 		new_action = new EditorActionModifyCamera(
 			(ComponentCamera*)action_component

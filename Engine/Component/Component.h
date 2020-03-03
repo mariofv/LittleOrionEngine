@@ -14,7 +14,6 @@ public:
 	{
 		AABB,
 		CAMERA,
-		MATERIAL_RENDERER,
 		MESH_RENDERER,
 		TRANSFORM,
 		LIGHT
@@ -35,25 +34,6 @@ public:
 	virtual void Load(const Config &config) = 0;
 
 	virtual ComponentType GetType() const { return type; };
-
-	static ComponentType GetComponentType(unsigned int component_type_uint)
-	{
-		switch (component_type_uint) 
-		{
-		case 0:
-			return ComponentType::AABB;
-		case 1:
-			return ComponentType::CAMERA;
-		case 2:
-			return ComponentType::MATERIAL_RENDERER;
-		case 3:
-			return ComponentType::MESH_RENDERER;
-		case 4:
-			return ComponentType::TRANSFORM;
-		case 5:
-			return ComponentType::LIGHT;
-		}
-	}
 
 public:
 	uint64_t UUID = 0;

@@ -9,7 +9,6 @@
 #include "ModuleResourceManager.h"
 #include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMaterialRenderer.h"
 #include "Component/ComponentMeshRenderer.h"
 #include <ResourceManagement/Importer/Importer.h>
 
@@ -99,24 +98,6 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 		}
 	}
 
-	std::vector<Config> textures;
-	node_config.GetChildrenConfig("Textures", textures);
-	ComponentMaterialRenderer *component_material_renderer = (ComponentMaterialRenderer*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL_RENDERER);
-	for (auto texture : textures)
-	{
-		std::string uid;
-		texture.GetString("uid", uid, "");
-		size_t separator = uid.find_last_of(":");
-		std::string texture_path = uid.substr(separator+1, uid.size());
-		std::string texture_type = uid.substr(0, separator);
-		std::shared_ptr<Texture> texture_resource = App->resources->Load<Texture>(texture_path);
-		if (texture_resource.get() != nullptr)
-		{
-			component_material_renderer->SetMaterialTexture(std::stoi(texture_type), App->resources->Load<Texture>(texture_path));
-		}
-	}
-
-
 	std::string skeleton_uid;
 	node_config.GetString("Skeleton", skeleton_uid, "");
 
@@ -172,8 +153,6 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 	ComponentMeshRenderer* mesh_component = (ComponentMeshRenderer*)model_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
 	mesh_component->SetMesh(mesh_for_component);
 	model_game_object->Update();
-
-	ComponentMaterialRenderer* component_material_renderer = (ComponentMaterialRenderer*)model_game_object->CreateComponent(Component::ComponentType::MATERIAL_RENDERER);
 
 	//UndoRedo
 	App->actions->action_game_object = model_game_object;

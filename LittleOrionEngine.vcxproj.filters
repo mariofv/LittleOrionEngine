@@ -337,9 +337,6 @@
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actions\EditorActionSetTexture.cpp">
-      <Filter>Engine\Actions</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
@@ -378,9 +375,6 @@
     </ClCompile>
     <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp">
       <Filter>Engine\UI\Panel\PopupsPanel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentMaterialRenderer.cpp">
-      <Filter>Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Resources\Material.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
@@ -606,9 +600,6 @@
     <ClInclude Include="Engine\Actions\EditorActionScale.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Actions\EditorActionSetTexture.h">
-      <Filter>Engine\Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
@@ -647,9 +638,6 @@
     </ClInclude>
     <ClInclude Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.h">
       <Filter>Engine\UI\Panel\PopupsPanel</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentMaterialRenderer.h">
-      <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Material.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>

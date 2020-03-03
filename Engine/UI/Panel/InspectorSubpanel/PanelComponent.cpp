@@ -6,7 +6,6 @@
 #include "Actions/EditorAction.h"
 
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMaterialRenderer.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
@@ -482,13 +481,6 @@ void PanelComponent::ShowAddNewComponentButton()
 	if (ImGui::BeginPopupContextItem("Add component", 0))
 	{
 		char tmp_string[128];
-
-		sprintf_s(tmp_string, "%s Material", ICON_FA_IMAGE);
-		if (ImGui::Selectable(tmp_string))
-		{
-			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::MATERIAL_RENDERER);
-
-		}
 
 		sprintf_s(tmp_string, "%s Camera", ICON_FA_VIDEO);
 		if (ImGui::Selectable(tmp_string))

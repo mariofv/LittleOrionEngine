@@ -1,7 +1,6 @@
 #include "PanelGameObject.h"
 
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMaterialRenderer.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Main/GameObject.h"

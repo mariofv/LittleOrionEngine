@@ -96,9 +96,7 @@
     <ClInclude Include="Engine\Actions\EditorActionModifyLight.h" />
     <ClInclude Include="Engine\Actions\EditorActionRotation.h" />
     <ClInclude Include="Engine\Actions\EditorActionScale.h" />
-    <ClInclude Include="Engine\Actions\EditorActionSetTexture.h" />
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h" />
-    <ClInclude Include="Engine\Component\ComponentMaterialRenderer.h" />
     <ClInclude Include="Engine\Helper\Config.h" />
     <ClInclude Include="Engine\Helper\Timer.h" />
     <ClInclude Include="Engine\Helper\TimerUs.h" />
@@ -186,9 +184,7 @@
     <ClCompile Include="Engine\Actions\EditorActionModifyLight.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionRotation.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />
-    <ClCompile Include="Engine\Actions\EditorActionSetTexture.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
-    <ClCompile Include="Engine\Component\ComponentMaterialRenderer.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
     <ClCompile Include="Engine\Helper\Timer.cpp" />
     <ClCompile Include="Engine\Helper\TimerUs.cpp" />

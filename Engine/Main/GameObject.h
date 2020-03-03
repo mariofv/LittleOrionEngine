@@ -44,8 +44,6 @@ public:
 	void UpdateHierarchyDepth();
 	void UpdateHierarchyBranch();
 
-	void RenderMaterialTexture(unsigned int shader_program) const;
-
 	int GetHierarchyDepth() const;
 	void SetHierarchyDepth(int value);
 

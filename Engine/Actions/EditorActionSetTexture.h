@@ -2,7 +2,6 @@
 #define _EDITORACTIONSETTEXTURE_H_
 
 #include "EditorAction.h"
-#include "Component/ComponentMaterialRenderer.h"
 
 class EditorActionSetTexture : public EditorAction
 {

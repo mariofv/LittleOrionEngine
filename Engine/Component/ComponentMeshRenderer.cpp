@@ -1,6 +1,5 @@
 #include "ComponentMeshRenderer.h"
 
-#include "Component/ComponentMaterialRenderer.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleLight.h"
