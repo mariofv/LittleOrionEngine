@@ -25,10 +25,32 @@ void Material::Save(Config& config) const
 	{
 		if (textures[i] != nullptr)
 		{
-			std::string id = "Path" + i;
-			config.AddString(textures[i]->exported_file, id);
+			MaterialTextureType type = static_cast<MaterialTextureType>(i);
+
+			switch (type)
+			{
+			case MaterialTextureType::DIFFUSE:
+				config.AddString(textures[i]->exported_file, "Diffuse");
+				break;
+
+			case MaterialTextureType::SPECULAR:
+				config.AddString(textures[i]->exported_file, "Specular");
+				break;
+
+			case MaterialTextureType::OCCLUSION:
+				config.AddString(textures[i]->exported_file, "Occlusion");
+				break;
+
+			case MaterialTextureType::EMISSIVE:
+				config.AddString(textures[i]->exported_file, "Emissive");
+				break;
+
+			default:
+				break;
+			}
 		}
 	}
+
 	config.AddBool(show_checkerboard_texture, "Checkboard");
 	config.AddString(shader_program, "ShaderProgram");
 
@@ -46,18 +68,33 @@ void Material::Save(Config& config) const
 
 void Material::Load(const Config& config)
 {
-	std::string tmp_path;
-	config.GetString("Path", tmp_path, "");
-	textures.resize(MAX_MATERIAL_TEXTURE_TYPES);
-	for (size_t i = 0; i < textures.size(); i++)
+	std::string texture_path;
+	config.GetString("Diffuse", texture_path, "");
+	std::shared_ptr<Texture> texture_resource = App->resources->Load<Texture>(texture_path);
+	if (texture_resource.get() != nullptr)
 	{
-		std::string id = "Path" + i;
-		std::string tmp_path;
-		config.GetString(id, tmp_path, "");
-		if (!tmp_path.empty())
-		{
-			textures[i] = App->resources->Load<Texture>(tmp_path);
-		}
+		SetMaterialTexture(Material::MaterialTextureType::DIFFUSE, texture_resource);
+	}
+
+	config.GetString("Specular", texture_path, "");
+	texture_resource = App->resources->Load<Texture>(texture_path);
+	if (texture_resource.get() != nullptr)
+	{
+		SetMaterialTexture(Material::MaterialTextureType::SPECULAR, texture_resource);
+	}
+
+	config.GetString("Occlusion", texture_path, "");
+	texture_resource = App->resources->Load<Texture>(texture_path);
+	if (texture_resource.get() != nullptr)
+	{
+		SetMaterialTexture(Material::MaterialTextureType::OCCLUSION, texture_resource);
+	}
+
+	config.GetString("Emissive", texture_path, "");
+	texture_resource = App->resources->Load<Texture>(texture_path);
+	if (texture_resource.get() != nullptr)
+	{
+		SetMaterialTexture(Material::MaterialTextureType::EMISSIVE, texture_resource);
 	}
 
 	show_checkerboard_texture = config.GetBool("Checkboard", true);

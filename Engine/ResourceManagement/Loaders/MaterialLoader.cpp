@@ -31,35 +31,7 @@ std::shared_ptr<Material> MaterialLoader::Load(const std::string& file_path)
 
 	Config material_config(serialized_material_string);
 	std::shared_ptr<Material> new_material = std::make_shared<Material>(file_path);
-
-	std::string texture_path;
-	material_config.GetString("Diffuse", texture_path, "");
-	std::shared_ptr<Texture> texture_resource = App->resources->Load<Texture>(texture_path);
-	if (texture_resource.get() != nullptr)
-	{
-		new_material.get()->SetMaterialTexture(Material::MaterialTextureType::DIFFUSE, texture_resource);
-	}
-
-	material_config.GetString("Specular", texture_path, "");
-	texture_resource = App->resources->Load<Texture>(texture_path);
-	if (texture_resource.get() != nullptr)
-	{
-		new_material.get()->SetMaterialTexture(Material::MaterialTextureType::SPECULAR, texture_resource);
-	}
-
-	material_config.GetString("Occlusion", texture_path, "");
-	texture_resource = App->resources->Load<Texture>(texture_path);
-	if (texture_resource.get() != nullptr)
-	{
-		new_material.get()->SetMaterialTexture(Material::MaterialTextureType::OCCLUSION, texture_resource);
-	}
-
-	material_config.GetString("Emissive", texture_path, "");
-	texture_resource = App->resources->Load<Texture>(texture_path);
-	if (texture_resource.get() != nullptr)
-	{
-		new_material.get()->SetMaterialTexture(Material::MaterialTextureType::EMISSIVE, texture_resource);
-	}
+	new_material->Load(material_config);
 
 	return new_material;
 }
