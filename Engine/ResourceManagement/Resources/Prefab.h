@@ -18,7 +18,8 @@ public:
 	std::vector<GameObject*> instances;
 private:
 	void LoadInMemory() override{};
-	void RecursiveRewrite(GameObject * new_reference);
+	void RecursiveRewrite(GameObject * old_instance, GameObject * new_reference);
+	void AddNewGameObjectToInstance(GameObject * old_instance, GameObject * new_reference);
 	std::vector<std::unique_ptr<GameObject>> prefab;
 
 };
