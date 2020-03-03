@@ -81,13 +81,22 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 			return;
 		}
 
-		ComponentMeshRenderer *mesh_component_renderer = (ComponentMeshRenderer*)node_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
-		mesh_component_renderer->SetMesh(mesh_for_component);
+		ComponentMeshRenderer *component_mesh_renderer = (ComponentMeshRenderer*)node_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
+		component_mesh_renderer->SetMesh(mesh_for_component);
 		File file(mesh_uid);
 		node_game_object->name = file.filename_no_extension;
 		node_game_object->Update();
 		App->renderer->InsertAABBTree(node_game_object);
 
+
+		std::string material_for_component;
+		node_config.GetString("Material", material_for_component, "");
+
+		if (material_for_component != "")
+		{
+			std::shared_ptr<Material> material_resource = App->resources->Load<Material>(material_for_component);
+			component_mesh_renderer->SetMaterial(material_resource);
+		}
 	}
 
 	std::vector<Config> textures;
@@ -106,6 +115,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 			component_material_renderer->SetMaterialTexture(std::stoi(texture_type), App->resources->Load<Texture>(texture_path));
 		}
 	}
+
 
 	std::string skeleton_uid;
 	node_config.GetString("Skeleton", skeleton_uid, "");

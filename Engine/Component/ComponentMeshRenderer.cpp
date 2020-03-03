@@ -28,6 +28,11 @@ void ComponentMeshRenderer::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render
 	owner->aabb.GenerateBoundingBox();
 }
 
+void ComponentMeshRenderer::SetMaterial(const std::shared_ptr<Material> & material_to_render)
+{
+	this->material_to_render = material_to_render;
+}
+
 ComponentMeshRenderer::~ComponentMeshRenderer()
 {
 	App->resources->RemoveResourceFromCacheIfNeeded(mesh_to_render);
@@ -44,6 +49,7 @@ void ComponentMeshRenderer::Save(Config& config) const
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddString(mesh_to_render->exported_file, "MeshPath");
+	config.AddString(material_to_render->exported_file, "MaterialPath");
 }
 
 void ComponentMeshRenderer::Load(const Config& config)
@@ -61,6 +67,18 @@ void ComponentMeshRenderer::Load(const Config& config)
 	else 
 	{
 		SetMesh(App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH));
+	}
+
+	std::string material_path;
+	config.GetString("MaterialPath", material_path, "");
+	std::shared_ptr<Material> material = App->resources->Load<Material>(material_path.c_str());
+	if (material != nullptr)
+	{
+		SetMaterial(material);
+	}
+	else
+	{
+		SetMaterial(App->resources->Load<Material>(DEFAULT_MATERIAL_PATH));
 	}
 
 }

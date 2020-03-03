@@ -105,7 +105,7 @@ void Material::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & 
 	textures[type] = new_texture;
 }
 
-const std::shared_ptr<Texture>& Material::GetMaterialTexture(size_t  type) const
+const std::shared_ptr<Texture>& Material::GetMaterialTexture(size_t type) const
 {
 	return textures[type];
 }

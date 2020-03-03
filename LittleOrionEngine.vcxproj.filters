@@ -382,8 +382,12 @@
     <ClCompile Include="Engine\Component\ComponentMaterialRenderer.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Resources\Material.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Loaders\MaterialLoader.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Material.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\MaterialLoader.cpp">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -647,8 +651,12 @@
     <ClInclude Include="Engine\Component\ComponentMaterialRenderer.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Resources\Material.h" />
-    <ClInclude Include="Engine\ResourceManagement\Loaders\MaterialLoader.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Material.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\MaterialLoader.h">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

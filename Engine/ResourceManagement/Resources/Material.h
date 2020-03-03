@@ -23,6 +23,8 @@ public:
 	
 	void RemoveMaterialTexture(size_t type);
 
+	void LoadInMemory() override {}
+
 public:
 	std::string shader_program = "Blinn phong";
 

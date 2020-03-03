@@ -85,6 +85,13 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
 		}
 
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Material");
+		ImGui::SameLine();
+		if (ImGui::Button(mesh->material_to_render->exported_file.c_str()))
+		{
+		}
+
 		char tmp_string[16];
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Triangles");

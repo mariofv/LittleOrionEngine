@@ -24,6 +24,7 @@ public:
 	void RenderModel() const;
 
 	void SetMesh(const std::shared_ptr<Mesh> & mesh_to_render);
+	void SetMaterial(const std::shared_ptr<Material> & material_to_render);
 
 public:
 	std::shared_ptr<Mesh> mesh_to_render;
