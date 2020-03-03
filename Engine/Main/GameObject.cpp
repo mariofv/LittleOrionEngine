@@ -48,38 +48,16 @@ GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_
 }
 GameObject & GameObject::operator<<(const GameObject & gameobject_to_copy)
 {
-	this->components.reserve(gameobject_to_copy.components.size());
-	for (auto component : gameobject_to_copy.components)
+
+	if(prefab_reference == nullptr && gameobject_to_copy.transform.modified_by_user)
 	{
-		Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
-		if (my_component != nullptr && !my_component->modified_by_user)
-		{
-			component->Copy(my_component);
-			my_component->owner = this;
-		}
-		else
-		{
-			Component *copy = component->Clone();
-			copy->owner = this;
-			this->components.push_back(copy);
-		}
+		transform.SetTranslation(gameobject_to_copy.transform.GetTranslation());
+		transform.SetRotation(gameobject_to_copy.transform.GetRotationRadiants());
+		//gameobject_to_copy.transform.modified_by_user = false;
 	}
 
-	std::vector<Component*> components_to_remove;
-	std::copy_if(
-		components.begin(),
-		components.end(),
-		std::back_inserter(components_to_remove),
-		[&gameobject_to_copy](auto component)
-	{
-		return gameobject_to_copy.GetComponent(component->type) == nullptr && !component->added_by_user;
-	}
-	);
-	for (auto component : components_to_remove)
-	{
-		RemoveComponent(component);
-	}
-
+	transform.SetScale(gameobject_to_copy.transform.GetScale());
+	CopyComponents(gameobject_to_copy);
 	this->name = gameobject_to_copy.name;
 	this->SetEnabled(gameobject_to_copy.active);
 	this->SetStatic(gameobject_to_copy.is_static);
@@ -261,7 +239,6 @@ void GameObject::AddChild(GameObject *child)
 	children.push_back(child);
 
 	child->parent_is_prefab =  original_UUID !=0 || parent_is_prefab;
-	added_by_user = child->original_UUID == 0 && parent_is_prefab;
 }
 
 void GameObject::RemoveChild(GameObject *child)
@@ -410,4 +387,40 @@ int GameObject::GetHierarchyDepth() const
 void GameObject::SetHierarchyDepth(int value)
 {
 	hierarchy_depth = value;
+}
+
+void GameObject::CopyComponents(const GameObject & gameobject_to_copy)
+{
+	this->components.reserve(gameobject_to_copy.components.size());
+	for (auto component : gameobject_to_copy.components)
+	{
+		component->modified_by_user = false;
+		Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
+		if (my_component != nullptr && !my_component->modified_by_user)
+		{
+			component->Copy(my_component);
+			my_component->owner = this;
+		}
+		else if (my_component == nullptr)
+		{
+			Component *copy = component->Clone();
+			copy->owner = this;
+			this->components.push_back(copy);
+		}
+	}
+
+	std::vector<Component*> components_to_remove;
+	std::copy_if(
+		components.begin(),
+		components.end(),
+		std::back_inserter(components_to_remove),
+		[&gameobject_to_copy](auto component)
+	{
+		return gameobject_to_copy.GetComponent(component->type) == nullptr && !component->added_by_user;
+	}
+	);
+	for (auto component : components_to_remove)
+	{
+		RemoveComponent(component);
+	}
 }

@@ -102,7 +102,7 @@ void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
 			to_reimport = to_reimport->parent;
 			prefab_reference = to_reimport->prefab_reference;
 		}
-		prefab_reference->Rewrite(game_object);
+		prefab_reference->Rewrite(to_reimport);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Revert"))

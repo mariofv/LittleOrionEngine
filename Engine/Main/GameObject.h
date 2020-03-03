@@ -21,9 +21,9 @@ public:
 	GameObject(const GameObject& gameobject_to_copy);
 	GameObject(GameObject&& gameobject_to_move) = default;
 
-	//GameObject & operator=(const GameObject & gameobject_to_copy) = default;
+	GameObject & operator=(const GameObject & gameobject_to_copy) = default;
 	GameObject & operator<<(const GameObject & gameobject_to_copy);
-	//GameObject & operator=(GameObject && gameobject_to_move) = default;
+	GameObject & operator=(GameObject && gameobject_to_move) = default;
 
 	bool IsEnabled() const;
 	void SetEnabled(bool able);
@@ -59,6 +59,7 @@ public:
 
 private:
 	void SetHierarchyStatic(bool is_static);
+	void CopyComponents(const GameObject & gameobject_to_copy);
 
 public:
 	std::vector<Component*> components;
@@ -76,7 +77,6 @@ public:
 	uint64_t original_UUID = 0; 
 	bool parent_is_prefab = false;
 	Prefab* prefab_reference = nullptr;
-	bool added_by_user = false;
 private:
 	bool active = true;
 	bool is_static = false;

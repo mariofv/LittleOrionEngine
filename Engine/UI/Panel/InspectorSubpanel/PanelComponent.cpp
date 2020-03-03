@@ -33,6 +33,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 		if (ImGui::DragFloat3("Translation", transform->translation.ptr(), 0.01f))
 		{
 			transform->OnTransformChange();
+			transform->modified_by_user = true;
 		}
 		//UndoRedo
 		CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION, transform);

@@ -35,8 +35,8 @@ void Prefab::Instantiate(GameObject * prefab_parent)
 
 void Prefab::Rewrite(GameObject * new_reference)
 {
-	auto result = App->resources->Import(exported_file, new_reference);
-	if (result.first)
+	//auto result = App->resources->Import(exported_file, new_reference);
+	if (true)
 	{
 		for (auto old_instance : instances)
 		{
@@ -47,6 +47,7 @@ void Prefab::Rewrite(GameObject * new_reference)
 			*old_instance << *new_reference;
 			for (auto & child : new_reference->children)
 			{
+				child->original_UUID = child->UUID;
 				auto it = std::find_if(old_instance->children.begin(), old_instance->children.end(), [child](auto old_instance_child) {
 					return child->original_UUID == old_instance_child->original_UUID;
 				});
@@ -59,9 +60,30 @@ void Prefab::Rewrite(GameObject * new_reference)
 				{
 					child->original_UUID = child->UUID;
 					GameObject * copy = App->scene->CreateGameObject();
-					*copy << *child;
 					copy->SetParent(old_instance);
+					*copy << *child;
+					copy->transform.SetTranslation(child->transform.GetTranslation());
 				}
+			}
+
+			std::vector<GameObject*> gameobjects_to_remove;
+			std::copy_if(
+				old_instance->children.begin(),
+				old_instance->children.end(),
+				std::back_inserter(gameobjects_to_remove),
+				[&new_reference](auto child)
+			{
+				return std::find_if(new_reference->children.begin(), new_reference->children.end(),
+					[child](GameObject * reference_child) 
+				{ 
+					return reference_child->original_UUID == child->original_UUID;
+				}) == new_reference->children.end() && child->original_UUID != 0;
+			}
+			
+			);
+			for (auto gameobject : gameobjects_to_remove)
+			{
+				old_instance->RemoveChild(gameobject);
 			}
 
 		}
