@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "Main/Globals.h"
 #include "UI/Panel/InspectorSubpanel/PanelComponent.h"
-#include "ResourceManagement/Resources/Texture.h"
+#include "ResourceManagement/Resources/Material.h"
 
 #include <GL/glew.h>
 #include <memory>
@@ -33,7 +33,7 @@ private:
 	void AddEmissiveUniforms(unsigned int shader_program) const;
 	void AddSpecularUniforms(unsigned int shader_program) const;
 	void AddAmbientOclusionUniforms(unsigned int shader_program) const;
-	void BindTexture(Texture::TextureType id) const;
+	void BindTexture(Material::MaterialTextureType id) const;
 
 public:
 	std::string shader_program = "Blinn phong";

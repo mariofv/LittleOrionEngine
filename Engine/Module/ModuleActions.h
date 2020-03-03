@@ -3,7 +3,7 @@
 
 #include "Module.h"
 #include "Actions/EditorAction.h"
-#include "ResourceManagement/Resources/Texture.h"
+#include "ResourceManagement/Resources/Material.h"
 
 #include <MathGeoLib.h>
 
@@ -61,7 +61,7 @@ public:
 	float previous_light_color[3];
 	float previous_light_intensity;
 
-	Texture::TextureType type_texture;
+	Material::MaterialTextureType type_texture;
 	const int MAXIMUM_SIZE_STACK_UNDO = 5;
 
 };

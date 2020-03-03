@@ -130,7 +130,7 @@ void PanelComponent::ShowComponentMaterialRendererWindow(ComponentMaterialRender
 		float window_width = ImGui::GetWindowWidth();
 		for (size_t i = 0; i < material->textures.size(); ++i)
 		{
-			Texture::TextureType type = static_cast<Texture::TextureType>(i);
+			Material::MaterialTextureType type = static_cast<Material::MaterialTextureType>(i);
 			if (ImGui::CollapsingHeader(GetTypeName(type).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
 			{
 				if (material->textures[i].get() != nullptr) {
@@ -156,7 +156,7 @@ void PanelComponent::ShowComponentMaterialRendererWindow(ComponentMaterialRender
 					if (ImGui::Button(ICON_FA_TIMES) )
 					{
 						//UndoRedo
-						App->actions->type_texture = Texture::TextureType(i);
+						App->actions->type_texture = Material::MaterialTextureType(i);
 						App->actions->action_component = material;
 						App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
 
@@ -171,24 +171,27 @@ void PanelComponent::ShowComponentMaterialRendererWindow(ComponentMaterialRender
 					ImGui::Image((void*)0, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.f,1.f,1.f,1.f), ImVec4(1.f, 1.f, 1.f, 1.f));
 					DropTarget(material, type);
 				}
-				if (type == Texture::TextureType::DIFUSSE)
+
+				switch (type)
 				{
+				case Material::MaterialTextureType::DIFFUSE:
 					ImGui::ColorEdit3("Diffuse Color", material->diffuse_color);
 					ImGui::SliderFloat("k diffuse", &material->k_diffuse, 0, 1);
-				}
-				if (type == Texture::TextureType::EMISSIVE)
-				{
+					break;
+
+				case Material::MaterialTextureType::EMISSIVE:
 					ImGui::ColorEdit3("Emissive Color", material->emissive_color);
-				}
-				if (type == Texture::TextureType::OCLUSION)
-				{
+					break;
+
+				case Material::MaterialTextureType::OCCLUSION:
 					ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1);
-				}
-				if (type == Texture::TextureType::SPECULAR)
-				{
+					break;
+
+				case Material::MaterialTextureType::SPECULAR:
 					ImGui::ColorEdit3("Specular Color", material->specular_color);
 					ImGui::SliderFloat("k specular", &material->k_specular, 0, 1);
 					ImGui::SliderFloat("Shininess", &material->shininess, 0, 1);
+					break;
 				}
 
 				ImGui::Separator();
@@ -196,7 +199,7 @@ void PanelComponent::ShowComponentMaterialRendererWindow(ComponentMaterialRender
 		}
 	}
 }
-void PanelComponent::DropTarget(ComponentMaterialRenderer *material, Texture::TextureType type)
+void PanelComponent::DropTarget(ComponentMaterialRenderer *material, Material::MaterialTextureType type)
 {
 	if (ImGui::BeginDragDropTarget())
 	{
@@ -218,22 +221,23 @@ void PanelComponent::DropTarget(ComponentMaterialRenderer *material, Texture::Te
 	}
 }
 
-std::string PanelComponent::GetTypeName(Texture::TextureType type)
+std::string PanelComponent::GetTypeName(Material::MaterialTextureType type)
 {
 	switch (type)
 	{
-	case Texture::TextureType::DIFUSSE:
+	case  Material::MaterialTextureType::DIFFUSE:
 		return "Difusse";
 		break;
-	case Texture::TextureType::SPECULAR:
+	case  Material::MaterialTextureType::SPECULAR:
 		return "Specular";
 		break;
-	case Texture::TextureType::EMISSIVE:
+	case  Material::MaterialTextureType::EMISSIVE:
 		return "Emissive";
 		break;
-	case Texture::TextureType::OCLUSION:
+	case  Material::MaterialTextureType::OCCLUSION:
 		return "Oclusion";
 		break;
+
 	default:
 		return "";
 	}

@@ -37,28 +37,28 @@ std::shared_ptr<Material> MaterialLoader::Load(const std::string& file_path)
 	std::shared_ptr<Texture> texture_resource = App->resources->Load<Texture>(texture_path);
 	if (texture_resource.get() != nullptr)
 	{
-		new_material.get()->SetMaterialTexture(Texture::TextureType::DIFUSSE, texture_resource);
+		new_material.get()->SetMaterialTexture(Material::MaterialTextureType::DIFFUSE, texture_resource);
 	}
 
 	material_config.GetString("Specular", texture_path, "");
 	texture_resource = App->resources->Load<Texture>(texture_path);
 	if (texture_resource.get() != nullptr)
 	{
-		new_material.get()->SetMaterialTexture(Texture::TextureType::SPECULAR, texture_resource);
+		new_material.get()->SetMaterialTexture(Material::MaterialTextureType::SPECULAR, texture_resource);
 	}
 
 	material_config.GetString("Occlusion", texture_path, "");
 	texture_resource = App->resources->Load<Texture>(texture_path);
 	if (texture_resource.get() != nullptr)
 	{
-		new_material.get()->SetMaterialTexture(Texture::TextureType::OCLUSION, texture_resource);
+		new_material.get()->SetMaterialTexture(Material::MaterialTextureType::OCCLUSION, texture_resource);
 	}
 
 	material_config.GetString("Emissive", texture_path, "");
 	texture_resource = App->resources->Load<Texture>(texture_path);
 	if (texture_resource.get() != nullptr)
 	{
-		new_material.get()->SetMaterialTexture(Texture::TextureType::EMISSIVE, texture_resource);
+		new_material.get()->SetMaterialTexture(Material::MaterialTextureType::EMISSIVE, texture_resource);
 	}
 
 	return new_material;

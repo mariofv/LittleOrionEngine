@@ -77,24 +77,24 @@ void MaterialImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_
 	App->filesystem->Save(material_file_path, serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
 }
 
-Texture::TextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureType type) const
+Material::MaterialTextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureType type) const
 {
 	switch (type)
 	{
 	case aiTextureType_DIFFUSE:
-		return Texture::TextureType::DIFUSSE;
+		return Material::MaterialTextureType::DIFFUSE;
 		break;
 	case aiTextureType_SPECULAR:
-		return Texture::TextureType::SPECULAR;
+		return Material::MaterialTextureType::SPECULAR;
 		break;
 	case aiTextureType_EMISSIVE:
-		return Texture::TextureType::EMISSIVE;
+		return Material::MaterialTextureType::EMISSIVE;
 		break;
 	case aiTextureType_AMBIENT_OCCLUSION:
-		return Texture::TextureType::OCLUSION;
+		return Material::MaterialTextureType::OCCLUSION;
 		break;
 	default:
-		return Texture::TextureType::UNKNOWN;
+		return Material::MaterialTextureType::UNKNOWN;
 		break;
 	}
 }

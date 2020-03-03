@@ -7,7 +7,7 @@
 class EditorActionSetTexture : public EditorAction
 {
 public:
-	EditorActionSetTexture(ComponentMaterialRenderer* component, Texture::TextureType type);
+	EditorActionSetTexture(ComponentMaterialRenderer* component, Material::MaterialTextureType type);
 	~EditorActionSetTexture() = default;
 
 
@@ -16,7 +16,7 @@ public:
 
 private:
 	uint64_t component_UUID;
-	Texture::TextureType type;
+	Material::MaterialTextureType type;
 	std::shared_ptr<Texture> texture;
 };
 

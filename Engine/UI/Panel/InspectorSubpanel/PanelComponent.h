@@ -2,7 +2,7 @@
 #define _PANELCOMPONENT_H_
 
 #include "Module/ModuleActions.h"
-#include "ResourceManagement/Resources/Texture.h"
+#include "ResourceManagement/Resources/Material.h"
 
 class Component;
 class ComponentCamera;
@@ -29,8 +29,8 @@ public:
 	void CheckClickForUndo(ModuleActions::UndoActionType type, Component* component);
 
 private:
-	void DropTarget(ComponentMaterialRenderer *material, Texture::TextureType type);
-	std::string GetTypeName(Texture::TextureType type);
+	void DropTarget(ComponentMaterialRenderer *material, Material::MaterialTextureType type);
+	std::string GetTypeName(Material::MaterialTextureType type);
 };
 
 #endif //_PANELCOMPONENT_H_

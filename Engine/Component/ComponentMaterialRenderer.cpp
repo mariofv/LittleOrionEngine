@@ -6,12 +6,12 @@
 
 ComponentMaterialRenderer::ComponentMaterialRenderer() : Component(nullptr, ComponentType::MATERIAL_RENDERER)
 {
-	textures.resize(Texture::MAX_TEXTURE_TYPES);
+	textures.resize(Material::MAX_MATERIAL_TEXTURE_TYPES);
 }
 
 ComponentMaterialRenderer::ComponentMaterialRenderer(GameObject * owner) : Component(owner, ComponentType::MATERIAL_RENDERER)
 {
-	textures.resize(Texture::MAX_TEXTURE_TYPES);
+	textures.resize(Material::MAX_MATERIAL_TEXTURE_TYPES);
 }
 
 ComponentMaterialRenderer::~ComponentMaterialRenderer()
@@ -65,7 +65,7 @@ void ComponentMaterialRenderer::Load(const Config& config)
 
 	std::string tmp_path;
 	config.GetString("Path", tmp_path, "");
-	textures.resize(Texture::MAX_TEXTURE_TYPES);
+	textures.resize(Material::MAX_MATERIAL_TEXTURE_TYPES);
 	for (size_t i = 0; i < textures.size(); i++)
 	{
 		std::string id = "Path" + i;
@@ -122,7 +122,7 @@ void ComponentMaterialRenderer::Render(unsigned int shader_program) const
 void ComponentMaterialRenderer::AddDiffuseUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE0);
-	BindTexture(Texture::TextureType::DIFUSSE);
+	BindTexture(Material::MaterialTextureType::DIFFUSE);
 	glUniform1i(glGetUniformLocation(shader_program, "material.diffuse_map"), 0);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.diffuse_color"), 1, (float*)diffuse_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_diffuse"),  k_diffuse);
@@ -132,7 +132,7 @@ void ComponentMaterialRenderer::AddDiffuseUniforms(unsigned int shader_program) 
 void ComponentMaterialRenderer::AddEmissiveUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE1);
-	BindTexture(Texture::TextureType::EMISSIVE);
+	BindTexture(Material::MaterialTextureType::EMISSIVE);
 	glUniform1i(glGetUniformLocation(shader_program, "material.emissive_map"), 1);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.emissive_color"), 1, (float*)emissive_color);
 }
@@ -140,7 +140,7 @@ void ComponentMaterialRenderer::AddEmissiveUniforms(unsigned int shader_program)
 void ComponentMaterialRenderer::AddSpecularUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE2);
-	BindTexture(Texture::TextureType::SPECULAR);
+	BindTexture(Material::MaterialTextureType::SPECULAR);
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), k_specular);
@@ -150,12 +150,12 @@ void ComponentMaterialRenderer::AddSpecularUniforms(unsigned int shader_program)
 void ComponentMaterialRenderer::AddAmbientOclusionUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE3);
-	BindTexture(Texture::TextureType::OCLUSION);
+	BindTexture(Material::MaterialTextureType::OCCLUSION);
 	glUniform1i(glGetUniformLocation(shader_program, "material.occlusion_map"), 3);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_ambient"), k_ambient);
 }
 
-void ComponentMaterialRenderer::BindTexture(Texture::TextureType id) const
+void ComponentMaterialRenderer::BindTexture(Material::MaterialTextureType id) const
 {
 	GLuint texture_id;
 	if (show_checkerboard_texture)

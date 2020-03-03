@@ -12,21 +12,31 @@
 class Material : public Resource
 {
 public:
+	enum MaterialTextureType
+	{
+		DIFFUSE,
+		SPECULAR,
+		EMISSIVE,
+		OCCLUSION,
+		UNKNOWN
+	};
+
 	Material(std::string material_file_path);
 	~Material();
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
-	void SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture);
-	const std::shared_ptr<Texture>& GetMaterialTexture(size_t type) const;
+	void SetMaterialTexture(MaterialTextureType type, const std::shared_ptr<Texture> & new_texture);
+	const std::shared_ptr<Texture>& GetMaterialTexture(MaterialTextureType type) const;
 	
-	void RemoveMaterialTexture(size_t type);
+	void RemoveMaterialTexture(MaterialTextureType type);
 
 	void LoadInMemory() override {}
 
 public:
 	std::string shader_program = "Blinn phong";
+	static const size_t MAX_MATERIAL_TEXTURE_TYPES = static_cast<size_t>(MaterialTextureType::UNKNOWN);
 
 private:
 	std::vector<std::shared_ptr<Texture>> textures;

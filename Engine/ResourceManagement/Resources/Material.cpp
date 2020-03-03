@@ -8,7 +8,7 @@
 Material::Material(std::string material_file_path) :
 	Resource("", material_file_path)
 {
-	textures.resize(Texture::MAX_TEXTURE_TYPES);
+	textures.resize(MAX_MATERIAL_TEXTURE_TYPES);
 }
 
 Material::~Material()
@@ -48,7 +48,7 @@ void Material::Load(const Config& config)
 {
 	std::string tmp_path;
 	config.GetString("Path", tmp_path, "");
-	textures.resize(Texture::MAX_TEXTURE_TYPES);
+	textures.resize(MAX_MATERIAL_TEXTURE_TYPES);
 	for (size_t i = 0; i < textures.size(); i++)
 	{
 		std::string id = "Path" + i;
@@ -94,18 +94,18 @@ void Material::Load(const Config& config)
 	specular_color[3] = specular.w;
 }
 
-void Material::RemoveMaterialTexture(size_t type)
+void Material::RemoveMaterialTexture(MaterialTextureType type)
 {
 	App->resources->RemoveResourceFromCacheIfNeeded(textures[type]);
 	textures[type] = nullptr;
 }
 
-void Material::SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture)
+void Material::SetMaterialTexture(MaterialTextureType type, const std::shared_ptr<Texture> & new_texture)
 {
 	textures[type] = new_texture;
 }
 
-const std::shared_ptr<Texture>& Material::GetMaterialTexture(size_t type) const
+const std::shared_ptr<Texture>& Material::GetMaterialTexture(MaterialTextureType type) const
 {
 	return textures[type];
 }
