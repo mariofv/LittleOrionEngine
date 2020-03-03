@@ -35,6 +35,9 @@ private:
 	void AddAmbientOclusionUniforms(unsigned int shader_program) const;
 	void BindTexture(Texture::TextureType id) const;
 
+public:
+	std::string shader_program = "Blinn phong";
+
 private:
 	ComponentType type = ComponentType::MATERIAL;
 

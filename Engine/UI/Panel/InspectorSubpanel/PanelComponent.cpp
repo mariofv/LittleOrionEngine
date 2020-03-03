@@ -87,22 +87,6 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::SameLine();
 		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
 		ImGui::Button(tmp_string);
-
-		if (ImGui::BeginCombo("Shader", mesh->shader_program.c_str()))
-		{
-			for (auto & program : App->program->names)
-			{
-				bool is_selected = (mesh->shader_program == program);
-				if (ImGui::Selectable(program, is_selected))
-				{
-					mesh->shader_program = program;
-					if (is_selected)
-						ImGui::SetItemDefaultFocus();  
-				}
-
-			}
-			ImGui::EndCombo();
-		}
 	}
 }
 
@@ -110,6 +94,22 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		if (ImGui::BeginCombo("Shader", material->shader_program.c_str()))
+		{
+			for (auto & program : App->program->names)
+			{
+				bool is_selected = (material->shader_program == program);
+				if (ImGui::Selectable(program, is_selected))
+				{
+					material->shader_program = program;
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();
+				}
+
+			}
+			ImGui::EndCombo();
+		}
+
 		float window_width = ImGui::GetWindowWidth();
 		for (size_t i = 0; i < material->textures.size(); ++i)
 		{
@@ -404,6 +404,46 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 		ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f);
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
+
+		int light_type = static_cast<int>(light->light_type);
+
+		if (ImGui::Combo("Light Type", &light_type, "Point\0Spot\0Directional"))
+		{
+			switch (light_type)
+			{
+			case 0:
+				light->light_type = ComponentLight::LightType::POINT_LIGHT;
+				break;
+			case 1:
+				light->light_type = ComponentLight::LightType::SPOT_LIGHT;
+				break;
+			case 2:
+				light->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
+				break;
+			}
+		}
+		if (light->light_type == ComponentLight::LightType::POINT_LIGHT)
+		{
+			if (ImGui::DragFloat("Range", &light->point_light_parameters.range, 1.f, 1.f, 100.f))
+			{
+				light->point_light_parameters.ChangePointLightAttenuationValues(light->point_light_parameters.range);
+			}
+		}
+		if (light->light_type == ComponentLight::LightType::SPOT_LIGHT)
+		{
+			if (ImGui::DragFloat("Spot Angle", &light->spot_light_parameters.spot_angle, 1.f, 1.f, 179.f))
+			{
+				light->spot_light_parameters.SetSpotAngle(light->spot_light_parameters.spot_angle);
+			}
+			if (ImGui::DragFloat("Edge Softness", &light->spot_light_parameters.edge_softness, 0.01f, 0.f, 1.f))
+			{
+				light->spot_light_parameters.SetEdgeSoftness(light->spot_light_parameters.edge_softness);
+			}
+			if (ImGui::DragFloat("Range", &light->spot_light_parameters.range, 1.f, 1.f, 100.f))
+			{
+				light->spot_light_parameters.ChangeSpotLightAttenuationValues(light->spot_light_parameters.range);
+			}
+		}
 		
 	}
 }
