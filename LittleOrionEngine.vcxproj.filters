@@ -382,7 +382,9 @@
     <ClCompile Include="Engine\ResourceManagement\Loaders\MaterialLoader.cpp">
       <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMaterialSelector.cpp" />
+    <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMaterialSelector.cpp">
+      <Filter>Engine\UI\Panel\PopupsPanel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -646,7 +648,9 @@
     <ClInclude Include="Engine\ResourceManagement\Loaders\MaterialLoader.h">
       <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PopupsPanel\PanelPopupMaterialSelector.h" />
+    <ClInclude Include="Engine\UI\Panel\PopupsPanel\PanelPopupMaterialSelector.h">
+      <Filter>Engine\UI\Panel\PopupsPanel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
