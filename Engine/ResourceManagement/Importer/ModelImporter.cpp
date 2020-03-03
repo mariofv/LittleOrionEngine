@@ -112,17 +112,6 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 		Config node;
 		size_t mesh_index = root_node->mMeshes[i];
 
-		std::vector<Config> textures;
-		std::vector<std::string> loaded_meshes_materials;
-		material_importer->ImportTexturesFromMesh(scene, mesh_index, file_path, loaded_meshes_materials);
-		for (size_t i = 0; i < loaded_meshes_materials.size(); i++)
-		{
-			Config texture;
-			texture.AddString(loaded_meshes_materials[i], "uid");
-			textures.push_back(texture);
-		}
-		node.AddChildrenConfig(textures, "Textures");
-
 
 		std::string material_file = output_file + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
 		material_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, material_file.c_str());
