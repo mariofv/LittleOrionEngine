@@ -31,7 +31,7 @@ void PanelPopupMeshSelector::Render()
 			File* mesh_folder_ptr = mesh_folder.get();
 			for (auto& mesh_file : mesh_folder_ptr->children)
 			{
-				if (mesh_file.get()->file_type == FileType::MODEL)
+				if (mesh_file.get()->file_type == FileType::MESH)
 				{
 					mesh_files.push_back(mesh_file);
 				}

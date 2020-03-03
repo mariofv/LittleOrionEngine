@@ -8,6 +8,7 @@ enum class FileType
 	MODEL,
 	TEXTURE,
 	MATERIAL,
+	MESH,
 	DIRECTORY,
 	ARCHIVE,
 	UNKNOWN

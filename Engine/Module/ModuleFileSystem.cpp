@@ -161,12 +161,13 @@ FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileT
 	{
 		return FileType::TEXTURE;
 	}
-	if (
-		file_extension == "fbx"
-		|| file_extension == "ol"
-		)
+	if (file_extension == "fbx")
 	{
 		return FileType::MODEL;
+	}
+	if (file_extension == "ol")
+	{
+		return FileType::MESH;
 	}
 	if (file_extension == "matol")
 	{
