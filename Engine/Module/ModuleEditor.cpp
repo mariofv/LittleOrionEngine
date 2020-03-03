@@ -98,8 +98,8 @@ update_status ModuleEditor::PreUpdate()
 
 update_status ModuleEditor::Update()
 {
-	ImGui::ShowStyleEditor();
-	ImGui::ShowDemoWindow();
+	//ImGui::ShowStyleEditor();
+	//ImGui::ShowDemoWindow();
 
 	static bool inital_scene_loaded = false;
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)

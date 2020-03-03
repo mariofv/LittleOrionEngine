@@ -60,7 +60,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 
 void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if(ImGui::Checkbox("Active", &mesh->active))
 		{
@@ -111,6 +111,8 @@ void PanelComponent::ShowMaterialWindow(Material* material)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Spacing();
+		ImGui::Text(material->exported_file.c_str());
 		ImGui::Spacing();
 
 		if (ImGui::BeginCombo("Shader", material->shader_program.c_str()))
