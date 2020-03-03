@@ -1,5 +1,6 @@
 #include "ModuleActions.h"
 #include "ModuleEditor.h"
+#include "ModuleInput.h"
 
 #include "Main/Application.h"
 
@@ -31,6 +32,7 @@ update_status ModuleActions::PreUpdate()
 
 update_status ModuleActions::Update()
 {
+	HandleInput();
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -190,3 +192,26 @@ void ModuleActions::ClearUndoRedoStacks()
 	ClearRedoStack();
 	ClearUndoStack();
 }
+
+void ModuleActions::HandleInput()
+{
+	if (App->input->GetKeyDown(KeyCode::Z))
+	{
+		control_key_down = true;
+	}
+	if (App->input->GetKeyUp(KeyCode::LeftControl))
+	{
+		control_key_down = false;
+	}
+	if (control_key_down && App->input->GetKey(KeyCode::LeftControl) && !App->input->GetKey(KeyCode::LeftShift))
+	{
+		Undo();
+		control_key_down = false;
+	}
+	if (control_key_down && App->input->GetKey(KeyCode::LeftControl) && App->input->GetKey(KeyCode::LeftShift))
+	{
+		Redo();
+		control_key_down = false;
+	}
+}
+
