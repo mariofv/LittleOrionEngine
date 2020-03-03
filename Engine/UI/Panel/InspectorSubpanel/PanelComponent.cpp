@@ -119,7 +119,10 @@ void PanelComponent::ShowMaterialWindow(Material* material)
 				{
 					material->shader_program = program;
 					if (is_selected)
+					{
 						ImGui::SetItemDefaultFocus();
+					}
+					SaveMaterial(material);
 				}
 
 			}
@@ -162,6 +165,7 @@ void PanelComponent::ShowMaterialWindow(Material* material)
 						*/
 
 						material->RemoveMaterialTexture(static_cast<Material::MaterialTextureType>(i));
+						SaveMaterial(material);
 					}
 					ImGui::SameLine(); ImGui::Text("Remove Texture");
 					ImGui::EndGroup();
@@ -200,6 +204,18 @@ void PanelComponent::ShowMaterialWindow(Material* material)
 		}
 	}
 }
+
+void PanelComponent::SaveMaterial(Material* material)
+{
+	Config material_config;
+	material->Save(material_config);
+
+	std::string serialized_material_string;
+	material_config.GetSerializedString(serialized_material_string);
+
+	App->filesystem->Save(material->exported_file.c_str(), serialized_material_string.c_str(), serialized_material_string.size() + 1);
+}
+
 void PanelComponent::DropTarget(Material* material, Material::MaterialTextureType type)
 {
 	if (ImGui::BeginDragDropTarget())
@@ -217,6 +233,7 @@ void PanelComponent::DropTarget(Material* material, Material::MaterialTextureTyp
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
 				*/
 				material->SetMaterialTexture(type, App->texture->LoadTexture(incoming_file->file_path.c_str()));
+				SaveMaterial(material);
 			}
 		}
 		ImGui::EndDragDropTarget();

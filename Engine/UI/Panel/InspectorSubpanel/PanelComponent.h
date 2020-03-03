@@ -20,6 +20,10 @@ public:
 	void ShowComponentTransformWindow(ComponentTransform *transform);
 	void ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh);
 	void ShowMaterialWindow(Material* material);
+
+	void SaveMaterial(Material* material);
+
+	
 	void ShowComponentCameraWindow(ComponentCamera *camera);
 	void ShowComponentLightWindow(ComponentLight *light);
 	

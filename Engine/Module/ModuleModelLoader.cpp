@@ -150,8 +150,10 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 	{
 		return model_game_object;
 	}
-	ComponentMeshRenderer* mesh_component = (ComponentMeshRenderer*)model_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
-	mesh_component->SetMesh(mesh_for_component);
+
+	ComponentMeshRenderer* mesh_renderer_component = (ComponentMeshRenderer*)model_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
+	mesh_renderer_component->SetMesh(mesh_for_component);
+	mesh_renderer_component->SetMaterial(App->resources->Load<Material>(DEFAULT_MATERIAL_PATH));
 	model_game_object->Update();
 
 	//UndoRedo
