@@ -22,9 +22,17 @@ public:
 
 	void Render() const;
 	void RenderModel() const;
+	void RenderMaterial(GLuint shader_program) const;
 
 	void SetMesh(const std::shared_ptr<Mesh> & mesh_to_render);
 	void SetMaterial(const std::shared_ptr<Material> & material_to_render);
+
+private:
+	void AddDiffuseUniforms(unsigned int shader_program) const;
+	void AddEmissiveUniforms(unsigned int shader_program) const;
+	void AddSpecularUniforms(unsigned int shader_program) const;
+	void AddAmbientOclusionUniforms(unsigned int shader_program) const;
+	void BindTexture(Material::MaterialTextureType id) const;
 
 public:
 	std::shared_ptr<Mesh> mesh_to_render;
