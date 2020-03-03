@@ -24,6 +24,7 @@ ModelImporter::ModelImporter()
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Info), Assimp::Logger::Info);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Err), Assimp::Logger::Err);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Warn), Assimp::Logger::Warn);
+	App->filesystem->MakeDirectory(LIBRARY_MATERIAL_FOLDER);
 	App->filesystem->MakeDirectory(LIBRARY_MODEL_FOLDER);
 
 	mesh_importer = std::make_unique<MeshImporter>();
@@ -38,7 +39,7 @@ ModelImporter::~ModelImporter()
 	Assimp::DefaultLogger::kill();
 }
 
-std::pair<bool, std::string> ModelImporter::Import(const File & file) const
+std::pair<bool, std::string> ModelImporter::Import(const File& file) const
 {
 	if (file.filename.empty())
 	{
@@ -76,7 +77,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 
 	Config model;
 	std::vector<Config> node_config;
-	ImportNode(root_node, identity_transformation, scene, base_path.c_str(),output_file.file_path, node_config);
+	ImportNode(root_node, identity_transformation, scene, base_path.c_str(), output_file, node_config);
 
 	std::vector<Config> animations_config;
 	for (size_t i = 0; i < scene->mNumAnimations; i++)
@@ -102,7 +103,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 	return std::pair<bool, std::string>(true, output_file.file_path);
 }
 
-void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file,  std::vector<Config> & node_config) const
+void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const File& output_file,  std::vector<Config> & node_config) const
 {
 
 	aiMatrix4x4& current_transformation = parent_transformation * root_node->mTransformation;
@@ -113,12 +114,12 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 		size_t mesh_index = root_node->mMeshes[i];
 
 
-		std::string material_file = output_file + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
+		std::string material_file = LIBRARY_MATERIAL_FOLDER + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
 		material_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, material_file.c_str());
 		node.AddString(material_file, "Material");
 
 
-		std::string mesh_file = output_file + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
+		std::string mesh_file = output_file.file_path + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
 
 		// Transformation
 		aiVector3t<float> pScaling, pPosition;
