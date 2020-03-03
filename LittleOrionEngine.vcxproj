@@ -154,6 +154,7 @@
     <ClInclude Include="Engine\Module\ModuleWindow.h" />
     <ClInclude Include="Engine\Module\ModuleScene.h" />
     <ClInclude Include="Engine\UI\Panel\InspectorSubpanel\PanelGameObject.h" />
+    <ClInclude Include="Engine\UI\Panel\InspectorSubpanel\PanelMaterial.h" />
     <ClInclude Include="Engine\UI\Panel\Panel.h" />
     <ClInclude Include="Engine\UI\Panel\PanelAbout.h" />
     <ClInclude Include="Engine\UI\Panel\PanelConfiguration.h" />
@@ -234,6 +235,7 @@
     <ClCompile Include="Engine\Module\ModuleModelLoader.cpp" />
     <ClCompile Include="Engine\Module\ModuleTime.cpp" />
     <ClCompile Include="Engine\UI\Panel\InspectorSubpanel\PanelGameObject.cpp" />
+    <ClCompile Include="Engine\UI\Panel\InspectorSubpanel\PanelMaterial.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelAbout.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelConfiguration.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelConsole.cpp" />

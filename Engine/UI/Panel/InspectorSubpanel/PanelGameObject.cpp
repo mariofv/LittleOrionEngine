@@ -3,7 +3,10 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
+#include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleEditor.h"
+#include "UI/Panel/PanelInspector.h"
 
 #include <imgui.h>
 #include <imgui_stdlib.h>
@@ -73,7 +76,7 @@ void PanelGameObject::Render(GameObject* game_object)
 
 	if (game_object->GetComponent(Component::ComponentType::MESH_RENDERER) != nullptr)
 	{
-		component_panel.ShowMaterialWindow(static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER))->material_to_render.get());
+		App->editor->inspector->material_panel.Render(static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER))->material_to_render.get());
 	}
 
 	ImGui::Spacing();

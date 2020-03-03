@@ -385,6 +385,9 @@
     <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMaterialSelector.cpp">
       <Filter>Engine\UI\Panel\PopupsPanel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\InspectorSubpanel\PanelMaterial.cpp">
+      <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -650,6 +653,9 @@
     </ClInclude>
     <ClInclude Include="Engine\UI\Panel\PopupsPanel\PanelPopupMaterialSelector.h">
       <Filter>Engine\UI\Panel\PopupsPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\InspectorSubpanel\PanelMaterial.h">
+      <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

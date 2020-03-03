@@ -2,7 +2,6 @@
 #define _PANELCOMPONENT_H_
 
 #include "Module/ModuleActions.h"
-#include "ResourceManagement/Resources/Material.h"
 
 class Component;
 class ComponentCamera;
@@ -19,12 +18,6 @@ public:
 
 	void ShowComponentTransformWindow(ComponentTransform *transform);
 	void ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh);
-	
-	void ShowMaterialWindow(Material* material);
-	void ShowMaterialTextureMap(Material* material, Material::MaterialTextureType type);
-	void SaveMaterial(Material* material);
-
-	
 	void ShowComponentCameraWindow(ComponentCamera *camera);
 	void ShowComponentLightWindow(ComponentLight *light);
 	
@@ -32,10 +25,6 @@ public:
 
 	void CheckClickedCamera(ComponentCamera* camera);
 	void CheckClickForUndo(ModuleActions::UndoActionType type, Component* component);
-
-private:
-	void DropTarget(Material* material, Material::MaterialTextureType type);
-	std::string GetTypeName(Material::MaterialTextureType type);
 };
 
 #endif //_PANELCOMPONENT_H_
