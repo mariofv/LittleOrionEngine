@@ -34,7 +34,13 @@ std::pair<bool, std::string> TextureImporter::Import(const File & file) const
 	ilGenImages(1, &image);
 	ilBindImage(image);
 	int width, height;
-	ILubyte * save_data = LoadImageData(file.file_path.c_str(), IL_RGBA, width, height);
+	ILubyte* save_data = LoadImageData(file.file_path.c_str(), IL_RGBA, width, height);
+	if (save_data == nullptr)
+	{
+		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
+			return std::pair<bool, std::string>(false, "");
+	}
+
 	//Get new Name
 
 	std::string texture_name_no_extension = file.filename.substr(0, file.filename.find_last_of("."));
