@@ -111,6 +111,8 @@ void PanelComponent::ShowMaterialWindow(Material* material)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ImGui::Spacing();
+
 		if (ImGui::BeginCombo("Shader", material->shader_program.c_str()))
 		{
 			for (auto & program : App->program->names)
@@ -130,80 +132,112 @@ void PanelComponent::ShowMaterialWindow(Material* material)
 			ImGui::EndCombo();
 		}
 
-		float window_width = ImGui::GetWindowWidth();
-		for (size_t i = 0; i < material->textures.size(); ++i)
-		{
-			Material::MaterialTextureType type = static_cast<Material::MaterialTextureType>(i);
-			if (ImGui::CollapsingHeader(GetTypeName(type).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
-			{
-				if (material->textures[i].get() != nullptr) {
-					ImGui::PushID(i);
-					char tmp_string[256];
-					std::shared_ptr<Texture> & texture = material->textures[i];
-					ImGui::Image((void*)(intptr_t)texture->opengl_texture, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
-					DropTarget(material, type);
-					ImGui::SameLine();
-					ImGui::BeginGroup();
-					ImGui::Text("Texture:");
-					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), texture->exported_file.c_str());
-					sprintf_s(tmp_string, "(%dx%d px)", texture->width, texture->height);
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
 
-					bool mipmap = texture->IsMipMapped();
-					ImGui::Checkbox("Mipmap", &mipmap);
-					ImGui::SameLine();
-					ImGui::Checkbox("Checker Texture", &material->show_checkerboard_texture);
-					ImGui::Spacing();
+		ImGui::Text("Main Maps");
+		ImGui::Spacing();
+		ImGui::Spacing();
 
-					if (ImGui::Button(ICON_FA_TIMES) )
-					{
-						/*
-						//UndoRedo
-						App->actions->type_texture = Material::MaterialTextureType(i);
-						App->actions->action_component = material;
-						App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
-						*/
+		ShowMaterialTextureMap(material, Material::MaterialTextureType::DIFFUSE);
+		ImGui::Spacing();
 
-						material->RemoveMaterialTexture(static_cast<Material::MaterialTextureType>(i));
-						SaveMaterial(material);
-					}
-					ImGui::SameLine(); ImGui::Text("Remove Texture");
-					ImGui::EndGroup();
-					ImGui::PopID();
-				}
-				else
-				{
-					ImGui::Image((void*)0, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.f,1.f,1.f,1.f), ImVec4(1.f, 1.f, 1.f, 1.f));
-					DropTarget(material, type);
-				}
+		ShowMaterialTextureMap(material, Material::MaterialTextureType::SPECULAR);
+		ImGui::Spacing();
 
-				switch (type)
-				{
-				case Material::MaterialTextureType::DIFFUSE:
-					ImGui::ColorEdit3("Diffuse Color", material->diffuse_color);
-					ImGui::SliderFloat("k diffuse", &material->k_diffuse, 0, 1);
-					break;
+		ShowMaterialTextureMap(material, Material::MaterialTextureType::EMISSIVE);
+		ImGui::Spacing();
 
-				case Material::MaterialTextureType::EMISSIVE:
-					ImGui::ColorEdit3("Emissive Color", material->emissive_color);
-					break;
+		ShowMaterialTextureMap(material, Material::MaterialTextureType::OCCLUSION);
+		ImGui::Spacing();
 
-				case Material::MaterialTextureType::OCCLUSION:
-					ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1);
-					break;
-
-				case Material::MaterialTextureType::SPECULAR:
-					ImGui::ColorEdit3("Specular Color", material->specular_color);
-					ImGui::SliderFloat("k specular", &material->k_specular, 0, 1);
-					ImGui::SliderFloat("Shininess", &material->shininess, 0, 1);
-					break;
-				}
-
-				ImGui::Separator();
-			}
-		}
+		ImGui::Separator();
 	}
+}
+
+void PanelComponent::ShowMaterialTextureMap(Material* material, Material::MaterialTextureType type)
+{
+	float material_texture_map_size = 20.f;
+
+	if (material->textures[type].get() != nullptr) {
+		char tmp_string[256];
+		std::shared_ptr<Texture>& texture = material->textures[type];
+		ImGui::Image(
+			(void*)(intptr_t)texture->opengl_texture, 
+			ImVec2(material_texture_map_size, material_texture_map_size), 
+			ImVec2(0, 1),
+			ImVec2(1, 0), 
+			ImVec4(1.f, 1.f, 1.f, 1.f),
+			ImVec4(1.f, 1.f, 1.f, 1.f)
+		);
+		DropTarget(material, type);
+	}
+	else
+	{
+		ImGui::Image(
+			(void*)0, 
+			ImVec2(material_texture_map_size, material_texture_map_size),
+			ImVec2(0, 1), 
+			ImVec2(1, 0), 
+			ImVec4(1.f, 1.f, 1.f, 1.f),
+			ImVec4(1.f, 1.f, 1.f, 1.f)
+		);
+		DropTarget(material, type);
+	}
+	
+	ImGui::SameLine();
+	ImGui::AlignTextToFramePadding();
+
+	switch (type)
+	{
+	case Material::MaterialTextureType::DIFFUSE:
+		ImGui::Text("Diffuse");
+		
+		ImGui::Spacing();
+		ImGui::Indent();
+
+		ImGui::ColorEdit3("Color", material->diffuse_color);
+		ImGui::SliderFloat("K diffuse", &material->k_diffuse, 0, 1);
+		ImGui::Unindent();
+
+		break;
+
+	case Material::MaterialTextureType::EMISSIVE:
+		ImGui::Text("Emissive");
+
+		ImGui::Spacing();
+		ImGui::Indent();
+
+		ImGui::ColorEdit3("Color", material->emissive_color);
+		ImGui::Unindent();
+
+		break;
+
+	case Material::MaterialTextureType::OCCLUSION:
+		ImGui::Text("Occlusion");
+
+		ImGui::Spacing();
+		ImGui::Indent();
+
+		ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1);
+		ImGui::Unindent();
+
+		break;
+
+	case Material::MaterialTextureType::SPECULAR:
+		ImGui::Text("Specular");
+		
+		ImGui::Spacing();
+		ImGui::Indent();
+
+		ImGui::ColorEdit3("Color", material->specular_color);
+		ImGui::SliderFloat("k specular", &material->k_specular, 0, 1);
+		ImGui::Unindent();
+		
+		break;
+	}
+
 }
 
 void PanelComponent::SaveMaterial(Material* material)

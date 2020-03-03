@@ -19,8 +19,9 @@ public:
 
 	void ShowComponentTransformWindow(ComponentTransform *transform);
 	void ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh);
+	
 	void ShowMaterialWindow(Material* material);
-
+	void ShowMaterialTextureMap(Material* material, Material::MaterialTextureType type);
 	void SaveMaterial(Material* material);
 
 	
