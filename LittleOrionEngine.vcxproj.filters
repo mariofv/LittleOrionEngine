@@ -469,6 +469,8 @@
     <ClCompile Include="Libraries\include\recast\Recast\RecastRasterization.cpp">
       <Filter>Libraries\recast</Filter>
     </ClCompile>
+    <ClCompile Include="ModuleAI.cpp" />
+    <ClCompile Include="NavMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -801,6 +803,8 @@
     <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDump.h">
       <Filter>Libraries\recast</Filter>
     </ClInclude>
+    <ClInclude Include="ModuleAI.h" />
+    <ClInclude Include="NavMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
