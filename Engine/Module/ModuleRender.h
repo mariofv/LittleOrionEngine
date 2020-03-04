@@ -101,6 +101,7 @@ private:
 	friend class PanelConfiguration;
 	friend class PanelDebug;
 	friend class PanelScene;
+	friend class NavMesh;
 };
 
 #endif //_MODULERENDER_H_
