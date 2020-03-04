@@ -19,7 +19,6 @@
 #include "UI/Panel/PanelInspector.h"
 #include "UI/Panel/PanelPopups.h"
 #include "UI/Panel/PanelProjectExplorer.h"
-#include "UI/Panel/PanelResourcesExplorer.h"
 #include "UI/Panel/PanelScene.h"
 #include "UI/Panel/PanelToolBar.h"
 
@@ -49,7 +48,6 @@ bool ModuleEditor::Init()
 	panels.push_back(hierarchy = new PanelHierarchy());
 	panels.push_back(project_explorer = new PanelProjectExplorer());
 	panels.push_back(console = new PanelConsole());
-	panels.push_back(resources_explorer = new PanelResourcesExplorer());
 	panels.push_back(debug_panel = new PanelDebug());
 	panels.push_back(configuration = new PanelConfiguration());
 	panels.push_back(about = new PanelAbout());
@@ -183,7 +181,6 @@ void ModuleEditor::InitEditorDockspace()
 	ImGui::DockBuilderDockWindow(inspector->GetWindowName().c_str(), dock_id_right);
 	ImGui::DockBuilderDockWindow(console->GetWindowName().c_str(), dock_id_left_bottom);
 	ImGui::DockBuilderDockWindow(project_explorer->GetWindowName().c_str(), dock_id_left_bottom);
-	ImGui::DockBuilderDockWindow(resources_explorer->GetWindowName().c_str(), dock_id_left_bottom);
 
 	ImGui::DockBuilderFinish(editor_dockspace_id);
 }

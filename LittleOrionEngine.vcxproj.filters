@@ -370,9 +370,6 @@
     <ClCompile Include="Engine\Component\ComponentMeshRenderer.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelResourcesExplorer.cpp">
-      <Filter>Engine\UI\Panel</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp">
       <Filter>Engine\UI\Panel\PopupsPanel</Filter>
     </ClCompile>
@@ -638,9 +635,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentMeshRenderer.h">
       <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelResourcesExplorer.h">
-      <Filter>Engine\UI\Panel</Filter>
     </ClInclude>
     <ClInclude Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.h">
       <Filter>Engine\UI\Panel\PopupsPanel</Filter>
