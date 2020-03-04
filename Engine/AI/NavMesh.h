@@ -8,6 +8,8 @@
 
 class dtNavMeshQuery;
 class dtNavMesh;
+class DetourNavMesh;
+class dtMeshTile;
 
 class NavMesh
 {
@@ -19,6 +21,8 @@ public:
 	bool Update();
 
 	bool CreateNavMesh();
+	bool RenderNavMesh(const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags) const;
+	void RenderTile(const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const;
 
 private:
 	void GetVerticesScene();
@@ -129,6 +133,10 @@ private:
 	dtNavMeshQuery* nav_query = nullptr;
 	dtNavMesh* nav_mesh = nullptr;
 	unsigned char nav_mesh_draw_flags;
+
+
+	
+
 };
 
 #endif // _NAVMESH_H_

@@ -9,7 +9,8 @@
 #include <math.h>
 #include "recast/Detour/DetourNavMeshQuery.h"
 #include "recast/Detour/DetourNavMeshBuilder.h"
-
+#include "recast/DebugUtils/DetourDebugDraw.h"
+#include "recast/Detour/DetourNavMesh.h"
 
 NavMesh::NavMesh()
 {
@@ -441,6 +442,143 @@ bool NavMesh::CreateNavMesh()
 	//duDebugDrawNavMeshWithClosedList(my_debug_draw, *nav_mesh, *nav_query, nav_mesh_draw_flags);
 
 	return true;
+}
+
+bool NavMesh::RenderNavMesh(const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags) const
+{
+	const dtNavMeshQuery* q = (flags & DU_DRAWNAVMESH_CLOSEDLIST) ? &query : 0;
+
+	for (int i = 0; i < mesh.getMaxTiles(); ++i)
+	{
+		const dtMeshTile* tile = mesh.getTile(i);
+		if (!tile->header) continue;
+		RenderTile(mesh, q, tile, flags);
+	}
+	
+	return true;
+}
+
+void NavMesh::RenderTile(const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const
+{
+	
+	
+	dtPolyRef base = mesh.getPolyRefBase(tile);
+
+	int tileNum = mesh.decodePolyIdTile(base);
+	const unsigned int tileColor = 1;
+	
+	dd->depthMask(false);
+
+	dd->begin(DU_DRAW_TRIS);
+	for (int i = 0; i < tile->header->polyCount; ++i)
+	{
+		const dtPoly* p = &tile->polys[i];
+		if (p->getType() == DT_POLYTYPE_OFFMESH_CONNECTION)	// Skip off-mesh links.
+			continue;
+			
+		const dtPolyDetail* pd = &tile->detailMeshes[i];
+
+		unsigned int col;
+		if (query && query->isInClosedList(base | (dtPolyRef)i))
+			col = duRGBA(255,196,0,64);
+		else
+		{
+			if (flags & DU_DRAWNAVMESH_COLOR_TILES)
+				col = tileColor;
+			else
+				col = duTransCol(dd->areaToCol(p->getArea()), 64);
+		}
+		
+		for (int j = 0; j < pd->triCount; ++j)
+		{
+			const unsigned char* t = &tile->detailTris[(pd->triBase+j)*4];
+			for (int k = 0; k < 3; ++k)
+			{
+				if (t[k] < p->vertCount)
+					dd->vertex(&tile->verts[p->verts[t[k]]*3], col);
+				else
+					dd->vertex(&tile->detailVerts[(pd->vertBase+t[k]-p->vertCount)*3], col);
+			}
+		}
+	}
+	dd->end();
+	
+	
+	///LINES UNTIL HERE ARE FOR RENDERING THE NAVMESH (CODE ABOVE)
+
+	// Draw inter poly boundaries
+	drawPolyBoundaries(dd, tile, duRGBA(0,48,64,32), 1.5f, true);
+	
+	// Draw outer poly boundaries
+	drawPolyBoundaries(dd, tile, duRGBA(0,48,64,220), 2.5f, false);
+
+	if (flags & DU_DRAWNAVMESH_OFFMESHCONS)
+	{
+		dd->begin(DU_DRAW_LINES, 2.0f);
+		for (int i = 0; i < tile->header->polyCount; ++i)
+		{
+			const dtPoly* p = &tile->polys[i];
+			if (p->getType() != DT_POLYTYPE_OFFMESH_CONNECTION)	// Skip regular polys.
+				continue;
+			
+			unsigned int col, col2;
+			if (query && query->isInClosedList(base | (dtPolyRef)i))
+				col = duRGBA(255,196,0,220);
+			else
+				col = duDarkenCol(duTransCol(dd->areaToCol(p->getArea()), 220));
+
+			const dtOffMeshConnection* con = &tile->offMeshCons[i - tile->header->offMeshBase];
+			const float* va = &tile->verts[p->verts[0]*3];
+			const float* vb = &tile->verts[p->verts[1]*3];
+
+			// Check to see if start and end end-points have links.
+			bool startSet = false;
+			bool endSet = false;
+			for (unsigned int k = p->firstLink; k != DT_NULL_LINK; k = tile->links[k].next)
+			{
+				if (tile->links[k].edge == 0)
+					startSet = true;
+				if (tile->links[k].edge == 1)
+					endSet = true;
+			}
+			
+			// End points and their on-mesh locations.
+			dd->vertex(va[0],va[1],va[2], col);
+			dd->vertex(con->pos[0],con->pos[1],con->pos[2], col);
+			col2 = startSet ? col : duRGBA(220,32,16,196);
+			duAppendCircle(dd, con->pos[0],con->pos[1]+0.1f,con->pos[2], con->rad, col2);
+
+			dd->vertex(vb[0],vb[1],vb[2], col);
+			dd->vertex(con->pos[3],con->pos[4],con->pos[5], col);
+			col2 = endSet ? col : duRGBA(220,32,16,196);
+			duAppendCircle(dd, con->pos[3],con->pos[4]+0.1f,con->pos[5], con->rad, col2);
+			
+			// End point vertices.
+			dd->vertex(con->pos[0],con->pos[1],con->pos[2], duRGBA(0,48,64,196));
+			dd->vertex(con->pos[0],con->pos[1]+0.2f,con->pos[2], duRGBA(0,48,64,196));
+			
+			dd->vertex(con->pos[3],con->pos[4],con->pos[5], duRGBA(0,48,64,196));
+			dd->vertex(con->pos[3],con->pos[4]+0.2f,con->pos[5], duRGBA(0,48,64,196));
+			
+			// Connection arc.
+			duAppendArc(dd, con->pos[0],con->pos[1],con->pos[2], con->pos[3],con->pos[4],con->pos[5], 0.25f,
+						(con->flags & 1) ? 0.6f : 0, 0.6f, col);
+		}
+		dd->end();
+	}
+	
+	const unsigned int vcol = duRGBA(0,0,0,196);
+	dd->begin(DU_DRAW_POINTS, 3.0f);
+	for (int i = 0; i < tile->header->vertCount; ++i)
+	{
+		const float* v = &tile->verts[i*3];
+		dd->vertex(v[0], v[1], v[2], vcol);
+	}
+	dd->end();
+
+	dd->depthMask(true);
+	*/
+	return;
 }
 
 void NavMesh::GetVerticesScene()
