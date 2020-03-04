@@ -160,7 +160,7 @@ static void drawMeshTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 		}
 	}
 	dd->end();
-	
+	/*
 	// Draw inter poly boundaries
 	drawPolyBoundaries(dd, tile, duRGBA(0,48,64,32), 1.5f, true);
 	

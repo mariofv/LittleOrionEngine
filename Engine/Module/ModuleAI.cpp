@@ -24,3 +24,8 @@ bool ModuleAI::CleanUp()
 {
 	return true;
 }
+
+void ModuleAI::RenderNavMesh(ComponentCamera& camera)
+{
+	nav_mesh.RenderNavMesh(camera);
+}

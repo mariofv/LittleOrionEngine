@@ -3,6 +3,7 @@
 #include "Component/ComponentCamera.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleAI.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleActions.h"
@@ -52,7 +53,6 @@ void PanelScene::Render()
 
 		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
 		App->cameras->scene_camera->RecordDebugDraws(scene_window_content_area_width, scene_window_content_area_height);
-		
 		ImGui::Image(
 			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
 			ImVec2(scene_window_content_area_width, scene_window_content_area_height),
@@ -128,6 +128,7 @@ void PanelScene::RenderEditorDraws()
 	}
 
 	RenderSceneCameraGizmo();
+
 }
 
 

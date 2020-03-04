@@ -59,6 +59,12 @@
          "Vertex":"Resources/Shaders/billboard.vs",
          "Fragment":"Resources/Shaders/billboard.fs",
          "Selectable":false
+      },
+	  {
+         "Name":"NavMesh",
+         "Vertex":"Resources/Shaders/NavMesh.vs",
+         "Fragment":"Resources/Shaders/NavMesh.fs",
+         "Selectable":true
       }
    ]
 }

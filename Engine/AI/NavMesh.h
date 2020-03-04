@@ -6,7 +6,7 @@
 #include "MathGeoLib.h"
 #include <vector>
 #include "recast/DebugUtils/DebugDraw.h"
-
+#include "Component/ComponentCamera.h"
 
 enum DrawMode
 {
@@ -61,6 +61,7 @@ enum SamplePolyFlags
 
 class DebugDrawGL : public duDebugDraw
 {
+
 public:
 	virtual void depthMask(bool state);
 	virtual void texture(bool state);
@@ -70,6 +71,14 @@ public:
 	virtual void vertex(const float* pos, unsigned int color, const float* uv);
 	virtual void vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v);
 	virtual void end();
+
+	virtual void drawMesh(ComponentCamera& camera);
+
+	unsigned int vbo = 0;
+	unsigned int vao = 0;
+
+	std::vector<float3> vertices;
+
 };
 
 class SampleDebugDraw : public DebugDrawGL
@@ -96,7 +105,7 @@ public:
 	bool CreateNavMesh();
 	bool RenderNavMesh(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags) const;
 	void RenderTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const;
-
+	void RenderNavMesh(ComponentCamera& camera);
 
 	SampleDebugDraw& getDebugDraw() { return m_dd; }
 
@@ -177,6 +186,7 @@ private:
 
 	///TEST
 	SampleDebugDraw m_dd;
+	std::vector<float> vertices;
 
 };
 

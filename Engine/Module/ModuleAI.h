@@ -4,6 +4,8 @@
 #include "Module/Module.h"
 #include "AI/NavMesh.h"
 
+class ComponentCamera;
+
 class ModuleAI : public Module
 {
 public:
@@ -13,6 +15,8 @@ public:
 	bool Init() override;
 	update_status Update() override;
 	bool CleanUp() override;
+
+	void RenderNavMesh(ComponentCamera& camera);
 
 private:
 	NavMesh nav_mesh = NavMesh();

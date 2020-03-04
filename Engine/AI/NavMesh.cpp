@@ -4,9 +4,11 @@
 #include "UI/DebugDraw.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleRender.h"
-
+#include "Module/ModuleProgram.h"
+#include "Module/ModuleCamera.h"
 
 #include "Component/ComponentMesh.h"
+#include "Component/ComponentCamera.h"
 #include <math.h>
 #include "recast/Detour/DetourNavMeshQuery.h"
 #include "recast/Detour/DetourNavMeshBuilder.h"
@@ -37,8 +39,8 @@ bool NavMesh::Update()
 		const float* bmin = &global_AABB.minPoint[0];
 		const float* bmax = &global_AABB.maxPoint[0];
 		dd::aabb(math::float3(bmin[0], bmin[1], bmin[2]), math::float3(bmax[0], bmax[1], bmax[2]), math::float3(1.0f, 0.0f, 0.0f));
-		RenderNavMesh(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);
-		duDebugDrawNavMeshWithClosedList(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);
+		//RenderNavMesh(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);
+		//duDebugDrawNavMeshWithClosedList(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);;
 	}
 	return true;
 }
@@ -638,6 +640,12 @@ void NavMesh::RenderTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 	return;
 }
 
+void NavMesh::RenderNavMesh(ComponentCamera& camera)
+{
+	if(is_mesh_computed)
+		m_dd.drawMesh(camera);
+}
+
 void NavMesh::GetVerticesScene()
 {
 	//Clear vertex vector
@@ -647,9 +655,12 @@ void NavMesh::GetVerticesScene()
 	{
 		for (int i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
 		{
-			verts_vec.push_back(mesh->mesh_to_render.get()->vertices[i].position.x);
-			verts_vec.push_back(mesh->mesh_to_render.get()->vertices[i].position.y);
-			verts_vec.push_back(mesh->mesh_to_render.get()->vertices[i].position.z);
+			float4 vertss(mesh->mesh_to_render.get()->vertices[i].position, 1.0f);
+			vertss = mesh->owner->transform.GetGlobalModelMatrix() * vertss;
+
+			verts_vec.push_back(vertss.x);
+			verts_vec.push_back(vertss.y);
+			verts_vec.push_back(vertss.z);
 		}
 	}
 }
@@ -825,4 +836,43 @@ void DebugDrawGL::end()
 	glEnd();
 	glLineWidth(3.0f);
 	glPointSize(4.0f);
+}
+
+void DebugDrawGL::drawMesh(ComponentCamera& camera)
+{
+	unsigned int shader = App->program->GetShaderProgramId("NavMesh");
+	math::float4x4 model = math::float4x4::identity;
+
+
+	glUseProgram(shader);
+	glUniformMatrix4fv(glGetUniformLocation(shader,
+		"model"), 1, GL_TRUE, &model[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(shader,
+		"view"), 1, GL_TRUE, &camera.view[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(shader,
+		"proj"), 1, GL_TRUE, &camera.proj[0][0]);
+
+
+
+	GLuint vbo;
+	glGenBuffers(1, &vbo);
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glBufferData(GL_ARRAY_BUFFER, 3 * sizeof(float) * vertices.size(), &vertices[0], GL_STATIC_DRAW);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+	glEnableVertexAttribArray(0); // attribute 0
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
+	glVertexAttribPointer(
+		0, // attribute 0
+		3, // number of componentes (3 floats)
+		GL_FLOAT, // data type
+		GL_FALSE, // should be normalized?
+		0, // stride
+		(void*)0 // array buffer offset
+	);
+	glDrawArrays(GL_TRIANGLES, 0, vertices.size()); // start at 0 and 3 tris
+	glDisableVertexAttribArray(0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glUseProgram(0);
+
 }

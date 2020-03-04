@@ -56,6 +56,7 @@ private:
 
 	std::vector<ComponentCamera*> cameras;
 	friend class ModuleEditor;
+
 };
 
 #endif //_MODULECAMERA_H_

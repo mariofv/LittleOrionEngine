@@ -3,6 +3,7 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMesh.h"
 #include "Main/Application.h"
+#include "Module/ModuleAI.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleDebug.h"
@@ -420,6 +421,8 @@ void ModuleDebugDraw::Render()
 	RenderBillboards();
 
 	RenderDebugDraws(*App->cameras->scene_camera);
+
+
 }
 
 void ModuleDebugDraw::RenderGrid() const
