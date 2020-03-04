@@ -70,6 +70,8 @@ void PanelMaterial::Render(Material* material)
 
 void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::MaterialTextureType type)
 {
+	ImGui::PushID(static_cast<unsigned int>(type));
+
 	float material_texture_map_size = 20.f;
 
 	if (material->textures[type].get() != nullptr) {
@@ -150,6 +152,7 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 		break;
 	}
 
+	ImGui::PopID();
 }
 
 void PanelMaterial::SaveMaterial(Material* material)
