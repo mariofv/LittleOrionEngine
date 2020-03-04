@@ -5,6 +5,79 @@
 #include "recast/Recast/Recast.h"
 #include "MathGeoLib.h"
 #include <vector>
+#include "recast/DebugUtils/DebugDraw.h"
+
+
+enum DrawMode
+{
+	DRAWMODE_NAVMESH,
+	DRAWMODE_NAVMESH_TRANS,
+	DRAWMODE_NAVMESH_BVTREE,
+	DRAWMODE_NAVMESH_NODES,
+	DRAWMODE_NAVMESH_INVIS,
+	DRAWMODE_MESH,
+	DRAWMODE_VOXELS,
+	DRAWMODE_VOXELS_WALKABLE,
+	DRAWMODE_COMPACT,
+	DRAWMODE_COMPACT_DISTANCE,
+	DRAWMODE_COMPACT_REGIONS,
+	DRAWMODE_REGION_CONNECTIONS,
+	DRAWMODE_RAW_CONTOURS,
+	DRAWMODE_BOTH_CONTOURS,
+	DRAWMODE_CONTOURS,
+	DRAWMODE_POLYMESH,
+	DRAWMODE_POLYMESH_DETAIL,
+	MAX_DRAWMODE
+};
+
+enum SamplePartitionType
+{
+	SAMPLE_PARTITION_WATERSHED,
+	SAMPLE_PARTITION_MONOTONE,
+	SAMPLE_PARTITION_LAYERS,
+};
+
+/// These are just sample areas to use consistent values across the samples.
+/// The use should specify these base on his needs.
+enum SamplePolyAreas
+{
+	SAMPLE_POLYAREA_GROUND,
+	SAMPLE_POLYAREA_WATER,
+	SAMPLE_POLYAREA_ROAD,
+	SAMPLE_POLYAREA_DOOR,
+	SAMPLE_POLYAREA_GRASS,
+	SAMPLE_POLYAREA_JUMP,
+};
+
+enum SamplePolyFlags
+{
+	SAMPLE_POLYFLAGS_WALK = 0x01,		// Ability to walk (ground, grass, road)
+	SAMPLE_POLYFLAGS_SWIM = 0x02,		// Ability to swim (water).
+	SAMPLE_POLYFLAGS_DOOR = 0x04,		// Ability to move through doors.
+	SAMPLE_POLYFLAGS_JUMP = 0x08,		// Ability to jump.
+	SAMPLE_POLYFLAGS_DISABLED = 0x10,		// Disabled polygon
+	SAMPLE_POLYFLAGS_ALL = 0xffff	// All abilities.
+};
+
+class DebugDrawGL : public duDebugDraw
+{
+public:
+	virtual void depthMask(bool state);
+	virtual void texture(bool state);
+	virtual void begin(duDebugDrawPrimitives prim, float size = 1.0f);
+	virtual void vertex(const float* pos, unsigned int color);
+	virtual void vertex(const float x, const float y, const float z, unsigned int color);
+	virtual void vertex(const float* pos, unsigned int color, const float* uv);
+	virtual void vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v);
+	virtual void end();
+};
+
+class SampleDebugDraw : public DebugDrawGL
+{
+public:
+	virtual unsigned int areaToCol(unsigned int area);
+};
+
 
 class dtNavMeshQuery;
 class dtNavMesh;
@@ -21,13 +94,30 @@ public:
 	bool Update();
 
 	bool CreateNavMesh();
-	bool RenderNavMesh(const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags) const;
-	void RenderTile(const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const;
+	bool RenderNavMesh(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags) const;
+	void RenderTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const;
+
+
+	SampleDebugDraw& getDebugDraw() { return m_dd; }
 
 private:
 	void GetVerticesScene();
 	void GetIndicesScene();
 	void GetNormalsScene();
+
+	float DistancePtLine2d(const float* pt, const float* p, const float* q) const
+	{
+		float pqx = q[0] - p[0];
+		float pqz = q[2] - p[2];
+		float dx = pt[0] - p[0];
+		float dz = pt[2] - p[2];
+		float d = pqx * pqx + pqz * pqz;
+		float t = pqx * dx + pqz * dz;
+		if (d != 0) t /= d;
+		dx = p[0] + t * pqx - pt[0];
+		dz = p[2] + t * pqz - pt[2];
+		return dx * dx + dz * dz;
+	}
 
 protected:
 	unsigned char* m_triareas = nullptr;
@@ -38,57 +128,7 @@ protected:
 	rcConfig m_cfg;
 	rcPolyMeshDetail* m_dmesh = nullptr;
 
-	enum DrawMode
-	{
-		DRAWMODE_NAVMESH,
-		DRAWMODE_NAVMESH_TRANS,
-		DRAWMODE_NAVMESH_BVTREE,
-		DRAWMODE_NAVMESH_NODES,
-		DRAWMODE_NAVMESH_INVIS,
-		DRAWMODE_MESH,
-		DRAWMODE_VOXELS,
-		DRAWMODE_VOXELS_WALKABLE,
-		DRAWMODE_COMPACT,
-		DRAWMODE_COMPACT_DISTANCE,
-		DRAWMODE_COMPACT_REGIONS,
-		DRAWMODE_REGION_CONNECTIONS,
-		DRAWMODE_RAW_CONTOURS,
-		DRAWMODE_BOTH_CONTOURS,
-		DRAWMODE_CONTOURS,
-		DRAWMODE_POLYMESH,
-		DRAWMODE_POLYMESH_DETAIL,
-		MAX_DRAWMODE
-	};
-
-	enum SamplePartitionType
-	{
-		SAMPLE_PARTITION_WATERSHED,
-		SAMPLE_PARTITION_MONOTONE,
-		SAMPLE_PARTITION_LAYERS,
-	};
-
-	/// These are just sample areas to use consistent values across the samples.
-	/// The use should specify these base on his needs.
-	enum SamplePolyAreas
-	{
-		SAMPLE_POLYAREA_GROUND,
-		SAMPLE_POLYAREA_WATER,
-		SAMPLE_POLYAREA_ROAD,
-		SAMPLE_POLYAREA_DOOR,
-		SAMPLE_POLYAREA_GRASS,
-		SAMPLE_POLYAREA_JUMP,
-	};
-
-	enum SamplePolyFlags
-	{
-		SAMPLE_POLYFLAGS_WALK = 0x01,		// Ability to walk (ground, grass, road)
-		SAMPLE_POLYFLAGS_SWIM = 0x02,		// Ability to swim (water).
-		SAMPLE_POLYFLAGS_DOOR = 0x04,		// Ability to move through doors.
-		SAMPLE_POLYFLAGS_JUMP = 0x08,		// Ability to jump.
-		SAMPLE_POLYFLAGS_DISABLED = 0x10,		// Disabled polygon
-		SAMPLE_POLYFLAGS_ALL = 0xffff	// All abilities.
-	};
-
+	
 	DrawMode m_drawMode;
 
 	//Variables of NavMesh (modified by UI)
@@ -135,7 +175,8 @@ private:
 	unsigned char nav_mesh_draw_flags;
 
 
-	
+	///TEST
+	SampleDebugDraw m_dd;
 
 };
 

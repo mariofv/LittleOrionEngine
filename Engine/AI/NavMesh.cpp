@@ -5,6 +5,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleRender.h"
 
+
 #include "Component/ComponentMesh.h"
 #include <math.h>
 #include "recast/Detour/DetourNavMeshQuery.h"
@@ -36,6 +37,8 @@ bool NavMesh::Update()
 		const float* bmin = &global_AABB.minPoint[0];
 		const float* bmax = &global_AABB.maxPoint[0];
 		dd::aabb(math::float3(bmin[0], bmin[1], bmin[2]), math::float3(bmax[0], bmax[1], bmax[2]), math::float3(1.0f, 0.0f, 0.0f));
+		RenderNavMesh(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);
+		duDebugDrawNavMeshWithClosedList(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);
 	}
 	return true;
 }
@@ -439,12 +442,12 @@ bool NavMesh::CreateNavMesh()
 	//RenderNavMesh(verts, nverts, tris, ntris, normals, texScale);
 	//my_debug_draw = new LOInterfaces();
 	is_mesh_computed = true;
-	//duDebugDrawNavMeshWithClosedList(my_debug_draw, *nav_mesh, *nav_query, nav_mesh_draw_flags);
+	duDebugDrawNavMeshWithClosedList(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);
 
 	return true;
 }
 
-bool NavMesh::RenderNavMesh(const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags) const
+bool NavMesh::RenderNavMesh(duDebugDraw* dd ,const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags) const
 {
 	const dtNavMeshQuery* q = (flags & DU_DRAWNAVMESH_CLOSEDLIST) ? &query : 0;
 
@@ -452,16 +455,70 @@ bool NavMesh::RenderNavMesh(const dtNavMesh& mesh, const dtNavMeshQuery& query, 
 	{
 		const dtMeshTile* tile = mesh.getTile(i);
 		if (!tile->header) continue;
-		RenderTile(mesh, q, tile, flags);
+		RenderTile(dd, mesh, q, tile, flags);
 	}
 	
 	return true;
 }
 
-void NavMesh::RenderTile(const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const
+void NavMesh::RenderTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const
 {
-	
-	
+
+	//BORDERS
+	static const float thr = 0.01f*0.01f;
+	for (int i = 0; i < tile->header->polyCount; ++i)
+	{
+		const dtPoly* p = &tile->polys[i];
+
+		if (p->getType() == DT_POLYTYPE_OFFMESH_CONNECTION) continue;
+
+		const dtPolyDetail* pd = &tile->detailMeshes[i];
+
+		for (int j = 0, nj = (int)p->vertCount; j < nj; ++j)
+		{
+			const float* v0 = &tile->verts[p->verts[j] * 3];
+			const float* v1 = &tile->verts[p->verts[(j + 1) % nj] * 3];
+
+			// Draw detail mesh edges which align with the actual poly edge.
+			// This is really slow.
+			for (int k = 0; k < pd->triCount; ++k)
+			{
+				const unsigned char* t = &tile->detailTris[(pd->triBase + k) * 4];
+				const float* tv[3];
+				for (int m = 0; m < 3; ++m)
+				{
+					if (t[m] < p->vertCount)
+						tv[m] = &tile->verts[p->verts[t[m]] * 3];
+					else
+						tv[m] = &tile->detailVerts[(pd->vertBase + (t[m] - p->vertCount)) * 3];
+				}
+				for (int m = 0, n = 2; m < 3; n = m++)
+				{
+					if ((dtGetDetailTriEdgeFlags(t[3], n) & DT_DETAIL_EDGE_BOUNDARY) == 0)
+						continue;
+
+					if (DistancePtLine2d(tv[n], v0, v1) < thr &&
+						DistancePtLine2d(tv[m], v0, v1) < thr)
+					{
+						dd::line(math::float3(tv[n]), math::float3(tv[m]), math::float3(1, 0, 0));
+					}
+				}
+			}
+		}
+	}
+
+
+
+
+
+	//POINTS
+	for (int i = 0; i < tile->header->vertCount; ++i)
+	{
+		const float* v = &tile->verts[i * 3];
+		dd::point(math::float3(v[0], v[1], v[2]), math::float3(1,0,0));
+	}
+
+	/*
 	dtPolyRef base = mesh.getPolyRefBase(tile);
 
 	int tileNum = mesh.decodePolyIdTile(base);
@@ -625,4 +682,147 @@ void NavMesh::GetNormalsScene()
 			normals_vec.push_back(mesh->mesh_to_render.get()->vertices[i].normals.z);
 		}
 	}
+}
+
+class GLCheckerTexture
+{
+	unsigned int m_texId;
+public:
+	GLCheckerTexture() : m_texId(0)
+	{
+	}
+
+	~GLCheckerTexture()
+	{
+		if (m_texId != 0)
+			glDeleteTextures(1, &m_texId);
+	}
+	void bind()
+	{
+		if (m_texId == 0)
+		{
+			// Create checker pattern.
+			const unsigned int col0 = duRGBA(215, 215, 215, 255);
+			const unsigned int col1 = duRGBA(255, 255, 255, 255);
+			static const int TSIZE = 64;
+			unsigned int data[TSIZE*TSIZE];
+
+			glGenTextures(1, &m_texId);
+			glBindTexture(GL_TEXTURE_2D, m_texId);
+
+			int level = 0;
+			int size = TSIZE;
+			while (size > 0)
+			{
+				for (int y = 0; y < size; ++y)
+					for (int x = 0; x < size; ++x)
+						data[x + y * size] = (x == 0 || y == 0) ? col0 : col1;
+				glTexImage2D(GL_TEXTURE_2D, level, GL_RGBA, size, size, 0, GL_RGBA, GL_UNSIGNED_BYTE, data);
+				size /= 2;
+				level++;
+			}
+
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_NEAREST);
+			glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		}
+		else
+		{
+			glBindTexture(GL_TEXTURE_2D, m_texId);
+		}
+	}
+};
+GLCheckerTexture g_tex;
+
+unsigned int SampleDebugDraw::areaToCol(unsigned int area)
+{
+	switch (area)
+	{
+		// Ground (0) : light blue
+	case SAMPLE_POLYAREA_GROUND: return duRGBA(0, 192, 255, 255);
+		// Water : blue
+	case SAMPLE_POLYAREA_WATER: return duRGBA(0, 0, 255, 255);
+		// Road : brown
+	case SAMPLE_POLYAREA_ROAD: return duRGBA(50, 20, 12, 255);
+		// Door : cyan
+	case SAMPLE_POLYAREA_DOOR: return duRGBA(0, 255, 255, 255);
+		// Grass : green
+	case SAMPLE_POLYAREA_GRASS: return duRGBA(0, 255, 0, 255);
+		// Jump : yellow
+	case SAMPLE_POLYAREA_JUMP: return duRGBA(255, 255, 0, 255);
+		// Unexpected : red
+	default: return duRGBA(255, 0, 0, 255);
+	}
+}
+
+void DebugDrawGL::depthMask(bool state)
+{
+	glDepthMask(state ? GL_TRUE : GL_FALSE);
+}
+
+void DebugDrawGL::texture(bool state)
+{
+	if (state)
+	{
+		glEnable(GL_TEXTURE_2D);
+		g_tex.bind();
+	}
+	else
+	{
+		glDisable(GL_TEXTURE_2D);
+	}
+}
+
+void DebugDrawGL::begin(duDebugDrawPrimitives prim, float size)
+{
+	switch (prim)
+	{
+	case DU_DRAW_POINTS:
+		glPointSize(size);
+		glBegin(GL_POINTS);
+		break;
+	case DU_DRAW_LINES:
+		glLineWidth(size);
+		glBegin(GL_LINES);
+		break;
+	case DU_DRAW_TRIS:
+		glBegin(GL_TRIANGLES);
+		break;
+	case DU_DRAW_QUADS:
+		glBegin(GL_QUADS);
+		break;
+	};
+}
+
+void DebugDrawGL::vertex(const float * pos, unsigned int color)
+{
+	//glColor3f(1.f, 0.f, 0.f);
+	//glVertex3fv(pos);
+	vertices.push_back(math::float3(pos));
+}
+
+void DebugDrawGL::vertex(const float x, const float y, const float z, unsigned int color)
+{
+	glColor4ubv((GLubyte*)&color);
+	glVertex3f(x, y, z);
+}
+
+void DebugDrawGL::vertex(const float * pos, unsigned int color, const float * uv)
+{
+	glColor4ubv((GLubyte*)&color);
+	glTexCoord2fv(uv);
+	glVertex3fv(pos);
+}
+
+void DebugDrawGL::vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v)
+{
+	glColor4ubv((GLubyte*)&color);
+	glTexCoord2f(u, v);
+	glVertex3f(x, y, z);
+}
+
+void DebugDrawGL::end()
+{
+	glEnd();
+	glLineWidth(3.0f);
+	glPointSize(4.0f);
 }
