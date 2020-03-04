@@ -21,7 +21,7 @@ public:
 	ComponentTransform & operator=(ComponentTransform && component_to_move) = default;
 
 
-	Component* Clone() const override;
+	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component * component_to_copy) const override { *static_cast<ComponentTransform*>(component_to_copy) = *this; };
 
 	~ComponentTransform() = default;

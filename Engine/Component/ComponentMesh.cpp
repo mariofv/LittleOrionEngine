@@ -94,9 +94,17 @@ void ComponentMesh::RenderModel() const
 	glBindVertexArray(0);
 }
 
-Component* ComponentMesh::Clone() const
+Component* ComponentMesh::Clone(bool original_prefab) const
 {
-	ComponentMesh * created_component = App->renderer->CreateComponentMesh();
+	ComponentMesh * created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentMesh();
+	}
+	else
+	{
+		created_component = App->renderer->CreateComponentMesh();
+	}
 	*created_component = *this;
 	return created_component;
 }

@@ -38,35 +38,36 @@ void Prefab::Rewrite(GameObject * new_reference)
 	auto result = App->resources->Import(exported_file, new_reference);
 	if (result.first)
 	{
+		RecursiveRewrite(prefab.front().get(), new_reference, true);
 		for (auto old_instance : instances)
 		{
 			if (new_reference == old_instance)
 			{
 				continue;
 			}
-			*old_instance << *new_reference;
-			RecursiveRewrite(old_instance, new_reference);
+			RecursiveRewrite(old_instance, new_reference, false);
 		}
 	}
 }
 
-void Prefab::RecursiveRewrite(GameObject * old_instance, GameObject * new_reference)
+void Prefab::RecursiveRewrite(GameObject * old_instance, GameObject * new_reference, bool original)
 {
 	for (auto & child : new_reference->children)
 	{
 		auto it = std::find_if(old_instance->children.begin(), old_instance->children.end(), [child](auto old_instance_child) {
-			return child->original_UUID == old_instance_child->original_UUID;
+			return child->original_UUID == old_instance_child->original_UUID &&  child->original_UUID != 0;
 		});
-		//TODO: Only copy went their a different, need to implemente == operator in every component ¿?¿
+		//TODO: Only copy went their a different, need to implement == operator in every component ¿?¿
 		if (it != old_instance->children.end())
 		{
 			**it << *child;
-			RecursiveRewrite(*it, child);
+			RecursiveRewrite(*it, child, original);
 		}
-		else if(child->original_UUID == 0)
+		else
 		{
-			AddNewGameObjectToInstance(old_instance, child);
+			AddNewGameObjectToInstance(old_instance, child, original);
 		}
+
 	}
 	std::vector<GameObject*> gameobjects_to_remove;
 	std::copy_if(
@@ -85,19 +86,51 @@ void Prefab::RecursiveRewrite(GameObject * old_instance, GameObject * new_refere
 	);
 	for (auto gameobject : gameobjects_to_remove)
 	{
-		App->scene->RemoveGameObject(gameobject);
+		if (original)
+		{
+			RemoveGameObjectFromOriginalPrefab(gameobject);
+		}
+		else
+		{
+			App->scene->RemoveGameObject(gameobject);
+		}
 	}
+
 }
 
-void Prefab::AddNewGameObjectToInstance(GameObject * parent, GameObject * new_reference)
+void Prefab::AddNewGameObjectToInstance(GameObject * parent, GameObject * new_reference, bool original)
 {
 	new_reference->original_UUID = new_reference->UUID;
-	GameObject * copy = App->scene->CreateGameObject();
+	GameObject * copy;
+	if (original)
+	{
+		prefab.emplace_back(std::make_unique<GameObject>());
+		copy = prefab.back().get();
+	}
+	else
+	{
+		copy = App->scene->CreateGameObject();
+	}
 	copy->SetParent(parent);
 	*copy << *new_reference;
 	copy->transform.SetTranslation(new_reference->transform.GetTranslation());
 	for (auto new_reference_child : new_reference->children)
 	{
-		AddNewGameObjectToInstance(copy, new_reference_child);
+		AddNewGameObjectToInstance(copy, new_reference_child, original);
+	}
+}
+
+void Prefab::RemoveGameObjectFromOriginalPrefab(GameObject * gameobject_to_remove)
+{
+	auto it = std::remove_if(prefab.begin(), prefab.end(), [gameobject_to_remove](auto & gameobject) {
+		return gameobject_to_remove->original_UUID == gameobject->original_UUID;
+	});
+	if (it != prefab.end())
+	{
+		prefab.erase(it);
+		for (auto child : gameobject_to_remove->children)
+		{
+			RemoveGameObjectFromOriginalPrefab(child);
+		}
 	}
 }

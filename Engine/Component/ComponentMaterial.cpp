@@ -184,9 +184,17 @@ const std::shared_ptr<Texture>& ComponentMaterial::GetMaterialTexture(size_t  ty
 	return textures[type];
 }
 
-Component* ComponentMaterial::Clone() const
+Component* ComponentMaterial::Clone(bool original_prefab) const
 {
-	ComponentMaterial * created_component = App->texture->CreateComponentMaterial();
+	ComponentMaterial * created_component;
+	if(original_prefab)
+	{
+		created_component = new ComponentMaterial();
+	}
+	else 
+	{
+		created_component = App->texture->CreateComponentMaterial();
+	}
 	*created_component = *this;
 	return created_component;
 }

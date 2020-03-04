@@ -61,7 +61,7 @@ public:
 
 	virtual void Update() {};
 	virtual void Delete() = 0;
-	virtual Component* Clone() const = 0;
+	virtual Component* Clone(bool original_prefab = false) const = 0;
 	virtual void Copy(Component * component_to_copy) const = 0;
 
 	virtual void Save(Config& config) const = 0;

@@ -403,9 +403,11 @@ void GameObject::CopyComponents(const GameObject & gameobject_to_copy)
 		}
 		else if (my_component == nullptr)
 		{
-			Component *copy = component->Clone();
+			Component *copy = component->Clone(gameobject_to_copy.original_UUID != gameobject_to_copy.UUID);
 			copy->owner = this;
 			this->components.push_back(copy);
+		}else
+		{
 		}
 	}
 

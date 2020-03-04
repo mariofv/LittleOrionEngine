@@ -73,7 +73,7 @@ bool ComponentAABB::IsEmpty() const
 	return bounding_box.Size().Length() == 0;
 }
 
-Component* ComponentAABB::Clone() const
+Component* ComponentAABB::Clone(bool original_prefab) const
 {
 	return nullptr;
 }

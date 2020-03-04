@@ -195,7 +195,7 @@ void ComponentTransform::ChangeLocalSpace(const float4x4 &new_local_space)
 	
 }
 
-Component* ComponentTransform::Clone() const
+Component* ComponentTransform::Clone(bool original_prefab) const
 {
 
 	return nullptr;
