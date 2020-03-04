@@ -22,6 +22,9 @@ void PanelMaterial::Render(Material* material)
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Spacing();
+		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(50, 50)); // TODO: Substitute this with resouce thumbnail
+		ImGui::SameLine();
+		ImGui::AlignTextToFramePadding();
 		ImGui::Text(material->exported_file.c_str());
 		ImGui::Spacing();
 
