@@ -231,6 +231,7 @@ static void drawMeshTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 	}
 	dd->end();
 
+	*/
 	dd->depthMask(true);
 }
 
