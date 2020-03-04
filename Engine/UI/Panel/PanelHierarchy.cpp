@@ -49,7 +49,7 @@ void PanelHierarchy::Render()
 void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 {
 	std::string game_object_name_label = (std::string(ICON_FA_CUBE) + " " + game_object->name);
-	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
+	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth;
 	if (game_object->children.size() == 0)
 	{
 		flags |= ImGuiTreeNodeFlags_Leaf;
