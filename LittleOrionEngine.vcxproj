@@ -173,7 +173,6 @@
     <ClInclude Include="Engine\Module\ModuleActions.h" />
     <ClInclude Include="Libraries\include\recast\DebugUtils\DebugDraw.h" />
     <ClInclude Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.h" />
-    <ClInclude Include="Libraries\include\recast\DebugUtils\LOInterfaces.h" />
     <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.h" />
     <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDump.h" />
     <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourCrowd.h" />
@@ -196,8 +195,8 @@
     <ClInclude Include="Libraries\include\recast\Recast\Recast.h" />
     <ClInclude Include="Libraries\include\recast\Recast\RecastAlloc.h" />
     <ClInclude Include="Libraries\include\recast\Recast\RecastAssert.h" />
-    <ClInclude Include="ModuleAI.h" />
-    <ClInclude Include="NavMesh.h" />
+    <ClInclude Include="Engine\AI\NavMesh.h" />
+    <ClInclude Include="Engine\Module\ModuleAI.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -327,7 +326,6 @@
     <ClCompile Include="Engine\Module\ModuleActions.cpp" />
     <ClCompile Include="Libraries\include\recast\DebugUtils\DebugDraw.cpp" />
     <ClCompile Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.cpp" />
-    <ClCompile Include="Libraries\include\recast\DebugUtils\LOInterfaces.cpp" />
     <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.cpp" />
     <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDump.cpp" />
     <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourCrowd.cpp" />
@@ -356,8 +354,8 @@
     <ClCompile Include="Libraries\include\recast\Recast\RecastMeshDetail.cpp" />
     <ClCompile Include="Libraries\include\recast\Recast\RecastRasterization.cpp" />
     <ClCompile Include="Libraries\include\recast\Recast\RecastRegion.cpp" />
-    <ClCompile Include="ModuleAI.cpp" />
-    <ClCompile Include="NavMesh.cpp" />
+    <ClCompile Include="Engine\AI\NavMesh.cpp" />
+    <ClCompile Include="Engine\Module\ModuleAI.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

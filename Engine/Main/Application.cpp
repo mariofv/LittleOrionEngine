@@ -1,5 +1,6 @@
 #include "Application.h"
 #include "Module/ModuleActions.h"
+#include "Module/ModuleAI.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleDebugDraw.h"
@@ -41,6 +42,7 @@ Application::Application()
 	modules.emplace_back(debug_draw = new ModuleDebugDraw());
 	modules.emplace_back(lights = new ModuleLight());
 	modules.emplace_back(scene = new ModuleScene());
+	modules.emplace_back(artificial_intelligence = new ModuleAI());
 		
 	engine_log = std::make_unique<EngineLog>();
 }
