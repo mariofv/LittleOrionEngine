@@ -14,5 +14,9 @@
         {
             "Script": "Jump"
         }
+        ,
+        {
+            "Script": "TestingRefresh"
+        }
     ]
 }

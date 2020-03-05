@@ -27,8 +27,13 @@ public:
 	void RemoveComponentScript(ComponentScript* script_to_remove);
 	void LoadScriptList();
 
+	void ReloadDLL();
+
+	void GetCurrentPath();
+
 private:
 	HINSTANCE gameplay_dll;
+	std::string working_directory;
 public:
 
 	std::vector<ComponentScript*> scripts;

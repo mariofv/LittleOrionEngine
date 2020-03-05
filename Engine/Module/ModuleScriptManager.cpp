@@ -9,15 +9,19 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+#include <stdio.h>
 
 
 bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
 	//TODO: Load all the .dll
+	GetCurrentPath();
+	MoveFile(DLL_PATH, working_directory.c_str());
 	gameplay_dll = LoadLibrary("GamePlaySystem.dll");
 	//TODO: fill / load the component script vector.
 	LoadScriptList();
+	//ReloadDLL();
 	//InitResourceScript();
 	return true;
 }
@@ -89,19 +93,9 @@ void ModuleScriptManager::RemoveComponentScript(ComponentScript * script_to_remo
 }
 void ModuleScriptManager::LoadScriptList() 
 {
-	/*std::ifstream file_scripts(SCRIPT_LIST_PATH);
-	if (!file_scripts)
-		return;
-	scripts_list.clear();
-	std::string script;
-	while (std::getline(file_scripts, script)) 
-	{
-		if (script.size() > 0) 
-		{
-			scripts_list.push_back(script);
-		}
-	}*/if(scripts_list.size()>0)
+	if(scripts_list.size()>0)
 		scripts_list.clear();
+
 	size_t readed_bytes;
 	char* scripts_file_data = App->filesystem->Load(SCRIPT_LIST_PATH, readed_bytes);
 	if (scripts_file_data != nullptr)
@@ -121,5 +115,37 @@ void ModuleScriptManager::LoadScriptList()
 		}
 	}
 
+}
+void ModuleScriptManager::ReloadDLL() 
+{
+
+	if (gameplay_dll != nullptr) 
+	{
+		if (!FreeLibrary(gameplay_dll)) 
+		{
+			return;
+		}
+		else 
+		{
+			for (auto &component_script : scripts)
+			{
+				component_script->script = nullptr;
+			}
+			remove("GamePlaySystem.dll");
+		}
+	}
+	MoveFile(DLL_PATH, working_directory.c_str());
+	gameplay_dll = LoadLibrary("GamePlaySystem.dll");
+	InitResourceScript();
+
+}
+
+void ModuleScriptManager::GetCurrentPath() 
+{
+
+	TCHAR NPath[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, NPath);
+	working_directory = NPath;
+	working_directory += "/GamePlaySystem.dll";
 }
 

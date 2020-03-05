@@ -431,6 +431,7 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 		if (ImGui::Button("Refresh"))
 		{
 			App->scripts->LoadScriptList();
+			App->scripts->ReloadDLL();
 
 			return;
 		}

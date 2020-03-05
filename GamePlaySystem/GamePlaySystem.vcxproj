@@ -101,7 +101,7 @@
       <AdditionalLibraryDirectories>..\Libraries\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(OutDir)$(ProjectName).dll" "..\Game"</Command>
+      <Command>xcopy /y /d "$(OutDir)$(ProjectName).dll" "..\Game\Resources\Scripts"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
