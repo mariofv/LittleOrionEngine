@@ -428,6 +428,12 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 
 			return;
 		}
+		if (ImGui::Button("Refresh"))
+		{
+			App->scripts->LoadScriptList();
+
+			return;
+		}
 		ShowScriptsCreated(component_script);
 		ImGui::Separator();
 
