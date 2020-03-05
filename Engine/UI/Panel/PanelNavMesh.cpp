@@ -7,8 +7,8 @@
 
 PanelNavMesh::PanelNavMesh()
 {
-	opened = true;
-	enabled = true;
+	opened = false;
+	enabled = false;
 	window_name = "NavMesh";
 }
 
@@ -43,8 +43,14 @@ void PanelNavMesh::Render()
 
 		if(ImGui::Button("Bake NavMesh"))
 		{
-			App->artificial_intelligence->nav_mesh.CreateNavMesh();
+			succes = App->artificial_intelligence->nav_mesh.CreateNavMesh();
 		}
+
+		if (!succes)
+			ImGui::Text("Error: Cannot create NavMesh.");
+		else
+			ImGui::Text("NavMesh created succesfully.");
+		
 
 
 	}

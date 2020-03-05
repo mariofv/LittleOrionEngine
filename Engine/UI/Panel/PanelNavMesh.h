@@ -13,6 +13,8 @@ public:
 
 	void Render() override;
 
+	bool succes = false;
+
 };
 
 #endif //_PANELNAVMESH_H_
