@@ -40,7 +40,7 @@ public:
 private:
 	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices);
 	void GenerateGlobalBoundingBox();
-	Component* Clone(bool original_prefab = false) const override;
+	Component* Clone(bool create_on_module = true) const override;
 public:
 	AABB bounding_box;
 	AABB global_bounding_box;

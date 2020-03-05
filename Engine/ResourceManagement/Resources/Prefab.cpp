@@ -106,6 +106,7 @@ void Prefab::AddNewGameObjectToInstance(GameObject * parent, GameObject * new_re
 	{
 		prefab.emplace_back(std::make_unique<GameObject>());
 		copy = prefab.back().get();
+		copy->original_prefab = true;
 	}
 	else
 	{

@@ -24,23 +24,10 @@ public:
 	virtual ~Component() = default;
 
 	//Copy and move
-	Component(const Component& component_to_copy)
-	{
-		*this = component_to_copy;
-	}
-	Component(Component&& component_to_move)
-	{
-		*this = std::move(component_to_move);
-	}
+	Component(const Component& component_to_copy) = default;
+	Component(Component&& component_to_move) = default;
 
-	virtual Component & operator=(const Component & component_to_copy)
-	{
-		this->active = component_to_copy.active;
-		this->UUID = component_to_copy.UUID;
-		this->owner = component_to_copy.owner;
-		this->type = component_to_copy.type;
-		return *this;
-	}
+	virtual Component & operator=(const Component & component_to_copy) = default;
 	virtual Component & operator=(Component && component_to_copy)
 	{
 
@@ -61,7 +48,7 @@ public:
 
 	virtual void Update() {};
 	virtual void Delete() = 0;
-	virtual Component* Clone(bool original_prefab = false) const = 0;
+	virtual Component* Clone(bool create_on_module = true) const = 0;
 	virtual void Copy(Component * component_to_copy) const = 0;
 
 	virtual void Save(Config& config) const = 0;
