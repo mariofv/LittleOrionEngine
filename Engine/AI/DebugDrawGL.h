@@ -5,18 +5,18 @@
 #include "recast/DebugUtils/DebugDraw.h"
 #include "Component/ComponentCamera.h"
 
-class DebugDrawGL : public duDebugDraw
+class DebugDrawGL : public DuDebugDraw
 {
 public:
-	virtual void depthMask(bool state);
-	virtual void texture(bool state);
-	virtual void begin(duDebugDrawPrimitives prim, float size = 1.0f);
-	virtual void vertex(const float* pos, unsigned int color);
-	virtual void vertex(const float x, const float y, const float z, unsigned int color);
-	virtual void vertex(const float* pos, unsigned int color, const float* uv);
-	virtual void vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v);
-	virtual void end();
-	virtual void drawMesh(ComponentCamera& camera);
+	virtual void DepthMask(bool state);
+	virtual void Texture(bool state);
+	virtual void Begin(DuDebugDrawPrimitives prim, float size = 1.0f);
+	virtual void Vertex(const float* pos, unsigned int color);
+	virtual void Vertex(const float x, const float y, const float z, unsigned int color);
+	virtual void Vertex(const float* pos, unsigned int color, const float* uv);
+	virtual void Vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v);
+	virtual void End();
+	virtual void DrawMesh(ComponentCamera& camera);
 
 public:
 	unsigned int vbo = 0;

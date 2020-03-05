@@ -446,7 +446,13 @@ bool NavMesh::CreateNavMesh()
 	return true;
 }
 
-bool NavMesh::RenderNavMesh(duDebugDraw* dd ,const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags) const
+void NavMesh::RenderNavMesh(ComponentCamera& camera)
+{
+	if (is_mesh_computed)
+		m_dd.DrawMesh(camera);
+}
+
+bool NavMesh::RenderNavMesh(DuDebugDraw* dd ,const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags) const
 {
 	const dtNavMeshQuery* q = (flags & DU_DRAWNAVMESH_CLOSEDLIST) ? &query : 0;
 
@@ -460,7 +466,7 @@ bool NavMesh::RenderNavMesh(duDebugDraw* dd ,const dtNavMesh& mesh, const dtNavM
 	return true;
 }
 
-void NavMesh::RenderTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const
+void NavMesh::RenderTile(DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const
 {
 
 	//BORDERS
@@ -505,10 +511,6 @@ void NavMesh::RenderTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 			}
 		}
 	}
-
-
-
-
 
 	//POINTS
 	for (int i = 0; i < tile->header->vertCount; ++i)
@@ -635,12 +637,6 @@ void NavMesh::RenderTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 	dd->depthMask(true);
 	*/
 	return;
-}
-
-void NavMesh::RenderNavMesh(ComponentCamera& camera)
-{
-	if(is_mesh_computed)
-		m_dd.drawMesh(camera);
 }
 
 void NavMesh::GetVerticesScene()
