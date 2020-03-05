@@ -91,6 +91,7 @@ void ModuleScriptManager::RemoveComponentScript(ComponentScript * script_to_remo
 		scripts.erase(it);
 	}
 }
+
 void ModuleScriptManager::LoadScriptList() 
 {
 	if(scripts_list.size()>0)
@@ -116,9 +117,9 @@ void ModuleScriptManager::LoadScriptList()
 	}
 
 }
+
 void ModuleScriptManager::ReloadDLL() 
 {
-
 	if (gameplay_dll != nullptr) 
 	{
 		if (!FreeLibrary(gameplay_dll)) 
@@ -142,7 +143,6 @@ void ModuleScriptManager::ReloadDLL()
 
 void ModuleScriptManager::GetCurrentPath() 
 {
-
 	TCHAR NPath[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, NPath);
 	working_directory = NPath;
