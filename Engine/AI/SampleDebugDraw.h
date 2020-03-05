@@ -6,7 +6,7 @@
 class SampleDebugDraw : public DebugDrawGL
 {
 public:
-	unsigned int AreaToCol(unsigned int area);
+	virtual unsigned int areaToCol(unsigned int area);
 };
 
 #endif //_SampleDebugDraw_H_

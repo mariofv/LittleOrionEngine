@@ -12,7 +12,7 @@ enum SamplePolyAreas
 	SAMPLE_POLYAREA_JUMP,
 };
 
-unsigned int SampleDebugDraw::AreaToCol(unsigned int area)
+unsigned int SampleDebugDraw::areaToCol(unsigned int area)
 {
 	switch (area)
 	{
