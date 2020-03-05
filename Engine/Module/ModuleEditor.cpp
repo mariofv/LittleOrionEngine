@@ -15,6 +15,7 @@
 #include "UI/Panel/PanelDebug.h"
 #include "UI/Panel/PanelGame.h"
 #include "UI/Panel/PanelMenuBar.h"
+#include "UI/Panel/PanelNavMesh.h"
 #include "UI/Panel/PanelHierarchy.h"
 #include "UI/Panel/PanelInspector.h"
 #include "UI/Panel/PanelPopups.h"
@@ -52,6 +53,7 @@ bool ModuleEditor::Init()
 	panels.push_back(configuration = new PanelConfiguration());
 	panels.push_back(about = new PanelAbout());
 	panels.push_back(popups = new PanelPopups());
+	panels.push_back(nav_mesh = new PanelNavMesh());
 
 	return ret;
 }

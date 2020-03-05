@@ -197,6 +197,7 @@
     <ClInclude Include="Libraries\include\recast\Recast\RecastAssert.h" />
     <ClInclude Include="Engine\AI\NavMesh.h" />
     <ClInclude Include="Engine\Module\ModuleAI.h" />
+    <ClInclude Include="Engine\UI\Panel\PanelNavMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -356,6 +357,7 @@
     <ClCompile Include="Libraries\include\recast\Recast\RecastRegion.cpp" />
     <ClCompile Include="Engine\AI\NavMesh.cpp" />
     <ClCompile Include="Engine\Module\ModuleAI.cpp" />
+    <ClCompile Include="Engine\UI\Panel\PanelNavMesh.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

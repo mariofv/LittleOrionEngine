@@ -92,6 +92,7 @@ class dtNavMeshQuery;
 class dtNavMesh;
 class DetourNavMesh;
 class dtMeshTile;
+class PanelNavMesh;
 
 class NavMesh
 {
@@ -188,6 +189,8 @@ private:
 	SampleDebugDraw m_dd;
 	std::vector<float> vertices;
 
+
+	friend PanelNavMesh;
 };
 
 #endif // _NAVMESH_H_

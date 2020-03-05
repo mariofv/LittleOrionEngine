@@ -472,6 +472,7 @@
     <ClCompile Include="Engine\AI\NavMesh.cpp">
       <Filter>Engine\AI</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\PanelNavMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -807,6 +808,7 @@
     <ClInclude Include="Engine\AI\NavMesh.h">
       <Filter>Engine\AI</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\PanelNavMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
