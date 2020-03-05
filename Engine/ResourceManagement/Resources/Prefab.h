@@ -14,6 +14,7 @@ public:
 	~Prefab() = default;
 	void Instantiate(GameObject * prefab_parent);
 	void Apply(GameObject * new_reference);
+	void Revert(GameObject * old_reference);
 
 	std::vector<GameObject*> instances;
 private:

@@ -60,6 +60,7 @@ GameObject & GameObject::operator<<(const GameObject & gameobject_to_copy)
 	CopyComponents(gameobject_to_copy);
 	this->name = gameobject_to_copy.name;
 	this->SetEnabled(gameobject_to_copy.active);
+	this->is_static = gameobject_to_copy.is_static;
 	this->SetStatic(gameobject_to_copy.is_static);
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;

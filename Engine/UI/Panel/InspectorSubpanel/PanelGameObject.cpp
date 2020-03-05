@@ -101,7 +101,7 @@ void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
 	if (ImGui::Button("Revert"))
 	{
 		GameObject *to_reimport = GetPrefabParent(game_object);
-		//to_reimport->prefab_reference->Revert(to_reimport);
+		to_reimport->prefab_reference->Revert(to_reimport);
 	}
 }
 

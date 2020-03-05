@@ -52,13 +52,35 @@ void Prefab::Apply(GameObject * new_reference)
 	}
 }
 
+void Prefab::Revert(GameObject * old_reference)
+{
+
+	for (auto component : old_reference->components)
+	{
+		component->added_by_user = false;
+		component->modified_by_user = false;
+	}
+	*old_reference << *prefab.front().get();
+	RecursiveRewrite(old_reference,prefab.front().get(), true, true);
+}
 void Prefab::RecursiveRewrite(GameObject * old_instance, GameObject * new_reference, bool original, bool revert)
 {
+
 	for (auto & child : new_reference->children)
 	{
 		auto it = std::find_if(old_instance->children.begin(), old_instance->children.end(), [child](auto old_instance_child) {
 			return child->original_UUID == old_instance_child->original_UUID &&  child->original_UUID != 0;
 		});
+
+
+		if (revert)
+		{
+			for (auto component : (*it)->components)
+			{
+				component->added_by_user = false;
+				component->modified_by_user = false;
+			}
+		}
 		//TODO: Only copy went their a different, need to implement == operator in every component ¿?¿
 		if (it != old_instance->children.end())
 		{

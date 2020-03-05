@@ -83,14 +83,15 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 
 GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject> & game_object_to_add)
 {
-	//TODO: Call copy consctructor for gameObject
 	game_objects_ownership.emplace_back(std::move(game_object_to_add));
-	game_objects_ownership.back()->SetParent(root);
-	if (!game_objects_ownership.back()->IsStatic())
+	GameObject * game_object = game_objects_ownership.back().get();
+	game_object->SetParent(root);
+	if (!game_object->IsStatic())
 	{
-		App->renderer->InsertAABBTree(game_objects_ownership.back().get());
+		App->renderer->InsertAABBTree(game_object);
 	}
-	return game_objects_ownership.back().get();
+	game_object->SetStatic(game_object->IsStatic());
+	return game_object;
 
 }
 
