@@ -5,6 +5,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Component/ComponentScript.h"
 #include "Script/Script.h"
+#include "Filesystem/File.h"
 
 #include <iostream>
 #include <fstream>
@@ -17,23 +18,38 @@ bool ModuleScriptManager::Init()
 	APP_LOG_SECTION("************ Module Manager Script ************");
 	//TODO: Load all the .dll
 	GetCurrentPath();
-	MoveFile(DLL_PATH, working_directory.c_str());
-	gameplay_dll = LoadLibrary("GamePlaySystem.dll");
-	//TODO: fill / load the component script vector.
+	//MoveFile(DLL_PATH, working_directory.c_str());
+	App->filesystem->Copy(DLL_PATH, working_directory.c_str());
+	dll_file = std::make_unique<File>("Resources/Scripts/GamePlaySystem.dll");
+	init_timestamp = dll_file->modification_timestamp;
+	gameplay_dll = LoadLibrary("GamePlaySystem_test.dll");
 	LoadScriptList();
-	//ReloadDLL();
-	//InitResourceScript();
+
 	return true;
 }
 
 update_status ModuleScriptManager::Update()
 {
-	if (!scripts.empty()) {
-		for (auto &component_script : scripts) {
+	
+	if (!scripts.empty()) 
+	{
+		for (auto &component_script : scripts) 
+		{
 			component_script->Update();
 		}
 	}
 
+	PHYSFS_Stat file_info;
+	PHYSFS_stat(dll_file->file_path.c_str(), &file_info);
+	last_timestamp = file_info.modtime;
+	//File dll_test("Resources/Scripts/GamePlaySystem.dll");
+	if (last_timestamp != init_timestamp) 
+	{
+		CreatePDB();
+		ReloadDLL();
+		init_timestamp = last_timestamp;
+	}
+	
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -132,13 +148,19 @@ void ModuleScriptManager::ReloadDLL()
 			{
 				component_script->script = nullptr;
 			}
-			remove("GamePlaySystem.dll");
+			remove("GamePlaySystem_test.dll");
 		}
 	}
-	MoveFile(DLL_PATH, working_directory.c_str());
-	gameplay_dll = LoadLibrary("GamePlaySystem.dll");
+	//MoveFile(DLL_PATH, working_directory.c_str());
+	App->filesystem->Copy(DLL_PATH, working_directory.c_str());
+	gameplay_dll = LoadLibrary("GamePlaySystem_test.dll");
 	InitResourceScript();
 
+}
+
+void ModuleScriptManager::CreatePDB() 
+{
+	App->filesystem->Copy("../GamePlaySystem/Debug/GamePlaySystem.pdb", "../GamePlaySystem/Debug/GamePlaySystem_test.pdb");
 }
 
 void ModuleScriptManager::GetCurrentPath() 
@@ -146,6 +168,6 @@ void ModuleScriptManager::GetCurrentPath()
 	TCHAR NPath[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, NPath);
 	working_directory = NPath;
-	working_directory += "/GamePlaySystem.dll";
+	working_directory += "/GamePlaySystem_test.dll";
 }
 
