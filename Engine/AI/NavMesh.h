@@ -1,12 +1,12 @@
 #ifndef _NAVMESH_H_
 #define _NAVMESH_H_
 
-#include <pcg_basic.h>
-#include "recast/Recast/Recast.h"
-#include "MathGeoLib.h"
-#include <vector>
 #include "AI/SampleDebugDraw.h"
 #include "AI/DebugDrawGL.h"
+#include "recast/Recast/Recast.h"
+#include "MathGeoLib.h"
+#include <pcg_basic.h>
+#include <vector>
 
 enum DrawMode
 {
@@ -37,18 +37,6 @@ enum SamplePartitionType
 	SAMPLE_PARTITION_LAYERS,
 };
 
-/// These are just sample areas to use consistent values across the samples.
-/// The use should specify these base on his needs.
-enum SamplePolyAreas
-{
-	SAMPLE_POLYAREA_GROUND,
-	SAMPLE_POLYAREA_WATER,
-	SAMPLE_POLYAREA_ROAD,
-	SAMPLE_POLYAREA_DOOR,
-	SAMPLE_POLYAREA_GRASS,
-	SAMPLE_POLYAREA_JUMP,
-};
-
 enum SamplePolyFlags
 {
 	SAMPLE_POLYFLAGS_WALK = 0x01,		// Ability to walk (ground, grass, road)
@@ -75,9 +63,9 @@ public:
 	bool Update();
 
 	bool CreateNavMesh();
-	bool RenderNavMesh(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags) const;
-	void RenderTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const;
 	void RenderNavMesh(ComponentCamera& camera);
+	bool RenderNavMesh(DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags) const;
+	void RenderTile(DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const;
 
 	inline SampleDebugDraw& GetDebugDraw() { return m_dd; }
 

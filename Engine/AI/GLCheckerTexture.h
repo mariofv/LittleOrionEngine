@@ -22,8 +22,8 @@ public:
 		if (m_texId == 0)
 		{
 			// Create checker pattern
-			const unsigned int col0 = duRGBA(215, 215, 215, 255);
-			const unsigned int col1 = duRGBA(255, 255, 255, 255);
+			const unsigned int col0 = DuRGBA(215, 215, 215, 255);
+			const unsigned int col1 = DuRGBA(255, 255, 255, 255);
 			static const int TSIZE = 64;
 			unsigned int data[TSIZE * TSIZE];
 

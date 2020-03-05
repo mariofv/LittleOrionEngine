@@ -3,12 +3,12 @@
 #include "Main/Application.h"
 #include "Module/ModuleProgram.h"
 
-void DebugDrawGL::depthMask(bool state)
+void DebugDrawGL::DepthMask(bool state)
 {
 	glDepthMask(state ? GL_TRUE : GL_FALSE);
 }
 
-void DebugDrawGL::texture(bool state)
+void DebugDrawGL::Texture(bool state)
 {
 	if (state)
 	{
@@ -21,7 +21,7 @@ void DebugDrawGL::texture(bool state)
 	}
 }
 
-void DebugDrawGL::begin(duDebugDrawPrimitives prim, float size)
+void DebugDrawGL::Begin(DuDebugDrawPrimitives prim, float size)
 {
 	switch (prim)
 	{
@@ -42,41 +42,41 @@ void DebugDrawGL::begin(duDebugDrawPrimitives prim, float size)
 	};
 }
 
-void DebugDrawGL::vertex(const float* pos, unsigned int color)
+void DebugDrawGL::Vertex(const float* pos, unsigned int color)
 {
 	//glColor3f(1.f, 0.f, 0.f);
 	//glVertex3fv(pos);
 	vertices.push_back(math::float3(pos));
 }
 
-void DebugDrawGL::vertex(const float x, const float y, const float z, unsigned int color)
+void DebugDrawGL::Vertex(const float x, const float y, const float z, unsigned int color)
 {
 	glColor4ubv((GLubyte*)&color);
 	glVertex3f(x, y, z);
 }
 
-void DebugDrawGL::vertex(const float* pos, unsigned int color, const float* uv)
+void DebugDrawGL::Vertex(const float* pos, unsigned int color, const float* uv)
 {
 	glColor4ubv((GLubyte*)&color);
 	glTexCoord2fv(uv);
 	glVertex3fv(pos);
 }
 
-void DebugDrawGL::vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v)
+void DebugDrawGL::Vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v)
 {
 	glColor4ubv((GLubyte*)&color);
 	glTexCoord2f(u, v);
 	glVertex3f(x, y, z);
 }
 
-void DebugDrawGL::end()
+void DebugDrawGL::End()
 {
 	glEnd();
 	glLineWidth(3.0f);
 	glPointSize(4.0f);
 }
 
-void DebugDrawGL::drawMesh(ComponentCamera& camera)
+void DebugDrawGL::DrawMesh(ComponentCamera& camera)
 {
 	unsigned int shader = App->program->GetShaderProgramId("NavMesh");
 	math::float4x4 model = math::float4x4::identity;
