@@ -4,6 +4,8 @@
 #include "Module/Module.h"
 #include "AI/NavMesh.h"
 
+
+class PanelNavMesh;
 class ComponentCamera;
 
 class ModuleAI : public Module
@@ -20,6 +22,8 @@ public:
 
 private:
 	NavMesh nav_mesh = NavMesh();
+
+	friend PanelNavMesh;
 };
 
 #endif //_MODULEAI_H_

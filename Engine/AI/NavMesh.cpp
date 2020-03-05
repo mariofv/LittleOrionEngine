@@ -38,8 +38,6 @@ bool NavMesh::Update()
 		const float* bmin = &global_AABB.minPoint[0];
 		const float* bmax = &global_AABB.maxPoint[0];
 		dd::aabb(math::float3(bmin[0], bmin[1], bmin[2]), math::float3(bmax[0], bmax[1], bmax[2]), math::float3(1.0f, 0.0f, 0.0f));
-		//RenderNavMesh(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);
-		//duDebugDrawNavMeshWithClosedList(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);;
 	}
 	return true;
 }

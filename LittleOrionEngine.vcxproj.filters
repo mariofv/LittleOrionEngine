@@ -474,6 +474,7 @@
     </ClCompile>
     <ClCompile Include="Engine\AI\DebugDrawGL.cpp" />
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
+    <ClCompile Include="Engine\UI\Panel\PanelNavMesh.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -812,6 +813,7 @@
     <ClInclude Include="Engine\AI\DebugDrawGL.h" />
     <ClInclude Include="Engine\AI\GLCheckerTexture.h" />
     <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
+    <ClInclude Include="Engine\UI\Panel\PanelNavMesh.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

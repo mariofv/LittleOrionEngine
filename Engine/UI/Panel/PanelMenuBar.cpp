@@ -11,6 +11,7 @@
 #include "UI/Panel/PanelDebug.h"
 #include "UI/Panel/PanelGame.h"
 #include "UI/Panel/PanelHierarchy.h"
+#include "UI/Panel/PanelNavMesh.h"
 #include "UI/Panel/PanelInspector.h"
 #include "UI/Panel/PanelProjectExplorer.h"
 #include "UI/Panel/PanelScene.h"
@@ -165,6 +166,10 @@ void PanelMenuBar::ShowWindowMenu()
 			if (ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, App->editor->console->IsOpened()))
 			{
 				App->editor->console->SwitchOpen();
+			}
+			if(ImGui::MenuItem((ICON_FA_TERMINAL " AI"), (const char*)0, App->editor->nav_mesh->IsOpened()))
+			{
+				App->editor->nav_mesh->SwitchOpen();
 			}
 
 			ImGui::EndMenu();

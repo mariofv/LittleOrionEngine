@@ -24,6 +24,7 @@ class PanelDebug;
 class PanelConfiguration;
 class PanelAbout;
 class PanelPopups;
+class PanelNavMesh;
 
 class GameObject;
 
@@ -74,6 +75,7 @@ public:
 	PanelConfiguration* configuration = nullptr;
 	PanelAbout* about = nullptr;
 	PanelPopups* popups = nullptr;
+	PanelNavMesh* nav_mesh = nullptr;
 
 private:
 	std::vector<Panel*> panels;
