@@ -19,7 +19,7 @@ public:
 	~ModuleFileSystem();
 
 	char* Load( const char* file_name, size_t & size) const;
-	unsigned int Save(const char* file_name, const void* buffer, unsigned int size, bool append = false) const;
+	bool Save(const char* file_name, const void* buffer, unsigned int size, bool append = false) const;
 
 	bool Remove(const File * file);
 	bool Exists(const char* file) const;
