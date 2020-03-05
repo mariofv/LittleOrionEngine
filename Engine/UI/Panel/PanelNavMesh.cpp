@@ -33,8 +33,8 @@ void PanelNavMesh::Render()
 		ImGui::SliderFloat("Agent Radius", &App->artificial_intelligence->nav_mesh.agent_radius, 0.001f, 20.f);
 		ImGui::SliderFloat("Edge Max Len", &App->artificial_intelligence->nav_mesh.edge_max_len, 1.0f, 50.f);
 		ImGui::SliderFloat("Edge Max Error", &App->artificial_intelligence->nav_mesh.edge_max_error, 0.001f, 20.f);
-		ImGui::SliderInt("Edge Max Error", &App->artificial_intelligence->nav_mesh.region_min_size, 1, 20);
-		ImGui::SliderInt("Edge Max Error", &App->artificial_intelligence->nav_mesh.region_merge_size, 2, 100);
+		ImGui::SliderInt("Region Min Size", &App->artificial_intelligence->nav_mesh.region_min_size, 1, 20);
+		ImGui::SliderInt("Region Merge Size", &App->artificial_intelligence->nav_mesh.region_merge_size, 2, 100);
 		ImGui::SliderFloat("Verts Per Poly", &App->artificial_intelligence->nav_mesh.verts_per_poly, 3.0f, 2000.f);
 		ImGui::SliderFloat("Detail Sample Distance", &App->artificial_intelligence->nav_mesh.detail_sample_distance, 1.0f, 20.f);
 		ImGui::SliderFloat("Detail Sample Max Error", &App->artificial_intelligence->nav_mesh.detail_sample_max_error, 1.0f, 20.f);
