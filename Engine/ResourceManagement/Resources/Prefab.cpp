@@ -34,24 +34,25 @@ void Prefab::Instantiate(GameObject * prefab_parent)
 	}
 }
 
-void Prefab::Rewrite(GameObject * new_reference)
+void Prefab::Apply(GameObject * new_reference)
 {
 	auto result = App->resources->Import(exported_file, new_reference);
 	if (result.first)
 	{
-		RecursiveRewrite(prefab.front().get(), new_reference, true);
+		RecursiveRewrite(prefab.front().get(), new_reference, true, false);
 		for (auto old_instance : instances)
 		{
 			if (new_reference == old_instance)
 			{
 				continue;
 			}
-			RecursiveRewrite(old_instance, new_reference, false);
+			*old_instance << *new_reference;
+			RecursiveRewrite(old_instance, new_reference, false, false);
 		}
 	}
 }
 
-void Prefab::RecursiveRewrite(GameObject * old_instance, GameObject * new_reference, bool original)
+void Prefab::RecursiveRewrite(GameObject * old_instance, GameObject * new_reference, bool original, bool revert)
 {
 	for (auto & child : new_reference->children)
 	{
@@ -62,7 +63,7 @@ void Prefab::RecursiveRewrite(GameObject * old_instance, GameObject * new_refere
 		if (it != old_instance->children.end())
 		{
 			**it << *child;
-			RecursiveRewrite(*it, child, original);
+			RecursiveRewrite(*it, child, original, revert);
 		}
 		else
 		{

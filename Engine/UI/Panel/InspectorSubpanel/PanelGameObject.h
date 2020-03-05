@@ -15,7 +15,8 @@ public:
 	void Render(GameObject* game_object);
 	void ShowPrefabMenu(GameObject* game_object);
 	
-
+private:
+	GameObject* GetPrefabParent(GameObject* game_object);
 public:
 	PanelComponent component_panel;
 

@@ -13,12 +13,12 @@ public:
 	Prefab(std::vector<std::unique_ptr<GameObject>> && gameObjects, uint32_t UID, const std::string & exported_file);
 	~Prefab() = default;
 	void Instantiate(GameObject * prefab_parent);
-	void Rewrite(GameObject * new_reference);
+	void Apply(GameObject * new_reference);
 
 	std::vector<GameObject*> instances;
 private:
 	void LoadInMemory() override{};
-	void RecursiveRewrite(GameObject * old_instance, GameObject * new_reference, bool original);
+	void RecursiveRewrite(GameObject * old_instance, GameObject * new_reference, bool original, bool revert);
 	void AddNewGameObjectToInstance(GameObject * old_instance, GameObject * new_reference, bool original);
 	void RemoveGameObjectFromOriginalPrefab(GameObject * gameobject_to_remove);
 	std::vector<std::unique_ptr<GameObject>> prefab;

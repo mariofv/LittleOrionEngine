@@ -94,17 +94,25 @@ void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
 	if(ImGui::Button("Apply"))
 	{
 
-		GameObject *to_reimport = game_object;
-		bool prefab_parent = game_object->is_prefab_parent;
-		while (to_reimport && !prefab_parent)
-		{
-			to_reimport = to_reimport->parent;
-			prefab_parent = to_reimport->is_prefab_parent;
-		}
-		to_reimport->prefab_reference->Rewrite(to_reimport);
+		GameObject *to_reimport = GetPrefabParent(game_object);
+		to_reimport->prefab_reference->Apply(to_reimport);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Revert"))
 	{
+		GameObject *to_reimport = GetPrefabParent(game_object);
+		//to_reimport->prefab_reference->Revert(to_reimport);
 	}
+}
+
+GameObject* PanelGameObject::GetPrefabParent(GameObject* game_object)
+{
+	GameObject *to_reimport = game_object;
+	bool prefab_parent = game_object->is_prefab_parent;
+	while (to_reimport && !prefab_parent)
+	{
+		to_reimport = to_reimport->parent;
+		prefab_parent = to_reimport->is_prefab_parent;
+	}
+	return to_reimport;
 }

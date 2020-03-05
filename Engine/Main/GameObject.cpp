@@ -404,8 +404,6 @@ void GameObject::CopyComponents(const GameObject & gameobject_to_copy)
 			Component *copy = component->Clone(this->original_prefab);
 			copy->owner = this;
 			this->components.push_back(copy);
-		}else
-		{
 		}
 	}
 
