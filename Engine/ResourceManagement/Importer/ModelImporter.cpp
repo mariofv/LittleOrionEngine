@@ -76,7 +76,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file, bool force
 
 	Config model;
 	std::vector<Config> node_config;
-	ImportNode(root_node, identity_transformation, scene, base_path.c_str(),output_file.file_path, node_config);
+	ImportNode(root_node, identity_transformation, scene, base_path.c_str(), output_file.file_path, node_config);
 
 	std::vector<Config> animations_config;
 	for (size_t i = 0; i < scene->mNumAnimations; i++)
@@ -99,7 +99,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file, bool force
 	App->filesystem->Save(output_file_model.c_str(), serialized_model_string.c_str(), serialized_model_string.size() + 1);
 
 	SaveMetaFile(file, output_file_model);
-	return std::pair<bool, std::string>(true, output_file.file_path);
+	return std::pair<bool, std::string>(true, output_file_model);
 }
 
 void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file,  std::vector<Config> & node_config) const

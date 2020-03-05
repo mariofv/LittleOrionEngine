@@ -26,9 +26,10 @@ void Prefab::Instantiate(GameObject * prefab_parent)
 		}
 		else
 		{
-			copy_in_scene->prefab_reference = this;
+			copy_in_scene->is_prefab_parent = true;
 			instances.push_back(copy_in_scene);
 		}
+		copy_in_scene->prefab_reference = this;
 		copy_in_scene->transform.Translate(float3::zero); //:D
 	}
 }

@@ -75,7 +75,7 @@ public:
 	//TODO: Maybe move this to a component editor?
 	// This should not be public. Public for now while implementing prefab.
 	uint64_t original_UUID = 0; 
-	bool parent_is_prefab = false;
+	bool is_prefab_parent = false;
 	Prefab* prefab_reference = nullptr;
 	bool original_prefab = false;
 private:

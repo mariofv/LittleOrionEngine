@@ -44,6 +44,7 @@ GameObject* ModuleModelLoader::LoadModel(const char *new_model_file_path) const
 
 	GameObject *model_root_node = App->scene->CreateGameObject();
 	model_root_node->name = std::string(file.filename_no_extension);
+	model_root_node->original_UUID = model_root_node->UUID;
 
 
 	std::vector<Config> game_objects_config;
@@ -86,6 +87,7 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 		mesh_component->SetMesh(mesh_for_component);
 		File file(mesh_uid);
 		node_game_object->name = file.filename_no_extension;
+		node_game_object->original_UUID = node_game_object->UUID;
 		node_game_object->Update();
 		App->renderer->InsertAABBTree(node_game_object);
 

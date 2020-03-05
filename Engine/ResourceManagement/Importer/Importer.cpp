@@ -41,7 +41,6 @@ void Importer::SaveMetaFile(const File & imported_file, const std::string & expo
 
 	std::string meta_file_path = GetMetaFilePath(imported_file);
 
-
 	Config scene_config;
 	ImportOptions options;
 	options.uid = std::hash<std::string>{}(imported_file.file_path);

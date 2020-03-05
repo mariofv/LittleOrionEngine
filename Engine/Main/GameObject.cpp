@@ -237,8 +237,6 @@ void GameObject::AddChild(GameObject *child)
 
 	child->transform.ChangeLocalSpace(transform.GetGlobalModelMatrix());
 	children.push_back(child);
-
-	child->parent_is_prefab =  original_UUID !=0 || parent_is_prefab;
 }
 
 void GameObject::RemoveChild(GameObject *child)

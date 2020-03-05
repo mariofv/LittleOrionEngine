@@ -36,7 +36,7 @@ void PanelGameObject::Render(GameObject* game_object)
 	}
 
 	ImGui::Spacing();
-	if (game_object->original_UUID != 0)
+	if (game_object->prefab_reference != nullptr)
 	{
 		ShowPrefabMenu(game_object);
 	}
@@ -95,14 +95,13 @@ void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
 	{
 
 		GameObject *to_reimport = game_object;
-		Prefab *prefab_reference = to_reimport->prefab_reference;
-
-		while (to_reimport && !to_reimport->prefab_reference)
+		bool prefab_parent = game_object->is_prefab_parent;
+		while (to_reimport && !prefab_parent)
 		{
 			to_reimport = to_reimport->parent;
-			prefab_reference = to_reimport->prefab_reference;
+			prefab_parent = to_reimport->is_prefab_parent;
 		}
-		prefab_reference->Rewrite(to_reimport);
+		to_reimport->prefab_reference->Rewrite(to_reimport);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Revert"))
