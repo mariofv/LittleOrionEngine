@@ -5,8 +5,7 @@
 #include "recast/Recast/Recast.h"
 #include "MathGeoLib.h"
 #include <vector>
-#include "recast/DebugUtils/DebugDraw.h"
-#include "Component/ComponentCamera.h"
+#include "AI/SampleDebugDraw.h"
 
 enum DrawMode
 {
@@ -37,18 +36,6 @@ enum SamplePartitionType
 	SAMPLE_PARTITION_LAYERS,
 };
 
-/// These are just sample areas to use consistent values across the samples.
-/// The use should specify these base on his needs.
-enum SamplePolyAreas
-{
-	SAMPLE_POLYAREA_GROUND,
-	SAMPLE_POLYAREA_WATER,
-	SAMPLE_POLYAREA_ROAD,
-	SAMPLE_POLYAREA_DOOR,
-	SAMPLE_POLYAREA_GRASS,
-	SAMPLE_POLYAREA_JUMP,
-};
-
 enum SamplePolyFlags
 {
 	SAMPLE_POLYFLAGS_WALK = 0x01,		// Ability to walk (ground, grass, road)
@@ -58,35 +45,6 @@ enum SamplePolyFlags
 	SAMPLE_POLYFLAGS_DISABLED = 0x10,		// Disabled polygon
 	SAMPLE_POLYFLAGS_ALL = 0xffff	// All abilities.
 };
-
-class DebugDrawGL : public duDebugDraw
-{
-
-public:
-	virtual void depthMask(bool state);
-	virtual void texture(bool state);
-	virtual void begin(duDebugDrawPrimitives prim, float size = 1.0f);
-	virtual void vertex(const float* pos, unsigned int color);
-	virtual void vertex(const float x, const float y, const float z, unsigned int color);
-	virtual void vertex(const float* pos, unsigned int color, const float* uv);
-	virtual void vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v);
-	virtual void end();
-
-	virtual void drawMesh(ComponentCamera& camera);
-
-	unsigned int vbo = 0;
-	unsigned int vao = 0;
-
-	std::vector<float3> vertices;
-
-};
-
-class SampleDebugDraw : public DebugDrawGL
-{
-public:
-	virtual unsigned int areaToCol(unsigned int area);
-};
-
 
 class dtNavMeshQuery;
 class dtNavMesh;
@@ -98,8 +56,8 @@ class NavMesh
 public:
 	NavMesh();
 	~NavMesh();
-	bool CleanUp();
 
+	bool CleanUp();
 	bool Update();
 
 	bool CreateNavMesh();
@@ -107,7 +65,7 @@ public:
 	void RenderTile(duDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const;
 	void RenderNavMesh(ComponentCamera& camera);
 
-	SampleDebugDraw& getDebugDraw() { return m_dd; }
+	inline SampleDebugDraw& GetDebugDraw() { return m_dd; }
 
 private:
 	void GetVerticesScene();
@@ -137,10 +95,9 @@ protected:
 	rcConfig m_cfg;
 	rcPolyMeshDetail* m_dmesh = nullptr;
 
-	
 	DrawMode m_drawMode;
 
-	//Variables of NavMesh (modified by UI)
+	// Variables of NavMesh (modified by UI)
 	float cell_width = 0.30f;
 	float cell_height = 0.20f;
 	float walkable_slope_angle = 50.0f;
@@ -160,7 +117,6 @@ protected:
 public:
 	uint64_t mesh_floor_uuid;
 
-
 private:
 	rcContext* m_ctx;
 
@@ -168,7 +124,6 @@ private:
 	bool filter_low_hanging_obstacles = true;
 	bool filter_ledge_spans = true;
 	bool filter_walkable_low_height_spans = true;
-
 
 	SamplePartitionType partition_type = SAMPLE_PARTITION_WATERSHED;
 
@@ -183,11 +138,9 @@ private:
 	dtNavMesh* nav_mesh = nullptr;
 	unsigned char nav_mesh_draw_flags;
 
-
 	///TEST
 	SampleDebugDraw m_dd;
 	std::vector<float> vertices;
-
 };
 
 #endif // _NAVMESH_H_
