@@ -1,4 +1,18 @@
-ExampleScript
-PlayerMovement
-Testing
-ListWorking
+{
+    "Scripts": [
+        {
+            "Script": "ExampleScript"
+        },
+        {
+            "Script": "TestingScriptList"
+        }
+        ,
+        {
+            "Script": "HelloWorld"
+        }
+        ,
+        {
+            "Script": "Jump"
+        }
+    ]
+}

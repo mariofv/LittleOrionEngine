@@ -2,6 +2,7 @@
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleFileSystem.h"
 #include "Component/ComponentScript.h"
 #include "Script/Script.h"
 
@@ -88,7 +89,7 @@ void ModuleScriptManager::RemoveComponentScript(ComponentScript * script_to_remo
 }
 void ModuleScriptManager::LoadScriptList() 
 {
-	std::ifstream file_scripts(SCRIPT_LIST_PATH);
+	/*std::ifstream file_scripts(SCRIPT_LIST_PATH);
 	if (!file_scripts)
 		return;
 	scripts_list.clear();
@@ -99,6 +100,26 @@ void ModuleScriptManager::LoadScriptList()
 		{
 			scripts_list.push_back(script);
 		}
+	}*/if(scripts_list.size()>0)
+		scripts_list.clear();
+	size_t readed_bytes;
+	char* scripts_file_data = App->filesystem->Load(SCRIPT_LIST_PATH, readed_bytes);
+	if (scripts_file_data != nullptr)
+	{
+		std::string serialized_scripts_string = scripts_file_data;
+		free(scripts_file_data);
+
+		Config scripts_config(serialized_scripts_string);
+
+		std::vector<Config> scripts_list_configs;
+		scripts_config.GetChildrenConfig("Scripts", scripts_list_configs);
+		for (unsigned int i = 0; i < scripts_list_configs.size(); ++i)
+		{
+			std::string script;
+			scripts_list_configs[i].GetString("Script", script,"");
+			scripts_list.push_back(script);
+		}
 	}
+
 }
 
