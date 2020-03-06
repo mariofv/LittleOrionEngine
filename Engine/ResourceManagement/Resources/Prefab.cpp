@@ -11,10 +11,11 @@ Prefab::Prefab(std::vector<std::unique_ptr<GameObject>> && gameObjects, uint32_t
 {
 
 }
-void Prefab::Instantiate(GameObject * prefab_parent)
+GameObject * Prefab::Instantiate(GameObject * prefab_parent)
 {
 	std::map<uint64_t, GameObject*> original_gameObject_reference;
 
+	GameObject* parent_prefab;
 	for (auto & gameObject : prefab)
 	{
 		GameObject* copy_in_scene = App->scene->AddGameObject(std::make_unique<GameObject>(*gameObject.get()));
@@ -28,10 +29,13 @@ void Prefab::Instantiate(GameObject * prefab_parent)
 		{
 			copy_in_scene->is_prefab_parent = true;
 			instances.push_back(copy_in_scene);
+			parent_prefab = copy_in_scene;
 		}
 		copy_in_scene->prefab_reference = this;
 		copy_in_scene->transform.Translate(float3::zero); //:D
 	}
+
+	return parent_prefab;
 }
 
 void Prefab::Apply(GameObject * new_reference)
