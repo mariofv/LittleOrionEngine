@@ -11,7 +11,7 @@ bool ModuleResourceManager::Init()
 	APP_LOG_SECTION("************ Module Resource Manager Init ************");
 	texture_importer = std::make_unique<TextureImporter>();
 	model_importer = std::make_unique<ModelImporter>();
-	prefab_manager = std::make_unique<PrefabManager>();
+	prefab_manager = std::make_unique<SceneManager>();
 	prefab_importer = std::make_unique<PrefabImporter>();
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 	thread_timer->Start();

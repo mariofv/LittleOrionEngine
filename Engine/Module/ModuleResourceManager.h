@@ -11,7 +11,7 @@
 #include "ResourceManagement/Importer/TextureImporter.h"
 #include "ResourceManagement/Importer/ModelImporter.h"
 #include "ResourceManagement/Importer/PrefabImporter.h"
-#include "ResourceManagement/Importer/PrefabManager.h"
+#include "ResourceManagement/Importer/SceneManager.h"
 
 class Texture;
 class File;
@@ -85,7 +85,7 @@ public:
 	} thread_comunication;
 
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
-	std::unique_ptr<PrefabManager> prefab_manager = nullptr;
+	std::unique_ptr<SceneManager> prefab_manager = nullptr;
 
 private:
 	const size_t importer_interval_millis = 30000;
