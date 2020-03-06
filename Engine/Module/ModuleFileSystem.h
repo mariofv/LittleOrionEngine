@@ -1,8 +1,6 @@
 #ifndef _ModuleFileSystem_H
 #define _ModuleFileSystem_H
 
-# define DLL_PATH "Resources/Scripts/GamePlaySystem.dll"
-
 
 #include <Module/Module.h>
 #include <string>

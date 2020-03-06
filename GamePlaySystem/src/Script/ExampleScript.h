@@ -1,6 +1,7 @@
 #ifndef  __EXAMPLESCRIPT_H__
 #define  __EXAMPLESCRIPT_H__
 #include "Script.h"
+
 class ExampleScript : public Script
 {
 public:

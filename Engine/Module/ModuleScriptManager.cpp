@@ -3,6 +3,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleTime.h"
 #include "Component/ComponentScript.h"
 #include "Script/Script.h"
 #include "Filesystem/File.h"
@@ -18,11 +19,12 @@ bool ModuleScriptManager::Init()
 	APP_LOG_SECTION("************ Module Manager Script ************");
 
 	GetCurrentPath();
-	patchDLL(DLL_PATH, working_directory.c_str());
-	dll_file = std::make_unique<File>("Resources/Scripts/GamePlaySystem.dll");
-	init_timestamp = dll_file->modification_timestamp;
-	gameplay_dll = LoadLibrary("GamePlaySyste_.dll");
+	initDLL();
 	LoadScriptList();
+	dll_file = std::make_unique<File>(SCRIPTS_DLL_PATH);
+	init_timestamp_dll = dll_file->modification_timestamp;
+	scripts_list_file = std::make_unique<File>(SCRIPT_LIST_PATH);
+	init_timestamp_script_list = scripts_list_file->modification_timestamp;
 
 	return true;
 }
@@ -30,22 +32,28 @@ bool ModuleScriptManager::Init()
 update_status ModuleScriptManager::Update()
 {
 	
-	if (!scripts.empty()) 
+	if (!scripts.empty() && App->time->isGameRunning()) 
 	{
-		for (auto &component_script : scripts) 
+		RunScripts();
+	}
+	if (!App->time->isGameRunning()) 
+	{
+
+		last_timestamp_dll = TimeStamp(dll_file->file_path.c_str());
+		if (last_timestamp_dll != init_timestamp_dll)
 		{
-			component_script->Update();
+			ReloadDLL();
+			init_timestamp_dll = last_timestamp_dll;
+		}
+
+		last_timestamp_script_list = TimeStamp(scripts_list_file->file_path.c_str());
+		if (last_timestamp_script_list != init_timestamp_script_list)
+		{
+			LoadScriptList();
+			init_timestamp_script_list = last_timestamp_script_list;
 		}
 	}
 
-	PHYSFS_Stat file_info;
-	PHYSFS_stat(dll_file->file_path.c_str(), &file_info);
-	last_timestamp = file_info.modtime;
-	if (last_timestamp != init_timestamp) 
-	{
-		ReloadDLL();
-		init_timestamp = last_timestamp;
-	}
 	
 	return update_status::UPDATE_CONTINUE;
 }
@@ -54,6 +62,13 @@ bool ModuleScriptManager::CleanUp()
 {
 	FreeLibrary(gameplay_dll);
 	return true;
+}
+
+long ModuleScriptManager::TimeStamp(const char* path)
+{
+	PHYSFS_Stat file_info;
+	PHYSFS_stat(path, &file_info);
+	return file_info.modtime;
 }
 
 void ModuleScriptManager::InitResourceScript() 
@@ -129,6 +144,28 @@ void ModuleScriptManager::LoadScriptList()
 
 }
 
+void ModuleScriptManager::RunScripts()
+{
+	for (auto &component_script : scripts)
+	{
+		component_script->script = nullptr;
+	}
+}
+
+void ModuleScriptManager::RemoveScriptPointers()
+{
+	for (auto &component_script : scripts)
+	{
+		component_script->script = nullptr;
+	}
+}
+
+void ModuleScriptManager::initDLL()
+{
+	patchDLL(SCRIPTS_DLL_PATH, working_directory.c_str());
+	gameplay_dll = LoadLibrary(SCRIPT_DLL_FILE);
+}
+
 void ModuleScriptManager::ReloadDLL() 
 {
 	if (gameplay_dll != nullptr) 
@@ -139,15 +176,11 @@ void ModuleScriptManager::ReloadDLL()
 		}
 		else 
 		{
-			for (auto &component_script : scripts)
-			{
-				component_script->script = nullptr;
-			}
-			remove("GamePlaySyste_.dll");
+			RemoveScriptPointers();
+			remove(SCRIPT_DLL_FILE);
 		}
 	}
-	patchDLL(DLL_PATH, working_directory.c_str());
-	gameplay_dll = LoadLibrary("GamePlaySyste_.dll");
+	initDLL();
 	InitResourceScript();
 
 }
@@ -158,7 +191,6 @@ void ModuleScriptManager::GetCurrentPath()
 	GetCurrentDirectory(MAX_PATH, NPath);
 	working_directory = NPath;
 	working_directory += "/GamePlaySyste_.dll";
-	APP_LOG_ERROR("something here");
 }
 
 size_t ModuleScriptManager::CStrlastIndexOfChar(const char* str, char find_char)

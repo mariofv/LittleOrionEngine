@@ -32,11 +32,15 @@ public:
 	bool Init() override;
 	update_status Update() override;
 	bool CleanUp() override;
+	long TimeStamp(const char * path);
 	void InitResourceScript();
 	Script * CreateResourceScript(const std::string & script_name, GameObject * owner);
 	ComponentScript* CreateComponentScript();
 	void RemoveComponentScript(ComponentScript* script_to_remove);
 	void LoadScriptList();
+	void RunScripts();
+	void RemoveScriptPointers();
+	void initDLL();
 	void ReloadDLL();
 	void GetCurrentPath();
 	size_t CStrlastIndexOfChar(const char * str, char find_char);
@@ -48,8 +52,12 @@ private:
 	HINSTANCE gameplay_dll;
 	std::string working_directory;
 	std::unique_ptr<File> dll_file = nullptr;
-	long last_timestamp;
-	long init_timestamp;
+	std::unique_ptr<File> scripts_list_file = nullptr;
+
+	long last_timestamp_dll;
+	long init_timestamp_dll;
+	long last_timestamp_script_list;
+	long init_timestamp_script_list;
 
 public:
 

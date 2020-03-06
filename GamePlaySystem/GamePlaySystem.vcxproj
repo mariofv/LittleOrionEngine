@@ -91,7 +91,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;GAMEPLAYSYSTEM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\Libraries\include\ImGuizmo;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\GamePlaySystem\src\Script;..\Libraries\include\ImGuizmo;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -172,10 +172,12 @@
   <ItemGroup>
     <ClInclude Include="src\Script\ExampleScript.h" />
     <ClInclude Include="src\Script\Script.h" />
+    <ClInclude Include="src\Script\TestScriptRuntime.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp" />
     <ClCompile Include="src\Script\Script.cpp" />
+    <ClCompile Include="src\Script\TestScriptRuntime.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

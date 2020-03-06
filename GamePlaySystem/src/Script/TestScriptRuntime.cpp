@@ -1,4 +1,4 @@
-#include "ExampleScript.h"
+#include "TestScriptRuntime.h"
 #include "Main/Application.h"
 #include "Module/ModuleInput.h"
 #include "Main/GameObject.h"
@@ -6,42 +6,42 @@
 #include "Module/ModuleScene.h"
 #include "imgui.h"
 
-
-ExampleScript* ExampleScriptDLL()
+TestScriptRuntime* TestScriptRuntimeDLL()
 {
-	ExampleScript *instance = new ExampleScript();
+	TestScriptRuntime *instance = new TestScriptRuntime();
 	return instance;
 }
 
-ExampleScript::ExampleScript()
-{
-}
-ExampleScript::~ExampleScript()
+TestScriptRuntime::TestScriptRuntime()
 {
 }
 
-void ExampleScript::Update()
+
+TestScriptRuntime::~TestScriptRuntime()
 {
-	
+}
+void TestScriptRuntime::Update()
+{
+
 	Test();
-	
-	if (App->input->GetKeyDown(KeyCode::C)) 
+
+	if (App->input->GetKeyDown(KeyCode::C))
 	{
 		GameObject* go = App->scene->CreateGameObject();
 	}
 }
 
-void ExampleScript::OnInspector(ImGuiContext* context)
+void TestScriptRuntime::OnInspector(ImGuiContext* context)
 {
 	ImGui::SetCurrentContext(context);
-	ImGui::Text("Example Script Inspector");
-	ImGui::DragFloat("Speed", &speed,0.01f,0.f,0.5f);
+	ImGui::Text("TestingScript on Runtime");
+	ImGui::DragFloat("Speed", &speed, 0.01f, 0.f, 0.5f);
 	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.f, 0.5f);
-	ImGui::Text("Testing for QA: Attempts 20182940");
-	
+	ImGui::Text("Testing for QA: Attempts 288888888888");
+
 }
 
-void ExampleScript::Test()
+void TestScriptRuntime::Test()
 {
 	float3 transform = owner->transform.GetTranslation();
 	float3 rotation = owner->transform.GetRotationRadiants();

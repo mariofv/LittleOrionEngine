@@ -2,8 +2,10 @@
     "Scripts": [
         "ExampleScript",
         "TestingScriptList",
+        "TestScriptRuntime",
+        "HolaPepole",
         "HelloWorld",
-		"Jump",
-        "TestingRefresh"
+        "TestingRefresh",
+        "HelloMarco"
     ]
 }

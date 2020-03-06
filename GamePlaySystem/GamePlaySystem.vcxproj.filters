@@ -18,12 +18,18 @@
     <ClInclude Include="src\Script\Script.h">
       <Filter>src\Script</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\TestScriptRuntime.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\Script.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\TestScriptRuntime.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>
