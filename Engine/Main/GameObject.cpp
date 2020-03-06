@@ -49,7 +49,7 @@ GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_
 GameObject & GameObject::operator<<(const GameObject & gameobject_to_copy)
 {
 
-	if(prefab_reference == nullptr && gameobject_to_copy.transform.modified_by_user)
+	if(!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
 	{
 		transform.SetTranslation(gameobject_to_copy.transform.GetTranslation());
 		transform.SetRotation(gameobject_to_copy.transform.GetRotationRadiants());
@@ -59,8 +59,7 @@ GameObject & GameObject::operator<<(const GameObject & gameobject_to_copy)
 	transform.SetScale(gameobject_to_copy.transform.GetScale());
 	CopyComponents(gameobject_to_copy);
 	this->name = gameobject_to_copy.name;
-	this->SetEnabled(gameobject_to_copy.active);
-	this->is_static = gameobject_to_copy.is_static;
+	this->active = gameobject_to_copy.active;
 	this->SetStatic(gameobject_to_copy.is_static);
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;

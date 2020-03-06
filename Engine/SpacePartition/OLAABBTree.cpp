@@ -203,11 +203,14 @@ void OLAABBTree::InsertLeaf(unsigned leafNodeIndex)
 
 void OLAABBTree::Remove(GameObject * go)
 {
-	unsigned nodeIndex = object_node_index_map[go];
-	RemoveLeaf(nodeIndex);
-	DeallocateNode(nodeIndex);
-	object_node_index_map.erase(go);
+	if (object_node_index_map.find(go) != object_node_index_map.end())
+	{
+		unsigned nodeIndex = object_node_index_map[go];
+		RemoveLeaf(nodeIndex);
+		DeallocateNode(nodeIndex);
+		object_node_index_map.erase(go);
 
+	}
 	return;
 }
 

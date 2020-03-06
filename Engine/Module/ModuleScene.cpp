@@ -90,7 +90,6 @@ GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject> & game_object
 	{
 		App->renderer->InsertAABBTree(game_object);
 	}
-	game_object->SetStatic(game_object->IsStatic());
 	return game_object;
 
 }

@@ -459,7 +459,10 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
 
 		}
-		component->added_by_user = true;
+		if (component != nullptr)
+		{
+			component->added_by_user = true;
+		}
 		ImGui::EndPopup();
 	}
 
