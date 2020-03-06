@@ -1,22 +1,9 @@
 {
     "Scripts": [
-        {
-            "Script": "ExampleScript"
-        },
-        {
-            "Script": "TestingScriptList"
-        }
-        ,
-        {
-            "Script": "HelloWorld"
-        }
-        ,
-        {
-            "Script": "Jump"
-        }
-        ,
-        {
-            "Script": "TestingRefresh"
-        }
+        "ExampleScript",
+        "TestingScriptList",
+        "HelloWorld",
+		"Jump",
+        "TestingRefresh"
     ]
 }

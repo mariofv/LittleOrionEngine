@@ -123,9 +123,7 @@ void ModuleScriptManager::LoadScriptList()
 		scripts_config.GetChildrenConfig("Scripts", scripts_list_configs);
 		for (unsigned int i = 0; i < scripts_list_configs.size(); ++i)
 		{
-			std::string script;
-			scripts_list_configs[i].GetString("Script", script,"");
-			scripts_list.push_back(script);
+			scripts_list.push_back(scripts_list_configs[i].config_document.GetString());
 		}
 	}
 
