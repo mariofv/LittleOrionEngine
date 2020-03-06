@@ -14,7 +14,6 @@ class ComponentScript :public Component
 public:
 	ComponentScript();
 	ComponentScript(GameObject * owner, std::string script_name);
-	//ComponentScript(GameObject*);
 	~ComponentScript();
 	void LoadName(std::string script_name);
 	void Update();
@@ -22,12 +21,7 @@ public:
 	void ShowComponentWindow();
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
-	/*virtual void Start() {};
-	virtual void Awake() {};
-	virtual void Update() {};
-	virtual void OnInspector() {};
-	void SetAppPointer(Application*);*/
-	//TODO: Implement more global functions Unity-like
+
 public:
 	std::string name;
 	Script* script = nullptr;

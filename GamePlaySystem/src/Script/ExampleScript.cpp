@@ -34,10 +34,10 @@ void ExampleScript::Update()
 void ExampleScript::OnInspector(ImGuiContext* context)
 {
 	ImGui::SetCurrentContext(context);
-	ImGui::Text("Testing Inspector");
-	ImGui::Text("By Marco and Jordi guys, we are doing it, yeah!");
+	ImGui::Text("Example Script Inspector");
 	ImGui::DragFloat("Speed", &speed,0.01f,0.f,0.5f);
-	ImGui::Text("Test 23232");
+	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.f, 0.5f);
+	ImGui::Text("Test equsals");
 	
 }
 
@@ -48,32 +48,26 @@ void ExampleScript::Test()
 	//TODO
 	if (App->input->GetKey(KeyCode::A))
 	{
-		++i;
 		owner->transform.SetTranslation(float3(transform.x + speed, transform.y, transform.z));
 	}
 	if (App->input->GetKey(KeyCode::W))
 	{
-		++i;
 		owner->transform.SetTranslation(float3(transform.x, transform.y, transform.z + speed));
 	}
 	if (App->input->GetKey(KeyCode::S))
 	{
-		++i;
 		owner->transform.SetTranslation(float3(transform.x, transform.y, transform.z - speed));
 	}
 	if (App->input->GetKey(KeyCode::D))
 	{
-		++i;
 		owner->transform.SetTranslation(float3(transform.x - speed, transform.y, transform.z));
 	}
 	if (App->input->GetKey(KeyCode::E))
 	{
-		++i;
-		owner->transform.SetRotation(float3(rotation.x, rotation.y - speed, rotation.z));
+		owner->transform.SetRotation(float3(rotation.x, rotation.y - rotation_speed, rotation.z));
 	}
 	if (App->input->GetKey(KeyCode::Q))
 	{
-		++i;
-		owner->transform.SetRotation(float3(rotation.x, rotation.y + speed, rotation.z));
+		owner->transform.SetRotation(float3(rotation.x, rotation.y + rotation_speed, rotation.z));
 	}
 }

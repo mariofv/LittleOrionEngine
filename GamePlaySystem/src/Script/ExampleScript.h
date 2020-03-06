@@ -12,6 +12,7 @@ public:
 
 	int i = 0;
 	float speed = 0.01f;
+	float rotation_speed = 0.01f;
 };
 extern "C" SCRIPT_API ExampleScript* ExampleScriptDLL(); //This is how we are going to load the script
 #endif

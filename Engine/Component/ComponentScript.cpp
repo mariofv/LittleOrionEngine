@@ -24,7 +24,6 @@ void ComponentScript::LoadName(std::string script_name)
 {
 	this->name = script_name;
 	script = App->scripts->CreateResourceScript(script_name, owner);
-	//App->scripts->scripts.push_back(this);
 }
 
 void ComponentScript::Update()

@@ -38,18 +38,11 @@ public:
 	void RemoveComponentScript(ComponentScript* script_to_remove);
 	void LoadScriptList();
 	void ReloadDLL();
-	void CreatePDB();
 	void GetCurrentPath();
-
-	size_t CStrlastIndexOfChar(const char * str, char findChar);
-
-	bool patchFileName(char * fileName);
-
-	bool FileIOisExist(const char * fileName);
-
-	bool FileIOcopy(const char * fromFile, const char * toFile, bool overwriteExisting);
-
-	bool patchDLL(const char * dllPath, const char patchedDllPath[MAX_PATH], char patchedPdbPath[MAX_PATH]);
+	size_t CStrlastIndexOfChar(const char * str, char find_char);
+	bool patchFileName(char* filename);
+	bool CopyPDB(const char* from_file, const char* destination_file, bool overwrite_existing);
+	bool patchDLL(const char* dll_path, const char patched_dll_path[MAX_PATH]);
 
 private:
 	HINSTANCE gameplay_dll;
@@ -61,7 +54,6 @@ private:
 public:
 
 	std::vector<ComponentScript*> scripts;
-	//const std::unordered_map<std::string, ScriptFunction> script_map;
 	std::vector<std::string> scripts_list;
 
 
