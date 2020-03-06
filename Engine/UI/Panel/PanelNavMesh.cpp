@@ -25,7 +25,15 @@ void PanelNavMesh::Render()
 		ImGui::Text("Variables");
 		ImGui::Separator();
 
-		ImGui::SliderFloat("Cell Width", &App->artificial_intelligence->nav_mesh.cell_width, 0.001f, 20.f);
+		ImGui::SliderFloat("Cell Size", &App->artificial_intelligence->nav_mesh.cell_width, 0.001f, 20.f);
+
+		int gw = 0, gh = 0;
+		rcCalcGridSize(&App->artificial_intelligence->nav_mesh.global_AABB.minPoint[0],
+			&App->artificial_intelligence->nav_mesh.global_AABB.maxPoint[0],
+			App->artificial_intelligence->nav_mesh.cell_width, &gw, &gh);
+
+		ImGui::Text("Voxels %d x %d", gw, gh);
+
 		ImGui::SliderFloat("Cell Height", &App->artificial_intelligence->nav_mesh.cell_height, 0.001f, 20.f);
 		ImGui::SliderFloat("Walkable Slope Angle", &App->artificial_intelligence->nav_mesh.walkable_slope_angle, 0.0f, 360.f);
 		ImGui::SliderFloat("Agent Height", &App->artificial_intelligence->nav_mesh.agent_height, 0.001f, 50.f);
