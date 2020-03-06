@@ -45,6 +45,9 @@ void ComponentScript::ShowComponentWindow()
 	{
 		script->OnInspector(ImGui::GetCurrentContext());
 	}
+	else {
+		APP_LOG_ERROR("wtf i'm doing");
+	}
 }
 
 void ComponentScript::Save(Config & config) const

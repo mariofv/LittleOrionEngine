@@ -121,7 +121,11 @@ ENGINE_API void GameObject::Update()
 
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
-		components[i]->Update();
+		if (components[i]->type != Component::ComponentType::SCRIPT) 
+		{
+			components[i]->Update();
+		}
+		
 	}
 }
 

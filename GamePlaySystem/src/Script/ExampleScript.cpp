@@ -37,7 +37,8 @@ void ExampleScript::OnInspector(ImGuiContext* context)
 	ImGui::Text("Example Script Inspector");
 	ImGui::DragFloat("Speed", &speed,0.01f,0.f,0.5f);
 	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.f, 0.5f);
-	ImGui::Text("Testing for QA: Attempts 20182940");
+	ImGui::Text("Testing for QA: attempt 24.84848484");
+	
 	
 }
 

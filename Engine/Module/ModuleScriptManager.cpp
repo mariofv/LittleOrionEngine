@@ -122,9 +122,11 @@ void ModuleScriptManager::RemoveComponentScript(ComponentScript * script_to_remo
 
 void ModuleScriptManager::LoadScriptList() 
 {
-	if(scripts_list.size()>0)
+	if (scripts_list.size() > 0) 
+	{
 		scripts_list.clear();
-
+	}
+	
 	size_t readed_bytes;
 	char* scripts_file_data = App->filesystem->Load(SCRIPT_LIST_PATH, readed_bytes);
 	if (scripts_file_data != nullptr)
@@ -148,7 +150,7 @@ void ModuleScriptManager::RunScripts()
 {
 	for (auto &component_script : scripts)
 	{
-		component_script->script = nullptr;
+		component_script->Update();
 	}
 }
 
