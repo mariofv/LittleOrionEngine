@@ -110,7 +110,7 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.h" />
-    <ClInclude Include="Engine\ResourceManagement\Importer\PrefabManager.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\SceneManager.h" />
     <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\AnimationLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\PrefabLoader.h" />
@@ -202,7 +202,7 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Importer\PrefabManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\SceneManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\AnimationLoader.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\PrefabLoader.cpp" />
