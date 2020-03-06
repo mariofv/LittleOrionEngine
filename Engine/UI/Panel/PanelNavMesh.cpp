@@ -25,8 +25,8 @@ void PanelNavMesh::Render()
 		ImGui::Text("Properties");
 		ImGui::Separator();
 		ImGui::Text("Rasterization");	
-		ImGui::SliderFloat("Cell Size", &App->artificial_intelligence->nav_mesh.cell_width, 0.001f, 20.f);
-		ImGui::SliderFloat("Cell Height", &App->artificial_intelligence->nav_mesh.cell_height, 0.001f, 20.f);
+		ImGui::DragFloat("Cell Size", &App->artificial_intelligence->nav_mesh.cell_width, 0.5f, 0.001f, 20.f);
+		ImGui::DragFloat("Cell Height", &App->artificial_intelligence->nav_mesh.cell_height, 0.5f, 0.001f, 50.f);
 		int gw = 0, gh = 0;
 		rcCalcGridSize(&App->artificial_intelligence->nav_mesh.global_AABB.minPoint[0],
 			&App->artificial_intelligence->nav_mesh.global_AABB.maxPoint[0],

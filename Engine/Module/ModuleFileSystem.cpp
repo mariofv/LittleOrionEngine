@@ -164,6 +164,7 @@ FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileT
 	if (
 		file_extension == "fbx"
 		|| file_extension == "ol"
+		|| file_extension == "obj"
 		)
 	{
 		return FileType::MODEL;

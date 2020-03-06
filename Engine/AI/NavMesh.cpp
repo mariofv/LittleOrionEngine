@@ -656,7 +656,7 @@ void NavMesh::GetVerticesScene()
 			verts_vec.push_back(vertss.y);
 			verts_vec.push_back(vertss.z);
 
-			if(mesh->owner->name == "Planks0" || mesh->owner->name == "Base0")
+			if(mesh->owner->name == "Planks0" || mesh->owner->name == "Base0" || mesh->owner->name == "defaultobject0")
 			{
 				unwalkable_verts.push_back(false);
 				unwalkable_verts.push_back(false);
