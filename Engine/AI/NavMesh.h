@@ -134,6 +134,7 @@ private:
 	std::vector<float> verts_vec;
 	std::vector<int> tris_vec;
 	std::vector<float> normals_vec;
+	std::vector<bool> unwalkable_verts;
 	AABB global_AABB;
 	bool is_mesh_computed = false;
 

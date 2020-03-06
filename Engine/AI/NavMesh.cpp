@@ -150,7 +150,7 @@ bool NavMesh::CreateNavMesh()
 	// If your input data is multiple meshes, you can transform them here, calculate
 	// the are type for each of the meshes and rasterize them.
 	memset(m_triareas, 0, ntris * sizeof(unsigned char));
-	rcMarkWalkableTriangles(m_ctx, m_cfg.walkableSlopeAngle, verts, nverts, tris, ntris, m_triareas);
+	rcMarkWalkableTriangles(m_ctx, m_cfg.walkableSlopeAngle, verts, nverts, tris, ntris, m_triareas, unwalkable_verts);
 	if (!rcRasterizeTriangles(m_ctx, verts, nverts, tris, m_triareas, ntris, *m_solid, m_cfg.walkableClimb))
 	{
 		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Could not rasterize triangles.");
@@ -643,6 +643,7 @@ void NavMesh::GetVerticesScene()
 {
 	//Clear vertex vector
 	verts_vec.clear();
+	unwalkable_verts.clear();
 
 	for (auto mesh : App->renderer->meshes)
 	{
@@ -654,6 +655,19 @@ void NavMesh::GetVerticesScene()
 			verts_vec.push_back(vertss.x);
 			verts_vec.push_back(vertss.y);
 			verts_vec.push_back(vertss.z);
+
+			if(mesh->owner->name == "Planks0" || mesh->owner->name == "Base0")
+			{
+				unwalkable_verts.push_back(false);
+				unwalkable_verts.push_back(false);
+				unwalkable_verts.push_back(false);
+			}
+			else
+			{
+				unwalkable_verts.push_back(true);
+				unwalkable_verts.push_back(true);
+				unwalkable_verts.push_back(true);
+			}
 		}
 	}
 }

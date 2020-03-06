@@ -18,7 +18,7 @@
  
 #ifndef RECAST_H
 #define RECAST_H
-
+#include <vector>
 /// The value of PI used by Recast.
 static const float RC_PI = 3.14159265f;
 
@@ -588,6 +588,10 @@ static const unsigned char RC_NULL_AREA = 0;
 /// recognized by some steps in the build process. 
 static const unsigned char RC_WALKABLE_AREA = 63;
 
+/// Indicate that an area is a unwalkable polygon
+/// Modified by OnionGalaxy
+static const unsigned char RC_UNWALKABLE_AREA = 10;
+
 /// The value returned by #rcGetCon if the specified direction is not connected
 /// to another span. (Has no neighbor.)
 static const int RC_NOT_CONNECTED = 0x3f;
@@ -810,7 +814,7 @@ bool rcCreateHeightfield(rcContext* ctx, rcHeightfield& hf, int width, int heigh
 ///  @param[in]		nt					The number of triangles.
 ///  @param[out]	areas				The triangle area ids. [Length: >= @p nt]
 void rcMarkWalkableTriangles(rcContext* ctx, const float walkableSlopeAngle, const float* verts, int nv,
-							 const int* tris, int nt, unsigned char* areas); 
+							 const int* tris, int nt, unsigned char* areas, const std::vector<bool>& unwalkable_verts); 
 
 /// Sets the area id of all triangles with a slope greater than or equal to the specified value to #RC_NULL_AREA.
 ///  @ingroup recast
