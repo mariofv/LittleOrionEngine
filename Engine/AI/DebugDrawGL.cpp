@@ -78,6 +78,10 @@ void DebugDrawGL::End()
 
 void DebugDrawGL::DrawMesh(ComponentCamera& camera)
 {
+	if (vertices.size() == 0)
+		return;
+
+
 	unsigned int shader = App->program->GetShaderProgramId("NavMesh");
 	math::float4x4 model = math::float4x4::identity;
 

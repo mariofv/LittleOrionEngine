@@ -19,6 +19,7 @@ NavMesh::NavMesh()
 {
 	m_ctx = new rcContext();
 	nav_query = dtAllocNavMeshQuery();
+	navmesh_timer = Timer();
 }
 
 NavMesh::~NavMesh()
@@ -27,6 +28,9 @@ NavMesh::~NavMesh()
 
 bool NavMesh::CleanUp()
 {
+	m_dd.vertices.clear();
+	is_mesh_computed = false;
+
 	return true;
 }
 
@@ -45,6 +49,8 @@ bool NavMesh::Update()
 bool NavMesh::CreateNavMesh()
 {
 	CleanUp();
+
+	navmesh_timer.Start();
 
 	GetVerticesScene();
 	GetIndicesScene();
@@ -107,12 +113,6 @@ bool NavMesh::CreateNavMesh()
 	rcVcopy(m_cfg.bmin, bmin);
 	rcVcopy(m_cfg.bmax, bmax);
 	rcCalcGridSize(m_cfg.bmin, m_cfg.bmax, m_cfg.cs, &m_cfg.width, &m_cfg.height);
-
-	// Reset build times gathering.
-	m_ctx->resetTimers();
-
-	// Start the build process.	
-	m_ctx->startTimer(RC_TIMER_TOTAL);
 
 	m_ctx->log(RC_LOG_PROGRESS, "Building navigation:");
 	m_ctx->log(RC_LOG_PROGRESS, " - %d x %d cells", m_cfg.width, m_cfg.height);
@@ -435,8 +435,8 @@ bool NavMesh::CreateNavMesh()
 		}
 	}
 
-	m_ctx->stopTimer(RC_TIMER_TOTAL);
 	
+	time_to_build = navmesh_timer.Stop();
 
 	//RenderNavMesh(verts, nverts, tris, ntris, normals, texScale);
 	//my_debug_draw = new LOInterfaces();

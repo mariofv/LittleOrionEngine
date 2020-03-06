@@ -7,6 +7,7 @@
 #include "MathGeoLib.h"
 #include <pcg_basic.h>
 #include <vector>
+#include "Helper/Timer.h"
 
 enum DrawMode
 {
@@ -142,7 +143,8 @@ private:
 
 	///TEST
 	SampleDebugDraw m_dd;
-	std::vector<float> vertices;
+	Timer navmesh_timer;
+	float time_to_build = 0.0f;
 
 	friend PanelNavMesh;
 };

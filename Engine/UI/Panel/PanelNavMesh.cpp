@@ -20,34 +20,47 @@ void PanelNavMesh::Render()
 		hovered = ImGui::IsWindowHovered();
 
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "NavMesh");
-		ImGui::TextWrapped("3D engine developed during the Master's Degree in AAA Videogames Development.");
+		
 
-		ImGui::Text("Variables");
+		ImGui::Text("Properties");
 		ImGui::Separator();
-
+		ImGui::Text("Rasterization");	
 		ImGui::SliderFloat("Cell Size", &App->artificial_intelligence->nav_mesh.cell_width, 0.001f, 20.f);
-
+		ImGui::SliderFloat("Cell Height", &App->artificial_intelligence->nav_mesh.cell_height, 0.001f, 20.f);
 		int gw = 0, gh = 0;
 		rcCalcGridSize(&App->artificial_intelligence->nav_mesh.global_AABB.minPoint[0],
 			&App->artificial_intelligence->nav_mesh.global_AABB.maxPoint[0],
 			App->artificial_intelligence->nav_mesh.cell_width, &gw, &gh);
 
 		ImGui::Text("Voxels %d x %d", gw, gh);
-
-		ImGui::SliderFloat("Cell Height", &App->artificial_intelligence->nav_mesh.cell_height, 0.001f, 20.f);
-		ImGui::SliderFloat("Walkable Slope Angle", &App->artificial_intelligence->nav_mesh.walkable_slope_angle, 0.0f, 360.f);
+		
+		ImGui::Text("");
+		ImGui::Text("Agent");
 		ImGui::SliderFloat("Agent Height", &App->artificial_intelligence->nav_mesh.agent_height, 0.001f, 50.f);
-		ImGui::SliderFloat("Agent Max Climb", &App->artificial_intelligence->nav_mesh.agent_max_climb, 0.001f, 20.f);
 		ImGui::SliderFloat("Agent Radius", &App->artificial_intelligence->nav_mesh.agent_radius, 0.001f, 20.f);
-		ImGui::SliderFloat("Edge Max Len", &App->artificial_intelligence->nav_mesh.edge_max_len, 1.0f, 50.f);
-		ImGui::SliderFloat("Edge Max Error", &App->artificial_intelligence->nav_mesh.edge_max_error, 0.001f, 20.f);
+		ImGui::SliderFloat("Agent Max Climb", &App->artificial_intelligence->nav_mesh.agent_max_climb, 0.001f, 20.f);
+		ImGui::SliderFloat("Walkable Slope Angle", &App->artificial_intelligence->nav_mesh.walkable_slope_angle, 0.0f, 360.f);
+		
+		ImGui::Text("");
+		ImGui::Text("Region");
 		ImGui::SliderInt("Region Min Size", &App->artificial_intelligence->nav_mesh.region_min_size, 1, 20);
 		ImGui::SliderInt("Region Merge Size", &App->artificial_intelligence->nav_mesh.region_merge_size, 2, 100);
+
+		ImGui::Text("");
+		ImGui::Text("Polygonization");
+
+		ImGui::SliderFloat("Edge Max Len", &App->artificial_intelligence->nav_mesh.edge_max_len, 1.0f, 50.f);
+		ImGui::SliderFloat("Edge Max Error", &App->artificial_intelligence->nav_mesh.edge_max_error, 0.001f, 20.f);
 		ImGui::SliderFloat("Verts Per Poly", &App->artificial_intelligence->nav_mesh.verts_per_poly, 3.0f, 2000.f);
+		
+		ImGui::Text("");
+		ImGui::Text("Detail Mesh");
 		ImGui::SliderFloat("Detail Sample Distance", &App->artificial_intelligence->nav_mesh.detail_sample_distance, 1.0f, 20.f);
 		ImGui::SliderFloat("Detail Sample Max Error", &App->artificial_intelligence->nav_mesh.detail_sample_max_error, 1.0f, 20.f);
 
 		ImGui::Separator();
+
+		ImGui::Text("Build NavMesh time: %.3f ms", App->artificial_intelligence->nav_mesh.time_to_build);
 
 		if(ImGui::Button("Bake NavMesh"))
 		{
