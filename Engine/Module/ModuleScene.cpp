@@ -144,5 +144,5 @@ void ModuleScene::Load(const Config& serialized_scene)
 		created_game_object->Load(game_objects_config[i]);
 	}
 	App->renderer->GenerateQuadTree();
-
+	App->renderer->GenerateOctTree();
 }

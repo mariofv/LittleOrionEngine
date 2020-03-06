@@ -83,9 +83,11 @@ void ModuleDebug::ShowDebugWindow()
 
 		if (ImGui::SliderInt("Quadtree Depth ", &App->renderer->ol_quadtree.max_depth, 1, 10)) {
 			App->renderer->GenerateQuadTree();
+			App->renderer->GenerateOctTree();
 		}
 		if (ImGui::SliderInt("Quadtree bucket size ", &App->renderer->ol_quadtree.bucket_size, 1, 10)) {
 			App->renderer->GenerateQuadTree();
+			App->renderer->GenerateOctTree();
 		}
 
 		ImGui::Spacing();
