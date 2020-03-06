@@ -19,10 +19,12 @@ bool ModuleScriptManager::Init()
 	//TODO: Load all the .dll
 	GetCurrentPath();
 	//MoveFile(DLL_PATH, working_directory.c_str());
-	App->filesystem->Copy(DLL_PATH, working_directory.c_str());
+	//App->filesystem->Copy(DLL_PATH, working_directory.c_str());
+	char patchedPdbPath[MAX_PATH] = { '\0' };
+	patchDLL(DLL_PATH, working_directory.c_str(), patchedPdbPath);
 	dll_file = std::make_unique<File>("Resources/Scripts/GamePlaySystem.dll");
 	init_timestamp = dll_file->modification_timestamp;
-	gameplay_dll = LoadLibrary("GamePlaySystem_test.dll");
+	gameplay_dll = LoadLibrary("GamePlaySyste_.dll");
 	LoadScriptList();
 
 	return true;
@@ -45,7 +47,6 @@ update_status ModuleScriptManager::Update()
 	//File dll_test("Resources/Scripts/GamePlaySystem.dll");
 	if (last_timestamp != init_timestamp) 
 	{
-		CreatePDB();
 		ReloadDLL();
 		init_timestamp = last_timestamp;
 	}
@@ -148,19 +149,22 @@ void ModuleScriptManager::ReloadDLL()
 			{
 				component_script->script = nullptr;
 			}
-			remove("GamePlaySystem_test.dll");
+			remove("GamePlaySyste_.dll");
 		}
 	}
+	//CreatePDB();
 	//MoveFile(DLL_PATH, working_directory.c_str());
-	App->filesystem->Copy(DLL_PATH, working_directory.c_str());
-	gameplay_dll = LoadLibrary("GamePlaySystem_test.dll");
+	//App->filesystem->Copy(DLL_PATH, working_directory.c_str());
+	char patchedPdbPath[MAX_PATH] = { '\0' };
+	patchDLL(DLL_PATH, working_directory.c_str(), patchedPdbPath);
+	gameplay_dll = LoadLibrary("GamePlaySyste_.dll");
 	InitResourceScript();
 
 }
 
 void ModuleScriptManager::CreatePDB() 
 {
-	App->filesystem->Copy("../GamePlaySystem/Debug/GamePlaySystem.pdb", "../GamePlaySystem/Debug/GamePlaySystem_test.pdb");
+	App->filesystem->Copy("../GamePlaySystem/Debug/GamePlaySystem.pdb", "../GamePlaySystem/Debug/GamePlaySyste_.pdb");
 }
 
 void ModuleScriptManager::GetCurrentPath() 
@@ -168,6 +172,136 @@ void ModuleScriptManager::GetCurrentPath()
 	TCHAR NPath[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, NPath);
 	working_directory = NPath;
-	working_directory += "/GamePlaySystem_test.dll";
+	working_directory += "/GamePlaySyste_.dll";
+	APP_LOG_ERROR("something here");
+}
+size_t ModuleScriptManager::CStrlastIndexOfChar(const char* str, char findChar)
+{
+	intptr_t i = strlen(str) - 1;
+	while (i >= 0)
+	{
+		if (str[i] == findChar)
+			return i;
+		--i;
+	}
+	return (size_t)-1;
+}
+bool ModuleScriptManager::patchFileName(char* fileName)
+{
+	size_t	dotIdx = CStrlastIndexOfChar(fileName, '.');
+	if (dotIdx != (size_t)-1)
+	{
+		fileName[dotIdx - 1] = '_';
+		return true;
+	}
+	else
+		return false;
 }
 
+
+bool ModuleScriptManager::FileIOisExist(const char* fileName)
+{
+	DWORD dwAttrib = GetFileAttributes(fileName);
+	return (dwAttrib != INVALID_FILE_ATTRIBUTES) && !(dwAttrib & FILE_ATTRIBUTE_DIRECTORY);
+}
+
+bool ModuleScriptManager::FileIOcopy(const char* fromFile, const char* toFile, bool overwriteExisting)
+{
+	return CopyFile(fromFile, toFile, !overwriteExisting);
+}
+
+bool ModuleScriptManager::patchDLL(const char* dllPath, const char patchedDllPath[MAX_PATH], char patchedPdbPath[MAX_PATH])
+{
+	// init
+	patchedPdbPath[0] = '\0';
+
+	// open DLL and copy content to fileContent for easy parsing of the DLL content
+	DWORD byteRead;
+	HANDLE file = CreateFileA(dllPath, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
+	if (file == INVALID_HANDLE_VALUE)
+		return false;
+	size_t	fileSize = GetFileSize((HANDLE)file, NULL);
+	BYTE*	fileContent = (BYTE*)malloc(fileSize);
+	bool	isFileReadOk = ReadFile((HANDLE)file, fileContent, (DWORD)fileSize, &byteRead, NULL);
+	CloseHandle(file);
+	if (!isFileReadOk || byteRead != fileSize)
+		APP_LOG_ERROR("Failed to read file.\n", false);
+
+	// check signature
+	IMAGE_DOS_HEADER dosHeader = *(IMAGE_DOS_HEADER*)fileContent;
+	if (dosHeader.e_magic != IMAGE_DOS_SIGNATURE)
+		APP_LOG_ERROR("Not IMAGE_DOS_SIGNATURE\n", false);
+
+	// IMAGE_NT_HEADERS
+	IMAGE_NT_HEADERS ntHeader = *((IMAGE_NT_HEADERS*)(fileContent + dosHeader.e_lfanew));
+	if (ntHeader.Signature != IMAGE_NT_SIGNATURE)
+		APP_LOG_ERROR("Not IMAGE_NT_SIGNATURE\n", false);
+
+	IMAGE_DATA_DIRECTORY debugDir;
+	if (ntHeader.OptionalHeader.Magic == IMAGE_NT_OPTIONAL_HDR_MAGIC && ntHeader.FileHeader.SizeOfOptionalHeader == sizeof(IMAGE_OPTIONAL_HEADER))
+		debugDir = ntHeader.OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG];
+	else
+		APP_LOG_ERROR("Not IMAGE_NT_OPTIONAL_HDR_MAGIC\n", false);
+
+	if (debugDir.VirtualAddress == 0 || debugDir.Size == 0)
+		APP_LOG_ERROR("No IMAGE_DIRECTORY_ENTRY_DEBUG data\n", false);
+
+	// find debug section
+	int						debugDirSectionIdx = -1;
+	IMAGE_SECTION_HEADER*	allSectionHeaders = (IMAGE_SECTION_HEADER*)(fileContent + dosHeader.e_lfanew + sizeof(IMAGE_NT_HEADERS));
+	for (int j = 0; j < ntHeader.FileHeader.NumberOfSections; ++j)
+	{
+		IMAGE_SECTION_HEADER sectionHeader = allSectionHeaders[j];
+		if ((debugDir.VirtualAddress >= sectionHeader.VirtualAddress) &&
+			(debugDir.VirtualAddress < sectionHeader.VirtualAddress + sectionHeader.Misc.VirtualSize))
+		{
+			debugDirSectionIdx = j;
+			break;
+		}
+	}
+
+	// read debug section
+	char*	pdbPath = nullptr;
+	char	originalPdbPath[MAX_PATH];
+	if (debugDirSectionIdx != -1)
+	{
+		// loop all debug directory
+		int						numDebugDir = debugDir.Size / (int)sizeof(IMAGE_DEBUG_DIRECTORY);
+		IMAGE_SECTION_HEADER	sectionHeader = allSectionHeaders[debugDirSectionIdx];
+		IMAGE_DEBUG_DIRECTORY*	allImageDebugDir = (IMAGE_DEBUG_DIRECTORY*)(fileContent + debugDir.VirtualAddress - (sectionHeader.VirtualAddress - sectionHeader.PointerToRawData));
+		for (int i = 0; i < numDebugDir; ++i)
+		{
+			IMAGE_DEBUG_DIRECTORY imageDebugDir = allImageDebugDir[i];
+			if (imageDebugDir.Type == IMAGE_DEBUG_TYPE_CODEVIEW)
+			{
+				DWORD signature = *((DWORD*)(fileContent + imageDebugDir.PointerToRawData));
+				if (signature == 'SDSR')	// RSDS type, i.e. PDB70
+				{
+					CV_INFO_PDB70* debugInfo = ((CV_INFO_PDB70*)(fileContent + imageDebugDir.PointerToRawData));
+					pdbPath = (char*)debugInfo->PdbFileName;
+					strcpy(originalPdbPath, pdbPath);
+					break;
+				}
+			}
+		}
+	}
+
+	if (pdbPath == nullptr)
+		APP_LOG_ERROR("No debug section is found.\n", false);
+
+	// create new DLL and pdb
+	patchFileName(pdbPath);
+
+	if (FileIOisExist(originalPdbPath))
+	{
+		strcpy(patchedPdbPath, pdbPath);
+		FileIOcopy(originalPdbPath, pdbPath, true);		// copy new PDB
+	}
+	HANDLE patchedDLL = CreateFile(patchedDllPath, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
+	DWORD byteWrite;
+	WriteFile(patchedDLL, fileContent, (DWORD)fileSize, &byteWrite, nullptr);	// generate patched DLL which points to the new PDB
+	CloseHandle(patchedDLL);
+
+	// clean up
+	APP_LOG_ERROR("Patching DLL succeeded!!!.\n", true);
+}

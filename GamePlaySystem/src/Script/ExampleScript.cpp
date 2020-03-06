@@ -37,7 +37,7 @@ void ExampleScript::OnInspector(ImGuiContext* context)
 	ImGui::Text("Testing Inspector");
 	ImGui::Text("By Marco and Jordi guys, we are doing it, yeah!");
 	ImGui::DragFloat("Speed", &speed,0.01f,0.f,0.5f);
-	ImGui::Text("Testing Hot Reloading");
+	ImGui::Text("Test 23232");
 	
 }
 

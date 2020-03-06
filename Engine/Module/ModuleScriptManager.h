@@ -4,10 +4,19 @@
 #include "Module.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
+
 #include <vector>
 #include <string>
 #include <unordered_map>
 #include <memory>
+
+struct CV_INFO_PDB70
+{
+	DWORD	CvSignature;
+	GUID	Signature;
+	DWORD	Age;
+	BYTE	PdbFileName[];
+};
 
 class ComponentScript;
 class GameObject;
@@ -31,6 +40,16 @@ public:
 	void ReloadDLL();
 	void CreatePDB();
 	void GetCurrentPath();
+
+	size_t CStrlastIndexOfChar(const char * str, char findChar);
+
+	bool patchFileName(char * fileName);
+
+	bool FileIOisExist(const char * fileName);
+
+	bool FileIOcopy(const char * fromFile, const char * toFile, bool overwriteExisting);
+
+	bool patchDLL(const char * dllPath, const char patchedDllPath[MAX_PATH], char patchedPdbPath[MAX_PATH]);
 
 private:
 	HINSTANCE gameplay_dll;
