@@ -101,15 +101,6 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 	return result;
 }
 
-void ModuleResourceManager::RemoveResourceFromCacheIfNeeded(const std::shared_ptr<Resource> & resource)
-{
-	auto it = std::find(resource_cache.begin(), resource_cache.end(), resource);
-	if (it != resource_cache.end() && (*it).use_count() <= 2)
-	{
-		resource_cache.erase(it);
-	}
-}
-
 std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(const std::string& uid) const
 {
 	if (!App->filesystem->Exists(uid.c_str()))

@@ -14,16 +14,13 @@ public:
 		float3 position;
 		float2 tex_coords;
 		float3 normals;
+		float3 tangent;
 	};
 	Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path);
 	~Mesh();
 
 	GLuint GetVAO() const;
 	std::vector<Triangle> GetTriangles() const;
-
-
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
 
 private:
 	void LoadInMemory() override;

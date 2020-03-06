@@ -18,9 +18,6 @@ public:
 	Skeleton(std::vector<Joint> && joints, const std::string & exported_file);
 	~Skeleton() = default;
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
-
 private:
 	void LoadInMemory() override;
 

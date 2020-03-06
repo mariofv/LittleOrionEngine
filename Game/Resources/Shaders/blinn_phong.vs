@@ -1,4 +1,4 @@
-#version 330
+#version 430
 
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec2 vertex_uv0;
@@ -17,7 +17,6 @@ struct Material {
 	float k_diffuse;
 	sampler2D specular_map;
 	vec4 specular_color;
-	float shininess;
 	float k_specular;
 	sampler2D occlusion_map;
 	float k_ambient;
