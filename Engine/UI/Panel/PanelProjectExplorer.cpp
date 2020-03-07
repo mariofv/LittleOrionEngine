@@ -4,6 +4,7 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleEditor.h"
 #include <ResourceManagement/Resources/Prefab.h>
 
 
@@ -257,7 +258,7 @@ void PanelProjectExplorer::FilesDrop() const
 				{
 					App->scene->RemoveGameObject(incoming_game_object);
 					std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(result.second);
-					prefab->Instantiate(App->scene->GetRoot());
+					App->editor->selected_game_object = prefab->Instantiate(App->scene->GetRoot());
 
 				}
 			}

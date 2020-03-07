@@ -154,7 +154,6 @@ GameObject * SceneManager::LoadPrefab(const Config & config) const
 	config.GetString("Prefab", prefab_path, "");
 
 	std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_path);
-
 	std::unordered_map<int64_t, int64_t> UUIDS_pairs;
 	std::vector<Config> original_UUIDS;
 	config.GetChildrenConfig("UUIDS", original_UUIDS);
@@ -164,7 +163,12 @@ GameObject * SceneManager::LoadPrefab(const Config & config) const
 		int64_t original = child_UUIDS.GetUInt("OriginalUUID", 0);
 		UUIDS_pairs[original] = UUID;
 	}
-
+	if (prefab == nullptr)
+	{
+		GameObject * missing_prefab = App->scene->CreateGameObject();
+		missing_prefab->name = "Missing prefab";
+		return missing_prefab;
+	}
 	GameObject * instance = prefab->Instantiate(App->scene->GetRoot(), &UUIDS_pairs);
 	Config transform_config;
 	config.GetChildConfig("Transform", transform_config);

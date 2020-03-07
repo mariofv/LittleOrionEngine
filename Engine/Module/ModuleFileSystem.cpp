@@ -45,6 +45,7 @@ ModuleFileSystem::~ModuleFileSystem()
 
 char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
 { 
+	assert(Exists(file_path));
 	SDL_RWops *rw = SDL_RWFromFile(file_path, "rb");
 	if (rw == NULL)
 	{

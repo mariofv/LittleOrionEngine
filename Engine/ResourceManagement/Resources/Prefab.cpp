@@ -152,6 +152,7 @@ void Prefab::AddNewGameObjectToInstance(GameObject * parent, GameObject * new_re
 	else
 	{
 		copy = App->scene->CreateGameObject();
+		copy->prefab_reference = this;
 	}
 	copy->SetParent(parent);
 	*copy << *new_reference;

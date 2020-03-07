@@ -16,7 +16,10 @@
 
 std::shared_ptr<Prefab> PrefabLoader::Load(const std::string& file_path)
 {
-
+	if (!App->filesystem->Exists(file_path.c_str()))
+	{
+		return nullptr;
+	}
 	size_t readed_bytes;
 	char* scene_file_data = App->filesystem->Load(file_path.c_str(), readed_bytes);
 	std::string serialized_scene_string = scene_file_data;
