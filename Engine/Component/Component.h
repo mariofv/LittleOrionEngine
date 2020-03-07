@@ -17,7 +17,8 @@ public:
 		MATERIAL,
 		MESH,
 		TRANSFORM,
-		LIGHT
+		LIGHT,
+		TRANSFORM2D
 	};
 
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
@@ -38,21 +39,7 @@ public:
 
 	static ComponentType GetComponentType(unsigned int component_type_uint)
 	{
-		switch (component_type_uint) 
-		{
-		case 0:
-			return ComponentType::AABB;
-		case 1:
-			return ComponentType::CAMERA;
-		case 2:
-			return ComponentType::MATERIAL;
-		case 3:
-			return ComponentType::MESH;
-		case 4:
-			return ComponentType::TRANSFORM;
-		case 5:
-			return ComponentType::LIGHT;
-		}
+		return (ComponentType) component_type_uint;
 	}
 
 public:
