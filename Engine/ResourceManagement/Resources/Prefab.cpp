@@ -54,6 +54,11 @@ void Prefab::Apply(GameObject * new_reference)
 			{
 				continue;
 			}
+			for (auto component : new_reference->components)
+			{
+				component->added_by_user = false;
+				component->modified_by_user = false;
+			}
 			*old_instance << *new_reference;
 			RecursiveRewrite(old_instance, new_reference, false, false);
 		}
@@ -80,24 +85,28 @@ void Prefab::RecursiveRewrite(GameObject * old_instance, GameObject * new_refere
 			return child->original_UUID == old_instance_child->original_UUID &&  child->original_UUID != 0;
 		});
 
-
-		if (revert)
+		for (auto component : child->components)
 		{
-			for (auto component : (*it)->components)
-			{
-				component->added_by_user = false;
-				component->modified_by_user = false;
-			}
+			component->added_by_user = false;
+			component->modified_by_user = false;
 		}
-		//TODO: Only copy went their a different, need to implement == operator in every component ¿?¿
+
 		if (it != old_instance->children.end())
 		{
+			if (revert)
+			{
+				for (auto component : (*it)->components)
+				{
+					component->added_by_user = false;
+					component->modified_by_user = false;
+				}
+			}
 			**it << *child;
 			RecursiveRewrite(*it, child, original, revert);
 		}
 		else
 		{
-			AddNewGameObjectToInstance(old_instance, child, original);
+			AddNewGameObjectToInstance(old_instance, child, original, revert);
 		}
 
 	}
@@ -130,11 +139,11 @@ void Prefab::RecursiveRewrite(GameObject * old_instance, GameObject * new_refere
 
 }
 
-void Prefab::AddNewGameObjectToInstance(GameObject * parent, GameObject * new_reference, bool original)
+void Prefab::AddNewGameObjectToInstance(GameObject * parent, GameObject * new_reference, bool original, bool revert)
 {
 	new_reference->original_UUID = new_reference->UUID;
 	GameObject * copy;
-	if (original)
+	if (original && !revert)
 	{
 		prefab.emplace_back(std::make_unique<GameObject>());
 		copy = prefab.back().get();
@@ -149,7 +158,7 @@ void Prefab::AddNewGameObjectToInstance(GameObject * parent, GameObject * new_re
 	copy->transform.SetTranslation(new_reference->transform.GetTranslation());
 	for (auto new_reference_child : new_reference->children)
 	{
-		AddNewGameObjectToInstance(copy, new_reference_child, original);
+		AddNewGameObjectToInstance(copy, new_reference_child, original, revert);
 	}
 }
 

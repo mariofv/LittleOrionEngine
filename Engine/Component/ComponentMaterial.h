@@ -34,8 +34,8 @@ public:
 	void SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture);
 	const std::shared_ptr<Texture>& GetMaterialTexture(size_t type) const;
 	void RemoveMaterialTexture(size_t type);
-	Component* Clone(bool create_on_module = true) const override;
-	void Copy(Component * component_to_copy) const override { *static_cast<ComponentMaterial*>(component_to_copy) = *this; };
+	Component* Clone(bool original_prefab = true) const override;
+	void Copy(Component * component_to_copy) const override;
 
 private:
 	void AddDiffuseUniforms(unsigned int shader_program) const;

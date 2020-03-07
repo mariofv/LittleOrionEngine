@@ -19,6 +19,12 @@ ComponentTransform::ComponentTransform(GameObject * owner, const float3 translat
 	OnTransformChange();
 }
 
+void ComponentTransform::Copy(Component * component_to_copy) const
+{ 
+	*component_to_copy = *this;
+	*static_cast<ComponentTransform*>(component_to_copy) = *this; 
+};
+
 ComponentTransform & ComponentTransform::operator=(const ComponentTransform & component_to_copy)
 {
 	this->translation = component_to_copy.translation;

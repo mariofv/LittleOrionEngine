@@ -27,7 +27,7 @@ public:
 
 	ComponentAABB & operator=(const ComponentAABB & component_to_copy) = default;
 	ComponentAABB & operator=(ComponentAABB && component_to_move) = default;
-	void Copy(Component * component_to_copy) const override { *static_cast<ComponentAABB*>(component_to_copy) = *this; };
+	void Copy(Component * component_to_copy) const override;
 
 	void Delete() override {};
 	void GenerateBoundingBox();
@@ -40,7 +40,7 @@ public:
 private:
 	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices);
 	void GenerateGlobalBoundingBox();
-	Component* Clone(bool create_on_module = true) const override;
+	Component* Clone(bool original_prefab = true) const override;
 public:
 	AABB bounding_box;
 	AABB global_bounding_box;

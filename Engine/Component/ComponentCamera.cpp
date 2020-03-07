@@ -23,6 +23,41 @@ ComponentCamera::ComponentCamera(GameObject * owner) : Component(owner, Componen
 	GenerateMatrices();
 }
 
+ComponentCamera & ComponentCamera::operator=(const ComponentCamera & component_to_copy)
+{
+	Component::operator = (component_to_copy);
+	this->camera_frustum = component_to_copy.camera_frustum;
+
+	this->camera_clear_mode = component_to_copy.camera_clear_mode;
+	memcpy(camera_clear_color, component_to_copy.camera_clear_color,3 * sizeof(float));
+	this->depth = component_to_copy.depth;
+	this->camera_movement_speed = component_to_copy.camera_movement_speed;
+	this->toggle_msaa = component_to_copy.toggle_msaa;
+	this->speed_up = component_to_copy.speed_up;
+
+	GenerateMatrices();
+	return *this;
+}
+Component* ComponentCamera::Clone(bool original_prefab) const
+{ 
+	ComponentCamera * created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentCamera();
+	}
+	else
+	{
+		created_component = App->cameras->CreateComponentCamera();
+	}
+	*created_component = *this;
+	return created_component;
+};
+void ComponentCamera::Copy(Component* component_to_copy) const
+{  
+	*component_to_copy = *this;
+	*static_cast<ComponentCamera*>(component_to_copy) = *this;
+};
+
 ComponentCamera::~ComponentCamera()
 {
 	glDeleteTextures(1, &last_recorded_frame_texture);

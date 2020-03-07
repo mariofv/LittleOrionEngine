@@ -14,6 +14,11 @@ ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, Comp
 	textures.resize(Texture::MAX_TEXTURE_TYPES);
 }
 
+void ComponentMaterial::Copy(Component * component_to_copy) const
+{ 
+	*component_to_copy = *this;
+	*static_cast<ComponentMaterial*>(component_to_copy) = *this; 
+};
 ComponentMaterial::~ComponentMaterial()
 {
 	for (auto & texture : textures)
@@ -198,3 +203,4 @@ Component* ComponentMaterial::Clone(bool original_prefab) const
 	*created_component = *this;
 	return created_component;
 }
+

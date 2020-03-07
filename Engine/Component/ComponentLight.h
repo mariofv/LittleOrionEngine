@@ -13,15 +13,13 @@ public:
 	~ComponentLight() = default;
 	
 	//Copy and move
-	ComponentLight(const ComponentLight& component_to_copy);
-	ComponentLight(ComponentLight&& component_to_move);
+	ComponentLight(const ComponentLight& component_to_copy) = default;
+	ComponentLight(ComponentLight&& component_to_move) = default;
 
-	ComponentLight & operator=(const ComponentLight & component_to_copy);
-	ComponentLight & operator=(ComponentLight && component_to_move);
-	Component* Clone(bool create_on_module = true) const override;
-	void Copy(Component * component_to_copy) const override { 
-		*component_to_copy = *this;
-		*static_cast<ComponentLight*>(component_to_copy) = *this; };
+	ComponentLight & operator=(const ComponentLight & component_to_copy) = default;
+	ComponentLight & operator=(ComponentLight && component_to_move) = default;
+	Component* Clone(bool original_prefab = true) const override;
+	void Copy(Component * component_to_copy) const override;
 	void Delete() override;
 	void Render() const;
 

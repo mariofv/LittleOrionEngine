@@ -29,7 +29,7 @@ public:
 	ComponentCamera(const ComponentCamera& component_to_copy) = default;
 	ComponentCamera(ComponentCamera&& component_to_move) = default;
 
-	ComponentCamera & operator=(const ComponentCamera & component_to_copy) = default;
+	ComponentCamera & operator=(const ComponentCamera & component_to_copy);
 	ComponentCamera & operator=(ComponentCamera && component_to_move) = default;
 
 	void Update() override;
@@ -37,8 +37,8 @@ public:
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
-	Component* Clone(bool create_on_module = false) const override { return nullptr; };
-	void Copy(Component* component_to_copy) const override{  };
+	Component* Clone(bool original_prefab = false) const override;
+	void Copy(Component* component_to_copy) const override;
 
 	float GetWidth() const;
 	float GetHeigt() const;

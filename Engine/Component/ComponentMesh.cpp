@@ -21,6 +21,12 @@ ComponentMesh::ComponentMesh() : Component(nullptr, ComponentType::MESH)
 {
 }
 
+void ComponentMesh::Copy(Component * component_to_copy) const
+{
+	*component_to_copy = *this;
+	*static_cast<ComponentMesh*>(component_to_copy) = *this;
+};
+
 
 void ComponentMesh::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
 {
