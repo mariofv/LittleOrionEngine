@@ -15,7 +15,9 @@ public:
 
 private:
 	void SavePrefab(Config & config, GameObject * gameobject_to_save) const;
+	bool SaveModifiedPrefabComponents(Config & config, GameObject * gameobject_to_save) const;
 	GameObject * LoadPrefab(const Config & config) const;
+	void LoadPrefabModifiedComponents(const Config & config) const;
 };
 
 #endif

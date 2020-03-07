@@ -19,6 +19,19 @@ ComponentTransform::ComponentTransform(GameObject * owner, const float3 translat
 	OnTransformChange();
 }
 
+ComponentTransform & ComponentTransform::operator=(const ComponentTransform & component_to_copy)
+{
+	this->translation = component_to_copy.translation;
+	this->rotation = component_to_copy.rotation;
+	this->rotation_degrees = component_to_copy.rotation_degrees;
+	this->rotation_radians = component_to_copy.rotation_radians;
+	this->scale = component_to_copy.scale;
+
+	this->model_matrix = component_to_copy.model_matrix;
+	this->global_model_matrix = component_to_copy.global_model_matrix;
+	OnTransformChange();
+	return *this;
+}
 
 void ComponentTransform::Save(Config& config) const
 {

@@ -208,7 +208,7 @@ void ModuleEditor::OpenScene(const std::string &path) const
 
 void ModuleEditor::SaveScene(const std::string &path) const
 {
-	App->resources->Import(path, App->scene->GetRoot());
+	App->resources->scene_manager->Save(path, App->scene->GetRoot());
 
 }
 

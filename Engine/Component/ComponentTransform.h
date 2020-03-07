@@ -17,7 +17,7 @@ public:
 	ComponentTransform(const ComponentTransform& component_to_copy) = default;
 	ComponentTransform(ComponentTransform&& component_to_move) = default;
 
-	ComponentTransform & operator=(const ComponentTransform & component_to_copy) = default;
+	ComponentTransform & operator=(const ComponentTransform & component_to_copy);
 	ComponentTransform & operator=(ComponentTransform && component_to_move) = default;
 
 
@@ -35,6 +35,7 @@ public:
 	float3 GetTranslation() const;
 	void SetTranslation(const float3 &translation);
 	void Translate(const float3 &translation);
+	
 
 	Quat GetRotation() const;
 	float3 GetRotationRadiants() const;

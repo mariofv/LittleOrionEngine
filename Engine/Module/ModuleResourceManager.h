@@ -85,7 +85,7 @@ public:
 	} thread_comunication;
 
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
-	std::unique_ptr<SceneManager> prefab_manager = nullptr;
+	std::unique_ptr<SceneManager> scene_manager = nullptr;
 
 private:
 	const size_t importer_interval_millis = 30000;

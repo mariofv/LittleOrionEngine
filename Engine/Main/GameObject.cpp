@@ -87,6 +87,10 @@ void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 		children[i]->parent = nullptr;
 		children[i]->Delete(children_to_remove);
 	}
+	/*if (is_prefab_parent)
+	{
+		prefab_reference->RemoveInstance(this);
+	}*/
 }
 bool GameObject::IsEnabled() const
 {

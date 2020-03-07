@@ -109,7 +109,7 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			if (!incoming_game_object->IsAboveInHierarchy(*target_game_object) && !(incoming_game_object->original_UUID != 0 && incoming_game_object->original_UUID != 0))
+			if (!incoming_game_object->IsAboveInHierarchy(*target_game_object) && (incoming_game_object->original_UUID == 0 || incoming_game_object->is_prefab_parent))
 			{
 				incoming_game_object->SetParent(target_game_object);
 			}
