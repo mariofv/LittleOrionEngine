@@ -131,23 +131,20 @@ void SceneManager::SavePrefab(Config & config, GameObject * gameobject_to_save) 
 	gameobject_to_save->transform.Save(transform_config);
 	config.AddChildConfig(transform_config, "Transform");
 
-	std::vector<Config> children_UUIDS;
-	for (auto child : gameobject_to_save->children)
-	{
-		SavePrefabChildUUIDS(children_UUIDS, child);
-	}
-	config.AddChildrenConfig(children_UUIDS, "Children");
+	std::vector<Config> original_UUIDS;
+	SavePrefabUUIDS(original_UUIDS, gameobject_to_save);
+	config.AddChildrenConfig(original_UUIDS, "UUIDS");
 }
 
-void SceneManager::SavePrefabChildUUIDS(std::vector<Config> & children_UUIDS, GameObject * gameobject_to_save) const
+void SceneManager::SavePrefabUUIDS(std::vector<Config> & original_UUIDS, GameObject * gameobject_to_save) const
 {
 	Config config;
 	config.AddUInt(gameobject_to_save->UUID, "UUID");
 	config.AddUInt(gameobject_to_save->original_UUID, "OriginalUUID");
-	children_UUIDS.push_back(config);
+	original_UUIDS.push_back(config);
 	for (auto & child : gameobject_to_save->children)
 	{
-		SavePrefabChildUUIDS(children_UUIDS, child);
+		SavePrefabUUIDS(original_UUIDS, child);
 	}
 
 }
@@ -159,9 +156,9 @@ GameObject * SceneManager::LoadPrefab(const Config & config) const
 	std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_path);
 
 	std::unordered_map<int64_t, int64_t> UUIDS_pairs;
-	std::vector<Config> children_UUIDS;
-	config.GetChildrenConfig("Children", children_UUIDS);
-	for (auto & child_UUIDS : children_UUIDS)
+	std::vector<Config> original_UUIDS;
+	config.GetChildrenConfig("UUIDS", original_UUIDS);
+	for (auto & child_UUIDS : original_UUIDS)
 	{
 		int64_t UUID = child_UUIDS.GetUInt("UUID", 0);
 		int64_t original = child_UUIDS.GetUInt("OriginalUUID", 0);
@@ -223,5 +220,18 @@ void SceneManager::LoadPrefabModifiedComponents(const Config & config) const
 	{
 		uint64_t component_type_uint = component_config.GetUInt("ComponentType", 0);
 		assert(component_type_uint != 0);
+
+		uint64_t UUID = component_config.GetUInt("UUID", 0);
+
+		Component * component = prefab_child->GetComponent(static_cast<Component::ComponentType>(component_type_uint));
+		if (component != nullptr && component->UUID == UUID)
+		{
+			component->Load(component_config);
+		}
+		else 
+		{
+			Component* created_component = prefab_child->CreateComponent(static_cast<Component::ComponentType>(component_type_uint));
+			created_component->Load(component_config);
+		}
 	}
 }
