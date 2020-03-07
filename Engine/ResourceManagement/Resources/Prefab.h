@@ -5,6 +5,7 @@
 #include "ResourceManagement/Loaders/PrefabLoader.h"
 #include <vector>
 #include <memory>
+#include <unordered_map>
 class GameObject;
 class Component;
 class Prefab : public Resource
@@ -12,7 +13,7 @@ class Prefab : public Resource
 public:
 	Prefab(std::vector<std::unique_ptr<GameObject>> && gameObjects, uint32_t UID, const std::string & exported_file);
 	~Prefab() = default;
-	GameObject * Instantiate(GameObject * prefab_parent);
+	GameObject * Instantiate(GameObject * prefab_parent, std::unordered_map<int64_t, int64_t> * UUIDS_pairs = nullptr);
 	void Apply(GameObject * new_reference);
 	void Revert(GameObject * old_reference);
 

@@ -5,21 +5,25 @@
 #include "Module/ModuleResourceManager.h"
 
 
-#include <map>
 
 Prefab::Prefab(std::vector<std::unique_ptr<GameObject>> && gameObjects, uint32_t UID, const std::string & exported_file) : Resource(UID, exported_file), prefab(std::move(gameObjects))
 {
 
 }
-GameObject * Prefab::Instantiate(GameObject * prefab_parent)
+GameObject * Prefab::Instantiate(GameObject * prefab_parent, std::unordered_map<int64_t, int64_t> * UUIDS_pairs)
 {
-	std::map<uint64_t, GameObject*> original_gameObject_reference;
+	std::unordered_map<uint64_t, GameObject*> original_gameObject_reference;
 
 	GameObject* parent_prefab;
 	for (auto & gameObject : prefab)
 	{
 		GameObject* copy_in_scene = App->scene->AddGameObject(std::make_unique<GameObject>(*gameObject.get()));
 		original_gameObject_reference[gameObject->UUID] = copy_in_scene;
+
+		if (UUIDS_pairs != nullptr && UUIDS_pairs->find(gameObject->UUID) != UUIDS_pairs->end())
+		{
+			copy_in_scene->UUID = (*UUIDS_pairs)[gameObject->UUID];
+		}
 
 		if (gameObject->parent != nullptr && original_gameObject_reference.find(gameObject->parent->UUID) != original_gameObject_reference.end())
 		{
