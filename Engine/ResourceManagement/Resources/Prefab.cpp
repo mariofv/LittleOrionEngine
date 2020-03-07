@@ -81,15 +81,15 @@ void Prefab::RecursiveRewrite(GameObject * old_instance, GameObject * new_refere
 
 	for (auto & child : new_reference->children)
 	{
-		auto it = std::find_if(old_instance->children.begin(), old_instance->children.end(), [child](auto old_instance_child) {
-			return child->original_UUID == old_instance_child->original_UUID &&  child->original_UUID != 0;
-		});
-
 		for (auto component : child->components)
 		{
 			component->added_by_user = false;
 			component->modified_by_user = false;
 		}
+
+		auto it = std::find_if(old_instance->children.begin(), old_instance->children.end(), [child](auto old_instance_child) {
+			return child->original_UUID == old_instance_child->original_UUID &&  child->original_UUID != 0;
+		});
 
 		if (it != old_instance->children.end())
 		{
@@ -164,16 +164,18 @@ void Prefab::AddNewGameObjectToInstance(GameObject * parent, GameObject * new_re
 
 void Prefab::RemoveGameObjectFromOriginalPrefab(GameObject * gameobject_to_remove)
 {
-	auto it = std::remove_if(prefab.begin(), prefab.end(), [gameobject_to_remove](auto & gameobject) {
+	auto & it = std::find_if(prefab.begin(), prefab.end(), [&gameobject_to_remove](auto & gameobject) {
 		return gameobject_to_remove->original_UUID == gameobject->original_UUID;
 	});
+
 	if (it != prefab.end())
 	{
-		prefab.erase(it);
-		for (auto child : gameobject_to_remove->children)
+		for (auto child : (*it)->children)
 		{
 			RemoveGameObjectFromOriginalPrefab(child);
 		}
+		(*it)->parent->RemoveChild((*it).get());
+		prefab.erase(it);
 	}
 }
 

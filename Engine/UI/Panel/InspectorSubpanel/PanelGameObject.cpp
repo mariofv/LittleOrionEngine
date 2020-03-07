@@ -21,6 +21,10 @@ PanelGameObject::PanelGameObject()
 
 void PanelGameObject::Render(GameObject* game_object)
 {
+	if (game_object == nullptr)
+	{
+		return;
+	}
 	ImGui::Checkbox("", &game_object->active);
 
 	ImGui::SameLine();
