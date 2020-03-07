@@ -16,6 +16,7 @@ public:
 	GameObject * Instantiate(GameObject * prefab_parent, std::unordered_map<int64_t, int64_t> * UUIDS_pairs = nullptr);
 	void Apply(GameObject * new_reference);
 	void Revert(GameObject * old_reference);
+	void RemoveInstance(GameObject * instance);
 
 	std::vector<GameObject*> instances;
 private:

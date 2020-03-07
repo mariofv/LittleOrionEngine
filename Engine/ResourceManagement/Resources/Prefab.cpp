@@ -167,3 +167,14 @@ void Prefab::RemoveGameObjectFromOriginalPrefab(GameObject * gameobject_to_remov
 		}
 	}
 }
+
+void Prefab::RemoveInstance(GameObject * instance)
+{
+	auto it = std::remove_if(instances.begin(), instances.end(), [instance](auto & gameobject) {
+		return instance == gameobject;
+	});
+	if (it != instances.end())
+	{
+		instances.erase(it);
+	}
+}
