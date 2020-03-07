@@ -227,11 +227,13 @@ void SceneManager::LoadPrefabModifiedComponents(const Config & config) const
 		if (component != nullptr && component->UUID == UUID)
 		{
 			component->Load(component_config);
+			component->modified_by_user = true;
 		}
 		else 
 		{
 			Component* created_component = prefab_child->CreateComponent(static_cast<Component::ComponentType>(component_type_uint));
 			created_component->Load(component_config);
+			created_component->added_by_user = true;
 		}
 	}
 }
