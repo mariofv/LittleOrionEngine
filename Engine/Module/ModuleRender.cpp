@@ -163,9 +163,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	canvas = (ComponentCanvas*)App->scene->canvasGO->GetComponent(Component::ComponentType::CANVAS);
-	canvas->Render(camera);
-
 	GetMeshesToRender(&camera);
 	for (auto &mesh : meshes_to_render)
 	{
