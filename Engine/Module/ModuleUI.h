@@ -15,6 +15,8 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
+	void Render(const ComponentCamera* camera);
+
 	ComponentCanvas* CreateComponentCanvas();
 	void RemoveComponentCanvas(ComponentCanvas* canvas_to_remove);
 

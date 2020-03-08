@@ -10,6 +10,8 @@
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
+#include "ModuleWindow.h"
+#include "ModuleUI.h"
 #include "SpacePartition/OLQuadTree.h"
 #include "UI/Billboard.h"
 
@@ -418,6 +420,7 @@ void ModuleDebugDraw::Render()
 	}
 
 	RenderBillboards();
+	RenderCanvas();
 
 	RenderDebugDraws(*App->cameras->scene_camera);
 }
@@ -545,6 +548,14 @@ void ModuleDebugDraw::RenderBillboards() const
 		if (camera_component != nullptr) {
 			camera_billboard->Render(object->transform.GetGlobalTranslation());
 		}
+	}
+}
+
+void ModuleDebugDraw::RenderCanvas() const
+{
+	for(auto &canvas: App->ui->canvases)
+	{
+		dd::box(canvas->owner->transform.GetTranslation(), float3::one, App->window->GetWidth() * 0.25f, App->window->GetHeight() * 0.25f, 0.01f);
 	}
 }
 

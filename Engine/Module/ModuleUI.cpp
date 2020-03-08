@@ -23,6 +23,17 @@ bool ModuleUI::CleanUp()
 	return true;
 }
 
+void ModuleUI::Render(const ComponentCamera *camera)
+{
+	for (auto &canvas : canvases)
+	{
+		if (canvas->IsEnabled())
+		{
+			canvas->Render(*camera);
+		}
+	}
+}
+
 ComponentCanvas* ModuleUI::CreateComponentCanvas()
 {
 	ComponentCanvas * new_canvas = new ComponentCanvas();
