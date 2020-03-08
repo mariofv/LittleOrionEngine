@@ -88,8 +88,8 @@ void ModuleResourceManager::ImportAllFileHierarchy(const File& file)
 
 std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& file)
 {
-	std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
 	std::pair<bool, std::string> result = std::pair<bool, std::string>(false,"");
+	std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
 	if (file.file_type == FileType::MODEL)
 	{
 		result = model_importer->Import(file);
@@ -99,15 +99,6 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 		result = texture_importer->Import(file);
 	}
 	return result;
-}
-
-void ModuleResourceManager::RemoveResourceFromCacheIfNeeded(const std::shared_ptr<Resource> & resource)
-{
-	auto it = std::find(resource_cache.begin(), resource_cache.end(), resource);
-	if (it != resource_cache.end() && (*it).use_count() <= 2)
-	{
-		resource_cache.erase(it);
-	}
 }
 
 std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(const std::string& uid) const

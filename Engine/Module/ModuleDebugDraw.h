@@ -23,8 +23,11 @@ public:
 
 private:
 	void RenderGrid() const;
-	void RenderCameraFrustum() const;
 	void RenderOutline() const;
+	
+	void RenderCameraFrustum() const;
+	void RenderLightGizmo() const;
+
 	void RenderBoundingBoxes() const;
 	void RenderGlobalBoundingBoxes() const;
 	void RenderBillboards() const;

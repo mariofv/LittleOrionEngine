@@ -1,9 +1,8 @@
 #include "Mesh.h"
 
 
-Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::vector<std::string> && meshes_textures_path ,std::string mesh_file_path) : vertices(vertices),
+Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path) : vertices(vertices),
 indices(indices),
-meshes_textures_path(meshes_textures_path),
 Resource("", mesh_file_path)
 {
 	LoadInMemory();
@@ -61,11 +60,9 @@ void Mesh::LoadInMemory()
 	glEnableVertexAttribArray(2);
 	glVertexAttribPointer(2, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, normals));
 
-	glBindVertexArray(0);
-}
+	// VERTEX TANGENT
+	glEnableVertexAttribArray(3);
+	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tangent));
 
-void Mesh::Save(Config& config) const
-{
-}
-void Mesh::Load(const Config& config) {
+	glBindVertexArray(0);
 }

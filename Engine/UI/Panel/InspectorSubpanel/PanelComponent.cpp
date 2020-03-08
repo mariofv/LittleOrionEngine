@@ -15,6 +15,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleActions.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
@@ -35,7 +36,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			transform->OnTransformChange();
 		}
 		//UndoRedo
-		CheckClickForUndo(ModuleEditor::UndoActionType::TRANSLATION, transform);
+		CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION, transform);
 
 		if (ImGui::DragFloat3("Rotation", transform->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
 		{
@@ -44,7 +45,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			transform->OnTransformChange();
 		}
 		//UndoRedo
-		CheckClickForUndo(ModuleEditor::UndoActionType::ROTATION, transform);
+		CheckClickForUndo(ModuleActions::UndoActionType::ROTATION, transform);
 
 		if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
 		{
@@ -52,7 +53,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 		}
 
 		//UndoRedo
-		CheckClickForUndo(ModuleEditor::UndoActionType::SCALE, transform);
+		CheckClickForUndo(ModuleActions::UndoActionType::SCALE, transform);
 	}
 }
 
@@ -63,13 +64,13 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 		if(ImGui::Checkbox("Active", &mesh->active))
 		{
 			//UndoRedo
-			App->editor->action_component = mesh;
-			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
+			App->actions->action_component = mesh;
+			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			App->editor->DeleteComponentUndo(mesh);
+			App->actions->DeleteComponentUndo(mesh);
 			return;
 		}
 		ImGui::Separator();
@@ -87,22 +88,6 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::SameLine();
 		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
 		ImGui::Button(tmp_string);
-
-		if (ImGui::BeginCombo("Shader", mesh->shader_program.c_str()))
-		{
-			for (auto & program : App->program->names)
-			{
-				bool is_selected = (mesh->shader_program == program);
-				if (ImGui::Selectable(program, is_selected))
-				{
-					mesh->shader_program = program;
-					if (is_selected)
-						ImGui::SetItemDefaultFocus();  
-				}
-
-			}
-			ImGui::EndCombo();
-		}
 	}
 }
 
@@ -110,6 +95,22 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		if (ImGui::BeginCombo("Shader", material->shader_program.c_str()))
+		{
+			for (auto & program : App->program->names)
+			{
+				bool is_selected = (material->shader_program == program);
+				if (ImGui::Selectable(program, is_selected))
+				{
+					material->shader_program = program;
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();
+				}
+
+			}
+			ImGui::EndCombo();
+		}
+
 		float window_width = ImGui::GetWindowWidth();
 		for (size_t i = 0; i < material->textures.size(); ++i)
 		{
@@ -139,9 +140,9 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 					if (ImGui::Button(ICON_FA_TIMES) )
 					{
 						//UndoRedo
-						App->editor->type_texture = Texture::TextureType(i);
-						App->editor->action_component = material;
-						App->editor->AddUndoAction(ModuleEditor::UndoActionType::EDIT_COMPONENTMATERIAL);
+						App->actions->type_texture = Texture::TextureType(i);
+						App->actions->action_component = material;
+						App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
 
 						material->RemoveMaterialTexture(i);
 					}
@@ -190,9 +191,9 @@ void PanelComponent::DropTarget(ComponentMaterial *material, Texture::TextureTyp
 			if (incoming_file->file_type == FileType::TEXTURE)
 			{
 				//UndoRedo
-				App->editor->type_texture = type;
-				App->editor->action_component = material;
-				App->editor->AddUndoAction(ModuleEditor::UndoActionType::EDIT_COMPONENTMATERIAL);
+				App->actions->type_texture = type;
+				App->actions->action_component = material;
+				App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
 
 				material->SetMaterialTexture(type, App->texture->LoadTexture(incoming_file->file_path.c_str()));
 			}
@@ -229,13 +230,13 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		if(ImGui::Checkbox("Active", &camera->active))
 		{
 			//UndoRedo
-			App->editor->action_component = camera;
-			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
+			App->actions->action_component = camera;
+			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			App->editor->DeleteComponentUndo(camera);
+			App->actions->DeleteComponentUndo(camera);
 			return;
 		}
 		ImGui::Separator();
@@ -338,45 +339,45 @@ void PanelComponent::CheckClickedCamera(ComponentCamera* camera)
 	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
 	{
 		//Push new action
-		App->editor->action_component = camera;
-		App->editor->AddUndoAction(ModuleEditor::UndoActionType::EDIT_COMPONENTCAMERA);
+		App->actions->action_component = camera;
+		App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTCAMERA);
 	}
 }
 
-void PanelComponent::CheckClickForUndo(ModuleEditor::UndoActionType  type, Component* component)
+void PanelComponent::CheckClickForUndo(ModuleActions::UndoActionType  type, Component* component)
 {
 	if (ImGui::IsItemActive() && !ImGui::IsItemActiveLastFrame())
 	{
 		switch (type)
 		{
-		case ModuleEditor::UndoActionType::TRANSLATION:
-			App->editor->previous_transform = ((ComponentTransform*)component)->GetTranslation();
+		case ModuleActions::UndoActionType::TRANSLATION:
+			App->actions->previous_transform = ((ComponentTransform*)component)->GetTranslation();
 			break;
-		case ModuleEditor::UndoActionType::ROTATION:
-			App->editor->previous_transform = ((ComponentTransform*)component)->GetRotationRadiants();
+		case ModuleActions::UndoActionType::ROTATION:
+			App->actions->previous_transform = ((ComponentTransform*)component)->GetRotationRadiants();
 			break;
-		case ModuleEditor::UndoActionType::SCALE:
-			App->editor->previous_transform = ((ComponentTransform*)component)->GetScale();
+		case ModuleActions::UndoActionType::SCALE:
+			App->actions->previous_transform = ((ComponentTransform*)component)->GetScale();
 			break;
-		case ModuleEditor::UndoActionType::EDIT_COMPONENTLIGHT:
-			App->editor->previous_light_color[0] = ((ComponentLight*)component)->light_color[0];
-			App->editor->previous_light_color[1] = ((ComponentLight*)component)->light_color[1];
-			App->editor->previous_light_color[2] = ((ComponentLight*)component)->light_color[2];
-			App->editor->previous_light_intensity = ((ComponentLight*)component)->light_intensity;
-			App->editor->action_component = component;
+		case ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT:
+			App->actions->previous_light_color[0] = ((ComponentLight*)component)->light_color[0];
+			App->actions->previous_light_color[1] = ((ComponentLight*)component)->light_color[1];
+			App->actions->previous_light_color[2] = ((ComponentLight*)component)->light_color[2];
+			App->actions->previous_light_intensity = ((ComponentLight*)component)->light_intensity;
+			App->actions->action_component = component;
 			break;
 		default:
 			break;
 		}
 
 
-		App->editor->clicked = true;
+		App->actions->clicked = true;
 	}
 
 	if (ImGui::IsItemDeactivatedAfterChange())
 	{
-		App->editor->AddUndoAction(type);
-		App->editor->clicked = false;
+		App->actions->AddUndoAction(type);
+		App->actions->clicked = false;
 	}
 
 }
@@ -388,13 +389,13 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 		if(ImGui::Checkbox("Active", &light->active))
 		{
 			//UndoRedo
-			App->editor->action_component = light;
-			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
+			App->actions->action_component = light;
+			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			App->editor->DeleteComponentUndo(light);
+			App->actions->DeleteComponentUndo(light);
 
 			return;
 		}
@@ -402,11 +403,51 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 
 		ImGui::ColorEdit3("Color", light->light_color);
 		
-		CheckClickForUndo(ModuleEditor::UndoActionType::EDIT_COMPONENTLIGHT, light);
+		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 		
 		ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f);
 
-		CheckClickForUndo(ModuleEditor::UndoActionType::EDIT_COMPONENTLIGHT, light);
+		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
+
+		int light_type = static_cast<int>(light->light_type);
+
+		if (ImGui::Combo("Light Type", &light_type, "Point\0Spot\0Directional"))
+		{
+			switch (light_type)
+			{
+			case 0:
+				light->light_type = ComponentLight::LightType::POINT_LIGHT;
+				break;
+			case 1:
+				light->light_type = ComponentLight::LightType::SPOT_LIGHT;
+				break;
+			case 2:
+				light->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
+				break;
+			}
+		}
+		if (light->light_type == ComponentLight::LightType::POINT_LIGHT)
+		{
+			if (ImGui::DragFloat("Range", &light->point_light_parameters.range, 1.f, 1.f, 100.f))
+			{
+				light->point_light_parameters.ChangePointLightAttenuationValues(light->point_light_parameters.range);
+			}
+		}
+		if (light->light_type == ComponentLight::LightType::SPOT_LIGHT)
+		{
+			if (ImGui::DragFloat("Spot Angle", &light->spot_light_parameters.spot_angle, 1.f, 1.f, 179.f))
+			{
+				light->spot_light_parameters.SetSpotAngle(light->spot_light_parameters.spot_angle);
+			}
+			if (ImGui::DragFloat("Edge Softness", &light->spot_light_parameters.edge_softness, 0.01f, 0.f, 1.f))
+			{
+				light->spot_light_parameters.SetEdgeSoftness(light->spot_light_parameters.edge_softness);
+			}
+			if (ImGui::DragFloat("Range", &light->spot_light_parameters.range, 1.f, 1.f, 100.f))
+			{
+				light->spot_light_parameters.ChangeSpotLightAttenuationValues(light->spot_light_parameters.range);
+			}
+		}
 		
 	}
 }
@@ -441,6 +482,9 @@ void PanelComponent::ShowAddNewComponentButton()
 	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
 	ImGui::Button("Add component", ImVec2(button_width, 25));
 
+	//UndoRedo
+	Component* component = nullptr;
+
 	if (ImGui::BeginPopupContextItem("Add component", 0))
 	{
 		char tmp_string[128];
@@ -448,21 +492,21 @@ void PanelComponent::ShowAddNewComponentButton()
 		sprintf_s(tmp_string, "%s Material", ICON_FA_IMAGE);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
 
 		}
 
 		sprintf_s(tmp_string, "%s Camera", ICON_FA_VIDEO);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::CAMERA);
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::CAMERA);
 
 		}
 
 		sprintf_s(tmp_string, "%s Light", ICON_FA_LIGHTBULB);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
 
 		}
 
@@ -474,6 +518,12 @@ void PanelComponent::ShowAddNewComponentButton()
 		}
 
 		ImGui::EndPopup();
+	}
+
+	if(component != nullptr)
+	{
+		App->actions->action_component = component;
+		App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_COMPONENT);
 	}
 }
 

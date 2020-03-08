@@ -215,7 +215,7 @@ void PanelProjectExplorer::CopyFileToSelectedFolder(const char * source) const
 	{
 		destination = "Assets"+ file_name;
 	}
-	else;
+	else
 	{
 		destination = selected_folder->file_path  + file_name;
 	}

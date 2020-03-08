@@ -5,6 +5,7 @@
 
 #include <algorithm>
 class File;
+class ImportOptions;
 class Importer {
 public:
 	Importer() = default;
@@ -16,11 +17,11 @@ protected:
 	std::string GetAlreadyImportedResource(const File & file_to_look_for) const;
 	void SaveMetaFile(const File & imported_file, const std::string & exported_path) const;
 
+public:
+	static void GetOptionsFromMeta(const File& file, ImportOptions & options);
+	static std::string GetMetaFilePath(const File& file);
 private:
-
-	std::string GetUIDFromMeta(const File& file) const;
-	std::string GetMetaFilePath(const File& file) const;
-
+	static const int IMPORTER_VERSION = 1;
 };
 #endif // !_IMPORTER_H_
 

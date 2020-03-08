@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Libraries\include\imgui\imgui.cpp">
@@ -349,6 +349,37 @@
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\SpacePartition\OLAABBTree.cpp">
+      <Filter>Engine\SpacePartition</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleActions.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Animation.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\AnimationLoader.cpp">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\SkeletonLoader.cpp">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Prefab.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Skeleton.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp">
+      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLAABBTree.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvas.cpp">
       <Filter>Engine\Component</Filter>
@@ -583,6 +614,37 @@
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\SpacePartition\OLAABBTree.h">
+      <Filter>Engine\SpacePartition</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleActions.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Animation.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\AnimationLoader.h">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\SkeletonLoader.h">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.h">
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.h">
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Prefab.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Skeleton.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
+      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentTransform2D.h" />
     <ClInclude Include="Engine\SpacePartition\OLAABBTree.h" />
     <ClInclude Include="Engine\Component\ComponentCanvas.h">
       <Filter>Engine\Component</Filter>
@@ -651,6 +713,9 @@
     </Filter>
     <Filter Include="Engine\Actions">
       <UniqueIdentifier>{3f3b0f7b-d67b-4384-a9ba-a7e803bb2a53}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\ImportOptions">
+      <UniqueIdentifier>{af162ed0-dacf-4e8f-850b-8e8130bb9f6e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
