@@ -30,7 +30,7 @@ public:
 	void CheckClickedCamera(ComponentCamera* camera);
 	void CheckClickForUndo(ModuleEditor::UndoActionType type, Component* component);
 
-	//Crear funcion de renderizar ui de inspector del canvas y del transform 2d
+	//Crear funcion de renderizar ui de inspector del transform 2d
 
 private:
 	void DropTarget(ComponentMaterial *material, Texture::TextureType type);
