@@ -379,6 +379,7 @@
     <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp">
       <Filter>Engine\ResourceManagement\ImportOptions</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -639,6 +640,7 @@
     <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
       <Filter>Engine\ResourceManagement\ImportOptions</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentTransform2D.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
