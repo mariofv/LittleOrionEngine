@@ -1,17 +1,14 @@
 #include "ModuleScriptManager.h"
-#include "Main/Globals.h"
+
+#include "Component/ComponentScript.h"
+#include "Filesystem/File.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Main/Globals.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleTime.h"
-#include "Component/ComponentScript.h"
 #include "Script/Script.h"
-#include "Filesystem/File.h"
 
-#include <iostream>
-#include <fstream>
-#include <string>
-#include <stdio.h>
 
 
 bool ModuleScriptManager::Init()
@@ -110,7 +107,7 @@ ComponentScript* ModuleScriptManager::CreateComponentScript()
 	return new_script;
 }
 
-void ModuleScriptManager::RemoveComponentScript(ComponentScript * script_to_remove)
+void ModuleScriptManager::RemoveComponentScript(ComponentScript* script_to_remove)
 {
 	auto it = std::find(scripts.begin(), scripts.end(), script_to_remove);
 	if (it != scripts.end())
@@ -229,7 +226,7 @@ bool ModuleScriptManager::CopyPDB(const char* source_file, const char* destinati
 	return CopyFile(source_file, destination_file, !overwrite_existing);
 }
 
-bool ModuleScriptManager::patchDLL(const char* dll_path, const char patched_dll_path[MAX_PATH])
+bool ModuleScriptManager::patchDLL(const char* dll_path, const char* patched_dll_path)
 {
 	// init
 	char patched_pdb_path[MAX_PATH] = { '\0' };
@@ -280,7 +277,7 @@ bool ModuleScriptManager::patchDLL(const char* dll_path, const char patched_dll_
 		
 	// find debug section
 	int	debug_dir_section_index = -1;
-	IMAGE_SECTION_HEADER*	all_section_headers = (IMAGE_SECTION_HEADER*)(file_content + dos_header.e_lfanew + sizeof(IMAGE_NT_HEADERS));
+	IMAGE_SECTION_HEADER* all_section_headers = (IMAGE_SECTION_HEADER*)(file_content + dos_header.e_lfanew + sizeof(IMAGE_NT_HEADERS));
 	for (int j = 0; j < nt_header.FileHeader.NumberOfSections; ++j)
 	{
 		IMAGE_SECTION_HEADER section_header = all_section_headers[j];
@@ -298,8 +295,8 @@ bool ModuleScriptManager::patchDLL(const char* dll_path, const char patched_dll_
 	{
 		// loop all debug directory
 		int	num_debug_dir = debug_dir.Size / (int)sizeof(IMAGE_DEBUG_DIRECTORY);
-		IMAGE_SECTION_HEADER	section_header = all_section_headers[debug_dir_section_index];
-		IMAGE_DEBUG_DIRECTORY*	all_image_debug_dir = (IMAGE_DEBUG_DIRECTORY*)(file_content + debug_dir.VirtualAddress - (section_header.VirtualAddress - section_header.PointerToRawData));
+		IMAGE_SECTION_HEADER section_header = all_section_headers[debug_dir_section_index];
+		IMAGE_DEBUG_DIRECTORY* all_image_debug_dir = (IMAGE_DEBUG_DIRECTORY*)(file_content + debug_dir.VirtualAddress - (section_header.VirtualAddress - section_header.PointerToRawData));
 		for (int i = 0; i < num_debug_dir; ++i)
 		{
 			IMAGE_DEBUG_DIRECTORY image_debug_dir = all_image_debug_dir[i];

@@ -1,9 +1,11 @@
 #include "TestScriptRuntime.h"
-#include "Main/Application.h"
-#include "Module/ModuleInput.h"
-#include "Main/GameObject.h"
+
 #include "Component/ComponentTransform.h"
+#include "Main/Application.h"
+#include "Main/GameObject.h"
+#include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
+
 #include "imgui.h"
 
 TestScriptRuntime* TestScriptRuntimeDLL()
@@ -16,10 +18,6 @@ TestScriptRuntime::TestScriptRuntime()
 {
 }
 
-
-TestScriptRuntime::~TestScriptRuntime()
-{
-}
 void TestScriptRuntime::Update()
 {
 

@@ -4,8 +4,9 @@
 #include "Component.h"
 #include "UI/Panel/InspectorSubpanel/PanelComponent.h"
 
-#include <unordered_map>
 #include <string>
+#include <unordered_map>
+
 
 class Application;
 class Script;
@@ -13,9 +14,9 @@ class ComponentScript :public Component
 {
 public:
 	ComponentScript();
-	ComponentScript(GameObject * owner, std::string script_name);
-	~ComponentScript();
-	void LoadName(std::string script_name);
+	ComponentScript(GameObject* owner, std::string& script_name);
+	~ComponentScript() = default;
+	void LoadName(std::string& script_name);
 	void Update();
 	void Delete();
 	void ShowComponentWindow();

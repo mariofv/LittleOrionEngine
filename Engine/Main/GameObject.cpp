@@ -125,7 +125,7 @@ ENGINE_API void GameObject::Update()
 		{
 			components[i]->Update();
 		}
-		
+
 	}
 }
 

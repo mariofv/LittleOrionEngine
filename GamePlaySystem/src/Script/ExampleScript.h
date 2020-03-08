@@ -6,12 +6,12 @@ class ExampleScript : public Script
 {
 public:
 	ExampleScript();
-	~ExampleScript();
+	~ExampleScript() = default;
 	void Update() override;
 	void OnInspector(ImGuiContext*) override;
 	void Test();
 
-	int i = 0;
+
 	float speed = 0.01f;
 	float rotation_speed = 0.01f;
 };

@@ -1,12 +1,13 @@
 #ifndef  __TESTSCRIPTRUNTIME_H__
 #define  __TESTSCRIPTRUNTIME_H__
+
 #include "Script.h"
 
 class TestScriptRuntime : public Script
 {
 public:
 	TestScriptRuntime();
-	~TestScriptRuntime();
+	~TestScriptRuntime() = default;
 	void Update() override;
 	void OnInspector(ImGuiContext*) override;
 	void Test();

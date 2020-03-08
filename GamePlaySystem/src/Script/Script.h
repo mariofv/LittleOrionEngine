@@ -13,7 +13,7 @@ class Script
 {
 public:
 	Script();
-	~Script();
+	~Script() = default;
 
 	virtual void Update() {};
 	virtual void OnInspector(ImGuiContext*) {};

@@ -15,7 +15,4 @@ void Script::AddReferences(GameObject *owner, Application *App)
 	this->owner = owner;
 }
 
-Script::~Script()
-{
-}
 

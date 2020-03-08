@@ -1,14 +1,15 @@
 #ifndef _MODULEMANAGERSCRIPT_H_
 #define _MODULEMANAGERSCRIPT_H_
 
-#include "Module.h"
-#include "Main/Globals.h"
 #include "Main/GameObject.h"
+#include "Main/Globals.h"
+#include "Module.h"
 
-#include <vector>
+#include <memory>
 #include <string>
 #include <unordered_map>
-#include <memory>
+#include <vector>
+
 
 struct CV_INFO_PDB70
 {
@@ -22,7 +23,7 @@ class ComponentScript;
 class GameObject;
 class Script;
 class File;
-typedef void(*ScriptFunction)(void);
+
 class ModuleScriptManager : public Module
 {
 public:
@@ -32,9 +33,9 @@ public:
 	bool Init() override;
 	update_status Update() override;
 	bool CleanUp() override;
-	long TimeStamp(const char * path);
+	long TimeStamp(const char* path);
 	void InitResourceScript();
-	Script * CreateResourceScript(const std::string & script_name, GameObject * owner);
+	Script * CreateResourceScript(const std::string& script_name, GameObject* owner);
 	ComponentScript* CreateComponentScript();
 	void RemoveComponentScript(ComponentScript* script_to_remove);
 	void LoadScriptList();
@@ -43,10 +44,10 @@ public:
 	void initDLL();
 	void ReloadDLL();
 	void GetCurrentPath();
-	size_t CStrlastIndexOfChar(const char * str, char find_char);
+	size_t CStrlastIndexOfChar(const char* str, char find_char);
 	bool patchFileName(char* filename);
 	bool CopyPDB(const char* from_file, const char* destination_file, bool overwrite_existing);
-	bool patchDLL(const char* dll_path, const char patched_dll_path[MAX_PATH]);
+	bool patchDLL(const char* dll_path, const char* patched_dll_path);
 
 private:
 	HINSTANCE gameplay_dll;
