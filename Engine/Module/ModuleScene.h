@@ -21,6 +21,7 @@ public:
 	bool CleanUp() override;
 
 	GameObject* CreateGameObject();
+	GameObject* CreateGameObject(const char* name);
 	GameObject* CreateChildGameObject(GameObject *parent);
 	void RemoveGameObject(GameObject * game_object_to_remove);
 	void DisableGameObject(GameObject * game_object_to_disable);
@@ -31,7 +32,7 @@ public:
 	void DeleteCurrentScene();
 	void Save(Config& serialized_scene) const;
 	void Load(const Config& serialized_scene);
-	GameObject* canvasGO = nullptr;
+
 private:
 	GameObject *root = nullptr;
 	

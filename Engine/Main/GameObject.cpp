@@ -8,6 +8,7 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleUI.h"
 #include "ResourceManagement/Resources/Texture.h"
 #include "UI/Panel/PanelHierarchy.h"
 
@@ -244,7 +245,7 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 		created_component = App->lights->CreateComponentLight();
 		break;
 	case Component::ComponentType::CANVAS:
-		created_component = new ComponentCanvas();
+		created_component = App->ui->CreateComponentCanvas();
 		break;
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");

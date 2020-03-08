@@ -55,6 +55,13 @@ GameObject* ModuleScene::CreateGameObject()
 	return created_game_object_ptr;
 }
 
+GameObject * ModuleScene::CreateGameObject(const char * name)
+{
+	GameObject* new_object = CreateGameObject();
+	new_object->name = name;
+	return new_object;
+}
+
 GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 {
 	GameObject * created_game_object_ptr = CreateGameObject();

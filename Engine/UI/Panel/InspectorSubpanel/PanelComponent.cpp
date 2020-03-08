@@ -466,7 +466,7 @@ void PanelComponent::ShowAddNewComponentButton()
 
 		}
 
-		sprintf_s(tmp_string, "%s Light", ICON_FA_LIGHTBULB);
+		sprintf_s(tmp_string, "%s Canvas", ICON_FA_PALETTE);
 		if (ImGui::Selectable(tmp_string))
 		{
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::CANVAS);
