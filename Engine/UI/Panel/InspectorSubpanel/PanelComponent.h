@@ -10,6 +10,7 @@ class ComponentMaterial;
 class ComponentMesh;
 class ComponentTransform;
 class ComponentLight;
+class ComponentCanvas;
 
 class PanelComponent
 {
@@ -22,11 +23,14 @@ public:
 	void ShowComponentMaterialWindow(ComponentMaterial *material);
 	void ShowComponentCameraWindow(ComponentCamera *camera);
 	void ShowComponentLightWindow(ComponentLight *light);
-	
+	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
+
 	void ShowAddNewComponentButton();
 
 	void CheckClickedCamera(ComponentCamera* camera);
 	void CheckClickForUndo(ModuleEditor::UndoActionType type, Component* component);
+
+	//Crear funcion de renderizar ui de inspector del canvas y del transform 2d
 
 private:
 	void DropTarget(ComponentMaterial *material, Texture::TextureType type);

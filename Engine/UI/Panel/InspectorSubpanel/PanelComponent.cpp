@@ -10,6 +10,7 @@
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentCanvas.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -410,6 +411,28 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 	}
 }
 
+void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::Checkbox("Active", &canvas->active))
+		{
+			//UndoRedo
+			App->editor->action_component = canvas;
+			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			App->editor->DeleteComponentUndo(canvas);
+			return;
+		}
+		ImGui::Separator();
+
+		ImGui::LabelText("Canvas", "Canvas");
+	}
+}
+
 
 void PanelComponent::ShowAddNewComponentButton()
 {
@@ -440,6 +463,13 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
+
+		}
+
+		sprintf_s(tmp_string, "%s Light", ICON_FA_LIGHTBULB);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::CANVAS);
 
 		}
 

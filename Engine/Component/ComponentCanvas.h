@@ -23,8 +23,6 @@ public:
 	void ShowComponentWindow();
 
 	void InitCanvas();
-	void GenerateFBOTexture(unsigned w, unsigned h);
-
 	
 	unsigned fbo = 0;
 	unsigned rbo = 0;
@@ -34,11 +32,12 @@ public:
 	unsigned fb_height = 0;
 	ComponentCamera* camera;
 
-
-
 	unsigned vao;
 	unsigned vbo;
 	unsigned ebo;
+
+private:
+	friend class PanelComponent;
 };
 
 #endif //_COMPONENTCANVAS_H_

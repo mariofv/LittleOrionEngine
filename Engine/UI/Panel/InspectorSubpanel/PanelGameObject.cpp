@@ -4,6 +4,7 @@
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentCanvas.h"
 #include "Main/GameObject.h"
 
 #include <imgui.h>
@@ -67,6 +68,9 @@ void PanelGameObject::Render(GameObject* game_object)
 				break;
 			case Component::ComponentType::LIGHT:
 				component_panel.ShowComponentLightWindow(static_cast<ComponentLight*>(component));
+				break;
+			case Component::ComponentType::CANVAS:
+				component_panel.ShowComponentCanvasWindow(static_cast<ComponentCanvas*>(component));
 				break;
 			default:
 				break;

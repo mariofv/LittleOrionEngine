@@ -22,3 +22,7 @@ bool ModuleUI::CleanUp()
 {
 	return true;
 }
+
+//Guardar aquí todos los component canvas (crear, destruir y guardar)
+//Cuando se hace el render de los canvas, añadir un render a este modulo que renderice todos los canvas
+//
