@@ -23,28 +23,28 @@ public:
 	
 	ENGINE_API float3 GetGlobalTranslation() const;
 	ENGINE_API float3 GetTranslation() const;
-	ENGINE_API void SetTranslation(const float3 &translation);
-	ENGINE_API void Translate(const float3 &translation);
+	ENGINE_API void SetTranslation(const float3& translation);
+	ENGINE_API void Translate(const float3& translation);
 
 	Quat GetRotation() const;
 	ENGINE_API float3 GetRotationRadiants() const;
-	ENGINE_API void SetRotation(const float3x3 &rotation);
-	ENGINE_API void SetRotation(const float3 &rotation);
-	void Rotate(const Quat &rotation);
-	void Rotate(const float3x3 &rotation);
+	ENGINE_API void SetRotation(const float3x3& rotation);
+	ENGINE_API void SetRotation(const float3& rotation);
+	void Rotate(const Quat& rotation);
+	void Rotate(const float3x3& rotation);
 
 	float3 GetScale() const;
-	void SetScale(const float3 &scale);
+	void SetScale(const float3& scale);
 
 	float3 GetUpVector() const;
 	float3 GetFrontVector() const;
 	float3 GetRightVector() const;
 
-	void ChangeLocalSpace(const float4x4 &new_local_space);
+	void ChangeLocalSpace(const float4x4& new_local_space);
 
 	void GenerateGlobalModelMatrix();
 	float4x4 GetGlobalModelMatrix() const;
-	void SetGlobalModelMatrix(const float4x4 &new_global_matrix);
+	void SetGlobalModelMatrix(const float4x4& new_global_matrix);
   
 private:
 	void OnTransformChange();

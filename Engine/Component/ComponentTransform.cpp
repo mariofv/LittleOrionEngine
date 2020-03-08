@@ -10,7 +10,7 @@ ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, Co
 	OnTransformChange();
 }
 
-ComponentTransform::ComponentTransform(GameObject * owner, const float3 translation, const Quat rotation, const float3 scale) :
+ComponentTransform::ComponentTransform(GameObject* owner, const float3 translation, const Quat rotation, const float3 scale) :
 	Component(owner, ComponentType::TRANSFORM),
 	translation(translation),
 	rotation(rotation),
@@ -52,13 +52,13 @@ ENGINE_API float3 ComponentTransform::GetTranslation() const
 	return translation;
 }
 
-ENGINE_API void ComponentTransform::SetTranslation(const float3 &translation)
+ENGINE_API void ComponentTransform::SetTranslation(const float3& translation)
 {
 	this->translation = translation;
 	OnTransformChange();
 }
 
-ENGINE_API void ComponentTransform::Translate(const float3 &translation)
+ENGINE_API void ComponentTransform::Translate(const float3& translation)
 {
 	this->translation += translation;
 	OnTransformChange();
@@ -74,7 +74,7 @@ ENGINE_API float3 ComponentTransform::GetRotationRadiants() const
 	return rotation_radians;
 }
 
-ENGINE_API void ComponentTransform::SetRotation(const float3x3 &rotation)
+ENGINE_API void ComponentTransform::SetRotation(const float3x3& rotation)
 {
 	this->rotation = rotation.ToQuat();
 	rotation_radians = rotation.ToEulerXYZ();
@@ -82,7 +82,7 @@ ENGINE_API void ComponentTransform::SetRotation(const float3x3 &rotation)
 	OnTransformChange();
 }
 
-ENGINE_API void ComponentTransform::SetRotation(const float3 & new_rotation)
+ENGINE_API void ComponentTransform::SetRotation(const float3& new_rotation)
 {
 	rotation = math::Quat::FromEulerXYZ(new_rotation.x, new_rotation.y, new_rotation.z);
 	rotation_radians = new_rotation;
@@ -90,7 +90,7 @@ ENGINE_API void ComponentTransform::SetRotation(const float3 & new_rotation)
 	OnTransformChange();
 }
 
-void ComponentTransform::Rotate(const Quat &rotation)
+void ComponentTransform::Rotate(const Quat& rotation)
 {
 	this->rotation = rotation * this->rotation;
 	rotation_radians = rotation * rotation_radians;
@@ -101,7 +101,7 @@ void ComponentTransform::Rotate(const Quat &rotation)
 
 
 
-void ComponentTransform::Rotate(const float3x3 &rotation)
+void ComponentTransform::Rotate(const float3x3& rotation)
 {
 	this->rotation = rotation.ToQuat() * this->rotation;
 	rotation_radians = rotation * rotation_radians;
@@ -116,7 +116,7 @@ float3 ComponentTransform::ComponentTransform::GetScale() const
 }
 
 
-void ComponentTransform::SetScale(const float3 &scale)
+void ComponentTransform::SetScale(const float3& scale)
 {
 	this->scale = scale;
 	
@@ -166,7 +166,7 @@ float4x4 ComponentTransform::GetGlobalModelMatrix() const
 	return global_model_matrix;
 }
 
-void ComponentTransform::SetGlobalModelMatrix(const float4x4 &new_global_matrix)
+void ComponentTransform::SetGlobalModelMatrix(const float4x4& new_global_matrix)
 {
 	if (owner->parent == nullptr)
 	{
@@ -188,7 +188,7 @@ void ComponentTransform::SetGlobalModelMatrix(const float4x4 &new_global_matrix)
 	
 }
 
-void ComponentTransform::ChangeLocalSpace(const float4x4 &new_local_space)
+void ComponentTransform::ChangeLocalSpace(const float4x4& new_local_space)
 {
 	model_matrix = new_local_space.Inverted() * global_model_matrix;
 	model_matrix.Decompose(translation, rotation, scale);

@@ -3,6 +3,7 @@
 #include "Helper/Config.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleScriptManager.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
@@ -10,7 +11,7 @@
 #include "Module/ModuleTexture.h"
 #include "ResourceManagement/Resources/Texture.h"
 #include "UI/Panel/PanelHierarchy.h"
-#include "Module/ModuleScriptManager.h"
+
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
