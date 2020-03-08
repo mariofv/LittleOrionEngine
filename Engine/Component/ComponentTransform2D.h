@@ -35,13 +35,15 @@ public:
 
 private:
 	void OnTransformChange();
-	void OnTransformChange(ComponentTransform2D &parent);
 
 private:
-	SDL_Rect* global_rect = new SDL_Rect();
-	SDL_Rect* rect = new SDL_Rect();
+	SDL_Rect global_rect = SDL_Rect();
+	SDL_Rect rect = SDL_Rect();
 	float rotation_degrees = 0;
-	float rotation_radians = 0;
+	float rotation_radians = 0;	
+	
+	float global_rotation_degrees = 0;
+	float global_rotation_radians = 0;
 
 	friend class PanelComponent;
 };
