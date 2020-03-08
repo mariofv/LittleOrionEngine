@@ -185,5 +185,5 @@ void ModuleScene::Load(const Config& serialized_scene)
 		}
 	}
 	App->renderer->GenerateQuadTree();
-	App->editor->ClearUndoStack();
+	App->actions->ClearUndoStack();
 }

@@ -459,13 +459,13 @@ void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 		if (ImGui::Checkbox("Active", &canvas->active))
 		{
 			//UndoRedo
-			App->editor->action_component = canvas;
-			App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
+			App->actions->action_component = canvas;
+			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			App->editor->DeleteComponentUndo(canvas);
+			App->actions->DeleteComponentUndo(canvas);
 			return;
 		}
 		ImGui::Separator();
