@@ -163,9 +163,6 @@ void ModuleScene::Load(const Config& serialized_scene)
 
 	std::vector<Config> game_objects_config;
 	serialized_scene.GetChildrenConfig("GameObjects", game_objects_config);
-	canvasGO = CreateGameObject();
-	canvasGO->CreateComponent(Component::ComponentType::CANVAS);
-	canvasGO->transform.SetTranslation(float3(0.5f, 2.f, -15.f));
 
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
