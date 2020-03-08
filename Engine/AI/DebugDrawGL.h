@@ -17,9 +17,10 @@ public:
 	virtual void Vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v);
 	virtual void End();
 	virtual void DrawMesh(ComponentCamera& camera);
+	virtual void GenerateBuffers();
 
 public:
-	unsigned int vbo = 0;
+	GLuint vbo = 0;
 	unsigned int vao = 0;
 
 	std::vector<float3> vertices;

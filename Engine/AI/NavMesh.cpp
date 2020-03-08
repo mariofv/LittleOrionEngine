@@ -442,6 +442,7 @@ bool NavMesh::CreateNavMesh()
 	//my_debug_draw = new LOInterfaces();
 	is_mesh_computed = true;
 	duDebugDrawNavMeshWithClosedList(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);
+	m_dd.GenerateBuffers();
 
 	return true;
 }
