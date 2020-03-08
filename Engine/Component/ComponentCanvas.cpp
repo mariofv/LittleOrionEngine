@@ -17,49 +17,6 @@ ComponentCanvas::ComponentCanvas(GameObject * owner) : Component(owner, Componen
 
 void ComponentCanvas::InitCanvas()
 {
-	//glBindFramebuffer(GL_DRAW_FRAMEBUFFER, App->cameras->scene_camera->fbo);
-
-	//glClear(GL_COLOR_BUFFER_BIT);
-	//glMatrixMode(GL_PROJECTION);
-	//glLoadIdentity();
-	//
-	//float canvasW = App->cameras->scene_camera->camera_frustum.orthographicWidth;
-	//float canvasH = App->cameras->scene_camera->camera_frustum.orthographicHeight;
-	//// args: left, right, bottom, top, near, far
-	//glOrtho(0.0f, canvasW, canvasH, 0.0f, 1.0f, -1.0f);
-	////Begin drawing quads
-	//glBegin(GL_POLYGON);
-
-	//glColor4ub(255, 255, 255, 255);
-	//glVertex3f(-0.5, 0.5, -20.f);
-	//glVertex3f(canvasW, 0.5, -20.f);
-	//glVertex3f(canvasW, canvasH, -20.f);
-	//glVertex3f(-0.5, canvasH, -20.f);
-	//glEnd();
-	////GenerateFBOTexture(App->cameras->scene_camera->camera_frustum.orthographicWidth, App->cameras->scene_camera->camera_frustum.orthographicHeight);
-	//
-	////dd::xzSquareGrid(-40.0f, 40.0f, 0.0f, 1.0f, math::float3(0.65f, 0.65f, 0.65f));
-
-
-
-
-	//glMatrixMode(GL_MODELVIEW);
-	//glDisable(GL_DEPTH_TEST);
-	//glRectf(cameraVBO., 5.0, 5.0, -5.0);
-
-
-	///
-	
-    //GLfloat vertices[] = { 
-    //     Pos      // Tex
-    //    0.0f, 1.0f, 0.0f, 1.0f,
-    //    1.0f, 0.0f, 1.0f, 0.0f,
-    //    0.0f, 0.0f, 0.0f, 0.0f, 
-
-    //    0.0f, 1.0f, 0.0f, 1.0f,
-    //    1.0f, 1.0f, 1.0f, 1.0f,
-    //    1.0f, 0.0f, 1.0f, 0.0f
-    //};
     glGenVertexArrays(1, &this->vao);
 	glBindVertexArray(this->vao);
 
@@ -108,11 +65,9 @@ void ComponentCanvas::Load(const Config& config)
 }
 void ComponentCanvas::Render(const ComponentCamera& cam) const
 {
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 	glMatrixMode(GL_PROJECTION);
 	glLoadIdentity();
 	glOrtho(0.0f, cam.camera_frustum.orthographicWidth, cam.camera_frustum.orthographicHeight, 0.0f, 1.0f, -1.0f);
-	glMatrixMode(GL_PROJECTION);
 	glDisable(GL_DEPTH_TEST);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, cam.fbo);
@@ -120,48 +75,12 @@ void ComponentCanvas::Render(const ComponentCamera& cam) const
 	glDrawArrays(GL_TRIANGLES, 0, 6);
 	glDrawElements(GL_TRIANGLES, 6, GL_UNSIGNED_INT, 0);
 	glUseProgram(0);
+
+	glEnable(GL_DEPTH_TEST);
 }
 void ComponentCanvas::Delete()
 {
 }
 void ComponentCanvas::ShowComponentWindow()
 {
-}
-
-void ComponentCanvas::GenerateFBOTexture(unsigned w, unsigned h)
-{
-	if (w != fb_width || h != fb_height)
-	{
-		if (fb_tex != 0)
-		{
-			glDeleteTextures(1, &fb_tex);
-		}
-		glGenTextures(1, &fb_tex);
-		if (rbo != 0)
-		{
-			glDeleteRenderbuffers(1, &rbo);
-		}
-		glGenRenderbuffers(1, &rbo);
-
-		glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-		glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, App->cameras->scene_camera->camera_frustum.orthographicWidth, App->cameras->scene_camera->camera_frustum.orthographicHeight);
-		glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-		glBindTexture(GL_TEXTURE_2D, fb_tex);
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, App->cameras->scene_camera->camera_frustum.orthographicWidth, App->cameras->scene_camera->camera_frustum.orthographicHeight, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		glBindTexture(GL_TEXTURE_2D, 0);
-
-		glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-		glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, fb_tex, 0);
-		glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-		glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-		fb_width = w;
-		fb_height = h;
-	}
-
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
