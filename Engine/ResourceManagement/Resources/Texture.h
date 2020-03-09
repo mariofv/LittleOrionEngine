@@ -15,6 +15,7 @@ public:
 		SPECULAR,
 		EMISSIVE,
 		OCLUSION,
+		NORMAL,
 		UNKNOWN
 	};
 	static const size_t MAX_TEXTURE_TYPES = static_cast<size_t>(TextureType::UNKNOWN);

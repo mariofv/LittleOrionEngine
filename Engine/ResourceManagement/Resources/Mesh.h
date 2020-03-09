@@ -15,6 +15,7 @@ public:
 		float2 tex_coords;
 		float3 normals;
 		float3 tangent;
+		float3 bitangent;
 	};
 	Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path);
 	~Mesh();

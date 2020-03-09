@@ -84,6 +84,7 @@ void ComponentMaterial::Load(const Config& config)
 	k_ambient = config.GetFloat("kAmbient", 1.0f);
 	k_specular = config.GetFloat( "kSpecular", 1.0f);
 	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
+	k_normal = config.GetFloat("kNormal", 1.0f);
 	shininess = config.GetFloat("shininess", 1.0f);
 
 	//colors
@@ -152,6 +153,14 @@ void ComponentMaterial::AddAmbientOclusionUniforms(unsigned int shader_program) 
 	BindTexture(Texture::TextureType::OCLUSION);
 	glUniform1i(glGetUniformLocation(shader_program, "material.occlusion_map"), 3);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_ambient"), k_ambient);
+}
+
+void ComponentMaterial::AddNormalUniforms(unsigned int shader_program) const
+{
+	glActiveTexture(GL_TEXTURE3);
+	BindTexture(Texture::TextureType::NORMAL);
+	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
+	glUniform1f(glGetUniformLocation(shader_program, "material.k_normal"), k_normal);
 }
 
 void ComponentMaterial::BindTexture(Texture::TextureType id) const

@@ -3,6 +3,8 @@
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec2 vertex_uv0;
 layout(location = 2) in vec3 vertex_normal;
+layout(location = 3) in vec3 vertex_tanget;
+layout(location = 4) in vec3 vertex_bitanget;
 
 layout (std140) uniform Matrices
 {
@@ -22,6 +24,8 @@ struct Material {
 	float k_ambient;
 	sampler2D emissive_map;
 	vec4 emissive_color;
+	sampler2D normal_map;
+	float k_normal;
 };
 uniform Material material;
 

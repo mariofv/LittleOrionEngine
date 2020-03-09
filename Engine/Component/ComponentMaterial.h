@@ -33,6 +33,7 @@ private:
 	void AddEmissiveUniforms(unsigned int shader_program) const;
 	void AddSpecularUniforms(unsigned int shader_program) const;
 	void AddAmbientOclusionUniforms(unsigned int shader_program) const;
+	void AddNormalUniforms(unsigned int shader_program) const;
 	void BindTexture(Texture::TextureType id) const;
 
 public:
@@ -50,7 +51,8 @@ private:
 	float k_diffuse = 1.0f;
 	float k_specular = 1.0f;
 	float k_ambient = 1.0f;
-	float shininess = 1.0f;
+	float shininess = 1.0f; //TODO-> erase shininess from all the code. 
+	float k_normal = 1.0f;
 
 	bool show_checkerboard_texture = false;
 
