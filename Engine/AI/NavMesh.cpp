@@ -104,9 +104,9 @@ bool NavMesh::CreateNavMesh()
 	rcVcopy(m_cfg.bmax, bmax);
 	rcCalcGridSize(m_cfg.bmin, m_cfg.bmax, m_cfg.cs, &m_cfg.width, &m_cfg.height);
 
-	m_ctx->log(RC_LOG_PROGRESS, "Building navigation:");
-	m_ctx->log(RC_LOG_PROGRESS, " - %d x %d cells", m_cfg.width, m_cfg.height);
-	m_ctx->log(RC_LOG_PROGRESS, " - %.1fK verts, %.1fK tris", nverts / 1000.0f, ntris / 1000.0f);
+	APP_LOG_INFO("Building navigation:");
+	APP_LOG_INFO("- %d x %d cells", m_cfg.width, m_cfg.height);
+	APP_LOG_INFO(" - %.1fK verts, %.1fK tris", nverts / 1000.0f, ntris / 1000.0f);
 
 	//
 	// Step 2. Rasterize input polygon soup.
@@ -117,12 +117,12 @@ bool NavMesh::CreateNavMesh()
 	m_solid = rcAllocHeightfield();
 	if (!m_solid)
 	{
-		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'solid'.");
+		APP_LOG_ERROR("buildNavigation: Out of memory 'solid'.");
 		return false;
 	}
 	if (!rcCreateHeightfield(m_ctx, *m_solid, m_cfg.width, m_cfg.height, m_cfg.bmin, m_cfg.bmax, m_cfg.cs, m_cfg.ch))
 	{
-		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Could not create solid heightfield.");
+		APP_LOG_ERROR("buildNavigation: Could not create solid heightfield.");
 		return false;
 	}
 
@@ -132,7 +132,7 @@ bool NavMesh::CreateNavMesh()
 	m_triareas = new unsigned char[ntris];
 	if (!m_triareas)
 	{
-		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'm_triareas' (%d).", ntris);
+		APP_LOG_ERROR("buildNavigation: Out of memory 'm_triareas' (%d).", ntris);
 		return false;
 	}
 
@@ -143,7 +143,7 @@ bool NavMesh::CreateNavMesh()
 	rcMarkWalkableTriangles(m_ctx, m_cfg.walkableSlopeAngle, verts, nverts, tris, ntris, m_triareas, unwalkable_verts);
 	if (!rcRasterizeTriangles(m_ctx, verts, nverts, tris, m_triareas, ntris, *m_solid, m_cfg.walkableClimb))
 	{
-		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Could not rasterize triangles.");
+		APP_LOG_ERROR("buildNavigation: Could not rasterize triangles.");
 		return false;
 	}
 
@@ -177,12 +177,12 @@ bool NavMesh::CreateNavMesh()
 	m_chf = rcAllocCompactHeightfield();
 	if (!m_chf)
 	{
-		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'chf'.");
+		APP_LOG_ERROR("buildNavigation: Out of memory 'chf'.");
 		return false;
 	}
 	if (!rcBuildCompactHeightfield(m_ctx, m_cfg.walkableHeight, m_cfg.walkableClimb, *m_solid, *m_chf))
 	{
-		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Could not build compact data.");
+		APP_LOG_ERROR("buildNavigation: Could not build compact data.");
 		return false;
 	}
 
@@ -195,7 +195,7 @@ bool NavMesh::CreateNavMesh()
 	// Erode the walkable area by agent radius.
 	if (!rcErodeWalkableArea(m_ctx, m_cfg.walkableRadius, *m_chf))
 	{
-		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Could not erode.");
+		APP_LOG_ERROR("buildNavigation: Could not erode.");
 		return false;
 	}
 
@@ -236,14 +236,14 @@ bool NavMesh::CreateNavMesh()
 		// Prepare for region partitioning, by calculating distance field along the walkable surface.
 		if (!rcBuildDistanceField(m_ctx, *m_chf))
 		{
-			m_ctx->log(RC_LOG_ERROR, "buildNavigation: Could not build distance field.");
+			APP_LOG_ERROR("buildNavigation: Could not build distance field.");
 			return false;
 		}
 
 		// Partition the walkable surface into simple regions without holes.
 		if (!rcBuildRegions(m_ctx, *m_chf, 0, m_cfg.minRegionArea, m_cfg.mergeRegionArea))
 		{
-			m_ctx->log(RC_LOG_ERROR, "buildNavigation: Could not build watershed regions.");
+			APP_LOG_ERROR("buildNavigation: Could not build watershed regions.");
 			return false;
 		}
 	}
@@ -254,6 +254,7 @@ bool NavMesh::CreateNavMesh()
 		if (!rcBuildRegionsMonotone(m_ctx, *m_chf, 0, m_cfg.minRegionArea, m_cfg.mergeRegionArea))
 		{
 			m_ctx->log(RC_LOG_ERROR, "buildNavigation: Could not build monotone regions.");
+			APP_LOG_ERROR("buildNavigation: Could not build monotone regions.");
 			return false;
 		}
 	}
@@ -262,7 +263,7 @@ bool NavMesh::CreateNavMesh()
 		// Partition the walkable surface into simple regions without holes.
 		if (!rcBuildLayerRegions(m_ctx, *m_chf, 0, m_cfg.minRegionArea))
 		{
-			m_ctx->log(RC_LOG_ERROR, "buildNavigation: Could not build layer regions.");
+			APP_LOG_ERROR("buildNavigation: Could not build layer regions.");
 			return false;
 		}
 	}
@@ -275,12 +276,12 @@ bool NavMesh::CreateNavMesh()
 	m_cset = rcAllocContourSet();
 	if (!m_cset)
 	{
-		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'cset'.");
+		APP_LOG_ERROR("buildNavigation: Out of memory 'cset'.");
 		return false;
 	}
 	if (!rcBuildContours(m_ctx, *m_chf, m_cfg.maxSimplificationError, m_cfg.maxEdgeLen, *m_cset))
 	{
-		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Could not create contours.");
+		APP_LOG_ERROR("buildNavigation: Could not create contours.");
 		return false;
 	}
 
@@ -292,12 +293,12 @@ bool NavMesh::CreateNavMesh()
 	m_pmesh = rcAllocPolyMesh();
 	if (!m_pmesh)
 	{
-		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'pmesh'.");
+		APP_LOG_ERROR("buildNavigation: Out of memory 'pmesh'.");
 		return false;
 	}
 	if (!rcBuildPolyMesh(m_ctx, *m_cset, m_cfg.maxVertsPerPoly, *m_pmesh))
 	{
-		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Could not triangulate contours.");
+		APP_LOG_ERROR("buildNavigation: Could not triangulate contours.");
 		return false;
 	}
 
@@ -308,13 +309,13 @@ bool NavMesh::CreateNavMesh()
 	m_dmesh = rcAllocPolyMeshDetail();
 	if (!m_dmesh)
 	{
-		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Out of memory 'pmdtl'.");
+		APP_LOG_ERROR("buildNavigation: Out of memory 'pmdtl'.");
 		return false;
 	}
 
 	if (!rcBuildPolyMeshDetail(m_ctx, *m_pmesh, *m_chf, m_cfg.detailSampleDist, m_cfg.detailSampleMaxError, *m_dmesh))
 	{
-		m_ctx->log(RC_LOG_ERROR, "buildNavigation: Could not build detail mesh.");
+		APP_LOG_ERROR("buildNavigation: Could not build detail mesh.");
 		return false;
 	}
 
@@ -395,7 +396,7 @@ bool NavMesh::CreateNavMesh()
 
 		if (!dtCreateNavMeshData(&params, &navData, &navDataSize))
 		{
-			m_ctx->log(RC_LOG_ERROR, "Could not build Detour navmesh.");
+			APP_LOG_ERROR("Could not build Detour navmesh.");
 			return false;
 		}
 
@@ -403,7 +404,7 @@ bool NavMesh::CreateNavMesh()
 		if (!nav_mesh)
 		{
 			dtFree(navData);
-			m_ctx->log(RC_LOG_ERROR, "Could not create Detour navmesh");
+			APP_LOG_ERROR("Could not create Detour navmesh");
 			return false;
 		}
 
@@ -413,14 +414,14 @@ bool NavMesh::CreateNavMesh()
 		if (dtStatusFailed(status))
 		{
 			dtFree(navData);
-			m_ctx->log(RC_LOG_ERROR, "Could not init Detour navmesh");
+			APP_LOG_ERROR("Could not init Detour navmesh");
 			return false;
 		}
 
 		status = nav_query->init(nav_mesh, 2048);
 		if (dtStatusFailed(status))
 		{
-			m_ctx->log(RC_LOG_ERROR, "Could not init Detour navmesh query");
+			APP_LOG_ERROR("Could not init Detour navmesh query");
 			return false;
 		}
 	}
@@ -428,8 +429,6 @@ bool NavMesh::CreateNavMesh()
 	
 	time_to_build = navmesh_timer.Stop();
 
-	//RenderNavMesh(verts, nverts, tris, ntris, normals, texScale);
-	//my_debug_draw = new LOInterfaces();
 	is_mesh_computed = true;
 	duDebugDrawNavMeshWithClosedList(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);
 	m_dd.GenerateBuffers();
