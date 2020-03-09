@@ -202,7 +202,31 @@ void PanelComponent::DropTarget(ComponentMaterial *material, Texture::TextureTyp
 		ImGui::EndDragDropTarget();
 	}
 }
+ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go, const std::string& script_name, ComponentScript*& script_to_find)
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_GameObject"))
+		{
+			assert(payload->DataSize == sizeof(GameObject*));
+			GameObject *incoming_game_object = *(GameObject**)payload->Data;
+			for (unsigned int i = 0; i < incoming_game_object->components.size(); ++i)
+			{
 
+				if (incoming_game_object->components[i]->type == Component::ComponentType::SCRIPT)
+				{
+					ComponentScript *script = (ComponentScript *)incoming_game_object->components[i];
+					if (script->name == script_name)
+					{
+						go = incoming_game_object;
+						script_to_find = script;
+					}
+				}
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
 std::string PanelComponent::GetTypeName(Texture::TextureType type)
 {
 	switch (type)
