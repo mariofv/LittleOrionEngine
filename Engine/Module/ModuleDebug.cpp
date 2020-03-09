@@ -2,15 +2,11 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleModelLoader.h"
-#include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
-#include "SpacePartition/OLQuadTree.h"
 
 #include <random>
 #include <ctime>
 #include <GL/glew.h>
-#include <imgui.h>
-#include <FontAwesome5/IconsFontAwesome5.h>
 
 // Called before render is available
 bool ModuleDebug::Init()
@@ -43,64 +39,4 @@ void ModuleDebug::CreateHousesRandom() const
 		houses->AddChild(loaded_house);
 	}
 	houses->SetStatic(true);
-}
-
-
-void ModuleDebug::ShowDebugWindow()
-{
-	if (ImGui::Begin(ICON_FA_BUG " Debug"))
-	{
-		ImGui::Checkbox("Grid", &show_grid);
-		ImGui::Checkbox("Bounding boxes", &show_bounding_boxes);
-		ImGui::Checkbox("Global bounding boxes", &show_global_bounding_boxes);
-		ImGui::Checkbox("Camera Frustum", &show_camera_frustum);
-		ImGui::Checkbox("QuadTree", &show_quadtree);
-		ImGui::Checkbox("OctTree", &show_octtree);
-		ImGui::Separator();
-
-		ImGui::Checkbox("Scene window culling", &culling_scene_mode);
-		int culling_mode_int = static_cast<int>(culling_mode);
-		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling\0OctTree Culling"))
-		{
-			switch (culling_mode_int)
-			{
-			case 0:
-				culling_mode = CullingMode::NONE;
-				break;
-			case 1:
-				culling_mode = CullingMode::FRUSTUM_CULLING;
-				break;
-			case 2:
-				culling_mode = CullingMode::QUADTREE_CULLING;
-				break;
-			case 3:
-				culling_mode = CullingMode::OCTTREE_CULLING;
-				break;
-			}
-		}
-
-		ImGui::DragFloat("Rendering time ",&rendering_time,NULL,NULL);
-
-		if (ImGui::SliderInt("Quadtree Depth ", &App->renderer->ol_quadtree.max_depth, 1, 10)) {
-			App->renderer->GenerateQuadTree();
-			App->renderer->GenerateOctTree();
-		}
-		if (ImGui::SliderInt("Quadtree bucket size ", &App->renderer->ol_quadtree.bucket_size, 1, 10)) {
-			App->renderer->GenerateQuadTree();
-			App->renderer->GenerateOctTree();
-		}
-
-		ImGui::Spacing();
-		ImGui::Separator();
-		ImGui::Spacing();
-
-		ImGui::SliderInt("Number of houses", &num_houses, 0, 1000);
-		ImGui::SliderInt("Dispersion X", &max_dispersion_x, 0, 1000);
-		ImGui::SliderInt("Dispersion Z", &max_dispersion_z, 0, 1000);
-		if (ImGui::Button("Create houses scene"))
-		{
-			CreateHousesRandom();
-		}
-	}
-	ImGui::End();
 }

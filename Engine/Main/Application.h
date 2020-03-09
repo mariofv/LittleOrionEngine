@@ -25,6 +25,8 @@ class ModuleDebugDraw;
 class ModuleUI;
 class ModuleLight;
 class ModuleResourceManager;
+class ModuleScriptManager;
+class ModuleActions;
 
 class EngineLog;
 
@@ -58,6 +60,8 @@ public:
 	ModuleUI* ui = nullptr;
 	ModuleLight* lights = nullptr;
 	ModuleResourceManager* resources = nullptr;
+	ModuleScriptManager* scripts = nullptr;
+	ModuleActions* actions = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
 

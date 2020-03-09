@@ -7,6 +7,7 @@
 
 class IDebugDrawOpenGLImplementation;
 class ComponentCamera;
+class Billboard;
 
 class ModuleDebugDraw : public Module
 {
@@ -17,10 +18,28 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void Render(const ComponentCamera& camera);
+	void Render();
+	void RenderDebugDraws(const ComponentCamera& camera);
+
+private:
+	void RenderGrid() const;
+	void RenderOutline() const;
+	
+	void RenderCameraFrustum() const;
+	void RenderLightGizmo() const;
+
+	void RenderBoundingBoxes() const;
+	void RenderGlobalBoundingBoxes() const;
+	void RenderBillboards() const;
 
 private:
 	static IDebugDrawOpenGLImplementation* dd_interface_implementation;
+
+	const float MIN_MAGNITUDE_ORDER_GRID = 0;
+	const float MAX_MAGNITUDE_ORDER_GRID = 20;
+
+	Billboard* camera_billboard = nullptr;
+	Billboard* light_billboard = nullptr;
 
 };
 

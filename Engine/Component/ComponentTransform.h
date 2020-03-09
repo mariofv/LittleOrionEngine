@@ -1,12 +1,12 @@
 #ifndef _COMPONENTTRANSFORM_H_
 #define _COMPONENTTRANSFORM_H_
 
+#define ENGINE_EXPORTS
 #include "Component.h"
+#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
-
-class ComponentsUI;
 
 class ComponentTransform : public Component
 {
@@ -21,31 +21,31 @@ public:
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 	
-	float3 ComponentTransform::GetGlobalTranslation() const;
-	float3 GetTranslation() const;
-	void SetTranslation(const float3 &translation);
-	void Translate(const float3 &translation);
+	ENGINE_API float3 GetGlobalTranslation() const;
+	ENGINE_API float3 GetTranslation() const;
+	ENGINE_API void SetTranslation(const float3& translation);
+	ENGINE_API void Translate(const float3& translation);
 
 	Quat GetRotation() const;
-	void SetRotation(const float3x3 &rotation);
-	void Rotate(const Quat &rotation);
-	void Rotate(const float3x3 &rotation);
+	ENGINE_API float3 GetRotationRadiants() const;
+	ENGINE_API void SetRotation(const float3x3& rotation);
+	ENGINE_API void SetRotation(const float3& rotation);
+	void Rotate(const Quat& rotation);
+	void Rotate(const float3x3& rotation);
 
-	float3 ComponentTransform::GetScale() const;
-	void SetScale(const float3 &scale);
+	float3 GetScale() const;
+	void SetScale(const float3& scale);
 
 	float3 GetUpVector() const;
 	float3 GetFrontVector() const;
 	float3 GetRightVector() const;
 
-	void ChangeLocalSpace(const float4x4 &new_local_space);
+	void ChangeLocalSpace(const float4x4& new_local_space);
 
 	void GenerateGlobalModelMatrix();
 	float4x4 GetGlobalModelMatrix() const;
-	void SetGlobalModelMatrix(const float4x4 &new_global_matrix);
+	void SetGlobalModelMatrix(const float4x4& new_global_matrix);
   
-	void ShowComponentWindow() override;
-
 private:
 	void OnTransformChange();
 
@@ -58,8 +58,8 @@ private:
 
 	float4x4 model_matrix = float4x4::identity;
 	float4x4 global_model_matrix = float4x4::identity;
-	
-	friend class ComponentsUI;
+
+	friend class PanelComponent;
 };
 
 #endif //_COMPONENTTRANSFORM_H_

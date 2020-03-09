@@ -1,24 +1,25 @@
 #include "GameObject.h"
 #include "Application.h"
 #include "Helper/Config.h"
-#include "UI/Hierarchy.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
+#include "Module/ModuleScriptManager.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
-#include "Module/ModuleLight.h"
 #include "ResourceManagement/Resources/Texture.h"
+#include "UI/Panel/PanelHierarchy.h"
+
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentScript.h"
 
-#include "imgui.h"
-#include "imgui_stdlib.h"
 #include "Brofiler/Brofiler.h"
-#include <FontAwesome5/IconsFontAwesome5.h>
 #include <pcg_basic.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>
@@ -44,6 +45,8 @@ GameObject::GameObject(const std::string name) :
 void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 {
 	children_to_remove.push_back(this);
+	if(!is_static)
+		App->renderer->RemoveAABBTree(this);
 	if (parent != nullptr)
 	{
 		parent->RemoveChild(this);
@@ -52,6 +55,7 @@ void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 	for (int i = (components.size() - 1); i >= 0; --i)
 	{
 		components[i]->Delete();
+		components[i] = nullptr;
 	}
 	for (int i = (children.size() - 1); i >= 0; --i)
 	{
@@ -64,6 +68,21 @@ bool GameObject::IsEnabled() const
 	return active;
 }
 
+void GameObject::SetEnabled(bool able)
+{
+	active = able;
+	
+	for(auto component : components)
+	{
+		(able) ? component->Enable() : component->Disable();
+	}
+
+	for(auto child : children)
+	{
+		child->SetEnabled(able);
+	}
+}
+
 void GameObject::SetStatic(bool is_static)
 {
 	SetHierarchyStatic(is_static);
@@ -74,6 +93,10 @@ void GameObject::SetStatic(bool is_static)
 void GameObject::SetHierarchyStatic(bool is_static)
 {
 	this->is_static = is_static;
+
+	//AABBTree
+	(is_static) ? App->renderer->RemoveAABBTree(this) : App->renderer->InsertAABBTree(this);
+	
 	for (auto & child : children)
 	{
 		child->SetStatic(is_static);
@@ -94,13 +117,17 @@ bool GameObject::IsVisible(const ComponentCamera & camera) const
 	}
 	return true;
 }
-void GameObject::Update()
+ENGINE_API void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
 
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
-		components[i]->Update();
+		if (components[i]->type != Component::ComponentType::SCRIPT) 
+		{
+			components[i]->Update();
+		}
+
 	}
 }
 
@@ -205,7 +232,7 @@ void GameObject::RemoveChild(GameObject *child)
 }
 
 
-Component* GameObject::CreateComponent(const Component::ComponentType type)
+ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type)
 {
 	Component *created_component;
 	switch (type)
@@ -224,6 +251,9 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 
 	case Component::ComponentType::LIGHT:
 		created_component = App->lights->CreateComponentLight();
+		break;
+	case Component::ComponentType::SCRIPT:
+		created_component = App->scripts->CreateComponentScript();
 		break;
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
@@ -245,7 +275,7 @@ void GameObject::RemoveComponent(Component * component_to_remove)
 	}
 }
 
-Component* GameObject::GetComponent(const Component::ComponentType type) const
+ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType type) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
@@ -302,7 +332,7 @@ void GameObject::UpdateHierarchyBranch()
 {
 	if (parent->hierarchy_branch == 0) // PARENT IS ROOT GAMEOBJECT
 	{
-		hierarchy_branch = App->scene->hierarchy.GetNextBranch();
+		hierarchy_branch = App->editor->hierarchy->GetNextBranch();
 	}
 	else
 	{
@@ -327,45 +357,12 @@ void GameObject::RenderMaterialTexture(unsigned int shader_program) const
 	}
 }
 
-void GameObject::ShowPropertiesWindow()
+int GameObject::GetHierarchyDepth() const
 {
-	ImGui::Checkbox("", &active);
+	return hierarchy_depth;
+}
 
-	ImGui::SameLine();
-	ImGui::Text(ICON_FA_CUBE);
-
-	ImGui::SameLine();
-	ImGui::InputText("###GameObject name Input", &name);
-
-	ImGui::SameLine();
-	if (ImGui::Checkbox("Static", &is_static))
-	{
-		SetStatic(is_static);
-	}
-
-	ImGui::Spacing();
-	ImGui::Separator();
-	ImGui::Spacing();
-
-	transform.ShowComponentWindow();
-
-	ImGui::Spacing();
-	ImGui::Separator();
-	ImGui::Spacing();
-
-	aabb.ShowComponentWindow();
-
-
-	for (unsigned int i = 0; i < components.size(); ++i)
-	{
-		if (i != 0)
-		{
-			ImGui::Spacing();
-			ImGui::Separator();
-		}
-		ImGui::Spacing();
-		ImGui::PushID(i);
-		components[i]->ShowComponentWindow();
-		ImGui::PopID();
-	}
+void GameObject::SetHierarchyDepth(int value)
+{
+	hierarchy_depth = value;
 }

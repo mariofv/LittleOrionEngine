@@ -3,11 +3,14 @@
 
 #include "Component.h"
 #include "Component/ComponentAABB.h"
+#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "UI/Panel/PanelScene.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
 
-class ComponentsUI;
+class EditorActionModifyCamera;
+
 class ComponentCamera : public Component
 {
 public:
@@ -85,12 +88,14 @@ public:
 
 	void GetRay(const float2& normalized_position, LineSegment &return_value) const;
 
-	void ShowComponentWindow() override;
+	AABB GetMinimalEnclosingAABB() const;
 
 private:
-	void GenerateFrameBuffers(float width,float height);
+	void GenerateFrameBuffers(float width, float height);
 	void GenerateMatrices();
 	void InitCamera();
+	void CreateFramebuffer(float width, float height);
+	void CreateMssaFramebuffer(float width, float height);
 
 public:
 	const float SPEED_UP_FACTOR = 2.f;
@@ -109,11 +114,15 @@ public:
 	float4x4 proj;
 	float4x4 view;
 
+	bool toggle_msaa = false;
+
 private:
 	Frustum camera_frustum;
 
-	GLuint fbo = 0;
 	GLuint rbo = 0;
+	GLuint fbo = 0;
+	GLuint msfbo = 0;
+	GLuint msfb_color = 0;
 	GLuint last_recorded_frame_texture = 0;
 
 	float last_height = 0;
@@ -133,7 +142,11 @@ private:
 	float3 goal_focus_position = float3::zero;
 
 	ClearMode camera_clear_mode = ClearMode::COLOR;
-	friend class ComponentsUI;
+
+	friend class EditorActionModifyCamera;
+	friend class ModuleDebugDraw;
+	friend class PanelComponent;
+	friend class PanelScene;
 };
 
 #endif //_COMPONENTCAMERA_H_

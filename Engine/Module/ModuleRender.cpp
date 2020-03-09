@@ -20,9 +20,6 @@
 #include <SDL/SDL.h>
 #include "MathGeoLib.h"
 #include <assimp/scene.h>
-#include <imgui.h>
-#include <ImGuizmo.h>
-#include <FontAwesome5/IconsFontAwesome5.h>
 #include <algorithm>
 #include "Brofiler/Brofiler.h"
 
@@ -145,7 +142,7 @@ bool ModuleRender::CleanUp()
 void ModuleRender::Render() const
 {
 	BROFILER_CATEGORY("Global Render",Profiler::Color::Aqua);
-	App->ui->Render();
+	App->editor->Render();
 	BROFILER_CATEGORY("Swap Window (VSYNC)", Profiler::Color::Aquamarine);
 	SDL_GL_SwapWindow(App->window->window);
 	App->time->EndFrame();
@@ -280,6 +277,57 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 		}
 		break;
 
+	case ModuleDebug::CullingMode::AABBTREE_CULLING:
+		if (camera != nullptr)
+		{
+			// First we get all static objects inside frustum
+			std::copy_if(
+				meshes.begin(),
+				meshes.end(),
+				std::back_inserter(meshes_to_render),
+				[camera](auto mesh)
+			{
+				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && mesh->owner->IsStatic();
+			}
+			);
+
+			// Then we add all dynamic objects culled using the aabbtree
+			std::vector<GameObject*> rendered_objects;
+			ol_abbtree->GetIntersection(rendered_objects, camera);
+
+			for (auto &object : rendered_objects)
+			{
+				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				meshes_to_render.push_back(object_mesh);
+			}
+		}
+		break;
+	case ModuleDebug::CullingMode::COMBINED_CULLING:
+		if(camera != nullptr)
+		{
+			// We add all static objects culled using the quadtree
+			std::vector<GameObject*> rendered_static_objects;
+			ol_quadtree.CollectIntersect(rendered_static_objects, *camera);
+
+			for (auto &object : rendered_static_objects)
+			{
+				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				meshes_to_render.push_back(object_mesh);
+			}
+
+			// Then we add all dynamic objects culled using the aabbtree
+			std::vector<GameObject*> rendered_dynamic_objects;
+			ol_abbtree->GetIntersection(rendered_dynamic_objects, camera);
+
+			for (auto &object : rendered_dynamic_objects)
+			{
+				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				meshes_to_render.push_back(object_mesh);
+			}
+
+		}
+		break;
+
 	default:
 		break;
 	}
@@ -349,10 +397,36 @@ void ModuleRender::SetMinMaxing(bool gl_minmax)
 	gl_minmax ? glEnable(GL_MINMAX) : glDisable(GL_MINMAX);
 }
 
-void ModuleRender::SetWireframing(bool gl_wireframe)
+void ModuleRender::SetDrawMode(DrawMode draw_mode)
 {
-	this->gl_wireframe = gl_wireframe;
-	gl_wireframe ? glPolygonMode(GL_FRONT_AND_BACK, GL_LINE) : glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+	this->draw_mode = draw_mode;
+	switch (draw_mode)
+	{
+	case ModuleRender::DrawMode::SHADED:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_FILL);
+		break;
+	case ModuleRender::DrawMode::WIREFRAME:
+		glPolygonMode(GL_FRONT_AND_BACK, GL_LINE);
+		break;
+	default:
+		break;
+	}
+}
+
+std::string ModuleRender::GetDrawMode() const
+{
+	switch (draw_mode)
+	{
+	case ModuleRender::DrawMode::SHADED:
+		return "Shaded";
+		break;
+	case ModuleRender::DrawMode::WIREFRAME:
+		return "Wireframe";
+		break;
+	default:
+		return "Unknown";
+		break;
+	}
 }
 
 ComponentMesh* ModuleRender::CreateComponentMesh()
@@ -369,101 +443,6 @@ void ModuleRender::RemoveComponentMesh(ComponentMesh* mesh_to_remove)
 	{
 		delete *it;
 		meshes.erase(it);
-	}
-}
-void ModuleRender::ShowRenderOptions()
-{
-	if (ImGui::CollapsingHeader(ICON_FA_CLONE " Renderer"))
-	{
-		if (ImGui::Checkbox("VSync", &vsync))
-		{
-			SetVSync(vsync);
-		}
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Wireframe", &gl_wireframe))
-		{
-			SetWireframing(gl_wireframe);
-		}
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Depth test", &gl_depth_test))
-		{
-			SetDepthTest(gl_depth_test);
-		}
-		ImGui::Separator();
-		if (ImGui::Checkbox("Face culling", &gl_cull_face))
-		{
-			SetFaceCulling(gl_cull_face);
-		}
-		if (ImGui::Combo("Culled faces", &culled_faces, "Back\0Front\0Front and back\0"))
-		{
-			switch (culled_faces)
-			{
-			case 0:
-				SetCulledFaces(GL_BACK);
-				break;
-			case 1:
-				SetCulledFaces(GL_FRONT);
-				break;
-			case 2:
-				SetCulledFaces(GL_FRONT_AND_BACK);
-				break;
-			}
-		}
-		if (ImGui::Combo("Front faces", &front_faces, "Counterclockwise\0Clockwise\0"))
-		{
-			switch (front_faces)
-			{
-			case 0:
-				SetFrontFaces(GL_CCW);
-				break;
-			case 1:
-				SetFrontFaces(GL_CW);
-				break;
-			}
-		}
-		if (ImGui::Combo("Filling mode", &filling_mode, "Fill\0Lines\0Vertices"))
-		{
-			if (filling_mode == 0) {
-				glPolygonMode(GL_FRONT, GL_FILL);
-			}
-			if (filling_mode == 1) {
-				glPolygonMode(GL_FRONT, GL_LINE);
-			}
-			if (filling_mode == 2) {
-				glPolygonMode(GL_FRONT, GL_POINT);
-			}
-		}
-		ImGui::Separator();
-		HelpMarker("This settings have no visual impact, WIP.");
-		ImGui::SameLine();
-		if (ImGui::TreeNode("Non-functional settings"))
-		{
-			if (ImGui::Checkbox("Alpha test", &gl_alpha_test))
-			{
-				SetAlphaTest(gl_alpha_test);
-			}
-			if (ImGui::Checkbox("Scissor test", &gl_scissor_test))
-			{
-				SetScissorTest(gl_scissor_test);
-			}
-			if (ImGui::Checkbox("Stencil test", &gl_stencil_test))
-			{
-				SetStencilTest(gl_stencil_test);
-			}
-			if (ImGui::Checkbox("Blending", &gl_blend))
-			{
-				SetBlending(gl_blend);
-			}
-			if (ImGui::Checkbox("Dithering", &gl_dither))
-			{
-				SetDithering(gl_dither);
-			}
-			if (ImGui::Checkbox("Min Maxing", &gl_minmax))
-			{
-				SetMinMaxing(gl_minmax);
-			}
-			ImGui::TreePop();
-		}
 	}
 }
 
@@ -516,3 +495,73 @@ void ModuleRender::GenerateOctTree()
 		ol_octtree.Insert(*mesh->owner);
 	}
 }
+void ModuleRender::InsertAABBTree(GameObject * game_object)
+{
+	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
+	if(object_mesh != nullptr)
+		ol_abbtree->Insert(game_object);
+}
+
+void ModuleRender::RemoveAABBTree(GameObject * game_object)
+{
+	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
+	if (object_mesh != nullptr)
+		ol_abbtree->Remove(game_object);
+}
+
+void ModuleRender::UpdateAABBTree(GameObject* game_object)
+{
+	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
+	if (object_mesh != nullptr)
+		ol_abbtree->UpdateObject(game_object);
+}
+
+void ModuleRender::DeleteAABBTree()
+{
+	delete ol_abbtree;
+}
+
+void ModuleRender::CreateAABBTree()
+{
+	ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
+}
+
+void ModuleRender::DrawAABBTree() const
+{
+	ol_abbtree->Draw();
+}
+
+GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
+{
+	GetCullingMeshes(App->cameras->scene_camera);
+	std::vector<ComponentMesh*> intersected_meshes;
+	for (auto & mesh : meshes_to_render)
+	{
+		if (mesh->owner->aabb.bounding_box.Intersects(ray))
+		{
+			intersected_meshes.push_back(mesh);
+		}
+	}
+
+	std::vector<GameObject*> intersected;
+	GameObject* selected = nullptr;
+	float min_distance = INFINITY;
+	for (auto & mesh : intersected_meshes)
+	{
+		LineSegment transformed_ray = ray;
+		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
+		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
+		for (auto & triangle : triangles)
+		{
+			float distance;
+			bool intersected = triangle.Intersects(transformed_ray, &distance);
+			if (intersected && distance < min_distance)
+			{
+				selected = mesh->owner;
+				min_distance = distance;
+			}
+		}
+	}
+	return selected;
+}
+

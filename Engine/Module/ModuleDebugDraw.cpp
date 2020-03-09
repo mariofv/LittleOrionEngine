@@ -1,7 +1,17 @@
 #include "ModuleDebugDraw.h"
-#include "Main/Application.h"
-#include "ModuleProgram.h"
+
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentLight.h"
+#include "Component/ComponentMesh.h"
+#include "Main/Application.h"
+#include "ModuleCamera.h"
+#include "ModuleEditor.h"
+#include "ModuleDebug.h"
+#include "ModuleProgram.h"
+#include "ModuleRender.h"
+#include "ModuleScene.h"
+#include "SpacePartition/OLQuadTree.h"
+#include "UI/Billboard.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
 #include "UI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
@@ -360,22 +370,227 @@ bool ModuleDebugDraw::Init()
 
 	dd_interface_implementation = new IDebugDrawOpenGLImplementation();
     dd::initialize(dd_interface_implementation);
+
+	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 1.72f, 2.5f);	
+	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 2.5f, 2.5f);
     
     APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
 
 	return true;
 }
 
-void ModuleDebugDraw::Render(const ComponentCamera& camera)
+void ModuleDebugDraw::Render()
 {
-    math::float4x4 view = camera.GetViewMatrix();
-    math::float4x4 proj = camera.GetProjectionMatrix();
+	if (App->debug->show_grid)
+	{
+		RenderGrid();
+	}
 
-    dd_interface_implementation->width = static_cast<unsigned int>(camera.GetWidth());
-    dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeigt());
-    dd_interface_implementation->mvpMatrix = proj * view;
+	if (App->debug->show_quadtree)
+	{
+		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree)
+		{
+			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
+			float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
+			dd::aabb(quadtree_node_min, quadtree_node_max, float3::one);
+		}
+	}
 
-    dd::flush();
+	if(App->debug->show_aabbtree)
+	{
+		App->renderer->DrawAABBTree();
+	}
+
+	if (App->editor->selected_game_object != nullptr)
+	{
+		RenderCameraFrustum();
+    RenderLightGizmo();
+		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
+	}
+
+	if (App->debug->show_bounding_boxes)
+	{
+		RenderBoundingBoxes();
+	}
+
+	if (App->debug->show_global_bounding_boxes)
+	{
+		RenderGlobalBoundingBoxes();
+	}
+
+	RenderBillboards();
+
+	RenderDebugDraws(*App->cameras->scene_camera);
+}
+
+void ModuleDebugDraw::RenderGrid() const
+{
+	float camera_distance_to_grid = App->cameras->scene_camera->owner->transform.GetTranslation().y;
+	float camera_distance_to_grid_abs = abs(camera_distance_to_grid);
+	float camera_horizontal_fov = App->cameras->scene_camera->camera_frustum.horizontalFov;
+
+	int grid_frustum_projection_half_size = FloorInt(tanf(camera_horizontal_fov / 2) * camera_distance_to_grid_abs);
+
+	int current_magnitude_order = MIN_MAGNITUDE_ORDER_GRID;
+	while (current_magnitude_order <= MAX_MAGNITUDE_ORDER_GRID && pow(10, current_magnitude_order) < grid_frustum_projection_half_size)
+	{
+		++current_magnitude_order;
+	}
+	int previous_magnitude_order = max(MIN_MAGNITUDE_ORDER_GRID, current_magnitude_order - 1);
+
+	int current_magnitude = pow(10, current_magnitude_order);
+	int previous_magnitude = pow(10, previous_magnitude_order);
+
+	if (previous_magnitude_order == current_magnitude_order || previous_magnitude_order == MAX_MAGNITUDE_ORDER_GRID) // Camera is too close or too far away from grid
+	{
+		dd::xzSquareGrid(-500.0f * previous_magnitude, 500.0f * previous_magnitude, 0.0f, previous_magnitude, math::float3(0.65f));
+	}
+	else
+	{
+		float progress_to_next_magnitude_order = (float)(grid_frustum_projection_half_size - previous_magnitude) / (current_magnitude - previous_magnitude);
+		float previous_grid_height = camera_distance_to_grid > 0 ? -0.01f : 0.01f; // Used to avoid overlapping of grids
+		// TODO: The color of the dissapearing grid fades to black, when it should fade to transparent
+		dd::xzSquareGrid(-500.0f * previous_magnitude, 500.0f * previous_magnitude, previous_grid_height, previous_magnitude, math::float3(0.65f * (1 - progress_to_next_magnitude_order)));
+
+		dd::xzSquareGrid(-500.0f * current_magnitude, 500.0f * current_magnitude, 0.0f, current_magnitude, math::float3(0.65f));
+	}
+}
+
+void ModuleDebugDraw::RenderCameraFrustum() const
+{
+	if (!App->debug->show_camera_frustum)
+	{
+		return;
+	}
+
+	Component * selected_camera_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::CAMERA);
+	if (selected_camera_component != nullptr) {
+		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
+
+		dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
+	}	
+}
+
+void ModuleDebugDraw::RenderLightGizmo() const	
+{	
+	Component* selected_light_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::LIGHT);	
+	if (selected_light_component != nullptr)
+  {	
+		ComponentLight* selected_light = static_cast<ComponentLight*>(selected_light_component);	
+		ComponentTransform* selected_light_transform = &selected_light->owner->transform;	
+		float gizmo_radius = 2.5f;	
+		switch (selected_light->light_type)	
+		{	
+		case ComponentLight::LightType::DIRECTIONAL_LIGHT:	
+			dd::directional_light(selected_light_transform->GetGlobalTranslation(), selected_light_transform->GetRotation().ToFloat4x4(), float3(1.f, 1.f, 0.f), 5.f, gizmo_radius);	
+			break;	
+		case ComponentLight::LightType::SPOT_LIGHT:	
+			dd::spot_light(	
+				selected_light_transform->GetGlobalTranslation(), 	
+				selected_light_transform->GetRotation().ToFloat4x4(),	
+				float3(1.f, 1.f, 0.f),	
+				selected_light->spot_light_parameters.range,	
+				tan(DegToRad(selected_light->spot_light_parameters.spot_angle/2.f)) * selected_light->spot_light_parameters.range	
+			); 	
+			break;	
+		case ComponentLight::LightType::POINT_LIGHT:	
+			dd::point_light(selected_light_transform->GetGlobalTranslation(), float3(1.f, 1.f, 0.f), selected_light->point_light_parameters.range);	
+			break;	
+		default:	
+			break;	
+		}	
+	}	
+}	
+
+
+void ModuleDebugDraw::RenderOutline() const
+{
+	GameObject* selected_game_object = App->editor->selected_game_object;
+	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH);
+
+	if (selected_object_mesh_component != nullptr && selected_object_mesh_component->IsEnabled())
+	{
+		ComponentMesh* selected_object_mesh = static_cast<ComponentMesh*>(selected_object_mesh_component);
+		glEnable(GL_STENCIL_TEST);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
+		glStencilMask(0xFF);
+
+		selected_object_mesh->Render();
+
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+
+		GLuint outline_shader_program = App->program->GetShaderProgramId("Outline");
+		glUseProgram(outline_shader_program);
+
+		ComponentTransform object_transform_copy = selected_game_object->transform;
+		float3 object_scale = object_transform_copy.GetScale();
+		object_transform_copy.SetScale(object_scale*1.01f);
+		object_transform_copy.GenerateGlobalModelMatrix();
+
+		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), object_transform_copy.GetGlobalModelMatrix().Transposed().ptr());
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		selected_object_mesh->RenderModel();
+
+		glStencilMask(0xFF);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_STENCIL_TEST);
+
+		glUseProgram(0);
+
+	}
+}
+
+void ModuleDebugDraw::RenderBoundingBoxes() const
+{
+	for (auto& mesh : App->renderer->meshes_to_render)
+	{
+		GameObject* mesh_game_object = mesh->owner;
+		if (!mesh_game_object->aabb.IsEmpty())
+		{
+			dd::aabb(mesh_game_object->aabb.bounding_box.minPoint, mesh_game_object->aabb.bounding_box.maxPoint, float3::one);
+		}
+	}
+}
+
+void ModuleDebugDraw::RenderGlobalBoundingBoxes() const
+{
+	for (auto& object : App->scene->game_objects_ownership)
+	{
+		dd::aabb(object->aabb.global_bounding_box.minPoint, object->aabb.global_bounding_box.maxPoint, float3::one);
+	}
+}
+
+void ModuleDebugDraw::RenderBillboards() const
+{
+	for (auto& object : App->scene->game_objects_ownership)
+	{
+		Component * light_component = object->GetComponent(Component::ComponentType::LIGHT);
+		if (light_component != nullptr) {
+			light_billboard->Render(object->transform.GetGlobalTranslation());
+		}
+
+		Component * camera_component = object->GetComponent(Component::ComponentType::CAMERA);
+		if (camera_component != nullptr) {
+			camera_billboard->Render(object->transform.GetGlobalTranslation());
+		}
+	}
+}
+
+void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
+{
+	math::float4x4 view = camera.GetViewMatrix();
+	math::float4x4 proj = camera.GetProjectionMatrix();
+
+	dd_interface_implementation->width = static_cast<unsigned int>(camera.GetWidth());
+	dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeigt());
+	dd_interface_implementation->mvpMatrix = proj * view;
+
+	dd::flush();
 }
 
 // Called before quitting
@@ -387,6 +602,9 @@ bool ModuleDebugDraw::CleanUp()
 
     delete dd_interface_implementation;
     dd_interface_implementation = 0;
+
+	delete light_billboard;
+	delete camera_billboard;
 
 	return true;
 }

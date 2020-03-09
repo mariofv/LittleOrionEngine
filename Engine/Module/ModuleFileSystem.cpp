@@ -29,6 +29,11 @@ bool ModuleFileSystem::Init() {
 		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
 		return false;
 	}
+	if (PHYSFS_mount("Resources", "Resources", 1) == 0)
+	{
+		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
+		return false;
+	}
 	RefreshFilesHierarchy();
 	return true;
 }
@@ -44,9 +49,14 @@ ModuleFileSystem::~ModuleFileSystem()
 }
 
 char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
-{
+{ 
 	SDL_RWops *rw = SDL_RWFromFile(file_path, "rb");
-	if (rw == NULL) return NULL;
+	if (rw == NULL)
+	{
+		size = 0;
+		return NULL;
+
+	}
 
 	size_t res_size = static_cast<size_t>(SDL_RWsize(rw));
 	char* res = (char*)malloc(res_size + 1);
@@ -65,13 +75,16 @@ char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
 	}
 
 	res[nb_read_total] = '\0';
-	if (size != NULL)
-		size = nb_read_total;
+	size = nb_read_total;
 	return res;
 
 }
-unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, unsigned int size, bool append) const
+bool ModuleFileSystem::Save(const char* file_path, const void* buffer, unsigned int size, bool append) const
 {
+	if (size == 0)
+	{
+		return false;
+	}
 	SDL_RWops* file;
 	if (append) 
 	{
@@ -92,10 +105,10 @@ unsigned int ModuleFileSystem::Save(const char* file_path, const void* buffer, u
 	else
 	{
 		APP_LOG_ERROR("Error: Unable to open file! SDL Error: %s\n", SDL_GetError());
-		return 1;
+		return false;
 	}
 	SDL_RWclose(file);
-	return 0;
+	return true;
 }
 bool ModuleFileSystem::Remove(const File * file)
 {
@@ -133,10 +146,6 @@ bool ModuleFileSystem::Copy(const char* source, const char* destination)
 	char * buffer = Load(source,file_size);
 	bool success = Save(destination, buffer, file_size,false);
 	free(buffer);
-	if (success)
-	{
-		RefreshFilesHierarchy();
-	}
 	return success;
 }
 
@@ -157,6 +166,7 @@ FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileT
 		|| file_extension == "dds"
 		|| file_extension == "tga"
 		|| file_extension == "jpg"
+		|| file_extension == "jfif"
 		)
 	{
 		return FileType::TEXTURE;

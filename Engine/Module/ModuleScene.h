@@ -1,10 +1,9 @@
 #ifndef _MODULESCENE_H_
 #define _MODULESCENE_H_
-
+#define ENGINE_EXPORTS
 #include "Module.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
-#include "UI/Hierarchy.h"
 
 #include <ImGuizmo.h>
 
@@ -20,25 +19,24 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	GameObject* CreateGameObject();
-	GameObject* CreateChildGameObject(GameObject *parent);
+	ENGINE_API GameObject* CreateGameObject();
+	ENGINE_API GameObject* CreateChildGameObject(GameObject *parent);
 	void RemoveGameObject(GameObject * game_object_to_remove);
 
 	GameObject* GetRoot() const;
 	GameObject* GetGameObject(uint64_t UUID) const;
+	Component* GetComponent(uint64_t UUID) const;
 
 	void DeleteCurrentScene();
 	void Save(Config& serialized_scene) const;
 	void Load(const Config& serialized_scene);
 
-public:
-	Hierarchy hierarchy;
-
 private:
 	GameObject *root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
 
-	friend class ModuleEditor;
+	friend class PanelScene;
+	friend class ModuleDebugDraw;
 };
 
 #endif // _MODULSESCENE_H

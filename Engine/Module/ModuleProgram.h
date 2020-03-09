@@ -3,12 +3,14 @@
 
 #include "Module.h"
 #include "Main/Globals.h"
+#include "Module/ModuleLight.h"
 
 #include <GL/glew.h>
 #include <MathGeoLib.h>
 #include <unordered_map>
 
-class ComponentsUI;
+class PanelComponent;
+
 class ModuleProgram : public Module
 {
 public:
@@ -41,13 +43,13 @@ public:
 		/*
 			In order to compute the total Light uniform block size we have to take in account the alignment of each of its elements. 
 			This block has the following elements in this specific order:
-				- float[3]
-				- float[3]
+				- vector<float[3]>[MAX_LIGHTS_RENDERED]
+				- vector<float[3]>[MAX_LIGHTS_RENDERED]
 			So, the total size will be the following:
-				total_size = 16 (float[3] size) + 16 (float[3] size) = 32 bytes = 8 * sizeof(float) 
+				total_size = float[3] size + float[3] size 
+				= 32 bytes = 8 * sizeof(float) 
 		*/
-		const size_t LIGHT_UNIFORMS_SIZE = 8 * sizeof(float); // Size of light intensity, color and position
-
+		const size_t LIGHT_UNIFORMS_SIZE = 8 * sizeof(float); // Size of light color, direction and num directional_lights
 
 		/*
 			Total buffer size depends on the alignment between uniform blocks, so it's size will be computed real time. 
@@ -62,6 +64,7 @@ public:
 	bool CleanUp() override;
 
 	unsigned int GetShaderProgramId(const std::string & program_name) const;
+
 private:
 	bool LoadProgram(std::string name, const char* vertex_shader_file_name, const char* fragment_shader_file_name);
 	void LoadPrograms(const char* file_path);
@@ -71,13 +74,15 @@ private:
 
 	void InitUniformBuffer();
 	void BindUniformBlocks(GLuint shader_program) const;
-	friend ComponentsUI;
 
 public:
 	UniformBuffer uniform_buffer;
+
 private:
 	std::unordered_map<std::string, GLuint> loaded_programs;
 	std::vector<const char *> names;
+
+	friend class PanelComponent;
 };
 
 #endif //_MODULEPROGRAM_H_

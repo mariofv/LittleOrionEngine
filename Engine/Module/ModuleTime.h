@@ -19,12 +19,13 @@ public:
 	void SetMaxFPS(int fps);
 	void SetTimeScale(float time_scale);
 
+	bool isGameRunning();
+
 	void Play();
 	void Pause();
 	void StepFrame();
 
 	void ShowTimeControls();
-	void ShowTimeOptions();
 
 	void EndFrame();
 
@@ -53,6 +54,9 @@ private:
 	int max_fps = 60;
 
 	bool stepping_frame = false;
+
+	friend class PanelConfiguration;
+	friend class PanelToolBar;
 };
 
 #endif

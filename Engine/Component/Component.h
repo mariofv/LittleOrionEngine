@@ -17,7 +17,8 @@ public:
 		MATERIAL,
 		MESH,
 		TRANSFORM,
-		LIGHT
+		LIGHT,
+		SCRIPT
 	};
 
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
@@ -36,8 +37,6 @@ public:
 
 	virtual ComponentType GetType() const { return type; };
 
-	virtual void ShowComponentWindow() = 0;
-
 	static ComponentType GetComponentType(unsigned int component_type_uint)
 	{
 		switch (component_type_uint) 
@@ -54,6 +53,8 @@ public:
 			return ComponentType::TRANSFORM;
 		case 5:
 			return ComponentType::LIGHT;
+		case 6:
+			return ComponentType::SCRIPT;
 		}
 	}
 

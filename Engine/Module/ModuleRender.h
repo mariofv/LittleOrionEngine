@@ -5,9 +5,12 @@
 #include "Main/Globals.h"
 #include "SpacePartition/OLQuadTree.h"
 #include "SpacePartition/OLOctTree.h"
+#include "SpacePartition/OLAABBTree.h"
 #include "Helper/Timer.h"
 
 #include <GL/glew.h>
+
+const unsigned INITIAL_SIZE_AABBTREE = 10;
 
 class ComponentMesh;
 class ComponentCamera;
@@ -19,6 +22,12 @@ struct SDL_Rect;
 class ModuleRender : public Module
 {
 public:
+	enum class DrawMode
+	{
+		SHADED,
+		WIREFRAME
+	};
+
 	ModuleRender() = default;
 	~ModuleRender() = default;
 
@@ -33,8 +42,14 @@ public:
 	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
 	void GenerateQuadTree();
 	void GenerateOctTree();
+	void InsertAABBTree(GameObject* game_object);
+	void RemoveAABBTree(GameObject * game_object);
+	void UpdateAABBTree(GameObject* game_object);
+	void DeleteAABBTree();
+	void CreateAABBTree();
+	void DrawAABBTree() const;
 
-	void ShowRenderOptions();
+	GameObject* GetRaycastIntertectedObject(const LineSegment & ray);
 
 private:
 	void SetVSync(bool vsync);
@@ -48,16 +63,23 @@ private:
 	void SetFrontFaces(GLenum front_faces) const;
 	void SetDithering(bool gl_dither);
 	void SetMinMaxing(bool gl_minmax);
-	void SetWireframing(bool gl_wireframe);
+
+	void SetDrawMode(DrawMode draw_mode);
+	std::string GetDrawMode() const;
 
 	void GetMeshesToRender(const ComponentCamera *camera);
 	void GetCullingMeshes(const ComponentCamera *camera);
+
+public:
+	bool anti_aliasing = false;
 
 private:
 	void* context = nullptr;
 
 	OLQuadTree ol_quadtree;
 	OLOctTree ol_octtree;
+	OLAABBTree* ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
+
 
 	bool vsync = false;
 	bool gl_alpha_test = false;
@@ -71,14 +93,17 @@ private:
 	int filling_mode = 0;
 	bool gl_dither = false;
 	bool gl_minmax = false;
-	bool gl_wireframe = false;
+
+	DrawMode draw_mode = DrawMode::SHADED;
 
 	std::vector<ComponentMesh*> meshes;
 	std::vector<ComponentMesh*> meshes_to_render;
 	Timer * rendering_measure_timer = new Timer();
 
-	friend class ModuleDebug;
-	friend class ModuleEditor;
+	friend class ModuleDebugDraw;
+	friend class PanelConfiguration;
+	friend class PanelDebug;
+	friend class PanelScene;
 };
 
 #endif //_MODULERENDER_H_

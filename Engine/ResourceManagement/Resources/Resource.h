@@ -4,16 +4,12 @@
 #include <pcg_basic.h>
 #include <memory>
 #include <string>
-class Config;
 class Resource
 {
 
 public:
 	Resource(const char * const UID, const std::string & exported_file) : UID(UID), exported_file(exported_file) {};
 	virtual ~Resource() = default;
-		
-	virtual void Save(Config& config) const = 0;
-	virtual void Load(const Config& config) = 0;
 
 public:
 	std::string exported_file;

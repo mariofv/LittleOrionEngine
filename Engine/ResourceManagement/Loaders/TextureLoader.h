@@ -45,9 +45,10 @@ public:
 	~TextureLoader()= default;
 
 	static std::shared_ptr<Texture> Load(const std::string& file_path);
-	static 	unsigned int LoadCubemap(std::vector<std::string> faces_paths);
+	static unsigned int LoadCubemap(std::vector<std::string> faces_paths);
 private:
-	static char * LoadCompressedDDS(const std::string& file_path, DDS::DDS_HEADER & dds_header, size_t & dds_content_size);
+	static std::vector<char> LoadCompressedDDS(const std::string& file_path, DDS::DDS_HEADER & dds_header);
+	static std::vector<char> LoadImageData(const std::string& file_path, int & width, int & height);
 
 };
 #endif
