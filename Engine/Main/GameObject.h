@@ -4,6 +4,7 @@
 #include "Globals.h"
 #include "Component/Component.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentTransform2D.h"
 #include "Component/ComponentAABB.h"
 
 #include <GL/glew.h>
@@ -38,6 +39,9 @@ public:
 	void RemoveComponent(Component * component);
 	Component* GetComponent(const Component::ComponentType type) const;
 
+	ComponentTransform* getTransform();
+	ComponentTransform2D* getTransform2D();
+
 	void MoveUpInHierarchy() const;
 	void MoveDownInHierarchy() const;
 	bool IsAboveInHierarchy(const GameObject &potential_child) const;
@@ -61,10 +65,9 @@ public:
 
 	uint64_t UUID = -1;
 	ComponentAABB aabb;
-	ComponentTransform transform;
-
 
 private:
+	Component* transform;
 	bool active = true;
 	bool is_static = false;
 	int hierarchy_depth = 0;

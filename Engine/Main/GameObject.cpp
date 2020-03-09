@@ -25,18 +25,17 @@
 
 #include <algorithm>
 
-GameObject::GameObject() : aabb(this), transform(this), UUID(pcg32_random())
+GameObject::GameObject() : aabb(this), UUID(pcg32_random())
 {
 }
 
-GameObject::GameObject(unsigned int UUID) : aabb(this), transform(this),  UUID(UUID)
+GameObject::GameObject(unsigned int UUID) : aabb(this),  UUID(UUID)
 {
 }
 
 GameObject::GameObject(const std::string name) :
 	name(name),
 	aabb(this),
-	transform(this),
 	UUID(pcg32_random())
 {
 }
@@ -194,6 +193,13 @@ void GameObject::SetParent(GameObject *new_parent)
 	if (parent != nullptr) 
 	{
 		parent->RemoveChild(this);
+	}
+
+	//Change the transform to 2D if child of ui
+	if (parent->GetComponent(Component::ComponentType::CANVAS) != nullptr || parent->GetComponent(Component::ComponentType::TRANSFORM2D) != nullptr)
+	{
+		RemoveComponent(&transform);
+		transform = *CreateComponent(Component::ComponentType::TRANSFORM2D);
 	}
 	new_parent->AddChild(this);
 }
