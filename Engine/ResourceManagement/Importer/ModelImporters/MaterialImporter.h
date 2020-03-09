@@ -11,7 +11,14 @@ public:
 	MaterialImporter() = default;
 	~MaterialImporter() = default;
 
-	void ImportMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* model_file_path, const char* material_file_path) const;
+	void ImportMaterialFromMesh(
+		const aiScene* scene,
+		size_t mesh_index, 
+		const char* model_file_path, 
+		const char* material_assets_file_path, 
+		const char* material_library_file_path
+	) const;
+
 	Material::MaterialTextureType GetTextureTypeFromAssimpType(aiTextureType type) const;
 };
 

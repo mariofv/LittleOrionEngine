@@ -114,9 +114,10 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 		size_t mesh_index = root_node->mMeshes[i];
 
 
-		std::string material_file = LIBRARY_MATERIAL_FOLDER"/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
-		material_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, material_file.c_str());
-		node.AddString(material_file, "Material");
+		std::string assets_material_file = std::string(file_path) + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
+		std::string library_material_file = LIBRARY_MATERIAL_FOLDER"/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
+		material_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, assets_material_file.c_str(), library_material_file.c_str());
+		node.AddString(library_material_file, "Material");
 
 
 		std::string mesh_file = output_file.file_path + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
