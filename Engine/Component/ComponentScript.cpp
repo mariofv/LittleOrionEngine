@@ -27,7 +27,7 @@ void ComponentScript::LoadName(std::string& script_name)
 
 void ComponentScript::Update()
 {
-	if (script) 
+	if (script && active) 
 	{
 		script->Update();
 	}

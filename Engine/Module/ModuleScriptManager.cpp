@@ -2,6 +2,7 @@
 
 #include "Component/ComponentScript.h"
 #include "Filesystem/File.h"
+#include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Main/Globals.h"
@@ -16,12 +17,13 @@ bool ModuleScriptManager::Init()
 	APP_LOG_SECTION("************ Module Manager Script ************");
 
 	GetCurrentPath();
-	initDLL();
+	InitDLL();
 	LoadScriptList();
 	dll_file = std::make_unique<File>(SCRIPTS_DLL_PATH);
 	init_timestamp_dll = dll_file->modification_timestamp;
 	scripts_list_file = std::make_unique<File>(SCRIPT_LIST_PATH);
 	init_timestamp_script_list = scripts_list_file->modification_timestamp;
+	utils = new Utils();
 
 	return true;
 }
@@ -68,6 +70,14 @@ long ModuleScriptManager::TimeStamp(const char* path)
 	return file_info.modtime;
 }
 
+void ModuleScriptManager::GetCurrentPath()
+{
+	TCHAR NPath[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, NPath);
+	working_directory = NPath;
+	working_directory += "/GamePlaySyste_.dll";
+}
+
 void ModuleScriptManager::InitResourceScript() 
 {
 	if (gameplay_dll != nullptr)
@@ -84,7 +94,7 @@ void ModuleScriptManager::InitResourceScript()
 	}
 }
 
-Script* ModuleScriptManager::CreateResourceScript( const std::string& script_name, GameObject* owner) 
+Script* ModuleScriptManager::CreateResourceScript(const std::string& script_name, GameObject* owner) 
 {
 	if (gameplay_dll != nullptr)
 	{
@@ -95,7 +105,6 @@ Script* ModuleScriptManager::CreateResourceScript( const std::string& script_nam
 			script->AddReferences(owner, App);
 			return script;
 		}
-		return nullptr;
 	}
 	return nullptr;
 }
@@ -159,9 +168,9 @@ void ModuleScriptManager::RemoveScriptPointers()
 	}
 }
 
-void ModuleScriptManager::initDLL()
+void ModuleScriptManager::InitDLL()
 {
-	patchDLL(SCRIPTS_DLL_PATH, working_directory.c_str());
+	PatchDLL(SCRIPTS_DLL_PATH, working_directory.c_str());
 	gameplay_dll = LoadLibrary(SCRIPT_DLL_FILE);
 }
 
@@ -179,46 +188,9 @@ void ModuleScriptManager::ReloadDLL()
 			remove(SCRIPT_DLL_FILE);
 		}
 	}
-	initDLL();
+	InitDLL();
 	InitResourceScript();
 
-}
-
-void ModuleScriptManager::GetCurrentPath() 
-{
-	TCHAR NPath[MAX_PATH];
-	GetCurrentDirectory(MAX_PATH, NPath);
-	working_directory = NPath;
-	working_directory += "/GamePlaySyste_.dll";
-}
-
-size_t ModuleScriptManager::CStrlastIndexOfChar(const char* str, char find_char)
-{
-	intptr_t i = strlen(str) - 1;
-	while (i >= 0)
-	{
-		if (str[i] == find_char) 
-		{
-			return i;
-		}	
-		--i;
-	}
-	return (size_t)-1;
-}
-
-bool ModuleScriptManager::patchFileName(char* filename)
-{
-	size_t	dot_idx = CStrlastIndexOfChar(filename, '.');
-	if (dot_idx != (size_t)-1)
-	{
-		filename[dot_idx - 1] = '_';
-		return true;
-	}
-	else 
-	{
-		return false;
-	}
-		
 }
 
 bool ModuleScriptManager::CopyPDB(const char* source_file, const char* destination_file, bool overwrite_existing)
@@ -226,24 +198,27 @@ bool ModuleScriptManager::CopyPDB(const char* source_file, const char* destinati
 	return CopyFile(source_file, destination_file, !overwrite_existing);
 }
 
-bool ModuleScriptManager::patchDLL(const char* dll_path, const char* patched_dll_path)
+bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll_path)
 {
 	// init
 	char patched_pdb_path[MAX_PATH] = { '\0' };
 
-	// open DLL and copy content to fileContent for easy parsing of the DLL content
+	// open DLL and copy content to file_content for easy parsing of the DLL content
 	DWORD byte_read;
 	HANDLE file = CreateFileA(dll_path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (file == INVALID_HANDLE_VALUE)
+	if (file == INVALID_HANDLE_VALUE) 
+	{
+		APP_LOG_ERROR("Failed to create file.\n");
 		return false;
-	size_t	file_size = GetFileSize((HANDLE)file, NULL);
-	BYTE*	file_content = (BYTE*)malloc(file_size);
-	bool	is_file_read_ok = ReadFile((HANDLE)file, file_content, (DWORD)file_size, &byte_read, NULL);
+	}
+		
+	size_t file_size = GetFileSize((HANDLE)file, NULL);
+	BYTE* file_content = (BYTE*)malloc(file_size);
+	bool is_file_read_ok = ReadFile((HANDLE)file, file_content, (DWORD)file_size, &byte_read, NULL);
 	CloseHandle(file);
 	if (!is_file_read_ok || byte_read != file_size) 
 	{
 		APP_LOG_ERROR("Failed to read file.\n");
-
 	}
 
 	// check signature
@@ -289,8 +264,8 @@ bool ModuleScriptManager::patchDLL(const char* dll_path, const char* patched_dll
 	}
 
 	// read debug section
-	char*	pdb_path = nullptr;
-	char	original_pdb_path[MAX_PATH];
+	char* pdb_path = nullptr;
+	char original_pdb_path[MAX_PATH];
 	if (debug_dir_section_index != -1)
 	{
 		// loop all debug directory
@@ -319,18 +294,24 @@ bool ModuleScriptManager::patchDLL(const char* dll_path, const char* patched_dll
 		APP_LOG_ERROR("No debug section is found.\n");
 	}
 		
-	// create new DLL and pdb
-	patchFileName(pdb_path);
+	// Create new DLL and pdb
+	utils->PatchFileName(pdb_path);
 	if (App->filesystem->Exists(original_pdb_path))
 	{
 		strcpy(patched_pdb_path, pdb_path);
-		CopyPDB(original_pdb_path, pdb_path, true);		// copy new PDB
+		CopyPDB(original_pdb_path, pdb_path, true);		// Copy new PDB
 	}
 	HANDLE patched_dll = CreateFile(patched_dll_path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	DWORD byte_write;
-	WriteFile(patched_dll, file_content, (DWORD)file_size, &byte_write, nullptr);	// generate patched DLL which points to the new PDB
+	WriteFile(patched_dll, file_content, (DWORD)file_size, &byte_write, nullptr);	// Generate patched DLL which points to the new PDB
 	CloseHandle(patched_dll);
 
 	// clean up
 	APP_LOG_ERROR("Patching DLL succeeded!!!.\n");
+}
+
+void ModuleScriptManager::Refresh() 
+{
+	LoadScriptList();
+	ReloadDLL();
 }
