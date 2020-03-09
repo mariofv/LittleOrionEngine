@@ -19,6 +19,8 @@ public:
 	void SetMaxFPS(int fps);
 	void SetTimeScale(float time_scale);
 
+	bool isGameRunning();
+
 	void Play();
 	void Pause();
 	void StepFrame();

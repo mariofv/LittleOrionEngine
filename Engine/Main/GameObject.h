@@ -4,12 +4,13 @@
 #define ENGINE_EXPORTS
 #include "Globals.h"
 #include "Component/Component.h"
-#include "Component/ComponentTransform.h"
 #include "Component/ComponentAABB.h"
+#include "Component/ComponentTransform.h"
+
 
 #include <GL/glew.h>
 
-class ComponentCamera;
+class ComponentCamera; 
 class GameObject
 {
 public:

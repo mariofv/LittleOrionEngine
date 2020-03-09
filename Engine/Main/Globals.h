@@ -84,8 +84,9 @@ enum class Fonts
 # define GAME_INPUT_PATH "Resources/GameInputs/game_inputs.inputs"
 
 # define SCRIPT_LIST_PATH "Resources/Scripts/scripts_list.scripts"
-# define SCRIPT_DLL_PATH "Resources/Scripts/HELLOWORLD.txt"
-# define TEST_PATH "Resources/GameInputs/HELLOWORLD.txt"
+# define SCRIPTS_DLL_PATH "Resources/Scripts/GamePlaySystem.dll"
+# define SCRIPT_DLL_FILE "GamePlaySyste_.dll"
+
  
 
 # define OPENGL_MAJOR_VERSION 4

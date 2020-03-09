@@ -1,14 +1,15 @@
 #ifndef _MODULEMANAGERSCRIPT_H_
 #define _MODULEMANAGERSCRIPT_H_
 
-#include "Module.h"
-#include "Main/Globals.h"
 #include "Main/GameObject.h"
+#include "Main/Globals.h"
+#include "Module.h"
 
-#include <vector>
+#include <memory>
 #include <string>
 #include <unordered_map>
-#include <memory>
+#include <vector>
+
 
 struct CV_INFO_PDB70
 {
@@ -22,7 +23,8 @@ class ComponentScript;
 class GameObject;
 class Script;
 class File;
-typedef void(*ScriptFunction)(void);
+class Utils;
+
 class ModuleScriptManager : public Module
 {
 public:
@@ -32,24 +34,37 @@ public:
 	bool Init() override;
 	update_status Update() override;
 	bool CleanUp() override;
+
 	void InitResourceScript();
-	Script * CreateResourceScript(const std::string & script_name, GameObject * owner);
+	Script* CreateResourceScript(const std::string& script_name, GameObject* owner);
 	ComponentScript* CreateComponentScript();
 	void RemoveComponentScript(ComponentScript* script_to_remove);
-	void LoadScriptList();
-	void ReloadDLL();
-	void GetCurrentPath();
-	size_t CStrlastIndexOfChar(const char * str, char find_char);
-	bool patchFileName(char* filename);
-	bool CopyPDB(const char* from_file, const char* destination_file, bool overwrite_existing);
-	bool patchDLL(const char* dll_path, const char patched_dll_path[MAX_PATH]);
+
+	void Refresh();
 
 private:
+	void GetCurrentPath();
+	long TimeStamp(const char* path);
+
+	void LoadScriptList();
+	void RunScripts();
+	void RemoveScriptPointers();
+
+	void InitDLL();
+	void ReloadDLL();
+	bool CopyPDB(const char* from_file, const char* destination_file, bool overwrite_existing);
+	bool PatchDLL(const char* dll_path, const char* patched_dll_path);
+
 	HINSTANCE gameplay_dll;
 	std::string working_directory;
 	std::unique_ptr<File> dll_file = nullptr;
-	long last_timestamp;
-	long init_timestamp;
+	std::unique_ptr<File> scripts_list_file = nullptr;
+	Utils* utils = nullptr;
+
+	long last_timestamp_dll;
+	long init_timestamp_dll;
+	long last_timestamp_script_list;
+	long init_timestamp_script_list;
 
 public:
 

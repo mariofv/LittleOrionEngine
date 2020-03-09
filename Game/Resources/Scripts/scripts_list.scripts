@@ -1,9 +1,7 @@
 {
     "Scripts": [
         "ExampleScript",
-        "TestingScriptList",
-        "HelloWorld",
-		"Jump",
-        "TestingRefresh"
+        "TestScriptRuntime"
+
     ]
 }

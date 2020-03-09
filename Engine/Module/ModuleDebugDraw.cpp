@@ -1,12 +1,12 @@
 #include "ModuleDebugDraw.h"
 
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentLight.h"
 #include "Component/ComponentMesh.h"
 #include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleDebug.h"
-#include "ModuleDebugDraw.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
@@ -371,8 +371,8 @@ bool ModuleDebugDraw::Init()
 	dd_interface_implementation = new IDebugDrawOpenGLImplementation();
     dd::initialize(dd_interface_implementation);
 
-	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 3.44f, 5.f);
-	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 5.f, 5.f);
+	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 1.72f, 2.5f);	
+	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 2.5f, 2.5f);
     
     APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
 
@@ -404,6 +404,7 @@ void ModuleDebugDraw::Render()
 	if (App->editor->selected_game_object != nullptr)
 	{
 		RenderCameraFrustum();
+    RenderLightGizmo();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 
@@ -467,8 +468,40 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
 
 		dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
-	}
+	}	
 }
+
+void ModuleDebugDraw::RenderLightGizmo() const	
+{	
+	Component* selected_light_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::LIGHT);	
+	if (selected_light_component != nullptr)
+  {	
+		ComponentLight* selected_light = static_cast<ComponentLight*>(selected_light_component);	
+		ComponentTransform* selected_light_transform = &selected_light->owner->transform;	
+		float gizmo_radius = 2.5f;	
+		switch (selected_light->light_type)	
+		{	
+		case ComponentLight::LightType::DIRECTIONAL_LIGHT:	
+			dd::directional_light(selected_light_transform->GetGlobalTranslation(), selected_light_transform->GetRotation().ToFloat4x4(), float3(1.f, 1.f, 0.f), 5.f, gizmo_radius);	
+			break;	
+		case ComponentLight::LightType::SPOT_LIGHT:	
+			dd::spot_light(	
+				selected_light_transform->GetGlobalTranslation(), 	
+				selected_light_transform->GetRotation().ToFloat4x4(),	
+				float3(1.f, 1.f, 0.f),	
+				selected_light->spot_light_parameters.range,	
+				tan(DegToRad(selected_light->spot_light_parameters.spot_angle/2.f)) * selected_light->spot_light_parameters.range	
+			); 	
+			break;	
+		case ComponentLight::LightType::POINT_LIGHT:	
+			dd::point_light(selected_light_transform->GetGlobalTranslation(), float3(1.f, 1.f, 0.f), selected_light->point_light_parameters.range);	
+			break;	
+		default:	
+			break;	
+		}	
+	}	
+}	
+
 
 void ModuleDebugDraw::RenderOutline() const
 {
