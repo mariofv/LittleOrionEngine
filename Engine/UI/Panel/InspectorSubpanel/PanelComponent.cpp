@@ -173,7 +173,7 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 					ImGui::SliderFloat("k specular", &material->k_specular, 0, 1);
 					ImGui::SliderFloat("Shininess", &material->shininess, 0, 1);
 				}
-
+			
 				ImGui::Separator();
 			}
 		}
@@ -216,6 +216,9 @@ std::string PanelComponent::GetTypeName(Texture::TextureType type)
 		break;
 	case Texture::TextureType::OCLUSION:
 		return "Oclusion";
+		break;
+	case Texture::TextureType::NORMAL:
+		return "Normal";
 		break;
 	default:
 		return "";
