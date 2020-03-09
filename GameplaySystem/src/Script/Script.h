@@ -20,8 +20,12 @@ public:
 	Script();
 	~Script();
 
+	virtual void Awake() {};
+	virtual void Start() {};
 	virtual void Update() {};
+
 	virtual void OnInspector(ImGuiContext*) {};
+
 	virtual void AddReferences(GameObject* owner, Application*);
 
 public:

@@ -16,10 +16,15 @@ public:
 	ComponentScript();
 	ComponentScript(GameObject* owner, std::string& script_name);
 	~ComponentScript() = default;
+
 	void LoadName(std::string& script_name);
+
 	void Update();
+	void InitScript();
 	void Delete();
+
 	void ShowComponentWindow();
+
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 

@@ -26,6 +26,14 @@ ExampleScript::ExampleScript()
 	panel = new PanelComponent();
 }
 
+void ExampleScript::Awake()
+{
+}
+
+void ExampleScript::Start()
+{
+}
+
 void ExampleScript::Update()
 {
 
@@ -54,6 +62,7 @@ void ExampleScript::OnInspector(ImGuiContext* context)
 	panel->DropGOTarget(enemy, "TestScriptRuntime", enemy_component);
 	if (enemy)
 	{
+		//TODO this assign in Awake or Start functions
 		enemy_script = (TestScriptRuntime*)enemy_component->script;
 		is_object = enemy->name;
 	}

@@ -8,6 +8,7 @@
 #include "Main/Globals.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleTime.h"
+
 #include "Script/Script.h"
 
 
@@ -310,7 +311,15 @@ bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll
 	APP_LOG_ERROR("Patching DLL succeeded!!!.\n");
 }
 
-void ModuleScriptManager::Refresh() 
+void ModuleScriptManager::InitScripts()
+{
+	for (auto &component_script : scripts)
+	{
+		component_script->InitScript();
+	}
+}
+
+void ModuleScriptManager::Refresh()
 {
 	LoadScriptList();
 	ReloadDLL();

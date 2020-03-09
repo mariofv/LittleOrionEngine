@@ -10,6 +10,8 @@ class ExampleScript : public Script
 public:
 	ExampleScript();
 	~ExampleScript() = default;
+	void Awake() override;
+	void Start() override;
 	void Update() override;
 	void OnInspector(ImGuiContext*) override;
 	void Test();

@@ -40,6 +40,7 @@ public:
 	ComponentScript* CreateComponentScript();
 	void RemoveComponentScript(ComponentScript* script_to_remove);
 
+	void InitScripts();
 	void Refresh();
 
 private:
