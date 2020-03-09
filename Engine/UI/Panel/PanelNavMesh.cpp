@@ -39,7 +39,8 @@ void PanelNavMesh::Render()
 		ImGui::SliderFloat("Agent Height", &App->artificial_intelligence->nav_mesh.agent_height, 0.001f, 50.f);
 		ImGui::SliderFloat("Agent Radius", &App->artificial_intelligence->nav_mesh.agent_radius, 0.001f, 20.f);
 		ImGui::SliderFloat("Agent Max Climb", &App->artificial_intelligence->nav_mesh.agent_max_climb, 0.001f, 20.f);
-		ImGui::SliderFloat("Walkable Slope Angle", &App->artificial_intelligence->nav_mesh.walkable_slope_angle, 0.0f, 360.f);
+		//walkableSlopeAngle	The maximum slope that is considered walkable. [Limits: 0 <= value < 90] [Units: Degrees]
+		ImGui::SliderFloat("Walkable Slope Angle", &App->artificial_intelligence->nav_mesh.walkable_slope_angle, 0.0f, 90.0f);
 		
 		ImGui::Text("");
 		ImGui::Text("Region");

@@ -99,12 +99,16 @@ bool NavMesh::CreateNavMesh()
 	m_cfg.cs = cell_width;
 	m_cfg.ch = cell_height;
 	m_cfg.walkableSlopeAngle = walkable_slope_angle;
+	//walkableHeight	Minimum floor to 'ceiling' height that will still allow the floor area to be considered walkable. [Limit: >= 3]
 	m_cfg.walkableHeight = (int)ceilf(agent_height / m_cfg.ch);
 	m_cfg.walkableClimb = (int)floorf(agent_max_climb / m_cfg.ch);
+	//walkableRadius	The radius of erosion. [Limits: 0 < value < 255] [Units: vx] 
 	m_cfg.walkableRadius = (int)ceilf(agent_radius / m_cfg.cs);
 	m_cfg.maxEdgeLen = (int)(edge_max_len / cell_width);
 	m_cfg.maxSimplificationError = edge_max_error;
+	//minRegionArea	The minimum number of cells allowed to form isolated island areas.[Limit:>= 0][Units:vx].
 	m_cfg.minRegionArea = (int)rcSqr(region_min_size);		// Note: area = size*size
+	//mergeRegionArea	Any regions with a span count smaller than this value will, if possible, be merged with larger regions. [Limit: >=0] [Units: vx] 
 	m_cfg.mergeRegionArea = (int)rcSqr(region_merge_size);	// Note: area = size*size
 	m_cfg.maxVertsPerPoly = (int)verts_per_poly;
 	m_cfg.detailSampleDist = detail_sample_distance < 0.9f ? 0 : cell_width * detail_sample_distance;
