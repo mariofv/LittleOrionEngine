@@ -5,6 +5,8 @@
 #else
 #define SCRIPT_API __declspec(dllimport)
 #endif
+
+#include <string>
 class GameObject;
 class Application;
 struct ImGuiContext;

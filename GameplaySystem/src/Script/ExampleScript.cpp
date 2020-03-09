@@ -50,11 +50,12 @@ void ExampleScript::OnInspector(ImGuiContext* context)
 	//Example to Drag and drop and link GOs in the Editor, Unity-like (WIP)
 	ImGui::Text("TestScriptRuntime: ");
 	ImGui::SameLine();
-	ImGui::Image((void*)0, ImVec2(381 * 0.4f, 381 * 0.05f), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.f, 1.f, 1.f, 1.f), ImVec4(1.f, 1.f, 1.f, 1.f));
+	ImGui::Button(is_object.c_str());
 	panel->DropGOTarget(enemy, "TestScriptRuntime", enemy_component);
 	if (enemy)
 	{
 		enemy_script = (TestScriptRuntime*)enemy_component->script;
+		is_object = enemy->name;
 	}
 }
 

@@ -2,6 +2,7 @@
 #define  __EXAMPLESCRIPT_H__
 #include "Script.h"
 
+
 class TestScriptRuntime;
 
 class ExampleScript : public Script
@@ -20,6 +21,7 @@ public:
 	float rotation_speed = 0.01f;
 private:
 	PanelComponent* panel = nullptr;
+	std::string is_object = "None";
 };
 extern "C" SCRIPT_API ExampleScript* ExampleScriptDLL(); //This is how we are going to load the script
 #endif
