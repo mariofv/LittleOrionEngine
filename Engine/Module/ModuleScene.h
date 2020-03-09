@@ -1,6 +1,6 @@
 #ifndef _MODULESCENE_H_
 #define _MODULESCENE_H_
-
+#define ENGINE_EXPORTS
 #include "Module.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
@@ -19,8 +19,8 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	GameObject* CreateGameObject();
-	GameObject* CreateChildGameObject(GameObject *parent);
+	ENGINE_API GameObject* CreateGameObject();
+	ENGINE_API GameObject* CreateChildGameObject(GameObject *parent);
 	void RemoveGameObject(GameObject * game_object_to_remove);
 
 	GameObject* GetRoot() const;

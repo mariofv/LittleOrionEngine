@@ -137,3 +137,8 @@ void ModuleTime::SetTimeScale(float time_scale)
 {
 	this->time_scale = time_scale;
 }
+
+bool ModuleTime::isGameRunning()
+{
+	return game_time_clock->Started();
+}

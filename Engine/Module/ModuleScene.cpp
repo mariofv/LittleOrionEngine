@@ -42,7 +42,7 @@ bool ModuleScene::CleanUp()
 	return true;
 }
 
-GameObject* ModuleScene::CreateGameObject()
+ENGINE_API GameObject* ModuleScene::CreateGameObject()
 {
 	std::string created_game_object_name = App->editor->hierarchy->GetNextGameObjectName();
 	std::unique_ptr<GameObject> created_game_object = std::make_unique<GameObject>(created_game_object_name);
@@ -54,7 +54,7 @@ GameObject* ModuleScene::CreateGameObject()
 	return created_game_object_ptr;
 }
 
-GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
+ENGINE_API GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 {
 	GameObject * created_game_object_ptr = CreateGameObject();
 	parent->AddChild(created_game_object_ptr);

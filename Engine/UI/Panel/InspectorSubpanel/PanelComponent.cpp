@@ -10,6 +10,7 @@
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentScript.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -18,6 +19,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleScriptManager.h"
 
 
 #include "Helper/Utils.h"
@@ -448,13 +450,45 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 	}
 }
 
+void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_EDIT " Script", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::Checkbox("Active", &component_script->active))
+		{
+			//UndoRedo TODO
+			//App->editor->action_component = component_script;
+			//App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
+		}
+		ImGui::SameLine();
+		
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(component_script);
+
+			return;
+		}
+		if (ImGui::Button("Refresh"))
+		{
+			App->scripts->Refresh();
+			return;
+		}
+		ShowScriptsCreated(component_script);
+		ImGui::Separator();
+
+		component_script->ShowComponentWindow();
+
+		// to implement CheckClickForUndo(ModuleEditor::UndoActionType::EDIT_COMPONENTSCRIPT, component_script);
+
+	}
+}
 
 void PanelComponent::ShowAddNewComponentButton()
 {
 	float window_width = ImGui::GetWindowWidth();
 	float button_width = 0.5f * window_width;
 	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
-	ImGui::Button("Add component", ImVec2(button_width, 25));
+	ImGui::Button("Add Component", ImVec2(button_width, 25));
 
 	//UndoRedo
 	Component* component = nullptr;
@@ -483,6 +517,12 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
 
 		}
+		sprintf_s(tmp_string, "%s Script", ICON_FA_EDIT);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::SCRIPT);
+
+		}
 
 		ImGui::EndPopup();
 	}
@@ -493,4 +533,23 @@ void PanelComponent::ShowAddNewComponentButton()
 		App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_COMPONENT);
 	}
 }
+
+void PanelComponent::ShowScriptsCreated(ComponentScript* component_script) {
+
+	if (ImGui::BeginCombo("Add Script", component_script->name.c_str()))
+	{
+		for (auto script_name : App->scripts->scripts_list) {
+			if (ImGui::Selectable(script_name.c_str()))
+			{
+				component_script->LoadName(script_name);
+		
+			}
+		}
+
+		ImGui::EndCombo();
+	}
+
+}
+
+
 
