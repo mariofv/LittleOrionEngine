@@ -190,7 +190,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(OutDir)$(ProjectName).lib" "..\..\Libraries\lib\x86"</Command>
+      <Command>xcopy /y /d "$(OutDir)$(ProjectName).lib" "$(SolutionDir)\Libraries\lib\x86"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -225,7 +225,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(OutDir)$(ProjectName).lib" "..\..\Libraries\lib\x86"</Command>
+      <Command>xcopy /y /d "$(OutDir)$(ProjectName).lib" "$(SolutionDir)\Libraries\lib\x86"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
