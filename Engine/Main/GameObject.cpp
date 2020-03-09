@@ -12,6 +12,7 @@
 #include "ResourceManagement/Resources/Texture.h"
 #include "UI/Panel/PanelHierarchy.h"
 
+#include "Component/Component.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
@@ -27,10 +28,12 @@
 
 GameObject::GameObject() : aabb(this), UUID(pcg32_random())
 {
+	CreateTransform();
 }
 
 GameObject::GameObject(unsigned int UUID) : aabb(this),  UUID(UUID)
 {
+	CreateTransform();
 }
 
 GameObject::GameObject(const std::string name) :
@@ -38,6 +41,7 @@ GameObject::GameObject(const std::string name) :
 	aabb(this),
 	UUID(pcg32_random())
 {
+	CreateTransform();
 }
 
 void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
@@ -100,6 +104,60 @@ void GameObject::SetHierarchyStatic(bool is_static)
 	}
 }
 
+Config GameObject::SaveTransform() const
+{
+	Config config;
+	ComponentTransform* transform = GetTransform();
+	if(transform != nullptr) transform->Save(config);
+
+	ComponentTransform2D* transform_2d = GetTransform2D();
+	if (transform_2d != nullptr) transform_2d->Save(config);
+
+	return config;
+}
+
+void GameObject::LoadTransform(Config config) const
+{
+	Config transform_config;
+	config.GetChildConfig("Transform", transform_config);
+
+	std::string transform_type;
+	config.GetString("TransformType", transform_type, "3D");
+
+	if (transform_type == "2D")
+	{
+		GetTransform2D()->Load(transform_config);
+	}
+	else if(transform_type == "3D")
+	{
+		GetTransform()->Load(transform_config);
+
+	}
+}
+
+void GameObject::CreateTransform()
+{
+	if (IsChildOfUI())
+	{
+		transform = new ComponentTransform2D();
+		transform->owner = this;
+		((ComponentTransform2D*)transform)->Translate(float2::zero);//trigger transform change
+	}
+	else
+	{
+		transform = new ComponentTransform();
+		transform->owner = this;
+		((ComponentTransform*)transform)->Translate(float3::zero);//trigger transform change
+
+	}
+
+}
+
+bool GameObject::IsChildOfUI()
+{
+	return parent != nullptr && (parent->GetComponent(Component::ComponentType::CANVAS) != nullptr || parent->GetTransform2D() != nullptr);
+}
+
 bool GameObject::IsStatic() const
 {
 	return is_static;
@@ -136,8 +194,7 @@ void GameObject::Save(Config& config) const
 	config.AddBool(is_static, "IsStatic");
 	config.AddBool(active, "Active");
 
-	Config transform_config;
-	transform.Save(transform_config);
+	Config transform_config = SaveTransform();
 	config.AddChildConfig(transform_config, "Transform");
 
 	std::vector<Config> gameobject_components_config(components.size());
@@ -166,9 +223,7 @@ void GameObject::Load(const Config& config)
 	SetStatic(config.GetBool("IsStatic", false));
 	active = config.GetBool("Active", true);
 
-	Config transform_config;
-	config.GetChildConfig("Transform", transform_config);
-	transform.Load(transform_config);
+	LoadTransform(config);
 
 	std::vector<Config> gameobject_components_config;
 	config.GetChildrenConfig("Components", gameobject_components_config);
@@ -196,10 +251,10 @@ void GameObject::SetParent(GameObject *new_parent)
 	}
 
 	//Change the transform to 2D if child of ui
-	if (parent->GetComponent(Component::ComponentType::CANVAS) != nullptr || parent->GetComponent(Component::ComponentType::TRANSFORM2D) != nullptr)
+	if (IsChildOfUI())
 	{
-		RemoveComponent(&transform);
-		transform = *CreateComponent(Component::ComponentType::TRANSFORM2D);
+		RemoveComponent(GetTransform());
+		CreateComponent(Component::ComponentType::TRANSFORM2D);
 	}
 	new_parent->AddChild(this);
 }
@@ -215,7 +270,7 @@ void GameObject::AddChild(GameObject *child)
 	child->UpdateHierarchyDepth();
 	child->UpdateHierarchyBranch();
 
-	child->transform.ChangeLocalSpace(transform.GetGlobalModelMatrix());
+	child->GetTransform()->ChangeLocalSpace(GetTransform()->GetGlobalModelMatrix());
 	children.push_back(child);
 }
 
@@ -285,6 +340,20 @@ Component* GameObject::GetComponent(const Component::ComponentType type) const
 		}
 	}
 	return nullptr;
+}
+
+ComponentTransform * GameObject::GetTransform() const
+{
+	if (transform != nullptr) return (ComponentTransform*)transform;
+
+	return (ComponentTransform*)GetComponent(Component::ComponentType::TRANSFORM);
+}
+
+ComponentTransform2D * GameObject::GetTransform2D() const
+{
+	if (transform != nullptr) return (ComponentTransform2D*)transform;
+
+	return (ComponentTransform2D*) GetComponent(Component::ComponentType::TRANSFORM2D);
 }
 
 void GameObject::MoveUpInHierarchy() const

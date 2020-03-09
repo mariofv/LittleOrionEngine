@@ -501,7 +501,7 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
 	for (auto & mesh : intersected_meshes)
 	{
 		LineSegment transformed_ray = ray;
-		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
+		transformed_ray.Transform(mesh->owner->GetTransform()->GetGlobalModelMatrix().Inverted());
 		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
 		for (auto & triangle : triangles)
 		{

@@ -428,7 +428,7 @@ void ModuleDebugDraw::Render()
 
 void ModuleDebugDraw::RenderGrid() const
 {
-	float camera_distance_to_grid = App->cameras->scene_camera->owner->transform.GetTranslation().y;
+	float camera_distance_to_grid = App->cameras->scene_camera->owner->GetTransform()->GetTranslation().y;
 	float camera_distance_to_grid_abs = abs(camera_distance_to_grid);
 	float camera_horizontal_fov = App->cameras->scene_camera->camera_frustum.horizontalFov;
 
@@ -480,7 +480,7 @@ void ModuleDebugDraw::RenderLightGizmo() const
 	if (selected_light_component != nullptr)
   {	
 		ComponentLight* selected_light = static_cast<ComponentLight*>(selected_light_component);	
-		ComponentTransform* selected_light_transform = &selected_light->owner->transform;	
+		ComponentTransform* selected_light_transform = selected_light->owner->GetTransform();	
 		float gizmo_radius = 2.5f;	
 		switch (selected_light->light_type)	
 		{	
@@ -528,7 +528,7 @@ void ModuleDebugDraw::RenderOutline() const
 		GLuint outline_shader_program = App->program->GetShaderProgramId("Outline");
 		glUseProgram(outline_shader_program);
 
-		ComponentTransform object_transform_copy = selected_game_object->transform;
+		ComponentTransform object_transform_copy = *selected_game_object->GetTransform();
 		float3 object_scale = object_transform_copy.GetScale();
 		object_transform_copy.SetScale(object_scale*1.01f);
 		object_transform_copy.GenerateGlobalModelMatrix();
@@ -574,12 +574,12 @@ void ModuleDebugDraw::RenderBillboards() const
 	{
 		Component * light_component = object->GetComponent(Component::ComponentType::LIGHT);
 		if (light_component != nullptr) {
-			light_billboard->Render(object->transform.GetGlobalTranslation());
+			light_billboard->Render(object->GetTransform()->GetGlobalTranslation());
 		}
 
 		Component * camera_component = object->GetComponent(Component::ComponentType::CAMERA);
 		if (camera_component != nullptr) {
-			camera_billboard->Render(object->transform.GetGlobalTranslation());
+			camera_billboard->Render(object->GetTransform()->GetGlobalTranslation());
 		}
 	}
 }
@@ -588,8 +588,8 @@ void ModuleDebugDraw::RenderCanvas() const
 {
 	for(auto &canvas: App->ui->canvases)
 	{
-		dd::box(canvas->owner->transform.GetTranslation(), float3::one, App->window->GetWidth() * 0.25f, App->window->GetHeight() * 0.25f, 0.01f);
-		dd::circle(canvas->owner->transform.GetTranslation(), float3(0, 0, 1), float3::one, 1.0f, 10);
+		dd::box(canvas->owner->GetTransform()->GetTranslation(), float3::one, App->window->GetWidth() * 0.25f, App->window->GetHeight() * 0.25f, 0.01f);
+		dd::circle(canvas->owner->GetTransform()->GetTranslation(), float3(0, 0, 1), float3::one, 1.0f, 10);
 	}
 }
 

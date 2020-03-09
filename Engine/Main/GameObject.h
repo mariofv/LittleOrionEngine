@@ -39,8 +39,8 @@ public:
 	void RemoveComponent(Component * component);
 	Component* GetComponent(const Component::ComponentType type) const;
 
-	ComponentTransform* getTransform();
-	ComponentTransform2D* getTransform2D();
+	ComponentTransform* GetTransform() const;
+	ComponentTransform2D* GetTransform2D() const;
 
 	void MoveUpInHierarchy() const;
 	void MoveDownInHierarchy() const;
@@ -55,6 +55,10 @@ public:
 
 private:
 	void SetHierarchyStatic(bool is_static);
+	Config SaveTransform() const;
+	void LoadTransform(Config config) const;
+	void CreateTransform();
+	bool IsChildOfUI();
 
 public:
 	std::vector<Component*> components;
@@ -67,7 +71,7 @@ public:
 	ComponentAABB aabb;
 
 private:
-	Component* transform;
+	Component* transform = nullptr;
 	bool active = true;
 	bool is_static = false;
 	int hierarchy_depth = 0;

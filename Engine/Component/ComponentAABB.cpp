@@ -38,7 +38,7 @@ void ComponentAABB::GenerateBoundingBox()
 		bounding_box = AABB(float3::zero, float3::zero);
 	}
 	
-	bounding_box.TransformAsAABB(owner->transform.GetGlobalModelMatrix());
+	bounding_box.TransformAsAABB(owner->GetTransform()->GetGlobalModelMatrix());
 
 	float2 min_point2D = float2(bounding_box.MinX(), bounding_box.MinZ());
 	float2 max_point2D = float2(bounding_box.MaxX(), bounding_box.MaxZ());

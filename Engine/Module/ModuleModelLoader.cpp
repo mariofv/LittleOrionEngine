@@ -138,9 +138,9 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 			float3x3 rotate;
 			joint.transform_local.Decompose(translation, rotate, scale);
 
-			object->transform.SetScale(scale);
-			object->transform.SetTranslation(translation);
-			object->transform.SetRotation(rotate);
+			object->GetTransform()->SetScale(scale);
+			object->GetTransform()->SetTranslation(translation);
+			object->GetTransform()->SetRotation(rotate);
 			object->name = joint.name;
 
 			skeleton_gameobjects.push_back(object);

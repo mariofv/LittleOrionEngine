@@ -9,13 +9,13 @@ current_scale(current), UUID_go(go->UUID) {}
 void EditorActionScale::Undo()
 {
 	GameObject* action_GO = App->scene->GetGameObject(UUID_go);
-	action_GO->transform.SetScale(previous_scale);
+	action_GO->GetTransform()->SetScale(previous_scale);
 	return;
 }
 
 void EditorActionScale::Redo()
 {
 	GameObject* action_GO = App->scene->GetGameObject(UUID_go);
-	action_GO->transform.SetScale(current_scale);
+	action_GO->GetTransform()->SetScale(current_scale);
 	return;
 }

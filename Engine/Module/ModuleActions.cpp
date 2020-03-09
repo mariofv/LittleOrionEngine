@@ -103,7 +103,7 @@ void ModuleActions::AddUndoAction(UndoActionType type)
 	case UndoActionType::TRANSLATION:
 		new_action = new EditorActionTranslate(
 			previous_transform,
-			App->editor->selected_game_object->transform.GetTranslation(),
+			App->editor->selected_game_object->GetTransform()->GetTranslation(),
 			App->editor->selected_game_object
 		);
 		break;
@@ -111,7 +111,7 @@ void ModuleActions::AddUndoAction(UndoActionType type)
 	case UndoActionType::ROTATION:
 		new_action = new EditorActionRotation(
 			previous_transform,
-			App->editor->selected_game_object->transform.GetRotationRadiants(),
+			App->editor->selected_game_object->GetTransform()->GetRotationRadiants(),
 			App->editor->selected_game_object
 		);
 		break;
@@ -119,7 +119,7 @@ void ModuleActions::AddUndoAction(UndoActionType type)
 	case UndoActionType::SCALE:
 		new_action = new EditorActionScale(
 			previous_transform,
-			App->editor->selected_game_object->transform.GetScale(),
+			App->editor->selected_game_object->GetTransform()->GetScale(),
 			App->editor->selected_game_object
 		);
 		break;

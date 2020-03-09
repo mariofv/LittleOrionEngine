@@ -10,6 +10,10 @@ ComponentTransform2D::ComponentTransform2D(GameObject * owner) : Component(owner
 	OnTransformChange();
 }
 
+ComponentTransform2D::ComponentTransform2D() : Component(ComponentType::TRANSFORM2D)
+{
+}
+
 ComponentTransform2D::ComponentTransform2D(GameObject * owner, const float2 translation, const float rotation) :
 	Component(owner, ComponentType::TRANSFORM2D),
 	rotation_degrees(rotation)
@@ -25,6 +29,7 @@ void ComponentTransform2D::Save(Config& config) const
 {
 	config.AddUInt(UUID, "UUID");
 	config.AddBool(active, "Active");
+	config.AddString("2D", "TransformType");
 	config.AddRect(rect, "Rect");
 	config.AddFloat(rotation_degrees, "Rotation");
 }
