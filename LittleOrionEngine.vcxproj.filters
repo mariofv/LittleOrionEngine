@@ -597,7 +597,4 @@
       <UniqueIdentifier>{af162ed0-dacf-4e8f-850b-8e8130bb9f6e}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
-  <ItemGroup>
-    <None Include="cpp.hint" />
-  </ItemGroup>
 </Project>
