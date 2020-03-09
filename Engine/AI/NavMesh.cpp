@@ -15,6 +15,8 @@
 #include "recast/DebugUtils/DetourDebugDraw.h"
 #include "recast/Detour/DetourNavMesh.h"
 
+
+///https://masagroup.github.io/recastdetour/group__recast.html nais documentation
 NavMesh::NavMesh()
 {
 	m_ctx = new rcContext();
@@ -24,6 +26,7 @@ NavMesh::NavMesh()
 
 NavMesh::~NavMesh()
 {
+	CleanUp();
 }
 
 bool NavMesh::CleanUp()
