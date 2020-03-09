@@ -26,6 +26,7 @@ void PanelDebug::Render()
 		ImGui::Checkbox("Camera Frustum", &App->debug->show_camera_frustum);
 		ImGui::Checkbox("QuadTree", &App->debug->show_quadtree);
 		ImGui::Checkbox("AABBTree", &App->debug->show_aabbtree);
+		ImGui::Checkbox("Show Navmesh", &App->debug->show_navmesh);
 		ImGui::Separator();
 
 		ImGui::Checkbox("Scene window culling", &App->debug->culling_scene_mode);

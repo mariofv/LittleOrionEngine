@@ -33,6 +33,7 @@ public:
 	bool show_camera_frustum = true;
 	bool show_quadtree = false;
 	bool show_aabbtree = false;
+	bool show_navmesh = true;
 
 	bool culling_scene_mode = false;
 	CullingMode culling_mode = CullingMode::QUADTREE_CULLING;

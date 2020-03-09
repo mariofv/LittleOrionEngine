@@ -2,6 +2,7 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleDebug.h"
 
 void DebugDrawGL::DepthMask(bool state)
 {
@@ -78,7 +79,7 @@ void DebugDrawGL::End()
 
 void DebugDrawGL::DrawMesh(ComponentCamera& camera)
 {
-	if (vertices.size() == 0)
+	if (vertices.size() == 0 || !App->debug->show_navmesh)
 		return;
 
 
