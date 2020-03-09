@@ -59,24 +59,7 @@ bool NavMesh::CreateNavMesh()
 	GetIndicesScene();
 	GetNormalsScene();
 	
-	global_AABB.SetNegativeInfinity();
-
-	for (auto & mesh : App->renderer->meshes)
-	{
-		float minX = std::fmin(mesh->owner->aabb.bounding_box.minPoint.x, global_AABB.minPoint.x);
-		float minY = std::fmin(mesh->owner->aabb.bounding_box.minPoint.y, global_AABB.minPoint.y);
-		float minZ = std::fmin(mesh->owner->aabb.bounding_box.minPoint.z, global_AABB.minPoint.z);
-		
-
-		float maxX = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.x, global_AABB.maxPoint.x);
-		float maxY = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.y, global_AABB.maxPoint.y);
-		float maxZ = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.z, global_AABB.maxPoint.z);
-
-
-		global_AABB.maxPoint = float3(maxX, maxY,maxZ);
-		global_AABB.minPoint = float3(minX, minY, minZ);
-
-	}
+	InitAABB();
 
 
 	const float* bmin = &global_AABB.minPoint[0];
@@ -645,6 +628,28 @@ void NavMesh::RenderTile(DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 	dd->depthMask(true);
 	*/
 	return;
+}
+
+void NavMesh::InitAABB()
+{
+	global_AABB.SetNegativeInfinity();
+
+	for (auto & mesh : App->renderer->meshes)
+	{
+		float minX = std::fmin(mesh->owner->aabb.bounding_box.minPoint.x, global_AABB.minPoint.x);
+		float minY = std::fmin(mesh->owner->aabb.bounding_box.minPoint.y, global_AABB.minPoint.y);
+		float minZ = std::fmin(mesh->owner->aabb.bounding_box.minPoint.z, global_AABB.minPoint.z);
+
+
+		float maxX = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.x, global_AABB.maxPoint.x);
+		float maxY = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.y, global_AABB.maxPoint.y);
+		float maxZ = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.z, global_AABB.maxPoint.z);
+
+
+		global_AABB.maxPoint = float3(maxX, maxY, maxZ);
+		global_AABB.minPoint = float3(minX, minY, minZ);
+
+	}
 }
 
 void NavMesh::GetVerticesScene()

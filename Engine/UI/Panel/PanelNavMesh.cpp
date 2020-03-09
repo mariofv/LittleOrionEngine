@@ -17,6 +17,13 @@ void PanelNavMesh::Render()
 {
 	if (ImGui::Begin(window_name.c_str(), &opened))
 	{
+
+		if(first_time)
+		{
+			App->artificial_intelligence->nav_mesh.InitAABB();
+			first_time = false;
+		}
+
 		hovered = ImGui::IsWindowHovered();
 
 		ImGui::TextColored(ImVec4(0.0f, 1.0f, 1.0f, 1.0f), "NavMesh");

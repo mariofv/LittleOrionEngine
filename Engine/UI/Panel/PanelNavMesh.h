@@ -14,6 +14,7 @@ public:
 	void Render() override;
 
 	bool succes = false;
+	bool first_time = true;
 
 };
 

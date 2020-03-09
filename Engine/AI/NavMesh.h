@@ -68,6 +68,8 @@ public:
 	bool RenderNavMesh(DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags) const;
 	void RenderTile(DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const;
 
+	void InitAABB();
+
 	inline SampleDebugDraw& GetDebugDraw() { return m_dd; }
 
 private:
