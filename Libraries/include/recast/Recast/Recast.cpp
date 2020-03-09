@@ -350,7 +350,7 @@ void rcMarkWalkableTriangles(rcContext* ctx, const float walkableSlopeAngle,
 		// Check if the face is walkable.
 		if(unwalkable_verts[tri[0]*3] || unwalkable_verts[tri[1] * 3] || unwalkable_verts[tri[2] * 3])
 		{
-			areas[i] = RC_UNWALKABLE_AREA; //Make it unwalkable
+			//areas[i] = RC_UNWALKABLE_AREA; //Make it unwalkable
 		}
 		else if (norm[1] > walkableThr)
 			areas[i] = RC_WALKABLE_AREA;

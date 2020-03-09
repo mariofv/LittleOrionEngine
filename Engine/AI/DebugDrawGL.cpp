@@ -117,3 +117,9 @@ void DebugDrawGL::GenerateBuffers()
 
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 }
+
+void DebugDrawGL::CleanUp()
+{
+	vertices.clear();
+	glDeleteBuffers(1, &vbo);
+}

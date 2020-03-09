@@ -18,6 +18,7 @@ public:
 	virtual void End();
 	virtual void DrawMesh(ComponentCamera& camera);
 	virtual void GenerateBuffers();
+	virtual void CleanUp();
 
 public:
 	GLuint vbo = 0;

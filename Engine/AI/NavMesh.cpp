@@ -28,7 +28,7 @@ NavMesh::~NavMesh()
 
 bool NavMesh::CleanUp()
 {
-	m_dd.vertices.clear();
+	m_dd.CleanUp();
 	is_mesh_computed = false;
 
 	return true;
@@ -657,7 +657,7 @@ void NavMesh::GetVerticesScene()
 			verts_vec.push_back(vertss.y);
 			verts_vec.push_back(vertss.z);
 
-			if(mesh->owner->name == "Planks0" || mesh->owner->name == "Base0" || mesh->owner->name == "defaultobject0")
+			if(mesh->owner->name == "Base0" || mesh->owner->name == "defaultobject0")
 			{
 				unwalkable_verts.push_back(false);
 				unwalkable_verts.push_back(false);
