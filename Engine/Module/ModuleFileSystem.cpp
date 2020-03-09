@@ -139,6 +139,10 @@ File ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path
 bool ModuleFileSystem::Copy(const char* source, const char* destination)
 {
 	size_t file_size;
+	if (!Exists(source))
+	{
+		return false;
+	}
 	char * buffer = Load(source,file_size);
 	bool success = Save(destination, buffer, file_size,false);
 	free(buffer);
