@@ -1,10 +1,18 @@
 #include "ExampleScript.h"
-#include "Main/Application.h"
-#include "Module/ModuleInput.h"
-#include "Main/GameObject.h"
+
+#include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
+
+#include "Main/Application.h"
+#include "Main/GameObject.h"
+#include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
+
+#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+
 #include "imgui.h"
+
+#include "TestScriptRuntime.h"
 
 
 ExampleScript* ExampleScriptDLL()
@@ -15,17 +23,15 @@ ExampleScript* ExampleScriptDLL()
 
 ExampleScript::ExampleScript()
 {
-}
-ExampleScript::~ExampleScript()
-{
+	panel = new PanelComponent();
 }
 
 void ExampleScript::Update()
 {
-	
+
 	Test();
-	
-	if (App->input->GetKeyDown(KeyCode::C)) 
+
+	if (App->input->GetKeyDown(KeyCode::C))
 	{
 		GameObject* go = App->scene->CreateGameObject();
 	}
@@ -33,19 +39,31 @@ void ExampleScript::Update()
 
 void ExampleScript::OnInspector(ImGuiContext* context)
 {
+	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
+	//Example to show text
 	ImGui::Text("Example Script Inspector");
-	ImGui::DragFloat("Speed", &speed,0.01f,0.f,0.5f);
+	//Example Showing variables and being able to modify it on Runtime.
+	ImGui::DragFloat("Speed", &speed, 0.01f, 0.f, 0.5f);
 	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.f, 0.5f);
-	ImGui::Text("Test equsals");
-	
+	ImGui::Text("Testing for QA: attempt 24.84848484");
+	//Example to Drag and drop and link GOs in the Editor, Unity-like (WIP)
+	ImGui::Text("TestScriptRuntime: ");
+	ImGui::SameLine();
+	ImGui::Image((void*)0, ImVec2(381 * 0.4f, 381 * 0.05f), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.f, 1.f, 1.f, 1.f), ImVec4(1.f, 1.f, 1.f, 1.f));
+	panel->DropGOTarget(enemy, "TestScriptRuntime", enemy_component);
+	if (enemy)
+	{
+		enemy_script = (TestScriptRuntime*)enemy_component->script;
+	}
 }
 
 void ExampleScript::Test()
 {
+	//example how to get variables from the engine
 	float3 transform = owner->transform.GetTranslation();
 	float3 rotation = owner->transform.GetRotationRadiants();
-	//TODO
+	//EXAMPLE USING PLAYER INPUT
 	if (App->input->GetKey(KeyCode::A))
 	{
 		owner->transform.SetTranslation(float3(transform.x + speed, transform.y, transform.z));
@@ -69,5 +87,9 @@ void ExampleScript::Test()
 	if (App->input->GetKey(KeyCode::Q))
 	{
 		owner->transform.SetRotation(float3(rotation.x, rotation.y + rotation_speed, rotation.z));
+	}
+	if (App->input->GetKey(KeyCode::T) && enemy)
+	{
+		enemy->transform.SetRotation(float3(rotation.x, rotation.y + enemy_script->rotation_speed, rotation.z));
 	}
 }

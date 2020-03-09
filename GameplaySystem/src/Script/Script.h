@@ -9,6 +9,9 @@ class GameObject;
 class Application;
 struct ImGuiContext;
 
+class ComponentScript;
+class PanelComponent;
+
 class Script 
 {
 public:
