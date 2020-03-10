@@ -24,6 +24,8 @@
 
 #include "Helper/Utils.h"
 
+#include "UI/Panel/PanelPopups.h"
+
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
@@ -484,12 +486,18 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 			//App->editor->action_component = component_script;
 			//App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
 		}
-		ImGui::SameLine();
+		
 		
 		if (ImGui::Button("Delete"))
 		{
 			App->actions->DeleteComponentUndo(component_script);
 
+			return;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Create Script"))
+		{
+			App->editor->popups->create_script_shown = true;
 			return;
 		}
 		if (ImGui::Button("Refresh"))
@@ -558,7 +566,8 @@ void PanelComponent::ShowAddNewComponentButton()
 	}
 }
 
-void PanelComponent::ShowScriptsCreated(ComponentScript* component_script) {
+void PanelComponent::ShowScriptsCreated(ComponentScript* component_script) 
+{
 
 	if (ImGui::BeginCombo("Add Script", component_script->name.c_str()))
 	{
@@ -574,6 +583,7 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script) {
 	}
 
 }
+
 
 
 

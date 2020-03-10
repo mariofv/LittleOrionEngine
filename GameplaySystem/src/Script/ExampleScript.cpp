@@ -96,7 +96,7 @@ void ExampleScript::Test()
 	}
 	if (App->input->GetKey(KeyCode::Q))
 	{
-		owner->transform.SetRotation(float3(rotation.x, rotation.y + rotation_speed, rotation.z));
+		owner->transform.SetRotation(float3(rotation.x, rotation.y + enemy_script->rotation_speed, rotation.z));
 	}
 	if (App->input->GetKey(KeyCode::T) && enemy)
 	{

@@ -79,7 +79,12 @@ void ModuleScriptManager::GetCurrentPath()
 	working_directory += "/GamePlaySyste_.dll";
 }
 
-void ModuleScriptManager::InitResourceScript() 
+void ModuleScriptManager::CreateScript(const std::string& name)
+{
+	
+}
+
+void ModuleScriptManager::InitResourceScript()
 {
 	if (gameplay_dll != nullptr)
 	{
@@ -151,6 +156,19 @@ void ModuleScriptManager::LoadScriptList()
 		}
 	}
 
+}
+
+void ModuleScriptManager::SaveScriptList()
+{
+
+}
+
+void ModuleScriptManager::InitScripts()
+{
+	for (auto &component_script : scripts)
+	{
+		component_script->InitScript();
+	}
 }
 
 void ModuleScriptManager::RunScripts()
@@ -309,14 +327,6 @@ bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll
 
 	// clean up
 	APP_LOG_ERROR("Patching DLL succeeded!!!.\n");
-}
-
-void ModuleScriptManager::InitScripts()
-{
-	for (auto &component_script : scripts)
-	{
-		component_script->InitScript();
-	}
 }
 
 void ModuleScriptManager::Refresh()
