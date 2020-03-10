@@ -495,12 +495,6 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 			return;
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Create Script"))
-		{
-			App->editor->popups->create_script_shown = true;
-			return;
-		}
-		ImGui::SameLine();
 		if (ImGui::Button("Refresh"))
 		{
 			App->scripts->Refresh();
@@ -578,6 +572,11 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 				component_script->LoadName(script_name);
 		
 			}
+		}
+		ImGui::Separator();
+		if (ImGui::Selectable("Create new Script")) 
+		{
+			App->editor->popups->create_script_shown = true;
 		}
 
 		ImGui::EndCombo();
