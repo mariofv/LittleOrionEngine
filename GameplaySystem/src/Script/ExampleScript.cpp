@@ -51,6 +51,7 @@ void ExampleScript::OnInspector(ImGuiContext* context)
 	ImGui::SetCurrentContext(context);
 	//Example to show text
 	ImGui::Text("Example Script Inspector");
+	//ImGui::Text(GET_VARIABLE_NAME(speed));
 	//Example Showing variables and being able to modify it on Runtime.
 	ImGui::DragFloat("Speed", &speed, 0.01f, 0.f, 0.5f);
 	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.f, 0.5f);

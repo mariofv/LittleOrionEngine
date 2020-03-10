@@ -11,6 +11,8 @@
 
 #include "Script/Script.h"
 
+#include <algorithm>
+
 
 
 bool ModuleScriptManager::Init()
@@ -38,7 +40,7 @@ update_status ModuleScriptManager::Update()
 	}
 	if (!App->time->isGameRunning()) 
 	{
-
+		//TODO Check it not every frame.
 		last_timestamp_dll = TimeStamp(dll_file->file_path.c_str());
 		if (last_timestamp_dll != init_timestamp_dll)
 		{
@@ -81,20 +83,23 @@ void ModuleScriptManager::GetCurrentPath()
 
 void ModuleScriptManager::CreateScript(const std::string& name)
 {
-
+	//TODO Add this to module file system
 	std::string cpp_file = utils->LoadFileContent(SCRIPT_TEMPLATE_FILE_CPP);
 	std::string header_file = utils->LoadFileContent(SCRIPT_TEMPLATE_FILE_H);
 
-	utils->ReplaceStringInPlace(cpp_file, "ExampleScript", name);
-	utils->ReplaceStringInPlace(header_file, "ExampleScript", name);
-	utils->ReplaceStringInPlace(header_file, "_EXAMPLESCRIPT_H_", "_"+name+"_H_");
+	utils->ReplaceStringInPlace(cpp_file, "TemplateScript", name);
+	utils->ReplaceStringInPlace(header_file, "TemplateScript", name);
+	std::string name_uppercase = name;
+	std::transform(name_uppercase.begin(), name_uppercase.end(), name_uppercase.begin(), ::toupper);
+	utils->ReplaceStringInPlace(header_file, "_TEMPLATESCRIPT_H_", "_" + name_uppercase + "_H_");
 	if (!App->filesystem->Exists((SCRIPT_PATH + name + ".cpp").c_str()))
 	{
 		utils->SaveFileContent(cpp_file, SCRIPT_PATH + name + ".cpp");
 		utils->SaveFileContent(header_file, SCRIPT_PATH + name + ".h");
+		scripts_list.push_back(name);
+		SaveScriptList();
 	}
-	scripts_list.push_back(name);
-	SaveScriptList();
+	
 }
 
 void ModuleScriptManager::InitResourceScript()
@@ -188,7 +193,7 @@ void ModuleScriptManager::SaveScriptList()
 
 	std::string serialized_script_list_string;
 	config.GetSerializedString(serialized_script_list_string);
-	App->filesystem->Save(SCRIPT_LIST_PATH, serialized_script_list_string.c_str(), serialized_script_list_string.size() + 1);
+	App->filesystem->Save(SCRIPT_LIST_PATH, serialized_script_list_string.c_str(), serialized_script_list_string.size());
 
 }
 
@@ -196,7 +201,11 @@ void ModuleScriptManager::InitScripts()
 {
 	for (auto &component_script : scripts)
 	{
-		component_script->InitScript();
+		component_script->AwakeScript();
+	}
+	for (auto &component_script : scripts)
+	{
+		component_script->StartScript();
 	}
 }
 

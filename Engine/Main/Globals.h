@@ -87,8 +87,8 @@ enum class Fonts
 # define SCRIPTS_DLL_PATH "Resources/Scripts/GamePlaySystem.dll"
 # define SCRIPT_DLL_FILE "GamePlaySyste_.dll"
 
-# define SCRIPT_TEMPLATE_FILE_CPP "../GamePlaySystem/src/Script/ExampleScript.cpp"
-# define SCRIPT_TEMPLATE_FILE_H "../GamePlaySystem/src/Script/ExampleScript.h"
+# define SCRIPT_TEMPLATE_FILE_CPP "Resources/Scripts/TemplateScript.cpp"
+# define SCRIPT_TEMPLATE_FILE_H "Resources/Scripts/TemplateScript.h"
 # define SCRIPT_PATH "../GamePlaySystem/src/Script/"
 
  
