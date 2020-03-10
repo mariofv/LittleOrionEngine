@@ -55,8 +55,11 @@ void PanelPopups::CreateScript()
 		if (ImGui::Button("OK", ImVec2(120, 0)))
 		{
 			std::string name = str1;
-			App->scripts->CreateScript(name);
-			ImGui::CloseCurrentPopup();
+			if (name.size() > 0) 
+			{
+				App->scripts->CreateScript(name);
+				ImGui::CloseCurrentPopup();
+			}
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
