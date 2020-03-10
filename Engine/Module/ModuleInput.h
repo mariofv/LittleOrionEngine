@@ -309,6 +309,14 @@ enum class ControllerCode
 	RightDpad = SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
 };
 
+enum class ControllerAxis
+{
+	LEFT_JOYSTICK,
+	RIGHT_JOYSTICK,
+	LEFT_TRIGGER,
+	RIGHT_TRIGGER
+};
+
 struct GameInput
 {
 	std::string name;
@@ -388,6 +396,9 @@ public:
 	Uint8 GetMouseClicks() const;
 	bool IsMouseMoving() const;
 
+	float2 GetAxisContoller(ControllerAxis type) const;
+	Sint16 GetTriggerController(ControllerAxis type) const;
+
 private:
 	void SaveGameInputs(Config &config);
 	void LoadGameInputs(Config &config);
@@ -408,6 +419,12 @@ private:
 
 	Uint8 mouse_clicks;
 	bool mouse_moving;
+
+	float2 left_joystick;
+	float2 right_joystick;
+
+	Sint16 left_controller_trigger;
+	Sint16 right_controller_trigger;
 
 	SDL_GameController* controller = nullptr;
 };

@@ -153,6 +153,17 @@ update_status ModuleInput::PreUpdate()
 		case SDL_CONTROLLERBUTTONUP:
 			controller_bible[(ControllerCode)event.cbutton.button] = KeyState::UP;
 			break;
+		
+		case SDL_CONTROLLERAXISMOTION:
+
+			left_joystick = float2(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY));
+
+			right_joystick = float2(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTY));
+
+			left_controller_trigger = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+			right_controller_trigger = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+				
+			break;
 
 		case SDL_DROPFILE:
 			char* dropped_filedir = event.drop.file;
@@ -347,6 +358,43 @@ Uint8 ModuleInput::GetMouseClicks() const
 bool ModuleInput::IsMouseMoving() const
 {
 	return mouse_moving;
+}
+
+float2 ModuleInput::GetAxisContoller(ControllerAxis type) const
+{
+
+	switch (type)
+	{
+		case ControllerAxis::LEFT_JOYSTICK:
+			return left_joystick;
+			break;
+
+		case ControllerAxis::RIGHT_JOYSTICK:
+			return right_joystick;
+			break;
+
+		default:
+			break;
+	}
+
+	return float2(0.0f, 0.0f);
+}
+
+Sint16 ModuleInput::GetTriggerController(ControllerAxis type) const
+{
+	switch (type)
+	{
+		case ControllerAxis::LEFT_TRIGGER:
+			return left_controller_trigger;
+			break;
+		case ControllerAxis::RIGHT_TRIGGER:
+			right_controller_trigger;
+			break;
+		default:
+			break;
+	}
+
+	return 0.0f;
 }
 
 void ModuleInput::SaveGameInputs(Config &config)
