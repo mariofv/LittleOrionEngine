@@ -83,7 +83,24 @@ void PanelNavMesh::Render()
 		else
 			ImGui::Text("NavMesh created succesfully.");
 		
+		ImGui::Separator();
 
+		if(ImGui::Button("Attach Starting Point"))
+		{
+			start_position = App->editor->selected_position;
+		}
+
+		ImGui::SameLine();
+
+		if (ImGui::Button("Attach End Point"))
+		{
+			end_position = App->editor->selected_position;
+		}
+
+		if(ImGui::Button("Build path from start to end"))
+		{
+			//TODO: pathfind from moduleAI
+		}
 
 	}
 	ImGui::End();
