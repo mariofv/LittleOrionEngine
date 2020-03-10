@@ -67,7 +67,7 @@ void PanelNavMesh::Render()
 		ImGui::SliderFloat("Detail Sample Distance", &App->artificial_intelligence->nav_mesh.detail_sample_distance, 1.0f, 20.f);
 		ImGui::SliderFloat("Detail Sample Max Error", &App->artificial_intelligence->nav_mesh.detail_sample_max_error, 1.0f, 20.f);
 
-		ImGui::Text("Selected Position: (%.3f,%.3f)", App->editor->selected_position.x, App->editor->selected_position.y);
+		ImGui::Text("Selected Position: (%.3f,%.3f, %.3f)", App->editor->selected_position.x, App->editor->selected_position.y, App->editor->selected_position.z);
 
 		ImGui::Separator();
 
