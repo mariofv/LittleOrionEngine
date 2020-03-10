@@ -1,10 +1,6 @@
 {
     "Scripts": [
-        {
-            "Script": "ExampleScript"
-        },
-        {
-            "Script": "TestScriptRuntime"
-        }
+        "ExampleScript",
+        "TestScriptRuntime"
     ]
 }

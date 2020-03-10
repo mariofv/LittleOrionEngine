@@ -165,31 +165,14 @@ void ModuleScriptManager::LoadScriptList()
 		free(scripts_file_data);
 
 		Config scripts_config(serialized_scripts_string);
-
-		std::vector<Config> scripts_list_configs;
-		scripts_config.GetChildrenConfig("Scripts", scripts_list_configs);
-		for (unsigned int i = 0; i < scripts_list_configs.size(); ++i)
-		{
-			std::string script;
-			scripts_list_configs[i].GetString("Script", script, "");
-			scripts_list.push_back(script);
-		}
+		scripts_config.GetVector<std::string>("Scripts", scripts_list, std::vector<std::string>());
 	}
-
 }
 
 void ModuleScriptManager::SaveScriptList()
 {
 	Config config;
-	std::vector<Config> script_configs;
-	for (auto script : scripts_list)
-	{
-		Config script_config;
-		script_config.AddString(script, "Script");
-		script_configs.push_back(script_config);
-	}
-
-	config.AddChildrenConfig(script_configs, "Scripts");
+	config.AddVector<std::string>(scripts_list, "Scripts");
 
 	std::string serialized_script_list_string;
 	config.GetSerializedString(serialized_script_list_string);
