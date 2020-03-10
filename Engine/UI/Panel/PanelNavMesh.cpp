@@ -1,6 +1,7 @@
 #include "AI/NavMesh.h"
 #include "Main/Application.h"
 #include "Module/ModuleAI.h"
+#include "Module/ModuleEditor.h"
 #include "PanelNavMesh.h"
 #include <imgui.h>
 
@@ -65,6 +66,8 @@ void PanelNavMesh::Render()
 		ImGui::Text("Detail Mesh");
 		ImGui::SliderFloat("Detail Sample Distance", &App->artificial_intelligence->nav_mesh.detail_sample_distance, 1.0f, 20.f);
 		ImGui::SliderFloat("Detail Sample Max Error", &App->artificial_intelligence->nav_mesh.detail_sample_max_error, 1.0f, 20.f);
+
+		ImGui::Text("Selected Position: (%.3f,%.3f)", App->editor->selected_position.x, App->editor->selected_position.y);
 
 		ImGui::Separator();
 

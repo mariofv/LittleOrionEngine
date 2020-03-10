@@ -66,5 +66,6 @@ void Mesh::LoadInMemory()
 void Mesh::Save(Config& config) const
 {
 }
-void Mesh::Load(const Config& config) {
+void Mesh::Load(const Config& config) 
+{
 }
