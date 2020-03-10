@@ -23,9 +23,8 @@ public:
 	void RenderModel() const;
 
 	void SetMesh(const std::shared_ptr<Mesh> & mesh_to_render);
-	bool operator <(const ComponentMesh & mesh_to_compare) const;
 
-	std::string shader_program = "Default";
+public:
 	std::shared_ptr<Mesh> mesh_to_render;
 
 private:

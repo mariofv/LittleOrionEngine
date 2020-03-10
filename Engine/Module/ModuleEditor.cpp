@@ -7,6 +7,7 @@
 #include "ModuleScene.h"
 #include "ModuleActions.h"
 #include "ModuleWindow.h"
+#include "ModuleInput.h"
 
 #include "UI/Panel/PanelAbout.h"
 #include "UI/Panel/PanelConfiguration.h"
@@ -80,6 +81,7 @@ bool ModuleEditor::InitImgui()
 	io.ConfigWindowsMoveFromTitleBarOnly = true;
 
 	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
+	return true;
 }
 
 update_status ModuleEditor::PreUpdate()
@@ -88,7 +90,6 @@ update_status ModuleEditor::PreUpdate()
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
 	ImGuizmo::BeginFrame();
-
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -104,6 +105,7 @@ update_status ModuleEditor::Update()
 		OpenScene(ASSIGNMENT_SCENE_PATH);
 		inital_scene_loaded = true;
 	}
+
 	return update_status::UPDATE_CONTINUE;
 }
 

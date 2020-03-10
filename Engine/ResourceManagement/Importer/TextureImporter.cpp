@@ -9,6 +9,7 @@ TextureImporter::TextureImporter()
 	ilInit();
 	ilEnable(IL_ORIGIN_SET);
 	ilOriginFunc(IL_ORIGIN_UPPER_LEFT);
+	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);
 	iluInit();
 	ilutInit();
 	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
@@ -28,31 +29,18 @@ std::pair<bool, std::string> TextureImporter::Import(const File & file) const
 	}
 
 	App->filesystem->MakeDirectory(LIBRARY_TEXTURES_FOLDER);
-	//Bound image
+	
+	std::string output_file;
 
-	ILuint image;
-	ilGenImages(1, &image);
-	ilBindImage(image);
-	int width, height;
-	ILubyte * save_data = LoadImageData(file.file_path.c_str(), IL_RGBA, width, height);
-	//Get new Name
-
-	std::string texture_name_no_extension = file.filename.substr(0, file.filename.find_last_of("."));
-	std::string output_file = LIBRARY_TEXTURES_FOLDER + "/" + texture_name_no_extension + ".dds";
-
-	//Save data
-	ILuint size;
-
-	ilSetInteger(IL_DXTC_FORMAT, IL_DXT5);// To pick a specific DXT compression use
-	size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
-	if (size > 0) {
-
-		if (ilSaveL(IL_DDS, save_data, size) > 0) // Save to buffer with the ilSaveIL function
-		{
-			App->filesystem->Save(output_file.c_str(), (unsigned int *)save_data, size);
-		}
-		ilDeleteImages(1, &image);
+	if (file.filename.find("_normal") != std::string::npos)
+	{
+		output_file = ImportToTGA(file);
 	}
+	else 
+	{
+		output_file = ImportToDDS(file);
+	}
+
 	SaveMetaFile(file, output_file);
 	return std::pair<bool, std::string>(true, output_file);
 }
@@ -89,7 +77,7 @@ std::string TextureImporter::ImportMaterialData(const std::string & material_pat
 }
 
 
-ILubyte * TextureImporter::LoadImageData(const std::string& file_path, int image_type ,int & width, int & height ) const
+ILubyte * TextureImporter::LoadImageDataInMemory(const std::string& file_path, int image_type ,int & width, int & height ) const
 {
 	ilLoadImage(file_path.c_str());
 
@@ -118,6 +106,7 @@ ILubyte * TextureImporter::LoadImageData(const std::string& file_path, int image
 
 
 
+
 //Remove the material from the cache if the only owner is the cache itself
 
 
@@ -137,3 +126,40 @@ std::string TextureImporter::GetTextureFileName(std::string texture_file_path) c
 	}
 }
 
+std::string TextureImporter::ImportToDDS(const File & file) const
+{
+	ILuint image;
+	ilGenImages(1, &image);
+	ilBindImage(image);
+	int width, height;
+	ILubyte * save_data = LoadImageDataInMemory(file.file_path.c_str(), IL_RGBA, width, height);
+	//Get new Name
+
+	std::string texture_name_no_extension = file.filename.substr(0, file.filename.find_last_of("."));
+	std::string output_file = LIBRARY_TEXTURES_FOLDER + "/" + texture_name_no_extension + ".dds";
+
+	//Save data
+	ILuint size;
+
+	size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
+	if (size > 0) {
+
+		if (ilSaveL(IL_DDS, save_data, size) > 0) // Save to buffer with the ilSaveIL function
+		{
+			App->filesystem->Save(output_file.c_str(), (unsigned int *)save_data, size);
+		}
+		ilDeleteImages(1, &image);
+	}
+	return output_file;
+}
+
+std::string TextureImporter::ImportToTGA(const File & file) const
+{
+	std::string output_file = LIBRARY_TEXTURES_FOLDER + "/" +file.filename;
+	bool copied = App->filesystem->Copy(file.file_path.c_str(), output_file.c_str());
+	if (!copied)
+	{
+		return "";
+	}
+	return output_file;
+}

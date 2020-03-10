@@ -15,15 +15,13 @@ std::shared_ptr<Mesh> MeshLoader::Load(const std::string& file_path)
 	char * data = App->filesystem->Load(file_path.c_str(), mesh_size);
 	char* cursor = data;
 
-	uint32_t ranges[3];
+	uint32_t ranges[2];
 	//Get ranges
 	size_t bytes = sizeof(ranges); // First store ranges
 	memcpy(ranges, cursor, bytes);
 
 	std::vector<uint32_t> indices;
 	std::vector<Mesh::Vertex> vertices;
-	std::vector<uint32_t> meshes_materials_size;
-	std::vector<std::string> meshes_textures_path;
 
 	indices.resize(ranges[0]);
 
@@ -37,27 +35,7 @@ std::shared_ptr<Mesh> MeshLoader::Load(const std::string& file_path)
 	bytes = sizeof(Mesh::Vertex) * ranges[1];
 	memcpy(&vertices.front(), cursor, bytes);
 
-
-	cursor += bytes; // Get sizes
-	bytes = sizeof(uint32_t) * ranges[2];
-	meshes_materials_size.resize(ranges[2]);
-	if (bytes != 0)
-	{
-		memcpy(&meshes_materials_size.front(), cursor, bytes);
-	}
-
-	meshes_textures_path.resize(ranges[2]);
-	for (size_t i = 0; i < ranges[2]; i++)
-	{
-		cursor += bytes; // Get materials
-		bytes = meshes_materials_size[i];
-		std::vector<char> path;
-		path.resize(bytes);
-		memcpy(&path.front(), cursor, bytes);
-		meshes_textures_path[i] = std::string(path.begin(), path.end());
-	}
-
-	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(std::move(vertices), std::move(indices), std::move(meshes_textures_path), file_path);
+	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(std::move(vertices), std::move(indices), file_path);
 	free(data);
 
 	return new_mesh;

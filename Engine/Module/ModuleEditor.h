@@ -55,9 +55,12 @@ private:
 	bool InitImgui();
 	void LoadFonts();
 
+	
+
 public:
 	GameObject *selected_game_object = nullptr;
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
+
 
 	PanelMenuBar* menu_bar = nullptr;
 	PanelToolBar* toolbar = nullptr;

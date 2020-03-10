@@ -28,7 +28,16 @@ public:
 	bool CleanUp() override;
 
 	std::pair<bool, std::string> Import(const File& file);
-	void RemoveResourceFromCacheIfNeeded(const std::shared_ptr<Resource> & resource);
+
+	template<typename T>
+	void RemoveResourceFromCacheIfNeeded(const std::shared_ptr<T> & resource) {
+		auto& it = std::find(resource_cache.begin(), resource_cache.end(), resource);
+		if (it != resource_cache.end() && (*it).use_count() <= 2)
+		{
+			resource_cache.erase(it);
+		}
+	}
+
 	template<typename T>
 	std::shared_ptr<T> Load(const std::string& uid) const
 	{
