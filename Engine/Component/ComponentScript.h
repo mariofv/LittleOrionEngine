@@ -20,7 +20,8 @@ public:
 	void LoadName(std::string& script_name);
 
 	void Update();
-	void InitScript();
+	void AwakeScript();
+	void StartScript();
 	void Delete();
 
 	void ShowComponentWindow();
