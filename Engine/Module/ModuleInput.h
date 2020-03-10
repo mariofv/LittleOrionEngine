@@ -314,7 +314,11 @@ enum class ControllerAxis
 	LEFT_JOYSTICK,
 	RIGHT_JOYSTICK,
 	LEFT_TRIGGER,
-	RIGHT_TRIGGER
+	RIGHT_TRIGGER,
+	LEFT_JOYSTICK_RAW,
+	RIGHT_JOYSTICK_RAW,
+	LEFT_TRIGGER_RAW,
+	RIGHT_TRIGGER_RAW
 };
 
 struct GameInput
@@ -399,9 +403,16 @@ public:
 	float2 GetAxisContoller(ControllerAxis type) const;
 	Sint16 GetTriggerController(ControllerAxis type) const;
 
+	float2 GetAxisContollerRaw(ControllerAxis type) const;
+	float GetTriggerControllerRaw(ControllerAxis type) const;
+
 private:
 	void SaveGameInputs(Config &config);
 	void LoadGameInputs(Config &config);
+
+
+public:
+	const float MAX_SDL_CONTROLLER_RANGE = 32767.0f;
 
 private:
 	std::map<KeyCode, KeyState> key_bible;
@@ -420,11 +431,17 @@ private:
 	Uint8 mouse_clicks;
 	bool mouse_moving;
 
-	float2 left_joystick;
-	float2 right_joystick;
+	float2 left_joystick = float2(0.0f,0.0f);
+	float2 right_joystick = float2(0.0f, 0.0f);
 
-	Sint16 left_controller_trigger;
-	Sint16 right_controller_trigger;
+	float2 left_joystick_raw = float2(0.0f, 0.0f);
+	float2 right_joystick_raw = float2(0.0f, 0.0f);
+
+	Sint32 left_controller_trigger = 0;
+	Sint32 right_controller_trigger = 0;
+
+	float left_controller_trigger_raw = 0;
+	float right_controller_trigger_raw = 0;
 
 	SDL_GameController* controller = nullptr;
 };

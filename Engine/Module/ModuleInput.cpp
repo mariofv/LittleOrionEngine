@@ -85,6 +85,14 @@ update_status ModuleInput::PreUpdate()
 
 	mouse_motion = { 0, 0 };
 	mouse_wheel_motion = 0;
+	left_joystick = { 0, 0 };
+	right_joystick = { 0, 0 };
+	left_controller_trigger = 0;
+	right_controller_trigger = 0;
+	left_joystick_raw = { 0, 0 };
+	right_joystick_raw = { 0, 0 };
+	left_controller_trigger_raw = 0;
+	right_controller_trigger_raw = 0;
 
 	for (auto& mouse : mouse_bible)
 	{
@@ -157,11 +165,32 @@ update_status ModuleInput::PreUpdate()
 		case SDL_CONTROLLERAXISMOTION:
 
 			left_joystick = float2(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY));
+			left_joystick_raw = float2(left_joystick / MAX_SDL_CONTROLLER_RANGE);
+
+			if(left_joystick.x < 0.0f)
+			{
+				left_joystick_raw.x = left_joystick.x / MAX_SDL_CONTROLLER_RANGE + 1;
+			}
+			else if(left_joystick.y >= 0.0f)
+			{
+				left_joystick_raw.y = left_joystick.y / MAX_SDL_CONTROLLER_RANGE;
+			}
+			else if(right_joystick.x < 0.0f)
+			{
+				right_joystick_raw.x = right_joystick.x / MAX_SDL_CONTROLLER_RANGE + 1;
+			}
+			else if(right_joystick.y >= 0.0f)
+			{
+				right_joystick_raw.y = right_joystick.y / MAX_SDL_CONTROLLER_RANGE;
+			}
 
 			right_joystick = float2(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTY));
+			right_joystick_raw = float2(right_joystick / MAX_SDL_CONTROLLER_RANGE);
 
 			left_controller_trigger = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+			left_controller_trigger_raw = left_controller_trigger / MAX_SDL_CONTROLLER_RANGE;
 			right_controller_trigger = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+			right_controller_trigger_raw = right_controller_trigger / MAX_SDL_CONTROLLER_RANGE;
 				
 			break;
 
@@ -362,7 +391,6 @@ bool ModuleInput::IsMouseMoving() const
 
 float2 ModuleInput::GetAxisContoller(ControllerAxis type) const
 {
-
 	switch (type)
 	{
 		case ControllerAxis::LEFT_JOYSTICK:
@@ -373,6 +401,13 @@ float2 ModuleInput::GetAxisContoller(ControllerAxis type) const
 			return right_joystick;
 			break;
 
+		case ControllerAxis::LEFT_JOYSTICK_RAW:
+			return left_joystick_raw;
+			break;
+
+		case ControllerAxis::RIGHT_JOYSTICK_RAW:
+			return right_joystick_raw;
+			break;
 		default:
 			break;
 	}
@@ -388,10 +423,53 @@ Sint16 ModuleInput::GetTriggerController(ControllerAxis type) const
 			return left_controller_trigger;
 			break;
 		case ControllerAxis::RIGHT_TRIGGER:
-			right_controller_trigger;
+			return right_controller_trigger;
+			break;
+		case ControllerAxis::LEFT_TRIGGER_RAW:
+			return left_controller_trigger_raw;
+			break;
+		case ControllerAxis::RIGHT_TRIGGER_RAW:
+			return right_controller_trigger_raw;
+			break;
+
+		default:
+			break;
+	}
+
+	return 0;
+}
+
+float2 ModuleInput::GetAxisContollerRaw(ControllerAxis type) const
+{
+	switch (type)
+	{
+		case ControllerAxis::LEFT_JOYSTICK_RAW:
+			return left_joystick_raw;
+			break;
+
+		case ControllerAxis::RIGHT_JOYSTICK_RAW:
+			return right_joystick_raw;
 			break;
 		default:
 			break;
+	}
+
+	return float2(0.0f, 0.0f);
+}
+
+float ModuleInput::GetTriggerControllerRaw(ControllerAxis type) const
+{
+	switch (type)
+	{
+	case ControllerAxis::LEFT_TRIGGER_RAW:
+		return left_controller_trigger_raw;
+		break;
+	case ControllerAxis::RIGHT_TRIGGER_RAW:
+		return right_controller_trigger_raw;
+		break;
+
+	default:
+		break;
 	}
 
 	return 0.0f;
