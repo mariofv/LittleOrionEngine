@@ -48,6 +48,7 @@ public:
 	void DrawAABBTree() const;
 
 	GameObject* GetRaycastIntertectedObject(const LineSegment & ray);
+	bool GetRayCastIntersectedPosition(const LineSegment & ray, float3& position);
 
 private:
 	void SetVSync(bool vsync);
