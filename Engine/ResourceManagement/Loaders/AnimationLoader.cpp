@@ -25,7 +25,7 @@ std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uid)
 
 	std::string animation_name;
 	animation_name.resize(name_size);
-	memcpy(animation_name.data(), cursor,name_size);
+	memcpy(&animation_name[0], cursor,name_size);
 	cursor += name_size;
 
 	float animation_duration;
@@ -59,7 +59,7 @@ std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uid)
 			cursor += sizeof(uint32_t);
 
 			channel.name.resize(name_size);
-			memcpy(channel.name.data(), cursor, name_size);
+			memcpy(&channel.name[0], cursor, name_size);
 			cursor += name_size;
 
 			memcpy(&channel.position, cursor,sizeof(float4x4));
