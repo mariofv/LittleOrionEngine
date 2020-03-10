@@ -14,6 +14,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/Prefab.h"
+#include "ResourceManagement/Importer/Importer.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -133,7 +134,9 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 			}
 			if (incoming_file->file_type == FileType::PREFAB)
 			{
-				auto prefab = App->resources->Load<Prefab>(incoming_file->file_path);
+				ImportOptions options;
+				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
+				auto prefab = App->resources->Load<Prefab>(options.exported_file);
 				prefab->Instantiate(target_game_object);
 			}
 		}
