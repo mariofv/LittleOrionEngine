@@ -17,6 +17,10 @@
 
 
 ///https://masagroup.github.io/recastdetour/group__recast.html nais documentation
+
+//TODO: Try to use the TemporalObstacle aproach to handle the multimesh navmesh
+// Using dtTileCache for multiple tiles.
+
 NavMesh::NavMesh()
 {
 	m_ctx = new rcContext();
