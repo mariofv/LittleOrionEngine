@@ -118,6 +118,7 @@ void ComponentMaterial::Render(unsigned int shader_program) const
 	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);
 	AddAmbientOclusionUniforms(shader_program);
+	AddNormalUniforms(shader_program);
 }
 
 void ComponentMaterial::AddDiffuseUniforms(unsigned int shader_program) const

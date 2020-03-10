@@ -173,6 +173,10 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 					ImGui::SliderFloat("k specular", &material->k_specular, 0, 1);
 					ImGui::SliderFloat("Shininess", &material->shininess, 0, 1);
 				}
+				if (type == Texture::TextureType::NORMAL)
+				{
+					
+				}
 			
 				ImGui::Separator();
 			}
