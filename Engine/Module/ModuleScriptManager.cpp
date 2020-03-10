@@ -81,7 +81,20 @@ void ModuleScriptManager::GetCurrentPath()
 
 void ModuleScriptManager::CreateScript(const std::string& name)
 {
-	
+
+	std::string cpp_file = utils->LoadFileContent(SCRIPT_TEMPLATE_FILE_CPP);
+	std::string header_file = utils->LoadFileContent(SCRIPT_TEMPLATE_FILE_H);
+
+	utils->ReplaceStringInPlace(cpp_file, "ExampleScript", name);
+	utils->ReplaceStringInPlace(header_file, "ExampleScript", name);
+
+	if (!App->filesystem->Exists((SCRIPT_PATH + name + ".cpp").c_str()))
+	{
+		utils->SaveFileContent(cpp_file, SCRIPT_PATH + name + ".cpp");
+		utils->SaveFileContent(header_file, SCRIPT_PATH + name + ".h");
+	}
+
+	SaveScriptList();
 }
 
 void ModuleScriptManager::InitResourceScript()
