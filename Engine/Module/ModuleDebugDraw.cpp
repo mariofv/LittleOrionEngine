@@ -396,6 +396,16 @@ void ModuleDebugDraw::Render()
 		}
 	}
 
+	if (App->debug->show_octtree)
+	{
+		for (auto& ol_octtree_node : App->renderer->ol_octtree.flattened_tree)
+		{
+			float3 octtree_node_min = float3(ol_octtree_node->box.minPoint.x, ol_octtree_node->box.minPoint.y, ol_octtree_node->box.minPoint.z);
+			float3 octtree_node_max = float3(ol_octtree_node->box.maxPoint.x, ol_octtree_node->box.maxPoint.y, ol_octtree_node->box.maxPoint.z);
+			dd::aabb(octtree_node_min, octtree_node_max, float3::one);
+		}
+	}
+
 	if(App->debug->show_aabbtree)
 	{
 		App->renderer->DrawAABBTree();
@@ -404,7 +414,7 @@ void ModuleDebugDraw::Render()
 	if (App->editor->selected_game_object != nullptr)
 	{
 		RenderCameraFrustum();
-    RenderLightGizmo();
+		RenderLightGizmo();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 
