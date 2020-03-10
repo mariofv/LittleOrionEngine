@@ -87,13 +87,13 @@ void ModuleScriptManager::CreateScript(const std::string& name)
 
 	utils->ReplaceStringInPlace(cpp_file, "ExampleScript", name);
 	utils->ReplaceStringInPlace(header_file, "ExampleScript", name);
-
+	utils->ReplaceStringInPlace(header_file, "_EXAMPLESCRIPT_H_", "_"+name+"_H_");
 	if (!App->filesystem->Exists((SCRIPT_PATH + name + ".cpp").c_str()))
 	{
 		utils->SaveFileContent(cpp_file, SCRIPT_PATH + name + ".cpp");
 		utils->SaveFileContent(header_file, SCRIPT_PATH + name + ".h");
 	}
-
+	scripts_list.push_back(name);
 	SaveScriptList();
 }
 
@@ -165,7 +165,9 @@ void ModuleScriptManager::LoadScriptList()
 		scripts_config.GetChildrenConfig("Scripts", scripts_list_configs);
 		for (unsigned int i = 0; i < scripts_list_configs.size(); ++i)
 		{
-			scripts_list.push_back(scripts_list_configs[i].config_document.GetString());
+			std::string script;
+			scripts_list_configs[i].GetString("Script", script, "");
+			scripts_list.push_back(script);
 		}
 	}
 
@@ -173,6 +175,20 @@ void ModuleScriptManager::LoadScriptList()
 
 void ModuleScriptManager::SaveScriptList()
 {
+	Config config;
+	std::vector<Config> script_configs;
+	for (auto script : scripts_list)
+	{
+		Config script_config;
+		script_config.AddString(script, "Script");
+		script_configs.push_back(script_config);
+	}
+
+	config.AddChildrenConfig(script_configs, "Scripts");
+
+	std::string serialized_script_list_string;
+	config.GetSerializedString(serialized_script_list_string);
+	App->filesystem->Save(SCRIPT_LIST_PATH, serialized_script_list_string.c_str(), serialized_script_list_string.size() + 1);
 
 }
 

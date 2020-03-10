@@ -500,6 +500,7 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 			App->editor->popups->create_script_shown = true;
 			return;
 		}
+		ImGui::SameLine();
 		if (ImGui::Button("Refresh"))
 		{
 			App->scripts->Refresh();
