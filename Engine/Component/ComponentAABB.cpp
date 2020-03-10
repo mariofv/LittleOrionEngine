@@ -80,6 +80,9 @@ bool ComponentAABB::IsEmpty() const
 
 Component* ComponentAABB::Clone(bool original_prefab) const
 {
-	return nullptr;
+	ComponentAABB * created_component;
+	created_component = new ComponentAABB();
+	*created_component = *this;
+	return created_component;
 }
 

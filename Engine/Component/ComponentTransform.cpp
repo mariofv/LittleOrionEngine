@@ -216,6 +216,8 @@ void ComponentTransform::ChangeLocalSpace(const float4x4 &new_local_space)
 
 Component* ComponentTransform::Clone(bool original_prefab) const
 {
-
-	return nullptr;
+	ComponentTransform * created_component;
+	created_component = new ComponentTransform();
+	*created_component = *this;
+	return created_component;
 }
