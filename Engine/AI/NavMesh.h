@@ -9,6 +9,8 @@
 #include <vector>
 #include "Helper/Timer.h"
 
+#define MAX_POLYS_PATH 256
+
 enum DrawMode
 {
 	DRAWMODE_NAVMESH,
@@ -69,6 +71,8 @@ public:
 	void RenderTile(DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const;
 
 	void InitAABB();
+
+	bool FindPath(float3& start, float3& end, std::vector<float3>& path) const;
 
 	inline SampleDebugDraw& GetDebugDraw() { return m_dd; }
 

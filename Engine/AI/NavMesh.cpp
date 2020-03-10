@@ -655,6 +655,33 @@ void NavMesh::InitAABB()
 	}
 }
 
+bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path) const
+{
+
+	if(!nav_query)
+	{
+		APP_LOG_ERROR("Cannot find path if dtNavMeshQuery* nav_query is nullptr");
+		return false;
+	}
+
+	dtPolyRef start_ref, end_ref;
+	dtQueryFilter filter;
+	filter.setIncludeFlags(SAMPLE_POLYFLAGS_ALL ^ SAMPLE_POLYFLAGS_DISABLED);
+	filter.setExcludeFlags(0);
+
+	float poly_pick_ext[3] = { 1.0f, 1.0f, 1.0f};
+
+	nav_query->findNearestPoly((float*)&start, poly_pick_ext, &filter, &start_ref, 0);
+	nav_query->findNearestPoly((float*)&end, poly_pick_ext, &filter, &end_ref, 0);
+
+	dtPolyRef path_ref[MAX_POLYS_PATH];
+	int path_count = 0;
+
+	nav_query->findPath(start_ref, end_ref, (float*)&start, (float*)&end, &filter, path_ref, &path_count, MAX_POLYS_PATH);
+
+	return true;
+}
+
 void NavMesh::GetVerticesScene()
 {
 	//Clear vertex vector

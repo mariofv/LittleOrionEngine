@@ -3,7 +3,7 @@
 
 #include "Module/Module.h"
 #include "AI/NavMesh.h"
-
+#include "MathGeoLib/MathGeoLib.h"
 
 class PanelNavMesh;
 class ComponentCamera;
@@ -19,6 +19,8 @@ public:
 	bool CleanUp() override;
 
 	void RenderNavMesh(ComponentCamera& camera);
+
+	bool FindPath(float3& start, float3& end, std::vector<float3>& path) const;
 
 private:
 	NavMesh nav_mesh = NavMesh();
