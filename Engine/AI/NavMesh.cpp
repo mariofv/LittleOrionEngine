@@ -659,6 +659,8 @@ void NavMesh::InitAABB()
 bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path) const
 {
 
+	path.clear();
+
 	if(!nav_query)
 	{
 		APP_LOG_ERROR("Cannot find path if dtNavMeshQuery* nav_query is nullptr");
@@ -702,6 +704,24 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path) co
 
 	if(path_count)
 	{
+
+		float straight_path[MAX_POLYS_PATH * 3];
+		int number_of_points = 0;
+		dtStatus straight_status = nav_query->findStraightPath((float*)&start, (float*)&end, 
+			path_ref, path_count, straight_path, NULL, NULL, &number_of_points, MAX_POLYS_PATH);
+
+		if(dtStatusFailed(straight_status))
+		{
+			APP_LOG_INFO("Couldn't find a straight path from start to end.");
+			return false;
+		}
+
+		for(int i = 0; i < number_of_points; ++i)
+		{
+			path.push_back(float3(straight_path[i * 3], straight_path[i * 3 + 1], straight_path[i * 3 + 2]));
+		}
+
+		/*
 		float3 current_position = start;
 
 		for (unsigned int i = 0; i < path_count; ++i)
@@ -715,6 +735,7 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path) co
 				current_position = path_position;
 			}
 		}
+		*/
 	}
 
 
