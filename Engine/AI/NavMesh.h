@@ -110,8 +110,8 @@ protected:
 	DrawMode m_drawMode;
 
 	// Variables of NavMesh (modified by UI)
-	float cell_width = 0.30f;
-	float cell_height = 0.20f;
+	float cell_width = 0.20f;
+	float cell_height = 1.0f;
 	float walkable_slope_angle = 50.0f;
 	float agent_height = 2.0f;
 	float agent_max_climb = 0.09f;

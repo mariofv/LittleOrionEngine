@@ -2,6 +2,7 @@
 #define _PANELNAVMESH_H_
 
 #include "Panel.h"
+#include <MathGeoLib/MathGeoLib.h>
 #include <string>
 
 class PanelNavMesh : public Panel

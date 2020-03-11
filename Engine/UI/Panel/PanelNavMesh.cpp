@@ -97,9 +97,14 @@ void PanelNavMesh::Render()
 			end_position = App->editor->selected_position;
 		}
 
+		ImGui::Text("Starting Point: (%.3f,%.3f,%.3f)", start_position.x, start_position.y, start_position.z);
+		ImGui::Text("Ending Point: (%.3f,%.3f,%.3f)", end_position.x, end_position.y, end_position.z);
+
 		if(ImGui::Button("Build path from start to end"))
 		{
 			//TODO: pathfind from moduleAI
+			std::vector<float3> path;
+			App->artificial_intelligence->FindPath(start_position, end_position, path);
 		}
 
 	}

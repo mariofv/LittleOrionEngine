@@ -669,7 +669,7 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path) co
 	filter.setIncludeFlags(SAMPLE_POLYFLAGS_ALL ^ SAMPLE_POLYFLAGS_DISABLED);
 	filter.setExcludeFlags(0);
 
-	float poly_pick_ext[3] = { 1.0f, 1.0f, 1.0f};
+	float poly_pick_ext[3] = { 2.0f, 4.0f, 2.0f};
 
 	nav_query->findNearestPoly((float*)&start, poly_pick_ext, &filter, &start_ref, 0);
 	nav_query->findNearestPoly((float*)&end, poly_pick_ext, &filter, &end_ref, 0);
@@ -678,6 +678,25 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path) co
 	int path_count = 0;
 
 	nav_query->findPath(start_ref, end_ref, (float*)&start, (float*)&end, &filter, path_ref, &path_count, MAX_POLYS_PATH);
+
+	if(path_count)
+	{
+		float3 current_position = start;
+
+		for (unsigned int i = 0; i < path_count; ++i)
+		{
+			if (nav_query->isValidPolyRef(path_ref[i], &filter))
+			{
+				float3 path_position;
+				nav_query->closestPointOnPoly(path_ref[i], (float*)&current_position, (float*)&path_position, 0);
+				
+				path.push_back(path_position);
+				current_position = path_position;
+			}
+		}
+	}
+
+
 
 	return true;
 }
