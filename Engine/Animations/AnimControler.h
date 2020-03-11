@@ -13,10 +13,10 @@ public:
 	bool loop = false;
 	bool stop = false;
 	Animation* anim = nullptr;
-	unsigned int current_time = 0.f;
-	unsigned int animation_time = 0.f;
+	unsigned int current_time = 0;
+	unsigned int animation_time = 600;
 
-	float progress_animation = (current_time%animation_time / animation_time);
+	float progress_animation = 1; //(current_time%animation_time / animation_time);
 
 
 public:

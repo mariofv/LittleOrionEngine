@@ -13,9 +13,12 @@
 #include <stack>
 #include "Brofiler/Brofiler.h"
 
+#include "Animations/AnimControler.h"
+
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
+	AnimControler anim = AnimControler();
 	return true;
 }
 
