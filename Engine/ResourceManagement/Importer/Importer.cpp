@@ -2,6 +2,7 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleResourceManager.h"
 #include "Helper/Config.h"
 
 std::pair<bool, std::string> Importer::Import(const File & file, bool force) const
@@ -53,6 +54,7 @@ void Importer::SaveMetaFile(const File& imported_file, const std::string & expor
 	scene_config.GetSerializedString(serialized_scene_string);
 
 	App->filesystem->Save(meta_file_path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
+	App->resources->resource_DB->AddEntry(options);
 }
 
 

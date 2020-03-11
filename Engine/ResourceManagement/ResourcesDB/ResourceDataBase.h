@@ -13,7 +13,9 @@ class ResourceDataBase
 public:
 	ResourceDataBase() = default;
 	~ResourceDataBase() = default;
+
 	void AddEntry(const File& meta_file);
+	void AddEntry(const ImportOptions& meta_file);
 
 private:
 	const std::string RESOURCE_DATABASE = "Resources/DB/resources.json";
