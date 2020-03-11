@@ -1,14 +1,16 @@
 #ifndef _GAMEOBJECT_H_
 #define _GAMEOBJECT_H_
 
+#define ENGINE_EXPORTS
 #include "Globals.h"
 #include "Component/Component.h"
-#include "Component/ComponentTransform.h"
 #include "Component/ComponentAABB.h"
-#include "ResourceManagement/Resources/Prefab.h"
+#include "Component/ComponentTransform.h"
+
+
 #include <GL/glew.h>
 
-class ComponentCamera;
+class ComponentCamera; 
 class GameObject
 {
 public:
@@ -32,7 +34,7 @@ public:
 	bool IsStatic() const;
 
 	bool IsVisible(const ComponentCamera & camera) const;
-	void Update();
+	ENGINE_API void Update();
 	void Delete(std::vector<GameObject*> & children_to_remove);
 
 	void Save(Config& config) const;
@@ -42,9 +44,9 @@ public:
 	void AddChild(GameObject *child);
 	void RemoveChild(GameObject *child);
 
-	Component* CreateComponent(const Component::ComponentType type);
+	ENGINE_API  Component* CreateComponent(const Component::ComponentType type);
 	void RemoveComponent(Component * component);
-	Component* GetComponent(const Component::ComponentType type) const;
+	ENGINE_API  Component* GetComponent(const Component::ComponentType type) const;
 
 	void MoveUpInHierarchy() const;
 	void MoveDownInHierarchy() const;

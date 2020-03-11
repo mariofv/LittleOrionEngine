@@ -29,7 +29,12 @@ bool ModuleFileSystem::Init() {
 		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
 		return false;
 	}
-	App->filesystem->RefreshFilesHierarchy();
+	if (PHYSFS_mount("Resources", "Resources", 1) == 0)
+	{
+		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
+		return false;
+	}
+	RefreshFilesHierarchy();
 	return true;
 }
 

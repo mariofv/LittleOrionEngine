@@ -3,6 +3,7 @@
 #include "Actions/EditorAction.h"
 #include "Actions/EditorActionDeleteGameObject.h"
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentLight.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
@@ -246,7 +247,22 @@ void PanelHierarchy::ShowComponentObjectCreationMenu(GameObject *game_object) co
 		{
 			created_game_object = App->scene->CreateGameObject();
 			created_game_object->name = "Point Light";
-			created_game_object->CreateComponent(Component::ComponentType::LIGHT);
+			ComponentLight* point_light_component = static_cast<ComponentLight*>(created_game_object->CreateComponent(Component::ComponentType::LIGHT));
+			point_light_component->light_type = ComponentLight::LightType::POINT_LIGHT;
+		}
+		if (ImGui::Selectable("Spot Light"))
+		{
+			created_game_object = App->scene->CreateGameObject();
+			created_game_object->name = "Spot Light";
+			ComponentLight* spot_light_component = static_cast<ComponentLight*>(created_game_object->CreateComponent(Component::ComponentType::LIGHT));
+			spot_light_component->light_type = ComponentLight::LightType::SPOT_LIGHT;
+		}
+		if (ImGui::Selectable("Directional Light"))
+		{
+			created_game_object = App->scene->CreateGameObject();
+			created_game_object->name = "Directional Light";
+			ComponentLight* directional_light_component = static_cast<ComponentLight*>(created_game_object->CreateComponent(Component::ComponentType::LIGHT));
+			directional_light_component->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
 		}
 
 		ImGui::EndMenu();

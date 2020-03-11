@@ -3,6 +3,7 @@
 #include "Helper/Config.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleScriptManager.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
@@ -11,10 +12,12 @@
 #include "ResourceManagement/Resources/Texture.h"
 #include "UI/Panel/PanelHierarchy.h"
 
+
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentScript.h"
 
 #include "Brofiler/Brofiler.h"
 #include <pcg_basic.h>
@@ -145,13 +148,17 @@ bool GameObject::IsVisible(const ComponentCamera & camera) const
 	}
 	return true;
 }
-void GameObject::Update()
+ENGINE_API void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
 
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
-		components[i]->Update();
+		if (components[i]->type != Component::ComponentType::SCRIPT) 
+		{
+			components[i]->Update();
+		}
+
 	}
 }
 
@@ -257,7 +264,7 @@ void GameObject::RemoveChild(GameObject *child)
 }
 
 
-Component* GameObject::CreateComponent(const Component::ComponentType type)
+ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type)
 {
 	Component *created_component;
 	switch (type)
@@ -276,6 +283,9 @@ Component* GameObject::CreateComponent(const Component::ComponentType type)
 
 	case Component::ComponentType::LIGHT:
 		created_component = App->lights->CreateComponentLight();
+		break;
+	case Component::ComponentType::SCRIPT:
+		created_component = App->scripts->CreateComponentScript();
 		break;
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
@@ -297,7 +307,7 @@ void GameObject::RemoveComponent(Component * component_to_remove)
 	}
 }
 
-Component* GameObject::GetComponent(const Component::ComponentType type) const
+ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType type) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{

@@ -46,6 +46,7 @@ void ComponentMaterial::Save(Config& config) const
 		}
 	}
 	config.AddBool(show_checkerboard_texture, "Checkboard");
+	config.AddString(shader_program, "ShaderProgram");
 
 	//k
 	config.AddFloat(k_ambient, "kAmbient");
@@ -79,6 +80,7 @@ void ComponentMaterial::Load(const Config& config)
 	}
 
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
+	config.GetString("ShaderProgram", shader_program, "Blinn phong");
 
 	//k
 	k_ambient = config.GetFloat("kAmbient", 1.0f);
@@ -144,7 +146,6 @@ void ComponentMaterial::AddSpecularUniforms(unsigned int shader_program) const
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), k_specular);
-	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), shininess);
 }
 
 void ComponentMaterial::AddAmbientOclusionUniforms(unsigned int shader_program) const

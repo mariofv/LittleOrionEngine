@@ -2,7 +2,7 @@
 #define _PANELGAMEOBJECT_H_
 
 #include "UI/Panel/Panel.h"
-#include "PanelComponent.h";
+#include "PanelComponent.h"
 
 class GameObject;
 
