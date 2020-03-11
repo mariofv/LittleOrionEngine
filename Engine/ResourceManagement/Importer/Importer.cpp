@@ -71,7 +71,5 @@ void Importer::GetOptionsFromMeta(const File& file, ImportOptions & options)
 
 std::string Importer::GetMetaFilePath(const File& file)
 {
-	int extension_index = file.file_path.find_last_of(".");
-	extension_index = extension_index != std::string::npos ? extension_index : file.file_path.size();
-	return file.file_path.substr(0, extension_index) + ".meta";
+	return file.file_path + ".meta";
 }
