@@ -18,6 +18,26 @@ ComponentScript::ComponentScript(GameObject* owner, std::string& script_name) : 
 	App->scripts->scripts.push_back(this);
 }
 
+Component* ComponentScript::Clone(bool original_prefab) const
+{
+	ComponentScript * created_component;
+	/*if (original_prefab)
+	{
+		created_component = new ComponentScript();
+	}
+	else
+	{
+		created_component->script = this->script;
+	}
+	*created_component = *this;*/
+	return created_component;
+};
+
+void ComponentScript::Copy(Component * component_to_copy) const
+{
+	*component_to_copy = *this;
+	*static_cast<ComponentScript*>(component_to_copy) = *this;
+}
 
 void ComponentScript::LoadName(std::string& script_name) 
 {

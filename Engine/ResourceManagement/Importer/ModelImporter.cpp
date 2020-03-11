@@ -1,21 +1,24 @@
 #include "ModelImporter.h"
-#include "ResourceManagement/Resources/Mesh.h"
-#include "TextureImporter.h"
-#include "Main/Application.h"
 
-#include <assimp/cimport.h>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
-#include <assimp/material.h>
-#include "assimp/DefaultLogger.hpp"
-#include "Brofiler/Brofiler.h"
 #include "Helper/Config.h"
 
-
+#include "Main/Application.h"
+#include "ModelImporters/AnimationImporter.h"
 #include "ModelImporters/MeshImporter.h"
 #include "ModelImporters/MaterialImporter.h"
 #include "ModelImporters/SkeletonImporter.h"
-#include "ModelImporters/AnimationImporter.h"
+#include "Module/ModuleFileSystem.h"
+
+#include "ResourceManagement/Resources/Mesh.h"
+#include "TextureImporter.h"
+
+#include "assimp/cimport.h"
+#include "assimp/postprocess.h"
+#include "assimp/scene.h"
+#include "assimp/material.h"
+#include "assimp/DefaultLogger.hpp"
+
+#include "Brofiler/Brofiler.h"
 
 ModelImporter::ModelImporter()
 {
@@ -38,16 +41,16 @@ ModelImporter::~ModelImporter()
 	Assimp::DefaultLogger::kill();
 }
 
-std::pair<bool, std::string> ModelImporter::Import(const File & file) const
+std::pair<bool, std::string> ModelImporter::Import(const File & file, bool force) const
 {
 	if (file.filename.empty())
 	{
 		APP_LOG_ERROR("Importing mesh error: Couldn't find the file to import.")
 		return std::pair<bool, std::string>(false, "");
 	}
-	std::string already_imported = GetAlreadyImportedResource(file);
-	if (!already_imported.empty()) {
-		return std::pair<bool, std::string>(true, already_imported);
+	ImportOptions already_imported = GetAlreadyImportedResource(file);
+	if (already_imported.uid != 0 && !force) {
+		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 
 	File output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER+"/"+ file.filename_no_extension);
@@ -76,7 +79,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 
 	Config model;
 	std::vector<Config> node_config;
-	ImportNode(root_node, identity_transformation, scene, base_path.c_str(),output_file.file_path, node_config);
+	ImportNode(root_node, identity_transformation, scene, base_path.c_str(), output_file.file_path, node_config);
 
 	std::vector<Config> animations_config;
 	for (size_t i = 0; i < scene->mNumAnimations; i++)
@@ -99,7 +102,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file) const
 	App->filesystem->Save(output_file_model.c_str(), serialized_model_string.c_str(), serialized_model_string.size() + 1);
 
 	SaveMetaFile(file, output_file_model);
-	return std::pair<bool, std::string>(true, output_file.file_path);
+	return std::pair<bool, std::string>(true, output_file_model);
 }
 
 void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file,  std::vector<Config> & node_config) const

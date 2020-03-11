@@ -6,6 +6,7 @@
 enum class FileType
 {
 	MODEL,
+	PREFAB, //TODO UNIFY MODEL & PREFAB
 	TEXTURE,
 	DIRECTORY,
 	ARCHIVE,

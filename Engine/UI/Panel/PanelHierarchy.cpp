@@ -13,6 +13,9 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleResourceManager.h"
+#include "ResourceManagement/Resources/Prefab.h"
+#include "ResourceManagement/Importer/Importer.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -47,7 +50,15 @@ void PanelHierarchy::Render()
 
 void PanelHierarchy::ShowGameObjectHierarchy(GameObject *game_object)
 {
-	std::string game_object_name_label = (std::string(ICON_FA_CUBE) + " " + game_object->name);
+	std::string game_object_name_label;
+	if (game_object->original_UUID != 0)
+	{
+		game_object_name_label = (std::string(ICON_FA_BOX_OPEN) + " " + game_object->name);
+	}
+	else 
+	{
+		game_object_name_label = (std::string(ICON_FA_CUBE) + " " + game_object->name);
+	}
 	ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_SpanFullWidth | ImGuiTreeNodeFlags_DefaultOpen;
 	if (game_object->children.size() == 0)
 	{
@@ -100,7 +111,7 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			if (!incoming_game_object->IsAboveInHierarchy(*target_game_object))
+			if (!incoming_game_object->IsAboveInHierarchy(*target_game_object) && (incoming_game_object->original_UUID == 0 || incoming_game_object->is_prefab_parent))
 			{
 				incoming_game_object->SetParent(target_game_object);
 			}
@@ -121,6 +132,13 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 					App->actions->action_game_object = new_model;
 					App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
 				}
+			}
+			if (incoming_file->file_type == FileType::PREFAB)
+			{
+				ImportOptions options;
+				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
+				auto prefab = App->resources->Load<Prefab>(options.exported_file);
+				prefab->Instantiate(target_game_object);
 			}
 		}
 		ImGui::EndDragDropTarget();
