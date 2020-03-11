@@ -8,10 +8,10 @@
 #include <atomic>
 #include <mutex>
 
-#include "ResourceManagement/Importer/TextureImporter.h"
 #include "ResourceManagement/Importer/ModelImporter.h"
 #include "ResourceManagement/Importer/PrefabImporter.h"
 #include "ResourceManagement/Importer/SceneManager.h"
+#include "ResourceManagement/Importer/TextureImporter.h"
 
 class Texture;
 class File;

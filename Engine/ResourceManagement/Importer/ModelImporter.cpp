@@ -1,21 +1,24 @@
 #include "ModelImporter.h"
-#include "ResourceManagement/Resources/Mesh.h"
-#include "TextureImporter.h"
-#include "Main/Application.h"
-#include "Module/ModuleFileSystem.h"
-#include <assimp/cimport.h>
-#include <assimp/postprocess.h>
-#include <assimp/scene.h>
-#include <assimp/material.h>
-#include "assimp/DefaultLogger.hpp"
-#include "Brofiler/Brofiler.h"
+
 #include "Helper/Config.h"
 
-
+#include "Main/Application.h"
+#include "ModelImporters/AnimationImporter.h"
 #include "ModelImporters/MeshImporter.h"
 #include "ModelImporters/MaterialImporter.h"
 #include "ModelImporters/SkeletonImporter.h"
-#include "ModelImporters/AnimationImporter.h"
+#include "Module/ModuleFileSystem.h"
+
+#include "ResourceManagement/Resources/Mesh.h"
+#include "TextureImporter.h"
+
+#include "assimp/cimport.h"
+#include "assimp/postprocess.h"
+#include "assimp/scene.h"
+#include "assimp/material.h"
+#include "assimp/DefaultLogger.hpp"
+
+#include "Brofiler/Brofiler.h"
 
 ModelImporter::ModelImporter()
 {

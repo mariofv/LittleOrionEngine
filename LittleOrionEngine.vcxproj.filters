@@ -268,9 +268,15 @@
     <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp">
       <Filter>Engine\ResourceManagement\ImportOptions</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\SceneManager.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Loaders\PrefabLoader.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\PrefabLoader.cpp">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\SceneManager.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -537,9 +543,15 @@
     <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
       <Filter>Engine\ResourceManagement\ImportOptions</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\PrefabImporter.h" />
-    <ClInclude Include="Engine\ResourceManagement\Importer\SceneManager.h" />
-    <ClInclude Include="Engine\ResourceManagement\Loaders\PrefabLoader.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\PrefabImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\PrefabLoader.h">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\SceneManager.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
