@@ -28,7 +28,7 @@ private:
 	void RenderBoundingBoxes() const;
 	void RenderGlobalBoundingBoxes() const;
 	void RenderBillboards() const;
-	void RenderNavMesh() const;
+	void RenderPathfinding() const;
 
 private:
 	static IDebugDrawOpenGLImplementation* dd_interface_implementation;

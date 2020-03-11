@@ -3,11 +3,12 @@
 
 #include "AI/SampleDebugDraw.h"
 #include "AI/DebugDrawGL.h"
-#include "recast/Recast/Recast.h"
-#include "MathGeoLib.h"
-#include <pcg_basic.h>
-#include <vector>
 #include "Helper/Timer.h"
+
+#include <MathGeoLib.h>
+#include <pcg_basic.h>
+#include <recast/Recast/Recast.h>
+#include <vector>
 
 #define MAX_POLYS_PATH 256
 

@@ -1,5 +1,6 @@
-#include "Main/Application.h"
 #include "ModuleAI.h"
+
+#include "Main/Application.h"
 #include "ModuleInput.h"
 
 
@@ -30,7 +31,7 @@ void ModuleAI::RenderNavMesh(ComponentCamera& camera)
 	nav_mesh.RenderNavMesh(camera);
 }
 
-bool ModuleAI::FindPath(float3 & start, float3 & end, std::vector<float3>& path) const
+bool ModuleAI::FindPath(float3& start, float3& end, std::vector<float3>& path) const
 {
-	return nav_mesh.FindPath(start, end ,path);
+	return nav_mesh.FindPath(start, end , path);
 }

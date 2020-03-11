@@ -102,9 +102,7 @@ void PanelNavMesh::Render()
 
 		if(ImGui::Button("Build path from start to end"))
 		{
-			//TODO: pathfind from moduleAI
-			std::vector<float3> path;
-			App->artificial_intelligence->FindPath(start_position, end_position, path);
+			App->artificial_intelligence->FindPath(start_position, end_position, App->artificial_intelligence->debug_path);
 		}
 
 	}

@@ -418,6 +418,11 @@ void ModuleDebugDraw::Render()
 		RenderGlobalBoundingBoxes();
 	}
 
+	if(App->debug->show_pathfind_points)
+	{
+		RenderPathfinding();
+	}
+
 	RenderBillboards();
 
 	RenderDebugDraws(*App->cameras->scene_camera);
@@ -548,6 +553,14 @@ void ModuleDebugDraw::RenderBillboards() const
 		if (camera_component != nullptr) {
 			camera_billboard->Render(object->transform.GetGlobalTranslation());
 		}
+	}
+}
+
+void ModuleDebugDraw::RenderPathfinding() const
+{
+	for(auto point : App->artificial_intelligence->debug_path)
+	{
+		dd::point(point, float3(0, 0, 255), 4.0f);
 	}
 }
 

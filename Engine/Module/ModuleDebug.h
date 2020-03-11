@@ -34,6 +34,7 @@ public:
 	bool show_quadtree = false;
 	bool show_aabbtree = false;
 	bool show_navmesh = true;
+	bool show_pathfind_points = true;
 
 	bool culling_scene_mode = false;
 	CullingMode culling_mode = CullingMode::QUADTREE_CULLING;

@@ -1,14 +1,15 @@
 #include "NavMesh.h"
 
-#include "Main/Application.h"
-#include "UI/DebugDraw.h"
-#include "Module/ModuleScene.h"
-#include "Module/ModuleRender.h"
-#include "Module/ModuleProgram.h"
-#include "Module/ModuleCamera.h"
-
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentCamera.h"
+
+#include "Main/Application.h"
+#include "Module/ModuleCamera.h"
+#include "Module/ModuleProgram.h"
+#include "Module/ModuleRender.h"
+#include "Module/ModuleScene.h"
+
+#include "UI/DebugDraw.h"
 #include <math.h>
 #include "recast/Detour/DetourNavMeshQuery.h"
 #include "recast/Detour/DetourNavMeshBuilder.h"
@@ -674,10 +675,30 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path) co
 	nav_query->findNearestPoly((float*)&start, poly_pick_ext, &filter, &start_ref, 0);
 	nav_query->findNearestPoly((float*)&end, poly_pick_ext, &filter, &end_ref, 0);
 
+
+	if(!start_ref)
+	{
+		APP_LOG_INFO("Couldn't find any polygon on start position.");
+		return false;
+	}
+
+	if (!end_ref)
+	{
+		APP_LOG_INFO("Couldn't find any polygon on end position.");
+		return false;
+	}
+
 	dtPolyRef path_ref[MAX_POLYS_PATH];
 	int path_count = 0;
 
-	nav_query->findPath(start_ref, end_ref, (float*)&start, (float*)&end, &filter, path_ref, &path_count, MAX_POLYS_PATH);
+	dtStatus status = nav_query->findPath(start_ref, end_ref, (float*)&start, (float*)&end, &filter, path_ref, &path_count, MAX_POLYS_PATH);
+
+	if(dtStatusFailed(status))
+	{
+		APP_LOG_INFO("Couldn't find a path from start to end.");
+		return false;
+	
+	}
 
 	if(path_count)
 	{
