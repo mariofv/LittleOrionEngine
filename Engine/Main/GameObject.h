@@ -10,6 +10,7 @@
 
 #include <GL/glew.h>
 
+class Prefab;
 class ComponentCamera; 
 class GameObject
 {

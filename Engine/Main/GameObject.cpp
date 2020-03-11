@@ -9,7 +9,7 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
-#include "ResourceManagement/Resources/Texture.h"
+#include "ResourceManagement/Resources/Prefab.h"
 #include "UI/Panel/PanelHierarchy.h"
 
 

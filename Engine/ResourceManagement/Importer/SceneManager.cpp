@@ -1,12 +1,17 @@
 #include "SceneManager.h"
 #include "Helper/Config.h"
-#include <stack>
+
 #include "Main/GameObject.h"
 #include "Main/Application.h"
+
 #include "Module/ModuleFileSystem.h"
-#include <Module/ModuleScene.h>
-#include <Module/ModuleRender.h>
-#include <Module/ModuleResourceManager.h>
+#include "Module/ModuleRender.h"
+#include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScene.h"
+
+#include "ResourceManagement/Resources/Prefab.h"
+
+#include <stack>
 #include <unordered_map>
 
 //THIS CLASS INCLUDE IMPORT AND LOAD FOR SCENE UNTIL SCENE IS CHANGE TO BE A RESOURCE
