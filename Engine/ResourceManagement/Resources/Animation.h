@@ -9,18 +9,16 @@ public:
 
 	struct Channel
 	{
-
 		std::string name;
 		float4x4 position;
-
 	};
+
 	struct KeyFrame
 	{
 		float frame;
 		std::vector<Channel> channels;
-
-
 	};
+
 	Animation(const char * const UID, const std::string & exported_file);
 	Animation(std::vector<KeyFrame> && keyframes, std::string name, float duration,const std::string & exported_file);
 	~Animation() = default;
