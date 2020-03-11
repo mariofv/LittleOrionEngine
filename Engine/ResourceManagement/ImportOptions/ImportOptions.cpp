@@ -2,22 +2,23 @@
 #include <chrono>
 #include "Helper/Config.h"
 
+
 void ImportOptions::Save(Config& config) const
 {
 	using namespace std::chrono;
 	milliseconds currentTimeStamp = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
 
 	config.AddInt(version, "ImporterVersion");
-	config.AddUInt(uid, "UID");
+	config.AddUInt(uuid, "UUID");
 	config.AddString(exported_file, "ExportedFile");
-	config.AddString(original_file, "OriginalFile");
+	config.AddString(imported_file, "OriginalFile");
 	config.AddInt(currentTimeStamp.count(), "TimeStamp"); //TODO: Create support for long type
 }
 void ImportOptions::Load(const Config& config) {
 
 	version = config.GetInt("ImporterVersion", 0);
-	uid = config.GetUInt("UID", uid);
+	uuid = config.GetUInt("UUID", uuid);
 	config.GetString("ExportedFile", exported_file, "");
-	config.GetString("OriginalFile", original_file, "");
+	config.GetString("ImportedFile", imported_file, "");
 	timestamp = config.GetInt("TimeStamp", 0);
 }

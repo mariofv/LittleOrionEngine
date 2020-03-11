@@ -16,16 +16,16 @@ TextureImporter::TextureImporter()
 	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 }
-std::pair<bool, std::string> TextureImporter::Import(const File & file, bool force) const
+std::pair<bool, std::string> TextureImporter::Import(const File & imported_file, bool force) const
 {
-	if (file.filename.empty())
+	if (imported_file.filename.empty())
 	{
 		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
 		return std::pair<bool, std::string>(false,"");
 	}
 
-	ImportOptions already_imported = GetAlreadyImportedResource(file);
-	if (already_imported.uid != 0 && !force) {
+	ImportOptions already_imported = GetAlreadyImportedResource(imported_file);
+	if (already_imported.uuid != 0 && !force) {
 		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 
@@ -33,16 +33,16 @@ std::pair<bool, std::string> TextureImporter::Import(const File & file, bool for
 	
 	std::string output_file;
 
-	if (file.filename.find("_normal") != std::string::npos)
+	if (imported_file.filename.find("_normal") != std::string::npos)
 	{
-		output_file = ImportToTGA(file);
+		output_file = ImportToTGA(imported_file);
 	}
 	else 
 	{
-		output_file = ImportToDDS(file);
+		output_file = ImportToDDS(imported_file);
 	}
 
-	SaveMetaFile(file, output_file);
+	SaveMetaFile(imported_file, output_file);
 	return std::pair<bool, std::string>(true, output_file);
 }
 

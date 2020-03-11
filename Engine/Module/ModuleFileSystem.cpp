@@ -1,7 +1,7 @@
 #include "ModuleFileSystem.h"
 #include "Main/Application.h"
+#include "Module/ModuleResourceManager.h"
 #include <SDL/SDL.h>
-
 #include <algorithm>
 #include <cctype>
 
@@ -225,14 +225,18 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	char **filename;
 	for (filename = files_array; *filename != NULL; filename++)
 	{
+		std::shared_ptr<File> new_file = std::make_shared<File>(path, *filename);
 		if (std::string(*filename).find(".meta") == std::string::npos)
 		{
-			std::shared_ptr<File> new_file = std::make_shared<File>(path, *filename);
 			bool is_directory = new_file->file_type == FileType::DIRECTORY;
 			if ((directories_only && is_directory) || !directories_only)
 			{
 				files.push_back(new_file);
 			}
+		}
+		else
+		{
+			App->resources->resource_DB->AddEntry(*new_file);
 		}
 	}
 	PHYSFS_freeList(files_array);

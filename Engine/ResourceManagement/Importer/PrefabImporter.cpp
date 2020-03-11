@@ -13,7 +13,7 @@ std::pair<bool, std::string> PrefabImporter::Import(const File & file, bool forc
 	}
 
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
-	if (already_imported.uid != 0 && !force) {
+	if (already_imported.uuid != 0 && !force) {
 		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 

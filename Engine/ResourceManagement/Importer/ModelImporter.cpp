@@ -49,7 +49,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file, bool force
 		return std::pair<bool, std::string>(false, "");
 	}
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
-	if (already_imported.uid != 0 && !force) {
+	if (already_imported.uuid != 0 && !force) {
 		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 

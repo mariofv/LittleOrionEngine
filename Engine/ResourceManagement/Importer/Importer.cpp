@@ -7,7 +7,7 @@
 std::pair<bool, std::string> Importer::Import(const File & file, bool force) const
 {
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
-	if (already_imported.uid != 0 && !force) {
+	if (already_imported.uuid != 0 && !force) {
 		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 	std::string uid = "default";
@@ -26,7 +26,7 @@ ImportOptions Importer::GetAlreadyImportedResource(const File & file_to_look_for
 		ImportOptions options;
 		GetOptionsFromMeta(meta_file,options);
 		if (options.version != IMPORTER_VERSION) {
-			options.uid = 0;
+			options.uuid = 0;
 			return options;
 		}
 		return options;
@@ -36,17 +36,17 @@ ImportOptions Importer::GetAlreadyImportedResource(const File & file_to_look_for
 }
 
 
-void Importer::SaveMetaFile(const File & imported_file, const std::string & exported_path) const
+void Importer::SaveMetaFile(const File& imported_file, const std::string & exported_path) const
 {
 
 	std::string meta_file_path = GetMetaFilePath(imported_file);
 
 	Config scene_config;
 	ImportOptions options;
-	options.uid = std::hash<std::string>{}(imported_file.file_path);
+	options.uuid = std::hash<std::string>{}(imported_file.file_path);
 	options.version = IMPORTER_VERSION;
 	options.exported_file = exported_path;
-	options.original_file = imported_file.file_path;
+	options.imported_file = imported_file.file_path;
 	options.Save(scene_config);
 
 	std::string serialized_scene_string;

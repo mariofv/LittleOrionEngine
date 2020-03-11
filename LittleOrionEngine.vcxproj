@@ -180,6 +180,7 @@
     <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
     <ClInclude Include="Engine\Module\ModuleActions.h" />
+    <ClInclude Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -274,6 +275,7 @@
     <ClCompile Include="Engine\ResourceManagement\Loaders\MeshLoader.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />
     <ClCompile Include="Engine\Module\ModuleActions.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

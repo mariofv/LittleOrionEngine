@@ -277,6 +277,9 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\SceneManager.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.cpp">
+      <Filter>Engine\ResourceManagement\ResourcesDB</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -552,6 +555,9 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\SceneManager.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.h">
+      <Filter>Engine\ResourceManagement\ResourcesDB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -613,6 +619,9 @@
     </Filter>
     <Filter Include="Engine\ResourceManagement\ImportOptions">
       <UniqueIdentifier>{af162ed0-dacf-4e8f-850b-8e8130bb9f6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\ResourcesDB">
+      <UniqueIdentifier>{2cb63c3c-91ab-40a6-adb2-04fc80f83a7c}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

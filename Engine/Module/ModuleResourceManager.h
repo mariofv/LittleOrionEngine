@@ -13,6 +13,8 @@
 #include "ResourceManagement/Importer/SceneManager.h"
 #include "ResourceManagement/Importer/TextureImporter.h"
 
+#include "ResourceManagement/ResourcesDB/ResourceDataBase.h"
+
 class Texture;
 class File;
 class Mesh;
@@ -23,7 +25,8 @@ class ModuleResourceManager : public Module
 {
 public:
 
-	ModuleResourceManager() = default;
+	ModuleResourceManager();
+	~ModuleResourceManager() = default;
 
 	bool Init() override;
 
@@ -86,6 +89,7 @@ public:
 
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
 	std::unique_ptr<SceneManager> scene_manager = nullptr;
+	std::unique_ptr<ResourceDataBase> resource_DB = nullptr;
 
 private:
 	const size_t importer_interval_millis = 30000;
@@ -98,6 +102,7 @@ private:
 	std::unique_ptr<ModelImporter> model_importer = nullptr;
 	std::unique_ptr<PrefabImporter> prefab_importer = nullptr;
 	mutable std::vector<std::shared_ptr<Resource>> resource_cache;
+
 };
 
 #endif // _MODULERESOURCEMANAGER_H_

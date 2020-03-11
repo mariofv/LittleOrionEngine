@@ -6,6 +6,11 @@
 #include "Helper/Timer.h"
 #include "ResourceManagement/Resources/Mesh.h"
 
+ModuleResourceManager::ModuleResourceManager()
+{
+	resource_DB = std::make_unique<ResourceDataBase>();
+}
+
 bool ModuleResourceManager::Init()
 {
 	APP_LOG_SECTION("************ Module Resource Manager Init ************");
