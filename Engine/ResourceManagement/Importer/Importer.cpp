@@ -11,9 +11,9 @@ std::pair<bool, std::string> Importer::Import(const File & file, bool force) con
 	if (already_imported.uuid != 0 && !force) {
 		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
-	std::string uid = "default";
-	SaveMetaFile(file, uid);
-	return std::pair<bool, std::string>(false, uid);
+	std::string exported_file = "Unknown";
+	SaveMetaFile(file, ResourceType::UNKNOWN, exported_file);
+	return std::pair<bool, std::string>(false, exported_file);
 }
 
 
@@ -37,7 +37,7 @@ ImportOptions Importer::GetAlreadyImportedResource(const File & file_to_look_for
 }
 
 
-void Importer::SaveMetaFile(const File& imported_file, const std::string & exported_path) const
+void Importer::SaveMetaFile(const File& imported_file, ResourceType resource_type, const std::string & exported_path) const
 {
 
 	std::string meta_file_path = GetMetaFilePath(imported_file);
@@ -45,6 +45,7 @@ void Importer::SaveMetaFile(const File& imported_file, const std::string & expor
 	Config scene_config;
 	ImportOptions options;
 	options.uuid = std::hash<std::string>{}(imported_file.file_path);
+	options.resource_type = resource_type;
 	options.version = IMPORTER_VERSION;
 	options.exported_file = exported_path;
 	options.imported_file = imported_file.file_path;

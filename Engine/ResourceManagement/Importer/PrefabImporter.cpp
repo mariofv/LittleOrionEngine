@@ -25,7 +25,7 @@ std::pair<bool, std::string> PrefabImporter::Import(const File & file, bool forc
 	{
 		return std::pair<bool, std::string>(false, "");
 	}
-	SaveMetaFile(file, output_file);
+	SaveMetaFile(file, ResourceType::PREFAB, output_file);
 	return std::pair<bool, std::string>(true, output_file);
 }
 

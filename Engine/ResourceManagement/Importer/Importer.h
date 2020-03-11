@@ -1,10 +1,13 @@
 #ifndef _IMPORTER_H_
 #define _IMPORTER_H_
+
 #include "Main/Globals.h"
 #include "ResourceManagement/ImportOptions/ImportOptions.h"
 
 #include <algorithm>
+
 class File;
+
 class Importer {
 public:
 	Importer() = default;
@@ -14,7 +17,7 @@ public:
 protected:
 
 	ImportOptions GetAlreadyImportedResource(const File & file_to_look_for) const;
-	void SaveMetaFile(const File & imported_file, const std::string & exported_path) const;
+	void SaveMetaFile(const File & imported_file, ResourceType resource_type, const std::string & exported_path) const;
 
 public:
 	static void GetOptionsFromMeta(const File& file, ImportOptions & options);

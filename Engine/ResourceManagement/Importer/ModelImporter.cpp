@@ -101,7 +101,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file, bool force
 	model.GetSerializedString(serialized_model_string);
 	App->filesystem->Save(output_file_model.c_str(), serialized_model_string.c_str(), serialized_model_string.size() + 1);
 
-	SaveMetaFile(file, output_file_model);
+	SaveMetaFile(file, ResourceType::MESH, output_file_model);
 	return std::pair<bool, std::string>(true, output_file_model);
 }
 

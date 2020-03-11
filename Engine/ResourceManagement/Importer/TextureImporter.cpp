@@ -42,7 +42,7 @@ std::pair<bool, std::string> TextureImporter::Import(const File & imported_file,
 		output_file = ImportToDDS(imported_file);
 	}
 
-	SaveMetaFile(imported_file, output_file);
+	SaveMetaFile(imported_file, ResourceType::TEXTURE, output_file);
 	return std::pair<bool, std::string>(true, output_file);
 }
 

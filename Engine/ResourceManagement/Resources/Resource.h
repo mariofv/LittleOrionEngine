@@ -1,13 +1,26 @@
 #ifndef _RESOURCE_H_
 #define _RESOURCE_H_
 
-#include "ResourceManagement/ImportOptions/ImportOptions.h"
-
 #include <memory>
 #include <string>
+
+enum class ResourceType
+{
+	ANIMATION,
+	AUDIO,
+	MATERIAL,
+	MESH,
+	NAVMESH,
+	PREFAB,
+	SCENE,
+	SKELETON,
+	SKYBOX,
+	TEXTURE,
+	UNKNOWN
+};
+
 class Resource
 {
-
 public:
 	Resource(uint32_t UID, const std::string & exported_file) : UID(UID), exported_file(exported_file) {
 		int x = 0;
