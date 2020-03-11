@@ -20,7 +20,7 @@ public:
 
 	void RenderNavMesh(ComponentCamera& camera);
 
-	bool FindPath(float3& start, float3& end, std::vector<float3>& path) const;
+	bool FindPath(float3& start, float3& end, std::vector<float3>& path);
 
 public:
 	std::vector<float3> debug_path;

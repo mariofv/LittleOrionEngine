@@ -7,10 +7,26 @@
 
 #include <MathGeoLib.h>
 #include <pcg_basic.h>
+#include <recast/Detour/DetourNavMesh.h>
 #include <recast/Recast/Recast.h>
 #include <vector>
 
-#define MAX_POLYS_PATH 256
+class PanelNavMesh;
+class dtNavMeshQuery;
+class dtNavMesh;
+class dtMeshTile;
+class DetourNavMesh;
+
+
+static const int MAX_POLYS = 256;
+static const int MAX_SMOOTH = 2048;
+
+
+enum PathMode
+{
+	FOLLOW_PATH,
+	STRAIGHT_PATH
+};
 
 enum DrawMode
 {
@@ -51,12 +67,6 @@ enum SamplePolyFlags
 	SAMPLE_POLYFLAGS_ALL = 0xffff		// All abilities
 };
 
-class dtNavMeshQuery;
-class dtNavMesh;
-class DetourNavMesh;
-class dtMeshTile;
-class PanelNavMesh;
-
 class NavMesh
 {
 public:
@@ -73,7 +83,7 @@ public:
 
 	void InitAABB();
 
-	bool FindPath(float3& start, float3& end, std::vector<float3>& path) const;
+	bool FindPath(float3& start, float3& end, std::vector<float3>& path);
 
 	inline SampleDebugDraw& GetDebugDraw() { return m_dd; }
 
@@ -81,6 +91,17 @@ private:
 	void GetVerticesScene();
 	void GetIndicesScene();
 	void GetNormalsScene();
+
+	bool GetSteerTarget(dtNavMeshQuery* navQuery, const float* startPos, const float* endPos,
+		const float minTargetDist,
+		const dtPolyRef* path, const int pathSize,
+		float* steerPos, unsigned char& steerPosFlag, dtPolyRef& steerPosRef,
+		float* outPoints = 0, int* outPointCount = 0);
+
+	inline bool InRange(const float* v1, const float* v2, const float r, const float h);
+	int FixUpShortcuts(dtPolyRef* path, int npath, dtNavMeshQuery* nav_query);
+	int FixUpCorridor(dtPolyRef* path, const int npath, const int max_path,
+		const dtPolyRef* visited, const int nvisited);
 
 	float DistancePtLine2d(const float* pt, const float* p, const float* q) const
 	{
@@ -148,6 +169,8 @@ private:
 	dtNavMeshQuery* nav_query = nullptr;
 	dtNavMesh* nav_mesh = nullptr;
 	unsigned char nav_mesh_draw_flags;
+
+	PathMode path_mode = PathMode::FOLLOW_PATH;
 
 	///TEST
 	SampleDebugDraw m_dd;
