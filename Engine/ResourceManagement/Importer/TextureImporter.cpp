@@ -16,9 +16,9 @@ TextureImporter::TextureImporter()
 	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 }
-std::pair<bool, std::string> TextureImporter::Import(const File & imported_file, bool force) const
+std::pair<bool, std::string> TextureImporter::Import(const File& imported_file, bool force) const
 {
-	if (imported_file.filename.empty())
+	if (imported_file.filename.empty() || !imported_file.loaded_correctly)
 	{
 		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
 		return std::pair<bool, std::string>(false,"");
@@ -26,6 +26,7 @@ std::pair<bool, std::string> TextureImporter::Import(const File & imported_file,
 
 	ImportOptions already_imported = GetAlreadyImportedResource(imported_file);
 	if (already_imported.uuid != 0 && !force) {
+		APP_LOG_INFO("Material already imported.")
 		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 
@@ -42,7 +43,7 @@ std::pair<bool, std::string> TextureImporter::Import(const File & imported_file,
 		output_file = ImportToDDS(imported_file);
 	}
 
-	SaveMetaFile(imported_file, ResourceType::TEXTURE, output_file);
+	SaveMetaFile(imported_file.file_path, ResourceType::TEXTURE, output_file);
 	return std::pair<bool, std::string>(true, output_file);
 }
 
@@ -52,7 +53,7 @@ std::string TextureImporter::ImportMaterialData(const std::string & material_pat
 	std::pair<bool, std::string> imported = Import(material_path);
 	if (imported.first)
 	{
-		APP_LOG_SUCCESS("Material loaded correctly.");
+		APP_LOG_SUCCESS("Material loaded correctly from %s.", material_path.c_str());
 		return imported.second;
 	}
 
@@ -62,7 +63,7 @@ std::string TextureImporter::ImportMaterialData(const std::string & material_pat
 	imported = Import(textures_path);
 	if (imported.first)
 	{
-		APP_LOG_SUCCESS("Material loaded correctly.");
+		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
 		return imported.second;
 	}
 
@@ -71,7 +72,7 @@ std::string TextureImporter::ImportMaterialData(const std::string & material_pat
 	imported = Import(textures_path);
 	if (imported.first)
 	{
-		APP_LOG_SUCCESS("Material loaded correctly.");
+		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
 		return imported.second;
 	}
 	return "";
@@ -104,9 +105,6 @@ ILubyte * TextureImporter::LoadImageDataInMemory(const std::string& file_path, i
 	height = ilGetInteger(IL_IMAGE_HEIGHT);
 	return data;
 }
-
-
-
 
 //Remove the material from the cache if the only owner is the cache itself
 

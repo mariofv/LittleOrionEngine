@@ -1,7 +1,7 @@
-#include "ImportOptions.h"
-#include <chrono>
 #include "Helper/Config.h"
+#include "ImportOptions.h"
 
+#include <chrono>
 
 void ImportOptions::Save(Config& config) const
 {
@@ -12,9 +12,10 @@ void ImportOptions::Save(Config& config) const
 	config.AddUInt(uuid, "UUID");
 	config.AddUInt(static_cast<unsigned int>(resource_type), "ResourceType");
 	config.AddString(exported_file, "ExportedFile");
-	config.AddString(imported_file, "OriginalFile");
+	config.AddString(imported_file, "ImportedFile");
 	config.AddInt(currentTimeStamp.count(), "TimeStamp"); //TODO: Create support for long type
 }
+
 void ImportOptions::Load(const Config& config) {
 
 	version = config.GetInt("ImporterVersion", 0);

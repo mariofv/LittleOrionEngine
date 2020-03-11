@@ -3,6 +3,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
 #include <ResourceManagement/Importer/TextureImporter.h>
+
 void MaterialImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* file_path, std::vector<std::string> & loaded_meshes_materials) const
 {
 	int mesh_material_index = scene->mMeshes[mesh_index]->mMaterialIndex;
@@ -25,7 +26,6 @@ void MaterialImporter::ImportMaterialFromMesh(const aiScene* scene, size_t mesh_
 		}
 	}
 }
-
 
 Texture::TextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureType type) const
 {

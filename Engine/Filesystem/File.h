@@ -28,6 +28,10 @@ public:
 	std::vector<std::shared_ptr<File>> children;
 	File* parent;
 	bool operator==(const File& compare);
+
+public:
+	bool loaded_correctly = true;
+
 private:
 	void GetFileInfo();
 	void GetChildren();
