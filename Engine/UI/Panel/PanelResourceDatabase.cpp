@@ -33,17 +33,20 @@ void PanelResourceDatabase::Render()
 		int i = -1;
 		for (auto& pair : App->resources->resource_DB.get()->entries)
 		{
-			++i;
-			ImGui::PushID(pair.first);
-			if (ImGui::Selectable(std::to_string(pair.first).c_str(), selected == i, ImGuiSelectableFlags_SpanAllColumns))
+			if (pair.second->resource_type != ResourceType::UNKNOWN)
 			{
-				selected = i;
+				++i;
+				ImGui::PushID(pair.first);
+				if (ImGui::Selectable(std::to_string(pair.first).c_str(), selected == i, ImGuiSelectableFlags_SpanAllColumns))
+				{
+					selected = i;
+				}
+				ImGui::NextColumn();
+				ImGui::Text(pair.second->imported_file.c_str()); ImGui::NextColumn();
+				ImGui::Text(pair.second->exported_file.c_str()); ImGui::NextColumn();
+				ImGui::Text(GetResourceTypeName(pair.second->resource_type).c_str()); ImGui::NextColumn();
+				ImGui::PopID();
 			}
-			ImGui::NextColumn();
-			ImGui::Text(pair.second->imported_file.c_str()); ImGui::NextColumn();
-			ImGui::Text(pair.second->exported_file.c_str()); ImGui::NextColumn();
-			ImGui::Text(GetResourceTypeName(pair.second->resource_type).c_str()); ImGui::NextColumn();
-			ImGui::PopID();
 		}
 		ImGui::Columns(1);
 	}
