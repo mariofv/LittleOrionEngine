@@ -87,22 +87,24 @@ void PanelNavMesh::Render()
 
 		if(ImGui::Button("Attach Starting Point"))
 		{
-			start_position = App->editor->selected_position;
+			App->artificial_intelligence->start_position = App->editor->selected_position;
+			App->artificial_intelligence->start_initialized = true;
 		}
 
 		ImGui::SameLine();
 
 		if (ImGui::Button("Attach End Point"))
 		{
-			end_position = App->editor->selected_position;
+			App->artificial_intelligence->end_position = App->editor->selected_position;
+			App->artificial_intelligence->end_initialized = true;
 		}
 
-		ImGui::Text("Starting Point: (%.3f,%.3f,%.3f)", start_position.x, start_position.y, start_position.z);
-		ImGui::Text("Ending Point: (%.3f,%.3f,%.3f)", end_position.x, end_position.y, end_position.z);
+		ImGui::Text("Starting Point: (%.3f,%.3f,%.3f)", App->artificial_intelligence->start_position.x, App->artificial_intelligence->start_position.y, App->artificial_intelligence->start_position.z);
+		ImGui::Text("Ending Point: (%.3f,%.3f,%.3f)", App->artificial_intelligence->end_position.x, App->artificial_intelligence->end_position.y, App->artificial_intelligence->end_position.z);
 
 		if(ImGui::Button("Build path from start to end"))
 		{
-			App->artificial_intelligence->FindPath(start_position, end_position, App->artificial_intelligence->debug_path);
+			App->artificial_intelligence->FindPath();
 		}
 
 	}

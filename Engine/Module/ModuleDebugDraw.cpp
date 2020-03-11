@@ -13,6 +13,7 @@
 #include "ModuleScene.h"
 #include "SpacePartition/OLQuadTree.h"
 #include "UI/Billboard.h"
+#include "UI/Panel/PanelNavMesh.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
 #include "UI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
@@ -558,6 +559,17 @@ void ModuleDebugDraw::RenderBillboards() const
 
 void ModuleDebugDraw::RenderPathfinding() const
 {
+	//First check if starting and ending point are null and render
+	if(App->artificial_intelligence->start_initialized)
+	{
+		dd::point(App->artificial_intelligence->start_position, float3(0, 255, 0), 20.0f);
+	}
+
+	if (App->artificial_intelligence->end_initialized)
+	{
+		dd::point(App->artificial_intelligence->end_position, float3(0, 255, 255), 20.0f);
+	}
+
 	for(auto point : App->artificial_intelligence->debug_path)
 	{
 		dd::point(point, float3(0, 0, 255), 10.0f);

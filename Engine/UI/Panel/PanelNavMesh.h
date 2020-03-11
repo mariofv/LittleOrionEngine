@@ -16,10 +16,6 @@ public:
 	bool succes = false;
 	bool first_time = true;
 
-	//PathFinding
-	float3 start_position;
-	float3 end_position;
-
 };
 
 #endif //_PANELNAVMESH_H_

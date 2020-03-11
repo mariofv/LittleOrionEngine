@@ -31,7 +31,7 @@ void ModuleAI::RenderNavMesh(ComponentCamera& camera)
 	nav_mesh.RenderNavMesh(camera);
 }
 
-bool ModuleAI::FindPath(float3& start, float3& end, std::vector<float3>& path)
+bool ModuleAI::FindPath()
 {
-	return nav_mesh.FindPath(start, end , path);
+	return nav_mesh.FindPath(start_position, end_position , debug_path);
 }

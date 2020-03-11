@@ -20,10 +20,19 @@ public:
 
 	void RenderNavMesh(ComponentCamera& camera);
 
-	bool FindPath(float3& start, float3& end, std::vector<float3>& path);
+	bool FindPath();
 
 public:
 	std::vector<float3> debug_path;
+
+	//Starting and ending points
+	//PathFinding
+	float3 start_position;
+	float3 end_position;
+
+	bool start_initialized = false;
+	bool end_initialized = false;
+
 private:
 	NavMesh nav_mesh = NavMesh();
 
