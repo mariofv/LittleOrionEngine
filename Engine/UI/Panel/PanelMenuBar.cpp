@@ -13,6 +13,7 @@
 #include "UI/Panel/PanelHierarchy.h"
 #include "UI/Panel/PanelInspector.h"
 #include "UI/Panel/PanelProjectExplorer.h"
+#include "UI/Panel/PanelResourceDatabase.h"
 #include "UI/Panel/PanelScene.h"
 
 #include <imgui.h>
@@ -165,6 +166,10 @@ void PanelMenuBar::ShowWindowMenu()
 			if (ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, App->editor->console->IsOpened()))
 			{
 				App->editor->console->SwitchOpen();
+			}
+			if (ImGui::MenuItem((ICON_FA_DATABASE " Resource Database"), (const char*)0, App->editor->resource_database->IsOpened()))
+			{
+				App->editor->resource_database->SwitchOpen();
 			}
 
 			ImGui::EndMenu();

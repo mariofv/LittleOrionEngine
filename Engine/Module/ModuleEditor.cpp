@@ -19,6 +19,7 @@
 #include "UI/Panel/PanelInspector.h"
 #include "UI/Panel/PanelPopups.h"
 #include "UI/Panel/PanelProjectExplorer.h"
+#include "UI/Panel/PanelResourceDatabase.h"
 #include "UI/Panel/PanelScene.h"
 #include "UI/Panel/PanelToolBar.h"
 
@@ -51,6 +52,7 @@ bool ModuleEditor::Init()
 	panels.push_back(debug_panel = new PanelDebug());
 	panels.push_back(configuration = new PanelConfiguration());
 	panels.push_back(about = new PanelAbout());
+	panels.push_back(resource_database = new PanelResourceDatabase());
 	panels.push_back(popups = new PanelPopups());
 
 	return ret;
@@ -97,7 +99,7 @@ update_status ModuleEditor::PreUpdate()
 update_status ModuleEditor::Update()
 {
 	//ImGui::ShowStyleEditor();
-	//ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
 
 	static bool inital_scene_loaded = false;
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
