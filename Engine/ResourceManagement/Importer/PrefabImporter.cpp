@@ -3,8 +3,10 @@
 #include "Module/ModuleFileSystem.h"
 #include "Main/GameObject.h"
 #include "Helper/Config.h"
+
 #include <stack>
-std::pair<bool, std::string> PrefabImporter::Import(const File & file, bool force) const
+
+std::pair<bool, std::string> PrefabImporter::Import(const File& file, bool force) const
 {
 	if (file.filename.empty())
 	{
@@ -25,7 +27,7 @@ std::pair<bool, std::string> PrefabImporter::Import(const File & file, bool forc
 	{
 		return std::pair<bool, std::string>(false, "");
 	}
-	SaveMetaFile(file, ResourceType::PREFAB, output_file);
+	SaveMetaFile(file.file_path, ResourceType::PREFAB, output_file);
 	return std::pair<bool, std::string>(true, output_file);
 }
 

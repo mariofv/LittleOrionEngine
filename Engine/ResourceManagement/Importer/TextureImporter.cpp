@@ -28,7 +28,7 @@ std::pair<bool, std::string> TextureImporter::Import(const File& imported_file, 
 
 	ImportOptions already_imported = GetAlreadyImportedResource(imported_file);
 	if (already_imported.uuid != 0 && !force) {
-		APP_LOG_INFO("Material already imported.")
+		APP_LOG_INFO("Texture already imported.")
 		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 

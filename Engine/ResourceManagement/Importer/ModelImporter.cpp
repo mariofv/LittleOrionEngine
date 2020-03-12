@@ -3,11 +3,12 @@
 #include "Helper/Config.h"
 
 #include "Main/Application.h"
+#include "MaterialImporter.h"
 #include "ModelImporters/AnimationImporter.h"
 #include "ModelImporters/MeshImporter.h"
-#include "ModelImporters/MaterialImporter.h"
 #include "ModelImporters/SkeletonImporter.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleResourceManager.h"
 
 #include "ResourceManagement/Resources/Mesh.h"
 #include "TextureImporter.h"
@@ -31,10 +32,8 @@ ModelImporter::ModelImporter()
 	App->filesystem->MakeDirectory(LIBRARY_MODEL_FOLDER);
 
 	mesh_importer = std::make_unique<MeshImporter>();
-	material_importer = std::make_unique<MaterialImporter>();
 	skeleton_importer = std::make_unique<SkeletonImporter>();
 	animation_importer = std::make_unique<AnimationImporter>();
-
 }
 
 ModelImporter::~ModelImporter()
@@ -42,7 +41,7 @@ ModelImporter::~ModelImporter()
 	Assimp::DefaultLogger::kill();
 }
 
-std::pair<bool, std::string> ModelImporter::Import(const File & file, bool force) const
+std::pair<bool, std::string> ModelImporter::Import(const File& file, bool force) const
 {
 	if (file.filename.empty())
 	{
@@ -103,7 +102,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file, bool force
 	model.GetSerializedString(serialized_model_string);
 	App->filesystem->Save(output_file_model.c_str(), serialized_model_string.c_str(), serialized_model_string.size() + 1);
 
-	SaveMetaFile(file, ResourceType::MESH, output_file_model);
+	SaveMetaFile(file.file_path, ResourceType::MESH, output_file_model);
 	return std::pair<bool, std::string>(true, output_file_model);
 }
 
@@ -120,7 +119,7 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 
 		std::string assets_material_file = std::string(file_path) + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
 		std::string library_material_file = LIBRARY_MATERIAL_FOLDER"/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
-		material_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, assets_material_file.c_str(), library_material_file.c_str());
+		App->resources->material_importer->ExtractMaterialFromMesh(scene, mesh_index, file_path, assets_material_file.c_str());
 		node.AddString(library_material_file, "Material");
 
 		std::string mesh_file = output_file.file_path + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";

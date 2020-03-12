@@ -178,9 +178,6 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\TextureImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClCompile>
@@ -290,6 +287,9 @@
       <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
     </ClCompile>
     <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -460,9 +460,6 @@
     <ClInclude Include="Engine\UI\Panel\InspectorSubpanel\PanelGameObject.h">
       <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.h">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.h">
       <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClInclude>
@@ -579,6 +576,9 @@
     </ClInclude>
     <ClInclude Include="Engine\UI\Panel\InspectorSubpanel\PanelMaterial.h">
       <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

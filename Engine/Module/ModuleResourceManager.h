@@ -3,6 +3,7 @@
 
 #include "Module.h"
 
+#include "ResourceManagement/Importer/MaterialImporter.h"
 #include "ResourceManagement/Importer/ModelImporter.h"
 #include "ResourceManagement/Importer/PrefabImporter.h"
 #include "ResourceManagement/Importer/SceneManager.h"
@@ -87,6 +88,7 @@ public:
 		std::atomic_uint total_items = 0;
 	} thread_comunication;
 
+	std::unique_ptr<MaterialImporter> material_importer = nullptr;
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
 	std::unique_ptr<SceneManager> scene_manager = nullptr;
 	std::unique_ptr<ResourceDataBase> resource_DB = nullptr;

@@ -12,7 +12,7 @@ std::pair<bool, std::string> Importer::Import(const File & file, bool force) con
 		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 	std::string exported_file = "Unknown";
-	SaveMetaFile(file, ResourceType::UNKNOWN, exported_file);
+	SaveMetaFile(file.file_path, ResourceType::UNKNOWN, exported_file);
 	return std::pair<bool, std::string>(false, exported_file);
 }
 
@@ -37,18 +37,18 @@ ImportOptions Importer::GetAlreadyImportedResource(const File & file_to_look_for
 }
 
 
-void Importer::SaveMetaFile(const File& imported_file, ResourceType resource_type, const std::string & exported_path) const
+void Importer::SaveMetaFile(const std::string& imported_path, ResourceType resource_type, const std::string& exported_path) const
 {
 
-	std::string meta_file_path = GetMetaFilePath(imported_file);
+	std::string meta_file_path = GetMetaFilePath(imported_path);
 
 	Config scene_config;
 	ImportOptions options;
-	options.uuid = std::hash<std::string>{}(imported_file.file_path);
+	options.uuid = std::hash<std::string>{}(imported_path);
 	options.resource_type = resource_type;
 	options.version = IMPORTER_VERSION;
 	options.exported_file = exported_path;
-	options.imported_file = imported_file.file_path;
+	options.imported_file = imported_path;
 	options.Save(scene_config);
 
 	std::string serialized_scene_string;

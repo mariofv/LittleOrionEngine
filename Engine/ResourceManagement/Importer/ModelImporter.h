@@ -1,11 +1,13 @@
 #ifndef _MODELIMPORTER_H_
 #define _MODELIMPORTER_H_
-#include "Importer.h"
-#include "Helper/Timer.h"
-#include <memory>
 
-#include "assimp/LogStream.hpp"
-#include "assimp/Logger.hpp"
+#include "Importer.h"
+
+#include "Helper/Timer.h"
+
+#include <assimp/LogStream.hpp>
+#include <assimp/Logger.hpp>
+#include <memory>
 
 
 
@@ -15,7 +17,6 @@ class Config;
 class Mesh;
 class GameObject;
 class MeshImporter;
-class MaterialImporter;
 class SkeletonImporter;
 class AnimationImporter;
 
@@ -26,6 +27,7 @@ public:
 	ModelImporter();
 	~ModelImporter();
 	std::pair<bool, std::string> Import(const File & file, bool force = false) const override;
+
 private:
 	void ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const File& output_file, std::vector<Config> & node_config) const;
 
@@ -35,7 +37,6 @@ public:
 private:
 	mutable Timer performance_timer;
 	std::unique_ptr<MeshImporter> mesh_importer;
-	std::unique_ptr<MaterialImporter> material_importer;
 	std::unique_ptr<SkeletonImporter> skeleton_importer;
 	std::unique_ptr<AnimationImporter> animation_importer;
 };

@@ -17,7 +17,7 @@ public:
 protected:
 
 	ImportOptions GetAlreadyImportedResource(const File & file_to_look_for) const;
-	void SaveMetaFile(const File & imported_file, ResourceType resource_type, const std::string & exported_path) const;
+	void SaveMetaFile(const std::string& imported_path, ResourceType resource_type, const std::string& exported_path) const;
 
 public:
 	static void GetOptionsFromMeta(const File& file, ImportOptions & options);

@@ -15,6 +15,7 @@ bool ModuleResourceManager::Init()
 {
 	APP_LOG_SECTION("************ Module Resource Manager Init ************");
 	texture_importer = std::make_unique<TextureImporter>();
+	material_importer = std::make_unique<MaterialImporter>();
 	model_importer = std::make_unique<ModelImporter>();
 	scene_manager = std::make_unique<SceneManager>();
 	prefab_importer = std::make_unique<PrefabImporter>();
@@ -110,6 +111,10 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 	if (file.file_type == FileType::TEXTURE)
 	{
 		result = texture_importer->Import(file);
+	}
+	if (file.file_type == FileType::MATERIAL)
+	{
+		result = material_importer->Import(file);
 	}
 	return result;
 }
