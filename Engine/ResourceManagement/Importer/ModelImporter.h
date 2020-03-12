@@ -29,7 +29,7 @@ public:
 	ImportResult Import(const File & file, bool force = false) const override;
 
 private:
-	void ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const File& output_file, std::vector<Config> & node_config) const;
+	std::vector<Config> ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const std::string& base_path, const File& output_file) const;
 
 public:
 	const float SCALE_FACTOR = 0.01f;
