@@ -13,6 +13,7 @@
 #include "Module/ModuleScene.h"
 #include "UI/Panel/PanelHierarchy.h"
 
+#include <Brofiler/Brofiler.h>
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
@@ -64,11 +65,12 @@ void PanelScene::Render()
 		AABB2D content_area = AABB2D(scene_window_content_area_pos, scene_window_content_area_max_point);
 		float2 mouse_pos_f2 = float2(ImGui::GetMousePos().x, ImGui::GetMousePos().y);
 		AABB2D mouse_pos = AABB2D(mouse_pos_f2, mouse_pos_f2);
-		hovered = content_area.Contains(mouse_pos); // TODO: This seems to be inneficient, check with partner
+		hovered = ImGui::IsWindowHovered(); // TODO: This seems to be inneficient, check with partner
+		focused = ImGui::IsWindowFocused();
 
 		RenderEditorDraws(); // This should be render after rendering framebuffer texture.
 
-		if (App->cameras->IsMovementEnabled() && hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
+		if (App->cameras->IsSceneCameraMoving()) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
 		{
 			ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
 		}
@@ -116,6 +118,8 @@ void PanelScene::RenderSceneBar()
 
 void PanelScene::RenderEditorDraws()
 {
+	BROFILER_CATEGORY("Render Editor Draws", Profiler::Color::Lavender);
+
 	ImGuizmo::SetRect(scene_window_content_area_pos.x, scene_window_content_area_pos.y, scene_window_content_area_width, scene_window_content_area_height);
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetOrthographic(false);

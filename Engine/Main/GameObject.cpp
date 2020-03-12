@@ -14,8 +14,7 @@
 
 
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMaterial.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
 
@@ -141,7 +140,7 @@ bool GameObject::IsStatic() const
 
 bool GameObject::IsVisible(const ComponentCamera & camera) const
 {
-	ComponentMesh* mesh = static_cast<ComponentMesh*>(GetComponent(Component::ComponentType::MESH));
+	ComponentMeshRenderer* mesh = static_cast<ComponentMeshRenderer*>(GetComponent(Component::ComponentType::MESH_RENDERER));
 	if ((mesh != nullptr && !mesh->IsEnabled()) || !IsEnabled() || !camera.IsInsideFrustum(aabb.bounding_box))
 	{
 		return false;
@@ -215,7 +214,7 @@ void GameObject::Load(const Config& config)
 		uint64_t component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
 		assert(component_type_uint != 0);
 		
-		Component::ComponentType component_type = Component::GetComponentType(static_cast<unsigned int>(component_type_uint));
+		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
 		Component* created_component = CreateComponent(component_type);
 		created_component->Load(gameobject_components_config[i]);
 	}
@@ -273,12 +272,8 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		created_component = App->cameras->CreateComponentCamera();
 		break;
 
-	case Component::ComponentType::MATERIAL:
-		created_component = App->texture->CreateComponentMaterial();
-		break;
-
-	case Component::ComponentType::MESH:
-		created_component = App->renderer->CreateComponentMesh();
+	case Component::ComponentType::MESH_RENDERER:
+		created_component = App->renderer->CreateComponentMeshRenderer();
 		break;
 
 	case Component::ComponentType::LIGHT:
@@ -376,18 +371,6 @@ void GameObject::UpdateHierarchyBranch()
 	for (unsigned int i = 0; i < children.size(); ++i)
 	{
 		children[i]->UpdateHierarchyBranch();
-	}
-}
-
-void GameObject::RenderMaterialTexture(unsigned int shader_program) const
-{
-	for (unsigned int i = 0; i < components.size(); ++i)
-	{
-		if (components[i]->GetType() == Component::ComponentType::MATERIAL)
-		{
-			ComponentMaterial* current_material = (ComponentMaterial*)components[i];
-			current_material->Render(shader_program);
-		}
 	}
 }
 

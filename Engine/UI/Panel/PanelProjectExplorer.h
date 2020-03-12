@@ -15,18 +15,28 @@ public:
 
 	void ShowFoldersHierarchy(const File& file);
 
-	void ProcessMouseInput(File* file, bool in_folders_windows);
+	void ProcessMouseInput(File* file);
+	void ProcessResourceMouseInput(File* file);
 	void ShowFilesInExplorer();
 
 	void ShowFileSystemActionsMenu(const File* file);
 	void MakeDirectoryFromFile(File* file);
 	void CopyFileToSelectedFolder(const char* source) const;
 
-	void FilesDrag() const;
 	void FilesDrop() const;
+	void ResourceDragSource(File* file) const;
+
 private:
+	void InitResourceExplorerDockspace();
+
+	void ShowFileIcon(File* file);
+
+private:
+	float file_size = 150.f;
+
 	File* selected_folder = nullptr;
 	File* selected_file = nullptr;
 
+	ImGuiID project_explorer_dockspace_id;
 };
 #endif //_PANELPROJECTEXPLORER_H_

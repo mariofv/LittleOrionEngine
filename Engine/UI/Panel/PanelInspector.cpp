@@ -19,6 +19,7 @@ void PanelInspector::Render()
 	if (ImGui::Begin(ICON_FA_INFO_CIRCLE " Inspector", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
+		focused = ImGui::IsWindowFocused();
 
 		if (App->editor->selected_game_object != nullptr)
 		{

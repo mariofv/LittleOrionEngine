@@ -24,7 +24,7 @@ private:
 	std::string GetTextureFileName(std::string texture_file_path) const;
 
 private:
-	const std::string LIBRARY_TEXTURES_FOLDER = "Library/Materials";
-	friend class TextureLoader;
+	const std::string LIBRARY_TEXTURES_FOLDER = "Library/Textures";
+
 };
 #endif // !_TEXTUREIMPORTER_H_

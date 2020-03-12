@@ -15,9 +15,16 @@ PanelPopups::PanelPopups()
 
 void PanelPopups::Render()
 {
-	if (!assets_loading_popup_shown)
+	RenderAssetsLoadingPopup();
+	material_selector_popup.Render();
+	mesh_selector_popup.Render();
+}
+
+void PanelPopups::RenderAssetsLoadingPopup()
+{
+	if (!show_assets_loading_popup)
 	{
-		assets_loading_popup_shown = true;
+		show_assets_loading_popup = true;
 		ImGui::OpenPopup("Loading Assets");
 	}
 

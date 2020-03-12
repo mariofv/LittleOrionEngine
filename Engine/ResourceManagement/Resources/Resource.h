@@ -22,19 +22,20 @@ enum class ResourceType
 class Resource
 {
 public:
-	Resource(uint32_t UID, const std::string & exported_file) : UID(UID), exported_file(exported_file) {
+	Resource(uint32_t UUID, const std::string & exported_file) : UUID(UUID), exported_file(exported_file) {
 		int x = 0;
 	};
 	virtual ~Resource() = default;
 
-public:
-	std::string exported_file;
-	std::string original_file;
 private:
 	virtual void LoadInMemory() = 0;
 
+public:
+	std::string exported_file;
+	std::string imported_file;
+
 private:
-	const uint32_t UID;
+	const uint32_t UUID;
 
 };
 

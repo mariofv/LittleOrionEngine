@@ -9,8 +9,7 @@
 #include "ModuleResourceManager.h"
 #include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMaterial.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
 #include <ResourceManagement/Importer/Importer.h>
 
 #include <ResourceManagement/Resources/Skeleton.h>
@@ -83,30 +82,22 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 			return;
 		}
 
-		ComponentMesh *mesh_component = (ComponentMesh*)node_game_object->CreateComponent(Component::ComponentType::MESH);
-		mesh_component->SetMesh(mesh_for_component);
+		ComponentMeshRenderer *component_mesh_renderer = (ComponentMeshRenderer*)node_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
+		component_mesh_renderer->SetMesh(mesh_for_component);
 		File file(mesh_uid);
 		node_game_object->name = file.filename_no_extension;
 		node_game_object->original_UUID = node_game_object->UUID;
 		node_game_object->Update();
 		App->renderer->InsertAABBTree(node_game_object);
 
-	}
 
-	std::vector<Config> textures;
-	node_config.GetChildrenConfig("Textures", textures);
-	ComponentMaterial *componentMaterial = (ComponentMaterial*)node_game_object->CreateComponent(Component::ComponentType::MATERIAL);
-	for (auto texture : textures)
-	{
-		std::string uid;
-		texture.GetString("uid", uid, "");
-		size_t separator = uid.find_last_of(":");
-		std::string texture_path = uid.substr(separator+1, uid.size());
-		std::string texture_type = uid.substr(0, separator);
-		std::shared_ptr<Texture> texture_resource = App->resources->Load<Texture>(texture_path);
-		if (texture_resource.get() != nullptr)
+		std::string material_for_component;
+		node_config.GetString("Material", material_for_component, "");
+
+		if (material_for_component != "")
 		{
-			componentMaterial->SetMaterialTexture(std::stoi(texture_type), App->resources->Load<Texture>(texture_path));
+			std::shared_ptr<Material> material_resource = App->resources->Load<Material>(material_for_component);
+			component_mesh_renderer->SetMaterial(material_resource);
 		}
 	}
 
@@ -162,11 +153,11 @@ GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) co
 	{
 		return model_game_object;
 	}
-	ComponentMesh* mesh_component = (ComponentMesh*)model_game_object->CreateComponent(Component::ComponentType::MESH);
-	mesh_component->SetMesh(mesh_for_component);
-	model_game_object->Update();
 
-	ComponentMaterial* componentMaterial = (ComponentMaterial*)model_game_object->CreateComponent(Component::ComponentType::MATERIAL);
+	ComponentMeshRenderer* mesh_renderer_component = (ComponentMeshRenderer*)model_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
+	mesh_renderer_component->SetMesh(mesh_for_component);
+	mesh_renderer_component->SetMaterial(App->resources->Load<Material>(DEFAULT_MATERIAL_PATH));
+	model_game_object->Update();
 
 	//UndoRedo
 	App->actions->action_game_object = model_game_object;

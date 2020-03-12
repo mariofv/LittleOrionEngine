@@ -1,0 +1,26 @@
+{
+    "Checkboard": false,
+    "ShaderProgram": "Blinn phong",
+    "kAmbient": 1.0,
+    "kSpecular": 1.0,
+    "kDiffuse": 1.0,
+    "shininess": 1.0,
+    "difusseColor": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+    ],
+    "emissiveColor": [
+        0.0,
+        0.0,
+        0.0,
+        1.0
+    ],
+    "specularColor": [
+        1.0,
+        1.0,
+        1.0,
+        1.0
+    ]
+}

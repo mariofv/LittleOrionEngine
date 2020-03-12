@@ -27,6 +27,7 @@ ModelImporter::ModelImporter()
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Info), Assimp::Logger::Info);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Err), Assimp::Logger::Err);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Warn), Assimp::Logger::Warn);
+	App->filesystem->MakeDirectory(LIBRARY_MATERIAL_FOLDER);
 	App->filesystem->MakeDirectory(LIBRARY_MODEL_FOLDER);
 
 	mesh_importer = std::make_unique<MeshImporter>();
@@ -53,8 +54,8 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file, bool force
 		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 
-	File output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER+"/"+ file.filename_no_extension);
-	std::string output_file_model = LIBRARY_MODEL_FOLDER + "/" + file.filename_no_extension + ".json";
+	File output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER"/" + file.filename_no_extension);
+	std::string output_file_model = LIBRARY_MODEL_FOLDER"/" + file.filename_no_extension + ".json";
 	APP_LOG_INIT("Importing model %s.", file.file_path.c_str());
 
 	performance_timer.Start();
@@ -79,7 +80,8 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file, bool force
 
 	Config model;
 	std::vector<Config> node_config;
-	ImportNode(root_node, identity_transformation, scene, base_path.c_str(), output_file.file_path, node_config);
+
+	ImportNode(root_node, identity_transformation, scene, base_path.c_str(), output_file, node_config);
 
 	std::vector<Config> animations_config;
 	for (size_t i = 0; i < scene->mNumAnimations; i++)
@@ -105,7 +107,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File & file, bool force
 	return std::pair<bool, std::string>(true, output_file_model);
 }
 
-void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file,  std::vector<Config> & node_config) const
+void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const File& output_file,  std::vector<Config> & node_config) const
 {
 
 	aiMatrix4x4& current_transformation = parent_transformation * root_node->mTransformation;
@@ -114,20 +116,14 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 	{
 		Config node;
 		size_t mesh_index = root_node->mMeshes[i];
-		std::vector<Config> materials;
-		std::vector<std::string> loaded_meshes_materials;
-		material_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, loaded_meshes_materials);
 
 
-		for (size_t i = 0; i < loaded_meshes_materials.size(); i++)
-		{
-			Config texture;
-			texture.AddString(loaded_meshes_materials[i], "uid");
-			materials.push_back(texture);
-		}
-		node.AddChildrenConfig(materials, "Textures");
+		std::string assets_material_file = std::string(file_path) + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
+		std::string library_material_file = LIBRARY_MATERIAL_FOLDER"/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
+		material_importer->ImportMaterialFromMesh(scene, mesh_index, file_path, assets_material_file.c_str(), library_material_file.c_str());
+		node.AddString(library_material_file, "Material");
 
-		std::string mesh_file = output_file + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
+		std::string mesh_file = output_file.file_path + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
 
 		// Transformation
 		aiVector3t<float> pScaling, pPosition;

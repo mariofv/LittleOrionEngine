@@ -3,17 +3,16 @@
 
 #include "Module.h"
 
-#include <memory>
-#include <thread>
-#include <atomic>
-#include <mutex>
-
 #include "ResourceManagement/Importer/ModelImporter.h"
 #include "ResourceManagement/Importer/PrefabImporter.h"
 #include "ResourceManagement/Importer/SceneManager.h"
 #include "ResourceManagement/Importer/TextureImporter.h"
-
 #include "ResourceManagement/ResourcesDB/ResourceDataBase.h"
+
+#include <memory>
+#include <thread>
+#include <atomic>
+#include <mutex>
 
 class Texture;
 class File;
@@ -21,6 +20,7 @@ class Mesh;
 class Resource;
 class Importer;
 class Timer;
+
 class ModuleResourceManager : public Module
 {
 public:

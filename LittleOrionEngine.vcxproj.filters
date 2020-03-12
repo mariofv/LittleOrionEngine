@@ -22,10 +22,7 @@
     <ClCompile Include="Engine\Component\ComponentLight.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentMaterial.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentMesh.cpp">
+    <ClCompile Include="Engine\Component\ComponentMeshRenderer.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentTransform.cpp">
@@ -226,9 +223,6 @@
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actions\EditorActionSetTexture.cpp">
-      <Filter>Engine\Actions</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
@@ -283,6 +277,19 @@
     <ClCompile Include="Engine\UI\Panel\PanelResourceDatabase.cpp">
       <Filter>Engine\UI\Panel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Material.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\MaterialLoader.cpp">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMaterialSelector.cpp">
+      <Filter>Engine\UI\Panel\PopupsPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\InspectorSubpanel\PanelMaterial.cpp">
+      <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -297,10 +304,7 @@
     <ClInclude Include="Engine\Component\ComponentLight.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentMaterial.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentMesh.h">
+    <ClInclude Include="Engine\Component\ComponentMeshRenderer.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentTransform.h">
@@ -507,9 +511,6 @@
     <ClInclude Include="Engine\Actions\EditorActionScale.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Actions\EditorActionSetTexture.h">
-      <Filter>Engine\Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
@@ -563,6 +564,21 @@
     </ClInclude>
     <ClInclude Include="Engine\UI\Panel\PanelResourceDatabase.h">
       <Filter>Engine\UI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.h">
+      <Filter>Engine\UI\Panel\PopupsPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Material.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\MaterialLoader.h">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\PopupsPanel\PanelPopupMaterialSelector.h">
+      <Filter>Engine\UI\Panel\PopupsPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\InspectorSubpanel\PanelMaterial.h">
+      <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -628,6 +644,9 @@
     </Filter>
     <Filter Include="Engine\ResourceManagement\ResourcesDB">
       <UniqueIdentifier>{2cb63c3c-91ab-40a6-adb2-04fc80f83a7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\UI\Panel\PopupsPanel">
+      <UniqueIdentifier>{4d3c5294-ef77-4da3-a2bc-ac29c72d5e42}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

@@ -4,7 +4,6 @@
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/Texture.h"
 #include "Main/GameObject.h"
-#include "Component/ComponentMaterial.h"
 #include <Filesystem/File.h>
 #include <ResourceManagement/Importer/TextureImporter.h>
 #include <ResourceManagement/Loaders/TextureLoader.h>
@@ -26,29 +25,7 @@ bool ModuleTexture::CleanUp()
 {
 	glDeleteTextures(1, &checkerboard_texture_id);
 	glDeleteTextures(1, &whitefall_texture_id);
-	for (auto& material : materials) 
-	{
-		material->owner->RemoveComponent(material);
-	}
-	materials.clear();
 	return true;
-}
-
-ComponentMaterial* ModuleTexture::CreateComponentMaterial()
-{
-	ComponentMaterial * new_material = new ComponentMaterial();
-	materials.push_back(new_material);
-	return new_material;
-}
-
-void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remove)
-{
-	auto it = std::find(materials.begin(), materials.end(), material_to_remove);
-	if (it != materials.end())
-	{
-		delete *it;
-		materials.erase(it);
-	}
 }
 
 std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)

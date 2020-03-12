@@ -101,7 +101,7 @@ update_status ModuleInput::PreUpdate()
 		case SDL_MOUSEMOTION:
 			mouse_position = float2(event.motion.x, event.motion.y);
 			mouse_motion = float2(event.motion.xrel, event.motion.yrel);
-			mouse_moving = event.motion.state & SDL_BUTTON_RMASK;
+			mouse_moving = event.motion.state;
 			break;
 
 		case SDL_MOUSEWHEEL:

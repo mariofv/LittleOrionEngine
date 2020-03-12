@@ -4,6 +4,7 @@
 
 #include <algorithm>
 #include "Brofiler/Brofiler.h"
+
 TextureImporter::TextureImporter()
 {
 	APP_LOG_INIT("Initializing DevIL image loader.")
@@ -16,6 +17,7 @@ TextureImporter::TextureImporter()
 	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 }
+
 std::pair<bool, std::string> TextureImporter::Import(const File& imported_file, bool force) const
 {
 	if (imported_file.filename.empty() || !imported_file.loaded_correctly)

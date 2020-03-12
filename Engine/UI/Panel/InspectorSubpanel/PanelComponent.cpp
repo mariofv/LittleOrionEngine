@@ -1,30 +1,30 @@
 #include "PanelComponent.h"
 
-#include "Actions/EditorActionTranslate.h"
+#include "Actions/EditorAction.h"
 #include "Actions/EditorActionRotation.h"
 #include "Actions/EditorActionScale.h"
-#include "Actions/EditorAction.h"
+#include "Actions/EditorActionTranslate.h"
 
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMaterial.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
 
-#include "Main/Application.h"
-#include "Main/GameObject.h"
-#include "Module/ModuleEditor.h"
-#include "Module/ModuleActions.h"
-#include "Module/ModuleFileSystem.h"
-#include "Module/ModuleProgram.h"
-#include "Module/ModuleTexture.h"
-#include "Module/ModuleScriptManager.h"
-
-
 #include "Helper/Utils.h"
 
+#include "Main/Application.h"
+#include "Main/GameObject.h"
+#include "Module/ModuleActions.h"
+#include "Module/ModuleFileSystem.h"
+#include "Module/ModuleScriptManager.h"
+#include "Module/ModuleEditor.h"
+
+#include "UI/Panel/PanelPopups.h"
+#include "UI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
+
 #include <imgui.h>
+#include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
 void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
@@ -61,9 +61,9 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 	}
 }
 
-void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
+void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if(ImGui::Checkbox("Active", &mesh->active))
 		{
@@ -80,6 +80,21 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 		}
 		ImGui::Separator();
 
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Mesh");
+		ImGui::SameLine();
+		if (ImGui::Button(mesh->mesh_to_render->exported_file.c_str()))
+		{
+			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
+		}
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Material");
+		ImGui::SameLine();
+		if (ImGui::Button(mesh->material_to_render->exported_file.c_str()))
+		{
+			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
+		}
 
 		char tmp_string[16];
 		ImGui::AlignTextToFramePadding();
@@ -93,140 +108,6 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::SameLine();
 		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
 		ImGui::Button(tmp_string);
-	}
-}
-
-void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
-{
-	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if (ImGui::BeginCombo("Shader", material->shader_program.c_str()))
-		{
-			for (auto & program : App->program->names)
-			{
-				bool is_selected = (material->shader_program == program);
-				if (ImGui::Selectable(program, is_selected))
-				{
-					material->shader_program = program;
-					if (is_selected)
-						ImGui::SetItemDefaultFocus();
-				}
-
-			}
-			ImGui::EndCombo();
-		}
-
-		float window_width = ImGui::GetWindowWidth();
-		for (size_t i = 0; i < material->textures.size(); ++i)
-		{
-			Texture::TextureType type = static_cast<Texture::TextureType>(i);
-			if (ImGui::CollapsingHeader(GetTypeName(type).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
-			{
-				if (material->textures[i].get() != nullptr) {
-					ImGui::PushID(i);
-					char tmp_string[256];
-					std::shared_ptr<Texture> & texture = material->textures[i];
-					ImGui::Image((void*)(intptr_t)texture->opengl_texture, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
-					DropTarget(material, type);
-					ImGui::SameLine();
-					ImGui::BeginGroup();
-					ImGui::Text("Texture:");
-					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), texture->exported_file.c_str());
-					sprintf_s(tmp_string, "(%dx%d px)", texture->width, texture->height);
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
-
-					bool mipmap = texture->IsMipMapped();
-					ImGui::Checkbox("Mipmap", &mipmap);
-					ImGui::SameLine();
-					ImGui::Checkbox("Checker Texture", &material->show_checkerboard_texture);
-					ImGui::Spacing();
-
-					if (ImGui::Button(ICON_FA_TIMES) )
-					{
-						//UndoRedo
-						App->actions->type_texture = Texture::TextureType(i);
-						App->actions->action_component = material;
-						App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
-
-						material->RemoveMaterialTexture(i);
-						material->modified_by_user = true;
-					}
-					ImGui::SameLine(); ImGui::Text("Remove Texture");
-					ImGui::EndGroup();
-					ImGui::PopID();
-				}
-				else
-				{
-					ImGui::Image((void*)0, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.f,1.f,1.f,1.f), ImVec4(1.f, 1.f, 1.f, 1.f));
-					DropTarget(material, type);
-				}
-				if (type == Texture::TextureType::DIFUSSE)
-				{
-					if (ImGui::ColorEdit3("Diffuse Color", material->diffuse_color)) { material->modified_by_user = true; };
-					if (ImGui::SliderFloat("k diffuse", &material->k_diffuse, 0, 1)) { material->modified_by_user = true; };
-				}
-				if (type == Texture::TextureType::EMISSIVE)
-				{
-					if (ImGui::ColorEdit3("Emissive Color", material->emissive_color)) {material->modified_by_user = true;}
-				}
-				if (type == Texture::TextureType::OCLUSION)
-				{
-					if (ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1)){	material->modified_by_user = true;}
-				}
-				if (type == Texture::TextureType::SPECULAR)
-				{
-					if(ImGui::ColorEdit3("Specular Color", material->specular_color)) { material->modified_by_user = true; }
-					if (ImGui::SliderFloat("k specular", &material->k_specular, 0, 1)) { material->modified_by_user = true; }
-					if (ImGui::SliderFloat("Shininess", &material->shininess, 0, 1)) { material->modified_by_user = true; }
-				}
-
-				ImGui::Separator();
-			}
-		}
-	}
-}
-void PanelComponent::DropTarget(ComponentMaterial *material, Texture::TextureType type)
-{
-	if (ImGui::BeginDragDropTarget())
-	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_File"))
-		{
-			assert(payload->DataSize == sizeof(File*));
-			File *incoming_file = *(File**)payload->Data;
-			if (incoming_file->file_type == FileType::TEXTURE)
-			{
-				//UndoRedo
-				App->actions->type_texture = type;
-				App->actions->action_component = material;
-				App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
-
-				material->SetMaterialTexture(type, App->texture->LoadTexture(incoming_file->file_path.c_str()));
-				material->modified_by_user = true;
-			}
-		}
-		ImGui::EndDragDropTarget();
-	}
-}
-
-std::string PanelComponent::GetTypeName(Texture::TextureType type)
-{
-	switch (type)
-	{
-	case Texture::TextureType::DIFUSSE:
-		return "Difusse";
-		break;
-	case Texture::TextureType::SPECULAR:
-		return "Specular";
-		break;
-	case Texture::TextureType::EMISSIVE:
-		return "Emissive";
-		break;
-	case Texture::TextureType::OCLUSION:
-		return "Oclusion";
-		break;
-	default:
-		return "";
 	}
 }
 
@@ -512,13 +393,6 @@ void PanelComponent::ShowAddNewComponentButton()
 	{
 		char tmp_string[128];
 
-		sprintf_s(tmp_string, "%s Material", ICON_FA_IMAGE);
-		if (ImGui::Selectable(tmp_string))
-		{
-			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
-
-		}
-
 		sprintf_s(tmp_string, "%s Camera", ICON_FA_VIDEO);
 		if (ImGui::Selectable(tmp_string))
 		{
@@ -565,6 +439,3 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script) {
 	}
 
 }
-
-
-

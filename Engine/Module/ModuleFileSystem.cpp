@@ -176,18 +176,21 @@ FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileT
 	{
 		return FileType::TEXTURE;
 	}
-	if (
-		file_extension == "fbx"
-		|| file_extension == "ol"
-		)
+	if (file_extension == "fbx")
 	{
 		return FileType::MODEL;
 	}
-	if (
-		file_extension == "prefab"
-		)
+	if (file_extension == "prefab")
 	{
 		return FileType::PREFAB;
+	}
+	if (file_extension == "ol")
+	{
+		return FileType::MESH;
+	}
+	if (file_extension == "matol")
+	{
+		return FileType::MATERIAL;
 	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{
