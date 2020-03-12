@@ -8,11 +8,17 @@
 
 class File;
 
+struct ImportResult
+{
+	bool succes = false;
+	std::string exported_file="";
+};
+
 class Importer {
 public:
 	Importer() = default;
 	virtual ~Importer() = default;
-	virtual std::pair<bool, std::string> Import(const File & file, bool force = false) const;
+	virtual ImportResult Import(const File & file, bool force = false) const;
 
 protected:
 

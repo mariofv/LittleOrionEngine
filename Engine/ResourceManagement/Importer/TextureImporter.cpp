@@ -18,18 +18,22 @@ TextureImporter::TextureImporter()
 
 }
 
-std::pair<bool, std::string> TextureImporter::Import(const File& imported_file, bool force) const
+ImportResult TextureImporter::Import(const File& imported_file, bool force) const
 {
+	ImportResult import_result;
+
 	if (imported_file.filename.empty() || !imported_file.loaded_correctly)
 	{
 		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
-		return std::pair<bool, std::string>(false,"");
+		return import_result;
 	}
 
 	ImportOptions already_imported = GetAlreadyImportedResource(imported_file);
 	if (already_imported.uuid != 0 && !force) {
 		APP_LOG_INFO("Texture already imported.")
-		return std::pair<bool, std::string>(true, already_imported.exported_file);
+		import_result.succes = true;
+		import_result.exported_file = already_imported.exported_file;
+		return import_result;
 	}
 
 	App->filesystem->MakeDirectory(LIBRARY_TEXTURES_FOLDER);
@@ -46,36 +50,39 @@ std::pair<bool, std::string> TextureImporter::Import(const File& imported_file, 
 	}
 
 	SaveMetaFile(imported_file.file_path, ResourceType::TEXTURE, output_file);
-	return std::pair<bool, std::string>(true, output_file);
+	import_result.succes = true;
+	import_result.exported_file = output_file;
+
+	return import_result;
 }
 
 std::string TextureImporter::ImportMaterialData(const std::string & material_path, const std::string model_base_path) const
 {
 	APP_LOG_INIT("Loading material texture in described path %s.", material_path.c_str());
-	std::pair<bool, std::string> imported = Import(material_path);
-	if (imported.first)
+	ImportResult import_result = Import(material_path);
+	if (import_result.succes)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly from %s.", material_path.c_str());
-		return imported.second;
+		return import_result.exported_file;
 	}
 
 	std::string texture_file_name = GetTextureFileName(material_path);
 	std::string textures_path = model_base_path+ "/" + texture_file_name;
 	APP_LOG_INIT("Loading material texture in model folder path %s.", model_base_path.c_str());
-	imported = Import(textures_path);
-	if (imported.first)
+	import_result = Import(textures_path);
+	if (import_result.succes)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
-		return imported.second;
+		return import_result.exported_file;
 	}
 
 	textures_path = std::string(TEXTURES_PATH) + texture_file_name;
 	APP_LOG_INIT("Loading material texture in textures folder %s.", textures_path.c_str());
-	imported = Import(textures_path);
-	if (imported.first)
+	import_result = Import(textures_path);
+	if (import_result.succes)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
-		return imported.second;
+		return import_result.exported_file;
 	}
 	return "";
 }

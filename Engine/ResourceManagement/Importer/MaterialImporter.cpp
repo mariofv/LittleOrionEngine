@@ -10,12 +10,16 @@
 
 #include <assimp/scene.h>
 
-std::pair<bool, std::string> MaterialImporter::Import(const File& file, bool force) const
+ImportResult MaterialImporter::Import(const File& file, bool force) const
 {
+	ImportResult import_result;
+
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
 	if (already_imported.uuid != 0 && !force) {
 		APP_LOG_INFO("Material already imported.")
-		return std::pair<bool, std::string>(true, already_imported.exported_file);
+		import_result.succes = true;
+		import_result.exported_file = already_imported.exported_file;
+		return import_result;
 	}
 
 	std::string library_material_file = LIBRARY_MATERIAL_FOLDER"/" + file.filename;
@@ -23,7 +27,9 @@ std::pair<bool, std::string> MaterialImporter::Import(const File& file, bool for
 	App->filesystem->Copy(file.file_path.c_str(), library_material_file.c_str());
 	SaveMetaFile(file.file_path, ResourceType::MATERIAL, library_material_file);
 
-	return std::pair<bool, std::string>(true, library_material_file);
+	import_result.succes = true;
+	import_result.exported_file = library_material_file;
+	return import_result;
 }
 
 

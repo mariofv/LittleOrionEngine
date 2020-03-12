@@ -312,11 +312,11 @@ void PanelProjectExplorer::FilesDrop() const
 			if (incoming_game_object->prefab_reference == nullptr)
 			{
 				std::string prefab_path = selected_folder->file_path + "/" + incoming_game_object->name + ".prefab";
-				auto & result = App->resources->Import(prefab_path, incoming_game_object);
-				if (result.first)
+				ImportResult import_result = App->resources->Import(prefab_path, incoming_game_object);
+				if (import_result.succes)
 				{
 					App->scene->RemoveGameObject(incoming_game_object);
-					std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(result.second);
+					std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(import_result.exported_file);
 					App->editor->selected_game_object = prefab->Instantiate(App->scene->GetRoot());
 					App->filesystem->RefreshFilesHierarchy();
 				}

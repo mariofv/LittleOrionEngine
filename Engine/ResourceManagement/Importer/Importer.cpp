@@ -5,15 +5,19 @@
 #include "Module/ModuleResourceManager.h"
 #include "Helper/Config.h"
 
-std::pair<bool, std::string> Importer::Import(const File & file, bool force) const
+ImportResult Importer::Import(const File & file, bool force) const
 {
+	ImportResult import_result;
+
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
 	if (already_imported.uuid != 0 && !force) {
-		return std::pair<bool, std::string>(true, already_imported.exported_file);
+		import_result.succes = true;
+		import_result.exported_file = already_imported.exported_file;
+		return import_result;
 	}
-	std::string exported_file = "Unknown";
+	std::string exported_file = "";
 	SaveMetaFile(file.file_path, ResourceType::UNKNOWN, exported_file);
-	return std::pair<bool, std::string>(false, exported_file);
+	return import_result;
 }
 
 

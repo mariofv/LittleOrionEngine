@@ -30,13 +30,13 @@ bool ModuleTexture::CleanUp()
 
 std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 {
-	std::pair<bool, std::string> imported = App->resources->Import(File(texture_path));
-	if (!imported.first)
+	ImportResult import_result = App->resources->Import(File(texture_path));
+	if (!import_result.succes)
 	{
 		return nullptr;
 	}
 
-	return App->resources->Load<Texture>(imported.second);
+	return App->resources->Load<Texture>(import_result.exported_file);
 }
 
 GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) const
@@ -44,7 +44,7 @@ GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) 
 	std::vector<std::string> faces_paths_dds;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
-		std::string ol_texture = App->resources->Import(File(faces_paths[i])).second;
+		std::string ol_texture = App->resources->Import(File(faces_paths[i])).exported_file;
 		faces_paths_dds.push_back(ol_texture);
 	}
 	return static_cast<GLuint>(TextureLoader::LoadCubemap(faces_paths_dds));

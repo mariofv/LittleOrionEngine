@@ -6,17 +6,22 @@
 
 #include <stack>
 
-std::pair<bool, std::string> PrefabImporter::Import(const File& file, bool force) const
+ImportResult PrefabImporter::Import(const File& file, bool force) const
 {
+	ImportResult import_result;
+
 	if (file.filename.empty())
 	{
 		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
-			return std::pair<bool, std::string>(false, "");
+			return import_result;
 	}
 
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
-	if (already_imported.uuid != 0 && !force) {
-		return std::pair<bool, std::string>(true, already_imported.exported_file);
+	if (already_imported.uuid != 0 && !force) 
+	{
+		import_result.succes = true;
+		import_result.exported_file = already_imported.exported_file;
+		return import_result;
 	}
 
 	App->filesystem->MakeDirectory(LIBRARY_TEXTURES_FOLDER);
@@ -25,13 +30,16 @@ std::pair<bool, std::string> PrefabImporter::Import(const File& file, bool force
 	bool copied = App->filesystem->Copy(file.file_path.c_str(), output_file.c_str());
 	if (!copied)
 	{
-		return std::pair<bool, std::string>(false, "");
+		return import_result;
 	}
 	SaveMetaFile(file.file_path, ResourceType::PREFAB, output_file);
-	return std::pair<bool, std::string>(true, output_file);
+
+	import_result.succes = true;
+	import_result.exported_file = output_file;
+	return import_result;
 }
 
-std::pair<bool, std::string> PrefabImporter::Import(const File & file, GameObject * gameobject_to_save) const
+ImportResult PrefabImporter::Import(const File & file, GameObject * gameobject_to_save) const
 {
 	Config scene_config;
 

@@ -42,38 +42,36 @@ update_status ModuleResourceManager::PreUpdate()
 	return true;
 }
 
+ void ModuleResourceManager::StartThread()
+ {
+	 thread_comunication.finished_loading = false;
+	 thread_comunication.total_items = App->filesystem->assets_file->total_sub_files_number;
+	 ImportAllFilesInDirectory(*App->filesystem->assets_file.get());
+	 thread_comunication.finished_loading = true;
+	 last_imported_time = thread_timer->Read();
+ }
 
- std::pair<bool, std::string> ModuleResourceManager::Import(const File& file)
+ ImportResult ModuleResourceManager::Import(const File& file)
  {
 	 while (thread_comunication.thread_importing_hash == std::hash<std::string>{}(file.file_path))
 	 {
 		 Sleep(1000);
 	 } 
 	 thread_comunication.main_importing_hash = std::hash<std::string>{}(file.file_path);
-	 std::pair<bool, std::string> result = InternalImport(file);
+	 ImportResult  result = InternalImport(file);
 	 thread_comunication.main_importing_hash = 0;
 	 return result;
  }
 
 
- std::pair<bool, std::string> ModuleResourceManager::Import(const std::string &path, GameObject * gameobject_to_save) const
+ ImportResult ModuleResourceManager::Import(const std::string &path, GameObject * gameobject_to_save) const
  {
 	 //If root import scene;
 	 return prefab_importer->Import(File(path),gameobject_to_save);
  }
 
- void ModuleResourceManager::StartThread()
+void ModuleResourceManager::ImportAllFilesInDirectory(const File& file)
  {
-	 thread_comunication.finished_loading = false;
-	 thread_comunication.total_items = App->filesystem->assets_file->total_sub_files_number;
-	 ImportAllFileHierarchy(*App->filesystem->assets_file.get());
-	 thread_comunication.finished_loading = true;
-	 last_imported_time = thread_timer->Read();
- }
-
-void ModuleResourceManager::ImportAllFileHierarchy(const File& file)
- {
-
 	 for (auto & child : file.children)
 	 {
 		 if (thread_comunication.stop_thread)
@@ -81,14 +79,14 @@ void ModuleResourceManager::ImportAllFileHierarchy(const File& file)
 			 return;
 		 }
 		 thread_comunication.thread_importing_hash = std::hash<std::string>{}(child->file_path);
-
 		 while (thread_comunication.main_importing_hash == std::hash<std::string>{}(file.file_path))
 		 {
 			 Sleep(1000);
 		 }
-		 if (child->file_type == FileType::DIRECTORY && !default_importer->Import(*child.get()).first)
+
+		 if (child->file_type == FileType::DIRECTORY && !default_importer->Import(*child.get()).succes)
 		 {
-			 ImportAllFileHierarchy(*child.get());
+			 ImportAllFilesInDirectory(*child.get());
 		 }
 		 else if (child->file_type != FileType::DIRECTORY)
 		 {
@@ -100,9 +98,9 @@ void ModuleResourceManager::ImportAllFileHierarchy(const File& file)
  }
 
 
-std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& file)
+ImportResult ModuleResourceManager::InternalImport(const File& file)
 {
-	std::pair<bool, std::string> result = std::pair<bool, std::string>(false,"");
+	ImportResult result;
 	std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
 	if (file.file_type == FileType::MODEL)
 	{

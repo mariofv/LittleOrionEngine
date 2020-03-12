@@ -44,8 +44,8 @@ GameObject * Prefab::Instantiate(GameObject * prefab_parent, std::unordered_map<
 
 void Prefab::Apply(GameObject * new_reference)
 {
-	auto result = App->resources->Import(exported_file, new_reference);
-	if (result.first)
+	ImportResult import_result = App->resources->Import(exported_file, new_reference);
+	if (import_result.succes)
 	{
 		RecursiveRewrite(prefab.front().get(), new_reference, true, false);
 		for (auto old_instance : instances)

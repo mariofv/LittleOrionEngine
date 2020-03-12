@@ -3,6 +3,7 @@
 
 #include "Module.h"
 
+#include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Importer/MaterialImporter.h"
 #include "ResourceManagement/Importer/ModelImporter.h"
 #include "ResourceManagement/Importer/PrefabImporter.h"
@@ -19,7 +20,6 @@ class Texture;
 class File;
 class Mesh;
 class Resource;
-class Importer;
 class Timer;
 
 class ModuleResourceManager : public Module
@@ -34,8 +34,8 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	std::pair<bool, std::string> Import(const File& file);
-	std::pair<bool, std::string> Import(const std::string &path, GameObject * gameobject_to_save) const;
+	ImportResult Import(const File& file);
+	ImportResult Import(const std::string &path, GameObject * gameobject_to_save) const;
 
 	template<typename T>
 	void RemoveResourceFromCacheIfNeeded(const std::shared_ptr<T> & resource) {
@@ -71,10 +71,11 @@ public:
 		return Load<T>(uid);
 	}
 private:
-	std::pair<bool, std::string> InternalImport(const File& file);
-	void ImportAllFileHierarchy(const File& file);
-	std::shared_ptr<Resource> RetrieveFromCacheIfExist(const std::string& uid) const;
 	void StartThread();
+	void ImportAllFilesInDirectory(const File& file);
+
+	ImportResult InternalImport(const File& file);
+	std::shared_ptr<Resource> RetrieveFromCacheIfExist(const std::string& uid) const;
 
 public:
 	struct ThreadComunication

@@ -41,16 +41,20 @@ ModelImporter::~ModelImporter()
 	Assimp::DefaultLogger::kill();
 }
 
-std::pair<bool, std::string> ModelImporter::Import(const File& file, bool force) const
+ImportResult ModelImporter::Import(const File& file, bool force) const
 {
+	ImportResult import_result;
+	
 	if (file.filename.empty())
 	{
 		APP_LOG_ERROR("Importing mesh error: Couldn't find the file to import.")
-		return std::pair<bool, std::string>(false, "");
+		return import_result;
 	}
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
 	if (already_imported.uuid != 0 && !force) {
-		return std::pair<bool, std::string>(true, already_imported.exported_file);
+		import_result.succes = true;
+		import_result.exported_file = already_imported.exported_file;
+		return import_result;
 	}
 
 	File output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER"/" + file.filename_no_extension);
@@ -66,7 +70,7 @@ std::pair<bool, std::string> ModelImporter::Import(const File& file, bool force)
 		APP_LOG_ERROR("Error loading model %s ", file.file_path.c_str());
 		APP_LOG_ERROR(error);
 		App->filesystem->Remove(&output_file);
-		return std::pair<bool, std::string>(false, "");
+		return import_result;
 	}
 	performance_timer.Stop();
 	float time = performance_timer.Read();
@@ -103,7 +107,9 @@ std::pair<bool, std::string> ModelImporter::Import(const File& file, bool force)
 	App->filesystem->Save(output_file_model.c_str(), serialized_model_string.c_str(), serialized_model_string.size() + 1);
 
 	SaveMetaFile(file.file_path, ResourceType::MESH, output_file_model);
-	return std::pair<bool, std::string>(true, output_file_model);
+	import_result.succes = true;
+	import_result.exported_file = output_file_model;
+	return import_result;
 }
 
 void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const File& output_file,  std::vector<Config> & node_config) const

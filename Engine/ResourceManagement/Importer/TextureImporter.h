@@ -14,7 +14,7 @@ class TextureImporter : Importer
 public:
 	TextureImporter();
 	~TextureImporter() = default;
-	std::pair<bool, std::string> Import(const File& file, bool force = false) const override;
+	ImportResult Import(const File& file, bool force = false) const override;
 	std::string ImportMaterialData(const std::string& material_path, const std::string model_base_path) const;
 
 private:
