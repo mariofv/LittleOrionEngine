@@ -111,7 +111,7 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	return import_result;
 }
 
-std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const std::string& base_path, const File& output_file) const
+std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const std::string& base_path, const File& exported_file) const
 {
 
 	std::vector<Config> node_config;
@@ -129,7 +129,7 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 		App->resources->material_importer->ExtractMaterialFromMesh(scene, mesh_index, base_path.c_str(), assets_material_file.c_str());
 		node.AddString(library_material_file, "Material");
 
-		std::string mesh_file = output_file.file_path + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
+
 
 		// Transformation
 		aiVector3t<float> pScaling, pPosition;
@@ -141,25 +141,27 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 
 		node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
 		aiMesh * importing_mesh = scene->mMeshes[mesh_index];
-		bool imported = mesh_importer->ImportMesh(importing_mesh, node_transformation, mesh_file);
+
+		std::string library_mesh_file = exported_file.file_path + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
+		bool imported = mesh_importer->ImportMesh(importing_mesh, node_transformation, library_mesh_file);
 		if (imported)
 		{
-			node.AddString(mesh_file, "Mesh");
+			node.AddString(library_mesh_file, "Mesh");
 		}
 
 		if (importing_mesh->HasBones())
 		{
-			std::string skeleton_file; 
-			//std::string animation_path = base_path + "/" + file.filename_no_extension + "_" + scene->mAnimations[i]->mName.C_Str() + ".anim";
-			skeleton_importer->ImportSkeleton(scene, importing_mesh, skeleton_file);
-			node.AddString(skeleton_file, "Skeleton");
+			std::string library_skeleton_file;
+			std::string assets_skeleton_file = base_path + "/" + std::string(root_node->mName.data)+ "_skeleton" + std::to_string(i) + ".sk";
+			skeleton_importer->ImportSkeleton(scene, importing_mesh, library_skeleton_file, assets_skeleton_file);
+			node.AddString(library_skeleton_file, "Skeleton");
 		}
 		node_config.push_back(node);
 	}
 
 	for (size_t i = 0; i < root_node->mNumChildren; i++)
 	{
-		std::vector<Config> child_node_config = ImportNode(root_node->mChildren[i], current_transformation, scene, base_path,output_file);
+		std::vector<Config> child_node_config = ImportNode(root_node->mChildren[i], current_transformation, scene, base_path, exported_file);
 		node_config.insert(node_config.begin(), child_node_config.begin(), child_node_config.end());
 	}
 

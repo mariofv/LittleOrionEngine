@@ -9,7 +9,7 @@
 #include <random>
 #include <map>
 
-bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, std::string& exported_file, std::string& importing_file) const
+bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, std::string& exported_file, std::string& imported_file) const
 {
 	Animation own_format_animation(0, "");
 	GetCleanAnimation(animation, own_format_animation);
@@ -21,12 +21,12 @@ bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation*
 
 	std::random_device random;
 	App->filesystem->MakeDirectory(LIBRARY_ANIMATION_FOLDER);
-	int64_t animation_uid = std::hash<std::string>{}(importing_file);
+	int64_t animation_uid = std::hash<std::string>{}(imported_file);
 	exported_file = LIBRARY_ANIMATION_FOLDER + "/" + std::to_string(animation_uid)+ "_"+ own_format_animation.name + ".anim";
 
-	App->filesystem->Save(importing_file.c_str(),"",1);
+	App->filesystem->Save(imported_file.c_str(),"",1);
 	SaveBinary(own_format_animation, exported_file);
-	SaveMetaFile(importing_file, ResourceType::ANIMATION, exported_file);
+	SaveMetaFile(imported_file, ResourceType::ANIMATION, exported_file);
 	return true;
 }
 

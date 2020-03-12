@@ -4,7 +4,7 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
-bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, std::string& output_file) const
+bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, std::string& exported_file, std::string& imported_file) const
 {
 
 	aiString bone_name = mesh->mBones[0]->mName;
@@ -25,8 +25,11 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 	if (skeleton.skeleton.size() > 0)
 	{
 		App->filesystem->MakeDirectory(LIBRARY_SKELETON_FOLDER);
-		output_file = LIBRARY_SKELETON_FOLDER + "/" +  mesh->mName.C_Str()+ ".ol";
-		SaveBinary(skeleton, output_file);
+		exported_file = LIBRARY_SKELETON_FOLDER + "/" +  mesh->mName.C_Str()+ ".ol";
+		SaveBinary(skeleton, exported_file);
+
+		App->filesystem->Save(imported_file.c_str(), "", 1);
+		SaveMetaFile(imported_file, ResourceType::SKELETON, exported_file);
 	}
 	return true;
 }
