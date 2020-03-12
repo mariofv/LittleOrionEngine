@@ -1,6 +1,6 @@
 #ifndef _MODULEINPUT_H_
 #define _MODULEINPUT_H_
-
+#define ENGINE_EXPORTS
 #include "Module.h"
 #include "Main/Globals.h"
 #include "Helper/Config.h"
@@ -341,9 +341,9 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	bool GetKey(KeyCode key);
-	bool GetKeyDown(KeyCode key);
-	bool GetKeyUp(KeyCode key);
+	ENGINE_API bool GetKey(KeyCode key);
+	ENGINE_API bool GetKeyDown(KeyCode key);
+	ENGINE_API bool GetKeyUp(KeyCode key);
 
 	bool GetMouseButton(MouseButton button);
 	bool GetMouseButtonDown(MouseButton button); 

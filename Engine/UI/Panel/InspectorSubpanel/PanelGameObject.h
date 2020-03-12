@@ -2,7 +2,7 @@
 #define _PANELGAMEOBJECT_H_
 
 #include "UI/Panel/Panel.h"
-#include "PanelComponent.h";
+#include "PanelComponent.h"
 
 class GameObject;
 
@@ -13,8 +13,10 @@ public:
 	~PanelGameObject() = default;
 
 	void Render(GameObject* game_object);
+	void ShowPrefabMenu(GameObject* game_object);
 	
-
+private:
+	GameObject* GetPrefabParent(GameObject* game_object);
 public:
 	PanelComponent component_panel;
 

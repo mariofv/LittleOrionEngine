@@ -4,7 +4,10 @@
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentScript.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleScene.h"
+#include "ResourceManagement/Resources/Prefab.h"
 
 #include <imgui.h>
 #include <imgui_stdlib.h>
@@ -19,6 +22,10 @@ PanelGameObject::PanelGameObject()
 
 void PanelGameObject::Render(GameObject* game_object)
 {
+	if (game_object == nullptr)
+	{
+		return;
+	}
 	ImGui::Checkbox("", &game_object->active);
 
 	ImGui::SameLine();
@@ -34,6 +41,10 @@ void PanelGameObject::Render(GameObject* game_object)
 	}
 
 	ImGui::Spacing();
+	if (game_object->prefab_reference != nullptr)
+	{
+		ShowPrefabMenu(game_object);
+	}
 	ImGui::Separator();
 	ImGui::Spacing();
 
@@ -68,6 +79,9 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::LIGHT:
 				component_panel.ShowComponentLightWindow(static_cast<ComponentLight*>(component));
 				break;
+			case Component::ComponentType::SCRIPT:
+				component_panel.ShowComponentScriptWindow(static_cast<ComponentScript*>(component));
+				break;
 			default:
 				break;
 		}
@@ -80,4 +94,33 @@ void PanelGameObject::Render(GameObject* game_object)
 	ImGui::Spacing();
 
 	component_panel.ShowAddNewComponentButton();
+}
+
+void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
+{
+	ImGui::SameLine();
+	if(ImGui::Button("Apply"))
+	{
+
+		GameObject *to_reimport = GetPrefabParent(game_object);
+		to_reimport->prefab_reference->Apply(to_reimport);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Revert"))
+	{
+		GameObject *to_reimport = GetPrefabParent(game_object);
+		to_reimport->prefab_reference->Revert(to_reimport);
+	}
+}
+
+GameObject* PanelGameObject::GetPrefabParent(GameObject* game_object)
+{
+	GameObject *to_reimport = game_object;
+	bool prefab_parent = game_object->is_prefab_parent;
+	while (to_reimport && !prefab_parent)
+	{
+		to_reimport = to_reimport->parent;
+		prefab_parent = to_reimport->is_prefab_parent;
+	}
+	return to_reimport;
 }

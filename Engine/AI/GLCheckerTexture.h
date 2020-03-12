@@ -2,7 +2,7 @@
 #define _GLCheckerTexture_H_
 
 #include <GL/glew.h>
-#include "DebugDraw.h"
+#include <recast/DebugUtils/DebugDraw.h>
 
 class GLCheckerTexture
 {

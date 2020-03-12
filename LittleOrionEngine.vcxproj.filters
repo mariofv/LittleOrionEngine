@@ -376,6 +376,15 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Skeleton.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
+        <ClCompile Include="Engine\Component\ComponentScript.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+        <ClCompile Include="Engine\Module\ModuleScriptManager.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+        <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp">
+      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
+    </ClCompile>
     <ClCompile Include="Libraries\include\recast\Recast\RecastRegion.cpp">
       <Filter>Libraries\recast</Filter>
     </ClCompile>
@@ -731,6 +740,15 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Skeleton.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
+      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentScript.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleScriptManager.h">
+      <Filter>Engine\Module</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\include\recast\DebugUtils\DebugDraw.h">
       <Filter>Libraries\recast</Filter>

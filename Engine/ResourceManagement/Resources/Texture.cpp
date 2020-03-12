@@ -5,7 +5,7 @@
 #include <IL/ilut.h>
 
 
-Texture::Texture(char * data, size_t image_size, int width, int height, const std::string& path, TextureType type) : image_size(image_size), width(width), height(height), type(type), data(data), Resource("",path)
+Texture::Texture(char * data, size_t image_size, int width, int height, const std::string& path, bool normal_map,TextureType type) : image_size(image_size), width(width), height(height), normal_map(normal_map),type(type), data(data), Resource(0,path)
 {
 	LoadInMemory();
 }
@@ -35,7 +35,15 @@ void Texture::LoadInMemory()
 	mag_filter = GL_LINEAR;
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
 
-	glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height, 0, image_size, data);
+	if (normal_map)
+	{
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+	}
+	else 
+	{
+		glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height, 0, image_size, data);
+	}
+
 	glBindTexture(GL_TEXTURE_2D, 0);
 	GenerateMipMap();
 }
@@ -139,11 +147,4 @@ char* Texture::GLEnumToString(GLenum gl_enum) const
 		return "Not implemented yet";
 		break;
 	}
-}
-
-
-void Texture::Save(Config& config) const
-{
-}
-void Texture::Load(const Config& config) {
 }

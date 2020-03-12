@@ -17,6 +17,7 @@
 #include "Module/ModuleUI.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
+#include "Module/ModuleScriptManager.h"
 #include "UI/EngineLog.h"
 #include "Brofiler/Brofiler.h"
 
@@ -28,6 +29,7 @@ Application::Application()
 	modules.emplace_back(window = new ModuleWindow());
 	modules.emplace_back(filesystem = new ModuleFileSystem());
 	modules.emplace_back(resources = new ModuleResourceManager());
+	modules.emplace_back(scripts = new ModuleScriptManager());
 	modules.emplace_back(input = new ModuleInput());
 	modules.emplace_back(ui = new ModuleUI());
 	modules.emplace_back(time = new ModuleTime());

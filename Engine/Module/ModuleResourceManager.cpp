@@ -11,6 +11,8 @@ bool ModuleResourceManager::Init()
 	APP_LOG_SECTION("************ Module Resource Manager Init ************");
 	texture_importer = std::make_unique<TextureImporter>();
 	model_importer = std::make_unique<ModelImporter>();
+	scene_manager = std::make_unique<SceneManager>();
+	prefab_importer = std::make_unique<PrefabImporter>();
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 	thread_timer->Start();
 	return true;
@@ -19,11 +21,11 @@ bool ModuleResourceManager::Init()
 update_status ModuleResourceManager::PreUpdate()
 {
 
-	if ((thread_timer->Read() - last_imported_time) >= importer_interval_millis)
+	/*if ((thread_timer->Read() - last_imported_time) >= importer_interval_millis)
 	{
 		importing_thread.join();
 		importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
-	}
+	}*/
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -47,6 +49,12 @@ update_status ModuleResourceManager::PreUpdate()
 	 return result;
  }
 
+
+ std::pair<bool, std::string> ModuleResourceManager::Import(const std::string &path, GameObject * gameobject_to_save) const
+ {
+	 //If root import scene;
+	 return prefab_importer->Import(File(path),gameobject_to_save);
+ }
 
  void ModuleResourceManager::StartThread()
  {
@@ -99,15 +107,6 @@ std::pair<bool, std::string> ModuleResourceManager::InternalImport(const File& f
 		result = texture_importer->Import(file);
 	}
 	return result;
-}
-
-void ModuleResourceManager::RemoveResourceFromCacheIfNeeded(const std::shared_ptr<Resource> & resource)
-{
-	auto it = std::find(resource_cache.begin(), resource_cache.end(), resource);
-	if (it != resource_cache.end() && (*it).use_count() <= 2)
-	{
-		resource_cache.erase(it);
-	}
 }
 
 std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(const std::string& uid) const

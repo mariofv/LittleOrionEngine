@@ -1,7 +1,8 @@
 #include "ComponentMesh.h"
 
-#include "Main/GameObject.h"
+#include "Component/ComponentMaterial.h"
 #include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
@@ -20,6 +21,13 @@ ComponentMesh::ComponentMesh(const std::shared_ptr<Mesh> & mesh_to_render, GameO
 ComponentMesh::ComponentMesh() : Component(nullptr, ComponentType::MESH)
 {
 }
+
+void ComponentMesh::Copy(Component * component_to_copy) const
+{
+	*component_to_copy = *this;
+	*static_cast<ComponentMesh*>(component_to_copy) = *this;
+};
+
 
 void ComponentMesh::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
 {
@@ -43,7 +51,6 @@ void ComponentMesh::Save(Config& config) const
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddString(mesh_to_render->exported_file, "MeshPath");
-	config.AddString(shader_program, "ShaderProgram");
 }
 
 void ComponentMesh::Load(const Config& config)
@@ -53,7 +60,6 @@ void ComponentMesh::Load(const Config& config)
 
 	std::string mesh_path;
 	config.GetString("MeshPath", mesh_path, "");
-	config.GetString("ShaderProgram", shader_program, "Default");
 	std::shared_ptr<Mesh> mesh = App->resources->Load<Mesh>(mesh_path.c_str());
 	if (mesh != nullptr)
 	{
@@ -66,21 +72,17 @@ void ComponentMesh::Load(const Config& config)
 
 }
 
-bool ComponentMesh::operator <(const ComponentMesh & mesh_to_compare) const
-{
-	return this->shader_program <= mesh_to_compare.shader_program;
-}
-
 void ComponentMesh::Render() const
 {
-	GLuint program = App->program->GetShaderProgramId(shader_program);
+	std::string program_name = static_cast<ComponentMaterial*>(owner->GetComponent(ComponentType::MATERIAL))->shader_program;
+	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
-	App->lights->RenderLight();
+	App->lights->Render(owner->transform.GetGlobalTranslation(), program);
 	owner->RenderMaterialTexture(program);
 	RenderModel();
 	glUseProgram(0);
@@ -91,4 +93,19 @@ void ComponentMesh::RenderModel() const
 	glBindVertexArray(mesh_to_render->GetVAO());
 	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+}
+
+Component* ComponentMesh::Clone(bool original_prefab) const
+{
+	ComponentMesh * created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentMesh();
+	}
+	else
+	{
+		created_component = App->renderer->CreateComponentMesh();
+	}
+	*created_component = *this;
+	return created_component;
 }

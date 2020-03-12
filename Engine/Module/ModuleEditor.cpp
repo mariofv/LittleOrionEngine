@@ -206,23 +206,13 @@ bool ModuleEditor::CleanUp()
 
 void ModuleEditor::OpenScene(const std::string &path) const
 {
-	size_t readed_bytes;
-	char* scene_file_data = App->filesystem->Load(path.c_str(), readed_bytes);
-	std::string serialized_scene_string = scene_file_data;
-	free(scene_file_data);
-
-	Config scene_config(serialized_scene_string);
-	App->scene->Load(scene_config);
+	App->scene->NewScene(path);
 }
 
 void ModuleEditor::SaveScene(const std::string &path) const
 {
-	Config scene_config;
-	App->scene->Save(scene_config);
-	std::string serialized_scene_string;
-	scene_config.GetSerializedString(serialized_scene_string);
+	App->resources->scene_manager->Save(path, App->scene->GetRoot());
 
-	App->filesystem->Save(path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
 }
 
 ImFont* ModuleEditor::GetFont(const Fonts & font) const

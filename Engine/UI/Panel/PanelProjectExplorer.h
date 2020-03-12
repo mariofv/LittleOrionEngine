@@ -23,7 +23,7 @@ public:
 	void CopyFileToSelectedFolder(const char* source) const;
 
 	void FilesDrag() const;
-
+	void FilesDrop() const;
 private:
 	File* selected_folder = nullptr;
 	File* selected_file = nullptr;
