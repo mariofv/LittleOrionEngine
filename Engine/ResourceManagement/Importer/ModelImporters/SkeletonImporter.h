@@ -1,11 +1,16 @@
 #pragma once
-struct aiScene;
-struct aiNode;
+
+
+#include "ResourceManagement/Resources/Skeleton.h"
+#include "ResourceManagement/Importer/Importer.h"
+
 #include <assimp/mesh.h>
 #include <string>
-#include <ResourceManagement/Resources/Skeleton.h>
 
-class SkeletonImporter
+struct aiScene;
+struct aiNode;
+
+class SkeletonImporter : public Importer
 {
 public:
 	SkeletonImporter() = default;

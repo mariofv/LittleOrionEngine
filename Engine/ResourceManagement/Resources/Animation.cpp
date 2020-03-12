@@ -6,10 +6,11 @@ Animation::Animation(const uint32_t UID, const std::string & exported_file) : Re
 
 }
 
-Animation::Animation(std::vector<KeyFrame> && keyframes, std::string name, float duration, const std::string & exported_file)
+Animation::Animation(std::vector<KeyFrame> && keyframes, std::string name, float frames, float frames_per_second,const std::string & exported_file)
 	: keyframes(keyframes)
 	, name(name)
-	, duration(duration)
+	, frames(frames)
+	, frames_per_second(frames_per_second)
 	, Resource(0, exported_file)
 {
 

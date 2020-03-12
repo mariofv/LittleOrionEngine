@@ -2,8 +2,8 @@
 #include <assimp/scene.h>
 #include <algorithm>
 
-#include <Main/Application.h>
-#include <Module/ModuleFileSystem.h>
+#include "Main/Application.h"
+#include "Module/ModuleFileSystem.h"
 bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, std::string& output_file) const
 {
 

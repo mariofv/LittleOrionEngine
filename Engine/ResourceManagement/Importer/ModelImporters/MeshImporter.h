@@ -1,10 +1,12 @@
 #ifndef _MESHIMPORTER_H_
 #define _MESHIMPORTER_H_
+
+#include "ResourceManagement/Importer/Importer.h"
 #include <vector>
 #include <string>
 
 #include <assimp/mesh.h>
-class MeshImporter
+class MeshImporter : public Importer
 {
 public:
 	MeshImporter() = default;

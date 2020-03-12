@@ -286,9 +286,11 @@
     <ClCompile Include="Engine\UI\Panel\InspectorSubpanel\PanelMaterial.cpp">
       <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp">
+      <Filter>Engine\UI\Panel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>

@@ -91,7 +91,8 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	{
 		Config animation_config;
 		std::string animation;
-		animation_importer->ImportAnimation(scene, scene->mAnimations[i], animation);
+		std::string animation_path = file.parent->file_path + "/"+file.filename_no_extension +"_"+scene->mAnimations[i]->mName.C_Str() + ".anim";
+		animation_importer->ImportAnimation(scene, scene->mAnimations[i], animation, animation_path);
 		animation_config.AddString(animation, "Animation");
 		animations_config.push_back(animation_config);
 	}

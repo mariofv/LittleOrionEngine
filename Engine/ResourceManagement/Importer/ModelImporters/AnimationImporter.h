@@ -3,19 +3,20 @@
 
 #include <string>
 #include <unordered_map>
-#include <ResourceManagement/Resources/Animation.h>
+#include "ResourceManagement/Resources/Animation.h"
+#include "ResourceManagement/Importer/Importer.h"
 struct aiAnimation;
 struct aiScene;
 struct aiNodeAnim;
 class Animation;
-class AnimationImporter
+class AnimationImporter : public Importer
 {
 public:
 
 	AnimationImporter() = default;
 	~AnimationImporter() = default;
 
-	bool ImportAnimation(const aiScene* scene, const aiAnimation* animation, std::string& output_file) const;
+	bool ImportAnimation(const aiScene* scene, const aiAnimation* animation, std::string& exported_file, std::string& assets_filepat) const;
 
 private:
 	void GetCleanAnimation(const aiAnimation* animation, Animation & own_format_animation) const ;
