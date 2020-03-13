@@ -22,6 +22,13 @@ ComponentMesh::ComponentMesh() : Component(nullptr, ComponentType::MESH)
 {
 }
 
+void ComponentMesh::Copy(Component * component_to_copy) const
+{
+	*component_to_copy = *this;
+	*static_cast<ComponentMesh*>(component_to_copy) = *this;
+};
+
+
 void ComponentMesh::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
 {
 	this->mesh_to_render = mesh_to_render;
@@ -86,4 +93,19 @@ void ComponentMesh::RenderModel() const
 	glBindVertexArray(mesh_to_render->GetVAO());
 	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
+}
+
+Component* ComponentMesh::Clone(bool original_prefab) const
+{
+	ComponentMesh * created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentMesh();
+	}
+	else
+	{
+		created_component = App->renderer->CreateComponentMesh();
+	}
+	*created_component = *this;
+	return created_component;
 }

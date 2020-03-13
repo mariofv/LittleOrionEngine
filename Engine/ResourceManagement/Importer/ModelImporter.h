@@ -25,7 +25,7 @@ class ModelImporter : Importer
 public:
 	ModelImporter();
 	~ModelImporter();
-	std::pair<bool, std::string> Import(const File & file) const override;
+	std::pair<bool, std::string> Import(const File & file, bool force = false) const override;
 private:
 	void ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file, std::vector<Config> & node_config) const;
 
