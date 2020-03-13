@@ -19,9 +19,12 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleScriptManager.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleResourceManager.h"
 
 #include "UI/Panel/PanelPopups.h"
 #include "UI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
+
+#include "ResourceManagement/Importer/Importer.h"
 
 #include <imgui.h>
 #include <imgui_stdlib.h>
@@ -82,6 +85,21 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Mesh");
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_File"))
+			{
+				assert(payload->DataSize == sizeof(File*));
+				File* incoming_file = *(File * *)payload->Data;
+				if (incoming_file->file_type == FileType::MESH)
+				{
+					ImportOptions meta;
+					Importer::GetOptionsFromMeta(*incoming_file,meta);
+					mesh->SetMesh(App->resources->Load<Mesh>(meta.exported_file));
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
 		ImGui::SameLine();
 		if (ImGui::Button(mesh->mesh_to_render->exported_file.c_str()))
 		{
@@ -325,6 +343,7 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 			if (ImGui::DragFloat("Range", &light->point_light_parameters.range, 1.f, 1.f, 100.f))
 			{
 				light->point_light_parameters.ChangePointLightAttenuationValues(light->point_light_parameters.range);
+				light->modified_by_user = true;
 			}
 		}
 		if (light->light_type == ComponentLight::LightType::SPOT_LIGHT)
@@ -332,14 +351,17 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 			if (ImGui::DragFloat("Spot Angle", &light->spot_light_parameters.spot_angle, 1.f, 1.f, 179.f))
 			{
 				light->spot_light_parameters.SetSpotAngle(light->spot_light_parameters.spot_angle);
+				light->modified_by_user = true;
 			}
 			if (ImGui::DragFloat("Edge Softness", &light->spot_light_parameters.edge_softness, 0.01f, 0.f, 1.f))
 			{
 				light->spot_light_parameters.SetEdgeSoftness(light->spot_light_parameters.edge_softness);
+				light->modified_by_user = true;
 			}
 			if (ImGui::DragFloat("Range", &light->spot_light_parameters.range, 1.f, 1.f, 100.f))
 			{
 				light->spot_light_parameters.ChangeSpotLightAttenuationValues(light->spot_light_parameters.range);
+				light->modified_by_user = true;
 			}
 		}
 		
@@ -413,6 +435,12 @@ void PanelComponent::ShowAddNewComponentButton()
 
 		}
 
+		sprintf_s(tmp_string, "%s Mesh Renderer", ICON_FA_DRAW_POLYGON);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
+
+		}
 		ImGui::EndPopup();
 	}
 

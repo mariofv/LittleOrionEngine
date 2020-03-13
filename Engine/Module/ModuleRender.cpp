@@ -167,7 +167,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	for (auto &mesh : meshes_to_render)
 	{
 		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
-		if (mesh->IsEnabled())
+		if (mesh->mesh_to_render != nullptr && mesh->IsEnabled())
 		{
 			mesh->Render();
 			glUseProgram(0);

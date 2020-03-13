@@ -32,7 +32,7 @@ private:
 	void ShowFileIcon(File* file);
 
 private:
-	float file_size = 150.f;
+	float file_size = 100.f;
 
 	File* selected_folder = nullptr;
 	File* selected_file = nullptr;

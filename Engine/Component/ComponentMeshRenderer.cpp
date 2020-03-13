@@ -20,10 +20,13 @@ ComponentMeshRenderer::ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_
 
 ComponentMeshRenderer::ComponentMeshRenderer() : Component(nullptr, ComponentType::MESH_RENDERER)
 {
+	this->mesh_to_render = App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH);
+	this->material_to_render = App->resources->Load<Material>(DEFAULT_MATERIAL_PATH);
 }
 
 void ComponentMeshRenderer::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
 {
+	App->resources->RemoveResourceFromCacheIfNeeded(this->mesh_to_render);
 	this->mesh_to_render = mesh_to_render;
 	owner->aabb.GenerateBoundingBox();
 }

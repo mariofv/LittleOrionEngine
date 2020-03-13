@@ -137,7 +137,7 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 			if (incoming_file->file_type == FileType::PREFAB)
 			{
 				ImportOptions options;
-				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
+				Importer::GetOptionsFromMeta(*incoming_file, options);
 				auto prefab = App->resources->Load<Prefab>(options.exported_file);
 				prefab->Instantiate(target_game_object);
 			}
