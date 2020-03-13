@@ -90,22 +90,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		{
 			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
 		}
-		if (ImGui::BeginDragDropTarget())
-		{
-			if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_File"))
-			{
-				assert(payload->DataSize == sizeof(File*));
-				File* incoming_file = *(File * *)payload->Data;
-				if (incoming_file->file_type == FileType::MESH)
-				{
-					std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
-					ImportOptions meta;
-					Importer::GetOptionsFromMeta(meta_path, meta);
-					mesh->SetMesh(App->resources->Load<Mesh>(meta.exported_file));
-				}
-			}
-			ImGui::EndDragDropTarget();
-		}
+		DropMeshAndMaterial(mesh);
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Material");
 		ImGui::SameLine();
@@ -113,7 +98,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		{
 			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
 		}
-
+		DropMeshAndMaterial(mesh);
 		char tmp_string[16];
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Triangles");
@@ -466,4 +451,30 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script) {
 		ImGui::EndCombo();
 	}
 
+}	
+void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_File"))
+		{
+			assert(payload->DataSize == sizeof(File*));
+			File* incoming_file = *(File * *)payload->Data;
+			if (incoming_file->file_type == FileType::MESH)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				component_mesh->SetMesh(App->resources->Load<Mesh>(meta.exported_file));
+			}
+			if (incoming_file->file_type == FileType::MATERIAL)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				component_mesh->SetMaterial(App->resources->Load<Material>(meta.exported_file));
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
 }

@@ -28,6 +28,9 @@ public:
 
 	void CheckClickedCamera(ComponentCamera* camera);
 	void CheckClickForUndo(ModuleActions::UndoActionType type, Component* component);
+
+private:
+	void DropMeshAndMaterial(ComponentMeshRenderer* component_mesh);
 };
 
 #endif //_PANELCOMPONENT_H_
