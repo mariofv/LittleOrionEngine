@@ -31,9 +31,6 @@ public:
 private:
 	std::vector<Config> ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const std::string& base_path, const File& exported_file) const;
 
-public:
-	const float SCALE_FACTOR = 0.01f;
-
 private:
 	mutable Timer performance_timer;
 	std::unique_ptr<MeshImporter> mesh_importer;

@@ -26,9 +26,7 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 	{
 		App->filesystem->MakeDirectory(LIBRARY_SKELETON_FOLDER);
 		exported_file = LIBRARY_SKELETON_FOLDER + "/" +  mesh->mName.C_Str()+ ".ol";
-		SaveBinary(skeleton, exported_file);
-
-		App->filesystem->Save(imported_file.c_str(), "", 1);
+		SaveBinary(skeleton, exported_file, imported_file);
 		SaveMetaFile(imported_file, ResourceType::SKELETON, exported_file);
 	}
 	return true;
@@ -100,7 +98,7 @@ float4x4 SkeletonImporter::GetTransform(const aiMatrix4x4 & current_transform) c
 	return math::float4x4::FromTRS(translation, rotation, scale);
 }
 
-bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& output_file) const
+bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& exported_file, const std::string& imported_file) const
 {
 
 	uint32_t num_bones = skeleton.skeleton.size();
@@ -133,7 +131,8 @@ bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& 
 		cursor += sizeof(uint32_t);
 	}
 
-	App->filesystem->Save(output_file.c_str(), data, size);
+	App->filesystem->Save(exported_file.c_str(), data, size);
+	App->filesystem->Save(imported_file.c_str(), data, size);
 	free(data);
 	return true;
 }

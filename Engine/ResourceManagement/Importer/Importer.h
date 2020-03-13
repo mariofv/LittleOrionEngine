@@ -29,7 +29,7 @@ public:
 	static void GetOptionsFromMeta(const File& file, ImportOptions & options);
 	static std::string GetMetaFilePath(const File& file);
 private:
-	static const int IMPORTER_VERSION = 2;
+	static const int IMPORTER_VERSION = 3;
 };
 #endif // !_IMPORTER_H_
 

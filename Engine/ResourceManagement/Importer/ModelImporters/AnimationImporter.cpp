@@ -24,8 +24,8 @@ bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation*
 	int64_t animation_uid = std::hash<std::string>{}(imported_file);
 	exported_file = LIBRARY_ANIMATION_FOLDER + "/" + std::to_string(animation_uid)+ "_"+ own_format_animation.name + ".anim";
 
-	App->filesystem->Save(imported_file.c_str(),"",1);
-	SaveBinary(own_format_animation, exported_file);
+
+	SaveBinary(own_format_animation, exported_file, imported_file);
 	SaveMetaFile(imported_file, ResourceType::ANIMATION, exported_file);
 	return true;
 }
@@ -141,7 +141,7 @@ void AnimationImporter::TransformPositions(const aiNodeAnim * ai_node, std::unor
 
 }
 
-void AnimationImporter::SaveBinary(const Animation & animation, const std::string & output_file) const
+void AnimationImporter::SaveBinary(const Animation& animation, const std::string& exported_file, const std::string& imported_file) const
 {
 
 
@@ -209,6 +209,7 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 		}
 	}
 
-	App->filesystem->Save(output_file.c_str(), data, size);
+	App->filesystem->Save(exported_file.c_str(), data, size);
+	App->filesystem->Save(imported_file.c_str(), data, size);
 	free(data);
 }

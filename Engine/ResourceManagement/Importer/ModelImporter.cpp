@@ -129,21 +129,11 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 		App->resources->material_importer->ExtractMaterialFromMesh(scene, mesh_index, base_path.c_str(), assets_material_file.c_str());
 		node.AddString(library_material_file, "Material");
 
-
-
-		// Transformation
-		aiVector3t<float> pScaling, pPosition;
-		aiQuaterniont<float> pRotation;
-		aiMatrix4x4 node_transformation = current_transformation;
-		node_transformation.Decompose(pScaling, pRotation, pPosition);
-		pScaling *= SCALE_FACTOR;
-		pPosition *= SCALE_FACTOR;
-
-		node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
 		aiMesh * importing_mesh = scene->mMeshes[mesh_index];
 
+		std::string assets_mesh_file = base_path + "/" + std::string(root_node->mName.data) + "_mesh" + std::to_string(i) + ".ol";
 		std::string library_mesh_file = exported_file.file_path + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
-		bool imported = mesh_importer->ImportMesh(importing_mesh, node_transformation, library_mesh_file);
+		bool imported = mesh_importer->ImportMesh(importing_mesh, current_transformation, library_mesh_file, assets_mesh_file);
 		if (imported)
 		{
 			node.AddString(library_mesh_file, "Mesh");
