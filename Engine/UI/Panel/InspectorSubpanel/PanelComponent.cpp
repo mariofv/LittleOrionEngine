@@ -85,6 +85,11 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Mesh");
+		ImGui::SameLine();
+		if (ImGui::Button(mesh->mesh_to_render->exported_file.c_str()))
+		{
+			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
+		}
 		if (ImGui::BeginDragDropTarget())
 		{
 			if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_File"))
@@ -93,19 +98,14 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 				File* incoming_file = *(File * *)payload->Data;
 				if (incoming_file->file_type == FileType::MESH)
 				{
+					std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
 					ImportOptions meta;
-					Importer::GetOptionsFromMeta(*incoming_file,meta);
+					Importer::GetOptionsFromMeta(meta_path, meta);
 					mesh->SetMesh(App->resources->Load<Mesh>(meta.exported_file));
 				}
 			}
 			ImGui::EndDragDropTarget();
 		}
-		ImGui::SameLine();
-		if (ImGui::Button(mesh->mesh_to_render->exported_file.c_str()))
-		{
-			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
-		}
-
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Material");
 		ImGui::SameLine();

@@ -58,3 +58,9 @@ void File::GetFileInfo()
 	modification_timestamp = file_info.modtime;
 	this->file_type = App->filesystem->GetFileType(filename.c_str(), file_info.filetype);
 }
+
+void File::Refresh()
+{
+	children.clear();
+	GetChildren();
+}

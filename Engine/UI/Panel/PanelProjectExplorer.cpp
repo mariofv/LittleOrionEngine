@@ -210,10 +210,12 @@ void PanelProjectExplorer::ProcessMouseInput(File * file)
 		{
 			selected_folder = file;
 			selected_file = nullptr;
+			selected_folder->Refresh();
 		}
 		else if (ImGui::IsMouseDoubleClicked(0))
 		{
 			selected_folder = file;
+			selected_folder->Refresh();
 		}
 	}
 }

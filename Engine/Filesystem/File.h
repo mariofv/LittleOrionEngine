@@ -31,6 +31,7 @@ public:
 	File* parent;
 	bool operator==(const File& compare);
 
+	void Refresh();
 public:
 	bool loaded_correctly = true;
 
