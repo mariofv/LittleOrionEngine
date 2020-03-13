@@ -72,7 +72,7 @@ bool NavMesh::CreateNavMesh()
 	const float* verts = &verts_vec[0];
 	const int nverts = verts_vec.size();
 	const int* tris = &tris_vec[0];
-	const int ntris = tris_vec.size() / 3;
+	ntris = tris_vec.size() / 3;
 	const float* normals = &normals_vec[0];
 
 	
@@ -143,7 +143,7 @@ bool NavMesh::CreateNavMesh()
 
 	// Find triangles which are walkable based on their slope and rasterize them.
 	// If your input data is multiple meshes, you can transform them here, calculate
-	// the are type for each of the meshes and rasterize them.
+	// the area type for each of the meshes and rasterize them.
 	memset(m_triareas, 0, ntris * sizeof(unsigned char));
 	rcMarkWalkableTriangles(m_ctx, m_cfg.walkableSlopeAngle, verts, nverts, tris, ntris, m_triareas, unwalkable_verts);
 	if (!rcRasterizeTriangles(m_ctx, verts, nverts, tris, m_triareas, ntris, *m_solid, m_cfg.walkableClimb))
@@ -920,7 +920,7 @@ void NavMesh::GetIndicesScene()
 {
 	//Clear index vector
 	tris_vec.clear();
-
+	/*
 	for (auto mesh : App->renderer->meshes)
 	{
 		for (int i = 0; i < mesh->mesh_to_render.get()->indices.size(); ++i)
@@ -928,6 +928,31 @@ void NavMesh::GetIndicesScene()
 			tris_vec.push_back(mesh->mesh_to_render.get()->indices[i]);
 		}
 	}
+	*/
+
+	if (!App->renderer->meshes.size())
+		return;
+
+	std::vector<int>max_vert_mesh(App->renderer->meshes.size() + 1, 0);
+	for(int i = 0; i < App->renderer->meshes.size(); ++i)
+	{
+		ntris += App->renderer->meshes[i]->mesh_to_render.get()->indices.size() / 3;
+		max_vert_mesh[i + 1] = App->renderer->meshes[i]->mesh_to_render.get()->vertices.size();
+	}
+
+	int vert_overload = 0;
+	for(int j = 0; j < App->renderer->meshes.size(); ++j)
+	{
+		vert_overload += max_vert_mesh[j];
+		for(int i = 0; i < App->renderer->meshes[j]->mesh_to_render.get()->indices.size(); i+= 3)
+		{
+			tris_vec.push_back(App->renderer->meshes[j]->mesh_to_render.get()->indices[i] + vert_overload);
+			tris_vec.push_back(App->renderer->meshes[j]->mesh_to_render.get()->indices[i + 1] + vert_overload);
+			tris_vec.push_back(App->renderer->meshes[j]->mesh_to_render.get()->indices[i + 2] + vert_overload);
+
+		}
+	}
+
 }
 
 void NavMesh::GetNormalsScene()

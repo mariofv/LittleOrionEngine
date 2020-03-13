@@ -1,27 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <ClCompile Include="Libraries\include\imgui\imgui.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\imgui\imgui_demo.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\imgui\imgui_draw.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\imgui\imgui_impl_opengl3.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\imgui\imgui_impl_sdl.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\imgui\imgui_stdlib.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\imgui\imgui_widgets.cpp">
-      <Filter>Libraries\imgui</Filter>
-    </ClCompile>
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp">
       <Filter>Libraries\ImGuizmo</Filter>
     </ClCompile>
@@ -33,102 +12,6 @@
     </ClCompile>
     <ClCompile Include="Libraries\include\ImGuizmo\ImSequencer.cpp">
       <Filter>Libraries\ImGuizmo</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\BitOps.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\TriangleMesh.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Sphere.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Triangle.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Ray.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Polygon.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Polyhedron.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Plane.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\OBB.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\LineSegment.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Line.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Frustum.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Cone.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Cylinder.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Circle.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\Capsule.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Geometry\AABB.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Algorithm\Random\LCG.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Time\Clock.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\float4x4.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\float4.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\float3x4.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\float3x3.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\float2.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\float3.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\TransformOps.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\SSEMath.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\Quat.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\Polynomial.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\MathOps.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\MathLog.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\MathGeoLib\Math\MathFunc.cpp">
-      <Filter>Libraries\MathGeoLib</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentAABB.cpp">
       <Filter>Engine\Component</Filter>
@@ -242,7 +125,7 @@
       <Filter>Engine\Helper</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\Importer.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
@@ -293,16 +176,16 @@
       <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\TextureImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
@@ -365,10 +248,10 @@
       <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Resources\Prefab.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
@@ -376,14 +259,11 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Skeleton.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
-        <ClCompile Include="Engine\Component\ComponentScript.cpp">
+    <ClCompile Include="Engine\Component\ComponentScript.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-        <ClCompile Include="Engine\Module\ModuleScriptManager.cpp">
+    <ClCompile Include="Engine\Module\ModuleScriptManager.cpp">
       <Filter>Engine\Module</Filter>
-    </ClCompile>
-        <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp">
-      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
     </ClCompile>
     <ClCompile Include="Libraries\include\recast\Recast\RecastRegion.cpp">
       <Filter>Libraries\recast</Filter>
@@ -481,9 +361,23 @@
     <ClCompile Include="Engine\AI\NavMesh.cpp">
       <Filter>Engine\AI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\AI\DebugDrawGL.cpp" />
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
     <ClCompile Include="Engine\UI\Panel\PanelNavMesh.cpp" />
+    <ClCompile Include="Engine\AI\DebugDrawGL.cpp">
+      <Filter>Engine\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp">
+      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp">
+      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\PrefabLoader.cpp">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\SceneManager.cpp">
+      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -598,7 +492,7 @@
       <Filter>Engine\Helper</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\Importer.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
@@ -607,10 +501,10 @@
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\TextureImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\UI\Panel\Panel.h">
       <Filter>Engine\UI\Panel</Filter>
@@ -658,10 +552,10 @@
       <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.h">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.h">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Skybox.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
@@ -730,19 +624,16 @@
       <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.h">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.h">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Prefab.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Skeleton.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
-      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentScript.h">
       <Filter>Engine\Component</Filter>
@@ -828,10 +719,26 @@
     <ClInclude Include="Engine\AI\NavMesh.h">
       <Filter>Engine\AI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\AI\DebugDrawGL.h" />
-    <ClInclude Include="Engine\AI\GLCheckerTexture.h" />
     <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
     <ClInclude Include="Engine\UI\Panel\PanelNavMesh.h" />
+    <ClInclude Include="Engine\AI\DebugDrawGL.h">
+      <Filter>Engine\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\AI\GLCheckerTexture.h">
+      <Filter>Engine\AI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
+      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\PrefabImporter.h">
+      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\PrefabLoader.h">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\SceneManager.h">
+      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -876,9 +783,6 @@
     <Filter Include="Engine\ResourceManagement">
       <UniqueIdentifier>{43b6c14e-b9eb-4025-9f7b-b2e8c1cedd2f}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\ResourceManagement\Importer">
-      <UniqueIdentifier>{77df864b-d951-40b5-ba86-51b9342f9390}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\ResourceManagement\Resources">
       <UniqueIdentifier>{621e0eab-6111-4b36-b46d-c82b3b6b0847}</UniqueIdentifier>
     </Filter>
@@ -887,9 +791,6 @@
     </Filter>
     <Filter Include="Engine\UI\Panel\InspectorSubpanel">
       <UniqueIdentifier>{7bf0885e-2c32-4fa2-9d73-f6cb15854163}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\ResourceManagement\Importer\ModelImporters">
-      <UniqueIdentifier>{9daec75e-3bbb-4792-bc2c-04d03e1b6f21}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\ResourceManagement\Loaders">
       <UniqueIdentifier>{af8a22c1-2b23-42fc-b542-ec1112f7066d}</UniqueIdentifier>
@@ -902,6 +803,15 @@
     </Filter>
     <Filter Include="Engine\AI">
       <UniqueIdentifier>{799add9a-b011-4795-bae5-55a425014ca0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\ImportOptions">
+      <UniqueIdentifier>{55df114a-b693-4532-8883-fdebb1790128}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\Loaders\Importer">
+      <UniqueIdentifier>{77df864b-d951-40b5-ba86-51b9342f9390}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\Loaders\Importer\ModelImporters">
+      <UniqueIdentifier>{9daec75e-3bbb-4792-bc2c-04d03e1b6f21}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

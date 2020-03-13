@@ -163,6 +163,10 @@ private:
 	std::vector<int> tris_vec;
 	std::vector<float> normals_vec;
 	std::vector<bool> unwalkable_verts;
+
+	int ntris = 0;
+
+
 	AABB global_AABB;
 	bool is_mesh_computed = false;
 
