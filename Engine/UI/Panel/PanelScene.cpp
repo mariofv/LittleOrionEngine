@@ -261,7 +261,7 @@ void PanelScene::RenderCameraPreview() const
 void PanelScene::RenderDebugMetrics() const
 {
 	ImGui::SetCursorPos(ImVec2(10, 50));
-	ImGui::BeginChildFrame(ImGui::GetID("Debug Metrics"), ImVec2(200, 200), ImGuiWindowFlags_MenuBar);
+	ImGui::BeginChildFrame(ImGui::GetID("Debug Metrics"), ImVec2(200, 100), ImGuiWindowFlags_MenuBar);
 	if (ImGui::BeginMenuBar())
 	{
 		ImGui::BeginMenu("Debug Metrics", false);
@@ -269,6 +269,7 @@ void PanelScene::RenderDebugMetrics() const
 	}
 
 	ImGui::Text("FPS: %f.2", App->time->GetFPS());
+	ImGui::Text("Tris: %d", App->renderer->GetRenderedTris());
 
 	ImGui::EndChild();
 }

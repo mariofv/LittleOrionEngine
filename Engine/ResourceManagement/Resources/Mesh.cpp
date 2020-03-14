@@ -19,6 +19,11 @@ GLuint Mesh::GetVAO() const
 	return vao;
 }
 
+int Mesh::GetNumTriangles() const
+{
+	return vertices.size() / 3;
+}
+
 std::vector<Triangle> Mesh::GetTriangles() const
 {
 	std::vector<Triangle> triangles;
