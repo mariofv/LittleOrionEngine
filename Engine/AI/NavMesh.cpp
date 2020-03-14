@@ -39,6 +39,8 @@ bool NavMesh::CleanUp()
 {
 	m_dd.CleanUp();
 	is_mesh_computed = false;
+	//Free memory allocated on the heap
+	free(navmesh_read_data);
 
 	return true;
 }
@@ -714,7 +716,7 @@ void NavMesh::LoadNavMesh()
 	std::string filepath(NAVMESH_PATH);
 	filepath.append("survival_scene_navmesh.bin");
 	size_t readed_bytes;
-	char* navmesh_read_data = App->filesystem->Load(filepath.c_str(), readed_bytes);
+	navmesh_read_data = App->filesystem->Load(filepath.c_str(), readed_bytes);
 
 
 	if (navmesh_read_data == nullptr)
@@ -753,8 +755,6 @@ void NavMesh::LoadNavMesh()
 	duDebugDrawNavMeshWithClosedList(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);
 	m_dd.GenerateBuffers();
 
-	//Free memory allocated on the heap
-	free(navmesh_read_data);
 }
 
 void NavMesh::GetVerticesScene()

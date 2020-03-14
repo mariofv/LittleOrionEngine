@@ -165,6 +165,8 @@ private:
 	std::vector<float> normals_vec;
 	std::vector<bool> unwalkable_verts;
 
+	char* navmesh_read_data = nullptr;
+
 	int ntris = 0;
 
 
