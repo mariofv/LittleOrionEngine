@@ -4,6 +4,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleFileSystem.h"
@@ -11,6 +12,7 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleTime.h"
 #include "UI/Panel/PanelHierarchy.h"
 
 #include <imgui.h>
@@ -125,6 +127,11 @@ void PanelScene::RenderEditorDraws()
 	{
 		RenderGizmo();
 		RenderCameraPreview();
+	}
+
+	if (App->debug->show_debug_metrics)
+	{
+		RenderDebugMetrics();
 	}
 
 	RenderSceneCameraGizmo();
@@ -249,6 +256,21 @@ void PanelScene::RenderCameraPreview() const
 
 		ImGui::EndChild();
 	}
+}
+
+void PanelScene::RenderDebugMetrics() const
+{
+	ImGui::SetCursorPos(ImVec2(10, 50));
+	ImGui::BeginChildFrame(ImGui::GetID("Debug Metrics"), ImVec2(200, 200), ImGuiWindowFlags_MenuBar);
+	if (ImGui::BeginMenuBar())
+	{
+		ImGui::BeginMenu("Debug Metrics", false);
+		ImGui::EndMenuBar();
+	}
+
+	ImGui::Text("FPS: %f.2", App->time->GetFPS());
+
+	ImGui::EndChild();
 }
 
 void PanelScene::MousePicking(const float2& mouse_position)

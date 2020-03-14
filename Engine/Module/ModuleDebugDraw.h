@@ -22,7 +22,6 @@ public:
 	void RenderDebugDraws(const ComponentCamera& camera);
 
 private:
-	void RenderDebugMetrics() const;
 	void RenderGrid() const;
 	void RenderOutline() const;
 	
