@@ -10,6 +10,7 @@
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
+#include "ModuleWindow.h"
 #include "SpacePartition/OLQuadTree.h"
 #include "UI/Billboard.h"
 
@@ -381,6 +382,11 @@ bool ModuleDebugDraw::Init()
 
 void ModuleDebugDraw::Render()
 {
+	if (App->debug->show_debug_metrics)
+	{
+		RenderDebugMetrics();
+	}
+
 	if (App->debug->show_grid)
 	{
 		RenderGrid();
@@ -421,6 +427,17 @@ void ModuleDebugDraw::Render()
 	RenderBillboards();
 
 	RenderDebugDraws(*App->cameras->scene_camera);
+}
+
+void ModuleDebugDraw::RenderDebugMetrics() const
+{
+	float4x4 view_matrix = App->cameras->scene_camera->GetViewMatrix();
+	float4x4 projection_matrix = App->cameras->scene_camera->GetProjectionMatrix();
+	dd::screenText(
+		"Hello world!", 
+		float3::zero, 
+		float3::one
+	);
 }
 
 void ModuleDebugDraw::RenderGrid() const

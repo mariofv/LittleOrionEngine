@@ -27,6 +27,7 @@ public:
 	void CreateHousesRandom() const;
 	
 public:
+	bool show_debug_metrics = true;
 	bool show_bounding_boxes = false;
 	bool show_global_bounding_boxes = false;
 	bool show_grid = true;
