@@ -111,6 +111,7 @@ void ModuleScriptManager::InitResourceScript()
 			CREATE_SCRIPT script_func = (CREATE_SCRIPT)GetProcAddress(gameplay_dll, (component_script->name + "DLL").c_str());
 			if (script_func != nullptr)
 			{
+				delete component_script->script;
 				component_script->script = script_func();
 				component_script->script->AddReferences(component_script->owner, App);
 			}

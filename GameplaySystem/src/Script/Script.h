@@ -18,7 +18,7 @@ class Script
 {
 public:
 	Script();
-	~Script();
+	virtual ~Script();
 
 	virtual void Awake() {};
 	virtual void Start() {};
