@@ -2,16 +2,18 @@
 
 #include "Actions/EditorAction.h"
 #include "Actions/EditorActionDeleteGameObject.h"
+
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentLight.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
-#include "Module/ModuleCamera.h"
-#include "Module/ModuleRender.h"
-#include "Module/ModuleEditor.h"
-#include "Module/ModuleModelLoader.h"
-#include "Module/ModuleEditor.h"
 #include "Module/ModuleActions.h"
+#include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
+#include "Module/ModuleInput.h"
+#include "Module/ModuleModelLoader.h"
+#include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/Prefab.h"
@@ -285,7 +287,7 @@ void PanelHierarchy::ProcessMouseInput(GameObject *game_object)
 {
 	if (ImGui::IsItemHovered())
 	{
-		if (ImGui::IsMouseClicked(0))
+		if (App->input->GetMouseButtonUp(MouseButton::Left))
 		{
 			App->editor->selected_game_object = game_object;
 		}

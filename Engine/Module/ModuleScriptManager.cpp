@@ -8,7 +8,10 @@
 #include "Main/Globals.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleTime.h"
+
 #include "Script/Script.h"
+
+#include <algorithm>
 
 
 
@@ -37,7 +40,7 @@ update_status ModuleScriptManager::Update()
 	}
 	if (!App->time->isGameRunning()) 
 	{
-
+		//TODO Check it not every frame.
 		last_timestamp_dll = TimeStamp(dll_file->file_path.c_str());
 		if (last_timestamp_dll != init_timestamp_dll)
 		{
@@ -78,7 +81,28 @@ void ModuleScriptManager::GetCurrentPath()
 	working_directory += "/GamePlaySyste_.dll";
 }
 
-void ModuleScriptManager::InitResourceScript() 
+void ModuleScriptManager::CreateScript(const std::string& name)
+{
+	//TODO Add this to module file system
+	std::string cpp_file = utils->LoadFileContent(SCRIPT_TEMPLATE_FILE_CPP);
+	std::string header_file = utils->LoadFileContent(SCRIPT_TEMPLATE_FILE_H);
+
+	utils->ReplaceStringInPlace(cpp_file, "TemplateScript", name);
+	utils->ReplaceStringInPlace(header_file, "TemplateScript", name);
+	std::string name_uppercase = name;
+	std::transform(name_uppercase.begin(), name_uppercase.end(), name_uppercase.begin(), ::toupper);
+	utils->ReplaceStringInPlace(header_file, "_TEMPLATESCRIPT_H_", "_" + name_uppercase + "_H_");
+	if (!App->filesystem->Exists((SCRIPT_PATH + name + ".cpp").c_str()))
+	{
+		utils->SaveFileContent(cpp_file, SCRIPT_PATH + name + ".cpp");
+		utils->SaveFileContent(header_file, SCRIPT_PATH + name + ".h");
+		scripts_list.push_back(name);
+		SaveScriptList();
+	}
+	
+}
+
+void ModuleScriptManager::InitResourceScript()
 {
 	if (gameplay_dll != nullptr)
 	{
@@ -87,6 +111,7 @@ void ModuleScriptManager::InitResourceScript()
 			CREATE_SCRIPT script_func = (CREATE_SCRIPT)GetProcAddress(gameplay_dll, (component_script->name + "DLL").c_str());
 			if (script_func != nullptr)
 			{
+				delete component_script->script;
 				component_script->script = script_func();
 				component_script->script->AddReferences(component_script->owner, App);
 			}
@@ -141,15 +166,31 @@ void ModuleScriptManager::LoadScriptList()
 		free(scripts_file_data);
 
 		Config scripts_config(serialized_scripts_string);
-
-		std::vector<Config> scripts_list_configs;
-		scripts_config.GetChildrenConfig("Scripts", scripts_list_configs);
-		for (unsigned int i = 0; i < scripts_list_configs.size(); ++i)
-		{
-			scripts_list.push_back(scripts_list_configs[i].config_document.GetString());
-		}
+		scripts_config.GetVector<std::string>("Scripts", scripts_list, std::vector<std::string>());
 	}
+}
 
+void ModuleScriptManager::SaveScriptList()
+{
+	Config config;
+	config.AddVector<std::string>(scripts_list, "Scripts");
+
+	std::string serialized_script_list_string;
+	config.GetSerializedString(serialized_script_list_string);
+	App->filesystem->Save(SCRIPT_LIST_PATH, serialized_script_list_string.c_str(), serialized_script_list_string.size());
+
+}
+
+void ModuleScriptManager::InitScripts()
+{
+	for (auto &component_script : scripts)
+	{
+		component_script->AwakeScript();
+	}
+	for (auto &component_script : scripts)
+	{
+		component_script->StartScript();
+	}
 }
 
 void ModuleScriptManager::RunScripts()
@@ -310,7 +351,7 @@ bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll
 	APP_LOG_ERROR("Patching DLL succeeded!!!.\n");
 }
 
-void ModuleScriptManager::Refresh() 
+void ModuleScriptManager::Refresh()
 {
 	LoadScriptList();
 	ReloadDLL();

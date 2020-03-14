@@ -13,6 +13,8 @@ public:
 
 	void Render() override;
 
+	void CreateScript();
+	bool create_script_shown = false;
 private:
 	bool assets_loading_popup_shown = false;
 };

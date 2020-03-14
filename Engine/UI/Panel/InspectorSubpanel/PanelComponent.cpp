@@ -24,6 +24,8 @@
 
 #include "Helper/Utils.h"
 
+#include "UI/Panel/PanelPopups.h"
+
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
@@ -208,7 +210,31 @@ void PanelComponent::DropTarget(ComponentMaterial *material, Texture::TextureTyp
 		ImGui::EndDragDropTarget();
 	}
 }
+ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go, const std::string& script_name, ComponentScript*& script_to_find)
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_GameObject"))
+		{
+			assert(payload->DataSize == sizeof(GameObject*));
+			GameObject *incoming_game_object = *(GameObject**)payload->Data;
+			for (unsigned int i = 0; i < incoming_game_object->components.size(); ++i)
+			{
 
+				if (incoming_game_object->components[i]->type == Component::ComponentType::SCRIPT)
+				{
+					ComponentScript *script = (ComponentScript *)incoming_game_object->components[i];
+					if (script->name == script_name)
+					{
+						go = incoming_game_object;
+						script_to_find = script;
+					}
+				}
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
 std::string PanelComponent::GetTypeName(Texture::TextureType type)
 {
 	switch (type)
@@ -475,7 +501,7 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 			//App->editor->action_component = component_script;
 			//App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
 		}
-		ImGui::SameLine();
+		
 		
 		if (ImGui::Button("Delete"))
 		{
@@ -483,6 +509,7 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 
 			return;
 		}
+		ImGui::SameLine();
 		if (ImGui::Button("Refresh"))
 		{
 			App->scripts->Refresh();
@@ -549,7 +576,8 @@ void PanelComponent::ShowAddNewComponentButton()
 	}
 }
 
-void PanelComponent::ShowScriptsCreated(ComponentScript* component_script) {
+void PanelComponent::ShowScriptsCreated(ComponentScript* component_script) 
+{
 
 	if (ImGui::BeginCombo("Add Script", component_script->name.c_str()))
 	{
@@ -560,11 +588,17 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script) {
 		
 			}
 		}
+		ImGui::Separator();
+		if (ImGui::Selectable("Create new Script")) 
+		{
+			App->editor->popups->create_script_shown = true;
+		}
 
 		ImGui::EndCombo();
 	}
 
 }
+
 
 
 
