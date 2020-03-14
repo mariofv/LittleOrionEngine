@@ -716,6 +716,7 @@ void NavMesh::LoadNavMesh()
 	size_t readed_bytes;
 	char* navmesh_read_data = App->filesystem->Load(filepath.c_str(), readed_bytes);
 
+
 	if (navmesh_read_data == nullptr)
 	{
 		APP_LOG_ERROR("Cannot load navmesh.");
@@ -747,12 +748,13 @@ void NavMesh::LoadNavMesh()
 		return;
 	}
 
-	//Free memory allocated on the heap
-	//free(navmesh_read_data);
 
 	is_mesh_computed = true;
 	duDebugDrawNavMeshWithClosedList(&m_dd, *nav_mesh, *nav_query, nav_mesh_draw_flags);
 	m_dd.GenerateBuffers();
+
+	//Free memory allocated on the heap
+	free(navmesh_read_data);
 }
 
 void NavMesh::GetVerticesScene()
