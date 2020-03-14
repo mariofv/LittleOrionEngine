@@ -111,7 +111,14 @@ void PanelScene::RenderSceneBar()
 			
 			ImGui::EndMenu();
 		}
+
+		if (ImGui::Selectable("Stats", App->debug->show_debug_metrics, ImGuiSelectableFlags_None, ImVec2(40,0)))
+		{
+			App->debug->show_debug_metrics = !App->debug->show_debug_metrics;
+		}
+
 		ImGui::EndMenuBar();
+
 	}
 }
 
