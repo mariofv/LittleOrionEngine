@@ -150,4 +150,5 @@ void PanelPopupMaterialSelector::ChangeSelectedObjectMaterial() const
 
 	std::shared_ptr<Material> new_material = App->resources->Load<Material>(selected_material->file_path);
 	selected_gameobject_mesh_renderer->SetMaterial(new_material);
+	selected_gameobject_mesh_renderer->modified_by_user = true;
 }

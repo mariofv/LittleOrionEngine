@@ -3,6 +3,7 @@
 
 #include "Resource.h"
 #include "ResourceManagement/Loaders/PrefabLoader.h"
+#include "UI/Panel/PanelHierarchy.h"
 #include <vector>
 #include <memory>
 #include <unordered_map>
@@ -17,7 +18,7 @@ public:
 	void Apply(GameObject * new_reference);
 	void Revert(GameObject * old_reference);
 	void RemoveInstance(GameObject * instance);
-
+	bool IsOverwritable() const;
 	std::vector<GameObject*> instances;
 private:
 	void LoadInMemory() override{};
@@ -25,7 +26,8 @@ private:
 	void AddNewGameObjectToInstance(GameObject * old_instance, GameObject * new_reference, bool original, bool revert);
 	void RemoveGameObjectFromOriginalPrefab(GameObject * gameobject_to_remove);
 	std::vector<std::unique_ptr<GameObject>> prefab;
-
+	bool overwritable = true;
+	friend PanelHierarchy;
 };
 
 namespace Loader

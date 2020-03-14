@@ -126,7 +126,12 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 				ImportOptions options;
 				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
 				auto prefab = App->resources->Load<Prefab>(options.exported_file);
+				if (incoming_file->file_type == FileType::MODEL)
+				{
+					prefab->overwritable = false;
+				}
 				GameObject* new_model = prefab->Instantiate(target_game_object);
+
 				App->actions->action_game_object = new_model;
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
 			}

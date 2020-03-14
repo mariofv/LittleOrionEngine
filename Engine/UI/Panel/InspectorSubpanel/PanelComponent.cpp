@@ -466,6 +466,7 @@ void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
 				ImportOptions meta;
 				Importer::GetOptionsFromMeta(meta_path, meta);
 				component_mesh->SetMesh(App->resources->Load<Mesh>(meta.exported_file));
+				component_mesh->modified_by_user = true;
 			}
 			if (incoming_file->file_type == FileType::MATERIAL)
 			{
@@ -473,6 +474,7 @@ void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
 				ImportOptions meta;
 				Importer::GetOptionsFromMeta(meta_path, meta);
 				component_mesh->SetMaterial(App->resources->Load<Material>(meta.exported_file));
+				component_mesh->modified_by_user = true;
 			}
 		}
 		ImGui::EndDragDropTarget();

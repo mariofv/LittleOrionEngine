@@ -154,4 +154,5 @@ void PanelPopupMeshSelector::ChangeSelectedObjectMesh() const
 
 	std::shared_ptr<Mesh> new_mesh = App->resources->Load<Mesh>(selected_mesh->file_path.c_str());
 	selected_gameobject_mesh_renderer->SetMesh(new_mesh);
+	selected_gameobject_mesh_renderer->modified_by_user = true;
 }

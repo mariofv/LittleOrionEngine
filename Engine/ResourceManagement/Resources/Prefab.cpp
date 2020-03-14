@@ -191,3 +191,8 @@ void Prefab::RemoveInstance(GameObject * instance)
 		instances.erase(it);
 	}
 }
+
+bool Prefab::IsOverwritable() const
+{
+	return overwritable;
+}

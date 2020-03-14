@@ -104,7 +104,7 @@ void PanelGameObject::Render(GameObject* game_object)
 void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
 {
 	ImGui::SameLine();
-	if(ImGui::Button("Apply"))
+	if(game_object->prefab_reference->IsOverwritable() && ImGui::Button("Apply"))
 	{
 
 		GameObject *to_reimport = GetPrefabParent(game_object);
