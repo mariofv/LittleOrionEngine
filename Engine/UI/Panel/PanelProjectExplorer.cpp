@@ -330,7 +330,7 @@ void PanelProjectExplorer::FilesDrop() const
 					App->scene->RemoveGameObject(incoming_game_object);
 					std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(import_result.exported_file);
 					App->editor->selected_game_object = prefab->Instantiate(App->scene->GetRoot());
-					App->filesystem->RefreshFilesHierarchy();
+					App->editor->project_explorer->selected_folder->Refresh();
 				}
 			}
 		}

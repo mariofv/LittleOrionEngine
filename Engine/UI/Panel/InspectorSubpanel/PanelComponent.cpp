@@ -20,6 +20,7 @@
 #include "Module/ModuleScriptManager.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleRender.h"
 
 #include "UI/Panel/PanelPopups.h"
 #include "UI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
@@ -424,6 +425,11 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
+
+			if (!App->editor->selected_game_object->IsStatic())
+			{
+				App->renderer->InsertAABBTree(App->editor->selected_game_object);
+			}
 
 		}
 		ImGui::EndPopup();
