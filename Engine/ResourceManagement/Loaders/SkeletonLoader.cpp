@@ -32,7 +32,7 @@ std::shared_ptr<Skeleton> SkeletonLoader::Load(const std::string& file_path)
 		memcpy(&name_size, cursor, sizeof(uint32_t));
 		cursor += sizeof(uint32_t);
 		joint.name.resize(name_size);
-		memcpy(joint.name.data(), cursor, name_size);
+		memcpy(&joint.name[0], cursor, name_size);
 		cursor += name_size;
 		memcpy(&joint.transform_global, cursor, sizeof(float4x4));
 		cursor += sizeof(float4x4);

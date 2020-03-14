@@ -253,7 +253,10 @@ void Config::AddChildrenConfig(std::vector<Config> &value_to_add, const std::str
 
 void Config::GetChildrenConfig(const std::string& name, std::vector<Config>& return_value) const
 {
-	assert(config_document.HasMember(name.c_str()));
+	if (!config_document.HasMember(name.c_str()))
+	{
+		return;
+	}
 
 	const rapidjson::Value& children_configs_value = config_document[name.c_str()];
 	return_value = std::vector<Config>();

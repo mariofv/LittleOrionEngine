@@ -1,5 +1,6 @@
 #include "TextureImporter.h"
 #include "Main/Application.h"
+#include "Module/ModuleFileSystem.h"
 
 #include <algorithm>
 #include "Brofiler/Brofiler.h"
@@ -15,7 +16,7 @@ TextureImporter::TextureImporter()
 	APP_LOG_SUCCESS("DevIL image loader initialized correctly.")
 
 }
-std::pair<bool, std::string> TextureImporter::Import(const File & file) const
+std::pair<bool, std::string> TextureImporter::Import(const File & file, bool force) const
 {
 	if (file.filename.empty())
 	{
@@ -23,9 +24,9 @@ std::pair<bool, std::string> TextureImporter::Import(const File & file) const
 		return std::pair<bool, std::string>(false,"");
 	}
 
-	std::string already_imported = GetAlreadyImportedResource(file);
-	if (!already_imported.empty()) {
-		return std::pair<bool, std::string>(true, already_imported);
+	ImportOptions already_imported = GetAlreadyImportedResource(file);
+	if (already_imported.uid != 0 && !force) {
+		return std::pair<bool, std::string>(true, already_imported.exported_file);
 	}
 
 	App->filesystem->MakeDirectory(LIBRARY_TEXTURES_FOLDER);

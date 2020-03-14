@@ -3,7 +3,7 @@
 
 Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path) : vertices(vertices),
 indices(indices),
-Resource("", mesh_file_path)
+Resource(0, mesh_file_path)
 {
 	LoadInMemory();
 	

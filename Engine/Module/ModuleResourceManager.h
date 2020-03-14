@@ -8,14 +8,17 @@
 #include <atomic>
 #include <mutex>
 
+#include "ResourceManagement/Importer/ModelImporter.h"
+#include "ResourceManagement/Importer/PrefabImporter.h"
+#include "ResourceManagement/Importer/SceneManager.h"
+#include "ResourceManagement/Importer/TextureImporter.h"
+
 class Texture;
 class File;
 class Mesh;
 class Resource;
 class Importer;
 class Timer;
-#include "ResourceManagement/Importer/TextureImporter.h"
-#include "ResourceManagement/Importer/ModelImporter.h"
 class ModuleResourceManager : public Module
 {
 public:
@@ -28,6 +31,7 @@ public:
 	bool CleanUp() override;
 
 	std::pair<bool, std::string> Import(const File& file);
+	std::pair<bool, std::string> Import(const std::string &path, GameObject * gameobject_to_save) const;
 
 	template<typename T>
 	void RemoveResourceFromCacheIfNeeded(const std::shared_ptr<T> & resource) {
@@ -54,6 +58,14 @@ public:
 		return resource;
 	}
 
+	template<typename T>
+	std::shared_ptr<T> Reload(const T * resource) const
+	{
+		std::string uid = resource->exported_file;
+		auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [resource](const auto & loaded_resource) { return loaded_resource.get() == resource; });
+		resource_cache.erase(it);
+		return Load<T>(uid);
+	}
 private:
 	std::pair<bool, std::string> InternalImport(const File& file);
 	void ImportAllFileHierarchy(const File& file);
@@ -73,6 +85,7 @@ public:
 	} thread_comunication;
 
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
+	std::unique_ptr<SceneManager> scene_manager = nullptr;
 
 private:
 	const size_t importer_interval_millis = 30000;
@@ -83,6 +96,7 @@ private:
 
 	std::unique_ptr<Importer> default_importer = std::make_unique<Importer>();
 	std::unique_ptr<ModelImporter> model_importer = nullptr;
+	std::unique_ptr<PrefabImporter> prefab_importer = nullptr;
 	mutable std::vector<std::shared_ptr<Resource>> resource_cache;
 };
 

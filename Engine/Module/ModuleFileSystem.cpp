@@ -50,6 +50,7 @@ ModuleFileSystem::~ModuleFileSystem()
 
 char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
 { 
+	assert(Exists(file_path));
 	SDL_RWops *rw = SDL_RWFromFile(file_path, "rb");
 	if (rw == NULL)
 	{
@@ -143,6 +144,10 @@ File ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path
 bool ModuleFileSystem::Copy(const char* source, const char* destination)
 {
 	size_t file_size;
+	if (!Exists(source))
+	{
+		return false;
+	}
 	char * buffer = Load(source,file_size);
 	bool success = Save(destination, buffer, file_size,false);
 	free(buffer);
@@ -177,6 +182,12 @@ FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileT
 		)
 	{
 		return FileType::MODEL;
+	}
+	if (
+		file_extension == "prefab"
+		)
+	{
+		return FileType::PREFAB;
 	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{

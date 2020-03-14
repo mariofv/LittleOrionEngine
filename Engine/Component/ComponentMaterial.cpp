@@ -14,6 +14,11 @@ ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, Comp
 	textures.resize(Texture::MAX_TEXTURE_TYPES);
 }
 
+void ComponentMaterial::Copy(Component * component_to_copy) const
+{ 
+	*component_to_copy = *this;
+	*static_cast<ComponentMaterial*>(component_to_copy) = *this; 
+};
 ComponentMaterial::~ComponentMaterial()
 {
 	for (auto & texture : textures)
@@ -32,7 +37,6 @@ void ComponentMaterial::Save(Config& config) const
 	config.AddUInt(UUID, "UUID");
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
-	config.AddInt(index, "Index");
 	for (size_t i = 0; i< textures.size(); i++ )
 	{
 		if (textures[i] != nullptr)
@@ -60,8 +64,6 @@ void ComponentMaterial::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-
-	index = config.GetInt("Index", 0);
 
 	std::string tmp_path;
 	config.GetString("Path", tmp_path, "");
@@ -187,3 +189,19 @@ const std::shared_ptr<Texture>& ComponentMaterial::GetMaterialTexture(size_t  ty
 {
 	return textures[type];
 }
+
+Component* ComponentMaterial::Clone(bool original_prefab) const
+{
+	ComponentMaterial * created_component;
+	if(original_prefab)
+	{
+		created_component = new ComponentMaterial();
+	}
+	else 
+	{
+		created_component = App->texture->CreateComponentMaterial();
+	}
+	*created_component = *this;
+	return created_component;
+}
+

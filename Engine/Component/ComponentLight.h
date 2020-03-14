@@ -73,6 +73,17 @@ public:
 	ComponentLight(GameObject * owner);
 	~ComponentLight() = default;
 
+	//Copy and move
+	ComponentLight(const ComponentLight& component_to_copy) = default;
+	ComponentLight(ComponentLight&& component_to_move) = default;
+
+	ComponentLight & operator=(const ComponentLight & component_to_copy) = default;
+	ComponentLight & operator=(ComponentLight && component_to_move) = default;
+
+
+	Component* Clone(bool original_prefab = false) const override;
+	void Copy(Component* component_to_copy) const override;
+
 	void Delete() override;
 	void Save(Config& config) const override;
 	void Load(const Config &config) override;
