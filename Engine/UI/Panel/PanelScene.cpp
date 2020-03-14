@@ -7,10 +7,12 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleFileSystem.h"
-#include "Module/ModuleModelLoader.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
+#include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/Resources/Prefab.h"
 #include "UI/Panel/PanelHierarchy.h"
 
 #include <Brofiler/Brofiler.h>
@@ -282,11 +284,12 @@ void PanelScene::SceneDropTarget()
 		{
 			assert(payload->DataSize == sizeof(File*));
 			File *incoming_file = *(File**)payload->Data;
-			if (incoming_file->file_type == FileType::MODEL)
+			if (incoming_file->file_type == FileType::PREFAB)
 			{
-				GameObject* new_model = App->model_loader->LoadModel(incoming_file->file_path.c_str());
-				App->scene->root->AddChild(new_model); 
-				
+				ImportOptions options;
+				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
+				auto prefab = App->resources->Load<Prefab>(options.exported_file);
+				GameObject* new_model = prefab->Instantiate(App->scene->root);
 				App->actions->action_game_object = new_model;
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
 			}

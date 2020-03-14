@@ -12,6 +12,10 @@
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Material.h"
 
+
+static std::vector<std::unique_ptr<GameObject>> gameobjects;
+static std::vector<std::unique_ptr<ComponentMeshRenderer>> mesh_renderer_components;
+
 void ModelPrefabImporter::ImportModelPrefab(const Config& model, const std::string& imported_file, std::string& exported_file) const
 {
 	std::unique_ptr<GameObject> model_root_node = std::make_unique<GameObject>();
@@ -37,12 +41,15 @@ void ModelPrefabImporter::ImportModelPrefab(const Config& model, const std::stri
 	}
 
 	exported_file = App->resources->Import(imported_file, model_root_node.get()).exported_file;
+	gameobjects.clear();
+	mesh_renderer_components.clear();
 }
 
 //For now we are representing the animation sketelon in the hierarchy just for visualization and learning, but proabbly this will not be needed in the future
 void ModelPrefabImporter::LoadNode(std::unique_ptr<GameObject> & parent_node, const Config& node_config, std::vector<std::string>& already_loaded_skeleton) const
 {
-	std::unique_ptr<GameObject> node_game_object = std::make_unique<GameObject>();
+	gameobjects.emplace_back(std::make_unique<GameObject>());
+	GameObject * node_game_object = gameobjects.back().get();
 	node_game_object->SetParent(parent_node.get());
 
 
@@ -54,7 +61,9 @@ void ModelPrefabImporter::LoadNode(std::unique_ptr<GameObject> & parent_node, co
 
 	if (mesh_exported_file != "")
 	{
-		std::unique_ptr<ComponentMeshRenderer> mesh_renderer = LoadMeshComponent(mesh_exported_file, material_exported_file, node_game_object.get());
+		LoadMeshComponent(mesh_exported_file, material_exported_file, node_game_object);
+
+		ComponentMeshRenderer * mesh_renderer = mesh_renderer_components.back().get();
 		File file(mesh_renderer->mesh_to_render->exported_file);
 		node_game_object->name = file.filename_no_extension;
 		node_game_object->original_UUID = node_game_object->UUID;
@@ -64,23 +73,21 @@ void ModelPrefabImporter::LoadNode(std::unique_ptr<GameObject> & parent_node, co
 	LoadSkeleton(node_config, already_loaded_skeleton, parent_node);
 }
 
-std::unique_ptr<ComponentMeshRenderer> ModelPrefabImporter::LoadMeshComponent(const std::string& mesh_exported_file, const std::string& material_exported_file, GameObject * node_game_object) const
+void ModelPrefabImporter::LoadMeshComponent(const std::string& mesh_exported_file, const std::string& material_exported_file, GameObject * node_game_object) const
 {
 
 	std::shared_ptr<Mesh> mesh_for_component = App->resources->Load<Mesh>(mesh_exported_file.c_str());
 	assert(mesh_for_component != nullptr);
 
-	std::unique_ptr<ComponentMeshRenderer> component_mesh_renderer = std::make_unique<ComponentMeshRenderer>();
-	node_game_object->components.push_back(component_mesh_renderer.get());
-	component_mesh_renderer->owner = node_game_object;
-	component_mesh_renderer->SetMesh(mesh_for_component);
+	mesh_renderer_components.emplace_back(std::make_unique<ComponentMeshRenderer>());
+	node_game_object->components.push_back(mesh_renderer_components.back().get());
+	mesh_renderer_components.back()->owner = node_game_object;
+	mesh_renderer_components.back()->SetMesh(mesh_for_component);
 
 	std::string material_file = material_exported_file != "" ? material_exported_file : DEFAULT_MATERIAL_PATH;
 
-	std::shared_ptr<Material> material_resource = App->resources->Load<Material>(material_file);
-	component_mesh_renderer->SetMaterial(material_resource);
-
-	return component_mesh_renderer;
+	std::shared_ptr<Material> material_resource = App->resources->Load<Material>(DEFAULT_MATERIAL_PATH);
+	mesh_renderer_components.back()->SetMaterial(material_resource);
 }
 
 void ModelPrefabImporter::LoadSkeleton(const Config& node_config, std::vector<std::string>& already_loaded_skeleton, std::unique_ptr<GameObject>& parent_node) const
@@ -92,19 +99,21 @@ void ModelPrefabImporter::LoadSkeleton(const Config& node_config, std::vector<st
 	if (skeleton_uid != "" && !already_loaded)
 	{
 		std::shared_ptr<Skeleton> full_skeleton = App->resources->Load<Skeleton>(skeleton_uid.c_str());
-		std::vector<std::unique_ptr<GameObject>> skeleton_gameobjects;
+		std::vector<GameObject*> skeleton_gameobjects;
 
 		for (Skeleton::Joint joint : full_skeleton->skeleton)
 		{
-			std::unique_ptr<GameObject> object = std::make_unique<GameObject>();
-			std::unique_ptr<ComponentMeshRenderer> mesh_renderer = LoadMeshComponent(PRIMITIVE_CUBE_PATH, DEFAULT_MATERIAL_PATH, object.get());
+			gameobjects.emplace_back(std::make_unique<GameObject>());
+			GameObject* object = gameobjects.back().get();
+			LoadMeshComponent(PRIMITIVE_CUBE_PATH, DEFAULT_MATERIAL_PATH, object);
+			ComponentMeshRenderer* mesh_renderer = mesh_renderer_components.back().get();
 			if (joint.parent_index >= skeleton_gameobjects.size())
 			{
 				object->SetParent(parent_node.get());
 			}
 			else
 			{
-				object->SetParent(skeleton_gameobjects.at(joint.parent_index).get());
+				object->SetParent(skeleton_gameobjects.at(joint.parent_index));
 			}
 
 			float3 translation;
@@ -117,7 +126,7 @@ void ModelPrefabImporter::LoadSkeleton(const Config& node_config, std::vector<st
 			object->transform.SetRotation(rotate);
 			object->name = joint.name;
 
-			skeleton_gameobjects.push_back(std::move(object));
+			skeleton_gameobjects.push_back(object);
 		}
 		already_loaded_skeleton.push_back(skeleton_uid);
 	}

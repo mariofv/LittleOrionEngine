@@ -46,12 +46,10 @@ ImportResult PrefabImporter::Import(const File & file, GameObject * gameobject_t
 	std::vector<Config> game_objects_config;
 	std::stack<GameObject*> pending_objects;
 
-	if (gameobject_to_save->parent != nullptr)
-	{
-		Config current_gameobject;
-		gameobject_to_save->Save(current_gameobject);
-		game_objects_config.push_back(current_gameobject);
-	}
+
+	Config current_gameobject;
+	gameobject_to_save->Save(current_gameobject);
+	game_objects_config.push_back(current_gameobject);
 
 	for (auto& child_game_object : gameobject_to_save->children)
 	{

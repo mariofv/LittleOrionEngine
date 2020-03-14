@@ -19,7 +19,7 @@ public:
 	AnimationImporter() = default;
 	~AnimationImporter() = default;
 
-	bool ImportAnimation(const aiScene* scene, const aiAnimation* animation, std::string& exported_file, std::string& imported_file) const;
+	bool ImportAnimation(const aiScene* scene, const aiAnimation* animation, const std::string& imported_file, std::string& exported_file) const;
 
 private:
 	void GetCleanAnimation(const aiAnimation* animation, Animation& own_format_animation) const ;

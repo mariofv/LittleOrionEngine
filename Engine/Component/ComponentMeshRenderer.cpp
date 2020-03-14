@@ -33,6 +33,7 @@ void ComponentMeshRenderer::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render
 
 void ComponentMeshRenderer::SetMaterial(const std::shared_ptr<Material> & material_to_render)
 {
+	App->resources->RemoveResourceFromCacheIfNeeded(this->material_to_render);
 	this->material_to_render = material_to_render;
 }
 

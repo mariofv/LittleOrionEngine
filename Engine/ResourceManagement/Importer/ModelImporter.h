@@ -19,6 +19,7 @@ class GameObject;
 class MeshImporter;
 class SkeletonImporter;
 class AnimationImporter;
+class ModelPrefabImporter;
 
 
 class ModelImporter : Importer
@@ -36,6 +37,7 @@ private:
 	std::unique_ptr<MeshImporter> mesh_importer;
 	std::unique_ptr<SkeletonImporter> skeleton_importer;
 	std::unique_ptr<AnimationImporter> animation_importer;
+	std::unique_ptr<ModelPrefabImporter> model_prefab_importer;
 };
 
 

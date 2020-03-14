@@ -7,6 +7,7 @@
 #include "ModelImporters/AnimationImporter.h"
 #include "ModelImporters/MeshImporter.h"
 #include "ModelImporters/SkeletonImporter.h"
+#include "ModelImporters/ModelPrefabImporter.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleResourceManager.h"
 
@@ -34,6 +35,7 @@ ModelImporter::ModelImporter()
 	mesh_importer = std::make_unique<MeshImporter>();
 	skeleton_importer = std::make_unique<SkeletonImporter>();
 	animation_importer = std::make_unique<AnimationImporter>();
+	model_prefab_importer = std::make_unique<ModelPrefabImporter>();
 }
 
 ModelImporter::~ModelImporter()
@@ -87,11 +89,12 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	std::vector<Config> animations_config;
 	for (size_t i = 0; i < scene->mNumAnimations; i++)
 	{
+		//Import animation
 		Config animation_config;
-		std::string animation;
-		std::string animation_path = base_path + "/"+file.filename_no_extension +"_"+scene->mAnimations[i]->mName.C_Str() + ".anim";
-		animation_importer->ImportAnimation(scene, scene->mAnimations[i], animation, animation_path);
-		animation_config.AddString(animation, "Animation");
+		std::string library_animation_file;
+		std::string assets_animation_file = base_path + "/"+file.filename_no_extension +"_"+scene->mAnimations[i]->mName.C_Str() + ".anim";
+		animation_importer->ImportAnimation(scene, scene->mAnimations[i], assets_animation_file, library_animation_file);
+		animation_config.AddString(library_animation_file, "Animation");
 		animations_config.push_back(animation_config);
 	}
 
@@ -99,6 +102,11 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 
 	model.AddChildrenConfig(node_config, "Node");
 	model.AddChildrenConfig(animations_config, "Animations");
+
+	//Import Prefab
+	std::string library_model_file; 
+	std::string assest_model_prefab_file = base_path + "/" + file.filename_no_extension +  ".prefab";
+	model_prefab_importer->ImportModelPrefab(model, assest_model_prefab_file, library_model_file);
 
 
 	std::string serialized_model_string;
@@ -127,6 +135,7 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 		std::string assets_material_file = base_path + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
 		std::string library_material_file = LIBRARY_MATERIAL_FOLDER"/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
 		App->resources->material_importer->ExtractMaterialFromMesh(scene, mesh_index, base_path.c_str(), assets_material_file.c_str());
+		//library_material_file = App->resources->Import(File(assets_material_file)).exported_file;
 		node.AddString(library_material_file, "Material");
 
 		aiMesh * importing_mesh = scene->mMeshes[mesh_index];

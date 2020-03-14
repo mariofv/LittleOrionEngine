@@ -9,7 +9,7 @@
 #include <random>
 #include <map>
 
-bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, std::string& exported_file, std::string& imported_file) const
+bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, const std::string& imported_file, std::string& exported_file) const
 {
 	Animation own_format_animation(0, "");
 	GetCleanAnimation(animation, own_format_animation);

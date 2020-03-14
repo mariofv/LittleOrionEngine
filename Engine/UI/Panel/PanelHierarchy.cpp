@@ -121,25 +121,14 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 		{
 			assert(payload->DataSize == sizeof(File*));
 			File *incoming_file = *(File**)payload->Data;
-			if (incoming_file->file_type == FileType::MODEL)
-			{
-				GameObject* new_model = App->model_loader->LoadModel(incoming_file->file_path.c_str());
-
-				if (target_game_object != nullptr)
-				{
-					target_game_object->AddChild(new_model);
-
-					//UndoRedo
-					App->actions->action_game_object = new_model;
-					App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
-				}
-			}
 			if (incoming_file->file_type == FileType::PREFAB)
 			{
 				ImportOptions options;
-				Importer::GetOptionsFromMeta(*incoming_file, options);
+				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
 				auto prefab = App->resources->Load<Prefab>(options.exported_file);
-				prefab->Instantiate(target_game_object);
+				GameObject* new_model = prefab->Instantiate(target_game_object);
+				App->actions->action_game_object = new_model;
+				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
 			}
 		}
 		ImGui::EndDragDropTarget();
