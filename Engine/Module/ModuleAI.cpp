@@ -6,6 +6,7 @@
 
 bool ModuleAI::Init()
 {
+	nav_mesh.LoadNavMesh();
 	return true;
 }
 

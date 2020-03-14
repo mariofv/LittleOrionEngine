@@ -78,12 +78,12 @@ public:
 
 	bool CreateNavMesh();
 	void RenderNavMesh(ComponentCamera& camera);
-	bool RenderNavMesh(DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags) const;
-	void RenderTile(DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query, const dtMeshTile* tile, unsigned char flags) const;
-
 	void InitAABB();
 
 	bool FindPath(float3& start, float3& end, std::vector<float3>& path);
+
+	void SaveNavMesh(unsigned char* nav_data, unsigned int nav_data_size) const;
+	void LoadNavMesh();
 
 	inline SampleDebugDraw& GetDebugDraw() { return m_dd; }
 
@@ -151,7 +151,8 @@ protected:
 private:
 	rcContext* m_ctx;
 
-	bool keep_inter_results = true;
+	//If true there are memory leaks but it should be only for debugging
+	bool keep_inter_results = false;
 	bool filter_low_hanging_obstacles = true;
 	bool filter_ledge_spans = true;
 	bool filter_walkable_low_height_spans = true;
