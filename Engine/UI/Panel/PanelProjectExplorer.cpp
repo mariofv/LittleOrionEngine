@@ -245,10 +245,19 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(const File * file)
 				changes = true;
 			}
 		}
-		/*
+		if (file->file_type == FileType::MODEL && ImGui::Selectable("Extract Prefab"))
+		{
+			std::string new_prefab_name = file->file_path.substr(0, file->file_path.find_last_of(".")) + ".prefab";
+			ImportOptions options;
+			Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(file->file_path), options);
+			App->filesystem->Copy(options.exported_file.c_str(), new_prefab_name.c_str());
+			App->resources->Import(new_prefab_name);
+			changes = true;
+
+		}
 		if (changes)
 		{
-			App->filesystem->RefreshFilesHierarchy();
+			selected_folder->Refresh();
 		}
 		/*if (ImGui::Selectable("Rename"))
 		{
