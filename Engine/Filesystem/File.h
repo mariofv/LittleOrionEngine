@@ -28,7 +28,7 @@ public:
 	uint64_t modification_timestamp = 0;
 
 	std::vector<std::shared_ptr<File>> children;
-	File* parent;
+	File* parent = nullptr;
 	bool operator==(const File& compare);
 
 	void Refresh();

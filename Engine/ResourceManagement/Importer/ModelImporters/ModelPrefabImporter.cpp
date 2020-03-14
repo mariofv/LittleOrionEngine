@@ -16,10 +16,10 @@
 static std::vector<std::unique_ptr<GameObject>> gameobjects;
 static std::vector<std::unique_ptr<ComponentMeshRenderer>> mesh_renderer_components;
 
-void ModelPrefabImporter::ImportModelPrefab(const Config& model, const std::string& imported_file, std::string& exported_file) const
+void ModelPrefabImporter::ImportModelPrefab(const Config& model, const File& imported_file) const
 {
 	std::unique_ptr<GameObject> model_root_node = std::make_unique<GameObject>();
-	model_root_node->name = std::string("model_prefab"/*file.filename_no_extension*/);
+	model_root_node->name = std::string(imported_file.filename_no_extension);
 	model_root_node->original_UUID = model_root_node->UUID;
 
 
@@ -40,7 +40,7 @@ void ModelPrefabImporter::ImportModelPrefab(const Config& model, const std::stri
 		std::shared_ptr<Animation> animation = App->resources->Load<Animation>(animation_uid);
 	}
 
-	exported_file = App->resources->Import(imported_file, model_root_node.get()).exported_file;
+	App->resources->CreatePrefab(imported_file.file_path.c_str(), model_root_node.get());
 	gameobjects.clear();
 	mesh_renderer_components.clear();
 }

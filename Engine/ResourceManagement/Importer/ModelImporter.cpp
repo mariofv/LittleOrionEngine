@@ -103,15 +103,7 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	model.AddChildrenConfig(node_config, "Node");
 	model.AddChildrenConfig(animations_config, "Animations");
 
-	//Import Prefab
-	std::string library_model_file; 
-	std::string assest_model_prefab_file = base_path + "/" + file.filename_no_extension +  ".prefab";
-	model_prefab_importer->ImportModelPrefab(model, assest_model_prefab_file, library_model_file);
-
-
-	std::string serialized_model_string;
-	model.GetSerializedString(serialized_model_string);
-	App->filesystem->Save(output_file_model.c_str(), serialized_model_string.c_str(), serialized_model_string.size() + 1);
+	model_prefab_importer->ImportModelPrefab(model, output_file_model);
 
 	SaveMetaFile(file.file_path, ResourceType::MESH, output_file_model);
 	import_result.succes = true;

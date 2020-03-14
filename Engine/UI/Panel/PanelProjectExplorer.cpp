@@ -314,7 +314,8 @@ void PanelProjectExplorer::FilesDrop() const
 			if (incoming_game_object->prefab_reference == nullptr)
 			{
 				std::string prefab_path = selected_folder->file_path + "/" + incoming_game_object->name + ".prefab";
-				ImportResult import_result = App->resources->Import(prefab_path, incoming_game_object);
+				App->resources->CreatePrefab(prefab_path, incoming_game_object);
+				ImportResult import_result = App->resources->Import(prefab_path);
 				if (import_result.succes)
 				{
 					App->scene->RemoveGameObject(incoming_game_object);

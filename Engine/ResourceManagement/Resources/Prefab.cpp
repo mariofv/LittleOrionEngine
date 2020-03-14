@@ -1,9 +1,9 @@
 #include "Prefab.h"
+#include "Filesystem/File.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
-
 
 
 Prefab::Prefab(std::vector<std::unique_ptr<GameObject>> && gameObjects, uint32_t UID, const std::string & exported_file) : Resource(UID, exported_file), prefab(std::move(gameObjects))
@@ -44,7 +44,8 @@ GameObject * Prefab::Instantiate(GameObject * prefab_parent, std::unordered_map<
 
 void Prefab::Apply(GameObject * new_reference)
 {
-	ImportResult import_result = App->resources->Import(exported_file, new_reference);
+	App->resources->CreatePrefab(exported_file, new_reference);
+	ImportResult import_result = App->resources->Import(File(exported_file));
 	if (import_result.succes)
 	{
 		RecursiveRewrite(prefab.front().get(), new_reference, true, false);

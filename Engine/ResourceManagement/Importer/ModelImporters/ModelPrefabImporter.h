@@ -5,13 +5,14 @@
 #include <vector>
 class Config;
 class GameObject;
+class File;
 class ModelPrefabImporter : public Importer
 {
 
 public:
 	ModelPrefabImporter() = default;
 	~ModelPrefabImporter() = default;
-	void ImportModelPrefab(const Config& model, const std::string& imported_file, std::string& exported_file) const;
+	void ImportModelPrefab(const Config& model, const File& imported_file) const;
 
 
 private:

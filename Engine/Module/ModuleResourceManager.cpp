@@ -64,10 +64,9 @@ update_status ModuleResourceManager::PreUpdate()
  }
 
 
- ImportResult ModuleResourceManager::Import(const std::string &path, GameObject * gameobject_to_save) const
+ void ModuleResourceManager::CreatePrefab(const std::string &path, GameObject * gameobject_to_save) const
  {
-	 //If root import scene;
-	 return prefab_importer->Import(File(path),gameobject_to_save);
+	prefab_importer->CreatePrefabResource(File(path),gameobject_to_save);
  }
 
 void ModuleResourceManager::ImportAllFilesInDirectory(const File& file)
@@ -113,6 +112,10 @@ ImportResult ModuleResourceManager::InternalImport(const File& file)
 	if (file.file_type == FileType::MATERIAL)
 	{
 		result = material_importer->Import(file);
+	}
+	if (file.file_type == FileType::PREFAB)
+	{
+		result = prefab_importer->Import(file);
 	}
 	return result;
 }

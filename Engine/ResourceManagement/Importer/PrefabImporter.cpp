@@ -39,7 +39,7 @@ ImportResult PrefabImporter::Import(const File& file, bool force) const
 	return import_result;
 }
 
-ImportResult PrefabImporter::Import(const File & file, GameObject * gameobject_to_save) const
+void PrefabImporter::CreatePrefabResource(const File & file, GameObject * gameobject_to_save) const
 {
 	Config scene_config;
 
@@ -76,5 +76,4 @@ ImportResult PrefabImporter::Import(const File & file, GameObject * gameobject_t
 	scene_config.GetSerializedString(serialized_scene_string);
 
 	App->filesystem->Save(file.file_path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
-	return Import(file);
 }

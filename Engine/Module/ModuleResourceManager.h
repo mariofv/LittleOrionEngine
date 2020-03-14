@@ -35,7 +35,7 @@ public:
 	bool CleanUp() override;
 
 	ImportResult Import(const File& file);
-	ImportResult Import(const std::string &path, GameObject * gameobject_to_save) const;
+	void CreatePrefab(const std::string &path, GameObject * gameobject_to_save) const;
 
 	template<typename T>
 	void RemoveResourceFromCacheIfNeeded(const std::shared_ptr<T> & resource) {

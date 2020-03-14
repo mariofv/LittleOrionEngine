@@ -121,7 +121,7 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 		{
 			assert(payload->DataSize == sizeof(File*));
 			File *incoming_file = *(File**)payload->Data;
-			if (incoming_file->file_type == FileType::PREFAB)
+			if (incoming_file->file_type == FileType::PREFAB || incoming_file->file_type == FileType::MODEL)
 			{
 				ImportOptions options;
 				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
