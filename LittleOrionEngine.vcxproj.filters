@@ -290,7 +290,10 @@
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\UI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp">
-      <Filter>Engine\UI\Panel</Filter>
+      <Filter>Engine\UI\Panel\PopupsPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\ModelPrefabImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -581,6 +584,9 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\ModelPrefabImporter.h">
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
