@@ -128,7 +128,7 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 	}
 
 	ImVec2 available_region = ImGui::GetContentRegionAvail();
-	int files_per_line = available_region.x / file_size;
+	int files_per_line = available_region.x / file_size_width;
 
 	int current_line = 0;
 	int current_file_in_line = 0;
@@ -156,18 +156,18 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 
 void PanelProjectExplorer::ShowFileIcon(File* file)
 {
-	std::string filename = std::string(file->filename_no_extension);
-	if (ImGui::BeginChild(filename.c_str(), ImVec2(file_size, file_size), selected_file == file, ImGuiWindowFlags_NoDecoration))
+	std::string filename = std::string(file->filename);
+	if (ImGui::BeginChild(filename.c_str(), ImVec2(file_size_width, file_size_height), selected_file == file, ImGuiWindowFlags_NoDecoration))
 	{
 		ResourceDragSource(file);
 		ProcessResourceMouseInput(file);
 
-		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * file_size) * 0.5f);
-		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*file_size, 0.75*file_size)); // TODO: Substitute this with resouce thumbnail
+		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * file_size_width) * 0.5f);
+		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*file_size_width, 0.75*file_size_width)); // TODO: Substitute this with resouce thumbnail
 		ImGui::Spacing();
 
 		float text_width = ImGui::CalcTextSize(filename.c_str()).x;
-		if (text_width < file_size)
+		if (text_width < file_size_width)
 		{
 			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - text_width) * 0.5f);
 			ImGui::Text(filename.c_str());
@@ -175,9 +175,9 @@ void PanelProjectExplorer::ShowFileIcon(File* file)
 		else
 		{
 			int character_width = text_width / filename.length();
-			int string_position_wrap = file_size / character_width - 5;
+			int string_position_wrap = file_size_width / character_width - 5;
 			assert(string_position_wrap < filename.length());
-			std::string wrapped_filename = filename.substr(0, string_position_wrap) + "...";
+			std::string wrapped_filename = filename.substr(0, string_position_wrap+3) + "\n" + filename.substr(string_position_wrap, file->filename.size());
 			ImGui::Text(wrapped_filename.c_str());
 		}
 	}

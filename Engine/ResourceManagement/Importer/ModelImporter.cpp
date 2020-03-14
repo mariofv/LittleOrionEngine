@@ -140,7 +140,7 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 
 		aiMesh * importing_mesh = scene->mMeshes[mesh_index];
 
-		std::string assets_mesh_file = base_path + "/" + std::string(importing_mesh->mName.data) + std::to_string(i) + ".ol";
+		std::string assets_mesh_file = base_path + "/" + std::string(importing_mesh->mName.data) + std::to_string(i) + ".mesh";
 		std::string library_mesh_file = exported_file.file_path + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
 		bool imported = mesh_importer->ImportMesh(importing_mesh, current_transformation, library_mesh_file, assets_mesh_file);
 		if (imported)

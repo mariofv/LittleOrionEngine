@@ -38,7 +38,7 @@ GameObject * Prefab::Instantiate(GameObject * prefab_parent, std::unordered_map<
 		copy_in_scene->prefab_reference = this;
 		copy_in_scene->transform.Translate(float3::zero); //:D
 	}
-
+	parent_prefab->SetParent(prefab_parent);
 	return parent_prefab;
 }
 
