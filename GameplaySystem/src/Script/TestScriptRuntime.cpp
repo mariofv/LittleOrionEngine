@@ -21,12 +21,12 @@ TestScriptRuntime::TestScriptRuntime()
 void TestScriptRuntime::Update()
 {
 
-	Test();
+	//Test();
 
-	if (App->input->GetKeyDown(KeyCode::C))
+	/*if (App->input->GetKeyDown(KeyCode::C))
 	{
 		GameObject* go = App->scene->CreateGameObject();
-	}
+	}*/
 }
 
 void TestScriptRuntime::OnInspector(ImGuiContext* context)
