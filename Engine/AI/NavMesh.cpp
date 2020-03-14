@@ -47,13 +47,13 @@ bool NavMesh::CleanUp()
 
 bool NavMesh::Update()
 {
-	if (is_mesh_computed)
-	{
-		// Draw bounds
-		const float* bmin = &global_AABB.minPoint[0];
-		const float* bmax = &global_AABB.maxPoint[0];
-		dd::aabb(math::float3(bmin[0], bmin[1], bmin[2]), math::float3(bmax[0], bmax[1], bmax[2]), math::float3(1.0f, 0.0f, 0.0f));
-	}
+	//if (is_mesh_computed)
+	//{
+	//	// Draw bounds
+	//	//const float* bmin = &global_AABB.minPoint[0];
+	//	//const float* bmax = &global_AABB.maxPoint[0];
+	//	//dd::aabb(math::float3(bmin[0], bmin[1], bmin[2]), math::float3(bmax[0], bmax[1], bmax[2]), math::float3(1.0f, 0.0f, 0.0f));
+	//}
 	return true;
 }
 
