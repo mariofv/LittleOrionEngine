@@ -5,7 +5,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
-
+#include "Module/ModuleResourceManager.h"
 #include <imgui.h>
 #include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -165,7 +165,16 @@ void PanelMaterial::SaveMaterial(Material* material)
 
 	std::string serialized_material_string;
 	material_config.GetSerializedString(serialized_material_string);
+	//Remove this when using uuid completely
+	if (std::find_if(material->exported_file.begin(), material->exported_file.end(), ::isdigit) == material->exported_file.end())
+	{
+		return;
+	}
+	std::string uid_string = material->exported_file.substr(material->exported_file.find_last_of("/") + 1, material->exported_file.size());
+	uint32_t real_uuid = std::stoul(uid_string);
 
+	std::string imported_file = App->resources->resource_DB->GetEntry(real_uuid)->imported_file;
+	App->filesystem->Save(imported_file.c_str(), serialized_material_string.c_str(), serialized_material_string.size() + 1);
 	App->filesystem->Save(material->exported_file.c_str(), serialized_material_string.c_str(), serialized_material_string.size() + 1);
 }
 
