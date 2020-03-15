@@ -40,6 +40,9 @@ public:
 
 	ComponentMesh* CreateComponentMesh();
 	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
+
+	int GetRenderedTris() const;
+
 	void GenerateQuadTree();
 	void GenerateOctTree();
 	void InsertAABBTree(GameObject* game_object);
@@ -98,6 +101,8 @@ private:
 
 	std::vector<ComponentMesh*> meshes;
 	std::vector<ComponentMesh*> meshes_to_render;
+
+	int num_rendered_tris = 0;
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;

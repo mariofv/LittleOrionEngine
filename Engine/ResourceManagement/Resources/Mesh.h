@@ -20,10 +20,13 @@ public:
 	~Mesh();
 
 	GLuint GetVAO() const;
+
+	int GetNumTriangles() const;
 	std::vector<Triangle> GetTriangles() const;
 
 private:
 	void LoadInMemory() override;
+
 public:
 	std::vector<Vertex> vertices;
 	std::vector<uint32_t> indices;

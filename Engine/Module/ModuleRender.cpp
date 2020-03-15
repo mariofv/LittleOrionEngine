@@ -163,6 +163,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
+	num_rendered_tris = 0;
+
 	GetMeshesToRender(&camera);
 	for (auto &mesh : meshes_to_render)
 	{
@@ -170,6 +172,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		if (mesh->IsEnabled())
 		{
 			mesh->Render();
+			num_rendered_tris += mesh->mesh_to_render->GetNumTriangles();
 			glUseProgram(0);
 		}
 	}
@@ -565,3 +568,7 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
 	return selected;
 }
 
+int ModuleRender::GetRenderedTris() const
+{
+	return num_rendered_tris;
+}

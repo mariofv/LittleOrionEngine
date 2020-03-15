@@ -35,11 +35,13 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
+	void CreateScript(const std::string& name);
 	void InitResourceScript();
 	Script* CreateResourceScript(const std::string& script_name, GameObject* owner);
 	ComponentScript* CreateComponentScript();
 	void RemoveComponentScript(ComponentScript* script_to_remove);
 
+	void InitScripts();
 	void Refresh();
 
 private:
@@ -47,6 +49,7 @@ private:
 	long TimeStamp(const char* path);
 
 	void LoadScriptList();
+	void SaveScriptList();
 	void RunScripts();
 	void RemoveScriptPointers();
 
