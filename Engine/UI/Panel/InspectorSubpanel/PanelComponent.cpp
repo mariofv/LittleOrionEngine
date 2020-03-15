@@ -10,6 +10,7 @@
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentScript.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -18,9 +19,12 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleScriptManager.h"
 
 
 #include "Helper/Utils.h"
+
+#include "UI/Panel/PanelPopups.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -33,6 +37,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 		if (ImGui::DragFloat3("Translation", transform->translation.ptr(), 0.01f))
 		{
 			transform->OnTransformChange();
+			transform->modified_by_user = true;
 		}
 		//UndoRedo
 		CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION, transform);
@@ -42,6 +47,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
 			transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
 			transform->OnTransformChange();
+			transform->modified_by_user = true;
 		}
 		//UndoRedo
 		CheckClickForUndo(ModuleActions::UndoActionType::ROTATION, transform);
@@ -49,6 +55,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 		if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
 		{
 			transform->OnTransformChange();
+			transform->modified_by_user = true;
 		}
 
 		//UndoRedo
@@ -65,6 +72,7 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 			//UndoRedo
 			App->actions->action_component = mesh;
 			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+			mesh->modified_by_user = true;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
@@ -87,22 +95,6 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::SameLine();
 		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
 		ImGui::Button(tmp_string);
-
-		if (ImGui::BeginCombo("Shader", mesh->shader_program.c_str()))
-		{
-			for (auto & program : App->program->names)
-			{
-				bool is_selected = (mesh->shader_program == program);
-				if (ImGui::Selectable(program, is_selected))
-				{
-					mesh->shader_program = program;
-					if (is_selected)
-						ImGui::SetItemDefaultFocus();  
-				}
-
-			}
-			ImGui::EndCombo();
-		}
 	}
 }
 
@@ -110,6 +102,22 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		if (ImGui::BeginCombo("Shader", material->shader_program.c_str()))
+		{
+			for (auto & program : App->program->names)
+			{
+				bool is_selected = (material->shader_program == program);
+				if (ImGui::Selectable(program, is_selected))
+				{
+					material->shader_program = program;
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();
+				}
+
+			}
+			ImGui::EndCombo();
+		}
+
 		float window_width = ImGui::GetWindowWidth();
 		for (size_t i = 0; i < material->textures.size(); ++i)
 		{
@@ -144,6 +152,7 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 						App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
 
 						material->RemoveMaterialTexture(i);
+						material->modified_by_user = true;
 					}
 					ImGui::SameLine(); ImGui::Text("Remove Texture");
 					ImGui::EndGroup();
@@ -156,22 +165,22 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 				}
 				if (type == Texture::TextureType::DIFUSSE)
 				{
-					ImGui::ColorEdit3("Diffuse Color", material->diffuse_color);
-					ImGui::SliderFloat("k diffuse", &material->k_diffuse, 0, 1);
+					if (ImGui::ColorEdit3("Diffuse Color", material->diffuse_color)) { material->modified_by_user = true; };
+					if (ImGui::SliderFloat("k diffuse", &material->k_diffuse, 0, 1)) { material->modified_by_user = true; };
 				}
 				if (type == Texture::TextureType::EMISSIVE)
 				{
-					ImGui::ColorEdit3("Emissive Color", material->emissive_color);
+					if (ImGui::ColorEdit3("Emissive Color", material->emissive_color)) {material->modified_by_user = true;}
 				}
 				if (type == Texture::TextureType::OCLUSION)
 				{
-					ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1);
+					if (ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1)){	material->modified_by_user = true;}
 				}
 				if (type == Texture::TextureType::SPECULAR)
 				{
-					ImGui::ColorEdit3("Specular Color", material->specular_color);
-					ImGui::SliderFloat("k specular", &material->k_specular, 0, 1);
-					ImGui::SliderFloat("Shininess", &material->shininess, 0, 1);
+					if(ImGui::ColorEdit3("Specular Color", material->specular_color)) { material->modified_by_user = true; }
+					if (ImGui::SliderFloat("k specular", &material->k_specular, 0, 1)) { material->modified_by_user = true; }
+					if (ImGui::SliderFloat("Shininess", &material->shininess, 0, 1)) { material->modified_by_user = true; }
 				}
 
 				ImGui::Separator();
@@ -195,12 +204,37 @@ void PanelComponent::DropTarget(ComponentMaterial *material, Texture::TextureTyp
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
 
 				material->SetMaterialTexture(type, App->texture->LoadTexture(incoming_file->file_path.c_str()));
+				material->modified_by_user = true;
 			}
 		}
 		ImGui::EndDragDropTarget();
 	}
 }
+ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go, const std::string& script_name, ComponentScript*& script_to_find)
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_GameObject"))
+		{
+			assert(payload->DataSize == sizeof(GameObject*));
+			GameObject *incoming_game_object = *(GameObject**)payload->Data;
+			for (unsigned int i = 0; i < incoming_game_object->components.size(); ++i)
+			{
 
+				if (incoming_game_object->components[i]->type == Component::ComponentType::SCRIPT)
+				{
+					ComponentScript *script = (ComponentScript *)incoming_game_object->components[i];
+					if (script->name == script_name)
+					{
+						go = incoming_game_object;
+						script_to_find = script;
+					}
+				}
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
 std::string PanelComponent::GetTypeName(Texture::TextureType type)
 {
 	switch (type)
@@ -231,6 +265,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 			//UndoRedo
 			App->actions->action_component = camera;
 			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+			camera->modified_by_user = true;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
@@ -240,12 +275,12 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly);
-		ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly);
+		if (ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; };
+		if (ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; };
 
 		ImGui::Separator();
 
-		ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f ,camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED);
+		if (ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED)) { camera->modified_by_user = true; };
 		
 		//UndoRedo
 		CheckClickedCamera(camera);
@@ -253,6 +288,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		if (ImGui::DragFloat("FOV", &camera->camera_frustum.verticalFov, 0.01f, 0, 2 * 3.14f))
 		{
 			camera->SetFOV(camera->camera_frustum.verticalFov);
+			camera->modified_by_user = true;
 		}
 
 		//UndoRedo
@@ -261,6 +297,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		if (ImGui::DragFloat("Aspect Ratio", &camera->aspect_ratio, 0.01f , 0, 10))
 		{
 			camera->SetAspectRatio(camera->aspect_ratio);
+			camera->modified_by_user = true;
 		}
 
 		//UndoRedo
@@ -269,6 +306,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		if (ImGui::DragFloat("Near plane", &camera->camera_frustum.nearPlaneDistance, 0.01f, 1, camera->camera_frustum.farPlaneDistance + 1))
 		{
 			camera->SetNearDistance(camera->camera_frustum.nearPlaneDistance);
+			camera->modified_by_user = true;
 		}
 
 		//UndoRedo
@@ -277,6 +315,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		if (ImGui::DragFloat("Far plane", &camera->camera_frustum.farPlaneDistance, 0.01f, camera->camera_frustum.nearPlaneDistance + 1, camera->camera_frustum.nearPlaneDistance + 1000))
 		{
 			camera->SetFarDistance(camera->camera_frustum.farPlaneDistance);
+			camera->modified_by_user = true;
 		}
 
 		//UndoRedo
@@ -290,18 +329,21 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 			{
 			case 0:
 				camera->SetClearMode(ComponentCamera::ClearMode::COLOR);
+				camera->modified_by_user = true;
 				break;
 			case 1:
 				camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
+				camera->modified_by_user = true;
 				break;
 			}
 		}		
-		ImGui::ColorEdit3("Clear Color", camera->camera_clear_color);
+		if (ImGui::ColorEdit3("Clear Color", camera->camera_clear_color)) { camera->modified_by_user = true; };
 		ImGui::Separator();
 
 		if (ImGui::DragFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0.01f, 0, 100))
 		{
 			camera->SetOrthographicSize(float2(camera->camera_frustum.orthographicHeight * camera->aspect_ratio, camera->camera_frustum.orthographicHeight));
+			camera->modified_by_user = true;
 		}
 
 		//UndoRedo
@@ -321,7 +363,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		ImGui::DragInt("Depth", &camera->depth, 0.05f);
+		if (ImGui::DragInt("Depth", &camera->depth, 0.05f)) { camera->modified_by_user = true; };
 
 		//UndoRedo
 		CheckClickedCamera(camera);
@@ -387,6 +429,7 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 			//UndoRedo
 			App->actions->action_component = light;
 			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+			light->modified_by_user = true;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
@@ -397,24 +440,97 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 		}
 		ImGui::Separator();
 
-		ImGui::ColorEdit3("Color", light->light_color);
+		if (ImGui::ColorEdit3("Color", light->light_color)) { light->modified_by_user = true; };
 		
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 		
-		ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f);
+		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f)) { light->modified_by_user = true; };
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
+
+		int light_type = static_cast<int>(light->light_type);
+
+		if (ImGui::Combo("Light Type", &light_type, "Point\0Spot\0Directional"))
+		{
+			switch (light_type)
+			{
+			case 0:
+				light->light_type = ComponentLight::LightType::POINT_LIGHT;
+				break;
+			case 1:
+				light->light_type = ComponentLight::LightType::SPOT_LIGHT;
+				break;
+			case 2:
+				light->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
+				break;
+			}
+		}
+		if (light->light_type == ComponentLight::LightType::POINT_LIGHT)
+		{
+			if (ImGui::DragFloat("Range", &light->point_light_parameters.range, 1.f, 1.f, 100.f))
+			{
+				light->point_light_parameters.ChangePointLightAttenuationValues(light->point_light_parameters.range);
+			}
+		}
+		if (light->light_type == ComponentLight::LightType::SPOT_LIGHT)
+		{
+			if (ImGui::DragFloat("Spot Angle", &light->spot_light_parameters.spot_angle, 1.f, 1.f, 179.f))
+			{
+				light->spot_light_parameters.SetSpotAngle(light->spot_light_parameters.spot_angle);
+			}
+			if (ImGui::DragFloat("Edge Softness", &light->spot_light_parameters.edge_softness, 0.01f, 0.f, 1.f))
+			{
+				light->spot_light_parameters.SetEdgeSoftness(light->spot_light_parameters.edge_softness);
+			}
+			if (ImGui::DragFloat("Range", &light->spot_light_parameters.range, 1.f, 1.f, 100.f))
+			{
+				light->spot_light_parameters.ChangeSpotLightAttenuationValues(light->spot_light_parameters.range);
+			}
+		}
 		
 	}
 }
 
+void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_EDIT " Script", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::Checkbox("Active", &component_script->active))
+		{
+			//UndoRedo TODO
+			//App->editor->action_component = component_script;
+			//App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
+		}
+		
+		
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(component_script);
+
+			return;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Refresh"))
+		{
+			App->scripts->Refresh();
+			return;
+		}
+		ShowScriptsCreated(component_script);
+		ImGui::Separator();
+
+		component_script->ShowComponentWindow();
+
+		// to implement CheckClickForUndo(ModuleEditor::UndoActionType::EDIT_COMPONENTSCRIPT, component_script);
+
+	}
+}
 
 void PanelComponent::ShowAddNewComponentButton()
 {
 	float window_width = ImGui::GetWindowWidth();
 	float button_width = 0.5f * window_width;
 	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
-	ImGui::Button("Add component", ImVec2(button_width, 25));
+	ImGui::Button("Add Component", ImVec2(button_width, 25));
 
 	//UndoRedo
 	Component* component = nullptr;
@@ -443,6 +559,12 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
 
 		}
+		sprintf_s(tmp_string, "%s Script", ICON_FA_EDIT);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::SCRIPT);
+
+		}
 
 		ImGui::EndPopup();
 	}
@@ -453,4 +575,30 @@ void PanelComponent::ShowAddNewComponentButton()
 		App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_COMPONENT);
 	}
 }
+
+void PanelComponent::ShowScriptsCreated(ComponentScript* component_script) 
+{
+
+	if (ImGui::BeginCombo("Add Script", component_script->name.c_str()))
+	{
+		for (auto script_name : App->scripts->scripts_list) {
+			if (ImGui::Selectable(script_name.c_str()))
+			{
+				component_script->LoadName(script_name);
+		
+			}
+		}
+		ImGui::Separator();
+		if (ImGui::Selectable("Create new Script")) 
+		{
+			App->editor->popups->create_script_shown = true;
+		}
+
+		ImGui::EndCombo();
+	}
+
+}
+
+
+
 

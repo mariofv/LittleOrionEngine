@@ -5,6 +5,7 @@
 #include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
 #include "ModuleRender.h"
+#include "ModuleResourceManager.h"
 #include "Component/ComponentCamera.h"
 #include "Helper/Config.h"
 #include "UI/Panel/PanelHierarchy.h"
@@ -42,7 +43,7 @@ bool ModuleScene::CleanUp()
 	return true;
 }
 
-GameObject* ModuleScene::CreateGameObject()
+ENGINE_API GameObject* ModuleScene::CreateGameObject()
 {
 	std::string created_game_object_name = App->editor->hierarchy->GetNextGameObjectName();
 	std::unique_ptr<GameObject> created_game_object = std::make_unique<GameObject>(created_game_object_name);
@@ -50,11 +51,10 @@ GameObject* ModuleScene::CreateGameObject()
 
 	GameObject * created_game_object_ptr = created_game_object.get();
 	game_objects_ownership.emplace_back(std::move(created_game_object));
-
 	return created_game_object_ptr;
 }
 
-GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
+ENGINE_API GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 {
 	GameObject * created_game_object_ptr = CreateGameObject();
 	parent->AddChild(created_game_object_ptr);
@@ -79,6 +79,21 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 		), end(game_objects_ownership));
 	}
 }
+
+
+GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject> & game_object_to_add)
+{
+	game_objects_ownership.emplace_back(std::move(game_object_to_add));
+	GameObject * game_object = game_objects_ownership.back().get();
+	game_object->SetParent(root);
+	if (!game_object->IsStatic())
+	{
+		App->renderer->InsertAABBTree(game_object);
+	}
+	return game_object;
+
+}
+
 
 GameObject* ModuleScene::GetRoot() const
 {
@@ -128,53 +143,14 @@ void ModuleScene::DeleteCurrentScene()
 	App->editor->selected_game_object = nullptr;
 }
 
-void ModuleScene::Save(Config& serialized_scene) const
+void  ModuleScene::NewScene(const std::string &path)
 {
-	std::vector<Config> game_objects_config(game_objects_ownership.size());
-	std::stack<GameObject*> pending_objects;
-	unsigned int current_index = 0;
-
-	for (auto& child_game_object : root->children)
-	{
-		pending_objects.push(child_game_object);
-	}	
-	
-	while (!pending_objects.empty())
-	{
-		GameObject* current_game_object = pending_objects.top();
-		pending_objects.pop();
-
-		current_game_object->Save(game_objects_config[current_index]);
-		++current_index;
-
-		for (auto& child_game_object : current_game_object->children)
-		{
-			pending_objects.push(child_game_object);
-		}
-	}
-	assert(current_index == game_objects_ownership.size());
-
-	serialized_scene.AddChildrenConfig(game_objects_config, "GameObjects");
-}
-
-void ModuleScene::Load(const Config& serialized_scene)
-{
-	DeleteCurrentScene();
+	App->scene->DeleteCurrentScene();
 	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 
-	std::vector<Config> game_objects_config;
-	serialized_scene.GetChildrenConfig("GameObjects", game_objects_config);
-	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
-	{
-		GameObject* created_game_object = CreateGameObject();
-		created_game_object->Load(game_objects_config[i]);
+	App->resources->scene_manager->Load(path);
 
-		if(!created_game_object->IsStatic())
-		{
-			App->renderer->InsertAABBTree(created_game_object);
-		}
-	}
 	App->renderer->GenerateQuadTree();
 	App->actions->ClearUndoStack();
 

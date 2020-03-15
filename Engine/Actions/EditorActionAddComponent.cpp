@@ -18,6 +18,7 @@ void EditorActionAddComponent::Undo()
 	Component* component = App->scene->GetComponent(component_UUID);
 	GameObject* owner = App->scene->GetGameObject(owner_UUID);
 	owner->RemoveComponent(component);
+	component->added_by_user = false;
 }
 
 void EditorActionAddComponent::Redo()
@@ -26,4 +27,5 @@ void EditorActionAddComponent::Redo()
 	GameObject* owner = App->scene->GetGameObject(owner_UUID);
 	component = owner->CreateComponent(type);
 	component->Load(serialization_component);
+	component->added_by_user = true;
 }

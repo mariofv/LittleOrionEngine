@@ -243,19 +243,19 @@ bool ModuleInput::CleanUp()
 }
 
 // Returns true while the user holds down the key identified by name
-bool ModuleInput::GetKey(KeyCode key)
+ENGINE_API bool ModuleInput::GetKey(KeyCode key)
 {
 	return key_bible[key] == KeyState::REPEAT;
 }
 
 // Returns true during the frame the user starts pressing down the key identified by name
-bool ModuleInput::GetKeyDown(KeyCode key)
+ENGINE_API bool ModuleInput::GetKeyDown(KeyCode key)
 {
 	return key_bible[key] == KeyState::DOWN;
 }
 
 // Returns true during the frame the user releases the key identified by name
-bool ModuleInput::GetKeyUp(KeyCode key)
+ENGINE_API bool ModuleInput::GetKeyUp(KeyCode key)
 {
 	return key_bible[key] == KeyState::UP;
 }

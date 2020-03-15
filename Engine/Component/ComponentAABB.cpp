@@ -13,6 +13,11 @@ ComponentAABB::ComponentAABB(GameObject * owner) : Component(owner, ComponentTyp
 
 }
 
+void ComponentAABB::Copy(Component * component_to_copy) const
+{ 
+	*static_cast<ComponentAABB*>(component_to_copy) = *this; 
+};
+
 void ComponentAABB::Save(Config& config) const
 {
 
@@ -71,5 +76,13 @@ void ComponentAABB::GenerateGlobalBoundingBox()
 bool ComponentAABB::IsEmpty() const
 {
 	return bounding_box.Size().Length() == 0;
+}
+
+Component* ComponentAABB::Clone(bool original_prefab) const
+{
+	ComponentAABB * created_component;
+	created_component = new ComponentAABB();
+	*created_component = *this;
+	return created_component;
 }
 

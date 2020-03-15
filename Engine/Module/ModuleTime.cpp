@@ -1,7 +1,9 @@
 #include "ModuleTime.h"
-#include "Main/Globals.h"
+
 #include "Main/Application.h"
+#include "Main/Globals.h"
 #include "ModuleEditor.h"
+#include "Module/ModuleScriptManager.h"
 #include "ModuleWindow.h"
 #include "UI/EngineLog.h"
 #include "Helper/Timer.h"
@@ -94,6 +96,7 @@ void ModuleTime::Play()
 	{
 		App->editor->SaveScene(TMP_SCENE_PATH);
 		game_time_clock->Start();
+		App->scripts->InitScripts();
 	}
 	else
 	{
@@ -136,4 +139,9 @@ void ModuleTime::StepFrame()
 void ModuleTime::SetTimeScale(float time_scale)
 {
 	this->time_scale = time_scale;
+}
+
+bool ModuleTime::isGameRunning()
+{
+	return game_time_clock->Started();
 }

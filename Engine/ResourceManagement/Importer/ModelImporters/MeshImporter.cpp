@@ -35,6 +35,10 @@ bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_transf
 		{
 			new_vertex.normals = float3(mesh->mNormals[i].x, mesh->mNormals[i].y, mesh->mNormals[i].z);
 		}
+		if (mesh->mTangents)
+		{
+			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
+		}
 		vertices.push_back(new_vertex);
 	}
 

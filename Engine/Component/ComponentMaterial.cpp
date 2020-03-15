@@ -14,6 +14,11 @@ ComponentMaterial::ComponentMaterial(GameObject * owner) : Component(owner, Comp
 	textures.resize(Texture::MAX_TEXTURE_TYPES);
 }
 
+void ComponentMaterial::Copy(Component * component_to_copy) const
+{ 
+	*component_to_copy = *this;
+	*static_cast<ComponentMaterial*>(component_to_copy) = *this; 
+};
 ComponentMaterial::~ComponentMaterial()
 {
 	for (auto & texture : textures)
@@ -32,7 +37,6 @@ void ComponentMaterial::Save(Config& config) const
 	config.AddUInt(UUID, "UUID");
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
-	config.AddInt(index, "Index");
 	for (size_t i = 0; i< textures.size(); i++ )
 	{
 		if (textures[i] != nullptr)
@@ -42,6 +46,7 @@ void ComponentMaterial::Save(Config& config) const
 		}
 	}
 	config.AddBool(show_checkerboard_texture, "Checkboard");
+	config.AddString(shader_program, "ShaderProgram");
 
 	//k
 	config.AddFloat(k_ambient, "kAmbient");
@@ -60,8 +65,6 @@ void ComponentMaterial::Load(const Config& config)
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 
-	index = config.GetInt("Index", 0);
-
 	std::string tmp_path;
 	config.GetString("Path", tmp_path, "");
 	textures.resize(Texture::MAX_TEXTURE_TYPES);
@@ -77,6 +80,7 @@ void ComponentMaterial::Load(const Config& config)
 	}
 
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
+	config.GetString("ShaderProgram", shader_program, "Blinn phong");
 
 	//k
 	k_ambient = config.GetFloat("kAmbient", 1.0f);
@@ -142,7 +146,6 @@ void ComponentMaterial::AddSpecularUniforms(unsigned int shader_program) const
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), k_specular);
-	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), shininess);
 }
 
 void ComponentMaterial::AddAmbientOclusionUniforms(unsigned int shader_program) const
@@ -186,3 +189,19 @@ const std::shared_ptr<Texture>& ComponentMaterial::GetMaterialTexture(size_t  ty
 {
 	return textures[type];
 }
+
+Component* ComponentMaterial::Clone(bool original_prefab) const
+{
+	ComponentMaterial * created_component;
+	if(original_prefab)
+	{
+		created_component = new ComponentMaterial();
+	}
+	else 
+	{
+		created_component = App->texture->CreateComponentMaterial();
+	}
+	*created_component = *this;
+	return created_component;
+}
+

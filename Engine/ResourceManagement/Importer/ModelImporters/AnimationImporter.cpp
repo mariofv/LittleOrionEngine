@@ -11,7 +11,7 @@
 
 bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, std::string& output_file) const
 {
-	Animation own_format_animation("", "");
+	Animation own_format_animation(0, "");
 	GetCleanAnimation(animation, own_format_animation);
 	own_format_animation.duration = static_cast<float>(animation->mDuration);
 	own_format_animation.name = std::string(animation->mName.C_Str());
