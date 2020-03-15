@@ -41,6 +41,11 @@ private:
 	Billboard* camera_billboard = nullptr;
 	Billboard* light_billboard = nullptr;
 
+	float grid_size = 1000.f;
+
+	GLuint grid_vao = 0;
+	GLuint grid_vbo = 0;
+	GLuint grid_ebo = 0;
 };
 
 #endif //_MODULEDEBUGDRAW_H_
