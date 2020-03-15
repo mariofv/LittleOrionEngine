@@ -11,8 +11,8 @@
 #include "ModuleScene.h"
 #include "ModuleUI.h"
 #include "Component/ComponentCamera.h"
-#include "UI/Panel/PanelProjectExplorer.h"
-#include "UI/Panel/PanelScene.h"
+#include "EditorUI/Panel/PanelProjectExplorer.h"
+#include "EditorUI/Panel/PanelScene.h"
 
 #include <SDL/SDL.h>
 #include "imgui.h"

@@ -5,7 +5,7 @@
 #include "ModuleEditor.h"
 #include "Module/ModuleScriptManager.h"
 #include "ModuleWindow.h"
-#include "UI/EngineLog.h"
+#include "EditorUI/EngineLog.h"
 #include "Helper/Timer.h"
 
 #include <SDL/SDL.h>

@@ -15,7 +15,7 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentLight.h"
-#include "UI/DebugDraw.h"
+#include "EditorUI/DebugDraw.h"
 
 #include <SDL/SDL.h>
 #include "MathGeoLib.h"

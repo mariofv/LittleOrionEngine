@@ -13,7 +13,7 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTime.h"
-#include "UI/Panel/PanelHierarchy.h"
+#include "EditorUI/Panel/PanelHierarchy.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>

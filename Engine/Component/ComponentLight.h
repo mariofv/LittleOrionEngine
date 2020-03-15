@@ -2,7 +2,7 @@
 #define _COMPONENTLIGHT_H
 
 #include "Component.h"
-#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 class GameObject;
 

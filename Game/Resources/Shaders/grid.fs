@@ -14,7 +14,6 @@ struct Grid
 {
   float grid_size;
   float cell_size;
-  vec3 view_dir;
   vec4 thin_color;
   vec4 thick_color;
 };
@@ -70,13 +69,12 @@ void main()
   vec2 lod2_cross_a = 1.f - abs(saturate(mod(uv, lod2_cs) / dudv) * 2 - 1.f);
   float lod2_a = max(lod2_cross_a.x, lod2_cross_a.y);
 
-  //lod1_a =1;
-
   // Blend between falloff colors to handle LOD transition [4]
   vec4 c = lod2_a > 0 ? grid.thick_color : lod1_a > 0 ? mix(grid.thick_color, grid.thin_color, lod_fade) : grid.thin_color;
 
   // Calculate opacity falloff based on distance to grid extents and gracing angle. [5]
-  vec3 view_dir = normalize(grid.view_dir);
+  vec3 view_dir = vec3(matrices.view[0][2], matrices.view[1][2], matrices.view[2][2]);
+  view_dir = normalize(view_dir);
   vec3 surface_vec = vec3(0.0, 1.0, 0.0);
   float op_gracing = 1.f - pow(1.f - abs(dot(view_dir, surface_vec)), 16);
   float op_distance = (1.f - saturate(length(uv) / grid.grid_size));

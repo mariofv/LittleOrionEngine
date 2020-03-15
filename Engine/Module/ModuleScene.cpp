@@ -8,7 +8,7 @@
 #include "ModuleResourceManager.h"
 #include "Component/ComponentCamera.h"
 #include "Helper/Config.h"
-#include "UI/Panel/PanelHierarchy.h"
+#include "EditorUI/Panel/PanelHierarchy.h"
 
 #include <algorithm>
 #include <stack>

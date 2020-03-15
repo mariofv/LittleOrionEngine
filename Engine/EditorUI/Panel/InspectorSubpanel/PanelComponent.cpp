@@ -24,7 +24,7 @@
 
 #include "Helper/Utils.h"
 
-#include "UI/Panel/PanelPopups.h"
+#include "EditorUI/Panel/PanelPopups.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>

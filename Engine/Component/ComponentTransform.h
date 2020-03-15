@@ -3,7 +3,7 @@
 
 #define ENGINE_EXPORTS
 #include "Component.h"
-#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>

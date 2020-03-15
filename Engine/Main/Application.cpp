@@ -17,7 +17,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
 #include "Module/ModuleScriptManager.h"
-#include "UI/EngineLog.h"
+#include "EditorUI/EngineLog.h"
 #include "Brofiler/Brofiler.h"
 
 

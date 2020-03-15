@@ -5,9 +5,10 @@
 
 #include <GL/glew.h>
 
-class IDebugDrawOpenGLImplementation;
-class ComponentCamera;
 class Billboard;
+class ComponentCamera;
+class Grid;
+class IDebugDrawOpenGLImplementation;
 
 class ModuleDebugDraw : public Module
 {
@@ -41,11 +42,7 @@ private:
 	Billboard* camera_billboard = nullptr;
 	Billboard* light_billboard = nullptr;
 
-	float grid_size = 1000.f;
-
-	GLuint grid_vao = 0;
-	GLuint grid_vbo = 0;
-	GLuint grid_ebo = 0;
+	Grid* grid = nullptr;
 };
 
 #endif //_MODULEDEBUGDRAW_H_

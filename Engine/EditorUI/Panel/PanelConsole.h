@@ -2,7 +2,7 @@
 #define _PANELCONSOLE_H_
 
 #include "Main/Globals.h"
-#include "UI/Panel/Panel.h"
+#include "EditorUI/Panel/Panel.h"
 
 #include <imgui.h>
 

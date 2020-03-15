@@ -7,7 +7,7 @@
 #define ENGINE_API __declspec(dllimport)
 #endif
 
-#include "UI/EngineLog.h"
+#include "EditorUI/EngineLog.h"
 
 #include "imgui.h"
 

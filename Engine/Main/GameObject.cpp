@@ -10,7 +10,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "ResourceManagement/Resources/Prefab.h"
-#include "UI/Panel/PanelHierarchy.h"
+#include "EditorUI/Panel/PanelHierarchy.h"
 
 
 #include "Component/ComponentCamera.h"

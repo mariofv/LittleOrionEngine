@@ -1,7 +1,7 @@
 #include "OLAABBTree.h"
 #include <assert.h>
 #include <stack>
-#include "UI/DebugDraw.h"
+#include "EditorUI/DebugDraw.h"
 
 
 OLAABBTree::OLAABBTree(unsigned initial_size)

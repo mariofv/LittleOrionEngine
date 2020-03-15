@@ -3,7 +3,7 @@
 
 #include "Component.h"
 #include "Main/Globals.h"
-#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 #include "ResourceManagement/Resources/Texture.h"
 
 #include <GL/glew.h>

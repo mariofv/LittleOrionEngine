@@ -3,7 +3,7 @@
 
 #include "Component.h"
 #include "ResourceManagement/Resources/Mesh.h"
-#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 class ComponentMesh : public Component
 {
