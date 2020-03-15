@@ -24,7 +24,7 @@ void PanelPopupMaterialSelector::Render()
 		opened = true;
 
 		// TODO: Change this when ModuleResourceManagement is refactored.
-		material_files = std::vector<std::shared_ptr<File>>();
+		/*material_files = std::vector<std::shared_ptr<File>>();
 		File material_folder(LIBRARY_MATERIAL_FOLDER);
 		for (auto& material_file : material_folder.children)
 		{
@@ -32,7 +32,7 @@ void PanelPopupMaterialSelector::Render()
 			{
 				material_files.push_back(material_file);
 			}
-		}
+		}*/
 	}
 
 	if (!opened)

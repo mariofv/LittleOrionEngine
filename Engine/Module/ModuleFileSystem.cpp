@@ -16,22 +16,14 @@ bool ModuleFileSystem::Init() {
 		APP_LOG_ERROR("Error creating writing directory: %s", PHYSFS_getLastError());
 		return false;
 	}
-	MakeDirectory("Assets");
+
 	MakeDirectory("Assets/Scenes");
-	MakeDirectory("Library");
-	if (PHYSFS_mount("Assets", "Assets", 1) == 0)
+	if (!CreateMountedDir("Assets"))
 	{
-		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
 		return false;
 	}
-	if (PHYSFS_mount("Library", "Library", 1) == 0)
+	if (!CreateMountedDir("Resources"))
 	{
-		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
-		return false;
-	}
-	if (PHYSFS_mount("Resources", "Resources", 1) == 0)
-	{
-		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
 		return false;
 	}
 	RefreshFilesHierarchy();
@@ -264,5 +256,14 @@ void ModuleFileSystem::RefreshFilesHierarchy()
 }
 
 
-
+bool  ModuleFileSystem::CreateMountedDir(const char * directory) const
+{
+	MakeDirectory(directory);
+	if (PHYSFS_mount(directory, directory, 1) == 0)
+	{
+		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
+		return false;
+	}
+	return true;
+}
 

@@ -1,11 +1,10 @@
 #include "ModuleResourceManager.h"
-#include "Main/Application.h"
 
-#include "ModuleFileSystem.h"
 #include "Helper/Config.h"
 #include "Helper/Timer.h"
 #include "ResourceManagement/Resources/Mesh.h"
 
+#include <algorithm>
 ModuleResourceManager::ModuleResourceManager()
 {
 	resource_DB = std::make_unique<ResourceDataBase>();
@@ -20,6 +19,7 @@ bool ModuleResourceManager::Init()
 	scene_manager = std::make_unique<SceneManager>();
 	prefab_importer = std::make_unique<PrefabImporter>();
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
+	File("Resources");
 	thread_timer->Start();
 	return true;
 }
@@ -44,21 +44,27 @@ update_status ModuleResourceManager::PreUpdate()
 
  void ModuleResourceManager::StartThread()
  {
+	 bool force_import = !App->filesystem->Exists("Library");
+	 if (force_import && !App->filesystem->CreateMountedDir("Library"))
+	 {
+		 return;
+	 }
+
 	 thread_comunication.finished_loading = false;
 	 thread_comunication.total_items = App->filesystem->assets_file->total_sub_files_number;
-	 ImportAllFilesInDirectory(*App->filesystem->assets_file.get());
+	 ImportAllFilesInDirectory(*App->filesystem->assets_file.get(), force_import);
 	 thread_comunication.finished_loading = true;
 	 last_imported_time = thread_timer->Read();
  }
 
- ImportResult ModuleResourceManager::Import(const File& file)
+ ImportResult ModuleResourceManager::Import(const File& file, bool force)
  {
 	 while (thread_comunication.thread_importing_hash == std::hash<std::string>{}(file.file_path))
 	 {
 		 Sleep(1000);
 	 } 
 	 thread_comunication.main_importing_hash = std::hash<std::string>{}(file.file_path);
-	 ImportResult  result = InternalImport(file);
+	 ImportResult  result = InternalImport(file, force);
 	 thread_comunication.main_importing_hash = 0;
 	 return result;
  }
@@ -69,7 +75,7 @@ update_status ModuleResourceManager::PreUpdate()
 	prefab_importer->CreatePrefabResource(File(path),gameobject_to_save);
  }
 
-void ModuleResourceManager::ImportAllFilesInDirectory(const File& file)
+void ModuleResourceManager::ImportAllFilesInDirectory(const File& file, bool force)
  {
 	 for (auto & child : file.children)
 	 {
@@ -83,13 +89,13 @@ void ModuleResourceManager::ImportAllFilesInDirectory(const File& file)
 			 Sleep(1000);
 		 }
 
-		 if (child->file_type == FileType::DIRECTORY && !default_importer->Import(*child.get()).succes)
+		 if (child->file_type == FileType::DIRECTORY && !default_importer->Import(*child.get()).succes, force)
 		 {
-			 ImportAllFilesInDirectory(*child.get());
+			 ImportAllFilesInDirectory(*child.get(), force);
 		 }
 		 else if (child->file_type != FileType::DIRECTORY)
 		 {
-			 InternalImport(*child.get());
+			 InternalImport(*child.get(), force);
 		 }
 		 ++thread_comunication.loaded_items;
 		 thread_comunication.thread_importing_hash = 0;
@@ -97,25 +103,29 @@ void ModuleResourceManager::ImportAllFilesInDirectory(const File& file)
  }
 
 
-ImportResult ModuleResourceManager::InternalImport(const File& file)
+ImportResult ModuleResourceManager::InternalImport(const File& file, bool force)
 {
 	ImportResult result;
 	std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
 	if (file.file_type == FileType::MODEL)
 	{
-		result = model_importer->Import(file);
+		result = model_importer->Import(file, force);
 	}
 	if (file.file_type == FileType::TEXTURE)
 	{
-		result = texture_importer->Import(file);
+		result = texture_importer->Import(file, force);
 	}
 	if (file.file_type == FileType::MATERIAL)
 	{
-		result = material_importer->Import(file);
+		result = material_importer->Import(file, force);
 	}
 	if (file.file_type == FileType::PREFAB)
 	{
-		result = prefab_importer->Import(file);
+		result = prefab_importer->Import(file, force);
+	}
+	if (file.file_type == FileType::MESH)
+	{
+		result = model_importer->ImportExtractedResources(file, force);
 	}
 	return result;
 }
@@ -137,4 +147,23 @@ std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(const 
 		return  *it;
 	}
 	return nullptr;
+}
+
+void  ModuleResourceManager::ReimportIfNeeded(const std::string& uid)
+{
+	if (std::find_if(uid.begin(), uid.end(), ::isdigit) == uid.end())
+	{
+		return;
+	}
+	std::string uid_string = uid.substr(uid.find_last_of("/") + 1, uid.size());
+	uint32_t real_uuid = std::stoul(uid_string);
+	const ImportOptions * options = resource_DB->GetEntry(real_uuid);
+	if (options == nullptr)
+	{
+		return;
+	}
+	if (!App->filesystem->Exists(uid.c_str()) &&  App->filesystem->Exists(options->imported_file.c_str()))
+	{
+		Import(options->imported_file, true);
+	}
 }

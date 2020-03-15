@@ -19,3 +19,13 @@ void ResourceDataBase::AddEntry(const ImportOptions& importing_options)
 		entries[options->uuid] = std::move(options);
 	}
 }
+
+const ImportOptions* ResourceDataBase::GetEntry(uint32_t uuid)
+{
+	bool exist = entries.find(uuid) != entries.end();
+	if (!exist)
+	{
+		return nullptr;
+	}
+	return entries[uuid].get();
+}

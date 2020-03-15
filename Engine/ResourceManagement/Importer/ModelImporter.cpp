@@ -29,8 +29,6 @@ ModelImporter::ModelImporter()
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Info), Assimp::Logger::Info);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Err), Assimp::Logger::Err);
 	Assimp::DefaultLogger::get()->attachStream(new AssimpStream(Assimp::Logger::Warn), Assimp::Logger::Warn);
-	App->filesystem->MakeDirectory(LIBRARY_MATERIAL_FOLDER);
-	App->filesystem->MakeDirectory(LIBRARY_MODEL_FOLDER);
 
 	mesh_importer = std::make_unique<MeshImporter>();
 	skeleton_importer = std::make_unique<SkeletonImporter>();
@@ -43,8 +41,18 @@ ModelImporter::~ModelImporter()
 	Assimp::DefaultLogger::kill();
 }
 
+ImportResult  ModelImporter::ImportExtractedResources(const File & file, bool force) const
+{
+	ImportResult result;
+	if (file.file_type == FileType::MESH)
+	{
+		result = mesh_importer->Import(file, force);
+	}
+	return result;
+}
 ImportResult ModelImporter::Import(const File& file, bool force) const
 {
+
 	ImportResult import_result;
 	
 	if (file.filename.empty())
@@ -59,18 +67,16 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 		return import_result;
 	}
 
-	File output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER"/" + file.filename_no_extension);
 	APP_LOG_INIT("Importing model %s.", file.file_path.c_str());
 
 	performance_timer.Start();
 
 	const aiScene* scene = aiImportFile(file.file_path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
-	if (scene == NULL || output_file.file_path.empty())
+	if (scene == NULL )
 	{
 		const char *error = aiGetErrorString();
 		APP_LOG_ERROR("Error loading model %s ", file.file_path.c_str());
 		APP_LOG_ERROR(error);
-		App->filesystem->Remove(&output_file);
 		return import_result;
 	}
 	performance_timer.Stop();
@@ -83,7 +89,7 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	aiMatrix4x4 identity_transformation = aiMatrix4x4();
 
 	Config model;
-	std::vector<Config> node_config = ImportNode(root_node, identity_transformation, scene, base_path.c_str(), output_file);
+	std::vector<Config> node_config = ImportNode(root_node, identity_transformation, scene, base_path.c_str());
 
 	std::vector<Config> animations_config;
 	for (size_t i = 0; i < scene->mNumAnimations; i++)
@@ -111,7 +117,7 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	return import_result;
 }
 
-std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const std::string& base_path, const File& exported_file) const
+std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const std::string& base_path) const
 {
 
 	std::vector<Config> node_config;
@@ -150,7 +156,7 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 
 	for (size_t i = 0; i < root_node->mNumChildren; i++)
 	{
-		std::vector<Config> child_node_config = ImportNode(root_node->mChildren[i], current_transformation, scene, base_path, exported_file);
+		std::vector<Config> child_node_config = ImportNode(root_node->mChildren[i], current_transformation, scene, base_path);
 		node_config.insert(node_config.begin(), child_node_config.begin(), child_node_config.end());
 	}
 

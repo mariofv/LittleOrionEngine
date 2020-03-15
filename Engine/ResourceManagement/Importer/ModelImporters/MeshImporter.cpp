@@ -4,6 +4,13 @@
 #include <ResourceManagement/Resources/Mesh.h>
 #include "Module/ModuleFileSystem.h"
 
+
+ImportResult MeshImporter::Import(const File & file, bool force) const
+{
+	std::string exported_file = SaveMetaFile(file.file_path, ResourceType::MESH);
+	App->filesystem->Copy(file.file_path.c_str(), exported_file.c_str());
+	return ImportResult{ true, exported_file };
+}
 bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, const std::string& imported_file, std::string& exported_file) const
 {
 

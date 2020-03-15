@@ -17,8 +17,10 @@ public:
 	void AddEntry(const File& meta_file);
 	void AddEntry(const ImportOptions& meta_file);
 
+	const ImportOptions* GetEntry(uint32_t uuid);
+
 public:
-	std::unordered_map<int64_t, std::unique_ptr<ImportOptions>> entries;
+	std::unordered_map<int32_t, std::unique_ptr<ImportOptions>> entries;
 
 private:
 	const std::string RESOURCE_DATABASE = "Resources/DB/resources.json";

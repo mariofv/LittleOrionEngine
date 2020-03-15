@@ -1,7 +1,9 @@
 #ifndef _MODULERESOURCEMANAGER_H_
 #define _MODULERESOURCEMANAGER_H_
 
+#include "Main/Application.h"
 #include "Module.h"
+#include "ModuleFileSystem.h"
 
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Importer/MaterialImporter.h"
@@ -34,7 +36,7 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	ImportResult Import(const File& file);
+	ImportResult Import(const File& file, bool force = false);
 	void CreatePrefab(const std::string &path, GameObject * gameobject_to_save) const;
 
 	template<typename T>
@@ -47,13 +49,14 @@ public:
 	}
 
 	template<typename T>
-	std::shared_ptr<T> Load(const std::string& uid) const
+	std::shared_ptr<T> Load(const std::string& uid)
 	{
 		std::shared_ptr<Resource> cache_resource = RetrieveFromCacheIfExist(uid);
 		if (cache_resource != nullptr)
 		{
 			return std::static_pointer_cast<T>(cache_resource);
 		}
+		ReimportIfNeeded(uid);
 		std::shared_ptr<T> resource = Loader::Load<T>(uid);
 		if (resource != nullptr)
 		{
@@ -72,9 +75,10 @@ public:
 	}
 private:
 	void StartThread();
-	void ImportAllFilesInDirectory(const File& file);
+	void ImportAllFilesInDirectory(const File& file, bool force);
+	void ReimportIfNeeded(const std::string& uid);
 
-	ImportResult InternalImport(const File& file);
+	ImportResult InternalImport(const File& file, bool force);
 	std::shared_ptr<Resource> RetrieveFromCacheIfExist(const std::string& uid) const;
 
 public:

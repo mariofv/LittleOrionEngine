@@ -30,6 +30,7 @@ public:
 	FileType GetFileType(const char *file_path, const PHYSFS_FileType & file_type = PHYSFS_FileType::PHYSFS_FILETYPE_OTHER) const;
 	void GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only = false) const;
 
+	bool CreateMountedDir(const char * directory) const;
 	void RefreshFilesHierarchy();
 private:
 	char *save_path = NULL;

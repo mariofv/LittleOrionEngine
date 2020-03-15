@@ -48,10 +48,10 @@ std::string Importer::SaveMetaFile(const std::string& imported_path, ResourceTyp
 
 	Config scene_config;
 	ImportOptions options;
-	if (App->filesystem->Exists(imported_path.c_str()))
+	if (App->filesystem->Exists(meta_file_path.c_str()))
 	{
 		ImportOptions old_options;
-		GetOptionsFromMeta(GetMetaFilePath(imported_path),old_options);
+		GetOptionsFromMeta(meta_file_path,old_options);
 		options.uuid = old_options.uuid;
 	}
 	else

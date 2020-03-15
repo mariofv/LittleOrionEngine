@@ -24,7 +24,7 @@ void PanelPopupMeshSelector::Render()
 		opened = true;
 
 		// TODO: Change this when ModuleResourceManagement is refactored.
-		mesh_files = std::vector<std::shared_ptr<File>>();
+		/*mesh_files = std::vector<std::shared_ptr<File>>();
 		File meshes_folder(LIBRARY_MESHES_FOLDER);
 		for (auto& mesh_folder : meshes_folder.children)
 		{
@@ -36,7 +36,7 @@ void PanelPopupMeshSelector::Render()
 					mesh_files.push_back(mesh_file);
 				}
 			}
-		}
+		}*/
 	}
 
 	if (!opened)

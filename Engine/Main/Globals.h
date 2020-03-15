@@ -64,9 +64,6 @@ enum class Fonts
 # define APP_ICON_PATH "Resources/Textures/engine_icon.png"
 
 # define TEXTURES_PATH "Assets/Textures/"
-# define LIBRARY_MATERIAL_FOLDER "Library/Materials"
-# define LIBRARY_MESHES_FOLDER "Library/Meshes"
-# define LIBRARY_MODEL_FOLDER "Library/Model"
 # define SHADERS_PATH "Resources/Shaders/shaders.json"
 
 # define HOUSE_MODEL_PATH "Assets/Models/baker_house/BakerHouse.fbx"

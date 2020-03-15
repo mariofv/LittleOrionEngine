@@ -11,7 +11,7 @@ class File;
 struct ImportResult
 {
 	bool succes = false;
-	std::string exported_file="";
+	std::string exported_file;
 };
 
 class Importer {
