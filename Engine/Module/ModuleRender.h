@@ -2,11 +2,11 @@
 #define _MODULERENDER_H_
 
 #include "Module.h"
-#include "Main/Globals.h"
-#include "SpacePartition/OLQuadTree.h"
-#include "SpacePartition/OLOctTree.h"
-#include "SpacePartition/OLAABBTree.h"
 #include "Helper/Timer.h"
+#include "Main/Globals.h"
+#include "SpacePartition/OLAABBTree.h"
+#include "SpacePartition/OLOctTree.h"
+#include "SpacePartition/OLQuadTree.h"
 
 #include <GL/glew.h>
 
