@@ -4,6 +4,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleResourceManager.h"
 #include "Helper/Config.h"
+#include <pcg_basic.h>
 
 ImportResult Importer::Import(const File & file, bool force) const
 {
@@ -15,8 +16,8 @@ ImportResult Importer::Import(const File & file, bool force) const
 		import_result.exported_file = already_imported.exported_file;
 		return import_result;
 	}
-	std::string exported_file = "";
-	SaveMetaFile(file.file_path, ResourceType::UNKNOWN, exported_file);
+	std::string exported_file = SaveMetaFile(file.file_path, ResourceType::UNKNOWN);
+
 	return import_result;
 }
 
@@ -41,17 +42,29 @@ ImportOptions Importer::GetAlreadyImportedResource(const File & file_to_look_for
 }
 
 
-void Importer::SaveMetaFile(const std::string& imported_path, ResourceType resource_type, const std::string& exported_path) const
+std::string Importer::SaveMetaFile(const std::string& imported_path, ResourceType resource_type) const
 {
-
 	std::string meta_file_path = GetMetaFilePath(imported_path);
 
 	Config scene_config;
 	ImportOptions options;
-	options.uuid = std::hash<std::string>{}(imported_path);
+	if (App->filesystem->Exists(imported_path.c_str()))
+	{
+		ImportOptions old_options;
+		GetOptionsFromMeta(GetMetaFilePath(imported_path),old_options);
+		options.uuid = old_options.uuid;
+	}
+	else
+	{
+		options.uuid = pcg32_random();
+	}
+
+	std::string uuid_string = std::to_string(options.uuid);
+	std::string exported_path = LIBRARY_METADATA_PATH + "/" + uuid_string.substr(0, 2);
+	App->filesystem->MakeDirectory(exported_path);
+	options.exported_file = exported_path + "/" + uuid_string;
 	options.resource_type = resource_type;
 	options.version = IMPORTER_VERSION;
-	options.exported_file = exported_path;
 	options.imported_file = imported_path;
 	options.Save(scene_config);
 
@@ -60,6 +73,7 @@ void Importer::SaveMetaFile(const std::string& imported_path, ResourceType resou
 
 	App->filesystem->Save(meta_file_path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
 	App->resources->resource_DB->AddEntry(options);
+	return options.exported_file;
 }
 
 

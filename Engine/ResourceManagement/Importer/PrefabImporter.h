@@ -12,8 +12,6 @@ public:
 	ImportResult Import(const File & file, bool force = true) const override;
 	void CreatePrefabResource(const File & file, GameObject * gameobject_to_save) const;
 
-private:
-	const std::string LIBRARY_TEXTURES_FOLDER = "Library/Prefabs";
 };
 
 #endif

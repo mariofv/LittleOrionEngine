@@ -24,15 +24,13 @@ ImportResult PrefabImporter::Import(const File& file, bool force) const
 		return import_result;
 	}
 
-	App->filesystem->MakeDirectory(LIBRARY_TEXTURES_FOLDER);
-
-	std::string output_file = LIBRARY_TEXTURES_FOLDER + "/" + file.filename;
+	std::string output_file = SaveMetaFile(file.file_path, ResourceType::PREFAB);
 	bool copied = App->filesystem->Copy(file.file_path.c_str(), output_file.c_str());
 	if (!copied)
 	{
 		return import_result;
 	}
-	SaveMetaFile(file.file_path, ResourceType::PREFAB, output_file);
+	
 
 	import_result.succes = true;
 	import_result.exported_file = output_file;

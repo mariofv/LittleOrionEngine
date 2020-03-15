@@ -22,10 +22,10 @@ ImportResult MaterialImporter::Import(const File& file, bool force) const
 		return import_result;
 	}
 
-	std::string library_material_file = LIBRARY_MATERIAL_FOLDER"/" + file.filename;
+	std::string library_material_file = SaveMetaFile(file.file_path, ResourceType::MATERIAL);
 
 	App->filesystem->Copy(file.file_path.c_str(), library_material_file.c_str());
-	SaveMetaFile(file.file_path, ResourceType::MATERIAL, library_material_file);
+	
 
 	import_result.succes = true;
 	import_result.exported_file = library_material_file;
@@ -33,12 +33,12 @@ ImportResult MaterialImporter::Import(const File& file, bool force) const
 }
 
 
-void MaterialImporter::ExtractMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* model_file_path, const char* material_assets_file_path) const
+ImportResult MaterialImporter::ExtractMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* model_file_path, const char* material_assets_file_path) const
 {
 	if (App->filesystem->Exists(material_assets_file_path))
 	{
 		APP_LOG_INFO("Material %s already exists.", material_assets_file_path)
-		return;
+		return ImportResult();
 	}
 
 	Material imported_material(0, std::string(material_assets_file_path));
@@ -124,7 +124,7 @@ void MaterialImporter::ExtractMaterialFromMesh(const aiScene* scene, size_t mesh
 	material_config.GetSerializedString(serialized_material_string);
 
 	App->filesystem->Save(material_assets_file_path, serialized_material_string.c_str(), serialized_material_string.size() + 1);
-	Import(File(material_assets_file_path));
+	return Import(File(material_assets_file_path));
 }
 
 Material::MaterialTextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureType type) const

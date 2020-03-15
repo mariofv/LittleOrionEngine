@@ -21,7 +21,7 @@ struct ImportOptions
 	virtual void Save(Config& config) const;
 	virtual void Load(const Config& config);
 
-	uint64_t uuid = 0;
+	uint32_t uuid = 0;
 	ResourceType resource_type = ResourceType::UNKNOWN;
 
 	long long timestamp = 0; //PLACEHOLDER

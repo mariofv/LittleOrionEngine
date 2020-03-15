@@ -14,17 +14,15 @@ std::shared_ptr<Material> MaterialLoader::Load(const std::string& file_path)
 {
 	BROFILER_CATEGORY("Load Material", Profiler::Color::Brown);
 
-
+	if (!App->filesystem->Exists(file_path.c_str()))
+	{
+		APP_LOG_ERROR("Error loading Mesh %s.", file_path.c_str());
+		return nullptr;
+	}
 	APP_LOG_INFO("Loading Material %s.", file_path.c_str());
 
 	size_t readed_bytes;
 	char* material_file_data = App->filesystem->Load(file_path.c_str(), readed_bytes);
-
-	if (material_file_data == nullptr)
-	{
-		APP_LOG_ERROR("Error loading Material %s.", file_path.c_str());
-		return nullptr;
-	}
 
 	std::string serialized_material_string = material_file_data;
 	free(material_file_data);

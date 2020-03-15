@@ -12,6 +12,11 @@ std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uid)
 	BROFILER_CATEGORY("Load Animation", Profiler::Color::Brown);
 
 
+	if (!App->filesystem->Exists(uid.c_str()))
+	{
+		APP_LOG_ERROR("Error loading Animation %s.", uid.c_str());
+		return nullptr;
+	}
 	APP_LOG_INFO("Loading Animation %s.", uid.c_str());
 	size_t animation_size;
 	char * data = App->filesystem->Load(uid.c_str(), animation_size);

@@ -36,8 +36,6 @@ ImportResult TextureImporter::Import(const File& imported_file, bool force) cons
 		return import_result;
 	}
 
-	App->filesystem->MakeDirectory(LIBRARY_TEXTURES_FOLDER);
-	
 	std::string output_file;
 
 	if (imported_file.filename.find("_normal") != std::string::npos)
@@ -49,7 +47,6 @@ ImportResult TextureImporter::Import(const File& imported_file, bool force) cons
 		output_file = ImportToDDS(imported_file);
 	}
 
-	SaveMetaFile(imported_file.file_path, ResourceType::TEXTURE, output_file);
 	import_result.succes = true;
 	import_result.exported_file = output_file;
 
@@ -144,7 +141,7 @@ std::string TextureImporter::ImportToDDS(const File & file) const
 	//Get new Name
 
 	std::string texture_name_no_extension = file.filename.substr(0, file.filename.find_last_of("."));
-	std::string output_file = LIBRARY_TEXTURES_FOLDER + "/" + texture_name_no_extension + ".dds";
+	std::string output_file = SaveMetaFile(file.file_path, ResourceType::TEXTURE);
 
 	//Save data
 	ILuint size;
@@ -163,7 +160,7 @@ std::string TextureImporter::ImportToDDS(const File & file) const
 
 std::string TextureImporter::ImportToTGA(const File & file) const
 {
-	std::string output_file = LIBRARY_TEXTURES_FOLDER + "/" +file.filename;
+	std::string output_file = SaveMetaFile(file.file_path, ResourceType::TEXTURE);
 	bool copied = App->filesystem->Copy(file.file_path.c_str(), output_file.c_str());
 	if (!copied)
 	{

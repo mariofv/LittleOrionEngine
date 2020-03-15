@@ -20,13 +20,12 @@ bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation*
 	own_format_animation.name = std::string(animation->mName.C_Str());
 
 	std::random_device random;
-	App->filesystem->MakeDirectory(LIBRARY_ANIMATION_FOLDER);
 	int64_t animation_uid = std::hash<std::string>{}(imported_file);
-	exported_file = LIBRARY_ANIMATION_FOLDER + "/" + std::to_string(animation_uid)+ "_"+ own_format_animation.name + ".anim";
 
 
+	exported_file = SaveMetaFile(imported_file, ResourceType::ANIMATION);
 	SaveBinary(own_format_animation, exported_file, imported_file);
-	SaveMetaFile(imported_file, ResourceType::ANIMATION, exported_file);
+
 	return true;
 }
 

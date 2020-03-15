@@ -4,7 +4,7 @@
 #include <ResourceManagement/Resources/Mesh.h>
 #include "Module/ModuleFileSystem.h"
 
-bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, const std::string& exported_file, const std::string& imported_file) const
+bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, const std::string& imported_file, std::string& exported_file) const
 {
 
 	// Transformation
@@ -53,8 +53,8 @@ bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_curren
 		vertices.push_back(new_vertex);
 	}
 	Mesh own_format_mesh(std::move(vertices), std::move(indices), "");
+	exported_file = SaveMetaFile(imported_file, ResourceType::MESH);
 	SaveBinary(own_format_mesh, exported_file, imported_file);
-	SaveMetaFile(imported_file, ResourceType::MESH, exported_file);
 }
 
 void MeshImporter::SaveBinary(const Mesh& own_format_mesh, const std::string& exported_file, const std::string& imported_file) const

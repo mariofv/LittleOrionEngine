@@ -16,7 +16,7 @@ public:
 	~MaterialImporter() = default;
 	ImportResult Import(const File& file, bool force = false) const override;
 
-	void ExtractMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* model_file_path, const char* material_assets_file_path) const;
+	ImportResult ExtractMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* model_file_path, const char* material_assets_file_path) const;
 
 	Material::MaterialTextureType GetTextureTypeFromAssimpType(aiTextureType type) const;
 };

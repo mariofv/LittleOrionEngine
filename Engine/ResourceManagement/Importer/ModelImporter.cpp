@@ -60,7 +60,6 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	}
 
 	File output_file = App->filesystem->MakeDirectory(LIBRARY_MESHES_FOLDER"/" + file.filename_no_extension);
-	std::string output_file_model = LIBRARY_MODEL_FOLDER"/" + file.filename_no_extension + ".json";
 	APP_LOG_INIT("Importing model %s.", file.file_path.c_str());
 
 	performance_timer.Start();
@@ -103,9 +102,10 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	model.AddChildrenConfig(node_config, "Node");
 	model.AddChildrenConfig(animations_config, "Animations");
 
+	std::string output_file_model = SaveMetaFile(file.file_path, ResourceType::PREFAB);
 	model_prefab_importer->ImportModelPrefab(model, output_file_model);
 
-	SaveMetaFile(file.file_path, ResourceType::MESH, output_file_model);
+
 	import_result.succes = true;
 	import_result.exported_file = output_file_model;
 	return import_result;
@@ -125,16 +125,14 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 
 
 		std::string assets_material_file = base_path + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
-		std::string library_material_file = LIBRARY_MATERIAL_FOLDER"/" + std::string(root_node->mName.data) + std::to_string(i) + ".matol";
-		App->resources->material_importer->ExtractMaterialFromMesh(scene, mesh_index, base_path.c_str(), assets_material_file.c_str());
-		//library_material_file = App->resources->Import(File(assets_material_file)).exported_file;
+		std::string library_material_file = App->resources->material_importer->ExtractMaterialFromMesh(scene, mesh_index, base_path.c_str(), assets_material_file.c_str()).exported_file;
 		node.AddString(library_material_file, "Material");
 
 		aiMesh * importing_mesh = scene->mMeshes[mesh_index];
 
 		std::string assets_mesh_file = base_path + "/" + std::string(importing_mesh->mName.data) + std::to_string(i) + ".mesh";
-		std::string library_mesh_file = exported_file.file_path + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
-		bool imported = mesh_importer->ImportMesh(importing_mesh, current_transformation, library_mesh_file, assets_mesh_file);
+		std::string library_mesh_file;
+		bool imported = mesh_importer->ImportMesh(importing_mesh, current_transformation, assets_mesh_file, library_mesh_file);
 		if (imported)
 		{
 			node.AddString(library_mesh_file, "Mesh");
@@ -144,7 +142,7 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 		{
 			std::string library_skeleton_file;
 			std::string assets_skeleton_file = base_path + "/" + std::string(root_node->mName.data)+ "_skeleton" + std::to_string(i) + ".sk";
-			skeleton_importer->ImportSkeleton(scene, importing_mesh, library_skeleton_file, assets_skeleton_file);
+			skeleton_importer->ImportSkeleton(scene, importing_mesh, assets_skeleton_file, library_skeleton_file);
 			node.AddString(library_skeleton_file, "Skeleton");
 		}
 		node_config.push_back(node);

@@ -26,8 +26,6 @@ private:
 	void TransformPositions(const aiNodeAnim* ai_node, std::unordered_map<double, float4x4>& frames) const;
 	void SaveBinary(const Animation& own_format_animation, const std::string& exported_file, const std::string& imported_file) const;
 
-
-	const std::string LIBRARY_ANIMATION_FOLDER{ "Library/Animations" };
 };
 #endif
 
