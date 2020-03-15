@@ -28,6 +28,11 @@ ExampleScript::ExampleScript()
 
 void ExampleScript::Awake()
 {
+
+	std::string aux("TestScriptRuntime");
+	enemy_component = enemy->GetComponentScript(aux);
+	enemy_script = (TestScriptRuntime*)enemy_component->script;
+	
 }
 
 void ExampleScript::Start()
@@ -60,13 +65,9 @@ void ExampleScript::OnInspector(ImGuiContext* context)
 	ImGui::Text("TestScriptRuntime: ");
 	ImGui::SameLine();
 	ImGui::Button(is_object.c_str());
-	panel->DropGOTarget(enemy, "TestScriptRuntime", enemy_component);
-	if (enemy)
-	{
-		//TODO this assign in Awake or Start functions
-		enemy_script = (TestScriptRuntime*)enemy_component->script;
+	panel->DropGOTarget(enemy, "TestScriptRuntime");
+	if(enemy)
 		is_object = enemy->name;
-	}
 }
 
 void ExampleScript::Test()
