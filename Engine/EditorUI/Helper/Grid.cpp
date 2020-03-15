@@ -5,6 +5,8 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleProgram.h"
 
+#include <Brofiler/Brofiler.h>
+
 Grid::Grid()
 {
 	float vertices[] = {
@@ -50,6 +52,8 @@ Grid::~Grid()
 
 void Grid::Render() const
 {
+	BROFILER_CATEGORY("Render Grid", Profiler::Color::BlueViolet);
+
 	GLuint grid_program = App->program->GetShaderProgramId("Grid");
 	glUseProgram(grid_program);
 

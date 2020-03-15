@@ -23,7 +23,6 @@ public:
 	void RenderDebugDraws(const ComponentCamera& camera);
 
 private:
-	void RenderGrid() const;
 	void RenderOutline() const;
 	
 	void RenderCameraFrustum() const;

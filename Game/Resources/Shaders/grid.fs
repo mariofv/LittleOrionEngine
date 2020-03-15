@@ -46,7 +46,7 @@ void main()
   );
 
   // Define minimum number of pixels between cell lines before LOD switch should occur.
-  const float min_pixels_between_cells = 1.f;
+  const float min_pixels_between_cells = 25.f;
 
   // Calc lod-level [2].
   float lod_level = max(0, log10((length(dudv) * min_pixels_between_cells) / grid.cell_size) + 1);

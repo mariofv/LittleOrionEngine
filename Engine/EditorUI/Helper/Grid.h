@@ -13,7 +13,7 @@ public:
 	void Render() const;
 
 private:
-	float grid_size = 1000.f;
+	float grid_size = 5000.f;
 	float cell_size = 10.f;
 	
 	float4 thin_lines_color = float4(0.7f, 0.7f, 0.7f, 1.f);
