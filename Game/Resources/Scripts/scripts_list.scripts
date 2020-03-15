@@ -1,6 +1,7 @@
 {
     "Scripts": [
         "ExampleScript",
-        "TestScriptRuntime"
+        "TestScriptRuntime",
+        "WalkableScript"
     ]
 }

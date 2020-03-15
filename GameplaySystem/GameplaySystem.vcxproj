@@ -174,11 +174,13 @@
     <ClInclude Include="src\Script\ExampleScript.h" />
     <ClInclude Include="src\Script\Script.h" />
     <ClInclude Include="src\Script\TestScriptRuntime.h" />
+    <ClInclude Include="src\Script\WalkableScript.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp" />
     <ClCompile Include="src\Script\Script.cpp" />
     <ClCompile Include="src\Script\TestScriptRuntime.cpp" />
+    <ClCompile Include="src\Script\WalkableScript.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
