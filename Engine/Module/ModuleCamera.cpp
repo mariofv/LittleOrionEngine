@@ -192,7 +192,7 @@ void ModuleCamera::HandleSceneCameraMovements()
 	// Key hold
 	if (IsMovementEnabled())
 	{
-		if (App->input->GetControllerButton(ControllerCode::A))
+		if (App->input->GetKey(KeyCode::Q))
 		{
 			scene_camera->MoveUp();
 		}
