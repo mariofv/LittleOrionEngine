@@ -48,6 +48,7 @@ public:
 	ENGINE_API  Component* CreateComponent(const Component::ComponentType type);
 	void RemoveComponent(Component * component);
 	ENGINE_API  Component* GetComponent(const Component::ComponentType type) const;
+	ENGINE_API ComponentScript* GetComponentScript(std::string& name);
 
 	void MoveUpInHierarchy() const;
 	void MoveDownInHierarchy() const;

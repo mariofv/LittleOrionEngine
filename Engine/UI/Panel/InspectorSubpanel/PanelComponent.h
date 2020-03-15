@@ -34,7 +34,7 @@ public:
 	void CheckClickedCamera(ComponentCamera* camera);
 	void CheckClickForUndo(ModuleActions::UndoActionType type, Component* component);
 
-	ENGINE_API void DropGOTarget(GameObject *& go, const std::string & script_name, ComponentScript *& script_to_find);
+	ENGINE_API void DropGOTarget(GameObject *& go, const std::string & script_name);
 
 private:
 	void DropTarget(ComponentMaterial *material, Texture::TextureType type);

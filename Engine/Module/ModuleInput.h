@@ -400,7 +400,7 @@ public:
 	Uint8 GetMouseClicks() const;
 	bool IsMouseMoving() const;
 
-	float2 GetAxisContoller(ControllerAxis type) const;
+	ENGINE_API float2 GetAxisContoller(ControllerAxis type) const;
 	Sint16 GetTriggerController(ControllerAxis type) const;
 
 	float2 GetAxisContollerRaw(ControllerAxis type) const;

@@ -319,6 +319,24 @@ ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType ty
 	return nullptr;
 }
 
+ENGINE_API ComponentScript * GameObject::GetComponentScript(std::string & name)
+{
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+
+		if (components[i]->type == Component::ComponentType::SCRIPT)
+		{
+			ComponentScript *script = (ComponentScript *)components[i];
+			if (script->name == name)
+			{
+				return script;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
 void GameObject::MoveUpInHierarchy() const
 {
 	std::vector<GameObject*>::iterator silbings_position = std::find(parent->children.begin(), parent->children.end(), this);

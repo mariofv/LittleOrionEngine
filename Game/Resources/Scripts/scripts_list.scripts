@@ -2,6 +2,7 @@
     "Scripts": [
         "ExampleScript",
         "TestScriptRuntime",
-        "WalkableScript"
+        "WalkableScript",
+        "TriggerActionScript"
     ]
 }

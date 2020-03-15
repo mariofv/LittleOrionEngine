@@ -14,10 +14,12 @@ public:
 	void OnInspector(ImGuiContext*) override;
 	void Move();
 
-private:
-	PanelComponent* panel = nullptr;
+
 	float speed = 0.01f;
 	float rotation_speed = 0.01f;
+
+private:
+	PanelComponent* panel = nullptr;
 
 };
 extern "C" SCRIPT_API WalkableScript* WalkableScriptDLL(); //This is how we are going to load the script

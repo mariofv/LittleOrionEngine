@@ -24,6 +24,9 @@
     <ClInclude Include="src\Script\WalkableScript.h">
       <Filter>src\Script</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\TriggerActionScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -36,6 +39,9 @@
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\WalkableScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\TriggerActionScript.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>
