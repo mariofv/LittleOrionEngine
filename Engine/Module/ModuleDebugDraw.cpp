@@ -404,7 +404,7 @@ void ModuleDebugDraw::Render()
 	if (App->editor->selected_game_object != nullptr)
 	{
 		RenderCameraFrustum();
-    RenderLightGizmo();
+		RenderLightGizmo();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 
