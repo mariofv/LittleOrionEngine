@@ -17,6 +17,7 @@
 #include "ResourceManagement/Resources/Prefab.h"
 #include "ResourceManagement/Importer/Importer.h"
 
+#include <Brofiler/Brofiler.h>
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
@@ -29,6 +30,8 @@ PanelHierarchy::PanelHierarchy()
 
 void PanelHierarchy::Render()
 {
+	BROFILER_CATEGORY("Render Hierarchy Panel", Profiler::Color::BlueViolet);
+
 	if (ImGui::Begin(ICON_FA_SITEMAP " Hierarchy", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();

@@ -180,6 +180,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 void ModuleRender::GetMeshesToRender(const ComponentCamera *camera)
 {
+	BROFILER_CATEGORY("Get meshes to render", Profiler::Color::Aquamarine);
+
 	meshes_to_render.clear();
 
 	if (camera == App->cameras->scene_camera && !App->debug->culling_scene_mode)
