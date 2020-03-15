@@ -33,6 +33,8 @@ PanelScene::~PanelScene()
 
 void PanelScene::Render()
 {
+	BROFILER_CATEGORY("Render Scene Panel", Profiler::Color::BlueViolet);
+
 	if (ImGui::Begin(ICON_FA_TH " Scene", &opened, ImGuiWindowFlags_MenuBar))
 	{
 		RenderSceneBar();

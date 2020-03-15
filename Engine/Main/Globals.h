@@ -69,7 +69,7 @@ enum class Fonts
 # define LIBRARY_MODEL_FOLDER "Library/Model"
 # define SHADERS_PATH "Resources/Shaders/shaders.json"
 
-# define HOUSE_MODEL_PATH "Assets/Models/baker_house/BakerHouse.prefab"
+# define HOUSE_MODEL_PATH "Assets/Models/baker_house/BakerHouse.fbx"
 # define DEFAULT_MATERIAL_PATH "Resources/Materials/default.olmat"
 
 # define VIDEO_BILLBOARD_TEXTURE_PATH "Resources/Textures/video-solid.png"

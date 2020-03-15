@@ -6,6 +6,7 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleRender.h"
 
+#include <Brofiler/Brofiler.h>
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
@@ -18,6 +19,8 @@ PanelGame::PanelGame()
 
 void PanelGame::Render()
 {
+	BROFILER_CATEGORY("Render Game Panel", Profiler::Color::BlueViolet);
+
 	if (ImGui::Begin(ICON_FA_GHOST " Game", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
