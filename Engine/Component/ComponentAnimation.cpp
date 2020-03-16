@@ -23,14 +23,11 @@ ComponentAnimation::~ComponentAnimation()
 
 void ComponentAnimation::Update()
 {
-	if (App->time->isGameRunning())
-	{
-		animation_controller->Update();
+	animation_controller->Update();
 
-		if (animation_controller->playing)
-		{
-			UpdateBone(owner);
-		}
+	if (animation_controller->playing)
+	{
+		UpdateBone(owner);
 	}
 }
 
