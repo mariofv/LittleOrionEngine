@@ -102,7 +102,7 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 		animation_config.AddString(library_animation_file, "Animation");
 		animations_config.push_back(animation_config);
 	}
-	model.AddString(root_node->mName.data, "Name");
+	model.AddString(file.filename_no_extension, "Name");
 	aiReleaseImport(scene);
 
 	model.AddChildrenConfig(node_config, "Node");
