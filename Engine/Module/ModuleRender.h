@@ -37,8 +37,12 @@ public:
 	void Render() const;
 	void RenderFrame(const ComponentCamera &camera);
 
+
 	ComponentMeshRenderer* CreateComponentMeshRenderer();
 	void RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove);
+
+	int GetRenderedTris() const;
+
 	void GenerateQuadTree();
 	void InsertAABBTree(GameObject* game_object);
 	void RemoveAABBTree(GameObject * game_object);
@@ -95,6 +99,8 @@ private:
 
 	std::vector<ComponentMeshRenderer*> meshes;
 	std::vector<ComponentMeshRenderer*> meshes_to_render;
+
+	int num_rendered_tris = 0;
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;

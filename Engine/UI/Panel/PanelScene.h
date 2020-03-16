@@ -24,6 +24,8 @@ private:
 	void RenderSceneCameraGizmo() const;
 	void RenderCameraPreview() const;
 
+	void RenderDebugMetrics() const;
+
 private:
 	bool scene_camera_gizmo_hovered = false;
 	bool gizmo_released = false;

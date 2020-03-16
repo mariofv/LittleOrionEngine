@@ -321,7 +321,7 @@ void PanelConfiguration::ShowTimeOptions()
 
 		ImGui::Separator();
 
-		sprintf(frame_info, "FPS: %.0f Frame Count: %d", 1000.f / App->time->real_time_delta_time, App->time->frame_count);
+		sprintf(frame_info, "FPS: %.0f Frame Count: %d", App->time->current_fps, App->time->frame_count);
 		ImGui::Text(frame_info);
 
 		std::vector<float> ms_data = App->engine_log->getMSData();
