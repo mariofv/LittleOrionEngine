@@ -6,6 +6,7 @@
 #include "UI/Panel/InspectorSubpanel/PanelComponent.h"
 
 class AnimController;
+class GameObject;
 
 class ComponentAnimation :	public Component
 {
@@ -20,9 +21,7 @@ public:
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
-	void OnPlay();
-	void OnStop();
-	void OnUpdate();
+	void UpdateBone(GameObject* bone);
 
 public:
 	AnimController* animation_controller = nullptr;

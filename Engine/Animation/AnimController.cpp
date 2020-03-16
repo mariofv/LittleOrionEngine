@@ -50,7 +50,7 @@ void AnimController::Update()
 
 }
 
-void AnimController::GetTransform(char * name, float3 & pos, Quat & rot)
+bool AnimController::GetTransform(const std::string& channel_name, float3 & pos, Quat & rot)
 {
 	float current_sample = (current_time*(anim->duration - 1)) / animation_time;
 	int current_keyframe = math::FloorInt(current_sample);
@@ -60,18 +60,26 @@ void AnimController::GetTransform(char * name, float3 & pos, Quat & rot)
 	float4x4 current_transformation_matrix;
 	float4x4 next_transformation_matrix;
 
-	for (unsigned int i = 0; i < anim->keyframes[current_keyframe].channels.size(); ++i)
+	bool channel_found = false;
+	size_t i = 0;
+	while (!channel_found && i < anim->keyframes[current_keyframe].channels.size())
 	{
-		if (anim->keyframes[current_keyframe].channels[i].name == name) {
+		if (anim->keyframes[current_keyframe].channels[i].name == channel_name)
+		{
+			channel_found = true;
 			current_transformation_matrix = anim->keyframes[current_keyframe].channels[i].position;
 			next_transformation_matrix = anim->keyframes[next_keyframe].channels[i].position;
 		}
+		++i;
 	}
 
-	pos = Interpolate(current_transformation_matrix.TranslatePart(), next_transformation_matrix.TranslatePart(), current_sample - current_keyframe);
-	rot = Interpolate(current_transformation_matrix.RotatePart().ToQuat(), next_transformation_matrix.RotatePart().ToQuat(), current_sample - current_keyframe);
+	if (channel_found)
+	{
+		pos = Interpolate(current_transformation_matrix.TranslatePart(), next_transformation_matrix.TranslatePart(), current_sample - current_keyframe);
+		rot = Interpolate(current_transformation_matrix.RotatePart().ToQuat(), next_transformation_matrix.RotatePart().ToQuat(), current_sample - current_keyframe);
+	}
 
-	
+	return channel_found;
 }
 
 const float3 AnimController::Interpolate(const float3& first, const float3& second, float lambda)

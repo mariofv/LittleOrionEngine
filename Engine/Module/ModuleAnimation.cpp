@@ -15,7 +15,7 @@ bool ModuleAnimation::Init()
 // Called every draw update
 update_status ModuleAnimation::Update()
 {
-	
+
 	return update_status::UPDATE_CONTINUE;
 }
 

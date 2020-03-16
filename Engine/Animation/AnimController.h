@@ -13,19 +13,18 @@ public:
 	void Stop();
 	void Update(); 
 
-	void GetTransform(char* name, float3& pos, Quat& rot);
+	bool GetTransform(const std::string& channel_name, float3& pos, Quat& rot);
 	const float3 Interpolate(const float3 & first, const float3 & second, float lambda);
 	const Quat Interpolate(const Quat & first, const Quat & second, float lambda);
 
 public:
+	Animation* anim = nullptr;
+
 	bool loop = false;
 	bool playing = false;
 
-	Animation* anim = nullptr;
-
-private:
-	unsigned int current_time = 0;
-	unsigned int animation_time = 600;
+	int current_time = 0;
+	int animation_time = 15000;
 };
 
 #endif //_ANIMCONTROLLER_H_

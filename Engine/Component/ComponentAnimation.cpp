@@ -1,7 +1,9 @@
 #include "ComponentAnimation.h"
 
 #include "Animation/AnimController.h"
+#include "Component/ComponentTransform.h"
 #include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleTime.h"
 
@@ -24,6 +26,11 @@ void ComponentAnimation::Update()
 	if (App->time->isGameRunning())
 	{
 		animation_controller->Update();
+
+		if (animation_controller->playing)
+		{
+			UpdateBone(owner);
+		}
 	}
 }
 
@@ -47,16 +54,18 @@ void ComponentAnimation::Load(const Config& config)
 	config.GetString("AnimationResource", animation_path, "");
 }
 
-void ComponentAnimation::OnPlay()
+void ComponentAnimation::UpdateBone(GameObject* current_bone)
 {
-
-}
-
-void ComponentAnimation::OnStop()
-{
-}
-
-void ComponentAnimation::OnUpdate()
-{
-
+	float3 bone_position;
+	Quat bone_rotation;
+	if (animation_controller->GetTransform(current_bone->name, bone_position, bone_rotation))
+	{
+		current_bone->transform.SetTranslation(bone_position);
+		current_bone->transform.SetRotation(bone_rotation.ToEulerXYZ());
+	}
+	
+	for (auto& children_bone : current_bone->children)
+	{
+		UpdateBone(children_bone);
+	}
 }
