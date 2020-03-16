@@ -31,8 +31,9 @@ public:
 
 	virtual void AddReferences(GameObject* owner, Application*);
 
-	virtual void Save(Config& config) const = 0;
-	virtual void Load(const Config &config) = 0;
+	virtual void Save(Config& config) const {};
+	virtual void Load(const Config &config) {};
+	virtual void Link() {};
 
 public:
 	GameObject *owner = nullptr;

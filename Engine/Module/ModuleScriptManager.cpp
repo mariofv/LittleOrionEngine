@@ -356,3 +356,11 @@ void ModuleScriptManager::Refresh()
 	LoadScriptList();
 	ReloadDLL();
 }
+
+void ModuleScriptManager::ReLink()
+{
+	for (auto &component_script : scripts)
+	{
+		component_script->script->Link();
+	}
+}

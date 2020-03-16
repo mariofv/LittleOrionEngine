@@ -16,7 +16,7 @@
 
 TemplateScript* TemplateScriptDLL()
 {
-	TemplateScript *instance = new TemplateScript();
+	TemplateScript* instance = new TemplateScript();
 	return instance;
 }
 
@@ -50,4 +50,22 @@ void TemplateScript::OnInspector(ImGuiContext* context)
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
 
+}
+
+//Use this for linking GO automatically
+void TemplateScript::Save(Config& config) const
+{
+	config.AddUInt(example->UUID, "ExampleNameforSave");
+}
+
+//Use this for linking GO automatically
+void TemplateScript::Load(const Config& config)
+{
+	exempleUUID = config.GetUInt("ExampleNameforSave", 0);
+}
+
+//Use this for linking GO automatically
+void TemplateScript::Link()
+{
+	example = App->scene->GetGameObject(exempleUUID);
 }

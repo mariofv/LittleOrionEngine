@@ -43,6 +43,7 @@ public:
 
 	void InitScripts();
 	void Refresh();
+	void ReLink();
 
 private:
 	void GetCurrentPath();

@@ -21,6 +21,7 @@ public:
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
+	void Link() override;
 
 public:
 	GameObject* enemy = nullptr;
@@ -32,6 +33,7 @@ public:
 private:
 	PanelComponent* panel = nullptr;
 	std::string is_object = "None";
+	uint64_t enemyUUID = -1;
 };
 extern "C" SCRIPT_API ExampleScript* ExampleScriptDLL(); //This is how we are going to load the script
 #endif

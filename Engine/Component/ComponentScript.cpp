@@ -95,7 +95,6 @@ void ComponentScript::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-
 	config.GetString("ScriptName", this->name, "");
 	LoadName(this->name);
 	script->Load(config);
