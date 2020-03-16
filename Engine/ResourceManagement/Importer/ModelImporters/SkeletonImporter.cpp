@@ -17,10 +17,7 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 	}
 
 	Skeleton skeleton("", "");
-	aiMatrix4x4 scaled_matrix; 
-	bone->mTransformation.Scaling(aiVector3D(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR), scaled_matrix);
-	scaled_matrix = scaled_matrix * bone->mTransformation;
-	ImportChildBone(mesh, bone, - 1, scaled_matrix, scaled_matrix,skeleton);
+	ImportChildBone(mesh, bone, - 1, bone->mTransformation, bone->mTransformation, skeleton);
 
 	if (skeleton.skeleton.size() > 0)
 	{
@@ -31,7 +28,7 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 	return true;
 }
 
-void SkeletonImporter::ImportChildBone(const aiMesh* mesh, const aiNode * previus_node,  uint32_t previous_joint_index, const aiMatrix4x4& parent_transformation,  aiMatrix4x4& accumulated_local_transformation,Skeleton & skeleton) const
+void SkeletonImporter::ImportChildBone(const aiMesh* mesh, const aiNode * previus_node,  uint32_t previous_joint_index, const aiMatrix4x4& parent_transformation,  aiMatrix4x4& accumulated_local_transformation, Skeleton& skeleton) const
 {
 
 	if (previous_joint_index == -1 && std::string(previus_node->mName.C_Str()).find("$Assimp") == std::string::npos) 

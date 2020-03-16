@@ -26,11 +26,9 @@ public:
 	ModelImporter();
 	~ModelImporter();
 	std::pair<bool, std::string> Import(const File & file) const override;
+
 private:
 	void ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file, std::vector<Config> & node_config) const;
-
-public:
-	const float SCALE_FACTOR = 0.01f;
 
 private:
 	const std::string LIBRARY_MESHES_FOLDER = "Library/Meshes";

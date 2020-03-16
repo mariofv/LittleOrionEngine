@@ -19,6 +19,5 @@ private:
 	bool SaveBinary(const Skeleton & skeleton, const std::string& output_file) const;
 
 	const std::string LIBRARY_SKELETON_FOLDER{ "Library/Skeleton" };
-	const float SCALE_FACTOR = 0.01f;
 };
 

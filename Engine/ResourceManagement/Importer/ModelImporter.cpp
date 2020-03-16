@@ -131,8 +131,6 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 		aiQuaterniont<float> pRotation;
 		aiMatrix4x4 node_transformation = current_transformation;
 		node_transformation.Decompose(pScaling, pRotation, pPosition);
-		pScaling *= SCALE_FACTOR;
-		pPosition *= SCALE_FACTOR;
 
 		node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
 		aiMesh * importing_mesh = scene->mMeshes[mesh_index];
