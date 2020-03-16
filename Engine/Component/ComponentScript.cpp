@@ -87,6 +87,8 @@ void ComponentScript::Save(Config& config) const
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddString(name, "ScriptName");
+	script->Save(config);
+	
 }
 
 void ComponentScript::Load(const Config& config)
@@ -96,5 +98,5 @@ void ComponentScript::Load(const Config& config)
 
 	config.GetString("ScriptName", this->name, "");
 	LoadName(this->name);
-
+	script->Load(config);
 }

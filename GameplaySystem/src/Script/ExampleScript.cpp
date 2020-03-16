@@ -105,3 +105,11 @@ void ExampleScript::Test()
 		enemy->transform.SetRotation(float3(rotation.x, rotation.y + enemy_script->rotation_speed, rotation.z));
 	}
 }
+
+void ExampleScript::Save(Config & config) const
+{
+}
+
+void ExampleScript::Load(const Config & config)
+{
+}
