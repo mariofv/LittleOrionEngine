@@ -50,9 +50,8 @@ void ModelPrefabImporter::LoadNode(std::unique_ptr<GameObject> & parent_node, co
 {
 	gameobjects.emplace_back(std::make_unique<GameObject>());
 	GameObject * node_game_object = gameobjects.back().get();
-	node_game_object->SetParent(parent_node.get());
-
-
+	node_game_object->parent = parent_node.get();
+	parent_node->children.push_back(node_game_object);
 
 	std::string material_exported_file;
 	node_config.GetString("Material", material_exported_file, "");
@@ -75,17 +74,15 @@ void ModelPrefabImporter::LoadNode(std::unique_ptr<GameObject> & parent_node, co
 void ModelPrefabImporter::LoadMeshComponent(const std::string& mesh_exported_file, const std::string& material_exported_file, GameObject * node_game_object) const
 {
 
-	std::shared_ptr<Mesh> mesh_for_component = App->resources->Load<Mesh>(mesh_exported_file.c_str());
+	std::shared_ptr<Mesh> mesh_for_component = std::make_unique<Mesh>(mesh_exported_file);
 	assert(mesh_for_component != nullptr);
 
-	mesh_renderer_components.emplace_back(std::make_unique<ComponentMeshRenderer>());
+	mesh_renderer_components.emplace_back(std::make_unique<ComponentMeshRenderer>(mesh_for_component, node_game_object));
 	node_game_object->components.push_back(mesh_renderer_components.back().get());
-	mesh_renderer_components.back()->owner = node_game_object;
-	mesh_renderer_components.back()->SetMesh(mesh_for_component);
 
 	std::string material_file = material_exported_file != "" ? material_exported_file : DEFAULT_MATERIAL_PATH;
 
-	std::shared_ptr<Material> material_resource = App->resources->Load<Material>(DEFAULT_MATERIAL_PATH);
+	std::shared_ptr<Material> material_resource = std::make_shared<Material>(0,DEFAULT_MATERIAL_PATH);
 	mesh_renderer_components.back()->SetMaterial(material_resource);
 }
 
@@ -108,11 +105,13 @@ void ModelPrefabImporter::LoadSkeleton(const Config& node_config, std::vector<st
 			ComponentMeshRenderer* mesh_renderer = mesh_renderer_components.back().get();
 			if (joint.parent_index >= skeleton_gameobjects.size())
 			{
-				object->SetParent(parent_node.get());
+				object->parent = parent_node.get();
+				parent_node->children.push_back(object);
 			}
 			else
 			{
-				object->SetParent(skeleton_gameobjects.at(joint.parent_index));
+				object->parent = skeleton_gameobjects.at(joint.parent_index);
+				skeleton_gameobjects.at(joint.parent_index)->children.push_back(object);
 			}
 
 			float3 translation;

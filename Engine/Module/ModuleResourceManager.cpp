@@ -44,8 +44,9 @@ update_status ModuleResourceManager::PreUpdate()
 
  void ModuleResourceManager::StartThread()
  {
+	 bool success = App->filesystem->CreateMountedDir("Library");
 	 bool force_import = !App->filesystem->Exists("Library");
-	 if (force_import && !App->filesystem->CreateMountedDir("Library"))
+	 if (force_import && !success)
 	 {
 		 return;
 	 }
@@ -88,12 +89,12 @@ void ModuleResourceManager::ImportAllFilesInDirectory(const File& file, bool for
 		 {
 			 Sleep(1000);
 		 }
-
-		 if (child->file_type == FileType::DIRECTORY && !default_importer->Import(*child.get()).succes, force)
+		 bool is_directory = child->file_type == FileType::DIRECTORY;
+		 if (is_directory && !default_importer->Import(*child.get(), force).succes)
 		 {
 			 ImportAllFilesInDirectory(*child.get(), force);
 		 }
-		 else if (child->file_type != FileType::DIRECTORY)
+		 else if (!is_directory)
 		 {
 			 InternalImport(*child.get(), force);
 		 }

@@ -24,7 +24,7 @@ struct ImportOptions
 	uint32_t uuid = 0;
 	ResourceType resource_type = ResourceType::UNKNOWN;
 
-	long long timestamp = 0; //PLACEHOLDER
+	int64_t timestamp = 0; //PLACEHOLDER
 
 	std::string exported_file;
 	std::string imported_file;

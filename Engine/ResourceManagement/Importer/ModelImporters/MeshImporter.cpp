@@ -1,7 +1,6 @@
 #include "MeshImporter.h"
 #include <assimp/mesh.h>
 #include "Main/Application.h"
-#include <ResourceManagement/Resources/Mesh.h>
 #include "Module/ModuleFileSystem.h"
 
 
@@ -59,16 +58,15 @@ bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_curren
 		}
 		vertices.push_back(new_vertex);
 	}
-	Mesh own_format_mesh(std::move(vertices), std::move(indices), "");
 	exported_file = SaveMetaFile(imported_file, ResourceType::MESH);
-	SaveBinary(own_format_mesh, exported_file, imported_file);
+	SaveBinary(std::move(vertices), std::move(indices), exported_file, imported_file);
 }
 
-void MeshImporter::SaveBinary(const Mesh& own_format_mesh, const std::string& exported_file, const std::string& imported_file) const
+void MeshImporter::SaveBinary(std::vector<Mesh::Vertex> && vertices, std::vector<uint32_t> && indices, const std::string& exported_file, const std::string& imported_file) const
 {
 
-	uint32_t num_indices = own_format_mesh.indices.size();
-	uint32_t num_vertices = own_format_mesh.vertices.size();
+	uint32_t num_indices = indices.size();
+	uint32_t num_vertices = vertices.size();
 	uint32_t ranges[2] = { num_indices, num_vertices };
 
 	uint32_t size = sizeof(ranges) + sizeof(uint32_t) * num_indices + sizeof(Mesh::Vertex) * num_vertices + sizeof(uint32_t);
@@ -80,11 +78,11 @@ void MeshImporter::SaveBinary(const Mesh& own_format_mesh, const std::string& ex
 
 	cursor += bytes; // Store indices
 	bytes = sizeof(uint32_t) * num_indices;
-	memcpy(cursor, &own_format_mesh.indices.front(), bytes);
+	memcpy(cursor, &indices.front(), bytes);
 
 	cursor += bytes; // Store vertices
 	bytes = sizeof(Mesh::Vertex) * num_vertices;
-	memcpy(cursor, &own_format_mesh.vertices.front(), bytes);
+	memcpy(cursor, &vertices.front(), bytes);
 
 	App->filesystem->Save(exported_file.c_str(), data, size);
 	App->filesystem->Save(imported_file.c_str(), data, size);

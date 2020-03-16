@@ -6,14 +6,14 @@
 void ImportOptions::Save(Config& config) const
 {
 	using namespace std::chrono;
-	milliseconds currentTimeStamp = duration_cast<milliseconds>(system_clock::now().time_since_epoch());
-
+	seconds currentTimeStamp = duration_cast<seconds>(system_clock::now().time_since_epoch());
+	long long n = currentTimeStamp.count();
 	config.AddInt(version, "ImporterVersion");
 	config.AddUInt(uuid, "UUID");
 	config.AddUInt(static_cast<unsigned int>(resource_type), "ResourceType");
 	config.AddString(exported_file, "ExportedFile");
 	config.AddString(imported_file, "ImportedFile");
-	config.AddInt(currentTimeStamp.count(), "TimeStamp"); //TODO: Create support for long type
+	config.AddInt64(currentTimeStamp.count(), "TimeStamp");
 }
 
 void ImportOptions::Load(const Config& config) {
@@ -23,5 +23,5 @@ void ImportOptions::Load(const Config& config) {
 	resource_type = static_cast<ResourceType>(config.GetUInt("ResourceType",  static_cast<unsigned int>(ResourceType::UNKNOWN)));
 	config.GetString("ExportedFile", exported_file, "");
 	config.GetString("ImportedFile", imported_file, "");
-	timestamp = config.GetInt("TimeStamp", 0);
+	timestamp = config.GetInt64("TimeStamp", 0);
 }
