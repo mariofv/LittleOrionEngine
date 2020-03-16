@@ -106,12 +106,16 @@ void ExampleScript::Test()
 	}
 }
 //Example how to Save the GO that we want to stay linked after loading/saving adn then Linking
-void ExampleScript::Save(Config & config) const
+void ExampleScript::Save(Config& config) const
 {
-	config.AddUInt(enemy->UUID, "TestScriptRuntime");
+	if (enemy) 
+	{
+		config.AddUInt(enemy->UUID, "TestScriptRuntime");
+	}
+		
 }
 
-void ExampleScript::Load(const Config & config)
+void ExampleScript::Load(const Config& config)
 {
 	enemyUUID = config.GetUInt("TestScriptRuntime", 0);
 }
