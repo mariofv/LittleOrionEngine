@@ -1,6 +1,7 @@
 #include "PanelPopups.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScriptManager.h"
 
@@ -17,6 +18,7 @@ PanelPopups::PanelPopups()
 void PanelPopups::Render()
 {
 	CreateScript();
+	SaveScene();
 	if (!assets_loading_popup_shown)
 	{
 		assets_loading_popup_shown = true;
@@ -58,6 +60,46 @@ void PanelPopups::CreateScript()
 			if (name.size() > 0) 
 			{
 				App->scripts->CreateScript(name);
+				ImGui::CloseCurrentPopup();
+			}
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Cancel", ImVec2(120, 0))) { ImGui::CloseCurrentPopup(); }
+		ImGui::EndPopup();
+	}
+}
+
+void PanelPopups::SaveScene()
+{
+	if (save_scene_shown)
+	{
+		save_scene_shown = false;
+		ImGui::OpenPopup("Save Scene");
+	}
+
+	if (ImGui::BeginPopupModal("Save Scene", NULL, ImGuiWindowFlags_AlwaysAutoResize))
+	{
+		ImGui::Text("Scene name: \n");
+		ImGui::Separator();
+
+		static char str1[128] = "";
+		ImGui::InputTextWithHint("", "enter scene name here (XXXX.scene format)", str1, IM_ARRAYSIZE(str1));
+
+		if (ImGui::Button("Save", ImVec2(120, 0)))
+		{
+			std::string name = str1;
+			std::size_t found = name.find_last_of(".");
+			if (found == std::string::npos || found == 0)
+			{
+				APP_LOG_ERROR("Invalid name for scene, it should be of format XXXX.scene");
+				return;
+			}
+			std::string file_extension = name.substr(found + 1, name.length());
+			if (name.size() > 0 && file_extension == "scene")
+			{
+				std::string filepath(SCENE_ROOT_PATH);
+				filepath.append(name);
+				App->editor->SaveScene(filepath);
 				ImGui::CloseCurrentPopup();
 			}
 		}

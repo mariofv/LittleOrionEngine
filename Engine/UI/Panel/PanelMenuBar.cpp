@@ -12,6 +12,7 @@
 #include "UI/Panel/PanelGame.h"
 #include "UI/Panel/PanelHierarchy.h"
 #include "UI/Panel/PanelInspector.h"
+#include "UI/Panel/PanelPopups.h"
 #include "UI/Panel/PanelProjectExplorer.h"
 #include "UI/Panel/PanelScene.h"
 
@@ -57,7 +58,7 @@ void PanelMenuBar::ShowFileMenu()
 		}
 		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
 		{
-			App->editor->SaveScene(SAVED_SCENE_PATH);
+			App->editor->popups->save_scene_shown = true;
 		}
 		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
 		{

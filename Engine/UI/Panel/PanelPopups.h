@@ -14,7 +14,9 @@ public:
 	void Render() override;
 
 	void CreateScript();
+	void SaveScene();
 	bool create_script_shown = false;
+	bool save_scene_shown = false;
 private:
 	bool assets_loading_popup_shown = false;
 };
