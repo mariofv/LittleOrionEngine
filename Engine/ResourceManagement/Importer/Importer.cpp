@@ -79,6 +79,10 @@ std::string Importer::SaveMetaFile(const std::string& imported_path, ResourceTyp
 
 void Importer::GetOptionsFromMeta(const File& file, ImportOptions & options)
 {
+	if (!App->filesystem->Exists(file.file_path.c_str()))
+	{
+		return;
+	}
 	size_t readed_bytes;
 	char* meta_file_data = App->filesystem->Load(file.file_path.c_str(), readed_bytes);
 	std::string serialized_string = meta_file_data;

@@ -128,7 +128,12 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 			{
 				ImportOptions options;
 				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
-				auto prefab = App->resources->Load<Prefab>(options.exported_file);
+				std::string prefab_exported_path = options.exported_file;
+				if (prefab_exported_path.empty())
+				{
+					prefab_exported_path = App->resources->Import(*incoming_file).exported_file;
+				}
+				auto prefab = App->resources->Load<Prefab>(prefab_exported_path);
 				if (incoming_file->file_type == FileType::MODEL)
 				{
 					prefab->overwritable = false;
