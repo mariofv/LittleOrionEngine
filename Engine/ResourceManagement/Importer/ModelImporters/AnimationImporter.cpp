@@ -55,20 +55,42 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 	std::map<double, std::vector<Animation::Channel>> keyframes;
 
 	//Merge channels
-	for (auto & nodes : aiNode_by_channel)
+	for (auto& channel : aiNode_by_channel)
 	{
-		std::unordered_map<double, float4x4>  frames;
+		std::unordered_map<double, float3> sample_translations;
+		std::unordered_map<double, Quat> sample_rotations;
 		
-		for (auto ai_node : nodes.second)
+		for (auto sample : channel.second)
 		{
-			TransformPositions(ai_node, frames);
+			TransformPositions(sample, sample_translations, sample_rotations);
 		}
 
-		for (auto & frame : frames)
+		assert(animation->mDuration == (int)animation->mDuration);
+		
+		if (sample_translations.size() == 0)
 		{
+			sample_translations[0] = float3::zero;
+		}
 
-			Animation::Channel channel{ nodes.first, frame.second };
-			keyframes[frame.first].push_back(channel);
+		if (sample_rotations.size() == 0) // TODO: Check this
+		{
+			sample_rotations[0] = Quat::identity;
+		}
+
+		float3 last_translation;
+		Quat last_rotation;
+		for (size_t i = 0; i < animation->mDuration; ++i)
+		{
+			if (i != 0)
+			{
+				last_translation = sample_translations[i - 1];
+				last_rotation = sample_rotations[i - 1];
+			}
+
+			float3 sample_translation = sample_translations.find(i) == sample_translations.end() ? last_translation : sample_translations[i];
+			Quat sample_rotation = sample_rotations.find(i) == sample_rotations.end() ? last_rotation : sample_rotations[i];
+			Animation::Channel imported_channel{ channel.first, sample_translations[i], sample_rotation};
+			keyframes[i].push_back(imported_channel);
 		}
 	}
 
@@ -80,59 +102,34 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 
 }
 
-void AnimationImporter::TransformPositions(const aiNodeAnim * ai_node, std::unordered_map<double, float4x4> & frames) const
+void AnimationImporter::TransformPositions
+(
+	const aiNodeAnim* sample,
+	std::unordered_map<double,	float3>& sample_translations,
+	std::unordered_map<double, Quat>& sample_rotations
+) const
 {
-
-	for (size_t j = 0; j < ai_node->mNumScalingKeys; j++)
+	for (size_t j = 0; j < sample->mNumRotationKeys; j++)
 	{
-		if (ai_node->mScalingKeys[j].mTime >= 0)
+
+		if (sample->mRotationKeys[j].mTime >= 0)
 		{
-			aiVector3D scale = ai_node->mScalingKeys[j].mValue;
-			if (frames.find(ai_node->mScalingKeys[j].mTime) == frames.end())
-			{
-				frames[ai_node->mScalingKeys[j].mTime] = float4x4::identity;
-			}
-			frames[ai_node->mScalingKeys[j].mTime].Scale(scale.x, scale.y, scale.z);
+			aiQuaternion rotation = sample->mRotationKeys[j].mValue;
+			Quat rotation_quat = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+
+			sample_rotations[sample->mRotationKeys[j].mTime] = rotation_quat;
 		}
 	}
 
-	for (size_t j = 0; j < ai_node->mNumRotationKeys; j++)
+	for (size_t j = 0; j < sample->mNumPositionKeys; j++)
 	{
-
-		if (ai_node->mRotationKeys[j].mTime >= 0)
+		if (sample->mPositionKeys[j].mTime >= 0)
 		{
-
-			aiQuaternion rotation = ai_node->mRotationKeys[j].mValue;
-			float4x4 rotation_matrix = float4x4::FromQuat(Quat(rotation.x, rotation.y, rotation.z, rotation.w));
-
-			if (frames.find(ai_node->mRotationKeys[j].mTime) == frames.end())
-			{
-				frames[ai_node->mRotationKeys[j].mTime] = float4x4::identity;
-			}
-			frames[ai_node->mRotationKeys[j].mTime] = frames[ai_node->mRotationKeys[j].mTime] * rotation_matrix;
-		}
-	}
-
-	for (size_t j = 0; j < ai_node->mNumPositionKeys; j++)
-	{
-
-		if (ai_node->mPositionKeys[j].mTime >= 0)
-		{
-			aiVector3D position = ai_node->mPositionKeys[j].mValue;
-			if (frames.find(ai_node->mPositionKeys[j].mTime) == frames.end())
-			{
-				frames[ai_node->mPositionKeys[j].mTime] = float4x4::identity;
-				frames[ai_node->mPositionKeys[j].mTime].SetTranslatePart(position.x, position.y, position.z);
-			}
-			else
-			{
-				frames[ai_node->mPositionKeys[j].mTime].Translate(position.x, position.y, position.z);
-			}
+			aiVector3D position = sample->mPositionKeys[j].mValue;
+			sample_translations[sample->mPositionKeys[j].mTime] = float3(position.x, position.y, position.z);
 		}
 
 	}
-
-
 }
 
 void AnimationImporter::SaveBinary(const Animation & animation, const std::string & output_file) const
@@ -153,7 +150,7 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 		for (auto & channel : keyframe.channels)
 		{
 			//name size + name + position
-			size += sizeof(uint32_t)  + channel.name.size() + sizeof(float4x4);
+			size += sizeof(uint32_t)  + channel.name.size() + sizeof(float3) + sizeof(Quat);
 		}
 	}
 
@@ -195,8 +192,11 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 			memcpy(cursor, channel.name.data(), name_size);
 			cursor += name_size;
 
-			memcpy(cursor, &channel.position, sizeof(float4x4));
-			cursor += sizeof(float4x4);
+			memcpy(cursor, &channel.translation, sizeof(float3));
+			cursor += sizeof(float3);
+
+			memcpy(cursor, &channel.rotation, sizeof(Quat));
+			cursor += sizeof(Quat);
 		}
 	}
 

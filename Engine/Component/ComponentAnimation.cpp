@@ -61,7 +61,7 @@ void ComponentAnimation::UpdateBone(GameObject* current_bone)
 	if (animation_controller->GetTransform(current_bone->name, bone_position, bone_rotation))
 	{
 		current_bone->transform.SetTranslation(bone_position);
-		current_bone->transform.SetRotation(bone_rotation.ToEulerXYZ());
+		current_bone->transform.SetRotation(bone_rotation.ToFloat3x3());
 	}
 	
 	for (auto& children_bone : current_bone->children)

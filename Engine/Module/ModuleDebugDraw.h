@@ -4,6 +4,7 @@
 #include "Module.h"
 
 #include <GL/glew.h>
+#include <MathGeoLib.h>
 
 class Billboard;
 class ComponentCamera;
@@ -29,7 +30,7 @@ private:
 	void RenderCameraFrustum() const;
 	void RenderLightGizmo() const;
 	void RenderBones() const;
-	void RenderBone(const GameObject* current_bone, const GameObject* last_bone) const;
+	void RenderBone(const GameObject* current_bone, const GameObject* last_bone, const float3& color) const;
 
 	void RenderBoundingBoxes() const;
 	void RenderGlobalBoundingBoxes() const;

@@ -512,20 +512,27 @@ void ModuleDebugDraw::RenderBones() const
 
 	if (selected_object_animation_component != nullptr && selected_object_animation_component->IsEnabled())
 	{
-		RenderBone(selected_game_object, nullptr);
+		RenderBone(selected_game_object, nullptr, float3(1.f, 0.f, 0.f));
 	}
 }
 
-void ModuleDebugDraw::RenderBone(const GameObject* current_bone, const GameObject* last_bone) const
+void ModuleDebugDraw::RenderBone(const GameObject* current_bone, const GameObject* last_bone, const float3& color) const
 {
 	if (last_bone != nullptr)
 	{
-		dd::line(last_bone->transform.GetGlobalTranslation(), current_bone->transform.GetGlobalTranslation(), float3(1.f, 0.f, 0.f));
+		dd::line(last_bone->transform.GetGlobalTranslation(), current_bone->transform.GetGlobalTranslation(), color);
 	}
 
 	for (auto& child_bone : current_bone->children)
 	{
-		RenderBone(child_bone, current_bone);
+		float3 next_color;
+		if (color.x == 1.f)
+			next_color = float3(0.f, 1.f, 0.f);
+		if (color.y == 1.f)
+			next_color = float3(0.f, 0.f, 1.f);
+		if (color.z == 1.f)
+			next_color = float3(1.f, 0.f, 0.f);
+		RenderBone(child_bone, current_bone, next_color);
 	}
 }
 
