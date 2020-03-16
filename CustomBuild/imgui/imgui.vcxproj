@@ -20,6 +20,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\..\Libraries\include\imgui\imconfig.h" />
+    <ClInclude Include="..\..\Libraries\include\imgui\imfilebrowser.h" />
     <ClInclude Include="..\..\Libraries\include\imgui\imgui.h" />
     <ClInclude Include="..\..\Libraries\include\imgui\imgui_impl_opengl3.h" />
     <ClInclude Include="..\..\Libraries\include\imgui\imgui_impl_sdl.h" />

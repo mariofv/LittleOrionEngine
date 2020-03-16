@@ -49,14 +49,15 @@ void PanelMenuBar::ShowFileMenu()
 		{
 			App->editor->OpenScene(DEFAULT_SCENE_PATH);
 		}
-		if (App->filesystem->Exists(SAVED_SCENE_PATH))
+		if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Load Scene"))
 		{
-			if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Load Scene"))
-			{
-				App->editor->OpenScene(SAVED_SCENE_PATH);
-			}
+			App->editor->popups->load_scene_shown = true;
 		}
 		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
+		{
+			App->editor->SaveScene(App->scene->current_scene_path);
+		}
+		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene as"))
 		{
 			App->editor->popups->save_scene_shown = true;
 		}
