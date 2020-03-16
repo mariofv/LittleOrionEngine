@@ -321,6 +321,13 @@ enum class ControllerAxis
 	RIGHT_TRIGGER_RAW
 };
 
+enum class PlayerID : Uint8
+{
+	ONE, 
+	TWO,
+	COUNT
+};
+
 struct GameInput
 {
 	std::string name;
@@ -379,17 +386,21 @@ public:
 	ENGINE_API bool GetKeyDown(KeyCode key);
 	ENGINE_API bool GetKeyUp(KeyCode key);
 
-	bool GetMouseButton(MouseButton button);
-	bool GetMouseButtonDown(MouseButton button); 
-	bool GetMouseButtonUp(MouseButton button);
+	ENGINE_API bool GetMouseButton(MouseButton button);
+	ENGINE_API bool GetMouseButtonDown(MouseButton button);
+	ENGINE_API bool GetMouseButtonUp(MouseButton button);
 
-	bool GetControllerButton(ControllerCode code);
-	bool GetControllerButtonDown(ControllerCode code);
-	bool GetControllerButtonUp(ControllerCode code);
+	ENGINE_API bool GetControllerButton(ControllerCode code);
+	ENGINE_API bool GetControllerButtonDown(ControllerCode code);
+	ENGINE_API bool GetControllerButtonUp(ControllerCode code);
 
-	bool GetGameInput(const char* name);
-	bool GetGameInputDown(const char* name);
-	bool GetGameInputUp(const char* name);
+	ENGINE_API bool GetControllerButton(ControllerCode code, int player_num);
+	ENGINE_API bool GetControllerButtonDown(ControllerCode code, int player_num);
+	ENGINE_API bool GetControllerButtonUp(ControllerCode code, int player_num);
+
+	ENGINE_API bool GetGameInput(const char* name);
+	ENGINE_API bool GetGameInputDown(const char* name);
+	ENGINE_API bool GetGameInputUp(const char* name);
 
 	void CreateGameInput(GameInput game_input);
 
@@ -417,7 +428,7 @@ public:
 private:
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseButton, KeyState> mouse_bible;
-	std::map<ControllerCode, KeyState> controller_bible;
+	std::vector<std::map<ControllerCode, KeyState>> controller_bible;
 
 	//Predefined buttons
 	std::map<std::string, GameInput> game_inputs;
@@ -443,7 +454,7 @@ private:
 	float left_controller_trigger_raw = 0;
 	float right_controller_trigger_raw = 0;
 
-	SDL_GameController* controller = nullptr;
+	SDL_GameController* controller[(int)PlayerID::COUNT];
 };
 
 #endif //_MODULEINPUT_H

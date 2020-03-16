@@ -1,6 +1,8 @@
 {
     "Scripts": [
         "ExampleScript",
-        "TestScriptRuntime"
+        "TestScriptRuntime",
+        "Player1InputScript",
+        "Player2InputScript"
     ]
 }

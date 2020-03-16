@@ -21,6 +21,12 @@
     <ClInclude Include="src\Script\TestScriptRuntime.h">
       <Filter>src\Script</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\Player1InputScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\Player2InputScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -30,6 +36,12 @@
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\TestScriptRuntime.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\Player1InputScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\Player2InputScript.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>
