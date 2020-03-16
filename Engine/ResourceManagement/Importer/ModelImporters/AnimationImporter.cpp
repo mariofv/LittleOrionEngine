@@ -18,9 +18,9 @@ bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation*
 
 	std::random_device random;
 	App->filesystem->MakeDirectory(LIBRARY_ANIMATION_FOLDER);
-	output_file = LIBRARY_ANIMATION_FOLDER + "/" + std::to_string(random())+ "_"+ own_format_animation.name + ".anim";
+	output_file = LIBRARY_ANIMATION_FOLDER + "/" + std::string(scene->mRootNode->mName.C_Str()) + "_" + own_format_animation.name + ".anim";
 
-	 SaveBinary(own_format_animation, output_file);
+	SaveBinary(own_format_animation, output_file);
 	return true;
 }
 

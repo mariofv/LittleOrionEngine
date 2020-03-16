@@ -8,7 +8,7 @@
 
 AnimController::AnimController()
 {
-	//anim = App->resources->Load<Animation>("Library/Animations/2719853001_Take 001.anim").get();
+	anim = App->resources->Load<Animation>("Library/Animations/RootNode_Take 001.anim").get();
 }
 
 
