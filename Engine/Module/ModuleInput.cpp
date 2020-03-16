@@ -51,15 +51,22 @@ bool ModuleInput::Init()
 	{
 		if (SDL_IsGameController(i))
 		{
-			controller = SDL_GameControllerOpen(i);
-			break;
+			controller[i] = SDL_GameControllerOpen(i);
+			//break;
 		}
 	}
 
+	std::map<ControllerCode, KeyState> temp1;
+	std::map<ControllerCode, KeyState> temp2;
+
 	for (int i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
 	{
-		controller_bible[(ControllerCode)i] = KeyState::IDLE;
+		temp1[(ControllerCode)i] = KeyState::IDLE;
+		temp2[(ControllerCode)i] = KeyState::IDLE;
 	}
+
+	controller_bible.push_back(temp1);
+	controller_bible.push_back(temp2);
 
 	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
 	
@@ -106,15 +113,18 @@ update_status ModuleInput::PreUpdate()
 		}
 	}
 
-	for (auto& controller : controller_bible)
+	for (int i = 0; i < controller_bible.size(); ++i)
 	{
-		if (controller.second == KeyState::DOWN)
+		for (auto& controller : controller_bible[i])
 		{
-			controller.second = KeyState::REPEAT;
-		}
-		else if (controller.second == KeyState::UP)
-		{
-			controller.second = KeyState::IDLE;
+			if (controller.second == KeyState::DOWN)
+			{
+				controller.second = KeyState::REPEAT;
+			}
+			else if (controller.second == KeyState::UP)
+			{
+				controller.second = KeyState::IDLE;
+			}
 		}
 	}
 
@@ -126,6 +136,7 @@ update_status ModuleInput::PreUpdate()
 
 		switch (event.type)
 		{
+
 		case SDL_QUIT:
 			return update_status::UPDATE_STOP;
 
@@ -154,44 +165,44 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_CONTROLLERBUTTONDOWN:
-			//TODO how to handle multiple controllers
-			controller_bible[(ControllerCode)event.cbutton.button] = KeyState::DOWN;
+			controller_bible[event.cbutton.which][(ControllerCode)event.cbutton.button] = KeyState::DOWN;
 			break;
 
 		case SDL_CONTROLLERBUTTONUP:
-			controller_bible[(ControllerCode)event.cbutton.button] = KeyState::UP;
+			controller_bible[event.cbutton.which][(ControllerCode)event.cbutton.button] = KeyState::UP;
 			break;
 		
-		case SDL_CONTROLLERAXISMOTION:
-
-			left_joystick = float2(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY));
+		case SDL_CONTROLLERAXISMOTION: 
+		{
+			int which = event.cbutton.which;
+			left_joystick = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
 			left_joystick_raw = float2(left_joystick / MAX_SDL_CONTROLLER_RANGE);
 
-			if(left_joystick.x < 0.0f)
+			if (left_joystick.x < 0.0f)
 			{
 				left_joystick_raw.x = left_joystick.x / MAX_SDL_CONTROLLER_RANGE + 1;
 			}
-			else if(left_joystick.y >= 0.0f)
+			else if (left_joystick.y >= 0.0f)
 			{
 				left_joystick_raw.y = left_joystick.y / MAX_SDL_CONTROLLER_RANGE;
 			}
-			else if(right_joystick.x < 0.0f)
+			else if (right_joystick.x < 0.0f)
 			{
 				right_joystick_raw.x = right_joystick.x / MAX_SDL_CONTROLLER_RANGE + 1;
 			}
-			else if(right_joystick.y >= 0.0f)
+			else if (right_joystick.y >= 0.0f)
 			{
 				right_joystick_raw.y = right_joystick.y / MAX_SDL_CONTROLLER_RANGE;
 			}
 
-			right_joystick = float2(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTY));
+			right_joystick = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
 			right_joystick_raw = float2(right_joystick / MAX_SDL_CONTROLLER_RANGE);
 
-			left_controller_trigger = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+			left_controller_trigger = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
 			left_controller_trigger_raw = left_controller_trigger / MAX_SDL_CONTROLLER_RANGE;
-			right_controller_trigger = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+			right_controller_trigger = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
 			right_controller_trigger_raw = right_controller_trigger / MAX_SDL_CONTROLLER_RANGE;
-				
+		}
 			break;
 
 		case SDL_DROPFILE:
@@ -238,7 +249,8 @@ bool ModuleInput::CleanUp()
 {
 	APP_LOG_INFO("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
-	SDL_GameControllerClose(controller);
+	SDL_GameControllerClose(controller[0]);
+	SDL_GameControllerClose(controller[1]);
 	return true;
 }
 
@@ -261,39 +273,54 @@ ENGINE_API bool ModuleInput::GetKeyUp(KeyCode key)
 }
 
 // Returns whether the given mouse button is held down
-bool ModuleInput::GetMouseButton(MouseButton button)
+ENGINE_API bool ModuleInput::GetMouseButton(MouseButton button)
 {
 	return mouse_bible[button] == KeyState::REPEAT;
 }
 
 // Returns true during the frame the user pressed the given mouse button
-bool ModuleInput::GetMouseButtonDown(MouseButton button)
+ENGINE_API bool ModuleInput::GetMouseButtonDown(MouseButton button)
 {
 	return mouse_bible[button] == KeyState::DOWN;
 }
 
 // Returns true during the frame the user releases the given mouse button
-bool ModuleInput::GetMouseButtonUp(MouseButton button)
+ENGINE_API bool ModuleInput::GetMouseButtonUp(MouseButton button)
 {
 	return mouse_bible[button] == KeyState::UP;
 }
 
-bool ModuleInput::GetControllerButton(ControllerCode code)
+ENGINE_API bool ModuleInput::GetControllerButton(ControllerCode code)
 {
-	return controller_bible[code] == KeyState::REPEAT;
+	return controller_bible[0][code] == KeyState::REPEAT;
 }
 
-bool ModuleInput::GetControllerButtonDown(ControllerCode code)
+ENGINE_API bool ModuleInput::GetControllerButtonDown(ControllerCode code)
 {
-	return controller_bible[code] == KeyState::DOWN;
+	return controller_bible[0][code] == KeyState::DOWN;
 }
 
-bool ModuleInput::GetControllerButtonUp(ControllerCode code)
+ENGINE_API bool ModuleInput::GetControllerButtonUp(ControllerCode code)
 {
-	return controller_bible[code] == KeyState::UP;
+	return controller_bible[0][code] == KeyState::UP;
 }
 
-bool ModuleInput::GetGameInput(const char* name)
+ENGINE_API bool ModuleInput::GetControllerButton(ControllerCode code, int player_num)
+{
+	return controller_bible[player_num][code] == KeyState::REPEAT;
+}
+
+ENGINE_API bool ModuleInput::GetControllerButtonDown(ControllerCode code, int player_num)
+{
+	return controller_bible[player_num][code] == KeyState::DOWN;
+}
+
+ENGINE_API bool ModuleInput::GetControllerButtonUp(ControllerCode code, int player_num)
+{
+	return controller_bible[player_num][code] == KeyState::UP;
+}
+
+ENGINE_API bool ModuleInput::GetGameInput(const char* name)
 {
 	GameInput button = game_inputs[name];
 	for (auto &key : button.keys)
@@ -311,7 +338,7 @@ bool ModuleInput::GetGameInput(const char* name)
 	return false;
 }
 
-bool ModuleInput::GetGameInputDown(const char* name)
+ENGINE_API bool ModuleInput::GetGameInputDown(const char* name)
 {
 	GameInput button = game_inputs[name];
 	for (auto &key : button.keys)
@@ -329,7 +356,7 @@ bool ModuleInput::GetGameInputDown(const char* name)
 	return false;
 }
 
-bool ModuleInput::GetGameInputUp(const char* name)
+ENGINE_API bool ModuleInput::GetGameInputUp(const char* name)
 {
 	GameInput button = game_inputs[name];
 	for (auto &key : button.keys)

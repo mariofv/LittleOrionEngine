@@ -3,6 +3,8 @@
         "ExampleScript",
         "TestScriptRuntime",
         "WalkableScript",
-        "TriggerActionScript"
+        "TriggerActionScript",
+        "Player1InputScript",
+        "Player2InputScript"
     ]
 }

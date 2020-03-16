@@ -25,6 +25,11 @@
       <Filter>src\Script</Filter>
     </ClInclude>
     <ClInclude Include="src\Script\TriggerActionScript.h">
+    </ClInclude>
+    <ClInclude Include="src\Script\Player1InputScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\Player2InputScript.h">
       <Filter>src\Script</Filter>
     </ClInclude>
   </ItemGroup>
@@ -42,6 +47,11 @@
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\TriggerActionScript.cpp">
+    </ClCompile>
+    <ClCompile Include="src\Script\Player1InputScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\Player2InputScript.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>

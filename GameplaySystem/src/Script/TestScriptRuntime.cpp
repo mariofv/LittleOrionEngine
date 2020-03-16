@@ -21,7 +21,7 @@ TestScriptRuntime::TestScriptRuntime()
 void TestScriptRuntime::Update()
 {
 
-	//Test();
+	Test();
 
 	/*if (App->input->GetKeyDown(KeyCode::C))
 	{
