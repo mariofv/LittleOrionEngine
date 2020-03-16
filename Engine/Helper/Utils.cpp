@@ -1,6 +1,6 @@
 #include "Utils.h"
 
-
+#include <fstream>
 
 Utils::Utils()
 {
@@ -119,4 +119,23 @@ bool Utils::PatchFileName(char* filename)
 		return false;
 	}
 
+}
+
+std::string Utils::LoadFileContent(const std::string& path) {
+	std::ifstream file(path);
+	return std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+}
+
+void Utils::SaveFileContent(const std::string& source, std::string& destination)
+{
+	std::ofstream file(destination);
+	file << source;
+}
+
+void Utils::ReplaceStringInPlace(std::string& subject, const std::string& search, const std::string& replace) {
+	size_t pos = 0;
+	while ((pos = subject.find(search, pos)) != std::string::npos) {
+		subject.replace(pos, search.length(), replace);
+		pos += replace.length();
+	}
 }

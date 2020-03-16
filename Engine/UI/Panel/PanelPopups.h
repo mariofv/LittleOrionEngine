@@ -15,6 +15,8 @@ public:
 
 	void Render() override;
 
+	void CreateScript();
+	bool create_script_shown = false;
 private:
 	void RenderAssetsLoadingPopup();
 

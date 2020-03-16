@@ -53,6 +53,21 @@ void ComponentScript::Update()
 	}
 }
 
+void ComponentScript::AwakeScript()
+{
+	if (script && active)
+	{
+		script->Awake();
+	}
+}
+
+void ComponentScript::StartScript()
+{
+	if (script && active)
+	{
+		script->Start();
+	}
+}
 void ComponentScript::Delete()
 {
 	App->scripts->RemoveComponentScript(this);
