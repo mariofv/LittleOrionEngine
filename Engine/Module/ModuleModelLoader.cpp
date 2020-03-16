@@ -119,15 +119,15 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 
 		for (Skeleton::Joint joint : full_skeleton->skeleton)
 		{
-			GameObject * object = LoadCoreModel(PRIMITIVE_CUBE_PATH);
+			GameObject* joint_object = App->scene->CreateGameObject();
 
 			if (joint.parent_index >= skeleton_gameobjects.size())
 			{
-				object->SetParent(parent_node);
+				joint_object->SetParent(parent_node);
 			}
 			else
 			{
-				object->SetParent(skeleton_gameobjects.at(joint.parent_index));
+				joint_object->SetParent(skeleton_gameobjects.at(joint.parent_index));
 			}
 
 
@@ -138,12 +138,12 @@ void ModuleModelLoader::LoadNode(GameObject *parent_node, const Config & node_co
 			float3x3 rotate;
 			joint.transform_local.Decompose(translation, rotate, scale);
 
-			object->transform.SetScale(scale);
-			object->transform.SetTranslation(translation);
-			object->transform.SetRotation(rotate);
-			object->name = joint.name;
+			joint_object->transform.SetScale(scale); // TODO: Check if not applying scale factor here could potentially arrise a bug
+			joint_object->transform.SetTranslation(full_skeleton->scale_factor * translation);
+			joint_object->transform.SetRotation(rotate);
+			joint_object->name = joint.name;
 
-			skeleton_gameobjects.push_back(object);
+			skeleton_gameobjects.push_back(joint_object);
 		}
 		already_loaded_skeleton.push_back(skeleton_uid);
 	}

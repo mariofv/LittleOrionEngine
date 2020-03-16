@@ -6,6 +6,17 @@
 #include <Module/ModuleFileSystem.h>
 bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, std::string& output_file) const
 {
+	float unit_scale_factor = 1.f;
+
+	for (unsigned int i = 0; i < scene->mMetaData->mNumProperties; ++i)
+	{
+		if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
+		{
+			aiMetadataEntry unit_scale_entry = scene->mMetaData->mValues[i];
+			unit_scale_factor = *(double*)unit_scale_entry.mData;
+		};
+	}
+	unit_scale_factor *= 0.01f;
 
 	aiString bone_name = mesh->mBones[0]->mName;
 	aiNode * bone = scene->mRootNode->FindNode(bone_name);
@@ -17,6 +28,7 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 	}
 
 	Skeleton skeleton("", "");
+	skeleton.scale_factor = unit_scale_factor;
 	ImportChildBone(mesh, bone, - 1, bone->mTransformation, bone->mTransformation, skeleton);
 
 	if (skeleton.skeleton.size() > 0)
@@ -99,7 +111,7 @@ bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& 
 
 	uint32_t num_bones = skeleton.skeleton.size();
 
-	uint32_t size = sizeof(uint32_t);
+	uint32_t size = sizeof(float) + sizeof(uint32_t);
 
 	for (auto & joint : skeleton.skeleton)
 	{
@@ -108,9 +120,14 @@ bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& 
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
+
+	memcpy(cursor, &skeleton.scale_factor, sizeof(float));
+	cursor += sizeof(float);
+
 	size_t bytes = sizeof(uint32_t); // First store ranges
 	memcpy(cursor, &num_bones, bytes);
 	cursor += bytes; // Store bones
+	
 	for (auto & joint : skeleton.skeleton)
 	{
 

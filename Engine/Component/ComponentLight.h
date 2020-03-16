@@ -27,9 +27,8 @@ public:
 		public: 
 			void ChangePointLightAttenuationValues(float range)
 			{
-				float augmented_range = 10 * range;
-				linear = 4.5 / (10 * augmented_range);
-				quadratic = 75.0 / (augmented_range*augmented_range);
+				linear = 4.5 / (10 * range);
+				quadratic = 75.0 / (range * range);
 			}
 	};
 
@@ -51,9 +50,8 @@ public:
 
 			void ChangeSpotLightAttenuationValues(float range)
 			{
-				float augmented_range = 10 * range;
-				linear = 4.5 / augmented_range;
-				quadratic = 75.0 / (augmented_range*augmented_range);
+				linear = 4.5 / range;
+				quadratic = 75.0 / (range * range);
 			}
 
 		public: 
@@ -63,7 +61,7 @@ public:
 			float edge_softness = 0.1f; // Dear reader do not modify this directly, use SetEdgeSoftness!
 			float outer_cutoff = cos(DegToRad(16.5f)); // Dear reader do not modify this directly, use SetEdgeSoftness!
 
-			float range = 10.f;
+			float range = 1.f;
 			float constant = 1.0f;
 			float linear = 0.045f;
 			float quadratic = 0.0075f;

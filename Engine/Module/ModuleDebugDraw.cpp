@@ -492,12 +492,12 @@ void ModuleDebugDraw::RenderLightGizmo() const
 				selected_light_transform->GetGlobalTranslation(), 	
 				selected_light_transform->GetRotation().ToFloat4x4(),	
 				float3(1.f, 1.f, 0.f),	
-				selected_light->spot_light_parameters.range,	
-				tan(DegToRad(selected_light->spot_light_parameters.spot_angle/2.f)) * selected_light->spot_light_parameters.range	
+				selected_light->spot_light_parameters.range / 10.f,	
+				tan(DegToRad(selected_light->spot_light_parameters.spot_angle/2.f)) * selected_light->spot_light_parameters.range / 10.f
 			); 	
 			break;	
 		case ComponentLight::LightType::POINT_LIGHT:	
-			dd::point_light(selected_light_transform->GetGlobalTranslation(), float3(1.f, 1.f, 0.f), selected_light->point_light_parameters.range);	
+			dd::point_light(selected_light_transform->GetGlobalTranslation(), float3(1.f, 1.f, 0.f), selected_light->point_light_parameters.range / 10.f);
 			break;	
 		default:	
 			break;	

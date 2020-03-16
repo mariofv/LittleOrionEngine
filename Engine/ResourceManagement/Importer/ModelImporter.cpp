@@ -127,10 +127,24 @@ void ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& paren
 		std::string mesh_file = output_file + "/" + std::string(root_node->mName.data) + std::to_string(i) + ".ol";
 
 		// Transformation
+		float unit_scale_factor = 1.f;
+
+		for (unsigned int i = 0; i <scene->mMetaData->mNumProperties; ++i)
+		{
+			if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
+			{
+				aiMetadataEntry unit_scale_entry = scene->mMetaData->mValues[i];
+				unit_scale_factor = *(double*)unit_scale_entry.mData;
+			};
+		}
+
 		aiVector3t<float> pScaling, pPosition;
 		aiQuaterniont<float> pRotation;
 		aiMatrix4x4 node_transformation = current_transformation;
 		node_transformation.Decompose(pScaling, pRotation, pPosition);
+
+		pPosition = pPosition * unit_scale_factor * 0.01f;
+		pScaling = pScaling * unit_scale_factor * 0.01f;
 
 		node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
 		aiMesh * importing_mesh = scene->mMeshes[mesh_index];
