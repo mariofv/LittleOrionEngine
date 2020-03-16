@@ -34,6 +34,7 @@ void TriggerActionScript::Awake()
 	std::string aux("WalkableScript");
 	movement_component = trigger_go->GetComponentScript(aux);
 	movement_script = (WalkableScript*)movement_component->script;
+	start_position = trigger_go->transform.GetGlobalTranslation();
 }
 
 // Use this for initialization
@@ -50,7 +51,8 @@ void TriggerActionScript::Update()
 		if(movement_script)
 		{
 			//Do something if inside aabb of an object
-			movement_script->speed *= 5.f;
+			//movement_script->speed *= 5.f;
+			trigger_go->transform.SetTranslation(start_position);
 		}
 	}
 

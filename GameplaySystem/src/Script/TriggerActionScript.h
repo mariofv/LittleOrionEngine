@@ -3,6 +3,8 @@
 
 #include "Script.h"
 
+#include <MathGeoLib/MathGeoLib.h>
+
 class WalkableScript;
 
 class TriggerActionScript : public Script
@@ -23,6 +25,7 @@ public:
 private:
 	PanelComponent* panel = nullptr;
 	std::string is_object = "None";
+	float3 start_position;
 };
 extern "C" SCRIPT_API TriggerActionScript* TriggerActionScriptDLL(); //This is how we are going to load the script
 #endif
