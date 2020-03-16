@@ -549,7 +549,6 @@ void ModuleDebugDraw::RenderOutline() const
 
 		GLuint outline_shader_program = App->program->GetShaderProgramId("Outline");
 		glUseProgram(outline_shader_program);
-
 		float4x4 new_transformation_matrix;
 		if (selected_game_object->parent != nullptr)
 		{
@@ -561,11 +560,19 @@ void ModuleDebugDraw::RenderOutline() const
 			new_transformation_matrix =  selected_game_object->transform.GetGlobalModelMatrix() * float4x4::Scale(float3(1.01f));
 		}
 
+		
+		ModuleRender::DrawMode last_draw_mode = App->renderer->draw_mode;
+		App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
+		glLineWidth(15.f);
+
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), new_transformation_matrix.Transposed().ptr());
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), selected_game_object->transform.GetGlobalModelMatrix().Transposed().ptr());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		selected_object_mesh->RenderModel();
+
+		glLineWidth(1.f);
+		App->renderer->SetDrawMode(last_draw_mode);
 
 		glStencilMask(0xFF);
 		glEnable(GL_DEPTH_TEST);
