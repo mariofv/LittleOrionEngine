@@ -1,5 +1,7 @@
 #include "PanelComponent.h"
 
+#include "Animation/AnimController.h"
+
 #include "Actions/EditorActionTranslate.h"
 #include "Actions/EditorActionRotation.h"
 #include "Actions/EditorActionScale.h"
@@ -503,6 +505,18 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		}
 		ImGui::Separator();
 
+		
+		if (ImGui::Checkbox("Loop", &animation->animation_controller->loop));
+		ImGui::SameLine();
+		if (ImGui::Button("Play"))
+		{
+			animation->animation_controller->Play();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Stop"))
+		{
+			animation->animation_controller->Stop();
+		}
 	}
 }
 
