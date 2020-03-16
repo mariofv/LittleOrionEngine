@@ -9,7 +9,6 @@
 AnimControler::AnimControler()
 {
 	anim = App->resources->Load<Animation>("Library/Animations/2719853001_Take 001.anim").get();
-	//animation_time = anim->duration;
 }
 
 
@@ -20,26 +19,33 @@ AnimControler::~AnimControler()
 void AnimControler::Play()
 { 
 	current_time = 0.f;
-
+	playing = true;
 }
 
 void AnimControler::Stop()
 {
-	loop = false;
-	stop = true;
+	playing = false;
 }
 
 void AnimControler::Update()
 {
-	current_time = current_time + App->time->delta_time;
-	if (current_time <= animation_time)
+	if (!playing)
 	{
-		if (loop) {
+		return;
+	}
+
+	current_time = current_time + App->time->delta_time;
+	if (current_time >= animation_time)
+	{
+		if (loop) 
+		{
 
 			current_time = current_time % animation_time;
 		}
 		else
-			stop = true;
+		{
+			playing = false;
+		}
 	}
 
 }
