@@ -28,7 +28,7 @@ ExampleScript::ExampleScript()
 
 void ExampleScript::Awake()
 {
-
+	//Example Unity-like of how get components from GO dragged
 	std::string aux("TestScriptRuntime");
 	enemy_component = enemy->GetComponentScript(aux);
 	enemy_script = (TestScriptRuntime*)enemy_component->script;
@@ -105,7 +105,7 @@ void ExampleScript::Test()
 		enemy->transform.SetRotation(float3(rotation.x, rotation.y + enemy_script->rotation_speed, rotation.z));
 	}
 }
-
+//Example how to Save the GO that we want to stay linked after loading/saving adn then Linking
 void ExampleScript::Save(Config & config) const
 {
 	config.AddUInt(enemy->UUID, "TestScriptRuntime");

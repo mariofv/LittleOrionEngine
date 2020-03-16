@@ -61,11 +61,11 @@ void TemplateScript::Save(Config& config) const
 //Use this for linking GO automatically
 void TemplateScript::Load(const Config& config)
 {
-	exempleUUID = config.GetUInt("ExampleNameforSave", 0);
+	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
 }
 
 //Use this for linking GO automatically
 void TemplateScript::Link()
 {
-	example = App->scene->GetGameObject(exempleUUID);
+	example = App->scene->GetGameObject(exampleUUID);
 }
