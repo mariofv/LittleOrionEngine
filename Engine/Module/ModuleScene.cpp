@@ -1,24 +1,22 @@
 #include "ModuleScene.h"
 
+#include "Component/ComponentCamera.h"
+
+#include "Helper/Config.h"
 #include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
 #include "ModuleRender.h"
-#include "Component/ComponentCamera.h"
-#include "Helper/Config.h"
 #include "UI/Panel/PanelHierarchy.h"
 
 #include <algorithm>
 #include <stack>
-#include "Brofiler/Brofiler.h"
-
-#include "Animations/AnimControler.h"
+#include <Brofiler/Brofiler.h>
 
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
-	AnimControler anim = AnimControler();
 	return true;
 }
 

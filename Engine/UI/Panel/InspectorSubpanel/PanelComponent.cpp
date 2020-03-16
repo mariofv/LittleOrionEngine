@@ -5,6 +5,7 @@
 #include "Actions/EditorActionScale.h"
 #include "Actions/EditorAction.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
@@ -483,6 +484,28 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 	}
 }
 
+void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_PLAY_CIRCLE " Animation", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::Checkbox("Active", &animation->active))
+		{
+			//UndoRedo
+			App->actions->action_component = animation;
+			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(animation);
+
+			return;
+		}
+		ImGui::Separator();
+
+	}
+}
+
 void PanelComponent::ShowAddNewComponentButton()
 {
 	float window_width = ImGui::GetWindowWidth();
@@ -523,7 +546,12 @@ void PanelComponent::ShowAddNewComponentButton()
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::SCRIPT);
 
 		}
+		sprintf_s(tmp_string, "%s Animation", ICON_FA_PLAY_CIRCLE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
 
+		}
 		ImGui::EndPopup();
 	}
 

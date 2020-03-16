@@ -5,6 +5,7 @@
 #include "ResourceManagement/Resources/Texture.h"
 
 class Component;
+class ComponentAnimation;
 class ComponentCamera;
 class ComponentMaterial;
 class ComponentMesh;
@@ -23,6 +24,7 @@ public:
 	void ShowComponentMaterialWindow(ComponentMaterial *material);
 	void ShowComponentCameraWindow(ComponentCamera *camera);
 	void ShowComponentLightWindow(ComponentLight *light);
+	void ShowComponentAnimationWindow(ComponentAnimation *animation);
 	void ShowComponentScriptWindow(ComponentScript * component_script);
 	
 	void ShowAddNewComponentButton();

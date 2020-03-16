@@ -18,8 +18,8 @@ public:
 		MESH,
 		TRANSFORM,
 		LIGHT,
-		ANIMATION,
-		SCRIPT
+		SCRIPT,
+		ANIMATION
 	};
 
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
