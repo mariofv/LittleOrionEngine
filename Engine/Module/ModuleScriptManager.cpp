@@ -219,6 +219,7 @@ void ModuleScriptManager::ReloadDLL()
 {
 	if (gameplay_dll != nullptr) 
 	{
+		SaveVariables();
 		if (!FreeLibrary(gameplay_dll)) 
 		{
 			return;
@@ -363,4 +364,13 @@ void ModuleScriptManager::ReLink()
 	{
 		component_script->script->Link();
 	}
+}
+
+void ModuleScriptManager::SaveVariables()
+{
+	
+}
+void ModuleScriptManager::LoadVariables()
+{
+
 }

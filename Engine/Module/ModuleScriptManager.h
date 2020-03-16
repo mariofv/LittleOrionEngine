@@ -24,6 +24,7 @@ class GameObject;
 class Script;
 class File;
 class Utils;
+class Config;
 
 class ModuleScriptManager : public Module
 {
@@ -74,6 +75,7 @@ public:
 
 	std::vector<ComponentScript*> scripts;
 	std::vector<std::string> scripts_list;
+	std::unordered_map<uint64_t, Config*> config_list;
 
 
 };
