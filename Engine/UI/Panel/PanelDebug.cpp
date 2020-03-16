@@ -26,12 +26,13 @@ void PanelDebug::Render()
 		ImGui::Checkbox("Global bounding boxes", &App->debug->show_global_bounding_boxes);
 		ImGui::Checkbox("Camera Frustum", &App->debug->show_camera_frustum);
 		ImGui::Checkbox("QuadTree", &App->debug->show_quadtree);
+		ImGui::Checkbox("OctTree", &App->debug->show_octtree);
 		ImGui::Checkbox("AABBTree", &App->debug->show_aabbtree);
 		ImGui::Separator();
 
 		ImGui::Checkbox("Scene window culling", &App->debug->culling_scene_mode);
 		int culling_mode_int = static_cast<int>(App->debug->culling_mode);
-		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling\0OctTree\0AabbTree Culling\0Combined Culling"))
+		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling\0OctTree Culling\0AabbTree Culling\0Combined Culling"))
 		{
 			switch (culling_mode_int)
 			{
@@ -43,6 +44,9 @@ void PanelDebug::Render()
 				break;
 			case 2:
 				App->debug->culling_mode = ModuleDebug::CullingMode::QUADTREE_CULLING;
+				break;
+			case 3:
+				App->debug->culling_mode = ModuleDebug::CullingMode::OCTTREE_CULLING;
 				break;
 			case 4:
 				App->debug->culling_mode = ModuleDebug::CullingMode::AABBTREE_CULLING;
@@ -57,9 +61,11 @@ void PanelDebug::Render()
 
 		if (ImGui::SliderInt("Quadtree Depth ", &App->renderer->ol_quadtree.max_depth, 1, 10)) {
 			App->renderer->GenerateQuadTree();
+			App->renderer->GenerateOctTree();
 		}
 		if (ImGui::SliderInt("Quadtree bucket size ", &App->renderer->ol_quadtree.bucket_size, 1, 10)) {
 			App->renderer->GenerateQuadTree();
+			App->renderer->GenerateOctTree();
 		}
 
 		ImGui::Spacing();

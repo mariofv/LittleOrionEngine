@@ -33,6 +33,7 @@ public:
 	bool show_grid = true;
 	bool show_camera_frustum = true;
 	bool show_quadtree = false;
+	bool show_octtree = false;
 	bool show_aabbtree = false;
 
 	bool culling_scene_mode = false;
