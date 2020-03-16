@@ -1,4 +1,4 @@
-#include "AnimControler.h"
+#include "AnimController.h"
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTime.h"
@@ -6,28 +6,28 @@
 #include <math.h>
 
 
-AnimControler::AnimControler()
+AnimController::AnimController()
 {
-	anim = App->resources->Load<Animation>("Library/Animations/2719853001_Take 001.anim").get();
+	//anim = App->resources->Load<Animation>("Library/Animations/2719853001_Take 001.anim").get();
 }
 
 
-AnimControler::~AnimControler()
+AnimController::~AnimController()
 {
 }
 
-void AnimControler::Play()
+void AnimController::Play()
 { 
 	current_time = 0.f;
 	playing = true;
 }
 
-void AnimControler::Stop()
+void AnimController::Stop()
 {
 	playing = false;
 }
 
-void AnimControler::Update()
+void AnimController::Update()
 {
 	if (!playing)
 	{
@@ -50,7 +50,7 @@ void AnimControler::Update()
 
 }
 
-void AnimControler::GetTransform(char * name, float3 & pos, Quat & rot)
+void AnimController::GetTransform(char * name, float3 & pos, Quat & rot)
 {
 	float current_sample = (current_time*(anim->duration - 1)) / animation_time;
 	int current_keyframe = math::FloorInt(current_sample);
@@ -74,12 +74,12 @@ void AnimControler::GetTransform(char * name, float3 & pos, Quat & rot)
 	
 }
 
-const float3 AnimControler::Interpolate(const float3& first, const float3& second, float lambda)
+const float3 AnimController::Interpolate(const float3& first, const float3& second, float lambda)
 {
 	return first * (1.0f - lambda) + second * lambda;
 }
 
-const Quat AnimControler::Interpolate(const Quat& first, const Quat& second, float lambda)
+const Quat AnimController::Interpolate(const Quat& first, const Quat& second, float lambda)
 {
 	Quat result;
 	float dot = first.Dot(second);

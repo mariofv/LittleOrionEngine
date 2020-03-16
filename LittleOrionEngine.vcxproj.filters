@@ -271,11 +271,11 @@
     <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp">
       <Filter>Engine\ResourceManagement\ImportOptions</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Animations\AnimControler.cpp">
-      <Filter>Engine\Animations</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp">
       <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Animation\AnimController.cpp">
+      <Filter>Engine\Animation</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -546,11 +546,11 @@
     <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
       <Filter>Engine\ResourceManagement\ImportOptions</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Animations\AnimControler.h">
-      <Filter>Engine\Animations</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Module\ModuleAnimation.h">
       <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Animation\AnimController.h">
+      <Filter>Engine\Animation</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -611,11 +611,11 @@
     <Filter Include="Engine\Actions">
       <UniqueIdentifier>{3f3b0f7b-d67b-4384-a9ba-a7e803bb2a53}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Animations">
-      <UniqueIdentifier>{def0a7eb-5fd9-47f1-8d40-947dc459a630}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\ResourceManagement\ImportOptions">
       <UniqueIdentifier>{af162ed0-dacf-4e8f-850b-8e8130bb9f6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Animation">
+      <UniqueIdentifier>{def0a7eb-5fd9-47f1-8d40-947dc459a630}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

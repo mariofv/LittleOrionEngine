@@ -1,16 +1,18 @@
 #include "ComponentAnimation.h"
 
+#include "Animation/AnimController.h"
 #include "Main/Application.h"
 #include "Module/ModuleAnimation.h"
+#include "Module/ModuleTime.h"
 
 ComponentAnimation::ComponentAnimation() : Component(nullptr, ComponentType::ANIMATION)
 {
-
+	animation_controller = new AnimController();
 }
 
 ComponentAnimation::ComponentAnimation(GameObject * owner) : Component(owner, ComponentType::ANIMATION)
 {
-
+	animation_controller = new AnimController();
 }
 
 ComponentAnimation::~ComponentAnimation()
@@ -19,7 +21,10 @@ ComponentAnimation::~ComponentAnimation()
 
 void ComponentAnimation::Update()
 {
-
+	if (App->time->isGameRunning())
+	{
+		animation_controller->Update();
+	}
 }
 
 void ComponentAnimation::Delete()

@@ -5,7 +5,7 @@
 
 #include "UI/Panel/InspectorSubpanel/PanelComponent.h"
 
-class AnimControler;
+class AnimController;
 
 class ComponentAnimation :	public Component
 {
@@ -25,7 +25,7 @@ public:
 	void OnUpdate();
 
 public:
-	AnimControler* animation_controller = nullptr;
+	AnimController* animation_controller = nullptr;
 	std::string animation_path = "";
 
 private:

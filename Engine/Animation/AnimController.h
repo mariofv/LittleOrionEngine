@@ -1,13 +1,13 @@
-#ifndef _ANIMCONTROLER_H_
-#define _ANIMCONTROLER_H_
+#ifndef _ANIMCONTROLLER_H_
+#define _ANIMCONTROLLER_H_
 
 #include "ResourceManagement/Resources/Animation.h"
 
-class AnimControler
+class AnimController
 {
 public:
-	AnimControler();
-	~AnimControler();
+	AnimController();
+	~AnimController();
 
 	void Play();
 	void Stop();
@@ -28,5 +28,5 @@ private:
 	unsigned int animation_time = 600;
 };
 
-#endif _ANIMCONTROLER_H_
+#endif //_ANIMCONTROLLER_H_
 
