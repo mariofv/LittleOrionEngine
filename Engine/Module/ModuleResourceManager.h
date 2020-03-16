@@ -37,6 +37,7 @@ public:
 	bool CleanUp() override;
 
 	ImportResult Import(const File& file, bool force = false);
+	void ImportAllFilesInDirectory(const File& file, bool force);
 	void CreatePrefab(const std::string &path, GameObject * gameobject_to_save) const;
 
 	template<typename T>
@@ -75,7 +76,6 @@ public:
 	}
 private:
 	void StartThread();
-	void ImportAllFilesInDirectory(const File& file, bool force);
 	void ReimportIfNeeded(const std::string& uid);
 
 	ImportResult InternalImport(const File& file, bool force);

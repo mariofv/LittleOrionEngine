@@ -222,6 +222,10 @@ void PanelProjectExplorer::ProcessMouseInput(File * file)
 
 void PanelProjectExplorer::ShowFileSystemActionsMenu(const File * file)
 {
+	if (file == nullptr)
+	{
+		return;
+	}
 	std::string label("Menu");
 	bool changes = false;
 	if (ImGui::BeginPopupContextWindow(label.c_str()))
@@ -254,6 +258,16 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(const File * file)
 			App->resources->Import(new_prefab_name);
 			changes = true;
 
+		}
+		if (ImGui::Selectable("Reimport"))
+		{
+			App->resources->ImportAllFilesInDirectory(*selected_folder, true);
+			changes = true;
+		}
+		if (ImGui::Selectable("Reimport All"))
+		{
+			App->resources->ImportAllFilesInDirectory(*App->filesystem->assets_file, true);
+			changes = true;
 		}
 		if (changes)
 		{

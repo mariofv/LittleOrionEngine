@@ -19,9 +19,9 @@ static std::vector<std::unique_ptr<ComponentMeshRenderer>> mesh_renderer_compone
 void ModelPrefabImporter::ImportModelPrefab(const Config& model, const File& imported_file) const
 {
 	std::unique_ptr<GameObject> model_root_node = std::make_unique<GameObject>();
-	model_root_node->name = std::string(imported_file.filename_no_extension);
 	model_root_node->original_UUID = model_root_node->UUID;
 
+	model.GetString("Name", model_root_node->name, "");
 
 	std::vector<Config> game_objects_config;
 	model.GetChildrenConfig("Node", game_objects_config);
@@ -64,8 +64,7 @@ void ModelPrefabImporter::LoadNode(std::unique_ptr<GameObject> & parent_node, co
 		LoadMeshComponent(mesh_exported_file, material_exported_file, node_game_object);
 
 		ComponentMeshRenderer * mesh_renderer = mesh_renderer_components.back().get();
-		File file(mesh_renderer->mesh_to_render->exported_file);
-		node_game_object->name = file.filename_no_extension;
+		node_config.GetString("Name", node_game_object->name, "");
 		node_game_object->original_UUID = node_game_object->UUID;
 		node_game_object->Update();
 	}

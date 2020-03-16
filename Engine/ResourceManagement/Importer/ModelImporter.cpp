@@ -102,12 +102,11 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 		animation_config.AddString(library_animation_file, "Animation");
 		animations_config.push_back(animation_config);
 	}
-
+	model.AddString(root_node->mName.data, "Name");
 	aiReleaseImport(scene);
 
 	model.AddChildrenConfig(node_config, "Node");
 	model.AddChildrenConfig(animations_config, "Animations");
-
 	std::string output_file_model = SaveMetaFile(file.file_path, ResourceType::PREFAB);
 	model_prefab_importer->ImportModelPrefab(model, output_file_model);
 
@@ -142,6 +141,7 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 		if (imported)
 		{
 			node.AddString(library_mesh_file, "Mesh");
+			node.AddString(importing_mesh->mName.data, "Name");
 		}
 
 		if (importing_mesh->HasBones())
