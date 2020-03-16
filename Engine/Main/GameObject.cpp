@@ -419,4 +419,5 @@ void GameObject::CopyComponents(const GameObject & gameobject_to_copy)
 	{
 		RemoveComponent(component);
 	}
+	this->aabb.GenerateBoundingBox();
 }
