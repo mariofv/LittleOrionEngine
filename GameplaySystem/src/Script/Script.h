@@ -6,7 +6,10 @@
 #define SCRIPT_API __declspec(dllimport)
 #endif
 
+#include "Helper/Config.h"
+
 #include <string>
+
 class GameObject;
 class Application;
 struct ImGuiContext;
@@ -27,6 +30,9 @@ public:
 	virtual void OnInspector(ImGuiContext*) {};
 
 	virtual void AddReferences(GameObject* owner, Application*);
+
+	virtual void Save(Config& config) const = 0;
+	virtual void Load(const Config &config) = 0;
 
 public:
 	GameObject *owner = nullptr;
