@@ -4,6 +4,7 @@
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMesh.h"
 #include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleDebug.h"
@@ -18,6 +19,7 @@
 
 #include "GL/glew.h"
 #include <assert.h>
+#include <queue>
 
 class IDebugDrawOpenGLImplementation final : public dd::RenderInterface
 {
@@ -404,7 +406,8 @@ void ModuleDebugDraw::Render()
 	if (App->editor->selected_game_object != nullptr)
 	{
 		RenderCameraFrustum();
-    RenderLightGizmo();
+		RenderLightGizmo();
+		RenderBones();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 
@@ -502,6 +505,29 @@ void ModuleDebugDraw::RenderLightGizmo() const
 	}	
 }	
 
+void ModuleDebugDraw::RenderBones() const
+{
+	GameObject* selected_game_object = App->editor->selected_game_object;
+	Component* selected_object_animation_component = selected_game_object->GetComponent(Component::ComponentType::ANIMATION);
+
+	if (selected_object_animation_component != nullptr && selected_object_animation_component->IsEnabled())
+	{
+		RenderBone(selected_game_object, nullptr);
+	}
+}
+
+void ModuleDebugDraw::RenderBone(const GameObject* current_bone, const GameObject* last_bone) const
+{
+	if (last_bone != nullptr)
+	{
+		dd::line(last_bone->transform.GetGlobalTranslation(), current_bone->transform.GetGlobalTranslation(), float3(1.f, 0.f, 0.f));
+	}
+
+	for (auto& child_bone : current_bone->children)
+	{
+		RenderBone(child_bone, current_bone);
+	}
+}
 
 void ModuleDebugDraw::RenderOutline() const
 {

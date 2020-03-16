@@ -5,9 +5,10 @@
 
 #include <GL/glew.h>
 
-class IDebugDrawOpenGLImplementation;
-class ComponentCamera;
 class Billboard;
+class ComponentCamera;
+class GameObject;
+class IDebugDrawOpenGLImplementation;
 
 class ModuleDebugDraw : public Module
 {
@@ -24,13 +25,16 @@ public:
 private:
 	void RenderGrid() const;
 	void RenderOutline() const;
-	
+
 	void RenderCameraFrustum() const;
 	void RenderLightGizmo() const;
+	void RenderBones() const;
+	void RenderBone(const GameObject* current_bone, const GameObject* last_bone) const;
 
 	void RenderBoundingBoxes() const;
 	void RenderGlobalBoundingBoxes() const;
 	void RenderBillboards() const;
+
 
 private:
 	static IDebugDrawOpenGLImplementation* dd_interface_implementation;
