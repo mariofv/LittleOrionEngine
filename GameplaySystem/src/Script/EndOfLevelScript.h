@@ -22,7 +22,7 @@ public:
 private:
 	PanelComponent* panel = nullptr;
 	std::string is_object = "None";
-	std::string level_to_load_path = DEFAULT_SCENE_PATH;
+	std::string level_to_load_path = "Assets/Scenes/Level2.scene";
 	bool entered = false;
 
 };

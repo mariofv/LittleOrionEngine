@@ -197,6 +197,7 @@ void ModuleScriptManager::RunScripts()
 {
 	for (auto &component_script : scripts)
 	{
+		//TODO: flag to break if scripts is changed
 		if (!scripts.size())
 			break;
 		component_script->Update();
