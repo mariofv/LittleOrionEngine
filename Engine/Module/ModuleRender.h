@@ -2,10 +2,11 @@
 #define _MODULERENDER_H_
 
 #include "Module.h"
-#include "Main/Globals.h"
-#include "SpacePartition/OLQuadTree.h"
-#include "SpacePartition/OLAABBTree.h"
 #include "Helper/Timer.h"
+#include "Main/Globals.h"
+#include "SpacePartition/OLAABBTree.h"
+#include "SpacePartition/OLOctTree.h"
+#include "SpacePartition/OLQuadTree.h"
 
 #include <GL/glew.h>
 
@@ -39,7 +40,11 @@ public:
 
 	ComponentMesh* CreateComponentMesh();
 	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
+
+	int GetRenderedTris() const;
+
 	void GenerateQuadTree();
+	void GenerateOctTree();
 	void InsertAABBTree(GameObject* game_object);
 	void RemoveAABBTree(GameObject * game_object);
 	void UpdateAABBTree(GameObject* game_object);
@@ -76,6 +81,7 @@ private:
 	void* context = nullptr;
 
 	OLQuadTree ol_quadtree;
+	OLOctTree ol_octtree;
 	OLAABBTree* ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
 
 
@@ -96,6 +102,8 @@ private:
 
 	std::vector<ComponentMesh*> meshes;
 	std::vector<ComponentMesh*> meshes_to_render;
+
+	int num_rendered_tris = 0;
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;

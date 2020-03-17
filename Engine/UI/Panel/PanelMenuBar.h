@@ -19,6 +19,8 @@ private:
 	void ShowGameObjectMenu();
 	void ShowWindowMenu();
 	void ShowHelpMenu();
+	
+
 };
 
 #endif //_PANELMENUBAR_H_

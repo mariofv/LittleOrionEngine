@@ -398,6 +398,16 @@ void ModuleDebugDraw::Render()
 		}
 	}
 
+	if (App->debug->show_octtree)
+	{
+		for (auto& ol_octtree_node : App->renderer->ol_octtree.flattened_tree)
+		{
+			float3 octtree_node_min = float3(ol_octtree_node->box.minPoint.x, ol_octtree_node->box.minPoint.y, ol_octtree_node->box.minPoint.z);
+			float3 octtree_node_max = float3(ol_octtree_node->box.maxPoint.x, ol_octtree_node->box.maxPoint.y, ol_octtree_node->box.maxPoint.z);
+			dd::aabb(octtree_node_min, octtree_node_max, float3::one);
+		}
+	}
+
 	if(App->debug->show_aabbtree)
 	{
 		App->renderer->DrawAABBTree();
@@ -406,7 +416,7 @@ void ModuleDebugDraw::Render()
 	if (App->editor->selected_game_object != nullptr)
 	{
 		RenderCameraFrustum();
-    RenderLightGizmo();
+		RenderLightGizmo();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 
@@ -533,17 +543,19 @@ void ModuleDebugDraw::RenderOutline() const
 
 		GLuint outline_shader_program = App->program->GetShaderProgramId("Outline");
 		glUseProgram(outline_shader_program);
-
-		ComponentTransform object_transform_copy = selected_game_object->transform;
-		float3 object_scale = object_transform_copy.GetScale();
-		object_transform_copy.SetScale(object_scale*1.01f);
-		object_transform_copy.GenerateGlobalModelMatrix();
+		
+		ModuleRender::DrawMode last_draw_mode = App->renderer->draw_mode;
+		App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
+		glLineWidth(15.f);
 
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), object_transform_copy.GetGlobalModelMatrix().Transposed().ptr());
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), selected_game_object->transform.GetGlobalModelMatrix().Transposed().ptr());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		selected_object_mesh->RenderModel();
+
+		glLineWidth(1.f);
+		App->renderer->SetDrawMode(last_draw_mode);
 
 		glStencilMask(0xFF);
 		glEnable(GL_DEPTH_TEST);

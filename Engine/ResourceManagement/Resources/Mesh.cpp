@@ -19,10 +19,15 @@ GLuint Mesh::GetVAO() const
 	return vao;
 }
 
+int Mesh::GetNumTriangles() const
+{
+	return indices.size() / 3;
+}
+
 std::vector<Triangle> Mesh::GetTriangles() const
 {
 	std::vector<Triangle> triangles;
-	triangles.reserve(vertices.size()/3);
+	triangles.reserve(indices.size()/3);
 	for (size_t i = 0; i < indices.size(); i += 3)
 	{
 		float3 first_point = vertices[indices[i]].position;

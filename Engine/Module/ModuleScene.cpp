@@ -154,6 +154,6 @@ void  ModuleScene::NewScene(const std::string &path)
 	App->resources->scene_manager->Load(path);
 
 	App->renderer->GenerateQuadTree();
+	App->renderer->GenerateOctTree();
 	App->actions->ClearUndoStack();
-
 }

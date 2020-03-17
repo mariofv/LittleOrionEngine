@@ -119,6 +119,7 @@ void GameObject::SetStatic(bool is_static)
 {
 	SetHierarchyStatic(is_static);
 	App->renderer->GenerateQuadTree(); // TODO: Check this. This could be called with ungenerated bounding boxes, resulting in a wrong quadtree.
+	App->renderer->GenerateOctTree();
 }
 
 void GameObject::SetHierarchyStatic(bool is_static)

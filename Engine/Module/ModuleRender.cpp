@@ -163,6 +163,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
+	num_rendered_tris = 0;
+
 	GetMeshesToRender(&camera);
 	for (auto &mesh : meshes_to_render)
 	{
@@ -170,6 +172,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		if (mesh->IsEnabled())
 		{
 			mesh->Render();
+			num_rendered_tris += mesh->mesh_to_render->GetNumTriangles();
 			glUseProgram(0);
 		}
 	}
@@ -242,6 +245,32 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 			// Then we add all static objects culled using the quadtree
 			std::vector<GameObject*> rendered_objects;
 			ol_quadtree.CollectIntersect(rendered_objects, *camera);
+
+			for (auto &object : rendered_objects)
+			{
+				ComponentMesh *object_mesh = (ComponentMesh*)object->GetComponent(Component::ComponentType::MESH);
+				meshes_to_render.push_back(object_mesh);
+			}
+		}
+		break;
+
+	case ModuleDebug::CullingMode::OCTTREE_CULLING:
+		if (camera != nullptr)
+		{
+			// First we get all non static objects inside frustum
+			std::copy_if(
+				meshes.begin(),
+				meshes.end(),
+				std::back_inserter(meshes_to_render),
+				[camera](auto mesh)
+			{
+				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && !mesh->owner->IsStatic();
+			}
+			);
+
+			// Then we add all static objects culled using the octtree
+			std::vector<GameObject*> rendered_objects;
+			ol_octtree.CollectIntersect(rendered_objects, *camera);
 
 			for (auto &object : rendered_objects)
 			{
@@ -444,6 +473,31 @@ void ModuleRender::GenerateQuadTree()
 	}
 }
 
+void ModuleRender::GenerateOctTree()
+{
+	AABB global_AABB;
+	global_AABB.SetNegativeInfinity();
+
+	for (auto & mesh : meshes)
+	{
+		float minX = std::fmin(mesh->owner->aabb.bounding_box.minPoint.x, global_AABB.minPoint.x);
+		float minY = std::fmin(mesh->owner->aabb.bounding_box.minPoint.y, global_AABB.minPoint.y);
+		float minZ = std::fmin(mesh->owner->aabb.bounding_box.minPoint.z, global_AABB.minPoint.z);
+
+		float maxX = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.x, global_AABB.maxPoint.x);
+		float maxY = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.y, global_AABB.maxPoint.y);
+		float maxZ = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.z, global_AABB.maxPoint.z);
+
+		global_AABB.maxPoint = float3(maxX, maxY, maxZ);
+		global_AABB.minPoint = float3(minX, minY, minZ);
+	}
+
+	ol_octtree.Create(global_AABB);
+	for (auto & mesh : meshes)
+	{
+		ol_octtree.Insert(*mesh->owner);
+	}
+}
 void ModuleRender::InsertAABBTree(GameObject * game_object)
 {
 	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH);
@@ -550,3 +604,7 @@ bool ModuleRender::GetRayCastIntersectedPosition(const LineSegment & ray, float3
 	return true;
 }
 
+int ModuleRender::GetRenderedTris() const
+{
+	return num_rendered_tris;
+}
