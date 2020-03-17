@@ -724,9 +724,6 @@
     <ClInclude Include="Engine\AI\DebugDrawGL.h">
       <Filter>Engine\AI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\AI\GLCheckerTexture.h">
-      <Filter>Engine\AI</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
       <Filter>Engine\ResourceManagement\ImportOptions</Filter>
     </ClInclude>

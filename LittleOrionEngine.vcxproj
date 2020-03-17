@@ -102,7 +102,6 @@
     <ClInclude Include="Engine\Actions\EditorActionSetTexture.h" />
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h" />
     <ClInclude Include="Engine\AI\DebugDrawGL.h" />
-    <ClInclude Include="Engine\AI\GLCheckerTexture.h" />
     <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
     <ClInclude Include="Engine\Component\ComponentScript.h" />
     <ClInclude Include="Engine\Helper\Config.h" />
