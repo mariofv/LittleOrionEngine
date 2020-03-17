@@ -167,7 +167,7 @@ void PanelMenuBar::ShowWindowMenu()
 			{
 				App->editor->console->SwitchOpen();
 			}
-			if(ImGui::MenuItem((ICON_FA_TERMINAL " AI"), (const char*)0, App->editor->nav_mesh->IsOpened()))
+			if(ImGui::MenuItem((ICON_FA_BRAIN " AI"), (const char*)0, App->editor->nav_mesh->IsOpened()))
 			{
 				App->editor->nav_mesh->SwitchOpen();
 			}
