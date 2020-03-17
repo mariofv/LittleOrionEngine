@@ -197,6 +197,8 @@ void ModuleScriptManager::RunScripts()
 {
 	for (auto &component_script : scripts)
 	{
+		if (!scripts.size())
+			break;
 		component_script->Update();
 	}
 }
