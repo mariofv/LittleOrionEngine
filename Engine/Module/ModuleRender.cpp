@@ -526,7 +526,7 @@ bool ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray, float3 &
 		}
 	}
 
-	bool intersected;
+	bool intersected = false;
 	float min_distance = INFINITY;
 	for (auto & mesh : intersected_meshes)
 	{
