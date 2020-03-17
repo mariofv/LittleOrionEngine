@@ -41,15 +41,6 @@ public:
 	void CreatePrefab(const std::string &path, GameObject * gameobject_to_save) const;
 
 	template<typename T>
-	void RemoveResourceFromCacheIfNeeded(const std::shared_ptr<T> & resource) {
-		auto& it = std::find(resource_cache.begin(), resource_cache.end(), resource);
-		if (it != resource_cache.end() && (*it).use_count() <= 2)
-		{
-			resource_cache.erase(it);
-		}
-	}
-
-	template<typename T>
 	std::shared_ptr<T> Load(const std::string& uid)
 	{
 		std::shared_ptr<Resource> cache_resource = RetrieveFromCacheIfExist(uid);
@@ -78,13 +69,13 @@ private:
 	void StartThread();
 	void ReimportIfNeeded(const std::string& uid);
 
-	ImportResult InternalImport(const File& file, bool force);
+	ImportResult InternalImport(const File& file, bool force) const;
 	std::shared_ptr<Resource> RetrieveFromCacheIfExist(const std::string& uid) const;
 
 public:
 	struct ThreadComunication
 	{
-		std::mutex thread_mutex;
+		mutable std::mutex thread_mutex;
 		std::atomic_bool stop_thread = false;
 		std::atomic_bool finished_loading = false;
 		std::atomic_uint thread_importing_hash = 0;

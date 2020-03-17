@@ -24,7 +24,7 @@ public:
 	};
 
 	Material(uint32_t UUID, std::string material_file_path);
-	~Material();
+	~Material() = default;
 
 	void Save(Config& config) const;
 	void Load(const Config& config);

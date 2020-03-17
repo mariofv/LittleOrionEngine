@@ -11,14 +11,6 @@ Material::Material(uint32_t UUID, std::string material_file_path) :
 	textures.resize(MAX_MATERIAL_TEXTURE_TYPES);
 }
 
-Material::~Material()
-{
-	for (auto & texture : textures)
-	{
-		App->resources->RemoveResourceFromCacheIfNeeded(texture);
-	}
-}
-
 void Material::Save(Config& config) const
 {
 	for (size_t i = 0; i < textures.size(); i++)
@@ -133,7 +125,6 @@ void Material::Load(const Config& config)
 
 void Material::RemoveMaterialTexture(MaterialTextureType type)
 {
-	App->resources->RemoveResourceFromCacheIfNeeded(textures[type]);
 	textures[type] = nullptr;
 }
 

@@ -12,7 +12,7 @@ public:
 	ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render);
 	ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner);
 	ComponentMeshRenderer();
-	~ComponentMeshRenderer();
+	~ComponentMeshRenderer() = default;
 
 	ComponentMeshRenderer(const ComponentMeshRenderer& component_to_copy) = default;
 	ComponentMeshRenderer(ComponentMeshRenderer&& component_to_move) = default;

@@ -26,21 +26,15 @@ ComponentMeshRenderer::ComponentMeshRenderer() : Component(nullptr, ComponentTyp
 
 void ComponentMeshRenderer::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
 {
-	App->resources->RemoveResourceFromCacheIfNeeded(this->mesh_to_render);
 	this->mesh_to_render = mesh_to_render;
 	owner->aabb.GenerateBoundingBox();
 }
 
 void ComponentMeshRenderer::SetMaterial(const std::shared_ptr<Material> & material_to_render)
 {
-	App->resources->RemoveResourceFromCacheIfNeeded(this->material_to_render);
 	this->material_to_render = material_to_render;
 }
 
-ComponentMeshRenderer::~ComponentMeshRenderer()
-{
-	App->resources->RemoveResourceFromCacheIfNeeded(mesh_to_render);
-}
 
 void ComponentMeshRenderer::Delete()
 {

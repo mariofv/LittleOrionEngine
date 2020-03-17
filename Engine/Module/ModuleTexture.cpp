@@ -43,7 +43,7 @@ GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) 
 	std::vector<std::string> faces_paths_dds;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
-		std::string ol_texture = App->resources->Import(File(faces_paths[i]), true).exported_file;
+		std::string ol_texture = App->resources->Import(File(faces_paths[i]), false).exported_file;
 		faces_paths_dds.push_back(ol_texture);
 	}
 	return static_cast<GLuint>(TextureLoader::LoadCubemap(faces_paths_dds));
