@@ -5,6 +5,8 @@
 #include "PanelNavMesh.h"
 #include <imgui.h>
 
+#include <FontAwesome5/IconsFontAwesome5.h>
+#include <FontAwesome5/IconsFontAwesome5Brands.h>
 
 PanelNavMesh::PanelNavMesh()
 {
@@ -16,7 +18,7 @@ PanelNavMesh::PanelNavMesh()
 
 void PanelNavMesh::Render()
 {
-	if (ImGui::Begin(window_name.c_str(), &opened))
+	if (ImGui::Begin((ICON_FA_BRAIN " AI"), &opened))
 	{
 
 		if(first_time)
