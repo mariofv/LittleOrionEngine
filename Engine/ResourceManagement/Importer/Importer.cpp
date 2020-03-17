@@ -31,7 +31,7 @@ ImportOptions Importer::GetAlreadyImportedResource(const File & file_to_look_for
 	
 		ImportOptions options;
 		GetOptionsFromMeta(meta_file,options);
-		if (options.version != IMPORTER_VERSION && options.timestamp != file_to_look_for.modification_timestamp) {
+		if (options.version != IMPORTER_VERSION || options.timestamp < file_to_look_for.modification_timestamp) {
 			options.uuid = 0;
 			return options;
 		}
