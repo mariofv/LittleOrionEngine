@@ -1,14 +1,5 @@
 #include "ModuleEditor.h"
 
-#include "Helper/Config.h"
-#include "Main/Globals.h"
-#include "Main/Application.h"
-#include "ModuleResourceManager.h"
-#include "ModuleScene.h"
-#include "ModuleActions.h"
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
-
 #include "EditorUI/Panel/PanelAbout.h"
 #include "EditorUI/Panel/PanelConfiguration.h"
 #include "EditorUI/Panel/PanelConsole.h"
@@ -22,16 +13,25 @@
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelToolBar.h"
 
-#include <SDL/SDL.h>
+#include "Helper/Config.h"
+
+#include "Main/Globals.h"
+#include "Main/Application.h"
+#include "ModuleResourceManager.h"
+#include "ModuleScene.h"
+#include "ModuleActions.h"
+#include "ModuleWindow.h"
+#include "ModuleInput.h"
+
+#include <Brofiler/Brofiler.h>
+#include <FontAwesome5/IconsFontAwesome5.h>
+#include <FontAwesome5/IconsFontAwesome5Brands.h>
 #include <GL/glew.h>
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl.h>
-#include <FontAwesome5/IconsFontAwesome5.h>
-#include <FontAwesome5/IconsFontAwesome5Brands.h>
-#include <Brofiler/Brofiler.h>
-
+#include <SDL/SDL.h>
 
 // Called before render is available
 bool ModuleEditor::Init()

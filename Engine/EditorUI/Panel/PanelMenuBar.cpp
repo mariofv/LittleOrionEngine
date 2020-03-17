@@ -1,10 +1,5 @@
 #include "PanelMenuBar.h"
 
-#include "Main/Application.h"
-#include "Module/ModuleEditor.h"
-#include "Module/ModuleModelLoader.h"
-#include "Module/ModuleFileSystem.h"
-#include "Module/ModuleScene.h"
 #include "EditorUI/Panel/PanelAbout.h"
 #include "EditorUI/Panel/PanelConfiguration.h"
 #include "EditorUI/Panel/PanelConsole.h"
@@ -14,10 +9,15 @@
 #include "EditorUI/Panel/PanelInspector.h"
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelScene.h"
+#include "Main/Application.h"
+#include "Module/ModuleEditor.h"
+#include "Module/ModuleModelLoader.h"
+#include "Module/ModuleFileSystem.h"
+#include "Module/ModuleScene.h"
 
-#include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
+#include <imgui.h>
 #include <SDL/SDL.h>
 
 PanelMenuBar::PanelMenuBar()

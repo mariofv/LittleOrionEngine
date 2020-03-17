@@ -1,11 +1,10 @@
 #ifndef _PANELCONSOLE_H_
 #define _PANELCONSOLE_H_
 
-#include "Main/Globals.h"
 #include "EditorUI/Panel/Panel.h"
+#include "Main/Globals.h"
 
 #include <imgui.h>
-
 #include <vector>
 
 struct ImGuiTextBuffer;

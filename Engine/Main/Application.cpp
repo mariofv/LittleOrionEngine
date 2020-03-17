@@ -1,4 +1,5 @@
 #include "Application.h"
+#include "EditorUI/EngineLog.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
@@ -17,8 +18,8 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
 #include "Module/ModuleScriptManager.h"
-#include "EditorUI/EngineLog.h"
-#include "Brofiler/Brofiler.h"
+
+#include <Brofiler/Brofiler.h>
 
 
 Application::Application()

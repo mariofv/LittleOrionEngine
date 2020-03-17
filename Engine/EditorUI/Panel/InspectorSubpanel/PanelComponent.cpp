@@ -5,6 +5,9 @@
 #include "Actions/EditorActionScale.h"
 #include "Actions/EditorAction.h"
 
+#include "EditorUI/Panel/PanelPopups.h"
+#include "Helper/Utils.h"
+
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
@@ -20,11 +23,6 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleScriptManager.h"
-
-
-#include "Helper/Utils.h"
-
-#include "EditorUI/Panel/PanelPopups.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>

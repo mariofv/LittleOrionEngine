@@ -2,8 +2,8 @@
 #define _COMPONENTMESH_H_
 
 #include "Component.h"
-#include "ResourceManagement/Resources/Mesh.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "ResourceManagement/Resources/Mesh.h"
 
 class ComponentMesh : public Component
 {

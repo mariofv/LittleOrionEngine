@@ -1,14 +1,14 @@
 #include "ModuleScene.h"
 
+#include "Component/ComponentCamera.h"
+#include "EditorUI/Panel/PanelHierarchy.h"
+#include "Helper/Config.h"
 #include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleModelLoader.h"
 #include "ModuleRender.h"
 #include "ModuleResourceManager.h"
-#include "Component/ComponentCamera.h"
-#include "Helper/Config.h"
-#include "EditorUI/Panel/PanelHierarchy.h"
 
 #include <algorithm>
 #include <stack>
