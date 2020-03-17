@@ -6,6 +6,7 @@
 #include "ResourceManagement/Resources/Animation.h"
 
 #include <assimp/scene.h>
+#include <cmath>
 #include <map>
 
 bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, std::string& output_file) const
@@ -43,8 +44,10 @@ Assimp added nodes need to be merge with the real node.
 
 void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const
 {
-	std::unordered_map<std::string, std::vector<aiNodeAnim *>> aiNode_by_channel;
+	assert(animation->mDuration == (int)animation->mDuration);
+	float animation_duration = animation->mDuration;
 
+	std::unordered_map<std::string, std::vector<aiNodeAnim *>> aiNode_by_channel;
 
 	//Organize channels
 	for (size_t i = 0; i < animation->mNumChannels; i++)
@@ -64,103 +67,15 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 	//Merge channels with same name
 	for (auto& channel_set : aiNode_by_channel)
 	{
-		std::map<double, float3> channel_translations;		
+		std::map<double, float3> channel_translations;
 		std::map<double, Quat> channel_rotations;
 		for (auto channel : channel_set.second)
 		{
-			GetChannelTranslations(channel, channel_translations);
-			GetChannelRotations(channel, channel_rotations);
+			GetChannelTranslations(channel, animation_duration, channel_translations);
+			GetChannelRotations(channel, animation_duration, channel_rotations);
 		}
 
-		assert(animation->mDuration == (int)animation->mDuration);
-		
-		if (channel_translations.size() <= 1)
-		{
-			channel_translations[0] = float3::zero;
-			channel_translations[animation->mDuration] = float3::zero;
-		}
-
-		if (channel_rotations.size() <= 1)
-		{
-			channel_rotations[0] = Quat::identity;
-			channel_rotations[animation->mDuration] = Quat::identity;
-		}
-
-		assert(channel_translations.find(0) != channel_translations.end());
-		assert(channel_translations.find(animation->mDuration) != channel_translations.end());
-		size_t current_keyframe = 1;
-		size_t last_keyframe_sample = 0;
-		while (current_keyframe <= animation->mDuration)
-		{
-			if (channel_translations.find(current_keyframe) != channel_translations.end())
-			{
-				last_keyframe_sample = current_keyframe;
-			}
-			else
-			{
-				size_t next_keyframe_sample = current_keyframe;
-				while (next_keyframe_sample <= animation->mDuration && channel_translations.find(next_keyframe_sample) == channel_translations.end())
-				{
-					++next_keyframe_sample;
-				}
-				
-				size_t num_interpolated_samples = next_keyframe_sample - last_keyframe_sample;
-				assert(num_interpolated_samples >= 2);
-				for (size_t current_interpolated_frame = 1; current_interpolated_frame < num_interpolated_samples; ++current_interpolated_frame)
-				{
-					float lambda = current_interpolated_frame/ num_interpolated_samples;
-					channel_translations[current_interpolated_frame + last_keyframe_sample] = Utils::Interpolate(
-						channel_translations[last_keyframe_sample],
-						channel_translations[next_keyframe_sample],
-						lambda
-					);
-				}
-				current_keyframe = next_keyframe_sample;
-			}
-			++current_keyframe;
-		}
-
-
-		assert(channel_rotations.find(0) != channel_rotations.end());
-		if (channel_rotations.find(animation->mDuration) == channel_rotations.end())
-		{
-			int x = 0;
-		}
-		assert(channel_rotations.find(animation->mDuration) != channel_rotations.end());
-		current_keyframe = 1;
-		last_keyframe_sample = 0;
-		while (current_keyframe <= animation->mDuration)
-		{
-			if (channel_rotations.find(current_keyframe) != channel_rotations.end())
-			{
-				last_keyframe_sample = current_keyframe;
-			}
-			else
-			{
-				size_t next_keyframe_sample = current_keyframe;
-				while (next_keyframe_sample <= animation->mDuration && channel_rotations.find(next_keyframe_sample) == channel_rotations.end())
-				{
-					++next_keyframe_sample;
-				}
-
-				size_t num_interpolated_samples = next_keyframe_sample - last_keyframe_sample;
-				assert(num_interpolated_samples >= 2);
-				for (size_t current_interpolated_frame = 1; current_interpolated_frame < num_interpolated_samples; ++current_interpolated_frame)
-				{
-					float lambda = current_interpolated_frame / num_interpolated_samples;
-					channel_rotations[current_interpolated_frame + last_keyframe_sample] = Utils::Interpolate(
-						channel_rotations[last_keyframe_sample],
-						channel_rotations[next_keyframe_sample],
-						lambda
-					);
-				}
-				current_keyframe = next_keyframe_sample;
-			}
-			++current_keyframe;
-		}
-
-
-		for (size_t i = 0; i < animation->mDuration; ++i)
+		for (size_t i = 0; i <= animation_duration; ++i)
 		{
 			Animation::Channel imported_channel{ channel_set.first, scale_factor*channel_translations[i], channel_rotations[i] };
 			keyframes[i].push_back(imported_channel);
@@ -170,43 +85,73 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 	own_format_animation.keyframes.reserve(keyframes.size());
 	for (auto & keyframe : keyframes)
 	{
-		own_format_animation.keyframes.push_back({static_cast<float>(keyframe.first), keyframe.second});
+		own_format_animation.keyframes.push_back({ static_cast<float>(keyframe.first), keyframe.second });
 	}
 
 }
 
-void AnimationImporter::GetChannelTranslations (const aiNodeAnim* sample, std::map<double, float3>& sample_translations) const
+void AnimationImporter::GetChannelTranslations(const aiNodeAnim* sample, float animation_duration, std::map<double, float3>& sample_translations) const
 {
 	for (size_t j = 0; j < sample->mNumPositionKeys; j++)
 	{
 		if (sample->mPositionKeys[j].mTime >= 0)
 		{
+			// Some animation sample times are stored with an small rounding error, so we need to round them
+			double integer_time = std::round(sample->mPositionKeys[j].mTime);
 			aiVector3D position = sample->mPositionKeys[j].mValue;
-			sample_translations[sample->mPositionKeys[j].mTime] = float3(position.x, position.y, position.z);
+			sample_translations[integer_time] = float3(position.x, position.y, position.z);
+		}
+		else
+		{
+			assert(sample->mNumPositionKeys == 1);
+			aiVector3D position = sample->mPositionKeys[j].mValue;
+			sample_translations[0] = float3(position.x, position.y, position.z);
 		}
 	}
+
+	if (sample_translations.size() == 1)
+	{
+		assert(sample_translations.find(0) != sample_translations.end());
+		for (size_t i = 1; i <= animation_duration; ++i)
+		{
+			sample_translations[i] = sample_translations[0];
+		}
+	}
+	assert(sample_translations.size() == animation_duration + 1);
 }
 
-void AnimationImporter::GetChannelRotations(const aiNodeAnim* sample, std::map<double, Quat>& sample_rotations) const
+void AnimationImporter::GetChannelRotations(const aiNodeAnim* sample, float animation_duration, std::map<double, Quat>& sample_rotations) const
 {
 	for (size_t j = 0; j < sample->mNumRotationKeys; j++)
 	{
 		if (sample->mRotationKeys[j].mTime >= 0)
 		{
+			// Some animation sample times are stored with an small rounding error, so we need to round them
+			double integer_time = std::round(sample->mRotationKeys[j].mTime);
 			aiQuaternion rotation = sample->mRotationKeys[j].mValue;
-			Quat rotation_quat = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
-
-			sample_rotations[sample->mRotationKeys[j].mTime] = rotation_quat;
+			sample_rotations[integer_time] = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+		}
+		else
+		{
+			assert(sample->mNumRotationKeys == 1);
+			aiQuaternion rotation = sample->mRotationKeys[j].mValue;
+			sample_rotations[0] = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 		}
 	}
+
+	if (sample_rotations.size() == 1)
+	{
+		assert(sample_rotations.find(0) != sample_rotations.end());
+		for (size_t i = 1; i <= animation_duration; ++i)
+		{
+			sample_rotations[i] = sample_rotations[0];
+		}
+	}
+	assert(sample_rotations.size() == animation_duration + 1);
 }
 
 void AnimationImporter::SaveBinary(const Animation & animation, const std::string & output_file) const
 {
-
-
-	uint32_t num_channels = animation.keyframes.size();
-
 	// number of keyframes +  name size + name + duration
 	uint32_t size = sizeof(uint32_t)*2 + animation.name.size() + sizeof(float);
 
@@ -218,7 +163,7 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 
 		for (auto & channel : keyframe.channels)
 		{
-			//name size + name + position
+			//name size + name + translation + rotation
 			size += sizeof(uint32_t)  + channel.name.size() + sizeof(float3) + sizeof(Quat);
 		}
 	}
@@ -238,9 +183,9 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 	memcpy(cursor, &animation.duration, sizeof(float));
 	cursor += sizeof(float); // Store duration
 
-	memcpy(cursor, &num_channels, sizeof(uint32_t));
+	uint32_t num_keyframes = animation.keyframes.size();
+	memcpy(cursor, &num_keyframes, sizeof(uint32_t));
 	cursor += sizeof(uint32_t); // Store channels
-
 
 
 	for (auto & keyframe : animation.keyframes)

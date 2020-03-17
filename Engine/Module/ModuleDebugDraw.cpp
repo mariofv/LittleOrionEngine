@@ -518,6 +518,11 @@ void ModuleDebugDraw::RenderBones() const
 
 void ModuleDebugDraw::RenderBone(const GameObject* current_bone, const GameObject* last_bone, const float3& color) const
 {
+	if (current_bone->name.substr(current_bone->name.length() - 2) == "IK" || current_bone->name.substr(current_bone->name.length() - 2) == "FK")
+	{
+		return;
+	}
+
 	if (last_bone != nullptr)
 	{
 		dd::line(last_bone->transform.GetGlobalTranslation(), current_bone->transform.GetGlobalTranslation(), color);

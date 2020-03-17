@@ -40,7 +40,6 @@ std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uid)
 	keyframes.resize(num_keyframe);
 	for (auto & keyframe : keyframes)
 	{
-
 		memcpy(&keyframe.frame, cursor,sizeof(float));
 		cursor += sizeof(float);
 
@@ -49,7 +48,6 @@ std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uid)
 		cursor += sizeof(uint32_t);
 
 		keyframe.channels.resize(number_channels);
-
 
 
 		for (auto & channel : keyframe.channels)
