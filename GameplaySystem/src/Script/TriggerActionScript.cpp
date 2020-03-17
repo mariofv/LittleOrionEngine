@@ -74,7 +74,7 @@ void TriggerActionScript::OnInspector(ImGuiContext* context)
 		is_object = trigger_go->name;
 }
 
-bool TriggerActionScript::OnTriggerEnter()
+bool TriggerActionScript::OnTriggerEnter() const
 {
 	return trigger_go && owner->aabb.global_bounding_box.Intersects(trigger_go->aabb.global_bounding_box);
 }

@@ -5,6 +5,7 @@
         "WalkableScript",
         "TriggerActionScript",
         "Player1InputScript",
-        "Player2InputScript"
+        "Player2InputScript",
+        "EndOfLevelScript"
     ]
 }

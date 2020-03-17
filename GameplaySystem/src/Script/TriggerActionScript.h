@@ -17,7 +17,7 @@ public:
 	void Update() override;
 	void OnInspector(ImGuiContext*) override;
 
-	bool OnTriggerEnter();
+	bool OnTriggerEnter() const;
 
 	GameObject* trigger_go = nullptr;
 	WalkableScript* movement_script = nullptr;

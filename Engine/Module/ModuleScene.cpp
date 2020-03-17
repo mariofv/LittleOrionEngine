@@ -6,6 +6,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleRender.h"
 #include "ModuleResourceManager.h"
+#include "ModuleScriptManager.h"
 #include "Component/ComponentCamera.h"
 #include "Helper/Config.h"
 #include "UI/Panel/PanelHierarchy.h"
@@ -146,6 +147,7 @@ void ModuleScene::DeleteCurrentScene()
 void  ModuleScene::NewScene(const std::string &path)
 {
 	App->scene->DeleteCurrentScene();
+	App->scripts->scripts.clear();
 	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 

@@ -171,6 +171,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Script\EndOfLevelScript.h" />
     <ClInclude Include="src\Script\ExampleScript.h" />
     <ClInclude Include="src\Script\Player1InputScript.h" />
     <ClInclude Include="src\Script\Player2InputScript.h" />
@@ -180,6 +181,7 @@
     <ClInclude Include="src\Script\WalkableScript.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Script\EndOfLevelScript.cpp" />
     <ClCompile Include="src\Script\ExampleScript.cpp" />
     <ClCompile Include="src\Script\Player1InputScript.cpp" />
     <ClCompile Include="src\Script\Player2InputScript.cpp" />

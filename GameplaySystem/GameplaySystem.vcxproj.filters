@@ -24,12 +24,16 @@
     <ClInclude Include="src\Script\WalkableScript.h">
       <Filter>src\Script</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\TriggerActionScript.h">
-    </ClInclude>
     <ClInclude Include="src\Script\Player1InputScript.h">
       <Filter>src\Script</Filter>
     </ClInclude>
     <ClInclude Include="src\Script\Player2InputScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\TriggerActionScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\EndOfLevelScript.h">
       <Filter>src\Script</Filter>
     </ClInclude>
   </ItemGroup>
@@ -46,12 +50,16 @@
     <ClCompile Include="src\Script\WalkableScript.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\TriggerActionScript.cpp">
-    </ClCompile>
     <ClCompile Include="src\Script\Player1InputScript.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\Player2InputScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\TriggerActionScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\EndOfLevelScript.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>
