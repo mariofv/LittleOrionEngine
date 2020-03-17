@@ -1,8 +1,7 @@
 #ifndef _UTILS_H_
 #define _UTILS_H_
 
-#include "MathGeoLib.h"
-
+#include <MathGeoLib.h>
 #include <vector>
 
 class Utils
@@ -21,6 +20,9 @@ public:
 	static std::vector<float> GetVertices(const AABB2D &box);
 	size_t CStrlastIndexOfChar(const char* str, char find_char);
 	bool PatchFileName(char* filename);
+
+	static float3 Interpolate(const float3 & first, const float3 & second, float lambda);
+	static Quat Interpolate(const Quat & first, const Quat & second, float lambda);
 
 };
 

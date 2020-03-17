@@ -2,6 +2,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTime.h"
+#include "Helper/Utils.h"
 
 #include <math.h>
 
@@ -83,36 +84,9 @@ bool AnimController::GetTransform(const std::string& channel_name, float3 & pos,
 	if (channel_found)
 	{
 		float delta = current_sample - current_keyframe;
-		pos = Interpolate(current_translation, next_translation, delta);
-		rot = Interpolate(current_rotation, next_rotation, delta);
+		pos = Utils::Interpolate(current_translation, next_translation, delta);
+		rot = Utils::Interpolate(current_rotation, next_rotation, delta);
 	}
 
 	return channel_found;
-}
-
-const float3 AnimController::Interpolate(const float3& first, const float3& second, float lambda)
-{
-	return first * (1.0f - lambda) + second * lambda;
-}
-
-const Quat AnimController::Interpolate(const Quat& first, const Quat& second, float lambda)
-{
-	Quat result;
-	float dot = first.Dot(second);
-	if (dot >= 0.0f) // Interpolate through the shortest path
-	{
-		result.x = first.x*(1.0f - lambda) + second.x*lambda;
-		result.y = first.y*(1.0f - lambda) + second.y*lambda;
-		result.z = first.z*(1.0f - lambda) + second.z*lambda;
-		result.w = first.w*(1.0f - lambda) + second.w*lambda;
-	}
-	else
-	{
-		result.x = first.x*(1.0f - lambda) - second.x*lambda;
-		result.y = first.y*(1.0f - lambda) - second.y*lambda;
-		result.z = first.z*(1.0f - lambda) - second.z*lambda;
-		result.w = first.w*(1.0f - lambda) - second.w*lambda;
-	}
-	result.Normalize();
-	return result;
 }
