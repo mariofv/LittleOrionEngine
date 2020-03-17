@@ -514,7 +514,7 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
 	return selected;
 }
 
-bool ModuleRender::GetRayCastIntersectedPosition(const LineSegment & ray, float3& position)
+bool ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray, float3 & position)
 {
 	GetCullingMeshes(App->cameras->scene_camera);
 	std::vector<ComponentMesh*> intersected_meshes;
@@ -526,6 +526,7 @@ bool ModuleRender::GetRayCastIntersectedPosition(const LineSegment & ray, float3
 		}
 	}
 
+	bool intersected;
 	float min_distance = INFINITY;
 	for (auto & mesh : intersected_meshes)
 	{
@@ -535,18 +536,16 @@ bool ModuleRender::GetRayCastIntersectedPosition(const LineSegment & ray, float3
 		for (auto & triangle : triangles)
 		{
 			float distance;
-			bool intersected = triangle.Intersects(transformed_ray, &distance);
+			float3 intersected_point;
+			intersected = triangle.Intersects(transformed_ray, &distance, &intersected_point);
 			if (intersected && distance < min_distance)
 			{
+				position = intersected_point;
 				min_distance = distance;
-				position = triangle.CenterPoint();
 			}
 		}
 	}
-
-	if (min_distance == INFINITY)
-		return false;
-
-	return true;
+	return intersected;
 }
+
 

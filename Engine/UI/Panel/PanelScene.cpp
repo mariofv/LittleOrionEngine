@@ -268,7 +268,7 @@ void PanelScene::MousePicking(const float2& mouse_position)
 	App->cameras->scene_camera->GetRay(window_mouse_position_normalized, ray);
 	GameObject* intersected = App->renderer->GetRaycastIntertectedObject(ray);
 	App->editor->selected_game_object = intersected;
-	App->renderer->GetRayCastIntersectedPosition(ray, App->editor->selected_position);
+	App->renderer->GetRaycastIntertectedObject(ray, App->editor->selected_position);
 }
 
 
