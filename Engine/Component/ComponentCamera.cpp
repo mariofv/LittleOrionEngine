@@ -209,7 +209,6 @@ void ComponentCamera::RecordFrame(float width, float height)
 	}
 
 	App->renderer->RenderFrame(*this);
-	App->artificial_intelligence->RenderNavMesh(*App->cameras->scene_camera);
 
 	if (App->renderer->anti_aliasing)
 	{

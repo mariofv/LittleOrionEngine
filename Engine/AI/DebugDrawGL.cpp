@@ -13,7 +13,7 @@ void DebugDrawGL::Vertex(const float* pos, unsigned int color)
 
 void DebugDrawGL::DrawMesh(ComponentCamera& camera)
 {
-	if (vertices.size() == 0 || !App->debug->show_navmesh)
+	if (vertices.size() == 0)
 		return;
 
 

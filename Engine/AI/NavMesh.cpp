@@ -984,3 +984,17 @@ int NavMesh::FixUpCorridor(dtPolyRef * path, const int npath, const int max_path
 	return req + size;
 }
 
+float NavMesh::DistancePtLine2d(const float * pt, const float * p, const float * q) const
+{
+	float pqx = q[0] - p[0];
+	float pqz = q[2] - p[2];
+	float dx = pt[0] - p[0];
+	float dz = pt[2] - p[2];
+	float d = pqx * pqx + pqz * pqz;
+	float t = pqx * dx + pqz * dz;
+	if (d != 0) t /= d;
+	dx = p[0] + t * pqx - pt[0];
+	dz = p[2] + t * pqz - pt[2];
+	return dx * dx + dz * dz;
+}
+

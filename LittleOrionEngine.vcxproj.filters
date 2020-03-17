@@ -361,8 +361,6 @@
     <ClCompile Include="Engine\AI\NavMesh.cpp">
       <Filter>Engine\AI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
-    <ClCompile Include="Engine\UI\Panel\PanelNavMesh.cpp" />
     <ClCompile Include="Engine\AI\DebugDrawGL.cpp">
       <Filter>Engine\AI</Filter>
     </ClCompile>
@@ -377,6 +375,12 @@
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\SceneManager.cpp">
       <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\AI\SampleDebugDraw.cpp">
+      <Filter>Engine\AI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\UI\Panel\PanelNavMesh.cpp">
+      <Filter>Engine\UI\Panel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -719,8 +723,6 @@
     <ClInclude Include="Engine\AI\NavMesh.h">
       <Filter>Engine\AI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
-    <ClInclude Include="Engine\UI\Panel\PanelNavMesh.h" />
     <ClInclude Include="Engine\AI\DebugDrawGL.h">
       <Filter>Engine\AI</Filter>
     </ClInclude>
@@ -735,6 +737,12 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\SceneManager.h">
       <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\AI\SampleDebugDraw.h">
+      <Filter>Engine\UI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\UI\Panel\PanelNavMesh.h">
+      <Filter>Engine\UI\Panel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

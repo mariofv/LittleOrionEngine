@@ -383,6 +383,12 @@ bool ModuleDebugDraw::Init()
 
 void ModuleDebugDraw::Render()
 {
+
+	if(App->debug->show_navmesh)
+	{
+		App->artificial_intelligence->RenderNavMesh(*App->cameras->scene_camera);
+	}
+
 	if (App->debug->show_grid)
 	{
 		RenderGrid();
