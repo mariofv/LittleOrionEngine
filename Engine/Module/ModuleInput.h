@@ -421,6 +421,8 @@ private:
 	void SaveGameInputs(Config &config);
 	void LoadGameInputs(Config &config);
 
+	float2 Filter2D(Sint16 input_x, Sint16 input_y) const;
+
 
 public:
 	const float MAX_SDL_CONTROLLER_RANGE = 32767.0f;

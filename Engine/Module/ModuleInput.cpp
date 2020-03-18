@@ -176,27 +176,31 @@ update_status ModuleInput::PreUpdate()
 		{
 			int which = event.cbutton.which;
 			left_joystick = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
-			left_joystick_raw = float2(left_joystick / MAX_SDL_CONTROLLER_RANGE);
+			//left_joystick_raw = float2(left_joystick / MAX_SDL_CONTROLLER_RANGE);
 
 			right_joystick = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
-			right_joystick_raw = float2(right_joystick / MAX_SDL_CONTROLLER_RANGE);
+			//right_joystick_raw = float2(right_joystick / MAX_SDL_CONTROLLER_RANGE);
 
-			if (left_joystick.x < 0.0f)
-			{
-				left_joystick_raw.x = left_joystick.x / MAX_SDL_CONTROLLER_RANGE + 1;
-			}
-			else if (left_joystick.y >= 0.0f)
-			{
-				left_joystick_raw.y = left_joystick.y / MAX_SDL_CONTROLLER_RANGE;
-			}
-			else if (right_joystick.x < 0.0f)
-			{
-				right_joystick_raw.x = right_joystick.x / MAX_SDL_CONTROLLER_RANGE + 1;
-			}
-			else if (right_joystick.y >= 0.0f)
-			{
-				right_joystick_raw.y = right_joystick.y / MAX_SDL_CONTROLLER_RANGE;
-			}
+			left_joystick_raw = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
+			right_joystick_raw = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
+
+
+			//if (left_joystick.x < 0.0f)
+			//{
+			//	left_joystick_raw.x = left_joystick.x / MAX_SDL_CONTROLLER_RANGE + 1;
+			//}
+			//else if (left_joystick.y >= 0.0f)
+			//{
+			//	left_joystick_raw.y = left_joystick.y / MAX_SDL_CONTROLLER_RANGE;
+			//}
+			//else if (right_joystick.x < 0.0f)
+			//{
+			//	right_joystick_raw.x = right_joystick.x / MAX_SDL_CONTROLLER_RANGE + 1;
+			//}
+			//else if (right_joystick.y >= 0.0f)
+			//{
+			//	right_joystick_raw.y = right_joystick.y / MAX_SDL_CONTROLLER_RANGE;
+			//}
 
 
 			left_controller_trigger = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
@@ -528,4 +532,36 @@ void ModuleInput::LoadGameInputs(Config &serialized_config)
 
 		game_inputs[game_input.name] = game_input;
 	}
+}
+
+float2 ModuleInput::Filter2D(Sint16 input_x, Sint16 input_y) const
+{
+
+	const float dead_zone = 8000.0f;
+	const float max_value = 30000.0f;
+
+	float2 dir;
+	dir.x = static_cast<float>(input_x);
+	dir.y = static_cast<float>(input_y);
+
+	float length = dir.Length();
+
+	//if len < dead_zone then should be no input
+	if(length < dead_zone)
+	{
+		dir = float2::zero;
+	}
+	else
+	{
+		//Compute fractional interpolation between dead zone and max_value
+		float f = (length - dead_zone) / (max_value - dead_zone);
+
+		//Clamp f between 0.0f and 1.0f
+		f = math::Clamp(f, 0.0f, 1.0f);
+		//Normalize the vector, and then scale it to the fractional value
+		dir *= f / length;
+	}
+
+
+	return dir;
 }
