@@ -5,6 +5,10 @@
 #include "Actions/EditorActionScale.h"
 #include "Actions/EditorActionTranslate.h"
 
+#include "EditorUI/Panel/PanelPopups.h"
+#include "EditorUI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
+#include "Helper/Utils.h"
+
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentTransform.h"
@@ -22,12 +26,8 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
 
-#include "UI/Panel/PanelPopups.h"
-#include "UI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
-
 #include "ResourceManagement/Importer/Importer.h"
 
-#include "UI/Panel/PanelPopups.h"
 
 #include <imgui.h>
 #include <imgui_stdlib.h>

@@ -5,12 +5,12 @@
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
 
+#include "EditorUI/Panel/PanelInspector.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
 #include "ResourceManagement/Resources/Prefab.h"
-#include "UI/Panel/PanelInspector.h"
 
 #include <imgui.h>
 #include <imgui_stdlib.h>

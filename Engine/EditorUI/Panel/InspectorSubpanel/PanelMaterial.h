@@ -2,7 +2,7 @@
 #define _PANELMATERIAL_H_
 
 #include "ResourceManagement/Resources/Material.h"
-#include "UI/Panel/Panel.h"
+#include "EditorUI/Panel/Panel.h"
 
 class PanelMaterial : public Panel
 {

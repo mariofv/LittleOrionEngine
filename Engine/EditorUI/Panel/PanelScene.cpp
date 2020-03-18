@@ -1,6 +1,7 @@
 #include "PanelScene.h"
 
 #include "Component/ComponentCamera.h"
+#include "EditorUI/Panel/PanelHierarchy.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
@@ -16,8 +17,6 @@
 
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/Prefab.h"
-
-#include "UI/Panel/PanelHierarchy.h"
 
 #include <Brofiler/Brofiler.h>
 #include <imgui.h>

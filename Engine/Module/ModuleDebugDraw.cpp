@@ -3,6 +3,10 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
+
+#include "EditorUI/Helper/Billboard.h"
+#include "EditorUI/Helper/Grid.h"
+
 #include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
@@ -11,10 +15,9 @@
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 #include "SpacePartition/OLQuadTree.h"
-#include "UI/Billboard.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
-#include "UI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
+#include "EditorUI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
 
 #include <GL/glew.h>
 #include <assert.h>
@@ -374,7 +377,9 @@ bool ModuleDebugDraw::Init()
 
 	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 1.72f, 2.5f);	
 	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 2.5f, 2.5f);
-    
+
+	grid = new Grid();
+
     APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
 
 	return true;
@@ -383,11 +388,6 @@ bool ModuleDebugDraw::Init()
 void ModuleDebugDraw::Render()
 {
 	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
-
-	if (App->debug->show_grid)
-	{
-		RenderGrid();
-	}
 
 	if (App->debug->show_quadtree)
 	{
@@ -437,48 +437,14 @@ void ModuleDebugDraw::Render()
 
 	RenderBillboards();
 
+	if (App->debug->show_grid)
+	{
+		float scene_camera_height = App->cameras->scene_camera->owner->transform.GetGlobalTranslation().y;
+		grid->ScaleOnDistance(scene_camera_height);
+		grid->Render();
+	}
+
 	RenderDebugDraws(*App->cameras->scene_camera);
-}
-
-void ModuleDebugDraw::RenderGrid() const
-{
-	BROFILER_CATEGORY("Render Grid", Profiler::Color::Lavender);
-
-	// TODO: This stills inneficient as fuck :D
-	dd::xzSquareGrid(-1000.0f, 1000.0f, 0.0f, 10.f, math::float3(0.65f));
-
-	// TODO: Rethink dynamic grid because the following code is extremely inefficient
-	/*
-	float camera_distance_to_grid = App->cameras->scene_camera->owner->transform.GetTranslation().y;
-	float camera_distance_to_grid_abs = abs(camera_distance_to_grid);
-	float camera_horizontal_fov = App->cameras->scene_camera->camera_frustum.horizontalFov;
-
-	int grid_frustum_projection_half_size = FloorInt(tanf(camera_horizontal_fov / 2) * camera_distance_to_grid_abs);
-
-	int current_magnitude_order = MIN_MAGNITUDE_ORDER_GRID;
-	while (current_magnitude_order <= MAX_MAGNITUDE_ORDER_GRID && pow(10, current_magnitude_order) < grid_frustum_projection_half_size)
-	{
-		++current_magnitude_order;
-	}
-	int previous_magnitude_order = max(MIN_MAGNITUDE_ORDER_GRID, current_magnitude_order - 1);
-
-	int current_magnitude = pow(10, current_magnitude_order);
-	int previous_magnitude = pow(10, previous_magnitude_order);
-
-	if (previous_magnitude_order == current_magnitude_order || previous_magnitude_order == MAX_MAGNITUDE_ORDER_GRID) // Camera is too close or too far away from grid
-	{
-		dd::xzSquareGrid(-500.0f * previous_magnitude, 500.0f * previous_magnitude, 0.0f, previous_magnitude, math::float3(0.65f));
-	}
-	else
-	{
-		float progress_to_next_magnitude_order = (float)(grid_frustum_projection_half_size - previous_magnitude) / (current_magnitude - previous_magnitude);
-		float previous_grid_height = camera_distance_to_grid > 0 ? -0.01f : 0.01f; // Used to avoid overlapping of grids
-		// TODO: The color of the dissapearing grid fades to black, when it should fade to transparent
-		dd::xzSquareGrid(-500.0f * previous_magnitude, 500.0f * previous_magnitude, previous_grid_height, previous_magnitude, math::float3(0.65f * (1 - progress_to_next_magnitude_order)));
-
-		dd::xzSquareGrid(-500.0f * current_magnitude, 500.0f * current_magnitude, 0.0f, current_magnitude, math::float3(0.65f));
-	}
-	*/
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
@@ -661,6 +627,7 @@ bool ModuleDebugDraw::CleanUp()
 
 	delete light_billboard;
 	delete camera_billboard;
+	delete grid;
 
 	return true;
 }

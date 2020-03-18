@@ -3,12 +3,15 @@
 
 #include "Resource.h"
 #include "ResourceManagement/Loaders/PrefabLoader.h"
-#include "UI/Panel/PanelHierarchy.h"
+#include "EditorUI/Panel/PanelHierarchy.h"
+
 #include <vector>
 #include <memory>
 #include <unordered_map>
+
 class GameObject;
 class Component;
+
 class Prefab : public Resource
 {
 public:

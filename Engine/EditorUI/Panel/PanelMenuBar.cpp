@@ -1,24 +1,24 @@
 #include "PanelMenuBar.h"
 
+#include "EditorUI/Panel/PanelAbout.h"
+#include "EditorUI/Panel/PanelConfiguration.h"
+#include "EditorUI/Panel/PanelConsole.h"
+#include "EditorUI/Panel/PanelDebug.h"
+#include "EditorUI/Panel/PanelGame.h"
+#include "EditorUI/Panel/PanelHierarchy.h"
+#include "EditorUI/Panel/PanelInspector.h"
+#include "EditorUI/Panel/PanelProjectExplorer.h"
+#include "EditorUI/Panel/PanelScene.h"
+#include "EditorUI/Panel/PanelResourceDatabase.h"
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleScene.h"
-#include "UI/Panel/PanelAbout.h"
-#include "UI/Panel/PanelConfiguration.h"
-#include "UI/Panel/PanelConsole.h"
-#include "UI/Panel/PanelDebug.h"
-#include "UI/Panel/PanelGame.h"
-#include "UI/Panel/PanelHierarchy.h"
-#include "UI/Panel/PanelInspector.h"
-#include "UI/Panel/PanelProjectExplorer.h"
-#include "UI/Panel/PanelResourceDatabase.h"
-#include "UI/Panel/PanelScene.h"
 
-#include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
+#include <imgui.h>
 #include <SDL/SDL.h>
 
 PanelMenuBar::PanelMenuBar()

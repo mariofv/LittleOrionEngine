@@ -8,8 +8,6 @@
 #include "Module/ModuleWindow.h"
 #include "PanelConfiguration.h"
 
-
-
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
 #include <imgui.h>

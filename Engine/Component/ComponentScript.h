@@ -2,7 +2,7 @@
 #define _COMPONENTSCRIPT_H_
 
 #include "Component.h"
-#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include <string>
 #include <unordered_map>

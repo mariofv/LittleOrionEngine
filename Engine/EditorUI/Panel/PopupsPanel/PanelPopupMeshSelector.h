@@ -1,7 +1,7 @@
 #ifndef _PANELPOPUPMESHSELECTOR_H_
 #define _PANELPOPUPMESHSELECTOR_H_
 
-#include "UI/Panel/Panel.h"
+#include "EditorUI/Panel/Panel.h"
 #include "Module/ModuleFileSystem.h"
 
 #include <string>

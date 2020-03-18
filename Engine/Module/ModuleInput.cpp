@@ -1,5 +1,8 @@
 #include "ModuleInput.h"
 
+#include "Component/ComponentCamera.h"
+#include "EditorUI/Panel/PanelProjectExplorer.h"
+#include "EditorUI/Panel/PanelScene.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleWindow.h"
@@ -10,15 +13,12 @@
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 #include "ModuleUI.h"
-#include "Component/ComponentCamera.h"
-#include "UI/Panel/PanelProjectExplorer.h"
-#include "UI/Panel/PanelScene.h"
 
-#include <SDL/SDL.h>
-#include "imgui.h"
-#include "imgui_impl_sdl.h"
+#include <Brofiler/Brofiler.h>
 #include <GL/glew.h>
-#include "Brofiler/Brofiler.h"
+#include <imgui.h>
+#include <imgui_impl_sdl.h>
+#include <SDL/SDL.h>
 
 // Called before render is available
 bool ModuleInput::Init()

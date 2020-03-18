@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Material.h"
-#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 class ComponentMeshRenderer : public Component
 {

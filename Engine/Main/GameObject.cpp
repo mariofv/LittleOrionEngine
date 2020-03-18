@@ -1,5 +1,6 @@
 #include "GameObject.h"
 #include "Application.h"
+#include "EditorUI/Panel/PanelHierarchy.h"
 #include "Helper/Config.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
@@ -10,7 +11,6 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "ResourceManagement/Resources/Prefab.h"
-#include "UI/Panel/PanelHierarchy.h"
 
 
 #include "Component/ComponentCamera.h"
@@ -18,7 +18,7 @@
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
 
-#include "Brofiler/Brofiler.h"
+#include <Brofiler/Brofiler.h>
 #include <pcg_basic.h>
 #include <rapidjson/stringbuffer.h>
 #include <rapidjson/prettywriter.h>

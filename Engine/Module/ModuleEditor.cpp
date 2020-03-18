@@ -1,6 +1,21 @@
 #include "ModuleEditor.h"
 
+#include "EditorUI/Panel/PanelAbout.h"
+#include "EditorUI/Panel/PanelConfiguration.h"
+#include "EditorUI/Panel/PanelConsole.h"
+#include "EditorUI/Panel/PanelDebug.h"
+#include "EditorUI/Panel/PanelGame.h"
+#include "EditorUI/Panel/PanelMenuBar.h"
+#include "EditorUI/Panel/PanelHierarchy.h"
+#include "EditorUI/Panel/PanelInspector.h"
+#include "EditorUI/Panel/PanelPopups.h"
+#include "EditorUI/Panel/PanelProjectExplorer.h"
+#include "EditorUI/Panel/PanelResourceDatabase.h"
+#include "EditorUI/Panel/PanelScene.h"
+#include "EditorUI/Panel/PanelToolBar.h"
+
 #include "Helper/Config.h"
+
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleResourceManager.h"
@@ -9,30 +24,16 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 
-#include "UI/Panel/PanelAbout.h"
-#include "UI/Panel/PanelConfiguration.h"
-#include "UI/Panel/PanelConsole.h"
-#include "UI/Panel/PanelDebug.h"
-#include "UI/Panel/PanelGame.h"
-#include "UI/Panel/PanelMenuBar.h"
-#include "UI/Panel/PanelHierarchy.h"
-#include "UI/Panel/PanelInspector.h"
-#include "UI/Panel/PanelPopups.h"
-#include "UI/Panel/PanelProjectExplorer.h"
-#include "UI/Panel/PanelResourceDatabase.h"
-#include "UI/Panel/PanelScene.h"
-#include "UI/Panel/PanelToolBar.h"
+#include <Brofiler/Brofiler.h>
+#include <FontAwesome5/IconsFontAwesome5.h>
+#include <FontAwesome5/IconsFontAwesome5Brands.h>
 
-#include <SDL/SDL.h>
 #include <GL/glew.h>
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl.h>
-#include <FontAwesome5/IconsFontAwesome5.h>
-#include <FontAwesome5/IconsFontAwesome5Brands.h>
-#include <Brofiler/Brofiler.h>
-
+#include <SDL/SDL.h>
 
 // Called before render is available
 bool ModuleEditor::Init()

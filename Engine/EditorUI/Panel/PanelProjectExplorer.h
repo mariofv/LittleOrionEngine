@@ -1,7 +1,7 @@
 #ifndef _PANELPROJECTEXPLORER_H_
 #define _PANELPROJECTEXPLORER_H_
 
-#include "UI/Panel/Panel.h"
+#include "EditorUI/Panel/Panel.h"
 #include "Module/ModuleFileSystem.h"
 
 class PanelProjectExplorer : public Panel

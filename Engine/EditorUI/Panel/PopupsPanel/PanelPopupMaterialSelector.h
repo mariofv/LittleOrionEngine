@@ -1,7 +1,7 @@
 #ifndef _PANELPOPUPMATERIALSELECTOR_H_
 #define _PANELPOPUPMATERIALSELECTOR_H_
 
-#include "UI/Panel/Panel.h"
+#include "EditorUI/Panel/Panel.h"
 #include "Module/ModuleFileSystem.h"
 
 #include <string>
