@@ -8,6 +8,7 @@
 #include "Module/ModuleAI.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleTime.h"
 
 #include "UI/Panel/InspectorSubpanel/PanelComponent.h"
 
@@ -29,7 +30,7 @@ WalkableScript::WalkableScript()
 // Use this for initialization before Start()
 void WalkableScript::Awake()
 {
-
+	gravity_vector = float3(0.0f, -9.8f, 0.0f);
 }
 
 // Use this for initialization
@@ -55,6 +56,7 @@ void WalkableScript::OnInspector(ImGuiContext* context)
 	//Example Showing variables and being able to modify it on Runtime.
 	ImGui::DragFloat("Speed", &speed, 0.01f, 0.f, 0.5f);
 	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.f, 0.5f);
+	ImGui::DragFloat("Jump Power", &jump_power, 2.0f, 2.0f, 10.0f);
 }
 
 void WalkableScript::Move()
@@ -99,6 +101,29 @@ void WalkableScript::Move()
 		owner->transform.SetRotation(float3(rotation.x, rotation.y + rotation_speed, rotation.z));
 	}
 
-	if (App->artificial_intelligence->IsPointWalkable(new_transform))
-		owner->transform.SetTranslation(new_transform);
+	if(App->input->GetKey(KeyCode::Space))
+	{
+		if(!is_jumping)
+		{
+			is_jumping = true;
+			current_y = transform.y;
+			movement_vector = float3(0.0f, jump_power, 0.0f);
+		}
+	}
+
+	if(is_jumping)
+	{
+		//Delta time conversion to seconds
+		new_transform += App->time->delta_time / 1000.0f * movement_vector;
+		movement_vector += App->time->delta_time / 1000.0f * gravity_vector;
+
+		if(new_transform.y <= current_y)
+		{
+			is_jumping = false;
+			new_transform.y = current_y;
+		}
+	}
+
+	//if (App->artificial_intelligence->IsPointWalkable(new_transform))
+	owner->transform.SetTranslation(new_transform);
 }
