@@ -53,6 +53,12 @@
          "Vertex":"Resources/Shaders/billboard.vs",
          "Fragment":"Resources/Shaders/billboard.fs",
          "Selectable":false
+      },
+      {
+         "Name":"Sprite",
+         "Vertex":"Resources/Shaders/sprite.vs",
+         "Fragment":"Resources/Shaders/sprite.fs",
+         "Selectable":false
       }
    ]
 }

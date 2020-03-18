@@ -5,12 +5,14 @@
 #include "Actions/EditorActionScale.h"
 #include "Actions/EditorAction.h"
 
+
+#include "Component/ComponentCanvas.h"
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentLight.h"
 #include "Component/ComponentMaterial.h"
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentLight.h"
-#include "Component/ComponentCanvas.h"
+#include "Component/ComponentUI.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -474,6 +476,31 @@ void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 	}
 }
 
+void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::Checkbox("Active", &ui->active))
+		{
+			//UndoRedo
+			App->actions->action_component = ui;
+			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(ui);
+			return;
+		}
+		ImGui::Separator();
+
+		ImGui::InputFloat2("Size", ui->size.ptr());
+		ImGui::InputFloat2("Position", ui->position.ptr());
+		ImGui::InputInt("Texture", (int*) (&ui->ui_texture));
+		ImGui::ColorPicker3("Color", ui->color.ptr());
+	}
+}
+
 
 void PanelComponent::ShowAddNewComponentButton()
 {
@@ -514,6 +541,13 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::CANVAS);
+
+		}
+
+		sprintf_s(tmp_string, "%s Ui", ICON_FA_SWATCHBOOK);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI);
 
 		}
 

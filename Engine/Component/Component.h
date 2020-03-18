@@ -19,7 +19,8 @@ public:
 		TRANSFORM,
 		LIGHT,
         CANVAS,
-		TRANSFORM2D
+		TRANSFORM2D,
+		UI
 	};
 
 	Component(ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
@@ -41,7 +42,7 @@ public:
 
 	static ComponentType GetComponentType(unsigned int component_type_uint)
 	{
-		return (ComponentType) component_type_uint;
+		return ComponentType(component_type_uint);
 	}
 
 public:
