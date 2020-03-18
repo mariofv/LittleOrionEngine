@@ -3,6 +3,7 @@
         "ExampleScript",
         "TestScriptRuntime",
         "WalkableScript",
-        "TriggerActionScript"
+        "TriggerActionScript",
+        "CameraController"
     ]
 }
