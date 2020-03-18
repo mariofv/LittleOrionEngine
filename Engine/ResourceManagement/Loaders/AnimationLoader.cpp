@@ -60,8 +60,14 @@ std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uid)
 			memcpy(channel.name.data(), cursor, name_size);
 			cursor += name_size;
 
+			memcpy(&channel.is_translated, cursor, sizeof(bool));
+			cursor += sizeof(bool);
+
 			memcpy(&channel.translation, cursor,sizeof(float3));
 			cursor += sizeof(float3);
+
+			memcpy(&channel.is_rotated, cursor, sizeof(bool));
+			cursor += sizeof(bool);
 
 			memcpy(&channel.rotation, cursor, sizeof(Quat));
 			cursor += sizeof(Quat);

@@ -13,7 +13,8 @@ public:
 	void Stop();
 	void Update(); 
 
-	bool GetTransform(const std::string& channel_name, float3& pos, Quat& rot);
+	bool GetTranslation(const std::string& channel_name, float3& pos);
+	bool GetRotation(const std::string& channel_name, Quat& rot);
 
 public:
 	Animation* anim = nullptr;

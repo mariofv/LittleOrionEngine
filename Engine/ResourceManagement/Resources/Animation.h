@@ -10,7 +10,11 @@ public:
 	struct Channel
 	{
 		std::string name;
+
+		bool is_translated;
 		float3 translation;
+
+		bool is_rotated;
 		Quat rotation;
 	};
 

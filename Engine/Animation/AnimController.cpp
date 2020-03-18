@@ -51,7 +51,7 @@ void AnimController::Update()
 
 }
 
-bool AnimController::GetTransform(const std::string& channel_name, float3 & pos, Quat & rot)
+bool AnimController::GetTranslation(const std::string& channel_name, float3 & pos)
 {
 	float current_sample = (current_time*(anim->duration - 1)) / animation_time;
 	int current_keyframe = math::FloorInt(current_sample);
@@ -60,6 +60,39 @@ bool AnimController::GetTransform(const std::string& channel_name, float3 & pos,
 
 	float3 current_translation;
 	float3 next_translation;
+
+	bool channel_found = false;
+	size_t i = 0;
+	while (!channel_found && i < anim->keyframes[current_keyframe].channels.size())
+	{
+		if (anim->keyframes[current_keyframe].channels[i].name == channel_name)
+		{
+			channel_found = true;
+			if (!anim->keyframes[current_keyframe].channels[i].is_translated)
+			{
+				return false;
+			}
+			current_translation = anim->keyframes[current_keyframe].channels[i].translation;
+			next_translation = anim->keyframes[next_keyframe].channels[i].translation;
+		}
+		++i;
+	}
+
+	if (channel_found)
+	{
+		float delta = current_sample - current_keyframe;
+		pos = Utils::Interpolate(current_translation, next_translation, delta);
+	}
+
+	return channel_found;
+}
+
+bool AnimController::GetRotation(const std::string& channel_name, Quat & rot)
+{
+	float current_sample = (current_time*(anim->duration - 1)) / animation_time;
+	int current_keyframe = math::FloorInt(current_sample);
+
+	int next_keyframe = (current_keyframe + 1) % (int)anim->duration;
 
 	Quat current_rotation;
 	Quat next_rotation;
@@ -71,9 +104,10 @@ bool AnimController::GetTransform(const std::string& channel_name, float3 & pos,
 		if (anim->keyframes[current_keyframe].channels[i].name == channel_name)
 		{
 			channel_found = true;
-
-			current_translation = anim->keyframes[current_keyframe].channels[i].translation;
-			next_translation = anim->keyframes[next_keyframe].channels[i].translation;
+			if (!anim->keyframes[current_keyframe].channels[i].is_rotated)
+			{
+				return false;
+			}
 
 			current_rotation = anim->keyframes[current_keyframe].channels[i].rotation;
 			next_rotation = anim->keyframes[next_keyframe].channels[i].rotation;
@@ -84,7 +118,6 @@ bool AnimController::GetTransform(const std::string& channel_name, float3 & pos,
 	if (channel_found)
 	{
 		float delta = current_sample - current_keyframe;
-		pos = Utils::Interpolate(current_translation, next_translation, delta);
 		rot = Utils::Interpolate(current_rotation, next_rotation, delta);
 	}
 

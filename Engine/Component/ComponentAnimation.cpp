@@ -54,13 +54,21 @@ void ComponentAnimation::Load(const Config& config)
 void ComponentAnimation::UpdateBone(GameObject* current_bone)
 {
 	float3 bone_position;
-	Quat bone_rotation;
-	if (animation_controller->GetTransform(current_bone->name, bone_position, bone_rotation))
+	if (current_bone->name == "Hips")
+	{
+		int x = 0;
+	}
+	if (animation_controller->GetTranslation(current_bone->name, bone_position))
 	{
 		current_bone->transform.SetTranslation(bone_position);
+	}
+
+	Quat bone_rotation;
+	if (animation_controller->GetRotation(current_bone->name, bone_rotation))
+	{
 		current_bone->transform.SetRotation(bone_rotation.ToFloat3x3());
 	}
-	
+
 	for (auto& children_bone : current_bone->children)
 	{
 		UpdateBone(children_bone);

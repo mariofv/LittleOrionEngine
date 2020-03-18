@@ -3,6 +3,8 @@
 
 #include "Module.h"
 
+#include "ModuleDebugDraw.h"
+
 class ComponentAnimation;
 class GameObject;
 
@@ -21,6 +23,7 @@ public:
 
 private:
 	std::vector<ComponentAnimation*> animations;
+	friend ModuleDebugDraw;
 };
 
 #endif //_MODULEANIMATION_H_

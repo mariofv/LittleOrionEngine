@@ -1,10 +1,12 @@
 #include "ModuleDebugDraw.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMesh.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "ModuleAnimation.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleDebug.h"
@@ -507,13 +509,16 @@ void ModuleDebugDraw::RenderLightGizmo() const
 
 void ModuleDebugDraw::RenderBones() const
 {
-	GameObject* selected_game_object = App->editor->selected_game_object;
-	Component* selected_object_animation_component = selected_game_object->GetComponent(Component::ComponentType::ANIMATION);
-
-	if (selected_object_animation_component != nullptr && selected_object_animation_component->IsEnabled())
+	for (auto& animation : App->animations->animations)
 	{
-		RenderBone(selected_game_object, nullptr, float3(1.f, 0.f, 0.f));
+		if (animation->IsEnabled())
+		{
+			GameObject* animation_game_object = animation->owner;
+			RenderBone(animation_game_object, nullptr, float3(1.f, 0.f, 0.f));
+		}
 	}
+
+	
 }
 
 void ModuleDebugDraw::RenderBone(const GameObject* current_bone, const GameObject* last_bone, const float3& color) const

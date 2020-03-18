@@ -77,7 +77,33 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 
 		for (size_t i = 0; i <= animation_duration; ++i)
 		{
-			Animation::Channel imported_channel{ channel_set.first, scale_factor*channel_translations[i], channel_rotations[i] };
+			bool is_translated;
+			float3 translation;
+			if (channel_translations.size() > 1)
+			{
+				is_translated = true;
+				translation = scale_factor * channel_translations[i];
+			}
+			else
+			{
+				is_translated = false;
+				translation =  channel_translations[0];
+			}
+
+			bool is_rotated;
+			Quat rotation;
+			if (channel_translations.size() > 1)
+			{
+				is_rotated = true;
+				rotation = channel_rotations[i];
+			}
+			else
+			{
+				is_rotated = false;
+				rotation = channel_rotations[0];
+			}
+
+			Animation::Channel imported_channel{ channel_set.first, is_translated, translation, is_rotated, rotation };
 			keyframes[i].push_back(imported_channel);
 		}
 	}
@@ -108,16 +134,6 @@ void AnimationImporter::GetChannelTranslations(const aiNodeAnim* sample, float a
 			sample_translations[0] = float3(position.x, position.y, position.z);
 		}
 	}
-
-	if (sample_translations.size() == 1)
-	{
-		assert(sample_translations.find(0) != sample_translations.end());
-		for (size_t i = 1; i <= animation_duration; ++i)
-		{
-			sample_translations[i] = sample_translations[0];
-		}
-	}
-	assert(sample_translations.size() == animation_duration + 1);
 }
 
 void AnimationImporter::GetChannelRotations(const aiNodeAnim* sample, float animation_duration, std::map<double, Quat>& sample_rotations) const
@@ -138,16 +154,6 @@ void AnimationImporter::GetChannelRotations(const aiNodeAnim* sample, float anim
 			sample_rotations[0] = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 		}
 	}
-
-	if (sample_rotations.size() == 1)
-	{
-		assert(sample_rotations.find(0) != sample_rotations.end());
-		for (size_t i = 1; i <= animation_duration; ++i)
-		{
-			sample_rotations[i] = sample_rotations[0];
-		}
-	}
-	assert(sample_rotations.size() == animation_duration + 1);
 }
 
 void AnimationImporter::SaveBinary(const Animation & animation, const std::string & output_file) const
@@ -164,7 +170,7 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 		for (auto & channel : keyframe.channels)
 		{
 			//name size + name + translation + rotation
-			size += sizeof(uint32_t)  + channel.name.size() + sizeof(float3) + sizeof(Quat);
+			size += sizeof(uint32_t)  + channel.name.size() + sizeof(bool) + sizeof(float3) + sizeof(bool) + sizeof(Quat);
 		}
 	}
 
@@ -206,8 +212,14 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 			memcpy(cursor, channel.name.data(), name_size);
 			cursor += name_size;
 
+			memcpy(cursor, &channel.is_translated, sizeof(bool));
+			cursor += sizeof(bool);
+
 			memcpy(cursor, &channel.translation, sizeof(float3));
 			cursor += sizeof(float3);
+
+			memcpy(cursor, &channel.is_rotated, sizeof(bool));
+			cursor += sizeof(bool);
 
 			memcpy(cursor, &channel.rotation, sizeof(Quat));
 			cursor += sizeof(Quat);
