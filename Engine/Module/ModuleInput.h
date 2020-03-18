@@ -7,6 +7,7 @@
 
 #include <SDL_scancode.h>
 #include <SDL_mouse.h>
+#include <SDL_gamecontroller.h>
 #include <MathGeoLib.h>
 #include <map>
 #include <string>
@@ -18,8 +19,9 @@ typedef unsigned __int8 Uint8;
 
 const int MAX_KEYS = 286;
 const int MAX_MOUSE_BUTTONS = 5;
+const int MAX_CONTROLLER_BUTTONS = 15;
 
-enum class KeyState
+enum class KeyState : Uint8
 {
 	IDLE, 
 	DOWN, 
@@ -27,7 +29,7 @@ enum class KeyState
 	UP
 };
 
-enum class KeyCode
+enum class KeyCode : short
 {
 	None = SDL_SCANCODE_UNKNOWN,
 
@@ -278,13 +280,45 @@ enum class KeyCode
 	AudioFastForward = SDL_SCANCODE_AUDIOFASTFORWARD,
 };
 
-enum class MouseButton
+enum class MouseButton : Uint8
 {
 	Left = SDL_BUTTON_LEFT,
 	Middle = SDL_BUTTON_MIDDLE,
 	Right = SDL_BUTTON_RIGHT,
 	X1 = SDL_BUTTON_X1,
 	X2 = SDL_BUTTON_X2
+};
+
+enum class ControllerCode
+{
+	Invalid = SDL_CONTROLLER_BUTTON_INVALID,
+	A = SDL_CONTROLLER_BUTTON_A,
+	B = SDL_CONTROLLER_BUTTON_B,
+	X = SDL_CONTROLLER_BUTTON_X,
+	Y = SDL_CONTROLLER_BUTTON_Y,
+	Back = SDL_CONTROLLER_BUTTON_BACK,
+	Guide = SDL_CONTROLLER_BUTTON_GUIDE,
+	Start = SDL_CONTROLLER_BUTTON_START,
+	LeftStick = SDL_CONTROLLER_BUTTON_LEFTSTICK,
+	RightStick = SDL_CONTROLLER_BUTTON_RIGHTSTICK,
+	LeftShoulder = SDL_CONTROLLER_BUTTON_LEFTSHOULDER,
+	RightShoulder = SDL_CONTROLLER_BUTTON_RIGHTSHOULDER,
+	UpDpad = SDL_CONTROLLER_BUTTON_DPAD_UP,
+	DownDpad = SDL_CONTROLLER_BUTTON_DPAD_DOWN,
+	LeftDpad = SDL_CONTROLLER_BUTTON_DPAD_LEFT,
+	RightDpad = SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
+};
+
+enum class ControllerAxis
+{
+	LEFT_JOYSTICK,
+	RIGHT_JOYSTICK,
+	LEFT_TRIGGER,
+	RIGHT_TRIGGER,
+	LEFT_JOYSTICK_RAW,
+	RIGHT_JOYSTICK_RAW,
+	LEFT_TRIGGER_RAW,
+	RIGHT_TRIGGER_RAW
 };
 
 struct GameInput
@@ -315,15 +349,15 @@ struct GameInput
 	void Load(Config &config)
 	{
 		config.GetString("Name", name, "DefaultName");
-		unsigned int size_keys = config.GetUInt("SizeKeys", 0);
-		for(int i = 0; i < size_keys; ++i)
+		uint64_t size_keys = config.GetUInt("SizeKeys", 0);
+		for(uint64_t i = 0; i < size_keys; ++i)
 		{
 			std::string name_k("k" + std::to_string(i));
 			keys.push_back((KeyCode)config.GetUInt(name_k, 0));
 		}
 
-		unsigned int size_mouse = config.GetUInt("SizeMouse", 0);
-		for (int j = 0; j < size_mouse; ++j)
+		uint64_t size_mouse = config.GetUInt("SizeMouse", 0);
+		for (uint64_t j = 0; j < size_mouse; ++j)
 		{
 			std::string name_m("m" + std::to_string(j));
 			mouse_buttons.push_back((MouseButton)config.GetUInt(name_m, 0));
@@ -349,6 +383,10 @@ public:
 	bool GetMouseButtonDown(MouseButton button); 
 	bool GetMouseButtonUp(MouseButton button);
 
+	bool GetControllerButton(ControllerCode code);
+	bool GetControllerButtonDown(ControllerCode code);
+	bool GetControllerButtonUp(ControllerCode code);
+
 	bool GetGameInput(const char* name);
 	bool GetGameInputDown(const char* name);
 	bool GetGameInputUp(const char* name);
@@ -362,13 +400,24 @@ public:
 	Uint8 GetMouseClicks() const;
 	bool IsMouseMoving() const;
 
+	float2 GetAxisContoller(ControllerAxis type) const;
+	Sint16 GetTriggerController(ControllerAxis type) const;
+
+	float2 GetAxisContollerRaw(ControllerAxis type) const;
+	float GetTriggerControllerRaw(ControllerAxis type) const;
+
 private:
 	void SaveGameInputs(Config &config);
 	void LoadGameInputs(Config &config);
 
+
+public:
+	const float MAX_SDL_CONTROLLER_RANGE = 32767.0f;
+
 private:
 	std::map<KeyCode, KeyState> key_bible;
 	std::map<MouseButton, KeyState> mouse_bible;
+	std::map<ControllerCode, KeyState> controller_bible;
 
 	//Predefined buttons
 	std::map<std::string, GameInput> game_inputs;
@@ -381,6 +430,20 @@ private:
 
 	Uint8 mouse_clicks;
 	bool mouse_moving;
+
+	float2 left_joystick = float2(0.0f,0.0f);
+	float2 right_joystick = float2(0.0f, 0.0f);
+
+	float2 left_joystick_raw = float2(0.0f, 0.0f);
+	float2 right_joystick_raw = float2(0.0f, 0.0f);
+
+	Sint32 left_controller_trigger = 0;
+	Sint32 right_controller_trigger = 0;
+
+	float left_controller_trigger_raw = 0;
+	float right_controller_trigger_raw = 0;
+
+	SDL_GameController* controller = nullptr;
 };
 
 #endif //_MODULEINPUT_H
