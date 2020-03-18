@@ -5,12 +5,13 @@
 #include "ResourceManagement/Resources/Texture.h"
 
 class Component;
+class ComponentCanvas;
 class ComponentCamera;
+class ComponentLight;
 class ComponentMaterial;
 class ComponentMesh;
 class ComponentTransform;
-class ComponentLight;
-class ComponentCanvas;
+class ComponentUI;
 
 class PanelComponent
 {
@@ -24,6 +25,7 @@ public:
 	void ShowComponentCameraWindow(ComponentCamera *camera);
 	void ShowComponentLightWindow(ComponentLight *light);
 	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
+	void ShowComponentUIWindow(ComponentUI*);
 
 	void ShowAddNewComponentButton();
 

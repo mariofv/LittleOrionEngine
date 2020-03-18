@@ -15,6 +15,9 @@ public:
 	void MousePicking(const float2& mouse_position);
 	void SceneDropTarget();
 
+	float scene_window_content_area_width = 0;
+	float scene_window_content_area_height = 0;
+
 private:
 	void RenderSceneBar();
 
@@ -23,13 +26,11 @@ private:
 	void RenderGizmo();
 	void RenderSceneCameraGizmo() const;
 	void RenderCameraPreview() const;
-
 private:
 	bool scene_camera_gizmo_hovered = false;
 	bool gizmo_released = false;
 
-	float scene_window_content_area_width = 0;
-	float scene_window_content_area_height = 0;
+	
 
 	float2 scene_window_content_area_pos = float2::zero;
 };

@@ -379,9 +379,14 @@
     <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp">
       <Filter>Engine\ResourceManagement\ImportOptions</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLAABBTree.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvas.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentUI.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
   </ItemGroup>
@@ -644,9 +649,14 @@
     <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
       <Filter>Engine\ResourceManagement\ImportOptions</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentTransform2D.h" />
     <ClInclude Include="Engine\SpacePartition\OLAABBTree.h" />
     <ClInclude Include="Engine\Component\ComponentCanvas.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentUI.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentTransform2D.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
