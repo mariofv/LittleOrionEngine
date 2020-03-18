@@ -130,6 +130,72 @@ void PanelMenuBar::ShowGameObjectMenu()
 			GameObject* created_game_object = App->scene->CreateGameObject();
 			created_game_object->name = "Camera";
 			created_game_object->CreateComponent(Component::ComponentType::CAMERA);
+			created_game_object->CreateComponent(Component::ComponentType::TRANSFORM2D);
+		}
+
+		if (ImGui::BeginMenu("UI"))
+		{
+			
+			if (ImGui::Selectable("Text"))
+			{
+				
+			}
+			if (ImGui::Selectable("Image"))
+			{
+				
+			}
+			if (ImGui::Selectable("Raw Image"))
+			{
+
+			}
+			ImGui::Separator();
+			if (ImGui::Selectable("Button"))
+			{
+
+			}
+			if (ImGui::Selectable("Toggle"))
+			{
+
+			}
+			if (ImGui::Selectable("Slider"))
+			{
+
+			}
+			if (ImGui::Selectable("Scrollbar"))
+			{
+
+			}
+			if (ImGui::Selectable("Dropdown"))
+			{
+
+			}
+			if (ImGui::Selectable("Input Field"))
+			{
+
+			}
+			ImGui::Separator();
+			if (ImGui::Selectable("Canvas"))
+			{
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Canvas";
+				created_game_object->CreateComponent(Component::ComponentType::CANVAS);
+				//App->editor->selected_game_object->CreateComponent(Component::ComponentType::CANVAS);
+			}
+			if (ImGui::Selectable("Panel"))
+			{
+
+			}
+			if (ImGui::Selectable("Scroll View"))
+			{
+
+			}
+			ImGui::Separator();
+			if (ImGui::Selectable("Event System"))
+			{
+
+			}
+
+			ImGui::EndMenu();
 		}
 
 		ImGui::EndMenu();

@@ -33,7 +33,7 @@ public:
 	void Load(const Config& config) override;
 
 	float GetWidth() const;
-	float GetHeigt() const;
+	float GetHeight() const;
 
 	void RecordFrame(float width, float height);
 	void RecordDebugDraws(float width, float height) const;
