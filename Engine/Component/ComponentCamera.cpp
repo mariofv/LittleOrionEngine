@@ -343,7 +343,7 @@ void ComponentCamera::AlignOrientationWithAxis()
 	owner->transform.SetRotation(rotation_matrix);
 }
 
-void ComponentCamera::SetOrthographicSize(const float2 & size)
+ENGINE_API void ComponentCamera::SetOrthographicSize(const float2 & size)
 {
 	camera_frustum.orthographicWidth = size.x;
 	camera_frustum.orthographicHeight = size.y;
@@ -360,12 +360,12 @@ void ComponentCamera::LookAt(float x, float y, float z)
 	LookAt(float3(x, y, z));
 }
 
-void ComponentCamera::SetPosition(const float3 & position)
+ENGINE_API void ComponentCamera::SetPosition(const float3 & position)
 {
 	owner->transform.SetTranslation(position);
 }
 
-void ComponentCamera::Center(const AABB &bounding_box)
+ENGINE_API void ComponentCamera::Center(const AABB &bounding_box)
 {
 	float containing_sphere_radius = bounding_box.Size().Length() / 2;
 
@@ -376,37 +376,46 @@ void ComponentCamera::Center(const AABB &bounding_box)
 	start_focus_time = App->time->real_time_since_startup;
 }
 
-void ComponentCamera::MoveUp()
+ENGINE_API void ComponentCamera::CenterGame(const GameObject* go)
+{
+	float containing_sphere_radius = go->aabb.bounding_box.Size().Length() / 2;
+	is_focusing = true;
+	start_focus_position = owner->transform.GetTranslation();
+	goal_focus_position = go->aabb.bounding_box.CenterPoint() - camera_frustum.front * BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius;;
+	start_focus_time = App->time->delta_time;
+}
+
+ENGINE_API void ComponentCamera::MoveUp()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(float3(0, distance, 0));
 }
 
-void ComponentCamera::MoveDown()
+ENGINE_API void ComponentCamera::MoveDown()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(float3(0, -distance, 0));
 }
 
-void ComponentCamera::MoveFoward()
+ENGINE_API void ComponentCamera::MoveForward()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(camera_frustum.front.ScaledToLength(distance));
 }
 
-void ComponentCamera::MoveBackward()
+ENGINE_API void ComponentCamera::MoveBackward()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(-camera_frustum.front.ScaledToLength(distance));
 }
 
-void ComponentCamera::MoveLeft()
+ENGINE_API void ComponentCamera::MoveLeft()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(-camera_frustum.WorldRight().ScaledToLength(distance));
 }
 
-void ComponentCamera::MoveRight()
+ENGINE_API void ComponentCamera::MoveRight()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(camera_frustum.WorldRight().ScaledToLength(distance));
@@ -493,7 +502,7 @@ void ComponentCamera::SetPerpesctiveView()
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
 }
 
-void ComponentCamera::SetOrthographicView()
+ENGINE_API void ComponentCamera::SetOrthographicView()
 {
 	camera_frustum.type = FrustumType::OrthographicFrustum;
 }
