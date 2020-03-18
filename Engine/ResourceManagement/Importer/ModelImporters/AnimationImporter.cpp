@@ -3,6 +3,7 @@
 #include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
+#include "ResourceManagement/Importer/ModelImporters/SkeletonImporter.h"
 #include "ResourceManagement/Resources/Animation.h"
 
 #include <assimp/scene.h>
@@ -23,7 +24,7 @@ bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation*
 	unit_scale_factor *= 0.01f;
 
 	Animation own_format_animation("", "");
-	GetCleanAnimation(animation, own_format_animation, unit_scale_factor);
+	GetCleanAnimation(scene->mRootNode,animation, own_format_animation, unit_scale_factor);
 	own_format_animation.duration = static_cast<float>(animation->mDuration);
 	own_format_animation.name = std::string(animation->mName.C_Str());
 
@@ -42,7 +43,7 @@ Assimp added nodes need to be merge with the real node.
 
 */
 
-void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const
+void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const
 {
 	assert(animation->mDuration == (int)animation->mDuration);
 	float animation_duration = animation->mDuration;
@@ -67,12 +68,32 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 	//Merge channels with same name
 	for (auto& channel_set : aiNode_by_channel)
 	{
+		const aiNode* current_node = root_node->FindNode(aiString(channel_set.first));
+		std::vector<const aiNode*> assimp_hierarchy_nodes;
+
+		const aiNode* next_node = current_node->mParent;
+		std::string next_node_name(next_node->mName.C_Str());
+		while (next_node_name.find("$Assimp") != std::string::npos)
+		{
+			assimp_hierarchy_nodes.push_back(next_node);
+			next_node = next_node->mParent;
+			next_node_name = next_node->mName.C_Str();
+		}
+		aiMatrix4x4 accumulated_assimp_local_transformation;
+		for (int i = assimp_hierarchy_nodes.size() -1 ; i >= 0; --i)
+		{
+			accumulated_assimp_local_transformation = accumulated_assimp_local_transformation * assimp_hierarchy_nodes[i]->mTransformation;
+		}
+
+		float4x4 accumulated_assimp_transformation = SkeletonImporter::GetTransform(accumulated_assimp_local_transformation );
+
 		std::map<double, float3> channel_translations;
 		std::map<double, Quat> channel_rotations;
 		for (auto channel : channel_set.second)
 		{
 			GetChannelTranslations(channel, animation_duration, channel_translations);
 			GetChannelRotations(channel, animation_duration, channel_rotations);
+
 		}
 
 		for (size_t i = 0; i <= animation_duration; ++i)
@@ -82,7 +103,7 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 			if (channel_translations.size() > 1)
 			{
 				is_translated = true;
-				translation = scale_factor * channel_translations[i];
+				translation = channel_translations[i];
 			}
 			else
 			{
@@ -102,7 +123,11 @@ void AnimationImporter::GetCleanAnimation(const aiAnimation* animation, Animatio
 				is_rotated = false;
 				rotation = channel_rotations[0];
 			}
-
+			float4x4 animation_transform = float4x4::FromTRS(translation, rotation,float3::one);
+			animation_transform = accumulated_assimp_transformation * animation_transform;
+			float3 scale;
+			animation_transform.Decompose(translation,rotation, scale);
+			translation *= scale_factor;
 			Animation::Channel imported_channel{ channel_set.first, is_translated, translation, is_rotated, rotation };
 			keyframes[i].push_back(imported_channel);
 		}
@@ -127,12 +152,6 @@ void AnimationImporter::GetChannelTranslations(const aiNodeAnim* sample, float a
 			aiVector3D position = sample->mPositionKeys[j].mValue;
 			sample_translations[integer_time] = float3(position.x, position.y, position.z);
 		}
-		else
-		{
-			assert(sample->mNumPositionKeys == 1);
-			aiVector3D position = sample->mPositionKeys[j].mValue;
-			sample_translations[0] = float3(position.x, position.y, position.z);
-		}
 	}
 }
 
@@ -146,12 +165,6 @@ void AnimationImporter::GetChannelRotations(const aiNodeAnim* sample, float anim
 			double integer_time = std::round(sample->mRotationKeys[j].mTime);
 			aiQuaternion rotation = sample->mRotationKeys[j].mValue;
 			sample_rotations[integer_time] = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
-		}
-		else
-		{
-			assert(sample->mNumRotationKeys == 1);
-			aiQuaternion rotation = sample->mRotationKeys[j].mValue;
-			sample_rotations[0] = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 		}
 	}
 }

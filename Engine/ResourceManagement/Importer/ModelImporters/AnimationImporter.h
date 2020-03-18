@@ -9,6 +9,7 @@
 struct aiAnimation;
 struct aiScene;
 struct aiNodeAnim;
+struct aiNode;
 class Animation;
 
 class AnimationImporter
@@ -21,7 +22,7 @@ public:
 	bool ImportAnimation(const aiScene* scene, const aiAnimation* animation, std::string& output_file) const;
 
 private:
-	void GetCleanAnimation(const aiAnimation* animation, Animation & own_format_animation, float scale_factor) const;
+	void GetCleanAnimation(const aiNode* root_node,const aiAnimation* animation, Animation & own_format_animation, float scale_factor) const;
 	void GetChannelTranslations(const aiNodeAnim* sample, float animation_duration, std::map<double, float3>& sample_translations) const;
 	void GetChannelRotations(const aiNodeAnim* sample, float animation_duration, std::map<double, Quat>& sample_rotations) const;
 	void SaveBinary(const Animation & own_format_animation, const std::string & output_file) const;
