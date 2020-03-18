@@ -3,6 +3,7 @@
 in vec3 position;
 in vec3 normal;
 in vec2 texCoord;
+in vec3 tangent;
 
 out vec4 FragColor;
 
@@ -71,14 +72,20 @@ vec4 GetSpecularColor(const Material mat, const vec2 texCoord);
 vec3 GetOcclusionColor(const Material mat, const vec2 texCoord);
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 
+vec3 GetNormalMap(sampler2D normal_map, const vec2 texCoord);
+
 vec3 CalculateDirectionalLight(const vec3 normalized_normal);
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal);
 vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal);
 
+mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent);
+
 void main()
 {
 	vec3 normalized_normal = normalize(normal);
-	
+	//vec3 normalized_normal = normalize(GetNormalMap(material.normal_map, texCoord));
+	//normalized_normal = CreateTangentSpace(normalize(normal), normalize(tangent)) * normalized_normal;
+
 	vec3 result = vec3(0);
 
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
@@ -117,6 +124,8 @@ vec3 GetOcclusionColor(const Material mat, const vec2 texCoord)
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 {
 	return (texture(mat.emissive_map, texCoord)*mat.emissive_color).rgb;
+}
+vec3 GetNormalMap(sampler2D normal_map, const vec2 texCoord){	return texture(normal_map, texCoord).rgb*2.0-1.0;
 }
 
 vec3 CalculateDirectionalLight(const vec3 normalized_normal)
@@ -226,3 +235,11 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal)
 	);
 
 }
+
+
+mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent)
+{
+	 vec3 ortho_tangent = normalize(tangent-dot(tangent, normal)*normal); // Gram-Schmidt
+	 vec3 bitangent = cross(normal, ortho_tangent);
+	return mat3(tangent, bitangent, normal);
+}
