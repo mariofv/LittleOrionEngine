@@ -65,7 +65,7 @@ void ExampleScript::OnInspector(ImGuiContext* context)
 	ImGui::Text("TestScriptRuntime: ");
 	ImGui::SameLine();
 	ImGui::Button(is_object.c_str());
-	panel->DropGOTarget(enemy, "TestScriptRuntime");
+	panel->DropGOTarget(enemy);
 	if(enemy)
 		is_object = enemy->name;
 }

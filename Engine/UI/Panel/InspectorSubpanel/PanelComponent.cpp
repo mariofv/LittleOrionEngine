@@ -212,7 +212,7 @@ void PanelComponent::DropTarget(ComponentMaterial *material, Texture::TextureTyp
 	}
 }
 
-ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go, const std::string& script_name)
+ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go)
 {
 	if (ImGui::BeginDragDropTarget())
 	{
