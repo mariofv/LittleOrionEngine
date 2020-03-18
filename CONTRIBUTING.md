@@ -57,6 +57,27 @@ void ThisIsAFunction()
     // Do something
 }
 ```
+## Class members declaration
+Class methods and member declarations must be splitted in 4 categories in the following order: `public` methods, `private` methods, `public` members, and `private` members. If one of these categories doesn't exist, it should be omitted. Example:
+```
+public class StyleClass
+{
+public:
+    StyleClass();
+    ~StyleClass();
+    
+    void PublicMethod();
+    
+private:
+    void PrivateMethod();
+    
+public:
+    int public_member = 0;
+
+private:
+    int private_member = 0;
+};
+```
 
 ## Include order
 Includes have to be split in three different blocks: **Engine includes**, **Library includes** and **C++ includes**. Each block have to be sorted alphabetically. Also, they should be written using absolute paths.
