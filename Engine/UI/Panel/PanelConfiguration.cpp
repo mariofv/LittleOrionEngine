@@ -26,6 +26,7 @@ void PanelConfiguration::Render()
 	if (ImGui::Begin(ICON_FA_COGS " Configuration", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
+		focused = ImGui::IsWindowFocused();
 
 		ShowHardware();
 

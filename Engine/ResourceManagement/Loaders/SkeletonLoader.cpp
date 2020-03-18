@@ -11,6 +11,12 @@ std::shared_ptr<Skeleton> SkeletonLoader::Load(const std::string& file_path)
 	BROFILER_CATEGORY("Load Skeleton", Profiler::Color::Brown);
 
 
+	if (!App->filesystem->Exists(file_path.c_str()))
+	{
+		APP_LOG_ERROR("Error loading Skeleton %s.", file_path.c_str());
+		return nullptr;
+	}
+
 	APP_LOG_INFO("Loading Skeleton %s.", file_path.c_str());
 	size_t skeleton_size;
 	char * data = App->filesystem->Load(file_path.c_str(), skeleton_size);

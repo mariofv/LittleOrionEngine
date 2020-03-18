@@ -16,10 +16,18 @@ PanelPopups::PanelPopups()
 
 void PanelPopups::Render()
 {
+	RenderAssetsLoadingPopup();
+	material_selector_popup.Render();
+	mesh_selector_popup.Render();
+}
+
+void PanelPopups::RenderAssetsLoadingPopup()
+{
+
 	CreateScript();
-	if (!assets_loading_popup_shown)
+	if (!show_assets_loading_popup)
 	{
-		assets_loading_popup_shown = true;
+		show_assets_loading_popup = true;
 		ImGui::OpenPopup("Loading Assets");
 	}
 	if (ImGui::BeginPopupModal("Loading Assets", NULL, ImGuiWindowFlags_AlwaysAutoResize | ImGuiWindowFlags_NoTitleBar))

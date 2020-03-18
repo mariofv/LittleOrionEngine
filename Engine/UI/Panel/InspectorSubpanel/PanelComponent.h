@@ -4,12 +4,10 @@
 #define ENGINE_EXPORTS
 
 #include "Module/ModuleActions.h"
-#include "ResourceManagement/Resources/Texture.h"
 
 class Component;
 class ComponentCamera;
-class ComponentMaterial;
-class ComponentMesh;
+class ComponentMeshRenderer;
 class ComponentTransform;
 class ComponentLight;
 class ComponentScript;
@@ -21,8 +19,7 @@ public:
 	~PanelComponent() = default;
 
 	void ShowComponentTransformWindow(ComponentTransform *transform);
-	void ShowComponentMeshWindow(ComponentMesh *mesh);
-	void ShowComponentMaterialWindow(ComponentMaterial *material);
+	void ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh);
 	void ShowComponentCameraWindow(ComponentCamera *camera);
 	void ShowComponentLightWindow(ComponentLight *light);
 	void ShowComponentScriptWindow(ComponentScript * component_script);
@@ -37,8 +34,7 @@ public:
 	ENGINE_API void DropGOTarget(GameObject *& go, const std::string & script_name, ComponentScript *& script_to_find);
 
 private:
-	void DropTarget(ComponentMaterial *material, Texture::TextureType type);
-	std::string GetTypeName(Texture::TextureType type);
+	void DropMeshAndMaterial(ComponentMeshRenderer* component_mesh);
 };
 
 #endif //_PANELCOMPONENT_H_

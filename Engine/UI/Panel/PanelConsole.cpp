@@ -18,6 +18,7 @@ PanelConsole::PanelConsole()
 void PanelConsole::Render()
 {
 	hovered = ImGui::IsWindowHovered();
+	focused = ImGui::IsWindowFocused();
 
 	char tmp_string[64];
 	if (ImGui::Begin(ICON_FA_TERMINAL " Console", &opened))

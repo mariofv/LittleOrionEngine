@@ -8,10 +8,17 @@ Resource(0, mesh_file_path)
 	LoadInMemory();
 	
 }
+Mesh::Mesh(std::string mesh_file_path) :
+Resource(0, mesh_file_path)
+{
+}
 Mesh::~Mesh() {
-	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ebo);
-	glDeleteVertexArrays(1, &vao);
+	if (vbo != 0)
+	{
+		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &ebo);
+		glDeleteVertexArrays(1, &vao);
+	}
 }
 
 GLuint Mesh::GetVAO() const

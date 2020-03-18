@@ -23,6 +23,7 @@ class PanelConsole;
 class PanelDebug;
 class PanelConfiguration;
 class PanelAbout;
+class PanelResourceDatabase;
 class PanelPopups;
 
 class GameObject;
@@ -73,6 +74,7 @@ public:
 	PanelDebug* debug_panel = nullptr;
 	PanelConfiguration* configuration = nullptr;
 	PanelAbout* about = nullptr;
+	PanelResourceDatabase* resource_database = nullptr;
 	PanelPopups* popups = nullptr;
 
 private:

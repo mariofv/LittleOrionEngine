@@ -1,32 +1,36 @@
 #include "PanelComponent.h"
 
-#include "Actions/EditorActionTranslate.h"
+#include "Actions/EditorAction.h"
 #include "Actions/EditorActionRotation.h"
 #include "Actions/EditorActionScale.h"
-#include "Actions/EditorAction.h"
+#include "Actions/EditorActionTranslate.h"
 
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMaterial.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
 
+#include "Helper/Utils.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
-#include "Module/ModuleEditor.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleFileSystem.h"
-#include "Module/ModuleProgram.h"
-#include "Module/ModuleTexture.h"
 #include "Module/ModuleScriptManager.h"
+#include "Module/ModuleEditor.h"
+#include "Module/ModuleResourceManager.h"
+#include "Module/ModuleRender.h"
 
+#include "UI/Panel/PanelPopups.h"
+#include "UI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
 
-#include "Helper/Utils.h"
+#include "ResourceManagement/Importer/Importer.h"
 
 #include "UI/Panel/PanelPopups.h"
 
 #include <imgui.h>
+#include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
 void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
@@ -63,9 +67,9 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 	}
 }
 
-void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
+void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if(ImGui::Checkbox("Active", &mesh->active))
 		{
@@ -82,7 +86,22 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 		}
 		ImGui::Separator();
 
-
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Mesh");
+		ImGui::SameLine();
+		if (ImGui::Button(mesh->mesh_to_render->exported_file.c_str()))
+		{
+			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
+		}
+		DropMeshAndMaterial(mesh);
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Material");
+		ImGui::SameLine();
+		if (ImGui::Button(mesh->material_to_render->exported_file.c_str()))
+		{
+			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
+		}
+		DropMeshAndMaterial(mesh);
 		char tmp_string[16];
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Triangles");
@@ -95,164 +114,6 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 		ImGui::SameLine();
 		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
 		ImGui::Button(tmp_string);
-	}
-}
-
-void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
-{
-	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if (ImGui::BeginCombo("Shader", material->shader_program.c_str()))
-		{
-			for (auto & program : App->program->names)
-			{
-				bool is_selected = (material->shader_program == program);
-				if (ImGui::Selectable(program, is_selected))
-				{
-					material->shader_program = program;
-					if (is_selected)
-						ImGui::SetItemDefaultFocus();
-				}
-
-			}
-			ImGui::EndCombo();
-		}
-
-		float window_width = ImGui::GetWindowWidth();
-		for (size_t i = 0; i < material->textures.size(); ++i)
-		{
-			Texture::TextureType type = static_cast<Texture::TextureType>(i);
-			if (ImGui::CollapsingHeader(GetTypeName(type).c_str(), ImGuiTreeNodeFlags_DefaultOpen))
-			{
-				if (material->textures[i].get() != nullptr) {
-					ImGui::PushID(i);
-					char tmp_string[256];
-					std::shared_ptr<Texture> & texture = material->textures[i];
-					ImGui::Image((void*)(intptr_t)texture->opengl_texture, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0));
-					DropTarget(material, type);
-					ImGui::SameLine();
-					ImGui::BeginGroup();
-					ImGui::Text("Texture:");
-					ImGui::SameLine();
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), texture->exported_file.c_str());
-					sprintf_s(tmp_string, "(%dx%d px)", texture->width, texture->height);
-					ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
-
-					bool mipmap = texture->IsMipMapped();
-					ImGui::Checkbox("Mipmap", &mipmap);
-					ImGui::SameLine();
-					ImGui::Checkbox("Checker Texture", &material->show_checkerboard_texture);
-					ImGui::Spacing();
-
-					if (ImGui::Button(ICON_FA_TIMES) )
-					{
-						//UndoRedo
-						App->actions->type_texture = Texture::TextureType(i);
-						App->actions->action_component = material;
-						App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
-
-						material->RemoveMaterialTexture(i);
-						material->modified_by_user = true;
-					}
-					ImGui::SameLine(); ImGui::Text("Remove Texture");
-					ImGui::EndGroup();
-					ImGui::PopID();
-				}
-				else
-				{
-					ImGui::Image((void*)0, ImVec2(window_width * 0.2f, window_width * 0.2f), ImVec2(0, 1), ImVec2(1, 0), ImVec4(1.f,1.f,1.f,1.f), ImVec4(1.f, 1.f, 1.f, 1.f));
-					DropTarget(material, type);
-				}
-				if (type == Texture::TextureType::DIFUSSE)
-				{
-					if (ImGui::ColorEdit3("Diffuse Color", material->diffuse_color)) { material->modified_by_user = true; };
-					if (ImGui::SliderFloat("k diffuse", &material->k_diffuse, 0, 1)) { material->modified_by_user = true; };
-				}
-				if (type == Texture::TextureType::EMISSIVE)
-				{
-					if (ImGui::ColorEdit3("Emissive Color", material->emissive_color)) {material->modified_by_user = true;}
-				}
-				if (type == Texture::TextureType::OCLUSION)
-				{
-					if (ImGui::SliderFloat("k ambient", &material->k_ambient, 0, 1)){	material->modified_by_user = true;}
-				}
-				if (type == Texture::TextureType::SPECULAR)
-				{
-					if(ImGui::ColorEdit3("Specular Color", material->specular_color)) { material->modified_by_user = true; }
-					if (ImGui::SliderFloat("k specular", &material->k_specular, 0, 1)) { material->modified_by_user = true; }
-					if (ImGui::SliderFloat("Shininess", &material->shininess, 0, 1)) { material->modified_by_user = true; }
-				}
-
-				ImGui::Separator();
-			}
-		}
-	}
-}
-void PanelComponent::DropTarget(ComponentMaterial *material, Texture::TextureType type)
-{
-	if (ImGui::BeginDragDropTarget())
-	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_File"))
-		{
-			assert(payload->DataSize == sizeof(File*));
-			File *incoming_file = *(File**)payload->Data;
-			if (incoming_file->file_type == FileType::TEXTURE)
-			{
-				//UndoRedo
-				App->actions->type_texture = type;
-				App->actions->action_component = material;
-				App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
-
-				material->SetMaterialTexture(type, App->texture->LoadTexture(incoming_file->file_path.c_str()));
-				material->modified_by_user = true;
-			}
-		}
-		ImGui::EndDragDropTarget();
-	}
-}
-ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go, const std::string& script_name, ComponentScript*& script_to_find)
-{
-	if (ImGui::BeginDragDropTarget())
-	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_GameObject"))
-		{
-			assert(payload->DataSize == sizeof(GameObject*));
-			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			for (unsigned int i = 0; i < incoming_game_object->components.size(); ++i)
-			{
-
-				if (incoming_game_object->components[i]->type == Component::ComponentType::SCRIPT)
-				{
-					ComponentScript *script = (ComponentScript *)incoming_game_object->components[i];
-					if (script->name == script_name)
-					{
-						go = incoming_game_object;
-						script_to_find = script;
-					}
-				}
-			}
-		}
-		ImGui::EndDragDropTarget();
-	}
-}
-std::string PanelComponent::GetTypeName(Texture::TextureType type)
-{
-	switch (type)
-	{
-	case Texture::TextureType::DIFUSSE:
-		return "Difusse";
-		break;
-	case Texture::TextureType::SPECULAR:
-		return "Specular";
-		break;
-	case Texture::TextureType::EMISSIVE:
-		return "Emissive";
-		break;
-	case Texture::TextureType::OCLUSION:
-		return "Oclusion";
-		break;
-	default:
-		return "";
 	}
 }
 
@@ -371,6 +232,115 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 	}
 }
 
+void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Light", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::Checkbox("Active", &light->active))
+		{
+			//UndoRedo
+			App->actions->action_component = light;
+			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+			light->modified_by_user = true;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(light);
+
+			return;
+		}
+		ImGui::Separator();
+
+		if (ImGui::ColorEdit3("Color", light->light_color)) { light->modified_by_user = true; };
+
+		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
+
+		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f)) { light->modified_by_user = true; };
+
+		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
+
+		int light_type = static_cast<int>(light->light_type);
+
+		if (ImGui::Combo("Light Type", &light_type, "Point\0Spot\0Directional"))
+		{
+			switch (light_type)
+			{
+			case 0:
+				light->light_type = ComponentLight::LightType::POINT_LIGHT;
+				break;
+			case 1:
+				light->light_type = ComponentLight::LightType::SPOT_LIGHT;
+				break;
+			case 2:
+				light->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
+				break;
+			}
+		}
+		if (light->light_type == ComponentLight::LightType::POINT_LIGHT)
+		{
+			if (ImGui::DragFloat("Range", &light->point_light_parameters.range, 1.f, 1.f, 100.f))
+			{
+				light->point_light_parameters.ChangePointLightAttenuationValues(light->point_light_parameters.range);
+				light->modified_by_user = true;
+			}
+		}
+		if (light->light_type == ComponentLight::LightType::SPOT_LIGHT)
+		{
+			if (ImGui::DragFloat("Spot Angle", &light->spot_light_parameters.spot_angle, 1.f, 1.f, 179.f))
+			{
+				light->spot_light_parameters.SetSpotAngle(light->spot_light_parameters.spot_angle);
+				light->modified_by_user = true;
+			}
+			if (ImGui::DragFloat("Edge Softness", &light->spot_light_parameters.edge_softness, 0.01f, 0.f, 1.f))
+			{
+				light->spot_light_parameters.SetEdgeSoftness(light->spot_light_parameters.edge_softness);
+				light->modified_by_user = true;
+			}
+			if (ImGui::DragFloat("Range", &light->spot_light_parameters.range, 1.f, 1.f, 100.f))
+			{
+				light->spot_light_parameters.ChangeSpotLightAttenuationValues(light->spot_light_parameters.range);
+				light->modified_by_user = true;
+			}
+		}
+
+	}
+}
+
+void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_EDIT " Script", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::Checkbox("Active", &component_script->active))
+		{
+			//UndoRedo TODO
+			//App->editor->action_component = component_script;
+			//App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
+		}
+
+
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(component_script);
+
+			return;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Refresh"))
+		{
+			App->scripts->Refresh();
+			return;
+		}
+		ShowScriptsCreated(component_script);
+		ImGui::Separator();
+
+		component_script->ShowComponentWindow();
+
+		// to implement CheckClickForUndo(ModuleEditor::UndoActionType::EDIT_COMPONENTSCRIPT, component_script);
+
+	}
+}
+
 void PanelComponent::CheckClickedCamera(ComponentCamera* camera)
 {
 	//UndoRedo
@@ -420,111 +390,6 @@ void PanelComponent::CheckClickForUndo(ModuleActions::UndoActionType  type, Comp
 
 }
 
-void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
-{
-	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Light", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if(ImGui::Checkbox("Active", &light->active))
-		{
-			//UndoRedo
-			App->actions->action_component = light;
-			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
-			light->modified_by_user = true;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(light);
-
-			return;
-		}
-		ImGui::Separator();
-
-		if (ImGui::ColorEdit3("Color", light->light_color)) { light->modified_by_user = true; };
-		
-		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
-		
-		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f)) { light->modified_by_user = true; };
-
-		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
-
-		int light_type = static_cast<int>(light->light_type);
-
-		if (ImGui::Combo("Light Type", &light_type, "Point\0Spot\0Directional"))
-		{
-			switch (light_type)
-			{
-			case 0:
-				light->light_type = ComponentLight::LightType::POINT_LIGHT;
-				break;
-			case 1:
-				light->light_type = ComponentLight::LightType::SPOT_LIGHT;
-				break;
-			case 2:
-				light->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
-				break;
-			}
-		}
-		if (light->light_type == ComponentLight::LightType::POINT_LIGHT)
-		{
-			if (ImGui::DragFloat("Range", &light->point_light_parameters.range, 1.f, 1.f, 100.f))
-			{
-				light->point_light_parameters.ChangePointLightAttenuationValues(light->point_light_parameters.range);
-			}
-		}
-		if (light->light_type == ComponentLight::LightType::SPOT_LIGHT)
-		{
-			if (ImGui::DragFloat("Spot Angle", &light->spot_light_parameters.spot_angle, 1.f, 1.f, 179.f))
-			{
-				light->spot_light_parameters.SetSpotAngle(light->spot_light_parameters.spot_angle);
-			}
-			if (ImGui::DragFloat("Edge Softness", &light->spot_light_parameters.edge_softness, 0.01f, 0.f, 1.f))
-			{
-				light->spot_light_parameters.SetEdgeSoftness(light->spot_light_parameters.edge_softness);
-			}
-			if (ImGui::DragFloat("Range", &light->spot_light_parameters.range, 1.f, 1.f, 100.f))
-			{
-				light->spot_light_parameters.ChangeSpotLightAttenuationValues(light->spot_light_parameters.range);
-			}
-		}
-		
-	}
-}
-
-void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script)
-{
-	if (ImGui::CollapsingHeader(ICON_FA_EDIT " Script", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if (ImGui::Checkbox("Active", &component_script->active))
-		{
-			//UndoRedo TODO
-			//App->editor->action_component = component_script;
-			//App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
-		}
-		
-		
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(component_script);
-
-			return;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Refresh"))
-		{
-			App->scripts->Refresh();
-			return;
-		}
-		ShowScriptsCreated(component_script);
-		ImGui::Separator();
-
-		component_script->ShowComponentWindow();
-
-		// to implement CheckClickForUndo(ModuleEditor::UndoActionType::EDIT_COMPONENTSCRIPT, component_script);
-
-	}
-}
-
 void PanelComponent::ShowAddNewComponentButton()
 {
 	float window_width = ImGui::GetWindowWidth();
@@ -538,13 +403,6 @@ void PanelComponent::ShowAddNewComponentButton()
 	if (ImGui::BeginPopupContextItem("Add component", 0))
 	{
 		char tmp_string[128];
-
-		sprintf_s(tmp_string, "%s Material", ICON_FA_IMAGE);
-		if (ImGui::Selectable(tmp_string))
-		{
-			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::MATERIAL);
-
-		}
 
 		sprintf_s(tmp_string, "%s Camera", ICON_FA_VIDEO);
 		if (ImGui::Selectable(tmp_string))
@@ -566,6 +424,17 @@ void PanelComponent::ShowAddNewComponentButton()
 
 		}
 
+		sprintf_s(tmp_string, "%s Mesh Renderer", ICON_FA_DRAW_POLYGON);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
+
+			if (!App->editor->selected_game_object->IsStatic())
+			{
+				App->renderer->InsertAABBTree(App->editor->selected_game_object);
+			}
+
+		}
 		ImGui::EndPopup();
 	}
 
@@ -597,8 +466,58 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 		ImGui::EndCombo();
 	}
 
+}	
+void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_File"))
+		{
+			assert(payload->DataSize == sizeof(File*));
+			File* incoming_file = *(File * *)payload->Data;
+			if (incoming_file->file_type == FileType::MESH)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				component_mesh->SetMesh(App->resources->Load<Mesh>(meta.exported_file));
+				component_mesh->modified_by_user = true;
+			}
+			if (incoming_file->file_type == FileType::MATERIAL)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				component_mesh->SetMaterial(App->resources->Load<Material>(meta.exported_file));
+				component_mesh->modified_by_user = true;
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
 }
 
+ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go, const std::string& script_name, ComponentScript*& script_to_find)
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_GameObject"))
+		{
+			assert(payload->DataSize == sizeof(GameObject*));
+			GameObject *incoming_game_object = *(GameObject**)payload->Data;
+			for (unsigned int i = 0; i < incoming_game_object->components.size(); ++i)
+			{
 
-
-
+				if (incoming_game_object->components[i]->type == Component::ComponentType::SCRIPT)
+				{
+					ComponentScript *script = (ComponentScript *)incoming_game_object->components[i];
+					if (script->name == script_name)
+					{
+						go = incoming_game_object;
+						script_to_find = script;
+					}
+				}
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
