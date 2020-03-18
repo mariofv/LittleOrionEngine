@@ -412,10 +412,10 @@ public:
 	bool IsMouseMoving() const;
 
 	ENGINE_API float2 GetAxisContoller(ControllerAxis type) const;
-	Sint16 GetTriggerController(ControllerAxis type) const;
+	ENGINE_API Sint16 GetTriggerController(ControllerAxis type) const;
 
-	float2 GetAxisContollerRaw(ControllerAxis type) const;
-	float GetTriggerControllerRaw(ControllerAxis type) const;
+	ENGINE_API float2 GetAxisContollerRaw(ControllerAxis type) const;
+	ENGINE_API float GetTriggerControllerRaw(ControllerAxis type) const;
 
 private:
 	void SaveGameInputs(Config &config);

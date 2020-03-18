@@ -53,7 +53,7 @@ void WalkableScript::OnInspector(ImGuiContext* context)
 	ImGui::Text("Example Script Inspector");
 	//ImGui::Text(GET_VARIABLE_NAME(speed));
 	//Example Showing variables and being able to modify it on Runtime.
-	ImGui::DragFloat("Speed", &speed, 0.01f, 0.f, 0.5f);
+	ImGui::DragFloat("Speed", &speed, 0.01f, 0.f, 2.5f);
 	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.f, 0.5f);
 }
 
@@ -62,34 +62,31 @@ void WalkableScript::Move()
 	//example how to get variables from the engine
 	float3 transform = owner->transform.GetTranslation();
 	float3 rotation = owner->transform.GetRotationRadiants();
+
+	//float2 axis = App->input->GetAxisContoller(ControllerAxis::LEFT_JOYSTICK);
+
+	//float3 target_pos = float3(transform.x + speed * axis.x, transform.y, transform.z + speed * axis.y);
+	//if (App->artificial_intelligence->IsPointWalkable(target_pos))
+	//owner->transform.SetTranslation(target_pos);
+
+	float3 new_transform = transform;
+
 	//EXAMPLE USING PLAYER INPUT
 	if (App->input->GetKey(KeyCode::A))
 	{
-		float3 target_position = float3(transform.x + speed, transform.y, transform.z);
-
-		if (App->artificial_intelligence->IsPointWalkable(target_position))
-			owner->transform.SetTranslation(target_position);
+		new_transform += float3(speed, 0, 0);
 	}
 	if (App->input->GetKey(KeyCode::W))
 	{
-		float3 target_position = float3(transform.x, transform.y, transform.z + speed);
-
-		if (App->artificial_intelligence->IsPointWalkable(target_position))
-			owner->transform.SetTranslation(target_position);
+		new_transform += float3(0, 0, speed);
 	}
 	if (App->input->GetKey(KeyCode::S))
 	{
-		float3 target_position = float3(transform.x, transform.y, transform.z - speed);
-
-		if (App->artificial_intelligence->IsPointWalkable(target_position))
-			owner->transform.SetTranslation(target_position);
+		new_transform += float3(0, 0, -speed);
 	}
 	if (App->input->GetKey(KeyCode::D))
 	{
-		float3 target_position = float3(transform.x - speed, transform.y, transform.z);
-
-		if (App->artificial_intelligence->IsPointWalkable(target_position))
-			owner->transform.SetTranslation(target_position);
+		new_transform += float3(-speed, 0, 0);
 	}
 	if (App->input->GetKey(KeyCode::E))
 	{
@@ -99,4 +96,7 @@ void WalkableScript::Move()
 	{
 		owner->transform.SetRotation(float3(rotation.x, rotation.y + rotation_speed, rotation.z));
 	}
+
+	if (App->artificial_intelligence->IsPointWalkable(new_transform))
+		owner->transform.SetTranslation(new_transform);
 }

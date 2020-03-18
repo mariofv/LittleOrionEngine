@@ -178,6 +178,9 @@ update_status ModuleInput::PreUpdate()
 			left_joystick = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
 			left_joystick_raw = float2(left_joystick / MAX_SDL_CONTROLLER_RANGE);
 
+			right_joystick = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
+			right_joystick_raw = float2(right_joystick / MAX_SDL_CONTROLLER_RANGE);
+
 			if (left_joystick.x < 0.0f)
 			{
 				left_joystick_raw.x = left_joystick.x / MAX_SDL_CONTROLLER_RANGE + 1;
@@ -195,8 +198,6 @@ update_status ModuleInput::PreUpdate()
 				right_joystick_raw.y = right_joystick.y / MAX_SDL_CONTROLLER_RANGE;
 			}
 
-			right_joystick = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
-			right_joystick_raw = float2(right_joystick / MAX_SDL_CONTROLLER_RANGE);
 
 			left_controller_trigger = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
 			left_controller_trigger_raw = left_controller_trigger / MAX_SDL_CONTROLLER_RANGE;
@@ -416,7 +417,7 @@ bool ModuleInput::IsMouseMoving() const
 	return mouse_moving;
 }
 
-float2 ModuleInput::GetAxisContoller(ControllerAxis type) const
+ENGINE_API float2 ModuleInput::GetAxisContoller(ControllerAxis type) const
 {
 	switch (type)
 	{
@@ -442,7 +443,7 @@ float2 ModuleInput::GetAxisContoller(ControllerAxis type) const
 	return float2(0.0f, 0.0f);
 }
 
-Sint16 ModuleInput::GetTriggerController(ControllerAxis type) const
+ENGINE_API Sint16 ModuleInput::GetTriggerController(ControllerAxis type) const
 {
 	switch (type)
 	{
@@ -466,7 +467,7 @@ Sint16 ModuleInput::GetTriggerController(ControllerAxis type) const
 	return 0;
 }
 
-float2 ModuleInput::GetAxisContollerRaw(ControllerAxis type) const
+ENGINE_API float2 ModuleInput::GetAxisContollerRaw(ControllerAxis type) const
 {
 	switch (type)
 	{
@@ -484,7 +485,7 @@ float2 ModuleInput::GetAxisContollerRaw(ControllerAxis type) const
 	return float2(0.0f, 0.0f);
 }
 
-float ModuleInput::GetTriggerControllerRaw(ControllerAxis type) const
+ENGINE_API float ModuleInput::GetTriggerControllerRaw(ControllerAxis type) const
 {
 	switch (type)
 	{
