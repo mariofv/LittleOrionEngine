@@ -1,6 +1,7 @@
 #include "PanelScene.h"
 
 #include "Component/ComponentCamera.h"
+#include "EditorUI/Panel/PanelHierarchy.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
@@ -8,13 +9,16 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleFileSystem.h"
-#include "Module/ModuleModelLoader.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTime.h"
-#include "EditorUI/Panel/PanelHierarchy.h"
 
+#include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/Resources/Prefab.h"
+
+#include <Brofiler/Brofiler.h>
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
@@ -32,6 +36,8 @@ PanelScene::~PanelScene()
 
 void PanelScene::Render()
 {
+	BROFILER_CATEGORY("Render Scene Panel", Profiler::Color::BlueViolet);
+
 	if (ImGui::Begin(ICON_FA_TH " Scene", &opened, ImGuiWindowFlags_MenuBar))
 	{
 		RenderSceneBar();
@@ -66,11 +72,12 @@ void PanelScene::Render()
 		AABB2D content_area = AABB2D(scene_window_content_area_pos, scene_window_content_area_max_point);
 		float2 mouse_pos_f2 = float2(ImGui::GetMousePos().x, ImGui::GetMousePos().y);
 		AABB2D mouse_pos = AABB2D(mouse_pos_f2, mouse_pos_f2);
-		hovered = content_area.Contains(mouse_pos); // TODO: This seems to be inneficient, check with partner
+		hovered = ImGui::IsWindowHovered(); // TODO: This seems to be inneficient, check with partner
+		focused = ImGui::IsWindowFocused();
 
 		RenderEditorDraws(); // This should be render after rendering framebuffer texture.
 
-		if (App->cameras->IsMovementEnabled() && hovered) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
+		if (App->cameras->IsSceneCameraMoving()) // CHANGES CURSOR IF SCENE CAMERA MOVEMENT IS ENABLED
 		{
 			ImGui::SetMouseCursor(ImGuiMouseCursor_ResizeAll);
 		}
@@ -125,6 +132,8 @@ void PanelScene::RenderSceneBar()
 
 void PanelScene::RenderEditorDraws()
 {
+	BROFILER_CATEGORY("Render Editor Draws", Profiler::Color::Lavender);
+
 	ImGuizmo::SetRect(scene_window_content_area_pos.x, scene_window_content_area_pos.y, scene_window_content_area_width, scene_window_content_area_height);
 	ImGuizmo::SetDrawlist();
 	ImGuizmo::SetOrthographic(false);
@@ -308,11 +317,12 @@ void PanelScene::SceneDropTarget()
 		{
 			assert(payload->DataSize == sizeof(File*));
 			File *incoming_file = *(File**)payload->Data;
-			if (incoming_file->file_type == FileType::MODEL)
+			if (incoming_file->file_type == FileType::PREFAB)
 			{
-				GameObject* new_model = App->model_loader->LoadModel(incoming_file->file_path.c_str());
-				App->scene->root->AddChild(new_model); 
-				
+				ImportOptions options;
+				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
+				auto prefab = App->resources->Load<Prefab>(options.exported_file);
+				GameObject* new_model = prefab->Instantiate(App->scene->root);
 				App->actions->action_game_object = new_model;
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
 			}

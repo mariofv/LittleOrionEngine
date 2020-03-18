@@ -45,6 +45,22 @@ bool ModuleInput::Init()
 		mouse_bible[(MouseButton)i] = KeyState::IDLE;
 	}
 
+	SDL_Init(SDL_INIT_GAMECONTROLLER);
+
+	for (int i = 0; i < SDL_NumJoysticks(); ++i)
+	{
+		if (SDL_IsGameController(i))
+		{
+			controller = SDL_GameControllerOpen(i);
+			break;
+		}
+	}
+
+	for (int i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
+	{
+		controller_bible[(ControllerCode)i] = KeyState::IDLE;
+	}
+
 	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
 	
 	//Load Game Inputs
@@ -69,6 +85,14 @@ update_status ModuleInput::PreUpdate()
 
 	mouse_motion = { 0, 0 };
 	mouse_wheel_motion = 0;
+	left_joystick = { 0, 0 };
+	right_joystick = { 0, 0 };
+	left_controller_trigger = 0;
+	right_controller_trigger = 0;
+	left_joystick_raw = { 0, 0 };
+	right_joystick_raw = { 0, 0 };
+	left_controller_trigger_raw = 0;
+	right_controller_trigger_raw = 0;
 
 	for (auto& mouse : mouse_bible)
 	{
@@ -79,6 +103,18 @@ update_status ModuleInput::PreUpdate()
 		else if (mouse.second == KeyState::UP)
 		{
 			mouse.second = KeyState::IDLE;
+		}
+	}
+
+	for (auto& controller : controller_bible)
+	{
+		if (controller.second == KeyState::DOWN)
+		{
+			controller.second = KeyState::REPEAT;
+		}
+		else if (controller.second == KeyState::UP)
+		{
+			controller.second = KeyState::IDLE;
 		}
 	}
 
@@ -101,7 +137,7 @@ update_status ModuleInput::PreUpdate()
 		case SDL_MOUSEMOTION:
 			mouse_position = float2(event.motion.x, event.motion.y);
 			mouse_motion = float2(event.motion.xrel, event.motion.yrel);
-			mouse_moving = event.motion.state & SDL_BUTTON_RMASK;
+			mouse_moving = event.motion.state;
 			break;
 
 		case SDL_MOUSEWHEEL:
@@ -115,6 +151,47 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_MOUSEBUTTONUP:
 			mouse_bible[(MouseButton)event.button.button] = KeyState::UP;
+			break;
+
+		case SDL_CONTROLLERBUTTONDOWN:
+			//TODO how to handle multiple controllers
+			controller_bible[(ControllerCode)event.cbutton.button] = KeyState::DOWN;
+			break;
+
+		case SDL_CONTROLLERBUTTONUP:
+			controller_bible[(ControllerCode)event.cbutton.button] = KeyState::UP;
+			break;
+		
+		case SDL_CONTROLLERAXISMOTION:
+
+			left_joystick = float2(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_LEFTY));
+			left_joystick_raw = float2(left_joystick / MAX_SDL_CONTROLLER_RANGE);
+
+			if(left_joystick.x < 0.0f)
+			{
+				left_joystick_raw.x = left_joystick.x / MAX_SDL_CONTROLLER_RANGE + 1;
+			}
+			else if(left_joystick.y >= 0.0f)
+			{
+				left_joystick_raw.y = left_joystick.y / MAX_SDL_CONTROLLER_RANGE;
+			}
+			else if(right_joystick.x < 0.0f)
+			{
+				right_joystick_raw.x = right_joystick.x / MAX_SDL_CONTROLLER_RANGE + 1;
+			}
+			else if(right_joystick.y >= 0.0f)
+			{
+				right_joystick_raw.y = right_joystick.y / MAX_SDL_CONTROLLER_RANGE;
+			}
+
+			right_joystick = float2(SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_RIGHTY));
+			right_joystick_raw = float2(right_joystick / MAX_SDL_CONTROLLER_RANGE);
+
+			left_controller_trigger = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+			left_controller_trigger_raw = left_controller_trigger / MAX_SDL_CONTROLLER_RANGE;
+			right_controller_trigger = SDL_GameControllerGetAxis(controller, SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+			right_controller_trigger_raw = right_controller_trigger / MAX_SDL_CONTROLLER_RANGE;
+				
 			break;
 
 		case SDL_DROPFILE:
@@ -161,6 +238,7 @@ bool ModuleInput::CleanUp()
 {
 	APP_LOG_INFO("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
+	SDL_GameControllerClose(controller);
 	return true;
 }
 
@@ -198,6 +276,21 @@ bool ModuleInput::GetMouseButtonDown(MouseButton button)
 bool ModuleInput::GetMouseButtonUp(MouseButton button)
 {
 	return mouse_bible[button] == KeyState::UP;
+}
+
+bool ModuleInput::GetControllerButton(ControllerCode code)
+{
+	return controller_bible[code] == KeyState::REPEAT;
+}
+
+bool ModuleInput::GetControllerButtonDown(ControllerCode code)
+{
+	return controller_bible[code] == KeyState::DOWN;
+}
+
+bool ModuleInput::GetControllerButtonUp(ControllerCode code)
+{
+	return controller_bible[code] == KeyState::UP;
 }
 
 bool ModuleInput::GetGameInput(const char* name)
@@ -294,6 +387,92 @@ Uint8 ModuleInput::GetMouseClicks() const
 bool ModuleInput::IsMouseMoving() const
 {
 	return mouse_moving;
+}
+
+float2 ModuleInput::GetAxisContoller(ControllerAxis type) const
+{
+	switch (type)
+	{
+		case ControllerAxis::LEFT_JOYSTICK:
+			return left_joystick;
+			break;
+
+		case ControllerAxis::RIGHT_JOYSTICK:
+			return right_joystick;
+			break;
+
+		case ControllerAxis::LEFT_JOYSTICK_RAW:
+			return left_joystick_raw;
+			break;
+
+		case ControllerAxis::RIGHT_JOYSTICK_RAW:
+			return right_joystick_raw;
+			break;
+		default:
+			break;
+	}
+
+	return float2(0.0f, 0.0f);
+}
+
+Sint16 ModuleInput::GetTriggerController(ControllerAxis type) const
+{
+	switch (type)
+	{
+		case ControllerAxis::LEFT_TRIGGER:
+			return left_controller_trigger;
+			break;
+		case ControllerAxis::RIGHT_TRIGGER:
+			return right_controller_trigger;
+			break;
+		case ControllerAxis::LEFT_TRIGGER_RAW:
+			return left_controller_trigger_raw;
+			break;
+		case ControllerAxis::RIGHT_TRIGGER_RAW:
+			return right_controller_trigger_raw;
+			break;
+
+		default:
+			break;
+	}
+
+	return 0;
+}
+
+float2 ModuleInput::GetAxisContollerRaw(ControllerAxis type) const
+{
+	switch (type)
+	{
+		case ControllerAxis::LEFT_JOYSTICK_RAW:
+			return left_joystick_raw;
+			break;
+
+		case ControllerAxis::RIGHT_JOYSTICK_RAW:
+			return right_joystick_raw;
+			break;
+		default:
+			break;
+	}
+
+	return float2(0.0f, 0.0f);
+}
+
+float ModuleInput::GetTriggerControllerRaw(ControllerAxis type) const
+{
+	switch (type)
+	{
+	case ControllerAxis::LEFT_TRIGGER_RAW:
+		return left_controller_trigger_raw;
+		break;
+	case ControllerAxis::RIGHT_TRIGGER_RAW:
+		return right_controller_trigger_raw;
+		break;
+
+	default:
+		break;
+	}
+
+	return 0.0f;
 }
 
 void ModuleInput::SaveGameInputs(Config &config)

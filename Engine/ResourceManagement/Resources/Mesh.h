@@ -17,6 +17,7 @@ public:
 		float3 tangent;
 	};
 	Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path);
+	Mesh(std::string mesh_file_path);
 	~Mesh();
 
 	GLuint GetVAO() const;

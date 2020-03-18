@@ -10,6 +10,7 @@
 #include "EditorUI/Panel/PanelInspector.h"
 #include "EditorUI/Panel/PanelPopups.h"
 #include "EditorUI/Panel/PanelProjectExplorer.h"
+#include "EditorUI/Panel/PanelResourceDatabase.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelToolBar.h"
 
@@ -26,6 +27,7 @@
 #include <Brofiler/Brofiler.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
+
 #include <GL/glew.h>
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -51,6 +53,7 @@ bool ModuleEditor::Init()
 	panels.push_back(debug_panel = new PanelDebug());
 	panels.push_back(configuration = new PanelConfiguration());
 	panels.push_back(about = new PanelAbout());
+	panels.push_back(resource_database = new PanelResourceDatabase());
 	panels.push_back(popups = new PanelPopups());
 
 	return ret;
@@ -97,12 +100,12 @@ update_status ModuleEditor::PreUpdate()
 update_status ModuleEditor::Update()
 {
 	//ImGui::ShowStyleEditor();
-	//ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
 
 	static bool inital_scene_loaded = false;
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
-		OpenScene(ASSIGNMENT_SCENE_PATH);
+		OpenScene(DEFAULT_SCENE_PATH);
 		inital_scene_loaded = true;
 	}
 
@@ -127,6 +130,8 @@ void ModuleEditor::Render()
 	ImGui::End();
 
 	ImGui::Render();
+
+	BROFILER_CATEGORY("Render ImGui Draws", Profiler::Color::BlueViolet);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 

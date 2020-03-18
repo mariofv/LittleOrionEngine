@@ -13,6 +13,7 @@ public:
 
 	std::string GetWindowName() const { return window_name; };
 	bool IsHovered() const { return hovered; };
+	bool IsFocused() const { return focused; };
 	bool IsEnabled() const { return enabled; };
 	void SwitchEnable() { enabled = !enabled; };
 	bool IsOpened() const { return opened; };
@@ -21,6 +22,7 @@ public:
 protected:
 	std::string window_name = "";
 	bool hovered = false;
+	bool focused = false;
 	bool enabled = false;
 	bool opened = false;
 };

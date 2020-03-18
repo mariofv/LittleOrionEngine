@@ -99,7 +99,6 @@
     <ClInclude Include="Engine\Actions\EditorActionModifyLight.h" />
     <ClInclude Include="Engine\Actions\EditorActionRotation.h" />
     <ClInclude Include="Engine\Actions\EditorActionScale.h" />
-    <ClInclude Include="Engine\Actions\EditorActionSetTexture.h" />
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h" />
     <ClInclude Include="Engine\Component\ComponentScript.h" />
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h" />
@@ -113,16 +112,18 @@
     <ClInclude Include="Engine\Module\ModuleResourceManager.h" />
     <ClInclude Include="Engine\Module\ModuleScriptManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.h" />
-    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\PrefabImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\SceneManager.h" />
     <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\AnimationLoader.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\MaterialLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\PrefabLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\SkeletonLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Animation.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Material.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Prefab.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h" />
@@ -147,8 +148,7 @@
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelComponent.h" />
     <ClInclude Include="Engine\Component\ComponentAABB.h" />
     <ClInclude Include="Engine\Component\ComponentCamera.h" />
-    <ClInclude Include="Engine\Component\ComponentMaterial.h" />
-    <ClInclude Include="Engine\Component\ComponentMesh.h" />
+    <ClInclude Include="Engine\Component\ComponentMeshRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentTransform.h" />
     <ClInclude Include="Engine\Component\Component.h" />
     <ClInclude Include="Engine\EditorUI\EngineLog.h" />
@@ -164,6 +164,7 @@
     <ClInclude Include="Engine\Module\ModuleWindow.h" />
     <ClInclude Include="Engine\Module\ModuleScene.h" />
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelGameObject.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMaterial.h" />
     <ClInclude Include="Engine\EditorUI\Panel\Panel.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelAbout.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelConfiguration.h" />
@@ -177,10 +178,15 @@
     <ClInclude Include="Engine\EditorUI\Panel\PanelToolBar.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelScene.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelInspector.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PanelResourceDatabase.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Skybox.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h" />
     <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h" />
     <ClInclude Include="Engine\Module\ModuleActions.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMaterialSelector.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMeshSelector.h" />
+    <ClInclude Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\ModelPrefabImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -192,7 +198,6 @@
     <ClCompile Include="Engine\Actions\EditorActionModifyLight.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionRotation.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />
-    <ClCompile Include="Engine\Actions\EditorActionSetTexture.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
@@ -207,16 +212,18 @@
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
     <ClCompile Include="Engine\Module\ModuleScriptManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\SceneManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\AnimationLoader.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\MaterialLoader.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\PrefabLoader.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\SkeletonLoader.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Animation.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Material.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Prefab.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Skeleton.cpp" />
@@ -240,14 +247,14 @@
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelComponent.cpp" />
     <ClCompile Include="Engine\Component\ComponentAABB.cpp" />
     <ClCompile Include="Engine\Component\ComponentCamera.cpp" />
-    <ClCompile Include="Engine\Component\ComponentMaterial.cpp" />
-    <ClCompile Include="Engine\Component\ComponentMesh.cpp" />
+    <ClCompile Include="Engine\Component\ComponentMeshRenderer.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform.cpp" />
     <ClCompile Include="Engine\EditorUI\EngineLog.cpp" />
     <ClCompile Include="Engine\Module\ModuleCamera.cpp" />
     <ClCompile Include="Engine\Module\ModuleModelLoader.cpp" />
     <ClCompile Include="Engine\Module\ModuleTime.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelGameObject.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMaterial.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelAbout.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelConfiguration.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelConsole.cpp" />
@@ -258,7 +265,10 @@
     <ClCompile Include="Engine\EditorUI\Panel\PanelPopups.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelProjectExplorer.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelToolBar.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PanelResourceDatabase.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMaterialSelector.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGradient.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGuizmo.cpp" />
@@ -276,6 +286,8 @@
     <ClCompile Include="Engine\ResourceManagement\Loaders\MeshLoader.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp" />
     <ClCompile Include="Engine\Module\ModuleActions.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\ModelPrefabImporter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -2,9 +2,11 @@
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentLight.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
+
 #include "EditorUI/Helper/Billboard.h"
 #include "EditorUI/Helper/Grid.h"
+
 #include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
@@ -17,8 +19,9 @@
 #define DEBUG_DRAW_IMPLEMENTATION
 #include "EditorUI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
 
-#include "GL/glew.h"
+#include <GL/glew.h>
 #include <assert.h>
+#include <Brofiler/Brofiler.h>
 
 class IDebugDrawOpenGLImplementation final : public dd::RenderInterface
 {
@@ -384,13 +387,12 @@ bool ModuleDebugDraw::Init()
 
 void ModuleDebugDraw::Render()
 {
-	if (App->debug->show_grid)
-	{
-		grid->Render();
-	}
+	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
 
 	if (App->debug->show_quadtree)
 	{
+		BROFILER_CATEGORY("Render QuadTree", Profiler::Color::Lavender);
+
 		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree)
 		{
 			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
@@ -416,6 +418,8 @@ void ModuleDebugDraw::Render()
 
 	if (App->editor->selected_game_object != nullptr)
 	{
+		BROFILER_CATEGORY("Render Selected GameObject DebugDraws", Profiler::Color::Lavender);
+
 		RenderCameraFrustum();
 		RenderLightGizmo();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
@@ -433,11 +437,20 @@ void ModuleDebugDraw::Render()
 
 	RenderBillboards();
 
+	if (App->debug->show_grid)
+	{
+		float scene_camera_height = App->cameras->scene_camera->owner->transform.GetGlobalTranslation().y;
+		grid->ScaleOnDistance(scene_camera_height);
+		grid->Render();
+	}
+
 	RenderDebugDraws(*App->cameras->scene_camera);
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
 {
+	BROFILER_CATEGORY("Render Selected GameObject Camera Frustum", Profiler::Color::Lavender);
+
 	if (!App->debug->show_camera_frustum)
 	{
 		return;
@@ -453,6 +466,8 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 
 void ModuleDebugDraw::RenderLightGizmo() const	
 {	
+	BROFILER_CATEGORY("Render Selected GameObject Light Gizmo", Profiler::Color::Lavender);
+
 	Component* selected_light_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::LIGHT);	
 	if (selected_light_component != nullptr)
   {	
@@ -485,12 +500,16 @@ void ModuleDebugDraw::RenderLightGizmo() const
 
 void ModuleDebugDraw::RenderOutline() const
 {
+	BROFILER_CATEGORY("Render Outline", Profiler::Color::Lavender);
+
 	GameObject* selected_game_object = App->editor->selected_game_object;
-	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH);
+	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 
 	if (selected_object_mesh_component != nullptr && selected_object_mesh_component->IsEnabled())
 	{
-		ComponentMesh* selected_object_mesh = static_cast<ComponentMesh*>(selected_object_mesh_component);
+		BROFILER_CATEGORY("Render Outline Write Stencil", Profiler::Color::Lavender);
+
+		ComponentMeshRenderer* selected_object_mesh = static_cast<ComponentMeshRenderer*>(selected_object_mesh_component);
 		glEnable(GL_STENCIL_TEST);
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
@@ -502,8 +521,21 @@ void ModuleDebugDraw::RenderOutline() const
 		glStencilMask(0x00);
 		glDisable(GL_DEPTH_TEST);
 
+		BROFILER_CATEGORY("Render Outline Read Stencil", Profiler::Color::Lavender);
+
 		GLuint outline_shader_program = App->program->GetShaderProgramId("Outline");
 		glUseProgram(outline_shader_program);
+		float4x4 new_transformation_matrix;
+		if (selected_game_object->parent != nullptr)
+		{
+			new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * selected_game_object->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
+
+		}
+		else 
+		{
+			new_transformation_matrix =  selected_game_object->transform.GetGlobalModelMatrix() * float4x4::Scale(float3(1.01f));
+		}
+
 		
 		ModuleRender::DrawMode last_draw_mode = App->renderer->draw_mode;
 		App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
@@ -529,6 +561,8 @@ void ModuleDebugDraw::RenderOutline() const
 
 void ModuleDebugDraw::RenderBoundingBoxes() const
 {
+	BROFILER_CATEGORY("Render Bounding Boxes", Profiler::Color::Lavender);
+
 	for (auto& mesh : App->renderer->meshes_to_render)
 	{
 		GameObject* mesh_game_object = mesh->owner;
@@ -541,6 +575,8 @@ void ModuleDebugDraw::RenderBoundingBoxes() const
 
 void ModuleDebugDraw::RenderGlobalBoundingBoxes() const
 {
+	BROFILER_CATEGORY("Render Global Bounding Boxes", Profiler::Color::Lavender);
+
 	for (auto& object : App->scene->game_objects_ownership)
 	{
 		dd::aabb(object->aabb.global_bounding_box.minPoint, object->aabb.global_bounding_box.maxPoint, float3::one);
@@ -549,6 +585,8 @@ void ModuleDebugDraw::RenderGlobalBoundingBoxes() const
 
 void ModuleDebugDraw::RenderBillboards() const
 {
+	BROFILER_CATEGORY("Render Billboards", Profiler::Color::Lavender);
+
 	for (auto& object : App->scene->game_objects_ownership)
 	{
 		Component * light_component = object->GetComponent(Component::ComponentType::LIGHT);
@@ -565,6 +603,8 @@ void ModuleDebugDraw::RenderBillboards() const
 
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 {
+	BROFILER_CATEGORY("Flush Debug Draw", Profiler::Color::Lavender);
+
 	math::float4x4 view = camera.GetViewMatrix();
 	math::float4x4 proj = camera.GetProjectionMatrix();
 

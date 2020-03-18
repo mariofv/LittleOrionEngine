@@ -1,11 +1,14 @@
 #include "PanelGameObject.h"
 
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMaterial.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+
+#include "EditorUI/Panel/PanelInspector.h"
+#include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
@@ -70,11 +73,8 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::CAMERA:
 				component_panel.ShowComponentCameraWindow(static_cast<ComponentCamera*>(component));
 				break;
-			case Component::ComponentType::MATERIAL:
-				component_panel.ShowComponentMaterialWindow(static_cast<ComponentMaterial*>(component));
-				break;
-			case Component::ComponentType::MESH:
-				component_panel.ShowComponentMeshWindow(static_cast<ComponentMesh*>(component));
+			case Component::ComponentType::MESH_RENDERER:
+				component_panel.ShowComponentMeshRendererWindow(static_cast<ComponentMeshRenderer*>(component));
 				break;
 			case Component::ComponentType::LIGHT:
 				component_panel.ShowComponentLightWindow(static_cast<ComponentLight*>(component));
@@ -89,6 +89,11 @@ void PanelGameObject::Render(GameObject* game_object)
 		ImGui::PopID();
 	}
 
+	if (game_object->GetComponent(Component::ComponentType::MESH_RENDERER) != nullptr)
+	{
+		App->editor->inspector->material_panel.Render(static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER))->material_to_render.get());
+	}
+
 	ImGui::Spacing();
 	ImGui::Separator();
 	ImGui::Spacing();
@@ -99,7 +104,7 @@ void PanelGameObject::Render(GameObject* game_object)
 void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
 {
 	ImGui::SameLine();
-	if(ImGui::Button("Apply"))
+	if(game_object->prefab_reference->IsOverwritable() && ImGui::Button("Apply"))
 	{
 
 		GameObject *to_reimport = GetPrefabParent(game_object);

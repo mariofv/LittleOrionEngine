@@ -80,3 +80,7 @@ void Grid::Render() const
 	glUseProgram(0);
 }
 
+void Grid::ScaleOnDistance(float distance)
+{
+	grid_size = distance * DISTANCE_FACTOR;
+}

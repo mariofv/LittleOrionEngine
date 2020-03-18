@@ -1,4 +1,4 @@
-#include "PanelConfiguration.h"
+#include "Component/ComponentCamera.h"
 
 #include "Main/Application.h"
 #include "Module/ModuleCamera.h"
@@ -6,9 +6,7 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
-
-#include "Component/ComponentCamera.h"
-
+#include "PanelConfiguration.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
@@ -26,6 +24,7 @@ void PanelConfiguration::Render()
 	if (ImGui::Begin(ICON_FA_COGS " Configuration", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
+		focused = ImGui::IsWindowFocused();
 
 		ShowHardware();
 
@@ -376,6 +375,35 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("NavInputs pressed:"); for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputsDownDuration[i] == 0.0f) { ImGui::SameLine(); ImGui::Text("[%d]", i); }
 			ImGui::Text("NavInputs duration:"); for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputsDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("[%d] %.2f", i, io.NavInputsDownDuration[i]); }
 
+
+			ImGui::Text("Controller:");
+			ImGui::Text("A: %d", App->input->GetControllerButton(ControllerCode::A));
+			ImGui::Text("B: %d", App->input->GetControllerButton(ControllerCode::B));
+			ImGui::Text("X: %d", App->input->GetControllerButton(ControllerCode::X));
+			ImGui::Text("Y: %d", App->input->GetControllerButton(ControllerCode::Y));
+			ImGui::Text("Back: %d", App->input->GetControllerButton(ControllerCode::Back));
+			ImGui::Text("DownDpad: %d", App->input->GetControllerButton(ControllerCode::DownDpad));
+			ImGui::Text("Guide: %d", App->input->GetControllerButton(ControllerCode::Guide));
+			ImGui::Text("LeftDpad: %d", App->input->GetControllerButton(ControllerCode::LeftDpad));
+			ImGui::Text("LeftShoulder: %d", App->input->GetControllerButton(ControllerCode::LeftShoulder));
+			ImGui::Text("LeftStick: %d", App->input->GetControllerButton(ControllerCode::LeftStick));
+			ImGui::Text("RightDpad: %d", App->input->GetControllerButton(ControllerCode::RightDpad));
+			ImGui::Text("RightShoulder: %d", App->input->GetControllerButton(ControllerCode::RightShoulder));
+			ImGui::Text("RightStick: %d", App->input->GetControllerButton(ControllerCode::RightStick));
+			ImGui::Text("Start: %d", App->input->GetControllerButton(ControllerCode::Start));
+			ImGui::Text("UpDpad: %d", App->input->GetControllerButton(ControllerCode::UpDpad));
+
+			ImGui::Text("Left Joystick : (%.3f, %.3f)", App->input->GetAxisContoller(ControllerAxis::LEFT_JOYSTICK).x, App->input->GetAxisContoller(ControllerAxis::LEFT_JOYSTICK).y);
+			ImGui::Text("Right Joystick : (%.3f, %.3f)", App->input->GetAxisContoller(ControllerAxis::RIGHT_JOYSTICK).x, App->input->GetAxisContoller(ControllerAxis::RIGHT_JOYSTICK).y);
+
+			ImGui::Text("Left Joystick : (%.3f, %.3f)", App->input->GetAxisContoller(ControllerAxis::LEFT_JOYSTICK_RAW).x, App->input->GetAxisContoller(ControllerAxis::LEFT_JOYSTICK_RAW).y);
+			ImGui::Text("Right Joystick : (%.3f, %.3f)", App->input->GetAxisContoller(ControllerAxis::RIGHT_JOYSTICK_RAW).x, App->input->GetAxisContoller(ControllerAxis::RIGHT_JOYSTICK_RAW).y);
+
+			ImGui::Text("Left Trigger : %d", App->input->GetTriggerController(ControllerAxis::LEFT_TRIGGER));
+			ImGui::Text("Right Trigger : %d", App->input->GetTriggerController(ControllerAxis::RIGHT_TRIGGER));
+
+			ImGui::Text("Left Raw Trigger : %.3f", App->input->GetTriggerControllerRaw(ControllerAxis::LEFT_TRIGGER_RAW));
+			ImGui::Text("Right Raw Trigger : %.3f", App->input->GetTriggerControllerRaw(ControllerAxis::RIGHT_TRIGGER_RAW));
 
 			ImGui::TreePop();
 		}

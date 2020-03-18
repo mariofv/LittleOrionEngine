@@ -19,6 +19,7 @@
 #include "ResourceManagement/Resources/Prefab.h"
 #include "ResourceManagement/Importer/Importer.h"
 
+#include <Brofiler/Brofiler.h>
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
@@ -31,9 +32,12 @@ PanelHierarchy::PanelHierarchy()
 
 void PanelHierarchy::Render()
 {
+	BROFILER_CATEGORY("Render Hierarchy Panel", Profiler::Color::BlueViolet);
+
 	if (ImGui::Begin(ICON_FA_SITEMAP " Hierarchy", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
+		focused = ImGui::IsWindowFocused();
 
 		for (unsigned int i = 0; i < App->scene->GetRoot()->children.size(); ++i)
 		{
@@ -122,25 +126,24 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 		{
 			assert(payload->DataSize == sizeof(File*));
 			File *incoming_file = *(File**)payload->Data;
-			if (incoming_file->file_type == FileType::MODEL)
-			{
-				GameObject* new_model = App->model_loader->LoadModel(incoming_file->file_path.c_str());
-
-				if (target_game_object != nullptr)
-				{
-					target_game_object->AddChild(new_model);
-
-					//UndoRedo
-					App->actions->action_game_object = new_model;
-					App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
-				}
-			}
-			if (incoming_file->file_type == FileType::PREFAB)
+			if (incoming_file->file_type == FileType::PREFAB || incoming_file->file_type == FileType::MODEL)
 			{
 				ImportOptions options;
 				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
-				auto prefab = App->resources->Load<Prefab>(options.exported_file);
-				prefab->Instantiate(target_game_object);
+				std::string prefab_exported_path = options.exported_file;
+				if (prefab_exported_path.empty())
+				{
+					prefab_exported_path = App->resources->Import(*incoming_file).exported_file;
+				}
+				auto prefab = App->resources->Load<Prefab>(prefab_exported_path);
+				if (incoming_file->file_type == FileType::MODEL)
+				{
+					prefab->overwritable = false;
+				}
+				GameObject* new_model = prefab->Instantiate(target_game_object);
+
+				App->actions->action_game_object = new_model;
+				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
 			}
 		}
 		ImGui::EndDragDropTarget();

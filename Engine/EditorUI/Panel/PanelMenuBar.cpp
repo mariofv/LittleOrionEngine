@@ -9,6 +9,7 @@
 #include "EditorUI/Panel/PanelInspector.h"
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelScene.h"
+#include "EditorUI/Panel/PanelResourceDatabase.h"
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleModelLoader.h"
@@ -165,6 +166,10 @@ void PanelMenuBar::ShowWindowMenu()
 			if (ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, App->editor->console->IsOpened()))
 			{
 				App->editor->console->SwitchOpen();
+			}
+			if (ImGui::MenuItem((ICON_FA_DATABASE " Resource Database"), (const char*)0, App->editor->resource_database->IsOpened()))
+			{
+				App->editor->resource_database->SwitchOpen();
 			}
 
 			ImGui::EndMenu();
