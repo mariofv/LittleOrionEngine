@@ -144,6 +144,7 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 
 	node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
 
+	std::map<std::string, std::string> already_loaded_skeleton;
 	for (size_t i = 0; i < root_node->mNumMeshes; ++i)
 	{
 		Config node;
@@ -165,12 +166,19 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 			node.AddString(importing_mesh->mName.data, "Name");
 		}
 
-		if (importing_mesh->HasBones())
+		std::string main_bone_name = importing_mesh->mBones[0]->mName.C_Str();
+		bool already_loaded = already_loaded_skeleton.find(main_bone_name) != already_loaded_skeleton.end();
+		if (importing_mesh->HasBones() && !already_loaded)
 		{
 			std::string library_skeleton_file;
 			std::string assets_skeleton_file = base_path + "/" + std::string(root_node->mName.data)+ "_skeleton" + std::to_string(i) + ".sk";
 			skeleton_importer->ImportSkeleton(scene, importing_mesh, assets_skeleton_file, library_skeleton_file);
+			already_loaded_skeleton[main_bone_name] = library_skeleton_file;
 			node.AddString(library_skeleton_file, "Skeleton");
+		}
+		else if(already_loaded)
+		{
+			node.AddString(already_loaded_skeleton[main_bone_name], "Skeleton");
 		}
 		node_config.push_back(node);
 	}
