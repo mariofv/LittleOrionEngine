@@ -372,9 +372,13 @@ void ModuleScriptManager::SaveVariables(std::unordered_map<uint64_t, Config>& co
 {
 	for (auto &component_script : scripts)
 	{
-		Config config;
-		component_script->script->Save(config);
-		config_list.insert({component_script->UUID, config });
+		if (component_script->script != nullptr) 
+		{
+			Config config;
+			component_script->script->Save(config);
+			config_list.insert({ component_script->UUID, config });
+		}
+
 	}
 }
 
@@ -382,10 +386,13 @@ void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> con
 {
 	for (auto &component_script : scripts)
 	{
-		std::unordered_map<uint64_t, Config>::const_iterator got = config_list.find(component_script->UUID);
-		if (got != config_list.end()) {
-			component_script->script->Load(got->second);
-			component_script->script->Link();
+		if (component_script->script != nullptr)
+		{
+			std::unordered_map<uint64_t, Config>::const_iterator got = config_list.find(component_script->UUID);
+			if (got != config_list.end()) {
+				component_script->script->Load(got->second);
+				component_script->script->Link();
+			}
 		}
 		
 	}
