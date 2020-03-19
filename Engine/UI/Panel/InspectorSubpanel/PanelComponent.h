@@ -12,6 +12,7 @@ class ComponentMaterial;
 class ComponentMesh;
 class ComponentTransform;
 class ComponentUI;
+class ComponentText;
 
 class PanelComponent
 {
@@ -26,6 +27,7 @@ public:
 	void ShowComponentLightWindow(ComponentLight *light);
 	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
 	void ShowComponentUIWindow(ComponentUI*);
+	void ShowComponentTextWindow(ComponentText*);
 
 	void ShowAddNewComponentButton();
 

@@ -13,6 +13,7 @@
 #include "Component/ComponentMesh.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentUI.h"
+#include "Component/ComponentText.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -500,6 +501,30 @@ void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 		ImGui::ColorPicker3("Color", ui->color.ptr());
 	}
 }
+void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::Checkbox("Active", &txt->active))
+		{
+			//UndoRedo
+			App->actions->action_component = txt;
+			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(txt);
+			return;
+		}
+		ImGui::Separator();
+
+		ImGui::InputFloat2("Size", txt->size.ptr());
+		ImGui::InputFloat2("Position", txt->position.ptr());
+		ImGui::InputInt("Texture", (int*)(&txt->text_texture));
+		//ImGui::ColorPicker3("Color", ui->color.ptr());
+	}
+}
 
 
 void PanelComponent::ShowAddNewComponentButton()
@@ -544,10 +569,16 @@ void PanelComponent::ShowAddNewComponentButton()
 
 		}
 
-		sprintf_s(tmp_string, "%s Ui", ICON_FA_SWATCHBOOK);
+		sprintf_s(tmp_string, "%s UI", ICON_FA_SWATCHBOOK);
 		if (ImGui::Selectable(tmp_string))
 		{
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI);
+
+		}
+		sprintf_s(tmp_string, "%s Text", ICON_FA_BEER);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::TEXT);
 
 		}
 

@@ -6,6 +6,7 @@
 #include "Component/ComponentLight.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentUI.h"
+#include "Component/ComponentText.h"
 #include "Main/GameObject.h"
 
 #include <imgui.h>
@@ -75,6 +76,9 @@ void PanelGameObject::Render(GameObject* game_object)
 				break;
 			case Component::ComponentType::UI:
 				component_panel.ShowComponentUIWindow(static_cast<ComponentUI*>(component));
+				break;
+			case Component::ComponentType::TEXT:
+				component_panel.ShowComponentTextWindow(static_cast<ComponentText*>(component));
 				break;
 			default:
 				break;

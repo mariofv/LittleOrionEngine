@@ -6,6 +6,7 @@
 
 class ComponentCanvas;
 class ComponentCamera;
+class ComponentText;
 class ComponentUI;
 
 struct SDL_Renderer;
@@ -28,8 +29,12 @@ public:
 	ComponentUI* CreateComponentUI();
 	void RemoveComponentUI(ComponentUI*);
 
+	ComponentText* CreateComponentText();
+	void RemoveComponentText(ComponentText*);
+
 	std::vector<ComponentCanvas*> canvases;
 	std::vector<ComponentUI*> ui_elements;
+	std::vector<ComponentText*> ui_texts;
 private:
 	SDL_Renderer* render;
 };

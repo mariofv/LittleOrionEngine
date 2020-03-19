@@ -14,7 +14,7 @@ public:
 
 	void Save(Config& config) const override {};
 	void Load(const Config& config) override {};
-	void Render();
+	virtual void Render();
 	float3 color = float3(0.0f, 1.0f, 0.0f);
 private:
 	unsigned int shader_program, vao, ui_texture;

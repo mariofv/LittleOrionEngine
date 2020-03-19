@@ -1,6 +1,7 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentUI.h"
+#include "Component/ComponentText.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "Module/ModuleWindow.h"
@@ -35,13 +36,18 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	{
 		if (canvas->IsEnabled())
 		{
-			canvas->Render(camera);
+			//canvas->Render(camera);
 		}
 	}
 
 	for (auto &ui : ui_elements)
 	{
 		ui->Render();
+	}
+
+	for (auto &txt : ui_texts)
+	{
+		txt->Render();
 	}
 }
 
@@ -76,6 +82,23 @@ void ModuleUI::RemoveComponentUI(ComponentUI* ui_to_remove)
 	{
 		delete *it;
 		ui_elements.erase(it);
+	}
+}
+
+ComponentText* ModuleUI::CreateComponentText()
+{
+	ComponentText* new_txt = new ComponentText();
+	ui_texts.push_back(new_txt);
+	return new_txt;
+}
+
+void ModuleUI::RemoveComponentText(ComponentText* txt_to_remove)
+{
+	auto it = std::find(ui_texts.begin(), ui_texts.end(), txt_to_remove);
+	if (it != ui_texts.end())
+	{
+		delete *it;
+		ui_texts.erase(it);
 	}
 }
 
