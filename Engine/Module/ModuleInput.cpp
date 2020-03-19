@@ -176,31 +176,10 @@ update_status ModuleInput::PreUpdate()
 		{
 			int which = event.cbutton.which;
 			left_joystick = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
-			//left_joystick_raw = float2(left_joystick / MAX_SDL_CONTROLLER_RANGE);
-
 			right_joystick = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
-			//right_joystick_raw = float2(right_joystick / MAX_SDL_CONTROLLER_RANGE);
 
 			left_joystick_raw = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
 			right_joystick_raw = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
-
-
-			//if (left_joystick.x < 0.0f)
-			//{
-			//	left_joystick_raw.x = left_joystick.x / MAX_SDL_CONTROLLER_RANGE + 1;
-			//}
-			//else if (left_joystick.y >= 0.0f)
-			//{
-			//	left_joystick_raw.y = left_joystick.y / MAX_SDL_CONTROLLER_RANGE;
-			//}
-			//else if (right_joystick.x < 0.0f)
-			//{
-			//	right_joystick_raw.x = right_joystick.x / MAX_SDL_CONTROLLER_RANGE + 1;
-			//}
-			//else if (right_joystick.y >= 0.0f)
-			//{
-			//	right_joystick_raw.y = right_joystick.y / MAX_SDL_CONTROLLER_RANGE;
-			//}
 
 
 			left_controller_trigger = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERLEFT);

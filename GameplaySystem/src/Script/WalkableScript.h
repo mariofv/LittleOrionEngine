@@ -15,7 +15,6 @@ public:
 	void OnInspector(ImGuiContext*) override;
 	void Move();
 
-
 	float speed = 0.01f;
 	float rotation_speed = 0.01f;
 

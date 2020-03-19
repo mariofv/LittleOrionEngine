@@ -66,11 +66,19 @@ void WalkableScript::Move()
 	float3 rotation = owner->transform.GetRotationRadiants();
 
 	///Controller Input
-	float2 axis = App->input->GetAxisContollerRaw(ControllerAxis::RIGHT_JOYSTICK_RAW);
+	float2 axis = App->input->GetAxisContollerRaw(ControllerAxis::LEFT_JOYSTICK_RAW);
 
-	float3 target_pos = float3(transform.x + axis.x, transform.y, transform.z + axis.y);
-	//if (App->artificial_intelligence->IsPointWalkable(target_pos))
-	owner->transform.SetTranslation(target_pos);
+	float3 axis_direction = float3(-axis.x, 0.0f , -axis.y);
+
+	if(!axis_direction.Equals(float3::zero))
+	{
+		float3 direction = axis_direction * speed + transform;
+		owner->transform.LookAt(direction);
+
+		if (App->artificial_intelligence->IsPointWalkable(direction))
+			owner->transform.SetTranslation(direction);
+	}
+
 
 	///Keyboard Input
 	float3 new_transform = transform;
@@ -101,6 +109,7 @@ void WalkableScript::Move()
 		owner->transform.SetRotation(float3(rotation.x, rotation.y + rotation_speed, rotation.z));
 	}
 
+	///Jump handle
 	if(App->input->GetKey(KeyCode::Space))
 	{
 		if(!is_jumping)
@@ -124,6 +133,12 @@ void WalkableScript::Move()
 		}
 	}
 
-	//if (App->artificial_intelligence->IsPointWalkable(new_transform))
-	owner->transform.SetTranslation(new_transform);
+	if (!new_transform.Equals(transform))
+	{
+		owner->transform.LookAt(new_transform);
+		if (App->artificial_intelligence->IsPointWalkable(new_transform))
+			owner->transform.SetTranslation(new_transform);
+	}
+
 }
+
