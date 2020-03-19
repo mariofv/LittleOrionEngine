@@ -59,6 +59,12 @@
          "Vertex":"Resources/Shaders/NavMesh.vs",
          "Fragment":"Resources/Shaders/NavMesh.fs",
          "Selectable":true
+	 },
+      {
+         "Name":"Grid",
+         "Vertex":"Resources/Shaders/grid.vs",
+         "Fragment":"Resources/Shaders/grid.fs",
+         "Selectable":false
       }
    ]
 }

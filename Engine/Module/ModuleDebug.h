@@ -27,11 +27,13 @@ public:
 	void CreateHousesRandom() const;
 	
 public:
+	bool show_debug_metrics = true;
 	bool show_bounding_boxes = false;
 	bool show_global_bounding_boxes = false;
 	bool show_grid = true;
 	bool show_camera_frustum = true;
 	bool show_quadtree = false;
+	bool show_octtree = false;
 	bool show_aabbtree = false;
 	bool show_navmesh = false;
 	bool show_pathfind_points = true;

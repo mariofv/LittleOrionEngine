@@ -1,7 +1,9 @@
 #include "NavMesh.h"
 
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentCamera.h"
+
+#include "EditorUI/DebugDraw.h"
 
 #include "Main/Application.h"
 #include "Module/ModuleCamera.h"
@@ -10,7 +12,6 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 
-#include "UI/DebugDraw.h"
 #include <math.h>
 #include <recast/Detour/DetourCommon.h>
 #include <recast/DebugUtils/DetourDebugDraw.h>

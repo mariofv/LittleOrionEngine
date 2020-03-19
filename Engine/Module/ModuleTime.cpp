@@ -1,12 +1,12 @@
 #include "ModuleTime.h"
 
+#include "EditorUI/EngineLog.h"
+#include "Helper/Timer.h"
 #include "Main/Application.h"
 #include "Main/Globals.h"
 #include "ModuleEditor.h"
-#include "Module/ModuleScriptManager.h"
+#include "ModuleScriptManager.h"
 #include "ModuleWindow.h"
-#include "UI/EngineLog.h"
-#include "Helper/Timer.h"
 
 #include <SDL/SDL.h>
 
@@ -66,8 +66,12 @@ void ModuleTime::EndFrame()
 	time += delta_time;
 	real_time_since_startup += real_time_delta_time;
 
-	App->engine_log->LogFPS(1000 / real_time_delta_time);
-	App->engine_log->LogMS(real_time_delta_time);
+	if (frame_count % 10 == 0)
+	{
+		current_fps = 1000.f / real_time_delta_time;
+		App->engine_log->LogFPS(current_fps);
+		App->engine_log->LogMS(real_time_delta_time);
+	}
 
 	if (stepping_frame)
 	{
@@ -83,6 +87,11 @@ bool ModuleTime::CleanUp()
 	delete game_time_clock;
 
 	return true;
+}
+
+float ModuleTime::GetFPS() const
+{
+	return current_fps;
 }
 
 void ModuleTime::SetMaxFPS(int fps)

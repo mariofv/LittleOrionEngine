@@ -4,7 +4,6 @@
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/Texture.h"
 #include "Main/GameObject.h"
-#include "Component/ComponentMaterial.h"
 #include <Filesystem/File.h>
 #include <ResourceManagement/Importer/TextureImporter.h>
 #include <ResourceManagement/Loaders/TextureLoader.h>
@@ -26,40 +25,17 @@ bool ModuleTexture::CleanUp()
 {
 	glDeleteTextures(1, &checkerboard_texture_id);
 	glDeleteTextures(1, &whitefall_texture_id);
-	for (auto& material : materials) 
-	{
-		material->owner->RemoveComponent(material);
-	}
-	materials.clear();
 	return true;
-}
-
-ComponentMaterial* ModuleTexture::CreateComponentMaterial()
-{
-	ComponentMaterial * new_material = new ComponentMaterial();
-	materials.push_back(new_material);
-	return new_material;
-}
-
-void ModuleTexture::RemoveComponentMaterial(ComponentMaterial* material_to_remove)
-{
-	auto it = std::find(materials.begin(), materials.end(), material_to_remove);
-	if (it != materials.end())
-	{
-		delete *it;
-		materials.erase(it);
-	}
 }
 
 std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 {
-	std::pair<bool, std::string> imported = App->resources->Import(File(texture_path));
-	if (!imported.first)
+	ImportResult import_result = App->resources->Import(File(texture_path));
+	if (!import_result.succes)
 	{
 		return nullptr;
 	}
-
-	return App->resources->Load<Texture>(imported.second);
+	return App->resources->Load<Texture>(import_result.exported_file);
 }
 
 GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) const
@@ -67,7 +43,7 @@ GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) 
 	std::vector<std::string> faces_paths_dds;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
-		std::string ol_texture = App->resources->Import(File(faces_paths[i])).second;
+		std::string ol_texture = App->resources->Import(File(faces_paths[i]), false).exported_file;
 		faces_paths_dds.push_back(ol_texture);
 	}
 	return static_cast<GLuint>(TextureLoader::LoadCubemap(faces_paths_dds));

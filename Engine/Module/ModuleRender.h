@@ -2,16 +2,17 @@
 #define _MODULERENDER_H_
 
 #include "Module.h"
-#include "Main/Globals.h"
-#include "SpacePartition/OLQuadTree.h"
-#include "SpacePartition/OLAABBTree.h"
 #include "Helper/Timer.h"
+#include "Main/Globals.h"
+#include "SpacePartition/OLAABBTree.h"
+#include "SpacePartition/OLOctTree.h"
+#include "SpacePartition/OLQuadTree.h"
 
 #include <GL/glew.h>
 
 const unsigned INITIAL_SIZE_AABBTREE = 10;
 
-class ComponentMesh;
+class ComponentMeshRenderer;
 class ComponentCamera;
 
 struct SDL_Texture;
@@ -37,9 +38,14 @@ public:
 	void Render() const;
 	void RenderFrame(const ComponentCamera &camera);
 
-	ComponentMesh* CreateComponentMesh();
-	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
+
+	ComponentMeshRenderer* CreateComponentMeshRenderer();
+	void RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove);
+
+	int GetRenderedTris() const;
+
 	void GenerateQuadTree();
+	void GenerateOctTree();
 	void InsertAABBTree(GameObject* game_object);
 	void RemoveAABBTree(GameObject * game_object);
 	void UpdateAABBTree(GameObject* game_object);
@@ -76,6 +82,7 @@ private:
 	void* context = nullptr;
 
 	OLQuadTree ol_quadtree;
+	OLOctTree ol_octtree;
 	OLAABBTree* ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
 
 
@@ -94,8 +101,10 @@ private:
 
 	DrawMode draw_mode = DrawMode::SHADED;
 
-	std::vector<ComponentMesh*> meshes;
-	std::vector<ComponentMesh*> meshes_to_render;
+	std::vector<ComponentMeshRenderer*> meshes;
+	std::vector<ComponentMeshRenderer*> meshes_to_render;
+
+	int num_rendered_tris = 0;
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;

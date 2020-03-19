@@ -3,7 +3,7 @@
 
 #define ENGINE_EXPORTS
 #include "Component.h"
-#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
@@ -53,6 +53,8 @@ public:
 
 	void ChangeLocalSpace(const float4x4& new_local_space);
 
+	float4x4 GetModelMatrix() const;
+	
 	void GenerateGlobalModelMatrix();
 	float4x4 GetGlobalModelMatrix() const;
 	void SetGlobalModelMatrix(const float4x4& new_global_matrix);
