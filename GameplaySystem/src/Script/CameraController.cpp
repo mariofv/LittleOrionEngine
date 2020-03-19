@@ -52,6 +52,7 @@ void CameraController::Update()
 	if (App->input->GetKey(KeyCode::J))
 	{
 		god_mode = !god_mode;
+		ActivePlayer();
 	}
 	if (god_mode) 
 	{
@@ -116,6 +117,20 @@ void CameraController::GodCamera()
 	}
 
 }
+
+void CameraController::ActivePlayer()
+{
+	if (god_mode) 
+	{
+		player_movement_component->Disable();
+	}
+	else 
+	{
+		player_movement_component->Enable();
+	}
+
+}
+
 void CameraController::FollowPlayer() 
 {
 	CenterToPlayer();

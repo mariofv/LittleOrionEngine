@@ -21,9 +21,8 @@ public:
 	void OnInspector(ImGuiContext*) override;
 
 	void GodCamera();
-
+	void ActivePlayer();
 	void FollowPlayer();
-
 	void CenterToPlayer();
 
 	void Save(Config& config) const override;
@@ -38,7 +37,6 @@ private:
 	uint64_t cameraUUID = -1;
 	std::string is_camera = "None";
 	ComponentCamera* camera_component = nullptr;
-	//Frustum camera_frustum;
 
 	GameObject* player = nullptr;
 	uint64_t playerUUID = -1;
