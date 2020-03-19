@@ -150,7 +150,7 @@ void AnimationImporter::GetChannelTranslations(const aiNodeAnim* sample, float a
 			// Some animation sample times are stored with an small rounding error, so we need to round them
 			double integer_time = std::round(sample->mPositionKeys[j].mTime);
 			aiVector3D position = sample->mPositionKeys[j].mValue;
-			sample_translations[integer_time] = float3(position.x, position.y, position.z);
+			sample_translations[integer_time] = float3(position.y, position.x, position.z);
 		}
 	}
 }
