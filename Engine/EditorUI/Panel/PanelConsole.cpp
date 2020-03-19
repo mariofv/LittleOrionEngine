@@ -2,6 +2,7 @@
 
 #include "Main/Application.h"
 #include "Main/Globals.h"
+#include "Module/ModuleResourceManager.h"
 
 #include "imgui.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -10,13 +11,14 @@
 
 PanelConsole::PanelConsole()
 {
-	opened = true;
+	opened = false;
 	enabled = true;
 	window_name = ICON_FA_TERMINAL " Console";
 }
 
 void PanelConsole::Render()
 {
+	//TODO: This is terribly inneficient, we must find a way to speed up console inside the engine
 	hovered = ImGui::IsWindowHovered();
 	focused = ImGui::IsWindowFocused();
 
@@ -35,7 +37,6 @@ void PanelConsole::Render()
 
 		if (ImGui::BeginChild(""))
 		{
-			/*
 			for (auto& log_entry : App->engine_log->text_log)
 			{
 				if (
@@ -89,7 +90,6 @@ void PanelConsole::Render()
 					}
 				}
 			}
-			*/
 			if (App->engine_log->scroll_down)
 			{
 				ImGui::SetScrollHere(1.0f);
