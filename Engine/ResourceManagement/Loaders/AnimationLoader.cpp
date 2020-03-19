@@ -12,6 +12,11 @@ std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uid)
 	BROFILER_CATEGORY("Load Animation", Profiler::Color::Brown);
 
 
+	if (!App->filesystem->Exists(uid.c_str()))
+	{
+		APP_LOG_ERROR("Error loading Animation %s.", uid.c_str());
+		return nullptr;
+	}
 	APP_LOG_INFO("Loading Animation %s.", uid.c_str());
 	size_t animation_size;
 	char * data = App->filesystem->Load(uid.c_str(), animation_size);
@@ -25,12 +30,16 @@ std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uid)
 
 	std::string animation_name;
 	animation_name.resize(name_size);
-	memcpy(animation_name.data(), cursor,name_size);
+	memcpy(&animation_name[0], cursor,name_size);
 	cursor += name_size;
 
-	float animation_duration;
-	memcpy(&animation_duration, cursor, sizeof(float));
+	float animation_frames;
+	memcpy(&animation_frames, cursor, sizeof(float));
 	cursor += sizeof(float); // Get duration
+
+	float frames_per_second;
+	memcpy(&frames_per_second, cursor, sizeof(float));
+	cursor += sizeof(float); // Get frames_per_second
 
 	uint32_t num_keyframe;
 	memcpy(&num_keyframe, cursor, sizeof(uint32_t));
@@ -57,7 +66,7 @@ std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uid)
 			cursor += sizeof(uint32_t);
 
 			channel.name.resize(name_size);
-			memcpy(channel.name.data(), cursor, name_size);
+			memcpy(&channel.name[0], cursor, name_size);
 			cursor += name_size;
 
 			memcpy(&channel.is_translated, cursor, sizeof(bool));
@@ -74,7 +83,7 @@ std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uid)
 		}
 	}
 
-	std::shared_ptr<Animation> new_animation = std::make_shared<Animation>(std::move(keyframes), animation_name, animation_duration, uid);
+	std::shared_ptr<Animation> new_animation = std::make_shared<Animation>(std::move(keyframes), animation_name, animation_frames, frames_per_second,uid);
 	free(data);
 
 	return new_animation;

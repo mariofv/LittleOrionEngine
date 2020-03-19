@@ -23,9 +23,8 @@ public:
 		float frame;
 		std::vector<Channel> channels;
 	};
-
-	Animation(const char * const UID, const std::string & exported_file);
-	Animation(std::vector<KeyFrame> && keyframes, std::string name, float duration,const std::string & exported_file);
+	Animation(const uint32_t UID, const std::string & exported_file);
+	Animation(std::vector<KeyFrame> && keyframes, std::string name, float frames, float frames_per_second,const std::string & exported_file);
 	~Animation() = default;
 
 private:
@@ -35,7 +34,8 @@ public:
 
 	std::string name;
 	std::vector<KeyFrame> keyframes;
-	float duration;
+	float frames;
+	float frames_per_second;
 };
 
 

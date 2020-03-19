@@ -19,6 +19,26 @@ ComponentTransform::ComponentTransform(GameObject* owner, const float3 translati
 	OnTransformChange();
 }
 
+void ComponentTransform::Copy(Component * component_to_copy) const
+{ 
+	*component_to_copy = *this;
+	*static_cast<ComponentTransform*>(component_to_copy) = *this; 
+};
+
+ComponentTransform & ComponentTransform::operator=(const ComponentTransform & component_to_copy)
+{
+	this->translation = component_to_copy.translation;
+	this->rotation = component_to_copy.rotation;
+	this->rotation_degrees = component_to_copy.rotation_degrees;
+	this->rotation_radians = component_to_copy.rotation_radians;
+	this->scale = component_to_copy.scale;
+
+	this->model_matrix = component_to_copy.model_matrix;
+	this->global_model_matrix = component_to_copy.global_model_matrix;
+	OnTransformChange();
+	return *this;
+}
+
 void ComponentTransform::Save(Config& config) const
 {
 	config.AddUInt(UUID, "UUID");
@@ -120,7 +140,7 @@ void ComponentTransform::SetScale(const float3& scale)
 {
 	this->scale = scale;
 	
-	OnTransformChange();
+	//OnTransformChange();
 }
 
 float3 ComponentTransform::GetUpVector() const
@@ -147,6 +167,11 @@ void ComponentTransform::OnTransformChange()
 	{
 		child->transform.OnTransformChange();
 	}
+}
+
+float4x4 ComponentTransform::GetModelMatrix() const
+{
+	return model_matrix;
 }
 
 void ComponentTransform::GenerateGlobalModelMatrix()
@@ -193,4 +218,12 @@ void ComponentTransform::ChangeLocalSpace(const float4x4& new_local_space)
 	model_matrix = new_local_space.Inverted() * global_model_matrix;
 	model_matrix.Decompose(translation, rotation, scale);
 	
+}
+
+Component* ComponentTransform::Clone(bool original_prefab) const
+{
+	ComponentTransform * created_component;
+	created_component = new ComponentTransform(nullptr);
+	*created_component = *this;
+	return created_component;
 }

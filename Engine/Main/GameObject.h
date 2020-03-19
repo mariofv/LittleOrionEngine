@@ -10,6 +10,7 @@
 
 #include <GL/glew.h>
 
+class Prefab;
 class ComponentCamera; 
 class GameObject
 {
@@ -18,6 +19,14 @@ public:
 	GameObject(unsigned int UUID);
 	GameObject(const std::string name);
 	~GameObject() = default;
+
+	//Copy and move
+	GameObject(const GameObject& gameobject_to_copy);
+	GameObject(GameObject&& gameobject_to_move) = default;
+
+	GameObject & operator=(const GameObject & gameobject_to_copy) = default;
+	GameObject & operator<<(const GameObject & gameobject_to_copy);
+	GameObject & operator=(GameObject && gameobject_to_move) = default;
 
 	bool IsEnabled() const;
 	void SetEnabled(bool able);
@@ -46,13 +55,12 @@ public:
 	void UpdateHierarchyDepth();
 	void UpdateHierarchyBranch();
 
-	void RenderMaterialTexture(unsigned int shader_program) const;
-
 	int GetHierarchyDepth() const;
 	void SetHierarchyDepth(int value);
 
 private:
 	void SetHierarchyStatic(bool is_static);
+	void CopyComponents(const GameObject & gameobject_to_copy);
 
 public:
 	std::vector<Component*> components;
@@ -65,7 +73,12 @@ public:
 	ComponentAABB aabb;
 	ComponentTransform transform;
 
-
+	//TODO: Maybe move this to a component editor?
+	// This should not be public. Public for now while implementing prefab.
+	uint64_t original_UUID = 0; 
+	bool is_prefab_parent = false;
+	std::shared_ptr<Prefab> prefab_reference = nullptr;
+	bool original_prefab = false;
 private:
 	bool active = true;
 	bool is_static = false;

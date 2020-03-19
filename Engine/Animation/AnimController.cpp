@@ -9,7 +9,7 @@
 
 AnimController::AnimController()
 {
-	anim = App->resources->Load<Animation>("Library/Animations/RootNode_Take 001.anim").get();
+	anim = App->resources->Load<Animation>("Library/Metadata/38/3800295065");
 }
 
 
@@ -53,10 +53,10 @@ void AnimController::Update()
 
 bool AnimController::GetTranslation(const std::string& channel_name, float3 & pos)
 {
-	float current_sample = (current_time*(anim->duration - 1)) / animation_time;
+	float current_sample = (current_time*(anim->frames - 1)) / animation_time;
 	int current_keyframe = math::FloorInt(current_sample);
 
-	int next_keyframe = (current_keyframe + 1)%(int)anim->duration;
+	int next_keyframe = (current_keyframe + 1)%(int)anim->frames;
 
 	float3 current_translation;
 	float3 next_translation;
@@ -89,10 +89,10 @@ bool AnimController::GetTranslation(const std::string& channel_name, float3 & po
 
 bool AnimController::GetRotation(const std::string& channel_name, Quat & rot)
 {
-	float current_sample = (current_time*(anim->duration - 1)) / animation_time;
+	float current_sample = (current_time*(anim->frames - 1)) / animation_time;
 	int current_keyframe = math::FloorInt(current_sample);
 
-	int next_keyframe = (current_keyframe + 1) % (int)anim->duration;
+	int next_keyframe = (current_keyframe + 1) % (int)anim->frames;
 
 	Quat current_rotation;
 	Quat next_rotation;

@@ -8,8 +8,9 @@
 
 class Billboard;
 class ComponentCamera;
-class GameObject;
+class Grid;
 class IDebugDrawOpenGLImplementation;
+class GameObject;
 
 class ModuleDebugDraw : public Module
 {
@@ -24,7 +25,6 @@ public:
 	void RenderDebugDraws(const ComponentCamera& camera);
 
 private:
-	void RenderGrid() const;
 	void RenderOutline() const;
 
 	void RenderCameraFrustum() const;
@@ -35,6 +35,7 @@ private:
 	void RenderBoundingBoxes() const;
 	void RenderGlobalBoundingBoxes() const;
 	void RenderBillboards() const;
+	void RenderPathfinding() const;
 
 
 private:
@@ -46,6 +47,7 @@ private:
 	Billboard* camera_billboard = nullptr;
 	Billboard* light_billboard = nullptr;
 
+	Grid* grid = nullptr;
 };
 
 #endif //_MODULEDEBUGDRAW_H_

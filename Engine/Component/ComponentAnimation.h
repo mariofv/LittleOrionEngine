@@ -3,7 +3,7 @@
 
 #include "Component.h"
 
-#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 class AnimController;
 class GameObject;
@@ -14,6 +14,17 @@ public:
 	ComponentAnimation();
 	ComponentAnimation(GameObject * owner);
 	~ComponentAnimation();
+
+
+	//Copy and move
+	ComponentAnimation(const ComponentAnimation& component_to_copy) = default;
+	ComponentAnimation(ComponentAnimation&& component_to_move) = default;
+
+	ComponentAnimation & operator=(const ComponentAnimation & component_to_copy) = default;
+	ComponentAnimation & operator=(ComponentAnimation && component_to_move) = default;
+
+	Component* Clone(bool original_prefab = false) const override;
+	void Copy(Component* component_to_copy) const override;
 
 	void Update() override;
 	void Delete() override;

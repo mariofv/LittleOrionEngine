@@ -10,7 +10,7 @@
 #include <cmath>
 #include <map>
 
-bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, std::string& output_file) const
+bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, const std::string& imported_file, std::string& exported_file) const
 {
 	float unit_scale_factor = 1.f;
 	for (unsigned int i = 0; i < scene->mMetaData->mNumProperties; ++i)
@@ -23,32 +23,25 @@ bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation*
 	}
 	unit_scale_factor *= 0.01f;
 
-	Animation own_format_animation("", "");
-	GetCleanAnimation(scene->mRootNode,animation, own_format_animation, unit_scale_factor);
-	own_format_animation.duration = static_cast<float>(animation->mDuration);
+
+	Animation own_format_animation(0,"");
+	GetCleanAnimation(scene->mRootNode, animation, own_format_animation, unit_scale_factor);
+	own_format_animation.frames = static_cast<float>(animation->mDuration);
+	own_format_animation.frames_per_second = static_cast<float>(animation->mTicksPerSecond);
 	own_format_animation.name = std::string(animation->mName.C_Str());
 
-	App->filesystem->MakeDirectory(LIBRARY_ANIMATION_FOLDER);
-	output_file = LIBRARY_ANIMATION_FOLDER + "/" + std::string(scene->mRootNode->mName.C_Str()) + "_" + own_format_animation.name + ".anim";
+	exported_file = SaveMetaFile(imported_file, ResourceType::ANIMATION);
+	SaveBinary(own_format_animation, exported_file);
 
-	SaveBinary(own_format_animation, output_file);
 	return true;
 }
-
-/*
-A channel is all the positions for a joint in each frame.
-aiNodeAnim contains the position in each frame.
-
-Assimp added nodes need to be merge with the real node.
-
-*/
 
 void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const
 {
 	assert(animation->mDuration == (int)animation->mDuration);
 	float animation_duration = animation->mDuration;
 
-	std::unordered_map<std::string, std::vector<aiNodeAnim *>> aiNode_by_channel;
+	std::map<std::string, std::vector<aiNodeAnim *>> aiNode_by_channel;
 
 	//Organize channels
 	for (size_t i = 0; i < animation->mNumChannels; i++)
@@ -80,12 +73,12 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 			next_node_name = next_node->mName.C_Str();
 		}
 		aiMatrix4x4 accumulated_assimp_local_transformation;
-		for (int i = assimp_hierarchy_nodes.size() -1 ; i >= 0; --i)
+		for (int i = assimp_hierarchy_nodes.size() - 1; i >= 0; --i)
 		{
 			accumulated_assimp_local_transformation = accumulated_assimp_local_transformation * assimp_hierarchy_nodes[i]->mTransformation;
 		}
 
-		float4x4 accumulated_assimp_transformation = SkeletonImporter::GetTransform(accumulated_assimp_local_transformation );
+		float4x4 accumulated_assimp_transformation = SkeletonImporter::GetTransform(accumulated_assimp_local_transformation);
 
 		std::map<double, float3> channel_translations;
 		std::map<double, Quat> channel_rotations;
@@ -108,7 +101,7 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 			else
 			{
 				is_translated = false;
-				translation =  channel_translations[0];
+				translation = channel_translations[0];
 			}
 
 			bool is_rotated;
@@ -123,10 +116,10 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 				is_rotated = false;
 				rotation = channel_rotations[0];
 			}
-			float4x4 animation_transform = float4x4::FromTRS(translation, rotation,float3::one);
+			float4x4 animation_transform = float4x4::FromTRS(translation, rotation, float3::one);
 			animation_transform = accumulated_assimp_transformation * animation_transform;
 			float3 euler_rotation = animation_transform.ToEulerXYX();
-			rotation =  Quat::FromEulerXYX(euler_rotation.x, euler_rotation.y, euler_rotation.z);
+			rotation = Quat::FromEulerXYX(euler_rotation.x, euler_rotation.y, euler_rotation.z);
 			translation *= scale_factor;
 			Animation::Channel imported_channel{ channel_set.first, is_translated, translation, is_rotated, rotation };
 			keyframes[i].push_back(imported_channel);
@@ -172,18 +165,18 @@ void AnimationImporter::GetChannelRotations(const aiNodeAnim* sample, float anim
 void AnimationImporter::SaveBinary(const Animation & animation, const std::string & output_file) const
 {
 	// number of keyframes +  name size + name + duration
-	uint32_t size = sizeof(uint32_t)*2 + animation.name.size() + sizeof(float);
+	uint32_t size = sizeof(uint32_t) * 2 + animation.name.size() + sizeof(float);
 
 
 	for (auto & keyframe : animation.keyframes)
 	{
-		//Number of channels + frame 
-		size += sizeof(uint32_t) + sizeof(float);
+		//Number of channels + frame + ticks_per_second 
+		size += sizeof(uint32_t) + sizeof(float) + sizeof(float);
 
 		for (auto & channel : keyframe.channels)
 		{
 			//name size + name + translation + rotation
-			size += sizeof(uint32_t)  + channel.name.size() + sizeof(bool) + sizeof(float3) + sizeof(bool) + sizeof(Quat);
+			size += sizeof(uint32_t) + channel.name.size() + sizeof(bool) + sizeof(float3) + sizeof(bool) + sizeof(Quat);
 		}
 	}
 
@@ -199,7 +192,10 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 	cursor += name_size;
 
 
-	memcpy(cursor, &animation.duration, sizeof(float));
+	memcpy(cursor, &animation.frames, sizeof(float));
+	cursor += sizeof(float); // Store duration
+
+	memcpy(cursor, &animation.frames_per_second, sizeof(float));
 	cursor += sizeof(float); // Store duration
 
 	uint32_t num_keyframes = animation.keyframes.size();

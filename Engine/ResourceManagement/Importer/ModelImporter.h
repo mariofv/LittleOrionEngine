@@ -1,11 +1,13 @@
 #ifndef _MODELIMPORTER_H_
 #define _MODELIMPORTER_H_
-#include "Importer.h"
-#include "Helper/Timer.h"
-#include <memory>
 
-#include "assimp/LogStream.hpp"
-#include "assimp/Logger.hpp"
+#include "Importer.h"
+
+#include "Helper/Timer.h"
+
+#include <assimp/LogStream.hpp>
+#include <assimp/Logger.hpp>
+#include <memory>
 
 
 
@@ -15,9 +17,9 @@ class Config;
 class Mesh;
 class GameObject;
 class MeshImporter;
-class MaterialImporter;
 class SkeletonImporter;
 class AnimationImporter;
+class ModelPrefabImporter;
 
 
 class ModelImporter : Importer
@@ -25,19 +27,18 @@ class ModelImporter : Importer
 public:
 	ModelImporter();
 	~ModelImporter();
-	std::pair<bool, std::string> Import(const File & file) const override;
+	ImportResult Import(const File & file, bool force = false) const override;
+	ImportResult ImportExtractedResources(const File & file, bool force = false) const;
 
 private:
-	void ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const char* file_path, const std::string& output_file, std::vector<Config> & node_config) const;
+	std::vector<Config> ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const std::string& base_path) const;
 
 private:
-	const std::string LIBRARY_MESHES_FOLDER = "Library/Meshes";
-	const std::string LIBRARY_MODEL_FOLDER = "Library/Model";
 	mutable Timer performance_timer;
 	std::unique_ptr<MeshImporter> mesh_importer;
-	std::unique_ptr<MaterialImporter> material_importer;
 	std::unique_ptr<SkeletonImporter> skeleton_importer;
 	std::unique_ptr<AnimationImporter> animation_importer;
+	std::unique_ptr<ModelPrefabImporter> model_prefab_importer;
 };
 
 

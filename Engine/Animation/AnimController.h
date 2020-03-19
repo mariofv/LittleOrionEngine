@@ -17,7 +17,7 @@ public:
 	bool GetRotation(const std::string& channel_name, Quat& rot);
 
 public:
-	Animation* anim = nullptr;
+	std::shared_ptr<Animation> anim = nullptr;
 
 	bool loop = false;
 	bool playing = false;

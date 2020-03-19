@@ -21,6 +21,27 @@ ComponentAnimation::~ComponentAnimation()
 {
 }
 
+Component* ComponentAnimation::Clone(bool original_prefab) const
+{
+	ComponentAnimation * created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentAnimation();
+	}
+	else
+	{
+		created_component = App->animations->CreateComponentAnimation();
+	}
+	*created_component = *this;
+	return created_component;
+};
+
+void ComponentAnimation::Copy(Component * component_to_copy) const
+{
+	*component_to_copy = *this;
+	*static_cast<ComponentAnimation*>(component_to_copy) = *this;
+}
+
 void ComponentAnimation::Update()
 {
 	animation_controller->Update();

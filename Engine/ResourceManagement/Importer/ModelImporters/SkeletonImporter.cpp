@@ -2,9 +2,9 @@
 #include <assimp/scene.h>
 #include <algorithm>
 
-#include <Main/Application.h>
-#include <Module/ModuleFileSystem.h>
-bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, std::string& output_file) const
+#include "Main/Application.h"
+#include "Module/ModuleFileSystem.h"
+bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const std::string& imported_file, std::string& exported_file) const
 {
 	float unit_scale_factor = 1.f;
 
@@ -27,15 +27,15 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 		bone = bone->mParent;
 	}
 
-	Skeleton skeleton("", "");
+	Skeleton skeleton(0, "");
 	skeleton.scale_factor = unit_scale_factor;
-	ImportChildBone(mesh, bone, - 1, bone->mTransformation, bone->mTransformation, skeleton);
+	ImportChildBone(mesh, bone, - 1,bone->mTransformation, bone->mTransformation,skeleton);
 
 	if (skeleton.skeleton.size() > 0)
 	{
-		App->filesystem->MakeDirectory(LIBRARY_SKELETON_FOLDER);
-		output_file = LIBRARY_SKELETON_FOLDER + "/" +  mesh->mName.C_Str()+ ".ol";
-		SaveBinary(skeleton, output_file);
+		exported_file = SaveMetaFile(imported_file, ResourceType::SKELETON);
+		SaveBinary(skeleton, exported_file, imported_file);
+		
 	}
 	return true;
 }
@@ -106,7 +106,7 @@ float4x4 SkeletonImporter::GetTransform(const aiMatrix4x4 & current_transform)
 	return math::float4x4::FromTRS(translation, rotation, scale);
 }
 
-bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& output_file) const
+bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& exported_file, const std::string& imported_file) const
 {
 
 	uint32_t num_bones = skeleton.skeleton.size();
@@ -144,7 +144,8 @@ bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& 
 		cursor += sizeof(uint32_t);
 	}
 
-	App->filesystem->Save(output_file.c_str(), data, size);
+	App->filesystem->Save(exported_file.c_str(), data, size);
+	App->filesystem->Save(imported_file.c_str(), data, size);
 	free(data);
 	return true;
 }

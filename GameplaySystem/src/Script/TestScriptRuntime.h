@@ -12,7 +12,6 @@ public:
 	void OnInspector(ImGuiContext*) override;
 	void Test();
 
-	int i = 0;
 	float speed = 0.01f;
 	float rotation_speed = 0.01f;
 };
