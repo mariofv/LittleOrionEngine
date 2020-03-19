@@ -30,6 +30,9 @@
     <ClInclude Include="src\Script\CameraController.h">
       <Filter>src\Script</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\SceneCamerasController.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -48,6 +51,9 @@
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\CameraController.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\SceneCamerasController.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>

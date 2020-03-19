@@ -47,7 +47,7 @@ void SceneCamerasController::Update()
 {
 	if (App->input->GetKeyDown(KeyCode::P)) 
 	{
-		if (index < camera_list.size()) 
+		if (index < camera_list.size()-1) 
 		{
 			++index;
 			UpdateCameraRendering();
@@ -126,11 +126,14 @@ void SceneCamerasController::Load(const Config& config)
 	maincameraUUID = config.GetUInt("MainCamera", 0);
 	camera1UUID = config.GetUInt("Camera1", 0);
 	camera2UUID = config.GetUInt("Camera2", 0);
-	camera2UUID = config.GetUInt("Camera3", 0);
+	camera3UUID = config.GetUInt("Camera3", 0);
 }
 
 //Use this for linking GO automatically
 void SceneCamerasController::Link()
 {
-	example = App->scene->GetGameObject(exampleUUID);
+	main_camera = App->scene->GetGameObject(maincameraUUID);
+	camera_1 = App->scene->GetGameObject(camera1UUID);
+	camera_2 = App->scene->GetGameObject(camera2UUID);
+	camera_3 = App->scene->GetGameObject(camera3UUID);
 }
