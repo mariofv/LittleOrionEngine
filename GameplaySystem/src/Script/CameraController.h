@@ -2,6 +2,9 @@
 #define  __CAMERACONTROLLER_H__
 
 #include "Script.h"
+
+#include "MathGeoLib.h"
+
 class TestScriptRuntime;
 class ComponentCamera;
 
@@ -21,6 +24,8 @@ public:
 
 	void FollowPlayer();
 
+	void CenterToPlayer();
+
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 	void Link() override;
@@ -33,6 +38,7 @@ private:
 	uint64_t cameraUUID = -1;
 	std::string is_camera = "None";
 	ComponentCamera* camera_component = nullptr;
+	//Frustum camera_frustum;
 
 	GameObject* player = nullptr;
 	uint64_t playerUUID = -1;

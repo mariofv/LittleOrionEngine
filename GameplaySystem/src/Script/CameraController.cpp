@@ -8,10 +8,12 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleTime.h"
 
 #include "UI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include "imgui.h"
+
 
 
 
@@ -116,9 +118,20 @@ void CameraController::GodCamera()
 }
 void CameraController::FollowPlayer() 
 {
-	camera_component->CenterGame(player);
+	CenterToPlayer();
 	
 }
+
+void CameraController::CenterToPlayer()
+{
+	Frustum camera_frustum = camera_component->GetFrustum();
+	float containing_sphere_radius = player->aabb.bounding_box.Size().Length();
+	camera_component->is_focusing = true;
+	camera_component->SetStartFocusPosition(camera->transform.GetTranslation());
+	camera_component->SetGoalFocusPosition(player->aabb.bounding_box.CenterPoint() - camera_frustum.front * 3.f * containing_sphere_radius);
+	camera_component->SetFocusTime(App->time->delta_time + 4);
+}
+
 //Use this for linking GO automatically
 void CameraController::Save(Config& config) const
 {

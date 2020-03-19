@@ -55,6 +55,11 @@ public:
 	void SetNearDistance(float distance);
 	void SetFarDistance(float distance);
 	void SetOrientation(const float3 & orientation);
+	ENGINE_API void SetStartFocusPosition(const float3& focus_position);
+	ENGINE_API void SetGoalFocusPosition(const float3& focus_position);
+	ENGINE_API void SetFocusTime(const float focus_time);
+	ENGINE_API Frustum GetFrustum();
+
 	void AlignOrientationWithAxis();
 	ENGINE_API void SetOrthographicSize(const float2 & size);
 	void LookAt(const float3 & focus);
@@ -128,6 +133,7 @@ public:
 	float4x4 view;
 
 	bool toggle_msaa = false;
+	bool is_focusing = false;
 
 private:
 	Frustum camera_frustum;
@@ -147,8 +153,6 @@ private:
 
 	bool is_speeding_up = false;
 	float speed_up = 1.f;
-
-	bool is_focusing = false;
 	const float CENTER_TIME = 250.f;
 	float start_focus_time = 0.f;
 	float3 start_focus_position = float3::zero;

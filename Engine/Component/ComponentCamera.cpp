@@ -337,6 +337,26 @@ void ComponentCamera::SetOrientation(const float3 & orientation)
 	owner->transform.Rotate(rotation);
 }
 
+ENGINE_API void ComponentCamera::SetStartFocusPosition(const float3& focus_position)
+{
+	start_focus_position = focus_position;
+}
+
+ENGINE_API void ComponentCamera::SetGoalFocusPosition(const float3& focus_position)
+{
+	goal_focus_position = focus_position;
+}
+
+ENGINE_API void ComponentCamera::SetFocusTime(const float focus_time)
+{
+	start_focus_time = focus_time;
+}
+
+ENGINE_API Frustum ComponentCamera::GetFrustum()
+{
+	return camera_frustum;
+}
+
 void ComponentCamera::AlignOrientationWithAxis()
 {
 	float3x3 rotation_matrix = float3x3::identity;
@@ -378,7 +398,7 @@ ENGINE_API void ComponentCamera::Center(const AABB &bounding_box)
 
 ENGINE_API void ComponentCamera::CenterGame(const GameObject* go)
 {
-	float containing_sphere_radius = go->aabb.bounding_box.Size().Length() / 2;
+	float containing_sphere_radius = go->aabb.bounding_box.Size().Length() / 2 ;
 	is_focusing = true;
 	start_focus_position = owner->transform.GetTranslation();
 	goal_focus_position = go->aabb.bounding_box.CenterPoint() - camera_frustum.front * BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius;;
@@ -453,7 +473,8 @@ void ComponentCamera::OrbitY(float angle, const float3& focus_point)
 
 	const float adjusted_angle = App->time->real_time_delta_time * CAMERA_ROTATION_SPEED * -angle;
 	const float current_angle = asinf(owner->transform.GetFrontVector().y / owner->transform.GetFrontVector().Length());
-	if (abs(current_angle + adjusted_angle) >= math::pi / 2) {
+	if (abs(current_angle + adjusted_angle) >= math::pi / 2) 
+	{
 		return;
 	}
 	Quat rotation = Quat::RotateAxisAngle(camera_frustum.WorldRight(), adjusted_angle);
@@ -483,7 +504,8 @@ void ComponentCamera::RotatePitch(float angle)
 {
 	const float adjusted_angle = App->time->real_time_delta_time * CAMERA_ROTATION_SPEED * -angle;
 	const float current_angle = asinf(owner->transform.GetFrontVector().y / owner->transform.GetFrontVector().Length());
-	if (abs(current_angle + adjusted_angle) >= math::pi / 2) { // Avoid Gimbal Lock
+	if (abs(current_angle + adjusted_angle) >= math::pi / 2) 
+	{ // Avoid Gimbal Lock
 		return;
 	}
 	Quat rotation = Quat::RotateAxisAngle(owner->transform.GetRightVector(), adjusted_angle);
