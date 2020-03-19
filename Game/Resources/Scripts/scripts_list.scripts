@@ -4,6 +4,7 @@
         "TestScriptRuntime",
         "WalkableScript",
         "TriggerActionScript",
-        "CameraController"
+        "CameraController",
+        "SceneCamerasController"
     ]
 }
