@@ -125,8 +125,8 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 			}
 			float4x4 animation_transform = float4x4::FromTRS(translation, rotation,float3::one);
 			animation_transform = accumulated_assimp_transformation * animation_transform;
-			float3 scale;
-			animation_transform.Decompose(translation,rotation, scale);
+			float3 euler_rotation = animation_transform.ToEulerXYX();
+			rotation =  Quat::FromEulerXYX(euler_rotation.x, euler_rotation.y, euler_rotation.z);
 			translation *= scale_factor;
 			Animation::Channel imported_channel{ channel_set.first, is_translated, translation, is_rotated, rotation };
 			keyframes[i].push_back(imported_channel);
@@ -150,7 +150,7 @@ void AnimationImporter::GetChannelTranslations(const aiNodeAnim* sample, float a
 			// Some animation sample times are stored with an small rounding error, so we need to round them
 			double integer_time = std::round(sample->mPositionKeys[j].mTime);
 			aiVector3D position = sample->mPositionKeys[j].mValue;
-			sample_translations[integer_time] = float3(position.y, position.x, position.z);
+			sample_translations[integer_time] = float3(position.x, position.y, position.z);
 		}
 	}
 }
