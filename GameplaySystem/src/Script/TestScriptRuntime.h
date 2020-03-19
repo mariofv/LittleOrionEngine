@@ -12,7 +12,7 @@ public:
 	void OnInspector(ImGuiContext*) override;
 	void Test();
 
-	float speed = 0.01f;
+	float speed = 0.50f;
 	float rotation_speed = 0.01f;
 };
 extern "C" SCRIPT_API TestScriptRuntime* TestScriptRuntimeDLL(); //This is how we are going to load the script
