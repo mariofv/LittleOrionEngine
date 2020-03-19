@@ -27,6 +27,7 @@ class ModuleLight;
 class ModuleResourceManager;
 class ModuleScriptManager;
 class ModuleActions;
+class ModuleAI;
 
 class EngineLog;
 
@@ -62,6 +63,7 @@ public:
 	ModuleResourceManager* resources = nullptr;
 	ModuleScriptManager* scripts = nullptr;
 	ModuleActions* actions = nullptr;
+	ModuleAI* artificial_intelligence = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
 

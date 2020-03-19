@@ -4,6 +4,7 @@
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleAI.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
@@ -60,7 +61,6 @@ void PanelScene::Render()
 
 		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
 		App->cameras->scene_camera->RecordDebugDraws(scene_window_content_area_width, scene_window_content_area_height);
-		
 		ImGui::Image(
 			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
 			ImVec2(scene_window_content_area_width, scene_window_content_area_height),
@@ -151,6 +151,7 @@ void PanelScene::RenderEditorDraws()
 	}
 
 	RenderSceneCameraGizmo();
+
 }
 
 
@@ -306,6 +307,7 @@ void PanelScene::MousePicking(const float2& mouse_position)
 	App->cameras->scene_camera->GetRay(window_mouse_position_normalized, ray);
 	GameObject* intersected = App->renderer->GetRaycastIntertectedObject(ray);
 	App->editor->selected_game_object = intersected;
+	App->renderer->GetRaycastIntertectedObject(ray, App->editor->selected_position);
 }
 
 

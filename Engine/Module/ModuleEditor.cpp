@@ -6,6 +6,7 @@
 #include "EditorUI/Panel/PanelDebug.h"
 #include "EditorUI/Panel/PanelGame.h"
 #include "EditorUI/Panel/PanelMenuBar.h"
+#include "EditorUI/Panel/PanelNavMesh.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "EditorUI/Panel/PanelInspector.h"
 #include "EditorUI/Panel/PanelPopups.h"
@@ -55,6 +56,7 @@ bool ModuleEditor::Init()
 	panels.push_back(about = new PanelAbout());
 	panels.push_back(resource_database = new PanelResourceDatabase());
 	panels.push_back(popups = new PanelPopups());
+	panels.push_back(nav_mesh = new PanelNavMesh());
 
 	return ret;
 }
@@ -100,7 +102,7 @@ update_status ModuleEditor::PreUpdate()
 update_status ModuleEditor::Update()
 {
 	//ImGui::ShowStyleEditor();
-	ImGui::ShowDemoWindow();
+	//ImGui::ShowDemoWindow();
 
 	static bool inital_scene_loaded = false;
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)

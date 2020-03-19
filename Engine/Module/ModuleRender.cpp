@@ -572,6 +572,40 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
 	return selected;
 }
 
+bool ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray, float3 & position)
+{
+	GetCullingMeshes(App->cameras->scene_camera);
+	std::vector<ComponentMeshRenderer*> intersected_meshes;
+	for (auto & mesh : meshes_to_render)
+	{
+		if (mesh->owner->aabb.bounding_box.Intersects(ray))
+		{
+			intersected_meshes.push_back(mesh);
+		}
+	}
+
+	bool intersected = false;
+	float min_distance = INFINITY;
+	for (auto & mesh : intersected_meshes)
+	{
+		LineSegment transformed_ray = ray;
+		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
+		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
+		for (auto & triangle : triangles)
+		{
+			float distance;
+			float3 intersected_point;
+			intersected = triangle.Intersects(transformed_ray, &distance, &intersected_point);
+			if (intersected && distance < min_distance)
+			{
+				position = intersected_point;
+				min_distance = distance;
+			}
+		}
+	}
+	return intersected;
+}
+
 int ModuleRender::GetRenderedTris() const
 {
 	return num_rendered_tris;

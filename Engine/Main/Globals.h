@@ -82,6 +82,7 @@ enum class Fonts
 # define SAVED_SCENE_PATH "Assets/Scenes/scene.scene"
 # define TMP_SCENE_PATH "Assets/Scenes/tmp_scene.scene"
 # define GAME_INPUT_PATH "Resources/GameInputs/game_inputs.inputs"
+# define NAVMESH_PATH "Resources/NavMeshes/"
 
 # define SCRIPT_LIST_PATH "Resources/Scripts/scripts_list.scripts"
 # define SCRIPTS_DLL_PATH "Resources/Scripts/GamePlaySystem.dll"

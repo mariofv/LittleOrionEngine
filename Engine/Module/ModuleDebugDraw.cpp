@@ -6,8 +6,10 @@
 
 #include "EditorUI/Helper/Billboard.h"
 #include "EditorUI/Helper/Grid.h"
+#include "EditorUI/Panel/PanelNavMesh.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleAI.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleDebug.h"
@@ -387,7 +389,12 @@ bool ModuleDebugDraw::Init()
 
 void ModuleDebugDraw::Render()
 {
+
 	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
+	if(App->debug->show_navmesh)
+	{
+		App->artificial_intelligence->RenderNavMesh(*App->cameras->scene_camera);
+	}
 
 	if (App->debug->show_quadtree)
 	{
@@ -435,7 +442,13 @@ void ModuleDebugDraw::Render()
 		RenderGlobalBoundingBoxes();
 	}
 
+	if(App->debug->show_pathfind_points)
+	{
+		RenderPathfinding();
+	}
+
 	RenderBillboards();
+
 
 	if (App->debug->show_grid)
 	{
@@ -443,8 +456,9 @@ void ModuleDebugDraw::Render()
 		grid->ScaleOnDistance(scene_camera_height);
 		grid->Render();
 	}
-
 	RenderDebugDraws(*App->cameras->scene_camera);
+
+
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
@@ -601,6 +615,25 @@ void ModuleDebugDraw::RenderBillboards() const
 	}
 }
 
+void ModuleDebugDraw::RenderPathfinding() const
+{
+	//First check if starting and ending point are null and render
+	if(App->artificial_intelligence->start_initialized)
+	{
+		dd::point(App->artificial_intelligence->start_position, float3(0, 255, 0), 20.0f);
+	}
+
+	if (App->artificial_intelligence->end_initialized)
+	{
+		dd::point(App->artificial_intelligence->end_position, float3(0, 255, 255), 20.0f);
+	}
+
+	for(auto point : App->artificial_intelligence->debug_path)
+	{
+		dd::point(point, float3(0, 0, 255), 10.0f);
+	}
+}
+
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 {
 	BROFILER_CATEGORY("Flush Debug Draw", Profiler::Color::Lavender);
@@ -613,6 +646,7 @@ void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 	dd_interface_implementation->mvpMatrix = proj * view;
 
 	dd::flush();
+
 }
 
 // Called before quitting

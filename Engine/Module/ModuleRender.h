@@ -54,6 +54,7 @@ public:
 	void DrawAABBTree() const;
 
 	GameObject* GetRaycastIntertectedObject(const LineSegment & ray);
+	bool GetRaycastIntertectedObject(const LineSegment & ray, float3& position);
 
 private:
 	void SetVSync(bool vsync);
@@ -110,6 +111,7 @@ private:
 	friend class PanelConfiguration;
 	friend class PanelDebug;
 	friend class PanelScene;
+	friend class NavMesh;
 };
 
 #endif //_MODULERENDER_H_

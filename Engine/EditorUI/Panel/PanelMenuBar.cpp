@@ -7,6 +7,7 @@
 #include "EditorUI/Panel/PanelGame.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "EditorUI/Panel/PanelInspector.h"
+#include "EditorUI/Panel/PanelNavMesh.h"
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelResourceDatabase.h"
@@ -166,6 +167,10 @@ void PanelMenuBar::ShowWindowMenu()
 			if (ImGui::MenuItem((ICON_FA_TERMINAL " Console"), (const char*)0, App->editor->console->IsOpened()))
 			{
 				App->editor->console->SwitchOpen();
+			}
+			if (ImGui::MenuItem((ICON_FA_BRAIN " AI"), (const char*)0, App->editor->nav_mesh->IsOpened()))
+			{
+				App->editor->nav_mesh->SwitchOpen();
 			}
 			if (ImGui::MenuItem((ICON_FA_DATABASE " Resource Database"), (const char*)0, App->editor->resource_database->IsOpened()))
 			{
