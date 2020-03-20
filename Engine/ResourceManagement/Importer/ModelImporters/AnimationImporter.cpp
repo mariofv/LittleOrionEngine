@@ -93,7 +93,7 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 		{
 			bool is_translated;
 			float3 translation;
-			if (channel_translations.size() > 1)
+			if (channel_translations.size() > i)
 			{
 				is_translated = true;
 				translation = channel_translations[i];
@@ -106,7 +106,7 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 
 			bool is_rotated;
 			Quat rotation;
-			if (channel_translations.size() > 1)
+			if (channel_rotations.size() > i)
 			{
 				is_rotated = true;
 				rotation = channel_rotations[i];
@@ -145,7 +145,14 @@ void AnimationImporter::GetChannelTranslations(const aiNodeAnim* sample, float a
 			aiVector3D position = sample->mPositionKeys[j].mValue;
 			sample_translations[integer_time] = float3(position.x, position.y, position.z);
 		}
+		else
+		{
+			assert(sample->mNumPositionKeys == 1);
+			aiVector3D position = sample->mPositionKeys[j].mValue;
+			sample_translations[0] = float3(position.x, position.y, position.z);
+		}
 	}
+
 }
 
 void AnimationImporter::GetChannelRotations(const aiNodeAnim* sample, float animation_duration, std::map<double, Quat>& sample_rotations) const
@@ -158,6 +165,12 @@ void AnimationImporter::GetChannelRotations(const aiNodeAnim* sample, float anim
 			double integer_time = std::round(sample->mRotationKeys[j].mTime);
 			aiQuaternion rotation = sample->mRotationKeys[j].mValue;
 			sample_rotations[integer_time] = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+		}
+		else
+		{
+			assert(sample->mNumRotationKeys == 1);
+			aiQuaternion rotation = sample->mRotationKeys[j].mValue;
+			sample_rotations[0] = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
 		}
 	}
 }
