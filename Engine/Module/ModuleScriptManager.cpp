@@ -220,8 +220,11 @@ void ModuleScriptManager::InitDLL()
 
 void ModuleScriptManager::ReloadDLL() 
 {
+	std::unordered_map<uint64_t, Config> config_list;
+	SaveVariables(config_list);
 	if (gameplay_dll != nullptr) 
 	{
+
 		if (!FreeLibrary(gameplay_dll)) 
 		{
 			return;
@@ -234,7 +237,7 @@ void ModuleScriptManager::ReloadDLL()
 	}
 	InitDLL();
 	InitResourceScript();
-
+	LoadVariables(config_list);
 }
 
 bool ModuleScriptManager::CopyPDB(const char* source_file, const char* destination_file, bool overwrite_existing)
@@ -358,4 +361,42 @@ void ModuleScriptManager::Refresh()
 {
 	LoadScriptList();
 	ReloadDLL();
+}
+
+void ModuleScriptManager::ReLink()
+{
+	for (auto &component_script : scripts)
+	{
+		component_script->script->Link();
+	}
+}
+
+void ModuleScriptManager::SaveVariables(std::unordered_map<uint64_t, Config>& config_list)
+{
+	for (auto &component_script : scripts)
+	{
+		if (component_script->script != nullptr) 
+		{
+			Config config;
+			component_script->script->Save(config);
+			config_list.insert({ component_script->UUID, config });
+		}
+
+	}
+}
+
+void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> config_list)
+{
+	for (auto &component_script : scripts)
+	{
+		if (component_script->script != nullptr)
+		{
+			std::unordered_map<uint64_t, Config>::const_iterator got = config_list.find(component_script->UUID);
+			if (got != config_list.end()) {
+				component_script->script->Load(got->second);
+				component_script->script->Link();
+			}
+		}
+		
+	}
 }

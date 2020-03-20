@@ -175,6 +175,8 @@
     <ClInclude Include="src\Script\ExampleScript.h" />
     <ClInclude Include="src\Script\Player1InputScript.h" />
     <ClInclude Include="src\Script\Player2InputScript.h" />
+    <ClInclude Include="src\Script\CameraController.h" />
+    <ClInclude Include="src\Script\SceneCamerasController.h" />
     <ClInclude Include="src\Script\Script.h" />
     <ClInclude Include="src\Script\TestScriptRuntime.h" />
     <ClInclude Include="src\Script\TriggerActionScript.h" />
@@ -185,6 +187,8 @@
     <ClCompile Include="src\Script\ExampleScript.cpp" />
     <ClCompile Include="src\Script\Player1InputScript.cpp" />
     <ClCompile Include="src\Script\Player2InputScript.cpp" />
+    <ClCompile Include="src\Script\CameraController.cpp" />
+    <ClCompile Include="src\Script\SceneCamerasController.cpp" />
     <ClCompile Include="src\Script\Script.cpp" />
     <ClCompile Include="src\Script\TestScriptRuntime.cpp" />
     <ClCompile Include="src\Script\TriggerActionScript.cpp" />

@@ -87,14 +87,15 @@ void ComponentScript::Save(Config& config) const
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddString(name, "ScriptName");
+	script->Save(config);
+	
 }
 
 void ComponentScript::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-
 	config.GetString("ScriptName", this->name, "");
 	LoadName(this->name);
-
+	script->Load(config);
 }

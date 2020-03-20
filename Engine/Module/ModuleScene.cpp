@@ -7,6 +7,7 @@
 #include "ModuleRender.h"
 #include "ModuleResourceManager.h"
 #include "ModuleScriptManager.h"
+
 #include "Component/ComponentCamera.h"
 #include "Helper/Config.h"
 #include "UI/Panel/PanelHierarchy.h"
@@ -101,7 +102,7 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
-GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
+ENGINE_API GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 {
 	if (UUID == 0)
 	{
@@ -141,13 +142,13 @@ void ModuleScene::DeleteCurrentScene()
 	App->actions->ClearUndoRedoStacks();
 	RemoveGameObject(root);
 	App->renderer->DeleteAABBTree();
+	App->scripts->scripts.clear();
 	App->editor->selected_game_object = nullptr;
 }
 
 void  ModuleScene::NewScene(const std::string &path)
 {
 	App->scene->DeleteCurrentScene();
-	App->scripts->scripts.clear();
 	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 

@@ -69,7 +69,7 @@ void TriggerActionScript::OnInspector(ImGuiContext* context)
 	ImGui::Text("TestScriptRuntime: ");
 	ImGui::SameLine();
 	ImGui::Button(is_object.c_str());
-	panel->DropGOTarget(trigger_go, "TestScriptRuntime");
+	panel->DropGOTarget(trigger_go);
 	if (trigger_go)
 		is_object = trigger_go->name;
 }

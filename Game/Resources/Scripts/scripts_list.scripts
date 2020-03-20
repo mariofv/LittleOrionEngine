@@ -6,6 +6,8 @@
         "TriggerActionScript",
         "Player1InputScript",
         "Player2InputScript",
-        "EndOfLevelScript"
+        "EndOfLevelScript",
+        "CameraController",
+        "SceneCamerasController"
     ]
 }

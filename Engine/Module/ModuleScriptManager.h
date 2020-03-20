@@ -24,6 +24,7 @@ class GameObject;
 class Script;
 class File;
 class Utils;
+class Config;
 
 class ModuleScriptManager : public Module
 {
@@ -43,6 +44,10 @@ public:
 
 	void InitScripts();
 	void Refresh();
+	void ReLink();
+
+	void SaveVariables(std::unordered_map<uint64_t, Config>& config_list);
+	void LoadVariables(std::unordered_map<uint64_t, Config> config_list);
 
 private:
 	void GetCurrentPath();
