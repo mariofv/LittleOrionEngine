@@ -4,20 +4,8 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
-bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const std::string& imported_file, std::string& exported_file) const
+ImportResult SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const std::string& imported_file, float unit_scale_factor) const
 {
-	float unit_scale_factor = 1.f;
-
-	for (unsigned int i = 0; i < scene->mMetaData->mNumProperties; ++i)
-	{
-		if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
-		{
-			aiMetadataEntry unit_scale_entry = scene->mMetaData->mValues[i];
-			unit_scale_factor = *(double*)unit_scale_entry.mData;
-		};
-	}
-	unit_scale_factor *= 0.01f;
-
 	aiString bone_name = mesh->mBones[0]->mName;
 	aiNode * bone = scene->mRootNode->FindNode(bone_name);
 
@@ -33,11 +21,12 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 
 	if (skeleton.skeleton.size() > 0)
 	{
-		exported_file = SaveMetaFile(imported_file, ResourceType::SKELETON);
+		std::string exported_file = SaveMetaFile(imported_file, ResourceType::SKELETON);
 		SaveBinary(skeleton, exported_file, imported_file);
+		return ImportResult{ true,exported_file };
 		
 	}
-	return true;
+	return ImportResult();
 }
 
 void SkeletonImporter::ImportChildBone(const aiMesh* mesh, const aiNode * previus_node,  uint32_t previous_joint_index, const aiMatrix4x4& parent_transformation,  aiMatrix4x4& accumulated_local_transformation, Skeleton& skeleton) const

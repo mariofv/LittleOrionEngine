@@ -46,7 +46,7 @@ void Prefab::Apply(GameObject * new_reference)
 {
 	App->resources->CreatePrefab(exported_file, new_reference);
 	ImportResult import_result = App->resources->Import(File(exported_file));
-	if (import_result.succes)
+	if (import_result.success)
 	{
 		RecursiveRewrite(prefab.front().get(), new_reference, true, false);
 		for (auto old_instance : instances)

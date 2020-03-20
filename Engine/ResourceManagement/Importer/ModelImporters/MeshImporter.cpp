@@ -10,9 +10,17 @@ ImportResult MeshImporter::Import(const File & file, bool force) const
 	App->filesystem->Copy(file.file_path.c_str(), exported_file.c_str());
 	return ImportResult{ true, exported_file };
 }
-bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, const std::string& imported_file, std::string& exported_file) const
+ImportResult MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, const std::string& imported_file, float unit_scale_factor) const
 {
+	aiVector3t<float> pScaling, pPosition;
+	aiQuaterniont<float> pRotation;
+	aiMatrix4x4 node_transformation = mesh_current_transformation;
+	node_transformation.Decompose(pScaling, pRotation, pPosition);
 
+	pPosition = pPosition * unit_scale_factor;
+	pScaling = pScaling * unit_scale_factor;
+
+	node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
 
 	std::vector<uint32_t> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
@@ -26,14 +34,18 @@ bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_curren
 	if (indices.size() % 3 != 0)
 	{
 		APP_LOG_ERROR("Mesh %s have incorrect indices", mesh->mName.C_Str());
-		return false;
+		return ImportResult();
+	}
+	if (mesh->HasBones())
+	{
+		GetSkinning(mesh);
 	}
 	std::vector<Mesh::Vertex> vertices;
 	vertices.reserve(mesh->mNumVertices);
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
 		Mesh::Vertex new_vertex;
-		aiVector3D transformed_position = mesh_current_transformation * mesh->mVertices[i];
+		aiVector3D transformed_position = node_transformation * mesh->mVertices[i];
 		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
 		if (mesh->mTextureCoords[0]) 
 		{
@@ -47,10 +59,31 @@ bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_curren
 		{
 			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
 		}
+		new_vertex.joints[0] = 0;
+		new_vertex.joints[1] = 0;
+		new_vertex.joints[2] = 0;
+		new_vertex.joints[3] = 0;
+
+		new_vertex.weights[0] = 0.0f;
+		new_vertex.weights[1] = 0.0f;
+		new_vertex.weights[2] = 0.0f;
+		new_vertex.weights[3] = 0.0f;
 		vertices.push_back(new_vertex);
 	}
-	exported_file = SaveMetaFile(imported_file, ResourceType::MESH);
+	std::string exported_file = SaveMetaFile(imported_file, ResourceType::MESH);
 	SaveBinary(std::move(vertices), std::move(indices), exported_file, imported_file);
+	return ImportResult{true,exported_file};
+}
+
+void MeshImporter::GetSkinning(const aiMesh* mesh) const
+{
+	for (size_t j = 0; j < mesh->mNumBones; j++)
+	{
+		for (size_t k = 0; k < mesh->mBones[j]->mNumWeights; k++)
+		{
+			//mesh->mBones[j]->mWeights[k].
+		}
+	}
 }
 
 void MeshImporter::SaveBinary(std::vector<Mesh::Vertex> && vertices, std::vector<uint32_t> && indices, const std::string& exported_file, const std::string& imported_file) const

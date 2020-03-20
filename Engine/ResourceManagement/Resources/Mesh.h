@@ -15,6 +15,8 @@ public:
 		float2 tex_coords;
 		float3 normals;
 		float3 tangent;
+		uint32_t joints[4];
+		float weights[4];
 	};
 	Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path);
 	Mesh(std::string mesh_file_path);

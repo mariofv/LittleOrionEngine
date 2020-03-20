@@ -94,7 +94,7 @@ void ModuleResourceManager::ImportAllFilesInDirectory(const File& file, bool for
 			 Sleep(1000);
 		 }
 		 bool is_directory = child->file_type == FileType::DIRECTORY;
-		 if (is_directory && !default_importer->Import(*child.get(), force).succes)
+		 if (is_directory && !default_importer->Import(*child.get(), force).success)
 		 {
 			 ImportAllFilesInDirectory(*child.get(), force);
 		 }

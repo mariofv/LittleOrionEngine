@@ -31,7 +31,7 @@ bool ModuleTexture::CleanUp()
 std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 {
 	ImportResult import_result = App->resources->Import(File(texture_path));
-	if (!import_result.succes)
+	if (!import_result.success)
 	{
 		return nullptr;
 	}

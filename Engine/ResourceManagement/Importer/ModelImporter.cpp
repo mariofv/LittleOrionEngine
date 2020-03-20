@@ -62,7 +62,7 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	}
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
 	if (already_imported.uuid != 0 && !force) {
-		import_result.succes = true;
+		import_result.success = true;
 		import_result.exported_file = already_imported.exported_file;
 		return import_result;
 	}
@@ -111,7 +111,7 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	model_prefab_importer->ImportModelPrefab(model, output_file_model);
 
 
-	import_result.succes = true;
+	import_result.success = true;
 	import_result.exported_file = output_file_model;
 	return import_result;
 }
@@ -134,16 +134,6 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 	}
 	unit_scale_factor *= 0.01f;
 
-	aiVector3t<float> pScaling, pPosition;
-	aiQuaterniont<float> pRotation;
-	aiMatrix4x4 node_transformation = current_transformation;
-	node_transformation.Decompose(pScaling, pRotation, pPosition);
-
-	pPosition = pPosition * unit_scale_factor;
-	pScaling = pScaling * unit_scale_factor;
-
-	node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
-
 	std::map<std::string, std::string> already_loaded_skeleton;
 	for (size_t i = 0; i < root_node->mNumMeshes; ++i)
 	{
@@ -157,28 +147,29 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 
 		aiMesh * importing_mesh = scene->mMeshes[mesh_index];
 
-		std::string assets_mesh_file = base_path + "/" + std::string(importing_mesh->mName.data) + std::to_string(i) + ".mesh";
-		std::string library_mesh_file;
-		bool imported = mesh_importer->ImportMesh(importing_mesh, node_transformation, assets_mesh_file, library_mesh_file);
-		if (imported)
-		{
-			node.AddString(library_mesh_file, "Mesh");
-			node.AddString(importing_mesh->mName.data, "Name");
-		}
-
 		std::string main_bone_name = importing_mesh->mBones[0]->mName.C_Str();
 		bool already_loaded = already_loaded_skeleton.find(main_bone_name) != already_loaded_skeleton.end();
 		if (importing_mesh->HasBones() && !already_loaded)
 		{
-			std::string library_skeleton_file;
 			std::string assets_skeleton_file = base_path + "/" + std::string(root_node->mName.data)+ "_skeleton" + std::to_string(i) + ".sk";
-			skeleton_importer->ImportSkeleton(scene, importing_mesh, assets_skeleton_file, library_skeleton_file);
-			already_loaded_skeleton[main_bone_name] = library_skeleton_file;
-			node.AddString(library_skeleton_file, "Skeleton");
+			ImportResult skeleton_import_result = skeleton_importer->ImportSkeleton(scene, importing_mesh, assets_skeleton_file,unit_scale_factor);
+			if (skeleton_import_result.success)
+			{
+				already_loaded_skeleton[main_bone_name] = skeleton_import_result.exported_file;
+				node.AddString(skeleton_import_result.exported_file, "Skeleton");
+			}
 		}
 		else if(already_loaded)
 		{
 			node.AddString(already_loaded_skeleton[main_bone_name], "Skeleton");
+		}
+
+		std::string assets_mesh_file = base_path + "/" + std::string(importing_mesh->mName.data) + std::to_string(i) + ".mesh";
+		ImportResult mesh_import_result = mesh_importer->ImportMesh(importing_mesh, current_transformation, assets_mesh_file, unit_scale_factor);
+		if (mesh_import_result.success)
+		{
+			node.AddString(mesh_import_result.exported_file, "Mesh");
+			node.AddString(importing_mesh->mName.data, "Name");
 		}
 		node_config.push_back(node);
 	}

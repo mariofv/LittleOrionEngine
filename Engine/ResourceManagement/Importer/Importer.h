@@ -10,7 +10,7 @@ class File;
 
 struct ImportResult
 {
-	bool succes = false;
+	bool success = false;
 	std::string exported_file;
 };
 
