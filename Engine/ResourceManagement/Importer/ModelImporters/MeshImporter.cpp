@@ -73,6 +73,7 @@ ImportResult MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mes
 		{
 			new_vertex.weights[j] = vertex_skinning__info[i].second[j];
 		}
+		new_vertex.num_joints = vertex_skinning__info[i].second.size();
 		vertices.push_back(new_vertex);
 	}
 	std::string exported_file = SaveMetaFile(imported_file, ResourceType::MESH);
