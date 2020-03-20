@@ -32,7 +32,7 @@ public:
 	void Save(Config& config) const override {};
 	void Load(const Config& config) override {};
 	virtual void Render();
-	float3 color = float3(0.0f, 1.0f, 0.0f);
+	float3 color = float3(0.0f, 0.0f, 1.0f);
 
 	FT_Library ft;
 	FT_Face face;
@@ -41,9 +41,9 @@ public:
 
 	GLuint VAO, VBO;
 	//Text Inputs
-	std::string text = "Default";
-	GLfloat x = 25.0f;
-	GLfloat y = 25.0f;
+	std::string text = "Artemis & Marco Rule";
+	GLfloat x = 0.0f;
+	GLfloat y = 0.0f;
 	GLfloat scale = 1.0f;
 
 private:

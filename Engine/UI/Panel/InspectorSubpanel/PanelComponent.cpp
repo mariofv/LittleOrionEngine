@@ -519,10 +519,10 @@ void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
 		}
 		ImGui::Separator();
 
-		ImGui::InputFloat2("Size", txt->size.ptr());
+		ImGui::InputFloat("Size",&txt->scale);
 		ImGui::InputFloat2("Position", txt->position.ptr());
 		ImGui::InputInt("Texture", (int*)(&txt->text_texture));
-		//ImGui::ColorPicker3("Color", ui->color.ptr());
+		ImGui::ColorPicker3("Color", txt->color.ptr());
 	}
 }
 

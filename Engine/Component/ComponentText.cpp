@@ -29,7 +29,7 @@ void ComponentText::InitData()
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
 	// Load font as face
-	if (FT_New_Face(ft, "./Assets/Fonts/arial.ttf", 0, &face))
+	if (FT_New_Face(ft, "Assets/Fonts/arial.ttf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
 	// Set size to load glyphs as
@@ -37,6 +37,12 @@ void ComponentText::InitData()
 
 	// Disable byte-alignment restriction
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	//
+	shader_program = App->program->GetShaderProgramId("Sprite");
+	window_width = App->editor->scene_panel->scene_window_content_area_width;
+	window_height = App->editor->scene_panel->scene_window_content_area_height;
+	//
 
 	// Load first 128 characters of ASCII set
 	for (GLubyte c = 0; c < 128; c++)
@@ -92,6 +98,8 @@ void ComponentText::InitData()
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+
+	
 }
 
 void ComponentText::Render()
@@ -100,22 +108,36 @@ void ComponentText::Render()
 	glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	// Activate corresponding render state	
-	shader_program = App->program->GetShaderProgramId("Sprite");
+
+	//model = model.Scale(float3(size.x, -size.y, 0.0f), float3::zero);
+	//model.SetTranslatePart(float3(position, 0.0f));
+
 	float4x4 projection = float4x4::D3DOrthoProjLH(0, 1, window_width, window_height);
-	glUniform3f(glGetUniformLocation(shader_program, "textColor"), color.x, color.y, color.z);
+	// Activate corresponding render state	
+	glUseProgram(shader_program);
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection"), 1, GL_TRUE, projection.ptr());
+	//glUniform1i(glGetUniformLocation(shader_program, "image"), 0);
+	glUniform1i(glGetUniformLocation(shader_program, "text"), 0);
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, model.ptr());
+	//glUniform3f(glGetUniformLocation(shader_program, "spriteColor"), 1, color.ptr());
+	//glUniform3f(glGetUniformLocation(shader_program, "textColor"), color.x, color.y, color.z);
+	//glUniform3fv(glGetUniformLocation(shader_program, "textColor"), 1, color.ptr());
+	glUniform3fv(glGetUniformLocation(shader_program, "spriteColor"), 1, color.ptr());
+
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(VAO);
 
 	// Iterate through all characters
 	std::string::const_iterator c;
+	x = position.x;
+	y = position.y;
 	for (c = text.begin(); c != text.end(); c++)
 	{
 		Character ch = Characters[*c];
-
+		
 		GLfloat xpos = x + ch.Bearing.x * scale;
 		GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
-
+		
 		GLfloat w = ch.Size.x * scale;
 		GLfloat h = ch.Size.y * scale;
 		// Update VBO for each character
