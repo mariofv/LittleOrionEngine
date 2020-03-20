@@ -5,6 +5,10 @@ in vec3 normal;
 in vec2 texCoord;
 in vec3 tangent;
 
+subroutine vec3 normal_subroutine();
+subroutine uniform normal_subroutine NormalSoubroutine;
+
+
 out vec4 FragColor;
 
 struct Material
@@ -67,24 +71,39 @@ uniform SpotLight spot_lights[10];
 uniform int num_point_lights;
 uniform PointLight point_lights[10];
 
+//COLOR TEXTURES
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord);
 vec3 GetOcclusionColor(const Material mat, const vec2 texCoord);
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 
+//MAPS
 vec3 GetNormalMap(sampler2D normal_map, const vec2 texCoord);
 
+//TYPE OF LIGHTS
 vec3 CalculateDirectionalLight(const vec3 normalized_normal);
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal);
 vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal);
 
 mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent);
 
+//SUBROUTINES
+subroutine (normal_subroutine) vec3 ComputeMaterialWithNormalMap()
+{
+	vec3 normalized_normal = normalize(GetNormalMap(material.normal_map, texCoord));
+	return normalized_normal = CreateTangentSpace(normalize(normal), normalize(tangent)) * normalized_normal;
+}
+
+subroutine (normal_subroutine) vec3 ComputeMaterialWithoutNormalMap()
+{
+	return normalize(normal);
+}
+
 void main()
 {
+
+
 	vec3 normalized_normal = normalize(normal);
-	//vec3 normalized_normal = normalize(GetNormalMap(material.normal_map, texCoord));
-	//normalized_normal = CreateTangentSpace(normalize(normal), normalize(tangent)) * normalized_normal;
 
 	vec3 result = vec3(0);
 
