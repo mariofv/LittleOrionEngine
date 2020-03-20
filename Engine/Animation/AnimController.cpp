@@ -86,7 +86,7 @@ bool AnimController::GetTranslation(const std::string& channel_name, float3 & po
 	float current_sample = (current_time*(anim->frames - 1)) / animation_time;
 	int current_keyframe = math::FloorInt(current_sample);
 
-	int next_keyframe = (current_keyframe + 1)%(int)anim->frames;
+	int next_keyframe = (current_keyframe + 1) % (int)anim->frames;
 
 	float3 current_translation;
 	float3 next_translation;
@@ -144,6 +144,13 @@ bool AnimController::GetRotation(const std::string& channel_name, Quat & rot)
 		}
 		++i;
 	}
+
+	if (channel_found)
+	{
+		float delta = current_sample - current_keyframe;
+		rot = Utils::Interpolate(current_rotation, next_rotation, delta);
+	}
+
 	return channel_found;
 }
 

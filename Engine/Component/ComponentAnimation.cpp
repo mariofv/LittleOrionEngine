@@ -88,12 +88,7 @@ void ComponentAnimation::SetSkeleton(std::shared_ptr<Skeleton> & skeleton)
 }
 void ComponentAnimation::UpdateBone(GameObject* current_bone)
 {
-
 	float3 bone_position;
-	if (current_bone->name == "Hips")
-	{
-		int x = 0;
-	}
 	if (animation_controller->GetTranslation(current_bone->name, bone_position))
 	{
 		current_bone->transform.SetTranslation(bone_position);
@@ -104,12 +99,6 @@ void ComponentAnimation::UpdateBone(GameObject* current_bone)
 	{
 		current_bone->transform.SetRotation(bone_rotation.ToFloat3x3());
 	}
-
-	/*float4x4 bone_transform;
-	if (animation_controller->GetTransformation(current_bone->name, bone_transform))
-	{
-		current_bone->transform.SetGlobalModelMatrix(bone_transform);
-	}*/
 
 	for (auto& children_bone : current_bone->children)
 	{

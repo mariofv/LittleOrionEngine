@@ -101,7 +101,6 @@ void ModelPrefabImporter::LoadSkeleton(const Config& node_config, std::vector<st
 		{
 			gameobjects.emplace_back(std::make_unique<GameObject>());
 			GameObject* object = gameobjects.back().get();
-
 			if (joint.parent_index >= skeleton_gameobjects.size())
 			{
 				object->parent = parent_node.get();
