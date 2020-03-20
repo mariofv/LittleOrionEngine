@@ -145,26 +145,29 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 		std::string library_material_file = App->resources->material_importer->ExtractMaterialFromMesh(scene, mesh_index, base_path.c_str(), assets_material_file.c_str()).exported_file;
 		node.AddString(library_material_file, "Material");
 
-		aiMesh * importing_mesh = scene->mMeshes[mesh_index];
-
 		std::shared_ptr<Skeleton> skeleton = std::make_shared<Skeleton>(0, "");
-		std::string main_bone_name = importing_mesh->mBones[0]->mName.C_Str();
-		bool already_loaded = already_loaded_skeleton.find(main_bone_name) != already_loaded_skeleton.end();
-		if (importing_mesh->HasBones() && !already_loaded)
+		aiMesh * importing_mesh = scene->mMeshes[mesh_index];
+		if (importing_mesh->HasBones())
 		{
-			std::string assets_skeleton_file = base_path + "/" + std::string(root_node->mName.data)+ "_skeleton" + std::to_string(i) + ".sk";
-			ImportResult skeleton_import_result = skeleton_importer->ImportSkeleton(scene, importing_mesh, assets_skeleton_file,unit_scale_factor, *skeleton);
-			if (skeleton_import_result.success)
+			std::string main_bone_name = importing_mesh->mBones[0]->mName.C_Str();
+			bool already_loaded = already_loaded_skeleton.find(main_bone_name) != already_loaded_skeleton.end();
+			if (!already_loaded)
 			{
-				already_loaded_skeleton[main_bone_name] = skeleton;
-				node.AddString(skeleton_import_result.exported_file, "Skeleton");
+				std::string assets_skeleton_file = base_path + "/" + std::string(root_node->mName.data) + "_skeleton" + std::to_string(i) + ".sk";
+				ImportResult skeleton_import_result = skeleton_importer->ImportSkeleton(scene, importing_mesh, assets_skeleton_file, unit_scale_factor, *skeleton);
+				if (skeleton_import_result.success)
+				{
+					already_loaded_skeleton[main_bone_name] = skeleton;
+					node.AddString(skeleton_import_result.exported_file, "Skeleton");
+				}
+			}
+			else if (already_loaded)
+			{
+				skeleton = already_loaded_skeleton[main_bone_name];
+				node.AddString(skeleton->exported_file, "Skeleton");
 			}
 		}
-		else if(already_loaded)
-		{
-			skeleton = already_loaded_skeleton[main_bone_name];
-			node.AddString(skeleton->exported_file, "Skeleton");
-		}
+		
 
 		std::string assets_mesh_file = base_path + "/" + std::string(importing_mesh->mName.data) + std::to_string(i) + ".mesh";
 		ImportResult mesh_import_result = mesh_importer->ImportMesh(importing_mesh, current_transformation, assets_mesh_file, unit_scale_factor, *skeleton);

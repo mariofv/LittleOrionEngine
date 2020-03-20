@@ -72,11 +72,11 @@ enum class Fonts
 # define VIDEO_BILLBOARD_TEXTURE_PATH "Resources/Textures/video-solid.png"
 # define LIGHT_BILLBOARD_TEXTURE_PATH "Resources/Textures/lightbulb-solid.png"
 
-# define PRIMITIVE_CUBE_PATH "Resources/Primitives/Cube/Cube.ol"
-# define PRIMITIVE_CYLINDER_PATH "Resources/Primitives/Cylinder/Cylinder.ol"
-# define PRIMITIVE_SPHERE_PATH "Resources/Primitives/Sphere/Sphere.ol"
-# define PRIMITIVE_TORUS_PATH "Resources/Primitives/Torus/Torus.ol"
-# define PRIMITIVE_QUAD_PATH "Resources/Primitives/Quad/Quad.ol"
+# define PRIMITIVE_CUBE_PATH "Library/Metadata/41/4135282941"
+# define PRIMITIVE_CYLINDER_PATH "Library/Metadata/40/4057255088"
+# define PRIMITIVE_SPHERE_PATH "Library/Metadata/35/3553469253"
+# define PRIMITIVE_TORUS_PATH "Library/Metadata/22/2202705559"
+# define PRIMITIVE_QUAD_PATH "Library/Metadata/35/3548710651"
 
 # define DEFAULT_SCENE_PATH "Resources/Scenes/default_scene.scene"
 # define SAVED_SCENE_PATH "Assets/Scenes/scene.scene"

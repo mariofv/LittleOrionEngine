@@ -62,18 +62,21 @@ ImportResult MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mes
 		{
 			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
 		}
-		assert(vertex_skinning__info[i].first.size() <= 4);
-		for (size_t j = 0; j < vertex_skinning__info[i].first.size(); ++j)
+		if (vertex_skinning__info.size() > 0)
 		{
-			new_vertex.joints[j] = vertex_skinning__info[i].first[j];
-		}
+			assert(vertex_skinning__info[i].first.size() <= 4);
+			for (size_t j = 0; j < vertex_skinning__info[i].first.size(); ++j)
+			{
+				new_vertex.joints[j] = vertex_skinning__info[i].first[j];
+			}
 
-		assert(vertex_skinning__info[i].second.size() <= 4);
-		for (size_t j = 0; j < vertex_skinning__info[i].second.size(); ++j)
-		{
-			new_vertex.weights[j] = vertex_skinning__info[i].second[j];
+			assert(vertex_skinning__info[i].second.size() <= 4);
+			for (size_t j = 0; j < vertex_skinning__info[i].second.size(); ++j)
+			{
+				new_vertex.weights[j] = vertex_skinning__info[i].second[j];
+			}
+			new_vertex.num_joints = vertex_skinning__info[i].second.size();
 		}
-		new_vertex.num_joints = vertex_skinning__info[i].second.size();
 		vertices.push_back(new_vertex);
 	}
 	std::string exported_file = SaveMetaFile(imported_file, ResourceType::MESH);

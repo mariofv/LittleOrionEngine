@@ -26,6 +26,7 @@ bool ModuleFileSystem::Init() {
 	{
 		return false;
 	}
+	File("Resources");
 	RefreshFilesHierarchy();
 	return true;
 }

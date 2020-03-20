@@ -185,7 +185,6 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 			{
 				game_object->MoveDownInHierarchy();
 			}
-
 			ImGui::Separator();
 		}
 
@@ -210,18 +209,22 @@ void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 		if (ImGui::Selectable("Cube"))
 		{
 			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_CUBE_PATH);
+			created_game_object->name = "Cube";
 		}
 		if (ImGui::Selectable("Cylinder"))
 		{
 			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_CYLINDER_PATH);
+			created_game_object->name = "Cylinder";
 		}
 		if (ImGui::Selectable("Sphere"))
 		{
 			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
+			created_game_object->name = "Sphere";
 		}
 		if (ImGui::Selectable("Torus"))
 		{
 			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
+			created_game_object->name = "Torus";
 		}
 
 		if (game_object != nullptr && created_game_object != nullptr)
@@ -231,6 +234,7 @@ void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 		if (ImGui::Selectable("Quad"))
 		{
 			App->model_loader->LoadCoreModel(PRIMITIVE_QUAD_PATH);
+			created_game_object->name = "Quad";
 		}
 
 		if(created_game_object != nullptr)
