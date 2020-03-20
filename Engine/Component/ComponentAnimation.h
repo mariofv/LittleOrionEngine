@@ -9,6 +9,7 @@
 class AnimController;
 class GameObject;
 class Animation;
+class Skeleton;
 
 class ComponentAnimation :	public Component
 {
@@ -28,6 +29,9 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
+	void SetAnimation(std::shared_ptr<Animation> & animation);
+	void SetSkeleton(std::shared_ptr<Skeleton> & skeleton);
+
 	void Update() override;
 	void Delete() override;
 
@@ -38,7 +42,6 @@ public:
 
 public:
 	AnimController* animation_controller = nullptr;
-	std::shared_ptr<Animation> animation;
 
 private:
 	friend class PanelComponent;

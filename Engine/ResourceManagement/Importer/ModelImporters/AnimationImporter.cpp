@@ -31,7 +31,7 @@ bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation*
 	own_format_animation.name = std::string(animation->mName.C_Str());
 
 	exported_file = SaveMetaFile(imported_file, ResourceType::ANIMATION);
-	SaveBinary(own_format_animation, exported_file);
+	SaveBinary(own_format_animation, exported_file, imported_file);
 
 	return true;
 }
@@ -162,7 +162,7 @@ void AnimationImporter::GetChannelRotations(const aiNodeAnim* sample, float anim
 	}
 }
 
-void AnimationImporter::SaveBinary(const Animation & animation, const std::string & output_file) const
+void AnimationImporter::SaveBinary(const Animation& animation, const std::string& exported_file, const std::string& imported_file) const
 {
 	// number of keyframes +  name size + name + duration
 	uint32_t size = sizeof(uint32_t) * 2 + animation.name.size() + sizeof(float);
@@ -235,6 +235,7 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 		}
 	}
 
-	App->filesystem->Save(output_file.c_str(), data, size);
+	App->filesystem->Save(exported_file.c_str(), data, size);
+	App->filesystem->Save(imported_file.c_str(), data, size);
 	free(data);
 }

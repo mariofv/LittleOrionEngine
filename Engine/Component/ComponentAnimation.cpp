@@ -63,7 +63,7 @@ void ComponentAnimation::Save(Config& config) const
 	config.AddUInt(UUID, "UUID");
 	config.AddUInt((uint64_t)type, "ComponentType");
 	config.AddBool(active, "Active");
-	config.AddString(animation->exported_file, "AnimationResource");
+	//config.AddString(animation->exported_file, "AnimationResource");
 }
 
 void ComponentAnimation::Load(const Config& config)
@@ -73,16 +73,43 @@ void ComponentAnimation::Load(const Config& config)
 	std::string animation_path;
 	config.GetString("AnimationResource", animation_path, "");
 
-	animation = App->resources->Load<Animation>(animation_path);
+	//animation = App->resources->Load<Animation>(animation_path);
 }
 
+void ComponentAnimation::SetAnimation(std::shared_ptr<Animation> & animation)
+{
+	animation_controller->anim = animation;
+	animation_controller->Init();
+}
+void ComponentAnimation::SetSkeleton(std::shared_ptr<Skeleton> & skeleton)
+{
+	animation_controller->sk = skeleton;
+	animation_controller->Init();
+}
 void ComponentAnimation::UpdateBone(GameObject* current_bone)
 {
-	float4x4 bone_transform;
+
+	float3 bone_position;
+	if (current_bone->name == "Hips")
+	{
+		int x = 0;
+	}
+	if (animation_controller->GetTranslation(current_bone->name, bone_position))
+	{
+		current_bone->transform.SetTranslation(bone_position);
+	}
+
+	Quat bone_rotation;
+	if (animation_controller->GetRotation(current_bone->name, bone_rotation))
+	{
+		current_bone->transform.SetRotation(bone_rotation.ToFloat3x3());
+	}
+
+	/*float4x4 bone_transform;
 	if (animation_controller->GetTransformation(current_bone->name, bone_transform))
 	{
 		current_bone->transform.SetGlobalModelMatrix(bone_transform);
-	}
+	}*/
 
 	for (auto& children_bone : current_bone->children)
 	{

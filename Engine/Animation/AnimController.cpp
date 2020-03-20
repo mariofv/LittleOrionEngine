@@ -11,6 +11,11 @@ AnimController::AnimController()
 {
 	anim = App->resources->Load<Animation>("Library/Metadata/38/3800295065");
 	sk = App->resources->Load<Skeleton>("Library/Metadata/29/2987806620");
+	Init();
+}
+
+void AnimController::Init()
+{
 	for (size_t i = 0; i < anim->keyframes[0].channels.size(); ++i)
 	{
 		auto & channel = anim->keyframes[0].channels[i];
@@ -20,10 +25,11 @@ AnimController::AnimController()
 		});
 		if (it != sk->skeleton.end())
 		{
-			auto & joint = (*it);
-			while(joint.parent_index < sk->skeleton.size())
+			Skeleton::Joint joint = (*it);
+			while (joint.parent_index < sk->skeleton.size())
 			{
-				auto it_channel = std::find_if(anim->keyframes[0].channels.begin(), anim->keyframes[0].channels.end(), [joint](const Animation::Channel & parent_channel)
+				joint = sk->skeleton[joint.parent_index];
+				auto it_channel = std::find_if(anim->keyframes[0].channels.begin(), anim->keyframes[0].channels.end(), [&joint](const Animation::Channel & parent_channel)
 				{
 					return joint.name == parent_channel.name;
 				});
@@ -31,13 +37,11 @@ AnimController::AnimController()
 				{
 					channel_hierarchy_cache[i].push_back(it_channel - anim->keyframes[0].channels.begin());
 				}
-				joint = sk->skeleton[joint.parent_index];
 			}
 		}
 
 	}
 }
-
 
 AnimController::~AnimController()
 {

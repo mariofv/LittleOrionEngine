@@ -10,6 +10,7 @@ class AnimController
 public:
 	AnimController();
 	~AnimController();
+	void Init();
 
 	void Play();
 	void Stop();

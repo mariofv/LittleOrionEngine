@@ -19,6 +19,7 @@ bool ModuleResourceManager::Init()
 	scene_manager = std::make_unique<SceneManager>();
 	prefab_importer = std::make_unique<PrefabImporter>();
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
+	File("Resources");
 	thread_timer->Start();
 	return true;
 }

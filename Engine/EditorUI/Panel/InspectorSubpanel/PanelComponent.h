@@ -38,6 +38,7 @@ public:
 
 private:
 	void DropMeshAndMaterial(ComponentMeshRenderer* component_mesh);
+	void DropAnimationAndSkeleton(ComponentAnimation* component_animation);
 };
 
 #endif //_PANELCOMPONENT_H_

@@ -328,6 +328,23 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		}
 		ImGui::Separator();
 
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Animation");
+		ImGui::SameLine();
+		if (ImGui::Button(animation->animation_controller->anim->exported_file.c_str()))
+		{
+			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
+		}
+		DropAnimationAndSkeleton(animation);
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Skeleton");
+		ImGui::SameLine();
+		if (ImGui::Button(animation->animation_controller->sk->exported_file.c_str()))
+		{
+			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
+		}
+		DropAnimationAndSkeleton(animation);
+		ImGui::Separator();
 		if (ImGui::Checkbox("Playing", &animation->animation_controller->playing));
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Loop", &animation->animation_controller->loop));
@@ -534,6 +551,35 @@ void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
 				Importer::GetOptionsFromMeta(meta_path, meta);
 				component_mesh->SetMaterial(App->resources->Load<Material>(meta.exported_file));
 				component_mesh->modified_by_user = true;
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
+
+void PanelComponent::DropAnimationAndSkeleton(ComponentAnimation* component_animation)
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_File"))
+		{
+			assert(payload->DataSize == sizeof(File*));
+			File* incoming_file = *(File * *)payload->Data;
+			if (incoming_file->file_type == FileType::ANIMATION)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				component_animation->SetAnimation(App->resources->Load<Animation>(meta.exported_file));
+				component_animation->modified_by_user = true;
+			}
+			if (incoming_file->file_type == FileType::SKELETON)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				component_animation->SetSkeleton(App->resources->Load<Skeleton>(meta.exported_file));
+				component_animation->modified_by_user = true;
 			}
 		}
 		ImGui::EndDragDropTarget();
