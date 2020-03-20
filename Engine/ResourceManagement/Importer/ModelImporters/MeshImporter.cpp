@@ -1,11 +1,28 @@
 #include "MeshImporter.h"
 #include <assimp/mesh.h>
 #include "Main/Application.h"
-#include <ResourceManagement/Resources/Mesh.h>
 #include "Module/ModuleFileSystem.h"
 
-bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_transformation, const std::string& output_file) const
+
+ImportResult MeshImporter::Import(const File & file, bool force) const
 {
+	std::string exported_file = SaveMetaFile(file.file_path, ResourceType::MESH);
+	App->filesystem->Copy(file.file_path.c_str(), exported_file.c_str());
+	return ImportResult{ true, exported_file };
+}
+bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, const std::string& imported_file, std::string& exported_file) const
+{
+
+	// Transformation
+	aiVector3t<float> pScaling, pPosition;
+	aiQuaterniont<float> pRotation;
+	aiMatrix4x4 node_transformation = mesh_current_transformation;
+	node_transformation.Decompose(pScaling, pRotation, pPosition);
+	pScaling *= SCALE_FACTOR;
+	pPosition *= SCALE_FACTOR;
+
+	node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
+
 	std::vector<uint32_t> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)
 	{
@@ -25,7 +42,7 @@ bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_transf
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
 	{
 		Mesh::Vertex new_vertex;
-		aiVector3D transformed_position = mesh_transformation * mesh->mVertices[i];
+		aiVector3D transformed_position = node_transformation * mesh->mVertices[i];
 		new_vertex.position = float3(transformed_position.x, transformed_position.y, transformed_position.z);
 		if (mesh->mTextureCoords[0]) 
 		{
@@ -41,6 +58,12 @@ bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_transf
 		}
 		vertices.push_back(new_vertex);
 	}
+	exported_file = SaveMetaFile(imported_file, ResourceType::MESH);
+	SaveBinary(std::move(vertices), std::move(indices), exported_file, imported_file);
+}
+
+void MeshImporter::SaveBinary(std::vector<Mesh::Vertex> && vertices, std::vector<uint32_t> && indices, const std::string& exported_file, const std::string& imported_file) const
+{
 
 	uint32_t num_indices = indices.size();
 	uint32_t num_vertices = vertices.size();
@@ -61,7 +84,7 @@ bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_transf
 	bytes = sizeof(Mesh::Vertex) * num_vertices;
 	memcpy(cursor, &vertices.front(), bytes);
 
-	App->filesystem->Save(output_file.c_str(), data, size);
+	App->filesystem->Save(exported_file.c_str(), data, size);
+	App->filesystem->Save(imported_file.c_str(), data, size);
 	free(data);
-	return true;
 }

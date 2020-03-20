@@ -8,7 +8,7 @@
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
 
-#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include "imgui.h"
 

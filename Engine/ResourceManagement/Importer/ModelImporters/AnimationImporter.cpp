@@ -9,18 +9,23 @@
 #include <random>
 #include <map>
 
-bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, std::string& output_file) const
+bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, const std::string& imported_file, std::string& exported_file) const
 {
 	Animation own_format_animation(0, "");
 	GetCleanAnimation(animation, own_format_animation);
-	own_format_animation.duration = static_cast<float>(animation->mDuration);
+
+
+	own_format_animation.frames = static_cast<float>(animation->mDuration);
+	own_format_animation.frames_per_second = static_cast<float>(animation->mTicksPerSecond);
 	own_format_animation.name = std::string(animation->mName.C_Str());
 
 	std::random_device random;
-	App->filesystem->MakeDirectory(LIBRARY_ANIMATION_FOLDER);
-	output_file = LIBRARY_ANIMATION_FOLDER + "/" + std::to_string(random())+ "_"+ own_format_animation.name + ".anim";
+	int64_t animation_uid = std::hash<std::string>{}(imported_file);
 
-	 SaveBinary(own_format_animation, output_file);
+
+	exported_file = SaveMetaFile(imported_file, ResourceType::ANIMATION);
+	SaveBinary(own_format_animation, exported_file, imported_file);
+
 	return true;
 }
 
@@ -135,14 +140,14 @@ void AnimationImporter::TransformPositions(const aiNodeAnim * ai_node, std::unor
 
 }
 
-void AnimationImporter::SaveBinary(const Animation & animation, const std::string & output_file) const
+void AnimationImporter::SaveBinary(const Animation& animation, const std::string& exported_file, const std::string& imported_file) const
 {
 
 
 	uint32_t num_channels = animation.keyframes.size();
 
-	// number of keyframes +  name size + name + duration
-	uint32_t size = sizeof(uint32_t)*2 + animation.name.size() + sizeof(float);
+	// number of keyframes +  name size + name + frames + frames_per_second
+	uint32_t size = sizeof(uint32_t)*2 + animation.name.size() + (sizeof(float)*2);
 
 
 	for (auto & keyframe : animation.keyframes)
@@ -169,8 +174,11 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 	cursor += name_size;
 
 
-	memcpy(cursor, &animation.duration, sizeof(float));
-	cursor += sizeof(float); // Store duration
+	memcpy(cursor, &animation.frames, sizeof(float));
+	cursor += sizeof(float); // Store frames
+
+	memcpy(cursor, &animation.frames_per_second, sizeof(float));
+	cursor += sizeof(float); // Store frames per second
 
 	memcpy(cursor, &num_channels, sizeof(uint32_t));
 	cursor += sizeof(uint32_t); // Store channels
@@ -200,6 +208,7 @@ void AnimationImporter::SaveBinary(const Animation & animation, const std::strin
 		}
 	}
 
-	App->filesystem->Save(output_file.c_str(), data, size);
+	App->filesystem->Save(exported_file.c_str(), data, size);
+	App->filesystem->Save(imported_file.c_str(), data, size);
 	free(data);
 }

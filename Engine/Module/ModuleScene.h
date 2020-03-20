@@ -1,13 +1,10 @@
 #ifndef _MODULESCENE_H_
 #define _MODULESCENE_H_
 #define ENGINE_EXPORTS
+
 #include "Module.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
-
-#include <ImGuizmo.h>
-
-class ComponentCamera;
 
 class ModuleScene : public Module
 {
@@ -32,7 +29,7 @@ public:
 	void NewScene(const std::string &path);
 
 public:
-	std::string current_scene_path = ASSIGNMENT_SCENE_PATH;
+	std::string current_scene_path = DEFAULT_SCENE_PATH;
 
 private:
 	GameObject *root = nullptr;

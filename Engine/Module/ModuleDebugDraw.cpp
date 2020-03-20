@@ -2,8 +2,14 @@
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentLight.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
+
+#include "EditorUI/Helper/Billboard.h"
+#include "EditorUI/Helper/Grid.h"
+#include "EditorUI/Panel/PanelNavMesh.h"
+
 #include "Main/Application.h"
+#include "Module/ModuleAI.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleDebug.h"
@@ -11,13 +17,13 @@
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 #include "SpacePartition/OLQuadTree.h"
-#include "UI/Billboard.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
-#include "UI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
+#include "EditorUI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
 
-#include "GL/glew.h"
+#include <GL/glew.h>
 #include <assert.h>
+#include <Brofiler/Brofiler.h>
 
 class IDebugDrawOpenGLImplementation final : public dd::RenderInterface
 {
@@ -373,7 +379,9 @@ bool ModuleDebugDraw::Init()
 
 	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 1.72f, 2.5f);	
 	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 2.5f, 2.5f);
-    
+
+	grid = new Grid();
+
     APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
 
 	return true;
@@ -381,13 +389,17 @@ bool ModuleDebugDraw::Init()
 
 void ModuleDebugDraw::Render()
 {
-	if (App->debug->show_grid)
+
+	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
+	if(App->debug->show_navmesh)
 	{
-		RenderGrid();
+		App->artificial_intelligence->RenderNavMesh(*App->cameras->scene_camera);
 	}
 
 	if (App->debug->show_quadtree)
 	{
+		BROFILER_CATEGORY("Render QuadTree", Profiler::Color::Lavender);
+
 		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree)
 		{
 			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
@@ -413,6 +425,8 @@ void ModuleDebugDraw::Render()
 
 	if (App->editor->selected_game_object != nullptr)
 	{
+		BROFILER_CATEGORY("Render Selected GameObject DebugDraws", Profiler::Color::Lavender);
+
 		RenderCameraFrustum();
 		RenderLightGizmo();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
@@ -428,46 +442,29 @@ void ModuleDebugDraw::Render()
 		RenderGlobalBoundingBoxes();
 	}
 
+	if(App->debug->show_pathfind_points)
+	{
+		RenderPathfinding();
+	}
+
 	RenderBillboards();
 
+
+	if (App->debug->show_grid)
+	{
+		float scene_camera_height = App->cameras->scene_camera->owner->transform.GetGlobalTranslation().y;
+		grid->ScaleOnDistance(scene_camera_height);
+		grid->Render();
+	}
 	RenderDebugDraws(*App->cameras->scene_camera);
-}
 
-void ModuleDebugDraw::RenderGrid() const
-{
-	float camera_distance_to_grid = App->cameras->scene_camera->owner->transform.GetTranslation().y;
-	float camera_distance_to_grid_abs = abs(camera_distance_to_grid);
-	float camera_horizontal_fov = App->cameras->scene_camera->camera_frustum.horizontalFov;
 
-	int grid_frustum_projection_half_size = FloorInt(tanf(camera_horizontal_fov / 2) * camera_distance_to_grid_abs);
-
-	int current_magnitude_order = MIN_MAGNITUDE_ORDER_GRID;
-	while (current_magnitude_order <= MAX_MAGNITUDE_ORDER_GRID && pow(10, current_magnitude_order) < grid_frustum_projection_half_size)
-	{
-		++current_magnitude_order;
-	}
-	int previous_magnitude_order = max(MIN_MAGNITUDE_ORDER_GRID, current_magnitude_order - 1);
-
-	int current_magnitude = pow(10, current_magnitude_order);
-	int previous_magnitude = pow(10, previous_magnitude_order);
-
-	if (previous_magnitude_order == current_magnitude_order || previous_magnitude_order == MAX_MAGNITUDE_ORDER_GRID) // Camera is too close or too far away from grid
-	{
-		dd::xzSquareGrid(-500.0f * previous_magnitude, 500.0f * previous_magnitude, 0.0f, previous_magnitude, math::float3(0.65f));
-	}
-	else
-	{
-		float progress_to_next_magnitude_order = (float)(grid_frustum_projection_half_size - previous_magnitude) / (current_magnitude - previous_magnitude);
-		float previous_grid_height = camera_distance_to_grid > 0 ? -0.01f : 0.01f; // Used to avoid overlapping of grids
-		// TODO: The color of the dissapearing grid fades to black, when it should fade to transparent
-		dd::xzSquareGrid(-500.0f * previous_magnitude, 500.0f * previous_magnitude, previous_grid_height, previous_magnitude, math::float3(0.65f * (1 - progress_to_next_magnitude_order)));
-
-		dd::xzSquareGrid(-500.0f * current_magnitude, 500.0f * current_magnitude, 0.0f, current_magnitude, math::float3(0.65f));
-	}
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
 {
+	BROFILER_CATEGORY("Render Selected GameObject Camera Frustum", Profiler::Color::Lavender);
+
 	if (!App->debug->show_camera_frustum)
 	{
 		return;
@@ -483,6 +480,8 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 
 void ModuleDebugDraw::RenderLightGizmo() const	
 {	
+	BROFILER_CATEGORY("Render Selected GameObject Light Gizmo", Profiler::Color::Lavender);
+
 	Component* selected_light_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::LIGHT);	
 	if (selected_light_component != nullptr)
   {	
@@ -515,12 +514,16 @@ void ModuleDebugDraw::RenderLightGizmo() const
 
 void ModuleDebugDraw::RenderOutline() const
 {
+	BROFILER_CATEGORY("Render Outline", Profiler::Color::Lavender);
+
 	GameObject* selected_game_object = App->editor->selected_game_object;
-	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH);
+	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 
 	if (selected_object_mesh_component != nullptr && selected_object_mesh_component->IsEnabled())
 	{
-		ComponentMesh* selected_object_mesh = static_cast<ComponentMesh*>(selected_object_mesh_component);
+		BROFILER_CATEGORY("Render Outline Write Stencil", Profiler::Color::Lavender);
+
+		ComponentMeshRenderer* selected_object_mesh = static_cast<ComponentMeshRenderer*>(selected_object_mesh_component);
 		glEnable(GL_STENCIL_TEST);
 		glStencilFunc(GL_ALWAYS, 1, 0xFF);
 		glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
@@ -532,8 +535,21 @@ void ModuleDebugDraw::RenderOutline() const
 		glStencilMask(0x00);
 		glDisable(GL_DEPTH_TEST);
 
+		BROFILER_CATEGORY("Render Outline Read Stencil", Profiler::Color::Lavender);
+
 		GLuint outline_shader_program = App->program->GetShaderProgramId("Outline");
 		glUseProgram(outline_shader_program);
+		float4x4 new_transformation_matrix;
+		if (selected_game_object->parent != nullptr)
+		{
+			new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * selected_game_object->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
+
+		}
+		else 
+		{
+			new_transformation_matrix =  selected_game_object->transform.GetGlobalModelMatrix() * float4x4::Scale(float3(1.01f));
+		}
+
 		
 		ModuleRender::DrawMode last_draw_mode = App->renderer->draw_mode;
 		App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
@@ -559,6 +575,8 @@ void ModuleDebugDraw::RenderOutline() const
 
 void ModuleDebugDraw::RenderBoundingBoxes() const
 {
+	BROFILER_CATEGORY("Render Bounding Boxes", Profiler::Color::Lavender);
+
 	for (auto& mesh : App->renderer->meshes_to_render)
 	{
 		GameObject* mesh_game_object = mesh->owner;
@@ -571,6 +589,8 @@ void ModuleDebugDraw::RenderBoundingBoxes() const
 
 void ModuleDebugDraw::RenderGlobalBoundingBoxes() const
 {
+	BROFILER_CATEGORY("Render Global Bounding Boxes", Profiler::Color::Lavender);
+
 	for (auto& object : App->scene->game_objects_ownership)
 	{
 		dd::aabb(object->aabb.global_bounding_box.minPoint, object->aabb.global_bounding_box.maxPoint, float3::one);
@@ -579,6 +599,8 @@ void ModuleDebugDraw::RenderGlobalBoundingBoxes() const
 
 void ModuleDebugDraw::RenderBillboards() const
 {
+	BROFILER_CATEGORY("Render Billboards", Profiler::Color::Lavender);
+
 	for (auto& object : App->scene->game_objects_ownership)
 	{
 		Component * light_component = object->GetComponent(Component::ComponentType::LIGHT);
@@ -593,8 +615,29 @@ void ModuleDebugDraw::RenderBillboards() const
 	}
 }
 
+void ModuleDebugDraw::RenderPathfinding() const
+{
+	//First check if starting and ending point are null and render
+	if(App->artificial_intelligence->start_initialized)
+	{
+		dd::point(App->artificial_intelligence->start_position, float3(0, 255, 0), 20.0f);
+	}
+
+	if (App->artificial_intelligence->end_initialized)
+	{
+		dd::point(App->artificial_intelligence->end_position, float3(0, 255, 255), 20.0f);
+	}
+
+	for(auto point : App->artificial_intelligence->debug_path)
+	{
+		dd::point(point, float3(0, 0, 255), 10.0f);
+	}
+}
+
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 {
+	BROFILER_CATEGORY("Flush Debug Draw", Profiler::Color::Lavender);
+
 	math::float4x4 view = camera.GetViewMatrix();
 	math::float4x4 proj = camera.GetProjectionMatrix();
 
@@ -603,6 +646,7 @@ void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 	dd_interface_implementation->mvpMatrix = proj * view;
 
 	dd::flush();
+
 }
 
 // Called before quitting
@@ -617,6 +661,7 @@ bool ModuleDebugDraw::CleanUp()
 
 	delete light_billboard;
 	delete camera_billboard;
+	delete grid;
 
 	return true;
 }
