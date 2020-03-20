@@ -5,8 +5,10 @@
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
+#include <memory>
 class AnimController;
 class GameObject;
+class Animation;
 
 class ComponentAnimation :	public Component
 {
@@ -36,7 +38,7 @@ public:
 
 public:
 	AnimController* animation_controller = nullptr;
-	std::string animation_path = "";
+	std::shared_ptr<Animation> animation;
 
 private:
 	friend class PanelComponent;

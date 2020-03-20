@@ -27,6 +27,7 @@ public:
 
 	static float3 Interpolate(const float3 & first, const float3 & second, float lambda);
 	static Quat Interpolate(const Quat & first, const Quat & second, float lambda);
+	static float4x4 Interpolate(const float4x4& first, const float4x4& second, float lambda);
 };
 
 #endif //_UTILS_H_

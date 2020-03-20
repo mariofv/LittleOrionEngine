@@ -166,3 +166,20 @@ Quat Utils::Interpolate(const Quat& first, const Quat& second, float lambda)
 	result.Normalize();
 	return result;
 }
+
+float4x4 Utils::Interpolate(const float4x4& first, const float4x4& second, float lambda)
+{
+	float4x4 result;
+
+	float3 first_translation;
+	Quat first_rotation;
+	float3 first_scale;
+	first.Decompose(first_translation, first_rotation, first_scale);
+
+	float3 second_translation;
+	Quat second_rotation;
+	float3 second_scale;
+	first.Decompose(second_translation, second_rotation, second_scale);
+	result = float4x4::FromTRS(Interpolate(first_translation, second_translation, lambda), Interpolate(first_rotation, second_rotation, lambda), second_scale);
+	return result;
+}

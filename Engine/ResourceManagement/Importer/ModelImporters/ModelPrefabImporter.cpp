@@ -101,21 +101,14 @@ void ModelPrefabImporter::LoadSkeleton(const Config& node_config, std::vector<st
 		{
 			gameobjects.emplace_back(std::make_unique<GameObject>());
 			GameObject* object = gameobjects.back().get();
-			if (joint.parent_index >= skeleton_gameobjects.size())
-			{
-				object->parent = parent_node.get();
-				parent_node->children.push_back(object);
-			}
-			else
-			{
-				object->parent = skeleton_gameobjects.at(joint.parent_index);
-				skeleton_gameobjects.at(joint.parent_index)->children.push_back(object);
-			}
+
+			object->parent = parent_node.get();
+			parent_node->children.push_back(object);
 
 			float3 translation;
 			float3 scale;
 			float3x3 rotate;
-			joint.transform_local.Decompose(translation, rotate, scale);
+			joint.transform_global.Decompose(translation, rotate, scale);
 
 			object->transform.SetScale(scale);
 			object->transform.SetTranslation(full_skeleton->scale_factor*translation);

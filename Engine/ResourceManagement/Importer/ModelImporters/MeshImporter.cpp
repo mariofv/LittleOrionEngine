@@ -111,8 +111,6 @@ void MeshImporter::SaveBinary(std::vector<Mesh::Vertex> && vertices, std::vector
 	uint32_t num_vertices = vertices.size();
 	uint32_t ranges[2] = { num_indices, num_vertices };
 
-	uint32_t total_vertex_size = sizeof(float3) * 3 + sizeof(float2) + sizeof(uint32_t) * 4 + sizeof(float) * 4;
-	assert(sizeof(Mesh::Vertex) == total_vertex_size);
 	uint32_t size = sizeof(ranges) + sizeof(uint32_t) * num_indices + sizeof(Mesh::Vertex) * num_vertices + sizeof(uint32_t);
 
 	char* data = new char[size]; // Allocate

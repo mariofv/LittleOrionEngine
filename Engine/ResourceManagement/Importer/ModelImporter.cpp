@@ -41,7 +41,7 @@ ModelImporter::~ModelImporter()
 	Assimp::DefaultLogger::kill();
 }
 
-ImportResult  ModelImporter::ImportExtractedResources(const File & file, bool force) const
+ImportResult ModelImporter::ImportExtractedResources(const File & file, bool force) const
 {
 	ImportResult result;
 	if (file.file_type == FileType::MESH)

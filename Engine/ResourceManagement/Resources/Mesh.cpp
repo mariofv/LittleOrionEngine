@@ -76,5 +76,17 @@ void Mesh::LoadInMemory()
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tangent));
 
+	// VERTEX JOINTS
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 4, GL_UNSIGNED_INT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, joints));
+
+	// VERTEX WEIGHTS
+	glEnableVertexAttribArray(5);
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, weights));
+
+	// VERTEX NUM WEIGHTS
+	glEnableVertexAttribArray(6);
+	glVertexAttribPointer(6, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, num_joints));
+
 	glBindVertexArray(0);
 }
