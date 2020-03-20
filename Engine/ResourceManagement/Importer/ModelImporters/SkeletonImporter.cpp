@@ -4,7 +4,7 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
-ImportResult SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const std::string& imported_file, float unit_scale_factor) const
+ImportResult SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const std::string& imported_file, float unit_scale_factor, Skeleton & skeleton) const
 {
 	aiString bone_name = mesh->mBones[0]->mName;
 	aiNode * bone = scene->mRootNode->FindNode(bone_name);
@@ -15,14 +15,15 @@ ImportResult SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh
 		bone = bone->mParent;
 	}
 
-	Skeleton skeleton(0, "");
 	skeleton.scale_factor = unit_scale_factor;
 	ImportChildBone(mesh, bone, - 1,bone->mTransformation, bone->mTransformation,skeleton);
 
 	if (skeleton.skeleton.size() > 0)
 	{
 		std::string exported_file = SaveMetaFile(imported_file, ResourceType::SKELETON);
-		SaveBinary(skeleton, exported_file, imported_file);
+		skeleton.exported_file = exported_file;
+		skeleton.imported_file = imported_file;
+		SaveBinary(skeleton);
 		return ImportResult{ true,exported_file };
 		
 	}
@@ -95,7 +96,7 @@ float4x4 SkeletonImporter::GetTransform(const aiMatrix4x4 & current_transform)
 	return math::float4x4::FromTRS(translation, rotation, scale);
 }
 
-bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& exported_file, const std::string& imported_file) const
+bool SkeletonImporter::SaveBinary(const Skeleton & skeleton) const
 {
 
 	uint32_t num_bones = skeleton.skeleton.size();
@@ -133,8 +134,8 @@ bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& 
 		cursor += sizeof(uint32_t);
 	}
 
-	App->filesystem->Save(exported_file.c_str(), data, size);
-	App->filesystem->Save(imported_file.c_str(), data, size);
+	App->filesystem->Save(skeleton.exported_file.c_str(), data, size);
+	App->filesystem->Save(skeleton.imported_file.c_str(), data, size);
 	free(data);
 	return true;
 }

@@ -1,8 +1,10 @@
 #include "MeshImporter.h"
-#include <assimp/mesh.h>
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
+#include "ResourceManagement/Resources/Skeleton.h"
 
+#include <assimp/mesh.h>
+#include <map>
 
 ImportResult MeshImporter::Import(const File & file, bool force) const
 {
@@ -10,7 +12,7 @@ ImportResult MeshImporter::Import(const File & file, bool force) const
 	App->filesystem->Copy(file.file_path.c_str(), exported_file.c_str());
 	return ImportResult{ true, exported_file };
 }
-ImportResult MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, const std::string& imported_file, float unit_scale_factor) const
+ImportResult MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, const std::string& imported_file, float unit_scale_factor,const Skeleton & skeleton) const
 {
 	aiVector3t<float> pScaling, pPosition;
 	aiQuaterniont<float> pRotation;
@@ -36,13 +38,14 @@ ImportResult MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mes
 		APP_LOG_ERROR("Mesh %s have incorrect indices", mesh->mName.C_Str());
 		return ImportResult();
 	}
+	std::vector<std::pair<std::vector<uint32_t>, std::vector<float>>> vertex_skinning__info;
 	if (mesh->HasBones())
 	{
-		GetSkinning(mesh);
+		vertex_skinning__info = GetSkinning(mesh, skeleton);
 	}
 	std::vector<Mesh::Vertex> vertices;
 	vertices.reserve(mesh->mNumVertices);
-	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
+	for (unsigned int i = 0; i < mesh->mNumVertices; ++i)
 	{
 		Mesh::Vertex new_vertex;
 		aiVector3D transformed_position = node_transformation * mesh->mVertices[i];
@@ -59,15 +62,17 @@ ImportResult MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mes
 		{
 			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
 		}
-		new_vertex.joints[0] = 0;
-		new_vertex.joints[1] = 0;
-		new_vertex.joints[2] = 0;
-		new_vertex.joints[3] = 0;
+		assert(vertex_skinning__info[i].first.size() <= 4);
+		for (size_t j = 0; j < vertex_skinning__info[i].first.size(); ++j)
+		{
+			new_vertex.joints[j] = vertex_skinning__info[i].first[j];
+		}
 
-		new_vertex.weights[0] = 0.0f;
-		new_vertex.weights[1] = 0.0f;
-		new_vertex.weights[2] = 0.0f;
-		new_vertex.weights[3] = 0.0f;
+		assert(vertex_skinning__info[i].second.size() <= 4);
+		for (size_t j = 0; j < vertex_skinning__info[i].second.size(); ++j)
+		{
+			new_vertex.weights[j] = vertex_skinning__info[i].second[j];
+		}
 		vertices.push_back(new_vertex);
 	}
 	std::string exported_file = SaveMetaFile(imported_file, ResourceType::MESH);
@@ -75,15 +80,27 @@ ImportResult MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mes
 	return ImportResult{true,exported_file};
 }
 
-void MeshImporter::GetSkinning(const aiMesh* mesh) const
+std::vector<std::pair<std::vector<uint32_t>, std::vector<float>>> MeshImporter::GetSkinning(const aiMesh* mesh, const Skeleton & skeleton) const
 {
-	for (size_t j = 0; j < mesh->mNumBones; j++)
+	std::vector<std::pair<std::vector<uint32_t>, std::vector<float>>> vertex_weights_joint(mesh->mNumVertices);
+	for (size_t j = 0; j < mesh->mNumBones; ++j)
 	{
-		for (size_t k = 0; k < mesh->mBones[j]->mNumWeights; k++)
+		aiBone * mesh_bone = mesh->mBones[j];
+		std::string mesh_bone_name(mesh_bone->mName.C_Str()); //TODO: Change to use hash instead of name everywhere (Mesh, animation, skeleton) just like this for better debugging
+		auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&mesh_bone_name](const Skeleton::Joint & joint)
 		{
-			//mesh->mBones[j]->mWeights[k].
+			return joint.name == mesh_bone_name;
+		});
+		assert(it != skeleton.skeleton.end());
+		for (size_t k = 0; k < mesh_bone->mNumWeights; ++k)
+		{
+			aiVertexWeight vertex_weight = mesh_bone->mWeights[k];
+			assert(vertex_weight.mVertexId <= vertex_weights_joint.size());
+			vertex_weights_joint[vertex_weight.mVertexId].second.push_back(vertex_weight.mWeight);
+			vertex_weights_joint[vertex_weight.mVertexId].first.push_back(it - skeleton.skeleton.begin());
 		}
 	}
+	return vertex_weights_joint;
 }
 
 void MeshImporter::SaveBinary(std::vector<Mesh::Vertex> && vertices, std::vector<uint32_t> && indices, const std::string& exported_file, const std::string& imported_file) const
@@ -93,6 +110,8 @@ void MeshImporter::SaveBinary(std::vector<Mesh::Vertex> && vertices, std::vector
 	uint32_t num_vertices = vertices.size();
 	uint32_t ranges[2] = { num_indices, num_vertices };
 
+	uint32_t total_vertex_size = sizeof(float3) * 3 + sizeof(float2) + sizeof(uint32_t) * 4 + sizeof(float) * 4;
+	assert(sizeof(Mesh::Vertex) == total_vertex_size);
 	uint32_t size = sizeof(ranges) + sizeof(uint32_t) * num_indices + sizeof(Mesh::Vertex) * num_vertices + sizeof(uint32_t);
 
 	char* data = new char[size]; // Allocate
