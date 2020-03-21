@@ -63,7 +63,10 @@ void ComponentAnimation::Save(Config& config) const
 	config.AddUInt(UUID, "UUID");
 	config.AddUInt((uint64_t)type, "ComponentType");
 	config.AddBool(active, "Active");
-	//config.AddString(animation->exported_file, "AnimationResource");
+
+
+	config.AddString(animation_controller->anim->exported_file, "AnimationResource");
+	config.AddString(animation_controller->sk->exported_file, "SkeletonResource");
 }
 
 void ComponentAnimation::Load(const Config& config)
@@ -72,8 +75,11 @@ void ComponentAnimation::Load(const Config& config)
 	active = config.GetBool("Active", true);
 	std::string animation_path;
 	config.GetString("AnimationResource", animation_path, "");
+	SetAnimation(App->resources->Load<Animation>(animation_path));
 
-	//animation = App->resources->Load<Animation>(animation_path);
+	std::string skeleton_path;
+	config.GetString("SkeletonResource", skeleton_path, "");
+	SetSkeleton(App->resources->Load<Skeleton>(skeleton_path));
 }
 
 void ComponentAnimation::SetAnimation(std::shared_ptr<Animation> & animation)
