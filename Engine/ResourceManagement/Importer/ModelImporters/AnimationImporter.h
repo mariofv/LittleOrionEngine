@@ -24,8 +24,8 @@ public:
 
 private:
 	void GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation & own_format_animation, float scale_factor) const;
-	void GetChannelTranslations(const aiNodeAnim* sample, float animation_duration, std::map<double, float3>& sample_translations) const;
-	void GetChannelRotations(const aiNodeAnim* sample, float animation_duration, std::map<double, Quat>& sample_rotations) const;
+	void GetChannelTranslations(const aiNodeAnim* sample, std::map<size_t, float3>& sample_translations) const;
+	void GetChannelRotations(const aiNodeAnim* sample, std::map<size_t, Quat>& sample_rotations) const;
 	void SaveBinary(const Animation& animation, const std::string& exported_file, const std::string& imported_file) const;
 
 };

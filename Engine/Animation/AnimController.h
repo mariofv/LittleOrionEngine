@@ -31,7 +31,7 @@ public:
 	bool playing = false;
 
 	int current_time = 0;
-	int animation_time = 15000;
+	int animation_time = 0;
 };
 
 #endif //_ANIMCONTROLLER_H_

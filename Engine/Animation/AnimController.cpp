@@ -16,6 +16,7 @@ AnimController::AnimController()
 
 void AnimController::Init()
 {
+	animation_time = (anim->frames/anim->frames_per_second )* 1000;
 	for (size_t i = 0; i < anim->keyframes[0].channels.size(); ++i)
 	{
 		auto & channel = anim->keyframes[0].channels[i];
