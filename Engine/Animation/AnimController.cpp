@@ -89,6 +89,10 @@ bool AnimController::GetTranslation(const std::string& channel_name, float3 & po
 
 	int next_keyframe = (current_keyframe + 1) % (int)anim->frames;
 
+	if (current_keyframe >= anim->keyframes.size() || next_keyframe >= anim->keyframes.size())
+	{
+		return false;
+	}
 	float3 current_translation;
 	float3 next_translation;
 
@@ -125,6 +129,10 @@ bool AnimController::GetRotation(const std::string& channel_name, Quat & rot)
 
 	int next_keyframe = (current_keyframe + 1) % (int)anim->frames;
 
+	if (current_keyframe >= anim->keyframes.size() || next_keyframe >= anim->keyframes.size())
+	{
+		return false;
+	}
 	Quat current_rotation;
 	Quat next_rotation;
 

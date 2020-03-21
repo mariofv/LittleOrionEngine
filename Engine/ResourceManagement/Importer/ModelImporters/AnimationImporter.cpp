@@ -116,13 +116,16 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 				is_rotated = false;
 				rotation = channel_rotations[0];
 			}
-			float4x4 animation_transform = float4x4::FromTRS(translation, rotation, float3::one);
-			animation_transform = accumulated_assimp_transformation * animation_transform;
-			float3 euler_rotation = animation_transform.ToEulerXYX();
-			rotation = Quat::FromEulerXYX(euler_rotation.x, euler_rotation.y, euler_rotation.z);
-			translation *= scale_factor;
-			Animation::Channel imported_channel{ channel_set.first, is_translated, translation, is_rotated, rotation };
-			keyframes[i].push_back(imported_channel);
+			if (is_rotated || is_translated)
+			{
+				float4x4 animation_transform = float4x4::FromTRS(translation, rotation, float3::one);
+				animation_transform = accumulated_assimp_transformation * animation_transform;
+				float3 euler_rotation = animation_transform.ToEulerXYX();
+				rotation = Quat::FromEulerXYX(euler_rotation.x, euler_rotation.y, euler_rotation.z);
+				translation *= scale_factor;
+				Animation::Channel imported_channel{ channel_set.first, is_translated, translation, is_rotated, rotation };
+				keyframes[i].push_back(imported_channel);
+			}
 		}
 	}
 
