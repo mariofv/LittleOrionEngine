@@ -36,6 +36,8 @@ private:
 	void AddNormalUniforms(unsigned int shader_program) const;
 	void BindTexture(Texture::TextureType id) const;
 
+	bool BindTextureNormal(Texture::TextureType id) const;
+
 public:
 	std::string shader_program = "Blinn phong";
 

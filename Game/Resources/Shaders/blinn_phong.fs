@@ -24,7 +24,6 @@ struct Material
 	sampler2D emissive_map;
 	vec4 emissive_color;
 	sampler2D normal_map;
-	float k_normal;
 };
 uniform Material material;
 
@@ -103,7 +102,8 @@ void main()
 {
 
 
-	vec3 normalized_normal = normalize(normal);
+	vec3 normalized_normal = normalize(GetNormalMap(material.normal_map, texCoord));
+	normalized_normal = CreateTangentSpace(normalize(normal), normalize(tangent)) * normalized_normal;
 
 	vec3 result = vec3(0);
 

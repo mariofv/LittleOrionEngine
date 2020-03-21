@@ -25,7 +25,6 @@ struct Material {
 	sampler2D emissive_map;
 	vec4 emissive_color;
 	sampler2D normal_map;
-	float k_normal;
 };
 uniform Material material;
 

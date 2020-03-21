@@ -161,7 +161,22 @@ void ComponentMaterial::AddNormalUniforms(unsigned int shader_program) const
 	glActiveTexture(GL_TEXTURE3);
 	BindTexture(Texture::TextureType::NORMAL);
 	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
-	glUniform1f(glGetUniformLocation(shader_program, "material.k_normal"), k_normal);
+	bool texture_normal = BindTextureNormal(Texture::TextureType::NORMAL);
+	//if (texture_normal)
+	//{
+	//	unsigned index = glGetSubroutineIndex(shader_program, GL_FRAGMENT_SHADER,"ComputeMaterialWithNormalMap");
+	//	unsigned indices[1]; // NUMBER_SUBROUTINES == 1 in our example
+	//	unsigned location = glGetSubroutineUniformLocation(shader_program, GL_FRAGMENT_SHADER,"NormalSoubroutine");
+	//	indices[index] = location;
+	//	glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, indices);
+	//}
+	//else {
+	//	unsigned index = glGetSubroutineIndex(shader_program, GL_FRAGMENT_SHADER, "ComputeMaterialWithoutNormalMap"); 
+	//	unsigned indices[1]; 
+	//	unsigned location = glGetSubroutineUniformLocation(shader_program, GL_FRAGMENT_SHADER, "NormalSoubroutine");
+	//	indices[index] = location;
+	//	glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, indices);
+	//}
 }
 
 void ComponentMaterial::BindTexture(Texture::TextureType id) const
@@ -181,7 +196,23 @@ void ComponentMaterial::BindTexture(Texture::TextureType id) const
 	}
 	glBindTexture(GL_TEXTURE_2D, texture_id);
 }
-
+bool ComponentMaterial::BindTextureNormal(Texture::TextureType id) const
+{
+	GLuint texture_id;
+	
+	if (textures[id] != nullptr)
+	{
+		texture_id = textures[id]->opengl_texture;
+		glBindTexture(GL_TEXTURE_2D, texture_id);
+		return true;
+	}
+	else {
+	
+		return false;
+	}
+	
+	
+}
 void ComponentMaterial::RemoveMaterialTexture(size_t type)
 {
 	App->resources->RemoveResourceFromCacheIfNeeded(textures[type]);
