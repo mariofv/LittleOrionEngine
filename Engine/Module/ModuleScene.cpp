@@ -143,6 +143,7 @@ void ModuleScene::DeleteCurrentScene()
 	RemoveGameObject(root);
 	App->renderer->DeleteAABBTree();
 	App->scripts->scripts.clear();
+	App->scripts->scene_is_changed = true;
 	App->editor->selected_game_object = nullptr;
 }
 
