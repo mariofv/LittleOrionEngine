@@ -3,9 +3,9 @@
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec2 vertex_uv0;
 layout(location = 2) in vec3 vertex_normal;
-layout(location = 3) in ivec4 vertex_joints;
-layout(location = 4) in vec4 vertex_weights;
-layout(location = 5) in uint vertex_num_joints;
+layout(location = 3) in vec4 vertex_tangent;
+layout(location = 4) in uvec4 vertex_joints;
+layout(location = 5) in vec4 vertex_weights;
 
 layout (std140) uniform Matrices
 {
@@ -32,17 +32,18 @@ uniform mat4 palette[64];
 out vec2 texCoord;
 out vec3 position;
 out vec3 normal;
-
+out vec3 color;
 void main()
 {
 
-	mat4 skinning_matrix = mat4(0);
-    for(uint i=0; i<vertex_num_joints; i++)
+	mat4 skinning_matrix = mat4(1.0);
+    for(uint i=0; i<4; i++)
 	{
-		skinning_matrix += vertex_weights[i] * palette[vertex_joints[i]];
+		skinning_matrix += vertex_weights[i] * palette[vertex_joints[32]];
 	}
-	gl_Position = matrices.proj*matrices.view*matrices.model* skinning_matrix * vec4(vertex_position, 1.0);
+	gl_Position = matrices.proj*matrices.view*matrices.model* vec4(vertex_position, 1.0);
 	texCoord = vertex_uv0;
 	position = (matrices.model*vec4(vertex_position, 1.0)).xyz;
 	normal = (matrices.model*vec4(vertex_normal, 0.0)).xyz;
+	color = vec3(skinning_matrix[0][1],skinning_matrix[0][0],skinning_matrix[0][2]);
 }

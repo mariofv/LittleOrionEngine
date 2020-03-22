@@ -3,7 +3,7 @@
 in vec3 position;
 in vec3 normal;
 in vec2 texCoord;
-
+in vec3 color;
 out vec4 FragColor;
 
 struct Material
@@ -94,7 +94,7 @@ void main()
 		result += CalculatePointLight(point_lights[i], normalized_normal);	
 	}
 
-	FragColor = vec4(result,1.0);
+	FragColor = vec4(color,1.0);
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
