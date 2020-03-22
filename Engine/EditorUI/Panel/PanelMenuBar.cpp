@@ -12,6 +12,7 @@
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelResourceDatabase.h"
+#include "EditorUI/Panel/PopupsPanel/PanelPopupSceneManagement.h"
 
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
@@ -47,22 +48,22 @@ void PanelMenuBar::ShowFileMenu()
 {
 	if (ImGui::BeginMenu("File"))
 	{
-
 		if (ImGui::MenuItem(ICON_FA_FILE " New Scene"))
 		{
 			App->editor->OpenScene(DEFAULT_SCENE_PATH);
 		}
 		if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Load Scene"))
 		{
-			App->editor->popups->load_scene_shown = true;
+			App->editor->popups->scene_management_popup.load_scene_shown = true;
 		}
-		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
+		ImGui::Separator();
+		if (App->editor->current_scene_path != "" && ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
 		{
-			App->editor->SaveScene(App->scene->current_scene_path);
+			App->editor->SaveScene(App->editor->current_scene_path);
 		}
 		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene as"))
 		{
-			App->editor->popups->save_scene_shown = true;
+			App->editor->popups->scene_management_popup.save_scene_shown = true;
 		}
 		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
 		{

@@ -28,9 +28,6 @@ public:
 	void DeleteCurrentScene();
 	void NewScene(const std::string &path);
 
-public:
-	std::string current_scene_path = DEFAULT_SCENE_PATH;
-
 private:
 	GameObject *root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
