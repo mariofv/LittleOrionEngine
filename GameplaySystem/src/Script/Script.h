@@ -35,6 +35,8 @@ public:
 	virtual void Load(const Config &config) {};
 	virtual void Link() {};
 
+	virtual void InitPublicGameObjects() {};
+
 public:
 	GameObject *owner = nullptr;
 	Application *App = nullptr;

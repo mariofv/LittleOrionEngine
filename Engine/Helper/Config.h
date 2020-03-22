@@ -32,8 +32,8 @@ public:
 	void AddBool(bool value_to_add, const std::string& name);
 	bool GetBool(const std::string& name, bool opt_value) const;
 
-	void AddString(const std::string value_to_add, const std::string& name);
-	void GetString(const std::string& name, std::string& return_value, const std::string& opt_value) const;
+	ENGINE_API void AddString(const std::string value_to_add, const std::string& name);
+	ENGINE_API void GetString(const std::string& name, std::string& return_value, const std::string& opt_value) const;
 
 	void AddFloat3(const float3 &value_to_addvalue_to_add, const std::string& name);
 	void GetFloat3(const std::string &name, float3 &return_value, const float3 &opt_value) const;

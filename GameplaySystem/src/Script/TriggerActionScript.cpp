@@ -68,13 +68,73 @@ void TriggerActionScript::OnInspector(ImGuiContext* context)
 	//Example to Drag and drop and link GOs in the Editor, Unity-like (WIP)
 	ImGui::Text("TestScriptRuntime: ");
 	ImGui::SameLine();
-	ImGui::Button(is_object.c_str());
-	panel->DropGOTarget(trigger_go);
-	if (trigger_go)
-		is_object = trigger_go->name;
+
+	for(int i  = 0; i < public_gameobjects.size(); ++i)
+	{
+		ImGui::Button(name_gameobjects[i].c_str());
+		panel->DropGOTarget(*(public_gameobjects[i]));
+		if (*public_gameobjects[i])
+			name_gameobjects[i] = (*public_gameobjects[i])->name;
+	}
+	
 }
 
+void TriggerActionScript::Save(Config & config) const
+{
+	for(int i = 0; i < public_gameobjects.size(); ++i)
+	{
+		GameObject* go = (*public_gameobjects[i]);
+
+		if(go != nullptr)
+		{
+			std::string aux_name = "Name";
+			aux_name.append(std::to_string(i));
+			config.AddString(name_gameobjects[i], aux_name);
+			config.AddUInt(go->UUID, name_gameobjects[i]);
+		}
+	}
+}
+void TriggerActionScript::Load(const Config & config)
+{
+	for (int i = 0; i < public_gameobjects.size(); ++i)
+	{
+		std::string aux_name = "Name";
+		aux_name.append(std::to_string(i));
+
+		std::string name_go;
+		config.GetString(aux_name, name_go, "Null");
+
+		if(name_go != "Null")
+		{
+			go_uuids[i] = (config.GetUInt(name_go, 0));
+		}
+
+	}
+}
+void TriggerActionScript::Link()
+{
+	for(int i = 0; i < public_gameobjects.size(); ++i)
+	{
+		if(go_uuids[i] != 0)
+			(*public_gameobjects[i]) = App->scene->GetGameObject(go_uuids[i]);
+	}
+}
 bool TriggerActionScript::OnTriggerEnter() const
 {
 	return trigger_go && owner->aabb.global_bounding_box.Intersects(trigger_go->aabb.global_bounding_box);
+}
+
+void TriggerActionScript::InitPublicGameObjects()
+{
+	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
+
+	public_gameobjects.push_back(&trigger_go);
+	public_gameobjects.push_back(&random_object);
+
+	name_gameobjects.push_back(is_object);
+	name_gameobjects.push_back(is_object);
+
+	go_uuids.push_back(0);
+	go_uuids.push_back(0);
+
 }
