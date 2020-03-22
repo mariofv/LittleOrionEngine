@@ -74,7 +74,16 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 		aiMatrix4x4 accumulated_assimp_local_transformation;
 		for (int i = assimp_hierarchy_nodes.size() - 1; i >= 0; --i)
 		{
-			accumulated_assimp_local_transformation = accumulated_assimp_local_transformation * assimp_hierarchy_nodes[i]->mTransformation;
+			const aiNode* hierarchy_node = assimp_hierarchy_nodes[i];
+			auto it = std::find_if(channel_set.second.begin(), channel_set.second.end(), [hierarchy_node](const aiNodeAnim * node)
+			{
+				return node->mNodeName == hierarchy_node->mName;
+			}
+			);
+			if (it == channel_set.second.end())
+			{
+				accumulated_assimp_local_transformation = accumulated_assimp_local_transformation * assimp_hierarchy_nodes[i]->mTransformation;
+			}
 		}
 
 		float4x4 accumulated_assimp_transformation = SkeletonImporter::GetTransform(accumulated_assimp_local_transformation);
