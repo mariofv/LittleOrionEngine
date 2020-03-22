@@ -15,7 +15,7 @@ public:
 		float3 normals;
 		float3 tangent;
 		float2 tex_coords;
-		int joints[4] = {0,0,0,0};
+		uint32_t joints[4] = {0,0,0,0};
 		float weights[4] = {0,0,0,0};
 		uint32_t num_joints = 0;
 	};

@@ -69,11 +69,15 @@ ImportResult MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mes
 			{
 				new_vertex.joints[j] = vertex_skinning__info[i].first[j];
 			}
-
 			assert(vertex_skinning__info[i].second.size() <= 4);
-			for (size_t j = 0; j < vertex_skinning__info[i].second.size(); ++j)
+			size_t j;
+			for (j = 0; j < vertex_skinning__info[i].second.size(); ++j)
 			{
 				new_vertex.weights[j] = vertex_skinning__info[i].second[j];
+			}
+			for (j; j < 4; ++j)
+			{
+				new_vertex.weights[j] = 1;
 			}
 			new_vertex.num_joints = vertex_skinning__info[i].second.size();
 		}

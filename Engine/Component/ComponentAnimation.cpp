@@ -47,8 +47,7 @@ void ComponentAnimation::Copy(Component * component_to_copy) const
 
 void ComponentAnimation::Render(GLuint shader_program) 
 {
-	const float * pointer = &palette[0][0][0];
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "palette"), palette.size(), GL_TRUE,pointer);
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
 }
 void ComponentAnimation::Update()
 {
