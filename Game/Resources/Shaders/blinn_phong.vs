@@ -25,6 +25,10 @@ struct Material {
 	sampler2D emissive_map;
 	vec4 emissive_color;
 	sampler2D normal_map;
+
+	float roughness;
+	float metalness;
+
 };
 uniform Material material;
 
@@ -40,5 +44,6 @@ void main()
 	position = (matrices.model*vec4(vertex_position, 1.0)).xyz;
 	normal = (matrices.model*vec4(vertex_normal, 0.0)).xyz;
 	tangent = (matrices.model*vec4(vertex_tangent, 0.0)).xyz;
-	gl_Position = matrices.proj*matrices.view*vec4(position, 1.0);
+
+	gl_Position = matrices.proj*matrices.view*vec4(position, 1.0);
 }

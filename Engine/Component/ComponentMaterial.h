@@ -56,6 +56,9 @@ private:
 	float shininess = 1.0f; //TODO-> erase shininess from all the code. 
 	float k_normal = 1.0f;
 
+	float roughness = 0.5f;
+	float metalness = 0.04f;
+
 	bool show_checkerboard_texture = false;
 
 	friend class PanelComponent;
