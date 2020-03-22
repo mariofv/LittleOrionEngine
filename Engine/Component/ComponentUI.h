@@ -14,6 +14,8 @@ public:
 
 	void Save(Config& config) const override {};
 	void Load(const Config& config) override {};
+	Component* Clone(bool original_prefab = false) const override { return nullptr; };
+	void Copy(Component* component_to_copy) const override {};
 	virtual void Render();
 	float3 color = float3(0.0f, 1.0f, 0.0f);
 private:

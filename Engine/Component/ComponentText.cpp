@@ -7,7 +7,7 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
 
-#include "UI/Panel/PanelScene.h"
+#include "EditorUI/Panel/PanelScene.h"
 
 
 

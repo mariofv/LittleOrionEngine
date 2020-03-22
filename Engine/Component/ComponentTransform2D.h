@@ -2,7 +2,7 @@
 #define _COMPONENTTRANSFORM2D_H_
 
 #include "Component.h"
-#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 #include "SDL/SDL.h"
 #include "MathGeoLib.h"
 #include <GL/glew.h>

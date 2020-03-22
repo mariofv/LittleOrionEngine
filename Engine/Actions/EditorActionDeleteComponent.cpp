@@ -3,7 +3,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleScene.h"
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMesh.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 
 EditorActionDeleteComponent::EditorActionDeleteComponent(Component* comp) : component_UUID(comp->UUID),

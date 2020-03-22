@@ -75,7 +75,24 @@ uint64_t Config::GetUInt(const std::string& name, unsigned int opt_value) const
 		return current_value.GetUint64();
 	}
 }
+void Config::AddInt64(int64_t value_to_add, const std::string& name)
+{
+	rapidjson::Value member_name(name.c_str(), *allocator);
+	config_document.AddMember(member_name, value_to_add, *allocator);
+}
 
+int64_t Config::GetInt64(const std::string& name, int64_t opt_value) const
+{
+	if (!config_document.HasMember(name.c_str()))
+	{
+		return opt_value;
+	}
+	else
+	{
+		const rapidjson::Value& current_value = config_document[name.c_str()];
+		return current_value.GetInt64();
+	}
+}
 void Config::AddFloat(float value_to_add, const std::string& name)
 {
 	rapidjson::Value member_name(name.c_str(), *allocator);
@@ -308,7 +325,10 @@ void Config::AddChildrenConfig(std::vector<Config> &value_to_add, const std::str
 
 void Config::GetChildrenConfig(const std::string& name, std::vector<Config>& return_value) const
 {
-	assert(config_document.HasMember(name.c_str()));
+	if (!config_document.HasMember(name.c_str()))
+	{
+		return;
+	}
 
 	const rapidjson::Value& children_configs_value = config_document[name.c_str()];
 	return_value = std::vector<Config>();

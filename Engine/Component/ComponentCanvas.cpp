@@ -3,7 +3,7 @@
 #include "./Module/ModuleDebugDraw.h"
 #include "./Module/ModuleProgram.h"
 #include "Main/Application.h"
-#include "UI/DebugDraw.h" 
+#include "EditorUI/DebugDraw.h" 
 
 ComponentCanvas::ComponentCanvas() : Component(nullptr, ComponentType::CANVAS)
 {

@@ -1,22 +1,28 @@
 #include "Importer.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleFileSystem.h"
+#include "Module/ModuleResourceManager.h"
 #include "Helper/Config.h"
-#include <ResourceManagement/ImportOptions/ImportOptions.h>
+#include <pcg_basic.h>
 
-std::pair<bool, std::string> Importer::Import(const File & file) const
+ImportResult Importer::Import(const File & file, bool force) const
 {
-	std::string already_imported = GetAlreadyImportedResource(file);
-	if (!already_imported.empty()) {
-		return std::pair<bool, std::string>(true, already_imported);
+	ImportResult import_result;
+
+	ImportOptions already_imported = GetAlreadyImportedResource(file);
+	if (already_imported.uuid != 0 && !force) {
+		import_result.succes = true;
+		import_result.exported_file = already_imported.exported_file;
+		return import_result;
 	}
-	std::string uid = "default";
-	SaveMetaFile(file, uid);
-	return std::pair<bool, std::string>(false, uid);
+	std::string exported_file = SaveMetaFile(file.file_path, ResourceType::UNKNOWN);
+
+	return import_result;
 }
 
 
-std::string Importer::GetAlreadyImportedResource(const File & file_to_look_for) const
+ImportOptions Importer::GetAlreadyImportedResource(const File & file_to_look_for) const
 {
 	std::string meta_file_path = GetMetaFilePath(file_to_look_for);
 
@@ -25,36 +31,58 @@ std::string Importer::GetAlreadyImportedResource(const File & file_to_look_for) 
 	
 		ImportOptions options;
 		GetOptionsFromMeta(meta_file,options);
-		if (options.version != IMPORTER_VERSION) {
-			return "";
+		if (options.version != IMPORTER_VERSION || options.timestamp < file_to_look_for.modification_timestamp) {
+			options.uuid = 0;
+			return options;
 		}
-		return options.uid;
+		return options;
 	}
 
-	return "";
+	return ImportOptions();
 }
 
 
-void Importer::SaveMetaFile(const File & imported_file, const std::string & exported_path) const
+std::string Importer::SaveMetaFile(const std::string& imported_path, ResourceType resource_type) const
 {
-
-	std::string meta_file_path = GetMetaFilePath(imported_file);
-
+	std::string meta_file_path = GetMetaFilePath(imported_path);
 
 	Config scene_config;
-	ImportOptions options(exported_path, IMPORTER_VERSION);
+	ImportOptions options;
+	if (App->filesystem->Exists(meta_file_path.c_str()))
+	{
+		ImportOptions old_options;
+		GetOptionsFromMeta(meta_file_path,old_options);
+		options.uuid = old_options.uuid;
+	}
+	else
+	{
+		options.uuid = pcg32_random();
+	}
+
+	std::string uuid_string = std::to_string(options.uuid);
+	std::string exported_path = LIBRARY_METADATA_PATH + "/" + uuid_string.substr(0, 2);
+	App->filesystem->MakeDirectory(exported_path);
+	options.exported_file = exported_path + "/" + uuid_string;
+	options.resource_type = resource_type;
+	options.version = IMPORTER_VERSION;
+	options.imported_file = imported_path;
 	options.Save(scene_config);
 
 	std::string serialized_scene_string;
 	scene_config.GetSerializedString(serialized_scene_string);
 
 	App->filesystem->Save(meta_file_path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
-
+	App->resources->resource_DB->AddEntry(options);
+	return options.exported_file;
 }
 
 
 void Importer::GetOptionsFromMeta(const File& file, ImportOptions & options)
 {
+	if (!App->filesystem->Exists(file.file_path.c_str()))
+	{
+		return;
+	}
 	size_t readed_bytes;
 	char* meta_file_data = App->filesystem->Load(file.file_path.c_str(), readed_bytes);
 	std::string serialized_string = meta_file_data;
@@ -66,7 +94,5 @@ void Importer::GetOptionsFromMeta(const File& file, ImportOptions & options)
 
 std::string Importer::GetMetaFilePath(const File& file)
 {
-	int extension_index = file.file_path.find_last_of(".");
-	extension_index = extension_index != std::string::npos ? extension_index : file.file_path.size();
-	return file.file_path.substr(0, extension_index) + ".meta";
+	return file.file_path + ".meta";
 }

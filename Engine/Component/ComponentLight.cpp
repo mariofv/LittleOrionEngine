@@ -13,6 +13,28 @@ ComponentLight::ComponentLight(GameObject * owner) : Component(owner, ComponentT
 
 }
 
+Component* ComponentLight::Clone(bool original_prefab) const
+{
+	ComponentLight * created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentLight();
+	}
+	else
+	{
+		created_component = App->lights->CreateComponentLight();
+	}
+	*created_component = *this;
+	return created_component;
+};
+
+void ComponentLight::Copy(Component * component_to_copy) const
+{
+	*component_to_copy = *this;
+	*static_cast<ComponentLight*>(component_to_copy) = *this;
+}
+
+
 void ComponentLight::Delete()
 {
 	App->lights->RemoveComponentLight(this);
