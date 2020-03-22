@@ -84,7 +84,7 @@ void Mesh::LoadInMemory()
 	
 	// VERTEX JOINTS
 	glEnableVertexAttribArray(4);
-	glVertexAttribPointer(4, 4, GL_UNSIGNED_INT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, joints));
+	glVertexAttribIPointer(4, 4, GL_UNSIGNED_INT, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, joints));
 
 	// VERTEX WEIGHTS
 	glEnableVertexAttribArray(5);

@@ -36,14 +36,13 @@ out vec3 color;
 void main()
 {
 
-	mat4 skinning_matrix = mat4(1.0);
+	mat4 skinning_matrix = mat4(0);
     for(uint i=0; i<4; i++)
 	{
-		skinning_matrix += vertex_weights[i] * palette[vertex_joints[32]];
+		skinning_matrix += vertex_weights[i] * palette[vertex_joints[i]];
 	}
-	gl_Position = matrices.proj*matrices.view*matrices.model* vec4(vertex_position, 1.0);
+	gl_Position = matrices.proj*matrices.view*matrices.model*skinning_matrix *vec4(vertex_position, 1.0);
 	texCoord = vertex_uv0;
 	position = (matrices.model*vec4(vertex_position, 1.0)).xyz;
 	normal = (matrices.model*vec4(vertex_normal, 0.0)).xyz;
-	color = vec3(skinning_matrix[0][1],skinning_matrix[0][0],skinning_matrix[0][2]);
 }
