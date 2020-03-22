@@ -122,12 +122,12 @@ void main()
 
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
 	{
-		result += CalculateDirectionalLight(normalized_normal);
+		result += CalculateDirectionalLight(normal);
 	}
 
 	for (int i = 0; i < num_spot_lights; ++i)
 	{
-		result += CalculateSpotLight(spot_lights[i], normalized_normal);
+		result += CalculateSpotLight(spot_lights[i], normal);
 	}
 
 	for (int i = 0; i < num_point_lights; ++i)
