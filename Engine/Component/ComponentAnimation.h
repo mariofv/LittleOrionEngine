@@ -5,6 +5,7 @@
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
+#include <GL/glew.h>
 #include <memory>
 class AnimController;
 class GameObject;
@@ -32,6 +33,8 @@ public:
 	void SetAnimation(std::shared_ptr<Animation> & animation);
 	void SetSkeleton(std::shared_ptr<Skeleton> & skeleton);
 
+	void Render(GLuint shader_program);
+
 	void Update() override;
 	void Delete() override;
 
@@ -45,6 +48,7 @@ public:
 
 private:
 	friend class PanelComponent;
+	std::vector<float4x4> palette;
 };
 
 #endif //_COMPONENTANIMATION_H_

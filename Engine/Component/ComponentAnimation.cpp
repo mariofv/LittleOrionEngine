@@ -11,6 +11,8 @@
 ComponentAnimation::ComponentAnimation() : Component(nullptr, ComponentType::ANIMATION)
 {
 	animation_controller = new AnimController();
+	SetAnimation(App->resources->Load<Animation>("Library/Metadata/38/3800295065"));
+	SetSkeleton(App->resources->Load<Skeleton>("Library/Metadata/29/2987806620"));
 }
 
 ComponentAnimation::ComponentAnimation(GameObject * owner) : Component(owner, ComponentType::ANIMATION)
@@ -43,6 +45,11 @@ void ComponentAnimation::Copy(Component * component_to_copy) const
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;
 }
 
+void ComponentAnimation::Render(GLuint shader_program) 
+{
+	const float * pointer = &palette[0][0][0];
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "palette"), palette.size(), GL_TRUE,pointer);
+}
 void ComponentAnimation::Update()
 {
 	animation_controller->Update();
@@ -85,11 +92,15 @@ void ComponentAnimation::Load(const Config& config)
 void ComponentAnimation::SetAnimation(std::shared_ptr<Animation> & animation)
 {
 	animation_controller->anim = animation;
-	animation_controller->Init();
 }
 void ComponentAnimation::SetSkeleton(std::shared_ptr<Skeleton> & skeleton)
 {
 	animation_controller->sk = skeleton;
+	palette.resize(skeleton->skeleton.size());
+	for (auto & matrix : palette)
+	{
+		matrix = float4x4::identity;
+	}
 	animation_controller->Init();
 }
 void ComponentAnimation::UpdateBone(GameObject* current_bone)
@@ -105,9 +116,17 @@ void ComponentAnimation::UpdateBone(GameObject* current_bone)
 	{
 		current_bone->transform.SetRotation(bone_rotation.ToFloat3x3());
 	}
+	auto it = std::find_if(animation_controller->sk->skeleton.begin(), animation_controller->sk->skeleton.end(), [current_bone](const Skeleton::Joint & joint) {
+		return current_bone->name == joint.name;
+	});
 
+	if (it != animation_controller->sk->skeleton.end())
+	{
+		palette[it - animation_controller->sk->skeleton.begin()] = current_bone->transform.GetGlobalModelMatrix() * (*it).transform_global.Inverted();
+	}
 	for (auto& children_bone : current_bone->children)
 	{
 		UpdateBone(children_bone);
 	}
+
 }

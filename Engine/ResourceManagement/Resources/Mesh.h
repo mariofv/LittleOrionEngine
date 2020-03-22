@@ -15,7 +15,7 @@ public:
 		float3 normals;
 		float3 tangent;
 		float2 tex_coords;
-		uint32_t joints[4] = {0,0,0,0};
+		int joints[4] = {0,0,0,0};
 		float weights[4] = {0,0,0,0};
 		uint32_t num_joints = 0;
 	};
@@ -24,6 +24,7 @@ public:
 	~Mesh();
 
 	GLuint GetVAO() const;
+	GLuint GetVBO() const;
 
 	int GetNumTriangles() const;
 	std::vector<Triangle> GetTriangles() const;

@@ -8,8 +8,8 @@
 class AnimController
 {
 public:
-	AnimController();
-	~AnimController();
+	AnimController() = default;
+	~AnimController() = default;
 	void Init();
 
 	void Play();

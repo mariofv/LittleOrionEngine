@@ -7,13 +7,6 @@
 #include <math.h>
 #include <algorithm>
 
-AnimController::AnimController()
-{
-	anim = App->resources->Load<Animation>("Library/Metadata/38/3800295065");
-	sk = App->resources->Load<Skeleton>("Library/Metadata/29/2987806620");
-	Init();
-}
-
 void AnimController::Init()
 {
 	animation_time = (anim->frames/anim->frames_per_second )* 1000;
@@ -44,9 +37,6 @@ void AnimController::Init()
 	}
 }
 
-AnimController::~AnimController()
-{
-}
 
 void AnimController::Play()
 { 
