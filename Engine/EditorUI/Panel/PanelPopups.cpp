@@ -1,11 +1,13 @@
 #include "PanelPopups.h"
 
 #include "Main/Application.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScene.h"
 #include "Module/ModuleScriptManager.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
-#include <imgui.h>
+
 
 PanelPopups::PanelPopups()
 {
@@ -17,14 +19,14 @@ PanelPopups::PanelPopups()
 void PanelPopups::Render()
 {
 	RenderAssetsLoadingPopup();
+	CreateScript();
 	material_selector_popup.Render();
 	mesh_selector_popup.Render();
+	scene_management_popup.Render();
 }
 
 void PanelPopups::RenderAssetsLoadingPopup()
 {
-
-	CreateScript();
 	if (!show_assets_loading_popup)
 	{
 		show_assets_loading_popup = true;

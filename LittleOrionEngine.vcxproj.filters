@@ -403,6 +403,7 @@
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp">
       <Filter>Engine\AI</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -786,6 +787,7 @@
     <ClInclude Include="Engine\AI\SampleDebugDraw.h">
       <Filter>Engine\AI</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

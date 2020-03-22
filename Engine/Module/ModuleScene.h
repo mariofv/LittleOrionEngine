@@ -1,13 +1,10 @@
 #ifndef _MODULESCENE_H_
 #define _MODULESCENE_H_
 #define ENGINE_EXPORTS
+
 #include "Module.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
-
-#include <ImGuizmo.h>
-
-class ComponentCamera;
 
 class ModuleScene : public Module
 {
@@ -30,6 +27,7 @@ public:
 
 	void DeleteCurrentScene();
 	void NewScene(const std::string &path);
+
 private:
 	GameObject *root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
