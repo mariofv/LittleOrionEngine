@@ -28,5 +28,7 @@ public:
 
 private:
 	void OnTransformChange();
+
+	friend class PanelComponent;
 };
 

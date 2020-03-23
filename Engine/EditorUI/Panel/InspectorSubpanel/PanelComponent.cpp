@@ -40,33 +40,63 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-
-		if (ImGui::DragFloat3("Translation", transform->translation.ptr(), 0.01f))
+		if (transform->owner->GetComponent(Component::ComponentType::UI) != nullptr) //Render transform 2d
 		{
-			transform->OnTransformChange();
-			transform->modified_by_user = true;
-		}
-		//UndoRedo
-		CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION, transform);
+			ComponentTransform2D* transform_2d = &transform->owner->transform_2d;
 
-		if (ImGui::DragFloat3("Rotation", transform->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
+			if (ImGui::DragFloat2("Translation", transform_2d->position.ptr(), 0.01f))
+			{
+				transform_2d->OnTransformChange();
+				transform_2d->modified_by_user = true;
+			}
+			//UndoRedo
+			CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION2D, transform_2d);
+
+			if (ImGui::DragFloat("Rotation", transform->rotation.ptr(), 0.1f, -180.f, 180.f))
+			{
+				transform_2d->OnTransformChange();
+				transform_2d->modified_by_user = true;
+			}
+			//UndoRedo
+			CheckClickForUndo(ModuleActions::UndoActionType::ROTATION2D, transform_2d);
+
+			if (ImGui::DragFloat2("Size", transform_2d->size.ptr(), 0.01f))
+			{
+				transform_2d->OnTransformChange();
+				transform_2d->modified_by_user = true;
+			}
+			//UndoRedo
+			CheckClickForUndo(ModuleActions::UndoActionType::SCALE2D, transform_2d);
+		}
+		else //Render transform 3d
 		{
-			transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
-			transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
-			transform->OnTransformChange();
-			transform->modified_by_user = true;
-		}
-		//UndoRedo
-		CheckClickForUndo(ModuleActions::UndoActionType::ROTATION, transform);
+			if (ImGui::DragFloat3("Translation", transform->translation.ptr(), 0.01f))
+			{
+				transform->OnTransformChange();
+				transform->modified_by_user = true;
+			}
+			//UndoRedo
+			CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION, transform);
 
-		if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
-		{
-			transform->OnTransformChange();
-			transform->modified_by_user = true;
-		}
+			if (ImGui::DragFloat3("Rotation", transform->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
+			{
+				transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
+				transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
+				transform->OnTransformChange();
+				transform->modified_by_user = true;
+			}
+			//UndoRedo
+			CheckClickForUndo(ModuleActions::UndoActionType::ROTATION, transform);
 
-		//UndoRedo
-		CheckClickForUndo(ModuleActions::UndoActionType::SCALE, transform);
+			if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
+			{
+				transform->OnTransformChange();
+				transform->modified_by_user = true;
+			}
+
+			//UndoRedo
+			CheckClickForUndo(ModuleActions::UndoActionType::SCALE, transform);
+		}
 	}
 }
 
@@ -441,6 +471,15 @@ void PanelComponent::CheckClickForUndo(ModuleActions::UndoActionType  type, Comp
 			break;
 		case ModuleActions::UndoActionType::SCALE:
 			App->actions->previous_transform = ((ComponentTransform*)component)->GetScale();
+			break;
+		case ModuleActions::UndoActionType::TRANSLATION2D:
+			App->actions->action_component = (ComponentTransform2D*) component;
+			break;
+		case ModuleActions::UndoActionType::ROTATION2D:
+			App->actions->action_component = (ComponentTransform2D*) component;
+			break;
+		case ModuleActions::UndoActionType::SCALE2D:
+			App->actions->action_component = (ComponentTransform2D*) component;
 			break;
 		case ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT:
 			App->actions->previous_light_color[0] = ((ComponentLight*)component)->light_color[0];
