@@ -26,11 +26,6 @@ GLuint Mesh::GetVAO() const
 	return vao;
 }
 
-GLuint Mesh::GetVBO() const
-{
-	return vbo;
-}
-
 int Mesh::GetNumTriangles() const
 {
 	return indices.size() / 3;
@@ -89,10 +84,6 @@ void Mesh::LoadInMemory()
 	// VERTEX WEIGHTS
 	glEnableVertexAttribArray(5);
 	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, weights));
-
-	/*// VERTEX NUM WEIGHTS
-	glEnableVertexAttribArray(6);
-	glVertexAttribPointer(6, 1, GL_UNSIGNED_INT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, num_joints));*/
 
 	glBindVertexArray(0);
 }

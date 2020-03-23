@@ -2,8 +2,8 @@
 #define _SKELETON_H_
 
 #include "Resource.h"
-#include <Component/ComponentTransform.h> //Need transform separate from component
-#include <ResourceManagement/Loaders/SkeletonLoader.h>
+#include "Component/ComponentTransform.h" //Need transform separate from component
+#include "ResourceManagement/Loaders/SkeletonLoader.h"
 #include <vector>
 
 class Skeleton : public Resource

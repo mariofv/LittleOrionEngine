@@ -32,7 +32,6 @@ uniform mat4 palette[64];
 out vec2 texCoord;
 out vec3 position;
 out vec3 normal;
-out vec3 color;
 void main()
 {
 

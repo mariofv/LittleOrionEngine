@@ -3,7 +3,6 @@
 in vec3 position;
 in vec3 normal;
 in vec2 texCoord;
-in vec3 color;
 out vec4 FragColor;
 
 struct Material
