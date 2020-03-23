@@ -6,17 +6,21 @@
 #include "Module/ModuleFileSystem.h"
 ImportResult SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const std::string& imported_file, float unit_scale_factor, Skeleton & skeleton) const
 {
-	aiString bone_name = mesh->mBones[0]->mName;
-	aiNode * bone = scene->mRootNode->FindNode(bone_name);
-
-	//bone->mParent->mNumChildren <= 1 arbitrary rule just base in zombunny and player meshes
-	while (bone->mParent && bone->mParent != scene->mRootNode && bone->mParent->mNumChildren <= 1)
-	{
-		bone = bone->mParent;
-	}
-
 	skeleton.scale_factor = unit_scale_factor;
-	ImportChildBone(mesh, bone, - 1,bone->mTransformation, bone->mTransformation,skeleton);
+
+	for (size_t i = 0; i < mesh->mNumBones; i++)
+	{
+		aiString bone_name = mesh->mBones[i]->mName;
+		aiNode * bone = scene->mRootNode->FindNode(bone_name);
+
+		//bone->mParent->mNumChildren <= 1 arbitrary rule just base in zombunny and player meshes
+		while (bone->mParent && bone->mParent != scene->mRootNode && bone->mParent->mNumChildren <= 1)
+		{
+			bone = bone->mParent;
+		}
+
+		ImportChildBone(mesh, bone, -1, bone->mTransformation, bone->mTransformation, skeleton);
+	}
 
 	if (skeleton.skeleton.size() > 0)
 	{
@@ -57,7 +61,11 @@ void SkeletonImporter::ImportChildBone(const aiMesh* mesh, const aiNode * previu
 		{
 		
 			Skeleton::Joint bone{ GetTransform(current_transformation.Inverse()), GetTransform(local_transformation),previous_joint_index, bone_name};
-			skeleton.skeleton.push_back(bone);
+			auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&bone_name](const Skeleton::Joint & joint) { return joint.name == bone_name; });
+			if (it == skeleton.skeleton.end())
+			{
+				skeleton.skeleton.push_back(bone);
+			}
 			next_joint = skeleton.skeleton.size() - 1;
 			local_transformation = aiMatrix4x4();
 			if (next_joint == 0)

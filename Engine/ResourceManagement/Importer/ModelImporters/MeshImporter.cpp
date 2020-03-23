@@ -70,15 +70,22 @@ ImportResult MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mes
 				new_vertex.joints[j] = vertex_skinning__info[i].first[j];
 			}
 			assert(vertex_skinning__info[i].second.size() <= 4);
-			size_t j;
-			for (j = 0; j < vertex_skinning__info[i].second.size(); ++j)
+
+			float weights_sum = 0;
+			for (size_t j = 0; j < vertex_skinning__info[i].second.size(); ++j)
 			{
-				new_vertex.weights[j] = vertex_skinning__info[i].second[j];
+				weights_sum += vertex_skinning__info[i].second[j];
 			}
-			for (j; j < 4; ++j)
+			
+			auto normalize_factor = 1.0 / weights_sum;
+			weights_sum = 0;
+			for (size_t j = 0; j < vertex_skinning__info[i].second.size(); ++j)
 			{
-				new_vertex.weights[j] = 1;
+				new_vertex.weights[j] = vertex_skinning__info[i].second[j] * normalize_factor;
+				weights_sum += new_vertex.weights[j];
 			}
+			int weights_sum_round = std::round(weights_sum);
+			//assert(weights_sum_round <= 1 && weights_sum_round >= 0);
 			new_vertex.num_joints = vertex_skinning__info[i].second.size();
 		}
 		vertices.push_back(new_vertex);
@@ -94,7 +101,7 @@ std::vector<std::pair<std::vector<uint32_t>, std::vector<float>>> MeshImporter::
 	for (size_t j = 0; j < mesh->mNumBones; ++j)
 	{
 		aiBone * mesh_bone = mesh->mBones[j];
-		std::string mesh_bone_name(mesh_bone->mName.C_Str()); //TODO: Change to use hash instead of name everywhere (Mesh, animation, skeleton) just like this for better debugging
+		std::string mesh_bone_name(mesh_bone->mName.C_Str()); //TODO: Change to use hash instead of name everywhere (Mesh, animation, skeleton)
 		auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&mesh_bone_name](const Skeleton::Joint & joint)
 		{
 			return joint.name == mesh_bone_name;
