@@ -1,0 +1,34 @@
+#ifndef  __PLAYERMOVEMENT_H__
+#define  __PLAYERMOVEMENT_H__
+
+#include "Script.h"
+
+class PlayerMovement : public Script
+{
+public:
+	PlayerMovement();
+	~PlayerMovement() = default;
+
+	void Awake() override;
+	void Start() override;
+	//void Update() override;
+
+	void OnInspector(ImGuiContext*) override;
+
+	void Move();
+
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
+	void Link() override;
+
+private:
+	PanelComponent* panel = nullptr;
+	GameObject* example = nullptr;
+	uint64_t exampleUUID = -1;
+
+	float speed = 0.5f;
+	float rotation_speed = 0.01f;
+
+};
+extern "C" SCRIPT_API PlayerMovement* PlayerMovementDLL(); //This is how we are going to load the script
+#endif

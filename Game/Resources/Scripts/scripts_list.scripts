@@ -5,6 +5,8 @@
         "WalkableScript",
         "TriggerActionScript",
         "CameraController",
-        "SceneCamerasController"
+        "SceneCamerasController",
+        "PlayerController",
+        "PlayerMovement"
     ]
 }
