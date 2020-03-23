@@ -123,6 +123,7 @@ void ComponentMaterial::Render(unsigned int shader_program) const
 	AddSpecularUniforms(shader_program);
 	AddAmbientOclusionUniforms(shader_program);
 	AddNormalUniforms(shader_program);
+	AddExtraUniforms(shader_program);
 }
 
 void ComponentMaterial::AddDiffuseUniforms(unsigned int shader_program) const
@@ -154,7 +155,6 @@ void ComponentMaterial::AddSpecularUniforms(unsigned int shader_program) const
 	//Material BRDF variables
 	glUniform1f(glGetUniformLocation(shader_program, "material.roughness"), roughness);
 	glUniform1f(glGetUniformLocation(shader_program, "material.metalness"), metalness);
-	glUniform1f(glGetUniformLocation(shader_program, "material.alpha_blending"), alpha_blending);
 
 }
 
@@ -187,6 +187,10 @@ void ComponentMaterial::AddNormalUniforms(unsigned int shader_program) const
 	//	indices[index] = location;
 	//	glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, indices);
 	//}
+}
+void ComponentMaterial::AddExtraUniforms(unsigned int shader_program) const
+{
+	glUniform1f(glGetUniformLocation(shader_program, "material.alpha_blending"), alpha_blending);
 }
 
 void ComponentMaterial::BindTexture(Texture::TextureType id) const
@@ -237,4 +241,22 @@ void ComponentMaterial::SetMaterialTexture(size_t type, const std::shared_ptr<Te
 const std::shared_ptr<Texture>& ComponentMaterial::GetMaterialTexture(size_t  type) const
 {
 	return textures[type];
+}
+
+const char* ComponentMaterial::TypeOfMaterial(const MaterialType material_type)
+{
+	switch (material_type)
+	{
+		case ComponentMaterial::MaterialType::MATERIALOPAQUE:
+			return "Opaque";
+			break;
+		case ComponentMaterial::MaterialType::MATERIALTRANSPARENT:
+			return "Transparent";
+			break;
+	}
+}
+
+void ComponentMaterial::ChangeTypeOfMaterial(const MaterialType new_material_type)
+{
+	material_type = new_material_type;
 }

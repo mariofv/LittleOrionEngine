@@ -92,6 +92,7 @@ void PanelComponent::ShowComponentMeshWindow(ComponentMesh *mesh)
 
 void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 {
+	
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (ImGui::BeginCombo("Shader", material->shader_program.c_str()))
@@ -109,7 +110,24 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 			}
 			ImGui::EndCombo();
 		}
+		if (ImGui::BeginCombo("Material Type", material->TypeOfMaterial(material->material_type)))
+		{
+			
+			int index = static_cast<int>(ComponentMaterial::MaterialType::NUM_OF_ITEMS);
+			for (int i = 0; i < index; ++i)
+			{
+				bool is_selected = (material->material_type == ((ComponentMaterial::MaterialType)i));
+				if (ImGui::Selectable(material->TypeOfMaterial((ComponentMaterial::MaterialType)i), is_selected))
+				{
+					material->ChangeTypeOfMaterial((ComponentMaterial::MaterialType)i);
+					const char* name = material->TypeOfMaterial(material->material_type);
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();
+				}
 
+			}
+			ImGui::EndCombo();
+		}
 		float window_width = ImGui::GetWindowWidth();
 		for (size_t i = 0; i < material->textures.size(); ++i)
 		{
@@ -158,6 +176,11 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 				{
 					ImGui::ColorEdit3("Diffuse Color", material->diffuse_color);
 					ImGui::SliderFloat("k diffuse", &material->k_diffuse, 0, 1);
+					if (material->material_type == ComponentMaterial::MaterialType::MATERIALTRANSPARENT) {
+						ImGui::SliderFloat("Transparency", &material->alpha_blending, 0.01, 1);
+					}
+					
+					
 				}
 				if (type == Texture::TextureType::EMISSIVE)
 				{
@@ -174,13 +197,14 @@ void PanelComponent::ShowComponentMaterialWindow(ComponentMaterial *material)
 					ImGui::SliderFloat("Shininess", &material->shininess, 0, 1);
 					ImGui::SliderFloat("Roughness", &material->roughness, 0, 100);
 					ImGui::SliderFloat("Metalness", &material->metalness, 0, 100);
-					ImGui::SliderFloat("Alpha Blending", &material->alpha_blending, 0.1, 1);
+					
+					
 				}
 				if (type == Texture::TextureType::NORMAL)
 				{
 					
 				}
-			
+				
 				ImGui::Separator();
 			}
 		}

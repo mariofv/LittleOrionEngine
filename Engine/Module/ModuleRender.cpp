@@ -343,7 +343,7 @@ void ModuleRender::SetBlending(bool gl_blend)
 	if (gl_blend)
 	{
 		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_COLOR);
+		glBlendFunc(GL_ONE, GL_ONE);
 		glBlendEquation(GL_FUNC_ADD);
 	}
 	else {

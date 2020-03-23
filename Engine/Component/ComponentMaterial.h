@@ -13,6 +13,13 @@
 class ComponentMaterial : public Component
 {
 public:
+	enum class MaterialType
+	{
+		MATERIALOPAQUE,
+		MATERIALTRANSPARENT,
+		NUM_OF_ITEMS
+	};
+
 	ComponentMaterial();
 	ComponentMaterial(GameObject * owner);
 	~ComponentMaterial();
@@ -26,6 +33,8 @@ public:
 
 	void SetMaterialTexture(size_t type, const std::shared_ptr<Texture> & new_texture);
 	const std::shared_ptr<Texture>& GetMaterialTexture(size_t type) const;
+	const char* TypeOfMaterial(const MaterialType material_type);
+	void ChangeTypeOfMaterial(const MaterialType new_material_type);
 	void RemoveMaterialTexture(size_t type);
 
 private:
@@ -34,6 +43,7 @@ private:
 	void AddSpecularUniforms(unsigned int shader_program) const;
 	void AddAmbientOclusionUniforms(unsigned int shader_program) const;
 	void AddNormalUniforms(unsigned int shader_program) const;
+	void AddExtraUniforms(unsigned int shader_program) const;
 	void BindTexture(Texture::TextureType id) const;
 
 	bool BindTextureNormal(Texture::TextureType id) const;
@@ -58,6 +68,9 @@ private:
 	float alpha_blending = 1.0F;
 	float roughness = 0.5f;
 	float metalness = 0.04f;
+
+	//Material type
+	MaterialType material_type = MaterialType::MATERIALOPAQUE;
 
 	bool show_checkerboard_texture = false;
 
