@@ -30,6 +30,7 @@ struct Material
 
 	float roughness;
 	float metalness;
+	float alpha_blending;
 };
 uniform Material material;
 
@@ -75,6 +76,7 @@ uniform SpotLight spot_lights[10];
 
 uniform int num_point_lights;
 uniform PointLight point_lights[10];
+
 
 //COLOR TEXTURES
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
@@ -136,8 +138,9 @@ void main()
 	}
 
 	FragColor = vec4(result,1.0);
+	FragColor.a=material.alpha_blending;
 
-	FragColor.rgb = pow(FragColor.rgb, vec3(1.0/gamma));
+	
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
@@ -190,7 +193,6 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal)
 	vec4 specular_color  = GetSpecularColor(material, texCoord);
 	vec3 occlusion_color = GetOcclusionColor(material, texCoord);
 	vec3 emissive_color  = GetEmissiveColor(material, texCoord);
-
 
 	return directional_light.color * (
 		emissive_color
@@ -263,8 +265,7 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal)
 
 	float distance    = length(point_light.position - position);
 	float attenuation = 1.0 / (point_light.constant + point_light.linear * distance + 
-    		    point_light.quadratic * (distance * distance));    
-
+    		    point_light.quadratic * (distance));    
 
 	return point_light.color * (
 		emissive_color
@@ -325,7 +326,8 @@ float GeometrySmith(vec3 normal, vec3 view_dir, vec3 light_dir, float roughness)
 }
 
 //Schlick
-vec3 Fresnel(vec3 light_dir, vec3 normal, float metalness){
+vec3 Fresnel(vec3 light_dir, vec3 normal, float metalness)
+{
 
 	vec3 F0 = vec3(metalness); 
 	float cosTheta = max(dot(light_dir, normal), 0.0);
@@ -334,7 +336,8 @@ vec3 Fresnel(vec3 light_dir, vec3 normal, float metalness){
 }
 
 //Cook-Torrance
-vec3 BRDF(vec3 view_dir, vec3 normal, vec3 half_dir, vec3 light_dir, float roughness, float metalness){
+vec3 BRDF(vec3 view_dir, vec3 normal, vec3 half_dir, vec3 light_dir, float roughness, float metalness)
+{
 	
 	float D = DistributionGGX(normal, half_dir, roughness);
 	float G = GeometrySmith(normal, view_dir, light_dir, roughness);
@@ -345,9 +348,7 @@ vec3 BRDF(vec3 view_dir, vec3 normal, vec3 half_dir, vec3 light_dir, float rough
 	float denom = 4.0 * max(dot(normal, view_dir), 0.0) * max(dot(normal, light_dir), 0.0);
 	vec3 specular = num / max(denom, 0.001); 
 	
-	return specular;
-
-	
+	return specular;	
 }
 
 

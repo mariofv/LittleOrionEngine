@@ -49,6 +49,7 @@ void ComponentMaterial::Save(Config& config) const
 	config.AddFloat(k_specular, "kSpecular");
 	config.AddFloat(k_diffuse, "kDiffuse");
 	config.AddFloat(shininess, "shininess");
+	config.AddFloat(alpha_blending, "alpha_blending");
 
 	//colors
 	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
@@ -88,6 +89,7 @@ void ComponentMaterial::Load(const Config& config)
 	shininess = config.GetFloat("shininess", 1.0f);
 	roughness = config.GetFloat("roughness", 0.5f);
 	metalness = config.GetFloat("metalness", 0.04f);
+	alpha_blending = config.GetFloat("alpha_blending", 1.0f);
 
 	//colors
 	float4 diffuse;
@@ -152,6 +154,7 @@ void ComponentMaterial::AddSpecularUniforms(unsigned int shader_program) const
 	//Material BRDF variables
 	glUniform1f(glGetUniformLocation(shader_program, "material.roughness"), roughness);
 	glUniform1f(glGetUniformLocation(shader_program, "material.metalness"), metalness);
+	glUniform1f(glGetUniformLocation(shader_program, "material.alpha_blending"), alpha_blending);
 
 }
 

@@ -28,6 +28,7 @@ struct Material {
 
 	float roughness;
 	float metalness;
+	float alpha_blending;
 
 };
 uniform Material material;
