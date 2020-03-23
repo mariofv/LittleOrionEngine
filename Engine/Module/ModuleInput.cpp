@@ -319,6 +319,12 @@ ENGINE_API bool ModuleInput::GetGameInput(const char* name)
 			return true;
 	}
 
+	for (auto &controller : button.controller_buttons)
+	{
+		if (GetControllerButton(controller))
+			return true;
+	}
+
 	return false;
 }
 
@@ -337,6 +343,12 @@ ENGINE_API bool ModuleInput::GetGameInputDown(const char* name)
 			return true;
 	}
 
+	for (auto &controller : button.controller_buttons)
+	{
+		if (GetControllerButtonDown(controller))
+			return true;
+	}
+
 	return false;
 }
 
@@ -352,6 +364,12 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name)
 	for (auto &mouse : button.mouse_buttons)
 	{
 		if (GetMouseButtonUp(mouse))
+			return true;
+	}
+
+	for (auto &controller : button.controller_buttons)
+	{
+		if (GetControllerButtonUp(controller))
 			return true;
 	}
 

@@ -110,7 +110,7 @@ void WalkableScript::Move()
 	}
 
 	///Jump handle
-	if(App->input->GetKey(KeyCode::Space))
+	if(App->input->GetGameInput("Jump"))
 	{
 		if(!is_jumping)
 		{

@@ -476,6 +476,7 @@ void PanelConfiguration::ShowInputOptions()
 			if(ImGui::Button("Delete Keycodes"))
 			{
 				keys.clear();
+				string_keys.clear();
 			}
 
 			ImGui::Separator();
@@ -519,6 +520,46 @@ void PanelConfiguration::ShowInputOptions()
 
 			ImGui::Separator();
 
+
+			ImGui::Text("Controller Keys:");
+			for (auto controller_key : controller_keys)
+			{
+				ImGui::Text(controller_keys_string[(int)controller_key]);
+			}
+
+			ImGui::Separator();
+
+			static const char* controller_current = controller_keys_string[0];
+			if (ImGui::BeginCombo("ControllerCodes", controller_current))
+			{
+				for (int n = 0; n < controller_keys_string.size(); ++n)
+				{
+					bool is_selected = (controller_current == controller_keys_string[n]);
+					if (ImGui::Selectable(controller_keys_string[n], is_selected))
+					{
+						controller_current = controller_keys_string[n];
+						selected_controller = ControllerCode(n);
+					}
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+				}
+				ImGui::EndCombo();
+			}
+
+			if (ImGui::Button("Add Controller Button"))
+			{
+				controller_keys.insert((int)selected_controller);
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Delete Controller Buttons"))
+			{
+				controller_keys.clear();
+			}
+
+			ImGui::Separator();
+
 			if(ImGui::Button("Create Game Input"))
 			{
 				GameInput game_input;
@@ -531,6 +572,11 @@ void PanelConfiguration::ShowInputOptions()
 				for (auto mouse : mouse_keys)
 				{
 					game_input.mouse_buttons.push_back((MouseButton)mouse);
+				}
+
+				for (auto controller_key : controller_keys)
+				{
+					game_input.controller_buttons.push_back((ControllerCode)controller_key);
 				}
 
 				App->input->CreateGameInput(game_input);

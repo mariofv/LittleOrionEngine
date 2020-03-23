@@ -306,7 +306,7 @@ enum class ControllerCode
 	UpDpad = SDL_CONTROLLER_BUTTON_DPAD_UP,
 	DownDpad = SDL_CONTROLLER_BUTTON_DPAD_DOWN,
 	LeftDpad = SDL_CONTROLLER_BUTTON_DPAD_LEFT,
-	RightDpad = SDL_CONTROLLER_BUTTON_DPAD_RIGHT,
+	RightDpad = SDL_CONTROLLER_BUTTON_DPAD_RIGHT
 };
 
 enum class ControllerAxis
@@ -333,10 +333,12 @@ struct GameInput
 	std::string name;
 	std::vector<KeyCode> keys;
 	std::vector<MouseButton> mouse_buttons;
+	std::vector<ControllerCode> controller_buttons;
 
 	void Save(Config &config)
 	{
 		config.AddString(name, "Name");
+		//KeyCodes
 		config.AddUInt(keys.size(), "SizeKeys");
 		for(unsigned int i = 0; i < keys.size(); ++i)
 		{
@@ -344,12 +346,19 @@ struct GameInput
 			
 			config.AddUInt((uint64_t)keys[i], name_k);
 		}
-
+		//MouseButtons
 		config.AddUInt(mouse_buttons.size(), "SizeMouse");
 		for (unsigned int j = 0; j < mouse_buttons.size(); ++j)
 		{
 			std::string name_m("m" + std::to_string(j));
 			config.AddUInt((uint64_t)mouse_buttons[j], name_m);
+		}
+		//ControllerCodes
+		config.AddUInt(controller_buttons.size(), "SizeController");
+		for (unsigned int k = 0; k < controller_buttons.size(); ++k)
+		{
+			std::string name_c("c" + std::to_string(k));
+			config.AddUInt((uint64_t)controller_buttons[k], name_c);
 		}
 	}
 
@@ -368,6 +377,13 @@ struct GameInput
 		{
 			std::string name_m("m" + std::to_string(j));
 			mouse_buttons.push_back((MouseButton)config.GetUInt(name_m, 0));
+		}
+
+		uint64_t size_controller = config.GetUInt("SizeController", 0);
+		for (uint64_t k = 0; k < size_controller; ++k)
+		{
+			std::string name_c("c" + std::to_string(k));
+			controller_buttons.push_back((ControllerCode)config.GetUInt(name_c, 0));
 		}
 	}
 };
