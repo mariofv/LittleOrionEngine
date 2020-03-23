@@ -15,7 +15,7 @@ public:
 
 	void OnInspector(ImGuiContext*) override;
 
-	void Move();
+	void Move(int player);
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;

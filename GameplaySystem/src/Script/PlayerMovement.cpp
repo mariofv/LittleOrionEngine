@@ -56,7 +56,7 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.f, 0.5f);
 }
 
-void PlayerMovement::Move()
+void PlayerMovement::Move(int player)
 {
 	//example how to get variables from the engine
 	float3 transform = owner->transform.GetTranslation();
