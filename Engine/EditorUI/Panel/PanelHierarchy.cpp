@@ -233,7 +233,7 @@ void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 		}
 		if (ImGui::Selectable("Quad"))
 		{
-			App->model_loader->LoadCoreModel(PRIMITIVE_QUAD_PATH);
+			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_QUAD_PATH);
 			created_game_object->name = "Quad";
 		}
 

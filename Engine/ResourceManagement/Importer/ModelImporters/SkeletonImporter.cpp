@@ -6,7 +6,6 @@
 #include "Module/ModuleFileSystem.h"
 ImportResult SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const std::string& imported_file, float unit_scale_factor, Skeleton & skeleton) const
 {
-	skeleton.scale_factor = unit_scale_factor;
 
 	for (size_t i = 0; i < mesh->mNumBones; i++)
 	{
@@ -19,9 +18,15 @@ ImportResult SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh
 			bone = bone->mParent;
 		}
 
-		ImportChildBone(bone, -1, bone->mTransformation, bone->mTransformation, skeleton);
+		ImportChildBone(bone, -1, bone->mTransformation, skeleton, unit_scale_factor);
+		for (auto & joint : skeleton.skeleton)
+		{
+			if (joint.name == std::string(bone_name.C_Str()))
+			{
+				joint.transform_global = GetTransform(mesh->mBones[i]->mOffsetMatrix, unit_scale_factor);
+			}
+		}
 	}
-
 	if (skeleton.skeleton.size() > 0)
 	{
 		std::string exported_file = SaveMetaFile(imported_file, ResourceType::SKELETON);
@@ -34,13 +39,13 @@ ImportResult SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh
 	return ImportResult();
 }
 
-void SkeletonImporter::ImportChildBone(const aiNode * previus_node,  uint32_t previous_joint_index, aiMatrix4x4& parent_global_transformation,  aiMatrix4x4& accumulated_local_transformation, Skeleton& skeleton) const
+void SkeletonImporter::ImportChildBone(const aiNode * previus_node,  uint32_t previous_joint_index,  aiMatrix4x4& accumulated_local_transformation, Skeleton& skeleton, float scale_factor) const
 {
 
 	if (previous_joint_index == -1 && std::string(previus_node->mName.C_Str()).find("$Assimp") == std::string::npos) 
 	{
 		aiMatrix4x4 local_transformation = accumulated_local_transformation * previus_node->mTransformation;
-		Skeleton::Joint bone{ GetTransform(local_transformation,skeleton.scale_factor), GetTransform(local_transformation, skeleton.scale_factor),previous_joint_index, std::string(previus_node->mName.C_Str()) };
+		Skeleton::Joint bone{ float4x4::identity, GetTransform(local_transformation, scale_factor),previous_joint_index, std::string(previus_node->mName.C_Str()) };
 
 		accumulated_local_transformation = aiMatrix4x4();
 		auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&bone](const Skeleton::Joint & joint) { return joint.name == bone.name; });
@@ -49,7 +54,6 @@ void SkeletonImporter::ImportChildBone(const aiNode * previus_node,  uint32_t pr
 			skeleton.skeleton.push_back(bone);
 		}
 		previous_joint_index = 0;
-		parent_global_transformation = local_transformation;
 	}
 
 
@@ -57,7 +61,6 @@ void SkeletonImporter::ImportChildBone(const aiNode * previus_node,  uint32_t pr
 	{
 		aiNode* current_node = previus_node->mChildren[i];
 		aiMatrix4x4 node_transformation = current_node->mTransformation;
-		aiMatrix4x4 current_global_transformation = parent_global_transformation * node_transformation;
 		aiMatrix4x4 local_transformation = accumulated_local_transformation * node_transformation;
 		std::string bone_name = std::string(current_node->mName.C_Str());
 
@@ -65,20 +68,16 @@ void SkeletonImporter::ImportChildBone(const aiNode * previus_node,  uint32_t pr
 		if (bone_name.find("$Assimp") == std::string::npos) 
 		{
 		
-			Skeleton::Joint bone{ GetTransform(current_global_transformation,skeleton.scale_factor), GetTransform(local_transformation, skeleton.scale_factor),previous_joint_index, bone_name};
+			Skeleton::Joint bone{ float4x4::identity, GetTransform(local_transformation, scale_factor),previous_joint_index, bone_name};
 			auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&bone_name](const Skeleton::Joint & joint) { return joint.name == bone_name; });
 			if (it == skeleton.skeleton.end())
 			{
 				skeleton.skeleton.push_back(bone);
 			}
 			next_joint = skeleton.skeleton.size() - 1;
-			if (next_joint == 0)
-			{
-				current_global_transformation = local_transformation;
-			}
 			local_transformation = aiMatrix4x4();
 		}
-		ImportChildBone(current_node, next_joint, current_global_transformation, local_transformation,skeleton);
+		ImportChildBone(current_node, next_joint, local_transformation,skeleton, scale_factor);
 	}
 }
 
@@ -114,7 +113,7 @@ bool SkeletonImporter::SaveBinary(const Skeleton & skeleton) const
 
 	uint32_t num_bones = skeleton.skeleton.size();
 
-	uint32_t size = sizeof(float) + sizeof(uint32_t);
+	uint32_t size = sizeof(uint32_t);
 
 	for (auto & joint : skeleton.skeleton)
 	{
@@ -123,9 +122,6 @@ bool SkeletonImporter::SaveBinary(const Skeleton & skeleton) const
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
-
-	memcpy(cursor, &skeleton.scale_factor, sizeof(float));
-	cursor += sizeof(float);
 
 	size_t bytes = sizeof(uint32_t); // First store ranges
 	memcpy(cursor, &num_bones, bytes);

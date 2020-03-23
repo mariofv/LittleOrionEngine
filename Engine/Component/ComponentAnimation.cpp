@@ -121,7 +121,7 @@ void ComponentAnimation::UpdateBone(GameObject* current_bone)
 
 	if (it != animation_controller->sk->skeleton.end())
 	{
-		palette[it - animation_controller->sk->skeleton.begin()] = current_bone->transform.GetGlobalModelMatrix() * (*it).transform_global.Inverted();
+		palette[it - animation_controller->sk->skeleton.begin()] = current_bone->transform.GetGlobalModelMatrix() * (*it).transform_global;
 	}
 	for (auto& children_bone : current_bone->children)
 	{

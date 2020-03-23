@@ -22,10 +22,6 @@ std::shared_ptr<Skeleton> SkeletonLoader::Load(const std::string& file_path)
 	char * data = App->filesystem->Load(file_path.c_str(), skeleton_size);
 	char* cursor = data;
 
-	float unit_scale;
-	memcpy(&unit_scale, cursor, sizeof(float));
-	cursor += sizeof(float);
-
 	uint32_t num_bones;
 	//Get number of bones
 	size_t bytes = sizeof(uint32_t);
@@ -53,7 +49,6 @@ std::shared_ptr<Skeleton> SkeletonLoader::Load(const std::string& file_path)
 	}
 
 	std::shared_ptr<Skeleton> new_skeleton = std::make_shared<Skeleton>(std::move(bones), file_path);
-	new_skeleton->scale_factor = unit_scale;
 	free(data);
 
 	return new_skeleton;

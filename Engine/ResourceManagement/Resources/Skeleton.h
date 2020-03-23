@@ -24,7 +24,6 @@ private:
 	void LoadInMemory() override;
 
 public:
-	float scale_factor = 1.f;
 	std::vector<Joint> skeleton;
 };
 
