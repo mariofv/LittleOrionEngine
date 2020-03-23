@@ -13,6 +13,8 @@
 #include <string>
 #include <vector>
 
+class PanelConfiguration;
+
 struct SDL_Cursor;
 typedef int32_t Sint32;
 typedef unsigned __int8 Uint8;
@@ -418,7 +420,8 @@ public:
 	ENGINE_API bool GetGameInputDown(const char* name);
 	ENGINE_API bool GetGameInputUp(const char* name);
 
-	void CreateGameInput(GameInput game_input);
+	void CreateGameInput(const GameInput& game_input);
+	void DeleteGameInput(const GameInput& game_input);
 
 	float2 GetMousePosition() const;
 	float2 GetMouseMotion() const;
@@ -473,6 +476,8 @@ private:
 	float right_controller_trigger_raw = 0;
 
 	SDL_GameController* controller[(int)PlayerID::COUNT];
+
+	friend PanelConfiguration;
 };
 
 #endif //_MODULEINPUT_H

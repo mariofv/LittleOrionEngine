@@ -376,9 +376,22 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name)
 	return false;
 }
 
-void ModuleInput::CreateGameInput(GameInput game_input)
+void ModuleInput::CreateGameInput(const GameInput& game_input)
 {
 	game_inputs[game_input.name] = game_input;
+
+	Config config;
+	SaveGameInputs(config);
+
+	std::string serialized_game_input_string;
+	config.GetSerializedString(serialized_game_input_string);
+
+	App->filesystem->Save(GAME_INPUT_PATH, serialized_game_input_string.c_str(), serialized_game_input_string.size() + 1);
+}
+
+void ModuleInput::DeleteGameInput(const GameInput & game_input)
+{
+	game_inputs.erase(game_input.name);
 
 	Config config;
 	SaveGameInputs(config);

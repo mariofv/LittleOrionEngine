@@ -422,7 +422,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::TreePop();
 		}
 
-		if(ImGui::TreeNode("Game Input"))
+		if(ImGui::TreeNode("Create Game Input"))
 		{
 
 			ImGui::InputText("Name: ", &name_game_input);
@@ -586,6 +586,49 @@ void PanelConfiguration::ShowInputOptions()
 		}
 
 		
+		if (ImGui::TreeNode("See Game Inputs"))
+		{
+
+			ImGui::Text("Game Inputs:");
+
+			ImGui::Text("");
+
+			for(auto game_input : App->input->game_inputs)
+			{
+				ImGui::Text("%s :", game_input.first);
+				for(auto key : game_input.second.keys)
+				{
+					int aux = static_cast<int>(key);
+					if (aux > FIRST_OFFSET_COND)
+						aux -= FIRST_OFFSET;
+					else if (aux > SECOND_OFFSET_COND)
+						aux -= SECOND_OFFSET;
+					else if (aux > THIRD_OFFSET_COND)
+						aux -= THIRD_OFFSET;
+					else
+						aux -= 4;
+
+
+					ImGui::Text("%s", game_inputs_strings[aux]);
+				}
+				for (auto mouse : game_input.second.mouse_buttons)
+				{
+					ImGui::Text("%s", mouse_keys_string[(int)mouse]);
+				}
+
+				for (auto controller_key : game_input.second.controller_buttons)
+				{
+					ImGui::Text("%s", controller_keys_string[(int)controller_key]);
+				}
+				
+				if(ImGui::Button("Delete GameInput"))
+				{
+					App->input->DeleteGameInput(game_input.second);
+				}
+
+			}
 		
+			ImGui::TreePop();
+		}
 	}
 }
