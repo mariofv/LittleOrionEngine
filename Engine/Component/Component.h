@@ -20,7 +20,8 @@ public:
         CANVAS,
 		UI,
 		TEXT,
-		SCRIPT
+		SCRIPT,
+		TRANSFORM2D
 	};
 
 	Component(ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};

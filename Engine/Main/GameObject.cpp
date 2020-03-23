@@ -34,12 +34,12 @@
 
 GameObject::GameObject() : aabb(this), UUID(pcg32_random())
 {
-	CreateTransform();
+	CreateTransforms();
 }
 
 GameObject::GameObject(unsigned int UUID) : aabb(this),  UUID(UUID)
 {
-	CreateTransform();
+	CreateTransforms();
 }
 
 GameObject::GameObject(const std::string name) :
@@ -47,13 +47,13 @@ GameObject::GameObject(const std::string name) :
 	aabb(this),
 	UUID(pcg32_random())
 {
-	CreateTransform();
+	CreateTransforms();
 }
 
 
 GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_to_copy.aabb), transform(gameobject_to_copy.transform), UUID(pcg32_random())
 {
-	CreateTransform();
+	CreateTransforms();
 	aabb.owner = this;
 	*this << gameobject_to_copy;
 }
@@ -163,23 +163,13 @@ void GameObject::LoadTransform(Config config)
 	transform.Load(transform_config);
 }
 
-void GameObject::CreateTransform()
+void GameObject::CreateTransforms()
 {
-	//if (IsChildOfUI())
-	//{
-	//	transform = new ComponentTransform2D();
-	//	transform->owner = this;
-	//	((ComponentTransform2D*)transform)->Translate(float2::zero);//trigger transform change
-	//}
-	//else
-	//{
-	//	transform = new ComponentTransform();
-	//	transform->owner = this;
-	//	((ComponentTransform*)transform)->Translate(float3::zero);//trigger transform change
-
-	//}
 	transform = ComponentTransform();
 	transform.owner = this;
+
+	transform_2d = ComponentTransform2D();
+	transform_2d.owner = this;
 }
 
 bool GameObject::IsStatic() const

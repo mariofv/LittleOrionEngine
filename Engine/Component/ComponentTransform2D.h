@@ -4,10 +4,20 @@ class ComponentTransform2D : public Component
 {
 public:
 	ComponentTransform2D();
+	ComponentTransform2D(GameObject * owner);
+	ComponentTransform2D(GameObject * owner, const float2 translation, const float rotation, const float2 scale);
 	~ComponentTransform2D();
+
+	//Copy and move
+	ComponentTransform2D(const ComponentTransform2D& component_to_copy) = default;
+	ComponentTransform2D(ComponentTransform2D&& component_to_move) = default;
+
+	ComponentTransform2D & operator=(const ComponentTransform2D & component_to_copy);
+	ComponentTransform2D & operator=(ComponentTransform2D && component_to_move) = default;
 
 	float2 position;
 	float2 size;
+	float rotation;
 
 	// Heredado vía Component
 	virtual void Delete() override;
@@ -15,5 +25,8 @@ public:
 	virtual void Copy(Component * component_to_copy) const override;
 	virtual void Save(Config & config) const override;
 	virtual void Load(const Config & config) override;
+
+private:
+	void OnTransformChange();
 };
 
