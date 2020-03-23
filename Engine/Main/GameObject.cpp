@@ -149,18 +149,26 @@ Config GameObject::SaveTransform() const
 	Config config;
 	transform.Save(config);
 
-	//ComponentTransform2D* transform_2d = GetTransform2D();
-	//if (transform_2d != nullptr) transform_2d->Save(config);
+	return config;
+}
+
+Config GameObject::SaveTransform2D() const
+{
+	Config config;
+	transform_2d.Save(config);
 
 	return config;
 }
 
-void GameObject::LoadTransform(Config config)
+void GameObject::LoadTransforms(Config config)
 {
 	Config transform_config;
 	config.GetChildConfig("Transform", transform_config);
-
 	transform.Load(transform_config);
+
+	Config transform_2d_config;
+	config.GetChildConfig("Transform2D", transform_2d_config);
+	transform_2d.Load(transform_2d_config);
 }
 
 void GameObject::CreateTransforms()
@@ -215,6 +223,9 @@ void GameObject::Save(Config& config) const
 	Config transform_config = SaveTransform();
 	config.AddChildConfig(transform_config, "Transform");
 
+	Config transform_2d_config = SaveTransform2D();
+	config.AddChildConfig(transform_2d_config, "Transform2D");
+
 	std::vector<Config> gameobject_components_config(components.size());
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
@@ -241,7 +252,7 @@ void GameObject::Load(const Config& config)
 	SetStatic(config.GetBool("IsStatic", false));
 	active = config.GetBool("Active", true);
 
-	LoadTransform(config);
+	LoadTransforms(config);
 
 	std::vector<Config> gameobject_components_config;
 	config.GetChildrenConfig("Components", gameobject_components_config);

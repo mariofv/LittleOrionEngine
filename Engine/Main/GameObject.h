@@ -62,7 +62,8 @@ public:
 private:
 	void SetHierarchyStatic(bool is_static);
 	Config SaveTransform() const;
-	void LoadTransform(Config config);
+	Config SaveTransform2D() const;
+	void LoadTransforms(Config config);
 	void CreateTransforms();
 	void CopyComponents(const GameObject & gameobject_to_copy);
 
