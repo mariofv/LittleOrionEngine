@@ -414,8 +414,6 @@ void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 		}
 		ImGui::Separator();
 
-		ImGui::InputFloat2("Size", ui->size.ptr());
-		ImGui::InputFloat2("Position", ui->position.ptr());
 		ImGui::InputInt("Texture", (int*) (&ui->ui_texture));
 		ImGui::ColorPicker3("Color", ui->color.ptr());
 	}
