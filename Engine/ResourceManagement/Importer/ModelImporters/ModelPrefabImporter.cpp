@@ -118,7 +118,7 @@ void ModelPrefabImporter::LoadSkeleton(const Config& node_config, std::vector<st
 			joint.transform_local.Decompose(translation, rotate, scale);
 
 			object->transform.SetScale(scale);
-			object->transform.SetTranslation(full_skeleton->scale_factor*translation);
+			object->transform.SetTranslation(translation);
 			object->transform.SetRotation(rotate);
 			object->name = joint.name;
 

@@ -40,7 +40,7 @@ void SkeletonImporter::ImportChildBone(const aiNode * previus_node,  uint32_t pr
 	if (previous_joint_index == -1 && std::string(previus_node->mName.C_Str()).find("$Assimp") == std::string::npos) 
 	{
 		aiMatrix4x4 local_transformation = accumulated_local_transformation * previus_node->mTransformation;
-		Skeleton::Joint bone{ GetTransform(local_transformation), GetTransform(local_transformation),previous_joint_index, std::string(previus_node->mName.C_Str()) };
+		Skeleton::Joint bone{ GetTransform(local_transformation,skeleton.scale_factor), GetTransform(local_transformation, skeleton.scale_factor),previous_joint_index, std::string(previus_node->mName.C_Str()) };
 
 		accumulated_local_transformation = aiMatrix4x4();
 		auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&bone](const Skeleton::Joint & joint) { return joint.name == bone.name; });
@@ -65,7 +65,7 @@ void SkeletonImporter::ImportChildBone(const aiNode * previus_node,  uint32_t pr
 		if (bone_name.find("$Assimp") == std::string::npos) 
 		{
 		
-			Skeleton::Joint bone{ GetTransform(current_global_transformation), GetTransform(local_transformation),previous_joint_index, bone_name};
+			Skeleton::Joint bone{ GetTransform(current_global_transformation,skeleton.scale_factor), GetTransform(local_transformation, skeleton.scale_factor),previous_joint_index, bone_name};
 			auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&bone_name](const Skeleton::Joint & joint) { return joint.name == bone_name; });
 			if (it == skeleton.skeleton.end())
 			{
@@ -95,7 +95,7 @@ aiBone* SkeletonImporter::GetNodeBone(const aiMesh* mesh,  const std::string & b
 }
 
 
-float4x4 SkeletonImporter::GetTransform(const aiMatrix4x4 & current_transform) 
+float4x4 SkeletonImporter::GetTransform(const aiMatrix4x4 & current_transform, float scale_factor) 
 {
 	aiVector3t<float> pScaling, pPosition;
 	aiQuaterniont<float> pRotation;
@@ -105,7 +105,7 @@ float4x4 SkeletonImporter::GetTransform(const aiMatrix4x4 & current_transform)
 	math::float3 scale(pScaling.x, pScaling.y,pScaling.z);
 	math::Quat rotation(pRotation.x, pRotation.y, pRotation.z, pRotation.w);
 	math::float3 translation(pPosition.x, pPosition.y, pPosition.z);
-
+	translation *= scale_factor;
 	return math::float4x4::FromTRS(translation, rotation, scale);
 }
 
