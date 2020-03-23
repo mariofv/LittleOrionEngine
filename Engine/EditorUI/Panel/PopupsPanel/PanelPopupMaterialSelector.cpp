@@ -87,7 +87,7 @@ void PanelPopupMaterialSelector::Render()
 	ImGui::End();
 }
 
-void PanelPopupMaterialSelector::ShowMaterialIcon(File* file)
+void PanelPopupMaterialSelector::ShowMaterialIcon(Path* file)
 {
 	std::string filename = std::string(file->filename_no_extension);
 	if (ImGui::BeginChild(filename.c_str(), ImVec2(material_icon_size, material_icon_size), selected_material == file, ImGuiWindowFlags_NoDecoration))
@@ -116,7 +116,7 @@ void PanelPopupMaterialSelector::ShowMaterialIcon(File* file)
 	ImGui::EndChild();
 }
 
-void PanelPopupMaterialSelector::ProcessMaterialMouseInput(File * file)
+void PanelPopupMaterialSelector::ProcessMaterialMouseInput(Path* file)
 {
 	if (ImGui::IsWindowHovered())
 	{

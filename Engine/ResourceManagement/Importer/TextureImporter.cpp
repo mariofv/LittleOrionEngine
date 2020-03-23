@@ -1,9 +1,10 @@
 #include "TextureImporter.h"
+
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 
 #include <algorithm>
-#include "Brofiler/Brofiler.h"
+#include <Brofiler/Brofiler.h>
 
 TextureImporter::TextureImporter()
 {
@@ -18,7 +19,7 @@ TextureImporter::TextureImporter()
 
 }
 
-ImportResult TextureImporter::Import(const File& imported_file, bool force) const
+ImportResult TextureImporter::Import(const Path& imported_file, bool force) const
 {
 	ImportResult import_result;
 
@@ -53,7 +54,7 @@ ImportResult TextureImporter::Import(const File& imported_file, bool force) cons
 	return import_result;
 }
 
-std::string TextureImporter::ImportMaterialData(const std::string & material_path, const std::string model_base_path) const
+std::string TextureImporter::ImportMaterialData(const std::string& material_path, const std::string model_base_path) const
 {
 	APP_LOG_INIT("Loading material texture in described path %s.", material_path.c_str());
 	ImportResult import_result = Import(material_path);
@@ -85,7 +86,7 @@ std::string TextureImporter::ImportMaterialData(const std::string & material_pat
 }
 
 
-ILubyte * TextureImporter::LoadImageDataInMemory(const std::string& file_path, int image_type ,int & width, int & height ) const
+ILubyte * TextureImporter::LoadImageDataInMemory(const std::string& file_path, int image_type ,int& width, int& height ) const
 {
 	ilLoadImage(file_path.c_str());
 
@@ -131,7 +132,7 @@ std::string TextureImporter::GetTextureFileName(std::string texture_file_path) c
 	}
 }
 
-std::string TextureImporter::ImportToDDS(const File & file) const
+std::string TextureImporter::ImportToDDS(const Path& file) const
 {
 	ILuint image;
 	ilGenImages(1, &image);
@@ -158,7 +159,7 @@ std::string TextureImporter::ImportToDDS(const File & file) const
 	return output_file;
 }
 
-std::string TextureImporter::ImportToTGA(const File & file) const
+std::string TextureImporter::ImportToTGA(const Path& file) const
 {
 	std::string output_file = SaveMetaFile(file.file_path, ResourceType::TEXTURE);
 	bool copied = App->filesystem->Copy(file.file_path.c_str(), output_file.c_str());

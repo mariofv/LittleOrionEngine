@@ -1,8 +1,10 @@
 #ifndef _MODELPREFABIMPORTER_H_
 #define _MODELPREFABIMPORTER_H_
-#include "Component/ComponentMeshRenderer.h"
+
 #include "ResourceManagement/Importer/Importer.h"
+#include "Component/ComponentMeshRenderer.h"
 #include <vector>
+
 class Config;
 class GameObject;
 class File;
@@ -12,7 +14,7 @@ class ModelPrefabImporter : public Importer
 public:
 	ModelPrefabImporter() = default;
 	~ModelPrefabImporter() = default;
-	void ImportModelPrefab(const Config& model, const File& imported_file) const;
+	void ImportModelPrefab(const Config& model, const Path& imported_file) const;
 
 
 private:

@@ -1,7 +1,7 @@
 #include "ModuleScriptManager.h"
 
 #include "Component/ComponentScript.h"
-#include "Filesystem/File.h"
+#include "Filesystem/Path.h"
 #include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -22,9 +22,9 @@ bool ModuleScriptManager::Init()
 	GetCurrentPath();
 	InitDLL();
 	LoadScriptList();
-	dll_file = std::make_unique<File>(SCRIPTS_DLL_PATH);
+	dll_file = std::make_unique<Path>(SCRIPTS_DLL_PATH);
 	init_timestamp_dll = dll_file->modification_timestamp;
-	scripts_list_file = std::make_unique<File>(SCRIPT_LIST_PATH);
+	scripts_list_file = std::make_unique<Path>(SCRIPT_LIST_PATH);
 	init_timestamp_script_list = scripts_list_file->modification_timestamp;
 	utils = new Utils();
 

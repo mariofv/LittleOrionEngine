@@ -15,7 +15,7 @@
 #include <unordered_map>
 
 //THIS CLASS INCLUDE IMPORT AND LOAD FOR SCENE UNTIL SCENE IS CHANGE TO BE A RESOURCE
-void SceneManager::Save(const std::string &path,  GameObject * gameobject_to_save) const
+void SceneManager::Save(const std::string &path, GameObject* gameobject_to_save) const
 {
 
 	Config scene_config;
@@ -124,7 +124,7 @@ void SceneManager::Load(const std::string &path) const
 }
 
 
-void SceneManager::SavePrefab(Config & config, GameObject * gameobject_to_save) const
+void SceneManager::SavePrefab(Config& config, GameObject* gameobject_to_save) const
 {
 	if (gameobject_to_save->parent != nullptr)
 	{
@@ -141,7 +141,7 @@ void SceneManager::SavePrefab(Config & config, GameObject * gameobject_to_save) 
 	config.AddChildrenConfig(original_UUIDS, "UUIDS");
 }
 
-void SceneManager::SavePrefabUUIDS(std::vector<Config> & original_UUIDS, GameObject * gameobject_to_save) const
+void SceneManager::SavePrefabUUIDS(std::vector<Config>& original_UUIDS, GameObject* gameobject_to_save) const
 {
 	Config config;
 	config.AddUInt(gameobject_to_save->UUID, "UUID");
@@ -181,7 +181,7 @@ GameObject * SceneManager::LoadPrefab(const Config & config) const
 return instance;
 }
 
-bool SceneManager::SaveModifiedPrefabComponents(Config & config, GameObject * gameobject_to_save) const
+bool SceneManager::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_to_save) const
 {
 
 	bool modified = false;
@@ -211,7 +211,7 @@ bool SceneManager::SaveModifiedPrefabComponents(Config & config, GameObject * ga
 	return modified;
 }
 
-void SceneManager::LoadPrefabModifiedComponents(const Config & config) const
+void SceneManager::LoadPrefabModifiedComponents(const Config& config) const
 {
 
 	GameObject * prefab_child = App->scene->GetGameObject(config.GetUInt("UUID", 0));

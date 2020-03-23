@@ -1,16 +1,17 @@
-#include "File.h"
+#include "Path.h"
+
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 
-File::File(const std::string & path, const std::string & name) {
+Path::Path(const std::string & path, const std::string & name)
+{
 	this->filename = name;
 	this->file_path = path + "/" + name;
 	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
 	GetFileInfo();
-	//TODO: Move this logic to a Path class
 }
 
-File::File(const std::string & path) {
+Path::Path(const std::string & path) {
 
 	this->filename = path.substr(path.find_last_of('/') + 1, -1);
 	this->file_path = path;
@@ -22,14 +23,14 @@ File::File(const std::string & path) {
 	}
 
 }
-bool File::operator==(const File& compare)
+bool Path::operator==(const Path& compare)
 {
 	return this->filename == compare.filename && this->file_path == compare.file_path && this->file_type == compare.file_type;
 };
 
-void File::GetChildren()
+void Path::GetChildren()
 {
-	std::vector<std::shared_ptr<File>> files;
+	std::vector<std::shared_ptr<Path>> files;
 	App->filesystem->GetAllFilesInPath(this->file_path, files);
 	for (auto & file : files)
 	{
@@ -47,7 +48,7 @@ void File::GetChildren()
 	}
 }
 
-void File::GetFileInfo()
+void Path::GetFileInfo()
 {
 	PHYSFS_Stat file_info;
 	if (PHYSFS_stat(this->file_path.c_str(), &file_info) == 0)
@@ -59,7 +60,7 @@ void File::GetFileInfo()
 	this->file_type = App->filesystem->GetFileType(filename.c_str(), file_info.filetype);
 }
 
-void File::Refresh()
+void Path::Refresh()
 {
 	children.clear();
 	GetChildren();

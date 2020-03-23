@@ -6,7 +6,8 @@
 #include <string>
 #include <unordered_map>
 
-class File;
+class Path;
+
 class ResourceDataBase
 {
 
@@ -14,7 +15,7 @@ public:
 	ResourceDataBase() = default;
 	~ResourceDataBase() = default;
 
-	void AddEntry(const File& meta_file);
+	void AddEntry(const Path& meta_file);
 	void AddEntry(const ImportOptions& meta_file);
 
 	const ImportOptions* GetEntry(uint32_t uuid);

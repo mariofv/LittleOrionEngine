@@ -125,7 +125,7 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_File"))
 		{
 			assert(payload->DataSize == sizeof(File*));
-			File *incoming_file = *(File**)payload->Data;
+			Path *incoming_file = *(Path**)payload->Data;
 			if (incoming_file->file_type == FileType::PREFAB || incoming_file->file_type == FileType::MODEL)
 			{
 				ImportOptions options;

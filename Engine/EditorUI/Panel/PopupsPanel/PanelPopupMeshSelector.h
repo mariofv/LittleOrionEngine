@@ -15,8 +15,8 @@ public:
 	void Render() override;
 
 private:
-	void ShowMeshIcon(File* file);
-	void ProcessMeshMouseInput(File * file);
+	void ShowMeshIcon(Path* file);
+	void ProcessMeshMouseInput(Path * file);
 	void ChangeSelectedObjectMesh() const;
 
 public:
@@ -24,8 +24,8 @@ public:
 	
 private:
 	float mesh_icon_size = 125.f;
-	File* selected_mesh = nullptr;
-	std::vector<std::shared_ptr<File>> mesh_files;
+	Path* selected_mesh = nullptr;
+	std::vector<std::shared_ptr<Path>> mesh_files;
 
 	bool child_window_focused = false;
 };

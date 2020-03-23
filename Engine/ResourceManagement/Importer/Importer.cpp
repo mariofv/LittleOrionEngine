@@ -4,9 +4,10 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleResourceManager.h"
 #include "Helper/Config.h"
+
 #include <pcg_basic.h>
 
-ImportResult Importer::Import(const File & file, bool force) const
+ImportResult Importer::Import(const Path& file, bool force) const
 {
 	ImportResult import_result;
 
@@ -22,11 +23,11 @@ ImportResult Importer::Import(const File & file, bool force) const
 }
 
 
-ImportOptions Importer::GetAlreadyImportedResource(const File & file_to_look_for) const
+ImportOptions Importer::GetAlreadyImportedResource(const Path& file_to_look_for) const
 {
 	std::string meta_file_path = GetMetaFilePath(file_to_look_for);
 
-	File meta_file(meta_file_path);
+	Path meta_file(meta_file_path);
 	if (App->filesystem->Exists(meta_file_path.c_str()) && meta_file.modification_timestamp >= file_to_look_for.modification_timestamp) {
 	
 		ImportOptions options;
@@ -77,7 +78,7 @@ std::string Importer::SaveMetaFile(const std::string& imported_path, ResourceTyp
 }
 
 
-void Importer::GetOptionsFromMeta(const File& file, ImportOptions & options)
+void Importer::GetOptionsFromMeta(const Path& file, ImportOptions & options)
 {
 	if (!App->filesystem->Exists(file.file_path.c_str()))
 	{
@@ -92,7 +93,7 @@ void Importer::GetOptionsFromMeta(const File& file, ImportOptions & options)
 	options.Load(meta_config);
 }
 
-std::string Importer::GetMetaFilePath(const File& file)
+std::string Importer::GetMetaFilePath(const Path& file)
 {
 	return file.file_path + ".meta";
 }

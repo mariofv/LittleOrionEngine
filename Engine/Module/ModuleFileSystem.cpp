@@ -1,12 +1,15 @@
 #include "ModuleFileSystem.h"
+
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
-#include <SDL/SDL.h>
+
 #include <algorithm>
 #include <cctype>
+#include <SDL/SDL.h>
 
-bool ModuleFileSystem::Init() {
-	save_path = SDL_GetPrefPath("UPC",TITLE);
+bool ModuleFileSystem::Init()
+{
+	save_path = SDL_GetPrefPath("UPC", TITLE);
 	if (save_path == NULL)
 	{
 		return false;
@@ -103,7 +106,7 @@ bool ModuleFileSystem::Save(const char* file_path, const void* buffer, unsigned 
 	SDL_RWclose(file);
 	return true;
 }
-bool ModuleFileSystem::Remove(const File * file) const
+bool ModuleFileSystem::Remove(const Path* file) const
 {
 	if (file == nullptr)
 	{
@@ -121,14 +124,14 @@ bool ModuleFileSystem::Exists(const char* file_path) const
 	return PHYSFS_exists(file_path);
 }
 
-File ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path) const
+Path ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path) const
 {
 	if (PHYSFS_mkdir(new_directory_full_path.c_str()) == 0)
 	{
 		APP_LOG_ERROR("Error creating directory %s : %s", new_directory_full_path.c_str(), PHYSFS_getLastError());
-		return File();
+		return Path();
 	}
-	return File(new_directory_full_path);
+	return Path(new_directory_full_path);
 }
 
 bool ModuleFileSystem::Copy(const char* source, const char* destination)
@@ -208,7 +211,7 @@ std::string ModuleFileSystem::GetFileExtension(const char *file_path) const
 	return file_extension;
 }
 
-void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only) const
+void ModuleFileSystem::GetAllFilesInPath(const std::string& path, std::vector<std::shared_ptr<Path>>& files, bool directories_only) const
 {
 	char **files_array = PHYSFS_enumerateFiles(path.c_str());
 	if (*files_array == NULL)
@@ -219,7 +222,7 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	char **filename;
 	for (filename = files_array; *filename != NULL; filename++)
 	{
-		std::shared_ptr<File> new_file = std::make_shared<File>(path, *filename);
+		std::shared_ptr<Path> new_file = std::make_shared<Path>(path, *filename);
 		if (std::string(*filename).find(".meta") == std::string::npos)
 		{
 			bool is_directory = new_file->file_type == FileType::DIRECTORY;
@@ -237,7 +240,7 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 				Importer::GetOptionsFromMeta(new_file->file_path, options);
 				if (!options.exported_file.empty())
 				{
-					Remove(&File(options.exported_file));
+					Remove(&Path(options.exported_file));
 				}
 				Remove(new_file.get());
 			}
@@ -252,11 +255,11 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 
 void ModuleFileSystem::RefreshFilesHierarchy()
 {
-	assets_file = std::make_shared<File>("Assets");
+	assets_file = std::make_shared<Path>("Assets");
 }
 
 
-bool  ModuleFileSystem::CreateMountedDir(const char * directory) const
+bool ModuleFileSystem::CreateMountedDir(const char* directory) const
 {
 	MakeDirectory(directory);
 	if (PHYSFS_mount(directory, directory, 1) == 0)

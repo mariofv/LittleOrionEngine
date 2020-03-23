@@ -1,7 +1,7 @@
 #include "ResourceDataBase.h"
 #include "ResourceManagement/Importer/Importer.h"
 
-void ResourceDataBase::AddEntry(const File& meta_file)
+void ResourceDataBase::AddEntry(const Path& meta_file)
 {
 	std::unique_ptr<ImportOptions> options = std::make_unique<ImportOptions>();
 	Importer::GetOptionsFromMeta(meta_file,*options);

@@ -1,5 +1,5 @@
 #include "ModuleDebug.h"
-#include "Filesystem/File.h"
+#include "Filesystem/Path.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleResourceManager.h"
@@ -33,7 +33,7 @@ void ModuleDebug::CreateHousesRandom() const
 	std::srand(static_cast<unsigned int>(std::time(nullptr))); // use current time as seed for random generator
 	GameObject *houses = App->scene->CreateGameObject();
 	ImportOptions options;
-	Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(File(HOUSE_MODEL_PATH)), options);
+	Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(Path(HOUSE_MODEL_PATH)), options);
 	auto prefab = App->resources->Load<Prefab>(options.exported_file);
 
 	for (int i = 0; i < num_houses; ++i)

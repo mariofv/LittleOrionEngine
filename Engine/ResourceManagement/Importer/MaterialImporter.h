@@ -14,7 +14,7 @@ class MaterialImporter : public Importer
 public:
 	MaterialImporter() = default;
 	~MaterialImporter() = default;
-	ImportResult Import(const File& file, bool force = false) const override;
+	ImportResult Import(const Path& file, bool force = false) const override;
 
 	ImportResult ExtractMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* model_file_path, const char* material_assets_file_path) const;
 

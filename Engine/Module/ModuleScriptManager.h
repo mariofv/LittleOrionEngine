@@ -22,7 +22,7 @@ struct CV_INFO_PDB70
 class ComponentScript;
 class GameObject;
 class Script;
-class File;
+class Path;
 class Utils;
 
 class ModuleScriptManager : public Module
@@ -60,8 +60,8 @@ private:
 
 	HINSTANCE gameplay_dll;
 	std::string working_directory;
-	std::unique_ptr<File> dll_file = nullptr;
-	std::unique_ptr<File> scripts_list_file = nullptr;
+	std::unique_ptr<Path> dll_file = nullptr;
+	std::unique_ptr<Path> scripts_list_file = nullptr;
 	Utils* utils = nullptr;
 
 	long last_timestamp_dll;

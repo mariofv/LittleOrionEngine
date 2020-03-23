@@ -88,7 +88,7 @@ void PanelProjectExplorer::InitResourceExplorerDockspace()
 	ImGui::DockBuilderFinish(project_explorer_dockspace_id);
 }
 
-void PanelProjectExplorer::ShowFoldersHierarchy(const File & file)
+void PanelProjectExplorer::ShowFoldersHierarchy(const Path& file)
 {
 	for (auto & child : file.children)
 	{
@@ -154,7 +154,7 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 	}
 }
 
-void PanelProjectExplorer::ShowFileIcon(File* file)
+void PanelProjectExplorer::ShowFileIcon(Path* file)
 {
 	std::string filename = std::string(file->filename);
 	if (ImGui::BeginChild(filename.c_str(), ImVec2(file_size_width, file_size_height), selected_file == file, ImGuiWindowFlags_NoDecoration))
@@ -184,17 +184,17 @@ void PanelProjectExplorer::ShowFileIcon(File* file)
 	ImGui::EndChild();
 }
 
-void PanelProjectExplorer::ResourceDragSource(File* file) const
+void PanelProjectExplorer::ResourceDragSource(Path* file) const
 {
 	if (ImGui::BeginDragDropSource())
 	{
-		ImGui::SetDragDropPayload("DND_File", &file, sizeof(File*));
+		ImGui::SetDragDropPayload("DND_File", &file, sizeof(Path*));
 		ImGui::Text("Dragging %s", file->filename.c_str());
 		ImGui::EndDragDropSource();
 	}
 }
 
-void PanelProjectExplorer::ProcessResourceMouseInput(File * file)
+void PanelProjectExplorer::ProcessResourceMouseInput(Path* file)
 {
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(0))
 	{
@@ -202,7 +202,7 @@ void PanelProjectExplorer::ProcessResourceMouseInput(File * file)
 	}
 }
 
-void PanelProjectExplorer::ProcessMouseInput(File * file)
+void PanelProjectExplorer::ProcessMouseInput(Path* file)
 {
 	if (ImGui::IsItemHovered())
 	{
@@ -220,7 +220,7 @@ void PanelProjectExplorer::ProcessMouseInput(File * file)
 	}
 }
 
-void PanelProjectExplorer::ShowFileSystemActionsMenu(const File * file)
+void PanelProjectExplorer::ShowFileSystemActionsMenu(const Path* file)
 {
 	if (file == nullptr)
 	{
@@ -286,30 +286,30 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(const File * file)
 	}
 }
 
-void PanelProjectExplorer::MakeDirectoryFromFile(File * file)
+void PanelProjectExplorer::MakeDirectoryFromFile(Path* file)
 {
 	if (file == nullptr)
 	{
 		return;
 	}
-	std::shared_ptr<File> new_folder;
+	std::shared_ptr<Path> new_folder;
 	if (!file->file_path.empty() && file->file_type != FileType::DIRECTORY)
 	{
 		size_t last_slash = file->file_path.find_last_of("/");
-		new_folder = std::make_shared<File>(App->filesystem->MakeDirectory(file->file_path.substr(0, last_slash - 1) + "/new Folder"));
+		new_folder = std::make_shared<Path>(App->filesystem->MakeDirectory(file->file_path.substr(0, last_slash - 1) + "/new Folder"));
 	}
 	else if (!file->file_path.empty())
 	{
-		new_folder = std::make_shared<File>(App->filesystem->MakeDirectory(file->file_path + "/new Folder"));
+		new_folder = std::make_shared<Path>(App->filesystem->MakeDirectory(file->file_path + "/new Folder"));
 	}
 	else if (!selected_folder->file_path.empty()) {
-		new_folder = std::make_shared<File>(App->filesystem->MakeDirectory(selected_folder->file_path + "/new Folder"));
+		new_folder = std::make_shared<Path>(App->filesystem->MakeDirectory(selected_folder->file_path + "/new Folder"));
 	}
 	file->children.push_back(new_folder);
 	selected_folder = new_folder.get();
 }
 
-void PanelProjectExplorer::CopyFileToSelectedFolder(const char * source) const
+void PanelProjectExplorer::CopyFileToSelectedFolder(const char* source) const
 {
 	std::string source_string(source);
 	std::replace(source_string.begin(), source_string.end(), '\\', '/');

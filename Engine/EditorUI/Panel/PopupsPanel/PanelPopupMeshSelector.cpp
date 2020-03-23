@@ -91,7 +91,7 @@ void PanelPopupMeshSelector::Render()
 	ImGui::End();
 }
 
-void PanelPopupMeshSelector::ShowMeshIcon(File* file)
+void PanelPopupMeshSelector::ShowMeshIcon(Path* file)
 {
 	std::string filename = std::string(file->filename_no_extension);
 	if (ImGui::BeginChild(filename.c_str(), ImVec2(mesh_icon_size, mesh_icon_size), selected_mesh == file, ImGuiWindowFlags_NoDecoration))
@@ -120,7 +120,7 @@ void PanelPopupMeshSelector::ShowMeshIcon(File* file)
 	ImGui::EndChild();
 }
 
-void PanelPopupMeshSelector::ProcessMeshMouseInput(File * file)
+void PanelPopupMeshSelector::ProcessMeshMouseInput(Path* file)
 {
 	if (ImGui::IsWindowHovered())
 	{

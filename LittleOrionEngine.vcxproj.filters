@@ -73,9 +73,6 @@
     <ClCompile Include="Engine\Module\ModuleWindow.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Filesystem\File.cpp">
-      <Filter>Engine\Filesystem</Filter>
-    </ClCompile>
     <ClCompile Include="Libraries\include\pcg_random\pcg_basic.c">
       <Filter>Libraries\pcg_random</Filter>
     </ClCompile>
@@ -404,6 +401,9 @@
       <Filter>Engine\AI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp" />
+    <ClCompile Include="Engine\Filesystem\Path.cpp">
+      <Filter>Engine\Filesystem</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -471,9 +471,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleWindow.h">
       <Filter>Engine\Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Filesystem\File.h">
-      <Filter>Engine\Filesystem</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Main\GameObject.h">
       <Filter>Engine\Main</Filter>
@@ -788,6 +785,9 @@
       <Filter>Engine\AI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h" />
+    <ClInclude Include="Engine\Filesystem\Path.h">
+      <Filter>Engine\Filesystem</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

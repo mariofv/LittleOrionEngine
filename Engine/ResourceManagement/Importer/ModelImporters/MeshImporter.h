@@ -3,16 +3,18 @@
 
 #include "ResourceManagement/Importer/Importer.h"
 #include <ResourceManagement/Resources/Mesh.h>
+
 #include <vector>
 #include <string>
 
 #include <assimp/mesh.h>
+
 class MeshImporter : public Importer
 {
 public:
 	MeshImporter() = default;
 	~MeshImporter() = default;
-	ImportResult Import(const File & file, bool force = false) const;
+	ImportResult Import(const Path& file, bool force = false) const;
 	bool ImportMesh(const aiMesh* assimp_mesh, const aiMatrix4x4& mesh_transformation, const std::string& imported_file, std::string& exported_file) const;
 
 private:

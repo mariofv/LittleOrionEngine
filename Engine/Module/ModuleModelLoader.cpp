@@ -30,7 +30,7 @@ bool ModuleModelLoader::Init()
 
 GameObject* ModuleModelLoader::LoadCoreModel(const char* new_model_file_path) const
 {
-	File file(new_model_file_path);
+	Path file(new_model_file_path);
 	GameObject* model_game_object = App->scene->CreateGameObject();
 	model_game_object->name = std::string(file.filename_no_extension);
 

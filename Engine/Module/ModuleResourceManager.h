@@ -19,7 +19,7 @@
 #include <mutex>
 
 class Texture;
-class File;
+class Path;
 class Mesh;
 class Resource;
 class Timer;
@@ -36,8 +36,8 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	ImportResult Import(const File& file, bool force = false);
-	void ImportAllFilesInDirectory(const File& file, bool force);
+	ImportResult Import(const Path& file, bool force = false);
+	void ImportAllFilesInDirectory(const Path& file, bool force);
 	void CreatePrefab(const std::string &path, GameObject * gameobject_to_save) const;
 
 	template<typename T>
@@ -69,7 +69,7 @@ private:
 	void StartThread();
 	void ReimportIfNeeded(const std::string& uid);
 
-	ImportResult InternalImport(const File& file, bool force) const;
+	ImportResult InternalImport(const Path& file, bool force) const;
 	std::shared_ptr<Resource> RetrieveFromCacheIfExist(const std::string& uid) const;
 
 public:

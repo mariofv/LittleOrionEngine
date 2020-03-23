@@ -15,8 +15,8 @@ public:
 	void Render() override;
 
 private:
-	void ShowMaterialIcon(File* file);
-	void ProcessMaterialMouseInput(File * file);
+	void ShowMaterialIcon(Path* file);
+	void ProcessMaterialMouseInput(Path * file);
 	void ChangeSelectedObjectMaterial() const;
 
 public:
@@ -24,8 +24,8 @@ public:
 	
 private:
 	float material_icon_size = 125.f;
-	File* selected_material = nullptr;
-	std::vector<std::shared_ptr<File>> material_files;
+	Path* selected_material = nullptr;
+	std::vector<std::shared_ptr<Path>> material_files;
 
 	bool child_window_focused = false;
 };

@@ -5,6 +5,7 @@
 #include "ResourceManagement/Resources/Mesh.h"
 
 #include <algorithm>
+
 ModuleResourceManager::ModuleResourceManager()
 {
 	resource_DB = std::make_unique<ResourceDataBase>();
@@ -19,7 +20,7 @@ bool ModuleResourceManager::Init()
 	scene_manager = std::make_unique<SceneManager>();
 	prefab_importer = std::make_unique<PrefabImporter>();
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
-	File("Resources");
+	Path("Resources");
 	thread_timer->Start();
 	return true;
 }
@@ -62,7 +63,7 @@ update_status ModuleResourceManager::PreUpdate()
 	 last_imported_time = thread_timer->Read();
  }
 
- ImportResult ModuleResourceManager::Import(const File& file, bool force)
+ ImportResult ModuleResourceManager::Import(const Path& file, bool force)
  {
 	 while (thread_comunication.thread_importing_hash == std::hash<std::string>{}(file.file_path))
 	 {
@@ -75,12 +76,12 @@ update_status ModuleResourceManager::PreUpdate()
  }
 
 
- void ModuleResourceManager::CreatePrefab(const std::string &path, GameObject * gameobject_to_save) const
+ void ModuleResourceManager::CreatePrefab(const std::string& path, GameObject * gameobject_to_save) const
  {
-	prefab_importer->CreatePrefabResource(File(path),gameobject_to_save);
+	prefab_importer->CreatePrefabResource(Path(path),gameobject_to_save);
  }
 
-void ModuleResourceManager::ImportAllFilesInDirectory(const File& file, bool force)
+void ModuleResourceManager::ImportAllFilesInDirectory(const Path& file, bool force)
  {
 	 for (auto & child : file.children)
 	 {
@@ -108,7 +109,7 @@ void ModuleResourceManager::ImportAllFilesInDirectory(const File& file, bool for
  }
 
 
-ImportResult ModuleResourceManager::InternalImport(const File& file, bool force) const
+ImportResult ModuleResourceManager::InternalImport(const Path& file, bool force) const
 {
 	ImportResult result;
 	std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);

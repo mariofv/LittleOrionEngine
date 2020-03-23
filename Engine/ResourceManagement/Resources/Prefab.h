@@ -23,6 +23,7 @@ public:
 	void RemoveInstance(GameObject * instance);
 	bool IsOverwritable() const;
 	std::vector<GameObject*> instances;
+
 private:
 	void LoadInMemory() override{};
 	void RecursiveRewrite(GameObject * old_instance, GameObject * new_reference, bool original, bool revert);

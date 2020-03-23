@@ -139,7 +139,7 @@
     <ClInclude Include="Engine\SpacePartition\OLQuadTreeNode.h" />
     <ClInclude Include="Engine\EditorUI\Helper\Billboard.h" />
     <ClInclude Include="Engine\Component\ComponentLight.h" />
-    <ClInclude Include="Engine\Filesystem\File.h" />
+    <ClInclude Include="Engine\Filesystem\Path.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\Importer.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\TextureImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporter.h" />
@@ -268,7 +268,7 @@
     <ClCompile Include="Engine\SpacePartition\OLQuadTreeNode.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Billboard.cpp" />
     <ClCompile Include="Engine\Component\ComponentLight.cpp" />
-    <ClCompile Include="Engine\Filesystem\File.cpp" />
+    <ClCompile Include="Engine\Filesystem\Path.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\Importer.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\TextureImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporter.cpp" />

@@ -10,7 +10,7 @@
 
 #include <assimp/scene.h>
 
-ImportResult MaterialImporter::Import(const File& file, bool force) const
+ImportResult MaterialImporter::Import(const Path& file, bool force) const
 {
 	ImportResult import_result;
 
@@ -124,7 +124,7 @@ ImportResult MaterialImporter::ExtractMaterialFromMesh(const aiScene* scene, siz
 	material_config.GetSerializedString(serialized_material_string);
 
 	App->filesystem->Save(material_assets_file_path, serialized_material_string.c_str(), serialized_material_string.size() + 1);
-	return Import(File(material_assets_file_path));
+	return Import(Path(material_assets_file_path));
 }
 
 Material::MaterialTextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureType type) const

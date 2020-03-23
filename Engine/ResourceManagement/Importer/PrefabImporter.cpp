@@ -6,7 +6,7 @@
 
 #include <stack>
 
-ImportResult PrefabImporter::Import(const File& file, bool force) const
+ImportResult PrefabImporter::Import(const Path& file, bool force) const
 {
 	ImportResult import_result;
 
@@ -37,7 +37,7 @@ ImportResult PrefabImporter::Import(const File& file, bool force) const
 	return import_result;
 }
 
-void PrefabImporter::CreatePrefabResource(const File & file, GameObject * gameobject_to_save) const
+void PrefabImporter::CreatePrefabResource(const Path& file, GameObject * gameobject_to_save) const
 {
 	Config scene_config;
 

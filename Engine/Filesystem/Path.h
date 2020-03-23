@@ -3,10 +3,11 @@
 
 #include <vector>
 #include <memory>
+
 enum class FileType
 {
 	MODEL,
-	PREFAB, //TODO UNIFY MODEL & PREFAB
+	PREFAB, 
 	TEXTURE,
 	MATERIAL,
 	MESH,
@@ -14,11 +15,13 @@ enum class FileType
 	ARCHIVE,
 	UNKNOWN
 };
-class File {
+
+class Path 
+{
 public:
-	File() = default;
-	File(const std::string & path, const std::string & name);
-	File(const std::string & path);
+	Path() = default;
+	Path(const std::string & path, const std::string & name);
+	Path(const std::string & path);
 	std::string filename;
 	std::string file_path;
 	std::string filename_no_extension;
@@ -27,9 +30,9 @@ public:
 	size_t total_sub_files_number = 0;
 	uint64_t modification_timestamp = 0;
 
-	std::vector<std::shared_ptr<File>> children;
-	File* parent = nullptr;
-	bool operator==(const File& compare);
+	std::vector<std::shared_ptr<Path>> children;
+	Path* parent = nullptr;
+	bool operator==(const Path& compare);
 
 	void Refresh();
 public:

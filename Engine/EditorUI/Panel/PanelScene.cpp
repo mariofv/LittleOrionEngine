@@ -317,8 +317,8 @@ void PanelScene::SceneDropTarget()
 	{
 		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_File"))
 		{
-			assert(payload->DataSize == sizeof(File*));
-			File *incoming_file = *(File**)payload->Data;
+			assert(payload->DataSize == sizeof(Path*));
+			Path *incoming_file = *(Path**)payload->Data;
 			if (incoming_file->file_type == FileType::PREFAB)
 			{
 				ImportOptions options;

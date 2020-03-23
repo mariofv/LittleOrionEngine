@@ -16,7 +16,7 @@
 static std::vector<std::unique_ptr<GameObject>> gameobjects;
 static std::vector<std::unique_ptr<ComponentMeshRenderer>> mesh_renderer_components;
 
-void ModelPrefabImporter::ImportModelPrefab(const Config& model, const File& imported_file) const
+void ModelPrefabImporter::ImportModelPrefab(const Config& model, const Path& imported_file) const
 {
 	std::unique_ptr<GameObject> model_root_node = std::make_unique<GameObject>();
 	model_root_node->original_UUID = model_root_node->UUID;

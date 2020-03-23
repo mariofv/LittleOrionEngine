@@ -1,15 +1,19 @@
 #include "ModuleTexture.h"
-#include "Main/Globals.h"
+
+#include "Filesystem/Path.h"
+
 #include "Main/Application.h"
-#include "Module/ModuleResourceManager.h"
-#include "ResourceManagement/Resources/Texture.h"
 #include "Main/GameObject.h"
-#include <Filesystem/File.h>
-#include <ResourceManagement/Importer/TextureImporter.h>
-#include <ResourceManagement/Loaders/TextureLoader.h>
-#include <SDL/SDL.h>
+#include "Main/Globals.h"
+#include "Module/ModuleResourceManager.h"
+
+#include "ResourceManagement/Resources/Texture.h"
+#include "ResourceManagement/Importer/TextureImporter.h"
+#include "ResourceManagement/Loaders/TextureLoader.h"
+
 #include <algorithm>
 #include <memory>
+#include <SDL/SDL.h>
 
 // Called before render is available
 bool ModuleTexture::Init()
@@ -30,7 +34,7 @@ bool ModuleTexture::CleanUp()
 
 std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 {
-	ImportResult import_result = App->resources->Import(File(texture_path));
+	ImportResult import_result = App->resources->Import(Path(texture_path));
 	if (!import_result.succes)
 	{
 		return nullptr;
@@ -43,7 +47,7 @@ GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) 
 	std::vector<std::string> faces_paths_dds;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
-		std::string ol_texture = App->resources->Import(File(faces_paths[i]), false).exported_file;
+		std::string ol_texture = App->resources->Import(Path(faces_paths[i]), false).exported_file;
 		faces_paths_dds.push_back(ol_texture);
 	}
 	return static_cast<GLuint>(TextureLoader::LoadCubemap(faces_paths_dds));

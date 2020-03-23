@@ -1,10 +1,11 @@
 #include "MeshImporter.h"
-#include <assimp/mesh.h>
+
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 
+#include <assimp/mesh.h>
 
-ImportResult MeshImporter::Import(const File & file, bool force) const
+ImportResult MeshImporter::Import(const Path& file, bool force) const
 {
 	std::string exported_file = SaveMetaFile(file.file_path, ResourceType::MESH);
 	App->filesystem->Copy(file.file_path.c_str(), exported_file.c_str());

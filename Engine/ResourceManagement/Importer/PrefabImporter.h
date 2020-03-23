@@ -9,8 +9,8 @@ class PrefabImporter : public Importer
 public:
 	PrefabImporter() = default;
 	~PrefabImporter() = default;
-	ImportResult Import(const File & file, bool force = true) const override;
-	void CreatePrefabResource(const File & file, GameObject * gameobject_to_save) const;
+	ImportResult Import(const Path& file, bool force = true) const override;
+	void CreatePrefabResource(const Path& file, GameObject* gameobject_to_save) const;
 
 };
 
