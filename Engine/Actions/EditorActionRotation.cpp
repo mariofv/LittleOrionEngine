@@ -9,13 +9,13 @@ current_rotation(current), UUID_go(go->UUID) {}
 void EditorActionRotation::Undo()
 {
 	GameObject* action_GO = App->scene->GetGameObject(UUID_go);
-	action_GO->GetTransform()->SetRotation(previous_rotation);
+	action_GO->transform.SetRotation(previous_rotation);
 	return;
 }
 
 void EditorActionRotation::Redo()
 {
 	GameObject* action_GO = App->scene->GetGameObject(UUID_go);
-	action_GO->GetTransform()->SetRotation(current_rotation);
+	action_GO->transform.SetRotation(current_rotation);
 	return;
 }

@@ -455,7 +455,7 @@ void ModuleDebugDraw::Render()
 
 	if (App->debug->show_grid)
 	{
-		float scene_camera_height = App->cameras->scene_camera->owner->transform->GetGlobalTranslation().y;
+		float scene_camera_height = App->cameras->scene_camera->owner->transform.GetGlobalTranslation().y;
 		grid->ScaleOnDistance(scene_camera_height);
 		grid->Render();
 	}
@@ -487,7 +487,8 @@ void ModuleDebugDraw::RenderLightGizmo() const
 	if (selected_light_component != nullptr)
   {	
 		ComponentLight* selected_light = static_cast<ComponentLight*>(selected_light_component);	
-		ComponentTransform* selected_light_transform = selected_light->owner->GetTransform();	
+		GameObject* selected_gameobject = selected_light->owner;
+		ComponentTransform* selected_light_transform = &selected_gameobject->transform;
 		float gizmo_radius = 2.5f;	
 		switch (selected_light->light_type)	
 		{	
@@ -543,16 +544,16 @@ void ModuleDebugDraw::RenderOutline() const
 		float4x4 new_transformation_matrix;
 		if (selected_game_object->parent != nullptr)
 		{
-			new_transformation_matrix = selected_game_object->parent->transform->GetGlobalModelMatrix() * selected_game_object->transform->GetModelMatrix() * float4x4::Scale(float3(1.01f));
+			new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * selected_game_object->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
 
-		ComponentTransform object_transform_copy = *selected_game_object->GetTransform();
+		ComponentTransform object_transform_copy = selected_game_object->transform;
 		float3 object_scale = object_transform_copy.GetScale();
 		object_transform_copy.SetScale(object_scale*1.01f);
 		object_transform_copy.GenerateGlobalModelMatrix();
 		}
 		else 
 		{
-			new_transformation_matrix =  selected_game_object->transform->GetGlobalModelMatrix() * float4x4::Scale(float3(1.01f));
+			new_transformation_matrix =  selected_game_object->transform.GetGlobalModelMatrix() * float4x4::Scale(float3(1.01f));
 		}
 
 		
@@ -561,7 +562,7 @@ void ModuleDebugDraw::RenderOutline() const
 		glLineWidth(15.f);
 
 		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), selected_game_object->transform->GetGlobalModelMatrix().Transposed().ptr());
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), selected_game_object->transform.GetGlobalModelMatrix().Transposed().ptr());
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 		selected_object_mesh->RenderModel();
@@ -610,12 +611,12 @@ void ModuleDebugDraw::RenderBillboards() const
 	{
 		Component * light_component = object->GetComponent(Component::ComponentType::LIGHT);
 		if (light_component != nullptr) {
-			light_billboard->Render(object->GetTransform()->GetGlobalTranslation());
+			light_billboard->Render(object->transform.GetGlobalTranslation());
 		}
 
 		Component * camera_component = object->GetComponent(Component::ComponentType::CAMERA);
 		if (camera_component != nullptr) {
-			camera_billboard->Render(object->GetTransform()->GetGlobalTranslation());
+			camera_billboard->Render(object->transform.GetGlobalTranslation());
 		}
 	}
 }
@@ -624,8 +625,8 @@ void ModuleDebugDraw::RenderCanvas() const
 {
 	for(auto &canvas: App->ui->canvases)
 	{
-		dd::box(canvas->owner->GetTransform()->GetTranslation(), float3::one, App->window->GetWidth() * 0.25f, App->window->GetHeight() * 0.25f, 0.01f);
-		dd::circle(canvas->owner->GetTransform()->GetTranslation(), float3(0, 0, 1), float3::one, 1.0f, 10);
+		dd::box(canvas->owner->transform.GetTranslation(), float3::one, App->window->GetWidth() * 0.25f, App->window->GetHeight() * 0.25f, 0.01f);
+		dd::circle(canvas->owner->transform.GetTranslation(), float3(0, 0, 1), float3::one, 1.0f, 10);
 	}
 }
 

@@ -409,9 +409,6 @@
     <ClCompile Include="Engine\Component\ComponentText.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Component\ComponentUI.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
@@ -805,9 +802,6 @@
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentText.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentTransform2D.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentUI.h">

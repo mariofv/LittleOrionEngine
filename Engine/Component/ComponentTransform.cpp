@@ -47,7 +47,6 @@ void ComponentTransform::Save(Config& config) const
 {
 	config.AddUInt(UUID, "UUID");
 	config.AddBool(active, "Active");
-	config.AddString("3D", "TransformType");
 	config.AddFloat3(translation, "Translation");
 	config.AddFloat3(rotation_degrees, "Rotation");
 	config.AddFloat3(scale, "Scale");
@@ -170,8 +169,7 @@ void ComponentTransform::OnTransformChange()
 	owner->aabb.GenerateBoundingBox();
 	for (auto & child : owner->children)
 	{
-		ComponentTransform* transform = child->GetTransform();
-		if(transform != nullptr) transform->OnTransformChange();
+		child->transform.OnTransformChange();
 	}
 }
 
@@ -188,7 +186,7 @@ void ComponentTransform::GenerateGlobalModelMatrix()
 	}
 	else
 	{
-		global_model_matrix = owner->parent->GetTransform()->global_model_matrix * model_matrix;
+		global_model_matrix = owner->parent->transform.global_model_matrix * model_matrix;
 	}
 }
 
@@ -205,7 +203,7 @@ void ComponentTransform::SetGlobalModelMatrix(const float4x4& new_global_matrix)
 	}
 	else
 	{
-		model_matrix = owner->parent->GetTransform()->global_model_matrix.Inverted() * new_global_matrix;
+		model_matrix = owner->parent->transform.global_model_matrix.Inverted() * new_global_matrix;
 	}
 
 	float3 translation, scale;

@@ -157,7 +157,7 @@ void PanelScene::RenderEditorDraws()
 
 void PanelScene::RenderGizmo()
 {
-	float4x4 model_global_matrix_transposed = App->editor->selected_game_object->transform->GetGlobalModelMatrix().Transposed();
+	float4x4 model_global_matrix_transposed = App->editor->selected_game_object->transform.GetGlobalModelMatrix().Transposed();
 
 	if (!gizmo_released && !App->actions->clicked)
 	{
@@ -165,13 +165,13 @@ void PanelScene::RenderGizmo()
 		switch (App->editor->gizmo_operation)
 		{
 		case ImGuizmo::TRANSLATE:
-			App->actions->previous_transform = App->editor->selected_game_object->transform->GetTranslation();
+			App->actions->previous_transform = App->editor->selected_game_object->transform.GetTranslation();
 			break;
 		case ImGuizmo::ROTATE:
-			App->actions->previous_transform = App->editor->selected_game_object->transform->GetRotationRadiants();
+			App->actions->previous_transform = App->editor->selected_game_object->transform.GetRotationRadiants();
 			break;
 		case ImGuizmo::SCALE:
-			App->actions->previous_transform = App->editor->selected_game_object->transform->GetScale();
+			App->actions->previous_transform = App->editor->selected_game_object->transform.GetScale();
 			break;
 		case ImGuizmo::BOUNDS:
 			break;
@@ -194,7 +194,7 @@ void PanelScene::RenderGizmo()
 	{
 		gizmo_released = true;
 
-		App->editor->selected_game_object->transform->SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
+		App->editor->selected_game_object->transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
 	}
 	else if (gizmo_released)
 	{

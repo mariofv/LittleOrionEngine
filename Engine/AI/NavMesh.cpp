@@ -769,7 +769,7 @@ void NavMesh::GetVerticesScene()
 		for (int i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
 		{
 			float4 vertss(mesh->mesh_to_render.get()->vertices[i].position, 1.0f);
-			vertss = mesh->owner->transform->GetGlobalModelMatrix() * vertss;
+			vertss = mesh->owner->transform.GetGlobalModelMatrix() * vertss;
 
 			verts_vec.push_back(vertss.x);
 			verts_vec.push_back(vertss.y);

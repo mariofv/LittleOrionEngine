@@ -68,7 +68,7 @@ void PrefabLoader::LoadBasicParameters(const Config& config, std::unique_ptr<Gam
 
 	Config transform_config;
 	config.GetChildConfig("Transform", transform_config);
-	loaded_gameObject->transform->Load(transform_config);
+	loaded_gameObject->transform.Load(transform_config);
 
 }
 

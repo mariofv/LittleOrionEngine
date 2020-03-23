@@ -5,7 +5,6 @@
 #include "Globals.h"
 #include "Component/Component.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentTransform2D.h"
 #include "Component/ComponentAABB.h"
 #include "Component/ComponentTransform.h"
 
@@ -51,9 +50,6 @@ public:
 	void RemoveComponent(Component * component);
 	ENGINE_API  Component* GetComponent(const Component::ComponentType type) const;
 
-	ComponentTransform* GetTransform() const;
-	ComponentTransform2D* GetTransform2D() const;
-
 	void MoveUpInHierarchy() const;
 	void MoveDownInHierarchy() const;
 	bool IsAboveInHierarchy(const GameObject &potential_child) const;
@@ -66,9 +62,8 @@ public:
 private:
 	void SetHierarchyStatic(bool is_static);
 	Config SaveTransform() const;
-	void LoadTransform(Config config) const;
+	void LoadTransform(Config config);
 	void CreateTransform();
-	bool IsChildOfUI();
 	void CopyComponents(const GameObject & gameobject_to_copy);
 
 public:
@@ -80,7 +75,7 @@ public:
 
 	uint64_t UUID = -1;
 	ComponentAABB aabb;
-	ComponentTransform* transform;
+	ComponentTransform transform;
 
 	//TODO: Maybe move this to a component editor?
 	// This should not be public. Public for now while implementing prefab.

@@ -116,7 +116,7 @@ void SceneManager::Load(const std::string &path) const
 		}
 		if (prefab_parents.find(created_game_object->UUID) != prefab_parents.end())
 		{
-			ComponentTransform* previous_transform = prefab_parents[created_game_object->UUID]->transform;
+			ComponentTransform previous_transform = prefab_parents[created_game_object->UUID]->transform;
 			prefab_parents[created_game_object->UUID]->SetParent(created_game_object);
 			prefab_parents[created_game_object->UUID]->transform = previous_transform;
 		}
@@ -133,7 +133,7 @@ void SceneManager::SavePrefab(Config & config, GameObject * gameobject_to_save) 
 	config.AddString(gameobject_to_save->prefab_reference->exported_file, "Prefab");
 
 	Config transform_config;
-	gameobject_to_save->transform->Save(transform_config);
+	gameobject_to_save->transform.Save(transform_config);
 	config.AddChildConfig(transform_config, "Transform");
 
 	std::vector<Config> original_UUIDS;
@@ -177,7 +177,7 @@ GameObject * SceneManager::LoadPrefab(const Config & config) const
 	GameObject * instance = prefab->Instantiate(App->scene->GetRoot(), &UUIDS_pairs);
 	Config transform_config;
 	config.GetChildConfig("Transform", transform_config);
-	instance->transform->Load(transform_config);
+	instance->transform.Load(transform_config);
 return instance;
 }
 
@@ -185,10 +185,10 @@ bool SceneManager::SaveModifiedPrefabComponents(Config & config, GameObject * ga
 {
 
 	bool modified = false;
-	if (gameobject_to_save->transform->modified_by_user)
+	if (gameobject_to_save->transform.modified_by_user)
 	{
 		Config transform_config;
-		gameobject_to_save->transform->Save(transform_config);
+		gameobject_to_save->transform.Save(transform_config);
 		config.AddChildConfig(transform_config, "Transform");
 		modified = true;
 	}
@@ -220,7 +220,7 @@ void SceneManager::LoadPrefabModifiedComponents(const Config & config) const
 		Config transform_config;
 		config.GetChildConfig("Transform", transform_config);
 
-		prefab_child->transform->Load(transform_config);
+		prefab_child->transform.Load(transform_config);
 	}
 
 	std::vector<Config> prefab_components_config;

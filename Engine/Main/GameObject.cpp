@@ -23,7 +23,6 @@
 #include "Component/ComponentScript.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentTransform2D.h"
 #include "Component/ComponentUI.h"
 
 #include <Brofiler/Brofiler.h>
@@ -58,17 +57,18 @@ GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_
 	aabb.owner = this;
 	*this << gameobject_to_copy;
 }
-GameObject & GameObject::operator<<(const GameObject & gameobject_to_copy)
+
+GameObject& GameObject::operator<<(const GameObject & gameobject_to_copy)
 {
 
-	if(!is_prefab_parent && gameobject_to_copy.transform->modified_by_user)
+	if(!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
 	{
-		transform->SetTranslation(gameobject_to_copy.transform->GetTranslation());
-		transform->SetRotation(gameobject_to_copy.transform->GetRotationRadiants());
+		transform.SetTranslation(gameobject_to_copy.transform.GetTranslation());
+		transform.SetRotation(gameobject_to_copy.transform.GetRotationRadiants());
 		//gameobject_to_copy.transform.modified_by_user = false;
 	}
 
-	transform->SetScale(gameobject_to_copy.transform->GetScale());
+	transform.SetScale(gameobject_to_copy.transform.GetScale());
 	CopyComponents(gameobject_to_copy);
 	this->name = gameobject_to_copy.name;
 	this->active = gameobject_to_copy.active;
@@ -147,32 +147,20 @@ void GameObject::SetHierarchyStatic(bool is_static)
 Config GameObject::SaveTransform() const
 {
 	Config config;
-	ComponentTransform* transform = GetTransform();
-	if(transform != nullptr) transform->Save(config);
+	transform.Save(config);
 
-	ComponentTransform2D* transform_2d = GetTransform2D();
-	if (transform_2d != nullptr) transform_2d->Save(config);
+	//ComponentTransform2D* transform_2d = GetTransform2D();
+	//if (transform_2d != nullptr) transform_2d->Save(config);
 
 	return config;
 }
 
-void GameObject::LoadTransform(Config config) const
+void GameObject::LoadTransform(Config config)
 {
 	Config transform_config;
 	config.GetChildConfig("Transform", transform_config);
 
-	std::string transform_type;
-	config.GetString("TransformType", transform_type, "3D");
-
-	if (transform_type == "2D")
-	{
-		GetTransform2D()->Load(transform_config);
-	}
-	else if(transform_type == "3D")
-	{
-		GetTransform()->Load(transform_config);
-
-	}
+	transform.Load(transform_config);
 }
 
 void GameObject::CreateTransform()
@@ -190,13 +178,8 @@ void GameObject::CreateTransform()
 	//	((ComponentTransform*)transform)->Translate(float3::zero);//trigger transform change
 
 	//}
-	transform = new ComponentTransform();
-	transform->owner = this;
-}
-
-bool GameObject::IsChildOfUI()
-{
-	return parent != nullptr && (parent->GetComponent(Component::ComponentType::CANVAS) != nullptr || parent->GetTransform2D() != nullptr);
+	transform = ComponentTransform();
+	transform.owner = this;
 }
 
 bool GameObject::IsStatic() const
@@ -295,12 +278,6 @@ void GameObject::SetParent(GameObject *new_parent)
 		parent->RemoveChild(this);
 	}
 
-	//Change the transform to 2D if child of ui
-	if (IsChildOfUI())
-	{
-		RemoveComponent(GetTransform());
-		CreateComponent(Component::ComponentType::TRANSFORM2D);
-	}
 	new_parent->AddChild(this);
 }
 
@@ -315,7 +292,7 @@ void GameObject::AddChild(GameObject *child)
 	child->UpdateHierarchyDepth();
 	child->UpdateHierarchyBranch();
 
-	child->GetTransform()->ChangeLocalSpace(GetTransform()->GetGlobalModelMatrix());
+	child->transform.ChangeLocalSpace(transform.GetGlobalModelMatrix());
 	children.push_back(child);
 }
 
@@ -390,16 +367,6 @@ ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType ty
 			return components[i];
 		}
 	}
-	return nullptr;
-}
-
-ComponentTransform * GameObject::GetTransform() const
-{
-	return transform;
-}
-
-ComponentTransform2D * GameObject::GetTransform2D() const
-{
 	return nullptr;
 }
 

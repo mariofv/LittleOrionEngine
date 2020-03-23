@@ -36,7 +36,7 @@ GameObject * Prefab::Instantiate(GameObject * prefab_parent, std::unordered_map<
 			parent_prefab = copy_in_scene;
 		}
 		copy_in_scene->prefab_reference = this;
-		copy_in_scene->transform->Translate(float3::zero); //:D
+		copy_in_scene->transform.Translate(float3::zero); //:D
 	}
 	parent_prefab->SetParent(prefab_parent);
 	return parent_prefab;
@@ -157,7 +157,7 @@ void Prefab::AddNewGameObjectToInstance(GameObject * parent, GameObject * new_re
 	}
 	copy->SetParent(parent);
 	*copy << *new_reference;
-	copy->transform->SetTranslation(new_reference->transform->GetTranslation());
+	copy->transform.SetTranslation(new_reference->transform.GetTranslation());
 	for (auto new_reference_child : new_reference->children)
 	{
 		AddNewGameObjectToInstance(copy, new_reference_child, original, revert);

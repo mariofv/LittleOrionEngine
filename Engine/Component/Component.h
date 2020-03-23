@@ -18,7 +18,6 @@ public:
 		TRANSFORM,
 		LIGHT,
         CANVAS,
-		TRANSFORM2D,
 		UI,
 		TEXT,
 		SCRIPT

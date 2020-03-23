@@ -17,7 +17,7 @@ bool ModuleCamera::Init()
 	SDL_GetWindowSize(App->window->window, &windowWidth, &windowHeight);
 
 	scene_camera_game_object = new GameObject();
-	scene_camera_game_object->GetTransform()->SetTranslation(float3(0.5f, 2.f, -15.f));
+	scene_camera_game_object->transform.SetTranslation(float3(0.5f, 2.f, -15.f));
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	scene_camera->SetFarDistance(5000);
 	scene_camera->depth = -1;
@@ -142,7 +142,7 @@ void ModuleCamera::HandleSceneCameraMovements()
 		{
 			if (App->editor->selected_game_object != nullptr)
 			{
-				scene_camera->OrbitCameraWithMouseMotion(motion, App->editor->selected_game_object->transform->GetGlobalTranslation());
+				scene_camera->OrbitCameraWithMouseMotion(motion, App->editor->selected_game_object->transform.GetGlobalTranslation());
 			}
 			else
 			{
