@@ -69,8 +69,8 @@ enum class Fonts
 # define HOUSE_MODEL_PATH "Assets/Models/baker_house/BakerHouse.fbx"
 # define DEFAULT_MATERIAL_PATH "Resources/Materials/default.olmat"
 
-# define VIDEO_BILLBOARD_TEXTURE_PATH "Resources/Textures/video-solid.png"
-# define LIGHT_BILLBOARD_TEXTURE_PATH "Resources/Textures/lightbulb-solid.png"
+# define VIDEO_BILLBOARD_TEXTURE_PATH "Library/Metadata/35/3575636683"
+# define LIGHT_BILLBOARD_TEXTURE_PATH "Library/Metadata/26/2664975493"
 
 # define PRIMITIVE_CUBE_PATH "Library/Metadata/41/4135282941"
 # define PRIMITIVE_CYLINDER_PATH "Library/Metadata/40/4057255088"
