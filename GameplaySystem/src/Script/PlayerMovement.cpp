@@ -103,17 +103,17 @@ void PlayerMovement::Move(int player)
 //Use this for linking GO automatically
 void PlayerMovement::Save(Config& config) const
 {
-	config.AddUInt(example->UUID, "ExampleNameforSave");
+	//config.AddUInt(example->UUID, "ExampleNameforSave");
 }
 
 //Use this for linking GO automatically
 void PlayerMovement::Load(const Config& config)
 {
-	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
+	//exampleUUID = config.GetUInt("ExampleNameforSave", 0);
 }
 
 //Use this for linking GO automatically
 void PlayerMovement::Link()
 {
-	example = App->scene->GetGameObject(exampleUUID);
+	//example = App->scene->GetGameObject(exampleUUID);
 }
