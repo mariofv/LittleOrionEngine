@@ -4,12 +4,11 @@
 #include "Module/ModuleResourceManager.h"
 
 #include <algorithm>
-#include <cctype>
 #include <SDL/SDL.h>
 
 bool ModuleFileSystem::Init()
 {
-	save_path = SDL_GetPrefPath("UPC", TITLE);
+	char* save_path = SDL_GetPrefPath("UPC", TITLE);
 	if (save_path == NULL)
 	{
 		return false;
@@ -75,6 +74,7 @@ char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
 	return res;
 
 }
+
 bool ModuleFileSystem::Save(const char* file_path, const void* buffer, unsigned int size, bool append) const
 {
 	if (size == 0)
@@ -106,22 +106,31 @@ bool ModuleFileSystem::Save(const char* file_path, const void* buffer, unsigned 
 	SDL_RWclose(file);
 	return true;
 }
-bool ModuleFileSystem::Remove(const Path* file) const
+
+bool ModuleFileSystem::Exists(const std::string& path) const
 {
-	if (file == nullptr)
+	return PHYSFS_exists(path.c_str());
+}
+
+bool ModuleFileSystem::Remove(const Path* path) const
+{
+	if (path == nullptr)
 	{
+		APP_LOG_ERROR("Nullptr path passed to Remove")
 		return false;
 	}
-	bool success = PHYSFS_delete(file->file_path.c_str()) != 0;
-	if (file->parent != nullptr)
+
+	bool success = PHYSFS_delete(path->file_path.c_str()) != 0;
+	if (path->parent != nullptr)
 	{
-		file->parent->Refresh();
+		path->parent->Refresh();
 	}
 	return success;
 }
-bool ModuleFileSystem::Exists(const char* file_path) const
+
+bool ModuleFileSystem::Remove(const std::string& path) const
 {
-	return PHYSFS_exists(file_path);
+	return Remove(&Path(path));
 }
 
 Path ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path) const
@@ -134,81 +143,18 @@ Path ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path
 	return Path(new_directory_full_path);
 }
 
-bool ModuleFileSystem::Copy(const char* source, const char* destination)
+bool ModuleFileSystem::Copy(const std::string& source, const std::string& destination)
 {
 	size_t file_size;
 	if (!Exists(source))
 	{
+		APP_LOG_ERROR("Cannot copy file %s because it doesn't exist!", source.c_str())
 		return false;
 	}
-	char * buffer = Load(source,file_size);
-	bool success = Save(destination, buffer, file_size,false);
+	char* buffer = Load(source.c_str(), file_size);
+	bool success = Save(destination.c_str(), buffer, file_size,false);
 	free(buffer);
 	return success;
-}
-
-FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileType & file_type) const
-{
-	std::string file_extension = GetFileExtension(file_path);
-	std::transform(file_extension.begin(), file_extension.end(), file_extension.begin(),
-		[](unsigned char letter) { return std::tolower(letter); });
-
-	if ((PHYSFS_FileType::PHYSFS_FILETYPE_DIRECTORY == file_type ) || (file_extension == "/" ))
-	{
-		return FileType::DIRECTORY;
-	}
-
-	if (
-		file_extension == "png"
-		|| file_extension == "tif"
-		|| file_extension == "dds"
-		|| file_extension == "tga"
-		|| file_extension == "jpg"
-		|| file_extension == "jfif"
-		)
-	{
-		return FileType::TEXTURE;
-	}
-	if (file_extension == "fbx")
-	{
-		return FileType::MODEL;
-	}
-	if (file_extension == "prefab")
-	{
-		return FileType::PREFAB;
-	}
-	if (file_extension == "ol"
-		|| file_extension == "mesh")
-	{
-		return FileType::MESH;
-	}
-	if (file_extension == "matol")
-	{
-		return FileType::MATERIAL;
-	}
-	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
-	{
-		return FileType::ARCHIVE;
-	}
-	return FileType::UNKNOWN;
-}
-
-
-std::string ModuleFileSystem::GetFileExtension(const char *file_path) const
-{
-	std::string file_path_string = std::string(file_path);
-	if (!file_path_string.empty() && file_path_string.back() == '/')
-	{
-		return std::string("/");
-	}
-
-	std::size_t found = file_path_string.find_last_of(".");
-	if (found == std::string::npos || found == 0) {
-		return "";
-	}
-	std::string file_extension = file_path_string.substr(found + 1, file_path_string.length());
-
-	return file_extension;
 }
 
 void ModuleFileSystem::GetAllFilesInPath(const std::string& path, std::vector<std::shared_ptr<Path>>& files, bool directories_only) const
