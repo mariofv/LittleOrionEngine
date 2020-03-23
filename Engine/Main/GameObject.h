@@ -4,7 +4,7 @@
 #define ENGINE_EXPORTS
 #include "Globals.h"
 #include "Component/Component.h"
-#include "Component/ComponentTransform.h"
+#include "Component/ComponentTransform2D.h"
 #include "Component/ComponentAABB.h"
 #include "Component/ComponentTransform.h"
 
@@ -76,6 +76,7 @@ public:
 	uint64_t UUID = -1;
 	ComponentAABB aabb;
 	ComponentTransform transform;
+	ComponentTransform2D transform_2d;
 
 	//TODO: Maybe move this to a component editor?
 	// This should not be public. Public for now while implementing prefab.

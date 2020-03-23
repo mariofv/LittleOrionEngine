@@ -22,9 +22,9 @@ ComponentUI::ComponentUI(GameObject * owner) : Component(owner, ComponentType::U
 
 void ComponentUI::Render() 
 {
-	
-	model = model.Scale(float3(size.x, -size.y, 0.0f), float3::zero);
-	model.SetTranslatePart(float3(position, 0.0f));
+
+	model = model.Scale(float3(10, 10, 0.0f), float3::zero);
+	model.SetTranslatePart(float3(owner->transform.GetTranslation().x, owner->transform.GetTranslation().y, 0.0f));
 
 	float4x4 projection = float4x4::D3DOrthoProjLH(0, 1, window_width, window_height);
 	
