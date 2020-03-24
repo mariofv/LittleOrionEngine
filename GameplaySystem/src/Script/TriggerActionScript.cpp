@@ -33,8 +33,7 @@ TriggerActionScript::TriggerActionScript()
 // Use this for initialization before Start()
 void TriggerActionScript::Awake()
 {
-	std::string aux("WalkableScript");
-	movement_component = trigger_go->GetComponentScript(aux);
+	movement_component = trigger_go->GetComponentScript("WalkableScript");
 	movement_script = (WalkableScript*)movement_component->script;
 	start_position = trigger_go->transform.GetGlobalTranslation();
 }

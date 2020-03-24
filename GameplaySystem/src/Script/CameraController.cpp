@@ -34,8 +34,7 @@ void CameraController::Awake()
 
 	camera_component = (ComponentCamera*)camera->GetComponent(Component::ComponentType::CAMERA);
 
-	std::string aux("TestScriptRuntime");
-	player_movement_component = player->GetComponentScript(aux);
+	player_movement_component = player->GetComponentScript("TestScriptRuntime");
 	player_movement_script = (TestScriptRuntime*)player_movement_component->script;
 }
 

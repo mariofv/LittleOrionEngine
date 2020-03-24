@@ -29,8 +29,7 @@ ExampleScript::ExampleScript()
 void ExampleScript::Awake()
 {
 	//Example Unity-like of how get components from GO dragged
-	std::string aux("TestScriptRuntime");
-	enemy_component = enemy->GetComponentScript(aux);
+	enemy_component = enemy->GetComponentScript("TestScriptRuntime");
 	enemy_script = (TestScriptRuntime*)enemy_component->script;
 	
 }
