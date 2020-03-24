@@ -331,7 +331,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Animation");
 		ImGui::SameLine();
-		if (ImGui::Button(animation->animation_controller->anim->exported_file.c_str()))
+		if (ImGui::Button(animation->animation_controller->animation->exported_file.c_str()))
 		{
 			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
 		}
@@ -339,7 +339,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Skeleton");
 		ImGui::SameLine();
-		if (ImGui::Button(animation->animation_controller->sk->exported_file.c_str()))
+		if (ImGui::Button(animation->animation_controller->skeleton->exported_file.c_str()))
 		{
 			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
 		}

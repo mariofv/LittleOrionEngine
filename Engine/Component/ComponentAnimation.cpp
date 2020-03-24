@@ -15,7 +15,7 @@ ComponentAnimation::ComponentAnimation() : Component(nullptr, ComponentType::ANI
 	SetSkeleton(App->resources->Load<Skeleton>("Library/Metadata/29/2987806620"));
 }
 
-ComponentAnimation::ComponentAnimation(GameObject * owner) : Component(owner, ComponentType::ANIMATION)
+ComponentAnimation::ComponentAnimation(GameObject* owner) : Component(owner, ComponentType::ANIMATION)
 {
 	animation_controller = new AnimController();
 }
@@ -39,7 +39,7 @@ Component* ComponentAnimation::Clone(bool original_prefab) const
 	return created_component;
 };
 
-void ComponentAnimation::Copy(Component * component_to_copy) const
+void ComponentAnimation::Copy(Component* component_to_copy) const
 {
 	*component_to_copy = *this;
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;
@@ -71,8 +71,8 @@ void ComponentAnimation::Save(Config& config) const
 	config.AddBool(active, "Active");
 
 
-	config.AddString(animation_controller->anim->exported_file, "AnimationResource");
-	config.AddString(animation_controller->sk->exported_file, "SkeletonResource");
+	config.AddString(animation_controller->animation->exported_file, "AnimationResource");
+	config.AddString(animation_controller->skeleton->exported_file, "SkeletonResource");
 }
 
 void ComponentAnimation::Load(const Config& config)
@@ -88,13 +88,13 @@ void ComponentAnimation::Load(const Config& config)
 	SetSkeleton(App->resources->Load<Skeleton>(skeleton_path));
 }
 
-void ComponentAnimation::SetAnimation(std::shared_ptr<Animation> & animation)
+void ComponentAnimation::SetAnimation(std::shared_ptr<Animation>& animation)
 {
-	animation_controller->anim = animation;
+	animation_controller->animation = animation;
 }
-void ComponentAnimation::SetSkeleton(std::shared_ptr<Skeleton> & skeleton)
+void ComponentAnimation::SetSkeleton(std::shared_ptr<Skeleton>& skeleton)
 {
-	animation_controller->sk = skeleton;
+	animation_controller->skeleton = skeleton;
 	palette.resize(skeleton->skeleton.size());
 	for (auto & matrix : palette)
 	{
@@ -115,13 +115,13 @@ void ComponentAnimation::UpdateBone(GameObject* current_bone)
 	{
 		current_bone->transform.SetRotation(bone_rotation.ToFloat3x3());
 	}
-	auto it = std::find_if(animation_controller->sk->skeleton.begin(), animation_controller->sk->skeleton.end(), [current_bone](const Skeleton::Joint & joint) {
+	auto it = std::find_if(animation_controller->skeleton->skeleton.begin(), animation_controller->skeleton->skeleton.end(), [current_bone](const Skeleton::Joint & joint) {
 		return current_bone->name == joint.name;
 	});
 
-	if (it != animation_controller->sk->skeleton.end())
+	if (it != animation_controller->skeleton->skeleton.end())
 	{
-		palette[it - animation_controller->sk->skeleton.begin()] = current_bone->transform.GetGlobalModelMatrix() * (*it).transform_global;
+		palette[it - animation_controller->skeleton->skeleton.begin()] = current_bone->transform.GetGlobalModelMatrix() * (*it).transform_global;
 	}
 	for (auto& children_bone : current_bone->children)
 	{

@@ -75,7 +75,7 @@ update_status ModuleResourceManager::PreUpdate()
  }
 
 
- void ModuleResourceManager::CreatePrefab(const std::string &path, GameObject * gameobject_to_save) const
+ void ModuleResourceManager::CreatePrefab(const std::string& path, GameObject* gameobject_to_save) const
  {
 	prefab_importer->CreatePrefabResource(File(path),gameobject_to_save);
  }
@@ -173,7 +173,7 @@ void  ModuleResourceManager::ReimportIfNeeded(const std::string& uid)
 	}
 }
 
-uint32_t ModuleResourceManager::LoadCubemap(const std::vector<std::string> & faces_paths) 
+uint32_t ModuleResourceManager::LoadCubemap(const std::vector<std::string>& faces_paths) 
 {
 	std::vector<std::string> faces_paths_dds;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)

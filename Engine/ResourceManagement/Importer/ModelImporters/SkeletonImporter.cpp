@@ -81,7 +81,7 @@ void SkeletonImporter::ImportChildBone(const aiNode * previus_node,  uint32_t pr
 	}
 }
 
-aiBone* SkeletonImporter::GetNodeBone(const aiMesh* mesh,  const std::string & boneName) const
+aiBone* SkeletonImporter::GetNodeBone(const aiMesh* mesh,  const std::string& boneName) const
 {
 	for (size_t i = 0; i < mesh->mNumBones; i++)
 	{
@@ -94,7 +94,7 @@ aiBone* SkeletonImporter::GetNodeBone(const aiMesh* mesh,  const std::string & b
 }
 
 
-float4x4 SkeletonImporter::GetTransform(const aiMatrix4x4 & current_transform, float scale_factor) 
+float4x4 SkeletonImporter::GetTransform(const aiMatrix4x4& current_transform, float scale_factor) 
 {
 	aiVector3t<float> pScaling, pPosition;
 	aiQuaterniont<float> pRotation;
@@ -108,7 +108,7 @@ float4x4 SkeletonImporter::GetTransform(const aiMatrix4x4 & current_transform, f
 	return math::float4x4::FromTRS(translation, rotation, scale);
 }
 
-bool SkeletonImporter::SaveBinary(const Skeleton & skeleton) const
+bool SkeletonImporter::SaveBinary(const Skeleton& skeleton) const
 {
 
 	uint32_t num_bones = skeleton.skeleton.size();

@@ -8,9 +8,9 @@
 
 class Billboard;
 class ComponentCamera;
+class GameObject;
 class Grid;
 class IDebugDrawOpenGLImplementation;
-class GameObject;
 
 class ModuleDebugDraw : public Module
 {

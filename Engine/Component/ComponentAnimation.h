@@ -7,16 +7,16 @@
 
 #include <GL/glew.h>
 #include <memory>
+class Animation;
 class AnimController;
 class GameObject;
-class Animation;
 class Skeleton;
 
 class ComponentAnimation :	public Component
 {
 public:
 	ComponentAnimation();
-	ComponentAnimation(GameObject * owner);
+	ComponentAnimation(GameObject* owner);
 	~ComponentAnimation();
 
 
@@ -24,8 +24,8 @@ public:
 	ComponentAnimation(const ComponentAnimation& component_to_copy) = default;
 	ComponentAnimation(ComponentAnimation&& component_to_move) = default;
 
-	ComponentAnimation & operator=(const ComponentAnimation & component_to_copy) = default;
-	ComponentAnimation & operator=(ComponentAnimation && component_to_move) = default;
+	ComponentAnimation & operator=(const ComponentAnimation& component_to_copy) = default;
+	ComponentAnimation & operator=(ComponentAnimation&& component_to_move) = default;
 
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;

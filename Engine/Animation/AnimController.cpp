@@ -9,27 +9,27 @@
 
 void AnimController::Init()
 {
-	animation_time = (anim->frames/anim->frames_per_second )* 1000;
-	for (size_t i = 0; i < anim->keyframes[0].channels.size(); ++i)
+	animation_time = (animation->frames/animation->frames_per_second )* 1000;
+	for (size_t i = 0; i < animation->keyframes[0].channels.size(); ++i)
 	{
-		auto & channel = anim->keyframes[0].channels[i];
-		auto it = std::find_if(sk->skeleton.begin(), sk->skeleton.end(), [channel](const Skeleton::Joint & joint)
+		auto & channel = animation->keyframes[0].channels[i];
+		auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [channel](const Skeleton::Joint & joint)
 		{
 			return joint.name == channel.name;
 		});
-		if (it != sk->skeleton.end())
+		if (it != skeleton->skeleton.end())
 		{
 			Skeleton::Joint joint = (*it);
-			while (joint.parent_index < sk->skeleton.size())
+			while (joint.parent_index < skeleton->skeleton.size())
 			{
-				joint = sk->skeleton[joint.parent_index];
-				auto it_channel = std::find_if(anim->keyframes[0].channels.begin(), anim->keyframes[0].channels.end(), [&joint](const Animation::Channel & parent_channel)
+				joint = skeleton->skeleton[joint.parent_index];
+				auto it_channel = std::find_if(animation->keyframes[0].channels.begin(), animation->keyframes[0].channels.end(), [&joint](const Animation::Channel & parent_channel)
 				{
 					return joint.name == parent_channel.name;
 				});
-				if (it_channel != anim->keyframes[0].channels.end())
+				if (it_channel != animation->keyframes[0].channels.end())
 				{
-					channel_hierarchy_cache[i].push_back(it_channel - anim->keyframes[0].channels.begin());
+					channel_hierarchy_cache[i].push_back(it_channel - animation->keyframes[0].channels.begin());
 				}
 			}
 		}
@@ -72,14 +72,14 @@ void AnimController::Update()
 
 }
 
-bool AnimController::GetTranslation(const std::string& channel_name, float3 & pos)
+bool AnimController::GetTranslation(const std::string& channel_name, float3& position)
 {
-	float current_sample = (current_time*(anim->frames - 1)) / animation_time;
+	float current_sample = (current_time*(animation->frames - 1)) / animation_time;
 	int current_keyframe = math::FloorInt(current_sample);
 
-	int next_keyframe = (current_keyframe + 1) % (int)anim->frames;
+	int next_keyframe = (current_keyframe + 1) % (int)animation->frames;
 
-	if (current_keyframe >= anim->keyframes.size() || next_keyframe >= anim->keyframes.size())
+	if (current_keyframe >= animation->keyframes.size() || next_keyframe >= animation->keyframes.size())
 	{
 		return false;
 	}
@@ -88,17 +88,17 @@ bool AnimController::GetTranslation(const std::string& channel_name, float3 & po
 
 	bool channel_found = false;
 	size_t i = 0;
-	while (!channel_found && i < anim->keyframes[current_keyframe].channels.size())
+	while (!channel_found && i < animation->keyframes[current_keyframe].channels.size())
 	{
-		if (anim->keyframes[current_keyframe].channels[i].name == channel_name)
+		if (animation->keyframes[current_keyframe].channels[i].name == channel_name)
 		{
 			channel_found = true;
-			if (!anim->keyframes[current_keyframe].channels[i].is_translated)
+			if (!animation->keyframes[current_keyframe].channels[i].is_translated)
 			{
 				return false;
 			}
-			current_translation = anim->keyframes[current_keyframe].channels[i].translation;
-			next_translation = anim->keyframes[next_keyframe].channels[i].translation;
+			current_translation = animation->keyframes[current_keyframe].channels[i].translation;
+			next_translation = animation->keyframes[next_keyframe].channels[i].translation;
 		}
 		++i;
 	}
@@ -106,20 +106,20 @@ bool AnimController::GetTranslation(const std::string& channel_name, float3 & po
 	if (channel_found)
 	{
 		float delta = current_sample - current_keyframe;
-		pos = Utils::Interpolate(current_translation, next_translation, delta);
+		position = Utils::Interpolate(current_translation, next_translation, delta);
 	}
 
 	return channel_found;
 }
 
-bool AnimController::GetRotation(const std::string& channel_name, Quat & rot)
+bool AnimController::GetRotation(const std::string& channel_name, Quat& rotation)
 {
-	float current_sample = (current_time*(anim->frames - 1)) / animation_time;
+	float current_sample = (current_time*(animation->frames - 1)) / animation_time;
 	int current_keyframe = math::FloorInt(current_sample);
 
-	int next_keyframe = (current_keyframe + 1) % (int)anim->frames;
+	int next_keyframe = (current_keyframe + 1) % (int)animation->frames;
 
-	if (current_keyframe >= anim->keyframes.size() || next_keyframe >= anim->keyframes.size())
+	if (current_keyframe >= animation->keyframes.size() || next_keyframe >= animation->keyframes.size())
 	{
 		return false;
 	}
@@ -128,18 +128,18 @@ bool AnimController::GetRotation(const std::string& channel_name, Quat & rot)
 
 	bool channel_found = false;
 	size_t i = 0;
-	while (!channel_found && i < anim->keyframes[current_keyframe].channels.size())
+	while (!channel_found && i < animation->keyframes[current_keyframe].channels.size())
 	{
-		if (anim->keyframes[current_keyframe].channels[i].name == channel_name)
+		if (animation->keyframes[current_keyframe].channels[i].name == channel_name)
 		{
 			channel_found = true;
-			if (!anim->keyframes[current_keyframe].channels[i].is_rotated)
+			if (!animation->keyframes[current_keyframe].channels[i].is_rotated)
 			{
 				return false;
 			}
 
-			current_rotation = anim->keyframes[current_keyframe].channels[i].rotation;
-			next_rotation = anim->keyframes[next_keyframe].channels[i].rotation;
+			current_rotation = animation->keyframes[current_keyframe].channels[i].rotation;
+			next_rotation = animation->keyframes[next_keyframe].channels[i].rotation;
 		}
 		++i;
 	}
@@ -147,33 +147,33 @@ bool AnimController::GetRotation(const std::string& channel_name, Quat & rot)
 	if (channel_found)
 	{
 		float delta = current_sample - current_keyframe;
-		rot = Utils::Interpolate(current_rotation, next_rotation, delta);
+		rotation = Utils::Interpolate(current_rotation, next_rotation, delta);
 	}
 
 	return channel_found;
 }
 
-bool AnimController::GetTransformation(const std::string& channel_name, float4x4 & transform)
+bool AnimController::GetTransformation(const std::string& channel_name, float4x4& transform)
 {
-	float current_sample = (current_time*(anim->frames - 1)) / animation_time;
+	float current_sample = (current_time*(animation->frames - 1)) / animation_time;
 	int current_keyframe = math::FloorInt(current_sample);
 
-	int next_keyframe = (current_keyframe + 1) % (int)anim->frames;
+	int next_keyframe = (current_keyframe + 1) % (int)animation->frames;
 
 	float4x4 current_global_tranform = float4x4::identity;
 	float4x4 next_global_tranform = float4x4::identity;
 
-	std::vector<Animation::Channel> & channels = anim->keyframes[current_keyframe].channels;
+	std::vector<Animation::Channel> & channels = animation->keyframes[current_keyframe].channels;
 
 	bool channel_found = false;
 	size_t i = 0;
-	while (!channel_found && i < anim->keyframes[current_keyframe].channels.size())
+	while (!channel_found && i < animation->keyframes[current_keyframe].channels.size())
 	{
-		if (anim->keyframes[current_keyframe].channels[i].name == channel_name)
+		if (animation->keyframes[current_keyframe].channels[i].name == channel_name)
 		{
 			channel_found = true;
-			GetChannelGlobalTransform(i,anim->keyframes[current_keyframe].channels[i], channels, current_global_tranform);
-			GetChannelGlobalTransform(i,anim->keyframes[next_keyframe].channels[i], channels, next_global_tranform);
+			GetChannelGlobalTransform(i,animation->keyframes[current_keyframe].channels[i], channels, current_global_tranform);
+			GetChannelGlobalTransform(i,animation->keyframes[next_keyframe].channels[i], channels, next_global_tranform);
 		}
 		++i;
 	}

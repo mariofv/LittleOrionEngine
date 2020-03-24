@@ -11,7 +11,7 @@ Utils::~Utils()
 {
 }
 
-Quat Utils::GenerateQuatFromDegFloat3(const float3 &rotation)
+Quat Utils::GenerateQuatFromDegFloat3(const float3& rotation)
 {
 	return Quat::FromEulerXYZ(
 		math::DegToRad(rotation.x),
@@ -20,7 +20,7 @@ Quat Utils::GenerateQuatFromDegFloat3(const float3 &rotation)
 	);
 }
 
-float3 Utils::GenerateDegFloat3FromQuat(const Quat &rotation)
+float3 Utils::GenerateDegFloat3FromQuat(const Quat& rotation)
 {
 	float3 deg_rotation = rotation.ToEulerXYZ();
 	deg_rotation.x = math::RadToDeg(deg_rotation.x);
@@ -52,7 +52,7 @@ float3 Utils::Float3DegToRad(const float3& deg_float3)
 	return rad_float3;
 }
 
-std::vector<float> Utils::GetVertices(const AABB &box)
+std::vector<float> Utils::GetVertices(const AABB& box)
 {
 	static const int num_of_vertices = 8;
 	float3 tmp_vertices[num_of_vertices];
@@ -69,7 +69,7 @@ std::vector<float> Utils::GetVertices(const AABB &box)
 	return vertices;
 }
 
-std::vector<float> Utils::GetVertices(const AABB2D &box)
+std::vector<float> Utils::GetVertices(const AABB2D& box)
 {
 	static const int num_of_vertices = 4;
 	float3 tmp_vertices[num_of_vertices];
