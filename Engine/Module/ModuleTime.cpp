@@ -105,7 +105,7 @@ void ModuleTime::Play()
 	{
 		App->editor->SaveScene(TMP_SCENE_PATH);
 		game_time_clock->Start();
-		frame_start_time = 0;
+		frame_start_time = game_time_clock->Read();
 		App->scripts->InitScripts();
 	}
 	else

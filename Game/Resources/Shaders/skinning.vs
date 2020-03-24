@@ -32,6 +32,7 @@ uniform mat4 palette[64];
 out vec2 texCoord;
 out vec3 position;
 out vec3 normal;
+//out vec3 tangent;
 void main()
 {
 
@@ -40,8 +41,9 @@ void main()
 	{
 		skinning_matrix += vertex_weights[i] * palette[vertex_joints[i]];
 	}
-	gl_Position = matrices.proj*matrices.view*matrices.model*skinning_matrix *vec4(vertex_position, 1.0);
+	gl_Position = matrices.proj * matrices.view * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
 	texCoord = vertex_uv0;
-	position = (matrices.model*vec4(vertex_position, 1.0)).xyz;
-	normal = (matrices.model*vec4(vertex_normal, 0.0)).xyz;
+	position = (matrices.model * skinning_matrix * vec4(vertex_position, 1.0)).xyz;
+	normal = (matrices.model * skinning_matrix * vec4(vertex_normal, 0.0)).xyz;
+	//tangent = (matrices.model * skinning_matrix * vec4(vertex_tangent, 0.0)).xyz;
 }
