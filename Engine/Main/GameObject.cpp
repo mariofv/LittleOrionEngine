@@ -320,7 +320,7 @@ ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType ty
 	return nullptr;
 }
 
-ENGINE_API ComponentScript* GameObject::GetComponentScript(std::string & name)
+ENGINE_API ComponentScript* GameObject::GetComponentScript(std::string& name)
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
