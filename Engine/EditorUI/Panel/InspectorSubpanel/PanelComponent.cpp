@@ -46,6 +46,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 		{
 			ComponentTransform2D* transform_2d = &transform->owner->transform_2d;
 
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
 			static int top = transform_2d->rect.top;
 			if (ImGui::DragInt("Top", &top, 1))
 			{
@@ -55,6 +56,8 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			}
 
 			ImGui::SameLine();
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
+			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2);
 
 			static int right = transform_2d->rect.right;
 			if (ImGui::DragInt("Right", &right, 1))
@@ -63,6 +66,8 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
 			}
+
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
 
 			static int bottom = transform_2d->rect.bottom;
 			if (ImGui::DragInt("Bottom", &bottom, 1))
@@ -73,6 +78,8 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			}
 
 			ImGui::SameLine();
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
+			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2);
 
 			static int left = transform_2d->rect.left;
 			if (ImGui::DragInt("Left", &left, 1))
