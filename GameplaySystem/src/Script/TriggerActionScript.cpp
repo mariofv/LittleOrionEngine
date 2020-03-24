@@ -67,7 +67,6 @@ void TriggerActionScript::OnInspector(ImGuiContext* context)
 	ImGui::Text("TriggerAction Script Inspector");
 	//Example to Drag and drop and link GOs in the Editor, Unity-like (WIP)
 	ImGui::Text("TestScriptRuntime: ");
-	ImGui::SameLine();
 
 	for(int i  = 0; i < public_gameobjects.size(); ++i)
 	{
@@ -81,6 +80,7 @@ void TriggerActionScript::OnInspector(ImGuiContext* context)
 
 void TriggerActionScript::Save(Config & config) const
 {
+
 	for(int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		GameObject* go = (*public_gameobjects[i]);
@@ -116,7 +116,9 @@ void TriggerActionScript::Link()
 	for(int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		if(go_uuids[i] != 0)
+		{
 			(*public_gameobjects[i]) = App->scene->GetGameObject(go_uuids[i]);
+		}
 	}
 }
 bool TriggerActionScript::OnTriggerEnter() const

@@ -591,11 +591,12 @@ void PanelConfiguration::ShowInputOptions()
 
 			ImGui::Text("Game Inputs:");
 
-			ImGui::Text("");
+			ImGui::Separator();
 
 			for(auto game_input : App->input->game_inputs)
 			{
-				ImGui::Text("%s :", game_input.first);
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", game_input.first.c_str());
+				ImGui::Text("KeyCodes:");
 				for(auto key : game_input.second.keys)
 				{
 					int aux = static_cast<int>(key);
@@ -609,22 +610,25 @@ void PanelConfiguration::ShowInputOptions()
 						aux -= 4;
 
 
-					ImGui::Text("%s", game_inputs_strings[aux]);
+					ImGui::Text("	%s", game_inputs_strings[aux]);
 				}
+				ImGui::Text("MouseCodes:");
 				for (auto mouse : game_input.second.mouse_buttons)
 				{
-					ImGui::Text("%s", mouse_keys_string[(int)mouse]);
+					ImGui::Text("	%s", mouse_keys_string[(int)mouse]);
 				}
-
+				ImGui::Text("ControllerCodes:");
 				for (auto controller_key : game_input.second.controller_buttons)
 				{
-					ImGui::Text("%s", controller_keys_string[(int)controller_key]);
+					ImGui::Text("	%s", controller_keys_string[(int)controller_key]);
 				}
 				
 				if(ImGui::Button("Delete GameInput"))
 				{
 					App->input->DeleteGameInput(game_input.second);
 				}
+
+				ImGui::Separator();
 
 			}
 		
