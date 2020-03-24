@@ -16,9 +16,11 @@
 #include "Component/ComponentScript.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentTransform2D.h"
 #include "Component/ComponentUI.h"
 
 #include "Helper/Utils.h"
+#include "Math/Rect.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -44,13 +46,43 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 		{
 			ComponentTransform2D* transform_2d = &transform->owner->transform_2d;
 
-			if (ImGui::DragFloat2("Translation", transform_2d->position.ptr(), 0.01f))
+			static int top = transform_2d->rect.top;
+			if (ImGui::DragInt("Top", &top, 1))
 			{
+				transform_2d->rect.top = top;
+				transform_2d->OnTransformChange();
+				transform_2d->modified_by_user = true;
+			}
+
+			ImGui::SameLine();
+
+			static int right = transform_2d->rect.right;
+			if (ImGui::DragInt("Right", &right, 1))
+			{
+				transform_2d->rect.right = right;
+				transform_2d->OnTransformChange();
+				transform_2d->modified_by_user = true;
+			}
+
+			static int bottom = transform_2d->rect.bottom;
+			if (ImGui::DragInt("Bottom", &bottom, 1))
+			{
+				transform_2d->rect.bottom = bottom;
+				transform_2d->OnTransformChange();
+				transform_2d->modified_by_user = true;
+			}
+
+			ImGui::SameLine();
+
+			static int left = transform_2d->rect.left;
+			if (ImGui::DragInt("Left", &left, 1))
+			{
+				transform_2d->rect.left = left;
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
 			}
 			//UndoRedo
-			CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION2D, transform_2d);
+			CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform_2d);
 
 			if (ImGui::DragFloat("Rotation", transform->rotation.ptr(), 0.1f, -180.f, 180.f))
 			{
@@ -58,15 +90,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 				transform_2d->modified_by_user = true;
 			}
 			//UndoRedo
-			CheckClickForUndo(ModuleActions::UndoActionType::ROTATION2D, transform_2d);
-
-			if (ImGui::DragFloat2("Size", transform_2d->size.ptr(), 0.01f))
-			{
-				transform_2d->OnTransformChange();
-				transform_2d->modified_by_user = true;
-			}
-			//UndoRedo
-			CheckClickForUndo(ModuleActions::UndoActionType::SCALE2D, transform_2d);
+			CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D_ROTATION, transform_2d);
 		}
 		else //Render transform 3d
 		{
@@ -470,13 +494,8 @@ void PanelComponent::CheckClickForUndo(ModuleActions::UndoActionType  type, Comp
 		case ModuleActions::UndoActionType::SCALE:
 			App->actions->previous_transform = ((ComponentTransform*)component)->GetScale();
 			break;
-		case ModuleActions::UndoActionType::TRANSLATION2D:
-			App->actions->action_component = (ComponentTransform2D*) component;
-			break;
-		case ModuleActions::UndoActionType::ROTATION2D:
-			App->actions->action_component = (ComponentTransform2D*) component;
-			break;
-		case ModuleActions::UndoActionType::SCALE2D:
+		case ModuleActions::UndoActionType::EDIT_RECT2D:
+		case ModuleActions::UndoActionType::EDIT_RECT2D_ROTATION:
 			App->actions->action_component = (ComponentTransform2D*) component;
 			break;
 		case ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT:

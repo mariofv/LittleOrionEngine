@@ -24,8 +24,8 @@ void ComponentUI::Render()
 {
 	ComponentTransform2D* transform = &owner->transform_2d;
 
-	model = model.Scale(float3(transform->size.x, transform->size.y, 0.0f), float3::zero);
-	model.SetTranslatePart(float3(transform->position.x, transform->position.y, 0.0f));
+	model = model.Scale(float3(transform->rect.Width(), transform->rect.Height(), 0.0f), float3::zero);
+	model.SetTranslatePart(float3(transform->rect.left, transform->rect.top, 0.0f));
 
 	float4x4 projection = float4x4::D3DOrthoProjLH(0, 1, window_width, window_height);
 	

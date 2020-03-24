@@ -10,11 +10,10 @@ ComponentTransform2D::ComponentTransform2D(GameObject * owner) : Component(owner
 	OnTransformChange();
 }
 
-ComponentTransform2D::ComponentTransform2D(GameObject* owner, const float2 translation, const float rotation, const float2 scale) :
+ComponentTransform2D::ComponentTransform2D(GameObject* owner, const Rect rext, const float rotation) :
 	Component(owner, ComponentType::TRANSFORM2D),
-	position(translation),
 	rotation(rotation),
-	size(scale)
+	rect(rect)
 {
 	OnTransformChange();
 }
@@ -25,8 +24,7 @@ ComponentTransform2D::~ComponentTransform2D()
 
 void ComponentTransform2D::Delete()
 {
-	delete(&position);
-	delete(&size);
+	delete(&rect);
 }
 
 Component * ComponentTransform2D::Clone(bool create_on_module) const
@@ -45,9 +43,8 @@ void ComponentTransform2D::Copy(Component * component_to_copy) const
 
 ComponentTransform2D & ComponentTransform2D::operator=(const ComponentTransform2D & component_to_copy)
 {
-	position = component_to_copy.position;
+	rect = component_to_copy.rect;
 	rotation = component_to_copy.rotation;
-	size = component_to_copy.size;
 	
 	OnTransformChange();
 	return *this;
@@ -57,18 +54,33 @@ void ComponentTransform2D::Save(Config& config) const
 {
 	config.AddUInt(UUID, "UUID");
 	config.AddBool(active, "Active");
-	config.AddFloat2(position, "Position");
+	config.AddFloat(rect.top, "Top");
+	config.AddFloat(rect.right, "Right");
+	config.AddFloat(rect.bottom, "Bottom");
+	config.AddFloat(rect.left, "Left");
 	config.AddFloat(rotation, "Rotation");
-	config.AddFloat2(size, "Scale");
 }
 
 void ComponentTransform2D::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-	config.GetFloat2("Translation", position, float2::zero);
+	
+	float param = 0.0f;
+
+	config.GetFloat("Top", param);
+	rect.top = param;
+	
+	config.GetFloat("Left", param);
+	rect.left = param;
+	
+	config.GetFloat("Bottom", param);
+	rect.bottom = param;
+	
+	config.GetFloat("Right", param);
+	rect.right = param;
+	
 	config.GetFloat("Rotation", rotation);
-	config.GetFloat2("Scale", size, float2::one);
 
 	OnTransformChange();
 }
