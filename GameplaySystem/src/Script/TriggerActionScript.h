@@ -16,9 +16,6 @@ public:
 	void Start() override;
 	void Update() override;
 	void OnInspector(ImGuiContext*) override;
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
-	void Link() override;
 	bool OnTriggerEnter() const;
 	void InitPublicGameObjects() override;
 
@@ -28,12 +25,9 @@ public:
 	WalkableScript* movement_script = nullptr;
 	ComponentScript* movement_component = nullptr;
 
-	//Important
-	std::vector<GameObject**> public_gameobjects;
-	std::vector<uint64_t> go_uuids;
+
 private:
 	PanelComponent* panel = nullptr;
-	std::vector<std::string> name_gameobjects;
 	std::string is_object = "None";
 	float3 start_position;
 };
