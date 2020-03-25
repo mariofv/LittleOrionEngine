@@ -412,9 +412,9 @@ public:
 	ENGINE_API bool GetControllerButtonDown(ControllerCode code, PlayerID player_id = PlayerID::ONE);
 	ENGINE_API bool GetControllerButtonUp(ControllerCode code, PlayerID player_id = PlayerID::ONE);
 
-	ENGINE_API bool GetGameInput(const char* name);
-	ENGINE_API bool GetGameInputDown(const char* name);
-	ENGINE_API bool GetGameInputUp(const char* name);
+	ENGINE_API bool GetGameInput(const char* name, PlayerID player_id = PlayerID::ONE);
+	ENGINE_API bool GetGameInputDown(const char* name, PlayerID player_id = PlayerID::ONE);
+	ENGINE_API bool GetGameInputUp(const char* name, PlayerID player_id = PlayerID::ONE);
 
 	void CreateGameInput(const GameInput& game_input);
 	void DeleteGameInput(const GameInput& game_input);

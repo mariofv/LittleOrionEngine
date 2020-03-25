@@ -305,7 +305,7 @@ ENGINE_API bool ModuleInput::GetControllerButtonUp(ControllerCode code, PlayerID
 	return controller_bible[(int)player_id][code] == KeyState::UP;
 }
 
-ENGINE_API bool ModuleInput::GetGameInput(const char* name)
+ENGINE_API bool ModuleInput::GetGameInput(const char* name, PlayerID player_id)
 {
 	GameInput button = game_inputs[name];
 
@@ -323,14 +323,14 @@ ENGINE_API bool ModuleInput::GetGameInput(const char* name)
 
 	for (auto& controller : button.controller_buttons)
 	{
-		if (GetControllerButton(controller))
+		if (GetControllerButton(controller, player_id))
 			return true;
 	}
 
 	return false;
 }
 
-ENGINE_API bool ModuleInput::GetGameInputDown(const char* name)
+ENGINE_API bool ModuleInput::GetGameInputDown(const char* name, PlayerID player_id)
 {
 	GameInput button = game_inputs[name];
 
@@ -348,14 +348,14 @@ ENGINE_API bool ModuleInput::GetGameInputDown(const char* name)
 
 	for (auto& controller : button.controller_buttons)
 	{
-		if (GetControllerButtonDown(controller))
+		if (GetControllerButtonDown(controller, player_id))
 			return true;
 	}
 
 	return false;
 }
 
-ENGINE_API bool ModuleInput::GetGameInputUp(const char* name)
+ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id)
 {
 	GameInput button = game_inputs[name];
 
@@ -373,7 +373,7 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name)
 
 	for (auto& controller : button.controller_buttons)
 	{
-		if (GetControllerButtonUp(controller))
+		if (GetControllerButtonUp(controller, player_id))
 			return true;
 	}
 
