@@ -59,10 +59,6 @@ void ComponentMeshRenderer::Load(const Config& config)
 		std::shared_ptr<Mesh> mesh = std::static_pointer_cast<Mesh>(App->resources->Load(mesh_uuid));
 		SetMesh(mesh);
 	}
-	else 
-	{
-		//SetMesh(App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH));
-	}
 
 	uint32_t material_uuid;
 	material_uuid = config.GetUInt("Material", 0);
@@ -70,10 +66,6 @@ void ComponentMeshRenderer::Load(const Config& config)
 	{
 		std::shared_ptr<Material> material = std::static_pointer_cast<Material>(App->resources->Load(material_uuid));
 		SetMaterial(material);
-	}
-	else
-	{
-		//SetMaterial(App->resources->Load<Material>(DEFAULT_MATERIAL_PATH));
 	}
 }
 

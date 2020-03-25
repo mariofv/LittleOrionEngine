@@ -12,7 +12,7 @@ FileData MeshImporter::ExtractData(Path& assets_file_path) const
 
 FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation) const
 {
-	FileData mesh_data;
+	FileData mesh_data{NULL, 0};
 
 	// Transformation
 	aiVector3t<float> pScaling, pPosition;

@@ -39,7 +39,7 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	uint32_t Import(Path& file) const;
+	uint32_t Import(Path& file);
 	std::shared_ptr<Resource> Load(uint32_t uuid);
 	std::shared_ptr<Resource> Reload(const Resource* resource);
 
@@ -56,6 +56,7 @@ public:
 
 private:
 	void StartThread();
+	uint32_t InternalImport(Path& file_path) const;
 
 	std::shared_ptr<Resource> RetrieveFromCacheIfExist(uint32_t uuid) const;
 

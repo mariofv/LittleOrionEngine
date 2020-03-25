@@ -28,6 +28,7 @@
 
 #include <algorithm>
 #include <Brofiler/Brofiler.h>
+#include <functional> //for std::hash
 
 ModuleResourceManager::ModuleResourceManager()
 {
@@ -48,8 +49,8 @@ bool ModuleResourceManager::Init()
 
 	scene_manager = std::make_unique<SceneManager>();
 
-	//importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
-	StartThread();
+	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
+	//StartThread();
 	thread_timer->Start();
 	return true;
 }
@@ -127,12 +128,13 @@ void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path)
 		 {
 			 return;
 		 }
+		 /*
 		 thread_comunication.thread_importing_hash = std::hash<std::string>{}(path_child->file_path);
 		 while (thread_comunication.main_importing_hash == std::hash<std::string>{}(directory_path.file_path))
 		 {
 			 Sleep(1000);
 		 }
-
+		 */
 		 if (path_child->IsDirectory())
 		 {
 			 ImportAssetsInDirectory(*path_child);
@@ -146,7 +148,19 @@ void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path)
 	 }
  }
 
-uint32_t ModuleResourceManager::Import(Path& file_path) const
+uint32_t ModuleResourceManager::Import(Path& file_path)
+{
+	while (thread_comunication.thread_importing_hash == std::hash<std::string>{}(file_path.file_path))
+	{
+		Sleep(1000);
+	}
+	thread_comunication.main_importing_hash = std::hash<std::string>{}(file_path.file_path);
+	uint32_t imported_resource_uuid = InternalImport(file_path);
+	thread_comunication.main_importing_hash = 0;
+	return imported_resource_uuid;
+}
+
+uint32_t ModuleResourceManager::InternalImport(Path& file_path) const
 {
 	//std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
 

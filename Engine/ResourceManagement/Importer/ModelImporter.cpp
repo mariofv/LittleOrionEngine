@@ -105,7 +105,7 @@ std::vector<Config> ModelImporter::ExtractDataFromNode(const aiNode* root_node, 
 		node.AddUInt(extracted_material_uuid, "Material");
 
 		uint32_t extracted_mesh_uuid = ExtractMeshFromNode(node_mesh, mesh_name, parent_transformation, asset_file_folder_path);
-		if (extracted_mesh_uuid != -1)
+		if (extracted_mesh_uuid != 0)
 		{
 			node.AddUInt(extracted_mesh_uuid, "Mesh");
 		}
@@ -139,6 +139,11 @@ uint32_t ModelImporter::ExtractMaterialFromNode(const aiScene* scene, size_t mes
 uint32_t ModelImporter::ExtractMeshFromNode(const aiMesh* asssimp_mesh, std::string mesh_name, const aiMatrix4x4& mesh_transformation, Path& asset_file_folder_path) const
 {
 	FileData mesh_data = App->resources->mesh_importer->ExtractMeshFromAssimp(asssimp_mesh, mesh_transformation);
+	if (mesh_data.size == 0)
+	{
+		return 0;
+	}
+
 	uint32_t extracted_mesh_uuid = App->resources->CreateFromData(mesh_data, asset_file_folder_path, mesh_name + ".mesh");
 	return extracted_mesh_uuid;
 }
