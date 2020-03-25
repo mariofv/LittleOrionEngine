@@ -43,7 +43,7 @@ void Player2InputScript::Update()
 	float3 transform = owner->transform.GetTranslation();
 	float3 rotation = owner->transform.GetRotationRadiants();
 
-	if (App->input->GetControllerButton(ControllerCode::A, PlayerID::TWO) || App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, PlayerID::TWO).x != 0)
+	if (App->input->GetControllerButton(ControllerCode::A, PlayerID::TWO) || App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK, PlayerID::TWO).y != 0)
 	{
 		owner->transform.SetTranslation(float3(transform.x + speed, transform.y, transform.z));
 	}

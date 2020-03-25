@@ -17,6 +17,7 @@ public:
 
 	float speed = 0.01f;
 	float rotation_speed = 0.01f;
+	int player_id = 0;
 
 private:
 	bool is_jumping = false;

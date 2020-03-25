@@ -324,7 +324,7 @@ enum class ControllerAxis
 	RIGHT_TRIGGER_RAW
 };
 
-enum class PlayerID : Uint8
+enum class PlayerID
 {
 	ONE, 
 	TWO

@@ -57,6 +57,7 @@ void WalkableScript::OnInspector(ImGuiContext* context)
 	ImGui::DragFloat("Speed", &speed, 0.01f, 0.f, 0.5f);
 	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.f, 0.5f);
 	ImGui::DragFloat("Jump Power", &jump_power, 2.0f, 2.0f, 10.0f);
+	ImGui::DragInt("Player", &player_id, 0.0f, 1.0f, 2.0f);
 }
 
 void WalkableScript::Move()
@@ -66,8 +67,7 @@ void WalkableScript::Move()
 	float3 rotation = owner->transform.GetRotationRadiants();
 
 	///Controller Input
-	float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW);
-
+	float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, static_cast<PlayerID>(player_id));
 	float3 axis_direction = float3(-axis.x, 0.0f , -axis.y);
 
 	if(!axis_direction.Equals(float3::zero))

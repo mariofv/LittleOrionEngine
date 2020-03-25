@@ -45,14 +45,13 @@ bool ModuleInput::Init()
 		mouse_bible[(MouseButton)i] = KeyState::IDLE;
 	}
 
-	SDL_Init(SDL_INIT_GAMECONTROLLER);
+	SDL_Init(SDL_INIT_EVERYTHING);
 
 	for (int i = 0; i < SDL_NumJoysticks(); ++i)
 	{
-		if (SDL_IsGameController(i))
+		if (SDL_IsGameController(i) && i < MAX_PLAYERS)
 		{
 			controller[i] = SDL_GameControllerOpen(i);
-			//break;
 		}
 	}
 
@@ -70,12 +69,12 @@ bool ModuleInput::Init()
 
 	for (int i = 0; i < MAX_PLAYERS; ++i)
 	{
-		left_joystick[i] = { 0, 0 };
-		right_joystick[i] = { 0, 0 };
+		left_joystick[i] = float2(0, 0);
+		right_joystick[i] = float2(0, 0);
 		left_controller_trigger[i] = 0;
 		right_controller_trigger[i] = 0;
-		left_joystick_raw[i] = { 0, 0 };
-		right_joystick_raw[i] = { 0, 0 };
+		left_joystick_raw[i] = float2(0, 0);
+		right_joystick_raw[i] = float2(0, 0);
 		left_controller_trigger_raw[i] = 0;
 		right_controller_trigger_raw[i] = 0;
 	}
@@ -107,12 +106,12 @@ update_status ModuleInput::PreUpdate()
 
 	for (int i = 0; i < MAX_PLAYERS; ++i)
 	{
-		left_joystick[i] = { 0, 0 };
-		right_joystick[i] = { 0, 0 };
+		left_joystick[i] = float2(0, 0);
+		right_joystick[i] = float2(0, 0);
 		left_controller_trigger[i] = 0;
 		right_controller_trigger[i] = 0;
-		left_joystick_raw[i] = { 0, 0 };
-		right_joystick_raw [i] = { 0, 0 };
+		left_joystick_raw[i] = float2(0, 0);
+		right_joystick_raw[i] = float2(0, 0);
 		left_controller_trigger_raw[i] = 0;
 		right_controller_trigger_raw[i] = 0;
 	}
