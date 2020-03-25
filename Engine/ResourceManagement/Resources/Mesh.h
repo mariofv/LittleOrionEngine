@@ -1,12 +1,14 @@
 #ifndef _MESH_H_
 #define _MESH_H_
 
-#include <vector>
-#include "MathGeoLib.h"
+#include "Resource.h"
 
 #include <GL/glew.h>
-#include "Resource.h"
-#include <ResourceManagement/Loaders/MeshLoader.h>
+#include <MathGeoLib.h>
+#include <vector>
+
+class Metafile;
+
 class Mesh : public Resource
 {
 public:
@@ -16,8 +18,9 @@ public:
 		float3 normals;
 		float3 tangent;
 	};
-	Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path);
-	Mesh(std::string mesh_file_path);
+
+	Mesh(Metafile* resource_metafile);
+	Mesh(Metafile* resource_metafile, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices);
 	~Mesh();
 
 	GLuint GetVAO() const;
@@ -26,7 +29,7 @@ public:
 	std::vector<Triangle> GetTriangles() const;
 
 private:
-	void LoadInMemory() override;
+	void LoadInMemory();
 
 public:
 	std::vector<Vertex> vertices;
@@ -38,12 +41,5 @@ private:
 	GLuint ebo = 0;
 };
 
-namespace Loader
-{
-	template<>
-	static std::shared_ptr<Mesh> Load(const std::string& uid) {
-		return MeshLoader::Load(uid);
-	}
-}
 #endif // !_MESH_H_
 

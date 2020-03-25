@@ -315,15 +315,22 @@ void PanelScene::SceneDropTarget()
 {
 	if (ImGui::BeginDragDropTarget())
 	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_File"))
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_Resource"))
 		{
-			assert(payload->DataSize == sizeof(Path*));
-			Path *incoming_file = *(Path**)payload->Data;
-			if (incoming_file->file_type == FileType::PREFAB)
+			assert(payload->DataSize == sizeof(Metafile*));
+			Metafile* incoming_metafile = *((Metafile**)payload->Data);
+			if (incoming_metafile->resource_type == ResourceType::PREFAB)
 			{
-				ImportOptions options;
-				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
-				auto prefab = App->resources->Load<Prefab>(options.exported_file);
+				std::shared_ptr<Prefab> prefab = std::static_pointer_cast<Prefab>(App->resources->Load(incoming_metafile->uuid));
+				GameObject* new_model = prefab->Instantiate(App->scene->root);
+				App->actions->action_game_object = new_model;
+				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
+			}
+
+			if (incoming_metafile->resource_type == ResourceType::MODEL)
+			{
+				std::shared_ptr<Prefab> prefab = std::static_pointer_cast<Prefab>(App->resources->Load(incoming_metafile->uuid));
+				prefab->overwritable = false;
 				GameObject* new_model = prefab->Instantiate(App->scene->root);
 				App->actions->action_game_object = new_model;
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);

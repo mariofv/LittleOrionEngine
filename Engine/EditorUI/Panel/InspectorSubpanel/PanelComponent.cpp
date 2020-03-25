@@ -89,7 +89,8 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Mesh");
 		ImGui::SameLine();
-		if (ImGui::Button(mesh->mesh_to_render->exported_file.c_str()))
+		std::string mesh_name = mesh->mesh_to_render == nullptr ? "None (Mesh)" : mesh->mesh_to_render->resource_metafile->imported_file_path;
+		if (ImGui::Button(mesh_name.c_str()))
 		{
 			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
 		}
@@ -97,23 +98,28 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Material");
 		ImGui::SameLine();
-		if (ImGui::Button(mesh->material_to_render->exported_file.c_str()))
+		std::string material_name = mesh->material_to_render == nullptr ? "None (Material)" : mesh->material_to_render->resource_metafile->imported_file_path;
+		if (ImGui::Button(material_name.c_str()))
 		{
 			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
 		}
 		DropMeshAndMaterial(mesh);
-		char tmp_string[16];
-		ImGui::AlignTextToFramePadding();
-		ImGui::Text("Triangles");
-		ImGui::SameLine();
-		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size() / 3);
-		ImGui::Button(tmp_string);
 
-		ImGui::AlignTextToFramePadding();
-		ImGui::Text("Vertices");
-		ImGui::SameLine();
-		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
-		ImGui::Button(tmp_string);
+		if (mesh->mesh_to_render != nullptr)
+		{
+			char tmp_string[16];
+			ImGui::AlignTextToFramePadding();
+			ImGui::Text("Triangles");
+			ImGui::SameLine();
+			sprintf_s(tmp_string, "%d", mesh->mesh_to_render->vertices.size() / 3);
+			ImGui::Button(tmp_string);
+
+			ImGui::AlignTextToFramePadding();
+			ImGui::Text("Vertices");
+			ImGui::SameLine();
+			sprintf_s(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
+			ImGui::Button(tmp_string);
+		}
 	}
 }
 
@@ -471,24 +477,21 @@ void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
 {
 	if (ImGui::BeginDragDropTarget())
 	{
-		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_File"))
+		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_Resource"))
 		{
-			assert(payload->DataSize == sizeof(Path*));
-			Path* incoming_file = *(Path**)payload->Data;
-			if (incoming_file->file_type == FileType::MESH)
+			assert(payload->DataSize == sizeof(Metafile*));
+			Metafile* incoming_resource_metafile = *(Metafile**)payload->Data;
+			if (incoming_resource_metafile->resource_type == ResourceType::MESH)
 			{
-				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
-				ImportOptions meta;
-				Importer::GetOptionsFromMeta(meta_path, meta);
-				component_mesh->SetMesh(App->resources->Load<Mesh>(meta.exported_file));
+				std::shared_ptr<Mesh> incoming_mesh = std::static_pointer_cast<Mesh>(App->resources->Load(incoming_resource_metafile->uuid));
+				component_mesh->SetMesh(incoming_mesh);
 				component_mesh->modified_by_user = true;
 			}
-			if (incoming_file->file_type == FileType::MATERIAL)
+			
+			if(incoming_resource_metafile->resource_type == ResourceType::MATERIAL)
 			{
-				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
-				ImportOptions meta;
-				Importer::GetOptionsFromMeta(meta_path, meta);
-				component_mesh->SetMaterial(App->resources->Load<Material>(meta.exported_file));
+				std::shared_ptr<Material> incoming_material = std::static_pointer_cast<Material>(App->resources->Load(incoming_resource_metafile->uuid));
+				component_mesh->SetMaterial(incoming_material);
 				component_mesh->modified_by_user = true;
 			}
 		}

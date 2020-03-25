@@ -1,22 +1,29 @@
 #include "SkeletonImporter.h"
-#include <assimp/scene.h>
-#include <algorithm>
 
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
-bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const std::string& imported_file, std::string& exported_file) const
+
+#include <assimp/scene.h>
+#include <algorithm>
+
+FileData SkeletonImporter::ExtractData(Path& assets_file_path) const
 {
+	return assets_file_path.GetFile()->Load();
+}
+
+FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const aiMesh* mesh) const
+{
+	FileData skeleton_data;
 
 	aiString bone_name = mesh->mBones[0]->mName;
 	aiNode * bone = scene->mRootNode->FindNode(bone_name);
 
-	//bone->mParent->mNumChildren <= 1 arbitrary rule just base in zombunny and player meshes
 	while (bone->mParent && bone->mParent != scene->mRootNode && bone->mParent->mNumChildren <= 1)
 	{
 		bone = bone->mParent;
 	}
 
-	Skeleton skeleton(0, "");
+	Skeleton skeleton;
 	aiMatrix4x4 scaled_matrix; 
 	bone->mTransformation.Scaling(aiVector3D(SCALE_FACTOR, SCALE_FACTOR, SCALE_FACTOR), scaled_matrix);
 	scaled_matrix = scaled_matrix * bone->mTransformation;
@@ -24,11 +31,9 @@ bool SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh* mesh, 
 
 	if (skeleton.skeleton.size() > 0)
 	{
-		exported_file = SaveMetaFile(imported_file, ResourceType::SKELETON);
-		SaveBinary(skeleton, exported_file, imported_file);
-		
+		skeleton_data = CreateBinary(skeleton);
 	}
-	return true;
+	return skeleton_data;
 }
 
 void SkeletonImporter::ImportChildBone(const aiMesh* mesh, const aiNode * previus_node,  uint32_t previous_joint_index, const aiMatrix4x4& parent_transformation,  aiMatrix4x4& accumulated_local_transformation,Skeleton & skeleton) const
@@ -97,9 +102,8 @@ float4x4 SkeletonImporter::GetTransform(const aiMatrix4x4 & current_transform) c
 	return math::float4x4::FromTRS(translation, rotation, scale);
 }
 
-bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& exported_file, const std::string& imported_file) const
+FileData SkeletonImporter::CreateBinary(const Skeleton & skeleton) const
 {
-
 	uint32_t num_bones = skeleton.skeleton.size();
 
 	uint32_t size = sizeof(uint32_t);
@@ -130,8 +134,6 @@ bool SkeletonImporter::SaveBinary(const Skeleton & skeleton, const std::string& 
 		cursor += sizeof(uint32_t);
 	}
 
-	App->filesystem->Save(exported_file.c_str(), data, size);
-	App->filesystem->Save(imported_file.c_str(), data, size);
-	free(data);
-	return true;
+	FileData skeleton_data{ data, size };
+	return skeleton_data;
 }

@@ -31,18 +31,20 @@ bool ModuleDebug::CleanUp()
 void ModuleDebug::CreateHousesRandom() const
 {
 	std::srand(static_cast<unsigned int>(std::time(nullptr))); // use current time as seed for random generator
+	/*
 	GameObject *houses = App->scene->CreateGameObject();
 	ImportOptions options;
 	Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(Path(HOUSE_MODEL_PATH)), options);
 	auto prefab = App->resources->Load<Prefab>(options.exported_file);
+	*/
 
 	for (int i = 0; i < num_houses; ++i)
 	{
-		GameObject* loaded_house = prefab->Instantiate(houses);
+		//GameObject* loaded_house = prefab->Instantiate(houses);
 
 		float x = static_cast<float>(std::rand() % max_dispersion_x);
 		float z = static_cast<float>(std::rand() % max_dispersion_z);
-		loaded_house->transform.SetTranslation(float3(x, 0, z));
+		//loaded_house->transform.SetTranslation(float3(x, 0, z));
 	}
-	houses->SetStatic(true);
+	//houses->SetStatic(true);
 }

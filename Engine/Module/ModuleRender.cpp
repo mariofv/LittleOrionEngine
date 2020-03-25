@@ -4,7 +4,6 @@
 #include "ModuleDebug.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleEditor.h"
-#include "ModuleModelLoader.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
@@ -116,7 +115,7 @@ bool ModuleRender::Init()
 
 	APP_LOG_SUCCESS("Glew initialized correctly.")
 
-return true;
+	return true;
 }
 
 update_status ModuleRender::PreUpdate()
@@ -502,21 +501,21 @@ void ModuleRender::GenerateOctTree()
 }
 void ModuleRender::InsertAABBTree(GameObject * game_object)
 {
-	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
+	ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 	if(object_mesh != nullptr)
 		ol_abbtree->Insert(game_object);
 }
 
 void ModuleRender::RemoveAABBTree(GameObject * game_object)
 {
-	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
+	ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 	if (object_mesh != nullptr)
 		ol_abbtree->Remove(game_object);
 }
 
 void ModuleRender::UpdateAABBTree(GameObject* game_object)
 {
-	ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
+	ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 	if (object_mesh != nullptr)
 		ol_abbtree->UpdateObject(game_object);
 }

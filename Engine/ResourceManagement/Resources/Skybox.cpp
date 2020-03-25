@@ -13,6 +13,7 @@ Skybox::Skybox()
 
 void Skybox::LoadDefaultSkybox()
 {
+	/*
 	std::string texture_path = std::string(TEXTURES_PATH);
 	std::string cube_face_front_path = texture_path + "skyboxes/ame_nebula/purplenebula_ft.tga";
 	std::string cube_face_back_path = texture_path + "skyboxes/ame_nebula/purplenebula_bk.tga";
@@ -35,6 +36,7 @@ void Skybox::LoadDefaultSkybox()
 	};
 
 	skybox_texture = App->texture->LoadCubemap(faces);
+	*/
 }
 
 void Skybox::GenerateSkyboxCube() 
@@ -93,8 +95,9 @@ void Skybox::GenerateSkyboxCube()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 }
 
-void Skybox::Render(const ComponentCamera & camera) const
+void Skybox::Render(const ComponentCamera& camera) const
 {
+	/*
 	glDepthFunc(GL_LEQUAL);
 	GLuint shader_program = App->program->GetShaderProgramId("Skybox");
 	glUseProgram(shader_program);
@@ -126,7 +129,9 @@ void Skybox::Render(const ComponentCamera & camera) const
 
 	glDepthFunc(GL_LESS);
 	glUseProgram(0);
+	*/
 }
+
 Skybox::~Skybox()
 {
 	glDeleteTextures(1, &skybox_texture);

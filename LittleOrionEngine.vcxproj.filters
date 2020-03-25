@@ -49,9 +49,6 @@
     <ClCompile Include="Engine\Module\ModuleLight.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Module\ModuleModelLoader.cpp">
-      <Filter>Engine\Module</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Module\ModuleProgram.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
@@ -136,12 +133,6 @@
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\MeshLoader.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
@@ -181,12 +172,6 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Animation.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\AnimationLoader.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\SkeletonLoader.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClCompile>
@@ -205,16 +190,7 @@
     <ClCompile Include="Engine\Module\ModuleScriptManager.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp">
-      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\PrefabLoader.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\SceneManager.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelComponent.cpp">
@@ -277,17 +253,11 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Material.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\MaterialLoader.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMaterial.cpp">
       <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\ModelPrefabImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMaterialSelector.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
@@ -404,6 +374,39 @@
     <ClCompile Include="Engine\Filesystem\Path.cpp">
       <Filter>Engine\Filesystem</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Filesystem\File.cpp">
+      <Filter>Engine\Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Metafile\Metafile.cpp">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Metafile\MetafileManager.cpp">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\MaterialManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\MeshManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\SkeletonManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\AnimationManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\PrefabManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\TextureManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Resource.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\SceneManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -446,9 +449,6 @@
       <Filter>Engine\Module</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleLight.h">
-      <Filter>Engine\Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Module\ModuleModelLoader.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleProgram.h">
@@ -574,12 +574,6 @@
     <ClInclude Include="Engine\Module\ModuleResourceManager.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
@@ -625,12 +619,6 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Animation.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\AnimationLoader.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\SkeletonLoader.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.h">
       <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClInclude>
@@ -649,16 +637,7 @@
     <ClInclude Include="Engine\Module\ModuleScriptManager.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
-      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\PrefabImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\PrefabLoader.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\SceneManager.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\EngineLog.h">
@@ -679,17 +658,11 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Material.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\MaterialLoader.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMaterial.h">
       <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\ModelPrefabImporter.h">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMaterialSelector.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
@@ -788,6 +761,39 @@
     <ClInclude Include="Engine\Filesystem\Path.h">
       <Filter>Engine\Filesystem</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Filesystem\File.h">
+      <Filter>Engine\Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\Metafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\MetafileManager.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Filesystem\PathAtlas.h">
+      <Filter>Engine\Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\MaterialManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\MeshManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\SkeletonManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\AnimationManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\PrefabManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\TextureManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\SceneManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -832,14 +838,8 @@
     <Filter Include="Engine\ResourceManagement\Importer\ModelImporters">
       <UniqueIdentifier>{9daec75e-3bbb-4792-bc2c-04d03e1b6f21}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\ResourceManagement\Loaders">
-      <UniqueIdentifier>{af8a22c1-2b23-42fc-b542-ec1112f7066d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Actions">
       <UniqueIdentifier>{3f3b0f7b-d67b-4384-a9ba-a7e803bb2a53}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\ResourceManagement\ImportOptions">
-      <UniqueIdentifier>{af162ed0-dacf-4e8f-850b-8e8130bb9f6e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\EditorUI">
       <UniqueIdentifier>{0032cc3c-b82d-4579-9ba1-11c9c0786d10}</UniqueIdentifier>
@@ -864,6 +864,12 @@
     </Filter>
     <Filter Include="Engine\AI">
       <UniqueIdentifier>{799add9a-b011-4795-bae5-55a425014ca0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\Metafile">
+      <UniqueIdentifier>{af162ed0-dacf-4e8f-850b-8e8130bb9f6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\Manager">
+      <UniqueIdentifier>{af8a22c1-2b23-42fc-b542-ec1112f7066d}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

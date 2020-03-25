@@ -2,7 +2,7 @@
 #define _PANELPOPUPMATERIALSELECTOR_H_
 
 #include "EditorUI/Panel/Panel.h"
-#include "Module/ModuleFileSystem.h"
+#include "ResourceManagement/Metafile/Metafile.h"
 
 #include <string>
 
@@ -15,8 +15,8 @@ public:
 	void Render() override;
 
 private:
-	void ShowMaterialIcon(Path* file);
-	void ProcessMaterialMouseInput(Path * file);
+	void ShowMaterialIcon(Metafile* file);
+	void ProcessMaterialMouseInput(Metafile * file);
 	void ChangeSelectedObjectMaterial() const;
 
 public:
@@ -24,8 +24,8 @@ public:
 	
 private:
 	float material_icon_size = 125.f;
-	Path* selected_material = nullptr;
-	std::vector<std::shared_ptr<Path>> material_files;
+	Metafile* selected_material = nullptr;
+	std::vector<Metafile*> material_metafiles;
 
 	bool child_window_focused = false;
 };

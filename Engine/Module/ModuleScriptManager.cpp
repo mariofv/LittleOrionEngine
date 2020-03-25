@@ -2,10 +2,10 @@
 
 #include "Component/ComponentScript.h"
 #include "Filesystem/Path.h"
+#include "Filesystem/PathAtlas.h"
 #include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
-#include "Main/Globals.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleTime.h"
 
@@ -19,13 +19,14 @@ bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
 
+	dll_file = App->filesystem->GetPath(RESOURCES_SCRIPT_DLL_PATH);
+	scripts_list_file_path = App->filesystem->GetPath(RESOURCES_SCRIPT_PATH + std::string("/") + RESOURCES_SCRIPT_LIST_FILENAME);
+
 	GetCurrentPath();
-	InitDLL();
 	LoadScriptList();
-	dll_file = std::make_unique<Path>(SCRIPTS_DLL_PATH);
+	InitDLL();
 	init_timestamp_dll = dll_file->modification_timestamp;
-	scripts_list_file = std::make_unique<Path>(SCRIPT_LIST_PATH);
-	init_timestamp_script_list = scripts_list_file->modification_timestamp;
+	init_timestamp_script_list = scripts_list_file_path->modification_timestamp;
 	utils = new Utils();
 
 	return true;
@@ -48,7 +49,7 @@ update_status ModuleScriptManager::Update()
 			init_timestamp_dll = last_timestamp_dll;
 		}
 
-		last_timestamp_script_list = TimeStamp(scripts_list_file->file_path.c_str());
+		last_timestamp_script_list = TimeStamp(scripts_list_file_path->file_path.c_str());
 		if (last_timestamp_script_list != init_timestamp_script_list)
 		{
 			LoadScriptList();
@@ -75,6 +76,7 @@ long ModuleScriptManager::TimeStamp(const char* path)
 
 void ModuleScriptManager::GetCurrentPath()
 {
+	//TODO:Move this
 	TCHAR NPath[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, NPath);
 	working_directory = NPath;
@@ -158,8 +160,9 @@ void ModuleScriptManager::LoadScriptList()
 		scripts_list.clear();
 	}
 	
-	size_t readed_bytes;
-	char* scripts_file_data = App->filesystem->Load(SCRIPT_LIST_PATH, readed_bytes);
+	FileData scripts_list_data = scripts_list_file_path->GetFile()->Load();
+	char* scripts_file_data = (char*)scripts_list_data.buffer;
+	size_t readed_bytes = scripts_list_data.size;
 	if (scripts_file_data != nullptr)
 	{
 		std::string serialized_scripts_string = scripts_file_data;
@@ -177,8 +180,9 @@ void ModuleScriptManager::SaveScriptList()
 
 	std::string serialized_script_list_string;
 	config.GetSerializedString(serialized_script_list_string);
-	App->filesystem->Save(SCRIPT_LIST_PATH, serialized_script_list_string.c_str(), serialized_script_list_string.size());
 
+	Path* script_resources_path = App->filesystem->GetPath(RESOURCES_SCRIPT_PATH);
+	script_resources_path->Save(RESOURCES_SCRIPT_LIST_FILENAME, serialized_script_list_string);
 }
 
 void ModuleScriptManager::InitScripts()
@@ -211,7 +215,7 @@ void ModuleScriptManager::RemoveScriptPointers()
 
 void ModuleScriptManager::InitDLL()
 {
-	PatchDLL(SCRIPTS_DLL_PATH, working_directory.c_str());
+	PatchDLL(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str());
 	gameplay_dll = LoadLibrary(SCRIPT_DLL_FILE);
 }
 

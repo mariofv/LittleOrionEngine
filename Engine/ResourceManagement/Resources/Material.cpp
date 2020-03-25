@@ -5,8 +5,10 @@
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleResourceManager.h"
 
-Material::Material(uint32_t UUID, std::string material_file_path) :
-	Resource(UUID, material_file_path)
+#include "ResourceManagement/Metafile/Metafile.h"
+
+Material::Material(Metafile* resource_metafile) :
+	Resource(resource_metafile)
 {
 	textures.resize(MAX_MATERIAL_TEXTURE_TYPES);
 }
@@ -22,19 +24,19 @@ void Material::Save(Config& config) const
 			switch (type)
 			{
 			case MaterialTextureType::DIFFUSE:
-				config.AddString(textures[i]->exported_file, "Diffuse");
+				config.AddUInt(textures[i]->GetUUID(), "Diffuse");
 				break;
 
 			case MaterialTextureType::SPECULAR:
-				config.AddString(textures[i]->exported_file, "Specular");
+				config.AddUInt(textures[i]->GetUUID(), "Specular");
 				break;
 
 			case MaterialTextureType::OCCLUSION:
-				config.AddString(textures[i]->exported_file, "Occlusion");
+				config.AddUInt(textures[i]->GetUUID(), "Occlusion");
 				break;
 
 			case MaterialTextureType::EMISSIVE:
-				config.AddString(textures[i]->exported_file, "Emissive");
+				config.AddUInt(textures[i]->GetUUID(), "Emissive");
 				break;
 
 			default:
@@ -60,32 +62,31 @@ void Material::Save(Config& config) const
 
 void Material::Load(const Config& config)
 {
-	std::string texture_path;
-	config.GetString("Diffuse", texture_path, "");
-	std::shared_ptr<Texture> texture_resource = App->resources->Load<Texture>(texture_path);
-	if (texture_resource.get() != nullptr)
+	uint32_t diffuse_uuid = config.GetUInt("Diffuse", 0);
+	if (diffuse_uuid != 0)
 	{
+		std::shared_ptr<Texture> texture_resource = std::static_pointer_cast<Texture>(App->resources->Load(diffuse_uuid));
 		SetMaterialTexture(Material::MaterialTextureType::DIFFUSE, texture_resource);
 	}
 
-	config.GetString("Specular", texture_path, "");
-	texture_resource = App->resources->Load<Texture>(texture_path);
-	if (texture_resource.get() != nullptr)
+	uint32_t specular_uuid = config.GetUInt("Specular", 0);
+	if (specular_uuid != 0)
 	{
+		std::shared_ptr<Texture> texture_resource = std::static_pointer_cast<Texture>(App->resources->Load(specular_uuid));
 		SetMaterialTexture(Material::MaterialTextureType::SPECULAR, texture_resource);
 	}
 
-	config.GetString("Occlusion", texture_path, "");
-	texture_resource = App->resources->Load<Texture>(texture_path);
-	if (texture_resource.get() != nullptr)
+	uint32_t occlusion_uuid = config.GetUInt("Occlusion", 0);
+	if (occlusion_uuid != 0)
 	{
+		std::shared_ptr<Texture> texture_resource = std::static_pointer_cast<Texture>(App->resources->Load(occlusion_uuid));
 		SetMaterialTexture(Material::MaterialTextureType::OCCLUSION, texture_resource);
 	}
 
-	config.GetString("Emissive", texture_path, "");
-	texture_resource = App->resources->Load<Texture>(texture_path);
-	if (texture_resource.get() != nullptr)
+	uint32_t emissive_uuid = config.GetUInt("Emissive", 0);
+	if (occlusion_uuid != 0)
 	{
+		std::shared_ptr<Texture> texture_resource = std::static_pointer_cast<Texture>(App->resources->Load(emissive_uuid));
 		SetMaterialTexture(Material::MaterialTextureType::EMISSIVE, texture_resource);
 	}
 
@@ -128,7 +129,7 @@ void Material::RemoveMaterialTexture(MaterialTextureType type)
 	textures[type] = nullptr;
 }
 
-void Material::SetMaterialTexture(MaterialTextureType type, const std::shared_ptr<Texture> & new_texture)
+void Material::SetMaterialTexture(MaterialTextureType type, const std::shared_ptr<Texture>& new_texture)
 {
 	textures[type] = new_texture;
 }

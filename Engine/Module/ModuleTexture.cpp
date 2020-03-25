@@ -7,9 +7,8 @@
 #include "Main/Globals.h"
 #include "Module/ModuleResourceManager.h"
 
-#include "ResourceManagement/Resources/Texture.h"
 #include "ResourceManagement/Importer/TextureImporter.h"
-#include "ResourceManagement/Loaders/TextureLoader.h"
+#include "ResourceManagement/Resources/Texture.h"
 
 #include <algorithm>
 #include <memory>
@@ -32,18 +31,10 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
-std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
-{
-	ImportResult import_result = App->resources->Import(Path(texture_path));
-	if (!import_result.succes)
-	{
-		return nullptr;
-	}
-	return App->resources->Load<Texture>(import_result.exported_file);
-}
-
+/*
 GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) const
 {
+	
 	std::vector<std::string> faces_paths_dds;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
@@ -52,6 +43,7 @@ GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) 
 	}
 	return static_cast<GLuint>(TextureLoader::LoadCubemap(faces_paths_dds));
 }
+*/
 
 GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const{
 

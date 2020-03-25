@@ -89,9 +89,10 @@ void PanelGameObject::Render(GameObject* game_object)
 		ImGui::PopID();
 	}
 
-	if (game_object->GetComponent(Component::ComponentType::MESH_RENDERER) != nullptr)
+	ComponentMeshRenderer* mesh_renderer_component = static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER));
+	if (mesh_renderer_component != nullptr && mesh_renderer_component->material_to_render != nullptr)
 	{
-		App->editor->inspector->material_panel.Render(static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER))->material_to_render.get());
+		App->editor->inspector->material_panel.Render(mesh_renderer_component->material_to_render.get());
 	}
 
 	ImGui::Spacing();

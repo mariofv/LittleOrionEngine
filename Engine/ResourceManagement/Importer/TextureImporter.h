@@ -8,20 +8,20 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-class TextureImporter : Importer
+class TextureImporter : public Importer
 {
 
 public:
 	TextureImporter();
 	~TextureImporter() = default;
-	ImportResult Import(const Path& file, bool force = false) const override;
-	std::string ImportMaterialData(const std::string& material_path, const std::string model_base_path) const;
+
+	FileData ExtractData(Path& assets_file_path) const override;
 
 private:
-	std::string ImportToDDS(const Path& imported_file) const;
-	std::string ImportToTGA(const Path& imported_file) const;
-	ILubyte* LoadImageDataInMemory(const std::string& file_path, int image_type, int& width, int& height) const;
-	std::string GetTextureFileName(std::string texture_file_path) const;
+	FileData ExtractDataToDDS(const Path& assets_file_path) const;
+	FileData ExtractDataToTGA(const Path& assets_file_path) const;
 
+	ILubyte* LoadImageDataInMemory(const Path& file_path, int image_type, int& width, int& height) const;
+	ILenum GetImageType(const Path& file_path) const;
 };
 #endif // !_TEXTUREIMPORTER_H_

@@ -19,6 +19,7 @@ public:
 
 	static std::vector<float> GetVertices(const AABB &box);
 	static std::vector<float> GetVertices(const AABB2D &box);
+
 	size_t CStrlastIndexOfChar(const char* str, char find_char);
 	bool PatchFileName(char* filename);
 	std::string LoadFileContent(const std::string& path);

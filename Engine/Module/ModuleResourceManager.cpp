@@ -1,10 +1,33 @@
 #include "ModuleResourceManager.h"
 
+#include "Filesystem/PathAtlas.h"
+
 #include "Helper/Config.h"
 #include "Helper/Timer.h"
+
+#include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/Importer/MaterialImporter.h"
+#include "ResourceManagement/Importer/ModelImporter.h"
+#include "ResourceManagement/Importer/ModelImporters/AnimationImporter.h"
+#include "ResourceManagement/Importer/ModelImporters/MeshImporter.h"
+#include "ResourceManagement/Importer/ModelImporters/SkeletonImporter.h"
+#include "ResourceManagement/Importer/PrefabImporter.h"
+#include "ResourceManagement/Importer/TextureImporter.h"
+
+#include "ResourceManagement/Manager/AnimationManager.h"
+#include "ResourceManagement/Manager/MaterialManager.h"
+#include "ResourceManagement/Manager/MeshManager.h"
+#include "ResourceManagement/Manager/PrefabManager.h"
+#include "ResourceManagement/Manager/SceneManager.h"
+#include "ResourceManagement/Manager/SkeletonManager.h"
+#include "ResourceManagement/Manager/TextureManager.h"
+
 #include "ResourceManagement/Resources/Mesh.h"
+#include "ResourceManagement/Metafile/Metafile.h"
+#include "ResourceManagement/Metafile/MetafileManager.h"
 
 #include <algorithm>
+#include <Brofiler/Brofiler.h>
 
 ModuleResourceManager::ModuleResourceManager()
 {
@@ -14,13 +37,19 @@ ModuleResourceManager::ModuleResourceManager()
 bool ModuleResourceManager::Init()
 {
 	APP_LOG_SECTION("************ Module Resource Manager Init ************");
-	texture_importer = std::make_unique<TextureImporter>();
+
+	animation_importer = std::make_unique<AnimationImporter>();
 	material_importer = std::make_unique<MaterialImporter>();
+	mesh_importer = std::make_unique<MeshImporter>();
 	model_importer = std::make_unique<ModelImporter>();
-	scene_manager = std::make_unique<SceneManager>();
 	prefab_importer = std::make_unique<PrefabImporter>();
-	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
-	Path("Resources");
+	skeleton_importer = std::make_unique<SkeletonImporter>();
+	texture_importer = std::make_unique<TextureImporter>();
+
+	scene_manager = std::make_unique<SceneManager>();
+
+	//importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
+	StartThread();
 	thread_timer->Start();
 	return true;
 }
@@ -40,136 +69,216 @@ update_status ModuleResourceManager::PreUpdate()
 	return update_status::UPDATE_CONTINUE;
 }
 
- bool ModuleResourceManager::CleanUp()
+bool ModuleResourceManager::CleanUp()
 {
-	 thread_comunication.stop_thread = true;
-	 importing_thread.join();
+	thread_comunication.stop_thread = true;
+	importing_thread.join();
 	return true;
 }
 
  void ModuleResourceManager::StartThread()
  {
-	 bool success = App->filesystem->CreateMountedDir("Library");
-	 bool force_import = !App->filesystem->Exists("Library");
-	 if (force_import && !success)
-	 {
-		 return;
-	 }
-
 	 thread_comunication.finished_loading = false;
-	 thread_comunication.total_items = App->filesystem->assets_file->total_sub_files_number;
-	 ImportAllFilesInDirectory(*App->filesystem->assets_file.get(), force_import);
+	 thread_comunication.total_items = App->filesystem->assets_folder_path->total_sub_files_number;
+
+	 CleanInconsistenciesInDirectory(*App->filesystem->assets_folder_path); // Clean all incorrect meta in the folder Assets.
+	 ImportAssetsInDirectory(*App->filesystem->assets_folder_path); // Import all assets in folder Assets. All metafiles in Assets are correct"
+	
 	 thread_comunication.finished_loading = true;
 	 last_imported_time = thread_timer->Read();
  }
 
- ImportResult ModuleResourceManager::Import(const Path& file, bool force)
+void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& directory_path)
+{
+	for (auto & path_child : directory_path.children)
+	{
+		if (thread_comunication.stop_thread)
+		{
+			return;
+		}
+		thread_comunication.thread_importing_hash = std::hash<std::string>{}(path_child->file_path);
+		while (thread_comunication.main_importing_hash == std::hash<std::string>{}(directory_path.file_path))
+		{
+			Sleep(1000);
+		}
+
+		if (path_child->IsDirectory())
+		{
+			CleanInconsistenciesInDirectory(*path_child);
+		}
+		else if (path_child->IsMeta())
+		{
+			if (!MetafileManager::IsMetafileConsistent(*path_child))
+			{
+				MetafileManager::DeleteMetafileInconsistencies(*path_child);
+			}
+		}
+		++thread_comunication.loaded_items;
+		thread_comunication.thread_importing_hash = 0;
+	}
+}
+
+void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path)
  {
-	 while (thread_comunication.thread_importing_hash == std::hash<std::string>{}(file.file_path))
+	 for (size_t i = 0; i < directory_path.children.size(); ++i)
 	 {
-		 Sleep(1000);
-	 } 
-	 thread_comunication.main_importing_hash = std::hash<std::string>{}(file.file_path);
-	 ImportResult  result = InternalImport(file, force);
-	 thread_comunication.main_importing_hash = 0;
-	 return result;
- }
-
-
- void ModuleResourceManager::CreatePrefab(const std::string& path, GameObject * gameobject_to_save) const
- {
-	prefab_importer->CreatePrefabResource(Path(path),gameobject_to_save);
- }
-
-void ModuleResourceManager::ImportAllFilesInDirectory(const Path& file, bool force)
- {
-	 for (auto & child : file.children)
-	 {
+		 Path* path_child = directory_path.children[i];
 		 if (thread_comunication.stop_thread)
 		 {
 			 return;
 		 }
-		 thread_comunication.thread_importing_hash = std::hash<std::string>{}(child->file_path);
-		 while (thread_comunication.main_importing_hash == std::hash<std::string>{}(file.file_path))
+		 thread_comunication.thread_importing_hash = std::hash<std::string>{}(path_child->file_path);
+		 while (thread_comunication.main_importing_hash == std::hash<std::string>{}(directory_path.file_path))
 		 {
 			 Sleep(1000);
 		 }
-		 bool is_directory = child->file_type == FileType::DIRECTORY;
-		 if (is_directory && !default_importer->Import(*child.get(), force).succes)
+
+		 if (path_child->IsDirectory())
 		 {
-			 ImportAllFilesInDirectory(*child.get(), force);
+			 ImportAssetsInDirectory(*path_child);
 		 }
-		 else if (!is_directory)
+		 else if (!path_child->IsMeta())
 		 {
-			 InternalImport(*child.get(), force);
+			 Import(*path_child);
 		 }
 		 ++thread_comunication.loaded_items;
 		 thread_comunication.thread_importing_hash = 0;
 	 }
  }
 
-
-ImportResult ModuleResourceManager::InternalImport(const Path& file, bool force) const
+uint32_t ModuleResourceManager::Import(Path& file_path) const
 {
-	ImportResult result;
-	std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
-	if (file.file_type == FileType::MODEL)
+	//std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
+
+	Metafile asset_metafile;
+
+	if (Importer::ImportRequired(file_path))
 	{
-		result = model_importer->Import(file, force);
+		switch (file_path.GetFile()->GetFileType())
+		{
+		case FileType::MATERIAL:
+			asset_metafile = material_importer->Import(file_path);
+			break;
+
+		case FileType::MESH:
+			asset_metafile = mesh_importer->Import(file_path);
+			break;
+
+		case FileType::MODEL:
+			asset_metafile = model_importer->Import(file_path); // WARNING! If you load a model dont forget to put Prefab overwritable flag to false!!
+			break;
+
+		case FileType::PREFAB:
+			asset_metafile = prefab_importer->Import(file_path);
+			break;
+
+		case FileType::TEXTURE:
+			asset_metafile = texture_importer->Import(file_path);
+			break;
+		}
 	}
-	if (file.file_type == FileType::TEXTURE)
+	else
 	{
-		result = texture_importer->Import(file, force);
+		Path* metafile_path = App->filesystem->GetPath(MetafileManager::GetMetafilePath(file_path));
+		MetafileManager::GetMetafile(*metafile_path, asset_metafile);
 	}
-	if (file.file_type == FileType::MATERIAL)
-	{
-		result = material_importer->Import(file, force);
-	}
-	if (file.file_type == FileType::PREFAB)
-	{
-		result = prefab_importer->Import(file, force);
-	}
-	if (file.file_type == FileType::MESH)
-	{
-		result = model_importer->ImportExtractedResources(file, force);
-	}
-	return result;
+
+	resource_DB->AddEntry(asset_metafile);
+
+	return asset_metafile.uuid;
 }
 
-std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(const std::string& uid) const
+std::shared_ptr<Resource> ModuleResourceManager::Load(uint32_t uuid)
 {
-	if (!App->filesystem->Exists(uid.c_str()))
+	BROFILER_CATEGORY("Load Resource", Profiler::Color::Brown);
+	APP_LOG_INFO("Loading Resource %u.", uuid);
+
+	std::shared_ptr<Resource> loaded_resource;
+	loaded_resource = RetrieveFromCacheIfExist(uuid);
+	if (loaded_resource != nullptr)
 	{
+		APP_LOG_SUCCESS("Resource %u loaded correctly from cache.", uuid);
+		return loaded_resource;
+	}
+
+	Metafile* metafile = resource_DB->GetEntry(uuid);
+	if (!App->filesystem->Exists(metafile->exported_file_path))
+	{
+		APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, metafile->exported_file_path);
 		return nullptr;
 	}
-	//Check if the resource is already loaded
-	auto it = std::find_if(resource_cache.begin(), resource_cache.end(), [uid](const std::shared_ptr<Resource> resource)
+
+	Path* resource_exported_file_path = App->filesystem->GetPath(metafile->exported_file_path);
+	FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
+
+	switch (metafile->resource_type)
 	{
-		return resource->exported_file == uid;
-	});
-	if (it != resource_cache.end())
-	{
-		APP_LOG_INFO("Resource %s exists in cache.", uid.c_str());
-		return  *it;
+	case ResourceType::ANIMATION:
+		loaded_resource = AnimationManager::Load(metafile, exported_file_data);
+		break;
+
+	case ResourceType::MATERIAL:
+		loaded_resource = MaterialManager::Load(metafile, exported_file_data);
+		break;
+
+	case ResourceType::MESH:
+		loaded_resource = MeshManager::Load(metafile, exported_file_data);
+		break;
+	/*
+	case ResourceType::MODEL:
+		loaded_resource = PrefabManager::Load(metafile, exported_file_data);
+		break;
+
+	case ResourceType::PREFAB:
+		loaded_resource = PrefabManager::Load(metafile, exported_file_data);
+		break;
+*/
+	case ResourceType::SKELETON:
+		loaded_resource = SkeletonManager::Load(metafile, exported_file_data);
+		break;
+
+	case ResourceType::TEXTURE:
+		loaded_resource = TextureManager::Load(metafile, exported_file_data);
+		break;
 	}
-	return nullptr;
+
+	free((char*)exported_file_data.buffer);
+
+	if (loaded_resource != nullptr)
+	{
+		resource_cache.push_back(loaded_resource);
+	}
+
+	APP_LOG_SUCCESS("Resource %u loaded correctly.", uuid);
+	return loaded_resource;
 }
 
-void  ModuleResourceManager::ReimportIfNeeded(const std::string& uid)
+std::shared_ptr<Resource> ModuleResourceManager::Reload(const Resource* resource)
 {
-	if (std::find_if(uid.begin(), uid.end(), ::isdigit) == uid.end())
+	uint32_t uuid = resource->GetUUID();
+	auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [resource](const auto & loaded_resource) { return loaded_resource.get() == resource; });
+	resource_cache.erase(it);
+	return Load(uuid);
+}
+
+uint32_t ModuleResourceManager::CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name)
+{
+	Path* created_asset_file_path = creation_folder_path.Save(created_resource_name.c_str(), data);
+	return App->resources->Import(*created_asset_file_path);
+}
+
+std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32_t uuid) const
+{
+	//Check if the resource is already loaded
+	auto it = std::find_if(resource_cache.begin(), resource_cache.end(), [uuid](const std::shared_ptr<Resource> resource)
 	{
-		return;
-	}
-	std::string uid_string = uid.substr(uid.find_last_of("/") + 1, uid.size());
-	uint32_t real_uuid = std::stoul(uid_string);
-	const ImportOptions * options = resource_DB->GetEntry(real_uuid);
-	if (options == nullptr)
+		return resource->GetUUID() == uuid;
+	});
+
+	if (it != resource_cache.end())
 	{
-		return;
+		APP_LOG_INFO("Resource %d exists in cache.", uuid);
+		return *it;
 	}
-	if (!App->filesystem->Exists(uid.c_str()) &&  App->filesystem->Exists(options->imported_file.c_str()))
-	{
-		Import(options->imported_file, true);
-	}
+	return nullptr;
 }

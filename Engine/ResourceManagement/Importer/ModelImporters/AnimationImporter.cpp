@@ -9,24 +9,21 @@
 #include <random>
 #include <map>
 
-bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, const std::string& imported_file, std::string& exported_file) const
+FileData AnimationImporter::ExtractData(Path& assets_file_path) const
 {
-	Animation own_format_animation(0, "");
-	GetCleanAnimation(animation, own_format_animation);
+	return assets_file_path.GetFile()->Load();
+}
 
+FileData AnimationImporter::ExtractAnimationFromAssimp(const aiScene* scene, const aiAnimation* animation) const
+{
+	Animation own_format_animation;
+	GetCleanAnimation(animation, own_format_animation);
 
 	own_format_animation.frames = static_cast<float>(animation->mDuration);
 	own_format_animation.frames_per_second = static_cast<float>(animation->mTicksPerSecond);
 	own_format_animation.name = std::string(animation->mName.C_Str());
 
-	std::random_device random;
-	int64_t animation_uid = std::hash<std::string>{}(imported_file);
-
-
-	exported_file = SaveMetaFile(imported_file, ResourceType::ANIMATION);
-	SaveBinary(own_format_animation, exported_file, imported_file);
-
-	return true;
+	return CreateBinary(own_format_animation);
 }
 
 /*
@@ -136,14 +133,10 @@ void AnimationImporter::TransformPositions(const aiNodeAnim * ai_node, std::unor
 		}
 
 	}
-
-
 }
 
-void AnimationImporter::SaveBinary(const Animation& animation, const std::string& exported_file, const std::string& imported_file) const
+FileData AnimationImporter::CreateBinary(const Animation& animation) const
 {
-
-
 	uint32_t num_channels = animation.keyframes.size();
 
 	// number of keyframes +  name size + name + frames + frames_per_second
@@ -208,7 +201,6 @@ void AnimationImporter::SaveBinary(const Animation& animation, const std::string
 		}
 	}
 
-	App->filesystem->Save(exported_file.c_str(), data, size);
-	App->filesystem->Save(imported_file.c_str(), data, size);
-	free(data);
+	FileData animation_data{data, size};
+	return animation_data;
 }

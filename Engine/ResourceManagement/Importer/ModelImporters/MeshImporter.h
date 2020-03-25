@@ -2,7 +2,7 @@
 #define _MESHIMPORTER_H_
 
 #include "ResourceManagement/Importer/Importer.h"
-#include <ResourceManagement/Resources/Mesh.h>
+#include "ResourceManagement/Resources/Mesh.h"
 
 #include <vector>
 #include <string>
@@ -12,13 +12,14 @@
 class MeshImporter : public Importer
 {
 public:
-	MeshImporter() = default;
+	MeshImporter() : Importer(ResourceType::MESH) {};
 	~MeshImporter() = default;
-	ImportResult Import(const Path& file, bool force = false) const;
-	bool ImportMesh(const aiMesh* assimp_mesh, const aiMatrix4x4& mesh_transformation, const std::string& imported_file, std::string& exported_file) const;
+
+	FileData ExtractData(Path& assets_file_path) const override;
+	FileData ExtractMeshFromAssimp(const aiMesh* assimp_mesh, const aiMatrix4x4& mesh_transformation) const;
 
 private:
-	void SaveBinary(std::vector<Mesh::Vertex> && vertices, std::vector<uint32_t> && indices, const std::string& exported_file, const std::string& imported_file) const;
+	FileData CreateBinary(std::vector<Mesh::Vertex> && vertices, std::vector<uint32_t> && indices) const;
 
 	const float SCALE_FACTOR = 0.01f;
 };

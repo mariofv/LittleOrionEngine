@@ -4,12 +4,12 @@
 #include "Resource.h"
 
 #include "Helper/Config.h"
-#include "ResourceManagement/Loaders/MaterialLoader.h"
+#include "ResourceManagement/Manager/MaterialManager.h"
 #include "Texture.h"
 
-#include <vector>
 #include <GL/glew.h>
 #include <MathGeoLib.h>
+#include <vector>
 
 class Material : public Resource
 {
@@ -23,7 +23,8 @@ public:
 		UNKNOWN
 	};
 
-	Material(uint32_t UUID, std::string material_file_path);
+	Material() = default;
+	Material(Metafile* resource_metafile);
 	~Material() = default;
 
 	void Save(Config& config) const;
@@ -33,8 +34,6 @@ public:
 	const std::shared_ptr<Texture>& GetMaterialTexture(MaterialTextureType type) const;
 
 	void RemoveMaterialTexture(MaterialTextureType type);
-
-	void LoadInMemory() override {}
 
 public:
 	static const size_t MAX_MATERIAL_TEXTURE_TYPES = static_cast<size_t>(MaterialTextureType::UNKNOWN);
@@ -53,12 +52,5 @@ public:
 	bool show_checkerboard_texture = false;
 };
 
-namespace Loader
-{
-	template<>
-	static std::shared_ptr<Material> Load(const std::string& uid) {
-		return MaterialLoader::Load(uid);
-	}
-}
 #endif // !_MESH_H_
 

@@ -1,9 +1,9 @@
 #include "ModuleTime.h"
 
 #include "EditorUI/EngineLog.h"
+#include "Filesystem/PathAtlas.h"
 #include "Helper/Timer.h"
 #include "Main/Application.h"
-#include "Main/Globals.h"
 #include "ModuleEditor.h"
 #include "ModuleScriptManager.h"
 #include "ModuleWindow.h"

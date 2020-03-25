@@ -5,12 +5,6 @@
 #include "Module.h"
 #include "ModuleFileSystem.h"
 
-#include "ResourceManagement/Importer/Importer.h"
-#include "ResourceManagement/Importer/MaterialImporter.h"
-#include "ResourceManagement/Importer/ModelImporter.h"
-#include "ResourceManagement/Importer/PrefabImporter.h"
-#include "ResourceManagement/Importer/SceneManager.h"
-#include "ResourceManagement/Importer/TextureImporter.h"
 #include "ResourceManagement/ResourcesDB/ResourceDataBase.h"
 
 #include <memory>
@@ -18,11 +12,20 @@
 #include <atomic>
 #include <mutex>
 
-class Texture;
-class Path;
 class Mesh;
+class Path;
 class Resource;
+class Texture;
 class Timer;
+
+class AnimationImporter;
+class MaterialImporter;
+class MeshImporter;
+class ModelImporter;
+class PrefabImporter;
+class SceneManager;
+class SkeletonImporter;
+class TextureImporter;
 
 class ModuleResourceManager : public Module
 {
@@ -36,41 +39,25 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	ImportResult Import(const Path& file, bool force = false);
-	void ImportAllFilesInDirectory(const Path& file, bool force);
-	void CreatePrefab(const std::string &path, GameObject * gameobject_to_save) const;
+	uint32_t Import(Path& file) const;
+	std::shared_ptr<Resource> Load(uint32_t uuid);
+	std::shared_ptr<Resource> Reload(const Resource* resource);
+
+	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
+
+	void CleanInconsistenciesInDirectory(const Path& directory_path);
+	void ImportAssetsInDirectory(const Path& directory_path);
 
 	template<typename T>
-	std::shared_ptr<T> Load(const std::string& uid)
+	uint32_t Create(Path& asset_creation_folder_path, const std::string created_asset_name = "")
 	{
-		std::shared_ptr<Resource> cache_resource = RetrieveFromCacheIfExist(uid);
-		if (cache_resource != nullptr)
-		{
-			return std::static_pointer_cast<T>(cache_resource);
-		}
-		ReimportIfNeeded(uid);
-		std::shared_ptr<T> resource = Loader::Load<T>(uid);
-		if (resource != nullptr)
-		{
-			resource_cache.push_back(resource);
-		}
-		return resource;
+		return ResourceManager::Create<T>(asset_creation_folder_path, created_asset_name);
 	}
 
-	template<typename T>
-	std::shared_ptr<T> Reload(const T * resource) const
-	{
-		std::string uid = resource->exported_file;
-		auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [resource](const auto & loaded_resource) { return loaded_resource.get() == resource; });
-		resource_cache.erase(it);
-		return Load<T>(uid);
-	}
 private:
 	void StartThread();
-	void ReimportIfNeeded(const std::string& uid);
 
-	ImportResult InternalImport(const Path& file, bool force) const;
-	std::shared_ptr<Resource> RetrieveFromCacheIfExist(const std::string& uid) const;
+	std::shared_ptr<Resource> RetrieveFromCacheIfExist(uint32_t uuid) const;
 
 public:
 	struct ThreadComunication
@@ -84,8 +71,15 @@ public:
 		std::atomic_uint total_items = 0;
 	} thread_comunication;
 
+	//Importers
+	std::unique_ptr<AnimationImporter> animation_importer = nullptr;
 	std::unique_ptr<MaterialImporter> material_importer = nullptr;
+	std::unique_ptr<MeshImporter> mesh_importer = nullptr;
+	std::unique_ptr<ModelImporter> model_importer = nullptr;
+	std::unique_ptr<PrefabImporter> prefab_importer = nullptr;
+	std::unique_ptr<SkeletonImporter> skeleton_importer = nullptr;
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
+
 	std::unique_ptr<SceneManager> scene_manager = nullptr;
 	std::unique_ptr<ResourceDataBase> resource_DB = nullptr;
 
@@ -94,13 +88,8 @@ private:
 	float last_imported_time = 0;
 	std::thread importing_thread;
 	std::unique_ptr<Timer> thread_timer = std::make_unique<Timer>();
-	//Importers
 
-	std::unique_ptr<Importer> default_importer = std::make_unique<Importer>();
-	std::unique_ptr<ModelImporter> model_importer = nullptr;
-	std::unique_ptr<PrefabImporter> prefab_importer = nullptr;
 	mutable std::vector<std::shared_ptr<Resource>> resource_cache;
-
 };
 
 #endif // _MODULERESOURCEMANAGER_H_

@@ -14,10 +14,10 @@
 #include "EditorUI/Panel/PanelResourceDatabase.h"
 #include "EditorUI/Panel/PopupsPanel/PanelPopupSceneManagement.h"
 
+#include "Filesystem/PathAtlas.h"
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleFileSystem.h"
-#include "Module/ModuleModelLoader.h"
 #include "Module/ModuleScene.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -99,6 +99,7 @@ void PanelMenuBar::ShowGameObjectMenu()
 		
 		if (ImGui::BeginMenu("3D Object"))
 		{
+			/* TODO: This
 			if (ImGui::Selectable("Cube"))
 			{
 				App->model_loader->LoadCoreModel(PRIMITIVE_CUBE_PATH);
@@ -115,7 +116,7 @@ void PanelMenuBar::ShowGameObjectMenu()
 			{
 				App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
 			}
-
+			*/
 			ImGui::EndMenu();
 		}
 

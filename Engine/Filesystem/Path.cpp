@@ -1,134 +1,240 @@
-#include "Path.h"
+#include "Path.h".
+
+#include "File.h"
 
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 
-#include <algorithm>
-#include <cctype>
+#include <SDL/SDL.h>
 
-Path::Path(const std::string& path) {
+Path::Path(const std::string& path) 
+{
+	assert(App->filesystem->Exists(path));
+	CleanFolderPath();
+	file_path = path;
+	file_name = path.substr(path.find_last_of('/') + 1, -1);
+	file_name_no_extension = file_name.substr(0, file_name.find_last_of("."));
 
-	this->filename = path.substr(path.find_last_of('/') + 1, -1);
-	this->file_path = path;
-	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
-	GetFileInfo();
-	if (file_type == FileType::DIRECTORY)
-	{
-		GetChildren();
-	}
-
+	Refresh();
 }
 
 Path::Path(const std::string& path, const std::string& name)
 {
-	this->filename = name;
-	this->file_path = path + "/" + name;
-	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
-	GetFileInfo();
+	assert(App->filesystem->Exists(path));
+	CleanFolderPath();
+	file_path = path + "/" + name;
+	file_name = name;
+	file_name_no_extension = file_name.substr(0, file_name.find_last_of("."));
+
+	Refresh();
+}
+
+Path::~Path()
+{
+	for (auto& path_child : children)
+	{
+		delete path_child;
+	}
+
+	delete file;
 }
 
 bool Path::operator==(const Path& compare)
 {
-	return this->filename == compare.filename && this->file_path == compare.file_path && this->file_type == compare.file_type;
-};
+	return file_name == compare.file_name && file_path == compare.file_path;
+}
 
-void Path::GetChildren()
+void Path::Refresh()
 {
-	std::vector<std::shared_ptr<Path>> files;
-	App->filesystem->GetAllFilesInPath(this->file_path, files);
-	for (auto & file : files)
+	for (auto& path_child : children)
 	{
-		file->parent = this;
-		this->children.push_back(file);
-		if (file->file_type == FileType::DIRECTORY)
+		delete path_child;
+	}
+	children.clear();
+
+	delete file;
+
+	CalculatePathInfo();
+	if (is_directory)
+	{
+		CalculateChildren();
+	}
+}
+
+Path* Path::Save(const char* file_name, const FileData& data, bool append)
+{
+	assert(is_directory);
+	if (data.size == 0)
+	{
+		return nullptr;
+	}
+
+	std::string saved_file_path_string = file_path + "/" + file_name;
+
+	PHYSFS_File * file;
+	if (append)
+	{
+		file = PHYSFS_openAppend(saved_file_path_string.c_str());
+	}
+	else
+	{
+		file = PHYSFS_openWrite(saved_file_path_string.c_str());
+	}
+
+	if (file == NULL)
+	{
+		APP_LOG_ERROR("Error: Unable to open file! PhysFS Error: %s\n", PHYSFS_getLastErrorCode());
+		return nullptr;
+	}
+
+
+	PHYSFS_writeBytes(file, data.buffer, data.size);
+	APP_LOG_INFO("File %s saved!\n", file_path);
+	PHYSFS_close(file);
+	
+	Path* saved_file_path = new Path(saved_file_path_string);
+	children.push_back(saved_file_path);
+	saved_file_path->parent = this;
+	App->filesystem->AddPath(saved_file_path);
+
+	free((char*) data.buffer);
+
+	return saved_file_path;
+}
+
+Path* Path::Save(const char* file_name, const std::string& serialized_data, bool append)
+{
+	char* data_bytes = new char[serialized_data.size() + 1];
+	memcpy(data_bytes, serialized_data.c_str(), serialized_data.size() + 1);
+
+	FileData data{ data_bytes, serialized_data.size() + 1 };
+	return Save(file_name, data);
+}
+
+Path* Path::GetParent()
+{
+	return parent;
+}
+
+std::string Path::GetParentPathString(const std::string& path)
+{
+	std::size_t found = path.find_last_of("/");
+	if (found == std::string::npos || found == 0) {
+		return "";
+	}
+	return path.substr(0, found);
+}
+
+
+File* Path::GetFile() const
+{
+	if (file == nullptr)
+	{
+		APP_LOG_ERROR("Path %s doesn't contain a file!", file_path.c_str())
+	}
+
+	return file;
+}
+
+void Path::CalculatePathInfo()
+{
+	PHYSFS_Stat path_info;
+	if (PHYSFS_stat(file_path.c_str(), &path_info) == 0)
+	{
+		APP_LOG_ERROR("Error getting %s path info: %s", this->file_path.c_str(), PHYSFS_getLastError());
+	}
+
+	std::string file_extension = GetExtension();
+	is_directory = (PHYSFS_FileType::PHYSFS_FILETYPE_DIRECTORY == path_info.filetype);
+	CalculateFile();
+
+	modification_timestamp = path_info.modtime;
+	return;
+}
+
+void Path::CalculateFile()
+{
+	if (is_directory)
+	{
+		file = nullptr;
+	}
+	else
+	{
+		file = new File(*this);
+	}
+}
+
+void Path::CalculateChildren()
+{
+	std::vector<Path*> path_children;
+	GetAllFilesInPath(path_children);
+
+	if (file_name == "Assets")
+	{
+		int x = 0;
+	}
+	for (auto & path_child : path_children)
+	{
+		path_child->parent = this;
+		this->children.push_back(path_child);
+		if (path_child->IsDirectory())
 		{
-			file->GetChildren();
 			++sub_folders;
-			total_sub_files_number += file->total_sub_files_number;
+			total_sub_files_number += path_child->total_sub_files_number;
 		}
-		else {
+		else
+		{
 			++total_sub_files_number;
 		}
 	}
 }
 
-void Path::GetFileInfo()
+void Path::GetAllFilesInPath(std::vector<Path*>& path_children, bool directories_only)
 {
-	PHYSFS_Stat file_info;
-	if (PHYSFS_stat(this->file_path.c_str(), &file_info) == 0)
+	char **files_array = PHYSFS_enumerateFiles(file_path.c_str());
+	if (*files_array == NULL)
 	{
-		APP_LOG_ERROR("Error getting %s file info: %s", this->file_path.c_str(), PHYSFS_getLastError());
-		loaded_correctly = false;
+		APP_LOG_INFO("Error reading directory %s: %s", file_path.c_str(), PHYSFS_getLastError());
+		return;
 	}
-	modification_timestamp = file_info.modtime;
-	file_type = GetFileType(filename.c_str(), file_info.filetype);
+
+	char **filename;
+	for (filename = files_array; *filename != NULL; filename++)
+	{
+		Path* child_path = new Path(file_path, *filename);
+		if ((directories_only && child_path->is_directory) || !directories_only)
+		{
+			path_children.push_back(child_path);
+		}
+	}
+	PHYSFS_freeList(files_array);
 }
 
-void Path::Refresh()
+bool Path::IsDirectory() const
 {
-	children.clear();
-	GetChildren();
+	return is_directory;
 }
 
-FileType Path::GetFileType(const std::string& file_path, const PHYSFS_FileType& file_type) const
+bool Path::IsMeta() const
 {
-	std::string file_extension = GetFileExtension(file_path);
-	std::transform(file_extension.begin(), file_extension.end(), file_extension.begin(),
-		[](unsigned char letter) { return std::tolower(letter); });
-
-	if ((PHYSFS_FileType::PHYSFS_FILETYPE_DIRECTORY == file_type) || (file_extension == "/"))
-	{
-		return FileType::DIRECTORY;
-	}
-
-	if (
-		file_extension == "png"
-		|| file_extension == "tif"
-		|| file_extension == "dds"
-		|| file_extension == "tga"
-		|| file_extension == "jpg"
-		|| file_extension == "jfif"
-		)
-	{
-		return FileType::TEXTURE;
-	}
-	if (file_extension == "fbx")
-	{
-		return FileType::MODEL;
-	}
-	if (file_extension == "prefab")
-	{
-		return FileType::PREFAB;
-	}
-	if (file_extension == "ol" || file_extension == "mesh")
-	{
-		return FileType::MESH;
-	}
-	if (file_extension == "matol")
-	{
-		return FileType::MATERIAL;
-	}
-	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
-	{
-		return FileType::ARCHIVE;
-	}
-	return FileType::UNKNOWN;
+	return !is_directory && file->GetFileType() == FileType::META;
 }
 
-
-std::string Path::GetFileExtension(const std::string& file_path) const
+std::string Path::GetExtension() const
 {
-	std::string file_path_string = std::string(file_path);
-	if (!file_path_string.empty() && file_path_string.back() == '/')
-	{
-		return std::string("/");
-	}
-
-	std::size_t found = file_path_string.find_last_of(".");
+	std::size_t found = file_path.find_last_of(".");
 	if (found == std::string::npos || found == 0) {
 		return "";
 	}
-	std::string file_extension = file_path_string.substr(found + 1, file_path_string.length());
+	std::string file_extension = file_path.substr(found + 1, file_path.length());
 
 	return file_extension;
+}
+
+void Path::CleanFolderPath()
+{
+	if (!file_path.empty() && file_path.back() == '/')
+	{
+		file_path.pop_back();
+	}
 }

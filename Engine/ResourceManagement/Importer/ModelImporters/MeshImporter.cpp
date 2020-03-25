@@ -5,14 +5,14 @@
 
 #include <assimp/mesh.h>
 
-ImportResult MeshImporter::Import(const Path& file, bool force) const
+FileData MeshImporter::ExtractData(Path& assets_file_path) const
 {
-	std::string exported_file = SaveMetaFile(file.file_path, ResourceType::MESH);
-	App->filesystem->Copy(file.file_path.c_str(), exported_file.c_str());
-	return ImportResult{ true, exported_file };
+	return assets_file_path.GetFile()->Load();
 }
-bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, const std::string& imported_file, std::string& exported_file) const
+
+FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation) const
 {
+	FileData mesh_data;
 
 	// Transformation
 	aiVector3t<float> pScaling, pPosition;
@@ -36,8 +36,9 @@ bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_curren
 	if (indices.size() % 3 != 0)
 	{
 		APP_LOG_ERROR("Mesh %s have incorrect indices", mesh->mName.C_Str());
-		return false;
+		return mesh_data;
 	}
+
 	std::vector<Mesh::Vertex> vertices;
 	vertices.reserve(mesh->mNumVertices);
 	for (unsigned int i = 0; i < mesh->mNumVertices; i++)
@@ -59,11 +60,11 @@ bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_curren
 		}
 		vertices.push_back(new_vertex);
 	}
-	exported_file = SaveMetaFile(imported_file, ResourceType::MESH);
-	SaveBinary(std::move(vertices), std::move(indices), exported_file, imported_file);
+
+	return CreateBinary(std::move(vertices), std::move(indices));
 }
 
-void MeshImporter::SaveBinary(std::vector<Mesh::Vertex> && vertices, std::vector<uint32_t> && indices, const std::string& exported_file, const std::string& imported_file) const
+FileData MeshImporter::CreateBinary(std::vector<Mesh::Vertex> && vertices, std::vector<uint32_t> && indices) const
 {
 
 	uint32_t num_indices = indices.size();
@@ -85,7 +86,6 @@ void MeshImporter::SaveBinary(std::vector<Mesh::Vertex> && vertices, std::vector
 	bytes = sizeof(Mesh::Vertex) * num_vertices;
 	memcpy(cursor, &vertices.front(), bytes);
 
-	App->filesystem->Save(exported_file.c_str(), data, size);
-	App->filesystem->Save(imported_file.c_str(), data, size);
-	free(data);
+	FileData mesh_data {data, size};
+	return mesh_data;
 }

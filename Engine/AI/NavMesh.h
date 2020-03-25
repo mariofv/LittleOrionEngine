@@ -14,7 +14,7 @@
 class PanelNavMesh;
 class dtNavMeshQuery;
 class dtNavMesh;
-class dtMeshTile;
+struct dtMeshTile;
 class DetourNavMesh;
 
 

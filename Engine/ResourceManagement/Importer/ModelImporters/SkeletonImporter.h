@@ -1,8 +1,8 @@
-#pragma once
+#ifndef _SKELETONIMPORTER_H_
+#define _SKELETONIMPORTER_H_
 
-
-#include "ResourceManagement/Resources/Skeleton.h"
 #include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/Resources/Skeleton.h"
 
 #include <assimp/mesh.h>
 #include <string>
@@ -13,15 +13,19 @@ struct aiNode;
 class SkeletonImporter : public Importer
 {
 public:
-	SkeletonImporter() = default;
+	SkeletonImporter() : Importer(ResourceType::SKELETON) {};
 	~SkeletonImporter() = default;
 
-	bool ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const std::string& imported_file, std::string& exported_file) const;
+	FileData ExtractData(Path& assets_file_path) const override;
+	FileData ExtractSkeletonFromAssimp(const aiScene* scene, const aiMesh* mesh) const;
+
 private:
+	FileData CreateBinary(const Skeleton & skeleton) const;
+
 	void ImportChildBone(const aiMesh* mesh, const aiNode * previus_node, uint32_t previous_joint_index, const aiMatrix4x4& parent_transformation, aiMatrix4x4& accumulated_local_transformation,Skeleton & skeleton) const;
 	aiBone * GetNodeBone(const aiMesh* mesh, const std::string & bone_name) const;
 	math::float4x4 GetTransform(const aiMatrix4x4& current_transform) const;
-	bool SaveBinary(const Skeleton & skeleton, const std::string& exported_file, const std::string& imported_file) const;
 	const float SCALE_FACTOR = 0.01f;
 };
 
+#endif

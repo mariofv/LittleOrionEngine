@@ -1,34 +1,67 @@
 #include "ModuleFileSystem.h"
 
+#include "Filesystem/PathAtlas.h"
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
 
 #include <algorithm>
 #include <SDL/SDL.h>
+#include <stack>
+
+ModuleFileSystem::~ModuleFileSystem()
+{
+	CleanUp();
+}
 
 bool ModuleFileSystem::Init()
 {
-	char* save_path = SDL_GetPrefPath("UPC", TITLE);
+	APP_LOG_SECTION("************ Module File System Init ************");
+
+	//PHYSFS_permitSymbolicLinks(1);
+
+	char* save_path = SDL_GetPrefPath("OnionGalaxy", TITLE);
+
 	if (save_path == NULL)
 	{
 		return false;
 	}
+
+	if (PHYSFS_mount(".", "", 0) == 0)
+	{
+		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
+		return false;
+	}
+
 	if (PHYSFS_setWriteDir(".") == 0)
 	{
 		APP_LOG_ERROR("Error creating writing directory: %s", PHYSFS_getLastError());
 		return false;
 	}
+	
+	RefreshPathMap();
+	assets_folder_path = GetPath(ASSETS_PATH);
 
-	MakeDirectory("Assets/Scenes");
-	if (!CreateMountedDir("Assets"))
+	if (!Exists(LIBRARY_PATH))
+	{
+		MakeDirectory(LIBRARY_PATH);
+	}
+	if (!Exists(LIBRARY_METADATA_PATH))
+	{
+		MakeDirectory(LIBRARY_METADATA_PATH);
+	}
+	library_folder_path = GetPath(LIBRARY_PATH);
+
+	if (!MountDirectory("Assets"))
 	{
 		return false;
 	}
-	if (!CreateMountedDir("Resources"))
+
+	if (!MountDirectory("Resources"))
 	{
 		return false;
 	}
-	RefreshFilesHierarchy();
+
+
 	return true;
 }
 
@@ -37,177 +70,133 @@ bool ModuleFileSystem::CleanUp()
 	return PHYSFS_deinit();
 }
 
-ModuleFileSystem::~ModuleFileSystem()
+void ModuleFileSystem::AddPath(Path* path)
 {
-	CleanUp();
+	assert(Exists(path->file_path));
+	paths[path->file_path] = path;
 }
 
-char* ModuleFileSystem::Load(const char* file_path, size_t & size) const
-{ 
-	assert(Exists(file_path));
-	SDL_RWops *rw = SDL_RWFromFile(file_path, "rb");
-	if (rw == NULL)
-	{
-		size = 0;
-		return NULL;
-
-	}
-
-	size_t res_size = static_cast<size_t>(SDL_RWsize(rw));
-	char* res = (char*)malloc(res_size + 1);
-
-	size_t nb_read_total = 0, nb_read = 1;
-	char* buf = res;
-	while (nb_read_total < res_size && nb_read != 0) {
-		nb_read = SDL_RWread(rw, buf, 1, (res_size - nb_read_total));
-		nb_read_total += nb_read;
-		buf += nb_read;
-	}
-	SDL_RWclose(rw);
-	if (nb_read_total != res_size) {
-		free(res);
-		return NULL;
-	}
-
-	res[nb_read_total] = '\0';
-	size = nb_read_total;
-	return res;
-
+Path* ModuleFileSystem::GetPath(const std::string& path)
+{
+	assert(Exists(path) && paths.find(path) != paths.end());
+	return paths[path];
 }
 
-bool ModuleFileSystem::Save(const char* file_path, const void* buffer, unsigned int size, bool append) const
+Path* ModuleFileSystem::Save(const std::string& complete_save_path, FileData data_to_save)
 {
-	if (size == 0)
+	std::string save_path_folder;
+	std::string save_path_filename;
+	std::size_t found = complete_save_path.find_last_of("/");
+	if (found == std::string::npos)
 	{
-		return false;
+		save_path_folder = "";
+		save_path_filename = complete_save_path;
 	}
-	SDL_RWops* file;
-	if (append) 
+	else if (found == 0) 
 	{
-		file = SDL_RWFromFile(file_path, "a+b");
-	}
-	else 
-	{
-		file = SDL_RWFromFile(file_path, "w+b");
-	}
-
-	if (file != NULL)
-	{
-		APP_LOG_INFO("File %s saved!\n", file_path);
-
-	SDL_RWwrite(file, buffer, size, 1);
-
+		save_path_folder = "";
+		save_path_filename = complete_save_path.substr(found + 1, -1);
 	}
 	else
 	{
-		APP_LOG_ERROR("Error: Unable to open file! SDL Error: %s\n", SDL_GetError());
-		return false;
+		save_path_folder = complete_save_path.substr(0, found);
+		save_path_filename = complete_save_path.substr(found + 1, -1);
 	}
-	SDL_RWclose(file);
-	return true;
+
+	Path* saved_file_path = GetPath(save_path_folder);
+	return saved_file_path->Save(save_path_filename.c_str(), data_to_save);
 }
+
+Path* ModuleFileSystem::Save(const std::string& complete_save_path, const std::string& serialized_data)
+{
+	std::string save_path_folder;
+	std::string save_path_filename;
+	std::size_t found = complete_save_path.find_last_of("/");
+	if (found == std::string::npos)
+	{
+		save_path_folder = "";
+		save_path_filename = complete_save_path;
+	}
+	else if (found == 0)
+	{
+		save_path_folder = "";
+		save_path_filename = complete_save_path.substr(found + 1, -1);
+	}
+	else
+	{
+		save_path_folder = complete_save_path.substr(0, found);
+		save_path_filename = complete_save_path.substr(found + 1, -1);
+	}
+
+	Path* saved_file_path = GetPath(save_path_folder);
+	return saved_file_path->Save(save_path_filename.c_str(), serialized_data);
+}
+
 
 bool ModuleFileSystem::Exists(const std::string& path) const
 {
 	return PHYSFS_exists(path.c_str());
 }
 
-bool ModuleFileSystem::Remove(const Path* path) const
+bool ModuleFileSystem::Remove(Path* path)
 {
-	if (path == nullptr)
-	{
-		APP_LOG_ERROR("Nullptr path passed to Remove")
-		return false;
-	}
+	assert(path != nullptr);
 
 	bool success = PHYSFS_delete(path->file_path.c_str()) != 0;
-	if (path->parent != nullptr)
+	
+	if (success)
 	{
-		path->parent->Refresh();
+		RefreshPathMap();
 	}
+
 	return success;
 }
 
-bool ModuleFileSystem::Remove(const std::string& path) const
+bool ModuleFileSystem::Remove(const std::string& path)
 {
-	return Remove(&Path(path));
+	Path* path_to_remove = App->filesystem->GetPath(path);
+	return Remove(path_to_remove);
 }
 
-Path ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path) const
+Path* ModuleFileSystem::MakeDirectory(const std::string& new_directory_full_path)
 {
 	if (PHYSFS_mkdir(new_directory_full_path.c_str()) == 0)
 	{
 		APP_LOG_ERROR("Error creating directory %s : %s", new_directory_full_path.c_str(), PHYSFS_getLastError());
-		return Path();
+		return nullptr;
 	}
-	return Path(new_directory_full_path);
+
+	Path* created_dir = new Path(new_directory_full_path);
+	Path* parent_path = GetPath(Path::GetParentPathString(new_directory_full_path));
+	parent_path->children.push_back(created_dir);
+	created_dir->parent = parent_path;
+	paths[created_dir->file_path] = created_dir;
+
+	return created_dir;
 }
 
-bool ModuleFileSystem::Copy(const std::string& source, const std::string& destination)
+Path* ModuleFileSystem::Copy(const std::string& source_path, const std::string& destination_path, const std::string& copied_file_name)
 {
-	size_t file_size;
-	if (!Exists(source))
-	{
-		APP_LOG_ERROR("Cannot copy file %s because it doesn't exist!", source.c_str())
-		return false;
-	}
-	char* buffer = Load(source.c_str(), file_size);
-	bool success = Save(destination.c_str(), buffer, file_size,false);
-	free(buffer);
-	return success;
+
+	Path* source_path_object = GetPath(source_path);
+	FileData source_file_data = source_path_object->GetFile()->Load();
+
+	Path* destination_path_object = GetPath(destination_path);
+	std::string file_name = copied_file_name == "" ? source_path_object->file_name : copied_file_name;
+	Path* copied_file_path = destination_path_object->Save(file_name.c_str(), source_file_data, false);
+	
+	free((char*)source_file_data.buffer);
+	return copied_file_path;
 }
 
-void ModuleFileSystem::GetAllFilesInPath(const std::string& path, std::vector<std::shared_ptr<Path>>& files, bool directories_only) const
-{
-	char **files_array = PHYSFS_enumerateFiles(path.c_str());
-	if (*files_array == NULL)
-	{
-		APP_LOG_INFO("Error reading directory: %s", PHYSFS_getLastError());
-		return;
-	}
-	char **filename;
-	for (filename = files_array; *filename != NULL; filename++)
-	{
-		std::shared_ptr<Path> new_file = std::make_shared<Path>(path, *filename);
-		if (std::string(*filename).find(".meta") == std::string::npos)
-		{
-			bool is_directory = new_file->file_type == FileType::DIRECTORY;
-			if ((directories_only && is_directory) || !directories_only)
-			{
-				files.push_back(new_file);
-			}
-		}
-		else
-		{
-			std::string original_file = new_file->file_path.substr(0, new_file->file_path.find(".meta"));
-			if (!Exists(original_file.c_str()))
-			{
-				ImportOptions options;
-				Importer::GetOptionsFromMeta(new_file->file_path, options);
-				if (!options.exported_file.empty())
-				{
-					Remove(&Path(options.exported_file));
-				}
-				Remove(new_file.get());
-			}
-			else
-			{
-				App->resources->resource_DB->AddEntry(*new_file);
-			}
-		}
-	}
-	PHYSFS_freeList(files_array);
-}
-
-void ModuleFileSystem::RefreshFilesHierarchy()
-{
-	assets_file = std::make_shared<Path>("Assets");
-}
-
-
-bool ModuleFileSystem::CreateMountedDir(const char* directory) const
+bool ModuleFileSystem::CreateMountedDir(const char* directory)
 {
 	MakeDirectory(directory);
+	return MountDirectory(directory);
+}
+
+bool ModuleFileSystem::MountDirectory(const char* directory) const
+{
 	if (PHYSFS_mount(directory, directory, 1) == 0)
 	{
 		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
@@ -216,3 +205,29 @@ bool ModuleFileSystem::CreateMountedDir(const char* directory) const
 	return true;
 }
 
+void ModuleFileSystem::RefreshPathMap()
+{
+	delete root_path;
+	delete assets_folder_path;
+	delete library_folder_path;
+
+	paths.clear();
+
+	root_path = new Path("");
+
+	Path* current_path = nullptr;
+	std::stack<Path*> remaining_paths_to_add;
+	remaining_paths_to_add.push(root_path);
+
+	while (!remaining_paths_to_add.empty())
+	{
+		 current_path = remaining_paths_to_add.top();
+		 remaining_paths_to_add.pop();
+
+		 paths[current_path->file_path] = current_path;
+		 for (auto& path_child : current_path->children)
+		 {
+			 remaining_paths_to_add.push(path_child);
+		 }
+	}
+}

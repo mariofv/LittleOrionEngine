@@ -30,13 +30,13 @@ private:
 
 public:
 	static const unsigned int MAX_DIRECTIONAL_LIGHTS_RENDERED = 1;
-	int current_number_directional_lights_rendered = 0;
+	unsigned int current_number_directional_lights_rendered = 0;
 
 	static const unsigned int MAX_SPOT_LIGHTS_RENDERED = 5;
-	int current_number_spot_lights_rendered = 0;
+	unsigned int current_number_spot_lights_rendered = 0;
 
 	static const unsigned int MAX_POINT_LIGHTS_RENDERED = 5;
-	int current_number_point_lights_rendered = 0;
+	unsigned int current_number_point_lights_rendered = 0;
 
 	std::vector<ComponentLight*> lights;
 
@@ -46,4 +46,3 @@ private:
 };
 
 #endif // !_MODULELIGHT_H_
-

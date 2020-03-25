@@ -1,14 +1,20 @@
 #ifndef _RESOURCE_H_
 #define _RESOURCE_H_
 
+#include "Filesystem/File.h"
+
 #include <memory>
 #include <string>
+
+class Path;
+class Metafile;
 
 enum class ResourceType
 {
 	ANIMATION,
 	AUDIO,
 	MATERIAL,
+	MODEL,
 	MESH,
 	NAVMESH,
 	PREFAB,
@@ -22,28 +28,22 @@ enum class ResourceType
 class Resource
 {
 public:
-	Resource(uint32_t UUID, const std::string & exported_file) : UUID(UUID), exported_file(exported_file) {
-		int x = 0;
-	};
+	Resource() = default;
+	Resource(Metafile* metafile);
 	virtual ~Resource() = default;
 
-private:
-	virtual void LoadInMemory() = 0;
+	uint32_t GetUUID() const;
 
 public:
-	std::string exported_file;
-	std::string imported_file;
-
-private:
-	const uint32_t UUID;
-
+	Metafile* resource_metafile = nullptr;
 };
 
-namespace Loader
+namespace ResourceManager
 {
 	template<typename T>
-	static std::shared_ptr<T> Load(const std::string& uid) {
-		return nullptr;
+	uint32_t Create(const Path& asset_creation_folder_path, const std::string created_asset_name="")
+	{
+		return -1;
 	};
 }
 #endif // !_RESOURCE_H_

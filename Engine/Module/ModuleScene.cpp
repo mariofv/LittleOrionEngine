@@ -3,12 +3,14 @@
 #include "Component/ComponentCamera.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "Helper/Config.h"
+
 #include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
-#include "ModuleModelLoader.h"
 #include "ModuleRender.h"
 #include "ModuleResourceManager.h"
+
+#include "ResourceManagement/Manager/SceneManager.h"
 
 #include <algorithm>
 #include <stack>
@@ -28,7 +30,7 @@ update_status ModuleScene::Update()
 		game_object->Update();
 		if(!game_object->IsStatic())
 		{
-			ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
+			ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 			if(object_mesh != nullptr)
 				App->renderer->UpdateAABBTree(game_object.get());
 		}

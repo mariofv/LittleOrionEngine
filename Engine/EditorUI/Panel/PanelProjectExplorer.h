@@ -4,6 +4,8 @@
 #include "EditorUI/Panel/Panel.h"
 #include "Module/ModuleFileSystem.h"
 
+class Metafile;
+
 class PanelProjectExplorer : public Panel
 {
 
@@ -19,17 +21,15 @@ public:
 	void ProcessResourceMouseInput(Path* file);
 	void ShowFilesInExplorer();
 
-	void ShowFileSystemActionsMenu(const Path* file);
-	void MakeDirectoryFromFile(Path* file);
-	void CopyFileToSelectedFolder(const char* source) const;
+	void ShowFileSystemActionsMenu(Path* file);
 
 	void FilesDrop() const;
-	void ResourceDragSource(Path* file) const;
+	void ResourceDragSource(Metafile* file) const;
 
 private:
 	void InitResourceExplorerDockspace();
 
-	void ShowFileIcon(Path* file);
+	void ShowMetafileIcon(Path* file);
 
 private:
 	float file_size_width = 100.f;

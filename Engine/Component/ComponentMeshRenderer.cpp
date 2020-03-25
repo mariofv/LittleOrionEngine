@@ -8,20 +8,17 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTexture.h"
 
-ComponentMeshRenderer::ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH_RENDERER)
-{
-	owner->aabb.GenerateBoundingBox();
-}
-
-ComponentMeshRenderer::ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner) : mesh_to_render(mesh_to_render), Component(owner, ComponentType::MESH_RENDERER)
+ComponentMeshRenderer::ComponentMeshRenderer(GameObject * owner) : Component(owner, ComponentType::MESH_RENDERER)
 {
 	owner->aabb.GenerateBoundingBox();
 }
 
 ComponentMeshRenderer::ComponentMeshRenderer() : Component(nullptr, ComponentType::MESH_RENDERER)
 {
+	/*
 	this->mesh_to_render = App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH);
 	this->material_to_render = App->resources->Load<Material>(DEFAULT_MATERIAL_PATH);
+	*/
 }
 
 void ComponentMeshRenderer::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
@@ -46,8 +43,8 @@ void ComponentMeshRenderer::Save(Config& config) const
 	config.AddUInt(UUID, "UUID");
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
-	config.AddString(mesh_to_render->exported_file, "MeshPath");
-	config.AddString(material_to_render->exported_file, "MaterialPath");
+	config.AddUInt(mesh_to_render->GetUUID(), "Mesh");
+	config.AddUInt(material_to_render->GetUUID(), "Material");
 }
 
 void ComponentMeshRenderer::Load(const Config& config)
@@ -55,34 +52,38 @@ void ComponentMeshRenderer::Load(const Config& config)
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 
-	std::string mesh_path;
-	config.GetString("MeshPath", mesh_path, "");
-	std::shared_ptr<Mesh> mesh = App->resources->Load<Mesh>(mesh_path.c_str());
-	if (mesh != nullptr)
+	uint32_t mesh_uuid;
+	mesh_uuid = config.GetUInt("Mesh", 0);
+	if (mesh_uuid != 0)
 	{
+		std::shared_ptr<Mesh> mesh = std::static_pointer_cast<Mesh>(App->resources->Load(mesh_uuid));
 		SetMesh(mesh);
 	}
 	else 
 	{
-		SetMesh(App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH));
+		//SetMesh(App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH));
 	}
 
-	std::string material_path;
-	config.GetString("MaterialPath", material_path, "");
-	std::shared_ptr<Material> material = App->resources->Load<Material>(material_path);
-	if (material != nullptr)
+	uint32_t material_uuid;
+	material_uuid = config.GetUInt("Material", 0);
+	if (material_uuid != 0)
 	{
+		std::shared_ptr<Material> material = std::static_pointer_cast<Material>(App->resources->Load(material_uuid));
 		SetMaterial(material);
 	}
 	else
 	{
-		SetMaterial(App->resources->Load<Material>(DEFAULT_MATERIAL_PATH));
+		//SetMaterial(App->resources->Load<Material>(DEFAULT_MATERIAL_PATH));
 	}
-
 }
 
 void ComponentMeshRenderer::Render() const
 {
+	if (material_to_render == nullptr)
+	{
+		return;
+	}
+
 	std::string program_name = material_to_render->shader_program;
 	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
@@ -99,6 +100,10 @@ void ComponentMeshRenderer::Render() const
 
 void ComponentMeshRenderer::RenderModel() const
 {
+	if (mesh_to_render == nullptr)
+	{
+		return;
+	}	
 	glBindVertexArray(mesh_to_render->GetVAO());
 	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);

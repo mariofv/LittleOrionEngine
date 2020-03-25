@@ -12,7 +12,6 @@ public:
 	
 	void Render(Material* material);
 	void ShowMaterialTextureMap(Material* material, Material::MaterialTextureType type);
-	void SaveMaterial(Material* material);
 
 private:
 	void DropTarget(Material* material, Material::MaterialTextureType type);

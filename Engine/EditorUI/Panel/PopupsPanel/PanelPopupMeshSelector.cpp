@@ -23,20 +23,8 @@ void PanelPopupMeshSelector::Render()
 		show_mesh_selector_popup = false;
 		opened = true;
 
-		// TODO: Change this when ModuleResourceManagement is refactored.
-		/*mesh_files = std::vector<std::shared_ptr<File>>();
-		File meshes_folder(LIBRARY_MESHES_FOLDER);
-		for (auto& mesh_folder : meshes_folder.children)
-		{
-			File* mesh_folder_ptr = mesh_folder.get();
-			for (auto& mesh_file : mesh_folder_ptr->children)
-			{
-				if (mesh_file.get()->file_type == FileType::MESH)
-				{
-					mesh_files.push_back(mesh_file);
-				}
-			}
-		}*/
+		mesh_metafiles = std::vector<Metafile*>();
+		App->resources->resource_DB->GetEntriesOfType(mesh_metafiles, ResourceType::MESH);
 	}
 
 	if (!opened)
@@ -46,7 +34,7 @@ void PanelPopupMeshSelector::Render()
 
 	ImGui::SetNextWindowSize(ImVec2(mesh_icon_size * 4.5, mesh_icon_size * 2 * 1.1f));
 
-	if (ImGui::Begin("Select Mesh", &opened))
+	if (ImGui::Begin("Select Material", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
 
@@ -58,10 +46,10 @@ void PanelPopupMeshSelector::Render()
 		int current_line = 0;
 		int current_file_in_line = 0;
 
-		for (auto & file : mesh_files)
+		for (auto& mesh_metafile : mesh_metafiles)
 		{
 			ImGui::PushID(current_line * files_per_line + current_file_in_line);
-			ShowMeshIcon(file.get());
+			ShowMeshIcon(mesh_metafile);
 			ImGui::PopID();
 
 			++current_file_in_line;
@@ -91,12 +79,13 @@ void PanelPopupMeshSelector::Render()
 	ImGui::End();
 }
 
-void PanelPopupMeshSelector::ShowMeshIcon(Path* file)
+void PanelPopupMeshSelector::ShowMeshIcon(Metafile* mesh_metafile)
 {
-	std::string filename = std::string(file->filename_no_extension);
-	if (ImGui::BeginChild(filename.c_str(), ImVec2(mesh_icon_size, mesh_icon_size), selected_mesh == file, ImGuiWindowFlags_NoDecoration))
+	Path* mesh_imported_file_path = App->filesystem->GetPath(mesh_metafile->imported_file_path);
+	std::string filename = std::string(mesh_imported_file_path->file_name_no_extension);
+	if (ImGui::BeginChild(filename.c_str(), ImVec2(mesh_icon_size, mesh_icon_size), selected_mesh == mesh_metafile, ImGuiWindowFlags_NoDecoration))
 	{
-		ProcessMeshMouseInput(file);
+		ProcessMeshMouseInput(mesh_metafile);
 
 		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * mesh_icon_size) * 0.5f);
 		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*mesh_icon_size, 0.75 * mesh_icon_size)); // TODO: Substitute this with resouce thumbnail
@@ -120,15 +109,15 @@ void PanelPopupMeshSelector::ShowMeshIcon(Path* file)
 	ImGui::EndChild();
 }
 
-void PanelPopupMeshSelector::ProcessMeshMouseInput(Path* file)
+void PanelPopupMeshSelector::ProcessMeshMouseInput(Metafile* mesh_metafile)
 {
 	if (ImGui::IsWindowHovered())
 	{
 		if (ImGui::IsMouseClicked(0))
 		{
-			if (selected_mesh != file)
+			if (selected_mesh != mesh_metafile)
 			{
-				selected_mesh = file;
+				selected_mesh = mesh_metafile;
 				ChangeSelectedObjectMesh();
 			}
 		}
@@ -152,7 +141,7 @@ void PanelPopupMeshSelector::ChangeSelectedObjectMesh() const
 	assert(selected_gameobject_mesh_renderer_component != nullptr);
 	ComponentMeshRenderer* selected_gameobject_mesh_renderer = static_cast<ComponentMeshRenderer*>(selected_gameobject_mesh_renderer_component);
 
-	std::shared_ptr<Mesh> new_mesh = App->resources->Load<Mesh>(selected_mesh->file_path.c_str());
+	std::shared_ptr<Mesh> new_mesh = std::static_pointer_cast<Mesh>(App->resources->Load(selected_mesh->uuid));
 	selected_gameobject_mesh_renderer->SetMesh(new_mesh);
 	selected_gameobject_mesh_renderer->modified_by_user = true;
 }

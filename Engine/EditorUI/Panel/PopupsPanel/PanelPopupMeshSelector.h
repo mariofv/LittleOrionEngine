@@ -2,9 +2,11 @@
 #define _PANELPOPUPMESHSELECTOR_H_
 
 #include "EditorUI/Panel/Panel.h"
-#include "Module/ModuleFileSystem.h"
 
 #include <string>
+#include <vector>
+
+class Metafile;
 
 class PanelPopupMeshSelector : public Panel
 {
@@ -15,8 +17,8 @@ public:
 	void Render() override;
 
 private:
-	void ShowMeshIcon(Path* file);
-	void ProcessMeshMouseInput(Path * file);
+	void ShowMeshIcon(Metafile* mesh_metafile);
+	void ProcessMeshMouseInput(Metafile* mesh_metafile);
 	void ChangeSelectedObjectMesh() const;
 
 public:
@@ -24,8 +26,8 @@ public:
 	
 private:
 	float mesh_icon_size = 125.f;
-	Path* selected_mesh = nullptr;
-	std::vector<std::shared_ptr<Path>> mesh_files;
+	Metafile* selected_mesh = nullptr;
+	std::vector<Metafile*> mesh_metafiles;
 
 	bool child_window_focused = false;
 };

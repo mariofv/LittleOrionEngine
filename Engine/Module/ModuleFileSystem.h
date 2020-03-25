@@ -7,36 +7,46 @@
 #include <memory>
 #include <physfs/physfs.h>
 #include <string>
+#include <unordered_map>
 #include <vector>
 
 
 class ModuleFileSystem : public Module
 {
 public:
-
-	bool Init() override;
-	bool CleanUp() override;
 	ModuleFileSystem() = default;
 	~ModuleFileSystem();
 
-	bool Save(const char* file_name, const void* buffer, unsigned int size, bool append = false) const;
-	char* Load(const char* file_name, size_t& size) const;
+	bool Init() override;
+	bool CleanUp() override;
+
+	void AddPath(Path* path);
+	Path* GetPath(const std::string& path);
+
+	Path* Save(const std::string& save_path, FileData data_to_save);
+	Path* Save(const std::string& save_path, const std::string& serialized_data);
 
 	bool Exists(const std::string& path) const;
 
-	bool Remove(const Path* path) const;
-	bool Remove(const std::string& path) const;
+	bool Remove(Path* path);
+	bool Remove(const std::string& path);
 
-	bool Copy(const std::string& source, const std::string& destination);
-	Path MakeDirectory(const std::string& new_directory_full_path) const;
+	Path* Copy(const std::string& source_path, const std::string& destination_path, const std::string& copied_file_name = "");
+	Path* MakeDirectory(const std::string& new_directory_full_path);
 	
-	void GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<Path>> & files, bool directories_only = false) const;
+	bool MountDirectory(const char* directory) const;
+	bool CreateMountedDir(const char* directory);
 
-	bool CreateMountedDir(const char * directory) const;
-	void RefreshFilesHierarchy();
+private:
+	void RefreshPathMap();
 
 public:
-	std::shared_ptr<Path> assets_file;
+	Path* assets_folder_path = nullptr;
+	Path* library_folder_path = nullptr;
+
+private:
+	Path* root_path = nullptr;
+	std::unordered_map<std::string, Path*> paths;
 };
 
 

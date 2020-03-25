@@ -1,7 +1,7 @@
 #ifndef _RESOURCEDATABASE_H_
 #define _RESOURCEDATABASE_H_
 
-#include "ResourceManagement/ImportOptions/ImportOptions.h"
+#include "ResourceManagement/Metafile/Metafile.h"
 
 #include <string>
 #include <unordered_map>
@@ -15,19 +15,17 @@ public:
 	ResourceDataBase() = default;
 	~ResourceDataBase() = default;
 
-	void AddEntry(const Path& meta_file);
-	void AddEntry(const ImportOptions& meta_file);
+	void AddEntry(const Path& metafile_path);
+	void AddEntry(const Metafile& metafile);
 
-	const ImportOptions* GetEntry(uint32_t uuid);
+	Metafile* GetEntry(uint32_t uuid);
+	void GetEntriesOfType(std::vector<Metafile*> entries, ResourceType type) const;
 
 public:
-	std::unordered_map<int32_t, std::unique_ptr<ImportOptions>> entries;
+	std::unordered_map<int32_t, std::unique_ptr<Metafile>> entries;
 
 private:
 	const std::string RESOURCE_DATABASE = "Resources/DB/resources.json";
 };
 
 #endif // !_RESOURCEDATABASE_H_
-
-
-

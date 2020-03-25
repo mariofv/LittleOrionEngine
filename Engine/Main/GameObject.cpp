@@ -72,8 +72,11 @@ GameObject & GameObject::operator<<(const GameObject & gameobject_to_copy)
 void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 {
 	children_to_remove.push_back(this);
-	if(!is_static)
+	if (!is_static)
+	{
 		App->renderer->RemoveAABBTree(this);
+	}
+
 	if (parent != nullptr)
 	{
 		parent->RemoveChild(this);
@@ -84,11 +87,13 @@ void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 		components[i]->Delete();
 		components[i] = nullptr;
 	}
+
 	for (int i = (children.size() - 1); i >= 0; --i)
 	{
 		children[i]->parent = nullptr;
 		children[i]->Delete(children_to_remove);
 	}
+
 	if (is_prefab_parent)
 	{
 		prefab_reference->RemoveInstance(this);

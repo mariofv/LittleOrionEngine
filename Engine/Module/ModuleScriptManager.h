@@ -60,8 +60,8 @@ private:
 
 	HINSTANCE gameplay_dll;
 	std::string working_directory;
-	std::unique_ptr<Path> dll_file = nullptr;
-	std::unique_ptr<Path> scripts_list_file = nullptr;
+	Path* dll_file = nullptr;
+	Path* scripts_list_file_path = nullptr;
 	Utils* utils = nullptr;
 
 	long last_timestamp_dll;

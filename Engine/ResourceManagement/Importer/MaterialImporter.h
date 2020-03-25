@@ -12,11 +12,12 @@ struct aiScene;
 class MaterialImporter : public Importer
 {
 public:
-	MaterialImporter() = default;
+	MaterialImporter() : Importer(ResourceType::MATERIAL) {};
 	~MaterialImporter() = default;
-	ImportResult Import(const Path& file, bool force = false) const override;
+	FileData ExtractData(Path& assets_file_path) const override;
 
-	ImportResult ExtractMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* model_file_path, const char* material_assets_file_path) const;
+	FileData ExtractMaterialFromAssimp(const aiMaterial* assimp_mesh_material, const Path& material_file_folder_path);
+	uint32_t ImportMaterialTexture(const std::string& texture_file_name, const Path& material_file_folder_path);
 
 	Material::MaterialTextureType GetTextureTypeFromAssimpType(aiTextureType type) const;
 };

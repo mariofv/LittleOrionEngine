@@ -23,16 +23,8 @@ void PanelPopupMaterialSelector::Render()
 		show_material_selector_popup = false;
 		opened = true;
 
-		// TODO: Change this when ModuleResourceManagement is refactored.
-		/*material_files = std::vector<std::shared_ptr<File>>();
-		File material_folder(LIBRARY_MATERIAL_FOLDER);
-		for (auto& material_file : material_folder.children)
-		{
-			if (material_file.get()->file_type == FileType::MATERIAL)
-			{
-				material_files.push_back(material_file);
-			}
-		}*/
+		material_metafiles = std::vector<Metafile*>();
+		App->resources->resource_DB->GetEntriesOfType(material_metafiles, ResourceType::MATERIAL);
 	}
 
 	if (!opened)
@@ -54,10 +46,10 @@ void PanelPopupMaterialSelector::Render()
 		int current_line = 0;
 		int current_file_in_line = 0;
 
-		for (auto & file : material_files)
+		for (auto& material_metafile : material_metafiles)
 		{
 			ImGui::PushID(current_line * files_per_line + current_file_in_line);
-			ShowMaterialIcon(file.get());
+			ShowMaterialIcon(material_metafile);
 			ImGui::PopID();
 
 			++current_file_in_line;
@@ -87,12 +79,13 @@ void PanelPopupMaterialSelector::Render()
 	ImGui::End();
 }
 
-void PanelPopupMaterialSelector::ShowMaterialIcon(Path* file)
+void PanelPopupMaterialSelector::ShowMaterialIcon(Metafile* material_metafile)
 {
-	std::string filename = std::string(file->filename_no_extension);
-	if (ImGui::BeginChild(filename.c_str(), ImVec2(material_icon_size, material_icon_size), selected_material == file, ImGuiWindowFlags_NoDecoration))
+	Path* material_imported_file_path = App->filesystem->GetPath(material_metafile->imported_file_path);
+	std::string filename = std::string(material_imported_file_path->file_name_no_extension);
+	if (ImGui::BeginChild(filename.c_str(), ImVec2(material_icon_size, material_icon_size), selected_material == material_metafile, ImGuiWindowFlags_NoDecoration))
 	{
-		ProcessMaterialMouseInput(file);
+		ProcessMaterialMouseInput(material_metafile);
 
 		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * material_icon_size) * 0.5f);
 		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*material_icon_size, 0.75 * material_icon_size)); // TODO: Substitute this with resouce thumbnail
@@ -116,7 +109,7 @@ void PanelPopupMaterialSelector::ShowMaterialIcon(Path* file)
 	ImGui::EndChild();
 }
 
-void PanelPopupMaterialSelector::ProcessMaterialMouseInput(Path* file)
+void PanelPopupMaterialSelector::ProcessMaterialMouseInput(Metafile* file)
 {
 	if (ImGui::IsWindowHovered())
 	{
@@ -148,7 +141,7 @@ void PanelPopupMaterialSelector::ChangeSelectedObjectMaterial() const
 	assert(selected_gameobject_mesh_renderer_component != nullptr);
 	ComponentMeshRenderer* selected_gameobject_mesh_renderer = static_cast<ComponentMeshRenderer*>(selected_gameobject_mesh_renderer_component);
 
-	std::shared_ptr<Material> new_material = App->resources->Load<Material>(selected_material->file_path);
+	std::shared_ptr<Material> new_material = std::static_pointer_cast<Material>(App->resources->Load(selected_material->uuid));
 	selected_gameobject_mesh_renderer->SetMaterial(new_material);
 	selected_gameobject_mesh_renderer->modified_by_user = true;
 }

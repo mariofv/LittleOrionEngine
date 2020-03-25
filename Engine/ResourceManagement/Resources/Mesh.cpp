@@ -1,18 +1,19 @@
 #include "Mesh.h"
 
+#include "ResourceManagement/Metafile/Metafile.h"
 
-Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path) : vertices(vertices),
-indices(indices),
-Resource(0, mesh_file_path)
+Mesh::Mesh(Metafile* resource_metafile) : Resource(resource_metafile) {};
+
+Mesh::Mesh(Metafile* resource_metafile, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices) 
+	: vertices(vertices)
+	, indices(indices)
+	, Resource(resource_metafile)
 {
 	LoadInMemory();
-	
 }
-Mesh::Mesh(std::string mesh_file_path) :
-Resource(0, mesh_file_path)
+
+Mesh::~Mesh() 
 {
-}
-Mesh::~Mesh() {
 	if (vbo != 0)
 	{
 		glDeleteBuffers(1, &vbo);

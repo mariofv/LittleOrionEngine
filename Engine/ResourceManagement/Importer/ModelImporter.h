@@ -1,7 +1,7 @@
 #ifndef _MODELIMPORTER_H_
 #define _MODELIMPORTER_H_
 
-#include "Importer.h"
+#include "ResourceManagement/Importer/Importer.h"
 
 #include "Helper/Timer.h"
 
@@ -9,34 +9,31 @@
 #include <assimp/Logger.hpp>
 #include <memory>
 
+struct aiAnimation;
 struct aiNode;
 struct aiScene;
+struct aiMesh;
+
 class Config;
-class Mesh;
-class GameObject;
-class MeshImporter;
-class SkeletonImporter;
-class AnimationImporter;
-class ModelPrefabImporter;
+class Path;
 
-
-class ModelImporter : Importer
+class ModelImporter : public Importer
 {
 public:
 	ModelImporter();
 	~ModelImporter();
-	ImportResult Import(const Path& file, bool force = false) const override;
-	ImportResult ImportExtractedResources(const Path& file, bool force = false) const;
+
+	FileData ExtractData(Path& assets_file_path) const override;
 
 private:
-	std::vector<Config> ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const std::string& base_path) const;
+	std::vector<Config> ExtractDataFromNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, Path& asset_file_folder_path) const;
+	uint32_t ExtractMaterialFromNode(const aiScene* scene, size_t mesh_index, const std::string& mesh_name, Path& asset_file_folder_path) const;
+	uint32_t ExtractMeshFromNode(const aiMesh* asssimp_mesh, std::string mesh_name, const aiMatrix4x4& mesh_transformation, Path& asset_file_folder_path) const;
+	uint32_t ExtractSkeletonFromNode(const aiScene* scene, const aiMesh* asssimp_mesh, std::string mesh_name, Path& asset_file_folder_path) const;
+	uint32_t ExtractAnimationFromNode(const aiScene* scene, const aiAnimation* assimp_animation, std::string animation_name, Path& asset_file_folder_path) const;
 
 private:
 	mutable Timer performance_timer;
-	std::unique_ptr<MeshImporter> mesh_importer;
-	std::unique_ptr<SkeletonImporter> skeleton_importer;
-	std::unique_ptr<AnimationImporter> animation_importer;
-	std::unique_ptr<ModelPrefabImporter> model_prefab_importer;
 };
 
 

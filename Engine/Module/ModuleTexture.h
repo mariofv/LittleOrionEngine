@@ -23,7 +23,6 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	std::shared_ptr<Texture> LoadTexture(const char* texture_path);
 	GLuint LoadCubemap(const std::vector<std::string> & faces) const;
 
 public:

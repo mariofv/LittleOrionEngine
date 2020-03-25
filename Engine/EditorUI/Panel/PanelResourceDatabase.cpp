@@ -42,8 +42,8 @@ void PanelResourceDatabase::Render()
 					selected = i;
 				}
 				ImGui::NextColumn();
-				ImGui::Text(pair.second->imported_file.c_str()); ImGui::NextColumn();
-				ImGui::Text(pair.second->exported_file.c_str()); ImGui::NextColumn();
+				ImGui::Text(pair.second->imported_file_path.c_str()); ImGui::NextColumn();
+				ImGui::Text(pair.second->exported_file_path.c_str()); ImGui::NextColumn();
 				ImGui::Text(GetResourceTypeName(pair.second->resource_type).c_str()); ImGui::NextColumn();
 				ImGui::PopID();
 			}

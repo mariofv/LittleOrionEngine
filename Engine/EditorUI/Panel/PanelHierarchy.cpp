@@ -12,7 +12,6 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleInput.h"
-#include "Module/ModuleModelLoader.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
@@ -122,24 +121,24 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 				incoming_game_object->SetParent(target_game_object);
 			}
 		}
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_File"))
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_Resource"))
 		{
-			assert(payload->DataSize == sizeof(File*));
-			Path *incoming_file = *(Path**)payload->Data;
-			if (incoming_file->file_type == FileType::PREFAB || incoming_file->file_type == FileType::MODEL)
+			assert(payload->DataSize == sizeof(Metafile*));
+			Metafile* incoming_metafile = *((Metafile**)payload->Data);
+			if (incoming_metafile->resource_type == ResourceType::PREFAB) 
 			{
-				ImportOptions options;
-				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
-				std::string prefab_exported_path = options.exported_file;
-				if (prefab_exported_path.empty())
-				{
-					prefab_exported_path = App->resources->Import(*incoming_file).exported_file;
-				}
-				auto prefab = App->resources->Load<Prefab>(prefab_exported_path);
-				if (incoming_file->file_type == FileType::MODEL)
-				{
-					prefab->overwritable = false;
-				}
+				std::shared_ptr<Prefab> prefab = std::static_pointer_cast<Prefab>(App->resources->Load(incoming_metafile->uuid));
+				GameObject* new_model = prefab->Instantiate(target_game_object);
+
+				App->actions->action_game_object = new_model;
+				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
+			}
+
+			if (incoming_metafile->resource_type == ResourceType::MODEL)
+			{
+				std::shared_ptr<Prefab> prefab = std::static_pointer_cast<Prefab>(App->resources->Load(incoming_metafile->uuid));
+				prefab->overwritable = false;
+				
 				GameObject* new_model = prefab->Instantiate(target_game_object);
 
 				App->actions->action_game_object = new_model;
@@ -204,24 +203,25 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 
 void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 {
+	//TODO: This
 	if (ImGui::BeginMenu("3D object"))
 	{
 		GameObject* created_game_object = nullptr;
 		if (ImGui::Selectable("Cube"))
 		{
-			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_CUBE_PATH);
+			//created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_CUBE_PATH);
 		}
 		if (ImGui::Selectable("Cylinder"))
 		{
-			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_CYLINDER_PATH);
+			//created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_CYLINDER_PATH);
 		}
 		if (ImGui::Selectable("Sphere"))
 		{
-			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
+			//created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
 		}
 		if (ImGui::Selectable("Torus"))
 		{
-			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
+			//created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
 		}
 
 		if (game_object != nullptr && created_game_object != nullptr)
@@ -230,7 +230,7 @@ void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 		}
 		if (ImGui::Selectable("Quad"))
 		{
-			App->model_loader->LoadCoreModel(PRIMITIVE_QUAD_PATH);
+			//App->model_loader->LoadCoreModel(PRIMITIVE_QUAD_PATH);
 		}
 
 		if(created_game_object != nullptr)
@@ -307,7 +307,8 @@ std::string PanelHierarchy::GetNextGameObjectName()
 	char tmp_string[64];
 	sprintf_s(tmp_string, "GameObject (%d)", num_game_objects++);
 
-	return std::string(tmp_string);
+	return std::string(
+);
 }
 
 int PanelHierarchy::GetNextBranch()
