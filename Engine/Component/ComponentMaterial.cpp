@@ -181,7 +181,7 @@ void ComponentMaterial::AddNormalUniforms(unsigned int shader_program) const
 	//	glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, indices);
 	//}
 	//else {
-	//	unsigned index = glGetSubroutineIndex(shader_program, GL_FRAGMENT_SHADER, "ComputeMaterialWithoutNormalMap"); 
+	//	GLint index = glGetSubroutineIndex(shader_program, GL_FRAGMENT_SHADER, "ComputeMaterialWithoutNormalMap"); 
 	//	unsigned indices[1]; 
 	//	unsigned location = glGetSubroutineUniformLocation(shader_program, GL_FRAGMENT_SHADER, "NormalSoubroutine");
 	//	indices[index] = location;

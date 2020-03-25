@@ -6,7 +6,7 @@ in vec2 texCoord;
 in vec3 tangent;
 
 subroutine vec3 normal_subroutine();
-subroutine uniform normal_subroutine NormalSoubroutine;
+layout (location=0) subroutine uniform normal_subroutine NormalSoubroutine;
 
 
 out vec4 FragColor;
@@ -102,13 +102,13 @@ vec3 BRDF(vec3 view_pos, vec3 normal, vec3 half_dir, vec3 light_dir, float rough
 mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent);
 
 //SUBROUTINES
-subroutine (normal_subroutine) vec3 ComputeMaterialWithNormalMap()
+layout(index=0) subroutine (normal_subroutine) vec3 ComputeMaterialWithNormalMap()
 {
 	vec3 normalized_normal = normalize(GetNormalMap(material.normal_map, texCoord));
 	return normalized_normal = CreateTangentSpace(normalize(normal), normalize(tangent)) * normalized_normal;
 }
 
-subroutine (normal_subroutine) vec3 ComputeMaterialWithoutNormalMap()
+layout(index=1) subroutine (normal_subroutine) vec3 ComputeMaterialWithoutNormalMap()
 {
 	return normalize(normal);
 }
@@ -117,9 +117,9 @@ void main()
 {
 
 
-	vec3 normalized_normal = normalize(GetNormalMap(material.normal_map, texCoord));
-	normalized_normal = CreateTangentSpace(normalize(normal), normalize(tangent)) * normalized_normal;
-
+	//vec3 normalized_normal = normalize(GetNormalMap(material.normal_map, texCoord));
+	//normalized_normal = CreateTangentSpace(normalize(normal), normalize(tangent)) * normalized_normal;
+	vec3 normalized_normal = normalize(normal);
 	vec3 result = vec3(0);
 
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
@@ -137,6 +137,7 @@ void main()
 		result += CalculatePointLight(point_lights[i], normal);	
 	}
 
+	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
 	FragColor.a=material.alpha_blending;
 
