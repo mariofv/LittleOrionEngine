@@ -43,19 +43,19 @@ void Player1InputScript::Update()
 	float3 transform = owner->transform.GetTranslation();
 	float3 rotation = owner->transform.GetRotationRadiants();
 
-	if (App->input->GetControllerButton(ControllerCode::A, 0))
+	if (App->input->GetControllerButton(ControllerCode::A, PlayerID::ONE) || App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, PlayerID::TWO).y != 0)
 	{
 		owner->transform.SetTranslation(float3(transform.x + speed, transform.y, transform.z));
 	}
-	if (App->input->GetControllerButton(ControllerCode::B, 0))
+	if (App->input->GetControllerButton(ControllerCode::B, PlayerID::ONE) || App->input->GetTriggerController(ControllerAxis::LEFT_TRIGGER, PlayerID::ONE) != 0)
 	{
 		owner->transform.SetTranslation(float3(transform.x, transform.y, transform.z + speed));
 	}
-	if (App->input->GetControllerButton(ControllerCode::X, 0))
+	if (App->input->GetControllerButton(ControllerCode::X, PlayerID::ONE))
 	{
 		owner->transform.SetTranslation(float3(transform.x, transform.y, transform.z - speed));
 	}
-	if (App->input->GetControllerButton(ControllerCode::Y, 0))
+	if (App->input->GetControllerButton(ControllerCode::Y, PlayerID::ONE))
 	{
 		owner->transform.SetTranslation(float3(transform.x - speed, transform.y, transform.z));
 	}

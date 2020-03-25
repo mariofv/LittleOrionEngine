@@ -199,8 +199,9 @@ update_status ModuleInput::PreUpdate()
 			right_joystick_raw[which] = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
 
 			left_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
-			left_controller_trigger_raw[which] = left_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
 			right_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+
+			left_controller_trigger_raw[which] = left_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
 			right_controller_trigger_raw[which] = right_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
 		}
 		break;
@@ -435,7 +436,7 @@ bool ModuleInput::IsMouseMoving() const
 	return mouse_moving;
 }
 
-ENGINE_API float2 ModuleInput::GetAxisContoller(ControllerAxis type, PlayerID player_id) const
+ENGINE_API float2 ModuleInput::GetAxisController(ControllerAxis type, PlayerID player_id) const
 {
 	switch (type)
 	{
@@ -477,7 +478,7 @@ ENGINE_API Sint16 ModuleInput::GetTriggerController(ControllerAxis type, PlayerI
 	}
 }
 
-ENGINE_API float2 ModuleInput::GetAxisContollerRaw(ControllerAxis type, PlayerID player_id) const
+ENGINE_API float2 ModuleInput::GetAxisControllerRaw(ControllerAxis type, PlayerID player_id) const
 {
 	switch (type)
 	{

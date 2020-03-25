@@ -394,11 +394,11 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("Start: %d", App->input->GetControllerButton(ControllerCode::Start));
 			ImGui::Text("UpDpad: %d", App->input->GetControllerButton(ControllerCode::UpDpad));
 
-			ImGui::Text("Left Joystick : (%.3f, %.3f)", App->input->GetAxisContoller(ControllerAxis::LEFT_JOYSTICK).x, App->input->GetAxisContoller(ControllerAxis::LEFT_JOYSTICK).y);
-			ImGui::Text("Right Joystick : (%.3f, %.3f)", App->input->GetAxisContoller(ControllerAxis::RIGHT_JOYSTICK).x, App->input->GetAxisContoller(ControllerAxis::RIGHT_JOYSTICK).y);
+			ImGui::Text("Left Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK).y);
+			ImGui::Text("Right Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK).y);
 
-			ImGui::Text("Left Joystick Raw : (%.3f, %.3f)", App->input->GetAxisContoller(ControllerAxis::LEFT_JOYSTICK_RAW).x, App->input->GetAxisContoller(ControllerAxis::LEFT_JOYSTICK_RAW).y);
-			ImGui::Text("Right Joystick Raw : (%.3f, %.3f)", App->input->GetAxisContoller(ControllerAxis::RIGHT_JOYSTICK_RAW).x, App->input->GetAxisContoller(ControllerAxis::RIGHT_JOYSTICK_RAW).y);
+			ImGui::Text("Left Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW).y);
+			ImGui::Text("Right Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW).y);
 
 			ImGui::Text("Left Trigger : %d", App->input->GetTriggerController(ControllerAxis::LEFT_TRIGGER));
 			ImGui::Text("Right Trigger : %d", App->input->GetTriggerController(ControllerAxis::RIGHT_TRIGGER));

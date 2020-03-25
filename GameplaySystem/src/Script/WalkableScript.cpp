@@ -66,7 +66,7 @@ void WalkableScript::Move()
 	float3 rotation = owner->transform.GetRotationRadiants();
 
 	///Controller Input
-	float2 axis = App->input->GetAxisContollerRaw(ControllerAxis::LEFT_JOYSTICK_RAW);
+	float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW);
 
 	float3 axis_direction = float3(-axis.x, 0.0f , -axis.y);
 

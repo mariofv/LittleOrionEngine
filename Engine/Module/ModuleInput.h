@@ -426,10 +426,10 @@ public:
 	Uint8 GetMouseClicks() const;
 	bool IsMouseMoving() const;
 
-	ENGINE_API float2 GetAxisContoller(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
+	ENGINE_API float2 GetAxisController(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
 	ENGINE_API Sint16 GetTriggerController(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
 
-	ENGINE_API float2 GetAxisContollerRaw(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
+	ENGINE_API float2 GetAxisControllerRaw(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
 	ENGINE_API float GetTriggerControllerRaw(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
 
 private:
