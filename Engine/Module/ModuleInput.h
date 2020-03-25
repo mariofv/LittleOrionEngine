@@ -22,6 +22,7 @@ typedef unsigned __int8 Uint8;
 const int MAX_KEYS = 286;
 const int MAX_MOUSE_BUTTONS = 5;
 const int MAX_CONTROLLER_BUTTONS = 15;
+const int MAX_PLAYERS = 2;
 
 enum class KeyState : Uint8
 {
@@ -326,8 +327,7 @@ enum class ControllerAxis
 enum class PlayerID : Uint8
 {
 	ONE, 
-	TWO,
-	COUNT
+	TWO
 };
 
 struct GameInput
@@ -408,13 +408,9 @@ public:
 	ENGINE_API bool GetMouseButtonDown(MouseButton button);
 	ENGINE_API bool GetMouseButtonUp(MouseButton button);
 
-	ENGINE_API bool GetControllerButton(ControllerCode code);
-	ENGINE_API bool GetControllerButtonDown(ControllerCode code);
-	ENGINE_API bool GetControllerButtonUp(ControllerCode code);
-
-	ENGINE_API bool GetControllerButton(ControllerCode code, int player_num);
-	ENGINE_API bool GetControllerButtonDown(ControllerCode code, int player_num);
-	ENGINE_API bool GetControllerButtonUp(ControllerCode code, int player_num);
+	ENGINE_API bool GetControllerButton(ControllerCode code, PlayerID player_id = PlayerID::ONE);
+	ENGINE_API bool GetControllerButtonDown(ControllerCode code, PlayerID player_id = PlayerID::ONE);
+	ENGINE_API bool GetControllerButtonUp(ControllerCode code, PlayerID player_id = PlayerID::ONE);
 
 	ENGINE_API bool GetGameInput(const char* name);
 	ENGINE_API bool GetGameInputDown(const char* name);
@@ -430,11 +426,11 @@ public:
 	Uint8 GetMouseClicks() const;
 	bool IsMouseMoving() const;
 
-	ENGINE_API float2 GetAxisContoller(ControllerAxis type) const;
-	ENGINE_API Sint16 GetTriggerController(ControllerAxis type) const;
+	ENGINE_API float2 GetAxisContoller(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
+	ENGINE_API Sint16 GetTriggerController(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
 
-	ENGINE_API float2 GetAxisContollerRaw(ControllerAxis type) const;
-	ENGINE_API float GetTriggerControllerRaw(ControllerAxis type) const;
+	ENGINE_API float2 GetAxisContollerRaw(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
+	ENGINE_API float GetTriggerControllerRaw(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
 
 private:
 	void SaveGameInputs(Config &config);
@@ -463,19 +459,19 @@ private:
 	Uint8 mouse_clicks;
 	bool mouse_moving;
 
-	float2 left_joystick = float2(0.0f,0.0f);
-	float2 right_joystick = float2(0.0f, 0.0f);
+	float2 left_joystick[MAX_PLAYERS];
+	float2 right_joystick[MAX_PLAYERS];
 
-	float2 left_joystick_raw = float2(0.0f, 0.0f);
-	float2 right_joystick_raw = float2(0.0f, 0.0f);
+	float2 left_joystick_raw[MAX_PLAYERS];
+	float2 right_joystick_raw[MAX_PLAYERS];
 
-	Sint32 left_controller_trigger = 0;
-	Sint32 right_controller_trigger = 0;
+	Sint32 left_controller_trigger[MAX_PLAYERS];
+	Sint32 right_controller_trigger[MAX_PLAYERS];
 
-	float left_controller_trigger_raw = 0;
-	float right_controller_trigger_raw = 0;
+	float left_controller_trigger_raw[MAX_PLAYERS];
+	float right_controller_trigger_raw[MAX_PLAYERS];
 
-	SDL_GameController* controller[(int)PlayerID::COUNT];
+	SDL_GameController* controller[MAX_PLAYERS];
 
 	friend PanelConfiguration;
 };

@@ -39,16 +39,6 @@ update_status ModuleCamera::Update()
 {
 	SelectMainCamera();
 	scene_camera->Update();
-	//if (App->input->GetControllerButton(ControllerCode::X, 0))
-	//{
-	//	int x = 5;
-	//	x = 6;
-	//}	
-	//if (App->input->GetControllerButton(ControllerCode::X, 1))
-	//{
-	//	int x = 5;
-	//	x = 6;
-	//}
 	return update_status::UPDATE_CONTINUE;
 }
 
