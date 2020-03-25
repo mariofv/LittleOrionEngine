@@ -19,14 +19,15 @@ public:
 
 	bool GetTranslation(const std::string& channel_name, float3& position);
 	bool GetRotation(const std::string& channel_name, Quat& rotation);
-	bool GetTransformation(const std::string& channel_name, float4x4& transform);
 
-	void GetChannelGlobalTransform(size_t channel_index, const Animation::Channel& channel, const std::vector<Animation::Channel>& channels, math::float4x4& current_global_tranform);
-
+private:
+	void UpdateChannelsGlobalTransformation();
 public:
 	std::shared_ptr<Animation> animation = nullptr;
 	std::shared_ptr<Skeleton> skeleton = nullptr;
+
 	std::map<size_t, std::vector<uint32_t>> channel_hierarchy_cache;
+	std::vector<float4x4> channel_global_transformation;
 
 	bool loop = false;
 	bool playing = false;

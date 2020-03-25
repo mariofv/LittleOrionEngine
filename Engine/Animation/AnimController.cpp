@@ -35,6 +35,8 @@ void AnimController::Init()
 		}
 
 	}
+	channel_global_transformation.resize(animation->keyframes[0].channels.size());
+
 }
 
 
@@ -68,6 +70,45 @@ void AnimController::Update()
 		{
 			playing = false;
 		}
+	}
+		//UpdateChannelsGlobalTransformation();
+
+}
+void AnimController::UpdateChannelsGlobalTransformation()
+{
+	float current_sample = (current_time*(animation->frames - 1)) / animation_time;
+	int current_keyframe = math::FloorInt(current_sample);
+
+	int next_keyframe = (current_keyframe + 1) % (int)animation->frames;
+
+	size_t i = 0;
+	for (const auto & channel : animation->keyframes[current_keyframe].channels)
+	{
+		Animation::Channel & next_keyframe_channel = animation->keyframes[next_keyframe].channels[i];
+
+		float4x4 current_global_tranform = float4x4::identity;
+		float4x4 next_global_tranform = float4x4::identity;
+
+		std::vector<Animation::Channel> & channels = animation->keyframes[current_keyframe].channels;
+		std::vector<Animation::Channel> & netx_keyframe_channels = animation->keyframes[next_keyframe].channels;
+
+		for (int j = channel_hierarchy_cache[i].size() - 1; j >= 0; --j)
+		{
+			auto & channel_parent = channels[channel_hierarchy_cache[i][j]];
+			current_global_tranform = current_global_tranform * float4x4::FromTRS(channel_parent.translation, channel_parent.rotation, float3(1.0f, 1.0f, 1.0f));
+
+			auto & channel_parent_next_keyframe = netx_keyframe_channels[channel_hierarchy_cache[i][j]];
+			next_global_tranform = next_global_tranform * float4x4::FromTRS(channel_parent_next_keyframe.translation, channel_parent_next_keyframe.rotation, float3(1.0f, 1.0f, 1.0f));
+		}
+		float4x4 channel_current_local_tranform = float4x4::FromTRS(channel.translation, channel.rotation, float3(1.0f, 1.0f, 1.0f));
+		float4x4 channel_next_local_tranform = float4x4::FromTRS(next_keyframe_channel.translation, next_keyframe_channel.rotation, float3(1.0f, 1.0f, 1.0f));
+
+		current_global_tranform = current_global_tranform * channel_current_local_tranform;
+		next_global_tranform = next_global_tranform * channel_next_local_tranform;
+
+		float delta = current_sample - current_keyframe;
+		channel_global_transformation[i] = Utils::Interpolate(current_global_tranform, next_global_tranform, delta);
+		++i;
 	}
 
 }
@@ -153,46 +194,3 @@ bool AnimController::GetRotation(const std::string& channel_name, Quat& rotation
 	return channel_found;
 }
 
-bool AnimController::GetTransformation(const std::string& channel_name, float4x4& transform)
-{
-	float current_sample = (current_time*(animation->frames - 1)) / animation_time;
-	int current_keyframe = math::FloorInt(current_sample);
-
-	int next_keyframe = (current_keyframe + 1) % (int)animation->frames;
-
-	float4x4 current_global_tranform = float4x4::identity;
-	float4x4 next_global_tranform = float4x4::identity;
-
-	std::vector<Animation::Channel> & channels = animation->keyframes[current_keyframe].channels;
-
-	bool channel_found = false;
-	size_t i = 0;
-	while (!channel_found && i < animation->keyframes[current_keyframe].channels.size())
-	{
-		if (animation->keyframes[current_keyframe].channels[i].name == channel_name)
-		{
-			channel_found = true;
-			GetChannelGlobalTransform(i,animation->keyframes[current_keyframe].channels[i], channels, current_global_tranform);
-			GetChannelGlobalTransform(i,animation->keyframes[next_keyframe].channels[i], channels, next_global_tranform);
-		}
-		++i;
-	}
-
-	if (channel_found)
-	{
-		float delta = current_sample - current_keyframe;
-		transform = Utils::Interpolate(current_global_tranform, next_global_tranform, delta);
-	}
-	return channel_found;
-}
-
-void AnimController::GetChannelGlobalTransform(size_t channel_index,const Animation::Channel & channel, const std::vector<Animation::Channel> & channels, math::float4x4 &current_global_tranform)
-{
-	float4x4 channel_local_tranform = float4x4::FromTRS(channel.translation, channel.rotation, float3(1.0f, 1.0f, 1.0f));
-	for (int j = channel_hierarchy_cache[channel_index].size() - 1; j >= 0; --j)
-	{
-		auto & channel_parent = channels[channel_hierarchy_cache[channel_index][j]];
-		current_global_tranform = current_global_tranform * float4x4::FromTRS(channel_parent.translation, channel_parent.rotation, float3(1.0f, 1.0f, 1.0f));
-	}
-	current_global_tranform = current_global_tranform * channel_local_tranform;
-}
