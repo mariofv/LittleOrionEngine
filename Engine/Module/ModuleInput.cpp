@@ -45,7 +45,7 @@ bool ModuleInput::Init()
 		mouse_bible[(MouseButton)i] = KeyState::IDLE;
 	}
 
-	SDL_Init(SDL_INIT_EVERYTHING);
+	SDL_Init(SDL_INIT_GAMECONTROLLER);
 
 	for (int i = 0; i < SDL_NumJoysticks(); ++i)
 	{
@@ -189,7 +189,7 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_CONTROLLERAXISMOTION:
 		{
-			int which = event.cbutton.which;
+			int which = event.caxis.which;
 
 			left_joystick[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
 			right_joystick[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
