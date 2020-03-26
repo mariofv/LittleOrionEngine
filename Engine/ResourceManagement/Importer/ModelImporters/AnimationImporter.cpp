@@ -129,9 +129,12 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 			{
 				float4x4 animation_transform = float4x4::FromTRS(translation, rotation, float3::one);
 				animation_transform = accumulated_assimp_transformation * animation_transform;
-				float3 euler_rotation = animation_transform.ToEulerXYX();
-				rotation = Quat::FromEulerXYX(euler_rotation.x, euler_rotation.y, euler_rotation.z);
-				translation *= scale_factor;
+				float4x4 scale_matrix = float4x4::identity * scale_factor;
+				scale_matrix[3][3] = 1;
+
+				animation_transform = scale_matrix * animation_transform * scale_matrix.Inverted();
+				float3 scale;
+				animation_transform.Decompose(translation,rotation,scale);
 				Animation::Channel imported_channel{ channel_set.first, is_translated, translation, is_rotated, rotation };
 				keyframes[i].push_back(imported_channel);
 			}

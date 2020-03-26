@@ -85,7 +85,7 @@ ImportResult MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mes
 				weights_sum += new_vertex.weights[j];
 			}
 			int weights_sum_round = std::round(weights_sum);
-			//assert(weights_sum_round <= 1 && weights_sum_round >= 0);
+			assert(weights_sum_round <= 1 && weights_sum_round >= 0);
 			new_vertex.num_joints = vertex_skinning__info[i].second.size();
 		}
 		vertices.push_back(new_vertex);
