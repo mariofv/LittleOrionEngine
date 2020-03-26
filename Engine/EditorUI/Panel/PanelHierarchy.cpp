@@ -307,8 +307,7 @@ std::string PanelHierarchy::GetNextGameObjectName()
 	char tmp_string[64];
 	sprintf_s(tmp_string, "GameObject (%d)", num_game_objects++);
 
-	return std::string(
-);
+	return std::string(tmp_string);
 }
 
 int PanelHierarchy::GetNextBranch()
