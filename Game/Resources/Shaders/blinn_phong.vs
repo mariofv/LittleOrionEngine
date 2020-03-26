@@ -3,6 +3,8 @@
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec2 vertex_uv0;
 layout(location = 2) in vec3 vertex_normal;
+layout(location = 3) in vec3 vertex_tangent;
+layout(location = 4) in vec3 vertex_bitanget;
 
 layout (std140) uniform Matrices
 {
@@ -22,17 +24,27 @@ struct Material {
 	float k_ambient;
 	sampler2D emissive_map;
 	vec4 emissive_color;
+	sampler2D normal_map;
+
+	float roughness;
+	float metalness;
+	float alpha_blending;
+
 };
 uniform Material material;
 
 out vec2 texCoord;
 out vec3 position;
 out vec3 normal;
+out vec3 tangent;
+
 
 void main()
 {
-	gl_Position = matrices.proj*matrices.view*matrices.model*vec4(vertex_position, 1.0);
 	texCoord = vertex_uv0;
 	position = (matrices.model*vec4(vertex_position, 1.0)).xyz;
 	normal = (matrices.model*vec4(vertex_normal, 0.0)).xyz;
+	tangent = (matrices.model*vec4(vertex_tangent, 0.0)).xyz;
+
+	gl_Position = matrices.proj*matrices.view*vec4(position, 1.0);
 }

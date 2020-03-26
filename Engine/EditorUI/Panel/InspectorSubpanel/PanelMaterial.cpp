@@ -150,6 +150,9 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 
 		ImGui::ColorEdit3("Color", material->specular_color);
 		ImGui::SliderFloat("k specular", &material->k_specular, 0, 1);
+		ImGui::SliderFloat("Shininess", &material->shininess, 0, 1);
+		ImGui::SliderFloat("Roughness", &material->roughness, 0, 100);
+		ImGui::SliderFloat("Metalness", &material->metalness, 0, 100);
 		ImGui::Unindent();
 
 		break;

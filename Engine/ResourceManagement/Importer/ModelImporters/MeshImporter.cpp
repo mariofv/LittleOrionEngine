@@ -56,6 +56,10 @@ bool MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_curren
 		{
 			new_vertex.tangent = float3(mesh->mTangents[i].x, mesh->mTangents[i].y, mesh->mTangents[i].z);
 		}
+		if (mesh->mBitangents)
+		{
+			new_vertex.bitangent = float3(mesh->mBitangents[i].x, mesh->mBitangents[i].y, mesh->mBitangents[i].z);
+		}
 		vertices.push_back(new_vertex);
 	}
 	exported_file = SaveMetaFile(imported_file, ResourceType::MESH);

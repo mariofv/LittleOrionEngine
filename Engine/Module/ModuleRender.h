@@ -91,7 +91,7 @@ private:
 	bool gl_depth_test = false;
 	bool gl_scissor_test = false;
 	bool gl_stencil_test = false;
-	bool gl_blend = false;
+	bool gl_blend = true;
 	bool gl_cull_face = false;
 	int culled_faces = 0;
 	int front_faces = 0;

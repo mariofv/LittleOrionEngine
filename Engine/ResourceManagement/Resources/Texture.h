@@ -9,7 +9,21 @@
 class Texture : public Resource
 {
 public:
+
+	enum TextureType
+	{
+		DIFUSSE,
+		SPECULAR,
+		EMISSIVE,
+		OCLUSION,
+		NORMAL,
+		UNKNOWN
+	};
+	static const size_t MAX_TEXTURE_TYPES = static_cast<size_t>(TextureType::UNKNOWN);
+public:
+
 	Texture(char * data, size_t image_size, int width, int height, const std::string& path, bool normal_map = false);
+
 
 	~Texture();
 

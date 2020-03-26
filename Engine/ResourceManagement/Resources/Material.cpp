@@ -51,6 +51,8 @@ void Material::Save(Config& config) const
 	config.AddFloat(k_specular, "kSpecular");
 	config.AddFloat(k_diffuse, "kDiffuse");
 	config.AddFloat(shininess, "shininess");
+	config.AddFloat(metalness, "metalness");
+	config.AddFloat(roughness, "roughness");
 
 	//colors
 	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
@@ -97,6 +99,8 @@ void Material::Load(const Config& config)
 	k_specular = config.GetFloat("kSpecular", 1.0f);
 	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
 	shininess = config.GetFloat("shininess", 1.0f);
+	metalness = config.GetFloat("metalness", 0.5f);
+	roughness = config.GetFloat("roughness", 0.5f);
 
 	//colors
 	float4 diffuse;

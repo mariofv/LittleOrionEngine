@@ -109,8 +109,8 @@ bool ModuleRender::Init()
 	SetVSync(VSYNC);
 	SetDepthTest(true);
 
-	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	/*glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -371,7 +371,15 @@ void ModuleRender::SetStencilTest(bool gl_stencil_test)
 void ModuleRender::SetBlending(bool gl_blend)
 {
 	this->gl_blend = gl_blend;
-	gl_blend ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
+	if (gl_blend)
+	{
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_ONE, GL_ONE);
+		glBlendEquation(GL_FUNC_ADD);
+	}
+	else {
+		glDisable(GL_BLEND);
+	}
 }
 
 void ModuleRender::SetFaceCulling(bool gl_cull_face)
