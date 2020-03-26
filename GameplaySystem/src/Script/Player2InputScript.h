@@ -14,7 +14,6 @@ public:
 	void OnInspector(ImGuiContext*) override;
 
 private:
-	//PanelComponent* panel = nullptr;
 	float speed = 0.5f;
 };
 extern "C" SCRIPT_API Player2InputScript* Player2InputScriptDLL(); //This is how we are going to load the script

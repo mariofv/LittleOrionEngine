@@ -30,10 +30,6 @@ public:
 	float speed = 0.01f;
 	float rotation_speed = 0.01f;
 
-private:
-	//PanelComponent* panel = nullptr;
-	std::string is_object = "None";
-	uint64_t enemyUUID = -1;
 };
 extern "C" SCRIPT_API ExampleScript* ExampleScriptDLL(); //This is how we are going to load the script
 #endif

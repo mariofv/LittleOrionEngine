@@ -21,9 +21,6 @@ public:
 	void Link() override;
 
 private:
-	//PanelComponent* panel = nullptr;
-	GameObject* example = nullptr;
-	uint64_t exampleUUID = -1;
 	PlayerMovement* player_movement = nullptr;
 	int player = 0;
 };

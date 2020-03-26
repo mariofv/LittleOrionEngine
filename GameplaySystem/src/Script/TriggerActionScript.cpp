@@ -68,19 +68,7 @@ void TriggerActionScript::OnInspector(ImGuiContext* context)
 	ImGui::Text("TriggerActionScript Inspector");
 	//Example to Drag and drop and link GOs in the Editor, Unity-like (WIP)
 	ImGui::Text("Variables: ");
-
-	for(int i  = 0; i < public_gameobjects.size(); ++i)
-	{
-		ImGui::Text(variable_names[i].c_str());
-
-		ImGui::SameLine();
-
-		ImGui::Button(name_gameobjects[i].c_str());
-		panel->DropGOTarget(*(public_gameobjects[i]));
-		if (*public_gameobjects[i])
-			name_gameobjects[i] = (*public_gameobjects[i])->name;
-	}
-	
+	ShowVariables();
 }
 
 bool TriggerActionScript::OnTriggerEnter() const

@@ -67,7 +67,6 @@ void Script::Link()
 
 void Script::ShowVariables()
 {
-	ImGui::Text("Variables: ");
 
 	for (int i = 0; i < public_gameobjects.size(); ++i)
 	{

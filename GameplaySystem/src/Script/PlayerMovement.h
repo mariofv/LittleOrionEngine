@@ -22,10 +22,6 @@ public:
 	void Link() override;
 
 private:
-	//PanelComponent* panel = nullptr;
-	GameObject* example = nullptr;
-	uint64_t exampleUUID = -1;
-
 	float speed = 0.5f;
 	float rotation_speed = 0.01f;
 	bool is_jumping = false;

@@ -32,18 +32,12 @@ public:
 	void InitPublicGameObjects();
 
 private:
-	//PanelComponent* panel = nullptr;
 	bool god_mode = false;
 
 	GameObject* camera = nullptr;
-	uint64_t cameraUUID = -1;
-	std::string is_camera = "None";
-	std::string is_object = "None";
 	ComponentCamera* camera_component = nullptr;
 
 	GameObject* player = nullptr;
-	uint64_t playerUUID = -1;
-	std::string is_player = "None";
 	TestScriptRuntime* player_movement_script = nullptr;
 	ComponentScript* player_movement_component = nullptr;
 

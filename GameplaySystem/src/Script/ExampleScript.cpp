@@ -116,10 +116,10 @@ void ExampleScript::Save(Config& config) const
 
 void ExampleScript::Load(const Config& config)
 {
-	enemyUUID = config.GetUInt("TestScriptRuntime", 0);
+	//enemyUUID = config.GetUInt("TestScriptRuntime", 0);
 }
 
 void ExampleScript::Link()
 {
-	enemy = App->scene->GetGameObject(enemyUUID);
+	//enemy = App->scene->GetGameObject(enemyUUID);
 }

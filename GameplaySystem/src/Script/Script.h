@@ -52,7 +52,7 @@ protected:
 	std::vector<uint64_t> go_uuids;
 	std::vector<std::string> name_gameobjects;
 	std::vector<std::string> variable_names;
-
+	std::string is_object = "None";
 };
 extern "C" SCRIPT_API Script* ScriptDLL();
 typedef Script* (*CREATE_SCRIPT) ();
