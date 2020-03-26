@@ -119,6 +119,7 @@ void GameObject::SetStatic(bool is_static)
 {
 	SetHierarchyStatic(is_static);
 	App->renderer->GenerateQuadTree(); // TODO: Check this. This could be called with ungenerated bounding boxes, resulting in a wrong quadtree.
+	App->renderer->GenerateOctTree();
 }
 
 void GameObject::SetHierarchyStatic(bool is_static)
@@ -319,7 +320,7 @@ ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType ty
 	return nullptr;
 }
 
-ENGINE_API ComponentScript* GameObject::GetComponentScript(std::string& name)
+ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{

@@ -114,6 +114,7 @@ void ModuleScriptManager::InitResourceScript()
 				delete component_script->script;
 				component_script->script = script_func();
 				component_script->script->AddReferences(component_script->owner, App);
+				component_script->script->InitPublicGameObjects();
 			}
 		}
 	}
@@ -128,6 +129,7 @@ Script* ModuleScriptManager::CreateResourceScript(const std::string& script_name
 		{
 			Script* script = script_func();
 			script->AddReferences(owner, App);
+			script->InitPublicGameObjects();
 			return script;
 		}
 	}
@@ -197,6 +199,11 @@ void ModuleScriptManager::RunScripts()
 {
 	for (auto &component_script : scripts)
 	{
+		if (!scripts.size() || scene_is_changed)
+		{
+			scene_is_changed = false;
+			break;
+		}
 		component_script->Update();
 	}
 }

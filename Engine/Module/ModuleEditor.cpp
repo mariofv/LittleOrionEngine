@@ -204,7 +204,7 @@ bool ModuleEditor::CleanUp()
 	return true;
 }
 
-void ModuleEditor::OpenScene(const std::string &path) const
+ENGINE_API void ModuleEditor::OpenScene(const std::string &path) const
 {
 	App->scene->NewScene(path);
 }
@@ -212,7 +212,6 @@ void ModuleEditor::OpenScene(const std::string &path) const
 void ModuleEditor::SaveScene(const std::string &path) const
 {
 	App->resources->scene_manager->Save(path, App->scene->GetRoot());
-
 }
 
 ImFont* ModuleEditor::GetFont(const Fonts & font) const

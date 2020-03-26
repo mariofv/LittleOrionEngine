@@ -279,12 +279,33 @@ private:
 		"Right"
 	};
 
+	std::vector<const char*> controller_keys_string
+	{
+		"A" ,
+		"B" ,
+		"X" ,
+		"Y" ,
+		"Back" ,
+		"Guide" ,
+		"Start" ,
+		"LeftStick" ,
+		"RightStick" ,
+		"LeftShoulder" ,
+		"RightShoulder" ,
+		"UpDpad" ,
+		"DownDpad" ,
+		"LeftDpad" ,
+		"RightDpad" 
+	};
+
 	std::set<int> string_keys;
 	std::set<int> keys;
 	std::set<int> mouse_keys;
+	std::set<int> controller_keys;
 	KeyCode selected_key = KeyCode::None;
 	unsigned int selected_combo = 0;
 	MouseButton selected_mouse = MouseButton::Left;
+	ControllerCode selected_controller = ControllerCode::A;
 	std::string name_game_input = "";
 
 	const int FIRST_OFFSET_COND = 164;

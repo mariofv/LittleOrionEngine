@@ -142,6 +142,8 @@ void ModuleScene::DeleteCurrentScene()
 	App->actions->ClearUndoRedoStacks();
 	RemoveGameObject(root);
 	App->renderer->DeleteAABBTree();
+	App->scripts->scripts.clear();
+	App->scripts->scene_is_changed = true;
 	App->editor->selected_game_object = nullptr;
 }
 
@@ -154,6 +156,6 @@ void  ModuleScene::NewScene(const std::string &path)
 	App->resources->scene_manager->Load(path);
 
 	App->renderer->GenerateQuadTree();
+	App->renderer->GenerateOctTree();
 	App->actions->ClearUndoStack();
-
 }

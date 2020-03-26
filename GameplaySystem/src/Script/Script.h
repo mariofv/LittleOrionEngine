@@ -31,13 +31,24 @@ public:
 
 	virtual void AddReferences(GameObject* owner, Application*);
 
-	virtual void Save(Config& config) const {};
-	virtual void Load(const Config &config) {};
-	virtual void Link() {};
+	virtual void Save(Config& config) const;
+	virtual void Load(const Config &config);
+	virtual void Link();
+
+	virtual void InitPublicGameObjects() {};
 
 public:
 	GameObject *owner = nullptr;
 	Application *App = nullptr;
+
+
+protected:
+	//Important
+	std::vector<GameObject**> public_gameobjects;
+	std::vector<uint64_t> go_uuids;
+	std::vector<std::string> name_gameobjects;
+	std::vector<std::string> variable_names;
+
 };
 extern "C" SCRIPT_API Script* ScriptDLL();
 typedef Script* (*CREATE_SCRIPT) ();

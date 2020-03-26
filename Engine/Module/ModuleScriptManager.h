@@ -78,6 +78,7 @@ public:
 
 	std::vector<ComponentScript*> scripts;
 	std::vector<std::string> scripts_list;
+	bool scene_is_changed = false;
 
 
 };

@@ -496,8 +496,8 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 		
 		if (ImGui::Button("Delete"))
 		{
-			App->actions->DeleteComponentUndo(component_script);
-
+			component_script->owner->RemoveComponent(component_script);
+			App->scripts->RemoveComponentScript(component_script);
 			return;
 		}
 		ImGui::SameLine();
