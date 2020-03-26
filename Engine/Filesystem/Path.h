@@ -16,8 +16,6 @@ public:
 	~Path();
 	bool operator==(const Path& compare);
 
-	void Refresh();
-
 	Path* Save(const char* file_name, const FileData& data, bool append = false);
 	Path* Save(const char* file_name, const std::string& serialized_data, bool append = false);
 
@@ -34,6 +32,8 @@ private:
 	Path() = default;
 	Path(const std::string& path);
 	Path(const std::string& path, const std::string& name);
+
+	void Refresh();
 
 	void CleanFolderPath();
 	void GetAllFilesInPath(std::vector<Path*>& path_children, bool directories_only = false);

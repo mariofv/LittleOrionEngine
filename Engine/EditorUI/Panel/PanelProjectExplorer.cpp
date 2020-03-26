@@ -218,12 +218,10 @@ void PanelProjectExplorer::ProcessMouseInput(Path* file)
 		{
 			selected_folder = file;
 			selected_file = nullptr;
-			selected_folder->Refresh();
 		}
 		else if (ImGui::IsMouseDoubleClicked(0))
 		{
 			selected_folder = file;
-			selected_folder->Refresh();
 		}
 	}
 }
@@ -310,7 +308,6 @@ void PanelProjectExplorer::FilesDrop() const
 					App->scene->RemoveGameObject(incoming_game_object);
 					std::shared_ptr<Prefab> prefab = std::static_pointer_cast<Prefab>(App->resources->Load(prefab_uuid));
 					App->editor->selected_game_object = prefab->Instantiate(App->scene->GetRoot());
-					App->editor->project_explorer->selected_folder->Refresh();
 				}
 			}
 		}

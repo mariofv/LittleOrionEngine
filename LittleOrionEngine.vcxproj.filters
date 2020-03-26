@@ -259,12 +259,6 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMaterialSelector.cpp">
-      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp">
-      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
-    </ClCompile>
     <ClCompile Include="Libraries\include\recast\Recast\RecastRegion.cpp">
       <Filter>Libraries\recast</Filter>
     </ClCompile>
@@ -407,6 +401,7 @@
     <ClCompile Include="Engine\ResourceManagement\Manager\SceneManager.cpp">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -664,12 +659,6 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMaterialSelector.h">
-      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMeshSelector.h">
-      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
-    </ClInclude>
     <ClInclude Include="Libraries\include\recast\DebugUtils\DebugDraw.h">
       <Filter>Libraries\recast</Filter>
     </ClInclude>
@@ -794,6 +783,7 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\SceneManager.h">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

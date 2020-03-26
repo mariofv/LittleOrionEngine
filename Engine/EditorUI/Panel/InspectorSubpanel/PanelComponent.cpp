@@ -6,7 +6,6 @@
 #include "Actions/EditorActionTranslate.h"
 
 #include "EditorUI/Panel/PanelPopups.h"
-#include "EditorUI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
 #include "Helper/Utils.h"
 
 #include "Component/ComponentCamera.h"
@@ -92,7 +91,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		std::string mesh_name = mesh->mesh_to_render == nullptr ? "None (Mesh)" : mesh->mesh_to_render->resource_metafile->imported_file_path;
 		if (ImGui::Button(mesh_name.c_str()))
 		{
-			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
+			App->editor->popups->resource_selector_popup.ShowPanel(ResourceType::MESH);
 		}
 		DropMeshAndMaterial(mesh);
 		ImGui::AlignTextToFramePadding();
@@ -101,7 +100,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		std::string material_name = mesh->material_to_render == nullptr ? "None (Material)" : mesh->material_to_render->resource_metafile->imported_file_path;
 		if (ImGui::Button(material_name.c_str()))
 		{
-			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
+			App->editor->popups->resource_selector_popup.ShowPanel(ResourceType::MATERIAL);
 		}
 		DropMeshAndMaterial(mesh);
 

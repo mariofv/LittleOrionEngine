@@ -20,8 +20,7 @@ void PanelPopups::Render()
 {
 	RenderAssetsLoadingPopup();
 	CreateScript();
-	material_selector_popup.Render();
-	mesh_selector_popup.Render();
+	resource_selector_popup.Render();
 	scene_management_popup.Render();
 }
 

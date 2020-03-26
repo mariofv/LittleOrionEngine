@@ -104,6 +104,7 @@
     <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
     <ClInclude Include="Engine\Component\ComponentScript.h" />
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h" />
     <ClInclude Include="Engine\Filesystem\File.h" />
     <ClInclude Include="Engine\Filesystem\PathAtlas.h" />
@@ -188,8 +189,6 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\MeshManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\TextureManager.h" />
     <ClInclude Include="Engine\Module\ModuleActions.h" />
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMaterialSelector.h" />
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMeshSelector.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.h" />
     <ClInclude Include="Libraries\include\recast\DebugUtils\DebugDraw.h" />
     <ClInclude Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.h" />
@@ -234,6 +233,7 @@
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp" />
     <ClCompile Include="Engine\Filesystem\File.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
@@ -303,8 +303,6 @@
     <ClCompile Include="Engine\EditorUI\Panel\PanelToolBar.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelResourceDatabase.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp" />
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMaterialSelector.cpp" />
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGradient.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGuizmo.cpp" />
