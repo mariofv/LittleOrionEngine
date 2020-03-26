@@ -28,8 +28,7 @@ PlayerController::PlayerController()
 // Use this for initialization before Start()
 void PlayerController::Awake()
 {
-	std::string aux("PlayerMovement");
-	ComponentScript* component = owner->GetComponentScript(aux);
+	ComponentScript* component = owner->GetComponentScript("PlayerMovement");
 	player_movement = (PlayerMovement*)component->script;
 }
 
@@ -57,11 +56,11 @@ void PlayerController::OnInspector(ImGuiContext* context)
 		
 		if (ImGui::Selectable("1"))
 		{
-			player = 1;
+			player = 0;
 		}
 		if (ImGui::Selectable("2"))
 		{
-			player = 2;
+			player = 1;
 		}
 
 		ImGui::EndCombo();
