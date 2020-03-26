@@ -19,13 +19,10 @@ public:
 	void AddEntry(const Metafile& metafile);
 
 	Metafile* GetEntry(uint32_t uuid);
-	void GetEntriesOfType(std::vector<Metafile*> entries, ResourceType type) const;
+	void GetEntriesOfType(std::vector<Metafile*>& result_entries, ResourceType type) const;
 
 public:
 	std::unordered_map<int32_t, std::unique_ptr<Metafile>> entries;
-
-private:
-	const std::string RESOURCE_DATABASE = "Resources/DB/resources.json";
 };
 
 #endif // !_RESOURCEDATABASE_H_

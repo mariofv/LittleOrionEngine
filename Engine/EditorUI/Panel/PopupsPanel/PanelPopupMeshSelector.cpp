@@ -34,7 +34,7 @@ void PanelPopupMeshSelector::Render()
 
 	ImGui::SetNextWindowSize(ImVec2(mesh_icon_size * 4.5, mesh_icon_size * 2 * 1.1f));
 
-	if (ImGui::Begin("Select Material", &opened))
+	if (ImGui::Begin("Select Mesh", &opened))
 	{
 		hovered = ImGui::IsWindowHovered();
 

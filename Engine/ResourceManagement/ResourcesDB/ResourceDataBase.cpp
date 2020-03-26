@@ -27,13 +27,13 @@ Metafile* ResourceDataBase::GetEntry(uint32_t uuid)
 	return entries[uuid].get();
 }
 
-void ResourceDataBase::GetEntriesOfType(std::vector<Metafile*> entries, ResourceType type) const
+void ResourceDataBase::GetEntriesOfType(std::vector<Metafile*>& result_entries, ResourceType type) const
 {
 	for (auto& entry : entries)
 	{
-		if (entry->resource_type == type)
+		if (entry.second->resource_type == type)
 		{
-			entries.push_back(entry);
+			result_entries.push_back(entry.second.get());
 		}
 	}
 }
