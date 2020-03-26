@@ -3,8 +3,8 @@
 
 #include "Component.h"
 #include "Component/ComponentAABB.h"
-#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
-#include "UI/Panel/PanelScene.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/PanelScene.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
@@ -25,11 +25,20 @@ public:
 
 	~ComponentCamera();
 
+	//Copy and move
+	ComponentCamera(const ComponentCamera& component_to_copy) = default;
+	ComponentCamera(ComponentCamera&& component_to_move) = default;
+
+	ComponentCamera & operator=(const ComponentCamera & component_to_copy);
+	ComponentCamera & operator=(ComponentCamera && component_to_move) = default;
+
 	void Update() override;
 	void Delete() override;
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
+	Component* Clone(bool original_prefab = false) const override;
+	void Copy(Component* component_to_copy) const override;
 
 	float GetWidth() const;
 	float GetHeigt() const;

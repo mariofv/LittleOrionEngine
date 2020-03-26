@@ -1,5 +1,7 @@
 #include "Application.h"
+#include "EditorUI/EngineLog.h"
 #include "Module/ModuleActions.h"
+#include "Module/ModuleAI.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleDebugDraw.h"
@@ -16,8 +18,9 @@
 #include "Module/ModuleUI.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
-#include "UI/EngineLog.h"
-#include "Brofiler/Brofiler.h"
+#include "Module/ModuleScriptManager.h"
+
+#include <Brofiler/Brofiler.h>
 
 
 Application::Application()
@@ -27,6 +30,7 @@ Application::Application()
 	modules.emplace_back(window = new ModuleWindow());
 	modules.emplace_back(filesystem = new ModuleFileSystem());
 	modules.emplace_back(resources = new ModuleResourceManager());
+	modules.emplace_back(scripts = new ModuleScriptManager());
 	modules.emplace_back(input = new ModuleInput());
 	modules.emplace_back(ui = new ModuleUI());
 	modules.emplace_back(time = new ModuleTime());
@@ -41,6 +45,7 @@ Application::Application()
 	modules.emplace_back(debug_draw = new ModuleDebugDraw());
 	modules.emplace_back(lights = new ModuleLight());
 	modules.emplace_back(scene = new ModuleScene());
+	modules.emplace_back(artificial_intelligence = new ModuleAI());
 		
 	engine_log = std::make_unique<EngineLog>();
 }

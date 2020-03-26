@@ -14,7 +14,7 @@ public:
 		std::string name;
 	};
 
-	Skeleton(const char * const UID, const std::string & exported_file);
+	Skeleton(const uint32_t UID, const std::string & exported_file);
 	Skeleton(std::vector<Joint> && joints, const std::string & exported_file);
 	~Skeleton() = default;
 
