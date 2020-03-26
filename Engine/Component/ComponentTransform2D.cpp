@@ -59,6 +59,7 @@ void ComponentTransform2D::Save(Config& config) const
 	config.AddFloat(rect.bottom, "Bottom");
 	config.AddFloat(rect.left, "Left");
 	config.AddFloat(rotation, "Rotation");
+	config.AddFloat2(scale, "Scale");
 }
 
 void ComponentTransform2D::Load(const Config& config)
@@ -81,6 +82,8 @@ void ComponentTransform2D::Load(const Config& config)
 	rect.right = param;
 	
 	config.GetFloat("Rotation", rotation);
+
+	config.GetFloat2("Scale", scale, float2::one);
 
 	OnTransformChange();
 }
