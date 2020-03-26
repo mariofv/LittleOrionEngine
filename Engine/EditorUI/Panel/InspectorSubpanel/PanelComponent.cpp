@@ -97,7 +97,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			//UndoRedo
 			CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform_2d);
 
-			if (ImGui::DragFloat("Rotation", transform->rotation.ptr(), 0.1f, -180.f, 180.f))
+			if (ImGui::DragFloat("Rotation", &transform_2d->rotation, 0.1f, -180.f, 180.f))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
