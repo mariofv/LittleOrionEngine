@@ -5,6 +5,8 @@
 #include "Helper/Config.h"
 #include "Helper/Timer.h"
 
+#include "Main/GameObject.h"
+
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Importer/MaterialImporter.h"
 #include "ResourceManagement/Importer/ModelImporter.h"
@@ -23,6 +25,7 @@
 #include "ResourceManagement/Manager/TextureManager.h"
 
 #include "ResourceManagement/Resources/Mesh.h"
+#include "ResourceManagement/Resources/Prefab.h"
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/Metafile/MetafileManager.h"
 
@@ -238,7 +241,7 @@ std::shared_ptr<Resource> ModuleResourceManager::Load(uint32_t uuid)
 	case ResourceType::MESH:
 		loaded_resource = MeshManager::Load(metafile, exported_file_data);
 		break;
-	/*
+
 	case ResourceType::MODEL:
 		loaded_resource = PrefabManager::Load(metafile, exported_file_data);
 		break;
@@ -246,7 +249,7 @@ std::shared_ptr<Resource> ModuleResourceManager::Load(uint32_t uuid)
 	case ResourceType::PREFAB:
 		loaded_resource = PrefabManager::Load(metafile, exported_file_data);
 		break;
-*/
+
 	case ResourceType::SKELETON:
 		loaded_resource = SkeletonManager::Load(metafile, exported_file_data);
 		break;
