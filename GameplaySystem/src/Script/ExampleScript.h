@@ -31,7 +31,7 @@ public:
 	float rotation_speed = 0.01f;
 
 private:
-	PanelComponent* panel = nullptr;
+	//PanelComponent* panel = nullptr;
 	std::string is_object = "None";
 	uint64_t enemyUUID = -1;
 };

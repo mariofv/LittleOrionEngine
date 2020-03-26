@@ -14,7 +14,7 @@ public:
 	void OnInspector(ImGuiContext*) override;
 
 private:
-	PanelComponent* panel = nullptr;
+	//PanelComponent* panel = nullptr;
 	float speed = 0.5f;
 
 };

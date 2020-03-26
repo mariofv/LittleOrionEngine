@@ -69,7 +69,7 @@ void SceneCamerasController::OnInspector(ImGuiContext* context)
 {
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
-	ImGui::Text("Game Camera: ");
+	/*ImGui::Text("Game Camera: ");
 	ImGui::SameLine();
 	ImGui::Button(is_main_camera.c_str());
 	panel->DropGOTarget(main_camera);
@@ -100,7 +100,7 @@ void SceneCamerasController::OnInspector(ImGuiContext* context)
 	if (camera_3)
 	{
 		is_camera_3 = camera_3->name;
-	}
+	}*/
 
 }
 
@@ -112,28 +112,48 @@ void SceneCamerasController::UpdateCameraRendering()
 }
 
 //Use this for linking GO automatically
-void SceneCamerasController::Save(Config& config) const
+//void SceneCamerasController::Save(Config& config) const
+//{
+//	config.AddUInt(main_camera->UUID, "MainCamera");
+//	config.AddUInt(camera_1->UUID, "Camera1");
+//	config.AddUInt(camera_2->UUID, "Camera2");
+//	config.AddUInt(camera_3->UUID, "Camera3");
+//}
+//
+////Use this for linking GO automatically
+//void SceneCamerasController::Load(const Config& config)
+//{
+//	maincameraUUID = config.GetUInt("MainCamera", 0);
+//	camera1UUID = config.GetUInt("Camera1", 0);
+//	camera2UUID = config.GetUInt("Camera2", 0);
+//	camera3UUID = config.GetUInt("Camera3", 0);
+//}
+//
+////Use this for linking GO automatically
+//void SceneCamerasController::Link()
+//{
+//	main_camera = App->scene->GetGameObject(maincameraUUID);
+//	camera_1 = App->scene->GetGameObject(camera1UUID);
+//	camera_2 = App->scene->GetGameObject(camera2UUID);
+//	camera_3 = App->scene->GetGameObject(camera3UUID);
+//}
+void SceneCamerasController::InitPublicGameObjects()
 {
-	config.AddUInt(main_camera->UUID, "MainCamera");
-	config.AddUInt(camera_1->UUID, "Camera1");
-	config.AddUInt(camera_2->UUID, "Camera2");
-	config.AddUInt(camera_3->UUID, "Camera3");
-}
+	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
 
-//Use this for linking GO automatically
-void SceneCamerasController::Load(const Config& config)
-{
-	maincameraUUID = config.GetUInt("MainCamera", 0);
-	camera1UUID = config.GetUInt("Camera1", 0);
-	camera2UUID = config.GetUInt("Camera2", 0);
-	camera3UUID = config.GetUInt("Camera3", 0);
-}
+	public_gameobjects.push_back(&main_camera);
+	public_gameobjects.push_back(&camera_1);
+	public_gameobjects.push_back(&camera_2);
+	public_gameobjects.push_back(&camera_3);
 
-//Use this for linking GO automatically
-void SceneCamerasController::Link()
-{
-	main_camera = App->scene->GetGameObject(maincameraUUID);
-	camera_1 = App->scene->GetGameObject(camera1UUID);
-	camera_2 = App->scene->GetGameObject(camera2UUID);
-	camera_3 = App->scene->GetGameObject(camera3UUID);
+	variable_names.push_back(GET_VARIABLE_NAME(main_camera));
+	variable_names.push_back(GET_VARIABLE_NAME(camera_1));
+	variable_names.push_back(GET_VARIABLE_NAME(camera_2));
+	variable_names.push_back(GET_VARIABLE_NAME(camera_3));
+
+	for (int i = 0; i < public_gameobjects.size(); ++i)
+	{
+		name_gameobjects.push_back(is_object);
+		go_uuids.push_back(0);
+	}
 }

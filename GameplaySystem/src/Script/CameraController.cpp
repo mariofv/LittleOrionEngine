@@ -69,21 +69,20 @@ void CameraController::OnInspector(ImGuiContext* context)
 {
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
-	ImGui::Text("Game Camera: ");
-	ImGui::SameLine();
-	ImGui::Button(is_camera.c_str());
-	panel->DropGOTarget(camera);
-	if (camera) 
+	ImGui::Text("Camera Controller Inspector");
+	//Example to Drag and drop and link GOs in the Editor, Unity-like (WIP)
+	ImGui::Text("Variables: ");
+
+	for (int i = 0; i < public_gameobjects.size(); ++i)
 	{
-		is_camera = camera->name;
-	}
-	ImGui::Text("Player: ");
-	ImGui::SameLine();
-	ImGui::Button(is_player.c_str());
-	panel->DropGOTarget(player);
-	if (player)
-	{
-		is_player = player->name;
+		ImGui::Text(variable_names[i].c_str());
+
+		ImGui::SameLine();
+
+		ImGui::Button(name_gameobjects[i].c_str());
+		panel->DropGOTarget(*(public_gameobjects[i]));
+		if (*public_gameobjects[i])
+			name_gameobjects[i] = (*public_gameobjects[i])->name;
 	}
 		
 }
@@ -147,22 +146,39 @@ void CameraController::CenterToPlayer()
 }
 
 //Use this for linking GO automatically
-void CameraController::Save(Config& config) const
-{
-	config.AddUInt(camera->UUID, "Camera");
-	config.AddUInt(player->UUID, "Player1");
-}
+//void CameraController::Save(Config& config) const
+//{
+//	config.AddUInt(camera->UUID, "Camera");
+//	config.AddUInt(player->UUID, "Player1");
+//}
+//
+////Use this for linking GO automatically
+//void CameraController::Load(const Config& config)
+//{
+//	cameraUUID = config.GetUInt("Camera", 0);
+//	playerUUID = config.GetUInt("Player1", 0);
+//}
+//
+////Use this for linking GO automatically
+//void CameraController::Link()
+//{
+//	camera = App->scene->GetGameObject(cameraUUID);
+//	player = App->scene->GetGameObject(playerUUID);
+//}
 
-//Use this for linking GO automatically
-void CameraController::Load(const Config& config)
+void CameraController::InitPublicGameObjects()
 {
-	cameraUUID = config.GetUInt("Camera", 0);
-	playerUUID = config.GetUInt("Player1", 0);
-}
+	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
 
-//Use this for linking GO automatically
-void CameraController::Link()
-{
-	camera = App->scene->GetGameObject(cameraUUID);
-	player = App->scene->GetGameObject(playerUUID);
+	public_gameobjects.push_back(&camera);
+	public_gameobjects.push_back(&player);
+
+	variable_names.push_back(GET_VARIABLE_NAME(camera));
+	variable_names.push_back(GET_VARIABLE_NAME(player));
+
+	for (int i = 0; i < public_gameobjects.size(); ++i)
+	{
+		name_gameobjects.push_back(is_object);
+		go_uuids.push_back(0);
+	}
 }

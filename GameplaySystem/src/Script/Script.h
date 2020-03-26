@@ -6,9 +6,12 @@
 #define SCRIPT_API __declspec(dllimport)
 #endif
 
+#define GET_VARIABLE_NAME(Variable) (#Variable)
+
 #include "Helper/Config.h"
 
 #include <string>
+
 
 class GameObject;
 class Application;
@@ -34,13 +37,14 @@ public:
 	virtual void Save(Config& config) const;
 	virtual void Load(const Config &config);
 	virtual void Link();
-
+	
+	void ShowVariables();
 	virtual void InitPublicGameObjects() {};
 
 public:
 	GameObject *owner = nullptr;
 	Application *App = nullptr;
-
+	PanelComponent *panel = nullptr;
 
 protected:
 	//Important

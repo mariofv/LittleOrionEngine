@@ -25,17 +25,20 @@ public:
 	void FollowPlayer();
 	void CenterToPlayer();
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
-	void Link() override;
+	//void Save(Config& config) const override;
+	//void Load(const Config& config) override;
+	//void Link() override;
+
+	void InitPublicGameObjects();
 
 private:
-	PanelComponent* panel = nullptr;
+	//PanelComponent* panel = nullptr;
 	bool god_mode = false;
 
 	GameObject* camera = nullptr;
 	uint64_t cameraUUID = -1;
 	std::string is_camera = "None";
+	std::string is_object = "None";
 	ComponentCamera* camera_component = nullptr;
 
 	GameObject* player = nullptr;

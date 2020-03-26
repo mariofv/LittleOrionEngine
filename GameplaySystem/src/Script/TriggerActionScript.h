@@ -27,7 +27,7 @@ public:
 
 
 private:
-	PanelComponent* panel = nullptr;
+	//PanelComponent* panel = nullptr;
 	std::string is_object = "None";
 	float3 start_position;
 };

@@ -18,18 +18,21 @@ public:
 
 	void UpdateCameraRendering();
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
-	void Link() override;
+	void InitPublicGameObjects();
+
+	//void Save(Config& config) const override;
+	//void Load(const Config& config) override;
+	//void Link() override;
 
 private:
-	PanelComponent* panel = nullptr;
+	//PanelComponent* panel = nullptr;
 	GameObject* example = nullptr;
 	uint64_t exampleUUID = -1;
 
 	GameObject* main_camera = nullptr;
 	uint64_t maincameraUUID = -1;
 	std::string is_main_camera = "None";
+	std::string is_object = "None";
 
 	GameObject* camera_1 = nullptr;
 	uint64_t camera1UUID = -1;

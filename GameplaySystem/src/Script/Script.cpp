@@ -65,6 +65,23 @@ void Script::Link()
 	}
 }
 
+void Script::ShowVariables()
+{
+	ImGui::Text("Variables: ");
+
+	for (int i = 0; i < public_gameobjects.size(); ++i)
+	{
+		ImGui::Text(variable_names[i].c_str());
+
+		ImGui::SameLine();
+
+		ImGui::Button(name_gameobjects[i].c_str());
+		panel->DropGOTarget(*(public_gameobjects[i]));
+		if (*public_gameobjects[i])
+			name_gameobjects[i] = (*public_gameobjects[i])->name;
+	}
+}
+
 Script::~Script()
 {
 }

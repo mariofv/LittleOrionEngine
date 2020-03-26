@@ -17,7 +17,7 @@
 #include "WalkableScript.h"
 
 
-#define GET_VARIABLE_NAME(Variable) (#Variable)
+//#define GET_VARIABLE_NAME(Variable) (#Variable)
 
 TriggerActionScript* TriggerActionScriptDLL()
 {

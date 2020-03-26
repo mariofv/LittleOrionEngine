@@ -25,7 +25,7 @@ private:
 	float jump_power = 10.0f;
 	float3 movement_vector;
 	float3 gravity_vector;
-	PanelComponent* panel = nullptr;
+	//PanelComponent* panel = nullptr;
 
 };
 extern "C" SCRIPT_API WalkableScript* WalkableScriptDLL(); //This is how we are going to load the script
