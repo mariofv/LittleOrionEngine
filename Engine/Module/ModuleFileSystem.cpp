@@ -174,14 +174,21 @@ FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileT
 	{
 		return FileType::PREFAB;
 	}
-	if (file_extension == "ol"
-		|| file_extension == "mesh")
+	if (file_extension == "mesh")
 	{
 		return FileType::MESH;
 	}
 	if (file_extension == "matol")
 	{
 		return FileType::MATERIAL;
+	}
+	if (file_extension == "anim")
+	{
+		return FileType::ANIMATION;
+	}
+	if (file_extension == "sk")
+	{
+		return FileType::SKELETON;
 	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{

@@ -41,7 +41,7 @@ ModelImporter::~ModelImporter()
 	Assimp::DefaultLogger::kill();
 }
 
-ImportResult  ModelImporter::ImportExtractedResources(const File & file, bool force) const
+ImportResult ModelImporter::ImportExtractedResources(const File & file, bool force) const
 {
 	ImportResult result;
 	if (file.file_type == FileType::MESH)
@@ -62,7 +62,7 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	}
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
 	if (already_imported.uuid != 0 && !force) {
-		import_result.succes = true;
+		import_result.success = true;
 		import_result.exported_file = already_imported.exported_file;
 		return import_result;
 	}
@@ -111,7 +111,7 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	model_prefab_importer->ImportModelPrefab(model, output_file_model);
 
 
-	import_result.succes = true;
+	import_result.success = true;
 	import_result.exported_file = output_file_model;
 	return import_result;
 }
@@ -122,7 +122,19 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 	std::vector<Config> node_config;
 
 	aiMatrix4x4& current_transformation = parent_transformation * root_node->mTransformation;
+	// Transformation
+	float unit_scale_factor = 1.f;
+	for (unsigned int i = 0; i < scene->mMetaData->mNumProperties; ++i)
+	{
+		if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
+		{
+			aiMetadataEntry unit_scale_entry = scene->mMetaData->mValues[i];
+			unit_scale_factor = *(double*)unit_scale_entry.mData;
+		};
+	}
+	unit_scale_factor *= 0.01f;
 
+	std::map<std::string, std::shared_ptr<Skeleton>> already_loaded_skeleton;
 	for (size_t i = 0; i < root_node->mNumMeshes; ++i)
 	{
 		Config node;
@@ -133,23 +145,36 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 		std::string library_material_file = App->resources->material_importer->ExtractMaterialFromMesh(scene, mesh_index, base_path.c_str(), assets_material_file.c_str()).exported_file;
 		node.AddString(library_material_file, "Material");
 
+		std::shared_ptr<Skeleton> skeleton = std::make_shared<Skeleton>(0, "");
 		aiMesh * importing_mesh = scene->mMeshes[mesh_index];
-
-		std::string assets_mesh_file = base_path + "/" + std::string(importing_mesh->mName.data) + std::to_string(i) + ".mesh";
-		std::string library_mesh_file;
-		bool imported = mesh_importer->ImportMesh(importing_mesh, current_transformation, assets_mesh_file, library_mesh_file);
-		if (imported)
-		{
-			node.AddString(library_mesh_file, "Mesh");
-			node.AddString(importing_mesh->mName.data, "Name");
-		}
-
 		if (importing_mesh->HasBones())
 		{
-			std::string library_skeleton_file;
-			std::string assets_skeleton_file = base_path + "/" + std::string(root_node->mName.data)+ "_skeleton" + std::to_string(i) + ".sk";
-			skeleton_importer->ImportSkeleton(scene, importing_mesh, assets_skeleton_file, library_skeleton_file);
-			node.AddString(library_skeleton_file, "Skeleton");
+			std::string main_bone_name = importing_mesh->mBones[0]->mName.C_Str();
+			bool already_loaded = already_loaded_skeleton.find(main_bone_name) != already_loaded_skeleton.end();
+			if (!already_loaded)
+			{
+				std::string assets_skeleton_file = base_path + "/" + std::string(root_node->mName.data) + "_skeleton" + std::to_string(i) + ".sk";
+				ImportResult skeleton_import_result = skeleton_importer->ImportSkeleton(scene, importing_mesh, assets_skeleton_file, unit_scale_factor, *skeleton);
+				if (skeleton_import_result.success)
+				{
+					already_loaded_skeleton[main_bone_name] = skeleton;
+					node.AddString(skeleton_import_result.exported_file, "Skeleton");
+				}
+			}
+			else if (already_loaded)
+			{
+				skeleton = already_loaded_skeleton[main_bone_name];
+				node.AddString(skeleton->exported_file, "Skeleton");
+			}
+		}
+		
+
+		std::string assets_mesh_file = base_path + "/" + std::string(importing_mesh->mName.data) + std::to_string(i) + ".mesh";
+		ImportResult mesh_import_result = mesh_importer->ImportMesh(importing_mesh, current_transformation, assets_mesh_file, unit_scale_factor, *skeleton);
+		if (mesh_import_result.success)
+		{
+			node.AddString(mesh_import_result.exported_file, "Mesh");
+			node.AddString(importing_mesh->mName.data, "Name");
 		}
 		node_config.push_back(node);
 	}

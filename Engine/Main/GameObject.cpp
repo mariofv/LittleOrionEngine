@@ -2,6 +2,7 @@
 #include "Application.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "Helper/Config.h"
+#include "Module/ModuleAnimation.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScriptManager.h"
@@ -13,6 +14,7 @@
 #include "ResourceManagement/Resources/Prefab.h"
 
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
@@ -280,9 +282,15 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	case Component::ComponentType::LIGHT:
 		created_component = App->lights->CreateComponentLight();
 		break;
+
 	case Component::ComponentType::SCRIPT:
 		created_component = App->scripts->CreateComponentScript();
 		break;
+
+	case Component::ComponentType::ANIMATION:
+		created_component = App->animations->CreateComponentAnimation();
+		break;
+
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
 		return nullptr;

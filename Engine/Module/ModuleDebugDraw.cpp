@@ -1,5 +1,6 @@
 #include "ModuleDebugDraw.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
@@ -10,6 +11,7 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleAI.h"
+#include "ModuleAnimation.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleDebug.h"
@@ -429,6 +431,7 @@ void ModuleDebugDraw::Render()
 
 		RenderCameraFrustum();
 		RenderLightGizmo();
+		RenderBones();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 
@@ -498,12 +501,12 @@ void ModuleDebugDraw::RenderLightGizmo() const
 				selected_light_transform->GetGlobalTranslation(), 	
 				selected_light_transform->GetRotation().ToFloat4x4(),	
 				float3(1.f, 1.f, 0.f),	
-				selected_light->spot_light_parameters.range,	
-				tan(DegToRad(selected_light->spot_light_parameters.spot_angle/2.f)) * selected_light->spot_light_parameters.range	
+				selected_light->spot_light_parameters.range / 10.f,	
+				tan(DegToRad(selected_light->spot_light_parameters.spot_angle/2.f)) * selected_light->spot_light_parameters.range / 10.f
 			); 	
 			break;	
 		case ComponentLight::LightType::POINT_LIGHT:	
-			dd::point_light(selected_light_transform->GetGlobalTranslation(), float3(1.f, 1.f, 0.f), selected_light->point_light_parameters.range);	
+			dd::point_light(selected_light_transform->GetGlobalTranslation(), float3(1.f, 1.f, 0.f), selected_light->point_light_parameters.range / 10.f);
 			break;	
 		default:	
 			break;	
@@ -511,6 +514,44 @@ void ModuleDebugDraw::RenderLightGizmo() const
 	}	
 }	
 
+void ModuleDebugDraw::RenderBones() const
+{
+	for (auto& animation : App->animations->animations)
+	{
+		if (animation->IsEnabled())
+		{
+			GameObject* animation_game_object = animation->owner;
+			RenderBone(animation_game_object, nullptr, float3(1.f, 0.f, 0.f));
+		}
+	}
+
+	
+}
+
+void ModuleDebugDraw::RenderBone(const GameObject* current_bone, const GameObject* last_bone, const float3& color) const
+{
+	if (current_bone->name.substr(current_bone->name.length() - 2) == "IK" || current_bone->name.substr(current_bone->name.length() - 2) == "FK")
+	{
+		return;
+	}
+
+	if (last_bone != nullptr)
+	{
+		dd::line(last_bone->transform.GetGlobalTranslation(), current_bone->transform.GetGlobalTranslation(), color);
+	}
+
+	for (auto& child_bone : current_bone->children)
+	{
+		float3 next_color;
+		if (color.x == 1.f)
+			next_color = float3(0.f, 1.f, 0.f);
+		if (color.y == 1.f)
+			next_color = float3(0.f, 0.f, 1.f);
+		if (color.z == 1.f)
+			next_color = float3(1.f, 0.f, 0.f);
+		RenderBone(child_bone, current_bone, next_color);
+	}
+}
 
 void ModuleDebugDraw::RenderOutline() const
 {

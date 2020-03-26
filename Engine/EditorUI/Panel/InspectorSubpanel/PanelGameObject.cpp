@@ -1,5 +1,6 @@
 #include "PanelGameObject.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
@@ -81,6 +82,9 @@ void PanelGameObject::Render(GameObject* game_object)
 				break;
 			case Component::ComponentType::SCRIPT:
 				component_panel.ShowComponentScriptWindow(static_cast<ComponentScript*>(component));
+				break;
+			case Component::ComponentType::ANIMATION:
+				component_panel.ShowComponentAnimationWindow(static_cast<ComponentAnimation*>(component));
 				break;
 			default:
 				break;

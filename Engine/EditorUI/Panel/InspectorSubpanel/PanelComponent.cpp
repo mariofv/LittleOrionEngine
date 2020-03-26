@@ -1,5 +1,7 @@
 #include "PanelComponent.h"
 
+#include "Animation/AnimController.h"
+
 #include "Actions/EditorAction.h"
 #include "Actions/EditorActionRotation.h"
 #include "Actions/EditorActionScale.h"
@@ -7,8 +9,8 @@
 
 #include "EditorUI/Panel/PanelPopups.h"
 #include "EditorUI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
-#include "Helper/Utils.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentTransform.h"
@@ -71,7 +73,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if(ImGui::Checkbox("Active", &mesh->active))
+		if (ImGui::Checkbox("Active", &mesh->active))
 		{
 			//UndoRedo
 			App->actions->action_component = mesh;
@@ -121,7 +123,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if(ImGui::Checkbox("Active", &camera->active))
+		if (ImGui::Checkbox("Active", &camera->active))
 		{
 			//UndoRedo
 			App->actions->action_component = camera;
@@ -142,7 +144,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		ImGui::Separator();
 
 		if (ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED)) { camera->modified_by_user = true; };
-		
+
 		//UndoRedo
 		CheckClickedCamera(camera);
 
@@ -155,7 +157,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		//UndoRedo
 		CheckClickedCamera(camera);
 
-		if (ImGui::DragFloat("Aspect Ratio", &camera->aspect_ratio, 0.01f , 0, 10))
+		if (ImGui::DragFloat("Aspect Ratio", &camera->aspect_ratio, 0.01f, 0, 10))
 		{
 			camera->SetAspectRatio(camera->aspect_ratio);
 			camera->modified_by_user = true;
@@ -197,7 +199,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 				camera->modified_by_user = true;
 				break;
 			}
-		}		
+		}
 		if (ImGui::ColorEdit3("Clear Color", camera->camera_clear_color)) { camera->modified_by_user = true; };
 		ImGui::Separator();
 
@@ -307,6 +309,59 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 	}
 }
 
+void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_PLAY_CIRCLE " Animation", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::Checkbox("Active", &animation->active))
+		{
+			//UndoRedo
+			App->actions->action_component = animation;
+			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(animation);
+
+			return;
+		}
+		ImGui::Separator();
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Animation");
+		ImGui::SameLine();
+		if (ImGui::Button(animation->animation_controller->animation->exported_file.c_str()))
+		{
+			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
+		}
+		DropAnimationAndSkeleton(animation);
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Skeleton");
+		ImGui::SameLine();
+		if (ImGui::Button(animation->animation_controller->skeleton->exported_file.c_str()))
+		{
+			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
+		}
+		DropAnimationAndSkeleton(animation);
+		ImGui::Separator();
+		if (ImGui::Checkbox("Playing", &animation->animation_controller->playing));
+		ImGui::SameLine();
+		if (ImGui::Checkbox("Loop", &animation->animation_controller->loop));
+		ImGui::SameLine();
+		if (ImGui::Button("Play"))
+		{
+			animation->animation_controller->Play();
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Stop"))
+		{
+			animation->animation_controller->Stop();
+		}
+
+		ImGui::SliderInt("Animation time", &animation->animation_controller->current_time, 0, animation->animation_controller->animation_time);
+	}
+}
 void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_EDIT " Script", ImGuiTreeNodeFlags_DefaultOpen))
@@ -435,17 +490,23 @@ void PanelComponent::ShowAddNewComponentButton()
 			}
 
 		}
+		sprintf_s(tmp_string, "%s Animation", ICON_FA_PLAY_CIRCLE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
+
+		}
 		ImGui::EndPopup();
 	}
 
-	if(component != nullptr)
+	if (component != nullptr)
 	{
 		App->actions->action_component = component;
 		App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_COMPONENT);
 	}
 }
 
-void PanelComponent::ShowScriptsCreated(ComponentScript* component_script) 
+void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 {
 
 	if (ImGui::BeginCombo("Add Script", component_script->name.c_str()))
@@ -454,11 +515,11 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 			if (ImGui::Selectable(script_name.c_str()))
 			{
 				component_script->LoadName(script_name);
-		
+
 			}
 		}
 		ImGui::Separator();
-		if (ImGui::Selectable("Create new Script")) 
+		if (ImGui::Selectable("Create new Script"))
 		{
 			App->editor->popups->create_script_shown = true;
 		}
@@ -466,7 +527,7 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 		ImGui::EndCombo();
 	}
 
-}	
+}
 void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
 {
 	if (ImGui::BeginDragDropTarget())
@@ -490,6 +551,35 @@ void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
 				Importer::GetOptionsFromMeta(meta_path, meta);
 				component_mesh->SetMaterial(App->resources->Load<Material>(meta.exported_file));
 				component_mesh->modified_by_user = true;
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
+
+void PanelComponent::DropAnimationAndSkeleton(ComponentAnimation* component_animation)
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_File"))
+		{
+			assert(payload->DataSize == sizeof(File*));
+			File* incoming_file = *(File * *)payload->Data;
+			if (incoming_file->file_type == FileType::ANIMATION)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				component_animation->SetAnimation(App->resources->Load<Animation>(meta.exported_file));
+				component_animation->modified_by_user = true;
+			}
+			if (incoming_file->file_type == FileType::SKELETON)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				component_animation->SetSkeleton(App->resources->Load<Skeleton>(meta.exported_file));
+				component_animation->modified_by_user = true;
 			}
 		}
 		ImGui::EndDragDropTarget();

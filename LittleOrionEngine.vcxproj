@@ -102,6 +102,8 @@
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h" />
     <ClInclude Include="Engine\AI\DebugDrawGL.h" />
     <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
+    <ClInclude Include="Engine\Animation\AnimController.h" />
+    <ClInclude Include="Engine\Component\ComponentAnimation.h" />
     <ClInclude Include="Engine\Component\ComponentScript.h" />
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h" />
@@ -112,6 +114,7 @@
     <ClInclude Include="Engine\Main\Application.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
     <ClInclude Include="Engine\Main\Globals.h" />
+    <ClInclude Include="Engine\Module\ModuleAnimation.h" />
     <ClInclude Include="Engine\Module\ModuleResourceManager.h" />
     <ClInclude Include="Engine\Module\ModuleScriptManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.h" />
@@ -231,6 +234,8 @@
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
     <ClCompile Include="Engine\AI\DebugDrawGL.cpp" />
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
+    <ClCompile Include="Engine\Animation\AnimController.cpp" />
+    <ClCompile Include="Engine\Component\ComponentAnimation.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp" />
@@ -242,6 +247,7 @@
     <ClCompile Include="Engine\Main\GameObject.cpp" />
     <ClCompile Include="Engine\Main\Log.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
+    <ClCompile Include="Engine\Module\ModuleAnimation.cpp" />
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
     <ClCompile Include="Engine\Module\ModuleScriptManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp" />
