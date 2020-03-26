@@ -72,8 +72,8 @@ bool ModuleFileSystem::CleanUp()
 
 void ModuleFileSystem::AddPath(Path* path)
 {
-	assert(Exists(path->file_path));
-	paths[path->file_path] = path;
+	assert(Exists(path->GetFullPath()));
+	paths[path->GetFullPath()] = path;
 }
 
 Path* ModuleFileSystem::GetPath(const std::string& path)
@@ -142,7 +142,7 @@ bool ModuleFileSystem::Remove(Path* path)
 {
 	assert(path != nullptr);
 
-	bool success = PHYSFS_delete(path->file_path.c_str()) != 0;
+	bool success = PHYSFS_delete(path->GetFullPath().c_str()) != 0;
 	
 	if (success)
 	{
@@ -170,7 +170,7 @@ Path* ModuleFileSystem::MakeDirectory(const std::string& new_directory_full_path
 	Path* parent_path = GetPath(Path::GetParentPathString(new_directory_full_path));
 	parent_path->children.push_back(created_dir);
 	created_dir->parent = parent_path;
-	paths[created_dir->file_path] = created_dir;
+	paths[created_dir->GetFullPath()] = created_dir;
 
 	return created_dir;
 }
@@ -182,22 +182,22 @@ Path* ModuleFileSystem::Copy(const std::string& source_path, const std::string& 
 	FileData source_file_data = source_path_object->GetFile()->Load();
 
 	Path* destination_path_object = GetPath(destination_path);
-	std::string file_name = copied_file_name == "" ? source_path_object->file_name : copied_file_name;
+	std::string file_name = copied_file_name == "" ? source_path_object->GetFilename() : copied_file_name;
 	Path* copied_file_path = destination_path_object->Save(file_name.c_str(), source_file_data, false);
 	
 	free((char*)source_file_data.buffer);
 	return copied_file_path;
 }
 
-bool ModuleFileSystem::CreateMountedDir(const char* directory)
+bool ModuleFileSystem::CreateMountedDir(const std::string& directory)
 {
 	MakeDirectory(directory);
 	return MountDirectory(directory);
 }
 
-bool ModuleFileSystem::MountDirectory(const char* directory) const
+bool ModuleFileSystem::MountDirectory(const std::string& directory) const
 {
-	if (PHYSFS_mount(directory, directory, 1) == 0)
+	if (PHYSFS_mount(directory.c_str(), directory.c_str(), 1) == 0)
 	{
 		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
 		return false;
@@ -224,7 +224,7 @@ void ModuleFileSystem::RefreshPathMap()
 		 current_path = remaining_paths_to_add.top();
 		 remaining_paths_to_add.pop();
 
-		 paths[current_path->file_path] = current_path;
+		 paths[current_path->GetFullPath()] = current_path;
 		 for (auto& path_child : current_path->children)
 		 {
 			 remaining_paths_to_add.push(path_child);

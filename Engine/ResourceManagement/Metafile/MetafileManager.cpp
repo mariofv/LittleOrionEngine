@@ -23,9 +23,9 @@ MetafileManager::~MetafileManager()
 
 Metafile* MetafileManager::GetMetafile(const Path& metafile_path)
 {
-	if (metafiles.find(metafile_path.file_path) != metafiles.end())
+	if (metafiles.find(metafile_path.GetFullPath()) != metafiles.end())
 	{
-		return metafiles[metafile_path.file_path];
+		return metafiles[metafile_path.GetFullPath()];
 	}
 
 	FileData meta_file_data = metafile_path.GetFile()->Load();
@@ -33,7 +33,7 @@ Metafile* MetafileManager::GetMetafile(const Path& metafile_path)
 	free((char*)meta_file_data.buffer);
 
 	Metafile* created_metafile = new Metafile();
-	created_metafile->metafile_path = metafile_path.file_path;
+	created_metafile->metafile_path = metafile_path.GetFullPath();
 	Config meta_config(serialized_string);
 	created_metafile->Load(meta_config);
 
@@ -60,7 +60,7 @@ Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType re
 	created_metafile->resource_type = resource_type;
 
 	created_metafile->metafile_path = metafile_path_string;
-	created_metafile->imported_file_path = asset_file_path.file_path;
+	created_metafile->imported_file_path = asset_file_path.GetFullPath();
 	created_metafile->exported_file_path = GetMetafileExportedFile(*created_metafile);
 
 	created_metafile->version = Importer::IMPORTER_VERSION;
@@ -71,7 +71,7 @@ Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType re
 	std::string metafile_config_string;
 	metafile_config.GetSerializedString(metafile_config_string);
 
-	std::string metfile_name_string = GetMetafilePath(asset_file_path.file_name);
+	std::string metfile_name_string = GetMetafilePath(asset_file_path.GetFilename());
 	asset_file_path.GetParent()->Save(metfile_name_string.c_str(), metafile_config_string);
 
 	metafiles[created_metafile->metafile_path] = created_metafile;
@@ -81,7 +81,7 @@ Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType re
 
 std::string MetafileManager::GetMetafilePath(const Path& file_path)
 {
-	return GetMetafilePath(file_path.file_path);
+	return GetMetafilePath(file_path.GetFullPath());
 }
 
 std::string MetafileManager::GetMetafilePath(const std::string& file_path_string)
@@ -103,7 +103,7 @@ void MetafileManager::TouchMetafileTimestamp(Metafile& metafile)
 	metafile_config.GetSerializedString(metafile_config_string);
 
 	Path* metafile_path = App->filesystem->GetPath(metafile.metafile_path);
-	metafile_path->GetParent()->Save(metafile_path->file_name.c_str(), metafile_config_string);
+	metafile_path->GetParent()->Save(metafile_path->GetFilename().c_str(), metafile_config_string);
 }
 
 bool MetafileManager::IsMetafileConsistent(const Path& metafile_path)

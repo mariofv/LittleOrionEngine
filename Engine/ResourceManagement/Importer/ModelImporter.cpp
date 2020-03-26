@@ -43,7 +43,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path) const
 {
 	FileData model_data;
 
-	APP_LOG_INIT("Importing model %s.", assets_file_path.file_path.c_str())
+	APP_LOG_INIT("Importing model %s.", assets_file_path.GetFullPath().c_str())
 
 	performance_timer.Start();
 	FileData file_data = assets_file_path.GetFile()->Load();
@@ -51,14 +51,14 @@ FileData ModelImporter::ExtractData(Path& assets_file_path) const
 	if (scene == NULL)
 	{
 		const char *error = aiGetErrorString();
-		APP_LOG_ERROR("Error loading model %s ", assets_file_path.file_path.c_str());
+		APP_LOG_ERROR("Error loading model %s ", assets_file_path.GetFullPath().c_str());
 		APP_LOG_ERROR(error);
 		return model_data;
 	}
 	performance_timer.Stop();
 	float time = performance_timer.Read();
 
-	APP_LOG_SUCCESS("Model %s loaded correctly from assimp in %f ms.", assets_file_path.file_path.c_str(), time);
+	APP_LOG_SUCCESS("Model %s loaded correctly from assimp in %f ms.", assets_file_path.GetFullPath().c_str(), time);
 
 
 	aiNode * root_node = scene->mRootNode;
@@ -80,7 +80,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path) const
 	aiReleaseImport(scene);
 
 	Config model;
-	model.AddString(assets_file_path.file_name_no_extension, "Name");
+	model.AddString(assets_file_path.GetFilenameWithoutExtension(), "Name");
 	model.AddChildrenConfig(node_config, "Node");
 	model.AddChildrenConfig(animations_config, "Animations");
 

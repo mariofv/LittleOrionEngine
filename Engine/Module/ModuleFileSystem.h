@@ -31,14 +31,14 @@ public:
 	bool Remove(Path* path);
 	bool Remove(const std::string& path);
 
-	Path* Copy(const std::string& source_path, const std::string& destination_path, const std::string& copied_file_name = "");
+	Path* Copy(const std::string& source_path, const std::string& destination_path, const std::string& copied_file_name = std::string());
 	Path* MakeDirectory(const std::string& new_directory_full_path);
 	
-	bool MountDirectory(const char* directory) const;
-	bool CreateMountedDir(const char* directory);
+	bool MountDirectory(const std::string& directory) const;
+	bool CreateMountedDir(const std::string& directory);
 
 private:
-	void RefreshPathMap();
+	void RefreshPathMap(); // TODO: Not allocate all at the begining, do it by demand!
 
 public:
 	Path* assets_folder_path = nullptr;

@@ -31,8 +31,7 @@ struct FileData
 class File
 {
 public:
-
-	File(const Path& path);
+	explicit File(const Path& path); // Without explicit compiler is able to convert Paths to Files without noticing the user.
 	~File();
 
 	FileData Load() const;

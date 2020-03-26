@@ -21,7 +21,7 @@ TextureImporter::TextureImporter() : Importer(ResourceType::TEXTURE)
 
 FileData TextureImporter::ExtractData(Path& assets_file_path) const
 {
-	if (assets_file_path.file_name.find("_normal") != std::string::npos)
+	if (assets_file_path.GetFilename().find("_normal") != std::string::npos)
 	{
 		return ExtractDataToTGA(assets_file_path);
 	}
@@ -75,7 +75,7 @@ ILubyte* TextureImporter::LoadImageDataInMemory(const Path& file_path, int image
 	error = ilGetError();
 	if (error == IL_COULD_NOT_OPEN_FILE)
 	{
-		APP_LOG_ERROR("Error loading texture %s. File not found", file_path.file_path.c_str());
+		APP_LOG_ERROR("Error loading texture %s. File not found", file_path.GetFullPath().c_str());
 		return nullptr;
 	}
 

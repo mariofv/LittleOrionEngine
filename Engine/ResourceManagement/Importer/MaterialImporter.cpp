@@ -115,8 +115,8 @@ uint32_t MaterialImporter::ImportMaterialTexture(const std::string& texture_desc
 	}
 
 	std::string texture_file_name = texture_described_path.substr(texture_described_path.find_last_of('/') + 1, -1);;
-	std::string textures_path = material_file_folder_path.file_path + "/" + texture_file_name;
-	APP_LOG_INIT("Loading material texture in model folder path %s.", material_file_folder_path.file_path.c_str());
+	std::string textures_path = material_file_folder_path.GetFullPath() + "/" + texture_file_name;
+	APP_LOG_INIT("Loading material texture in model folder path %s.", material_file_folder_path.GetFullPath().c_str());
 	if (App->filesystem->Exists(textures_path))
 	{
 		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());

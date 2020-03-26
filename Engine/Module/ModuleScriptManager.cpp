@@ -41,14 +41,14 @@ update_status ModuleScriptManager::Update()
 	if (!App->time->isGameRunning()) 
 	{
 		//TODO Check it not every frame.
-		last_timestamp_dll = TimeStamp(dll_file->file_path.c_str());
+		last_timestamp_dll = TimeStamp(dll_file->GetFullPath().c_str());
 		if (last_timestamp_dll != init_timestamp_dll)
 		{
 			ReloadDLL();
 			init_timestamp_dll = last_timestamp_dll;
 		}
 
-		last_timestamp_script_list = TimeStamp(scripts_list_file_path->file_path.c_str());
+		last_timestamp_script_list = TimeStamp(scripts_list_file_path->GetFullPath().c_str());
 		if (last_timestamp_script_list != init_timestamp_script_list)
 		{
 			LoadScriptList();

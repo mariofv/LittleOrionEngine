@@ -111,7 +111,7 @@ void PanelPopupResourceSelector::Render()
 void PanelPopupResourceSelector::ShowResourceIcon(Metafile* resource_metafile)
 {
 	Path* resource_imported_file_path = App->filesystem->GetPath(resource_metafile->imported_file_path);
-	std::string filename = resource_imported_file_path->file_name_no_extension;
+	std::string filename = resource_imported_file_path->GetFilenameWithoutExtension();
 	if (ImGui::BeginChild(filename.c_str(), ImVec2(resource_icon_size, resource_icon_size), selected_resource_metafile == resource_metafile, ImGuiWindowFlags_NoDecoration))
 	{
 		ProcessMouseInput(resource_metafile);

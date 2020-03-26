@@ -101,7 +101,7 @@ void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 
 			ImGuiTreeNodeFlags flags = ImGuiTreeNodeFlags_OpenOnArrow | ImGuiTreeNodeFlags_DefaultOpen;
 
-			std::string filename = ICON_FA_FOLDER " " + path_child->file_name;
+			std::string filename = ICON_FA_FOLDER " " + path_child->GetFilename();
 			if (path_child->sub_folders == 0)
 			{
 				flags |= ImGuiTreeNodeFlags_Leaf;
@@ -109,7 +109,7 @@ void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 			if (selected_folder == path_child)
 			{
 				flags |= ImGuiTreeNodeFlags_Selected;
-				filename = ICON_FA_FOLDER_OPEN " " + path_child->file_name;
+				filename = ICON_FA_FOLDER_OPEN " " + path_child->GetFilename();
 			}
 			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
 			if (expanded) {
@@ -162,7 +162,7 @@ void PanelProjectExplorer::ShowMetafileIcon(Path* metafile_path)
 {
 	Metafile* metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
 
-	std::string filename = metafile_path->file_name_no_extension;
+	std::string filename = metafile_path->GetFilenameWithoutExtension();
 
 	if (ImGui::BeginChild(filename.c_str(), ImVec2(file_size_width, file_size_height), selected_file == metafile_path, ImGuiWindowFlags_NoDecoration))
 	{
@@ -256,9 +256,9 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* file)
 		}
 		if (file->file_type == FileType::MODEL && ImGui::Selectable("Extract Prefab"))
 		{
-			std::string new_prefab_name = file->file_path.substr(0, file->file_path.find_last_of(".")) + ".prefab";
+			std::string new_prefab_name = file->GetFullPath().substr(0, file->GetFullPath().find_last_of(".")) + ".prefab";
 			ImportOptions options;
-			Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(file->file_path), options);
+			Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(file->GetFullPath()), options);
 			App->filesystem->Copy(options.exported_file.c_str(), new_prefab_name.c_str());
 			App->resources->Import(new_prefab_name);
 			changes = true;

@@ -101,8 +101,8 @@ void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& director
 		{
 			return;
 		}
-		thread_comunication.thread_importing_hash = std::hash<std::string>{}(path_child->file_path);
-		while (thread_comunication.main_importing_hash == std::hash<std::string>{}(directory_path.file_path))
+		thread_comunication.thread_importing_hash = std::hash<std::string>{}(path_child->GetFullPath());
+		while (thread_comunication.main_importing_hash == std::hash<std::string>{}(directory_path.GetFullPath()))
 		{
 			Sleep(1000);
 		}
@@ -133,8 +133,8 @@ void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path)
 			 return;
 		 }
 		 /*
-		 thread_comunication.thread_importing_hash = std::hash<std::string>{}(path_child->file_path);
-		 while (thread_comunication.main_importing_hash == std::hash<std::string>{}(directory_path.file_path))
+		 thread_comunication.thread_importing_hash = std::hash<std::string>{}(path_child->GetFullPath());
+		 while (thread_comunication.main_importing_hash == std::hash<std::string>{}(directory_path.GetFullPath()))
 		 {
 			 Sleep(1000);
 		 }
@@ -154,11 +154,11 @@ void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path)
 
 uint32_t ModuleResourceManager::Import(Path& file_path)
 {
-	while (thread_comunication.thread_importing_hash == std::hash<std::string>{}(file_path.file_path))
+	while (thread_comunication.thread_importing_hash == std::hash<std::string>{}(file_path.GetFullPath()))
 	{
 		Sleep(1000);
 	}
-	thread_comunication.main_importing_hash = std::hash<std::string>{}(file_path.file_path);
+	thread_comunication.main_importing_hash = std::hash<std::string>{}(file_path.GetFullPath());
 	uint32_t imported_resource_uuid = InternalImport(file_path);
 	thread_comunication.main_importing_hash = 0;
 	return imported_resource_uuid;

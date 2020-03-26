@@ -12,9 +12,7 @@ Path::Path(const std::string& path)
 	assert(App->filesystem->Exists(path));
 	CleanFolderPath();
 	file_path = path;
-	file_name = path.substr(path.find_last_of('/') + 1, -1);
-	file_name_no_extension = file_name.substr(0, file_name.find_last_of("."));
-
+	
 	Refresh();
 }
 
@@ -23,8 +21,6 @@ Path::Path(const std::string& path, const std::string& name)
 	assert(App->filesystem->Exists(path));
 	CleanFolderPath();
 	file_path = path + "/" + name;
-	file_name = name;
-	file_name_no_extension = file_name.substr(0, file_name.find_last_of("."));
 
 	Refresh();
 }
@@ -41,7 +37,7 @@ Path::~Path()
 
 bool Path::operator==(const Path& compare)
 {
-	return file_name == compare.file_name && file_path == compare.file_path;
+	return file_path == compare.file_path;
 }
 
 void Path::Refresh()
@@ -111,7 +107,7 @@ Path* Path::Save(const char* file_name, const std::string& serialized_data, bool
 	return Save(file_name, data);
 }
 
-Path* Path::GetParent()
+Path* Path::GetParent() const
 {
 	return parent;
 }
@@ -141,7 +137,7 @@ void Path::CalculatePathInfo()
 	PHYSFS_Stat path_info;
 	if (PHYSFS_stat(file_path.c_str(), &path_info) == 0)
 	{
-		APP_LOG_ERROR("Error getting %s path info: %s", this->file_path.c_str(), PHYSFS_getLastError());
+		APP_LOG_ERROR("Error getting %s path info: %s", file_path.c_str(), PHYSFS_getLastError());
 	}
 
 	std::string file_extension = GetExtension();
@@ -169,10 +165,6 @@ void Path::CalculateChildren()
 	std::vector<Path*> path_children;
 	GetAllFilesInPath(path_children);
 
-	if (file_name == "Assets")
-	{
-		int x = 0;
-	}
 	for (auto & path_child : path_children)
 	{
 		path_child->parent = this;
@@ -231,6 +223,22 @@ bool Path::IsImportable() const
 		|| file_type == FileType::PREFAB
 		|| file_type == FileType::SKELETON
 		|| file_type == FileType::TEXTURE;
+}
+
+std::string Path::GetFullPath() const
+{
+	return file_path;
+}
+
+std::string Path::GetFilename() const
+{
+	return file_path.substr(file_path.find_last_of('/') + 1, -1);
+}
+
+std::string Path::GetFilenameWithoutExtension() const
+{
+	std::string file_name = GetFilename();
+	return file_name.substr(0, file_name.find_last_of("."));
 }
 
 std::string Path::GetExtension() const

@@ -19,10 +19,10 @@ File::~File()
 FileData File::Load() const
 {
 	FileData loaded_data;
-	PHYSFS_File* physfs_file_handle = PHYSFS_openRead(file_path.file_path.c_str());
+	PHYSFS_File* physfs_file_handle = PHYSFS_openRead(file_path.GetFullPath().c_str());
 	if (physfs_file_handle == NULL)
 	{
-		APP_LOG_ERROR("Error loading file %s, %s", file_path.file_path.c_str(), PHYSFS_getLastErrorCode())
+		APP_LOG_ERROR("Error loading file %s, %s", file_path.GetFullPath().c_str(), PHYSFS_getLastErrorCode())
 		loaded_data.size = 0;
 		loaded_data.buffer = NULL;
 		return loaded_data;
@@ -38,7 +38,7 @@ FileData File::Load() const
 	if (length_read != res_size)
 	{
 		free(res);
-		APP_LOG_ERROR("Error loading file %s", file_path.file_path.c_str())
+		APP_LOG_ERROR("Error loading file %s", file_path.GetFullPath().c_str())
 
 		loaded_data.size = 0;
 		loaded_data.buffer = NULL;
@@ -65,7 +65,7 @@ void File::GetPath(Path& return_value) const
 void File::CalculateFileInfo()
 {
 	PHYSFS_Stat file_info;
-	std::string file_path_string = file_path.file_path;
+	std::string file_path_string = file_path.GetFullPath();
 	if (PHYSFS_stat(file_path_string.c_str(), &file_info) == 0)
 	{
 		APP_LOG_ERROR("Error getting %s file info: %s", file_path_string.c_str(), PHYSFS_getLastError())
