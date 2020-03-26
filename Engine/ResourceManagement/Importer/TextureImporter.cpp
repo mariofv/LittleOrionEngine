@@ -47,10 +47,13 @@ FileData TextureImporter::ExtractDataToDDS(const Path& assets_file_path) const
 	size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
 	if (size > 0)
 	{
-		texture_data.size = size;
-		char* texture_bytes_data = new char[size];
-		memcpy(texture_bytes_data, save_data, size);
-		texture_data.buffer = texture_bytes_data;
+		if (ilSaveL(IL_DDS, save_data, size) > 0) // Save to buffer with the ilSaveIL function
+		{
+			texture_data.size = size;
+			char* texture_bytes_data = new char[size];
+			memcpy(texture_bytes_data, save_data, size);
+			texture_data.buffer = texture_bytes_data;
+		}		
 		ilDeleteImages(1, &image);
 	};
 
