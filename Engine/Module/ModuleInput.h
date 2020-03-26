@@ -12,6 +12,7 @@
 #include <map>
 #include <string>
 #include <vector>
+#include <array>
 
 class PanelConfiguration;
 
@@ -333,9 +334,9 @@ enum class PlayerID
 struct GameInput
 {
 	std::string name;
-	std::vector<KeyCode> keys;
-	std::vector<MouseButton> mouse_buttons;
-	std::vector<ControllerCode> controller_buttons;
+	std::array<KeyCode, 8> keys;
+	std::array<MouseButton, 8> mouse_buttons;
+	std::array<ControllerCode, 8> controller_buttons;
 
 	void Save(Config &config)
 	{
@@ -371,21 +372,21 @@ struct GameInput
 		for(uint64_t i = 0; i < size_keys; ++i)
 		{
 			std::string name_k("k" + std::to_string(i));
-			keys.push_back((KeyCode)config.GetUInt(name_k, 0));
+			keys[i] = ((KeyCode)config.GetUInt(name_k, 0));
 		}
 
 		uint64_t size_mouse = config.GetUInt("SizeMouse", 0);
 		for (uint64_t j = 0; j < size_mouse; ++j)
 		{
 			std::string name_m("m" + std::to_string(j));
-			mouse_buttons.push_back((MouseButton)config.GetUInt(name_m, 0));
+			mouse_buttons[j] = ((MouseButton)config.GetUInt(name_m, 0));
 		}
 
 		uint64_t size_controller = config.GetUInt("SizeController", 0);
 		for (uint64_t k = 0; k < size_controller; ++k)
 		{
 			std::string name_c("c" + std::to_string(k));
-			controller_buttons.push_back((ControllerCode)config.GetUInt(name_c, 0));
+			controller_buttons[k] = ((ControllerCode)config.GetUInt(name_c, 0));
 		}
 	}
 };
@@ -452,8 +453,8 @@ private:
 
 	const Uint8 *keys = nullptr;
 
-	float2 mouse_position;
-	float2 mouse_motion;
+	float2 mouse_position = float2::zero;
+	float2 mouse_motion = float2::zero;
 	Sint32 mouse_wheel_motion;
 
 	Uint8 mouse_clicks;

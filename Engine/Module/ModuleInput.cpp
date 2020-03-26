@@ -64,8 +64,8 @@ bool ModuleInput::Init()
 		temp2[(ControllerCode)i] = KeyState::IDLE;
 	}
 
-	controller_bible.push_back(temp1);
-	controller_bible.push_back(temp2);
+	controller_bible.push_back(std::move(temp1));
+	controller_bible.push_back(std::move(temp2));
 
 	for (int i = 0; i < MAX_PLAYERS; ++i)
 	{
@@ -257,7 +257,12 @@ bool ModuleInput::CleanUp()
 // Returns true while the user holds down the key identified by name
 ENGINE_API bool ModuleInput::GetKey(KeyCode key)
 {
-	return key_bible[key] == KeyState::REPEAT;
+	//If map[x] does not find x it will add the default value
+	auto it = key_bible.find(key); 
+	if (it == key_bible.end())
+		return false;
+
+	return it->second == KeyState::REPEAT;
 }
 
 // Returns true during the frame the user starts pressing down the key identified by name
