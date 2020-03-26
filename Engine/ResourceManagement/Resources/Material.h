@@ -49,6 +49,8 @@ public:
 	float k_specular = 1.0f;
 	float k_ambient = 1.0f;
 	float shininess = 1.0f;
+	float roughness = 0.5f;
+	float metalness = 0.5f;
 
 	bool show_checkerboard_texture = false;
 };

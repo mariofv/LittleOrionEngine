@@ -355,6 +355,10 @@
     <ClCompile Include="Engine\Module\ModuleAI.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelNavMesh.cpp" />
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Game\Resources\Shaders\blinn_phong.fs" />
+    <None Include="Game\Resources\Shaders\blinn_phong.vs" />
+  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>

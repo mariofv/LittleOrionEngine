@@ -866,4 +866,8 @@
       <UniqueIdentifier>{799add9a-b011-4795-bae5-55a425014ca0}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
+  <ItemGroup>
+    <None Include="Game\Resources\Shaders\blinn_phong.fs" />
+    <None Include="Game\Resources\Shaders\blinn_phong.vs" />
+  </ItemGroup>
 </Project>

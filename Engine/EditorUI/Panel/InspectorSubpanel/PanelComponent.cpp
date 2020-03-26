@@ -256,7 +256,7 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
-		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f)) { light->modified_by_user = true; };
+		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 100.f)) { light->modified_by_user = true; };
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
