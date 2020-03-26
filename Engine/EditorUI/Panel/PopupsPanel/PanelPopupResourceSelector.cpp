@@ -16,10 +16,32 @@ PanelPopupResourceSelector::PanelPopupResourceSelector()
 	window_name = "Popups Resource Selector";
 }
 
-void PanelPopupResourceSelector::ShowPanel(ResourceType resource_type)
+void PanelPopupResourceSelector::ShowPanel(unsigned int element_id , ResourceType resource_type)
 {
 	show_resource_selector_popup = true;
+	this->element_id = element_id;
 	this->resource_type = resource_type;
+}
+
+void PanelPopupResourceSelector::ClosePanel()
+{
+	opened = false;
+	selected_resource = nullptr;
+	this->element_id = 0;
+	this->resource_type = ResourceType::UNKNOWN;
+}
+
+void PanelPopupResourceSelector::GetSelectedResource(unsigned int element_id, std::shared_ptr<Resource>& return_value)
+{
+	if (this->element_id != element_id)
+	{
+		return_value = nullptr;
+	}
+	else
+	{
+		return_value = selected_resource;
+		selected_resource = nullptr;
+	}
 }
 
 void PanelPopupResourceSelector::Render()
@@ -80,7 +102,7 @@ void PanelPopupResourceSelector::Render()
 
 		if (!focused)
 		{
-			opened = false;
+			ClosePanel();
 		}
 	}
 	ImGui::End();
@@ -125,13 +147,13 @@ void PanelPopupResourceSelector::ProcessMouseInput(Metafile* file)
 			if (selected_resource_metafile != file)
 			{
 				selected_resource_metafile = file;
-				ChangeSelectedObjectResource();
+				SelectResource();
 			}
 		}
 
 		if (ImGui::IsMouseDoubleClicked(0))
 		{
-			opened = false;
+			ClosePanel();
 		}
 	}
 
@@ -141,28 +163,9 @@ void PanelPopupResourceSelector::ProcessMouseInput(Metafile* file)
 	}
 }
 
-void PanelPopupResourceSelector::ChangeSelectedObjectResource() const
+void PanelPopupResourceSelector::SelectResource()
 {
-	GameObject* selected_gameobject = App->editor->selected_game_object;
-	std::shared_ptr<Resource> selected_resource = App->resources->Load(selected_resource_metafile->uuid);
-
-	//TODO: Improve this.
-	Component* selected_gameobject_mesh_renderer_component = selected_gameobject->GetComponent(Component::ComponentType::MESH_RENDERER);
-	assert(selected_gameobject_mesh_renderer_component != nullptr);
-	ComponentMeshRenderer* selected_gameobject_mesh_renderer = static_cast<ComponentMeshRenderer*>(selected_gameobject_mesh_renderer_component);
-
-	switch (resource_type)
-	{
-	case ResourceType::MATERIAL:
-		selected_gameobject_mesh_renderer->SetMaterial(std::static_pointer_cast<Material>(selected_resource));
-		selected_gameobject_mesh_renderer->modified_by_user = true;
-		break;
-
-	case ResourceType::MESH:
-		selected_gameobject_mesh_renderer->SetMesh(std::static_pointer_cast<Mesh>(selected_resource));
-		selected_gameobject_mesh_renderer->modified_by_user = true;
-		break;
-	}
+	selected_resource = App->resources->Load(selected_resource_metafile->uuid);
 }
 
 std::string PanelPopupResourceSelector::GetResourceName() const
@@ -176,7 +179,7 @@ std::string PanelPopupResourceSelector::GetResourceName() const
 		return "Audio";
 		break;
 	case ResourceType::MATERIAL:
-		return "Materila";
+		return "Material";
 		break;
 	case ResourceType::MESH:
 		return "Mesh";

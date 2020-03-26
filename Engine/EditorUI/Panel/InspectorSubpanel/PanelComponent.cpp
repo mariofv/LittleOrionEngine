@@ -66,57 +66,76 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 	}
 }
 
-void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh)
+void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh_renderer)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if(ImGui::Checkbox("Active", &mesh->active))
+		if(ImGui::Checkbox("Active", &mesh_renderer->active))
 		{
 			//UndoRedo
-			App->actions->action_component = mesh;
+			App->actions->action_component = mesh_renderer;
 			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
-			mesh->modified_by_user = true;
+			mesh_renderer->modified_by_user = true;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Delete"))
 		{
-			App->actions->DeleteComponentUndo(mesh);
+			App->actions->DeleteComponentUndo(mesh_renderer);
 			return;
 		}
 		ImGui::Separator();
 
+
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Mesh");
 		ImGui::SameLine();
-		std::string mesh_name = mesh->mesh_to_render == nullptr ? "None (Mesh)" : mesh->mesh_to_render->resource_metafile->imported_file_path;
+		std::string mesh_name = mesh_renderer->mesh_to_render == nullptr ? "None (Mesh)" : mesh_renderer->mesh_to_render->resource_metafile->imported_file_path;
+		ImGuiID element_id = ImGui::GetID((std::to_string(mesh_renderer->UUID) + "MeshSelector").c_str());
 		if (ImGui::Button(mesh_name.c_str()))
 		{
-			App->editor->popups->resource_selector_popup.ShowPanel(ResourceType::MESH);
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::MESH);
 		}
-		DropMeshAndMaterial(mesh);
+		std::shared_ptr<Resource> resource_selector_mesh;
+		App->editor->popups->resource_selector_popup.GetSelectedResource(element_id, resource_selector_mesh);
+		if (resource_selector_mesh != nullptr)
+		{
+			mesh_renderer->SetMesh(std::static_pointer_cast<Mesh>(resource_selector_mesh));
+		}
+		DropMeshAndMaterial(mesh_renderer);
+
+
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Material");
 		ImGui::SameLine();
-		std::string material_name = mesh->material_to_render == nullptr ? "None (Material)" : mesh->material_to_render->resource_metafile->imported_file_path;
+		
+		std::string material_name = mesh_renderer->material_to_render == nullptr ? "None (Material)" : mesh_renderer->material_to_render->resource_metafile->imported_file_path;
+		element_id = ImGui::GetID((std::to_string(mesh_renderer->UUID) + "MaterialSelector").c_str());
 		if (ImGui::Button(material_name.c_str()))
 		{
-			App->editor->popups->resource_selector_popup.ShowPanel(ResourceType::MATERIAL);
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::MATERIAL);
 		}
-		DropMeshAndMaterial(mesh);
+		std::shared_ptr<Resource> resource_selector_material;
+		App->editor->popups->resource_selector_popup.GetSelectedResource(element_id, resource_selector_material);
+		if (resource_selector_material != nullptr)
+		{
+			mesh_renderer->SetMaterial(std::static_pointer_cast<Material>(resource_selector_material));
+		}
+		DropMeshAndMaterial(mesh_renderer);
 
-		if (mesh->mesh_to_render != nullptr)
+
+		if (mesh_renderer->mesh_to_render != nullptr)
 		{
 			char tmp_string[16];
 			ImGui::AlignTextToFramePadding();
 			ImGui::Text("Triangles");
 			ImGui::SameLine();
-			sprintf_s(tmp_string, "%d", mesh->mesh_to_render->vertices.size() / 3);
+			sprintf_s(tmp_string, "%d", mesh_renderer->mesh_to_render->vertices.size() / 3);
 			ImGui::Button(tmp_string);
 
 			ImGui::AlignTextToFramePadding();
 			ImGui::Text("Vertices");
 			ImGui::SameLine();
-			sprintf_s(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
+			sprintf_s(tmp_string, "%d", mesh_renderer->mesh_to_render->vertices.size());
 			ImGui::Button(tmp_string);
 		}
 	}

@@ -1,11 +1,16 @@
 #include "PanelMaterial.h"
 
+#include "EditorUI/Panel/PanelPopups.h"
+#include "EditorUI/Panel/PopupsPanel/PanelPopupResourceSelector.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleResourceManager.h"
+
 #include <imgui.h>
 #include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -77,30 +82,37 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 
 	float material_texture_map_size = 20.f;
 
+	void* display_image;
 	if (material->textures[type].get() != nullptr)
 	{
 		std::shared_ptr<Texture>& texture = material->textures[type];
-		ImGui::Image(
-			(void*)(intptr_t)texture->opengl_texture,
-			ImVec2(material_texture_map_size, material_texture_map_size),
-			ImVec2(0, 1),
-			ImVec2(1, 0),
-			ImVec4(1.f, 1.f, 1.f, 1.f),
-			ImVec4(1.f, 1.f, 1.f, 1.f)
-		);
-		DropTarget(material, type);
+		display_image = (void*)(intptr_t)texture->opengl_texture;
 	}
 	else
 	{
-		ImGui::Image(
-			(void*)0,
-			ImVec2(material_texture_map_size, material_texture_map_size),
-			ImVec2(0, 1),
-			ImVec2(1, 0),
-			ImVec4(1.f, 1.f, 1.f, 1.f),
-			ImVec4(1.f, 1.f, 1.f, 1.f)
-		);
-		DropTarget(material, type);
+		display_image = (void*)0;
+	}
+
+	ImGuiID element_id = ImGui::GetID(std::to_string(material->GetUUID() + type).c_str());
+	if (ImGui::ImageButton(
+		display_image,
+		ImVec2(material_texture_map_size, material_texture_map_size),
+		ImVec2(0, 1),
+		ImVec2(1, 0),
+		1,
+		ImVec4(1.f, 1.f, 1.f, 1.f),
+		ImVec4(1.f, 1.f, 1.f, 1.f)
+	))
+	{
+		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+	}
+	DropTarget(material, type);
+
+	std::shared_ptr<Resource> resource_selector_texture;
+	App->editor->popups->resource_selector_popup.GetSelectedResource(element_id, resource_selector_texture);
+	if (resource_selector_texture != nullptr)
+	{
+		material->SetMaterialTexture(type, std::static_pointer_cast<Texture>(resource_selector_texture));
 	}
 
 	ImGui::SameLine();
