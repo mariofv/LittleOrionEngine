@@ -7,14 +7,17 @@
 #include "EditorUI/Panel/PanelGame.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "EditorUI/Panel/PanelInspector.h"
+#include "EditorUI/Panel/PanelPopups.h"
 #include "EditorUI/Panel/PanelNavMesh.h"
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelResourceDatabase.h"
+#include "EditorUI/Panel/PopupsPanel/PanelPopupSceneManagement.h"
+
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
-#include "Module/ModuleModelLoader.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleModelLoader.h"
 #include "Module/ModuleScene.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -45,21 +48,22 @@ void PanelMenuBar::ShowFileMenu()
 {
 	if (ImGui::BeginMenu("File"))
 	{
-
 		if (ImGui::MenuItem(ICON_FA_FILE " New Scene"))
 		{
 			App->editor->OpenScene(DEFAULT_SCENE_PATH);
 		}
-		if (App->filesystem->Exists(SAVED_SCENE_PATH))
+		if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Load Scene"))
 		{
-			if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Load Scene"))
-			{
-				App->editor->OpenScene(SAVED_SCENE_PATH);
-			}
+			App->editor->popups->scene_management_popup.load_scene_shown = true;
 		}
-		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
+		ImGui::Separator();
+		if (App->editor->current_scene_path != "" && ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
 		{
-			App->editor->SaveScene(SAVED_SCENE_PATH);
+			App->editor->SaveScene(App->editor->current_scene_path);
+		}
+		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene as"))
+		{
+			App->editor->popups->scene_management_popup.save_scene_shown = true;
 		}
 		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
 		{

@@ -33,6 +33,9 @@
     <ClInclude Include="..\..\Libraries\include\imgui\imgui_impl_opengl3.h">
       <Filter>src</Filter>
     </ClInclude>
+    <ClInclude Include="..\..\Libraries\include\imgui\imfilebrowser.h">
+      <Filter>src</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="..\..\Libraries\include\imgui\imgui.cpp">

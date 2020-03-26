@@ -403,15 +403,7 @@
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp">
       <Filter>Engine\AI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Module\ModuleAnimation.cpp">
-      <Filter>Engine\Module</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentAnimation.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Animation\AnimController.cpp">
-      <Filter>Engine\Animation</Filter>
-    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -795,15 +787,7 @@
     <ClInclude Include="Engine\AI\SampleDebugDraw.h">
       <Filter>Engine\AI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Module\ModuleAnimation.h">
-      <Filter>Engine\Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentAnimation.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Animation\AnimController.h">
-      <Filter>Engine\Animation</Filter>
-    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

@@ -4,6 +4,7 @@
 #include "Panel.h"
 #include "PopupsPanel/PanelPopupMaterialSelector.h"
 #include "PopupsPanel/PanelPopupMeshSelector.h"
+#include "PopupsPanel/PanelPopupSceneManagement.h"
 
 #include <string>
 
@@ -16,15 +17,17 @@ public:
 	void Render() override;
 
 	void CreateScript();
-	bool create_script_shown = false;
+
 private:
 	void RenderAssetsLoadingPopup();
 
 public:
-	bool show_assets_loading_popup = false;
 	PanelPopupMaterialSelector material_selector_popup;
 	PanelPopupMeshSelector mesh_selector_popup;
+	PanelPopupSceneManagement scene_management_popup;
 
+	bool create_script_shown = false;
+	bool show_assets_loading_popup = false;
 };
 
 #endif //_PANELPOPUPS_H_
