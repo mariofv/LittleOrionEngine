@@ -17,7 +17,7 @@ public:
 	Importer(ResourceType resource_type) : resource_type(resource_type) {};
 	virtual ~Importer() = default;
 
-	Metafile Import(Path& assets_file_path);
+	Metafile* Import(Path& assets_file_path);
 	virtual FileData ExtractData(Path& assets_file_path) const = 0;
 
 	static bool ImportRequired(const Path& file_path);

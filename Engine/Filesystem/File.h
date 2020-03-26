@@ -9,13 +9,15 @@
 
 enum class FileType
 {
+	ANIMATION,
+	ARCHIVE,
+	MATERIAL,
+	MESH,
 	META,
 	MODEL,
 	PREFAB,
+	SKELETON,
 	TEXTURE,
-	MATERIAL,
-	MESH,
-	ARCHIVE,
 	UNKNOWN
 };
 

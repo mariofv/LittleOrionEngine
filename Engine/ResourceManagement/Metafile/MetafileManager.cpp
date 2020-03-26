@@ -12,16 +12,71 @@
 #include <pcg_basic.h>
 #include <chrono>
 
-void MetafileManager::GetMetafile(const Path& metafile_path, Metafile& metafile)
+MetafileManager::~MetafileManager()
 {
-	metafile.metafile_path = metafile_path.file_path;
+	for (auto& metafile : metafiles)
+	{
+		delete metafile.second;
+	}
+	metafiles.clear();
+}
+
+Metafile* MetafileManager::GetMetafile(const Path& metafile_path)
+{
+	if (metafiles.find(metafile_path.file_path) != metafiles.end())
+	{
+		return metafiles[metafile_path.file_path];
+	}
 
 	FileData meta_file_data = metafile_path.GetFile()->Load();
-	std::string serialized_string = (char*)meta_file_data.buffer;
+	std::string serialized_string ((char*)meta_file_data.buffer, meta_file_data.size);
 	free((char*)meta_file_data.buffer);
 
+	Metafile* created_metafile = new Metafile();
+	created_metafile->metafile_path = metafile_path.file_path;
 	Config meta_config(serialized_string);
-	metafile.Load(meta_config);
+	created_metafile->Load(meta_config);
+
+	metafiles[created_metafile->metafile_path] = created_metafile;
+
+	return created_metafile;
+}
+
+
+Metafile* MetafileManager::CreateMetafile(const std::string& asset_file_path_string, ResourceType resource_type)
+{
+	return CreateMetafile(*App->filesystem->GetPath(asset_file_path_string), resource_type);
+}
+
+Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType resource_type)
+{
+
+	Metafile* created_metafile = new Metafile();
+
+	std::string metafile_path_string = GetMetafilePath(asset_file_path);
+	assert(metafiles.find(metafile_path_string) == metafiles.end());
+
+	created_metafile->uuid = pcg32_random();
+	created_metafile->resource_type = resource_type;
+
+	created_metafile->metafile_path = metafile_path_string;
+	created_metafile->imported_file_path = asset_file_path.file_path;
+	created_metafile->exported_file_path = GetMetafileExportedFile(*created_metafile);
+
+	created_metafile->version = Importer::IMPORTER_VERSION;
+
+	Config metafile_config;
+	created_metafile->Save(metafile_config);
+
+	std::string metafile_config_string;
+	metafile_config.GetSerializedString(metafile_config_string);
+
+	std::string metfile_name_string = GetMetafilePath(asset_file_path.file_name);
+	asset_file_path.GetParent()->Save(metfile_name_string.c_str(), metafile_config_string);
+
+	metafiles[created_metafile->metafile_path] = created_metafile;
+
+	return created_metafile;
 }
 
 std::string MetafileManager::GetMetafilePath(const Path& file_path)
@@ -53,9 +108,8 @@ void MetafileManager::TouchMetafileTimestamp(Metafile& metafile)
 
 bool MetafileManager::IsMetafileConsistent(const Path& metafile_path)
 {
-	Metafile metafile;
-	GetMetafile(metafile_path, metafile);
-	return IsMetafileConsistent(metafile);
+	Metafile* metafile = GetMetafile(metafile_path);
+	return IsMetafileConsistent(*metafile);
 }
 
 bool MetafileManager::IsMetafileConsistent(const Metafile& metafile)
@@ -63,12 +117,10 @@ bool MetafileManager::IsMetafileConsistent(const Metafile& metafile)
 	return App->filesystem->Exists(metafile.imported_file_path) && App->filesystem->Exists(metafile.exported_file_path);
 }
 
-
 void MetafileManager::DeleteMetafileInconsistencies(const Path& metafile_path)
 {
-	Metafile metafile;
-	GetMetafile(metafile_path, metafile);
-	DeleteMetafileInconsistencies(metafile);
+	Metafile* metafile = GetMetafile(metafile_path);
+	DeleteMetafileInconsistencies(*metafile);
 }
 
 void MetafileManager::DeleteMetafileInconsistencies(const Metafile& metafile)
@@ -84,34 +136,6 @@ void MetafileManager::DeleteMetafileInconsistencies(const Metafile& metafile)
 	}
 
 	App->filesystem->Remove(metafile.metafile_path);
-}
-
-void MetafileManager::CreateMetafile(const std::string& asset_file_path_string, ResourceType resource_type, Metafile& result_metafile)
-{
-	CreateMetafile(*App->filesystem->GetPath(asset_file_path_string), resource_type, result_metafile);
-}
-
-void MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType resource_type, Metafile& result_metafile)
-{
-	std::string metafile_path_string = GetMetafilePath(asset_file_path);
-
-	result_metafile.uuid = pcg32_random();
-	result_metafile.resource_type = resource_type;
-	
-	result_metafile.metafile_path= metafile_path_string;
-	result_metafile.imported_file_path = asset_file_path.file_path;
-	result_metafile.exported_file_path = GetMetafileExportedFile(result_metafile);
-
-	result_metafile.version = Importer::IMPORTER_VERSION;
-
-	Config metafile_config;
-	result_metafile.Save(metafile_config);
-
-	std::string metafile_config_string;
-	metafile_config.GetSerializedString(metafile_config_string);
-
-	std::string metfile_name_string = GetMetafilePath(asset_file_path.file_name);
-	asset_file_path.GetParent()->Save(metfile_name_string.c_str(), metafile_config_string);
 }
 
 std::string MetafileManager::GetMetafileExportedFolder(const Metafile& metafile)

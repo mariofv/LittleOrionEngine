@@ -160,14 +160,13 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 
 void PanelProjectExplorer::ShowMetafileIcon(Path* metafile_path)
 {
-	Metafile metafile;
-	MetafileManager::GetMetafile(*metafile_path, metafile);
+	Metafile* metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
 
 	std::string filename = metafile_path->file_name_no_extension;
 
 	if (ImGui::BeginChild(filename.c_str(), ImVec2(file_size_width, file_size_height), selected_file == metafile_path, ImGuiWindowFlags_NoDecoration))
 	{
-		ResourceDragSource(&metafile);
+		ResourceDragSource(metafile);
 		ProcessResourceMouseInput(metafile_path);
 
 		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * file_size_width) * 0.5f);

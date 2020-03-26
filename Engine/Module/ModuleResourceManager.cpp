@@ -50,6 +50,7 @@ bool ModuleResourceManager::Init()
 	skeleton_importer = std::make_unique<SkeletonImporter>();
 	texture_importer = std::make_unique<TextureImporter>();
 
+	metafile_manager = std::make_unique<MetafileManager>();
 	scene_manager = std::make_unique<SceneManager>();
 
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
@@ -112,9 +113,9 @@ void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& director
 		}
 		else if (path_child->IsMeta())
 		{
-			if (!MetafileManager::IsMetafileConsistent(*path_child))
+			if (!metafile_manager->IsMetafileConsistent(*path_child))
 			{
-				MetafileManager::DeleteMetafileInconsistencies(*path_child);
+				metafile_manager->DeleteMetafileInconsistencies(*path_child);
 			}
 		}
 		++thread_comunication.loaded_items;
@@ -142,7 +143,7 @@ void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path)
 		 {
 			 ImportAssetsInDirectory(*path_child);
 		 }
-		 else if (!path_child->IsMeta())
+		 else if (path_child->IsImportable())
 		 {
 			 Import(*path_child);
 		 }
@@ -167,12 +168,16 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path) const
 {
 	//std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
 
-	Metafile asset_metafile;
+	Metafile* asset_metafile = nullptr;
 
 	if (Importer::ImportRequired(file_path))
 	{
 		switch (file_path.GetFile()->GetFileType())
 		{
+		case FileType::ANIMATION:
+			asset_metafile = animation_importer->Import(file_path);
+			break;
+		
 		case FileType::MATERIAL:
 			asset_metafile = material_importer->Import(file_path);
 			break;
@@ -189,6 +194,10 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path) const
 			asset_metafile = prefab_importer->Import(file_path);
 			break;
 
+		case FileType::SKELETON:
+			asset_metafile = skeleton_importer->Import(file_path);
+			break;
+
 		case FileType::TEXTURE:
 			asset_metafile = texture_importer->Import(file_path);
 			break;
@@ -196,13 +205,13 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path) const
 	}
 	else
 	{
-		Path* metafile_path = App->filesystem->GetPath(MetafileManager::GetMetafilePath(file_path));
-		MetafileManager::GetMetafile(*metafile_path, asset_metafile);
+		Path* metafile_path = App->filesystem->GetPath(metafile_manager->GetMetafilePath(file_path));
+		asset_metafile = metafile_manager->GetMetafile(*metafile_path);
 	}
 
 	resource_DB->AddEntry(asset_metafile);
 
-	return asset_metafile.uuid;
+	return asset_metafile->uuid;
 }
 
 std::shared_ptr<Resource> ModuleResourceManager::Load(uint32_t uuid)

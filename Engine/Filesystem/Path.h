@@ -24,6 +24,7 @@ public:
 
 	bool IsDirectory() const;
 	bool IsMeta() const;
+	bool IsImportable() const;
 
 	static std::string GetParentPathString(const std::string& path);
 	std::string GetExtension() const;

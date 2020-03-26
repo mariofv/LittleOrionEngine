@@ -1,19 +1,20 @@
 #include "ResourceDataBase.h"
+
+#include "Main/Application.h"
+#include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Metafile/MetafileManager.h"
 
 void ResourceDataBase::AddEntry(const Path& metafile_path)
 {
-	Metafile metafile;
-	MetafileManager::GetMetafile(metafile_path, metafile);
+	Metafile* metafile = App->resources->metafile_manager->GetMetafile(metafile_path);
 	AddEntry(metafile);
 }
 
-void ResourceDataBase::AddEntry(const Metafile& metafile)
+void ResourceDataBase::AddEntry(Metafile* metafile)
 {
-	std::unique_ptr<Metafile> options = std::make_unique<Metafile>(metafile);
-	if (entries.find(options->uuid) == entries.end())
+	if (entries.find(metafile->uuid) == entries.end())
 	{
-		entries[options->uuid] = std::move(options);
+		entries[metafile->uuid] = metafile;
 	}
 }
 
@@ -24,7 +25,7 @@ Metafile* ResourceDataBase::GetEntry(uint32_t uuid)
 	{
 		return nullptr;
 	}
-	return entries[uuid].get();
+	return entries[uuid];
 }
 
 void ResourceDataBase::GetEntriesOfType(std::vector<Metafile*>& result_entries, ResourceType type) const
@@ -33,7 +34,7 @@ void ResourceDataBase::GetEntriesOfType(std::vector<Metafile*>& result_entries, 
 	{
 		if (entry.second->resource_type == type)
 		{
-			result_entries.push_back(entry.second.get());
+			result_entries.push_back(entry.second);
 		}
 	}
 }

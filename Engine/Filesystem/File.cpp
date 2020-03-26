@@ -110,6 +110,14 @@ FileType File::CalculateFileType(const PHYSFS_FileType& file_type) const
 	{
 		return FileType::META;
 	}
+	if (file_extension == "sk")
+	{
+		return FileType::SKELETON;
+	}
+	if (file_extension == "anim")
+	{
+		return FileType::ANIMATION;
+	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{
 		return FileType::ARCHIVE;

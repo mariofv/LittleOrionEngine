@@ -220,6 +220,19 @@ bool Path::IsMeta() const
 	return !is_directory && file->GetFileType() == FileType::META;
 }
 
+bool Path::IsImportable() const
+{
+	FileType file_type = file->GetFileType();
+	return
+		file_type == FileType::ANIMATION
+		|| file_type == FileType::MATERIAL
+		|| file_type == FileType::MESH
+		|| file_type == FileType::MODEL
+		|| file_type == FileType::PREFAB
+		|| file_type == FileType::SKELETON
+		|| file_type == FileType::TEXTURE;
+}
+
 std::string Path::GetExtension() const
 {
 	std::size_t found = file_path.find_last_of(".");

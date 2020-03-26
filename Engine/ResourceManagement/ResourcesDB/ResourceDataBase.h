@@ -16,13 +16,13 @@ public:
 	~ResourceDataBase() = default;
 
 	void AddEntry(const Path& metafile_path);
-	void AddEntry(const Metafile& metafile);
+	void AddEntry(Metafile* metafile);
 
 	Metafile* GetEntry(uint32_t uuid);
 	void GetEntriesOfType(std::vector<Metafile*>& result_entries, ResourceType type) const;
 
 public:
-	std::unordered_map<int32_t, std::unique_ptr<Metafile>> entries;
+	std::unordered_map<int32_t, Metafile*> entries;
 };
 
 #endif // !_RESOURCEDATABASE_H_

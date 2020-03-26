@@ -27,6 +27,8 @@ class SceneManager;
 class SkeletonImporter;
 class TextureImporter;
 
+class MetafileManager;
+
 class ModuleResourceManager : public Module
 {
 public:
@@ -81,6 +83,7 @@ public:
 	std::unique_ptr<SkeletonImporter> skeleton_importer = nullptr;
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
 
+	std::unique_ptr<MetafileManager> metafile_manager = nullptr;
 	std::unique_ptr<SceneManager> scene_manager = nullptr;
 	std::unique_ptr<ResourceDataBase> resource_DB = nullptr;
 
