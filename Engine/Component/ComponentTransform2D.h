@@ -1,4 +1,5 @@
-#pragma once
+#ifndef _COMPONENTTRANSFORM2D_H_
+#define _COMPONENTTRANSFORM2D_H_
 #include "Component.h"
 class ComponentTransform2D : public Component
 {
@@ -18,6 +19,8 @@ public:
 	math::Rect rect = math::Rect(10, 10, 10, 10);
 	float rotation = 0.0f;
 	float2 position = float2::zero;
+	float2 scale = float2::one;
+	float4x4 scale_matrix = float4x4::identity;
 
 	// Heredado vía Component
 	virtual void Delete() override;
@@ -31,4 +34,5 @@ private:
 
 	friend class PanelComponent;
 };
+#endif
 

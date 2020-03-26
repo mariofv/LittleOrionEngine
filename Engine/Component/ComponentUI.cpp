@@ -24,16 +24,13 @@ void ComponentUI::Render()
 {
 	ComponentTransform2D* transform = &owner->transform_2d;
 
-	model = model.Scale(float3(transform->rect.Width(), transform->rect.Height(), 0.0f), float3::zero);
-	model.SetTranslatePart(float3(transform->rect.left, transform->rect.top, 0.0f));
-
 	float4x4 projection = float4x4::D3DOrthoProjLH(0, 1, window_width, window_height);
 	//float4x4 projection = App->cameras->scene_camera->camera_frustum.ViewProjMatrix();
 
 	glUseProgram(shader_program);
 	glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection"), 1, GL_TRUE, projection.ptr());
 	glUniform1i(glGetUniformLocation(shader_program, "image"), 0);
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, owner->transform.GetGlobalModelMatrix().ptr());
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, transform->scale_matrix.ptr());
 	glUniform3fv(glGetUniformLocation(shader_program, "spriteColor"), 1, color.ptr());
 	glActiveTexture(GL_TEXTURE0);
 	glBindTexture(GL_TEXTURE_2D, ui_texture);

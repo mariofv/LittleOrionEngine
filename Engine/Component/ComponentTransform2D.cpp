@@ -15,7 +15,7 @@ ComponentTransform2D::ComponentTransform2D(GameObject* owner, const Rect rext, c
 	rotation(rotation),
 	rect(rext)
 {
-	OnTransformChange();
+		OnTransformChange();
 }
 
 ComponentTransform2D::~ComponentTransform2D()
@@ -89,5 +89,13 @@ void ComponentTransform2D::OnTransformChange()
 {
 	owner->transform.SetRotation(float3(0, 0, rotation));
 	owner->transform.SetTranslation(float3(position, 0));
-	owner->transform.SetScale(float3(rect.Width(), rect.Height(), 0));
+	owner->transform.SetScale(float3(scale, 0));
+
+	scale_matrix = float4x4::Scale(float3(rect.Width(), rect.Height(), 0), float3::zero);
+	scale_matrix = owner->transform.GetGlobalModelMatrix() * scale_matrix;
+
+	for (auto & child : owner->children)
+	{
+		child->transform_2d.OnTransformChange();
+	}
 }
