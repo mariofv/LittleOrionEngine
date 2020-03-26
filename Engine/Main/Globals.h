@@ -68,12 +68,6 @@ enum class Fonts
 
 # define SCRIPT_DLL_FILE "GamePlaySyste_.dll"
 
-# define SCRIPT_TEMPLATE_FILE_CPP "Resources/Scripts/TemplateScript.cpp"
-# define SCRIPT_TEMPLATE_FILE_H "Resources/Scripts/TemplateScript.h"
-# define SCRIPT_PATH "../GamePlaySystem/src/Script/"
-
- 
-
 # define OPENGL_MAJOR_VERSION 4
 # define OPENGL_MINOR_VERSION 0
 

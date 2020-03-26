@@ -27,7 +27,6 @@ bool ModuleScriptManager::Init()
 	InitDLL();
 	init_timestamp_dll = dll_file->modification_timestamp;
 	init_timestamp_script_list = scripts_list_file_path->modification_timestamp;
-	utils = new Utils();
 
 	return true;
 }
@@ -85,19 +84,26 @@ void ModuleScriptManager::GetCurrentPath()
 
 void ModuleScriptManager::CreateScript(const std::string& name)
 {
-	//TODO Add this to module file system
-	std::string cpp_file = utils->LoadFileContent(SCRIPT_TEMPLATE_FILE_CPP);
-	std::string header_file = utils->LoadFileContent(SCRIPT_TEMPLATE_FILE_H);
+	FileData cpp_file_data = App->filesystem->GetPath(RESOURCES_SCRIPT_TEMPLATE_CPP)->GetFile()->Load();
+	std::string cpp_file((char*)cpp_file_data.buffer, cpp_file_data.size);
+	free((char*)cpp_file_data.buffer);
 
-	utils->ReplaceStringInPlace(cpp_file, "TemplateScript", name);
-	utils->ReplaceStringInPlace(header_file, "TemplateScript", name);
+	FileData header_file_data = App->filesystem->GetPath(RESOURCES_SCRIPT_TEMPLATE_H)->GetFile()->Load();
+	std::string header_file((char*)header_file_data.buffer, header_file_data.size);
+	free((char*)header_file_data.buffer);
+
+	Utils::ReplaceStringInPlace(cpp_file, "TemplateScript", name);
+	Utils::ReplaceStringInPlace(header_file, "TemplateScript", name);
+
 	std::string name_uppercase = name;
 	std::transform(name_uppercase.begin(), name_uppercase.end(), name_uppercase.begin(), ::toupper);
-	utils->ReplaceStringInPlace(header_file, "_TEMPLATESCRIPT_H_", "_" + name_uppercase + "_H_");
+	Utils::ReplaceStringInPlace(header_file, "_TEMPLATESCRIPT_H_", "_" + name_uppercase + "_H_");
+
 	if (!App->filesystem->Exists((SCRIPT_PATH + name + ".cpp").c_str()))
 	{
-		utils->SaveFileContent(cpp_file, SCRIPT_PATH + name + ".cpp");
-		utils->SaveFileContent(header_file, SCRIPT_PATH + name + ".h");
+		//TODO: Use filesystem for this
+		Utils::SaveFileContent(cpp_file, SCRIPT_PATH + name + ".cpp");
+		Utils::SaveFileContent(header_file, SCRIPT_PATH + name + ".h");
 		scripts_list.push_back(name);
 		SaveScriptList();
 	}
@@ -238,11 +244,6 @@ void ModuleScriptManager::ReloadDLL()
 
 }
 
-bool ModuleScriptManager::CopyPDB(const char* source_file, const char* destination_file, bool overwrite_existing)
-{
-	return CopyFile(source_file, destination_file, !overwrite_existing);
-}
-
 bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll_path)
 {
 	// init
@@ -340,11 +341,11 @@ bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll
 	}
 		
 	// Create new DLL and pdb
-	utils->PatchFileName(pdb_path);
+	Utils::PatchFileName(pdb_path);
 	if (App->filesystem->Exists(original_pdb_path))
 	{
 		strcpy(patched_pdb_path, pdb_path);
-		CopyPDB(original_pdb_path, pdb_path, true);		// Copy new PDB
+		App->filesystem->Copy(original_pdb_path, pdb_path);		// Copy new PDB
 	}
 	HANDLE patched_dll = CreateFile(patched_dll_path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	DWORD byte_write;

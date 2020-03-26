@@ -12,6 +12,9 @@
 #define RESOURCES_SCRIPT_PATH "/Resources/Scripts"
 #define RESOURCES_SCRIPT_DLL_PATH "/Resources/Scripts/GamePlaySystem.dll"
 #define RESOURCES_SCRIPT_LIST_FILENAME "scripts_list.scripts"
+#define RESOURCES_SCRIPT_TEMPLATE_CPP "/Resources/Scripts/TemplateScript.cpp"
+#define RESOURCES_SCRIPT_TEMPLATE_H "/Resources/Scripts/TemplateScript.h"
+#define SCRIPT_PATH "../GamePlaySystem/src/Script/"
 
 #define RESOURCES_GAME_INPUTS_PATH "/Resources/GameInputs"
 #define RESOURCES_GAME_INPUTS_FILENAME "game_inputs.inputs"

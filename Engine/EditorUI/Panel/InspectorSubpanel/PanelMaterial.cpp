@@ -188,8 +188,6 @@ void PanelMaterial::DropTarget(Material* material, Material::MaterialTextureType
 				*/
 				std::shared_ptr<Texture> texture = std::static_pointer_cast<Texture>(App->resources->Load(incoming_metafile->uuid));
 				material->SetMaterialTexture(type, texture);
-				
-				//SaveMaterial(material); TODO: Save material changes
 			}
 		}
 		ImGui::EndDragDropTarget();

@@ -23,7 +23,6 @@ class ComponentScript;
 class GameObject;
 class Script;
 class Path;
-class Utils;
 
 class ModuleScriptManager : public Module
 {
@@ -55,14 +54,12 @@ private:
 
 	void InitDLL();
 	void ReloadDLL();
-	bool CopyPDB(const char* from_file, const char* destination_file, bool overwrite_existing);
 	bool PatchDLL(const char* dll_path, const char* patched_dll_path);
 
 	HINSTANCE gameplay_dll;
 	std::string working_directory;
 	Path* dll_file = nullptr;
 	Path* scripts_list_file_path = nullptr;
-	Utils* utils = nullptr;
 
 	long last_timestamp_dll;
 	long init_timestamp_dll;
@@ -70,7 +67,6 @@ private:
 	long init_timestamp_script_list;
 
 public:
-
 	std::vector<ComponentScript*> scripts;
 	std::vector<std::string> scripts_list;
 

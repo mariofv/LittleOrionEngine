@@ -121,11 +121,6 @@ bool Utils::PatchFileName(char* filename)
 
 }
 
-std::string Utils::LoadFileContent(const std::string& path) {
-	std::ifstream file(path);
-	return std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-}
-
 void Utils::SaveFileContent(const std::string& source, std::string& destination)
 {
 	std::ofstream file(destination);
