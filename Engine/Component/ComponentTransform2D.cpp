@@ -13,7 +13,7 @@ ComponentTransform2D::ComponentTransform2D(GameObject * owner) : Component(owner
 ComponentTransform2D::ComponentTransform2D(GameObject* owner, const Rect rext, const float rotation) :
 	Component(owner, ComponentType::TRANSFORM2D),
 	rotation(rotation),
-	rect(rect)
+	rect(rext)
 {
 	OnTransformChange();
 }
@@ -87,8 +87,7 @@ void ComponentTransform2D::Load(const Config& config)
 
 void ComponentTransform2D::OnTransformChange()
 {
-	for (auto & child : owner->children)
-	{
-		child->transform_2d.OnTransformChange();
-	}
+	owner->transform.SetRotation(float3(0, 0, rotation));
+	owner->transform.SetTranslation(float3(position, 0));
+	owner->transform.SetScale(float3(rect.Width(), rect.Height(), 0));
 }

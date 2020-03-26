@@ -46,6 +46,12 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 		{
 			ComponentTransform2D* transform_2d = &transform->owner->transform_2d;
 
+			if (ImGui::DragFloat2("Position", transform_2d->position.ptr(), 1.0f))
+			{
+				transform_2d->OnTransformChange();
+				transform_2d->modified_by_user = true;
+			}
+
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
 			static int top = transform_2d->rect.top;
 			if (ImGui::DragInt("Top", &top, 1))
