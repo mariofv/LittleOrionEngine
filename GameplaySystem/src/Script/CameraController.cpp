@@ -114,7 +114,7 @@ void CameraController::GodCamera()
 	{
 		camera_component->MoveUp();
 	}
-
+	//TODO MOVE AND ROTATE WITH JOYSTICK
 }
 
 void CameraController::ActivePlayer()

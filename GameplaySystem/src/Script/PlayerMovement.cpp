@@ -80,33 +80,26 @@ void PlayerMovement::Move(int player_id)
 	//Keyboard Input
 	float3 new_transform = transform;
 
-	//EXAMPLE USING PLAYER INPUT
-	if (App->input->GetKey(KeyCode::A))
+	//EXAMPLE USING PLAYER INPUT (JUST MOVE)
+	if (App->input->GetKey(KeyCode::LeftArrow))
 	{
 		new_transform += float3(speed, 0, 0);
 	}
-	if (App->input->GetKey(KeyCode::W))
+	if (App->input->GetKey(KeyCode::UpArrow))
 	{
 		new_transform += float3(0, 0, speed);
 	}
-	if (App->input->GetKey(KeyCode::S))
+	if (App->input->GetKey(KeyCode::DownArrow))
 	{
 		new_transform += float3(0, 0, -speed);
 	}
-	if (App->input->GetKey(KeyCode::D))
+	if (App->input->GetKey(KeyCode::RightArrow))
 	{
 		new_transform += float3(-speed, 0, 0);
 	}
-	if (App->input->GetKey(KeyCode::E))
-	{
-		owner->transform.SetRotation(float3(rotation.x, rotation.y - rotation_speed, rotation.z));
-	}
-	if (App->input->GetKey(KeyCode::Q))
-	{
-		owner->transform.SetRotation(float3(rotation.x, rotation.y + rotation_speed, rotation.z));
-	}
 
-	///Jump handle
+
+	//Jump handle
 	if (App->input->GetGameInput("Jump"))
 	{
 		if (!is_jumping)
@@ -136,6 +129,11 @@ void PlayerMovement::Move(int player_id)
 		if (App->artificial_intelligence->IsPointWalkable(new_transform))
 			owner->transform.SetTranslation(new_transform);
 	}
+}
+
+void PlayerMovement::Dash()
+{
+	//TODO DASH FRONT
 }
 
 //Use this for linking GO automatically

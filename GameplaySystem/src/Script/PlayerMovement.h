@@ -11,11 +11,11 @@ public:
 
 	void Awake() override;
 	void Start() override;
-	//void Update() override;
 
 	void OnInspector(ImGuiContext*) override;
 
 	void Move(int player);
+	void Dash();
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
