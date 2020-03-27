@@ -121,7 +121,6 @@ void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& director
 				metafile_manager->DeleteMetafileInconsistencies(*path_child);
 			}
 		}
-		++thread_comunication.loaded_items;
 		thread_comunication.thread_importing_hash = 0;
 	}
 }
@@ -149,8 +148,8 @@ void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path)
 		 else if (path_child->IsImportable())
 		 {
 			 Import(*path_child);
+			 ++thread_comunication.loaded_items;
 		 }
-		 ++thread_comunication.loaded_items;
 		 thread_comunication.thread_importing_hash = 0;
 	 }
  }

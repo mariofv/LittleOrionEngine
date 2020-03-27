@@ -35,6 +35,7 @@ void PanelPopups::RenderAssetsLoadingPopup()
 	{
 		ImGui::Text("Loading Assets");
 		float progress = (float)App->resources->thread_comunication.loaded_items / App->resources->thread_comunication.total_items;
+		assert(progress <= 1);
 		ImGui::ProgressBar(progress);
 
 		if (App->resources->thread_comunication.finished_loading)
