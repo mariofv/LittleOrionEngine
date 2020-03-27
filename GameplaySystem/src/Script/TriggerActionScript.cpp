@@ -15,6 +15,8 @@
 #include <MathGeoLib/MathGeoLib.h>
 
 
+#include "PlayerMovement.h"
+
 
 TriggerActionScript* TriggerActionScriptDLL()
 {
@@ -30,9 +32,9 @@ TriggerActionScript::TriggerActionScript()
 // Use this for initialization before Start()
 void TriggerActionScript::Awake()
 {
-	movement_component = trigger_go->GetComponentScript("PlayerController");
-	movement_script = (PlayerController*)movement_component->script;
-	start_position = trigger_go->transform.GetGlobalTranslation();
+	movement_component = player->GetComponentScript("PlayerMovement");
+	movement_script = (PlayerMovement*)movement_component->script;
+	start_position = player->transform.GetGlobalTranslation();
 }
 
 // Use this for initialization
@@ -50,7 +52,8 @@ void TriggerActionScript::Update()
 		{
 			//Do something if inside aabb of an object
 			//movement_script->speed *= 5.f;
-			trigger_go->transform.SetTranslation(start_position);
+			//player->transform.SetTranslation(start_position);
+			movement_script->on_ramp = true;
 		}
 	}
 
@@ -70,17 +73,15 @@ void TriggerActionScript::OnInspector(ImGuiContext* context)
 
 bool TriggerActionScript::OnTriggerEnter() const
 {
-	return trigger_go && owner->aabb.global_bounding_box.Intersects(trigger_go->aabb.global_bounding_box);
+	return player && owner->aabb.global_bounding_box.Intersects(player->aabb.global_bounding_box);
 }
 
 void TriggerActionScript::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
 
-	public_gameobjects.push_back(&trigger_go);
 	public_gameobjects.push_back(&player);
 
-	variable_names.push_back(GET_VARIABLE_NAME(trigger_go));
 	variable_names.push_back(GET_VARIABLE_NAME(player));
 
 	for(int i = 0; i < public_gameobjects.size(); ++i)

@@ -17,6 +17,9 @@ public:
 	void Move(int player);
 	void Dash();
 
+public:
+	bool on_ramp = false;
+
 private:
 	float speed = 0.5f;
 	float rotation_speed = 0.01f;

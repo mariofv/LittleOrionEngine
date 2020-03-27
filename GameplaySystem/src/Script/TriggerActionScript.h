@@ -5,7 +5,7 @@
 
 #include <MathGeoLib/MathGeoLib.h>
 
-class PlayerController;
+class PlayerMovement;
 
 class TriggerActionScript : public Script
 {
@@ -20,9 +20,8 @@ public:
 	void InitPublicGameObjects() override;
 
 public:
-	GameObject* trigger_go = nullptr;
 	GameObject* player = nullptr;
-	PlayerController* movement_script = nullptr;
+	PlayerMovement* movement_script = nullptr;
 	ComponentScript* movement_component = nullptr;
 
 

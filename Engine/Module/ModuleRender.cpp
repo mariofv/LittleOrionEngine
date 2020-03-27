@@ -589,11 +589,10 @@ bool ModuleRender::GetRayCastIntersectedPosition(const LineSegment & ray, float3
 		for (auto & triangle : triangles)
 		{
 			float distance;
-			bool intersected = triangle.Intersects(transformed_ray, &distance);
+			bool intersected = triangle.Intersects(transformed_ray, &distance, &position);
 			if (intersected && distance < min_distance)
 			{
 				min_distance = distance;
-				position = triangle.CenterPoint();
 			}
 		}
 	}
