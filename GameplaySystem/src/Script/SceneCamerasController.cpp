@@ -101,7 +101,7 @@ void SceneCamerasController::OnInspector(ImGuiContext* context)
 	{
 		is_camera_3 = camera_3->name;
 	}*/
-
+	ShowDraggedObjects();
 }
 
 void SceneCamerasController::UpdateCameraRendering()

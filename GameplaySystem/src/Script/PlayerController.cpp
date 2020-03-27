@@ -80,8 +80,3 @@ void PlayerController::Load(const Config& config)
 	player = config.GetUInt("Player", player);
 }
 
-//Use this for linking GO automatically
-void PlayerController::Link()
-{
-	//example = App->scene->GetGameObject(exampleUUID);
-}

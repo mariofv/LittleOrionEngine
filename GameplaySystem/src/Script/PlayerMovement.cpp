@@ -39,12 +39,6 @@ void PlayerMovement::Start()
 	gravity_vector = float3(0.0f, -9.8f, 0.0f);
 }
 
-// Update is called once per frame
-//void PlayerMovement::Update()
-//{
-//
-//
-//}
 
 // Use this for showing variables on inspector
 void PlayerMovement::OnInspector(ImGuiContext* context)
@@ -81,19 +75,19 @@ void PlayerMovement::Move(int player_id)
 	float3 new_transform = transform;
 
 	//EXAMPLE USING PLAYER INPUT (JUST MOVE)
-	if (App->input->GetKey(KeyCode::LeftArrow))
+	if (App->input->GetKey(KeyCode::W))
 	{
 		new_transform += float3(speed, 0, 0);
 	}
-	if (App->input->GetKey(KeyCode::UpArrow))
+	if (App->input->GetKey(KeyCode::A))
 	{
 		new_transform += float3(0, 0, speed);
 	}
-	if (App->input->GetKey(KeyCode::DownArrow))
+	if (App->input->GetKey(KeyCode::S))
 	{
 		new_transform += float3(0, 0, -speed);
 	}
-	if (App->input->GetKey(KeyCode::RightArrow))
+	if (App->input->GetKey(KeyCode::D))
 	{
 		new_transform += float3(-speed, 0, 0);
 	}
@@ -126,30 +120,14 @@ void PlayerMovement::Move(int player_id)
 	if (!new_transform.Equals(transform))
 	{
 		owner->transform.LookAt(new_transform);
-		if (App->artificial_intelligence->IsPointWalkable(new_transform))
+		if (App->artificial_intelligence->IsPointWalkable(new_transform)) 
+		{
 			owner->transform.SetTranslation(new_transform);
+		}
 	}
 }
 
 void PlayerMovement::Dash()
 {
-	//TODO DASH FRONT
-}
-
-//Use this for linking GO automatically
-void PlayerMovement::Save(Config& config) const
-{
-	//config.AddUInt(example->UUID, "ExampleNameforSave");
-}
-
-//Use this for linking GO automatically
-void PlayerMovement::Load(const Config& config)
-{
-	//exampleUUID = config.GetUInt("ExampleNameforSave", 0);
-}
-
-//Use this for linking GO automatically
-void PlayerMovement::Link()
-{
-	//example = App->scene->GetGameObject(exampleUUID);
+	//TODO DASH
 }

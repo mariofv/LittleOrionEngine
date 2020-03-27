@@ -17,10 +17,6 @@ public:
 	void Move(int player);
 	void Dash();
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
-	void Link() override;
-
 private:
 	float speed = 0.5f;
 	float rotation_speed = 0.01f;

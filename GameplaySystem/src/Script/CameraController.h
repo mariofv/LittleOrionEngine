@@ -5,7 +5,7 @@
 
 #include "MathGeoLib.h"
 
-class TestScriptRuntime;
+class PlayerController;
 class ComponentCamera;
 
 class CameraController : public Script
@@ -33,12 +33,11 @@ public:
 
 private:
 	bool god_mode = false;
-
 	GameObject* camera = nullptr;
 	ComponentCamera* camera_component = nullptr;
 
 	GameObject* player = nullptr;
-	TestScriptRuntime* player_movement_script = nullptr;
+	PlayerController* player_movement_script = nullptr;
 	ComponentScript* player_movement_component = nullptr;
 
 };

@@ -34,8 +34,8 @@ void CameraController::Awake()
 
 	camera_component = (ComponentCamera*)camera->GetComponent(Component::ComponentType::CAMERA);
 
-	player_movement_component = player->GetComponentScript("TestScriptRuntime");
-	player_movement_script = (TestScriptRuntime*)player_movement_component->script;
+	player_movement_component = player->GetComponentScript("PlayerController");
+	player_movement_script = (PlayerController*)player_movement_component->script;
 }
 
 // Use this for initialization
@@ -72,7 +72,7 @@ void CameraController::OnInspector(ImGuiContext* context)
 	ImGui::Text("Camera Controller Inspector");
 	//Example to Drag and drop and link GOs in the Editor, Unity-like (WIP)
 	ImGui::Text("Variables: ");
-	ShowVariables();
+	ShowDraggedObjects();
 }
 
 void CameraController::GodCamera() 
@@ -126,10 +126,10 @@ void CameraController::FollowPlayer()
 void CameraController::CenterToPlayer()
 {
 	Frustum camera_frustum = camera_component->GetFrustum();
-	float containing_sphere_radius = player->aabb.bounding_box.Size().Length();
+	float containing_sphere_radius = player->aabb.global_bounding_box.Size().Length();
 	camera_component->is_focusing = true;
 	camera_component->SetStartFocusPosition(camera->transform.GetTranslation());
-	camera_component->SetGoalFocusPosition(player->aabb.bounding_box.CenterPoint() - camera_frustum.front * 3.f * containing_sphere_radius);
+	camera_component->SetGoalFocusPosition(player->aabb.global_bounding_box.CenterPoint() - camera_frustum.front * 3.f * containing_sphere_radius);
 	camera_component->SetFocusTime(App->time->delta_time + 4);
 }
 
