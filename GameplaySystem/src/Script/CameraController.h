@@ -25,9 +25,6 @@ public:
 	void FollowPlayer();
 	void CenterToPlayer();
 
-	//void Save(Config& config) const override;
-	//void Load(const Config& config) override;
-	//void Link() override;
 
 	void InitPublicGameObjects();
 
