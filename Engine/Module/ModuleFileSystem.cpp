@@ -40,6 +40,7 @@ bool ModuleFileSystem::Init()
 	
 	RefreshPathMap();
 	assets_folder_path = GetPath(ASSETS_PATH);
+	resources_folder_path = GetPath(RESOURCES_PATH);
 
 	if (!Exists(LIBRARY_PATH))
 	{

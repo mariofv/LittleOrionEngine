@@ -43,6 +43,7 @@ private:
 public:
 	Path* assets_folder_path = nullptr;
 	Path* library_folder_path = nullptr;
+	Path* resources_folder_path = nullptr;
 
 private:
 	Path* root_path = nullptr;

@@ -25,7 +25,6 @@ private:
 	void SelectResource();
 
 	void ProcessMouseInput(Metafile * file);
-	std::string GetResourceName() const;
 	
 private:
 	unsigned int element_id = 0;

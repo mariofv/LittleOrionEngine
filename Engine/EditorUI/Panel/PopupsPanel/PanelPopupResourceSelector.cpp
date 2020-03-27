@@ -53,7 +53,7 @@ void PanelPopupResourceSelector::Render()
 
 		resource_metafiles = std::vector<Metafile*>();
 		App->resources->resource_DB->GetEntriesOfType(resource_metafiles, resource_type);
-		resource_name = GetResourceName();
+		resource_name = Resource::GetResourceTypeName(resource_type);
 	}
 
 	if (!opened)
@@ -166,38 +166,4 @@ void PanelPopupResourceSelector::ProcessMouseInput(Metafile* file)
 void PanelPopupResourceSelector::SelectResource()
 {
 	selected_resource = App->resources->Load(selected_resource_metafile->uuid);
-}
-
-std::string PanelPopupResourceSelector::GetResourceName() const
-{
-	switch (resource_type)
-	{
-	case ResourceType::ANIMATION:
-		return "Animation";
-		break;
-	case ResourceType::AUDIO:
-		return "Audio";
-		break;
-	case ResourceType::MATERIAL:
-		return "Material";
-		break;
-	case ResourceType::MESH:
-		return "Mesh";
-		break;
-	case ResourceType::NAVMESH:
-		return "NavMesh";
-		break;
-	case ResourceType::SKELETON:
-		return "Skeleton";
-		break;
-	case ResourceType::SKYBOX:
-		return "Skybox";
-		break;
-	case ResourceType::TEXTURE:
-		return "Texture";
-		break;
-	default:
-		return "Unknown";
-		break;
-	}
 }

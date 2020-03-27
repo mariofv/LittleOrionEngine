@@ -87,7 +87,9 @@ bool ModuleResourceManager::CleanUp()
  void ModuleResourceManager::StartThread()
  {
 	 thread_comunication.finished_loading = false;
-	 thread_comunication.total_items = App->filesystem->assets_folder_path->total_sub_files_number;
+	 thread_comunication.total_items = App->filesystem->assets_folder_path->total_sub_files_number + App->filesystem->resources_folder_path->total_sub_files_number;
+
+	 ImportAssetsInDirectory(*App->filesystem->resources_folder_path); // Import all assets in folder Resources. All metafiles in Resources are correct"
 
 	 CleanInconsistenciesInDirectory(*App->filesystem->assets_folder_path); // Clean all incorrect meta in the folder Assets.
 	 ImportAssetsInDirectory(*App->filesystem->assets_folder_path); // Import all assets in folder Assets. All metafiles in Assets are correct"

@@ -7,6 +7,8 @@
 #define LIBRARY_PATH "/Library"
 #define LIBRARY_METADATA_PATH "/Library/Metadata"
 
+#define RESOURCES_PATH "/Resources"
+
 #define SHADERS_PATH "/Resources/Shaders/shaders.json"
 
 #define RESOURCES_SCRIPT_PATH "/Resources/Scripts"

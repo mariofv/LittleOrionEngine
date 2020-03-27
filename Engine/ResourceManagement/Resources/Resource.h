@@ -34,6 +34,8 @@ public:
 
 	uint32_t GetUUID() const;
 
+	static std::string GetResourceTypeName(ResourceType resource_type);
+
 public:
 	Metafile* resource_metafile = nullptr;
 };

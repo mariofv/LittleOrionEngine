@@ -15,7 +15,7 @@ public:
 	~MetafileManager();
 
 	Metafile* CreateMetafile(const std::string& asset_file_path_string, ResourceType resource_type);
-	Metafile* CreateMetafile(Path& asset_file_path, ResourceType resource_type);
+	Metafile* CreateMetafile(Path& asset_file_path, ResourceType resource_type, uint32_t uuid = 0);
 	
 	Metafile* GetMetafile(const Path& metafile_path);
 

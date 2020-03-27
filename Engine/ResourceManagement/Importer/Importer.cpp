@@ -5,6 +5,7 @@
 #include "Module/ModuleResourceManager.h"
 
 #include "ResourceManagement/Metafile/MetafileManager.h"
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #include <pcg_basic.h>
 
@@ -21,7 +22,14 @@ Metafile* Importer::Import(Path& assets_file_path)
 	}
 	else
 	{
-		metafile = App->resources->metafile_manager->CreateMetafile(assets_file_path, resource_type);
+		if (core_resources_pathes.find(assets_file_path.GetFullPath()) != core_resources_pathes.end())
+		{
+			metafile = App->resources->metafile_manager->CreateMetafile(assets_file_path, resource_type, (uint32_t)core_resources_pathes[assets_file_path.GetFullPath()]);
+		}
+		else
+		{
+			metafile = App->resources->metafile_manager->CreateMetafile(assets_file_path, resource_type);
+		}
 	}
 
 	std::string metafile_exported_folder = MetafileManager::GetMetafileExportedFolder(*metafile);

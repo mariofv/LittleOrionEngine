@@ -804,6 +804,9 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h">
+      <Filter>Engine\ResourceManagement\ResourcesDB</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

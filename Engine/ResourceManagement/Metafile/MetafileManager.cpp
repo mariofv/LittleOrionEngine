@@ -48,7 +48,7 @@ Metafile* MetafileManager::CreateMetafile(const std::string& asset_file_path_str
 	return CreateMetafile(*App->filesystem->GetPath(asset_file_path_string), resource_type);
 }
 
-Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType resource_type)
+Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType resource_type, uint32_t uuid)
 {
 
 	Metafile* created_metafile = new Metafile();
@@ -56,7 +56,7 @@ Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType re
 	std::string metafile_path_string = GetMetafilePath(asset_file_path);
 	assert(metafiles.find(metafile_path_string) == metafiles.end());
 
-	created_metafile->uuid = pcg32_random();
+	created_metafile->uuid = uuid == 0 ? pcg32_random() : uuid;
 	created_metafile->resource_type = resource_type;
 
 	created_metafile->metafile_path = metafile_path_string;
