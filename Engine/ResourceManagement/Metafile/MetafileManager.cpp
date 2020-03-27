@@ -114,7 +114,7 @@ bool MetafileManager::IsMetafileConsistent(const Path& metafile_path)
 
 bool MetafileManager::IsMetafileConsistent(const Metafile& metafile)
 {
-	return App->filesystem->Exists(metafile.imported_file_path) && App->filesystem->Exists(metafile.exported_file_path);
+	return App->filesystem->Exists(metafile.imported_file_path);
 }
 
 void MetafileManager::DeleteMetafileInconsistencies(const Path& metafile_path)
@@ -125,11 +125,6 @@ void MetafileManager::DeleteMetafileInconsistencies(const Path& metafile_path)
 
 void MetafileManager::DeleteMetafileInconsistencies(const Metafile& metafile)
 {
-	if (App->filesystem->Exists(metafile.imported_file_path))
-	{
-		App->filesystem->Remove(metafile.imported_file_path);
-	}
-
 	if (App->filesystem->Exists(metafile.exported_file_path))
 	{
 		App->filesystem->Remove(metafile.exported_file_path);

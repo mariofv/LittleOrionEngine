@@ -48,7 +48,10 @@ bool Importer::ImportRequired(const Path& file_path)
 		Metafile* metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
 		assert(App->resources->metafile_manager->IsMetafileConsistent(*metafile));
 
-		return metafile->timestamp < file_path.modification_timestamp;
+		return 
+			metafile->timestamp < file_path.modification_timestamp
+			|| metafile->version < Importer::IMPORTER_VERSION
+			|| !App->filesystem->Exists(metafile->exported_file_path);
 	}
 
 	return true;

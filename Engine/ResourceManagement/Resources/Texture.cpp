@@ -19,7 +19,6 @@ Texture::Texture(Metafile* resource_metafile, char* data, size_t image_size, int
 
 Texture::~Texture()
 {
-	free(data);
 	glDeleteTextures(1, &opengl_texture);
 }
 
