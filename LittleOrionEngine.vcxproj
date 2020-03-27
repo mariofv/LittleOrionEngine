@@ -89,6 +89,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagementAux.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h" />
     <ClInclude Include="Engine\Actions\EditorAction.h" />
@@ -239,6 +240,7 @@
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagementAux.cpp" />
     <ClCompile Include="Engine\Filesystem\File.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
     <ClCompile Include="Engine\Helper\TemplatedGameObjectCreator.cpp" />

@@ -31,6 +31,7 @@ public:
 
 	static std::string GetParentPathString(const std::string& path);
 	std::string GetExtension() const;
+	static std::string GetExtension(const std::string& path);
 
 private:
 	Path() = default;

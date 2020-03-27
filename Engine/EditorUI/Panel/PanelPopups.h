@@ -4,6 +4,7 @@
 #include "Panel.h"
 #include "PopupsPanel/PanelPopupResourceSelector.h"
 #include "PopupsPanel/PanelPopupSceneManagement.h"
+#include "PopupsPanel/PanelPopupSceneManagementAux.h"
 
 #include <string>
 
@@ -23,6 +24,7 @@ private:
 public:
 	PanelPopupResourceSelector resource_selector_popup;
 	PanelPopupSceneManagement scene_management_popup;
+	PanelPopupSceneManagementAux scene_management_popup_aux;
 
 	bool create_script_shown = false;
 	bool show_assets_loading_popup = false;

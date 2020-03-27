@@ -22,6 +22,7 @@ void PanelPopups::Render()
 	CreateScript();
 	resource_selector_popup.Render();
 	scene_management_popup.Render();
+	scene_management_popup_aux.Render();
 }
 
 void PanelPopups::RenderAssetsLoadingPopup()

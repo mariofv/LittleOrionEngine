@@ -140,7 +140,7 @@ void Path::CalculatePathInfo()
 		APP_LOG_ERROR("Error getting %s path info: %s", file_path.c_str(), PHYSFS_getLastError());
 	}
 
-	std::string file_extension = GetExtension();
+	std::string file_extension = GetExtension(file_path);
 	is_directory = (PHYSFS_FileType::PHYSFS_FILETYPE_DIRECTORY == path_info.filetype);
 	CalculateFile();
 
@@ -249,6 +249,17 @@ std::string Path::GetExtension() const
 		return "";
 	}
 	std::string file_extension = file_path.substr(found + 1, file_path.length());
+
+	return file_extension;
+}
+
+std::string Path::GetExtension(const std::string& path)
+{
+	std::size_t found = path.find_last_of(".");
+	if (found == std::string::npos || found == 0) {
+		return "";
+	}
+	std::string file_extension = path.substr(found + 1, path.length());
 
 	return file_extension;
 }

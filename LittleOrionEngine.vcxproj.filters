@@ -415,6 +415,7 @@
     <ClCompile Include="Engine\Helper\TemplatedGameObjectCreator.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagementAux.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -813,6 +814,7 @@
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagementAux.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

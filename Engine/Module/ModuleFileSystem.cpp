@@ -83,6 +83,11 @@ Path* ModuleFileSystem::GetPath(const std::string& path)
 	return paths[path];
 }
 
+Path* ModuleFileSystem::GetRootPath() const
+{
+	return root_path;
+}
+
 Path* ModuleFileSystem::Save(const std::string& complete_save_path, FileData data_to_save)
 {
 	std::string save_path_folder;
