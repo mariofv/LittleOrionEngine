@@ -8,6 +8,7 @@
 #include <GL/glew.h>
 
 class ComponentCamera;
+class Config;
 class Metafile;
 
 class Skybox : public Resource
@@ -24,25 +25,29 @@ public:
 		BACK = 5
 	};
 
-	Skybox() = default;
+	Skybox();
+	Skybox(Metafile* resource_metafile);
 	Skybox(Metafile* resource_metafile, const std::array<uint32_t, 6>& textures_id);
 	~Skybox();
+
+	void Save(Config& config) const;
+	void Load(const Config& config);
 
 	void Render(const ComponentCamera & camera) const;
 
 private:
 	void GenerateSkyboxCube();
-	void GenerateTextures(const std::array<uint32_t, 6>& textures_id);
+	void GenerateTextures();
+	void GenerateTexture(SkyboxFaces face);
 	void GenerateSkyboxCubeMap();
 
 private:
+	std::array<uint32_t, 6> textures_id{};
 	std::array<std::shared_ptr<Texture>, 6> textures;
 
-	GLuint texture_id;
+	GLuint cubemap;
 	GLuint vao;
 	GLuint vbo;
-
-
 };
 
 

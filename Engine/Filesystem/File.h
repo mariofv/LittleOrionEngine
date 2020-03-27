@@ -17,6 +17,7 @@ enum class FileType
 	MODEL,
 	PREFAB,
 	SKELETON,
+	SKYBOX,
 	TEXTURE,
 	UNKNOWN
 };

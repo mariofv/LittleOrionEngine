@@ -122,7 +122,9 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\PrefabImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\SkyboxImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SceneManager.h" />
+    <ClInclude Include="Engine\ResourceManagement\Manager\SkyboxManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Metafile\Metafile.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\AnimationManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\MaterialManager.h" />
@@ -251,7 +253,9 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\SkyboxImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\SceneManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Manager\SkyboxManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Metafile\Metafile.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\AnimationManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\MaterialManager.cpp" />

@@ -364,7 +364,6 @@
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp">
       <Filter>Engine\AI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp" />
     <ClCompile Include="Engine\Filesystem\Path.cpp">
       <Filter>Engine\Filesystem</Filter>
     </ClCompile>
@@ -401,7 +400,18 @@
     <ClCompile Include="Engine\ResourceManagement\Manager\SceneManager.cpp">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Manager\SkyboxManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\SkyboxImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -746,7 +756,6 @@
     <ClInclude Include="Engine\AI\SampleDebugDraw.h">
       <Filter>Engine\AI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h" />
     <ClInclude Include="Engine\Filesystem\Path.h">
       <Filter>Engine\Filesystem</Filter>
     </ClInclude>
@@ -783,7 +792,18 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\SceneManager.h">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.h" />
+    <ClInclude Include="Engine\ResourceManagement\Manager\SkyboxManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\SkyboxImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

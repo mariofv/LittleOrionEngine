@@ -114,6 +114,10 @@ FileType File::CalculateFileType(const PHYSFS_FileType& file_type) const
 	{
 		return FileType::SKELETON;
 	}
+	if (file_extension == "skybox")
+	{
+		return FileType::SKYBOX;
+	}
 	if (file_extension == "anim")
 	{
 		return FileType::ANIMATION;

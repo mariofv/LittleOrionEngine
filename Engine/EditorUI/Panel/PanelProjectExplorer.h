@@ -21,7 +21,7 @@ public:
 	void ProcessResourceMouseInput(Path* file);
 	void ShowFilesInExplorer();
 
-	void ShowFileSystemActionsMenu(Path* file);
+	void ShowFileSystemActionsMenu(Path* path);
 
 	void FilesDrop() const;
 	void ResourceDragSource(Metafile* file) const;

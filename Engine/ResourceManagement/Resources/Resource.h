@@ -38,13 +38,5 @@ public:
 	Metafile* resource_metafile = nullptr;
 };
 
-namespace ResourceManager
-{
-	template<typename T>
-	uint32_t Create(const Path& asset_creation_folder_path, const std::string created_asset_name="")
-	{
-		return -1;
-	};
-}
 #endif // !_RESOURCE_H_
 

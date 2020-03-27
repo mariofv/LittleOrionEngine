@@ -8,6 +8,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "ResourceManagement/Manager/PrefabManager.h"
+#include "ResourceManagement/Manager/SkyboxManager.h"
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/Metafile/MetafileManager.h"
 #include "ResourceManagement/Resources/Prefab.h"
@@ -55,9 +56,10 @@ void PanelProjectExplorer::Render()
 		ImGui::End();
 
 		ImGui::SameLine();
-		if (ImGui::Begin("Project File Explorer")) {
+		if (ImGui::Begin("Project File Explorer")) 
+		{
 			ImGui::BeginChild("Project File Explorer Drop Target");
-			ShowFileSystemActionsMenu(selected_file);
+			ShowFileSystemActionsMenu(selected_folder);
 			ShowFilesInExplorer();
 			ImGui::EndChild();
 			FilesDrop();
@@ -225,26 +227,29 @@ void PanelProjectExplorer::ProcessMouseInput(Path* file)
 	}
 }
 
-void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* file)
+void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 {
-	if (file == nullptr)
+	if (path == nullptr)
 	{
 		return;
 	}
 	std::string label("Menu");
-	bool changes = false;
 	if (ImGui::BeginPopupContextWindow(label.c_str()))
 	{
-		/* TODO: Finish this
+		
 		if (ImGui::BeginMenu("Create"))
 		{
-			if (ImGui::Selectable("Folder"))
+			if (ImGui::Selectable("Material"))
 			{
-				MakeDirectoryInPath(selected_folder);
-				changes = true;
+				MaterialManager::Create(*path);
+			}
+			if (ImGui::Selectable("Skybox"))
+			{
+				SkyboxManager ::Create(*path);
 			}
 			ImGui::EndMenu();
 		}
+		/* TODO: Finish this
 		if (ImGui::Selectable("Delete"))
 		{
 			bool success = App->filesystem->Remove(file);

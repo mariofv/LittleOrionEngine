@@ -25,6 +25,7 @@ class ModelImporter;
 class PrefabImporter;
 class SceneManager;
 class SkeletonImporter;
+class SkyboxImporter;
 class TextureImporter;
 
 class MetafileManager;
@@ -49,12 +50,6 @@ public:
 
 	void CleanInconsistenciesInDirectory(const Path& directory_path);
 	void ImportAssetsInDirectory(const Path& directory_path);
-
-	template<typename T>
-	uint32_t Create(Path& asset_creation_folder_path, const std::string created_asset_name = "")
-	{
-		return ResourceManager::Create<T>(asset_creation_folder_path, created_asset_name);
-	}
 
 private:
 	void StartThread();
@@ -81,6 +76,7 @@ public:
 	std::unique_ptr<ModelImporter> model_importer = nullptr;
 	std::unique_ptr<PrefabImporter> prefab_importer = nullptr;
 	std::unique_ptr<SkeletonImporter> skeleton_importer = nullptr;
+	std::unique_ptr<SkyboxImporter> skybox_importer = nullptr;
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
 
 	std::unique_ptr<MetafileManager> metafile_manager = nullptr;
