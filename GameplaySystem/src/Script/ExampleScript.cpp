@@ -12,7 +12,6 @@
 
 #include "imgui.h"
 
-#include "TestScriptRuntime.h"
 
 
 ExampleScript* ExampleScriptDLL()
@@ -29,8 +28,8 @@ ExampleScript::ExampleScript()
 void ExampleScript::Awake()
 {
 	//Example Unity-like of how get components from GO dragged
-	enemy_component = enemy->GetComponentScript("TestScriptRuntime");
-	enemy_script = (TestScriptRuntime*)enemy_component->script;
+	//script_component = enemy->GetComponentScript("Script_i_want");
+	//example_script = (Script_i_want*)enemy_component->script;
 	
 }
 
@@ -41,12 +40,12 @@ void ExampleScript::Start()
 void ExampleScript::Update()
 {
 
-	Test();
+	//Test();
 
-	if (App->input->GetKeyDown(KeyCode::C))
-	{
-		GameObject* go = App->scene->CreateGameObject();
-	}
+	//if (App->input->GetKeyDown(KeyCode::C))
+	//{
+	//	GameObject* go = App->scene->CreateGameObject();
+	//}
 }
 
 void ExampleScript::OnInspector(ImGuiContext* context)
@@ -55,18 +54,11 @@ void ExampleScript::OnInspector(ImGuiContext* context)
 	ImGui::SetCurrentContext(context);
 	//Example to show text
 	ImGui::Text("Example Script Inspector");
-	//ImGui::Text(GET_VARIABLE_NAME(speed));
 	//Example Showing variables and being able to modify it on Runtime.
 	ImGui::DragFloat("Speed", &speed, 0.01f, 0.f, 0.5f);
 	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.f, 0.5f);
-	ImGui::Text("Testing for QA: attempt 24.84848484");
 	//Example to Drag and drop and link GOs in the Editor, Unity-like (WIP)
-	ImGui::Text("TestScriptRuntime: ");
-	ImGui::SameLine();
-	ImGui::Button(is_object.c_str());
-	panel->DropGOTarget(enemy);
-	if(enemy)
-		is_object = enemy->name;
+	ShowDraggedObjects();
 }
 
 void ExampleScript::Test()
@@ -91,35 +83,34 @@ void ExampleScript::Test()
 	{
 		owner->transform.SetTranslation(float3(transform.x - speed, transform.y, transform.z));
 	}
-	if (App->input->GetKey(KeyCode::E))
+
+}
+//Example how to Save the GO that we want to stay linked after loading/saving and then Linking 
+void ExampleScript::InitPublicGameObjects()
+{
+	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
+
+	public_gameobjects.push_back(&example);
+
+	variable_names.push_back(GET_VARIABLE_NAME(example));
+
+	for (int i = 0; i < public_gameobjects.size(); ++i)
 	{
-		owner->transform.SetRotation(float3(rotation.x, rotation.y - rotation_speed, rotation.z));
-	}
-	if (App->input->GetKey(KeyCode::Q))
-	{
-		owner->transform.SetRotation(float3(rotation.x, rotation.y + enemy_script->rotation_speed, rotation.z));
-	}
-	if (App->input->GetKey(KeyCode::T) && enemy)
-	{
-		enemy->transform.SetRotation(float3(rotation.x, rotation.y + enemy_script->rotation_speed, rotation.z));
+		name_gameobjects.push_back(is_object);
+		go_uuids.push_back(0);
 	}
 }
-//Example how to Save the GO that we want to stay linked after loading/saving adn then Linking
+//Example how to Save the GO and SOME VARIABLES that we want to stay linked after loading/saving adn then Linking
+//IN CASE YOU DON'T NEED TO STORE ANYTHING ELSE THAN GO YOU DON'T NEED THIS TWO METHODS
 void ExampleScript::Save(Config& config) const
 {
-	if (enemy) 
-	{
-		config.AddUInt(enemy->UUID, "TestScriptRuntime");
-	}
-		
+	//config.AddUInt(speed, "speed");
+	//Script::Save(config);
 }
 
 void ExampleScript::Load(const Config& config)
 {
-	enemyUUID = config.GetUInt("TestScriptRuntime", 0);
+	//speed = config.GetUInt("speed", 0);
+	//Script::Load(config);
 }
 
-void ExampleScript::Link()
-{
-	enemy = App->scene->GetGameObject(enemyUUID);
-}

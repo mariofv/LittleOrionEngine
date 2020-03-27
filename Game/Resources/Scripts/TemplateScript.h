@@ -14,15 +14,12 @@ public:
 	void Update() override;
 
 	void OnInspector(ImGuiContext*) override;
-
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
-	void Link() override;
+	void InitPublicGameObjects();
+	//void Save(Config& config) const override;
+	//void Load(const Config& config) override;
 
 private:
-	PanelComponent* panel = nullptr;
 	GameObject* example = nullptr;
-	uint64_t exampleUUID = -1;
 
 };
 extern "C" SCRIPT_API TemplateScript* TemplateScriptDLL(); //This is how we are going to load the script

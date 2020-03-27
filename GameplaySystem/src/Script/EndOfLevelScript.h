@@ -20,8 +20,6 @@ public:
 	GameObject* trigger_go = nullptr;
 
 private:
-	PanelComponent* panel = nullptr;
-	std::string is_object = "None";
 	std::string level_to_load_path = "Assets/Scenes/Level2.scene";
 	bool entered = false;
 

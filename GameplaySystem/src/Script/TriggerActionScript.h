@@ -5,7 +5,7 @@
 
 #include <MathGeoLib/MathGeoLib.h>
 
-class WalkableScript;
+class PlayerController;
 
 class TriggerActionScript : public Script
 {
@@ -21,14 +21,12 @@ public:
 
 public:
 	GameObject* trigger_go = nullptr;
-	GameObject* random_object = nullptr;
-	WalkableScript* movement_script = nullptr;
+	GameObject* player = nullptr;
+	PlayerController* movement_script = nullptr;
 	ComponentScript* movement_component = nullptr;
 
 
 private:
-	PanelComponent* panel = nullptr;
-	std::string is_object = "None";
 	float3 start_position;
 };
 extern "C" SCRIPT_API TriggerActionScript* TriggerActionScriptDLL(); //This is how we are going to load the script

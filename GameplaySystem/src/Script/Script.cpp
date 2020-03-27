@@ -61,7 +61,23 @@ void Script::Link()
 		if (go_uuids[i] != 0)
 		{
 			(*public_gameobjects[i]) = App->scene->GetGameObject(go_uuids[i]);
+			name_gameobjects[i] = (*public_gameobjects[i])->name;
 		}
+		
+	}
+}
+
+void Script::ShowDraggedObjects()
+{
+
+	for (int i = 0; i < public_gameobjects.size(); ++i)
+	{
+		ImGui::Text(variable_names[i].c_str());
+		ImGui::SameLine();
+		ImGui::Button(name_gameobjects[i].c_str());
+		panel->DropGOTarget(*(public_gameobjects[i]));
+		if (*public_gameobjects[i])
+			name_gameobjects[i] = (*public_gameobjects[i])->name;
 	}
 }
 

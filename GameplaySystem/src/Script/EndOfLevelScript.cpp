@@ -62,6 +62,7 @@ void EndOfLevelScript::OnInspector(ImGuiContext* context)
 	panel->DropGOTarget(trigger_go);
 	if (trigger_go)
 		is_object = trigger_go->name;
+	//TODO UPDATE THIS up
 }
 
 bool EndOfLevelScript::OnTriggerEnter()

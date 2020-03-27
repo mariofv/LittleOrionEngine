@@ -14,10 +14,7 @@
 #include "imgui.h"
 #include <MathGeoLib/MathGeoLib.h>
 
-#include "WalkableScript.h"
 
-
-#define GET_VARIABLE_NAME(Variable) (#Variable)
 
 TriggerActionScript* TriggerActionScriptDLL()
 {
@@ -33,8 +30,8 @@ TriggerActionScript::TriggerActionScript()
 // Use this for initialization before Start()
 void TriggerActionScript::Awake()
 {
-	movement_component = trigger_go->GetComponentScript("WalkableScript");
-	movement_script = (WalkableScript*)movement_component->script;
+	movement_component = trigger_go->GetComponentScript("PlayerController");
+	movement_script = (PlayerController*)movement_component->script;
 	start_position = trigger_go->transform.GetGlobalTranslation();
 }
 
@@ -68,19 +65,7 @@ void TriggerActionScript::OnInspector(ImGuiContext* context)
 	ImGui::Text("TriggerActionScript Inspector");
 	//Example to Drag and drop and link GOs in the Editor, Unity-like (WIP)
 	ImGui::Text("Variables: ");
-
-	for(int i  = 0; i < public_gameobjects.size(); ++i)
-	{
-		ImGui::Text(variable_names[i].c_str());
-
-		ImGui::SameLine();
-
-		ImGui::Button(name_gameobjects[i].c_str());
-		panel->DropGOTarget(*(public_gameobjects[i]));
-		if (*public_gameobjects[i])
-			name_gameobjects[i] = (*public_gameobjects[i])->name;
-	}
-	
+	ShowDraggedObjects();
 }
 
 bool TriggerActionScript::OnTriggerEnter() const
@@ -93,10 +78,10 @@ void TriggerActionScript::InitPublicGameObjects()
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
 
 	public_gameobjects.push_back(&trigger_go);
-	public_gameobjects.push_back(&random_object);
+	public_gameobjects.push_back(&player);
 
 	variable_names.push_back(GET_VARIABLE_NAME(trigger_go));
-	variable_names.push_back(GET_VARIABLE_NAME(random_object));
+	variable_names.push_back(GET_VARIABLE_NAME(player));
 
 	for(int i = 0; i < public_gameobjects.size(); ++i)
 	{

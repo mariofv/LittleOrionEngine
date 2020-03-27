@@ -46,7 +46,7 @@ public:
 	void RemoveChild(GameObject* child);
 
 	ENGINE_API Component* CreateComponent(const Component::ComponentType type);
-	void RemoveComponent(Component * component);
+	void RemoveComponent(Component* component);
 	ENGINE_API Component* GetComponent(const Component::ComponentType type) const;
 	ENGINE_API ComponentScript* GetComponentScript(const char* name) const;
 
@@ -63,7 +63,7 @@ public:
 
 private:
 	void SetHierarchyStatic(bool is_static);
-	void CopyComponents(const GameObject & gameobject_to_copy);
+	void CopyComponents(const GameObject& gameobject_to_copy);
 
 public:
 	std::vector<Component*> components;

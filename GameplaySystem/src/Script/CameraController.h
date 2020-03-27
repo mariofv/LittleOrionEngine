@@ -5,7 +5,7 @@
 
 #include "MathGeoLib.h"
 
-class TestScriptRuntime;
+class PlayerController;
 class ComponentCamera;
 
 class CameraController : public Script
@@ -25,23 +25,16 @@ public:
 	void FollowPlayer();
 	void CenterToPlayer();
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
-	void Link() override;
+
+	void InitPublicGameObjects();
 
 private:
-	PanelComponent* panel = nullptr;
 	bool god_mode = false;
-
 	GameObject* camera = nullptr;
-	uint64_t cameraUUID = -1;
-	std::string is_camera = "None";
 	ComponentCamera* camera_component = nullptr;
 
 	GameObject* player = nullptr;
-	uint64_t playerUUID = -1;
-	std::string is_player = "None";
-	TestScriptRuntime* player_movement_script = nullptr;
+	PlayerController* player_movement_script = nullptr;
 	ComponentScript* player_movement_component = nullptr;
 
 };

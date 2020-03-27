@@ -1,13 +1,11 @@
 {
     "Scripts": [
         "ExampleScript",
-        "TestScriptRuntime",
-        "WalkableScript",
         "TriggerActionScript",
-        "Player1InputScript",
-        "Player2InputScript",
         "EndOfLevelScript",
         "CameraController",
-        "SceneCamerasController"
+        "SceneCamerasController",
+        "PlayerController",
+        "PlayerMovement"
     ]
 }
