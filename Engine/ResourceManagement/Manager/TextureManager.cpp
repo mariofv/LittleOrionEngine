@@ -87,33 +87,3 @@ std::vector<char> TextureManager::LoadCompressedDDS(const FileData& resource_dat
 	}
 	return data;
 }
-
-/* TODO: Fix this once Skyboxs are resources
-unsigned int TextureManager::LoadCubemap(std::vector<std::string> faces_paths)
-{
-	
-	unsigned int texture_id;
-
-	glGenTextures(1, &texture_id);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
-
-	for (unsigned int i = 0; i < faces_paths.size(); i++)
-	{
-		DDS::DDS_HEADER ddsHeader;
-		std::vector<char> data = LoadCompressedDDS(faces_paths[i].c_str(), ddsHeader);
-		if (data.size() > 0)
-		{
-			glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, ddsHeader.dwWidth, ddsHeader.dwHeight, 0, data.size(), data.data());
-
-		}
-	}
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
-
-	return texture_id;
-	
-}
-*/

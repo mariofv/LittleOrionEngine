@@ -202,7 +202,7 @@ void ComponentCamera::RecordFrame(float width, float height)
 			break;
 		case ComponentCamera::ClearMode::SKYBOX:
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			App->cameras->skybox->Render(*this);
+			//App->cameras->skybox->Render(*this);
 			break;
 		default:
 			break;

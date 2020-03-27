@@ -1,45 +1,60 @@
 #include "Skybox.h"
+
 #include "Main/Application.h"
-#include "Module/ModuleTexture.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleResourceManager.h"
 #include "Component/ComponentCamera.h"
 
-Skybox::Skybox() 
+Skybox::Skybox(Metafile* resource_metafile, const std::array<uint32_t, 6>& textures_id)
 {
-	LoadDefaultSkybox();
 	GenerateSkyboxCube();
-	
+	GenerateTextures(textures_id);
+	GenerateSkyboxCubeMap();
 }
 
-void Skybox::LoadDefaultSkybox()
+Skybox::~Skybox()
 {
-	/*
-	std::string texture_path = std::string(TEXTURES_PATH);
-	std::string cube_face_front_path = texture_path + "skyboxes/ame_nebula/purplenebula_ft.tga";
-	std::string cube_face_back_path = texture_path + "skyboxes/ame_nebula/purplenebula_bk.tga";
-
-	std::string cube_face_left_path = texture_path + "skyboxes/ame_nebula/purplenebula_rt.tga";
-	std::string cube_face_right_path = texture_path + "skyboxes/ame_nebula/purplenebula_lf.tga";
-
-	std::string cube_face_up_path = texture_path + "skyboxes/ame_nebula/purplenebula_up.tga";
-	std::string cube_face_down_path = texture_path + "skyboxes/ame_nebula/purplenebula_dn.tga";
-
-	std::vector<std::string> faces{
-		cube_face_right_path,
-		cube_face_left_path,
-
-		cube_face_up_path,
-		cube_face_down_path,
-		
-		cube_face_front_path,
-		cube_face_back_path,
-	};
-
-	skybox_texture = App->texture->LoadCubemap(faces);
-	*/
+	glDeleteTextures(1, &texture_id);
+	glDeleteVertexArrays(1, &vao);
+	glDeleteBuffers(1, &vbo);
 }
 
-void Skybox::GenerateSkyboxCube() 
+void Skybox::Render(const ComponentCamera& camera) const
+{
+	glDepthFunc(GL_LEQUAL);
+	GLuint shader_program = App->program->GetShaderProgramId("Skybox");
+	glUseProgram(shader_program);
+
+	float4x4 view_matrix = camera.GetViewMatrix();
+	view_matrix.SetRow(3, float4::zero);
+	view_matrix.SetCol(3, float4::zero);
+
+	glUniformMatrix4fv(
+		glGetUniformLocation(shader_program, "view"),
+		1,
+		GL_TRUE,
+		view_matrix.ptr()
+	);
+	glUniformMatrix4fv(
+		glGetUniformLocation(shader_program, "proj"),
+		1,
+		GL_TRUE,
+		camera.GetProjectionMatrix().ptr()
+	);
+
+
+	//Draw skybox
+	glBindVertexArray(vao);
+	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+	glDrawArrays(GL_TRIANGLES, 0, 36);
+	glBindVertexArray(0);
+
+	glDepthFunc(GL_LESS);
+	glUseProgram(0);
+}
+
+void Skybox::GenerateSkyboxCube()
 {
 	float skybox_vertices[] = {
 		// positions          
@@ -86,55 +101,46 @@ void Skybox::GenerateSkyboxCube()
 		 5.0f, -5.0f,  5.0f
 	};
 
-	glGenVertexArrays(1, &skybox_VAO);
-	glGenBuffers(1, &skybox_VBO);
-	glBindVertexArray(skybox_VAO);
-	glBindBuffer(GL_ARRAY_BUFFER, skybox_VBO);
+	glGenVertexArrays(1, &vao);
+	glGenBuffers(1, &vbo);
+
+	glBindVertexArray(vao);
+
+	glBindBuffer(GL_ARRAY_BUFFER, vbo);
 	glBufferData(GL_ARRAY_BUFFER, sizeof(skybox_vertices), &skybox_vertices, GL_STATIC_DRAW);
 	glEnableVertexAttribArray(0);
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
-}
 
-void Skybox::Render(const ComponentCamera& camera) const
-{
-	/*
-	glDepthFunc(GL_LEQUAL);
-	GLuint shader_program = App->program->GetShaderProgramId("Skybox");
-	glUseProgram(shader_program);
-
-	float4x4 view_matrix = camera.GetViewMatrix();
-	view_matrix.SetRow(3, float4::zero);
-	view_matrix.SetCol(3, float4::zero);
-
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "view"),
-		1,
-		GL_TRUE,
-		view_matrix.ptr()
-	);
-	glUniformMatrix4fv(
-		glGetUniformLocation(shader_program, "proj"),
-		1,
-		GL_TRUE,
-		camera.GetProjectionMatrix().ptr()
-	);
-
-
-	//Draw skybox
-	glBindVertexArray(skybox_VAO);
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_CUBE_MAP, skybox_texture);
-	glDrawArrays(GL_TRIANGLES, 0, 36);
 	glBindVertexArray(0);
-
-	glDepthFunc(GL_LESS);
-	glUseProgram(0);
-	*/
 }
 
-Skybox::~Skybox()
+void Skybox::GenerateTextures(const std::array<uint32_t, 6>& textures_id)
 {
-	glDeleteTextures(1, &skybox_texture);
-	glDeleteVertexArrays(1, &skybox_VAO);
-	glDeleteBuffers(1, &skybox_VBO);
+	textures[(size_t)SkyboxFaces::RIGHT] = std::static_pointer_cast<Texture>(App->resources->Load(textures_id[(size_t)SkyboxFaces::RIGHT]));
+	textures[(size_t)SkyboxFaces::LEFT] = std::static_pointer_cast<Texture>(App->resources->Load(textures_id[(size_t)SkyboxFaces::LEFT]));
+
+	textures[(size_t)SkyboxFaces::UP] = std::static_pointer_cast<Texture>(App->resources->Load(textures_id[(size_t)SkyboxFaces::UP]));
+	textures[(size_t)SkyboxFaces::DOWN] = std::static_pointer_cast<Texture>(App->resources->Load(textures_id[(size_t)SkyboxFaces::DOWN]));
+
+	textures[(size_t)SkyboxFaces::FRONT] = std::static_pointer_cast<Texture>(App->resources->Load(textures_id[(size_t)SkyboxFaces::FRONT]));
+	textures[(size_t)SkyboxFaces::BACK] = std::static_pointer_cast<Texture>(App->resources->Load(textures_id[(size_t)SkyboxFaces::BACK]));
+}
+
+void Skybox::GenerateSkyboxCubeMap()
+{
+	glGenTextures(1, &texture_id);
+	glBindTexture(GL_TEXTURE_CUBE_MAP, texture_id);
+
+	for (size_t i = 0; i < textures.size(); i++)
+	{
+		std::shared_ptr<Texture> texture = textures[i];
+		glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, texture->width, texture->height, 0, texture->image_size, texture->data);
+	}
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_R, GL_CLAMP_TO_EDGE);
+
+	glBindTexture(GL_TEXTURE_CUBE_MAP, 0);
 }

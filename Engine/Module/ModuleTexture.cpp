@@ -31,20 +31,6 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
-/*
-GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) const
-{
-	
-	std::vector<std::string> faces_paths_dds;
-	for (unsigned int i = 0; i < faces_paths.size(); i++)
-	{
-		std::string ol_texture = App->resources->Import(Path(faces_paths[i]), false).exported_file;
-		faces_paths_dds.push_back(ol_texture);
-	}
-	return static_cast<GLuint>(TextureLoader::LoadCubemap(faces_paths_dds));
-}
-*/
-
 GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const{
 
 

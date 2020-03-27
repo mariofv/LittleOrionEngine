@@ -50,7 +50,6 @@ public:
 	~TextureManager()= default;
 
 	static std::shared_ptr<Texture> Load(Metafile* metafile, const FileData& resource_data);
-	//static unsigned int LoadCubemap(std::vector<std::string> faces_paths);
 
 private:
 	static std::vector<char> LoadCompressedDDS(const FileData& resource_data, DDS::DDS_HEADER & dds_header);

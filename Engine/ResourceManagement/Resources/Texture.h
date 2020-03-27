@@ -7,6 +7,7 @@
 #include <string>
 
 class Metafile;
+class Skybox;
 
 class Texture : public Resource
 {
@@ -55,7 +56,9 @@ private:
 
 	GLenum min_filter;	
 	GLenum mag_filter;
-	char * data;
+	char* data;
+
+	friend class Skybox;
 };
 
 
