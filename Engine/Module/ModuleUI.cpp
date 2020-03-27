@@ -2,9 +2,14 @@
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentUI.h"
 #include "Component/ComponentText.h"
+
 #include "Main/Globals.h"
 #include "Main/Application.h"
+
 #include "Module/ModuleWindow.h"
+#include "Module/ModuleEditor.h"
+#include "Module/ModuleProgram.h"
+
 #include "ModuleUI.h"
 #include "SDL/SDL.h"
 
@@ -47,7 +52,15 @@ void ModuleUI::Render(const ComponentCamera* camera)
 
 	for (auto &txt : ui_texts)
 	{
-		txt->Render();
+		if (App->ui->glyphInit == false)
+		{
+			InitGlyph();
+			txt->Render();
+		}
+		else
+		{
+			txt->Render();
+		}
 	}
 }
 
@@ -100,6 +113,86 @@ void ModuleUI::RemoveComponentText(ComponentText* txt_to_remove)
 		delete *it;
 		ui_texts.erase(it);
 	}
+}
+
+void ModuleUI::InitGlyph()
+{
+	// All functions return a value different than 0 whenever an error occurred
+	if (FT_Init_FreeType(&ft))
+		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+
+	// Load font as face
+	if (FT_New_Face(ft, "Assets/Fonts/arial.ttf", 0, &face))
+		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+
+	// Set size to load glyphs as
+	FT_Set_Pixel_Sizes(face, 0, 48);
+
+	// Disable byte-alignment restriction
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	//
+	shader_program = App->program->GetShaderProgramId("Sprite");
+	window_width = App->editor->scene_panel->scene_window_content_area_width;
+	window_height = App->editor->scene_panel->scene_window_content_area_height;
+	//
+
+	// Load first 128 characters of ASCII set
+	for (GLubyte c = 0; c < 128; c++)
+	{
+		// Load character glyph 
+		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+		{
+			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+			continue;
+		}
+		// Generate texture
+
+		glGenTextures(1, &text_texture);
+		glBindTexture(GL_TEXTURE_2D, text_texture);
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_RED,
+			face->glyph->bitmap.width,
+			face->glyph->bitmap.rows,
+			0,
+			GL_RED,
+			GL_UNSIGNED_BYTE,
+			face->glyph->bitmap.buffer
+		);
+		// Set texture options
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// Now store character for later use
+		Character character = {
+			text_texture,
+			float2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+			float2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+			face->glyph->advance.x
+		};
+		Characters.insert(std::pair<GLchar, Character>(c, character));
+	}
+	glBindTexture(GL_TEXTURE_2D, 0);
+	// Destroy FreeType once we're finished
+	FT_Done_Face(face);
+	FT_Done_FreeType(ft);
+
+
+	// Configure VAO/VBO for texture quads
+	glGenVertexArrays(1, &VAO);
+	glGenBuffers(1, &VBO);
+	glBindVertexArray(VAO);
+	glBindBuffer(GL_ARRAY_BUFFER, VBO);
+	glBufferData(GL_ARRAY_BUFFER, sizeof(GLfloat) * 6 * 4, NULL, GL_DYNAMIC_DRAW);
+	glEnableVertexAttribArray(0);
+	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), 0);
+	glBindBuffer(GL_ARRAY_BUFFER, 0);
+	glBindVertexArray(0);
+
+	glyphInit = true;
 }
 
 //Guardar aquí todos los component canvas (crear, destruir y guardar)

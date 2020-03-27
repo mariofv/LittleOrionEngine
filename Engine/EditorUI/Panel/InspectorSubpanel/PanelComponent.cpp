@@ -28,6 +28,7 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleUI.h"
 
 #include "ResourceManagement/Importer/Importer.h"
 
@@ -439,7 +440,7 @@ void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
 
 		ImGui::InputFloat("Size",&txt->scale);
 		ImGui::InputFloat2("Position", txt->position.ptr());
-		ImGui::InputInt("Texture", (int*)(&txt->text_texture));
+		ImGui::InputInt("Texture", (int*)(&App->ui->text_texture));
 		ImGui::ColorPicker3("Color", txt->color.ptr());
 	}
 }
