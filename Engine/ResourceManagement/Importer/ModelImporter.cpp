@@ -100,6 +100,7 @@ std::vector<Config> ModelImporter::ExtractDataFromNode(const aiNode* root_node, 
 		size_t mesh_index = root_node->mMeshes[i];
 		aiMesh* node_mesh = scene->mMeshes[mesh_index];
 		std::string mesh_name = std::string(node_mesh->mName.data) + "_" + std::to_string(i);
+		node.AddString(mesh_name, "Name");
 
 		uint32_t extracted_material_uuid = ExtractMaterialFromNode(scene, mesh_index, mesh_name, asset_file_folder_path);
 		node.AddUInt(extracted_material_uuid, "Material");

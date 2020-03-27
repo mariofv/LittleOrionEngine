@@ -22,7 +22,6 @@ bool ModuleCamera::Init()
 	scene_camera->SetFarDistance(5000);
 	scene_camera->depth = -1;
 	
-	skybox = new Skybox();
 	scene_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
 
 	return true;

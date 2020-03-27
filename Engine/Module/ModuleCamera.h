@@ -41,8 +41,6 @@ public:
 	ComponentCamera *scene_camera = nullptr;
 	ComponentCamera* main_camera = nullptr;
 
-	Skybox *skybox = nullptr;
-
 private:
 	GameObject *scene_camera_game_object = nullptr;
 
