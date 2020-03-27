@@ -26,7 +26,7 @@ enum class CoreResource
 	BILLBOARD_LIGHT_TEXTURE = 15
 };
 
-std::unordered_map<std::string, CoreResource> core_resources_pathes({
+static std::unordered_map<std::string, CoreResource> core_resources_pathes({
 	{ "/Resources/Meshes/Cube.mesh", CoreResource::CUBE },
 	{ "/Resources/Meshes/Sphere.mesh", CoreResource::SPHERE },
 	{ "/Resources/Meshes/Torus.mesh", CoreResource::TORUS },
