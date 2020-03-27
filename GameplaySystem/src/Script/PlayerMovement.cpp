@@ -119,7 +119,10 @@ void PlayerMovement::Move(int player_id)
 
 	if (!new_transform.Equals(transform))
 	{
-		owner->transform.LookAt(new_transform);
+		if (!is_jumping) 
+		{
+			owner->transform.LookAt(new_transform);
+		}
 		if (App->artificial_intelligence->IsPointWalkable(new_transform)) 
 		{
 			owner->transform.SetTranslation(new_transform);

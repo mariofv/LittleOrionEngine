@@ -18,7 +18,6 @@ public:
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
-	void Link() override;
 
 private:
 	PlayerMovement* player_movement = nullptr;
