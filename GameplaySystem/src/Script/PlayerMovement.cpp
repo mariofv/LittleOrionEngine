@@ -61,29 +61,31 @@ void PlayerMovement::Move(int player_id)
 	float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, static_cast<PlayerID>(player_id));
 	float3 axis_direction = float3(-axis.x, 0.0f, -axis.y);
 
-	if(on_ramp)
-	{
-		float degrees = 0.0f;
-		if (App->input->GetKey(KeyCode::A) || axis.x < 0)
-		{
-			degrees = 15.0f;
-		}
-		else if((App->input->GetKey(KeyCode::D)) || axis.x > 0)
-		{
-			degrees = -15.0f;
-		}
-		axis_direction.y = sin(math::DegToRad(degrees));
-	}
+	//if(on_ramp)
+	//{
+	//	float heigth = owner->transform.GetTranslation().y;
+	//	if (App->input->GetKey(KeyCode::A) || axis.x < 0)
+	//	{
+	//		heigth = sin(math::DegToRad(15.0f));
+	//	}
+	//	else if((App->input->GetKey(KeyCode::D)) || axis.x > 0)
+	//	{
+	//		heigth = -sin(math::DegToRad(15.0f));
+	//	}
+	//	axis_direction.y += heigth;
+	//}
 
 	if (!axis_direction.Equals(float3::zero))
 	{
+		float3 dir;
 		float3 direction = axis_direction * speed + transform;
+		App->artificial_intelligence->FindNextPolyByDirection(direction, dir);
+		direction.y = dir.y;
 		owner->transform.LookAt(direction);
 
 		if (App->artificial_intelligence->IsPointWalkable(direction))
 			owner->transform.SetTranslation(direction);
 	}
-
 
 	//Keyboard Input
 	float3 new_transform = transform;
@@ -133,6 +135,10 @@ void PlayerMovement::Move(int player_id)
 
 	if (!new_transform.Equals(transform))
 	{
+		float3 dir;
+		App->artificial_intelligence->FindNextPolyByDirection(new_transform, dir);
+		new_transform.y = dir.y;
+
 		if (!is_jumping) 
 		{
 			owner->transform.LookAt(new_transform);

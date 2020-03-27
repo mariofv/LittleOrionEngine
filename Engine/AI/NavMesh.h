@@ -82,6 +82,7 @@ public:
 
 	bool FindPath(float3& start, float3& end, std::vector<float3>& path, PathMode path_mode);
 	bool IsPointWalkable(float3 & target_position);
+	bool FindNextPolyByDirection(float3& position, float3& next_position);
 
 	void SaveNavMesh(unsigned char* nav_data, unsigned int nav_data_size) const;
 	void LoadNavMesh();

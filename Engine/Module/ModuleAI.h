@@ -23,6 +23,7 @@ public:
 
 	bool FindPath();
 	ENGINE_API bool IsPointWalkable(float3& target_position);
+	ENGINE_API bool FindNextPolyByDirection(float3& position, float3& next_position);
 
 public:
 	std::vector<float3> debug_path;
