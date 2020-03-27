@@ -12,8 +12,8 @@
 
 const unsigned INITIAL_SIZE_AABBTREE = 10;
 
-class ComponentMesh;
 class ComponentCamera;
+class ComponentMeshRenderer;
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -36,24 +36,25 @@ public:
 	bool CleanUp();
 	
 	void Render() const;
-	void RenderFrame(const ComponentCamera &camera);
+	void RenderFrame(const ComponentCamera& camera);
 
-	ComponentMesh* CreateComponentMesh();
-	void RemoveComponentMesh(ComponentMesh* mesh_to_remove);
+
+	ComponentMeshRenderer* CreateComponentMeshRenderer();
+	void RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove);
 
 	int GetRenderedTris() const;
 
 	void GenerateQuadTree();
 	void GenerateOctTree();
 	void InsertAABBTree(GameObject* game_object);
-	void RemoveAABBTree(GameObject * game_object);
+	void RemoveAABBTree(GameObject* game_object);
 	void UpdateAABBTree(GameObject* game_object);
 	void DeleteAABBTree();
 	void CreateAABBTree();
 	void DrawAABBTree() const;
 
-	GameObject* GetRaycastIntertectedObject(const LineSegment & ray);
-	bool GetRayCastIntersectedPosition(const LineSegment & ray, float3& position);
+	GameObject* GetRaycastIntertectedObject(const LineSegment& ray);
+	bool GetRaycastIntertectedObject(const LineSegment& ray, float3& position);
 
 private:
 	void SetVSync(bool vsync);
@@ -71,8 +72,8 @@ private:
 	void SetDrawMode(DrawMode draw_mode);
 	std::string GetDrawMode() const;
 
-	void GetMeshesToRender(const ComponentCamera *camera);
-	void GetCullingMeshes(const ComponentCamera *camera);
+	void GetMeshesToRender(const ComponentCamera* camera);
+	void GetCullingMeshes(const ComponentCamera* camera);
 
 public:
 	bool anti_aliasing = false;
@@ -100,8 +101,8 @@ private:
 
 	DrawMode draw_mode = DrawMode::SHADED;
 
-	std::vector<ComponentMesh*> meshes;
-	std::vector<ComponentMesh*> meshes_to_render;
+	std::vector<ComponentMeshRenderer*> meshes;
+	std::vector<ComponentMeshRenderer*> meshes_to_render;
 
 	int num_rendered_tris = 0;
 	Timer * rendering_measure_timer = new Timer();

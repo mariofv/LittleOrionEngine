@@ -19,7 +19,7 @@ bool ModuleCamera::Init()
 	scene_camera_game_object = new GameObject();
 	scene_camera_game_object->transform.SetTranslation(float3(0.5f, 2.f, -15.f));
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
-	scene_camera->SetFarDistance(2000);
+	scene_camera->SetFarDistance(5000);
 	scene_camera->depth = -1;
 	
 	skybox = new Skybox();
@@ -94,12 +94,7 @@ void ModuleCamera::SelectMainCamera()
 	}
 }
 
-void ModuleCamera::SetOrbit(bool is_orbiting)
-{
-	this->is_orbiting = is_orbiting;
-}
-
-bool ModuleCamera::IsOrbiting() const
+bool ModuleCamera::IsSceneCameraOrbiting() const
 {
 	return is_orbiting;
 }
@@ -109,43 +104,63 @@ void ModuleCamera::SetMovement(bool movement_enabled)
 	this->movement_enabled = movement_enabled;
 }
 
+bool ModuleCamera::IsSceneCameraMoving() const
+{
+	return movement_enabled;
+}
+
 void ModuleCamera::HandleSceneCameraMovements()
 {
+	if (!(App->editor->scene_panel->IsHovered()))
+	{
+		return;
+	}
+
 	// Mouse wheel
-	if (App->input->GetMouseWheelMotion() > 0 && App->editor->scene_panel->IsHovered())
+	if (App->input->GetMouseWheelMotion() > 0)
 	{
 		scene_camera->MoveForward();
 	}
-	else if (App->input->GetMouseWheelMotion() < 0 && App->editor->scene_panel->IsHovered())
+	else if (App->input->GetMouseWheelMotion() < 0)
 	{
 		scene_camera->MoveBackward();
 	}
 
 	// Mouse motion
-	if (App->input->IsMouseMoving() && App->editor->scene_panel->IsHovered())
+	if (App->input->IsMouseMoving())
 	{
 		float2 motion = App->input->GetMouseMotion();
-		scene_camera->RotateCameraWithMouseMotion(motion);
-	}
-	else if (App->input->IsMouseMoving() && App->editor->scene_panel->IsHovered() && IsOrbiting())
-	{
-		float2 motion = App->input->GetMouseMotion();
-		if (App->editor->selected_game_object != nullptr)
-		{
-			scene_camera->OrbitCameraWithMouseMotion(motion, App->editor->selected_game_object->transform.GetGlobalTranslation());
-		}
-		else
+		
+		if (IsSceneCameraMoving() && !IsSceneCameraOrbiting())
 		{
 			scene_camera->RotateCameraWithMouseMotion(motion);
+		}
+		else if (!IsSceneCameraMoving() && IsSceneCameraOrbiting() && orbit_movement_enabled)
+		{
+			if (App->editor->selected_game_object != nullptr)
+			{
+				scene_camera->OrbitCameraWithMouseMotion(motion, App->editor->selected_game_object->transform.GetGlobalTranslation());
+			}
+			else
+			{
+				scene_camera->RotateCameraWithMouseMotion(motion);
+			}
 		}
 	}
 
 	// Mouse button down
-	if (App->input->GetMouseButtonDown(MouseButton::Right) && App->editor->scene_panel->IsHovered())
+	if (App->input->GetMouseButtonDown(MouseButton::Right))
 	{
 		SetMovement(true);
 	}
-	if (App->input->GetMouseButtonDown(MouseButton::Left) && App->editor->scene_panel->IsHovered() && !IsOrbiting())
+
+	// Mouse button down
+	if (App->input->GetMouseButtonDown(MouseButton::Left))
+	{
+		orbit_movement_enabled = true;
+	}
+
+	if (App->input->GetMouseButtonDown(MouseButton::Left) && !IsSceneCameraOrbiting())
 	{
 		float2 position = App->input->GetMousePosition();
 		App->editor->scene_panel->MousePicking(position);
@@ -156,22 +171,18 @@ void ModuleCamera::HandleSceneCameraMovements()
 		}
 	}
 
-	// Mouse button up
-	if (App->input->GetMouseButtonUp(MouseButton::Right))
-	{
-		SetMovement(false);
-	}
-
 	// Key down
 	if (App->input->GetKeyDown(KeyCode::LeftAlt))
 	{
-		SetOrbit(true);
+		is_orbiting = true;
 	}
-	else if (App->input->GetKeyDown(KeyCode::LeftShift))
+
+	if (App->input->GetKeyDown(KeyCode::LeftShift))
 	{
 		scene_camera->SetSpeedUp(true);
 	}
-	else if (App->input->GetKeyDown(KeyCode::F))
+
+	if (App->input->GetKeyDown(KeyCode::F))
 	{
 		if (App->editor->selected_game_object != nullptr)
 		{
@@ -179,18 +190,31 @@ void ModuleCamera::HandleSceneCameraMovements()
 		}
 	}
 
+	// Mouse button up
+	if (App->input->GetMouseButtonUp(MouseButton::Right))
+	{
+		SetMovement(false);
+	}
+
+	// Mouse button up
+	if (App->input->GetMouseButtonUp(MouseButton::Left))
+	{
+		orbit_movement_enabled = false;
+	}
+
 	// Key up
 	if (App->input->GetKeyUp(KeyCode::LeftAlt))
 	{
-		SetOrbit(false);
+		is_orbiting = false;
 	}
-	else if (App->input->GetKeyUp(KeyCode::LeftShift))
+
+	if (App->input->GetKeyUp(KeyCode::LeftShift))
 	{
 		scene_camera->SetSpeedUp(false);
 	}
 
 	// Key hold
-	if (IsMovementEnabled())
+	if (IsSceneCameraMoving())
 	{
 		if (App->input->GetKey(KeyCode::Q))
 		{
@@ -233,9 +257,4 @@ void ModuleCamera::HandleSceneCameraMovements()
 	{
 		scene_camera->RotateYaw(1.f);
 	}
-}
-
-bool ModuleCamera::IsMovementEnabled() const
-{
-	return movement_enabled;
 }

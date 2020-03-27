@@ -56,8 +56,6 @@ public:
 	void UpdateHierarchyDepth();
 	void UpdateHierarchyBranch();
 
-	void RenderMaterialTexture(unsigned int shader_program) const;
-
 	int GetHierarchyDepth() const;
 	void SetHierarchyDepth(int value);
 
@@ -80,7 +78,7 @@ public:
 	// This should not be public. Public for now while implementing prefab.
 	uint64_t original_UUID = 0; 
 	bool is_prefab_parent = false;
-	Prefab* prefab_reference = nullptr;
+	std::shared_ptr<Prefab> prefab_reference = nullptr;
 	bool original_prefab = false;
 private:
 	bool active = true;

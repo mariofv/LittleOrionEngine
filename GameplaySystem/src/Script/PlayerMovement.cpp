@@ -10,7 +10,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTime.h"
 
-#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include "imgui.h"
 

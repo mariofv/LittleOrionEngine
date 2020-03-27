@@ -46,9 +46,26 @@ In order to do that assure that you have the following:
 Because this is a academic project is not possible to contribute directly to this repo. Said that, feel free to fork it (<https://github.com/Unnamed-Company/LittleOrionEngine/fork>) and to expand it in your own way!
 
 ## Authors
-| [![Mario Fernández Villalba](https://github.com/mariofv.png?size=100)](https://github.com/mariofv) | [![Anabel Hernández Barrera](https://github.com/yalania.png?size=100)](https://github.com/yalania) |
-| ---- | ---- |
-| [Mario Fernández Villalba](https://github.com/mariofv/) | [Anabel Hernández Barrera](https://github.com/yalania/) |
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/mariofv"><img src="https://avatars2.githubusercontent.com/u/17348688?v=4" width="100px;" alt=""/><br /><sub><b>Mario Fernández Villalba</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/yalania"><img src="https://avatars2.githubusercontent.com/u/48101863?v=4" width="100px;" alt=""/><br /><sub><b>Anabel Hernández Barrera</b></sub></a><br /></td>  
+    <td align="center"><a href="https://github.com/Dartemiss"><img src="https://avatars2.githubusercontent.com/u/18176345?v=4" width="100px;" alt=""/><br /><sub><b>Enrique Alexandre González Sequeira</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/JoanStinson"><img src="https://avatars2.githubusercontent.com/u/24247839?v=4" width="100px;" alt=""/><br /><sub><b>Joan Ginard Mateo</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/JorxSS"><img src="https://avatars2.githubusercontent.com/u/49075678?v=4" width="100px;" alt=""/><br /><sub><b>Jordi Sauras</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/JordiRomagosa"><img src="https://avatars2.githubusercontent.com/u/9912719?v=4" width="100px;" alt=""/><br /><sub><b>Jordi Romagosa</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/Kibium"><img src="https://avatars2.githubusercontent.com/u/24247683?v=4" width="100px;" alt=""/><br /><sub><b>Toni Ferrari Juan</b></sub></a><br /></td>
+ </tr>
+ <tr>
+     <td align="center"><a href="https://github.com/luismoyano"><img src="https://avatars2.githubusercontent.com/u/39064112?v=4" width="100px;" alt=""/><br /><sub><b>Luis Moyano</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/marcorod94"><img src="https://avatars2.githubusercontent.com/u/29025282?v=4" width="100px;" alt=""/><br /><sub><b>Marco Rodríguez</b></sub></a><br /></td>  
+    <td align="center"><a href="https://github.com/Misarte"><img src="https://avatars2.githubusercontent.com/u/34191130?v=4" width="100px;" alt=""/><br /><sub><b>Artemis Georgakopoulou</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/pacasasgar"><img src="https://avatars2.githubusercontent.com/u/15977683?v=4" width="100px;" alt=""/><br /><sub><b>Pau Casas Garcia</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/raulgonzalezupc"><img src="https://avatars2.githubusercontent.com/u/56253770?v=4" width="100px;" alt=""/><br /><sub><b>Raúl González</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/RickyVimon"><img src="https://avatars2.githubusercontent.com/u/33130090?v=4" width="100px;" alt=""/><br /><sub><b>Ricard Vivó</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/vidalmelero"><img src="https://avatars2.githubusercontent.com/u/43371298?v=4" width="100px;" alt=""/><br /><sub><b>Vidal Melero</b></sub></a><br /></td>
+</tr>
+</table>
 
 ## Developement methodology 
 This project was developed following agile methodologies philosophy. If you are interested to know the tasks distribution don't hesitate to visit our [Trello board](https://trello.com/b/uFhGXWJ1/littleorionengine)!

@@ -407,8 +407,11 @@ inline void ImGui::FileBrowser::Display()
         ScopeGuard popTextID([] { PopID(); });
 
         PushItemWidth(-1);
-        if(InputText("", inputNameBuf_->data(), inputNameBuf_->size()))
+		if (InputText("", inputNameBuf_->data(), inputNameBuf_->size()))
+		{
             selectedFilename_ = inputNameBuf_->data();
+			selectedFilename_ += typeFilters_[typeFilterIndex_];
+		}
         PopItemWidth();
     }
 

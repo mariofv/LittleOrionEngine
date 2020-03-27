@@ -26,6 +26,9 @@ public:
 	ENGINE_API void AddUInt(uint64_t value_to_add, const std::string& name);
 	ENGINE_API uint64_t GetUInt(const std::string& name, unsigned int opt_value) const;
 
+	void AddInt64(int64_t value_to_add, const std::string &name);
+	int64_t GetInt64(const std::string& name, int64_t opt_value) const;
+
 	void AddFloat(float value_to_add, const std::string& name);
 	float GetFloat(const std::string &name, float opt_value) const;
 

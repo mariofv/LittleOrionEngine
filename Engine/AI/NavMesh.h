@@ -18,10 +18,6 @@ class dtMeshTile;
 class DetourNavMesh;
 
 
-static const int MAX_POLYS = 256;
-static const int MAX_SMOOTH = 2048;
-
-
 enum PathMode
 {
 	FOLLOW_PATH,
@@ -105,19 +101,7 @@ private:
 	int FixUpCorridor(dtPolyRef* path, const int npath, const int max_path,
 		const dtPolyRef* visited, const int nvisited);
 
-	float DistancePtLine2d(const float* pt, const float* p, const float* q) const
-	{
-		float pqx = q[0] - p[0];
-		float pqz = q[2] - p[2];
-		float dx = pt[0] - p[0];
-		float dz = pt[2] - p[2];
-		float d = pqx * pqx + pqz * pqz;
-		float t = pqx * dx + pqz * dz;
-		if (d != 0) t /= d;
-		dx = p[0] + t * pqx - pt[0];
-		dz = p[2] + t * pqz - pt[2];
-		return dx * dx + dz * dz;
-	}
+	float DistancePtLine2d(const float* pt, const float* p, const float* q) const;
 
 public:
 	uint64_t mesh_floor_uuid;
@@ -180,6 +164,10 @@ private:
 	unsigned char nav_mesh_draw_flags;
 
 	//PathMode path_mode = PathMode::FOLLOW_PATH;
+
+
+	static const int MAX_POLYS = 256;
+	static const int MAX_SMOOTH = 2048;
 
 	///TEST
 	SampleDebugDraw m_dd;

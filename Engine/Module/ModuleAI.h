@@ -2,8 +2,8 @@
 #define _MODULEAI_H_
 #define ENGINE_EXPORTS
 
-#include "Module/Module.h"
 #include "AI/NavMesh.h"
+#include "Module/Module.h"
 #include <MathGeoLib/MathGeoLib.h>
 
 class PanelNavMesh;
@@ -37,7 +37,7 @@ public:
 	bool end_initialized = false;
 
 private:
-	NavMesh nav_mesh = NavMesh();
+	NavMesh nav_mesh;
 
 	friend PanelNavMesh;
 };

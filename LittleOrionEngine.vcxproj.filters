@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp">
@@ -22,10 +22,7 @@
     <ClCompile Include="Engine\Component\ComponentLight.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentMaterial.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentMesh.cpp">
+    <ClCompile Include="Engine\Component\ComponentMeshRenderer.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentTransform.cpp">
@@ -79,12 +76,6 @@
     <ClCompile Include="Engine\Filesystem\File.cpp">
       <Filter>Engine\Filesystem</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UI\Billboard.cpp">
-      <Filter>Engine\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\EngineLog.cpp">
-      <Filter>Engine\UI</Filter>
-    </ClCompile>
     <ClCompile Include="Libraries\include\pcg_random\pcg_basic.c">
       <Filter>Libraries\pcg_random</Filter>
     </ClCompile>
@@ -125,7 +116,7 @@
       <Filter>Engine\Helper</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\Importer.cpp">
-      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
@@ -133,59 +124,14 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Texture.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelScene.cpp">
-      <Filter>Engine\UI\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelGame.cpp">
-      <Filter>Engine\UI\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelHierarchy.cpp">
-      <Filter>Engine\UI\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelInspector.cpp">
-      <Filter>Engine\UI\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelConsole.cpp">
-      <Filter>Engine\UI\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelProjectExplorer.cpp">
-      <Filter>Engine\UI\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelMenuBar.cpp">
-      <Filter>Engine\UI\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelDebug.cpp">
-      <Filter>Engine\UI\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelConfiguration.cpp">
-      <Filter>Engine\UI\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelAbout.cpp">
-      <Filter>Engine\UI\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelToolBar.cpp">
-      <Filter>Engine\UI\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\PanelPopups.cpp">
-      <Filter>Engine\UI\Panel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\InspectorSubpanel\PanelComponent.cpp">
-      <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\UI\Panel\InspectorSubpanel\PanelGameObject.cpp">
-      <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporter.cpp">
-      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\TextureImporter.cpp">
-      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.cpp">
-      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp">
-      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
@@ -226,9 +172,6 @@
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actions\EditorActionSetTexture.cpp">
-      <Filter>Engine\Actions</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
@@ -248,10 +191,10 @@
       <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp">
-      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp">
-      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Resources\Prefab.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
@@ -264,6 +207,96 @@
     </ClCompile>
     <ClCompile Include="Engine\Module\ModuleScriptManager.cpp">
       <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp">
+      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\PrefabLoader.cpp">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\SceneManager.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelComponent.cpp">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelGameObject.cpp">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelAbout.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelConfiguration.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelConsole.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelDebug.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelGame.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelHierarchy.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelInspector.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelMenuBar.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelPopups.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelProjectExplorer.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelScene.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelToolBar.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\EngineLog.cpp">
+      <Filter>Engine\EditorUI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Helper\Billboard.cpp">
+      <Filter>Engine\EditorUI\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp">
+      <Filter>Engine\EditorUI\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.cpp">
+      <Filter>Engine\ResourceManagement\ResourcesDB</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelResourceDatabase.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Material.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\MaterialLoader.cpp">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMaterial.cpp">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\ModelPrefabImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMaterialSelector.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
     <ClCompile Include="Libraries\include\recast\Recast\RecastRegion.cpp">
       <Filter>Libraries\recast</Filter>
@@ -361,22 +394,26 @@
     <ClCompile Include="Engine\AI\NavMesh.cpp">
       <Filter>Engine\AI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
-    <ClCompile Include="Engine\UI\Panel\PanelNavMesh.cpp" />
     <ClCompile Include="Engine\AI\DebugDrawGL.cpp">
       <Filter>Engine\AI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp">
-      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelNavMesh.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp">
-      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+    <ClCompile Include="Engine\AI\SampleDebugDraw.cpp">
+      <Filter>Engine\AI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\PrefabLoader.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    <ClCompile Include="Engine\Animation\AnimController.cpp">
+      <Filter>Engine\Animation</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\SceneManager.cpp">
-      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+    <ClCompile Include="Engine\Component\ComponentAnimation.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleAnimation.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -392,10 +429,7 @@
     <ClInclude Include="Engine\Component\ComponentLight.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentMaterial.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentMesh.h">
+    <ClInclude Include="Engine\Component\ComponentMeshRenderer.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentTransform.h">
@@ -452,12 +486,6 @@
     <ClInclude Include="Engine\Filesystem\File.h">
       <Filter>Engine\Filesystem</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Billboard.h">
-      <Filter>Engine\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\UI\EngineLog.h">
-      <Filter>Engine\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Main\GameObject.h">
       <Filter>Engine\Main</Filter>
     </ClInclude>
@@ -492,7 +520,7 @@
       <Filter>Engine\Helper</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\Importer.h">
-      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
@@ -501,61 +529,58 @@
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporter.h">
-      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\TextureImporter.h">
-      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\Panel.h">
-      <Filter>Engine\UI\Panel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\Panel.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelScene.h">
-      <Filter>Engine\UI\Panel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelScene.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelGame.h">
-      <Filter>Engine\UI\Panel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelGame.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelHierarchy.h">
-      <Filter>Engine\UI\Panel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelHierarchy.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelInspector.h">
-      <Filter>Engine\UI\Panel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelInspector.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelConsole.h">
-      <Filter>Engine\UI\Panel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelConsole.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelProjectExplorer.h">
-      <Filter>Engine\UI\Panel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelProjectExplorer.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelMenuBar.h">
-      <Filter>Engine\UI\Panel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelMenuBar.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelDebug.h">
-      <Filter>Engine\UI\Panel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelDebug.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelConfiguration.h">
-      <Filter>Engine\UI\Panel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelConfiguration.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelAbout.h">
-      <Filter>Engine\UI\Panel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelAbout.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelToolBar.h">
-      <Filter>Engine\UI\Panel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelToolBar.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\PanelPopups.h">
-      <Filter>Engine\UI\Panel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelPopups.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\InspectorSubpanel\PanelComponent.h">
-      <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelComponent.h">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\UI\Panel\InspectorSubpanel\PanelGameObject.h">
-      <Filter>Engine\UI\Panel\InspectorSubpanel</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MaterialImporter.h">
-      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelGameObject.h">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.h">
-      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Skybox.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
@@ -602,9 +627,6 @@
     <ClInclude Include="Engine\Actions\EditorActionScale.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Actions\EditorActionSetTexture.h">
-      <Filter>Engine\Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
@@ -624,10 +646,10 @@
       <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.h">
-      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.h">
-      <Filter>Engine\ResourceManagement\Loaders\Importer\ModelImporters</Filter>
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Prefab.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
@@ -640,6 +662,54 @@
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleScriptManager.h">
       <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
+      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\PrefabImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\PrefabLoader.h">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\SceneManager.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\EngineLog.h">
+      <Filter>Engine\EditorUI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Helper\Billboard.h">
+      <Filter>Engine\EditorUI\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Helper\Grid.h">
+      <Filter>Engine\EditorUI\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.h">
+      <Filter>Engine\ResourceManagement\ResourcesDB</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelResourceDatabase.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Material.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\MaterialLoader.h">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMaterial.h">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\ModelPrefabImporter.h">
+      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMaterialSelector.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMeshSelector.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
     <ClInclude Include="Libraries\include\recast\DebugUtils\DebugDraw.h">
       <Filter>Libraries\recast</Filter>
@@ -719,25 +789,26 @@
     <ClInclude Include="Engine\AI\NavMesh.h">
       <Filter>Engine\AI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
-    <ClInclude Include="Engine\UI\Panel\PanelNavMesh.h" />
     <ClInclude Include="Engine\AI\DebugDrawGL.h">
       <Filter>Engine\AI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\AI\GLCheckerTexture.h">
+    <ClInclude Include="Engine\EditorUI\Panel\PanelNavMesh.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\AI\SampleDebugDraw.h">
       <Filter>Engine\AI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
-      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
+    <ClInclude Include="Engine\Animation\AnimController.h">
+      <Filter>Engine\Animation</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\PrefabImporter.h">
-      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+    <ClInclude Include="Engine\Component\ComponentAnimation.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\PrefabLoader.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    <ClInclude Include="Engine\Module\ModuleAnimation.h">
+      <Filter>Engine\Module</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\SceneManager.h">
-      <Filter>Engine\ResourceManagement\Loaders\Importer</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -747,14 +818,8 @@
     <Filter Include="Engine">
       <UniqueIdentifier>{78196238-a4d6-4e0e-ba05-48142ddb16dc}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\imgui">
-      <UniqueIdentifier>{5ae1ff27-bee3-4b9f-bf4d-74e8961b09b8}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Libraries\ImGuizmo">
       <UniqueIdentifier>{4156e7f7-9ca4-4c90-a5c6-6dd08a48b4d9}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Libraries\MathGeoLib">
-      <UniqueIdentifier>{7aeb874c-0048-442d-a610-13b2f8c71ccf}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Component">
       <UniqueIdentifier>{550cf299-4283-45ac-bf26-ac8d0ea988f8}</UniqueIdentifier>
@@ -768,9 +833,6 @@
     <Filter Include="Engine\Module">
       <UniqueIdentifier>{aa443e3b-8046-4ada-ba17-0c9902910cf3}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\UI">
-      <UniqueIdentifier>{0032cc3c-b82d-4579-9ba1-11c9c0786d10}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Libraries\pcg_random">
       <UniqueIdentifier>{e3b0e27d-0659-43e6-be7c-5837bfb898b3}</UniqueIdentifier>
     </Filter>
@@ -783,14 +845,14 @@
     <Filter Include="Engine\ResourceManagement">
       <UniqueIdentifier>{43b6c14e-b9eb-4025-9f7b-b2e8c1cedd2f}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\ResourceManagement\Importer">
+      <UniqueIdentifier>{77df864b-d951-40b5-ba86-51b9342f9390}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\ResourceManagement\Resources">
       <UniqueIdentifier>{621e0eab-6111-4b36-b46d-c82b3b6b0847}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\UI\Panel">
-      <UniqueIdentifier>{cb898d7a-8090-400e-9c95-f05cfa63a85f}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\UI\Panel\InspectorSubpanel">
-      <UniqueIdentifier>{7bf0885e-2c32-4fa2-9d73-f6cb15854163}</UniqueIdentifier>
+    <Filter Include="Engine\ResourceManagement\Importer\ModelImporters">
+      <UniqueIdentifier>{9daec75e-3bbb-4792-bc2c-04d03e1b6f21}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\ResourceManagement\Loaders">
       <UniqueIdentifier>{af8a22c1-2b23-42fc-b542-ec1112f7066d}</UniqueIdentifier>
@@ -798,20 +860,35 @@
     <Filter Include="Engine\Actions">
       <UniqueIdentifier>{3f3b0f7b-d67b-4384-a9ba-a7e803bb2a53}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\ResourceManagement\ImportOptions">
+      <UniqueIdentifier>{af162ed0-dacf-4e8f-850b-8e8130bb9f6e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\EditorUI">
+      <UniqueIdentifier>{0032cc3c-b82d-4579-9ba1-11c9c0786d10}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\EditorUI\Panel">
+      <UniqueIdentifier>{cb898d7a-8090-400e-9c95-f05cfa63a85f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\EditorUI\Panel\InspectorSubpanel">
+      <UniqueIdentifier>{7bf0885e-2c32-4fa2-9d73-f6cb15854163}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\EditorUI\Helper">
+      <UniqueIdentifier>{6972204a-ae71-45dc-9c04-7e5ddc15ef7f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\ResourceManagement\ResourcesDB">
+      <UniqueIdentifier>{2cb63c3c-91ab-40a6-adb2-04fc80f83a7c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\EditorUI\Panel\PopupsPanel">
+      <UniqueIdentifier>{4d3c5294-ef77-4da3-a2bc-ac29c72d5e42}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Libraries\recast">
       <UniqueIdentifier>{380b2d72-4143-4cd0-a469-bbd10415b4c7}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\AI">
       <UniqueIdentifier>{799add9a-b011-4795-bae5-55a425014ca0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\ResourceManagement\ImportOptions">
-      <UniqueIdentifier>{55df114a-b693-4532-8883-fdebb1790128}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\ResourceManagement\Loaders\Importer">
-      <UniqueIdentifier>{77df864b-d951-40b5-ba86-51b9342f9390}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\ResourceManagement\Loaders\Importer\ModelImporters">
-      <UniqueIdentifier>{9daec75e-3bbb-4792-bc2c-04d03e1b6f21}</UniqueIdentifier>
+    <Filter Include="Engine\Animation">
+      <UniqueIdentifier>{ecb044c0-b431-4c8e-ab13-ad262d334b04}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>
