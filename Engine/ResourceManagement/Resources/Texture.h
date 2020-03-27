@@ -45,7 +45,6 @@ public:
 
 	int width = 0;
 	int height = 0;
-	size_t image_size;
 	bool normal_map = false;
 
 private:
@@ -56,7 +55,7 @@ private:
 
 	GLenum min_filter;	
 	GLenum mag_filter;
-	char* data;
+	std::vector<char> data;
 
 	friend class Skybox;
 };

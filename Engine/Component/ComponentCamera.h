@@ -79,6 +79,7 @@ public:
 	void SetOrthographicView();
 
 	void SetClearMode(ComponentCamera::ClearMode clear_mode);
+	void SetSkybox(uint32_t skybox_uuid);
 
 	void SetSpeedUp(bool is_speeding_up);
 
@@ -151,6 +152,9 @@ private:
 	float3 goal_focus_position = float3::zero;
 
 	ClearMode camera_clear_mode = ClearMode::COLOR;
+
+	uint32_t skybox_uuid = 0;
+	std::shared_ptr<Skybox> camera_skybox = nullptr;
 
 	friend class EditorActionModifyCamera;
 	friend class ModuleDebugDraw;

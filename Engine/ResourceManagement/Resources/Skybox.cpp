@@ -1,27 +1,21 @@
 #include "Skybox.h"
 
+#include "Component/ComponentCamera.h"
 #include "Helper/Config.h"
 #include "Main/Application.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
-#include "Component/ComponentCamera.h"
+#include "ResourceManagement/Manager/SkyboxManager.h"
 
-Skybox::Skybox()
+Skybox::Skybox() : Resource(nullptr)
 {
 	GenerateSkyboxCube();
 	GenerateSkyboxCubeMap();
 }
 
-Skybox::Skybox(Metafile* resource_metafile)
+Skybox::Skybox(Metafile* resource_metafile) : Resource(resource_metafile)
 {
 	GenerateSkyboxCube();
-	GenerateSkyboxCubeMap();
-}
-
-Skybox::Skybox(Metafile* resource_metafile, const std::array<uint32_t, 6>& textures_id)
-{
-	GenerateSkyboxCube();
-	GenerateTextures();
 	GenerateSkyboxCubeMap();
 }
 
@@ -34,28 +28,29 @@ Skybox::~Skybox()
 
 void Skybox::Save(Config& config) const
 {
-	config.AddUInt(textures_id[(size_t)SkyboxFaces::RIGHT], "Right");
-	config.AddUInt(textures_id[(size_t)SkyboxFaces::LEFT], "Left");
+	config.AddUInt(textures_id[(size_t)SkyboxFace::RIGHT], "Right");
+	config.AddUInt(textures_id[(size_t)SkyboxFace::LEFT], "Left");
 
-	config.AddUInt(textures_id[(size_t)SkyboxFaces::UP], "Up");
-	config.AddUInt(textures_id[(size_t)SkyboxFaces::DOWN], "Down");
+	config.AddUInt(textures_id[(size_t)SkyboxFace::UP], "Up");
+	config.AddUInt(textures_id[(size_t)SkyboxFace::DOWN], "Down");
 
-	config.AddUInt(textures_id[(size_t)SkyboxFaces::FRONT], "Front");
-	config.AddUInt(textures_id[(size_t)SkyboxFaces::BACK], "Back");
+	config.AddUInt(textures_id[(size_t)SkyboxFace::FRONT], "Front");
+	config.AddUInt(textures_id[(size_t)SkyboxFace::BACK], "Back");
 }
 
 void Skybox::Load(const Config& config)
 {
-	textures_id[(size_t)SkyboxFaces::RIGHT] = config.GetUInt("Right", 0);
-	textures_id[(size_t)SkyboxFaces::LEFT] = config.GetUInt("Left", 0);
+	textures_id[(size_t)SkyboxFace::RIGHT] = config.GetUInt("Right", 0);
+	textures_id[(size_t)SkyboxFace::LEFT] = config.GetUInt("Left", 0);
 
-	textures_id[(size_t)SkyboxFaces::UP] = config.GetUInt("Up", 0);
-	textures_id[(size_t)SkyboxFaces::DOWN] = config.GetUInt("Down", 0);
+	textures_id[(size_t)SkyboxFace::UP] = config.GetUInt("Up", 0);
+	textures_id[(size_t)SkyboxFace::DOWN] = config.GetUInt("Down", 0);
 
-	textures_id[(size_t)SkyboxFaces::FRONT] = config.GetUInt("Front", 0);
-	textures_id[(size_t)SkyboxFaces::BACK] = config.GetUInt("Back", 0);
+	textures_id[(size_t)SkyboxFace::FRONT] = config.GetUInt("Front", 0);
+	textures_id[(size_t)SkyboxFace::BACK] = config.GetUInt("Back", 0);
 
 	GenerateTextures();
+	GenerateSkyboxCubeMap();
 }
 
 void Skybox::Render(const ComponentCamera& camera) const
@@ -155,17 +150,17 @@ void Skybox::GenerateSkyboxCube()
 
 void Skybox::GenerateTextures()
 {
-	GenerateTexture(SkyboxFaces::RIGHT);
-	GenerateTexture(SkyboxFaces::LEFT);
+	GenerateTexture(SkyboxFace::RIGHT);
+	GenerateTexture(SkyboxFace::LEFT);
 
-	GenerateTexture(SkyboxFaces::UP);
-	GenerateTexture(SkyboxFaces::DOWN);
+	GenerateTexture(SkyboxFace::UP);
+	GenerateTexture(SkyboxFace::DOWN);
 
-	GenerateTexture(SkyboxFaces::FRONT);
-	GenerateTexture(SkyboxFaces::BACK);
+	GenerateTexture(SkyboxFace::FRONT);
+	GenerateTexture(SkyboxFace::BACK);
 }
 
-void Skybox::GenerateTexture(SkyboxFaces face)
+void Skybox::GenerateTexture(SkyboxFace face)
 {
 	uint32_t texture_id = textures_id[(size_t)face];
 	if (texture_id != 0)
@@ -184,9 +179,10 @@ void Skybox::GenerateSkyboxCubeMap()
 		if (textures_id[i] != 0)
 		{
 			std::shared_ptr<Texture> texture = textures[i];
-			glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, texture->width, texture->height, 0, texture->image_size, texture->data);
+			glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, texture->width, texture->height, 0, texture->data.size(), texture->data.data());
 		}
 	}
+
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_CUBE_MAP, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);

@@ -15,7 +15,7 @@ class Skybox : public Resource
 {
 
 public:
-	enum class SkyboxFaces
+	enum class SkyboxFace
 	{
 		RIGHT = 0,
 		LEFT = 1,
@@ -27,7 +27,6 @@ public:
 
 	Skybox();
 	Skybox(Metafile* resource_metafile);
-	Skybox(Metafile* resource_metafile, const std::array<uint32_t, 6>& textures_id);
 	~Skybox();
 
 	void Save(Config& config) const;
@@ -38,7 +37,7 @@ public:
 private:
 	void GenerateSkyboxCube();
 	void GenerateTextures();
-	void GenerateTexture(SkyboxFaces face);
+	void GenerateTexture(SkyboxFace face);
 	void GenerateSkyboxCubeMap();
 
 private:

@@ -4,6 +4,8 @@
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleResourceManager.h"
+
+#include "ResourceManagement/Manager/TextureManager.h"
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/Resources/Skybox.h"
 
@@ -19,7 +21,6 @@ std::shared_ptr<Skybox> SkyboxManager::Load(Metafile* metafile, const FileData& 
 
 	return new_skybox;
 }
-
 
 uint32_t SkyboxManager::Create(Path& asset_creation_folder_path, const std::string created_asset_name)
 {

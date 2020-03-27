@@ -379,8 +379,8 @@ bool ModuleDebugDraw::Init()
 	dd_interface_implementation = new IDebugDrawOpenGLImplementation();
     dd::initialize(dd_interface_implementation);
 
-	light_billboard = new Billboard(CoreResource::BILLBOARD_LIGHT_TEXTURE, 1.72f, 2.5f);	
-	camera_billboard = new Billboard(CoreResource::BILLBOARD_CAMERA_TEXTURE, 2.5f, 2.5f);
+	light_billboard = new Billboard(CoreResource::BILLBOARD_LIGHT_TEXTURE, 17.2f, 25.f);	
+	camera_billboard = new Billboard(CoreResource::BILLBOARD_CAMERA_TEXTURE, 25.f, 25.f);
 
 	grid = new Grid();
 

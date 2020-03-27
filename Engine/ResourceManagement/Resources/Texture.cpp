@@ -7,12 +7,12 @@
 #include <IL/ilut.h>
 
 Texture::Texture(Metafile* resource_metafile, char* data, size_t image_size, int width, int height, bool normal_map) 
-	: image_size(image_size)
-	, width(width), height(height)
+	: width(width), height(height)
 	, normal_map(normal_map)
-	, data(data)
 	, Resource(resource_metafile)
 {
+	this->data.resize(image_size);
+	memcpy(&this->data.front(), data, image_size);
 	LoadInMemory();
 }
 
@@ -42,11 +42,11 @@ void Texture::LoadInMemory()
 
 	if (normal_map)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data.data());
 	}
 	else 
 	{
-		glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height, 0, image_size, data);
+		glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height, 0, data.size(), data.data());
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
