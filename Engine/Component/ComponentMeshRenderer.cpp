@@ -14,17 +14,20 @@
 ComponentMeshRenderer::ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH_RENDERER)
 {
 	owner->aabb.GenerateBoundingBox();
+	SetSkeleton(App->resources->Load<Skeleton>("Library/Metadata/29/2987806620"));
 }
 
 ComponentMeshRenderer::ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner) : mesh_to_render(mesh_to_render), Component(owner, ComponentType::MESH_RENDERER)
 {
 	owner->aabb.GenerateBoundingBox();
+	SetSkeleton(App->resources->Load<Skeleton>("Library/Metadata/29/2987806620"));
 }
 
 ComponentMeshRenderer::ComponentMeshRenderer() : Component(nullptr, ComponentType::MESH_RENDERER)
 {
 	this->mesh_to_render = App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH);
 	this->material_to_render = App->resources->Load<Material>(DEFAULT_MATERIAL_PATH);
+	SetSkeleton(App->resources->Load<Skeleton>("Library/Metadata/29/2987806620"));
 }
 
 void ComponentMeshRenderer::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
@@ -51,6 +54,11 @@ void ComponentMeshRenderer::Save(Config& config) const
 	config.AddBool(active, "Active");
 	config.AddString(mesh_to_render->exported_file, "MeshPath");
 	config.AddString(material_to_render->exported_file, "MaterialPath");
+
+	if(!skeleton)
+		config.AddString("", "SkeletonResource");
+	else
+		config.AddString(skeleton->exported_file, "SkeletonResource");
 }
 
 void ComponentMeshRenderer::Load(const Config& config)
@@ -82,19 +90,21 @@ void ComponentMeshRenderer::Load(const Config& config)
 		SetMaterial(App->resources->Load<Material>(DEFAULT_MATERIAL_PATH));
 	}
 
+	std::string skeleton_path;
+	config.GetString("SkeletonResource", skeleton_path, "");
+	if(!skeleton_path.empty())
+		SetSkeleton(App->resources->Load<Skeleton>(skeleton_path));
+
 }
 
-void ComponentMeshRenderer::Render() const
+void ComponentMeshRenderer::Render()
 {
 	std::string program_name = material_to_render->shader_program;
 	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
 
-	ComponentAnimation* anim = static_cast<ComponentAnimation*>(owner->parent->GetComponent(ComponentType::ANIMATION));
-	if (anim != nullptr)
-	{
-		anim->Render(program);
-	}
+	glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
+
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -195,3 +205,28 @@ void ComponentMeshRenderer::Copy(Component* component_to_copy) const
 	*component_to_copy = *this;
 	*static_cast<ComponentMeshRenderer*>(component_to_copy) = *this;
 };
+
+void ComponentMeshRenderer::SetSkeleton(std::shared_ptr<Skeleton>& skeleton)
+{
+	this->skeleton = skeleton;
+	palette.resize(skeleton->skeleton.size());
+	for (auto & matrix : palette)
+	{
+		matrix = float4x4::identity;
+	}
+}
+
+void ComponentMeshRenderer::UpdatePalette(const GameObject &current_bone)
+{
+	if (!skeleton)
+		return;
+
+	auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [&current_bone](const Skeleton::Joint & joint) {
+		return current_bone.name == joint.name;
+	});
+
+	if (it != skeleton->skeleton.end())
+	{
+		palette[it - skeleton->skeleton.begin()] = current_bone.transform.GetGlobalModelMatrix() * (*it).transform_global;
+	}
+}

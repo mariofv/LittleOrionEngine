@@ -104,6 +104,14 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
 		}
 		DropMeshAndMaterial(mesh);
+		ImGui::Text("Skeleton");
+		ImGui::SameLine();
+		std::string skeleton_exported_path = mesh->skeleton ? mesh->skeleton->exported_file : "";
+		if (ImGui::Button(skeleton_exported_path.c_str()))
+		{
+			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
+		}
+		DropMeshAndMaterial(mesh);
 		char tmp_string[16];
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Triangles");
@@ -337,13 +345,6 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		}
 		DropAnimationAndSkeleton(animation);
 		ImGui::AlignTextToFramePadding();
-		ImGui::Text("Skeleton");
-		ImGui::SameLine();
-		if (ImGui::Button(animation->animation_controller->skeleton->exported_file.c_str()))
-		{
-			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
-		}
-		DropAnimationAndSkeleton(animation);
 		ImGui::Separator();
 		if (ImGui::Checkbox("Playing", &animation->animation_controller->playing));
 		ImGui::SameLine();
@@ -552,6 +553,14 @@ void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
 				component_mesh->SetMaterial(App->resources->Load<Material>(meta.exported_file));
 				component_mesh->modified_by_user = true;
 			}
+			if (incoming_file->file_type == FileType::SKELETON)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				component_mesh->SetSkeleton(App->resources->Load<Skeleton>(meta.exported_file));
+				component_mesh->modified_by_user = true;
+			}
 		}
 		ImGui::EndDragDropTarget();
 	}
@@ -573,14 +582,7 @@ void PanelComponent::DropAnimationAndSkeleton(ComponentAnimation* component_anim
 				component_animation->SetAnimation(App->resources->Load<Animation>(meta.exported_file));
 				component_animation->modified_by_user = true;
 			}
-			if (incoming_file->file_type == FileType::SKELETON)
-			{
-				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
-				ImportOptions meta;
-				Importer::GetOptionsFromMeta(meta_path, meta);
-				component_animation->SetSkeleton(App->resources->Load<Skeleton>(meta.exported_file));
-				component_animation->modified_by_user = true;
-			}
+			
 		}
 		ImGui::EndDragDropTarget();
 	}

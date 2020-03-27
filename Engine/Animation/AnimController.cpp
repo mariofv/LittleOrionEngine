@@ -3,13 +3,18 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTime.h"
 #include "Helper/Utils.h"
+#include "Component/ComponentMeshRenderer.h"
+#include "Main/Application.h"
 
 #include <math.h>
 #include <algorithm>
 
+class ComponentMeshRenderer;
+
 void AnimController::Init()
 {
 	animation_time = (animation->frames/animation->frames_per_second )* 1000;
+	/*
 	for (size_t i = 0; i < animation->keyframes[0].channels.size(); ++i)
 	{
 		auto & channel = animation->keyframes[0].channels[i];
@@ -35,7 +40,7 @@ void AnimController::Init()
 		}
 
 	}
-	channel_global_transformation.resize(animation->keyframes[0].channels.size());
+	channel_global_transformation.resize(animation->keyframes[0].channels.size());*/
 
 }
 

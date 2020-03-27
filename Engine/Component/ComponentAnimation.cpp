@@ -1,6 +1,7 @@
 #include "ComponentAnimation.h"
 
 #include "Animation/AnimController.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentTransform.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -12,12 +13,13 @@ ComponentAnimation::ComponentAnimation() : Component(nullptr, ComponentType::ANI
 {
 	animation_controller = new AnimController();
 	SetAnimation(App->resources->Load<Animation>("Library/Metadata/38/3800295065"));
-	SetSkeleton(App->resources->Load<Skeleton>("Library/Metadata/29/2987806620"));
+	
 }
 
 ComponentAnimation::ComponentAnimation(GameObject* owner) : Component(owner, ComponentType::ANIMATION)
 {
 	animation_controller = new AnimController();
+	GetChildrenMeshes(owner);
 }
 
 ComponentAnimation::~ComponentAnimation()
@@ -45,10 +47,8 @@ void ComponentAnimation::Copy(Component* component_to_copy) const
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;
 }
 
-void ComponentAnimation::Render(GLuint shader_program) 
-{
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
-}
+
+
 void ComponentAnimation::Update()
 {
 	animation_controller->Update();
@@ -70,9 +70,7 @@ void ComponentAnimation::Save(Config& config) const
 	config.AddUInt((uint64_t)type, "ComponentType");
 	config.AddBool(active, "Active");
 
-
 	config.AddString(animation_controller->animation->exported_file, "AnimationResource");
-	config.AddString(animation_controller->skeleton->exported_file, "SkeletonResource");
 }
 
 void ComponentAnimation::Load(const Config& config)
@@ -82,26 +80,15 @@ void ComponentAnimation::Load(const Config& config)
 	std::string animation_path;
 	config.GetString("AnimationResource", animation_path, "");
 	SetAnimation(App->resources->Load<Animation>(animation_path));
-
-	std::string skeleton_path;
-	config.GetString("SkeletonResource", skeleton_path, "");
-	SetSkeleton(App->resources->Load<Skeleton>(skeleton_path));
 }
 
 void ComponentAnimation::SetAnimation(std::shared_ptr<Animation>& animation)
 {
 	animation_controller->animation = animation;
-}
-void ComponentAnimation::SetSkeleton(std::shared_ptr<Skeleton>& skeleton)
-{
-	animation_controller->skeleton = skeleton;
-	palette.resize(skeleton->skeleton.size());
-	for (auto & matrix : palette)
-	{
-		matrix = float4x4::identity;
-	}
 	animation_controller->Init();
 }
+
+
 void ComponentAnimation::UpdateBone(GameObject* current_bone)
 {
 	float3 bone_position;
@@ -115,17 +102,27 @@ void ComponentAnimation::UpdateBone(GameObject* current_bone)
 	{
 		current_bone->transform.SetRotation(bone_rotation.ToFloat3x3());
 	}
-	auto it = std::find_if(animation_controller->skeleton->skeleton.begin(), animation_controller->skeleton->skeleton.end(), [current_bone](const Skeleton::Joint & joint) {
-		return current_bone->name == joint.name;
-	});
-
-	if (it != animation_controller->skeleton->skeleton.end())
+	for (auto& mesh : skinned_meshes) 
 	{
-		palette[it - animation_controller->skeleton->skeleton.begin()] = current_bone->transform.GetGlobalModelMatrix() * (*it).transform_global;
+		mesh->UpdatePalette(*current_bone);
 	}
 	for (auto& children_bone : current_bone->children)
 	{
 		UpdateBone(children_bone);
 	}
 
+}
+
+void ComponentAnimation::GetChildrenMeshes(GameObject* current_mesh_gameobject)
+{
+	ComponentMeshRenderer* mesh_renderer = static_cast<ComponentMeshRenderer*>(current_mesh_gameobject->GetComponent(ComponentType::MESH_RENDERER));
+	if (mesh_renderer)
+	{
+		skinned_meshes.push_back(mesh_renderer);
+	}
+	
+	for (auto& child_gameobject : current_mesh_gameobject->children)
+	{
+		GetChildrenMeshes(child_gameobject);
+	}
 }

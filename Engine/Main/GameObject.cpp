@@ -289,6 +289,7 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 
 	case Component::ComponentType::ANIMATION:
 		created_component = App->animations->CreateComponentAnimation();
+		static_cast<ComponentAnimation*>(created_component)->GetChildrenMeshes(this);
 		break;
 
 	default:

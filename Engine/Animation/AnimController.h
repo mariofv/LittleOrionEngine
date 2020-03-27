@@ -24,7 +24,7 @@ private:
 	void UpdateChannelsGlobalTransformation();
 public:
 	std::shared_ptr<Animation> animation = nullptr;
-	std::shared_ptr<Skeleton> skeleton = nullptr;
+	//std::shared_ptr<Skeleton> skeleton = nullptr;
 
 	std::map<size_t, std::vector<uint32_t>> channel_hierarchy_cache;
 	std::vector<float4x4> channel_global_transformation;

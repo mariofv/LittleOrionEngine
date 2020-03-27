@@ -24,12 +24,16 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
+	void SetSkeleton(std::shared_ptr<Skeleton>& skeleton);
+
+	void UpdatePalette(const GameObject & current_bone);
+
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
 	void Delete() override;
 
-	void Render() const;
+	void Render();
 	void RenderModel() const;
 	void RenderMaterial(GLuint shader_program) const;
 
@@ -46,6 +50,8 @@ private:
 public:
 	std::shared_ptr<Mesh> mesh_to_render;
 	std::shared_ptr<Material> material_to_render;
+	std::shared_ptr<Skeleton> skeleton = nullptr;
+	std::vector<float4x4> palette;
 
 private:
 	friend class PanelComponent;

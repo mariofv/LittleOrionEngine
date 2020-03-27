@@ -31,9 +31,7 @@ public:
 	void Copy(Component* component_to_copy) const override;
 
 	void SetAnimation(std::shared_ptr<Animation> & animation);
-	void SetSkeleton(std::shared_ptr<Skeleton> & skeleton);
 
-	void Render(GLuint shader_program);
 
 	void Update() override;
 	void Delete() override;
@@ -43,12 +41,15 @@ public:
 
 	void UpdateBone(GameObject* bone);
 
+	void GetChildrenMeshes(GameObject * current_mesh);
+
 public:
 	AnimController* animation_controller = nullptr;
+	std::vector<ComponentMeshRenderer*> skinned_meshes;
 
 private:
 	friend class PanelComponent;
-	std::vector<float4x4> palette;
+	
 };
 
 #endif //_COMPONENTANIMATION_H_
