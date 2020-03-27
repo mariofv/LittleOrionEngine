@@ -5,8 +5,8 @@
 
 #include "Component.h"
 #include "Component/ComponentAABB.h"
-#include "UI/Panel/InspectorSubpanel/PanelComponent.h"
-#include "UI/Panel/PanelScene.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/PanelScene.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>

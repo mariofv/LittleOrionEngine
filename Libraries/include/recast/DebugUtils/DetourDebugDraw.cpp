@@ -117,7 +117,7 @@ static void drawPolyBoundaries(DuDebugDraw* dd, const dtMeshTile* tile,
 	dd->End();
 }
 
-static void drawMeshTile(DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query,
+static void drawMeshTile(SampleDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query,
 						 const dtMeshTile* tile, unsigned char flags)
 {
 	dtPolyRef base = mesh.getPolyRefBase(tile);
@@ -125,9 +125,7 @@ static void drawMeshTile(DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 	int tileNum = mesh.decodePolyIdTile(base);
 	const unsigned int tileColor = DuIntToCol(tileNum, 128);
 	
-	dd->DepthMask(false);
 
-	dd->Begin(DU_DRAW_TRIS);
 	for (int i = 0; i < tile->header->polyCount; ++i)
 	{
 		const dtPoly* p = &tile->polys[i];
@@ -159,7 +157,6 @@ static void drawMeshTile(DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 			}
 		}
 	}
-	dd->End();
 	/*
 	// Draw inter poly boundaries
 	drawPolyBoundaries(dd, tile, duRGBA(0,48,64,32), 1.5f, true);
@@ -232,10 +229,9 @@ static void drawMeshTile(DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMesh
 	dd->end();
 
 	*/
-	dd->DepthMask(true);
 }
 
-void duDebugDrawNavMesh(DuDebugDraw* dd, const dtNavMesh& mesh, unsigned char flags)
+void duDebugDrawNavMesh(SampleDebugDraw* dd, const dtNavMesh& mesh, unsigned char flags)
 {
 	if (!dd) return;
 	
@@ -247,7 +243,7 @@ void duDebugDrawNavMesh(DuDebugDraw* dd, const dtNavMesh& mesh, unsigned char fl
 	}
 }
 
-void duDebugDrawNavMeshWithClosedList(struct DuDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags)
+void duDebugDrawNavMeshWithClosedList(SampleDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags)
 {
 	if (!dd) return;
 

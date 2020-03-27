@@ -27,13 +27,12 @@ public:
 	ComponentCamera* CreateComponentCamera();
 	void RemoveComponentCamera(ComponentCamera* camera_to_remove);
 
-	bool IsMovementEnabled() const;
+	bool IsSceneCameraMoving() const;
 
 private:
 	void SelectMainCamera();
 
-	void SetOrbit(bool is_orbiting);
-	bool IsOrbiting() const;
+	bool IsSceneCameraOrbiting() const;
 
 	void SetMovement(bool movement_enabled);
 	void HandleSceneCameraMovements();
@@ -51,6 +50,7 @@ private:
 	bool game_window_is_hovered = false;
 
 	bool is_orbiting = false;
+	bool orbit_movement_enabled = false;
 	float speed_up;
 
 

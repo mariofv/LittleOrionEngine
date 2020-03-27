@@ -1,55 +1,55 @@
 #ifndef _MODULERESOURCEMANAGER_H_
 #define _MODULERESOURCEMANAGER_H_
 
+#include "Main/Application.h"
 #include "Module.h"
+#include "ModuleFileSystem.h"
+
+#include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/Importer/MaterialImporter.h"
+#include "ResourceManagement/Importer/ModelImporter.h"
+#include "ResourceManagement/Importer/PrefabImporter.h"
+#include "ResourceManagement/Importer/SceneManager.h"
+#include "ResourceManagement/Importer/TextureImporter.h"
+#include "ResourceManagement/ResourcesDB/ResourceDataBase.h"
 
 #include <memory>
 #include <thread>
 #include <atomic>
 #include <mutex>
 
-#include "ResourceManagement/Importer/ModelImporter.h"
-#include "ResourceManagement/Importer/PrefabImporter.h"
-#include "ResourceManagement/Importer/SceneManager.h"
-#include "ResourceManagement/Importer/TextureImporter.h"
-
 class Texture;
 class File;
 class Mesh;
 class Resource;
-class Importer;
 class Timer;
+
 class ModuleResourceManager : public Module
 {
 public:
 
-	ModuleResourceManager() = default;
+	ModuleResourceManager();
+	~ModuleResourceManager() = default;
 
 	bool Init() override;
 
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	std::pair<bool, std::string> Import(const File& file);
-	std::pair<bool, std::string> Import(const std::string &path, GameObject * gameobject_to_save) const;
+	ImportResult Import(const File& file, bool force = false);
+	void ImportAllFilesInDirectory(const File& file, bool force);
+	void CreatePrefab(const std::string& path, GameObject* gameobject_to_save) const;
+	uint32_t LoadCubemap(const std::vector<std::string>& faces_paths);
 
 	template<typename T>
-	void RemoveResourceFromCacheIfNeeded(const std::shared_ptr<T> & resource) {
-		auto& it = std::find(resource_cache.begin(), resource_cache.end(), resource);
-		if (it != resource_cache.end() && (*it).use_count() <= 2)
-		{
-			resource_cache.erase(it);
-		}
-	}
-
-	template<typename T>
-	std::shared_ptr<T> Load(const std::string& uid) const
+	std::shared_ptr<T> Load(const std::string& uid)
 	{
 		std::shared_ptr<Resource> cache_resource = RetrieveFromCacheIfExist(uid);
 		if (cache_resource != nullptr)
 		{
 			return std::static_pointer_cast<T>(cache_resource);
 		}
+		ReimportIfNeeded(uid);
 		std::shared_ptr<T> resource = Loader::Load<T>(uid);
 		if (resource != nullptr)
 		{
@@ -67,15 +67,16 @@ public:
 		return Load<T>(uid);
 	}
 private:
-	std::pair<bool, std::string> InternalImport(const File& file);
-	void ImportAllFileHierarchy(const File& file);
-	std::shared_ptr<Resource> RetrieveFromCacheIfExist(const std::string& uid) const;
 	void StartThread();
+	void ReimportIfNeeded(const std::string& uid);
+
+	ImportResult InternalImport(const File& file, bool force) const;
+	std::shared_ptr<Resource> RetrieveFromCacheIfExist(const std::string& uid) const;
 
 public:
 	struct ThreadComunication
 	{
-		std::mutex thread_mutex;
+		mutable std::mutex thread_mutex;
 		std::atomic_bool stop_thread = false;
 		std::atomic_bool finished_loading = false;
 		std::atomic_uint thread_importing_hash = 0;
@@ -84,8 +85,10 @@ public:
 		std::atomic_uint total_items = 0;
 	} thread_comunication;
 
+	std::unique_ptr<MaterialImporter> material_importer = nullptr;
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
 	std::unique_ptr<SceneManager> scene_manager = nullptr;
+	std::unique_ptr<ResourceDataBase> resource_DB = nullptr;
 
 private:
 	const size_t importer_interval_millis = 30000;
@@ -98,6 +101,7 @@ private:
 	std::unique_ptr<ModelImporter> model_importer = nullptr;
 	std::unique_ptr<PrefabImporter> prefab_importer = nullptr;
 	mutable std::vector<std::shared_ptr<Resource>> resource_cache;
+
 };
 
 #endif // _MODULERESOURCEMANAGER_H_

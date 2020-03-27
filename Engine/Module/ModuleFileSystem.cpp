@@ -1,7 +1,7 @@
 #include "ModuleFileSystem.h"
 #include "Main/Application.h"
+#include "Module/ModuleResourceManager.h"
 #include <SDL/SDL.h>
-
 #include <algorithm>
 #include <cctype>
 
@@ -16,22 +16,14 @@ bool ModuleFileSystem::Init() {
 		APP_LOG_ERROR("Error creating writing directory: %s", PHYSFS_getLastError());
 		return false;
 	}
-	MakeDirectory("Assets");
+
 	MakeDirectory("Assets/Scenes");
-	MakeDirectory("Library");
-	if (PHYSFS_mount("Assets", "Assets", 1) == 0)
+	if (!CreateMountedDir("Assets"))
 	{
-		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
 		return false;
 	}
-	if (PHYSFS_mount("Library", "Library", 1) == 0)
+	if (!CreateMountedDir("Resources"))
 	{
-		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
-		return false;
-	}
-	if (PHYSFS_mount("Resources", "Resources", 1) == 0)
-	{
-		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
 		return false;
 	}
 	RefreshFilesHierarchy();
@@ -111,24 +103,22 @@ bool ModuleFileSystem::Save(const char* file_path, const void* buffer, unsigned 
 	SDL_RWclose(file);
 	return true;
 }
-bool ModuleFileSystem::Remove(const File * file)
+bool ModuleFileSystem::Remove(const File * file) const
 {
 	if (file == nullptr)
 	{
 		return false;
 	}
 	bool success = PHYSFS_delete(file->file_path.c_str()) != 0;
-	RefreshFilesHierarchy();
+	if (file->parent != nullptr)
+	{
+		file->parent->Refresh();
+	}
 	return success;
 }
 bool ModuleFileSystem::Exists(const char* file_path) const
 {
-	SDL_RWops* file = SDL_RWFromFile(file_path, "r");
-	bool exists = file != NULL;
-	if (exists) {
-		SDL_RWclose(file);
-	}
-	return exists;
+	return PHYSFS_exists(file_path);
 }
 
 File ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path) const
@@ -176,19 +166,29 @@ FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileT
 	{
 		return FileType::TEXTURE;
 	}
-	if (
-		file_extension == "fbx"
-		|| file_extension == "ol"
-		|| file_extension == "obj"
-		)
+	if (file_extension == "fbx")
 	{
 		return FileType::MODEL;
 	}
-	if (
-		file_extension == "prefab"
-		)
+	if (file_extension == "prefab")
 	{
 		return FileType::PREFAB;
+	}
+	if (file_extension == "mesh")
+	{
+		return FileType::MESH;
+	}
+	if (file_extension == "matol")
+	{
+		return FileType::MATERIAL;
+	}
+	if (file_extension == "anim")
+	{
+		return FileType::ANIMATION;
+	}
+	if (file_extension == "sk")
+	{
+		return FileType::SKELETON;
 	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{
@@ -201,7 +201,7 @@ FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileT
 std::string ModuleFileSystem::GetFileExtension(const char *file_path) const
 {
 	std::string file_path_string = std::string(file_path);
-	if (file_path_string.back() == '/') 
+	if (!file_path_string.empty() && file_path_string.back() == '/')
 	{
 		return std::string("/");
 	}
@@ -226,13 +226,31 @@ void ModuleFileSystem::GetAllFilesInPath(const std::string & path, std::vector<s
 	char **filename;
 	for (filename = files_array; *filename != NULL; filename++)
 	{
+		std::shared_ptr<File> new_file = std::make_shared<File>(path, *filename);
 		if (std::string(*filename).find(".meta") == std::string::npos)
 		{
-			std::shared_ptr<File> new_file = std::make_shared<File>(path, *filename);
 			bool is_directory = new_file->file_type == FileType::DIRECTORY;
 			if ((directories_only && is_directory) || !directories_only)
 			{
 				files.push_back(new_file);
+			}
+		}
+		else
+		{
+			std::string original_file = new_file->file_path.substr(0, new_file->file_path.find(".meta"));
+			if (!Exists(original_file.c_str()))
+			{
+				ImportOptions options;
+				Importer::GetOptionsFromMeta(new_file->file_path, options);
+				if (!options.exported_file.empty())
+				{
+					Remove(&File(options.exported_file));
+				}
+				Remove(new_file.get());
+			}
+			else
+			{
+				App->resources->resource_DB->AddEntry(*new_file);
 			}
 		}
 	}
@@ -245,5 +263,14 @@ void ModuleFileSystem::RefreshFilesHierarchy()
 }
 
 
-
+bool  ModuleFileSystem::CreateMountedDir(const char * directory) const
+{
+	MakeDirectory(directory);
+	if (PHYSFS_mount(directory, directory, 1) == 0)
+	{
+		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
+		return false;
+	}
+	return true;
+}
 

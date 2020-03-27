@@ -1,6 +1,22 @@
 #include "ModuleEditor.h"
 
+#include "EditorUI/Panel/PanelAbout.h"
+#include "EditorUI/Panel/PanelConfiguration.h"
+#include "EditorUI/Panel/PanelConsole.h"
+#include "EditorUI/Panel/PanelDebug.h"
+#include "EditorUI/Panel/PanelGame.h"
+#include "EditorUI/Panel/PanelMenuBar.h"
+#include "EditorUI/Panel/PanelNavMesh.h"
+#include "EditorUI/Panel/PanelHierarchy.h"
+#include "EditorUI/Panel/PanelInspector.h"
+#include "EditorUI/Panel/PanelPopups.h"
+#include "EditorUI/Panel/PanelProjectExplorer.h"
+#include "EditorUI/Panel/PanelResourceDatabase.h"
+#include "EditorUI/Panel/PanelScene.h"
+#include "EditorUI/Panel/PanelToolBar.h"
+
 #include "Helper/Config.h"
+
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleResourceManager.h"
@@ -9,30 +25,16 @@
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 
-#include "UI/Panel/PanelAbout.h"
-#include "UI/Panel/PanelConfiguration.h"
-#include "UI/Panel/PanelConsole.h"
-#include "UI/Panel/PanelDebug.h"
-#include "UI/Panel/PanelGame.h"
-#include "UI/Panel/PanelMenuBar.h"
-#include "UI/Panel/PanelNavMesh.h"
-#include "UI/Panel/PanelHierarchy.h"
-#include "UI/Panel/PanelInspector.h"
-#include "UI/Panel/PanelPopups.h"
-#include "UI/Panel/PanelProjectExplorer.h"
-#include "UI/Panel/PanelScene.h"
-#include "UI/Panel/PanelToolBar.h"
+#include <Brofiler/Brofiler.h>
+#include <FontAwesome5/IconsFontAwesome5.h>
+#include <FontAwesome5/IconsFontAwesome5Brands.h>
 
-#include <SDL/SDL.h>
 #include <GL/glew.h>
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <imgui_impl_opengl3.h>
 #include <imgui_impl_sdl.h>
-#include <FontAwesome5/IconsFontAwesome5.h>
-#include <FontAwesome5/IconsFontAwesome5Brands.h>
-#include <Brofiler/Brofiler.h>
-
+#include <SDL/SDL.h>
 
 // Called before render is available
 bool ModuleEditor::Init()
@@ -52,6 +54,7 @@ bool ModuleEditor::Init()
 	panels.push_back(debug_panel = new PanelDebug());
 	panels.push_back(configuration = new PanelConfiguration());
 	panels.push_back(about = new PanelAbout());
+	panels.push_back(resource_database = new PanelResourceDatabase());
 	panels.push_back(popups = new PanelPopups());
 	panels.push_back(nav_mesh = new PanelNavMesh());
 
@@ -104,7 +107,7 @@ update_status ModuleEditor::Update()
 	static bool inital_scene_loaded = false;
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
-		OpenScene(ASSIGNMENT_SCENE_PATH);
+		OpenScene(DEFAULT_SCENE_PATH);
 		inital_scene_loaded = true;
 	}
 
@@ -129,6 +132,8 @@ void ModuleEditor::Render()
 	ImGui::End();
 
 	ImGui::Render();
+
+	BROFILER_CATEGORY("Render ImGui Draws", Profiler::Color::BlueViolet);
 	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 

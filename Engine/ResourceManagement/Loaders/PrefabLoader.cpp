@@ -1,17 +1,19 @@
 #include "PrefabLoader.h"
+
+#include "Component/ComponentCamera.h"
+#include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentLight.h"
+#include "Component/ComponentAnimation.h"
+#include "Component/ComponentScript.h"
+
+#include "Helper/Config.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleFileSystem.h"
 
 #include "ResourceManagement/Resources/Prefab.h"
 
-#include "Component/ComponentCamera.h"
-#include "Component/ComponentMaterial.h"
-#include "Component/ComponentMesh.h"
-#include "Component/ComponentLight.h"
-
-
-#include "Helper/Config.h"
 #include <algorithm>
 
 std::shared_ptr<Prefab> PrefabLoader::Load(const std::string& file_path)
@@ -82,7 +84,7 @@ void PrefabLoader::CreateComponents(const Config& config, std::unique_ptr<GameOb
 		uint64_t component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
 		assert(component_type_uint != 0);
 
-		Component::ComponentType component_type = Component::GetComponentType(static_cast<unsigned int>(component_type_uint));
+		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
 
 			Component *created_component;
 			switch (component_type)
@@ -91,16 +93,18 @@ void PrefabLoader::CreateComponents(const Config& config, std::unique_ptr<GameOb
 				created_component = new ComponentCamera();
 				break;
 
-			case Component::ComponentType::MATERIAL:
-				created_component = new ComponentMaterial();
-				break;
-
-			case Component::ComponentType::MESH:
-				created_component = new ComponentMesh;
+			case Component::ComponentType::MESH_RENDERER:
+				created_component = new ComponentMeshRenderer();
 				break;
 
 			case Component::ComponentType::LIGHT:
 				created_component = new ComponentLight();
+				break;
+			case Component::ComponentType::ANIMATION:
+				created_component = new ComponentAnimation();
+				break;
+			case Component::ComponentType::SCRIPT:
+				created_component = new ComponentScript();
 				break;
 			}
 			created_component->owner = loaded_gameObject.get();

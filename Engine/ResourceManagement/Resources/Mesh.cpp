@@ -8,10 +8,17 @@ Resource(0, mesh_file_path)
 	LoadInMemory();
 	
 }
+Mesh::Mesh(std::string mesh_file_path) :
+Resource(0, mesh_file_path)
+{
+}
 Mesh::~Mesh() {
-	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ebo);
-	glDeleteVertexArrays(1, &vao);
+	if (vbo != 0)
+	{
+		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &ebo);
+		glDeleteVertexArrays(1, &vao);
+	}
 }
 
 GLuint Mesh::GetVAO() const
@@ -68,6 +75,15 @@ void Mesh::LoadInMemory()
 	// VERTEX TANGENT
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tangent));
+
+	
+	// VERTEX JOINTS
+	glEnableVertexAttribArray(4);
+	glVertexAttribIPointer(4, 4, GL_UNSIGNED_INT, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, joints));
+
+	// VERTEX WEIGHTS
+	glEnableVertexAttribArray(5);
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, weights));
 
 	glBindVertexArray(0);
 }

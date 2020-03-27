@@ -4,82 +4,16 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleDebug.h"
 
-void DebugDrawGL::DepthMask(bool state)
-{
-	glDepthMask(state ? GL_TRUE : GL_FALSE);
-}
-
-void DebugDrawGL::Texture(bool state)
-{
-	if (state)
-	{
-		glEnable(GL_TEXTURE_2D);
-		g_tex.Bind();
-	}
-	else
-	{
-		glDisable(GL_TEXTURE_2D);
-	}
-}
-
-void DebugDrawGL::Begin(DuDebugDrawPrimitives prim, float size)
-{
-	switch (prim)
-	{
-	case DU_DRAW_POINTS:
-		glPointSize(size);
-		glBegin(GL_POINTS);
-		break;
-	case DU_DRAW_LINES:
-		glLineWidth(size);
-		glBegin(GL_LINES);
-		break;
-	case DU_DRAW_TRIS:
-		glBegin(GL_TRIANGLES);
-		break;
-	case DU_DRAW_QUADS:
-		glBegin(GL_QUADS);
-		break;
-	};
-}
 
 void DebugDrawGL::Vertex(const float* pos, unsigned int color)
 {
-	//glColor3f(1.f, 0.f, 0.f);
-	//glVertex3fv(pos);
 	vertices.push_back(math::float3(pos));
 }
 
-void DebugDrawGL::Vertex(const float x, const float y, const float z, unsigned int color)
-{
-	glColor4ubv((GLubyte*)&color);
-	glVertex3f(x, y, z);
-}
-
-void DebugDrawGL::Vertex(const float* pos, unsigned int color, const float* uv)
-{
-	glColor4ubv((GLubyte*)&color);
-	glTexCoord2fv(uv);
-	glVertex3fv(pos);
-}
-
-void DebugDrawGL::Vertex(const float x, const float y, const float z, unsigned int color, const float u, const float v)
-{
-	glColor4ubv((GLubyte*)&color);
-	glTexCoord2f(u, v);
-	glVertex3f(x, y, z);
-}
-
-void DebugDrawGL::End()
-{
-	glEnd();
-	glLineWidth(3.0f);
-	glPointSize(4.0f);
-}
 
 void DebugDrawGL::DrawMesh(ComponentCamera& camera)
 {
-	if (vertices.size() == 0 || !App->debug->show_navmesh)
+	if (vertices.size() == 0)
 		return;
 
 

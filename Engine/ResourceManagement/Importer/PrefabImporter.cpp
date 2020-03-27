@@ -3,45 +3,51 @@
 #include "Module/ModuleFileSystem.h"
 #include "Main/GameObject.h"
 #include "Helper/Config.h"
+
 #include <stack>
-std::pair<bool, std::string> PrefabImporter::Import(const File & file, bool force) const
+
+ImportResult PrefabImporter::Import(const File& file, bool force) const
 {
+	ImportResult import_result;
+
 	if (file.filename.empty())
 	{
 		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
-			return std::pair<bool, std::string>(false, "");
+			return import_result;
 	}
 
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
-	if (already_imported.uid != 0 && !force) {
-		return std::pair<bool, std::string>(true, already_imported.exported_file);
+	if (already_imported.uuid != 0 && !force) 
+	{
+		import_result.success = true;
+		import_result.exported_file = already_imported.exported_file;
+		return import_result;
 	}
 
-	App->filesystem->MakeDirectory(LIBRARY_TEXTURES_FOLDER);
-
-	std::string output_file = LIBRARY_TEXTURES_FOLDER + "/" + file.filename;
+	std::string output_file = SaveMetaFile(file.file_path, ResourceType::PREFAB);
 	bool copied = App->filesystem->Copy(file.file_path.c_str(), output_file.c_str());
 	if (!copied)
 	{
-		return std::pair<bool, std::string>(false, "");
+		return import_result;
 	}
-	SaveMetaFile(file, output_file);
-	return std::pair<bool, std::string>(true, output_file);
+	
+
+	import_result.success = true;
+	import_result.exported_file = output_file;
+	return import_result;
 }
 
-std::pair<bool, std::string> PrefabImporter::Import(const File & file, GameObject * gameobject_to_save) const
+void PrefabImporter::CreatePrefabResource(const File & file, GameObject * gameobject_to_save) const
 {
 	Config scene_config;
 
 	std::vector<Config> game_objects_config;
 	std::stack<GameObject*> pending_objects;
 
-	if (gameobject_to_save->parent != nullptr)
-	{
-		Config current_gameobject;
-		gameobject_to_save->Save(current_gameobject);
-		game_objects_config.push_back(current_gameobject);
-	}
+
+	Config current_gameobject;
+	gameobject_to_save->Save(current_gameobject);
+	game_objects_config.push_back(current_gameobject);
 
 	for (auto& child_game_object : gameobject_to_save->children)
 	{
@@ -68,5 +74,4 @@ std::pair<bool, std::string> PrefabImporter::Import(const File & file, GameObjec
 	scene_config.GetSerializedString(serialized_scene_string);
 
 	App->filesystem->Save(file.file_path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
-	return Import(file);
 }

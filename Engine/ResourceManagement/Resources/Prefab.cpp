@@ -1,9 +1,9 @@
 #include "Prefab.h"
+#include "Filesystem/File.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
-
 
 
 Prefab::Prefab(std::vector<std::unique_ptr<GameObject>> && gameObjects, uint32_t UID, const std::string & exported_file) : Resource(UID, exported_file), prefab(std::move(gameObjects))
@@ -35,17 +35,18 @@ GameObject * Prefab::Instantiate(GameObject * prefab_parent, std::unordered_map<
 			instances.push_back(copy_in_scene);
 			parent_prefab = copy_in_scene;
 		}
-		copy_in_scene->prefab_reference = this;
+		copy_in_scene->prefab_reference = App->resources->Load<Prefab>(exported_file);
 		copy_in_scene->transform.Translate(float3::zero); //:D
 	}
-
+	parent_prefab->SetParent(prefab_parent);
 	return parent_prefab;
 }
 
 void Prefab::Apply(GameObject * new_reference)
 {
-	auto result = App->resources->Import(exported_file, new_reference);
-	if (result.first)
+	App->resources->CreatePrefab(exported_file, new_reference);
+	ImportResult import_result = App->resources->Import(File(exported_file));
+	if (import_result.success)
 	{
 		RecursiveRewrite(prefab.front().get(), new_reference, true, false);
 		for (auto old_instance : instances)
@@ -152,7 +153,7 @@ void Prefab::AddNewGameObjectToInstance(GameObject * parent, GameObject * new_re
 	else
 	{
 		copy = App->scene->CreateGameObject();
-		copy->prefab_reference = this;
+		copy->prefab_reference = App->resources->Load<Prefab>(exported_file);
 	}
 	copy->SetParent(parent);
 	*copy << *new_reference;
@@ -189,4 +190,9 @@ void Prefab::RemoveInstance(GameObject * instance)
 	{
 		instances.erase(it);
 	}
+}
+
+bool Prefab::IsOverwritable() const
+{
+	return overwritable;
 }
