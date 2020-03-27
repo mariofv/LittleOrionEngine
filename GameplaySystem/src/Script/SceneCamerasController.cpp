@@ -79,32 +79,7 @@ void SceneCamerasController::UpdateCameraRendering()
 	camera_rendering->Enable();
 }
 
-//Use this for linking GO automatically
-//void SceneCamerasController::Save(Config& config) const
-//{
-//	config.AddUInt(main_camera->UUID, "MainCamera");
-//	config.AddUInt(camera_1->UUID, "Camera1");
-//	config.AddUInt(camera_2->UUID, "Camera2");
-//	config.AddUInt(camera_3->UUID, "Camera3");
-//}
-//
-////Use this for linking GO automatically
-//void SceneCamerasController::Load(const Config& config)
-//{
-//	maincameraUUID = config.GetUInt("MainCamera", 0);
-//	camera1UUID = config.GetUInt("Camera1", 0);
-//	camera2UUID = config.GetUInt("Camera2", 0);
-//	camera3UUID = config.GetUInt("Camera3", 0);
-//}
-//
-////Use this for linking GO automatically
-//void SceneCamerasController::Link()
-//{
-//	main_camera = App->scene->GetGameObject(maincameraUUID);
-//	camera_1 = App->scene->GetGameObject(camera1UUID);
-//	camera_2 = App->scene->GetGameObject(camera2UUID);
-//	camera_3 = App->scene->GetGameObject(camera3UUID);
-//}
+
 void SceneCamerasController::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
