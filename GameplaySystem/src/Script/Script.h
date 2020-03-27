@@ -38,7 +38,7 @@ public:
 	virtual void Load(const Config &config);
 	virtual void Link();
 	
-	void ShowVariables();
+	void ShowDraggedObjects();
 	virtual void InitPublicGameObjects() {};
 
 public:
