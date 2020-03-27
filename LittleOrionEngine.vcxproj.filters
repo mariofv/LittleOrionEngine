@@ -412,6 +412,9 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Helper\TemplatedGameObjectCreator.cpp">
+      <Filter>Engine\Helper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -806,6 +809,9 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h">
       <Filter>Engine\ResourceManagement\ResourcesDB</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h">
+      <Filter>Engine\Helper</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

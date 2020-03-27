@@ -307,7 +307,7 @@ void PanelProjectExplorer::FilesDrop() const
 			if (incoming_game_object->prefab_reference == nullptr)
 			{
 				uint32_t prefab_uuid = PrefabManager::CreateFromGameObject(*selected_folder, *incoming_game_object);
-				if (prefab_uuid != -1)
+				if (prefab_uuid != 0)
 				{
 					App->scene->RemoveGameObject(incoming_game_object);
 					std::shared_ptr<Prefab> prefab = std::static_pointer_cast<Prefab>(App->resources->Load(prefab_uuid));

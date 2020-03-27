@@ -30,15 +30,16 @@ public:
 	void Save(Config& config) const;
 	void Load(const Config& config);
 
-	void SetMaterialTexture(MaterialTextureType type, const std::shared_ptr<Texture> & new_texture);
+	void SetMaterialTexture(MaterialTextureType type, uint32_t texture_id);
 	const std::shared_ptr<Texture>& GetMaterialTexture(MaterialTextureType type) const;
 
 	void RemoveMaterialTexture(MaterialTextureType type);
 
 public:
 	static const size_t MAX_MATERIAL_TEXTURE_TYPES = static_cast<size_t>(MaterialTextureType::UNKNOWN);
-
 	std::string shader_program = "Blinn phong";
+	
+	std::vector<uint32_t> textures_uuid;
 	std::vector<std::shared_ptr<Texture>> textures;
 
 	float diffuse_color[4] = { 1.0f, 1.0f,1.0f,1.0f };

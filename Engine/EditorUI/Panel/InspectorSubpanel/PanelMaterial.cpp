@@ -108,11 +108,10 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 	}
 	DropTarget(material, type);
 
-	std::shared_ptr<Resource> resource_selector_texture;
-	App->editor->popups->resource_selector_popup.GetSelectedResource(element_id, resource_selector_texture);
-	if (resource_selector_texture != nullptr)
+	uint32_t resource_selector_texture = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+	if (resource_selector_texture != 0)
 	{
-		material->SetMaterialTexture(type, std::static_pointer_cast<Texture>(resource_selector_texture));
+		material->SetMaterialTexture(type, resource_selector_texture);
 	}
 
 	ImGui::SameLine();
@@ -186,8 +185,7 @@ void PanelMaterial::DropTarget(Material* material, Material::MaterialTextureType
 				App->actions->action_component = material;
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
 				*/
-				std::shared_ptr<Texture> texture = std::static_pointer_cast<Texture>(App->resources->Load(incoming_metafile->uuid));
-				material->SetMaterialTexture(type, texture);
+				material->SetMaterialTexture(type, incoming_metafile->uuid);
 			}
 		}
 		ImGui::EndDragDropTarget();

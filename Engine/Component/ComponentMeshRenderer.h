@@ -31,8 +31,8 @@ public:
 	void RenderModel() const;
 	void RenderMaterial(GLuint shader_program) const;
 
-	void SetMesh(const std::shared_ptr<Mesh> & mesh_to_render);
-	void SetMaterial(const std::shared_ptr<Material> & material_to_render);
+	void SetMesh(uint32_t mesh_uuid);
+	void SetMaterial(uint32_t material_uuid);
 
 private:
 	void AddDiffuseUniforms(unsigned int shader_program) const;
@@ -42,10 +42,14 @@ private:
 	void BindTexture(Material::MaterialTextureType id) const;
 
 public:
+	uint32_t mesh_uuid;
+	uint32_t material_uuid;
+
 	std::shared_ptr<Mesh> mesh_to_render;
 	std::shared_ptr<Material> material_to_render;
 
 private:
+
 	friend class PanelComponent;
 };
 

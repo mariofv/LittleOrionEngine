@@ -95,11 +95,11 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		{
 			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::MESH);
 		}
-		std::shared_ptr<Resource> resource_selector_mesh;
-		App->editor->popups->resource_selector_popup.GetSelectedResource(element_id, resource_selector_mesh);
-		if (resource_selector_mesh != nullptr)
+
+		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
 		{
-			mesh_renderer->SetMesh(std::static_pointer_cast<Mesh>(resource_selector_mesh));
+			mesh_renderer->SetMesh(selected_resource);
 		}
 		DropMeshAndMaterial(mesh_renderer);
 
@@ -114,11 +114,10 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		{
 			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::MATERIAL);
 		}
-		std::shared_ptr<Resource> resource_selector_material;
-		App->editor->popups->resource_selector_popup.GetSelectedResource(element_id, resource_selector_material);
-		if (resource_selector_material != nullptr)
+		selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
 		{
-			mesh_renderer->SetMaterial(std::static_pointer_cast<Material>(resource_selector_material));
+			mesh_renderer->SetMaterial(selected_resource);
 		}
 		DropMeshAndMaterial(mesh_renderer);
 
@@ -501,15 +500,13 @@ void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
 			Metafile* incoming_resource_metafile = *(Metafile**)payload->Data;
 			if (incoming_resource_metafile->resource_type == ResourceType::MESH)
 			{
-				std::shared_ptr<Mesh> incoming_mesh = std::static_pointer_cast<Mesh>(App->resources->Load(incoming_resource_metafile->uuid));
-				component_mesh->SetMesh(incoming_mesh);
+				component_mesh->SetMesh(incoming_resource_metafile->uuid);
 				component_mesh->modified_by_user = true;
 			}
 			
 			if(incoming_resource_metafile->resource_type == ResourceType::MATERIAL)
 			{
-				std::shared_ptr<Material> incoming_material = std::static_pointer_cast<Material>(App->resources->Load(incoming_resource_metafile->uuid));
-				component_mesh->SetMaterial(incoming_material);
+				component_mesh->SetMaterial(incoming_resource_metafile->uuid);
 				component_mesh->modified_by_user = true;
 			}
 		}

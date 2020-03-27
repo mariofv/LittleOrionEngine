@@ -17,7 +17,7 @@ public:
 	void Render() override;
 
 	void ShowPanel(unsigned int element_id, ResourceType resource_type);
-	void GetSelectedResource(unsigned int element_id, std::shared_ptr<Resource>& return_value);
+	uint32_t GetSelectedResource(unsigned int element_id);
 private:
 	void ClosePanel();
 
@@ -32,7 +32,7 @@ private:
 	ResourceType resource_type = ResourceType::UNKNOWN;
 	std::string resource_name = "";
 
-	std::shared_ptr<Resource> selected_resource = nullptr;
+	uint32_t selected_resource = 0;
 	Metafile* selected_resource_metafile = nullptr;
 	std::vector<Metafile*> resource_metafiles;
 

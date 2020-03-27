@@ -89,6 +89,7 @@
     </ProjectReference>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h" />
     <ClInclude Include="Engine\Actions\EditorAction.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddComponent.h" />
@@ -240,6 +241,7 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp" />
     <ClCompile Include="Engine\Filesystem\File.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
+    <ClCompile Include="Engine\Helper\TemplatedGameObjectCreator.cpp" />
     <ClCompile Include="Engine\Helper\Timer.cpp" />
     <ClCompile Include="Engine\Helper\TimerUs.cpp" />
     <ClCompile Include="Engine\Helper\Utils.cpp" />

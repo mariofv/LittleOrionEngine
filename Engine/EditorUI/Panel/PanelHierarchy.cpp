@@ -6,6 +6,8 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentLight.h"
 
+#include "Helper/TemplatedGameObjectCreator.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleActions.h"
@@ -15,8 +17,10 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
-#include "ResourceManagement/Resources/Prefab.h"
+
 #include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/Resources/Prefab.h"
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #include <Brofiler/Brofiler.h>
 #include <imgui.h>
@@ -203,34 +207,33 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 
 void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 {
-	//TODO: This
 	if (ImGui::BeginMenu("3D object"))
 	{
 		GameObject* created_game_object = nullptr;
 		if (ImGui::Selectable("Cube"))
 		{
-			//created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_CUBE_PATH);
+			created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::CUBE);
 		}
 		if (ImGui::Selectable("Cylinder"))
 		{
-			//created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_CYLINDER_PATH);
+			created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::CYLINDER);
 		}
 		if (ImGui::Selectable("Sphere"))
 		{
-			//created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
+			created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::SPHERE);
 		}
 		if (ImGui::Selectable("Torus"))
 		{
-			//created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
+			created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::TORUS);
+		}
+		if (ImGui::Selectable("Quad"))
+		{
+			created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::QUAD);
 		}
 
 		if (game_object != nullptr && created_game_object != nullptr)
 		{
 			created_game_object->SetParent(game_object);
-		}
-		if (ImGui::Selectable("Quad"))
-		{
-			//App->model_loader->LoadCoreModel(PRIMITIVE_QUAD_PATH);
 		}
 
 		if(created_game_object != nullptr)

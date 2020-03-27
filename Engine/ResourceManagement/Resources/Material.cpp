@@ -11,37 +11,35 @@ Material::Material(Metafile* resource_metafile) :
 	Resource(resource_metafile)
 {
 	textures.resize(MAX_MATERIAL_TEXTURE_TYPES);
+	textures_uuid.resize(MAX_MATERIAL_TEXTURE_TYPES);
 }
 
 void Material::Save(Config& config) const
 {
-	for (size_t i = 0; i < textures.size(); i++)
+	for (size_t i = 0; i < textures_uuid.size(); i++)
 	{
-		if (textures[i] != nullptr)
+		MaterialTextureType type = static_cast<MaterialTextureType>(i);
+
+		switch (type)
 		{
-			MaterialTextureType type = static_cast<MaterialTextureType>(i);
+		case MaterialTextureType::DIFFUSE:
+			config.AddUInt(textures_uuid[i], "Diffuse");
+			break;
 
-			switch (type)
-			{
-			case MaterialTextureType::DIFFUSE:
-				config.AddUInt(textures[i]->GetUUID(), "Diffuse");
-				break;
+		case MaterialTextureType::SPECULAR:
+			config.AddUInt(textures_uuid[i], "Specular");
+			break;
 
-			case MaterialTextureType::SPECULAR:
-				config.AddUInt(textures[i]->GetUUID(), "Specular");
-				break;
+		case MaterialTextureType::OCCLUSION:
+			config.AddUInt(textures_uuid[i], "Occlusion");
+			break;
 
-			case MaterialTextureType::OCCLUSION:
-				config.AddUInt(textures[i]->GetUUID(), "Occlusion");
-				break;
+		case MaterialTextureType::EMISSIVE:
+			config.AddUInt(textures_uuid[i], "Emissive");
+			break;
 
-			case MaterialTextureType::EMISSIVE:
-				config.AddUInt(textures[i]->GetUUID(), "Emissive");
-				break;
-
-			default:
-				break;
-			}
+		default:
+			break;
 		}
 	}
 
@@ -62,33 +60,10 @@ void Material::Save(Config& config) const
 
 void Material::Load(const Config& config)
 {
-	uint32_t diffuse_uuid = config.GetUInt("Diffuse", 0);
-	if (diffuse_uuid != 0)
-	{
-		std::shared_ptr<Texture> texture_resource = std::static_pointer_cast<Texture>(App->resources->Load(diffuse_uuid));
-		SetMaterialTexture(Material::MaterialTextureType::DIFFUSE, texture_resource);
-	}
-
-	uint32_t specular_uuid = config.GetUInt("Specular", 0);
-	if (specular_uuid != 0)
-	{
-		std::shared_ptr<Texture> texture_resource = std::static_pointer_cast<Texture>(App->resources->Load(specular_uuid));
-		SetMaterialTexture(Material::MaterialTextureType::SPECULAR, texture_resource);
-	}
-
-	uint32_t occlusion_uuid = config.GetUInt("Occlusion", 0);
-	if (occlusion_uuid != 0)
-	{
-		std::shared_ptr<Texture> texture_resource = std::static_pointer_cast<Texture>(App->resources->Load(occlusion_uuid));
-		SetMaterialTexture(Material::MaterialTextureType::OCCLUSION, texture_resource);
-	}
-
-	uint32_t emissive_uuid = config.GetUInt("Emissive", 0);
-	if (occlusion_uuid != 0)
-	{
-		std::shared_ptr<Texture> texture_resource = std::static_pointer_cast<Texture>(App->resources->Load(emissive_uuid));
-		SetMaterialTexture(Material::MaterialTextureType::EMISSIVE, texture_resource);
-	}
+	SetMaterialTexture(MaterialTextureType::DIFFUSE, config.GetUInt("Diffuse", 0));
+	SetMaterialTexture(MaterialTextureType::SPECULAR, config.GetUInt("Specular", 0));
+	SetMaterialTexture(MaterialTextureType::OCCLUSION, config.GetUInt("Occlusion", 0));
+	SetMaterialTexture(MaterialTextureType::DIFFUSE, config.GetUInt("Emissive", 0));
 
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 	config.GetString("ShaderProgram", shader_program, "Blinn phong");
@@ -129,9 +104,13 @@ void Material::RemoveMaterialTexture(MaterialTextureType type)
 	textures[type] = nullptr;
 }
 
-void Material::SetMaterialTexture(MaterialTextureType type, const std::shared_ptr<Texture>& new_texture)
+void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uuid)
 {
-	textures[type] = new_texture;
+	textures_uuid[type] = texture_uuid;
+	if (textures_uuid[type] != 0)
+	{
+		textures[type] = std::static_pointer_cast<Texture>(App->resources->Load(texture_uuid));
+	}
 }
 
 const std::shared_ptr<Texture>& Material::GetMaterialTexture(MaterialTextureType type) const

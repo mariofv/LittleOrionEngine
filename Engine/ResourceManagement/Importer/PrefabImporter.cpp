@@ -76,7 +76,7 @@ FileData PrefabImporter::ExtractFromModel(const Config& model_config) const
 	for (auto animation : animation_config)
 	{
 		uint32_t animation_uuid;
-		animation_uuid = animation.GetUInt("Animation", -1);
+		animation_uuid = animation.GetUInt("Animation", 0);
 	}
 
 	FileData prefab_data = ExtractFromGameObject(model_root_node.get());
@@ -105,12 +105,12 @@ void PrefabImporter::ExcractGameObjectFromNode
 	node_game_object->original_UUID = node_game_object->UUID;
 
 	uint32_t material_uuid;
-	material_uuid = node_config.GetUInt("Material", -1);
+	material_uuid = node_config.GetUInt("Material", 0);
 
 	uint32_t mesh_uuid;
-	mesh_uuid = node_config.GetUInt("Mesh", -1);
+	mesh_uuid = node_config.GetUInt("Mesh", 0);
 
-	if (mesh_uuid != -1)
+	if (mesh_uuid != 0)
 	{
 		ExcractMeshComponent(mesh_uuid, material_uuid, mesh_renderer_components, node_game_object);
 
@@ -130,25 +130,8 @@ void PrefabImporter::ExcractMeshComponent(
 	mesh_renderer_components.emplace_back(std::make_unique<ComponentMeshRenderer>(node_game_object));
 	node_game_object->components.push_back(mesh_renderer_components.back().get());
 
-	if (mesh_uuid != -1)
-	{
-		std::shared_ptr<Mesh> mesh = std::static_pointer_cast<Mesh>(App->resources->Load(mesh_uuid));
-		mesh_renderer_components.back()->SetMesh(mesh);
-	}
-	else
-	{
-		//TODO: Get standard mesh
-	}
-
-	if (material_uuid != -1)
-	{
-		std::shared_ptr<Material> material = std::static_pointer_cast<Material>(App->resources->Load(material_uuid));
-		mesh_renderer_components.back()->SetMaterial(material);
-	}
-	else
-	{
-		//TODO: Get standard material
-	}
+	mesh_renderer_components.back()->SetMesh(mesh_uuid);
+	mesh_renderer_components.back()->SetMaterial(material_uuid);
 }
 
 void PrefabImporter::ExtractSkeletonFromNode(

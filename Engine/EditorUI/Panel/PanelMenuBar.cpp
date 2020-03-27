@@ -15,10 +15,14 @@
 #include "EditorUI/Panel/PopupsPanel/PanelPopupSceneManagement.h"
 
 #include "Filesystem/PathAtlas.h"
+#include "Helper/TemplatedGameObjectCreator.h"
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleRender.h"
+
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
@@ -99,24 +103,34 @@ void PanelMenuBar::ShowGameObjectMenu()
 		
 		if (ImGui::BeginMenu("3D Object"))
 		{
-			/* TODO: This
+			GameObject* created_game_object = nullptr;
+
 			if (ImGui::Selectable("Cube"))
 			{
-				App->model_loader->LoadCoreModel(PRIMITIVE_CUBE_PATH);
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::CUBE);
 			}
 			if (ImGui::Selectable("Cylinder"))
 			{
-				App->model_loader->LoadCoreModel(PRIMITIVE_CYLINDER_PATH);
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::CYLINDER);
 			}
 			if (ImGui::Selectable("Sphere"))
 			{
-				App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::SPHERE);
 			}
 			if (ImGui::Selectable("Torus"))
 			{
-				App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::TORUS);
 			}
-			*/
+			if (ImGui::Selectable("Quad"))
+			{
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::QUAD);
+			}
+
+			if (created_game_object != nullptr)
+			{
+				App->renderer->InsertAABBTree(created_game_object);
+			}
+
 			ImGui::EndMenu();
 		}
 

@@ -26,21 +26,22 @@ void PanelPopupResourceSelector::ShowPanel(unsigned int element_id , ResourceTyp
 void PanelPopupResourceSelector::ClosePanel()
 {
 	opened = false;
-	selected_resource = nullptr;
+	selected_resource = 0;
 	this->element_id = 0;
 	this->resource_type = ResourceType::UNKNOWN;
 }
 
-void PanelPopupResourceSelector::GetSelectedResource(unsigned int element_id, std::shared_ptr<Resource>& return_value)
+uint32_t PanelPopupResourceSelector::GetSelectedResource(unsigned int element_id)
 {
 	if (this->element_id != element_id)
 	{
-		return_value = nullptr;
+		return 0;
 	}
 	else
 	{
-		return_value = selected_resource;
-		selected_resource = nullptr;
+		uint32_t tmp = selected_resource;
+		selected_resource = 0;
+		return tmp;
 	}
 }
 
@@ -165,5 +166,5 @@ void PanelPopupResourceSelector::ProcessMouseInput(Metafile* file)
 
 void PanelPopupResourceSelector::SelectResource()
 {
-	selected_resource = App->resources->Load(selected_resource_metafile->uuid);
+	selected_resource = selected_resource_metafile->uuid;
 }

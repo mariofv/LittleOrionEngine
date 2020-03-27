@@ -32,7 +32,7 @@ FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_me
 			assimp_mesh_material->GetTexture(type, j, &file, &mapping, 0);
 			uint32_t material_texture_uuid = ImportMaterialTexture(file.data, material_file_folder_path);
 
-			if (material_texture_uuid != -1)
+			if (material_texture_uuid != 0)
 			{
 				switch (type)
 				{
@@ -131,7 +131,7 @@ uint32_t MaterialImporter::ImportMaterialTexture(const std::string& texture_desc
 		return App->resources->Import(*App->filesystem->GetPath(textures_path));
 	}
 
-	return -1;
+	return 0;
 }
 
 Material::MaterialTextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureType type) const

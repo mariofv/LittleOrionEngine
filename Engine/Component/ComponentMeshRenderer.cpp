@@ -8,28 +8,42 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTexture.h"
 
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
+
 ComponentMeshRenderer::ComponentMeshRenderer(GameObject * owner) : Component(owner, ComponentType::MESH_RENDERER)
 {
+	SetMesh(0);
+	SetMaterial(0);
 	owner->aabb.GenerateBoundingBox();
 }
 
 ComponentMeshRenderer::ComponentMeshRenderer() : Component(nullptr, ComponentType::MESH_RENDERER)
 {
-	/*
-	this->mesh_to_render = App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH);
-	this->material_to_render = App->resources->Load<Material>(DEFAULT_MATERIAL_PATH);
-	*/
+	SetMesh(0);
+	SetMaterial(0);
 }
 
-void ComponentMeshRenderer::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
+void ComponentMeshRenderer::SetMesh(uint32_t mesh_uuid)
 {
-	this->mesh_to_render = mesh_to_render;
-	owner->aabb.GenerateBoundingBox();
+	this->mesh_uuid = mesh_uuid;
+	if (mesh_uuid != 0)
+	{
+		this->mesh_to_render = std::static_pointer_cast<Mesh>(App->resources->Load(mesh_uuid));
+		owner->aabb.GenerateBoundingBox();
+	}
 }
 
-void ComponentMeshRenderer::SetMaterial(const std::shared_ptr<Material> & material_to_render)
+void ComponentMeshRenderer::SetMaterial(uint32_t material_uuid)
 {
-	this->material_to_render = material_to_render;
+	this->material_uuid = material_uuid;
+	if (material_uuid != 0)
+	{
+		material_to_render = std::static_pointer_cast<Material>(App->resources->Load(material_uuid));;
+	}
+	else
+	{
+		material_to_render = std::static_pointer_cast<Material>(App->resources->Load((uint32_t)CoreResource::DEFAULT_MATERIAL));;
+	}
 }
 
 
@@ -43,8 +57,8 @@ void ComponentMeshRenderer::Save(Config& config) const
 	config.AddUInt(UUID, "UUID");
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
-	config.AddUInt(mesh_to_render->GetUUID(), "Mesh");
-	config.AddUInt(material_to_render->GetUUID(), "Material");
+	config.AddUInt(mesh_uuid, "Mesh");
+	config.AddUInt(material_uuid, "Material");
 }
 
 void ComponentMeshRenderer::Load(const Config& config)
@@ -52,21 +66,11 @@ void ComponentMeshRenderer::Load(const Config& config)
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 
-	uint32_t mesh_uuid;
 	mesh_uuid = config.GetUInt("Mesh", 0);
-	if (mesh_uuid != 0)
-	{
-		std::shared_ptr<Mesh> mesh = std::static_pointer_cast<Mesh>(App->resources->Load(mesh_uuid));
-		SetMesh(mesh);
-	}
+	SetMesh(mesh_uuid);
 
-	uint32_t material_uuid;
 	material_uuid = config.GetUInt("Material", 0);
-	if (material_uuid != 0)
-	{
-		std::shared_ptr<Material> material = std::static_pointer_cast<Material>(App->resources->Load(material_uuid));
-		SetMaterial(material);
-	}
+	SetMaterial(material_uuid);
 }
 
 void ComponentMeshRenderer::Render() const
