@@ -69,38 +69,6 @@ void SceneCamerasController::OnInspector(ImGuiContext* context)
 {
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
-	/*ImGui::Text("Game Camera: ");
-	ImGui::SameLine();
-	ImGui::Button(is_main_camera.c_str());
-	panel->DropGOTarget(main_camera);
-	if (main_camera)
-	{
-		is_main_camera = main_camera->name;
-	}
-	ImGui::Text("Camera 1: ");
-	ImGui::SameLine();
-	ImGui::Button(is_camera_1.c_str());
-	panel->DropGOTarget(camera_1);
-	if (camera_1)
-	{
-		is_camera_1 = camera_1->name;
-	}
-	ImGui::Text("Camera 2: ");
-	ImGui::SameLine();
-	ImGui::Button(is_camera_2.c_str());
-	panel->DropGOTarget(camera_2);
-	if (camera_2)
-	{
-		is_camera_2 = camera_2->name;
-	}
-	ImGui::Text("Camera 3: ");
-	ImGui::SameLine();
-	ImGui::Button(is_camera_3.c_str());
-	panel->DropGOTarget(camera_3);
-	if (camera_3)
-	{
-		is_camera_3 = camera_3->name;
-	}*/
 	ShowDraggedObjects();
 }
 
