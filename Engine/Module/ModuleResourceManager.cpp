@@ -91,7 +91,7 @@ bool ModuleResourceManager::CleanUp()
 
 	 CleanInconsistenciesInDirectory(*App->filesystem->assets_folder_path); // Clean all incorrect meta in the folder Assets.
 	 ImportAssetsInDirectory(*App->filesystem->assets_folder_path); // Import all assets in folder Assets. All metafiles in Assets are correct"
-	
+	// TODO: We need also to iterate over the library folder and to delete binaries that doesnt have corresponding metafiles
 	 thread_comunication.finished_loading = true;
 	 last_imported_time = thread_timer->Read();
  }
@@ -118,7 +118,7 @@ void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& director
 		{
 			if (!metafile_manager->IsMetafileConsistent(*path_child))
 			{
-				metafile_manager->DeleteMetafileInconsistencies(*path_child);
+				metafile_manager->DeleteMetafileInconsistencies(*path_child); // TODO: This causes memory violations because bector size is modified. Look for a better way of deleting files.
 			}
 		}
 		thread_comunication.thread_importing_hash = 0;
