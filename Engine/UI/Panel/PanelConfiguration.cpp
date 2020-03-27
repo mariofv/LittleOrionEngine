@@ -593,19 +593,23 @@ void PanelConfiguration::ShowInputOptions()
 			{
 				GameInput game_input;
 				game_input.name = name_game_input;
+				int i = 0;
 				for(auto key : keys)
 				{
-					game_input.keys.push_back((KeyCode)key);
+					game_input.keys[i] = ((KeyCode)key);
+					++i;
 				}
-
+				int j = 0;
 				for (auto mouse : mouse_keys)
 				{
-					game_input.mouse_buttons.push_back((MouseButton)mouse);
+					game_input.mouse_buttons[j] = ((MouseButton)mouse);
+					++j;
 				}
-
+				int k = 0;
 				for (auto controller_key : controller_keys)
 				{
-					game_input.controller_buttons.push_back((ControllerCode)controller_key);
+					game_input.controller_buttons[k] = ((ControllerCode)controller_key);
+					++k;
 				}
 
 				App->input->CreateGameInput(game_input);
