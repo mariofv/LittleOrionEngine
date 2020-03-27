@@ -144,7 +144,7 @@ void ComponentTransform::SetScale(const float3& scale)
 {
 	this->scale = scale;
 	
-	//OnTransformChange();
+	OnTransformChange();
 }
 
 float3 ComponentTransform::GetUpVector() const

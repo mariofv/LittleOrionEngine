@@ -418,9 +418,12 @@
     <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp" />
-    <ClCompile Include="Engine\Actions\EditorActionScale2D.cpp" />
-    <ClCompile Include="Engine\Actions\EditorActionTranslate2D.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -819,9 +822,12 @@
     <ClInclude Include="Engine\Component\ComponentTransform2D.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Actions\EditorActionRotation2D.h" />
-    <ClInclude Include="Engine\Actions\EditorActionScale2D.h" />
-    <ClInclude Include="Engine\Actions\EditorActionTranslate2D.h" />
+    <ClInclude Include="Engine\Actions\EditorActionRotation2D.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionRect2D.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

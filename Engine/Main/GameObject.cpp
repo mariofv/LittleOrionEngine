@@ -164,10 +164,12 @@ void GameObject::LoadTransforms(Config config)
 {
 	Config transform_config;
 	config.GetChildConfig("Transform", transform_config);
+	transform.owner = this;
 	transform.Load(transform_config);
 
 	Config transform_2d_config;
 	config.GetChildConfig("Transform2D", transform_2d_config);
+	transform_2d.owner = this;
 	transform_2d.Load(transform_2d_config);
 }
 
@@ -175,9 +177,8 @@ void GameObject::CreateTransforms()
 {
 	transform = ComponentTransform();
 	transform.owner = this;
-
-	transform_2d = ComponentTransform2D();
-	transform_2d.owner = this;
+	
+	transform_2d = ComponentTransform2D(this);
 }
 
 bool GameObject::IsStatic() const
