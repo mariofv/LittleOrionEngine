@@ -143,8 +143,12 @@ void PanelMenuBar::ShowGameObjectMenu()
 			
 			if (ImGui::Selectable("Text"))
 			{
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Text";
+				//created_game_object->SetParent(created_game_object_parent);
+				created_game_object->CreateComponent(Component::ComponentType::TEXT);
 
-				for (unsigned int i = 0; i < App->scene->GetRoot()->children.size(); ++i)
+			/*	for (unsigned int i = 0; i < App->scene->GetRoot()->children.size(); ++i)
 				{
 					if (App->scene->GetRoot()->children[i]->name == "Canvas")
 					{
@@ -163,11 +167,7 @@ void PanelMenuBar::ShowGameObjectMenu()
 						created_game_object->SetParent(created_game_object_parent);
 						created_game_object->CreateComponent(Component::ComponentType::TEXT);
 					}
-				}
-				
-				//created_game_object->o
-				//created_game_object->CreateComponent(Component::ComponentType::TRANSFORM2D);
-				
+				}*/
 			}
 			if (ImGui::Selectable("Image"))
 			{

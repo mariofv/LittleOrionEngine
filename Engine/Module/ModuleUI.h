@@ -54,7 +54,7 @@ public:
 	FT_Library ft;
 	FT_Face face;
 	std::map<GLchar, Character> Characters;
-	GLuint VAO, VBO;
+
 	unsigned int shader_program, vao, text_texture;
 	float window_width, window_height;
 

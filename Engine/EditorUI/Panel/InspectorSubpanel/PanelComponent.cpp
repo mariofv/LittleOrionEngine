@@ -43,7 +43,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (transform->owner->GetComponent(Component::ComponentType::UI) != nullptr) //Render transform 2d
+		if ((transform->owner->GetComponent(Component::ComponentType::UI) != nullptr)|| (transform->owner->GetComponent(Component::ComponentType::TEXT) != nullptr)) //Render transform 2d
 		{
 			ComponentTransform2D* transform_2d = &transform->owner->transform_2d;
 
@@ -433,7 +433,7 @@ void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 
 void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE "Canvas", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (ImGui::Checkbox("Active", &ui->active))
 		{
@@ -471,10 +471,8 @@ void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
 			return;
 		}
 		ImGui::Separator();
-
-		ImGui::InputFloat("Size",&txt->scale);
-		ImGui::InputFloat2("Position", txt->position.ptr());
-		ImGui::InputInt("Texture", (int*)(&App->ui->text_texture));
+		ImGui::InputText("Text", &txt->text);
+		ImGui::Separator();
 		ImGui::ColorPicker3("Color", txt->color.ptr());
 	}
 }
