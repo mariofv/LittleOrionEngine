@@ -116,9 +116,18 @@ bool ModuleFileSystem::Remove(const File * file) const
 	}
 	return success;
 }
-bool ModuleFileSystem::Exists(const char* file_path) const
+bool ModuleFileSystem::Exists(const char* file_path, bool windows) const
 {
-	return PHYSFS_exists(file_path);
+	if(!windows)
+	{
+		return PHYSFS_exists(file_path);
+	}
+	SDL_RWops* file = SDL_RWFromFile(file_path, "r");
+	bool exists = file != NULL;
+	if (exists) {
+		SDL_RWclose(file);
+	}
+	return exists;
 }
 
 File ModuleFileSystem::MakeDirectory(const std::string & new_directory_full_path) const
