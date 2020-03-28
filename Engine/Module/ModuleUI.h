@@ -40,14 +40,9 @@ public:
 
 	void Render(const ComponentCamera* camera);
 
-	ComponentCanvas* CreateComponentCanvas();
-	void RemoveComponentCanvas(ComponentCanvas* canvas_to_remove);
-
 	ComponentUI* CreateComponentUI(const ComponentUI::UIType);
 	void RemoveComponentUI(ComponentUI*);
 
-	ComponentText* CreateComponentText();
-	void RemoveComponentText(ComponentText*);
 	//Glyph init 
 	void InitGlyph();
 	bool glyphInit = false;

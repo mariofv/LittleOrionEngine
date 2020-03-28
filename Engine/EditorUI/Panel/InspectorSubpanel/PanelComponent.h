@@ -8,6 +8,7 @@
 class Component;
 class ComponentCamera;
 class ComponentCanvas;
+class ComponentImage;
 class ComponentMeshRenderer;
 class ComponentLight;
 class ComponentScript;
@@ -26,10 +27,7 @@ public:
 	void ShowComponentCameraWindow(ComponentCamera *camera);
 	void ShowComponentLightWindow(ComponentLight *light);
 	void ShowComponentScriptWindow(ComponentScript * component_script);
-	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
 	void ShowComponentUIWindow(ComponentUI*);
-	void ShowComponentTextWindow(ComponentText*);
-	
 	void ShowAddNewComponentButton();
 
 	void ShowScriptsCreated(ComponentScript*);
@@ -41,6 +39,11 @@ public:
 
 private:
 	void DropMeshAndMaterial(ComponentMeshRenderer* component_mesh);
+	void ShowCommonUIWindow(ComponentUI*);
+	void ShowComponentCanvasWindow(ComponentCanvas*);
+	void ShowComponentImageWindow(ComponentImage*);
+	void ShowComponentTextWindow(ComponentText*);
+
 };
 
 #endif //_PANELCOMPONENT_H_

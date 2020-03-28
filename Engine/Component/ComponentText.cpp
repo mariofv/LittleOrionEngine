@@ -11,14 +11,12 @@
 #include "EditorUI/Panel/PanelScene.h"
 
 
-
-
-ComponentText::ComponentText() : ComponentUI()
+ComponentText::ComponentText() : ComponentUI(ComponentUI::UIType::TEXT)
 {
 	InitData();
 }
 
-ComponentText::ComponentText(GameObject * owner) : ComponentUI(owner)
+ComponentText::ComponentText(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::TEXT)
 {
 	InitData();
 }
@@ -34,18 +32,15 @@ void ComponentText::InitData()
 void ComponentText::Render(float4x4* projection)
 {
 	// Set OpenGL options
-	glEnable(GL_CULL_FACE);
+	/*glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-
-
-	ComponentTransform2D* transform = &owner->transform_2d;
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
 
 	// Activate corresponding render state	
 	glUseProgram(shader_program);
 	glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection"), 1, GL_TRUE, projection->ptr());
 	glUniform1i(glGetUniformLocation(shader_program, "text"), 0);
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, transform->scale_matrix.ptr());
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, owner->transform_2d.scale_matrix.ptr());
 	glUniform3fv(glGetUniformLocation(shader_program, "spriteColor"), 1, color.ptr());
 
 	glActiveTexture(GL_TEXTURE0);

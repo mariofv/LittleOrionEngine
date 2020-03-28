@@ -328,14 +328,8 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	case Component::ComponentType::LIGHT:
 		created_component = App->lights->CreateComponentLight();
 		break;
-	case Component::ComponentType::CANVAS:
-		created_component = App->ui->CreateComponentCanvas();
-		break;
 	case Component::ComponentType::UI:
 		created_component = App->ui->CreateComponentUI(ui_type);
-		break;
-	case Component::ComponentType::TEXT:
-		created_component = App->ui->CreateComponentText();
 		break;
 	case Component::ComponentType::SCRIPT:
 		created_component = App->scripts->CreateComponentScript();

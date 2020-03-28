@@ -69,17 +69,10 @@ void ComponentTransform2D::Load(const Config& config)
 	
 	float param = 0.0f;
 
-	config.GetFloat("Top", param);
-	rect.top = param;
-	
-	config.GetFloat("Left", param);
-	rect.left = param;
-	
-	config.GetFloat("Bottom", param);
-	rect.bottom = param;
-	
-	config.GetFloat("Right", param);
-	rect.right = param;
+	rect.top = config.GetFloat("Top", param);
+	rect.left = config.GetFloat("Left", param);
+	rect.bottom = config.GetFloat("Bottom", param);	
+	rect.right = config.GetFloat("Right", param);
 	
 	config.GetFloat("Rotation", rotation);
 

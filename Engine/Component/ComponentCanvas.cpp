@@ -5,12 +5,12 @@
 #include "Main/Application.h"
 #include "EditorUI/DebugDraw.h" 
 
-ComponentCanvas::ComponentCanvas() : Component(nullptr, ComponentType::CANVAS)
+ComponentCanvas::ComponentCanvas() : Component(nullptr, ComponentType::UI)
 {
 	InitCanvas();
 }
 
-ComponentCanvas::ComponentCanvas(GameObject * owner) : Component(owner, ComponentType::CANVAS)
+ComponentCanvas::ComponentCanvas(GameObject * owner) : Component(owner, ComponentType::UI)
 {
 	InitCanvas();
 }

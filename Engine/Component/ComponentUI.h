@@ -11,8 +11,8 @@ public:
 		IMAGE,
 		TEXT
 	};
-	ComponentUI();
-	ComponentUI(GameObject * owner);
+	ComponentUI(UIType);
+	ComponentUI(GameObject * owner, UIType);
 	~ComponentUI() = default;
 
 	virtual void Delete();
@@ -24,6 +24,7 @@ public:
 	virtual void Render(float4x4*);
 	float3 color = float3(0.0f, 1.0f, 0.0f);
 protected:
+	UIType ui_type;
 	unsigned int shader_program, vao, vbo, ui_texture;
 	void InitData();
 	friend class PanelComponent;

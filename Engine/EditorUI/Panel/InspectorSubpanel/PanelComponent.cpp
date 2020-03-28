@@ -11,6 +11,7 @@
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
@@ -43,7 +44,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if ((transform->owner->GetComponent(Component::ComponentType::UI) != nullptr)|| (transform->owner->GetComponent(Component::ComponentType::TEXT) != nullptr)) //Render transform 2d
+		if ((transform->owner->GetComponent(Component::ComponentType::UI) != nullptr)) //Render transform 2d
 		{
 			ComponentTransform2D* transform_2d = &transform->owner->transform_2d;
 
@@ -54,10 +55,8 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			}
 
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
-			static int top = transform_2d->rect.top;
-			if (ImGui::DragInt("Top", &top, 1))
+			if (ImGui::DragInt("Height", &transform_2d->rect.bottom, 1))
 			{
-				transform_2d->rect.top = top;
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
 			}
@@ -66,32 +65,8 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
 			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2);
 
-			static int right = transform_2d->rect.right;
-			if (ImGui::DragInt("Right", &right, 1))
+			if (ImGui::DragInt("Width", &transform_2d->rect.right, 1))
 			{
-				transform_2d->rect.right = right;
-				transform_2d->OnTransformChange();
-				transform_2d->modified_by_user = true;
-			}
-
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
-
-			static int bottom = transform_2d->rect.bottom;
-			if (ImGui::DragInt("Bottom", &bottom, 1))
-			{
-				transform_2d->rect.bottom = bottom;
-				transform_2d->OnTransformChange();
-				transform_2d->modified_by_user = true;
-			}
-
-			ImGui::SameLine();
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
-			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2);
-
-			static int left = transform_2d->rect.left;
-			if (ImGui::DragInt("Left", &left, 1))
-			{
-				transform_2d->rect.left = left;
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
 			}
@@ -413,44 +388,33 @@ void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::Checkbox("Active", &canvas->active))
-		{
-			//UndoRedo
-			App->actions->action_component = canvas;
-			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(canvas);
-			return;
-		}
-		ImGui::Separator();
-
-		ImGui::LabelText("Canvas", "Canvas");
+		//ShowCommonUIWindow(canvas);
 	}
 }
 
 void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 {
+	switch (ui->ui_type) 
+	{
+		case ComponentUI::UIType::CANVAS :
+			/*ShowComponentCanvasWindow(static_cast<ComponentCanvas*>(ui));
+			break;*/
+		case ComponentUI::UIType::IMAGE:
+			ShowComponentImageWindow(static_cast<ComponentImage*>(ui));
+			break;
+		case ComponentUI::UIType::TEXT:
+			ShowComponentTextWindow(static_cast<ComponentText*>(ui));
+			break;
+	}
+}
+
+
+void PanelComponent::ShowComponentImageWindow(ComponentImage* image) {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE "Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::Checkbox("Active", &ui->active))
-		{
-			//UndoRedo
-			App->actions->action_component = ui;
-			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(ui);
-			return;
-		}
+		ShowCommonUIWindow(image);
 		ImGui::Separator();
-
-		ImGui::InputInt("Texture", (int*) (&ui->ui_texture));
-		ImGui::ColorPicker3("Color", ui->color.ptr());
+		ImGui::InputInt("Texture", (int*)(&image->ui_texture));
 	}
 }
 
@@ -458,22 +422,9 @@ void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::Checkbox("Active", &txt->active))
-		{
-			//UndoRedo
-			App->actions->action_component = txt;
-			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(txt);
-			return;
-		}
-		ImGui::Separator();
+		ShowCommonUIWindow(txt);
+		ImGui::Separator();		
 		ImGui::InputText("Text", &txt->text);
-		ImGui::Separator();
-		ImGui::ColorPicker3("Color", txt->color.ptr());
 	}
 }
 
@@ -660,4 +611,22 @@ ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go, const std::string&
 		}
 		ImGui::EndDragDropTarget();
 	}
+}
+
+void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
+{
+	if (ImGui::Checkbox("Active", &ui->active))
+	{
+		//UndoRedo
+		App->actions->action_component = ui;
+		App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Delete"))
+	{
+		App->actions->DeleteComponentUndo(ui);
+		return;
+	}
+	ImGui::Separator();
+	ImGui::ColorPicker3("Color", ui->color.ptr());
 }
