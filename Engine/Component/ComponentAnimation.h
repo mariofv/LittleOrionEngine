@@ -32,14 +32,13 @@ public:
 
 	void SetAnimation(std::shared_ptr<Animation> & animation);
 
-
 	void Update() override;
 	void Delete() override;
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
-	void UpdateBone(GameObject* bone);
+	void UpdateBone(GameObject * current_bone, int first_keyframe, int second_keyframe, float lambda);
 
 	void GetChildrenMeshes(GameObject * current_mesh);
 

@@ -55,7 +55,7 @@ void ComponentAnimation::Update()
 
 	if (animation_controller->playing)
 	{
-		UpdateBone(owner);
+		UpdateBone(owner, -1, -1, -1);
 	}
 }
 
@@ -89,28 +89,31 @@ void ComponentAnimation::SetAnimation(std::shared_ptr<Animation>& animation)
 }
 
 
-void ComponentAnimation::UpdateBone(GameObject* current_bone)
+void ComponentAnimation::UpdateBone(GameObject* current_bone, int first_keyframe, int second_keyframe, float lambda)
 {
-	float3 bone_position;
-	if (animation_controller->GetTranslation(current_bone->name, bone_position))
+	if (first_keyframe < 0)
 	{
-		current_bone->transform.SetTranslation(bone_position);
+		animation_controller->GetKeyframes(first_keyframe, second_keyframe, lambda);
 	}
 
+	float3 bone_position;
 	Quat bone_rotation;
-	if (animation_controller->GetRotation(current_bone->name, bone_rotation))
+	if (animation_controller->GetTransform(current_bone->name, bone_position, bone_rotation, first_keyframe,
+		second_keyframe, lambda))
 	{
+		current_bone->transform.SetTranslation(bone_position);
 		current_bone->transform.SetRotation(bone_rotation.ToFloat3x3());
 	}
+
 	for (auto& mesh : skinned_meshes) 
 	{
 		mesh->UpdatePalette(*current_bone);
 	}
 	for (auto& children_bone : current_bone->children)
 	{
-		UpdateBone(children_bone);
+		UpdateBone(children_bone, first_keyframe, second_keyframe, lambda);
 	}
-
+	
 }
 
 void ComponentAnimation::GetChildrenMeshes(GameObject* current_mesh_gameobject)
