@@ -1,6 +1,7 @@
 #ifndef _MODULEUI_H_
 #define _MODULEUI_H_
 
+#include "Component/ComponentUI.h"
 #include "Module.h"
 #include "Main/Globals.h"
 
@@ -17,7 +18,6 @@
 class ComponentCanvas;
 class ComponentCamera;
 class ComponentText;
-class ComponentUI;
 
 struct SDL_Renderer;
 
@@ -43,7 +43,7 @@ public:
 	ComponentCanvas* CreateComponentCanvas();
 	void RemoveComponentCanvas(ComponentCanvas* canvas_to_remove);
 
-	ComponentUI* CreateComponentUI();
+	ComponentUI* CreateComponentUI(const ComponentUI::UIType);
 	void RemoveComponentUI(ComponentUI*);
 
 	ComponentText* CreateComponentText();
@@ -62,7 +62,7 @@ public:
 	std::vector<ComponentUI*> ui_elements;
 	std::vector<ComponentText*> ui_texts;
 private:
-
+	float window_width, window_height;
 	SDL_Renderer* render;
 };
 

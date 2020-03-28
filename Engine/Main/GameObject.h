@@ -7,6 +7,7 @@
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentAABB.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentUI.h"
 
 
 #include <GL/glew.h>
@@ -46,7 +47,7 @@ public:
 	void AddChild(GameObject *child);
 	void RemoveChild(GameObject *child);
 
-	ENGINE_API  Component* CreateComponent(const Component::ComponentType type);
+	ENGINE_API  Component* CreateComponent(const Component::ComponentType type, const ComponentUI::UIType ui_type = ComponentUI::UIType::IMAGE);
 	void RemoveComponent(Component * component);
 	ENGINE_API  Component* GetComponent(const Component::ComponentType type) const;
 

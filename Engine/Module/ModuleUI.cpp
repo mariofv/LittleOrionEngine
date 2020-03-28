@@ -1,16 +1,16 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentImage.h"
 #include "Component/ComponentUI.h"
 #include "Component/ComponentText.h"
 
 #include "Main/Globals.h"
 #include "Main/Application.h"
 
-#include "Module/ModuleWindow.h"
-#include "Module/ModuleEditor.h"
-#include "Module/ModuleProgram.h"
-
 #include "ModuleUI.h"
+#include "ModuleEditor.h"
+#include "ModuleWindow.h"
+
 #include "SDL/SDL.h"
 
 
@@ -37,6 +37,9 @@ bool ModuleUI::CleanUp()
 
 void ModuleUI::Render(const ComponentCamera* camera)
 {
+	window_width = App->editor->scene_panel->scene_window_content_area_width;
+	window_height = App->editor->scene_panel->scene_window_content_area_height;
+	float4x4 projection = float4x4::D3DOrthoProjLH(0, 1, window_width, window_height);
 	for (auto &canvas : canvases)
 	{
 		if (canvas->IsEnabled())
@@ -47,7 +50,7 @@ void ModuleUI::Render(const ComponentCamera* camera)
 
 	for (auto &ui : ui_elements)
 	{
-		ui->Render();
+		ui->Render(&projection);
 	}
 
 	for (auto &txt : ui_texts)
@@ -81,10 +84,25 @@ void ModuleUI::RemoveComponentCanvas(ComponentCanvas* canvas_to_remove)
 	}
 }
 
-ComponentUI* ModuleUI::CreateComponentUI()
+ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type)
 {
-	ComponentUI* new_ui = new ComponentUI();
-	ui_elements.push_back(new_ui);
+	ComponentUI* new_ui;
+	switch (type)
+	{
+		case ComponentUI::UIType::CANVAS:
+			//new_ui = new ComponentCanvas();
+			break;
+		case ComponentUI::UIType::IMAGE:
+			new_ui = new ComponentImage();
+			break;
+		case ComponentUI::UIType::TEXT:
+			//new_ui = new ComponetText();
+			break;
+	}
+	if(new_ui) 
+	{
+		ui_elements.push_back(new_ui);
+	}
 	return new_ui;
 }
 
@@ -183,6 +201,6 @@ void ModuleUI::InitGlyph()
 	glyphInit = true;
 }
 
-//Guardar aquí todos los component canvas (crear, destruir y guardar)
-//Cuando se hace el render de los canvas, añadir un render a este modulo que renderice todos los canvas
+//Guardar aquï¿½ todos los component canvas (crear, destruir y guardar)
+//Cuando se hace el render de los canvas, aï¿½adir un render a este modulo que renderice todos los canvas
 //
