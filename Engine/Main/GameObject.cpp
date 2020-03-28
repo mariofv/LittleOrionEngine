@@ -312,7 +312,7 @@ void GameObject::RemoveChild(GameObject *child)
 }
 
 
-ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type)
+ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type, const ComponentUI::UIType ui_type)
 {
 	Component *created_component;
 	switch (type)
@@ -332,7 +332,7 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		created_component = App->ui->CreateComponentCanvas();
 		break;
 	case Component::ComponentType::UI:
-		created_component = App->ui->CreateComponentUI();
+		created_component = App->ui->CreateComponentUI(ui_type);
 		break;
 	case Component::ComponentType::TEXT:
 		created_component = App->ui->CreateComponentText();
