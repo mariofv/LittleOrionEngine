@@ -5,12 +5,12 @@
 
 #include "Module/ModuleUI.h"
 
-ComponentCanvas::ComponentCanvas() : ComponentUI()
+ComponentCanvas::ComponentCanvas() : ComponentUI(ComponentUI::UIType::CANVAS)
 {
 	
 }
 
-ComponentCanvas::ComponentCanvas(GameObject * owner) : ComponentUI(owner)
+ComponentCanvas::ComponentCanvas(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::CANVAS)
 {
 	
 }

@@ -66,23 +66,6 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	}
 }
 
-ComponentCanvas* ModuleUI::CreateComponentCanvas()
-{
-	ComponentCanvas * new_canvas = new ComponentCanvas();
-	canvases.push_back(new_canvas);
-	return new_canvas;
-}
-
-void ModuleUI::RemoveComponentCanvas(ComponentCanvas* canvas_to_remove)
-{
-	auto it = std::find(canvases.begin(), canvases.end(), canvas_to_remove);
-	if (it != canvases.end())
-	{
-		delete *it;
-		canvases.erase(it);
-	}
-}
-
 ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type)
 {
 	ComponentUI* new_ui;
@@ -112,23 +95,6 @@ void ModuleUI::RemoveComponentUI(ComponentUI* ui_to_remove)
 	{
 		delete *it;
 		ui_elements.erase(it);
-	}
-}
-
-ComponentText* ModuleUI::CreateComponentText()
-{
-	ComponentText* new_txt = new ComponentText();
-	ui_texts.push_back(new_txt);
-	return new_txt;
-}
-
-void ModuleUI::RemoveComponentText(ComponentText* txt_to_remove)
-{
-	auto it = std::find(ui_texts.begin(), ui_texts.end(), txt_to_remove);
-	if (it != ui_texts.end())
-	{
-		delete *it;
-		ui_texts.erase(it);
 	}
 }
 

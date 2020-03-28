@@ -16,7 +16,7 @@ public:
 	ComponentTransform2D & operator=(const ComponentTransform2D & component_to_copy);
 	ComponentTransform2D & operator=(ComponentTransform2D && component_to_move) = default;
 
-	math::Rect rect = math::Rect(10, 10, 10, 10);
+	math::Rect rect = math::Rect(0, 0, 10, 10);
 	float rotation = 0.0f;
 	float2 position = float2::zero;
 	float2 scale = float2::one;

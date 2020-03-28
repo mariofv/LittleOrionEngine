@@ -1,11 +1,11 @@
 #include "ComponentImage.h"
 
-ComponentImage::ComponentImage() : ComponentUI()
+ComponentImage::ComponentImage() : ComponentUI(ComponentUI::UIType::IMAGE)
 {
 
 }
 
-ComponentImage::ComponentImage(GameObject * owner) : ComponentUI(owner)
+ComponentImage::ComponentImage(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::IMAGE)
 {
 
 }

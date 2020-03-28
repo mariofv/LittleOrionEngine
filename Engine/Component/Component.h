@@ -17,9 +17,7 @@ public:
 		MESH_RENDERER,
 		TRANSFORM,
 		LIGHT,
-        CANVAS,
 		UI,
-		TEXT,
 		SCRIPT,
 		TRANSFORM2D
 	};

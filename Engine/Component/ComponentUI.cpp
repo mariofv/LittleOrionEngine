@@ -10,12 +10,12 @@
 
 #include "EditorUI/Panel/PanelScene.h"
 
-ComponentUI::ComponentUI() : Component(nullptr, ComponentType::UI)
+ComponentUI::ComponentUI(UIType ui_type) : Component(nullptr, ComponentType::UI), ui_type(ui_type)
 {
 	InitData();
 }
 
-ComponentUI::ComponentUI(GameObject * owner) : Component(owner, ComponentType::UI)
+ComponentUI::ComponentUI(GameObject * owner, UIType ui_type) : Component(owner, ComponentType::UI), ui_type(ui_type)
 {
 	InitData();
 }

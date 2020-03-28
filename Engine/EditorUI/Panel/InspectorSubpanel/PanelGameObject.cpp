@@ -86,14 +86,8 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::SCRIPT:
 				component_panel.ShowComponentScriptWindow(static_cast<ComponentScript*>(component));
 				break;
-			case Component::ComponentType::CANVAS:
-				component_panel.ShowComponentCanvasWindow(static_cast<ComponentCanvas*>(component));
-				break;
 			case Component::ComponentType::UI:
 				component_panel.ShowComponentUIWindow(static_cast<ComponentUI*>(component));
-				break;
-			case Component::ComponentType::TEXT:
-				component_panel.ShowComponentTextWindow(static_cast<ComponentText*>(component));
 				break;
 			default:
 				break;
