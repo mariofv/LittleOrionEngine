@@ -15,6 +15,5 @@ public:
 	void Save(Config& config) const;
 	void Load(const Config& config);
 	void Render(float4x4*);
-	float3 color = float3(0.0f, 1.0f, 0.0f);
 };
 #endif

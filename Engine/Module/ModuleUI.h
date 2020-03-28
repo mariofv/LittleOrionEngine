@@ -55,8 +55,7 @@ public:
 	FT_Face face;
 	std::map<GLchar, Character> Characters;
 
-	unsigned int shader_program, vao, text_texture;
-	float window_width, window_height;
+	unsigned int text_texture;
 
 	std::vector<ComponentCanvas*> canvases;
 	std::vector<ComponentUI*> ui_elements;

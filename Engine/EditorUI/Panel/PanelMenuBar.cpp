@@ -146,7 +146,7 @@ void PanelMenuBar::ShowGameObjectMenu()
 				GameObject* created_game_object = App->scene->CreateGameObject();
 				created_game_object->name = "Text";
 				//created_game_object->SetParent(created_game_object_parent);
-				created_game_object->CreateComponent(Component::ComponentType::TEXT);
+				created_game_object->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::TEXT);
 
 			/*	for (unsigned int i = 0; i < App->scene->GetRoot()->children.size(); ++i)
 				{

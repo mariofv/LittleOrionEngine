@@ -406,9 +406,6 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentText.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
@@ -425,6 +422,9 @@
       <Filter>Engine\Component\UI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentCanvas.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentText.cpp">
       <Filter>Engine\Component\UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -813,9 +813,6 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentText.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Component\ComponentTransform2D.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
@@ -832,6 +829,9 @@
       <Filter>Engine\Component\UI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentCanvas.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentText.h">
       <Filter>Engine\Component\UI</Filter>
     </ClInclude>
   </ItemGroup>

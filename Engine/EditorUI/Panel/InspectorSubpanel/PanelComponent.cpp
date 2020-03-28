@@ -433,7 +433,7 @@ void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 
 void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE "Canvas", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE "Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (ImGui::Checkbox("Active", &ui->active))
 		{

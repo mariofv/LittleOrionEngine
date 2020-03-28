@@ -58,11 +58,11 @@ void ModuleUI::Render(const ComponentCamera* camera)
 		if (App->ui->glyphInit == false)
 		{
 			InitGlyph();
-			txt->Render();
+			txt->Render(&projection);
 		}
 		else
 		{
-			txt->Render();
+			txt->Render(&projection);
 		}
 	}
 }
@@ -96,7 +96,7 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type)
 			new_ui = new ComponentImage();
 			break;
 		case ComponentUI::UIType::TEXT:
-			//new_ui = new ComponetText();
+			new_ui = new ComponentText();
 			break;
 	}
 	if(new_ui) 
@@ -148,12 +148,6 @@ void ModuleUI::InitGlyph()
 
 	// Disable byte-alignment restriction
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-	//
-	shader_program = App->program->GetShaderProgramId("Sprite");
-	window_width = App->editor->scene_panel->scene_window_content_area_width;
-	window_height = App->editor->scene_panel->scene_window_content_area_height;
-	//
 
 	// Load first 128 characters of ASCII set
 	for (GLubyte c = 0; c < 128; c++)
