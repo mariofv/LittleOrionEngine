@@ -17,7 +17,7 @@ class ComponentAnimation :	public Component
 public:
 	ComponentAnimation();
 	ComponentAnimation(GameObject* owner);
-	~ComponentAnimation();
+	~ComponentAnimation() = default;
 
 
 	//Copy and move

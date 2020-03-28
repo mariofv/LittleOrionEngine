@@ -14,20 +14,17 @@
 ComponentMeshRenderer::ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH_RENDERER)
 {
 	owner->aabb.GenerateBoundingBox();
-	SetSkeleton(App->resources->Load<Skeleton>("Library/Metadata/29/2987806620"));
 }
 
 ComponentMeshRenderer::ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner) : mesh_to_render(mesh_to_render), Component(owner, ComponentType::MESH_RENDERER)
 {
 	owner->aabb.GenerateBoundingBox();
-	SetSkeleton(App->resources->Load<Skeleton>("Library/Metadata/29/2987806620"));
 }
 
 ComponentMeshRenderer::ComponentMeshRenderer() : Component(nullptr, ComponentType::MESH_RENDERER)
 {
 	this->mesh_to_render = App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH);
 	this->material_to_render = App->resources->Load<Material>(DEFAULT_MATERIAL_PATH);
-	SetSkeleton(App->resources->Load<Skeleton>("Library/Metadata/29/2987806620"));
 }
 
 void ComponentMeshRenderer::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)

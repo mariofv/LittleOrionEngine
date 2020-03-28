@@ -22,10 +22,6 @@ ComponentAnimation::ComponentAnimation(GameObject* owner) : Component(owner, Com
 	GetChildrenMeshes(owner);
 }
 
-ComponentAnimation::~ComponentAnimation()
-{
-}
-
 Component* ComponentAnimation::Clone(bool original_prefab) const
 {
 	ComponentAnimation * created_component;
