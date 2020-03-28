@@ -59,7 +59,7 @@ void PlayerMovement::Move(int player_id)
 
 	//Controller Input
 	float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, static_cast<PlayerID>(player_id));
-	float3 axis_direction = float3(-axis.x, 0.0f, -axis.y);
+	float3 axis_direction = float3(axis.x, 0.0f, axis.y);
 
 	//if(on_ramp)
 	//{
@@ -99,19 +99,19 @@ void PlayerMovement::Move(int player_id)
 	float3 new_transform = transform;
 
 	//EXAMPLE USING PLAYER INPUT (JUST MOVE)
-	if (App->input->GetKey(KeyCode::A))
+	if (App->input->GetKey(KeyCode::D))
 	{
 		new_transform += float3(speed, 0.0f, 0.0f);
 	}
 	if (App->input->GetKey(KeyCode::W))
 	{
-		new_transform += float3(0.0f, 0.0f, speed);
+		new_transform += float3(0.0f, 0.0f, -speed);
 	}
 	if (App->input->GetKey(KeyCode::S))
 	{
-		new_transform += float3(0.0f, 0.0f, -speed);
+		new_transform += float3(0.0f, 0.0f, speed);
 	}
-	if (App->input->GetKey(KeyCode::D))
+	if (App->input->GetKey(KeyCode::A))
 	{
 		new_transform += float3(-speed, 0.0f, 0.0f);
 	}

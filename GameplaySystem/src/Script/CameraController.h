@@ -30,6 +30,7 @@ public:
 
 private:
 	bool god_mode = false;
+	float containing_sphere_radius = 0.0f;
 	GameObject* camera = nullptr;
 	ComponentCamera* camera_component = nullptr;
 

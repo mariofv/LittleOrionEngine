@@ -36,6 +36,7 @@ void CameraController::Awake()
 
 	player_movement_component = player->GetComponentScript("PlayerController");
 	player_movement_script = (PlayerController*)player_movement_component->script;
+	containing_sphere_radius = player->aabb.global_bounding_box.Size().Length();
 }
 
 // Use this for initialization
@@ -120,17 +121,15 @@ void CameraController::ActivePlayer()
 void CameraController::FollowPlayer() 
 {
 	CenterToPlayer();
-	
 }
 
 void CameraController::CenterToPlayer()
 {
 	Frustum camera_frustum = camera_component->GetFrustum();
-	float containing_sphere_radius = player->aabb.global_bounding_box.Size().Length();
 	camera_component->is_focusing = true;
 	camera_component->SetStartFocusPosition(camera->transform.GetTranslation());
 	camera_component->SetGoalFocusPosition(player->aabb.global_bounding_box.CenterPoint() - camera_frustum.front * 3.f * containing_sphere_radius);
-	camera_component->SetFocusTime(App->time->delta_time + 4);
+	camera_component->SetFocusTime(App->time->delta_time + 2000.f);
 }
 
 //Use this for linking GO automatically
