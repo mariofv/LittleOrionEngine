@@ -48,7 +48,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 		{
 			ComponentTransform2D* transform_2d = &transform->owner->transform_2d;
 
-			if (ImGui::DragFloat2("Position", transform_2d->position.ptr(), 1.0f))
+			if (ImGui::DragFloat3("Position", transform_2d->position.ptr(), 1.0f))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
@@ -384,21 +384,13 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 	}
 }
 
-void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
-{
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		//ShowCommonUIWindow(canvas);
-	}
-}
-
 void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 {
 	switch (ui->ui_type) 
 	{
 		case ComponentUI::UIType::CANVAS :
-			/*ShowComponentCanvasWindow(static_cast<ComponentCanvas*>(ui));
-			break;*/
+			ShowComponentCanvasWindow(static_cast<ComponentCanvas*>(ui));
+			break;
 		case ComponentUI::UIType::IMAGE:
 			ShowComponentImageWindow(static_cast<ComponentImage*>(ui));
 			break;
@@ -408,9 +400,16 @@ void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 	}
 }
 
+void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonUIWindow(canvas);
+	}
+}
 
 void PanelComponent::ShowComponentImageWindow(ComponentImage* image) {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE "Image", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonUIWindow(image);
 		ImGui::Separator();

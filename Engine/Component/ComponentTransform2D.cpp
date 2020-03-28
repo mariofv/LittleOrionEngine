@@ -84,7 +84,7 @@ void ComponentTransform2D::Load(const Config& config)
 void ComponentTransform2D::OnTransformChange()
 {
 	owner->transform.SetRotation(float3(0, 0, rotation));
-	owner->transform.SetTranslation(float3(position, 0));
+	owner->transform.SetTranslation(position);
 	owner->transform.SetScale(float3(scale, 0));
 
 	scale_matrix = float4x4::Scale(float3(rect.Width(), rect.Height(), 0), float3::zero);

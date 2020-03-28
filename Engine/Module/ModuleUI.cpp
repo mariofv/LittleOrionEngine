@@ -39,30 +39,10 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	window_width = App->editor->scene_panel->scene_window_content_area_width;
 	window_height = App->editor->scene_panel->scene_window_content_area_height;
 	float4x4 projection = float4x4::D3DOrthoProjLH(0, 1, window_width, window_height);
-	for (auto &canvas : canvases)
-	{
-		if (canvas->IsEnabled())
-		{
-			canvas->Render(&projection);
-		}
-	}
-
+	
 	for (auto &ui : ui_elements)
 	{
 		ui->Render(&projection);
-	}
-
-	for (auto &txt : ui_texts)
-	{
-		if (App->ui->glyphInit == false)
-		{
-			InitGlyph();
-			txt->Render(&projection);
-		}
-		else
-		{
-			txt->Render(&projection);
-		}
 	}
 }
 

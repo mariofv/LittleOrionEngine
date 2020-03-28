@@ -27,7 +27,6 @@ public:
 	void Load(const Config& config) override;
 
 	virtual void Render(float4x4*);
-	float3 color = float3(0.0f, 0.0f, 1.0f);
 
 	//Text Inputs
 	std::string text = "Default";
