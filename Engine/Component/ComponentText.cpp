@@ -59,12 +59,12 @@ void ComponentText::Render(float4x4* projection)
 	for (c = text.begin(); c != text.end(); c++)
 	{
 		Character ch = App->ui->Characters[*c];
+		//ch.Size = ch.Size / 30;
+		GLfloat xpos = x + ch.Bearing.x ;
+		GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) ;
 		
-		GLfloat xpos = x + ch.Bearing.x * scale;
-		GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale;
-		
-		GLfloat w = ch.Size.x * scale;
-		GLfloat h = ch.Size.y * scale;
+		GLfloat w = ch.Size.x ;
+		GLfloat h = ch.Size.y ;
 		// Update VBO for each character
 		GLfloat vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0, 0.0 },
@@ -101,12 +101,14 @@ void ComponentText::Delete()
 void ComponentText::Save(Config& config) const
 {
 	ComponentUI::Save(config);
+	config.AddString(text, "Text");
 	
 }
 
 void ComponentText::Load(const Config& config)
 {
 	ComponentUI::Load(config);
+	config.GetString("Text", text, "");
 }
 
 

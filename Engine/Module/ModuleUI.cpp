@@ -19,7 +19,6 @@ bool ModuleUI::Init()
 {
 	APP_LOG_SECTION("************ Module UI Init ************");
 
-	render = SDL_CreateRenderer(App->window->window, -1, SDL_RENDERER_ACCELERATED);
 	return true;
 }
 
@@ -44,7 +43,7 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	{
 		if (canvas->IsEnabled())
 		{
-			//canvas->Render(camera);
+			canvas->Render(&projection);
 		}
 	}
 
@@ -90,7 +89,7 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type)
 	switch (type)
 	{
 		case ComponentUI::UIType::CANVAS:
-			//new_ui = new ComponentCanvas();
+			new_ui = new ComponentCanvas();
 			break;
 		case ComponentUI::UIType::IMAGE:
 			new_ui = new ComponentImage();
@@ -144,8 +143,13 @@ void ModuleUI::InitGlyph()
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
 	// Set size to load glyphs as
-	FT_Set_Pixel_Sizes(face, 0, 48);
-
+	FT_Set_Pixel_Sizes(face, 0, 16);
+	FT_Set_Char_Size(
+		face,    /* handle to face object           */
+		0,       /* char_width in 1/64th of points  */
+		12 * 64,   /* char_height in 1/64th of points */
+		1920,     /* horizontal device resolution    */
+		1080);   /* vertical device resolution      */
 	// Disable byte-alignment restriction
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
