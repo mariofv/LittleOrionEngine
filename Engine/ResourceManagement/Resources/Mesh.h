@@ -19,7 +19,6 @@ public:
 		float3 tangent;
 	};
 
-	Mesh(Metafile* resource_metafile);
 	Mesh(Metafile* resource_metafile, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices);
 	~Mesh();
 

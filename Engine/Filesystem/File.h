@@ -32,20 +32,20 @@ struct FileData
 class File
 {
 public:
-	explicit File(const Path& path); // Without explicit compiler is able to convert Paths to Files without noticing the user.
+	explicit File(Path* path); // Without explicit compiler is able to convert Paths to Files without noticing the user.
 	~File();
 
 	FileData Load() const;
 
 	FileType GetFileType() const;
-	void GetPath(Path& return_value) const;
+	void GetPath(Path* return_value) const;
 
 private:
 	void CalculateFileInfo();
 	FileType CalculateFileType(const PHYSFS_FileType& file_type = PHYSFS_FileType::PHYSFS_FILETYPE_OTHER) const;
 
 private:
-	Path file_path;
+	Path* file_path;
 	FileType file_type = FileType::UNKNOWN;
 };
 

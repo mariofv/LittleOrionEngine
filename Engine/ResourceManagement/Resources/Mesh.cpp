@@ -2,8 +2,6 @@
 
 #include "ResourceManagement/Metafile/Metafile.h"
 
-Mesh::Mesh(Metafile* resource_metafile) : Resource(resource_metafile) {};
-
 Mesh::Mesh(Metafile* resource_metafile, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices) 
 	: vertices(vertices)
 	, indices(indices)

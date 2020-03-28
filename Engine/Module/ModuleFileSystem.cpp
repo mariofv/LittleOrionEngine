@@ -74,6 +74,7 @@ bool ModuleFileSystem::CleanUp()
 void ModuleFileSystem::AddPath(Path* path)
 {
 	assert(Exists(path->GetFullPath()));
+	assert(paths.find(path->GetFullPath()) == paths.end());
 	paths[path->GetFullPath()] = path;
 }
 

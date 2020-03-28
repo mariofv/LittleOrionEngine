@@ -66,6 +66,7 @@ Path* Path::Save(const char* file_name, const FileData& data, bool append)
 	}
 
 	std::string saved_file_path_string = file_path + "/" + file_name;
+	bool already_exists = App->filesystem->Exists(saved_file_path_string);
 
 	PHYSFS_File * file;
 	if (append)
@@ -87,11 +88,20 @@ Path* Path::Save(const char* file_name, const FileData& data, bool append)
 	PHYSFS_writeBytes(file, data.buffer, data.size);
 	APP_LOG_INFO("File %s saved!\n", file_path);
 	PHYSFS_close(file);
-	
-	Path* saved_file_path = new Path(saved_file_path_string);
-	children.push_back(saved_file_path);
-	saved_file_path->parent = this;
-	App->filesystem->AddPath(saved_file_path);
+
+	Path* saved_file_path = nullptr;
+	if (!already_exists)
+	{
+		saved_file_path = new Path(saved_file_path_string);
+		children.push_back(saved_file_path);
+		saved_file_path->parent = this;
+		App->filesystem->AddPath(saved_file_path);
+	}
+	else
+	{
+		saved_file_path = App->filesystem->GetPath(saved_file_path_string);
+		saved_file_path->Refresh();
+	}
 
 	free((char*) data.buffer);
 
@@ -156,7 +166,7 @@ void Path::CalculateFile()
 	}
 	else
 	{
-		file = new File(*this);
+		file = new File(this);
 	}
 }
 
