@@ -347,7 +347,7 @@ bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll
 		
 	// Create new DLL and pdb
 	utils->PatchFileName(pdb_path);
-	if (App->filesystem->Exists(original_pdb_path))
+	if (App->filesystem->Exists(original_pdb_path, true))
 	{
 		strcpy(patched_pdb_path, pdb_path);
 		CopyPDB(original_pdb_path, pdb_path, true);		// Copy new PDB
