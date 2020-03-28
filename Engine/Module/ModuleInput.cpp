@@ -258,11 +258,7 @@ bool ModuleInput::CleanUp()
 ENGINE_API bool ModuleInput::GetKey(KeyCode key)
 {
 	//If map[x] does not find x it will add the default value
-	auto it = key_bible.find(key); 
-	if (it == key_bible.end())
-		return false;
-
-	return it->second == KeyState::REPEAT;
+	return key_bible[key] == KeyState::REPEAT;
 }
 
 // Returns true during the frame the user starts pressing down the key identified by name

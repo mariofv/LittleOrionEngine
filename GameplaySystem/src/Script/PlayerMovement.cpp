@@ -79,12 +79,20 @@ void PlayerMovement::Move(int player_id)
 	{
 		float3 dir;
 		float3 direction = axis_direction * speed + transform;
-		App->artificial_intelligence->FindNextPolyByDirection(direction, dir);
-		direction.y = dir.y;
-		owner->transform.LookAt(direction);
+		bool there_is_poly = App->artificial_intelligence->FindNextPolyByDirection(direction, dir);
+		
+		if(there_is_poly)
+		{
+			direction.y = dir.y;
+		}
+		
 
 		if (App->artificial_intelligence->IsPointWalkable(direction))
+		{
+		
+			owner->transform.LookAt(direction);
 			owner->transform.SetTranslation(direction);
+		}
 	}
 
 	//Keyboard Input

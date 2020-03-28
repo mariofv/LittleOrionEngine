@@ -730,6 +730,12 @@ bool NavMesh::FindNextPolyByDirection(float3& position, float3& next_position)
 	float poly_pick_ext[3] = { diff.x, diff.y, diff.z };
 
 	nav_query->findNearestPoly((float*)&aux_position, poly_pick_ext, &filter, &target_ref, diff.ptr());
+	//PolyNotFound
+	if(target_ref == 0)
+	{
+		return false;
+	}
+	
 	float pos[3];
 	nav_query->closestPointOnPoly(target_ref, (float*)&aux_position, pos, 0);
 
