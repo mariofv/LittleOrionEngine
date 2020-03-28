@@ -144,13 +144,18 @@ void PlayerMovement::Move(int player_id)
 	if (!new_transform.Equals(transform))
 	{
 		float3 dir;
-		App->artificial_intelligence->FindNextPolyByDirection(new_transform, dir);
-		new_transform.y = dir.y;
+		bool there_is_poly = App->artificial_intelligence->FindNextPolyByDirection(new_transform, dir);
+		
+		if (there_is_poly)
+		{
+			new_transform.y = dir.y;
+		}
 
-		if (!is_jumping) 
+		if (!is_jumping)
 		{
 			owner->transform.LookAt(new_transform);
 		}
+
 		if (App->artificial_intelligence->IsPointWalkable(new_transform)) 
 		{
 			owner->transform.SetTranslation(new_transform);
