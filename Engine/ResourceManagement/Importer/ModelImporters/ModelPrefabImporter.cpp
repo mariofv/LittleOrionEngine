@@ -1,5 +1,7 @@
 #include "ModelPrefabImporter.h"
 
+
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Helper/Config.h"
 #include "Main/Application.h"
@@ -37,7 +39,10 @@ void ModelPrefabImporter::ImportModelPrefab(const Config& model, const File& imp
 	{
 		std::string animation_uid;
 		animation.GetString("Animation", animation_uid, "");
-		std::shared_ptr<Animation> animation = App->resources->Load<Animation>(animation_uid);
+		ComponentAnimation * component_animation = new ComponentAnimation();
+		component_animation->SetAnimation(App->resources->Load<Animation>(animation_uid));
+		model_root_node->components.push_back(component_animation);
+		component_animation->owner = model_root_node.get();
 	}
 
 	App->resources->CreatePrefab(imported_file.file_path.c_str(), model_root_node.get());
@@ -68,6 +73,7 @@ void ModelPrefabImporter::LoadNode(std::unique_ptr<GameObject> & parent_node, co
 		if (!skeleton_uuid.empty())
 		{
 			mesh_renderer->SetSkeleton(App->resources->Load<Skeleton>(skeleton_uuid));
+			mesh_renderer->material_to_render->shader_program = "skinning";
 		}
 		node_config.GetString("Name", node_game_object->name, "");
 		node_game_object->original_UUID = node_game_object->UUID;
@@ -87,7 +93,7 @@ void ModelPrefabImporter::LoadMeshComponent(const std::string& mesh_exported_fil
 
 	std::string material_file = material_exported_file != "" ? material_exported_file : DEFAULT_MATERIAL_PATH;
 
-	std::shared_ptr<Material> material_resource = std::make_shared<Material>(0,DEFAULT_MATERIAL_PATH);
+	std::shared_ptr<Material> material_resource = std::make_shared<Material>(0, material_file);
 	mesh_renderer_components.back()->SetMaterial(material_resource);
 }
 

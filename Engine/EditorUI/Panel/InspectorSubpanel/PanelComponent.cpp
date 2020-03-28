@@ -334,6 +334,12 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 
 			return;
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Load Meshes"))
+		{
+			animation->GetChildrenMeshes(animation->owner);
+			return;
+		}
 		ImGui::Separator();
 
 		ImGui::AlignTextToFramePadding();
