@@ -6,6 +6,7 @@
         "CameraController",
         "SceneCamerasController",
         "PlayerController",
-        "PlayerMovement"
+        "PlayerMovement",
+        "TriggerGravity"
     ]
 }

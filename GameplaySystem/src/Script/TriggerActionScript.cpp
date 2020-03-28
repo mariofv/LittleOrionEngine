@@ -53,7 +53,7 @@ void TriggerActionScript::Update()
 			//Do something if inside aabb of an object
 			//movement_script->speed *= 5.f;
 			//player->transform.SetTranslation(start_position);
-			movement_script->on_ramp = true;
+			//movement_script->on_ramp = true;
 		}
 	}
 

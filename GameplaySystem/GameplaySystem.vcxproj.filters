@@ -36,6 +36,9 @@
     <ClInclude Include="src\Script\PlayerMovement.h">
       <Filter>src\Script</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\TriggerGravity.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -60,6 +63,9 @@
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\PlayerMovement.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\TriggerGravity.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>

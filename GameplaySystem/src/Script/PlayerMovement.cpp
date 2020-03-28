@@ -163,6 +163,14 @@ void PlayerMovement::Move(int player_id)
 	}
 }
 
+void PlayerMovement::Fall()
+{
+	float3 new_position = owner->transform.GetTranslation() + gravity_vector * falling_factor * App->time->delta_time / 1000.0f;
+	falling_factor += 0.1f;
+	owner->transform.SetTranslation(new_position);
+
+}
+
 void PlayerMovement::Dash()
 {
 	//TODO DASH

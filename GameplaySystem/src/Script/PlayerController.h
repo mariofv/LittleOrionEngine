@@ -19,6 +19,9 @@ public:
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
+public:
+	bool on_gravity = false;
+
 private:
 	PlayerMovement* player_movement = nullptr;
 	int player = 0;

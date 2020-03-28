@@ -41,7 +41,16 @@ void PlayerController::Start()
 // Update is called once per frame
 void PlayerController::Update()
 {
-	player_movement->Move(player);
+	if(!on_gravity)
+	{
+		player_movement->Move(player);
+	}
+	else
+	{
+		//Fall
+		player_movement->Fall();
+	}
+
 }
 
 // Use this for showing variables on inspector
