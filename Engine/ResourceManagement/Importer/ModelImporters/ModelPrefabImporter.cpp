@@ -48,6 +48,8 @@ void ModelPrefabImporter::ImportModelPrefab(const Config& model, const File& imp
 //For now we are representing the animation sketelon in the hierarchy just for visualization and learning, but proabbly this will not be needed in the future
 void ModelPrefabImporter::LoadNode(std::unique_ptr<GameObject> & parent_node, const Config& node_config, std::vector<std::string>& already_loaded_skeleton) const
 {
+	std::string skeleton_uuid = LoadSkeleton(node_config, already_loaded_skeleton, parent_node);
+
 	gameobjects.emplace_back(std::make_unique<GameObject>());
 	GameObject * node_game_object = gameobjects.back().get();
 	node_game_object->parent = parent_node.get();
@@ -63,12 +65,15 @@ void ModelPrefabImporter::LoadNode(std::unique_ptr<GameObject> & parent_node, co
 		LoadMeshComponent(mesh_exported_file, material_exported_file, node_game_object);
 
 		ComponentMeshRenderer * mesh_renderer = mesh_renderer_components.back().get();
+		if (!skeleton_uuid.empty())
+		{
+			mesh_renderer->SetSkeleton(App->resources->Load<Skeleton>(skeleton_uuid));
+		}
 		node_config.GetString("Name", node_game_object->name, "");
 		node_game_object->original_UUID = node_game_object->UUID;
 		node_game_object->Update();
 	}
 
-	LoadSkeleton(node_config, already_loaded_skeleton, parent_node);
 }
 
 void ModelPrefabImporter::LoadMeshComponent(const std::string& mesh_exported_file, const std::string& material_exported_file, GameObject * node_game_object) const
@@ -86,7 +91,7 @@ void ModelPrefabImporter::LoadMeshComponent(const std::string& mesh_exported_fil
 	mesh_renderer_components.back()->SetMaterial(material_resource);
 }
 
-void ModelPrefabImporter::LoadSkeleton(const Config& node_config, std::vector<std::string>& already_loaded_skeleton, std::unique_ptr<GameObject>& parent_node) const
+std::string ModelPrefabImporter::LoadSkeleton(const Config& node_config, std::vector<std::string>& already_loaded_skeleton, std::unique_ptr<GameObject>& parent_node) const
 {
 	std::string skeleton_uid;
 	node_config.GetString("Skeleton", skeleton_uid, "");
@@ -126,4 +131,5 @@ void ModelPrefabImporter::LoadSkeleton(const Config& node_config, std::vector<st
 		}
 		already_loaded_skeleton.push_back(skeleton_uid);
 	}
+	return skeleton_uid;
 }
