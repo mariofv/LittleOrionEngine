@@ -358,7 +358,7 @@ bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll
 	CloseHandle(patched_dll);
 
 	// clean up
-	APP_LOG_ERROR("Patching DLL succeeded!!!.\n");
+	APP_LOG_INFO("Patching DLL succeeded!!!.\n");
 }
 
 void ModuleScriptManager::Refresh()

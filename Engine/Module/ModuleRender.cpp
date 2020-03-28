@@ -540,6 +540,7 @@ void ModuleRender::DrawAABBTree() const
 
 GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 {
+	BROFILER_CATEGORY("Do Raycast", Profiler::Color::HotPink);
 	GetCullingMeshes(App->cameras->scene_camera);
 	std::vector<ComponentMeshRenderer*> intersected_meshes;
 	for (auto & mesh : meshes_to_render)
@@ -550,6 +551,7 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 		}
 	}
 
+	BROFILER_CATEGORY("Intersect", Profiler::Color::HotPink);
 	std::vector<GameObject*> intersected;
 	GameObject* selected = nullptr;
 	float min_distance = INFINITY;
@@ -558,6 +560,7 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 		LineSegment transformed_ray = ray;
 		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
 		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
+		BROFILER_CATEGORY("Triangles", Profiler::Color::HotPink);
 		for (auto & triangle : triangles)
 		{
 			float distance;

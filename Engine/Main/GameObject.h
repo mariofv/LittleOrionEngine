@@ -59,6 +59,10 @@ public:
 	int GetHierarchyDepth() const;
 	void SetHierarchyDepth(int value);
 
+	//Prefabs
+	GameObject * GetPrefabParent();
+	void UnpackPrefab();
+
 private:
 	void SetHierarchyStatic(bool is_static);
 	void CopyComponents(const GameObject& gameobject_to_copy);

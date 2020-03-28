@@ -411,6 +411,34 @@ void GameObject::SetHierarchyDepth(int value)
 	hierarchy_depth = value;
 }
 
+GameObject * GameObject::GetPrefabParent() 
+{
+	GameObject *to_reimport = this;
+	bool prefab_parent = is_prefab_parent;
+	while (to_reimport && !prefab_parent)
+	{
+		to_reimport = to_reimport->parent;
+		prefab_parent = to_reimport->is_prefab_parent;
+	}
+	return to_reimport;
+}
+
+void GameObject::UnpackPrefab()
+{
+	assert(!original_prefab);
+	if (is_prefab_parent)
+	{
+		prefab_reference->RemoveInstance(this);
+		is_prefab_parent = false;
+	}
+	prefab_reference = nullptr;
+	original_UUID = false;
+	for (auto & child : children)
+	{
+		child->UnpackPrefab();
+	}
+}
+
 void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 {
 	this->components.reserve(gameobject_to_copy.components.size());
