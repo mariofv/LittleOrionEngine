@@ -97,7 +97,6 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			//UndoRedo
 			CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION, transform);
 
-
 			if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
 			{
 				transform->OnTransformChange();
@@ -106,7 +105,6 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			//UndoRedo
 			CheckClickForUndo(ModuleActions::UndoActionType::SCALE, transform);
 		}
-
 	}
 }
 
@@ -421,9 +419,12 @@ void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(txt);
 		ImGui::Separator();		
 		ImGui::InputText("Text", &txt->text);
+		ImGui::Separator();
+		ImGui::DragFloat("Font Size", (float*)(&txt->scale));
+		ImGui::Separator();
+		ShowCommonUIWindow(txt);
 	}
 }
 

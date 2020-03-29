@@ -93,7 +93,7 @@ void ModuleUI::InitGlyph()
 	FT_Set_Char_Size(
 		face,    /* handle to face object           */
 		0,       /* char_width in 1/64th of points  */
-		12 * 64,   /* char_height in 1/64th of points */
+		16 * 64,   /* char_height in 1/64th of points */
 		1920,     /* horizontal device resolution    */
 		1080);   /* vertical device resolution      */
 	// Disable byte-alignment restriction

@@ -22,7 +22,7 @@ public:
 	virtual Component* Clone(bool original_prefab = false) const { return nullptr; };
 	virtual void Copy(Component* component_to_copy) const {};
 	virtual void Render(float4x4*);
-	float3 color = float3(0.0f, 1.0f, 0.0f);
+	float3 color = float3(0.0f, 0.0f, 1.0f);
 protected:
 	UIType ui_type;
 	unsigned int shader_program, vao, vbo, ui_texture;

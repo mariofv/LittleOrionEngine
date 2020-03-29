@@ -50,16 +50,15 @@ void ComponentText::Render(float4x4* projection)
 	std::string::const_iterator c;
 	x = 0;
 	y = 0;
-
+	float scale_factor = scale / 1000;
 	for (c = text.begin(); c != text.end(); c++)
 	{
 		Character ch = App->ui->Characters[*c];
-		//ch.Size = ch.Size / 30;
-		GLfloat xpos = x + ch.Bearing.x ;
-		GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) ;
+		GLfloat xpos = x + ch.Bearing.x * scale_factor;
+		GLfloat ypos = y - (ch.Size.y - ch.Bearing.y) * scale_factor;
 		
-		GLfloat w = ch.Size.x ;
-		GLfloat h = ch.Size.y ;
+		GLfloat w = ch.Size.x * scale_factor;
+		GLfloat h = ch.Size.y * scale_factor;
 		// Update VBO for each character
 		GLfloat vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0, 0.0 },
@@ -80,7 +79,7 @@ void ComponentText::Render(float4x4* projection)
 		// Render quad
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
-		x += (ch.Advance >> 6) * scale; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		x += (ch.Advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
 	}
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
@@ -90,7 +89,6 @@ void ComponentText::Delete()
 {
 	ComponentUI::Delete();
 }
-
 
 
 void ComponentText::Save(Config& config) const
