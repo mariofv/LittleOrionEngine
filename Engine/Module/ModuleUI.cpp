@@ -1,10 +1,12 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentImage.h"
+#include "Component/ComponentProgressBar.h"
 #include "Component/ComponentUI.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentButton.h"
 
+#include "GL/glew.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
 
@@ -39,7 +41,7 @@ void ModuleUI::Render(const ComponentCamera* camera)
 {
 	window_width = App->editor->scene_panel->scene_window_content_area_width;
 	window_height = App->editor->scene_panel->scene_window_content_area_height;
-	float4x4 projection = float4x4::D3DOrthoProjLH(0, 1, window_width, window_height);
+	float4x4 projection = float4x4::D3DOrthoProjLH(-1, 1, window_width, window_height);
 	
 	for (auto &ui : ui_elements)
 	{
@@ -53,16 +55,19 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* o
 	switch (type)
 	{
 		case ComponentUI::UIType::CANVAS:
-			new_ui = new ComponentCanvas();
+			new_ui = new ComponentCanvas(owner);
 			break;
 		case ComponentUI::UIType::IMAGE:
-			new_ui = new ComponentImage();
+			new_ui = new ComponentImage(owner);
 			break;
 		case ComponentUI::UIType::TEXT:
-			new_ui = new ComponentText();
+			new_ui = new ComponentText(owner);
 			break;
 		case ComponentUI::UIType::BUTTON:
 			new_ui = new ComponentButton(owner);
+			break;
+		case ComponentUI::UIType::PROGRESSBAR:
+			new_ui = new ComponentProgressBar(owner);
 			break;
 	}
 	if(new_ui) 

@@ -14,6 +14,7 @@
 #include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentProgressBar.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
@@ -49,7 +50,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 		{
 			ComponentTransform2D* transform_2d = &transform->owner->transform_2d;
 
-			if (ImGui::DragFloat3("Position", transform_2d->position.ptr(), 1.0f))
+			if (ImGui::DragFloat2("Position", transform_2d->position.ptr(), 1.0f))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
@@ -399,6 +400,9 @@ void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 		case ComponentUI::UIType::BUTTON:
 			ShowComponentButtonWindow(static_cast<ComponentButton*>(ui));
 			break;
+		case ComponentUI::UIType::PROGRESSBAR:
+			ShowComponentProgressBarWindow(static_cast<ComponentProgressBar*>(ui));
+			break;
 	}
 }
 
@@ -419,17 +423,31 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* image) {
 	}
 }
 
+
+void PanelComponent::ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar) {
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonUIWindow(progress_bar);
+		ImGui::Separator();
+		ImGui::InputInt("Background", (int*)(&progress_bar->ui_texture));
+		ImGui::Separator();
+		ImGui::DragFloat("Bar Value", &progress_bar->percentage, 0.1F, 0.0F, 100.0F);
+		ImGui::InputInt("Bar Image", (int*)(&progress_bar->bar_texture));
+		ImGui::ColorPicker3("Bar Color", progress_bar->bar_color.ptr());
+	}
+}
+
 void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		ShowCommonUIWindow(txt);
 		ImGui::Separator();		
 		ImGui::InputText("Text", &txt->text);
 		ImGui::Separator();
 		ImGui::DragFloat("Font Size", (float*)(&txt->scale));
 		ImGui::Separator();
 		ImGui::InputInt("Texture", (int*)(&txt->ui_texture));
-		ShowCommonUIWindow(txt);
 	}
 }
 void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)
@@ -438,12 +456,6 @@ void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)
 	{
 		ShowCommonUIWindow(button);
 		ImGui::InputInt("Texture", (int*)(&button->ui_texture));
-		/*ImGui::Separator();
-		ImGui::InputText("Text", &txt->text);
-		ImGui::Separator();
-		ImGui::DragFloat("Font Size", (float*)(&txt->scale));
-		ImGui::Separator();
-		ShowCommonUIWindow(txt);*/
 	}
 }
 

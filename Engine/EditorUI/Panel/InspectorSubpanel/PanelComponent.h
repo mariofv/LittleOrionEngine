@@ -11,6 +11,7 @@ class ComponentCanvas;
 class ComponentImage;
 class ComponentMeshRenderer;
 class ComponentLight;
+class ComponentProgressBar;
 class ComponentScript;
 class ComponentText;
 class ComponentTransform;
@@ -42,6 +43,7 @@ private:
 	void DropMeshAndMaterial(ComponentMeshRenderer* component_mesh);
 	void ShowCommonUIWindow(ComponentUI*);
 	void ShowComponentCanvasWindow(ComponentCanvas*);
+	void ShowComponentProgressBarWindow(ComponentProgressBar*);
 	void ShowComponentImageWindow(ComponentImage*);
 	void ShowComponentTextWindow(ComponentText*);
 	void ShowComponentButtonWindow(ComponentButton*);

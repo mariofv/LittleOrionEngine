@@ -424,6 +424,8 @@
     <ClCompile Include="Engine\Component\ComponentText.cpp">
       <Filter>Engine\Component\UI</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentProgressBar.cpp">
+      <Filter>Engine\Component\UI</Filter>
     <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
       <Filter>Engine\Component\UI</Filter>
     </ClCompile>
@@ -834,6 +836,8 @@
     <ClInclude Include="Engine\Component\ComponentText.h">
       <Filter>Engine\Component\UI</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentProgressBar.h">
+      <Filter>Engine\Component\UI</Filter>
     <ClInclude Include="Engine\Component\ComponentTransform2D.h">
       <Filter>Engine\Component\UI</Filter>
     </ClInclude>

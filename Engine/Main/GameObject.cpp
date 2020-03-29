@@ -261,10 +261,14 @@ void GameObject::Load(const Config& config)
 	for (unsigned int i = 0; i < gameobject_components_config.size(); ++i)
 	{
 		uint64_t component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
+		ComponentUI::UIType ui_type = ComponentUI::UIType::IMAGE;
 		assert(component_type_uint != 0);
 		
 		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
-		Component* created_component = CreateComponent(component_type);
+		if (component_type == Component::ComponentType::UI) {
+			ui_type = ComponentUI::UIType(gameobject_components_config[i].GetUInt("UIType", 0));
+		}
+		Component* created_component = CreateComponent(component_type, ui_type);
 		created_component->Load(gameobject_components_config[i]);
 	}
 }

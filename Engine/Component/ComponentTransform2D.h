@@ -18,7 +18,7 @@ public:
 
 	math::Rect rect = math::Rect(0, 0, 10, 10);
 	float rotation = 0.0f;
-	float3 position = float3::zero;
+	float2 position = float2::zero;
 	float2 scale = float2::one;
 	float4x4 scale_matrix = float4x4::identity;
 
