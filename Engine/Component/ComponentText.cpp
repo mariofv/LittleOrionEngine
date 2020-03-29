@@ -51,8 +51,8 @@ void ComponentText::Render(float4x4* projection)
 	std::string::const_iterator c;
 	x = 0;
 	y = 0;
-	owner->transform_2d.rect.right = 0;
-	owner->transform_2d.rect.bottom = 0;
+	/*owner->transform_2d.rect.right = 0;
+	owner->transform_2d.rect.bottom = 0;*/
 	float scale_factor = scale / 1000;
 	for (c = text.begin(); c != text.end(); c++)
 	{
@@ -63,8 +63,8 @@ void ComponentText::Render(float4x4* projection)
 		GLfloat w = ch.Size.x * scale_factor;
 		GLfloat h = ch.Size.y * scale_factor;
 
-		owner->transform_2d.rect.right += xpos + w;
-		owner->transform_2d.rect.bottom += h;
+		/*owner->transform_2d.rect.right += xpos + w;
+		owner->transform_2d.rect.bottom += h;*/
 		// Update VBO for each character
 		GLfloat vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0, 0.0 },
