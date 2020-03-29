@@ -201,6 +201,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 {
 	BROFILER_CATEGORY("Get culling meshes", Profiler::Color::Lavender);
 
+	meshes_to_render.clear();
 	switch (App->debug->culling_mode)
 	{
 	case ModuleDebug::CullingMode::NONE:
