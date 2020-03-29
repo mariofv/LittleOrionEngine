@@ -2,6 +2,7 @@
 #include "Filesystem/File.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleAnimation.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
 
@@ -39,6 +40,7 @@ GameObject * Prefab::Instantiate(GameObject * prefab_parent, std::unordered_map<
 		copy_in_scene->transform.Translate(float3::zero); //:D
 	}
 	parent_prefab->SetParent(prefab_parent);
+	App->animations->UpdateAnimationMeshes();
 	return parent_prefab;
 }
 

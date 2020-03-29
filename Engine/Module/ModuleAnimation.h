@@ -20,7 +20,7 @@ public:
 	
 	ComponentAnimation* CreateComponentAnimation();
 	void RemoveComponentAnimation(ComponentAnimation* animation_to_remove);
-
+	void UpdateAnimationMeshes();
 private:
 	std::vector<ComponentAnimation*> animations;
 	friend ModuleDebugDraw;

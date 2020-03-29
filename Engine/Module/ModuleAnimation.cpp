@@ -46,3 +46,11 @@ void ModuleAnimation::RemoveComponentAnimation(ComponentAnimation* animation_to_
 		animations.erase(it);
 	}
 }
+
+void ModuleAnimation::UpdateAnimationMeshes()
+{
+	for (auto & animation : animations)
+	{
+		animation->GetChildrenMeshes(animation->owner);
+	}
+}
