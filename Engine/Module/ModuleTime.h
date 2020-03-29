@@ -16,14 +16,15 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
+	float GetFPS() const;
 	void SetMaxFPS(int fps);
 	void SetTimeScale(float time_scale);
+
+	bool isGameRunning();
 
 	void Play();
 	void Pause();
 	void StepFrame();
-
-	void ShowTimeControls();
 
 	void EndFrame();
 
@@ -50,6 +51,7 @@ private:
 	float last_frame_delay = 0.f;
 
 	int max_fps = 60;
+	float current_fps = 0.f;
 
 	bool stepping_frame = false;
 

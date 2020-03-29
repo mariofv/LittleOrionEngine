@@ -63,7 +63,6 @@ StyleCopReport.xml
 *_p.c
 *_i.h
 *.ilk
-*.meta
 *.obj
 *.iobj
 *.pch
@@ -334,3 +333,4 @@ ASALocalRun/
 imgui.ini
 Game/Library/**
 Game/Assets/Scenes/**
+**/LittleOrionEngine.lib

@@ -1,8 +1,8 @@
 #ifndef _CONFIG_H_
 #define _CONFIG_H_
 
-#include <rapidjson/document.h>
 #include <MathGeoLib.h>
+#include <rapidjson/document.h>
 
 class Config
 {
@@ -22,6 +22,9 @@ public:
 
 	void AddUInt(uint64_t value_to_add, const std::string& name);
 	uint64_t GetUInt(const std::string& name, unsigned int opt_value) const;
+
+	void AddInt64(int64_t value_to_add, const std::string &name);
+	int64_t GetInt64(const std::string& name, int64_t opt_value) const;
 
 	void AddFloat(float value_to_add, const std::string& name);
 	float GetFloat(const std::string &name, float opt_value) const;
@@ -47,9 +50,71 @@ public:
 	void AddChildrenConfig(std::vector<Config>& value_to_add, const std::string& name);
 	void GetChildrenConfig(const std::string& name, std::vector<Config>& return_value) const;
 
+	template<class T>
+	void AddVector(const std::vector<T>& value_to_add, const std::string& name)
+	{
+		rapidjson::Value member_name(name.c_str(), *allocator);
+		rapidjson::Value vector_value(rapidjson::kArrayType);
+		for (size_t i = 0; i < value_to_add.size(); ++i)
+		{
+			vector_value.PushBack(value_to_add[i], *allocator);
+		}
+
+		config_document.AddMember(member_name, vector_value, *allocator);
+	};
+
+	template<>
+	void AddVector(const std::vector<std::string>& value_to_add, const std::string& name)
+	{
+		rapidjson::Value member_name(name.c_str(), *allocator);
+		rapidjson::Value vector_value(rapidjson::kArrayType);
+		for (size_t i = 0; i < value_to_add.size(); ++i)
+		{
+			rapidjson::Value string_value(value_to_add[i].c_str(), value_to_add[i].size(), *allocator);
+			vector_value.PushBack(string_value, *allocator);
+		}
+
+		config_document.AddMember(member_name, vector_value, *allocator);
+	};
+
+	template<class T> void GetVector(const std::string& name, std::vector<T>& return_value, const std::vector<T>& opt_value) const
+	{
+		if (!config_document.HasMember(name.c_str()))
+		{
+			return_value = opt_value;
+		}
+		else
+		{
+			const rapidjson::Value& current_value = config_document[name.c_str()];
+			return_value = std::vector<T>();
+			for (size_t i = 0; i < current_value.Capacity(); ++i)
+			{
+				return_value.push_back(current_value[i].Get<T>());
+			}
+		}
+	};
+
+	template<>
+	void GetVector(const std::string& name, std::vector<std::string>& return_value, const std::vector<std::string>& opt_value) const
+	{
+		if (!config_document.HasMember(name.c_str()))
+		{
+			return_value = opt_value;
+		}
+		else
+		{
+			const rapidjson::Value& current_value = config_document[name.c_str()];
+			return_value = std::vector<std::string>();
+			for (size_t i = 0; i < current_value.Capacity(); ++i)
+			{
+				return_value.push_back(current_value[i].GetString());
+			}
+		}
+	};
+
 	void GetSerializedString(std::string& return_string);
 
-public:;
+public:
 	rapidjson::Document config_document;
 	rapidjson::Document::AllocatorType* allocator;
 

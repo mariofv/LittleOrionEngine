@@ -8,7 +8,6 @@ in vec3 tangent;
 subroutine vec3 normal_subroutine();
 layout (location=0) subroutine uniform normal_subroutine NormalSoubroutine;
 
-
 out vec4 FragColor;
 
 //constants
@@ -233,6 +232,7 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal)
     float intensity = clamp((theta - spot_light.outerCutOff) / epsilon, 0.0, 1.0);
     
     float distance    = length(spot_light.position - position);
+	//TODO: Why is this commented?
     //float attenuation = 1.0 / (spot_light.constant + spot_light.linear * distance + 
                 //spot_light.quadratic * (distance * distance));    
 

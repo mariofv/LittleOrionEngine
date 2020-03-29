@@ -7,6 +7,7 @@
 #include <vector>
 #include <memory>
 
+class ModuleAnimation;
 class ModuleRender;
 class ModuleWindow;
 class ModuleTextures;
@@ -25,7 +26,9 @@ class ModuleDebugDraw;
 class ModuleUI;
 class ModuleLight;
 class ModuleResourceManager;
+class ModuleScriptManager;
 class ModuleActions;
+class ModuleAI;
 
 class EngineLog;
 
@@ -43,6 +46,7 @@ public:
 	bool CleanUp();
 
 public:
+	ModuleAnimation* animations = nullptr;
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;
@@ -59,7 +63,9 @@ public:
 	ModuleUI* ui = nullptr;
 	ModuleLight* lights = nullptr;
 	ModuleResourceManager* resources = nullptr;
+	ModuleScriptManager* scripts = nullptr;
 	ModuleActions* actions = nullptr;
+	ModuleAI* artificial_intelligence = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
 

@@ -3,15 +3,22 @@
 
 Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path) : vertices(vertices),
 indices(indices),
-Resource("", mesh_file_path)
+Resource(0, mesh_file_path)
 {
 	LoadInMemory();
 	
 }
+Mesh::Mesh(std::string mesh_file_path) :
+Resource(0, mesh_file_path)
+{
+}
 Mesh::~Mesh() {
-	glDeleteBuffers(1, &vbo);
-	glDeleteBuffers(1, &ebo);
-	glDeleteVertexArrays(1, &vao);
+	if (vbo != 0)
+	{
+		glDeleteBuffers(1, &vbo);
+		glDeleteBuffers(1, &ebo);
+		glDeleteVertexArrays(1, &vao);
+	}
 }
 
 GLuint Mesh::GetVAO() const
@@ -19,10 +26,15 @@ GLuint Mesh::GetVAO() const
 	return vao;
 }
 
+int Mesh::GetNumTriangles() const
+{
+	return indices.size() / 3;
+}
+
 std::vector<Triangle> Mesh::GetTriangles() const
 {
 	std::vector<Triangle> triangles;
-	triangles.reserve(vertices.size()/3);
+	triangles.reserve(indices.size()/3);
 	for (size_t i = 0; i < indices.size(); i += 3)
 	{
 		float3 first_point = vertices[indices[i]].position;
@@ -67,6 +79,14 @@ void Mesh::LoadInMemory()
 	// VERTEX BITANGENT
 	glEnableVertexAttribArray(4);
 	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, bitangent));
+	
+	// VERTEX JOINTS
+	glEnableVertexAttribArray(5);
+	glVertexAttribIPointer(4, 4, GL_UNSIGNED_INT, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, joints));
+
+	// VERTEX WEIGHTS
+	glEnableVertexAttribArray(6);
+	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, weights));
 
 	glBindVertexArray(0);
 }
