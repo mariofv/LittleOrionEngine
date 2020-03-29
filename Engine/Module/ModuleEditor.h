@@ -15,6 +15,7 @@ class Panel;
 class PanelMenuBar;
 class PanelToolBar;
 class PanelScene;
+class PanelStateMachine;
 class PanelGame;
 class PanelInspector;
 class PanelHierarchy;
@@ -79,6 +80,7 @@ public:
 	PanelResourceDatabase* resource_database = nullptr;
 	PanelPopups* popups = nullptr;
 	PanelNavMesh* nav_mesh = nullptr;
+	PanelStateMachine* state_machine = nullptr;
 
 private:
 	std::vector<Panel*> panels;

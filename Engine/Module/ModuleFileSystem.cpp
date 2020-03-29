@@ -190,6 +190,10 @@ FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileT
 	{
 		return FileType::SKELETON;
 	}
+	if (file_extension == "stm")
+	{
+		return FileType::STATE_MACHINE;
+	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{
 		return FileType::ARCHIVE;

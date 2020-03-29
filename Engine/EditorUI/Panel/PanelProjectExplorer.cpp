@@ -9,6 +9,7 @@
 #include "ResourceManagement/Resources/Prefab.h"
 #include "ResourceManagement/Resources/StateMachine.h"
 
+#include "PanelStateMachine.h"
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <SDL/SDL.h>
@@ -200,6 +201,13 @@ void PanelProjectExplorer::ProcessResourceMouseInput(File * file)
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(0))
 	{
 		selected_file = file;
+	}
+	if (ImGui::IsWindowHovered() && ImGui::IsMouseDoubleClicked(0))
+	{
+		if (file->file_type == FileType::STATE_MACHINE)
+		{
+			App->editor->state_machine->SwitchOpen();
+		}
 	}
 }
 

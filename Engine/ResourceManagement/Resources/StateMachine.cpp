@@ -6,7 +6,7 @@
 StateMachine::StateMachine(const std::string & mesh_file_path):
 Resource(0, mesh_file_path)
 {
-	states.push_back(std::make_shared<State>("Entry"));
+	//states.push_back(std::make_shared<State>("Entry"));
 }
 
 

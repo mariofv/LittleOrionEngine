@@ -418,6 +418,24 @@
     <ClCompile Include="Engine\Animation\StateMachineManager.cpp">
       <Filter>Engine\Animation</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\StateMachine.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor_api.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\crude_json.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_canvas.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelStateMachine.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -816,6 +834,12 @@
     <ClInclude Include="Engine\Animation\StateMachineManager.h">
       <Filter>Engine\Animation</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\StateMachine.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelStateMachine.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -895,6 +919,9 @@
     </Filter>
     <Filter Include="Engine\Animation">
       <UniqueIdentifier>{ecb044c0-b431-4c8e-ab13-ad262d334b04}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\NodeEditor">
+      <UniqueIdentifier>{75cef95d-1f43-401f-9be9-517c82f15cdf}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

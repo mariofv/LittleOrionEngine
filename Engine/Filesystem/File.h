@@ -14,6 +14,7 @@ enum class FileType
 	SKELETON,
 	DIRECTORY,
 	ARCHIVE,
+	STATE_MACHINE,
 	UNKNOWN
 };
 class File {
