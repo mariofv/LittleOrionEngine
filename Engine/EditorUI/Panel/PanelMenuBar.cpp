@@ -207,9 +207,7 @@ void PanelMenuBar::ShowGameObjectMenu()
 			{
 				GameObject* created_game_object = App->scene->CreateGameObject();
 				created_game_object->name = "Canvas";
-				created_game_object->CreateComponent(Component::ComponentType::UI);
-				//created_game_object->CreateComponent(Component::ComponentType::TRANSFORM2D);
-				//App->editor->selected_game_object->CreateComponent(Component::ComponentType::CANVAS);
+				created_game_object->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::CANVAS);
 			}
 			if (ImGui::Selectable("Panel"))
 			{

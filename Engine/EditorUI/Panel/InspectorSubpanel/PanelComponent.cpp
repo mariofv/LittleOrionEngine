@@ -98,7 +98,6 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			//UndoRedo
 			CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION, transform);
 
-
 			if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
 			{
 				transform->OnTransformChange();
@@ -107,7 +106,6 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			//UndoRedo
 			CheckClickForUndo(ModuleActions::UndoActionType::SCALE, transform);
 		}
-
 	}
 }
 
@@ -390,8 +388,8 @@ void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 	switch (ui->ui_type) 
 	{
 		case ComponentUI::UIType::CANVAS :
-			/*ShowComponentCanvasWindow(static_cast<ComponentCanvas*>(ui));
-			break;*/
+			ShowComponentCanvasWindow(static_cast<ComponentCanvas*>(ui));
+			break;
 		case ComponentUI::UIType::IMAGE:
 			ShowComponentImageWindow(static_cast<ComponentImage*>(ui));
 			break;
@@ -408,12 +406,12 @@ void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		//ShowCommonUIWindow(canvas);
+		ShowCommonUIWindow(canvas);
 	}
 }
 
 void PanelComponent::ShowComponentImageWindow(ComponentImage* image) {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE "Image", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonUIWindow(image);
 		ImGui::Separator();
@@ -423,7 +421,7 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* image) {
 
 
 void PanelComponent::ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar) {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE "Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonUIWindow(progress_bar);
 		ImGui::Separator();
@@ -442,6 +440,9 @@ void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
 		ShowCommonUIWindow(txt);
 		ImGui::Separator();		
 		ImGui::InputText("Text", &txt->text);
+		ImGui::Separator();
+		ImGui::DragFloat("Font Size", (float*)(&txt->scale));
+		ImGui::Separator();
 	}
 }
 

@@ -27,13 +27,13 @@ public:
 	void Load(const Config& config) override;
 
 	virtual void Render(float4x4*);
-	float3 color = float3(0.0f, 0.0f, 1.0f);
 
 	//Text Inputs
 	std::string text = "Default";
 	GLfloat x = 0.0f;
 	GLfloat y = 0.0f;
-	GLfloat scale = 1.0f;
+	GLfloat scale =  12.0f;
+
 
 private:
 	void InitData();

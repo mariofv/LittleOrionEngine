@@ -21,7 +21,6 @@ bool ModuleUI::Init()
 {
 	APP_LOG_SECTION("************ Module UI Init ************");
 
-	render = SDL_CreateRenderer(App->window->window, -1, SDL_RENDERER_ACCELERATED);
 	return true;
 }
 
@@ -42,28 +41,10 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	window_width = App->editor->scene_panel->scene_window_content_area_width;
 	window_height = App->editor->scene_panel->scene_window_content_area_height;
 	float4x4 projection = float4x4::D3DOrthoProjLH(-1, 1, window_width, window_height);
-	for (auto &canvas : canvases)
-	{
-		if (canvas->IsEnabled())
-		{
-			//canvas->Render(camera);
-		}
-	}
+	
 	for (auto &ui : ui_elements)
 	{
 		ui->Render(&projection);
-	}
-	for (auto &txt : ui_texts)
-	{
-		if (App->ui->glyphInit == false)
-		{
-			InitGlyph();
-			txt->Render(&projection);
-		}
-		else
-		{
-			txt->Render(&projection);
-		}
 	}
 }
 
@@ -73,7 +54,7 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type)
 	switch (type)
 	{
 		case ComponentUI::UIType::CANVAS:
-			//new_ui = new ComponentCanvas();
+			new_ui = new ComponentCanvas();
 			break;
 		case ComponentUI::UIType::IMAGE:
 			new_ui = new ComponentImage();
@@ -113,8 +94,13 @@ void ModuleUI::InitGlyph()
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
 	// Set size to load glyphs as
-	FT_Set_Pixel_Sizes(face, 0, 48);
-
+	FT_Set_Pixel_Sizes(face, 0, 16);
+	FT_Set_Char_Size(
+		face,    /* handle to face object           */
+		0,       /* char_width in 1/64th of points  */
+		16 * 64,   /* char_height in 1/64th of points */
+		1920,     /* horizontal device resolution    */
+		1080);   /* vertical device resolution      */
 	// Disable byte-alignment restriction
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 

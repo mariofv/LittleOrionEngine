@@ -406,9 +406,6 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
@@ -428,6 +425,8 @@
       <Filter>Engine\Component\UI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentProgressBar.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
       <Filter>Engine\Component\UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -816,9 +815,6 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentTransform2D.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Actions\EditorActionRotation2D.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
@@ -838,6 +834,8 @@
       <Filter>Engine\Component\UI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentProgressBar.h">
+      <Filter>Engine\Component\UI</Filter>
+    <ClInclude Include="Engine\Component\ComponentTransform2D.h">
       <Filter>Engine\Component\UI</Filter>
     </ClInclude>
   </ItemGroup>

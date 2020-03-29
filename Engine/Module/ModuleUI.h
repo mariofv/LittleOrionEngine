@@ -55,9 +55,9 @@ public:
 	std::vector<ComponentCanvas*> canvases;
 	std::vector<ComponentUI*> ui_elements;
 	std::vector<ComponentText*> ui_texts;
-private:
+
 	float window_width, window_height;
-	SDL_Renderer* render;
+
 };
 
 #endif //_MODULEUI_H_
