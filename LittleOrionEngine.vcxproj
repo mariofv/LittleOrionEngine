@@ -73,7 +73,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/par_shapes;./Libraries/include;./Libraries/include/NodeEditor</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
@@ -82,7 +82,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imgui.lib;MathGeoLib.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imgui.lib;MathGeoLib.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;imgui_node_editor.lib;imgui_canvas.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -220,6 +220,7 @@
     <ClInclude Include="Engine\AI\NavMesh.h" />
     <ClInclude Include="Engine\Module\ModuleAI.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelNavMesh.h" />
+    <ClInclude Include="Engine\Animation\StateMachineManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -360,6 +361,7 @@
     <ClCompile Include="Engine\AI\NavMesh.cpp" />
     <ClCompile Include="Engine\Module\ModuleAI.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelNavMesh.cpp" />
+    <ClCompile Include="Engine\Animation\StateMachineManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
