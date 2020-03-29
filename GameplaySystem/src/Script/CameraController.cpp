@@ -132,27 +132,6 @@ void CameraController::CenterToPlayer()
 	camera_component->SetFocusTime(App->time->delta_time + 2000.f);
 }
 
-//Use this for linking GO automatically
-//void CameraController::Save(Config& config) const
-//{
-//	config.AddUInt(camera->UUID, "Camera");
-//	config.AddUInt(player->UUID, "Player1");
-//}
-//
-////Use this for linking GO automatically
-//void CameraController::Load(const Config& config)
-//{
-//	cameraUUID = config.GetUInt("Camera", 0);
-//	playerUUID = config.GetUInt("Player1", 0);
-//}
-//
-////Use this for linking GO automatically
-//void CameraController::Link()
-//{
-//	camera = App->scene->GetGameObject(cameraUUID);
-//	player = App->scene->GetGameObject(playerUUID);
-//}
-
 void CameraController::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
