@@ -207,6 +207,7 @@ void PanelProjectExplorer::ProcessResourceMouseInput(File * file)
 		if (file->file_type == FileType::STATE_MACHINE)
 		{
 			App->editor->state_machine->SwitchOpen();
+			App->editor->state_machine->OpenStateMachine(*file);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 #include "PanelStateMachine.h"
-
+#include "Filesystem/File.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
 PanelStateMachine::PanelStateMachine()
 {
@@ -39,4 +39,10 @@ void PanelStateMachine::Render()
 		ax::NodeEditor::End();
 	}
 	ImGui::End();
+}
+
+void PanelStateMachine::OpenStateMachine(const File & file)
+{
+	state_machine = std::make_shared<StateMachine>(file.file_path);
+	state_machine->Load(file);
 }
