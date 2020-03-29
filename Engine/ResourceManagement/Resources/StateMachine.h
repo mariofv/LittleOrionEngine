@@ -1,5 +1,5 @@
-#ifndef _H_STATEMACHINE_
-#define _H_STATEMACHINE_
+#ifndef _STATEMACHINE_H_
+#define _STATEMACHINE_H_
 
 #include "Resource.h"
 #include "Animation.h"
@@ -22,18 +22,20 @@ struct Transition
 	std::string source;
 	std::string target;
 	std::string trigger;
-	long interpolation_time;
+	long interpolation_time = 0;
 };
 class StateMachine : Resource
 {
 public:
-	StateMachine() = default;
+	StateMachine(const std::string & mesh_file_path);
 	~StateMachine() = default;
+	void LoadInMemory() override {};
 
+	void Save() const;
 public:
-	std::vector<Clip> clips;
-	std::vector<State> states;
-	std::vector<Transition> transitions;
+	std::vector<std::shared_ptr<Clip>> clips;
+	std::vector<std::shared_ptr<State>> states;
+	std::vector<std::shared_ptr<Transition>> transitions;
 };
 
 #endif // !_H_STATEMACHINE_

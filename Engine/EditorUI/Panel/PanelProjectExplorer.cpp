@@ -7,6 +7,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "ResourceManagement/Resources/Prefab.h"
+#include "ResourceManagement/Resources/StateMachine.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -231,12 +232,18 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(const File * file)
 	if (ImGui::BeginPopupContextWindow(label.c_str()))
 	{
 
-		if (ImGui::BeginMenu("Create"))
+		if (selected_folder != nullptr && ImGui::BeginMenu("Create"))
 		{
 			if (ImGui::Selectable("Folder"))
 			{
 				MakeDirectoryFromFile(selected_folder);
 				changes = true;
+			}
+			if (ImGui::Selectable("State Machine"))
+			{
+				std::string path = selected_folder->file_path + "/statemachine.stm";
+				StateMachine state_machine(path);
+				state_machine.Save();
 			}
 			ImGui::EndMenu();
 		}
