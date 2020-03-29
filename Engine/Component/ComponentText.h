@@ -32,7 +32,7 @@ public:
 	std::string text = "Default";
 	GLfloat x = 0.0f;
 	GLfloat y = 0.0f;
-	GLfloat scale =  12.0f;
+	GLfloat scale =  1.0f;
 
 
 private:

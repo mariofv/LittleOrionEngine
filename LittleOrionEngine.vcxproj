@@ -104,6 +104,7 @@
     <ClInclude Include="Engine\Actions\EditorActionRect2D.h" />
     <ClInclude Include="Engine\AI\DebugDrawGL.h" />
     <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
+    <ClInclude Include="Engine\Component\ComponentButton.h" />
     <ClInclude Include="Engine\Component\ComponentCanvas.h" />
     <ClInclude Include="Engine\Component\ComponentImage.h" />
     <ClInclude Include="Engine\Component\ComponentScript.h" />
@@ -240,6 +241,7 @@
     <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp" />
     <ClCompile Include="Engine\AI\DebugDrawGL.cpp" />
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
+    <ClCompile Include="Engine\Component\ComponentButton.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvas.cpp" />
     <ClCompile Include="Engine\Component\ComponentImage.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />

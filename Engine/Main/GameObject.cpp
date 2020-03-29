@@ -24,6 +24,7 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentUI.h"
+#include "Component/ComponentButton.h"
 
 #include <Brofiler/Brofiler.h>
 #include <pcg_basic.h>
@@ -329,7 +330,7 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		created_component = App->lights->CreateComponentLight();
 		break;
 	case Component::ComponentType::UI:
-		created_component = App->ui->CreateComponentUI(ui_type);
+		created_component = App->ui->CreateComponentUI(ui_type, this);
 		break;
 	case Component::ComponentType::SCRIPT:
 		created_component = App->scripts->CreateComponentScript();

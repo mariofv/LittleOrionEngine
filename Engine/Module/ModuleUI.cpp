@@ -3,6 +3,7 @@
 #include "Component/ComponentImage.h"
 #include "Component/ComponentUI.h"
 #include "Component/ComponentText.h"
+#include "Component/ComponentButton.h"
 
 #include "Main/Globals.h"
 #include "Main/Application.h"
@@ -46,7 +47,7 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	}
 }
 
-ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type)
+ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* owner)
 {
 	ComponentUI* new_ui;
 	switch (type)
@@ -59,6 +60,9 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type)
 			break;
 		case ComponentUI::UIType::TEXT:
 			new_ui = new ComponentText();
+			break;
+		case ComponentUI::UIType::BUTTON:
+			new_ui = new ComponentButton(owner);
 			break;
 	}
 	if(new_ui) 
@@ -109,7 +113,6 @@ void ModuleUI::InitGlyph()
 			continue;
 		}
 		// Generate texture
-
 		glGenTextures(1, &text_texture);
 		glBindTexture(GL_TEXTURE_2D, text_texture);
 		glTexImage2D(

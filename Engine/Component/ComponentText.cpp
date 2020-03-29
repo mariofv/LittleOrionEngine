@@ -32,10 +32,10 @@ void ComponentText::InitData()
 void ComponentText::Render(float4x4* projection)
 {
 	// Set OpenGL options
-	/*glEnable(GL_CULL_FACE);
+	//glEnable(GL_CULL_FACE);
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
-
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	
 	// Activate corresponding render state	
 	glUseProgram(shader_program);
 	glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection"), 1, GL_TRUE, projection->ptr());
@@ -44,12 +44,15 @@ void ComponentText::Render(float4x4* projection)
 	glUniform3fv(glGetUniformLocation(shader_program, "spriteColor"), 1, color.ptr());
 
 	glActiveTexture(GL_TEXTURE0);
+	glBindTexture(GL_TEXTURE_2D, ui_texture);
 	glBindVertexArray(vao);
 
 	// Iterate through all characters
 	std::string::const_iterator c;
 	x = 0;
 	y = 0;
+	owner->transform_2d.rect.right = 0;
+	owner->transform_2d.rect.bottom = 0;
 	float scale_factor = scale / 1000;
 	for (c = text.begin(); c != text.end(); c++)
 	{
@@ -59,6 +62,9 @@ void ComponentText::Render(float4x4* projection)
 		
 		GLfloat w = ch.Size.x * scale_factor;
 		GLfloat h = ch.Size.y * scale_factor;
+
+		owner->transform_2d.rect.right += xpos + w;
+		owner->transform_2d.rect.bottom += h;
 		// Update VBO for each character
 		GLfloat vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0, 0.0 },

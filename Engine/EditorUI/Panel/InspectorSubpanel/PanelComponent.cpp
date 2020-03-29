@@ -19,6 +19,7 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentUI.h"
+#include "Component/ComponentButton.h"
 
 #include "Helper/Utils.h"
 #include "Math/Rect.h"
@@ -395,6 +396,9 @@ void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 		case ComponentUI::UIType::TEXT:
 			ShowComponentTextWindow(static_cast<ComponentText*>(ui));
 			break;
+		case ComponentUI::UIType::BUTTON:
+			ShowComponentButtonWindow(static_cast<ComponentButton*>(ui));
+			break;
 	}
 }
 
@@ -424,7 +428,22 @@ void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
 		ImGui::Separator();
 		ImGui::DragFloat("Font Size", (float*)(&txt->scale));
 		ImGui::Separator();
+		ImGui::InputInt("Texture", (int*)(&txt->ui_texture));
 		ShowCommonUIWindow(txt);
+	}
+}
+void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Button", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonUIWindow(button);
+		ImGui::InputInt("Texture", (int*)(&button->ui_texture));
+		/*ImGui::Separator();
+		ImGui::InputText("Text", &txt->text);
+		ImGui::Separator();
+		ImGui::DragFloat("Font Size", (float*)(&txt->scale));
+		ImGui::Separator();
+		ShowCommonUIWindow(txt);*/
 	}
 }
 

@@ -15,6 +15,7 @@ class ComponentScript;
 class ComponentText;
 class ComponentTransform;
 class ComponentUI;
+class ComponentButton;
 
 class PanelComponent
 {
@@ -43,6 +44,7 @@ private:
 	void ShowComponentCanvasWindow(ComponentCanvas*);
 	void ShowComponentImageWindow(ComponentImage*);
 	void ShowComponentTextWindow(ComponentText*);
+	void ShowComponentButtonWindow(ComponentButton*);
 
 };
 

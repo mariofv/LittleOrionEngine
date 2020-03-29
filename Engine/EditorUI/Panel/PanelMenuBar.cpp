@@ -182,7 +182,9 @@ void PanelMenuBar::ShowGameObjectMenu()
 			ImGui::Separator();
 			if (ImGui::Selectable("Button"))
 			{
-
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Button";
+				created_game_object->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::BUTTON);
 			}
 			if (ImGui::Selectable("Toggle"))
 			{

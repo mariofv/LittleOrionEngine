@@ -18,6 +18,8 @@
 class ComponentCanvas;
 class ComponentCamera;
 class ComponentText;
+class ComponentButton;
+class Gameobject;
 
 struct SDL_Renderer;
 
@@ -40,7 +42,7 @@ public:
 
 	void Render(const ComponentCamera* camera);
 
-	ComponentUI* CreateComponentUI(const ComponentUI::UIType);
+	ComponentUI* CreateComponentUI(const ComponentUI::UIType, GameObject*);
 	void RemoveComponentUI(ComponentUI*);
 
 	//Glyph init 
@@ -55,7 +57,7 @@ public:
 	std::vector<ComponentCanvas*> canvases;
 	std::vector<ComponentUI*> ui_elements;
 	std::vector<ComponentText*> ui_texts;
-
+	std::vector<ComponentButton*> ui_buttons;
 	float window_width, window_height;
 
 };

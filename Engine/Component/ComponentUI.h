@@ -9,7 +9,8 @@ public:
 	enum class UIType {
 		CANVAS,
 		IMAGE,
-		TEXT
+		TEXT,
+		BUTTON
 	};
 	ComponentUI(UIType);
 	ComponentUI(GameObject * owner, UIType);

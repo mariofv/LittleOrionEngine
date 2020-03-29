@@ -8,6 +8,7 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentUI.h"
+#include "Component/ComponentButton.h"
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "Main/Application.h"
