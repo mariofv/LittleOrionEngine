@@ -1,9 +1,11 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentImage.h"
+#include "Component/ComponentProgressBar.h"
 #include "Component/ComponentUI.h"
 #include "Component/ComponentText.h"
 
+#include "GL/glew.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
 
@@ -39,7 +41,7 @@ void ModuleUI::Render(const ComponentCamera* camera)
 {
 	window_width = App->editor->scene_panel->scene_window_content_area_width;
 	window_height = App->editor->scene_panel->scene_window_content_area_height;
-	float4x4 projection = float4x4::D3DOrthoProjLH(0, 1, window_width, window_height);
+	float4x4 projection = float4x4::D3DOrthoProjLH(-1, 1, window_width, window_height);
 	for (auto &canvas : canvases)
 	{
 		if (canvas->IsEnabled())
@@ -47,12 +49,10 @@ void ModuleUI::Render(const ComponentCamera* camera)
 			//canvas->Render(camera);
 		}
 	}
-
 	for (auto &ui : ui_elements)
 	{
 		ui->Render(&projection);
 	}
-
 	for (auto &txt : ui_texts)
 	{
 		if (App->ui->glyphInit == false)
@@ -80,6 +80,9 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type)
 			break;
 		case ComponentUI::UIType::TEXT:
 			new_ui = new ComponentText();
+			break;
+		case ComponentUI::UIType::PROGRESSBAR:
+			new_ui = new ComponentProgressBar();
 			break;
 	}
 	if(new_ui) 

@@ -14,6 +14,7 @@
 #include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentProgressBar.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
@@ -384,14 +385,6 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 	}
 }
 
-void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
-{
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		//ShowCommonUIWindow(canvas);
-	}
-}
-
 void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 {
 	switch (ui->ui_type) 
@@ -405,9 +398,19 @@ void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 		case ComponentUI::UIType::TEXT:
 			ShowComponentTextWindow(static_cast<ComponentText*>(ui));
 			break;
+		case ComponentUI::UIType::PROGRESSBAR:
+			ShowComponentProgressBarWindow(static_cast<ComponentProgressBar*>(ui));
+			break;
 	}
 }
 
+void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		//ShowCommonUIWindow(canvas);
+	}
+}
 
 void PanelComponent::ShowComponentImageWindow(ComponentImage* image) {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE "Image", ImGuiTreeNodeFlags_DefaultOpen))
@@ -415,6 +418,20 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* image) {
 		ShowCommonUIWindow(image);
 		ImGui::Separator();
 		ImGui::InputInt("Texture", (int*)(&image->ui_texture));
+	}
+}
+
+
+void PanelComponent::ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar) {
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE "Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonUIWindow(progress_bar);
+		ImGui::Separator();
+		ImGui::InputInt("Background", (int*)(&progress_bar->ui_texture));
+		ImGui::Separator();
+		ImGui::DragFloat("Bar Value", &progress_bar->percentage, 0.1F, 0.0F, 100.0F);
+		ImGui::InputInt("Bar Image", (int*)(&progress_bar->bar_texture));
+		ImGui::ColorPicker3("Bar Color", progress_bar->bar_color.ptr());
 	}
 }
 

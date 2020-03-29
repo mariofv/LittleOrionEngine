@@ -175,18 +175,16 @@ void PanelMenuBar::ShowGameObjectMenu()
 				created_game_object->name = "Image";
 				created_game_object->CreateComponent(Component::ComponentType::UI);
 			}
-			if (ImGui::Selectable("Raw Image"))
-			{
-
-			}
 			ImGui::Separator();
 			if (ImGui::Selectable("Button"))
 			{
 
 			}
-			if (ImGui::Selectable("Toggle"))
+			if (ImGui::Selectable("Progess Bar"))
 			{
-
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Progess Bar";
+				created_game_object->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::PROGRESSBAR);
 			}
 			if (ImGui::Selectable("Slider"))
 			{

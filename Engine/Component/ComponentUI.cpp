@@ -22,13 +22,18 @@ ComponentUI::ComponentUI(GameObject * owner, UIType ui_type) : Component(owner, 
 
 void ComponentUI::Render(float4x4* projection)
 {
+	Render(projection, &owner->transform_2d.scale_matrix, ui_texture, &color);
+}
+
+void ComponentUI::Render(float4x4* projection, float4x4* model, unsigned int texture, float3* color)
+{	
 	glUseProgram(shader_program);
 	glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection"), 1, GL_TRUE, projection->ptr());
 	glUniform1i(glGetUniformLocation(shader_program, "image"), 0);
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, owner->transform_2d.scale_matrix.ptr());
-	glUniform3fv(glGetUniformLocation(shader_program, "spriteColor"), 1, color.ptr());
+	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, model->ptr());
+	glUniform3fv(glGetUniformLocation(shader_program, "spriteColor"), 1, color->ptr());
 	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, ui_texture);
+	glBindTexture(GL_TEXTURE_2D, texture);
 
 	glBindVertexArray(vao);
 	glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -36,7 +41,7 @@ void ComponentUI::Render(float4x4* projection)
 	glUseProgram(0);
 }
 
-void ComponentUI::InitData() 
+void ComponentUI::InitData()
 {
 	shader_program = App->program->GetShaderProgramId("Sprite");
 	GLfloat vertices[] = {
@@ -74,6 +79,7 @@ void ComponentUI::Save(Config& config) const
 	config.AddUInt(UUID, "UUID");
 	config.AddBool(active, "Active");
 	config.AddUInt((unsigned int)type, "ComponentType");
+	config.AddUInt((unsigned int)ui_type, "UIType");
 	config.AddUInt(ui_texture, "Texture");
 	config.AddFloat3(color, "Color");
 }
@@ -82,9 +88,7 @@ void ComponentUI::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-	type = Component::GetComponentType(config.GetInt("ComponentType", 0));
 	ui_texture = config.GetUInt("Texture", 0);
 	config.GetFloat3("Color", color, float3::one);
-
 	InitData();
 }
