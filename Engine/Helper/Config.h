@@ -20,8 +20,8 @@ public:
 
 	rapidjson::Document::AllocatorType& GetAllocator() const;
 
-	void AddInt(int value_to_add, const std::string &name);
-	int GetInt(const std::string &name, int opt_value) const;
+	ENGINE_API void AddInt(int value_to_add, const std::string &name);
+	ENGINE_API int GetInt(const std::string &name, int opt_value) const;
 
 	ENGINE_API void AddUInt(uint64_t value_to_add, const std::string& name);
 	ENGINE_API uint64_t GetUInt(const std::string& name, unsigned int opt_value) const;
@@ -29,8 +29,8 @@ public:
 	void AddInt64(int64_t value_to_add, const std::string &name);
 	int64_t GetInt64(const std::string& name, int64_t opt_value) const;
 
-	void AddFloat(float value_to_add, const std::string& name);
-	float GetFloat(const std::string &name, float opt_value) const;
+	ENGINE_API void AddFloat(float value_to_add, const std::string& name);
+	ENGINE_API float GetFloat(const std::string &name, float opt_value) const;
 
 	ENGINE_API void AddBool(bool value_to_add, const std::string& name);
 	ENGINE_API bool GetBool(const std::string& name, bool opt_value) const;
@@ -38,8 +38,8 @@ public:
 	ENGINE_API void AddString(const std::string value_to_add, const std::string& name);
 	ENGINE_API void GetString(const std::string& name, std::string& return_value, const std::string& opt_value) const;
 
-	void AddFloat3(const float3 &value_to_addvalue_to_add, const std::string& name);
-	void GetFloat3(const std::string &name, float3 &return_value, const float3 &opt_value) const;
+	ENGINE_API void AddFloat3(const float3 &value_to_addvalue_to_add, const std::string& name);
+	ENGINE_API void GetFloat3(const std::string &name, float3 &return_value, const float3 &opt_value) const;
 
 	void AddQuat(const Quat & value_to_add, const std::string& name);
 	void GetQuat(const std::string& name, Quat& return_value, const Quat& opt_value) const;
