@@ -3,13 +3,14 @@
 
 ComponentProgressBar::ComponentProgressBar() : ComponentUI(ComponentUI::UIType::PROGRESSBAR)
 {
-
+	
 }
 
 ComponentProgressBar::ComponentProgressBar(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::PROGRESSBAR)
 {
-
+	owner->transform_2d.SetSize(120, 10);
 }
+
 
 void ComponentProgressBar::Render(float4x4* projection)
 {

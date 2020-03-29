@@ -446,8 +446,6 @@ void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
 		ImGui::InputText("Text", &txt->text);
 		ImGui::Separator();
 		ImGui::DragFloat("Font Size", (float*)(&txt->scale));
-		ImGui::Separator();
-		ImGui::InputInt("Texture", (int*)(&txt->ui_texture));
 	}
 }
 void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)

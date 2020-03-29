@@ -426,10 +426,11 @@
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentProgressBar.cpp">
       <Filter>Engine\Component\UI</Filter>
-    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
-      <Filter>Engine\Component\UI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentButton.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
       <Filter>Engine\Component\UI</Filter>
     </ClCompile>
   </ItemGroup>
@@ -838,10 +839,11 @@
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentProgressBar.h">
       <Filter>Engine\Component\UI</Filter>
-    <ClInclude Include="Engine\Component\ComponentTransform2D.h">
-      <Filter>Engine\Component\UI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentButton.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentTransform2D.h">
       <Filter>Engine\Component\UI</Filter>
     </ClInclude>
   </ItemGroup>

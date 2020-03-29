@@ -29,6 +29,7 @@ public:
 	virtual void Save(Config & config) const override;
 	virtual void Load(const Config & config) override;
 
+	void SetSize(float width, float height);
 private:
 	void OnTransformChange();
 

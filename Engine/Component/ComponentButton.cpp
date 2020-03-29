@@ -19,6 +19,7 @@ ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, Compon
 
 void ComponentButton::InitData()
 {
+	// check if the owner has a child called text
 	GameObject* created_game_object = App->scene->CreateGameObject();
 	created_game_object->name = "Text";
 	owner->AddChild(created_game_object);

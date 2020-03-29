@@ -15,8 +15,8 @@ public:
 	virtual void Save(Config& config) const;
 	void Load(const Config& config);
 	void Render(float4x4*);
-	float percentage = 0.0F;
-	unsigned int bar_texture = 0;
+	float percentage = 20.0F;
+	unsigned int bar_texture = 2;
 	float3 bar_color = float3::unitX;
 };
 #endif

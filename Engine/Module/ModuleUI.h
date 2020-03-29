@@ -53,11 +53,7 @@ public:
 	std::map<GLchar, Character> Characters;
 
 	unsigned int text_texture;
-
-	std::vector<ComponentCanvas*> canvases;
 	std::vector<ComponentUI*> ui_elements;
-	std::vector<ComponentText*> ui_texts;
-	std::vector<ComponentButton*> ui_buttons;
 	float window_width, window_height;
 
 };
