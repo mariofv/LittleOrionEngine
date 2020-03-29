@@ -559,10 +559,16 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 	{
 		LineSegment transformed_ray = ray;
 		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
-		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
 		BROFILER_CATEGORY("Triangles", Profiler::Color::HotPink);
-		for (auto & triangle : triangles)
+		std::vector<Mesh::Vertex> &vertices = mesh->mesh_to_render->vertices;
+		std::vector<uint32_t> &indices = mesh->mesh_to_render->indices;
+		for (size_t i = 0; i < indices.size(); i += 3)
 		{
+			float3 first_point = vertices[indices[i]].position;
+			float3 second_point = vertices[indices[i + 1]].position;
+			float3 third_point = vertices[indices[i + 2]].position;
+			Triangle triangle(first_point, second_point, third_point);
+
 			float distance;
 			bool intersected = triangle.Intersects(transformed_ray, &distance);
 			if (intersected && distance < min_distance)
