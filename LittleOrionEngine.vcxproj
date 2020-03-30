@@ -14,7 +14,7 @@
     <ProjectGuid>{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}</ProjectGuid>
     <RootNamespace>SDLGame</RootNamespace>
     <ProjectName>LittleOrionEngine</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -97,13 +97,15 @@
     <ClInclude Include="Engine\Actions\EditorActionEnableDisableComponent.h" />
     <ClInclude Include="Engine\Actions\EditorActionModifyCamera.h" />
     <ClInclude Include="Engine\Actions\EditorActionModifyLight.h" />
+    <ClInclude Include="Engine\Actions\EditorActionRect2D.h" />
     <ClInclude Include="Engine\Actions\EditorActionRotation.h" />
     <ClInclude Include="Engine\Actions\EditorActionRotation2D.h" />
     <ClInclude Include="Engine\Actions\EditorActionScale.h" />
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h" />
-    <ClInclude Include="Engine\Actions\EditorActionRect2D.h" />
     <ClInclude Include="Engine\AI\DebugDrawGL.h" />
     <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
+    <ClInclude Include="Engine\Animation\AnimController.h" />
+    <ClInclude Include="Engine\Component\ComponentAnimation.h" />
     <ClInclude Include="Engine\Component\ComponentButton.h" />
     <ClInclude Include="Engine\Component\ComponentCanvas.h" />
     <ClInclude Include="Engine\Component\ComponentImage.h" />
@@ -121,6 +123,7 @@
     <ClInclude Include="Engine\Main\Application.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
     <ClInclude Include="Engine\Main\Globals.h" />
+    <ClInclude Include="Engine\Module\ModuleAnimation.h" />
     <ClInclude Include="Engine\Module\ModuleResourceManager.h" />
     <ClInclude Include="Engine\Module\ModuleScriptManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.h" />
@@ -235,13 +238,15 @@
     <ClCompile Include="Engine\Actions\EditorActionEnableDisableComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionModifyCamera.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionModifyLight.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionRotation.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
-    <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp" />
     <ClCompile Include="Engine\AI\DebugDrawGL.cpp" />
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
+    <ClCompile Include="Engine\Animation\AnimController.cpp" />
+    <ClCompile Include="Engine\Component\ComponentAnimation.cpp" />
     <ClCompile Include="Engine\Component\ComponentButton.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvas.cpp" />
     <ClCompile Include="Engine\Component\ComponentImage.cpp" />
@@ -260,6 +265,7 @@
     <ClCompile Include="Engine\Main\GameObject.cpp" />
     <ClCompile Include="Engine\Main\Log.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
+    <ClCompile Include="Engine\Module\ModuleAnimation.cpp" />
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
     <ClCompile Include="Engine\Module\ModuleScriptManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp" />

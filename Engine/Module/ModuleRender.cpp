@@ -497,11 +497,11 @@ void ModuleRender::GenerateOctTree()
 		global_AABB.minPoint = float3(minX, minY, minZ);
 	}
 
-	ol_octtree.Create(global_AABB);
+	/*ol_octtree.Create(global_AABB);
 	for (auto & mesh : meshes)
 	{
 		ol_octtree.Insert(*mesh->owner);
-	}
+	}*/
 }
 void ModuleRender::InsertAABBTree(GameObject * game_object)
 {

@@ -19,7 +19,8 @@ public:
 		LIGHT,
 		UI,
 		SCRIPT,
-		TRANSFORM2D
+		TRANSFORM2D,
+		ANIMATION
 	};
 
 	Component(ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};

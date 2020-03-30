@@ -12,9 +12,12 @@ class Mesh : public Resource
 public:
 	struct Vertex {
 		float3 position;
-		float2 tex_coords;
 		float3 normals;
 		float3 tangent;
+		float2 tex_coords;
+		uint32_t joints[4] = {0,0,0,0};
+		float weights[4] = {0,0,0,0};
+		uint32_t num_joints = 0;
 	};
 	Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path);
 	Mesh(std::string mesh_file_path);

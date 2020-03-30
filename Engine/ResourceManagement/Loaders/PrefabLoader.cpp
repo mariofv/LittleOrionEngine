@@ -3,6 +3,8 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentAnimation.h"
+#include "Component/ComponentScript.h"
 
 #include "Helper/Config.h"
 
@@ -101,6 +103,12 @@ void PrefabLoader::CreateComponents(const Config& config, std::unique_ptr<GameOb
 
 			case Component::ComponentType::LIGHT:
 				created_component = new ComponentLight();
+				break;
+			case Component::ComponentType::ANIMATION:
+				created_component = new ComponentAnimation();
+				break;
+			case Component::ComponentType::SCRIPT:
+				created_component = new ComponentScript();
 				break;
 			}
 			created_component->owner = loaded_gameObject.get();

@@ -75,7 +75,7 @@ update_status ModuleResourceManager::PreUpdate()
  }
 
 
- void ModuleResourceManager::CreatePrefab(const std::string &path, GameObject * gameobject_to_save) const
+ void ModuleResourceManager::CreatePrefab(const std::string& path, GameObject* gameobject_to_save) const
  {
 	prefab_importer->CreatePrefabResource(File(path),gameobject_to_save);
  }
@@ -94,7 +94,7 @@ void ModuleResourceManager::ImportAllFilesInDirectory(const File& file, bool for
 			 Sleep(1000);
 		 }
 		 bool is_directory = child->file_type == FileType::DIRECTORY;
-		 if (is_directory && !default_importer->Import(*child.get(), force).succes)
+		 if (is_directory && !default_importer->Import(*child.get(), force).success)
 		 {
 			 ImportAllFilesInDirectory(*child.get(), force);
 		 }
@@ -171,4 +171,16 @@ void  ModuleResourceManager::ReimportIfNeeded(const std::string& uid)
 	{
 		Import(options->imported_file, true);
 	}
+}
+
+uint32_t ModuleResourceManager::LoadCubemap(const std::vector<std::string>& faces_paths) 
+{
+	std::vector<std::string> faces_paths_dds;
+	for (unsigned int i = 0; i < faces_paths.size(); i++)
+	{
+		std::string ol_texture = Import(File(faces_paths[i]), false).exported_file;
+		ReimportIfNeeded(ol_texture);
+		faces_paths_dds.push_back(ol_texture);
+	}
+	return TextureLoader::LoadCubemap(faces_paths_dds);
 }

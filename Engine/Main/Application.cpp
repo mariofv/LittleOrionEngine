@@ -2,6 +2,7 @@
 #include "EditorUI/EngineLog.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleAI.h"
+#include "Module/ModuleAnimation.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleDebugDraw.h"
@@ -36,6 +37,7 @@ Application::Application()
 	modules.emplace_back(time = new ModuleTime());
 	modules.emplace_back(texture = new ModuleTexture());
 	modules.emplace_back(renderer = new ModuleRender());
+	modules.emplace_back(animations = new ModuleAnimation());
 	modules.emplace_back(editor = new ModuleEditor());
 	modules.emplace_back(actions = new ModuleActions());
 	modules.emplace_back(program = new ModuleProgram());

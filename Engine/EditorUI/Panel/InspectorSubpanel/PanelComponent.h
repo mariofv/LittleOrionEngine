@@ -6,6 +6,7 @@
 #include "Module/ModuleActions.h"
 
 class Component;
+class ComponentAnimation;
 class ComponentCamera;
 class ComponentCanvas;
 class ComponentImage;
@@ -17,6 +18,7 @@ class ComponentText;
 class ComponentTransform;
 class ComponentUI;
 class ComponentButton;
+class GameObject;
 
 class PanelComponent
 {
@@ -28,6 +30,7 @@ public:
 	void ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh);
 	void ShowComponentCameraWindow(ComponentCamera *camera);
 	void ShowComponentLightWindow(ComponentLight *light);
+	void ShowComponentAnimationWindow(ComponentAnimation *animation);
 	void ShowComponentScriptWindow(ComponentScript * component_script);
 	void ShowComponentUIWindow(ComponentUI*);
 	void ShowAddNewComponentButton();
@@ -48,6 +51,7 @@ private:
 	void ShowComponentTextWindow(ComponentText*);
 	void ShowComponentButtonWindow(ComponentButton*);
 
+	void DropAnimationAndSkeleton(ComponentAnimation* component_animation);
 };
 
 #endif //_PANELCOMPONENT_H_
