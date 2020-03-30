@@ -27,18 +27,21 @@ void ComponentUI::Render(float4x4* projection)
 
 void ComponentUI::Render(float4x4* projection, float4x4* model, unsigned int texture, float3* color)
 {	
-	glUseProgram(shader_program);
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection"), 1, GL_TRUE, projection->ptr());
-	glUniform1i(glGetUniformLocation(shader_program, "image"), 0);
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, model->ptr());
-	glUniform3fv(glGetUniformLocation(shader_program, "spriteColor"), 1, color->ptr());
-	glActiveTexture(GL_TEXTURE0);
-	glBindTexture(GL_TEXTURE_2D, texture);
+	if(owner->IsEnabled() && active)
+	{
+		glUseProgram(shader_program);
+		glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection"), 1, GL_TRUE, projection->ptr());
+		glUniform1i(glGetUniformLocation(shader_program, "image"), 0);
+		glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, model->ptr());
+		glUniform3fv(glGetUniformLocation(shader_program, "spriteColor"), 1, color->ptr());
+		glActiveTexture(GL_TEXTURE0);
+		glBindTexture(GL_TEXTURE_2D, texture);
 
-	glBindVertexArray(vao);
-	glDrawArrays(GL_TRIANGLES, 0, 6);
-	glBindVertexArray(0);
-	glUseProgram(0);
+		glBindVertexArray(vao);
+		glDrawArrays(GL_TRIANGLES, 0, 6);
+		glBindVertexArray(0);
+		glUseProgram(0);
+	}
 }
 
 void ComponentUI::InitData()

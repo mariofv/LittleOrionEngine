@@ -34,7 +34,11 @@ void PanelGameObject::Render(GameObject* game_object)
 	{
 		return;
 	}
-	ImGui::Checkbox("", &game_object->active);
+	
+	if (ImGui::Checkbox("###State", &game_object->active)) 
+	{
+		game_object->SetEnabled(game_object->active);
+	}
 
 	ImGui::SameLine();
 	ImGui::Text(ICON_FA_CUBE);
