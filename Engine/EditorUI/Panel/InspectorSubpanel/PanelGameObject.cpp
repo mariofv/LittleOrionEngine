@@ -1,5 +1,6 @@
 #include "PanelGameObject.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentMeshRenderer.h"
@@ -34,7 +35,11 @@ void PanelGameObject::Render(GameObject* game_object)
 	{
 		return;
 	}
-	ImGui::Checkbox("", &game_object->active);
+	
+	if (ImGui::Checkbox("###State", &game_object->active)) 
+	{
+		game_object->SetEnabled(game_object->active);
+	}
 
 	ImGui::SameLine();
 	ImGui::Text(ICON_FA_CUBE);
@@ -89,6 +94,9 @@ void PanelGameObject::Render(GameObject* game_object)
 				break;
 			case Component::ComponentType::UI:
 				component_panel.ShowComponentUIWindow(static_cast<ComponentUI*>(component));
+				break;
+			case Component::ComponentType::ANIMATION:
+				component_panel.ShowComponentAnimationWindow(static_cast<ComponentAnimation*>(component));
 				break;
 			default:
 				break;

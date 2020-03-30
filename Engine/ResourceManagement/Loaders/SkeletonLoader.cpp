@@ -48,7 +48,6 @@ std::shared_ptr<Skeleton> SkeletonLoader::Load(const std::string& file_path)
 		cursor += sizeof(uint32_t);
 	}
 
-
 	std::shared_ptr<Skeleton> new_skeleton = std::make_shared<Skeleton>(std::move(bones), file_path);
 	free(data);
 

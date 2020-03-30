@@ -20,7 +20,9 @@ public:
 	float rotation = 0.0f;
 	float2 position = float2::zero;
 	float2 scale = float2::one;
-	float4x4 scale_matrix = float4x4::identity;
+	float4x4 global_matrix = float4x4::identity;
+	float4x4 model_matrix = float4x4::identity;
+	float4x4 rect_matrix = float4x4::identity;
 
 	// Heredado vía Component
 	virtual void Delete() override;
@@ -29,6 +31,7 @@ public:
 	virtual void Save(Config & config) const override;
 	virtual void Load(const Config & config) override;
 
+	void GenerateGlobalModelMatrix();
 	void SetSize(float width, float height);
 private:
 	void OnTransformChange();

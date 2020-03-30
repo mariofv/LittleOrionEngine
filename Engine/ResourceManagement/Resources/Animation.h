@@ -9,17 +9,19 @@ public:
 
 	struct Channel
 	{
-
 		std::string name;
-		float4x4 position;
 
+		bool is_translated;
+		float3 translation;
+
+		bool is_rotated;
+		Quat rotation;
 	};
+
 	struct KeyFrame
 	{
 		float frame;
 		std::vector<Channel> channels;
-
-
 	};
 	Animation(const uint32_t UID, const std::string & exported_file);
 	Animation(std::vector<KeyFrame> && keyframes, std::string name, float frames, float frames_per_second,const std::string & exported_file);

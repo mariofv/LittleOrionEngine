@@ -31,7 +31,7 @@ ImportResult TextureImporter::Import(const File& imported_file, bool force) cons
 	ImportOptions already_imported = GetAlreadyImportedResource(imported_file);
 	if (already_imported.uuid != 0 && !force) {
 		APP_LOG_INFO("Texture already imported.")
-		import_result.succes = true;
+		import_result.success = true;
 		import_result.exported_file = already_imported.exported_file;
 		return import_result;
 	}
@@ -47,7 +47,7 @@ ImportResult TextureImporter::Import(const File& imported_file, bool force) cons
 		output_file = ImportToDDS(imported_file);
 	}
 
-	import_result.succes = true;
+	import_result.success = true;
 	import_result.exported_file = output_file;
 
 	return import_result;
@@ -57,7 +57,7 @@ std::string TextureImporter::ImportMaterialData(const std::string & material_pat
 {
 	APP_LOG_INIT("Loading material texture in described path %s.", material_path.c_str());
 	ImportResult import_result = Import(material_path);
-	if (import_result.succes)
+	if (import_result.success)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly from %s.", material_path.c_str());
 		return import_result.exported_file;
@@ -67,7 +67,7 @@ std::string TextureImporter::ImportMaterialData(const std::string & material_pat
 	std::string textures_path = model_base_path+ "/" + texture_file_name;
 	APP_LOG_INIT("Loading material texture in model folder path %s.", model_base_path.c_str());
 	import_result = Import(textures_path);
-	if (import_result.succes)
+	if (import_result.success)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
 		return import_result.exported_file;
@@ -76,7 +76,7 @@ std::string TextureImporter::ImportMaterialData(const std::string & material_pat
 	textures_path = std::string(TEXTURES_PATH) + texture_file_name;
 	APP_LOG_INIT("Loading material texture in textures folder %s.", textures_path.c_str());
 	import_result = Import(textures_path);
-	if (import_result.succes)
+	if (import_result.success)
 	{
 		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
 		return import_result.exported_file;
