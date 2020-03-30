@@ -623,11 +623,11 @@ void ModuleDebugDraw::RenderBillboards() const
 
 void ModuleDebugDraw::RenderCanvas() const
 {
-	for(auto &canvas: App->ui->canvases)
+	/*for(auto &canvas: App->ui->canvases)
 	{
 		dd::box(canvas->owner->transform.GetTranslation(), float3::one, App->window->GetWidth() * 0.25f, App->window->GetHeight() * 0.25f, 0.01f);
 		dd::circle(canvas->owner->transform.GetTranslation(), float3(0, 0, 1), float3::one, 1.0f, 10);
-	}
+	}*/
 }
 
 void ModuleDebugDraw::RenderPathfinding() const

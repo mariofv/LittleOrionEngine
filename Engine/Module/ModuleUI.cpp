@@ -98,7 +98,7 @@ void ModuleUI::InitGlyph()
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
 	// Set size to load glyphs as
-	FT_Set_Pixel_Sizes(face, 0, 16);
+	//FT_Set_Pixel_Sizes(face, 0, 16);
 	FT_Set_Char_Size(
 		face,    /* handle to face object           */
 		0,       /* char_width in 1/64th of points  */

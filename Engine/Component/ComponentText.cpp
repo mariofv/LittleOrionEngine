@@ -3,12 +3,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
-#include "Module/ModuleCamera.h"
-#include "Module/ModuleEditor.h"
-#include "Module/ModuleProgram.h"
 #include "Module/ModuleUI.h"
-
-#include "EditorUI/Panel/PanelScene.h"
 
 
 ComponentText::ComponentText() : ComponentUI(ComponentUI::UIType::TEXT)
@@ -23,6 +18,7 @@ ComponentText::ComponentText(GameObject * owner) : ComponentUI(owner, ComponentU
 
 void ComponentText::InitData()
 {
+	color = float3::unitZ;
 	if (App->ui->glyphInit == false)
 	{
 		App->ui->InitGlyph();
@@ -49,10 +45,10 @@ void ComponentText::Render(float4x4* projection)
 
 	// Iterate through all characters
 	std::string::const_iterator c;
-	x = 0;
-	y = 0;
-	/*owner->transform_2d.rect.right = 0;
-	owner->transform_2d.rect.bottom = 0;*/
+	float x = 0.0f;
+	float y = 0.0f;
+	float text_witdh = 0;
+	float text_heigth = 0;
 	float scale_factor = scale / 1000;
 	for (c = text.begin(); c != text.end(); c++)
 	{
@@ -63,8 +59,8 @@ void ComponentText::Render(float4x4* projection)
 		GLfloat w = ch.Size.x * scale_factor;
 		GLfloat h = ch.Size.y * scale_factor;
 
-		/*owner->transform_2d.rect.right += xpos + w;
-		owner->transform_2d.rect.bottom += h;*/
+		text_witdh = max(text_witdh, xpos + w);
+		text_heigth = max(text_heigth, ypos + h);
 		// Update VBO for each character
 		GLfloat vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0, 0.0 },
@@ -86,9 +82,11 @@ void ComponentText::Render(float4x4* projection)
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 		x += (ch.Advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
-	}
+	}	
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
+	text_witdh *= owner->transform_2d.rect.Width();
+	text_heigth *= owner->transform_2d.rect.Height();
 }
 
 void ComponentText::Delete()

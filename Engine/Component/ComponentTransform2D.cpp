@@ -97,3 +97,10 @@ void ComponentTransform2D::OnTransformChange()
 		child->transform_2d.OnTransformChange();
 	}
 }
+
+void  ComponentTransform2D::SetSize(float width, float height)
+{
+	rect.right = width;
+	rect.bottom = height;
+	OnTransformChange();
+}
