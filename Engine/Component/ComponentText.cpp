@@ -47,8 +47,9 @@ void ComponentText::Render(float4x4* projection)
 	std::string::const_iterator c;
 	float x = 0.0f;
 	float y = 0.0f;
-	float text_witdh = 0;
-	float text_heigth = 0;
+	text_width = 0;
+	text_heigth = 0;
+
 	float scale_factor = scale / 1000;
 	for (c = text.begin(); c != text.end(); c++)
 	{
@@ -59,8 +60,9 @@ void ComponentText::Render(float4x4* projection)
 		GLfloat w = ch.Size.x * scale_factor;
 		GLfloat h = ch.Size.y * scale_factor;
 
-		text_witdh = max(text_witdh, xpos + w);
-		text_heigth = max(text_heigth, ypos + h);
+		text_width = max(text_width, xpos + w) * scale_factor;
+		text_heigth = max(text_heigth, ypos + h) * scale_factor;
+
 		// Update VBO for each character
 		GLfloat vertices[6][4] = {
 			{ xpos,     ypos + h,   0.0, 0.0 },
@@ -85,8 +87,9 @@ void ComponentText::Render(float4x4* projection)
 	}	
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	text_witdh *= owner->transform_2d.rect.Width();
+	text_width *= owner->transform_2d.rect.Width();
 	text_heigth *= owner->transform_2d.rect.Height();
+	
 }
 
 void ComponentText::Delete()

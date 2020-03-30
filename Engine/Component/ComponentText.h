@@ -21,6 +21,8 @@ public:
 	//Text Inputs
 	std::string text = "Default";
 	float scale =  12.0f;
+	float text_width = 0;
+	float text_heigth = 0;
 
 private:
 	void InitData();

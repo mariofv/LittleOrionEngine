@@ -9,6 +9,7 @@
 #include "GL/glew.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
+#include "Main/Gameobject.h"
 
 #include "ModuleUI.h"
 #include "ModuleEditor.h"
@@ -45,8 +46,17 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	
 	for (auto &ui : ui_elements)
 	{
+		//look for canvas and iterate
 		ui->Render(&projection);
 	}
+	/*if (main_canvas != nullptr)
+	{
+		for (auto &child : main_canvas->owner->children)
+		{
+			ComponentUI::Re
+		}
+		
+	}*/
 }
 
 ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* owner)
@@ -55,6 +65,11 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* o
 	switch (type)
 	{
 		case ComponentUI::UIType::CANVAS:
+			if (main_canvas == nullptr)
+			{
+				main_canvas = new ComponentCanvas(owner);
+				new_ui = main_canvas;
+			}
 			new_ui = new ComponentCanvas(owner);
 			break;
 		case ComponentUI::UIType::IMAGE:
