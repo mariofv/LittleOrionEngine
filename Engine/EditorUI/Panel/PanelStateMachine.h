@@ -13,11 +13,17 @@ public:
 	~PanelStateMachine();
 
 	void Render() override;
+	void HandleInteraction();
 	void OpenStateMachine(const File & file);
+
+	void RenderStates() const;
+	void CreationIterations(); 
+	void CreateNodeMenu();
 
 private:
 	ax::NodeEditor::EditorContext* editor_context = nullptr;
 	std::shared_ptr<StateMachine> state_machine;
+	bool firstFrame = true;
 };
 #endif // !_PANELSTATEMACHINE_H_
 

@@ -15,7 +15,7 @@ struct Clip
 
 struct State
 {
-	State(std::string& name, std::shared_ptr<Clip>& clip);
+	State(std::string name, std::shared_ptr<Clip> clip);
 	std::string name;
 	uint64_t name_hash = 0;
 	std::shared_ptr<Clip> clip = nullptr;

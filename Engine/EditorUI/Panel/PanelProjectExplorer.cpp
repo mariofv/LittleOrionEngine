@@ -252,6 +252,9 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(const File * file)
 			{
 				std::string path = selected_folder->file_path + "/statemachine.stm";
 				StateMachine state_machine(path);
+
+				state_machine.states.push_back(std::make_shared<State>("Entry", nullptr));
+				state_machine.states.push_back(std::make_shared<State>("End", nullptr));
 				state_machine.Save();
 			}
 			ImGui::EndMenu();
