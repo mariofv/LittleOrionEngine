@@ -57,7 +57,7 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Game|Win32'">
     <OutDir>$(SolutionDir)TwinlightSouls\</OutDir>
-    <IntDir>$(SolutionDir)TwinlightSoulsBinaries\</IntDir>
+    <IntDir>$(SolutionDir)TwinlightSouls\</IntDir>
     <TargetName>TwinlightSouls</TargetName>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
