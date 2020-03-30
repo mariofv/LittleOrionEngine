@@ -19,6 +19,9 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleUI.h"
+
+#include "Component/ComponentCanvas.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
@@ -145,48 +148,66 @@ void PanelMenuBar::ShowGameObjectMenu()
 			{
 				GameObject* created_game_object = App->scene->CreateGameObject();
 				created_game_object->name = "Text";
-				//created_game_object->SetParent(created_game_object_parent);
 				created_game_object->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::TEXT);
 
-			/*	for (unsigned int i = 0; i < App->scene->GetRoot()->children.size(); ++i)
+				if (App->ui->main_canvas == nullptr)
 				{
-					if (App->scene->GetRoot()->children[i]->name == "Canvas")
-					{
-						GameObject* created_game_object = App->scene->CreateGameObject();
-						created_game_object->name = "Text";
-						created_game_object->SetParent((App->scene->GetRoot()->children[i]));
-						created_game_object->CreateComponent(Component::ComponentType::TEXT);
-					}
-					else
-					{
-						GameObject* created_game_object_parent = App->scene->CreateGameObject();
-						created_game_object_parent->name = "Canvas";
-						created_game_object_parent->CreateComponent(Component::ComponentType::CANVAS);
-						GameObject* created_game_object = App->scene->CreateGameObject();
-						created_game_object->name = "Text";
-						created_game_object->SetParent(created_game_object_parent);
-						created_game_object->CreateComponent(Component::ComponentType::TEXT);
-					}
-				}*/
+					GameObject* created_game_object_parent = App->scene->CreateGameObject();
+					created_game_object_parent->name = "Canvas";
+					created_game_object_parent->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(created_game_object);
 			}
 			if (ImGui::Selectable("Image"))
 			{
 				GameObject* created_game_object = App->scene->CreateGameObject();
 				created_game_object->name = "Image";
 				created_game_object->CreateComponent(Component::ComponentType::UI);
+
+				if (App->ui->main_canvas == nullptr)
+				{
+					GameObject* created_game_object_parent = App->scene->CreateGameObject();
+					created_game_object_parent->name = "Canvas";
+					created_game_object_parent->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(created_game_object);
 			}
 			ImGui::Separator();
 			if (ImGui::Selectable("Button"))
 			{
+				GameObject* created_game_object_text = App->scene->CreateGameObject();
+				created_game_object_text->name = "Text";
+				
+				created_game_object_text->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::TEXT);
+
 				GameObject* created_game_object = App->scene->CreateGameObject();
 				created_game_object->name = "Button";
+
 				created_game_object->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::BUTTON);
+				created_game_object->AddChild(created_game_object_text);
+
+				if (App->ui->main_canvas == nullptr)
+				{
+					GameObject* created_game_object_parent = App->scene->CreateGameObject();
+					created_game_object_parent->name = "Canvas";
+					created_game_object_parent->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(created_game_object);
+				
 			}
 			if (ImGui::Selectable("Progess Bar"))
 			{
 				GameObject* created_game_object = App->scene->CreateGameObject();
 				created_game_object->name = "Progess Bar";
 				created_game_object->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::PROGRESSBAR);
+
+				if (App->ui->main_canvas == nullptr)
+				{
+					GameObject* created_game_object_parent = App->scene->CreateGameObject();
+					created_game_object_parent->name = "Canvas";
+					created_game_object_parent->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(created_game_object);
 			}
 			if (ImGui::Selectable("Slider"))
 			{
