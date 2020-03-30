@@ -26,9 +26,9 @@ public:
 	GameObject(const GameObject& gameobject_to_copy);
 	GameObject(GameObject&& gameobject_to_move) = default;
 
-	GameObject & operator=(const GameObject & gameobject_to_copy) = default;
-	GameObject & operator<<(const GameObject & gameobject_to_copy);
-	GameObject & operator=(GameObject && gameobject_to_move) = default;
+	GameObject & operator=(const GameObject& gameobject_to_copy) = default;
+	GameObject & operator<<(const GameObject& gameobject_to_copy);
+	GameObject & operator=(GameObject&& gameobject_to_move) = default;
 
 	bool IsEnabled() const;
 	void SetEnabled(bool able);
@@ -36,20 +36,21 @@ public:
 	void SetStatic(bool is_static);
 	bool IsStatic() const;
 
-	bool IsVisible(const ComponentCamera & camera) const;
+	bool IsVisible(const ComponentCamera& camera) const;
 	ENGINE_API void Update();
-	void Delete(std::vector<GameObject*> & children_to_remove);
+	void Delete(std::vector<GameObject*>& children_to_remove);
 
 	void Save(Config& config) const;
 	void Load(const Config& config);
 
-	void SetParent(GameObject *new_parent);
-	void AddChild(GameObject *child);
-	void RemoveChild(GameObject *child);
+	void SetParent(GameObject* new_parent);
+	void AddChild(GameObject* child);
+	void RemoveChild(GameObject* child);
 
-	ENGINE_API  Component* CreateComponent(const Component::ComponentType type, const ComponentUI::UIType ui_type = ComponentUI::UIType::IMAGE);
-	void RemoveComponent(Component * component);
-	ENGINE_API  Component* GetComponent(const Component::ComponentType type) const;
+	ENGINE_API Component* CreateComponent(const Component::ComponentType type, const ComponentUI::UIType ui_type = ComponentUI::UIType::IMAGE);
+	void RemoveComponent(Component* component);
+	ENGINE_API Component* GetComponent(const Component::ComponentType type) const;
+	ENGINE_API ComponentScript* GetComponentScript(const char* name) const;
 
 	void MoveUpInHierarchy() const;
 	void MoveDownInHierarchy() const;
@@ -59,6 +60,10 @@ public:
 
 	int GetHierarchyDepth() const;
 	void SetHierarchyDepth(int value);
+
+	//Prefabs
+	GameObject * GetPrefabParent();
+	void UnpackPrefab();
 
 private:
 	void SetHierarchyStatic(bool is_static);

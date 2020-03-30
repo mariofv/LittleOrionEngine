@@ -9,6 +9,7 @@
 #include "ModuleModelLoader.h"
 #include "ModuleRender.h"
 #include "ModuleResourceManager.h"
+#include "ModuleScriptManager.h"
 
 #include <algorithm>
 #include <stack>
@@ -101,7 +102,7 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
-GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
+ENGINE_API GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 {
 	if (UUID == 0)
 	{
@@ -141,6 +142,8 @@ void ModuleScene::DeleteCurrentScene()
 	App->actions->ClearUndoRedoStacks();
 	RemoveGameObject(root);
 	App->renderer->DeleteAABBTree();
+	App->scripts->scripts.clear();
+	App->scripts->scene_is_changed = true;
 	App->editor->selected_game_object = nullptr;
 }
 

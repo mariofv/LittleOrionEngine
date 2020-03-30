@@ -14,15 +14,10 @@ ImportResult MeshImporter::Import(const File & file, bool force) const
 }
 ImportResult MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, const std::string& imported_file, float unit_scale_factor,const Skeleton & skeleton) const
 {
-	aiVector3t<float> pScaling, pPosition;
-	aiQuaterniont<float> pRotation;
+	aiMatrix4x4 scaling_matrix = aiMatrix4x4() * unit_scale_factor;
 	aiMatrix4x4 node_transformation = mesh_current_transformation;
-	node_transformation.Decompose(pScaling, pRotation, pPosition);
 
-	pPosition = pPosition * unit_scale_factor;
-	pScaling = pScaling * unit_scale_factor;
-
-	node_transformation = aiMatrix4x4(pScaling, pRotation, pPosition);
+	node_transformation = scaling_matrix * node_transformation;
 
 	std::vector<uint32_t> indices;
 	for (unsigned int i = 0; i < mesh->mNumFaces; i++)

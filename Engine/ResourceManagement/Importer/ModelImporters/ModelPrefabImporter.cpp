@@ -82,7 +82,7 @@ void ModelPrefabImporter::LoadMeshComponent(const std::string& mesh_exported_fil
 
 	std::string material_file = material_exported_file != "" ? material_exported_file : DEFAULT_MATERIAL_PATH;
 
-	std::shared_ptr<Material> material_resource = std::make_shared<Material>(0,DEFAULT_MATERIAL_PATH);
+	std::shared_ptr<Material> material_resource = std::make_shared<Material>(0, material_file);
 	mesh_renderer_components.back()->SetMaterial(material_resource);
 }
 

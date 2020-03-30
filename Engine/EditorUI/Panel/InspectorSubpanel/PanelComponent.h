@@ -7,17 +7,17 @@
 
 class Component;
 class ComponentAnimation;
+class ComponentButton;
 class ComponentCamera;
 class ComponentCanvas;
 class ComponentImage;
 class ComponentMeshRenderer;
 class ComponentLight;
 class ComponentProgressBar;
-class ComponentScript;
+class ComponentUI;
 class ComponentText;
 class ComponentTransform;
-class ComponentUI;
-class ComponentButton;
+class ComponentScript;
 class GameObject;
 
 class PanelComponent
@@ -40,7 +40,7 @@ public:
 	void CheckClickedCamera(ComponentCamera* camera);
 	void CheckClickForUndo(ModuleActions::UndoActionType type, Component* component);
 
-	ENGINE_API void DropGOTarget(GameObject *& go, const std::string & script_name, ComponentScript *& script_to_find);
+	ENGINE_API void DropGOTarget(GameObject*& go);
 
 private:
 	void DropMeshAndMaterial(ComponentMeshRenderer* component_mesh);

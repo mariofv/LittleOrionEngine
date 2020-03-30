@@ -23,7 +23,7 @@ public:
 	bool Save(const char* file_name, const void* buffer, unsigned int size, bool append = false) const;
 
 	bool Remove(const File * file) const;
-	bool Exists(const char* file) const;
+	bool Exists(const char* file,bool windows = false) const;
 	File MakeDirectory(const std::string & new_directory_full_path) const;
 	bool Copy(const char* source, const char* destination);
 	

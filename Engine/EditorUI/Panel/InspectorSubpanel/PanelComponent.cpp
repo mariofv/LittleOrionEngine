@@ -429,8 +429,8 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 
 		if (ImGui::Button("Delete"))
 		{
-			App->actions->DeleteComponentUndo(component_script);
-
+			component_script->owner->RemoveComponent(component_script);
+			App->scripts->RemoveComponentScript(component_script);
 			return;
 		}
 		ImGui::SameLine();
@@ -717,7 +717,7 @@ void PanelComponent::DropAnimationAndSkeleton(ComponentAnimation* component_anim
 	}
 }
 
-ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go, const std::string& script_name, ComponentScript*& script_to_find)
+ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go)
 {
 	if (ImGui::BeginDragDropTarget())
 	{
@@ -725,19 +725,7 @@ ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go, const std::string&
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			for (unsigned int i = 0; i < incoming_game_object->components.size(); ++i)
-			{
-
-				if (incoming_game_object->components[i]->type == Component::ComponentType::SCRIPT)
-				{
-					ComponentScript *script = (ComponentScript *)incoming_game_object->components[i];
-					if (script->name == script_name)
-					{
-						go = incoming_game_object;
-						script_to_find = script;
-					}
-				}
-			}
+			go = incoming_game_object;
 		}
 		ImGui::EndDragDropTarget();
 	}
