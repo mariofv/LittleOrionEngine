@@ -49,14 +49,14 @@ void ModuleUI::Render(const ComponentCamera* camera)
 		//look for canvas and iterate
 		ui->Render(&projection);
 	}
-	if (main_canvas != nullptr)
-	{
-		for (auto &child : main_canvas->owner->children)
-		{
-			//ComponentUI::Re
-		}
-		
-	}
+	//if (main_canvas != nullptr)
+	//{
+	//	for (auto &child : main_canvas->owner->children)
+	//	{
+	//		//ComponentUI::Re
+	//	}
+	//	
+	//}
 }
 
 ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* owner)
