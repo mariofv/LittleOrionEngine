@@ -4,6 +4,22 @@
 #include "NodeEditor/imgui_node_editor.h"
 #include "EditorUI/Panel/Panel.h"
 #include "ResourceManagement/Resources/StateMachine.h"
+
+struct LinkInfo
+{
+	ax::NodeEditor::LinkId id;
+	ax::NodeEditor::PinId input_id;
+	ax::NodeEditor::PinId output_id;
+};
+
+struct NodeInfo
+{
+	ax::NodeEditor::NodeId id;
+	size_t num_inputs = 1;
+	size_t num_outputs = 1;
+};
+
+
 class File;
 class PanelStateMachine :public Panel
 {
@@ -17,13 +33,20 @@ public:
 	void OpenStateMachine(const File & file);
 
 	void RenderStates() const;
-	void CreationIterations(); 
+	void LeftPanel();
 	void CreateNodeMenu();
 
 private:
 	ax::NodeEditor::EditorContext* editor_context = nullptr;
 	std::shared_ptr<StateMachine> state_machine;
 	bool firstFrame = true;
+	uint64_t entry_hash = std::hash<std::string>{}("Entry");
+	uint64_t end_hash = std::hash<std::string>{}("End");
+
+	//Editor
+	ImVector<LinkInfo> links;
+	ImVector<NodeInfo> Nodes;
+	int new_states = 0;
 };
 #endif // !_PANELSTATEMACHINE_H_
 

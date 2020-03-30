@@ -30,31 +30,35 @@ void ImGuiEx_EndColumn()
 {
 	ImGui::EndGroup();
 }
-struct LinkInfo
-{
-	ax::NodeEditor::LinkId Id;
-	ax::NodeEditor::PinId  InputId;
-	ax::NodeEditor::PinId  OutputId;
-};
-static ImVector<LinkInfo>   g_Links;
+
+
 static int g_NextLinkId = 100;
 void PanelStateMachine::Render()
 {
 	if (ImGui::Begin(ICON_FA_PROJECT_DIAGRAM " State Machine", &opened, ImGuiWindowFlags_MenuBar))
 	{
-		ax::NodeEditor::SetCurrentEditor(editor_context);
 
-		ax::NodeEditor::Begin("My Editor");
-		RenderStates();
-		//
-		HandleInteraction();
+			ax::NodeEditor::SetCurrentEditor(editor_context);
 
-
-		ax::NodeEditor::End();
-		if (firstFrame)
-			ax::NodeEditor::NavigateToContent(0.0f);
-		firstFrame = false;
-
+			LeftPanel();
+			ax::NodeEditor::Begin("My Editor");
+			{
+				if (ImGui::IsMouseClicked(1))
+				{
+					ax::NodeEditor::Suspend();
+					ImGui::OpenPopup("Editor Menu");
+					ax::NodeEditor::Resume();
+				}
+				RenderStates();
+				HandleInteraction();
+				CreateNodeMenu();
+				ax::NodeEditor::End();
+				if (firstFrame)
+				{
+					ax::NodeEditor::NavigateToContent(0.0f);
+				}
+				firstFrame = false;
+			}
 
 	}
 	ImGui::End();
@@ -109,7 +113,9 @@ void PanelStateMachine::HandleInteraction()
 
 			if (ax::NodeEditor::AcceptNewItem())
 			{
-				CreateNodeMenu();
+				ax::NodeEditor::Suspend();
+				ImGui::OpenPopup("Editor Menu");
+				ax::NodeEditor::Resume();
 			}
 		}
 	}
@@ -125,13 +131,13 @@ void PanelStateMachine::HandleInteraction()
 			if (ax::NodeEditor::AcceptDeletedItem())
 			{
 				// Then remove link from your data.
-				for (auto& link : g_Links)
+				for (auto& link : links)
 				{
-					if (link.Id == deletedLinkId)
+					/*if (link.Id == deletedLinkId)
 					{
 						g_Links.erase(&link);
 						break;
-					}
+					}*/
 				}
 			}
 
@@ -168,38 +174,35 @@ void PanelStateMachine::RenderStates() const
 		position.x += 10;
 
 	}
-
-	// Submit Links
-	for (auto& linkInfo : g_Links)
-		ax::NodeEditor::Link(linkInfo.Id, linkInfo.InputId, linkInfo.OutputId);
 }
 
-void PanelStateMachine::CreationIterations()
-{
-	if (ImGui::Begin(" Details"))
-	{
-		if (ImGui::IsWindowHovered())
-		{
-			if (ImGui::IsMouseClicked(0))
-			{
-				int x = 0;
-				if (ImGui::BeginPopupContextWindow("Menu"))
-				{
-					if (ImGui::Selectable("Create State"))
-					{
-					}
-					ImGui::EndPopup();
-				}
-			}
-		}
-	}
-	ImGui::End();
-	
-}
 
 
 void PanelStateMachine::CreateNodeMenu()
 {
-	state_machine->states.push_back(std::make_shared<State>("New Node",nullptr));
+	ax::NodeEditor::Suspend();
+	if (ImGui::BeginPopup("Editor Menu"))
+	{
+		if (ImGui::BeginMenu("Create State"))
+		{
+			if (ImGui::MenuItem("Empty"))
+			{
+				state_machine->states.push_back(std::make_shared<State>("New Node " + new_states, nullptr));
+				new_states++;
+			}
+			ImGui::EndMenu();
+		}
+		ImGui::EndPopup();
+	}
+	ax::NodeEditor::Resume();
 }
 
+
+void PanelStateMachine::LeftPanel()
+{
+	if (ImGui::BeginChild("Details", ImVec2(300, 0)))
+	{
+	}
+	ImGui::EndChild();
+	ImGui::SameLine(0.0f, 12.0f);
+}
