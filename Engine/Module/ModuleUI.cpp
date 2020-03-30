@@ -9,10 +9,13 @@
 #include "GL/glew.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
+#include "Main/GameObject.h"
 
-#include "ModuleUI.h"
 #include "ModuleEditor.h"
+#include "ModuleScene.h"
+#include "ModuleUI.h"
 #include "ModuleWindow.h"
+
 
 #include "SDL/SDL.h"
 
@@ -43,19 +46,40 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	window_height = App->editor->scene_panel->scene_window_content_area_height;
 	float4x4 projection = float4x4::D3DOrthoProjLH(-1, 1, window_width, window_height);
 	
-	for (auto &ui : ui_elements)
+	/*for (auto &ui : ui_elements)
 	{
 		ui->Render(&projection);
+	}*/
+	if (main_canvas != nullptr)
+	{
+		RenderUIGameObject(main_canvas->owner, &projection);
+	}
+}
+
+void  ModuleUI::RenderUIGameObject(GameObject* parent, float4x4* projection)
+{
+	for (auto child : parent->children)
+	{
+		ComponentUI* ui = static_cast<ComponentUI*>(child->GetComponent(Component::ComponentType::UI));
+		if (ui)
+		{
+			ui->Render(projection);
+		}
+		RenderUIGameObject(child, projection);
 	}
 }
 
 ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* owner)
 {
-	ComponentUI* new_ui;
+	ComponentUI* new_ui = nullptr;
 	switch (type)
 	{
 		case ComponentUI::UIType::CANVAS:
-			new_ui = new ComponentCanvas(owner);
+			if (main_canvas == nullptr)
+			{
+				main_canvas = new ComponentCanvas(owner);
+				new_ui = main_canvas;
+			}
 			break;
 		case ComponentUI::UIType::IMAGE:
 			new_ui = new ComponentImage(owner);

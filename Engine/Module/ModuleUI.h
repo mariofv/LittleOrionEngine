@@ -53,8 +53,11 @@ public:
 	std::map<GLchar, Character> Characters;
 
 	unsigned int text_texture;
+	ComponentCanvas* main_canvas;
 	std::vector<ComponentUI*> ui_elements;
 	float window_width, window_height;
+private:
+	void RenderUIGameObject(GameObject*, float4x4*);
 
 };
 
