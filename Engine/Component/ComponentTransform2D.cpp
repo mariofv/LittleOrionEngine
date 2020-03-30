@@ -85,16 +85,29 @@ void ComponentTransform2D::Load(const Config& config)
 
 void ComponentTransform2D::OnTransformChange()
 {
-	owner->transform.SetRotation(float3(0, 0, rotation));
-	owner->transform.SetTranslation(float3(position, 0.0F));
-	owner->transform.SetScale(float3(scale, 0));
-
-	scale_matrix = float4x4::Scale(float3(rect.Width(), rect.Height(), 0), float3::zero);
-	scale_matrix = owner->transform.GetGlobalModelMatrix() * scale_matrix;
+	model_matrix = float4x4::FromTRS(float3(position, 0), float4x4::FromEulerXYZ(0, 0, rotation), float3(scale, 0));
+	GenerateGlobalModelMatrix();
 
 	for (auto & child : owner->children)
 	{
 		child->transform_2d.OnTransformChange();
+	}
+
+	rect_matrix = float4x4(global_matrix);
+	rect_matrix = rect_matrix * float4x4::RotateZ(-rotation); //Reset Rotation
+	rect_matrix = rect_matrix * float4x4::Scale(float3(rect.Width(), rect.Height(), 0));
+	rect_matrix = float4x4::RotateZ(rotation) * rect_matrix; //Revert Rotation Reset
+}
+
+void ComponentTransform2D::GenerateGlobalModelMatrix()
+{
+	if (owner->parent == nullptr)
+	{
+		global_matrix = model_matrix;
+	}
+	else
+	{
+		global_matrix = owner->parent->transform_2d.global_matrix * model_matrix;
 	}
 }
 
