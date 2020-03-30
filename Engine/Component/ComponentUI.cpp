@@ -20,9 +20,11 @@ ComponentUI::ComponentUI(GameObject * owner, UIType ui_type) : Component(owner, 
 	InitData();
 }
 
+
+
 void ComponentUI::Render(float4x4* projection)
 {
-	Render(projection, &owner->transform_2d.scale_matrix, ui_texture, &color);
+	Render(projection, &owner->transform_2d.rect_matrix, ui_texture, &color);
 }
 
 void ComponentUI::Render(float4x4* projection, float4x4* model, unsigned int texture, float3* color)

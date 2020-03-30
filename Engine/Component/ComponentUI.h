@@ -26,6 +26,7 @@ public:
 	virtual void Render(float4x4*);
 	virtual void Render(float4x4*, float4x4*, unsigned int texture = 0, float3* color = &float3(0.0f, 1.0f, 0.0f));
 	float3 color = float3::unitY;
+	
 protected:
 	UIType ui_type;
 	unsigned int shader_program, vao, vbo;

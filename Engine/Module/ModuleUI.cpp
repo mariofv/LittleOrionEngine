@@ -46,13 +46,13 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	window_height = App->editor->scene_panel->scene_window_content_area_height;
 	float4x4 projection = float4x4::D3DOrthoProjLH(-1, 1, window_width, window_height);
 	
-	/*for (auto &ui : ui_elements)
-	{
-		ui->Render(&projection);
-	}*/
-	if (main_canvas != nullptr)
+	/*if (main_canvas != nullptr)
 	{
 		RenderUIGameObject(main_canvas->owner, &projection);
+	}*/
+	for (auto &ui : ui_elements) 
+	{
+		ui->Render(&projection);
 	}
 }
 
@@ -78,8 +78,8 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* o
 			if (main_canvas == nullptr)
 			{
 				main_canvas = new ComponentCanvas(owner);
-				new_ui = main_canvas;
 			}
+			new_ui = main_canvas;
 			break;
 		case ComponentUI::UIType::IMAGE:
 			new_ui = new ComponentImage(owner);

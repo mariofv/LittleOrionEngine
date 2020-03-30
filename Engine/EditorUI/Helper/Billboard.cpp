@@ -18,7 +18,7 @@ Billboard::~Billboard()
 
 void Billboard::Render(const float3& position) const
 {
-	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
+	/*GLuint shader_program = App->program->GetShaderProgramId("Billboard");
 	glUseProgram(shader_program);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -32,6 +32,6 @@ void Billboard::Render(const float3& position) const
 	glDrawElements(GL_TRIANGLES, billboard_quad->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
-	glUseProgram(0);
+	glUseProgram(0);*/
 }
 
