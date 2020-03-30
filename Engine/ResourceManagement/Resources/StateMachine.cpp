@@ -4,7 +4,25 @@
 #include "Module/ModuleResourceManager.h"
 #include "Helper/Config.h"
 
-StateMachine::StateMachine(const std::string & mesh_file_path):
+//Structs
+
+Clip::Clip(std::string& name, std::shared_ptr<Animation>& animation, bool loop) :
+	name(name), name_hash(std::hash<std::string>{}(name)), animation(animation), loop(loop) {};
+
+State::State(std::string& name, std::shared_ptr<Clip>& clip) :
+	name(name), name_hash(std::hash<std::string>{}(name)),clip(clip)  {
+};
+
+Transition::Transition(std::string& source, std::string& target, std::string& trigger, long interpolation) :
+	source(source), 
+	source_hash(std::hash<std::string>{}(source)), 
+	target(target), 
+	target_hash(std::hash<std::string>{}(target)),
+	trigger(trigger), 
+	trigger_hash(std::hash<std::string>{}(trigger)),
+	interpolation_time(interpolation) {};
+
+StateMachine::StateMachine(const std::string& mesh_file_path):
 Resource(0, mesh_file_path)
 {
 	//states.push_back(std::make_shared<State>("Entry"));
@@ -15,7 +33,7 @@ void StateMachine::Save() const
 {
 	Config state_machine_config;
 	std::vector<Config> clips_config(clips.size());
-	for (auto & clip : clips)
+	for (auto& clip : clips)
 	{
 		Config clip_config;
 		clip_config.AddString(clip->animation->exported_file, "AnimationUUID");
@@ -26,7 +44,7 @@ void StateMachine::Save() const
 	state_machine_config.AddChildrenConfig(clips_config, "Clips");
 
 	std::vector<Config> states_config(states.size());
-	for (auto & state : states)
+	for (auto& state : states)
 	{
 		Config state_config;
 		state_config.AddString(state->name, "Name");
@@ -36,7 +54,7 @@ void StateMachine::Save() const
 	state_machine_config.AddChildrenConfig(states_config, "States");
 
 	std::vector<Config> transitions_config(transitions.size());
-	for (auto & transition : transitions)
+	for (auto& transition : transitions)
 	{
 		Config transition_config;
 		transition_config.AddString(transition->source, "Source");
@@ -53,7 +71,7 @@ void StateMachine::Save() const
 	App->filesystem->Save(exported_file.c_str(), serialized_state_machine_string.c_str(), serialized_state_machine_string.size());
 }
 
-void StateMachine::Load(const File & file)
+void StateMachine::Load(const File& file)
 {
 	size_t size;
 	char * state_machine_data =  App->filesystem->Load(file.file_path.c_str(), size);
@@ -68,7 +86,7 @@ void StateMachine::Load(const File & file)
 
 	std::vector<Config> clips_config(clips.size());
 	state_machine_config.GetChildrenConfig("States", clips_config);
-	for (auto & clip_config : clips_config)
+	for (auto& clip_config : clips_config)
 	{
 		std::string animation;
 		std::string name;
@@ -81,14 +99,14 @@ void StateMachine::Load(const File & file)
 
 	std::vector<Config> states_config(states.size());
 	state_machine_config.GetChildrenConfig( "States", states_config);
-	for (auto & state_config : states_config)
+	for (auto& state_config : states_config)
 	{
 		std::string clip_name;
 		std::string name;
 		state_config.GetString("Name", name, "");
 		state_config.GetString("ClipName", clip_name, "");
 		std::shared_ptr<Clip> state_clip;
-		for (auto & clip : clips)
+		for (auto& clip : clips)
 		{
 			if (clip->name == name)
 			{
@@ -100,7 +118,7 @@ void StateMachine::Load(const File & file)
 
 	std::vector<Config> transitions_config(transitions.size());
 	state_machine_config.GetChildrenConfig("Transitions", transitions_config);
-	for (auto & transition_config : transitions_config)
+	for (auto& transition_config : transitions_config)
 	{
 		std::string source;
 		std::string target;
