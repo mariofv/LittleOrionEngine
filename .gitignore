@@ -332,5 +332,4 @@ ASALocalRun/
 !Libraries/**
 imgui.ini
 Game/Library/**
-Game/Assets/Scenes/**
 **/LittleOrionEngine.lib
