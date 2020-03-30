@@ -1,5 +1,6 @@
-#include "ComponentMeshRenderer.h"
+﻿#include "ComponentMeshRenderer.h"
 
+#include "ComponentAnimation.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleLight.h"
@@ -7,7 +8,9 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleScene.h"
 
+#include <algorithm>
 ComponentMeshRenderer::ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH_RENDERER)
 {
 	owner->aabb.GenerateBoundingBox();
@@ -87,6 +90,11 @@ void ComponentMeshRenderer::Render() const
 	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
 
+	ComponentAnimation* anim = static_cast<ComponentAnimation*>(owner->parent->GetComponent(ComponentType::ANIMATION));
+	if (anim != nullptr)
+	{
+		anim->Render(program);
+	}
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -111,6 +119,7 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 	AddSpecularUniforms(shader_program);
 	AddAmbientOclusionUniforms(shader_program);
 }
+
 
 void ComponentMeshRenderer::AddDiffuseUniforms(unsigned int shader_program) const
 {

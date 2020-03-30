@@ -8,7 +8,6 @@
 std::shared_ptr<Mesh> MeshLoader::Load(const std::string& file_path)
 {
 
-
 	BROFILER_CATEGORY("Load Mesh", Profiler::Color::Brown);
 
 	if (!App->filesystem->Exists(file_path.c_str()))
