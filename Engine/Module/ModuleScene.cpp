@@ -18,6 +18,7 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
+	
 	return true;
 }
 

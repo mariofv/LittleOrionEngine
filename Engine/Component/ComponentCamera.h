@@ -20,7 +20,8 @@ public:
 	enum class ClearMode
 	{
 		COLOR = 0,
-		SKYBOX = 1
+		SKYBOX = 1,
+		ORTHO = 2
 	};
 
 	ComponentCamera();
@@ -44,7 +45,7 @@ public:
 	void Copy(Component* component_to_copy) const override;
 
 	float GetWidth() const;
-	float GetHeigt() const;
+	float GetHeight() const;
 
 	void RecordFrame(float width, float height);
 	void RecordDebugDraws(float width, float height) const;
@@ -137,9 +138,12 @@ public:
 
 private:
 	Frustum camera_frustum;
-
 	GLuint rbo = 0;
 	GLuint fbo = 0;
+private:
+	
+	
+	
 	GLuint msfbo = 0;
 	GLuint msfb_color = 0;
 	GLuint last_recorded_frame_texture = 0;

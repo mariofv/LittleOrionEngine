@@ -7,11 +7,17 @@
 
 class Component;
 class ComponentAnimation;
+class ComponentButton;
 class ComponentCamera;
-class ComponentLight;
+class ComponentCanvas;
+class ComponentImage;
 class ComponentMeshRenderer;
-class ComponentScript;
+class ComponentLight;
+class ComponentProgressBar;
+class ComponentUI;
+class ComponentText;
 class ComponentTransform;
+class ComponentScript;
 class GameObject;
 
 class PanelComponent
@@ -20,13 +26,13 @@ public:
 	PanelComponent() = default;
 	~PanelComponent() = default;
 
-	void ShowComponentTransformWindow(ComponentTransform* transform);
-	void ShowComponentMeshRendererWindow(ComponentMeshRenderer* mesh);
-	void ShowComponentCameraWindow(ComponentCamera* camera);
-	void ShowComponentLightWindow(ComponentLight* light);
-	void ShowComponentAnimationWindow(ComponentAnimation* animation);
-	void ShowComponentScriptWindow(ComponentScript* component_script);
-	
+	void ShowComponentTransformWindow(ComponentTransform *transform);
+	void ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh);
+	void ShowComponentCameraWindow(ComponentCamera *camera);
+	void ShowComponentLightWindow(ComponentLight *light);
+	void ShowComponentAnimationWindow(ComponentAnimation *animation);
+	void ShowComponentScriptWindow(ComponentScript * component_script);
+	void ShowComponentUIWindow(ComponentUI*);
 	void ShowAddNewComponentButton();
 
 	void ShowScriptsCreated(ComponentScript*);
@@ -38,6 +44,13 @@ public:
 
 private:
 	void DropMeshAndMaterial(ComponentMeshRenderer* component_mesh);
+	void ShowCommonUIWindow(ComponentUI*);
+	void ShowComponentCanvasWindow(ComponentCanvas*);
+	void ShowComponentProgressBarWindow(ComponentProgressBar*);
+	void ShowComponentImageWindow(ComponentImage*);
+	void ShowComponentTextWindow(ComponentText*);
+	void ShowComponentButtonWindow(ComponentButton*);
+
 	void DropAnimationAndSkeleton(ComponentAnimation* component_animation);
 };
 

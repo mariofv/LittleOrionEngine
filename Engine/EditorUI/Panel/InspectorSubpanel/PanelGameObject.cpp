@@ -2,9 +2,14 @@
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentCanvas.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentText.h"
+#include "Component/ComponentTransform.h"
+#include "Component/ComponentUI.h"
+#include "Component/ComponentButton.h"
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "Main/Application.h"
@@ -30,7 +35,11 @@ void PanelGameObject::Render(GameObject* game_object)
 	{
 		return;
 	}
-	ImGui::Checkbox("", &game_object->active);
+	
+	if (ImGui::Checkbox("###State", &game_object->active)) 
+	{
+		game_object->SetEnabled(game_object->active);
+	}
 
 	ImGui::SameLine();
 	ImGui::Text(ICON_FA_CUBE);
@@ -82,6 +91,9 @@ void PanelGameObject::Render(GameObject* game_object)
 				break;
 			case Component::ComponentType::SCRIPT:
 				component_panel.ShowComponentScriptWindow(static_cast<ComponentScript*>(component));
+				break;
+			case Component::ComponentType::UI:
+				component_panel.ShowComponentUIWindow(static_cast<ComponentUI*>(component));
 				break;
 			case Component::ComponentType::ANIMATION:
 				component_panel.ShowComponentAnimationWindow(static_cast<ComponentAnimation*>(component));

@@ -35,6 +35,7 @@ private:
 	void RenderBoundingBoxes() const;
 	void RenderGlobalBoundingBoxes() const;
 	void RenderBillboards() const;
+	void RenderCanvas() const;
 	void RenderPathfinding() const;
 
 

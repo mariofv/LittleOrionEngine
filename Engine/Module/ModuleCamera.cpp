@@ -1,5 +1,6 @@
 #include "Main/Globals.h"
 #include "Main/Application.h"
+#include "ModuleScene.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
 #include "ModuleCamera.h"
@@ -16,7 +17,7 @@ bool ModuleCamera::Init()
 	int windowWidth, windowHeight;
 	SDL_GetWindowSize(App->window->window, &windowWidth, &windowHeight);
 
-	scene_camera_game_object = new GameObject();
+	scene_camera_game_object = App->scene->CreateGameObject();
 	scene_camera_game_object->transform.SetTranslation(float3(0.5f, 2.f, -15.f));
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	scene_camera->SetFarDistance(5000);
@@ -85,10 +86,13 @@ void ModuleCamera::SelectMainCamera()
 			if (main_camera == nullptr)
 			{
 				main_camera = camera;
+				canvas_camera = camera;
+				//scene_camera->SetClearMode(ComponentCamera::ClearMode::ORTHO);
 			}
 			else if (main_camera->depth < camera->depth)
 			{
 				main_camera = camera;
+				canvas_camera = camera;
 			}
 		}
 	}
