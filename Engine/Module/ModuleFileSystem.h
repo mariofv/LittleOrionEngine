@@ -31,6 +31,8 @@ public:
 	void GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only = false) const;
 
 	bool CreateMountedDir(const char * directory) const;
+	bool MountDir(const char * directory) const;
+
 	void RefreshFilesHierarchy();
 private:
 	char *save_path = NULL;

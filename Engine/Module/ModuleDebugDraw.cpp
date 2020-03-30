@@ -391,6 +391,9 @@ bool ModuleDebugDraw::Init()
 
 void ModuleDebugDraw::Render()
 {
+#if GAME
+	return;
+#endif
 
 	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
 	if(App->debug->show_navmesh)

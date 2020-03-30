@@ -189,7 +189,9 @@ void ComponentCamera::RecordFrame(float width, float height)
 		toggle_msaa = false;
 	}
 
+#if !GAME
 	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+#endif
 
 	glViewport(0, 0, width, height);
 
@@ -202,7 +204,9 @@ void ComponentCamera::RecordFrame(float width, float height)
 			break;
 		case ComponentCamera::ClearMode::SKYBOX:
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+#if !GAME
 			App->cameras->skybox->Render(*this);
+#endif
 			break;
 		default:
 			break;
@@ -210,6 +214,7 @@ void ComponentCamera::RecordFrame(float width, float height)
 
 	App->renderer->RenderFrame(*this);
 
+#if !GAME
 	if (App->renderer->anti_aliasing)
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
@@ -218,6 +223,8 @@ void ComponentCamera::RecordFrame(float width, float height)
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#endif
+	
 }
 
 void ComponentCamera::RecordDebugDraws(float width, float height) const

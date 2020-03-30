@@ -91,6 +91,10 @@ bool ModuleEditor::InitImgui()
 
 update_status ModuleEditor::PreUpdate()
 {
+#if GAME
+	return update_status::UPDATE_CONTINUE;
+#endif
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -101,10 +105,20 @@ update_status ModuleEditor::PreUpdate()
 
 update_status ModuleEditor::Update()
 {
+	static bool inital_scene_loaded = false;
+
+#if GAME
+	if (!inital_scene_loaded)
+	{
+		OpenScene(MAIN_SCENE_PATH);
+		inital_scene_loaded = true;
+		return update_status::UPDATE_CONTINUE;
+	}
+#endif
+
 	//ImGui::ShowStyleEditor();
 	//ImGui::ShowDemoWindow();
 
-	static bool inital_scene_loaded = false;
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
 		OpenScene(DEFAULT_SCENE_PATH);
@@ -116,6 +130,10 @@ update_status ModuleEditor::Update()
 
 void ModuleEditor::Render()
 {
+#if GAME
+	return;
+#endif
+
 	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
 	
 	ImGui::SetNextWindowPos(ImVec2(0, 0));

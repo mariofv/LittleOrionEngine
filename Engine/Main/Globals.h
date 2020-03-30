@@ -78,6 +78,7 @@ enum class Fonts
 # define PRIMITIVE_TORUS_PATH "Library/Metadata/22/2202705559"
 # define PRIMITIVE_QUAD_PATH "Library/Metadata/35/3548710651"
 
+# define MAIN_SCENE_PATH "Library/Main.scene"
 # define DEFAULT_SCENE_PATH "Resources/Scenes/default_scene.scene"
 # define SAVED_SCENE_PATH "Assets/Scenes/scene.scene"
 # define TMP_SCENE_PATH "Assets/Scenes/tmp_scene.scene"

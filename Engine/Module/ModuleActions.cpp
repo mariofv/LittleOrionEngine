@@ -32,6 +32,9 @@ update_status ModuleActions::PreUpdate()
 
 update_status ModuleActions::Update()
 {
+#if GAME
+	return update_status::UPDATE_CONTINUE;
+#endif 
 	HandleInput();
 	return update_status::UPDATE_CONTINUE;
 }
