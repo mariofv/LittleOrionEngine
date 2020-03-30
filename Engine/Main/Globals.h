@@ -87,8 +87,17 @@ enum class Fonts
 # define NAVMESH_PATH "Resources/NavMeshes/"
 
 # define SCRIPT_LIST_PATH "Resources/Scripts/scripts_list.scripts"
-# define SCRIPTS_DLL_PATH "Resources/Scripts/GamePlaySystem.dll"
-# define SCRIPT_DLL_FILE "GamePlaySyste_.dll"
+
+#if DEBUG
+# define SCRIPTS_DLL_PATH "Resources/Scripts/GamePlaySystemDebug.dll"
+# define SCRIPT_DLL_FILE "GamePlaySystemDebu_.dll"
+#elif GAME
+# define SCRIPTS_DLL_PATH "Resources/Scripts/GameplaySystem.dll"
+# define SCRIPT_DLL_FILE "GameplaySystem.dll"
+#else
+# define SCRIPTS_DLL_PATH "Resources/Scripts/GamePlaySystemRelease.dll"
+# define SCRIPT_DLL_FILE "GamePlaySystemReleas_.dll"
+#endif
 
 # define SCRIPT_TEMPLATE_FILE_CPP "Resources/Scripts/TemplateScript.cpp"
 # define SCRIPT_TEMPLATE_FILE_H "Resources/Scripts/TemplateScript.h"

@@ -120,7 +120,7 @@ void ModuleCamera::HandleSceneCameraMovements()
 	// Mouse wheel
 	if (App->input->GetMouseWheelMotion() > 0)
 	{
-		scene_camera->MoveFoward();
+		scene_camera->MoveForward();
 	}
 	else if (App->input->GetMouseWheelMotion() < 0)
 	{
@@ -227,7 +227,7 @@ void ModuleCamera::HandleSceneCameraMovements()
 		}
 		if (App->input->GetKey(KeyCode::W))
 		{
-			scene_camera->MoveFoward();
+			scene_camera->MoveForward();
 		}
 		if (App->input->GetKey(KeyCode::S))
 		{

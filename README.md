@@ -75,6 +75,7 @@ This project was developed following agile methodologies philosophy. If you are 
 * [glew 2.1.0](http://glew.sourceforge.net/) - Used to manage OpenGL extensions.
 * [MathGeoLib 3.0.0](https://github.com/juj/MathGeoLib/) - Used to do the maths.
 * [Dear ImGui 1.73](https://github.com/ocornut/imgui/) - Used to build the GUI.
+* [ImGui filebrowser](https://github.com/AirGuanZ/imgui-filebrowser) - Used to open file directory with imgui.
 * [DevIL 1.8](http://openil.sourceforge.net/) - Used to load images.
 * [assimp 5.0](https://github.com/assimp/assimp/) - Used to load 3D models.
 * [Font Awesome 5](https://github.com/FortAwesome/Font-Awesome) - Used to display fancy icons.

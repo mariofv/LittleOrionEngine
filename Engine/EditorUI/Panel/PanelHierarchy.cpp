@@ -185,6 +185,11 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 			{
 				game_object->MoveDownInHierarchy();
 			}
+			if (game_object->prefab_reference != nullptr && ImGui::Selectable("Unpack Prefab"))
+			{
+				GameObject * prefab_parent = game_object->GetPrefabParent();
+				prefab_parent->UnpackPrefab();
+			}
 			ImGui::Separator();
 		}
 

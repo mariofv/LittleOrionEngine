@@ -67,7 +67,7 @@
       <ExceptionHandling>Sync</ExceptionHandling>
       <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>_MBCS;WINDOWS_IGNORE_PACKING_MISMATCH;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;WINDOWS_IGNORE_PACKING_MISMATCH;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -94,6 +94,7 @@
       <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -131,6 +132,9 @@
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(OutDir)TwinlightSouls.lib" "./Libraries/lib/x86"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Actions\EditorAction.h" />

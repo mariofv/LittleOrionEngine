@@ -1,6 +1,12 @@
 {
     "Scripts": [
         "ExampleScript",
-        "TestScriptRuntime"
+        "TriggerActionScript",
+        "EndOfLevelScript",
+        "CameraController",
+        "SceneCamerasController",
+        "PlayerController",
+        "PlayerMovement",
+        "TriggerGravity"
     ]
 }

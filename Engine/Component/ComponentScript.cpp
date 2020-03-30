@@ -21,15 +21,15 @@ ComponentScript::ComponentScript(GameObject* owner, std::string& script_name) : 
 Component* ComponentScript::Clone(bool original_prefab) const
 {
 	ComponentScript * created_component;
-	/*if (original_prefab)
+	if (original_prefab)
 	{
 		created_component = new ComponentScript();
 	}
 	else
 	{
-		created_component->script = this->script;
+		created_component = App->scripts->CreateComponentScript();
 	}
-	*created_component = *this;*/
+	*created_component = *this;
 	return created_component;
 };
 
@@ -87,14 +87,18 @@ void ComponentScript::Save(Config& config) const
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddString(name, "ScriptName");
+	if (script != nullptr)
+	{
+		script->Save(config);
+	}
+	
 }
 
 void ComponentScript::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-
 	config.GetString("ScriptName", this->name, "");
 	LoadName(this->name);
-
+	script->Load(config);
 }

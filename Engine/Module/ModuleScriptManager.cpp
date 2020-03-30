@@ -19,6 +19,12 @@ bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
 
+#if GAME
+	gameplay_dll = LoadLibrary(SCRIPT_DLL_FILE);
+
+	return true;
+#endif
+
 	GetCurrentPath();
 	InitDLL();
 	LoadScriptList();
@@ -55,8 +61,6 @@ update_status ModuleScriptManager::Update()
 			init_timestamp_script_list = last_timestamp_script_list;
 		}
 	}
-
-	
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -78,7 +82,7 @@ void ModuleScriptManager::GetCurrentPath()
 	TCHAR NPath[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, NPath);
 	working_directory = NPath;
-	working_directory += "/GamePlaySyste_.dll";
+	working_directory += "/" + std::string(SCRIPT_DLL_FILE);
 }
 
 void ModuleScriptManager::CreateScript(const std::string& name)
@@ -114,6 +118,7 @@ void ModuleScriptManager::InitResourceScript()
 				delete component_script->script;
 				component_script->script = script_func();
 				component_script->script->AddReferences(component_script->owner, App);
+				component_script->script->InitPublicGameObjects();
 			}
 		}
 	}
@@ -128,6 +133,7 @@ Script* ModuleScriptManager::CreateResourceScript(const std::string& script_name
 		{
 			Script* script = script_func();
 			script->AddReferences(owner, App);
+			script->InitPublicGameObjects();
 			return script;
 		}
 	}
@@ -197,6 +203,11 @@ void ModuleScriptManager::RunScripts()
 {
 	for (auto &component_script : scripts)
 	{
+		if (!scripts.size() || scene_is_changed)
+		{
+			scene_is_changed = false;
+			break;
+		}
 		component_script->Update();
 	}
 }
@@ -217,8 +228,11 @@ void ModuleScriptManager::InitDLL()
 
 void ModuleScriptManager::ReloadDLL() 
 {
+	std::unordered_map<uint64_t, Config> config_list;
+	SaveVariables(config_list);
 	if (gameplay_dll != nullptr) 
 	{
+
 		if (!FreeLibrary(gameplay_dll)) 
 		{
 			return;
@@ -231,7 +245,7 @@ void ModuleScriptManager::ReloadDLL()
 	}
 	InitDLL();
 	InitResourceScript();
-
+	LoadVariables(config_list);
 }
 
 bool ModuleScriptManager::CopyPDB(const char* source_file, const char* destination_file, bool overwrite_existing)
@@ -337,7 +351,7 @@ bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll
 		
 	// Create new DLL and pdb
 	utils->PatchFileName(pdb_path);
-	if (App->filesystem->Exists(original_pdb_path))
+	if (App->filesystem->Exists(original_pdb_path, true))
 	{
 		strcpy(patched_pdb_path, pdb_path);
 		CopyPDB(original_pdb_path, pdb_path, true);		// Copy new PDB
@@ -348,11 +362,49 @@ bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll
 	CloseHandle(patched_dll);
 
 	// clean up
-	APP_LOG_ERROR("Patching DLL succeeded!!!.\n");
+	APP_LOG_INFO("Patching DLL succeeded!!!.\n");
 }
 
 void ModuleScriptManager::Refresh()
 {
 	LoadScriptList();
 	ReloadDLL();
+}
+
+void ModuleScriptManager::ReLink()
+{
+	for (auto &component_script : scripts)
+	{
+		component_script->script->Link();
+	}
+}
+
+void ModuleScriptManager::SaveVariables(std::unordered_map<uint64_t, Config>& config_list)
+{
+	for (auto &component_script : scripts)
+	{
+		if (component_script->script != nullptr) 
+		{
+			Config config;
+			component_script->script->Save(config);
+			config_list.insert({ component_script->UUID, config });
+		}
+
+	}
+}
+
+void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> config_list)
+{
+	for (auto &component_script : scripts)
+	{
+		if (component_script->script != nullptr)
+		{
+			std::unordered_map<uint64_t, Config>::const_iterator got = config_list.find(component_script->UUID);
+			if (got != config_list.end()) {
+				component_script->script->Load(got->second);
+				component_script->script->Link();
+			}
+		}
+		
+	}
 }
