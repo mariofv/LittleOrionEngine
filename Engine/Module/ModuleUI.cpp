@@ -46,13 +46,9 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	window_height = App->editor->scene_panel->scene_window_content_area_height;
 	float4x4 projection = float4x4::D3DOrthoProjLH(-1, 1, window_width, window_height);
 	
-	/*if (main_canvas != nullptr)
+	if (main_canvas != nullptr)
 	{
 		RenderUIGameObject(main_canvas->owner, &projection);
-	}*/
-	for (auto &ui : ui_elements) 
-	{
-		ui->Render(&projection);
 	}
 }
 
@@ -104,6 +100,10 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* o
 void ModuleUI::RemoveComponentUI(ComponentUI* ui_to_remove)
 {
 	auto it = std::find(ui_elements.begin(), ui_elements.end(), ui_to_remove);
+	if (*it == main_canvas)
+	{
+		main_canvas = nullptr;
+	}
 	if (it != ui_elements.end())
 	{
 		delete *it;

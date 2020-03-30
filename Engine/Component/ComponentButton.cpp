@@ -17,6 +17,11 @@ ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, Compon
 	InitData();
 }
 
+ComponentButton::~ComponentButton()
+{
+	ComponentUI::~ComponentUI();
+}
+
 void ComponentButton::InitData()
 {
 	owner->transform_2d.SetSize(170, 23);

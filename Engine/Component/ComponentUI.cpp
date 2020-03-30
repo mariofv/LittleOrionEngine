@@ -5,8 +5,8 @@
 #include "Main/GameObject.h"
 
 #include "Module/ModuleCamera.h"
-
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleUI.h"
 
 #include "EditorUI/Panel/PanelScene.h"
 
@@ -20,7 +20,11 @@ ComponentUI::ComponentUI(GameObject * owner, UIType ui_type) : Component(owner, 
 	InitData();
 }
 
-
+ComponentUI::~ComponentUI()
+{
+	glDeleteBuffers(1, &vbo);
+	glDeleteVertexArrays(1, &vao);
+}
 
 void ComponentUI::Render(float4x4* projection)
 {
@@ -75,8 +79,7 @@ void ComponentUI::InitData()
 
 void ComponentUI::Delete()
 {
-	glDeleteBuffers(1, &vbo);
-	glDeleteVertexArrays(1, &vao);
+	App->ui->RemoveComponentUI(this);
 }
 
 void ComponentUI::Save(Config& config) const

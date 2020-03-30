@@ -8,7 +8,7 @@ class ComponentImage : public ComponentUI
 public:
 	ComponentImage();
 	ComponentImage(GameObject * owner);
-	~ComponentImage() = default;
+	~ComponentImage();
 
 	void Delete();
 

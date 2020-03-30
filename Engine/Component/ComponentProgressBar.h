@@ -8,7 +8,7 @@ class ComponentProgressBar : public ComponentUI
 public:
 	ComponentProgressBar();
 	ComponentProgressBar(GameObject * owner);
-	~ComponentProgressBar() = default;
+	~ComponentProgressBar();
 
 	void Delete();
 

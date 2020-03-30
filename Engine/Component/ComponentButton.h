@@ -8,7 +8,7 @@ public:
 	ComponentButton();
 	ComponentButton(GameObject * owner);
 
-	~ComponentButton() = default;
+	~ComponentButton();
 
 	void Delete() override;
 

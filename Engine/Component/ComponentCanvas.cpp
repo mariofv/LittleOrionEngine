@@ -15,6 +15,10 @@ ComponentCanvas::ComponentCanvas(GameObject * owner) : ComponentUI(owner, Compon
 	
 }
 
+ComponentCanvas::~ComponentCanvas()
+{
+	ComponentUI::~ComponentUI();
+}
 
 void ComponentCanvas::Render(float4x4* projection) 
 {

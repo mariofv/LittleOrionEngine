@@ -16,6 +16,11 @@ ComponentText::ComponentText(GameObject * owner) : ComponentUI(owner, ComponentU
 	InitData();
 }
 
+ComponentText::~ComponentText()
+{
+	ComponentUI::~ComponentUI();
+}
+
 void ComponentText::InitData()
 {
 	color = float3::unitZ;

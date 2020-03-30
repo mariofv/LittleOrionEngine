@@ -15,7 +15,7 @@ public:
 	};
 	ComponentUI(UIType);
 	ComponentUI(GameObject * owner, UIType);
-	~ComponentUI() = default;
+	~ComponentUI();
 
 	virtual void Delete();
 
