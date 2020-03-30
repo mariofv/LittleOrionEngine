@@ -100,7 +100,17 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			}
 			//UndoRedo
 			CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION, transform);
-
+			
+			if (ImGui::DragFloat3("Rotation", transform->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
+			{
+				transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
+				transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
+				transform->OnTransformChange();
+				transform->modified_by_user = true;
+			}
+			//UndoRedo
+			CheckClickForUndo(ModuleActions::UndoActionType::ROTATION, transform);
+			
 			if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
 			{
 				transform->OnTransformChange();
