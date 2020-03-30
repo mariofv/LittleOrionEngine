@@ -209,7 +209,7 @@ bool ModuleEditor::CleanUp()
 	return true;
 }
 
-void ModuleEditor::OpenScene(const std::string &path) const
+ENGINE_API void ModuleEditor::OpenScene(const std::string &path) const
 {
 	App->scene->NewScene(path);
 }

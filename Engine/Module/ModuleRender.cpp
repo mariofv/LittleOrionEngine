@@ -4,6 +4,7 @@
 #include "ModuleDebug.h"
 #include "ModuleDebugDraw.h"
 #include "ModuleEditor.h"
+#include "ModuleLight.h"
 #include "ModuleModelLoader.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
@@ -11,17 +12,16 @@
 #include "ModuleTime.h"
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
-#include "ModuleLight.h"
 #include "Component/ComponentCamera.h"
-#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "EditorUI/DebugDraw.h"
 
-#include <SDL/SDL.h>
-#include "MathGeoLib.h"
-#include <assimp/scene.h>
 #include <algorithm>
-#include "Brofiler/Brofiler.h"
+#include <assimp/scene.h>
+#include <MathGeoLib.h>
+#include <SDL/SDL.h>
+#include <Brofiler/Brofiler.h>
 
 static void APIENTRY openglCallbackFunction(
 	GLenum source,
@@ -201,6 +201,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 {
 	BROFILER_CATEGORY("Get culling meshes", Profiler::Color::Lavender);
 
+	meshes_to_render.clear();
 	switch (App->debug->culling_mode)
 	{
 	case ModuleDebug::CullingMode::NONE:
@@ -538,8 +539,9 @@ void ModuleRender::DrawAABBTree() const
 	ol_abbtree->Draw();
 }
 
-GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
+GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 {
+	BROFILER_CATEGORY("Do Raycast", Profiler::Color::HotPink);
 	GetCullingMeshes(App->cameras->scene_camera);
 	std::vector<ComponentMeshRenderer*> intersected_meshes;
 	for (auto & mesh : meshes_to_render)
@@ -550,6 +552,7 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
 		}
 	}
 
+	BROFILER_CATEGORY("Intersect", Profiler::Color::HotPink);
 	std::vector<GameObject*> intersected;
 	GameObject* selected = nullptr;
 	float min_distance = INFINITY;
@@ -557,9 +560,16 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
 	{
 		LineSegment transformed_ray = ray;
 		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
-		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
-		for (auto & triangle : triangles)
+		BROFILER_CATEGORY("Triangles", Profiler::Color::HotPink);
+		std::vector<Mesh::Vertex> &vertices = mesh->mesh_to_render->vertices;
+		std::vector<uint32_t> &indices = mesh->mesh_to_render->indices;
+		for (size_t i = 0; i < indices.size(); i += 3)
 		{
+			float3 first_point = vertices[indices[i]].position;
+			float3 second_point = vertices[indices[i + 1]].position;
+			float3 third_point = vertices[indices[i + 2]].position;
+			Triangle triangle(first_point, second_point, third_point);
+
 			float distance;
 			bool intersected = triangle.Intersects(transformed_ray, &distance);
 			if (intersected && distance < min_distance)
@@ -572,7 +582,7 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray)
 	return selected;
 }
 
-bool ModuleRender::GetRaycastIntertectedObject(const LineSegment & ray, float3 & position)
+bool ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, float3& position)
 {
 	GetCullingMeshes(App->cameras->scene_camera);
 	std::vector<ComponentMeshRenderer*> intersected_meshes;
