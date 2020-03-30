@@ -148,6 +148,7 @@ void PanelMenuBar::ShowGameObjectMenu()
 			{
 				GameObject* created_game_object = App->scene->CreateGameObject();
 				created_game_object->name = "Text";
+				created_game_object->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::TEXT);
 
 				if (App->ui->main_canvas == nullptr)
 				{
