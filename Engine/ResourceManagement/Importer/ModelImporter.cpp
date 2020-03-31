@@ -71,7 +71,7 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 
 	performance_timer.Start();
 
-	const aiScene* scene = aiImportFile(file.file_path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality);
+	const aiScene* scene = aiImportFile(file.file_path.c_str(), aiProcessPreset_TargetRealtime_MaxQuality | aiProcess_Triangulate | aiProcess_FlipUVs | aiProcess_CalcTangentSpace);
 	if (scene == NULL )
 	{
 		const char *error = aiGetErrorString();

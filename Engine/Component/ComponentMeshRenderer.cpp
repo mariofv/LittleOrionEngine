@@ -9,6 +9,7 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleDebugDraw.h"
 
 #include <algorithm>
 ComponentMeshRenderer::ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH_RENDERER)
@@ -102,6 +103,7 @@ void ComponentMeshRenderer::Render() const
 	App->lights->Render(owner->transform.GetGlobalTranslation(), program);
 	RenderMaterial(program);
 	RenderModel();
+
 	glUseProgram(0);
 }	
 
