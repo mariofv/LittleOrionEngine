@@ -63,7 +63,26 @@ void MenuLogic::Update()
 	if(App->input->GetKeyDown(KeyCode::Space))
 	{
 		//Change scene
-		App->editor->OpenScene(DEFAULT_SCENE_PATH);
+		switch (current)
+		{
+			case 0:
+				App->editor->OpenScene(DEFAULT_SCENE_PATH);
+				break;
+			case 1:
+				//Active help
+				break;
+			case 2:
+				//Active credits
+				break;
+			case 3:
+				//Close game
+				SDL_Event quit_event;
+				quit_event.type = SDL_QUIT;
+				SDL_PushEvent(&quit_event);
+				break;
+			default:
+				break;
+		}
 	}
 
 }
