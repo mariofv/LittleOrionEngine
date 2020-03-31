@@ -1,9 +1,8 @@
 #include "ComponentButton.h"
+#include "ComponentText.h"
 
 #include "Main/Application.h"
 #include "Main/Gameobject.h"
-
-#include "Component/ComponentText.h"
 
 #include "Module/ModuleScene.h"
 

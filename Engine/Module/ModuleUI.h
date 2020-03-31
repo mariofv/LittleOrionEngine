@@ -44,20 +44,23 @@ public:
 
 	ComponentUI* CreateComponentUI(const ComponentUI::UIType, GameObject*);
 	void RemoveComponentUI(ComponentUI*);
-
-	//Glyph init 
+	
 	void InitGlyph();
-	bool glyphInit = false;
-	FT_Library ft;
-	FT_Face face;
-	std::map<GLchar, Character> Characters;
 
-	ComponentCanvas* main_canvas = nullptr;
-	unsigned int text_texture;
-	std::vector<ComponentUI*> ui_elements;
-	float window_width, window_height;
 private:
 	void RenderUIGameObject(GameObject*, float4x4*);
+
+public:
+	std::map<GLchar, Character> Characters;
+	float window_width, window_height;
+	bool glyphInit = false;
+	ComponentCanvas* main_canvas = nullptr;
+
+private:
+	FT_Library ft;
+	FT_Face face;
+	unsigned int text_texture;
+	std::vector<ComponentUI*> ui_elements;
 
 };
 

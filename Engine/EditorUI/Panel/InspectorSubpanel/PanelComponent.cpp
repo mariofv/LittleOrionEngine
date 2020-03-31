@@ -11,6 +11,7 @@
 #include "EditorUI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentImage.h"
@@ -22,7 +23,6 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentUI.h"
-#include "Component/ComponentButton.h"
 
 #include "Helper/Utils.h"
 #include "Math/Rect.h"
@@ -502,15 +502,15 @@ void PanelComponent::ShowComponentProgressBarWindow(ComponentProgressBar* progre
 	}
 }
 
-void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
+void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(txt);
+		ShowCommonUIWindow(text);
 		ImGui::Separator();		
-		ImGui::InputText("Text", &txt->text);
+		ImGui::InputText("Text", &text->text);
 		ImGui::Separator();
-		ImGui::DragFloat("Font Size", (float*)(&txt->scale));
+		ImGui::DragFloat("Font Size", (float*)(&text->scale));
 		
 	}
 }

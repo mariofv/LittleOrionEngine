@@ -18,7 +18,6 @@ public:
 	virtual void Render(float4x4*);
 private:
 	void InitData();
-	float percentage = 20.0F;
 	bool hasText = false;
 };
 #endif
