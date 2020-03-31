@@ -12,12 +12,20 @@
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentCanvas.h"
+#include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
-#include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentProgressBar.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentText.h"
+#include "Component/ComponentTransform.h"
+#include "Component/ComponentTransform2D.h"
+#include "Component/ComponentUI.h"
+#include "Component/ComponentButton.h"
 
 #include "Helper/Utils.h"
+#include "Math/Rect.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -27,6 +35,7 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleUI.h"
 
 #include "ResourceManagement/Importer/Importer.h"
 
@@ -39,33 +48,77 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-
-		if (ImGui::DragFloat3("Translation", transform->translation.ptr(), 0.01f))
+		if ((transform->owner->GetComponent(Component::ComponentType::UI) != nullptr)) //Render transform 2d
 		{
-			transform->OnTransformChange();
-			transform->modified_by_user = true;
-		}
-		//UndoRedo
-		CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION, transform);
+			ComponentTransform2D* transform_2d = &transform->owner->transform_2d;
 
-		if (ImGui::DragFloat3("Rotation", transform->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
+			if (ImGui::DragFloat2("Position", transform_2d->position.ptr(), 1.0f))
+			{
+				transform_2d->OnTransformChange();
+				transform_2d->modified_by_user = true;
+			}
+
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
+			if (ImGui::DragInt("Height", &transform_2d->rect.bottom, 1))
+			{
+				transform_2d->OnTransformChange();
+				transform_2d->modified_by_user = true;
+			}
+
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
+			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2);
+
+			if (ImGui::DragInt("Width", &transform_2d->rect.right, 1))
+			{
+				transform_2d->OnTransformChange();
+				transform_2d->modified_by_user = true;
+			}
+			//UndoRedo
+			CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform_2d);
+
+			if (ImGui::DragFloat("Rotation", &transform_2d->rotation, 0.1f, -180.f, 180.f))
+			{
+				transform_2d->OnTransformChange();
+				transform_2d->modified_by_user = true;
+			}
+			//UndoRedo
+			CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D_ROTATION, transform_2d);
+
+			if (ImGui::DragFloat2("Scale", transform_2d->scale.ptr(), 0.1f))
+			{
+				transform_2d->OnTransformChange();
+				transform_2d->modified_by_user = true;
+			}
+		}
+		else //Render transform 3d
 		{
-			transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
-			transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
-			transform->OnTransformChange();
-			transform->modified_by_user = true;
+			if (ImGui::DragFloat3("Translation", transform->translation.ptr(), 0.01f))
+			{
+				transform->OnTransformChange();
+				transform->modified_by_user = true;
+			}
+			//UndoRedo
+			CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION, transform);
+			
+			if (ImGui::DragFloat3("Rotation", transform->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
+			{
+				transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
+				transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
+				transform->OnTransformChange();
+				transform->modified_by_user = true;
+			}
+			//UndoRedo
+			CheckClickForUndo(ModuleActions::UndoActionType::ROTATION, transform);
+			
+			if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
+			{
+				transform->OnTransformChange();
+				transform->modified_by_user = true;
+			}
+			//UndoRedo
+			CheckClickForUndo(ModuleActions::UndoActionType::SCALE, transform);
 		}
-		//UndoRedo
-		CheckClickForUndo(ModuleActions::UndoActionType::ROTATION, transform);
-
-		if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
-		{
-			transform->OnTransformChange();
-			transform->modified_by_user = true;
-		}
-
-		//UndoRedo
-		CheckClickForUndo(ModuleActions::UndoActionType::SCALE, transform);
 	}
 }
 
@@ -396,6 +449,80 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 	}
 }
 
+void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
+{
+	switch (ui->ui_type) 
+	{
+		case ComponentUI::UIType::CANVAS :
+			ShowComponentCanvasWindow(static_cast<ComponentCanvas*>(ui));
+			break;
+		case ComponentUI::UIType::IMAGE:
+			ShowComponentImageWindow(static_cast<ComponentImage*>(ui));
+			break;
+		case ComponentUI::UIType::TEXT:
+			ShowComponentTextWindow(static_cast<ComponentText*>(ui));
+			break;
+		case ComponentUI::UIType::BUTTON:
+			ShowComponentButtonWindow(static_cast<ComponentButton*>(ui));
+			break;
+		case ComponentUI::UIType::PROGRESSBAR:
+			ShowComponentProgressBarWindow(static_cast<ComponentProgressBar*>(ui));
+			break;
+	}
+}
+
+void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonUIWindow(canvas);
+	}
+}
+
+void PanelComponent::ShowComponentImageWindow(ComponentImage* image) {
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Image", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonUIWindow(image);
+		ImGui::Separator();
+		ImGui::InputInt("Texture", (int*)(&image->ui_texture));
+	}
+}
+
+
+void PanelComponent::ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar) {
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonUIWindow(progress_bar);
+		ImGui::Separator();
+		ImGui::InputInt("Background", (int*)(&progress_bar->ui_texture));
+		ImGui::Separator();
+		ImGui::DragFloat("Bar Value", &progress_bar->percentage, 0.1F, 0.0F, 100.0F);
+		ImGui::InputInt("Bar Image", (int*)(&progress_bar->bar_texture));
+		ImGui::ColorPicker3("Bar Color", progress_bar->bar_color.ptr());
+	}
+}
+
+void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonUIWindow(txt);
+		ImGui::Separator();		
+		ImGui::InputText("Text", &txt->text);
+		ImGui::Separator();
+		ImGui::DragFloat("Font Size", (float*)(&txt->scale));
+		
+	}
+}
+void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Button", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonUIWindow(button);
+		ImGui::InputInt("Texture", (int*)(&button->ui_texture));
+	}
+}
+
 void PanelComponent::CheckClickedCamera(ComponentCamera* camera)
 {
 	//UndoRedo
@@ -421,6 +548,10 @@ void PanelComponent::CheckClickForUndo(ModuleActions::UndoActionType  type, Comp
 			break;
 		case ModuleActions::UndoActionType::SCALE:
 			App->actions->previous_transform = ((ComponentTransform*)component)->GetScale();
+			break;
+		case ModuleActions::UndoActionType::EDIT_RECT2D:
+		case ModuleActions::UndoActionType::EDIT_RECT2D_ROTATION:
+			App->actions->action_component = (ComponentTransform2D*) component;
 			break;
 		case ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT:
 			App->actions->previous_light_color[0] = ((ComponentLight*)component)->light_color[0];
@@ -598,4 +729,22 @@ ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go)
 		}
 		ImGui::EndDragDropTarget();
 	}
+}
+
+void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
+{
+	if (ImGui::Checkbox("Active", &ui->active))
+	{
+		//UndoRedo
+		App->actions->action_component = ui;
+		App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+	}
+	ImGui::SameLine();
+	if (ImGui::Button("Delete"))
+	{
+		App->actions->DeleteComponentUndo(ui);
+		return;
+	}
+	ImGui::Separator();
+	ImGui::ColorPicker3("Color", ui->color.ptr());
 }

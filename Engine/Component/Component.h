@@ -17,10 +17,13 @@ public:
 		MESH_RENDERER,
 		TRANSFORM,
 		LIGHT,
+		UI,
 		SCRIPT,
+		TRANSFORM2D,
 		ANIMATION
 	};
 
+	Component(ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
 	virtual ~Component() = default;
 
@@ -56,6 +59,11 @@ public:
 	virtual void Load(const Config &config) = 0;
 
 	virtual ComponentType GetType() const { return type; };
+
+	static ComponentType GetComponentType(unsigned int component_type_uint)
+	{
+		return ComponentType(component_type_uint);
+	}
 
 public:
 	uint64_t UUID = 0;

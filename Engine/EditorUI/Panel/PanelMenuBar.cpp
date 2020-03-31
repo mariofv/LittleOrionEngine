@@ -19,6 +19,9 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleUI.h"
+
+#include "Component/ComponentCanvas.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
@@ -136,6 +139,114 @@ void PanelMenuBar::ShowGameObjectMenu()
 			GameObject* created_game_object = App->scene->CreateGameObject();
 			created_game_object->name = "Camera";
 			created_game_object->CreateComponent(Component::ComponentType::CAMERA);
+		}
+
+		if (ImGui::BeginMenu("UI"))
+		{
+			
+			if (ImGui::Selectable("Text"))
+			{
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Text";
+				created_game_object->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::TEXT);
+
+				if (App->ui->main_canvas == nullptr)
+				{
+					GameObject* created_game_object_parent = App->scene->CreateGameObject();
+					created_game_object_parent->name = "Canvas";
+					created_game_object_parent->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(created_game_object);
+			}
+			if (ImGui::Selectable("Image"))
+			{
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Image";
+				created_game_object->CreateComponent(Component::ComponentType::UI);
+
+				if (App->ui->main_canvas == nullptr)
+				{
+					GameObject* created_game_object_parent = App->scene->CreateGameObject();
+					created_game_object_parent->name = "Canvas";
+					created_game_object_parent->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(created_game_object);
+			}
+			ImGui::Separator();
+			if (ImGui::Selectable("Button"))
+			{
+				GameObject* created_game_object_text = App->scene->CreateGameObject();
+				created_game_object_text->name = "Text";
+				
+				created_game_object_text->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::TEXT);
+
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Button";
+
+				created_game_object->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::BUTTON);
+				created_game_object->AddChild(created_game_object_text);
+
+				if (App->ui->main_canvas == nullptr)
+				{
+					GameObject* created_game_object_parent = App->scene->CreateGameObject();
+					created_game_object_parent->name = "Canvas";
+					created_game_object_parent->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(created_game_object);
+				
+			}
+			if (ImGui::Selectable("Progess Bar"))
+			{
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Progess Bar";
+				created_game_object->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::PROGRESSBAR);
+
+				if (App->ui->main_canvas == nullptr)
+				{
+					GameObject* created_game_object_parent = App->scene->CreateGameObject();
+					created_game_object_parent->name = "Canvas";
+					created_game_object_parent->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(created_game_object);
+			}
+			if (ImGui::Selectable("Slider"))
+			{
+
+			}
+			if (ImGui::Selectable("Scrollbar"))
+			{
+
+			}
+			if (ImGui::Selectable("Dropdown"))
+			{
+
+			}
+			if (ImGui::Selectable("Input Field"))
+			{
+
+			}
+			ImGui::Separator();
+			if (ImGui::Selectable("Canvas"))
+			{
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Canvas";
+				created_game_object->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::CANVAS);
+			}
+			if (ImGui::Selectable("Panel"))
+			{
+
+			}
+			if (ImGui::Selectable("Scroll View"))
+			{
+
+			}
+			ImGui::Separator();
+			if (ImGui::Selectable("Event System"))
+			{
+
+			}
+
+			ImGui::EndMenu();
 		}
 
 		ImGui::EndMenu();

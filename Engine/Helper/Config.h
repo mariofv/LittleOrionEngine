@@ -5,6 +5,8 @@
 
 #include "Main/Globals.h"
 #include <MathGeoLib.h>
+#include "SDL/SDL.h"
+
 #include <rapidjson/document.h>
 
 class Config
@@ -40,6 +42,12 @@ public:
 
 	ENGINE_API void AddFloat3(const float3 &value_to_addvalue_to_add, const std::string& name);
 	ENGINE_API void GetFloat3(const std::string &name, float3 &return_value, const float3 &opt_value) const;
+
+	void AddFloat2(const float2 &value_to_addvalue_to_add, const std::string& name);
+	void GetFloat2(const std::string &name, float2 &return_value, const float2 &opt_value) const;
+	
+	void AddRect(const SDL_Rect &value_to_addvalue_to_add, const std::string& name);
+	void GetRect(const std::string &name, SDL_Rect &return_value, const SDL_Rect &opt_value) const;
 
 	void AddQuat(const Quat & value_to_add, const std::string& name);
 	void GetQuat(const std::string& name, Quat& return_value, const Quat& opt_value) const;

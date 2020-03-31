@@ -5,7 +5,7 @@
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
 #include "ResourceManagement/Resources/Skybox.h"
-
+#include "Component/ComponentCanvas.h"
 #include "Geometry/Frustum.h"
 #include "MathGeoLib.h"
 
@@ -40,9 +40,9 @@ private:
 public:
 	ComponentCamera *scene_camera = nullptr;
 	ComponentCamera* main_camera = nullptr;
-
+	ComponentCamera* canvas_camera = nullptr;
 	Skybox *skybox = nullptr;
-
+	
 private:
 	GameObject *scene_camera_game_object = nullptr;
 
