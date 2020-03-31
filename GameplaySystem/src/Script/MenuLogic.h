@@ -25,6 +25,8 @@ private:
 	GameObject* button2 = nullptr;
 	GameObject* button3 = nullptr;
 
+	GameObject* background = nullptr;
+
 	std::vector<GameObject*> buttons;
 	unsigned current = 0;
 	

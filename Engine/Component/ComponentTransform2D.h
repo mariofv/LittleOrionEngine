@@ -1,5 +1,8 @@
 #ifndef _COMPONENTTRANSFORM2D_H_
 #define _COMPONENTTRANSFORM2D_H_
+
+#define ENGINE_EXPORTS
+
 #include "Component.h"
 class ComponentTransform2D : public Component
 {
@@ -25,6 +28,7 @@ public:
 
 	void GenerateGlobalModelMatrix();
 	void SetSize(float width, float height);
+	ENGINE_API void SetPosition(float x, float y);
 private:
 	void OnTransformChange();
 	friend class PanelComponent;
