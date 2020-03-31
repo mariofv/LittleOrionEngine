@@ -21,7 +21,7 @@ public:
 	void RemoveGameObject(GameObject * game_object_to_remove);
 	GameObject* AddGameObject(std::unique_ptr<GameObject> & game_object_to_add);
 
-	GameObject* GetRoot() const;
+	ENGINE_API GameObject* GetRoot() const;
 	ENGINE_API GameObject* GetGameObject(uint64_t UUID) const;
 	Component* GetComponent(uint64_t UUID) const;
 

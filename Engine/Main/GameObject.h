@@ -30,8 +30,8 @@ public:
 	GameObject & operator<<(const GameObject& gameobject_to_copy);
 	GameObject & operator=(GameObject&& gameobject_to_move) = default;
 
-	bool IsEnabled() const;
-	void SetEnabled(bool able);
+	ENGINE_API bool IsEnabled() const;
+	ENGINE_API void SetEnabled(bool able);
 
 	void SetStatic(bool is_static);
 	bool IsStatic() const;

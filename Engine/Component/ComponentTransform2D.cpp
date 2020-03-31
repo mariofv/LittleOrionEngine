@@ -117,3 +117,10 @@ void  ComponentTransform2D::SetSize(float width, float height)
 	rect.bottom = height;
 	OnTransformChange();
 }
+
+void ComponentTransform2D::SetPosition(float x, float y)
+{
+	position.x = x;
+	position.y = y;
+	OnTransformChange();
+}
