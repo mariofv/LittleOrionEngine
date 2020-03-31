@@ -26,10 +26,14 @@ private:
 	GameObject* button3 = nullptr;
 
 	GameObject* background = nullptr;
+	GameObject* help = nullptr;
+	GameObject* credits = nullptr;
 
 	std::vector<GameObject*> buttons;
 	unsigned current = 0;
 	
+	bool show_help = false;
+	bool show_credits = false;
 
 };
 extern "C" SCRIPT_API MenuLogic* MenuLogicDLL(); //This is how we are going to load the script

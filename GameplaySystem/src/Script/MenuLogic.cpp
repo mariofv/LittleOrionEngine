@@ -48,14 +48,65 @@ void MenuLogic::Start()
 // Update is called once per frame
 void MenuLogic::Update()
 {
-	if(App->input->GetKeyDown(KeyCode::UpArrow))
+
+	if(show_help && (App->input->GetKeyDown(KeyCode::BackSpace) || App->input->GetControllerButtonDown(ControllerCode::B)))
+	{
+		help->SetEnabled(false);
+		show_help = false;
+		return;
+	}
+
+	if (show_credits && (App->input->GetKeyDown(KeyCode::BackSpace) || App->input->GetControllerButtonDown(ControllerCode::B)))
+	{
+		credits->SetEnabled(false);
+		show_credits = false;
+		return;
+	}
+
+	if(show_credits || show_help)
+	{
+		return;
+	}
+
+	if (App->input->GetKeyDown(KeyCode::Space) || App->input->GetControllerButtonDown(ControllerCode::A))
+	{
+		//Change scene
+		switch (current)
+		{
+		case 0:
+			App->editor->OpenScene(DEFAULT_SCENE_PATH);
+			break;
+		case 1:
+			//Active help
+			help->SetEnabled(true);
+			show_help = true;
+			return;
+			break;
+		case 2:
+			//Active credits
+			credits->SetEnabled(true);
+			show_credits = true;
+			return;
+			break;
+		case 3:
+			//Close game
+			SDL_Event quit_event;
+			quit_event.type = SDL_QUIT;
+			SDL_PushEvent(&quit_event);
+			break;
+		default:
+			break;
+		}
+	}
+
+	if(App->input->GetKeyDown(KeyCode::UpArrow) || App->input->GetControllerButtonDown(ControllerCode::UpDpad))
 	{
 		current -= 1;
 		current = current % 4;
 
 		owner->transform_2d.SetPosition(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y);
 	}
-	else if(App->input->GetKeyDown(KeyCode::DownArrow))
+	else if(App->input->GetKeyDown(KeyCode::DownArrow) || App->input->GetControllerButtonDown(ControllerCode::DownDpad))
 	{
 		current += 1;
 		current = current % 4;
@@ -63,30 +114,7 @@ void MenuLogic::Update()
 		owner->transform_2d.SetPosition(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y);
 	}
 
-	if(App->input->GetKeyDown(KeyCode::Space))
-	{
-		//Change scene
-		switch (current)
-		{
-			case 0:
-				App->editor->OpenScene(DEFAULT_SCENE_PATH);
-				break;
-			case 1:
-				//Active help
-				break;
-			case 2:
-				//Active credits
-				break;
-			case 3:
-				//Close game
-				SDL_Event quit_event;
-				quit_event.type = SDL_QUIT;
-				SDL_PushEvent(&quit_event);
-				break;
-			default:
-				break;
-		}
-	}
+
 
 }
 
@@ -118,6 +146,12 @@ void MenuLogic::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&background);
 	variable_names.push_back(GET_VARIABLE_NAME(background));
+
+	public_gameobjects.push_back(&help);
+	variable_names.push_back(GET_VARIABLE_NAME(help));	
+	
+	public_gameobjects.push_back(&credits);
+	variable_names.push_back(GET_VARIABLE_NAME(credits));
 
 
 	for (int i = 0; i < public_gameobjects.size(); ++i)
