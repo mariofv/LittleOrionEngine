@@ -1,0 +1,435 @@
+{
+    "Prefabs": [
+        {
+            "ParentUUID": 3702350578,
+            "Prefab": "Library/Metadata/25/2500476228",
+            "Transform": {
+                "UUID": 2359773176,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 2813720786,
+                    "OriginalUUID": 455248683
+                },
+                {
+                    "UUID": 3927121963,
+                    "OriginalUUID": 416505990
+                },
+                {
+                    "UUID": 2527798997,
+                    "OriginalUUID": 310829913
+                },
+                {
+                    "UUID": 3968391157,
+                    "OriginalUUID": 3269897365
+                },
+                {
+                    "UUID": 1696174388,
+                    "OriginalUUID": 3760028683
+                },
+                {
+                    "UUID": 2525932080,
+                    "OriginalUUID": 2413178213
+                },
+                {
+                    "UUID": 1660214343,
+                    "OriginalUUID": 1305931773
+                },
+                {
+                    "UUID": 3269454540,
+                    "OriginalUUID": 1601487600
+                },
+                {
+                    "UUID": 2053095989,
+                    "OriginalUUID": 3622080213
+                },
+                {
+                    "UUID": 2468460760,
+                    "OriginalUUID": 1812816878
+                },
+                {
+                    "UUID": 1837966847,
+                    "OriginalUUID": 976843448
+                },
+                {
+                    "UUID": 1875692247,
+                    "OriginalUUID": 3324809950
+                },
+                {
+                    "UUID": 338171797,
+                    "OriginalUUID": 3940955157
+                },
+                {
+                    "UUID": 1493392823,
+                    "OriginalUUID": 3940418459
+                },
+                {
+                    "UUID": 4120807640,
+                    "OriginalUUID": 779929811
+                },
+                {
+                    "UUID": 3239007661,
+                    "OriginalUUID": 2713831425
+                },
+                {
+                    "UUID": 4016764294,
+                    "OriginalUUID": 2768436533
+                },
+                {
+                    "UUID": 2287814917,
+                    "OriginalUUID": 1569008474
+                },
+                {
+                    "UUID": 2425099557,
+                    "OriginalUUID": 2790849892
+                },
+                {
+                    "UUID": 478026213,
+                    "OriginalUUID": 381592665
+                },
+                {
+                    "UUID": 1477149064,
+                    "OriginalUUID": 1140757936
+                },
+                {
+                    "UUID": 1537511149,
+                    "OriginalUUID": 1383747336
+                },
+                {
+                    "UUID": 363264207,
+                    "OriginalUUID": 402623230
+                },
+                {
+                    "UUID": 2657146605,
+                    "OriginalUUID": 4150745869
+                },
+                {
+                    "UUID": 291448162,
+                    "OriginalUUID": 3494183166
+                },
+                {
+                    "UUID": 2720812943,
+                    "OriginalUUID": 1099863795
+                },
+                {
+                    "UUID": 4118595741,
+                    "OriginalUUID": 519607729
+                },
+                {
+                    "UUID": 2246562777,
+                    "OriginalUUID": 2799976990
+                },
+                {
+                    "UUID": 1910594438,
+                    "OriginalUUID": 113786
+                },
+                {
+                    "UUID": 1950999554,
+                    "OriginalUUID": 597324301
+                },
+                {
+                    "UUID": 1208872478,
+                    "OriginalUUID": 770116426
+                },
+                {
+                    "UUID": 1251371210,
+                    "OriginalUUID": 3483687256
+                },
+                {
+                    "UUID": 2849040163,
+                    "OriginalUUID": 4167597895
+                },
+                {
+                    "UUID": 734814893,
+                    "OriginalUUID": 2396448015
+                },
+                {
+                    "UUID": 2871026635,
+                    "OriginalUUID": 1327966157
+                },
+                {
+                    "UUID": 1339851818,
+                    "OriginalUUID": 3535846883
+                },
+                {
+                    "UUID": 1608209071,
+                    "OriginalUUID": 540431395
+                },
+                {
+                    "UUID": 3378413967,
+                    "OriginalUUID": 1975982903
+                },
+                {
+                    "UUID": 4026007145,
+                    "OriginalUUID": 3721975136
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/13/1367911280",
+            "Transform": {
+                "UUID": 1964472703,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.019999999552965165,
+                    0.019999999552965165,
+                    0.019999999552965165
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 2810206866,
+                    "OriginalUUID": 2183407232
+                },
+                {
+                    "UUID": 2930941233,
+                    "OriginalUUID": 1785703192
+                },
+                {
+                    "UUID": 3404808993,
+                    "OriginalUUID": 3913605153
+                },
+                {
+                    "UUID": 1725549391,
+                    "OriginalUUID": 918928938
+                },
+                {
+                    "UUID": 3979265291,
+                    "OriginalUUID": 2374512719
+                },
+                {
+                    "UUID": 1819976675,
+                    "OriginalUUID": 1285797020
+                },
+                {
+                    "UUID": 1800451593,
+                    "OriginalUUID": 2517136116
+                },
+                {
+                    "UUID": 1724781635,
+                    "OriginalUUID": 3765156082
+                },
+                {
+                    "UUID": 3457253987,
+                    "OriginalUUID": 256291265
+                },
+                {
+                    "UUID": 3051353731,
+                    "OriginalUUID": 841459176
+                },
+                {
+                    "UUID": 1053191842,
+                    "OriginalUUID": 1800067607
+                },
+                {
+                    "UUID": 3914337602,
+                    "OriginalUUID": 2418190361
+                },
+                {
+                    "UUID": 779784155,
+                    "OriginalUUID": 4228220894
+                },
+                {
+                    "UUID": 3029103669,
+                    "OriginalUUID": 2320679291
+                },
+                {
+                    "UUID": 232433155,
+                    "OriginalUUID": 2742960843
+                }
+            ]
+        }
+    ],
+    "PrefabsComponents": [
+        {
+            "Components": [
+                {
+                    "UUID": 369817448,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "MeshPath": "Library/Metadata/30/3077774803",
+                    "MaterialPath": "Library/Metadata/37/3720461137"
+                }
+            ],
+            "UUID": 4026007145
+        }
+    ],
+    "GameObjects": [
+        {
+            "UUID": 3702350578,
+            "ParentUUID": 0,
+            "Name": "Player",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3964650893,
+                "Active": true,
+                "Translation": [
+                    -95.132568359375,
+                    -1.0616158246994019,
+                    2.4534764289855959
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 40870818,
+                    "ComponentType": 5,
+                    "Active": true,
+                    "ScriptName": "PlayerController",
+                    "Player": 0
+                },
+                {
+                    "UUID": 4243426969,
+                    "ComponentType": 5,
+                    "Active": true,
+                    "ScriptName": "PlayerMovement"
+                }
+            ]
+        },
+        {
+            "UUID": 172714554,
+            "ParentUUID": 0,
+            "Name": "Main Camera",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1527511923,
+                "Active": true,
+                "Translation": [
+                    -94.6422348022461,
+                    12.417342185974121,
+                    16.39966583251953
+                ],
+                "Rotation": [
+                    141.2118377685547,
+                    -0.6097941994667053,
+                    179.5099334716797
+                ],
+                "Scale": [
+                    1.0000296831130982,
+                    1.0,
+                    1.0000224113464356
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 3641786684,
+                    "ComponentType": 1,
+                    "Active": true,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 500.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0
+                },
+                {
+                    "UUID": 984200074,
+                    "ComponentType": 5,
+                    "Active": true,
+                    "ScriptName": "CameraController",
+                    "Name0": "Main Camera",
+                    "Main Camera": 172714554,
+                    "Name1": "Player",
+                    "Player": 3702350578
+                }
+            ]
+        },
+        {
+            "UUID": 1690967942,
+            "ParentUUID": 0,
+            "Name": "Light",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3749479261,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    10.0,
+                    20.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 2143224420,
+                    "ComponentType": 4,
+                    "Active": true,
+                    "LightColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Intensity": 1.0,
+                    "LightType": 2,
+                    "PointLightRange": 16.0,
+                    "PointLightConstant": 1.0,
+                    "PointLightLinear": 0.04500000178813934,
+                    "PointLightQuadratic": 0.007499999832361937,
+                    "SpotLightRange": 10.0,
+                    "SpotLightConstant": 1.0,
+                    "SpotLightLinear": 0.04500000178813934,
+                    "SpotLightQuadratic": 0.007499999832361937,
+                    "SpotLightSpotAngle": 30.0,
+                    "SpotLightCutoff": 0.9659258127212524,
+                    "SpotLightSoftness": 0.10000000149011612,
+                    "SpotLightOuterCutoff": 0.9588197469711304
+                }
+            ]
+        }
+    ]
+} 

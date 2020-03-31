@@ -1,0 +1,486 @@
+{
+    "Prefabs": [
+        {
+            "ParentUUID": 804614070,
+            "Prefab": "Library/Metadata/25/2500476228",
+            "Transform": {
+                "UUID": 1711777732,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 1949999690,
+                    "OriginalUUID": 3568770711
+                },
+                {
+                    "UUID": 1550772011,
+                    "OriginalUUID": 2054148210
+                },
+                {
+                    "UUID": 1811323879,
+                    "OriginalUUID": 3888786455
+                },
+                {
+                    "UUID": 1781462132,
+                    "OriginalUUID": 2280246966
+                },
+                {
+                    "UUID": 3839238717,
+                    "OriginalUUID": 818266332
+                },
+                {
+                    "UUID": 3596786994,
+                    "OriginalUUID": 3569918296
+                },
+                {
+                    "UUID": 1529784201,
+                    "OriginalUUID": 3836527258
+                },
+                {
+                    "UUID": 2755234355,
+                    "OriginalUUID": 3595782874
+                },
+                {
+                    "UUID": 157083018,
+                    "OriginalUUID": 1049486611
+                },
+                {
+                    "UUID": 1744067750,
+                    "OriginalUUID": 743897021
+                },
+                {
+                    "UUID": 1509077170,
+                    "OriginalUUID": 806199491
+                },
+                {
+                    "UUID": 2126554171,
+                    "OriginalUUID": 3440340039
+                },
+                {
+                    "UUID": 3896111366,
+                    "OriginalUUID": 244312801
+                },
+                {
+                    "UUID": 3584568165,
+                    "OriginalUUID": 1735109192
+                },
+                {
+                    "UUID": 219847895,
+                    "OriginalUUID": 4074617321
+                },
+                {
+                    "UUID": 3936276041,
+                    "OriginalUUID": 3066850764
+                },
+                {
+                    "UUID": 374080199,
+                    "OriginalUUID": 698591601
+                },
+                {
+                    "UUID": 3402957648,
+                    "OriginalUUID": 726897473
+                },
+                {
+                    "UUID": 189413883,
+                    "OriginalUUID": 2445561646
+                },
+                {
+                    "UUID": 1754768346,
+                    "OriginalUUID": 3470597055
+                },
+                {
+                    "UUID": 534549531,
+                    "OriginalUUID": 2358195280
+                },
+                {
+                    "UUID": 529195430,
+                    "OriginalUUID": 1994173703
+                },
+                {
+                    "UUID": 1849011888,
+                    "OriginalUUID": 256444192
+                },
+                {
+                    "UUID": 781249632,
+                    "OriginalUUID": 1856509372
+                },
+                {
+                    "UUID": 1676895290,
+                    "OriginalUUID": 1504196072
+                },
+                {
+                    "UUID": 915255556,
+                    "OriginalUUID": 2385600728
+                },
+                {
+                    "UUID": 2076350368,
+                    "OriginalUUID": 2638270293
+                },
+                {
+                    "UUID": 123940270,
+                    "OriginalUUID": 3696241180
+                },
+                {
+                    "UUID": 3846943772,
+                    "OriginalUUID": 4003410171
+                },
+                {
+                    "UUID": 1728055038,
+                    "OriginalUUID": 2074236305
+                },
+                {
+                    "UUID": 628214320,
+                    "OriginalUUID": 3814706771
+                },
+                {
+                    "UUID": 1912622580,
+                    "OriginalUUID": 1467971584
+                },
+                {
+                    "UUID": 3784005450,
+                    "OriginalUUID": 1927529751
+                },
+                {
+                    "UUID": 408584398,
+                    "OriginalUUID": 3570013706
+                },
+                {
+                    "UUID": 2314580873,
+                    "OriginalUUID": 3984245398
+                },
+                {
+                    "UUID": 1906114857,
+                    "OriginalUUID": 1655749812
+                },
+                {
+                    "UUID": 3926193973,
+                    "OriginalUUID": 416557602
+                },
+                {
+                    "UUID": 582671712,
+                    "OriginalUUID": 2315776142
+                },
+                {
+                    "UUID": 1690610998,
+                    "OriginalUUID": 2192671041
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/35/3591463692",
+            "Transform": {
+                "UUID": 3234544256,
+                "Active": true,
+                "Translation": [
+                    -950.0,
+                    -69.0,
+                    -604.0
+                ],
+                "Rotation": [
+                    -90.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 4027941442,
+                    "OriginalUUID": 838704685
+                },
+                {
+                    "UUID": 985519301,
+                    "OriginalUUID": 1659714369
+                },
+                {
+                    "UUID": 1605275671,
+                    "OriginalUUID": 339414957
+                },
+                {
+                    "UUID": 1282372060,
+                    "OriginalUUID": 3859864238
+                }
+            ]
+        }
+    ],
+    "PrefabsComponents": [
+        {
+            "Components": [
+                {
+                    "UUID": 790718501,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "MeshPath": "Library/Metadata/30/3077774803",
+                    "MaterialPath": "Library/Metadata/37/3720461137"
+                }
+            ],
+            "UUID": 1690610998
+        }
+    ],
+    "GameObjects": [
+        {
+            "UUID": 1360505536,
+            "ParentUUID": 0,
+            "Name": "Cube",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3005148931,
+                "Active": true,
+                "Translation": [
+                    30.171302795410158,
+                    -72.76049041748047,
+                    -10.038715362548829
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    14.0,
+                    3.0,
+                    14.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 1839165694,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "MeshPath": "Library/Metadata/41/4135282941",
+                    "MaterialPath": "Resources/Materials/default.olmat"
+                },
+                {
+                    "UUID": 2383265124,
+                    "ComponentType": 5,
+                    "Active": true,
+                    "ScriptName": "TriggerGravity",
+                    "UpDown": false,
+                    "Name0": "Cube",
+                    "Cube": 804614070
+                }
+            ]
+        },
+        {
+            "UUID": 667718238,
+            "ParentUUID": 0,
+            "Name": "Cube",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1163571045,
+                "Active": true,
+                "Translation": [
+                    34.201534271240237,
+                    0.0,
+                    -6.355133533477783
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    6.5,
+                    9.0,
+                    6.5
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 1093909378,
+                    "ComponentType": 2,
+                    "Active": false,
+                    "MeshPath": "Library/Metadata/41/4135282941",
+                    "MaterialPath": "Resources/Materials/default.olmat"
+                },
+                {
+                    "UUID": 3931080877,
+                    "ComponentType": 5,
+                    "Active": true,
+                    "ScriptName": "TriggerGravity",
+                    "UpDown": false,
+                    "Name0": "Cube",
+                    "Cube": 804614070
+                }
+            ]
+        },
+        {
+            "UUID": 804614070,
+            "ParentUUID": 0,
+            "Name": "Cube",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 932914426,
+                "Active": true,
+                "Translation": [
+                    8.196413040161133,
+                    0.5063827037811279,
+                    -8.4556884765625
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 1792416487,
+                    "ComponentType": 2,
+                    "Active": false,
+                    "MeshPath": "Library/Metadata/41/4135282941",
+                    "MaterialPath": "Resources/Materials/default.olmat"
+                },
+                {
+                    "UUID": 563351444,
+                    "ComponentType": 5,
+                    "Active": true,
+                    "ScriptName": "PlayerMovement"
+                },
+                {
+                    "UUID": 240004130,
+                    "ComponentType": 5,
+                    "Active": true,
+                    "ScriptName": "PlayerController",
+                    "Player": 0
+                }
+            ]
+        },
+        {
+            "UUID": 172714554,
+            "ParentUUID": 0,
+            "Name": "Main Camera",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1527511923,
+                "Active": true,
+                "Translation": [
+                    7.09430456161499,
+                    14.491037368774414,
+                    18.766809463500978
+                ],
+                "Rotation": [
+                    161.5,
+                    -0.4999724328517914,
+                    179.99996948242188
+                ],
+                "Scale": [
+                    1.0000762939453126,
+                    0.9999987483024597,
+                    1.000071406364441
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 3641786684,
+                    "ComponentType": 1,
+                    "Active": true,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 500.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0
+                },
+                {
+                    "UUID": 4173915911,
+                    "ComponentType": 5,
+                    "Active": true,
+                    "ScriptName": "CameraController",
+                    "Name0": "Main Camera",
+                    "Main Camera": 172714554,
+                    "Name1": "Cube",
+                    "Cube": 804614070
+                }
+            ]
+        },
+        {
+            "UUID": 1690967942,
+            "ParentUUID": 0,
+            "Name": "Light",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3749479261,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    10.0,
+                    20.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 2143224420,
+                    "ComponentType": 4,
+                    "Active": true,
+                    "LightColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Intensity": 0.3199999928474426,
+                    "LightType": 2,
+                    "PointLightRange": 16.0,
+                    "PointLightConstant": 1.0,
+                    "PointLightLinear": 0.04500000178813934,
+                    "PointLightQuadratic": 0.007499999832361937,
+                    "SpotLightRange": 10.0,
+                    "SpotLightConstant": 1.0,
+                    "SpotLightLinear": 0.04500000178813934,
+                    "SpotLightQuadratic": 0.007499999832361937,
+                    "SpotLightSpotAngle": 30.0,
+                    "SpotLightCutoff": 0.9659258127212524,
+                    "SpotLightSoftness": 0.10000000149011612,
+                    "SpotLightOuterCutoff": 0.9588197469711304
+                }
+            ]
+        }
+    ]
+} 
