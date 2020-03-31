@@ -15,28 +15,11 @@ PanelStateMachine::PanelStateMachine()
 
 PanelStateMachine::~PanelStateMachine()
 {
+	nodes.erase(nodes.begin(), nodes.end());
+	links.erase(links.begin(), links.end());
 	ax::NodeEditor::DestroyEditor(editor_context);
 }
 
-void ImGuiEx_BeginColumn()
-{
-	ImGui::BeginGroup();
-}
-
-void ImGuiEx_NextColumn()
-{
-	ImGui::EndGroup();
-	ImGui::SameLine();
-	ImGui::BeginGroup();
-}
-
-void ImGuiEx_EndColumn()
-{
-	ImGui::EndGroup();
-}
-
-
-static int g_NextLinkId = 100;
 void PanelStateMachine::Render()
 {
 	if (ImGui::Begin(ICON_FA_PROJECT_DIAGRAM " State Machine", &opened, ImGuiWindowFlags_MenuBar))
@@ -47,15 +30,15 @@ void PanelStateMachine::Render()
 			LeftPanel();
 			ax::NodeEditor::Begin("My Editor");
 			{
-				if (ImGui::IsMouseClicked(1))
+				/*if (ImGui::IsMouseClicked(1))
 				{
 					ax::NodeEditor::Suspend();
 					ImGui::OpenPopup("Editor Menu");
 					ax::NodeEditor::Resume();
-				}
+				}*/
 				RenderStates();
-				HandleInteraction();
-				CreateNodeMenu();
+				//HandleInteraction();
+				//CreateNodeMenu();
 				ax::NodeEditor::End();
 				if (firstFrame)
 				{
@@ -67,126 +50,45 @@ void PanelStateMachine::Render()
 	}
 	ImGui::End();
 }
-
-void PanelStateMachine::HandleInteraction()
-{
-	// 2) Handle interactions
-	//
-
-	// Handle creation action, returns true if editor want to create new object (node or link)
-	if (ax::NodeEditor::BeginCreate())
-	{
-		ax::NodeEditor::PinId inputPinId, outputPinId;
-		/*if (ax::NodeEditor::QueryNewLink(&inputPinId, &outputPinId))
-		{
-			if (inputPinId && outputPinId) // both are valid, let's accept link
-			{
-				// ax::NodeEditor::AcceptNewItem() return true when user release mouse button.
-				if (ax::NodeEditor::AcceptNewItem())
-				{
-					// Since we accepted new link, lets add one to our list of links.
-					g_Links.push_back({ ax::NodeEditor::LinkId(g_NextLinkId++), inputPinId, outputPinId });
-
-					// Draw new link.
-					ax::NodeEditor::Link(g_Links.back().Id, g_Links.back().InputId, g_Links.back().OutputId);
-				}
-
-				// You may choose to reject connection between these nodes
-				// by calling ax::NodeEditor::RejectNewItem(). This will allow editor to give
-				// visual feedback by changing link thickness and color.
-			}
-		}*/
-		ax::NodeEditor::PinId pinId = 0;
-		if (ax::NodeEditor::QueryNewNode(&pinId))
-		{
-			ImGui::SetCursorPosY(ImGui::GetCursorPosY() - ImGui::GetTextLineHeight());
-			auto size = ImGui::CalcTextSize("+ Create Node");
-
-			auto padding = ImGui::GetStyle().FramePadding;
-			auto spacing = ImGui::GetStyle().ItemSpacing;
-
-			ImGui::SetCursorPos(ImVec2(ImGui::GetCursorPos().x + spacing.x, ImGui::GetCursorPos().y -spacing.y));
-
-			ImVec2 cursor_screen = ImGui::GetCursorScreenPos();
-			auto rectMin = ImVec2(cursor_screen.x - padding.x, cursor_screen.y- padding.y);
-			auto rectMax = ImVec2(cursor_screen.x + size.x + padding.x, cursor_screen.y + size.y + padding.x);
-
-			auto drawList = ImGui::GetWindowDrawList();
-			drawList->AddRectFilled(rectMin, rectMax, ImColor(32, 45, 32, 180), size.y * 0.15f);
-			ImGui::TextUnformatted("+ Create Node");
-
-			if (ax::NodeEditor::AcceptNewItem())
-			{
-				ax::NodeEditor::Suspend();
-				ImGui::OpenPopup("Editor Menu");
-				ax::NodeEditor::Resume();
-			}
-		}
-	}
-	ax::NodeEditor::EndCreate(); // Wraps up object creation action handling.
-	// Handle deletion action
-	if (ax::NodeEditor::BeginDelete())
-	{
-		// There may be many links marked for deletion, let's loop over them.
-		ax::NodeEditor::LinkId deletedLinkId;
-		while (ax::NodeEditor::QueryDeletedLink(&deletedLinkId))
-		{
-			// If you agree that link can be deleted, accept deletion.
-			if (ax::NodeEditor::AcceptDeletedItem())
-			{
-				// Then remove link from your data.
-				for (auto& link : links)
-				{
-					/*if (link.Id == deletedLinkId)
-					{
-						g_Links.erase(&link);
-						break;
-					}*/
-				}
-			}
-
-		}
-	}
-	ax::NodeEditor::EndDelete(); // Wrap up deletion action
-}
-
-
-void PanelStateMachine::OpenStateMachine(const File & file)
-{
-	state_machine = std::make_shared<StateMachine>(file.file_path);
-	state_machine->Load(file);
-
-	//TODO: Remove, this is only for testing
-	ImportOptions options;
-	Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(file), options);
-	std::shared_ptr<StateMachine> test = App->resources->Load<StateMachine>(options.exported_file);
-}
-
 void PanelStateMachine::RenderStates() const
 {
 	int uniqueId = 5;
 	ImVec2 position(0,0);
-	for (auto & state : state_machine->states)
+	for (auto & node : nodes)
 	{
 		// Start drawing nodes.
-		int node = uniqueId++;
 		if (firstFrame)
-			ax::NodeEditor::SetNodePosition(node, position);
-		ax::NodeEditor::BeginNode(node);
-		ImGui::Text(state->name.c_str());
-		ax::NodeEditor::BeginPin(uniqueId++, ax::NodeEditor::PinKind::Output);
-		ImGui::Text("Out ->");
-		ax::NodeEditor::EndPin();
+		{
+			ax::NodeEditor::SetNodePosition(node->id, position);
+		}
+		ax::NodeEditor::BeginNode(node->id);
+		ImGui::Text(node->state->name.c_str());
+		ImGui::Button("Clip");
+		for (auto & output :  node->outputs)
+		{
+			ax::NodeEditor::BeginPin(output, ax::NodeEditor::PinKind::Output);
+			ImGui::Text("Out ->");
+			ax::NodeEditor::EndPin();
+		}
+		for (auto & output : node->outputs)
+		{
+			ax::NodeEditor::BeginPin(output, ax::NodeEditor::PinKind::Input);
+			ImGui::Text("-> In");
+			ax::NodeEditor::EndPin();
+		}
 		ax::NodeEditor::EndNode();
-		position = ax::NodeEditor::GetNodeSize(node);
-		position.y = 0;
-		position.x += 10;
 
+	}
+	for (auto& linkInfo : links)
+	{
+		ax::NodeEditor::Link(linkInfo->id, linkInfo->input_id, linkInfo->output_id);
 	}
 }
 
-
-
+void PanelStateMachine::HandleInteraction()
+{
+	
+}
 void PanelStateMachine::CreateNodeMenu()
 {
 	ax::NodeEditor::Suspend();
@@ -196,8 +98,11 @@ void PanelStateMachine::CreateNodeMenu()
 		{
 			if (ImGui::MenuItem("Empty"))
 			{
-				state_machine->states.push_back(std::make_shared<State>("New Node " + new_states, nullptr));
-				new_states++;
+				NodeInfo* node = new NodeInfo({ ax::NodeEditor::NodeId(uniqueid++) });
+				node->state = std::make_shared<State>("New Node", nullptr);
+				node->inputs.push_back(uniqueid++);
+				node->outputs.push_back(uniqueid++);
+				nodes.push_back(std::move(node));
 			}
 			ImGui::EndMenu();
 		}
@@ -214,4 +119,37 @@ void PanelStateMachine::LeftPanel()
 	}
 	ImGui::EndChild();
 	ImGui::SameLine(0.0f, 12.0f);
+}
+void PanelStateMachine::OpenStateMachine(const File & file)
+{
+	state_machine = std::make_shared<StateMachine>(file.file_path);
+	state_machine->Load(file);
+
+	//TODO: Remove, this is only for testing
+	ImportOptions options;
+	Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(file), options);
+	std::shared_ptr<StateMachine> test = App->resources->Load<StateMachine>(options.exported_file);
+
+	//Tranform form state machine to ui
+	for (auto & link : state_machine->transitions)
+	{
+		links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) ,  ax::NodeEditor::PinId(uniqueid++),  ax::NodeEditor::PinId(uniqueid++), link});
+	}
+	for (auto & state : state_machine->states)
+	{
+		NodeInfo * node = new NodeInfo({ ax::NodeEditor::NodeId(uniqueid++) });
+		node->state = state;
+		for (auto & link : links)
+		{
+			if (link->transition->source_hash == state->name_hash)
+			{
+				node->outputs.push_back(link->output_id);
+			}
+			if (link->transition->target_hash == state->name_hash)
+			{
+				node->outputs.push_back(link->input_id);
+			}
+		}
+		nodes.push_back(node);
+	}
 }

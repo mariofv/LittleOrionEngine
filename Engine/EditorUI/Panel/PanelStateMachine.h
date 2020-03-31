@@ -10,13 +10,15 @@ struct LinkInfo
 	ax::NodeEditor::LinkId id;
 	ax::NodeEditor::PinId input_id;
 	ax::NodeEditor::PinId output_id;
+	std::shared_ptr<Transition> transition;
 };
 
 struct NodeInfo
 {
 	ax::NodeEditor::NodeId id;
-	size_t num_inputs = 1;
-	size_t num_outputs = 1;
+	std::vector<ax::NodeEditor::PinId> inputs;
+	std::vector<ax::NodeEditor::PinId> outputs;
+	std::shared_ptr<State> state;
 };
 
 
@@ -44,9 +46,9 @@ private:
 	uint64_t end_hash = std::hash<std::string>{}("End");
 
 	//Editor
-	ImVector<LinkInfo> links;
-	ImVector<NodeInfo> Nodes;
-	int new_states = 0;
+	ImVector<LinkInfo*> links;
+	ImVector<NodeInfo*> nodes;
+	int uniqueid = 0;
 };
 #endif // !_PANELSTATEMACHINE_H_
 
