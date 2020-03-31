@@ -173,6 +173,7 @@
   <ItemGroup>
     <ClInclude Include="src\Script\EndOfLevelScript.h" />
     <ClInclude Include="src\Script\ExampleScript.h" />
+    <ClInclude Include="src\Script\MenuLogic.h" />
     <ClInclude Include="src\Script\PlayerController.h" />
     <ClInclude Include="src\Script\PlayerMovement.h" />
     <ClInclude Include="src\Script\CameraController.h" />
@@ -184,6 +185,7 @@
   <ItemGroup>
     <ClCompile Include="src\Script\EndOfLevelScript.cpp" />
     <ClCompile Include="src\Script\ExampleScript.cpp" />
+    <ClCompile Include="src\Script\MenuLogic.cpp" />
     <ClCompile Include="src\Script\PlayerController.cpp" />
     <ClCompile Include="src\Script\PlayerMovement.cpp" />
     <ClCompile Include="src\Script\CameraController.cpp" />
