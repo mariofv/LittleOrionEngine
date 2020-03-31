@@ -40,7 +40,7 @@ void ComponentUI::Render(float4x4* projection, float4x4* model, unsigned int tex
 		glUniform1i(glGetUniformLocation(shader_program, "image"), 0);
 		glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, model->ptr());
 		glUniform3fv(glGetUniformLocation(shader_program, "spriteColor"), 1, color->ptr());
-		glActiveTexture(GL_TEXTURE0);
+		glActiveTexture(GL_TEXTURE);
 		glBindTexture(GL_TEXTURE_2D, texture);
 
 		glBindVertexArray(vao);

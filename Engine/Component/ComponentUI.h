@@ -29,6 +29,7 @@ public:
 public:
 	float3 color = float3::unitY;
 	UIType ui_type;
+	int layer = 0;
 	
 protected:
 	unsigned int shader_program, vao, vbo;

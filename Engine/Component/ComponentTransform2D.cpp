@@ -60,7 +60,7 @@ void ComponentTransform2D::Save(Config& config) const
 	config.AddFloat(rect.left, "Left");
 	config.AddFloat(rotation, "Rotation");
 	config.AddFloat2(scale, "Scale");
-	config.AddFloat2(position, "Position");
+	config.AddFloat3(position, "Position");
 }
 
 void ComponentTransform2D::Load(const Config& config)
@@ -78,14 +78,14 @@ void ComponentTransform2D::Load(const Config& config)
 	config.GetFloat("Rotation", rotation);
 
 	config.GetFloat2("Scale", scale, float2::one);
-	config.GetFloat2("Position", position, float2::zero);
+	config.GetFloat3("Position", position, float3::zero);
 	is_new = false;
 	OnTransformChange();
 }
 
 void ComponentTransform2D::OnTransformChange()
 {
-	model_matrix = float4x4::FromTRS(float3(position, 0), float4x4::FromEulerXYZ(0, 0, rotation), float3(scale, 0));
+	model_matrix = float4x4::FromTRS(position, float4x4::FromEulerXYZ(0, 0, rotation), float3(scale, 1));
 	GenerateGlobalModelMatrix();
 
 	for (auto & child : owner->children)

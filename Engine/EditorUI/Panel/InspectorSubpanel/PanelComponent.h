@@ -52,6 +52,7 @@ private:
 	void ShowComponentButtonWindow(ComponentButton* button);
 
 	void DropAnimationAndSkeleton(ComponentAnimation* component_animation);
+	void DropTexture(ComponentUI* ui);
 };
 
 #endif //_PANELCOMPONENT_H_

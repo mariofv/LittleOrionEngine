@@ -37,7 +37,7 @@ public:
 	bool is_new = true;
 	math::Rect rect = math::Rect(0, 0, 10, 10);
 	float rotation = 0.0f;
-	float2 position = float2::zero;
+	float3 position = float3::zero;
 	float2 scale = float2::one;
 	float4x4 global_matrix = float4x4::identity;
 	float4x4 model_matrix = float4x4::identity;
