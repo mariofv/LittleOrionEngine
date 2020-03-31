@@ -18,6 +18,7 @@ bool ModuleResourceManager::Init()
 	model_importer = std::make_unique<ModelImporter>();
 	scene_manager = std::make_unique<SceneManager>();
 	prefab_importer = std::make_unique<PrefabImporter>();
+	state_machine_importer = std::make_unique<StateMachineImporter>();
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 	File("Resources");
 	thread_timer->Start();
@@ -127,6 +128,10 @@ ImportResult ModuleResourceManager::InternalImport(const File& file, bool force)
 	if (file.file_type == FileType::PREFAB)
 	{
 		result = prefab_importer->Import(file, force);
+	}
+	if (file.file_type == FileType::STATE_MACHINE)
+	{
+		result = state_machine_importer->Import(file, force);
 	}
 	if (file.file_type == FileType::MESH)
 	{

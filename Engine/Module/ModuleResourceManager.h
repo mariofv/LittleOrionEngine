@@ -11,6 +11,7 @@
 #include "ResourceManagement/Importer/PrefabImporter.h"
 #include "ResourceManagement/Importer/SceneManager.h"
 #include "ResourceManagement/Importer/TextureImporter.h"
+#include "ResourceManagement/Importer/StateMachineImporter.h"
 #include "ResourceManagement/ResourcesDB/ResourceDataBase.h"
 
 #include <memory>
@@ -100,6 +101,7 @@ private:
 	std::unique_ptr<Importer> default_importer = std::make_unique<Importer>();
 	std::unique_ptr<ModelImporter> model_importer = nullptr;
 	std::unique_ptr<PrefabImporter> prefab_importer = nullptr;
+	std::unique_ptr<StateMachineImporter> state_machine_importer = nullptr;
 	mutable std::vector<std::shared_ptr<Resource>> resource_cache;
 
 };

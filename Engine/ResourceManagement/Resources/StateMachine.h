@@ -3,7 +3,7 @@
 
 #include "Resource.h"
 #include "Animation.h"
-
+#include "ResourceManagement/Loaders/StateMachineManager.h"
 struct Clip
 {
 	Clip(std::string& name, std::shared_ptr<Animation>& animation, bool loop);
@@ -36,6 +36,7 @@ class File;
 class StateMachine : Resource
 {
 public:
+	StateMachine(std::vector<std::shared_ptr<Clip>> && clips, std::vector<std::shared_ptr<State>> && states, std::vector<std::shared_ptr<Transition>> && transitions, const std::string& file_path);
 	StateMachine(const std::string& file_path);
 	~StateMachine() = default;
 	void LoadInMemory() override {};
@@ -48,6 +49,13 @@ public:
 	std::vector<std::shared_ptr<Transition>> transitions;
 };
 
+namespace Loader
+{
+	template<>
+	static std::shared_ptr<StateMachine> Load(const std::string& uid) {
+		return StateMachineManager::Load(uid);
+	}
+}
 #endif // !_H_STATEMACHINE_
 
 

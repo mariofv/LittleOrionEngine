@@ -16,6 +16,7 @@ enum class ResourceType
 	SKELETON,
 	SKYBOX,
 	TEXTURE,
+	STATE_MACHINE,
 	UNKNOWN
 };
 
@@ -27,6 +28,7 @@ public:
 	};
 	virtual ~Resource() = default;
 
+	uint32_t GetUUID() const { return UUID; };
 private:
 	virtual void LoadInMemory() = 0;
 

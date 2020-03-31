@@ -22,8 +22,16 @@ Transition::Transition(std::string& source, std::string& target, std::string& tr
 	trigger_hash(std::hash<std::string>{}(trigger)),
 	interpolation_time(interpolation) {};
 
-StateMachine::StateMachine(const std::string& mesh_file_path):
-Resource(0, mesh_file_path)
+StateMachine::StateMachine(std::vector<std::shared_ptr<Clip>>&& clips, std::vector<std::shared_ptr<State>>&& states, std::vector<std::shared_ptr<Transition>>&& transitions, const std::string & file_path)
+	: clips(clips)
+	,states(states)
+	,transitions(transitions)
+	,Resource(0, file_path)
+{
+}
+
+StateMachine::StateMachine(const std::string& file_path):
+Resource(0, file_path)
 {
 
 }
