@@ -117,7 +117,7 @@ void CameraController::ActivePlayer()
 
 void CameraController::FollowPlayer() 
 {
-	float3 offset(0.f, 2.f, -10.f);
+	float3 offset(0.f, 8.f, 10.f);
 	float3 new_position = player->transform.GetTranslation() + offset;
 	owner->transform.SetTranslation(new_position);
 	/*
