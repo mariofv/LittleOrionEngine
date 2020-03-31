@@ -79,7 +79,7 @@ void ComponentTransform2D::Load(const Config& config)
 
 	config.GetFloat2("Scale", scale, float2::one);
 	config.GetFloat2("Position", position, float2::zero);
-
+	is_new = false;
 	OnTransformChange();
 }
 

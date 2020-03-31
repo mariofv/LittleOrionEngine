@@ -59,7 +59,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			}
 
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
-			if (ImGui::DragInt("Height", &transform_2d->rect.bottom, 1))
+			if (ImGui::DragInt("Width", &transform_2d->rect.right, 1))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
@@ -69,7 +69,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
 			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2);
 
-			if (ImGui::DragInt("Width", &transform_2d->rect.right, 1))
+			if (ImGui::DragInt("Height", &transform_2d->rect.bottom, 1))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;

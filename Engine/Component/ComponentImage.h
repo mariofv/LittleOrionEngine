@@ -14,6 +14,6 @@ public:
 
 	void Save(Config& config) const;
 	void Load(const Config& config);
-	void Render(float4x4*);
+	void Render(float4x4* projection);
 };
 #endif

@@ -8,22 +8,19 @@
 
 ComponentButton::ComponentButton() : ComponentUI(ComponentUI::UIType::BUTTON)
 {
-	InitData();
 }
 
 ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::BUTTON)
 {
-	InitData();
+	if (owner->transform_2d.is_new)
+	{
+		owner->transform_2d.SetSize(170, 23);
+	}
 }
 
 ComponentButton::~ComponentButton()
 {
 	ComponentUI::~ComponentUI();
-}
-
-void ComponentButton::InitData()
-{
-	owner->transform_2d.SetSize(170, 23);
 }
 
 void ComponentButton::Render(float4x4* projection)
