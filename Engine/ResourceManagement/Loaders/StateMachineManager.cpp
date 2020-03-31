@@ -8,30 +8,31 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(const std::string & file
 {
 	if (!App->filesystem->Exists(file_path.c_str()))
 	{
-		APP_LOG_ERROR("Error loading Mesh %s.", file_path.c_str());
+		APP_LOG_ERROR("Error loading State Machine %s.", file_path.c_str());
 		return nullptr;
 	}
 
-	APP_LOG_INFO("Loading model %s.", file_path.c_str());
-	size_t mesh_size;
-	char * data = App->filesystem->Load(file_path.c_str(), mesh_size);
+	APP_LOG_INFO("Loading State Machine  %s.", file_path.c_str());
+	size_t size;
+	char * data = App->filesystem->Load(file_path.c_str(), size);
 	char* cursor = data;
 
 	uint32_t ranges[3];
 	//Get ranges
 	size_t bytes = sizeof(ranges); 
 	memcpy(ranges, cursor, bytes);
+	cursor += bytes;
 
 
 	std::vector<std::shared_ptr<Clip>> clips;
 	clips.resize(ranges[0]);
-	cursor += bytes; // Get clips
 	for (auto clip : clips)
 	{
+		clip = std::make_shared<Clip>();
 
-		bytes = sizeof(Clip);
-		memcpy(&(*clip), cursor, bytes);
-		cursor += bytes; 
+		bytes = sizeof(uint64_t);
+		memcpy( &clip->name_hash, cursor, bytes);
+		cursor += bytes; // Store Clip
 
 		bytes = sizeof(uint32_t);
 		uint32_t animation_uuid;
@@ -46,17 +47,36 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(const std::string & file
 	states.resize(ranges[1]);
 	for (auto state : states)
 	{
-		bytes = sizeof(State);
-		memcpy(&(*state), cursor, bytes);
-		cursor += bytes;
+		state = std::make_shared<State>();
+
+		bytes = sizeof(uint64_t);
+		memcpy(&state->name_hash, cursor, bytes);
+		cursor += bytes; // Store states
+		uint64_t clip_hash;
+		bytes = sizeof(uint64_t);
+		memcpy(&clip_hash, cursor, bytes);
+		cursor += bytes; // Store states
 	}
 
 	std::vector<std::shared_ptr<Transition>> transitions;
-	clips.resize(ranges[2]);
+	transitions.resize(ranges[2]);
 	for (auto transition : transitions)
 	{
-		bytes = sizeof(Transition);
-		memcpy(&(*transition), cursor, bytes);
+		transition = std::make_shared<Transition>();
+		bytes = sizeof(uint64_t);
+		memcpy( &transition->source_hash, cursor, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(uint64_t);
+		memcpy(&transition->target_hash, cursor, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(uint64_t);
+		memcpy(&transition->trigger_hash, cursor, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(long);
+		memcpy( &transition->interpolation_time, cursor, bytes);
 		cursor += bytes;
 	}
 	std::shared_ptr<StateMachine> new_state_machine = std::make_shared<StateMachine>(std::move(clips), std::move(states), std::move(transitions), file_path);

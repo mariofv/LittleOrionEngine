@@ -1,6 +1,10 @@
 #include "PanelStateMachine.h"
 #include "Filesystem/File.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
+
+#include "Main/Application.h"
+#include "Module/ModuleResourceManager.h"
+
 PanelStateMachine::PanelStateMachine()
 {
 	opened = false;
@@ -151,6 +155,11 @@ void PanelStateMachine::OpenStateMachine(const File & file)
 {
 	state_machine = std::make_shared<StateMachine>(file.file_path);
 	state_machine->Load(file);
+
+	//TODO: Remove, this is only for testing
+	ImportOptions options;
+	Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(file), options);
+	std::shared_ptr<StateMachine> test = App->resources->Load<StateMachine>(options.exported_file);
 }
 
 void PanelStateMachine::RenderStates() const

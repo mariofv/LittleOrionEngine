@@ -1,4 +1,5 @@
 #include "StateMachineImporter.h"
+#include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 #include "ResourceManagement/Resources/StateMachine.h"
 ImportResult StateMachineImporter::Import(const File & file, bool force) const
@@ -27,7 +28,10 @@ ImportResult StateMachineImporter::Import(const File & file, bool force) const
 	uint32_t num_transitions = state_machine.transitions.size();
 	uint32_t ranges[3] = { num_clips, num_states, num_transitions };
 
-	uint32_t size = sizeof(ranges) + sizeof(Clip) * num_clips + sizeof(uint32_t) * num_clips  +sizeof(Transition) * num_transitions + sizeof(State) * num_states;
+	uint32_t size_of_clip= sizeof(uint64_t) + sizeof(uint32_t);
+	uint32_t size_of_state = sizeof(uint64_t) * 2;
+	uint32_t size_of_transitions = sizeof(uint64_t) * 3 + sizeof(long);
+	uint32_t size = sizeof(ranges) + size_of_clip * num_clips + size_of_transitions * num_transitions + size_of_state * num_states;
 
 	char* data = new char[size]; // Allocate
 	char* cursor = data;
@@ -38,9 +42,9 @@ ImportResult StateMachineImporter::Import(const File & file, bool force) const
 
 	for (auto & clip : state_machine.clips)
 	{
-		bytes = sizeof(Clip);
-		memcpy(cursor, &(*clip), bytes);
-		cursor += bytes; // Store animations hashes
+		bytes = sizeof(uint64_t);
+		memcpy(cursor, &clip->name_hash, bytes);
+		cursor += bytes; // Store Clip
 
 		bytes = sizeof(uint32_t) ;
 		uint32_t animation_uuid = clip->animation->GetUUID();
@@ -50,19 +54,36 @@ ImportResult StateMachineImporter::Import(const File & file, bool force) const
 
 	for (auto & state : state_machine.states)
 	{
-		bytes = sizeof(State);
-		memcpy(cursor, &(*state), bytes);
+		bytes = sizeof(uint64_t);
+		memcpy(cursor, &state->name_hash, bytes);
+		cursor += bytes; // Store states
+		uint64_t clip_hash = state->clip ? state->clip->name_hash : 0;
+		bytes = sizeof(uint64_t);
+		memcpy(cursor, &clip_hash, bytes);
 		cursor += bytes; // Store states
 	}
 
 	for (auto & transition : state_machine.transitions)
 	{
-		bytes = sizeof(Transition);
-		memcpy(cursor, &(*transition), bytes);
-		cursor += bytes; // Store transitions
+		bytes = sizeof(uint64_t);
+		memcpy(cursor, &transition->source_hash, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(uint64_t);
+		memcpy(cursor, &transition->target_hash, bytes);
+		cursor += bytes; 
+
+		bytes = sizeof(uint64_t);
+		memcpy(cursor, &transition->trigger_hash, bytes);
+		cursor += bytes; 
+
+		bytes = sizeof(long);
+		memcpy(cursor, &transition->interpolation_time, bytes);
+		cursor += bytes; 
 	}
 
 	std::string exported_file = SaveMetaFile(file.file_path, ResourceType::STATE_MACHINE);
+	App->filesystem->Save(exported_file.c_str(), data, size);
 
 	import_result.success = true;
 	import_result.exported_file = exported_file;

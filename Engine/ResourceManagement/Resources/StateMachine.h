@@ -6,6 +6,7 @@
 #include "ResourceManagement/Loaders/StateMachineManager.h"
 struct Clip
 {
+	Clip() = default;
 	Clip(std::string& name, std::shared_ptr<Animation>& animation, bool loop);
 	std::string name;
 	uint64_t name_hash = 0;
@@ -15,6 +16,7 @@ struct Clip
 
 struct State
 {
+	State() = default;
 	State(std::string name, std::shared_ptr<Clip> clip);
 	std::string name;
 	uint64_t name_hash = 0;
@@ -23,6 +25,7 @@ struct State
 
 struct Transition
 {
+	Transition() = default;
 	Transition(std::string& source, std::string& target, std::string& trigger, long interpolation);
 	std::string source;
 	std::string target;
@@ -33,7 +36,7 @@ struct Transition
 	long interpolation_time = 0;
 };
 class File;
-class StateMachine : Resource
+class StateMachine : public Resource
 {
 public:
 	StateMachine(std::vector<std::shared_ptr<Clip>> && clips, std::vector<std::shared_ptr<State>> && states, std::vector<std::shared_ptr<Transition>> && transitions, const std::string& file_path);
