@@ -8,7 +8,7 @@
 class EditorActionRotation2D : public EditorAction
 {
 public:
-	EditorActionRotation2D(ComponentTransform2D* component, float &current, GameObject* go);
+	EditorActionRotation2D(ComponentTransform2D* component, const float &current, GameObject* go);
 	~EditorActionRotation2D() = default;
 
 	void Undo();

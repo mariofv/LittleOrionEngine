@@ -8,7 +8,7 @@
 class EditorActionRect2D : public EditorAction
 {
 public:
-	EditorActionRect2D(ComponentTransform2D* component, Rect &current, GameObject* go);
+	EditorActionRect2D(ComponentTransform2D* component, const Rect &current, GameObject* go);
 	~EditorActionRect2D() = default;
 
 	void Undo();

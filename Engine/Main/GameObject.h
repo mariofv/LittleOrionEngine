@@ -47,7 +47,8 @@ public:
 	void AddChild(GameObject* child);
 	void RemoveChild(GameObject* child);
 
-	ENGINE_API Component* CreateComponent(const Component::ComponentType type, const ComponentUI::UIType ui_type = ComponentUI::UIType::IMAGE);
+	ENGINE_API Component* CreateComponent(const Component::ComponentType type);
+	ENGINE_API Component* CreateComponentUI(const ComponentUI::UIType ui_type);
 	void RemoveComponent(Component* component);
 	ENGINE_API Component* GetComponent(const Component::ComponentType type) const;
 	ENGINE_API ComponentScript* GetComponentScript(const char* name) const;

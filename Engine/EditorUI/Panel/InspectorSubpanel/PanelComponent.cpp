@@ -11,6 +11,7 @@
 #include "EditorUI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentImage.h"
@@ -22,7 +23,6 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentUI.h"
-#include "Component/ComponentButton.h"
 
 #include "Helper/Utils.h"
 #include "Math/Rect.h"
@@ -59,7 +59,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			}
 
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
-			if (ImGui::DragInt("Height", &transform_2d->rect.bottom, 1))
+			if (ImGui::DragInt("Width", &transform_2d->rect.right, 1))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
@@ -69,7 +69,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
 			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2);
 
-			if (ImGui::DragInt("Width", &transform_2d->rect.right, 1))
+			if (ImGui::DragInt("Height", &transform_2d->rect.bottom, 1))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
@@ -502,15 +502,15 @@ void PanelComponent::ShowComponentProgressBarWindow(ComponentProgressBar* progre
 	}
 }
 
-void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
+void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(txt);
+		ShowCommonUIWindow(text);
 		ImGui::Separator();		
-		ImGui::InputText("Text", &txt->text);
+		ImGui::InputText("Text", &text->text);
 		ImGui::Separator();
-		ImGui::DragFloat("Font Size", (float*)(&txt->scale));
+		ImGui::DragFloat("Font Size", (float*)(&text->scale));
 		
 	}
 }

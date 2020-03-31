@@ -45,11 +45,12 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	window_width = App->editor->scene_panel->scene_window_content_area_width;
 	window_height = App->editor->scene_panel->scene_window_content_area_height;
 	float4x4 projection = float4x4::D3DOrthoProjLH(-1, 1, window_width, window_height);
-	
+	glDisable(GL_DEPTH);
 	if (main_canvas != nullptr)
 	{
 		RenderUIGameObject(main_canvas->owner, &projection);
 	}
+	glEnable(GL_DEPTH);
 }
 
 void  ModuleUI::RenderUIGameObject(GameObject* parent, float4x4* projection)
