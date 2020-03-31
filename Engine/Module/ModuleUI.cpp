@@ -109,7 +109,7 @@ void ModuleUI::InitGlyph()
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
 	// Load font as face
-	if (FT_New_Face(ft, "Assets/Fonts/arial.ttf", 0, &face))
+	if (FT_New_Face(ft, "Assets/Fonts/Montserrat-Light.ttf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
 	// Set size to load glyphs as
