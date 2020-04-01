@@ -26,10 +26,7 @@ struct State
 struct Transition
 {
 	Transition() = default;
-	Transition(std::string& source, std::string& target, std::string& trigger, long interpolation);
-	std::string source;
-	std::string target;
-	std::string trigger;
+	Transition(uint64_t source, uint64_t target, uint64_t trigger, long interpolation);
 	uint64_t source_hash = 0;
 	uint64_t target_hash = 0;
 	uint64_t trigger_hash = 0;

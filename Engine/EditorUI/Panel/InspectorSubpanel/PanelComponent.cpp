@@ -402,7 +402,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		{
 			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
 		}
-		DropAnimationAndSkeleton(animation);
+		DropAnimation(animation);
 		ImGui::AlignTextToFramePadding();
 		ImGui::Separator();
 		if (ImGui::Checkbox("Playing", &animation->animation_controller->playing));
@@ -703,7 +703,7 @@ void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
 	}
 }
 
-void PanelComponent::DropAnimationAndSkeleton(ComponentAnimation* component_animation)
+void PanelComponent::DropAnimation(ComponentAnimation* component_animation)
 {
 	if (ImGui::BeginDragDropTarget())
 	{

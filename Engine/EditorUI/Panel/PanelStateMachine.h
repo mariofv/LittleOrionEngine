@@ -34,9 +34,11 @@ public:
 	void HandleInteraction();
 	void OpenStateMachine(const File & file);
 
-	void RenderStates() const;
+	void RenderStates();
 	void LeftPanel();
 	void CreateNodeMenu();
+
+	void DropAnimation(std::shared_ptr<State>& state);
 
 private:
 	ax::NodeEditor::EditorContext* editor_context = nullptr;

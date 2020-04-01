@@ -19,6 +19,7 @@ PanelStateMachine::~PanelStateMachine()
 	nodes.erase(nodes.begin(), nodes.end());
 	links.erase(links.begin(), links.end());
 	ax::NodeEditor::DestroyEditor(editor_context);
+	state_machine->Save();
 }
 
 void PanelStateMachine::Render()
@@ -50,7 +51,7 @@ void PanelStateMachine::Render()
 	}
 	ImGui::End();
 }
-void PanelStateMachine::RenderStates() const
+void PanelStateMachine::RenderStates()
 {
 	ImVec2 position(10,10);
 	for (auto & node : nodes)
@@ -63,7 +64,9 @@ void PanelStateMachine::RenderStates() const
 		}
 		ax::NodeEditor::BeginNode(node->id);
 		ImGui::Text(node->state->name.c_str());
-		ImGui::Button("Clip");
+		std::string clip_name = node->state->clip ? node->state->clip->name : "Clip";
+		ImGui::Button(clip_name.c_str());
+		DropAnimation(node->state);
 		for (auto & output :  node->outputs)
 		{
 			ax::NodeEditor::BeginPin(output, ax::NodeEditor::PinKind::Output);
@@ -114,6 +117,7 @@ void PanelStateMachine::HandleInteraction()
 							new_transition->target_hash = node->state->name_hash;
 						}
 					}
+					state_machine->transitions.push_back(new_transition);
 					links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) , input_pin_id, output_pin_id, new_transition });
 
 					// Draw new link.
@@ -136,6 +140,7 @@ void PanelStateMachine::CreateNodeMenu()
 			{
 				NodeInfo* node = new NodeInfo({ ax::NodeEditor::NodeId(uniqueid++) });
 				node->state = std::make_shared<State>("New Node", nullptr);
+				state_machine->states.push_back(node->state);
 				node->inputs.push_back(uniqueid++);
 				node->outputs.push_back(uniqueid++);
 				nodes.push_back(std::move(node));
@@ -147,6 +152,28 @@ void PanelStateMachine::CreateNodeMenu()
 	ax::NodeEditor::Resume();
 }
 
+void PanelStateMachine::DropAnimation(std::shared_ptr<State> & state)
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_File"))
+		{
+			assert(payload->DataSize == sizeof(File*));
+			File* incoming_file = *(File * *)payload->Data;
+			if (incoming_file->file_type == FileType::ANIMATION)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				std::shared_ptr<Animation> animation = App->resources->Load<Animation>(meta.exported_file);
+				std::shared_ptr<Clip> new_clip = std::make_shared<Clip>(incoming_file->filename_no_extension, animation, false);
+				state->clip = new_clip;
+				state_machine->clips.push_back(new_clip);
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
 
 void PanelStateMachine::LeftPanel()
 {
