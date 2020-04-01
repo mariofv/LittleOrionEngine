@@ -24,6 +24,7 @@ void ComponentButton::InitData()
 
 void ComponentButton::Render(float4x4* projection)
 {
+
 	ComponentUI::Render(projection);
 }
 

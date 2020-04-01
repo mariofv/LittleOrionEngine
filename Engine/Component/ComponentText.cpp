@@ -5,6 +5,8 @@
 
 #include "Module/ModuleUI.h"
 
+#include "EditorUI/DebugDraw.h"  
+
 
 ComponentText::ComponentText() : ComponentUI(ComponentUI::UIType::TEXT)
 {
@@ -38,9 +40,9 @@ void ComponentText::Render(float4x4* projection)
 		glUseProgram(shader_program);
 		glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection"), 1, GL_TRUE, projection->ptr());
 		glUniform1i(glGetUniformLocation(shader_program, "text"), 0);
-		glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, owner->transform_2d.rect_matrix.ptr());
+		glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, float4x4::identity.ptr());
 		glUniform3fv(glGetUniformLocation(shader_program, "spriteColor"), 1, color.ptr());
-
+		//dd::plane(owner->transform_2d.position, );
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, ui_texture);
 		glBindVertexArray(vao);
@@ -51,7 +53,7 @@ void ComponentText::Render(float4x4* projection)
 		float y = 0.0f;
 		float text_witdh = 0;
 		float text_heigth = 0;
-		float scale_factor = scale / 1000;
+		float scale_factor = scale / 100;
 		for (c = text.begin(); c != text.end(); c++)
 		{
 			Character ch = App->ui->Characters[*c];
@@ -78,10 +80,7 @@ void ComponentText::Render(float4x4* projection)
 			// Update content of VBO memory
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // Be sure to use glBufferSubData and not glBufferData
-			if (xpos + w > owner->transform_2d.rect.Width())
-			{
-				x -= (ch.Advance >> 6);
-			}
+			
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			// Render quad
 			glDrawArrays(GL_TRIANGLES, 0, 6);
@@ -91,8 +90,7 @@ void ComponentText::Render(float4x4* projection)
 		}
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		text_witdh *= owner->transform_2d.rect.Width();
-		text_heigth *= owner->transform_2d.rect.Height();
+		owner->transform_2d.SetSize(text_witdh, text_heigth);
 	}
 }
 

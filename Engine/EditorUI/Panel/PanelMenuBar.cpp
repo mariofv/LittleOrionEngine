@@ -175,15 +175,17 @@ void PanelMenuBar::ShowGameObjectMenu()
 			ImGui::Separator();
 			if (ImGui::Selectable("Button"))
 			{
-				GameObject* created_game_object_text = App->scene->CreateGameObject();
-				created_game_object_text->name = "Text";
-				
-				created_game_object_text->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::TEXT);
-
 				GameObject* created_game_object = App->scene->CreateGameObject();
 				created_game_object->name = "Button";
 
+				GameObject* created_game_object_text = App->scene->CreateGameObject();
+				created_game_object_text->name = "Text";
+
+
 				created_game_object->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::BUTTON);
+
+				created_game_object_text->CreateComponent(Component::ComponentType::UI, ComponentUI::UIType::TEXT);
+
 				created_game_object->AddChild(created_game_object_text);
 
 				if (App->ui->main_canvas == nullptr)
