@@ -379,6 +379,22 @@ void ImGuiEx::Canvas::EnterLocalSpace()
     auto& fringeScale = ImFringeScaleRef(m_DrawList);
     m_LastFringeScale = fringeScale;
     fringeScale *= m_View.InvScale;
+
+	auto pViewport = ImGui::GetWindowViewport();
+
+	m_ViewportPosBackup = pViewport->Pos;
+	m_ViewportSizeBackup = pViewport->Size;
+
+	ImVec2 rMin = pViewport->Pos;
+	ImVec2 rMax = pViewport->Pos + pViewport->Size;
+
+	rMin.x = (rMin.x - m_ViewTransformPosition.x) * m_View.InvScale;
+	rMin.y = (rMin.y - m_ViewTransformPosition.y) * m_View.InvScale;
+	rMax.x = (rMax.x - m_ViewTransformPosition.x) * m_View.InvScale;
+	rMax.y = (rMax.y - m_ViewTransformPosition.y) * m_View.InvScale;
+
+	pViewport->Pos = rMin;
+	pViewport->Size = rMax - rMin;
 }
 
 void ImGuiEx::Canvas::LeaveLocalSpace()
@@ -449,4 +465,9 @@ void ImGuiEx::Canvas::LeaveLocalSpace()
     ImGui::PopClipRect();
 
     RestoreInputState();
+
+	auto pViewport = ImGui::GetWindowViewport();
+
+	pViewport->Pos = m_ViewportPosBackup;
+	pViewport->Size = m_ViewportSizeBackup;
 }

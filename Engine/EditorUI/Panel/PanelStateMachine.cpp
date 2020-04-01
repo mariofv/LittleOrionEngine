@@ -4,6 +4,7 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
+#include "imgui_internal.h"
 
 PanelStateMachine::PanelStateMachine()
 {
@@ -24,38 +25,37 @@ void PanelStateMachine::Render()
 {
 	if (ImGui::Begin(ICON_FA_PROJECT_DIAGRAM " State Machine", &opened, ImGuiWindowFlags_MenuBar))
 	{
-
 			ax::NodeEditor::SetCurrentEditor(editor_context);
-
-			LeftPanel();
-			ax::NodeEditor::Begin("My Editor");
 			{
-				/*if (ImGui::IsMouseClicked(1))
+				LeftPanel();
+				ax::NodeEditor::Begin("My Editor");
+				if (ImGui::IsMouseClicked(1))
 				{
 					ax::NodeEditor::Suspend();
 					ImGui::OpenPopup("Editor Menu");
 					ax::NodeEditor::Resume();
-				}*/
-				RenderStates();
-				//HandleInteraction();
-				//CreateNodeMenu();
-				ax::NodeEditor::End();
-				if (firstFrame)
-				{
-					ax::NodeEditor::NavigateToContent(0.0f);
 				}
+				RenderStates();
+				HandleInteraction();
+				CreateNodeMenu();
+			}
+			ax::NodeEditor::End();
+			if (firstFrame)
+			{
+				ax::NodeEditor::NavigateToContent(0.0f);
 				firstFrame = false;
 			}
+			ImGuiContext* context = ImGui::GetCurrentContext();
 
 	}
 	ImGui::End();
 }
 void PanelStateMachine::RenderStates() const
 {
-	int uniqueId = 5;
-	ImVec2 position(0,0);
+	ImVec2 position(10,10);
 	for (auto & node : nodes)
 	{
+		assert(!node->id.Invalid);
 		// Start drawing nodes.
 		if (firstFrame)
 		{
@@ -70,13 +70,16 @@ void PanelStateMachine::RenderStates() const
 			ImGui::Text("Out ->");
 			ax::NodeEditor::EndPin();
 		}
-		for (auto & output : node->outputs)
+		for (auto & inputs : node->inputs)
 		{
-			ax::NodeEditor::BeginPin(output, ax::NodeEditor::PinKind::Input);
+			ax::NodeEditor::BeginPin(inputs, ax::NodeEditor::PinKind::Input);
 			ImGui::Text("-> In");
 			ax::NodeEditor::EndPin();
 		}
 		ax::NodeEditor::EndNode();
+
+		position = ax::NodeEditor::GetNodePosition(node->id);
+		position.x+= ax::NodeEditor::GetNodeSize(node->id).x;
 
 	}
 	for (auto& linkInfo : links)
@@ -87,7 +90,40 @@ void PanelStateMachine::RenderStates() const
 
 void PanelStateMachine::HandleInteraction()
 {
-	
+	if (ax::NodeEditor::BeginCreate())
+	{
+		ax::NodeEditor::PinId input_pin_id, output_pin_id;
+		if (ax::NodeEditor::QueryNewLink(&input_pin_id, &output_pin_id))
+		{
+			if (input_pin_id && output_pin_id)
+			{
+				if (ax::NodeEditor::AcceptNewItem())
+				{
+					// Since we accepted new link, lets add one to our list of links.
+					std::shared_ptr<Transition> new_transition = std::make_shared<Transition>();
+					for (auto node : nodes)
+					{
+						auto& it_input = std::find(node->inputs.begin(), node->inputs.end(), input_pin_id);
+						if (it_input != node->inputs.end())
+						{
+							new_transition->source_hash = node->state->name_hash;
+						}
+						auto& it_output = std::find(node->outputs.begin(), node->outputs.end(), output_pin_id);
+						if (it_output != node->outputs.end())
+						{
+							new_transition->target_hash = node->state->name_hash;
+						}
+					}
+					links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) , input_pin_id, output_pin_id, new_transition });
+
+					// Draw new link.
+					ax::NodeEditor::Link(links.back()->id, links.back()->input_id, links.back()->output_id);
+				}
+
+			}
+		}
+	}
+	ax::NodeEditor::EndCreate(); // Wraps up object creation action handling.
 }
 void PanelStateMachine::CreateNodeMenu()
 {
@@ -122,6 +158,8 @@ void PanelStateMachine::LeftPanel()
 }
 void PanelStateMachine::OpenStateMachine(const File & file)
 {
+	nodes.clear();
+	links.clear();
 	state_machine = std::make_shared<StateMachine>(file.file_path);
 	state_machine->Load(file);
 
@@ -149,6 +187,14 @@ void PanelStateMachine::OpenStateMachine(const File & file)
 			{
 				node->outputs.push_back(link->input_id);
 			}
+		}
+		if (node->state->name_hash == entry_hash && node->outputs.size() == 0)
+		{
+			node->outputs.push_back(uniqueid++);
+		}
+		if (node->state->name_hash == end_hash && node->inputs.size() == 0)
+		{
+			node->inputs.push_back(uniqueid++);
 		}
 		nodes.push_back(node);
 	}

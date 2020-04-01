@@ -12,7 +12,6 @@
 ComponentAnimation::ComponentAnimation() : Component(nullptr, ComponentType::ANIMATION)
 {
 	animation_controller = new AnimController();
-	SetAnimation(App->resources->Load<Animation>("Library/Metadata/38/3800295065"));
 	
 }
 

@@ -48,7 +48,7 @@ private:
 	//Editor
 	ImVector<LinkInfo*> links;
 	ImVector<NodeInfo*> nodes;
-	int uniqueid = 0;
+	int uniqueid = 1;
 };
 #endif // !_PANELSTATEMACHINE_H_
 
