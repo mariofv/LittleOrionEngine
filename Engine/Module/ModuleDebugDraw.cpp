@@ -10,16 +10,15 @@
 #include "EditorUI/Panel/PanelNavMesh.h"
 
 #include "Main/Application.h"
-#include "Module/ModuleAI.h"
+#include "ModuleAI.h"
 #include "ModuleAnimation.h"
 #include "ModuleCamera.h"
-#include "ModuleEditor.h"
 #include "ModuleDebug.h"
+#include "ModuleEditor.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 #include "ModuleWindow.h"
-#include "ModuleUI.h"
 #include "SpacePartition/OLQuadTree.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
@@ -453,8 +452,6 @@ void ModuleDebugDraw::Render()
 	}
 
 	RenderBillboards();
-	RenderCanvas();
-
 
 	if (App->debug->show_grid)
 	{
@@ -490,9 +487,8 @@ void ModuleDebugDraw::RenderLightGizmo() const
 	if (selected_light_component != nullptr)
   {	
 		ComponentLight* selected_light = static_cast<ComponentLight*>(selected_light_component);	
-		GameObject* selected_gameobject = selected_light->owner;
-		ComponentTransform* selected_light_transform = &selected_gameobject->transform;
-		float gizmo_radius = 2.5f;	
+		ComponentTransform* selected_light_transform = &selected_light->owner->transform;
+		float gizmo_radius = 2.5F;	
 		switch (selected_light->light_type)	
 		{	
 		case ComponentLight::LightType::DIRECTIONAL_LIGHT:	
@@ -660,15 +656,6 @@ void ModuleDebugDraw::RenderBillboards() const
 			camera_billboard->Render(object->transform.GetGlobalTranslation());
 		}
 	}
-}
-
-void ModuleDebugDraw::RenderCanvas() const
-{
-	/*for(auto &canvas: App->ui->canvases)
-	{
-		dd::box(canvas->owner->transform.GetTranslation(), float3::one, App->window->GetWidth() * 0.25f, App->window->GetHeight() * 0.25f, 0.01f);
-		dd::circle(canvas->owner->transform.GetTranslation(), float3(0, 0, 1), float3::one, 1.0f, 10);
-	}*/
 }
 
 void ModuleDebugDraw::RenderPathfinding() const

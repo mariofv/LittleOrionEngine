@@ -1,6 +1,8 @@
 #ifndef _COMPONENTCAMERA_H_
 #define _COMPONENTCAMERA_H_
 
+#define ENGINE_EXPORTS
+
 #include "Component.h"
 #include "Component/ComponentAABB.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
@@ -9,6 +11,7 @@
 #include "MathGeoLib.h"
 #include <GL/glew.h>
 
+class GameObject;
 class EditorActionModifyCamera;
 
 class ComponentCamera : public Component
@@ -53,20 +56,26 @@ public:
 	void SetNearDistance(float distance);
 	void SetFarDistance(float distance);
 	void SetOrientation(const float3 & orientation);
+	ENGINE_API void SetStartFocusPosition(const float3& focus_position);
+	ENGINE_API void SetGoalFocusPosition(const float3& focus_position);
+	ENGINE_API void SetFocusTime(const float focus_time);
+	ENGINE_API Frustum GetFrustum();
+
 	void AlignOrientationWithAxis();
-	void SetOrthographicSize(const float2 & size);
+	ENGINE_API void SetOrthographicSize(const float2 & size);
 	void LookAt(const float3 & focus);
 	void LookAt(float x, float y, float z);
 
-	void SetPosition(const float3 & position);
-	void MoveUp();
-	void MoveDown();
-	void MoveFoward();
-	void MoveBackward();
-	void MoveLeft();
-	void MoveRight();
+	ENGINE_API void SetPosition(const float3 & position);
+	ENGINE_API void MoveUp();
+	ENGINE_API void MoveDown();
+	ENGINE_API void MoveForward();
+	ENGINE_API void MoveBackward();
+	ENGINE_API void MoveLeft();
+	ENGINE_API void MoveRight();
 
-	void Center(const AABB &bounding_box);
+	ENGINE_API void Center(const AABB &bounding_box);
+	ENGINE_API void CenterGame(const GameObject* go);
 
 	void OrbitCameraWithMouseMotion(const float2 &motion, const float3& focus_point);
 	void OrbitX(float angle, const float3& focus_point);
@@ -77,7 +86,7 @@ public:
 	void RotateYaw(float angle);
 
 	void SetPerpesctiveView();
-	void SetOrthographicView();
+	ENGINE_API void SetOrthographicView();
 
 	void SetClearMode(ComponentCamera::ClearMode clear_mode);
 
@@ -93,7 +102,7 @@ public:
 	bool IsInsideFrustum(const AABB& aabb) const;
 	ComponentAABB::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
 
-	bool IsInsideFrustum(const AABB2D& aabb) const;
+	ENGINE_API bool IsInsideFrustum(const AABB2D& aabb) const;
 	ComponentAABB::CollisionState CheckAABB2DCollision(const AABB2D& reference_AABB) const;
 
 	void GetRay(const float2& normalized_position, LineSegment &return_value) const;
@@ -125,7 +134,9 @@ public:
 	float4x4 view;
 
 	bool toggle_msaa = false;
-	
+	bool is_focusing = false;
+
+private:
 	Frustum camera_frustum;
 	GLuint rbo = 0;
 	GLuint fbo = 0;
@@ -146,8 +157,6 @@ private:
 
 	bool is_speeding_up = false;
 	float speed_up = 1.f;
-
-	bool is_focusing = false;
 	const float CENTER_TIME = 250.f;
 	float start_focus_time = 0.f;
 	float3 start_focus_position = float3::zero;

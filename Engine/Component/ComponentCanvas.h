@@ -11,11 +11,11 @@ class ComponentCanvas : public ComponentUI
 public:
 	ComponentCanvas();
 	ComponentCanvas(GameObject * owner);
-	~ComponentCanvas() = default;
+	~ComponentCanvas();
 
 
 	void Delete() override;
-	void Render(float4x4*);
+	void Render(float4x4* projection);
 
 	void Save(Config& config) const override;
 	void Load(const Config &config) override;

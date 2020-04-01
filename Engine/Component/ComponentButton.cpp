@@ -1,25 +1,26 @@
 #include "ComponentButton.h"
+#include "ComponentText.h"
 
 #include "Main/Application.h"
 #include "Main/Gameobject.h"
-
-#include "Component/ComponentText.h"
 
 #include "Module/ModuleScene.h"
 
 ComponentButton::ComponentButton() : ComponentUI(ComponentUI::UIType::BUTTON)
 {
-	InitData();
 }
 
 ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::BUTTON)
 {
-	InitData();
+	if (owner->transform_2d.is_new)
+	{
+		owner->transform_2d.SetSize(170, 23);
+	}
 }
 
-void ComponentButton::InitData()
+ComponentButton::~ComponentButton()
 {
-	owner->transform_2d.SetSize(170, 23);
+	ComponentUI::~ComponentUI();
 }
 
 void ComponentButton::Render(float4x4* projection)

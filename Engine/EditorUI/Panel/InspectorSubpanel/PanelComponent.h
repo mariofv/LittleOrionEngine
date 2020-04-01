@@ -7,17 +7,17 @@
 
 class Component;
 class ComponentAnimation;
+class ComponentButton;
 class ComponentCamera;
 class ComponentCanvas;
 class ComponentImage;
 class ComponentMeshRenderer;
 class ComponentLight;
 class ComponentProgressBar;
-class ComponentScript;
+class ComponentUI;
 class ComponentText;
 class ComponentTransform;
-class ComponentUI;
-class ComponentButton;
+class ComponentScript;
 class GameObject;
 
 class PanelComponent
@@ -26,32 +26,33 @@ public:
 	PanelComponent() = default;
 	~PanelComponent() = default;
 
-	void ShowComponentTransformWindow(ComponentTransform *transform);
-	void ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh);
-	void ShowComponentCameraWindow(ComponentCamera *camera);
-	void ShowComponentLightWindow(ComponentLight *light);
-	void ShowComponentAnimationWindow(ComponentAnimation *animation);
-	void ShowComponentScriptWindow(ComponentScript * component_script);
-	void ShowComponentUIWindow(ComponentUI*);
+	void ShowComponentTransformWindow(ComponentTransform* transform);
+	void ShowComponentMeshRendererWindow(ComponentMeshRenderer* mesh);
+	void ShowComponentCameraWindow(ComponentCamera* camera);
+	void ShowComponentLightWindow(ComponentLight* light);
+	void ShowComponentAnimationWindow(ComponentAnimation* animation);
+	void ShowComponentScriptWindow(ComponentScript* component_script);
+	void ShowComponentUIWindow(ComponentUI* ui);
 	void ShowAddNewComponentButton();
 
-	void ShowScriptsCreated(ComponentScript*);
+	void ShowScriptsCreated(ComponentScript* component_script);
 
 	void CheckClickedCamera(ComponentCamera* camera);
 	void CheckClickForUndo(ModuleActions::UndoActionType type, Component* component);
 
-	ENGINE_API void DropGOTarget(GameObject *& go, const std::string & script_name, ComponentScript *& script_to_find);
+	ENGINE_API void DropGOTarget(GameObject*& go);
 
 private:
 	void DropMeshAndMaterial(ComponentMeshRenderer* component_mesh);
-	void ShowCommonUIWindow(ComponentUI*);
-	void ShowComponentCanvasWindow(ComponentCanvas*);
-	void ShowComponentProgressBarWindow(ComponentProgressBar*);
-	void ShowComponentImageWindow(ComponentImage*);
-	void ShowComponentTextWindow(ComponentText*);
-	void ShowComponentButtonWindow(ComponentButton*);
+	void ShowCommonUIWindow(ComponentUI* ui);
+	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
+	void ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar);
+	void ShowComponentImageWindow(ComponentImage* image);
+	void ShowComponentTextWindow(ComponentText* text);
+	void ShowComponentButtonWindow(ComponentButton* button);
 
 	void DropAnimationAndSkeleton(ComponentAnimation* component_animation);
+	void DropTexture(ComponentUI* ui);
 };
 
 #endif //_PANELCOMPONENT_H_

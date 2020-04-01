@@ -11,6 +11,7 @@
 #include "EditorUI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentImage.h"
@@ -22,7 +23,6 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentUI.h"
-#include "Component/ComponentButton.h"
 
 #include "Helper/Utils.h"
 #include "Math/Rect.h"
@@ -59,7 +59,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			}
 
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
-			if (ImGui::DragInt("Height", &transform_2d->rect.bottom, 1))
+			if (ImGui::DragInt("Width", &transform_2d->rect.right, 1))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
@@ -69,7 +69,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
 			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2);
 
-			if (ImGui::DragInt("Width", &transform_2d->rect.right, 1))
+			if (ImGui::DragInt("Height", &transform_2d->rect.bottom, 1))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
@@ -100,7 +100,17 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			}
 			//UndoRedo
 			CheckClickForUndo(ModuleActions::UndoActionType::TRANSLATION, transform);
-
+			
+			if (ImGui::DragFloat3("Rotation", transform->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
+			{
+				transform->rotation = Utils::GenerateQuatFromDegFloat3(transform->rotation_degrees);
+				transform->rotation_radians = Utils::Float3DegToRad(transform->rotation_degrees);
+				transform->OnTransformChange();
+				transform->modified_by_user = true;
+			}
+			//UndoRedo
+			CheckClickForUndo(ModuleActions::UndoActionType::ROTATION, transform);
+			
 			if (ImGui::DragFloat3("Scale", transform->scale.ptr(), 0.01f))
 			{
 				transform->OnTransformChange();
@@ -419,8 +429,8 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 
 		if (ImGui::Button("Delete"))
 		{
-			App->actions->DeleteComponentUndo(component_script);
-
+			component_script->owner->RemoveComponent(component_script);
+			App->scripts->RemoveComponentScript(component_script);
 			return;
 		}
 		ImGui::SameLine();
@@ -473,8 +483,6 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* image) {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonUIWindow(image);
-		ImGui::Separator();
-		ImGui::InputInt("Texture", (int*)(&image->ui_texture));
 	}
 }
 
@@ -484,23 +492,21 @@ void PanelComponent::ShowComponentProgressBarWindow(ComponentProgressBar* progre
 	{
 		ShowCommonUIWindow(progress_bar);
 		ImGui::Separator();
-		ImGui::InputInt("Background", (int*)(&progress_bar->ui_texture));
-		ImGui::Separator();
 		ImGui::DragFloat("Bar Value", &progress_bar->percentage, 0.1F, 0.0F, 100.0F);
 		ImGui::InputInt("Bar Image", (int*)(&progress_bar->bar_texture));
 		ImGui::ColorPicker3("Bar Color", progress_bar->bar_color.ptr());
 	}
 }
 
-void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
+void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(txt);
+		ShowCommonUIWindow(text);
 		ImGui::Separator();		
-		ImGui::InputText("Text", &txt->text);
+		ImGui::InputText("Text", &text->text);
 		ImGui::Separator();
-		ImGui::DragFloat("Font Size", (float*)(&txt->scale));
+		ImGui::DragFloat("Font Size", (float*)(&text->scale));
 		
 	}
 }
@@ -509,7 +515,6 @@ void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Button", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonUIWindow(button);
-		ImGui::InputInt("Texture", (int*)(&button->ui_texture));
 	}
 }
 
@@ -707,7 +712,27 @@ void PanelComponent::DropAnimationAndSkeleton(ComponentAnimation* component_anim
 	}
 }
 
-ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go, const std::string& script_name, ComponentScript*& script_to_find)
+void PanelComponent::DropTexture(ComponentUI* ui)
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_File"))
+		{
+			assert(payload->DataSize == sizeof(File*));
+			File* incoming_file = *(File * *)payload->Data;
+			if (incoming_file->file_type == FileType::TEXTURE)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				ui->ui_texture = App->resources->Load<Texture>(meta.exported_file)->opengl_texture;
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
+
+ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go)
 {
 	if (ImGui::BeginDragDropTarget())
 	{
@@ -715,19 +740,7 @@ ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go, const std::string&
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			for (unsigned int i = 0; i < incoming_game_object->components.size(); ++i)
-			{
-
-				if (incoming_game_object->components[i]->type == Component::ComponentType::SCRIPT)
-				{
-					ComponentScript *script = (ComponentScript *)incoming_game_object->components[i];
-					if (script->name == script_name)
-					{
-						go = incoming_game_object;
-						script_to_find = script;
-					}
-				}
-			}
+			go = incoming_game_object;
 		}
 		ImGui::EndDragDropTarget();
 	}
@@ -748,5 +761,13 @@ void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 		return;
 	}
 	ImGui::Separator();
+	if (ImGui::DragFloat("Layer", &ui->owner->transform_2d.position.z, 1.0F, -MAX_NUM_LAYERS, MAX_NUM_LAYERS))
+	{
+		ui->owner->transform_2d.OnTransformChange();
+	}
+	ImGui::Separator();
+	ImGui::InputInt("Texture", (int*)(&ui->ui_texture));
+	DropTexture(ui);
+
 	ImGui::ColorPicker3("Color", ui->color.ptr());
 }

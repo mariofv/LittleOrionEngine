@@ -8,12 +8,12 @@ class ComponentImage : public ComponentUI
 public:
 	ComponentImage();
 	ComponentImage(GameObject * owner);
-	~ComponentImage() = default;
+	~ComponentImage();
 
 	void Delete();
 
 	void Save(Config& config) const;
 	void Load(const Config& config);
-	void Render(float4x4*);
+	void Render(float4x4* projection);
 };
 #endif

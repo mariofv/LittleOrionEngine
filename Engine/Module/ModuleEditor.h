@@ -1,6 +1,8 @@
 #ifndef _MODULEEDITOR_H_
 #define _MODULEEDITOR_H_
 
+#define ENGINE_EXPORTS
+
 #include "Module.h"
 #include "Main/Globals.h"
 #include "ResourceManagement/Resources/Texture.h"
@@ -43,7 +45,7 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	void OpenScene(const std::string &path) const;
+	ENGINE_API void OpenScene(const std::string &path) const;
 	void SaveScene(const std::string &path) const;
 
 	void Render();

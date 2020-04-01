@@ -9,11 +9,13 @@
 #include "GL/glew.h"
 #include "Main/Globals.h"
 #include "Main/Application.h"
-#include "Main/Gameobject.h"
+#include "Main/GameObject.h"
 
-#include "ModuleUI.h"
 #include "ModuleEditor.h"
+#include "ModuleScene.h"
+#include "ModuleUI.h"
 #include "ModuleWindow.h"
+
 
 #include "SDL/SDL.h"
 
@@ -42,35 +44,37 @@ void ModuleUI::Render(const ComponentCamera* camera)
 {
 	window_width = App->editor->scene_panel->scene_window_content_area_width;
 	window_height = App->editor->scene_panel->scene_window_content_area_height;
-	float4x4 projection = float4x4::D3DOrthoProjLH(-1, 1, window_width, window_height);
-	
-	for (auto &ui : ui_elements)
+	float4x4 projection = float4x4::D3DOrthoProjLH(-1, MAX_NUM_LAYERS, window_width, window_height);
+	if (main_canvas != nullptr)
 	{
-		//look for canvas and iterate
-		ui->Render(&projection);
+		RenderUIGameObject(main_canvas->owner, &projection);
 	}
-	//if (main_canvas != nullptr)
-	//{
-	//	for (auto &child : main_canvas->owner->children)
-	//	{
-	//		//ComponentUI::Re
-	//	}
-	//	
-	//}
+}
+
+void  ModuleUI::RenderUIGameObject(GameObject* parent, float4x4* projection)
+{
+	for (auto child : parent->children)
+	{
+		ComponentUI* ui = static_cast<ComponentUI*>(child->GetComponent(Component::ComponentType::UI));
+		if (ui)
+		{
+			ui->Render(projection);
+		}
+		RenderUIGameObject(child, projection);
+	}
 }
 
 ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* owner)
 {
-	ComponentUI* new_ui;
+	ComponentUI* new_ui = nullptr;
 	switch (type)
 	{
 		case ComponentUI::UIType::CANVAS:
 			if (main_canvas == nullptr)
 			{
 				main_canvas = new ComponentCanvas(owner);
-				new_ui = main_canvas;
 			}
-			new_ui = new ComponentCanvas(owner);
+			new_ui = main_canvas;
 			break;
 		case ComponentUI::UIType::IMAGE:
 			new_ui = new ComponentImage(owner);
@@ -95,6 +99,10 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* o
 void ModuleUI::RemoveComponentUI(ComponentUI* ui_to_remove)
 {
 	auto it = std::find(ui_elements.begin(), ui_elements.end(), ui_to_remove);
+	if (*it == main_canvas)
+	{
+		main_canvas = nullptr;
+	}
 	if (it != ui_elements.end())
 	{
 		delete *it;

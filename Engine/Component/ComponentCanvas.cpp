@@ -15,12 +15,17 @@ ComponentCanvas::ComponentCanvas(GameObject * owner) : ComponentUI(owner, Compon
 	
 }
 
+ComponentCanvas::~ComponentCanvas()
+{
+	ComponentUI::~ComponentUI();
+}
 
 void ComponentCanvas::Render(float4x4* projection) 
 {
+	/*owner->transform_2d.position.x = -App->ui->window_width / 2;
+	owner->transform_2d.position.y = -App->ui->window_height / 2;
+	owner->transform_2d.SetSize(App->ui->window_width, App->ui->window_height);*/
 	ComponentUI::Render(projection);
-	owner->transform_2d.position.x = -App->ui->window_width / 2;
-	owner->transform_2d.position.y = App->ui->window_height / 2;
 }
 
 void ComponentCanvas::Delete()

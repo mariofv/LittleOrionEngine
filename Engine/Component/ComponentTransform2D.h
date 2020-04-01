@@ -1,5 +1,8 @@
 #ifndef _COMPONENTTRANSFORM2D_H_
 #define _COMPONENTTRANSFORM2D_H_
+
+#define ENGINE_EXPORTS
+
 #include "Component.h"
 class ComponentTransform2D : public Component
 {
@@ -16,14 +19,6 @@ public:
 	ComponentTransform2D & operator=(const ComponentTransform2D & component_to_copy);
 	ComponentTransform2D & operator=(ComponentTransform2D && component_to_move) = default;
 
-	math::Rect rect = math::Rect(0, 0, 10, 10);
-	float rotation = 0.0f;
-	float2 position = float2::zero;
-	float2 scale = float2::one;
-	float4x4 global_matrix = float4x4::identity;
-	float4x4 model_matrix = float4x4::identity;
-	float4x4 rect_matrix = float4x4::identity;
-
 	// Heredado vía Component
 	virtual void Delete() override;
 	virtual Component * Clone(bool create_on_module = true) const override;
@@ -33,10 +28,20 @@ public:
 
 	void GenerateGlobalModelMatrix();
 	void SetSize(float width, float height);
+	ENGINE_API void SetPosition(float x, float y);
 private:
 	void OnTransformChange();
-
 	friend class PanelComponent;
+
+public:
+	bool is_new = true;
+	math::Rect rect = math::Rect(0, 0, 10, 10);
+	float rotation = 0.0f;
+	float3 position = float3::zero;
+	float2 scale = float2::one;
+	float4x4 global_matrix = float4x4::identity;
+	float4x4 model_matrix = float4x4::identity;
+	float4x4 rect_matrix = float4x4::identity;
 };
 #endif
 

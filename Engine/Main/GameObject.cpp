@@ -60,8 +60,7 @@ GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_
 	aabb.owner = this;
 	*this << gameobject_to_copy;
 }
-
-GameObject& GameObject::operator<<(const GameObject & gameobject_to_copy)
+GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
 {
 
 	if(!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
@@ -82,7 +81,7 @@ GameObject& GameObject::operator<<(const GameObject & gameobject_to_copy)
 	return *this;
 }
 
-void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
+void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 {
 	children_to_remove.push_back(this);
 	if(!is_static)
@@ -189,7 +188,7 @@ bool GameObject::IsStatic() const
 	return is_static;
 }
 
-bool GameObject::IsVisible(const ComponentCamera & camera) const
+bool GameObject::IsVisible(const ComponentCamera& camera) const
 {
 	ComponentMeshRenderer* mesh = static_cast<ComponentMeshRenderer*>(GetComponent(Component::ComponentType::MESH_RENDERER));
 	if ((mesh != nullptr && !mesh->IsEnabled()) || !IsEnabled() || !camera.IsInsideFrustum(aabb.bounding_box))
@@ -267,15 +266,20 @@ void GameObject::Load(const Config& config)
 		assert(component_type_uint != 0);
 		
 		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
+		Component* created_component = nullptr;
 		if (component_type == Component::ComponentType::UI) {
 			ui_type = ComponentUI::UIType(gameobject_components_config[i].GetUInt("UIType", 0));
+			created_component = CreateComponentUI(ui_type);
 		}
-		Component* created_component = CreateComponent(component_type, ui_type);
+		else
+		{
+			created_component = CreateComponent(component_type);
+		}
 		created_component->Load(gameobject_components_config[i]);
 	}
 }
 
-void GameObject::SetParent(GameObject *new_parent)
+void GameObject::SetParent(GameObject* new_parent)
 {
 	if (new_parent == parent)
 	{
@@ -290,7 +294,7 @@ void GameObject::SetParent(GameObject *new_parent)
 	new_parent->AddChild(this);
 }
 
-void GameObject::AddChild(GameObject *child)
+void GameObject::AddChild(GameObject* child)
 {
 	if (child->parent != nullptr)
 	{
@@ -305,7 +309,7 @@ void GameObject::AddChild(GameObject *child)
 	children.push_back(child);
 }
 
-void GameObject::RemoveChild(GameObject *child)
+void GameObject::RemoveChild(GameObject* child)
 {
 	std::vector<GameObject*>::iterator found = std::find(children.begin(), children.end(), child);
 	if (found == children.end())
@@ -319,7 +323,7 @@ void GameObject::RemoveChild(GameObject *child)
 }
 
 
-ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type, const ComponentUI::UIType ui_type)
+ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type)
 {
 	Component *created_component;
 	switch (type)
@@ -334,9 +338,6 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 
 	case Component::ComponentType::LIGHT:
 		created_component = App->lights->CreateComponentLight();
-		break;
-	case Component::ComponentType::UI:
-		created_component = App->ui->CreateComponentUI(ui_type, this);
 		break;
 	case Component::ComponentType::SCRIPT:
 		created_component = App->scripts->CreateComponentScript();
@@ -356,7 +357,15 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	return created_component;
 }
 
-void GameObject::RemoveComponent(Component * component_to_remove) 
+
+ENGINE_API Component* GameObject::CreateComponentUI(const ComponentUI::UIType ui_type)
+{
+	Component *created_component = App->ui->CreateComponentUI(ui_type, this);
+	components.push_back(created_component);
+	return created_component;
+}
+
+void GameObject::RemoveComponent(Component* component_to_remove) 
 {
 	auto it = std::find(components.begin(), components.end(), component_to_remove);
 	if (it != components.end()) 
@@ -375,6 +384,24 @@ ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType ty
 			return components[i];
 		}
 	}
+	return nullptr;
+}
+
+ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) const
+{
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+
+		if (components[i]->type == Component::ComponentType::SCRIPT)
+		{
+			ComponentScript *script = (ComponentScript *)components[i];
+			if (script->name == name)
+			{
+				return script;
+			}
+		}
+	}
+
 	return nullptr;
 }
 
@@ -448,7 +475,35 @@ void GameObject::SetHierarchyDepth(int value)
 	hierarchy_depth = value;
 }
 
-void GameObject::CopyComponents(const GameObject & gameobject_to_copy)
+GameObject * GameObject::GetPrefabParent() 
+{
+	GameObject *to_reimport = this;
+	bool prefab_parent = is_prefab_parent;
+	while (to_reimport && !prefab_parent)
+	{
+		to_reimport = to_reimport->parent;
+		prefab_parent = to_reimport->is_prefab_parent;
+	}
+	return to_reimport;
+}
+
+void GameObject::UnpackPrefab()
+{
+	assert(!original_prefab);
+	if (is_prefab_parent)
+	{
+		prefab_reference->RemoveInstance(this);
+		is_prefab_parent = false;
+	}
+	prefab_reference = nullptr;
+	original_UUID = false;
+	for (auto & child : children)
+	{
+		child->UnpackPrefab();
+	}
+}
+
+void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 {
 	this->components.reserve(gameobject_to_copy.components.size());
 	for (auto component : gameobject_to_copy.components)

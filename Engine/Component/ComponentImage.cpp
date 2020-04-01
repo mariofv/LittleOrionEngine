@@ -8,7 +8,15 @@ ComponentImage::ComponentImage() : ComponentUI(ComponentUI::UIType::IMAGE)
 
 ComponentImage::ComponentImage(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::IMAGE)
 {
-	owner->transform_2d.SetSize(100, 100);
+	if (owner->transform_2d.is_new)
+	{
+		owner->transform_2d.SetSize(100, 100);
+	}
+}
+
+ComponentImage::~ComponentImage()
+{
+	ComponentUI::~ComponentUI();
 }
 
 void ComponentImage::Render(float4x4* projection)
