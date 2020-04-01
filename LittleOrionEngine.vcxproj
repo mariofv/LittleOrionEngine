@@ -221,8 +221,9 @@
     <ClInclude Include="Engine\AI\NavMesh.h" />
     <ClInclude Include="Engine\Module\ModuleAI.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelNavMesh.h" />
-    <ClInclude Include="Engine\Animation\StateMachineManager.h" />
+    <ClInclude Include="Engine\ResourceManagement\Loaders\StateMachineManager.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelStateMachine.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\StateMachineImporter.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -368,8 +369,9 @@
     <ClCompile Include="Engine\AI\NavMesh.cpp" />
     <ClCompile Include="Engine\Module\ModuleAI.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelNavMesh.cpp" />
-    <ClCompile Include="Engine\Animation\StateMachineManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Loaders\StateMachineManager.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelStateMachine.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\StateMachineImporter.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

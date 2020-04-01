@@ -415,9 +415,6 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Animation\StateMachineManager.cpp">
-      <Filter>Engine\Animation</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Resources\StateMachine.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
@@ -435,6 +432,12 @@
     </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\PanelStateMachine.cpp">
       <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\StateMachineImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\StateMachineManager.cpp">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -831,14 +834,17 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Animation\StateMachineManager.h">
-      <Filter>Engine\Animation</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\StateMachine.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PanelStateMachine.h">
       <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\StateMachineImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\StateMachineManager.h">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
