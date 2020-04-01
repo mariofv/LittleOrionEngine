@@ -124,6 +124,7 @@ void SceneManager::Load(const std::string &path) const
 		}
 	}
 	App->scripts->ReLink();
+	App->animations->UpdateAnimationMeshes();
 }
 
 
