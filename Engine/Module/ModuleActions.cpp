@@ -15,6 +15,8 @@
 #include "Actions/EditorActionTranslate.h"
 #include "Actions/EditorActionRotation.h"
 #include "Actions/EditorActionScale.h"
+#include "Actions/EditorActionrect2D.h"
+#include "Actions/EditorActionRotation2D.h"
 #include "Actions/EditorAction.h"
 
 
@@ -120,6 +122,22 @@ void ModuleActions::AddUndoAction(UndoActionType type)
 		new_action = new EditorActionScale(
 			previous_transform,
 			App->editor->selected_game_object->transform.GetScale(),
+			App->editor->selected_game_object
+		);
+		break;
+
+	case UndoActionType::EDIT_RECT2D:
+		new_action = new EditorActionRect2D(
+			(ComponentTransform2D*)action_component,
+			App->editor->selected_game_object->transform_2d.rect,
+			App->editor->selected_game_object
+		);
+		break; 
+	
+	case UndoActionType::EDIT_RECT2D_ROTATION:
+		new_action = new EditorActionRotation2D(
+			(ComponentTransform2D*)action_component,
+			App->editor->selected_game_object->transform_2d.rotation,
 			App->editor->selected_game_object
 		);
 		break;

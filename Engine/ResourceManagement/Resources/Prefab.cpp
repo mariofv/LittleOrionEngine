@@ -9,7 +9,6 @@
 
 Prefab::Prefab(std::vector<std::unique_ptr<GameObject>> && gameObjects, uint32_t UID, const std::string & exported_file) : Resource(UID, exported_file), prefab(std::move(gameObjects))
 {
-
 }
 GameObject * Prefab::Instantiate(GameObject * prefab_parent, std::unordered_map<int64_t, int64_t> * UUIDS_pairs)
 {
@@ -46,10 +45,17 @@ GameObject * Prefab::Instantiate(GameObject * prefab_parent, std::unordered_map<
 
 void Prefab::Apply(GameObject * new_reference)
 {
-	App->resources->CreatePrefab(exported_file, new_reference);
-	ImportResult import_result = App->resources->Import(File(exported_file));
+	if (imported_file.empty())
+	{
+		std::string uid_string = exported_file.substr(exported_file.find_last_of("/") + 1, exported_file.size());
+		uint32_t real_uuid = std::stoul(uid_string);
+		imported_file = App->resources->resource_DB->GetEntry(real_uuid)->imported_file;
+	}
+	App->resources->CreatePrefab(imported_file, new_reference);
+	ImportResult import_result = App->resources->Import(File(imported_file));
 	if (import_result.success)
 	{
+		*prefab.front().get() << *new_reference;
 		RecursiveRewrite(prefab.front().get(), new_reference, true, false);
 		for (auto old_instance : instances)
 		{

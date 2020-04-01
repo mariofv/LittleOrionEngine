@@ -7,10 +7,16 @@
 
 class Component;
 class ComponentAnimation;
+class ComponentButton;
 class ComponentCamera;
+class ComponentCanvas;
+class ComponentImage;
 class ComponentMeshRenderer;
-class ComponentTransform;
 class ComponentLight;
+class ComponentProgressBar;
+class ComponentUI;
+class ComponentText;
+class ComponentTransform;
 class ComponentScript;
 class GameObject;
 
@@ -26,7 +32,7 @@ public:
 	void ShowComponentLightWindow(ComponentLight *light);
 	void ShowComponentAnimationWindow(ComponentAnimation *animation);
 	void ShowComponentScriptWindow(ComponentScript * component_script);
-	
+	void ShowComponentUIWindow(ComponentUI*);
 	void ShowAddNewComponentButton();
 
 	void ShowScriptsCreated(ComponentScript*);
@@ -34,10 +40,17 @@ public:
 	void CheckClickedCamera(ComponentCamera* camera);
 	void CheckClickForUndo(ModuleActions::UndoActionType type, Component* component);
 
-	ENGINE_API void DropGOTarget(GameObject *& go, const std::string & script_name, ComponentScript *& script_to_find);
+	ENGINE_API void DropGOTarget(GameObject*& go);
 
 private:
 	void DropMeshAndMaterial(ComponentMeshRenderer* component_mesh);
+	void ShowCommonUIWindow(ComponentUI*);
+	void ShowComponentCanvasWindow(ComponentCanvas*);
+	void ShowComponentProgressBarWindow(ComponentProgressBar*);
+	void ShowComponentImageWindow(ComponentImage*);
+	void ShowComponentTextWindow(ComponentText*);
+	void ShowComponentButtonWindow(ComponentButton*);
+
 	void DropAnimationAndSkeleton(ComponentAnimation* component_animation);
 };
 

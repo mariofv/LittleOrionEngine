@@ -22,7 +22,7 @@ public:
 	GameObject* AddGameObject(std::unique_ptr<GameObject> & game_object_to_add);
 
 	GameObject* GetRoot() const;
-	GameObject* GetGameObject(uint64_t UUID) const;
+	ENGINE_API GameObject* GetGameObject(uint64_t UUID) const;
 	Component* GetComponent(uint64_t UUID) const;
 
 	void DeleteCurrentScene();
@@ -30,6 +30,9 @@ public:
 
 private:
 	GameObject *root = nullptr;
+	
+
+	
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
 
 	friend class PanelScene;

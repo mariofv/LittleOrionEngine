@@ -2,9 +2,14 @@
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentCanvas.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentText.h"
+#include "Component/ComponentTransform.h"
+#include "Component/ComponentUI.h"
+#include "Component/ComponentButton.h"
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "Main/Application.h"
@@ -30,7 +35,11 @@ void PanelGameObject::Render(GameObject* game_object)
 	{
 		return;
 	}
-	ImGui::Checkbox("", &game_object->active);
+	
+	if (ImGui::Checkbox("###State", &game_object->active)) 
+	{
+		game_object->SetEnabled(game_object->active);
+	}
 
 	ImGui::SameLine();
 	ImGui::Text(ICON_FA_CUBE);
@@ -83,6 +92,9 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::SCRIPT:
 				component_panel.ShowComponentScriptWindow(static_cast<ComponentScript*>(component));
 				break;
+			case Component::ComponentType::UI:
+				component_panel.ShowComponentUIWindow(static_cast<ComponentUI*>(component));
+				break;
 			case Component::ComponentType::ANIMATION:
 				component_panel.ShowComponentAnimationWindow(static_cast<ComponentAnimation*>(component));
 				break;
@@ -110,26 +122,13 @@ void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
 	ImGui::SameLine();
 	if(game_object->prefab_reference->IsOverwritable() && ImGui::Button("Apply"))
 	{
-
-		GameObject *to_reimport = GetPrefabParent(game_object);
+		GameObject *to_reimport = game_object->GetPrefabParent();
 		to_reimport->prefab_reference->Apply(to_reimport);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Revert"))
 	{
-		GameObject *to_reimport = GetPrefabParent(game_object);
+		GameObject *to_reimport = game_object->GetPrefabParent();
 		to_reimport->prefab_reference->Revert(to_reimport);
 	}
-}
-
-GameObject* PanelGameObject::GetPrefabParent(GameObject* game_object)
-{
-	GameObject *to_reimport = game_object;
-	bool prefab_parent = game_object->is_prefab_parent;
-	while (to_reimport && !prefab_parent)
-	{
-		to_reimport = to_reimport->parent;
-		prefab_parent = to_reimport->is_prefab_parent;
-	}
-	return to_reimport;
 }

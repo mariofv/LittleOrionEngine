@@ -76,7 +76,9 @@ public:
 	void RenderNavMesh(ComponentCamera& camera);
 	void InitAABB();
 
-	bool FindPath(float3& start, float3& end, std::vector<float3>& path);
+	bool FindPath(float3& start, float3& end, std::vector<float3>& path, PathMode path_mode);
+	bool IsPointWalkable(float3 & target_position);
+	bool FindNextPolyByDirection(float3& position, float3& next_position);
 
 	void SaveNavMesh(unsigned char* nav_data, unsigned int nav_data_size) const;
 	void LoadNavMesh();
@@ -161,7 +163,7 @@ private:
 	dtNavMesh* nav_mesh = nullptr;
 	unsigned char nav_mesh_draw_flags;
 
-	PathMode path_mode = PathMode::FOLLOW_PATH;
+	//PathMode path_mode = PathMode::FOLLOW_PATH;
 
 
 	static const int MAX_POLYS = 256;

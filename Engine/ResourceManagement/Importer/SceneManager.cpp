@@ -9,6 +9,7 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleScriptManager.h"
 
 #include "ResourceManagement/Resources/Prefab.h"
 
@@ -122,7 +123,7 @@ void SceneManager::Load(const std::string &path) const
 			prefab_parents[created_game_object->UUID]->transform = previous_transform;
 		}
 	}
-	App->animations->UpdateAnimationMeshes();
+	App->scripts->ReLink();
 }
 
 

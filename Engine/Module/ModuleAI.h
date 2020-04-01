@@ -1,5 +1,6 @@
 #ifndef _MODULEAI_H_
 #define _MODULEAI_H_
+#define ENGINE_EXPORTS
 
 #include "AI/NavMesh.h"
 #include "Module/Module.h"
@@ -21,6 +22,8 @@ public:
 	void RenderNavMesh(ComponentCamera& camera);
 
 	bool FindPath();
+	ENGINE_API bool IsPointWalkable(float3& target_position);
+	ENGINE_API bool FindNextPolyByDirection(float3& position, float3& next_position);
 
 public:
 	std::vector<float3> debug_path;
