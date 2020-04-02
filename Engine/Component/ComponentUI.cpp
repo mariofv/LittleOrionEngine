@@ -94,7 +94,10 @@ void ComponentUI::Save(Config& config) const
 	config.AddUInt((unsigned int)ui_type, "UIType");
 	config.AddUInt(ui_texture, "Texture");
 	config.AddFloat3(color, "Color");
-	config.AddString(meta_path, "Metapath");
+	if (texture_to_render != nullptr)
+	{
+		config.AddString(texture_to_render->exported_file, "MetadataPath");
+	}
 }
 
 void ComponentUI::Load(const Config& config)
@@ -103,13 +106,17 @@ void ComponentUI::Load(const Config& config)
 	active = config.GetBool("Active", true);
 	ui_texture = config.GetUInt("Texture", 0);
 	config.GetFloat3("Color", color, float3::one);
-	config.GetString("Metapath", meta_path, "");
-	if(meta_path != "")
+	config.GetString("MetadataPath", metadata_path, "");
+	if(metadata_path != "")
 	{
-		ImportOptions meta;
-		Importer::GetOptionsFromMeta(meta_path, meta);
-		texture_to_render = App->resources->Load<Texture>(meta.exported_file);
-		ui_texture = texture_to_render->opengl_texture;
+		SetTextureToRender(App->resources->Load<Texture>(metadata_path));
 	}
 	InitData();
+}
+
+void ComponentUI::SetTextureToRender(const std::shared_ptr<Texture>& new_texture)
+{
+	texture_to_render = new_texture;
+	metadata_path = texture_to_render->exported_file;
+	ui_texture = texture_to_render->opengl_texture;
 }

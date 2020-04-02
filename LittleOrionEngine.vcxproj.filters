@@ -415,15 +415,33 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp" />
-    <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp" />
-    <ClCompile Include="Engine\Component\ComponentButton.cpp" />
-    <ClCompile Include="Engine\Component\ComponentCanvas.cpp" />
-    <ClCompile Include="Engine\Component\ComponentImage.cpp" />
-    <ClCompile Include="Engine\Component\ComponentProgressBar.cpp" />
-    <ClCompile Include="Engine\Component\ComponentText.cpp" />
-    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp" />
-    <ClCompile Include="Engine\Component\ComponentUI.cpp" />
+    <ClCompile Include="Engine\Component\ComponentButton.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentCanvas.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentImage.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentProgressBar.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentText.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentUI.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -819,15 +837,33 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Actions\EditorActionRect2D.h" />
-    <ClInclude Include="Engine\Actions\EditorActionRotation2D.h" />
-    <ClInclude Include="Engine\Component\ComponentButton.h" />
-    <ClInclude Include="Engine\Component\ComponentCanvas.h" />
-    <ClInclude Include="Engine\Component\ComponentImage.h" />
-    <ClInclude Include="Engine\Component\ComponentProgressBar.h" />
-    <ClInclude Include="Engine\Component\ComponentText.h" />
-    <ClInclude Include="Engine\Component\ComponentTransform2D.h" />
-    <ClInclude Include="Engine\Component\ComponentUI.h" />
+    <ClInclude Include="Engine\Component\ComponentButton.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCanvas.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentImage.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentProgressBar.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentText.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentTransform2D.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentUI.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionRect2D.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionRotation2D.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
