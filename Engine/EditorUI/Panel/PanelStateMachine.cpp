@@ -106,7 +106,12 @@ void PanelStateMachine::RenderStates()
 		}
 		ImGui::EndGroup();
 		ax::NodeEditor::EndNode();
-
+		if (ImGui::IsMouseClicked(1) && ImGui::IsItemHovered())
+		{
+			ax::NodeEditor::Suspend();
+			ImGui::OpenPopup("Create State");
+			ax::NodeEditor::Resume();
+		}
 		position = ax::NodeEditor::GetNodePosition(node->id);
 		position.x+= ax::NodeEditor::GetNodeSize(node->id).x;
 
@@ -236,9 +241,51 @@ void PanelStateMachine::CreateNodeMenu()
 			}
 			ImGui::EndMenu();
 		}
+		std::vector<NodeInfo*>selected_nodes = GetSelectedNodes();
+		if (selected_nodes.size() > 0)
+		{
+			if (ImGui::MenuItem("Add output"))
+			{
+				for (auto node: selected_nodes)
+				{
+					node->outputs.push_back(uniqueid++);
+				}
+			}
+			if (ImGui::MenuItem("Add input"))
+			{
+				for (auto & node : selected_nodes)
+				{
+					node->inputs.push_back(uniqueid++);
+				}
+			}
+			if (ImGui::MenuItem("Remove output"))
+			{
+			}
+			if (ImGui::MenuItem("Remove input"))
+			{
+			}
+		}
 		ImGui::EndPopup();
 	}
 	ax::NodeEditor::Resume();
+}
+
+std::vector<NodeInfo*> PanelStateMachine::GetSelectedNodes()
+{
+	std::vector<ax::NodeEditor::NodeId> selection;
+	selection.resize(ax::NodeEditor::GetSelectedObjectCount());
+	ax::NodeEditor::GetSelectedNodes(selection.data(), static_cast<int>(selection.size()));
+
+	std::vector<NodeInfo*> selected_nodes;
+	for (auto & node : nodes)
+	{
+		bool isSelected = std::find(selection.begin(), selection.end(), node->id) != selection.end();
+		if (isSelected)
+		{
+			selected_nodes.push_back(node);
+		}
+	}
+	return selected_nodes;
 }
 
 void PanelStateMachine::DropAnimation(std::shared_ptr<State> & state)

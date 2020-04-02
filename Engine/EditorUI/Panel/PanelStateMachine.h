@@ -40,7 +40,9 @@ public:
 	void LeftPanel();
 	void CreateNodeMenu();
 
+private:
 	void DropAnimation(std::shared_ptr<State>& state);
+	std::vector<NodeInfo*> GetSelectedNodes();
 
 private:
 	ax::NodeEditor::EditorContext* editor_context = nullptr;
