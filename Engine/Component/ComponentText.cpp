@@ -85,13 +85,18 @@ void ComponentText::Render(float4x4* projection)
 			// Update content of VBO memory
 			glBindBuffer(GL_ARRAY_BUFFER, vbo);
 			glBufferSubData(GL_ARRAY_BUFFER, 0, sizeof(vertices), vertices); // Be sure to use glBufferSubData and not glBufferData
-			
 			glBindBuffer(GL_ARRAY_BUFFER, 0);
 			// Render quad
 			glDrawArrays(GL_TRIANGLES, 0, 6);
 			// Now advance cursors for next glyph (note that advance is number of 1/64 pixels)
 			x += (ch.Advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
-			
+
+			//following code is for future, shifting letters in y-axis (Unity-like) if text width is bigger than transform width
+			/*if (xpos + w > owner->transform_2d.rect.Width())
+			{
+				y -=  (ch.Bearing.y + text_heigth) * scale_factor;
+				x -= ((ch.Advance >> 6) - text_width) * scale_factor;
+			}*/
 		}
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);

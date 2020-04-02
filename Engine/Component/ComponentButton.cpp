@@ -14,7 +14,7 @@ ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, Compon
 {
 	if (owner->transform_2d.is_new)
 	{
-		owner->transform_2d.SetSize(170, 23);
+		
 	}
 }
 
@@ -25,7 +25,20 @@ ComponentButton::~ComponentButton()
 
 void ComponentButton::Render(float4x4* projection)
 {
-
+	owner->transform_2d.position.z = 1;
+	if (owner->transform_2d.is_new)
+	{
+		if (owner->children.size() > 0)
+		{
+			for (auto& child : owner->children)
+			{
+				if (child->name == "Text")
+				{
+					owner->transform_2d.SetSize(child->transform_2d.rect.Width(), child->transform_2d.rect.Height());
+				}
+			}
+		}
+	}
 	ComponentUI::Render(projection);
 }
 
