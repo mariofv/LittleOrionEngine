@@ -14,6 +14,7 @@
 #include <ft2build.h>
 #include FT_FREETYPE_H
 
+#define MAX_NUM_LAYERS 8
 
 class ComponentCanvas;
 class ComponentCamera;

@@ -3,6 +3,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
+#include "Module/ModuleProgram.h"
 #include "Module/ModuleUI.h"
 
 
@@ -14,6 +15,10 @@ ComponentText::ComponentText() : ComponentUI(ComponentUI::UIType::TEXT)
 ComponentText::ComponentText(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::TEXT)
 {
 	InitData();
+	if (owner->transform_2d.is_new)
+	{
+		owner->transform_2d.SetPosition(&float3(0.0F, 0.0F, -1.0F));
+	}
 }
 
 ComponentText::~ComponentText()
@@ -23,6 +28,7 @@ ComponentText::~ComponentText()
 
 void ComponentText::InitData()
 {
+	shader_program = App->program->GetShaderProgramId("UI Text");
 	color = float3::unitZ;
 	if (App->ui->glyphInit == false)
 	{
@@ -42,8 +48,8 @@ void ComponentText::Render(float4x4* projection)
 		// Activate corresponding render state	
 		glUseProgram(shader_program);
 		glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection"), 1, GL_TRUE, projection->ptr());
-		glUniform1i(glGetUniformLocation(shader_program, "text"), 0);
-		glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, owner->transform_2d.rect_matrix.ptr());
+		glUniform1i(glGetUniformLocation(shader_program, "image"), 0);
+		glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, owner->transform_2d.model_matrix.ptr());
 		glUniform3fv(glGetUniformLocation(shader_program, "spriteColor"), 1, color.ptr());
 
 		glActiveTexture(GL_TEXTURE0);
@@ -52,11 +58,11 @@ void ComponentText::Render(float4x4* projection)
 
 		// Iterate through all characters
 		std::string::const_iterator c;
-		float x = 0.0f;
-		float y = 0.0f;
+		float x = 0;
+		float y = 0;
 		float text_witdh = 0;
 		float text_heigth = 0;
-		float scale_factor = scale / 1000;
+		float scale_factor = scale / 100;
 		for (c = text.begin(); c != text.end(); c++)
 		{
 			Character ch = App->ui->Characters[*c];
@@ -92,8 +98,7 @@ void ComponentText::Render(float4x4* projection)
 		}
 		glBindVertexArray(0);
 		glBindTexture(GL_TEXTURE_2D, 0);
-		text_witdh *= owner->transform_2d.rect.Width();
-		text_heigth *= owner->transform_2d.rect.Height();
+		owner->transform_2d.SetSize(text_witdh, text_heigth);
 	}
 }
 

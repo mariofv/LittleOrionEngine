@@ -77,6 +77,12 @@
         "Vertex":"Resources/Shaders/sprite.vs",
         "Fragment":"Resources/Shaders/sprite.fs",
         "Selectable":false
+     },
+      {
+        "Name":"UI Text",
+        "Vertex":"Resources/Shaders/sprite.vs",
+        "Fragment":"Resources/Shaders/ui_text.fs",
+        "Selectable":false
      }
     ]
   }
