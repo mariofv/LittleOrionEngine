@@ -27,13 +27,18 @@ public:
 	virtual void Load(const Config & config) override;
 
 	void GenerateGlobalModelMatrix();
-	void SetSize(float width, float height);
+	void SetSize(float new_width, float new_height);
 	ENGINE_API void SetPosition(float x, float y);
+	ENGINE_API void SetPosition(float3* new_position);
+	void CalculateRectMatix(float new_width, float new_height, float4x4* matrix);
 private:
 	void OnTransformChange();
+	void UpdateRect();
 	friend class PanelComponent;
 
 public:
+	float width = 10;
+	float height = 10;
 	bool is_new = true;
 	math::Rect rect = math::Rect(0, 0, 10, 10);
 	float rotation = 0.0f;
