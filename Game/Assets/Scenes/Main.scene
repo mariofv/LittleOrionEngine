@@ -283,158 +283,23 @@
     ],
     "GameObjects": [
         {
-            "UUID": 3639245300,
+            "UUID": 3702350578,
             "ParentUUID": 0,
-            "Name": "Camera3",
+            "Name": "Player",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 125483241,
+                "UUID": 3964650893,
                 "Active": true,
                 "Translation": [
-                    0.0,
-                    189.11622619628907,
-                    -10.7941312789917
+                    -95.132568359375,
+                    -1.0616158246994019,
+                    2.4534764289855959
                 ],
                 "Rotation": [
-                    89.80626678466797,
+                    -0.0,
                     0.0,
                     -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0000178813934327,
-                    1.0000178813934327
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 2948505449,
-                    "ComponentType": 1,
-                    "Active": true,
-                    "FrustumType": 2,
-                    "NearPlaneDistance": 1.0,
-                    "FarPlaneDistance": 500.0,
-                    "VerticalFOV": 0.7853981852531433,
-                    "ClearMode": 0,
-                    "ClearColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "Depth": 0
-                }
-            ]
-        },
-        {
-            "UUID": 568536835,
-            "ParentUUID": 0,
-            "Name": "Camera2",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 971261326,
-                "Active": true,
-                "Translation": [
-                    -131.67855834960938,
-                    10.314851760864258,
-                    0.4905166029930115
-                ],
-                "Rotation": [
-                    -180.0,
-                    88.43114471435547,
-                    -180.0
-                ],
-                "Scale": [
-                    1.0000019073486329,
-                    1.0,
-                    1.0000019073486329
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 290066534,
-                    "ComponentType": 1,
-                    "Active": true,
-                    "FrustumType": 2,
-                    "NearPlaneDistance": 1.0,
-                    "FarPlaneDistance": 100.0,
-                    "VerticalFOV": 0.7853981852531433,
-                    "ClearMode": 0,
-                    "ClearColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "Depth": 0
-                }
-            ]
-        },
-        {
-            "UUID": 1505760982,
-            "ParentUUID": 0,
-            "Name": "Camera1",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 657921781,
-                "Active": true,
-                "Translation": [
-                    128.62066650390626,
-                    22.674545288085939,
-                    1.1642550230026246
-                ],
-                "Rotation": [
-                    -3.445189952850342,
-                    -88.65767669677735,
-                    -0.000437301117926836
-                ],
-                "Scale": [
-                    1.0000004768371583,
-                    1.0,
-                    0.9999892711639404
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 3674936915,
-                    "ComponentType": 1,
-                    "Active": true,
-                    "FrustumType": 2,
-                    "NearPlaneDistance": 1.0,
-                    "FarPlaneDistance": 100.0,
-                    "VerticalFOV": 0.7853981852531433,
-                    "ClearMode": 0,
-                    "ClearColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "Depth": 0
-                }
-            ]
-        },
-        {
-            "UUID": 1690967942,
-            "ParentUUID": 0,
-            "Name": "Light",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3749479261,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    10.0,
-                    20.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
                 ],
                 "Scale": [
                     1.0,
@@ -444,29 +309,17 @@
             },
             "Components": [
                 {
-                    "UUID": 2143224420,
-                    "ComponentType": 4,
+                    "UUID": 40870818,
+                    "ComponentType": 5,
                     "Active": true,
-                    "LightColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "Intensity": 1.0,
-                    "LightType": 2,
-                    "PointLightRange": 16.0,
-                    "PointLightConstant": 1.0,
-                    "PointLightLinear": 0.04500000178813934,
-                    "PointLightQuadratic": 0.007499999832361937,
-                    "SpotLightRange": 10.0,
-                    "SpotLightConstant": 1.0,
-                    "SpotLightLinear": 0.04500000178813934,
-                    "SpotLightQuadratic": 0.007499999832361937,
-                    "SpotLightSpotAngle": 30.0,
-                    "SpotLightCutoff": 0.9659258127212524,
-                    "SpotLightSoftness": 0.10000000149011612,
-                    "SpotLightOuterCutoff": 0.9588197469711304
+                    "ScriptName": "PlayerController",
+                    "Player": 0
+                },
+                {
+                    "UUID": 4243426969,
+                    "ComponentType": 5,
+                    "Active": true,
+                    "ScriptName": "PlayerMovement"
                 }
             ]
         },
@@ -540,23 +393,23 @@
             ]
         },
         {
-            "UUID": 3702350578,
+            "UUID": 1690967942,
             "ParentUUID": 0,
-            "Name": "Player",
+            "Name": "Light",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3964650893,
+                "UUID": 3749479261,
                 "Active": true,
                 "Translation": [
-                    -95.132568359375,
-                    -1.0616158246994019,
-                    2.4534764289855959
+                    0.0,
+                    10.0,
+                    20.0
                 ],
                 "Rotation": [
-                    -0.0,
                     0.0,
-                    -0.0
+                    0.0,
+                    0.0
                 ],
                 "Scale": [
                     1.0,
@@ -566,17 +419,164 @@
             },
             "Components": [
                 {
-                    "UUID": 40870818,
-                    "ComponentType": 5,
+                    "UUID": 2143224420,
+                    "ComponentType": 4,
                     "Active": true,
-                    "ScriptName": "PlayerController",
-                    "Player": 0
-                },
+                    "LightColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Intensity": 1.0,
+                    "LightType": 2,
+                    "PointLightRange": 16.0,
+                    "PointLightConstant": 1.0,
+                    "PointLightLinear": 0.04500000178813934,
+                    "PointLightQuadratic": 0.007499999832361937,
+                    "SpotLightRange": 10.0,
+                    "SpotLightConstant": 1.0,
+                    "SpotLightLinear": 0.04500000178813934,
+                    "SpotLightQuadratic": 0.007499999832361937,
+                    "SpotLightSpotAngle": 30.0,
+                    "SpotLightCutoff": 0.9659258127212524,
+                    "SpotLightSoftness": 0.10000000149011612,
+                    "SpotLightOuterCutoff": 0.9588197469711304
+                }
+            ]
+        },
+        {
+            "UUID": 1505760982,
+            "ParentUUID": 0,
+            "Name": "Camera1",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 657921781,
+                "Active": true,
+                "Translation": [
+                    128.62066650390626,
+                    22.674545288085939,
+                    1.1642550230026246
+                ],
+                "Rotation": [
+                    -3.445189952850342,
+                    -88.65767669677735,
+                    -0.000437301117926836
+                ],
+                "Scale": [
+                    1.0000004768371583,
+                    1.0,
+                    0.9999892711639404
+                ]
+            },
+            "Components": [
                 {
-                    "UUID": 4243426969,
-                    "ComponentType": 5,
-                    "Active": true,
-                    "ScriptName": "PlayerMovement"
+                    "UUID": 3674936915,
+                    "ComponentType": 1,
+                    "Active": false,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 100.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0
+                }
+            ]
+        },
+        {
+            "UUID": 568536835,
+            "ParentUUID": 0,
+            "Name": "Camera2",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 971261326,
+                "Active": true,
+                "Translation": [
+                    -131.67855834960938,
+                    10.314851760864258,
+                    0.4905166029930115
+                ],
+                "Rotation": [
+                    -180.0,
+                    88.43114471435547,
+                    -180.0
+                ],
+                "Scale": [
+                    1.0000019073486329,
+                    1.0,
+                    1.0000019073486329
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 290066534,
+                    "ComponentType": 1,
+                    "Active": false,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 100.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0
+                }
+            ]
+        },
+        {
+            "UUID": 3639245300,
+            "ParentUUID": 0,
+            "Name": "Camera3",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 125483241,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    189.11622619628907,
+                    -10.7941312789917
+                ],
+                "Rotation": [
+                    89.80626678466797,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0000178813934327,
+                    1.0000178813934327
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 2948505449,
+                    "ComponentType": 1,
+                    "Active": false,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 500.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0
                 }
             ]
         }

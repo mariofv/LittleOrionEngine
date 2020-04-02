@@ -50,8 +50,11 @@ update_status ModuleResourceManager::PreUpdate()
 
  bool ModuleResourceManager::CleanUp()
 {
+#if !GAME
 	 thread_comunication.stop_thread = true;
 	 importing_thread.join();
+#endif
+
 	return true;
 }
 
