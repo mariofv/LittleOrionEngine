@@ -4,7 +4,7 @@ Remove-Item -LiteralPath "LittleOrionEngine.zip" -Force -Recurse
 Remove-Item -LiteralPath "TwinlightSouls" -Force -Recurse
 Remove-Item -LiteralPath "TwinlightSouls.zip" -Force -Recurse.
 
-Copy-Item -Path Game -Destination Engine -Recurse -Force -Container
+Copy-Item -Path Game -Destination LittleOrionEngine -Recurse -Force -Container
 Copy-Item Release\LittleOrionEngine.exe -Destination LittleOrionEngine
 
 Compress-Archive -Path LittleOrionEngine -DestinationPath LittleOrionEngine.zip
