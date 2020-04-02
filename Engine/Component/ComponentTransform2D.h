@@ -31,6 +31,7 @@ public:
 	ENGINE_API void SetPosition(float x, float y);
 	ENGINE_API void SetPosition(float3* new_position);
 	void CalculateRectMatix(float new_width, float new_height, float4x4* matrix);
+	void CalculateTxtRectMatix(float x, float y, float width, float height, float4x4* matrix);
 private:
 	void OnTransformChange();
 	void UpdateRect();

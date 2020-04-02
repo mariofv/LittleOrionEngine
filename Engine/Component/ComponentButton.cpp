@@ -26,20 +26,8 @@ ComponentButton::~ComponentButton()
 
 void ComponentButton::Render(float4x4* projection)
 {
-	/*owner->transform_2d.position.z = 1;
+	owner->transform_2d.position.z = 1;
 	
-	if (owner->children.size() > 0)
-	{
-		for (auto& child : owner->children)
-		{
-			if (child->name == "Text")
-			{
-				owner->transform_2d.SetSize(child->transform_2d.rect.Width(), child->transform_2d.rect.Height());
-				child->transform_2d.SetPosition(owner->transform_2d.position.x, owner->transform_2d.position.y);
-			}
-		}
-	}
-	*/
 	ComponentUI* text = nullptr;
 	for (auto child : owner->children)
 	{
@@ -70,7 +58,3 @@ void ComponentButton::Load(const Config& config)
 	ComponentUI::Load(config);
 }
 
-void ComponentButton::OnButtonChange()
-{
-	
-}

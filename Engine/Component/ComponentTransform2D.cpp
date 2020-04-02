@@ -146,3 +146,13 @@ void ComponentTransform2D::CalculateRectMatix(float new_width, float new_height,
 	*matrix = *matrix * float4x4::Scale(float3(new_width, new_height, 0));
 	
 }
+
+void ComponentTransform2D::CalculateTxtRectMatix(float x, float y, float width, float height, float4x4* matrix)
+{
+	*matrix = float4x4(global_matrix);
+	matrix->SetTranslatePart(float3(x, y, position.z));
+	*matrix = float4x4::RotateZ(-rotation) * *matrix;
+	*matrix = *matrix * float4x4::RotateZ(-rotation);
+	*matrix = *matrix * float4x4::Scale(float3(width, height, 0));
+
+}
