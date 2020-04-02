@@ -64,7 +64,7 @@ public:
 	float k_specular = 1.0f;
 	float k_ambient = 1.0f;
 
-	float transparency = 1.0F;
+	float transparency = 0.5F;
 	float roughness = 0.5f;
 	float metalness = 0.04f;
 

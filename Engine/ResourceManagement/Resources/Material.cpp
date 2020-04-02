@@ -69,7 +69,7 @@ void Material::Save(Config& config) const
 
 void Material::Load(const Config& config)
 {
-	material_type = (MaterialType)config.GetInt("MaterialType", 1);
+	material_type = (MaterialType)config.GetInt("MaterialType", 0);
 
 	std::string texture_path;
 	config.GetString("Diffuse", texture_path, "");

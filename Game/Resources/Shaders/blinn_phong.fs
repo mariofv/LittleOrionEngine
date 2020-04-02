@@ -29,7 +29,7 @@ struct Material
 
 	float roughness;
 	float metalness;
-	float alpha_blending;
+	float transparency;
 };
 uniform Material material;
 
@@ -138,7 +138,7 @@ void main()
 
 	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
-	FragColor.a=material.alpha_blending;
+	FragColor.a=material.transparency;
 
 	
 }

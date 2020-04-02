@@ -142,10 +142,6 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 		{
 			ImGui::SliderFloat("Transparency", &material->transparency, 0.01f, 1.f);
 		}
-		else
-		{
-
-		}
 		ImGui::Unindent();
 
 		break;

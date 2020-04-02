@@ -174,6 +174,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			mesh->Render();
 			num_rendered_tris += mesh->mesh_to_render->GetNumTriangles();
 			glUseProgram(0);
+			
 		}
 	}
 
@@ -371,15 +372,7 @@ void ModuleRender::SetStencilTest(bool gl_stencil_test)
 void ModuleRender::SetBlending(bool gl_blend)
 {
 	this->gl_blend = gl_blend;
-	if (gl_blend)
-	{
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_ONE, GL_ONE);
-		glBlendEquation(GL_FUNC_ADD);
-	}
-	else {
-		glDisable(GL_BLEND);
-	}
+
 }
 
 void ModuleRender::SetFaceCulling(bool gl_cull_face)

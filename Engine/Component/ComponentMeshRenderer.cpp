@@ -87,6 +87,14 @@ void ComponentMeshRenderer::Load(const Config& config)
 
 void ComponentMeshRenderer::Render() const
 {
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
+	{
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		/*glBlendFunc(GL_ONE, GL_ONE); TODO -> FIX THIS
+		glBlendEquation(GL_FUNC_ADD);*/
+	}
 	std::string program_name = material_to_render->shader_program;
 	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
@@ -103,7 +111,10 @@ void ComponentMeshRenderer::Render() const
 	App->lights->Render(owner->transform.GetGlobalTranslation(), program);
 	RenderMaterial(program);
 	RenderModel();
-
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
+	{
+		glDisable(GL_BLEND);
+	}
 	glUseProgram(0);
 }	
 
@@ -116,11 +127,14 @@ void ComponentMeshRenderer::RenderModel() const
 
 void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 {
+	
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);
 	AddAmbientOclusionUniforms(shader_program);
 	AddNormalUniforms(shader_program);
+	AddExtraUniforms(shader_program);
+	
 }
 
 
@@ -191,11 +205,11 @@ void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 {
 	if (material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
 	{
-		glUniform1f(glGetUniformLocation(shader_program, "material.alpha_blending"), 1.f);
+		glUniform1f(glGetUniformLocation(shader_program, "material.transparency"), 1.f);
 	}
 	else
 	{
-		glUniform1f(glGetUniformLocation(shader_program, "material.alpha_blending"), material_to_render->transparency);
+		glUniform1f(glGetUniformLocation(shader_program, "material.transparency"), material_to_render->transparency);
 	}
 }
 
