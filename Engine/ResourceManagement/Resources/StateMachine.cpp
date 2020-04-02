@@ -132,9 +132,9 @@ void StateMachine::Load(const File& file)
 	state_machine_config.GetChildrenConfig("Transitions", transitions_config);
 	for (auto& transition_config : transitions_config)
 	{
-		uint64_t source = transition_config.GetUInt("Source", source);
-		uint64_t target = transition_config.GetUInt("Target", target);
-		uint64_t trigger = transition_config.GetUInt("Trigger", trigger);
+		uint64_t source = transition_config.GetUInt("Source", 0);
+		uint64_t target = transition_config.GetUInt("Target", 0);
+		uint64_t trigger = transition_config.GetUInt("Trigger", 0);
 		int64_t interpolation_time = transition_config.GetInt64("Interpolation", 0);
 		this->transitions.push_back(std::make_shared<Transition>(source, target, trigger, interpolation_time));
 	}

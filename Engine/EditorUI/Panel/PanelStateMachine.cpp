@@ -95,10 +95,10 @@ void PanelStateMachine::HandleInteraction()
 {
 	if (ax::NodeEditor::BeginCreate())
 	{
-		ax::NodeEditor::PinId input_pin_id, output_pin_id;
-		if (ax::NodeEditor::QueryNewLink(&input_pin_id, &output_pin_id))
+		ax::NodeEditor::PinId end_pin_id, start_pin_id;
+		if (ax::NodeEditor::QueryNewLink(&start_pin_id, &end_pin_id))
 		{
-			if (input_pin_id && output_pin_id)
+			if (end_pin_id && start_pin_id)
 			{
 				if (ax::NodeEditor::AcceptNewItem())
 				{
@@ -106,19 +106,24 @@ void PanelStateMachine::HandleInteraction()
 					std::shared_ptr<Transition> new_transition = std::make_shared<Transition>();
 					for (auto node : nodes)
 					{
-						auto& it_input = std::find(node->inputs.begin(), node->inputs.end(), input_pin_id);
-						if (it_input != node->inputs.end())
+
+						for (auto & input : node->inputs)
 						{
-							new_transition->source_hash = node->state->name_hash;
+							if (input == end_pin_id)
+							{
+								new_transition->target_hash = node->state->name_hash;
+							}
 						}
-						auto& it_output = std::find(node->outputs.begin(), node->outputs.end(), output_pin_id);
-						if (it_output != node->outputs.end())
+						for (auto & output : node->outputs)
 						{
-							new_transition->target_hash = node->state->name_hash;
+							if (output == start_pin_id)
+							{
+								new_transition->source_hash = node->state->name_hash;
+							}
 						}
 					}
 					state_machine->transitions.push_back(new_transition);
-					links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) , input_pin_id, output_pin_id, new_transition });
+					links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) , start_pin_id, end_pin_id, new_transition });
 
 					// Draw new link.
 					ax::NodeEditor::Link(links.back()->id, links.back()->input_id, links.back()->output_id);
@@ -212,7 +217,7 @@ void PanelStateMachine::OpenStateMachine(const File & file)
 			}
 			if (link->transition->target_hash == state->name_hash)
 			{
-				node->outputs.push_back(link->input_id);
+				node->inputs.push_back(link->input_id);
 			}
 		}
 		if (node->state->name_hash == entry_hash && node->outputs.size() == 0)
