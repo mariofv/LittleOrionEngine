@@ -182,6 +182,9 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			glUseProgram(0);
 		}
 	}
+	
+	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
+	App->ui->Render(&camera);
 
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
@@ -501,11 +504,11 @@ void ModuleRender::GenerateOctTree()
 		global_AABB.minPoint = float3(minX, minY, minZ);
 	}
 
-	ol_octtree.Create(global_AABB);
+	/*ol_octtree.Create(global_AABB);
 	for (auto & mesh : meshes)
 	{
 		ol_octtree.Insert(*mesh->owner);
-	}
+	}*/
 }
 void ModuleRender::InsertAABBTree(GameObject * game_object)
 {

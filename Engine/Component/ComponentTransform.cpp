@@ -5,8 +5,12 @@
 #include "Helper/Utils.h"
 #include <Brofiler/Brofiler.h>
 
-ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM) {
+ComponentTransform::ComponentTransform() : Component(ComponentType::TRANSFORM)
+{
+}
 
+ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM)
+{
 	OnTransformChange();
 }
 
@@ -160,7 +164,7 @@ void ComponentTransform::SetScale(const float3& scale)
 {
 	this->scale = scale;
 	
-	//OnTransformChange();
+	OnTransformChange();
 }
 
 ENGINE_API float3 ComponentTransform::GetUpVector() const

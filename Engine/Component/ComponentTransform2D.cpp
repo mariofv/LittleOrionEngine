@@ -1,0 +1,153 @@
+#include "ComponentTransform2D.h"
+#include "Main/GameObject.h"
+
+ComponentTransform2D::ComponentTransform2D() : Component(ComponentType::TRANSFORM2D)
+{
+}
+
+ComponentTransform2D::ComponentTransform2D(GameObject * owner) : Component(owner, ComponentType::TRANSFORM2D)
+{
+	OnTransformChange();
+}
+
+ComponentTransform2D::ComponentTransform2D(GameObject* owner, const Rect rext, const float rotation) :
+	Component(owner, ComponentType::TRANSFORM2D),
+	rotation(rotation),
+	rect(rext)
+{
+		OnTransformChange();
+}
+
+ComponentTransform2D::~ComponentTransform2D()
+{
+}
+
+void ComponentTransform2D::Delete()
+{
+	delete(&rect);
+}
+
+Component * ComponentTransform2D::Clone(bool create_on_module) const
+{
+	ComponentTransform2D * created_component;
+	created_component = new ComponentTransform2D(nullptr);
+	*created_component = *this;
+	return created_component;
+}
+
+void ComponentTransform2D::Copy(Component * component_to_copy) const
+{
+	*component_to_copy = *this;
+	*static_cast<ComponentTransform2D*>(component_to_copy) = *this;
+};
+
+ComponentTransform2D & ComponentTransform2D::operator=(const ComponentTransform2D & component_to_copy)
+{
+	rect = component_to_copy.rect;
+	rotation = component_to_copy.rotation;
+	
+	OnTransformChange();
+	return *this;
+}
+
+void ComponentTransform2D::Save(Config& config) const
+{
+	config.AddUInt(UUID, "UUID");
+	config.AddBool(active, "Active");
+	config.AddFloat(rect.top, "Top");
+	config.AddFloat(rect.right, "Right");
+	config.AddFloat(rect.bottom, "Bottom");
+	config.AddFloat(rect.left, "Left");
+	config.AddFloat(rotation, "Rotation");
+	config.AddFloat2(scale, "Scale");
+	config.AddFloat3(position, "Position");
+	config.AddFloat(width, "Width");
+	config.AddFloat(height, "Height");
+}
+
+void ComponentTransform2D::Load(const Config& config)
+{
+	UUID = config.GetUInt("UUID", 0);
+	active = config.GetBool("Active", true);
+	
+	float param = 0.0f;
+
+	rect.top = config.GetFloat("Top", param);
+	rect.left = config.GetFloat("Left", param);
+	rect.bottom = config.GetFloat("Bottom", param);	
+	rect.right = config.GetFloat("Right", param);
+	
+	config.GetFloat("Rotation", rotation);
+
+	config.GetFloat2("Scale", scale, float2::one);
+	config.GetFloat3("Position", position, float3::zero);
+
+	width = config.GetFloat("Width", 10);
+	height = config.GetFloat("Height", 10);
+	is_new = false;
+	OnTransformChange();
+}
+
+void ComponentTransform2D::OnTransformChange()
+{
+	model_matrix = float4x4::FromTRS(position, float4x4::FromEulerXYZ(0, 0, rotation), float3(scale, 1));
+	UpdateRect();
+	GenerateGlobalModelMatrix();
+	CalculateRectMatix(rect.Width(), rect.Height(), &rect_matrix);
+
+	for (auto & child : owner->children)
+	{
+		child->transform_2d.OnTransformChange();
+	}
+}
+
+void ComponentTransform2D::GenerateGlobalModelMatrix()
+{
+	if (owner->parent == nullptr)
+	{
+		global_matrix = model_matrix;
+	}
+	else
+	{
+		global_matrix = owner->parent->transform_2d.global_matrix * model_matrix;
+	}
+}
+
+void  ComponentTransform2D::SetSize(float new_width, float new_height)
+{
+	width = new_width;
+	height = new_height;
+	OnTransformChange();
+}
+
+void ComponentTransform2D::SetPosition(float x, float y)
+{
+	position.x = x;
+	position.y = y;
+	OnTransformChange();
+}
+
+
+void ComponentTransform2D::SetPosition(float3* new_position)
+{
+	position = *new_position;
+	OnTransformChange();
+}
+
+void ComponentTransform2D::UpdateRect()
+{
+	rect.left = position.x - width / 2;
+	rect.right = position.x + width / 2;
+	rect.top = position.y - height / 2;
+	rect.bottom = position.y + height / 2;
+}
+
+void ComponentTransform2D::CalculateRectMatix(float new_width, float new_height, float4x4* matrix)
+{
+	*matrix = float4x4(global_matrix);
+	matrix->SetTranslatePart(float3(rect.left, rect.top, position.z));
+	*matrix = float4x4::RotateZ(rotation) * *matrix;
+	*matrix = *matrix * float4x4::RotateZ(-rotation);
+	*matrix = *matrix * float4x4::Scale(float3(new_width, new_height, 0));
+	
+}

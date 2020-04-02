@@ -10,14 +10,15 @@
 #include "EditorUI/Panel/PanelNavMesh.h"
 
 #include "Main/Application.h"
-#include "Module/ModuleAI.h"
+#include "ModuleAI.h"
 #include "ModuleAnimation.h"
 #include "ModuleCamera.h"
-#include "ModuleEditor.h"
 #include "ModuleDebug.h"
+#include "ModuleEditor.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
+#include "ModuleWindow.h"
 #include "SpacePartition/OLQuadTree.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
@@ -455,7 +456,6 @@ void ModuleDebugDraw::Render()
 
 	RenderBillboards();
 
-
 	if (App->debug->show_grid)
 	{
 		float scene_camera_height = App->cameras->scene_camera->owner->transform.GetGlobalTranslation().y;
@@ -463,8 +463,6 @@ void ModuleDebugDraw::Render()
 		grid->Render();
 	}
 	RenderDebugDraws(*App->cameras->scene_camera);
-
-
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
@@ -492,8 +490,8 @@ void ModuleDebugDraw::RenderLightGizmo() const
 	if (selected_light_component != nullptr)
   {	
 		ComponentLight* selected_light = static_cast<ComponentLight*>(selected_light_component);	
-		ComponentTransform* selected_light_transform = &selected_light->owner->transform;	
-		float gizmo_radius = 2.5f;	
+		ComponentTransform* selected_light_transform = &selected_light->owner->transform;
+		float gizmo_radius = 2.5F;	
 		switch (selected_light->light_type)	
 		{	
 		case ComponentLight::LightType::DIRECTIONAL_LIGHT:	
@@ -588,6 +586,10 @@ void ModuleDebugDraw::RenderOutline() const
 		{
 			new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * selected_game_object->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
 
+		ComponentTransform object_transform_copy = selected_game_object->transform;
+		float3 object_scale = object_transform_copy.GetScale();
+		object_transform_copy.SetScale(object_scale*1.01f);
+		object_transform_copy.GenerateGlobalModelMatrix();
 		}
 		else 
 		{
@@ -686,7 +688,7 @@ void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 	math::float4x4 proj = camera.GetProjectionMatrix();
 
 	dd_interface_implementation->width = static_cast<unsigned int>(camera.GetWidth());
-	dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeigt());
+	dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeight());
 	dd_interface_implementation->mvpMatrix = proj * view;
 
 	dd::flush();

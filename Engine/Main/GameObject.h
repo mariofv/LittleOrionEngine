@@ -4,8 +4,10 @@
 #define ENGINE_EXPORTS
 #include "Globals.h"
 #include "Component/Component.h"
+#include "Component/ComponentTransform2D.h"
 #include "Component/ComponentAABB.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentUI.h"
 
 
 #include <GL/glew.h>
@@ -28,8 +30,8 @@ public:
 	GameObject & operator<<(const GameObject& gameobject_to_copy);
 	GameObject & operator=(GameObject&& gameobject_to_move) = default;
 
-	bool IsEnabled() const;
-	void SetEnabled(bool able);
+	ENGINE_API bool IsEnabled() const;
+	ENGINE_API void SetEnabled(bool able);
 
 	void SetStatic(bool is_static);
 	bool IsStatic() const;
@@ -46,9 +48,11 @@ public:
 	void RemoveChild(GameObject* child);
 
 	ENGINE_API Component* CreateComponent(const Component::ComponentType type);
+	ENGINE_API Component* CreateComponentUI(const ComponentUI::UIType ui_type);
 	void RemoveComponent(Component* component);
 	ENGINE_API Component* GetComponent(const Component::ComponentType type) const;
 	ENGINE_API ComponentScript* GetComponentScript(const char* name) const;
+	ENGINE_API Component* GetComponentUI(const ComponentUI::UIType type) const;
 
 	void MoveUpInHierarchy() const;
 	void MoveDownInHierarchy() const;
@@ -65,7 +69,11 @@ public:
 
 private:
 	void SetHierarchyStatic(bool is_static);
-	void CopyComponents(const GameObject& gameobject_to_copy);
+	Config SaveTransform() const;
+	Config SaveTransform2D() const;
+	void LoadTransforms(Config config);
+	void CreateTransforms();
+	void CopyComponents(const GameObject & gameobject_to_copy);
 
 public:
 	std::vector<Component*> components;
@@ -77,6 +85,7 @@ public:
 	uint64_t UUID = -1;
 	ComponentAABB aabb;
 	ComponentTransform transform;
+	ComponentTransform2D transform_2d;
 
 	//TODO: Maybe move this to a component editor?
 	// This should not be public. Public for now while implementing prefab.

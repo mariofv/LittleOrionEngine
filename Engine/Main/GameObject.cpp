@@ -11,14 +11,22 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleUI.h"
+#include "ResourceManagement/Resources/Texture.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
 
+#include "Component/Component.h"
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentCanvas.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentText.h"
+#include "Component/ComponentTransform.h"
+#include "Component/ComponentUI.h"
+#include "Component/ComponentButton.h"
 
 #include <Brofiler/Brofiler.h>
 #include <pcg_basic.h>
@@ -27,26 +35,28 @@
 
 #include <algorithm>
 
-GameObject::GameObject() : aabb(this), transform(this), UUID(pcg32_random())
+GameObject::GameObject() : aabb(this), UUID(pcg32_random())
 {
+	CreateTransforms();
 }
 
-GameObject::GameObject(unsigned int UUID) : aabb(this), transform(this),  UUID(UUID)
+GameObject::GameObject(unsigned int UUID) : aabb(this),  UUID(UUID)
 {
+	CreateTransforms();
 }
 
 GameObject::GameObject(const std::string name) :
 	name(name),
 	aabb(this),
-	transform(this),
 	UUID(pcg32_random())
 {
+	CreateTransforms();
 }
 
 
 GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_to_copy.aabb), transform(gameobject_to_copy.transform), UUID(pcg32_random())
 {
-	transform.owner = this;
+	CreateTransforms();
 	aabb.owner = this;
 	*this << gameobject_to_copy;
 }
@@ -136,6 +146,43 @@ void GameObject::SetHierarchyStatic(bool is_static)
 	}
 }
 
+Config GameObject::SaveTransform() const
+{
+	Config config;
+	transform.Save(config);
+
+	return config;
+}
+
+Config GameObject::SaveTransform2D() const
+{
+	Config config;
+	transform_2d.Save(config);
+
+	return config;
+}
+
+void GameObject::LoadTransforms(Config config)
+{
+	Config transform_config;
+	config.GetChildConfig("Transform", transform_config);
+	transform.owner = this;
+	transform.Load(transform_config);
+
+	Config transform_2d_config;
+	config.GetChildConfig("Transform2D", transform_2d_config);
+	transform_2d.owner = this;
+	transform_2d.Load(transform_2d_config);
+}
+
+void GameObject::CreateTransforms()
+{
+	transform = ComponentTransform();
+	transform.owner = this;
+	
+	transform_2d = ComponentTransform2D(this);
+}
+
 bool GameObject::IsStatic() const
 {
 	return is_static;
@@ -176,9 +223,11 @@ void GameObject::Save(Config& config) const
 	config.AddBool(is_static, "IsStatic");
 	config.AddBool(active, "Active");
 
-	Config transform_config;
-	transform.Save(transform_config);
+	Config transform_config = SaveTransform();
 	config.AddChildConfig(transform_config, "Transform");
+
+	Config transform_2d_config = SaveTransform2D();
+	config.AddChildConfig(transform_2d_config, "Transform2D");
 
 	std::vector<Config> gameobject_components_config(components.size());
 	for (unsigned int i = 0; i < components.size(); ++i)
@@ -206,19 +255,26 @@ void GameObject::Load(const Config& config)
 	SetStatic(config.GetBool("IsStatic", false));
 	active = config.GetBool("Active", true);
 
-	Config transform_config;
-	config.GetChildConfig("Transform", transform_config);
-	transform.Load(transform_config);
+	LoadTransforms(config);
 
 	std::vector<Config> gameobject_components_config;
 	config.GetChildrenConfig("Components", gameobject_components_config);
 	for (unsigned int i = 0; i < gameobject_components_config.size(); ++i)
 	{
 		uint64_t component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
+		ComponentUI::UIType ui_type = ComponentUI::UIType::IMAGE;
 		assert(component_type_uint != 0);
 		
 		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
-		Component* created_component = CreateComponent(component_type);
+		Component* created_component = nullptr;
+		if (component_type == Component::ComponentType::UI) {
+			ui_type = ComponentUI::UIType(gameobject_components_config[i].GetUInt("UIType", 0));
+			created_component = CreateComponentUI(ui_type);
+		}
+		else
+		{
+			created_component = CreateComponent(component_type);
+		}
 		created_component->Load(gameobject_components_config[i]);
 	}
 }
@@ -234,6 +290,7 @@ void GameObject::SetParent(GameObject* new_parent)
 	{
 		parent->RemoveChild(this);
 	}
+
 	new_parent->AddChild(this);
 }
 
@@ -282,7 +339,6 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	case Component::ComponentType::LIGHT:
 		created_component = App->lights->CreateComponentLight();
 		break;
-
 	case Component::ComponentType::SCRIPT:
 		created_component = App->scripts->CreateComponentScript();
 		break;
@@ -297,6 +353,14 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	}
 
 	created_component->owner = this;
+	components.push_back(created_component);
+	return created_component;
+}
+
+
+ENGINE_API Component* GameObject::CreateComponentUI(const ComponentUI::UIType ui_type)
+{
+	Component *created_component = App->ui->CreateComponentUI(ui_type, this);
 	components.push_back(created_component);
 	return created_component;
 }
@@ -330,7 +394,7 @@ ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) con
 
 		if (components[i]->type == Component::ComponentType::SCRIPT)
 		{
-			ComponentScript *script = (ComponentScript *)components[i];
+			ComponentScript* script = (ComponentScript* )components[i];
 			if (script->name == name)
 			{
 				return script;
@@ -338,6 +402,22 @@ ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) con
 		}
 	}
 
+	return nullptr;
+}
+
+Component* GameObject::GetComponentUI(const ComponentUI::UIType type) const
+{
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		if (components[i]->GetType() == Component::ComponentType::UI)
+		{
+			ComponentUI* ui = static_cast<ComponentUI*>(components[i]);
+			if (ui->ui_type == type)
+			{
+				return ui;
+			}
+		}
+	}
 	return nullptr;
 }
 

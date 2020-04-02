@@ -72,6 +72,10 @@ void PrefabLoader::LoadBasicParameters(const Config& config, std::unique_ptr<Gam
 	config.GetChildConfig("Transform", transform_config);
 	loaded_gameObject->transform.Load(transform_config);
 
+	Config transform_2d_config;
+	config.GetChildConfig("Transform2D", transform_2d_config);
+	loaded_gameObject->transform_2d.Load(transform_2d_config);
+
 }
 
 void PrefabLoader::CreateComponents(const Config& config, std::unique_ptr<GameObject> & loaded_gameObject)

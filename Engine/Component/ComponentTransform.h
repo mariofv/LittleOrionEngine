@@ -11,6 +11,7 @@
 class ComponentTransform : public Component
 {
 public:
+	ComponentTransform();
 	ComponentTransform(GameObject * owner);
 	ComponentTransform(GameObject * owner,const float3 translation, const Quat rotation, const float3 scale);
 

@@ -174,7 +174,7 @@ float ComponentCamera::GetWidth() const
 	return last_width;
 }
 
-float ComponentCamera::GetHeigt() const
+float ComponentCamera::GetHeight() const
 {
 	return last_height;
 }

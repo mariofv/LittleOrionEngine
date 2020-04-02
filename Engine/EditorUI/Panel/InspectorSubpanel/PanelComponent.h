@@ -7,11 +7,17 @@
 
 class Component;
 class ComponentAnimation;
+class ComponentButton;
 class ComponentCamera;
-class ComponentLight;
+class ComponentCanvas;
+class ComponentImage;
 class ComponentMeshRenderer;
-class ComponentScript;
+class ComponentLight;
+class ComponentProgressBar;
+class ComponentUI;
+class ComponentText;
 class ComponentTransform;
+class ComponentScript;
 class GameObject;
 
 class PanelComponent
@@ -26,10 +32,10 @@ public:
 	void ShowComponentLightWindow(ComponentLight* light);
 	void ShowComponentAnimationWindow(ComponentAnimation* animation);
 	void ShowComponentScriptWindow(ComponentScript* component_script);
-	
+	void ShowComponentUIWindow(ComponentUI* ui);
 	void ShowAddNewComponentButton();
 
-	void ShowScriptsCreated(ComponentScript*);
+	void ShowScriptsCreated(ComponentScript* component_script);
 
 	void CheckClickedCamera(ComponentCamera* camera);
 	void CheckClickForUndo(ModuleActions::UndoActionType type, Component* component);
@@ -38,7 +44,15 @@ public:
 
 private:
 	void DropMeshAndMaterial(ComponentMeshRenderer* component_mesh);
+	void ShowCommonUIWindow(ComponentUI* ui);
+	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
+	void ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar);
+	void ShowComponentImageWindow(ComponentImage* image);
+	void ShowComponentTextWindow(ComponentText* text);
+	void ShowComponentButtonWindow(ComponentButton* button);
+
 	void DropAnimationAndSkeleton(ComponentAnimation* component_animation);
+	void DropTexture(ComponentUI* ui);
 };
 
 #endif //_PANELCOMPONENT_H_

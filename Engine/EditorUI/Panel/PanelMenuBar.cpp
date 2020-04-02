@@ -1,5 +1,7 @@
 #include "PanelMenuBar.h"
 
+#include "Component/ComponentCanvas.h"
+
 #include "EditorUI/Panel/PanelAbout.h"
 #include "EditorUI/Panel/PanelConfiguration.h"
 #include "EditorUI/Panel/PanelConsole.h"
@@ -19,6 +21,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleUI.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
@@ -138,6 +141,87 @@ void PanelMenuBar::ShowGameObjectMenu()
 			created_game_object->CreateComponent(Component::ComponentType::CAMERA);
 		}
 
+		if (ImGui::BeginMenu("UI"))
+		{
+			
+			if (ImGui::Selectable("Text"))
+			{
+				if (App->ui->main_canvas == nullptr)
+				{
+					CreateUIGameObject("Canvas", ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(CreateUIGameObject("Text", ComponentUI::UIType::TEXT));
+			}
+			if (ImGui::Selectable("Image"))
+			{
+				if (App->ui->main_canvas == nullptr)
+				{
+					CreateUIGameObject("Canvas", ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(CreateUIGameObject("Image", ComponentUI::UIType::IMAGE));
+			}
+			ImGui::Separator();
+			if (ImGui::Selectable("Button"))
+			{
+				GameObject* created_game_object = CreateUIGameObject("Button", ComponentUI::UIType::BUTTON);
+				created_game_object->AddChild(CreateUIGameObject("Text", ComponentUI::UIType::TEXT));
+
+				if (App->ui->main_canvas == nullptr)
+				{
+					CreateUIGameObject("Canvas", ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(created_game_object);
+				
+			}
+			if (ImGui::Selectable("Progess Bar"))
+			{
+				if (App->ui->main_canvas == nullptr)
+				{
+					CreateUIGameObject("Canvas", ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(CreateUIGameObject("Progess Bar", ComponentUI::UIType::PROGRESSBAR));
+			}
+			if (ImGui::Selectable("Slider"))
+			{
+
+			}
+			if (ImGui::Selectable("Scrollbar"))
+			{
+
+			}
+			if (ImGui::Selectable("Dropdown"))
+			{
+
+			}
+			if (ImGui::Selectable("Input Field"))
+			{
+
+			}
+			ImGui::Separator();
+			if (ImGui::Selectable("Canvas"))
+			{
+				if (App->ui->main_canvas == nullptr)
+				{
+					CreateUIGameObject("Canvas", ComponentUI::UIType::CANVAS);
+				}
+			}
+			if (ImGui::Selectable("Panel"))
+			{
+
+			}
+			if (ImGui::Selectable("Scroll View"))
+			{
+
+			}
+			ImGui::Separator();
+			if (ImGui::Selectable("Event System"))
+			{
+
+			}
+
+			ImGui::EndMenu();
+		}
+
 		ImGui::EndMenu();
 	}
 }
@@ -214,4 +298,12 @@ void PanelMenuBar::ShowHelpMenu()
 		ImGui::PopFont();
 		ImGui::EndMenu();
 	}
+}
+
+GameObject* PanelMenuBar::CreateUIGameObject(const char* name, ComponentUI::UIType ui_type) const
+{
+	GameObject* created_game_object = App->scene->CreateGameObject();
+	created_game_object->name = name;
+	created_game_object->CreateComponentUI(ui_type);
+	return created_game_object;
 }
