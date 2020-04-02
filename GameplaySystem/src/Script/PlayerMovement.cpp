@@ -47,7 +47,7 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 	ImGui::SetCurrentContext(context);
 	ImGui::Text("Player Movement Script Inspector");
 	//Example Showing variables and being able to modify it on Runtime.
-	ImGui::DragFloat("Speed", &speed, 0.2f, 0.f, 0.5f);
+	ImGui::DragFloat("Speed", &speed, 0.1f, 0.f, 0.5f);
 	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.f, 0.5f);
 	ImGui::DragFloat("Jump Power", &jump_power, 2.0f, 2.0f, 10.0f);
 }
