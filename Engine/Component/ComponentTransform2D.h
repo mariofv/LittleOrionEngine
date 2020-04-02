@@ -19,7 +19,7 @@ public:
 	ComponentTransform2D & operator=(const ComponentTransform2D & component_to_copy);
 	ComponentTransform2D & operator=(ComponentTransform2D && component_to_move) = default;
 
-	// Heredado vía Component
+	// Heredado vï¿½a Component
 	virtual void Delete() override;
 	virtual Component * Clone(bool create_on_module = true) const override;
 	virtual void Copy(Component * component_to_copy) const override;

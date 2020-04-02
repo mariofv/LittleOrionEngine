@@ -14,8 +14,7 @@ public:
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
-	void OnButtonChange();
-	virtual void Render(float4x4* projection);
+	void Render(float4x4* projection);
 private:
 	bool hasText = false;
 };
