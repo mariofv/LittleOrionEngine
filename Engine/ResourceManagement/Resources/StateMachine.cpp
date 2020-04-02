@@ -33,6 +33,31 @@ Resource(0, file_path)
 
 }
 
+void StateMachine::RemoveState(const std::shared_ptr<State>& state)
+{
+	auto states_it = std::find(states.begin(), states.end(), state);
+	if (states_it != states.end())
+	{
+		uint64_t transition_hash = (*states_it)->name_hash;
+		auto transition_it = std::remove_if(transitions.begin(), transitions.end(), [&transition_hash](const auto & transition){
+			return transition->source_hash == transition_hash || transition->target_hash == transition_hash;
+		});
+		if (transition_it != transitions.end())
+		{
+			transitions.erase(transition_it);
+		}
+		if ((*states_it)->clip != nullptr)
+		{
+			uint64_t clip_hash = (*states_it)->clip->name_hash;
+			auto clip_it = std::remove_if(clips.begin(), clips.end(), [&clip_hash](const auto & clip) {
+				return clip->name_hash == clip_hash;
+			});
+			clips.erase(clip_it);
+		}
+		states.erase(states_it);
+	}
+}
+
 //TODO: Do it like a binary
 void StateMachine::Save() const
 {

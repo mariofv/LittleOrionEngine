@@ -32,6 +32,8 @@ public:
 
 	void Render() override;
 	void HandleInteraction();
+	void InteractionDelete();
+	void InteractionCreation();
 	void OpenStateMachine(const File & file);
 
 	void RenderStates();

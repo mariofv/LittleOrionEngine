@@ -40,6 +40,7 @@ public:
 	StateMachine(const std::string& file_path);
 	~StateMachine() = default;
 	void LoadInMemory() override {};
+	void RemoveState(const std::shared_ptr<State> & state);
 
 	void Save() const;
 	void Load(const File & file);

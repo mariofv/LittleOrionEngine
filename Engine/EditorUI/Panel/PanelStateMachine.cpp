@@ -17,7 +17,10 @@ PanelStateMachine::PanelStateMachine()
 PanelStateMachine::~PanelStateMachine()
 {
 	nodes.erase(nodes.begin(), nodes.end());
-	links.erase(links.begin(), links.end());
+	if (links.size() > 0)
+	{
+		links.erase(links.begin(), links.end());
+	}
 	ax::NodeEditor::DestroyEditor(editor_context);
 	state_machine->Save();
 }
@@ -67,18 +70,23 @@ void PanelStateMachine::RenderStates()
 		std::string clip_name = node->state->clip ? node->state->clip->name : "Clip";
 		ImGui::Button(clip_name.c_str());
 		DropAnimation(node->state);
-		for (auto & output :  node->outputs)
-		{
-			ax::NodeEditor::BeginPin(output, ax::NodeEditor::PinKind::Output);
-			ImGui::Text("Out ->");
-			ax::NodeEditor::EndPin();
-		}
+		ImGui::BeginGroup();
 		for (auto & inputs : node->inputs)
 		{
 			ax::NodeEditor::BeginPin(inputs, ax::NodeEditor::PinKind::Input);
 			ImGui::Text("-> In");
 			ax::NodeEditor::EndPin();
 		}
+		ImGui::EndGroup();
+		ImGui::SameLine();
+		ImGui::BeginGroup();
+		for (auto & output : node->outputs)
+		{
+			ax::NodeEditor::BeginPin(output, ax::NodeEditor::PinKind::Output);
+			ImGui::Text("Out ->");
+			ax::NodeEditor::EndPin();
+		}
+		ImGui::EndGroup();
 		ax::NodeEditor::EndNode();
 
 		position = ax::NodeEditor::GetNodePosition(node->id);
@@ -92,6 +100,51 @@ void PanelStateMachine::RenderStates()
 }
 
 void PanelStateMachine::HandleInteraction()
+{
+	InteractionCreation();
+	InteractionDelete();
+}
+void PanelStateMachine::InteractionDelete()
+{
+	if (ax::NodeEditor::BeginDelete())
+	{
+		ax::NodeEditor::LinkId deletedLinkId;
+		while (ax::NodeEditor::QueryDeletedLink(&deletedLinkId))
+		{
+			if (ax::NodeEditor::AcceptDeletedItem())
+			{
+				for (auto& link : links)
+				{
+					if (link->id == deletedLinkId)
+					{
+						auto transitions_it = std::find(state_machine->transitions.begin(), state_machine->transitions.end(), link->transition);
+						state_machine->transitions.erase(transitions_it);
+						links.erase(&link);
+						break;
+					}
+				}
+			}
+		}
+		ax::NodeEditor::NodeId deletedNodeId;
+		while (ax::NodeEditor::QueryDeletedNode(&deletedNodeId))
+		{
+			if (ax::NodeEditor::AcceptDeletedItem())
+			{
+				for (auto& node : nodes)
+				{
+					if (node->id == deletedNodeId)
+					{
+						state_machine->RemoveState(node->state);
+						nodes.erase(&node);
+						break;
+					}
+				}
+			}
+		}
+	}
+	ax::NodeEditor::EndDelete();
+}
+void PanelStateMachine::InteractionCreation()
 {
 	if (ax::NodeEditor::BeginCreate())
 	{
@@ -132,7 +185,7 @@ void PanelStateMachine::HandleInteraction()
 			}
 		}
 	}
-	ax::NodeEditor::EndCreate(); // Wraps up object creation action handling.
+	ax::NodeEditor::EndCreate();
 }
 void PanelStateMachine::CreateNodeMenu()
 {
