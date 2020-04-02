@@ -59,7 +59,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			}
 
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
-			if (ImGui::DragInt("Width", &transform_2d->rect.right, 1))
+			if (ImGui::DragFloat("Width", &transform_2d->width, 1))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
@@ -69,7 +69,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
 			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2);
 
-			if (ImGui::DragInt("Height", &transform_2d->rect.bottom, 1))
+			if (ImGui::DragFloat("Height", &transform_2d->height, 1))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
@@ -725,7 +725,8 @@ void PanelComponent::DropTexture(ComponentUI* ui)
 				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
 				ImportOptions meta;
 				Importer::GetOptionsFromMeta(meta_path, meta);
-				ui->ui_texture = App->resources->Load<Texture>(meta.exported_file)->opengl_texture;
+				ui->texture_to_render = App->resources->Load<Texture>(meta.exported_file);
+				ui->ui_texture = ui->texture_to_render->opengl_texture;
 			}
 		}
 		ImGui::EndDragDropTarget();
