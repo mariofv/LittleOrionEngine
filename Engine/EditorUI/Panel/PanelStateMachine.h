@@ -53,6 +53,7 @@ private:
 	ImVector<LinkInfo*> links;
 	ImVector<NodeInfo*> nodes;
 	int uniqueid = 1;
+	std::shared_ptr<State> selected_state;
 };
 #endif // !_PANELSTATEMACHINE_H_
 

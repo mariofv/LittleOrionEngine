@@ -5,7 +5,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
 #include "imgui_internal.h"
-
+#include <imgui_stdlib.h>
 PanelStateMachine::PanelStateMachine()
 {
 	opened = false;
@@ -60,13 +60,31 @@ void PanelStateMachine::RenderStates()
 	for (auto & node : nodes)
 	{
 		assert(!node->id.Invalid);
+		ImGui::PushID(node->id.AsPointer());
 		// Start drawing nodes.
 		if (firstFrame)
 		{
 			ax::NodeEditor::SetNodePosition(node->id, position);
 		}
 		ax::NodeEditor::BeginNode(node->id);
-		ImGui::Text(node->state->name.c_str());
+		ImGui::PushItemWidth(100.0f);
+		uint64_t old_hash = node->state->name_hash;
+		if(ImGui::InputText("###Node name Input", &node->state->name))
+		{
+			node->state->name_hash = std::hash<std::string>{}(node->state->name);
+			for (auto link : links)
+			{
+				if (link->transition->source_hash == old_hash)
+				{
+					link->transition->source_hash = node->state->name_hash;
+				}
+				if (link->transition->target_hash == old_hash)
+				{
+					link->transition->target_hash = node->state->name_hash;
+				}
+			}
+		}
+		ImGui::PopItemWidth();
 		std::string clip_name = node->state->clip ? node->state->clip->name : "Clip";
 		ImGui::Button(clip_name.c_str());
 		DropAnimation(node->state);
@@ -91,6 +109,8 @@ void PanelStateMachine::RenderStates()
 
 		position = ax::NodeEditor::GetNodePosition(node->id);
 		position.x+= ax::NodeEditor::GetNodeSize(node->id).x;
+
+		ImGui::PopID();
 
 	}
 	for (auto& linkInfo : links)
@@ -184,6 +204,17 @@ void PanelStateMachine::InteractionCreation()
 
 			}
 		}
+		ax::NodeEditor::PinId new_node_id;
+		if (ax::NodeEditor::QueryNewNode(&new_node_id))
+		{
+			if (ax::NodeEditor::AcceptNewItem())
+			{
+				ax::NodeEditor::Suspend();
+				ImGui::OpenPopup("Editor Menu");
+				ax::NodeEditor::Resume();
+			}
+
+		}
 	}
 	ax::NodeEditor::EndCreate();
 }
@@ -237,6 +268,14 @@ void PanelStateMachine::LeftPanel()
 {
 	if (ImGui::BeginChild("Details", ImVec2(300, 0)))
 	{
+		if (ImGui::Button("Save"))
+		{
+			state_machine->Save();
+		}
+		if (ImGui::Button("Load"))
+		{
+			OpenStateMachine(state_machine->exported_file);
+		}
 	}
 	ImGui::EndChild();
 	ImGui::SameLine(0.0f, 12.0f);
