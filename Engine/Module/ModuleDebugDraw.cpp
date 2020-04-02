@@ -459,7 +459,7 @@ void ModuleDebugDraw::Render()
 		grid->ScaleOnDistance(scene_camera_height);
 		grid->Render();
 	}
-	if (App->renderer->meshes_to_render.size() != 0) //TODO -> Be able to activate or deactivate from editor
+	if (App->renderer->meshes_to_render.size() != 0 && App->debug->show_axis) 
 	{
 		RenderTangentsAndBitangents();
 	}
@@ -481,10 +481,42 @@ void ModuleDebugDraw::RenderTangentsAndBitangents() const
 			float4 tangent = float4(mesh->mesh_to_render->vertices[i].tangent, 0.0F);
 			float4 bitangent = float4(mesh->mesh_to_render->vertices[i].bitangent, 0.0F);
 			float4 position = float4 (mesh->mesh_to_render->vertices[i].position, 1.0F);
-			float4x4 axis_object_space = float4x4(normal, tangent, bitangent, position);
+			float4x4 axis_object_space = float4x4(tangent, bitangent, normal, position);
 			float4x4 axis_transform = mesh->owner->transform.GetGlobalModelMatrix() * axis_object_space;
 			dd::axisTriad(axis_transform, 0.1F, 1.0F);
 		}	
+		float3 pos1 = float3(mesh->mesh_to_render->vertices[0].position);
+		float3 pos2 = float3(mesh->mesh_to_render->vertices[1].position);
+		float3 pos3 = float3(mesh->mesh_to_render->vertices[2].position);
+		float2 uv1 = float2(mesh->mesh_to_render->vertices[0].tex_coords);
+		float2 uv2 = float2(mesh->mesh_to_render->vertices[1].tex_coords);
+		float2 uv3 = float2(mesh->mesh_to_render->vertices[2].tex_coords);
+		float3 edge1 = pos2 - pos1;
+		float3 edge2 = pos3 - pos1;
+		float2 deltaUV1 = uv2 - uv1;
+		float2 deltaUV2 = uv3 - uv1;
+		float4 normal = float4(mesh->mesh_to_render->vertices[0].normals, 0.0f);
+		float f = 1.0F / (deltaUV1.x * deltaUV2.y - deltaUV2.x*deltaUV1.y);
+
+		float3 tangent;
+		tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+		tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+		tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+		tangent = tangent.Normalized();
+		float4 tangent1 = float4(tangent, 0.0f);
+
+		float3 bitangent;
+		bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+		bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+		bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+		bitangent = bitangent.Normalized();
+		float4 bitangent1 = float4(bitangent, 0.0f);
+		float4 position = float4(pos1, 1.0f);
+		float4x4 axis_object_space = float4x4(tangent1, bitangent1, normal, position);
+		float4x4 axis_transform = mesh->owner->transform.GetGlobalModelMatrix() * axis_object_space;
+		dd::axisTriad(axis_transform, 10.F, 10.F);
+
+
 	}
 }
 void ModuleDebugDraw::RenderCameraFrustum() const
