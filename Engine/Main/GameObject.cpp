@@ -394,7 +394,7 @@ ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) con
 
 		if (components[i]->type == Component::ComponentType::SCRIPT)
 		{
-			ComponentScript *script = (ComponentScript *)components[i];
+			ComponentScript* script = (ComponentScript* )components[i];
 			if (script->name == name)
 			{
 				return script;
@@ -402,6 +402,22 @@ ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) con
 		}
 	}
 
+	return nullptr;
+}
+
+Component* GameObject::GetComponentUI(const ComponentUI::UIType type) const
+{
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		if (components[i]->GetType() == Component::ComponentType::UI)
+		{
+			ComponentUI* ui = static_cast<ComponentUI*>(components[i]);
+			if (ui->ui_type == type)
+			{
+				return ui;
+			}
+		}
+	}
 	return nullptr;
 }
 
