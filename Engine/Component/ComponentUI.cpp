@@ -7,6 +7,7 @@
 
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleUI.h"
 
 #include "ResourceManagement/Resources/Texture.h"
@@ -35,7 +36,7 @@ void ComponentUI::Render(float4x4* projection)
 }
 
 void ComponentUI::Render(float4x4* projection, float4x4* model, unsigned int texture, float3* color)
-{	
+{
 	if(owner->IsEnabled() && active)
 	{
 		glUseProgram(shader_program);
@@ -93,6 +94,10 @@ void ComponentUI::Save(Config& config) const
 	config.AddUInt((unsigned int)ui_type, "UIType");
 	config.AddUInt(ui_texture, "Texture");
 	config.AddFloat3(color, "Color");
+	if (texture_to_render)
+	{
+		config.AddString(texture_to_render->exported_file, "TexturePath");
+	}
 }
 
 void ComponentUI::Load(const Config& config)
@@ -101,5 +106,12 @@ void ComponentUI::Load(const Config& config)
 	active = config.GetBool("Active", true);
 	ui_texture = config.GetUInt("Texture", 0);
 	config.GetFloat3("Color", color, float3::one);
+	std::string texture_path;
+	config.GetString("TexturePath", texture_path, "");
+	if (texture_path != "")
+	{
+		texture_to_render = App->resources->Load<Texture>(texture_path);
+		ui_texture = texture_to_render->opengl_texture;
+	}
 	InitData();
 }
