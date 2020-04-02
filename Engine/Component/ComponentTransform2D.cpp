@@ -61,6 +61,8 @@ void ComponentTransform2D::Save(Config& config) const
 	config.AddFloat(rotation, "Rotation");
 	config.AddFloat2(scale, "Scale");
 	config.AddFloat3(position, "Position");
+	config.AddFloat(width, "Width");
+	config.AddFloat(height, "Height");
 }
 
 void ComponentTransform2D::Load(const Config& config)
@@ -79,6 +81,9 @@ void ComponentTransform2D::Load(const Config& config)
 
 	config.GetFloat2("Scale", scale, float2::one);
 	config.GetFloat3("Position", position, float3::zero);
+
+	width = config.GetFloat("Width", 10);
+	height = config.GetFloat("Height", 10);
 	is_new = false;
 	OnTransformChange();
 }

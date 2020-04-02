@@ -725,6 +725,7 @@ void PanelComponent::DropTexture(ComponentUI* ui)
 				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
 				ImportOptions meta;
 				Importer::GetOptionsFromMeta(meta_path, meta);
+				ui->meta_path = meta_path;
 				ui->texture_to_render = App->resources->Load<Texture>(meta.exported_file);
 				ui->ui_texture = ui->texture_to_render->opengl_texture;
 			}

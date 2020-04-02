@@ -32,6 +32,7 @@ public:
 	UIType ui_type;
 	int layer = 0; public:
 	std::shared_ptr<Texture> texture_to_render;
+	std::string meta_path;
 	
 protected:
 	unsigned int shader_program, vao, vbo;

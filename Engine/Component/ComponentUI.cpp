@@ -7,6 +7,7 @@
 
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleUI.h"
 
 #include "ResourceManagement/Resources/Texture.h"
@@ -93,6 +94,7 @@ void ComponentUI::Save(Config& config) const
 	config.AddUInt((unsigned int)ui_type, "UIType");
 	config.AddUInt(ui_texture, "Texture");
 	config.AddFloat3(color, "Color");
+	config.AddString(meta_path, "Metapath");
 }
 
 void ComponentUI::Load(const Config& config)
@@ -101,5 +103,13 @@ void ComponentUI::Load(const Config& config)
 	active = config.GetBool("Active", true);
 	ui_texture = config.GetUInt("Texture", 0);
 	config.GetFloat3("Color", color, float3::one);
+	config.GetString("Metapath", meta_path, "");
+	if(meta_path != "")
+	{
+		ImportOptions meta;
+		Importer::GetOptionsFromMeta(meta_path, meta);
+		texture_to_render = App->resources->Load<Texture>(meta.exported_file);
+		ui_texture = texture_to_render->opengl_texture;
+	}
 	InitData();
 }
