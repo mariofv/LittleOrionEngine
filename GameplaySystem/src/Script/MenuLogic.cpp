@@ -34,9 +34,6 @@ void MenuLogic::Awake()
 	buttons.push_back(button2);
 	buttons.push_back(button3);
 
-
-	background->parent = App->scene->GetRoot();
-	background->parent = owner->parent;
 }
 
 // Use this for initialization
@@ -104,17 +101,15 @@ void MenuLogic::Update()
 		current -= 1;
 		current = current % 4;
 
-		owner->transform_2d.SetPosition(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y);
+		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
 	}
 	else if(App->input->GetKeyDown(KeyCode::DownArrow) || App->input->GetControllerButtonDown(ControllerCode::DownDpad))
 	{
 		current += 1;
 		current = current % 4;
 
-		owner->transform_2d.SetPosition(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y);
+		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
 	}
-
-
 
 }
 
@@ -143,9 +138,6 @@ void MenuLogic::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&button3);
 	variable_names.push_back(GET_VARIABLE_NAME(button3));
-
-	public_gameobjects.push_back(&background);
-	variable_names.push_back(GET_VARIABLE_NAME(background));
 
 	public_gameobjects.push_back(&help);
 	variable_names.push_back(GET_VARIABLE_NAME(help));	
