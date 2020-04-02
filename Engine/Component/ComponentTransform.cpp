@@ -115,7 +115,7 @@ ENGINE_API void ComponentTransform::SetRotation(const float3& new_rotation)
 	OnTransformChange();
 }
 
-ENGINE_API void ComponentTransform::SetRotation(const Quat & new_rotation)
+ENGINE_API void ComponentTransform::SetRotation(const Quat& new_rotation)
 {
 	rotation = new_rotation;
 	rotation_radians = new_rotation.ToEulerXYZ();

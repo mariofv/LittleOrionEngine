@@ -81,8 +81,8 @@ public:
 	void OrbitY(float angle, const float3& focus_point);
 
 	void RotateCameraWithMouseMotion(const float2 &motion);
-	void RotatePitch(float angle);
-	void RotateYaw(float angle);
+	ENGINE_API void RotatePitch(float angle);
+	ENGINE_API void RotateYaw(float angle);
 
 	void SetPerpesctiveView();
 	ENGINE_API void SetOrthographicView();
