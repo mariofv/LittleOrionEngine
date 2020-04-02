@@ -1,10 +1,10 @@
 {
     "Prefabs": [
         {
-            "ParentUUID": 1018011513,
+            "ParentUUID": 3702350578,
             "Prefab": "Library/Metadata/25/2500476228",
             "Transform": {
-                "UUID": 3859727432,
+                "UUID": 2359773176,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -24,205 +24,168 @@
             },
             "UUIDS": [
                 {
-                    "UUID": 387471788,
-                    "OriginalUUID": 3085238779
+                    "UUID": 2813720786,
+                    "OriginalUUID": 455248683
                 },
                 {
-                    "UUID": 2800233063,
-                    "OriginalUUID": 4067359697
+                    "UUID": 3927121963,
+                    "OriginalUUID": 416505990
                 },
                 {
-                    "UUID": 2007372502,
-                    "OriginalUUID": 3526945192
+                    "UUID": 2527798997,
+                    "OriginalUUID": 310829913
                 },
                 {
-                    "UUID": 1613737885,
-                    "OriginalUUID": 4064866970
+                    "UUID": 3968391157,
+                    "OriginalUUID": 3269897365
                 },
                 {
-                    "UUID": 305120933,
-                    "OriginalUUID": 2034530532
+                    "UUID": 1696174388,
+                    "OriginalUUID": 3760028683
                 },
                 {
-                    "UUID": 370420180,
-                    "OriginalUUID": 3616147013
+                    "UUID": 2525932080,
+                    "OriginalUUID": 2413178213
                 },
                 {
-                    "UUID": 3428981345,
-                    "OriginalUUID": 855095040
+                    "UUID": 1660214343,
+                    "OriginalUUID": 1305931773
                 },
                 {
-                    "UUID": 1021395214,
-                    "OriginalUUID": 3110223480
+                    "UUID": 3269454540,
+                    "OriginalUUID": 1601487600
                 },
                 {
-                    "UUID": 3764814156,
-                    "OriginalUUID": 2652362157
+                    "UUID": 2053095989,
+                    "OriginalUUID": 3622080213
                 },
                 {
-                    "UUID": 447990901,
-                    "OriginalUUID": 3711012207
+                    "UUID": 2468460760,
+                    "OriginalUUID": 1812816878
                 },
                 {
-                    "UUID": 1338334839,
-                    "OriginalUUID": 2571172291
+                    "UUID": 1837966847,
+                    "OriginalUUID": 976843448
                 },
                 {
-                    "UUID": 1281935769,
-                    "OriginalUUID": 4060829729
+                    "UUID": 1875692247,
+                    "OriginalUUID": 3324809950
                 },
                 {
-                    "UUID": 3584618303,
-                    "OriginalUUID": 527918422
+                    "UUID": 338171797,
+                    "OriginalUUID": 3940955157
                 },
                 {
-                    "UUID": 2902874153,
-                    "OriginalUUID": 377598998
+                    "UUID": 1493392823,
+                    "OriginalUUID": 3940418459
                 },
                 {
-                    "UUID": 378994531,
-                    "OriginalUUID": 3534039744
+                    "UUID": 4120807640,
+                    "OriginalUUID": 779929811
                 },
                 {
-                    "UUID": 902957977,
-                    "OriginalUUID": 3422653358
+                    "UUID": 3239007661,
+                    "OriginalUUID": 2713831425
                 },
                 {
-                    "UUID": 1961739407,
-                    "OriginalUUID": 2870154004
+                    "UUID": 4016764294,
+                    "OriginalUUID": 2768436533
                 },
                 {
-                    "UUID": 3320765686,
-                    "OriginalUUID": 3007834567
+                    "UUID": 2287814917,
+                    "OriginalUUID": 1569008474
                 },
                 {
-                    "UUID": 2709701437,
-                    "OriginalUUID": 1111924912
+                    "UUID": 2425099557,
+                    "OriginalUUID": 2790849892
                 },
                 {
-                    "UUID": 2916802239,
-                    "OriginalUUID": 974769298
+                    "UUID": 478026213,
+                    "OriginalUUID": 381592665
                 },
                 {
-                    "UUID": 2343083662,
-                    "OriginalUUID": 2688136200
+                    "UUID": 1477149064,
+                    "OriginalUUID": 1140757936
                 },
                 {
-                    "UUID": 1692072490,
-                    "OriginalUUID": 1745497725
+                    "UUID": 1537511149,
+                    "OriginalUUID": 1383747336
                 },
                 {
-                    "UUID": 596030761,
-                    "OriginalUUID": 829929329
+                    "UUID": 363264207,
+                    "OriginalUUID": 402623230
                 },
                 {
-                    "UUID": 781666219,
-                    "OriginalUUID": 1292170177
+                    "UUID": 2657146605,
+                    "OriginalUUID": 4150745869
                 },
                 {
-                    "UUID": 4038635015,
-                    "OriginalUUID": 3246826846
+                    "UUID": 291448162,
+                    "OriginalUUID": 3494183166
                 },
                 {
-                    "UUID": 3015513930,
-                    "OriginalUUID": 788924773
+                    "UUID": 2720812943,
+                    "OriginalUUID": 1099863795
                 },
                 {
-                    "UUID": 1174213678,
-                    "OriginalUUID": 773805616
+                    "UUID": 4118595741,
+                    "OriginalUUID": 519607729
                 },
                 {
-                    "UUID": 3161989409,
-                    "OriginalUUID": 2865979831
+                    "UUID": 2246562777,
+                    "OriginalUUID": 2799976990
                 },
                 {
-                    "UUID": 4263383366,
-                    "OriginalUUID": 3849171951
+                    "UUID": 1910594438,
+                    "OriginalUUID": 113786
                 },
                 {
-                    "UUID": 170149125,
-                    "OriginalUUID": 4110001270
+                    "UUID": 1950999554,
+                    "OriginalUUID": 597324301
                 },
                 {
-                    "UUID": 2119119815,
-                    "OriginalUUID": 4073819843
+                    "UUID": 1208872478,
+                    "OriginalUUID": 770116426
                 },
                 {
-                    "UUID": 2751313736,
-                    "OriginalUUID": 2781478878
+                    "UUID": 1251371210,
+                    "OriginalUUID": 3483687256
                 },
                 {
-                    "UUID": 4039740904,
-                    "OriginalUUID": 214962724
+                    "UUID": 2849040163,
+                    "OriginalUUID": 4167597895
                 },
                 {
-                    "UUID": 2385282404,
-                    "OriginalUUID": 73525024
+                    "UUID": 734814893,
+                    "OriginalUUID": 2396448015
                 },
                 {
-                    "UUID": 895533457,
-                    "OriginalUUID": 107410530
+                    "UUID": 2871026635,
+                    "OriginalUUID": 1327966157
                 },
                 {
-                    "UUID": 559235584,
-                    "OriginalUUID": 219503724
+                    "UUID": 1339851818,
+                    "OriginalUUID": 3535846883
                 },
                 {
-                    "UUID": 1076336081,
-                    "OriginalUUID": 2234662524
+                    "UUID": 1608209071,
+                    "OriginalUUID": 540431395
                 },
                 {
-                    "UUID": 490788921,
-                    "OriginalUUID": 580174804
+                    "UUID": 3378413967,
+                    "OriginalUUID": 1975982903
                 },
                 {
-                    "UUID": 1836922395,
-                    "OriginalUUID": 3454207084
+                    "UUID": 4026007145,
+                    "OriginalUUID": 3721975136
                 }
             ]
         },
         {
             "ParentUUID": 0,
-            "Prefab": "Library/Metadata/38/3863962944",
+            "Prefab": "Library/Metadata/13/1367911280",
             "Transform": {
-                "UUID": 3622773535,
-                "Active": true,
-                "Translation": [
-                    34.45326232910156,
-                    0.0,
-                    -31.314279556274415
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 1116776614,
-                    "OriginalUUID": 1217034920
-                },
-                {
-                    "UUID": 3477127718,
-                    "OriginalUUID": 1290420811
-                },
-                {
-                    "UUID": 810620751,
-                    "OriginalUUID": 2062633617
-                }
-            ]
-        },
-        {
-            "ParentUUID": 0,
-            "Prefab": "Library/Metadata/35/3563846457",
-            "Transform": {
-                "UUID": 411844502,
+                "UUID": 1964472703,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -235,27 +198,71 @@
                     0.0
                 ],
                 "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
+                    0.019999999552965165,
+                    0.019999999552965165,
+                    0.019999999552965165
                 ]
             },
             "UUIDS": [
                 {
-                    "UUID": 1941842532,
-                    "OriginalUUID": 3538618648
+                    "UUID": 2810206866,
+                    "OriginalUUID": 2183407232
                 },
                 {
-                    "UUID": 3882923967,
-                    "OriginalUUID": 2084861401
+                    "UUID": 2930941233,
+                    "OriginalUUID": 1785703192
                 },
                 {
-                    "UUID": 532789065,
-                    "OriginalUUID": 3660170546
+                    "UUID": 3404808993,
+                    "OriginalUUID": 3913605153
                 },
                 {
-                    "UUID": 150028319,
-                    "OriginalUUID": 2859397807
+                    "UUID": 1725549391,
+                    "OriginalUUID": 918928938
+                },
+                {
+                    "UUID": 3979265291,
+                    "OriginalUUID": 2374512719
+                },
+                {
+                    "UUID": 1819976675,
+                    "OriginalUUID": 1285797020
+                },
+                {
+                    "UUID": 1800451593,
+                    "OriginalUUID": 2517136116
+                },
+                {
+                    "UUID": 1724781635,
+                    "OriginalUUID": 3765156082
+                },
+                {
+                    "UUID": 3457253987,
+                    "OriginalUUID": 256291265
+                },
+                {
+                    "UUID": 3051353731,
+                    "OriginalUUID": 841459176
+                },
+                {
+                    "UUID": 1053191842,
+                    "OriginalUUID": 1800067607
+                },
+                {
+                    "UUID": 3914337602,
+                    "OriginalUUID": 2418190361
+                },
+                {
+                    "UUID": 779784155,
+                    "OriginalUUID": 4228220894
+                },
+                {
+                    "UUID": 3029103669,
+                    "OriginalUUID": 2320679291
+                },
+                {
+                    "UUID": 232433155,
+                    "OriginalUUID": 2742960843
                 }
             ]
         }
@@ -264,17 +271,152 @@
         {
             "Components": [
                 {
-                    "UUID": 2658009162,
+                    "UUID": 369817448,
                     "ComponentType": 2,
                     "Active": true,
-                    "MeshPath": "Library/Metadata/28/2889994370",
-                    "MaterialPath": "Library/Metadata/33/3312248973"
+                    "MeshPath": "Library/Metadata/30/3077774803",
+                    "MaterialPath": "Library/Metadata/37/3720461137"
                 }
             ],
-            "UUID": 150028319
+            "UUID": 4026007145
         }
     ],
     "GameObjects": [
+        {
+            "UUID": 3639245300,
+            "ParentUUID": 0,
+            "Name": "Camera3",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 125483241,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    189.11622619628907,
+                    -10.7941312789917
+                ],
+                "Rotation": [
+                    89.80626678466797,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0000178813934327,
+                    1.0000178813934327
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 2948505449,
+                    "ComponentType": 1,
+                    "Active": true,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 500.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0
+                }
+            ]
+        },
+        {
+            "UUID": 568536835,
+            "ParentUUID": 0,
+            "Name": "Camera2",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 971261326,
+                "Active": true,
+                "Translation": [
+                    -131.67855834960938,
+                    10.314851760864258,
+                    0.4905166029930115
+                ],
+                "Rotation": [
+                    -180.0,
+                    88.43114471435547,
+                    -180.0
+                ],
+                "Scale": [
+                    1.0000019073486329,
+                    1.0,
+                    1.0000019073486329
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 290066534,
+                    "ComponentType": 1,
+                    "Active": true,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 100.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0
+                }
+            ]
+        },
+        {
+            "UUID": 1505760982,
+            "ParentUUID": 0,
+            "Name": "Camera1",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 657921781,
+                "Active": true,
+                "Translation": [
+                    128.62066650390626,
+                    22.674545288085939,
+                    1.1642550230026246
+                ],
+                "Rotation": [
+                    -3.445189952850342,
+                    -88.65767669677735,
+                    -0.000437301117926836
+                ],
+                "Scale": [
+                    1.0000004768371583,
+                    1.0,
+                    0.9999892711639404
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 3674936915,
+                    "ComponentType": 1,
+                    "Active": true,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 100.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0
+                }
+            ]
+        },
         {
             "UUID": 1690967942,
             "ParentUUID": 0,
@@ -329,47 +471,6 @@
             ]
         },
         {
-            "UUID": 1018011513,
-            "ParentUUID": 0,
-            "Name": "GameObject (2)",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2757985075,
-                "Active": true,
-                "Translation": [
-                    10.332523345947266,
-                    0.0,
-                    -12.078582763671875
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 3611672993,
-                    "ComponentType": 5,
-                    "Active": true,
-                    "ScriptName": "PlayerController",
-                    "Player": 0
-                },
-                {
-                    "UUID": 181281371,
-                    "ComponentType": 5,
-                    "Active": true,
-                    "ScriptName": "PlayerMovement"
-                }
-            ]
-        },
-        {
             "UUID": 172714554,
             "ParentUUID": 0,
             "Name": "Main Camera",
@@ -379,19 +480,19 @@
                 "UUID": 1527511923,
                 "Active": true,
                 "Translation": [
-                    0.0,
-                    1.0,
-                    -10.0
+                    -94.6422348022461,
+                    12.417342185974121,
+                    16.39966583251953
                 ],
                 "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
+                    141.2118377685547,
+                    -0.6097941994667053,
+                    179.5099334716797
                 ],
                 "Scale": [
+                    1.0000296831130982,
                     1.0,
-                    1.0,
-                    1.0
+                    1.0000224113464356
                 ]
             },
             "Components": [
@@ -413,14 +514,69 @@
                     "Depth": 0
                 },
                 {
-                    "UUID": 2220127772,
+                    "UUID": 984200074,
                     "ComponentType": 5,
                     "Active": true,
                     "ScriptName": "CameraController",
                     "Name0": "Main Camera",
                     "Main Camera": 172714554,
-                    "Name1": "GameObject (2)",
-                    "GameObject (2)": 1018011513
+                    "Name1": "Player",
+                    "Player": 3702350578
+                },
+                {
+                    "UUID": 3324973730,
+                    "ComponentType": 5,
+                    "Active": true,
+                    "ScriptName": "SceneCamerasController",
+                    "Name0": "Main Camera",
+                    "Main Camera": 172714554,
+                    "Name1": "Camera1",
+                    "Camera1": 1505760982,
+                    "Name2": "Camera2",
+                    "Camera2": 568536835,
+                    "Name3": "Camera3",
+                    "Camera3": 3639245300
+                }
+            ]
+        },
+        {
+            "UUID": 3702350578,
+            "ParentUUID": 0,
+            "Name": "Player",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3964650893,
+                "Active": true,
+                "Translation": [
+                    -95.132568359375,
+                    -1.0616158246994019,
+                    2.4534764289855959
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 40870818,
+                    "ComponentType": 5,
+                    "Active": true,
+                    "ScriptName": "PlayerController",
+                    "Player": 0
+                },
+                {
+                    "UUID": 4243426969,
+                    "ComponentType": 5,
+                    "Active": true,
+                    "ScriptName": "PlayerMovement"
                 }
             ]
         }
