@@ -45,7 +45,7 @@ void ComponentText::Render(float4x4* projection)
 		glUseProgram(shader_program);
 		glUniformMatrix4fv(glGetUniformLocation(shader_program, "projection"), 1, GL_TRUE, projection->ptr());
 		glUniform1i(glGetUniformLocation(shader_program, "text"), 0);
-		glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, float4x4::identity.ptr());
+		glUniformMatrix4fv(glGetUniformLocation(shader_program, "model"), 1, GL_TRUE, owner->transform_2d.model_matrix.ptr());
 		glUniform3fv(glGetUniformLocation(shader_program, "spriteColor"), 1, color.ptr());
 		//dd::plane(owner->transform_2d.position, );
 		glActiveTexture(GL_TEXTURE0);
