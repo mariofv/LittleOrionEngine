@@ -2,6 +2,7 @@
 #define _COMPONENTUI_H_
 
 #include "Component.h"
+class Texture;
 
 class ComponentUI : public Component
 {
@@ -27,9 +28,10 @@ public:
 	virtual void Render(float4x4* projection, float4x4* model, unsigned int texture = 0, float3* color = &float3(0.0f, 1.0f, 0.0f));
 
 public:
-	float3 color = float3::unitY;
+	float3 color = float3::one;
 	UIType ui_type;
-	int layer = 0;
+	int layer = 0; public:
+	std::shared_ptr<Texture> texture_to_render;
 	
 protected:
 	unsigned int shader_program, vao, vbo;

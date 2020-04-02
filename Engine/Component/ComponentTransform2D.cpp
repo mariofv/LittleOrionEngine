@@ -86,17 +86,14 @@ void ComponentTransform2D::Load(const Config& config)
 void ComponentTransform2D::OnTransformChange()
 {
 	model_matrix = float4x4::FromTRS(position, float4x4::FromEulerXYZ(0, 0, rotation), float3(scale, 1));
+	UpdateRect();
 	GenerateGlobalModelMatrix();
+	CalculateRectMatix(rect.Width(), rect.Height(), &rect_matrix);
 
 	for (auto & child : owner->children)
 	{
 		child->transform_2d.OnTransformChange();
 	}
-
-	rect_matrix = float4x4(global_matrix);
-	rect_matrix = rect_matrix * float4x4::RotateZ(-rotation); //Reset Rotation
-	rect_matrix = rect_matrix * float4x4::Scale(float3(rect.Width(), rect.Height(), 0));
-	rect_matrix = float4x4::RotateZ(rotation) * rect_matrix; //Revert Rotation Reset
 }
 
 void ComponentTransform2D::GenerateGlobalModelMatrix()
@@ -111,10 +108,10 @@ void ComponentTransform2D::GenerateGlobalModelMatrix()
 	}
 }
 
-void  ComponentTransform2D::SetSize(float width, float height)
+void  ComponentTransform2D::SetSize(float new_width, float new_height)
 {
-	rect.right = width;
-	rect.bottom = height;
+	width = new_width;
+	height = new_height;
 	OnTransformChange();
 }
 
@@ -123,4 +120,29 @@ void ComponentTransform2D::SetPosition(float x, float y)
 	position.x = x;
 	position.y = y;
 	OnTransformChange();
+}
+
+
+void ComponentTransform2D::SetPosition(float3* new_position)
+{
+	position = *new_position;
+	OnTransformChange();
+}
+
+void ComponentTransform2D::UpdateRect()
+{
+	rect.left = position.x - width / 2;
+	rect.right = position.x + width / 2;
+	rect.top = position.y - height / 2;
+	rect.bottom = position.y + height / 2;
+}
+
+void ComponentTransform2D::CalculateRectMatix(float new_width, float new_height, float4x4* matrix)
+{
+	*matrix = float4x4(global_matrix);
+	matrix->SetTranslatePart(float3(rect.left, rect.top, position.z));
+	*matrix = float4x4::RotateZ(rotation) * *matrix;
+	*matrix = *matrix * float4x4::RotateZ(-rotation);
+	*matrix = *matrix * float4x4::Scale(float3(new_width, new_height, 0));
+	
 }

@@ -21,12 +21,10 @@ ComponentProgressBar::~ComponentProgressBar()
 
 void ComponentProgressBar::Render(float4x4* projection)
 {
-	ComponentTransform2D * transform_2d = &owner->transform_2d;	
+	ComponentTransform2D* transform_2d = &owner->transform_2d;	
 	// bar
-	float4x4 bar_model = float4x4(transform_2d->global_matrix);
-	bar_model = bar_model * float4x4::RotateZ(-transform_2d->rotation);
-	bar_model = bar_model * float4x4::Scale(float3(transform_2d->rect.Width() * (percentage / 100), transform_2d->rect.Height(), 0));
-	bar_model = float4x4::RotateZ(transform_2d->rotation) * bar_model;
+	float4x4 bar_model;
+	transform_2d->CalculateRectMatix(transform_2d->rect.Width() * (percentage / 100), transform_2d->rect.Height(), &bar_model);
 	ComponentUI::Render(projection, &bar_model, bar_texture, &bar_color);
 	// background
 	ComponentUI::Render(projection);

@@ -12,7 +12,11 @@ ComponentButton::ComponentButton() : ComponentUI(ComponentUI::UIType::BUTTON)
 
 ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::BUTTON)
 {
-	
+	if (owner->transform_2d.is_new)
+	{
+		owner->transform_2d.SetSize(170, 23);
+		owner->transform_2d.SetPosition(&float3(0, 0, 1));
+	}
 }
 
 ComponentButton::~ComponentButton()
@@ -22,19 +26,29 @@ ComponentButton::~ComponentButton()
 
 void ComponentButton::Render(float4x4* projection)
 {
-	owner->transform_2d.position.z = 1;
-	if (owner->transform_2d.is_new)
+	/*owner->transform_2d.position.z = 1;
+	
+	if (owner->children.size() > 0)
 	{
-		if (owner->children.size() > 0)
+		for (auto& child : owner->children)
 		{
-			for (auto& child : owner->children)
+			if (child->name == "Text")
 			{
-				if (child->name == "Text")
-				{
-					owner->transform_2d.SetSize(child->transform_2d.rect.Width(), child->transform_2d.rect.Height());
-					child->transform_2d.SetPosition(owner->transform_2d.position.x, owner->transform_2d.position.y);
-				}
+				owner->transform_2d.SetSize(child->transform_2d.rect.Width(), child->transform_2d.rect.Height());
+				child->transform_2d.SetPosition(owner->transform_2d.position.x, owner->transform_2d.position.y);
 			}
+		}
+	}
+	*/
+	ComponentUI* text = nullptr;
+	for (auto child : owner->children)
+	{
+		text = static_cast<ComponentUI*>(child->GetComponentUI(ComponentUI::UIType::TEXT));
+		if (text)
+		{
+			ComponentTransform2D* text_transform = &text->owner->transform_2d;
+			owner->transform_2d.SetSize(text_transform->rect.Width(), text_transform->rect.Height());
+			break;
 		}
 	}
 	ComponentUI::Render(projection);

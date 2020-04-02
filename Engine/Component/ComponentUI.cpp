@@ -1,5 +1,6 @@
 #include "ComponentUI.h"
-#include <GL/glew.h>
+
+#include "EditorUI/Panel/PanelScene.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -8,7 +9,9 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleUI.h"
 
-#include "EditorUI/Panel/PanelScene.h"
+#include "ResourceManagement/Resources/Texture.h"
+
+#include <GL/glew.h>
 
 ComponentUI::ComponentUI(UIType ui_type) : Component(nullptr, ComponentType::UI), ui_type(ui_type)
 {
