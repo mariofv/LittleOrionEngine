@@ -66,7 +66,7 @@ void ComponentText::Render(float4x4* projection)
 			text_witdh = max(text_witdh, xpos + w);
 			text_heigth = max(text_heigth, abs(ypos) + h);
 
-			transform_2d_txt->CalculateTxtRectMatix(xpos, ypos + h, w, -h, &txt_model);
+			transform_2d_txt->CalculateRectMatix(xpos, ypos + h, w, -h, &txt_model);
 			
 			ComponentUI::Render(projection, &txt_model, ch.TextureID, &color);
 		

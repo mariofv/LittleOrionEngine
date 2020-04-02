@@ -144,7 +144,10 @@ void ModuleRender::Render() const
 	BROFILER_CATEGORY("Global Render",Profiler::Color::Aqua);
 
 #if GAME
-	App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
+	if (App->cameras->main_camera != nullptr) 
+	{
+		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
+	}
 #else
 	App->editor->Render();
 #endif
