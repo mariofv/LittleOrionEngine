@@ -76,6 +76,8 @@ void ComponentTransform2D::Load(const Config& config)
 	rect.left = config.GetFloat("Left", param);
 	rect.bottom = config.GetFloat("Bottom", param);	
 	rect.right = config.GetFloat("Right", param);
+	width = config.GetFloat("Width", param);
+	height = config.GetFloat("Height", param);
 	
 	config.GetFloat("Rotation", rotation);
 
@@ -144,10 +146,16 @@ void ComponentTransform2D::UpdateRect()
 
 void ComponentTransform2D::CalculateRectMatix(float new_width, float new_height, float4x4* matrix)
 {
+	CalculateRectMatix(rect.left, rect.top, new_width, new_height, matrix);
+	
+}
+
+void ComponentTransform2D::CalculateRectMatix(float x, float y, float new_width, float new_height, float4x4* matrix)
+{
 	*matrix = float4x4(global_matrix);
-	matrix->SetTranslatePart(float3(rect.left, rect.top, position.z));
+	matrix->SetTranslatePart(float3(x, y, position.z));
 	*matrix = float4x4::RotateZ(rotation) * *matrix;
 	*matrix = *matrix * float4x4::RotateZ(-rotation);
 	*matrix = *matrix * float4x4::Scale(float3(new_width, new_height, 0));
-	
+
 }

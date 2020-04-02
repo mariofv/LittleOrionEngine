@@ -27,6 +27,7 @@ public:
 	virtual void Copy(Component* component_to_copy) const {};
 	virtual void Render(float4x4* projection);
 	virtual void Render(float4x4* projection, float4x4* model, unsigned int texture = 0, float3* color = &float3(0.0f, 1.0f, 0.0f));
+	virtual void InitData();
 
 	void SetTextureToRender(const std::shared_ptr<Texture>& new_texture);
 
@@ -40,7 +41,6 @@ public:
 protected:
 	unsigned int shader_program, vao, vbo;
 	unsigned int ui_texture = 2;
-	void InitData();
 	friend class PanelComponent;
 };
 #endif

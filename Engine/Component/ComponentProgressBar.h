@@ -12,7 +12,7 @@ public:
 
 	void Delete();
 
-	virtual void Save(Config& config) const;
+	void Save(Config& config) const;
 	void Load(const Config& config);
 	void Render(float4x4* projection);
 

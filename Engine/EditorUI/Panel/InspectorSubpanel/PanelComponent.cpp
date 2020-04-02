@@ -506,7 +506,10 @@ void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 		ImGui::Separator();		
 		ImGui::InputText("Text", &text->text);
 		ImGui::Separator();
-		ImGui::DragFloat("Font Size", (float*)(&text->scale));
+		if (ImGui::DragFloat("Font Size", (float*)(&text->scale)))
+		{
+			text->modified_by_user = true;
+		}
 		
 	}
 }

@@ -19,7 +19,7 @@ public:
 	ComponentTransform2D & operator=(const ComponentTransform2D & component_to_copy);
 	ComponentTransform2D & operator=(ComponentTransform2D && component_to_move) = default;
 
-	// Heredado vía Component
+	// Heredado vï¿½a Component
 	virtual void Delete() override;
 	virtual Component * Clone(bool create_on_module = true) const override;
 	virtual void Copy(Component * component_to_copy) const override;
@@ -31,6 +31,7 @@ public:
 	ENGINE_API void SetPosition(float x, float y);
 	ENGINE_API void SetPosition(float3* new_position);
 	void CalculateRectMatix(float new_width, float new_height, float4x4* matrix);
+	void CalculateRectMatix(float x, float y, float new_width, float new_height, float4x4* matrix);
 private:
 	void OnTransformChange();
 	void UpdateRect();

@@ -36,7 +36,7 @@ void ComponentUI::Render(float4x4* projection)
 }
 
 void ComponentUI::Render(float4x4* projection, float4x4* model, unsigned int texture, float3* color)
-{	
+{
 	if(owner->IsEnabled() && active)
 	{
 		glUseProgram(shader_program);
