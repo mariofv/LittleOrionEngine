@@ -114,6 +114,7 @@ void ComponentText::Save(Config& config) const
 {
 	ComponentUI::Save(config);
 	config.AddString(text, "Text");
+	config.AddFloat(scale, "Scale");
 	
 }
 
@@ -121,6 +122,7 @@ void ComponentText::Load(const Config& config)
 {
 	ComponentUI::Load(config);
 	config.GetString("Text", text, "");
+	config.GetFloat("Scale", scale);
 }
 
 
