@@ -111,7 +111,7 @@ update_status ModuleEditor::Update()
 #if GAME
 	if (!inital_scene_loaded)
 	{
-		OpenScene(MAIN_SCENE_PATH);
+		OpenScene("Library/menuscene.scene");
 		App->scripts->InitScripts();
 		inital_scene_loaded = true;
 		return update_status::UPDATE_CONTINUE;

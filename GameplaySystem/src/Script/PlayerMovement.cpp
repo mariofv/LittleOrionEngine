@@ -61,20 +61,6 @@ void PlayerMovement::Move(int player_id)
 	float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, static_cast<PlayerID>(player_id));
 	float3 axis_direction = float3(axis.x, 0.0f, axis.y);
 
-	//if(on_ramp)
-	//{
-	//	float heigth = owner->transform.GetTranslation().y;
-	//	if (App->input->GetKey(KeyCode::A) || axis.x < 0)
-	//	{
-	//		heigth = sin(math::DegToRad(15.0f));
-	//	}
-	//	else if((App->input->GetKey(KeyCode::D)) || axis.x > 0)
-	//	{
-	//		heigth = -sin(math::DegToRad(15.0f));
-	//	}
-	//	axis_direction.y += heigth;
-	//}
-
 	if (!axis_direction.Equals(float3::zero))
 	{
 		float3 dir;

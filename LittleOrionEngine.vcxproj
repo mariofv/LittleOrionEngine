@@ -65,7 +65,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_MBCS;WINDOWS_IGNORE_PACKING_MISMATCH;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -74,7 +74,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiDebug.lib;MathGeoLibDebug.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiDebug.lib;MathGeoLibDebug.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -91,7 +91,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -102,7 +102,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -116,7 +116,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>_MBCS;GAME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
@@ -127,7 +127,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -145,14 +145,23 @@
     <ClInclude Include="Engine\Actions\EditorActionEnableDisableComponent.h" />
     <ClInclude Include="Engine\Actions\EditorActionModifyCamera.h" />
     <ClInclude Include="Engine\Actions\EditorActionModifyLight.h" />
+    <ClInclude Include="Engine\Actions\EditorActionRect2D.h" />
     <ClInclude Include="Engine\Actions\EditorActionRotation.h" />
+    <ClInclude Include="Engine\Actions\EditorActionRotation2D.h" />
     <ClInclude Include="Engine\Actions\EditorActionScale.h" />
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h" />
     <ClInclude Include="Engine\AI\DebugDrawGL.h" />
     <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
     <ClInclude Include="Engine\Animation\AnimController.h" />
     <ClInclude Include="Engine\Component\ComponentAnimation.h" />
+    <ClInclude Include="Engine\Component\ComponentButton.h" />
+    <ClInclude Include="Engine\Component\ComponentCanvas.h" />
+    <ClInclude Include="Engine\Component\ComponentImage.h" />
+    <ClInclude Include="Engine\Component\ComponentProgressBar.h" />
     <ClInclude Include="Engine\Component\ComponentScript.h" />
+    <ClInclude Include="Engine\Component\ComponentText.h" />
+    <ClInclude Include="Engine\Component\ComponentTransform2D.h" />
+    <ClInclude Include="Engine\Component\ComponentUI.h" />
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h" />
     <ClInclude Include="Engine\Helper\Config.h" />
@@ -277,14 +286,23 @@
     <ClCompile Include="Engine\Actions\EditorActionEnableDisableComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionModifyCamera.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionModifyLight.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionRotation.cpp" />
+    <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
     <ClCompile Include="Engine\AI\DebugDrawGL.cpp" />
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
     <ClCompile Include="Engine\Animation\AnimController.cpp" />
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp" />
+    <ClCompile Include="Engine\Component\ComponentButton.cpp" />
+    <ClCompile Include="Engine\Component\ComponentCanvas.cpp" />
+    <ClCompile Include="Engine\Component\ComponentImage.cpp" />
+    <ClCompile Include="Engine\Component\ComponentProgressBar.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
+    <ClCompile Include="Engine\Component\ComponentText.cpp" />
+    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp" />
+    <ClCompile Include="Engine\Component\ComponentUI.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />

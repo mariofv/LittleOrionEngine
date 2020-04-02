@@ -154,7 +154,10 @@ void  ModuleScene::NewScene(const std::string &path)
 	root = new GameObject(0);
 
 	App->resources->scene_manager->Load(path);
-
+	if (App->scripts->scene_is_changed) 
+	{
+		App->scripts->InitScripts();
+	}
 	App->renderer->GenerateQuadTree();
 	App->renderer->GenerateOctTree();
 	App->actions->ClearUndoStack();
