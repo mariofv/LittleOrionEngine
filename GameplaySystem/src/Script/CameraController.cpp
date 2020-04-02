@@ -33,7 +33,7 @@ void CameraController::Awake()
 
 	player_movement_component = player->GetComponentScript("PlayerController");
 	player_movement_script = (PlayerController*)player_movement_component->script;
-	containing_sphere_radius = player->aabb.global_bounding_box.Size().Length();
+	rotation = owner->transform.GetRotation();
 }
 
 // Use this for initialization
@@ -48,6 +48,7 @@ void CameraController::Update()
 
 	if (App->input->GetKey(KeyCode::J))
 	{
+		owner->transform.SetRotation(rotation);
 		god_mode = !god_mode;
 		ActivePlayer();
 	}
@@ -99,6 +100,22 @@ void CameraController::GodCamera()
 	{
 		camera_component->MoveUp();
 	}
+	if (App->input->GetKey(KeyCode::UpArrow))
+	{
+		camera_component->RotateYaw(-rotation_speed);
+	}
+	if (App->input->GetKey(KeyCode::LeftArrow))
+	{
+		camera_component->RotatePitch(-rotation_speed);
+	}
+	if (App->input->GetKey(KeyCode::DownArrow))
+	{
+		camera_component->RotateYaw(rotation_speed);
+	}
+	if (App->input->GetKey(KeyCode::RightArrow))
+	{
+		camera_component->RotatePitch(rotation_speed);
+	}
 	//TODO MOVE AND ROTATE WITH JOYSTICK
 }
 
@@ -120,13 +137,7 @@ void CameraController::FollowPlayer()
 	float3 offset(0.f, 8.f, 10.f);
 	float3 new_position = player->transform.GetTranslation() + offset;
 	owner->transform.SetTranslation(new_position);
-	/*
-	Frustum camera_frustum = camera_component->GetFrustum();
-	camera_component->is_focusing = true;
-	camera_component->SetStartFocusPosition(camera->transform.GetTranslation());
-	camera_component->SetGoalFocusPosition(player->aabb.global_bounding_box.CenterPoint() - camera_frustum.front * 3.f * containing_sphere_radius);
-	camera_component->SetFocusTime(App->time->delta_time);
-	*/
+
 }
 
 void CameraController::InitPublicGameObjects()

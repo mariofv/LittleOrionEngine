@@ -29,9 +29,10 @@ public:
 
 private:
 	bool god_mode = false;
-	float containing_sphere_radius = 0.0f;
+	Quat rotation = Quat::identity;
 	GameObject* camera = nullptr;
 	ComponentCamera* camera_component = nullptr;
+	float rotation_speed = 0.2f;
 
 	GameObject* player = nullptr;
 	PlayerController* player_movement_script = nullptr;
