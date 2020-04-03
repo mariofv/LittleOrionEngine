@@ -254,6 +254,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Script\DamageScript.h" />
     <ClInclude Include="src\Script\EndOfLevelScript.h" />
     <ClInclude Include="src\Script\ExampleScript.h" />
     <ClInclude Include="src\Script\MenuLogic.h" />
@@ -266,6 +267,7 @@
     <ClInclude Include="src\Script\TriggerGravity.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Script\DamageScript.cpp" />
     <ClCompile Include="src\Script\EndOfLevelScript.cpp" />
     <ClCompile Include="src\Script\ExampleScript.cpp" />
     <ClCompile Include="src\Script\MenuLogic.cpp" />

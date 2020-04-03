@@ -42,6 +42,9 @@
     <ClInclude Include="src\Script\MenuLogic.h">
       <Filter>src\Script</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\DamageScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -72,6 +75,9 @@
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\MenuLogic.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\DamageScript.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>
