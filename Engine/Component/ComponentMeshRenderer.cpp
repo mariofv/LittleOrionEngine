@@ -212,8 +212,8 @@ void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 		glUniform1f(glGetUniformLocation(shader_program, "material.transparency"), material_to_render->transparency);
 	}
 
-	glUniform1f(glGetUniformLocation(shader_program, "material.tilling_x"), material_to_render->tilling_x);
-	glUniform1f(glGetUniformLocation(shader_program, "material.tilling_y"), material_to_render->tilling_y);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_x"), material_to_render->tiling_x);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_y"), material_to_render->tiling_y);
 }
 
 void ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const

@@ -145,8 +145,8 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 			ImGui::SliderFloat("Transparency", &material->transparency, 0.01f, 1.f);
 		}
 
-		ImGui::SliderFloat("Tilling X", &material->tilling_x, 0.f, 100.f);
-		ImGui::SliderFloat("Tilling Y", &material->tilling_y, 0.f, 100.f);
+		ImGui::SliderFloat("Tiling X", &material->tiling_x, 0.f, 10.f);
+		ImGui::SliderFloat("Tiling Y", &material->tiling_y, 0.f, 10.f);
 		ImGui::Unindent();
 
 		break;

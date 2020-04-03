@@ -29,8 +29,8 @@ struct Material {
 	float roughness;
 	float metalness;
 	float transparency;
-	float tilling_x;
-	float tilling_y;
+	float tiling_x;
+	float tiling_y;
 
 };
 uniform Material material;

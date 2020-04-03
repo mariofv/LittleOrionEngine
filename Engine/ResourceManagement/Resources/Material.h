@@ -69,8 +69,8 @@ public:
 	float roughness = 0.5f;
 	float metalness = 0.04f;
 
-	float tilling_x = 0.0f;
-	float tilling_y = 0.0f;
+	float tiling_x = 1.0f;
+	float tiling_y = 1.0f;
 
 	bool show_checkerboard_texture = false;
 };

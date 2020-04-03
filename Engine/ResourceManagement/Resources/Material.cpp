@@ -61,8 +61,8 @@ void Material::Save(Config& config) const
 	config.AddFloat(roughness, "Roughness");
 	config.AddFloat(metalness, "Metalness");
 
-	config.AddFloat(roughness, "TillingX");
-	config.AddFloat(metalness, "TillingY");
+	config.AddFloat(tiling_x, "Tiling X");
+	config.AddFloat(tiling_y, "Tiling Y");
 
 	//colors
 	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
@@ -122,8 +122,8 @@ void Material::Load(const Config& config)
 	roughness = config.GetFloat("Roughness", 0.5f);
 	metalness = config.GetFloat("Metalness", 0.04f);
 
-	roughness = config.GetFloat("TillingX", 0.0f);
-	metalness = config.GetFloat("TillingY", 0.0f);
+	roughness = config.GetFloat("Tiling X", 0.0f);
+	metalness = config.GetFloat("Tiling Y", 0.0f);
 
 	//colors
 	float4 diffuse;
