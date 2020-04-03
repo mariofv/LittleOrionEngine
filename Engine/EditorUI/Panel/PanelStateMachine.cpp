@@ -288,6 +288,24 @@ std::vector<NodeInfo*> PanelStateMachine::GetSelectedNodes()
 	return selected_nodes;
 }
 
+std::vector<LinkInfo*> PanelStateMachine::GetSelectedLinks()
+{
+	std::vector<ax::NodeEditor::LinkId> selection;
+	selection.resize(ax::NodeEditor::GetSelectedObjectCount());
+	ax::NodeEditor::GetSelectedLinks(selection.data(), static_cast<int>(selection.size()));
+
+	std::vector<LinkInfo*> selected_links;
+	for (auto & link : links)
+	{
+		bool isSelected = std::find(selection.begin(), selection.end(), link->id) != selection.end();
+		if (isSelected)
+		{
+			selected_links.push_back(link);
+		}
+	}
+	return selected_links;
+}
+
 void PanelStateMachine::DropAnimation(std::shared_ptr<State> & state)
 {
 	if (ImGui::BeginDragDropTarget())

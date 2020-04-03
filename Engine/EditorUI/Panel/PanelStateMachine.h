@@ -44,6 +44,8 @@ private:
 	void DropAnimation(std::shared_ptr<State>& state);
 	std::vector<NodeInfo*> GetSelectedNodes();
 
+	std::vector<LinkInfo*> GetSelectedLinks();
+
 private:
 	ax::NodeEditor::EditorContext* editor_context = nullptr;
 	std::shared_ptr<StateMachine> state_machine;
