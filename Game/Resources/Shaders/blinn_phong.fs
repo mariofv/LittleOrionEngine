@@ -30,6 +30,8 @@ struct Material
 	float roughness;
 	float metalness;
 	float transparency;
+	float tilling_x;
+	float tilling_y;
 };
 uniform Material material;
 
@@ -84,7 +86,7 @@ vec3 GetOcclusionColor(const Material mat, const vec2 texCoord);
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 
 //MAPS
-vec3 GetNormalMap(sampler2D normal_map, const vec2 texCoord);
+vec3 GetNormalMap(const Material mat, const vec2 texCoord);
 
 //TYPE OF LIGHTS
 vec3 CalculateDirectionalLight(const vec3 normalized_normal);
@@ -103,7 +105,7 @@ mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent);
 //SUBROUTINES
 layout(index=0) subroutine (normal_subroutine) vec3 ComputeMaterialWithNormalMap()
 {
-	vec3 normalized_normal = normalize(GetNormalMap(material.normal_map, texCoord));
+	vec3 normalized_normal = normalize(GetNormalMap(material, texCoord));
 	return normalized_normal = CreateTangentSpace(normalize(normal), normalize(tangent)) * normalized_normal;
 }
 
@@ -145,27 +147,35 @@ void main()
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 {
-	return texture(mat.diffuse_map, texCoord)*mat.diffuse_color;
+	vec2 tilling = vec2(mat.tilling_x, mat.tilling_y); 
+	tilling += texCoord;
+	return texture(mat.diffuse_map, tilling)*mat.diffuse_color;
 }
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
 {
-	return texture(mat.specular_map, texCoord)*mat.specular_color;
+	vec2 tilling = vec2(mat.tilling_x, mat.tilling_y); 
+	tilling += texCoord;
+	return texture(mat.specular_map, tilling)*mat.specular_color;
 }
 
 vec3 GetOcclusionColor(const Material mat, const vec2 texCoord)
 {
-	return texture(mat.occlusion_map, texCoord).rgb * vec3(1.0,1.0,1.0);
+	vec2 tilling = vec2(mat.tilling_x, mat.tilling_y); 
+	tilling += texCoord;
+	return texture(mat.occlusion_map, tilling).rgb * vec3(1.0,1.0,1.0);
 }
 
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 {
-	return (texture(mat.emissive_map, texCoord)*mat.emissive_color).rgb;
+	vec2 tilling = vec2(mat.tilling_x, mat.tilling_y); 
+	tilling += texCoord;
+	return (texture(mat.emissive_map, tilling)*mat.emissive_color).rgb;
 }
 
-vec3 GetNormalMap(sampler2D normal_map, const vec2 texCoord)
+vec3 GetNormalMap(const Material mat, const vec2 texCoord)
 {
-	return texture(normal_map, texCoord).rgb*2.0-1.0;
+	return texture(mat.normal_map, texCoord).rgb*2.0-1.0;
 }
 
 vec3 CalculateDirectionalLight(const vec3 normalized_normal)

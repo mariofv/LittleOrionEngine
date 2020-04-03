@@ -63,10 +63,14 @@ public:
 	float k_diffuse = 1.0f;
 	float k_specular = 1.0f;
 	float k_ambient = 1.0f;
+	float2 coords = float2(1.0f, 1.0f);
 
 	float transparency = 0.5F;
 	float roughness = 0.5f;
 	float metalness = 0.04f;
+
+	float tilling_x = 0.0f;
+	float tilling_y = 0.0f;
 
 	bool show_checkerboard_texture = false;
 };

@@ -25,12 +25,14 @@ public:
 	~Mesh();
 
 	GLuint GetVAO() const;
-
+	void ChangeTiling();
 	int GetNumTriangles() const;
 	std::vector<Triangle> GetTriangles() const;
 
 private:
 	void LoadInMemory() override;
+
+
 
 public:
 	std::vector<Vertex> vertices;

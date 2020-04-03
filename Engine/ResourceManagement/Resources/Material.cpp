@@ -61,6 +61,9 @@ void Material::Save(Config& config) const
 	config.AddFloat(roughness, "Roughness");
 	config.AddFloat(metalness, "Metalness");
 
+	config.AddFloat(roughness, "TillingX");
+	config.AddFloat(metalness, "TillingY");
+
 	//colors
 	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
 	config.AddColor(float4(emissive_color[0], emissive_color[1], emissive_color[2], 1.0f), "emissiveColor");
@@ -118,6 +121,9 @@ void Material::Load(const Config& config)
 	transparency = config.GetFloat("Transparency", 1.f);
 	roughness = config.GetFloat("Roughness", 0.5f);
 	metalness = config.GetFloat("Metalness", 0.04f);
+
+	roughness = config.GetFloat("TillingX", 0.0f);
+	metalness = config.GetFloat("TillingY", 0.0f);
 
 	//colors
 	float4 diffuse;

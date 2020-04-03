@@ -68,7 +68,9 @@ void PanelMaterial::Render(Material* material)
 		ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing();
-
+		bool some = false;
+		ImGui::Checkbox("Rise Texcoords", &some);
+		
 		ImGui::Text("Main Maps");
 		ImGui::Spacing();
 		ImGui::Spacing();
@@ -142,6 +144,9 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 		{
 			ImGui::SliderFloat("Transparency", &material->transparency, 0.01f, 1.f);
 		}
+
+		ImGui::SliderFloat("Tilling X", &material->tilling_x, 0.f, 100.f);
+		ImGui::SliderFloat("Tilling Y", &material->tilling_y, 0.f, 100.f);
 		ImGui::Unindent();
 
 		break;
@@ -178,6 +183,7 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 		ImGui::SliderFloat("k specular", &material->k_specular, 0.f, 1.f);
 		ImGui::SliderFloat("Roughness", &material->roughness, 0.f, 1.f);
 		ImGui::SliderFloat("Metalness", &material->metalness, 0.f, 100.f);
+
 		ImGui::Unindent();
 
 		break;

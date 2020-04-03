@@ -90,3 +90,4 @@ void Mesh::LoadInMemory()
 
 	glBindVertexArray(0);
 }
+
