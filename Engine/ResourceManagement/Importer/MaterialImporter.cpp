@@ -74,7 +74,10 @@ ImportResult MaterialImporter::ExtractMaterialFromMesh(const aiScene* scene, siz
 			}
 		}
 	}
-
+	if (scene->mMeshes[mesh_index]->HasBones())
+	{
+		imported_material.shader_program = "Skinning";
+	}
 	material_config.AddBool(imported_material.show_checkerboard_texture, "Checkboard");
 	material_config.AddString(imported_material.shader_program, "ShaderProgram");
 

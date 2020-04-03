@@ -73,7 +73,6 @@ void ModelPrefabImporter::LoadNode(std::unique_ptr<GameObject> & parent_node, co
 		if (!skeleton_uuid.empty())
 		{
 			mesh_renderer->SetSkeleton(App->resources->Load<Skeleton>(skeleton_uuid));
-			mesh_renderer->material_to_render->shader_program = "skinning";
 		}
 		node_config.GetString("Name", node_game_object->name, "");
 		node_game_object->original_UUID = node_game_object->UUID;
