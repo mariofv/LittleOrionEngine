@@ -78,6 +78,12 @@ update_status Application::Update()
 {
 	BROFILER_FRAME("MainLoop");
 	update_status result = update_status::UPDATE_CONTINUE;
+
+	if (App->scene->HasPendingSceneToLoad())
+	{
+		App->scene->OpenPendingScene();
+	}
+
 	for (auto &module : modules) 
 	{
 		update_status ret = module->PreUpdate();

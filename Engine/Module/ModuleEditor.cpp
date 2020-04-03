@@ -231,7 +231,7 @@ bool ModuleEditor::CleanUp()
 
 ENGINE_API void ModuleEditor::OpenScene(const std::string &path) const
 {
-	App->scene->NewScene(path);
+	App->scene->LoadScene(path);
 }
 
 void ModuleEditor::SaveScene(const std::string &path) const

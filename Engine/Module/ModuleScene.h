@@ -25,15 +25,21 @@ public:
 	ENGINE_API GameObject* GetGameObject(uint64_t UUID) const;
 	Component* GetComponent(uint64_t UUID) const;
 
+
+	void OpenPendingScene();
 	void DeleteCurrentScene();
-	void NewScene(const std::string &path);
+
+	void LoadScene(const std::string &path);
+	bool HasPendingSceneToLoad() const;
+
+private:
+	void OpenScene(const std::string &path);
 
 private:
 	GameObject *root = nullptr;
-	
-
-	
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
+	
+	std::string scene_to_load;
 
 	friend class PanelScene;
 	friend class ModuleDebugDraw;

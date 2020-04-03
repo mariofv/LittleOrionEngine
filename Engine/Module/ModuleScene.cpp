@@ -147,7 +147,7 @@ void ModuleScene::DeleteCurrentScene()
 	App->editor->selected_game_object = nullptr;
 }
 
-void  ModuleScene::NewScene(const std::string &path)
+void ModuleScene::OpenScene(const std::string &path)
 {
 	App->scene->DeleteCurrentScene();
 	App->renderer->CreateAABBTree();
@@ -162,3 +162,20 @@ void  ModuleScene::NewScene(const std::string &path)
 	App->renderer->GenerateOctTree();
 	App->actions->ClearUndoStack();
 }
+
+void ModuleScene::OpenPendingScene()
+{
+	OpenScene(scene_to_load);
+	scene_to_load.clear();
+}
+
+void ModuleScene::LoadScene(const std::string &path)
+{
+	scene_to_load = path;
+}
+
+bool ModuleScene::HasPendingSceneToLoad() const
+{
+	return !scene_to_load.empty();
+}
+
