@@ -10,6 +10,7 @@
 #include "ModuleRender.h"
 #include "ModuleResourceManager.h"
 #include "ModuleScriptManager.h"
+#include "ModuleTime.h"
 
 #include <algorithm>
 #include <stack>
@@ -143,7 +144,6 @@ void ModuleScene::DeleteCurrentScene()
 	RemoveGameObject(root);
 	App->renderer->DeleteAABBTree();
 	App->scripts->scripts.clear();
-	App->scripts->scene_is_changed = true;
 	App->editor->selected_game_object = nullptr;
 }
 
@@ -154,7 +154,8 @@ void ModuleScene::OpenScene(const std::string &path)
 	root = new GameObject(0);
 
 	App->resources->scene_manager->Load(path);
-	if (App->scripts->scene_is_changed) 
+
+	if (App->time->isGameRunning())
 	{
 		App->scripts->InitScripts();
 	}

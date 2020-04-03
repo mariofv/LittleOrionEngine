@@ -203,11 +203,6 @@ void ModuleScriptManager::RunScripts()
 {
 	for (auto &component_script : scripts)
 	{
-		if (!scripts.size() || scene_is_changed)
-		{
-			scene_is_changed = false;
-			break;
-		}
 		component_script->Update();
 	}
 }
