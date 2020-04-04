@@ -22,10 +22,7 @@ public:
 	void Stop();
 	void Update();
 
-	bool GetKeyframes(int& first_keyframe_index, int& second_keyframe_index, float& interpolationLambda);
-
-	bool GetTransform(const std::string& channel_name, float3& position, Quat& rotation, const int first_keyframe_index,
-		const int second_keyframe_index, const float interpolationLambda);
+	bool GetTransform(const std::string& channel_name, float3& position, Quat& rotation);
 
 private:
 	void UpdateChannelsGlobalTransformation();

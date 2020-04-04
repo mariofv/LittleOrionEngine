@@ -37,7 +37,7 @@ public:
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
-	void UpdateBone(GameObject * current_bone, int first_keyframe, int second_keyframe, float lambda);
+	void UpdateBone(GameObject * current_bone);
 
 	void GetChildrenMeshes(GameObject * current_mesh);
 

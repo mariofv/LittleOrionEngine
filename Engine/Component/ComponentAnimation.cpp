@@ -57,7 +57,7 @@ void ComponentAnimation::Update()
 
 	if (animation_controller->playing)
 	{
-		UpdateBone(owner, -1, -1, -1);
+		UpdateBone(owner);
 	}
 }
 
@@ -91,17 +91,11 @@ void ComponentAnimation::Load(const Config& config)
 
 
 
-void ComponentAnimation::UpdateBone(GameObject* current_bone, int first_keyframe, int second_keyframe, float lambda)
+void ComponentAnimation::UpdateBone(GameObject* current_bone)
 {
-	if (first_keyframe < 0)
-	{
-		animation_controller->GetKeyframes(first_keyframe, second_keyframe, lambda);
-	}
-
 	float3 bone_position;
 	Quat bone_rotation;
-	if (animation_controller->GetTransform(current_bone->name, bone_position, bone_rotation, first_keyframe,
-		second_keyframe, lambda))
+	if (animation_controller->GetTransform(current_bone->name, bone_position, bone_rotation))
 	{
 		current_bone->transform.SetTranslation(bone_position);
 		current_bone->transform.SetRotation(bone_rotation.ToFloat3x3());
@@ -113,7 +107,7 @@ void ComponentAnimation::UpdateBone(GameObject* current_bone, int first_keyframe
 	}
 	for (auto& children_bone : current_bone->children)
 	{
-		UpdateBone(children_bone, first_keyframe, second_keyframe, lambda);
+		UpdateBone(children_bone);
 	}
 	
 }

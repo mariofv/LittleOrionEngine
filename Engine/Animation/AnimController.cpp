@@ -76,61 +76,16 @@ void AnimController::Update()
 		}
 	}
 		//UpdateChannelsGlobalTransformation();
-
 }
 
-bool AnimController::GetKeyframes(int & first_keyframe_index, int & second_keyframe_index, float & interpolationLambda)
+bool AnimController::GetTransform(const std::string & channel_name, float3 & position, Quat & rotation)
 {
-	float current_sample = (current_time*(animation->frames - 1)) / animation_time;
-	int current_keyframe = math::FloorInt(current_sample);
+	float current_keyframe = (current_time*(animation->frames - 1)) / animation_time;
+	size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
+	size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
 
-	bool found_keyframe = false;
-	for (size_t i = 0; !found_keyframe && i < animation->keyframes.size(); i++)
-	{
-		if (animation->keyframes[i].frame == current_keyframe)
-		{
-			if (i + 1 == animation->keyframes.size())
-			{
-				if (this->loop)
-				{
-					first_keyframe_index = i;
-					second_keyframe_index = (i + 1) % (int)animation->frames;
-				}
-				else
-				{
-					first_keyframe_index = second_keyframe_index = i;
-				}
-			}
+	float interpolationLambda = current_keyframe - std::floor(current_keyframe);
 
-			else
-			{
-				first_keyframe_index = i;
-				second_keyframe_index = i + 1;
-			}
-			found_keyframe = true;
-			break;
-		}
-
-		if (animation->keyframes[i].frame > current_keyframe)
-		{
-			first_keyframe_index = i - 1;
-			second_keyframe_index = i;
-
-			found_keyframe = true;
-			break;
-		}
-	}
-	if (!found_keyframe)
-		return false;
-
-	interpolationLambda = (current_sample - animation->keyframes[first_keyframe_index].frame)
-		/ (animation->keyframes[second_keyframe_index].frame - animation->keyframes[first_keyframe_index].frame);
-
-	return true;
-}
-
-bool AnimController::GetTransform(const std::string & channel_name, float3 & position, Quat & rotation, const int first_keyframe_index, const int second_keyframe_index, const float interpolationLambda)
-{
 	bool channel_found = false;
 	size_t channel_index = 0;
 	while (!channel_found && channel_index < animation->keyframes[0].channels.size())
