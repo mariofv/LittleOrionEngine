@@ -43,7 +43,9 @@ Application::Application()
 	modules.emplace_back(cameras = new ModuleCamera());
 	modules.emplace_back(model_loader = new ModuleModelLoader());
 	modules.emplace_back(debug = new ModuleDebug());
+#if !GAME
 	modules.emplace_back(debug_draw = new ModuleDebugDraw());
+#endif
 	modules.emplace_back(lights = new ModuleLight());
 	modules.emplace_back(scene = new ModuleScene());
 	modules.emplace_back(artificial_intelligence = new ModuleAI());

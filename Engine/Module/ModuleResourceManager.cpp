@@ -32,10 +32,6 @@ bool ModuleResourceManager::Init()
 
 update_status ModuleResourceManager::PreUpdate()
 {
-#if GAME
-	return update_status::UPDATE_CONTINUE;
-#endif
-
 	if ((thread_timer->Read() - last_imported_time) >= importer_interval_millis)
 	{
 		//importing_thread.join();
