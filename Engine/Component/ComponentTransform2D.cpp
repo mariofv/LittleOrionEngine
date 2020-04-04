@@ -95,7 +95,7 @@ void ComponentTransform2D::OnTransformChange()
 	model_matrix = float4x4::FromTRS(position, float4x4::FromEulerXYZ(0, 0, rotation), float3(scale, 1));
 	UpdateRect();
 	GenerateGlobalModelMatrix();
-	CalculateRectMatix(rect.Width(), rect.Height(), &rect_matrix);
+	CalculateRectMatrix(rect.Width(), rect.Height(), rect_matrix);
 
 	for (auto & child : owner->children)
 	{
@@ -144,18 +144,18 @@ void ComponentTransform2D::UpdateRect()
 	rect.bottom = position.y + height / 2;
 }
 
-void ComponentTransform2D::CalculateRectMatix(float new_width, float new_height, float4x4* matrix)
+void ComponentTransform2D::CalculateRectMatrix(float new_width, float new_height, float4x4& matrix)
 {
-	CalculateRectMatix(rect.left, rect.top, new_width, new_height, matrix);
+	CalculateRectMatrix(rect.left, rect.top, new_width, new_height, matrix);
 	
 }
 
-void ComponentTransform2D::CalculateRectMatix(float x, float y, float new_width, float new_height, float4x4* matrix)
+void ComponentTransform2D::CalculateRectMatrix(float x, float y, float new_width, float new_height, float4x4& matrix)
 {
-	*matrix = float4x4(global_matrix);
-	matrix->SetTranslatePart(float3(x, y, position.z));
-	*matrix = float4x4::RotateZ(rotation) * *matrix;
-	*matrix = *matrix * float4x4::RotateZ(-rotation);
-	*matrix = *matrix * float4x4::Scale(float3(new_width, new_height, 0));
+	matrix = float4x4(global_matrix);
+	matrix.SetTranslatePart(float3(x, y, position.z));
+	matrix = float4x4::RotateZ(rotation) * matrix;
+	matrix = matrix * float4x4::RotateZ(-rotation);
+	matrix = matrix * float4x4::Scale(float3(new_width, new_height, 0));
 
 }

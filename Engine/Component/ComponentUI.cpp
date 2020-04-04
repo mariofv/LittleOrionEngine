@@ -19,7 +19,7 @@ ComponentUI::ComponentUI(UIType ui_type) : Component(nullptr, ComponentType::UI)
 	InitData();
 }
 
-ComponentUI::ComponentUI(GameObject * owner, UIType ui_type) : Component(owner, ComponentType::UI), ui_type(ui_type)
+ComponentUI::ComponentUI(GameObject* owner, UIType ui_type) : Component(owner, ComponentType::UI), ui_type(ui_type)
 {
 	InitData();
 }

@@ -360,7 +360,7 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 
 ENGINE_API Component* GameObject::CreateComponentUI(const ComponentUI::UIType ui_type)
 {
-	Component *created_component = App->ui->CreateComponentUI(ui_type, this);
+	Component* created_component = App->ui->CreateComponentUI(ui_type, this);
 	components.push_back(created_component);
 	return created_component;
 }

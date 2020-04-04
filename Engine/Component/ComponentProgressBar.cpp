@@ -24,7 +24,7 @@ void ComponentProgressBar::Render(float4x4* projection)
 	ComponentTransform2D* transform_2d = &owner->transform_2d;	
 	// bar
 	float4x4 bar_model;
-	transform_2d->CalculateRectMatix(transform_2d->rect.Width() * (percentage / 100), transform_2d->rect.Height(), &bar_model);
+	transform_2d->CalculateRectMatrix(transform_2d->rect.Width() * (percentage / 100), transform_2d->rect.Height(), bar_model);
 	ComponentUI::Render(projection, &bar_model, bar_texture, &bar_color);
 	// background
 	ComponentUI::Render(projection);
