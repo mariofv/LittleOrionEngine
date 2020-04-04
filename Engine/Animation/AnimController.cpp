@@ -216,4 +216,7 @@ void AnimController::ActiveAnimation(const std::string & trigger)
 		next_state = state_machine->GetState(transition->target_hash);
 	}
 	//TODO: BLEND STATES
+	active_state = next_state;
+	animation = active_state->clip->animation;
+	Init();
 }

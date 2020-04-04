@@ -58,6 +58,15 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(const std::string & file
 		bytes = sizeof(uint64_t);
 		memcpy(&clip_hash, cursor, bytes);
 		cursor += bytes; // Store states
+
+		for (auto & clip : clips)
+		{
+			if (clip->name_hash == clip_hash)
+			{
+				state->clip = clip;
+				break;
+			}
+		}
 	}
 
 	std::vector<std::shared_ptr<Transition>> transitions;
