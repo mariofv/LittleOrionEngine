@@ -112,9 +112,15 @@ void PanelStateMachine::RenderStates()
 		ImGui::PopID();
 
 	}
-	for (auto& linkInfo : links)
+	for (auto& link : links)
 	{
-		ax::NodeEditor::Link(linkInfo->id, linkInfo->input_id, linkInfo->output_id);
+		ax::NodeEditor::Link(link->id, link->input_id, link->output_id);
+		if (ImGui::IsMouseClicked(1) && ImGui::IsItemHovered())
+		{
+			ax::NodeEditor::Suspend();
+			ImGui::OpenPopup("Link Menu");
+			ax::NodeEditor::Resume();
+		}
 	}
 }
 
@@ -230,6 +236,15 @@ void PanelStateMachine::CreateNodeMenu()
 			}
 			ImGui::EndMenu();
 		}
+		auto& links = GetSelectedLinks();
+		if (links.size > 0 && ImGui::BeginMenu("Link Menu"))
+		{
+
+			ImGui::PushID(links[0]->id.AsPointer());
+			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(links[0]->transition->interpolation_time));
+			ImGui::PopID();
+			ImGui::EndMenu();
+		}
 		ImGui::EndPopup();
 	}
 	ax::NodeEditor::Resume();
@@ -270,6 +285,7 @@ std::vector<LinkInfo*> PanelStateMachine::GetSelectedLinks()
 	}
 	return selected_links;
 }
+
 
 void PanelStateMachine::DropAnimation(std::shared_ptr<State> & state)
 {

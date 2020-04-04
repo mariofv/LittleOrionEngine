@@ -77,7 +77,7 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(const std::string & file
 		memcpy(&transition->trigger_hash, cursor, bytes);
 		cursor += bytes;
 
-		bytes = sizeof(long);
+		bytes = sizeof(uint64_t);
 		memcpy( &transition->interpolation_time, cursor, bytes);
 		cursor += bytes;
 	}

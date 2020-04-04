@@ -30,7 +30,7 @@ struct Transition
 	uint64_t source_hash = 0;
 	uint64_t target_hash = 0;
 	uint64_t trigger_hash = 0;
-	long interpolation_time = 0;
+	uint64_t interpolation_time = 0;
 };
 class File;
 class StateMachine : public Resource
