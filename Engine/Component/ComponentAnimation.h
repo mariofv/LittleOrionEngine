@@ -10,7 +10,7 @@
 class Animation;
 class AnimController;
 class GameObject;
-class Skeleton;
+class StateMachine;
 
 class ComponentAnimation :	public Component
 {
@@ -45,6 +45,7 @@ public:
 public:
 	AnimController* animation_controller = nullptr;
 	std::vector<ComponentMeshRenderer*> skinned_meshes;
+	std::shared_ptr<StateMachine> state_machine;
 
 private:
 	friend class PanelComponent;

@@ -9,6 +9,7 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleResourceManager.h"
 
+#include "ResourceManagement/Resources/StateMachine.h"
 ComponentAnimation::ComponentAnimation() : Component(nullptr, ComponentType::ANIMATION)
 {
 	animation_controller = new AnimController();
@@ -66,6 +67,9 @@ void ComponentAnimation::Save(Config& config) const
 	config.AddBool(active, "Active");
 
 	config.AddString(animation_controller->animation->exported_file, "AnimationResource");
+
+	std::string state_machine_path = state_machine ? state_machine->exported_file : "";
+	config.AddString(state_machine_path, "StateMachineResource");
 }
 
 void ComponentAnimation::Load(const Config& config)
@@ -75,6 +79,13 @@ void ComponentAnimation::Load(const Config& config)
 	std::string animation_path;
 	config.GetString("AnimationResource", animation_path, "");
 	SetAnimation(App->resources->Load<Animation>(animation_path));
+
+	std::string state_machine_path;
+	config.GetString("StateMachineResource", state_machine_path, "");
+	if (!state_machine_path.empty())
+	{
+		state_machine = App->resources->Load<StateMachine>(state_machine_path);
+	}
 }
 
 void ComponentAnimation::SetAnimation(std::shared_ptr<Animation>& animation)

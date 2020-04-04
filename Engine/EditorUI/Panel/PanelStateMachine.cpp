@@ -237,7 +237,7 @@ void PanelStateMachine::CreateNodeMenu()
 			ImGui::EndMenu();
 		}
 		auto& links = GetSelectedLinks();
-		if (links.size > 0 && ImGui::BeginMenu("Link Menu"))
+		if (links.size() > 0 && ImGui::BeginMenu("Link Menu"))
 		{
 
 			ImGui::PushID(links[0]->id.AsPointer());

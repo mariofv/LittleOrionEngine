@@ -38,6 +38,7 @@
 #include "Module/ModuleUI.h"
 
 #include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/Resources/StateMachine.h"
 
 
 #include <imgui.h>
@@ -398,10 +399,12 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Animation");
 		ImGui::SameLine();
-		if (ImGui::Button(animation->animation_controller->animation->exported_file.c_str()))
-		{
-			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
-		}
+		ImGui::Button(animation->animation_controller->animation->exported_file.c_str());
+		DropAnimation(animation);
+		ImGui::Text("State Machine");
+		ImGui::SameLine();
+		std::string state_machine_path = animation->state_machine ? animation->state_machine->exported_file : "State machine";
+		ImGui::Button(state_machine_path.c_str());
 		DropAnimation(animation);
 		ImGui::AlignTextToFramePadding();
 		ImGui::Separator();
@@ -717,6 +720,14 @@ void PanelComponent::DropAnimation(ComponentAnimation* component_animation)
 				ImportOptions meta;
 				Importer::GetOptionsFromMeta(meta_path, meta);
 				component_animation->SetAnimation(App->resources->Load<Animation>(meta.exported_file));
+				component_animation->modified_by_user = true;
+			}
+			if (incoming_file->file_type == FileType::STATE_MACHINE)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				component_animation->state_machine = App->resources->Load<StateMachine>(meta.exported_file);
 				component_animation->modified_by_user = true;
 			}
 			
