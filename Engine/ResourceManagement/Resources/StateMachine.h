@@ -41,6 +41,8 @@ public:
 	~StateMachine() = default;
 	void LoadInMemory() override {};
 	void RemoveState(const std::shared_ptr<State> & state);
+	void RemoveClip(const std::shared_ptr<Clip> & state);
+	void AddClipToState(std::shared_ptr<State> & state, File & clip_file);
 
 	void Save() const;
 	void Load(const File & file);

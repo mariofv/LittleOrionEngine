@@ -316,13 +316,7 @@ void PanelStateMachine::DropAnimation(std::shared_ptr<State> & state)
 			File* incoming_file = *(File * *)payload->Data;
 			if (incoming_file->file_type == FileType::ANIMATION)
 			{
-				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
-				ImportOptions meta;
-				Importer::GetOptionsFromMeta(meta_path, meta);
-				std::shared_ptr<Animation> animation = App->resources->Load<Animation>(meta.exported_file);
-				std::shared_ptr<Clip> new_clip = std::make_shared<Clip>(incoming_file->filename_no_extension, animation, false);
-				state->clip = new_clip;
-				state_machine->clips.push_back(new_clip);
+				state_machine->AddClipToState(state, *incoming_file);
 			}
 		}
 		ImGui::EndDragDropTarget();

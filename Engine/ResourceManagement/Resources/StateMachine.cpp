@@ -46,16 +46,50 @@ void StateMachine::RemoveState(const std::shared_ptr<State>& state)
 		{
 			transitions.erase(transition_it);
 		}
-		if ((*states_it)->clip != nullptr)
-		{
-			uint64_t clip_hash = (*states_it)->clip->name_hash;
-			auto clip_it = std::remove_if(clips.begin(), clips.end(), [&clip_hash](const auto & clip) {
-				return clip->name_hash == clip_hash;
-			});
-			clips.erase(clip_it);
-		}
 		states.erase(states_it);
+		std::shared_ptr<Clip> clip = (*states_it)->clip;
+		if (clip != nullptr)
+		{
+			RemoveClip(clip);
+		}
 	}
+}
+
+void StateMachine::RemoveClip(const std::shared_ptr<Clip>& clip)
+{
+	bool is_being_use = false;
+	for (auto & state : states)
+	{
+		is_being_use = state->clip && state->clip->name_hash == clip->name_hash;
+		if (is_being_use)
+		{
+			break;
+		}
+	}
+	if (!is_being_use)
+	{
+		uint64_t clip_hash = clip->name_hash;
+		auto clip_it = std::remove_if(clips.begin(), clips.end(), [&clip_hash](const auto & clip) {
+			return clip->name_hash == clip_hash;
+		});
+		clips.erase(clip_it);
+	}
+}
+
+void StateMachine::AddClipToState(std::shared_ptr<State>& state, File& clip_file)
+{
+	std::string meta_path = Importer::GetMetaFilePath(clip_file.file_path);
+	ImportOptions meta;
+	Importer::GetOptionsFromMeta(meta_path, meta);
+	std::shared_ptr<Animation> animation = App->resources->Load<Animation>(meta.exported_file);
+	std::shared_ptr<Clip> new_clip = std::make_shared<Clip>(clip_file.filename_no_extension, animation, false);
+	std::shared_ptr<Clip> old_clip = state->clip;
+	state->clip = new_clip;
+	if (old_clip != nullptr)
+	{
+		RemoveClip(old_clip);
+	}
+	clips.push_back(new_clip);
 }
 
 //TODO: Do it like a binary
@@ -145,7 +179,7 @@ void StateMachine::Load(const File& file)
 		std::shared_ptr<Clip> state_clip;
 		for (auto& clip : clips)
 		{
-			if (clip->name == name)
+			if (clip->name == clip_name)
 			{
 				state_clip = clip;
 			}
