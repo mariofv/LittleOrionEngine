@@ -17,8 +17,8 @@ public:
 	bool CleanUp() override;
 
 	ENGINE_API GameObject* CreateGameObject();
-	ENGINE_API GameObject* CreateChildGameObject(GameObject *parent);
-	void RemoveGameObject(GameObject * game_object_to_remove);
+	ENGINE_API GameObject* CreateChildGameObject(GameObject* parent);
+	void RemoveGameObject(GameObject* game_object_to_remove);
 	GameObject* AddGameObject(std::unique_ptr<GameObject> & game_object_to_add);
 
 	ENGINE_API GameObject* GetRoot() const;
@@ -36,7 +36,7 @@ private:
 	void OpenScene(const std::string &path);
 
 private:
-	GameObject *root = nullptr;
+	GameObject* root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
 	
 	std::string scene_to_load;

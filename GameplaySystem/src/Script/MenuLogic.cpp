@@ -78,13 +78,11 @@ void MenuLogic::Update()
 			help->SetEnabled(true);
 			show_help = true;
 			return;
-			break;
 		case 2:
 			//Active credits
 			credits->SetEnabled(true);
 			show_credits = true;
 			return;
-			break;
 		case 3:
 			//Close game
 			SDL_Event quit_event;
