@@ -116,7 +116,6 @@ void ModuleTime::Play()
 	{
 		game_time_clock->Stop();
 		App->editor->OpenScene(TMP_SCENE_PATH);
-		remove(TMP_SCENE_PATH);
 	}
 }
 
