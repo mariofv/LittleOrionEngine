@@ -332,4 +332,5 @@ ASALocalRun/
 !Libraries/**
 imgui.ini
 Game/Library/**
+TwinlightSouls/
 **/LittleOrionEngine.lib

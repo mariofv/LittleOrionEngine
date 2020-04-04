@@ -415,6 +415,15 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentButton.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentCanvas.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentImage.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Component\ComponentProgressBar.cpp">
       <Filter>Engine\Component\UI</Filter>
     </ClCompile>
@@ -425,16 +434,7 @@
       <Filter>Engine\Component\UI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentUI.cpp">
-      <Filter>Engine\Component\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentButton.cpp">
-      <Filter>Engine\Component\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentCanvas.cpp">
-      <Filter>Engine\Component\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentImage.cpp">
-      <Filter>Engine\Component\UI</Filter>
+      <Filter>Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp">
       <Filter>Engine\Actions</Filter>
@@ -837,6 +837,15 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentButton.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCanvas.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentImage.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Component\ComponentProgressBar.h">
       <Filter>Engine\Component\UI</Filter>
     </ClInclude>
@@ -847,16 +856,7 @@
       <Filter>Engine\Component\UI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentUI.h">
-      <Filter>Engine\Component\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentButton.h">
-      <Filter>Engine\Component\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentCanvas.h">
-      <Filter>Engine\Component\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentImage.h">
-      <Filter>Engine\Component\UI</Filter>
+      <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Actions\EditorActionRect2D.h">
       <Filter>Engine\Actions</Filter>

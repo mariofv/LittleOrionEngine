@@ -283,3 +283,13 @@ bool  ModuleFileSystem::CreateMountedDir(const char * directory) const
 	return true;
 }
 
+bool  ModuleFileSystem::MountDir(const char * directory) const
+{
+	if (PHYSFS_mount(directory, directory, 1) == 0)
+	{
+		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
+		return false;
+	}
+	return true;
+}
+

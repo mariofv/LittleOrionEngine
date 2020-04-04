@@ -88,6 +88,11 @@ ENGINE_API void ComponentTransform::Translate(const float3& translation)
 	OnTransformChange();
 }
 
+ENGINE_API Quat ComponentTransform::GetGlobalRotation() const
+{
+	return global_model_matrix.RotatePart().ToQuat();
+}
+
 ENGINE_API Quat ComponentTransform::GetRotation() const
 {
 	return rotation;
@@ -114,7 +119,7 @@ ENGINE_API void ComponentTransform::SetRotation(const float3& new_rotation)
 	OnTransformChange();
 }
 
-ENGINE_API void ComponentTransform::SetRotation(const Quat & new_rotation)
+ENGINE_API void ComponentTransform::SetRotation(const Quat& new_rotation)
 {
 	rotation = new_rotation;
 	rotation_radians = new_rotation.ToEulerXYZ();

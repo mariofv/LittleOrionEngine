@@ -31,7 +31,6 @@ Application::Application()
 	modules.emplace_back(window = new ModuleWindow());
 	modules.emplace_back(filesystem = new ModuleFileSystem());
 	modules.emplace_back(resources = new ModuleResourceManager());
-	modules.emplace_back(scripts = new ModuleScriptManager());
 	modules.emplace_back(input = new ModuleInput());
 	modules.emplace_back(ui = new ModuleUI());
 	modules.emplace_back(time = new ModuleTime());
@@ -44,10 +43,13 @@ Application::Application()
 	modules.emplace_back(cameras = new ModuleCamera());
 	modules.emplace_back(model_loader = new ModuleModelLoader());
 	modules.emplace_back(debug = new ModuleDebug());
+#if !GAME
 	modules.emplace_back(debug_draw = new ModuleDebugDraw());
+#endif
 	modules.emplace_back(lights = new ModuleLight());
 	modules.emplace_back(scene = new ModuleScene());
 	modules.emplace_back(artificial_intelligence = new ModuleAI());
+	modules.emplace_back(scripts = new ModuleScriptManager());
 		
 	engine_log = std::make_unique<EngineLog>();
 }
@@ -78,6 +80,12 @@ update_status Application::Update()
 {
 	BROFILER_FRAME("MainLoop");
 	update_status result = update_status::UPDATE_CONTINUE;
+
+	if (App->scene->HasPendingSceneToLoad())
+	{
+		App->scene->OpenPendingScene();
+	}
+
 	for (auto &module : modules) 
 	{
 		update_status ret = module->PreUpdate();

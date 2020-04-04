@@ -16,15 +16,16 @@ public:
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
-	virtual void Render(float4x4*);
-
-	//Text Inputs
-	std::string text = "Default";
-	float scale =  12.0f;
-	float text_width = 0;
-	float text_heigth = 0;
+	void Render(float4x4* projection);
 
 private:
 	void InitData();
+
+public:
+	//Text Inputs
+	std::string text = "Default";
+	float scale = 12.0f;
+	float text_width = 0;
+	float text_heigth = 0;
 };
 #endif

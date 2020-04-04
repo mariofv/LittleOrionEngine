@@ -19,7 +19,7 @@ public:
 	void Dash();
 
 private:
-	float speed = 0.5f;
+	float speed = 0.2f;
 	float rotation_speed = 0.01f;
 	float falling_factor = 1.0f;
 	bool is_jumping = false;

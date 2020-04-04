@@ -19,6 +19,12 @@ bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
 
+#if GAME
+	gameplay_dll = LoadLibrary(SCRIPT_DLL_FILE);
+
+	return true;
+#endif
+
 	GetCurrentPath();
 	InitDLL();
 	LoadScriptList();
@@ -55,8 +61,6 @@ update_status ModuleScriptManager::Update()
 			init_timestamp_script_list = last_timestamp_script_list;
 		}
 	}
-
-	
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -78,7 +82,7 @@ void ModuleScriptManager::GetCurrentPath()
 	TCHAR NPath[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, NPath);
 	working_directory = NPath;
-	working_directory += "/GamePlaySyste_.dll";
+	working_directory += "/" + std::string(SCRIPT_DLL_FILE);
 }
 
 void ModuleScriptManager::CreateScript(const std::string& name)
@@ -199,11 +203,6 @@ void ModuleScriptManager::RunScripts()
 {
 	for (auto &component_script : scripts)
 	{
-		if (!scripts.size() || scene_is_changed)
-		{
-			scene_is_changed = false;
-			break;
-		}
 		component_script->Update();
 	}
 }
