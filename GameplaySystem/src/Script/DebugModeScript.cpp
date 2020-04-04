@@ -15,6 +15,8 @@
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include "imgui.h"
+#include <iomanip>
+#include <sstream>
 
 
 
@@ -49,7 +51,11 @@ void DebugModeScript::Update()
 {
 	if (debug_enabled)
 	{
-		text_fps->text = base_str_fps + std::to_string(App->time->GetFPS()) + std::to_string('(') + std::to_string(App->time->delta_time) + std::to_string('ms)');
+		std::stringstream stream_fps;
+		std::stringstream stream_ms;
+		stream_fps << std::fixed << std::setprecision(2) << App->time->GetFPS();
+		stream_ms << std::fixed << std::setprecision(2) << App->time->delta_time;
+		text_fps->text = base_str_fps + stream_fps.str()  + std::string(" (") + stream_ms.str() + std::string("ms)");
 		text_tris->text = base_str_tris + std::to_string(App->renderer->GetRenderedTris());
 		text_verts->text = base_str_verts + std::to_string(App->renderer->GetRenderedVerts());
 	}
