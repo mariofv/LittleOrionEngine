@@ -1,6 +1,8 @@
 #ifndef _MODULERENDER_H_
 #define _MODULERENDER_H_
 
+#define ENGINE_EXPORTS
+
 #include "Module.h"
 #include "Helper/Timer.h"
 #include "Main/Globals.h"
@@ -42,7 +44,7 @@ public:
 	ComponentMeshRenderer* CreateComponentMeshRenderer();
 	void RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove);
 
-	int GetRenderedTris() const;
+	ENGINE_API int GetRenderedTris() const;
 
 	void GenerateQuadTree();
 	void GenerateOctTree();
