@@ -35,6 +35,7 @@ void DebugModeScript::Awake()
 	background = (ComponentImage*)background_go->GetComponentUI(ComponentUI::UIType::IMAGE);
 	text_fps = (ComponentText*)text_fps_go->GetComponentUI(ComponentUI::UIType::TEXT);
 	text_tris = (ComponentText*)text_tris_go->GetComponentUI(ComponentUI::UIType::TEXT);
+	text_verts = (ComponentText*)text_verts_go->GetComponentUI(ComponentUI::UIType::TEXT);
 }
 
 // Use this for initialization
@@ -48,8 +49,9 @@ void DebugModeScript::Update()
 {
 	if (debug_enabled)
 	{
+		text_fps->text = base_str_fps + std::to_string(App->time->GetFPS()) + std::to_string('(') + std::to_string(App->time->delta_time) + std::to_string('ms)');
 		text_tris->text = base_str_tris + std::to_string(App->renderer->GetRenderedTris());
-		text_fps->text = base_str_fps + std::to_string(App->time->GetFPS());
+		text_verts->text = base_str_verts + std::to_string(App->renderer->GetRenderedVerts());
 	}
 
 }
@@ -73,6 +75,9 @@ void DebugModeScript::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&text_tris_go);
 	variable_names.push_back(GET_VARIABLE_NAME(text_tris_go));
+
+	public_gameobjects.push_back(&text_verts_go);
+	variable_names.push_back(GET_VARIABLE_NAME(text_verts_go));
 
 	public_gameobjects.push_back(&text_fps_go);
 	variable_names.push_back(GET_VARIABLE_NAME(text_fps_go));

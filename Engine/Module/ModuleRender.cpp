@@ -173,6 +173,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	num_rendered_tris = 0;
+	num_rendered_verts = 0;
 
 	GetMeshesToRender(&camera);
 	for (auto &mesh : meshes_to_render)
@@ -182,6 +183,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		{
 			mesh->Render();
 			num_rendered_tris += mesh->mesh_to_render->GetNumTriangles();
+			num_rendered_verts += mesh->mesh_to_render->GetNumVerts();
 			glUseProgram(0);
 		}
 	}
@@ -631,4 +633,9 @@ bool ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, float3& p
 int ModuleRender::GetRenderedTris() const
 {
 	return num_rendered_tris;
+}
+
+int ModuleRender::GetRenderedVerts() const
+{
+	return num_rendered_verts;
 }

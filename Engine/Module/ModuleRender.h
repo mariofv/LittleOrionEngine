@@ -45,6 +45,7 @@ public:
 	void RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove);
 
 	ENGINE_API int GetRenderedTris() const;
+	ENGINE_API int GetRenderedVerts() const;
 
 	void GenerateQuadTree();
 	void GenerateOctTree();
@@ -107,6 +108,7 @@ private:
 	std::vector<ComponentMeshRenderer*> meshes_to_render;
 
 	int num_rendered_tris = 0;
+	int num_rendered_verts = 0;
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;
