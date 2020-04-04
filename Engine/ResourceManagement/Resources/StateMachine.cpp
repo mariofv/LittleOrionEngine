@@ -13,10 +13,11 @@ State::State(std::string name, std::shared_ptr<Clip> clip) :
 	name(name), name_hash(std::hash<std::string>{}(name)),clip(clip)  {
 };
 
-Transition::Transition(uint64_t source, uint64_t target, uint64_t trigger, long interpolation) :
+Transition::Transition(uint64_t source, uint64_t target, std::string & trigger, long interpolation) :
 	source_hash(source), 
+	trigger(trigger),
 	target_hash(target),
-	trigger_hash(trigger),
+	trigger_hash(std::hash<std::string>{}(trigger)),
 	interpolation_time(interpolation) {};
 
 StateMachine::StateMachine(std::vector<std::shared_ptr<Clip>>&& clips, std::vector<std::shared_ptr<State>>&& states, std::vector<std::shared_ptr<Transition>>&& transitions, const std::string & file_path)
@@ -80,8 +81,8 @@ void StateMachine::RemoveState(const std::shared_ptr<State>& state)
 		{
 			transitions.erase(transition_it);
 		}
-		states.erase(states_it);
 		std::shared_ptr<Clip> clip = (*states_it)->clip;
+		states.erase(states_it);
 		if (clip != nullptr)
 		{
 			RemoveClip(clip);
@@ -160,7 +161,7 @@ void StateMachine::Save() const
 		Config transition_config;
 		transition_config.AddUInt(transition->source_hash, "Source");
 		transition_config.AddUInt(transition->target_hash, "Target");
-		transition_config.AddUInt(transition->trigger_hash, "Trigger");
+		transition_config.AddString(transition->trigger, "Trigger");
 		transition_config.AddInt64(transition->interpolation_time, "Interpolation");
 		transitions_config.push_back(transition_config);
 	}
@@ -225,9 +226,10 @@ void StateMachine::Load(const File& file)
 	state_machine_config.GetChildrenConfig("Transitions", transitions_config);
 	for (auto& transition_config : transitions_config)
 	{
+		std::string trigger;
 		uint64_t source = transition_config.GetUInt("Source", 0);
 		uint64_t target = transition_config.GetUInt("Target", 0);
-		uint64_t trigger = transition_config.GetUInt("Trigger", 0);
+		transition_config.GetString("Trigger", trigger, "");
 		int64_t interpolation_time = transition_config.GetInt64("Interpolation", 0);
 		this->transitions.push_back(std::make_shared<Transition>(source, target, trigger, interpolation_time));
 	}

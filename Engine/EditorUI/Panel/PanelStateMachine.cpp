@@ -244,6 +244,7 @@ void PanelStateMachine::CreateNodeMenu()
 
 			ImGui::PushID(links[0]->id.AsPointer());
 			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(links[0]->transition->interpolation_time));
+			ImGui::InputText("###Trigger", &(links[0]->transition->trigger));
 			ImGui::PopID();
 			ImGui::EndMenu();
 		}

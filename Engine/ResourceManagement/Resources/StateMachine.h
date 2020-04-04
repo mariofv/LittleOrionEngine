@@ -27,10 +27,11 @@ struct State
 struct Transition
 {
 	Transition() = default;
-	Transition(uint64_t source, uint64_t target, uint64_t trigger, long interpolation);
+	Transition(uint64_t source, uint64_t target, std::string & trigger, long interpolation);
 	uint64_t source_hash = 0;
 	uint64_t target_hash = 0;
 	uint64_t trigger_hash = 0;
+	std::string trigger;
 	uint64_t interpolation_time = 0;
 };
 class File;
