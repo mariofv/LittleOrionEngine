@@ -16,8 +16,8 @@ struct LinkInfo
 struct NodeInfo
 {
 	ax::NodeEditor::NodeId id;
-	std::vector<ax::NodeEditor::PinId> inputs;
-	std::vector<ax::NodeEditor::PinId> outputs;
+	ax::NodeEditor::PinId input;
+	ax::NodeEditor::PinId output;
 	std::shared_ptr<State> state;
 };
 

@@ -38,9 +38,11 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(const std::string & file
 		uint32_t animation_uuid;
 		memcpy(&animation_uuid, cursor, bytes);
 		cursor += bytes; 
-
-		std::string  animation_path = App->resources->resource_DB->GetEntry(animation_uuid)->exported_file;
-		clip->animation = App->resources->Load<Animation>(animation_path);
+		if (animation_uuid != 0)
+		{
+			std::string  animation_path = App->resources->resource_DB->GetEntry(animation_uuid)->exported_file;
+			clip->animation = App->resources->Load<Animation>(animation_path);
+		}
 	}
 
 	std::vector< std::shared_ptr<State>> states;

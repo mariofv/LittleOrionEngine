@@ -132,7 +132,7 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 				float4x4 scale_matrix = float4x4::identity * scale_factor;
 				scale_matrix[3][3] = 1;
 
-				animation_transform = scale_matrix * animation_transform * scale_matrix.Inverted();
+				animation_transform = scale_matrix * animation_transform;
 				float3 scale;
 				animation_transform.Decompose(translation, rotation, scale);
 				Animation::Channel imported_channel{ channel_set.first, is_translated, translation, is_rotated, rotation };

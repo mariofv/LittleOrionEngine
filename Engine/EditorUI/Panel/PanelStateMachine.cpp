@@ -89,21 +89,15 @@ void PanelStateMachine::RenderStates()
 		ImGui::Button(clip_name.c_str());
 		DropAnimation(node->state);
 		ImGui::BeginGroup();
-		for (auto & inputs : node->inputs)
-		{
-			ax::NodeEditor::BeginPin(inputs, ax::NodeEditor::PinKind::Input);
-			ImGui::Text("-> In");
-			ax::NodeEditor::EndPin();
-		}
+		ax::NodeEditor::BeginPin(node->input, ax::NodeEditor::PinKind::Input);
+		ImGui::Text("-> In");
+		ax::NodeEditor::EndPin();
 		ImGui::EndGroup();
 		ImGui::SameLine();
 		ImGui::BeginGroup();
-		for (auto & output : node->outputs)
-		{
-			ax::NodeEditor::BeginPin(output, ax::NodeEditor::PinKind::Output);
-			ImGui::Text("Out ->");
-			ax::NodeEditor::EndPin();
-		}
+		ax::NodeEditor::BeginPin(node->output, ax::NodeEditor::PinKind::Output);
+		ImGui::Text("Out ->");
+		ax::NodeEditor::EndPin();
 		ImGui::EndGroup();
 		ax::NodeEditor::EndNode();
 		if (ImGui::IsMouseClicked(1) && ImGui::IsItemHovered())
@@ -185,19 +179,14 @@ void PanelStateMachine::InteractionCreation()
 					for (auto node : nodes)
 					{
 
-						for (auto & input : node->inputs)
+						if (node->input == end_pin_id)
 						{
-							if (input == end_pin_id)
-							{
-								new_transition->target_hash = node->state->name_hash;
-							}
+							new_transition->target_hash = node->state->name_hash;
 						}
-						for (auto & output : node->outputs)
+
+						if (node->output == start_pin_id)
 						{
-							if (output == start_pin_id)
-							{
-								new_transition->source_hash = node->state->name_hash;
-							}
+							new_transition->source_hash = node->state->name_hash;
 						}
 					}
 					state_machine->transitions.push_back(new_transition);
@@ -235,35 +224,11 @@ void PanelStateMachine::CreateNodeMenu()
 				NodeInfo* node = new NodeInfo({ ax::NodeEditor::NodeId(uniqueid++) });
 				node->state = std::make_shared<State>("New Node", nullptr);
 				state_machine->states.push_back(node->state);
-				node->inputs.push_back(uniqueid++);
-				node->outputs.push_back(uniqueid++);
+				node->input = uniqueid++;
+				node->output = uniqueid++;
 				nodes.push_back(std::move(node));
 			}
 			ImGui::EndMenu();
-		}
-		std::vector<NodeInfo*>selected_nodes = GetSelectedNodes();
-		if (selected_nodes.size() > 0)
-		{
-			if (ImGui::MenuItem("Add output"))
-			{
-				for (auto node: selected_nodes)
-				{
-					node->outputs.push_back(uniqueid++);
-				}
-			}
-			if (ImGui::MenuItem("Add input"))
-			{
-				for (auto & node : selected_nodes)
-				{
-					node->inputs.push_back(uniqueid++);
-				}
-			}
-			if (ImGui::MenuItem("Remove output"))
-			{
-			}
-			if (ImGui::MenuItem("Remove input"))
-			{
-			}
 		}
 		ImGui::EndPopup();
 	}
@@ -352,33 +317,30 @@ void PanelStateMachine::OpenStateMachine(const File & file)
 	std::shared_ptr<StateMachine> test = App->resources->Load<StateMachine>(options.exported_file);
 
 	//Tranform form state machine to ui
-	for (auto & link : state_machine->transitions)
-	{
-		links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) ,  ax::NodeEditor::PinId(uniqueid++),  ax::NodeEditor::PinId(uniqueid++), link});
-	}
 	for (auto & state : state_machine->states)
 	{
 		NodeInfo * node = new NodeInfo({ ax::NodeEditor::NodeId(uniqueid++) });
 		node->state = state;
-		for (auto & link : links)
-		{
-			if (link->transition->source_hash == state->name_hash)
-			{
-				node->outputs.push_back(link->output_id);
-			}
-			if (link->transition->target_hash == state->name_hash)
-			{
-				node->inputs.push_back(link->input_id);
-			}
-		}
-		if (node->state->name_hash == entry_hash && node->outputs.size() == 0)
-		{
-			node->outputs.push_back(uniqueid++);
-		}
-		if (node->state->name_hash == end_hash && node->inputs.size() == 0)
-		{
-			node->inputs.push_back(uniqueid++);
-		}
+		node->output = uniqueid++;
+		node->input = uniqueid++;
 		nodes.push_back(node);
+	}
+
+	for (auto & link : state_machine->transitions)
+	{
+		ax::NodeEditor::PinId source;
+		ax::NodeEditor::PinId target;
+		for (auto & node : nodes)
+		{
+			if (node->state->name_hash == link->source_hash)
+			{
+				source = node->output;
+			}
+			if (node->state->name_hash == link->target_hash)
+			{
+				target = node->input;
+			}
+		}
+		links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) , target, source, link });
 	}
 }
