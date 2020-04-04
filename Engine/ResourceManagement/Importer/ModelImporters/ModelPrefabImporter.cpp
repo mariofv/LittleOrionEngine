@@ -18,7 +18,11 @@ static std::vector<std::unique_ptr<ComponentMeshRenderer>> mesh_renderer_compone
 
 void ModelPrefabImporter::ImportModelPrefab(const Config& model, const File& imported_file) const
 {
+
+	uint32_t real_uuid = std::stoul(imported_file.filename_no_extension);
+
 	std::unique_ptr<GameObject> model_root_node = std::make_unique<GameObject>();
+	model_root_node->UUID = real_uuid;
 	model_root_node->original_UUID = model_root_node->UUID;
 
 	model.GetString("Name", model_root_node->name, "");
@@ -29,6 +33,12 @@ void ModelPrefabImporter::ImportModelPrefab(const Config& model, const File& imp
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
 		LoadNode(model_root_node, game_objects_config[i], already_loaded_skeleton);
+	}
+	size_t gameobject_index = 1;
+	for (auto & gameobject : gameobjects)
+	{
+		gameobject->UUID = real_uuid + gameobject_index++;
+		gameobject->original_UUID = gameobject->UUID;
 	}
 
 	std::vector<Config> animation_config;
@@ -64,7 +74,6 @@ void ModelPrefabImporter::LoadNode(std::unique_ptr<GameObject> & parent_node, co
 
 		ComponentMeshRenderer * mesh_renderer = mesh_renderer_components.back().get();
 		node_config.GetString("Name", node_game_object->name, "");
-		node_game_object->original_UUID = node_game_object->UUID;
 		node_game_object->Update();
 	}
 
