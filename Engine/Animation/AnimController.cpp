@@ -199,6 +199,7 @@ void AnimController::UpdateChannelsGlobalTransformation()
 
 void AnimController::SetActiveAnimation()
 {
+	active_state = state_machine->GetDefaultState();
 	if (active_state != nullptr && active_state->clip != nullptr)
 	{
 		animation = active_state->clip->animation;
@@ -209,6 +210,10 @@ void AnimController::SetActiveAnimation()
 void AnimController::ActiveAnimation(const std::string & trigger)
 {
 	std::shared_ptr<Transition> transition = state_machine->GetTransition(trigger, active_state->name_hash);
-
-
+	std::shared_ptr<State> next_state;
+	if (transition != nullptr)
+	{
+		next_state = state_machine->GetState(transition->target_hash);
+	}
+	//TODO: BLEND STATES
 }

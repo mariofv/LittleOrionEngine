@@ -43,6 +43,7 @@ public:
 	void LoadInMemory() override {};
 
 	std::shared_ptr<State> GetDefaultState() const;
+	std::shared_ptr<State> GetState(uint64_t state_hash) const;
 	std::shared_ptr<Transition> GetTransition(const std::string & trigger, uint64_t state_hash) const;
 
 	void Save() const;

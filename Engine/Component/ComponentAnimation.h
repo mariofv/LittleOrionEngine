@@ -10,7 +10,7 @@
 class Animation;
 class AnimController;
 class GameObject;
-
+class StateMachine;
 class ComponentAnimation :	public Component
 {
 public:
@@ -29,7 +29,7 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
-	void SetActiveAnimation();
+	void SetStateMachine(std::shared_ptr<StateMachine> & state_machine);
 
 	void Update() override;
 	void Delete() override;

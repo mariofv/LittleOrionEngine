@@ -7,19 +7,19 @@
 #include <Module/ModuleFileSystem.h>
 #include <ResourceManagement/Resources/Animation.h>
 
-std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uid)
+std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uuid)
 {
 	BROFILER_CATEGORY("Load Animation", Profiler::Color::Brown);
 
 
-	if (!App->filesystem->Exists(uid.c_str()))
+	if (!App->filesystem->Exists(uuid.c_str()))
 	{
-		APP_LOG_ERROR("Error loading Animation %s.", uid.c_str());
+		APP_LOG_ERROR("Error loading Animation %s.", uuid.c_str());
 		return nullptr;
 	}
-	APP_LOG_INFO("Loading Animation %s.", uid.c_str());
+	APP_LOG_INFO("Loading Animation %s.", uuid.c_str());
 	size_t animation_size;
-	char * data = App->filesystem->Load(uid.c_str(), animation_size);
+	char * data = App->filesystem->Load(uuid.c_str(), animation_size);
 	char* cursor = data;
 
 
@@ -83,7 +83,10 @@ std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uid)
 		}
 	}
 
-	std::shared_ptr<Animation> new_animation = std::make_shared<Animation>(std::move(keyframes), animation_name, animation_frames, frames_per_second,uid);
+	std::string uid_string = uuid.substr(uuid.find_last_of("/") + 1, uuid.size());
+	uint32_t real_uuid = std::stoul(uid_string);
+
+	std::shared_ptr<Animation> new_animation = std::make_shared<Animation>(std::move(keyframes), animation_name, animation_frames, frames_per_second,real_uuid,uuid);
 	free(data);
 
 	return new_animation;

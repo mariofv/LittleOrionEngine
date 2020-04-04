@@ -35,9 +35,21 @@ Resource(0, file_path)
 
 std::shared_ptr<State> StateMachine::GetDefaultState() const
 {
-	if (states.empty())
+	if (!states.empty())
 	{
 		return states[0];
+	}
+	return nullptr;
+}
+
+std::shared_ptr<State> StateMachine::GetState(uint64_t state_hash) const
+{
+	for (auto & state : states)
+	{
+		if (state->name_hash == state_hash)
+		{
+			return state;
+		}
 	}
 	return nullptr;
 }

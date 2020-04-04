@@ -402,6 +402,16 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		std::string state_machine_path = animation->animation_controller->state_machine ? animation->animation_controller->state_machine->exported_file : "State machine";
 		ImGui::Button(state_machine_path.c_str());
 		DropStateMachine(animation);
+		if (animation->animation_controller->state_machine && animation->animation_controller->active_state)
+		{
+			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(animation->animation_controller->active_state->name_hash), nullptr, nullptr, nullptr, ImGuiInputTextFlags_ReadOnly);
+			static std::string trigger;
+			ImGui::InputText("Trigger ", &trigger);
+			if (ImGui::Button("Activate"))
+			{
+				animation->animation_controller->ActiveAnimation(trigger);
+			}
+		}
 		ImGui::AlignTextToFramePadding();
 		ImGui::Separator();
 		if (ImGui::Checkbox("Playing", &animation->animation_controller->playing));
@@ -715,7 +725,7 @@ void PanelComponent::DropStateMachine(ComponentAnimation* component_animation)
 				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
 				ImportOptions meta;
 				Importer::GetOptionsFromMeta(meta_path, meta);
-				component_animation->animation_controller->state_machine = App->resources->Load<StateMachine>(meta.exported_file);
+				component_animation->SetStateMachine( App->resources->Load<StateMachine>(meta.exported_file));
 				component_animation->modified_by_user = true;
 			}
 			

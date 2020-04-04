@@ -26,7 +26,7 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(const std::string & file
 
 	std::vector<std::shared_ptr<Clip>> clips;
 	clips.resize(ranges[0]);
-	for (auto clip : clips)
+	for (auto & clip : clips)
 	{
 		clip = std::make_shared<Clip>();
 
@@ -47,7 +47,7 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(const std::string & file
 
 	std::vector< std::shared_ptr<State>> states;
 	states.resize(ranges[1]);
-	for (auto state : states)
+	for (auto & state : states)
 	{
 		state = std::make_shared<State>();
 
@@ -62,7 +62,7 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(const std::string & file
 
 	std::vector<std::shared_ptr<Transition>> transitions;
 	transitions.resize(ranges[2]);
-	for (auto transition : transitions)
+	for (auto & transition : transitions)
 	{
 		transition = std::make_shared<Transition>();
 		bytes = sizeof(uint64_t);

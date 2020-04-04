@@ -43,6 +43,12 @@ void ComponentAnimation::Copy(Component* component_to_copy) const
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;
 }
 
+void ComponentAnimation::SetStateMachine(std::shared_ptr<StateMachine>& state_machine)
+{
+	animation_controller->state_machine = state_machine;
+	animation_controller->SetActiveAnimation();
+}
+
 
 
 void ComponentAnimation::Update()
