@@ -397,15 +397,11 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		ImGui::Separator();
 
 		ImGui::AlignTextToFramePadding();
-		ImGui::Text("Animation");
-		ImGui::SameLine();
-		ImGui::Button(animation->animation_controller->animation->exported_file.c_str());
-		DropAnimation(animation);
 		ImGui::Text("State Machine");
 		ImGui::SameLine();
-		std::string state_machine_path = animation->state_machine ? animation->state_machine->exported_file : "State machine";
+		std::string state_machine_path = animation->animation_controller->state_machine ? animation->animation_controller->state_machine->exported_file : "State machine";
 		ImGui::Button(state_machine_path.c_str());
-		DropAnimation(animation);
+		DropStateMachine(animation);
 		ImGui::AlignTextToFramePadding();
 		ImGui::Separator();
 		if (ImGui::Checkbox("Playing", &animation->animation_controller->playing));
@@ -706,7 +702,7 @@ void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
 	}
 }
 
-void PanelComponent::DropAnimation(ComponentAnimation* component_animation)
+void PanelComponent::DropStateMachine(ComponentAnimation* component_animation)
 {
 	if (ImGui::BeginDragDropTarget())
 	{
@@ -714,20 +710,12 @@ void PanelComponent::DropAnimation(ComponentAnimation* component_animation)
 		{
 			assert(payload->DataSize == sizeof(File*));
 			File* incoming_file = *(File * *)payload->Data;
-			if (incoming_file->file_type == FileType::ANIMATION)
-			{
-				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
-				ImportOptions meta;
-				Importer::GetOptionsFromMeta(meta_path, meta);
-				component_animation->SetAnimation(App->resources->Load<Animation>(meta.exported_file));
-				component_animation->modified_by_user = true;
-			}
 			if (incoming_file->file_type == FileType::STATE_MACHINE)
 			{
 				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
 				ImportOptions meta;
 				Importer::GetOptionsFromMeta(meta_path, meta);
-				component_animation->state_machine = App->resources->Load<StateMachine>(meta.exported_file);
+				component_animation->animation_controller->state_machine = App->resources->Load<StateMachine>(meta.exported_file);
 				component_animation->modified_by_user = true;
 			}
 			

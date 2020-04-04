@@ -10,7 +10,6 @@
 class Animation;
 class AnimController;
 class GameObject;
-class StateMachine;
 
 class ComponentAnimation :	public Component
 {
@@ -30,7 +29,7 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
-	void SetAnimation(std::shared_ptr<Animation> & animation);
+	void SetActiveAnimation();
 
 	void Update() override;
 	void Delete() override;
@@ -45,8 +44,6 @@ public:
 public:
 	AnimController* animation_controller = nullptr;
 	std::vector<ComponentMeshRenderer*> skinned_meshes;
-	std::shared_ptr<StateMachine> state_machine;
-
 private:
 	friend class PanelComponent;
 	

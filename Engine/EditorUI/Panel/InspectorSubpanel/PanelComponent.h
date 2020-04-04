@@ -51,7 +51,7 @@ private:
 	void ShowComponentTextWindow(ComponentText*);
 	void ShowComponentButtonWindow(ComponentButton*);
 
-	void DropAnimation(ComponentAnimation* component_animation);
+	void DropStateMachine(ComponentAnimation* component_animation);
 };
 
 #endif //_PANELCOMPONENT_H_

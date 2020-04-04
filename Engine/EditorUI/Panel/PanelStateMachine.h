@@ -3,7 +3,11 @@
 
 #include "NodeEditor/imgui_node_editor.h"
 #include "EditorUI/Panel/Panel.h"
-#include "ResourceManagement/Resources/StateMachine.h"
+
+#include <vector>
+class StateMachine;
+struct Transition;
+struct State;
 
 struct LinkInfo
 {

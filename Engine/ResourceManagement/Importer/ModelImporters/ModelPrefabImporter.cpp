@@ -1,7 +1,5 @@
 #include "ModelPrefabImporter.h"
 
-
-#include "Component/ComponentAnimation.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Helper/Config.h"
 #include "Main/Application.h"
@@ -9,7 +7,6 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleModelLoader.h"
-#include "ResourceManagement/Resources/Animation.h"
 #include "ResourceManagement/Resources/Skeleton.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Material.h"
@@ -31,18 +28,6 @@ void ModelPrefabImporter::ImportModelPrefab(const Config& model, const File& imp
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
 		LoadNode(model_root_node, game_objects_config[i], already_loaded_skeleton);
-	}
-
-	std::vector<Config> animation_config;
-	model.GetChildrenConfig("Animations", animation_config);
-	for (auto animation : animation_config)
-	{
-		std::string animation_uid;
-		animation.GetString("Animation", animation_uid, "");
-		ComponentAnimation * component_animation = new ComponentAnimation();
-		component_animation->SetAnimation(App->resources->Load<Animation>(animation_uid));
-		model_root_node->components.push_back(component_animation);
-		component_animation->owner = model_root_node.get();
 	}
 
 	App->resources->CreatePrefab(imported_file.file_path.c_str(), model_root_node.get());

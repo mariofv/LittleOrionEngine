@@ -4,6 +4,8 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
+#include "ResourceManagement/Resources/StateMachine.h"
+
 #include "imgui_internal.h"
 #include <imgui_stdlib.h>
 PanelStateMachine::PanelStateMachine()

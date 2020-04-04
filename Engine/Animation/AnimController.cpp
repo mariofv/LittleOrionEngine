@@ -8,8 +8,7 @@
 
 #include <math.h>
 #include <algorithm>
-
-class ComponentMeshRenderer;
+#include "ResourceManagement/Resources/StateMachine.h"
 
 void AnimController::Init()
 {
@@ -47,7 +46,7 @@ void AnimController::Init()
 
 void AnimController::Play()
 { 
-	current_time = 0.f;
+	current_time = 0;
 	playing = true;
 }
 
@@ -63,7 +62,7 @@ void AnimController::Update()
 		return;
 	}
 
-	current_time = current_time + App->time->delta_time;
+	current_time = current_time + static_cast<int>(App->time->delta_time);
 	if (current_time >= animation_time)
 	{
 		if (loop) 
@@ -194,5 +193,22 @@ void AnimController::UpdateChannelsGlobalTransformation()
 		channel_global_transformation[i] = Utils::Interpolate(current_global_tranform, next_global_tranform, delta);
 		++i;
 	}
+
+}
+
+
+void AnimController::SetActiveAnimation()
+{
+	if (active_state != nullptr && active_state->clip != nullptr)
+	{
+		animation = active_state->clip->animation;
+		Init();
+	}
+}
+
+void AnimController::ActiveAnimation(const std::string & trigger)
+{
+	std::shared_ptr<Transition> transition = state_machine->GetTransition(trigger, active_state->name_hash);
+
 
 }

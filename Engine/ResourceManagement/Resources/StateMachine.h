@@ -4,6 +4,7 @@
 #include "Resource.h"
 #include "Animation.h"
 #include "ResourceManagement/Loaders/StateMachineManager.h"
+#include "EditorUI/Panel/PanelStateMachine.h"
 struct Clip
 {
 	Clip() = default;
@@ -40,16 +41,24 @@ public:
 	StateMachine(const std::string& file_path);
 	~StateMachine() = default;
 	void LoadInMemory() override {};
+
+	std::shared_ptr<State> GetDefaultState() const;
+	std::shared_ptr<Transition> GetTransition(const std::string & trigger, uint64_t state_hash) const;
+
+	void Save() const;
+	void Load(const File & file);
+
+private:
 	void RemoveState(const std::shared_ptr<State> & state);
 	void RemoveClip(const std::shared_ptr<Clip> & state);
 	void AddClipToState(std::shared_ptr<State> & state, File & clip_file);
 
-	void Save() const;
-	void Load(const File & file);
 public:
 	std::vector<std::shared_ptr<Clip>> clips;
 	std::vector<std::shared_ptr<State>> states;
 	std::vector<std::shared_ptr<Transition>> transitions;
+
+	friend class PanelStateMachine;
 };
 
 namespace Loader

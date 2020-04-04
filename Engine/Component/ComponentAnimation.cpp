@@ -66,9 +66,7 @@ void ComponentAnimation::Save(Config& config) const
 	config.AddUInt((uint64_t)type, "ComponentType");
 	config.AddBool(active, "Active");
 
-	config.AddString(animation_controller->animation->exported_file, "AnimationResource");
-
-	std::string state_machine_path = state_machine ? state_machine->exported_file : "";
+	std::string state_machine_path = animation_controller->state_machine ? animation_controller->state_machine->exported_file : "";
 	config.AddString(state_machine_path, "StateMachineResource");
 }
 
@@ -76,23 +74,15 @@ void ComponentAnimation::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-	std::string animation_path;
-	config.GetString("AnimationResource", animation_path, "");
-	SetAnimation(App->resources->Load<Animation>(animation_path));
-
 	std::string state_machine_path;
 	config.GetString("StateMachineResource", state_machine_path, "");
 	if (!state_machine_path.empty())
 	{
-		state_machine = App->resources->Load<StateMachine>(state_machine_path);
+		animation_controller->state_machine = App->resources->Load<StateMachine>(state_machine_path);
+		animation_controller->SetActiveAnimation();
 	}
 }
 
-void ComponentAnimation::SetAnimation(std::shared_ptr<Animation>& animation)
-{
-	animation_controller->animation = animation;
-	animation_controller->Init();
-}
 
 
 void ComponentAnimation::UpdateBone(GameObject* current_bone, int first_keyframe, int second_keyframe, float lambda)

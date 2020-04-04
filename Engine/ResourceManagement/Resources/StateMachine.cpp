@@ -33,6 +33,28 @@ Resource(0, file_path)
 
 }
 
+std::shared_ptr<State> StateMachine::GetDefaultState() const
+{
+	if (states.empty())
+	{
+		return states[0];
+	}
+	return nullptr;
+}
+
+std::shared_ptr<Transition> StateMachine::GetTransition(const std::string & trigger, uint64_t state_hash) const
+{
+	uint64_t trigger_hash = std::hash<std::string>{}(trigger);
+	for (auto & transition : transitions)
+	{
+		if (transition->source_hash == state_hash &&  transition->trigger_hash == trigger_hash)
+		{
+			return transition;
+		}
+	}
+}
+
+
 void StateMachine::RemoveState(const std::shared_ptr<State>& state)
 {
 	auto states_it = std::find(states.begin(), states.end(), state);
