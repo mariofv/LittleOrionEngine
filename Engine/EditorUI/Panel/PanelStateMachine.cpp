@@ -85,10 +85,21 @@ void PanelStateMachine::RenderStates()
 				}
 			}
 		}
-		ImGui::PopItemWidth();
+
 		std::string clip_name = node->state->clip ? node->state->clip->name : "Clip";
 		ImGui::Button(clip_name.c_str());
 		DropAnimation(node->state);
+		if (node->state->clip)
+		{
+			ImGui::Checkbox("Loop", &node->state->clip->loop);
+			ImGui::SameLine();
+		}
+		bool is_default_state = node->state->name_hash == state_machine->default_state;
+		if (ImGui::Checkbox("Default", &is_default_state))
+		{
+			state_machine->default_state = node->state->name_hash;
+		}
+	
 		ImGui::BeginGroup();
 		ax::NodeEditor::BeginPin(node->input, ax::NodeEditor::PinKind::Input);
 		ImGui::Text("-> In");
@@ -110,6 +121,7 @@ void PanelStateMachine::RenderStates()
 		position = ax::NodeEditor::GetNodePosition(node->id);
 		position.x+= ax::NodeEditor::GetNodeSize(node->id).x;
 
+		ImGui::PopItemWidth();
 		ImGui::PopID();
 
 	}

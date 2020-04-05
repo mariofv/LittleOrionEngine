@@ -36,9 +36,16 @@ Resource(0, file_path)
 
 std::shared_ptr<State> StateMachine::GetDefaultState() const
 {
-	if (!states.empty())
+	if (default_state == 0)
 	{
 		return states[0];
+	}
+	for (auto state : states)
+	{
+		if (state->name_hash == default_state)
+		{
+			return state;
+		}
 	}
 	return nullptr;
 }
@@ -167,6 +174,7 @@ void StateMachine::Save() const
 	}
 	state_machine_config.AddChildrenConfig(transitions_config, "Transitions");
 
+	state_machine_config.AddUInt(default_state, "Default");
 	std::string serialized_state_machine_string;
 	state_machine_config.GetSerializedString(serialized_state_machine_string);
 
@@ -233,4 +241,6 @@ void StateMachine::Load(const File& file)
 		int64_t interpolation_time = transition_config.GetInt64("Interpolation", 0);
 		this->transitions.push_back(std::make_shared<Transition>(source, target, trigger, interpolation_time));
 	}
+
+	default_state = state_machine_config.GetUInt("Default", 0);
 }

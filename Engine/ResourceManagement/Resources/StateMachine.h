@@ -59,7 +59,7 @@ public:
 	std::vector<std::shared_ptr<Clip>> clips;
 	std::vector<std::shared_ptr<State>> states;
 	std::vector<std::shared_ptr<Transition>> transitions;
-
+	uint64_t default_state;
 	friend class PanelStateMachine;
 };
 
