@@ -58,7 +58,9 @@ void ModelPrefabImporter::ImportModelPrefab(const Config& model, const File& imp
 //For now we are representing the animation sketelon in the hierarchy just for visualization and learning, but proabbly this will not be needed in the future
 void ModelPrefabImporter::LoadNode(std::unique_ptr<GameObject> & parent_node, const Config& node_config, std::vector<std::string>& already_loaded_skeleton) const
 {
-	std::string skeleton_uuid = LoadSkeleton(node_config, already_loaded_skeleton, parent_node);
+	//std::string skeleton_uuid = LoadSkeleton(node_config, already_loaded_skeleton, parent_node);
+	std::string skeleton_uuid;
+	node_config.GetString("Skeleton", skeleton_uuid, "");
 
 	gameobjects.emplace_back(std::make_unique<GameObject>());
 	GameObject * node_game_object = gameobjects.back().get();

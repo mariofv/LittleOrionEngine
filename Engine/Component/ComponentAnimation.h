@@ -43,7 +43,6 @@ public:
 private:
 	void GetChildrenMeshes(GameObject * current_mesh);
 	void GenerateJointChannelMaps();
-	void UpdateBone(GameObject * current_bone);
 
 private:
 	std::vector<std::vector<size_t>> meshes_channels_joints_map;

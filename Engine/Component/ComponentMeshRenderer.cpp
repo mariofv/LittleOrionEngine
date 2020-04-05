@@ -216,22 +216,6 @@ void ComponentMeshRenderer::SetSkeleton(std::shared_ptr<Skeleton>& skeleton)
 	}
 }
 
-//TODO: PASS THE FULL GLOBAL SKELETON POSITION FOR EACH JOINT
-void ComponentMeshRenderer::UpdatePalette(const GameObject &current_bone)
-{
-	if (!skeleton)
-		return;
-
-	auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [&current_bone](const Skeleton::Joint & joint) {
-		return current_bone.name == joint.name;
-	});
-
-	if (it != skeleton->skeleton.end())
-	{
-		palette[it - skeleton->skeleton.begin()] = current_bone.transform.GetGlobalModelMatrix() * (*it).transform_global;
-	}
-}
-
 void ComponentMeshRenderer::UpdatePalette(const std::vector<float4x4>& pose)
 {
 	assert(pose.size() == palette.size());

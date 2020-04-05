@@ -16,40 +16,6 @@ void AnimController::Init()
 	loop = active_state->clip->loop;
 }
 
-bool AnimController::GetTransform(float current_time,const std::string & channel_name, float3 & position, Quat & rotation)
-{
-	float current_keyframe = (current_time*(animation->frames - 1)) / animation_time;
-	size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
-	size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
-
-	float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
-
-	bool channel_found = false;
-	size_t channel_index = 0;
-	while (!channel_found && channel_index < animation->keyframes[0].channels.size())
-	{
-		if (animation->keyframes[0].channels[channel_index].name == channel_name)
-		{
-			channel_found = true;
-			break;
-		}
-		++channel_index;
-	}
-	if (!channel_found)
-		return false;
-
-	float3 last_translation = animation->keyframes[first_keyframe_index].channels[channel_index].translation;
-	float3 next_translation = animation->keyframes[second_keyframe_index].channels[channel_index].translation;
-
-	Quat last_rotation = animation->keyframes[first_keyframe_index].channels[channel_index].rotation;
-	Quat next_rotation = animation->keyframes[second_keyframe_index].channels[channel_index].rotation;
-
-	position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
-	rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
-
-	return true;
-}
-
 std::shared_ptr<Animation> AnimController::GetCurrentAnimation() const
 {
 	return animation;

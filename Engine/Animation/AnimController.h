@@ -18,15 +18,12 @@ public:
 	void SetActiveAnimation();
 	void ActiveAnimation(const std::string & trigger);
 
-	bool GetTransform(float current_time,const std::string& channel_name, float3& position, Quat& rotation);
 	void GetPose(float current_time, const std::vector<size_t> & joint_channels_map, std::vector<float4x4> &pose) const;
 	std::shared_ptr<Animation> GetCurrentAnimation() const;
 
 public:
 	std::shared_ptr<Animation> animation = nullptr;
 	std::shared_ptr<StateMachine> state_machine;
-
-	std::map<size_t, std::vector<uint32_t>> channel_hierarchy_cache;
 
 	bool loop = false;
 	int animation_time = 0;

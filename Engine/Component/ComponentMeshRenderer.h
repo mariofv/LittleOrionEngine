@@ -26,7 +26,6 @@ public:
 
 	void SetSkeleton(std::shared_ptr<Skeleton>& skeleton);
 
-	void UpdatePalette(const GameObject & current_bone);
 	void UpdatePalette(const std::vector<float4x4> & pose);
 
 	void Save(Config& config) const override;

@@ -13,7 +13,6 @@
 ComponentAnimation::ComponentAnimation() : Component(nullptr, ComponentType::ANIMATION)
 {
 	animation_controller = new AnimController();
-	
 }
 
 ComponentAnimation::ComponentAnimation(GameObject* owner) : Component(owner, ComponentType::ANIMATION)
@@ -97,7 +96,6 @@ void ComponentAnimation::Update()
 			animation_controller->GetPose(current_time,meshes_channels_joints_map[i], pose);
 			skinned_meshes[i]->UpdatePalette(pose);
 		}
-		//UpdateBone(owner);
 	}
 }
 
@@ -126,27 +124,6 @@ void ComponentAnimation::Load(const Config& config)
 	{
 		SetStateMachine(App->resources->Load<StateMachine>(state_machine_path));
 	}
-}
-
-void ComponentAnimation::UpdateBone(GameObject* current_bone)
-{
-	float3 bone_position;
-	Quat bone_rotation;
-	if (animation_controller->GetTransform(current_time,current_bone->name, bone_position, bone_rotation))
-	{
-		current_bone->transform.SetTranslation(bone_position);
-		current_bone->transform.SetRotation(bone_rotation.ToFloat3x3());
-	}
-
-	for (auto& mesh : skinned_meshes) 
-	{
-		mesh->UpdatePalette(*current_bone);
-	}
-	for (auto& children_bone : current_bone->children)
-	{
-		UpdateBone(children_bone);
-	}
-	
 }
 
 void ComponentAnimation::GetChildrenMeshes(GameObject* current_mesh_gameobject)
