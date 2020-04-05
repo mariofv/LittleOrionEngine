@@ -13,76 +13,15 @@
 void AnimController::Init()
 {
 	animation_time = (animation->frames/animation->frames_per_second )* 1000;
-	/*
-	for (size_t i = 0; i < animation->keyframes[0].channels.size(); ++i)
-	{
-		auto & channel = animation->keyframes[0].channels[i];
-		auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [channel](const Skeleton::Joint & joint)
-		{
-			return joint.name == channel.name;
-		});
-		if (it != skeleton->skeleton.end())
-		{
-			Skeleton::Joint joint = (*it);
-			while (joint.parent_index < skeleton->skeleton.size())
-			{
-				joint = skeleton->skeleton[joint.parent_index];
-				auto it_channel = std::find_if(animation->keyframes[0].channels.begin(), animation->keyframes[0].channels.end(), [&joint](const Animation::Channel & parent_channel)
-				{
-					return joint.name == parent_channel.name;
-				});
-				if (it_channel != animation->keyframes[0].channels.end())
-				{
-					channel_hierarchy_cache[i].push_back(it_channel - animation->keyframes[0].channels.begin());
-				}
-			}
-		}
-
-	}
-	channel_global_transformation.resize(animation->keyframes[0].channels.size());*/
-
-}
-void AnimController::Play()
-{
-	current_time = 0;
-	playing = true;
 }
 
-void AnimController::Stop()
-{
-	playing = false;
-}
-
-void AnimController::Update()
-{
-	if (!playing)
-	{
-		return;
-	}
-
-	current_time = current_time + static_cast<int>(App->time->delta_time);
-	if (current_time >= animation_time)
-	{
-		if (loop) 
-		{
-
-			current_time = current_time % animation_time;
-		}
-		else
-		{
-			playing = false;
-		}
-	}
-		//UpdateChannelsGlobalTransformation();
-}
-
-bool AnimController::GetTransform(const std::string & channel_name, float3 & position, Quat & rotation)
+bool AnimController::GetTransform(float current_time,const std::string & channel_name, float3 & position, Quat & rotation)
 {
 	float current_keyframe = (current_time*(animation->frames - 1)) / animation_time;
 	size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
 	size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
 
-	float interpolationLambda = current_keyframe - std::floor(current_keyframe);
+	float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
 
 	bool channel_found = false;
 	size_t channel_index = 0;
@@ -104,49 +43,40 @@ bool AnimController::GetTransform(const std::string & channel_name, float3 & pos
 	Quat last_rotation = animation->keyframes[first_keyframe_index].channels[channel_index].rotation;
 	Quat next_rotation = animation->keyframes[second_keyframe_index].channels[channel_index].rotation;
 
-	position = Utils::Interpolate(last_translation, next_translation, interpolationLambda);
-	rotation = Utils::Interpolate(last_rotation, next_rotation, interpolationLambda);
+	position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
+	rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
 
 	return true;
 }
 
-void AnimController::UpdateChannelsGlobalTransformation()
+std::shared_ptr<Animation> AnimController::GetCurrentAnimation() const
 {
-	float current_sample = (current_time*(animation->frames - 1)) / animation_time;
-	int current_keyframe = math::FloorInt(current_sample);
-
-	int next_keyframe = (current_keyframe + 1) % (int)animation->frames;
-
-	size_t i = 0;
-	for (const auto & channel : animation->keyframes[current_keyframe].channels)
+	if (active_state == nullptr || active_state->clip == nullptr)
 	{
-		Animation::Channel & next_keyframe_channel = animation->keyframes[next_keyframe].channels[i];
-
-		float4x4 current_global_tranform = float4x4::identity;
-		float4x4 next_global_tranform = float4x4::identity;
-
-		std::vector<Animation::Channel> & channels = animation->keyframes[current_keyframe].channels;
-		std::vector<Animation::Channel> & netx_keyframe_channels = animation->keyframes[next_keyframe].channels;
-
-		for (int j = channel_hierarchy_cache[i].size() - 1; j >= 0; --j)
-		{
-			auto & channel_parent = channels[channel_hierarchy_cache[i][j]];
-			current_global_tranform = current_global_tranform * float4x4::FromTRS(channel_parent.translation, channel_parent.rotation, float3(1.0f, 1.0f, 1.0f));
-
-			auto & channel_parent_next_keyframe = netx_keyframe_channels[channel_hierarchy_cache[i][j]];
-			next_global_tranform = next_global_tranform * float4x4::FromTRS(channel_parent_next_keyframe.translation, channel_parent_next_keyframe.rotation, float3(1.0f, 1.0f, 1.0f));
-		}
-		float4x4 channel_current_local_tranform = float4x4::FromTRS(channel.translation, channel.rotation, float3(1.0f, 1.0f, 1.0f));
-		float4x4 channel_next_local_tranform = float4x4::FromTRS(next_keyframe_channel.translation, next_keyframe_channel.rotation, float3(1.0f, 1.0f, 1.0f));
-
-		current_global_tranform = current_global_tranform * channel_current_local_tranform;
-		next_global_tranform = next_global_tranform * channel_next_local_tranform;
-
-		float delta = current_sample - current_keyframe;
-		channel_global_transformation[i] = Utils::Interpolate(current_global_tranform, next_global_tranform, delta);
-		++i;
+		return nullptr;
 	}
+	return active_state->clip->animation;
+}
 
+std::vector<float4x4> AnimController::GetPose(float current_time, const std::vector<size_t> & joint_channels_map)
+{
+	std::vector<float4x4> outpose;
+	/*float current_keyframe = (current_time*(animation->frames - 1)) / animation_time;
+	size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
+	size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
+
+	float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
+
+
+	const std::vector<Animation::Channel> current_pose = animation->keyframes[first_keyframe_index].channels;
+	const std::vector<Animation::Channel> next_pose = animation->keyframes[second_keyframe_index].channels;
+
+	for (auto joint : joint_channels_map)
+	{
+		position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
+		rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
+	}*/
+	return outpose;
 }
 
 

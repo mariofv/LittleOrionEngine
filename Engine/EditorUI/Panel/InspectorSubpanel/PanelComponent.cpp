@@ -414,21 +414,21 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		}
 		ImGui::AlignTextToFramePadding();
 		ImGui::Separator();
-		if (ImGui::Checkbox("Playing", &animation->animation_controller->playing));
+		if (ImGui::Checkbox("Playing", &animation->playing));
 		ImGui::SameLine();
 		if (ImGui::Checkbox("Loop", &animation->animation_controller->loop));
 		ImGui::SameLine();
 		if (ImGui::Button("Play"))
 		{
-			animation->animation_controller->Play();
+			animation->Play();
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Stop"))
 		{
-			animation->animation_controller->Stop();
+			animation->Stop();
 		}
 
-		ImGui::SliderInt("Animation time", &animation->animation_controller->current_time, 0, animation->animation_controller->animation_time);
+		ImGui::SliderInt("Animation time", &animation->current_time, 0, animation->animation_controller->animation_time);
 	}
 }
 void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script)

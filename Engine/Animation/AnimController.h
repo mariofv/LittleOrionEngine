@@ -18,28 +18,21 @@ public:
 	void SetActiveAnimation();
 	void ActiveAnimation(const std::string & trigger);
 
-	void Play();
-	void Stop();
-	void Update();
-
-	bool GetTransform(const std::string& channel_name, float3& position, Quat& rotation);
-
+	bool GetTransform(float current_time,const std::string& channel_name, float3& position, Quat& rotation);
+	std::shared_ptr<Animation> GetCurrentAnimation() const;
 private:
-	void UpdateChannelsGlobalTransformation();
+	std::vector<float4x4> GetPose(float current_time, const std::vector<size_t> & joint_channels_map);
 public:
 	std::shared_ptr<Animation> animation = nullptr;
 	std::shared_ptr<StateMachine> state_machine;
 
 	std::map<size_t, std::vector<uint32_t>> channel_hierarchy_cache;
-	std::vector<float4x4> channel_global_transformation;
 
-	bool playing = false;
+	bool loop = false;
+	int animation_time = 0;
 private:
 	std::shared_ptr<State> active_state;
-	bool loop = false;
 
-	int current_time = 0;
-	int animation_time = 0;
 
 	friend class PanelComponent;
 };

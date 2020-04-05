@@ -18,6 +18,7 @@ public:
 	ComponentAnimation(GameObject* owner);
 	~ComponentAnimation() = default;
 
+	void Init();
 
 	//Copy and move
 	ComponentAnimation(const ComponentAnimation& component_to_copy) = default;
@@ -31,19 +32,27 @@ public:
 
 	void SetStateMachine(std::shared_ptr<StateMachine> & state_machine);
 
+	void Play();
+	void Stop();
 	void Update() override;
 	void Delete() override;
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
-	void UpdateBone(GameObject * current_bone);
-	void GetChildrenMeshes(GameObject * current_mesh);
-
-public:
-	AnimController* animation_controller = nullptr;
-	std::vector<ComponentMeshRenderer*> skinned_meshes;
 private:
+	void GetChildrenMeshes(GameObject * current_mesh);
+	void GenerateJointChannelMaps();
+	void UpdateBone(GameObject * current_bone);
+
+private:
+	std::vector<std::vector<size_t>> meshes_channels_joints_map;
+	std::vector<ComponentMeshRenderer*> skinned_meshes;
+	AnimController* animation_controller = nullptr;
+
+	int current_time = 0;
+	bool playing = false;
+
 	friend class PanelComponent;
 	
 };

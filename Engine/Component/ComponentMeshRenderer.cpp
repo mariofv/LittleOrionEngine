@@ -216,6 +216,7 @@ void ComponentMeshRenderer::SetSkeleton(std::shared_ptr<Skeleton>& skeleton)
 	}
 }
 
+//TODO: PASS THE FULL GLOBAL SKELETON POSITION FOR EACH JOINT
 void ComponentMeshRenderer::UpdatePalette(const GameObject &current_bone)
 {
 	if (!skeleton)

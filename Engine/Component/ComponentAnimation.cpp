@@ -22,6 +22,12 @@ ComponentAnimation::ComponentAnimation(GameObject* owner) : Component(owner, Com
 	GetChildrenMeshes(owner);
 }
 
+void ComponentAnimation::Init()
+{
+	GetChildrenMeshes(owner);
+	GenerateJointChannelMaps();
+}
+
 Component* ComponentAnimation::Clone(bool original_prefab) const
 {
 	ComponentAnimation * created_component;
@@ -47,15 +53,43 @@ void ComponentAnimation::SetStateMachine(std::shared_ptr<StateMachine>& state_ma
 {
 	animation_controller->state_machine = state_machine;
 	animation_controller->SetActiveAnimation();
+	GenerateJointChannelMaps();
 }
 
+void ComponentAnimation::Play()
+{
+	current_time = 0;
+	playing = true;
+}
+
+void ComponentAnimation::Stop()
+{
+	playing = false;
+}
 
 
 void ComponentAnimation::Update()
 {
-	animation_controller->Update();
+	if (!playing)
+	{
+		return;
+	}
 
-	if (animation_controller->playing)
+	current_time = current_time + static_cast<int>(App->time->delta_time);
+	if (current_time >= animation_controller->animation_time)
+	{
+		if (animation_controller->loop)
+		{
+
+			current_time = current_time % animation_controller->animation_time;
+		}
+		else
+		{
+			playing = false;
+		}
+	}
+
+	if (playing)
 	{
 		UpdateBone(owner);
 	}
@@ -84,18 +118,15 @@ void ComponentAnimation::Load(const Config& config)
 	config.GetString("StateMachineResource", state_machine_path, "");
 	if (!state_machine_path.empty())
 	{
-		animation_controller->state_machine = App->resources->Load<StateMachine>(state_machine_path);
-		animation_controller->SetActiveAnimation();
+		SetStateMachine(App->resources->Load<StateMachine>(state_machine_path));
 	}
 }
 
-
-//TODO: INTEAD OF ITERATIVE DO THIS WITH SKELETON
 void ComponentAnimation::UpdateBone(GameObject* current_bone)
 {
 	float3 bone_position;
 	Quat bone_rotation;
-	if (animation_controller->GetTransform(current_bone->name, bone_position, bone_rotation))
+	if (animation_controller->GetTransform(current_time,current_bone->name, bone_position, bone_rotation))
 	{
 		current_bone->transform.SetTranslation(bone_position);
 		current_bone->transform.SetRotation(bone_rotation.ToFloat3x3());
@@ -112,18 +143,6 @@ void ComponentAnimation::UpdateBone(GameObject* current_bone)
 	
 }
 
-/*
-void ComponentAnimation::Play()
-{
-	current_time = 0;
-	playing = true;
-}
-
-void ComponentAnimation::Stop()
-{
-	playing = false;
-}*/
-
 void ComponentAnimation::GetChildrenMeshes(GameObject* current_mesh_gameobject)
 {
 	ComponentMeshRenderer* mesh_renderer = static_cast<ComponentMeshRenderer*>(current_mesh_gameobject->GetComponent(ComponentType::MESH_RENDERER));
@@ -131,9 +150,33 @@ void ComponentAnimation::GetChildrenMeshes(GameObject* current_mesh_gameobject)
 	{
 		skinned_meshes.push_back(mesh_renderer);
 	}
-	
+
 	for (auto& child_gameobject : current_mesh_gameobject->children)
 	{
 		GetChildrenMeshes(child_gameobject);
+	}
+}
+
+void ComponentAnimation::GenerateJointChannelMaps()
+{
+	meshes_channels_joints_map.resize(skinned_meshes.size());
+	if (animation_controller->GetCurrentAnimation() == nullptr)
+	{
+		return;
+	}
+	auto & channels = animation_controller->GetCurrentAnimation()->keyframes[0].channels;
+	for (size_t i = 0; i < skinned_meshes.size(); ++i)
+	{
+		auto & skeleton = skinned_meshes[i]->skeleton;
+		meshes_channels_joints_map[i].resize(channels.size());
+		for (size_t j = 0; j < channels.size() ; ++j)
+		{
+			auto & channel = channels[j];
+			auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [&channel](const Skeleton::Joint & joint) {
+				return channel.name == joint.name;
+			});
+
+			meshes_channels_joints_map[i][j] = (it - skeleton->skeleton.begin());
+		}
 	}
 }

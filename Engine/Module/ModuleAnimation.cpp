@@ -51,6 +51,6 @@ void ModuleAnimation::UpdateAnimationMeshes()
 {
 	for (auto & animation : animations)
 	{
-		animation->GetChildrenMeshes(animation->owner);
+		animation->Init();
 	}
 }
