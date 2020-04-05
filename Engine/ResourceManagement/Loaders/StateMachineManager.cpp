@@ -43,6 +43,10 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(const std::string & file
 			std::string  animation_path = App->resources->resource_DB->GetEntry(animation_uuid)->exported_file;
 			clip->animation = App->resources->Load<Animation>(animation_path);
 		}
+
+		bytes = sizeof(bool);
+		memcpy(&clip->loop, cursor, bytes);
+		cursor += bytes;
 	}
 
 	std::vector< std::shared_ptr<State>> states;

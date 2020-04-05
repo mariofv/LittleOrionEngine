@@ -13,6 +13,7 @@
 void AnimController::Init()
 {
 	animation_time = (animation->frames/animation->frames_per_second )* 1000;
+	loop = active_state->clip->loop;
 }
 
 bool AnimController::GetTransform(float current_time,const std::string & channel_name, float3 & position, Quat & rotation)
@@ -51,17 +52,12 @@ bool AnimController::GetTransform(float current_time,const std::string & channel
 
 std::shared_ptr<Animation> AnimController::GetCurrentAnimation() const
 {
-	if (active_state == nullptr || active_state->clip == nullptr)
-	{
-		return nullptr;
-	}
-	return active_state->clip->animation;
+	return animation;
 }
 
-std::vector<float4x4> AnimController::GetPose(float current_time, const std::vector<size_t> & joint_channels_map)
+void AnimController::GetPose(float current_time,const std::vector<size_t> & joint_channels_map, std::vector<float4x4> & pose) const
 {
-	std::vector<float4x4> outpose;
-	/*float current_keyframe = (current_time*(animation->frames - 1)) / animation_time;
+	float current_keyframe = (current_time*(animation->frames - 1)) / animation_time;
 	size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
 	size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
 
@@ -71,12 +67,22 @@ std::vector<float4x4> AnimController::GetPose(float current_time, const std::vec
 	const std::vector<Animation::Channel> current_pose = animation->keyframes[first_keyframe_index].channels;
 	const std::vector<Animation::Channel> next_pose = animation->keyframes[second_keyframe_index].channels;
 
-	for (auto joint : joint_channels_map)
+	for (size_t i = 0 ; i < joint_channels_map.size(); ++i)
 	{
-		position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
-		rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
-	}*/
-	return outpose;
+		size_t joint_index = joint_channels_map[i];
+		if (joint_index < pose.size())
+		{
+			float3 last_translation = current_pose[i].translation;
+			float3 next_translation = next_pose[i].translation;
+
+			Quat last_rotation = current_pose[i].rotation;
+			Quat next_rotation = next_pose[i].rotation;
+
+			float3 position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
+			Quat rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
+			pose[joint_index] = float4x4::FromTRS(position,rotation,float3::one);
+		}
+	}
 }
 
 

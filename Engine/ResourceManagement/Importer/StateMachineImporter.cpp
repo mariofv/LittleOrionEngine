@@ -28,7 +28,7 @@ ImportResult StateMachineImporter::Import(const File & file, bool force) const
 	uint32_t num_transitions = state_machine.transitions.size();
 	uint32_t ranges[3] = { num_clips, num_states, num_transitions };
 
-	uint32_t size_of_clip= sizeof(uint64_t) + sizeof(uint32_t);
+	uint32_t size_of_clip= sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
 	uint32_t size_of_state = sizeof(uint64_t) * 2;
 	uint32_t size_of_transitions = sizeof(uint64_t) * 4;
 	uint32_t size = sizeof(ranges) + size_of_clip * num_clips + size_of_transitions * num_transitions + size_of_state * num_states + sizeof(uint64_t)/*Default state*/;
@@ -49,6 +49,10 @@ ImportResult StateMachineImporter::Import(const File & file, bool force) const
 		bytes = sizeof(uint32_t) ;
 		uint32_t animation_uuid = clip->animation->GetUUID();
 		memcpy(cursor, &animation_uuid, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(bool);
+		memcpy(cursor, &clip->loop, bytes);
 		cursor += bytes;
 	}
 

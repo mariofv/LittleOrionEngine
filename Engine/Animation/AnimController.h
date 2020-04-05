@@ -19,9 +19,9 @@ public:
 	void ActiveAnimation(const std::string & trigger);
 
 	bool GetTransform(float current_time,const std::string& channel_name, float3& position, Quat& rotation);
+	void GetPose(float current_time, const std::vector<size_t> & joint_channels_map, std::vector<float4x4> &pose) const;
 	std::shared_ptr<Animation> GetCurrentAnimation() const;
-private:
-	std::vector<float4x4> GetPose(float current_time, const std::vector<size_t> & joint_channels_map);
+
 public:
 	std::shared_ptr<Animation> animation = nullptr;
 	std::shared_ptr<StateMachine> state_machine;

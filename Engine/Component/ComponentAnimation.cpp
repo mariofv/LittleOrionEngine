@@ -91,7 +91,13 @@ void ComponentAnimation::Update()
 
 	if (playing)
 	{
-		UpdateBone(owner);
+		for (size_t i = 0; i < skinned_meshes.size(); i++)
+		{
+			std::vector<float4x4> pose(skinned_meshes[i]->skeleton->skeleton.size());
+			animation_controller->GetPose(current_time,meshes_channels_joints_map[i], pose);
+			skinned_meshes[i]->UpdatePalette(pose);
+		}
+		//UpdateBone(owner);
 	}
 }
 
