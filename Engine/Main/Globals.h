@@ -78,16 +78,25 @@ enum class Fonts
 # define PRIMITIVE_TORUS_PATH "Library/Metadata/22/2202705559"
 # define PRIMITIVE_QUAD_PATH "Library/Metadata/35/3548710651"
 
+# define MAIN_SCENE_PATH "Library/Main.scene"
 # define DEFAULT_SCENE_PATH "Resources/Scenes/default_scene.scene"
-# define SAVED_SCENE_PATH "Assets/Scenes/scene.scene"
 # define TMP_SCENE_PATH "Assets/Scenes/tmp_scene.scene"
 # define SCENE_ROOT_PATH "Assets/Scenes/"
 # define GAME_INPUT_PATH "Resources/GameInputs/game_inputs.inputs"
 # define NAVMESH_PATH "Resources/NavMeshes/"
 
 # define SCRIPT_LIST_PATH "Resources/Scripts/scripts_list.scripts"
-# define SCRIPTS_DLL_PATH "Resources/Scripts/GamePlaySystem.dll"
-# define SCRIPT_DLL_FILE "GamePlaySyste_.dll"
+
+#if DEBUG
+# define SCRIPTS_DLL_PATH "Resources/Scripts/GamePlaySystemDebug.dll"
+# define SCRIPT_DLL_FILE "GamePlaySystemDebu_.dll"
+#elif GAME
+# define SCRIPTS_DLL_PATH "Resources/Scripts/GameplaySystem.dll"
+# define SCRIPT_DLL_FILE "GameplaySystem.dll"
+#else
+# define SCRIPTS_DLL_PATH "Resources/Scripts/GamePlaySystemRelease.dll"
+# define SCRIPT_DLL_FILE "GamePlaySystemReleas_.dll"
+#endif
 
 # define SCRIPT_TEMPLATE_FILE_CPP "Resources/Scripts/TemplateScript.cpp"
 # define SCRIPT_TEMPLATE_FILE_H "Resources/Scripts/TemplateScript.h"

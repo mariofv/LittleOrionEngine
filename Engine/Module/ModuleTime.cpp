@@ -27,6 +27,10 @@ bool ModuleTime::Init()
 
 	real_time_clock->Start();
 
+#if GAME
+	game_time_clock->Start();
+#endif
+
 	APP_LOG_SUCCESS("Engine clocks initialized correctly");
 
 	return true;
@@ -112,7 +116,6 @@ void ModuleTime::Play()
 	{
 		game_time_clock->Stop();
 		App->editor->OpenScene(TMP_SCENE_PATH);
-		remove(TMP_SCENE_PATH);
 	}
 }
 

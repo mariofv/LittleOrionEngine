@@ -17,23 +17,29 @@ public:
 	bool CleanUp() override;
 
 	ENGINE_API GameObject* CreateGameObject();
-	ENGINE_API GameObject* CreateChildGameObject(GameObject *parent);
-	void RemoveGameObject(GameObject * game_object_to_remove);
+	ENGINE_API GameObject* CreateChildGameObject(GameObject* parent);
+	void RemoveGameObject(GameObject* game_object_to_remove);
 	GameObject* AddGameObject(std::unique_ptr<GameObject> & game_object_to_add);
 
-	GameObject* GetRoot() const;
+	ENGINE_API GameObject* GetRoot() const;
 	ENGINE_API GameObject* GetGameObject(uint64_t UUID) const;
 	Component* GetComponent(uint64_t UUID) const;
 
+
+	void OpenPendingScene();
 	void DeleteCurrentScene();
-	void NewScene(const std::string &path);
+
+	void LoadScene(const std::string &path);
+	bool HasPendingSceneToLoad() const;
 
 private:
-	GameObject *root = nullptr;
-	
+	void OpenScene(const std::string &path);
 
-	
+private:
+	GameObject* root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
+	
+	std::string scene_to_load;
 
 	friend class PanelScene;
 	friend class ModuleDebugDraw;

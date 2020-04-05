@@ -3,7 +3,7 @@
 #include "Main/Application.h"
 
 
-EditorActionRotation2D::EditorActionRotation2D(ComponentTransform2D* component, float &current, GameObject* go) : previous_rotation(component->rotation),
+EditorActionRotation2D::EditorActionRotation2D(ComponentTransform2D* component, float current, GameObject* go) : previous_rotation(component->rotation),
 current_rotation(current), UUID_go(go->UUID) {}
 
 void EditorActionRotation2D::Undo()

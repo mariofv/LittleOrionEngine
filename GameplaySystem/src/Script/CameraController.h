@@ -23,16 +23,16 @@ public:
 	void GodCamera();
 	void ActivePlayer();
 	void FollowPlayer();
-	void CenterToPlayer();
 
 
 	void InitPublicGameObjects();
 
 private:
 	bool god_mode = false;
-	float containing_sphere_radius = 0.0f;
+	Quat rotation = Quat::identity;
 	GameObject* camera = nullptr;
 	ComponentCamera* camera_component = nullptr;
+	float rotation_speed = 1.f;
 
 	GameObject* player = nullptr;
 	PlayerController* player_movement_script = nullptr;

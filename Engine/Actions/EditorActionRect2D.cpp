@@ -2,7 +2,7 @@
 #include "Module/ModuleScene.h"
 #include "Main/Application.h"
 
-EditorActionRect2D::EditorActionRect2D(ComponentTransform2D* component, Rect &current, GameObject* go) : previous_rect(component->rect),
+EditorActionRect2D::EditorActionRect2D(ComponentTransform2D* component, const Rect &current, GameObject* go) : previous_rect(component->rect),
 current_rect(current), UUID_go(go->UUID) {}
 
 

@@ -14,11 +14,6 @@ update_status ModuleAI::Update()
 {
 	nav_mesh.Update();
 
-	if (App->input->GetKeyDown(KeyCode::P))
-	{
-		nav_mesh.CreateNavMesh();
-	}
-
 	return update_status::UPDATE_CONTINUE;
 }
 

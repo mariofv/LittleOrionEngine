@@ -76,7 +76,6 @@ void SceneManager::Save(const std::string &path,  GameObject * gameobject_to_sav
 
 void SceneManager::Load(const std::string &path) const
 {
-
 	size_t readed_bytes;
 	char* scene_file_data = App->filesystem->Load(path.c_str(), readed_bytes);
 	std::string serialized_scene_string = scene_file_data;
