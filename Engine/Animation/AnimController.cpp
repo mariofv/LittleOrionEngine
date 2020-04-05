@@ -42,10 +42,8 @@ void AnimController::Init()
 	channel_global_transformation.resize(animation->keyframes[0].channels.size());*/
 
 }
-
-
 void AnimController::Play()
-{ 
+{
 	current_time = 0;
 	playing = true;
 }

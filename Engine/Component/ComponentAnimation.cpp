@@ -90,7 +90,7 @@ void ComponentAnimation::Load(const Config& config)
 }
 
 
-
+//TODO: INTEAD OF ITERATIVE DO THIS WITH SKELETON
 void ComponentAnimation::UpdateBone(GameObject* current_bone)
 {
 	float3 bone_position;
@@ -111,6 +111,18 @@ void ComponentAnimation::UpdateBone(GameObject* current_bone)
 	}
 	
 }
+
+/*
+void ComponentAnimation::Play()
+{
+	current_time = 0;
+	playing = true;
+}
+
+void ComponentAnimation::Stop()
+{
+	playing = false;
+}*/
 
 void ComponentAnimation::GetChildrenMeshes(GameObject* current_mesh_gameobject)
 {

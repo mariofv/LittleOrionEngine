@@ -10,20 +10,8 @@
 #include <cmath>
 #include <map>
 
-bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, const std::string& imported_file, std::string& exported_file) const
+bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, const std::string& imported_file, std::string& exported_file , float unit_scale_factor) const
 {
-	float unit_scale_factor = 1.f;
-	for (unsigned int i = 0; i < scene->mMetaData->mNumProperties; ++i)
-	{
-		if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
-		{
-			aiMetadataEntry unit_scale_entry = scene->mMetaData->mValues[i];
-			unit_scale_factor = *(double*)unit_scale_entry.mData;
-		};
-	}
-	unit_scale_factor *= 0.01f;
-
-
 	Animation own_format_animation(0,"");
 	GetCleanAnimation(scene->mRootNode, animation, own_format_animation, unit_scale_factor);
 	own_format_animation.frames = static_cast<float>(animation->mDuration);
