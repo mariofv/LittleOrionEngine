@@ -38,7 +38,6 @@ public:
 	void Load(const Config& config) override;
 
 	void UpdateBone(GameObject * current_bone);
-
 	void GetChildrenMeshes(GameObject * current_mesh);
 
 public:

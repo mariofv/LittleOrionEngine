@@ -51,7 +51,6 @@ void PanelStateMachine::Render()
 				ax::NodeEditor::NavigateToContent(0.0f);
 				firstFrame = false;
 			}
-			ImGuiContext* context = ImGui::GetCurrentContext();
 
 	}
 	ImGui::End();

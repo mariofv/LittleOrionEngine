@@ -442,30 +442,22 @@
     <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelStateMachine.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Resources\StateMachine.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\StateMachineManager.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\StateMachineImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
-    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor.cpp">
-      <Filter>Libraries\NodeEditor</Filter>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\StateMachineManager.cpp">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClCompile>
-    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor_api.cpp">
-      <Filter>Libraries\NodeEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\NodeEditor\crude_json.cpp">
-      <Filter>Libraries\NodeEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\NodeEditor\imgui_canvas.cpp">
-      <Filter>Libraries\NodeEditor</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PanelStateMachine.cpp">
-      <Filter>Engine\EditorUI\Panel</Filter>
-    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor.cpp" />
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor_api.cpp" />
+    <ClCompile Include="Libraries\include\NodeEditor\crude_json.cpp" />
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_canvas.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -888,36 +880,24 @@
     <ClInclude Include="Engine\Actions\EditorActionRotation2D.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelStateMachine.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\StateMachine.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\StateMachineManager.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\StateMachineImporter.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor.h">
-      <Filter>Libraries\NodeEditor</Filter>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\StateMachineManager.h">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor_internal.h">
-      <Filter>Libraries\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\NodeEditor\crude_json.h">
-      <Filter>Libraries\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_bezier_math.h">
-      <Filter>Libraries\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_canvas.h">
-      <Filter>Libraries\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_extra_math.h">
-      <Filter>Libraries\NodeEditor</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PanelStateMachine.h">
-      <Filter>Engine\EditorUI\Panel</Filter>
-    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor.h" />
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor_internal.h" />
+    <ClInclude Include="Libraries\include\NodeEditor\crude_json.h" />
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_bezier_math.h" />
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_canvas.h" />
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_extra_math.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -1006,14 +986,8 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <None Include="Libraries\include\NodeEditor\imgui_extra_math.inl">
-      <Filter>Libraries\NodeEditor</Filter>
-    </None>
-    <None Include="Libraries\include\NodeEditor\imgui_node_editor_internal.inl">
-      <Filter>Libraries\NodeEditor</Filter>
-    </None>
-    <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl">
-      <Filter>Libraries\NodeEditor</Filter>
-    </None>
+    <None Include="Libraries\include\NodeEditor\imgui_node_editor_internal.inl" />
+    <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl" />
+    <None Include="Libraries\include\NodeEditor\imgui_extra_math.inl" />
   </ItemGroup>
 </Project>

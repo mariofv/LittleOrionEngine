@@ -2,7 +2,6 @@
 
 #include "Helper/Config.h"
 #include "Helper/Timer.h"
-#include "ResourceManagement/Resources/Mesh.h"
 
 #include <algorithm>
 ModuleResourceManager::ModuleResourceManager()
@@ -18,6 +17,7 @@ bool ModuleResourceManager::Init()
 	model_importer = std::make_unique<ModelImporter>();
 	scene_manager = std::make_unique<SceneManager>();
 	prefab_importer = std::make_unique<PrefabImporter>();
+	state_machine_importer = std::make_unique<StateMachineImporter>();
 
 #if !GAME
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);

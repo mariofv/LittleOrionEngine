@@ -51,7 +51,7 @@ private:
 	void ShowComponentTextWindow(ComponentText* text);
 	void ShowComponentButtonWindow(ComponentButton* button);
 
-	void DropAnimationAndSkeleton(ComponentAnimation* component_animation);
+	void DropStateMachine(ComponentAnimation* component_animation);
 	void DropTexture(ComponentUI* ui);
 };
 
