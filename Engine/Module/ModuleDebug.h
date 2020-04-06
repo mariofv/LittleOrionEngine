@@ -38,8 +38,8 @@ public:
 	bool show_navmesh = false;
 	bool show_pathfind_points = true;
 
-	bool culling_scene_mode = false;
-	CullingMode culling_mode = CullingMode::QUADTREE_CULLING;
+	bool culling_scene_mode = true;
+	CullingMode culling_mode = CullingMode::FRUSTUM_CULLING;
 	float rendering_time = 0;
 
 private:

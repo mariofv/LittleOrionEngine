@@ -8,6 +8,7 @@
         "PlayerController",
         "PlayerMovement",
         "TriggerGravity",
-        "MenuLogic"
+        "MenuLogic",
+        "DebugModeScript"
     ]
 }
