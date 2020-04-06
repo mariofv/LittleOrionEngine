@@ -82,7 +82,7 @@ void SceneManager::Load(const std::string &path) const
 
 	Config scene_config(serialized_scene_string);
 
-	std::unordered_map<int64_t, GameObject*> prefab_parents;
+	std::unordered_map<int64_t, std::vector<GameObject*>> prefab_parents;
 	std::vector<Config> prefabs_config;
 	scene_config.GetChildrenConfig("Prefabs", prefabs_config);
 	for (unsigned int i = 0; i < prefabs_config.size(); ++i)
@@ -91,7 +91,7 @@ void SceneManager::Load(const std::string &path) const
 		GameObject * loaded_gameobject = LoadPrefab(prefabs_config[i]);
 		if (parent_UUID != 0)
 		{
-			prefab_parents[parent_UUID] = loaded_gameobject;
+			prefab_parents[parent_UUID].push_back(loaded_gameobject);
 		}
 	}
 
@@ -116,9 +116,13 @@ void SceneManager::Load(const std::string &path) const
 		}
 		if (prefab_parents.find(created_game_object->UUID) != prefab_parents.end())
 		{
-			ComponentTransform previous_transform = prefab_parents[created_game_object->UUID]->transform;
-			prefab_parents[created_game_object->UUID]->SetParent(created_game_object);
-			prefab_parents[created_game_object->UUID]->transform = previous_transform;
+			for (auto & prefab_child : prefab_parents[created_game_object->UUID])
+			{
+				ComponentTransform previous_transform = prefab_child->transform;
+				prefab_child->SetParent(created_game_object);
+				prefab_child->transform = previous_transform;
+			}
+
 		}
 	}
 	App->scripts->ReLink();
