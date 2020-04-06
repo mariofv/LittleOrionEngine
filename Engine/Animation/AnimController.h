@@ -10,6 +10,13 @@ class StateMachine;
 struct State;
 struct Clip;
 struct Transition;
+
+struct PlayingClip
+{
+	std::shared_ptr<Clip> clip;
+	int current_time = 0;
+	bool Update();
+};
 class AnimController
 {
 public:
@@ -17,19 +24,18 @@ public:
 	~AnimController() = default;
 	void SetActiveAnimation();
 
-	void GetPose(float current_time, uint32_t skeleton_uuid, std::vector<float4x4> &pose) const;
+	void GetPose(uint32_t skeleton_uuid, std::vector<float4x4> &pose) const;
 	std::shared_ptr<State> StartNextState(const std::string & trigger);
 	void SetActiveState(std::shared_ptr<State> & new_state);
 private:
 	std::vector<float4x4> InterpolatePoses(const std::vector<float4x4> & first_pose, const std::vector<float4x4> & second_pose) const;
 	void GetClipTransform(float current_time, uint32_t skeleton_uuid, const std::shared_ptr<Clip> &clip, std::vector<math::float4x4> & pose) const;
 public:
-	std::shared_ptr<Clip> clip = nullptr;
 	std::shared_ptr<StateMachine> state_machine;
+	std::vector<PlayingClip> playing_clips;
 
 private:
 	std::shared_ptr<State> active_state;
-	std::vector<std::shared_ptr<Clip>> fading_clips;
 	std::shared_ptr<Transition> active_transition;
 	float fade_time = 0;
 

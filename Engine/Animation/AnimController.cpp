@@ -10,16 +10,20 @@
 #include <algorithm>
 #include "ResourceManagement/Resources/StateMachine.h"
 
-void AnimController::GetPose(float current_time,uint32_t skeleton_uuid, std::vector<float4x4> & pose) const
+void AnimController::GetPose(uint32_t skeleton_uuid, std::vector<float4x4> & pose) const
 {
-
-	GetClipTransform(current_time,skeleton_uuid, active_state->clip,pose);
-
-	for (auto & clip : fading_clips)
+	for (auto & clip : playing_clips)
 	{
 		std::vector<float4x4> fading_pose(pose.size());
-		GetClipTransform(current_time,skeleton_uuid, clip, fading_pose);
-		pose = InterpolatePoses(pose, fading_pose);
+		GetClipTransform(clip.current_time,skeleton_uuid, clip.clip, fading_pose);
+		if (playing_clips.size() == 1)
+		{
+			pose = fading_pose;
+		}
+		else
+		{
+			pose = InterpolatePoses(pose, fading_pose);
+		}
 	}
 	if (active_transition && active_transition->interpolation_time < fade_time)
 	{
@@ -76,7 +80,7 @@ void AnimController::SetActiveAnimation()
 	active_state = state_machine->GetDefaultState();
 	if (active_state != nullptr && active_state->clip != nullptr)
 	{
-		clip = active_state->clip;
+		playing_clips.push_back({ active_state->clip });
 	}
 }
 
@@ -88,12 +92,31 @@ std::shared_ptr<State> AnimController::StartNextState(const std::string & trigge
 	{
 		next_state = state_machine->GetState(active_transition->target_hash);
 	}
-	fading_clips.push_back(next_state->clip);
+	playing_clips.push_back({ next_state->clip });
 	return next_state;
 }
 
 void AnimController::SetActiveState(std::shared_ptr<State>& new_state)
 {
 	active_state = new_state;
-	clip = active_state->clip;
+	playing_clips.push_back({ active_state->clip });
+}
+
+bool PlayingClip::Update()
+{
+	bool playing = true;
+	current_time = current_time + static_cast<int>(App->time->delta_time);
+	if (current_time >= clip->animation_time)
+	{
+		if (clip->loop)
+		{
+
+			current_time = current_time % clip->animation_time;
+		}
+		else
+		{
+			playing = false;
+		}
+	}
+	return playing;
 }

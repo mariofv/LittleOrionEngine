@@ -416,8 +416,6 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		ImGui::Separator();
 		if (ImGui::Checkbox("Playing", &animation->playing));
 		ImGui::SameLine();
-		if (ImGui::Checkbox("Loop", &animation->animation_controller->clip->loop));
-		ImGui::SameLine();
 		if (ImGui::Button("Play"))
 		{
 			animation->Play();
@@ -428,7 +426,12 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 			animation->Stop();
 		}
 
-		ImGui::SliderInt("Animation time", &animation->current_time, 0, animation->animation_controller->clip->animation_time);
+		for (auto& playing_clip : animation->animation_controller->playing_clips)
+		{
+			ImGui::Checkbox("Loop", &(playing_clip.clip->loop));
+			ImGui::SliderInt("Animation time", &playing_clip.current_time, 0, playing_clip.clip->animation_time);
+		}
+
 	}
 }
 void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script)

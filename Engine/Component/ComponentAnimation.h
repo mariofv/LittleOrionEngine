@@ -53,7 +53,6 @@ private:
 	std::shared_ptr<StateMachine> state_machine;
 	AnimController* animation_controller = nullptr;
 
-	int current_time = 0;
 	bool playing = false;
 
 	friend class PanelComponent;

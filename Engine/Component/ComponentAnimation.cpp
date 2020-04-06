@@ -60,7 +60,10 @@ void ComponentAnimation::SetStateMachine(std::shared_ptr<StateMachine>& state_ma
 
 void ComponentAnimation::Play()
 {
-	current_time = 0;
+	for (auto & playing_clip : animation_controller->playing_clips)
+	{
+		playing_clip.current_time = 0;
+	}
 	playing = true;
 }
 
@@ -83,19 +86,9 @@ void ComponentAnimation::Update()
 	{
 		return;
 	}
-
-	current_time = current_time + static_cast<int>(App->time->delta_time);
-	if (current_time >= animation_controller->clip->animation_time)
+	for (auto & playing_clip : animation_controller->playing_clips)
 	{
-		if (animation_controller->clip->loop)
-		{
-
-			current_time = current_time % animation_controller->clip->animation_time;
-		}
-		else
-		{
-			playing = false;
-		}
+		playing_clip.Update();
 	}
 
 	if (playing)
@@ -110,7 +103,7 @@ void ComponentAnimation::UpdateMeshes()
 	{
 		auto & skeleton = skinned_meshes[i]->skeleton;
 		std::vector<float4x4> pose(skeleton->skeleton.size());
-		animation_controller->GetPose(current_time, skeleton->GetUUID(), pose);
+		animation_controller->GetPose(skeleton->GetUUID(), pose);
 		skinned_meshes[i]->UpdatePalette(pose);
 	}
 }
