@@ -38,7 +38,11 @@ public:
 	bool show_navmesh = false;
 	bool show_pathfind_points = true;
 
+#if !GAME
+	bool culling_scene_mode = false;
+#else
 	bool culling_scene_mode = true;
+#endif
 	CullingMode culling_mode = CullingMode::FRUSTUM_CULLING;
 	float rendering_time = 0;
 
