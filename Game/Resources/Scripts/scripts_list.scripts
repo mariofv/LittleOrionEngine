@@ -9,6 +9,7 @@
         "PlayerMovement",
         "TriggerGravity",
         "MenuLogic",
-        "DebugModeScript"
+        "DebugModeScript",
+        "DamageScript"
     ]
 }
