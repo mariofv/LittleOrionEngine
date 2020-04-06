@@ -71,7 +71,7 @@ void ComponentAnimation::Stop()
 
 void ComponentAnimation::ActiveAnimation(const std::string & trigger)
 {
-	std::shared_ptr<State> & next_state = animation_controller->GetNextState(trigger);
+	std::shared_ptr<State> & next_state = animation_controller->StartNextState(trigger);
 	//TODO: BLEND STATES
 	animation_controller->SetActiveState(next_state);
 }
@@ -85,12 +85,12 @@ void ComponentAnimation::Update()
 	}
 
 	current_time = current_time + static_cast<int>(App->time->delta_time);
-	if (current_time >= animation_controller->animation_time)
+	if (current_time >= animation_controller->clip->animation_time)
 	{
-		if (animation_controller->loop)
+		if (animation_controller->clip->loop)
 		{
 
-			current_time = current_time % animation_controller->animation_time;
+			current_time = current_time % animation_controller->clip->animation_time;
 		}
 		else
 		{

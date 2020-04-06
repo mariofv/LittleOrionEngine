@@ -7,11 +7,17 @@
 //Structs
 
 Clip::Clip(std::string& name, std::shared_ptr<Animation>& animation, bool loop) :
-	name(name), name_hash(std::hash<std::string>{}(name)), animation(animation), loop(loop) {};
+	name(name), name_hash(std::hash<std::string>{}(name)), animation(animation), loop(loop), animation_time((animation->frames / animation->frames_per_second) * 1000) {}
+void Clip::SetAnimation(const std::shared_ptr<Animation>& animation)
+{
+	this->animation = animation;
+	animation_time = (animation->frames / animation->frames_per_second) * 1000;
+}
+
 
 State::State(std::string name, std::shared_ptr<Clip> clip) :
 	name(name), name_hash(std::hash<std::string>{}(name)),clip(clip)  {
-};
+}
 
 Transition::Transition(uint64_t source, uint64_t target, std::string & trigger, long interpolation) :
 	source_hash(source), 

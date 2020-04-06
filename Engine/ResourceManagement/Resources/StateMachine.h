@@ -11,12 +11,15 @@ struct Clip
 {
 	Clip() = default;
 	Clip(std::string& name, std::shared_ptr<Animation>& animation, bool loop);
+	void SetAnimation(const std::shared_ptr<Animation>& animation);
 	std::string name;
 	uint64_t name_hash = 0;
 	std::shared_ptr<Animation> animation = nullptr;
 	bool loop = false;
 
+	//RunTime only
 	std::unordered_map<uint32_t,std::vector<size_t>> skeleton_channels_joints_map;
+	int animation_time = 0;
 };
 
 struct State

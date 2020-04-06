@@ -1,11 +1,11 @@
 #include "AnimationLoader.h"
 
+#include "Main/Application.h"
+#include "Module/ModuleFileSystem.h"
+#include "ResourceManagement/Resources/Animation.h"
 
 #include "Brofiler/Brofiler.h"
 #include <vector>
-#include <Main/Application.h>
-#include <Module/ModuleFileSystem.h>
-#include <ResourceManagement/Resources/Animation.h>
 
 std::shared_ptr<Animation> AnimationLoader::Load(const std::string& uuid)
 {

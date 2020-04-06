@@ -10,30 +10,50 @@
 #include <algorithm>
 #include "ResourceManagement/Resources/StateMachine.h"
 
-void AnimController::Init()
-{
-	animation_time = (animation->frames/animation->frames_per_second )* 1000;
-	loop = active_state->clip->loop;
-}
-
 void AnimController::GetPose(float current_time,uint32_t skeleton_uuid, std::vector<float4x4> & pose) const
 {
-	float current_keyframe = (current_time*(animation->frames - 1)) / animation_time;
+
+	GetClipTransform(current_time,skeleton_uuid, active_state->clip,pose);
+
+	for (auto & clip : fading_clips)
+	{
+		std::vector<float4x4> fading_pose(pose.size());
+		GetClipTransform(current_time,skeleton_uuid, clip, fading_pose);
+		pose = InterpolatePoses(pose, fading_pose);
+	}
+	if (active_transition && active_transition->interpolation_time < fade_time)
+	{
+	}
+}
+
+std::vector<float4x4> AnimController::InterpolatePoses(const std::vector<float4x4>& first_pose, const std::vector<float4x4>& second_pose) const
+{
+	assert(first_pose.size() == second_pose.size());
+	std::vector<float4x4> interpolated_pose(first_pose.size());
+	for (size_t i = 0; i < first_pose.size(); i++)
+	{
+		interpolated_pose[i] = Utils::Interpolate(first_pose[i], second_pose[i],0);
+	}
+	return interpolated_pose;
+}
+
+void AnimController::GetClipTransform(float current_time, uint32_t skeleton_uuid, const std::shared_ptr<Clip> &clip, std::vector<math::float4x4> & pose) const
+{
+	float current_keyframe = (current_time*(clip->animation->frames - 1)) / clip->animation_time;
 	size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
 	size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
 
 	float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
 
+	const std::vector<Animation::Channel> current_pose = clip->animation->keyframes[first_keyframe_index].channels;
+	const std::vector<Animation::Channel> next_pose = clip->animation->keyframes[second_keyframe_index].channels;
 
-	const std::vector<Animation::Channel> current_pose = animation->keyframes[first_keyframe_index].channels;
-	const std::vector<Animation::Channel> next_pose = animation->keyframes[second_keyframe_index].channels;
-
-	if (active_state->clip->skeleton_channels_joints_map.find(skeleton_uuid) == active_state->clip->skeleton_channels_joints_map.end())
+	if (clip->skeleton_channels_joints_map.find(skeleton_uuid) == clip->skeleton_channels_joints_map.end())
 	{
 		return;
 	}
-	auto & joint_channels_map = active_state->clip->skeleton_channels_joints_map[skeleton_uuid];
-	for (size_t i = 0 ; i < joint_channels_map.size(); ++i)
+	auto & joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
+	for (size_t i = 0; i < joint_channels_map.size(); ++i)
 	{
 		size_t joint_index = joint_channels_map[i];
 		if (joint_index < pose.size())
@@ -46,7 +66,7 @@ void AnimController::GetPose(float current_time,uint32_t skeleton_uuid, std::vec
 
 			float3 position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
 			Quat rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
-			pose[joint_index] = float4x4::FromTRS(position,rotation,float3::one);
+			pose[joint_index] = float4x4::FromTRS(position, rotation, float3::one);
 		}
 	}
 }
@@ -56,25 +76,24 @@ void AnimController::SetActiveAnimation()
 	active_state = state_machine->GetDefaultState();
 	if (active_state != nullptr && active_state->clip != nullptr)
 	{
-		animation = active_state->clip->animation;
-		Init();
+		clip = active_state->clip;
 	}
 }
 
-std::shared_ptr<State> AnimController::GetNextState(const std::string & trigger) const
+std::shared_ptr<State> AnimController::StartNextState(const std::string & trigger)
 {
-	std::shared_ptr<Transition> transition = state_machine->GetTransition(trigger, active_state->name_hash);
+	active_transition = state_machine->GetTransition(trigger, active_state->name_hash);
 	std::shared_ptr<State> next_state;
-	if (transition != nullptr)
+	if (active_transition != nullptr)
 	{
-		next_state = state_machine->GetState(transition->target_hash);
+		next_state = state_machine->GetState(active_transition->target_hash);
 	}
+	fading_clips.push_back(next_state->clip);
 	return next_state;
 }
 
 void AnimController::SetActiveState(std::shared_ptr<State>& new_state)
 {
 	active_state = new_state;
-	animation = active_state->clip->animation;
-	Init();
+	clip = active_state->clip;
 }

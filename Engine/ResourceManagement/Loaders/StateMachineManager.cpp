@@ -41,7 +41,7 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(const std::string & file
 		if (animation_uuid != 0)
 		{
 			std::string  animation_path = App->resources->resource_DB->GetEntry(animation_uuid)->exported_file;
-			clip->animation = App->resources->Load<Animation>(animation_path);
+			clip->SetAnimation(App->resources->Load<Animation>(animation_path));
 		}
 
 		bytes = sizeof(bool);
