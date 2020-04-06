@@ -409,7 +409,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 			ImGui::InputText("Trigger ", &trigger);
 			if (ImGui::Button("Activate"))
 			{
-				animation->animation_controller->ActiveAnimation(trigger);
+				animation->ActiveAnimation(trigger);
 			}
 		}
 		ImGui::AlignTextToFramePadding();

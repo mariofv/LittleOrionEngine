@@ -16,12 +16,7 @@ void AnimController::Init()
 	loop = active_state->clip->loop;
 }
 
-std::shared_ptr<Animation> AnimController::GetCurrentAnimation() const
-{
-	return animation;
-}
-
-void AnimController::GetPose(float current_time,const std::vector<size_t> & joint_channels_map, std::vector<float4x4> & pose) const
+void AnimController::GetPose(float current_time,uint32_t skeleton_uuid, std::vector<float4x4> & pose) const
 {
 	float current_keyframe = (current_time*(animation->frames - 1)) / animation_time;
 	size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
@@ -33,6 +28,11 @@ void AnimController::GetPose(float current_time,const std::vector<size_t> & join
 	const std::vector<Animation::Channel> current_pose = animation->keyframes[first_keyframe_index].channels;
 	const std::vector<Animation::Channel> next_pose = animation->keyframes[second_keyframe_index].channels;
 
+	if (active_state->clip->skeleton_channels_joints_map.find(skeleton_uuid) == active_state->clip->skeleton_channels_joints_map.end())
+	{
+		return;
+	}
+	auto & joint_channels_map = active_state->clip->skeleton_channels_joints_map[skeleton_uuid];
 	for (size_t i = 0 ; i < joint_channels_map.size(); ++i)
 	{
 		size_t joint_index = joint_channels_map[i];
@@ -51,7 +51,6 @@ void AnimController::GetPose(float current_time,const std::vector<size_t> & join
 	}
 }
 
-
 void AnimController::SetActiveAnimation()
 {
 	active_state = state_machine->GetDefaultState();
@@ -62,7 +61,7 @@ void AnimController::SetActiveAnimation()
 	}
 }
 
-void AnimController::ActiveAnimation(const std::string & trigger)
+std::shared_ptr<State> AnimController::GetNextState(const std::string & trigger) const
 {
 	std::shared_ptr<Transition> transition = state_machine->GetTransition(trigger, active_state->name_hash);
 	std::shared_ptr<State> next_state;
@@ -70,8 +69,12 @@ void AnimController::ActiveAnimation(const std::string & trigger)
 	{
 		next_state = state_machine->GetState(transition->target_hash);
 	}
-	//TODO: BLEND STATES
-	active_state = next_state;
+	return next_state;
+}
+
+void AnimController::SetActiveState(std::shared_ptr<State>& new_state)
+{
+	active_state = new_state;
 	animation = active_state->clip->animation;
 	Init();
 }

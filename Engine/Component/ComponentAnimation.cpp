@@ -24,7 +24,10 @@ ComponentAnimation::ComponentAnimation(GameObject* owner) : Component(owner, Com
 void ComponentAnimation::Init()
 {
 	GetChildrenMeshes(owner);
-	GenerateJointChannelMaps();
+	if (animation_controller->state_machine)
+	{
+		GenerateJointChannelMaps();
+	}
 }
 
 Component* ComponentAnimation::Clone(bool original_prefab) const
@@ -66,6 +69,13 @@ void ComponentAnimation::Stop()
 	playing = false;
 }
 
+void ComponentAnimation::ActiveAnimation(const std::string & trigger)
+{
+	std::shared_ptr<State> & next_state = animation_controller->GetNextState(trigger);
+	//TODO: BLEND STATES
+	animation_controller->SetActiveState(next_state);
+}
+
 
 void ComponentAnimation::Update()
 {
@@ -90,12 +100,18 @@ void ComponentAnimation::Update()
 
 	if (playing)
 	{
-		for (size_t i = 0; i < skinned_meshes.size(); i++)
-		{
-			std::vector<float4x4> pose(skinned_meshes[i]->skeleton->skeleton.size());
-			animation_controller->GetPose(current_time,meshes_channels_joints_map[i], pose);
-			skinned_meshes[i]->UpdatePalette(pose);
-		}
+		UpdateMeshes();
+	}
+}
+
+void ComponentAnimation::UpdateMeshes()
+{
+	for (size_t i = 0; i < skinned_meshes.size(); i++)
+	{
+		auto & skeleton = skinned_meshes[i]->skeleton;
+		std::vector<float4x4> pose(skeleton->skeleton.size());
+		animation_controller->GetPose(current_time, skeleton->GetUUID(), pose);
+		skinned_meshes[i]->UpdatePalette(pose);
 	}
 }
 
@@ -142,24 +158,28 @@ void ComponentAnimation::GetChildrenMeshes(GameObject* current_mesh_gameobject)
 
 void ComponentAnimation::GenerateJointChannelMaps()
 {
-	meshes_channels_joints_map.resize(skinned_meshes.size());
-	if (animation_controller->GetCurrentAnimation() == nullptr)
+	
+	for (auto& clip : animation_controller->state_machine->clips)
 	{
-		return;
-	}
-	auto & channels = animation_controller->GetCurrentAnimation()->keyframes[0].channels;
-	for (size_t i = 0; i < skinned_meshes.size(); ++i)
-	{
-		auto & skeleton = skinned_meshes[i]->skeleton;
-		meshes_channels_joints_map[i].resize(channels.size());
-		for (size_t j = 0; j < channels.size() ; ++j)
+		for (auto& mesh : skinned_meshes)
 		{
-			auto & channel = channels[j];
-			auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [&channel](const Skeleton::Joint & joint) {
-				return channel.name == joint.name;
-			});
+			auto & skeleton = mesh->skeleton;
+			if (clip->animation && clip->skeleton_channels_joints_map.find(skeleton->GetUUID()) != clip->skeleton_channels_joints_map.end())
+			{
+				return;
+			}
+			auto & channels = clip->animation->keyframes[0].channels;
+			std::vector<size_t> meshes_channels_joints_map(channels.size());
+			for (size_t j = 0; j < channels.size(); ++j)
+			{
+				auto & channel = channels[j];
+				auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [&channel](const Skeleton::Joint & joint) {
+					return channel.name == joint.name;
+				});
 
-			meshes_channels_joints_map[i][j] = (it - skeleton->skeleton.begin());
+				meshes_channels_joints_map[j] = (it - skeleton->skeleton.begin());
+			}
+			clip->skeleton_channels_joints_map[skeleton->GetUUID()] = std::move(meshes_channels_joints_map);
 		}
 	}
 }

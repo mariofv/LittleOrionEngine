@@ -16,10 +16,10 @@ public:
 	~AnimController() = default;
 	void Init();
 	void SetActiveAnimation();
-	void ActiveAnimation(const std::string & trigger);
 
-	void GetPose(float current_time, const std::vector<size_t> & joint_channels_map, std::vector<float4x4> &pose) const;
-	std::shared_ptr<Animation> GetCurrentAnimation() const;
+	void GetPose(float current_time, uint32_t skeleton_uuid, std::vector<float4x4> &pose) const;
+	std::shared_ptr<State> GetNextState(const std::string & trigger) const;
+	void SetActiveState(std::shared_ptr<State> & new_state);
 
 public:
 	std::shared_ptr<Animation> animation = nullptr;

@@ -32,9 +32,13 @@ public:
 
 	void SetStateMachine(std::shared_ptr<StateMachine> & state_machine);
 
-	void Play();
-	void Stop();
+	//API
+	ENGINE_API void Play();
+	ENGINE_API void Stop();
+	ENGINE_API void ActiveAnimation(const std::string & trigger);
+
 	void Update() override;
+	void UpdateMeshes();
 	void Delete() override;
 
 	void Save(Config& config) const override;
@@ -45,7 +49,6 @@ private:
 	void GenerateJointChannelMaps();
 
 private:
-	std::vector<std::vector<size_t>> meshes_channels_joints_map;
 	std::vector<ComponentMeshRenderer*> skinned_meshes;
 	AnimController* animation_controller = nullptr;
 

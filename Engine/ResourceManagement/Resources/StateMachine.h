@@ -5,6 +5,8 @@
 #include "Animation.h"
 #include "ResourceManagement/Loaders/StateMachineManager.h"
 #include "EditorUI/Panel/PanelStateMachine.h"
+
+#include <unordered_map>
 struct Clip
 {
 	Clip() = default;
@@ -13,6 +15,8 @@ struct Clip
 	uint64_t name_hash = 0;
 	std::shared_ptr<Animation> animation = nullptr;
 	bool loop = false;
+
+	std::unordered_map<uint32_t,std::vector<size_t>> skeleton_channels_joints_map;
 };
 
 struct State
