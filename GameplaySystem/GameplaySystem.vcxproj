@@ -266,6 +266,7 @@
     <ClInclude Include="src\Script\Script.h" />
     <ClInclude Include="src\Script\TriggerActionScript.h" />
     <ClInclude Include="src\Script\TriggerGravity.h" />
+    <ClInclude Include="src\Script\WorldManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\DamageScript.cpp" />
@@ -280,6 +281,7 @@
     <ClCompile Include="src\Script\Script.cpp" />
     <ClCompile Include="src\Script\TriggerActionScript.cpp" />
     <ClCompile Include="src\Script\TriggerGravity.cpp" />
+    <ClCompile Include="src\Script\WorldManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

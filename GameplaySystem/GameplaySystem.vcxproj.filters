@@ -48,6 +48,9 @@
     <ClInclude Include="src\Script\DebugModeScript.h">
       <Filter>src\Script</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\WorldManager.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -84,6 +87,9 @@
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\DebugModeScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\WorldManager.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>

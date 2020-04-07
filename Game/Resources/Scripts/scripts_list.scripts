@@ -10,6 +10,7 @@
         "TriggerGravity",
         "MenuLogic",
         "DebugModeScript",
-		"DamageScript"
+        "DamageScript",
+        "WorldManager"
     ]
 }
