@@ -43,13 +43,14 @@ void SceneManager::Save(const std::string &path,  GameObject * gameobject_to_sav
 			SavePrefab(current_prefab, current_game_object);
 			prefabs_config.push_back(current_prefab);
 		}
-		else if(current_game_object->prefab_reference == nullptr)
+		else if(!current_game_object->prefab_reference)
 		{
 			Config current_gameobject;
 			current_game_object->Save(current_gameobject);
 			game_objects_config.push_back(current_gameobject);
 		}
-		else 
+		
+		if(current_game_object->prefab_reference)
 		{
 			Config current_prefab_modified_component;
 			bool modified = SaveModifiedPrefabComponents(current_prefab_modified_component, current_game_object);

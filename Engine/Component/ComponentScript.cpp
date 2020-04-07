@@ -87,7 +87,7 @@ void ComponentScript::Save(Config& config) const
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
 	config.AddString(name, "ScriptName");
-	if (script != nullptr)
+	if (script)
 	{
 		script->Save(config);
 	}
@@ -100,5 +100,8 @@ void ComponentScript::Load(const Config& config)
 	active = config.GetBool("Active", true);
 	config.GetString("ScriptName", this->name, "");
 	LoadName(this->name);
-	script->Load(config);
+	if (script)
+	{
+		script->Load(config);
+	}
 }
