@@ -149,26 +149,16 @@ std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(const 
 	{
 		return nullptr;
 	}
-	bool found = false;
-	size_t iterator = 0;
-	while(!found && iterator < resource_cache.size())
+	//Check if the resource is already loaded
+	auto it = std::find_if(resource_cache.begin(), resource_cache.end(), [&uid](const std::shared_ptr<Resource> & resource)
 	{
-		auto& resource = resource_cache[iterator];
-		if(resource->exported_file == uid)
-		{
-			found = true;
-		}
-		else
-		{
-			++iterator;
-		}
-	}
-	if (found)
+		return resource->exported_file == uid;
+	});
+	if (it != resource_cache.end())
 	{
 		APP_LOG_INFO("Resource %s exists in cache.", uid.c_str());
-		return  resource_cache[iterator];
+		return  *it;
 	}
-
 	return nullptr;
 }
 
