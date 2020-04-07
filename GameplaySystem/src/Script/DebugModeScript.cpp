@@ -39,9 +39,9 @@ void DebugModeScript::Awake()
 	text_tris = (ComponentText*)text_tris_go->GetComponentUI(ComponentUI::UIType::TEXT);
 	text_verts = (ComponentText*)text_verts_go->GetComponentUI(ComponentUI::UIType::TEXT);
 
-	text_fps->scale = 10.0f;
-	text_tris->scale = 10.0f;
-	text_verts->scale = 10.0f;
+	text_fps->scale = 8.0f;
+	text_tris->scale = 8.0f;
+	text_verts->scale = 8.0f;
 	text_fps->color = float3::zero;
 	text_tris->color = float3::zero;
 	text_verts->color = float3::zero;

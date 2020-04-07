@@ -71,7 +71,7 @@ void MenuLogic::Update()
 		switch (current)
 		{
 		case 0:
-			App->editor->OpenScene(MAIN_SCENE_PATH);
+			App->editor->OpenScene("Assets/Scenes/vs1_scene.scene");
 			break;
 		case 1:
 			//Active help
