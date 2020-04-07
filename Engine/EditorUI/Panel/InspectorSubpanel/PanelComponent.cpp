@@ -604,14 +604,14 @@ void PanelComponent::ShowAddNewComponentButton()
 		sprintf_s(tmp_string, "%s Script", ICON_FA_EDIT);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::SCRIPT);
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::SCRIPT);
 
 		}
 
 		sprintf_s(tmp_string, "%s Mesh Renderer", ICON_FA_DRAW_POLYGON);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
 
 			if (!App->editor->selected_game_object->IsStatic())
 			{
@@ -622,7 +622,7 @@ void PanelComponent::ShowAddNewComponentButton()
 		sprintf_s(tmp_string, "%s Animation", ICON_FA_PLAY_CIRCLE);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
 
 		}
 		ImGui::EndPopup();
@@ -630,6 +630,7 @@ void PanelComponent::ShowAddNewComponentButton()
 
 	if (component != nullptr)
 	{
+		component->added_by_user = true;
 		App->actions->action_component = component;
 		App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_COMPONENT);
 	}
