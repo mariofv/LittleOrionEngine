@@ -144,7 +144,7 @@ void MenuLogic::InitPublicGameObjects()
 	variable_names.push_back(GET_VARIABLE_NAME(credits));
 
 
-	for (int i = 0; i < public_gameobjects.size(); ++i)
+	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		name_gameobjects.push_back(is_object);
 		go_uuids.push_back(0);

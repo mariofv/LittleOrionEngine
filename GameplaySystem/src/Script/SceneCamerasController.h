@@ -29,7 +29,7 @@ private:
 	
 	ComponentCamera* camera_rendering;
 	std::vector<GameObject*> camera_list;
-	int index = 0;
+	unsigned int index = 0;
 
 };
 extern "C" SCRIPT_API SceneCamerasController* SceneCamerasControllerDLL(); //This is how we are going to load the script

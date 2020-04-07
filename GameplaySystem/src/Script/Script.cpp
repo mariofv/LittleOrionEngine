@@ -22,7 +22,7 @@ void Script::AddReferences(GameObject *owner, Application *App)
 
 void Script::Save(Config & config) const
 {
-	for (int i = 0; i < public_gameobjects.size(); ++i)
+	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		GameObject* go = (*public_gameobjects[i]);
 
@@ -38,7 +38,7 @@ void Script::Save(Config & config) const
 
 void Script::Load(const Config & config)
 {
-	for (int i = 0; i < public_gameobjects.size(); ++i)
+	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		std::string aux_name = "Name";
 		aux_name.append(std::to_string(i));
@@ -56,7 +56,7 @@ void Script::Load(const Config & config)
 
 void Script::Link()
 {
-	for (int i = 0; i < public_gameobjects.size(); ++i)
+	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		if (go_uuids[i] != 0)
 		{
@@ -70,7 +70,7 @@ void Script::Link()
 void Script::ShowDraggedObjects()
 {
 
-	for (int i = 0; i < public_gameobjects.size(); ++i)
+	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		ImGui::Text(variable_names[i].c_str());
 		ImGui::SameLine();

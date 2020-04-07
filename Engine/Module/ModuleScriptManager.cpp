@@ -15,6 +15,7 @@
 
 
 
+
 bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
@@ -236,9 +237,10 @@ void ModuleScriptManager::ReloadDLL()
 		{
 			RemoveScriptPointers();
 			remove(SCRIPT_DLL_FILE);
+			InitDLL();
 		}
+		
 	}
-	InitDLL();
 	InitResourceScript();
 	LoadVariables(config_list);
 }
@@ -349,7 +351,9 @@ bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll
 	if (App->filesystem->Exists(original_pdb_path, true))
 	{
 		strcpy(patched_pdb_path, pdb_path);
-		CopyPDB(original_pdb_path, pdb_path, true);		// Copy new PDB
+		if (!CopyPDB(original_pdb_path, pdb_path, true)) {
+			APP_LOG_ERROR("PDB blocked by Visual Studio.\n");
+		}// Copy new PDB
 	}
 	HANDLE patched_dll = CreateFile(patched_dll_path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	DWORD byte_write;
@@ -357,7 +361,7 @@ bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll
 	CloseHandle(patched_dll);
 
 	// clean up
-	APP_LOG_INFO("Patching DLL succeeded!!!.\n");
+	APP_LOG_INFO("Patching DLL Succeeded.\n");
 }
 
 void ModuleScriptManager::Refresh()
