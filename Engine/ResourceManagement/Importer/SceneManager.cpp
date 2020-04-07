@@ -121,6 +121,7 @@ void SceneManager::Load(const std::string &path) const
 				ComponentTransform previous_transform = prefab_child->transform;
 				prefab_child->SetParent(created_game_object);
 				prefab_child->transform = previous_transform;
+				prefab_child->aabb.GenerateBoundingBox();
 			}
 
 		}
