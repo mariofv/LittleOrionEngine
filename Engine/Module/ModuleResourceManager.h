@@ -53,6 +53,7 @@ public:
 		std::shared_ptr<T> resource = Loader::Load<T>(uid);
 		if (resource != nullptr)
 		{
+			
 			resource_cache.push_back(resource);
 		}
 		return resource;

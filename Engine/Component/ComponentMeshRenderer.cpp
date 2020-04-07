@@ -23,7 +23,7 @@ ComponentMeshRenderer::ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_
 
 ComponentMeshRenderer::ComponentMeshRenderer() : Component(nullptr, ComponentType::MESH_RENDERER)
 {
-	this->mesh_to_render = App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH);
+	this->mesh_to_render = App->resources->Load<Mesh>("Library/Metadata/41/4140832022");
 	this->material_to_render = App->resources->Load<Material>(DEFAULT_MATERIAL_PATH);
 }
 
@@ -67,7 +67,7 @@ void ComponentMeshRenderer::Load(const Config& config)
 	}
 	else 
 	{
-		SetMesh(App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH));
+		SetMesh(App->resources->Load<Mesh>("Library/Metadata/41/4140832022"));
 	}
 
 	std::string material_path;

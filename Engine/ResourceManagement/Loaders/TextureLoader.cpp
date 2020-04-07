@@ -57,14 +57,14 @@ unsigned int TextureLoader::LoadCubemap(std::vector<std::string> faces_paths)
 
 std::shared_ptr<Texture> TextureLoader::Load(const std::string& file_path)
 {
-
 	if (!App->filesystem->Exists(file_path.c_str()))
 	{
+		APP_LOG_ERROR("Error loading texture, this file: %s doesn't exist",file_path.c_str());
 		return nullptr;
 	}
 	BROFILER_CATEGORY("Load Texture", Profiler::Color::BurlyWood);
 
-	std::shared_ptr<Texture> loaded_texture;
+	std::shared_ptr<Texture> loaded_texture = nullptr;
 	Config importing_options;
 	if (file_path.find("_normal") != std::string::npos)
 	{
@@ -76,10 +76,15 @@ std::shared_ptr<Texture> TextureLoader::Load(const std::string& file_path)
 	else
 	{
 		DDS::DDS_HEADER ddsHeader;
+		APP_LOG_INFO("Loading Texture data from file %s",file_path.c_str())
 		std::vector<char> data = LoadCompressedDDS(file_path.c_str(), ddsHeader);
 		if (data.size())
 		{
 			loaded_texture = std::make_shared<Texture>(data.data(), data.size(), ddsHeader.dwWidth, ddsHeader.dwHeight, file_path);
+		}
+		else 
+		{
+			APP_LOG_ERROR("Error loading texture, couldn't load data from this file: %s", file_path.c_str());
 		}
 	}
 

@@ -60,7 +60,8 @@ private:
 namespace Loader
 {
 	template<>
-	static std::shared_ptr<Texture> Load(const std::string& uid) {
+	static std::shared_ptr<Texture> Load(const std::string& uid) 
+	{
 		return TextureLoader::Load(uid);
 	}
 }

@@ -109,7 +109,8 @@ void ComponentUI::Load(const Config& config)
 	config.GetString("MetadataPath", metadata_path, "");
 	if(metadata_path != "")
 	{
-		SetTextureToRender(App->resources->Load<Texture>(metadata_path));
+		std::shared_ptr<Texture> ui_texture = App->resources->Load<Texture>(metadata_path);
+		SetTextureToRender(ui_texture);
 	}
 	InitData();
 }
