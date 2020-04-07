@@ -84,7 +84,7 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	APP_LOG_SUCCESS("Model %s loaded correctly from assimp in %f ms.", file.file_path.c_str(), time);
 
 	float unit_scale_factor = 1.f;
-	for (unsigned int i = 0; i < scene->mMetaData->mNumProperties; ++i)
+	/*for (unsigned int i = 0; i < scene->mMetaData->mNumProperties; ++i)
 	{
 		if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
 		{
@@ -92,7 +92,7 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 			unit_scale_factor = *(double*)unit_scale_entry.mData;
 		};
 	}
-	unit_scale_factor *= 0.01f;
+	unit_scale_factor *= 0.01f;*/
 	
 	aiNode * root_node = scene->mRootNode;
 	std::string base_path = file.file_path.substr(0, file.file_path.find_last_of("//"));

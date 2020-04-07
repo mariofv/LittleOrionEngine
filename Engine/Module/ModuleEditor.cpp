@@ -205,6 +205,7 @@ void ModuleEditor::InitEditorDockspace()
 	ImGui::DockBuilderDockWindow(hierarchy->GetWindowName().c_str(), dock_id_left_upper_left);
 	ImGui::DockBuilderDockWindow(scene_panel->GetWindowName().c_str(), dock_id_left_upper_right);
 	ImGui::DockBuilderDockWindow(game_panel->GetWindowName().c_str(), dock_id_left_upper_right);
+	ImGui::DockBuilderDockWindow(state_machine->GetWindowName().c_str(), dock_id_left_upper_right);
 	ImGui::DockBuilderDockWindow(inspector->GetWindowName().c_str(), dock_id_right);
 	ImGui::DockBuilderDockWindow(console->GetWindowName().c_str(), dock_id_left_bottom);
 	ImGui::DockBuilderDockWindow(project_explorer->GetWindowName().c_str(), dock_id_left_bottom);

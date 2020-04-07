@@ -10,7 +10,7 @@
 #include <algorithm>
 #include "ResourceManagement/Resources/StateMachine.h"
 
-void AnimController::GetPose(uint32_t skeleton_uuid, std::vector<float4x4> & pose) const
+void AnimController::GetPose(uint32_t skeleton_uuid, std::vector<float4x4> & pose) 
 {
 	for (auto & clip : playing_clips)
 	{
@@ -22,15 +22,21 @@ void AnimController::GetPose(uint32_t skeleton_uuid, std::vector<float4x4> & pos
 		}
 		else
 		{
-			pose = InterpolatePoses(pose, fading_pose);
+			
+			float weight = clip.current_time / active_transition->interpolation_time;
+			if (weight >= 1.0f)
+			{
+				apply_transition = true;
+			}
+			else
+			{
+				pose = InterpolatePoses(pose, fading_pose, weight);
+			}
 		}
-	}
-	if (active_transition && active_transition->interpolation_time < fade_time)
-	{
 	}
 }
 
-std::vector<float4x4> AnimController::InterpolatePoses(const std::vector<float4x4>& first_pose, const std::vector<float4x4>& second_pose) const
+std::vector<float4x4> AnimController::InterpolatePoses(const std::vector<float4x4>& first_pose, const std::vector<float4x4>& second_pose, float weight) const
 {
 	assert(first_pose.size() == second_pose.size());
 	std::vector<float4x4> interpolated_pose(first_pose.size());
@@ -75,6 +81,23 @@ void AnimController::GetClipTransform(float current_time, uint32_t skeleton_uuid
 	}
 }
 
+bool AnimController::Update()
+{
+
+	bool playing = false;
+	for (auto & playing_clip : playing_clips)
+	{
+		 playing_clip.Update();
+		 playing = playing_clip.playing ? true : false; //At leas one clip is playing
+	}
+
+	if (apply_transition && active_transition == nullptr)
+	{
+		FinishActiveState();
+	}
+	return playing;
+}
+
 void AnimController::SetActiveAnimation()
 {
 	active_state = state_machine->GetDefaultState();
@@ -84,27 +107,30 @@ void AnimController::SetActiveAnimation()
 	}
 }
 
-std::shared_ptr<State> AnimController::StartNextState(const std::string & trigger)
+void AnimController::StartNextState(const std::string & trigger)
 {
 	active_transition = state_machine->GetTransition(trigger, active_state->name_hash);
 	std::shared_ptr<State> next_state;
-	if (active_transition != nullptr)
+	if (active_transition)
 	{
 		next_state = state_machine->GetState(active_transition->target_hash);
+		playing_clips.push_back({ next_state->clip });
 	}
-	playing_clips.push_back({ next_state->clip });
-	return next_state;
 }
 
-void AnimController::SetActiveState(std::shared_ptr<State>& new_state)
+void AnimController::FinishActiveState()
 {
-	active_state = new_state;
-	playing_clips.push_back({ active_state->clip });
+	std::shared_ptr<State> next_state = state_machine->GetState(active_transition->target_hash);
+	active_state = next_state;
+	playing_clips.erase(playing_clips.begin());
 }
 
-bool PlayingClip::Update()
+void PlayingClip::Update()
 {
-	bool playing = true;
+	if (!playing)
+	{
+		return;
+	}
 	current_time = current_time + static_cast<int>(App->time->delta_time);
 	if (current_time >= clip->animation_time)
 	{
@@ -118,5 +144,4 @@ bool PlayingClip::Update()
 			playing = false;
 		}
 	}
-	return playing;
 }

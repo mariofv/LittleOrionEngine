@@ -29,7 +29,7 @@ PanelStateMachine::~PanelStateMachine()
 
 void PanelStateMachine::Render()
 {
-	if (ImGui::Begin(ICON_FA_PROJECT_DIAGRAM " State Machine", &opened, ImGuiWindowFlags_MenuBar))
+	if (ImGui::Begin(window_name.c_str(), &opened, ImGuiWindowFlags_MenuBar))
 	{
 			ax::NodeEditor::SetCurrentEditor(editor_context);
 			{

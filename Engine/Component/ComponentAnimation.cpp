@@ -60,37 +60,29 @@ void ComponentAnimation::SetStateMachine(std::shared_ptr<StateMachine>& state_ma
 
 void ComponentAnimation::Play()
 {
-	for (auto & playing_clip : animation_controller->playing_clips)
-	{
-		playing_clip.current_time = 0;
-	}
+	
+	auto & playing_clip = animation_controller->playing_clips[0];
+	playing_clip.current_time = 0;
+	playing_clip.playing = true;
 	playing = true;
 }
 
 void ComponentAnimation::Stop()
 {
+	auto & playing_clip = animation_controller->playing_clips[0];
+	playing_clip.playing = false;
 	playing = false;
 }
 
 void ComponentAnimation::ActiveAnimation(const std::string & trigger)
 {
-	std::shared_ptr<State> & next_state = animation_controller->StartNextState(trigger);
-	//TODO: BLEND STATES
-	animation_controller->SetActiveState(next_state);
+	animation_controller->StartNextState(trigger);
 }
 
 
 void ComponentAnimation::Update()
 {
-	if (!playing)
-	{
-		return;
-	}
-	for (auto & playing_clip : animation_controller->playing_clips)
-	{
-		playing_clip.Update();
-	}
-
+	playing = animation_controller->Update();
 	if (playing)
 	{
 		UpdateMeshes();

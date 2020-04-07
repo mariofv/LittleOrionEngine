@@ -428,6 +428,10 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 
 		for (auto& playing_clip : animation->animation_controller->playing_clips)
 		{
+			if (!playing_clip.clip)
+			{
+				break;
+			}
 			ImGui::Checkbox("Loop", &(playing_clip.clip->loop));
 			ImGui::SliderInt("Animation time", &playing_clip.current_time, 0, playing_clip.clip->animation_time);
 		}

@@ -27,7 +27,7 @@ struct NodeInfo
 
 
 class File;
-class PanelStateMachine :public Panel
+class PanelStateMachine : public Panel
 {
 
 public:
