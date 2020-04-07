@@ -31,7 +31,7 @@ private:
 	ComponentText* text_verts = nullptr;
 	ComponentText* text_fps = nullptr;
 
-	bool debug_enabled = true;
+	bool debug_enabled = false;
 
 	std::string base_str_tris = "#Tris: ";
 	std::string base_str_verts = "#Verts: ";

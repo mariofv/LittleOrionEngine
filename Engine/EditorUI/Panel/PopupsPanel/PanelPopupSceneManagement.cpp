@@ -45,8 +45,12 @@ void PanelPopupSceneManagement::RenderLoadScene()
 
 		if (found == std::string::npos || found == 0)
 		{
-			APP_LOG_ERROR("Invalid name for scene.");
-			return;
+			found = local_path.find("Library");
+			if (found == std::string::npos || found == 0)
+			{
+				APP_LOG_ERROR("Invalid name for scene.");
+				return;
+			}
 		}
 		local_path = local_path.substr(found, local_path.length());
 		//Replace \\ by /
