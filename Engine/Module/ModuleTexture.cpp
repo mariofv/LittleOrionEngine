@@ -43,8 +43,8 @@ GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) 
 	return static_cast<GLuint>(App->resources->LoadCubemap(faces_paths));
 }
 
-GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const{
-
+GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const
+{
 
 	switch (color_id)
 	{
@@ -58,20 +58,34 @@ GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const{
 		return 0;
 		break;
 	}
+
+	
 }
 
 void ModuleTexture::GenerateTexture(GLuint &texture_id_to_store, PATRON color_id)
 {
-	static GLubyte image[generate_texture_height][generate_texture_width][3];
-	int i, j, color;
-	for (i = 0; i < generate_texture_height; i++) {
-		for (j = 0; j < generate_texture_width; j++) {
-			color = GetColor(i,j,color_id),
-			image[i][j][0] = (GLubyte)color; //R
-			image[i][j][1] = (GLubyte)color; //G
-			image[i][j][2] = (GLubyte)color; //B
-		}
-	}
+	//static GLubyte image[generate_texture_height][generate_texture_width][3];
+	//int i, j, color;
+	//for (i = 0; i < generate_texture_height; i++) {
+	//	for (j = 0; j < generate_texture_width; j++) {
+	//		color = GetColor(i,j,color_id),
+	//		image[i][j][0] = (GLubyte)color; //R
+	//		image[i][j][1] = (GLubyte)color; //G
+	//		image[i][j][2] = (GLubyte)color; //B
+	//	}
+	//}
+	//glGenTextures(1, &texture_id_to_store);
+	//glBindTexture(GL_TEXTURE_2D, texture_id_to_store);
+
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, generate_texture_width, generate_texture_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	//glBindTexture(GL_TEXTURE_2D, 0);
+
+	GLubyte texData[] = { 255, 255, 255, 255 };
+
 	glGenTextures(1, &texture_id_to_store);
 	glBindTexture(GL_TEXTURE_2D, texture_id_to_store);
 
@@ -79,7 +93,7 @@ void ModuleTexture::GenerateTexture(GLuint &texture_id_to_store, PATRON color_id
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, generate_texture_height, generate_texture_width, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
