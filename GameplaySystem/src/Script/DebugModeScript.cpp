@@ -59,12 +59,13 @@ void DebugModeScript::Update()
 
 	if(App->input->GetKeyDown(KeyCode::F1) || App->input->GetControllerButtonDown(ControllerCode::RightStick))
 	{
-		debug_enabled = !debug_enabled;
-		
 		(debug_enabled) ? text_fps->Disable() : text_fps->Enable();
 		(debug_enabled) ? text_tris->Disable() : text_tris->Enable();
 		(debug_enabled) ? text_verts->Disable() : text_verts->Enable();
 		(debug_enabled) ? background->Disable() : background->Enable();
+
+		debug_enabled = !debug_enabled;
+		
 		
 	}
 
