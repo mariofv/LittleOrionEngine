@@ -128,14 +128,6 @@ std::string ModelPrefabImporter::LoadSkeleton(const Config& node_config, std::ve
 				skeleton_gameobjects.at(joint.parent_index)->children.push_back(object);
 			}
 
-			float3 translation;
-			float3 scale;
-			float3x3 rotate;
-			joint.transform_local.Decompose(translation, rotate, scale);
-
-			object->transform.SetScale(scale);
-			object->transform.SetTranslation(translation);
-			object->transform.SetRotation(rotate);
 			object->name = joint.name;
 
 			skeleton_gameobjects.push_back(object);
