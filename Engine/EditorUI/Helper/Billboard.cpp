@@ -6,8 +6,8 @@
 
 Billboard::Billboard(const std::string& texture_path, float width, float height) : width(width), height(height)
 {
-	billboard_texture = App->resources->Load<Texture>(texture_path.c_str());
-	billboard_quad = App->resources->Load<Mesh>(PRIMITIVE_QUAD_PATH);
+	billboard_texture = nullptr;
+	billboard_quad = nullptr;
 }
 
 

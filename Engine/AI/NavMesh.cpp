@@ -450,7 +450,9 @@ bool NavMesh::CreateNavMesh()
 void NavMesh::RenderNavMesh(ComponentCamera& camera)
 {
 	if (is_mesh_computed)
+	{
 		m_dd.DrawMesh(camera);
+	}
 }
 
 void NavMesh::InitAABB()
