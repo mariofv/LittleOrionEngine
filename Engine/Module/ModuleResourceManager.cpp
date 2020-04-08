@@ -36,10 +36,7 @@ update_status ModuleResourceManager::PreUpdate()
 	{
 		//importing_thread.join();
 		//importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
-		auto it = std::remove_if(resource_cache.begin(), resource_cache.end(), [](const std::shared_ptr<Resource> & resource) {		
-			return resource.use_count() == 1;
-		});
-		resource_cache.erase(it,resource_cache.end());
+		CleanResourceCache();
 	}
 	return update_status::UPDATE_CONTINUE;
 }
@@ -191,4 +188,13 @@ uint32_t ModuleResourceManager::LoadCubemap(const std::vector<std::string>& face
 		faces_paths_dds.push_back(ol_texture);
 	}
 	return TextureLoader::LoadCubemap(faces_paths_dds);
+}
+
+void ModuleResourceManager::CleanResourceCache()
+{
+	//auto it = std::remove_if(resource_cache.begin(), resource_cache.end(), [](const std::shared_ptr<Resource> & resource) {
+	//	return resource.use_count() == 1;
+	//});
+	//resource_cache.erase(it, resource_cache.end());
+	resource_cache.clear();
 }

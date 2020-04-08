@@ -41,6 +41,8 @@ public:
 	void CreatePrefab(const std::string& path, GameObject* gameobject_to_save) const;
 	uint32_t LoadCubemap(const std::vector<std::string>& faces_paths);
 
+	void CleanResourceCache();
+
 	template<typename T>
 	std::shared_ptr<T> Load(const std::string& uid)
 	{
