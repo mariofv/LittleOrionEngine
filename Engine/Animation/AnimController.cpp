@@ -17,7 +17,7 @@ void AnimController::GetPose(uint32_t skeleton_uuid, std::vector<float4x4> & pos
 	if (active_transition)
 	{
 		std::vector<float4x4> fading_pose(pose.size());
-		float weight = playing_clips[1].current_time / active_transition->interpolation_time;
+		float weight = playing_clips[1].current_time / (active_transition->interpolation_time * 1.0f);
 		GetClipTransform(playing_clips[1].current_time, skeleton_uuid, playing_clips[1].clip, fading_pose);
 		if (weight >= 1.0f)
 		{
@@ -36,7 +36,7 @@ std::vector<float4x4> AnimController::InterpolatePoses(const std::vector<float4x
 	std::vector<float4x4> interpolated_pose(first_pose.size());
 	for (size_t i = 0; i < first_pose.size(); i++)
 	{
-		interpolated_pose[i] = Utils::Interpolate(first_pose[i], second_pose[i],0);
+		interpolated_pose[i] = Utils::Interpolate(first_pose[i], second_pose[i],weight);
 	}
 	return interpolated_pose;
 }
