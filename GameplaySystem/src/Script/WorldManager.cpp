@@ -33,6 +33,7 @@ void WorldManager::Awake()
 	health_component = (ComponentProgressBar*)health_bar->GetComponentUI(ComponentUI::UIType::PROGRESSBAR);
 	lose_component = (ComponentImage*)lose_screen->GetComponentUI(ComponentUI::UIType::IMAGE);
 	win_component = (ComponentImage*)win_screen->GetComponentUI(ComponentUI::UIType::IMAGE);
+	player_controller = (ComponentScript*)player->GetComponentScript("PlayerController");
 }
 
 // Use this for initialization
@@ -47,6 +48,7 @@ void WorldManager::Update()
 	if(health_component->percentage <= 0.0f)
 	{
 		//Lose
+		player_controller->Disable();
 		lose_component->Enable();
 		transition = true;
 	}
@@ -54,6 +56,7 @@ void WorldManager::Update()
 	if(OnTriggerEnter())
 	{
 		//Win
+		player_controller->Disable();
 		win_component->Enable();
 		transition = true;
 	}

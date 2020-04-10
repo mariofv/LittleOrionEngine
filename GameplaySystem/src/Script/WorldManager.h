@@ -6,6 +6,7 @@
 class ComponentProgressBar;
 class ComponentImage;
 
+
 class WorldManager : public Script
 {
 public:
@@ -31,6 +32,7 @@ private:
 	ComponentImage* lose_component = nullptr;
 	ComponentImage* win_component = nullptr;
 	ComponentProgressBar* health_component = nullptr;
+	ComponentScript* player_controller = nullptr;
 
 	bool transition = false;
 
