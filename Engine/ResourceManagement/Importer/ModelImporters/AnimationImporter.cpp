@@ -112,19 +112,20 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 				is_rotated = false;
 				rotation = channel_rotations[0];
 			}
-			if (is_rotated || is_translated)
-			{
-				float4x4 animation_transform = float4x4::FromTRS(translation, rotation, float3::one);
-				animation_transform = accumulated_assimp_transformation * animation_transform;
-				float4x4 scale_matrix = float4x4::identity * scale_factor;
-				scale_matrix[3][3] = 1;
 
-				animation_transform = scale_matrix * animation_transform;
-				float3 scale;
-				animation_transform.Decompose(translation, rotation, scale);
-				Animation::Channel imported_channel{ channel_set.first, is_translated, translation, is_rotated, rotation };
-				keyframes[i].push_back(imported_channel);
+			float4x4 animation_transform = float4x4::FromTRS(translation, rotation, float3::one);
+			animation_transform = accumulated_assimp_transformation * animation_transform;
+				
+			float3 euler_rotation = animation_transform.ToEulerXYX();
+			rotation = Quat::FromEulerXYX(euler_rotation.x, euler_rotation.y, euler_rotation.z);
+			if (!is_translated)
+			{
+				translation = animation_transform.Col3(3);
 			}
+			translation *= scale_factor;
+
+			Animation::Channel imported_channel{ channel_set.first, translation, rotation };
+			keyframes[i].push_back(imported_channel);
 		}
 	}
 
@@ -179,7 +180,7 @@ void AnimationImporter::SaveBinary(const Animation& animation, const std::string
 		for (auto & channel : keyframe.channels)
 		{
 			//name size + name + translation + rotation
-			size += sizeof(uint32_t) + channel.name.size() + sizeof(bool) + sizeof(float3) + sizeof(bool) + sizeof(Quat);
+			size += sizeof(uint32_t) + channel.name.size() + sizeof(float3) + sizeof(Quat);
 		}
 	}
 
@@ -224,14 +225,9 @@ void AnimationImporter::SaveBinary(const Animation& animation, const std::string
 			memcpy(cursor, channel.name.data(), name_size);
 			cursor += name_size;
 
-			memcpy(cursor, &channel.is_translated, sizeof(bool));
-			cursor += sizeof(bool);
-
 			memcpy(cursor, &channel.translation, sizeof(float3));
 			cursor += sizeof(float3);
 
-			memcpy(cursor, &channel.is_rotated, sizeof(bool));
-			cursor += sizeof(bool);
 
 			memcpy(cursor, &channel.rotation, sizeof(Quat));
 			cursor += sizeof(Quat);
