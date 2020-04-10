@@ -29,7 +29,7 @@ private:
 	void SaveBinary(const Animation& animation, const std::string& exported_file, const std::string& imported_file) const;
 
 	void GetAcumulatedAssimpTransformations(const std::pair<std::string, std::vector<aiNodeAnim *>> & channel_pair, const aiNode* root_node, float4x4 & accumulated_transformation) const;
-	void GetAssimpNodeTansformationOutSideChannels(const aiNode* root_node, const aiAnimation* animation, std::vector<const aiNode*> & nodes) const;
+	void GetAssimpNodeTansformationOutSideChannels(const aiNode* root_node, const Animation& animation, std::vector<const aiNode*> & nodes) const;
 	void ApplyNodeTansformationOutSideChannels(const aiNode * node_to_apply,const aiNode* node, Animation& animation) const;
 };
 #endif

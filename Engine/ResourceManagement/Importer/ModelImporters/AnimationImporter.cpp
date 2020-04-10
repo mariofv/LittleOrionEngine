@@ -19,7 +19,7 @@ bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation*
 	own_format_animation.name = std::string(animation->mName.C_Str());
 
 	std::vector<const aiNode*> nodes;
-	GetAssimpNodeTansformationOutSideChannels(scene->mRootNode, animation, nodes);
+	GetAssimpNodeTansformationOutSideChannels(scene->mRootNode, own_format_animation, nodes);
 
 	for (auto & node : nodes)
 	{
@@ -256,7 +256,7 @@ void AnimationImporter::GetAcumulatedAssimpTransformations(const std::pair<std::
 	accumulated_transformation = SkeletonImporter::GetTransform(accumulated_assimp_local_transformation);
 }
 
-void AnimationImporter::GetAssimpNodeTansformationOutSideChannels(const aiNode * root_node, const aiAnimation* animation, std::vector<const aiNode*> & nodes) const
+void AnimationImporter::GetAssimpNodeTansformationOutSideChannels(const aiNode * root_node, const Animation& animation, std::vector<const aiNode*> & nodes) const
 {
 
 	for (size_t i = 0; i < root_node->mNumChildren; i++)
@@ -267,10 +267,10 @@ void AnimationImporter::GetAssimpNodeTansformationOutSideChannels(const aiNode *
 		bool assimp_node = node_name.find("$Assimp") != std::string::npos;
 		bool part_of_channels = false;
 		size_t j = 0;
-
-		while (j < animation->mNumChannels && !part_of_channels && assimp_node)
+		auto & channels_vector = animation.keyframes[0].channels;
+		while (j < channels_vector.size() && !part_of_channels && assimp_node)
 		{
-			if (child->mName == animation->mChannels[j]->mNodeName)
+			if (std::string(child->mName.C_Str()).find(channels_vector[j].name) != std::string::npos)
 			{
 				part_of_channels = true;
 			}
@@ -281,10 +281,7 @@ void AnimationImporter::GetAssimpNodeTansformationOutSideChannels(const aiNode *
 		{
 			nodes.push_back(child);
 		}
-		if (!part_of_channels)
-		{
-			GetAssimpNodeTansformationOutSideChannels(child, animation, nodes);
-		}
+		GetAssimpNodeTansformationOutSideChannels(child, animation, nodes);
 	}
 }
 
@@ -297,6 +294,7 @@ void AnimationImporter::ApplyNodeTansformationOutSideChannels(const aiNode * nod
 	if (it != channels_keyframe.end())
 	{
 		auto & channel = (*it);
+		float4x4 assimp_transform = SkeletonImporter::GetTransform(node_to_apply->mTransformation);
 		for (auto & keyframe : animation.keyframes)
 		{
 			auto iterator = std::find_if(keyframe.channels.begin(), keyframe.channels.end(), [&channel](const auto & keyframe_channel)
@@ -305,11 +303,10 @@ void AnimationImporter::ApplyNodeTansformationOutSideChannels(const aiNode * nod
 			});
 			if (iterator != keyframe.channels.end())
 			{
-				aiVector3t<float> pScaling, pPosition;
-				aiQuaterniont<float> pRotation;
-				node_to_apply->mTransformation.Decompose(pScaling,pRotation,pPosition);
-				iterator->translation =  float3(pPosition.x, pPosition.y, pPosition.z) + iterator->translation ;
-				iterator->rotation =  Quat(pRotation.x, pRotation.y, pRotation.z, pRotation.w) * iterator->rotation;
+				float4x4 trs = float4x4::FromTRS(iterator->translation, iterator->rotation, float3::one);
+				trs = assimp_transform * trs;
+				float3 scale;
+				trs.Decompose(iterator->translation, iterator->rotation, scale);
 			}
 		}
 	}
