@@ -11,11 +11,11 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-std::vector<char> TextureLoader::LoadCompressedDDS(const std::string& file_path, DDS::DDS_HEADER & dds_header)
+std::vector<char> TextureLoader::LoadCompressedDDS(const std::string& file_path, DDS::DDS_HEADER& dds_header)
 {
 
 	size_t dds_content_size;
-	char * loaded_data = App->filesystem->Load(file_path.c_str(), dds_content_size);
+	char* loaded_data = App->filesystem->Load(file_path.c_str(), dds_content_size);
 	std::vector<char> data;
 	if (loaded_data)
 	{
@@ -93,7 +93,7 @@ std::shared_ptr<Texture> TextureLoader::Load(const std::string& file_path)
 }
 
 
-std::vector<char> TextureLoader::LoadImageData(const std::string& file_path, int & width, int & height)
+std::vector<char> TextureLoader::LoadImageData(const std::string& file_path, int& width, int& height)
 {
 
 	std::vector<char> data;
@@ -117,7 +117,7 @@ std::vector<char> TextureLoader::LoadImageData(const std::string& file_path, int
 		iluFlipImage();
 	}
 
-	ILubyte * loaded_data = ilGetData();
+	ILubyte* loaded_data = ilGetData();
 	data.resize(ilGetInteger(IL_IMAGE_SIZE_OF_DATA));
 	memcpy(&data.front(), loaded_data, data.size());
 	width = ilGetInteger(IL_IMAGE_WIDTH);

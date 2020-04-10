@@ -38,10 +38,11 @@ std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 	return App->resources->Load<Texture>(import_result.exported_file);
 }
 
-GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) const
+GLuint ModuleTexture::LoadCubemap(const std::vector<std::string>& faces_paths) const
 {
 	return static_cast<GLuint>(App->resources->LoadCubemap(faces_paths));
 }
+
 
 GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const
 {

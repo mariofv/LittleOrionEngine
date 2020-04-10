@@ -36,7 +36,7 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	ImportResult Import(const File& file, bool force = false);
+	ImportResult Import(const File& file, bool force = false, bool skybox = false);
 	void ImportAllFilesInDirectory(const File& file, bool force);
 	void CreatePrefab(const std::string& path, GameObject* gameobject_to_save) const;
 	uint32_t LoadCubemap(const std::vector<std::string>& faces_paths);
@@ -71,9 +71,9 @@ public:
 	}
 private:
 	void StartThread();
-	void ReimportIfNeeded(const std::string& uid);
+	void ReimportIfNeeded(const std::string& uid, bool skybox = false);
 
-	ImportResult InternalImport(const File& file, bool force) const;
+	ImportResult InternalImport(const File& file, bool force, bool skybox = false) const;
 	std::shared_ptr<Resource> RetrieveFromCacheIfExist(const std::string& uid) const;
 
 public:

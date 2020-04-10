@@ -18,7 +18,7 @@ TextureImporter::TextureImporter()
 
 }
 
-ImportResult TextureImporter::Import(const File& imported_file, bool force) const
+ImportResult TextureImporter::Import(const File& imported_file, bool force, bool skybox) const
 {
 	ImportResult import_result;
 
@@ -44,7 +44,7 @@ ImportResult TextureImporter::Import(const File& imported_file, bool force) cons
 	}
 	else 
 	{
-		output_file = ImportToDDS(imported_file);
+		output_file = ImportToDDS(imported_file, skybox);
 	}
 
 	import_result.success = true;
@@ -85,7 +85,7 @@ std::string TextureImporter::ImportMaterialData(const std::string & material_pat
 }
 
 
-ILubyte * TextureImporter::LoadImageDataInMemory(const std::string& file_path, int image_type ,int & width, int & height ) const
+ILubyte* TextureImporter::LoadImageDataInMemory(const std::string& file_path, int image_type ,int& width, int& height, bool skybox) const
 {
 	ilLoadImage(file_path.c_str());
 
@@ -101,12 +101,12 @@ ILubyte * TextureImporter::LoadImageDataInMemory(const std::string& file_path, i
 
 	ILinfo ImageInfo;
 	iluGetImageInfo(&ImageInfo);
-	if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT && image_type != IL_DDS)
+	if (ImageInfo.Origin == IL_ORIGIN_UPPER_LEFT && image_type != IL_DDS && !skybox)
 	{
 		iluFlipImage();
 	}
 
-	ILubyte * data = ilGetData();
+	ILubyte* data = ilGetData();
 	width = ilGetInteger(IL_IMAGE_WIDTH);
 	height = ilGetInteger(IL_IMAGE_HEIGHT);
 	return data;
@@ -131,13 +131,13 @@ std::string TextureImporter::GetTextureFileName(std::string texture_file_path) c
 	}
 }
 
-std::string TextureImporter::ImportToDDS(const File & file) const
+std::string TextureImporter::ImportToDDS(const File& file, bool skybox) const
 {
 	ILuint image;
 	ilGenImages(1, &image);
 	ilBindImage(image);
 	int width, height;
-	ILubyte * save_data = LoadImageDataInMemory(file.file_path.c_str(), IL_RGBA, width, height);
+	ILubyte * save_data = LoadImageDataInMemory(file.file_path.c_str(), IL_RGBA, width, height, skybox);
 	//Get new Name
 
 	std::string texture_name_no_extension = file.filename.substr(0, file.filename.find_last_of("."));
@@ -158,7 +158,7 @@ std::string TextureImporter::ImportToDDS(const File & file) const
 	return output_file;
 }
 
-std::string TextureImporter::ImportToTGA(const File & file) const
+std::string TextureImporter::ImportToTGA(const File& file) const
 {
 	std::string output_file = SaveMetaFile(file.file_path, ResourceType::TEXTURE);
 	bool copied = App->filesystem->Copy(file.file_path.c_str(), output_file.c_str());

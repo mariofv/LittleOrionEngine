@@ -67,14 +67,14 @@ update_status ModuleResourceManager::PreUpdate()
 	 last_imported_time = thread_timer->Read();
  }
 
- ImportResult ModuleResourceManager::Import(const File& file, bool force)
+ ImportResult ModuleResourceManager::Import(const File& file, bool force, bool skybox)
  {
 	 while (thread_comunication.thread_importing_hash == std::hash<std::string>{}(file.file_path))
 	 {
 		 Sleep(1000);
 	 } 
 	 thread_comunication.main_importing_hash = std::hash<std::string>{}(file.file_path);
-	 ImportResult  result = InternalImport(file, force);
+	 ImportResult  result = InternalImport(file, force, skybox);
 	 thread_comunication.main_importing_hash = 0;
 	 return result;
  }
@@ -113,7 +113,7 @@ void ModuleResourceManager::ImportAllFilesInDirectory(const File& file, bool for
  }
 
 
-ImportResult ModuleResourceManager::InternalImport(const File& file, bool force) const
+ImportResult ModuleResourceManager::InternalImport(const File& file, bool force, bool skybox) const
 {
 	ImportResult result;
 	std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
@@ -123,7 +123,7 @@ ImportResult ModuleResourceManager::InternalImport(const File& file, bool force)
 	}
 	if (file.file_type == FileType::TEXTURE)
 	{
-		result = texture_importer->Import(file, force);
+		result = texture_importer->Import(file, force, skybox);
 	}
 	if (file.file_type == FileType::MATERIAL)
 	{
@@ -159,7 +159,7 @@ std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(const 
 	return nullptr;
 }
 
-void  ModuleResourceManager::ReimportIfNeeded(const std::string& uid)
+void  ModuleResourceManager::ReimportIfNeeded(const std::string& uid, bool skybox)
 {
 	if (std::find_if(uid.begin(), uid.end(), ::isdigit) == uid.end())
 	{
@@ -174,7 +174,7 @@ void  ModuleResourceManager::ReimportIfNeeded(const std::string& uid)
 	}
 	if (!App->filesystem->Exists(uid.c_str()) &&  App->filesystem->Exists(options->imported_file.c_str()))
 	{
-		Import(options->imported_file, true);
+		Import(options->imported_file, true, skybox);
 	}
 }
 
@@ -183,8 +183,8 @@ uint32_t ModuleResourceManager::LoadCubemap(const std::vector<std::string>& face
 	std::vector<std::string> faces_paths_dds;
 	for (unsigned int i = 0; i < faces_paths.size(); i++)
 	{
-		std::string ol_texture = Import(File(faces_paths[i]), false).exported_file;
-		ReimportIfNeeded(ol_texture);
+		std::string ol_texture = Import(File(faces_paths[i]), false, i!=2 && i!=3).exported_file;
+		ReimportIfNeeded(ol_texture, i != 2 && i != 3);
 		faces_paths_dds.push_back(ol_texture);
 	}
 	return TextureLoader::LoadCubemap(faces_paths_dds);

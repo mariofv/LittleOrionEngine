@@ -14,21 +14,21 @@ Skybox::Skybox()
 void Skybox::LoadDefaultSkybox()
 {
 	std::string texture_path = std::string(TEXTURES_PATH);
-	std::string cube_face_front_path = texture_path + "skyboxes/twinlight/SkyboxFront_lvl1.tga";
-	std::string cube_face_back_path = texture_path + "skyboxes/twinlight/SkyboxBack_lvl1.tga";
+	std::string cube_face_front_path = texture_path + "skyboxes/twinlight/front.tga";
+	std::string cube_face_back_path = texture_path + "skyboxes/twinlight/back.tga";
 
-	std::string cube_face_left_path = texture_path + "skyboxes/twinlight/SkyboxLeft_lvl1.tga";
-	std::string cube_face_right_path = texture_path + "skyboxes/twinlight/SkyboxRight_lvl1.tga";
+	std::string cube_face_left_path = texture_path + "skyboxes/twinlight/left.tga";
+	std::string cube_face_right_path = texture_path + "skyboxes/twinlight/right.tga";
 
-	std::string cube_face_up_path = texture_path + "skyboxes/twinlight/SkyboxTop_lvl1.tga";
-	std::string cube_face_down_path = texture_path + "skyboxes/twinlight/SkyboxBottom_lvl1.tga";
+	std::string cube_face_top_path = texture_path + "skyboxes/twinlight/top.tga";
+	std::string cube_face_bottom_path = texture_path + "skyboxes/twinlight/bottom.tga";
 
 	std::vector<std::string> faces{
 		cube_face_right_path,
 		cube_face_left_path,
 
-		cube_face_up_path,
-		cube_face_down_path,
+		cube_face_top_path,
+		cube_face_bottom_path,
 		
 		cube_face_front_path,
 		cube_face_back_path,
@@ -93,7 +93,7 @@ void Skybox::GenerateSkyboxCube()
 	glVertexAttribPointer(0, 3, GL_FLOAT, GL_FALSE, 3 * sizeof(float), (void*)0);
 }
 
-void Skybox::Render(const ComponentCamera & camera) const
+void Skybox::Render(const ComponentCamera& camera) const
 {
 	glDepthFunc(GL_LEQUAL);
 	GLuint shader_program = App->program->GetShaderProgramId("Skybox");
