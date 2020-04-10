@@ -155,27 +155,29 @@ vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
 {
 	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
-	tiling += texCoord;
+	tiling *= texCoord;
 	return texture(mat.specular_map, tiling)*mat.specular_color;
 }
 
 vec3 GetOcclusionColor(const Material mat, const vec2 texCoord)
 {
 	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
-	tiling += texCoord;
+	tiling *= texCoord;
 	return texture(mat.occlusion_map, tiling).rgb * vec3(1.0,1.0,1.0);
 }
 
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 {
 	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
-	tiling += texCoord;
+	tiling *= texCoord;
 	return (texture(mat.emissive_map, tiling)*mat.emissive_color).rgb;
 }
 
 vec3 GetNormalMap(const Material mat, const vec2 texCoord)
 {
-	return texture(mat.normal_map, texCoord).rgb*2.0-1.0;
+	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
+	tiling *= texCoord;
+	return texture(mat.normal_map, tiling).rgb*2.0-1.0;
 }
 
 vec3 CalculateDirectionalLight(const vec3 normalized_normal)
