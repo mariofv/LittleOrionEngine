@@ -257,6 +257,9 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(const File * file)
 				state_machine.states.push_back(std::make_shared<State>("End", nullptr));
 				state_machine.default_state = std::hash<std::string>{}("Entry");
 				state_machine.Save();
+
+				App->resources->Import(path);
+				changes = true;
 			}
 			ImGui::EndMenu();
 		}

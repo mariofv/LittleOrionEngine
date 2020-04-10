@@ -325,6 +325,7 @@ void PanelStateMachine::LeftPanel()
 		if (ImGui::Button("Save"))
 		{
 			state_machine->Save();
+			App->resources->Import(state_machine->exported_file, true);
 		}
 		if (ImGui::Button("Load"))
 		{

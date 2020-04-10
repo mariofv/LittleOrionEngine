@@ -18,6 +18,13 @@ bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation*
 	own_format_animation.frames_per_second = static_cast<float>(animation->mTicksPerSecond);
 	own_format_animation.name = std::string(animation->mName.C_Str());
 
+	std::vector<const aiNode*> nodes;
+	GetAssimpNodeTansformationOutSideChannels(scene->mRootNode, animation, nodes);
+
+	for (auto & node : nodes)
+	{
+		ApplyNodeTansformationOutSideChannels(node, node,own_format_animation);
+	}
 	exported_file = SaveMetaFile(imported_file, ResourceType::ANIMATION);
 	SaveBinary(own_format_animation, exported_file, imported_file);
 
@@ -27,7 +34,6 @@ bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation*
 void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const
 {
 	assert(animation->mDuration == (int)animation->mDuration);
-
 	std::map<std::string, std::vector<aiNodeAnim *>> aiNode_by_channel;
 
 	//Organize channels
@@ -48,34 +54,8 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 	//Merge channels with same name
 	for (auto& channel_set : aiNode_by_channel)
 	{
-		const aiNode* current_node = root_node->FindNode(aiString(channel_set.first));
-		std::vector<const aiNode*> assimp_hierarchy_nodes;
-
-		const aiNode* next_node = current_node->mParent;
-		std::string next_node_name(next_node->mName.C_Str());
-		while (next_node_name.find("$Assimp") != std::string::npos)
-		{
-			assimp_hierarchy_nodes.push_back(next_node);
-			next_node = next_node->mParent;
-			next_node_name = next_node->mName.C_Str();
-		}
-		aiMatrix4x4 accumulated_assimp_local_transformation;
-		for (int i = assimp_hierarchy_nodes.size() - 1; i >= 0; --i)
-		{
-			const aiNode* hierarchy_node = assimp_hierarchy_nodes[i];
-			auto it = std::find_if(channel_set.second.begin(), channel_set.second.end(), [hierarchy_node](const aiNodeAnim * node)
-			{
-				return node->mNodeName == hierarchy_node->mName;
-			}
-			);
-			if (it == channel_set.second.end())
-			{
-				accumulated_assimp_local_transformation = accumulated_assimp_local_transformation * assimp_hierarchy_nodes[i]->mTransformation;
-			}
-		}
-
-		float4x4 accumulated_assimp_transformation = SkeletonImporter::GetTransform(accumulated_assimp_local_transformation);
-
+		float4x4 accumulated_assimp_transformation;
+		GetAcumulatedAssimpTransformations(channel_set, root_node, accumulated_assimp_transformation);
 		std::map<size_t, float3> channel_translations;
 		std::map<size_t, Quat> channel_rotations;
 		for (auto channel : channel_set.second)
@@ -242,4 +222,102 @@ void AnimationImporter::SaveBinary(const Animation& animation, const std::string
 	App->filesystem->Save(exported_file.c_str(), data, size);
 	App->filesystem->Save(imported_file.c_str(), data, size);
 	free(data);
+}
+
+void AnimationImporter::GetAcumulatedAssimpTransformations(const std::pair<std::string, std::vector<aiNodeAnim *>> & channel_pair, const aiNode* root_node, float4x4 & accumulated_transformation) const
+{
+	const aiNode* current_node = root_node->FindNode(aiString(channel_pair.first));
+	std::vector<const aiNode*> assimp_hierarchy_nodes;
+
+	const aiNode* next_node = current_node->mParent;
+	bool is_assimp_node = std::string(next_node->mName.C_Str()).find("$Assimp") != std::string::npos;
+	while (is_assimp_node)
+	{
+		assimp_hierarchy_nodes.push_back(next_node);
+		next_node = next_node->mParent;
+		is_assimp_node = std::string(next_node->mName.C_Str()).find("$Assimp") != std::string::npos;
+
+	}
+	aiMatrix4x4 accumulated_assimp_local_transformation;
+	for (int i = assimp_hierarchy_nodes.size() - 1; i >= 0; --i)
+	{
+		const aiNode* hierarchy_node = assimp_hierarchy_nodes[i];
+		auto it = std::find_if(channel_pair.second.begin(), channel_pair.second.end(), [hierarchy_node](const aiNodeAnim * node)
+		{
+			return node->mNodeName == hierarchy_node->mName;
+		}
+		);
+		if (it == channel_pair.second.end())
+		{
+			accumulated_assimp_local_transformation = accumulated_assimp_local_transformation * assimp_hierarchy_nodes[i]->mTransformation;
+		}
+	}
+
+	accumulated_transformation = SkeletonImporter::GetTransform(accumulated_assimp_local_transformation);
+}
+
+void AnimationImporter::GetAssimpNodeTansformationOutSideChannels(const aiNode * root_node, const aiAnimation* animation, std::vector<const aiNode*> & nodes) const
+{
+
+	for (size_t i = 0; i < root_node->mNumChildren; i++)
+	{
+		const aiNode * child = root_node->mChildren[i];
+		std::string node_name(child->mName.C_Str());
+
+		bool assimp_node = node_name.find("$Assimp") != std::string::npos;
+		bool part_of_channels = false;
+		size_t j = 0;
+
+		while (j < animation->mNumChannels && !part_of_channels && assimp_node)
+		{
+			if (child->mName == animation->mChannels[j]->mNodeName)
+			{
+				part_of_channels = true;
+			}
+			++j;
+		}
+
+		if (assimp_node && !part_of_channels)
+		{
+			nodes.push_back(child);
+		}
+		if (!part_of_channels)
+		{
+			GetAssimpNodeTansformationOutSideChannels(child, animation, nodes);
+		}
+	}
+}
+
+void AnimationImporter::ApplyNodeTansformationOutSideChannels(const aiNode * node_to_apply, const aiNode * node, Animation & animation) const
+{
+	auto & channels_keyframe = animation.keyframes[0].channels;
+	auto it = std::find_if(channels_keyframe.begin(), channels_keyframe.end(), [&node](const auto & channel) {
+		return std::string(node->mName.C_Str()).find(channel.name) != std::string::npos;
+	});
+	if (it != channels_keyframe.end())
+	{
+		auto & channel = (*it);
+		for (auto & keyframe : animation.keyframes)
+		{
+			auto iterator = std::find_if(keyframe.channels.begin(), keyframe.channels.end(), [&channel](const auto & keyframe_channel)
+			{
+				return channel.name == keyframe_channel.name;
+			});
+			if (iterator != keyframe.channels.end())
+			{
+				aiVector3t<float> pScaling, pPosition;
+				aiQuaterniont<float> pRotation;
+				node_to_apply->mTransformation.Decompose(pScaling,pRotation,pPosition);
+				iterator->translation =  float3(pPosition.x, pPosition.y, pPosition.z) + iterator->translation ;
+				iterator->rotation =  Quat(pRotation.x, pRotation.y, pRotation.z, pRotation.w) * iterator->rotation;
+			}
+		}
+	}
+	else
+	{
+		for (size_t i = 0; i < node->mNumChildren; i++)
+		{
+			ApplyNodeTansformationOutSideChannels(node_to_apply,node->mChildren[i], animation);
+		}
+	}
 }
