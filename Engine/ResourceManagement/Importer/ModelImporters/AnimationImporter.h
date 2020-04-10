@@ -32,6 +32,6 @@ private:
 	void GetAcumulatedAssimpTransformations(const std::pair<std::string, std::vector<aiNodeAnim *>> & channel_pair, const aiNode* root_node, float4x4 & accumulated_transformation) const;
 	void GetAssimpNodeTansformationOutSideChannels(const aiNode* root_node, const Animation& animation, std::map<const std::string, std::vector<const aiNode *>>  & nodes) const;
 	void ApplyNodeTansformationOutSideChannels(std::map<const std::string, std::vector<const aiNode *>> &nodes, float unit_scale_factor, Animation &own_format_animation) const;
-}
+};
 #endif
 
