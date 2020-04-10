@@ -18,17 +18,36 @@ bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation*
 	own_format_animation.frames_per_second = static_cast<float>(animation->mTicksPerSecond);
 	own_format_animation.name = std::string(animation->mName.C_Str());
 
-	std::vector<const aiNode*> nodes;
+	std::map<const std::string, std::vector<const aiNode *>> nodes;
 	GetAssimpNodeTansformationOutSideChannels(scene->mRootNode, own_format_animation, nodes);
 
-	for (auto & node : nodes)
-	{
-		ApplyNodeTansformationOutSideChannels(node, node,own_format_animation);
-	}
+	ApplyNodeTansformationOutSideChannels(nodes, unit_scale_factor, own_format_animation);
 	exported_file = SaveMetaFile(imported_file, ResourceType::ANIMATION);
 	SaveBinary(own_format_animation, exported_file, imported_file);
 
 	return true;
+}
+
+void AnimationImporter::ApplyNodeTansformationOutSideChannels(std::map<const std::string, std::vector<const aiNode *>> &nodes, float unit_scale_factor, Animation &own_format_animation) const
+{
+	for (auto& pair : nodes)
+	{
+		Animation::Channel channel;
+		channel.name = pair.first;
+		float4x4 assimp_transform;
+
+		float3 scale;
+		for (auto & second : pair.second)
+		{
+			assimp_transform = assimp_transform * SkeletonImporter::GetTransform(second->mTransformation);
+		}
+		assimp_transform.Decompose(channel.translation, channel.rotation, scale);
+		channel.translation *= unit_scale_factor;
+		for (auto & keyframe : own_format_animation.keyframes)
+		{
+			keyframe.channels.push_back(channel);
+		}
+	}
 }
 
 void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const
@@ -256,7 +275,7 @@ void AnimationImporter::GetAcumulatedAssimpTransformations(const std::pair<std::
 	accumulated_transformation = SkeletonImporter::GetTransform(accumulated_assimp_local_transformation);
 }
 
-void AnimationImporter::GetAssimpNodeTansformationOutSideChannels(const aiNode * root_node, const Animation& animation, std::vector<const aiNode*> & nodes) const
+void AnimationImporter::GetAssimpNodeTansformationOutSideChannels(const aiNode * root_node, const Animation& animation, std::map<const std::string, std::vector<const aiNode *>> & nodes) const
 {
 
 	for (size_t i = 0; i < root_node->mNumChildren; i++)
@@ -279,42 +298,15 @@ void AnimationImporter::GetAssimpNodeTansformationOutSideChannels(const aiNode *
 
 		if (assimp_node && !part_of_channels)
 		{
-			nodes.push_back(child);
+			std::string channel_name(child->mName.C_Str());
+
+			size_t assimp_key_index = channel_name.find("$Assimp");
+			if (assimp_key_index != std::string::npos)
+			{
+				channel_name = channel_name.substr(0, assimp_key_index - 1);
+			}
+			nodes[channel_name].push_back(child);
 		}
 		GetAssimpNodeTansformationOutSideChannels(child, animation, nodes);
-	}
-}
-
-void AnimationImporter::ApplyNodeTansformationOutSideChannels(const aiNode * node_to_apply, const aiNode * node, Animation & animation) const
-{
-	auto & channels_keyframe = animation.keyframes[0].channels;
-	auto it = std::find_if(channels_keyframe.begin(), channels_keyframe.end(), [&node](const auto & channel) {
-		return std::string(node->mName.C_Str()).find(channel.name) != std::string::npos;
-	});
-	if (it != channels_keyframe.end())
-	{
-		auto & channel = (*it);
-		float4x4 assimp_transform = SkeletonImporter::GetTransform(node_to_apply->mTransformation);
-		for (auto & keyframe : animation.keyframes)
-		{
-			auto iterator = std::find_if(keyframe.channels.begin(), keyframe.channels.end(), [&channel](const auto & keyframe_channel)
-			{
-				return channel.name == keyframe_channel.name;
-			});
-			if (iterator != keyframe.channels.end())
-			{
-				float4x4 trs = float4x4::FromTRS(iterator->translation, iterator->rotation, float3::one);
-				trs = assimp_transform * trs;
-				float3 scale;
-				trs.Decompose(iterator->translation, iterator->rotation, scale);
-			}
-		}
-	}
-	else
-	{
-		for (size_t i = 0; i < node->mNumChildren; i++)
-		{
-			ApplyNodeTansformationOutSideChannels(node_to_apply,node->mChildren[i], animation);
-		}
 	}
 }
