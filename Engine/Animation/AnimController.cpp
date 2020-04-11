@@ -8,7 +8,7 @@
 
 #include <math.h>
 
-void AnimController::GetPose(uint32_t skeleton_uuid, std::vector<float4x4> & pose) 
+void AnimController::GetPose(uint32_t skeleton_uuid, std::vector<float4x4>& pose) 
 {
 	GetClipTransform(playing_clips[0].current_time, skeleton_uuid, playing_clips[0].clip, pose);
 	if (active_transition)
@@ -38,7 +38,7 @@ std::vector<float4x4> AnimController::InterpolatePoses(const std::vector<float4x
 	return interpolated_pose;
 }
 
-void AnimController::GetClipTransform(float current_time, uint32_t skeleton_uuid, const std::shared_ptr<Clip> &clip, std::vector<math::float4x4> & pose) const
+void AnimController::GetClipTransform(float current_time, uint32_t skeleton_uuid, const std::shared_ptr<Clip>& clip, std::vector<math::float4x4>& pose) const
 {
 	float current_keyframe = (current_time*(clip->animation->frames - 1)) / clip->animation_time;
 	size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
@@ -95,7 +95,7 @@ void AnimController::SetActiveAnimation()
 	}
 }
 
-void AnimController::StartNextState(const std::string & trigger)
+void AnimController::StartNextState(const std::string& trigger)
 {
 	active_transition = state_machine->GetTransition(trigger, active_state->name_hash);
 	std::shared_ptr<State> next_state;

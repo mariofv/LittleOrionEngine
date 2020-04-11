@@ -95,5 +95,6 @@ ImportResult StateMachineImporter::Import(const File & file, bool force) const
 
 	import_result.success = true;
 	import_result.exported_file = exported_file;
+	free(data);
 	return import_result;
 }
