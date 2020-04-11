@@ -1,0 +1,17 @@
+﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/Extras/ConvexDecomposition/CMakeLists.txt
+  bestfitobb.cpp
+  ConvexBuilder.cpp
+  cd_wavefront.cpp
+  fitsphere.cpp
+  meshvolume.cpp
+  raytri.cpp
+  vlookup.cpp
+  bestfit.cpp
+  cd_hull.cpp
+  ConvexDecomposition.cpp
+  concavity.cpp
+  float_math.cpp
+  planetri.cpp
+  splitplane.cpp
+  Generando código...
+  ConvexDecomposition.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\lib\Debug\ConvexDecomposition_Debug.lib

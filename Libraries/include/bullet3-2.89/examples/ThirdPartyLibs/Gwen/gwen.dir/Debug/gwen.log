@@ -1,0 +1,76 @@
+﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/examples/ThirdPartyLibs/Gwen/CMakeLists.txt
+  Anim.cpp
+  BaseRender.cpp
+  Base.cpp
+  Button.cpp
+  Canvas.cpp
+  CheckBox.cpp
+  ColorControls.cpp
+  ColorPicker.cpp
+  ComboBox.cpp
+  CrossSplitter.cpp
+  FileOpen.cpp
+  FileSave.cpp
+  Query.cpp
+  DockBase.cpp
+  DockedTabControl.cpp
+  Dragger.cpp
+  GroupBox.cpp
+  HSVColorPicker.cpp
+  HorizontalScrollBar.cpp
+  HorizontalSlider.cpp
+  Generando código...
+  Compilando...
+  ImagePanel.cpp
+  Label.cpp
+  LabelClickable.cpp
+  ListBox.cpp
+  Menu.cpp
+  MenuItem.cpp
+  MenuStrip.cpp
+  NumericUpDown.cpp
+  PanelListPanel.cpp
+  ProgressBar.cpp
+  Properties.cpp
+  RadioButton.cpp
+  RadioButtonController.cpp
+  ResizableControl.cpp
+  Resizer.cpp
+  RichLabel.cpp
+  ScrollBar.cpp
+  ScrollBarBar.cpp
+  ScrollBarButton.cpp
+  ScrollControl.cpp
+  Generando código...
+  Compilando...
+  Slider.cpp
+  SplitterBar.cpp
+  TabButton.cpp
+  TabControl.cpp
+  TabStrip.cpp
+  Text.cpp
+  TextBox.cpp
+  TextBoxNumeric.cpp
+  TreeControl.cpp
+  TreeNode.cpp
+  VerticalScrollBar.cpp
+  VerticalSlider.cpp
+  WindowControl.cpp
+  DragAndDrop.cpp
+  Gwen.cpp
+  Hook.cpp
+  Null.cpp
+  Windows.cpp
+  OpenGL_DebugFont.cpp
+  Skin.cpp
+  Generando código...
+  Compilando...
+  ToolTip.cpp
+  Utility.cpp
+  events.cpp
+  inputhandler.cpp
+  Generando código...
+Null.obj : warning LNK4221: Este archivo de objeto no define ning·n sÝmbolo p·blico que no se haya definido previamente, por lo que no se usarß en ninguna vinculaci¾n que utilice esta biblioteca
+ImagePanel.obj : warning LNK4221: Este archivo de objeto no define ning·n sÝmbolo p·blico que no se haya definido previamente, por lo que no se usarß en ninguna vinculaci¾n que utilice esta biblioteca
+Query.obj : warning LNK4221: Este archivo de objeto no define ning·n sÝmbolo p·blico que no se haya definido previamente, por lo que no se usarß en ninguna vinculaci¾n que utilice esta biblioteca
+  gwen.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\lib\Debug\gwen_Debug.lib

@@ -1,0 +1,16 @@
+﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/src/LinearMath/CMakeLists.txt
+  btAlignedAllocator.cpp
+  btConvexHull.cpp
+  btConvexHullComputer.cpp
+  btGeometryUtil.cpp
+  btPolarDecomposition.cpp
+  btQuickprof.cpp
+  btSerializer.cpp
+  btSerializer64.cpp
+  btThreads.cpp
+  btVector3.cpp
+  btTaskScheduler.cpp
+  btThreadSupportPosix.cpp
+  btThreadSupportWin32.cpp
+  Generando código...
+  LinearMath.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\lib\Debug\LinearMath_Debug.lib

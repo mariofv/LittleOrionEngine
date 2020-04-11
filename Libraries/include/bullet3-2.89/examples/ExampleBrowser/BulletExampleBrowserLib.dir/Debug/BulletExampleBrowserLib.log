@@ -1,0 +1,16 @@
+﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/examples/ExampleBrowser/CMakeLists.txt
+  OpenGLExampleBrowser.cpp
+  OpenGLGuiHelper.cpp
+  GL_ShapeDrawer.cpp
+  CollisionShape2TriangleMesh.cpp
+  b3Clock.cpp
+  ChromeTraceUtil.cpp
+  b3ResourcePath.cpp
+  GraphingTexture.cpp
+  GwenParameterInterface.cpp
+  GwenProfileWindow.cpp
+  GwenTextureWindow.cpp
+  gwenUserInterface.cpp
+  Generando código...
+GwenProfileWindow.obj : warning LNK4221: Este archivo de objeto no define ning·n sÝmbolo p·blico que no se haya definido previamente, por lo que no se usarß en ninguna vinculaci¾n que utilice esta biblioteca
+  BulletExampleBrowserLib.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\lib\Debug\BulletExampleBrowserLib_Debug.lib

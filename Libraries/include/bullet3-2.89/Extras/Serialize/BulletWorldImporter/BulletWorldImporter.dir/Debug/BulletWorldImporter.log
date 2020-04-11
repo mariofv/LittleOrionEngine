@@ -1,0 +1,6 @@
+﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/Extras/Serialize/BulletWorldImporter/CMakeLists.txt
+  btMultiBodyWorldImporter.cpp
+  btBulletWorldImporter.cpp
+  btWorldImporter.cpp
+  Generando código...
+  BulletWorldImporter.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\lib\Debug\BulletWorldImporter_Debug.lib

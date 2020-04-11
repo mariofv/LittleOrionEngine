@@ -20,6 +20,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
 #include "Module/ModuleScriptManager.h"
+#include "Module/ModulePhysics.h"
 
 #include <Brofiler/Brofiler.h>
 
@@ -48,7 +49,7 @@ Application::Application()
 	modules.emplace_back(lights = new ModuleLight());
 	modules.emplace_back(scene = new ModuleScene());
 	modules.emplace_back(artificial_intelligence = new ModuleAI());
-		
+	modules.emplace_back(physics = new ModulePhysics());
 	engine_log = std::make_unique<EngineLog>();
 }
 

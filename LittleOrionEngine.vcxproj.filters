@@ -442,6 +442,9 @@
     <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Module\ModulePhysics.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -863,6 +866,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Actions\EditorActionRotation2D.h">
       <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModulePhysics.h">
+      <Filter>Engine\Module</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

@@ -1,0 +1,10 @@
+﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/examples/ThirdPartyLibs/clsocket/CMakeLists.txt
+  SimpleSocket.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ThirdPartyLibs\clsocket\src\SimpleSocket.cpp(895): warning C4996: 'lseek': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _lseek. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\corecrt_io.h(503): note: vea la declaración de 'lseek'
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ThirdPartyLibs\clsocket\src\SimpleSocket.cpp(904): warning C4996: 'read': The POSIX name for this item is deprecated. Instead, use the ISO C and C++ conformant name: _read. See online help for details.
+  C:\Program Files (x86)\Windows Kits\10\Include\10.0.17763.0\ucrt\corecrt_io.h(523): note: vea la declaración de 'read'
+  ActiveSocket.cpp
+  PassiveSocket.cpp
+  Generando código...
+  clsocket.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\lib\Debug\clsocket_Debug.lib

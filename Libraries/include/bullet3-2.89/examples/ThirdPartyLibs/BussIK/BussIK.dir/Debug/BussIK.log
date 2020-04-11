@@ -1,0 +1,12 @@
+﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/examples/ThirdPartyLibs/BussIK/CMakeLists.txt
+  Jacobian.cpp
+  LinearR2.cpp
+  LinearR3.cpp
+  LinearR4.cpp
+  MatrixRmn.cpp
+  Misc.cpp
+  Node.cpp
+  Tree.cpp
+  VectorRn.cpp
+  Generando código...
+  BussIK.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\lib\Debug\BussIK_Debug.lib

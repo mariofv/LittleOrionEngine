@@ -1,0 +1,297 @@
+﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/examples/ExampleBrowser/CMakeLists.txt
+  main.cpp
+  ExampleEntries.cpp
+  Chain.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ExtendedTutorials\Chain.cpp(123): warning C4316: 'ChainExample': puede que el objeto asignado en el montón no esté alineado 16
+  Bridge.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ExtendedTutorials\Bridge.cpp(134): warning C4316: 'BridgeExample': puede que el objeto asignado en el montón no esté alineado 16
+  RigidBodyFromObj.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ExtendedTutorials\RigidBodyFromObj.cpp(148): warning C4316: 'RigidBodyFromObjExample': puede que el objeto asignado en el montón no esté alineado 16
+  SimpleBox.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ExtendedTutorials\SimpleBox.cpp(102): warning C4316: 'SimpleBoxExample': puede que el objeto asignado en el montón no esté alineado 16
+  MultipleBoxes.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ExtendedTutorials\MultipleBoxes.cpp(106): warning C4316: 'MultipleBoxesExample': puede que el objeto asignado en el montón no esté alineado 16
+  CompoundBoxes.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ExtendedTutorials\CompoundBoxes.cpp(124): warning C4316: 'CompoundBoxesExample': puede que el objeto asignado en el montón no esté alineado 16
+  SimpleCloth.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ExtendedTutorials\SimpleCloth.cpp(147): warning C4316: 'SimpleClothExample': puede que el objeto asignado en el montón no esté alineado 16
+  SimpleJoint.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ExtendedTutorials\SimpleJoint.cpp(117): warning C4316: 'SimpleJointExample': puede que el objeto asignado en el montón no esté alineado 16
+  NewtonsCradle.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ExtendedTutorials\NewtonsCradle.cpp(390): warning C4316: 'NewtonsCradleExample': puede que el objeto asignado en el montón no esté alineado 16
+  InclinedPlane.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ExtendedTutorials\InclinedPlane.cpp(388): warning C4316: 'InclinedPlaneExample': puede que el objeto asignado en el montón no esté alineado 16
+  MultiPendulum.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ExtendedTutorials\MultiPendulum.cpp(445): warning C4316: 'MultiPendulumExample': puede que el objeto asignado en el montón no esté alineado 16
+  FixJointBoxes.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\BulletRobotics\FixJointBoxes.cpp(64): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\BulletRobotics\FixJointBoxes.cpp(112): warning C4018: '<': no coinciden signed/unsigned
+  BoxStack.cpp
+  JointLimit.cpp
+  geometry.cpp
+  model.cpp
+  tgaimage.cpp
+  our_gl.cpp
+  Generando código...
+  Compilando...
+  TinyRenderer.cpp
+  collisionFilterPlugin.cpp
+  pdControlPlugin.cpp
+  tinyRendererPlugin.cpp
+  TinyRendererVisualShapeConverter.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SharedMemory\plugins\tinyRendererPlugin\TinyRendererVisualShapeConverter.cpp(127): warning C4316: 'TinyRendererVisualShapeConverterInternalData': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SharedMemory\plugins\tinyRendererPlugin\TinyRendererVisualShapeConverter.cpp(751): warning C4316: 'TinyRendererObjectArray': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SharedMemory\plugins\tinyRendererPlugin\TinyRendererVisualShapeConverter.cpp(790): warning C4316: 'TinyRenderObjectData': puede que el objeto asignado en el montón no esté alineado 16
+  IKTrajectoryHelper.cpp
+  PhysicsServer.cpp
+  PhysicsClientSharedMemory.cpp
+  PhysicsClientSharedMemory_C_API.cpp
+  PhysicsClient.cpp
+  PhysicsClientC_API.cpp
+  GraphicsServerExample.cpp
+  GraphicsClientExample.cpp
+  RemoteGUIHelper.cpp
+  PhysicsServerExample.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SharedMemory\PhysicsServerExample.cpp(863): warning C4316: 'MultithreadedDebugDrawer': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SharedMemory\PhysicsServerExample.cpp(3234): warning C4316: 'MultiThreadedOpenGLGuiHelper': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SharedMemory\PhysicsServerExample.cpp(3239): warning C4316: 'PhysicsServerExample': puede que el objeto asignado en el montón no esté alineado 16
+  PhysicsServerExampleBullet2.cpp
+  PhysicsClientExample.cpp
+  PosixSharedMemory.cpp
+  Win32SharedMemory.cpp
+  InProcessMemory.cpp
+  Generando código...
+  Compilando...
+  PhysicsServerSharedMemory.cpp
+  PhysicsDirect.cpp
+  PhysicsDirectC_API.cpp
+  SharedMemoryInProcessPhysicsC_API.cpp
+  PhysicsLoopBack.cpp
+  PhysicsLoopBackC_API.cpp
+  PhysicsServerCommandProcessor.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SharedMemory\PhysicsServerCommandProcessor.cpp(2000): warning C4316: 'PhysicsServerCommandProcessorInternalData': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SharedMemory\PhysicsServerCommandProcessor.cpp(4437): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SharedMemory\PhysicsServerCommandProcessor.cpp(4440): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SharedMemory\PhysicsServerCommandProcessor.cpp(8116): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SharedMemory\PhysicsServerCommandProcessor.cpp(8120): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SharedMemory\PhysicsServerCommandProcessor.cpp(8260): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SharedMemory\PhysicsServerCommandProcessor.cpp(8431): warning C4316: 'btMultiBodyJointFeedback': puede que el objeto asignado en el montón no esté alineado 16
+  b3PluginManager.cpp
+  b3RobotSimulatorClientAPI_NoGUI.cpp
+  b3RobotSimulatorClientAPI_NoDirect.cpp
+  b3RobotSimulatorClientAPI.cpp
+  BasicExample.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\BasicDemo\BasicExample.cpp(124): warning C4316: 'BasicExample': puede que el objeto asignado en el montón no esté alineado 16
+  InverseDynamicsExample.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\InverseDynamics\InverseDynamicsExample.cpp(359): warning C4316: 'InverseDynamicsExample': puede que el objeto asignado en el montón no esté alineado 16
+  InverseKinematicsExample.cpp
+  ForkLiftDemo.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ForkLift\ForkLiftDemo.cpp(1157): warning C4316: 'ForkLiftDemo': puede que el objeto asignado en el montón no esté alineado 16
+  MultiThreadedDemo.cpp
+  CommonRigidBodyMTBase.cpp
+  HeightfieldExample.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Heightfield\HeightfieldExample.cpp(1292): warning C4316: 'HeightfieldExample': puede que el objeto asignado en el montón no esté alineado 16
+  Tutorial.cpp
+  Dof6ConstraintTutorial.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Tutorial\Dof6ConstraintTutorial.cpp(520): warning C4316: 'Dof6ConstraintTutorial': puede que el objeto asignado en el montón no esté alineado 16
+  Generando código...
+  Compilando...
+  NN3DWalkers.cpp
+c:\users\meler\downloads\bullet3-2.89\bullet3-2.89\examples\evolution\NN3DWalkersTimeWarpBase.h(832): warning C4018: '>': no coinciden signed/unsigned
+c:\users\meler\downloads\bullet3-2.89\bullet3-2.89\examples\evolution\NN3DWalkersTimeWarpBase.h(853): warning C4018: '>': no coinciden signed/unsigned
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Evolution\NN3DWalkers.cpp(741): warning C4316: 'NNWalker': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Evolution\NN3DWalkers.cpp(828): warning C4316: 'NN3DWalkersExample': puede que el objeto asignado en el montón no esté alineado 16
+  NewtonsRopeCradle.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ExtendedTutorials\NewtonsRopeCradle.cpp(384): warning C4316: 'NewtonsRopeCradleExample': puede que el objeto asignado en el montón no esté alineado 16
+  CollisionSdkC_Api.cpp
+  CollisionTutorialBullet2.cpp
+  Bullet2CollisionSdk.cpp
+  RealTimeBullet3CollisionSdk.cpp
+  GyroscopicSetup.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\GyroscopicDemo\GyroscopicSetup.cpp(121): warning C4316: 'GyroscopicSetup': puede que el objeto asignado en el montón no esté alineado 16
+  Planar2D.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Planar2D\Planar2D.cpp(313): warning C4316: 'Planar2D': puede que el objeto asignado en el montón no esté alineado 16
+  RollingFrictionDemo.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\RollingFrictionDemo\RollingFrictionDemo.cpp(269): warning C4316: 'RollingFrictionDemo': puede que el objeto asignado en el montón no esté alineado 16
+  FractureDemo.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\FractureDemo\FractureDemo.cpp(370): warning C4316: 'FractureDemo': puede que el objeto asignado en el montón no esté alineado 16
+  btFractureBody.cpp
+  btFractureDynamicsWorld.cpp
+  MotorDemo.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DynamicControlDemo\MotorDemo.cpp(432): warning C4316: 'MotorDemo': puede que el objeto asignado en el montón no esté alineado 16
+  MultiThreadingExample.cpp
+  b3PosixThreadSupport.cpp
+  b3Win32ThreadSupport.cpp
+  b3ThreadSupportInterface.cpp
+  TinyRendererSetup.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\RenderingExamples\TinyRendererSetup.cpp(141): warning C4316: 'TinyRendererSetupInternalData': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\RenderingExamples\TinyRendererSetup.cpp(183): warning C4316: 'TinyRenderObjectData': puede que el objeto asignado en el montón no esté alineado 16
+  TimeSeriesCanvas.cpp
+  TimeSeriesFontData.cpp
+  Generando código...
+  Compilando...
+  DynamicTexturedCubeDemo.cpp
+  TinyVRGui.cpp
+  GripperGraspExample.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\RoboticsLearning\GripperGraspExample.cpp(741): warning C4316: 'GripperGraspExample': puede que el objeto asignado en el montón no esté alineado 16
+  R2D2GraspExample.cpp
+  KukaGraspExample.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\RoboticsLearning\KukaGraspExample.cpp(286): warning C4316: 'KukaGraspExample': puede que el objeto asignado en el montón no esté alineado 16
+  CoordinateSystemDemo.cpp
+  RaytracerSetup.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\RenderingExamples\RaytracerSetup.cpp(121): warning C4316: 'RaytracerInternalData': puede que el objeto asignado en el montón no esté alineado 16
+  RenderInstancingDemo.cpp
+  TimeSeriesExample.cpp
+  BenchmarkDemo.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Benchmarks\BenchmarkDemo.cpp(1334): warning C4316: 'BenchmarkDemo': puede que el objeto asignado en el montón no esté alineado 16
+  RaytestDemo.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Raycast\RaytestDemo.cpp(300): warning C4316: 'RaytestDemo': puede que el objeto asignado en el montón no esté alineado 16
+  SerializeSetup.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportBullet\SerializeSetup.cpp(103): warning C4316: 'SerializeSetup': puede que el objeto asignado en el montón no esté alineado 16
+  b3ImportMeshUtility.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportMeshUtility\b3ImportMeshUtility.cpp(80): warning C4018: '<': no coinciden signed/unsigned
+  btWorldImporter.cpp
+  btMultiBodyWorldImporter.cpp
+  btBulletWorldImporter.cpp
+  bChunk.cpp
+  bFile.cpp
+  bDNA.cpp
+  btBulletFile.cpp
+  Generando código...
+  Compilando...
+  BulletMJCFImporter.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportMJCFDemo\BulletMJCFImporter.cpp(422): warning C4316: 'UrdfModel': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportMJCFDemo\BulletMJCFImporter.cpp(432): warning C4316: 'UrdfModel': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportMJCFDemo\BulletMJCFImporter.cpp(435): warning C4316: 'UrdfLink': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportMJCFDemo\BulletMJCFImporter.cpp(614): warning C4316: 'UrdfJoint': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportMJCFDemo\BulletMJCFImporter.cpp(1080): warning C4316: 'UrdfLink': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportMJCFDemo\BulletMJCFImporter.cpp(1279): warning C4316: 'UrdfJoint': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportMJCFDemo\BulletMJCFImporter.cpp(1443): warning C4804: '>': uso no seguro del tipo 'bool' en la operación
+  ImportMJCFSetup.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportMJCFDemo\ImportMJCFSetup.cpp(372): warning C4316: 'ImportMJCFSetup': puede que el objeto asignado en el montón no esté alineado 16
+  BspConverter.cpp
+  BspLoader.cpp
+  ImportBspExample.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportBsp\ImportBspExample.cpp(242): warning C4316: 'BspDemo': puede que el objeto asignado en el montón no esté alineado 16
+  ImportColladaSetup.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportColladaDemo\ImportColladaSetup.cpp(191): warning C4316: 'ImportColladaSetup': puede que el objeto asignado en el montón no esté alineado 16
+  LoadMeshFromCollada.cpp
+  ImportObjExample.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportObjDemo\ImportObjExample.cpp(111): warning C4316: 'ImportObjSetup': puede que el objeto asignado en el montón no esté alineado 16
+  LoadMeshFromObj.cpp
+  Wavefront2GLInstanceGraphicsShape.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportObjDemo\Wavefront2GLInstanceGraphicsShape.cpp(49): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportObjDemo\Wavefront2GLInstanceGraphicsShape.cpp(78): warning C4018: '<': no coinciden signed/unsigned
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportObjDemo\Wavefront2GLInstanceGraphicsShape.cpp(107): warning C4018: '<': no coinciden signed/unsigned
+  ImportSTLSetup.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportSTLDemo\ImportSTLSetup.cpp(89): warning C4316: 'ImportSTLSetup': puede que el objeto asignado en el montón no esté alineado 16
+  ImportSDFSetup.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportSDFDemo\ImportSDFSetup.cpp(300): warning C4316: 'ImportSDFSetup': puede que el objeto asignado en el montón no esté alineado 16
+  ImportURDFSetup.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\ImportURDFSetup.cpp(370): warning C4316: 'ImportUrdfSetup': puede que el objeto asignado en el montón no esté alineado 16
+  URDF2Bullet.cpp
+  MyMultiBodyCreator.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\MyMultiBodyCreator.cpp(66): warning C4316: 'GenericConstraintUserInfo': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\MyMultiBodyCreator.cpp(147): warning C4316: 'GenericConstraintUserInfo': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\MyMultiBodyCreator.cpp(171): warning C4316: 'GenericConstraintUserInfo': puede que el objeto asignado en el montón no esté alineado 16
+  UrdfParser.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\UrdfParser.cpp(660): warning C4316: 'UrdfMaterial': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\UrdfParser.cpp(719): warning C4316: 'UrdfMaterial': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\UrdfParser.cpp(1645): warning C4316: 'UrdfMaterial': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\UrdfParser.cpp(1667): warning C4316: 'UrdfLink': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\UrdfParser.cpp(1718): warning C4316: 'UrdfJoint': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\UrdfParser.cpp(1747): warning C4316: 'UrdfLink': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\UrdfParser.cpp(1748): warning C4316: 'UrdfJoint': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\UrdfParser.cpp(1859): warning C4316: 'UrdfModel': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\UrdfParser.cpp(1894): warning C4316: 'UrdfMaterial': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\UrdfParser.cpp(1916): warning C4316: 'UrdfLink': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Importers\ImportURDFDemo\UrdfParser.cpp(1967): warning C4316: 'UrdfJoint': puede que el objeto asignado en el montón no esté alineado 16
+  RobotLoggingUtil.cpp
+  urdfStringSplit.cpp
+  BulletUrdfImporter.cpp
+  VoronoiFractureDemo.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\VoronoiFracture\VoronoiFractureDemo.cpp(835): warning C4316: 'VoronoiFractureDemo': puede que el objeto asignado en el montón no esté alineado 16
+  Generando código...
+  Compilando...
+  btConvexConvexMprAlgorithm.cpp
+  Hinge2Vehicle.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Vehicles\Hinge2Vehicle.cpp(627): warning C4316: 'Hinge2Vehicle': puede que el objeto asignado en el montón no esté alineado 16
+  Pendulum.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\MultiBody\Pendulum.cpp(212): warning C4316: 'Pendulum': puede que el objeto asignado en el montón no esté alineado 16
+  MultiBodySoftContact.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\MultiBody\MultiBodySoftContact.cpp(147): warning C4316: 'MultiBodySoftContact': puede que el objeto asignado en el montón no esté alineado 16
+  TestJointTorqueSetup.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\MultiBody\TestJointTorqueSetup.cpp(205): warning C4316: 'btMultiBodyJointFeedback': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\MultiBody\TestJointTorqueSetup.cpp(403): warning C4316: 'TestJointTorqueSetup': puede que el objeto asignado en el montón no esté alineado 16
+  InvertedPendulumPDControl.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\MultiBody\InvertedPendulumPDControl.cpp(339): warning C4316: 'btMultiBodyJointFeedback': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\MultiBody\InvertedPendulumPDControl.cpp(426): warning C4316: 'InvertedPendulumPDControl': puede que el objeto asignado en el montón no esté alineado 16
+  MultiBodyConstraintFeedback.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\MultiBody\MultiBodyConstraintFeedback.cpp(203): warning C4316: 'btMultiBodyJointFeedback': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\MultiBody\MultiBodyConstraintFeedback.cpp(403): warning C4316: 'MultiBodyConstraintFeedbackSetup': puede que el objeto asignado en el montón no esté alineado 16
+  SoftDemo.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\SoftDemo\SoftDemo.cpp(2270): warning C4316: 'SoftDemo': puede que el objeto asignado en el montón no esté alineado 16
+  DeformableContact.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\DeformableContact.cpp(171): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\DeformableContact.cpp(199): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\DeformableContact.cpp(261): warning C4316: 'DeformableContact': puede que el objeto asignado en el montón no esté alineado 16
+  GraspDeformable.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\GraspDeformable.cpp(310): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\GraspDeformable.cpp(355): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\GraspDeformable.cpp(542): warning C4316: 'GraspDeformable': puede que el objeto asignado en el montón no esté alineado 16
+  Pinch.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\Pinch.cpp(323): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\Pinch.cpp(384): warning C4316: 'Pinch': puede que el objeto asignado en el montón no esté alineado 16
+  DeformableSelfCollision.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\DeformableSelfCollision.cpp(175): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\DeformableSelfCollision.cpp(231): warning C4316: 'DeformableSelfCollision': puede que el objeto asignado en el montón no esté alineado 16
+  PinchFriction.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\PinchFriction.cpp(278): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\PinchFriction.cpp(307): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\PinchFriction.cpp(336): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\PinchFriction.cpp(397): warning C4316: 'PinchFriction': puede que el objeto asignado en el montón no esté alineado 16
+  ClothFriction.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\ClothFriction.cpp(169): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\ClothFriction.cpp(197): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\ClothFriction.cpp(250): warning C4316: 'ClothFriction': puede que el objeto asignado en el montón no esté alineado 16
+  DeformableMultibody.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\DeformableMultibody.cpp(221): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\DeformableMultibody.cpp(399): warning C4316: 'DeformableMultibody': puede que el objeto asignado en el montón no esté alineado 16
+  DeformableRigid.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\DeformableRigid.cpp(230): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\DeformableRigid.cpp(288): warning C4316: 'DeformableRigid': puede que el objeto asignado en el montón no esté alineado 16
+  SplitImpulse.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\SplitImpulse.cpp(198): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\SplitImpulse.cpp(256): warning C4316: 'SplitImpulse': puede que el objeto asignado en el montón no esté alineado 16
+  VolumetricDeformable.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\VolumetricDeformable.cpp(225): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\VolumetricDeformable.cpp(290): warning C4316: 'VolumetricDeformable': puede que el objeto asignado en el montón no esté alineado 16
+  DeformableClothAnchor.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\DeformableClothAnchor.cpp(170): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\DeformableClothAnchor.cpp(233): warning C4316: 'DeformableClothAnchor': puede que el objeto asignado en el montón no esté alineado 16
+  MultibodyClothAnchor.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\MultibodyClothAnchor.cpp(174): warning C4316: 'btDeformableGravityForce': puede que el objeto asignado en el montón no esté alineado 16
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\DeformableDemo\MultibodyClothAnchor.cpp(392): warning C4316: 'MultibodyClothAnchor': puede que el objeto asignado en el montón no esté alineado 16
+  Generando código...
+  Compilando...
+  MultiDofDemo.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\MultiBody\MultiDofDemo.cpp(456): warning C4316: 'MultiDofDemo': puede que el objeto asignado en el montón no esté alineado 16
+  RigidBodySoftContact.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\RigidBody\RigidBodySoftContact.cpp(160): warning C4316: 'RigidBodySoftContact': puede que el objeto asignado en el montón no esté alineado 16
+  TestHingeTorque.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Constraints\TestHingeTorque.cpp(223): warning C4316: 'TestHingeTorque': puede que el objeto asignado en el montón no esté alineado 16
+  ConstraintDemo.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Constraints\ConstraintDemo.cpp(837): warning C4316: 'AllConstraintDemo': puede que el objeto asignado en el montón no esté alineado 16
+  Dof6Spring2Setup.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Constraints\Dof6Spring2Setup.cpp(497): warning C4316: 'Dof6Spring2Setup': puede que el objeto asignado en el montón no esté alineado 16
+  ConstraintPhysicsSetup.cpp
+C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\Constraints\ConstraintPhysicsSetup.cpp(144): warning C4316: 'ConstraintPhysicsSetup': puede que el objeto asignado en el montón no esté alineado 16
+  stb_image.cpp
+  stb_image_write.cpp
+  tiny_obj_loader.cpp
+  tinyxml2.cpp
+  InProcessExampleBrowser.cpp
+  Generando código...
+LINK : warning LNK4075: se omite '/INCREMENTAL' debido a la especificación '/OPT:ICF'
+     Creando biblioteca C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/examples/ExampleBrowser/Debug/App_ExampleBrowser.lib y objeto C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/examples/ExampleBrowser/Debug/App_ExampleBrowser.exp
+  App_ExampleBrowser.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\ExampleBrowser\Debug\App_ExampleBrowser.exe

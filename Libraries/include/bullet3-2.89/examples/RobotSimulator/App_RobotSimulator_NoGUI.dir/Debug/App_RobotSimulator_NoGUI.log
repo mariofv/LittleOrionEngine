@@ -1,0 +1,7 @@
+﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/examples/RobotSimulator/CMakeLists.txt
+  RobotSimulatorMain.cpp
+  MinitaurSetup.cpp
+  Generando código...
+LINK : warning LNK4075: se omite '/INCREMENTAL' debido a la especificación '/OPT:ICF'
+     Creando biblioteca C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/examples/RobotSimulator/Debug/App_RobotSimulator_NoGUI_d.lib y objeto C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/examples/RobotSimulator/Debug/App_RobotSimulator_NoGUI_d.exp
+  App_RobotSimulator_NoGUI.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\examples\RobotSimulator\Debug\App_RobotSimulator_NoGUI_d.exe
