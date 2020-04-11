@@ -342,11 +342,6 @@ void PanelStateMachine::OpenStateMachine(const File & file)
 	state_machine = std::make_shared<StateMachine>(file.file_path);
 	state_machine->Load(file);
 
-	//TODO: Remove, this is only for testing
-	ImportOptions options;
-	Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(file), options);
-	std::shared_ptr<StateMachine> test = App->resources->Load<StateMachine>(options.exported_file);
-
 	//Tranform form state machine to ui
 	for (auto & state : state_machine->states)
 	{

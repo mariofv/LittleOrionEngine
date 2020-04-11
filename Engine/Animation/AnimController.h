@@ -30,6 +30,12 @@ public:
 	AnimController() { playing_clips.resize(2); };
 	~AnimController() = default;
 
+	AnimController(const AnimController& controller_to_copy) = default;
+	AnimController(AnimController&& controller_to_move) = default;
+
+	AnimController & operator=(const AnimController& controller_to_copy) = default;
+	AnimController & operator=(AnimController&& controller_to_move) = default;
+
 	bool Update();
 	void SetActiveAnimation();
 

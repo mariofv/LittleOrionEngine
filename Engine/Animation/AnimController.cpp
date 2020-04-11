@@ -1,18 +1,17 @@
 #include "AnimController.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTime.h"
+#include "ResourceManagement/Resources/StateMachine.h"
 #include "Helper/Utils.h"
-#include "Component/ComponentMeshRenderer.h"
-#include "Main/Application.h"
 
 #include <math.h>
-#include <algorithm>
-#include "ResourceManagement/Resources/StateMachine.h"
+#include <Brofiler/Brofiler.h>
 
 void AnimController::GetPose(uint32_t skeleton_uuid, std::vector<float4x4> & pose) 
 {
-
+	BROFILER_CATEGORY("Get Interpolated Pose", Profiler::Color::LightGoldenRodYellow);
 	GetClipTransform(playing_clips[0].current_time, skeleton_uuid, playing_clips[0].clip, pose);
 	if (active_transition)
 	{

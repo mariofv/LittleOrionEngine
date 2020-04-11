@@ -15,7 +15,6 @@ public:
 	~ModuleAnimation() = default;
 	
 	bool Init() override;
-	update_status Update() override;
 	bool CleanUp() override;
 	
 	ComponentAnimation* CreateComponentAnimation();

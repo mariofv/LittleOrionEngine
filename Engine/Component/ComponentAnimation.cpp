@@ -8,8 +8,10 @@
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleResourceManager.h"
-
 #include "ResourceManagement/Resources/StateMachine.h"
+
+#include <Brofiler/Brofiler.h>
+
 ComponentAnimation::ComponentAnimation() : Component(nullptr, ComponentType::ANIMATION)
 {
 	animation_controller = new AnimController();
@@ -28,6 +30,15 @@ void ComponentAnimation::Init()
 	{
 		GenerateJointChannelMaps();
 	}
+}
+
+ComponentAnimation & ComponentAnimation::operator=(const ComponentAnimation & component_to_copy)
+{
+	Component::operator = (component_to_copy);
+	this->state_machine = component_to_copy.state_machine;
+	*this->animation_controller = *component_to_copy.animation_controller;
+	Init();
+	return *this;
 }
 
 Component* ComponentAnimation::Clone(bool original_prefab) const
@@ -91,6 +102,7 @@ void ComponentAnimation::Update()
 
 void ComponentAnimation::UpdateMeshes()
 {
+	BROFILER_CATEGORY("Update Meshes", Profiler::Color::PaleGoldenRod);
 	for (size_t i = 0; i < skinned_meshes.size(); i++)
 	{
 		auto & skeleton = skinned_meshes[i]->skeleton;
@@ -143,7 +155,6 @@ void ComponentAnimation::GetChildrenMeshes(GameObject* current_mesh_gameobject)
 
 void ComponentAnimation::GenerateJointChannelMaps()
 {
-	
 	for (auto& clip : animation_controller->state_machine->clips)
 	{
 		for (auto& mesh : skinned_meshes)
@@ -151,7 +162,7 @@ void ComponentAnimation::GenerateJointChannelMaps()
 			auto & skeleton = mesh->skeleton;
 			if (clip->animation && clip->skeleton_channels_joints_map.find(skeleton->GetUUID()) != clip->skeleton_channels_joints_map.end())
 			{
-				return;
+				break;
 			}
 			auto & channels = clip->animation->keyframes[0].channels;
 			std::vector<size_t> meshes_channels_joints_map(channels.size());

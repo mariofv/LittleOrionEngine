@@ -24,7 +24,7 @@ public:
 	ComponentAnimation(const ComponentAnimation& component_to_copy) = default;
 	ComponentAnimation(ComponentAnimation&& component_to_move) = default;
 
-	ComponentAnimation & operator=(const ComponentAnimation& component_to_copy) = default;
+	ComponentAnimation & operator=(const ComponentAnimation& component_to_copy);
 	ComponentAnimation & operator=(ComponentAnimation&& component_to_move) = default;
 
 	Component* Clone(bool original_prefab = false) const override;
