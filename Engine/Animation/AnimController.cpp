@@ -7,11 +7,9 @@
 #include "Helper/Utils.h"
 
 #include <math.h>
-#include <Brofiler/Brofiler.h>
 
 void AnimController::GetPose(uint32_t skeleton_uuid, std::vector<float4x4> & pose) 
 {
-	BROFILER_CATEGORY("Get Interpolated Pose", Profiler::Color::LightGoldenRodYellow);
 	GetClipTransform(playing_clips[0].current_time, skeleton_uuid, playing_clips[0].clip, pose);
 	if (active_transition)
 	{
@@ -48,8 +46,8 @@ void AnimController::GetClipTransform(float current_time, uint32_t skeleton_uuid
 
 	float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
 
-	const std::vector<Animation::Channel> current_pose = clip->animation->keyframes[first_keyframe_index].channels;
-	const std::vector<Animation::Channel> next_pose = clip->animation->keyframes[second_keyframe_index].channels;
+	const std::vector<Animation::Channel> & current_pose = clip->animation->keyframes[first_keyframe_index].channels;
+	const std::vector<Animation::Channel> & next_pose = clip->animation->keyframes[second_keyframe_index].channels;
 
 	if (clip->skeleton_channels_joints_map.find(skeleton_uuid) == clip->skeleton_channels_joints_map.end())
 	{

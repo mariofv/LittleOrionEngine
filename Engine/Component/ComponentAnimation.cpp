@@ -20,11 +20,12 @@ ComponentAnimation::ComponentAnimation() : Component(nullptr, ComponentType::ANI
 ComponentAnimation::ComponentAnimation(GameObject* owner) : Component(owner, ComponentType::ANIMATION)
 {
 	animation_controller = new AnimController();
-	GetChildrenMeshes(owner);
+	Init();
 }
 
 void ComponentAnimation::Init()
 {
+	skinned_meshes.clear();
 	GetChildrenMeshes(owner);
 	if (animation_controller->state_machine)
 	{
@@ -102,13 +103,13 @@ void ComponentAnimation::Update()
 
 void ComponentAnimation::UpdateMeshes()
 {
-	BROFILER_CATEGORY("Update Meshes", Profiler::Color::PaleGoldenRod);
-	for (size_t i = 0; i < skinned_meshes.size(); i++)
+	BROFILER_CATEGORY("Animation", Profiler::Color::PaleGoldenRod);
+	for (auto & mesh : skinned_meshes)
 	{
-		auto & skeleton = skinned_meshes[i]->skeleton;
-		std::vector<float4x4> pose(skeleton->skeleton.size());
+		pose.resize(mesh->skeleton->skeleton.size());
+		auto & skeleton = mesh->skeleton;
 		animation_controller->GetPose(skeleton->GetUUID(), pose);
-		skinned_meshes[i]->UpdatePalette(pose);
+		mesh->UpdatePalette(pose);
 	}
 }
 

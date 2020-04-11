@@ -221,13 +221,15 @@ void ComponentMeshRenderer::UpdatePalette(const std::vector<float4x4>& pose)
 	assert(pose.size() == palette.size());
 	for (size_t i = 0; i < pose.size(); ++i)
 	{
-		auto joint = skeleton->skeleton[i];
+		auto &  joints = skeleton->skeleton;
+		size_t joint_index = i;
 		float4x4 gobal_transform = float4x4::identity;
-		while (joint.parent_index != -1)
+		while (joints[joint_index].parent_index != -1)
 		{
-			gobal_transform =  pose[joint.parent_index] * gobal_transform;
-			joint = skeleton->skeleton[joint.parent_index];
+			joint_index = joints[joint_index].parent_index;
+			gobal_transform = pose[joint_index] * gobal_transform;
+
 		}
-		palette[i] =  gobal_transform * pose[i] * skeleton->skeleton[i].transform_global;
+		palette[i] =  gobal_transform * pose[i] * joints[i].transform_global;
 	}
 }

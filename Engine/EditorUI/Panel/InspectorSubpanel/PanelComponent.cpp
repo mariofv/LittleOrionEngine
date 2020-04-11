@@ -389,9 +389,9 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 			return;
 		}
 		ImGui::SameLine();
-		if (ImGui::Button("Load Meshes"))
+		if (ImGui::Button("Reload"))
 		{
-			animation->GetChildrenMeshes(animation->owner);
+			animation->Init();
 			return;
 		}
 		ImGui::Separator();

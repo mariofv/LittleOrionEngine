@@ -52,7 +52,7 @@ private:
 	std::vector<ComponentMeshRenderer*> skinned_meshes;
 	std::shared_ptr<StateMachine> state_machine;
 	AnimController* animation_controller = nullptr;
-
+	std::vector<float4x4> pose;
 	bool playing = false;
 
 	friend class PanelComponent;
