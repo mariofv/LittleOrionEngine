@@ -29,6 +29,8 @@ void PanelPopupSceneManagement::Render()
 		selected_path = -1;
 		selected_file_name = std::string();
 
+		has_selected = false;
+
 		current_path = App->filesystem->assets_folder_path;
 		path_stack.clear();
 		path_stack.push_back(current_path);
@@ -69,6 +71,13 @@ void PanelPopupSceneManagement::Render()
 		ImGui::EndPopup();
 	}
 
+	if (HasSelected())
+	{
+		APP_LOG_INFO("Loading %s scene.", GetSelected())
+		
+		App->editor->OpenScene(GetSelected());
+		App->editor->current_scene_path = GetSelected();
+	}
 }
 
 void PanelPopupSceneManagement::RenderAccessPath()
@@ -168,7 +177,8 @@ std::string PanelPopupSceneManagement::GetNormalizedPath()
 
 void PanelPopupSceneManagement::SetPopupSelection()
 {
-
+	has_selected = true;
+	ImGui::CloseCurrentPopup();
 }
 
 void PanelPopupSceneManagement::ConfirmationPopup()
@@ -193,4 +203,14 @@ float PanelPopupSceneManagement::GetFrameHeightWithSpacing()
 {
 	ImGuiContext& g = *GImGui;
 	return g.FontSize + g.Style.FramePadding.y * 2.0f + g.Style.ItemSpacing.y;
+}
+
+bool PanelPopupSceneManagement::HasSelected() const
+{
+	return has_selected;
+}
+
+std::string PanelPopupSceneManagement::GetSelected() const
+{
+	return current_path->GetFullPath() + "/" + selected_file_name;
 }

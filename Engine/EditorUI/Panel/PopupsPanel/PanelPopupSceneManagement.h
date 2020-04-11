@@ -19,6 +19,9 @@ public:
 
 	void Render() override;
 
+	bool HasSelected() const;
+	std::string GetSelected() const;
+
 private:
 	void RenderAccessPath();
 	void RenderCurrentFolderContents();
@@ -42,6 +45,8 @@ private:
 
 	int selected_path = -1;
 	std::string selected_file_name;
+
+	bool has_selected = false;
 };
 
 #endif //_PANELPOPUPSCENEMANAGEMENT_H_
