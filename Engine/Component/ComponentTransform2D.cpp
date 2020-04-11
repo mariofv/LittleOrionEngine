@@ -128,6 +128,8 @@ void ComponentTransform2D::RescaleTransform()
 	float game_width = App->window->GetWidth();
 	float game_height = App->window->GetHeight();
 
+	//This values come from ImGui release/debug versions
+	///TODO: think a clever way of get this values
 	float scene_width = 1022.0f;
 	float scene_height = 597.0f;
 
