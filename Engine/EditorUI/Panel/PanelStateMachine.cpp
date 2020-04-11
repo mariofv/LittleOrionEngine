@@ -18,13 +18,19 @@ PanelStateMachine::PanelStateMachine()
 
 PanelStateMachine::~PanelStateMachine()
 {
-	nodes.erase(nodes.begin(), nodes.end());
+	if (nodes.size() > 0)
+	{
+		nodes.erase(nodes.begin(), nodes.end());
+	}
 	if (links.size() > 0)
 	{
 		links.erase(links.begin(), links.end());
 	}
 	ax::NodeEditor::DestroyEditor(editor_context);
-	state_machine->Save();
+	if (state_machine != nullptr)
+	{
+		state_machine->Save();
+	}
 }
 
 void PanelStateMachine::Render()
@@ -195,21 +201,24 @@ void PanelStateMachine::InteractionCreation()
 				{
 					// Since we accepted new link, lets add one to our list of links.
 					std::shared_ptr<Transition> new_transition = std::make_shared<Transition>();
+					std::string source_name;
+					std::string target_name;
 					for (auto node : nodes)
 					{
-
 						if (node->input == end_pin_id)
 						{
 							new_transition->target_hash = node->state->name_hash;
+							target_name = node->state->name;
 						}
 
 						if (node->output == start_pin_id)
 						{
 							new_transition->source_hash = node->state->name_hash;
+							source_name = node->state->name;
 						}
 					}
 					state_machine->transitions.push_back(new_transition);
-					links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) , start_pin_id, end_pin_id, new_transition });
+					links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) , start_pin_id, end_pin_id, target_name, source_name,new_transition });
 
 					// Draw new link.
 					ax::NodeEditor::Link(links.back()->id, links.back()->input_id, links.back()->output_id);
@@ -247,16 +256,6 @@ void PanelStateMachine::CreateNodeMenu()
 				node->output = uniqueid++;
 				nodes.push_back(std::move(node));
 			}
-			ImGui::EndMenu();
-		}
-		auto& links = GetSelectedLinks();
-		if (links.size() > 0 && ImGui::BeginMenu("Link Menu"))
-		{
-
-			ImGui::PushID(links[0]->id.AsPointer());
-			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(links[0]->transition->interpolation_time));
-			ImGui::InputText("###Trigger", &(links[0]->transition->trigger));
-			ImGui::PopID();
 			ImGui::EndMenu();
 		}
 		ImGui::EndPopup();
@@ -326,10 +325,25 @@ void PanelStateMachine::LeftPanel()
 		{
 			state_machine->Save();
 			App->resources->Import(state_machine->exported_file, true);
+			*state_machine_cache = *state_machine;
 		}
+		ImGui::SameLine();
 		if (ImGui::Button("Load"))
 		{
 			OpenStateMachine(state_machine->exported_file);
+		}
+		ImGui::Separator();
+		auto& links = GetSelectedLinks();
+		for (auto & link : links)
+		{
+			ImGui::Text(link->source.c_str());ImGui::SameLine(); ImGui::Text("->");ImGui::SameLine(); ImGui::Text(link->target.c_str());
+			ImGui::PushID(link->id.AsPointer());
+			ImGui::Text("Interpolation time: ");
+			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(link->transition->interpolation_time)); ImGui::SameLine(); ImGui::Text("ms");
+			ImGui::Spacing();
+			ImGui::Text("Trigger Name:");
+			ImGui::InputText("###Trigger Name", &(link->transition->trigger));
+			ImGui::PopID();
 		}
 	}
 	ImGui::EndChild();
@@ -341,6 +355,10 @@ void PanelStateMachine::OpenStateMachine(const File & file)
 	links.clear();
 	state_machine = std::make_shared<StateMachine>(file.file_path);
 	state_machine->Load(file);
+
+	ImportOptions options;
+	Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(file), options);
+	state_machine_cache = App->resources->Load<StateMachine>(options.exported_file);
 
 	//Tranform form state machine to ui
 	for (auto & state : state_machine->states)
@@ -356,17 +374,21 @@ void PanelStateMachine::OpenStateMachine(const File & file)
 	{
 		ax::NodeEditor::PinId source;
 		ax::NodeEditor::PinId target;
+		std::string source_name;
+		std::string target_name;
 		for (auto & node : nodes)
 		{
 			if (node->state->name_hash == link->source_hash)
 			{
 				source = node->output;
+				source_name = node->state->name;
 			}
 			if (node->state->name_hash == link->target_hash)
 			{
 				target = node->input;
+				target_name = node->state->name;
 			}
 		}
-		links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) , target, source, link });
+		links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) , target, source, target_name, source_name, link });
 	}
 }

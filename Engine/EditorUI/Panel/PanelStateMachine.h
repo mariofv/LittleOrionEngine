@@ -14,6 +14,8 @@ struct LinkInfo
 	ax::NodeEditor::LinkId id;
 	ax::NodeEditor::PinId input_id;
 	ax::NodeEditor::PinId output_id;
+	std::string target;
+	std::string source;
 	std::shared_ptr<Transition> transition;
 };
 
@@ -53,6 +55,7 @@ private:
 private:
 	ax::NodeEditor::EditorContext* editor_context = nullptr;
 	std::shared_ptr<StateMachine> state_machine;
+	std::shared_ptr<StateMachine> state_machine_cache;
 	bool firstFrame = true;
 	uint64_t entry_hash = std::hash<std::string>{}("Entry");
 	uint64_t end_hash = std::hash<std::string>{}("End");

@@ -72,7 +72,7 @@ void ComponentAnimation::SetStateMachine(std::shared_ptr<StateMachine>& state_ma
 
 void ComponentAnimation::Play()
 {
-	
+
 	auto & playing_clip = animation_controller->playing_clips[0];
 	playing_clip.current_time = 0;
 	playing_clip.playing = true;

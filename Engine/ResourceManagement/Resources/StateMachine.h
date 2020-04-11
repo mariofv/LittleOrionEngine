@@ -47,6 +47,8 @@ class StateMachine : public Resource
 public:
 	StateMachine(std::vector<std::shared_ptr<Clip>> && clips, std::vector<std::shared_ptr<State>> && states, std::vector<std::shared_ptr<Transition>> && transitions, const std::string& file_path);
 	StateMachine(const std::string& file_path);
+	StateMachine& operator=(const StateMachine& state_machine_to_copy);
+
 	~StateMachine() = default;
 	void LoadInMemory() override {};
 
