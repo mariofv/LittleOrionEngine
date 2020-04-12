@@ -96,6 +96,7 @@ void ComponentUI::Save(Config& config) const
 	config.AddUInt((unsigned int)ui_type, "UIType");
 	config.AddUInt(ui_texture, "Texture");
 	config.AddFloat3(color, "Color");
+	config.AddInt(layer, "Layer");
 	if (texture_to_render != nullptr)
 	{
 		config.AddString(texture_to_render->exported_file, "MetadataPath");
@@ -109,6 +110,7 @@ void ComponentUI::Load(const Config& config)
 	ui_texture = config.GetUInt("Texture", 0);
 	config.GetFloat3("Color", color, float3::one);
 	config.GetString("MetadataPath", metadata_path, "");
+	layer = config.GetInt("Layer", 0);
 	if(!metadata_path.empty())
 	{
 		std::shared_ptr<Texture> ui_texture = App->resources->Load<Texture>(metadata_path);

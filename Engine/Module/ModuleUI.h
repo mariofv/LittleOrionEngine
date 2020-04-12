@@ -47,6 +47,7 @@ public:
 	void RemoveComponentUI(ComponentUI*);
 	
 	void InitGlyph();
+	void SortComponentsUI();
 
 private:
 	void RenderUIGameObject(GameObject*, float4x4*);
@@ -62,6 +63,7 @@ private:
 	FT_Face face;
 	unsigned int text_texture;
 	std::vector<ComponentUI*> ui_elements;
+	std::vector<ComponentUI*> ordered_ui;
 
 };
 

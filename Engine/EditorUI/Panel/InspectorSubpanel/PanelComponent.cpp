@@ -765,9 +765,10 @@ void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 		return;
 	}
 	ImGui::Separator();
-	if (ImGui::DragFloat("Layer", &ui->owner->transform_2d.position.z, 1.0F, -MAX_NUM_LAYERS, MAX_NUM_LAYERS))
+	if (ImGui::DragInt("Layer", &ui->layer, 1.0F, -MAX_NUM_LAYERS, MAX_NUM_LAYERS))
 	{
 		ui->owner->transform_2d.OnTransformChange();
+		App->ui->SortComponentsUI();
 	}
 	ImGui::Separator();
 	ImGui::InputInt("Texture", (int*)(&ui->ui_texture));

@@ -16,8 +16,8 @@
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 
-
-#include "SDL/SDL.h"
+#include <algorithm>
+#include <SDL/SDL.h>
 
 
 // Called before render is available
@@ -58,14 +58,12 @@ void ModuleUI::Render(const ComponentCamera* camera)
 
 void  ModuleUI::RenderUIGameObject(GameObject* parent, float4x4* projection)
 {
-	for (auto child : parent->children)
+	for (auto ui_element : ordered_ui)
 	{
-		ComponentUI* ui = static_cast<ComponentUI*>(child->GetComponent(Component::ComponentType::UI));
-		if (ui)
+		if (ui_element && ui_element->ui_type != ComponentUI::UIType::CANVAS)
 		{
-			ui->Render(projection);
+			ui_element->Render(projection);
 		}
-		RenderUIGameObject(child, projection);
 	}
 }
 
@@ -97,6 +95,7 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* o
 	if(new_ui) 
 	{
 		ui_elements.push_back(new_ui);
+		SortComponentsUI();
 	}
 	return new_ui;
 }
@@ -179,6 +178,16 @@ void ModuleUI::InitGlyph()
 	FT_Done_FreeType(ft);
 
 	glyphInit = true;
+}
+
+void ModuleUI::SortComponentsUI()
+{
+	ordered_ui = ui_elements;
+	std::sort(ordered_ui.begin(), ordered_ui.end(), [](ComponentUI* left, ComponentUI* right)
+	{
+		return left->layer < right->layer;
+	}
+	);
 }
 
 //Guardar aqu� todos los component canvas (crear, destruir y guardar)
