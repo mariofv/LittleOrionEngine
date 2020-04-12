@@ -142,7 +142,6 @@ void ModuleScene::DeleteCurrentScene()
 	//UndoRedo
 	App->actions->ClearUndoRedoStacks();
 	RemoveGameObject(root);
-	App->resources->CleanResourceCache();
 	App->renderer->DeleteAABBTree();
 	App->scripts->scripts.clear();
 	App->editor->selected_game_object = nullptr;

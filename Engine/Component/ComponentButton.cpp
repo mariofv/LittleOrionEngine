@@ -19,11 +19,6 @@ ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, Compon
 	}
 }
 
-ComponentButton::~ComponentButton()
-{
-	ComponentUI::~ComponentUI();
-}
-
 void ComponentButton::Render(float4x4* projection)
 {
 	BROFILER_CATEGORY("UI: Button Render", Profiler::Color::Bisque);

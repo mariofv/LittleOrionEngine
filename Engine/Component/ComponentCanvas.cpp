@@ -15,11 +15,6 @@ ComponentCanvas::ComponentCanvas(GameObject* owner) : ComponentUI(owner, Compone
 	
 }
 
-ComponentCanvas::~ComponentCanvas()
-{
-	ComponentUI::~ComponentUI();
-}
-
 void ComponentCanvas::Render(float4x4* projection) 
 {
 	owner->transform_2d.SetSize(App->ui->window_width, App->ui->window_height);

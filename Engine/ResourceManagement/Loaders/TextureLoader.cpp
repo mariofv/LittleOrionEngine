@@ -13,7 +13,6 @@
 
 std::vector<char> TextureLoader::LoadCompressedDDS(const std::string& file_path, DDS::DDS_HEADER& dds_header)
 {
-
 	size_t dds_content_size;
 	char* loaded_data = App->filesystem->Load(file_path.c_str(), dds_content_size);
 	std::vector<char> data;
@@ -68,7 +67,6 @@ std::shared_ptr<Texture> TextureLoader::Load(const std::string& file_path)
 	Config importing_options;
 	if (file_path.find("_normal") != std::string::npos)
 	{
-
 		int width, height;
 		std::vector<char> data = LoadImageData(file_path, width, height);
 		loaded_texture = std::make_shared<Texture>(data.data(), 0,width, height, file_path, true);
@@ -95,7 +93,6 @@ std::shared_ptr<Texture> TextureLoader::Load(const std::string& file_path)
 
 std::vector<char> TextureLoader::LoadImageData(const std::string& file_path, int& width, int& height)
 {
-
 	std::vector<char> data;
 	ILuint image;
 	ilGenImages(1, &image);

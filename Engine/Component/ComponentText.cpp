@@ -21,11 +21,6 @@ ComponentText::ComponentText(GameObject * owner) : ComponentUI(owner, ComponentU
 	}
 }
 
-ComponentText::~ComponentText()
-{
-	ComponentUI::~ComponentUI();
-}
-
 void ComponentText::InitData()
 {
 	BROFILER_CATEGORY("UI: Text Init", Profiler::Color::Azure);

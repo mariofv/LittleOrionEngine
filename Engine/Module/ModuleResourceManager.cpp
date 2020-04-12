@@ -192,8 +192,11 @@ uint32_t ModuleResourceManager::LoadCubemap(const std::vector<std::string>& face
 
 void ModuleResourceManager::CleanResourceCache()
 {
-	auto& it = std::remove_if(resource_cache.begin(), resource_cache.end(), [](const std::shared_ptr<Resource> & resource) {
+	const auto it = std::remove_if(resource_cache.begin(), resource_cache.end(), [](const std::shared_ptr<Resource> & resource) {
 		return resource.use_count() == 1;
 	});
-	resource_cache.erase(it, resource_cache.end());
+	if (it != resource_cache.end())
+	{
+		resource_cache.erase(it, resource_cache.end());
+	}
 }

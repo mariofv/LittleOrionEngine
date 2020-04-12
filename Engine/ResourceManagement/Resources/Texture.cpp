@@ -1,9 +1,5 @@
 #include "Texture.h"
 
-#include <IL/il.h>
-#include <IL/ilu.h>
-#include <IL/ilut.h>
-
 
 Texture::Texture(char * data, size_t image_size, int width, int height, const std::string& path, bool normal_map) : image_size(image_size), width(width), height(height), normal_map(normal_map), data(data), Resource(0,path)
 {
