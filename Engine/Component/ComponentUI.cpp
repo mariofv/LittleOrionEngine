@@ -12,6 +12,7 @@
 
 #include "ResourceManagement/Resources/Texture.h"
 
+#include "Brofiler/Brofiler.h"
 #include <GL/glew.h>
 
 ComponentUI::ComponentUI(UIType ui_type) : Component(nullptr, ComponentType::UI), ui_type(ui_type)
@@ -37,6 +38,7 @@ void ComponentUI::Render(float4x4* projection)
 
 void ComponentUI::Render(float4x4* projection, float4x4* model, unsigned int texture, float3* color)
 {
+	BROFILER_CATEGORY("UI: Render", Profiler::Color::LawnGreen);
 	if(owner->IsEnabled() && active)
 	{
 		glUseProgram(shader_program);
@@ -58,6 +60,7 @@ void ComponentUI::Render(float4x4* projection, float4x4* model, unsigned int tex
 
 void ComponentUI::InitData()
 {
+	BROFILER_CATEGORY("UI: Init Data", Profiler::Color::LawnGreen);
 	shader_program = App->program->GetShaderProgramId("Sprite");
 	GLfloat vertices[] = {
 		// Pos      // Tex

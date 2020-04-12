@@ -105,7 +105,7 @@ void ComponentTransform2D::OnTransformChange()
 	GenerateGlobalModelMatrix();
 	CalculateRectMatrix(rect.Width(), rect.Height(), rect_matrix);
 
-	for (auto & child : owner->children)
+	for (const auto& child : owner->children)
 	{
 		child->transform_2d.OnTransformChange();
 	}

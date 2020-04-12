@@ -188,7 +188,7 @@ void ComponentTransform::OnTransformChange()
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
 	GenerateGlobalModelMatrix();
 	owner->aabb.GenerateBoundingBox();
-	for (auto & child : owner->children)
+	for (const auto & child : owner->children)
 	{
 		child->transform.OnTransformChange();
 	}

@@ -5,7 +5,7 @@
 
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleUI.h"
-
+#include "Brofiler/Brofiler.h"
 ComponentText::ComponentText() : ComponentUI(ComponentUI::UIType::TEXT)
 {
 	InitData();
@@ -28,6 +28,7 @@ ComponentText::~ComponentText()
 
 void ComponentText::InitData()
 {
+	BROFILER_CATEGORY("UI: Text Init", Profiler::Color::Azure);
 	ComponentUI::InitData();
 	shader_program = App->program->GetShaderProgramId("UI Text");
 	color = float3::unitZ;
@@ -39,6 +40,7 @@ void ComponentText::InitData()
 
 void ComponentText::Render(float4x4* projection)
 {
+	BROFILER_CATEGORY("UI: Text Render", Profiler::Color::CornflowerBlue);
 	ComponentTransform2D* transform_2d_txt = &owner->transform_2d;
 	float4x4 txt_model;
 
