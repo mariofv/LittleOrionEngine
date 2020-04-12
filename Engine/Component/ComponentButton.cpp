@@ -5,7 +5,6 @@
 #include "Main/Gameobject.h"
 
 #include "Module/ModuleScene.h"
-#include "Brofiler/Brofiler.h"
 ComponentButton::ComponentButton() : ComponentUI(ComponentUI::UIType::BUTTON)
 {
 }
@@ -21,7 +20,6 @@ ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, Compon
 
 void ComponentButton::Render(float4x4* projection)
 {
-	BROFILER_CATEGORY("UI: Button Render", Profiler::Color::Bisque);
 	owner->transform_2d.position.z = 1;
 	
 	ComponentUI* text = nullptr;
