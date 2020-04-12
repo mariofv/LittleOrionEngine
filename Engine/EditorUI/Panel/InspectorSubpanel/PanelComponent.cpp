@@ -767,7 +767,7 @@ void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 	ImGui::Separator();
 	if (ImGui::DragInt("Layer", &ui->layer, 1.0F, -MAX_NUM_LAYERS, MAX_NUM_LAYERS))
 	{
-		ui->owner->transform_2d.OnTransformChange();
+		//ui->owner->transform_2d.OnTransformChange();
 		App->ui->SortComponentsUI();
 	}
 	ImGui::Separator();
