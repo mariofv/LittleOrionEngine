@@ -144,8 +144,6 @@ void main()
 	//Gamma Correction
 	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma));
 	FragColor.a=material.transparency;
-
-	
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)

@@ -18,6 +18,7 @@ Billboard::~Billboard()
 
 void Billboard::Render(const float3& position) const
 {
+	/*
 	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
 	glUseProgram(shader_program);
 
@@ -33,5 +34,6 @@ void Billboard::Render(const float3& position) const
 	glBindVertexArray(0);
 
 	glUseProgram(0);
+	*/
 }
 

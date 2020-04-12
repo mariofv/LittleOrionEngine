@@ -68,8 +68,6 @@ void PanelMaterial::Render(Material* material)
 		ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing();
-		bool some = false;
-		ImGui::Checkbox("Rise Texcoords", &some);
 		
 		ImGui::Text("Main Maps");
 		ImGui::Spacing();
