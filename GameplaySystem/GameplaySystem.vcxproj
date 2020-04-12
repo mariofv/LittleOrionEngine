@@ -129,7 +129,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;GAMEPLAYSYSTEM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\Libraries\include\ImGuizmo;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Libraries\include\ImGuizmo;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries/include\FreeTypeFont;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
