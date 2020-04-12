@@ -131,7 +131,7 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 			Metafile* incoming_metafile = *((Metafile**)payload->Data);
 			if (incoming_metafile->resource_type == ResourceType::PREFAB) 
 			{
-				std::shared_ptr<Prefab> prefab = std::static_pointer_cast<Prefab>(App->resources->Load(incoming_metafile->uuid));
+				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(incoming_metafile->uuid);
 				GameObject* new_model = prefab->Instantiate(target_game_object);
 
 				App->actions->action_game_object = new_model;
@@ -140,7 +140,7 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 
 			if (incoming_metafile->resource_type == ResourceType::MODEL)
 			{
-				std::shared_ptr<Prefab> prefab = std::static_pointer_cast<Prefab>(App->resources->Load(incoming_metafile->uuid));
+				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(incoming_metafile->uuid);
 				prefab->overwritable = false;
 				
 				GameObject* new_model = prefab->Instantiate(target_game_object);

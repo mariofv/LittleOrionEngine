@@ -146,7 +146,7 @@ void PrefabImporter::ExtractSkeletonFromNode(
 	bool already_loaded = std::find(loaded_skeletons.begin(), loaded_skeletons.end(), skeleton_uuid) != loaded_skeletons.end();
 	if (skeleton_uuid != 0 && !already_loaded)
 	{
-		std::shared_ptr<Skeleton> full_skeleton = std::static_pointer_cast<Skeleton>(App->resources->Load(skeleton_uuid));
+		std::shared_ptr<Skeleton> full_skeleton = App->resources->Load<Skeleton>(skeleton_uuid);
 		std::vector<GameObject*> skeleton_gameobjects;
 
 		for (Skeleton::Joint joint : full_skeleton->skeleton)

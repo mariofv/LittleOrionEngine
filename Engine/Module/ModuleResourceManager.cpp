@@ -26,13 +26,10 @@
 #include "ResourceManagement/Manager/SkyboxManager.h"
 #include "ResourceManagement/Manager/TextureManager.h"
 
-#include "ResourceManagement/Resources/Mesh.h"
-#include "ResourceManagement/Resources/Prefab.h"
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/Metafile/MetafileManager.h"
 
 #include <algorithm>
-#include <Brofiler/Brofiler.h>
 #include <functional> //for std::hash
 
 ModuleResourceManager::ModuleResourceManager()
@@ -220,83 +217,6 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path) const
 	resource_DB->AddEntry(asset_metafile);
 
 	return asset_metafile->uuid;
-}
-
-std::shared_ptr<Resource> ModuleResourceManager::Load(uint32_t uuid)
-{
-	BROFILER_CATEGORY("Load Resource", Profiler::Color::Brown);
-	APP_LOG_INFO("Loading Resource %u.", uuid);
-
-	std::shared_ptr<Resource> loaded_resource;
-	loaded_resource = RetrieveFromCacheIfExist(uuid);
-	if (loaded_resource != nullptr)
-	{
-		APP_LOG_SUCCESS("Resource %u loaded correctly from cache.", uuid);
-		return loaded_resource;
-	}
-
-	Metafile* metafile = resource_DB->GetEntry(uuid);
-	if (!App->filesystem->Exists(metafile->exported_file_path))
-	{
-		APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, metafile->exported_file_path);
-		return nullptr;
-	}
-
-	Path* resource_exported_file_path = App->filesystem->GetPath(metafile->exported_file_path);
-	FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
-
-	switch (metafile->resource_type)
-	{
-	case ResourceType::ANIMATION:
-		loaded_resource = AnimationManager::Load(metafile, exported_file_data);
-		break;
-
-	case ResourceType::MATERIAL:
-		loaded_resource = MaterialManager::Load(metafile, exported_file_data);
-		break;
-
-	case ResourceType::MESH:
-		loaded_resource = MeshManager::Load(metafile, exported_file_data);
-		break;
-
-	case ResourceType::MODEL:
-		loaded_resource = PrefabManager::Load(metafile, exported_file_data);
-		break;
-
-	case ResourceType::PREFAB:
-		loaded_resource = PrefabManager::Load(metafile, exported_file_data);
-		break;
-
-	case ResourceType::SKELETON:
-		loaded_resource = SkeletonManager::Load(metafile, exported_file_data);
-		break;
-
-	case ResourceType::TEXTURE:
-		loaded_resource = TextureManager::Load(metafile, exported_file_data);
-		break;
-
-	case ResourceType::SKYBOX:
-		loaded_resource = SkyboxManager::Load(metafile, exported_file_data);
-		break;
-	}
-
-	free((char*)exported_file_data.buffer);
-
-	if (loaded_resource != nullptr)
-	{
-		resource_cache.push_back(loaded_resource);
-	}
-
-	APP_LOG_SUCCESS("Resource %u loaded correctly.", uuid);
-	return loaded_resource;
-}
-
-std::shared_ptr<Resource> ModuleResourceManager::Reload(const Resource* resource)
-{
-	uint32_t uuid = resource->GetUUID();
-	auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [resource](const auto & loaded_resource) { return loaded_resource.get() == resource; });
-	resource_cache.erase(it);
-	return Load(uuid);
 }
 
 uint32_t ModuleResourceManager::CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name)

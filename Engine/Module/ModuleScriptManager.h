@@ -1,7 +1,6 @@
 #ifndef _MODULEMANAGERSCRIPT_H_
 #define _MODULEMANAGERSCRIPT_H_
 
-#include "Main/GameObject.h"
 #include "Main/Globals.h"
 #include "Module.h"
 

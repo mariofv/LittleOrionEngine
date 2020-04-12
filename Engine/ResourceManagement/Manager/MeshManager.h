@@ -19,7 +19,6 @@ public:
 	static std::shared_ptr<Mesh> Load(Metafile* metafile, const FileData& resource_data);
 };
 
-
 #endif // !_MESHMANAGER_H_
 
 

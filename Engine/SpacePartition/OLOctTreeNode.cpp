@@ -1,4 +1,7 @@
 #include "OLOctTreeNode.h"
+
+#include "Main/GameObject.h"
+
 #include <algorithm>
 
 OLOctTreeNode::OLOctTreeNode()

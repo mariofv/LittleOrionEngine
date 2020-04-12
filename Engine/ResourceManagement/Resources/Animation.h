@@ -34,4 +34,14 @@ public:
 	float frames_per_second;
 };
 
+
+namespace Loader
+{
+	template<>
+	static std::shared_ptr<Animation> Load(Metafile* metafile, const FileData& resource_data)
+	{
+		return AnimationManager::Load(metafile, resource_data);
+	}
+}
+
 #endif // _ANIMATION_H_

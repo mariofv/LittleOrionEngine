@@ -1,16 +1,14 @@
 #ifndef _OLAABBTREE_H_
 #define _OLAABBTREE_H_
 
-#include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
 #include <MathGeoLib.h>
 #include <map>
 #include <vector>
 
-
+class GameObject;
 
 const unsigned AABB_NULL_NODE =  0xffffffff;
-
 
 struct NodeAABB
 {

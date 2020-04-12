@@ -2,6 +2,7 @@
 #define _SKELETON_H_
 
 #include "Resource.h"
+#include "ResourceManagement/Manager/SkeletonManager.h"
 
 #include <MathGeoLib/MathGeoLib.h>
 #include <vector>
@@ -26,6 +27,15 @@ public:
 public:
 	std::vector<Joint> skeleton;
 };
+
+namespace Loader
+{
+	template<>
+	static std::shared_ptr<Skeleton> Load(Metafile* metafile, const FileData& resource_data)
+	{
+		return SkeletonManager::Load(metafile, resource_data);
+	}
+}
 
 #endif //_SKELETON_H_
 

@@ -2,6 +2,7 @@
 #define _MESH_H_
 
 #include "Resource.h"
+#include "ResourceManagement/Manager/MeshManager.h"
 
 #include <GL/glew.h>
 #include <MathGeoLib.h>
@@ -39,6 +40,15 @@ private:
 	GLuint vbo = 0;
 	GLuint ebo = 0;
 };
+
+namespace Loader
+{
+	template<>
+	static std::shared_ptr<Mesh> Load(Metafile* metafile, const FileData& resource_data)
+	{
+		return MeshManager::Load(metafile, resource_data);
+	}
+}
 
 #endif // !_MESH_H_
 

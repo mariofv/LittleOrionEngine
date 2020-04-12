@@ -1,7 +1,6 @@
 #include "Prefab.h"
 #include "Filesystem/Path.h"
 #include "Main/Application.h"
-#include "Main/GameObject.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
 

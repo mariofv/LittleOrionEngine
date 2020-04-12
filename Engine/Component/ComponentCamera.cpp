@@ -519,11 +519,11 @@ void ComponentCamera::SetSkybox(uint32_t skybox_uuid)
 	this->skybox_uuid = skybox_uuid;
 	if (skybox_uuid == 0)
 	{
-		camera_skybox = std::static_pointer_cast<Skybox>(App->resources->Load((uint32_t)CoreResource::DEFAULT_SKYBOX));
+		camera_skybox = App->resources->Load<Skybox>((uint32_t)CoreResource::DEFAULT_SKYBOX);
 	}
 	else
 	{
-		camera_skybox = std::static_pointer_cast<Skybox>(App->resources->Load(skybox_uuid));
+		camera_skybox = App->resources->Load<Skybox>(skybox_uuid);
 	}
 }
 

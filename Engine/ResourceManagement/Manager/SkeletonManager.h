@@ -17,4 +17,5 @@ public:
 
 	static std::shared_ptr<Skeleton> Load(Metafile* metafile, const FileData& resource_data);
 };
+
 #endif // _SKELETONMANAGER_H_

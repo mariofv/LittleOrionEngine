@@ -1,6 +1,7 @@
 #ifndef _SKYBOX_H_
 #define _SKYBOX_H_
 
+#include "ResourceManagement/Manager/SkyboxManager.h"
 #include "Texture.h"
 
 #include <array>
@@ -49,5 +50,13 @@ private:
 	GLuint vbo;
 };
 
+namespace Loader
+{
+	template<>
+	static std::shared_ptr<Skybox> Load(Metafile* metafile, const FileData& resource_data)
+	{
+		return SkyboxManager::Load(metafile, resource_data);
+	}
+}
 
 #endif //_SKYBOX_H_

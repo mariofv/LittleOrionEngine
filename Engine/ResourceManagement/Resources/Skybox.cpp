@@ -165,7 +165,7 @@ void Skybox::GenerateTexture(SkyboxFace face)
 	uint32_t texture_id = textures_id[(size_t)face];
 	if (texture_id != 0)
 	{
-		textures[(size_t)face] = std::static_pointer_cast<Texture>(App->resources->Load(texture_id));
+		textures[(size_t)face] = App->resources->Load<Texture>(texture_id);
 	}
 }
 

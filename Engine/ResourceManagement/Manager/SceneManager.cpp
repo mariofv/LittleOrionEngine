@@ -161,7 +161,7 @@ GameObject* SceneManager::LoadPrefab(const Config & config) const
 	uint32_t prefab_uuid;
 	prefab_uuid = config.GetUInt("Prefab", 0);
 
-	std::shared_ptr<Prefab> prefab = std::static_pointer_cast<Prefab>(App->resources->Load(prefab_uuid));
+	std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_uuid);
 	std::unordered_map<int64_t, int64_t> UUIDS_pairs;
 	std::vector<Config> original_UUIDS;
 	config.GetChildrenConfig("UUIDS", original_UUIDS);

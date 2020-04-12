@@ -321,7 +321,7 @@ void PanelScene::SceneDropTarget()
 			Metafile* incoming_metafile = *((Metafile**)payload->Data);
 			if (incoming_metafile->resource_type == ResourceType::PREFAB)
 			{
-				std::shared_ptr<Prefab> prefab = std::static_pointer_cast<Prefab>(App->resources->Load(incoming_metafile->uuid));
+				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(incoming_metafile->uuid);
 				GameObject* new_model = prefab->Instantiate(App->scene->root);
 				App->actions->action_game_object = new_model;
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
@@ -329,7 +329,7 @@ void PanelScene::SceneDropTarget()
 
 			if (incoming_metafile->resource_type == ResourceType::MODEL)
 			{
-				std::shared_ptr<Prefab> prefab = std::static_pointer_cast<Prefab>(App->resources->Load(incoming_metafile->uuid));
+				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(incoming_metafile->uuid);
 				prefab->overwritable = false;
 				GameObject* new_model = prefab->Instantiate(App->scene->root);
 				App->actions->action_game_object = new_model;

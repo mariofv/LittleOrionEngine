@@ -9,8 +9,8 @@
 
 Billboard::Billboard(CoreResource quad_sprite, float width, float height) : width(width), height(height)
 {
-	billboard_texture = std::static_pointer_cast<Texture>(App->resources->Load((uint32_t)quad_sprite));
-	billboard_quad = std::static_pointer_cast<Mesh>(App->resources->Load((uint32_t)CoreResource::QUAD));
+	billboard_texture = App->resources->Load<Texture>((uint32_t)quad_sprite);
+	billboard_quad = App->resources->Load<Mesh>((uint32_t)CoreResource::QUAD);
 }
 
 void Billboard::Render(const float3& position) const

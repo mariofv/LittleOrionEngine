@@ -1,10 +1,12 @@
-#include "Main/Globals.h"
-#include "Main/Application.h"
-#include "ModuleWindow.h"
-#include "ModuleInput.h"
 #include "ModuleCamera.h"
-#include "ModuleEditor.h"
+
+#include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Main/Globals.h"
+#include "ModuleEditor.h"
+#include "ModuleInput.h"
+#include "ModuleWindow.h"
+
 #include "Component/ComponentCamera.h"
 
 #include <algorithm>

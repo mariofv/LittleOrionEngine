@@ -26,6 +26,5 @@ private:
 
 };
 
-
 #endif // !_PREFABLOADER_H_
 

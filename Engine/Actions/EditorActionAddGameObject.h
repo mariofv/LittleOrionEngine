@@ -2,8 +2,9 @@
 #define _EDITORACTIONADDGAMEOBJECT_H_
 
 #include "EditorAction.h"
-#include "Main/GameObject.h"
+#include "Helper/Config.h"
 
+class GameObject;
 
 class EditorActionAddGameObject : public EditorAction
 {

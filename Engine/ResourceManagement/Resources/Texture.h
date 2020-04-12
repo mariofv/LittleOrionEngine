@@ -2,6 +2,7 @@
 #define _TEXTURE_H_
 
 #include "Resource.h"
+#include "ResourceManagement/Manager/TextureManager.h"
 
 #include <GL/glew.h>
 #include <string>
@@ -59,6 +60,15 @@ private:
 
 	friend class Skybox;
 };
+
+namespace Loader
+{
+	template<>
+	static std::shared_ptr<Texture> Load(Metafile* metafile, const FileData& resource_data)
+	{
+		return TextureManager::Load(metafile, resource_data);
+	}
+}
 
 
 #endif //_TEXTURE_H_

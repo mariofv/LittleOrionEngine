@@ -5,17 +5,23 @@
 #include "Module.h"
 #include "ModuleFileSystem.h"
 
+#include "ResourceManagement/Resources/Animation.h"
+#include "ResourceManagement/Resources/Material.h"
+#include "ResourceManagement/Resources/Mesh.h"
+#include "ResourceManagement/Resources/Prefab.h"
+#include "ResourceManagement/Resources/Skeleton.h"
+#include "ResourceManagement/Resources/Skybox.h"
+#include "ResourceManagement/Resources/Texture.h"
+
 #include "ResourceManagement/ResourcesDB/ResourceDataBase.h"
 
+#include <Brofiler/Brofiler.h>
 #include <memory>
 #include <thread>
 #include <atomic>
 #include <mutex>
 
-class Mesh;
 class Path;
-class Resource;
-class Texture;
 class Timer;
 
 class AnimationImporter;
@@ -27,6 +33,15 @@ class SceneManager;
 class SkeletonImporter;
 class SkyboxImporter;
 class TextureImporter;
+
+class AnimationManager;
+class MaterialManager;
+class MeshManager;
+class PrefabManager;
+class SceneManager;
+class SkeletonManager;
+class SkyboxManager;
+class TextureManager;
 
 class MetafileManager;
 
@@ -43,8 +58,52 @@ public:
 	bool CleanUp() override;
 
 	uint32_t Import(Path& file);
-	std::shared_ptr<Resource> Load(uint32_t uuid);
-	std::shared_ptr<Resource> Reload(const Resource* resource);
+
+	template<typename T>
+	std::shared_ptr<T> Load(uint32_t uuid)
+	{
+		BROFILER_CATEGORY("Load Resource", Profiler::Color::Brown);
+		APP_LOG_INFO("Loading Resource %u.", uuid);
+
+		std::shared_ptr<Resource> loaded_resource;
+		loaded_resource = RetrieveFromCacheIfExist(uuid);
+		if (loaded_resource != nullptr)
+		{
+			APP_LOG_SUCCESS("Resource %u loaded correctly from cache.", uuid);
+			return std::static_pointer_cast<T>(loaded_resource);
+		}
+
+		Metafile* metafile = resource_DB->GetEntry(uuid);
+		assert(metafile != nullptr);
+		if (!App->filesystem->Exists(metafile->exported_file_path))
+		{
+			APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, metafile->exported_file_path);
+			return nullptr;
+		}
+
+		Path* resource_exported_file_path = App->filesystem->GetPath(metafile->exported_file_path);
+		FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
+		loaded_resource = Loader::Load<T>(metafile, exported_file_data);
+
+		free((char*)exported_file_data.buffer);
+
+		if (loaded_resource != nullptr)
+		{
+			resource_cache.push_back(loaded_resource);
+		}
+
+		APP_LOG_SUCCESS("Resource %u loaded correctly.", uuid);
+		return std::static_pointer_cast<T>(loaded_resource);
+	}
+
+	template<typename T>
+	std::shared_ptr<T> Reload(const Resource* resource)
+	{
+		uint32_t uuid = resource->GetUUID();
+		auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [resource](const auto & loaded_resource) { return loaded_resource.get() == resource; });
+		resource_cache.erase(it);
+		return Load<T>(uuid);
+	}
 
 	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
 

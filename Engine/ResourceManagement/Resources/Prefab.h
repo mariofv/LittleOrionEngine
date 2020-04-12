@@ -2,15 +2,18 @@
 #define _PREFAB_H_
 
 #include "Resource.h"
+#include "ResourceManagement/Manager/PrefabManager.h"
+
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "EditorUI/Panel/PanelScene.h"
+
+#include "Main/GameObject.h"
 
 #include <vector>
 #include <memory>
 #include <unordered_map>
 
 class Component;
-class GameObject;
 class Metafile;
 
 class Prefab : public Resource
@@ -40,6 +43,15 @@ private:
 	friend PanelHierarchy;
 	friend PanelScene;
 };
+
+namespace Loader
+{
+	template<>
+	static std::shared_ptr<Prefab> Load(Metafile* metafile, const FileData& resource_data)
+	{
+		return PrefabManager::Load(metafile, resource_data);
+	}
+}
 
 #endif // !_PREFAB_H_
 

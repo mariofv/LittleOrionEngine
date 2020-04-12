@@ -40,5 +40,14 @@ public:
 	Metafile* resource_metafile = nullptr;
 };
 
+namespace Loader
+{
+	template<typename T>
+	static std::shared_ptr<T> Load(Metafile* metafile, const FileData& resource_data)
+	{
+		return nullptr;
+	};
+}
+
 #endif // !_RESOURCE_H_
 

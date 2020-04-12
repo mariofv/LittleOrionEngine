@@ -109,7 +109,7 @@ void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uui
 	textures_uuid[type] = texture_uuid;
 	if (textures_uuid[type] != 0)
 	{
-		textures[type] = std::static_pointer_cast<Texture>(App->resources->Load(texture_uuid));
+		textures[type] = App->resources->Load<Texture>(texture_uuid);
 	}
 }
 

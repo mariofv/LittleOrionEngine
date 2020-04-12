@@ -20,7 +20,6 @@ public:
 	static uint32_t Create(Path& asset_creation_folder_path, const std::string created_asset_name= "New Skybox.skybox");
 };
 
-
 #endif // !_MATERIALMANAGER_H_
 
 

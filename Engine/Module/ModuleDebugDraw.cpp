@@ -9,6 +9,7 @@
 #include "EditorUI/Panel/PanelNavMesh.h"
 
 #include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleAI.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"

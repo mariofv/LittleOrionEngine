@@ -171,7 +171,7 @@ void ComponentMeshRenderer::SetMesh(uint32_t mesh_uuid)
 	this->mesh_uuid = mesh_uuid;
 	if (mesh_uuid != 0)
 	{
-		this->mesh_to_render = std::static_pointer_cast<Mesh>(App->resources->Load(mesh_uuid));
+		this->mesh_to_render = App->resources->Load<Mesh>(mesh_uuid);
 		owner->aabb.GenerateBoundingBox();
 	}
 }
@@ -181,10 +181,10 @@ void ComponentMeshRenderer::SetMaterial(uint32_t material_uuid)
 	this->material_uuid = material_uuid;
 	if (material_uuid != 0)
 	{
-		material_to_render = std::static_pointer_cast<Material>(App->resources->Load(material_uuid));;
+		material_to_render = App->resources->Load<Material>(material_uuid);
 	}
 	else
 	{
-		material_to_render = std::static_pointer_cast<Material>(App->resources->Load((uint32_t)CoreResource::DEFAULT_MATERIAL));;
+		material_to_render = App->resources->Load<Material>((uint32_t)CoreResource::DEFAULT_MATERIAL);
 	}
 }
