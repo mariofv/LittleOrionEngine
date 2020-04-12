@@ -52,7 +52,9 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	float4x4 projection = float4x4::D3DOrthoProjLH(-1, MAX_NUM_LAYERS, window_width, window_height);
 	if (main_canvas != nullptr)
 	{
+		glDisable(GL_DEPTH_TEST);
 		RenderUIGameObject(main_canvas->owner, &projection);
+		glEnable(GL_DEPTH_TEST);
 	}
 }
 
