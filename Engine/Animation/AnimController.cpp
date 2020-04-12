@@ -10,6 +10,7 @@
 
 void AnimController::GetPose(uint32_t skeleton_uuid, std::vector<float4x4>& pose) 
 {
+
 	GetClipTransform(playing_clips[0].current_time, skeleton_uuid, playing_clips[0].clip, pose);
 	if (active_transition)
 	{

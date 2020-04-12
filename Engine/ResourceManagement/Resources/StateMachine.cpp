@@ -45,6 +45,7 @@ StateMachine & StateMachine::operator=(const StateMachine & state_machine_to_cop
 	this->clips = state_machine_to_copy.clips;
 	this->states = state_machine_to_copy.states;
 	this->transitions = state_machine_to_copy.transitions;
+	this->default_state = state_machine_to_copy.default_state;
 	return *this;
 }
 
@@ -139,7 +140,7 @@ void StateMachine::AddClipToState(std::shared_ptr<State>& state, File& clip_file
 	Importer::GetOptionsFromMeta(meta_path, meta);
 	std::shared_ptr<Animation> animation = App->resources->Load<Animation>(meta.exported_file);
 	std::shared_ptr<Clip> new_clip = std::make_shared<Clip>(clip_file.filename_no_extension, animation, false);
-	if (new_clip->animation == state->clip->animation)
+	if (state->clip && new_clip->animation == state->clip->animation)
 	{
 		return;
 	}

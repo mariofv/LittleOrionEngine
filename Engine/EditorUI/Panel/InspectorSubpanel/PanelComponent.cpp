@@ -391,6 +391,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		ImGui::SameLine();
 		if (ImGui::Button("Reload"))
 		{
+			animation->SetStateMachine(animation->animation_controller->state_machine);
 			animation->Init();
 			return;
 		}

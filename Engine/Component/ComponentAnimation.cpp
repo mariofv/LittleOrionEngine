@@ -36,7 +36,6 @@ void ComponentAnimation::Init()
 ComponentAnimation & ComponentAnimation::operator=(const ComponentAnimation & component_to_copy)
 {
 	Component::operator = (component_to_copy);
-	this->state_machine = component_to_copy.state_machine;
 	*this->animation_controller = *component_to_copy.animation_controller;
 	Init();
 	return *this;
@@ -72,10 +71,13 @@ void ComponentAnimation::SetStateMachine(std::shared_ptr<StateMachine>& state_ma
 
 void ComponentAnimation::Play()
 {
-
-	auto & playing_clip = animation_controller->playing_clips[0];
-	playing_clip.current_time = 0;
-	playing_clip.playing = true;
+	PlayingClip * playing_clip = &animation_controller->playing_clips[0];
+	if (!playing_clip->clip)
+	{
+		return;
+	}
+	playing_clip->current_time = 0;
+	playing_clip->playing = true;
 	playing = true;
 }
 
@@ -104,6 +106,10 @@ void ComponentAnimation::Update()
 void ComponentAnimation::UpdateMeshes()
 {
 	BROFILER_CATEGORY("Animation", Profiler::Color::PaleGoldenRod);
+	if (!animation_controller->state_machine)
+	{
+		return;
+	}
 	for (auto & mesh : skinned_meshes)
 	{
 		pose.resize(mesh->skeleton->skeleton.size());
