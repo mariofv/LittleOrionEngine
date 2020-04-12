@@ -180,9 +180,10 @@ void ComponentMeshRenderer::AddAmbientOclusionUniforms(unsigned int shader_progr
 
 void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 {
-	glActiveTexture(GL_TEXTURE3);
+	glActiveTexture(GL_TEXTURE4);
 	BindTexture(Material::MaterialTextureType::NORMAL);
 	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
+	glUniform1i(glGetUniformLocation(shader_program, "material.use_normal_map"), material_to_render->use_normal_map);
 	//bool texture_normal = BindTextureNormal(Material::MaterialTextureType::NORMAL);
 	//if (texture_normal)
 	//{

@@ -5,8 +5,6 @@ in vec3 normal;
 in vec2 texCoord;
 in vec3 tangent;
 
-subroutine vec3 normal_subroutine();
-layout (location=0) subroutine uniform normal_subroutine NormalSoubroutine;
 
 out vec4 FragColor;
 
@@ -32,6 +30,7 @@ struct Material
 	float transparency;
 	float tiling_x;
 	float tiling_y;
+	bool use_normal_map;
 };
 uniform Material material;
 
@@ -100,42 +99,41 @@ float GeometrySmith(vec3 normal, vec3 view_pos, vec3 light_dir, float roughness)
 vec3 Fresnel(vec3 light_dir, vec3 normal, float metalness);
 vec3 BRDF(vec3 view_pos, vec3 normal, vec3 half_dir, vec3 light_dir, float roughness, float metalness);
 
+//Normal mapping
 mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent);
-
-//SUBROUTINES
-layout(index=0) subroutine (normal_subroutine) vec3 ComputeMaterialWithNormalMap()
-{
-	vec3 normalized_normal = normalize(GetNormalMap(material, texCoord));
-	return normalized_normal = CreateTangentSpace(normalize(normal), normalize(tangent)) * normalized_normal;
-}
-
-layout(index=1) subroutine (normal_subroutine) vec3 ComputeMaterialWithoutNormalMap()
-{
-	return normalize(normal);
-}
 
 void main()
 {
 
-
-	//vec3 normalized_normal = normalize(GetNormalMap(material.normal_map, texCoord));
-	//normalized_normal = CreateTangentSpace(normalize(normal), normalize(tangent)) * normalized_normal;
 	vec3 normalized_normal = normalize(normal);
+	vec3 normalized_tangent = normalize(tangent);
 	vec3 result = vec3(0);
+
+	mat3 tangent_space = CreateTangentSpace(normalized_normal, normalized_tangent);
+	vec3 fragment_normal = tangent_space*(texture(material.normal_map, texCoord).xyz*2.0 - 1.0);
 
 	for (int i = 0; i < directional_light.num_directional_lights; ++i)
 	{
-		result += CalculateDirectionalLight(normal);
+		if(material.use_normal_map)
+		{
+			result += CalculateDirectionalLight(fragment_normal);
+		}
+
+		else
+		{
+			result += CalculateDirectionalLight(normal);
+		}
+
 	}
 
 	for (int i = 0; i < num_spot_lights; ++i)
 	{
-		result += CalculateSpotLight(spot_lights[i], normal);
+		result += CalculateSpotLight(spot_lights[i], fragment_normal);
 	}
 
 	for (int i = 0; i < num_point_lights; ++i)
 	{
-		result += CalculatePointLight(point_lights[i], normal);	
+		result += CalculatePointLight(point_lights[i], fragment_normal);	
 	}
 
 	//FragColor = vec4(vec3(normalize(tangent)),1.0);

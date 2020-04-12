@@ -64,6 +64,8 @@ void Material::Save(Config& config) const
 	config.AddFloat(tiling_x, "Tiling X");
 	config.AddFloat(tiling_y, "Tiling Y");
 
+	config.AddBool(use_normal_map, "UseNormalMap");
+
 	//colors
 	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
 	config.AddColor(float4(emissive_color[0], emissive_color[1], emissive_color[2], 1.0f), "emissiveColor");
@@ -108,6 +110,12 @@ void Material::Load(const Config& config)
 	if (texture_resource.get() != nullptr)
 	{
 		SetMaterialTexture(Material::MaterialTextureType::NORMAL, texture_resource);
+		use_normal_map = true;
+	}
+
+	else 
+	{
+		use_normal_map = false;
 	}
 
 	show_checkerboard_texture = config.GetBool("Checkboard", true);

@@ -72,6 +72,9 @@ public:
 	float tiling_x = 1.0f;
 	float tiling_y = 1.0f;
 
+	//This variable will allow the shader to use the normal maps if there is any assigned to the model material
+	bool use_normal_map = false;
+
 	bool show_checkerboard_texture = false;
 };
 

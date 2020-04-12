@@ -99,6 +99,10 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 	float material_texture_map_size = 20.f;
 
 	if (material->textures[type].get() != nullptr) {
+
+		if (type == Material::MaterialTextureType::NORMAL)
+			material->use_normal_map = true;
+
 		char tmp_string[256];
 		std::shared_ptr<Texture>& texture = material->textures[type];
 		ImGui::Image(
@@ -180,7 +184,7 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 		ImGui::ColorEdit3("Color", material->specular_color);
 		ImGui::SliderFloat("k specular", &material->k_specular, 0.f, 1.f);
 		ImGui::SliderFloat("Roughness", &material->roughness, 0.f, 1.f);
-		ImGui::SliderFloat("Metalness", &material->metalness, 0.f, 100.f);
+		ImGui::SliderFloat("Metalness", &material->metalness, 0.f, 10.f);
 
 		ImGui::Unindent();
 
@@ -195,6 +199,8 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 	if (ImGui::Button(ICON_FA_TIMES))
 	{
 		material->RemoveMaterialTexture(type);
+		if (type == Material::MaterialTextureType::NORMAL)
+			material->use_normal_map = false;
 	}
 	ImGui::SameLine();
 	ImGui::Text("Remove Texture");

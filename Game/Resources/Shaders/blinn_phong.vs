@@ -4,7 +4,6 @@ layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec2 vertex_uv0;
 layout(location = 2) in vec3 vertex_normal;
 layout(location = 3) in vec3 vertex_tangent;
-layout(location = 4) in vec3 vertex_bitanget;
 
 layout (std140) uniform Matrices
 {
@@ -31,6 +30,8 @@ struct Material {
 	float transparency;
 	float tiling_x;
 	float tiling_y;
+	bool use_normal_map;
+
 
 };
 uniform Material material;
