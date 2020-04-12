@@ -112,6 +112,8 @@ void ModuleUI::RemoveComponentUI(ComponentUI* ui_to_remove)
 		delete *it;
 		ui_elements.erase(it);
 	}
+
+	SortComponentsUI();
 }
 
 void ModuleUI::InitGlyph()
