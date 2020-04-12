@@ -140,7 +140,7 @@ void GameObject::SetHierarchyStatic(bool is_static)
 	//AABBTree
 	(is_static) ? App->renderer->RemoveAABBTree(this) : App->renderer->InsertAABBTree(this);
 	
-	for (const auto & child : children)
+	for (const auto& child : children)
 	{
 		child->SetStatic(is_static);
 	}
@@ -367,7 +367,7 @@ ENGINE_API Component* GameObject::CreateComponentUI(const ComponentUI::UIType ui
 
 void GameObject::RemoveComponent(Component* component_to_remove) 
 {
-	auto it = std::find(components.begin(), components.end(), component_to_remove);
+	const auto it = std::find(components.begin(), components.end(), component_to_remove);
 	if (it != components.end()) 
 	{
 		component_to_remove->Delete();

@@ -458,7 +458,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Separator();
 
 			ImGui::Text("Keys:");
-			for(const auto & key : string_keys)
+			for(const auto key : string_keys)
 			{
 				ImGui::Text(game_inputs_strings[key]);
 			}
@@ -510,7 +510,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Separator();
 
 			ImGui::Text("Mouse:");
-			for (const auto & mouse_key : mouse_keys)
+			for (const auto mouse_key : mouse_keys)
 			{
 				ImGui::Text(mouse_keys_string[(int)mouse_key]);
 			}
@@ -550,7 +550,7 @@ void PanelConfiguration::ShowInputOptions()
 
 
 			ImGui::Text("Controller Keys:");
-			for (auto controller_key : controller_keys)
+			for (const auto controller_key : controller_keys)
 			{
 				ImGui::Text(controller_keys_string[(int)controller_key]);
 			}
@@ -625,11 +625,11 @@ void PanelConfiguration::ShowInputOptions()
 
 			ImGui::Separator();
 
-			for(const auto & game_input : App->input->game_inputs)
+			for(const auto& game_input : App->input->game_inputs)
 			{
 				ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", game_input.first.c_str());
 				ImGui::Text("KeyCodes:");
-				for(const auto key : game_input.second.keys)
+				for(const auto& key : game_input.second.keys)
 				{
 					int aux = static_cast<int>(key);
 					if (aux > FIRST_OFFSET_COND)
@@ -645,7 +645,7 @@ void PanelConfiguration::ShowInputOptions()
 					ImGui::Text("	%s", game_inputs_strings[aux]);
 				}
 				ImGui::Text("MouseCodes:");
-				for (auto mouse : game_input.second.mouse_buttons)
+				for (auto& mouse : game_input.second.mouse_buttons)
 				{
 					ImGui::Text("	%s", mouse_keys_string[(int)mouse]);
 				}

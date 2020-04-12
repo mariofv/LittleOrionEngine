@@ -104,7 +104,7 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* o
 
 void ModuleUI::RemoveComponentUI(ComponentUI* ui_to_remove)
 {
-	auto it = std::find(ui_elements.begin(), ui_elements.end(), ui_to_remove);
+	const auto it = std::find(ui_elements.begin(), ui_elements.end(), ui_to_remove);
 	if (*it == main_canvas)
 	{
 		main_canvas = nullptr;

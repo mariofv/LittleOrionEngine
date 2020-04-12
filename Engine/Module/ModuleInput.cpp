@@ -512,7 +512,7 @@ void ModuleInput::SaveGameInputs(Config& config)
 {
 	std::vector<Config> game_inputs_configs;
 
-	for (auto game_input : game_inputs)
+	for (auto& game_input : game_inputs)
 	{
 		Config game_inputs_config;
 		game_input.second.Save(game_inputs_config);

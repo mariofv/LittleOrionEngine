@@ -323,7 +323,7 @@ void PanelScene::SceneDropTarget()
 			{
 				ImportOptions options;
 				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
-				auto prefab = App->resources->Load<Prefab>(options.exported_file);
+				const auto& prefab = App->resources->Load<Prefab>(options.exported_file);
 				GameObject* new_model = prefab->Instantiate(App->scene->root);
 				App->actions->action_game_object = new_model;
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);

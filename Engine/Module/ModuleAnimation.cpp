@@ -39,7 +39,7 @@ ComponentAnimation* ModuleAnimation::CreateComponentAnimation()
 
 void ModuleAnimation::RemoveComponentAnimation(ComponentAnimation* animation_to_remove)
 {
-	auto it = std::find(animations.begin(), animations.end(), animation_to_remove);
+	const auto it = std::find(animations.begin(), animations.end(), animation_to_remove);
 	if (it != animations.end())
 	{
 		delete *it;

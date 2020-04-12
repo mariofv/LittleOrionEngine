@@ -16,7 +16,7 @@ void OLOctTree::Create(AABB limits)
 
 void OLOctTree::Clear()
 {
-	for (auto & node : flattened_tree)
+	for (const auto& node : flattened_tree)
 	{
 		delete node;
 	}
@@ -33,7 +33,7 @@ void OLOctTree::Insert(GameObject &game_object)
 	assert(intersecting_leaves.size() > 0);
 
 	bool reinsert = false;
-	for (auto &leaf : intersecting_leaves)
+	for (const auto& leaf : intersecting_leaves)
 	{
 		if (leaf->depth == max_depth)
 		{
@@ -65,13 +65,13 @@ void OLOctTree::Insert(GameObject &game_object)
 void OLOctTree::CollectIntersect(std::vector<GameObject*> &game_objects, const ComponentCamera &camera)
 {
 	root->CollectIntersect(game_objects, camera);
-	auto it = std::unique(game_objects.begin(), game_objects.end());
+	const auto it = std::unique(game_objects.begin(), game_objects.end());
 	game_objects.erase(it, game_objects.end());
 }
 
 void OLOctTree::FindLeaves(const AABB &game_object_aabb, std::vector<OLOctTreeNode*> &leaves) const
 {
-	for (auto &node : flattened_tree)
+	for (const auto& node : flattened_tree)
 	{
 		if (node->IsLeaf() && node->box.Intersects(game_object_aabb))
 		{

@@ -102,7 +102,7 @@ void ComponentAnimation::SetSkeleton(std::shared_ptr<Skeleton>& skeleton)
 {
 	animation_controller->skeleton = skeleton;
 	palette.resize(skeleton->skeleton.size());
-	for (auto & matrix : palette)
+	for (auto& matrix : palette)
 	{
 		matrix = float4x4::identity;
 	}
@@ -121,7 +121,7 @@ void ComponentAnimation::UpdateBone(GameObject* current_bone)
 	{
 		current_bone->transform.SetRotation(bone_rotation.ToFloat3x3());
 	}
-	auto it = std::find_if(animation_controller->skeleton->skeleton.begin(), animation_controller->skeleton->skeleton.end(), [current_bone](const Skeleton::Joint & joint) {
+	const auto it = std::find_if(animation_controller->skeleton->skeleton.begin(), animation_controller->skeleton->skeleton.end(), [current_bone](const Skeleton::Joint & joint) {
 		return current_bone->name == joint.name;
 	});
 

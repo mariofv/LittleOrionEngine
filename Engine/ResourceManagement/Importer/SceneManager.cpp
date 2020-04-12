@@ -116,7 +116,7 @@ void SceneManager::Load(const std::string &path) const
 		}
 		if (prefab_parents.find(created_game_object->UUID) != prefab_parents.end())
 		{
-			for (auto & prefab_child : prefab_parents[created_game_object->UUID])
+			for (const auto&  prefab_child : prefab_parents[created_game_object->UUID])
 			{
 				ComponentTransform previous_transform = prefab_child->transform;
 				prefab_child->SetParent(created_game_object);
@@ -153,7 +153,7 @@ void SceneManager::SavePrefabUUIDS(std::vector<Config> & original_UUIDS, GameObj
 	config.AddUInt(gameobject_to_save->UUID, "UUID");
 	config.AddUInt(gameobject_to_save->original_UUID, "OriginalUUID");
 	original_UUIDS.push_back(config);
-	for (auto & child : gameobject_to_save->children)
+	for (const auto&  child : gameobject_to_save->children)
 	{
 		SavePrefabUUIDS(original_UUIDS, child);
 	}
@@ -168,7 +168,7 @@ GameObject * SceneManager::LoadPrefab(const Config & config) const
 	std::unordered_map<int64_t, int64_t> UUIDS_pairs;
 	std::vector<Config> original_UUIDS;
 	config.GetChildrenConfig("UUIDS", original_UUIDS);
-	for (auto & child_UUIDS : original_UUIDS)
+	for (const auto&  child_UUIDS : original_UUIDS)
 	{
 		int64_t UUID = child_UUIDS.GetUInt("UUID", 0);
 		int64_t original = child_UUIDS.GetUInt("OriginalUUID", 0);
@@ -199,7 +199,7 @@ bool SceneManager::SaveModifiedPrefabComponents(Config & config, GameObject * ga
 		modified = true;
 	}
 	std::vector<Config> gameobject_components_config;
-	for (auto & component : gameobject_to_save->components)
+	for (const auto&  component : gameobject_to_save->components)
 	{
 		if (component->modified_by_user || component->added_by_user)
 		{
@@ -235,7 +235,7 @@ void SceneManager::LoadPrefabModifiedComponents(const Config & config) const
 
 	std::vector<Config> prefab_components_config;
 	config.GetChildrenConfig("Components", prefab_components_config);
-	for (auto & component_config : prefab_components_config)
+	for (const auto& component_config : prefab_components_config)
 	{
 		uint64_t component_type_uint = component_config.GetUInt("ComponentType", 0);
 		assert(component_type_uint != 0);

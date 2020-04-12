@@ -16,14 +16,14 @@ bool ModuleProgram::Init()
 // Called before quitting
 bool ModuleProgram::CleanUp()
 {
-	for ( auto & program : loaded_programs)
+	for (const auto& program : loaded_programs)
 	{
 		glDeleteProgram(program.second);
 	}
 
 	glDeleteBuffers(1, &uniform_buffer.ubo);
 
-	for (auto & name : names)
+	for (auto& name : names)
 	{
 		delete[] name;
 	}

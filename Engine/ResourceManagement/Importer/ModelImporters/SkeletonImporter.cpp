@@ -19,7 +19,7 @@ ImportResult SkeletonImporter::ImportSkeleton(const aiScene* scene, const aiMesh
 		}
 
 		ImportChildBone(bone, -1, bone->mTransformation, skeleton, unit_scale_factor);
-		for (auto & joint : skeleton.skeleton)
+		for (auto&  joint : skeleton.skeleton)
 		{
 			if (joint.name == std::string(bone_name.C_Str()))
 			{
@@ -48,7 +48,7 @@ void SkeletonImporter::ImportChildBone(const aiNode * previus_node,  uint32_t pr
 		Skeleton::Joint bone{ float4x4::identity, GetTransform(local_transformation, scale_factor),previous_joint_index, std::string(previus_node->mName.C_Str()) };
 
 		accumulated_local_transformation = aiMatrix4x4();
-		auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&bone](const Skeleton::Joint & joint) { return joint.name == bone.name; });
+		const auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&bone](const Skeleton::Joint & joint) { return joint.name == bone.name; });
 		if (it == skeleton.skeleton.end())
 		{
 			skeleton.skeleton.push_back(bone);
@@ -69,7 +69,7 @@ void SkeletonImporter::ImportChildBone(const aiNode * previus_node,  uint32_t pr
 		{
 		
 			Skeleton::Joint bone{ float4x4::identity, GetTransform(local_transformation, scale_factor),previous_joint_index, bone_name};
-			auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&bone_name](const Skeleton::Joint & joint) { return joint.name == bone_name; });
+			const auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&bone_name](const Skeleton::Joint & joint) { return joint.name == bone_name; });
 			if (it == skeleton.skeleton.end())
 			{
 				skeleton.skeleton.push_back(bone);
@@ -118,7 +118,7 @@ bool SkeletonImporter::SaveBinary(const Skeleton& skeleton) const
 
 	uint32_t size = sizeof(uint32_t);
 
-	for (auto & joint : skeleton.skeleton)
+	for (const auto&  joint : skeleton.skeleton)
 	{
 		size += sizeof(uint32_t) * 2 + joint.name.size() + sizeof(float4x4)*2;
 	}
@@ -130,7 +130,7 @@ bool SkeletonImporter::SaveBinary(const Skeleton& skeleton) const
 	memcpy(cursor, &num_bones, bytes);
 	cursor += bytes; // Store bones
 	
-	for (auto & joint : skeleton.skeleton)
+	for (const auto&  joint : skeleton.skeleton)
 	{
 
 		uint32_t name_size = joint.name.size();

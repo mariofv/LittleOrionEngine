@@ -129,7 +129,7 @@ ComponentLight* ModuleLight::CreateComponentLight()
 
 void ModuleLight::RemoveComponentLight(ComponentLight* light_to_remove)
 {
-	auto it = std::find(lights.begin(), lights.end(), light_to_remove);
+	auto& it = std::find(lights.begin(), lights.end(), light_to_remove);
 	if (it != lights.end())
 	{
 		delete *it;

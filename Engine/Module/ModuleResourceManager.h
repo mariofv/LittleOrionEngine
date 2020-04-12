@@ -65,7 +65,7 @@ public:
 	std::shared_ptr<T> Reload(const T * resource) const
 	{
 		std::string uid = resource->exported_file;
-		auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [resource](const auto & loaded_resource) { return loaded_resource.get() == resource; });
+		auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [resource](const const auto&  loaded_resource) { return loaded_resource.get() == resource; });
 		resource_cache.erase(it);
 		return Load<T>(uid);
 	}
