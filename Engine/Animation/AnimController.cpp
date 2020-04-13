@@ -99,6 +99,10 @@ void AnimController::SetActiveAnimation()
 void AnimController::StartNextState(const std::string& trigger)
 {
 	active_transition = state_machine->GetTransition(trigger, active_state->name_hash);
+	if (!active_transition)
+	{
+		return;
+	}
 	std::shared_ptr<State> next_state;
 	if (active_transition)
 	{

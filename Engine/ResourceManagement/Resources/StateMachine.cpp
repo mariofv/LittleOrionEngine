@@ -87,6 +87,7 @@ std::shared_ptr<Transition> StateMachine::GetTransition(const std::string & trig
 			return transition;
 		}
 	}
+	return nullptr;
 }
 
 
