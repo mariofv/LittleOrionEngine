@@ -149,6 +149,8 @@ private:
 	std::unique_ptr<Timer> thread_timer = std::make_unique<Timer>();
 
 	mutable std::vector<std::shared_ptr<Resource>> resource_cache;
+
+	friend class MaterialImporter;
 };
 
 #endif // _MODULERESOURCEMANAGER_H_

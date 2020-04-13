@@ -110,7 +110,7 @@ uint32_t MaterialImporter::ImportMaterialTexture(const std::string& texture_desc
 	if (App->filesystem->Exists(texture_described_path))
 	{
 		APP_LOG_SUCCESS("Material loaded correctly from %s.", texture_described_path.c_str());
-		return App->resources->Import(*App->filesystem->GetPath(texture_described_path));
+		return App->resources->InternalImport(*App->filesystem->GetPath(texture_described_path));
 	}
 
 	std::string texture_file_name = texture_described_path.substr(texture_described_path.find_last_of('/') + 1, -1);;
@@ -119,7 +119,7 @@ uint32_t MaterialImporter::ImportMaterialTexture(const std::string& texture_desc
 	if (App->filesystem->Exists(textures_path))
 	{
 		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
-		return App->resources->Import(*App->filesystem->GetPath(textures_path));
+		return App->resources->InternalImport(*App->filesystem->GetPath(textures_path));
 	}
 
 	textures_path = std::string(TEXTURES_PATH) + "/" +  texture_file_name;
@@ -127,7 +127,7 @@ uint32_t MaterialImporter::ImportMaterialTexture(const std::string& texture_desc
 	if (App->filesystem->Exists(textures_path))
 	{
 		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
-		return App->resources->Import(*App->filesystem->GetPath(textures_path));
+		return App->resources->InternalImport(*App->filesystem->GetPath(textures_path));
 	}
 
 	return 0;

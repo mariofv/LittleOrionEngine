@@ -155,20 +155,13 @@ void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path)
 
 uint32_t ModuleResourceManager::Import(Path& file_path)
 {
-	while (thread_comunication.thread_importing_hash == std::hash<std::string>{}(file_path.GetFullPath()))
-	{
-		Sleep(1000);
-	}
-	thread_comunication.main_importing_hash = std::hash<std::string>{}(file_path.GetFullPath());
+	std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
 	uint32_t imported_resource_uuid = InternalImport(file_path);
-	thread_comunication.main_importing_hash = 0;
 	return imported_resource_uuid;
 }
 
 uint32_t ModuleResourceManager::InternalImport(Path& file_path) const
 {
-	//std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
-
 	Metafile* asset_metafile = nullptr;
 
 	if (Importer::ImportRequired(file_path))
@@ -222,7 +215,7 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path) const
 uint32_t ModuleResourceManager::CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name)
 {
 	Path* created_asset_file_path = creation_folder_path.Save(created_resource_name.c_str(), data);
-	return App->resources->Import(*created_asset_file_path);
+	return App->resources->InternalImport(*created_asset_file_path);
 }
 
 std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32_t uuid) const
