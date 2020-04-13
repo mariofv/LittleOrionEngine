@@ -63,7 +63,7 @@ void WorldManager::Update()
 
 	if(transition && (App->input->GetControllerButtonDown(ControllerCode::A) || App->input->GetKeyDown(KeyCode::Space)))
 	{
-		App->editor->OpenScene("Assets/Scenes/Develop/menuscene.scene");
+		App->editor->OpenScene("Library/menuscene.scene");
 	}
 
 }

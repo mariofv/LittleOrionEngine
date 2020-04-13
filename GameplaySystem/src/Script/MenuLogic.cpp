@@ -8,6 +8,7 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleUI.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
@@ -46,18 +47,26 @@ void MenuLogic::Start()
 void MenuLogic::Update()
 {
 
-	if(show_help && (App->input->GetKeyDown(KeyCode::BackSpace) || App->input->GetControllerButtonDown(ControllerCode::B)))
+	if(show_help && ComfirmButtonPressed())
 	{
-		help->SetEnabled(false);
+		help_controller->SetEnabled(false);
+		help_keyboard->SetEnabled(false);
 		show_help = false;
 		return;
 	}
 
-	if (show_credits && (App->input->GetKeyDown(KeyCode::BackSpace) || App->input->GetControllerButtonDown(ControllerCode::B)))
+	if (show_credits && ComfirmButtonPressed())
 	{
 		credits->SetEnabled(false);
 		show_credits = false;
 		return;
+	}
+
+	if(show_help && (App->input->GetKeyDown(KeyCode::RightArrow) || App->input->GetControllerButtonDown(ControllerCode::RightDpad) || App->input->GetKeyDown(KeyCode::LeftArrow) || App->input->GetControllerButtonDown(ControllerCode::LeftDpad)))
+	{
+		help_controller->SetEnabled(!help_controller->IsEnabled());
+		help_keyboard->SetEnabled(!help_keyboard->IsEnabled());
+		App->ui->SortComponentsUI();
 	}
 
 	if(show_credits || show_help)
@@ -65,7 +74,7 @@ void MenuLogic::Update()
 		return;
 	}
 
-	if (App->input->GetKeyDown(KeyCode::Space) || App->input->GetControllerButtonDown(ControllerCode::A))
+	if (ComfirmButtonPressed())
 	{
 		//Change scene
 		switch (current)
@@ -75,7 +84,8 @@ void MenuLogic::Update()
 			break;
 		case 1:
 			//Active help
-			help->SetEnabled(true);
+			help_controller->SetEnabled(true);
+			help_keyboard->SetEnabled(false);
 			show_help = true;
 			return;
 		case 2:
@@ -137,8 +147,11 @@ void MenuLogic::InitPublicGameObjects()
 	public_gameobjects.push_back(&button3);
 	variable_names.push_back(GET_VARIABLE_NAME(button3));
 
-	public_gameobjects.push_back(&help);
-	variable_names.push_back(GET_VARIABLE_NAME(help));	
+	public_gameobjects.push_back(&help_controller);
+	variable_names.push_back(GET_VARIABLE_NAME(help_controller));
+
+	public_gameobjects.push_back(&help_keyboard);
+	variable_names.push_back(GET_VARIABLE_NAME(help_keyboard));
 	
 	public_gameobjects.push_back(&credits);
 	variable_names.push_back(GET_VARIABLE_NAME(credits));
@@ -150,6 +163,11 @@ void MenuLogic::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
+bool MenuLogic::ComfirmButtonPressed()
+{
+	return (App->input->GetKeyDown(KeyCode::Space) || App->input->GetControllerButtonDown(ControllerCode::A));
+}
+
 //Use this for linking GO AND VARIABLES automatically if you need to save variables 
 // void MenuLogic::Save(Config& config) const
 // {

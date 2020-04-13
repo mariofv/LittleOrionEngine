@@ -3,13 +3,13 @@
     "PrefabsComponents": [],
     "GameObjects": [
         {
-            "UUID": 2267775313,
+            "UUID": 480277961,
             "ParentUUID": 0,
             "Name": "Canvas",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3396734690,
+                "UUID": 596497106,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -28,7 +28,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 2053444388,
+                "UUID": 3470790054,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -49,7 +49,7 @@
             },
             "Components": [
                 {
-                    "UUID": 3871397266,
+                    "UUID": 1354099001,
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 0,
@@ -58,79 +58,19 @@
                         1.0,
                         1.0,
                         1.0
-                    ]
-                }
-            ]
-        },
-        {
-            "UUID": 3428600631,
-            "ParentUUID": 2267775313,
-            "Name": "Credits",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 457123910,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2513429401,
-                "Active": true,
-                "Top": -215.0,
-                "Right": 335.0,
-                "Bottom": 215.0,
-                "Left": -335.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 670.0,
-                "Height": 431.0
-            },
-            "Components": [
-                {
-                    "UUID": 3603466807,
-                    "Active": false,
-                    "ComponentType": 5,
-                    "UIType": 1,
-                    "Texture": 143,
-                    "Color": [
-                        1.0,
-                        1.0,
-                        1.0
                     ],
-                    "MetadataPath": "Library/Metadata/39/3920774402"
+                    "Layer": 0
                 }
             ]
         },
         {
-            "UUID": 3584877855,
-            "ParentUUID": 2267775313,
+            "UUID": 1563002892,
+            "ParentUUID": 480277961,
             "Name": "Controller",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1754232865,
+                "UUID": 3641937913,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -149,12 +89,12 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 4239791279,
+                "UUID": 1110859441,
                 "Active": true,
-                "Top": -249.0,
-                "Right": 386.0,
-                "Bottom": 249.0,
-                "Left": -386.0,
+                "Top": -302.0,
+                "Right": 507.0,
+                "Bottom": 302.0,
+                "Left": -507.0,
                 "Rotation": 0.0,
                 "Scale": [
                     1.0,
@@ -165,33 +105,34 @@
                     0.0,
                     0.0
                 ],
-                "Width": 772.0,
-                "Height": 499.0
+                "Width": 1014.0,
+                "Height": 604.0
             },
             "Components": [
                 {
-                    "UUID": 880538936,
+                    "UUID": 3837373266,
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 142,
+                    "Texture": 14,
                     "Color": [
                         1.0,
                         1.0,
                         1.0
                     ],
-                    "MetadataPath": "Library/Metadata/16/1660468096"
+                    "Layer": 3,
+                    "MetadataPath": "Library/Metadata/14/1462599102"
                 }
             ]
         },
         {
-            "UUID": 1099701036,
-            "ParentUUID": 2267775313,
-            "Name": "Cursor",
+            "UUID": 4124390082,
+            "ParentUUID": 480277961,
+            "Name": "Credits",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 18739451,
+                "UUID": 93287833,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -210,66 +151,50 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 3123356978,
+                "UUID": 4091241354,
                 "Active": true,
-                "Top": 164.0,
-                "Right": -182.0,
-                "Bottom": 203.0,
-                "Left": -253.0,
+                "Top": -302.0,
+                "Right": 514.0,
+                "Bottom": 302.0,
+                "Left": -514.0,
                 "Rotation": 0.0,
                 "Scale": [
                     1.0,
                     1.0
                 ],
                 "Position": [
-                    -218.0,
-                    184.0,
-                    1.0
+                    0.0,
+                    0.0,
+                    -3.0
                 ],
-                "Width": 71.0,
-                "Height": 39.0
+                "Width": 1028.0,
+                "Height": 605.0
             },
             "Components": [
                 {
-                    "UUID": 3013321486,
-                    "Active": true,
+                    "UUID": 2859836964,
+                    "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 2,
+                    "Texture": 13,
                     "Color": [
-                        0.2312866896390915,
-                        0.022714296355843545,
-                        0.255972683429718
-                    ]
-                },
-                {
-                    "UUID": 1377674841,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "MenuLogic",
-                    "Name0": "Button1",
-                    "Button1": 1302990562,
-                    "Name1": "Button2",
-                    "Button2": 358194803,
-                    "Name2": "Button3",
-                    "Button3": 1127091039,
-                    "Name3": "Button4",
-                    "Button4": 72724341,
-                    "Name4": "Controller",
-                    "Controller": 3584877855,
-                    "Name5": "Credits",
-                    "Credits": 3428600631
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Layer": 3,
+                    "MetadataPath": "Library/Metadata/13/1337888085"
                 }
             ]
         },
         {
-            "UUID": 72724341,
-            "ParentUUID": 2267775313,
+            "UUID": 3020343320,
+            "ParentUUID": 480277961,
             "Name": "Button4",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 885537512,
+                "UUID": 3284371242,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -288,49 +213,50 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 2189585434,
+                "UUID": 1584110166,
                 "Active": true,
-                "Top": -276.0,
-                "Right": 147.0,
-                "Bottom": -176.0,
-                "Left": -147.0,
+                "Top": -250.0,
+                "Right": -217.0,
+                "Bottom": -190.0,
+                "Left": -407.0,
                 "Rotation": 0.0,
                 "Scale": [
                     1.0,
                     1.0
                 ],
                 "Position": [
-                    0.0,
-                    -226.0,
+                    -312.0,
+                    -220.0,
                     1.0
                 ],
-                "Width": 294.0,
-                "Height": 100.0
+                "Width": 190.0,
+                "Height": 60.0
             },
             "Components": [
                 {
-                    "UUID": 423213580,
+                    "UUID": 1876003459,
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 3,
-                    "Texture": 141,
+                    "Texture": 12,
                     "Color": [
                         1.0,
                         1.0,
                         1.0
                     ],
-                    "MetadataPath": "Library/Metadata/16/1630890112"
+                    "Layer": 1,
+                    "MetadataPath": "Library/Metadata/65/651652363"
                 }
             ]
         },
         {
-            "UUID": 1127091039,
-            "ParentUUID": 2267775313,
+            "UUID": 3518593437,
+            "ParentUUID": 480277961,
             "Name": "Button3",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 2691299382,
+                "UUID": 1947534490,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -349,171 +275,50 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 3087304203,
+                "UUID": 3851451270,
                 "Active": true,
-                "Top": -147.0,
-                "Right": 147.0,
-                "Bottom": -47.0,
-                "Left": -147.0,
+                "Top": -180.0,
+                "Right": -217.0,
+                "Bottom": -120.0,
+                "Left": -407.0,
                 "Rotation": 0.0,
                 "Scale": [
                     1.0,
                     1.0
                 ],
                 "Position": [
-                    0.0,
-                    -97.0,
+                    -312.0,
+                    -150.0,
                     1.0
                 ],
-                "Width": 294.0,
-                "Height": 100.0
+                "Width": 190.0,
+                "Height": 60.0
             },
             "Components": [
                 {
-                    "UUID": 4051075092,
+                    "UUID": 1318514606,
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 3,
-                    "Texture": 140,
+                    "Texture": 11,
                     "Color": [
                         1.0,
                         1.0,
                         1.0
                     ],
-                    "MetadataPath": "Library/Metadata/20/2060628993"
+                    "Layer": 1,
+                    "MetadataPath": "Library/Metadata/38/3865092846"
                 }
             ]
         },
         {
-            "UUID": 358194803,
-            "ParentUUID": 2267775313,
-            "Name": "Button2",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3549299769,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 126620387,
-                "Active": true,
-                "Top": -9.0,
-                "Right": 147.0,
-                "Bottom": 91.0,
-                "Left": -147.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    41.0,
-                    1.0
-                ],
-                "Width": 294.0,
-                "Height": 100.0
-            },
-            "Components": [
-                {
-                    "UUID": 2530945094,
-                    "Active": true,
-                    "ComponentType": 5,
-                    "UIType": 3,
-                    "Texture": 139,
-                    "Color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "MetadataPath": "Library/Metadata/16/1633733818"
-                }
-            ]
-        },
-        {
-            "UUID": 1302990562,
-            "ParentUUID": 2267775313,
-            "Name": "Button1",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 586591700,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2818454316,
-                "Active": true,
-                "Top": 136.0,
-                "Right": 147.0,
-                "Bottom": 236.0,
-                "Left": -147.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    186.0,
-                    1.0
-                ],
-                "Width": 294.0,
-                "Height": 100.0
-            },
-            "Components": [
-                {
-                    "UUID": 3916631209,
-                    "Active": true,
-                    "ComponentType": 5,
-                    "UIType": 3,
-                    "Texture": 138,
-                    "Color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "MetadataPath": "Library/Metadata/66/665586347"
-                }
-            ]
-        },
-        {
-            "UUID": 188347430,
-            "ParentUUID": 2267775313,
+            "UUID": 3831315673,
+            "ParentUUID": 480277961,
             "Name": "Background",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3783720932,
+                "UUID": 1760542484,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -532,12 +337,12 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 2382257456,
+                "UUID": 362153019,
                 "Active": true,
-                "Top": -348.0,
-                "Right": 547.0,
-                "Bottom": 348.0,
-                "Left": -547.0,
+                "Top": -301.0,
+                "Right": 512.0,
+                "Bottom": 301.0,
+                "Left": -512.0,
                 "Rotation": 0.0,
                 "Scale": [
                     1.0,
@@ -548,22 +353,227 @@
                     0.0,
                     5.0
                 ],
-                "Width": 1094.0,
-                "Height": 697.0
+                "Width": 1025.0,
+                "Height": 603.0
             },
             "Components": [
                 {
-                    "UUID": 3936907413,
+                    "UUID": 19846345,
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 1,
+                    "Texture": 10,
+                    "Color": [
+                        1.0,
+                        0.9999899864196777,
+                        0.9999980330467224
+                    ],
+                    "Layer": -1,
+                    "MetadataPath": "Library/Metadata/46/462805476"
+                }
+            ]
+        },
+        {
+            "UUID": 3401573957,
+            "ParentUUID": 480277961,
+            "Name": "Button1",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1023349635,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3156877589,
+                "Active": true,
+                "Top": 15.0,
+                "Right": -217.0,
+                "Bottom": 75.0,
+                "Left": -407.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    -312.0,
+                    45.0,
+                    1.0
+                ],
+                "Width": 190.0,
+                "Height": 60.0
+            },
+            "Components": [
+                {
+                    "UUID": 3133770535,
+                    "Active": true,
+                    "ComponentType": 5,
+                    "UIType": 3,
                     "Texture": 9,
+                    "Color": [
+                        1.0,
+                        0.9999899864196777,
+                        0.9999899864196777
+                    ],
+                    "Layer": 1,
+                    "MetadataPath": "Library/Metadata/45/453059737"
+                }
+            ]
+        },
+        {
+            "UUID": 1642606455,
+            "ParentUUID": 480277961,
+            "Name": "Cursor",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2516244371,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3951659019,
+                "Active": true,
+                "Top": 14.0,
+                "Right": -433.0,
+                "Bottom": 74.0,
+                "Left": -463.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    -448.0,
+                    44.0,
+                    0.0
+                ],
+                "Width": 30.0,
+                "Height": 60.0
+            },
+            "Components": [
+                {
+                    "UUID": 2028161188,
+                    "Active": true,
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 8,
                     "Color": [
                         1.0,
                         1.0,
                         1.0
                     ],
-                    "MetadataPath": "Library/Metadata/88/886403746"
+                    "Layer": 1,
+                    "MetadataPath": "Library/Metadata/30/3043102979"
+                },
+                {
+                    "UUID": 505619904,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "MenuLogic",
+                    "Name0": "Button1",
+                    "Button1": 3401573957,
+                    "Name1": "Button2",
+                    "Button2": 63409665,
+                    "Name2": "Button3",
+                    "Button3": 3518593437,
+                    "Name3": "Button4",
+                    "Button4": 3020343320,
+                    "Name4": "Controller",
+                    "Controller": 1563002892,
+                    "Name5": "Credits",
+                    "Credits": 4124390082
+                }
+            ]
+        },
+        {
+            "UUID": 63409665,
+            "ParentUUID": 480277961,
+            "Name": "Button2",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 4002487477,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2178166325,
+                "Active": true,
+                "Top": -110.0,
+                "Right": -217.0,
+                "Bottom": -50.0,
+                "Left": -407.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    -312.0,
+                    -80.0,
+                    1.0
+                ],
+                "Width": 190.0,
+                "Height": 60.0
+            },
+            "Components": [
+                {
+                    "UUID": 2987084652,
+                    "Active": true,
+                    "ComponentType": 5,
+                    "UIType": 3,
+                    "Texture": 6,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Layer": 1,
+                    "MetadataPath": "Library/Metadata/42/4220481160"
                 }
             ]
         },
@@ -623,9 +633,9 @@
                     "VerticalFOV": 0.7853981852531433,
                     "ClearMode": 0,
                     "ClearColor": [
-                        0.0,
-                        0.0,
-                        0.0,
+                        1.0,
+                        0.9999899864196777,
+                        0.9999899864196777,
                         1.0
                     ],
                     "Depth": 0

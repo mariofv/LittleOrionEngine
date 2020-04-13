@@ -108,7 +108,7 @@ enum class Fonts
 # define OPENGL_MINOR_VERSION 0
 
 #define FULLSCREEN false
-#define RESIZABLE true
+#define RESIZABLE false
 #define BORDERED true
 
 #define VSYNC true

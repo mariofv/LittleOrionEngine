@@ -34,7 +34,7 @@ public:
 public:
 	float3 color = float3::one;
 	UIType ui_type;
-	int layer = 0; public:
+	int layer = 0;
 	std::shared_ptr<Texture> texture_to_render;
 	std::string metadata_path;
 	
