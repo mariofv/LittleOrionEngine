@@ -4,6 +4,10 @@
 #include "Module.h"
 #include "bullet3-2.89/src/btBulletDynamicsCommon.h"
 #include "bullet3-2.89/src/LinearMath/btIDebugDraw.h"
+#include "Helper/Timer.h"
+#include "Math/float3.h"
+
+#define BT_USE_FLOAT_PRECISION
 
 class DebugDrawer : public btIDebugDraw
 {
@@ -41,6 +45,14 @@ public:
 	btDiscreteDynamicsWorld* world = nullptr;
 
 	bool showPhysics= false;
+	bool invertedGravity = false;
+	Timer * physics_timer = new Timer();
+	float ms = 0;
+	std::vector<float> ms_info;
+	math::float3 gravity = float3(0.0f, -1.0f, 0.0f);
+	
+	void setGravity(float3 newGgravity);
+
 
 private:
 

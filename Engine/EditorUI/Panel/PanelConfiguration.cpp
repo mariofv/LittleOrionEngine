@@ -7,6 +7,7 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
 #include "PanelConfiguration.h"
+#include "Module/ModulePhysics.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
@@ -39,6 +40,9 @@ void PanelConfiguration::Render()
 
 		ImGui::Spacing();
 		ShowInputOptions();
+
+		ImGui::Spacing();
+		ShowPhysicsOptions();
 	}
 	ImGui::End();
 }
@@ -326,6 +330,7 @@ void PanelConfiguration::ShowTimeOptions()
 		std::vector<float> frame_data = App->engine_log->getFPSData();
 
 		ImGui::PlotLines("Miliseconds", &ms_data[0], ms_data.size(), 0, nullptr, 0, 80);
+
 		ImGui::PlotLines("Frame Rate", &frame_data[0], frame_data.size(), 20, nullptr, 0, 80);
 	}
 
@@ -667,4 +672,22 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::TreePop();
 		}
 	}
+}
+
+void PanelConfiguration::ShowPhysicsOptions()
+{
+	ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAR));
+	if (ImGui::CollapsingHeader(ICON_FA_WINDOW_MAXIMIZE " Physics")) {
+		
+		if (ImGui::SliderFloat3("Gravity", &App->physics->gravity.x, -10, 10 ))
+		{
+			App->physics->setGravity(App->physics->gravity);
+		}
+		ImGui::Checkbox("Physics draw", &App->physics->showPhysics);
+		
+		
+	}
+	ImGui::PopFont();
+	
+
 }

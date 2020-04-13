@@ -30,7 +30,6 @@ void PanelDebug::Render()
 		ImGui::Checkbox("OctTree", &App->debug->show_octtree);
 		ImGui::Checkbox("AABBTree", &App->debug->show_aabbtree);
 		ImGui::Checkbox("Show Navmesh", &App->debug->show_navmesh);
-		ImGui::Checkbox("Physics draw", &App->physics->showPhysics);
 		ImGui::Separator();
 
 		ImGui::Checkbox("Scene window culling", &App->debug->culling_scene_mode);

@@ -6,9 +6,11 @@
 #include "EditorUI/DebugDraw.h"
 
 
+
 ModulePhysics::ModulePhysics()
 {
 	subSteps = 1;
+	
 }
 
 ModulePhysics::~ModulePhysics()
@@ -17,12 +19,15 @@ ModulePhysics::~ModulePhysics()
 
 bool ModulePhysics::Init()
 {
+	
+	
 	collision_conf = new btDefaultCollisionConfiguration();
 	dispatcher = new btCollisionDispatcher(collision_conf);
 	broad_phase = new btDbvtBroadphase();
 	solver = new btSequentialImpulseConstraintSolver();
 	world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_conf);
-	world->setGravity(btVector3(0.0f, -1.0f, 0.0f));
+	world->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
+	
 	btVector3 aux(1, 1, 1);
 	AddBody(aux);
 
@@ -33,17 +38,25 @@ bool ModulePhysics::Init()
 
 update_status ModulePhysics::PreUpdate()
 {
-	//update the world
-	world->stepSimulation(App->time->delta_time, subSteps);
 	
 	return update_status::UPDATE_CONTINUE;
 }
 
 update_status ModulePhysics::Update()
 {
+	//physics_timer->Start();
+	//update the world
+	world->stepSimulation(App->time->delta_time, subSteps);
 	if (showPhysics) {
 		world->debugDrawWorld();
 	}
+
+	//physics_timer->Stop();
+	//ms = physics_timer->Read();
+	//ms_info.push_back(ms);
+	//ImGui::PlotLines("Miliseconds", &ms_info[0], ms_info.size(), 0, nullptr, 0, 80);
+	
+	
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -82,6 +95,11 @@ btRigidBody* ModulePhysics::AddBody(btVector3 box_size)
 	
 	
 	return body;
+}
+
+void ModulePhysics::setGravity(float3 newGravity)
+{
+	world->setGravity(btVector3(newGravity.x, newGravity.y, newGravity.z));
 }
 
 void DebugDrawer::drawLine(const btVector3 & from, const btVector3 & to, const btVector3 & color)

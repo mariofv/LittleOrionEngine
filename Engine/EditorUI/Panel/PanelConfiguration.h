@@ -22,6 +22,7 @@ private:
 	void ShowRenderOptions();
 	void ShowTimeOptions();
 	void ShowInputOptions();
+	void ShowPhysicsOptions();
 
 	std::vector<const char*> game_inputs_strings
 	{
