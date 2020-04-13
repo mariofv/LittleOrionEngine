@@ -58,7 +58,7 @@ void PanelPopupMeshSelector::Render()
 		int current_line = 0;
 		int current_file_in_line = 0;
 
-		for (auto & file : mesh_files)
+		for (const auto& file : mesh_files)
 		{
 			ImGui::PushID(current_line * files_per_line + current_file_in_line);
 			ShowMeshIcon(file.get());

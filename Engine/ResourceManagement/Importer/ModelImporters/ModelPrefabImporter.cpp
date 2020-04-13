@@ -35,7 +35,7 @@ void ModelPrefabImporter::ImportModelPrefab(const Config& model, const File& imp
 		LoadNode(model_root_node, game_objects_config[i], already_loaded_skeleton);
 	}
 	size_t gameobject_index = 1;
-	for (auto & gameobject : gameobjects)
+	for (const auto&  gameobject : gameobjects)
 	{
 		gameobject->UUID = real_uuid + gameobject_index++;
 		gameobject->original_UUID = gameobject->UUID;
@@ -43,7 +43,7 @@ void ModelPrefabImporter::ImportModelPrefab(const Config& model, const File& imp
 
 	std::vector<Config> animation_config;
 	model.GetChildrenConfig("Animations", animation_config);
-	for (auto animation : animation_config)
+	for (const auto& animation : animation_config)
 	{
 		std::string animation_uid;
 		animation.GetString("Animation", animation_uid, "");

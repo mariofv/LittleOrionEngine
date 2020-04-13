@@ -5,7 +5,6 @@
 
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleUI.h"
-
 ComponentText::ComponentText() : ComponentUI(ComponentUI::UIType::TEXT)
 {
 	InitData();
@@ -19,11 +18,6 @@ ComponentText::ComponentText(GameObject * owner) : ComponentUI(owner, ComponentU
 		owner->transform_2d.SetPosition(&float3(0.0F, 0.0F, -1.0F));
 		owner->transform_2d.SetSize(189, 26);
 	}
-}
-
-ComponentText::~ComponentText()
-{
-	ComponentUI::~ComponentUI();
 }
 
 void ComponentText::InitData()

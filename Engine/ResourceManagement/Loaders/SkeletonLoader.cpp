@@ -31,7 +31,7 @@ std::shared_ptr<Skeleton> SkeletonLoader::Load(const std::string& file_path)
 
 	bones.resize(num_bones);
 	cursor += bytes;
-	for (auto & joint : bones)
+	for (auto& joint : bones)
 	{
 
 		uint32_t name_size;

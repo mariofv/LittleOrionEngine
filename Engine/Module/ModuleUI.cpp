@@ -16,6 +16,7 @@
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 
+#include "Brofiler/Brofiler.h"
 #include <algorithm>
 #include <SDL/SDL.h>
 
@@ -42,6 +43,7 @@ bool ModuleUI::CleanUp()
 
 void ModuleUI::Render(const ComponentCamera* camera)
 {
+	BROFILER_CATEGORY("UI: Module Render", Profiler::Color::LightSeaGreen);
 #if GAME
 	window_width = App->window->GetWidth();
 	window_height = App->window->GetHeight();
@@ -60,7 +62,7 @@ void ModuleUI::Render(const ComponentCamera* camera)
 
 void  ModuleUI::RenderUIGameObject(GameObject* parent, float4x4* projection)
 {
-	for (auto ui_element : ordered_ui)
+	for (auto& ui_element : ordered_ui)
 	{
 		if (ui_element && ui_element->ui_type != ComponentUI::UIType::CANVAS)
 		{
@@ -104,7 +106,7 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* o
 
 void ModuleUI::RemoveComponentUI(ComponentUI* ui_to_remove)
 {
-	auto it = std::find(ui_elements.begin(), ui_elements.end(), ui_to_remove);
+	const auto it = std::find(ui_elements.begin(), ui_elements.end(), ui_to_remove);
 	if (*it == main_canvas)
 	{
 		main_canvas = nullptr;
@@ -120,6 +122,7 @@ void ModuleUI::RemoveComponentUI(ComponentUI* ui_to_remove)
 
 void ModuleUI::InitGlyph()
 {
+	BROFILER_CATEGORY("UI: Init Glyph", Profiler::Color::HoneyDew);
 	// All functions return a value different than 0 whenever an error occurred
 	if (FT_Init_FreeType(&ft))
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;

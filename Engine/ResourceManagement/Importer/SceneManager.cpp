@@ -14,6 +14,7 @@
 
 #include <stack>
 #include <unordered_map>
+#include "Brofiler/Brofiler.h"
 
 //THIS CLASS INCLUDE IMPORT AND LOAD FOR SCENE UNTIL SCENE IS CHANGE TO BE A RESOURCE
 void SceneManager::Save(const std::string &path,  GameObject * gameobject_to_save) const
@@ -75,6 +76,7 @@ void SceneManager::Save(const std::string &path,  GameObject * gameobject_to_sav
 
 void SceneManager::Load(const std::string &path) const
 {
+	BROFILER_CATEGORY("Scene: Load", Profiler::Color::NavajoWhite);
 	size_t readed_bytes;
 	char* scene_file_data = App->filesystem->Load(path.c_str(), readed_bytes);
 	std::string serialized_scene_string = scene_file_data;
@@ -116,7 +118,7 @@ void SceneManager::Load(const std::string &path) const
 		}
 		if (prefab_parents.find(created_game_object->UUID) != prefab_parents.end())
 		{
-			for (auto & prefab_child : prefab_parents[created_game_object->UUID])
+			for (const auto&  prefab_child : prefab_parents[created_game_object->UUID])
 			{
 				ComponentTransform previous_transform = prefab_child->transform;
 				prefab_child->SetParent(created_game_object);
@@ -153,7 +155,7 @@ void SceneManager::SavePrefabUUIDS(std::vector<Config> & original_UUIDS, GameObj
 	config.AddUInt(gameobject_to_save->UUID, "UUID");
 	config.AddUInt(gameobject_to_save->original_UUID, "OriginalUUID");
 	original_UUIDS.push_back(config);
-	for (auto & child : gameobject_to_save->children)
+	for (const auto&  child : gameobject_to_save->children)
 	{
 		SavePrefabUUIDS(original_UUIDS, child);
 	}
@@ -161,6 +163,7 @@ void SceneManager::SavePrefabUUIDS(std::vector<Config> & original_UUIDS, GameObj
 }
 GameObject * SceneManager::LoadPrefab(const Config & config) const
 {
+	BROFILER_CATEGORY("Scene: Load Prefab", Profiler::Color::Snow);
 	std::string prefab_path;
 	config.GetString("Prefab", prefab_path, "");
 
@@ -168,7 +171,7 @@ GameObject * SceneManager::LoadPrefab(const Config & config) const
 	std::unordered_map<int64_t, int64_t> UUIDS_pairs;
 	std::vector<Config> original_UUIDS;
 	config.GetChildrenConfig("UUIDS", original_UUIDS);
-	for (auto & child_UUIDS : original_UUIDS)
+	for (const auto&  child_UUIDS : original_UUIDS)
 	{
 		int64_t UUID = child_UUIDS.GetUInt("UUID", 0);
 		int64_t original = child_UUIDS.GetUInt("OriginalUUID", 0);
@@ -199,7 +202,7 @@ bool SceneManager::SaveModifiedPrefabComponents(Config & config, GameObject * ga
 		modified = true;
 	}
 	std::vector<Config> gameobject_components_config;
-	for (auto & component : gameobject_to_save->components)
+	for (const auto&  component : gameobject_to_save->components)
 	{
 		if (component->modified_by_user || component->added_by_user)
 		{
@@ -219,7 +222,7 @@ bool SceneManager::SaveModifiedPrefabComponents(Config & config, GameObject * ga
 
 void SceneManager::LoadPrefabModifiedComponents(const Config & config) const
 {
-
+	BROFILER_CATEGORY("Scene: Load Modiefied", Profiler::Color::Aquamarine);
 	GameObject * prefab_child = App->scene->GetGameObject(config.GetUInt("UUID", 0));
 	if (prefab_child == nullptr)
 	{
@@ -235,7 +238,7 @@ void SceneManager::LoadPrefabModifiedComponents(const Config & config) const
 
 	std::vector<Config> prefab_components_config;
 	config.GetChildrenConfig("Components", prefab_components_config);
-	for (auto & component_config : prefab_components_config)
+	for (const auto& component_config : prefab_components_config)
 	{
 		uint64_t component_type_uint = component_config.GetUInt("ComponentType", 0);
 		assert(component_type_uint != 0);

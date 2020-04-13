@@ -87,7 +87,7 @@ update_status ModuleResourceManager::PreUpdate()
 
 void ModuleResourceManager::ImportAllFilesInDirectory(const File& file, bool force)
  {
-	 for (auto & child : file.children)
+	 for (const auto& child : file.children)
 	 {
 		 if (thread_comunication.stop_thread)
 		 {
@@ -147,7 +147,7 @@ std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(const 
 		return nullptr;
 	}
 	//Check if the resource is already loaded
-	auto it = std::find_if(resource_cache.begin(), resource_cache.end(), [&uid](const std::shared_ptr<Resource> & resource)
+	auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [&uid](const std::shared_ptr<Resource> & resource)
 	{
 		return resource->exported_file == uid;
 	});
@@ -192,9 +192,11 @@ uint32_t ModuleResourceManager::LoadCubemap(const std::vector<std::string>& face
 
 void ModuleResourceManager::CleanResourceCache()
 {
-	//auto it = std::remove_if(resource_cache.begin(), resource_cache.end(), [](const std::shared_ptr<Resource> & resource) {
-	//	return resource.use_count() == 1;
-	//});
-	//resource_cache.erase(it, resource_cache.end());
-	resource_cache.clear();
+	const auto it = std::remove_if(resource_cache.begin(), resource_cache.end(), [](const std::shared_ptr<Resource> & resource) {
+		return resource.use_count() == 1;
+	});
+	if (it != resource_cache.end())
+	{
+		resource_cache.erase(it, resource_cache.end());
+	}
 }

@@ -12,8 +12,8 @@ void AnimController::Init()
 	animation_time = (animation->frames/animation->frames_per_second )* 1000;
 	for (size_t i = 0; i < animation->keyframes[0].channels.size(); ++i)
 	{
-		auto & channel = animation->keyframes[0].channels[i];
-		auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [channel](const Skeleton::Joint & joint)
+		const auto&  channel = animation->keyframes[0].channels[i];
+		const auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [channel](const Skeleton::Joint & joint)
 		{
 			return joint.name == channel.name;
 		});
@@ -23,7 +23,7 @@ void AnimController::Init()
 			while (joint.parent_index < skeleton->skeleton.size())
 			{
 				joint = skeleton->skeleton[joint.parent_index];
-				auto it_channel = std::find_if(animation->keyframes[0].channels.begin(), animation->keyframes[0].channels.end(), [&joint](const Animation::Channel & parent_channel)
+				const auto it_channel = std::find_if(animation->keyframes[0].channels.begin(), animation->keyframes[0].channels.end(), [&joint](const Animation::Channel & parent_channel)
 				{
 					return joint.name == parent_channel.name;
 				});
@@ -82,7 +82,7 @@ void AnimController::UpdateChannelsGlobalTransformation()
 	int next_keyframe = (current_keyframe + 1) % (int)animation->frames;
 
 	size_t i = 0;
-	for (const auto & channel : animation->keyframes[current_keyframe].channels)
+	for (const const auto&  channel : animation->keyframes[current_keyframe].channels)
 	{
 		Animation::Channel & next_keyframe_channel = animation->keyframes[next_keyframe].channels[i];
 
@@ -94,10 +94,10 @@ void AnimController::UpdateChannelsGlobalTransformation()
 
 		for (int j = channel_hierarchy_cache[i].size() - 1; j >= 0; --j)
 		{
-			auto & channel_parent = channels[channel_hierarchy_cache[i][j]];
+			const auto&  channel_parent = channels[channel_hierarchy_cache[i][j]];
 			current_global_tranform = current_global_tranform * float4x4::FromTRS(channel_parent.translation, channel_parent.rotation, float3(1.0f, 1.0f, 1.0f));
 
-			auto & channel_parent_next_keyframe = netx_keyframe_channels[channel_hierarchy_cache[i][j]];
+			const auto&  channel_parent_next_keyframe = netx_keyframe_channels[channel_hierarchy_cache[i][j]];
 			next_global_tranform = next_global_tranform * float4x4::FromTRS(channel_parent_next_keyframe.translation, channel_parent_next_keyframe.rotation, float3(1.0f, 1.0f, 1.0f));
 		}
 		float4x4 channel_current_local_tranform = float4x4::FromTRS(channel.translation, channel.rotation, float3(1.0f, 1.0f, 1.0f));

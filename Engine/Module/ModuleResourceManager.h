@@ -65,7 +65,7 @@ public:
 	std::shared_ptr<T> Reload(const T * resource) const
 	{
 		std::string uid = resource->exported_file;
-		auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [resource](const auto & loaded_resource) { return loaded_resource.get() == resource; });
+		auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [resource](const const auto&  loaded_resource) { return loaded_resource.get() == resource; });
 		resource_cache.erase(it);
 		return Load<T>(uid);
 	}
@@ -94,7 +94,7 @@ public:
 	std::unique_ptr<ResourceDataBase> resource_DB = nullptr;
 
 private:
-	const size_t importer_interval_millis = 30000;
+	const size_t importer_interval_millis = 60*10*1000;
 	float last_imported_time = 0;
 	std::thread importing_thread;
 	std::unique_ptr<Timer> thread_timer = std::make_unique<Timer>();

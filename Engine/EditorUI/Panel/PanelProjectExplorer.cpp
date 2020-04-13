@@ -90,7 +90,7 @@ void PanelProjectExplorer::InitResourceExplorerDockspace()
 
 void PanelProjectExplorer::ShowFoldersHierarchy(const File & file)
 {
-	for (auto & child : file.children)
+	for (const auto& child : file.children)
 	{
 		if (child->file_type == FileType::DIRECTORY)
 		{
@@ -133,7 +133,7 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 	int current_line = 0;
 	int current_file_in_line = 0;
 
-	for (auto & file : selected_folder->children)
+	for (const auto& file : selected_folder->children)
 	{
 
 		ImGui::PushID(current_line * files_per_line + current_file_in_line);

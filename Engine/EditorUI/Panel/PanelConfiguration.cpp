@@ -458,7 +458,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Separator();
 
 			ImGui::Text("Keys:");
-			for(auto key : string_keys)
+			for(const auto key : string_keys)
 			{
 				ImGui::Text(game_inputs_strings[key]);
 			}
@@ -510,7 +510,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Separator();
 
 			ImGui::Text("Mouse:");
-			for (auto mouse_key : mouse_keys)
+			for (const auto mouse_key : mouse_keys)
 			{
 				ImGui::Text(mouse_keys_string[(int)mouse_key]);
 			}
@@ -550,7 +550,7 @@ void PanelConfiguration::ShowInputOptions()
 
 
 			ImGui::Text("Controller Keys:");
-			for (auto controller_key : controller_keys)
+			for (const auto controller_key : controller_keys)
 			{
 				ImGui::Text(controller_keys_string[(int)controller_key]);
 			}
@@ -593,19 +593,19 @@ void PanelConfiguration::ShowInputOptions()
 				GameInput game_input;
 				game_input.name = name_game_input;
 				int i = 0;
-				for(auto key : keys)
+				for(const auto key : keys)
 				{
 					game_input.keys[i] = ((KeyCode)key);
 					++i;
 				}
 				int j = 0;
-				for (auto mouse : mouse_keys)
+				for (const auto mouse : mouse_keys)
 				{
 					game_input.mouse_buttons[j] = ((MouseButton)mouse);
 					++j;
 				}
 				int k = 0;
-				for (auto controller_key : controller_keys)
+				for (const auto controller_key : controller_keys)
 				{
 					game_input.controller_buttons[k] = ((ControllerCode)controller_key);
 					++k;
@@ -625,11 +625,11 @@ void PanelConfiguration::ShowInputOptions()
 
 			ImGui::Separator();
 
-			for(auto game_input : App->input->game_inputs)
+			for(const auto& game_input : App->input->game_inputs)
 			{
 				ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", game_input.first.c_str());
 				ImGui::Text("KeyCodes:");
-				for(auto key : game_input.second.keys)
+				for(const auto& key : game_input.second.keys)
 				{
 					int aux = static_cast<int>(key);
 					if (aux > FIRST_OFFSET_COND)
@@ -645,12 +645,12 @@ void PanelConfiguration::ShowInputOptions()
 					ImGui::Text("	%s", game_inputs_strings[aux]);
 				}
 				ImGui::Text("MouseCodes:");
-				for (auto mouse : game_input.second.mouse_buttons)
+				for (auto& mouse : game_input.second.mouse_buttons)
 				{
 					ImGui::Text("	%s", mouse_keys_string[(int)mouse]);
 				}
 				ImGui::Text("ControllerCodes:");
-				for (auto controller_key : game_input.second.controller_buttons)
+				for (const auto& controller_key : game_input.second.controller_buttons)
 				{
 					ImGui::Text("	%s", controller_keys_string[(int)controller_key]);
 				}

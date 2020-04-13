@@ -14,11 +14,6 @@ ComponentProgressBar::ComponentProgressBar(GameObject * owner) : ComponentUI(own
 	}
 }
 
-ComponentProgressBar::~ComponentProgressBar()
-{
-	ComponentUI::~ComponentUI();
-}
-
 void ComponentProgressBar::Render(float4x4* projection)
 {
 	ComponentTransform2D* transform_2d = &owner->transform_2d;	

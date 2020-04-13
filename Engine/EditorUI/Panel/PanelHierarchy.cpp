@@ -135,7 +135,7 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 				{
 					prefab_exported_path = App->resources->Import(*incoming_file).exported_file;
 				}
-				auto prefab = App->resources->Load<Prefab>(prefab_exported_path);
+				auto& prefab = App->resources->Load<Prefab>(prefab_exported_path);
 				if (incoming_file->file_type == FileType::MODEL)
 				{
 					prefab->overwritable = false;

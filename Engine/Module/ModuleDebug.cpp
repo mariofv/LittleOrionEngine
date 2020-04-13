@@ -34,7 +34,7 @@ void ModuleDebug::CreateHousesRandom() const
 	GameObject *houses = App->scene->CreateGameObject();
 	ImportOptions options;
 	Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(File(HOUSE_MODEL_PATH)), options);
-	auto prefab = App->resources->Load<Prefab>(options.exported_file);
+	const auto& prefab = App->resources->Load<Prefab>(options.exported_file);
 
 	for (int i = 0; i < num_houses; ++i)
 	{

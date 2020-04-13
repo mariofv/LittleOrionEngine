@@ -31,7 +31,7 @@ void File::GetChildren()
 {
 	std::vector<std::shared_ptr<File>> files;
 	App->filesystem->GetAllFilesInPath(this->file_path, files);
-	for (auto & file : files)
+	for (const auto& file : files)
 	{
 		file->parent = this;
 		this->children.push_back(file);
