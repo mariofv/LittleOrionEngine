@@ -130,8 +130,8 @@ void PrefabImporter::ExcractMeshComponent(
 	mesh_renderer_components.emplace_back(std::make_unique<ComponentMeshRenderer>(node_game_object));
 	node_game_object->components.push_back(mesh_renderer_components.back().get());
 
-	mesh_renderer_components.back()->SetMesh(mesh_uuid);
-	mesh_renderer_components.back()->SetMaterial(material_uuid);
+	mesh_renderer_components.back()->mesh_uuid = mesh_uuid;
+	mesh_renderer_components.back()->material_uuid = material_uuid;
 }
 
 void PrefabImporter::ExtractSkeletonFromNode(
