@@ -461,7 +461,7 @@ void ModuleDebugDraw::Render()
 	}
 	if (App->renderer->meshes_to_render.size() != 0 && App->debug->show_axis) 
 	{
-		RenderTangentsAndBitangents();
+		//RenderTangentsAndBitangents();
 	}
 
 	RenderDebugDraws(*App->cameras->scene_camera);

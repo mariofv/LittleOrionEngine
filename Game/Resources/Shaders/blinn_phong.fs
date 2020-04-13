@@ -1,10 +1,20 @@
 #version 430 core
 
+//General variables
 in vec3 position;
 in vec3 normal;
 in vec2 texCoord;
 in vec3 tangent;
 
+//Without tangent transform
+in vec3 view_pos;
+in vec3 view_dir;
+in vec3 half_dir;
+
+//Tangent - Normal mapping variables
+in mat3 TBN;
+in vec3 t_view_pos;
+in vec3 t_frag_pos;
 
 out vec4 FragColor;
 
@@ -99,8 +109,7 @@ float GeometrySmith(vec3 normal, vec3 view_pos, vec3 light_dir, float roughness)
 vec3 Fresnel(vec3 light_dir, vec3 normal, float metalness);
 vec3 BRDF(vec3 view_pos, vec3 normal, vec3 half_dir, vec3 light_dir, float roughness, float metalness);
 
-//Normal mapping
-mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent);
+
 
 void main()
 {
@@ -109,32 +118,53 @@ void main()
 	vec3 normalized_tangent = normalize(tangent);
 	vec3 result = vec3(0);
 
-	mat3 tangent_space = CreateTangentSpace(normalized_normal, normalized_tangent);
-	vec3 fragment_normal = tangent_space*(texture(material.normal_map, texCoord).xyz*2.0 - 1.0);
+	
 
-	for (int i = 0; i < directional_light.num_directional_lights; ++i)
+	if(material.use_normal_map)
 	{
-		if(material.use_normal_map)
+		
+		vec3 normal_from_texture = texture(material.normal_map, texCoord).rgb;
+		normal_from_texture = normal_from_texture * 2.0 - 1.0;
+
+		vec3 fragment_normal = normalize(TBN * normal_from_texture);
+
+		for (int i = 0; i < directional_light.num_directional_lights; ++i)
 		{
 			result += CalculateDirectionalLight(fragment_normal);
+
 		}
 
-		else
+		for (int i = 0; i < num_spot_lights; ++i)
+		{
+			result += CalculateSpotLight(spot_lights[i], fragment_normal);
+		}
+
+		for (int i = 0; i < num_point_lights; ++i)
+		{
+			result += CalculatePointLight(point_lights[i], fragment_normal);	
+		}
+	}
+
+	else
+	{
+		for (int i = 0; i < directional_light.num_directional_lights; ++i)
 		{
 			result += CalculateDirectionalLight(normal);
+
 		}
 
+		for (int i = 0; i < num_spot_lights; ++i)
+		{
+			result += CalculateSpotLight(spot_lights[i], normal);
+		}
+
+		for (int i = 0; i < num_point_lights; ++i)
+		{
+			result += CalculatePointLight(point_lights[i], normal);	
+		}
 	}
 
-	for (int i = 0; i < num_spot_lights; ++i)
-	{
-		result += CalculateSpotLight(spot_lights[i], fragment_normal);
-	}
-
-	for (int i = 0; i < num_point_lights; ++i)
-	{
-		result += CalculatePointLight(point_lights[i], fragment_normal);	
-	}
+	
 
 	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
@@ -185,8 +215,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal)
 	vec3 light_dir   = normalize(-directional_light.direction );
 	float diffuse    = max(0.0, dot(normalized_normal, light_dir));
 	float specular   = 0.0;
-	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-	vec3 view_dir    = normalize(view_pos - position);
+	
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 
 	if(diffuse > 0.0 && material.k_specular > 0.0 && material.specular_color.w > 0.0)
@@ -218,9 +247,7 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal)
 	vec3 light_dir   = normalize(spot_light.position - position);
     float diffuse    = max(0.0, dot(normalized_normal, light_dir));
     float specular   = 0.0;
-	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-	vec3 view_dir    = normalize(view_pos - position);
-	vec3 half_dir      = normalize(light_dir + view_dir);
+	
 
 	if(diffuse > 0.0 && material.k_specular > 0.0 && material.specular_color.w > 0.0)
 	{
@@ -258,12 +285,12 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal)
 
 vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal)
 {
+
 	vec3 light_dir   = normalize(point_light.position - position);
 	float diffuse    = max(0.0, dot(normalized_normal, light_dir));
 	float specular   = 0.0;
 
-    vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
-    vec3 view_dir    = normalize(view_pos - position);
+    
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
     float spec       = max(dot(normalized_normal, half_dir), 0.0);
 	specular		 = pow(spec, material.specular_color.w);
@@ -281,19 +308,14 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal)
 
 	return point_light.color * (
 		emissive_color
-		+  diffuse_color.rgb * (occlusion_color*material.k_ambient)*attenuation
-		+ diffuse_color.rgb * material.k_diffuse * diffuse * attenuation
-		+ specular_color.rgb * material.k_specular * BRDF(view_dir, normalized_normal, half_dir, light_dir, material.roughness, material.metalness)* attenuation
+		+  diffuse_color.rgb * (occlusion_color*material.k_ambient)//*attenuation
+		+ diffuse_color.rgb * material.k_diffuse * diffuse// * attenuation
+		+ specular_color.rgb * material.k_specular * BRDF(view_dir, normalized_normal, half_dir, light_dir, material.roughness, material.metalness)//* attenuation
 	);
 
 }
 
-mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent)
-{
-	 vec3 ortho_tangent = normalize(tangent-dot(tangent, normal)*normal); // Gram-Schmidt
-	 vec3 bitangent = cross(normal, ortho_tangent);
-	return mat3(tangent, bitangent, normal);
-}
+
 
 //BRDF
 
