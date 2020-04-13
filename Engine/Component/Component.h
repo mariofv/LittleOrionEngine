@@ -20,7 +20,8 @@ public:
 		UI,
 		SCRIPT,
 		TRANSFORM2D,
-		ANIMATION
+		ANIMATION,
+		BOXPRIMITIVE
 	};
 
 	Component(ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};

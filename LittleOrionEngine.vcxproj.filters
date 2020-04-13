@@ -445,6 +445,9 @@
     <ClCompile Include="Engine\Module\ModulePhysics.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentBoxPrimitive.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -869,6 +872,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Module\ModulePhysics.h">
       <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentBoxPrimitive.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

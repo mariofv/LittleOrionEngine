@@ -627,6 +627,12 @@ void PanelComponent::ShowAddNewComponentButton()
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
 
 		}
+		sprintf_s(tmp_string, "%s Box", ICON_FA_LIGHTBULB);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::BOXPRIMITIVE);
+
+		}
 		ImGui::EndPopup();
 	}
 

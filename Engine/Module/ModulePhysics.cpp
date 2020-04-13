@@ -102,6 +102,13 @@ void ModulePhysics::setGravity(float3 newGravity)
 	world->setGravity(btVector3(newGravity.x, newGravity.y, newGravity.z));
 }
 
+ComponentBoxPrimitive * ModulePhysics::CreateComponentBoxPrimitive(GameObject* owner)
+{
+	ComponentBoxPrimitive * createdBox = new ComponentBoxPrimitive(owner, Component::ComponentType::BOXPRIMITIVE);
+	boxes.push_back(createdBox);
+	return createdBox;
+}
+
 void DebugDrawer::drawLine(const btVector3 & from, const btVector3 & to, const btVector3 & color)
 {
 	/*mode = btIDebugDraw::DBG_DrawWireframe;

@@ -6,6 +6,8 @@
 #include "bullet3-2.89/src/LinearMath/btIDebugDraw.h"
 #include "Helper/Timer.h"
 #include "Math/float3.h"
+#include "Main/GameObject.h"
+#include "Component/ComponentBoxPrimitive.h"
 
 #define BT_USE_FLOAT_PRECISION
 
@@ -52,7 +54,8 @@ public:
 	math::float3 gravity = float3(0.0f, -1.0f, 0.0f);
 	
 	void setGravity(float3 newGgravity);
-
+	ComponentBoxPrimitive* CreateComponentBoxPrimitive(GameObject* owner);
+	std::vector<ComponentBoxPrimitive*> boxes;
 
 private:
 

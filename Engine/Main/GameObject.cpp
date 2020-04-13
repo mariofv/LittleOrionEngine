@@ -12,6 +12,7 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleUI.h"
+#include "Module/ModulePhysics.h"
 #include "ResourceManagement/Resources/Texture.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
@@ -344,6 +345,9 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	case Component::ComponentType::ANIMATION:
 		created_component = App->animations->CreateComponentAnimation();
 		break;
+
+	case Component::ComponentType::BOXPRIMITIVE:
+		created_component = App->physics->CreateComponentBoxPrimitive(this);
 
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
