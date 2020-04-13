@@ -10,36 +10,49 @@
 #include <cmath>
 #include <map>
 
-bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, const std::string& imported_file, std::string& exported_file) const
+bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, const std::string& imported_file, std::string& exported_file , float unit_scale_factor) const
 {
-	float unit_scale_factor = 1.f;
-	for (unsigned int i = 0; i < scene->mMetaData->mNumProperties; ++i)
-	{
-		if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
-		{
-			aiMetadataEntry unit_scale_entry = scene->mMetaData->mValues[i];
-			unit_scale_factor = *(double*)unit_scale_entry.mData;
-		};
-	}
-	unit_scale_factor *= 0.01f;
-
-
 	Animation own_format_animation(0,"");
 	GetCleanAnimation(scene->mRootNode, animation, own_format_animation, unit_scale_factor);
 	own_format_animation.frames = static_cast<float>(animation->mDuration);
 	own_format_animation.frames_per_second = static_cast<float>(animation->mTicksPerSecond);
 	own_format_animation.name = std::string(animation->mName.C_Str());
 
+	std::map<const std::string, std::vector<const aiNode *>> nodes;
+	GetAssimpNodeTansformationOutSideChannels(scene->mRootNode, own_format_animation, nodes);
+
+	ApplyNodeTansformationOutSideChannels(nodes, unit_scale_factor, own_format_animation);
 	exported_file = SaveMetaFile(imported_file, ResourceType::ANIMATION);
 	SaveBinary(own_format_animation, exported_file, imported_file);
 
 	return true;
 }
 
+void AnimationImporter::ApplyNodeTansformationOutSideChannels(std::map<const std::string, std::vector<const aiNode *>> &nodes, float unit_scale_factor, Animation &own_format_animation) const
+{
+	for (auto& pair : nodes)
+	{
+		Animation::Channel channel;
+		channel.name = pair.first;
+		float4x4 assimp_transform;
+
+		float3 scale;
+		for (auto & second : pair.second)
+		{
+			assimp_transform = assimp_transform * SkeletonImporter::GetTransform(second->mTransformation);
+		}
+		assimp_transform.Decompose(channel.translation, channel.rotation, scale);
+		channel.translation *= unit_scale_factor;
+		for (auto & keyframe : own_format_animation.keyframes)
+		{
+			keyframe.channels.push_back(channel);
+		}
+	}
+}
+
 void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const
 {
 	assert(animation->mDuration == (int)animation->mDuration);
-
 	std::map<std::string, std::vector<aiNodeAnim *>> aiNode_by_channel;
 
 	//Organize channels
@@ -60,34 +73,8 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 	//Merge channels with same name
 	for (auto& channel_set : aiNode_by_channel)
 	{
-		const aiNode* current_node = root_node->FindNode(aiString(channel_set.first));
-		std::vector<const aiNode*> assimp_hierarchy_nodes;
-
-		const aiNode* next_node = current_node->mParent;
-		std::string next_node_name(next_node->mName.C_Str());
-		while (next_node_name.find("$Assimp") != std::string::npos)
-		{
-			assimp_hierarchy_nodes.push_back(next_node);
-			next_node = next_node->mParent;
-			next_node_name = next_node->mName.C_Str();
-		}
-		aiMatrix4x4 accumulated_assimp_local_transformation;
-		for (int i = assimp_hierarchy_nodes.size() - 1; i >= 0; --i)
-		{
-			const aiNode* hierarchy_node = assimp_hierarchy_nodes[i];
-			auto it = std::find_if(channel_set.second.begin(), channel_set.second.end(), [hierarchy_node](const aiNodeAnim * node)
-			{
-				return node->mNodeName == hierarchy_node->mName;
-			}
-			);
-			if (it == channel_set.second.end())
-			{
-				accumulated_assimp_local_transformation = accumulated_assimp_local_transformation * assimp_hierarchy_nodes[i]->mTransformation;
-			}
-		}
-
-		float4x4 accumulated_assimp_transformation = SkeletonImporter::GetTransform(accumulated_assimp_local_transformation);
-
+		float4x4 accumulated_assimp_transformation;
+		GetAcumulatedAssimpTransformations(channel_set, root_node, accumulated_assimp_transformation);
 		std::map<size_t, float3> channel_translations;
 		std::map<size_t, Quat> channel_rotations;
 		for (auto channel : channel_set.second)
@@ -125,19 +112,20 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 				is_rotated = false;
 				rotation = channel_rotations[0];
 			}
-			if (is_rotated || is_translated)
-			{
-				float4x4 animation_transform = float4x4::FromTRS(translation, rotation, float3::one);
-				animation_transform = accumulated_assimp_transformation * animation_transform;
-				float4x4 scale_matrix = float4x4::identity * scale_factor;
-				scale_matrix[3][3] = 1;
 
-				animation_transform = scale_matrix * animation_transform * scale_matrix.Inverted();
-				float3 scale;
-				animation_transform.Decompose(translation,rotation,scale);
-				Animation::Channel imported_channel{ channel_set.first, is_translated, translation, is_rotated, rotation };
-				keyframes[i].push_back(imported_channel);
+			float4x4 animation_transform = float4x4::FromTRS(translation, rotation, float3::one);
+			animation_transform = accumulated_assimp_transformation * animation_transform;
+				
+			float3 euler_rotation = animation_transform.ToEulerXYX();
+			rotation = Quat::FromEulerXYX(euler_rotation.x, euler_rotation.y, euler_rotation.z);
+			if (!is_translated)
+			{
+				translation = animation_transform.Col3(3);
 			}
+			translation *= scale_factor;
+
+			Animation::Channel imported_channel{ channel_set.first, translation, rotation };
+			keyframes[i].push_back(imported_channel);
 		}
 	}
 
@@ -192,7 +180,7 @@ void AnimationImporter::SaveBinary(const Animation& animation, const std::string
 		for (auto & channel : keyframe.channels)
 		{
 			//name size + name + translation + rotation
-			size += sizeof(uint32_t) + channel.name.size() + sizeof(bool) + sizeof(float3) + sizeof(bool) + sizeof(Quat);
+			size += sizeof(uint32_t) + channel.name.size() + sizeof(float3) + sizeof(Quat);
 		}
 	}
 
@@ -237,14 +225,9 @@ void AnimationImporter::SaveBinary(const Animation& animation, const std::string
 			memcpy(cursor, channel.name.data(), name_size);
 			cursor += name_size;
 
-			memcpy(cursor, &channel.is_translated, sizeof(bool));
-			cursor += sizeof(bool);
-
 			memcpy(cursor, &channel.translation, sizeof(float3));
 			cursor += sizeof(float3);
 
-			memcpy(cursor, &channel.is_rotated, sizeof(bool));
-			cursor += sizeof(bool);
 
 			memcpy(cursor, &channel.rotation, sizeof(Quat));
 			cursor += sizeof(Quat);
@@ -254,4 +237,72 @@ void AnimationImporter::SaveBinary(const Animation& animation, const std::string
 	App->filesystem->Save(exported_file.c_str(), data, size);
 	App->filesystem->Save(imported_file.c_str(), data, size);
 	free(data);
+}
+
+void AnimationImporter::GetAcumulatedAssimpTransformations(const std::pair<std::string, std::vector<aiNodeAnim *>> & channel_pair, const aiNode* root_node, float4x4 & accumulated_transformation) const
+{
+	const aiNode* current_node = root_node->FindNode(aiString(channel_pair.first));
+	std::vector<const aiNode*> assimp_hierarchy_nodes;
+
+	const aiNode* next_node = current_node->mParent;
+	bool is_assimp_node = std::string(next_node->mName.C_Str()).find("$Assimp") != std::string::npos;
+	while (is_assimp_node)
+	{
+		assimp_hierarchy_nodes.push_back(next_node);
+		next_node = next_node->mParent;
+		is_assimp_node = std::string(next_node->mName.C_Str()).find("$Assimp") != std::string::npos;
+
+	}
+	aiMatrix4x4 accumulated_assimp_local_transformation;
+	for (int i = assimp_hierarchy_nodes.size() - 1; i >= 0; --i)
+	{
+		const aiNode* hierarchy_node = assimp_hierarchy_nodes[i];
+		auto it = std::find_if(channel_pair.second.begin(), channel_pair.second.end(), [hierarchy_node](const aiNodeAnim * node)
+		{
+			return node->mNodeName == hierarchy_node->mName;
+		}
+		);
+		if (it == channel_pair.second.end())
+		{
+			accumulated_assimp_local_transformation = accumulated_assimp_local_transformation * assimp_hierarchy_nodes[i]->mTransformation;
+		}
+	}
+
+	accumulated_transformation = SkeletonImporter::GetTransform(accumulated_assimp_local_transformation);
+}
+
+void AnimationImporter::GetAssimpNodeTansformationOutSideChannels(const aiNode * root_node, const Animation& animation, std::map<const std::string, std::vector<const aiNode *>> & nodes) const
+{
+
+	for (size_t i = 0; i < root_node->mNumChildren; i++)
+	{
+		const aiNode * child = root_node->mChildren[i];
+		std::string node_name(child->mName.C_Str());
+
+		bool assimp_node = node_name.find("$Assimp") != std::string::npos;
+		bool part_of_channels = false;
+		size_t j = 0;
+		auto & channels_vector = animation.keyframes[0].channels;
+		while (j < channels_vector.size() && !part_of_channels && assimp_node)
+		{
+			if (std::string(child->mName.C_Str()).find(channels_vector[j].name) != std::string::npos)
+			{
+				part_of_channels = true;
+			}
+			++j;
+		}
+
+		if (assimp_node && !part_of_channels)
+		{
+			std::string channel_name(child->mName.C_Str());
+
+			size_t assimp_key_index = channel_name.find("$Assimp");
+			if (assimp_key_index != std::string::npos)
+			{
+				channel_name = channel_name.substr(0, assimp_key_index - 1);
+			}
+			nodes[channel_name].push_back(child);
+		}
+		GetAssimpNodeTansformationOutSideChannels(child, animation, nodes);
+	}
 }

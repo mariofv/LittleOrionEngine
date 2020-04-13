@@ -16,6 +16,7 @@ enum class ResourceType
 	SKELETON,
 	SKYBOX,
 	TEXTURE,
+	STATE_MACHINE,
 	UNKNOWN
 };
 
@@ -25,8 +26,10 @@ public:
 	Resource(uint32_t UUID, const std::string & exported_file) : UUID(UUID), exported_file(exported_file) {
 		int x = 0;
 	};
+	Resource& operator=(const Resource& resource_to_copy) = default;
 	virtual ~Resource() = default;
 
+	uint32_t GetUUID() const { return UUID; };
 private:
 	virtual void LoadInMemory() = 0;
 

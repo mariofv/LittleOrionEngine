@@ -38,6 +38,7 @@
 #include "Module/ModuleUI.h"
 
 #include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/Resources/StateMachine.h"
 
 
 #include <imgui.h>
@@ -153,6 +154,14 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		ImGui::Text("Material");
 		ImGui::SameLine();
 		if (ImGui::Button(mesh->material_to_render->exported_file.c_str()))
+		{
+			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
+		}
+		DropMeshAndMaterial(mesh);
+		ImGui::Text("Skeleton");
+		ImGui::SameLine();
+		std::string skeleton_exported_path = mesh->skeleton ? mesh->skeleton->exported_file : "";
+		if (ImGui::Button(skeleton_exported_path.c_str()))
 		{
 			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
 		}
@@ -379,40 +388,55 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 
 			return;
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Reload"))
+		{
+			animation->SetStateMachine(animation->animation_controller->state_machine);
+			animation->Init();
+			return;
+		}
 		ImGui::Separator();
 
 		ImGui::AlignTextToFramePadding();
-		ImGui::Text("Animation");
+		ImGui::Text("State Machine");
 		ImGui::SameLine();
-		if (ImGui::Button(animation->animation_controller->animation->exported_file.c_str()))
+		std::string state_machine_path = animation->animation_controller->state_machine ? animation->animation_controller->state_machine->exported_file : "State machine";
+		ImGui::Button(state_machine_path.c_str());
+		DropStateMachine(animation);
+		if (animation->animation_controller->state_machine && animation->animation_controller->active_state)
 		{
-			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
+			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(animation->animation_controller->active_state->name_hash), nullptr, nullptr, nullptr, ImGuiInputTextFlags_ReadOnly);
+			static std::string trigger;
+			ImGui::InputText("Trigger ", &trigger);
+			if (ImGui::Button("Activate"))
+			{
+				animation->ActiveAnimation(trigger);
+			}
 		}
-		DropAnimationAndSkeleton(animation);
 		ImGui::AlignTextToFramePadding();
-		ImGui::Text("Skeleton");
-		ImGui::SameLine();
-		if (ImGui::Button(animation->animation_controller->skeleton->exported_file.c_str()))
-		{
-			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
-		}
-		DropAnimationAndSkeleton(animation);
 		ImGui::Separator();
-		if (ImGui::Checkbox("Playing", &animation->animation_controller->playing));
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Loop", &animation->animation_controller->loop));
+		if (ImGui::Checkbox("Playing", &animation->playing));
 		ImGui::SameLine();
 		if (ImGui::Button("Play"))
 		{
-			animation->animation_controller->Play();
+			animation->Play();
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Stop"))
 		{
-			animation->animation_controller->Stop();
+			animation->Stop();
 		}
 
-		ImGui::SliderInt("Animation time", &animation->animation_controller->current_time, 0, animation->animation_controller->animation_time);
+		for (auto& playing_clip : animation->animation_controller->playing_clips)
+		{
+			if (!playing_clip.clip)
+			{
+				break;
+			}
+			ImGui::Checkbox("Loop", &(playing_clip.clip->loop));
+			ImGui::SliderInt("Animation time", &playing_clip.current_time, 0, playing_clip.clip->animation_time);
+		}
+
 	}
 }
 void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script)
@@ -682,12 +706,20 @@ void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
 				component_mesh->SetMaterial(App->resources->Load<Material>(meta.exported_file));
 				component_mesh->modified_by_user = true;
 			}
+			if (incoming_file->file_type == FileType::SKELETON)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				component_mesh->SetSkeleton(App->resources->Load<Skeleton>(meta.exported_file));
+				component_mesh->modified_by_user = true;
+			}
 		}
 		ImGui::EndDragDropTarget();
 	}
 }
 
-void PanelComponent::DropAnimationAndSkeleton(ComponentAnimation* component_animation)
+void PanelComponent::DropStateMachine(ComponentAnimation* component_animation)
 {
 	if (ImGui::BeginDragDropTarget())
 	{
@@ -695,22 +727,15 @@ void PanelComponent::DropAnimationAndSkeleton(ComponentAnimation* component_anim
 		{
 			assert(payload->DataSize == sizeof(File*));
 			File* incoming_file = *(File * *)payload->Data;
-			if (incoming_file->file_type == FileType::ANIMATION)
+			if (incoming_file->file_type == FileType::STATE_MACHINE)
 			{
 				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
 				ImportOptions meta;
 				Importer::GetOptionsFromMeta(meta_path, meta);
-				component_animation->SetAnimation(App->resources->Load<Animation>(meta.exported_file));
+				component_animation->SetStateMachine( App->resources->Load<StateMachine>(meta.exported_file));
 				component_animation->modified_by_user = true;
 			}
-			if (incoming_file->file_type == FileType::SKELETON)
-			{
-				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
-				ImportOptions meta;
-				Importer::GetOptionsFromMeta(meta_path, meta);
-				component_animation->SetSkeleton(App->resources->Load<Skeleton>(meta.exported_file));
-				component_animation->modified_by_user = true;
-			}
+			
 		}
 		ImGui::EndDragDropTarget();
 	}

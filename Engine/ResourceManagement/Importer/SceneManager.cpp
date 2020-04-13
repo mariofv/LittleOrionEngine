@@ -4,6 +4,7 @@
 #include "Main/GameObject.h"
 #include "Main/Application.h"
 
+#include "Module/ModuleAnimation.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
@@ -127,6 +128,7 @@ void SceneManager::Load(const std::string &path) const
 		}
 	}
 	App->scripts->ReLink();
+	App->animations->UpdateAnimationMeshes();
 }
 
 

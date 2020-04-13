@@ -12,6 +12,7 @@
 #include "EditorUI/Panel/PanelPopups.h"
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelResourceDatabase.h"
+#include "EditorUI/Panel/PanelStateMachine.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelToolBar.h"
 
@@ -58,6 +59,7 @@ bool ModuleEditor::Init()
 	panels.push_back(resource_database = new PanelResourceDatabase());
 	panels.push_back(popups = new PanelPopups());
 	panels.push_back(nav_mesh = new PanelNavMesh());
+	panels.push_back(state_machine = new PanelStateMachine());
 
 	return ret;
 }
@@ -203,6 +205,7 @@ void ModuleEditor::InitEditorDockspace()
 	ImGui::DockBuilderDockWindow(hierarchy->GetWindowName().c_str(), dock_id_left_upper_left);
 	ImGui::DockBuilderDockWindow(scene_panel->GetWindowName().c_str(), dock_id_left_upper_right);
 	ImGui::DockBuilderDockWindow(game_panel->GetWindowName().c_str(), dock_id_left_upper_right);
+	ImGui::DockBuilderDockWindow(state_machine->GetWindowName().c_str(), dock_id_left_upper_right);
 	ImGui::DockBuilderDockWindow(inspector->GetWindowName().c_str(), dock_id_right);
 	ImGui::DockBuilderDockWindow(console->GetWindowName().c_str(), dock_id_left_bottom);
 	ImGui::DockBuilderDockWindow(project_explorer->GetWindowName().c_str(), dock_id_left_bottom);

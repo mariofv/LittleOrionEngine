@@ -435,7 +435,7 @@ void ModuleDebugDraw::Render()
 
 		RenderCameraFrustum();
 		RenderLightGizmo();
-		RenderBones();
+		//RenderBones();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 
@@ -525,7 +525,6 @@ void ModuleDebugDraw::RenderBones() const
 			RenderBone(animation_game_object, nullptr, float3(1.f, 0.f, 0.f));
 		}
 	}
-
 	
 }
 

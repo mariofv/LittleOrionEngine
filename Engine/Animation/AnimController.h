@@ -2,38 +2,58 @@
 #define _ANIMCONTROLLER_H_
 
 #include "ResourceManagement/Resources/Animation.h"
-#include "ResourceManagement/Resources/Skeleton.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
-#include <map>
 #include <vector>
+
+class StateMachine;
+struct State;
+struct Clip;
+struct Transition;
+
+struct PlayingClip
+{
+	std::shared_ptr<Clip> clip;
+	int current_time = 0;
+	bool playing = false;
+	void Update();
+};
+
+enum ClipType
+{
+	ACTIVE = 0,
+	NEXT
+};
 class AnimController
 {
 public:
-	AnimController() = default;
+	AnimController() { playing_clips.resize(2); };
 	~AnimController() = default;
-	void Init();
 
-	void Play();
-	void Stop();
-	void Update(); 
+	AnimController(const AnimController& controller_to_copy) = default;
+	AnimController(AnimController&& controller_to_move) = default;
 
-	bool GetTranslation(const std::string& channel_name, float3& position);
-	bool GetRotation(const std::string& channel_name, Quat& rotation);
+	AnimController & operator=(const AnimController& controller_to_copy) = default;
+	AnimController & operator=(AnimController&& controller_to_move) = default;
+
+	bool Update();
+	void SetActiveAnimation();
+
+	void GetPose(uint32_t skeleton_uuid, std::vector<float4x4>& pose);
+	void StartNextState(const std::string& trigger);
+private:
+	void FinishActiveState();
+	std::vector<float4x4> InterpolatePoses(const std::vector<float4x4>& first_pose, const std::vector<float4x4>& second_pose, float weight) const;
+	void GetClipTransform(float current_time, uint32_t skeleton_uuid, const std::shared_ptr<Clip>& clip, std::vector<math::float4x4>& pose) const;
+public:
+	std::shared_ptr<StateMachine> state_machine;
+	std::vector<PlayingClip> playing_clips;
 
 private:
-	void UpdateChannelsGlobalTransformation();
-public:
-	std::shared_ptr<Animation> animation = nullptr;
-	std::shared_ptr<Skeleton> skeleton = nullptr;
-
-	std::map<size_t, std::vector<uint32_t>> channel_hierarchy_cache;
-	std::vector<float4x4> channel_global_transformation;
-
-	bool loop = false;
-	bool playing = false;
-
-	int current_time = 0;
-	int animation_time = 0;
+	std::shared_ptr<State> active_state;
+	std::shared_ptr<Transition> active_transition;
+	bool apply_transition = false;
+	friend class PanelComponent;
 };
 
 #endif //_ANIMCONTROLLER_H_

@@ -15,6 +15,7 @@ ImportResult MeshImporter::Import(const File & file, bool force) const
 ImportResult MeshImporter::ImportMesh(const aiMesh* mesh, const aiMatrix4x4& mesh_current_transformation, const std::string& imported_file, float unit_scale_factor,const Skeleton & skeleton) const
 {
 	aiMatrix4x4 scaling_matrix = aiMatrix4x4() * unit_scale_factor;
+	scaling_matrix.d4 = 1;
 	aiMatrix4x4 node_transformation = mesh_current_transformation;
 
 	node_transformation = scaling_matrix * node_transformation;

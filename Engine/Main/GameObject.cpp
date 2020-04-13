@@ -353,6 +353,10 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	}
 
 	created_component->owner = this;
+	if (type == Component::ComponentType::ANIMATION)
+	{
+		static_cast<ComponentAnimation*>(created_component)->Init();
+	}
 	components.push_back(created_component);
 	return created_component;
 }
