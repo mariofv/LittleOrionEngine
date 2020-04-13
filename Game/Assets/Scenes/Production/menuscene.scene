@@ -114,13 +114,13 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 14,
+                    "Texture": 15,
                     "Color": [
                         1.0,
                         1.0,
                         1.0
                     ],
-                    "Layer": 3,
+                    "Layer": 6,
                     "MetadataPath": "Library/Metadata/14/1462599102"
                 }
             ]
@@ -130,7 +130,7 @@
             "ParentUUID": 480277961,
             "Name": "Credits",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 93287833,
                 "Active": true,
@@ -176,14 +176,14 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 13,
+                    "Texture": 14,
                     "Color": [
                         1.0,
                         1.0,
                         1.0
                     ],
-                    "Layer": 3,
-                    "MetadataPath": "Library/Metadata/13/1337888085"
+                    "Layer": 6,
+                    "MetadataPath": "Library/Metadata/29/2972862161"
                 }
             ]
         },
@@ -238,7 +238,7 @@
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 3,
-                    "Texture": 12,
+                    "Texture": 13,
                     "Color": [
                         1.0,
                         1.0,
@@ -300,7 +300,7 @@
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 3,
-                    "Texture": 11,
+                    "Texture": 12,
                     "Color": [
                         1.0,
                         1.0,
@@ -362,7 +362,7 @@
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 10,
+                    "Texture": 11,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -424,7 +424,7 @@
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 3,
-                    "Texture": 9,
+                    "Texture": 10,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -463,9 +463,9 @@
             "Transform2D": {
                 "UUID": 3951659019,
                 "Active": true,
-                "Top": 14.0,
+                "Top": 15.0,
                 "Right": -433.0,
-                "Bottom": 74.0,
+                "Bottom": 75.0,
                 "Left": -463.0,
                 "Rotation": 0.0,
                 "Scale": [
@@ -474,7 +474,7 @@
                 ],
                 "Position": [
                     -448.0,
-                    44.0,
+                    45.0,
                     0.0
                 ],
                 "Width": 30.0,
@@ -486,13 +486,13 @@
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 8,
+                    "Texture": 9,
                     "Color": [
                         1.0,
                         1.0,
                         1.0
                     ],
-                    "Layer": 1,
+                    "Layer": 8,
                     "MetadataPath": "Library/Metadata/30/3043102979"
                 },
                 {
@@ -510,7 +510,9 @@
                     "Button4": 3020343320,
                     "Name4": "Controller",
                     "Controller": 1563002892,
-                    "Name5": "Credits",
+                    "Name5": "Keyboard",
+                    "Keyboard": 1877940946,
+                    "Name6": "Credits",
                     "Credits": 4124390082
                 }
             ]
@@ -566,7 +568,7 @@
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 3,
-                    "Texture": 6,
+                    "Texture": 8,
                     "Color": [
                         1.0,
                         1.0,
@@ -574,6 +576,68 @@
                     ],
                     "Layer": 1,
                     "MetadataPath": "Library/Metadata/42/4220481160"
+                }
+            ]
+        },
+        {
+            "UUID": 1877940946,
+            "ParentUUID": 480277961,
+            "Name": "Keyboard",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 3312612698,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3680624011,
+                "Active": true,
+                "Top": -302.0,
+                "Right": 507.0,
+                "Bottom": 302.0,
+                "Left": -507.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 1014.0,
+                "Height": 604.0
+            },
+            "Components": [
+                {
+                    "UUID": 2041111763,
+                    "Active": false,
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 6,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Layer": 6,
+                    "MetadataPath": "Library/Metadata/17/17164519"
                 }
             ]
         },
