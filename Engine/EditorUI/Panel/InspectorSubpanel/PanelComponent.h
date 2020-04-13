@@ -33,8 +33,6 @@ public:
 
 	ENGINE_API void DropGOTarget(GameObject*& go, const std::string& script_name, ComponentScript*& script_to_find);
 
-private:
-	void DropMeshAndMaterial(ComponentMeshRenderer* component_mesh);
 };
 
 #endif //_PANELCOMPONENT_H_

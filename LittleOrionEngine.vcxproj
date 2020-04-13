@@ -195,6 +195,7 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\TextureManager.h" />
     <ClInclude Include="Engine\Module\ModuleActions.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.h" />
+    <ClInclude Include="Engine\EditorUI\Helper\ImGuiHelper.h" />
     <ClInclude Include="Libraries\include\recast\DebugUtils\DebugDraw.h" />
     <ClInclude Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.h" />
     <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.h" />
@@ -312,6 +313,7 @@
     <ClCompile Include="Engine\EditorUI\Panel\PanelToolBar.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelResourceDatabase.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Skybox.cpp" />
+    <ClCompile Include="Engine\EditorUI\Helper\ImGuiHelper.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGradient.cpp" />
     <ClCompile Include="Libraries\include\ImGuizmo\ImGuizmo.cpp" />

@@ -5,6 +5,7 @@
 #include "Actions/EditorActionScale.h"
 #include "Actions/EditorActionTranslate.h"
 
+#include "EditorUI/Helper/ImGuiHelper.h"
 #include "EditorUI/Panel/PanelPopups.h"
 #include "Helper/Utils.h"
 
@@ -26,7 +27,6 @@
 #include "Module/ModuleRender.h"
 
 #include "ResourceManagement/Importer/Importer.h"
-
 
 #include <imgui.h>
 #include <imgui_stdlib.h>
@@ -101,8 +101,12 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		{
 			mesh_renderer->SetMesh(selected_resource);
 		}
-		DropMeshAndMaterial(mesh_renderer);
-
+		uint32_t incoming_mesh_uuid = ImGui::ResourceDropper<Mesh>();
+		if (incoming_mesh_uuid != 0)
+		{
+			mesh_renderer->SetMesh(incoming_mesh_uuid);
+			mesh_renderer->modified_by_user = true;
+		}
 
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Material");
@@ -119,7 +123,12 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		{
 			mesh_renderer->SetMaterial(selected_resource);
 		}
-		DropMeshAndMaterial(mesh_renderer);
+		uint32_t incoming_material_uuid = ImGui::ResourceDropper<Material>();
+		if (incoming_material_uuid != 0)
+		{
+			mesh_renderer->SetMaterial(incoming_material_uuid);
+			mesh_renderer->modified_by_user = true;
+		}
 
 
 		if (mesh_renderer->mesh_to_render != nullptr)
@@ -490,29 +499,6 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 	}
 
 }	
-void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
-{
-	if (ImGui::BeginDragDropTarget())
-	{
-		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_Resource"))
-		{
-			assert(payload->DataSize == sizeof(Metafile*));
-			Metafile* incoming_resource_metafile = *(Metafile**)payload->Data;
-			if (incoming_resource_metafile->resource_type == ResourceType::MESH)
-			{
-				component_mesh->SetMesh(incoming_resource_metafile->uuid);
-				component_mesh->modified_by_user = true;
-			}
-			
-			if(incoming_resource_metafile->resource_type == ResourceType::MATERIAL)
-			{
-				component_mesh->SetMaterial(incoming_resource_metafile->uuid);
-				component_mesh->modified_by_user = true;
-			}
-		}
-		ImGui::EndDragDropTarget();
-	}
-}
 
 ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go, const std::string& script_name, ComponentScript*& script_to_find)
 {

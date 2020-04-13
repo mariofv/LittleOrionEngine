@@ -416,6 +416,9 @@
       <Filter>Engine\Helper</Filter>
     </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagementAux.cpp" />
+    <ClCompile Include="Engine\EditorUI\Helper\ImGuiHelper.cpp">
+      <Filter>Engine\EditorUI\Helper</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -815,6 +818,9 @@
       <Filter>Engine\Helper</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagementAux.h" />
+    <ClInclude Include="Engine\EditorUI\Helper\ImGuiHelper.h">
+      <Filter>Engine\EditorUI\Helper</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
