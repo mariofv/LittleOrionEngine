@@ -51,6 +51,7 @@ void MenuLogic::Update()
 	{
 		help_controller->SetEnabled(false);
 		help_keyboard->SetEnabled(false);
+		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
 		show_help = false;
 		return;
 	}
@@ -58,6 +59,7 @@ void MenuLogic::Update()
 	if (show_credits && ComfirmButtonPressed())
 	{
 		credits->SetEnabled(false);
+		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
 		show_credits = false;
 		return;
 	}
@@ -86,11 +88,13 @@ void MenuLogic::Update()
 			//Active help
 			help_controller->SetEnabled(true);
 			help_keyboard->SetEnabled(false);
+			owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, (help_controller->transform_2d.height * -236.0f) / 604.0f, owner->transform_2d.position.z));
 			show_help = true;
 			return;
 		case 2:
 			//Active credits
 			credits->SetEnabled(true);
+			owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, (credits->transform_2d.height * -236.0f) / 604.0f, owner->transform_2d.position.z));
 			show_credits = true;
 			return;
 		case 3:
