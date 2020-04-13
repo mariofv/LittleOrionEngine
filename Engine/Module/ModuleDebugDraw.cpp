@@ -393,6 +393,7 @@ bool ModuleDebugDraw::Init()
 
 void ModuleDebugDraw::Render()
 {
+	
 
 	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
 	if(App->debug->show_navmesh)
@@ -421,6 +422,7 @@ void ModuleDebugDraw::Render()
 			dd::aabb(octtree_node_min, octtree_node_max, float3::one);
 		}
 	}
+	
 
 	if(App->debug->show_aabbtree)
 	{

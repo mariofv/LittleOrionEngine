@@ -40,6 +40,8 @@ public:
 	btSequentialImpulseConstraintSolver* solver = nullptr;
 	btDiscreteDynamicsWorld* world = nullptr;
 
+	bool showPhysics= false;
+
 private:
 
 	int subSteps = 0;
