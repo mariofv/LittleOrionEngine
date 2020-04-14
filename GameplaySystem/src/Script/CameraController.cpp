@@ -46,7 +46,7 @@ void CameraController::Start()
 void CameraController::Update()
 {
 
-	if (App->input->GetKey(KeyCode::Alpha1))
+	if (App->input->GetKey(KeyCode::Alpha1)||App->input->GetControllerButtonDown(ControllerCode::Back))
 	{
 		owner->transform.SetRotation(rotation);
 		god_mode = !god_mode;
@@ -92,11 +92,11 @@ void CameraController::GodCamera()
 	{
 		camera_component->MoveRight();
 	}
-	if (App->input->GetKey(KeyCode::E))
+	if (App->input->GetKey(KeyCode::E) || App->input->GetControllerButtonDown(ControllerCode::DownDpad))
 	{
 		camera_component->MoveDown();
 	}
-	if (App->input->GetKey(KeyCode::Q))
+	if (App->input->GetKey(KeyCode::Q) || App->input->GetControllerButtonDown(ControllerCode::UpDpad))
 	{
 		camera_component->MoveUp();
 	}
@@ -117,6 +117,22 @@ void CameraController::GodCamera()
 		camera_component->RotateYaw(rotation_speed);
 	}
 	//TODO MOVE AND ROTATE WITH JOYSTICK
+	float2 right_axis = App->input->GetAxisControllerRaw(ControllerAxis::RIGHT_JOYSTICK_RAW);
+	float3 right_axis_direction = float3(right_axis.x, 0.0f, right_axis.y);
+
+	if (!right_axis_direction.Equals(float3::zero))
+	{
+		float3 direction = right_axis_direction * rotation_speed +  owner->transform.GetTranslation();;
+		owner->transform.LookAt(direction);
+	}
+	float2 left_axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW);
+	float3 left_axis_direction = float3(left_axis.x, 0.0f, left_axis.y);
+
+	if (!left_axis_direction.Equals(float3::zero))
+	{
+		float3 direction = left_axis_direction * rotation_speed + owner->transform.GetTranslation();;
+		owner->transform.SetTranslation(direction);
+	}
 }
 
 void CameraController::ActivePlayer()
