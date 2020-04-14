@@ -17,8 +17,6 @@ in vec3 t_view_pos;
 in vec3 t_frag_pos;
 
 
-#define NORMAL_MAP 1
-#define SPECULAR_MAP 1
 
 out vec4 FragColor;
 
@@ -30,21 +28,15 @@ struct Material
 	sampler2D diffuse_map;
 	vec4 diffuse_color;
 	float k_diffuse;
-
-	#if SPECULAR_MAP
-		sampler2D specular_map;
-		vec4 specular_color;
-		float k_specular;
-	#endif
+	sampler2D specular_map;
+	vec4 specular_color;
+	float k_specular;
 
 	sampler2D occlusion_map; 
 	float k_ambient;
 	sampler2D emissive_map;
 	vec4 emissive_color;
-
-	#if NORMAL_MAP
-		sampler2D normal_map;
-	#endif
+	sampler2D normal_map;
 
 	float roughness;
 	float metalness;

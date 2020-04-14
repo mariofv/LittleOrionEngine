@@ -127,23 +127,12 @@ void ComponentMeshRenderer::RenderModel() const
 
 void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 {
-	unsigned int variation = ENABLE_NORMAL_MAP | ENABLE_SPECULAR_MAP;
-	
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
-
-	if ((variation & ENABLE_SPECULAR_MAP) != 0)
-	{
-		AddSpecularUniforms(shader_program);
-	}
+	AddSpecularUniforms(shader_program);
 
 	AddAmbientOclusionUniforms(shader_program);
-
-	if ((variation & ENABLE_NORMAL_MAP) != 0)
-	{
-		AddNormalUniforms(shader_program);
-
-	}
+	AddNormalUniforms(shader_program);
 
 	AddExtraUniforms(shader_program);
 	
