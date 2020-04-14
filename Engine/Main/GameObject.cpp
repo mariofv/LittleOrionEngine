@@ -348,7 +348,7 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 
 	case Component::ComponentType::BOXPRIMITIVE:
 		created_component = App->physics->CreateComponentBoxPrimitive(this);
-
+		break;
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
 		return nullptr;

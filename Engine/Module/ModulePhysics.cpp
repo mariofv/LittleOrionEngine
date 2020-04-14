@@ -50,7 +50,12 @@ update_status ModulePhysics::Update()
 	if (showPhysics) {
 		world->debugDrawWorld();
 	}
-
+	
+	for (int i = 0; i < boxes.size(); i++) {
+		btTransform trans;
+		boxes.at(i)->motionState->getWorldTransform(trans);
+		boxes.at(i)->owner->transform.SetTranslation(float3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
+	}
 	//physics_timer->Stop();
 	//ms = physics_timer->Read();
 	//ms_info.push_back(ms);

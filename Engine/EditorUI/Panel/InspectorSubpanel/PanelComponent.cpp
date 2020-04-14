@@ -23,6 +23,7 @@
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentUI.h"
 #include "Component/ComponentButton.h"
+#include "Component/ComponentBoxPrimitive.h"
 
 #include "Helper/Utils.h"
 #include "Math/Rect.h"
@@ -362,6 +363,23 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 	}
 }
 
+
+void PanelComponent::ShowComponentBox(ComponentBoxPrimitive *box)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Box", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(box);
+
+			return;
+		}
+		
+		ImGui::Separator();
+	}
+}
+
 void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PLAY_CIRCLE " Animation", ImGuiTreeNodeFlags_DefaultOpen))
@@ -630,7 +648,7 @@ void PanelComponent::ShowAddNewComponentButton()
 		sprintf_s(tmp_string, "%s Box", ICON_FA_LIGHTBULB);
 		if (ImGui::Selectable(tmp_string))
 		{
-			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::BOXPRIMITIVE);
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::BOXPRIMITIVE);
 
 		}
 		ImGui::EndPopup();

@@ -19,6 +19,7 @@ class ComponentText;
 class ComponentTransform;
 class ComponentScript;
 class GameObject;
+class ComponentBoxPrimitive;
 
 class PanelComponent
 {
@@ -30,6 +31,7 @@ public:
 	void ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh);
 	void ShowComponentCameraWindow(ComponentCamera *camera);
 	void ShowComponentLightWindow(ComponentLight *light);
+	void ShowComponentBox(ComponentBoxPrimitive *box);
 	void ShowComponentAnimationWindow(ComponentAnimation *animation);
 	void ShowComponentScriptWindow(ComponentScript * component_script);
 	void ShowComponentUIWindow(ComponentUI*);

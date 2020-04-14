@@ -10,6 +10,7 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentUI.h"
 #include "Component/ComponentButton.h"
+#include "Component/ComponentBoxPrimitive.h"
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "Main/Application.h"
@@ -97,6 +98,9 @@ void PanelGameObject::Render(GameObject* game_object)
 				break;
 			case Component::ComponentType::ANIMATION:
 				component_panel.ShowComponentAnimationWindow(static_cast<ComponentAnimation*>(component));
+				break;
+			case Component::ComponentType::BOXPRIMITIVE:
+				component_panel.ShowComponentBox(static_cast<ComponentBoxPrimitive*>(component));
 				break;
 			default:
 				break;

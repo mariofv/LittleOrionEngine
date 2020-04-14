@@ -6,6 +6,7 @@
 #include "Main/GameObject.h"
 
 
+
 class GameObject;
 
 class ComponentBoxPrimitive : public Component
@@ -15,7 +16,7 @@ public:
 	btRigidBody* addBody(btVector3 box_size);
 	btRigidBody* body;
 	btScalar mass;
-
+	btDefaultMotionState* motionState;
 
 	ComponentBoxPrimitive(ComponentType componentType);
 	ComponentBoxPrimitive(GameObject* owner, ComponentType componentType);
