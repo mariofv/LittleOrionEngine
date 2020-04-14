@@ -26,7 +26,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 2306689755,
+                "UUID": 1605196368,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -54,7 +54,7 @@
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 595179960,
+                "UUID": 2985698794,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -73,7 +73,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 2932455125,
+                "UUID": 2794046324,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -109,7 +109,7 @@
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 893229627,
+                "UUID": 231605323,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -128,7 +128,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 2231912556,
+                "UUID": 2035183457,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -164,7 +164,7 @@
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3809490554,
+                "UUID": 1561386664,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -183,7 +183,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 798716188,
+                "UUID": 2096619024,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -219,7 +219,7 @@
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 2231388746,
+                "UUID": 229452069,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -238,7 +238,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 1802589107,
+                "UUID": 2634267640,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -274,7 +274,7 @@
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3750761088,
+                "UUID": 15813552,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -293,7 +293,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 254159773,
+                "UUID": 1873469759,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -329,7 +329,7 @@
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 736547514,
+                "UUID": 2024483065,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -348,7 +348,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 1794241799,
+                "UUID": 2185376177,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -384,7 +384,7 @@
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 922328995,
+                "UUID": 416467781,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -403,7 +403,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 2792401165,
+                "UUID": 704968902,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -429,391 +429,6 @@
                     "Active": true,
                     "MeshPath": "Library/Metadata/38/3899046029",
                     "MaterialPath": "Library/Metadata/28/2833665808"
-                }
-            ]
-        },
-        {
-            "UUID": 1640448628,
-            "ParentUUID": 1690287179,
-            "Name": "Zone 7 ext",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2182958621,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1271578201,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 612642673,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/36/3616625887",
-                    "MaterialPath": "Library/Metadata/23/2360406762"
-                }
-            ]
-        },
-        {
-            "UUID": 1352103007,
-            "ParentUUID": 1690287179,
-            "Name": "Zone 6 ext",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 772705952,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 48783209,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 1487551837,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/34/3401635153",
-                    "MaterialPath": "Library/Metadata/19/1979046040"
-                }
-            ]
-        },
-        {
-            "UUID": 3036861776,
-            "ParentUUID": 1690287179,
-            "Name": "zone 5 ext",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3747473994,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1644661655,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 1754999498,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/33/3358212014",
-                    "MaterialPath": "Library/Metadata/29/293633765"
-                }
-            ]
-        },
-        {
-            "UUID": 2192157395,
-            "ParentUUID": 1690287179,
-            "Name": "Zone 4 ext",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1749189723,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 611686975,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 3453909115,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/24/2485865276",
-                    "MaterialPath": "Library/Metadata/79/797048055"
-                }
-            ]
-        },
-        {
-            "UUID": 1343582603,
-            "ParentUUID": 1690287179,
-            "Name": "Zone 3 ext",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2371744162,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1933878736,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 2497265142,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/69/690660262",
-                    "MaterialPath": "Library/Metadata/28/2831933391"
-                }
-            ]
-        },
-        {
-            "UUID": 3945434679,
-            "ParentUUID": 1690287179,
-            "Name": "Zone 2 ext",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3845542819,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 3872905596,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 1064046441,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/35/3536611192",
-                    "MaterialPath": "Library/Metadata/38/3802566269"
-                }
-            ]
-        },
-        {
-            "UUID": 3282878125,
-            "ParentUUID": 1690287179,
-            "Name": "Zone 1 ext",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 4073617767,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2914225727,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 1911467150,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/27/2772414456",
-                    "MaterialPath": "Library/Metadata/11/1132473433"
                 }
             ]
         }

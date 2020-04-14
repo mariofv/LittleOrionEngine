@@ -1,6 +1,171 @@
 {
     "Prefabs": [
         {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 1249681293,
+                "Active": true,
+                "Translation": [
+                    47.829734802246097,
+                    7.104501724243164,
+                    7.047913551330566
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    4.03000020980835,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 1902579070,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 3819093819,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 2394817538,
+                "Active": true,
+                "Translation": [
+                    -110.98355865478516,
+                    -1.2639129161834717,
+                    1.8671115636825562
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    3.833923578262329
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 3801539821,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 1424134975,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 1282553615,
+                "Active": true,
+                "Translation": [
+                    50.649715423583987,
+                    8.751049995422364,
+                    -5.03639554977417
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 2457613273,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 1745722036,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 1646730125,
+                "Active": true,
+                "Translation": [
+                    -101.10398864746094,
+                    -0.9683825969696045,
+                    -4.931333065032959
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 2269940242,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 1051797212,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 672478351,
+                "Active": true,
+                "Translation": [
+                    -89.16755676269531,
+                    1.8119837045669556,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 2857468370,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 3825316574,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
             "ParentUUID": 3472388989,
             "Prefab": "Library/Metadata/14/142371074",
             "Transform": {
@@ -367,6 +532,105 @@
             "ParentUUID": 0,
             "Prefab": "Library/Metadata/37/3725310025",
             "Transform": {
+                "UUID": 708255791,
+                "Active": true,
+                "Translation": [
+                    -40.93098068237305,
+                    7.428792953491211,
+                    -5.085663795471191
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 1898072271,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 2803117847,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 1892621347,
+                "Active": true,
+                "Translation": [
+                    -1.4704937934875489,
+                    5.93251371383667,
+                    -4.906352996826172
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    2.348623752593994,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 1273846256,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 2540408760,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 592440674,
+                "Active": true,
+                "Translation": [
+                    -14.530141830444336,
+                    7.247644424438477,
+                    -5.4114885330200199
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    3.477961301803589,
+                    1.0,
+                    1.5332695245742798
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 309904333,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 2147617229,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
                 "UUID": 3736568682,
                 "Active": true,
                 "Translation": [
@@ -424,34 +688,6 @@
                     "OriginalUUID": 1757690034
                 },
                 {
-                    "UUID": 3282878125,
-                    "OriginalUUID": 1757690048
-                },
-                {
-                    "UUID": 3945434679,
-                    "OriginalUUID": 1757690047
-                },
-                {
-                    "UUID": 1343582603,
-                    "OriginalUUID": 1757690046
-                },
-                {
-                    "UUID": 2192157395,
-                    "OriginalUUID": 1757690045
-                },
-                {
-                    "UUID": 3036861776,
-                    "OriginalUUID": 1757690044
-                },
-                {
-                    "UUID": 1352103007,
-                    "OriginalUUID": 1757690043
-                },
-                {
-                    "UUID": 1640448628,
-                    "OriginalUUID": 1757690042
-                },
-                {
                     "UUID": 2891583938,
                     "OriginalUUID": 1757690041
                 },
@@ -480,9 +716,540 @@
                     "OriginalUUID": 1757690035
                 }
             ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 4106933366,
+                "Active": true,
+                "Translation": [
+                    -12.866888046264649,
+                    5.341623783111572,
+                    7.309209823608398
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 121622907,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 2771566718,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 1591554562,
+                "Active": true,
+                "Translation": [
+                    -98.22533416748047,
+                    -1.5807278156280518,
+                    6.858355522155762
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    11.346526145935059,
+                    3.75,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 2228045379,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 1053770038,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 647905160,
+                "Active": true,
+                "Translation": [
+                    -101.38386535644531,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 3630302648,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 4019494361,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 3655876936,
+                "Active": true,
+                "Translation": [
+                    -37.054473876953128,
+                    6.779360771179199,
+                    7.150622367858887
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    15.816303253173829,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 1313506042,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 1087784183,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 424594408,
+                "Active": true,
+                "Translation": [
+                    -31.145030975341798,
+                    7.581262111663818,
+                    -4.932520389556885
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    2.3935811519622804,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 3834204367,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 113011684,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 3703490700,
+                "Active": true,
+                "Translation": [
+                    -52.73405075073242,
+                    7.450105667114258,
+                    -4.780733108520508
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 3908203161,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 1489495393,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 393856158,
+                "Active": true,
+                "Translation": [
+                    -72.1916275024414,
+                    2.035499095916748,
+                    -4.795450210571289
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    3.2590177059173586,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 3845674929,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 759700871,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 4159093425,
+                "Active": true,
+                "Translation": [
+                    -25.2249813079834,
+                    7.457437515258789,
+                    -4.916018486022949
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 1892326005,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 2283768546,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 3170933927,
+                "Active": true,
+                "Translation": [
+                    63.501834869384769,
+                    6.181251525878906,
+                    -4.792331218719482
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    6.746094226837158,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 3150840244,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 3737011665,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 2708060729,
+                "Active": true,
+                "Translation": [
+                    64.22208404541016,
+                    5.785759449005127,
+                    6.817023754119873
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    6.179759979248047,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 4150730922,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 3791189670,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 1237246668,
+                "Active": true,
+                "Translation": [
+                    111.45037078857422,
+                    17.29743194580078,
+                    7.234664440155029
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    10.99734878540039,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 4174518564,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 4241835305,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 2927170573,
+                "Active": true,
+                "Translation": [
+                    43.34986877441406,
+                    7.82541561126709,
+                    -4.210260391235352
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 354187606,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 3397389864,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 229358612,
+                "Active": true,
+                "Translation": [
+                    28.437088012695314,
+                    6.336075782775879,
+                    5.868536472320557
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 2170770,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 4144662156,
+                    "OriginalUUID": 3725310026
+                }
+            ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 2237730618,
+                "Active": true,
+                "Translation": [
+                    35.509300231933597,
+                    6.902461051940918,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 4105245305,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 558391542,
+                    "OriginalUUID": 3725310026
+                }
+            ]
         }
     ],
     "PrefabsComponents": [
+        {
+            "Transform": {
+                "UUID": 2067604101,
+                "Active": true,
+                "Translation": [
+                    -0.8790435791015625,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    0.9700000286102295,
+                    4.110000133514404,
+                    2.3899996280670168
+                ]
+            },
+            "Components": [],
+            "UUID": 1424134975
+        },
+        {
+            "Transform": {
+                "UUID": 1514638933,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    -0.764338493347168
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    2.9800000190734865,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 1051797212
+        },
+        {
+            "Transform": {
+                "UUID": 3652766391,
+                "Active": true,
+                "Translation": [
+                    -0.856231689453125,
+                    -1.943979024887085,
+                    -6.208065032958984
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    2.0017404556274416,
+                    2.5299999713897707,
+                    1.3165799379348755
+                ]
+            },
+            "Components": [],
+            "UUID": 3825316574
+        },
         {
             "Components": [
                 {
@@ -604,9 +1371,104 @@
             "UUID": 81529280
         },
         {
+            "Transform": {
+                "UUID": 2476914157,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    -0.6076054573059082
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    3.2200000286102297,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 2803117847
+        },
+        {
+            "Transform": {
+                "UUID": 1049588869,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    -0.5345478057861328
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    3.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 2540408760
+        },
+        {
+            "Transform": {
+                "UUID": 3742428290,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    -0.7928874492645264
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    2.9600000381469728,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 2147617229
+        },
+        {
+            "Transform": {
+                "UUID": 4236943620,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    8.401660919189454,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    2.5299999713897707,
+                    1.0
+                ]
+            },
             "Components": [
                 {
                     "UUID": 2879098278,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "MeshPath": "Library/Metadata/43/430316603",
+                    "MaterialPath": "Resources/Materials/default.olmat"
+                },
+                {
+                    "UUID": 3353251402,
                     "ComponentType": 2,
                     "Active": false,
                     "MeshPath": "Library/Metadata/43/430316603",
@@ -707,88 +1569,303 @@
             "UUID": 2891583938
         },
         {
-            "Components": [
-                {
-                    "UUID": 612642673,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/36/3616625887",
-                    "MaterialPath": "Library/Metadata/23/2360406762"
-                }
-            ],
-            "UUID": 1640448628
+            "Transform": {
+                "UUID": 953282871,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.6057987213134766
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    2.3399999141693117,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 2771566718
         },
         {
-            "Components": [
-                {
-                    "UUID": 1487551837,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/34/3401635153",
-                    "MaterialPath": "Library/Metadata/19/1979046040"
-                }
-            ],
-            "UUID": 1352103007
+            "Transform": {
+                "UUID": 2019713681,
+                "Active": true,
+                "Translation": [
+                    17.320823669433595,
+                    -0.6686413288116455,
+                    -5.817288398742676
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    2.2200000286102297,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 4019494361
         },
         {
-            "Components": [
-                {
-                    "UUID": 1754999498,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/33/3358212014",
-                    "MaterialPath": "Library/Metadata/29/293633765"
-                }
-            ],
-            "UUID": 3036861776
+            "Transform": {
+                "UUID": 2770871852,
+                "Active": true,
+                "Translation": [
+                    -0.042594194412231448,
+                    0.0,
+                    0.544189453125
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    2.7100000381469728,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 1087784183
         },
         {
-            "Components": [
-                {
-                    "UUID": 3453909115,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/24/2485865276",
-                    "MaterialPath": "Library/Metadata/79/797048055"
-                }
-            ],
-            "UUID": 2192157395
+            "Transform": {
+                "UUID": 3161712613,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    -1.0625715255737305
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    3.7799999713897707,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 113011684
         },
         {
-            "Components": [
-                {
-                    "UUID": 2497265142,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/69/690660262",
-                    "MaterialPath": "Library/Metadata/28/2831933391"
-                }
-            ],
-            "UUID": 1343582603
+            "Transform": {
+                "UUID": 2088463250,
+                "Active": true,
+                "Translation": [
+                    0.3699607849121094,
+                    0.0,
+                    -1.2137012481689454
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    3.380000114440918,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 1489495393
         },
         {
-            "Components": [
-                {
-                    "UUID": 1064046441,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/35/3536611192",
-                    "MaterialPath": "Library/Metadata/38/3802566269"
-                }
-            ],
-            "UUID": 3945434679
+            "Transform": {
+                "UUID": 4257538966,
+                "Active": true,
+                "Translation": [
+                    -0.00074005126953125,
+                    0.02569580078125,
+                    -0.7575359344482422
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    3.0,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 759700871
         },
         {
-            "Components": [
-                {
-                    "UUID": 1911467150,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/27/2772414456",
-                    "MaterialPath": "Library/Metadata/11/1132473433"
-                }
-            ],
-            "UUID": 3282878125
+            "Transform": {
+                "UUID": 1240307410,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    -1.062511920928955
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    2.7699999809265138,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 2283768546
+        },
+        {
+            "Transform": {
+                "UUID": 567470205,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    -0.872260570526123
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    4.820000171661377,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 3737011665
+        },
+        {
+            "Transform": {
+                "UUID": 3299825104,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.7808914184570313
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    3.809999942779541,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 3791189670
+        },
+        {
+            "Transform": {
+                "UUID": 1754710897,
+                "Active": true,
+                "Translation": [
+                    0.014533042907714844,
+                    0.0,
+                    1.0908846855163575
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    3.369999885559082,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 4241835305
+        },
+        {
+            "Transform": {
+                "UUID": 3187257768,
+                "Active": true,
+                "Translation": [
+                    0.2451019287109375,
+                    0.0,
+                    -1.040374755859375
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    3.4700000286102297,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 3397389864
+        },
+        {
+            "Transform": {
+                "UUID": 2021367113,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.9311895370483398
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    4.099999904632568,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 4144662156
+        },
+        {
+            "Transform": {
+                "UUID": 3328148360,
+                "Active": true,
+                "Translation": [
+                    -42.28340530395508,
+                    -0.6555929183959961,
+                    -5.722588062286377
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    3.430000066757202,
+                    1.0
+                ]
+            },
+            "Components": [],
+            "UUID": 558391542
         }
     ],
     "GameObjects": [
@@ -1162,7 +2239,7 @@
                         0.10763084143400192,
                         0.10763084143400192
                     ],
-                    "Layer": 3,
+                    "Layer": 0,
                     "MetadataPath": "Library/Metadata/23/2331161065"
                 }
             ]
@@ -1224,7 +2301,7 @@
                         0.12069918215274811,
                         0.7679181098937988
                     ],
-                    "Layer": 3,
+                    "Layer": 0,
                     "MetadataPath": "Library/Metadata/37/3702527862"
                 }
             ]
@@ -1284,11 +2361,11 @@
                     "Color": [
                         0.0,
                         0.0,
-                        1.0
+                        0.0
                     ],
-                    "Layer": 1,
+                    "Layer": 0,
                     "Text": "Default",
-                    "Scale": 12.0
+                    "Scale": 8.0
                 }
             ]
         },
@@ -1347,11 +2424,11 @@
                     "Color": [
                         0.0,
                         0.0,
-                        1.0
+                        0.0
                     ],
-                    "Layer": 1,
+                    "Layer": 0,
                     "Text": "Default",
-                    "Scale": 12.0
+                    "Scale": 8.0
                 }
             ]
         },
@@ -1410,11 +2487,11 @@
                     "Color": [
                         0.0,
                         0.0,
-                        1.0
+                        0.0
                     ],
-                    "Layer": 1,
+                    "Layer": 0,
                     "Text": "Default",
-                    "Scale": 12.0
+                    "Scale": 8.0
                 }
             ]
         },
@@ -1537,7 +2614,7 @@
                         0.08073479682207108
                     ],
                     "Layer": 0,
-                    "Percentage": 100.0,
+                    "Percentage": 99.66000366210938,
                     "BarTexture": 2,
                     "BarColor": [
                         0.07803237438201904,
@@ -1557,9 +2634,9 @@
                 "UUID": 1527511923,
                 "Active": true,
                 "Translation": [
-                    -100.99388122558594,
-                    17.08606719970703,
-                    22.169919967651368
+                    -110.76602172851563,
+                    14.469271659851075,
+                    18.400001525878908
                 ],
                 "Rotation": [
                     147.83889770507813,
@@ -1719,14 +2796,14 @@
                 "UUID": 2312298764,
                 "Active": true,
                 "Translation": [
-                    -100.76617431640625,
-                    -1.5809134244918824,
-                    0.0
+                    -110.76602172851563,
+                    -0.5307283401489258,
+                    -5.599998950958252
                 ],
                 "Rotation": [
-                    -0.0,
+                    -180.0,
                     0.0,
-                    -0.0
+                    -180.0
                 ],
                 "Scale": [
                     1.0,
