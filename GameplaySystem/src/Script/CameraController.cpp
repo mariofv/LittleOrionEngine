@@ -56,7 +56,7 @@ void CameraController::Update()
 		god_mode = !god_mode;
 		ActivePlayer();
 	}
-	if (App->input->GetKey(KeyCode::Alpha1)||App->input->GetControllerButtonDown(ControllerCode::Back))
+	if (App->input->GetKeyDown(KeyCode::Alpha1)||App->input->GetControllerButtonDown(ControllerCode::Back))
 	{ 
 		if(debug_mode->debug_enabled || god_mode)
 		{
