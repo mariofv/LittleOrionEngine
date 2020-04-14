@@ -19,14 +19,14 @@
 bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
-
+	GetCurrentPath();
 #if GAME
+	//TODO USE THE NEW FILESYSTEM TO DO THIS
+	CopyFile(SCRIPTS_DLL_PATH, working_directory.c_str(), false);
 	gameplay_dll = LoadLibrary(SCRIPT_DLL_FILE);
 
 	return true;
 #endif
-
-	GetCurrentPath();
 	InitDLL();
 	LoadScriptList();
 	dll_file = std::make_unique<File>(SCRIPTS_DLL_PATH);
