@@ -50,7 +50,12 @@ void CameraController::Start()
 // Update is called once per frame
 void CameraController::Update()
 {
-
+	if (!debug_mode->debug_enabled && god_mode) 
+	{
+		owner->transform.SetRotation(rotation);
+		god_mode = !god_mode;
+		ActivePlayer();
+	}
 	if (App->input->GetKey(KeyCode::Alpha1)||App->input->GetControllerButtonDown(ControllerCode::Back))
 	{ 
 		if(debug_mode->debug_enabled || god_mode)

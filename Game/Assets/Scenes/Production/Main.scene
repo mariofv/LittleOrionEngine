@@ -1,10 +1,10 @@
 {
     "Prefabs": [
         {
-            "ParentUUID": 3472388989,
+            "ParentUUID": 1405731591,
             "Prefab": "Library/Metadata/14/142371074",
             "Transform": {
-                "UUID": 2913968216,
+                "UUID": 597357408,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -12,42 +12,9 @@
                     0.0
                 ],
                 "Rotation": [
+                    -0.0,
                     0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0000219345092774,
-                    1.0,
-                    1.0000219345092774
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 1023465745,
-                    "OriginalUUID": 142371074
-                },
-                {
-                    "UUID": 1715486873,
-                    "OriginalUUID": 142371075
-                }
-            ]
-        },
-        {
-            "ParentUUID": 2680572544,
-            "Prefab": "Library/Metadata/14/142371074",
-            "Transform": {
-                "UUID": 2473104287,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
+                    -0.0
                 ],
                 "Scale": [
                     1.0,
@@ -57,242 +24,11 @@
             },
             "UUIDS": [
                 {
-                    "UUID": 3678773538,
+                    "UUID": 4189631674,
                     "OriginalUUID": 142371074
                 },
                 {
-                    "UUID": 2611618213,
-                    "OriginalUUID": 142371075
-                }
-            ]
-        },
-        {
-            "ParentUUID": 621716883,
-            "Prefab": "Library/Metadata/14/142371074",
-            "Transform": {
-                "UUID": 2275546685,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 814908702,
-                    "OriginalUUID": 142371074
-                },
-                {
-                    "UUID": 1869607017,
-                    "OriginalUUID": 142371075
-                }
-            ]
-        },
-        {
-            "ParentUUID": 4276022674,
-            "Prefab": "Library/Metadata/18/1843568886",
-            "Transform": {
-                "UUID": 1037096680,
-                "Active": true,
-                "Translation": [
-                    0.00017547607421875,
-                    -0.00008654594421386719,
-                    0.0
-                ],
-                "Rotation": [
-                    -90.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0000001192092896,
-                    1.0000001192092896
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 1693140940,
-                    "OriginalUUID": 1843568886
-                },
-                {
-                    "UUID": 948150299,
-                    "OriginalUUID": 1843568887
-                }
-            ]
-        },
-        {
-            "ParentUUID": 3141404224,
-            "Prefab": "Library/Metadata/14/142371074",
-            "Transform": {
-                "UUID": 1084981978,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    0.9999998807907105,
-                    1.0,
-                    0.9999998807907105
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 3889522035,
-                    "OriginalUUID": 142371074
-                },
-                {
-                    "UUID": 3542076369,
-                    "OriginalUUID": 142371075
-                }
-            ]
-        },
-        {
-            "ParentUUID": 439564410,
-            "Prefab": "Library/Metadata/14/142371074",
-            "Transform": {
-                "UUID": 932404443,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    0.9999998807907105,
-                    1.0,
-                    0.9999998807907105
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 194696281,
-                    "OriginalUUID": 142371074
-                },
-                {
-                    "UUID": 3747423302,
-                    "OriginalUUID": 142371075
-                }
-            ]
-        },
-        {
-            "ParentUUID": 2215071729,
-            "Prefab": "Library/Metadata/14/142371074",
-            "Transform": {
-                "UUID": 818826528,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    0.9999998807907105,
-                    1.0,
-                    0.9999998807907105
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 835811596,
-                    "OriginalUUID": 142371074
-                },
-                {
-                    "UUID": 3455780701,
-                    "OriginalUUID": 142371075
-                }
-            ]
-        },
-        {
-            "ParentUUID": 1315072191,
-            "Prefab": "Library/Metadata/14/142371074",
-            "Transform": {
-                "UUID": 463180856,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    0.9999998807907105,
-                    1.0,
-                    0.9999998807907105
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 4098285723,
-                    "OriginalUUID": 142371074
-                },
-                {
-                    "UUID": 4102597730,
-                    "OriginalUUID": 142371075
-                }
-            ]
-        },
-        {
-            "ParentUUID": 2601900686,
-            "Prefab": "Library/Metadata/14/142371074",
-            "Transform": {
-                "UUID": 1111576715,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 1220633447,
-                    "OriginalUUID": 142371074
-                },
-                {
-                    "UUID": 136775205,
+                    "UUID": 81529280,
                     "OriginalUUID": 142371075
                 }
             ]
@@ -331,10 +67,10 @@
             ]
         },
         {
-            "ParentUUID": 1405731591,
+            "ParentUUID": 2601900686,
             "Prefab": "Library/Metadata/14/142371074",
             "Transform": {
-                "UUID": 597357408,
+                "UUID": 1111576715,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -342,9 +78,9 @@
                     0.0
                 ],
                 "Rotation": [
-                    -0.0,
                     0.0,
-                    -0.0
+                    0.0,
+                    0.0
                 ],
                 "Scale": [
                     1.0,
@@ -354,45 +90,276 @@
             },
             "UUIDS": [
                 {
-                    "UUID": 4189631674,
+                    "UUID": 1220633447,
                     "OriginalUUID": 142371074
                 },
                 {
-                    "UUID": 81529280,
+                    "UUID": 136775205,
                     "OriginalUUID": 142371075
                 }
             ]
         },
         {
-            "ParentUUID": 0,
-            "Prefab": "Library/Metadata/37/3725310025",
+            "ParentUUID": 1315072191,
+            "Prefab": "Library/Metadata/14/142371074",
             "Transform": {
-                "UUID": 3736568682,
+                "UUID": 463180856,
                 "Active": true,
                 "Translation": [
-                    118.20744323730469,
-                    17.04744529724121,
-                    0.9604029655456543
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
-                    -0.0,
                     0.0,
-                    -0.0
+                    0.0,
+                    0.0
                 ],
                 "Scale": [
+                    0.9999998807907105,
                     1.0,
-                    1.0,
-                    6.5
+                    0.9999998807907105
                 ]
             },
             "UUIDS": [
                 {
-                    "UUID": 1237788600,
-                    "OriginalUUID": 3725310025
+                    "UUID": 4098285723,
+                    "OriginalUUID": 142371074
                 },
                 {
-                    "UUID": 2947238369,
-                    "OriginalUUID": 3725310026
+                    "UUID": 4102597730,
+                    "OriginalUUID": 142371075
+                }
+            ]
+        },
+        {
+            "ParentUUID": 2215071729,
+            "Prefab": "Library/Metadata/14/142371074",
+            "Transform": {
+                "UUID": 818826528,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.9999998807907105,
+                    1.0,
+                    0.9999998807907105
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 835811596,
+                    "OriginalUUID": 142371074
+                },
+                {
+                    "UUID": 3455780701,
+                    "OriginalUUID": 142371075
+                }
+            ]
+        },
+        {
+            "ParentUUID": 439564410,
+            "Prefab": "Library/Metadata/14/142371074",
+            "Transform": {
+                "UUID": 932404443,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.9999998807907105,
+                    1.0,
+                    0.9999998807907105
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 194696281,
+                    "OriginalUUID": 142371074
+                },
+                {
+                    "UUID": 3747423302,
+                    "OriginalUUID": 142371075
+                }
+            ]
+        },
+        {
+            "ParentUUID": 3141404224,
+            "Prefab": "Library/Metadata/14/142371074",
+            "Transform": {
+                "UUID": 1084981978,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.9999998807907105,
+                    1.0,
+                    0.9999998807907105
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 3889522035,
+                    "OriginalUUID": 142371074
+                },
+                {
+                    "UUID": 3542076369,
+                    "OriginalUUID": 142371075
+                }
+            ]
+        },
+        {
+            "ParentUUID": 4276022674,
+            "Prefab": "Library/Metadata/18/1843568886",
+            "Transform": {
+                "UUID": 1037096680,
+                "Active": true,
+                "Translation": [
+                    0.00017547607421875,
+                    -0.00008654594421386719,
+                    0.0
+                ],
+                "Rotation": [
+                    -90.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0000001192092896,
+                    1.0000001192092896
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 1693140940,
+                    "OriginalUUID": 1843568886
+                },
+                {
+                    "UUID": 948150299,
+                    "OriginalUUID": 1843568887
+                }
+            ]
+        },
+        {
+            "ParentUUID": 621716883,
+            "Prefab": "Library/Metadata/14/142371074",
+            "Transform": {
+                "UUID": 2275546685,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 814908702,
+                    "OriginalUUID": 142371074
+                },
+                {
+                    "UUID": 1869607017,
+                    "OriginalUUID": 142371075
+                }
+            ]
+        },
+        {
+            "ParentUUID": 2680572544,
+            "Prefab": "Library/Metadata/14/142371074",
+            "Transform": {
+                "UUID": 2473104287,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 3678773538,
+                    "OriginalUUID": 142371074
+                },
+                {
+                    "UUID": 2611618213,
+                    "OriginalUUID": 142371075
+                }
+            ]
+        },
+        {
+            "ParentUUID": 3472388989,
+            "Prefab": "Library/Metadata/14/142371074",
+            "Transform": {
+                "UUID": 2913968216,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0000219345092774,
+                    1.0,
+                    1.0000219345092774
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 1023465745,
+                    "OriginalUUID": 142371074
+                },
+                {
+                    "UUID": 1715486873,
+                    "OriginalUUID": 142371075
                 }
             ]
         },
@@ -480,6 +447,39 @@
                     "OriginalUUID": 1757690035
                 }
             ]
+        },
+        {
+            "ParentUUID": 0,
+            "Prefab": "Library/Metadata/37/3725310025",
+            "Transform": {
+                "UUID": 3736568682,
+                "Active": true,
+                "Translation": [
+                    118.20744323730469,
+                    17.04744529724121,
+                    0.9604029655456543
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    6.5
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 1237788600,
+                    "OriginalUUID": 3725310025
+                },
+                {
+                    "UUID": 2947238369,
+                    "OriginalUUID": 3725310026
+                }
+            ]
         }
     ],
     "PrefabsComponents": [
@@ -493,91 +493,7 @@
                     "MaterialPath": "Library/Metadata/32/3203815492"
                 }
             ],
-            "UUID": 1715486873
-        },
-        {
-            "Components": [
-                {
-                    "UUID": 676590793,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/32/3202225351",
-                    "MaterialPath": "Library/Metadata/32/3203815492"
-                }
-            ],
-            "UUID": 2611618213
-        },
-        {
-            "Components": [
-                {
-                    "UUID": 676590793,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/32/3202225351",
-                    "MaterialPath": "Library/Metadata/32/3203815492"
-                }
-            ],
-            "UUID": 1869607017
-        },
-        {
-            "Components": [
-                {
-                    "UUID": 676590793,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/32/3202225351",
-                    "MaterialPath": "Library/Metadata/32/3203815492"
-                }
-            ],
-            "UUID": 3542076369
-        },
-        {
-            "Components": [
-                {
-                    "UUID": 676590793,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/32/3202225351",
-                    "MaterialPath": "Library/Metadata/32/3203815492"
-                }
-            ],
-            "UUID": 3747423302
-        },
-        {
-            "Components": [
-                {
-                    "UUID": 676590793,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/32/3202225351",
-                    "MaterialPath": "Library/Metadata/32/3203815492"
-                }
-            ],
-            "UUID": 3455780701
-        },
-        {
-            "Components": [
-                {
-                    "UUID": 676590793,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/32/3202225351",
-                    "MaterialPath": "Library/Metadata/32/3203815492"
-                }
-            ],
-            "UUID": 4102597730
-        },
-        {
-            "Components": [
-                {
-                    "UUID": 676590793,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "MeshPath": "Library/Metadata/32/3202225351",
-                    "MaterialPath": "Library/Metadata/32/3203815492"
-                }
-            ],
-            "UUID": 136775205
+            "UUID": 81529280
         },
         {
             "Components": [
@@ -601,26 +517,91 @@
                     "MaterialPath": "Library/Metadata/32/3203815492"
                 }
             ],
-            "UUID": 81529280
+            "UUID": 136775205
         },
         {
             "Components": [
                 {
-                    "UUID": 2879098278,
+                    "UUID": 676590793,
                     "ComponentType": 2,
-                    "Active": false,
-                    "MeshPath": "Library/Metadata/43/430316603",
-                    "MaterialPath": "Resources/Materials/default.olmat"
-                },
-                {
-                    "UUID": 498776019,
-                    "ComponentType": 2,
-                    "Active": false,
-                    "MeshPath": "Library/Metadata/43/430316603",
-                    "MaterialPath": "Resources/Materials/default.olmat"
+                    "Active": true,
+                    "MeshPath": "Library/Metadata/32/3202225351",
+                    "MaterialPath": "Library/Metadata/32/3203815492"
                 }
             ],
-            "UUID": 2947238369
+            "UUID": 4102597730
+        },
+        {
+            "Components": [
+                {
+                    "UUID": 676590793,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "MeshPath": "Library/Metadata/32/3202225351",
+                    "MaterialPath": "Library/Metadata/32/3203815492"
+                }
+            ],
+            "UUID": 3455780701
+        },
+        {
+            "Components": [
+                {
+                    "UUID": 676590793,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "MeshPath": "Library/Metadata/32/3202225351",
+                    "MaterialPath": "Library/Metadata/32/3203815492"
+                }
+            ],
+            "UUID": 3747423302
+        },
+        {
+            "Components": [
+                {
+                    "UUID": 676590793,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "MeshPath": "Library/Metadata/32/3202225351",
+                    "MaterialPath": "Library/Metadata/32/3203815492"
+                }
+            ],
+            "UUID": 3542076369
+        },
+        {
+            "Components": [
+                {
+                    "UUID": 676590793,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "MeshPath": "Library/Metadata/32/3202225351",
+                    "MaterialPath": "Library/Metadata/32/3203815492"
+                }
+            ],
+            "UUID": 1869607017
+        },
+        {
+            "Components": [
+                {
+                    "UUID": 676590793,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "MeshPath": "Library/Metadata/32/3202225351",
+                    "MaterialPath": "Library/Metadata/32/3203815492"
+                }
+            ],
+            "UUID": 2611618213
+        },
+        {
+            "Components": [
+                {
+                    "UUID": 676590793,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "MeshPath": "Library/Metadata/32/3202225351",
+                    "MaterialPath": "Library/Metadata/32/3203815492"
+                }
+            ],
+            "UUID": 1715486873
         },
         {
             "Components": [
@@ -789,36 +770,55 @@
                 }
             ],
             "UUID": 3282878125
+        },
+        {
+            "Components": [
+                {
+                    "UUID": 2879098278,
+                    "ComponentType": 2,
+                    "Active": false,
+                    "MeshPath": "Library/Metadata/43/430316603",
+                    "MaterialPath": "Resources/Materials/default.olmat"
+                },
+                {
+                    "UUID": 498776019,
+                    "ComponentType": 2,
+                    "Active": false,
+                    "MeshPath": "Library/Metadata/43/430316603",
+                    "MaterialPath": "Resources/Materials/default.olmat"
+                }
+            ],
+            "UUID": 2947238369
         }
     ],
     "GameObjects": [
         {
-            "UUID": 2098360921,
+            "UUID": 3557340657,
             "ParentUUID": 0,
-            "Name": "WorldManager",
+            "Name": "Camera3",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1709141134,
+                "UUID": 3313388298,
                 "Active": true,
                 "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
+                    126.6791763305664,
+                    23.494098663330079,
+                    1.0953497886657715
                 ],
                 "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
+                    -180.0,
+                    -87.73133850097656,
+                    -180.0
                 ],
                 "Scale": [
+                    1.000001311302185,
                     1.0,
-                    1.0,
-                    1.0
+                    1.000001311302185
                 ]
             },
             "Transform2D": {
-                "UUID": 1053671642,
+                "UUID": 3090928158,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -839,282 +839,629 @@
             },
             "Components": [
                 {
-                    "UUID": 990935131,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "WorldManager",
-                    "Name0": "Cube.001",
-                    "Cube.001": 2947238369,
-                    "Name1": "Progess Bar",
-                    "Progess Bar": 3530630477,
-                    "Name2": "LoseScreen",
-                    "LoseScreen": 417780375,
-                    "Name3": "WinScreen",
-                    "WinScreen": 2393616920,
-                    "Name4": "Player",
-                    "Player": 4276022674
-                }
-            ]
-        },
-        {
-            "UUID": 3472388989,
-            "ParentUUID": 0,
-            "Name": "Enemy2",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2313942858,
-                "Active": true,
-                "Translation": [
-                    -33.307308197021487,
-                    7.6567182540893559,
-                    3.192206859588623
-                ],
-                "Rotation": [
-                    -0.0,
-                    270.0,
-                    0.0
-                ],
-                "Scale": [
-                    0.9999780058860779,
-                    1.0,
-                    0.9999780058860779
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2970859101,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 3024025958,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "DamageScript",
-                    "Name0": "Player",
-                    "Player": 4276022674,
-                    "Name1": "Progess Bar",
-                    "Progess Bar": 3530630477
-                }
-            ]
-        },
-        {
-            "UUID": 2680572544,
-            "ParentUUID": 0,
-            "Name": "Enemy1",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1280148712,
-                "Active": true,
-                "Translation": [
-                    -3.586564064025879,
-                    6.458881378173828,
-                    1.5623422861099244
-                ],
-                "Rotation": [
-                    -0.0,
-                    270.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1440820539,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 1521336170,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "DamageScript",
-                    "Name0": "Player",
-                    "Player": 4276022674,
-                    "Name1": "Progess Bar",
-                    "Progess Bar": 3530630477
-                }
-            ]
-        },
-        {
-            "UUID": 621716883,
-            "ParentUUID": 0,
-            "Name": "Enemy",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 72498751,
-                "Active": true,
-                "Translation": [
-                    -88.82943725585938,
-                    -0.4351380467414856,
-                    -0.6176948547363281
-                ],
-                "Rotation": [
-                    -0.0,
-                    270.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1317110530,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 1866968593,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "DamageScript",
-                    "Name0": "Player",
-                    "Player": 4276022674,
-                    "Name1": "Progess Bar",
-                    "Progess Bar": 3530630477
-                }
-            ]
-        },
-        {
-            "UUID": 2107763449,
-            "ParentUUID": 0,
-            "Name": "Canvas",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3454453610,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 4178266092,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 1657138389,
-                    "Active": true,
-                    "ComponentType": 5,
-                    "UIType": 0,
-                    "Texture": 2,
-                    "Color": [
-                        1.0,
-                        1.0,
+                    "UUID": 3716170080,
+                    "ComponentType": 1,
+                    "Active": false,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 100.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 1,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
                         1.0
                     ],
-                    "Layer": 0
+                    "Depth": 0
+                }
+            ]
+        },
+        {
+            "UUID": 3756280887,
+            "ParentUUID": 0,
+            "Name": "Camera2",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 297354049,
+                "Active": true,
+                "Translation": [
+                    -119.48574829101563,
+                    7.770149230957031,
+                    -3.6286733150482179
+                ],
+                "Rotation": [
+                    -0.0,
+                    84.83710479736328,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0000001192092896,
+                    1.0,
+                    1.0000001192092896
+                ]
+            },
+            "Transform2D": {
+                "UUID": 412316298,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 4143584514,
+                    "ComponentType": 1,
+                    "Active": false,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 100.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 1,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0
+                }
+            ]
+        },
+        {
+            "UUID": 2957880146,
+            "ParentUUID": 0,
+            "Name": "Camera1",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2158696316,
+                "Active": true,
+                "Translation": [
+                    9.371611595153809,
+                    100.80411529541016,
+                    -9.836433410644532
+                ],
+                "Rotation": [
+                    88.46711730957031,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0000005960464478,
+                    1.0000005960464478
+                ]
+            },
+            "Transform2D": {
+                "UUID": 300795904,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 893694317,
+                    "ComponentType": 1,
+                    "Active": false,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 300.0,
+                    "VerticalFOV": 1.715000033378601,
+                    "ClearMode": 1,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0
+                }
+            ]
+        },
+        {
+            "UUID": 1405731591,
+            "ParentUUID": 0,
+            "Name": "Enemy9",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3435877256,
+                "Active": true,
+                "Translation": [
+                    98.19544982910156,
+                    17.349485397338868,
+                    1.889192819595337
+                ],
+                "Rotation": [
+                    -0.0,
+                    -90.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2192905087,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 3158561485,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageScript",
+                    "Name0": "Player",
+                    "Player": 4276022674,
+                    "Name1": "Progess Bar",
+                    "Progess Bar": 3530630477
+                }
+            ]
+        },
+        {
+            "UUID": 1454018062,
+            "ParentUUID": 0,
+            "Name": "Enemy8",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2678524286,
+                "Active": true,
+                "Translation": [
+                    63.519832611083987,
+                    6.910491943359375,
+                    2.304945230484009
+                ],
+                "Rotation": [
+                    -0.0,
+                    270.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2647892021,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 1403937952,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageScript",
+                    "Name0": "Player",
+                    "Player": 4276022674,
+                    "Name1": "Progess Bar",
+                    "Progess Bar": 3530630477
+                }
+            ]
+        },
+        {
+            "UUID": 2601900686,
+            "ParentUUID": 0,
+            "Name": "Enemy7",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 588537986,
+                "Active": true,
+                "Translation": [
+                    43.61703872680664,
+                    7.7108564376831059,
+                    3.663665771484375
+                ],
+                "Rotation": [
+                    -0.0,
+                    270.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 308953762,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 4013201334,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageScript",
+                    "Name0": "Player",
+                    "Player": 4276022674,
+                    "Name1": "Progess Bar",
+                    "Progess Bar": 3530630477
+                }
+            ]
+        },
+        {
+            "UUID": 1315072191,
+            "ParentUUID": 0,
+            "Name": "Enemy6",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1429360057,
+                "Active": true,
+                "Translation": [
+                    32.79219436645508,
+                    7.763132572174072,
+                    -1.2442960739135743
+                ],
+                "Rotation": [
+                    -0.0,
+                    270.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1200620375,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 2031515853,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageScript",
+                    "Name0": "Player",
+                    "Player": 4276022674,
+                    "Name1": "Progess Bar",
+                    "Progess Bar": 3530630477
+                }
+            ]
+        },
+        {
+            "UUID": 2215071729,
+            "ParentUUID": 0,
+            "Name": "Enemy5",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2540503486,
+                "Active": true,
+                "Translation": [
+                    21.034719467163087,
+                    7.969695568084717,
+                    4.110218524932861
+                ],
+                "Rotation": [
+                    -0.0,
+                    270.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 4089380502,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 3619299086,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageScript",
+                    "Name0": "Player",
+                    "Player": 4276022674,
+                    "Name1": "Progess Bar",
+                    "Progess Bar": 3530630477
+                }
+            ]
+        },
+        {
+            "UUID": 439564410,
+            "ParentUUID": 0,
+            "Name": "Enemy4",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2063244765,
+                "Active": true,
+                "Translation": [
+                    8.433682441711426,
+                    7.6587724685668949,
+                    -1.6942107677459717
+                ],
+                "Rotation": [
+                    -0.0,
+                    270.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2882377394,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 1612331875,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageScript",
+                    "Name0": "Player",
+                    "Player": 4276022674,
+                    "Name1": "Progess Bar",
+                    "Progess Bar": 3530630477
+                }
+            ]
+        },
+        {
+            "UUID": 3141404224,
+            "ParentUUID": 0,
+            "Name": "Enemy3",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3276332288,
+                "Active": true,
+                "Translation": [
+                    -48.98279571533203,
+                    7.73475456237793,
+                    -2.0008997917175295
+                ],
+                "Rotation": [
+                    -0.0,
+                    270.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2291715715,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 1737891840,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageScript",
+                    "Name0": "Player",
+                    "Player": 4276022674,
+                    "Name1": "Progess Bar",
+                    "Progess Bar": 3530630477
+                }
+            ]
+        },
+        {
+            "UUID": 4276022674,
+            "ParentUUID": 0,
+            "Name": "Player",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2312298764,
+                "Active": true,
+                "Translation": [
+                    -100.76617431640625,
+                    -1.5809134244918824,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1762346147,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 2849780764,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerController",
+                    "Player": 0
                 },
                 {
-                    "UUID": 3883710935,
+                    "UUID": 114607021,
                     "ComponentType": 6,
                     "Active": true,
-                    "ScriptName": "DebugModeScript",
-                    "Name0": "Background",
-                    "Background": 806815011,
-                    "Name1": "Texttris",
-                    "Texttris": 2691129657,
-                    "Name2": "Textverts",
-                    "Textverts": 965692103,
-                    "Name3": "Textfps",
-                    "Textfps": 3904012780,
-                    "Name4": "Main Camera",
-                    "Main Camera": 172714554
+                    "ScriptName": "PlayerMovement"
                 }
             ]
         },
         {
-            "UUID": 417780375,
-            "ParentUUID": 2107763449,
-            "Name": "LoseScreen",
+            "UUID": 1690967942,
+            "ParentUUID": 0,
+            "Name": "Light",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3088108479,
+                "UUID": 3749479261,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -1123,7 +1470,7 @@
                 ],
                 "Rotation": [
                     0.0,
-                    0.0,
+                    -107.69999694824219,
                     0.0
                 ],
                 "Scale": [
@@ -1133,12 +1480,12 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 2455574222,
+                "UUID": 1012207212,
                 "Active": true,
-                "Top": -540.0,
-                "Right": 960.0,
-                "Bottom": 540.0,
-                "Left": -960.0,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
                 "Rotation": 0.0,
                 "Scale": [
                     1.0,
@@ -1147,405 +1494,36 @@
                 "Position": [
                     0.0,
                     0.0,
-                    -1.0
+                    0.0
                 ],
-                "Width": 1920.0,
-                "Height": 1080.0
+                "Width": 10.0,
+                "Height": 10.0
             },
             "Components": [
                 {
-                    "UUID": 643750088,
-                    "Active": false,
-                    "ComponentType": 5,
-                    "UIType": 1,
-                    "Texture": 9,
-                    "Color": [
-                        0.788395881652832,
-                        0.10763084143400192,
-                        0.10763084143400192
-                    ],
-                    "Layer": 3,
-                    "MetadataPath": "Library/Metadata/23/2331161065"
-                }
-            ]
-        },
-        {
-            "UUID": 2393616920,
-            "ParentUUID": 2107763449,
-            "Name": "WinScreen",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 421096938,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2872892424,
-                "Active": true,
-                "Top": -540.0,
-                "Right": 960.0,
-                "Bottom": 540.0,
-                "Left": -960.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    -1.0
-                ],
-                "Width": 1920.0,
-                "Height": 1080.0
-            },
-            "Components": [
-                {
-                    "UUID": 1119199184,
-                    "Active": false,
-                    "ComponentType": 5,
-                    "UIType": 1,
-                    "Texture": 10,
-                    "Color": [
-                        0.057659395039081576,
-                        0.12069918215274811,
-                        0.7679181098937988
-                    ],
-                    "Layer": 3,
-                    "MetadataPath": "Library/Metadata/37/3702527862"
-                }
-            ]
-        },
-        {
-            "UUID": 965692103,
-            "ParentUUID": 2107763449,
-            "Name": "Textverts",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 250289248,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2889067770,
-                "Active": true,
-                "Top": 134.0,
-                "Right": 475.0,
-                "Bottom": 160.0,
-                "Left": 108.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    292.0,
-                    147.0,
-                    -2.0
-                ],
-                "Width": 367.0,
-                "Height": 26.0
-            },
-            "Components": [
-                {
-                    "UUID": 2887972880,
-                    "Active": false,
-                    "ComponentType": 5,
-                    "UIType": 2,
-                    "Texture": 2,
-                    "Color": [
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "Layer": 1,
-                    "Text": "Default",
-                    "Scale": 12.0
-                }
-            ]
-        },
-        {
-            "UUID": 2691129657,
-            "ParentUUID": 2107763449,
-            "Name": "Texttris",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 984919551,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 667678069,
-                "Active": true,
-                "Top": 194.0,
-                "Right": 713.0,
-                "Bottom": 220.0,
-                "Left": 107.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    410.0,
-                    207.0,
-                    -2.0
-                ],
-                "Width": 606.0,
-                "Height": 26.0
-            },
-            "Components": [
-                {
-                    "UUID": 689450964,
-                    "Active": false,
-                    "ComponentType": 5,
-                    "UIType": 2,
-                    "Texture": 2,
-                    "Color": [
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "Layer": 1,
-                    "Text": "Default",
-                    "Scale": 12.0
-                }
-            ]
-        },
-        {
-            "UUID": 3904012780,
-            "ParentUUID": 2107763449,
-            "Name": "Textfps",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2711702917,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1668940902,
-                "Active": true,
-                "Top": 256.0,
-                "Right": 657.0,
-                "Bottom": 282.0,
-                "Left": 108.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    383.0,
-                    269.0,
-                    -2.0
-                ],
-                "Width": 549.0,
-                "Height": 26.0
-            },
-            "Components": [
-                {
-                    "UUID": 2394912892,
-                    "Active": false,
-                    "ComponentType": 5,
-                    "UIType": 2,
-                    "Texture": 2,
-                    "Color": [
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "Layer": 1,
-                    "Text": "Default",
-                    "Scale": 12.0
-                }
-            ]
-        },
-        {
-            "UUID": 806815011,
-            "ParentUUID": 2107763449,
-            "Name": "Background",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1832682227,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 3778509475,
-                "Active": true,
-                "Top": 108.0,
-                "Right": 526.0,
-                "Bottom": 303.0,
-                "Left": 83.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    305.0,
-                    206.0,
-                    -1.0
-                ],
-                "Width": 443.0,
-                "Height": 195.0
-            },
-            "Components": [
-                {
-                    "UUID": 3655692272,
-                    "Active": false,
-                    "ComponentType": 5,
-                    "UIType": 1,
-                    "Texture": 2,
-                    "Color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "Layer": 0
-                }
-            ]
-        },
-        {
-            "UUID": 3530630477,
-            "ParentUUID": 2107763449,
-            "Name": "Progess Bar",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2483970451,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2040301640,
-                "Active": true,
-                "Top": 227.0,
-                "Right": -272.0,
-                "Bottom": 244.0,
-                "Left": -485.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    -379.0,
-                    236.0,
-                    0.0
-                ],
-                "Width": 213.0,
-                "Height": 17.0
-            },
-            "Components": [
-                {
-                    "UUID": 3299404115,
+                    "UUID": 2143224420,
+                    "ComponentType": 4,
                     "Active": true,
-                    "ComponentType": 5,
-                    "UIType": 4,
-                    "Texture": 2,
-                    "Color": [
-                        0.8156996369361877,
-                        0.09578525274991989,
-                        0.08073479682207108
+                    "LightColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                     ],
-                    "Layer": 0,
-                    "Percentage": 100.0,
-                    "BarTexture": 2,
-                    "BarColor": [
-                        0.07803237438201904,
-                        0.788395881652832,
-                        0.25744155049324038
-                    ]
+                    "Intensity": 0.30000001192092898,
+                    "LightType": 2,
+                    "PointLightRange": 16.0,
+                    "PointLightConstant": 1.0,
+                    "PointLightLinear": 0.04500000178813934,
+                    "PointLightQuadratic": 0.007499999832361937,
+                    "SpotLightRange": 10.0,
+                    "SpotLightConstant": 1.0,
+                    "SpotLightLinear": 0.04500000178813934,
+                    "SpotLightQuadratic": 0.007499999832361937,
+                    "SpotLightSpotAngle": 30.0,
+                    "SpotLightCutoff": 0.9659258127212524,
+                    "SpotLightSoftness": 0.10000000149011612,
+                    "SpotLightOuterCutoff": 0.9588197469711304
                 }
             ]
         },
@@ -1643,13 +1621,13 @@
             ]
         },
         {
-            "UUID": 1690967942,
+            "UUID": 2107763449,
             "ParentUUID": 0,
-            "Name": "Light",
+            "Name": "Canvas",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3749479261,
+                "UUID": 3454453610,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -1658,7 +1636,7 @@
                 ],
                 "Rotation": [
                     0.0,
-                    -107.69999694824219,
+                    0.0,
                     0.0
                 ],
                 "Scale": [
@@ -1668,7 +1646,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 1012207212,
+                "UUID": 4178266092,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -1689,110 +1667,53 @@
             },
             "Components": [
                 {
-                    "UUID": 2143224420,
-                    "ComponentType": 4,
+                    "UUID": 1657138389,
                     "Active": true,
-                    "LightColor": [
-                        1.0,
+                    "ComponentType": 5,
+                    "UIType": 0,
+                    "Texture": 2,
+                    "Color": [
                         1.0,
                         1.0,
                         1.0
                     ],
-                    "Intensity": 0.30000001192092898,
-                    "LightType": 2,
-                    "PointLightRange": 16.0,
-                    "PointLightConstant": 1.0,
-                    "PointLightLinear": 0.04500000178813934,
-                    "PointLightQuadratic": 0.007499999832361937,
-                    "SpotLightRange": 10.0,
-                    "SpotLightConstant": 1.0,
-                    "SpotLightLinear": 0.04500000178813934,
-                    "SpotLightQuadratic": 0.007499999832361937,
-                    "SpotLightSpotAngle": 30.0,
-                    "SpotLightCutoff": 0.9659258127212524,
-                    "SpotLightSoftness": 0.10000000149011612,
-                    "SpotLightOuterCutoff": 0.9588197469711304
-                }
-            ]
-        },
-        {
-            "UUID": 4276022674,
-            "ParentUUID": 0,
-            "Name": "Player",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2312298764,
-                "Active": true,
-                "Translation": [
-                    -100.76617431640625,
-                    -1.5809134244918824,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1762346147,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 2849780764,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "PlayerController",
-                    "Player": 0
+                    "Layer": 0
                 },
                 {
-                    "UUID": 114607021,
+                    "UUID": 3883710935,
                     "ComponentType": 6,
                     "Active": true,
-                    "ScriptName": "PlayerMovement"
+                    "ScriptName": "DebugModeScript",
+                    "Name0": "Background",
+                    "Background": 806815011,
+                    "Name1": "Texttris",
+                    "Texttris": 2691129657,
+                    "Name2": "Textverts",
+                    "Textverts": 965692103,
+                    "Name3": "Textfps",
+                    "Textfps": 3904012780,
+                    "Name4": "Main Camera",
+                    "Main Camera": 172714554
                 }
             ]
         },
         {
-            "UUID": 3141404224,
-            "ParentUUID": 0,
-            "Name": "Enemy3",
+            "UUID": 3530630477,
+            "ParentUUID": 2107763449,
+            "Name": "Progess Bar",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3276332288,
+                "UUID": 2483970451,
                 "Active": true,
                 "Translation": [
-                    -48.98279571533203,
-                    7.73475456237793,
-                    -2.0008997917175295
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
-                    -0.0,
-                    270.0,
+                    0.0,
+                    0.0,
                     0.0
                 ],
                 "Scale": [
@@ -1802,55 +1723,65 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 2291715715,
+                "UUID": 2040301640,
                 "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
+                "Top": 227.0,
+                "Right": -272.0,
+                "Bottom": 244.0,
+                "Left": -485.0,
                 "Rotation": 0.0,
                 "Scale": [
                     1.0,
                     1.0
                 ],
                 "Position": [
-                    0.0,
-                    0.0,
+                    -379.0,
+                    236.0,
                     0.0
                 ],
-                "Width": 10.0,
-                "Height": 10.0
+                "Width": 213.0,
+                "Height": 17.0
             },
             "Components": [
                 {
-                    "UUID": 1737891840,
-                    "ComponentType": 6,
+                    "UUID": 3299404115,
                     "Active": true,
-                    "ScriptName": "DamageScript",
-                    "Name0": "Player",
-                    "Player": 4276022674,
-                    "Name1": "Progess Bar",
-                    "Progess Bar": 3530630477
+                    "ComponentType": 5,
+                    "UIType": 4,
+                    "Texture": 2,
+                    "Color": [
+                        0.8156996369361877,
+                        0.09578525274991989,
+                        0.08073479682207108
+                    ],
+                    "Layer": 0,
+                    "Percentage": 100.0,
+                    "BarTexture": 2,
+                    "BarColor": [
+                        0.07803237438201904,
+                        0.788395881652832,
+                        0.25744155049324038
+                    ]
                 }
             ]
         },
         {
-            "UUID": 439564410,
-            "ParentUUID": 0,
-            "Name": "Enemy4",
+            "UUID": 806815011,
+            "ParentUUID": 2107763449,
+            "Name": "Background",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 2063244765,
+                "UUID": 1832682227,
                 "Active": true,
                 "Translation": [
-                    8.433682441711426,
-                    7.6587724685668949,
-                    -1.6942107677459717
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
-                    -0.0,
-                    270.0,
+                    0.0,
+                    0.0,
                     0.0
                 ],
                 "Scale": [
@@ -1860,425 +1791,262 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 2882377394,
+                "UUID": 3778509475,
                 "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
+                "Top": 108.0,
+                "Right": 526.0,
+                "Bottom": 303.0,
+                "Left": 83.0,
                 "Rotation": 0.0,
                 "Scale": [
                     1.0,
                     1.0
                 ],
                 "Position": [
-                    0.0,
-                    0.0,
-                    0.0
+                    305.0,
+                    206.0,
+                    -1.0
                 ],
-                "Width": 10.0,
-                "Height": 10.0
+                "Width": 443.0,
+                "Height": 195.0
             },
             "Components": [
                 {
-                    "UUID": 1612331875,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "DamageScript",
-                    "Name0": "Player",
-                    "Player": 4276022674,
-                    "Name1": "Progess Bar",
-                    "Progess Bar": 3530630477
-                }
-            ]
-        },
-        {
-            "UUID": 2215071729,
-            "ParentUUID": 0,
-            "Name": "Enemy5",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2540503486,
-                "Active": true,
-                "Translation": [
-                    21.034719467163087,
-                    7.969695568084717,
-                    4.110218524932861
-                ],
-                "Rotation": [
-                    -0.0,
-                    270.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 4089380502,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 3619299086,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "DamageScript",
-                    "Name0": "Player",
-                    "Player": 4276022674,
-                    "Name1": "Progess Bar",
-                    "Progess Bar": 3530630477
-                }
-            ]
-        },
-        {
-            "UUID": 1315072191,
-            "ParentUUID": 0,
-            "Name": "Enemy6",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1429360057,
-                "Active": true,
-                "Translation": [
-                    32.79219436645508,
-                    7.763132572174072,
-                    -1.2442960739135743
-                ],
-                "Rotation": [
-                    -0.0,
-                    270.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1200620375,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 2031515853,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "DamageScript",
-                    "Name0": "Player",
-                    "Player": 4276022674,
-                    "Name1": "Progess Bar",
-                    "Progess Bar": 3530630477
-                }
-            ]
-        },
-        {
-            "UUID": 2601900686,
-            "ParentUUID": 0,
-            "Name": "Enemy7",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 588537986,
-                "Active": true,
-                "Translation": [
-                    43.61703872680664,
-                    7.7108564376831059,
-                    3.663665771484375
-                ],
-                "Rotation": [
-                    -0.0,
-                    270.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 308953762,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 4013201334,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "DamageScript",
-                    "Name0": "Player",
-                    "Player": 4276022674,
-                    "Name1": "Progess Bar",
-                    "Progess Bar": 3530630477
-                }
-            ]
-        },
-        {
-            "UUID": 1454018062,
-            "ParentUUID": 0,
-            "Name": "Enemy8",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2678524286,
-                "Active": true,
-                "Translation": [
-                    63.519832611083987,
-                    6.910491943359375,
-                    2.304945230484009
-                ],
-                "Rotation": [
-                    -0.0,
-                    270.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2647892021,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 1403937952,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "DamageScript",
-                    "Name0": "Player",
-                    "Player": 4276022674,
-                    "Name1": "Progess Bar",
-                    "Progess Bar": 3530630477
-                }
-            ]
-        },
-        {
-            "UUID": 1405731591,
-            "ParentUUID": 0,
-            "Name": "Enemy9",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3435877256,
-                "Active": true,
-                "Translation": [
-                    98.19544982910156,
-                    17.349485397338868,
-                    1.889192819595337
-                ],
-                "Rotation": [
-                    -0.0,
-                    -90.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2192905087,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 3158561485,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "DamageScript",
-                    "Name0": "Player",
-                    "Player": 4276022674,
-                    "Name1": "Progess Bar",
-                    "Progess Bar": 3530630477
-                }
-            ]
-        },
-        {
-            "UUID": 2957880146,
-            "ParentUUID": 0,
-            "Name": "Camera1",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2158696316,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    67.33002471923828,
-                    -72.28821563720703
-                ],
-                "Rotation": [
-                    34.87287139892578,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    0.9999998211860657,
-                    0.9999998211860657
-                ]
-            },
-            "Transform2D": {
-                "UUID": 300795904,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 893694317,
-                    "ComponentType": 1,
+                    "UUID": 3655692272,
                     "Active": false,
-                    "FrustumType": 2,
-                    "NearPlaneDistance": 1.0,
-                    "FarPlaneDistance": 100.0,
-                    "VerticalFOV": 0.7853981852531433,
-                    "ClearMode": 1,
-                    "ClearColor": [
-                        0.0,
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 2,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Layer": 0
+                }
+            ]
+        },
+        {
+            "UUID": 3904012780,
+            "ParentUUID": 2107763449,
+            "Name": "Textfps",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2711702917,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1668940902,
+                "Active": true,
+                "Top": 256.0,
+                "Right": 657.0,
+                "Bottom": 282.0,
+                "Left": 108.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    383.0,
+                    269.0,
+                    -2.0
+                ],
+                "Width": 549.0,
+                "Height": 26.0
+            },
+            "Components": [
+                {
+                    "UUID": 2394912892,
+                    "Active": false,
+                    "ComponentType": 5,
+                    "UIType": 2,
+                    "Texture": 2,
+                    "Color": [
                         0.0,
                         0.0,
                         1.0
                     ],
-                    "Depth": 0
+                    "Layer": 1,
+                    "Text": "Default",
+                    "Scale": 12.0
                 }
             ]
         },
         {
-            "UUID": 3756280887,
-            "ParentUUID": 0,
-            "Name": "Camera2",
+            "UUID": 2691129657,
+            "ParentUUID": 2107763449,
+            "Name": "Texttris",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 297354049,
+                "UUID": 984919551,
                 "Active": true,
                 "Translation": [
-                    -119.48574829101563,
-                    7.770149230957031,
-                    -3.6286733150482179
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
-                    -0.0,
-                    84.83710479736328,
-                    -0.0
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Scale": [
-                    1.0000001192092896,
                     1.0,
-                    1.0000001192092896
+                    1.0,
+                    1.0
                 ]
             },
             "Transform2D": {
-                "UUID": 412316298,
+                "UUID": 667678069,
                 "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
+                "Top": 194.0,
+                "Right": 713.0,
+                "Bottom": 220.0,
+                "Left": 107.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    410.0,
+                    207.0,
+                    -2.0
+                ],
+                "Width": 606.0,
+                "Height": 26.0
+            },
+            "Components": [
+                {
+                    "UUID": 689450964,
+                    "Active": false,
+                    "ComponentType": 5,
+                    "UIType": 2,
+                    "Texture": 2,
+                    "Color": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Layer": 1,
+                    "Text": "Default",
+                    "Scale": 12.0
+                }
+            ]
+        },
+        {
+            "UUID": 965692103,
+            "ParentUUID": 2107763449,
+            "Name": "Textverts",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 250289248,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2889067770,
+                "Active": true,
+                "Top": 134.0,
+                "Right": 475.0,
+                "Bottom": 160.0,
+                "Left": 108.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    292.0,
+                    147.0,
+                    -2.0
+                ],
+                "Width": 367.0,
+                "Height": 26.0
+            },
+            "Components": [
+                {
+                    "UUID": 2887972880,
+                    "Active": false,
+                    "ComponentType": 5,
+                    "UIType": 2,
+                    "Texture": 2,
+                    "Color": [
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Layer": 1,
+                    "Text": "Default",
+                    "Scale": 12.0
+                }
+            ]
+        },
+        {
+            "UUID": 2393616920,
+            "ParentUUID": 2107763449,
+            "Name": "WinScreen",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 421096938,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2872892424,
+                "Active": true,
+                "Top": -540.0,
+                "Right": 960.0,
+                "Bottom": 540.0,
+                "Left": -960.0,
                 "Rotation": 0.0,
                 "Scale": [
                     1.0,
@@ -2287,48 +2055,107 @@
                 "Position": [
                     0.0,
                     0.0,
-                    0.0
+                    -1.0
                 ],
-                "Width": 10.0,
-                "Height": 10.0
+                "Width": 1920.0,
+                "Height": 1080.0
             },
             "Components": [
                 {
-                    "UUID": 4143584514,
-                    "ComponentType": 1,
+                    "UUID": 1119199184,
                     "Active": false,
-                    "FrustumType": 2,
-                    "NearPlaneDistance": 1.0,
-                    "FarPlaneDistance": 100.0,
-                    "VerticalFOV": 0.7853981852531433,
-                    "ClearMode": 1,
-                    "ClearColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 10,
+                    "Color": [
+                        0.057659395039081576,
+                        0.12069918215274811,
+                        0.7679181098937988
                     ],
-                    "Depth": 0
+                    "Layer": 3,
+                    "MetadataPath": "Library/Metadata/37/3702527862"
                 }
             ]
         },
         {
-            "UUID": 3557340657,
-            "ParentUUID": 0,
-            "Name": "Camera3",
+            "UUID": 417780375,
+            "ParentUUID": 2107763449,
+            "Name": "LoseScreen",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3313388298,
+                "UUID": 3088108479,
                 "Active": true,
                 "Translation": [
-                    118.96340942382813,
-                    7.345372200012207,
-                    -21.12773323059082
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2455574222,
+                "Active": true,
+                "Top": -540.0,
+                "Right": 960.0,
+                "Bottom": 540.0,
+                "Left": -960.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    -1.0
+                ],
+                "Width": 1920.0,
+                "Height": 1080.0
+            },
+            "Components": [
+                {
+                    "UUID": 643750088,
+                    "Active": false,
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 9,
+                    "Color": [
+                        0.788395881652832,
+                        0.10763084143400192,
+                        0.10763084143400192
+                    ],
+                    "Layer": 3,
+                    "MetadataPath": "Library/Metadata/23/2331161065"
+                }
+            ]
+        },
+        {
+            "UUID": 621716883,
+            "ParentUUID": 0,
+            "Name": "Enemy",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 72498751,
+                "Active": true,
+                "Translation": [
+                    -88.82943725585938,
+                    -0.4351380467414856,
+                    -0.6176948547363281
                 ],
                 "Rotation": [
                     -0.0,
-                    -85.50001525878906,
+                    270.0,
                     -0.0
                 ],
                 "Scale": [
@@ -2338,7 +2165,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 3090928158,
+                "UUID": 1317110530,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -2359,21 +2186,194 @@
             },
             "Components": [
                 {
-                    "UUID": 3716170080,
-                    "ComponentType": 1,
-                    "Active": false,
-                    "FrustumType": 2,
-                    "NearPlaneDistance": 1.0,
-                    "FarPlaneDistance": 100.0,
-                    "VerticalFOV": 0.7853981852531433,
-                    "ClearMode": 1,
-                    "ClearColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "Depth": 0
+                    "UUID": 1866968593,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageScript",
+                    "Name0": "Player",
+                    "Player": 4276022674,
+                    "Name1": "Progess Bar",
+                    "Progess Bar": 3530630477
+                }
+            ]
+        },
+        {
+            "UUID": 2680572544,
+            "ParentUUID": 0,
+            "Name": "Enemy1",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1280148712,
+                "Active": true,
+                "Translation": [
+                    -3.586564064025879,
+                    6.458881378173828,
+                    1.5623422861099244
+                ],
+                "Rotation": [
+                    -0.0,
+                    270.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1440820539,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 1521336170,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageScript",
+                    "Name0": "Player",
+                    "Player": 4276022674,
+                    "Name1": "Progess Bar",
+                    "Progess Bar": 3530630477
+                }
+            ]
+        },
+        {
+            "UUID": 3472388989,
+            "ParentUUID": 0,
+            "Name": "Enemy2",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2313942858,
+                "Active": true,
+                "Translation": [
+                    -33.307308197021487,
+                    7.6567182540893559,
+                    3.192206859588623
+                ],
+                "Rotation": [
+                    -0.0,
+                    270.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.9999780058860779,
+                    1.0,
+                    0.9999780058860779
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2970859101,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 3024025958,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageScript",
+                    "Name0": "Player",
+                    "Player": 4276022674,
+                    "Name1": "Progess Bar",
+                    "Progess Bar": 3530630477
+                }
+            ]
+        },
+        {
+            "UUID": 2098360921,
+            "ParentUUID": 0,
+            "Name": "WorldManager",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1709141134,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1053671642,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 990935131,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "WorldManager",
+                    "Name0": "Cube.001",
+                    "Cube.001": 2947238369,
+                    "Name1": "Progess Bar",
+                    "Progess Bar": 3530630477,
+                    "Name2": "LoseScreen",
+                    "LoseScreen": 417780375,
+                    "Name3": "WinScreen",
+                    "WinScreen": 2393616920,
+                    "Name4": "Player",
+                    "Player": 4276022674
                 }
             ]
         }
