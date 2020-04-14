@@ -69,9 +69,6 @@ void main()
 	view_dir    = normalize(view_pos - position);
 	
 
-//Normalized nornal + tangent
-	vec3 normalized_normal = normalize(normal);
-	vec3 normalized_tangent = normalize(tangent);
 
 //Tangent space matrix
 	mat3 normalMatrix = transpose(inverse(mat3(matrices.model)));

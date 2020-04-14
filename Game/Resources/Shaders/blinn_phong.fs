@@ -16,6 +16,10 @@ in mat3 TBN;
 in vec3 t_view_pos;
 in vec3 t_frag_pos;
 
+
+#define NORMAL_MAP 1
+#define SPECULAR_MAP 1
+
 out vec4 FragColor;
 
 //constants
@@ -26,14 +30,21 @@ struct Material
 	sampler2D diffuse_map;
 	vec4 diffuse_color;
 	float k_diffuse;
-	sampler2D specular_map;
-	vec4 specular_color;
-	float k_specular;
+
+	#if SPECULAR_MAP
+		sampler2D specular_map;
+		vec4 specular_color;
+		float k_specular;
+	#endif
+
 	sampler2D occlusion_map; 
 	float k_ambient;
 	sampler2D emissive_map;
 	vec4 emissive_color;
-	sampler2D normal_map;
+
+	#if NORMAL_MAP
+		sampler2D normal_map;
+	#endif
 
 	float roughness;
 	float metalness;
@@ -122,9 +133,7 @@ void main()
 
 	if(material.use_normal_map)
 	{
-		
-		vec3 normal_from_texture = texture(material.normal_map, texCoord).rgb;
-		normal_from_texture = normal_from_texture * 2.0 - 1.0;
+		vec3 normal_from_texture = GetNormalMap(material, texCoord);
 
 		vec3 fragment_normal = normalize(TBN * normal_from_texture);
 
@@ -270,15 +279,14 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal)
     float intensity = clamp((theta - spot_light.outerCutOff) / epsilon, 0.0, 1.0);
     
     float distance    = length(spot_light.position - position);
-	//TODO: Why is this commented?
-    //float attenuation = 1.0 / (spot_light.constant + spot_light.linear * distance + 
-                //spot_light.quadratic * (distance * distance));    
+    float attenuation = 1.0 / (spot_light.constant + spot_light.linear * distance + 
+                spot_light.quadratic * (distance * distance));    
 
    return spot_light.color * (
         emissive_color
-        + diffuse_color.rgb * (occlusion_color*material.k_ambient)//*attenuation
-        + diffuse_color.rgb * material.k_diffuse * diffuse*intensity//*attenuation
-        + specular_color.rgb * material.k_specular * BRDF(view_dir, normalized_normal, half_dir, light_dir, material.roughness, material.metalness)*intensity//*attenuation
+        + diffuse_color.rgb * (occlusion_color*material.k_ambient)*attenuation
+        + diffuse_color.rgb * material.k_diffuse * diffuse*intensity*attenuation
+        + specular_color.rgb * material.k_specular * BRDF(view_dir, normalized_normal, half_dir, light_dir, material.roughness, material.metalness)*intensity*attenuation
     );
 
 }
@@ -308,15 +316,12 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal)
 
 	return point_light.color * (
 		emissive_color
-		+  diffuse_color.rgb * (occlusion_color*material.k_ambient)//*attenuation
-		+ diffuse_color.rgb * material.k_diffuse * diffuse// * attenuation
-		+ specular_color.rgb * material.k_specular * BRDF(view_dir, normalized_normal, half_dir, light_dir, material.roughness, material.metalness)//* attenuation
+		+  diffuse_color.rgb * (occlusion_color*material.k_ambient)*attenuation
+		+ diffuse_color.rgb * material.k_diffuse * diffuse* attenuation
+		+ specular_color.rgb * material.k_specular * BRDF(view_dir, normalized_normal, half_dir, light_dir, material.roughness, material.metalness)* attenuation
 	);
 
 }
-
-
-
 //BRDF
 
 //Distribution Function GGX

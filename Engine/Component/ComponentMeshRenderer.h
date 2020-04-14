@@ -10,6 +10,11 @@
 class ComponentMeshRenderer : public Component
 {
 public:
+	enum Variations
+	{
+		ENABLE_NORMAL_MAP =1 << 0,
+		ENABLE_SPECULAR_MAP = 1 << 1
+	};
 	ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render);
 	ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner);
 	ComponentMeshRenderer();

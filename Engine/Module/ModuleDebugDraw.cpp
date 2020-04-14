@@ -461,7 +461,7 @@ void ModuleDebugDraw::Render()
 	}
 	if (App->renderer->meshes_to_render.size() != 0 && App->debug->show_axis) 
 	{
-		//RenderTangentsAndBitangents();
+		RenderTangentsAndBitangents();
 	}
 
 	RenderDebugDraws(*App->cameras->scene_camera);
@@ -485,7 +485,7 @@ void ModuleDebugDraw::RenderTangentsAndBitangents() const
 			float4x4 axis_transform = mesh->owner->transform.GetGlobalModelMatrix() * axis_object_space;
 			dd::axisTriad(axis_transform, 0.1F, 1.0F);
 		}	
-		float3 pos1 = float3(mesh->mesh_to_render->vertices[0].position);
+	/*	float3 pos1 = float3(mesh->mesh_to_render->vertices[0].position);
 		float3 pos2 = float3(mesh->mesh_to_render->vertices[1].position);
 		float3 pos3 = float3(mesh->mesh_to_render->vertices[2].position);
 		float2 uv1 = float2(mesh->mesh_to_render->vertices[0].tex_coords);
@@ -514,9 +514,7 @@ void ModuleDebugDraw::RenderTangentsAndBitangents() const
 		float4 position = float4(pos1, 1.0f);
 		float4x4 axis_object_space = float4x4(tangent1, bitangent1, normal, position);
 		float4x4 axis_transform = mesh->owner->transform.GetGlobalModelMatrix() * axis_object_space;
-		dd::axisTriad(axis_transform, 10.F, 10.F);
-
-
+		dd::axisTriad(axis_transform, 10.F, 10.F);*/
 	}
 }
 void ModuleDebugDraw::RenderCameraFrustum() const
