@@ -17,11 +17,15 @@ bool ModuleFileSystem::Init() {
 		return false;
 	}
 
+#if !GAME
 	MakeDirectory("Assets/Scenes");
+
 	if (!CreateMountedDir("Assets"))
 	{
 		return false;
 	}
+#endif 
+
 	if (!CreateMountedDir("Resources"))
 	{
 		return false;

@@ -127,9 +127,14 @@ void ModuleUI::InitGlyph()
 	if (FT_Init_FreeType(&ft))
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
+#if !GAME
 	// Load font as face
 	if (FT_New_Face(ft, "Assets/Fonts/Montserrat-Light.ttf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+#else
+	if (FT_New_Face(ft, "Library/Montserrat-Light.ttf", 0, &face))
+		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+#endif
 
 	// Set size to load glyphs as
 	//FT_Set_Pixel_Sizes(face, 0, 16);
