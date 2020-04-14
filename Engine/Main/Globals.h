@@ -112,7 +112,11 @@ enum class Fonts
 #define BORDERED true
 
 #define VSYNC true
-#define TITLE "Little Orion Engine"
 
+#if GAME
+#define TITLE "Twinlight Souls"
+#else
+#define TITLE "Little Orion Engine"
+#endif
 
 #endif //_GLOBALS_H_

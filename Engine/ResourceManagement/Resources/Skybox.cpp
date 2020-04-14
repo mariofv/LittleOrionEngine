@@ -23,6 +23,7 @@ void Skybox::LoadDefaultSkybox()
 	std::string cube_face_top_path = texture_path + "skyboxes/twinlight/top.tga";
 	std::string cube_face_bottom_path = texture_path + "skyboxes/twinlight/bottom.tga";
 
+#if !GAME
 	std::vector<std::string> faces{
 		cube_face_right_path,
 		cube_face_left_path,
@@ -35,6 +36,20 @@ void Skybox::LoadDefaultSkybox()
 	};
 
 	skybox_texture = App->texture->LoadCubemap(faces);
+#else
+	std::vector<std::string> faces{
+		"Library/Metadata/32/3247967612",
+		"Library/Metadata/14/1432458242",
+
+		"Library/Metadata/98/988401116",
+		"Library/Metadata/23/2350119398",
+
+		"Library/Metadata/42/4294323779",
+		"Library/Metadata/25/2534416188"
+	};
+
+	skybox_texture = TextureLoader::LoadCubemap(faces);
+#endif
 }
 
 void Skybox::GenerateSkyboxCube() 
