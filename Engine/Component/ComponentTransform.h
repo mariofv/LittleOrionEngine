@@ -67,7 +67,7 @@ public:
 private:
 	void OnTransformChange();
 
-private:
+public:
 	float3 translation = float3::zero;
 	Quat rotation = Quat::identity;
 	float3 rotation_degrees = float3::zero;

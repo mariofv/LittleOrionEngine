@@ -27,12 +27,11 @@ bool ModulePhysics::Init()
 	solver = new btSequentialImpulseConstraintSolver();
 	world = new btDiscreteDynamicsWorld(dispatcher, broad_phase, solver, collision_conf);
 	world->setGravity(btVector3(gravity.x, gravity.y, gravity.z));
-	
-	btVector3 aux(1, 1, 1);
-	AddBody(aux);
+	debug_draw = new DebugDrawer();
+	debug_draw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
+	world->setDebugDrawer(debug_draw);
 
-
-
+	AddBody(btVector3(10,1,10));
 	return true;
 }
 
@@ -53,8 +52,11 @@ update_status ModulePhysics::Update()
 	
 	for (int i = 0; i < boxes.size(); i++) {
 		btTransform trans;
+		
 		boxes.at(i)->motionState->getWorldTransform(trans);
 		boxes.at(i)->owner->transform.SetTranslation(float3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
+		
+
 	}
 	//physics_timer->Stop();
 	//ms = physics_timer->Read();
@@ -74,9 +76,9 @@ bool ModulePhysics::CleanUp()
 btRigidBody* ModulePhysics::AddBody(btVector3 box_size)
 {
 	
-	btScalar mass = 1.0f; // 0.0f would create a static or inmutable body
+	btScalar mass = 0.0f; // 0.0f would create a static or inmutable body
 	btCollisionShape* colShape = new btBoxShape(box_size); // regular box
-	btMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 10, 0)));;
+	btMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -2, 0)));;
 	shapes.push_back(colShape);
 	btVector3 localInertia(0.f, 0.f, 0.f);
 	if (mass != 0.f) colShape->calculateLocalInertia(mass, localInertia);
@@ -84,7 +86,7 @@ btRigidBody* ModulePhysics::AddBody(btVector3 box_size)
 	btRigidBody* body = new btRigidBody(rbInfo);
 	world->addRigidBody(body);
 
-	btScalar mass2 = 0.0f; // 0.0f would create a static or inmutable body
+	/*btScalar mass2 = 0.0f; // 0.0f would create a static or inmutable body
 	btCollisionShape* colShape2 = new btBoxShape(box_size); // regular box
 	btMotionState* motionState2 = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(1.2f, 5, 0)));;
 	shapes.push_back(colShape2);
@@ -93,10 +95,8 @@ btRigidBody* ModulePhysics::AddBody(btVector3 box_size)
 	btRigidBody::btRigidBodyConstructionInfo rbInfo2(mass2, motionState2, colShape2, localInertia2);
 	btRigidBody* body2 = new btRigidBody(rbInfo2);
 	world->addRigidBody(body2);
-
-	debug_draw = new DebugDrawer();
-	debug_draw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
-	world->setDebugDrawer(debug_draw);
+	*/
+	
 	
 	
 	return body;

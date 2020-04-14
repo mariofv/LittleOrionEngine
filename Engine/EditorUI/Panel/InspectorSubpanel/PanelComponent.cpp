@@ -375,8 +375,23 @@ void PanelComponent::ShowComponentBox(ComponentBoxPrimitive *box)
 
 			return;
 		}
-		
 		ImGui::Separator();
+		if (ImGui::SliderFloat3("Scale", &box->scale.x, 0.1, 5))
+		{
+			box->body->getCollisionShape()->setLocalScaling(btVector3(box->scale.x, box->scale.y, box->scale.z));
+		}
+
+		if (ImGui::SliderFloat3("Transform", &box->translation.x, -5, 5))
+		{
+			box->body->setWorldTransform(btTransform(btQuaternion(0, 0, 0, 1), btVector3(box->translation.x, box->translation.y, box->translation.z)));
+		}
+
+		
+		if (ImGui::Button("is Static")) {
+			box->body->setFlags(box->body->CF_STATIC_OBJECT);
+		}
+		
+		
 	}
 }
 

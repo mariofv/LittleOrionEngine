@@ -17,7 +17,9 @@ public:
 	btRigidBody* body;
 	btScalar mass;
 	btDefaultMotionState* motionState;
-
+	float3 scale = float3(1.0f, 1.0f, 1.0f);
+	float3 translation = float3::zero;
+	bool isStatic = false;
 	ComponentBoxPrimitive(ComponentType componentType);
 	ComponentBoxPrimitive(GameObject* owner, ComponentType componentType);
 	~ComponentBoxPrimitive() = default;
