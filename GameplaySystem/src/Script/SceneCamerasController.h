@@ -3,6 +3,7 @@
 
 #include "Script.h"
 class ComponentCamera;
+class DebugModeScript;
 
 class SceneCamerasController : public Script
 {
@@ -17,6 +18,7 @@ public:
 	void OnInspector(ImGuiContext*) override;
 
 	void UpdateCameraRendering();
+	void SetMainCameraRendering();
 
 	void InitPublicGameObjects();
 
@@ -31,6 +33,8 @@ private:
 	std::vector<GameObject*> camera_list;
 	unsigned int index = 0;
 
+	GameObject* debug = nullptr;
+	DebugModeScript* debug_mode = nullptr;
 };
 extern "C" SCRIPT_API SceneCamerasController* SceneCamerasControllerDLL(); //This is how we are going to load the script
 #endif

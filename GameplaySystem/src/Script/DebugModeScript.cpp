@@ -14,6 +14,8 @@
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
+#include "SceneCamerasController.h"
+
 #include "imgui.h"
 #include <iomanip>
 #include <sstream>
@@ -45,6 +47,9 @@ void DebugModeScript::Awake()
 	text_fps->color = float3::zero;
 	text_tris->color = float3::zero;
 	text_verts->color = float3::zero;
+
+	ComponentScript* component = camera_manager->GetComponentScript("SceneCamerasController");
+	scene_cameras = (SceneCamerasController*)component->script;
 }
 
 // Use this for initialization
@@ -63,7 +68,7 @@ void DebugModeScript::Update()
 		(debug_enabled) ? text_tris->Disable() : text_tris->Enable();
 		(debug_enabled) ? text_verts->Disable() : text_verts->Enable();
 		(debug_enabled) ? background->Disable() : background->Enable();
-
+		(debug_enabled) ? scene_cameras->SetMainCameraRendering() : scene_cameras->SetMainCameraRendering();
 		debug_enabled = !debug_enabled;
 		
 		
@@ -107,6 +112,9 @@ void DebugModeScript::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&text_fps_go);
 	variable_names.push_back(GET_VARIABLE_NAME(text_fps_go));
+
+	public_gameobjects.push_back(&camera_manager);
+	variable_names.push_back(GET_VARIABLE_NAME(camera_manager));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{

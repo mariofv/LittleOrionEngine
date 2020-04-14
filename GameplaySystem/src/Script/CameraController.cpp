@@ -12,6 +12,8 @@
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
+#include "DebugModeScript.h"
+
 #include "imgui.h"
 
 
@@ -31,6 +33,9 @@ void CameraController::Awake()
 {
 	camera_component = (ComponentCamera*)camera->GetComponent(Component::ComponentType::CAMERA);
 
+	ComponentScript* component_debug = debug->GetComponentScript("DebugModeScript");
+	debug_mode = (DebugModeScript*)component_debug->script;
+
 	player_movement_component = player->GetComponentScript("PlayerController");
 	player_movement_script = (PlayerController*)player_movement_component->script;
 	rotation = owner->transform.GetRotation();
@@ -47,12 +52,15 @@ void CameraController::Update()
 {
 
 	if (App->input->GetKey(KeyCode::Alpha1)||App->input->GetControllerButtonDown(ControllerCode::Back))
-	{
-		owner->transform.SetRotation(rotation);
-		god_mode = !god_mode;
-		ActivePlayer();
+	{ 
+		if(debug_mode->debug_enabled || god_mode)
+		{
+			owner->transform.SetRotation(rotation);
+			god_mode = !god_mode;
+			ActivePlayer();
+		}
 	}
-	if (god_mode) 
+	if (god_mode && debug_mode->debug_enabled)
 	{
 		GodCamera();
 	}
@@ -92,11 +100,11 @@ void CameraController::GodCamera()
 	{
 		camera_component->MoveRight();
 	}
-	if (App->input->GetKey(KeyCode::E) || App->input->GetControllerButtonDown(ControllerCode::DownDpad))
+	if (App->input->GetKey(KeyCode::E) || App->input->GetControllerButton(ControllerCode::DownDpad))
 	{
 		camera_component->MoveDown();
 	}
-	if (App->input->GetKey(KeyCode::Q) || App->input->GetControllerButtonDown(ControllerCode::UpDpad))
+	if (App->input->GetKey(KeyCode::Q) || App->input->GetControllerButton(ControllerCode::UpDpad))
 	{
 		camera_component->MoveUp();
 	}
@@ -162,9 +170,11 @@ void CameraController::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&camera);
 	public_gameobjects.push_back(&player);
+	public_gameobjects.push_back(&debug);
 
 	variable_names.push_back(GET_VARIABLE_NAME(camera));
 	variable_names.push_back(GET_VARIABLE_NAME(player));
+	variable_names.push_back(GET_VARIABLE_NAME(debug));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{

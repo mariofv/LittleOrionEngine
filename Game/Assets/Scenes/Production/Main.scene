@@ -1101,7 +1101,9 @@
                     "Name2": "Textverts",
                     "Textverts": 965692103,
                     "Name3": "Textfps",
-                    "Textfps": 3904012780
+                    "Textfps": 3904012780,
+                    "Name4": "Main Camera",
+                    "Main Camera": 172714554
                 }
             ]
         },
@@ -1156,7 +1158,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 138,
+                    "Texture": 9,
                     "Color": [
                         0.788395881652832,
                         0.10763084143400192,
@@ -1218,7 +1220,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 137,
+                    "Texture": 10,
                     "Color": [
                         0.057659395039081576,
                         0.12069918215274811,
@@ -1618,7 +1620,9 @@
                     "Name0": "Main Camera",
                     "Main Camera": 172714554,
                     "Name1": "Player",
-                    "Player": 4276022674
+                    "Player": 4276022674,
+                    "Name2": "Canvas",
+                    "Canvas": 2107763449
                 },
                 {
                     "UUID": 4252775231,
@@ -1632,7 +1636,9 @@
                     "Name2": "Camera2",
                     "Camera2": 3756280887,
                     "Name3": "Camera3",
-                    "Camera3": 3557340657
+                    "Camera3": 3557340657,
+                    "Name4": "Canvas",
+                    "Canvas": 2107763449
                 }
             ]
         },

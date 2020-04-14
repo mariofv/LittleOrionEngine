@@ -11,6 +11,8 @@
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
+#include "DebugModeScript.h"
+
 #include "imgui.h"
 
 
@@ -34,6 +36,9 @@ void SceneCamerasController::Awake()
 	camera_list.push_back(camera_2);
 	camera_list.push_back(camera_3);
 	camera_rendering = (ComponentCamera*)main_camera->GetComponent(Component::ComponentType::CAMERA);
+
+	ComponentScript* component_debug = debug->GetComponentScript("DebugModeScript");
+	debug_mode = (DebugModeScript*)component_debug->script;
 }
 
 // Use this for initialization
@@ -45,7 +50,7 @@ void SceneCamerasController::Start()
 // Update is called once per frame
 void SceneCamerasController::Update()
 {
-	if (App->input->GetKeyDown(KeyCode::Alpha3)) 
+	if (App->input->GetKeyDown(KeyCode::Alpha3) && debug_mode->debug_enabled) 
 	{
 		if (index < camera_list.size()-1) 
 		{
@@ -53,7 +58,7 @@ void SceneCamerasController::Update()
 			UpdateCameraRendering();
 		}	
 	}
-	if (App->input->GetKeyDown(KeyCode::Alpha2))
+	if (App->input->GetKeyDown(KeyCode::Alpha2) && debug_mode->debug_enabled)
 	{
 		if (index > 0)
 		{
@@ -61,7 +66,6 @@ void SceneCamerasController::Update()
 			UpdateCameraRendering();
 		}
 	}
-
 }
 
 // Use this for showing variables on inspector
@@ -79,6 +83,14 @@ void SceneCamerasController::UpdateCameraRendering()
 	camera_rendering->Enable();
 }
 
+void SceneCamerasController::SetMainCameraRendering()
+{
+	camera_rendering->Disable();
+	camera_rendering = (ComponentCamera*)camera_list[0]->GetComponent(Component::ComponentType::CAMERA);
+	camera_rendering->Enable();
+	index = 0;
+}
+
 
 void SceneCamerasController::InitPublicGameObjects()
 {
@@ -88,11 +100,13 @@ void SceneCamerasController::InitPublicGameObjects()
 	public_gameobjects.push_back(&camera_1);
 	public_gameobjects.push_back(&camera_2);
 	public_gameobjects.push_back(&camera_3);
+	public_gameobjects.push_back(&debug);
 
 	variable_names.push_back(GET_VARIABLE_NAME(main_camera));
 	variable_names.push_back(GET_VARIABLE_NAME(camera_1));
 	variable_names.push_back(GET_VARIABLE_NAME(camera_2));
 	variable_names.push_back(GET_VARIABLE_NAME(camera_3));
+	variable_names.push_back(GET_VARIABLE_NAME(debug));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
