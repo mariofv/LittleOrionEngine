@@ -18,6 +18,7 @@ public:
 	~ComponentBoxPrimitive() = default;
 
 	btRigidBody* addBody();
+	void makeBoxStatic();
 
 	void Copy(Component* component_to_copy) const override;
 	void Delete() override;
@@ -33,7 +34,10 @@ public:
 	float3 scale = float3(1.0f, 1.0f, 1.0f);
 	float3 translation = float3::zero;
 	btVector3 box_size = btVector3(1.0f, 1.0f, 1.0f);
-	//bool is_static = false;
+	btCollisionShape* col_shape;
+
+	bool is_static = false;
+	float3 deviation = float3::zero;
 
 	
 };
