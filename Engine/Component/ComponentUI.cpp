@@ -124,3 +124,15 @@ void ComponentUI::SetTextureToRender(const std::shared_ptr<Texture>& new_texture
 	metadata_path = texture_to_render->exported_file;
 	ui_texture = texture_to_render->opengl_texture;
 }
+
+void ComponentUI::Enable()
+{
+	active = true;
+	App->ui->SortComponentsUI();
+}
+
+void ComponentUI::Disable()
+{
+	active = false;
+	App->ui->SortComponentsUI();
+}
