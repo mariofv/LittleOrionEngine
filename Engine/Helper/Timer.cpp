@@ -19,34 +19,30 @@ bool Timer::Started()
 
 float Timer::Read() const
 {
-	float current_time;
-
 	if (running)
 	{
 		if (paused) 
 		{
-			current_time = (pause_start_ticks - start_ticks) - elapsed_while_paused_ticks;
+			return pause_time;
 		}
 		else
 		{
-			current_time = (SDL_GetTicks() - start_ticks) - elapsed_while_paused_ticks;
+			return SDL_GetTicks() - start_ticks;
 		}
 		
 	} 
 	else
 	{
-		current_time = end_time;
-	} 
-
-	return current_time;
+		return end_time;
+	}
 }
 
 void Timer::Resume()
 {
 	if (paused)
 	{
-		elapsed_while_paused_ticks += SDL_GetTicks() - pause_start_ticks;
 		paused = false;
+		start_ticks = SDL_GetTicks();
 	}
 }
 
@@ -54,10 +50,10 @@ float Timer::Pause()
 {
 	if (!paused)
 	{
-		pause_start_ticks = SDL_GetTicks();
 		paused = true;
+		pause_time = SDL_GetTicks() - start_ticks;
 	}	
-	return pause_start_ticks - start_ticks - elapsed_while_paused_ticks;
+	return pause_time;
 }
 
 bool Timer::IsPaused() const
@@ -67,7 +63,7 @@ bool Timer::IsPaused() const
 
 float Timer::Stop()
 {
-	end_time = SDL_GetTicks() - start_ticks - elapsed_while_paused_ticks;
+	end_time = SDL_GetTicks() - start_ticks;
 	running = false;
 	paused = false;
 

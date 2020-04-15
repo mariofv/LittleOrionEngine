@@ -123,6 +123,8 @@ update_status Application::Update()
 		App->renderer->Render();
 	}
 
+	App->time->EndFrame();
+
 	return result;
 }
 
