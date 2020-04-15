@@ -366,7 +366,7 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 
 void PanelComponent::ShowComponentBox(ComponentBoxPrimitive* box)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Box", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_BOX " Box Collider", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 
 		if (ImGui::Button("Delete"))
@@ -380,17 +380,16 @@ void PanelComponent::ShowComponentBox(ComponentBoxPrimitive* box)
 			box->body->getCollisionShape()->setLocalScaling(btVector3(box->scale.x, box->scale.y, box->scale.z));
 		}
 
-		if (ImGui::SliderFloat3("Transform", box->translation.ptr(), -5, 5))
+		/*if (ImGui::SliderFloat3("Transform", box->translation.ptr(), -5, 5))
 		{
 			box->body->setWorldTransform(btTransform(btQuaternion(0, 0, 0, 1), btVector3(box->translation.x, box->translation.y, box->translation.z)));
-		}
+		}*/
 
 		
-		if (ImGui::Button("is Static")) {
-			//
+		if (ImGui::Checkbox("Static Box", &box->is_static))
+		{
+			box->MakeBoxStatic();
 		}
-		
-		
 	}
 }
 
@@ -659,7 +658,7 @@ void PanelComponent::ShowAddNewComponentButton()
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
 
 		}
-		sprintf_s(tmp_string, "%s Box", ICON_FA_LIGHTBULB);
+		sprintf_s(tmp_string, "%s Box", ICON_FA_BOX);
 		if (ImGui::Selectable(tmp_string))
 		{
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::BOXPRIMITIVE);

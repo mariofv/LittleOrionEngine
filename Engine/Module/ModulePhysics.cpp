@@ -48,6 +48,7 @@ update_status ModulePhysics::Update()
 	//update the world
 	world->stepSimulation(App->time->delta_time, subSteps);
 	
+
 	if (show_physics) 
 	{
 		world->debugDrawWorld();
@@ -55,10 +56,13 @@ update_status ModulePhysics::Update()
 	
 	for (int i = 0; i < boxes.size(); i++) {
 		
-		btTransform trans;
-		boxes.at(i)->motion_state->getWorldTransform(trans);
-		boxes.at(i)->owner->transform.SetTranslation(float3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
-
+		if (App->time->isGameRunning())
+		{
+			btTransform trans;
+			boxes.at(i)->motion_state->getWorldTransform(trans);
+			boxes.at(i)->owner->transform.SetTranslation(float3(trans.getOrigin().getX()-boxes.at(i)->deviation.x, trans.getOrigin().getY() - boxes.at(i)->deviation.y, trans.getOrigin().getZ() - boxes.at(i)->deviation.z));
+			world->synchronizeSingleMotionState(boxes.at(i)->body);
+		}
 	}
 	
 	
