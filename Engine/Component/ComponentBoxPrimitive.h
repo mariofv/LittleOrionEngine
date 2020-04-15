@@ -17,7 +17,7 @@ public:
 	ComponentBoxPrimitive(GameObject* owner, ComponentType componentType);
 	~ComponentBoxPrimitive() = default;
 
-	btRigidBody* addBody();
+	btRigidBody* AddBody();
 
 	void Copy(Component* component_to_copy) const override;
 	void Delete() override;
@@ -27,8 +27,8 @@ public:
 
 public:
 
-	btRigidBody* body;
-	btScalar mass;
+	btRigidBody* body = nullptr;
+	btScalar mass = 1.0f; // 0.0f would create a static or inmutable body
 	btDefaultMotionState* motion_state;
 	float3 scale = float3(1.0f, 1.0f, 1.0f);
 	float3 translation = float3::zero;

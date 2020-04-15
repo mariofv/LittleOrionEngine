@@ -39,10 +39,11 @@ public:
 	update_status PreUpdate() override;
 	update_status Update() override;
 
-	btRigidBody* AddBody(btVector3 box_size);
-	void setGravity(float3 newGgravity);
-	float3 getGravity();
+	btRigidBody* AddBody(btVector3& box_size);
+	void SetGravity(float3& newGgravity);
+	float3 GetGravity();
 	ComponentBoxPrimitive* CreateComponentBoxPrimitive(GameObject* owner);
+	void RemoveComponentBoxPrimitive(ComponentBoxPrimitive* box_to_remove);
 
 public:
 

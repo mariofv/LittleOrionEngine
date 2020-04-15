@@ -681,7 +681,7 @@ void PanelConfiguration::ShowPhysicsOptions()
 		
 		if (ImGui::SliderFloat3("Gravity", &App->physics->gravity.x, -10, 10 ))
 		{
-			App->physics->setGravity(App->physics->getGravity());
+			App->physics->SetGravity(App->physics->GetGravity());
 		}
 		ImGui::Checkbox("Draw physics", &App->physics->show_physics);
 		

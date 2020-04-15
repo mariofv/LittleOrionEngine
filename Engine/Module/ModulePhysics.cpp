@@ -83,12 +83,12 @@ bool ModulePhysics::CleanUp()
 	return true;
 }
 
-btRigidBody* ModulePhysics::AddBody(btVector3 box_size)
+btRigidBody* ModulePhysics::AddBody(btVector3& box_size)
 {
 	
 	btScalar mass = 0.0f; // 0.0f would create a static or inmutable body
 	btCollisionShape* colShape = new btBoxShape(box_size); // regular box
-	btMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -2, 0)));;
+	btMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -2, 0)));
 	shapes.push_back(colShape);
 	btVector3 localInertia(0.f, 0.f, 0.f);
 	if (mass != 0.f) colShape->calculateLocalInertia(mass, localInertia);
@@ -100,19 +100,19 @@ btRigidBody* ModulePhysics::AddBody(btVector3 box_size)
 	return body;
 }
 
-void ModulePhysics::setGravity(float3 newGravity)
+void ModulePhysics::SetGravity(float3& newGravity)
 {
 	world->setGravity(btVector3(newGravity.x, newGravity.y, newGravity.z));
 }
 
-float3 ModulePhysics::getGravity()
+float3 ModulePhysics::GetGravity()
 {
 	return gravity;
 }
 
-ComponentBoxPrimitive * ModulePhysics::CreateComponentBoxPrimitive(GameObject* owner)
+ComponentBoxPrimitive* ModulePhysics::CreateComponentBoxPrimitive(GameObject* owner)
 {
-	ComponentBoxPrimitive * createdBox = new ComponentBoxPrimitive(owner, Component::ComponentType::BOXPRIMITIVE);
+	ComponentBoxPrimitive* createdBox = new ComponentBoxPrimitive(owner, Component::ComponentType::BOXPRIMITIVE);
 	boxes.push_back(createdBox);
 	return createdBox;
 }
@@ -145,4 +145,14 @@ void DebugDrawer::setDebugMode(int debugMode)
 int DebugDrawer::getDebugMode() const
 {
 	return btIDebugDraw::DBG_DrawWireframe;
+}
+
+void ModulePhysics::RemoveComponentBoxPrimitive(ComponentBoxPrimitive* box_to_remove)
+{
+	auto it = std::find(boxes.begin(), boxes.end(), box_to_remove);
+	if (it != boxes.end())
+	{
+		delete *it;
+		boxes.erase(it);
+	}
 }

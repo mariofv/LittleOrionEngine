@@ -364,23 +364,23 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 }
 
 
-void PanelComponent::ShowComponentBox(ComponentBoxPrimitive *box)
+void PanelComponent::ShowComponentBox(ComponentBoxPrimitive* box)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Box", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 
 		if (ImGui::Button("Delete"))
 		{
-			//App->actions->DeleteComponentUndo(box);
+			App->actions->DeleteComponentUndo(box);
 			return;
 		}
 		ImGui::Separator();
-		if (ImGui::SliderFloat3("Scale", &box->scale.x, 0.1, 5))
+		if (ImGui::SliderFloat3("Scale", box->scale.ptr(), 0.1, 5))
 		{
 			box->body->getCollisionShape()->setLocalScaling(btVector3(box->scale.x, box->scale.y, box->scale.z));
 		}
 
-		if (ImGui::SliderFloat3("Transform", &box->translation.x, -5, 5))
+		if (ImGui::SliderFloat3("Transform", box->translation.ptr(), -5, 5))
 		{
 			box->body->setWorldTransform(btTransform(btQuaternion(0, 0, 0, 1), btVector3(box->translation.x, box->translation.y, box->translation.z)));
 		}
