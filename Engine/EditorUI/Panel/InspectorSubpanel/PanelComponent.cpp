@@ -371,8 +371,7 @@ void PanelComponent::ShowComponentBox(ComponentBoxPrimitive *box)
 
 		if (ImGui::Button("Delete"))
 		{
-			App->actions->DeleteComponentUndo(box);
-
+			//App->actions->DeleteComponentUndo(box);
 			return;
 		}
 		ImGui::Separator();
@@ -388,7 +387,7 @@ void PanelComponent::ShowComponentBox(ComponentBoxPrimitive *box)
 
 		
 		if (ImGui::Button("is Static")) {
-			box->body->setFlags(box->body->CF_STATIC_OBJECT);
+			//
 		}
 		
 		

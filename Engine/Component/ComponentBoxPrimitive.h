@@ -2,9 +2,9 @@
 #define _COMPONENTBOXPRIMITIVE_H
 
 #include "Component.h"
-#include "bullet3-2.89/src/btBulletDynamicsCommon.h"
 #include "Main/GameObject.h"
 
+#include "bullet3-2.89/src/btBulletDynamicsCommon.h"
 
 
 class GameObject;
@@ -13,23 +13,28 @@ class ComponentBoxPrimitive : public Component
 {
 public:
 
-	btRigidBody* addBody(btVector3 box_size);
-	btRigidBody* body;
-	btScalar mass;
-	btDefaultMotionState* motionState;
-	float3 scale = float3(1.0f, 1.0f, 1.0f);
-	float3 translation = float3::zero;
-	bool isStatic = false;
 	ComponentBoxPrimitive(ComponentType componentType);
 	ComponentBoxPrimitive(GameObject* owner, ComponentType componentType);
 	~ComponentBoxPrimitive() = default;
 
-	Component* Clone(bool original_prefab = false) const override;
-	void Copy(Component* component_to_copy) const override;
+	btRigidBody* addBody();
 
+	void Copy(Component* component_to_copy) const override;
 	void Delete() override;
 	void Save(Config& config) const override;
 	void Load(const Config &config) override;
+	Component* Clone(bool original_prefab = false) const override;
+
+public:
+
+	btRigidBody* body;
+	btScalar mass;
+	btDefaultMotionState* motion_state;
+	float3 scale = float3(1.0f, 1.0f, 1.0f);
+	float3 translation = float3::zero;
+	btVector3 box_size = btVector3(1.0f, 1.0f, 1.0f);
+	//bool is_static = false;
+
 	
 };
 

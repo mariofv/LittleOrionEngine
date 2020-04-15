@@ -4,40 +4,31 @@
 
 
 
-btRigidBody * ComponentBoxPrimitive::addBody(btVector3 box_size)
+btRigidBody * ComponentBoxPrimitive::addBody()
 {
 	
 	mass = 1.0f; // 0.0f would create a static or inmutable body
-	btCollisionShape* colShape = new btBoxShape(btVector3(box_size)); // regular box
-	motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(owner->transform.translation.x, owner->transform.translation.y, owner->transform.translation.z)));;
+	btCollisionShape* col_shape = new btBoxShape(btVector3(box_size)); // regular box
+	motion_state = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(owner->transform.translation.x, owner->transform.translation.y, owner->transform.translation.z)));;
 	
 	btVector3 localInertia(0.f, 0.f, 0.f);
-	if (mass != 0.f) colShape->calculateLocalInertia(mass, localInertia);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, colShape, localInertia);
+	if (mass != 0.f) col_shape->calculateLocalInertia(mass, localInertia);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motion_state, col_shape, localInertia);
 	body = new btRigidBody(rbInfo);
 	
-	
-	//body->getMotionState()->setWorldTransform(btTransform(btQuaternion(owner->transform.GetRotation().x, owner->transform.GetRotation().y, owner->transform.GetRotation().z, owner->transform.GetRotation().w), btVector3(owner->transform.translation.x, owner->transform.translation.y, owner->transform.translation.z)));
-	
-
-	//body->setActivationState(DISABLE_DEACTIVATION);
 	App->physics->world->addRigidBody(body);
 	
-	
 	return body;
-	
 }
 
 ComponentBoxPrimitive::ComponentBoxPrimitive(ComponentType componentType):Component(componentType)
 {
-	btVector3 aux(1, 1, 1);
-	addBody(aux);
+	addBody();
 }
 
 ComponentBoxPrimitive::ComponentBoxPrimitive(GameObject * owner, ComponentType componentType): Component(owner, componentType)
 {
-	btVector3 aux(1, 1, 1);
-	addBody(aux);
+	addBody();
 }
 
 Component * ComponentBoxPrimitive::Clone(bool original_prefab) const
