@@ -61,7 +61,7 @@ void WorldManager::Update()
 		transition = true;
 	}
 
-	if(transition && (App->input->GetControllerButtonDown(ControllerCode::A) || App->input->GetKeyDown(KeyCode::Space)))
+	if(transition && App->input->GetAnyKeyPressedDown())
 	{
 		App->editor->OpenScene("Library/menuscene.scene");
 	}
