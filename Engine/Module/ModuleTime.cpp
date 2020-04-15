@@ -38,8 +38,8 @@ bool ModuleTime::Init()
 
 update_status ModuleTime::PreUpdate()
 {
-	frame_start_time = game_time_clock->Read();
-	real_frame_start_time = real_time_clock->Read();
+	
+
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -48,8 +48,9 @@ void ModuleTime::EndFrame()
 {
 	++frame_count;
 
-	delta_time = (game_time_clock->Read() - frame_start_time) * time_scale;
-	real_time_delta_time = real_time_clock->Read() - real_frame_start_time;
+	float real_time = real_time_clock->Read();
+	real_time_delta_time = real_time - real_frame_start_time;
+	real_frame_start_time = real_time;
 
 	if (limit_fps)
 	{
@@ -59,13 +60,15 @@ void ModuleTime::EndFrame()
 			SDL_Delay(static_cast<Uint32>(remaining_frame_time));
 			last_frame_delay = remaining_frame_time;
 		}
-		delta_time = (game_time_clock->Read() - frame_start_time) * time_scale;
-		real_time_delta_time = real_time_clock->Read() - real_frame_start_time;
 	}
 	else
 	{
 		last_frame_delay = 0.f;
 	}
+
+	float game_time = game_time_clock->Read();
+	delta_time = (game_time - frame_start_time) * time_scale;
+	frame_start_time = game_time;
 
 	time += delta_time;
 	real_time_since_startup += real_time_delta_time;
