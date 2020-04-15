@@ -381,6 +381,27 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id
 	return false;
 }
 
+ENGINE_API bool ModuleInput::GetAnyKeyPressedDown() const
+{
+	for (auto& key : key_bible)
+	{
+		if (key.second == KeyState::DOWN)
+		{
+			return true;
+		}
+	}
+
+	for (auto& contr : controller_bible[0])
+	{
+		if (contr.second == KeyState::DOWN)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void ModuleInput::CreateGameInput(const GameInput& game_input)
 {
 	game_inputs[game_input.name] = game_input;
