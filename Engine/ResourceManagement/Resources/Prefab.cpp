@@ -16,6 +16,10 @@ GameObject * Prefab::Instantiate(GameObject * prefab_parent, std::unordered_map<
 	GameObject* parent_prefab;
 	for (const auto& gameObject : prefab)
 	{
+		if (UUIDS_pairs != nullptr && UUIDS_pairs->find(gameObject->UUID) == UUIDS_pairs->end())
+		{
+			continue;
+		}
 		GameObject* copy_in_scene = App->scene->AddGameObject(std::make_unique<GameObject>(*gameObject.get()));
 		original_gameObject_reference[gameObject->UUID] = copy_in_scene;
 
