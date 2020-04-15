@@ -142,6 +142,10 @@ void SceneManager::SavePrefab(Config & config, GameObject * gameobject_to_save) 
 
 	Config transform_config;
 	gameobject_to_save->transform.Save(transform_config);
+	if (gameobject_to_save->transform.GetScale().x <= 0.0)
+	{
+		int x = 0;
+	}
 	config.AddChildConfig(transform_config, "Transform");
 
 	std::vector<Config> original_UUIDS;
@@ -234,6 +238,7 @@ void SceneManager::LoadPrefabModifiedComponents(const Config & config) const
 		config.GetChildConfig("Transform", transform_config);
 
 		prefab_child->transform.Load(transform_config);
+		prefab_child->transform.modified_by_user = true;
 	}
 
 	std::vector<Config> prefab_components_config;
