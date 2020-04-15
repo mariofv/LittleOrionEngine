@@ -64,7 +64,7 @@ void MenuLogic::Update()
 		return;
 	}
 
-	if(show_help && (App->input->GetKeyDown(KeyCode::RightArrow) || App->input->GetControllerButtonDown(ControllerCode::RightDpad) || App->input->GetKeyDown(KeyCode::LeftArrow) || App->input->GetControllerButtonDown(ControllerCode::LeftDpad)))
+	if(show_help && (App->input->GetKeyDown(KeyCode::D) || App->input->GetControllerButtonDown(ControllerCode::RightDpad) || App->input->GetKeyDown(KeyCode::A) || App->input->GetControllerButtonDown(ControllerCode::LeftDpad)))
 	{
 		help_controller->SetEnabled(!help_controller->IsEnabled());
 		help_keyboard->SetEnabled(!help_keyboard->IsEnabled());
@@ -108,14 +108,14 @@ void MenuLogic::Update()
 		}
 	}
 
-	if(App->input->GetKeyDown(KeyCode::UpArrow) || App->input->GetControllerButtonDown(ControllerCode::UpDpad))
+	if(App->input->GetKeyDown(KeyCode::W) || App->input->GetControllerButtonDown(ControllerCode::UpDpad))
 	{
 		current -= 1;
 		current = current % 4;
 
 		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
 	}
-	else if(App->input->GetKeyDown(KeyCode::DownArrow) || App->input->GetControllerButtonDown(ControllerCode::DownDpad))
+	else if(App->input->GetKeyDown(KeyCode::S) || App->input->GetControllerButtonDown(ControllerCode::DownDpad))
 	{
 		current += 1;
 		current = current % 4;
