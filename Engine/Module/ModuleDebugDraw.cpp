@@ -1,5 +1,6 @@
 #include "ModuleDebugDraw.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
@@ -10,6 +11,7 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleAI.h"
+#include "ModuleAnimation.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleDebug.h"
@@ -429,6 +431,7 @@ void ModuleDebugDraw::Render()
 
 		RenderCameraFrustum();
 		RenderLightGizmo();
+		RenderBones();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 
@@ -456,11 +459,64 @@ void ModuleDebugDraw::Render()
 		grid->ScaleOnDistance(scene_camera_height);
 		grid->Render();
 	}
+	if (App->renderer->meshes_to_render.size() != 0 && App->debug->show_axis) 
+	{
+		RenderTangentsAndBitangents();
+	}
+
 	RenderDebugDraws(*App->cameras->scene_camera);
-
-
+	
 }
 
+void ModuleDebugDraw::RenderTangentsAndBitangents() const
+{
+	BROFILER_CATEGORY("Render Tangent, Bitangent and Normal Vectors", Profiler::Color::Lavender);
+
+	for (auto& mesh : App->renderer->meshes_to_render)
+	{
+		
+		for (int i = 0; i < 30; ++i)
+		{
+			float4 normal = float4(mesh->mesh_to_render->vertices[i].normals, 0.0F);
+			float4 tangent = float4(mesh->mesh_to_render->vertices[i].tangent, 0.0F);
+			float4 bitangent = float4(mesh->mesh_to_render->vertices[i].bitangent, 0.0F);
+			float4 position = float4 (mesh->mesh_to_render->vertices[i].position, 1.0F);
+			float4x4 axis_object_space = float4x4(tangent, bitangent, normal, position);
+			float4x4 axis_transform = mesh->owner->transform.GetGlobalModelMatrix() * axis_object_space;
+			dd::axisTriad(axis_transform, 0.1F, 1.0F);
+		}	
+	/*	float3 pos1 = float3(mesh->mesh_to_render->vertices[0].position);
+		float3 pos2 = float3(mesh->mesh_to_render->vertices[1].position);
+		float3 pos3 = float3(mesh->mesh_to_render->vertices[2].position);
+		float2 uv1 = float2(mesh->mesh_to_render->vertices[0].tex_coords);
+		float2 uv2 = float2(mesh->mesh_to_render->vertices[1].tex_coords);
+		float2 uv3 = float2(mesh->mesh_to_render->vertices[2].tex_coords);
+		float3 edge1 = pos2 - pos1;
+		float3 edge2 = pos3 - pos1;
+		float2 deltaUV1 = uv2 - uv1;
+		float2 deltaUV2 = uv3 - uv1;
+		float4 normal = float4(mesh->mesh_to_render->vertices[0].normals, 0.0f);
+		float f = 1.0F / (deltaUV1.x * deltaUV2.y - deltaUV2.x*deltaUV1.y);
+
+		float3 tangent;
+		tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
+		tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
+		tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
+		tangent = tangent.Normalized();
+		float4 tangent1 = float4(tangent, 0.0f);
+
+		float3 bitangent;
+		bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
+		bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
+		bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
+		bitangent = bitangent.Normalized();
+		float4 bitangent1 = float4(bitangent, 0.0f);
+		float4 position = float4(pos1, 1.0f);
+		float4x4 axis_object_space = float4x4(tangent1, bitangent1, normal, position);
+		float4x4 axis_transform = mesh->owner->transform.GetGlobalModelMatrix() * axis_object_space;
+		dd::axisTriad(axis_transform, 10.F, 10.F);*/
+	}
+}
 void ModuleDebugDraw::RenderCameraFrustum() const
 {
 	BROFILER_CATEGORY("Render Selected GameObject Camera Frustum", Profiler::Color::Lavender);
@@ -498,12 +554,12 @@ void ModuleDebugDraw::RenderLightGizmo() const
 				selected_light_transform->GetGlobalTranslation(), 	
 				selected_light_transform->GetRotation().ToFloat4x4(),	
 				float3(1.f, 1.f, 0.f),	
-				selected_light->spot_light_parameters.range,	
-				tan(DegToRad(selected_light->spot_light_parameters.spot_angle/2.f)) * selected_light->spot_light_parameters.range	
+				selected_light->spot_light_parameters.range / 10.f,	
+				tan(DegToRad(selected_light->spot_light_parameters.spot_angle/2.f)) * selected_light->spot_light_parameters.range / 10.f
 			); 	
 			break;	
 		case ComponentLight::LightType::POINT_LIGHT:	
-			dd::point_light(selected_light_transform->GetGlobalTranslation(), float3(1.f, 1.f, 0.f), selected_light->point_light_parameters.range);	
+			dd::point_light(selected_light_transform->GetGlobalTranslation(), float3(1.f, 1.f, 0.f), selected_light->point_light_parameters.range / 10.f);
 			break;	
 		default:	
 			break;	
@@ -511,6 +567,44 @@ void ModuleDebugDraw::RenderLightGizmo() const
 	}	
 }	
 
+void ModuleDebugDraw::RenderBones() const
+{
+	for (auto& animation : App->animations->animations)
+	{
+		if (animation->IsEnabled())
+		{
+			GameObject* animation_game_object = animation->owner;
+			RenderBone(animation_game_object, nullptr, float3(1.f, 0.f, 0.f));
+		}
+	}
+
+	
+}
+
+void ModuleDebugDraw::RenderBone(const GameObject* current_bone, const GameObject* last_bone, const float3& color) const
+{
+	if (current_bone->name.substr(current_bone->name.length() - 2) == "IK" || current_bone->name.substr(current_bone->name.length() - 2) == "FK")
+	{
+		return;
+	}
+
+	if (last_bone != nullptr)
+	{
+		dd::line(last_bone->transform.GetGlobalTranslation(), current_bone->transform.GetGlobalTranslation(), color);
+	}
+
+	for (auto& child_bone : current_bone->children)
+	{
+		float3 next_color;
+		if (color.x == 1.f)
+			next_color = float3(0.f, 1.f, 0.f);
+		if (color.y == 1.f)
+			next_color = float3(0.f, 0.f, 1.f);
+		if (color.z == 1.f)
+			next_color = float3(1.f, 0.f, 0.f);
+		RenderBone(child_bone, current_bone, next_color);
+	}
+}
 
 void ModuleDebugDraw::RenderOutline() const
 {

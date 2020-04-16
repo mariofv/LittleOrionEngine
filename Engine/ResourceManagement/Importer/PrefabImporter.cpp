@@ -19,7 +19,7 @@ ImportResult PrefabImporter::Import(const File& file, bool force) const
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
 	if (already_imported.uuid != 0 && !force) 
 	{
-		import_result.succes = true;
+		import_result.success = true;
 		import_result.exported_file = already_imported.exported_file;
 		return import_result;
 	}
@@ -32,7 +32,7 @@ ImportResult PrefabImporter::Import(const File& file, bool force) const
 	}
 	
 
-	import_result.succes = true;
+	import_result.success = true;
 	import_result.exported_file = output_file;
 	return import_result;
 }

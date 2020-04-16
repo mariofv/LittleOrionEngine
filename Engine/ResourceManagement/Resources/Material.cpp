@@ -37,11 +37,17 @@ void Material::Save(Config& config) const
 				config.AddString(textures[i]->exported_file, "Emissive");
 				break;
 
+			case MaterialTextureType::NORMAL:
+				config.AddString(textures[i]->exported_file, "Normal");
+				break;
+
 			default:
 				break;
 			}
 		}
 	}
+
+	config.AddInt((int)material_type, "MaterialType");
 
 	config.AddBool(show_checkerboard_texture, "Checkboard");
 	config.AddString(shader_program, "ShaderProgram");
@@ -50,9 +56,15 @@ void Material::Save(Config& config) const
 	config.AddFloat(k_ambient, "kAmbient");
 	config.AddFloat(k_specular, "kSpecular");
 	config.AddFloat(k_diffuse, "kDiffuse");
-	config.AddFloat(shininess, "shininess");
-	config.AddFloat(metalness, "metalness");
-	config.AddFloat(roughness, "roughness");
+
+	config.AddFloat(transparency, "Transparency");
+	config.AddFloat(roughness, "Roughness");
+	config.AddFloat(metalness, "Metalness");
+
+	config.AddFloat(tiling_x, "Tiling X");
+	config.AddFloat(tiling_y, "Tiling Y");
+
+	config.AddBool(use_normal_map, "UseNormalMap");
 
 	//colors
 	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
@@ -62,6 +74,8 @@ void Material::Save(Config& config) const
 
 void Material::Load(const Config& config)
 {
+	material_type = (MaterialType)config.GetInt("MaterialType", 0);
+
 	std::string texture_path;
 	config.GetString("Diffuse", texture_path, "");
 	std::shared_ptr<Texture> texture_resource = App->resources->Load<Texture>(texture_path);
@@ -91,6 +105,19 @@ void Material::Load(const Config& config)
 		SetMaterialTexture(Material::MaterialTextureType::EMISSIVE, texture_resource);
 	}
 
+	config.GetString("Normal", texture_path, "");
+	texture_resource = App->resources->Load<Texture>(texture_path);
+	if (texture_resource.get() != nullptr)
+	{
+		SetMaterialTexture(Material::MaterialTextureType::NORMAL, texture_resource);
+		use_normal_map = true;
+	}
+
+	else 
+	{
+		use_normal_map = false;
+	}
+
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 	config.GetString("ShaderProgram", shader_program, "Blinn phong");
 
@@ -98,9 +125,13 @@ void Material::Load(const Config& config)
 	k_ambient = config.GetFloat("kAmbient", 1.0f);
 	k_specular = config.GetFloat("kSpecular", 1.0f);
 	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
-	shininess = config.GetFloat("shininess", 1.0f);
-	metalness = config.GetFloat("metalness", 0.5f);
-	roughness = config.GetFloat("roughness", 0.5f);
+
+	transparency = config.GetFloat("Transparency", 1.f);
+	roughness = config.GetFloat("Roughness", 0.5f);
+	metalness = config.GetFloat("Metalness", 0.04f);
+
+	roughness = config.GetFloat("Tiling X", 0.0f);
+	metalness = config.GetFloat("Tiling Y", 0.0f);
 
 	//colors
 	float4 diffuse;
@@ -140,4 +171,21 @@ void Material::SetMaterialTexture(MaterialTextureType type, const std::shared_pt
 const std::shared_ptr<Texture>& Material::GetMaterialTexture(MaterialTextureType type) const
 {
 	return textures[type];
+}
+
+void Material::ChangeTypeOfMaterial(const MaterialType new_material_type)
+{
+	material_type = new_material_type;
+}
+
+const char* Material::GetMaterialTypeName(const MaterialType material_type)
+{
+	switch (material_type)
+	{
+	case MaterialType::MATERIAL_OPAQUE:
+		return "Opaque";
+
+	case MaterialType::MATERIAL_TRANSPARENT:
+		return "Transparent";
+	}
 }

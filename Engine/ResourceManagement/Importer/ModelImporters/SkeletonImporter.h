@@ -16,12 +16,11 @@ public:
 	SkeletonImporter() = default;
 	~SkeletonImporter() = default;
 
-	bool ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const std::string& imported_file, std::string& exported_file) const;
+	ImportResult ImportSkeleton(const aiScene* scene, const aiMesh* mesh, const std::string& imported_file, float unit_scale_factor, Skeleton& skeleton) const;
+	static math::float4x4 GetTransform(const aiMatrix4x4& current_transform, float scale_factor = 1.0);
 private:
-	void ImportChildBone(const aiMesh* mesh, const aiNode * previus_node, uint32_t previous_joint_index, const aiMatrix4x4& parent_transformation, aiMatrix4x4& accumulated_local_transformation,Skeleton & skeleton) const;
+	void ImportChildBone(const aiNode * previus_node, uint32_t previous_joint_index, aiMatrix4x4& accumulated_local_transformation,Skeleton& skeleton,float scale_factor) const;
 	aiBone * GetNodeBone(const aiMesh* mesh, const std::string & bone_name) const;
-	math::float4x4 GetTransform(const aiMatrix4x4& current_transform) const;
-	bool SaveBinary(const Skeleton & skeleton, const std::string& exported_file, const std::string& imported_file) const;
-	const float SCALE_FACTOR = 0.01f;
+	bool SaveBinary(const Skeleton & skeleton) const;
 };
 

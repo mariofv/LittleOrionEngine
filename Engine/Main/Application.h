@@ -7,6 +7,7 @@
 #include <vector>
 #include <memory>
 
+class ModuleAnimation;
 class ModuleRender;
 class ModuleWindow;
 class ModuleTextures;
@@ -45,6 +46,7 @@ public:
 	bool CleanUp();
 
 public:
+	ModuleAnimation* animations = nullptr;
 	ModuleRender* renderer = nullptr;
 	ModuleWindow* window = nullptr;
 	ModuleInput* input = nullptr;

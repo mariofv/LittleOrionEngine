@@ -31,7 +31,7 @@ bool ModuleTexture::CleanUp()
 std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 {
 	ImportResult import_result = App->resources->Import(File(texture_path));
-	if (!import_result.succes)
+	if (!import_result.success)
 	{
 		return nullptr;
 	}
@@ -40,13 +40,7 @@ std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
 
 GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) const
 {
-	std::vector<std::string> faces_paths_dds;
-	for (unsigned int i = 0; i < faces_paths.size(); i++)
-	{
-		std::string ol_texture = App->resources->Import(File(faces_paths[i]), false).exported_file;
-		faces_paths_dds.push_back(ol_texture);
-	}
-	return static_cast<GLuint>(TextureLoader::LoadCubemap(faces_paths_dds));
+	return static_cast<GLuint>(App->resources->LoadCubemap(faces_paths));
 }
 
 GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const{

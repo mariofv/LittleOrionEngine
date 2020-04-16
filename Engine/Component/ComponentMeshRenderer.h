@@ -4,11 +4,17 @@
 #include "Component.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Material.h"
+#include "ResourceManagement/Resources/Skeleton.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 class ComponentMeshRenderer : public Component
 {
 public:
+	enum Variations
+	{
+		ENABLE_NORMAL_MAP =1 << 0,
+		ENABLE_SPECULAR_MAP = 1 << 1
+	};
 	ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render);
 	ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner);
 	ComponentMeshRenderer();
@@ -40,7 +46,11 @@ private:
 	void AddEmissiveUniforms(unsigned int shader_program) const;
 	void AddSpecularUniforms(unsigned int shader_program) const;
 	void AddAmbientOclusionUniforms(unsigned int shader_program) const;
+	void AddNormalUniforms(unsigned int shader_program) const;
+	void AddExtraUniforms(unsigned int shader_program) const;
+
 	void BindTexture(Material::MaterialTextureType id) const;
+	bool BindTextureNormal(Material::MaterialTextureType id) const;
 
 public:
 	std::shared_ptr<Mesh> mesh_to_render;

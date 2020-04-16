@@ -17,7 +17,7 @@ ImportResult MaterialImporter::Import(const File& file, bool force) const
 	ImportOptions already_imported = GetAlreadyImportedResource(file);
 	if (already_imported.uuid != 0 && !force) {
 		APP_LOG_INFO("Material already imported.")
-		import_result.succes = true;
+		import_result.success = true;
 		import_result.exported_file = already_imported.exported_file;
 		return import_result;
 	}
@@ -27,7 +27,7 @@ ImportResult MaterialImporter::Import(const File& file, bool force) const
 	App->filesystem->Copy(file.file_path.c_str(), library_material_file.c_str());
 	
 
-	import_result.succes = true;
+	import_result.success = true;
 	import_result.exported_file = library_material_file;
 	return import_result;
 }
@@ -88,7 +88,6 @@ ImportResult MaterialImporter::ExtractMaterialFromMesh(const aiScene* scene, siz
 	material_config.AddFloat(imported_material.k_ambient, "kAmbient");
 	material_config.AddFloat(imported_material.k_specular, "kSpecular");
 	material_config.AddFloat(imported_material.k_diffuse, "kDiffuse");
-	material_config.AddFloat(imported_material.shininess, "shininess");
 
 	//colors
 	material_config.AddColor(

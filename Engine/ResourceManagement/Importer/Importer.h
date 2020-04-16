@@ -10,7 +10,7 @@ class File;
 
 struct ImportResult
 {
-	bool succes = false;
+	bool success = false;
 	std::string exported_file;
 };
 
@@ -30,7 +30,8 @@ public:
 	static void GetOptionsFromMeta(const File& file, ImportOptions & options);
 	static std::string GetMetaFilePath(const File& file);
 private:
-	static const int IMPORTER_VERSION = 4;
+
+	static const int IMPORTER_VERSION = 5;
 };
 #endif // !_IMPORTER_H_
 

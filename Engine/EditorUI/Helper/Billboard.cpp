@@ -2,12 +2,11 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleProgram.h"
-#include "Module/ModuleTexture.h"
 #include "Module/ModuleResourceManager.h"
 
 Billboard::Billboard(const std::string& texture_path, float width, float height) : width(width), height(height)
 {
-	billboard_texture = App->texture->LoadTexture(texture_path.c_str());
+	billboard_texture = App->resources->Load<Texture>(texture_path.c_str());
 	billboard_quad = App->resources->Load<Mesh>(PRIMITIVE_QUAD_PATH);
 }
 
@@ -19,6 +18,7 @@ Billboard::~Billboard()
 
 void Billboard::Render(const float3& position) const
 {
+	/*
 	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
 	glUseProgram(shader_program);
 
@@ -34,5 +34,6 @@ void Billboard::Render(const float3& position) const
 	glBindVertexArray(0);
 
 	glUseProgram(0);
+	*/
 }
 
