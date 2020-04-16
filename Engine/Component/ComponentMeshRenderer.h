@@ -4,6 +4,7 @@
 #include "Component.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Material.h"
+#include "ResourceManagement/Resources/Skeleton.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 class ComponentMeshRenderer : public Component
@@ -27,12 +28,15 @@ public:
 
 	void Delete() override;
 
-	void Render() const;
+	void Render();
 	void RenderModel() const;
 	void RenderMaterial(GLuint shader_program) const;
 
 	void SetMesh(uint32_t mesh_uuid);
 	void SetMaterial(uint32_t material_uuid);
+	void SetSkeleton(uint32_t skeleton_uuid);
+
+	void UpdatePalette(const std::vector<float4x4> & pose);
 
 private:
 	void AddDiffuseUniforms(unsigned int shader_program) const;
@@ -43,10 +47,15 @@ private:
 
 public:
 	uint32_t mesh_uuid;
-	uint32_t material_uuid;
+	std::shared_ptr<Mesh> mesh_to_render = nullptr;
 
-	std::shared_ptr<Mesh> mesh_to_render;
-	std::shared_ptr<Material> material_to_render;
+	uint32_t material_uuid;
+	std::shared_ptr<Material> material_to_render = nullptr;
+
+	uint32_t skeleton_uuid;
+	std::shared_ptr<Skeleton> skeleton = nullptr;
+
+	std::vector<float4x4> palette;
 
 private:
 

@@ -11,6 +11,7 @@
 #include "ResourceManagement/Resources/Prefab.h"
 #include "ResourceManagement/Resources/Skeleton.h"
 #include "ResourceManagement/Resources/Skybox.h"
+#include "ResourceManagement/Resources/StateMachine.h"
 #include "ResourceManagement/Resources/Texture.h"
 
 #include "ResourceManagement/ResourcesDB/ResourceDataBase.h"
@@ -32,6 +33,7 @@ class PrefabImporter;
 class SceneManager;
 class SkeletonImporter;
 class SkyboxImporter;
+class StateMachineImporter;
 class TextureImporter;
 
 class AnimationManager;
@@ -41,6 +43,7 @@ class PrefabManager;
 class SceneManager;
 class SkeletonManager;
 class SkyboxManager;
+class StateMachineManager;
 class TextureManager;
 
 class MetafileManager;
@@ -96,6 +99,12 @@ public:
 		return std::static_pointer_cast<T>(loaded_resource);
 	}
 
+	Create()
+	{
+		x = Loader::Create<>();
+		Import(x);
+	}
+
 	template<typename T>
 	std::shared_ptr<T> Reload(const Resource* resource)
 	{
@@ -136,6 +145,7 @@ public:
 	std::unique_ptr<PrefabImporter> prefab_importer = nullptr;
 	std::unique_ptr<SkeletonImporter> skeleton_importer = nullptr;
 	std::unique_ptr<SkyboxImporter> skybox_importer = nullptr;
+	std::unique_ptr<StateMachineImporter> state_machine_importer = nullptr;
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
 
 	std::unique_ptr<MetafileManager> metafile_manager = nullptr;

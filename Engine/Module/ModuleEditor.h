@@ -1,6 +1,8 @@
 #ifndef _MODULEEDITOR_H_
 #define _MODULEEDITOR_H_
 
+#define ENGINE_EXPORTS
+
 #include "Module.h"
 #include "Main/Globals.h"
 #include "ResourceManagement/Resources/Texture.h"
@@ -15,6 +17,7 @@ class Panel;
 class PanelMenuBar;
 class PanelToolBar;
 class PanelScene;
+class PanelStateMachine;
 class PanelGame;
 class PanelInspector;
 class PanelHierarchy;
@@ -43,7 +46,7 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	void OpenScene(const std::string &path) const;
+	ENGINE_API void OpenScene(const std::string &path) const;
 	void SaveScene(const std::string &path) const;
 
 	void Render();
@@ -79,6 +82,7 @@ public:
 	PanelResourceDatabase* resource_database = nullptr;
 	PanelPopups* popups = nullptr;
 	PanelNavMesh* nav_mesh = nullptr;
+	PanelStateMachine* state_machine = nullptr;
 
 private:
 	std::vector<Panel*> panels;

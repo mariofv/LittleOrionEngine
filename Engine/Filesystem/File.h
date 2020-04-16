@@ -18,6 +18,7 @@ enum class FileType
 	PREFAB,
 	SKELETON,
 	SKYBOX,
+	STATE_MACHINE,
 	TEXTURE,
 	UNKNOWN
 };

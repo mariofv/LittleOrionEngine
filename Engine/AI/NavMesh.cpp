@@ -42,8 +42,6 @@ bool NavMesh::CleanUp()
 {
 	m_dd.CleanUp();
 	is_mesh_computed = false;
-	//Free memory allocated on the heap
-	free(navmesh_read_data);
 
 	return true;
 }
@@ -53,9 +51,9 @@ bool NavMesh::Update()
 	//if (is_mesh_computed)
 	//{
 	//	// Draw bounds
-	//	//const float* bmin = &global_AABB.minPoint[0];
-	//	//const float* bmax = &global_AABB.maxPoint[0];
-	//	//dd::aabb(math::float3(bmin[0], bmin[1], bmin[2]), math::float3(bmax[0], bmax[1], bmax[2]), math::float3(1.0f, 0.0f, 0.0f));
+	//	const float* bmin = &global_AABB.minPoint[0];
+	//	const float* bmax = &global_AABB.maxPoint[0];
+	//	dd::aabb(math::float3(bmin[0], bmin[1], bmin[2]), math::float3(bmax[0], bmax[1], bmax[2]), math::float3(1.0f, 0.0f, 0.0f));
 	//}
 	return true;
 }
@@ -479,7 +477,7 @@ void NavMesh::InitAABB()
 	}
 }
 
-bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path)
+bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, PathMode path_mode)
 {
 
 	path.clear();
@@ -500,6 +498,7 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path)
 	nav_query->findNearestPoly((float*)&start, poly_pick_ext, &filter, &start_ref, 0);
 	nav_query->findNearestPoly((float*)&end, poly_pick_ext, &filter, &end_ref, 0);
 
+	
 
 	if(!start_ref)
 	{
@@ -705,6 +704,51 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path)
 
 	return true;
 }
+
+bool NavMesh::IsPointWalkable(float3 & target_position)
+{
+	dtPolyRef target_ref;
+	dtQueryFilter filter;
+	filter.setIncludeFlags(SAMPLE_POLYFLAGS_ALL ^ SAMPLE_POLYFLAGS_DISABLED);
+	filter.setExcludeFlags(0);
+
+	float3 diff = math::float3(0.1f, 2.f, 0.1f);
+	float poly_pick_ext[3] = { diff.x, diff.y, diff.z };
+
+	nav_query->findNearestPoly((float*)&target_position, poly_pick_ext, &filter, &target_ref, diff.ptr());
+
+	if (target_ref == 0)
+		return false;
+
+	return Distance(diff, target_position) < 0.45f;
+}
+
+bool NavMesh::FindNextPolyByDirection(float3& position, float3& next_position)
+{
+	float3 aux_position = position;
+	dtPolyRef target_ref;
+	dtQueryFilter filter;
+	float3 diff = math::float3(0.1f, 2.f, 0.1f);
+	float poly_pick_ext[3] = { diff.x, diff.y, diff.z };
+
+	nav_query->findNearestPoly((float*)&aux_position, poly_pick_ext, &filter, &target_ref, diff.ptr());
+	//PolyNotFound
+	if(target_ref == 0)
+	{
+		return false;
+	}
+	
+	float pos[3];
+	nav_query->closestPointOnPoly(target_ref, (float*)&aux_position, pos, 0);
+
+	next_position.x = pos[0];
+	next_position.y = pos[1];
+	next_position.z = pos[2];
+
+	return true;
+}
+
+
 
 void NavMesh::SaveNavMesh(unsigned char* nav_data, unsigned int nav_data_size) const
 {

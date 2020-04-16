@@ -5,6 +5,7 @@
 #include "Main/Globals.h"
 #include "ModuleEditor.h"
 #include "ModuleInput.h"
+#include "ModuleScene.h"
 #include "ModuleWindow.h"
 
 #include "Component/ComponentCamera.h"
@@ -18,12 +19,12 @@ bool ModuleCamera::Init()
 	int windowWidth, windowHeight;
 	SDL_GetWindowSize(App->window->window, &windowWidth, &windowHeight);
 
-	scene_camera_game_object = new GameObject();
+	scene_camera_game_object = App->scene->CreateGameObject();
 	scene_camera_game_object->transform.SetTranslation(float3(0.5f, 2.f, -15.f));
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	scene_camera->SetFarDistance(5000);
 	scene_camera->depth = -1;
-	
+
 	scene_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
 
 	return true;
@@ -120,7 +121,7 @@ void ModuleCamera::HandleSceneCameraMovements()
 	// Mouse wheel
 	if (App->input->GetMouseWheelMotion() > 0)
 	{
-		scene_camera->MoveFoward();
+		scene_camera->MoveForward();
 	}
 	else if (App->input->GetMouseWheelMotion() < 0)
 	{
@@ -227,7 +228,7 @@ void ModuleCamera::HandleSceneCameraMovements()
 		}
 		if (App->input->GetKey(KeyCode::W))
 		{
-			scene_camera->MoveFoward();
+			scene_camera->MoveForward();
 		}
 		if (App->input->GetKey(KeyCode::S))
 		{

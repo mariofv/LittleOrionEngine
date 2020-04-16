@@ -17,8 +17,8 @@ public:
 
 	void ShowFoldersHierarchy(const Path& file);
 
-	void ProcessMouseInput(Path* file);
-	void ProcessResourceMouseInput(Path* file);
+	void ProcessMouseInput(Path* file_path);
+	void ProcessResourceMouseInput(Path* metafile_path, Metafile* metafile);
 	void ShowFilesInExplorer();
 
 	void ShowFileSystemActionsMenu(Path* path);

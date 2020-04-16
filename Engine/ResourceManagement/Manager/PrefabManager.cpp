@@ -3,6 +3,8 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentAnimation.h"
+#include "Component/ComponentScript.h"
 
 #include "Helper/Config.h"
 
@@ -72,6 +74,10 @@ void PrefabManager::LoadBasicParameters(const Config& config, std::unique_ptr<Ga
 	config.GetChildConfig("Transform", transform_config);
 	loaded_gameObject->transform.Load(transform_config);
 
+	Config transform_2d_config;
+	config.GetChildConfig("Transform2D", transform_2d_config);
+	loaded_gameObject->transform_2d.Load(transform_2d_config);
+
 }
 
 void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameObject> & loaded_gameObject)
@@ -99,6 +105,14 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 
 		case Component::ComponentType::LIGHT:
 			created_component = new ComponentLight();
+			break;
+
+		case Component::ComponentType::ANIMATION:
+			created_component = new ComponentAnimation();
+			break;
+
+		case Component::ComponentType::SCRIPT:
+			created_component = new ComponentScript();
 			break;
 		}
 		created_component->owner = loaded_gameObject.get();

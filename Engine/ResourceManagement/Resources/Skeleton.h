@@ -9,12 +9,13 @@
 
 class Metafile;
 
+
 class Skeleton : public Resource
 {
 public:
-	struct Joint {
+	struct Joint 
+	{
 		math::float4x4 transform_global;
-		math::float4x4 transform_local;
 		uint32_t parent_index;
 		std::string name;
 	};

@@ -1,6 +1,8 @@
 #include "Prefab.h"
 #include "Filesystem/Path.h"
 #include "Main/Application.h"
+
+#include "Module/ModuleAnimation.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
 
@@ -11,7 +13,6 @@
 
 Prefab::Prefab(Metafile* resource_metafile, std::vector<std::unique_ptr<GameObject>> && gameObjects) : Resource(resource_metafile), prefab(std::move(gameObjects))
 {
-
 }
 
 GameObject* Prefab::Instantiate(GameObject* prefab_parent, std::unordered_map<int64_t, int64_t>* UUIDS_pairs)
@@ -39,15 +40,17 @@ GameObject* Prefab::Instantiate(GameObject* prefab_parent, std::unordered_map<in
 			instances.push_back(copy_in_scene);
 			parent_prefab = copy_in_scene;
 		}
-		copy_in_scene->prefab_reference = this;
+		copy_in_scene->prefab_reference = App->resources->Load<Prefab>(GetUUID());
 		copy_in_scene->transform.Translate(float3::zero); //:D
 	}
 	parent_prefab->SetParent(prefab_parent);
+	App->animations->UpdateAnimationMeshes();
 	return parent_prefab;
 }
 
 void Prefab::Apply(GameObject* new_reference)
 {
+	//TODO: Talk with Anabel about reimporting deleted prefabs here
 	RecursiveRewrite(prefab.front().get(), new_reference, true, false);
 	for (auto old_instance : instances)
 	{
@@ -155,7 +158,7 @@ void Prefab::AddNewGameObjectToInstance(GameObject * parent, GameObject * new_re
 	else
 	{
 		copy = App->scene->CreateGameObject();
-		copy->prefab_reference = this;
+		copy->prefab_reference = App->resources->Load<Prefab>(GetUUID());
 	}
 	copy->SetParent(parent);
 	*copy << *new_reference;

@@ -4,7 +4,7 @@
 #include "Module.h"
 #include "Main/Globals.h"
 #include "ResourceManagement/Resources/Skybox.h"
-
+#include "Component/ComponentCanvas.h"
 #include "Geometry/Frustum.h"
 #include "MathGeoLib.h"
 

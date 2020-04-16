@@ -26,6 +26,8 @@ public:
 
 public:
 	uint32_t uuid = 0;
+	std::string resource_name;
+
 	ResourceType resource_type = ResourceType::UNKNOWN;
 
 	std::string metafile_path = "";

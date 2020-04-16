@@ -66,7 +66,16 @@ enum class Fonts
 # define VIDEO_BILLBOARD_TEXTURE_PATH "Resources/Textures/video-solid.png"
 # define LIGHT_BILLBOARD_TEXTURE_PATH "Resources/Textures/lightbulb-solid.png"
 
-# define SCRIPT_DLL_FILE "GamePlaySyste_.dll"
+#if DEBUG
+# define SCRIPTS_DLL_PATH "Resources/Scripts/GamePlaySystemDebug.dll"
+# define SCRIPT_DLL_FILE "GamePlaySystemDebu_.dll"
+#elif GAME
+# define SCRIPTS_DLL_PATH "Resources/Scripts/GameplaySystem.dll"
+# define SCRIPT_DLL_FILE "GameplaySystem.dll"
+#else
+# define SCRIPTS_DLL_PATH "Resources/Scripts/GamePlaySystemRelease.dll"
+# define SCRIPT_DLL_FILE "GamePlaySystemReleas_.dll"
+#endif
 
 # define OPENGL_MAJOR_VERSION 4
 # define OPENGL_MINOR_VERSION 0

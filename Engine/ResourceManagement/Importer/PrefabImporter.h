@@ -26,16 +26,11 @@ private:
 		std::vector<uint32_t>& loaded_skeletons
 	);
 	static void ExcractMeshComponent(
-		uint32_t mesh_uuid, uint32_t material_uuid, 
+		uint32_t mesh_uuid, uint32_t material_uuid, uint32_t skeleton_uuid,
 		std::vector<std::unique_ptr<ComponentMeshRenderer>>& mesh_renderer_components,
 		GameObject* node_game_object
 	);
-	static void ExtractSkeletonFromNode(
-		const Config& node_config,
-		std::unique_ptr<GameObject>& parent_node,
-		std::vector<std::unique_ptr<GameObject>>& game_objects,
-		std::vector<uint32_t>& loaded_skeletons
-	);
+	static void ExtractAnimationComponent(GameObject* node_game_object, const Config& node_config);
 };
 
 #endif

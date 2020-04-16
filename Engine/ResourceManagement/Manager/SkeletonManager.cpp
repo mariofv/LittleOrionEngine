@@ -25,7 +25,6 @@ std::shared_ptr<Skeleton> SkeletonManager::Load(Metafile* metafile, const FileDa
 	cursor += bytes;
 	for (auto & joint : bones)
 	{
-
 		uint32_t name_size;
 		memcpy(&name_size, cursor, sizeof(uint32_t));
 		cursor += sizeof(uint32_t);
@@ -33,8 +32,6 @@ std::shared_ptr<Skeleton> SkeletonManager::Load(Metafile* metafile, const FileDa
 		memcpy(&joint.name[0], cursor, name_size);
 		cursor += name_size;
 		memcpy(&joint.transform_global, cursor, sizeof(float4x4));
-		cursor += sizeof(float4x4);
-		memcpy(&joint.transform_local, cursor, sizeof(float4x4));
 		cursor += sizeof(float4x4);
 		memcpy(&joint.parent_index, cursor,sizeof(uint32_t));
 		cursor += sizeof(uint32_t);

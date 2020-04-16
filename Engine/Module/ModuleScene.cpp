@@ -9,16 +9,19 @@
 #include "ModuleEditor.h"
 #include "ModuleRender.h"
 #include "ModuleResourceManager.h"
+#include "ModuleScriptManager.h"
+#include "ModuleTime.h"
 
 #include "ResourceManagement/Manager/SceneManager.h"
 
 #include <algorithm>
 #include <stack>
-#include "Brofiler/Brofiler.h"
+#include <Brofiler/Brofiler.h>
 
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
+	
 	return true;
 }
 
@@ -102,7 +105,7 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
-GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
+ENGINE_API GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 {
 	if (UUID == 0)
 	{
@@ -142,10 +145,11 @@ void ModuleScene::DeleteCurrentScene()
 	App->actions->ClearUndoRedoStacks();
 	RemoveGameObject(root);
 	App->renderer->DeleteAABBTree();
+	App->scripts->scripts.clear();
 	App->editor->selected_game_object = nullptr;
 }
 
-void  ModuleScene::NewScene(const std::string &path)
+void ModuleScene::OpenScene(const std::string &path)
 {
 	App->scene->DeleteCurrentScene();
 	App->renderer->CreateAABBTree();
@@ -153,7 +157,28 @@ void  ModuleScene::NewScene(const std::string &path)
 
 	App->resources->scene_manager->Load(path);
 
+	if (App->time->isGameRunning())
+	{
+		App->scripts->InitScripts();
+	}
 	App->renderer->GenerateQuadTree();
 	App->renderer->GenerateOctTree();
 	App->actions->ClearUndoStack();
 }
+
+void ModuleScene::OpenPendingScene()
+{
+	OpenScene(scene_to_load);
+	scene_to_load.clear();
+}
+
+void ModuleScene::LoadScene(const std::string &path)
+{
+	scene_to_load = path;
+}
+
+bool ModuleScene::HasPendingSceneToLoad() const
+{
+	return !scene_to_load.empty();
+}
+

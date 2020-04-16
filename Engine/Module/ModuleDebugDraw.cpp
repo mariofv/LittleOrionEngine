@@ -1,5 +1,6 @@
 #include "ModuleDebugDraw.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
@@ -10,10 +11,12 @@
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
-#include "Module/ModuleAI.h"
+
+#include "ModuleAI.h"
+#include "ModuleAnimation.h"
 #include "ModuleCamera.h"
-#include "ModuleEditor.h"
 #include "ModuleDebug.h"
+#include "ModuleEditor.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
@@ -392,6 +395,9 @@ bool ModuleDebugDraw::Init()
 
 void ModuleDebugDraw::Render()
 {
+#if GAME
+	return;
+#endif
 
 	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
 	if(App->debug->show_navmesh)
@@ -432,6 +438,7 @@ void ModuleDebugDraw::Render()
 
 		RenderCameraFrustum();
 		RenderLightGizmo();
+		//RenderBones();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 
@@ -452,7 +459,6 @@ void ModuleDebugDraw::Render()
 
 	RenderBillboards();
 
-
 	if (App->debug->show_grid)
 	{
 		float scene_camera_height = App->cameras->scene_camera->owner->transform.GetGlobalTranslation().y;
@@ -460,8 +466,6 @@ void ModuleDebugDraw::Render()
 		grid->Render();
 	}
 	RenderDebugDraws(*App->cameras->scene_camera);
-
-
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
@@ -489,8 +493,8 @@ void ModuleDebugDraw::RenderLightGizmo() const
 	if (selected_light_component != nullptr)
   {	
 		ComponentLight* selected_light = static_cast<ComponentLight*>(selected_light_component);	
-		ComponentTransform* selected_light_transform = &selected_light->owner->transform;	
-		float gizmo_radius = 2.5f;	
+		ComponentTransform* selected_light_transform = &selected_light->owner->transform;
+		float gizmo_radius = 2.5F;	
 		switch (selected_light->light_type)	
 		{	
 		case ComponentLight::LightType::DIRECTIONAL_LIGHT:	
@@ -501,12 +505,12 @@ void ModuleDebugDraw::RenderLightGizmo() const
 				selected_light_transform->GetGlobalTranslation(), 	
 				selected_light_transform->GetRotation().ToFloat4x4(),	
 				float3(1.f, 1.f, 0.f),	
-				selected_light->spot_light_parameters.range,	
-				tan(DegToRad(selected_light->spot_light_parameters.spot_angle/2.f)) * selected_light->spot_light_parameters.range	
+				selected_light->spot_light_parameters.range / 10.f,	
+				tan(DegToRad(selected_light->spot_light_parameters.spot_angle/2.f)) * selected_light->spot_light_parameters.range / 10.f
 			); 	
 			break;	
 		case ComponentLight::LightType::POINT_LIGHT:	
-			dd::point_light(selected_light_transform->GetGlobalTranslation(), float3(1.f, 1.f, 0.f), selected_light->point_light_parameters.range);	
+			dd::point_light(selected_light_transform->GetGlobalTranslation(), float3(1.f, 1.f, 0.f), selected_light->point_light_parameters.range / 10.f);
 			break;	
 		default:	
 			break;	
@@ -514,6 +518,43 @@ void ModuleDebugDraw::RenderLightGizmo() const
 	}	
 }	
 
+void ModuleDebugDraw::RenderBones() const
+{
+	for (auto& animation : App->animations->animations)
+	{
+		if (animation->IsEnabled())
+		{
+			GameObject* animation_game_object = animation->owner;
+			RenderBone(animation_game_object, nullptr, float3(1.f, 0.f, 0.f));
+		}
+	}
+	
+}
+
+void ModuleDebugDraw::RenderBone(const GameObject* current_bone, const GameObject* last_bone, const float3& color) const
+{
+	if (current_bone->name.substr(current_bone->name.length() - 2) == "IK" || current_bone->name.substr(current_bone->name.length() - 2) == "FK")
+	{
+		return;
+	}
+
+	if (last_bone != nullptr)
+	{
+		dd::line(last_bone->transform.GetGlobalTranslation(), current_bone->transform.GetGlobalTranslation(), color);
+	}
+
+	for (auto& child_bone : current_bone->children)
+	{
+		float3 next_color;
+		if (color.x == 1.f)
+			next_color = float3(0.f, 1.f, 0.f);
+		if (color.y == 1.f)
+			next_color = float3(0.f, 0.f, 1.f);
+		if (color.z == 1.f)
+			next_color = float3(1.f, 0.f, 0.f);
+		RenderBone(child_bone, current_bone, next_color);
+	}
+}
 
 void ModuleDebugDraw::RenderOutline() const
 {
@@ -547,6 +588,10 @@ void ModuleDebugDraw::RenderOutline() const
 		{
 			new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * selected_game_object->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
 
+		ComponentTransform object_transform_copy = selected_game_object->transform;
+		float3 object_scale = object_transform_copy.GetScale();
+		object_transform_copy.SetScale(object_scale*1.01f);
+		object_transform_copy.GenerateGlobalModelMatrix();
 		}
 		else 
 		{
@@ -645,7 +690,7 @@ void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 	math::float4x4 proj = camera.GetProjectionMatrix();
 
 	dd_interface_implementation->width = static_cast<unsigned int>(camera.GetWidth());
-	dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeigt());
+	dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeight());
 	dd_interface_implementation->mvpMatrix = proj * view;
 
 	dd::flush();

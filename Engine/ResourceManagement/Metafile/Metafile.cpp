@@ -5,6 +5,7 @@
 void Metafile::Save(Config& config) const
 {
 	config.AddUInt(uuid, "UUID");
+	config.AddString(resource_name, "ResourceName");
 	config.AddUInt(static_cast<unsigned int>(resource_type), "ResourceType");
 
 	config.AddString(metafile_path, "MetfilePath");
@@ -18,6 +19,7 @@ void Metafile::Save(Config& config) const
 void Metafile::Load(const Config& config)
 {
 	uuid = config.GetUInt("UUID", uuid);
+	config.GetString("ResourceName", resource_name, "");
 	resource_type = static_cast<ResourceType>(config.GetUInt("ResourceType",  static_cast<unsigned int>(ResourceType::UNKNOWN)));
 
 	config.GetString("MetfilePath", metafile_path, "");

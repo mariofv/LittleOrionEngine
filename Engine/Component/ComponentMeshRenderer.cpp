@@ -1,5 +1,6 @@
-#include "ComponentMeshRenderer.h"
+﻿#include "ComponentMeshRenderer.h"
 
+#include "ComponentAnimation.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleLight.h"
@@ -7,6 +8,7 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleScene.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
@@ -36,6 +38,7 @@ void ComponentMeshRenderer::Save(Config& config) const
 	config.AddBool(active, "Active");
 	config.AddUInt(mesh_uuid, "Mesh");
 	config.AddUInt(material_uuid, "Material");
+	config.AddUInt(skeleton_uuid, "Skeleton");
 }
 
 void ComponentMeshRenderer::Load(const Config& config)
@@ -48,9 +51,12 @@ void ComponentMeshRenderer::Load(const Config& config)
 
 	material_uuid = config.GetUInt("Material", 0);
 	SetMaterial(material_uuid);
+
+	skeleton_uuid =	config.GetUInt("Skeleton", 0);
+	SetSkeleton(skeleton_uuid);
 }
 
-void ComponentMeshRenderer::Render() const
+void ComponentMeshRenderer::Render()
 {
 	if (material_to_render == nullptr)
 	{
@@ -60,6 +66,11 @@ void ComponentMeshRenderer::Render() const
 	std::string program_name = material_to_render->shader_program;
 	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
+
+	if (palette.size() > 0)
+	{
+		glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
+	}
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
@@ -89,6 +100,7 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 	AddSpecularUniforms(shader_program);
 	AddAmbientOclusionUniforms(shader_program);
 }
+
 
 void ComponentMeshRenderer::AddDiffuseUniforms(unsigned int shader_program) const
 {
@@ -165,7 +177,6 @@ void ComponentMeshRenderer::Copy(Component* component_to_copy) const
 	*static_cast<ComponentMeshRenderer*>(component_to_copy) = *this;
 };
 
-
 void ComponentMeshRenderer::SetMesh(uint32_t mesh_uuid)
 {
 	this->mesh_uuid = mesh_uuid;
@@ -186,5 +197,37 @@ void ComponentMeshRenderer::SetMaterial(uint32_t material_uuid)
 	else
 	{
 		material_to_render = App->resources->Load<Material>((uint32_t)CoreResource::DEFAULT_MATERIAL);
+	}
+}
+
+void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)
+{
+	this->skeleton_uuid = skeleton_uuid;
+	if (skeleton_uuid != 0)
+	{
+		skeleton = App->resources->Load<Skeleton>(skeleton_uuid);
+		palette.resize(skeleton->skeleton.size());
+		for (auto & matrix : palette)
+		{
+			matrix = float4x4::identity;
+		}
+	}
+}
+
+void ComponentMeshRenderer::UpdatePalette(const std::vector<float4x4>& pose)
+{
+	assert(pose.size() == palette.size());
+	for (size_t i = 0; i < pose.size(); ++i)
+	{
+		auto &  joints = skeleton->skeleton;
+		size_t joint_index = i;
+		float4x4 gobal_transform = float4x4::identity;
+		while (joints[joint_index].parent_index != -1)
+		{
+			joint_index = joints[joint_index].parent_index;
+			gobal_transform = pose[joint_index] * gobal_transform;
+
+		}
+		palette[i] =  gobal_transform * pose[i] * joints[i].transform_global;
 	}
 }

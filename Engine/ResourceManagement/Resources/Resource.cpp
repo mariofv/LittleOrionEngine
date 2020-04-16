@@ -1,5 +1,6 @@
 #include "Resource.h"
 
+#include "Filesystem/Path.h"
 #include "ResourceManagement/Metafile/Metafile.h"
 
 Resource::Resource(Metafile* metafile) : resource_metafile(metafile) {}
@@ -7,6 +8,11 @@ Resource::Resource(Metafile* metafile) : resource_metafile(metafile) {}
 uint32_t Resource::GetUUID() const
 { 
 	return resource_metafile->uuid; 
+}
+
+std::string Resource::GetName() const
+{
+	return resource_metafile->resource_name;
 }
 
 std::string Resource::GetResourceTypeName(ResourceType resource_type)
@@ -33,6 +39,8 @@ std::string Resource::GetResourceTypeName(ResourceType resource_type)
 		return "Skeleton";
 	case ResourceType::SKYBOX:
 		return "Skybox";
+	case ResourceType::STATE_MACHINE:
+		return "State Machine";
 	case ResourceType::TEXTURE:
 		return "Texture";
 	case ResourceType::UNKNOWN:

@@ -39,7 +39,6 @@ std::shared_ptr<Animation> AnimationManager::Load(Metafile* metafile, const File
 	keyframes.resize(num_keyframe);
 	for (auto & keyframe : keyframes)
 	{
-
 		memcpy(&keyframe.frame, cursor,sizeof(float));
 		cursor += sizeof(float);
 
@@ -48,7 +47,6 @@ std::shared_ptr<Animation> AnimationManager::Load(Metafile* metafile, const File
 		cursor += sizeof(uint32_t);
 
 		keyframe.channels.resize(number_channels);
-
 
 
 		for (auto & channel : keyframe.channels)
@@ -61,8 +59,11 @@ std::shared_ptr<Animation> AnimationManager::Load(Metafile* metafile, const File
 			memcpy(&channel.name[0], cursor, name_size);
 			cursor += name_size;
 
-			memcpy(&channel.position, cursor,sizeof(float4x4));
-			cursor += sizeof(float4x4);
+			memcpy(&channel.translation, cursor,sizeof(float3));
+			cursor += sizeof(float3);
+
+			memcpy(&channel.rotation, cursor, sizeof(Quat));
+			cursor += sizeof(Quat);
 		}
 	}
 

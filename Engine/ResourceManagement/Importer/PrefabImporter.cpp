@@ -1,5 +1,6 @@
 #include "PrefabImporter.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Helper/Config.h"
 
@@ -55,6 +56,7 @@ FileData PrefabImporter::ExtractFromGameObject(GameObject* gameobject) const
 
 FileData PrefabImporter::ExtractFromModel(const Config& model_config) const
 {
+	//TODO: Be sure that uuid of the prefab is same as the resoruce one
 	std::vector<std::unique_ptr<GameObject>> game_objects;
 	std::vector<std::unique_ptr<ComponentMeshRenderer>> mesh_renderer_components;
 	std::vector<uint32_t> loaded_skeletons;
@@ -70,15 +72,8 @@ FileData PrefabImporter::ExtractFromModel(const Config& model_config) const
 	{
 		ExcractGameObjectFromNode(model_root_node, game_objects_config[i], game_objects, mesh_renderer_components, loaded_skeletons);
 	}
-
-	std::vector<Config> animation_config;
-	model_config.GetChildrenConfig("Animations", animation_config);
-	for (auto animation : animation_config)
-	{
-		uint32_t animation_uuid;
-		animation_uuid = animation.GetUInt("Animation", 0);
-	}
-
+	ExtractAnimationComponent(model_root_node.get(), model_config);
+	
 	FileData prefab_data = ExtractFromGameObject(model_root_node.get());
 
 	game_objects.clear();
@@ -104,26 +99,22 @@ void PrefabImporter::ExcractGameObjectFromNode
 	node_config.GetString("Name", node_game_object->name, "");
 	node_game_object->original_UUID = node_game_object->UUID;
 
-	uint32_t material_uuid;
-	material_uuid = node_config.GetUInt("Material", 0);
-
-	uint32_t mesh_uuid;
-	mesh_uuid = node_config.GetUInt("Mesh", 0);
+	uint32_t material_uuid = node_config.GetUInt("Material", 0);
+	uint32_t mesh_uuid = node_config.GetUInt("Mesh", 0);
+	uint32_t skeleton_uuid = node_config.GetUInt("Skeleton", 0);
 
 	if (mesh_uuid != 0)
 	{
-		ExcractMeshComponent(mesh_uuid, material_uuid, mesh_renderer_components, node_game_object);
-
+		ExcractMeshComponent(mesh_uuid, material_uuid, skeleton_uuid, mesh_renderer_components, node_game_object);
 		ComponentMeshRenderer* mesh_renderer = mesh_renderer_components.back().get();
 		node_game_object->Update();
 	}
 
-	ExtractSkeletonFromNode(node_config, parent_node, game_objects, loaded_skeletons);
 }
 
 
 void PrefabImporter::ExcractMeshComponent(
-	uint32_t mesh_uuid, uint32_t material_uuid,
+	uint32_t mesh_uuid, uint32_t material_uuid, uint32_t skeleton_uuid,
 	std::vector<std::unique_ptr<ComponentMeshRenderer>>& mesh_renderer_components,
 	GameObject* node_game_object
 ) {
@@ -132,52 +123,17 @@ void PrefabImporter::ExcractMeshComponent(
 
 	mesh_renderer_components.back()->mesh_uuid = mesh_uuid;
 	mesh_renderer_components.back()->material_uuid = material_uuid;
+	mesh_renderer_components.back()->skeleton_uuid = skeleton_uuid;
 }
 
-void PrefabImporter::ExtractSkeletonFromNode(
-	const Config& node_config, 
-	std::unique_ptr<GameObject>& parent_node,
-	std::vector<std::unique_ptr<GameObject>>& game_objects,
-	std::vector<uint32_t>& loaded_skeletons
-)
+void PrefabImporter::ExtractAnimationComponent(GameObject* node_game_object, const Config& node_config)
 {
-	uint32_t skeleton_uuid = node_config.GetUInt("Skeleton", 0);
-
-	bool already_loaded = std::find(loaded_skeletons.begin(), loaded_skeletons.end(), skeleton_uuid) != loaded_skeletons.end();
-	if (skeleton_uuid != 0 && !already_loaded)
+	std::vector<Config> animation_config;
+	node_config.GetChildrenConfig("Animations", animation_config);
+	if (animation_config.size() > 0)
 	{
-		std::shared_ptr<Skeleton> full_skeleton = App->resources->Load<Skeleton>(skeleton_uuid);
-		std::vector<GameObject*> skeleton_gameobjects;
-
-		for (Skeleton::Joint joint : full_skeleton->skeleton)
-		{
-			game_objects.emplace_back(std::make_unique<GameObject>());
-			GameObject* object = game_objects.back().get();
-		
-			if (joint.parent_index >= skeleton_gameobjects.size())
-			{
-				object->parent = parent_node.get();
-				parent_node->children.push_back(object);
-			}
-			else
-			{
-				object->parent = skeleton_gameobjects.at(joint.parent_index);
-				skeleton_gameobjects.at(joint.parent_index)->children.push_back(object);
-			}
-
-			float3 translation;
-			float3 scale;
-			float3x3 rotate;
-			joint.transform_local.Decompose(translation, rotate, scale);
-
-			object->transform.SetScale(scale);
-			object->transform.SetTranslation(translation);
-			object->transform.SetRotation(rotate);
-			object->name = joint.name;
-
-			skeleton_gameobjects.push_back(object);
-		}
-
-		loaded_skeletons.push_back(skeleton_uuid);
+		ComponentAnimation * component_animation = new ComponentAnimation();
+		node_game_object->components.push_back(component_animation);
+		component_animation->owner = node_game_object;
 	}
 }

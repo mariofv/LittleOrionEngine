@@ -419,6 +419,66 @@
     <ClCompile Include="Engine\EditorUI\Helper\ImGuiHelper.cpp">
       <Filter>Engine\EditorUI\Helper</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Animation\AnimController.cpp">
+      <Filter>Engine\Animation</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentAnimation.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentUI.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentButton.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentCanvas.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentImage.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentProgressBar.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentText.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleAnimation.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\StateMachine.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\StateMachineImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\crude_json.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_canvas.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor_api.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelStateMachine.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\StateMachineManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -821,6 +881,72 @@
     <ClInclude Include="Engine\EditorUI\Helper\ImGuiHelper.h">
       <Filter>Engine\EditorUI\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Animation\AnimController.h">
+      <Filter>Engine\Animation</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentAnimation.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentUI.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentButton.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCanvas.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentImage.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentProgressBar.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentText.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentTransform2D.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionRect2D.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionRotation2D.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleAnimation.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\StateMachine.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\StateMachineImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\crude_json.h">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_bezier_math.h">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_canvas.h">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_extra_math.h">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor.h">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor_internal.h">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelStateMachine.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\StateMachineManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -898,5 +1024,22 @@
     <Filter Include="Engine\ResourceManagement\Manager">
       <UniqueIdentifier>{af8a22c1-2b23-42fc-b542-ec1112f7066d}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\Animation">
+      <UniqueIdentifier>{64f0a9f8-590b-4318-84a1-d3f7a693b4ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\NodeEditor">
+      <UniqueIdentifier>{0962007d-0c63-4e57-a857-faada0652d87}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl">
+      <Filter>Libraries\NodeEditor</Filter>
+    </None>
+    <None Include="Libraries\include\NodeEditor\imgui_extra_math.inl">
+      <Filter>Libraries\NodeEditor</Filter>
+    </None>
+    <None Include="Libraries\include\NodeEditor\imgui_node_editor_internal.inl">
+      <Filter>Libraries\NodeEditor</Filter>
+    </None>
   </ItemGroup>
 </Project>

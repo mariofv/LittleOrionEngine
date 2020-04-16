@@ -57,6 +57,7 @@ Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType re
 	assert(metafiles.find(metafile_path_string) == metafiles.end());
 
 	created_metafile->uuid = uuid == 0 ? pcg32_random() : uuid;
+	created_metafile->resource_name = asset_file_path.GetFilenameWithoutExtension();
 	created_metafile->resource_type = resource_type;
 
 	created_metafile->metafile_path = metafile_path_string;

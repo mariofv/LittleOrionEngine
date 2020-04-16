@@ -11,11 +11,11 @@ class Animation : public Resource
 public:
 	struct Channel
 	{
-
 		std::string name;
-		float4x4 position;
-
+		float3 translation;
+		Quat rotation;
 	};
+
 	struct KeyFrame
 	{
 		float frame;

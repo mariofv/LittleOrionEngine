@@ -22,6 +22,7 @@ class ComponentScript;
 class GameObject;
 class Script;
 class Path;
+class Config;
 
 class ModuleScriptManager : public Module
 {
@@ -41,6 +42,10 @@ public:
 
 	void InitScripts();
 	void Refresh();
+	void ReLink();
+
+	void SaveVariables(std::unordered_map<uint64_t, Config>& config_list);
+	void LoadVariables(std::unordered_map<uint64_t, Config> config_list);
 
 private:
 	void GetCurrentPath();
@@ -68,8 +73,6 @@ private:
 public:
 	std::vector<ComponentScript*> scripts;
 	std::vector<std::string> scripts_list;
-
-
 };
 
 #endif //_MODULEMANAGERSCRIPT_H_

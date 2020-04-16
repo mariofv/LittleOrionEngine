@@ -110,7 +110,7 @@ public:
 
 	/// Creates a new float4x4 with uninitialized member values.
 	/** [opaque-qtscript] */
-	float4x4() {}
+	float4x4() { *this = float4x4::identity; }
 
 #ifdef MATH_EXPLICIT_COPYCTORS
 	/// The copy-ctor for float4x4 is the trivial copy-ctor, but it is explicitly written to be able to automatically

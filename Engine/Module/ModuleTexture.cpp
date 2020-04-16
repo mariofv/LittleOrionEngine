@@ -31,9 +31,8 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
-GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const{
-
-
+GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const
+{
 	switch (color_id)
 	{
 	case PATRON::CHECKBOARD:

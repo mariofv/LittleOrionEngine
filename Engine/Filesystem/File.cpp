@@ -122,6 +122,10 @@ FileType File::CalculateFileType(const PHYSFS_FileType& file_type) const
 	{
 		return FileType::ANIMATION;
 	}
+	if (file_extension == "stm")
+	{
+		return FileType::STATE_MACHINE;
+	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{
 		return FileType::ARCHIVE;

@@ -15,6 +15,7 @@
 #include "ResourceManagement/Importer/ModelImporters/SkeletonImporter.h"
 #include "ResourceManagement/Importer/PrefabImporter.h"
 #include "ResourceManagement/Importer/SkyboxImporter.h"
+#include "ResourceManagement/Importer/StateMachineImporter.h"
 #include "ResourceManagement/Importer/TextureImporter.h"
 
 #include "ResourceManagement/Manager/AnimationManager.h"
@@ -24,6 +25,7 @@
 #include "ResourceManagement/Manager/SceneManager.h"
 #include "ResourceManagement/Manager/SkeletonManager.h"
 #include "ResourceManagement/Manager/SkyboxManager.h"
+#include "ResourceManagement/Manager/StateMachineManager.h"
 #include "ResourceManagement/Manager/TextureManager.h"
 
 #include "ResourceManagement/Metafile/Metafile.h"
@@ -48,22 +50,25 @@ bool ModuleResourceManager::Init()
 	prefab_importer = std::make_unique<PrefabImporter>();
 	skeleton_importer = std::make_unique<SkeletonImporter>();
 	skybox_importer = std::make_unique<SkyboxImporter>();
+	state_machine_importer = std::make_unique<StateMachineImporter>();
 	texture_importer = std::make_unique<TextureImporter>();
 
 	metafile_manager = std::make_unique<MetafileManager>();
 	scene_manager = std::make_unique<SceneManager>();
 
+#if !GAME
 	ImportAssetsInDirectory(*App->filesystem->resources_folder_path); // Import all assets in folder Resources. All metafiles in Resources are correct"
-
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
-	//StartThread();
+#else
+	App->filesystem->MountDir("Library");
+#endif
+
 	thread_timer->Start();
 	return true;
 }
 
 update_status ModuleResourceManager::PreUpdate()
 {
-
 	if ((thread_timer->Read() - last_imported_time) >= importer_interval_millis)
 	{
 		//importing_thread.join();
@@ -78,8 +83,10 @@ update_status ModuleResourceManager::PreUpdate()
 
 bool ModuleResourceManager::CleanUp()
 {
-	thread_comunication.stop_thread = true;
-	importing_thread.join();
+#if !GAME
+	 thread_comunication.stop_thread = true;
+	 importing_thread.join();
+#endif
 	return true;
 }
 
@@ -192,12 +199,16 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path) const
 			asset_metafile = skeleton_importer->Import(file_path);
 			break;
 
-		case FileType::TEXTURE:
-			asset_metafile = texture_importer->Import(file_path);
-			break;
-
 		case FileType::SKYBOX:
 			asset_metafile = skybox_importer->Import(file_path);
+			break;
+
+		case FileType::STATE_MACHINE:
+			asset_metafile = state_machine_importer->Import(file_path);
+			break;
+
+		case FileType::TEXTURE:
+			asset_metafile = texture_importer->Import(file_path);
 			break;
 		}
 	}

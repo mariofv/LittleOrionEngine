@@ -80,7 +80,8 @@ void ModuleFileSystem::AddPath(Path* path)
 
 Path* ModuleFileSystem::GetPath(const std::string& path)
 {
-	assert(Exists(path) && paths.find(path) != paths.end());
+	assert(Exists(path));
+	assert(paths.find(path) != paths.end());
 	return paths[path];
 }
 

@@ -22,6 +22,7 @@ enum class ResourceType
 	SKELETON,
 	SKYBOX,
 	TEXTURE,
+	STATE_MACHINE,
 	UNKNOWN
 };
 
@@ -30,10 +31,12 @@ class Resource
 public:
 	Resource() = default;
 	Resource(Metafile* metafile);
+	Resource& operator=(const Resource& resource_to_copy) = default;
+
 	virtual ~Resource() = default;
 
+	std::string GetName() const;
 	uint32_t GetUUID() const;
-
 	static std::string GetResourceTypeName(ResourceType resource_type);
 
 public:

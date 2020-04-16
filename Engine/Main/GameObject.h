@@ -4,8 +4,10 @@
 #define ENGINE_EXPORTS
 #include "Globals.h"
 #include "Component/Component.h"
+#include "Component/ComponentTransform2D.h"
 #include "Component/ComponentAABB.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentUI.h"
 
 
 #include <GL/glew.h>
@@ -24,30 +26,33 @@ public:
 	GameObject(const GameObject& gameobject_to_copy);
 	GameObject(GameObject&& gameobject_to_move) = default;
 
-	GameObject & operator=(const GameObject & gameobject_to_copy) = default;
-	GameObject & operator<<(const GameObject & gameobject_to_copy);
-	GameObject & operator=(GameObject && gameobject_to_move) = default;
+	GameObject & operator=(const GameObject& gameobject_to_copy) = default;
+	GameObject & operator<<(const GameObject& gameobject_to_copy);
+	GameObject & operator=(GameObject&& gameobject_to_move) = default;
 
-	bool IsEnabled() const;
-	void SetEnabled(bool able);
+	ENGINE_API bool IsEnabled() const;
+	ENGINE_API void SetEnabled(bool able);
 
 	void SetStatic(bool is_static);
 	bool IsStatic() const;
 
-	bool IsVisible(const ComponentCamera & camera) const;
+	bool IsVisible(const ComponentCamera& camera) const;
 	ENGINE_API void Update();
-	void Delete(std::vector<GameObject*> & children_to_remove);
+	void Delete(std::vector<GameObject*>& children_to_remove);
 
 	void Save(Config& config) const;
 	void Load(const Config& config);
 
-	void SetParent(GameObject *new_parent);
-	void AddChild(GameObject *child);
-	void RemoveChild(GameObject *child);
+	void SetParent(GameObject* new_parent);
+	void AddChild(GameObject* child);
+	void RemoveChild(GameObject* child);
 
-	ENGINE_API  Component* CreateComponent(const Component::ComponentType type);
-	void RemoveComponent(Component * component);
-	ENGINE_API  Component* GetComponent(const Component::ComponentType type) const;
+	ENGINE_API Component* CreateComponent(const Component::ComponentType type);
+	ENGINE_API Component* CreateComponentUI(const ComponentUI::UIType ui_type);
+	void RemoveComponent(Component* component);
+	ENGINE_API Component* GetComponent(const Component::ComponentType type) const;
+	ENGINE_API ComponentScript* GetComponentScript(const char* name) const;
+	ENGINE_API Component* GetComponentUI(const ComponentUI::UIType type) const;
 
 	void MoveUpInHierarchy() const;
 	void MoveDownInHierarchy() const;
@@ -58,8 +63,16 @@ public:
 	int GetHierarchyDepth() const;
 	void SetHierarchyDepth(int value);
 
+	//Prefabs
+	GameObject * GetPrefabParent();
+	void UnpackPrefab();
+
 private:
 	void SetHierarchyStatic(bool is_static);
+	Config SaveTransform() const;
+	Config SaveTransform2D() const;
+	void LoadTransforms(Config config);
+	void CreateTransforms();
 	void CopyComponents(const GameObject & gameobject_to_copy);
 
 public:
@@ -72,12 +85,13 @@ public:
 	uint64_t UUID = -1;
 	ComponentAABB aabb;
 	ComponentTransform transform;
+	ComponentTransform2D transform_2d;
 
 	//TODO: Maybe move this to a component editor?
 	// This should not be public. Public for now while implementing prefab.
 	uint64_t original_UUID = 0; 
 	bool is_prefab_parent = false;
-	Prefab* prefab_reference = nullptr;
+	std::shared_ptr<Prefab> prefab_reference = nullptr;
 	bool original_prefab = false;
 private:
 	bool active = true;

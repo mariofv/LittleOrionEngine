@@ -11,7 +11,7 @@ Utils::~Utils()
 {
 }
 
-Quat Utils::GenerateQuatFromDegFloat3(const float3 &rotation)
+Quat Utils::GenerateQuatFromDegFloat3(const float3& rotation)
 {
 	return Quat::FromEulerXYZ(
 		math::DegToRad(rotation.x),
@@ -20,7 +20,7 @@ Quat Utils::GenerateQuatFromDegFloat3(const float3 &rotation)
 	);
 }
 
-float3 Utils::GenerateDegFloat3FromQuat(const Quat &rotation)
+float3 Utils::GenerateDegFloat3FromQuat(const Quat& rotation)
 {
 	float3 deg_rotation = rotation.ToEulerXYZ();
 	deg_rotation.x = math::RadToDeg(deg_rotation.x);
@@ -52,7 +52,7 @@ float3 Utils::Float3DegToRad(const float3& deg_float3)
 	return rad_float3;
 }
 
-std::vector<float> Utils::GetVertices(const AABB &box)
+std::vector<float> Utils::GetVertices(const AABB& box)
 {
 	static const int num_of_vertices = 8;
 	float3 tmp_vertices[num_of_vertices];
@@ -69,7 +69,7 @@ std::vector<float> Utils::GetVertices(const AABB &box)
 	return vertices;
 }
 
-std::vector<float> Utils::GetVertices(const AABB2D &box)
+std::vector<float> Utils::GetVertices(const AABB2D& box)
 {
 	static const int num_of_vertices = 4;
 	float3 tmp_vertices[num_of_vertices];
@@ -133,4 +133,65 @@ void Utils::ReplaceStringInPlace(std::string& subject, const std::string& search
 		subject.replace(pos, search.length(), replace);
 		pos += replace.length();
 	}
+}
+
+float3 Utils::Interpolate(const float3& first, const float3& second, float lambda)
+{
+	return first * (1.0f - lambda) + second * lambda;
+}
+
+Quat Utils::Interpolate(const Quat& first, const Quat& second, float lambda)
+{
+	Quat result;
+	float dot = first.Dot(second);
+	if (dot >= 0.0f) // Interpolate through the shortest path
+	{
+		result.x = first.x*(1.0f - lambda) + second.x*lambda;
+		result.y = first.y*(1.0f - lambda) + second.y*lambda;
+		result.z = first.z*(1.0f - lambda) + second.z*lambda;
+		result.w = first.w*(1.0f - lambda) + second.w*lambda;
+	}
+	else
+	{
+		result.x = first.x*(1.0f - lambda) - second.x*lambda;
+		result.y = first.y*(1.0f - lambda) - second.y*lambda;
+		result.z = first.z*(1.0f - lambda) - second.z*lambda;
+		result.w = first.w*(1.0f - lambda) - second.w*lambda;
+	}
+	result.Normalize();
+	return result;
+}
+
+float4x4 Utils::Interpolate(const float4x4& first, const float4x4& second, float lambda)
+{
+	float4x4 result;
+
+	float3 first_translation;
+	Quat first_rotation;
+	float3 first_scale;
+	first.Decompose(first_translation, first_rotation, first_scale);
+
+	float3 second_translation;
+	Quat second_rotation;
+	float3 second_scale;
+	second.Decompose(second_translation, second_rotation, second_scale);
+	result = float4x4::FromTRS(Interpolate(first_translation, second_translation, lambda), Interpolate(first_rotation, second_rotation, lambda), second_scale);
+	return result;
+}
+
+float4x4 Utils::GetTransform(const aiMatrix4x4& current_transform, float scale_factor)
+{
+	aiVector3t<float> pScaling, pPosition;
+	aiQuaterniont<float> pRotation;
+
+	aiMatrix4x4 scale_matrix = aiMatrix4x4() * scale_factor;
+	scale_matrix[3][3] = 1;
+
+	aiMatrix4x4 node_transformation = scale_matrix * current_transform * scale_matrix.Inverse();
+	node_transformation.Decompose(pScaling, pRotation, pPosition);
+
+	math::float3 scale(pScaling.x, pScaling.y, pScaling.z);
+	math::Quat rotation(pRotation.x, pRotation.y, pRotation.z, pRotation.w);
+	math::float3 translation(pPosition.x, pPosition.y, pPosition.z);
+	return math::float4x4::FromTRS(translation, rotation, scale);
 }

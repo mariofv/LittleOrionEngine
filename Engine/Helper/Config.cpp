@@ -179,6 +179,61 @@ void Config::GetFloat3(const std::string& name, float3 &return_value, const floa
 	}
 }
 
+void Config::AddFloat2(const float2& value_to_add, const std::string& name)
+{
+	rapidjson::Value member_name(name.c_str(), *allocator);
+	rapidjson::Value array_value(rapidjson::kArrayType);
+	array_value.PushBack(value_to_add.x, *allocator);
+	array_value.PushBack(value_to_add.y, *allocator);
+
+	config_document.AddMember(member_name, array_value, *allocator);
+}
+
+void Config::GetFloat2(const std::string& name, float2 &return_value, const float2 &opt_value) const
+{
+	if (!config_document.HasMember(name.c_str()))
+	{
+		return_value = opt_value;
+	}
+	else
+	{
+		const rapidjson::Value& current_value = config_document[name.c_str()];
+		return_value = float2(
+			current_value[0].GetFloat(),
+			current_value[1].GetFloat()
+		);
+	}
+}
+
+void Config::AddRect(const SDL_Rect& value_to_add, const std::string& name)
+{
+	rapidjson::Value member_name(name.c_str(), *allocator);
+	rapidjson::Value array_value(rapidjson::kArrayType);
+	array_value.PushBack(value_to_add.x, *allocator);
+	array_value.PushBack(value_to_add.y, *allocator);
+	array_value.PushBack(value_to_add.w, *allocator);
+	array_value.PushBack(value_to_add.h, *allocator);
+
+	config_document.AddMember(member_name, array_value, *allocator);
+}
+
+void Config::GetRect(const std::string &name, SDL_Rect &return_value, const SDL_Rect &opt_value) const
+{
+	if (!config_document.HasMember(name.c_str()))
+	{
+		return_value = opt_value;
+	}
+	else
+	{
+		const rapidjson::Value& current_value = config_document[name.c_str()];
+		return_value = SDL_Rect();
+		return_value.x = current_value[0].GetFloat();
+		return_value.y = current_value[1].GetFloat();
+		return_value.w = current_value[2].GetFloat();
+		return_value.h = current_value[3].GetFloat();
+	}
+}
+
 void Config::AddQuat(const Quat& value_to_add, const std::string& name)
 {
 	rapidjson::Value member_name(name.c_str(), *allocator);

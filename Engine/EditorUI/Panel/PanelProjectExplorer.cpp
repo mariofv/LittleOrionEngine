@@ -12,7 +12,9 @@
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/Metafile/MetafileManager.h"
 #include "ResourceManagement/Resources/Prefab.h"
+#include "ResourceManagement/Resources/StateMachine.h"
 
+#include "PanelStateMachine.h"
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <SDL/SDL.h>
@@ -169,7 +171,7 @@ void PanelProjectExplorer::ShowMetafileIcon(Path* metafile_path)
 	if (ImGui::BeginChild(filename.c_str(), ImVec2(file_size_width, file_size_height), selected_file == metafile_path, ImGuiWindowFlags_NoDecoration))
 	{
 		ResourceDragSource(metafile);
-		ProcessResourceMouseInput(metafile_path);
+		ProcessResourceMouseInput(metafile_path, metafile);
 
 		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * file_size_width) * 0.5f);
 		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*file_size_width, 0.75*file_size_width)); // TODO: Substitute this with resouce thumbnail
@@ -203,26 +205,34 @@ void PanelProjectExplorer::ResourceDragSource(Metafile* metafile) const
 	}
 }
 
-void PanelProjectExplorer::ProcessResourceMouseInput(Path* file)
+void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafile* metafile)
 {
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(0))
 	{
-		selected_file = file;
+		selected_file = metafile_path;
+	}
+	if (ImGui::IsWindowHovered() && ImGui::IsMouseDoubleClicked(0))
+	{
+		if (metafile->resource_type == ResourceType::STATE_MACHINE)
+		{
+			App->editor->state_machine->SwitchOpen();
+			App->editor->state_machine->OpenStateMachine(metafile->uuid);
+		}
 	}
 }
 
-void PanelProjectExplorer::ProcessMouseInput(Path* file)
+void PanelProjectExplorer::ProcessMouseInput(Path* file_path)
 {
 	if (ImGui::IsItemHovered())
 	{
 		if (ImGui::IsMouseClicked(0))
 		{
-			selected_folder = file;
+			selected_folder = file_path;
 			selected_file = nullptr;
 		}
 		else if (ImGui::IsMouseDoubleClicked(0))
 		{
-			selected_folder = file;
+			selected_folder = file_path;
 		}
 	}
 }
@@ -236,8 +246,7 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 	std::string label("Menu");
 	if (ImGui::BeginPopupContextWindow(label.c_str()))
 	{
-		
-		if (ImGui::BeginMenu("Create"))
+		if (selected_folder != nullptr && ImGui::BeginMenu("Create"))
 		{
 			if (ImGui::Selectable("Material"))
 			{
@@ -246,6 +255,11 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 			if (ImGui::Selectable("Skybox"))
 			{
 				SkyboxManager ::Create(*path);
+			}
+			if (ImGui::Selectable("State Machine"))
+			{
+				//TODO: This
+				//StateMachineManager::Create(*path);
 			}
 			ImGui::EndMenu();
 		}
