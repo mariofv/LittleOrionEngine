@@ -187,7 +187,19 @@ void ModuleRender::GetMeshesToRender(const ComponentCamera *camera)
 	BROFILER_CATEGORY("Get meshes to render", Profiler::Color::Aquamarine);
 
 	meshes_to_render.clear();
-
+	opaque_mesh_to_render.clear();
+	transparent_mesh_to_render.clear();
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		if (meshes[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
+		{
+			transparent_mesh_to_render.push_back(meshes[i]);
+		}
+		if (meshes[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
+		{
+			opaque_mesh_to_render.push_back(meshes[i]);
+		}
+	}
 	if (camera == App->cameras->scene_camera && !App->debug->culling_scene_mode)
 	{
 		meshes_to_render = meshes;

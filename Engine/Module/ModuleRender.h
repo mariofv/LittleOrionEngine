@@ -9,6 +9,7 @@
 #include "SpacePartition/OLQuadTree.h"
 
 #include <GL/glew.h>
+#include <list>
 
 const unsigned INITIAL_SIZE_AABBTREE = 10;
 
@@ -103,7 +104,7 @@ private:
 
 	std::vector<ComponentMeshRenderer*> meshes;
 	std::vector<ComponentMeshRenderer*> meshes_to_render;
-
+	std::list <ComponentMeshRenderer*> opaque_mesh_to_render, transparent_mesh_to_render;
 	int num_rendered_tris = 0;
 	Timer * rendering_measure_timer = new Timer();
 
