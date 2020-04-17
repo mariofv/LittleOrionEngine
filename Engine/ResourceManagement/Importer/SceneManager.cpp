@@ -139,6 +139,7 @@ void SceneManager::SavePrefab(Config & config, GameObject * gameobject_to_save) 
 		config.AddUInt(gameobject_to_save->parent->UUID, "ParentUUID");
 	}
 	config.AddString(gameobject_to_save->prefab_reference->exported_file, "Prefab");
+	config.AddString(gameobject_to_save->name, "Name");
 
 	Config transform_config;
 	gameobject_to_save->transform.Save(transform_config);
@@ -154,6 +155,7 @@ void SceneManager::SavePrefabUUIDS(std::vector<Config> & original_UUIDS, GameObj
 	Config config;
 	config.AddUInt(gameobject_to_save->UUID, "UUID");
 	config.AddUInt(gameobject_to_save->original_UUID, "OriginalUUID");
+
 	original_UUIDS.push_back(config);
 	for (const auto&  child : gameobject_to_save->children)
 	{
@@ -187,6 +189,7 @@ GameObject * SceneManager::LoadPrefab(const Config & config) const
 	Config transform_config;
 	config.GetChildConfig("Transform", transform_config);
 	instance->transform.Load(transform_config);
+	config.GetString("Name", instance->name, instance->name);
 return instance;
 }
 
@@ -199,6 +202,11 @@ bool SceneManager::SaveModifiedPrefabComponents(Config & config, GameObject * ga
 		Config transform_config;
 		gameobject_to_save->transform.Save(transform_config);
 		config.AddChildConfig(transform_config, "Transform");
+		modified = true;
+	}
+	if (gameobject_to_save->modified_by_user)
+	{
+		config.AddString(gameobject_to_save->name, "Name");
 		modified = true;
 	}
 	std::vector<Config> gameobject_components_config;
@@ -234,8 +242,13 @@ void SceneManager::LoadPrefabModifiedComponents(const Config & config) const
 		config.GetChildConfig("Transform", transform_config);
 
 		prefab_child->transform.Load(transform_config);
+		prefab_child->transform.modified_by_user = true;
 	}
-
+	if (config.config_document.HasMember("Name"))
+	{
+		config.GetString("Name", prefab_child->name, prefab_child->name);
+		prefab_child->modified_by_user = true;
+	}
 	std::vector<Config> prefab_components_config;
 	config.GetChildrenConfig("Components", prefab_components_config);
 	for (const auto& component_config : prefab_components_config)
