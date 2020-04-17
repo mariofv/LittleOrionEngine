@@ -110,6 +110,10 @@ FileType File::CalculateFileType(const PHYSFS_FileType& file_type) const
 	{
 		return FileType::META;
 	}
+	if (file_extension == "scene")
+	{
+		return FileType::SCENE;
+	}
 	if (file_extension == "sk")
 	{
 		return FileType::SKELETON;

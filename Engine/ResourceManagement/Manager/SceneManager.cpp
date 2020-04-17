@@ -13,6 +13,8 @@
 #include "Module/ModuleScriptManager.h"
 
 #include "ResourceManagement/Resources/Prefab.h"
+#include "ResourceManagement/Resources/Scene.h"
+
 
 #include <stack>
 #include <unordered_map>
@@ -132,6 +134,20 @@ void SceneManager::Load(const std::string& path) const
 	}
 	App->scripts->ReLink();
 	App->animations->UpdateAnimationMeshes();
+}
+
+std::shared_ptr<Scene> SceneManager::Load(Metafile* metafile, const FileData& resource_data)
+{
+	char* scene_file_data = (char*)resource_data.buffer;
+	std::string serialized_scene_string = std::string(scene_file_data, resource_data.size);
+
+	Config scene_config(serialized_scene_string);
+	std::shared_ptr<Scene> new_scene = std::make_shared<Scene>(metafile);
+	new_scene->Load(scene_config);
+
+	return new_scene;
+
+	return std::shared_ptr<Scene>();
 }
 
 

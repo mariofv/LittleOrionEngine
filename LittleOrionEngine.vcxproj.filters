@@ -479,6 +479,9 @@
     <ClCompile Include="Engine\ResourceManagement\Manager\StateMachineManager.cpp">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="SceneImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -947,6 +950,10 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\StateMachineManager.h">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="resource.h" />
+    <ClInclude Include="SceneImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -1041,5 +1048,8 @@
     <None Include="Libraries\include\NodeEditor\imgui_node_editor_internal.inl">
       <Filter>Libraries\NodeEditor</Filter>
     </None>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="LittleOrionEngine.rc" />
   </ItemGroup>
 </Project>

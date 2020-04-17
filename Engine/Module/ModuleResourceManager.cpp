@@ -14,6 +14,7 @@
 #include "ResourceManagement/Importer/ModelImporters/MeshImporter.h"
 #include "ResourceManagement/Importer/ModelImporters/SkeletonImporter.h"
 #include "ResourceManagement/Importer/PrefabImporter.h"
+#include "ResourceManagement/Importer/SceneImporter.h"
 #include "ResourceManagement/Importer/SkyboxImporter.h"
 #include "ResourceManagement/Importer/StateMachineImporter.h"
 #include "ResourceManagement/Importer/TextureImporter.h"
@@ -48,6 +49,7 @@ bool ModuleResourceManager::Init()
 	mesh_importer = std::make_unique<MeshImporter>();
 	model_importer = std::make_unique<ModelImporter>();
 	prefab_importer = std::make_unique<PrefabImporter>();
+	scene_importer = std::make_unique<SceneImporter>();
 	skeleton_importer = std::make_unique<SkeletonImporter>();
 	skybox_importer = std::make_unique<SkyboxImporter>();
 	state_machine_importer = std::make_unique<StateMachineImporter>();
@@ -60,7 +62,7 @@ bool ModuleResourceManager::Init()
 	ImportAssetsInDirectory(*App->filesystem->resources_folder_path); // Import all assets in folder Resources. All metafiles in Resources are correct"
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 #else
-	App->filesystem->MountDir("Library");
+	App->filesystem->MountDirectory("Library");
 #endif
 
 	thread_timer->Start();
@@ -193,6 +195,10 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path) const
 
 		case FileType::PREFAB:
 			asset_metafile = prefab_importer->Import(file_path);
+			break;
+		
+		case FileType::SCENE:
+			asset_metafile = scene_importer->Import(file_path);
 			break;
 
 		case FileType::SKELETON:

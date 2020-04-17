@@ -4,6 +4,7 @@
 #include <string>
 #include <vector>
 
+class Scene;
 class Config;
 class GameObject;
 
@@ -15,6 +16,7 @@ public:
 
 	void Save(const std::string& path, GameObject* gameobject_to_save) const;
 	void Load(const std::string& path) const;
+	std::shared_ptr<Scene> Load(Metafile* metafile, const FileData& resource_data);
 
 private:
 	void SavePrefab(Config& config, GameObject* gameobject_to_save) const;
