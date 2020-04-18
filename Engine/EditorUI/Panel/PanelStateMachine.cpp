@@ -308,7 +308,8 @@ void PanelStateMachine::LeftPanel()
 	{
 		if (ImGui::Button("Save"))
 		{
-			// TODO: Manage saving of states machines
+			App->resources->Save<StateMachine>(state_machine);
+			//TODO: Change this to be saved after eachtime user modifies anything, see PanelMaterial for reference
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Load"))

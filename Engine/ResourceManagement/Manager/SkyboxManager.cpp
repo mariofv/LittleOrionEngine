@@ -9,10 +9,10 @@
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/Resources/Skybox.h"
 
-FileData SkyboxManager::Binarize(const Skybox& skybox)
+FileData SkyboxManager::Binarize(Skybox* skybox)
 {
 	Config skybox_config;
-	skybox.Save(skybox_config);
+	skybox->Save(skybox_config);
 
 	std::string serialized_skybox_string;
 	skybox_config.GetSerializedString(serialized_skybox_string);
@@ -40,5 +40,5 @@ std::shared_ptr<Skybox> SkyboxManager::Load(Metafile* metafile, const FileData& 
 FileData SkyboxManager::Create()
 {
 	Skybox skybox;
-	return Binarize(skybox);
+	return Binarize(&skybox);
 }

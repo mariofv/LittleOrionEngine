@@ -81,9 +81,9 @@ public:
 namespace ResourceManagement
 {
 	template<>
-	static FileData Binarize(const StateMachine& state_machine)
+	static FileData Binarize<StateMachine>(Resource* state_machine)
 	{
-		StateMachineManager::Binarize(state_machine);
+		return StateMachineManager::Binarize(static_cast<StateMachine*>(state_machine));
 	};
 
 	template<>

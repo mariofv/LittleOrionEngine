@@ -53,9 +53,9 @@ private:
 namespace ResourceManagement
 {
 	template<>
-	static FileData Binarize(const Skybox& skybox)
+	static FileData Binarize<Skybox>(Resource* skybox)
 	{
-		SkyboxManager::Binarize(skybox);
+		SkyboxManager::Binarize(static_cast<Skybox*>(skybox));
 	};
 
 	template<>

@@ -80,11 +80,11 @@ public:
 	{
 		APP_LOG_INFO("Saving Resource %u.", modified_resource->GetUUID());
 
-		FileData resource_data = ResourceManagement::Binarize<T>(*modified_resource.get());
+		FileData resource_data = ResourceManagement::Binarize<T>(modified_resource.get());
 		std::string modified_resource_path = modified_resource->resource_metafile->imported_file_path;
 		Path* saved_resource_assets_path = App->filesystem->Save(modified_resource_path, resource_data);
 
-		InternalImport(saved_resource_assets_path);
+		InternalImport(*saved_resource_assets_path);
 
 		APP_LOG_SUCCESS("Resource %u saved corrrectly.", modified_resource->GetUUID());
 	}

@@ -11,10 +11,10 @@
 #include <Brofiler/Brofiler.h>
 #include <vector>
 
-FileData MaterialManager::Binarize(const Material& material)
+FileData MaterialManager::Binarize(Material* material)
 {
 	Config material_config;
-	material.Save(material_config);
+	material->Save(material_config);
 
 	std::string serialized_material_string;
 	material_config.GetSerializedString(serialized_material_string);
@@ -42,5 +42,5 @@ std::shared_ptr<Material> MaterialManager::Load(Metafile* metafile, const FileDa
 FileData MaterialManager::Create()
 {
 	Material material;
-	return Binarize(material);
+	return Binarize(&material);
 }

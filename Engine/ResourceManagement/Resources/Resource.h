@@ -47,9 +47,9 @@ public:
 namespace ResourceManagement
 {
 	template<typename T>
-	static FileData Binarize(const T& resource)
+	static FileData Binarize(Resource* resource)
 	{
-		assert(1 != 0); // If you are here, implement your Create function on the corresponding resource class.
+		assert(1 != 0); // If you are here, implement your Binarize function on the corresponding resource class.
 		return NULL;
 	};
 

@@ -56,9 +56,9 @@ public:
 namespace ResourceManagement
 {
 	template<>
-	static FileData Binarize(const Material& material)
+	static FileData Binarize<Material>(Resource* material)
 	{
-		MaterialManager::Binarize(material);
+		return MaterialManager::Binarize(static_cast<Material*>(material));
 	};
 
 	template<>

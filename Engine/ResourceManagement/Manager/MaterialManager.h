@@ -16,7 +16,7 @@ public:
 	MaterialManager() = default;
 	~MaterialManager() = default;
 
-	static FileData Binarize(const Material& material);
+	static FileData Binarize(Material* material);
 	static std::shared_ptr<Material> Load(Metafile* metafile, const FileData& resource_data);
 	static FileData Create();
 };

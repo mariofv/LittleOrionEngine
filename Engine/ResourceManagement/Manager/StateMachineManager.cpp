@@ -5,10 +5,10 @@
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/StateMachine.h"
 
-FileData StateMachineManager::Binarize(const StateMachine& state_machine)
+FileData StateMachineManager::Binarize(StateMachine* state_machine)
 {
 	Config state_machine_config;
-	state_machine.Save(state_machine_config);
+	state_machine->Save(state_machine_config);
 
 	std::string serialized_state_machine_string;
 	state_machine_config.GetSerializedString(serialized_state_machine_string);
@@ -130,6 +130,6 @@ FileData StateMachineManager::Create()
 	created_state_machine.states.push_back(std::make_shared<State>("End", nullptr));
 	created_state_machine.default_state = std::hash<std::string>{}("Entry");
 
-	return Binarize(created_state_machine);
+	return Binarize(&created_state_machine);
 
 }

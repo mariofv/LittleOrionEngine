@@ -1,5 +1,6 @@
 #include "PanelMaterial.h"
 
+#include "EditorUI/Helper/ImGuiHelper.h"
 #include "EditorUI/Panel/PanelPopups.h"
 #include "EditorUI/Panel/PopupsPanel/PanelPopupResourceSelector.h"
 
@@ -22,8 +23,10 @@ PanelMaterial::PanelMaterial()
 	window_name = "Material Inspector";
 }
 
-void PanelMaterial::Render(Material* material)
+void PanelMaterial::Render(std::shared_ptr<Material> material)
 {
+	modified_by_user = false;
+
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Spacing();
@@ -45,7 +48,7 @@ void PanelMaterial::Render(Material* material)
 					{
 						ImGui::SetItemDefaultFocus();
 					}
-					//SaveMaterial(material);
+					modified_by_user = true;
 				}
 
 			}
@@ -74,9 +77,14 @@ void PanelMaterial::Render(Material* material)
 
 		ImGui::Separator();
 	}
+
+	if (modified_by_user)
+	{
+		App->resources->Save<Material>(material);
+	}
 }
 
-void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::MaterialTextureType type)
+void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type)
 {
 	ImGui::PushID(static_cast<unsigned int>(type));
 
@@ -106,12 +114,18 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 	{
 		App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
 	}
-	DropTarget(material, type);
+	uint32_t dropped_texture_uuid = ImGui::ResourceDropper<Texture>();
+	if (dropped_texture_uuid != 0)
+	{
+		material->SetMaterialTexture(type, dropped_texture_uuid);
+		modified_by_user = true;
+	}
 
 	uint32_t resource_selector_texture = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
 	if (resource_selector_texture != 0)
 	{
 		material->SetMaterialTexture(type, resource_selector_texture);
+		modified_by_user = true;
 	}
 
 	ImGui::SameLine();
@@ -167,29 +181,6 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 	}
 
 	ImGui::PopID();
-}
-
-void PanelMaterial::DropTarget(Material* material, Material::MaterialTextureType type)
-{
-	if (ImGui::BeginDragDropTarget())
-	{
-		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_Resource"))
-		{
-			assert(payload->DataSize == sizeof(Metafile*));
-			Metafile* incoming_metafile = *((Metafile**)payload->Data);
-			if (incoming_metafile->resource_type == ResourceType::TEXTURE)
-			{
-				/*
-				//UndoRedo
-				App->actions->type_texture = type;
-				App->actions->action_component = material;
-				App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
-				*/
-				material->SetMaterialTexture(type, incoming_metafile->uuid);
-			}
-		}
-		ImGui::EndDragDropTarget();
-	}
 }
 
 std::string PanelMaterial::GetTypeName(Material::MaterialTextureType type)
