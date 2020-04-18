@@ -482,6 +482,12 @@
     <ClCompile Include="SceneImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\SceneImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Scene.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -953,6 +959,12 @@
     <ClInclude Include="resource.h" />
     <ClInclude Include="SceneImporter.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Scene.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
