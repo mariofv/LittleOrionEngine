@@ -2,6 +2,7 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleFileSystem.h"
 #include "Module/ModuleScene.h"
 
 #include "ResourceManagement/Manager/SceneManager.h"
@@ -89,8 +90,16 @@ void PanelPopupSceneManagementAux::RenderSaveScene()
 	{
 		APP_LOG_INFO("Saving %s scene.", save_scene_popup.GetSelected().string());
 
-		SceneManager::Create(save_scene_popup.GetSelected().string());
-		App->editor->current_scene_path = save_scene_popup.GetSelected().string();
+		if (App->filesystem->Exists(save_scene_popup.GetSelected().string()))
+		{
+			App->editor->SaveScene(save_scene_popup.GetSelected().string());
+		}
+		else
+		{
+			SceneManager::Create(save_scene_popup.GetSelected().string());
+			App->editor->current_scene_path = save_scene_popup.GetSelected().string();
+		}
+
 		save_scene_popup.ClearSelected();
 	}
 }
