@@ -72,6 +72,10 @@ void PanelMenuBar::ShowFileMenu()
 		{
 			App->editor->popups->scene_management_popup_aux.save_scene_shown = true;
 		}
+		if(ImGui::MenuItem(ICON_FA_BUILDING "Build Options"))
+		{
+			App->editor->build_options->SwitchOpen();
+		}
 		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
 		{
 			SDL_Event quit_event;

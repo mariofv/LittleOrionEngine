@@ -6,7 +6,7 @@
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
 
-
+class BuildOptions;
 class Scene;
 
 class ModuleScene : public Module
@@ -45,6 +45,7 @@ private:
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
 	std::shared_ptr<Scene> current_scene = nullptr;
 	std::string scene_to_load;
+	std::unique_ptr<BuildOptions> build_options = nullptr;
 
 	friend class PanelScene;
 	friend class ModuleDebugDraw;

@@ -485,6 +485,8 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Scene.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelBuildOptions.cpp" />
+    <ClCompile Include="Engine\Helper\BuildOptions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -960,6 +962,8 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Scene.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelBuildOptions.h" />
+    <ClInclude Include="Engine\Helper\BuildOptions.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

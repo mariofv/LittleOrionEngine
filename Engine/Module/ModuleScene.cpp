@@ -3,6 +3,7 @@
 #include "Component/ComponentCamera.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "Filesystem/PathAtlas.h"
+#include "Helper/BuildOptions.h"
 #include "Helper/Config.h"
 
 #include "Main/Application.h"
@@ -26,6 +27,7 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
+	build_options = std::make_unique<BuildOptions>();
 	GetSceneFromPath(DEFAULT_SCENE_PATH);
 
 	return true;

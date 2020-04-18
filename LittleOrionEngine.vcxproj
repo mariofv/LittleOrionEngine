@@ -138,6 +138,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagementAux.h" />
+    <ClInclude Include="Engine\Helper\BuildOptions.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h" />
@@ -295,6 +296,7 @@
     <ClInclude Include="Engine\AI\NavMesh.h" />
     <ClInclude Include="Engine\Module\ModuleAI.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelNavMesh.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PanelBuildOptions.h" />
     <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
@@ -328,6 +330,7 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagementAux.cpp" />
     <ClCompile Include="Engine\Filesystem\File.cpp" />
+    <ClCompile Include="Engine\Helper\BuildOptions.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
     <ClCompile Include="Engine\Helper\TemplatedGameObjectCreator.cpp" />
     <ClCompile Include="Engine\Helper\Timer.cpp" />
@@ -460,6 +463,7 @@
     <ClCompile Include="Engine\AI\NavMesh.cpp" />
     <ClCompile Include="Engine\Module\ModuleAI.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelNavMesh.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PanelBuildOptions.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl" />

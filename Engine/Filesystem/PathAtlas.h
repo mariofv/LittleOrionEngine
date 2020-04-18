@@ -21,12 +21,14 @@
 #define RESOURCES_GAME_INPUTS_PATH "/Resources/GameInputs"
 #define RESOURCES_GAME_INPUTS_FILENAME "game_inputs.inputs"
 
-# define RESOURCES_NAVMESH_PATH "/Resources/NavMesh"
+#define RESOURCES_NAVMESH_PATH "/Resources/NavMesh"
 
-# define DEFAULT_SCENE_PATH "/Resources/Scenes/default_scene.scene"
-# define SAVED_SCENE_PATH "/Assets/Scenes/scene.scene"
-# define TMP_SCENE_PATH "/Assets/Scenes/tmp_scene.scene"
-# define SCENE_ROOT_PATH "/Assets/Scenes"
+#define RESOURCES_BUILD_OPTIONS "Resources/Scenes/build.options"
+
+#define DEFAULT_SCENE_PATH "/Resources/Scenes/default_scene.scene"
+#define SAVED_SCENE_PATH "/Assets/Scenes/scene.scene"
+#define TMP_SCENE_PATH "/Assets/Scenes/tmp_scene.scene"
+#define SCENE_ROOT_PATH "/Assets/Scenes"
 
 
 #endif // !_PATHATLAS_H_
