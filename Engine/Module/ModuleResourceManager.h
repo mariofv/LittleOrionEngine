@@ -99,12 +99,6 @@ public:
 		return std::static_pointer_cast<T>(loaded_resource);
 	}
 
-	Create()
-	{
-		x = Loader::Create<>();
-		Import(x);
-	}
-
 	template<typename T>
 	std::shared_ptr<T> Reload(const Resource* resource)
 	{
