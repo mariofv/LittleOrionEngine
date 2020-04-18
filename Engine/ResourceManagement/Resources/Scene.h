@@ -14,12 +14,18 @@ class Scene : public Resource
 {
 
 public:
-	Scene(Metafile* resource_metafile) : Resource(resource_metafile) {};
+	Scene(Metafile* resource_metafile, const Config& config);
 	~Scene() = default;
 
-	void Save(Config& config) const;
-	void Load(const Config& config);
+	void Save(GameObject* gameobject_to_save) const;
+	void Load();
 
+private:
+	void SavePrefab(Config& config, GameObject* gameobject_to_save) const;
+	void SavePrefabUUIDS(std::vector<Config>& config, GameObject* gameobject_to_save) const;
+	bool SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_to_save) const;
+	GameObject * LoadPrefab(const Config& config) const;
+	void LoadPrefabModifiedComponents(const Config& config) const;
 
 private:
 	std::unique_ptr<Config> scene_config = nullptr;

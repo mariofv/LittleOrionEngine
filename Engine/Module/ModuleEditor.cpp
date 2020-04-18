@@ -239,9 +239,9 @@ ENGINE_API void ModuleEditor::OpenScene(const std::string &path) const
 	App->scene->LoadScene(path);
 }
 
-void ModuleEditor::SaveScene(const std::string &path) const
+void ModuleEditor::SaveScene(const std::string& path) const
 {
-	App->resources->scene_manager->Save(path, App->scene->GetRoot());
+	App->scene->SaveScene(path);
 }
 
 ImFont* ModuleEditor::GetFont(const Fonts & font) const

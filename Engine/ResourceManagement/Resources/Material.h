@@ -60,13 +60,7 @@ namespace Loader
 	{
 		return MaterialManager::Load(metafile, resource_data);
 	}
-
-	template<>
-	static std::shared_ptr<Material> Create()
-	{
-		return MaterialManager::Create(metafile, resource_data);
-	}
 }
 
-#endif // !_MESH_H_
+#endif // !_MATERIAL_H_
 

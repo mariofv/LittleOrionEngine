@@ -2,6 +2,7 @@
 
 #include "Component/ComponentCamera.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
+#include "Filesystem/PathAtlas.h"
 #include "Helper/Config.h"
 
 #include "Main/Application.h"
@@ -12,7 +13,11 @@
 #include "ModuleScriptManager.h"
 #include "ModuleTime.h"
 
+
+#include "ResourceManagement/Metafile/Metafile.h"
+#include "ResourceManagement/Metafile/MetafileManager.h"
 #include "ResourceManagement/Manager/SceneManager.h"
+#include "ResourceManagement/Resources/Scene.h"
 
 #include <algorithm>
 #include <stack>
@@ -21,7 +26,8 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
-	
+	GetSceneFromPath(DEFAULT_SCENE_PATH);
+
 	return true;
 }
 
@@ -149,13 +155,14 @@ void ModuleScene::DeleteCurrentScene()
 	App->editor->selected_game_object = nullptr;
 }
 
-void ModuleScene::OpenScene(const std::string &path)
+void ModuleScene::OpenScene(const std::string& path)
 {
 	App->scene->DeleteCurrentScene();
 	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 
-	App->resources->scene_manager->Load(path);
+	GetSceneFromPath(path);
+	current_scene.get()->Load();
 
 	if (App->time->isGameRunning())
 	{
@@ -164,6 +171,14 @@ void ModuleScene::OpenScene(const std::string &path)
 	App->renderer->GenerateQuadTree();
 	App->renderer->GenerateOctTree();
 	App->actions->ClearUndoStack();
+}
+
+void ModuleScene::GetSceneFromPath(const std::string& path)
+{
+	Path* metafile_path = App->filesystem->GetPath(App->resources->metafile_manager->GetMetafilePath(path));
+	Metafile* scene_metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
+	assert(scene_metafile != nullptr);
+	current_scene = App->resources->Load<Scene>(scene_metafile->uuid);
 }
 
 void ModuleScene::OpenPendingScene()
@@ -175,6 +190,11 @@ void ModuleScene::OpenPendingScene()
 void ModuleScene::LoadScene(const std::string &path)
 {
 	scene_to_load = path;
+}
+
+void ModuleScene::SaveScene(const std::string& path) const
+{
+	current_scene.get()->Save(root);
 }
 
 bool ModuleScene::HasPendingSceneToLoad() const
