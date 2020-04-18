@@ -72,6 +72,6 @@ void PrefabImporter::CreatePrefabResource(const File & file, GameObject * gameob
 
 	std::string serialized_scene_string;
 	scene_config.GetSerializedString(serialized_scene_string);
-
+	assert(file.file_type != FileType::MODEL);
 	App->filesystem->Save(file.file_path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
 }
