@@ -146,11 +146,8 @@ void StateMachine::AddClipToState(std::shared_ptr<State>& state, uint32_t animat
 	clips.push_back(new_clip);
 }
 
-//TODO: Do it like a binary
-void StateMachine::Save() const
+void StateMachine::Save(Config& config) const
 {
-	/*
-	Config state_machine_config;
 	std::vector<Config> clips_config;
 	for (auto& clip : clips)
 	{
@@ -160,7 +157,7 @@ void StateMachine::Save() const
 		clip_config.AddBool(clip->loop, "Loop");
 		clips_config.push_back(clip_config);
 	}
-	state_machine_config.AddChildrenConfig(clips_config, "Clips");
+	config.AddChildrenConfig(clips_config, "Clips");
 
 	std::vector<Config> states_config;
 	for (auto& state : states)
@@ -173,7 +170,7 @@ void StateMachine::Save() const
 		}
 		states_config.push_back(state_config);
 	}
-	state_machine_config.AddChildrenConfig(states_config, "States");
+	config.AddChildrenConfig(states_config, "States");
 
 	std::vector<Config> transitions_config;
 	for (auto& transition : transitions)
@@ -185,14 +182,9 @@ void StateMachine::Save() const
 		transition_config.AddInt64(transition->interpolation_time, "Interpolation");
 		transitions_config.push_back(transition_config);
 	}
-	state_machine_config.AddChildrenConfig(transitions_config, "Transitions");
+	config.AddChildrenConfig(transitions_config, "Transitions");
 
-	state_machine_config.AddUInt(default_state, "Default");
-	std::string serialized_state_machine_string;
-	state_machine_config.GetSerializedString(serialized_state_machine_string);
-
-	App->filesystem->Save(exported_file.c_str(), serialized_state_machine_string.c_str(), serialized_state_machine_string.size());
-	*/
+	config.AddUInt(default_state, "Default");
 }
 
 

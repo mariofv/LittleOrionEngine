@@ -44,7 +44,7 @@ private:
 	GLuint ebo = 0;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
 	template<>
 	static std::shared_ptr<Mesh> Load(Metafile* metafile, const FileData& resource_data)

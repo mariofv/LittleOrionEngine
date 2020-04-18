@@ -44,12 +44,19 @@ public:
 	Metafile* resource_metafile = nullptr;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
 	template<typename T>
 	static std::shared_ptr<T> Load(Metafile* metafile, const FileData& resource_data)
 	{
 		return nullptr;
+	};
+
+	template<typename T>
+	static FileData Create()
+	{
+		assert(1 != 0); // If you are here, implement your Create function on the corresponding resource class.
+		return NULL;
 	};
 }
 

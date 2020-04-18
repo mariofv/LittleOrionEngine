@@ -16,7 +16,9 @@ class StateMachineManager
 public:
 	StateMachineManager() = default;
 	~StateMachineManager() = default;
+
 	static std::shared_ptr<StateMachine> Load(Metafile* metafile, const FileData& resource_data);
+	static FileData Create();
 };
 
 #endif // !_H_STATEMACHINEMANAGER_

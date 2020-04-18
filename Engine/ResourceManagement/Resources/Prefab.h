@@ -44,7 +44,7 @@ private:
 	friend PanelScene;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
 	template<>
 	static std::shared_ptr<Prefab> Load(Metafile* metafile, const FileData& resource_data)

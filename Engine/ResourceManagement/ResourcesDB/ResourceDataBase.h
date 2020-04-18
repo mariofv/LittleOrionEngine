@@ -22,7 +22,7 @@ public:
 	void GetEntriesOfType(std::vector<Metafile*>& result_entries, ResourceType type) const;
 
 public:
-	std::unordered_map<int32_t, Metafile*> entries;
+	std::unordered_map<uint32_t, Metafile*> entries;
 };
 
 #endif // !_RESOURCEDATABASE_H_

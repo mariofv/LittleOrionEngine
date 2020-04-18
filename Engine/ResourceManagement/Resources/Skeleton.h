@@ -29,7 +29,7 @@ public:
 	std::vector<Joint> skeleton;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
 	template<>
 	static std::shared_ptr<Skeleton> Load(Metafile* metafile, const FileData& resource_data)

@@ -53,13 +53,19 @@ public:
 	bool show_checkerboard_texture = false;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
 	template<>
 	static std::shared_ptr<Material> Load(Metafile* metafile, const FileData& resource_data)
 	{
 		return MaterialManager::Load(metafile, resource_data);
 	}
+
+	template<>
+	static FileData Create<Material>()
+	{
+		return MaterialManager::Create();
+	};
 }
 
 #endif // !_MESH_H_

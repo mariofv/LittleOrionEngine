@@ -86,7 +86,7 @@ public:
 
 		Path* resource_exported_file_path = App->filesystem->GetPath(metafile->exported_file_path);
 		FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
-		loaded_resource = Loader::Load<T>(metafile, exported_file_data);
+		loaded_resource = ResourceManagement::Load<T>(metafile, exported_file_data);
 
 		free((char*)exported_file_data.buffer);
 
@@ -100,6 +100,19 @@ public:
 	}
 
 	template<typename T>
+	uint32_t Create(Path& path, const std::string& resource_name)
+	{
+		BROFILER_CATEGORY("Create Resource", Profiler::Color::Brown);
+		APP_LOG_INFO("Creating Resource %s.", resource_name.c_str())
+
+		FileData created_resource_data = ResourceManagement::Create<T>();
+
+		APP_LOG_INFO("Resource %s created correctly.", resource_name.c_str())
+
+		return CreateFromData(created_resource_data, path, resource_name);
+	}
+
+	template<typename T>
 	std::shared_ptr<T> Reload(const Resource* resource)
 	{
 		uint32_t uuid = resource->GetUUID();
@@ -108,10 +121,12 @@ public:
 		return Load<T>(uuid);
 	}
 
-	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
-
 	void CleanInconsistenciesInDirectory(const Path& directory_path);
 	void ImportAssetsInDirectory(const Path& directory_path);
+
+	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
+
+	void CleanResourceCache();
 
 private:
 	void StartThread();

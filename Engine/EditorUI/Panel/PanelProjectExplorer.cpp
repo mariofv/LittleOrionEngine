@@ -250,16 +250,15 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 		{
 			if (ImGui::Selectable("Material"))
 			{
-				MaterialManager::Create(*path);
+				App->resources->Create<Material>(*path, "New Material.mat");
 			}
 			if (ImGui::Selectable("Skybox"))
 			{
-				SkyboxManager ::Create(*path);
+				App->resources->Create<Skybox>(*path, "New Skybox.skybox");
 			}
 			if (ImGui::Selectable("State Machine"))
 			{
-				//TODO: This
-				//StateMachineManager::Create(*path);
+				App->resources->Create<StateMachine>(*path, "New State Machine.stm");
 			}
 			ImGui::EndMenu();
 		}

@@ -22,7 +22,7 @@ std::shared_ptr<Skybox> SkyboxManager::Load(Metafile* metafile, const FileData& 
 	return new_skybox;
 }
 
-uint32_t SkyboxManager::Create(Path& asset_creation_folder_path, const std::string created_asset_name)
+FileData SkyboxManager::Create()
 {
 	Skybox skybox;
 	Config skybox_config;
@@ -35,5 +35,5 @@ uint32_t SkyboxManager::Create(Path& asset_creation_folder_path, const std::stri
 	memcpy(skybox_bytes, serialized_skybox_string.c_str(), serialized_skybox_string.size() + 1);
 
 	FileData skybox_data{ skybox_bytes, serialized_skybox_string.size() + 1 };
-	return App->resources->CreateFromData(skybox_data, asset_creation_folder_path, created_asset_name);
+	return skybox_data;
 }

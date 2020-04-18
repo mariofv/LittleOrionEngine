@@ -17,7 +17,7 @@ public:
 	~SkyboxManager() = default;
 
 	static std::shared_ptr<Skybox> Load(Metafile* metafile, const FileData& resource_data);
-	static uint32_t Create(Path& asset_creation_folder_path, const std::string created_asset_name= "New Skybox.skybox");
+	static FileData Create();
 };
 
 #endif // !_MATERIALMANAGER_H_

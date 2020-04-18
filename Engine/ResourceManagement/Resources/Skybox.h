@@ -50,13 +50,19 @@ private:
 	GLuint vbo;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
 	template<>
 	static std::shared_ptr<Skybox> Load(Metafile* metafile, const FileData& resource_data)
 	{
 		return SkyboxManager::Load(metafile, resource_data);
 	}
+
+	template<>
+	static FileData Create<Skybox>()
+	{
+		return SkyboxManager::Create();
+	};
 }
 
 #endif //_SKYBOX_H_

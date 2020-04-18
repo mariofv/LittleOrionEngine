@@ -29,10 +29,6 @@ PanelStateMachine::~PanelStateMachine()
 		links.erase(links.begin(), links.end());
 	}
 	ax::NodeEditor::DestroyEditor(editor_context);
-	if (state_machine != nullptr)
-	{
-		state_machine->Save();
-	}
 }
 
 void PanelStateMachine::Render()
@@ -312,7 +308,6 @@ void PanelStateMachine::LeftPanel()
 	{
 		if (ImGui::Button("Save"))
 		{
-			state_machine->Save();
 			// TODO: Manage saving of states machines
 		}
 		ImGui::SameLine();

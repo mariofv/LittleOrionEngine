@@ -24,8 +24,7 @@ std::shared_ptr<Material> MaterialManager::Load(Metafile* metafile, const FileDa
 	return new_material;
 }
 
-
-uint32_t MaterialManager::Create(Path& asset_creation_folder_path, const std::string created_asset_name)
+FileData MaterialManager::Create()
 {
 	Material material;
 	Config material_config;
@@ -38,5 +37,5 @@ uint32_t MaterialManager::Create(Path& asset_creation_folder_path, const std::st
 	memcpy(material_bytes, serialized_material_string.c_str(), serialized_material_string.size() + 1);
 
 	FileData material_data{ material_bytes, serialized_material_string.size() + 1 };
-	return App->resources->CreateFromData(material_data, asset_creation_folder_path, created_asset_name);
+	return material_data;
 }
