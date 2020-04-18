@@ -56,6 +56,12 @@ public:
 namespace ResourceManagement
 {
 	template<>
+	static FileData Binarize(const Material& material)
+	{
+		MaterialManager::Binarize(material);
+	};
+
+	template<>
 	static std::shared_ptr<Material> Load(Metafile* metafile, const FileData& resource_data)
 	{
 		return MaterialManager::Load(metafile, resource_data);

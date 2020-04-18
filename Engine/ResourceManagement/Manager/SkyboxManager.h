@@ -16,6 +16,7 @@ public:
 	SkyboxManager() = default;
 	~SkyboxManager() = default;
 
+	static FileData Binarize(const Skybox& skybox);
 	static std::shared_ptr<Skybox> Load(Metafile* metafile, const FileData& resource_data);
 	static FileData Create();
 };

@@ -47,6 +47,13 @@ public:
 namespace ResourceManagement
 {
 	template<typename T>
+	static FileData Binarize(const T& resource)
+	{
+		assert(1 != 0); // If you are here, implement your Create function on the corresponding resource class.
+		return NULL;
+	};
+
+	template<typename T>
 	static std::shared_ptr<T> Load(Metafile* metafile, const FileData& resource_data)
 	{
 		return nullptr;

@@ -53,6 +53,12 @@ private:
 namespace ResourceManagement
 {
 	template<>
+	static FileData Binarize(const Skybox& skybox)
+	{
+		SkyboxManager::Binarize(skybox);
+	};
+
+	template<>
 	static std::shared_ptr<Skybox> Load(Metafile* metafile, const FileData& resource_data)
 	{
 		return SkyboxManager::Load(metafile, resource_data);

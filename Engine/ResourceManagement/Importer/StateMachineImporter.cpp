@@ -6,5 +6,6 @@
 
 FileData StateMachineImporter::ExtractData(Path& assets_file_path) const
 {
+	// TODO: Transform from json to binary
 	return assets_file_path.GetFile()->Load();
 }

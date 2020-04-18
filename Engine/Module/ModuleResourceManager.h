@@ -63,6 +63,33 @@ public:
 	uint32_t Import(Path& file);
 
 	template<typename T>
+	uint32_t Create(Path& path, const std::string& resource_name)
+	{
+		BROFILER_CATEGORY("Create Resource", Profiler::Color::Brown);
+		APP_LOG_INFO("Creating Resource %s.", resource_name.c_str())
+
+		FileData created_resource_data = ResourceManagement::Create<T>();
+
+		APP_LOG_SUCCESS("Resource %s created correctly.", resource_name.c_str())
+
+		return CreateFromData(created_resource_data, path, resource_name);
+	}
+
+	template<typename T>
+	void Save(std::shared_ptr<Resource> modified_resource)
+	{
+		APP_LOG_INFO("Saving Resource %u.", modified_resource->GetUUID());
+
+		FileData resource_data = ResourceManagement::Binarize<T>(*modified_resource.get());
+		std::string modified_resource_path = modified_resource->resource_metafile->imported_file_path;
+		Path* saved_resource_assets_path = App->filesystem->Save(modified_resource_path, resource_data);
+
+		InternalImport(saved_resource_assets_path);
+
+		APP_LOG_SUCCESS("Resource %u saved corrrectly.", modified_resource->GetUUID());
+	}
+
+	template<typename T>
 	std::shared_ptr<T> Load(uint32_t uuid)
 	{
 		BROFILER_CATEGORY("Load Resource", Profiler::Color::Brown);
@@ -97,28 +124,6 @@ public:
 
 		APP_LOG_SUCCESS("Resource %u loaded correctly.", uuid);
 		return std::static_pointer_cast<T>(loaded_resource);
-	}
-
-	template<typename T>
-	uint32_t Create(Path& path, const std::string& resource_name)
-	{
-		BROFILER_CATEGORY("Create Resource", Profiler::Color::Brown);
-		APP_LOG_INFO("Creating Resource %s.", resource_name.c_str())
-
-		FileData created_resource_data = ResourceManagement::Create<T>();
-
-		APP_LOG_INFO("Resource %s created correctly.", resource_name.c_str())
-
-		return CreateFromData(created_resource_data, path, resource_name);
-	}
-
-	template<typename T>
-	std::shared_ptr<T> Reload(const Resource* resource)
-	{
-		uint32_t uuid = resource->GetUUID();
-		auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [resource](const auto & loaded_resource) { return loaded_resource.get() == resource; });
-		resource_cache.erase(it);
-		return Load<T>(uuid);
 	}
 
 	void CleanInconsistenciesInDirectory(const Path& directory_path);

@@ -57,6 +57,7 @@ FileData PrefabImporter::ExtractFromGameObject(GameObject* gameobject) const
 FileData PrefabImporter::ExtractFromModel(const Config& model_config) const
 {
 	//TODO: Be sure that uuid of the prefab is same as the resoruce one
+
 	std::vector<std::unique_ptr<GameObject>> game_objects;
 	std::vector<std::unique_ptr<ComponentMeshRenderer>> mesh_renderer_components;
 	std::vector<uint32_t> loaded_skeletons;

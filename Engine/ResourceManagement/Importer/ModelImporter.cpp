@@ -85,7 +85,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path) const
 	current_model_data = {scene, asset_file_folder_path, unit_scale_factor, skeleton_cache};
 
 
-	aiNode * root_node = scene->mRootNode;
+	aiNode* root_node = scene->mRootNode;
 	aiMatrix4x4 identity_transformation = aiMatrix4x4();
 	std::vector<Config> node_config = ExtractDataFromNode(root_node, identity_transformation);
 

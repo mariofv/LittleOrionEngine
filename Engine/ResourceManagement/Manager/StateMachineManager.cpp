@@ -5,6 +5,21 @@
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/StateMachine.h"
 
+FileData StateMachineManager::Binarize(const StateMachine& state_machine)
+{
+	Config state_machine_config;
+	state_machine.Save(state_machine_config);
+
+	std::string serialized_state_machine_string;
+	state_machine_config.GetSerializedString(serialized_state_machine_string);
+
+	char* state_machine_bytes = new char[serialized_state_machine_string.size() + 1];
+	memcpy(state_machine_bytes, serialized_state_machine_string.c_str(), serialized_state_machine_string.size() + 1);
+
+	FileData state_machine_data{ state_machine_bytes, serialized_state_machine_string.size() + 1 };
+	return state_machine_data;
+}
+
 std::shared_ptr<StateMachine> StateMachineManager::Load(Metafile* metafile, const FileData& resource_data)
 {
 	char* state_machine_data = (char*)resource_data.buffer;
@@ -115,16 +130,6 @@ FileData StateMachineManager::Create()
 	created_state_machine.states.push_back(std::make_shared<State>("End", nullptr));
 	created_state_machine.default_state = std::hash<std::string>{}("Entry");
 
-	Config state_machine_config;
-	created_state_machine.Save(state_machine_config);
-
-	std::string serialized_state_machine_string;
-	state_machine_config.GetSerializedString(serialized_state_machine_string);
-
-	char* state_machine_bytes = new char[serialized_state_machine_string.size() + 1];
-	memcpy(state_machine_bytes, serialized_state_machine_string.c_str(), serialized_state_machine_string.size() + 1);
-
-	FileData state_machine_data{ state_machine_bytes, serialized_state_machine_string.size() + 1 };
-	return state_machine_data;
+	return Binarize(created_state_machine);
 
 }

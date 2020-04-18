@@ -81,6 +81,12 @@ public:
 namespace ResourceManagement
 {
 	template<>
+	static FileData Binarize(const StateMachine& state_machine)
+	{
+		StateMachineManager::Binarize(state_machine);
+	};
+
+	template<>
 	static std::shared_ptr<StateMachine> Load(Metafile* metafile, const FileData& resource_data)
 	{
 		return StateMachineManager::Load(metafile, resource_data);
