@@ -2,23 +2,27 @@
 #define _SCENE_H_
 
 #include "Resource.h"
+#include "Helper/Config.h"
 #include "ResourceManagement/Manager/SceneManager.h"
-
 #include <array>
 #include <vector>
 
-class Config;
 class Metafile;
 
 class Scene : public Resource
 {
 
 public:
+	Scene();
 	Scene(Metafile* resource_metafile, const Config& config);
 	~Scene() = default;
 
 	void Save(GameObject* gameobject_to_save) const;
 	void Load();
+
+	const std::string GetSerializedConfig() const;
+	void SaveSerializedConfig() const;
+
 
 private:
 	void SavePrefab(Config& config, GameObject* gameobject_to_save) const;
@@ -28,7 +32,7 @@ private:
 	void LoadPrefabModifiedComponents(const Config& config) const;
 
 private:
-	std::unique_ptr<Config> scene_config = nullptr;
+	mutable Config scene_config;
 
 };
 

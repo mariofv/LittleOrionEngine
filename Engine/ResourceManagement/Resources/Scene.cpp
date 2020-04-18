@@ -19,15 +19,18 @@
 #include <stack>
 #include <unordered_map>
 
-Scene::Scene(Metafile * resource_metafile, const Config & config) : Resource(resource_metafile)
+Scene::Scene() : Resource(nullptr)
 {
-	scene_config = std::make_unique<Config>(config);
+	scene_config = Config();
+}
+
+Scene::Scene(Metafile* resource_metafile, const Config& config) : Resource(resource_metafile)
+{
+	scene_config = Config(config);
 }
 
 void Scene::Save(GameObject* gameobject_to_save) const
 {
-	Config scene_config;
-
 	std::vector<Config> game_objects_config;
 	std::vector<Config> prefabs_config;
 	std::vector<Config> prefabs_components_config;
@@ -72,12 +75,6 @@ void Scene::Save(GameObject* gameobject_to_save) const
 	scene_config.AddChildrenConfig(prefabs_config, "Prefabs");
 	scene_config.AddChildrenConfig(prefabs_components_config, "PrefabsComponents");
 	scene_config.AddChildrenConfig(game_objects_config, "GameObjects");
-
-	std::string serialized_scene_string;
-	scene_config.GetSerializedString(serialized_scene_string);
-
-	App->filesystem->Save(resource_metafile->imported_file_path.c_str(), serialized_scene_string);
-	App->filesystem->Save(resource_metafile->exported_file_path.c_str(), serialized_scene_string);
 }
 
 void Scene::Load()
@@ -137,6 +134,20 @@ void Scene::Load()
 	}
 	App->scripts->ReLink();
 	App->animations->UpdateAnimationMeshes();
+}
+
+const std::string Scene::GetSerializedConfig() const
+{
+	std::string serialized_scene_string;
+	scene_config.GetSerializedString(serialized_scene_string);
+	return serialized_scene_string;
+}
+
+void Scene::SaveSerializedConfig() const
+{
+	std::string serialized_scene_string = GetSerializedConfig();
+	App->filesystem->Save(resource_metafile->imported_file_path.c_str(), serialized_scene_string);
+	App->filesystem->Save(resource_metafile->exported_file_path.c_str(), serialized_scene_string);
 }
 
 void Scene::SavePrefab(Config & config, GameObject * gameobject_to_save) const
