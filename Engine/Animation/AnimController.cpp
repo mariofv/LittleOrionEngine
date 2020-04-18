@@ -41,7 +41,7 @@ std::vector<float4x4> AnimController::InterpolatePoses(const std::vector<float4x
 
 void AnimController::GetClipTransform(float current_time, uint32_t skeleton_uuid, const std::shared_ptr<Clip>& clip, std::vector<math::float4x4>& pose) const
 {
-	float current_keyframe = (current_time*(clip->animation->frames - 1)) / clip->animation_time;
+	float current_keyframe =( (current_time*(clip->animation->frames - 1)) / clip->animation_time) +1;
 	size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
 	size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
 
@@ -119,6 +119,7 @@ void AnimController::FinishActiveState()
 	playing_clips[0] = playing_clips[1];
 	playing_clips[1] = {};
 	active_transition = nullptr;
+	apply_transition = false;
 }
 
 void PlayingClip::Update()

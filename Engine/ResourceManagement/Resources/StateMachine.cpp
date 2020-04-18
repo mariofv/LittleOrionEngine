@@ -190,6 +190,7 @@ void StateMachine::Save() const
 		transition_config.AddUInt(transition->target_hash, "Target");
 		transition_config.AddString(transition->trigger, "Trigger");
 		transition_config.AddInt64(transition->interpolation_time, "Interpolation");
+		transition_config.AddBool(transition->automatic, "Automatic");
 		transitions_config.push_back(transition_config);
 	}
 	state_machine_config.AddChildrenConfig(transitions_config, "Transitions");
@@ -260,6 +261,7 @@ void StateMachine::Load(const File& file)
 		transition_config.GetString("Trigger", trigger, "");
 		int64_t interpolation_time = transition_config.GetInt64("Interpolation", 0);
 		this->transitions.push_back(std::make_shared<Transition>(source, target, trigger, interpolation_time));
+		this->transitions.back()->automatic = transition_config.GetBool("Automatic", false);
 	}
 
 	default_state = state_machine_config.GetUInt("Default", 0);

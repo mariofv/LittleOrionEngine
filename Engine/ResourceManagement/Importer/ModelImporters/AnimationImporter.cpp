@@ -52,7 +52,6 @@ void AnimationImporter::ApplyNodeTansformationOutSideChannels(std::map<const std
 
 void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const
 {
-	assert(animation->mDuration == (int)animation->mDuration);
 	std::map<std::string, std::vector<aiNodeAnim *>> aiNode_by_channel;
 
 	//Organize channels
@@ -122,7 +121,7 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 			{
 				translation = animation_transform.Col3(3);
 			}
-			translation *= scale_factor;
+			//translation *= scale_factor;
 
 			Animation::Channel imported_channel{ channel_set.first, translation, rotation };
 			keyframes[i].push_back(imported_channel);

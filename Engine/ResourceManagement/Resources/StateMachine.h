@@ -40,6 +40,7 @@ struct Transition
 	uint64_t trigger_hash = 0;
 	std::string trigger;
 	uint64_t interpolation_time = 100;
+	bool automatic = false;
 };
 class File;
 class StateMachine : public Resource

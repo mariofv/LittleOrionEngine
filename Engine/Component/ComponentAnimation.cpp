@@ -149,7 +149,7 @@ void ComponentAnimation::Load(const Config& config)
 void ComponentAnimation::GetChildrenMeshes(GameObject* current_mesh_gameobject)
 {
 	ComponentMeshRenderer* mesh_renderer = static_cast<ComponentMeshRenderer*>(current_mesh_gameobject->GetComponent(ComponentType::MESH_RENDERER));
-	if (mesh_renderer)
+	if (mesh_renderer && mesh_renderer->skeleton)
 	{
 		skinned_meshes.push_back(mesh_renderer);
 	}

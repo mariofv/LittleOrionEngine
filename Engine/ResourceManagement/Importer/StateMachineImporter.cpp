@@ -30,7 +30,7 @@ ImportResult StateMachineImporter::Import(const File & file, bool force) const
 
 	uint32_t size_of_clip= sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
 	uint32_t size_of_state = sizeof(uint64_t) * 2;
-	uint32_t size_of_transitions = sizeof(uint64_t) * 4;
+	uint32_t size_of_transitions = sizeof(uint64_t) * 4 + sizeof(bool);
 	uint32_t size = sizeof(ranges) + size_of_clip * num_clips + size_of_transitions * num_transitions + size_of_state * num_states + sizeof(uint64_t)/*Default state*/;
 
 	char* data = new char[size]; // Allocate
@@ -84,6 +84,10 @@ ImportResult StateMachineImporter::Import(const File & file, bool force) const
 		bytes = sizeof(uint64_t);
 		memcpy(cursor, &transition->interpolation_time, bytes);
 		cursor += bytes; 
+
+		bytes = sizeof(bool);
+		memcpy(cursor, &transition->automatic, bytes);
+		cursor += bytes;
 	}
 
 	bytes = sizeof(uint64_t);

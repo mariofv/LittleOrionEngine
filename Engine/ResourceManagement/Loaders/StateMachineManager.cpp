@@ -93,6 +93,10 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(const std::string & file
 		bytes = sizeof(uint64_t);
 		memcpy( &transition->interpolation_time, cursor, bytes);
 		cursor += bytes;
+
+		bytes = sizeof(bool);
+		memcpy(&transition->automatic, cursor, bytes);
+		cursor += bytes;
 	}
 	std::shared_ptr<StateMachine> new_state_machine = std::make_shared<StateMachine>(std::move(clips), std::move(states), std::move(transitions), file_path);
 	bytes = sizeof(uint64_t);
