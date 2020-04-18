@@ -8,67 +8,52 @@
 
 #include <math.h>
 
-void AnimController::GetPose(uint32_t skeleton_uuid, std::vector<float4x4>& pose) 
+void AnimController::GetClipTransform( uint32_t skeleton_uuid, std::vector<math::float4x4>& pose)
 {
-
-	GetClipTransform(playing_clips[0].current_time, skeleton_uuid, playing_clips[0].clip, pose);
-	if (active_transition)
+	for (size_t j = 0; j < playing_clips.size(); j++)
 	{
-		std::vector<float4x4> fading_pose(pose.size());
-		float weight = playing_clips[1].current_time / (active_transition->interpolation_time * 1.0f);
-		GetClipTransform(playing_clips[1].current_time, skeleton_uuid, playing_clips[1].clip, fading_pose);
-		if (weight >= 1.0f)
+		const std::shared_ptr<Clip> clip = playing_clips[j].clip;
+		if (!clip || clip->skeleton_channels_joints_map.find(skeleton_uuid) == clip->skeleton_channels_joints_map.end())
 		{
-			apply_transition = true;
+			continue;
 		}
-		else
+		float current_keyframe = ((playing_clips[j].current_time*(clip->animation->frames - 1)) / clip->animation_time) + 1;
+		size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
+		size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
+
+		float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
+		const std::vector<Animation::Channel> & current_pose = clip->animation->keyframes[first_keyframe_index].channels;
+		const std::vector<Animation::Channel> & next_pose = clip->animation->keyframes[second_keyframe_index].channels;
+
+		auto & joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
+		for (size_t i = 0; i < joint_channels_map.size(); ++i)
 		{
-			pose = InterpolatePoses(pose, fading_pose, weight);
-		}
-	}
-}
+			size_t joint_index = joint_channels_map[i];
+			if (joint_index < pose.size())
+			{
+				float3 last_translation = current_pose[i].translation;
+				float3 next_translation = next_pose[i].translation;
 
-std::vector<float4x4> AnimController::InterpolatePoses(const std::vector<float4x4>& first_pose, const std::vector<float4x4>& second_pose, float weight) const
-{
-	assert(first_pose.size() == second_pose.size());
-	std::vector<float4x4> interpolated_pose(first_pose.size());
-	for (size_t i = 0; i < first_pose.size(); i++)
-	{
-		interpolated_pose[i] = Utils::Interpolate(first_pose[i], second_pose[i],weight);
-	}
-	return interpolated_pose;
-}
+				Quat last_rotation = current_pose[i].rotation;
+				Quat next_rotation = next_pose[i].rotation;
 
-void AnimController::GetClipTransform(float current_time, uint32_t skeleton_uuid, const std::shared_ptr<Clip>& clip, std::vector<math::float4x4>& pose) const
-{
-	float current_keyframe =( (current_time*(clip->animation->frames - 1)) / clip->animation_time) +1;
-	size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
-	size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
+				float3 position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
+				Quat rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
+				if (j == ClipType::NEXT)
+				{
+					float weight = playing_clips[j].current_time / (active_transition->interpolation_time * 1.0f);
+					pose[joint_index] = Utils::Interpolate(pose[joint_index], float4x4::FromTRS(position, rotation, float3::one), weight);
+					if(weight > 1.0f)
+					{
+						apply_transition = true;
+					}
+				}
+				else
+				{
+					pose[joint_index] = float4x4::FromTRS(position, rotation, float3::one);
 
-	float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
-
-	const std::vector<Animation::Channel> & current_pose = clip->animation->keyframes[first_keyframe_index].channels;
-	const std::vector<Animation::Channel> & next_pose = clip->animation->keyframes[second_keyframe_index].channels;
-
-	if (clip->skeleton_channels_joints_map.find(skeleton_uuid) == clip->skeleton_channels_joints_map.end())
-	{
-		return;
-	}
-	auto & joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
-	for (size_t i = 0; i < joint_channels_map.size(); ++i)
-	{
-		size_t joint_index = joint_channels_map[i];
-		if (joint_index < pose.size())
-		{
-			float3 last_translation = current_pose[i].translation;
-			float3 next_translation = next_pose[i].translation;
-
-			Quat last_rotation = current_pose[i].rotation;
-			Quat next_rotation = next_pose[i].rotation;
-
-			float3 position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
-			Quat rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
-			pose[joint_index] = float4x4::FromTRS(position, rotation, float3::one);
+				}	
+			}
 		}
 	}
 }

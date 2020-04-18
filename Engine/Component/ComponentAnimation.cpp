@@ -114,7 +114,7 @@ void ComponentAnimation::UpdateMeshes()
 	{
 		pose.resize(mesh->skeleton->skeleton.size());
 		auto & skeleton = mesh->skeleton;
-		animation_controller->GetPose(skeleton->GetUUID(), pose);
+		animation_controller->GetClipTransform(skeleton->GetUUID(), pose);
 		mesh->UpdatePalette(pose);
 	}
 }
