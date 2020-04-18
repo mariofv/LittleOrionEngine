@@ -1,6 +1,7 @@
 #include "ModuleEditor.h"
 
 #include "EditorUI/Panel/PanelAbout.h"
+#include "EditorUI/Panel/PanelBuildOptions.h"
 #include "EditorUI/Panel/PanelConfiguration.h"
 #include "EditorUI/Panel/PanelConsole.h"
 #include "EditorUI/Panel/PanelDebug.h"
@@ -62,6 +63,7 @@ bool ModuleEditor::Init()
 	panels.push_back(popups = new PanelPopups());
 	panels.push_back(nav_mesh = new PanelNavMesh());
 	panels.push_back(state_machine = new PanelStateMachine());
+	panels.push_back(build_options = new PanelBuildOptions());
 
 	return ret;
 }

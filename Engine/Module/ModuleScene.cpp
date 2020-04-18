@@ -28,7 +28,15 @@ bool ModuleScene::Init()
 {
 	root = new GameObject(0);
 	build_options = std::make_unique<BuildOptions>();
-	GetSceneFromPath(DEFAULT_SCENE_PATH);
+	
+	if(!build_options->LoadOptions())
+	{
+		GetSceneFromPath(DEFAULT_SCENE_PATH);
+		
+		return true;
+	}
+
+	current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(0));
 
 	return true;
 }

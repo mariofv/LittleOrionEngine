@@ -3,6 +3,7 @@
 #include "Component/ComponentCanvas.h"
 
 #include "EditorUI/Panel/PanelAbout.h"
+#include "EditorUI/Panel/PanelBuildOptions.h"
 #include "EditorUI/Panel/PanelConfiguration.h"
 #include "EditorUI/Panel/PanelConsole.h"
 #include "EditorUI/Panel/PanelDebug.h"
@@ -72,7 +73,7 @@ void PanelMenuBar::ShowFileMenu()
 		{
 			App->editor->popups->scene_management_popup_aux.save_scene_shown = true;
 		}
-		if(ImGui::MenuItem(ICON_FA_BUILDING "Build Options"))
+		if(ImGui::MenuItem(ICON_FA_BUILDING " Build Options"))
 		{
 			App->editor->build_options->SwitchOpen();
 		}

@@ -6,9 +6,9 @@
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 
-void BuildOptions::AddScene(uint32_t scene_uuid, const std::string& path )
+void BuildOptions::AddScene(uint32_t scene_uuid, const std::string& path, const std::string& name)
 {
-	Options options = Options(scene_uuid, path);
+	Options options = Options(scene_uuid, path, name);
 	build_scenes.push_back(options);
 }
 
@@ -29,6 +29,11 @@ void BuildOptions::SetBuildModeActive()
 
 bool BuildOptions::LoadOptions()
 {
+
+	if(!App->filesystem->Exists(RESOURCES_BUILD_OPTIONS))
+	{
+		return false;
+	}
 
 	Path* build_options_file_path = App->filesystem->GetPath(RESOURCES_BUILD_OPTIONS);
 
@@ -88,4 +93,16 @@ bool BuildOptions::SaveOptions() const
 	game_inputs_folder_path->Save(RESOURCES_GAME_INPUTS_FILENAME, serialized_build_options_string);
 
 	return true;
+}
+
+uint32_t BuildOptions::GetSceneUUID(unsigned position) const
+{
+	assert(position < build_scenes.size());
+	return build_scenes[position].uuid;
+}
+
+std::string BuildOptions::GetScenePath(unsigned position) const
+{
+	assert(position < build_scenes.size());
+	return build_scenes[position].library_path;
 }

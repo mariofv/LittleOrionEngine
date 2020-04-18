@@ -3,6 +3,8 @@
 
 #include "Panel.h"
 
+class ModuleScene;
+
 class PanelBuildOptions : public Panel
 {
 public:

@@ -3,10 +3,10 @@
 #define ENGINE_EXPORTS
 
 #include "Module.h"
+#include "Helper/BuildOptions.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
 
-class BuildOptions;
 class Scene;
 
 class ModuleScene : public Module
@@ -48,6 +48,7 @@ private:
 	std::unique_ptr<BuildOptions> build_options = nullptr;
 
 	friend class PanelScene;
+	friend class PanelBuildOptions;
 	friend class ModuleDebugDraw;
 };
 
