@@ -4,6 +4,8 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
 
+#include "ResourceManagement/Manager/SceneManager.h"
+
 #include <Brofiler/Brofiler.h>
 
 
@@ -86,7 +88,8 @@ void PanelPopupSceneManagementAux::RenderSaveScene()
 	if (save_scene_popup.HasSelected())
 	{
 		APP_LOG_INFO("Saving %s scene.", save_scene_popup.GetSelected().string());
-		App->editor->SaveScene(save_scene_popup.GetSelected().string());
+
+		SceneManager::Create(save_scene_popup.GetSelected().string());
 		App->editor->current_scene_path = save_scene_popup.GetSelected().string();
 		save_scene_popup.ClearSelected();
 	}

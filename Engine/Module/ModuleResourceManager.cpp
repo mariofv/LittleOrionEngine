@@ -232,7 +232,13 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path) const
 uint32_t ModuleResourceManager::CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name)
 {
 	Path* created_asset_file_path = creation_folder_path.Save(created_resource_name.c_str(), data);
-	return App->resources->InternalImport(*created_asset_file_path);
+	return InternalImport(*created_asset_file_path);
+}
+
+uint32_t ModuleResourceManager::CreateFromData(FileData data, const std::string& created_resource_path)
+{
+	Path* created_asset_file_path = App->filesystem->Save(created_resource_path, data);
+	return InternalImport(*created_asset_file_path);
 }
 
 std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32_t uuid) const

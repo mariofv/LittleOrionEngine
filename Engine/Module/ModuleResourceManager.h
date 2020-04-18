@@ -109,6 +109,7 @@ public:
 	}
 
 	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
+	uint32_t CreateFromData(FileData data, const std::string& created_resource_path);
 
 	void CleanInconsistenciesInDirectory(const Path& directory_path);
 	void ImportAssetsInDirectory(const Path& directory_path);

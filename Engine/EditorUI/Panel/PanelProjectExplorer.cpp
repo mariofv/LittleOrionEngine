@@ -254,7 +254,7 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 			}
 			if (ImGui::Selectable("Skybox"))
 			{
-				SkyboxManager ::Create(*path);
+				SkyboxManager::Create(*path);
 			}
 			if (ImGui::Selectable("State Machine"))
 			{

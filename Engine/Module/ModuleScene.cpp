@@ -195,6 +195,7 @@ void ModuleScene::LoadScene(const std::string &path)
 void ModuleScene::SaveScene(const std::string& path) const
 {
 	current_scene.get()->Save(root);
+	current_scene.get()->SaveSerializedConfig();
 }
 
 bool ModuleScene::HasPendingSceneToLoad() const
