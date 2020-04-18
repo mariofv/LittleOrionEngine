@@ -14,7 +14,7 @@ class MaterialImporter : public Importer
 public:
 	MaterialImporter() : Importer(ResourceType::MATERIAL) {};
 	~MaterialImporter() = default;
-	FileData ExtractData(Path& assets_file_path) const override;
+	FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const override;
 
 	FileData ExtractMaterialFromAssimp(const aiMaterial* assimp_mesh_material, const Path& material_file_folder_path);
 	uint32_t ImportMaterialTexture(const std::string& texture_file_name, const Path& material_file_folder_path);

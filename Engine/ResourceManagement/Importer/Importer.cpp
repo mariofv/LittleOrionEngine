@@ -11,8 +11,6 @@
 
 Metafile* Importer::Import(Path& assets_file_path)
 {
-	FileData imported_data = ExtractData(assets_file_path);
-
 	Metafile* metafile;
 	std::string metafile_path_string = App->resources->metafile_manager->GetMetafilePath(assets_file_path);
 
@@ -22,9 +20,9 @@ Metafile* Importer::Import(Path& assets_file_path)
 	}
 	else
 	{
-		if (core_resources_pathes.find(assets_file_path.GetFullPath()) != core_resources_pathes.end())
+		if (core_resources_uuid_mapping.find(assets_file_path.GetFullPath()) != core_resources_uuid_mapping.end())
 		{
-			metafile = App->resources->metafile_manager->CreateMetafile(assets_file_path, resource_type, (uint32_t)core_resources_pathes[assets_file_path.GetFullPath()]);
+			metafile = App->resources->metafile_manager->CreateMetafile(assets_file_path, resource_type, (uint32_t)core_resources_uuid_mapping[assets_file_path.GetFullPath()]);
 		}
 		else
 		{
@@ -37,8 +35,9 @@ Metafile* Importer::Import(Path& assets_file_path)
 	{
 		App->filesystem->MakeDirectory(metafile_exported_folder);
 	}
-
 	Path* metafile_exported_folder_path = App->filesystem->GetPath(metafile_exported_folder);
+
+	FileData imported_data = ExtractData(assets_file_path, *metafile);
 	metafile_exported_folder_path->Save(std::to_string(metafile->uuid).c_str(), imported_data);
 
 	MetafileManager::TouchMetafileTimestamp(*metafile);

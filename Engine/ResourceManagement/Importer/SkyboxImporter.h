@@ -14,7 +14,7 @@ class SkyboxImporter : public Importer
 public:
 	SkyboxImporter() : Importer(ResourceType::SKYBOX) {};
 	~SkyboxImporter() = default;
-	FileData ExtractData(Path& assets_file_path) const override;
+	FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const override;
 };
 
 #endif // !_SKYBOXIMPORTER_H_

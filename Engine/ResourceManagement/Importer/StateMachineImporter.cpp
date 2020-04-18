@@ -4,7 +4,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "ResourceManagement/Resources/StateMachine.h"
 
-FileData StateMachineImporter::ExtractData(Path& assets_file_path) const
+FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
 	// TODO: Transform from json to binary
 	return assets_file_path.GetFile()->Load();

@@ -20,7 +20,7 @@ public:
 	AnimationImporter() : Importer(ResourceType::ANIMATION) {};
 	~AnimationImporter() = default;
 
-	FileData ExtractData(Path& assets_file_path) const override;
+	FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const override;
 	FileData ExtractAnimationFromAssimp(const aiScene* scene, const aiAnimation* animation, float unit_scale_factor) const;
 
 private:

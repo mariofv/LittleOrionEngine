@@ -39,7 +39,7 @@ ModelImporter::~ModelImporter()
 	Assimp::DefaultLogger::kill();
 }
 
-FileData ModelImporter::ExtractData(Path& assets_file_path) const
+FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
 	FileData model_data;
 
@@ -107,7 +107,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path) const
 	model.AddChildrenConfig(node_config, "Node");
 	model.AddChildrenConfig(animations_config, "Animations");
 
-	model_data = App->resources->prefab_importer->ExtractFromModel(model);
+	model_data = App->resources->prefab_importer->ExtractFromModel(model, metafile);
 	return model_data;
 }
 

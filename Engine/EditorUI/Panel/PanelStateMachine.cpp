@@ -336,7 +336,6 @@ void PanelStateMachine::LeftPanel()
 
 void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 {
-	//TODO: Back to Load with binary
 	nodes.clear();
 	links.clear();
 	state_machine = App->resources->Load<StateMachine>(state_machine_uuid);

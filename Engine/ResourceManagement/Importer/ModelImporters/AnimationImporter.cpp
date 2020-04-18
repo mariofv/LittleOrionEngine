@@ -10,7 +10,7 @@
 #include <cmath>
 #include <map>
 
-FileData AnimationImporter::ExtractData(Path& assets_file_path) const
+FileData AnimationImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
 	return assets_file_path.GetFile()->Load();
 }
