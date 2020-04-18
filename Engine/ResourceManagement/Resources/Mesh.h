@@ -25,6 +25,7 @@ public:
 	~Mesh();
 
 	GLuint GetVAO() const;
+	GLuint GetEBO() const;
 	void ChangeTiling();
 	int GetNumTriangles() const;
 	std::vector<Triangle> GetTriangles() const;

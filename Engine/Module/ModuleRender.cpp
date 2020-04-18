@@ -196,6 +196,7 @@ void ModuleRender::GetMeshesToRender(const ComponentCamera *camera)
 	{
 		GetCullingMeshes(App->cameras->main_camera);
 	}
+
 }
 
 void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)

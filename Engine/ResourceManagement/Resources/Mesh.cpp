@@ -26,6 +26,10 @@ GLuint Mesh::GetVAO() const
 	return vao;
 }
 
+GLuint Mesh::GetEBO() const {
+	return ebo;
+}
+
 int Mesh::GetNumTriangles() const
 {
 	return indices.size() / 3;
