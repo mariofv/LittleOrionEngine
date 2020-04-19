@@ -65,7 +65,7 @@ void WorldManager::Update()
 
 	if(transition && App->input->GetAnyKeyPressedDown())
 	{
-		App->editor->OpenScene(MENU_SCENE_PATH);
+		App->scene->LoadBuildScene(0);
 	}
 
 }
