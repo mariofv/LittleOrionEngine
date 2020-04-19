@@ -38,6 +38,8 @@ public:
 	std::string GetName() const;
 	uint32_t GetUUID() const;
 
+	bool IsCoreResource() const;
+
 	static std::string GetResourceTypeName(ResourceType resource_type);
 
 public:

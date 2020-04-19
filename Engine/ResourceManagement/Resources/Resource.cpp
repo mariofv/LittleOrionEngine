@@ -2,6 +2,7 @@
 
 #include "Filesystem/Path.h"
 #include "ResourceManagement/Metafile/Metafile.h"
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 Resource::Resource(Metafile* metafile) : resource_metafile(metafile) {}
 
@@ -13,6 +14,11 @@ uint32_t Resource::GetUUID() const
 std::string Resource::GetName() const
 {
 	return resource_metafile->resource_name;
+}
+
+bool Resource::IsCoreResource() const
+{
+	return GetUUID() < NUM_CORE_RESOURCES;
 }
 
 std::string Resource::GetResourceTypeName(ResourceType resource_type)

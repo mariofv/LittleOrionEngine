@@ -13,6 +13,7 @@
 #include "Module/ModuleResourceManager.h"
 
 #include <imgui.h>
+#include <imgui_internal.h>
 #include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
@@ -25,6 +26,11 @@ PanelMaterial::PanelMaterial()
 
 void PanelMaterial::Render(std::shared_ptr<Material> material)
 {
+	if (material->IsCoreResource())
+	{
+		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
+	}
 	modified_by_user = false;
 
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
@@ -81,6 +87,11 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 	if (modified_by_user)
 	{
 		App->resources->Save<Material>(material);
+	}
+	if (material->IsCoreResource())
+	{
+		ImGui::PopItemFlag();
+		ImGui::PopStyleVar();
 	}
 }
 
