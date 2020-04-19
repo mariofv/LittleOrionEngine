@@ -20,7 +20,7 @@ public:
 	void Render() override;
 
 	bool HasSelected() const;
-	std::string GetSelected() const;
+	std::string GetSelected();
 
 private:
 	void RenderAccessPath();
@@ -46,6 +46,7 @@ private:
 	int selected_path = -1;
 	std::string selected_file_name;
 
+	bool pending_to_be_closed = false;
 	bool has_selected = false;
 };
 
