@@ -409,13 +409,9 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp">
-      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Helper\TemplatedGameObjectCreator.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagementAux.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\ImGuiHelper.cpp">
       <Filter>Engine\EditorUI\Helper</Filter>
     </ClCompile>
@@ -478,6 +474,10 @@
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Manager\StateMachineManager.cpp">
       <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -868,16 +868,12 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h">
-      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h">
       <Filter>Engine\ResourceManagement\ResourcesDB</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagementAux.h" />
     <ClInclude Include="Engine\EditorUI\Helper\ImGuiHelper.h">
       <Filter>Engine\EditorUI\Helper</Filter>
     </ClInclude>
@@ -946,6 +942,10 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Manager\StateMachineManager.h">
       <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
