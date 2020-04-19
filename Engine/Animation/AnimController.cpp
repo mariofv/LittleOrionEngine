@@ -66,7 +66,8 @@ bool AnimController::Update()
 	}
 	if (active_transition && active_transition->automatic)
 	{
-		if (playing_clips[ClipType::ACTIVE].current_time + active_transition->interpolation_time + 100 >= playing_clips[ClipType::ACTIVE].clip->animation_time)
+		float animation_time_with_interpolation = playing_clips[ClipType::ACTIVE].current_time + active_transition->interpolation_time + 100;
+		if (animation_time_with_interpolation >= playing_clips[ClipType::ACTIVE].clip->animation_time)
 		{
 			playing_clips[ClipType::NEXT].clip = state_machine->GetState(active_transition->target_hash)->clip;
 			playing_clips[ClipType::NEXT].playing = true;
@@ -89,24 +90,24 @@ void AnimController::SetActiveState(std::shared_ptr<State> & state)
 {
 	if (state != nullptr && state->clip != nullptr)
 	{
+		uint64_t old_state_hash = active_state ? active_state->name_hash : 0;
 		active_state = state;
 		playing_clips[ClipType::ACTIVE] = { active_state->clip };
-		active_transition = state_machine->GetAutomaticTransition(active_state->name_hash);
+		active_transition = state_machine->GetAutomaticTransition(active_state->name_hash, old_state_hash);
 	}
 }
 
 void AnimController::StartNextState(const std::string& trigger)
 {
 	std::shared_ptr<Transition> next_transition = state_machine->GetTriggerTransition(trigger, active_state->name_hash);
-	if (!next_transition)
+	if (!next_transition || next_transition == active_transition)
 	{
 		return;
 	}
 	std::shared_ptr<State> next_state;
 	active_transition = next_transition;
 	next_state = state_machine->GetState(active_transition->target_hash);
-	playing_clips[1] ={ next_state->clip };
-	playing_clips[1].playing = true;
+	playing_clips[ClipType::NEXT] ={ next_state->clip, 0, true};
 }
 
 void AnimController::FinishActiveState()
