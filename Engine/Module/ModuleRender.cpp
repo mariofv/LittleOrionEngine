@@ -109,8 +109,8 @@ bool ModuleRender::Init()
 	SetVSync(VSYNC);
 	SetDepthTest(true);
 
-	/*glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);*/
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -189,11 +189,14 @@ void ModuleRender::GetMeshesToRender(const ComponentCamera *camera)
 	meshes_to_render.clear();
 	opaque_mesh_to_render.clear();
 	transparent_mesh_to_render.clear();
+	float3 camera_pos = camera->camera_frustum.pos;
 	for (int i = 0; i < meshes.size(); i++)
 	{
 		if (meshes[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
 		{
 			transparent_mesh_to_render.push_back(meshes[i]);
+			meshes[i]->owner->aabb;
+			
 		}
 		if (meshes[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
 		{
