@@ -2,8 +2,8 @@
 #define _MODULEPHYSICS_H_
 
 #include "Module.h"
-#include "bullet3-2.89/src/btBulletDynamicsCommon.h"
-#include "bullet3-2.89/src/LinearMath/btIDebugDraw.h"
+#include "btBulletDynamicsCommon.h"
+#include "LinearMath/btIDebugDraw.h"
 #include "Helper/Timer.h"
 #include "Math/float3.h"
 #include "Main/GameObject.h"

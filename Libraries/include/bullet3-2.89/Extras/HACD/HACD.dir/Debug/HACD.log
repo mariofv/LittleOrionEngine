@@ -1,7 +1,0 @@
-﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/Extras/HACD/CMakeLists.txt
-  hacdGraph.cpp
-  hacdHACD.cpp
-  hacdICHull.cpp
-  hacdManifoldMesh.cpp
-  Generando código...
-  HACD.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\lib\Debug\HACD_Debug.lib

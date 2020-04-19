@@ -1,4 +1,0 @@
-﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/test/BulletDynamics/CMakeLists.txt
-  test_btKinematicCharacterController.cpp
-LINK : warning LNK4075: se omite '/INCREMENTAL' debido a la especificación '/OPT:ICF'
-  Test_btKinematicCharacterController.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\test\BulletDynamics\Debug\Test_btKinematicCharacterController.exe

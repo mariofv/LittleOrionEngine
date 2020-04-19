@@ -1,7 +1,0 @@
-﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/Extras/obj2sdf/CMakeLists.txt
-  obj2sdf.cpp
-  b3ResourcePath.cpp
-  tiny_obj_loader.cpp
-  Generando código...
-LINK : warning LNK4075: se omite '/INCREMENTAL' debido a la especificación '/OPT:ICF'
-  App_obj2sdf.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\Extras\obj2sdf\Debug\App_obj2sdf.exe

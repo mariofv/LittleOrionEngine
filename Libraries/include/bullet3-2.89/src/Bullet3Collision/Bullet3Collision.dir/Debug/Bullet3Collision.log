@@ -1,8 +1,0 @@
-﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/src/Bullet3Collision/CMakeLists.txt
-  b3DynamicBvh.cpp
-  b3DynamicBvhBroadphase.cpp
-  b3OverlappingPairCache.cpp
-  b3ConvexUtility.cpp
-  b3CpuNarrowPhase.cpp
-  Generando código...
-  Bullet3Collision.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\lib\Debug\Bullet3Collision_Debug.lib

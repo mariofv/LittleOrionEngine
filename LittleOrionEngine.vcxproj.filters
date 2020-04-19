@@ -454,15 +454,23 @@
     <ClCompile Include="Engine\ResourceManagement\Loaders\StateMachineManager.cpp">
       <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClCompile>
-    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor.cpp" />
-    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor_api.cpp" />
-    <ClCompile Include="Libraries\include\NodeEditor\crude_json.cpp" />
-    <ClCompile Include="Libraries\include\NodeEditor\imgui_canvas.cpp" />
     <ClCompile Include="Engine\Module\ModulePhysics.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentBoxPrimitive.cpp">
       <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\crude_json.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_canvas.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor_api.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -898,12 +906,6 @@
     <ClInclude Include="Engine\ResourceManagement\Loaders\StateMachineManager.h">
       <Filter>Engine\ResourceManagement\Loaders</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor_internal.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\crude_json.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_bezier_math.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_canvas.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_extra_math.h" />
     <ClInclude Include="Engine\Module\ModulePhysics.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
@@ -996,10 +998,5 @@
     <Filter Include="Libraries\NodeEditor">
       <UniqueIdentifier>{8917def4-6771-4d99-b8cf-0cd3bd85eff4}</UniqueIdentifier>
     </Filter>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Libraries\include\NodeEditor\imgui_node_editor_internal.inl" />
-    <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl" />
-    <None Include="Libraries\include\NodeEditor\imgui_extra_math.inl" />
   </ItemGroup>
 </Project>

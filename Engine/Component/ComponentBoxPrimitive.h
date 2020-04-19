@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "Main/GameObject.h"
 
-#include "bullet3-2.89/src/btBulletDynamicsCommon.h"
+#include "btBulletDynamicsCommon.h"
 
 
 class GameObject;
