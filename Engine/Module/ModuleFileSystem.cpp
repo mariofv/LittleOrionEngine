@@ -199,6 +199,10 @@ FileType ModuleFileSystem::GetFileType(const char *file_path, const PHYSFS_FileT
 	{
 		return FileType::SKELETON;
 	}
+	if (file_extension == "stm")
+	{
+		return FileType::STATE_MACHINE;
+	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{
 		return FileType::ARCHIVE;
@@ -275,6 +279,16 @@ void ModuleFileSystem::RefreshFilesHierarchy()
 bool  ModuleFileSystem::CreateMountedDir(const char * directory) const
 {
 	MakeDirectory(directory);
+	if (PHYSFS_mount(directory, directory, 1) == 0)
+	{
+		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());
+		return false;
+	}
+	return true;
+}
+
+bool  ModuleFileSystem::MountDir(const char * directory) const
+{
 	if (PHYSFS_mount(directory, directory, 1) == 0)
 	{
 		APP_LOG_ERROR("Error mounting directory: %s", PHYSFS_getLastError());

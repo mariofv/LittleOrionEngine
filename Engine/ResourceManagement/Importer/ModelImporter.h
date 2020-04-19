@@ -31,7 +31,7 @@ public:
 	ImportResult ImportExtractedResources(const File & file, bool force = false) const;
 
 private:
-	std::vector<Config> ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const std::string& base_path) const;
+	std::vector<Config> ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const std::string& base_path, float unit_scale_factor) const;
 
 private:
 	mutable Timer performance_timer;

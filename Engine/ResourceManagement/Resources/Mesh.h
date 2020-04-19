@@ -20,7 +20,7 @@ public:
 		uint32_t num_joints = 0;
 	};
 	Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path);
-	Mesh(std::string mesh_file_path);
+	Mesh(const std::string & mesh_file_path);
 	~Mesh();
 
 	GLuint GetVAO() const;

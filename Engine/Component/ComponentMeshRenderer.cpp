@@ -52,6 +52,11 @@ void ComponentMeshRenderer::Save(Config& config) const
 	config.AddBool(active, "Active");
 	config.AddString(mesh_to_render->exported_file, "MeshPath");
 	config.AddString(material_to_render->exported_file, "MaterialPath");
+
+	if(!skeleton)
+		config.AddString("", "SkeletonResource");
+	else
+		config.AddString(skeleton->exported_file, "SkeletonResource");
 }
 
 void ComponentMeshRenderer::Load(const Config& config)
@@ -83,19 +88,24 @@ void ComponentMeshRenderer::Load(const Config& config)
 		SetMaterial(App->resources->Load<Material>(DEFAULT_MATERIAL_PATH));
 	}
 
+	std::string skeleton_path;
+	config.GetString("SkeletonResource", skeleton_path, "");
+	if(!skeleton_path.empty())
+		SetSkeleton(App->resources->Load<Skeleton>(skeleton_path));
+
 }
 
-void ComponentMeshRenderer::Render() const
+void ComponentMeshRenderer::Render()
 {
 	std::string program_name = material_to_render->shader_program;
 	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
 
-	ComponentAnimation* anim = static_cast<ComponentAnimation*>(owner->parent->GetComponent(ComponentType::ANIMATION));
-	if (anim != nullptr)
+	if (palette.size() > 0)
 	{
-		anim->Render(program);
+		glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
 	}
+
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -196,3 +206,31 @@ void ComponentMeshRenderer::Copy(Component* component_to_copy) const
 	*component_to_copy = *this;
 	*static_cast<ComponentMeshRenderer*>(component_to_copy) = *this;
 };
+
+void ComponentMeshRenderer::SetSkeleton(std::shared_ptr<Skeleton>& skeleton)
+{
+	this->skeleton = skeleton;
+	palette.resize(skeleton->skeleton.size());
+	for (auto & matrix : palette)
+	{
+		matrix = float4x4::identity;
+	}
+}
+
+void ComponentMeshRenderer::UpdatePalette(const std::vector<float4x4>& pose)
+{
+	assert(pose.size() == palette.size());
+	for (size_t i = 0; i < pose.size(); ++i)
+	{
+		auto &  joints = skeleton->skeleton;
+		size_t joint_index = i;
+		float4x4 gobal_transform = float4x4::identity;
+		while (joints[joint_index].parent_index != -1)
+		{
+			joint_index = joints[joint_index].parent_index;
+			gobal_transform = pose[joint_index] * gobal_transform;
+
+		}
+		palette[i] =  gobal_transform * pose[i] * joints[i].transform_global;
+	}
+}

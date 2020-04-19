@@ -10,11 +10,7 @@ public:
 	struct Channel
 	{
 		std::string name;
-
-		bool is_translated;
 		float3 translation;
-
-		bool is_rotated;
 		Quat rotation;
 	};
 
@@ -23,8 +19,8 @@ public:
 		float frame;
 		std::vector<Channel> channels;
 	};
-	Animation(const uint32_t UID, const std::string & exported_file);
-	Animation(std::vector<KeyFrame> && keyframes, std::string name, float frames, float frames_per_second,const std::string & exported_file);
+	Animation(const uint32_t UUID, const std::string & exported_file);
+	Animation(std::vector<KeyFrame> && keyframes, std::string name, float frames, float frames_per_second, const uint32_t UUID, const std::string & exported_file);
 	~Animation() = default;
 
 private:

@@ -2,7 +2,6 @@
 
 #include "Helper/Config.h"
 #include "Helper/Timer.h"
-#include "ResourceManagement/Resources/Mesh.h"
 
 #include <algorithm>
 ModuleResourceManager::ModuleResourceManager()
@@ -18,7 +17,14 @@ bool ModuleResourceManager::Init()
 	model_importer = std::make_unique<ModelImporter>();
 	scene_manager = std::make_unique<SceneManager>();
 	prefab_importer = std::make_unique<PrefabImporter>();
+	state_machine_importer = std::make_unique<StateMachineImporter>();
+
+#if !GAME
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
+#else
+	App->filesystem->MountDir("Library");
+#endif
+
 	File("Resources");
 	thread_timer->Start();
 	return true;
@@ -26,7 +32,6 @@ bool ModuleResourceManager::Init()
 
 update_status ModuleResourceManager::PreUpdate()
 {
-
 	if ((thread_timer->Read() - last_imported_time) >= importer_interval_millis)
 	{
 		//importing_thread.join();
@@ -41,8 +46,11 @@ update_status ModuleResourceManager::PreUpdate()
 
  bool ModuleResourceManager::CleanUp()
 {
+#if !GAME
 	 thread_comunication.stop_thread = true;
 	 importing_thread.join();
+#endif
+
 	return true;
 }
 
@@ -127,6 +135,10 @@ ImportResult ModuleResourceManager::InternalImport(const File& file, bool force)
 	if (file.file_type == FileType::PREFAB)
 	{
 		result = prefab_importer->Import(file, force);
+	}
+	if (file.file_type == FileType::STATE_MACHINE)
+	{
+		result = state_machine_importer->Import(file, force);
 	}
 	if (file.file_type == FileType::MESH)
 	{

@@ -35,12 +35,6 @@ ImportResult MaterialImporter::Import(const File& file, bool force) const
 
 ImportResult MaterialImporter::ExtractMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* model_file_path, const char* material_assets_file_path) const
 {
-	if (App->filesystem->Exists(material_assets_file_path))
-	{
-		APP_LOG_INFO("Material %s already exists.", material_assets_file_path)
-		return ImportResult();
-	}
-
 	Material imported_material(0, std::string(material_assets_file_path));
 
 	int mesh_material_index = scene->mMeshes[mesh_index]->mMaterialIndex;
@@ -80,7 +74,10 @@ ImportResult MaterialImporter::ExtractMaterialFromMesh(const aiScene* scene, siz
 			}
 		}
 	}
-
+	if (scene->mMeshes[mesh_index]->HasBones())
+	{
+		imported_material.shader_program = "Skinning";
+	}
 	material_config.AddBool(imported_material.show_checkerboard_texture, "Checkboard");
 	material_config.AddString(imported_material.shader_program, "ShaderProgram");
 

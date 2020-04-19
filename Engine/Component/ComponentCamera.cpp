@@ -87,6 +87,7 @@ void ComponentCamera::InitCamera()
 
 void ComponentCamera::Update()
 {
+#if !GAME
 	if (is_focusing)
 	{
 		float focus_progress = math::Min((App->time->real_time_since_startup - start_focus_time) / CENTER_TIME, 1.f);
@@ -95,9 +96,9 @@ void ComponentCamera::Update()
 		owner->transform.SetTranslation(new_camera_position);
 		is_focusing = focus_progress != 1;
 	}	
-
-	camera_frustum.pos = owner->transform.GetTranslation();
-	Quat owner_rotation = owner->transform.GetRotation();
+#endif
+	camera_frustum.pos = owner->transform.GetGlobalTranslation();
+	Quat owner_rotation = owner->transform.GetGlobalRotation();
 	camera_frustum.up = owner_rotation * float3::unitY;
 	camera_frustum.front = owner_rotation * float3::unitZ;
 
@@ -189,7 +190,9 @@ void ComponentCamera::RecordFrame(float width, float height)
 		toggle_msaa = false;
 	}
 
+#if !GAME
 	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+#endif
 
 	glViewport(0, 0, width, height);
 
@@ -202,17 +205,9 @@ void ComponentCamera::RecordFrame(float width, float height)
 			break;
 		case ComponentCamera::ClearMode::SKYBOX:
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+#if !GAME
 			App->cameras->skybox->Render(*this);
-			break;
-		case ComponentCamera::ClearMode::ORTHO:
-			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			glMatrixMode(GL_PROJECTION);
-			glLoadIdentity();
-			glOrtho(this->camera_frustum.pos.x, width, height, this->camera_frustum.pos.y, this->camera_frustum.nearPlaneDistance, -this->camera_frustum.farPlaneDistance);
-			glMatrixMode(GL_PROJECTION);
-			glDisable(GL_DEPTH_TEST);
-			//App->renderer->canvas->Render(*this);
-			//App->cameras->skybox->Render(*this);
+#endif
 			break;
 		default:
 			break;
@@ -220,6 +215,7 @@ void ComponentCamera::RecordFrame(float width, float height)
 
 	App->renderer->RenderFrame(*this);
 
+#if !GAME
 	if (App->renderer->anti_aliasing)
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
@@ -228,6 +224,8 @@ void ComponentCamera::RecordFrame(float width, float height)
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#endif
+	
 }
 
 void ComponentCamera::RecordDebugDraws(float width, float height) const

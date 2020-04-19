@@ -5,12 +5,6 @@ out vec2 TexCoords;
 
 uniform mat4 model;
 uniform mat4 projection;
-layout (std140) uniform Matrices
-{
-    mat4 model;
-    mat4 proj;
-    mat4 view;
-} matrices;
 
 void main()
 {

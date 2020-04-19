@@ -83,13 +83,23 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	float time = performance_timer.Read();
 	APP_LOG_SUCCESS("Model %s loaded correctly from assimp in %f ms.", file.file_path.c_str(), time);
 
+	float unit_scale_factor = 1.f;
+	/*for (unsigned int i = 0; i < scene->mMetaData->mNumProperties; ++i)
+	{
+		if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
+		{
+			aiMetadataEntry unit_scale_entry = scene->mMetaData->mValues[i];
+			unit_scale_factor = *(double*)unit_scale_entry.mData;
+		};
+	}
+	unit_scale_factor *= 0.01f;*/
 	
 	aiNode * root_node = scene->mRootNode;
 	std::string base_path = file.file_path.substr(0, file.file_path.find_last_of("//"));
 	aiMatrix4x4 identity_transformation = aiMatrix4x4();
 
 	Config model;
-	std::vector<Config> node_config = ImportNode(root_node, identity_transformation, scene, base_path.c_str());
+	std::vector<Config> node_config = ImportNode(root_node, identity_transformation, scene, base_path.c_str(),unit_scale_factor);
 
 	std::vector<Config> animations_config;
 	for (size_t i = 0; i < scene->mNumAnimations; i++)
@@ -98,7 +108,7 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 		Config animation_config;
 		std::string library_animation_file;
 		std::string assets_animation_file = base_path + "/"+file.filename_no_extension +"_"+scene->mAnimations[i]->mName.C_Str() + ".anim";
-		animation_importer->ImportAnimation(scene, scene->mAnimations[i], assets_animation_file, library_animation_file);
+		animation_importer->ImportAnimation(scene, scene->mAnimations[i], assets_animation_file, library_animation_file, unit_scale_factor);
 		animation_config.AddString(library_animation_file, "Animation");
 		animations_config.push_back(animation_config);
 	}
@@ -116,23 +126,13 @@ ImportResult ModelImporter::Import(const File& file, bool force) const
 	return import_result;
 }
 
-std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const std::string& base_path) const
+std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const std::string& base_path, float unit_scale_factor) const
 {
 
 	std::vector<Config> node_config;
 
 	aiMatrix4x4& current_transformation = parent_transformation * root_node->mTransformation;
 	// Transformation
-	float unit_scale_factor = 1.f;
-	for (unsigned int i = 0; i < scene->mMetaData->mNumProperties; ++i)
-	{
-		if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
-		{
-			aiMetadataEntry unit_scale_entry = scene->mMetaData->mValues[i];
-			unit_scale_factor = *(double*)unit_scale_entry.mData;
-		};
-	}
-	unit_scale_factor *= 0.01f;
 
 	std::map<std::string, std::shared_ptr<Skeleton>> already_loaded_skeleton;
 	for (size_t i = 0; i < root_node->mNumMeshes; ++i)
@@ -181,7 +181,7 @@ std::vector<Config> ModelImporter::ImportNode(const aiNode* root_node, const aiM
 
 	for (size_t i = 0; i < root_node->mNumChildren; i++)
 	{
-		std::vector<Config> child_node_config = ImportNode(root_node->mChildren[i], current_transformation, scene, base_path);
+		std::vector<Config> child_node_config = ImportNode(root_node->mChildren[i], current_transformation, scene, base_path, unit_scale_factor);
 		node_config.insert(node_config.begin(), child_node_config.begin(), child_node_config.end());
 	}
 

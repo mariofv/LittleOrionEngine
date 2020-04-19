@@ -7,7 +7,9 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
 #include "ResourceManagement/Resources/Prefab.h"
+#include "ResourceManagement/Resources/StateMachine.h"
 
+#include "PanelStateMachine.h"
 #include <imgui.h>
 #include <imgui_internal.h>
 #include <SDL/SDL.h>
@@ -200,6 +202,14 @@ void PanelProjectExplorer::ProcessResourceMouseInput(File * file)
 	{
 		selected_file = file;
 	}
+	if (ImGui::IsWindowHovered() && ImGui::IsMouseDoubleClicked(0))
+	{
+		if (file->file_type == FileType::STATE_MACHINE)
+		{
+			App->editor->state_machine->SwitchOpen();
+			App->editor->state_machine->OpenStateMachine(*file);
+		}
+	}
 }
 
 void PanelProjectExplorer::ProcessMouseInput(File * file)
@@ -231,11 +241,24 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(const File * file)
 	if (ImGui::BeginPopupContextWindow(label.c_str()))
 	{
 
-		if (ImGui::BeginMenu("Create"))
+		if (selected_folder != nullptr && ImGui::BeginMenu("Create"))
 		{
 			if (ImGui::Selectable("Folder"))
 			{
 				MakeDirectoryFromFile(selected_folder);
+				changes = true;
+			}
+			if (ImGui::Selectable("State Machine"))
+			{
+				std::string path = selected_folder->file_path + "/statemachine.stm";
+				StateMachine state_machine(path);
+
+				state_machine.states.push_back(std::make_shared<State>("Entry", nullptr));
+				state_machine.states.push_back(std::make_shared<State>("End", nullptr));
+				state_machine.default_state = std::hash<std::string>{}("Entry");
+				state_machine.Save();
+
+				App->resources->Import(path);
 				changes = true;
 			}
 			ImGui::EndMenu();

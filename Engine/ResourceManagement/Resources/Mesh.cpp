@@ -8,7 +8,7 @@ Resource(0, mesh_file_path)
 	LoadInMemory();
 	
 }
-Mesh::Mesh(std::string mesh_file_path) :
+Mesh::Mesh(const std::string & mesh_file_path) :
 Resource(0, mesh_file_path)
 {
 }

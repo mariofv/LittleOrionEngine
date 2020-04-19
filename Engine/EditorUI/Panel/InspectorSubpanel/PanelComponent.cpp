@@ -11,6 +11,8 @@
 #include "EditorUI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentBoxPrimitive.h"
+#include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentImage.h"
@@ -22,8 +24,6 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentUI.h"
-#include "Component/ComponentButton.h"
-#include "Component/ComponentBoxPrimitive.h"
 
 #include "Helper/Utils.h"
 #include "Math/Rect.h"
@@ -39,6 +39,7 @@
 #include "Module/ModuleUI.h"
 
 #include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/Resources/StateMachine.h"
 
 
 #include <imgui.h>
@@ -60,7 +61,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			}
 
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
-			if (ImGui::DragInt("Height", &transform_2d->rect.bottom, 1))
+			if (ImGui::DragFloat("Width", &transform_2d->width, 1))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
@@ -70,7 +71,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
 			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2);
 
-			if (ImGui::DragInt("Width", &transform_2d->rect.right, 1))
+			if (ImGui::DragFloat("Height", &transform_2d->height, 1))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
@@ -154,6 +155,14 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		ImGui::Text("Material");
 		ImGui::SameLine();
 		if (ImGui::Button(mesh->material_to_render->exported_file.c_str()))
+		{
+			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
+		}
+		DropMeshAndMaterial(mesh);
+		ImGui::Text("Skeleton");
+		ImGui::SameLine();
+		std::string skeleton_exported_path = mesh->skeleton ? mesh->skeleton->exported_file : "";
+		if (ImGui::Button(skeleton_exported_path.c_str()))
 		{
 			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
 		}
@@ -410,40 +419,55 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 
 			return;
 		}
+		ImGui::SameLine();
+		if (ImGui::Button("Reload"))
+		{
+			animation->SetStateMachine(animation->animation_controller->state_machine);
+			animation->Init();
+			return;
+		}
 		ImGui::Separator();
 
 		ImGui::AlignTextToFramePadding();
-		ImGui::Text("Animation");
+		ImGui::Text("State Machine");
 		ImGui::SameLine();
-		if (ImGui::Button(animation->animation_controller->animation->exported_file.c_str()))
+		std::string state_machine_path = animation->animation_controller->state_machine ? animation->animation_controller->state_machine->exported_file : "State machine";
+		ImGui::Button(state_machine_path.c_str());
+		DropStateMachine(animation);
+		if (animation->animation_controller->state_machine && animation->animation_controller->active_state)
 		{
-			App->editor->popups->mesh_selector_popup.show_mesh_selector_popup = true;
+			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(animation->animation_controller->active_state->name_hash), nullptr, nullptr, nullptr, ImGuiInputTextFlags_ReadOnly);
+			static std::string trigger;
+			ImGui::InputText("Trigger ", &trigger);
+			if (ImGui::Button("Activate"))
+			{
+				animation->ActiveAnimation(trigger);
+			}
 		}
-		DropAnimationAndSkeleton(animation);
 		ImGui::AlignTextToFramePadding();
-		ImGui::Text("Skeleton");
-		ImGui::SameLine();
-		if (ImGui::Button(animation->animation_controller->skeleton->exported_file.c_str()))
-		{
-			App->editor->popups->material_selector_popup.show_material_selector_popup = true;
-		}
-		DropAnimationAndSkeleton(animation);
 		ImGui::Separator();
-		if (ImGui::Checkbox("Playing", &animation->animation_controller->playing));
-		ImGui::SameLine();
-		if (ImGui::Checkbox("Loop", &animation->animation_controller->loop));
+		if (ImGui::Checkbox("Playing", &animation->playing));
 		ImGui::SameLine();
 		if (ImGui::Button("Play"))
 		{
-			animation->animation_controller->Play();
+			animation->Play();
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Stop"))
 		{
-			animation->animation_controller->Stop();
+			animation->Stop();
 		}
 
-		ImGui::SliderInt("Animation time", &animation->animation_controller->current_time, 0, animation->animation_controller->animation_time);
+		for (auto& playing_clip : animation->animation_controller->playing_clips)
+		{
+			if (!playing_clip.clip)
+			{
+				break;
+			}
+			ImGui::Checkbox("Loop", &(playing_clip.clip->loop));
+			ImGui::SliderInt("Animation time", &playing_clip.current_time, 0, playing_clip.clip->animation_time);
+		}
+
 	}
 }
 void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script)
@@ -514,8 +538,6 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* image) {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonUIWindow(image);
-		ImGui::Separator();
-		ImGui::InputInt("Texture", (int*)(&image->ui_texture));
 	}
 }
 
@@ -525,23 +547,24 @@ void PanelComponent::ShowComponentProgressBarWindow(ComponentProgressBar* progre
 	{
 		ShowCommonUIWindow(progress_bar);
 		ImGui::Separator();
-		ImGui::InputInt("Background", (int*)(&progress_bar->ui_texture));
-		ImGui::Separator();
 		ImGui::DragFloat("Bar Value", &progress_bar->percentage, 0.1F, 0.0F, 100.0F);
 		ImGui::InputInt("Bar Image", (int*)(&progress_bar->bar_texture));
 		ImGui::ColorPicker3("Bar Color", progress_bar->bar_color.ptr());
 	}
 }
 
-void PanelComponent::ShowComponentTextWindow(ComponentText *txt)
+void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(txt);
+		ShowCommonUIWindow(text);
 		ImGui::Separator();		
-		ImGui::InputText("Text", &txt->text);
+		ImGui::InputText("Text", &text->text);
 		ImGui::Separator();
-		ImGui::DragFloat("Font Size", (float*)(&txt->scale));
+		if (ImGui::DragFloat("Font Size", (float*)(&text->scale)))
+		{
+			text->modified_by_user = true;
+		}
 		
 	}
 }
@@ -550,7 +573,6 @@ void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Button", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonUIWindow(button);
-		ImGui::InputInt("Texture", (int*)(&button->ui_texture));
 	}
 }
 
@@ -637,14 +659,14 @@ void PanelComponent::ShowAddNewComponentButton()
 		sprintf_s(tmp_string, "%s Script", ICON_FA_EDIT);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::SCRIPT);
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::SCRIPT);
 
 		}
 
 		sprintf_s(tmp_string, "%s Mesh Renderer", ICON_FA_DRAW_POLYGON);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
 
 			if (!App->editor->selected_game_object->IsStatic())
 			{
@@ -655,7 +677,7 @@ void PanelComponent::ShowAddNewComponentButton()
 		sprintf_s(tmp_string, "%s Animation", ICON_FA_PLAY_CIRCLE);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
 
 		}
 		sprintf_s(tmp_string, "%s Box", ICON_FA_BOX);
@@ -669,6 +691,7 @@ void PanelComponent::ShowAddNewComponentButton()
 
 	if (component != nullptr)
 	{
+		component->added_by_user = true;
 		App->actions->action_component = component;
 		App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_COMPONENT);
 	}
@@ -720,12 +743,20 @@ void PanelComponent::DropMeshAndMaterial(ComponentMeshRenderer* component_mesh)
 				component_mesh->SetMaterial(App->resources->Load<Material>(meta.exported_file));
 				component_mesh->modified_by_user = true;
 			}
+			if (incoming_file->file_type == FileType::SKELETON)
+			{
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				component_mesh->SetSkeleton(App->resources->Load<Skeleton>(meta.exported_file));
+				component_mesh->modified_by_user = true;
+			}
 		}
 		ImGui::EndDragDropTarget();
 	}
 }
 
-void PanelComponent::DropAnimationAndSkeleton(ComponentAnimation* component_animation)
+void PanelComponent::DropStateMachine(ComponentAnimation* component_animation)
 {
 	if (ImGui::BeginDragDropTarget())
 	{
@@ -733,21 +764,35 @@ void PanelComponent::DropAnimationAndSkeleton(ComponentAnimation* component_anim
 		{
 			assert(payload->DataSize == sizeof(File*));
 			File* incoming_file = *(File * *)payload->Data;
-			if (incoming_file->file_type == FileType::ANIMATION)
+			if (incoming_file->file_type == FileType::STATE_MACHINE)
 			{
 				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
 				ImportOptions meta;
 				Importer::GetOptionsFromMeta(meta_path, meta);
-				component_animation->SetAnimation(App->resources->Load<Animation>(meta.exported_file));
+				component_animation->SetStateMachine( App->resources->Load<StateMachine>(meta.exported_file));
 				component_animation->modified_by_user = true;
 			}
-			if (incoming_file->file_type == FileType::SKELETON)
+			
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
+
+void PanelComponent::DropTexture(ComponentUI* ui)
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_File"))
+		{
+			assert(payload->DataSize == sizeof(File*));
+			File* incoming_file = *(File * *)payload->Data;
+			if (incoming_file->file_type == FileType::TEXTURE)
 			{
 				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
 				ImportOptions meta;
 				Importer::GetOptionsFromMeta(meta_path, meta);
-				component_animation->SetSkeleton(App->resources->Load<Skeleton>(meta.exported_file));
-				component_animation->modified_by_user = true;
+
+				ui->SetTextureToRender(App->resources->Load<Texture>(meta.exported_file));
 			}
 		}
 		ImGui::EndDragDropTarget();
@@ -783,5 +828,13 @@ void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 		return;
 	}
 	ImGui::Separator();
+	if (ImGui::DragFloat("Layer", &ui->owner->transform_2d.position.z, 1.0F, -MAX_NUM_LAYERS, MAX_NUM_LAYERS))
+	{
+		ui->owner->transform_2d.OnTransformChange();
+	}
+	ImGui::Separator();
+	ImGui::InputInt("Texture", (int*)(&ui->ui_texture));
+	DropTexture(ui);
+
 	ImGui::ColorPicker3("Color", ui->color.ptr());
 }

@@ -415,6 +415,15 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentButton.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentCanvas.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentImage.cpp">
+      <Filter>Engine\Component\UI</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Component\ComponentProgressBar.cpp">
       <Filter>Engine\Component\UI</Filter>
     </ClCompile>
@@ -425,16 +434,7 @@
       <Filter>Engine\Component\UI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentUI.cpp">
-      <Filter>Engine\Component\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentButton.cpp">
-      <Filter>Engine\Component\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentCanvas.cpp">
-      <Filter>Engine\Component\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentImage.cpp">
-      <Filter>Engine\Component\UI</Filter>
+      <Filter>Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp">
       <Filter>Engine\Actions</Filter>
@@ -442,6 +442,22 @@
     <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelStateMachine.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\StateMachine.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\StateMachineImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Loaders\StateMachineManager.cpp">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor.cpp" />
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor_api.cpp" />
+    <ClCompile Include="Libraries\include\NodeEditor\crude_json.cpp" />
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_canvas.cpp" />
     <ClCompile Include="Engine\Module\ModulePhysics.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
@@ -843,6 +859,15 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentButton.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCanvas.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentImage.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Component\ComponentProgressBar.h">
       <Filter>Engine\Component\UI</Filter>
     </ClInclude>
@@ -853,16 +878,7 @@
       <Filter>Engine\Component\UI</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentUI.h">
-      <Filter>Engine\Component\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentButton.h">
-      <Filter>Engine\Component\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentCanvas.h">
-      <Filter>Engine\Component\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentImage.h">
-      <Filter>Engine\Component\UI</Filter>
+      <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Actions\EditorActionRect2D.h">
       <Filter>Engine\Actions</Filter>
@@ -870,6 +886,24 @@
     <ClInclude Include="Engine\Actions\EditorActionRotation2D.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelStateMachine.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\StateMachine.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\StateMachineImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Loaders\StateMachineManager.h">
+      <Filter>Engine\ResourceManagement\Loaders</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor.h" />
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor_internal.h" />
+    <ClInclude Include="Libraries\include\NodeEditor\crude_json.h" />
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_bezier_math.h" />
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_canvas.h" />
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_extra_math.h" />
     <ClInclude Include="Engine\Module\ModulePhysics.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
@@ -959,5 +993,13 @@
     <Filter Include="Engine\Component\UI">
       <UniqueIdentifier>{50d04042-1cd4-4858-85c4-778434cc10fc}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\NodeEditor">
+      <UniqueIdentifier>{8917def4-6771-4d99-b8cf-0cd3bd85eff4}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Libraries\include\NodeEditor\imgui_node_editor_internal.inl" />
+    <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl" />
+    <None Include="Libraries\include\NodeEditor\imgui_extra_math.inl" />
   </ItemGroup>
 </Project>

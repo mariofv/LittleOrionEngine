@@ -1,27 +1,44 @@
 #include "ComponentAnimation.h"
 
 #include "Animation/AnimController.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentTransform.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleResourceManager.h"
+#include "ResourceManagement/Resources/StateMachine.h"
+
+#include <Brofiler/Brofiler.h>
 
 ComponentAnimation::ComponentAnimation() : Component(nullptr, ComponentType::ANIMATION)
 {
 	animation_controller = new AnimController();
-	SetAnimation(App->resources->Load<Animation>("Library/Metadata/38/3800295065"));
-	SetSkeleton(App->resources->Load<Skeleton>("Library/Metadata/29/2987806620"));
 }
 
 ComponentAnimation::ComponentAnimation(GameObject* owner) : Component(owner, ComponentType::ANIMATION)
 {
 	animation_controller = new AnimController();
+	Init();
 }
 
-ComponentAnimation::~ComponentAnimation()
+void ComponentAnimation::Init()
 {
+	skinned_meshes.clear();
+	GetChildrenMeshes(owner);
+	if (animation_controller->state_machine)
+	{
+		GenerateJointChannelMaps();
+	}
+}
+
+ComponentAnimation & ComponentAnimation::operator=(const ComponentAnimation & component_to_copy)
+{
+	Component::operator = (component_to_copy);
+	*this->animation_controller = *component_to_copy.animation_controller;
+	Init();
+	return *this;
 }
 
 Component* ComponentAnimation::Clone(bool original_prefab) const
@@ -45,17 +62,60 @@ void ComponentAnimation::Copy(Component* component_to_copy) const
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;
 }
 
-void ComponentAnimation::Render(GLuint shader_program) 
+void ComponentAnimation::SetStateMachine(std::shared_ptr<StateMachine>& state_machine)
 {
-	glUniformMatrix4fv(glGetUniformLocation(shader_program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
+	animation_controller->state_machine = state_machine;
+	animation_controller->SetActiveAnimation();
+	GenerateJointChannelMaps();
 }
+
+void ComponentAnimation::Play()
+{
+	PlayingClip * playing_clip = &animation_controller->playing_clips[0];
+	if (!playing_clip->clip)
+	{
+		return;
+	}
+	playing_clip->current_time = 0;
+	playing_clip->playing = true;
+	playing = true;
+}
+
+void ComponentAnimation::Stop()
+{
+	auto & playing_clip = animation_controller->playing_clips[0];
+	playing_clip.playing = false;
+	playing = false;
+}
+
+void ComponentAnimation::ActiveAnimation(const std::string & trigger)
+{
+	animation_controller->StartNextState(trigger);
+}
+
+
 void ComponentAnimation::Update()
 {
-	animation_controller->Update();
-
-	if (animation_controller->playing)
+	playing = animation_controller->Update();
+	if (playing)
 	{
-		UpdateBone(owner);
+		UpdateMeshes();
+	}
+}
+
+void ComponentAnimation::UpdateMeshes()
+{
+	BROFILER_CATEGORY("Animation", Profiler::Color::PaleGoldenRod);
+	if (!animation_controller->state_machine)
+	{
+		return;
+	}
+	for (auto & mesh : skinned_meshes)
+	{
+		pose.resize(mesh->skeleton->skeleton.size());
+		auto & skeleton = mesh->skeleton;
+		animation_controller->GetPose(skeleton->GetUUID(), pose);
+		mesh->UpdatePalette(pose);
 	}
 }
 
@@ -70,62 +130,59 @@ void ComponentAnimation::Save(Config& config) const
 	config.AddUInt((uint64_t)type, "ComponentType");
 	config.AddBool(active, "Active");
 
-
-	config.AddString(animation_controller->animation->exported_file, "AnimationResource");
-	config.AddString(animation_controller->skeleton->exported_file, "SkeletonResource");
+	std::string state_machine_path = animation_controller->state_machine ? animation_controller->state_machine->exported_file : "";
+	config.AddString(state_machine_path, "StateMachineResource");
 }
 
 void ComponentAnimation::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-	std::string animation_path;
-	config.GetString("AnimationResource", animation_path, "");
-	SetAnimation(App->resources->Load<Animation>(animation_path));
-
-	std::string skeleton_path;
-	config.GetString("SkeletonResource", skeleton_path, "");
-	SetSkeleton(App->resources->Load<Skeleton>(skeleton_path));
+	std::string state_machine_path;
+	config.GetString("StateMachineResource", state_machine_path, "");
+	if (!state_machine_path.empty())
+	{
+		SetStateMachine(App->resources->Load<StateMachine>(state_machine_path));
+	}
 }
 
-void ComponentAnimation::SetAnimation(std::shared_ptr<Animation>& animation)
+void ComponentAnimation::GetChildrenMeshes(GameObject* current_mesh_gameobject)
 {
-	animation_controller->animation = animation;
+	ComponentMeshRenderer* mesh_renderer = static_cast<ComponentMeshRenderer*>(current_mesh_gameobject->GetComponent(ComponentType::MESH_RENDERER));
+	if (mesh_renderer)
+	{
+		skinned_meshes.push_back(mesh_renderer);
+	}
+
+	for (auto& child_gameobject : current_mesh_gameobject->children)
+	{
+		GetChildrenMeshes(child_gameobject);
+	}
 }
-void ComponentAnimation::SetSkeleton(std::shared_ptr<Skeleton>& skeleton)
+
+void ComponentAnimation::GenerateJointChannelMaps()
 {
-	animation_controller->skeleton = skeleton;
-	palette.resize(skeleton->skeleton.size());
-	for (auto & matrix : palette)
+	for (auto& clip : animation_controller->state_machine->clips)
 	{
-		matrix = float4x4::identity;
-	}
-	animation_controller->Init();
-}
-void ComponentAnimation::UpdateBone(GameObject* current_bone)
-{
-	float3 bone_position;
-	if (animation_controller->GetTranslation(current_bone->name, bone_position))
-	{
-		current_bone->transform.SetTranslation(bone_position);
-	}
+		for (auto& mesh : skinned_meshes)
+		{
+			auto & skeleton = mesh->skeleton;
+			if (clip->animation && clip->skeleton_channels_joints_map.find(skeleton->GetUUID()) != clip->skeleton_channels_joints_map.end())
+			{
+				break;
+			}
+			auto & channels = clip->animation->keyframes[0].channels;
+			std::vector<size_t> meshes_channels_joints_map(channels.size());
+			for (size_t j = 0; j < channels.size(); ++j)
+			{
+				auto & channel = channels[j];
+				auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [&channel](const Skeleton::Joint & joint) {
+					return channel.name == joint.name;
+				});
 
-	Quat bone_rotation;
-	if (animation_controller->GetRotation(current_bone->name, bone_rotation))
-	{
-		current_bone->transform.SetRotation(bone_rotation.ToFloat3x3());
+				meshes_channels_joints_map[j] = (it - skeleton->skeleton.begin());
+			}
+			clip->skeleton_channels_joints_map[skeleton->GetUUID()] = std::move(meshes_channels_joints_map);
+		}
 	}
-	auto it = std::find_if(animation_controller->skeleton->skeleton.begin(), animation_controller->skeleton->skeleton.end(), [current_bone](const Skeleton::Joint & joint) {
-		return current_bone->name == joint.name;
-	});
-
-	if (it != animation_controller->skeleton->skeleton.end())
-	{
-		palette[it - animation_controller->skeleton->skeleton.begin()] = current_bone->transform.GetGlobalModelMatrix() * (*it).transform_global;
-	}
-	for (auto& children_bone : current_bone->children)
-	{
-		UpdateBone(children_bone);
-	}
-
 }

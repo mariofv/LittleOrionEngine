@@ -45,7 +45,7 @@ void SceneCamerasController::Start()
 // Update is called once per frame
 void SceneCamerasController::Update()
 {
-	if (App->input->GetKeyDown(KeyCode::P)) 
+	if (App->input->GetKeyDown(KeyCode::Alpha3)) 
 	{
 		if (index < camera_list.size()-1) 
 		{
@@ -53,7 +53,7 @@ void SceneCamerasController::Update()
 			UpdateCameraRendering();
 		}	
 	}
-	if (App->input->GetKeyDown(KeyCode::O))
+	if (App->input->GetKeyDown(KeyCode::Alpha2))
 	{
 		if (index > 0)
 		{

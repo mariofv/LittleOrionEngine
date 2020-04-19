@@ -27,6 +27,10 @@ bool ModuleTime::Init()
 
 	real_time_clock->Start();
 
+#if GAME
+	game_time_clock->Start();
+#endif
+
 	APP_LOG_SUCCESS("Engine clocks initialized correctly");
 
 	return true;
@@ -34,8 +38,8 @@ bool ModuleTime::Init()
 
 update_status ModuleTime::PreUpdate()
 {
-	frame_start_time = game_time_clock->Read();
-	real_frame_start_time = real_time_clock->Read();
+	
+
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -44,8 +48,9 @@ void ModuleTime::EndFrame()
 {
 	++frame_count;
 
-	delta_time = (game_time_clock->Read() - frame_start_time) * time_scale;
-	real_time_delta_time = real_time_clock->Read() - real_frame_start_time;
+	float real_time = real_time_clock->Read();
+	real_time_delta_time = real_time - real_frame_start_time;
+	float aux_real_frame_start_time = real_time;
 
 	if (limit_fps)
 	{
@@ -55,13 +60,21 @@ void ModuleTime::EndFrame()
 			SDL_Delay(static_cast<Uint32>(remaining_frame_time));
 			last_frame_delay = remaining_frame_time;
 		}
-		delta_time = (game_time_clock->Read() - frame_start_time) * time_scale;
-		real_time_delta_time = real_time_clock->Read() - real_frame_start_time;
+
+		real_time = real_time_clock->Read();
+		real_time_delta_time = real_time - real_frame_start_time;
+		aux_real_frame_start_time = real_time;
+
 	}
 	else
 	{
 		last_frame_delay = 0.f;
 	}
+	real_frame_start_time = aux_real_frame_start_time;
+
+	float game_time = game_time_clock->Read();
+	delta_time = (game_time - frame_start_time) * time_scale;
+	frame_start_time = game_time;
 
 	time += delta_time;
 	real_time_since_startup += real_time_delta_time;
@@ -112,7 +125,6 @@ void ModuleTime::Play()
 	{
 		game_time_clock->Stop();
 		App->editor->OpenScene(TMP_SCENE_PATH);
-		remove(TMP_SCENE_PATH);
 	}
 }
 
@@ -126,6 +138,7 @@ void ModuleTime::Pause()
 	if (game_time_clock->IsPaused())
 	{
 		game_time_clock->Resume();
+		frame_start_time = game_time_clock->Read();
 	}
 	else {
 		game_time_clock->Pause();

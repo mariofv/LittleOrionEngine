@@ -12,13 +12,6 @@ bool ModuleAnimation::Init()
 	return true;
 }
 
-// Called every draw update
-update_status ModuleAnimation::Update()
-{
-
-	return update_status::UPDATE_CONTINUE;
-}
-
 bool ModuleAnimation::CleanUp()
 {
 	for (auto& animation : animations)
@@ -44,5 +37,13 @@ void ModuleAnimation::RemoveComponentAnimation(ComponentAnimation* animation_to_
 	{
 		delete *it;
 		animations.erase(it);
+	}
+}
+
+void ModuleAnimation::UpdateAnimationMeshes()
+{
+	for (auto & animation : animations)
+	{
+		animation->Init();
 	}
 }

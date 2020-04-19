@@ -12,6 +12,7 @@
 #include "EditorUI/Panel/PanelPopups.h"
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelResourceDatabase.h"
+#include "EditorUI/Panel/PanelStateMachine.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelToolBar.h"
 
@@ -21,6 +22,7 @@
 #include "Main/Application.h"
 #include "ModuleResourceManager.h"
 #include "ModuleScene.h"
+#include "ModuleScriptManager.h"
 #include "ModuleActions.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -57,6 +59,7 @@ bool ModuleEditor::Init()
 	panels.push_back(resource_database = new PanelResourceDatabase());
 	panels.push_back(popups = new PanelPopups());
 	panels.push_back(nav_mesh = new PanelNavMesh());
+	panels.push_back(state_machine = new PanelStateMachine());
 
 	return ret;
 }
@@ -91,6 +94,10 @@ bool ModuleEditor::InitImgui()
 
 update_status ModuleEditor::PreUpdate()
 {
+#if GAME
+	return update_status::UPDATE_CONTINUE;
+#endif
+
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
@@ -101,10 +108,21 @@ update_status ModuleEditor::PreUpdate()
 
 update_status ModuleEditor::Update()
 {
+	static bool inital_scene_loaded = false;
+
+#if GAME
+	if (!inital_scene_loaded)
+	{
+		OpenScene("Library/menuscene.scene");
+		App->scripts->InitScripts();
+		inital_scene_loaded = true;
+		return update_status::UPDATE_CONTINUE;
+	}
+#endif
+
 	//ImGui::ShowStyleEditor();
 	//ImGui::ShowDemoWindow();
 
-	static bool inital_scene_loaded = false;
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
 		OpenScene(DEFAULT_SCENE_PATH);
@@ -116,6 +134,10 @@ update_status ModuleEditor::Update()
 
 void ModuleEditor::Render()
 {
+#if GAME
+	return;
+#endif
+
 	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
 	
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
@@ -183,6 +205,7 @@ void ModuleEditor::InitEditorDockspace()
 	ImGui::DockBuilderDockWindow(hierarchy->GetWindowName().c_str(), dock_id_left_upper_left);
 	ImGui::DockBuilderDockWindow(scene_panel->GetWindowName().c_str(), dock_id_left_upper_right);
 	ImGui::DockBuilderDockWindow(game_panel->GetWindowName().c_str(), dock_id_left_upper_right);
+	ImGui::DockBuilderDockWindow(state_machine->GetWindowName().c_str(), dock_id_left_upper_right);
 	ImGui::DockBuilderDockWindow(inspector->GetWindowName().c_str(), dock_id_right);
 	ImGui::DockBuilderDockWindow(console->GetWindowName().c_str(), dock_id_left_bottom);
 	ImGui::DockBuilderDockWindow(project_explorer->GetWindowName().c_str(), dock_id_left_bottom);
@@ -211,7 +234,7 @@ bool ModuleEditor::CleanUp()
 
 ENGINE_API void ModuleEditor::OpenScene(const std::string &path) const
 {
-	App->scene->NewScene(path);
+	App->scene->LoadScene(path);
 }
 
 void ModuleEditor::SaveScene(const std::string &path) const

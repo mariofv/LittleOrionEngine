@@ -42,10 +42,14 @@ bool ModuleUI::CleanUp()
 
 void ModuleUI::Render(const ComponentCamera* camera)
 {
+#if GAME
+	window_width = App->window->GetWidth();
+	window_height = App->window->GetHeight();
+#else
 	window_width = App->editor->scene_panel->scene_window_content_area_width;
 	window_height = App->editor->scene_panel->scene_window_content_area_height;
-	float4x4 projection = float4x4::D3DOrthoProjLH(-1, 1, window_width, window_height);
-	
+#endif
+	float4x4 projection = float4x4::D3DOrthoProjLH(-1, MAX_NUM_LAYERS, window_width, window_height);
 	if (main_canvas != nullptr)
 	{
 		RenderUIGameObject(main_canvas->owner, &projection);
@@ -118,7 +122,7 @@ void ModuleUI::InitGlyph()
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
 	// Load font as face
-	if (FT_New_Face(ft, "Assets/Fonts/arial.ttf", 0, &face))
+	if (FT_New_Face(ft, "Assets/Fonts/Montserrat-Light.ttf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
 
 	// Set size to load glyphs as

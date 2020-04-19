@@ -18,7 +18,7 @@ public:
 private:
 	void LoadNode(std::unique_ptr<GameObject>& parent_node, const Config& node_config, std::vector<std::string>& already_loaded_skeleton) const;
 	void LoadMeshComponent(const std::string& mesh_exported_file, const std::string& material_exported_file, GameObject * node_game_object) const;
-	void LoadSkeleton(const Config& node_config, std::vector<std::string>& already_loaded_skeleton, std::unique_ptr<GameObject>& parent_node) const;
+	std::string LoadSkeleton(const Config& node_config, std::vector<std::string>& already_loaded_skeleton, std::unique_ptr<GameObject>& parent_node) const;
 
 };
 

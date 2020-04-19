@@ -1,196 +1,143 @@
 #include "AnimController.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleTime.h"
+#include "ResourceManagement/Resources/StateMachine.h"
 #include "Helper/Utils.h"
 
 #include <math.h>
-#include <algorithm>
 
-void AnimController::Init()
+void AnimController::GetPose(uint32_t skeleton_uuid, std::vector<float4x4>& pose) 
 {
-	animation_time = (animation->frames/animation->frames_per_second )* 1000;
-	for (size_t i = 0; i < animation->keyframes[0].channels.size(); ++i)
+
+	GetClipTransform(playing_clips[0].current_time, skeleton_uuid, playing_clips[0].clip, pose);
+	if (active_transition)
 	{
-		auto & channel = animation->keyframes[0].channels[i];
-		auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [channel](const Skeleton::Joint & joint)
+		std::vector<float4x4> fading_pose(pose.size());
+		float weight = playing_clips[1].current_time / (active_transition->interpolation_time * 1.0f);
+		GetClipTransform(playing_clips[1].current_time, skeleton_uuid, playing_clips[1].clip, fading_pose);
+		if (weight >= 1.0f)
 		{
-			return joint.name == channel.name;
-		});
-		if (it != skeleton->skeleton.end())
-		{
-			Skeleton::Joint joint = (*it);
-			while (joint.parent_index < skeleton->skeleton.size())
-			{
-				joint = skeleton->skeleton[joint.parent_index];
-				auto it_channel = std::find_if(animation->keyframes[0].channels.begin(), animation->keyframes[0].channels.end(), [&joint](const Animation::Channel & parent_channel)
-				{
-					return joint.name == parent_channel.name;
-				});
-				if (it_channel != animation->keyframes[0].channels.end())
-				{
-					channel_hierarchy_cache[i].push_back(it_channel - animation->keyframes[0].channels.begin());
-				}
-			}
+			apply_transition = true;
 		}
-
+		else
+		{
+			pose = InterpolatePoses(pose, fading_pose, weight);
+		}
 	}
-	channel_global_transformation.resize(animation->keyframes[0].channels.size());
-
 }
 
-
-void AnimController::Play()
-{ 
-	current_time = 0.f;
-	playing = true;
-}
-
-void AnimController::Stop()
+std::vector<float4x4> AnimController::InterpolatePoses(const std::vector<float4x4>& first_pose, const std::vector<float4x4>& second_pose, float weight) const
 {
-	playing = false;
+	assert(first_pose.size() == second_pose.size());
+	std::vector<float4x4> interpolated_pose(first_pose.size());
+	for (size_t i = 0; i < first_pose.size(); i++)
+	{
+		interpolated_pose[i] = Utils::Interpolate(first_pose[i], second_pose[i],weight);
+	}
+	return interpolated_pose;
 }
 
-void AnimController::Update()
+void AnimController::GetClipTransform(float current_time, uint32_t skeleton_uuid, const std::shared_ptr<Clip>& clip, std::vector<math::float4x4>& pose) const
 {
-	if (!playing)
+	float current_keyframe = (current_time*(clip->animation->frames - 1)) / clip->animation_time;
+	size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
+	size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
+
+	float interpolation_lambda = current_keyframe - std::floor(current_keyframe);
+
+	const std::vector<Animation::Channel> & current_pose = clip->animation->keyframes[first_keyframe_index].channels;
+	const std::vector<Animation::Channel> & next_pose = clip->animation->keyframes[second_keyframe_index].channels;
+
+	if (clip->skeleton_channels_joints_map.find(skeleton_uuid) == clip->skeleton_channels_joints_map.end())
 	{
 		return;
 	}
-
-	current_time = current_time + App->time->delta_time;
-	if (current_time >= animation_time)
+	auto & joint_channels_map = clip->skeleton_channels_joints_map[skeleton_uuid];
+	for (size_t i = 0; i < joint_channels_map.size(); ++i)
 	{
-		if (loop) 
+		size_t joint_index = joint_channels_map[i];
+		if (joint_index < pose.size())
+		{
+			float3 last_translation = current_pose[i].translation;
+			float3 next_translation = next_pose[i].translation;
+
+			Quat last_rotation = current_pose[i].rotation;
+			Quat next_rotation = next_pose[i].rotation;
+
+			float3 position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
+			Quat rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
+			pose[joint_index] = float4x4::FromTRS(position, rotation, float3::one);
+		}
+	}
+}
+
+bool AnimController::Update()
+{
+	for (auto & playing_clip : playing_clips)
+	{
+		 playing_clip.Update();
+	}
+
+	if (apply_transition && active_transition)
+	{
+		FinishActiveState();
+	}
+	return playing_clips[0].playing;
+}
+
+void AnimController::SetActiveAnimation()
+{
+	active_state = state_machine->GetDefaultState();
+	if (active_state != nullptr && active_state->clip != nullptr)
+	{
+		playing_clips[0] = { active_state->clip };
+	}
+}
+
+void AnimController::StartNextState(const std::string& trigger)
+{
+	active_transition = state_machine->GetTransition(trigger, active_state->name_hash);
+	if (!active_transition)
+	{
+		return;
+	}
+	std::shared_ptr<State> next_state;
+	if (active_transition)
+	{
+		next_state = state_machine->GetState(active_transition->target_hash);
+		playing_clips[1] ={ next_state->clip };
+		playing_clips[1].playing = true;
+	}
+}
+
+void AnimController::FinishActiveState()
+{
+	std::shared_ptr<State> next_state = state_machine->GetState(active_transition->target_hash);
+	active_state = next_state;
+	playing_clips[0] = playing_clips[1];
+	playing_clips[1] = {};
+	active_transition = nullptr;
+}
+
+void PlayingClip::Update()
+{
+	if (!playing || !clip)
+	{
+		return;
+	}
+	current_time = current_time + static_cast<int>(App->time->delta_time);
+	if (current_time >= clip->animation_time)
+	{
+		if (clip->loop)
 		{
 
-			current_time = current_time % animation_time;
+			current_time = current_time % clip->animation_time;
 		}
 		else
 		{
 			playing = false;
 		}
 	}
-		//UpdateChannelsGlobalTransformation();
-
 }
-void AnimController::UpdateChannelsGlobalTransformation()
-{
-	float current_sample = (current_time*(animation->frames - 1)) / animation_time;
-	int current_keyframe = math::FloorInt(current_sample);
-
-	int next_keyframe = (current_keyframe + 1) % (int)animation->frames;
-
-	size_t i = 0;
-	for (const auto & channel : animation->keyframes[current_keyframe].channels)
-	{
-		Animation::Channel & next_keyframe_channel = animation->keyframes[next_keyframe].channels[i];
-
-		float4x4 current_global_tranform = float4x4::identity;
-		float4x4 next_global_tranform = float4x4::identity;
-
-		std::vector<Animation::Channel> & channels = animation->keyframes[current_keyframe].channels;
-		std::vector<Animation::Channel> & netx_keyframe_channels = animation->keyframes[next_keyframe].channels;
-
-		for (int j = channel_hierarchy_cache[i].size() - 1; j >= 0; --j)
-		{
-			auto & channel_parent = channels[channel_hierarchy_cache[i][j]];
-			current_global_tranform = current_global_tranform * float4x4::FromTRS(channel_parent.translation, channel_parent.rotation, float3(1.0f, 1.0f, 1.0f));
-
-			auto & channel_parent_next_keyframe = netx_keyframe_channels[channel_hierarchy_cache[i][j]];
-			next_global_tranform = next_global_tranform * float4x4::FromTRS(channel_parent_next_keyframe.translation, channel_parent_next_keyframe.rotation, float3(1.0f, 1.0f, 1.0f));
-		}
-		float4x4 channel_current_local_tranform = float4x4::FromTRS(channel.translation, channel.rotation, float3(1.0f, 1.0f, 1.0f));
-		float4x4 channel_next_local_tranform = float4x4::FromTRS(next_keyframe_channel.translation, next_keyframe_channel.rotation, float3(1.0f, 1.0f, 1.0f));
-
-		current_global_tranform = current_global_tranform * channel_current_local_tranform;
-		next_global_tranform = next_global_tranform * channel_next_local_tranform;
-
-		float delta = current_sample - current_keyframe;
-		channel_global_transformation[i] = Utils::Interpolate(current_global_tranform, next_global_tranform, delta);
-		++i;
-	}
-
-}
-
-bool AnimController::GetTranslation(const std::string& channel_name, float3& position)
-{
-	float current_sample = (current_time*(animation->frames - 1)) / animation_time;
-	int current_keyframe = math::FloorInt(current_sample);
-
-	int next_keyframe = (current_keyframe + 1) % (int)animation->frames;
-
-	if (current_keyframe >= animation->keyframes.size() || next_keyframe >= animation->keyframes.size())
-	{
-		return false;
-	}
-	float3 current_translation;
-	float3 next_translation;
-
-	bool channel_found = false;
-	size_t i = 0;
-	while (!channel_found && i < animation->keyframes[current_keyframe].channels.size())
-	{
-		if (animation->keyframes[current_keyframe].channels[i].name == channel_name)
-		{
-			channel_found = true;
-			if (!animation->keyframes[current_keyframe].channels[i].is_translated)
-			{
-				return false;
-			}
-			current_translation = animation->keyframes[current_keyframe].channels[i].translation;
-			next_translation = animation->keyframes[next_keyframe].channels[i].translation;
-		}
-		++i;
-	}
-
-	if (channel_found)
-	{
-		float delta = current_sample - current_keyframe;
-		position = Utils::Interpolate(current_translation, next_translation, delta);
-	}
-
-	return channel_found;
-}
-
-bool AnimController::GetRotation(const std::string& channel_name, Quat& rotation)
-{
-	float current_sample = (current_time*(animation->frames - 1)) / animation_time;
-	int current_keyframe = math::FloorInt(current_sample);
-
-	int next_keyframe = (current_keyframe + 1) % (int)animation->frames;
-
-	if (current_keyframe >= animation->keyframes.size() || next_keyframe >= animation->keyframes.size())
-	{
-		return false;
-	}
-	Quat current_rotation;
-	Quat next_rotation;
-
-	bool channel_found = false;
-	size_t i = 0;
-	while (!channel_found && i < animation->keyframes[current_keyframe].channels.size())
-	{
-		if (animation->keyframes[current_keyframe].channels[i].name == channel_name)
-		{
-			channel_found = true;
-			if (!animation->keyframes[current_keyframe].channels[i].is_rotated)
-			{
-				return false;
-			}
-
-			current_rotation = animation->keyframes[current_keyframe].channels[i].rotation;
-			next_rotation = animation->keyframes[next_keyframe].channels[i].rotation;
-		}
-		++i;
-	}
-
-	if (channel_found)
-	{
-		float delta = current_sample - current_keyframe;
-		rotation = Utils::Interpolate(current_rotation, next_rotation, delta);
-	}
-
-	return channel_found;
-}
-

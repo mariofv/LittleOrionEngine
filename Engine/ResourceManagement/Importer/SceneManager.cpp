@@ -4,6 +4,7 @@
 #include "Main/GameObject.h"
 #include "Main/Application.h"
 
+#include "Module/ModuleAnimation.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
@@ -43,13 +44,14 @@ void SceneManager::Save(const std::string &path,  GameObject * gameobject_to_sav
 			SavePrefab(current_prefab, current_game_object);
 			prefabs_config.push_back(current_prefab);
 		}
-		else if(current_game_object->prefab_reference == nullptr)
+		else if(!current_game_object->prefab_reference)
 		{
 			Config current_gameobject;
 			current_game_object->Save(current_gameobject);
 			game_objects_config.push_back(current_gameobject);
 		}
-		else 
+		
+		if(current_game_object->prefab_reference)
 		{
 			Config current_prefab_modified_component;
 			bool modified = SaveModifiedPrefabComponents(current_prefab_modified_component, current_game_object);
@@ -75,7 +77,6 @@ void SceneManager::Save(const std::string &path,  GameObject * gameobject_to_sav
 
 void SceneManager::Load(const std::string &path) const
 {
-
 	size_t readed_bytes;
 	char* scene_file_data = App->filesystem->Load(path.c_str(), readed_bytes);
 	std::string serialized_scene_string = scene_file_data;
@@ -83,7 +84,7 @@ void SceneManager::Load(const std::string &path) const
 
 	Config scene_config(serialized_scene_string);
 
-	std::unordered_map<int64_t, GameObject*> prefab_parents;
+	std::unordered_map<int64_t, std::vector<GameObject*>> prefab_parents;
 	std::vector<Config> prefabs_config;
 	scene_config.GetChildrenConfig("Prefabs", prefabs_config);
 	for (unsigned int i = 0; i < prefabs_config.size(); ++i)
@@ -92,7 +93,7 @@ void SceneManager::Load(const std::string &path) const
 		GameObject * loaded_gameobject = LoadPrefab(prefabs_config[i]);
 		if (parent_UUID != 0)
 		{
-			prefab_parents[parent_UUID] = loaded_gameobject;
+			prefab_parents[parent_UUID].push_back(loaded_gameobject);
 		}
 	}
 
@@ -117,12 +118,17 @@ void SceneManager::Load(const std::string &path) const
 		}
 		if (prefab_parents.find(created_game_object->UUID) != prefab_parents.end())
 		{
-			ComponentTransform previous_transform = prefab_parents[created_game_object->UUID]->transform;
-			prefab_parents[created_game_object->UUID]->SetParent(created_game_object);
-			prefab_parents[created_game_object->UUID]->transform = previous_transform;
+			for (auto & prefab_child : prefab_parents[created_game_object->UUID])
+			{
+				ComponentTransform previous_transform = prefab_child->transform;
+				prefab_child->SetParent(created_game_object);
+				prefab_child->transform = previous_transform;
+			}
+
 		}
 	}
 	App->scripts->ReLink();
+	App->animations->UpdateAnimationMeshes();
 }
 
 

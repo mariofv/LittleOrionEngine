@@ -30,8 +30,8 @@ public:
 	GameObject & operator<<(const GameObject& gameobject_to_copy);
 	GameObject & operator=(GameObject&& gameobject_to_move) = default;
 
-	bool IsEnabled() const;
-	void SetEnabled(bool able);
+	ENGINE_API bool IsEnabled() const;
+	ENGINE_API void SetEnabled(bool able);
 
 	void SetStatic(bool is_static);
 	bool IsStatic() const;
@@ -47,10 +47,12 @@ public:
 	void AddChild(GameObject* child);
 	void RemoveChild(GameObject* child);
 
-	ENGINE_API Component* CreateComponent(const Component::ComponentType type, const ComponentUI::UIType ui_type = ComponentUI::UIType::IMAGE);
+	ENGINE_API Component* CreateComponent(const Component::ComponentType type);
+	ENGINE_API Component* CreateComponentUI(const ComponentUI::UIType ui_type);
 	void RemoveComponent(Component* component);
 	ENGINE_API Component* GetComponent(const Component::ComponentType type) const;
 	ENGINE_API ComponentScript* GetComponentScript(const char* name) const;
+	ENGINE_API Component* GetComponentUI(const ComponentUI::UIType type) const;
 
 	void MoveUpInHierarchy() const;
 	void MoveDownInHierarchy() const;
