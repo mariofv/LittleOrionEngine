@@ -67,7 +67,13 @@ void PanelPopupSceneManagement::Render()
 		}
 
 		ConfirmationPopup();
-
+		
+		if (pending_to_be_closed)
+		{
+			pending_to_be_closed = false;
+			ImGui::CloseCurrentPopup();
+		}
+		
 		ImGui::EndPopup();
 	}
 
@@ -179,6 +185,7 @@ void PanelPopupSceneManagement::SetPopupSelection()
 {
 	has_selected = true;
 	ImGui::CloseCurrentPopup();
+	pending_to_be_closed = true;
 }
 
 void PanelPopupSceneManagement::ConfirmationPopup()
@@ -210,7 +217,8 @@ bool PanelPopupSceneManagement::HasSelected() const
 	return has_selected;
 }
 
-std::string PanelPopupSceneManagement::GetSelected() const
+std::string PanelPopupSceneManagement::GetSelected()
 {
+	has_selected = false;
 	return current_path->GetFullPath() + "/" + selected_file_name;
 }
