@@ -64,7 +64,7 @@ bool Application::Init()
 {
 	bool result = true;
 
-	for (auto &module : modules) 
+	for (auto& module : modules) 
 	{
 		bool ret = module->Init();
 		if (!ret) {
@@ -84,7 +84,7 @@ update_status Application::Update()
 		App->scene->OpenPendingScene();
 	}
 
-	for (auto &module : modules) 
+	for (auto& module : modules) 
 	{
 		update_status ret = module->PreUpdate();
 		if (ret == update_status::UPDATE_ERROR || ret == update_status::UPDATE_STOP) 
@@ -94,7 +94,7 @@ update_status Application::Update()
 	}
 	if (result == update_status::UPDATE_CONTINUE) 
 	{
-		for (auto &module : modules) 
+		for (auto& module : modules) 
 		{
 			update_status ret = module->Update();
 			if (ret == update_status::UPDATE_ERROR || ret == update_status::UPDATE_STOP) 
@@ -106,7 +106,7 @@ update_status Application::Update()
 
 	if (result == update_status::UPDATE_CONTINUE) 
 	{
-		for (auto &module : modules) 
+		for (auto& module : modules) 
 		{
 			update_status ret = module->PostUpdate();
 			if (ret == update_status::UPDATE_ERROR || ret == update_status::UPDATE_STOP) 

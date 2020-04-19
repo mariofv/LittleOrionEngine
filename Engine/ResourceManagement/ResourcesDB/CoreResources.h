@@ -31,11 +31,11 @@ enum class CoreResource
 static const uint32_t NUM_CORE_RESOURCES = (uint32_t)CoreResource::NUM_CORE_RESOURCES;
 
 static std::unordered_map<std::string, CoreResource> core_resources_uuid_mapping({
-	{ "/Resources/Meshes/Cube.mesh", CoreResource::CUBE },
-	{ "/Resources/Meshes/Sphere.mesh", CoreResource::SPHERE },
-	{ "/Resources/Meshes/Torus.mesh", CoreResource::TORUS },
-	{ "/Resources/Meshes/Cylinder.mesh", CoreResource::CYLINDER },
-	{ "/Resources/Meshes/Quad.mesh", CoreResource::QUAD },
+	{ "/Resources/Primitives/Cube/Cube_0.mesh", CoreResource::CUBE },
+	{ "/Resources/Primitives/Sphere/Sphere_0.mesh", CoreResource::SPHERE },
+	{ "/Resources/Primitives/Torus/Torus_0.mesh", CoreResource::TORUS },
+	{ "/Resources/Primitives/Cylinder/Cylinder_0.mesh", CoreResource::CYLINDER },
+	{ "/Resources/Primitives/Quad/Plane_0.mesh", CoreResource::QUAD },
 
 	{ "/Resources/Materials/default.mat", CoreResource::DEFAULT_MATERIAL },
 

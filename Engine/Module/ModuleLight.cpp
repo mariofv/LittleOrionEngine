@@ -63,7 +63,7 @@ void ModuleLight::RenderDirectionalLight(const float3& mesh_position)
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	size_t num_directional_lights_offset = App->program->uniform_buffer.lights_uniform_offset + 7 * sizeof(float);
-	glBufferSubData(GL_UNIFORM_BUFFER, num_directional_lights_offset, sizeof(float), &current_number_directional_lights_rendered);
+	glBufferSubData(GL_UNIFORM_BUFFER, num_directional_lights_offset, sizeof(int), &current_number_directional_lights_rendered);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
@@ -129,7 +129,7 @@ ComponentLight* ModuleLight::CreateComponentLight()
 
 void ModuleLight::RemoveComponentLight(ComponentLight* light_to_remove)
 {
-	auto it = std::find(lights.begin(), lights.end(), light_to_remove);
+	auto& it = std::find(lights.begin(), lights.end(), light_to_remove);
 	if (it != lights.end())
 	{
 		delete *it;

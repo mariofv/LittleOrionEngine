@@ -24,7 +24,7 @@ void OLQuadTreeNode::AddChild(OLQuadTreeNode * new_child)
 
 void OLQuadTreeNode::RemoveChild(const OLQuadTreeNode * child_to_remove)
 {
-	auto it = std::remove_if(children.begin(), children.end(), [child_to_remove](auto const & child)
+	const auto it = std::remove_if(children.begin(), children.end(), [child_to_remove](auto const& child)
 	{
 		return child == child_to_remove;
 	});
@@ -73,7 +73,7 @@ void OLQuadTreeNode::Split(std::vector<OLQuadTreeNode*> &generated_nodes)
 	generated_nodes.push_back(top_left_node);
 	generated_nodes.push_back(top_right_node);
 
-	for (auto &node : generated_nodes)
+	for (const auto& node : generated_nodes)
 	{
 		AddChild(node);
 	}
@@ -82,7 +82,7 @@ void OLQuadTreeNode::Split(std::vector<OLQuadTreeNode*> &generated_nodes)
 
 void OLQuadTreeNode::DistributeGameObjectsAmongChildren()
 {
-	for (auto &game_object : objects)
+	for (const auto& game_object : objects)
 	{
 		for (unsigned int i = 0; i < 4; ++i)
 		{
@@ -100,14 +100,14 @@ void OLQuadTreeNode::CollectIntersect(std::vector<GameObject*> &game_objects, co
 {
 	if (camera.IsInsideFrustum(box))
 	{
-		for (auto &object : objects)
+		for (const auto& object : objects)
 		{
 			if (object->IsVisible(camera))
 			{
 				game_objects.push_back(object);
 			}
 		}
-		for (auto &child : children)
+		for (const auto& child : children)
 		{
 			child->CollectIntersect(game_objects, camera);
 		}

@@ -80,13 +80,13 @@ Path* Path::Save(const char* file_name, const FileData& data, bool append)
 
 	if (file == NULL)
 	{
-		APP_LOG_ERROR("Error: Unable to open file! PhysFS Error: %s\n", PHYSFS_getLastErrorCode());
+		APP_LOG_ERROR("Error: Unable to open file! PhysFS Error: %s\n", PHYSFS_getLastError());
 		return nullptr;
 	}
 
 
 	PHYSFS_writeBytes(file, data.buffer, data.size);
-	APP_LOG_INFO("File %s saved!\n", file_path.c_str());
+	APP_LOG_INFO("File %s saved!\n", saved_file_path_string.c_str());
 	PHYSFS_close(file);
 
 	Path* saved_file_path = nullptr;

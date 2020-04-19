@@ -391,6 +391,27 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id
 	return false;
 }
 
+ENGINE_API bool ModuleInput::GetAnyKeyPressedDown() const
+{
+	for (auto& key : key_bible)
+	{
+		if (key.second == KeyState::DOWN)
+		{
+			return true;
+		}
+	}
+
+	for (auto& contr : controller_bible[0])
+	{
+		if (contr.second == KeyState::DOWN)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void ModuleInput::CreateGameInput(const GameInput& game_input)
 {
 	game_inputs[game_input.name] = game_input;
@@ -524,7 +545,7 @@ void ModuleInput::SaveGameInputs(Config& config)
 {
 	std::vector<Config> game_inputs_configs;
 
-	for (auto game_input : game_inputs)
+	for (auto& game_input : game_inputs)
 	{
 		Config game_inputs_config;
 		game_input.second.Save(game_inputs_config);

@@ -170,15 +170,17 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
 	num_rendered_tris = 0;
+	num_rendered_verts = 0;
 
 	GetMeshesToRender(&camera);
-	for (auto &mesh : meshes_to_render)
+	for (auto& mesh : meshes_to_render)
 	{
 		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
 		if (mesh->mesh_uuid != 0 && mesh->IsEnabled())
 		{
 			mesh->Render();
 			num_rendered_tris += mesh->mesh_to_render->GetNumTriangles();
+			num_rendered_verts += mesh->mesh_to_render->GetNumVerts();
 			glUseProgram(0);
 		}
 	}
@@ -218,7 +220,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 			meshes.begin(),
 			meshes.end(),
 			std::back_inserter(meshes_to_render),
-			[camera](auto mesh)
+			[camera](const auto& mesh)
 			{ 
 				return mesh->IsEnabled(); 
 			}
@@ -232,7 +234,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 				meshes.begin(),
 				meshes.end(),
 				std::back_inserter(meshes_to_render),
-				[camera](auto mesh)
+				[camera](const auto& mesh)
 			{
 				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera);
 			}
@@ -248,7 +250,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 				meshes.begin(),
 				meshes.end(),
 				std::back_inserter(meshes_to_render),
-				[camera](auto mesh)
+				[camera](const auto& mesh)
 			{
 				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && !mesh->owner->IsStatic();
 			}
@@ -258,7 +260,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 			std::vector<GameObject*> rendered_objects;
 			ol_quadtree.CollectIntersect(rendered_objects, *camera);
 
-			for (auto &object : rendered_objects)
+			for (const auto& object : rendered_objects)
 			{
 				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
 				meshes_to_render.push_back(object_mesh);
@@ -274,7 +276,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 				meshes.begin(),
 				meshes.end(),
 				std::back_inserter(meshes_to_render),
-				[camera](auto mesh)
+				[camera](const auto&  mesh)
 			{
 				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && !mesh->owner->IsStatic();
 			}
@@ -284,7 +286,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 			std::vector<GameObject*> rendered_objects;
 			ol_octtree.CollectIntersect(rendered_objects, *camera);
 
-			for (auto &object : rendered_objects)
+			for (const auto& object: rendered_objects)
 			{
 				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
 				meshes_to_render.push_back(object_mesh);
@@ -300,7 +302,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 				meshes.begin(),
 				meshes.end(),
 				std::back_inserter(meshes_to_render),
-				[camera](auto mesh)
+				[camera](const auto& mesh)
 			{
 				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && mesh->owner->IsStatic();
 			}
@@ -310,7 +312,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 			std::vector<GameObject*> rendered_objects;
 			ol_abbtree->GetIntersection(rendered_objects, camera);
 
-			for (auto &object : rendered_objects)
+			for (const auto& object : rendered_objects)
 			{
 				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
 				meshes_to_render.push_back(object_mesh);
@@ -324,7 +326,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 			std::vector<GameObject*> rendered_static_objects;
 			ol_quadtree.CollectIntersect(rendered_static_objects, *camera);
 
-			for (auto &object : rendered_static_objects)
+			for (const auto& object : rendered_static_objects)
 			{
 				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
 				meshes_to_render.push_back(object_mesh);
@@ -334,7 +336,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 			std::vector<GameObject*> rendered_dynamic_objects;
 			ol_abbtree->GetIntersection(rendered_dynamic_objects, camera);
 
-			for (auto &object : rendered_dynamic_objects)
+			for (const auto& object : rendered_dynamic_objects)
 			{
 				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
 				meshes_to_render.push_back(object_mesh);
@@ -453,7 +455,7 @@ ComponentMeshRenderer* ModuleRender::CreateComponentMeshRenderer()
 
 void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 {
-	auto it = std::find(meshes.begin(), meshes.end(), mesh_to_remove);
+	const auto it = std::find(meshes.begin(), meshes.end(), mesh_to_remove);
 	if (it != meshes.end())
 	{
 		delete *it;
@@ -466,7 +468,7 @@ void ModuleRender::GenerateQuadTree()
 	AABB2D global_AABB;
 	global_AABB.SetNegativeInfinity();
 
-	for (auto & mesh : meshes)
+	for (const auto&  mesh : meshes)
 	{
 		float minX = std::fmin(mesh->owner->aabb.bounding_box2D.minPoint.x, global_AABB.minPoint.x);
 		float minY = std::fmin(mesh->owner->aabb.bounding_box2D.minPoint.y, global_AABB.minPoint.y);
@@ -479,7 +481,7 @@ void ModuleRender::GenerateQuadTree()
 	}
 
 	ol_quadtree.Create(global_AABB);
-	for (auto & mesh : meshes)
+	for (const auto&  mesh : meshes)
 	{
 		ol_quadtree.Insert(*mesh->owner);
 	}
@@ -490,7 +492,7 @@ void ModuleRender::GenerateOctTree()
 	AABB global_AABB;
 	global_AABB.SetNegativeInfinity();
 
-	for (auto & mesh : meshes)
+	for (const auto&  mesh : meshes)
 	{
 		float minX = std::fmin(mesh->owner->aabb.bounding_box.minPoint.x, global_AABB.minPoint.x);
 		float minY = std::fmin(mesh->owner->aabb.bounding_box.minPoint.y, global_AABB.minPoint.y);
@@ -505,7 +507,7 @@ void ModuleRender::GenerateOctTree()
 	}
 
 	/*ol_octtree.Create(global_AABB);
-	for (auto & mesh : meshes)
+	for (const auto&  mesh : meshes)
 	{
 		ol_octtree.Insert(*mesh->owner);
 	}*/
@@ -553,7 +555,7 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 	BROFILER_CATEGORY("Do Raycast", Profiler::Color::HotPink);
 	GetCullingMeshes(App->cameras->scene_camera);
 	std::vector<ComponentMeshRenderer*> intersected_meshes;
-	for (auto & mesh : meshes_to_render)
+	for (const auto&  mesh : meshes_to_render)
 	{
 		if (mesh->owner->aabb.bounding_box.Intersects(ray))
 		{
@@ -565,7 +567,7 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 	std::vector<GameObject*> intersected;
 	GameObject* selected = nullptr;
 	float min_distance = INFINITY;
-	for (auto & mesh : intersected_meshes)
+	for (const auto&  mesh : intersected_meshes)
 	{
 		LineSegment transformed_ray = ray;
 		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
@@ -595,7 +597,7 @@ bool ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, float3& p
 {
 	GetCullingMeshes(App->cameras->scene_camera);
 	std::vector<ComponentMeshRenderer*> intersected_meshes;
-	for (auto & mesh : meshes_to_render)
+	for (const auto&  mesh : meshes_to_render)
 	{
 		if (mesh->owner->aabb.bounding_box.Intersects(ray))
 		{
@@ -605,12 +607,12 @@ bool ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, float3& p
 
 	bool intersected = false;
 	float min_distance = INFINITY;
-	for (auto & mesh : intersected_meshes)
+	for (const auto&  mesh : intersected_meshes)
 	{
 		LineSegment transformed_ray = ray;
 		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
 		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
-		for (auto & triangle : triangles)
+		for (const auto&  triangle : triangles)
 		{
 			float distance;
 			float3 intersected_point;
@@ -628,4 +630,9 @@ bool ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, float3& p
 int ModuleRender::GetRenderedTris() const
 {
 	return num_rendered_tris;
+}
+
+int ModuleRender::GetRenderedVerts() const
+{
+	return num_rendered_verts;
 }

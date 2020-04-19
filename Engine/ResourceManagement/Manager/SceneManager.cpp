@@ -16,6 +16,7 @@
 
 #include <stack>
 #include <unordered_map>
+#include "Brofiler/Brofiler.h"
 
 //THIS CLASS INCLUDE IMPORT AND LOAD FOR SCENE UNTIL SCENE IS CHANGE TO BE A RESOURCE
 void SceneManager::Save(const std::string &path, GameObject* gameobject_to_save) const
@@ -77,6 +78,7 @@ void SceneManager::Save(const std::string &path, GameObject* gameobject_to_save)
 
 void SceneManager::Load(const std::string& path) const
 {
+	BROFILER_CATEGORY("Scene: Load", Profiler::Color::NavajoWhite);
 	Path* scene_path = App->filesystem->GetPath(path);
 	FileData scene_data = scene_path->GetFile()->Load();
 
@@ -121,11 +123,12 @@ void SceneManager::Load(const std::string& path) const
 		}
 		if (prefab_parents.find(created_game_object->UUID) != prefab_parents.end())
 		{
-			for (auto & prefab_child : prefab_parents[created_game_object->UUID])
+			for (const auto&  prefab_child : prefab_parents[created_game_object->UUID])
 			{
 				ComponentTransform previous_transform = prefab_child->transform;
 				prefab_child->SetParent(created_game_object);
 				prefab_child->transform = previous_transform;
+				prefab_child->aabb.GenerateBoundingBox();
 			}
 
 		}
@@ -142,6 +145,7 @@ void SceneManager::SavePrefab(Config& config, GameObject* gameobject_to_save) co
 		config.AddUInt(gameobject_to_save->parent->UUID, "ParentUUID");
 	}
 	config.AddUInt(gameobject_to_save->prefab_reference->GetUUID(), "Prefab");
+	config.AddString(gameobject_to_save->name, "Name");
 
 	Config transform_config;
 	gameobject_to_save->transform.Save(transform_config);
@@ -157,8 +161,9 @@ void SceneManager::SavePrefabUUIDS(std::vector<Config>& original_UUIDS, GameObje
 	Config config;
 	config.AddUInt(gameobject_to_save->UUID, "UUID");
 	config.AddUInt(gameobject_to_save->original_UUID, "OriginalUUID");
+
 	original_UUIDS.push_back(config);
-	for (auto & child : gameobject_to_save->children)
+	for (const auto&  child : gameobject_to_save->children)
 	{
 		SavePrefabUUIDS(original_UUIDS, child);
 	}
@@ -166,6 +171,7 @@ void SceneManager::SavePrefabUUIDS(std::vector<Config>& original_UUIDS, GameObje
 }
 GameObject* SceneManager::LoadPrefab(const Config & config) const
 {
+	BROFILER_CATEGORY("Scene: Load Prefab", Profiler::Color::Snow);
 	uint32_t prefab_uuid;
 	prefab_uuid = config.GetUInt("Prefab", 0);
 
@@ -173,7 +179,7 @@ GameObject* SceneManager::LoadPrefab(const Config & config) const
 	std::unordered_map<int64_t, int64_t> UUIDS_pairs;
 	std::vector<Config> original_UUIDS;
 	config.GetChildrenConfig("UUIDS", original_UUIDS);
-	for (auto & child_UUIDS : original_UUIDS)
+	for (const auto&  child_UUIDS : original_UUIDS)
 	{
 		int64_t UUID = child_UUIDS.GetUInt("UUID", 0);
 		int64_t original = child_UUIDS.GetUInt("OriginalUUID", 0);
@@ -191,6 +197,8 @@ GameObject* SceneManager::LoadPrefab(const Config & config) const
 	Config transform_config;
 	config.GetChildConfig("Transform", transform_config);
 	instance->transform.Load(transform_config);
+	config.GetString("Name", instance->name, instance->name);
+
 	return instance;
 }
 
@@ -204,8 +212,13 @@ bool SceneManager::SaveModifiedPrefabComponents(Config& config, GameObject* game
 		config.AddChildConfig(transform_config, "Transform");
 		modified = true;
 	}
+	if (gameobject_to_save->modified_by_user)
+	{
+		config.AddString(gameobject_to_save->name, "Name");
+		modified = true;
+	}
 	std::vector<Config> gameobject_components_config;
-	for (auto & component : gameobject_to_save->components)
+	for (const auto&  component : gameobject_to_save->components)
 	{
 		if (component->modified_by_user || component->added_by_user)
 		{
@@ -225,19 +238,28 @@ bool SceneManager::SaveModifiedPrefabComponents(Config& config, GameObject* game
 
 void SceneManager::LoadPrefabModifiedComponents(const Config& config) const
 {
-
+	BROFILER_CATEGORY("Scene: Load Modiefied", Profiler::Color::Aquamarine);
 	GameObject * prefab_child = App->scene->GetGameObject(config.GetUInt("UUID", 0));
+	if (prefab_child == nullptr)
+	{
+		return;
+	}
 	if (config.config_document.HasMember("Transform"))
 	{
 		Config transform_config;
 		config.GetChildConfig("Transform", transform_config);
 
 		prefab_child->transform.Load(transform_config);
+		prefab_child->transform.modified_by_user = true;
 	}
-
+	if (config.config_document.HasMember("Name"))
+	{
+		config.GetString("Name", prefab_child->name, prefab_child->name);
+		prefab_child->modified_by_user = true;
+	}
 	std::vector<Config> prefab_components_config;
 	config.GetChildrenConfig("Components", prefab_components_config);
-	for (auto & component_config : prefab_components_config)
+	for (const auto& component_config : prefab_components_config)
 	{
 		uint64_t component_type_uint = component_config.GetUInt("ComponentType", 0);
 		assert(component_type_uint != 0);

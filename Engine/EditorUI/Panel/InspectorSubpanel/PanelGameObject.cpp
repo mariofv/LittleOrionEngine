@@ -46,7 +46,9 @@ void PanelGameObject::Render(GameObject* game_object)
 	ImGui::Text(ICON_FA_CUBE);
 
 	ImGui::SameLine();
-	ImGui::InputText("###GameObject name Input", &game_object->name);
+	if (ImGui::InputText("###GameObject name Input", &game_object->name))
+	{		game_object->modified_by_user = true;
+	}
 
 	ImGui::SameLine();
 	if (ImGui::Checkbox("Static", &game_object->is_static))

@@ -12,6 +12,8 @@
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
+#include "DebugModeScript.h"
+
 #include "imgui.h"
 
 
@@ -31,6 +33,9 @@ void CameraController::Awake()
 {
 	camera_component = (ComponentCamera*)camera->GetComponent(Component::ComponentType::CAMERA);
 
+	ComponentScript* component_debug = debug->GetComponentScript("DebugModeScript");
+	debug_mode = (DebugModeScript*)component_debug->script;
+
 	player_movement_component = player->GetComponentScript("PlayerController");
 	player_movement_script = (PlayerController*)player_movement_component->script;
 	rotation = owner->transform.GetRotation();
@@ -45,14 +50,22 @@ void CameraController::Start()
 // Update is called once per frame
 void CameraController::Update()
 {
-
-	if (App->input->GetKey(KeyCode::Alpha1))
+	if (!debug_mode->debug_enabled && god_mode) 
 	{
 		owner->transform.SetRotation(rotation);
 		god_mode = !god_mode;
 		ActivePlayer();
 	}
-	if (god_mode) 
+	if (App->input->GetKeyDown(KeyCode::Alpha1)||App->input->GetControllerButtonDown(ControllerCode::Back))
+	{ 
+		if(debug_mode->debug_enabled || god_mode)
+		{
+			owner->transform.SetRotation(rotation);
+			god_mode = !god_mode;
+			ActivePlayer();
+		}
+	}
+	if (god_mode && debug_mode->debug_enabled)
 	{
 		GodCamera();
 	}
@@ -92,11 +105,11 @@ void CameraController::GodCamera()
 	{
 		camera_component->MoveRight();
 	}
-	if (App->input->GetKey(KeyCode::E))
+	if (App->input->GetKey(KeyCode::E) || App->input->GetControllerButton(ControllerCode::DownDpad))
 	{
 		camera_component->MoveDown();
 	}
-	if (App->input->GetKey(KeyCode::Q))
+	if (App->input->GetKey(KeyCode::Q) || App->input->GetControllerButton(ControllerCode::UpDpad))
 	{
 		camera_component->MoveUp();
 	}
@@ -117,6 +130,22 @@ void CameraController::GodCamera()
 		camera_component->RotateYaw(rotation_speed);
 	}
 	//TODO MOVE AND ROTATE WITH JOYSTICK
+	float2 right_axis = App->input->GetAxisControllerRaw(ControllerAxis::RIGHT_JOYSTICK_RAW);
+	float3 right_axis_direction = float3(right_axis.x, 0.0f, right_axis.y);
+
+	if (!right_axis_direction.Equals(float3::zero))
+	{
+		float3 direction = right_axis_direction * rotation_speed +  owner->transform.GetTranslation();;
+		owner->transform.LookAt(direction);
+	}
+	float2 left_axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW);
+	float3 left_axis_direction = float3(left_axis.x, 0.0f, left_axis.y);
+
+	if (!left_axis_direction.Equals(float3::zero))
+	{
+		float3 direction = left_axis_direction * rotation_speed + owner->transform.GetTranslation();;
+		owner->transform.SetTranslation(direction);
+	}
 }
 
 void CameraController::ActivePlayer()
@@ -134,7 +163,7 @@ void CameraController::ActivePlayer()
 
 void CameraController::FollowPlayer() 
 {
-	float3 offset(0.f, 9.f, 12.f);
+	float3 offset(0.f, 15.f, 24.f);
 	float3 new_position = player->transform.GetTranslation() + offset;
 	owner->transform.SetTranslation(new_position);
 
@@ -146,11 +175,13 @@ void CameraController::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&camera);
 	public_gameobjects.push_back(&player);
+	public_gameobjects.push_back(&debug);
 
 	variable_names.push_back(GET_VARIABLE_NAME(camera));
 	variable_names.push_back(GET_VARIABLE_NAME(player));
+	variable_names.push_back(GET_VARIABLE_NAME(debug));
 
-	for (int i = 0; i < public_gameobjects.size(); ++i)
+	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		name_gameobjects.push_back(is_object);
 		go_uuids.push_back(0);

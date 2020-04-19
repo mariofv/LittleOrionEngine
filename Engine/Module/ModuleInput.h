@@ -421,6 +421,8 @@ public:
 	ENGINE_API bool GetGameInputDown(const char* name, PlayerID player_id = PlayerID::ONE);
 	ENGINE_API bool GetGameInputUp(const char* name, PlayerID player_id = PlayerID::ONE);
 
+	ENGINE_API bool GetAnyKeyPressedDown() const;
+
 	void CreateGameInput(const GameInput& game_input);
 	void DeleteGameInput(const GameInput& game_input);
 

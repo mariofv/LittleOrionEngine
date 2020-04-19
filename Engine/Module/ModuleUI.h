@@ -1,5 +1,6 @@
 #ifndef _MODULEUI_H_
 #define _MODULEUI_H_
+#define ENGINE_EXPORTS
 
 #include "Component/ComponentUI.h"
 #include "Module.h"
@@ -47,6 +48,7 @@ public:
 	void RemoveComponentUI(ComponentUI*);
 	
 	void InitGlyph();
+	ENGINE_API void SortComponentsUI();
 
 private:
 	void RenderUIGameObject(GameObject*, float4x4*);
@@ -62,6 +64,7 @@ private:
 	FT_Face face;
 	unsigned int text_texture;
 	std::vector<ComponentUI*> ui_elements;
+	std::vector<ComponentUI*> ordered_ui;
 
 };
 

@@ -1,4 +1,5 @@
 #include "AnimController.h"
+
 #include "Component/ComponentMeshRenderer.h"
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
@@ -57,7 +58,6 @@ void AnimController::GetClipTransform( uint32_t skeleton_uuid, std::vector<math:
 		}
 	}
 }
-
 bool AnimController::Update()
 {
 	for (auto & playing_clip : playing_clips)

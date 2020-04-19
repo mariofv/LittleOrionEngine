@@ -129,7 +129,7 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;GAMEPLAYSYSTEM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\Libraries\include\ImGuizmo;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Libraries\include\ImGuizmo;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries/include\FreeTypeFont;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -172,7 +172,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;GAMEPLAYSYSTEM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\Libraries\include\ImGuizmo;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Libraries\include\ImGuizmo;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries/include\FreeTypeFont;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -198,7 +198,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;GAMEPLAYSYSTEM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\Libraries\include\ImGuizmo;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Libraries\include\ImGuizmo;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries/include\FreeTypeFont;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -255,6 +255,7 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="src\Script\DamageScript.h" />
+    <ClInclude Include="src\Script\DebugModeScript.h" />
     <ClInclude Include="src\Script\EndOfLevelScript.h" />
     <ClInclude Include="src\Script\ExampleScript.h" />
     <ClInclude Include="src\Script\MenuLogic.h" />
@@ -265,9 +266,11 @@
     <ClInclude Include="src\Script\Script.h" />
     <ClInclude Include="src\Script\TriggerActionScript.h" />
     <ClInclude Include="src\Script\TriggerGravity.h" />
+    <ClInclude Include="src\Script\WorldManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\DamageScript.cpp" />
+    <ClCompile Include="src\Script\DebugModeScript.cpp" />
     <ClCompile Include="src\Script\EndOfLevelScript.cpp" />
     <ClCompile Include="src\Script\ExampleScript.cpp" />
     <ClCompile Include="src\Script\MenuLogic.cpp" />
@@ -278,6 +281,7 @@
     <ClCompile Include="src\Script\Script.cpp" />
     <ClCompile Include="src\Script\TriggerActionScript.cpp" />
     <ClCompile Include="src\Script\TriggerGravity.cpp" />
+    <ClCompile Include="src\Script\WorldManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

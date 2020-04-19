@@ -56,7 +56,7 @@ FileData SkeletonImporter::CreateBinary(const Skeleton & skeleton) const
 
 	uint32_t size = sizeof(uint32_t);
 
-	for (auto & joint : skeleton.skeleton)
+	for (const auto&  joint : skeleton.skeleton)
 	{
 		size += sizeof(uint32_t) * 2 + joint.name.size() + sizeof(float4x4);
 	}
@@ -68,7 +68,7 @@ FileData SkeletonImporter::CreateBinary(const Skeleton & skeleton) const
 	memcpy(cursor, &num_bones, bytes);
 	cursor += bytes; // Store bones
 
-	for (auto & joint : skeleton.skeleton)
+	for (const auto& joint : skeleton.skeleton)
 	{
 
 		uint32_t name_size = joint.name.size();

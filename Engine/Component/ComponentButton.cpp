@@ -5,7 +5,6 @@
 #include "Main/Gameobject.h"
 
 #include "Module/ModuleScene.h"
-
 ComponentButton::ComponentButton() : ComponentUI(ComponentUI::UIType::BUTTON)
 {
 }
@@ -19,17 +18,12 @@ ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, Compon
 	}
 }
 
-ComponentButton::~ComponentButton()
-{
-	ComponentUI::~ComponentUI();
-}
-
 void ComponentButton::Render(float4x4* projection)
 {
 	owner->transform_2d.position.z = 1;
 	
 	ComponentUI* text = nullptr;
-	for (auto child : owner->children)
+	for (const auto& child : owner->children)
 	{
 		text = static_cast<ComponentUI*>(child->GetComponentUI(ComponentUI::UIType::TEXT));
 		if (text)

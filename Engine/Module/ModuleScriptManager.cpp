@@ -15,11 +15,14 @@
 
 
 
+
 bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
-
+	GetCurrentPath();
 #if GAME
+	//TODO USE THE NEW FILESYSTEM TO DO THIS
+	CopyFile(SCRIPTS_DLL_PATH, working_directory.c_str(), false);
 	gameplay_dll = LoadLibrary(SCRIPT_DLL_FILE);
 	return true;
 #endif
@@ -28,6 +31,7 @@ bool ModuleScriptManager::Init()
 	scripts_list_file_path = App->filesystem->GetPath(RESOURCES_SCRIPT_PATH + std::string("/") + RESOURCES_SCRIPT_LIST_FILENAME);
 
 	GetCurrentPath();
+
 	LoadScriptList();
 	InitDLL();
 	init_timestamp_dll = dll_file->modification_timestamp;
@@ -117,7 +121,7 @@ void ModuleScriptManager::InitResourceScript()
 {
 	if (gameplay_dll != nullptr)
 	{
-		for (auto &component_script : scripts)
+		for (const auto& component_script : scripts)
 		{
 			CREATE_SCRIPT script_func = (CREATE_SCRIPT)GetProcAddress(gameplay_dll, (component_script->name + "DLL").c_str());
 			if (script_func != nullptr)
@@ -156,7 +160,7 @@ ComponentScript* ModuleScriptManager::CreateComponentScript()
 
 void ModuleScriptManager::RemoveComponentScript(ComponentScript* script_to_remove)
 {
-	auto it = std::find(scripts.begin(), scripts.end(), script_to_remove);
+	const auto it = std::find(scripts.begin(), scripts.end(), script_to_remove);
 	if (it != scripts.end())
 	{
 		delete *it;
@@ -198,11 +202,11 @@ void ModuleScriptManager::SaveScriptList()
 
 void ModuleScriptManager::InitScripts()
 {
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		component_script->AwakeScript();
 	}
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		component_script->StartScript();
 	}
@@ -210,7 +214,7 @@ void ModuleScriptManager::InitScripts()
 
 void ModuleScriptManager::RunScripts()
 {
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		component_script->Update();
 	}
@@ -218,7 +222,7 @@ void ModuleScriptManager::RunScripts()
 
 void ModuleScriptManager::RemoveScriptPointers()
 {
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		component_script->script = nullptr;
 	}
@@ -245,9 +249,10 @@ void ModuleScriptManager::ReloadDLL()
 		{
 			RemoveScriptPointers();
 			remove(SCRIPT_DLL_FILE);
+			InitDLL();
 		}
+		
 	}
-	InitDLL();
 	InitResourceScript();
 	LoadVariables(config_list);
 }
@@ -361,7 +366,7 @@ bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll
 	CloseHandle(patched_dll);
 
 	// clean up
-	APP_LOG_INFO("Patching DLL succeeded!!!.\n");
+	APP_LOG_INFO("Patching DLL Succeeded.\n");
 }
 
 void ModuleScriptManager::Refresh()
@@ -372,7 +377,7 @@ void ModuleScriptManager::Refresh()
 
 void ModuleScriptManager::ReLink()
 {
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		component_script->script->Link();
 	}
@@ -380,7 +385,7 @@ void ModuleScriptManager::ReLink()
 
 void ModuleScriptManager::SaveVariables(std::unordered_map<uint64_t, Config>& config_list)
 {
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		if (component_script->script != nullptr) 
 		{
@@ -394,7 +399,7 @@ void ModuleScriptManager::SaveVariables(std::unordered_map<uint64_t, Config>& co
 
 void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> config_list)
 {
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		if (component_script->script != nullptr)
 		{

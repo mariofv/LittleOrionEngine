@@ -11,7 +11,7 @@ class ComponentCanvas : public ComponentUI
 public:
 	ComponentCanvas();
 	ComponentCanvas(GameObject * owner);
-	~ComponentCanvas();
+	~ComponentCanvas() = default;
 
 
 	void Delete() override;
