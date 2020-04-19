@@ -9,7 +9,7 @@ public:
 	SceneImporter() : Importer(ResourceType::SCENE) {};
 	~SceneImporter() = default;
 
-	FileData ExtractData(Path& assets_file_path) const override;
+	FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const override;
 };
 
 #endif //_SCENEIMPORTER_H_

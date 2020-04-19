@@ -37,7 +37,7 @@ private:
 };
 
 
-namespace Loader
+namespace ResourceManagement
 {
 	template<>
 	static std::shared_ptr<Scene> Load(Metafile* metafile, const FileData& resource_data)

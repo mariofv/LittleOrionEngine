@@ -104,6 +104,10 @@ public:
 		}
 
 		Metafile* metafile = resource_DB->GetEntry(uuid);
+		if(metafile == nullptr)
+		{
+			int i = 0;
+		}
 		assert(metafile != nullptr);
 		if (!App->filesystem->Exists(metafile->exported_file_path))
 		{

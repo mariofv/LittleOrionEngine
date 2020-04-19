@@ -15,7 +15,6 @@ std::shared_ptr<Scene> SceneManager::Load(Metafile* metafile, const FileData& re
 
 	Config scene_config(serialized_scene_string);
 	std::shared_ptr<Scene> new_scene = std::make_shared<Scene>(metafile, scene_config);
-	new_scene->Load();
 
 	return new_scene;
 }

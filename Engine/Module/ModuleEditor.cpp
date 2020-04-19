@@ -125,11 +125,11 @@ update_status ModuleEditor::Update()
 #endif
 
 	//ImGui::ShowStyleEditor();
-	ImGui::ShowDemoWindow();
+	//ImGui::ShowDemoWindow();
 
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
-		OpenScene(DEFAULT_SCENE_PATH);
+		//OpenScene(DEFAULT_SCENE_PATH);
 		inital_scene_loaded = true;
 	}
 
