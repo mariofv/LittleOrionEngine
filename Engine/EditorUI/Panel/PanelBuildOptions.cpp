@@ -35,7 +35,7 @@ void PanelBuildOptions::Render()
 
 		if(ImGui::Button("Add current scene"))
 		{
-			App->scene->build_options.get()->AddScene(App->scene->current_scene.get()->resource_metafile->uuid, App->scene->current_scene.get()->resource_metafile->exported_file_path, App->scene->current_scene.get()->GetName());
+			App->scene->build_options.get()->AddScene(App->scene->current_scene.get()->GetUUID(), App->scene->current_scene.get()->GetExportedFile(), App->scene->current_scene.get()->GetName());
 		}
 
 		ImGui::SameLine();

@@ -19,14 +19,15 @@
 #include <stack>
 #include <unordered_map>
 
-Scene::Scene() : Resource(nullptr)
+Scene::Scene() : Resource(0)
 {
 	scene_config = Config();
 }
 
-Scene::Scene(Metafile* resource_metafile, const Config& config) : Resource(resource_metafile)
+Scene::Scene(uint32_t uuid, const Config& config) : Resource(uuid)
 {
 	scene_config = Config(config);
+	exported_file_path = MetafileManager::GetUUIDExportedFile(GetUUID());
 }
 
 void Scene::Save(GameObject* gameobject_to_save) const
@@ -79,7 +80,7 @@ void Scene::Save(GameObject* gameobject_to_save) const
 
 void Scene::Load()
 {
-	Path* scene_path = App->filesystem->GetPath(resource_metafile->exported_file_path);
+	Path* scene_path = App->filesystem->GetPath(exported_file_path);
 	FileData scene_data = scene_path->GetFile()->Load();
 
 	size_t readed_bytes = scene_data.size;
@@ -143,11 +144,13 @@ const std::string Scene::GetSerializedConfig() const
 	return serialized_scene_string;
 }
 
-void Scene::SaveSerializedConfig() const
+void Scene::SaveSerializedConfig(const std::string& assets_file_path)
 {
 	std::string serialized_scene_string = GetSerializedConfig();
-	App->filesystem->Save(resource_metafile->imported_file_path.c_str(), serialized_scene_string);
-	App->filesystem->Save(resource_metafile->exported_file_path.c_str(), serialized_scene_string);
+	App->filesystem->Save(assets_file_path.c_str(), serialized_scene_string);
+	App->filesystem->Save(exported_file_path.c_str(), serialized_scene_string);
+
+	ComputeNameScene(assets_file_path);
 }
 
 void Scene::SavePrefab(Config & config, GameObject * gameobject_to_save) const
@@ -272,4 +275,33 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 			created_component->added_by_user = true;
 		}
 	}
+}
+
+std::string Scene::GetName() const
+{
+	return name;
+}
+
+std::string Scene::GetExportedFile() const
+{
+	return exported_file_path;
+}
+
+bool Scene::ComputeNameScene(const std::string& assets_path)
+{
+	std::string aux_path(assets_path);
+
+	std::size_t founddot = aux_path.find_last_of(".");
+	if (founddot == std::string::npos || founddot == 0) {
+		return false ;
+	}
+
+	std::size_t foundbar = aux_path.find_last_of("/");
+	if (foundbar == std::string::npos || foundbar == 0) {
+		return false;
+	}
+
+	name = aux_path.substr(foundbar, founddot);
+
+	return true;
 }
