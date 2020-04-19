@@ -15,14 +15,14 @@ struct Options
 	std::string library_path;
 	std::string name;
 
-	void Save(Config config) const
+	void Save(Config& config) const
 	{
 		config.AddUInt(uuid, "uuid");
 		config.AddString(library_path, "library_path");
 		config.AddString(name, "name");
 	}
 
-	void Load(Config config)
+	void Load(Config& config)
 	{
 		uuid = config.GetUInt("uuid", 0);
 		config.GetString("library_path", library_path, "Error");

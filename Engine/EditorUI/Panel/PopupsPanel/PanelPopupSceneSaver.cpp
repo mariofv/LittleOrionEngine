@@ -4,6 +4,7 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleScene.h"
+#include "ResourceManagement/Manager/SceneManager.h"
 
 #include <algorithm>    // std::find
 #include <Brofiler/Brofiler.h>
@@ -80,8 +81,15 @@ void PanelPopupSceneSaver::Render()
 	if (HasSelected())
 	{
 		APP_LOG_INFO("Saving %s scene.", GetSelected())
-		App->editor->SaveScene(GetSelected());
-		App->editor->current_scene_path = GetSelected();
+		if (App->filesystem->Exists(GetSelected()))
+		{
+			App->editor->SaveScene(GetSelected());
+		}
+		else
+		{
+			SceneManager::Create(GetSelected());
+			App->editor->current_scene_path = GetSelected();
+		}
 	}
 }
 

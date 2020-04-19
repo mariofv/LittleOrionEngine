@@ -88,9 +88,7 @@ bool BuildOptions::SaveOptions() const
 	std::string serialized_build_options_string;
 	options_config.GetSerializedString(serialized_build_options_string);
 
-	Path* game_inputs_folder_path = App->filesystem->GetPath(RESOURCES_BUILD_OPTIONS);
-
-	game_inputs_folder_path->Save(RESOURCES_GAME_INPUTS_FILENAME, serialized_build_options_string);
+	App->filesystem->Save(RESOURCES_BUILD_OPTIONS, serialized_build_options_string);
 
 	return true;
 }
