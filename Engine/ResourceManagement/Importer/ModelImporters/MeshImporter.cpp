@@ -88,8 +88,8 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 				new_vertex.weights[j] = vertex_skinning__info[i].second[j] * normalize_factor;
 				weights_sum += new_vertex.weights[j];
 			}
-			int weights_sum_round = std::round(weights_sum);
-			assert(weights_sum_round <= 1 && weights_sum_round >= 0);
+			float weights_sum_round = std::round(weights_sum);
+			assert(weights_sum_round <= 1.0f && weights_sum_round >= 0.0f);
 			new_vertex.num_joints = vertex_skinning__info[i].second.size();
 		}
 		vertices.push_back(new_vertex);
@@ -106,7 +106,7 @@ std::vector<std::pair<std::vector<uint32_t>, std::vector<float>>> MeshImporter::
 	{
 		aiBone * mesh_bone = mesh->mBones[j];
 		std::string mesh_bone_name(mesh_bone->mName.C_Str()); //TODO: Change to use hash instead of name everywhere (Mesh, animation, skeleton)
-		const auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [&mesh_bone_name](const Skeleton::Joint & joint)
+		auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [&mesh_bone_name](const Skeleton::Joint & joint)
 		{
 			return joint.name == mesh_bone_name;
 		});

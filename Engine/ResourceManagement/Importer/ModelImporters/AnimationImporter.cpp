@@ -34,7 +34,7 @@ FileData AnimationImporter::ExtractAnimationFromAssimp(const aiScene* scene, con
 }
 
 
-void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const
+void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float unit_scale_factor) const
 {
 	std::map<std::string, std::vector<aiNodeAnim *>> aiNode_by_channel;
 
@@ -105,7 +105,7 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 			{
 				translation = animation_transform.Col3(3);
 			}
-			translation *= scale_factor;
+			translation *= unit_scale_factor;
 
 			Animation::Channel imported_channel{ channel_set.first, translation, rotation };
 			keyframes[i].push_back(imported_channel);
