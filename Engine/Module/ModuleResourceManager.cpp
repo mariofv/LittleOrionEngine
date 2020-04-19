@@ -92,7 +92,7 @@ bool ModuleResourceManager::CleanUp()
 	 thread_comunication.finished_loading = false;
 	 thread_comunication.total_items = App->filesystem->assets_folder_path->total_sub_files_number;
 
-	 CleanInconsistenciesInDirectory(*App->filesystem->assets_folder_path); // Clean all incorrect meta in the folder Assets.
+	 //CleanInconsistenciesInDirectory(*App->filesystem->assets_folder_path); // Clean all incorrect meta in the folder Assets.
 	 ImportAssetsInDirectory(*App->filesystem->assets_folder_path); // Import all assets in folder Assets. All metafiles in Assets are correct"
 	// TODO: We need also to iterate over the library folder and to delete binaries that doesnt have corresponding metafiles
 	 thread_comunication.finished_loading = true;

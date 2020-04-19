@@ -203,6 +203,9 @@ void StateMachine::Save(Config& config) const
 
 void StateMachine::Load(const Config& config)
 {
+	this->clips.clear();
+	this->transitions.clear();
+	this->states.clear();
 	std::vector<Config> clips_config;
 	config.GetChildrenConfig("Clips", clips_config);
 	for (auto& clip_config : clips_config)

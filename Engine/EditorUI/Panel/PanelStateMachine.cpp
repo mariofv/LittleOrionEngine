@@ -4,6 +4,7 @@
 #include "EditorUI/Helper/ImGuiHelper.h"
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleFileSystem.h"
 #include "ResourceManagement/Resources/StateMachine.h"
 
 #include <imgui_internal.h>
@@ -339,8 +340,15 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 {
 	nodes.clear();
 	links.clear();
-	state_machine = App->resources->Load<StateMachine>(state_machine_uuid);
 
+	state_machine = App->resources->Load<StateMachine>(state_machine_uuid);
+	Path* state_machine_json_path = App->filesystem->GetPath(state_machine->resource_metafile->imported_file_path);
+	FileData state_machine_data = state_machine_json_path->GetFile()->Load();
+
+	char* state_machine_data_buffer = (char*)state_machine_data.buffer;
+	std::string serialized_state_machine_string = std::string(state_machine_data_buffer, state_machine_data.size);
+
+	state_machine->Load(serialized_state_machine_string);
 	//Tranform form state machine to ui
 	for (auto & state : state_machine->states)
 	{

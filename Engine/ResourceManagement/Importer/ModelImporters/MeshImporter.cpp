@@ -68,12 +68,12 @@ FileData MeshImporter::ExtractMeshFromAssimp(const aiMesh* mesh, const aiMatrix4
 		}
 		if (vertex_skinning__info.size() > 0)
 		{
-			assert(vertex_skinning__info[i].first.size() <= 4);
+			assert(vertex_skinning__info[i].first.size() <= MAX_JOINTS);
 			for (size_t j = 0; j < vertex_skinning__info[i].first.size(); ++j)
 			{
 				new_vertex.joints[j] = vertex_skinning__info[i].first[j];
 			}
-			assert(vertex_skinning__info[i].second.size() <= 4);
+			assert(vertex_skinning__info[i].second.size() <= MAX_JOINTS);
 
 			float weights_sum = 0;
 			for (size_t j = 0; j < vertex_skinning__info[i].second.size(); ++j)
