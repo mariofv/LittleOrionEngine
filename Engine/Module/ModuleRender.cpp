@@ -152,7 +152,6 @@ void ModuleRender::Render() const
 
 	BROFILER_CATEGORY("Swap Window (VSYNC)", Profiler::Color::Aquamarine);
 	SDL_GL_SwapWindow(App->window->window);
-	App->time->EndFrame();
 }
 
 void ModuleRender::RenderFrame(const ComponentCamera &camera)
