@@ -187,7 +187,6 @@ void StateMachine::Save(Config& config) const
 	config.AddUInt(default_state, "Default");
 }
 
-
 void StateMachine::Load(const Config& config)
 {
 	std::vector<Config> clips_config;

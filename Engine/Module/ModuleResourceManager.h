@@ -107,7 +107,7 @@ public:
 		assert(metafile != nullptr);
 		if (!App->filesystem->Exists(metafile->exported_file_path))
 		{
-			APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, metafile->exported_file_path);
+			APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, metafile->exported_file_path.c_str());
 			return nullptr;
 		}
 
