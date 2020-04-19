@@ -77,12 +77,24 @@ std::shared_ptr<State> StateMachine::GetState(uint64_t state_hash) const
 	return nullptr;
 }
 
-std::shared_ptr<Transition> StateMachine::GetTransition(const std::string & trigger, uint64_t state_hash) const
+std::shared_ptr<Transition> StateMachine::GetTriggerTransition(const std::string & trigger, uint64_t state_hash) const
 {
 	uint64_t trigger_hash = std::hash<std::string>{}(trigger);
 	for (auto & transition : transitions)
 	{
 		if (transition->source_hash == state_hash &&  transition->trigger_hash == trigger_hash)
+		{
+			return transition;
+		}
+	}
+	return nullptr;
+}
+
+std::shared_ptr<Transition> StateMachine::GetAutomaticTransition(uint64_t state_hash) const
+{
+	for (auto & transition : transitions)
+	{
+		if (transition->source_hash == state_hash && transition->automatic)
 		{
 			return transition;
 		}

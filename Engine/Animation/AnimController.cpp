@@ -17,6 +17,7 @@ void AnimController::GetClipTransform( uint32_t skeleton_uuid, std::vector<math:
 		{
 			continue;
 		}
+		float weight = j != ClipType::ACTIVE ? playing_clips[j].current_time / (active_transition->interpolation_time * 1.0f) : 0.0f;
 		float current_keyframe = ((playing_clips[j].current_time*(clip->animation->frames - 1)) / clip->animation_time) + 1;
 		size_t first_keyframe_index = static_cast<size_t>(std::floor(current_keyframe));
 		size_t second_keyframe_index = static_cast<size_t>(std::ceil(current_keyframe));
@@ -39,14 +40,9 @@ void AnimController::GetClipTransform( uint32_t skeleton_uuid, std::vector<math:
 
 				float3 position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
 				Quat rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
-				if (j == ClipType::NEXT)
+				if (j != ClipType::ACTIVE)
 				{
-					float weight = playing_clips[j].current_time / (active_transition->interpolation_time * 1.0f);
 					pose[joint_index] = Utils::Interpolate(pose[joint_index], float4x4::FromTRS(position, rotation, float3::one), weight);
-					if(weight > 1.0f)
-					{
-						apply_transition = true;
-					}
 				}
 				else
 				{
@@ -54,6 +50,10 @@ void AnimController::GetClipTransform( uint32_t skeleton_uuid, std::vector<math:
 
 				}	
 			}
+		}
+		if (weight > 1.0f)
+		{
+			apply_transition = true;
 		}
 	}
 }
@@ -64,46 +64,57 @@ bool AnimController::Update()
 	{
 		 playing_clip.Update();
 	}
-
+	if (active_transition && active_transition->automatic)
+	{
+		if (playing_clips[ClipType::ACTIVE].current_time + active_transition->interpolation_time + 100 >= playing_clips[ClipType::ACTIVE].clip->animation_time)
+		{
+			playing_clips[ClipType::NEXT].clip = state_machine->GetState(active_transition->target_hash)->clip;
+			playing_clips[ClipType::NEXT].playing = true;
+		}
+	}
 	if (apply_transition && active_transition)
 	{
 		FinishActiveState();
 	}
-	return playing_clips[0].playing;
+	return playing_clips[ClipType::ACTIVE].playing;
 }
 
-void AnimController::SetActiveAnimation()
+void AnimController::SetStateMachine(std::shared_ptr<StateMachine> & state_machine)
 {
-	active_state = state_machine->GetDefaultState();
-	if (active_state != nullptr && active_state->clip != nullptr)
+	this->state_machine = state_machine;
+	SetActiveState(state_machine->GetDefaultState());
+}
+
+void AnimController::SetActiveState(std::shared_ptr<State> & state)
+{
+	if (state != nullptr && state->clip != nullptr)
 	{
-		playing_clips[0] = { active_state->clip };
+		active_state = state;
+		playing_clips[ClipType::ACTIVE] = { active_state->clip };
+		active_transition = state_machine->GetAutomaticTransition(active_state->name_hash);
 	}
 }
 
 void AnimController::StartNextState(const std::string& trigger)
 {
-	active_transition = state_machine->GetTransition(trigger, active_state->name_hash);
-	if (!active_transition)
+	std::shared_ptr<Transition> next_transition = state_machine->GetTriggerTransition(trigger, active_state->name_hash);
+	if (!next_transition)
 	{
 		return;
 	}
 	std::shared_ptr<State> next_state;
-	if (active_transition)
-	{
-		next_state = state_machine->GetState(active_transition->target_hash);
-		playing_clips[1] ={ next_state->clip };
-		playing_clips[1].playing = true;
-	}
+	active_transition = next_transition;
+	next_state = state_machine->GetState(active_transition->target_hash);
+	playing_clips[1] ={ next_state->clip };
+	playing_clips[1].playing = true;
 }
 
 void AnimController::FinishActiveState()
 {
 	std::shared_ptr<State> next_state = state_machine->GetState(active_transition->target_hash);
-	active_state = next_state;
-	playing_clips[0] = playing_clips[1];
-	playing_clips[1] = {};
-	active_transition = nullptr;
+	SetActiveState(next_state);
+	playing_clips[ClipType::ACTIVE] = playing_clips[ClipType::NEXT];
+	playing_clips[ClipType::NEXT] = {};
 	apply_transition = false;
 }
 

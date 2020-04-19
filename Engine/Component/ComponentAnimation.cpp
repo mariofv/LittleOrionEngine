@@ -64,8 +64,7 @@ void ComponentAnimation::Copy(Component* component_to_copy) const
 
 void ComponentAnimation::SetStateMachine(std::shared_ptr<StateMachine>& state_machine)
 {
-	animation_controller->state_machine = state_machine;
-	animation_controller->SetActiveAnimation();
+	animation_controller->SetStateMachine(state_machine);
 	GenerateJointChannelMaps();
 }
 
