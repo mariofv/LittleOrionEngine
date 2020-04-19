@@ -61,7 +61,7 @@ private:
 	friend class Skybox;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
 	template<>
 	static std::shared_ptr<Texture> Load(Metafile* metafile, const FileData& resource_data)

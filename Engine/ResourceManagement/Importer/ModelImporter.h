@@ -33,7 +33,7 @@ public:
 	ModelImporter();
 	~ModelImporter();
 
-	FileData ExtractData(Path& assets_file_path) const override;
+	FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const override;
 
 private:
 	std::vector<Config> ExtractDataFromNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation) const;

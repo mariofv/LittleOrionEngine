@@ -62,7 +62,7 @@ public:
 	std::shared_ptr<State> GetState(uint64_t state_hash) const;
 	std::shared_ptr<Transition> GetTransition(const std::string & trigger, uint64_t state_hash) const;
 
-	void Save() const;
+	void Save(Config& config) const;
 	void Load(const Config& config);
 
 private:
@@ -78,13 +78,25 @@ public:
 	friend class PanelStateMachine;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
+	template<>
+	static FileData Binarize<StateMachine>(Resource* state_machine)
+	{
+		return StateMachineManager::Binarize(static_cast<StateMachine*>(state_machine));
+	};
+
 	template<>
 	static std::shared_ptr<StateMachine> Load(Metafile* metafile, const FileData& resource_data)
 	{
 		return StateMachineManager::Load(metafile, resource_data);
 	}
+
+	template<>
+	static FileData Create<StateMachine>()
+	{
+		return StateMachineManager::Create();
+	};
 }
 #endif // !_STATEMACHINE_H_
 

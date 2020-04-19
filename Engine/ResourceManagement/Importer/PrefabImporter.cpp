@@ -15,9 +15,45 @@
 
 #include <stack>
 
-FileData PrefabImporter::ExtractData(Path& file_path) const
+FileData PrefabImporter::ExtractData(Path& file_path, const Metafile& metafile) const
 {
 	return file_path.GetFile()->Load();
+}
+
+FileData PrefabImporter::ExtractFromModel(const Config& model_config, const Metafile& metafile) const
+{
+	std::vector<std::unique_ptr<GameObject>> game_objects;
+	std::vector<std::unique_ptr<ComponentMeshRenderer>> mesh_renderer_components;
+	std::vector<uint32_t> loaded_skeletons;
+
+	uint32_t real_uuid = metafile.uuid;
+	std::unique_ptr<GameObject> model_root_node = std::make_unique<GameObject>();
+	model_root_node->UUID = real_uuid;
+	model_root_node->original_UUID = model_root_node->UUID;
+
+	model_config.GetString("Name", model_root_node->name, "");
+
+	std::vector<Config> game_objects_config;
+	model_config.GetChildrenConfig("Node", game_objects_config);
+	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
+	{
+		ExcractGameObjectFromNode(model_root_node, game_objects_config[i], game_objects, mesh_renderer_components, loaded_skeletons);
+	}
+	size_t gameobject_index = 1;
+	for (auto & game_object : game_objects)
+	{
+		game_object->UUID = real_uuid + gameobject_index++;
+		game_object->original_UUID = game_object->UUID;
+	}
+
+	ExtractAnimationComponent(model_root_node.get(), model_config);
+	
+	FileData prefab_data = ExtractFromGameObject(model_root_node.get());
+
+	game_objects.clear();
+	mesh_renderer_components.clear();
+
+	return prefab_data;
 }
 
 FileData PrefabImporter::ExtractFromGameObject(GameObject* gameobject) const
@@ -54,35 +90,6 @@ FileData PrefabImporter::ExtractFromGameObject(GameObject* gameobject) const
 	return prefab_data;
 }
 
-FileData PrefabImporter::ExtractFromModel(const Config& model_config) const
-{
-	//TODO: Be sure that uuid of the prefab is same as the resoruce one
-	std::vector<std::unique_ptr<GameObject>> game_objects;
-	std::vector<std::unique_ptr<ComponentMeshRenderer>> mesh_renderer_components;
-	std::vector<uint32_t> loaded_skeletons;
-
-	std::unique_ptr<GameObject> model_root_node = std::make_unique<GameObject>();
-	model_root_node->original_UUID = model_root_node->UUID;
-
-	model_config.GetString("Name", model_root_node->name, "");
-
-	std::vector<Config> game_objects_config;
-	model_config.GetChildrenConfig("Node", game_objects_config);
-	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
-	{
-		ExcractGameObjectFromNode(model_root_node, game_objects_config[i], game_objects, mesh_renderer_components, loaded_skeletons);
-	}
-	ExtractAnimationComponent(model_root_node.get(), model_config);
-	
-	FileData prefab_data = ExtractFromGameObject(model_root_node.get());
-
-	game_objects.clear();
-	mesh_renderer_components.clear();
-
-	return prefab_data;
-}
-
-//For now we are representing the animation sketelon in the hierarchy just for visualization and learning, but proabbly this will not be needed in the future
 void PrefabImporter::ExcractGameObjectFromNode
 (
 	std::unique_ptr<GameObject>& parent_node,
@@ -111,7 +118,6 @@ void PrefabImporter::ExcractGameObjectFromNode
 	}
 
 }
-
 
 void PrefabImporter::ExcractMeshComponent(
 	uint32_t mesh_uuid, uint32_t material_uuid, uint32_t skeleton_uuid,

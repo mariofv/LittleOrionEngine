@@ -19,6 +19,11 @@
 
 #include <algorithm>
 
+FileData PrefabManager::Binarize(Prefab* prefab)
+{
+	return App->resources->prefab_importer->ExtractFromGameObject(prefab->GetRootGameObject());
+}
+
 std::shared_ptr<Prefab> PrefabManager::Load(Metafile* metafile, const FileData& resource_data)
 {
 	char* prefab_file_data = (char*)resource_data.buffer;

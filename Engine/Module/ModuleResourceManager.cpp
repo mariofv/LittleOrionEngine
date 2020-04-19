@@ -75,10 +75,7 @@ update_status ModuleResourceManager::PreUpdate()
 	{
 		//importing_thread.join();
 		//importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
-		auto it = std::remove_if(resource_cache.begin(), resource_cache.end(), [](const std::shared_ptr<Resource> & resource) {		
-			return resource.use_count() == 1;
-		});
-		resource_cache.erase(it,resource_cache.end());
+		CleanResourceCache();
 	}
 	return update_status::UPDATE_CONTINUE;
 }
@@ -255,4 +252,15 @@ std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32
 		return *it;
 	}
 	return nullptr;
+}
+
+void ModuleResourceManager::CleanResourceCache()
+{
+	const auto it = std::remove_if(resource_cache.begin(), resource_cache.end(), [](const std::shared_ptr<Resource> & resource) {
+		return resource.use_count() == 1;
+	});
+	if (it != resource_cache.end())
+	{
+		resource_cache.erase(it, resource_cache.end());
+	}
 }

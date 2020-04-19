@@ -19,7 +19,7 @@ TextureImporter::TextureImporter() : Importer(ResourceType::TEXTURE)
 
 }
 
-FileData TextureImporter::ExtractData(Path& assets_file_path) const
+FileData TextureImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
 	if (assets_file_path.GetFilename().find("_normal") != std::string::npos)
 	{

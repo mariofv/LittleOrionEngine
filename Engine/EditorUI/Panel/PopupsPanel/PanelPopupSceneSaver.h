@@ -1,5 +1,5 @@
-#ifndef _PANELPOPUPSCENEMANAGEMENT_H_
-#define _PANELPOPUPSCENEMANAGEMENT_H_
+#ifndef _PANELPOPUPSCENESAVER_H_
+#define _PANELPOPUPSCENESAVER_H_
 
 #include "EditorUI/Panel/Panel.h"
 
@@ -11,16 +11,16 @@
 
 class Path;
 
-class PanelPopupSceneManagement : public Panel
+class PanelPopupSceneSaver : public Panel
 {
 public:
-	PanelPopupSceneManagement();
-	~PanelPopupSceneManagement() = default;
+	PanelPopupSceneSaver();
+	~PanelPopupSceneSaver() = default;
 
 	void Render() override;
 
 	bool HasSelected() const;
-	std::string GetSelected() const;
+	std::string GetSelected();
 
 private:
 	void RenderAccessPath();
@@ -35,7 +35,7 @@ private:
 	void ConfirmationPopup();
 
 	float GetFrameHeightWithSpacing();
-	
+
 public:
 	bool popup_shown = false;
 
@@ -46,7 +46,8 @@ private:
 	int selected_path = -1;
 	std::string selected_file_name;
 
+	bool pending_to_be_closed = false;
 	bool has_selected = false;
 };
 
-#endif //_PANELPOPUPSCENEMANAGEMENT_H_
+#endif //_PANELPOPUPSCENESAVER_H_

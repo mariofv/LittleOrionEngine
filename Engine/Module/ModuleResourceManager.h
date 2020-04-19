@@ -63,6 +63,33 @@ public:
 	uint32_t Import(Path& file);
 
 	template<typename T>
+	uint32_t Create(Path& path, const std::string& resource_name)
+	{
+		BROFILER_CATEGORY("Create Resource", Profiler::Color::Brown);
+		APP_LOG_INFO("Creating Resource %s.", resource_name.c_str())
+
+		FileData created_resource_data = ResourceManagement::Create<T>();
+
+		APP_LOG_SUCCESS("Resource %s created correctly.", resource_name.c_str())
+
+		return CreateFromData(created_resource_data, path, resource_name);
+	}
+
+	template<typename T>
+	void Save(std::shared_ptr<Resource> modified_resource)
+	{
+		APP_LOG_INFO("Saving Resource %u.", modified_resource->GetUUID());
+
+		FileData resource_data = ResourceManagement::Binarize<T>(modified_resource.get());
+		std::string modified_resource_path = modified_resource->resource_metafile->imported_file_path;
+		Path* saved_resource_assets_path = App->filesystem->Save(modified_resource_path, resource_data);
+
+		InternalImport(*saved_resource_assets_path);
+
+		APP_LOG_SUCCESS("Resource %u saved corrrectly.", modified_resource->GetUUID());
+	}
+
+	template<typename T>
 	std::shared_ptr<T> Load(uint32_t uuid)
 	{
 		BROFILER_CATEGORY("Load Resource", Profiler::Color::Brown);
@@ -80,13 +107,13 @@ public:
 		assert(metafile != nullptr);
 		if (!App->filesystem->Exists(metafile->exported_file_path))
 		{
-			APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, metafile->exported_file_path);
+			APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, metafile->exported_file_path.c_str());
 			return nullptr;
 		}
 
 		Path* resource_exported_file_path = App->filesystem->GetPath(metafile->exported_file_path);
 		FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
-		loaded_resource = Loader::Load<T>(metafile, exported_file_data);
+		loaded_resource = ResourceManagement::Load<T>(metafile, exported_file_data);
 
 		free((char*)exported_file_data.buffer);
 
@@ -99,20 +126,13 @@ public:
 		return std::static_pointer_cast<T>(loaded_resource);
 	}
 
-	template<typename T>
-	std::shared_ptr<T> Reload(const Resource* resource)
-	{
-		uint32_t uuid = resource->GetUUID();
-		auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [resource](const auto & loaded_resource) { return loaded_resource.get() == resource; });
-		resource_cache.erase(it);
-		return Load<T>(uuid);
-	}
+	void CleanInconsistenciesInDirectory(const Path& directory_path);
+	void ImportAssetsInDirectory(const Path& directory_path);
 
 	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
 	uint32_t CreateFromData(FileData data, const std::string& created_resource_path);
 
-	void CleanInconsistenciesInDirectory(const Path& directory_path);
-	void ImportAssetsInDirectory(const Path& directory_path);
+	void CleanResourceCache();
 
 private:
 	void StartThread();

@@ -8,7 +8,7 @@ class StateMachineImporter : public Importer
 public:
 	StateMachineImporter() : Importer(ResourceType::STATE_MACHINE) {};
 	~StateMachineImporter() = default;
-	FileData ExtractData(Path& assets_file_path) const override;
+	FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const override;
 };
 
 #endif // !_STATEMACHINEIMPORTER_H_

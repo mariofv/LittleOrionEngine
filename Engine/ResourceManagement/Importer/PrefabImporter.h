@@ -13,9 +13,9 @@ public:
 	PrefabImporter() : Importer(ResourceType::PREFAB) {};
 	~PrefabImporter() = default;
 
-	FileData ExtractData(Path& file_path) const override;
+	FileData ExtractData(Path& file_path, const Metafile& metafile) const override;
+	FileData ExtractFromModel(const Config& model_config, const Metafile& metafile) const;
 	FileData ExtractFromGameObject(GameObject* gameobject) const;
-	FileData ExtractFromModel(const Config& model_config) const;
 
 private:
 	static void ExcractGameObjectFromNode(

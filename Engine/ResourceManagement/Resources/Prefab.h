@@ -30,6 +30,8 @@ public:
 	void RemoveInstance(GameObject * instance);
 	bool IsOverwritable() const;
 
+	GameObject* GetRootGameObject() const;
+
 public:
 	std::vector<GameObject*> instances;
 
@@ -44,8 +46,14 @@ private:
 	friend PanelScene;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
+	template<>
+	static FileData Binarize<Prefab>(Resource* prefab)
+	{
+		return PrefabManager::Binarize(static_cast<Prefab*>(prefab));
+	};
+
 	template<>
 	static std::shared_ptr<Prefab> Load(Metafile* metafile, const FileData& resource_data)
 	{

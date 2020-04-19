@@ -53,13 +53,25 @@ public:
 	bool show_checkerboard_texture = false;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
+	template<>
+	static FileData Binarize<Material>(Resource* material)
+	{
+		return MaterialManager::Binarize(static_cast<Material*>(material));
+	};
+
 	template<>
 	static std::shared_ptr<Material> Load(Metafile* metafile, const FileData& resource_data)
 	{
 		return MaterialManager::Load(metafile, resource_data);
 	}
+
+	template<>
+	static FileData Create<Material>()
+	{
+		return MaterialManager::Create();
+	};
 }
 
 #endif // !_MATERIAL_H_

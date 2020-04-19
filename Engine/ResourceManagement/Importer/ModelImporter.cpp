@@ -39,7 +39,7 @@ ModelImporter::~ModelImporter()
 	Assimp::DefaultLogger::kill();
 }
 
-FileData ModelImporter::ExtractData(Path& assets_file_path) const
+FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
 	FileData model_data;
 
@@ -85,7 +85,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path) const
 	current_model_data = {scene, asset_file_folder_path, unit_scale_factor, skeleton_cache};
 
 
-	aiNode * root_node = scene->mRootNode;
+	aiNode* root_node = scene->mRootNode;
 	aiMatrix4x4 identity_transformation = aiMatrix4x4();
 	std::vector<Config> node_config = ExtractDataFromNode(root_node, identity_transformation);
 
@@ -107,7 +107,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path) const
 	model.AddChildrenConfig(node_config, "Node");
 	model.AddChildrenConfig(animations_config, "Animations");
 
-	model_data = App->resources->prefab_importer->ExtractFromModel(model);
+	model_data = App->resources->prefab_importer->ExtractFromModel(model, metafile);
 	return model_data;
 }
 

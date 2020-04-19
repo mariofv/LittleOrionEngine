@@ -63,7 +63,7 @@ void Material::Load(const Config& config)
 	SetMaterialTexture(MaterialTextureType::DIFFUSE, config.GetUInt("Diffuse", 0));
 	SetMaterialTexture(MaterialTextureType::SPECULAR, config.GetUInt("Specular", 0));
 	SetMaterialTexture(MaterialTextureType::OCCLUSION, config.GetUInt("Occlusion", 0));
-	SetMaterialTexture(MaterialTextureType::DIFFUSE, config.GetUInt("Emissive", 0));
+	SetMaterialTexture(MaterialTextureType::EMISSIVE, config.GetUInt("Emissive", 0));
 
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 	config.GetString("ShaderProgram", shader_program, "Blinn phong");

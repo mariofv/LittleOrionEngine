@@ -86,7 +86,7 @@ Path* Path::Save(const char* file_name, const FileData& data, bool append)
 
 
 	PHYSFS_writeBytes(file, data.buffer, data.size);
-	APP_LOG_INFO("File %s saved!\n", file_path);
+	APP_LOG_INFO("File %s saved!\n", file_path.c_str());
 	PHYSFS_close(file);
 
 	Path* saved_file_path = nullptr;
@@ -234,6 +234,7 @@ bool Path::IsImportable() const
 		|| file_type == FileType::SCENE
 		|| file_type == FileType::SKELETON
 		|| file_type == FileType::SKYBOX
+		|| file_type == FileType::STATE_MACHINE
 		|| file_type == FileType::TEXTURE;
 }
 

@@ -5,26 +5,29 @@
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/StateMachine.h"
 
+FileData StateMachineManager::Binarize(StateMachine* state_machine)
+{
+	Config state_machine_config;
+	state_machine->Save(state_machine_config);
+
+	std::string serialized_state_machine_string;
+	state_machine_config.GetSerializedString(serialized_state_machine_string);
+
+	char* state_machine_bytes = new char[serialized_state_machine_string.size() + 1];
+	memcpy(state_machine_bytes, serialized_state_machine_string.c_str(), serialized_state_machine_string.size() + 1);
+
+	FileData state_machine_data{ state_machine_bytes, serialized_state_machine_string.size() + 1 };
+	return state_machine_data;
+}
+
 std::shared_ptr<StateMachine> StateMachineManager::Load(Metafile* metafile, const FileData& resource_data)
 {
-	char* state_machine_data = (char*)resource_data.buffer;
-
-	std::string serialized_state_machine_string = std::string(state_machine_data, resource_data.size);
-
-	Config state_machine_config(serialized_state_machine_string);
-	std::shared_ptr<StateMachine> new_state_machine = std::make_shared<StateMachine>(metafile);
-	new_state_machine->Load(state_machine_config);
-
-	return new_state_machine;
-
-	//TODO: Ask why there where two different Load.
-	/*
 	char * data = (char*)resource_data.buffer;
 	char* cursor = data;
 
 	uint32_t ranges[3];
 	//Get ranges
-	size_t bytes = sizeof(ranges); 
+	size_t bytes = sizeof(ranges);
 	memcpy(ranges, cursor, bytes);
 	cursor += bytes;
 
@@ -35,13 +38,13 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(Metafile* metafile, cons
 		clip = std::make_shared<Clip>();
 
 		bytes = sizeof(uint64_t);
-		memcpy( &clip->name_hash, cursor, bytes);
+		memcpy(&clip->name_hash, cursor, bytes);
 		cursor += bytes; // Store Clip
 
 		bytes = sizeof(uint32_t);
 		uint32_t animation_uuid;
 		memcpy(&animation_uuid, cursor, bytes);
-		cursor += bytes; 
+		cursor += bytes;
 		if (animation_uuid != 0)
 		{
 			clip->SetAnimation(App->resources->Load<Animation>(animation_uuid));
@@ -82,7 +85,7 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(Metafile* metafile, cons
 	{
 		transition = std::make_shared<Transition>();
 		bytes = sizeof(uint64_t);
-		memcpy( &transition->source_hash, cursor, bytes);
+		memcpy(&transition->source_hash, cursor, bytes);
 		cursor += bytes;
 
 		bytes = sizeof(uint64_t);
@@ -94,16 +97,24 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(Metafile* metafile, cons
 		cursor += bytes;
 
 		bytes = sizeof(uint64_t);
-		memcpy( &transition->interpolation_time, cursor, bytes);
+		memcpy(&transition->interpolation_time, cursor, bytes);
 		cursor += bytes;
 	}
-	std::shared_ptr<StateMachine> new_state_machine = std::make_shared<StateMachine>(std::move(clips), std::move(states), std::move(transitions), file_path);
+	std::shared_ptr<StateMachine> new_state_machine = std::make_shared<StateMachine>(metafile, std::move(clips), std::move(states), std::move(transitions));
 	bytes = sizeof(uint64_t);
 	memcpy(&new_state_machine->default_state, cursor, bytes);
 	cursor += bytes;
 
-	free(data);
-
 	return new_state_machine;
-	*/
+}
+
+FileData StateMachineManager::Create()
+{
+	StateMachine created_state_machine;
+	created_state_machine.states.push_back(std::make_shared<State>("Entry", nullptr));
+	created_state_machine.states.push_back(std::make_shared<State>("End", nullptr));
+	created_state_machine.default_state = std::hash<std::string>{}("Entry");
+
+	return Binarize(&created_state_machine);
+
 }

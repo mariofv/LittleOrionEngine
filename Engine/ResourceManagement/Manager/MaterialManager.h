@@ -16,8 +16,9 @@ public:
 	MaterialManager() = default;
 	~MaterialManager() = default;
 
+	static FileData Binarize(Material* material);
 	static std::shared_ptr<Material> Load(Metafile* metafile, const FileData& resource_data);
-	static uint32_t Create(Path& asset_creation_folder_path, const std::string created_asset_name= "New Material.mat");
+	static FileData Create();
 };
 
 #endif // !_MATERIALMANAGER_H_

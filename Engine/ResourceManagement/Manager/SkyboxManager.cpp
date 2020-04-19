@@ -9,6 +9,21 @@
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/Resources/Skybox.h"
 
+FileData SkyboxManager::Binarize(Skybox* skybox)
+{
+	Config skybox_config;
+	skybox->Save(skybox_config);
+
+	std::string serialized_skybox_string;
+	skybox_config.GetSerializedString(serialized_skybox_string);
+
+	char* skybox_bytes = new char[serialized_skybox_string.size() + 1];
+	memcpy(skybox_bytes, serialized_skybox_string.c_str(), serialized_skybox_string.size() + 1);
+
+	FileData skybox_data{ skybox_bytes, serialized_skybox_string.size() + 1 };
+	return skybox_data;
+}
+
 std::shared_ptr<Skybox> SkyboxManager::Load(Metafile* metafile, const FileData& resource_data)
 {
 	char* material_file_data = (char*)resource_data.buffer;
@@ -22,18 +37,8 @@ std::shared_ptr<Skybox> SkyboxManager::Load(Metafile* metafile, const FileData& 
 	return new_skybox;
 }
 
-uint32_t SkyboxManager::Create(Path& asset_creation_folder_path, const std::string created_asset_name)
+FileData SkyboxManager::Create()
 {
 	Skybox skybox;
-	Config skybox_config;
-	skybox.Save(skybox_config);
-	
-	std::string serialized_skybox_string;
-	skybox_config.GetSerializedString(serialized_skybox_string);
-
-	char* skybox_bytes = new char[serialized_skybox_string.size() + 1];
-	memcpy(skybox_bytes, serialized_skybox_string.c_str(), serialized_skybox_string.size() + 1);
-
-	FileData skybox_data{ skybox_bytes, serialized_skybox_string.size() + 1 };
-	return App->resources->CreateFromData(skybox_data, asset_creation_folder_path, created_asset_name);
+	return Binarize(&skybox);
 }

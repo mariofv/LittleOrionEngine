@@ -15,7 +15,7 @@ public:
 	TextureImporter();
 	~TextureImporter() = default;
 
-	FileData ExtractData(Path& assets_file_path) const override;
+	FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const override;
 
 private:
 	FileData ExtractDataToDDS(const Path& assets_file_path) const;

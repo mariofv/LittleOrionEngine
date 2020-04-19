@@ -37,18 +37,35 @@ public:
 
 	std::string GetName() const;
 	uint32_t GetUUID() const;
+
+	bool IsCoreResource() const;
+
 	static std::string GetResourceTypeName(ResourceType resource_type);
 
 public:
 	Metafile* resource_metafile = nullptr;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
+	template<typename T>
+	static FileData Binarize(Resource* resource)
+	{
+		assert(1 != 0); // If you are here, implement your Binarize function on the corresponding resource class.
+		return NULL;
+	};
+
 	template<typename T>
 	static std::shared_ptr<T> Load(Metafile* metafile, const FileData& resource_data)
 	{
 		return nullptr;
+	};
+
+	template<typename T>
+	static FileData Create()
+	{
+		assert(1 != 0); // If you are here, implement your Create function on the corresponding resource class.
+		return NULL;
 	};
 }
 

@@ -137,8 +137,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagementAux.h" />
     <ClInclude Include="Engine\Helper\BuildOptions.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h" />
@@ -170,7 +170,7 @@
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelStateMachine.h" />
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.h" />
     <ClInclude Include="Engine\Filesystem\File.h" />
     <ClInclude Include="Engine\Filesystem\PathAtlas.h" />
     <ClInclude Include="Engine\Helper\Config.h" />
@@ -327,8 +327,8 @@
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelStateMachine.cpp" />
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp" />
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagementAux.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp" />
     <ClCompile Include="Engine\Filesystem\File.cpp" />
     <ClCompile Include="Engine\Helper\BuildOptions.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
