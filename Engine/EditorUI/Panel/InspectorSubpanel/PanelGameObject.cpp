@@ -16,6 +16,7 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
 #include <imgui.h>
@@ -125,6 +126,7 @@ void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
 	{
 		GameObject *to_reimport = game_object->GetPrefabParent();
 		to_reimport->prefab_reference->Apply(to_reimport);
+		App->resources->Save<Prefab>(to_reimport->prefab_reference);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Revert"))

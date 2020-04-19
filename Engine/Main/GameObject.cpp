@@ -53,13 +53,13 @@ GameObject::GameObject(const std::string name) :
 	CreateTransforms();
 }
 
-
 GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_to_copy.aabb), transform(gameobject_to_copy.transform), UUID(pcg32_random())
 {
 	CreateTransforms();
 	aabb.owner = this;
 	*this << gameobject_to_copy;
 }
+
 GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
 {
 

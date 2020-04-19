@@ -48,39 +48,13 @@ GameObject* Prefab::Instantiate(GameObject* prefab_parent, std::unordered_map<in
 	return parent_prefab;
 }
 
+/*
+	We won't allow the user to call this function if the prefab is deleted from filesystem. In other words, there shouldn't be pointers to resources that
+	doesn't exist in filesystem.
+*/
 void Prefab::Apply(GameObject* new_reference)
 {
-	/*
-	if (imported_file.empty())
-	{
-		std::string uid_string = exported_file.substr(exported_file.find_last_of("/") + 1, exported_file.size());
-		uint32_t real_uuid = std::stoul(uid_string);
-		imported_file = App->resources->resource_DB->GetEntry(real_uuid)->imported_file;
-	}
-	App->resources->CreatePrefab(imported_file, new_reference);
-	ImportResult import_result = App->resources->Import(File(imported_file));
-	if (import_result.success)
-	{
-		*prefab.front().get() << *new_reference;
-		RecursiveRewrite(prefab.front().get(), new_reference, true, false);
-		for (auto old_instance : instances)
-		{
-			if (new_reference == old_instance)
-			{
-				continue;
-			}
-			for (auto component : new_reference->components)
-			{
-				component->added_by_user = false;
-				component->modified_by_user = false;
-			}
-			*old_instance << *new_reference;
-			RecursiveRewrite(old_instance, new_reference, false, false);
-		}
-	}
-
-	*/
-	//TODO: Talk with Anabel about reimporting deleted prefabs here
+	*prefab.front().get() << *new_reference;
 	RecursiveRewrite(prefab.front().get(), new_reference, true, false);
 	for (auto old_instance : instances)
 	{
@@ -96,8 +70,6 @@ void Prefab::Apply(GameObject* new_reference)
 		*old_instance << *new_reference;
 		RecursiveRewrite(old_instance, new_reference, false, false);
 	}
-
-	//TODO: Create function to update already imported prefabs
 }
 
 void Prefab::Revert(GameObject * old_reference)
@@ -225,6 +197,11 @@ void Prefab::RemoveInstance(GameObject * instance)
 	{
 		instances.erase(it);
 	}
+}
+
+GameObject* Prefab::GetRootGameObject() const
+{
+	return prefab.front().get();
 }
 
 bool Prefab::IsOverwritable() const
