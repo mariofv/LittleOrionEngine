@@ -117,7 +117,7 @@ update_status ModuleEditor::Update()
 #if GAME
 	if (!inital_scene_loaded)
 	{
-		OpenScene(MENU_SCENE_PATH);
+		App->scene->LoadBuildScene(0);
 		App->scripts->InitScripts();
 		inital_scene_loaded = true;
 		return update_status::UPDATE_CONTINUE;
@@ -125,7 +125,7 @@ update_status ModuleEditor::Update()
 #else	
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
-		App->scene->LoadBuildScene();
+		App->scene->LoadBuildScene(0);
 		inital_scene_loaded = true;
 	}
 	//ImGui::ShowStyleEditor();

@@ -191,9 +191,9 @@ void ModuleScene::OpenPendingScene()
 	scene_to_load.clear();
 }
 
-void ModuleScene::LoadBuildScene()
+void ModuleScene::LoadBuildScene(unsigned scene)
 {
-	if (!build_options->LoadOptions())
+	if (!build_options->is_imported && !build_options->LoadOptions())
 	{
 		GetSceneFromPath(DEFAULT_SCENE_PATH);
 		current_scene.get()->Load();
@@ -201,7 +201,7 @@ void ModuleScene::LoadBuildScene()
 		return;
 	}
 
-	current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(0));
+	current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(scene));
 	current_scene.get()->Load();
 
 	return;

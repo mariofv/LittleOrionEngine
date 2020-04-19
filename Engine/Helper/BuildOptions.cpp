@@ -29,7 +29,6 @@ void BuildOptions::SetBuildModeActive()
 
 bool BuildOptions::LoadOptions()
 {
-
 	if(!App->filesystem->Exists(RESOURCES_BUILD_OPTIONS))
 	{
 		return false;
@@ -62,6 +61,8 @@ bool BuildOptions::LoadOptions()
 
 		build_scenes.push_back(option);
 	}
+
+	is_imported = true;
 
 	return true;
 }

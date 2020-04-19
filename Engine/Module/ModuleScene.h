@@ -32,7 +32,7 @@ public:
 	void OpenPendingScene();
 	void DeleteCurrentScene();
 
-	void LoadBuildScene();
+	ENGINE_API void LoadBuildScene(unsigned scene);
 	void LoadScene(const std::string& path);
 	void SaveScene(const std::string& path) const;
 	bool HasPendingSceneToLoad() const;

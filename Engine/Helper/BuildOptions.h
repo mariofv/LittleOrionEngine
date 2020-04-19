@@ -48,6 +48,8 @@ public:
 	uint32_t GetSceneUUID(unsigned position) const;
 	std::string GetScenePath(unsigned position) const;
 
+public:
+	bool is_imported = false;
 private:
 	std::vector<Options> build_scenes;
 	bool build_mode_activated = true;
