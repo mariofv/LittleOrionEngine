@@ -16,7 +16,7 @@ public:
 	MeshManager() = default;
 	~MeshManager() = default;
 
-	static std::shared_ptr<Mesh> Load(Metafile* metafile, const FileData& resource_data);
+	static std::shared_ptr<Mesh> Load(uint32_t uuid, const FileData& resource_data);
 };
 
 #endif // !_MESHMANAGER_H_

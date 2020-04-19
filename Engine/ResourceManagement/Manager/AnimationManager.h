@@ -15,7 +15,7 @@ public:
 	AnimationManager() = default;
 	~AnimationManager() = default;
 
-	static std::shared_ptr<Animation> Load(Metafile* metafile, const FileData& resource_data);
+	static std::shared_ptr<Animation> Load(uint32_t uuid, const FileData& resource_data);
 };
 
 #endif //_ANIMATIONMANAGER_H_

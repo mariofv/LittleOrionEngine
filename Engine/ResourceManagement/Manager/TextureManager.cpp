@@ -5,6 +5,7 @@
 #include "Module/ModuleFileSystem.h"
 
 #include "ResourceManagement/Metafile/Metafile.h"
+#include "ResourceManagement/Metafile/MetafileManager.h"
 #include "ResourceManagement/Resources/Texture.h"
 
 #include <Brofiler/Brofiler.h>
@@ -14,15 +15,15 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-std::shared_ptr<Texture> TextureManager::Load(Metafile* metafile, const FileData& resource_data)
+std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& resource_data)
 {
 	std::shared_ptr<Texture> loaded_texture;
 
-	if (metafile->imported_file_path.find("_normal") != std::string::npos)
+	if (MetafileManager::GetUUIDExportedFile(uuid).find("_normal") != std::string::npos)
 	{
 		int width, height;
-		std::vector<char> data = LoadImageData(metafile->exported_file_path, width, height);
-		loaded_texture = std::make_shared<Texture>(metafile, data.data(), 0, width, height, true);
+		std::vector<char> data = LoadImageData(MetafileManager::GetUUIDExportedFile(uuid), width, height);
+		loaded_texture = std::make_shared<Texture>(uuid, data.data(), 0, width, height, true);
 	}
 	else
 	{
@@ -30,7 +31,7 @@ std::shared_ptr<Texture> TextureManager::Load(Metafile* metafile, const FileData
 		std::vector<char> data = LoadCompressedDDS(resource_data, ddsHeader);
 		if (data.size())
 		{
-			loaded_texture = std::make_shared<Texture>(metafile, data.data(), data.size(), ddsHeader.dwWidth, ddsHeader.dwHeight);
+			loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), ddsHeader.dwWidth, ddsHeader.dwHeight);
 		}
 	}
 

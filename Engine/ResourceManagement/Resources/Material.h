@@ -24,7 +24,7 @@ public:
 	};
 
 	Material() = default;
-	Material(Metafile* resource_metafile);
+	Material(uint32_t uuid);
 	~Material() = default;
 
 	void Save(Config& config) const;
@@ -62,9 +62,9 @@ namespace ResourceManagement
 	};
 
 	template<>
-	static std::shared_ptr<Material> Load(Metafile* metafile, const FileData& resource_data)
+	static std::shared_ptr<Material> Load(uint32_t uuid, const FileData& resource_data)
 	{
-		return MaterialManager::Load(metafile, resource_data);
+		return MaterialManager::Load(uuid, resource_data);
 	}
 
 	template<>

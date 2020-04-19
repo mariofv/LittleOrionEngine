@@ -14,16 +14,21 @@
 #include <algorithm>
 
 
-
-
 bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
 	GetCurrentPath();
 #if GAME
 	//TODO USE THE NEW FILESYSTEM TO DO THIS
-	CopyFile(SCRIPTS_DLL_PATH, working_directory.c_str(), false);
-	gameplay_dll = LoadLibrary(SCRIPT_DLL_FILE);
+	bool success = CopyFile(RESOURCE_SCRIPT_DLL_FILE, working_directory.c_str(), false);
+	if (!success)
+	{
+		char procID[10];
+		sprintf(procID, "%d", GetLastError());
+		APP_LOG_INFO("File copying dll %s", procID)
+	}
+
+	gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
 	return true;
 #endif
 

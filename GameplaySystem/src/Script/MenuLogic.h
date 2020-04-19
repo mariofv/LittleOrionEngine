@@ -3,7 +3,6 @@
 
 #include "Script.h"
 
-#define MAIN_SCENE_PATH "TO CHANGE"
 class MenuLogic : public Script
 {
 public:

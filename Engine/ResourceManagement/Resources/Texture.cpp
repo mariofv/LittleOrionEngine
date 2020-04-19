@@ -6,10 +6,10 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-Texture::Texture(Metafile* resource_metafile, char* data, size_t image_size, int width, int height, bool normal_map) 
+Texture::Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, bool normal_map)
 	: width(width), height(height)
 	, normal_map(normal_map)
-	, Resource(resource_metafile)
+	, Resource(uuid)
 {
 	this->data.resize(image_size);
 	memcpy(&this->data.front(), data, image_size);

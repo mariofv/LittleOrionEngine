@@ -24,7 +24,7 @@ FileData PrefabManager::Binarize(Prefab* prefab)
 	return App->resources->prefab_importer->ExtractFromGameObject(prefab->GetRootGameObject());
 }
 
-std::shared_ptr<Prefab> PrefabManager::Load(Metafile* metafile, const FileData& resource_data)
+std::shared_ptr<Prefab> PrefabManager::Load(uint32_t uuid, const FileData& resource_data)
 {
 	char* prefab_file_data = (char*)resource_data.buffer;
 
@@ -55,7 +55,7 @@ std::shared_ptr<Prefab> PrefabManager::Load(Metafile* metafile, const FileData& 
 		gameObjects.emplace_back(std::move(created_game_object));
 	}
 
-	std::shared_ptr<Prefab> new_prefab = std::make_shared<Prefab>(metafile, std::move(gameObjects));
+	std::shared_ptr<Prefab> new_prefab = std::make_shared<Prefab>(uuid, std::move(gameObjects));
 	return new_prefab;
 }
 

@@ -49,7 +49,7 @@ public:
 	TextureManager() = default;
 	~TextureManager()= default;
 
-	static std::shared_ptr<Texture> Load(Metafile* metafile, const FileData& resource_data);
+	static std::shared_ptr<Texture> Load(uint32_t uuid, const FileData& resource_data);
 
 private:
 	static std::vector<char> LoadCompressedDDS(const FileData& resource_data, DDS::DDS_HEADER & dds_header);

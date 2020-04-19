@@ -4,6 +4,8 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentProgressBar.h"
 
+#include "Filesystem/PathAtlas.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
@@ -63,7 +65,7 @@ void WorldManager::Update()
 
 	if(transition && App->input->GetAnyKeyPressedDown())
 	{
-		App->editor->OpenScene("Library/menuscene.scene");
+		App->editor->OpenScene(MENU_SCENE_PATH);
 	}
 
 }

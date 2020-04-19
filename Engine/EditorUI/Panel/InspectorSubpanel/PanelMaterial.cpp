@@ -39,7 +39,7 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(50, 50)); // TODO: Substitute this with resouce thumbnail
 		ImGui::SameLine();
 		ImGui::AlignTextToFramePadding();
-		ImGui::Text(material->resource_metafile->imported_file_path.c_str());
+		ImGui::Text(App->resources->resource_DB->GetEntry(material->GetUUID())->resource_name.c_str());
 		ImGui::Spacing();
 
 		if (ImGui::BeginCombo("Shader", material->shader_program.c_str()))
