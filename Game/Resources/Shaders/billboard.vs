@@ -1,7 +1,10 @@
-#version 330
+#version 430 core
 
 layout(location = 0) in vec3 vertex_position;
 layout(location = 1) in vec2 vertex_uv0;
+
+subroutine vec4 alignment_subroutine();
+subroutine uniform alignment_subroutine alignment_selector;
 
 layout (std140) uniform Matrices
 {
@@ -23,6 +26,35 @@ out vec2 texCoord;
 
 void main()
 {
-  gl_Position = matrices.proj*(matrices.view*vec4(billboard.center_pos,1.0) + vec4(billboard.width*vertex_position.x, billboard.height*vertex_position.y, 0.0, 0.0));
+  gl_Position = alignment_selector();
   texCoord = vertex_uv0;
 }
+
+subroutine (alignment_subroutine) vec4 view_point_alignment() //probably aligned to viewplane TODO: check it
+{
+	return matrices.proj*(matrices.view*vec4(billboard.center_pos,1.0) + vec4(billboard.width*vertex_position.x, billboard.height*vertex_position.y, 0.0, 0.0));
+}
+
+subroutine (alignment_subroutine) vec4 crossed_alignment()
+{
+	return matrices.proj*matrices.view*vec4(billboard.width*vertex_position.x + billboard.center_pos.x, billboard.height*vertex_position.y + billboard.center_pos.y, 
+											vertex_position.z + billboard.center_pos.z,1.0);
+}
+
+subroutine (alignment_subroutine) vec4 axial_alignment()
+{
+	return matrices.proj*(matrices.view*vec4(billboard.center_pos,1.0) + vec4(billboard.width*vertex_position.x, billboard.height*vertex_position.y, 0.0, 0.0));
+}
+
+
+
+subroutine (alignment_subroutine) vec4 hola()
+{
+	return vec4(0, 0, 0, 0);
+}
+
+
+
+
+
+

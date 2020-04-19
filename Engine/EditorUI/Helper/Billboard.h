@@ -11,11 +11,20 @@
 class Billboard
 {
 public:
+
+	enum AlignmentType {
+		SCREEN,		// TODO: Parallel to the screen normal: UI, text, ...
+		VIEW_POINT,	// Alligned to the camera position
+		AXIAL,		// Rotates over Y axis
+		CROSSED		// Billboards crossed between them
+
+	};
+
 	Billboard(const std::string& texture_path, float width, float height);
 	~Billboard();
 
 	void Render(const float3& position) const;
-	
+	AlignmentType type;
 
 private:
 	std::shared_ptr<Mesh> billboard_quad;
@@ -24,18 +33,19 @@ private:
 	float height = 5.f;
 	std::shared_ptr<Texture> billboard_texture = nullptr;
 
-	float vertices[12] = {
-		 0.5f,  0.5f, 0.0f,  // top right
-		 0.5f, -0.5f, 0.0f,  // bottom right
-		-0.5f, -0.5f, 0.0f,  // bottom left
-		-0.5f,  0.5f, 0.0f   // top left 
+	float vertices[20] = {
+		 0.5f,  0.5f, 0.0f,		1.0f, 1.0f, // top right
+		 0.5f, -0.5f, 0.0f,		1.0f, 0.0f,	// bottom right
+		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,	// bottom left
+		-0.5f,  0.5f, 0.0f,		0.0f, 1.0f	// top left 
 	};
-	unsigned int indices[6] = {  // note that we start from 0!
+	unsigned int indices[6] = { 
 		0, 1, 3,  // first Triangle
 		1, 2, 3   // second Triangle
 	};
 
 	unsigned int EBO;
+
 
 };
 

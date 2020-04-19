@@ -392,6 +392,9 @@ bool ModuleDebugDraw::Init()
 void ModuleDebugDraw::Render()
 {
 
+	RenderBillboards();
+
+
 	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
 	if(App->debug->show_navmesh)
 	{
@@ -450,7 +453,6 @@ void ModuleDebugDraw::Render()
 		RenderPathfinding();
 	}
 
-	RenderBillboards();
 
 
 	if (App->debug->show_grid)
