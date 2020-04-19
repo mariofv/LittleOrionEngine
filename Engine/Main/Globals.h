@@ -66,26 +66,19 @@ enum class Fonts
 # define VIDEO_BILLBOARD_TEXTURE_PATH "Resources/Textures/video-solid.png"
 # define LIGHT_BILLBOARD_TEXTURE_PATH "Resources/Textures/lightbulb-solid.png"
 
-#if DEBUG
-# define SCRIPTS_DLL_PATH "Resources/Scripts/GamePlaySystemDebug.dll"
-# define SCRIPT_DLL_FILE "GamePlaySystemDebu_.dll"
-#elif GAME
-# define SCRIPTS_DLL_PATH "Resources/Scripts/GameplaySystem.dll"
-# define SCRIPT_DLL_FILE "GameplaySystem.dll"
-#else
-# define SCRIPTS_DLL_PATH "Resources/Scripts/GamePlaySystemRelease.dll"
-# define SCRIPT_DLL_FILE "GamePlaySystemReleas_.dll"
-#endif
-
 # define OPENGL_MAJOR_VERSION 4
 # define OPENGL_MINOR_VERSION 0
 
 #define FULLSCREEN false
-#define RESIZABLE true
+#define RESIZABLE false
 #define BORDERED true
 
 #define VSYNC true
-#define TITLE "Little Orion Engine"
 
+#if GAME
+#define TITLE "Twinlight Souls"
+#else
+#define TITLE "Little Orion Engine"
+#endif
 
 #endif //_GLOBALS_H_

@@ -21,8 +21,8 @@ public:
 	};
 
 	Skeleton() = default;
-	Skeleton(Metafile* resource_metafile);
-	Skeleton(Metafile* resource_metafile, std::vector<Joint> && joints);
+	Skeleton(uint32_t uuid);
+	Skeleton(uint32_t uuid, std::vector<Joint> && joints);
 	~Skeleton() = default;
 
 public:
@@ -32,9 +32,9 @@ public:
 namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<Skeleton> Load(Metafile* metafile, const FileData& resource_data)
+	static std::shared_ptr<Skeleton> Load(uint32_t uuid, const FileData& resource_data)
 	{
-		return SkeletonManager::Load(metafile, resource_data);
+		return SkeletonManager::Load(uuid, resource_data);
 	}
 }
 

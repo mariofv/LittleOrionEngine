@@ -50,7 +50,9 @@ void ComponentUI::Render(float4x4* projection, float4x4* model, unsigned int tex
 		glBindVertexArray(vao);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glUseProgram(0);
+
 	}
 }
 
@@ -95,15 +97,19 @@ void ComponentUI::Save(Config& config) const
 	config.AddUInt(ui_texture, "Texture");
 	config.AddFloat3(color, "Color");
 	config.AddUInt(texture_uuid, "TextureUUID");
+	config.AddInt(layer, "Layer");
 }
 
 void ComponentUI::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-	ui_texture = config.GetUInt("Texture", 0);
+
 	config.GetFloat3("Color", color, float3::one);
+	layer = config.GetInt("Layer", 0);
+
 	texture_uuid = config.GetUInt("TextureUUID", 0);
+	ui_texture = config.GetUInt("Texture", 0);
 	if(texture_uuid != 0)
 	{
 		SetTextureToRender(texture_uuid);
@@ -116,4 +122,16 @@ void ComponentUI::SetTextureToRender(uint32_t texture_uuid)
 	this->texture_uuid = texture_uuid;
 	texture_to_render = App->resources->Load<Texture>(texture_uuid);
 	ui_texture = texture_to_render->opengl_texture;
+}
+
+void ComponentUI::Enable()
+{
+	active = true;
+	App->ui->SortComponentsUI();
+}
+
+void ComponentUI::Disable()
+{
+	active = false;
+	App->ui->SortComponentsUI();
 }

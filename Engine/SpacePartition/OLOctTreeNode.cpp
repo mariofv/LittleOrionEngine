@@ -24,7 +24,7 @@ void OLOctTreeNode::AddChild(OLOctTreeNode * new_child)
 
 void OLOctTreeNode::RemoveChild(const OLOctTreeNode * child_to_remove)
 {
-	auto it = std::remove_if(children.begin(), children.end(), [child_to_remove](auto const & child)
+	const auto it = std::remove_if(children.begin(), children.end(), [child_to_remove](auto const& child)
 	{
 		return child == child_to_remove;
 	});
@@ -105,7 +105,7 @@ void OLOctTreeNode::Split(std::vector<OLOctTreeNode*> &generated_nodes)
 	generated_nodes.push_back(second_floor_top_left_node);
 	generated_nodes.push_back(second_floor_top_right_node);
 	
-	for (auto &node : generated_nodes)
+	for (const auto& node : generated_nodes)
 	{
 		AddChild(node);
 	}
@@ -114,7 +114,7 @@ void OLOctTreeNode::Split(std::vector<OLOctTreeNode*> &generated_nodes)
 
 void OLOctTreeNode::DistributeGameObjectsAmongChildren()
 {
-	for (auto &game_object : objects)
+	for (const auto& game_object : objects)
 	{
 		for (unsigned int i = 0; i < 8; ++i)
 		{
@@ -132,14 +132,14 @@ void OLOctTreeNode::CollectIntersect(std::vector<GameObject*> &game_objects, con
 {
 	if (camera.IsInsideFrustum(box))
 	{
-		for (auto &object : objects)
+		for (const auto& object : objects)
 		{
 			if (object->IsVisible(camera))
 			{
 				game_objects.push_back(object);
 			}
 		}
-		for (auto &child : children)
+		for (const auto& child : children)
 		{
 			child->CollectIntersect(game_objects, camera);
 		}

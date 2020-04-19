@@ -117,21 +117,21 @@ update_status ModuleEditor::Update()
 #if GAME
 	if (!inital_scene_loaded)
 	{
-		OpenScene("Library/menuscene.scene");
+		OpenScene(MENU_SCENE_PATH);
 		App->scripts->InitScripts();
 		inital_scene_loaded = true;
 		return update_status::UPDATE_CONTINUE;
 	}
-#endif
-
-	//ImGui::ShowStyleEditor();
-	//ImGui::ShowDemoWindow();
-
+#else	
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
 		//OpenScene(DEFAULT_SCENE_PATH);
 		inital_scene_loaded = true;
 	}
+	//ImGui::ShowStyleEditor();
+	//ImGui::ShowDemoWindow();
+#endif
+
 
 	return update_status::UPDATE_CONTINUE;
 }

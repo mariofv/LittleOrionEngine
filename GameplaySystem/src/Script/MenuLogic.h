@@ -2,7 +2,6 @@
 #define  __MENULOGIC_H__
 
 #include "Script.h"
-#include "Main/Globals.h"
 
 class MenuLogic : public Script
 {
@@ -20,13 +19,17 @@ public:
 	//void Load(const Config& config) override;
 
 private:
+	bool ComfirmButtonPressed();
+
+private:
 	GameObject* button0 = nullptr;
 	GameObject* button1 = nullptr;
 	GameObject* button2 = nullptr;
 	GameObject* button3 = nullptr;
 
 	GameObject* background = nullptr;
-	GameObject* help = nullptr;
+	GameObject* help_controller = nullptr;
+	GameObject* help_keyboard = nullptr;
 	GameObject* credits = nullptr;
 
 	std::vector<GameObject*> buttons;

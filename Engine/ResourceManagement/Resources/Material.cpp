@@ -7,8 +7,7 @@
 
 #include "ResourceManagement/Metafile/Metafile.h"
 
-Material::Material(Metafile* resource_metafile) :
-	Resource(resource_metafile)
+Material::Material(uint32_t uuid) : Resource(uuid)
 {
 	textures.resize(MAX_MATERIAL_TEXTURE_TYPES);
 	textures_uuid.resize(MAX_MATERIAL_TEXTURE_TYPES);

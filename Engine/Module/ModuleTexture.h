@@ -24,8 +24,8 @@ public:
 	bool CleanUp() override;
 
 public:
-	GLuint checkerboard_texture_id;
-	GLuint whitefall_texture_id;
+	GLuint checkerboard_texture_id = 0;
+	GLuint whitefall_texture_id = 0;
 
 	const static int generate_texture_height = 64;
 	const static int generate_texture_width = 64;

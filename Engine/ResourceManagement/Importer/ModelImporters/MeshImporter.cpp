@@ -106,7 +106,7 @@ std::vector<std::pair<std::vector<uint32_t>, std::vector<float>>> MeshImporter::
 	{
 		aiBone * mesh_bone = mesh->mBones[j];
 		std::string mesh_bone_name(mesh_bone->mName.C_Str()); //TODO: Change to use hash instead of name everywhere (Mesh, animation, skeleton)
-		auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [&mesh_bone_name](const Skeleton::Joint & joint)
+		const auto it = std::find_if(skeleton->skeleton.begin(), skeleton->skeleton.end(), [&mesh_bone_name](const Skeleton::Joint & joint)
 		{
 			return joint.name == mesh_bone_name;
 		});

@@ -14,6 +14,7 @@
 #include "ResourceManagement/Resources/StateMachine.h"
 #include "ResourceManagement/Resources/Texture.h"
 
+#include "ResourceManagement/Metafile/MetafileManager.h"
 #include "ResourceManagement/ResourcesDB/ResourceDataBase.h"
 
 #include <Brofiler/Brofiler.h>
@@ -45,8 +46,6 @@ class SkeletonManager;
 class SkyboxManager;
 class StateMachineManager;
 class TextureManager;
-
-class MetafileManager;
 
 class ModuleResourceManager : public Module
 {
@@ -81,7 +80,7 @@ public:
 		APP_LOG_INFO("Saving Resource %u.", modified_resource->GetUUID());
 
 		FileData resource_data = ResourceManagement::Binarize<T>(modified_resource.get());
-		std::string modified_resource_path = modified_resource->resource_metafile->imported_file_path;
+		std::string modified_resource_path = resource_DB->GetEntry(modified_resource->GetUUID())->imported_file_path;
 		Path* saved_resource_assets_path = App->filesystem->Save(modified_resource_path, resource_data);
 
 		InternalImport(*saved_resource_assets_path);
@@ -103,21 +102,16 @@ public:
 			return std::static_pointer_cast<T>(loaded_resource);
 		}
 
-		Metafile* metafile = resource_DB->GetEntry(uuid);
-		if(metafile == nullptr)
+		std::string resource_library_file = MetafileManager::GetUUIDExportedFile(uuid);
+		if (!App->filesystem->Exists(resource_library_file))
 		{
-			int i = 0;
-		}
-		assert(metafile != nullptr);
-		if (!App->filesystem->Exists(metafile->exported_file_path))
-		{
-			APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, metafile->exported_file_path.c_str());
+			APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, resource_library_file.c_str());
 			return nullptr;
 		}
 
-		Path* resource_exported_file_path = App->filesystem->GetPath(metafile->exported_file_path);
+		Path* resource_exported_file_path = App->filesystem->GetPath(resource_library_file);
 		FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
-		loaded_resource = ResourceManagement::Load<T>(metafile, exported_file_data);
+		loaded_resource = ResourceManagement::Load<T>(uuid, exported_file_data);
 
 		free((char*)exported_file_data.buffer);
 
@@ -173,7 +167,7 @@ public:
 	std::unique_ptr<ResourceDataBase> resource_DB = nullptr;
 
 private:
-	const size_t importer_interval_millis = 30000;
+	const size_t importer_interval_millis = 60*10*1000;
 	float last_imported_time = 0;
 	std::thread importing_thread;
 	std::unique_ptr<Timer> thread_timer = std::make_unique<Timer>();

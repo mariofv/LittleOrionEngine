@@ -13,7 +13,7 @@ class Skybox;
 class Texture : public Resource
 {
 public:
-	Texture(Metafile* resource_metafile, char* data, size_t image_size, int width, int height, bool normal_map = false);
+	Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, bool normal_map = false);
 
 	~Texture();
 
@@ -64,9 +64,9 @@ private:
 namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<Texture> Load(Metafile* metafile, const FileData& resource_data)
+	static std::shared_ptr<Texture> Load(uint32_t uuid, const FileData& resource_data)
 	{
-		return TextureManager::Load(metafile, resource_data);
+		return TextureManager::Load(uuid, resource_data);
 	}
 }
 

@@ -2,10 +2,10 @@
 
 #include "ResourceManagement/Metafile/Metafile.h"
 
-Mesh::Mesh(Metafile* resource_metafile, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices) 
+Mesh::Mesh(uint32_t uuid, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices)
 	: vertices(vertices)
 	, indices(indices)
-	, Resource(resource_metafile)
+	, Resource(uuid)
 {
 	LoadInMemory();
 }
@@ -28,6 +28,11 @@ GLuint Mesh::GetVAO() const
 int Mesh::GetNumTriangles() const
 {
 	return indices.size() / 3;
+}
+
+int Mesh::GetNumVerts() const
+{
+	return vertices.size();
 }
 
 std::vector<Triangle> Mesh::GetTriangles() const

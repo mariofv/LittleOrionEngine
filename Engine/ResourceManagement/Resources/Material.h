@@ -24,7 +24,7 @@ public:
 	};
 
 	Material() = default;
-	Material(Metafile* resource_metafile);
+	Material(uint32_t uuid);
 	~Material() = default;
 
 	void Save(Config& config) const;
@@ -47,7 +47,7 @@ public:
 	float specular_color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float k_diffuse = 1.0f;
 	float k_specular = 1.0f;
-	float k_ambient = 1.0f;
+	float k_ambient = 0.5f;
 	float shininess = 1.0f;
 
 	bool show_checkerboard_texture = false;
@@ -62,9 +62,9 @@ namespace ResourceManagement
 	};
 
 	template<>
-	static std::shared_ptr<Material> Load(Metafile* metafile, const FileData& resource_data)
+	static std::shared_ptr<Material> Load(uint32_t uuid, const FileData& resource_data)
 	{
-		return MaterialManager::Load(metafile, resource_data);
+		return MaterialManager::Load(uuid, resource_data);
 	}
 
 	template<>

@@ -80,13 +80,13 @@ Path* Path::Save(const char* file_name, const FileData& data, bool append)
 
 	if (file == NULL)
 	{
-		APP_LOG_ERROR("Error: Unable to open file! PhysFS Error: %s\n", PHYSFS_getLastErrorCode());
+		APP_LOG_ERROR("Error: Unable to open file! PhysFS Error: %s\n", PHYSFS_getLastError());
 		return nullptr;
 	}
 
 
 	PHYSFS_writeBytes(file, data.buffer, data.size);
-	APP_LOG_INFO("File %s saved!\n", file_path.c_str());
+	APP_LOG_INFO("File %s saved!\n", saved_file_path_string.c_str());
 	PHYSFS_close(file);
 
 	Path* saved_file_path = nullptr;
@@ -153,9 +153,6 @@ void Path::CalculatePathInfo()
 	std::string file_extension = GetExtension(file_path);
 	is_directory = (PHYSFS_FileType::PHYSFS_FILETYPE_DIRECTORY == path_info.filetype);
 	CalculateFile();
-
-	modification_timestamp = path_info.modtime;
-	return;
 }
 
 void Path::CalculateFile()
@@ -189,6 +186,17 @@ void Path::CalculateChildren()
 			++total_sub_files_number;
 		}
 	}
+}
+
+uint32_t Path::GetModificationTimestamp() const
+{
+	PHYSFS_Stat path_info;
+	if (PHYSFS_stat(file_path.c_str(), &path_info) == 0)
+	{
+		APP_LOG_ERROR("Error getting %s path info: %s", file_path.c_str(), PHYSFS_getLastError());
+	}
+
+	return path_info.modtime;
 }
 
 void Path::GetAllFilesInPath(std::vector<Path*>& path_children, bool directories_only)

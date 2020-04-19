@@ -8,7 +8,7 @@
 #include <Brofiler/Brofiler.h>
 #include <vector>
 
-std::shared_ptr<Mesh> MeshManager::Load(Metafile* metafile, const FileData& resource_data)
+std::shared_ptr<Mesh> MeshManager::Load(uint32_t uuid, const FileData& resource_data)
 {
 	char * data = (char*)resource_data.buffer;
 	char* cursor = data;
@@ -33,7 +33,7 @@ std::shared_ptr<Mesh> MeshManager::Load(Metafile* metafile, const FileData& reso
 	bytes = sizeof(Mesh::Vertex) * ranges[1];
 	memcpy(&vertices.front(), cursor, bytes);
 
-	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(metafile, std::move(vertices), std::move(indices));
+	std::shared_ptr<Mesh> new_mesh = std::make_shared<Mesh>(uuid, std::move(vertices), std::move(indices));
 
 	return new_mesh;
 }

@@ -7,13 +7,13 @@
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Manager/SkyboxManager.h"
 
-Skybox::Skybox() : Resource(nullptr)
+Skybox::Skybox() : Resource()
 {
 	GenerateSkyboxCube();
 	GenerateSkyboxCubeMap();
 }
 
-Skybox::Skybox(Metafile* resource_metafile) : Resource(resource_metafile)
+Skybox::Skybox(uint32_t uuid) : Resource(uuid)
 {
 	GenerateSkyboxCube();
 	GenerateSkyboxCubeMap();

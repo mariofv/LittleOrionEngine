@@ -9,7 +9,7 @@ class ComponentText : public ComponentUI
 public:
 	ComponentText();
 	ComponentText(GameObject * owner);
-	~ComponentText();
+	~ComponentText() = default;
 
 	void Delete() override;
 

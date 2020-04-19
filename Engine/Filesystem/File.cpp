@@ -22,7 +22,7 @@ FileData File::Load() const
 	PHYSFS_File* physfs_file_handle = PHYSFS_openRead(file_path->GetFullPath().c_str());
 	if (physfs_file_handle == NULL)
 	{
-		APP_LOG_ERROR("Error loading file %s, %s", file_path->GetFullPath().c_str(), PHYSFS_getLastErrorCode())
+		APP_LOG_ERROR("Error loading file %s, %s", file_path->GetFullPath().c_str(), PHYSFS_getLastError())
 		loaded_data.size = 0;
 		loaded_data.buffer = NULL;
 		return loaded_data;

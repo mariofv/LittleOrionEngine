@@ -1,4 +1,5 @@
 #include "AnimController.h"
+
 #include "Component/ComponentMeshRenderer.h"
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
@@ -72,7 +73,6 @@ void AnimController::GetClipTransform(float current_time, uint32_t skeleton_uuid
 		}
 	}
 }
-
 bool AnimController::Update()
 {
 	for (auto & playing_clip : playing_clips)

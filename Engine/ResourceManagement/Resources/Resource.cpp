@@ -4,21 +4,16 @@
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
-Resource::Resource(Metafile* metafile) : resource_metafile(metafile) {}
+Resource::Resource(uint32_t uuid) : uuid(uuid) {}
 
 uint32_t Resource::GetUUID() const
 { 
-	return resource_metafile->uuid; 
-}
-
-std::string Resource::GetName() const
-{
-	return resource_metafile->resource_name;
+	return uuid; 
 }
 
 bool Resource::IsCoreResource() const
 {
-	return GetUUID() < NUM_CORE_RESOURCES;
+	return uuid < NUM_CORE_RESOURCES;
 }
 
 std::string Resource::GetResourceTypeName(ResourceType resource_type)

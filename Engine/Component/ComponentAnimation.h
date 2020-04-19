@@ -7,10 +7,12 @@
 
 #include <GL/glew.h>
 #include <memory>
+
 class Animation;
 class AnimController;
 class GameObject;
 class StateMachine;
+
 class ComponentAnimation :	public Component
 {
 public:

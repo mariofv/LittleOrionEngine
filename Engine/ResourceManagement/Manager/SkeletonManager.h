@@ -15,7 +15,7 @@ public:
 	SkeletonManager() = default;
 	~SkeletonManager() = default;
 
-	static std::shared_ptr<Skeleton> Load(Metafile* metafile, const FileData& resource_data);
+	static std::shared_ptr<Skeleton> Load(uint32_t uuid, const FileData& resource_data);
 };
 
 #endif // _SKELETONMANAGER_H_

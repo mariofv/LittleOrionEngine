@@ -20,8 +20,8 @@ class Prefab : public Resource
 {
 public:
 	Prefab() = default;
-	Prefab(Metafile* resource_metafile) : Resource(resource_metafile) {};
-	Prefab(Metafile* resource_metafile, std::vector<std::unique_ptr<GameObject>> && gameObjects);
+	Prefab(uint32_t uuid) : Resource(uuid) {};
+	Prefab(uint32_t uuid, std::vector<std::unique_ptr<GameObject>> && gameObjects);
 	~Prefab() = default;
 
 	GameObject * Instantiate(GameObject * prefab_parent, std::unordered_map<int64_t, int64_t> * UUIDS_pairs = nullptr);
@@ -55,9 +55,9 @@ namespace ResourceManagement
 	};
 
 	template<>
-	static std::shared_ptr<Prefab> Load(Metafile* metafile, const FileData& resource_data)
+	static std::shared_ptr<Prefab> Load(uint32_t uuid, const FileData& resource_data)
 	{
-		return PrefabManager::Load(metafile, resource_data);
+		return PrefabManager::Load(uuid, resource_data);
 	}
 }
 

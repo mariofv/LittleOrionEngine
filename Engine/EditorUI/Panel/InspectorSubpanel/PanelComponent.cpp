@@ -146,7 +146,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Mesh");
 		ImGui::SameLine();
-		std::string mesh_name = mesh_renderer->mesh_to_render == nullptr ? "None (Mesh)" : mesh_renderer->mesh_to_render->resource_metafile->imported_file_path;
+		std::string mesh_name = mesh_renderer->mesh_to_render == nullptr ? "None (Mesh)" : App->resources->resource_DB->GetEntry(mesh_renderer->mesh_to_render->GetUUID())->resource_name;
 		ImGuiID element_id = ImGui::GetID((std::to_string(mesh_renderer->UUID) + "MeshSelector").c_str());
 		if (ImGui::Button(mesh_name.c_str()))
 		{
@@ -169,7 +169,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		ImGui::Text("Material");
 		ImGui::SameLine();
 		
-		std::string material_name = mesh_renderer->material_to_render == nullptr ? "None (Material)" : mesh_renderer->material_to_render->resource_metafile->imported_file_path;
+		std::string material_name = mesh_renderer->material_to_render == nullptr ? "None (Material)" : App->resources->resource_DB->GetEntry(mesh_renderer->material_to_render->GetUUID())->resource_name;
 		element_id = ImGui::GetID((std::to_string(mesh_renderer->UUID) + "MaterialSelector").c_str());
 		if (ImGui::Button(material_name.c_str()))
 		{
@@ -191,7 +191,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		ImGui::Text("Skeleton");
 		ImGui::SameLine();
 
-		std::string skeleton_name = mesh_renderer->skeleton == nullptr ? "None (Skeleton)" : mesh_renderer->skeleton->resource_metafile->imported_file_path;
+		std::string skeleton_name = mesh_renderer->skeleton == nullptr ? "None (Skeleton)" : App->resources->resource_DB->GetEntry(mesh_renderer->material_to_render->GetUUID())->resource_name;;
 		element_id = ImGui::GetID((std::to_string(mesh_renderer->UUID) + "SkeletonSelector").c_str());
 		if (ImGui::Button(skeleton_name.c_str()))
 		{
@@ -447,7 +447,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		ImGui::Text("State Machine");
 		ImGui::SameLine();
 
-		std::string state_machine_name = animation->animation_controller->state_machine == nullptr ? "None (State machine)" : animation->animation_controller->state_machine->resource_metafile->imported_file_path;
+		std::string state_machine_name = animation->animation_controller->state_machine == nullptr ? "None (State machine)" : App->resources->resource_DB->GetEntry(animation->animation_controller->state_machine->GetUUID())->resource_name;
 		ImGuiID element_id = ImGui::GetID((std::to_string(animation->UUID) + "StateMachineSelector").c_str());
 		if (ImGui::Button(state_machine_name.c_str()))
 		{
@@ -728,7 +728,7 @@ void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 
 	if (ImGui::BeginCombo("Add Script", component_script->name.c_str()))
 	{
-		for (auto script_name : App->scripts->scripts_list) {
+		for (auto& script_name : App->scripts->scripts_list) {
 			if (ImGui::Selectable(script_name.c_str()))
 			{
 				component_script->LoadName(script_name);
@@ -774,9 +774,10 @@ void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 		return;
 	}
 	ImGui::Separator();
-	if (ImGui::DragFloat("Layer", &ui->owner->transform_2d.position.z, 1.0F, -MAX_NUM_LAYERS, MAX_NUM_LAYERS))
+	if (ImGui::DragInt("Layer", &ui->layer, 1.0F, -MAX_NUM_LAYERS, MAX_NUM_LAYERS))
 	{
-		ui->owner->transform_2d.OnTransformChange();
+		//ui->owner->transform_2d.OnTransformChange();
+		App->ui->SortComponentsUI();
 	}
 	ImGui::Separator();
 	ImGui::InputInt("Texture", (int*)(&ui->ui_texture));

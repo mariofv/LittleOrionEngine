@@ -20,7 +20,7 @@ FileData StateMachineManager::Binarize(StateMachine* state_machine)
 	return state_machine_data;
 }
 
-std::shared_ptr<StateMachine> StateMachineManager::Load(Metafile* metafile, const FileData& resource_data)
+std::shared_ptr<StateMachine> StateMachineManager::Load(uint32_t uuid, const FileData& resource_data)
 {
 	char * data = (char*)resource_data.buffer;
 	char* cursor = data;
@@ -100,7 +100,7 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(Metafile* metafile, cons
 		memcpy(&transition->interpolation_time, cursor, bytes);
 		cursor += bytes;
 	}
-	std::shared_ptr<StateMachine> new_state_machine = std::make_shared<StateMachine>(metafile, std::move(clips), std::move(states), std::move(transitions));
+	std::shared_ptr<StateMachine> new_state_machine = std::make_shared<StateMachine>(uuid, std::move(clips), std::move(states), std::move(transitions));
 	bytes = sizeof(uint64_t);
 	memcpy(&new_state_machine->default_state, cursor, bytes);
 	cursor += bytes;
