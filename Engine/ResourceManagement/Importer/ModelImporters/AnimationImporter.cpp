@@ -105,7 +105,7 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 			{
 				translation = animation_transform.Col3(3);
 			}
-			//translation *= scale_factor;
+			translation *= scale_factor;
 
 			Animation::Channel imported_channel{ channel_set.first, translation, rotation };
 			keyframes[i].push_back(imported_channel);
