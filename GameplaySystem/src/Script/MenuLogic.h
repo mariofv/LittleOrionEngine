@@ -2,8 +2,8 @@
 #define  __MENULOGIC_H__
 
 #include "Script.h"
-#include "Main/Globals.h"
 
+#define MAIN_SCENE_PATH "TO CHANGE"
 class MenuLogic : public Script
 {
 public:

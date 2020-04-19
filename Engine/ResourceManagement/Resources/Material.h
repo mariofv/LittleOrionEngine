@@ -47,7 +47,7 @@ public:
 	float specular_color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float k_diffuse = 1.0f;
 	float k_specular = 1.0f;
-	float k_ambient = 1.0f;
+	float k_ambient = 0.5f;
 	float shininess = 1.0f;
 
 	bool show_checkerboard_texture = false;

@@ -12,11 +12,23 @@
 #define SHADERS_PATH "/Resources/Shaders/shaders.json"
 
 #define RESOURCES_SCRIPT_PATH "/Resources/Scripts"
-#define RESOURCES_SCRIPT_DLL_PATH "/Resources/Scripts/GamePlaySystem.dll"
+
+#if DEBUG
+#define RESOURCES_SCRIPT_DLL_PATH "Resources/Scripts/GameplaySystemDebug.dll"
+#define RESOURCE_SCRIPT_DLL_FILE "GameplaySystemDebu_.dll"
+#elif GAME
+#define RESOURCES_SCRIPT_DLL_PATH "Resources/Scripts/GameplaySystem.dll"
+#define RESOURCE_SCRIPT_DLL_FILE "GameplaySystem.dll"
+#else
+#define RESOURCES_SCRIPT_DLL_PATH "Resources/Scripts/GameplaySystemRelease.dll"
+#define RESOURCE_SCRIPT_DLL_FILE "GameplaySystemReleas_.dll"
+#endif
 #define RESOURCES_SCRIPT_LIST_FILENAME "scripts_list.scripts"
+
 #define RESOURCES_SCRIPT_TEMPLATE_CPP "/Resources/Scripts/TemplateScript.cpp"
 #define RESOURCES_SCRIPT_TEMPLATE_H "/Resources/Scripts/TemplateScript.h"
 #define SCRIPT_PATH "../GamePlaySystem/src/Script/"
+
 
 #define RESOURCES_GAME_INPUTS_PATH "/Resources/GameInputs"
 #define RESOURCES_GAME_INPUTS_FILENAME "game_inputs.inputs"

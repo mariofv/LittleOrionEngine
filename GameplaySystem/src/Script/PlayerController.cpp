@@ -74,7 +74,6 @@ void PlayerController::OnInspector(ImGuiContext* context)
 
 		ImGui::EndCombo();
 	}
-
 }
 
 //Use this for linking GO automatically
