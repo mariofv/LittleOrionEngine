@@ -29,15 +29,6 @@ bool ModuleScene::Init()
 	root = new GameObject(0);
 	build_options = std::make_unique<BuildOptions>();
 	
-	if(!build_options->LoadOptions())
-	{
-		GetSceneFromPath(DEFAULT_SCENE_PATH);
-		
-		return true;
-	}
-
-	current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(0));
-
 	return true;
 }
 
@@ -200,6 +191,22 @@ void ModuleScene::OpenPendingScene()
 	scene_to_load.clear();
 }
 
+void ModuleScene::LoadBuildScene()
+{
+	if (!build_options->LoadOptions())
+	{
+		GetSceneFromPath(DEFAULT_SCENE_PATH);
+		current_scene.get()->Load();
+
+		return;
+	}
+
+	current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(0));
+	current_scene.get()->Load();
+
+	return;
+}
+
 void ModuleScene::LoadScene(const std::string &path)
 {
 	scene_to_load = path;
@@ -208,7 +215,7 @@ void ModuleScene::LoadScene(const std::string &path)
 void ModuleScene::SaveScene(const std::string& path) const
 {
 	current_scene.get()->Save(root);
-	current_scene.get()->SaveSerializedConfig();
+	current_scene.get()->SaveSerializedConfig(path);
 }
 
 bool ModuleScene::HasPendingSceneToLoad() const

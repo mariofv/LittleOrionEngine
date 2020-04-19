@@ -125,7 +125,7 @@ update_status ModuleEditor::Update()
 #else	
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
-		//OpenScene(DEFAULT_SCENE_PATH);
+		App->scene->LoadBuildScene();
 		inital_scene_loaded = true;
 	}
 	//ImGui::ShowStyleEditor();

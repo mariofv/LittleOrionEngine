@@ -32,6 +32,7 @@ public:
 	void OpenPendingScene();
 	void DeleteCurrentScene();
 
+	void LoadBuildScene();
 	void LoadScene(const std::string& path);
 	void SaveScene(const std::string& path) const;
 	bool HasPendingSceneToLoad() const;
