@@ -1,4 +1,4 @@
-#include "PanelPopupSceneManagement.h"
+#include "PanelPopupSceneLoader.h"
 
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
@@ -11,7 +11,7 @@
 #include <imgui_stdlib.h>
 
 
-PanelPopupSceneManagement::PanelPopupSceneManagement()
+PanelPopupSceneLoader::PanelPopupSceneLoader()
 {
 	opened = false;
 	enabled = true;
@@ -19,7 +19,7 @@ PanelPopupSceneManagement::PanelPopupSceneManagement()
 	window_name = "Popups Scene Management";
 }
 
-void PanelPopupSceneManagement::Render()
+void PanelPopupSceneLoader::Render()
 {
 	if (popup_shown)
 	{
@@ -51,22 +51,13 @@ void PanelPopupSceneManagement::Render()
 
 		if (ImGui::Button("ok") && selected_file_name != "")
 		{
-			if (App->filesystem->Exists(GetNormalizedPath()))
-			{
-				ImGui::OpenPopup("Confirmation");
-			}
-			else
-			{
-				SetPopupSelection();
-			}
+			SetPopupSelection();
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("cancel"))
 		{
 			ImGui::CloseCurrentPopup();
 		}
-
-		ConfirmationPopup();
 		
 		if (pending_to_be_closed)
 		{
@@ -86,7 +77,7 @@ void PanelPopupSceneManagement::Render()
 	}
 }
 
-void PanelPopupSceneManagement::RenderAccessPath()
+void PanelPopupSceneLoader::RenderAccessPath()
 {
 	for (size_t i = 0; i < path_stack.size(); ++i)
 	{
@@ -104,7 +95,7 @@ void PanelPopupSceneManagement::RenderAccessPath()
 	}
 }
 
-void PanelPopupSceneManagement::RenderCurrentFolderContents()
+void PanelPopupSceneLoader::RenderCurrentFolderContents()
 {
 	float reserved_space = GetFrameHeightWithSpacing() * 2;
 	ImGui::BeginChild("###current_directory_browser", ImVec2(0, -reserved_space), true);
@@ -156,14 +147,14 @@ void PanelPopupSceneManagement::RenderCurrentFolderContents()
 	ImGui::EndChild();
 }
 
-void PanelPopupSceneManagement::PushCurrentPath(Path* new_current_path)
+void PanelPopupSceneLoader::PushCurrentPath(Path* new_current_path)
 {
 	current_path = new_current_path;
 	path_stack.push_back(current_path);
 	selected_path = -1;
 }
 
-void PanelPopupSceneManagement::PopCurrentPath(Path* new_current_path)
+void PanelPopupSceneLoader::PopCurrentPath(Path* new_current_path)
 {
 	current_path = new_current_path;
 	auto& current_path_pos = std::find(path_stack.begin(), path_stack.end(), current_path);
@@ -171,7 +162,7 @@ void PanelPopupSceneManagement::PopCurrentPath(Path* new_current_path)
 	selected_path = -1;
 }
 
-std::string PanelPopupSceneManagement::GetNormalizedPath()
+std::string PanelPopupSceneLoader::GetNormalizedPath()
 {
 	std::string full_path = current_path->GetFullPath() + "/" + selected_file_name;
 	if (Path::GetExtension(selected_file_name) != "scene")
@@ -181,43 +172,25 @@ std::string PanelPopupSceneManagement::GetNormalizedPath()
 	return full_path;
 }
 
-void PanelPopupSceneManagement::SetPopupSelection()
+void PanelPopupSceneLoader::SetPopupSelection()
 {
 	has_selected = true;
 	ImGui::CloseCurrentPopup();
 	pending_to_be_closed = true;
 }
 
-void PanelPopupSceneManagement::ConfirmationPopup()
-{
-	if (ImGui::BeginPopupModal("Confirmation"))
-	{
-		ImGui::Text("File already exists. Confirm?");
-		if (ImGui::Button("ok"))
-		{
-			SetPopupSelection();
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("cancel"))
-		{
-			ImGui::CloseCurrentPopup();
-		}
-		ImGui::EndPopup();
-	}
-}
-
-float PanelPopupSceneManagement::GetFrameHeightWithSpacing()
+float PanelPopupSceneLoader::GetFrameHeightWithSpacing()
 {
 	ImGuiContext& g = *GImGui;
 	return g.FontSize + g.Style.FramePadding.y * 2.0f + g.Style.ItemSpacing.y;
 }
 
-bool PanelPopupSceneManagement::HasSelected() const
+bool PanelPopupSceneLoader::HasSelected() const
 {
 	return has_selected;
 }
 
-std::string PanelPopupSceneManagement::GetSelected()
+std::string PanelPopupSceneLoader::GetSelected()
 {
 	has_selected = false;
 	return current_path->GetFullPath() + "/" + selected_file_name;

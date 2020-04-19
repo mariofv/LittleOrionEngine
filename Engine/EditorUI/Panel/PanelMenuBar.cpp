@@ -14,7 +14,8 @@
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelResourceDatabase.h"
-#include "EditorUI/Panel/PopupsPanel/PanelPopupSceneManagement.h"
+#include "EditorUI/Panel/PopupsPanel/PanelPopupSceneLoader.h"
+#include "EditorUI/Panel/PopupsPanel/PanelPopupSceneSaver.h"
 
 #include "Filesystem/PathAtlas.h"
 #include "Helper/TemplatedGameObjectCreator.h"
@@ -61,7 +62,7 @@ void PanelMenuBar::ShowFileMenu()
 		}
 		if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Load Scene"))
 		{
-			App->editor->popups->scene_management_popup.popup_shown = true;
+			App->editor->popups->scene_loader_popup.popup_shown = true;
 		}
 		ImGui::Separator();
 		if (App->editor->current_scene_path != "" && ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
@@ -70,7 +71,7 @@ void PanelMenuBar::ShowFileMenu()
 		}
 		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene as"))
 		{
-			App->editor->popups->scene_management_popup_aux.save_scene_shown = true;
+			App->editor->popups->scene_saver_popup.popup_shown = true;
 		}
 		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
 		{
