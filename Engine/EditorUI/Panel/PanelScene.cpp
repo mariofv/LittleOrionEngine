@@ -331,6 +331,7 @@ void PanelScene::SceneDropTarget()
 			{
 				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(incoming_metafile->uuid);
 				prefab->overwritable = false;
+
 				GameObject* new_model = prefab->Instantiate(App->scene->root);
 				App->actions->action_game_object = new_model;
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);

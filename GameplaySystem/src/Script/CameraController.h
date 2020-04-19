@@ -5,8 +5,9 @@
 
 #include "MathGeoLib.h"
 
-class PlayerController;
 class ComponentCamera;
+class DebugModeScript;
+class PlayerController;
 
 class CameraController : public Script
 {
@@ -37,6 +38,10 @@ private:
 	GameObject* player = nullptr;
 	PlayerController* player_movement_script = nullptr;
 	ComponentScript* player_movement_component = nullptr;
+
+	GameObject* debug = nullptr;
+	DebugModeScript* debug_mode = nullptr;
+
 
 };
 extern "C" SCRIPT_API CameraController* CameraControllerDLL(); //This is how we are going to load the script

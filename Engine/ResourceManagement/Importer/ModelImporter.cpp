@@ -41,7 +41,7 @@ ModelImporter::~ModelImporter()
 
 FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
-	FileData model_data;
+	FileData model_data{NULL, 0};
 
 	// LOAD ASSIMP SCENE
 	APP_LOG_INIT("Importing model %s.", assets_file_path.GetFullPath().c_str())

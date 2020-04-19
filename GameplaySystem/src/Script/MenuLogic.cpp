@@ -8,6 +8,7 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleUI.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
@@ -46,18 +47,28 @@ void MenuLogic::Start()
 void MenuLogic::Update()
 {
 
-	if(show_help && (App->input->GetKeyDown(KeyCode::BackSpace) || App->input->GetControllerButtonDown(ControllerCode::B)))
+	if(show_help && ComfirmButtonPressed())
 	{
-		help->SetEnabled(false);
+		help_controller->SetEnabled(false);
+		help_keyboard->SetEnabled(false);
+		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
 		show_help = false;
 		return;
 	}
 
-	if (show_credits && (App->input->GetKeyDown(KeyCode::BackSpace) || App->input->GetControllerButtonDown(ControllerCode::B)))
+	if (show_credits && ComfirmButtonPressed())
 	{
 		credits->SetEnabled(false);
+		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
 		show_credits = false;
 		return;
+	}
+
+	if(show_help && (App->input->GetKeyDown(KeyCode::D) || App->input->GetControllerButtonDown(ControllerCode::RightDpad) || App->input->GetKeyDown(KeyCode::A) || App->input->GetControllerButtonDown(ControllerCode::LeftDpad)))
+	{
+		help_controller->SetEnabled(!help_controller->IsEnabled());
+		help_keyboard->SetEnabled(!help_keyboard->IsEnabled());
+		App->ui->SortComponentsUI();
 	}
 
 	if(show_credits || show_help)
@@ -65,7 +76,7 @@ void MenuLogic::Update()
 		return;
 	}
 
-	if (App->input->GetKeyDown(KeyCode::Space) || App->input->GetControllerButtonDown(ControllerCode::A))
+	if (ComfirmButtonPressed())
 	{
 		//Change scene
 		switch (current)
@@ -75,12 +86,15 @@ void MenuLogic::Update()
 			break;
 		case 1:
 			//Active help
-			help->SetEnabled(true);
+			help_controller->SetEnabled(true);
+			help_keyboard->SetEnabled(false);
+			owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, (help_controller->transform_2d.height * -236.0f) / 604.0f, owner->transform_2d.position.z));
 			show_help = true;
 			return;
 		case 2:
 			//Active credits
 			credits->SetEnabled(true);
+			owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, (credits->transform_2d.height * -236.0f) / 604.0f, owner->transform_2d.position.z));
 			show_credits = true;
 			return;
 		case 3:
@@ -94,14 +108,14 @@ void MenuLogic::Update()
 		}
 	}
 
-	if(App->input->GetKeyDown(KeyCode::UpArrow) || App->input->GetControllerButtonDown(ControllerCode::UpDpad))
+	if(App->input->GetKeyDown(KeyCode::W) || App->input->GetControllerButtonDown(ControllerCode::UpDpad))
 	{
 		current -= 1;
 		current = current % 4;
 
 		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
 	}
-	else if(App->input->GetKeyDown(KeyCode::DownArrow) || App->input->GetControllerButtonDown(ControllerCode::DownDpad))
+	else if(App->input->GetKeyDown(KeyCode::S) || App->input->GetControllerButtonDown(ControllerCode::DownDpad))
 	{
 		current += 1;
 		current = current % 4;
@@ -137,19 +151,27 @@ void MenuLogic::InitPublicGameObjects()
 	public_gameobjects.push_back(&button3);
 	variable_names.push_back(GET_VARIABLE_NAME(button3));
 
-	public_gameobjects.push_back(&help);
-	variable_names.push_back(GET_VARIABLE_NAME(help));	
+	public_gameobjects.push_back(&help_controller);
+	variable_names.push_back(GET_VARIABLE_NAME(help_controller));
+
+	public_gameobjects.push_back(&help_keyboard);
+	variable_names.push_back(GET_VARIABLE_NAME(help_keyboard));
 	
 	public_gameobjects.push_back(&credits);
 	variable_names.push_back(GET_VARIABLE_NAME(credits));
 
 
-	for (int i = 0; i < public_gameobjects.size(); ++i)
+	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		name_gameobjects.push_back(is_object);
 		go_uuids.push_back(0);
 	}
 }
+bool MenuLogic::ComfirmButtonPressed()
+{
+	return (App->input->GetKeyDown(KeyCode::Space) || App->input->GetControllerButtonDown(ControllerCode::A));
+}
+
 //Use this for linking GO AND VARIABLES automatically if you need to save variables 
 // void MenuLogic::Save(Config& config) const
 // {

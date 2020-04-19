@@ -30,6 +30,11 @@ int Mesh::GetNumTriangles() const
 	return indices.size() / 3;
 }
 
+int Mesh::GetNumVerts() const
+{
+	return vertices.size();
+}
+
 std::vector<Triangle> Mesh::GetTriangles() const
 {
 	std::vector<Triangle> triangles;

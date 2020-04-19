@@ -16,8 +16,9 @@
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 
-
-#include "SDL/SDL.h"
+#include "Brofiler/Brofiler.h"
+#include <algorithm>
+#include <SDL/SDL.h>
 
 
 // Called before render is available
@@ -42,6 +43,7 @@ bool ModuleUI::CleanUp()
 
 void ModuleUI::Render(const ComponentCamera* camera)
 {
+	BROFILER_CATEGORY("UI: Module Render", Profiler::Color::LightSeaGreen);
 #if GAME
 	window_width = App->window->GetWidth();
 	window_height = App->window->GetHeight();
@@ -52,20 +54,20 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	float4x4 projection = float4x4::D3DOrthoProjLH(-1, MAX_NUM_LAYERS, window_width, window_height);
 	if (main_canvas != nullptr)
 	{
+		glDisable(GL_DEPTH_TEST);
 		RenderUIGameObject(main_canvas->owner, &projection);
+		glEnable(GL_DEPTH_TEST);
 	}
 }
 
 void  ModuleUI::RenderUIGameObject(GameObject* parent, float4x4* projection)
 {
-	for (auto child : parent->children)
+	for (auto& ui_element : ordered_ui)
 	{
-		ComponentUI* ui = static_cast<ComponentUI*>(child->GetComponent(Component::ComponentType::UI));
-		if (ui)
+		if (ui_element && ui_element->ui_type != ComponentUI::UIType::CANVAS)
 		{
-			ui->Render(projection);
+			ui_element->Render(projection);
 		}
-		RenderUIGameObject(child, projection);
 	}
 }
 
@@ -97,13 +99,14 @@ ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* o
 	if(new_ui) 
 	{
 		ui_elements.push_back(new_ui);
+		SortComponentsUI();
 	}
 	return new_ui;
 }
 
 void ModuleUI::RemoveComponentUI(ComponentUI* ui_to_remove)
 {
-	auto it = std::find(ui_elements.begin(), ui_elements.end(), ui_to_remove);
+	const auto it = std::find(ui_elements.begin(), ui_elements.end(), ui_to_remove);
 	if (*it == main_canvas)
 	{
 		main_canvas = nullptr;
@@ -113,17 +116,25 @@ void ModuleUI::RemoveComponentUI(ComponentUI* ui_to_remove)
 		delete *it;
 		ui_elements.erase(it);
 	}
+
+	SortComponentsUI();
 }
 
 void ModuleUI::InitGlyph()
 {
+	BROFILER_CATEGORY("UI: Init Glyph", Profiler::Color::HoneyDew);
 	// All functions return a value different than 0 whenever an error occurred
 	if (FT_Init_FreeType(&ft))
 		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
 
+#if !GAME
 	// Load font as face
 	if (FT_New_Face(ft, "Assets/Fonts/Montserrat-Light.ttf", 0, &face))
 		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+#else
+	if (FT_New_Face(ft, "Library/Montserrat-Light.ttf", 0, &face))
+		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+#endif
 
 	// Set size to load glyphs as
 	//FT_Set_Pixel_Sizes(face, 0, 16);
@@ -179,6 +190,16 @@ void ModuleUI::InitGlyph()
 	FT_Done_FreeType(ft);
 
 	glyphInit = true;
+}
+
+void ModuleUI::SortComponentsUI()
+{
+	ordered_ui = ui_elements;
+	std::sort(ordered_ui.begin(), ordered_ui.end(), [](ComponentUI* left, ComponentUI* right)
+	{
+		return left->layer < right->layer;
+	}
+	);
 }
 
 //Guardar aqu� todos los component canvas (crear, destruir y guardar)

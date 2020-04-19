@@ -676,7 +676,7 @@ void ModuleDebugDraw::RenderPathfinding() const
 		dd::point(App->artificial_intelligence->end_position, float3(0, 255, 255), 20.0f);
 	}
 
-	for(auto point : App->artificial_intelligence->debug_path)
+	for(const auto& point : App->artificial_intelligence->debug_path)
 	{
 		dd::point(point, float3(0, 0, 255), 10.0f);
 	}

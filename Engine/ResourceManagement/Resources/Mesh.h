@@ -13,7 +13,8 @@ class Metafile;
 class Mesh : public Resource
 {
 public:
-	struct Vertex {
+	struct Vertex 
+	{
 		float3 position;
 		float3 normals;
 		float3 tangent;
@@ -29,6 +30,7 @@ public:
 	GLuint GetVAO() const;
 
 	int GetNumTriangles() const;
+	int GetNumVerts() const;
 	std::vector<Triangle> GetTriangles() const;
 
 private:

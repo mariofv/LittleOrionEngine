@@ -163,7 +163,7 @@ private:
 	float3 start_focus_position = float3::zero;
 	float3 goal_focus_position = float3::zero;
 
-	ClearMode camera_clear_mode = ClearMode::COLOR;
+	ClearMode camera_clear_mode = ClearMode::SKYBOX;
 
 	uint32_t skybox_uuid = 0;
 	std::shared_ptr<Skybox> camera_skybox = nullptr;

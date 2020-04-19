@@ -102,31 +102,6 @@ void PlayerMovement::Move(int player_id)
 		new_transform += float3(-speed, 0.0f, 0.0f);
 	}
 
-
-	//Jump handle
-	if (App->input->GetGameInput("Jump"))
-	{
-		if (!is_jumping)
-		{
-			is_jumping = true;
-			current_y = transform.y;
-			movement_vector = float3(0.0f, jump_power, 0.0f);
-		}
-	}
-
-	if (is_jumping)
-	{
-		//Delta time conversion to seconds
-		new_transform += App->time->delta_time / 1000.0f * movement_vector;
-		movement_vector += App->time->delta_time / 1000.0f * gravity_vector;
-
-		if (new_transform.y <= current_y)
-		{
-			is_jumping = false;
-			new_transform.y = current_y;
-		}
-	}
-
 	if (!new_transform.Equals(transform))
 	{
 		float3 dir;
@@ -137,10 +112,9 @@ void PlayerMovement::Move(int player_id)
 			new_transform.y = dir.y;
 		}
 
-		if (!is_jumping)
-		{
-			owner->transform.LookAt(new_transform);
-		}
+
+		owner->transform.LookAt(new_transform);
+		
 
 		if (App->artificial_intelligence->IsPointWalkable(new_transform)) 
 		{

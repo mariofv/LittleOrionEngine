@@ -452,14 +452,16 @@ bool NavMesh::CreateNavMesh()
 void NavMesh::RenderNavMesh(ComponentCamera& camera)
 {
 	if (is_mesh_computed)
+	{
 		m_dd.DrawMesh(camera);
+	}
 }
 
 void NavMesh::InitAABB()
 {
 	global_AABB.SetNegativeInfinity();
 
-	for (auto & mesh : App->renderer->meshes)
+	for (const auto& mesh : App->renderer->meshes)
 	{
 		float minX = std::fmin(mesh->owner->aabb.bounding_box.minPoint.x, global_AABB.minPoint.x);
 		float minY = std::fmin(mesh->owner->aabb.bounding_box.minPoint.y, global_AABB.minPoint.y);
@@ -815,7 +817,7 @@ void NavMesh::GetVerticesScene()
 	verts_vec.clear();
 	unwalkable_verts.clear();
 
-	for (auto mesh : App->renderer->meshes)
+	for (const auto& mesh : App->renderer->meshes)
 	{
 		for (size_t i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
 		{
@@ -866,7 +868,7 @@ void NavMesh::GetNormalsScene()
 	//Clear normals vector
 	normals_vec.clear();
 
-	for (auto mesh : App->renderer->meshes)
+	for (const const auto&  mesh : App->renderer->meshes)
 	{
 		for (size_t i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
 		{

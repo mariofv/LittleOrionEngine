@@ -229,7 +229,7 @@ uint32_t ModuleResourceManager::CreateFromData(FileData data, Path& creation_fol
 std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32_t uuid) const
 {
 	//Check if the resource is already loaded
-	auto it = std::find_if(resource_cache.begin(), resource_cache.end(), [uuid](const std::shared_ptr<Resource> resource)
+	auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [&uuid](const std::shared_ptr<Resource> & resource)
 	{
 		return resource->GetUUID() == uuid;
 	});

@@ -37,7 +37,7 @@ FileData PrefabImporter::ExtractFromModel(const Config& model_config, const Meta
 	model_config.GetChildrenConfig("Node", game_objects_config);
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
-		ExcractGameObjectFromNode(model_root_node, game_objects_config[i], game_objects, mesh_renderer_components, loaded_skeletons);
+		ExtractGameObjectFromNode(model_root_node, game_objects_config[i], game_objects, mesh_renderer_components, loaded_skeletons);
 	}
 	size_t gameobject_index = 1;
 	for (auto & game_object : game_objects)
@@ -90,7 +90,7 @@ FileData PrefabImporter::ExtractFromGameObject(GameObject* gameobject) const
 	return prefab_data;
 }
 
-void PrefabImporter::ExcractGameObjectFromNode
+void PrefabImporter::ExtractGameObjectFromNode
 (
 	std::unique_ptr<GameObject>& parent_node,
 	const Config& node_config,
@@ -112,14 +112,14 @@ void PrefabImporter::ExcractGameObjectFromNode
 
 	if (mesh_uuid != 0)
 	{
-		ExcractMeshComponent(mesh_uuid, material_uuid, skeleton_uuid, mesh_renderer_components, node_game_object);
+		ExtractMeshComponent(mesh_uuid, material_uuid, skeleton_uuid, mesh_renderer_components, node_game_object);
 		ComponentMeshRenderer* mesh_renderer = mesh_renderer_components.back().get();
 		node_game_object->Update();
 	}
 
 }
 
-void PrefabImporter::ExcractMeshComponent(
+void PrefabImporter::ExtractMeshComponent(
 	uint32_t mesh_uuid, uint32_t material_uuid, uint32_t skeleton_uuid,
 	std::vector<std::unique_ptr<ComponentMeshRenderer>>& mesh_renderer_components,
 	GameObject* node_game_object

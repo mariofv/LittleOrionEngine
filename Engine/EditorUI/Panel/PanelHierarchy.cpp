@@ -142,7 +142,6 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 			{
 				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(incoming_metafile->uuid);
 				prefab->overwritable = false;
-				
 				GameObject* new_model = prefab->Instantiate(target_game_object);
 
 				App->actions->action_game_object = new_model;
