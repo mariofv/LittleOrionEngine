@@ -90,23 +90,14 @@ std::shared_ptr<Transition> StateMachine::GetTriggerTransition(const std::string
 	return nullptr;
 }
 
-std::shared_ptr<Transition> StateMachine::GetAutomaticTransition(uint64_t state_hash, uint64_t previous_state_hash) const
+std::shared_ptr<Transition> StateMachine::GetAutomaticTransition(uint64_t state_hash) const
 {
 	std::shared_ptr<Transition> automatic_transition = nullptr;
 	for (auto & transition : transitions)
 	{
-		bool valid_transition = transition->source_hash == state_hash && transition->automatic;
-		if (!automatic_transition && valid_transition)
+		if (transition->source_hash == state_hash && transition->automatic)
 		{
-			automatic_transition = transition;
-			if (previous_state_hash == 0)
-			{
-				break;
-			}
-		}
-		else if (valid_transition && transition->target_hash == previous_state_hash)
-		{
-			automatic_transition = transition;
+			automatic_transition = !automatic_transition || automatic_transition->priority < transition->priority ?  transition : automatic_transition;
 		}
 	}
 	return automatic_transition;

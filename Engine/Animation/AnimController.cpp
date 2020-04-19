@@ -90,10 +90,9 @@ void AnimController::SetActiveState(std::shared_ptr<State> & state)
 {
 	if (state != nullptr && state->clip != nullptr)
 	{
-		uint64_t old_state_hash = active_state ? active_state->name_hash : 0;
 		active_state = state;
 		playing_clips[ClipType::ACTIVE] = { active_state->clip };
-		active_transition = state_machine->GetAutomaticTransition(active_state->name_hash, old_state_hash);
+		active_transition = state_machine->GetAutomaticTransition(active_state->name_hash);
 	}
 }
 
