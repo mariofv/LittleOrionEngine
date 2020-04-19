@@ -2,36 +2,41 @@
 #define _SKELETON_H_
 
 #include "Resource.h"
-#include "Component/ComponentTransform.h" //Need transform separate from component
-#include "ResourceManagement/Loaders/SkeletonLoader.h"
+#include "ResourceManagement/Manager/SkeletonManager.h"
+
+#include <MathGeoLib/MathGeoLib.h>
 #include <vector>
+
+class Metafile;
+
 
 class Skeleton : public Resource
 {
 public:
-	struct Joint {
+	struct Joint 
+	{
 		math::float4x4 transform_global;
 		uint32_t parent_index;
 		std::string name;
 	};
 
-	Skeleton(const uint32_t UID, const std::string & exported_file);
-	Skeleton(std::vector<Joint> && joints, const std::string & exported_file);
+	Skeleton() = default;
+	Skeleton(Metafile* resource_metafile);
+	Skeleton(Metafile* resource_metafile, std::vector<Joint> && joints);
 	~Skeleton() = default;
-
-private:
-	void LoadInMemory() override;
 
 public:
 	std::vector<Joint> skeleton;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<Skeleton> Load(const std::string& uid) {
-		return SkeletonLoader::Load(uid);
+	static std::shared_ptr<Skeleton> Load(Metafile* metafile, const FileData& resource_data)
+	{
+		return SkeletonManager::Load(metafile, resource_data);
 	}
 }
+
 #endif //_SKELETON_H_
 

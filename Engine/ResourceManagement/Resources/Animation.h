@@ -1,12 +1,14 @@
-#pragma once
+#ifndef _ANIMATION_H_
+#define _ANIMATION_H_
+
 #include "Resource.h"
-#include <Component/ComponentTransform.h>
-#include <ResourceManagement/Loaders/AnimationLoader.h>
+
+#include "Component/ComponentTransform.h"
+#include "ResourceManagement/Manager/AnimationManager.h"
+
 class Animation : public Resource
 {
 public:
-
-
 	struct Channel
 	{
 		std::string name;
@@ -19,15 +21,13 @@ public:
 		float frame;
 		std::vector<Channel> channels;
 	};
-	Animation(const uint32_t UUID, const std::string & exported_file);
-	Animation(std::vector<KeyFrame> && keyframes, std::string name, float frames, float frames_per_second, const uint32_t UUID, const std::string & exported_file);
+
+	Animation() = default;
+	Animation(Metafile* resource_metafile) : Resource(resource_metafile) {};
+	Animation(Metafile* resource_metafile, std::vector<KeyFrame> && keyframes, std::string name, float frames, float frames_per_second);
 	~Animation() = default;
 
-private:
-	void LoadInMemory() override {};
-
 public:
-
 	std::string name;
 	std::vector<KeyFrame> keyframes;
 	float frames;
@@ -35,10 +35,13 @@ public:
 };
 
 
-namespace Loader
+namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<Animation> Load(const std::string& uid) {
-		return AnimationLoader::Load(uid);
+	static std::shared_ptr<Animation> Load(Metafile* metafile, const FileData& resource_data)
+	{
+		return AnimationManager::Load(metafile, resource_data);
 	}
 }
+
+#endif // _ANIMATION_H_

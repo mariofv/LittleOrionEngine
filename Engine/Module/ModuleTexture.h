@@ -23,9 +23,6 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	std::shared_ptr<Texture> LoadTexture(const char* texture_path);
-	GLuint LoadCubemap(const std::vector<std::string> & faces) const;
-
 public:
 	GLuint checkerboard_texture_id;
 	GLuint whitefall_texture_id;
@@ -40,6 +37,7 @@ private:
 		CHECKBOARD,
 		WHITE
 	};
+
 	void GenerateTexture(GLuint &texture_id_to_store, PATRON color_id);
 	GLubyte GetColor(size_t i, size_t j, PATRON color_id) const;
 

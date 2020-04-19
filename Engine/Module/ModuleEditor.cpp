@@ -16,9 +16,9 @@
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelToolBar.h"
 
+#include "Filesystem/PathAtlas.h"
 #include "Helper/Config.h"
 
-#include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleResourceManager.h"
 #include "ModuleScene.h"
@@ -26,6 +26,8 @@
 #include "ModuleActions.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+
+#include "ResourceManagement/Manager/SceneManager.h"
 
 #include <Brofiler/Brofiler.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -121,7 +123,7 @@ update_status ModuleEditor::Update()
 #endif
 
 	//ImGui::ShowStyleEditor();
-	//ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
 
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{

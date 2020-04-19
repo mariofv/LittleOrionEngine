@@ -10,9 +10,8 @@
 class ComponentMeshRenderer : public Component
 {
 public:
-	ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render);
-	ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner);
 	ComponentMeshRenderer();
+	ComponentMeshRenderer(GameObject * owner);
 	~ComponentMeshRenderer() = default;
 
 	ComponentMeshRenderer(const ComponentMeshRenderer& component_to_copy) = default;
@@ -24,10 +23,6 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
-	void SetSkeleton(std::shared_ptr<Skeleton>& skeleton);
-
-	void UpdatePalette(const std::vector<float4x4> & pose);
-
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
@@ -37,8 +32,11 @@ public:
 	void RenderModel() const;
 	void RenderMaterial(GLuint shader_program) const;
 
-	void SetMesh(const std::shared_ptr<Mesh> & mesh_to_render);
-	void SetMaterial(const std::shared_ptr<Material> & material_to_render);
+	void SetMesh(uint32_t mesh_uuid);
+	void SetMaterial(uint32_t material_uuid);
+	void SetSkeleton(uint32_t skeleton_uuid);
+
+	void UpdatePalette(const std::vector<float4x4> & pose);
 
 private:
 	void AddDiffuseUniforms(unsigned int shader_program) const;
@@ -48,12 +46,19 @@ private:
 	void BindTexture(Material::MaterialTextureType id) const;
 
 public:
-	std::shared_ptr<Mesh> mesh_to_render;
-	std::shared_ptr<Material> material_to_render;
+	uint32_t mesh_uuid;
+	std::shared_ptr<Mesh> mesh_to_render = nullptr;
+
+	uint32_t material_uuid;
+	std::shared_ptr<Material> material_to_render = nullptr;
+
+	uint32_t skeleton_uuid;
 	std::shared_ptr<Skeleton> skeleton = nullptr;
+
 	std::vector<float4x4> palette;
 
 private:
+
 	friend class PanelComponent;
 };
 

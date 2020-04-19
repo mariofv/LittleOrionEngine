@@ -1,12 +1,15 @@
 #include "ModuleInput.h"
 
 #include "Component/ComponentCamera.h"
+
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelScene.h"
-#include "Main/Globals.h"
+
+#include "Filesystem/File.h"
+#include "Filesystem/PathAtlas.h"
+
 #include "Main/Application.h"
 #include "ModuleWindow.h"
-#include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleFileSystem.h"
@@ -82,9 +85,13 @@ bool ModuleInput::Init()
 	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
 
 	//Load Game Inputs
-	size_t readed_bytes;
-	char* scene_file_data = App->filesystem->Load(GAME_INPUT_PATH, readed_bytes);
-	if (scene_file_data != nullptr)
+	game_inputs_file_path = App->filesystem->GetPath(RESOURCES_GAME_INPUTS_PATH + std::string("/") + RESOURCES_GAME_INPUTS_FILENAME);
+
+	FileData game_inputs_data = game_inputs_file_path->GetFile()->Load();
+	size_t readed_bytes = game_inputs_data.size;
+	char* scene_file_data = (char*)game_inputs_data.buffer;
+
+	if(scene_file_data != nullptr)
 	{
 		std::string serialized_scene_string = scene_file_data;
 		free(scene_file_data);
@@ -206,9 +213,12 @@ update_status ModuleInput::PreUpdate()
 		break;
 
 		case SDL_DROPFILE:
+			/* TODO: This
 			char* dropped_filedir = event.drop.file;
 			App->editor->project_explorer->CopyFileToSelectedFolder(dropped_filedir);
 			SDL_free(dropped_filedir);
+			*/
+
 			break;
 		}
 	}
@@ -391,7 +401,9 @@ void ModuleInput::CreateGameInput(const GameInput& game_input)
 	std::string serialized_game_input_string;
 	config.GetSerializedString(serialized_game_input_string);
 
-	App->filesystem->Save(GAME_INPUT_PATH, serialized_game_input_string.c_str(), serialized_game_input_string.size() + 1);
+	Path* game_inputs_folder_path = App->filesystem->GetPath(RESOURCES_GAME_INPUTS_PATH);
+
+	game_inputs_folder_path->Save(RESOURCES_GAME_INPUTS_FILENAME, serialized_game_input_string);
 }
 
 void ModuleInput::DeleteGameInput(const GameInput& game_input)
@@ -404,7 +416,7 @@ void ModuleInput::DeleteGameInput(const GameInput& game_input)
 	std::string serialized_game_input_string;
 	config.GetSerializedString(serialized_game_input_string);
 
-	App->filesystem->Save(GAME_INPUT_PATH, serialized_game_input_string.c_str(), serialized_game_input_string.size() + 1);
+	App->filesystem->Save(game_inputs_file_path->GetFullPath(), serialized_game_input_string);
 }
 
 // Returns the current mouse position in pixel coordinates

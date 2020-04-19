@@ -1,4 +1,7 @@
 #include "OLQuadTreeNode.h"
+
+#include "Main/GameObject.h"
+
 #include <algorithm>
 
 OLQuadTreeNode::OLQuadTreeNode()

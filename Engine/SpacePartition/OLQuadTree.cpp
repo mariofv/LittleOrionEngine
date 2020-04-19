@@ -1,7 +1,9 @@
 #include "OLQuadTree.h"
 
+#include "Main/GameObject.h"
+
 #include <algorithm>
-#include "Brofiler/Brofiler.h"
+#include <Brofiler/Brofiler.h>
 
 OLQuadTree::~OLQuadTree()
 {

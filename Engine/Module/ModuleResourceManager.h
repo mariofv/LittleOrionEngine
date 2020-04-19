@@ -5,25 +5,48 @@
 #include "Module.h"
 #include "ModuleFileSystem.h"
 
-#include "ResourceManagement/Importer/Importer.h"
-#include "ResourceManagement/Importer/MaterialImporter.h"
-#include "ResourceManagement/Importer/ModelImporter.h"
-#include "ResourceManagement/Importer/PrefabImporter.h"
-#include "ResourceManagement/Importer/SceneManager.h"
-#include "ResourceManagement/Importer/TextureImporter.h"
-#include "ResourceManagement/Importer/StateMachineImporter.h"
+#include "ResourceManagement/Resources/Animation.h"
+#include "ResourceManagement/Resources/Material.h"
+#include "ResourceManagement/Resources/Mesh.h"
+#include "ResourceManagement/Resources/Prefab.h"
+#include "ResourceManagement/Resources/Skeleton.h"
+#include "ResourceManagement/Resources/Skybox.h"
+#include "ResourceManagement/Resources/StateMachine.h"
+#include "ResourceManagement/Resources/Texture.h"
+
 #include "ResourceManagement/ResourcesDB/ResourceDataBase.h"
 
+#include <Brofiler/Brofiler.h>
 #include <memory>
 #include <thread>
 #include <atomic>
 #include <mutex>
 
-class Texture;
-class File;
-class Mesh;
-class Resource;
+class Path;
 class Timer;
+
+class AnimationImporter;
+class MaterialImporter;
+class MeshImporter;
+class ModelImporter;
+class PrefabImporter;
+class SceneManager;
+class SkeletonImporter;
+class SkyboxImporter;
+class StateMachineImporter;
+class TextureImporter;
+
+class AnimationManager;
+class MaterialManager;
+class MeshManager;
+class PrefabManager;
+class SceneManager;
+class SkeletonManager;
+class SkyboxManager;
+class StateMachineManager;
+class TextureManager;
+
+class MetafileManager;
 
 class ModuleResourceManager : public Module
 {
@@ -37,42 +60,84 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	ImportResult Import(const File& file, bool force = false);
-	void ImportAllFilesInDirectory(const File& file, bool force);
-	void CreatePrefab(const std::string& path, GameObject* gameobject_to_save) const;
-	uint32_t LoadCubemap(const std::vector<std::string>& faces_paths);
+	uint32_t Import(Path& file);
 
 	template<typename T>
-	std::shared_ptr<T> Load(const std::string& uid)
+	uint32_t Create(Path& path, const std::string& resource_name)
 	{
-		std::shared_ptr<Resource> cache_resource = RetrieveFromCacheIfExist(uid);
-		if (cache_resource != nullptr)
-		{
-			return std::static_pointer_cast<T>(cache_resource);
-		}
-		ReimportIfNeeded(uid);
-		std::shared_ptr<T> resource = Loader::Load<T>(uid);
-		if (resource != nullptr)
-		{
-			resource_cache.push_back(resource);
-		}
-		return resource;
+		BROFILER_CATEGORY("Create Resource", Profiler::Color::Brown);
+		APP_LOG_INFO("Creating Resource %s.", resource_name.c_str())
+
+		FileData created_resource_data = ResourceManagement::Create<T>();
+
+		APP_LOG_SUCCESS("Resource %s created correctly.", resource_name.c_str())
+
+		return CreateFromData(created_resource_data, path, resource_name);
 	}
 
 	template<typename T>
-	std::shared_ptr<T> Reload(const T * resource) const
+	void Save(std::shared_ptr<Resource> modified_resource)
 	{
-		std::string uid = resource->exported_file;
-		auto& it = std::find_if(resource_cache.begin(), resource_cache.end(), [resource](const auto & loaded_resource) { return loaded_resource.get() == resource; });
-		resource_cache.erase(it);
-		return Load<T>(uid);
+		APP_LOG_INFO("Saving Resource %u.", modified_resource->GetUUID());
+
+		FileData resource_data = ResourceManagement::Binarize<T>(modified_resource.get());
+		std::string modified_resource_path = modified_resource->resource_metafile->imported_file_path;
+		Path* saved_resource_assets_path = App->filesystem->Save(modified_resource_path, resource_data);
+
+		InternalImport(*saved_resource_assets_path);
+
+		APP_LOG_SUCCESS("Resource %u saved corrrectly.", modified_resource->GetUUID());
 	}
+
+	template<typename T>
+	std::shared_ptr<T> Load(uint32_t uuid)
+	{
+		BROFILER_CATEGORY("Load Resource", Profiler::Color::Brown);
+		APP_LOG_INFO("Loading Resource %u.", uuid);
+
+		std::shared_ptr<Resource> loaded_resource;
+		loaded_resource = RetrieveFromCacheIfExist(uuid);
+		if (loaded_resource != nullptr)
+		{
+			APP_LOG_SUCCESS("Resource %u loaded correctly from cache.", uuid);
+			return std::static_pointer_cast<T>(loaded_resource);
+		}
+
+		Metafile* metafile = resource_DB->GetEntry(uuid);
+		assert(metafile != nullptr);
+		if (!App->filesystem->Exists(metafile->exported_file_path))
+		{
+			APP_LOG_ERROR("Error loading Resource %u. File %s doesn't exist", uuid, metafile->exported_file_path.c_str());
+			return nullptr;
+		}
+
+		Path* resource_exported_file_path = App->filesystem->GetPath(metafile->exported_file_path);
+		FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
+		loaded_resource = ResourceManagement::Load<T>(metafile, exported_file_data);
+
+		free((char*)exported_file_data.buffer);
+
+		if (loaded_resource != nullptr)
+		{
+			resource_cache.push_back(loaded_resource);
+		}
+
+		APP_LOG_SUCCESS("Resource %u loaded correctly.", uuid);
+		return std::static_pointer_cast<T>(loaded_resource);
+	}
+
+	void CleanInconsistenciesInDirectory(const Path& directory_path);
+	void ImportAssetsInDirectory(const Path& directory_path);
+
+	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
+
+	void CleanResourceCache();
+
 private:
 	void StartThread();
-	void ReimportIfNeeded(const std::string& uid);
+	uint32_t InternalImport(Path& file_path) const;
 
-	ImportResult InternalImport(const File& file, bool force) const;
-	std::shared_ptr<Resource> RetrieveFromCacheIfExist(const std::string& uid) const;
+	std::shared_ptr<Resource> RetrieveFromCacheIfExist(uint32_t uuid) const;
 
 public:
 	struct ThreadComunication
@@ -86,8 +151,18 @@ public:
 		std::atomic_uint total_items = 0;
 	} thread_comunication;
 
+	//Importers
+	std::unique_ptr<AnimationImporter> animation_importer = nullptr;
 	std::unique_ptr<MaterialImporter> material_importer = nullptr;
+	std::unique_ptr<MeshImporter> mesh_importer = nullptr;
+	std::unique_ptr<ModelImporter> model_importer = nullptr;
+	std::unique_ptr<PrefabImporter> prefab_importer = nullptr;
+	std::unique_ptr<SkeletonImporter> skeleton_importer = nullptr;
+	std::unique_ptr<SkyboxImporter> skybox_importer = nullptr;
+	std::unique_ptr<StateMachineImporter> state_machine_importer = nullptr;
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
+
+	std::unique_ptr<MetafileManager> metafile_manager = nullptr;
 	std::unique_ptr<SceneManager> scene_manager = nullptr;
 	std::unique_ptr<ResourceDataBase> resource_DB = nullptr;
 
@@ -96,14 +171,10 @@ private:
 	float last_imported_time = 0;
 	std::thread importing_thread;
 	std::unique_ptr<Timer> thread_timer = std::make_unique<Timer>();
-	//Importers
 
-	std::unique_ptr<Importer> default_importer = std::make_unique<Importer>();
-	std::unique_ptr<ModelImporter> model_importer = nullptr;
-	std::unique_ptr<PrefabImporter> prefab_importer = nullptr;
-	std::unique_ptr<StateMachineImporter> state_machine_importer = nullptr;
 	mutable std::vector<std::shared_ptr<Resource>> resource_cache;
 
+	friend class MaterialImporter;
 };
 
 #endif // _MODULERESOURCEMANAGER_H_

@@ -8,6 +8,7 @@
 
 Clip::Clip(std::string& name, std::shared_ptr<Animation>& animation, bool loop) :
 	name(name), name_hash(std::hash<std::string>{}(name)), animation(animation), loop(loop), animation_time((animation->frames / animation->frames_per_second) * 1000) {}
+
 void Clip::SetAnimation(const std::shared_ptr<Animation>& animation)
 {
 	this->animation = animation;
@@ -26,18 +27,12 @@ Transition::Transition(uint64_t source, uint64_t target, std::string & trigger, 
 	trigger_hash(std::hash<std::string>{}(trigger)),
 	interpolation_time(interpolation) {};
 
-StateMachine::StateMachine(std::vector<std::shared_ptr<Clip>>&& clips, std::vector<std::shared_ptr<State>>&& states, std::vector<std::shared_ptr<Transition>>&& transitions, const std::string & file_path)
+StateMachine::StateMachine(Metafile* resource_metafile, std::vector<std::shared_ptr<Clip>>&& clips, std::vector<std::shared_ptr<State>>&& states, std::vector<std::shared_ptr<Transition>>&& transitions)
 	: clips(clips)
 	,states(states)
 	,transitions(transitions)
-	,Resource(0, file_path)
+	,Resource(resource_metafile)
 {
-}
-
-StateMachine::StateMachine(const std::string& file_path):
-Resource(0, file_path)
-{
-
 }
 
 StateMachine & StateMachine::operator=(const StateMachine & state_machine_to_copy)
@@ -147,13 +142,10 @@ void StateMachine::RemoveClip(const std::shared_ptr<Clip>& clip)
 	}
 }
 
-void StateMachine::AddClipToState(std::shared_ptr<State>& state, File& clip_file)
+void StateMachine::AddClipToState(std::shared_ptr<State>& state, uint32_t animation_uuid)
 {
-	std::string meta_path = Importer::GetMetaFilePath(clip_file.file_path);
-	ImportOptions meta;
-	Importer::GetOptionsFromMeta(meta_path, meta);
-	std::shared_ptr<Animation> animation = App->resources->Load<Animation>(meta.exported_file);
-	std::shared_ptr<Clip> new_clip = std::make_shared<Clip>(clip_file.filename_no_extension, animation, false);
+	std::shared_ptr<Animation> animation = App->resources->Load<Animation>(animation_uuid);
+	std::shared_ptr<Clip> new_clip = std::make_shared<Clip>(animation->GetName(), animation, false);
 	if (state->clip && new_clip->animation == state->clip->animation)
 	{
 		return;
@@ -167,20 +159,18 @@ void StateMachine::AddClipToState(std::shared_ptr<State>& state, File& clip_file
 	clips.push_back(new_clip);
 }
 
-//TODO: Do it like a binary
-void StateMachine::Save() const
+void StateMachine::Save(Config& config) const
 {
-	Config state_machine_config;
 	std::vector<Config> clips_config;
 	for (auto& clip : clips)
 	{
 		Config clip_config;
-		clip_config.AddString(clip->animation->exported_file, "AnimationUUID");
+		clip_config.AddUInt(clip->animation->GetUUID(), "AnimationUUID");
 		clip_config.AddString(clip->name, "Name");
 		clip_config.AddBool(clip->loop, "Loop");
 		clips_config.push_back(clip_config);
 	}
-	state_machine_config.AddChildrenConfig(clips_config, "Clips");
+	config.AddChildrenConfig(clips_config, "Clips");
 
 	std::vector<Config> states_config;
 	for (auto& state : states)
@@ -193,7 +183,7 @@ void StateMachine::Save() const
 		}
 		states_config.push_back(state_config);
 	}
-	state_machine_config.AddChildrenConfig(states_config, "States");
+	config.AddChildrenConfig(states_config, "States");
 
 	std::vector<Config> transitions_config;
 	for (auto& transition : transitions)
@@ -206,47 +196,33 @@ void StateMachine::Save() const
 		transition_config.AddBool(transition->automatic, "Automatic");
 		transitions_config.push_back(transition_config);
 	}
-	state_machine_config.AddChildrenConfig(transitions_config, "Transitions");
+	config.AddChildrenConfig(transitions_config, "Transitions");
 
-	state_machine_config.AddUInt(default_state, "Default");
-	std::string serialized_state_machine_string;
-	state_machine_config.GetSerializedString(serialized_state_machine_string);
-
-	App->filesystem->Save(exported_file.c_str(), serialized_state_machine_string.c_str(), serialized_state_machine_string.size());
+	config.AddUInt(default_state, "Default");
 }
 
-void StateMachine::Load(const File& file)
+void StateMachine::Load(const Config& config)
 {
-	size_t size;
-	char * state_machine_data =  App->filesystem->Load(file.file_path.c_str(), size);
-	if (state_machine_data == nullptr)
-	{
-		return;
-	}
-	std::string serialized_machine_string = state_machine_data;
-	free(state_machine_data);
-
-	Config state_machine_config(serialized_machine_string);
-
 	std::vector<Config> clips_config;
-	state_machine_config.GetChildrenConfig("Clips", clips_config);
+	config.GetChildrenConfig("Clips", clips_config);
 	for (auto& clip_config : clips_config)
 	{
-		std::string animation;
 		std::string name;
-		clip_config.GetString("AnimationUUID", animation, "");
-		clip_config.GetString( "Name", name, "");
-		bool loop = clip_config.GetBool("Loop", false);
+		clip_config.GetString("Name", name, "");
+
+		uint32_t animation_uuid = clip_config.GetUInt("AnimationUUID", 0);
 		std::shared_ptr<Animation> anim = nullptr;
-		if (!animation.empty())
+		if (animation_uuid != 0)
 		{
-			anim = App->resources->Load<Animation>(animation);
+			anim = App->resources->Load<Animation>(animation_uuid);
 		}
-		this->clips.push_back(std::make_shared<Clip>(name, anim,loop));
+
+		bool loop = clip_config.GetBool("Loop", false);
+		this->clips.push_back(std::make_shared<Clip>(name, anim, loop));
 	}
 
 	std::vector<Config> states_config;
-	state_machine_config.GetChildrenConfig( "States", states_config);
+	config.GetChildrenConfig("States", states_config);
 	for (auto& state_config : states_config)
 	{
 		std::string clip_name;
@@ -265,7 +241,7 @@ void StateMachine::Load(const File& file)
 	}
 
 	std::vector<Config> transitions_config;
-	state_machine_config.GetChildrenConfig("Transitions", transitions_config);
+	config.GetChildrenConfig("Transitions", transitions_config);
 	for (auto& transition_config : transitions_config)
 	{
 		std::string trigger;
@@ -277,5 +253,5 @@ void StateMachine::Load(const File& file)
 		this->transitions.back()->automatic = transition_config.GetBool("Automatic", false);
 	}
 
-	default_state = state_machine_config.GetUInt("Default", 0);
+	default_state = config.GetUInt("Default", 0);
 }

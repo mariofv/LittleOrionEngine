@@ -2,9 +2,9 @@
 #define _PANELPOPUPS_H_
 
 #include "Panel.h"
-#include "PopupsPanel/PanelPopupMaterialSelector.h"
-#include "PopupsPanel/PanelPopupMeshSelector.h"
+#include "PopupsPanel/PanelPopupResourceSelector.h"
 #include "PopupsPanel/PanelPopupSceneManagement.h"
+#include "PopupsPanel/PanelPopupSceneManagementAux.h"
 
 #include <string>
 
@@ -22,9 +22,9 @@ private:
 	void RenderAssetsLoadingPopup();
 
 public:
-	PanelPopupMaterialSelector material_selector_popup;
-	PanelPopupMeshSelector mesh_selector_popup;
+	PanelPopupResourceSelector resource_selector_popup;
 	PanelPopupSceneManagement scene_management_popup;
+	PanelPopupSceneManagementAux scene_management_popup_aux;
 
 	bool create_script_shown = false;
 	bool show_assets_loading_popup = false;

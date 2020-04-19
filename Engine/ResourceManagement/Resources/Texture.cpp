@@ -1,19 +1,24 @@
 #include "Texture.h"
 
+#include "ResourceManagement/Metafile/Metafile.h"
+
 #include <IL/il.h>
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-
-Texture::Texture(char * data, size_t image_size, int width, int height, const std::string& path, bool normal_map) : image_size(image_size), width(width), height(height), normal_map(normal_map), data(data), Resource(0,path)
+Texture::Texture(Metafile* resource_metafile, char* data, size_t image_size, int width, int height, bool normal_map) 
+	: width(width), height(height)
+	, normal_map(normal_map)
+	, Resource(resource_metafile)
 {
+	this->data.resize(image_size);
+	memcpy(&this->data.front(), data, image_size);
 	LoadInMemory();
 }
 
 
 Texture::~Texture()
 {
-
 	glDeleteTextures(1, &opengl_texture);
 }
 
@@ -37,11 +42,11 @@ void Texture::LoadInMemory()
 
 	if (normal_map)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data);
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data.data());
 	}
 	else 
 	{
-		glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height, 0, image_size, data);
+		glCompressedTexImage2D(GL_TEXTURE_2D, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, width, height, 0, data.size(), data.data());
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);

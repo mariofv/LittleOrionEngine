@@ -1,11 +1,13 @@
-#include "Main/Globals.h"
+#include "ModuleCamera.h"
+
 #include "Main/Application.h"
+#include "Main/GameObject.h"
+#include "Main/Globals.h"
+#include "ModuleEditor.h"
+#include "ModuleInput.h"
 #include "ModuleScene.h"
 #include "ModuleWindow.h"
-#include "ModuleInput.h"
-#include "ModuleCamera.h"
-#include "ModuleEditor.h"
-#include "Main/GameObject.h"
+
 #include "Component/ComponentCamera.h"
 
 #include <algorithm>
@@ -22,9 +24,7 @@ bool ModuleCamera::Init()
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	scene_camera->SetFarDistance(5000);
 	scene_camera->depth = -1;
-#if !GAME
-	skybox = new Skybox();
-#endif
+
 	scene_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
 
 	return true;

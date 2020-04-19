@@ -20,9 +20,9 @@ void PanelPopups::Render()
 {
 	RenderAssetsLoadingPopup();
 	CreateScript();
-	material_selector_popup.Render();
-	mesh_selector_popup.Render();
+	resource_selector_popup.Render();
 	scene_management_popup.Render();
+	scene_management_popup_aux.Render();
 }
 
 void PanelPopups::RenderAssetsLoadingPopup()
@@ -36,6 +36,7 @@ void PanelPopups::RenderAssetsLoadingPopup()
 	{
 		ImGui::Text("Loading Assets");
 		float progress = (float)App->resources->thread_comunication.loaded_items / App->resources->thread_comunication.total_items;
+		//assert(progress <= 1);
 		ImGui::ProgressBar(progress);
 
 		if (App->resources->thread_comunication.finished_loading)

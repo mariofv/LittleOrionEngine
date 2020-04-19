@@ -94,10 +94,7 @@ void ComponentUI::Save(Config& config) const
 	config.AddUInt((unsigned int)ui_type, "UIType");
 	config.AddUInt(ui_texture, "Texture");
 	config.AddFloat3(color, "Color");
-	if (texture_to_render != nullptr)
-	{
-		config.AddString(texture_to_render->exported_file, "MetadataPath");
-	}
+	config.AddUInt(texture_uuid, "TextureUUID");
 }
 
 void ComponentUI::Load(const Config& config)
@@ -106,17 +103,17 @@ void ComponentUI::Load(const Config& config)
 	active = config.GetBool("Active", true);
 	ui_texture = config.GetUInt("Texture", 0);
 	config.GetFloat3("Color", color, float3::one);
-	config.GetString("MetadataPath", metadata_path, "");
-	if(metadata_path != "")
+	texture_uuid = config.GetUInt("TextureUUID", 0);
+	if(texture_uuid != 0)
 	{
-		SetTextureToRender(App->resources->Load<Texture>(metadata_path));
+		SetTextureToRender(texture_uuid);
 	}
 	InitData();
 }
 
-void ComponentUI::SetTextureToRender(const std::shared_ptr<Texture>& new_texture)
+void ComponentUI::SetTextureToRender(uint32_t texture_uuid)
 {
-	texture_to_render = new_texture;
-	metadata_path = texture_to_render->exported_file;
+	this->texture_uuid = texture_uuid;
+	texture_to_render = App->resources->Load<Texture>(texture_uuid);
 	ui_texture = texture_to_render->opengl_texture;
 }

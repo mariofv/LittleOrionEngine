@@ -9,7 +9,6 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleLight.h"
-#include "Module/ModuleModelLoader.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
@@ -41,7 +40,6 @@ Application::Application()
 	modules.emplace_back(actions = new ModuleActions());
 	modules.emplace_back(program = new ModuleProgram());
 	modules.emplace_back(cameras = new ModuleCamera());
-	modules.emplace_back(model_loader = new ModuleModelLoader());
 	modules.emplace_back(debug = new ModuleDebug());
 #if !GAME
 	modules.emplace_back(debug_draw = new ModuleDebugDraw());

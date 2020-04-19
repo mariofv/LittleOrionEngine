@@ -1,16 +1,21 @@
 #include "Prefab.h"
-#include "Filesystem/File.h"
+#include "Filesystem/Path.h"
 #include "Main/Application.h"
-#include "Main/GameObject.h"
+
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
 
+#include "ResourceManagement/Manager/PrefabManager.h"
+#include "ResourceManagement/Metafile/Metafile.h"
 
-Prefab::Prefab(std::vector<std::unique_ptr<GameObject>> && gameObjects, uint32_t UID, const std::string & exported_file) : Resource(UID, exported_file), prefab(std::move(gameObjects))
+#include <algorithm>
+
+Prefab::Prefab(Metafile* resource_metafile, std::vector<std::unique_ptr<GameObject>> && gameObjects) : Resource(resource_metafile), prefab(std::move(gameObjects))
 {
 }
-GameObject * Prefab::Instantiate(GameObject * prefab_parent, std::unordered_map<int64_t, int64_t> * UUIDS_pairs)
+
+GameObject* Prefab::Instantiate(GameObject* prefab_parent, std::unordered_map<int64_t, int64_t>* UUIDS_pairs)
 {
 	std::unordered_map<uint64_t, GameObject*> original_gameObject_reference;
 
@@ -35,7 +40,7 @@ GameObject * Prefab::Instantiate(GameObject * prefab_parent, std::unordered_map<
 			instances.push_back(copy_in_scene);
 			parent_prefab = copy_in_scene;
 		}
-		copy_in_scene->prefab_reference = App->resources->Load<Prefab>(exported_file);
+		copy_in_scene->prefab_reference = App->resources->Load<Prefab>(GetUUID());
 		copy_in_scene->transform.Translate(float3::zero); //:D
 	}
 	parent_prefab->SetParent(prefab_parent);
@@ -43,34 +48,27 @@ GameObject * Prefab::Instantiate(GameObject * prefab_parent, std::unordered_map<
 	return parent_prefab;
 }
 
-void Prefab::Apply(GameObject * new_reference)
+/*
+	We won't allow the user to call this function if the prefab is deleted from filesystem. In other words, there shouldn't be pointers to resources that
+	doesn't exist in filesystem.
+*/
+void Prefab::Apply(GameObject* new_reference)
 {
-	if (imported_file.empty())
+	*prefab.front().get() << *new_reference;
+	RecursiveRewrite(prefab.front().get(), new_reference, true, false);
+	for (auto old_instance : instances)
 	{
-		std::string uid_string = exported_file.substr(exported_file.find_last_of("/") + 1, exported_file.size());
-		uint32_t real_uuid = std::stoul(uid_string);
-		imported_file = App->resources->resource_DB->GetEntry(real_uuid)->imported_file;
-	}
-	App->resources->CreatePrefab(imported_file, new_reference);
-	ImportResult import_result = App->resources->Import(File(imported_file));
-	if (import_result.success)
-	{
-		*prefab.front().get() << *new_reference;
-		RecursiveRewrite(prefab.front().get(), new_reference, true, false);
-		for (auto old_instance : instances)
+		if (new_reference == old_instance)
 		{
-			if (new_reference == old_instance)
-			{
-				continue;
-			}
-			for (auto component : new_reference->components)
-			{
-				component->added_by_user = false;
-				component->modified_by_user = false;
-			}
-			*old_instance << *new_reference;
-			RecursiveRewrite(old_instance, new_reference, false, false);
+			continue;
 		}
+		for (auto component : new_reference->components)
+		{
+			component->added_by_user = false;
+			component->modified_by_user = false;
+		}
+		*old_instance << *new_reference;
+		RecursiveRewrite(old_instance, new_reference, false, false);
 	}
 }
 
@@ -85,6 +83,7 @@ void Prefab::Revert(GameObject * old_reference)
 	*old_reference << *prefab.front().get();
 	RecursiveRewrite(old_reference,prefab.front().get(), true, true);
 }
+
 void Prefab::RecursiveRewrite(GameObject * old_instance, GameObject * new_reference, bool original, bool revert)
 {
 
@@ -161,7 +160,7 @@ void Prefab::AddNewGameObjectToInstance(GameObject * parent, GameObject * new_re
 	else
 	{
 		copy = App->scene->CreateGameObject();
-		copy->prefab_reference = App->resources->Load<Prefab>(exported_file);
+		copy->prefab_reference = App->resources->Load<Prefab>(GetUUID());
 	}
 	copy->SetParent(parent);
 	*copy << *new_reference;
@@ -198,6 +197,11 @@ void Prefab::RemoveInstance(GameObject * instance)
 	{
 		instances.erase(it);
 	}
+}
+
+GameObject* Prefab::GetRootGameObject() const
+{
+	return prefab.front().get();
 }
 
 bool Prefab::IsOverwritable() const

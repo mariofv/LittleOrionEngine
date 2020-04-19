@@ -3,21 +3,23 @@
 
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/Mesh.h"
+
 #include <vector>
 #include <string>
 
 #include <assimp/mesh.h>
-class Skeleton;
+
 class MeshImporter : public Importer
 {
 public:
-	MeshImporter() = default;
+	MeshImporter() : Importer(ResourceType::MESH) {};
 	~MeshImporter() = default;
-	ImportResult Import(const File & file, bool force = false) const;
-	ImportResult ImportMesh(const aiMesh* assimp_mesh, const aiMatrix4x4& mesh_transformation, const std::string& imported_file, float unit_scale_factor, const Skeleton & skeleton) const;
+
+	FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const override;
+	FileData ExtractMeshFromAssimp(const aiMesh* assimp_mesh, const aiMatrix4x4& mesh_transformation, float unit_scale_factor, uint32_t mesh_skeleton_uuid) const;
 
 private:
-	std::vector<std::pair<std::vector<uint32_t>, std::vector<float>>> GetSkinning(const aiMesh* assimp_mesh, const Skeleton & skeleton) const;
-	void SaveBinary(std::vector<Mesh::Vertex> && vertices, std::vector<uint32_t> && indices, const std::string& exported_file, const std::string& imported_file) const;
+	FileData CreateBinary(std::vector<Mesh::Vertex> && vertices, std::vector<uint32_t> && indices) const;
+	std::vector<std::pair<std::vector<uint32_t>, std::vector<float>>> GetSkinning(const aiMesh* assimp_mesh, uint32_t mesh_skeleton_uuid) const;
 };
 #endif // !_MESHIMPORTER_H_

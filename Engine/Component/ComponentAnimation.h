@@ -30,7 +30,7 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
-	void SetStateMachine(std::shared_ptr<StateMachine> & state_machine);
+	void SetStateMachine(uint32_t state_machine_uuid);
 
 	//API
 	ENGINE_API void Play();

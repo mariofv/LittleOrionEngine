@@ -24,7 +24,7 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 	
-	void CreateHousesRandom() const;
+	void CreateFrustumCullingDebugScene() const;
 	
 public:
 	bool show_debug_metrics = true;

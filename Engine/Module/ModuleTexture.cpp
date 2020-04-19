@@ -1,15 +1,18 @@
 #include "ModuleTexture.h"
-#include "Main/Globals.h"
+
+#include "Filesystem/Path.h"
+
 #include "Main/Application.h"
-#include "Module/ModuleResourceManager.h"
-#include "ResourceManagement/Resources/Texture.h"
 #include "Main/GameObject.h"
-#include <Filesystem/File.h>
-#include <ResourceManagement/Importer/TextureImporter.h>
-#include <ResourceManagement/Loaders/TextureLoader.h>
-#include <SDL/SDL.h>
+#include "Main/Globals.h"
+#include "Module/ModuleResourceManager.h"
+
+#include "ResourceManagement/Importer/TextureImporter.h"
+#include "ResourceManagement/Resources/Texture.h"
+
 #include <algorithm>
 #include <memory>
+#include <SDL/SDL.h>
 
 // Called before render is available
 bool ModuleTexture::Init()
@@ -28,24 +31,8 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
-std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
+GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const
 {
-	ImportResult import_result = App->resources->Import(File(texture_path));
-	if (!import_result.success)
-	{
-		return nullptr;
-	}
-	return App->resources->Load<Texture>(import_result.exported_file);
-}
-
-GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) const
-{
-	return static_cast<GLuint>(App->resources->LoadCubemap(faces_paths));
-}
-
-GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const{
-
-
 	switch (color_id)
 	{
 	case PATRON::CHECKBOARD:

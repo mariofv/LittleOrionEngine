@@ -43,16 +43,12 @@ public:
 	ENGINE_API void DropGOTarget(GameObject*& go);
 
 private:
-	void DropMeshAndMaterial(ComponentMeshRenderer* component_mesh);
 	void ShowCommonUIWindow(ComponentUI* ui);
 	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
 	void ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar);
 	void ShowComponentImageWindow(ComponentImage* image);
 	void ShowComponentTextWindow(ComponentText* text);
 	void ShowComponentButtonWindow(ComponentButton* button);
-
-	void DropStateMachine(ComponentAnimation* component_animation);
-	void DropTexture(ComponentUI* ui);
 };
 
 #endif //_PANELCOMPONENT_H_

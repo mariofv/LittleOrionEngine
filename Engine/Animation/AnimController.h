@@ -37,7 +37,7 @@ public:
 	AnimController & operator=(AnimController&& controller_to_move) = default;
 
 	bool Update();
-	void SetStateMachine(std::shared_ptr<StateMachine> & state_machine);
+	void SetStateMachine(uint32_t state_machine_uuid);
 	void GetClipTransform(uint32_t skeleton_uuid, std::vector<math::float4x4>& pose);
 	void StartNextState(const std::string& trigger);
 private:

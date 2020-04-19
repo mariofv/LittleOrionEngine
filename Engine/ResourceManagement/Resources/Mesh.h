@@ -1,12 +1,15 @@
 #ifndef _MESH_H_
 #define _MESH_H_
 
-#include <vector>
-#include "MathGeoLib.h"
+#include "Resource.h"
+#include "ResourceManagement/Manager/MeshManager.h"
 
 #include <GL/glew.h>
-#include "Resource.h"
-#include <ResourceManagement/Loaders/MeshLoader.h>
+#include <MathGeoLib.h>
+#include <vector>
+
+class Metafile;
+
 class Mesh : public Resource
 {
 public:
@@ -19,8 +22,8 @@ public:
 		float weights[4] = {0,0,0,0};
 		uint32_t num_joints = 0;
 	};
-	Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path);
-	Mesh(const std::string & mesh_file_path);
+
+	Mesh(Metafile* resource_metafile, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices);
 	~Mesh();
 
 	GLuint GetVAO() const;
@@ -29,7 +32,7 @@ public:
 	std::vector<Triangle> GetTriangles() const;
 
 private:
-	void LoadInMemory() override;
+	void LoadInMemory();
 
 public:
 	std::vector<Vertex> vertices;
@@ -41,12 +44,14 @@ private:
 	GLuint ebo = 0;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<Mesh> Load(const std::string& uid) {
-		return MeshLoader::Load(uid);
+	static std::shared_ptr<Mesh> Load(Metafile* metafile, const FileData& resource_data)
+	{
+		return MeshManager::Load(metafile, resource_data);
 	}
 }
+
 #endif // !_MESH_H_
 

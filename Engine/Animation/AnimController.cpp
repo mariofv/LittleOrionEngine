@@ -80,9 +80,9 @@ bool AnimController::Update()
 	return playing_clips[ClipType::ACTIVE].playing;
 }
 
-void AnimController::SetStateMachine(std::shared_ptr<StateMachine> & state_machine)
+void AnimController::SetStateMachine(uint32_t state_machine_uuid)
 {
-	this->state_machine = state_machine;
+	this->state_machine = App->resources->Load<StateMachine>(state_machine_uuid);
 	SetActiveState(state_machine->GetDefaultState());
 }
 

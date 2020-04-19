@@ -1,66 +1,134 @@
 #include "File.h"
+
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 
-File::File(const std::string & path, const std::string & name) {
-	this->filename = name;
-	this->file_path = path + "/" + name;
-	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
-	GetFileInfo();
-	//TODO: Move this logic to a Path class
+#include <algorithm>
+#include <cctype>
+#include <SDL/SDL.h>
+
+File::File(Path* path) : file_path(path)
+{
+	CalculateFileInfo();
 }
 
-File::File(const std::string & path) {
+File::~File()
+{
+}
 
-	this->filename = path.substr(path.find_last_of('/') + 1, -1);
-	this->file_path = path;
-	this->filename_no_extension = this->filename.substr(0, this->filename.find_last_of("."));
-	GetFileInfo();
-	if (file_type == FileType::DIRECTORY)
+FileData File::Load() const
+{
+	FileData loaded_data;
+	PHYSFS_File* physfs_file_handle = PHYSFS_openRead(file_path->GetFullPath().c_str());
+	if (physfs_file_handle == NULL)
 	{
-		GetChildren();
+		APP_LOG_ERROR("Error loading file %s, %s", file_path->GetFullPath().c_str(), PHYSFS_getLastErrorCode())
+		loaded_data.size = 0;
+		loaded_data.buffer = NULL;
+		return loaded_data;
+
 	}
 
-}
-bool File::operator==(const File& compare)
-{
-	return this->filename == compare.filename && this->file_path == compare.file_path && this->file_type == compare.file_type;
-};
+	size_t res_size = static_cast<size_t>(PHYSFS_fileLength(physfs_file_handle));
+	char* res = new char[res_size + 1];
 
-void File::GetChildren()
-{
-	std::vector<std::shared_ptr<File>> files;
-	App->filesystem->GetAllFilesInPath(this->file_path, files);
-	for (auto & file : files)
+	int length_read = PHYSFS_read(physfs_file_handle, res, 1, res_size);
+	PHYSFS_close(physfs_file_handle);
+
+	if (length_read != res_size)
 	{
-		file->parent = this;
-		this->children.push_back(file);
-		if (file->file_type == FileType::DIRECTORY)
-		{
-			file->GetChildren();
-			++sub_folders;
-			total_sub_files_number += file->total_sub_files_number;
-		}
-		else {
-			++total_sub_files_number;
-		}
+		free(res);
+		APP_LOG_ERROR("Error loading file %s", file_path->GetFullPath().c_str())
+
+		loaded_data.size = 0;
+		loaded_data.buffer = NULL;
+		return loaded_data;
 	}
+
+	res[length_read] = '\0';
+	loaded_data.size = length_read;
+	loaded_data.buffer = res;
+
+	return loaded_data;
 }
 
-void File::GetFileInfo()
+FileType File::GetFileType() const
+{
+	return file_type;
+}
+
+void File::GetPath(Path* return_value) const
+{
+	return_value = file_path;
+}
+
+void File::CalculateFileInfo()
 {
 	PHYSFS_Stat file_info;
-	if (PHYSFS_stat(this->file_path.c_str(), &file_info) == 0)
+	std::string file_path_string = file_path->GetFullPath();
+	if (PHYSFS_stat(file_path_string.c_str(), &file_info) == 0)
 	{
-		APP_LOG_ERROR("Error getting %s file info: %s", this->file_path.c_str(), PHYSFS_getLastError());
-		loaded_correctly = false;
+		APP_LOG_ERROR("Error getting %s file info: %s", file_path_string.c_str(), PHYSFS_getLastError())
 	}
-	modification_timestamp = file_info.modtime;
-	this->file_type = App->filesystem->GetFileType(filename.c_str(), file_info.filetype);
+	file_type = CalculateFileType(file_info.filetype);
 }
 
-void File::Refresh()
+FileType File::CalculateFileType(const PHYSFS_FileType& file_type) const
 {
-	children.clear();
-	GetChildren();
+	std::string file_extension = file_path->GetExtension();
+	std::transform(file_extension.begin(), file_extension.end(), file_extension.begin(),
+		[](unsigned char letter) { return std::tolower(letter); });
+
+	if (
+		file_extension == "png"
+		|| file_extension == "tif"
+		|| file_extension == "dds"
+		|| file_extension == "tga"
+		|| file_extension == "jpg"
+		|| file_extension == "jfif"
+		)
+	{
+		return FileType::TEXTURE;
+	}
+	if (file_extension == "fbx")
+	{
+		return FileType::MODEL;
+	}
+	if (file_extension == "prefab")
+	{
+		return FileType::PREFAB;
+	}
+	if (file_extension == "mesh")
+	{
+		return FileType::MESH;
+	}
+	if (file_extension == "mat")
+	{
+		return FileType::MATERIAL;
+	}
+	if (file_extension == "meta")
+	{
+		return FileType::META;
+	}
+	if (file_extension == "sk")
+	{
+		return FileType::SKELETON;
+	}
+	if (file_extension == "skybox")
+	{
+		return FileType::SKYBOX;
+	}
+	if (file_extension == "anim")
+	{
+		return FileType::ANIMATION;
+	}
+	if (file_extension == "stm")
+	{
+		return FileType::STATE_MACHINE;
+	}
+	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
+	{
+		return FileType::ARCHIVE;
+	}
+	return FileType::UNKNOWN;
 }
