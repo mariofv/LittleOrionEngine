@@ -24,6 +24,8 @@ std::string Resource::GetResourceTypeName(ResourceType resource_type)
 		return "Animation";
 	case ResourceType::AUDIO:
 		return "Audio";
+	case ResourceType::FONT:
+		return "Font";
 	case ResourceType::MATERIAL:
 		return "Material";
 	case ResourceType::MODEL:

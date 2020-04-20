@@ -6,12 +6,9 @@
 #include "Module.h"
 #include "Main/Globals.h"
 
-// Std. Includes
 #include <iostream>
 #include <map>
-// GLEW
 #include <GL/glew.h>
-// FreeType
 #include <ft2build.h>
 #include FT_FREETYPE_H
 

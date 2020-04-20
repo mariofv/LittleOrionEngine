@@ -198,6 +198,7 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\StateMachineImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\StateMachineManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Animation.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Font.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Material.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Prefab.h" />
@@ -354,6 +355,7 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\StateMachineImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\StateMachineManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Animation.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Font.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Material.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Prefab.cpp" />
