@@ -445,9 +445,6 @@
     <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp">
-      <Filter>Engine\Actions</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
@@ -919,9 +916,6 @@
       <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Actions\EditorActionRect2D.h">
-      <Filter>Engine\Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Actions\EditorActionRotation2D.h">
       <Filter>Engine\Actions</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleAnimation.h">

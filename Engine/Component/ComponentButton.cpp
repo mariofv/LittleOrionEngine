@@ -12,11 +12,6 @@ ComponentButton::ComponentButton() : ComponentUI(ComponentType::UI_BUTTON)
 
 ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, ComponentType::UI_BUTTON)
 {
-	if (owner->transform_2d.is_new)
-	{
-		owner->transform_2d.SetSize(170, 23);
-		owner->transform_2d.SetPosition(&float3(0, 0, 1));
-	}
 }
 
 void ComponentButton::Render(float4x4* projection)

@@ -8,10 +8,6 @@ ComponentProgressBar::ComponentProgressBar() : ComponentUI(ComponentType::UI_PRO
 
 ComponentProgressBar::ComponentProgressBar(GameObject * owner) : ComponentUI(owner, ComponentType::UI_PROGRESS_BAR)
 {
-	if (owner->transform_2d.is_new)
-	{
-		owner->transform_2d.SetSize(120, 10);
-	}
 }
 
 void ComponentProgressBar::Render(float4x4* projection)

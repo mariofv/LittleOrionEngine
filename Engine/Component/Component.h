@@ -38,16 +38,16 @@ public:
 	Component(Component&& component_to_move) = default;
 
 	virtual Component & operator=(const Component & component_to_copy) = default;
-	virtual Component & operator=(Component && component_to_copy)
+	virtual Component & operator=(Component && component_to_move)
 	{
 
-		this->active = component_to_copy.active;
-		this->UUID = component_to_copy.UUID;
-		component_to_copy.UUID = 0;
+		this->active = component_to_move.active;
+		this->UUID = component_to_move.UUID;
+		component_to_move.UUID = 0;
 
-		this->owner = component_to_copy.owner;
-		component_to_copy.owner = nullptr;
-		this->type = component_to_copy.type;
+		this->owner = component_to_move.owner;
+		component_to_move.owner = nullptr;
+		this->type = component_to_move.type;
 		return *this;
 	}
 

@@ -2,11 +2,13 @@
 #define _GAMEOBJECT_H_
 
 #define ENGINE_EXPORTS
+
 #include "Globals.h"
 #include "Component/Component.h"
-#include "Component/ComponentTransform2D.h"
 #include "Component/ComponentAABB.h"
+#include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentTransform2D.h"
 #include "Component/ComponentUI.h"
 
 #include <GL/glew.h>

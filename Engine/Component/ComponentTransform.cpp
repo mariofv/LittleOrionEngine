@@ -5,11 +5,11 @@
 #include "Helper/Utils.h"
 #include <Brofiler/Brofiler.h>
 
-ComponentTransform::ComponentTransform() : Component(ComponentType::TRANSFORM)
+ComponentTransform::ComponentTransform(ComponentType transform_type) : Component(transform_type)
 {
 }
 
-ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM)
+ComponentTransform::ComponentTransform(GameObject* owner, ComponentType transform_type) : Component(owner, transform_type)
 {
 	OnTransformChange();
 }
@@ -131,8 +131,6 @@ void ComponentTransform::Rotate(const Quat& rotation)
 
 	OnTransformChange();
 }
-
-
 
 void ComponentTransform::Rotate(const float3x3& rotation)
 {

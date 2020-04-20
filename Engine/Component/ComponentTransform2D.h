@@ -3,13 +3,13 @@
 
 #define ENGINE_EXPORTS
 
-#include "Component.h"
-class ComponentTransform2D : public Component
+#include "ComponentTransform.h"
+
+class ComponentTransform2D : public ComponentTransform
 {
 public:
 	ComponentTransform2D();
 	ComponentTransform2D(GameObject * owner);
-	ComponentTransform2D(GameObject * owner, const Rect rect, const float rotation);
 	~ComponentTransform2D();
 
 	//Copy and move
@@ -19,36 +19,32 @@ public:
 	ComponentTransform2D & operator=(const ComponentTransform2D & component_to_copy);
 	ComponentTransform2D & operator=(ComponentTransform2D && component_to_move) = default;
 
-	// Heredado v�a Component
-	virtual void Delete() override;
-	virtual Component * Clone(bool create_on_module = true) const override;
-	virtual void Copy(Component * component_to_copy) const override;
-	virtual void SpecializedSave(Config & config) const override;
-	virtual void SpecializedLoad(const Config & config) override;
+	Component * Clone(bool create_on_module = true) const override;
+	void Copy(Component * component_to_copy) const override;
+
+	void Delete() override;
+
+	void SpecializedSave(Config & config) const override;
+	void SpecializedLoad(const Config & config) override;
 
 	void GenerateGlobalModelMatrix();
-	void RescaleTransform();
-	void SetSize(float new_width, float new_height);
-	ENGINE_API void SetPosition(float x, float y);
-	ENGINE_API void SetPosition(float3* new_position);
-	void CalculateRectMatrix(float new_width, float new_height, float4x4& matrix);
-	void CalculateRectMatrix(float x, float y, float new_width, float new_height, float4x4& matrix);
+	float4x4 GetSizedGlobalModelMatrix() const;
+
+	void SetWidth(float new_width);
+	void SetHeight(float new_height);
+	void SetSize(float2 new_size);
+
+	ENGINE_API void SetTranslation(float x, float y);
+
 private:
-	void OnTransformChange();
+	void OnTransformChange() override;
 	void UpdateRect();
-	friend class PanelComponent;
 
 public:
-	float width = 10;
-	float height = 10;
-	bool is_new = true;
-	math::Rect rect = math::Rect(0, 0, 10, 10);
-	float rotation = 0.0f;
-	float3 position = float3::zero;
-	float2 scale = float2::one;
-	float4x4 global_matrix = float4x4::identity;
-	float4x4 model_matrix = float4x4::identity;
-	float4x4 rect_matrix = float4x4::identity;
+	float2 size = float2(100.f, 100.f);
+	math::Rect rect;
+
+	friend class PanelComponent;
 };
 #endif
 

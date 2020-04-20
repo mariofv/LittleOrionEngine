@@ -14,10 +14,6 @@ ComponentImage::ComponentImage() : ComponentUI(ComponentType::UI_IMAGE)
 ComponentImage::ComponentImage(GameObject * owner) : ComponentUI(owner, ComponentType::UI_IMAGE)
 {
 	InitData();
-	if (owner->transform_2d.is_new)
-	{
-		owner->transform_2d.SetSize(100, 100);
-	}
 }
 
 ComponentImage::~ComponentImage()
@@ -32,13 +28,13 @@ void ComponentImage::InitData()
 
 	GLfloat vertices[] = {
 		// Pos      // Tex
-		0.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 0.0f, 1.0f, 0.0f,
-		0.0f, 0.0f, 0.0f, 0.0f,
+		-0.5f, 0.5f, 0.0f, 1.0f,
+		0.5f, -0.5f, 1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f, 0.0f,
 
-		0.0f, 1.0f, 0.0f, 1.0f,
-		1.0f, 1.0f, 1.0f, 1.0f,
-		1.0f, 0.0f, 1.0f, 0.0f
+		-0.5f, 0.5f, 0.0f, 1.0f,
+		0.5f, 0.5f, 1.0f, 1.0f,
+		0.5f, -0.5f, 1.0f, 0.0f
 	};
 
 	glGenVertexArrays(1, &vao);
@@ -57,7 +53,7 @@ void ComponentImage::InitData()
 
 void ComponentImage::Render(float4x4* projection)
 {
-	Render(projection, &owner->transform_2d.rect_matrix);
+	Render(projection, &owner->transform_2d.GetSizedGlobalModelMatrix());
 }
 
 void ComponentImage::Render(float4x4* projection, float4x4* model)

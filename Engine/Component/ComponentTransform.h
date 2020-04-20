@@ -2,18 +2,20 @@
 #define _COMPONENTTRANSFORM_H_
 
 #define ENGINE_EXPORTS
+
 #include "Component.h"
-#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
 
+class PanelComponent;
+
 class ComponentTransform : public Component
 {
 public:
-	ComponentTransform();
-	ComponentTransform(GameObject * owner);
-	ComponentTransform(GameObject * owner,const float3 translation, const Quat rotation, const float3 scale);
+	ComponentTransform(ComponentType transform_type = ComponentType::TRANSFORM);
+	ComponentTransform(GameObject* owner, ComponentType transform_type = ComponentType::TRANSFORM);
+	ComponentTransform(GameObject* owner, const float3 translation, const Quat rotation, const float3 scale);
 
 	//Copy and move
 	ComponentTransform(const ComponentTransform& component_to_copy) = default;
@@ -22,11 +24,10 @@ public:
 	ComponentTransform & operator=(const ComponentTransform & component_to_copy);
 	ComponentTransform & operator=(ComponentTransform && component_to_move) = default;
 
+	~ComponentTransform() = default;
 
 	Component* Clone(bool create_on_module = true) const override;
 	void Copy(Component * component_to_copy) const override;
-
-	~ComponentTransform() = default;
 
 	void Delete() override {};
 
@@ -65,10 +66,10 @@ public:
 	float4x4 GetGlobalModelMatrix() const;
 	void SetGlobalModelMatrix(const float4x4& new_global_matrix);
   
-private:
-	void OnTransformChange();
+protected:
+	virtual void OnTransformChange();
 
-private:
+protected:
 	float3 translation = float3::zero;
 	Quat rotation = Quat::identity;
 	float3 rotation_degrees = float3::zero;

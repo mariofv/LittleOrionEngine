@@ -15,11 +15,6 @@ ComponentText::ComponentText() : ComponentUI(ComponentType::UI_TEXT)
 ComponentText::ComponentText(GameObject * owner) : ComponentUI(owner, ComponentType::UI_TEXT)
 {
 	InitData();
-	if (owner->transform_2d.is_new)
-	{
-		owner->transform_2d.SetPosition(&float3(0.0F, 0.0F, -1.0F));
-		owner->transform_2d.SetSize(189, 26);
-	}
 }
 
 void ComponentText::InitData()

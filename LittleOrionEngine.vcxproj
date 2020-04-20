@@ -152,7 +152,6 @@
     <ClInclude Include="Engine\Actions\EditorActionModifyLight.h" />
     <ClInclude Include="Engine\Actions\EditorActionRect2D.h" />
     <ClInclude Include="Engine\Actions\EditorActionRotation.h" />
-    <ClInclude Include="Engine\Actions\EditorActionRotation2D.h" />
     <ClInclude Include="Engine\Actions\EditorActionScale.h" />
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h" />
     <ClInclude Include="Engine\AI\DebugDrawGL.h" />
@@ -307,7 +306,6 @@
     <ClCompile Include="Engine\Actions\EditorActionModifyLight.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionRotation.cpp" />
-    <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
     <ClCompile Include="Engine\AI\DebugDrawGL.cpp" />

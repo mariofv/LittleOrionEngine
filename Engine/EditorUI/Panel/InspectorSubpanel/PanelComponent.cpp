@@ -53,40 +53,30 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 		{
 			ComponentTransform2D* transform_2d = &transform->owner->transform_2d;
 
-			if (ImGui::DragFloat2("Position", transform_2d->position.ptr(), 1.0f))
+			if (ImGui::DragFloat3("Position", transform_2d->translation.ptr(), 1.0f))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
 			}
 
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
-			if (ImGui::DragFloat("Width", &transform_2d->width, 1))
+			if (ImGui::DragFloat2("Size", transform_2d->size.ptr(), 1))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
 			}
 
-			ImGui::SameLine();
-			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 3);
-			ImGui::SetCursorPosX(ImGui::GetWindowWidth() / 2);
-
-			if (ImGui::DragFloat("Height", &transform_2d->height, 1))
-			{
-				transform_2d->OnTransformChange();
-				transform_2d->modified_by_user = true;
-			}
 			//UndoRedo
 			CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform_2d);
 
-			if (ImGui::DragFloat("Rotation", &transform_2d->rotation, 0.1f, -180.f, 180.f))
+			if (ImGui::DragFloat3("Rotation", transform_2d->rotation_degrees.ptr(), 0.1f, -180.f, 180.f))
 			{
+				transform_2d->rotation = Utils::GenerateQuatFromDegFloat3(transform_2d->rotation_degrees);
+				transform_2d->rotation_radians = Utils::Float3DegToRad(transform_2d->rotation_degrees);
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
 			}
-			//UndoRedo
-			CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D_ROTATION, transform_2d);
 
-			if (ImGui::DragFloat2("Scale", transform_2d->scale.ptr(), 0.1f))
+			if (ImGui::DragFloat3("Scale", transform_2d->scale.ptr(), 0.01f))
 			{
 				transform_2d->OnTransformChange();
 				transform_2d->modified_by_user = true;
