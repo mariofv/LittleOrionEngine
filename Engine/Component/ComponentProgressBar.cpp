@@ -1,12 +1,12 @@
 #include "ComponentProgressBar.h"
 #include "Main/GameObject.h"
 
-ComponentProgressBar::ComponentProgressBar() : ComponentUI(ComponentUI::UIType::PROGRESSBAR)
+ComponentProgressBar::ComponentProgressBar() : ComponentUI(ComponentType::UI_PROGRESS_BAR)
 {
 	
 }
 
-ComponentProgressBar::ComponentProgressBar(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::PROGRESSBAR)
+ComponentProgressBar::ComponentProgressBar(GameObject * owner) : ComponentUI(owner, ComponentType::UI_PROGRESS_BAR)
 {
 	if (owner->transform_2d.is_new)
 	{
@@ -30,17 +30,15 @@ void ComponentProgressBar::Delete()
 	ComponentUI::Delete();
 }
 
-void ComponentProgressBar::Save(Config& config) const
+void ComponentProgressBar::UISpecializedSave(Config& config) const
 {
-	ComponentUI::Save(config);
 	config.AddFloat(percentage, "Percentage");
 	config.AddUInt(bar_texture, "BarTexture");
 	config.AddFloat3(bar_color, "BarColor");
 }
 
-void ComponentProgressBar::Load(const Config& config)
+void ComponentProgressBar::UISpecializedLoad(const Config& config)
 {
-	ComponentUI::Load(config);
 	percentage = config.GetFloat("Percentage", 0.0F);
 	bar_texture = config.GetUInt("BarTexture", 0);
 	config.GetFloat3("BarColor", bar_color, float3::one);

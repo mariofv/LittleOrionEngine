@@ -5,11 +5,12 @@
 #include "Main/Gameobject.h"
 
 #include "Module/ModuleScene.h"
-ComponentButton::ComponentButton() : ComponentUI(ComponentUI::UIType::BUTTON)
+
+ComponentButton::ComponentButton() : ComponentUI(ComponentType::UI_BUTTON)
 {
 }
 
-ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::BUTTON)
+ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, ComponentType::UI_BUTTON)
 {
 	if (owner->transform_2d.is_new)
 	{
@@ -25,7 +26,7 @@ void ComponentButton::Render(float4x4* projection)
 	ComponentUI* text = nullptr;
 	for (const auto& child : owner->children)
 	{
-		text = static_cast<ComponentUI*>(child->GetComponentUI(ComponentUI::UIType::TEXT));
+		text = static_cast<ComponentUI*>(child->GetComponent(ComponentType::UI_TEXT));
 		if (text)
 		{
 			ComponentTransform2D* text_transform = &text->owner->transform_2d;
@@ -42,13 +43,11 @@ void ComponentButton::Delete()
 }
 
 
-void ComponentButton::Save(Config& config) const
+void ComponentButton::UISpecializedSave(Config& config) const
 {
-	ComponentUI::Save(config);
 }
 
-void ComponentButton::Load(const Config& config)
+void ComponentButton::UISpecializedLoad(const Config& config)
 {
-	ComponentUI::Load(config);
 }
 

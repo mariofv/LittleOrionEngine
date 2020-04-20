@@ -12,8 +12,9 @@ public:
 
 	void Delete();
 
-	void Save(Config& config) const;
-	void Load(const Config& config);
+	void UISpecializedSave(Config& config) const override;
+	void UISpecializedLoad(const Config& config) override;
+
 	void Render(float4x4* projection);
 };
 #endif

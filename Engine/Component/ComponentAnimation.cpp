@@ -124,20 +124,14 @@ void ComponentAnimation::Delete()
 	App->animations->RemoveComponentAnimation(this);
 }
 
-void ComponentAnimation::Save(Config& config) const
+void ComponentAnimation::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddUInt((uint64_t)type, "ComponentType");
-	config.AddBool(active, "Active");
-
 	uint32_t state_machine_uuid = animation_controller->state_machine ? animation_controller->state_machine->GetUUID() : 0;
 	config.AddUInt(state_machine_uuid, "StateMachineResource");
 }
 
-void ComponentAnimation::Load(const Config& config)
+void ComponentAnimation::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
 	uint32_t state_machine_uuid = config.GetUInt("StateMachineResource", 0);
 	if (state_machine_uuid != 0)
 	{

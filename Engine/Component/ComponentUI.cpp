@@ -14,12 +14,12 @@
 
 #include <GL/glew.h>
 
-ComponentUI::ComponentUI(UIType ui_type) : Component(nullptr, ComponentType::UI), ui_type(ui_type)
+ComponentUI::ComponentUI(ComponentType ui_type) : Component(nullptr, ui_type)
 {
 	InitData();
 }
 
-ComponentUI::ComponentUI(GameObject* owner, UIType ui_type) : Component(owner, ComponentType::UI), ui_type(ui_type)
+ComponentUI::ComponentUI(GameObject* owner, ComponentType ui_type) : Component(owner, ui_type)
 {
 	InitData();
 }
@@ -88,23 +88,18 @@ void ComponentUI::Delete()
 	App->ui->RemoveComponentUI(this);
 }
 
-void ComponentUI::Save(Config& config) const
+void ComponentUI::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddBool(active, "Active");
-	config.AddUInt((unsigned int)type, "ComponentType");
-	config.AddUInt((unsigned int)ui_type, "UIType");
 	config.AddUInt(ui_texture, "Texture");
 	config.AddFloat3(color, "Color");
 	config.AddUInt(texture_uuid, "TextureUUID");
 	config.AddInt(layer, "Layer");
+
+	UISpecializedSave(config);
 }
 
-void ComponentUI::Load(const Config& config)
+void ComponentUI::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
-
 	config.GetFloat3("Color", color, float3::one);
 	layer = config.GetInt("Layer", 0);
 
@@ -114,6 +109,9 @@ void ComponentUI::Load(const Config& config)
 	{
 		SetTextureToRender(texture_uuid);
 	}
+
+	UISpecializedLoad(config);
+
 	InitData();
 }
 

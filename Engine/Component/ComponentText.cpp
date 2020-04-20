@@ -7,12 +7,12 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleUI.h"
 
-ComponentText::ComponentText() : ComponentUI(ComponentUI::UIType::TEXT)
+ComponentText::ComponentText() : ComponentUI(ComponentType::UI_TEXT)
 {
 	InitData();
 }
 
-ComponentText::ComponentText(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::TEXT)
+ComponentText::ComponentText(GameObject * owner) : ComponentUI(owner, ComponentType::UI_TEXT)
 {
 	InitData();
 	if (owner->transform_2d.is_new)
@@ -79,16 +79,14 @@ void ComponentText::Delete()
 	ComponentUI::Delete();
 }
 
-void ComponentText::Save(Config& config) const
+void ComponentText::UISpecializedSave(Config& config) const
 {
-	ComponentUI::Save(config);
 	config.AddString(text, "Text");
 	config.AddFloat(scale, "Scale");
 }
 
-void ComponentText::Load(const Config& config)
+void ComponentText::UISpecializedLoad(const Config& config)
 {
-	ComponentUI::Load(config);
 	config.GetString("Text", text, "");
 	config.GetFloat("Scale", scale);
 }

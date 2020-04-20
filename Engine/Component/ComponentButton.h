@@ -12,9 +12,11 @@ public:
 
 	void Delete() override;
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+	void UISpecializedSave(Config& config) const override;
+	void UISpecializedLoad(const Config& config) override;
+
 	void Render(float4x4* projection);
+
 private:
 	bool hasText = false;
 };

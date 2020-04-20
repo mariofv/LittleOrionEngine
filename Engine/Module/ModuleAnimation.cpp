@@ -30,6 +30,13 @@ ComponentAnimation* ModuleAnimation::CreateComponentAnimation()
 	return new_animation;
 }
 
+ComponentAnimation* ModuleAnimation::CreateComponentAnimation(GameObject* owner)
+{
+	ComponentAnimation* new_animation = new ComponentAnimation(owner);
+	animations.push_back(new_animation);
+	return new_animation;
+}
+
 void ModuleAnimation::RemoveComponentAnimation(ComponentAnimation* animation_to_remove)
 {
 	const auto it = std::find(animations.begin(), animations.end(), animation_to_remove);

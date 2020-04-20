@@ -30,8 +30,8 @@ public:
 
 	void Delete() override {};
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 	
 	ENGINE_API float3 GetGlobalTranslation() const;
 	ENGINE_API float3 GetTranslation() const;

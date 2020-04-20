@@ -32,8 +32,8 @@ public:
 	void Delete() override {};
 	void GenerateBoundingBox();
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 
 	bool IsEmpty() const;
 

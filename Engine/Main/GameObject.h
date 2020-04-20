@@ -48,11 +48,9 @@ public:
 	void RemoveChild(GameObject* child);
 
 	ENGINE_API Component* CreateComponent(const Component::ComponentType type);
-	ENGINE_API Component* CreateComponentUI(const ComponentUI::UIType ui_type);
 	void RemoveComponent(Component* component);
 	ENGINE_API Component* GetComponent(const Component::ComponentType type) const;
 	ENGINE_API ComponentScript* GetComponentScript(const char* name) const;
-	ENGINE_API Component* GetComponentUI(const ComponentUI::UIType type) const;
 
 	void MoveUpInHierarchy() const;
 	void MoveDownInHierarchy() const;

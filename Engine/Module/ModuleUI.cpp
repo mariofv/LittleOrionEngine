@@ -64,43 +64,45 @@ void  ModuleUI::RenderUIGameObject(GameObject* parent, float4x4* projection)
 {
 	for (auto& ui_element : ordered_ui)
 	{
-		if (ui_element && ui_element->ui_type != ComponentUI::UIType::CANVAS)
+		if (ui_element->GetType() != Component::ComponentType::CANVAS)
 		{
 			ui_element->Render(projection);
 		}
 	}
 }
 
-ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* owner)
+ComponentUI* ModuleUI::CreateComponentUI(Component::ComponentType type)
 {
 	ComponentUI* new_ui = nullptr;
 	switch (type)
 	{
-		case ComponentUI::UIType::CANVAS:
+		case Component::ComponentType::CANVAS:
 			if (main_canvas == nullptr)
 			{
-				main_canvas = new ComponentCanvas(owner);
+				main_canvas = new ComponentCanvas();
 			}
 			new_ui = main_canvas;
 			break;
-		case ComponentUI::UIType::IMAGE:
-			new_ui = new ComponentImage(owner);
+		case Component::ComponentType::UI_IMAGE:
+			new_ui = new ComponentImage();
 			break;
-		case ComponentUI::UIType::TEXT:
-			new_ui = new ComponentText(owner);
+		case Component::ComponentType::UI_TEXT:
+			new_ui = new ComponentText();
 			break;
-		case ComponentUI::UIType::BUTTON:
-			new_ui = new ComponentButton(owner);
+		case Component::ComponentType::UI_BUTTON:
+			new_ui = new ComponentButton();
 			break;
-		case ComponentUI::UIType::PROGRESSBAR:
-			new_ui = new ComponentProgressBar(owner);
+		case Component::ComponentType::UI_PROGRESS_BAR:
+			new_ui = new ComponentProgressBar();
 			break;
 	}
+
 	if(new_ui) 
 	{
 		ui_elements.push_back(new_ui);
 		SortComponentsUI();
 	}
+
 	return new_ui;
 }
 

@@ -52,10 +52,8 @@ ComponentTransform2D & ComponentTransform2D::operator=(const ComponentTransform2
 	return *this;
 }
 
-void ComponentTransform2D::Save(Config& config) const
+void ComponentTransform2D::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddBool(active, "Active");
 	config.AddFloat(rect.top, "Top");
 	config.AddFloat(rect.right, "Right");
 	config.AddFloat(rect.bottom, "Bottom");
@@ -67,11 +65,8 @@ void ComponentTransform2D::Save(Config& config) const
 	config.AddFloat(height, "Height");
 }
 
-void ComponentTransform2D::Load(const Config& config)
-{
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
-	
+void ComponentTransform2D::SpecializedLoad(const Config& config)
+{	
 	float param = 0.0f;
 
 	rect.top = config.GetFloat("Top", param);

@@ -1,12 +1,12 @@
 #include "ComponentImage.h"
 #include "Main/GameObject.h"
 
-ComponentImage::ComponentImage() : ComponentUI(ComponentUI::UIType::IMAGE)
+ComponentImage::ComponentImage() : ComponentUI(ComponentType::UI_IMAGE)
 {
 
 }
 
-ComponentImage::ComponentImage(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::IMAGE)
+ComponentImage::ComponentImage(GameObject * owner) : ComponentUI(owner, ComponentType::UI_IMAGE)
 {
 	if (owner->transform_2d.is_new)
 	{
@@ -24,12 +24,10 @@ void ComponentImage::Delete()
 	ComponentUI::Delete();
 }
 
-void ComponentImage::Save(Config& config) const
+void ComponentImage::UISpecializedSave(Config& config) const
 {
-	ComponentUI::Save(config);
 }
 
-void ComponentImage::Load(const Config& config)
+void ComponentImage::UISpecializedLoad(const Config& config)
 {
-	ComponentUI::Load(config);
 }

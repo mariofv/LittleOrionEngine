@@ -49,7 +49,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if ((transform->owner->GetComponent(Component::ComponentType::UI) != nullptr)) //Render transform 2d
+		if (false) //Render transform 2d
 		{
 			ComponentTransform2D* transform_2d = &transform->owner->transform_2d;
 
@@ -533,28 +533,6 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 
 		// to implement CheckClickForUndo(ModuleEditor::UndoActionType::EDIT_COMPONENTSCRIPT, component_script);
 
-	}
-}
-
-void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
-{
-	switch (ui->ui_type) 
-	{
-		case ComponentUI::UIType::CANVAS :
-			ShowComponentCanvasWindow(static_cast<ComponentCanvas*>(ui));
-			break;
-		case ComponentUI::UIType::IMAGE:
-			ShowComponentImageWindow(static_cast<ComponentImage*>(ui));
-			break;
-		case ComponentUI::UIType::TEXT:
-			ShowComponentTextWindow(static_cast<ComponentText*>(ui));
-			break;
-		case ComponentUI::UIType::BUTTON:
-			ShowComponentButtonWindow(static_cast<ComponentButton*>(ui));
-			break;
-		case ComponentUI::UIType::PROGRESSBAR:
-			ShowComponentProgressBarWindow(static_cast<ComponentProgressBar*>(ui));
-			break;
 	}
 }
 

@@ -30,10 +30,9 @@ public:
 
 	void Render(const ComponentCamera* camera);
 
-	ComponentUI* CreateComponentUI(const ComponentUI::UIType, GameObject*);
-	void RemoveComponentUI(ComponentUI*);
+	ComponentUI* CreateComponentUI(Component::ComponentType ui_component_type);
+	void RemoveComponentUI(ComponentUI* component_ui);
 	
-	void InitGlyph();
 	ENGINE_API void SortComponentsUI();
 
 private:

@@ -202,6 +202,7 @@ bool GameObject::IsVisible(const ComponentCamera& camera) const
 	}
 	return true;
 }
+
 ENGINE_API void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
@@ -266,20 +267,13 @@ void GameObject::Load(const Config& config)
 	config.GetChildrenConfig("Components", gameobject_components_config);
 	for (unsigned int i = 0; i < gameobject_components_config.size(); ++i)
 	{
-		uint64_t component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
-		ComponentUI::UIType ui_type = ComponentUI::UIType::IMAGE;
-		assert(component_type_uint != 0);
-		
-		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
+		std::string component_type_name;
+		gameobject_components_config[i].GetString("ComponentType", component_type_name, "Unknown");
+		Component::ComponentType component_type = Component::GetComponentType(component_type_name);
+
 		Component* created_component = nullptr;
-		if (component_type == Component::ComponentType::UI) {
-			ui_type = ComponentUI::UIType(gameobject_components_config[i].GetUInt("UIType", 0));
-			created_component = CreateComponentUI(ui_type);
-		}
-		else
-		{
-			created_component = CreateComponent(component_type);
-		}
+		created_component = CreateComponent(component_type);
+		
 		created_component->Load(gameobject_components_config[i]);
 	}
 }
@@ -333,6 +327,14 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	Component *created_component;
 	switch (type)
 	{
+	case Component::ComponentType::ANIMATION:
+		created_component = App->animations->CreateComponentAnimation(this);
+		break;
+
+	case Component::ComponentType::CANVAS:
+		created_component = App->ui->CreateComponentUI(type);
+		break;
+
 	case Component::ComponentType::CAMERA:
 		created_component = App->cameras->CreateComponentCamera();
 		break;
@@ -344,12 +346,16 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	case Component::ComponentType::LIGHT:
 		created_component = App->lights->CreateComponentLight();
 		break;
+
 	case Component::ComponentType::SCRIPT:
 		created_component = App->scripts->CreateComponentScript();
 		break;
 
-	case Component::ComponentType::ANIMATION:
-		created_component = App->animations->CreateComponentAnimation();
+	case Component::ComponentType::UI_BUTTON:
+	case Component::ComponentType::UI_IMAGE:
+	case Component::ComponentType::UI_PROGRESS_BAR:
+	case Component::ComponentType::UI_TEXT:
+		created_component = App->ui->CreateComponentUI(type);
 		break;
 
 	default:
@@ -358,18 +364,6 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	}
 
 	created_component->owner = this;
-	if (type == Component::ComponentType::ANIMATION)
-	{
-		static_cast<ComponentAnimation*>(created_component)->Init();
-	}
-	components.push_back(created_component);
-	return created_component;
-}
-
-
-ENGINE_API Component* GameObject::CreateComponentUI(const ComponentUI::UIType ui_type)
-{
-	Component* created_component = App->ui->CreateComponentUI(ui_type, this);
 	components.push_back(created_component);
 	return created_component;
 }
@@ -411,22 +405,6 @@ ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) con
 		}
 	}
 
-	return nullptr;
-}
-
-Component* GameObject::GetComponentUI(const ComponentUI::UIType type) const
-{
-	for (unsigned int i = 0; i < components.size(); ++i)
-	{
-		if (components[i]->GetType() == Component::ComponentType::UI)
-		{
-			ComponentUI* ui = static_cast<ComponentUI*>(components[i]);
-			if (ui->ui_type == type)
-			{
-				return ui;
-			}
-		}
-	}
 	return nullptr;
 }
 

@@ -43,19 +43,15 @@ ComponentTransform & ComponentTransform::operator=(const ComponentTransform & co
 	return *this;
 }
 
-void ComponentTransform::Save(Config& config) const
+void ComponentTransform::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddBool(active, "Active");
 	config.AddFloat3(translation, "Translation");
 	config.AddFloat3(rotation_degrees, "Rotation");
 	config.AddFloat3(scale, "Scale");
 }
 
-void ComponentTransform::Load(const Config& config)
+void ComponentTransform::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
 	config.GetFloat3("Translation", translation, float3::zero);
 	config.GetFloat3("Rotation", rotation_degrees, float3::zero);
 	rotation = Utils::GenerateQuatFromDegFloat3(rotation_degrees);

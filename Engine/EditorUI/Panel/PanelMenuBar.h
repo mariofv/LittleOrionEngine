@@ -20,7 +20,7 @@ private:
 	void ShowGameObjectMenu();
 	void ShowWindowMenu();
 	void ShowHelpMenu();
-	GameObject* CreateUIGameObject(const char* name, ComponentUI::UIType ui_type) const;
+	GameObject* CreateUIGameObject(const char* name, Component::ComponentType ui_type) const;
 };
 
 #endif //_PANELMENUBAR_H_

@@ -313,6 +313,7 @@
     <ClCompile Include="Engine\AI\DebugDrawGL.cpp" />
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
     <ClCompile Include="Engine\Animation\AnimController.cpp" />
+    <ClCompile Include="Engine\Component\Component.cpp" />
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp" />
     <ClCompile Include="Engine\Component\ComponentButton.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvas.cpp" />

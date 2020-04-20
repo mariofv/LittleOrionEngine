@@ -32,7 +32,12 @@ public:
 	void ShowComponentLightWindow(ComponentLight* light);
 	void ShowComponentAnimationWindow(ComponentAnimation* animation);
 	void ShowComponentScriptWindow(ComponentScript* component_script);
-	void ShowComponentUIWindow(ComponentUI* ui);
+	void ShowCommonUIWindow(ComponentUI* ui);
+	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
+	void ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar);
+	void ShowComponentImageWindow(ComponentImage* image);
+	void ShowComponentTextWindow(ComponentText* text);
+	void ShowComponentButtonWindow(ComponentButton* button);
 	void ShowAddNewComponentButton();
 
 	void ShowScriptsCreated(ComponentScript* component_script);
@@ -42,13 +47,6 @@ public:
 
 	ENGINE_API void DropGOTarget(GameObject*& go);
 
-private:
-	void ShowCommonUIWindow(ComponentUI* ui);
-	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
-	void ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar);
-	void ShowComponentImageWindow(ComponentImage* image);
-	void ShowComponentTextWindow(ComponentText* text);
-	void ShowComponentButtonWindow(ComponentButton* button);
 };
 
 #endif //_PANELCOMPONENT_H_

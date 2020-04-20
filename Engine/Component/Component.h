@@ -13,14 +13,20 @@ public:
 	enum class ComponentType
 	{
 		AABB,
+		ANIMATION,
 		CAMERA,
+		CANVAS,
+		LIGHT,
 		MESH_RENDERER,
 		TRANSFORM,
-		LIGHT,
-		UI,
-		SCRIPT,
 		TRANSFORM2D,
-		ANIMATION
+		SCRIPT,
+
+		UI_BUTTON,
+		UI_IMAGE,
+		UI_PROGRESS_BAR,
+		UI_TEXT
+
 	};
 
 	Component(ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
@@ -55,8 +61,11 @@ public:
 	virtual Component* Clone(bool create_on_module = true) const = 0;
 	virtual void Copy(Component * component_to_copy) const = 0;
 
-	virtual void Save(Config& config) const = 0;
-	virtual void Load(const Config &config) = 0;
+	void Save(Config& config) const;
+	void Load(const Config &config);
+
+	virtual void SpecializedSave(Config& config) const = 0;
+	virtual void SpecializedLoad(const Config &config) = 0;
 
 	virtual ComponentType GetType() const { return type; };
 
@@ -64,6 +73,9 @@ public:
 	{
 		return ComponentType(component_type_uint);
 	}
+
+	static ComponentType GetComponentType(const std::string& component_type_name);
+	static std::string GetComponentTypeName(ComponentType component_type);
 
 public:
 	uint64_t UUID = 0;
@@ -73,6 +85,7 @@ public:
 
 	bool modified_by_user = false; //This is only for prefab and UI
 	bool added_by_user = false; //This is only for prefab and UI
+
 protected:
 	bool active = true;
 };

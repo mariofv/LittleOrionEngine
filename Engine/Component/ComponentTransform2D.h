@@ -23,8 +23,8 @@ public:
 	virtual void Delete() override;
 	virtual Component * Clone(bool create_on_module = true) const override;
 	virtual void Copy(Component * component_to_copy) const override;
-	virtual void Save(Config & config) const override;
-	virtual void Load(const Config & config) override;
+	virtual void SpecializedSave(Config & config) const override;
+	virtual void SpecializedLoad(const Config & config) override;
 
 	void GenerateGlobalModelMatrix();
 	void RescaleTransform();

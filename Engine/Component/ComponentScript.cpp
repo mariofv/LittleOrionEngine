@@ -81,11 +81,8 @@ void ComponentScript::ShowComponentWindow()
 	}
 }
 
-void ComponentScript::Save(Config& config) const
+void ComponentScript::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddInt((unsigned int)type, "ComponentType");
-	config.AddBool(active, "Active");
 	config.AddString(name, "ScriptName");
 	if (script)
 	{
@@ -94,10 +91,8 @@ void ComponentScript::Save(Config& config) const
 	
 }
 
-void ComponentScript::Load(const Config& config)
+void ComponentScript::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
 	config.GetString("ScriptName", this->name, "");
 	LoadName(this->name);
 	if (script)

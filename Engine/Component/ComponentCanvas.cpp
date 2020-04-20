@@ -5,12 +5,12 @@
 
 #include "Module/ModuleUI.h"
 
-ComponentCanvas::ComponentCanvas() : ComponentUI(ComponentUI::UIType::CANVAS)
+ComponentCanvas::ComponentCanvas() : ComponentUI(ComponentType::CANVAS)
 {
 	
 }
 
-ComponentCanvas::ComponentCanvas(GameObject* owner) : ComponentUI(owner, ComponentUI::UIType::CANVAS)
+ComponentCanvas::ComponentCanvas(GameObject* owner) : ComponentUI(owner, ComponentType::CANVAS)
 {
 	
 }
@@ -26,13 +26,11 @@ void ComponentCanvas::Delete()
 	ComponentUI::Delete();
 }
 
-void ComponentCanvas::Save(Config& config) const
+void ComponentCanvas::UISpecializedSave(Config& config) const
 {
-	ComponentUI::Save(config);
 }
 
-void ComponentCanvas::Load(const Config& config)
+void ComponentCanvas::UISpecializedLoad(const Config& config)
 {
-	ComponentUI::Load(config);
 }
 
