@@ -36,17 +36,20 @@ DebugModeScript::DebugModeScript()
 // Use this for initialization before Start()
 void DebugModeScript::Awake()
 {
-	background = (ComponentImage*)background_go->GetComponentUI(ComponentUI::UIType::IMAGE);
-	text_fps = (ComponentText*)text_fps_go->GetComponentUI(ComponentUI::UIType::TEXT);
-	text_tris = (ComponentText*)text_tris_go->GetComponentUI(ComponentUI::UIType::TEXT);
-	text_verts = (ComponentText*)text_verts_go->GetComponentUI(ComponentUI::UIType::TEXT);
+	background = (ComponentImage*)background_go->GetComponent(Component::ComponentType::UI_IMAGE);
+	text_fps = (ComponentText*)text_fps_go->GetComponent(ComponentUI::ComponentType::UI_TEXT);
+	text_tris = (ComponentText*)text_tris_go->GetComponent(ComponentUI::ComponentType::UI_TEXT);
+	text_verts = (ComponentText*)text_verts_go->GetComponent(ComponentUI::ComponentType::UI_TEXT);
 
 	text_fps->scale = 8.0f;
 	text_tris->scale = 8.0f;
 	text_verts->scale = 8.0f;
+
+	/*
 	text_fps->color = float3::zero;
 	text_tris->color = float3::zero;
 	text_verts->color = float3::zero;
+	*/
 
 	ComponentScript* component = camera_manager->GetComponentScript("SceneCamerasController");
 	scene_cameras = (SceneCamerasController*)component->script;

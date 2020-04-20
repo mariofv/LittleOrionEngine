@@ -32,9 +32,9 @@ WorldManager::WorldManager()
 // Use this for initialization before Start()
 void WorldManager::Awake()
 {
-	health_component = (ComponentProgressBar*)health_bar->GetComponentUI(ComponentUI::UIType::PROGRESSBAR);
-	lose_component = (ComponentImage*)lose_screen->GetComponentUI(ComponentUI::UIType::IMAGE);
-	win_component = (ComponentImage*)win_screen->GetComponentUI(ComponentUI::UIType::IMAGE);
+	health_component = (ComponentProgressBar*)health_bar->GetComponent(Component::ComponentType::UI_PROGRESS_BAR);
+	lose_component = (ComponentImage*)lose_screen->GetComponent(Component::ComponentType::UI_IMAGE);;
+	win_component = (ComponentImage*)win_screen->GetComponent(Component::ComponentType::UI_IMAGE);;
 	player_controller = (ComponentScript*)player->GetComponentScript("PlayerController");
 }
 
