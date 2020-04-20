@@ -29,7 +29,7 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 
 	uint32_t size_of_clip = sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
 	uint32_t size_of_state = sizeof(uint64_t) * 2;
-	uint32_t size_of_transitions = sizeof(uint64_t) * 4 + sizeof(bool);
+	uint32_t size_of_transitions = sizeof(uint64_t) * 5 + sizeof(bool);
 	uint32_t size = sizeof(ranges) + size_of_clip * num_clips + size_of_transitions * num_transitions + size_of_state * num_states + sizeof(uint64_t)/*Default state*/;
 
 	char* data = new char[size]; // Allocate
@@ -88,7 +88,7 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 		transition.GetString("Trigger", trigger, "");
 		int64_t interpolation_time = transition.GetInt64("Interpolation", 0);
 		uint64_t trigger_hash = std::hash<std::string>{}(trigger);
-
+		uint64_t priority = transition.GetUInt("Priority", 0);
 		bool automatic = transition.GetBool("Automatic", false);
 
 		bytes = sizeof(uint64_t);
@@ -106,6 +106,9 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 		bytes = sizeof(uint64_t);
 		memcpy(cursor, &interpolation_time, bytes);
 		cursor += bytes; 
+		bytes = sizeof(uint64_t);
+		memcpy(cursor, &priority, bytes);
+		cursor += bytes;
 
 		bytes = sizeof(bool);
 		memcpy(cursor, &automatic, bytes);

@@ -57,9 +57,9 @@ struct Transition
 	uint64_t interpolation_time = 100;
 
 	bool automatic = false;
-	uint32_t priority = 0;
+	uint64_t priority = 0;
 
-	std::vector<std::shared_ptr<Parameter<bool>>> parameters;
+	std::vector<std::shared_ptr<Parameter<int>>> parameters;
 };
 
 class StateMachine : public Resource
@@ -89,7 +89,7 @@ public:
 	std::vector<std::shared_ptr<Clip>> clips;
 	std::vector<std::shared_ptr<State>> states;
 	std::vector<std::shared_ptr<Transition>> transitions;
-	std::vector<std::shared_ptr<Parameter<bool>>> parameters;
+	std::vector<std::shared_ptr<Parameter<int>>> parameters;
 	uint64_t default_state = 0;
 	friend class PanelStateMachine;
 };

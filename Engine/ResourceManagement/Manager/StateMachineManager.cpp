@@ -100,6 +100,10 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(Metafile* metafile, cons
 		memcpy(&transition->interpolation_time, cursor, bytes);
 		cursor += bytes;
 
+		bytes = sizeof(uint64_t);
+		memcpy(&transition->priority, cursor, bytes);
+		cursor += bytes;
+
 		bytes = sizeof(bool);
 		memcpy(&transition->automatic, cursor, bytes);
 		cursor += bytes;

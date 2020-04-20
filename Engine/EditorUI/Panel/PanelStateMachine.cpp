@@ -326,7 +326,13 @@ void PanelStateMachine::LeftPanel()
 			ImGui::Text("Interpolation time: ");
 			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(link->transition->interpolation_time)); ImGui::SameLine(); ImGui::Text("ms");
 			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Text("Conditions:");
 			ImGui::Checkbox("Exit time", &(link->transition->automatic));
+			if (link->transition->automatic)
+			{
+				ImGui::InputScalar("Priority", ImGuiDataType_U64, &(link->transition->priority));
+			}
 			ImGui::Text("Trigger Name:");
 			ImGui::InputText("###Trigger Name", &(link->transition->trigger));
 			ImGui::PopID();
