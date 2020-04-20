@@ -139,6 +139,8 @@
   <ItemGroup>
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\FontImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h" />
     <ClInclude Include="Engine\Actions\EditorAction.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddComponent.h" />
@@ -338,12 +340,14 @@
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp" />
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
     <ClCompile Include="Engine\Module\ModuleScriptManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\FontImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\SkyboxImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Manager\FontManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\SceneManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\SkyboxManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Metafile\Metafile.cpp" />
