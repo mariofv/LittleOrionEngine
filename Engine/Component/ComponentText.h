@@ -33,7 +33,7 @@ public:
 	float text_width = 0;
 	float text_heigth = 0;
 
-private:
+public:
 	uint32_t font_uuid = 0;
 	std::shared_ptr<Font> font = nullptr;
 

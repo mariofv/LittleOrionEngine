@@ -590,9 +590,31 @@ void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonUIWindow(text);
+
 		ImGui::Separator();		
 		ImGui::InputText("Text", &text->text);
+		
 		ImGui::Separator();
+		ImGui::Text("Font");
+		ImGui::SameLine();
+		std::string font_name = text->font == nullptr ? "None (Font)" : App->resources->resource_DB->GetEntry(text->font->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(text->UUID) + "FontSelector").c_str());
+		if (ImGui::Button(font_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::FONT);
+		}	
+		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			text->SetFont(selected_resource);
+			text->modified_by_user = true;
+		}
+		selected_resource = ImGui::ResourceDropper<Font>();
+		if (selected_resource != 0)
+		{
+			text->SetFont(selected_resource);
+		}
+
 		if (ImGui::DragFloat("Font Size", (float*)(&text->scale)))
 		{
 			text->modified_by_user = true;
