@@ -24,7 +24,7 @@ public:
 
 private:
 	PlayerMovement* player_movement = nullptr;
-	int player = 0;
+	unsigned player = 0;
 };
 extern "C" SCRIPT_API PlayerController* PlayerControllerDLL(); //This is how we are going to load the script
 #endif

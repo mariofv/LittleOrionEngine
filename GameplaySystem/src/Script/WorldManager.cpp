@@ -106,7 +106,7 @@ void WorldManager::InitPublicGameObjects()
 
 
 
-	for (int i = 0; i < public_gameobjects.size(); ++i)
+	for (unsigned i = 0; i < public_gameobjects.size(); ++i)
 	{
 		name_gameobjects.push_back(is_object);
 		go_uuids.push_back(0);
