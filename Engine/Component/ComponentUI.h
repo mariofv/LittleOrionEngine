@@ -2,7 +2,6 @@
 #define _COMPONENTUI_H_
 
 #include "Component.h"
-class Texture;
 
 class ComponentUI : public Component
 {
@@ -25,24 +24,8 @@ public:
 	virtual void Enable() override;
 	virtual void Disable() override;
 
-	virtual void Render(float4x4* projection);
-	virtual void Render(float4x4* projection, float4x4* model, unsigned int texture = 0, float3* color = &float3(0.0f, 1.0f, 0.0f));
-	virtual void InitData();
-
-	void SetTextureToRender(uint32_t texture_uuid);
-
 public:
-	float3 color = float3::one;
-
 	int layer = 0; 
-
-	uint32_t texture_uuid = 0;
-	std::shared_ptr<Texture> texture_to_render;
-	std::string metadata_path;
-	
-protected:
-	unsigned int shader_program, vao, vbo;
-	unsigned int ui_texture = 2;
 	friend class PanelComponent;
 };
 #endif

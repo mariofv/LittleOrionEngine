@@ -21,6 +21,7 @@ ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, Compon
 
 void ComponentButton::Render(float4x4* projection)
 {
+	/*
 	owner->transform_2d.position.z = 1;
 	
 	ComponentUI* text = nullptr;
@@ -35,6 +36,7 @@ void ComponentButton::Render(float4x4* projection)
 		}
 	}
 	ComponentUI::Render(projection);
+	*/
 }
 
 void ComponentButton::Delete()

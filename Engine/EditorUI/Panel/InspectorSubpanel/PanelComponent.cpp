@@ -49,7 +49,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (false) //Render transform 2d
+		if (true) //Render transform 2d
 		{
 			ComponentTransform2D* transform_2d = &transform->owner->transform_2d;
 
@@ -544,10 +544,38 @@ void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 	}
 }
 
-void PanelComponent::ShowComponentImageWindow(ComponentImage* image) {
+void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image) {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(image);
+		ShowCommonUIWindow(component_image);
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Texture");
+		ImGui::SameLine();
+
+		std::string texture_name = component_image->texture_to_render == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(component_image->texture_to_render->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(component_image->UUID) + "MeshSelector").c_str());
+		if (ImGui::Button(texture_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+		}
+
+		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			component_image->SetTextureToRender(selected_resource);
+		}
+		selected_resource = ImGui::ResourceDropper<Texture>();
+		if (selected_resource != 0)
+		{
+			component_image->SetTextureToRender(selected_resource);
+		}
+
+		ImGui::ColorPicker3("Color", component_image->color.ptr());
 	}
 }
 
@@ -779,13 +807,4 @@ void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 		//ui->owner->transform_2d.OnTransformChange();
 		App->ui->SortComponentsUI();
 	}
-	ImGui::Separator();
-	ImGui::InputInt("Texture", (int*)(&ui->ui_texture));
-	uint32_t selected_resource = ImGui::ResourceDropper<Texture>();
-	if (selected_resource != 0)
-	{
-		ui->SetTextureToRender(selected_resource);
-	}
-
-	ImGui::ColorPicker3("Color", ui->color.ptr());
 }

@@ -24,9 +24,10 @@ ComponentText::ComponentText(GameObject * owner) : ComponentUI(owner, ComponentT
 
 void ComponentText::InitData()
 {
-	ComponentUI::InitData();
+	/*
 	shader_program = App->program->GetShaderProgramId("UI Text");
 	color = float3::unitZ;
+	*/
 }
 
 void ComponentText::Render(float4x4* projection)
@@ -35,7 +36,7 @@ void ComponentText::Render(float4x4* projection)
 	{
 		return;
 	}
-
+	/*
 	ComponentTransform2D* transform_2d_txt = &owner->transform_2d;
 	float4x4 txt_model;
 
@@ -72,6 +73,7 @@ void ComponentText::Render(float4x4* projection)
 			x = owner->transform_2d.rect.left;
 		}
 	}
+	*/
 }
 
 void ComponentText::Delete()

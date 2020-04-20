@@ -3,18 +3,35 @@
 
 #include "ComponentUI.h"
 
+#include <GL/glew.h>
+
+class Texture;
+
 class ComponentImage : public ComponentUI
 {
 public:
 	ComponentImage();
 	ComponentImage(GameObject * owner);
-	~ComponentImage() = default;
-
-	void Delete();
+	~ComponentImage();
 
 	void UISpecializedSave(Config& config) const override;
 	void UISpecializedLoad(const Config& config) override;
 
+	void SetTextureToRender(uint32_t texture_uuid);
+
 	void Render(float4x4* projection);
+	void Render(float4x4* projection, float4x4* model);
+
+private:
+	virtual void InitData();
+
+public:
+	uint32_t texture_uuid = 0;
+	std::shared_ptr<Texture> texture_to_render;
+
+	float3 color = float3::one;
+
+private:
+	GLuint program, vao, vbo;
 };
-#endif
+#endif //_COMPONENTIMAGE_H_

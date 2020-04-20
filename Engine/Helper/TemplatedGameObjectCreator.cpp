@@ -10,7 +10,6 @@ GameObject* TemplatedGameObjectCreator::CreatePrimitive(CoreResource resource_ty
 	GameObject* primitive_game_object = App->scene->CreateGameObject();
 	primitive_game_object->name = GetCoreResourceName(resource_type);
 
-
 	ComponentMeshRenderer* mesh_renderer_component = (ComponentMeshRenderer*)primitive_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
 	mesh_renderer_component->SetMesh((uint32_t)resource_type);
 	primitive_game_object->Update();

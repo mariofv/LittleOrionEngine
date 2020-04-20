@@ -9,7 +9,6 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentUI.h"
 
-
 #include <GL/glew.h>
 
 class Prefab;

@@ -60,13 +60,13 @@ void ModuleUI::Render(const ComponentCamera* camera)
 	}
 }
 
-void  ModuleUI::RenderUIGameObject(GameObject* parent, float4x4* projection)
+void ModuleUI::RenderUIGameObject(GameObject* parent, float4x4* projection)
 {
 	for (auto& ui_element : ordered_ui)
 	{
-		if (ui_element->GetType() != Component::ComponentType::CANVAS)
+		if (ui_element->GetType() == Component::ComponentType::UI_IMAGE)
 		{
-			ui_element->Render(projection);
+			static_cast<ComponentImage*>(ui_element)->Render(projection);
 		}
 	}
 }
