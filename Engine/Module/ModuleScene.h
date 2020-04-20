@@ -35,16 +35,20 @@ public:
 	ENGINE_API void LoadBuildScene(unsigned scene);
 	void LoadScene(const std::string& path);
 	void SaveScene(const std::string& path) const;
+	void SaveTmpScene();
+	void LoadTmpScene();
 	bool HasPendingSceneToLoad() const;
 
 private:
 	void OpenScene(const std::string &path);
+	void OpenScene(unsigned position);
 	void GetSceneFromPath(const std::string& path);
 
 private:
 	GameObject* root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
 	std::shared_ptr<Scene> current_scene = nullptr;
+	uint32_t tmp_scene_uuid = 0;
 	std::string scene_to_load;
 	std::unique_ptr<BuildOptions> build_options = nullptr;
 

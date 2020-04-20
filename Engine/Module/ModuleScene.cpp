@@ -28,7 +28,7 @@ bool ModuleScene::Init()
 {
 	root = new GameObject(0);
 	build_options = std::make_unique<BuildOptions>();
-	
+
 	return true;
 }
 
@@ -166,6 +166,24 @@ void ModuleScene::OpenScene(const std::string& path)
 	root = new GameObject(0);
 
 	GetSceneFromPath(path);
+	current_scene.get()->Load();	
+
+	if (App->time->isGameRunning())
+	{
+		App->scripts->InitScripts();
+	}
+	App->renderer->GenerateQuadTree();
+	App->renderer->GenerateOctTree();
+	App->actions->ClearUndoStack();
+}
+
+void ModuleScene::OpenScene(unsigned position)
+{
+	App->scene->DeleteCurrentScene();
+	App->renderer->CreateAABBTree();
+	root = new GameObject(0);
+
+	current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(position));
 	current_scene.get()->Load();
 
 	if (App->time->isGameRunning())
@@ -195,14 +213,14 @@ void ModuleScene::LoadBuildScene(unsigned scene)
 {
 	if (!build_options->is_imported && !build_options->LoadOptions())
 	{
+		//Only gets here if no build options exists
 		GetSceneFromPath(DEFAULT_SCENE_PATH);
 		current_scene.get()->Load();
 
 		return;
 	}
 
-	current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(scene));
-	current_scene.get()->Load();
+	OpenScene(scene);
 
 	return;
 }
@@ -214,9 +232,41 @@ void ModuleScene::LoadScene(const std::string &path)
 
 void ModuleScene::SaveScene(const std::string& path) const
 {
+	if(App->time->isGameRunning())
+	{
+		APP_LOG_INFO("You must stop play mode to save scene.");
+		return;
+	}
+
 	current_scene.get()->Save(root);
 	current_scene.get()->SaveSerializedConfig(path);
 }
+
+void ModuleScene::SaveTmpScene()
+{
+	tmp_scene_uuid = current_scene.get()->GetUUID();
+}
+
+void ModuleScene::LoadTmpScene()
+{
+	App->scene->DeleteCurrentScene();
+	App->renderer->CreateAABBTree();
+	root = new GameObject(0);
+
+	assert(tmp_scene_uuid != 0);
+	current_scene = App->resources->Load<Scene>(tmp_scene_uuid);
+	current_scene.get()->Load();
+
+	if (App->time->isGameRunning())
+	{
+		App->scripts->InitScripts();
+	}
+	App->renderer->GenerateQuadTree();
+	App->renderer->GenerateOctTree();
+	App->actions->ClearUndoStack();
+}
+
+
 
 bool ModuleScene::HasPendingSceneToLoad() const
 {

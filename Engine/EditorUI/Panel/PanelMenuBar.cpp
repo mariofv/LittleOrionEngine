@@ -25,6 +25,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleTime.h"
 #include "Module/ModuleUI.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
@@ -72,7 +73,11 @@ void PanelMenuBar::ShowFileMenu()
 		}
 		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene as"))
 		{
-			App->editor->popups->scene_saver_popup.popup_shown = true;
+			if (!App->time->isGameRunning())
+			{
+				App->editor->popups->scene_saver_popup.popup_shown = true;
+			}
+			APP_LOG_INFO("You must stop play mode to save scene.");
 		}
 		if(ImGui::MenuItem(ICON_FA_BUILDING " Build Options"))
 		{

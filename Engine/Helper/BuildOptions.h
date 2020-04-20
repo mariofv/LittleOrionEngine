@@ -24,7 +24,7 @@ struct Options
 
 	void Load(Config& config)
 	{
-		uuid = config.GetUInt("uuid", 0);
+		uuid = static_cast<uint32_t>(config.GetUInt("uuid", 0));
 		config.GetString("library_path", library_path, "Error");
 		config.GetString("name", name, "Error");
 	}
