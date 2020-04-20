@@ -18,7 +18,7 @@ public:
 	~Scene() = default;
 
 	void Save(GameObject* gameobject_to_save) const;
-	void Load();
+	void Load(bool from_file = true);
 
 	const std::string GetSerializedConfig() const;
 	void SaveSerializedConfig(const std::string& assets_file_path);

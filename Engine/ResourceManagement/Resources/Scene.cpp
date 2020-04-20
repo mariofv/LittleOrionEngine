@@ -78,17 +78,20 @@ void Scene::Save(GameObject* gameobject_to_save) const
 	scene_config.AddChildrenConfig(game_objects_config, "GameObjects");
 }
 
-void Scene::Load()
+void Scene::Load(bool from_file)
 {
-	Path* scene_path = App->filesystem->GetPath(exported_file_path);
-	FileData scene_data = scene_path->GetFile()->Load();
+	if(from_file)
+	{
+		Path* scene_path = App->filesystem->GetPath(exported_file_path);
+		FileData scene_data = scene_path->GetFile()->Load();
 
-	size_t readed_bytes = scene_data.size;
-	char* scene_file_data = (char*)scene_data.buffer;
-	std::string serialized_scene_string = scene_file_data;
-	free(scene_file_data);
+		size_t readed_bytes = scene_data.size;
+		char* scene_file_data = (char*)scene_data.buffer;
+		std::string serialized_scene_string = scene_file_data;
+		free(scene_file_data);
 
-	Config scene_config(serialized_scene_string);
+		Config scene_config(serialized_scene_string);
+	}
 
 	std::unordered_map<int64_t, std::vector<GameObject*>> prefab_parents;
 	std::vector<Config> prefabs_config;
