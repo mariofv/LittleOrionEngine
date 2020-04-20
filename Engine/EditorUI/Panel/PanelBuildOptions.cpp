@@ -27,6 +27,7 @@ void PanelBuildOptions::Render()
 			if(ImGui::Button("-"))
 			{
 				App->scene->build_options.get()->RemoveScene(number_of_scene - 1);
+				break;
 			}
 			++number_of_scene;
 		}
