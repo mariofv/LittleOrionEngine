@@ -14,28 +14,31 @@
 #include <algorithm>
 
 
-
-
 bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
 	GetCurrentPath();
 #if GAME
 	//TODO USE THE NEW FILESYSTEM TO DO THIS
-	CopyFile(SCRIPTS_DLL_PATH, working_directory.c_str(), false);
-	gameplay_dll = LoadLibrary(SCRIPT_DLL_FILE);
+	bool success = CopyFile(RESOURCE_SCRIPT_DLL_FILE, working_directory.c_str(), false);
+	if (!success)
+	{
+		char procID[10];
+		sprintf(procID, "%d", GetLastError());
+		APP_LOG_INFO("File copying dll %s", procID)
+	}
+
+	gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
 	return true;
 #endif
 
-	dll_file = App->filesystem->GetPath(RESOURCES_SCRIPT_DLL_PATH);
+	dll_file = App->filesystem->GetPath(std::string("/") + RESOURCES_SCRIPT_DLL_PATH);
 	scripts_list_file_path = App->filesystem->GetPath(RESOURCES_SCRIPT_PATH + std::string("/") + RESOURCES_SCRIPT_LIST_FILENAME);
-
-	GetCurrentPath();
 
 	LoadScriptList();
 	InitDLL();
-	init_timestamp_dll = dll_file->modification_timestamp;
-	init_timestamp_script_list = scripts_list_file_path->modification_timestamp;
+	init_timestamp_dll = dll_file->GetModificationTimestamp();
+	init_timestamp_script_list = scripts_list_file_path->GetModificationTimestamp();
 
 	return true;
 }
@@ -86,7 +89,7 @@ void ModuleScriptManager::GetCurrentPath()
 	TCHAR NPath[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, NPath);
 	working_directory = NPath;
-	working_directory += "/" + std::string(SCRIPT_DLL_FILE);
+	working_directory += "/" + std::string(RESOURCE_SCRIPT_DLL_FILE);
 }
 
 void ModuleScriptManager::CreateScript(const std::string& name)
@@ -231,7 +234,7 @@ void ModuleScriptManager::RemoveScriptPointers()
 void ModuleScriptManager::InitDLL()
 {
 	PatchDLL(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str());
-	gameplay_dll = LoadLibrary(SCRIPT_DLL_FILE);
+	gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
 }
 
 void ModuleScriptManager::ReloadDLL() 
@@ -248,7 +251,7 @@ void ModuleScriptManager::ReloadDLL()
 		else 
 		{
 			RemoveScriptPointers();
-			remove(SCRIPT_DLL_FILE);
+			remove(RESOURCE_SCRIPT_DLL_FILE);
 			InitDLL();
 		}
 		
@@ -355,11 +358,11 @@ bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll
 		
 	// Create new DLL and pdb
 	Utils::PatchFileName(pdb_path);
-	if (App->filesystem->Exists(original_pdb_path))
-	{
-		strcpy(patched_pdb_path, pdb_path);
-		App->filesystem->Copy(original_pdb_path, pdb_path);		// Copy new PDB
-	}
+
+	strcpy(patched_pdb_path, pdb_path);
+	//App->filesystem->Copy(original_pdb_path, pdb_path);		// Copy new PDB
+	CopyFile(original_pdb_path, pdb_path,true);
+
 	HANDLE patched_dll = CreateFile(patched_dll_path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	DWORD byte_write;
 	WriteFile(patched_dll, file_content, (DWORD)file_size, &byte_write, nullptr);	// Generate patched DLL which points to the new PDB

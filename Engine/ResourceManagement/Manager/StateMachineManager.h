@@ -18,7 +18,7 @@ public:
 	~StateMachineManager() = default;
 
 	static FileData Binarize(StateMachine* state_machine);
-	static std::shared_ptr<StateMachine> Load(Metafile* metafile, const FileData& resource_data);
+	static std::shared_ptr<StateMachine> Load(uint32_t uuid, const FileData& resource_data);
 	static FileData Create();
 };
 

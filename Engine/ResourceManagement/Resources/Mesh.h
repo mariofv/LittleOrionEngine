@@ -24,7 +24,7 @@ public:
 		uint32_t num_joints = 0;
 	};
 
-	Mesh(Metafile* resource_metafile, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices);
+	Mesh(uint32_t uuid, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices);
 	~Mesh();
 
 	GLuint GetVAO() const;
@@ -49,9 +49,9 @@ private:
 namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<Mesh> Load(Metafile* metafile, const FileData& resource_data)
+	static std::shared_ptr<Mesh> Load(uint32_t uuid, const FileData& resource_data)
 	{
-		return MeshManager::Load(metafile, resource_data);
+		return MeshManager::Load(uuid, resource_data);
 	}
 }
 

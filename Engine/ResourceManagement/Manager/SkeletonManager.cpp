@@ -9,7 +9,7 @@
 #include <Brofiler/Brofiler.h>
 #include <vector>
 
-std::shared_ptr<Skeleton> SkeletonManager::Load(Metafile* metafile, const FileData& resource_data)
+std::shared_ptr<Skeleton> SkeletonManager::Load(uint32_t uuid, const FileData& resource_data)
 {
 	char* data = (char*) resource_data.buffer;
 	char* cursor = data;
@@ -37,6 +37,6 @@ std::shared_ptr<Skeleton> SkeletonManager::Load(Metafile* metafile, const FileDa
 		cursor += sizeof(uint32_t);
 	}
 
-	std::shared_ptr<Skeleton> new_skeleton = std::make_shared<Skeleton>(metafile, std::move(bones));
+	std::shared_ptr<Skeleton> new_skeleton = std::make_shared<Skeleton>(uuid, std::move(bones));
 	return new_skeleton;
 }

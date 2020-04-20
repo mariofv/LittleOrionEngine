@@ -27,7 +27,7 @@ public:
 	};
 
 	Skybox();
-	Skybox(Metafile* resource_metafile);
+	Skybox(uint32_t uuid);
 	~Skybox();
 
 	void Save(Config& config) const;
@@ -59,9 +59,9 @@ namespace ResourceManagement
 	};
 
 	template<>
-	static std::shared_ptr<Skybox> Load(Metafile* metafile, const FileData& resource_data)
+	static std::shared_ptr<Skybox> Load(uint32_t uuid, const FileData& resource_data)
 	{
-		return SkyboxManager::Load(metafile, resource_data);
+		return SkyboxManager::Load(uuid, resource_data);
 	}
 
 	template<>

@@ -33,6 +33,8 @@ public:
 	std::string GetExtension() const;
 	static std::string GetExtension(const std::string& path);
 
+	uint32_t GetModificationTimestamp() const;
+
 private:
 	Path() = default;
 	Path(const std::string& path);
@@ -51,8 +53,6 @@ public:
 	std::vector<Path*> children;
 	size_t sub_folders = 0;
 	size_t total_sub_files_number = 0;
-
-	uint64_t modification_timestamp = 0;
 
 private:
 	Path* parent = nullptr;

@@ -3,6 +3,8 @@
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 
+#include "Filesystem/PathAtlas.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"

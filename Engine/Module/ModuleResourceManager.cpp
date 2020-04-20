@@ -60,7 +60,7 @@ bool ModuleResourceManager::Init()
 	ImportAssetsInDirectory(*App->filesystem->resources_folder_path); // Import all assets in folder Resources. All metafiles in Resources are correct"
 	importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 #else
-	App->filesystem->MountDir("Library");
+	App->filesystem->MountDirectory("Library");
 #endif
 
 	thread_timer->Start();
