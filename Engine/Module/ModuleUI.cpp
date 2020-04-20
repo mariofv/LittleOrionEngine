@@ -201,7 +201,3 @@ void ModuleUI::SortComponentsUI()
 	}
 	);
 }
-
-//Guardar aqu� todos los component canvas (crear, destruir y guardar)
-//Cuando se hace el render de los canvas, a�adir un render a este modulo que renderice todos los canvas
-//

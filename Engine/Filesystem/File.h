@@ -11,6 +11,7 @@ enum class FileType
 {
 	ANIMATION,
 	ARCHIVE,
+	FONT,
 	MATERIAL,
 	MESH,
 	META,

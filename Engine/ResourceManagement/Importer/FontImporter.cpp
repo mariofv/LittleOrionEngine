@@ -10,5 +10,5 @@
 
 FileData FontImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
-	return FileData{};
+	return assets_file_path.GetFile()->Load();
 }

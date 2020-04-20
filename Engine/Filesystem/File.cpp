@@ -126,6 +126,10 @@ FileType File::CalculateFileType(const PHYSFS_FileType& file_type) const
 	{
 		return FileType::STATE_MACHINE;
 	}
+	if (file_extension == "ttf")
+	{
+		return FileType::FONT;
+	}
 	if (file_extension == "" && PHYSFS_FileType::PHYSFS_FILETYPE_OTHER == file_type)
 	{
 		return FileType::ARCHIVE;
