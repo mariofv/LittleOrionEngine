@@ -10,9 +10,11 @@ btRigidBody* ComponentBoxPrimitive::AddBody()
 	}
 	
 	col_shape = new btBoxShape(btVector3(box_size)); // regular box
-	
+	float3 global_translation = owner->transform.GetGlobalTranslation();
+	motion_state = new btDefaultMotionState(btTransform(btQuaternion(owner->transform.rotation.x, owner->transform.rotation.y, owner->transform.rotation.z, owner->transform.rotation.w), btVector3(global_translation.x, global_translation.y, global_translation.z)));
+
 	//motion_state = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(owner->transform.translation.x, owner->transform.translation.y, owner->transform.translation.z)));
-	motion_state = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(owner->aabb.bounding_box.CenterPoint().x, owner->aabb.bounding_box.CenterPoint().y, owner->aabb.bounding_box.CenterPoint().z)));
+	//motion_state = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(owner->aabb.bounding_box.CenterPoint().x, owner->aabb.bounding_box.CenterPoint().y, owner->aabb.bounding_box.CenterPoint().z)));
 	
 	//motion_state->setWorldTransform(btTransform(btQuaternion(0, 0, 0, 1), btVector3(owner->transform.translation.x, owner->transform.translation.y, owner->transform.translation.z)));
 	deviation.y = owner->aabb.bounding_box.CenterPoint().y - owner->transform.translation.y;
@@ -91,6 +93,19 @@ void ComponentBoxPrimitive::MakeBoxStatic() {
 
 }
 
+void ComponentBoxPrimitive::MoveBody()
+{
+	btTransform trans;
+	motion_state->getWorldTransform(trans);
+	owner->transform.SetGlobalMatrixTranslation(float3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
+	owner->transform.SetRotation(Quat(trans.getRotation().x(), trans.getRotation().y(), trans.getRotation().z(), trans.getRotation().w()));
+}
 
-
+void ComponentBoxPrimitive::UpdateBoxDimensions()
+{
+	float3 global_translation = owner->transform.GetGlobalTranslation();
+	Quat global_rotation = owner->transform.GetGlobalRotation();	
+	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w), btVector3(global_translation.x, global_translation.y, global_translation.z)));
+	body->setMotionState(motion_state);
+}
 

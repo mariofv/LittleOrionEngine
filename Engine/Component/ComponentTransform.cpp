@@ -88,6 +88,12 @@ ENGINE_API void ComponentTransform::Translate(const float3& translation)
 	OnTransformChange();
 }
 
+ENGINE_API void ComponentTransform::SetGlobalMatrixTranslation(const float3& translation)
+{
+	global_model_matrix.SetTranslatePart(translation);
+	SetGlobalModelMatrix(global_model_matrix);
+}
+
 ENGINE_API Quat ComponentTransform::GetGlobalRotation() const
 {
 	return global_model_matrix.RotatePart().ToQuat();
@@ -125,6 +131,19 @@ ENGINE_API void ComponentTransform::SetRotation(const Quat& new_rotation)
 	rotation_radians = new_rotation.ToEulerXYZ();
 	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
 	OnTransformChange();
+}
+
+ENGINE_API void ComponentTransform::SetGlobalMatrixRotation(const float3x3& rotation)
+{
+	global_model_matrix.SetRotatePart(rotation);
+	SetGlobalModelMatrix(global_model_matrix);
+}
+
+
+ENGINE_API void ComponentTransform::SetGlobalMatrixRotation(const Quat& rotation)
+{
+	global_model_matrix.SetRotatePart(rotation);
+	SetGlobalModelMatrix(global_model_matrix);
 }
 
 void ComponentTransform::Rotate(const Quat& rotation)
@@ -227,14 +246,9 @@ void ComponentTransform::SetGlobalModelMatrix(const float4x4& new_global_matrix)
 		model_matrix = owner->parent->transform.global_model_matrix.Inverted() * new_global_matrix;
 	}
 
-	float3 translation, scale;
-	float3x3 rotation;
-
 	model_matrix.Decompose(translation, rotation, scale);
 
-	SetTranslation(translation);
-	SetRotation(rotation);
-	SetScale(scale);
+	OnTransformChange();
 	
 }
 

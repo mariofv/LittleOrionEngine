@@ -4,7 +4,7 @@
 #include "Component.h"
 #include "Main/GameObject.h"
 
-#include "btBulletDynamicsCommon.h"
+#include "bullet3/btBulletDynamicsCommon.h"
 
 
 class GameObject;
@@ -18,6 +18,9 @@ public:
 	~ComponentBoxPrimitive() = default;
 
 	btRigidBody* AddBody();
+	void MoveBody();
+	void UpdateBoxDimensions();
+
 	void MakeBoxStatic();
 
 	void Copy(Component* component_to_copy) const override;

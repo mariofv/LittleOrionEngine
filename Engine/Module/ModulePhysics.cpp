@@ -54,15 +54,17 @@ update_status ModulePhysics::Update()
 		world->debugDrawWorld();
 	}
 	
-	for (int i = 0; i < boxes.size(); i++) {
+	for (auto box : boxes) {
 		
 		if (App->time->isGameRunning())
 		{
-			btTransform trans;
-			boxes.at(i)->motion_state->getWorldTransform(trans);
-			boxes.at(i)->owner->transform.SetTranslation(float3(trans.getOrigin().getX()-boxes.at(i)->deviation.x, trans.getOrigin().getY() - boxes.at(i)->deviation.y, trans.getOrigin().getZ() - boxes.at(i)->deviation.z));
-			world->synchronizeSingleMotionState(boxes.at(i)->body);
+			box->MoveBody();
 		}
+		else
+		{
+			box->UpdateBoxDimensions();
+		}
+		world->synchronizeSingleMotionState(box->body);
 	}
 	
 	

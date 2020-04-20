@@ -2,8 +2,8 @@
 #define _MODULEPHYSICS_H_
 
 #include "Module.h"
-#include "btBulletDynamicsCommon.h"
-#include "LinearMath/btIDebugDraw.h"
+#include "bullet3/btBulletDynamicsCommon.h"
+#include "bullet3/LinearMath/btIDebugDraw.h"
 #include "Helper/Timer.h"
 #include "Math/float3.h"
 #include "Main/GameObject.h"
@@ -53,7 +53,7 @@ public:
 	btSequentialImpulseConstraintSolver* solver = nullptr;
 	btDiscreteDynamicsWorld* world = nullptr;
 
-	bool show_physics= false;
+	bool show_physics = true;
 	Timer * physics_timer = nullptr;
 	float ms = 0;
 	std::vector<float> ms_info;
