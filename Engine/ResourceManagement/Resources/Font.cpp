@@ -1,4 +1,6 @@
 #include "Font.h"
 
-
-Font::Font(uint32_t uuid) : Resource(uuid) {}
+Font::Character Font::GetCharacter(const char& c)
+{
+	return characters[c];
+}

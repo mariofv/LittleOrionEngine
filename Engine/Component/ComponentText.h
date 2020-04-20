@@ -2,7 +2,10 @@
 #define _COMPONENTTEXT_H_
 
 #include "ComponentUI.h"
+
 #include <string>
+
+class Font;
 
 class ComponentText : public ComponentUI
 {
@@ -18,6 +21,8 @@ public:
 
 	void Render(float4x4* projection);
 
+	void SetFont(uint32_t font_uuid);
+
 private:
 	void InitData();
 
@@ -27,5 +32,10 @@ public:
 	float scale = 12.0f;
 	float text_width = 0;
 	float text_heigth = 0;
+
+private:
+	uint32_t font_uuid = 0;
+	std::shared_ptr<Font> font = nullptr;
+
 };
 #endif
