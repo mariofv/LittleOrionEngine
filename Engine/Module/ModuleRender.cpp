@@ -186,23 +186,7 @@ void ModuleRender::GetMeshesToRender(const ComponentCamera *camera)
 {
 	BROFILER_CATEGORY("Get meshes to render", Profiler::Color::Aquamarine);
 
-	meshes_to_render.clear();
-	opaque_mesh_to_render.clear();
-	transparent_mesh_to_render.clear();
-	float3 camera_pos = camera->camera_frustum.pos;
-	for (int i = 0; i < meshes.size(); i++)
-	{
-		if (meshes[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
-		{
-			transparent_mesh_to_render.push_back(meshes[i]);
-			meshes[i]->owner->aabb;
-			
-		}
-		if (meshes[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
-		{
-			opaque_mesh_to_render.push_back(meshes[i]);
-		}
-	}
+	SetListOfMeshesToRender(camera);
 	if (camera == App->cameras->scene_camera && !App->debug->culling_scene_mode)
 	{
 		meshes_to_render = meshes;
@@ -212,7 +196,40 @@ void ModuleRender::GetMeshesToRender(const ComponentCamera *camera)
 		GetCullingMeshes(App->cameras->main_camera);
 	}
 }
-
+void ModuleRender::SetListOfMeshesToRender(const ComponentCamera *camera)
+{
+	meshes_to_render.clear();
+	opaque_mesh_to_render.clear();
+	transparent_mesh_to_render.clear();
+	float3 camera_pos = camera->camera_frustum.pos;
+	for (int i = 0; i < meshes.size(); i++)
+	{
+		if (meshes[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
+		{
+			meshes[i]->owner->aabb.bounding_box;
+			float3 center_bounding_box = (meshes[i]->owner->aabb.bounding_box.minPoint + meshes[i]->owner->aabb.bounding_box.maxPoint) / 2;
+			float distance = sqrt(
+				((camera_pos.x - center_bounding_box.x)*(camera_pos.x - center_bounding_box.x)) +
+				((camera_pos.y - center_bounding_box.y)*(camera_pos.y - center_bounding_box.y)) +
+				((camera_pos.z - center_bounding_box.z)*(camera_pos.z - center_bounding_box.z))
+			);
+			transparent_mesh_to_render.push_back(std::make_pair(distance, meshes[i]));
+			transparent_mesh_to_render.sort([](const ipair & a, const ipair & b) { return a.first > b.first; });
+		}
+		if (meshes[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
+		{
+			meshes[i]->owner->aabb.bounding_box;
+			float3 center_bounding_box = (meshes[i]->owner->aabb.bounding_box.minPoint + meshes[i]->owner->aabb.bounding_box.maxPoint) / 2;
+			float distance = sqrt(
+				((camera_pos.x - center_bounding_box.x)*(camera_pos.x - center_bounding_box.x)) +
+				((camera_pos.y - center_bounding_box.y)*(camera_pos.y - center_bounding_box.y)) +
+				((camera_pos.z - center_bounding_box.z)*(camera_pos.z - center_bounding_box.z))
+			);
+			opaque_mesh_to_render.push_back(std::make_pair(distance, meshes[i]));
+			opaque_mesh_to_render.sort([](const ipair & a, const ipair & b) { return a.first < b.first; });
+		}
+	}
+}
 void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 {
 	BROFILER_CATEGORY("Get culling meshes", Profiler::Color::Lavender);

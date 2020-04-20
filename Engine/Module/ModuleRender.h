@@ -74,6 +74,7 @@ private:
 	std::string GetDrawMode() const;
 
 	void GetMeshesToRender(const ComponentCamera *camera);
+	void SetListOfMeshesToRender(const ComponentCamera * camera);
 	void GetCullingMeshes(const ComponentCamera *camera);
 
 public:
@@ -104,7 +105,8 @@ private:
 
 	std::vector<ComponentMeshRenderer*> meshes;
 	std::vector<ComponentMeshRenderer*> meshes_to_render;
-	std::list <ComponentMeshRenderer*> opaque_mesh_to_render, transparent_mesh_to_render;
+	typedef std::pair<float, ComponentMeshRenderer*> ipair;
+	std::list <ipair> opaque_mesh_to_render, transparent_mesh_to_render;
 	int num_rendered_tris = 0;
 	Timer * rendering_measure_timer = new Timer();
 
