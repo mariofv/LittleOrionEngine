@@ -99,7 +99,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 
 void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh_renderer)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_SHAPES " Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_DRAW_POLYGON " Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (ImGui::Checkbox("Active", &mesh_renderer->active))
 		{
@@ -512,14 +512,14 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 
 void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonUIWindow(canvas);
 	}
 }
 
 void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image) {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Image", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonUIWindow(component_image);
 
