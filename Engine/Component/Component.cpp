@@ -13,6 +13,8 @@ void Component::Load(const Config &config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
+
+	SpecializedLoad(config);
 }
 
 bool Component::Is2DComponent() const

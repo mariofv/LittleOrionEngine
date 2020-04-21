@@ -92,10 +92,10 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 
 	for (unsigned int i = 0; i < gameobject_components_config.size(); ++i)
 	{
-		uint64_t component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
-		assert(component_type_uint != 0);
-
-		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
+		std::string component_type_name;
+		gameobject_components_config[i].GetString("ComponentType", component_type_name, "Unknown");
+		assert(component_type_name != "Unknown");
+		Component::ComponentType component_type = Component::GetComponentType(component_type_name);
 
 		Component *created_component;
 		switch (component_type)
