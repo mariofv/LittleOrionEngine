@@ -44,6 +44,10 @@ public:
 	float2 size = float2(100.f, 100.f);
 	math::Rect rect;
 
+private:
+	float2 min_anchor = float2(0.5f);
+	float2 max_anchor = float2(0.5f);
+
 	friend class PanelComponent;
 };
 #endif

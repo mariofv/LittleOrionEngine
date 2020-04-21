@@ -60,6 +60,11 @@ void ComponentTransform2D::SpecializedSave(Config& config) const
 
 	config.AddFloat(size.x, "Width");
 	config.AddFloat(size.y, "Height");
+
+	config.AddFloat(min_anchor.x, "MinAnchorX");
+	config.AddFloat(min_anchor.y, "MinAnchorY");
+	config.AddFloat(max_anchor.x, "MaxAnchorX");
+	config.AddFloat(max_anchor.y, "MaxAnchorY");
 }
 
 void ComponentTransform2D::SpecializedLoad(const Config& config)
@@ -71,6 +76,11 @@ void ComponentTransform2D::SpecializedLoad(const Config& config)
 
 	size.x = config.GetFloat("Width", 100.0f);
 	size.y = config.GetFloat("Height", 100.0f);
+
+	min_anchor.x = config.GetFloat("MinAnchorX", 0.5f);
+	min_anchor.y = config.GetFloat("MinAnchorY", 0.5f);
+	max_anchor.x = config.GetFloat("MaxAnchorX", 0.5f);
+	max_anchor.y = config.GetFloat("MaxAnchorY", 0.5f);
 
 	OnTransformChange();
 }

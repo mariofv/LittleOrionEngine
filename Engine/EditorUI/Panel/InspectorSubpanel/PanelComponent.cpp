@@ -65,6 +65,23 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			}
 			//UndoRedo
 			CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform);
+
+			if (ImGui::TreeNodeEx("Anchors", ImGuiTreeNodeFlags_DefaultOpen))
+			{
+				if (ImGui::DragFloat2("Min", ((ComponentTransform2D*)transform)->min_anchor.ptr(), 0.1f))
+				{
+
+				}
+				CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform);
+
+				if (ImGui::DragFloat2("Max", ((ComponentTransform2D*)transform)->max_anchor.ptr(), 0.1f))
+				{
+
+				}
+				CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform);
+
+				ImGui::TreePop();
+			}
 		}
 		else //Render transform 3d
 		{
