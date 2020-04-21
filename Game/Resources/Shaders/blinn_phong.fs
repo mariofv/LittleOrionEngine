@@ -193,7 +193,7 @@ vec3 GetOcclusionColor(const Material mat, const vec2 texCoord)
 {
 	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
 	tiling *= texCoord;
-	return texture(mat.occlusion_map, tiling).rgb * vec3(1.0,1.0,1.0);
+	return texture(mat.occlusion_map, tiling).rgb;
 }
 
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)

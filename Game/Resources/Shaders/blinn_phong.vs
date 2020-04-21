@@ -33,9 +33,8 @@ struct Material {
 	float tiling_x;
 	float tiling_y;
 	bool use_normal_map;
-
-
 };
+
 uniform Material material;
 
 out vec2 texCoord;
@@ -71,7 +70,7 @@ void main()
 
 
 //Tangent space matrix
-	mat3 normalMatrix = transpose(inverse(mat3(matrices.model)));
+	mat3 normalMatrix = mat3(matrices.model);
     vec3 T = normalize(normalMatrix * vertex_tangent);
     vec3 N = normalize(normalMatrix * vertex_normal);
     T = normalize(T - dot(T, N) * N);
