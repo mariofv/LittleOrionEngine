@@ -21,7 +21,6 @@ public:
 	void Load(bool from_file = true);
 
 	const std::string GetSerializedConfig() const;
-	void SaveSerializedConfig(const std::string& assets_file_path);
 	std::string GetName() const;
 	std::string GetExportedFile() const;
 
@@ -44,6 +43,12 @@ private:
 
 namespace ResourceManagement
 {
+	template<>
+	static FileData Binarize<Scene>(Resource* scene)
+	{
+		return SceneManager::Binarize(static_cast<Scene*>(scene));
+	};
+
 	template<>
 	static std::shared_ptr<Scene> Load(uint32_t uuid, const FileData& resource_data)
 	{

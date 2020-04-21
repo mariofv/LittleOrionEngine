@@ -28,6 +28,7 @@ bool ModuleScene::Init()
 {
 	root = new GameObject(0);
 	build_options = std::make_unique<BuildOptions>();
+	build_options->LoadOptions();
 
 	return true;
 }
@@ -211,7 +212,7 @@ void ModuleScene::OpenPendingScene()
 
 void ModuleScene::LoadBuildScene(unsigned scene)
 {
-	if (!build_options->is_imported && !build_options->LoadOptions())
+	if (!build_options->is_imported)
 	{
 		//Only gets here if no build options exists
 		GetSceneFromPath(DEFAULT_SCENE_PATH);
@@ -230,7 +231,7 @@ void ModuleScene::LoadScene(const std::string &path)
 	scene_to_load = path;
 }
 
-void ModuleScene::SaveScene(const std::string& path) const
+void ModuleScene::SaveScene()
 {
 	if(App->time->isGameRunning())
 	{
@@ -238,8 +239,7 @@ void ModuleScene::SaveScene(const std::string& path) const
 		return;
 	}
 
-	current_scene.get()->Save(root);
-	current_scene.get()->SaveSerializedConfig(path);
+	App->resources->Save<Scene>(current_scene);
 }
 
 void ModuleScene::SaveTmpScene()

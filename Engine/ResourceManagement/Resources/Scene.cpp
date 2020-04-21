@@ -147,15 +147,6 @@ const std::string Scene::GetSerializedConfig() const
 	return serialized_scene_string;
 }
 
-void Scene::SaveSerializedConfig(const std::string& assets_file_path)
-{
-	std::string serialized_scene_string = GetSerializedConfig();
-	App->filesystem->Save(assets_file_path.c_str(), serialized_scene_string);
-	App->filesystem->Save(exported_file_path.c_str(), serialized_scene_string);
-
-	ComputeNameScene(assets_file_path);
-}
-
 void Scene::SavePrefab(Config & config, GameObject * gameobject_to_save) const
 {
 	if (gameobject_to_save->parent != nullptr)

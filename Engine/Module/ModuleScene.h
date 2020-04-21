@@ -34,7 +34,7 @@ public:
 
 	ENGINE_API void LoadBuildScene(unsigned scene);
 	void LoadScene(const std::string& path);
-	void SaveScene(const std::string& path) const;
+	void SaveScene();
 	void SaveTmpScene();
 	void LoadTmpScene();
 	bool HasPendingSceneToLoad() const;

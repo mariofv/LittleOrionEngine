@@ -17,6 +17,8 @@ class SceneManager
 public:
 	SceneManager() = default;
 	~SceneManager() = default;
+
+	static FileData Binarize(Scene* material);
 	static std::shared_ptr<Scene> Load(uint32_t uuid, const FileData& resource_data);
 	static uint32_t Create(const std::string& new_scene_path);
 };
