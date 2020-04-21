@@ -6,9 +6,10 @@
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 
-void BuildOptions::AddScene(uint32_t scene_uuid, const std::string& path, const std::string& name)
+
+void BuildOptions::AddScene(uint32_t scene_uuid,const std::string& imported_assets_path, const std::string& exported_library_path)
 {
-	Options options = Options(scene_uuid, path, name);
+	Options options = Options(scene_uuid, imported_assets_path, exported_library_path);
 	build_scenes.push_back(options);
 }
 
@@ -97,11 +98,11 @@ bool BuildOptions::SaveOptions() const
 uint32_t BuildOptions::GetSceneUUID(unsigned position) const
 {
 	assert(position < build_scenes.size());
-	return build_scenes[position].uuid;
+	return build_scenes[position].scene_uuid;
 }
 
 std::string BuildOptions::GetScenePath(unsigned position) const
 {
 	assert(position < build_scenes.size());
-	return build_scenes[position].library_path;
+	return build_scenes[position].exported_library_path;
 }

@@ -2,6 +2,7 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/Scene.h"
 #include "ResourceManagement/Metafile/Metafile.h"
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -36,15 +37,8 @@ void PanelBuildOptions::Render()
 
 		if(ImGui::Button("Add current scene"))
 		{
-			App->scene->build_options.get()->AddScene(App->scene->current_scene.get()->GetUUID(), App->scene->current_scene.get()->GetExportedFile(), App->scene->current_scene.get()->GetName());
-		}
-
-		ImGui::SameLine();
-
-		if(ImGui::Button("+"))
-		{
-			//Open browser and get scene
-			int i = 0;
+			Metafile* scene_meta = App->resources->resource_DB->GetEntry(App->scene->current_scene->GetUUID());
+			App->scene->build_options.get()->AddScene(scene_meta->uuid, scene_meta->imported_file_path, scene_meta->exported_file_path);
 		}
 
 		ImGui::Separator();
