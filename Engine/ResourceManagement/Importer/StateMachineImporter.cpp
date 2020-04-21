@@ -92,7 +92,7 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 		bool automatic = transition.GetBool("Automatic", false);
 
 		bytes = sizeof(uint64_t);
-		memcpy(cursor, &transition, bytes);
+		memcpy(cursor, &source, bytes);
 		cursor += bytes;
 
 		bytes = sizeof(uint64_t);
@@ -106,6 +106,7 @@ FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafil
 		bytes = sizeof(uint64_t);
 		memcpy(cursor, &interpolation_time, bytes);
 		cursor += bytes; 
+
 		bytes = sizeof(uint64_t);
 		memcpy(cursor, &priority, bytes);
 		cursor += bytes;

@@ -27,7 +27,7 @@ private:
 	FileData CreateBinary(const Animation& own_format_animation) const;
 
 	void GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const;
-	void GetChannelTransform(const float4x4 &pre_transform, const aiNodeAnim* sample, std::map<size_t, float4x4>& sample_transform) const;
+	void GetChannelTransform(const float4x4 &pre_transform, const aiNodeAnim* sample, size_t animation_duration,std::map<size_t, float4x4>& sample_transform) const;
 
 	void GetAcumulatedAssimpTransformations(const aiNodeAnim * animation_channel, const std::vector<aiNodeAnim *> & channel_vector, const aiNode* root_node, float4x4 & pre_transform) const;
 	void GetAssimpNodeTansformationOutSideChannels(const aiNode* root_node, const Animation& animation, std::map<const std::string, std::vector<const aiNode *>>  & nodes) const;

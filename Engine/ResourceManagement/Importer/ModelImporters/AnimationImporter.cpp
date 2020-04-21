@@ -58,20 +58,19 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 	for (auto& channel_set : aiNode_by_channel)
 	{
 		std::map<size_t, float4x4> channel_transform;
+		float animation_duration = animation->mDuration;
 		for (auto channel : channel_set.second)
 		{
 			float4x4 pre_transform;
 			GetAcumulatedAssimpTransformations(channel, channel_set.second,root_node, pre_transform);
-			GetChannelTransform(pre_transform, channel, channel_transform);
+			GetChannelTransform(pre_transform, channel, animation_duration,channel_transform);
 		}
 
-		float animation_duration = animation->mDuration;
 		for (size_t i = 0; i <= animation_duration; ++i)
 		{
-			size_t k = i >= channel_transform.size() ? 0 : i;
-			float3 euler_rotation = channel_transform[k].ToEulerXYX();
+			float3 euler_rotation = channel_transform[i].ToEulerXYX();
 			Quat rotation = Quat::FromEulerXYX(euler_rotation.x, euler_rotation.y, euler_rotation.z);
-			float3 translation = channel_transform[k].Col3(3) * unit_scale_factor;
+			float3 translation = channel_transform[i].Col3(3) * unit_scale_factor;
 
 			Animation::Channel imported_channel{ channel_set.first, translation, rotation };
 			keyframes[i].push_back(imported_channel);
@@ -110,16 +109,12 @@ void AnimationImporter::ApplyNodeTansformationOutSideChannels(std::map<const std
 	}
 }
 
-void AnimationImporter::GetChannelTransform(const float4x4 & pre_transform, const aiNodeAnim * sample, std::map<size_t, float4x4>& sample_transform) const
+void AnimationImporter::GetChannelTransform(const float4x4 & pre_transform, const aiNodeAnim * sample, size_t animation_duration, std::map<size_t, float4x4>& sample_transform ) const
 {
-	size_t max_key_number  = sample->mNumPositionKeys > sample->mNumRotationKeys ? sample->mNumPositionKeys : sample->mNumRotationKeys;
-	max_key_number = sample_transform.size() > max_key_number ? sample_transform.size() : max_key_number;
-
 	float3 position = float3::zero;
 	Quat rotation = Quat::identity;
-	for (size_t j = 0; j < max_key_number; j++)
+	for (size_t j = 0; j <= animation_duration; j++)
 	{
-		//size_t integer_time = sample->mPositionKeys[j].mTime > sample->mRotationKeys[j].mTime ? sample->mPositionKeys[j].mTime : sample->mRotationKeys[j].mTime;
 		if (sample->mNumPositionKeys >= j && sample->mPositionKeys[j].mTime >= 0.0f)
 		{
 			aiVector3D position_assimp = sample->mPositionKeys[j].mValue;
