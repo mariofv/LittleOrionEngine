@@ -514,7 +514,7 @@ void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(canvas);
+
 	}
 }
 

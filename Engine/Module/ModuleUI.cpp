@@ -71,48 +71,62 @@ void ModuleUI::RenderUIGameObject(GameObject* parent, float4x4* projection)
 	}
 }
 
+ComponentCanvas* ModuleUI::CreateComponentCanvas()
+{
+	ComponentCanvas* new_canvas = new ComponentCanvas();
+	canvases.push_back(new_canvas);
+	if (main_canvas == nullptr)
+	{
+		main_canvas = new_canvas;
+	}
+	return new_canvas;
+}
+
 ComponentUI* ModuleUI::CreateComponentUI(Component::ComponentType type)
 {
-	ComponentUI* new_ui = nullptr;
+	ComponentUI* new_component_ui = nullptr;
 	switch (type)
 	{
-		case Component::ComponentType::CANVAS:
-			if (main_canvas == nullptr)
-			{
-				main_canvas = new ComponentCanvas();
-			}
-			new_ui = main_canvas;
-			break;
 		case Component::ComponentType::UI_IMAGE:
-			new_ui = new ComponentImage();
+			new_component_ui = new ComponentImage();
 			break;
 		case Component::ComponentType::UI_TEXT:
-			new_ui = new ComponentText();
+			new_component_ui = new ComponentText();
 			break;
 		case Component::ComponentType::UI_BUTTON:
-			new_ui = new ComponentButton();
+			new_component_ui = new ComponentButton();
 			break;
 		case Component::ComponentType::UI_PROGRESS_BAR:
-			new_ui = new ComponentProgressBar();
+			new_component_ui = new ComponentProgressBar();
 			break;
 	}
 
-	if(new_ui) 
+	if(new_component_ui)
 	{
-		ui_elements.push_back(new_ui);
+		ui_elements.push_back(new_component_ui);
 		SortComponentsUI();
 	}
 
-	return new_ui;
+	return new_component_ui;
 }
 
-void ModuleUI::RemoveComponentUI(ComponentUI* ui_to_remove)
+void ModuleUI::RemoveComponentCanvas(ComponentCanvas* component_canvas)
 {
-	const auto it = std::find(ui_elements.begin(), ui_elements.end(), ui_to_remove);
+	const auto it = std::find(canvases.begin(), canvases.end(), component_canvas);
 	if (*it == main_canvas)
 	{
 		main_canvas = nullptr;
 	}
+	if (it != canvases.end())
+	{
+		delete *it;
+		canvases.erase(it);
+	}
+}
+
+void ModuleUI::RemoveComponentUI(ComponentUI* component_ui)
+{
+	const auto it = std::find(ui_elements.begin(), ui_elements.end(), component_ui);
 	if (it != ui_elements.end())
 	{
 		delete *it;

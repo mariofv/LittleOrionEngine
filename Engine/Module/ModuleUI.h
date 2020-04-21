@@ -30,6 +30,9 @@ public:
 
 	void Render(const ComponentCamera* camera);
 
+	ComponentCanvas* CreateComponentCanvas();
+	void RemoveComponentCanvas(ComponentCanvas* component_canvas);
+
 	ComponentUI* CreateComponentUI(Component::ComponentType ui_component_type);
 	void RemoveComponentUI(ComponentUI* component_ui);
 	
@@ -43,9 +46,10 @@ public:
 	ComponentCanvas* main_canvas = nullptr;
 
 private:
+	std::vector<ComponentCanvas*> canvases;
+
 	std::vector<ComponentUI*> ui_elements;
 	std::vector<ComponentUI*> ordered_ui;
-
 };
 
 #endif //_MODULEUI_H_

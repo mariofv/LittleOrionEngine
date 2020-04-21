@@ -337,7 +337,7 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		break;
 
 	case Component::ComponentType::CANVAS:
-		created_component = App->ui->CreateComponentUI(type);
+		created_component = App->ui->CreateComponentCanvas();
 		break;
 
 	case Component::ComponentType::CAMERA:
