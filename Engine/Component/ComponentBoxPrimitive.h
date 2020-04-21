@@ -19,9 +19,13 @@ public:
 
 	btRigidBody* AddBody();
 	void MoveBody();
+	void MoveNoAttachedBody();
 	void UpdateBoxDimensions();
-
-	void MakeBoxStatic();
+	void UpdateNoAttachedBoxDimensions();
+	void setMass(float new_mass);
+	void setVisualization();
+	void setCollisionDetection();
+	void Scale();
 
 	void Copy(Component* component_to_copy) const override;
 	void Delete() override;
@@ -32,16 +36,18 @@ public:
 public:
 
 	btRigidBody* body = nullptr;
-	btScalar mass = 1.0f; // 0.0f would create a static or inmutable body
+	float mass = 1.0f; // 0.0f would create a static or inmutable body
 	btDefaultMotionState* motion_state;
 	float3 scale = float3(1.0f, 1.0f, 1.0f);
 	float3 translation = float3::zero;
 	btVector3 box_size = btVector3(1.0f, 1.0f, 1.0f);
 	btCollisionShape* col_shape;
+	btVector3 localInertia = btVector3(0.f, 0.f, 0.f);
 
-	bool is_static = false;
 	float3 deviation = float3::zero;
-
+	bool visualize = true;
+	bool detectCollision = true;
+	bool is_attached = false;
 	
 };
 

@@ -386,19 +386,22 @@ void PanelComponent::ShowComponentBox(ComponentBoxPrimitive* box)
 		ImGui::Separator();
 		if (ImGui::SliderFloat3("Scale", box->scale.ptr(), 0.1, 5))
 		{
-			box->body->getCollisionShape()->setLocalScaling(btVector3(box->scale.x, box->scale.y, box->scale.z));
+			box->Scale();
 		}
 
-		/*if (ImGui::SliderFloat3("Transform", box->translation.ptr(), -5, 5))
+		if (ImGui::DragFloat("Mass", &box->mass, 1.0f, 0.f, 100.f)) {
+			box->setMass(box->mass);
+		}
+		if (ImGui::Checkbox("Visualize", &box->visualize))
 		{
-			box->body->setWorldTransform(btTransform(btQuaternion(0, 0, 0, 1), btVector3(box->translation.x, box->translation.y, box->translation.z)));
-		}*/
-
+			box->setVisualization();
+		}
+		if (ImGui::Checkbox("Detect collision", &box->detectCollision))
+		{
+			box->setCollisionDetection();
+		}
 		
-		if (ImGui::Checkbox("Static Box", &box->is_static))
-		{
-			box->MakeBoxStatic();
-		}
+		
 	}
 }
 

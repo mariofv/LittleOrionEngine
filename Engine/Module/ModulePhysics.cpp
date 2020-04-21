@@ -56,15 +56,28 @@ update_status ModulePhysics::Update()
 	
 	for (auto box : boxes) {
 		
-		if (App->time->isGameRunning())
-		{
-			box->MoveBody();
+		if (box->is_attached) {
+			if (App->time->isGameRunning())
+			{
+				box->MoveBody();
+			}
+			else
+			{
+				box->UpdateBoxDimensions();
+			}
+			world->synchronizeSingleMotionState(box->body);
 		}
-		else
-		{
-			box->UpdateBoxDimensions();
+		else {
+			if (App->time->isGameRunning())
+			{
+				box->MoveNoAttachedBody();
+			}
+			else
+			{
+				box->UpdateNoAttachedBoxDimensions();
+			}
+			world->synchronizeSingleMotionState(box->body);
 		}
-		world->synchronizeSingleMotionState(box->body);
 	}
 	
 	

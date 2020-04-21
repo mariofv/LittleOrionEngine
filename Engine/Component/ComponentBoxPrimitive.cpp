@@ -9,19 +9,33 @@ btRigidBody* ComponentBoxPrimitive::AddBody()
 		App->physics->world->removeRigidBody(body);
 	}
 
-	float3 global_scale = owner->transform.GetGlobalScale();	
+	if (owner->aabb.global_bounding_box.IsFinite() && owner->aabb.global_bounding_box.Size().x != 0) {
+		box_size = btVector3((owner->aabb.global_bounding_box.Size().x / 2) / owner->transform.GetGlobalScale().x,
+			(owner->aabb.global_bounding_box.Size().y / 2) / owner->transform.GetGlobalScale().y,
+			(owner->aabb.global_bounding_box.Size().z / 2) / owner->transform.GetGlobalScale().z);
+		is_attached = true;
+	}
+	else {
+		box_size = btVector3(1.0f, 1.0f, 1.0f);
+		is_attached = false;
+	}
+
 	col_shape = new btBoxShape(btVector3(box_size)); // regular box
-	col_shape->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
-	deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
-	motion_state = new btDefaultMotionState(btTransform(btQuaternion(owner->transform.rotation.x, owner->transform.rotation.y, owner->transform.rotation.z, owner->transform.rotation.w), btVector3(owner->aabb.global_bounding_box.CenterPoint().x, owner->aabb.global_bounding_box.CenterPoint().y, owner->aabb.global_bounding_box.CenterPoint().z)));
-		
-	btVector3 localInertia(0.f, 0.f, 0.f);
+
+	if (is_attached) {
+		float3 global_scale = owner->transform.GetGlobalScale();
+		col_shape->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
+		deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
+		motion_state = new btDefaultMotionState(btTransform(btQuaternion(owner->transform.rotation.x, owner->transform.rotation.y, owner->transform.rotation.z, owner->transform.rotation.w), btVector3(owner->aabb.global_bounding_box.CenterPoint().x, owner->aabb.global_bounding_box.CenterPoint().y, owner->aabb.global_bounding_box.CenterPoint().z)));
+	}
+	else {
+		motion_state = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, 0, 0)));
+	}
 	if (mass != 0.f) col_shape->calculateLocalInertia(mass, localInertia);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motion_state, col_shape, localInertia);
 	body = new btRigidBody(rbInfo);
 	
 	App->physics->world->addRigidBody(body);
-	body->applyCentralForce(btVector3(0, 1, 0));
 	
 	return body;
 }
@@ -33,12 +47,6 @@ ComponentBoxPrimitive::ComponentBoxPrimitive(ComponentType componentType):Compon
 
 ComponentBoxPrimitive::ComponentBoxPrimitive(GameObject* owner, ComponentType componentType): Component(owner, componentType)
 {
-	//size will be bounding_box size already computed
-
-	box_size = btVector3((owner->aabb.global_bounding_box.Size().x / 2) / owner->transform.GetGlobalScale().x,
-		(owner->aabb.global_bounding_box.Size().y / 2) / owner->transform.GetGlobalScale().y,
-		(owner->aabb.global_bounding_box.Size().z / 2) / owner->transform.GetGlobalScale().z);
-
 	AddBody();
 }
 
@@ -75,19 +83,6 @@ void ComponentBoxPrimitive::Load(const Config & config)
 	AddBody();
 }
 
-void ComponentBoxPrimitive::MakeBoxStatic() {
-
-	if (is_static) 
-	{
-		body->setMassProps(0, body->getLocalInertia());
-	}
-	else {
-		btVector3 localInertia(0.f, 0.f, 0.f);
-		col_shape->calculateLocalInertia(1, localInertia);
-		body->setMassProps(1, localInertia);
-	}
-
-}
 
 void ComponentBoxPrimitive::MoveBody()
 {
@@ -96,6 +91,14 @@ void ComponentBoxPrimitive::MoveBody()
 	owner->transform.SetGlobalMatrixTranslation(float3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()) - deviation);
 	owner->transform.SetRotation(Quat(trans.getRotation().x(), trans.getRotation().y(), trans.getRotation().z(), trans.getRotation().w()));
 	deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
+}
+
+void ComponentBoxPrimitive::MoveNoAttachedBody()
+{
+	btTransform trans;
+	motion_state->getWorldTransform(trans);
+	owner->transform.SetGlobalMatrixTranslation(float3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
+	owner->transform.SetRotation(Quat(trans.getRotation().x(), trans.getRotation().y(), trans.getRotation().z(), trans.getRotation().w()));
 }
 
 void ComponentBoxPrimitive::UpdateBoxDimensions()
@@ -109,4 +112,54 @@ void ComponentBoxPrimitive::UpdateBoxDimensions()
 	body->getCollisionShape()->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
 	deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
 }
+
+void ComponentBoxPrimitive::UpdateNoAttachedBoxDimensions()
+{
+	Quat global_rotation = owner->transform.GetGlobalRotation();
+	float3 global_scale = owner->transform.GetGlobalScale();
+
+	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w), btVector3(owner->transform.translation.x, owner->transform.translation.y, owner->transform.translation.z)));
+	body->setMotionState(motion_state);
+	body->getCollisionShape()->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
+}
+
+void ComponentBoxPrimitive::setMass(float new_mass)
+{
+	
+	if (mass == 0 && new_mass !=0) {
+		body->getCollisionShape()->calculateLocalInertia(new_mass, body->getLocalInertia());
+	}
+	body->setMassProps(new_mass, localInertia);
+	
+}
+
+void ComponentBoxPrimitive::setVisualization()
+{
+	if (!visualize) {
+		body->setCollisionFlags(body->getCollisionFlags() | body->CF_DISABLE_VISUALIZE_OBJECT);
+	}
+	else {
+		body->setCollisionFlags(~body->CF_DISABLE_VISUALIZE_OBJECT);
+	}
+	
+}
+
+void ComponentBoxPrimitive::setCollisionDetection()
+{
+	if (!detectCollision) {
+		body->setCollisionFlags(body->getCollisionFlags() | body->CF_NO_CONTACT_RESPONSE);
+	}
+	else {
+		body->setCollisionFlags(~body->CF_NO_CONTACT_RESPONSE);
+	}
+}
+
+void ComponentBoxPrimitive::Scale()
+{
+	body->getCollisionShape()->setLocalScaling(btVector3(scale.x, scale.y, scale.z));
+}
+
+
+
+
 
