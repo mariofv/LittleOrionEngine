@@ -155,8 +155,6 @@ void ComponentTransform::Rotate(const Quat& rotation)
 	OnTransformChange();
 }
 
-
-
 void ComponentTransform::Rotate(const float3x3& rotation)
 {
 	this->rotation = rotation.ToQuat() * this->rotation;
@@ -178,12 +176,16 @@ float3 ComponentTransform::ComponentTransform::GetScale() const
 	return scale;
 }
 
-
 void ComponentTransform::SetScale(const float3& scale)
 {
 	this->scale = scale;
 	
 	OnTransformChange();
+}
+
+float3 ComponentTransform::GetGlobalScale() const
+{
+	return global_model_matrix.GetScale();
 }
 
 ENGINE_API float3 ComponentTransform::GetUpVector() const

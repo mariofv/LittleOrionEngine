@@ -10,17 +10,9 @@ btRigidBody* ComponentBoxPrimitive::AddBody()
 	}
 	
 	col_shape = new btBoxShape(btVector3(box_size)); // regular box
-	float3 global_translation = owner->transform.GetGlobalTranslation();
-	motion_state = new btDefaultMotionState(btTransform(btQuaternion(owner->transform.rotation.x, owner->transform.rotation.y, owner->transform.rotation.z, owner->transform.rotation.w), btVector3(global_translation.x, global_translation.y, global_translation.z)));
-
-	//motion_state = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(owner->transform.translation.x, owner->transform.translation.y, owner->transform.translation.z)));
-	//motion_state = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(owner->aabb.bounding_box.CenterPoint().x, owner->aabb.bounding_box.CenterPoint().y, owner->aabb.bounding_box.CenterPoint().z)));
-	
-	//motion_state->setWorldTransform(btTransform(btQuaternion(0, 0, 0, 1), btVector3(owner->transform.translation.x, owner->transform.translation.y, owner->transform.translation.z)));
-	deviation.y = owner->aabb.bounding_box.CenterPoint().y - owner->transform.translation.y;
-	deviation.x = owner->aabb.bounding_box.CenterPoint().x - owner->transform.translation.x;
-	deviation.z = owner->aabb.bounding_box.CenterPoint().z - owner->transform.translation.z;
-	
+	deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
+	motion_state = new btDefaultMotionState(btTransform(btQuaternion(owner->transform.rotation.x, owner->transform.rotation.y, owner->transform.rotation.z, owner->transform.rotation.w), btVector3(owner->aabb.global_bounding_box.CenterPoint().x, owner->aabb.global_bounding_box.CenterPoint().y, owner->aabb.global_bounding_box.CenterPoint().z)));
+		
 	btVector3 localInertia(0.f, 0.f, 0.f);
 	if (mass != 0.f) col_shape->calculateLocalInertia(mass, localInertia);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motion_state, col_shape, localInertia);
@@ -97,15 +89,19 @@ void ComponentBoxPrimitive::MoveBody()
 {
 	btTransform trans;
 	motion_state->getWorldTransform(trans);
-	owner->transform.SetGlobalMatrixTranslation(float3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()));
+	owner->transform.SetGlobalMatrixTranslation(float3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()) - deviation);
 	owner->transform.SetRotation(Quat(trans.getRotation().x(), trans.getRotation().y(), trans.getRotation().z(), trans.getRotation().w()));
 }
 
 void ComponentBoxPrimitive::UpdateBoxDimensions()
 {
-	float3 global_translation = owner->transform.GetGlobalTranslation();
+	// This should only happen if the transform change
 	Quat global_rotation = owner->transform.GetGlobalRotation();	
-	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w), btVector3(global_translation.x, global_translation.y, global_translation.z)));
+	float3 global_scale = owner->transform.GetGlobalScale();
+	
+	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w), btVector3(owner->aabb.global_bounding_box.CenterPoint().x, owner->aabb.global_bounding_box.CenterPoint().y, owner->aabb.global_bounding_box.CenterPoint().z)));
 	body->setMotionState(motion_state);
+	body->getCollisionShape()->setLocalScaling(btVector3(global_scale.x, global_scale.y, global_scale.z));
+	deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
 }
 
