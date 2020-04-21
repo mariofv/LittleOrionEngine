@@ -521,7 +521,10 @@ void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image) {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(component_image);
+		if (!ShowCommonUIWindow(component_image))
+		{
+			return;
+		}
 
 		ImGui::Spacing();
 		ImGui::Separator();
@@ -761,7 +764,7 @@ ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go)
 	}
 }
 
-void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
+bool PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 {
 	if (ImGui::Checkbox("Active", &ui->active))
 	{
@@ -773,7 +776,7 @@ void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 	if (ImGui::Button("Delete"))
 	{
 		App->actions->DeleteComponentUndo(ui);
-		return;
+		return false;
 	}
 	ImGui::Separator();
 	if (ImGui::DragInt("Layer", &ui->layer, 1.0F, -MAX_NUM_LAYERS, MAX_NUM_LAYERS))
@@ -781,4 +784,6 @@ void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 		//ui->owner->transform_2d.OnTransformChange();
 		App->ui->SortComponentsUI();
 	}
+
+	return true;
 }
