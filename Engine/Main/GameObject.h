@@ -48,6 +48,8 @@ public:
 	void AddChild(GameObject* child);
 	void RemoveChild(GameObject* child);
 
+	Component::ComponentType GetTransformType() const;
+
 	ENGINE_API Component* CreateComponent(const Component::ComponentType type);
 	void RemoveComponent(Component* component);
 	ENGINE_API Component* GetComponent(const Component::ComponentType type) const;
@@ -68,10 +70,10 @@ public:
 
 private:
 	void SetHierarchyStatic(bool is_static);
-	Config SaveTransform() const;
-	Config SaveTransform2D() const;
+
 	void LoadTransforms(Config config);
 	void CreateTransforms();
+
 	void CopyComponents(const GameObject & gameobject_to_copy);
 
 public:
@@ -82,10 +84,12 @@ public:
 	std::vector<GameObject*> children;
 
 	uint64_t UUID = -1;
-	ComponentAABB aabb;
+
 	ComponentTransform transform;
 	ComponentTransform2D transform_2d;
 
+	ComponentAABB aabb;
+	
 	//TODO: Maybe move this to a component editor?
 	// This should not be public. Public for now while implementing prefab.
 	uint64_t original_UUID = 0; 
@@ -93,9 +97,13 @@ public:
 	std::shared_ptr<Prefab> prefab_reference = nullptr;
 	bool original_prefab = false;
 	bool modified_by_user = false;
+
 private:
 	bool active = true;
 	bool is_static = false;
+
+	uint32_t num_2d_components = 0;
+
 	int hierarchy_depth = 0;
 	int hierarchy_branch = 0;
 

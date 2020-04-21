@@ -53,9 +53,14 @@ GameObject::GameObject(const std::string name) :
 	CreateTransforms();
 }
 
-GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_to_copy.aabb), transform(gameobject_to_copy.transform), UUID(pcg32_random())
+GameObject::GameObject(const GameObject& gameobject_to_copy) :
+	aabb(gameobject_to_copy.aabb), 
+	transform(gameobject_to_copy.transform), 
+	transform_2d(gameobject_to_copy.transform_2d),
+	UUID(pcg32_random())
 {
-	CreateTransforms();
+	transform.owner = this;
+	transform_2d.owner = this;
 	aabb.owner = this;
 	*this << gameobject_to_copy;
 }
@@ -151,22 +156,6 @@ void GameObject::SetHierarchyStatic(bool is_static)
 	}
 }
 
-Config GameObject::SaveTransform() const
-{
-	Config config;
-	transform.Save(config);
-
-	return config;
-}
-
-Config GameObject::SaveTransform2D() const
-{
-	Config config;
-	transform_2d.Save(config);
-
-	return config;
-}
-
 void GameObject::LoadTransforms(Config config)
 {
 	Config transform_config;
@@ -185,7 +174,8 @@ void GameObject::CreateTransforms()
 	transform = ComponentTransform();
 	transform.owner = this;
 	
-	transform_2d = ComponentTransform2D(this);
+	transform_2d = ComponentTransform2D();
+	transform_2d.owner = this;
 }
 
 bool GameObject::IsStatic() const
@@ -229,10 +219,12 @@ void GameObject::Save(Config& config) const
 	config.AddBool(is_static, "IsStatic");
 	config.AddBool(active, "Active");
 
-	Config transform_config = SaveTransform();
+	Config transform_config;
+	transform.Save(transform_config);
 	config.AddChildConfig(transform_config, "Transform");
 
-	Config transform_2d_config = SaveTransform2D();
+	Config transform_2d_config;
+	transform_2d.Save(transform_2d_config);
 	config.AddChildConfig(transform_2d_config, "Transform2D");
 
 	std::vector<Config> gameobject_components_config(components.size());
@@ -305,6 +297,7 @@ void GameObject::AddChild(GameObject* child)
 	child->UpdateHierarchyBranch();
 
 	child->transform.ChangeLocalSpace(transform.GetGlobalModelMatrix());
+	child->transform_2d.ChangeLocalSpace(transform_2d.GetGlobalModelMatrix());
 	children.push_back(child);
 }
 
@@ -319,6 +312,18 @@ void GameObject::RemoveChild(GameObject* child)
 	children.erase(found);
 	child->parent = nullptr;
 	child->hierarchy_depth = 0;
+}
+
+Component::ComponentType GameObject::GetTransformType() const
+{
+	if (num_2d_components > 0)
+	{
+		return Component::ComponentType::TRANSFORM2D;
+	}
+	else
+	{
+		return Component::ComponentType::TRANSFORM;
+	}
 }
 
 
@@ -362,9 +367,14 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
 		return nullptr;
 	}
-
 	created_component->owner = this;
 	components.push_back(created_component);
+
+	if (created_component->Is2DComponent())
+	{
+		++num_2d_components;
+	}
+	
 	return created_component;
 }
 
@@ -373,6 +383,11 @@ void GameObject::RemoveComponent(Component* component_to_remove)
 	const auto it = std::find(components.begin(), components.end(), component_to_remove);
 	if (it != components.end()) 
 	{
+		if (component_to_remove->Is2DComponent())
+		{
+			--num_2d_components;
+			assert(num_2d_components >= 0);
+		}
 		component_to_remove->Delete();
 		components.erase(it);
 	}

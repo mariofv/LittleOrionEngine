@@ -65,7 +65,14 @@ void PanelGameObject::Render(GameObject* game_object)
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	component_panel.ShowComponentTransformWindow(&game_object->transform);
+	if (game_object->GetTransformType() == Component::ComponentType::TRANSFORM)
+	{
+		component_panel.ShowComponentTransformWindow(&game_object->transform);
+	}
+	else
+	{
+		component_panel.ShowComponentTransformWindow(&game_object->transform_2d);
+	}
 
 	ImGui::Spacing();
 	ImGui::Separator();

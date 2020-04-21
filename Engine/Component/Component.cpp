@@ -15,6 +15,16 @@ void Component::Load(const Config &config)
 	active = config.GetBool("Active", true);
 }
 
+bool Component::Is2DComponent() const
+{
+	return
+		type == ComponentType::CANVAS
+		|| type == ComponentType::UI_BUTTON
+		|| type == ComponentType::UI_IMAGE
+		|| type == ComponentType::UI_PROGRESS_BAR
+		|| type == ComponentType::UI_TEXT;
+}
+
 Component::ComponentType Component::GetComponentType(const std::string& component_type_name)
 {
 	if (component_type_name == "AABB")

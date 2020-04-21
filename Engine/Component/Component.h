@@ -68,6 +68,8 @@ public:
 	virtual void SpecializedLoad(const Config &config) = 0;
 
 	virtual ComponentType GetType() const { return type; };
+	bool Is2DComponent() const;
+
 
 	static ComponentType GetComponentType(unsigned int component_type_uint)
 	{
