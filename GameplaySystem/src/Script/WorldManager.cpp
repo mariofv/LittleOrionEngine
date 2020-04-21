@@ -65,7 +65,7 @@ void WorldManager::Update()
 
 	if(transition && App->input->GetAnyKeyPressedDown())
 	{
-		App->scene->LoadBuildScene(0);
+		App->scene->LoadScene(0);
 	}
 
 }

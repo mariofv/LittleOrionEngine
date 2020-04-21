@@ -160,32 +160,39 @@ void ModuleScene::DeleteCurrentScene()
 	App->editor->selected_game_object = nullptr;
 }
 
-void ModuleScene::OpenScene(const std::string& path)
+void ModuleScene::OpenScene()
 {
 	App->scene->DeleteCurrentScene();
 	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 
-	GetSceneFromPath(path);
-	current_scene.get()->Load();	
 
-	if (App->time->isGameRunning())
+	if(load_tmp_scene)
 	{
-		App->scripts->InitScripts();
+		assert(tmp_scene_uuid != 0);
+		current_scene = App->resources->Load<Scene>(tmp_scene_uuid);
+		current_scene.get()->Load();
 	}
-	App->renderer->GenerateQuadTree();
-	App->renderer->GenerateOctTree();
-	App->actions->ClearUndoStack();
-}
+	else if(build_options_position != -1)
+	{
+		if (!build_options->is_imported)
+		{
+			//Only gets here if no build options exists
+			GetSceneFromPath(DEFAULT_SCENE_PATH);
+			current_scene.get()->Load();
+		}
+		else
+		{
+			current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(build_options_position));
+			current_scene.get()->Load();
+		}
+	}
+	else
+	{		
+		GetSceneFromPath(scene_to_load);
+		current_scene.get()->Load();	
+	}
 
-void ModuleScene::OpenScene(unsigned position)
-{
-	App->scene->DeleteCurrentScene();
-	App->renderer->CreateAABBTree();
-	root = new GameObject(0);
-
-	current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(position));
-	current_scene.get()->Load();
 
 	if (App->time->isGameRunning())
 	{
@@ -206,29 +213,25 @@ void ModuleScene::GetSceneFromPath(const std::string& path)
 
 void ModuleScene::OpenPendingScene()
 {
-	OpenScene(scene_to_load);
+	OpenScene();
 	scene_to_load.clear();
-}
-
-void ModuleScene::LoadBuildScene(unsigned scene)
-{
-	if (!build_options->is_imported)
-	{
-		//Only gets here if no build options exists
-		GetSceneFromPath(DEFAULT_SCENE_PATH);
-		current_scene.get()->Load();
-
-		return;
-	}
-
-	OpenScene(scene);
-
-	return;
+	build_options_position = -1;
+	load_tmp_scene = false;
 }
 
 void ModuleScene::LoadScene(const std::string &path)
 {
 	scene_to_load = path;
+}
+
+void ModuleScene::LoadScene(unsigned position)
+{
+	build_options_position = position;
+}
+
+void ModuleScene::LoadScene()
+{
+	load_tmp_scene = true;
 }
 
 void ModuleScene::SaveScene()
@@ -247,29 +250,8 @@ void ModuleScene::SaveTmpScene()
 	tmp_scene_uuid = current_scene.get()->GetUUID();
 }
 
-void ModuleScene::LoadTmpScene()
-{
-	App->scene->DeleteCurrentScene();
-	App->renderer->CreateAABBTree();
-	root = new GameObject(0);
-
-	assert(tmp_scene_uuid != 0);
-	current_scene = App->resources->Load<Scene>(tmp_scene_uuid);
-	current_scene.get()->Load();
-
-	if (App->time->isGameRunning())
-	{
-		App->scripts->InitScripts();
-	}
-	App->renderer->GenerateQuadTree();
-	App->renderer->GenerateOctTree();
-	App->actions->ClearUndoStack();
-}
-
-
-
 bool ModuleScene::HasPendingSceneToLoad() const
 {
-	return !scene_to_load.empty();
+	return !scene_to_load.empty() || build_options_position != -1 || load_tmp_scene;
 }
 

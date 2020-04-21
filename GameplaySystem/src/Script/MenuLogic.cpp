@@ -84,7 +84,7 @@ void MenuLogic::Update()
 		switch (current)
 		{
 		case 0:
-			App->scene->LoadBuildScene(1);
+			App->scene->LoadScene(1);
 			break;
 		case 1:
 			//Active help

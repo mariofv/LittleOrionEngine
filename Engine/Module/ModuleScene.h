@@ -32,16 +32,15 @@ public:
 	void OpenPendingScene();
 	void DeleteCurrentScene();
 
-	ENGINE_API void LoadBuildScene(unsigned scene);
-	void LoadScene(const std::string& path);
+	ENGINE_API void LoadScene(const std::string& path);
+	ENGINE_API void LoadScene(unsigned position);
+	void LoadScene();
 	void SaveScene();
 	void SaveTmpScene();
-	void LoadTmpScene();
 	bool HasPendingSceneToLoad() const;
 
 private:
-	void OpenScene(const std::string &path);
-	void OpenScene(unsigned position);
+	void OpenScene();
 	void GetSceneFromPath(const std::string& path);
 
 private:
@@ -50,6 +49,8 @@ private:
 	std::shared_ptr<Scene> current_scene = nullptr;
 	uint32_t tmp_scene_uuid = 0;
 	std::string scene_to_load;
+	unsigned build_options_position = -1;
+	bool load_tmp_scene = false;
 	std::unique_ptr<BuildOptions> build_options = nullptr;
 
 	friend class PanelScene;

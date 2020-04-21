@@ -125,7 +125,7 @@ void ModuleTime::Play()
 	else
 	{
 		game_time_clock->Stop();
-		App->scene->LoadTmpScene();
+		App->scene->LoadScene();
 	}
 }
 
