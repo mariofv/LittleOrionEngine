@@ -8,8 +8,10 @@ btRigidBody* ComponentBoxPrimitive::AddBody()
 	if (body) {
 		App->physics->world->removeRigidBody(body);
 	}
-	
+
+	float3 global_scale = owner->transform.GetGlobalScale();	
 	col_shape = new btBoxShape(btVector3(box_size)); // regular box
+	col_shape->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
 	deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
 	motion_state = new btDefaultMotionState(btTransform(btQuaternion(owner->transform.rotation.x, owner->transform.rotation.y, owner->transform.rotation.z, owner->transform.rotation.w), btVector3(owner->aabb.global_bounding_box.CenterPoint().x, owner->aabb.global_bounding_box.CenterPoint().y, owner->aabb.global_bounding_box.CenterPoint().z)));
 		
@@ -33,7 +35,9 @@ ComponentBoxPrimitive::ComponentBoxPrimitive(GameObject* owner, ComponentType co
 {
 	//size will be bounding_box size already computed
 
-	box_size = btVector3(owner->aabb.bounding_box.Size().x/2, owner->aabb.bounding_box.Size().y/2, owner->aabb.bounding_box.Size().z/2);
+	box_size = btVector3((owner->aabb.global_bounding_box.Size().x / 2) / owner->transform.GetGlobalScale().x,
+		(owner->aabb.global_bounding_box.Size().y / 2) / owner->transform.GetGlobalScale().y,
+		(owner->aabb.global_bounding_box.Size().z / 2) / owner->transform.GetGlobalScale().z);
 
 	AddBody();
 }
@@ -91,6 +95,7 @@ void ComponentBoxPrimitive::MoveBody()
 	motion_state->getWorldTransform(trans);
 	owner->transform.SetGlobalMatrixTranslation(float3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()) - deviation);
 	owner->transform.SetRotation(Quat(trans.getRotation().x(), trans.getRotation().y(), trans.getRotation().z(), trans.getRotation().w()));
+	deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
 }
 
 void ComponentBoxPrimitive::UpdateBoxDimensions()
@@ -101,7 +106,7 @@ void ComponentBoxPrimitive::UpdateBoxDimensions()
 	
 	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w), btVector3(owner->aabb.global_bounding_box.CenterPoint().x, owner->aabb.global_bounding_box.CenterPoint().y, owner->aabb.global_bounding_box.CenterPoint().z)));
 	body->setMotionState(motion_state);
-	body->getCollisionShape()->setLocalScaling(btVector3(global_scale.x, global_scale.y, global_scale.z));
+	body->getCollisionShape()->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
 	deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
 }
 
