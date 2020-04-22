@@ -3,14 +3,16 @@
 #include "Component/ComponentCamera.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "Helper/Config.h"
+
 #include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
-#include "ModuleModelLoader.h"
 #include "ModuleRender.h"
 #include "ModuleResourceManager.h"
 #include "ModuleScriptManager.h"
 #include "ModuleTime.h"
+
+#include "ResourceManagement/Manager/SceneManager.h"
 
 #include <algorithm>
 #include <stack>
@@ -19,19 +21,18 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
-	
 	return true;
 }
 
 update_status ModuleScene::Update()
 {
 	BROFILER_CATEGORY("Scene Update", Profiler::Color::Crimson);
-	for (auto & game_object : game_objects_ownership)
+	for (const auto&  game_object : game_objects_ownership)
 	{
 		game_object->Update();
 		if(!game_object->IsStatic())
 		{
-			ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
+			ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 			if(object_mesh != nullptr)
 				App->renderer->UpdateAABBTree(game_object.get());
 		}
@@ -67,7 +68,7 @@ ENGINE_API GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 
 void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 {
-	auto it = std::find_if(game_objects_ownership.begin(), game_objects_ownership.end(), [game_object_to_remove](auto const & game_object) 
+	const auto it = std::find_if(game_objects_ownership.begin(), game_objects_ownership.end(), [game_object_to_remove](auto const& game_object)
 	{
 		return game_object_to_remove == game_object.get();
 	});
@@ -75,7 +76,7 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 	{
 		std::vector<GameObject*> children_to_remove;
 		game_object_to_remove->Delete(children_to_remove);
-		game_objects_ownership.erase(std::remove_if(begin(game_objects_ownership), end(game_objects_ownership), [children_to_remove](auto const &  game_object)
+		game_objects_ownership.erase(std::remove_if(begin(game_objects_ownership), end(game_objects_ownership), [&children_to_remove](auto const&  game_object)
 		{
 			return std::find(begin(children_to_remove), end(children_to_remove), game_object.get()) != end(children_to_remove);
 		}
@@ -110,8 +111,11 @@ ENGINE_API GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 		return root;
 	}
 
+	APP_LOG_INFO("Getting game object %u", UUID)
+	APP_LOG_INFO("%d", game_objects_ownership.size())
+
 	for (auto& game_object : game_objects_ownership)
-	{
+	{		
 		if (game_object->UUID == UUID) 
 		{
 			return game_object.get();

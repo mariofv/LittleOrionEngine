@@ -73,12 +73,15 @@ void PanelDebug::Render()
 		ImGui::Separator();
 		ImGui::Spacing();
 
-		ImGui::SliderInt("Number of houses", &App->debug->num_houses, 0, 1000);
-		ImGui::SliderInt("Dispersion X", &App->debug->max_dispersion_x, 0, 1000);
-		ImGui::SliderInt("Dispersion Z", &App->debug->max_dispersion_z, 0, 1000);
-		if (ImGui::Button("Create houses scene"))
+		if (ImGui::CollapsingHeader("Frustum culling scene"))
 		{
-			App->debug->CreateHousesRandom();
+			ImGui::SliderInt("Number of objects", &App->debug->num_houses, 0, 1000);
+			ImGui::SliderInt("Dispersion X", &App->debug->max_dispersion_x, 0, 1000);
+			ImGui::SliderInt("Dispersion Z", &App->debug->max_dispersion_z, 0, 1000);
+			if (ImGui::Button("Create scene"))
+			{
+				App->debug->CreateFrustumCullingDebugScene();
+			}
 		}
 	}
 	ImGui::End();

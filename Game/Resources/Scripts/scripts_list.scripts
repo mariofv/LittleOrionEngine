@@ -8,6 +8,9 @@
         "PlayerController",
         "PlayerMovement",
         "TriggerGravity",
-        "MenuLogic"
+        "MenuLogic",
+        "DebugModeScript",
+        "DamageScript",
+        "WorldManager"
     ]
 }

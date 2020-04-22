@@ -121,11 +121,6 @@ bool Utils::PatchFileName(char* filename)
 
 }
 
-std::string Utils::LoadFileContent(const std::string& path) {
-	std::ifstream file(path);
-	return std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
-}
-
 void Utils::SaveFileContent(const std::string& source, std::string& destination)
 {
 	std::ofstream file(destination);
@@ -182,4 +177,21 @@ float4x4 Utils::Interpolate(const float4x4& first, const float4x4& second, float
 	second.Decompose(second_translation, second_rotation, second_scale);
 	result = float4x4::FromTRS(Interpolate(first_translation, second_translation, lambda), Interpolate(first_rotation, second_rotation, lambda), second_scale);
 	return result;
+}
+
+float4x4 Utils::GetTransform(const aiMatrix4x4& current_transform, float scale_factor)
+{
+	aiVector3t<float> pScaling, pPosition;
+	aiQuaterniont<float> pRotation;
+
+	aiMatrix4x4 scale_matrix = aiMatrix4x4() * scale_factor;
+	scale_matrix[3][3] = 1;
+
+	aiMatrix4x4 node_transformation = scale_matrix * current_transform * scale_matrix.Inverse();
+	node_transformation.Decompose(pScaling, pRotation, pPosition);
+
+	math::float3 scale(pScaling.x, pScaling.y, pScaling.z);
+	math::Quat rotation(pRotation.x, pRotation.y, pRotation.z, pRotation.w);
+	math::float3 translation(pPosition.x, pPosition.y, pPosition.z);
+	return math::float4x4::FromTRS(translation, rotation, scale);
 }

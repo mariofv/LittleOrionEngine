@@ -1,4 +1,6 @@
 #include "EditorActionDeleteGameObject.h"
+
+#include "Main/GameObject.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleEditor.h"

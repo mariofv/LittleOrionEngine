@@ -10,10 +10,17 @@
 #include <cmath>
 #include <map>
 
-bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, const std::string& imported_file, std::string& exported_file , float unit_scale_factor) const
+FileData AnimationImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
-	Animation own_format_animation(0,"");
+	return assets_file_path.GetFile()->Load();
+}
+
+FileData AnimationImporter::ExtractAnimationFromAssimp(const aiScene* scene, const aiAnimation* animation, float unit_scale_factor) const
+{
+	Animation own_format_animation;
+
 	GetCleanAnimation(scene->mRootNode, animation, own_format_animation, unit_scale_factor);
+
 	own_format_animation.frames = static_cast<float>(animation->mDuration);
 	own_format_animation.frames_per_second = static_cast<float>(animation->mTicksPerSecond);
 	own_format_animation.name = std::string(animation->mName.C_Str());
@@ -22,33 +29,10 @@ bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation*
 	GetAssimpNodeTansformationOutSideChannels(scene->mRootNode, own_format_animation, nodes);
 
 	ApplyNodeTansformationOutSideChannels(nodes, unit_scale_factor, own_format_animation);
-	exported_file = SaveMetaFile(imported_file, ResourceType::ANIMATION);
-	SaveBinary(own_format_animation, exported_file, imported_file);
 
-	return true;
+	return CreateBinary(own_format_animation);
 }
 
-void AnimationImporter::ApplyNodeTansformationOutSideChannels(std::map<const std::string, std::vector<const aiNode *>> &nodes, float unit_scale_factor, Animation &own_format_animation) const
-{
-	for (auto& pair : nodes)
-	{
-		Animation::Channel channel;
-		channel.name = pair.first;
-		float4x4 assimp_transform;
-
-		float3 scale;
-		for (auto & second : pair.second)
-		{
-			assimp_transform = assimp_transform * SkeletonImporter::GetTransform(second->mTransformation);
-		}
-		assimp_transform.Decompose(channel.translation, channel.rotation, scale);
-		channel.translation *= unit_scale_factor;
-		for (auto & keyframe : own_format_animation.keyframes)
-		{
-			keyframe.channels.push_back(channel);
-		}
-	}
-}
 
 void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const
 {
@@ -115,7 +99,7 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 
 			float4x4 animation_transform = float4x4::FromTRS(translation, rotation, float3::one);
 			animation_transform = accumulated_assimp_transformation * animation_transform;
-				
+
 			float3 euler_rotation = animation_transform.ToEulerXYX();
 			rotation = Quat::FromEulerXYX(euler_rotation.x, euler_rotation.y, euler_rotation.z);
 			if (!is_translated)
@@ -136,6 +120,29 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 	}
 
 }
+
+void AnimationImporter::ApplyNodeTansformationOutSideChannels(std::map<const std::string, std::vector<const aiNode *>> &nodes, float unit_scale_factor, Animation &own_format_animation) const
+{
+	for (auto& pair : nodes)
+	{
+		Animation::Channel channel;
+		channel.name = pair.first;
+		float4x4 assimp_transform;
+
+		float3 scale;
+		for (auto & second : pair.second)
+		{
+			assimp_transform = assimp_transform * Utils::GetTransform(second->mTransformation);
+		}
+		assimp_transform.Decompose(channel.translation, channel.rotation, scale);
+		channel.translation *= unit_scale_factor;
+		for (auto & keyframe : own_format_animation.keyframes)
+		{
+			keyframe.channels.push_back(channel);
+		}
+	}
+}
+
 
 void AnimationImporter::GetChannelTranslations(const aiNodeAnim* sample,std::map<size_t, float3>& sample_translations) const
 {
@@ -166,11 +173,10 @@ void AnimationImporter::GetChannelRotations(const aiNodeAnim* sample, std::map<s
 	}
 }
 
-void AnimationImporter::SaveBinary(const Animation& animation, const std::string& exported_file, const std::string& imported_file) const
+FileData AnimationImporter::CreateBinary(const Animation& animation) const
 {
 	// number of keyframes +  name size + name + duration
 	uint32_t size = sizeof(uint32_t) * 2 + animation.name.size() + sizeof(float);
-
 
 	for (auto & keyframe : animation.keyframes)
 	{
@@ -234,9 +240,8 @@ void AnimationImporter::SaveBinary(const Animation& animation, const std::string
 		}
 	}
 
-	App->filesystem->Save(exported_file.c_str(), data, size);
-	App->filesystem->Save(imported_file.c_str(), data, size);
-	free(data);
+	FileData animation_data{data, size};
+	return animation_data;
 }
 
 void AnimationImporter::GetAcumulatedAssimpTransformations(const std::pair<std::string, std::vector<aiNodeAnim *>> & channel_pair, const aiNode* root_node, float4x4 & accumulated_transformation) const
@@ -268,7 +273,7 @@ void AnimationImporter::GetAcumulatedAssimpTransformations(const std::pair<std::
 		}
 	}
 
-	accumulated_transformation = SkeletonImporter::GetTransform(accumulated_assimp_local_transformation);
+	accumulated_transformation = Utils::GetTransform(accumulated_assimp_local_transformation);
 }
 
 void AnimationImporter::GetAssimpNodeTansformationOutSideChannels(const aiNode * root_node, const Animation& animation, std::map<const std::string, std::vector<const aiNode *>> & nodes) const

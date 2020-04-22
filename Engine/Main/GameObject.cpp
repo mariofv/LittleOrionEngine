@@ -53,13 +53,13 @@ GameObject::GameObject(const std::string name) :
 	CreateTransforms();
 }
 
-
 GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_to_copy.aabb), transform(gameobject_to_copy.transform), UUID(pcg32_random())
 {
 	CreateTransforms();
 	aabb.owner = this;
 	*this << gameobject_to_copy;
 }
+
 GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
 {
 
@@ -84,8 +84,11 @@ GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
 void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 {
 	children_to_remove.push_back(this);
-	if(!is_static)
+	if (!is_static)
+	{
 		App->renderer->RemoveAABBTree(this);
+	}
+
 	if (parent != nullptr)
 	{
 		parent->RemoveChild(this);
@@ -96,11 +99,13 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 		components[i]->Delete();
 		components[i] = nullptr;
 	}
+
 	for (int i = (children.size() - 1); i >= 0; --i)
 	{
 		children[i]->parent = nullptr;
 		children[i]->Delete(children_to_remove);
 	}
+
 	if (is_prefab_parent)
 	{
 		prefab_reference->RemoveInstance(this);
@@ -115,12 +120,12 @@ void GameObject::SetEnabled(bool able)
 {
 	active = able;
 	
-	for(auto component : components)
+	for(const auto& component : components)
 	{
 		(able) ? component->Enable() : component->Disable();
 	}
 
-	for(auto child : children)
+	for(const auto& child : children)
 	{
 		child->SetEnabled(able);
 	}
@@ -140,7 +145,7 @@ void GameObject::SetHierarchyStatic(bool is_static)
 	//AABBTree
 	(is_static) ? App->renderer->RemoveAABBTree(this) : App->renderer->InsertAABBTree(this);
 	
-	for (auto & child : children)
+	for (const auto& child : children)
 	{
 		child->SetStatic(is_static);
 	}
@@ -371,7 +376,7 @@ ENGINE_API Component* GameObject::CreateComponentUI(const ComponentUI::UIType ui
 
 void GameObject::RemoveComponent(Component* component_to_remove) 
 {
-	auto it = std::find(components.begin(), components.end(), component_to_remove);
+	const auto it = std::find(components.begin(), components.end(), component_to_remove);
 	if (it != components.end()) 
 	{
 		component_to_remove->Delete();
@@ -517,7 +522,7 @@ void GameObject::UnpackPrefab()
 	}
 	prefab_reference = nullptr;
 	original_UUID = false;
-	for (auto & child : children)
+	for (const auto& child : children)
 	{
 		child->UnpackPrefab();
 	}
@@ -526,7 +531,7 @@ void GameObject::UnpackPrefab()
 void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 {
 	this->components.reserve(gameobject_to_copy.components.size());
-	for (auto component : gameobject_to_copy.components)
+	for (const auto& component : gameobject_to_copy.components)
 	{
 		component->modified_by_user = false;
 		Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
@@ -548,12 +553,12 @@ void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 		components.begin(),
 		components.end(),
 		std::back_inserter(components_to_remove),
-		[&gameobject_to_copy](auto component)
+		[&gameobject_to_copy](const auto& component)
 	{
 		return gameobject_to_copy.GetComponent(component->type) == nullptr && !component->added_by_user;
 	}
 	);
-	for (auto component : components_to_remove)
+	for (const auto& component : components_to_remove)
 	{
 		RemoveComponent(component);
 	}

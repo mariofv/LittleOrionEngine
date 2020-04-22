@@ -1,6 +1,7 @@
 #include "OLAABBTree.h"
 
 #include "EditorUI/DebugDraw.h"
+#include "Main/GameObject.h"
 
 #include <assert.h>
 #include <stack>

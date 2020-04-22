@@ -1,6 +1,8 @@
 #include "EditorActionRotation.h"
-#include "Module/ModuleScene.h"
+
 #include "Main/Application.h"
+#include "Main/GameObject.h"
+#include "Module/ModuleScene.h"
 
 
 EditorActionRotation::EditorActionRotation(float3 &previous, float3 &current, GameObject* go) : previous_rotation(previous),

@@ -1,10 +1,11 @@
 #ifndef _OLOCTTREE_H_
 #define _OLOCTTREE_H_
 
-#include "Main/GameObject.h"
 #include "OLOctTreeNode.h"
 
 #include <MathGeoLib.h>
+
+class GameObject;
 
 class OLOctTree
 {

@@ -1,31 +1,40 @@
 #include "ResourceDataBase.h"
-#include "ResourceManagement/Importer/Importer.h"
 
-void ResourceDataBase::AddEntry(const File& meta_file)
+#include "Main/Application.h"
+#include "Module/ModuleResourceManager.h"
+#include "ResourceManagement/Metafile/MetafileManager.h"
+
+void ResourceDataBase::AddEntry(const Path& metafile_path)
 {
-	std::unique_ptr<ImportOptions> options = std::make_unique<ImportOptions>();
-	Importer::GetOptionsFromMeta(meta_file,*options);
-	if (entries.find(options->uuid) == entries.end())
+	Metafile* metafile = App->resources->metafile_manager->GetMetafile(metafile_path);
+	AddEntry(metafile);
+}
+
+void ResourceDataBase::AddEntry(Metafile* metafile)
+{
+	if (entries.find(metafile->uuid) == entries.end())
 	{
-		entries[options->uuid] = std::move(options);
+		entries[metafile->uuid] = metafile;
 	}
 }
 
-void ResourceDataBase::AddEntry(const ImportOptions& importing_options)
-{
-	std::unique_ptr<ImportOptions> options = std::make_unique<ImportOptions>(importing_options);
-	if (entries.find(options->uuid) == entries.end())
-	{
-		entries[options->uuid] = std::move(options);
-	}
-}
-
-const ImportOptions* ResourceDataBase::GetEntry(uint32_t uuid)
+Metafile* ResourceDataBase::GetEntry(uint32_t uuid)
 {
 	bool exist = entries.find(uuid) != entries.end();
 	if (!exist)
 	{
 		return nullptr;
 	}
-	return entries[uuid].get();
+	return entries[uuid];
+}
+
+void ResourceDataBase::GetEntriesOfType(std::vector<Metafile*>& result_entries, ResourceType type) const
+{
+	for (auto& entry : entries)
+	{
+		if (entry.second->resource_type == type)
+		{
+			result_entries.push_back(entry.second);
+		}
+	}
 }

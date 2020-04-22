@@ -1,34 +1,26 @@
 #include "StateMachineImporter.h"
+
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 #include "ResourceManagement/Resources/StateMachine.h"
-ImportResult StateMachineImporter::Import(const File & file, bool force) const
+
+FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
-	ImportResult import_result;
+	FileData state_machine_data = assets_file_path.GetFile()->Load();
 
-	if (file.filename.empty() || !file.loaded_correctly)
-	{
-		APP_LOG_ERROR("Importing state machine error: Couldn't find the file to import.")
-			return import_result;
-	}
+	char* state_machine_data_buffer = (char*)state_machine_data.buffer;
+	std::string serialized_state_machine_string = std::string(state_machine_data_buffer, state_machine_data.size);
 
-	ImportOptions already_imported = GetAlreadyImportedResource(file);
-	if (already_imported.uuid != 0 && !force) {
-		APP_LOG_INFO("state machine already imported.")
-			import_result.success = true;
-		import_result.exported_file = already_imported.exported_file;
-		return import_result;
-	}
-
-	StateMachine state_machine(file.file_path);
-	state_machine.Load(file);
+	Config state_machine_config(serialized_state_machine_string);
+	StateMachine state_machine;
+	state_machine.Load(state_machine_config);
 
 	uint32_t num_clips = state_machine.clips.size();
 	uint32_t num_states = state_machine.states.size();
 	uint32_t num_transitions = state_machine.transitions.size();
 	uint32_t ranges[3] = { num_clips, num_states, num_transitions };
 
-	uint32_t size_of_clip= sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
+	uint32_t size_of_clip = sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
 	uint32_t size_of_state = sizeof(uint64_t) * 2;
 	uint32_t size_of_transitions = sizeof(uint64_t) * 4;
 	uint32_t size = sizeof(ranges) + size_of_clip * num_clips + size_of_transitions * num_transitions + size_of_state * num_states + sizeof(uint64_t)/*Default state*/;
@@ -46,7 +38,7 @@ ImportResult StateMachineImporter::Import(const File & file, bool force) const
 		memcpy(cursor, &clip->name_hash, bytes);
 		cursor += bytes; // Store Clip
 
-		bytes = sizeof(uint32_t) ;
+		bytes = sizeof(uint32_t);
 		uint32_t animation_uuid = clip->animation->GetUUID();
 		memcpy(cursor, &animation_uuid, bytes);
 		cursor += bytes;
@@ -75,26 +67,20 @@ ImportResult StateMachineImporter::Import(const File & file, bool force) const
 
 		bytes = sizeof(uint64_t);
 		memcpy(cursor, &transition->target_hash, bytes);
-		cursor += bytes; 
+		cursor += bytes;
 
 		bytes = sizeof(uint64_t);
 		memcpy(cursor, &transition->trigger_hash, bytes);
-		cursor += bytes; 
+		cursor += bytes;
 
 		bytes = sizeof(uint64_t);
 		memcpy(cursor, &transition->interpolation_time, bytes);
-		cursor += bytes; 
+		cursor += bytes;
 	}
 
 	bytes = sizeof(uint64_t);
 	memcpy(cursor, &state_machine.default_state, bytes);
 	cursor += bytes;
 
-	std::string exported_file = SaveMetaFile(file.file_path, ResourceType::STATE_MACHINE);
-	App->filesystem->Save(exported_file.c_str(), data, size);
-
-	import_result.success = true;
-	import_result.exported_file = exported_file;
-	free(data);
-	return import_result;
+	return FileData{data, size};
 }

@@ -3,6 +3,7 @@
 #include "ModuleInput.h"
 
 #include "Main/Application.h"
+#include "Main/GameObject.h"
 
 #include "Actions/EditorActionEnableDisableComponent.h"
 #include "Actions/EditorActionModifyCamera.h"

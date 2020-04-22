@@ -2,7 +2,6 @@
 #define _MODULEPROGRAM_H_
 
 #include "Module.h"
-#include "Main/Globals.h"
 #include "Module/ModuleLight.h"
 
 #include <GL/glew.h>

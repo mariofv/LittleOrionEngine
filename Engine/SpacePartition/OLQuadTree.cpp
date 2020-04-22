@@ -1,7 +1,9 @@
 #include "OLQuadTree.h"
 
+#include "Main/GameObject.h"
+
 #include <algorithm>
-#include "Brofiler/Brofiler.h"
+#include <Brofiler/Brofiler.h>
 
 OLQuadTree::~OLQuadTree()
 {
@@ -17,7 +19,7 @@ void OLQuadTree::Create(AABB2D limits)
 
 void OLQuadTree::Clear()
 {
-	for (auto & node : flattened_tree)
+	for (const auto& node : flattened_tree)
 	{
 		delete node;
 	}
@@ -38,7 +40,7 @@ void OLQuadTree::Insert(GameObject &game_object)
 	assert(intersecting_leaves.size() > 0);
 
 	bool reinsert = false;
-	for (auto &leaf : intersecting_leaves)
+	for (const auto& leaf : intersecting_leaves)
 	{
 		if (leaf->depth == max_depth)
 		{
@@ -71,13 +73,13 @@ void OLQuadTree::CollectIntersect(std::vector<GameObject*> &game_objects, const 
 {
 	BROFILER_CATEGORY("OLQuadTree collect intersect", Profiler::Color::Yellow);
 	root->CollectIntersect(game_objects, camera);
-	auto it = std::unique(game_objects.begin(), game_objects.end());
+	const auto it = std::unique(game_objects.begin(), game_objects.end());
 	game_objects.erase(it, game_objects.end());
 }
 
 void OLQuadTree::FindLeaves(const AABB2D &game_object_aabb, std::vector<OLQuadTreeNode*> &leaves) const
 {
-	for (auto &node : flattened_tree)
+	for (const auto& node : flattened_tree)
 	{
 		if (node->IsLeaf() && node->box.Intersects(game_object_aabb))
 		{

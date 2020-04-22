@@ -5,6 +5,8 @@
 
 #include "EditorUI/DebugDraw.h"
 
+#include "Filesystem/PathAtlas.h"
+
 #include "Main/Application.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleFileSystem.h"
@@ -450,14 +452,16 @@ bool NavMesh::CreateNavMesh()
 void NavMesh::RenderNavMesh(ComponentCamera& camera)
 {
 	if (is_mesh_computed)
+	{
 		m_dd.DrawMesh(camera);
+	}
 }
 
 void NavMesh::InitAABB()
 {
 	global_AABB.SetNegativeInfinity();
 
-	for (auto & mesh : App->renderer->meshes)
+	for (const auto& mesh : App->renderer->meshes)
 	{
 		float minX = std::fmin(mesh->owner->aabb.bounding_box.minPoint.x, global_AABB.minPoint.x);
 		float minY = std::fmin(mesh->owner->aabb.bounding_box.minPoint.y, global_AABB.minPoint.y);
@@ -654,7 +658,7 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, Pa
 
 			}
 
-			for(size_t i = 0; i < nsmooth_path; ++i)
+			for(int i = 0; i < nsmooth_path; ++i)
 			{
 				path.push_back(float3(smooth_path[i * 3], smooth_path[i * 3 + 1], smooth_path[i * 3 + 2]));
 			}
@@ -750,28 +754,30 @@ bool NavMesh::FindNextPolyByDirection(float3& position, float3& next_position)
 
 void NavMesh::SaveNavMesh(unsigned char* nav_data, unsigned int nav_data_size) const
 {
-	std::string filepath(NAVMESH_PATH);
-	filepath.append("survival_scene_navmesh.bin");
+	Path* navmesh_path = App->filesystem->GetPath(RESOURCES_NAVMESH_PATH);
+	std::string navmesh_filename("survival_scene_navmesh.bin");
 
-	App->filesystem->Save(filepath.c_str(), reinterpret_cast<char*>(nav_data), nav_data_size);
+	FileData navmesh_data{ reinterpret_cast<char*>(nav_data), nav_data_size };
+
+	navmesh_path->Save(navmesh_filename.c_str(), navmesh_data);
 }
 
 void NavMesh::LoadNavMesh()
 {
-	//Free memory allocated on the heap
-	free(navmesh_read_data);
+	std::string navmesh_file_path_string(RESOURCES_NAVMESH_PATH);
+	navmesh_file_path_string.append("/survival_scene_navmesh.bin");
 
-	std::string filepath(NAVMESH_PATH);
-	filepath.append("survival_scene_navmesh.bin");
-	size_t readed_bytes;
-	navmesh_read_data = App->filesystem->Load(filepath.c_str(), readed_bytes);
-
-
-	if (navmesh_read_data == nullptr)
+	if (!App->filesystem->Exists(navmesh_file_path_string))
 	{
 		APP_LOG_ERROR("Cannot load navmesh.");
 		return;
 	}
+
+	Path* navmesh_file_path = App->filesystem->GetPath(navmesh_file_path_string);
+	FileData navmesh_data = navmesh_file_path->GetFile()->Load();
+
+	size_t readed_bytes = navmesh_data.size;
+	navmesh_read_data = (char*)navmesh_data.buffer;
 
 	nav_mesh = dtAllocNavMesh();
 	if (!nav_mesh)
@@ -811,9 +817,9 @@ void NavMesh::GetVerticesScene()
 	verts_vec.clear();
 	unwalkable_verts.clear();
 
-	for (auto mesh : App->renderer->meshes)
+	for (const auto& mesh : App->renderer->meshes)
 	{
-		for (int i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
+		for (size_t i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
 		{
 			float4 vertss(mesh->mesh_to_render.get()->vertices[i].position, 1.0f);
 			vertss = mesh->owner->transform.GetGlobalModelMatrix() * vertss;
@@ -836,17 +842,17 @@ void NavMesh::GetIndicesScene()
 		return;
 
 	std::vector<int>max_vert_mesh(App->renderer->meshes.size() + 1, 0);
-	for(int i = 0; i < App->renderer->meshes.size(); ++i)
+	for(size_t i = 0; i < App->renderer->meshes.size(); ++i)
 	{
 		ntris += App->renderer->meshes[i]->mesh_to_render.get()->indices.size() / 3;
 		max_vert_mesh[i + 1] = App->renderer->meshes[i]->mesh_to_render.get()->vertices.size();
 	}
 
 	int vert_overload = 0;
-	for(int j = 0; j < App->renderer->meshes.size(); ++j)
+	for(size_t j = 0; j < App->renderer->meshes.size(); ++j)
 	{
 		vert_overload += max_vert_mesh[j];
-		for(int i = 0; i < App->renderer->meshes[j]->mesh_to_render.get()->indices.size(); i+= 3)
+		for(size_t i = 0; i < App->renderer->meshes[j]->mesh_to_render.get()->indices.size(); i+= 3)
 		{
 			tris_vec.push_back(App->renderer->meshes[j]->mesh_to_render.get()->indices[i] + vert_overload);
 			tris_vec.push_back(App->renderer->meshes[j]->mesh_to_render.get()->indices[i + 1] + vert_overload);
@@ -862,9 +868,9 @@ void NavMesh::GetNormalsScene()
 	//Clear normals vector
 	normals_vec.clear();
 
-	for (auto mesh : App->renderer->meshes)
+	for (const const auto&  mesh : App->renderer->meshes)
 	{
-		for (int i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
+		for (size_t i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
 		{
 			normals_vec.push_back(mesh->mesh_to_render.get()->vertices[i].normals.x);
 			normals_vec.push_back(mesh->mesh_to_render.get()->vertices[i].normals.y);

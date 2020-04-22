@@ -1,18 +1,17 @@
 #include "Mesh.h"
 
+#include "ResourceManagement/Metafile/Metafile.h"
 
-Mesh::Mesh(std::vector<Vertex> && vertices, std::vector<uint32_t> && indices, std::string mesh_file_path) : vertices(vertices),
-indices(indices),
-Resource(0, mesh_file_path)
+Mesh::Mesh(uint32_t uuid, std::vector<Vertex> && vertices, std::vector<uint32_t> && indices)
+	: vertices(vertices)
+	, indices(indices)
+	, Resource(uuid)
 {
 	LoadInMemory();
-	
 }
-Mesh::Mesh(const std::string & mesh_file_path) :
-Resource(0, mesh_file_path)
+
+Mesh::~Mesh() 
 {
-}
-Mesh::~Mesh() {
 	if (vbo != 0)
 	{
 		glDeleteBuffers(1, &vbo);
@@ -29,6 +28,11 @@ GLuint Mesh::GetVAO() const
 int Mesh::GetNumTriangles() const
 {
 	return indices.size() / 3;
+}
+
+int Mesh::GetNumVerts() const
+{
+	return vertices.size();
 }
 
 std::vector<Triangle> Mesh::GetTriangles() const

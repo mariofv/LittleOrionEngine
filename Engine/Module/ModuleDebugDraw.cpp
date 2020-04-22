@@ -10,6 +10,8 @@
 #include "EditorUI/Panel/PanelNavMesh.h"
 
 #include "Main/Application.h"
+#include "Main/GameObject.h"
+
 #include "ModuleAI.h"
 #include "ModuleAnimation.h"
 #include "ModuleCamera.h"
@@ -18,8 +20,9 @@
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
-#include "ModuleWindow.h"
+
 #include "SpacePartition/OLQuadTree.h"
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
 #include "EditorUI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
@@ -380,8 +383,8 @@ bool ModuleDebugDraw::Init()
 	dd_interface_implementation = new IDebugDrawOpenGLImplementation();
     dd::initialize(dd_interface_implementation);
 
-	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 1.72f, 2.5f);	
-	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 2.5f, 2.5f);
+	light_billboard = new Billboard(CoreResource::BILLBOARD_LIGHT_TEXTURE, 17.2f, 25.f);	
+	camera_billboard = new Billboard(CoreResource::BILLBOARD_CAMERA_TEXTURE, 25.f, 25.f);
 
 	grid = new Grid();
 
@@ -673,7 +676,7 @@ void ModuleDebugDraw::RenderPathfinding() const
 		dd::point(App->artificial_intelligence->end_position, float3(0, 255, 255), 20.0f);
 	}
 
-	for(auto point : App->artificial_intelligence->debug_path)
+	for(const auto& point : App->artificial_intelligence->debug_path)
 	{
 		dd::point(point, float3(0, 0, 255), 10.0f);
 	}

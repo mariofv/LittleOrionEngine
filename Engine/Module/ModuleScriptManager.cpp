@@ -1,11 +1,11 @@
 #include "ModuleScriptManager.h"
 
 #include "Component/ComponentScript.h"
-#include "Filesystem/File.h"
+#include "Filesystem/Path.h"
+#include "Filesystem/PathAtlas.h"
 #include "Helper/Utils.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
-#include "Main/Globals.h"
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleTime.h"
 
@@ -14,25 +14,31 @@
 #include <algorithm>
 
 
-
 bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
-
+	GetCurrentPath();
 #if GAME
-	gameplay_dll = LoadLibrary(SCRIPT_DLL_FILE);
+	//TODO USE THE NEW FILESYSTEM TO DO THIS
+	bool success = CopyFile(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str(), false);
+	if (!success)
+	{
+		char procID[10];
+		sprintf(procID, "%d", GetLastError());
+		APP_LOG_INFO("File copying dll %s", procID)
+	}
 
+	gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
 	return true;
 #endif
 
-	GetCurrentPath();
-	InitDLL();
+	dll_file = App->filesystem->GetPath(std::string("/") + RESOURCES_SCRIPT_DLL_PATH);
+	scripts_list_file_path = App->filesystem->GetPath(RESOURCES_SCRIPT_PATH + std::string("/") + RESOURCES_SCRIPT_LIST_FILENAME);
+
 	LoadScriptList();
-	dll_file = std::make_unique<File>(SCRIPTS_DLL_PATH);
-	init_timestamp_dll = dll_file->modification_timestamp;
-	scripts_list_file = std::make_unique<File>(SCRIPT_LIST_PATH);
-	init_timestamp_script_list = scripts_list_file->modification_timestamp;
-	utils = new Utils();
+	InitDLL();
+	init_timestamp_dll = dll_file->GetModificationTimestamp();
+	init_timestamp_script_list = scripts_list_file_path->GetModificationTimestamp();
 
 	return true;
 }
@@ -47,14 +53,14 @@ update_status ModuleScriptManager::Update()
 	if (!App->time->isGameRunning()) 
 	{
 		//TODO Check it not every frame.
-		last_timestamp_dll = TimeStamp(dll_file->file_path.c_str());
+		last_timestamp_dll = TimeStamp(dll_file->GetFullPath().c_str());
 		if (last_timestamp_dll != init_timestamp_dll)
 		{
 			ReloadDLL();
 			init_timestamp_dll = last_timestamp_dll;
 		}
 
-		last_timestamp_script_list = TimeStamp(scripts_list_file->file_path.c_str());
+		last_timestamp_script_list = TimeStamp(scripts_list_file_path->GetFullPath().c_str());
 		if (last_timestamp_script_list != init_timestamp_script_list)
 		{
 			LoadScriptList();
@@ -79,27 +85,35 @@ long ModuleScriptManager::TimeStamp(const char* path)
 
 void ModuleScriptManager::GetCurrentPath()
 {
+	//TODO:Move this
 	TCHAR NPath[MAX_PATH];
 	GetCurrentDirectory(MAX_PATH, NPath);
 	working_directory = NPath;
-	working_directory += "/" + std::string(SCRIPT_DLL_FILE);
+	working_directory += "/" + std::string(RESOURCE_SCRIPT_DLL_FILE);
 }
 
 void ModuleScriptManager::CreateScript(const std::string& name)
 {
-	//TODO Add this to module file system
-	std::string cpp_file = utils->LoadFileContent(SCRIPT_TEMPLATE_FILE_CPP);
-	std::string header_file = utils->LoadFileContent(SCRIPT_TEMPLATE_FILE_H);
+	FileData cpp_file_data = App->filesystem->GetPath(RESOURCES_SCRIPT_TEMPLATE_CPP)->GetFile()->Load();
+	std::string cpp_file((char*)cpp_file_data.buffer, cpp_file_data.size);
+	free((char*)cpp_file_data.buffer);
 
-	utils->ReplaceStringInPlace(cpp_file, "TemplateScript", name);
-	utils->ReplaceStringInPlace(header_file, "TemplateScript", name);
+	FileData header_file_data = App->filesystem->GetPath(RESOURCES_SCRIPT_TEMPLATE_H)->GetFile()->Load();
+	std::string header_file((char*)header_file_data.buffer, header_file_data.size);
+	free((char*)header_file_data.buffer);
+
+	Utils::ReplaceStringInPlace(cpp_file, "TemplateScript", name);
+	Utils::ReplaceStringInPlace(header_file, "TemplateScript", name);
+
 	std::string name_uppercase = name;
 	std::transform(name_uppercase.begin(), name_uppercase.end(), name_uppercase.begin(), ::toupper);
-	utils->ReplaceStringInPlace(header_file, "_TEMPLATESCRIPT_H_", "_" + name_uppercase + "_H_");
+	Utils::ReplaceStringInPlace(header_file, "_TEMPLATESCRIPT_H_", "_" + name_uppercase + "_H_");
+
 	if (!App->filesystem->Exists((SCRIPT_PATH + name + ".cpp").c_str()))
 	{
-		utils->SaveFileContent(cpp_file, SCRIPT_PATH + name + ".cpp");
-		utils->SaveFileContent(header_file, SCRIPT_PATH + name + ".h");
+		//TODO: Use filesystem for this
+		Utils::SaveFileContent(cpp_file, SCRIPT_PATH + name + ".cpp");
+		Utils::SaveFileContent(header_file, SCRIPT_PATH + name + ".h");
 		scripts_list.push_back(name);
 		SaveScriptList();
 	}
@@ -110,7 +124,7 @@ void ModuleScriptManager::InitResourceScript()
 {
 	if (gameplay_dll != nullptr)
 	{
-		for (auto &component_script : scripts)
+		for (const auto& component_script : scripts)
 		{
 			CREATE_SCRIPT script_func = (CREATE_SCRIPT)GetProcAddress(gameplay_dll, (component_script->name + "DLL").c_str());
 			if (script_func != nullptr)
@@ -149,7 +163,7 @@ ComponentScript* ModuleScriptManager::CreateComponentScript()
 
 void ModuleScriptManager::RemoveComponentScript(ComponentScript* script_to_remove)
 {
-	auto it = std::find(scripts.begin(), scripts.end(), script_to_remove);
+	const auto it = std::find(scripts.begin(), scripts.end(), script_to_remove);
 	if (it != scripts.end())
 	{
 		delete *it;
@@ -164,8 +178,9 @@ void ModuleScriptManager::LoadScriptList()
 		scripts_list.clear();
 	}
 	
-	size_t readed_bytes;
-	char* scripts_file_data = App->filesystem->Load(SCRIPT_LIST_PATH, readed_bytes);
+	FileData scripts_list_data = scripts_list_file_path->GetFile()->Load();
+	char* scripts_file_data = (char*)scripts_list_data.buffer;
+	size_t readed_bytes = scripts_list_data.size;
 	if (scripts_file_data != nullptr)
 	{
 		std::string serialized_scripts_string = scripts_file_data;
@@ -183,17 +198,18 @@ void ModuleScriptManager::SaveScriptList()
 
 	std::string serialized_script_list_string;
 	config.GetSerializedString(serialized_script_list_string);
-	App->filesystem->Save(SCRIPT_LIST_PATH, serialized_script_list_string.c_str(), serialized_script_list_string.size());
 
+	Path* script_resources_path = App->filesystem->GetPath(RESOURCES_SCRIPT_PATH);
+	script_resources_path->Save(RESOURCES_SCRIPT_LIST_FILENAME, serialized_script_list_string);
 }
 
 void ModuleScriptManager::InitScripts()
 {
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		component_script->AwakeScript();
 	}
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		component_script->StartScript();
 	}
@@ -201,7 +217,7 @@ void ModuleScriptManager::InitScripts()
 
 void ModuleScriptManager::RunScripts()
 {
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		component_script->Update();
 	}
@@ -209,7 +225,7 @@ void ModuleScriptManager::RunScripts()
 
 void ModuleScriptManager::RemoveScriptPointers()
 {
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		component_script->script = nullptr;
 	}
@@ -217,8 +233,8 @@ void ModuleScriptManager::RemoveScriptPointers()
 
 void ModuleScriptManager::InitDLL()
 {
-	PatchDLL(SCRIPTS_DLL_PATH, working_directory.c_str());
-	gameplay_dll = LoadLibrary(SCRIPT_DLL_FILE);
+	PatchDLL(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str());
+	gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
 }
 
 void ModuleScriptManager::ReloadDLL() 
@@ -235,17 +251,13 @@ void ModuleScriptManager::ReloadDLL()
 		else 
 		{
 			RemoveScriptPointers();
-			remove(SCRIPT_DLL_FILE);
+			remove(RESOURCE_SCRIPT_DLL_FILE);
+			InitDLL();
 		}
+		
 	}
-	InitDLL();
 	InitResourceScript();
 	LoadVariables(config_list);
-}
-
-bool ModuleScriptManager::CopyPDB(const char* source_file, const char* destination_file, bool overwrite_existing)
-{
-	return CopyFile(source_file, destination_file, !overwrite_existing);
 }
 
 bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll_path)
@@ -345,19 +357,19 @@ bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll
 	}
 		
 	// Create new DLL and pdb
-	utils->PatchFileName(pdb_path);
-	if (App->filesystem->Exists(original_pdb_path, true))
-	{
-		strcpy(patched_pdb_path, pdb_path);
-		CopyPDB(original_pdb_path, pdb_path, true);		// Copy new PDB
-	}
+	Utils::PatchFileName(pdb_path);
+
+	strcpy(patched_pdb_path, pdb_path);
+	//App->filesystem->Copy(original_pdb_path, pdb_path);		// Copy new PDB
+	CopyFile(original_pdb_path, pdb_path,true);
+
 	HANDLE patched_dll = CreateFile(patched_dll_path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
 	DWORD byte_write;
 	WriteFile(patched_dll, file_content, (DWORD)file_size, &byte_write, nullptr);	// Generate patched DLL which points to the new PDB
 	CloseHandle(patched_dll);
 
 	// clean up
-	APP_LOG_INFO("Patching DLL succeeded!!!.\n");
+	APP_LOG_INFO("Patching DLL Succeeded.\n");
 }
 
 void ModuleScriptManager::Refresh()
@@ -368,7 +380,7 @@ void ModuleScriptManager::Refresh()
 
 void ModuleScriptManager::ReLink()
 {
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		component_script->script->Link();
 	}
@@ -376,7 +388,7 @@ void ModuleScriptManager::ReLink()
 
 void ModuleScriptManager::SaveVariables(std::unordered_map<uint64_t, Config>& config_list)
 {
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		if (component_script->script != nullptr) 
 		{
@@ -390,7 +402,7 @@ void ModuleScriptManager::SaveVariables(std::unordered_map<uint64_t, Config>& co
 
 void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> config_list)
 {
-	for (auto &component_script : scripts)
+	for (const auto& component_script : scripts)
 	{
 		if (component_script->script != nullptr)
 		{

@@ -16,9 +16,9 @@
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelToolBar.h"
 
+#include "Filesystem/PathAtlas.h"
 #include "Helper/Config.h"
 
-#include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleResourceManager.h"
 #include "ModuleScene.h"
@@ -26,6 +26,8 @@
 #include "ModuleActions.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
+
+#include "ResourceManagement/Manager/SceneManager.h"
 
 #include <Brofiler/Brofiler.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
@@ -113,21 +115,21 @@ update_status ModuleEditor::Update()
 #if GAME
 	if (!inital_scene_loaded)
 	{
-		OpenScene("Library/menuscene.scene");
+		OpenScene(MENU_SCENE_PATH);
 		App->scripts->InitScripts();
 		inital_scene_loaded = true;
 		return update_status::UPDATE_CONTINUE;
 	}
-#endif
-
-	//ImGui::ShowStyleEditor();
-	//ImGui::ShowDemoWindow();
-
+#else
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
 		OpenScene(DEFAULT_SCENE_PATH);
 		inital_scene_loaded = true;
 	}
+	//ImGui::ShowStyleEditor();
+	//ImGui::ShowDemoWindow();
+#endif
+
 
 	return update_status::UPDATE_CONTINUE;
 }

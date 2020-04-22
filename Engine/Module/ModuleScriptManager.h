@@ -1,7 +1,6 @@
 #ifndef _MODULEMANAGERSCRIPT_H_
 #define _MODULEMANAGERSCRIPT_H_
 
-#include "Main/GameObject.h"
 #include "Main/Globals.h"
 #include "Module.h"
 
@@ -22,8 +21,7 @@ struct CV_INFO_PDB70
 class ComponentScript;
 class GameObject;
 class Script;
-class File;
-class Utils;
+class Path;
 class Config;
 
 class ModuleScriptManager : public Module
@@ -60,14 +58,12 @@ private:
 
 	void InitDLL();
 	void ReloadDLL();
-	bool CopyPDB(const char* from_file, const char* destination_file, bool overwrite_existing);
 	bool PatchDLL(const char* dll_path, const char* patched_dll_path);
 
 	HINSTANCE gameplay_dll;
 	std::string working_directory;
-	std::unique_ptr<File> dll_file = nullptr;
-	std::unique_ptr<File> scripts_list_file = nullptr;
-	Utils* utils = nullptr;
+	Path* dll_file = nullptr;
+	Path* scripts_list_file_path = nullptr;
 
 	long last_timestamp_dll;
 	long init_timestamp_dll;
@@ -75,7 +71,6 @@ private:
 	long init_timestamp_script_list;
 
 public:
-
 	std::vector<ComponentScript*> scripts;
 	std::vector<std::string> scripts_list;
 };

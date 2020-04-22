@@ -14,11 +14,6 @@ ComponentImage::ComponentImage(GameObject * owner) : ComponentUI(owner, Componen
 	}
 }
 
-ComponentImage::~ComponentImage()
-{
-	ComponentUI::~ComponentUI();
-}
-
 void ComponentImage::Render(float4x4* projection)
 {
 	ComponentUI::Render(projection);

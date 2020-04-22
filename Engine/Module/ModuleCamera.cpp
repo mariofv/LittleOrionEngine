@@ -1,12 +1,17 @@
-#include "Main/Globals.h"
+#include "ModuleCamera.h"
+
+#include "Component/ComponentCamera.h"
+
 #include "Main/Application.h"
+#include "Main/GameObject.h"
+#include "Main/Globals.h"
+#include "ModuleEditor.h"
+#include "ModuleInput.h"
+#include "ModuleResourceManager.h"
 #include "ModuleScene.h"
 #include "ModuleWindow.h"
-#include "ModuleInput.h"
-#include "ModuleCamera.h"
-#include "ModuleEditor.h"
-#include "Main/GameObject.h"
-#include "Component/ComponentCamera.h"
+
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #include <algorithm>
 #include <SDL/SDL.h>
@@ -22,10 +27,10 @@ bool ModuleCamera::Init()
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	scene_camera->SetFarDistance(5000);
 	scene_camera->depth = -1;
-#if !GAME
-	skybox = new Skybox();
-#endif
+
 	scene_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
+
+	world_skybox = App->resources->Load<Skybox>((uint32_t)CoreResource::DEFAULT_SKYBOX);
 
 	return true;
 }
@@ -64,7 +69,7 @@ ComponentCamera* ModuleCamera::CreateComponentCamera()
 
 void ModuleCamera::RemoveComponentCamera(ComponentCamera* camera_to_remove)
 {
-	auto it = std::find(cameras.begin(), cameras.end(), camera_to_remove);
+	const auto it = std::find(cameras.begin(), cameras.end(), camera_to_remove);
 	if (*it == main_camera)
 	{
 		main_camera = nullptr;

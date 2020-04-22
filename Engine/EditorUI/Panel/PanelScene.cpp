@@ -195,6 +195,7 @@ void PanelScene::RenderGizmo()
 		gizmo_released = true;
 
 		App->editor->selected_game_object->transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
+		App->editor->selected_game_object->transform.modified_by_user = true;
 	}
 	else if (gizmo_released)
 	{
@@ -315,15 +316,23 @@ void PanelScene::SceneDropTarget()
 {
 	if (ImGui::BeginDragDropTarget())
 	{
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_File"))
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_Resource"))
 		{
-			assert(payload->DataSize == sizeof(File*));
-			File *incoming_file = *(File**)payload->Data;
-			if (incoming_file->file_type == FileType::PREFAB)
+			assert(payload->DataSize == sizeof(Metafile*));
+			Metafile* incoming_metafile = *((Metafile**)payload->Data);
+			if (incoming_metafile->resource_type == ResourceType::PREFAB)
 			{
-				ImportOptions options;
-				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
-				auto prefab = App->resources->Load<Prefab>(options.exported_file);
+				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(incoming_metafile->uuid);
+				GameObject* new_model = prefab->Instantiate(App->scene->root);
+				App->actions->action_game_object = new_model;
+				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
+			}
+
+			if (incoming_metafile->resource_type == ResourceType::MODEL)
+			{
+				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(incoming_metafile->uuid);
+				prefab->overwritable = false;
+
 				GameObject* new_model = prefab->Instantiate(App->scene->root);
 				App->actions->action_game_object = new_model;
 				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);

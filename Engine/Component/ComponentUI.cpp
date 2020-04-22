@@ -50,7 +50,9 @@ void ComponentUI::Render(float4x4* projection, float4x4* model, unsigned int tex
 		glBindVertexArray(vao);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 		glBindVertexArray(0);
+		glBindTexture(GL_TEXTURE_2D, 0);
 		glUseProgram(0);
+
 	}
 }
 
@@ -94,29 +96,42 @@ void ComponentUI::Save(Config& config) const
 	config.AddUInt((unsigned int)ui_type, "UIType");
 	config.AddUInt(ui_texture, "Texture");
 	config.AddFloat3(color, "Color");
-	if (texture_to_render != nullptr)
-	{
-		config.AddString(texture_to_render->exported_file, "MetadataPath");
-	}
+	config.AddUInt(texture_uuid, "TextureUUID");
+	config.AddInt(layer, "Layer");
 }
 
 void ComponentUI::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-	ui_texture = config.GetUInt("Texture", 0);
+
 	config.GetFloat3("Color", color, float3::one);
-	config.GetString("MetadataPath", metadata_path, "");
-	if(metadata_path != "")
+	layer = config.GetInt("Layer", 0);
+
+	texture_uuid = config.GetUInt("TextureUUID", 0);
+	ui_texture = config.GetUInt("Texture", 0);
+	if(texture_uuid != 0)
 	{
-		SetTextureToRender(App->resources->Load<Texture>(metadata_path));
+		SetTextureToRender(texture_uuid);
 	}
 	InitData();
 }
 
-void ComponentUI::SetTextureToRender(const std::shared_ptr<Texture>& new_texture)
+void ComponentUI::SetTextureToRender(uint32_t texture_uuid)
 {
-	texture_to_render = new_texture;
-	metadata_path = texture_to_render->exported_file;
+	this->texture_uuid = texture_uuid;
+	texture_to_render = App->resources->Load<Texture>(texture_uuid);
 	ui_texture = texture_to_render->opengl_texture;
+}
+
+void ComponentUI::Enable()
+{
+	active = true;
+	App->ui->SortComponentsUI();
+}
+
+void ComponentUI::Disable()
+{
+	active = false;
+	App->ui->SortComponentsUI();
 }
