@@ -507,7 +507,7 @@ struct cr_plugin {
 #endif
 
 #ifndef CR_MAIN_FUNC
-#   define CR_MAIN_FUNC "cr_main"
+#   define CR_MAIN_FUNC "ScriptDLL"
 #endif
 
 #ifndef CR_ASSERT

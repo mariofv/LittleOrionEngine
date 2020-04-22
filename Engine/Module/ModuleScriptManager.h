@@ -9,7 +9,7 @@
 #include <unordered_map>
 #include <vector>
 
-
+#include <Helper/cr.h>
 struct CV_INFO_PDB70
 {
 	DWORD	CvSignature;
@@ -23,6 +23,7 @@ class GameObject;
 class Script;
 class Path;
 class Config;
+
 
 class ModuleScriptManager : public Module
 {
@@ -48,6 +49,7 @@ public:
 	void LoadVariables(std::unordered_map<uint64_t, Config> config_list);
 
 private:
+	cr_plugin ctx;
 	void GetCurrentPath();
 	long TimeStamp(const char* path);
 

@@ -1,3 +1,4 @@
+#define CR_HOST CR_SAFE
 #include "ModuleScriptManager.h"
 
 #include "Component/ComponentScript.h"
@@ -13,7 +14,6 @@
 
 #include <algorithm>
 
-
 bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
@@ -21,13 +21,6 @@ bool ModuleScriptManager::Init()
 #if GAME
 	//TODO USE THE NEW FILESYSTEM TO DO THIS
 	bool success = CopyFile(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str(), false);
-	if (!success)
-	{
-		char procID[10];
-		sprintf(procID, "%d", GetLastError());
-		APP_LOG_INFO("File copying dll %s", procID)
-	}
-
 	gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
 	return true;
 #endif
@@ -36,7 +29,10 @@ bool ModuleScriptManager::Init()
 	scripts_list_file_path = App->filesystem->GetPath(RESOURCES_SCRIPT_PATH + std::string("/") + RESOURCES_SCRIPT_LIST_FILENAME);
 
 	LoadScriptList();
+	cr_plugin_open(ctx, RESOURCES_SCRIPT_DLL_PATH);
+	cr_plugin_update(ctx);
 	InitDLL();
+	
 	init_timestamp_dll = dll_file->GetModificationTimestamp();
 	init_timestamp_script_list = scripts_list_file_path->GetModificationTimestamp();
 
@@ -72,7 +68,13 @@ update_status ModuleScriptManager::Update()
 
 bool ModuleScriptManager::CleanUp()
 {
+	
+#if GAME
 	FreeLibrary(gameplay_dll);
+	return true;
+#endif
+	cr_plugin_close(ctx);
+
 	return true;
 }
 
@@ -233,8 +235,11 @@ void ModuleScriptManager::RemoveScriptPointers()
 
 void ModuleScriptManager::InitDLL()
 {
-	PatchDLL(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str());
-	gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
+	//PatchDLL(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str());
+	//gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
+	auto p = (cr_internal *)ctx.p;
+	assert(p->handle);
+	gameplay_dll = (HMODULE)p->handle;
 }
 
 void ModuleScriptManager::ReloadDLL() 
@@ -244,17 +249,12 @@ void ModuleScriptManager::ReloadDLL()
 	if (gameplay_dll != nullptr) 
 	{
 
-		if (!FreeLibrary(gameplay_dll)) 
-		{
-			return;
-		}
-		else 
-		{
-			RemoveScriptPointers();
-			remove(RESOURCE_SCRIPT_DLL_FILE);
-			InitDLL();
-		}
-		
+		cr_plugin_update(ctx);
+
+
+		RemoveScriptPointers();
+		//remove(RESOURCE_SCRIPT_DLL_FILE);
+		InitDLL();
 	}
 	InitResourceScript();
 	LoadVariables(config_list);
