@@ -22,6 +22,7 @@ FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const
 	{
 		imported_skeleton.skeleton[i].name = std::string(mesh->mBones[i]->mName.C_Str());
 		imported_skeleton.skeleton[i].transform_global = Utils::GetTransform(mesh->mBones[i]->mOffsetMatrix, unit_scale_factor);
+		imported_skeleton.skeleton[i].parent_index = -1;
 	}
 
 	for (size_t i = 0; i < mesh->mNumBones; i++)
@@ -43,7 +44,6 @@ FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const
 	}
 	if (imported_skeleton.skeleton.size() > 0)
 	{
-		imported_skeleton.skeleton[0].parent_index = -1;
 		skeleton_data = CreateBinary(imported_skeleton);
 	}
 
