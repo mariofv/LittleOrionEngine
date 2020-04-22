@@ -106,3 +106,19 @@ std::string BuildOptions::GetScenePath(unsigned position) const
 	assert(position < build_scenes.size());
 	return build_scenes[position].exported_library_path;
 }
+
+int BuildOptions::GetPositionFromPath(const std::string& assets_path) const
+{
+	unsigned count = 0;
+
+	for(const auto& option : build_scenes)
+	{
+		if(option.imported_assets_path.compare(assets_path.c_str()) == 0)
+		{
+			return count;
+		}
+		++count;
+	}
+	//Not found
+	return -1;
+}

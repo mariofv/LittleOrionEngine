@@ -55,6 +55,7 @@ public:
 
 	uint32_t GetSceneUUID(unsigned position) const;
 	std::string GetScenePath(unsigned position) const;
+	int GetPositionFromPath(const std::string& assets_path) const;
 
 public:
 	bool is_imported = false;

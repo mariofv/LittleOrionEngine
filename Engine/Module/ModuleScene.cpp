@@ -188,8 +188,17 @@ void ModuleScene::OpenScene()
 		}
 	}
 	else
-	{		
-		GetSceneFromPath(scene_to_load);
+	{
+		int position = build_options.get()->GetPositionFromPath(scene_to_load);
+
+		#if GAME
+				assert(position != -1);
+		#endif
+
+		(position != -1) 
+			? current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(position)) 
+			: GetSceneFromPath(scene_to_load);
+
 		current_scene.get()->Load();	
 	}
 

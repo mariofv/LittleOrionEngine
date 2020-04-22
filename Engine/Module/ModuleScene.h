@@ -49,7 +49,7 @@ private:
 	std::shared_ptr<Scene> current_scene = nullptr;
 	uint32_t tmp_scene_uuid = 0;
 	std::string scene_to_load;
-	unsigned build_options_position = -1;
+	int build_options_position = -1;
 	bool load_tmp_scene = false;
 	std::unique_ptr<BuildOptions> build_options = nullptr;
 
