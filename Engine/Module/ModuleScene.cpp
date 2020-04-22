@@ -166,14 +166,26 @@ void ModuleScene::OpenScene()
 	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 
+	GetSceneResource();
 
-	if(load_tmp_scene)
+	if (App->time->isGameRunning())
+	{
+		App->scripts->InitScripts();
+	}
+	App->renderer->GenerateQuadTree();
+	App->renderer->GenerateOctTree();
+	App->actions->ClearUndoStack();
+}
+
+inline void ModuleScene::GetSceneResource()
+{
+	if (load_tmp_scene)
 	{
 		assert(tmp_scene_uuid != 0);
 		current_scene = App->resources->Load<Scene>(tmp_scene_uuid);
 		current_scene.get()->Load();
 	}
-	else if(build_options_position != -1)
+	else if (build_options_position != -1)
 	{
 		if (!build_options->is_imported)
 		{
@@ -192,24 +204,15 @@ void ModuleScene::OpenScene()
 		int position = build_options.get()->GetPositionFromPath(scene_to_load);
 
 		#if GAME
-				assert(position != -1);
+			assert(position != -1);
 		#endif
 
-		(position != -1) 
-			? current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(position)) 
+		(position != -1)
+			? current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(position))
 			: GetSceneFromPath(scene_to_load);
 
-		current_scene.get()->Load();	
+		current_scene.get()->Load();
 	}
-
-
-	if (App->time->isGameRunning())
-	{
-		App->scripts->InitScripts();
-	}
-	App->renderer->GenerateQuadTree();
-	App->renderer->GenerateOctTree();
-	App->actions->ClearUndoStack();
 }
 
 void ModuleScene::GetSceneFromPath(const std::string& path)

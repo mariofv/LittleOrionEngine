@@ -41,6 +41,7 @@ public:
 
 private:
 	void OpenScene();
+	inline void GetSceneResource();
 	void GetSceneFromPath(const std::string& path);
 
 private:
