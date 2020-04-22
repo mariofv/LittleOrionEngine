@@ -475,8 +475,10 @@
     <ClCompile Include="Engine\ResourceManagement\Manager\StateMachineManager.cpp">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
   </ItemGroup>
@@ -943,8 +945,10 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\StateMachineManager.h">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
   </ItemGroup>

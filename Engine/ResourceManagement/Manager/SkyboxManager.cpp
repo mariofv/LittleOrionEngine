@@ -24,14 +24,14 @@ FileData SkyboxManager::Binarize(Skybox* skybox)
 	return skybox_data;
 }
 
-std::shared_ptr<Skybox> SkyboxManager::Load(Metafile* metafile, const FileData& resource_data)
+std::shared_ptr<Skybox> SkyboxManager::Load(uint32_t uuid, const FileData& resource_data)
 {
 	char* material_file_data = (char*)resource_data.buffer;
 
 	std::string serialized_material_string = std::string(material_file_data, resource_data.size);
 
 	Config material_config(serialized_material_string);
-	std::shared_ptr<Skybox> new_skybox = std::make_shared<Skybox>(metafile);
+	std::shared_ptr<Skybox> new_skybox = std::make_shared<Skybox>(uuid);
 	new_skybox->Load(material_config);
 
 	return new_skybox;

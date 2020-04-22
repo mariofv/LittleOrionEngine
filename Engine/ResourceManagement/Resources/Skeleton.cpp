@@ -2,6 +2,6 @@
 
 #include "ResourceManagement/Metafile/Metafile.h"
 
-Skeleton::Skeleton(Metafile* resource_metafile) : Resource(resource_metafile) {};
+Skeleton::Skeleton(uint32_t uuid) : Resource(uuid) {};
 
-Skeleton::Skeleton(Metafile* resource_metafile, std::vector<Joint> && joints) : skeleton(joints), Resource(resource_metafile) {}
+Skeleton::Skeleton(uint32_t uuid, std::vector<Joint> && joints) : skeleton(joints), Resource(uuid) {}

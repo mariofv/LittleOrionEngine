@@ -30,20 +30,19 @@ class Resource
 {
 public:
 	Resource() = default;
-	Resource(Metafile* metafile);
+	Resource(uint32_t uuid);
 	Resource& operator=(const Resource& resource_to_copy) = default;
 
 	virtual ~Resource() = default;
 
-	std::string GetName() const;
 	uint32_t GetUUID() const;
 
 	bool IsCoreResource() const;
 
 	static std::string GetResourceTypeName(ResourceType resource_type);
 
-public:
-	Metafile* resource_metafile = nullptr;
+private:
+	uint32_t uuid = 0;
 };
 
 namespace ResourceManagement
@@ -56,7 +55,7 @@ namespace ResourceManagement
 	};
 
 	template<typename T>
-	static std::shared_ptr<T> Load(Metafile* metafile, const FileData& resource_data)
+	static std::shared_ptr<T> Load(uint32_t uuid, const FileData& resource_data)
 	{
 		return nullptr;
 	};

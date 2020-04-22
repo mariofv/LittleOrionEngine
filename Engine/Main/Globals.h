@@ -63,25 +63,11 @@ enum class Fonts
 // Paths -------
 # define APP_ICON_PATH "Resources/Textures/engine_icon.png"
 
-# define VIDEO_BILLBOARD_TEXTURE_PATH "Resources/Textures/video-solid.png"
-# define LIGHT_BILLBOARD_TEXTURE_PATH "Resources/Textures/lightbulb-solid.png"
-
-#if DEBUG
-# define SCRIPTS_DLL_PATH "Resources/Scripts/GameplaySystemDebug.dll"
-# define SCRIPT_DLL_FILE "GameplaySystemDebu_.dll"
-#elif GAME
-# define SCRIPTS_DLL_PATH "Resources/Scripts/GameplaySystem.dll"
-# define SCRIPT_DLL_FILE "GameplaySystem.dll"
-#else
-# define SCRIPTS_DLL_PATH "Resources/Scripts/GameplaySystemRelease.dll"
-# define SCRIPT_DLL_FILE "GameplaySystemReleas_.dll"
-#endif
-
 # define OPENGL_MAJOR_VERSION 4
 # define OPENGL_MINOR_VERSION 0
 
 #define FULLSCREEN false
-#define RESIZABLE false
+#define RESIZABLE true
 #define BORDERED true
 
 #define VSYNC true

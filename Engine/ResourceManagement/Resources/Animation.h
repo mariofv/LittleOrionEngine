@@ -23,8 +23,8 @@ public:
 	};
 
 	Animation() = default;
-	Animation(Metafile* resource_metafile) : Resource(resource_metafile) {};
-	Animation(Metafile* resource_metafile, std::vector<KeyFrame> && keyframes, std::string name, float frames, float frames_per_second);
+	Animation(uint32_t uuid) : Resource(uuid) {};
+	Animation(uint32_t uuid, std::vector<KeyFrame> && keyframes, std::string name, float frames, float frames_per_second);
 	~Animation() = default;
 
 public:
@@ -38,9 +38,9 @@ public:
 namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<Animation> Load(Metafile* metafile, const FileData& resource_data)
+	static std::shared_ptr<Animation> Load(uint32_t uuid, const FileData& resource_data)
 	{
-		return AnimationManager::Load(metafile, resource_data);
+		return AnimationManager::Load(uuid, resource_data);
 	}
 }
 

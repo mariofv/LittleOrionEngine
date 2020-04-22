@@ -2,7 +2,6 @@
 #define  __MENULOGIC_H__
 
 #include "Script.h"
-#include "Main/Globals.h"
 
 class MenuLogic : public Script
 {

@@ -9,7 +9,7 @@
 #include <Brofiler/Brofiler.h>
 #include <vector>
 
-std::shared_ptr<Animation> AnimationManager::Load(Metafile* metafile, const FileData& resource_data)
+std::shared_ptr<Animation> AnimationManager::Load(uint32_t uuid, const FileData& resource_data)
 {
 	char* cursor = (char*)resource_data.buffer;
 
@@ -67,7 +67,7 @@ std::shared_ptr<Animation> AnimationManager::Load(Metafile* metafile, const File
 		}
 	}
 
-	std::shared_ptr<Animation> new_animation = std::make_shared<Animation>(metafile, std::move(keyframes), animation_name, animation_frames, frames_per_second);
+	std::shared_ptr<Animation> new_animation = std::make_shared<Animation>(uuid, std::move(keyframes), animation_name, animation_frames, frames_per_second);
 
 	return new_animation;
 }

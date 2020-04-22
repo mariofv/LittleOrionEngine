@@ -26,14 +26,14 @@ FileData MaterialManager::Binarize(Material* material)
 	return material_data;
 }
 
-std::shared_ptr<Material> MaterialManager::Load(Metafile* metafile, const FileData& resource_data)
+std::shared_ptr<Material> MaterialManager::Load(uint32_t uuid, const FileData& resource_data)
 {
 	char* material_file_data = (char*)resource_data.buffer;
 
 	std::string serialized_material_string = std::string(material_file_data, resource_data.size);
 
 	Config material_config(serialized_material_string);
-	std::shared_ptr<Material> new_material = std::make_shared<Material>(metafile);
+	std::shared_ptr<Material> new_material = std::make_shared<Material>(uuid);
 	new_material->Load(material_config);
 
 	return new_material;

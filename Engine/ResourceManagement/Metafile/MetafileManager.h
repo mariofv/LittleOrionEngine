@@ -21,8 +21,12 @@ public:
 
 	std::string GetMetafilePath(const Path& file_path);
 	std::string GetMetafilePath(const std::string& file_path_string);
+
 	static std::string GetMetafileExportedFolder(const Metafile& metafile);
+	static std::string GetUUIDExportedFolder(uint32_t uuid);
+
 	static std::string GetMetafileExportedFile(const Metafile& metafile);
+	static std::string GetUUIDExportedFile(uint32_t uuid);
 
 	static void TouchMetafileTimestamp(Metafile& metafile);
 

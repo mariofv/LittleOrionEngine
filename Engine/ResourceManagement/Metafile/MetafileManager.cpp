@@ -136,12 +136,22 @@ void MetafileManager::DeleteMetafileInconsistencies(const Metafile& metafile)
 
 std::string MetafileManager::GetMetafileExportedFolder(const Metafile& metafile)
 {
-	std::string uuid_string = std::to_string(metafile.uuid);
+	return GetUUIDExportedFolder(metafile.uuid);
+}
+
+std::string MetafileManager::GetUUIDExportedFolder(uint32_t uuid)
+{
+	std::string uuid_string = std::to_string(uuid);
 	return std::string(LIBRARY_METADATA_PATH) + "/" + uuid_string.substr(0, 2);
 }
 
 std::string MetafileManager::GetMetafileExportedFile(const Metafile& metafile)
 {
-	std::string uuid_string = std::to_string(metafile.uuid);
+	return GetUUIDExportedFile(metafile.uuid);
+}
+
+std::string MetafileManager::GetUUIDExportedFile(uint32_t uuid)
+{
+	std::string uuid_string = std::to_string(uuid);
 	return std::string(LIBRARY_METADATA_PATH) + "/" + uuid_string.substr(0, 2) + "/" + uuid_string;
 }

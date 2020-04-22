@@ -66,8 +66,8 @@ class StateMachine : public Resource
 {
 public:
 	StateMachine() = default;
-	StateMachine(Metafile* resource_metafile) : Resource(resource_metafile) {};
-	StateMachine(Metafile* resource_metafile, std::vector<std::shared_ptr<Clip>> && clips, std::vector<std::shared_ptr<State>> && states, std::vector<std::shared_ptr<Transition>> && transitions);
+	StateMachine(uint32_t uuid) : Resource(uuid) {};
+	StateMachine(uint32_t uuid, std::vector<std::shared_ptr<Clip>> && clips, std::vector<std::shared_ptr<State>> && states, std::vector<std::shared_ptr<Transition>> && transitions);
 	StateMachine& operator=(const StateMachine& state_machine_to_copy);
 
 	~StateMachine() = default;
@@ -103,9 +103,9 @@ namespace ResourceManagement
 	};
 
 	template<>
-	static std::shared_ptr<StateMachine> Load(Metafile* metafile, const FileData& resource_data)
+	static std::shared_ptr<StateMachine> Load(uint32_t uuid, const FileData& resource_data)
 	{
-		return StateMachineManager::Load(metafile, resource_data);
+		return StateMachineManager::Load(uuid, resource_data);
 	}
 
 	template<>

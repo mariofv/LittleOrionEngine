@@ -27,11 +27,11 @@ Transition::Transition(uint64_t source, uint64_t target, std::string & trigger, 
 	trigger_hash(std::hash<std::string>{}(trigger)),
 	interpolation_time(interpolation) {};
 
-StateMachine::StateMachine(Metafile* resource_metafile, std::vector<std::shared_ptr<Clip>>&& clips, std::vector<std::shared_ptr<State>>&& states, std::vector<std::shared_ptr<Transition>>&& transitions)
+StateMachine::StateMachine(uint32_t uuid, std::vector<std::shared_ptr<Clip>>&& clips, std::vector<std::shared_ptr<State>>&& states, std::vector<std::shared_ptr<Transition>>&& transitions)
 	: clips(clips)
 	,states(states)
 	,transitions(transitions)
-	,Resource(resource_metafile)
+	,Resource(uuid)
 {
 }
 
@@ -145,7 +145,7 @@ void StateMachine::RemoveClip(const std::shared_ptr<Clip>& clip)
 void StateMachine::AddClipToState(std::shared_ptr<State>& state, uint32_t animation_uuid)
 {
 	std::shared_ptr<Animation> animation = App->resources->Load<Animation>(animation_uuid);
-	std::shared_ptr<Clip> new_clip = std::make_shared<Clip>(animation->GetName(), animation, false);
+	std::shared_ptr<Clip> new_clip = std::make_shared<Clip>(App->resources->resource_DB->GetEntry(animation_uuid)->resource_name, animation, false);
 	if (state->clip && new_clip->animation == state->clip->animation)
 	{
 		return;

@@ -11,12 +11,12 @@
 #include <recast/Recast/Recast.h>
 #include <vector>
 
-class PanelNavMesh;
+class DetourNavMesh;
 class dtNavMeshQuery;
 class dtNavMesh;
-struct dtMeshTile;
-class DetourNavMesh;
+class PanelNavMesh;
 
+struct dtMeshTile;
 
 enum PathMode
 {

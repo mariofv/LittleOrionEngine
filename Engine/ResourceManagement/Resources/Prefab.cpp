@@ -11,7 +11,7 @@
 
 #include <algorithm>
 
-Prefab::Prefab(Metafile* resource_metafile, std::vector<std::unique_ptr<GameObject>> && gameObjects) : Resource(resource_metafile), prefab(std::move(gameObjects))
+Prefab::Prefab(uint32_t uuid, std::vector<std::unique_ptr<GameObject>> && gameObjects) : Resource(uuid), prefab(std::move(gameObjects))
 {
 }
 

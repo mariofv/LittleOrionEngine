@@ -18,7 +18,7 @@ public:
 	~PrefabManager() = default;
 
 	static FileData Binarize(Prefab* prefab);
-	static std::shared_ptr<Prefab> Load(Metafile* metafile, const FileData& resource_data);
+	static std::shared_ptr<Prefab> Load(uint32_t uuid, const FileData& resource_data);
 	static uint32_t CreateFromGameObject(Path& creation_folder_path, GameObject& gameobject);
 
 private:

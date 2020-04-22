@@ -21,7 +21,6 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
-	
 	return true;
 }
 
@@ -112,8 +111,11 @@ ENGINE_API GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 		return root;
 	}
 
+	APP_LOG_INFO("Getting game object %u", UUID)
+	APP_LOG_INFO("%d", game_objects_ownership.size())
+
 	for (auto& game_object : game_objects_ownership)
-	{
+	{		
 		if (game_object->UUID == UUID) 
 		{
 			return game_object.get();

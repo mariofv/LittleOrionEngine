@@ -39,7 +39,9 @@ bool ModuleFileSystem::Init()
 	}
 	
 	RefreshPathMap();
+#if !GAME
 	assets_folder_path = GetPath(ASSETS_PATH);
+#endif
 	resources_folder_path = GetPath(RESOURCES_PATH);
 
 	if (!Exists(LIBRARY_PATH))
@@ -51,17 +53,6 @@ bool ModuleFileSystem::Init()
 		MakeDirectory(LIBRARY_METADATA_PATH);
 	}
 	library_folder_path = GetPath(LIBRARY_PATH);
-
-	if (!MountDirectory("Assets"))
-	{
-		return false;
-	}
-
-	if (!MountDirectory("Resources"))
-	{
-		return false;
-	}
-
 
 	return true;
 }
