@@ -166,18 +166,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	num_rendered_tris = 0;
 
 	GetMeshesToRender(&camera);
-	
-	for (auto &mesh : transparent_mesh_to_render)
-	{
-		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
-		if (mesh.second->mesh_to_render != nullptr && mesh.second->IsEnabled())
-		{
-			mesh.second->Render();
-			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
-			glUseProgram(0);
-			
-		}
-	}
 	for (auto &mesh : opaque_mesh_to_render)
 	{
 		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
@@ -189,6 +177,18 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 		}
 	}
+	for (auto &mesh : transparent_mesh_to_render)
+	{
+		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
+		if (mesh.second->mesh_to_render != nullptr && mesh.second->IsEnabled())
+		{
+			mesh.second->Render();
+			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
+			glUseProgram(0);
+			
+		}
+	}
+
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
 }
