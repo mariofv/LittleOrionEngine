@@ -348,7 +348,9 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 	links.clear();
 
 	state_machine = App->resources->Load<StateMachine>(state_machine_uuid);
-	Path* state_machine_json_path = App->filesystem->GetPath(state_machine->resource_metafile->imported_file_path);
+
+	std::string original_file = App->resources->resource_DB->GetEntry(state_machine->GetUUID())->imported_file_path;
+	Path* state_machine_json_path = App->filesystem->GetPath(original_file);
 	FileData state_machine_data = state_machine_json_path->GetFile()->Load();
 
 	char* state_machine_data_buffer = (char*)state_machine_data.buffer;

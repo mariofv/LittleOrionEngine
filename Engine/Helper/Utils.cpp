@@ -186,7 +186,7 @@ float4x4 Utils::GetTransform(const aiMatrix4x4& current_transform, float scale_f
 
 	aiMatrix4x4 scale_matrix = aiMatrix4x4() * scale_factor;
 	scale_matrix[3][3] = 1;
-	pPosition *= scale_factor;
+
 	aiMatrix4x4 node_transformation = scale_matrix * current_transform * scale_matrix.Inverse();
 	node_transformation.Decompose(pScaling, pRotation, pPosition);
 
