@@ -1,0 +1,16 @@
+{
+    "Scripts": [
+        "ExampleScript",
+        "TriggerActionScript",
+        "EndOfLevelScript",
+        "CameraController",
+        "SceneCamerasController",
+        "PlayerController",
+        "PlayerMovement",
+        "TriggerGravity",
+        "MenuLogic",
+        "DebugModeScript",
+        "DamageScript",
+        "WorldManager"
+    ]
+}

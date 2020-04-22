@@ -1,26 +1,26 @@
 <h1 align="center" style="border-bottom: none;">
-  <a href="https://github.com/mariofv/LittleOrionEngine/">LittleOrion Engine</a>
+  <a href="https://github.com/Unnamed-Company/LittleOrionEngine/">LittleOrion Engine</a>
 </h1>
 <h3 align="center">C++ 3D Engine developed during the Master's Degree in AAA Videogames Development</h3>
 <p align="center">
-  <a href="https://github.com/mariofv/LittleOrionEngine/releases/">
-    <img alt="GitHub version" src="https://img.shields.io/github/v/release/mariofv/LittleOrionEngine?include_prereleases">
+  <a href="https://github.com/Unnamed-Company/LittleOrionEngine/releases/">
+    <img alt="GitHub version" src="https://img.shields.io/github/v/release/Unnamed-Company/LittleOrionEngine?include_prereleases">
   </a>
-  <a href="https://github.com/mariofv/LittleOrionEngine/stargazers/">
-    <img alt="GitHub stars" src="https://img.shields.io/github/stars/mariofv/LittleOrionEngine.svg">
+  <a href="https://github.com/Unnamed-Company/LittleOrionEngine/stargazers/">
+    <img alt="GitHub stars" src="https://img.shields.io/github/stars/Unnamed-Company/LittleOrionEngine.svg">
   </a>
-  <a href="https://github.com/mariofv/LittleOrionEngine/network/">
-    <img alt="GitHub forks" src="https://img.shields.io/github/forks/mariofv/LittleOrionEngine.svg">
+  <a href="https://github.com/Unnamed-Company/LittleOrionEngine/network/">
+    <img alt="GitHub forks" src="https://img.shields.io/github/forks/Unnamed-Company/LittleOrionEngine.svg">
   </a>
-  <a href="https://github.com/mariofv/LittleOrionEngine/">
-    <img alt="GitHub repo size in bytes" src="https://img.shields.io/github/repo-size/mariofv/LittleOrionEngine.svg">
+  <a href="https://github.com/Unnamed-Company/LittleOrionEngine/">
+    <img alt="GitHub repo size in bytes" src="https://img.shields.io/github/repo-size/Unnamed-Company/LittleOrionEngine.svg">
   </a>
-  <a href="https://github.com/mariofv/LittleOrionEngine/blob/master/LICENSE">
-    <img alt="GitHub license" src="https://img.shields.io/github/license/mariofv/LittleOrionEngine.svg">
+  <a href="https://github.com/Unnamed-Company/LittleOrionEngine/blob/master/LICENSE">
+    <img alt="GitHub license" src="https://img.shields.io/github/license/Unnamed-Company/LittleOrionEngine.svg">
   </a>
 </p>
 
-![](https://github.com/mariofv/LittleOrionEngine/blob/master/Media/README_usage/engine_usage_v1_0_1.gif)
+![](https://github.com/Unnamed-Company/LittleOrionEngine/blob/master/Media/README_usage/engine_usage_v1_0_1.gif)
 
 ## Highlights
 - Create, save and load scenes.
@@ -29,12 +29,12 @@
 - Configure different engine properties: renderer, time management, ...
 
 ## Installation
-- Download the last release (or whatever release you want) from the [Releases section](https://github.com/mariofv/LittleOrionEngine/releases).
+- Download the last release (or whatever release you want) from the [Releases section](https://github.com/Unnamed-Company/LittleOrionEngine/releases).
 - Extract `Build.zip`.
 - Execute `LittleOrionEngine.exe`.
 
 ## Usage
-Please refer to our [Wiki](https://github.com/mariofv/LittleOrionEngine/wiki) in order to learn how to use the engine.
+Please refer to our [Wiki](https://github.com/Unnamed-Company/LittleOrionEngine/wiki) in order to learn how to use the engine.
 
 ## Development setup
 In order to do that assure that you have the following:
@@ -43,12 +43,29 @@ In order to do that assure that you have the following:
 - [VisualStudio 2017 or above](https://visualstudio.microsoft.com/es/).
 
 ## Contributing
-Because this is a academic project is not possible to contribute directly to this repo. Said that, feel free to fork it (<https://github.com/mariofv/LittleOrionEngine/fork>) and to expand it in your own way!
+Because this is a academic project is not possible to contribute directly to this repo. Said that, feel free to fork it (<https://github.com/Unnamed-Company/LittleOrionEngine/fork>) and to expand it in your own way!
 
 ## Authors
-| [![Mario Fernández Villalba](https://github.com/mariofv.png?size=100)](https://github.com/mariofv) | [![Anabel Hernández Barrera](https://github.com/yalania.png?size=100)](https://github.com/yalania) |
-| ---- | ---- |
-| [Mario Fernández Villalba](https://github.com/mariofv/) | [Anabel Hernández Barrera](https://github.com/yalania/) |
+<table>
+  <tr>
+    <td align="center"><a href="https://github.com/mariofv"><img src="https://avatars2.githubusercontent.com/u/17348688?v=4" width="100px;" alt=""/><br /><sub><b>Mario Fernández Villalba</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/yalania"><img src="https://avatars2.githubusercontent.com/u/48101863?v=4" width="100px;" alt=""/><br /><sub><b>Anabel Hernández Barrera</b></sub></a><br /></td>  
+    <td align="center"><a href="https://github.com/Dartemiss"><img src="https://avatars2.githubusercontent.com/u/18176345?v=4" width="100px;" alt=""/><br /><sub><b>Enrique Alexandre González Sequeira</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/JoanStinson"><img src="https://avatars2.githubusercontent.com/u/24247839?v=4" width="100px;" alt=""/><br /><sub><b>Joan Ginard Mateo</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/JorxSS"><img src="https://avatars2.githubusercontent.com/u/49075678?v=4" width="100px;" alt=""/><br /><sub><b>Jordi Sauras</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/JordiRomagosa"><img src="https://avatars2.githubusercontent.com/u/9912719?v=4" width="100px;" alt=""/><br /><sub><b>Jordi Romagosa</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/Kibium"><img src="https://avatars2.githubusercontent.com/u/24247683?v=4" width="100px;" alt=""/><br /><sub><b>Toni Ferrari Juan</b></sub></a><br /></td>
+ </tr>
+ <tr>
+     <td align="center"><a href="https://github.com/luismoyano"><img src="https://avatars2.githubusercontent.com/u/39064112?v=4" width="100px;" alt=""/><br /><sub><b>Luis Moyano</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/marcorod94"><img src="https://avatars2.githubusercontent.com/u/29025282?v=4" width="100px;" alt=""/><br /><sub><b>Marco Rodríguez</b></sub></a><br /></td>  
+    <td align="center"><a href="https://github.com/Misarte"><img src="https://avatars2.githubusercontent.com/u/34191130?v=4" width="100px;" alt=""/><br /><sub><b>Artemis Georgakopoulou</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/pacasasgar"><img src="https://avatars2.githubusercontent.com/u/15977683?v=4" width="100px;" alt=""/><br /><sub><b>Pau Casas Garcia</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/raulgonzalezupc"><img src="https://avatars2.githubusercontent.com/u/56253770?v=4" width="100px;" alt=""/><br /><sub><b>Raúl González</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/RickyVimon"><img src="https://avatars2.githubusercontent.com/u/33130090?v=4" width="100px;" alt=""/><br /><sub><b>Ricard Vivó</b></sub></a><br /></td>
+    <td align="center"><a href="https://github.com/vidalmelero"><img src="https://avatars2.githubusercontent.com/u/43371298?v=4" width="100px;" alt=""/><br /><sub><b>Vidal Melero</b></sub></a><br /></td>
+</tr>
+</table>
 
 ## Developement methodology 
 This project was developed following agile methodologies philosophy. If you are interested to know the tasks distribution don't hesitate to visit our [Trello board](https://trello.com/b/uFhGXWJ1/littleorionengine)!
@@ -58,6 +75,7 @@ This project was developed following agile methodologies philosophy. If you are 
 * [glew 2.1.0](http://glew.sourceforge.net/) - Used to manage OpenGL extensions.
 * [MathGeoLib 3.0.0](https://github.com/juj/MathGeoLib/) - Used to do the maths.
 * [Dear ImGui 1.73](https://github.com/ocornut/imgui/) - Used to build the GUI.
+* [ImGui filebrowser](https://github.com/AirGuanZ/imgui-filebrowser) - Used to open file directory with imgui.
 * [DevIL 1.8](http://openil.sourceforge.net/) - Used to load images.
 * [assimp 5.0](https://github.com/assimp/assimp/) - Used to load 3D models.
 * [Font Awesome 5](https://github.com/FortAwesome/Font-Awesome) - Used to display fancy icons.
@@ -70,7 +88,7 @@ This project was developed following agile methodologies philosophy. If you are 
 * [PhysFS 3.0.2](http://icculus.org/physfs/) - Used to manage file system.
 
 ## License
-This project is licensed under the MIT License - see the [LICENSE](https://github.com/mariofv/LittleOrionEngine/blob/master/LICENSE) file for details.
+This project is licensed under the MIT License - see the [LICENSE](https://github.com/Unnamed-Company/LittleOrionEngine/blob/master/LICENSE) file for details.
 
 ## Release History
 * [[1.0.1] Erradicating the bugs and polishing](https://github.com/mariofv/LittleOrionEngine/releases/tag/v1.0.1)

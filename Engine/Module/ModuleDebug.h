@@ -12,7 +12,10 @@ public:
 	{
 		NONE,
 		FRUSTUM_CULLING,
-		QUADTREE_CULLING
+		QUADTREE_CULLING,
+		OCTTREE_CULLING,
+		AABBTREE_CULLING,
+		COMBINED_CULLING
 	};
 
 	ModuleDebug() = default;
@@ -21,25 +24,34 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 	
-	void CreateHousesRandom() const;
+	void CreateFrustumCullingDebugScene() const;
 	
-	void ShowDebugWindow();
-
 public:
+	bool show_debug_metrics = true;
 	bool show_bounding_boxes = false;
 	bool show_global_bounding_boxes = false;
 	bool show_grid = true;
 	bool show_camera_frustum = true;
 	bool show_quadtree = false;
+	bool show_octtree = false;
+	bool show_aabbtree = false;
+	bool show_navmesh = false;
+	bool show_pathfind_points = true;
 
+#if !GAME
 	bool culling_scene_mode = false;
-	CullingMode culling_mode = CullingMode::QUADTREE_CULLING;
+#else
+	bool culling_scene_mode = true;
+#endif
+	CullingMode culling_mode = CullingMode::FRUSTUM_CULLING;
 	float rendering_time = 0;
 
 private:
 	int num_houses = 20;
 	int max_dispersion_x = 40;
 	int max_dispersion_z = 40;
+
+	friend class PanelDebug;
 };
 
 #endif //_MODULEDEBUG_H_

@@ -2,7 +2,7 @@
 #define _COMPONENTAABB_H_
 
 #include "Component.h"
-#include "Mesh.h"
+#include "ResourceManagement/Resources/Mesh.h"
 
 #include "MathGeoLib.h"
 #include "GL/glew.h"
@@ -21,6 +21,14 @@ public:
 	ComponentAABB(GameObject * owner);
 	~ComponentAABB() = default;
 
+	//Copy and move
+	ComponentAABB(const ComponentAABB& component_to_copy) = default;
+	ComponentAABB(ComponentAABB&& component_to_move) = default;
+
+	ComponentAABB & operator=(const ComponentAABB & component_to_copy) = default;
+	ComponentAABB & operator=(ComponentAABB && component_to_move) = default;
+	void Copy(Component * component_to_copy) const override;
+
 	void Delete() override {};
 	void GenerateBoundingBox();
 
@@ -29,11 +37,10 @@ public:
 
 	bool IsEmpty() const;
 
-	void ShowComponentWindow(){}
-
 private:
 	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices);
 	void GenerateGlobalBoundingBox();
+	Component* Clone(bool original_prefab = true) const override;
 public:
 	AABB bounding_box;
 	AABB global_bounding_box;

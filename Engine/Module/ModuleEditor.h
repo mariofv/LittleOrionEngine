@@ -1,64 +1,92 @@
 #ifndef _MODULEEDITOR_H_
 #define _MODULEEDITOR_H_
 
-#include "Module.h"
-#include "Globals.h"
-#include "Component/ComponentCamera.h"
-#include "UI/Billboard.h"
+#define ENGINE_EXPORTS
 
+#include "Module.h"
+#include "Main/Globals.h"
+#include "ResourceManagement/Resources/Texture.h"
+
+#include <vector>
 #include <ImGuizmo.h>
+#include <MathGeoLib.h>
+
+class Component;
+
+class Panel;
+class PanelMenuBar;
+class PanelToolBar;
+class PanelScene;
+class PanelStateMachine;
+class PanelGame;
+class PanelInspector;
+class PanelHierarchy;
+class PanelProjectExplorer;
+class PanelConsole;
+class PanelDebug;
+class PanelConfiguration;
+class PanelAbout;
+class PanelResourceDatabase;
+class PanelPopups;
+class PanelNavMesh;
+
+class GameObject;
+
+struct ImFont;
 
 class ModuleEditor : public Module
 {
 public:
+
 	ModuleEditor() = default;
 	~ModuleEditor() = default;
 
 	bool Init() override;
+	update_status PreUpdate() override;
 	update_status Update() override;
 	bool CleanUp() override;
 
-	void OpenScene(const std::string &path) const;
+	ENGINE_API void OpenScene(const std::string &path) const;
 	void SaveScene(const std::string &path) const;
 
-	void RenderDebugDraws();
+	void Render();
 
-	void MousePicking(const float2& mouse_position);
-
-	void ShowSceneTab();
-	void ShowGameTab();
-
-	void ShowGizmoControls();
+	ImFont* GetFont(const Fonts & font) const;
 
 private:
-	void RenderCameraFrustum() const;
-	void RenderOutline() const;
-	void RenderBoundingBoxes() const;
-	void RenderGlobalBoundingBoxes() const;
-	void RenderBillboards() const;
+	void InitEditorDockspace();
+	void RenderEditorDockspace();
 
-	void RenderEditorDraws();
-	void RenderGizmo();
-	void RenderEditorCameraGizmo() const;
-	void RenderCameraPreview() const;
+	bool InitImgui();
+	void LoadFonts();
 
-	void SceneDropTarget();
+	
 
 public:
-	bool scene_window_is_hovered = false;
+	GameObject *selected_game_object = nullptr;
+	float3 selected_position = float3(0.0f, 0.0f, 0.0f);
+	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
+	std::string current_scene_path = "";
+
+	PanelMenuBar* menu_bar = nullptr;
+	PanelToolBar* toolbar = nullptr;
+	PanelScene* scene_panel = nullptr;
+	PanelGame* game_panel = nullptr;
+	PanelInspector* inspector = nullptr;
+	PanelHierarchy* hierarchy = nullptr;
+	PanelProjectExplorer* project_explorer = nullptr;
+	PanelConsole* console = nullptr;
+	PanelDebug* debug_panel = nullptr;
+	PanelConfiguration* configuration = nullptr;
+	PanelAbout* about = nullptr;
+	PanelResourceDatabase* resource_database = nullptr;
+	PanelPopups* popups = nullptr;
+	PanelNavMesh* nav_mesh = nullptr;
+	PanelStateMachine* state_machine = nullptr;
 
 private:
-	float scene_window_content_area_width = 0;
-	float scene_window_content_area_height = 0;
-
-	float2 scene_window_content_area_pos = float2::zero;
-
-	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
-	bool gizmo_hovered = false;
-
-	Billboard* camera_billboard = nullptr;
-	Billboard* light_billboard = nullptr;
-
+	std::vector<Panel*> panels;
+	ImGuiID editor_dockspace_id;
 };
 
 #endif //_MODULEEDITOR_H_

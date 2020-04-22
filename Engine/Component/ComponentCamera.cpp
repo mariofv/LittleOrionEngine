@@ -1,14 +1,21 @@
 #include "ComponentCamera.h"
-#include "Application.h"
-#include "GameObject.h"
+
+#include "Helper/Utils.h"
+
+#include "Main/Application.h"
+#include "Main/GameObject.h"
+#include "Module/ModuleAI.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
-#include "UI/ComponentsUI.h"
+#include "Module/ModuleResourceManager.h"
+#include "Module/ModuleWindow.h"
 
-#include "Utils.h"
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
+#include "ResourceManagement/Resources/Skybox.h"
 
 ComponentCamera::ComponentCamera() : Component(nullptr, ComponentType::CAMERA)
 {
@@ -22,9 +29,55 @@ ComponentCamera::ComponentCamera(GameObject * owner) : Component(owner, Componen
 	GenerateMatrices();
 }
 
+ComponentCamera & ComponentCamera::operator=(const ComponentCamera & component_to_copy)
+{
+	Component::operator = (component_to_copy);
+	this->camera_frustum = component_to_copy.camera_frustum;
+
+	this->camera_clear_mode = component_to_copy.camera_clear_mode;
+	memcpy(camera_clear_color, component_to_copy.camera_clear_color,3 * sizeof(float));
+	this->depth = component_to_copy.depth;
+	this->camera_movement_speed = component_to_copy.camera_movement_speed;
+	this->toggle_msaa = component_to_copy.toggle_msaa;
+	this->speed_up = component_to_copy.speed_up;
+
+	GenerateMatrices();
+	return *this;
+}
+Component* ComponentCamera::Clone(bool original_prefab) const
+{ 
+	ComponentCamera * created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentCamera();
+	}
+	else
+	{
+		created_component = App->cameras->CreateComponentCamera();
+	}
+	*created_component = *this;
+	return created_component;
+};
+void ComponentCamera::Copy(Component* component_to_copy) const
+{  
+	*component_to_copy = *this;
+	*static_cast<ComponentCamera*>(component_to_copy) = *this;
+};
+
+ComponentCamera::~ComponentCamera()
+{
+	glDeleteTextures(1, &last_recorded_frame_texture);
+	glDeleteTextures(1, &msfb_color);
+
+	glDeleteRenderbuffers(1, &rbo);
+	glDeleteFramebuffers(1, &fbo);
+	glDeleteFramebuffers(1, &msfbo);
+}
+
 void ComponentCamera::InitCamera()
 {
 	glGenFramebuffers(1, &fbo);
+	glGenFramebuffers(1, &msfbo);
 
 	aspect_ratio = 1.f;
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
@@ -35,16 +88,13 @@ void ComponentCamera::InitCamera()
 	camera_frustum.farPlaneDistance = 100.0f;
 	camera_frustum.verticalFov = math::pi / 4.0f;
 	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
-}
-ComponentCamera::~ComponentCamera()
-{
-	glDeleteTextures(1, &last_recorded_frame_texture);
-	glDeleteFramebuffers(1, &fbo);
-	glDeleteRenderbuffers(1, &rbo);
+
+	SetSkybox(0);
 }
 
 void ComponentCamera::Update()
 {
+#if !GAME
 	if (is_focusing)
 	{
 		float focus_progress = math::Min((App->time->real_time_since_startup - start_focus_time) / CENTER_TIME, 1.f);
@@ -53,9 +103,9 @@ void ComponentCamera::Update()
 		owner->transform.SetTranslation(new_camera_position);
 		is_focusing = focus_progress != 1;
 	}	
-
-	camera_frustum.pos = owner->transform.GetTranslation();
-	Quat owner_rotation = owner->transform.GetRotation();
+#endif
+	camera_frustum.pos = owner->transform.GetGlobalTranslation();
+	Quat owner_rotation = owner->transform.GetGlobalRotation();
 	camera_frustum.up = owner_rotation * float3::unitY;
 	camera_frustum.front = owner_rotation * float3::unitZ;
 
@@ -80,6 +130,8 @@ void ComponentCamera::Save(Config& config) const
 	config.AddUInt((uint64_t)camera_clear_mode, "ClearMode");
 	config.AddColor(float4(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f), "ClearColor");
 	config.AddInt(depth, "Depth");
+
+	config.AddUInt(skybox_uuid, "Skybox");
 }
 
 void ComponentCamera::Load(const Config& config)
@@ -123,6 +175,9 @@ void ComponentCamera::Load(const Config& config)
 
 	depth = config.GetInt("Depth", 0);
 
+	skybox_uuid = config.GetUInt("Skybox", 0);
+	SetSkybox(skybox_uuid);
+
 	GenerateMatrices();
 }
 
@@ -131,22 +186,25 @@ float ComponentCamera::GetWidth() const
 	return last_width;
 }
 
-float ComponentCamera::GetHeigt() const
+float ComponentCamera::GetHeight() const
 {
 	return last_height;
 }
 
 void ComponentCamera::RecordFrame(float width, float height)
 {
-	if (last_width != width || last_height != height)
+	if (last_width != width || last_height != height || toggle_msaa)
 	{
 		last_width = width;
 		last_height = height;
 		SetAspectRatio(width/height);
 		GenerateFrameBuffers(width, height);
+		toggle_msaa = false;
 	}
 
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+#if !GAME
+	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+#endif
 
 	glViewport(0, 0, width, height);
 
@@ -159,7 +217,14 @@ void ComponentCamera::RecordFrame(float width, float height)
 			break;
 		case ComponentCamera::ClearMode::SKYBOX:
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			App->cameras->skybox->Render(*this);
+			if (skybox_uuid != 0)
+			{
+				camera_skybox->Render(*this);
+			}
+			else
+			{
+				App->cameras->world_skybox->Render(*this);
+			}
 			break;
 		default:
 			break;
@@ -167,14 +232,34 @@ void ComponentCamera::RecordFrame(float width, float height)
 
 	App->renderer->RenderFrame(*this);
 
+#if !GAME
+	if (App->renderer->anti_aliasing)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#endif
+	
 }
 
 void ComponentCamera::RecordDebugDraws(float width, float height) const
 {
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
 	glViewport(0, 0, width, height);
-	App->editor->RenderDebugDraws();
+
+	App->debug_draw->Render();
+
+	if (App->renderer->anti_aliasing)
+	{
+		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
+		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
+		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+	}
+
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -182,7 +267,6 @@ GLuint ComponentCamera::GetLastRecordedFrame() const
 {
 	return last_recorded_frame_texture;
 }
-
 
 void ComponentCamera::GenerateFrameBuffers(float width, float height)
 {
@@ -197,8 +281,13 @@ void ComponentCamera::GenerateFrameBuffers(float width, float height)
 	{
 		glDeleteRenderbuffers(1, &rbo);
 	}
-	glGenRenderbuffers(1, &rbo);
 
+	App->renderer->anti_aliasing ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
+}
+
+void ComponentCamera::CreateFramebuffer(float width, float height)
+{
+	glGenRenderbuffers(1, &rbo);
 	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
@@ -210,8 +299,36 @@ void ComponentCamera::GenerateFrameBuffers(float width, float height)
 	glBindTexture(GL_TEXTURE_2D, 0);
 
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void ComponentCamera::CreateMssaFramebuffer(float width, float height)
+{
+	glGenTextures(1, &msfb_color);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, msfb_color);
+	glTexImage2DMultisample(GL_TEXTURE_2D_MULTISAMPLE, 4, GL_RGB, width, height, GL_TRUE);
+	glBindTexture(GL_TEXTURE_2D_MULTISAMPLE, 0);
+
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorageMultisample(GL_RENDERBUFFER, 4, GL_DEPTH24_STENCIL8, width, height);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, msfbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, msfb_color, 0);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glBindTexture(GL_TEXTURE_2D, last_recorded_frame_texture);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 
@@ -244,14 +361,33 @@ void ComponentCamera::SetOrientation(const float3 & orientation)
 	owner->transform.Rotate(rotation);
 }
 
+ENGINE_API void ComponentCamera::SetStartFocusPosition(const float3& focus_position)
+{
+	start_focus_position = focus_position;
+}
+
+ENGINE_API void ComponentCamera::SetGoalFocusPosition(const float3& focus_position)
+{
+	goal_focus_position = focus_position;
+}
+
+ENGINE_API void ComponentCamera::SetFocusTime(const float focus_time)
+{
+	start_focus_time = focus_time;
+}
+
+ENGINE_API Frustum ComponentCamera::GetFrustum()
+{
+	return camera_frustum;
+}
+
 void ComponentCamera::AlignOrientationWithAxis()
 {
 	float3x3 rotation_matrix = float3x3::identity;
 	owner->transform.SetRotation(rotation_matrix);
 }
 
-
-void ComponentCamera::SetOrthographicSize(const float2 & size)
+ENGINE_API void ComponentCamera::SetOrthographicSize(const float2 & size)
 {
 	camera_frustum.orthographicWidth = size.x;
 	camera_frustum.orthographicHeight = size.y;
@@ -268,12 +404,12 @@ void ComponentCamera::LookAt(float x, float y, float z)
 	LookAt(float3(x, y, z));
 }
 
-void ComponentCamera::SetPosition(const float3 & position)
+ENGINE_API void ComponentCamera::SetPosition(const float3 & position)
 {
 	owner->transform.SetTranslation(position);
 }
 
-void ComponentCamera::Center(const AABB &bounding_box)
+ENGINE_API void ComponentCamera::Center(const AABB &bounding_box)
 {
 	float containing_sphere_radius = bounding_box.Size().Length() / 2;
 
@@ -284,37 +420,46 @@ void ComponentCamera::Center(const AABB &bounding_box)
 	start_focus_time = App->time->real_time_since_startup;
 }
 
-void ComponentCamera::MoveUp()
+ENGINE_API void ComponentCamera::CenterGame(const GameObject* go)
+{
+	float containing_sphere_radius = go->aabb.bounding_box.Size().Length() / 2 ;
+	is_focusing = true;
+	start_focus_position = owner->transform.GetTranslation();
+	goal_focus_position = go->aabb.bounding_box.CenterPoint() - camera_frustum.front * BOUNDING_BOX_DISTANCE_FACTOR * containing_sphere_radius;;
+	start_focus_time = App->time->delta_time;
+}
+
+ENGINE_API void ComponentCamera::MoveUp()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(float3(0, distance, 0));
 }
 
-void ComponentCamera::MoveDown()
+ENGINE_API void ComponentCamera::MoveDown()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(float3(0, -distance, 0));
 }
 
-void ComponentCamera::MoveFoward()
+ENGINE_API void ComponentCamera::MoveForward()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(camera_frustum.front.ScaledToLength(distance));
 }
 
-void ComponentCamera::MoveBackward()
+ENGINE_API void ComponentCamera::MoveBackward()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(-camera_frustum.front.ScaledToLength(distance));
 }
 
-void ComponentCamera::MoveLeft()
+ENGINE_API void ComponentCamera::MoveLeft()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(-camera_frustum.WorldRight().ScaledToLength(distance));
 }
 
-void ComponentCamera::MoveRight()
+ENGINE_API void ComponentCamera::MoveRight()
 {
 	const float distance = App->time->real_time_delta_time * camera_movement_speed * speed_up;
 	owner->transform.Translate(camera_frustum.WorldRight().ScaledToLength(distance));
@@ -352,7 +497,8 @@ void ComponentCamera::OrbitY(float angle, const float3& focus_point)
 
 	const float adjusted_angle = App->time->real_time_delta_time * CAMERA_ROTATION_SPEED * -angle;
 	const float current_angle = asinf(owner->transform.GetFrontVector().y / owner->transform.GetFrontVector().Length());
-	if (abs(current_angle + adjusted_angle) >= math::pi / 2) {
+	if (abs(current_angle + adjusted_angle) >= math::pi / 2) 
+	{
 		return;
 	}
 	Quat rotation = Quat::RotateAxisAngle(camera_frustum.WorldRight(), adjusted_angle);
@@ -382,7 +528,8 @@ void ComponentCamera::RotatePitch(float angle)
 {
 	const float adjusted_angle = App->time->real_time_delta_time * CAMERA_ROTATION_SPEED * -angle;
 	const float current_angle = asinf(owner->transform.GetFrontVector().y / owner->transform.GetFrontVector().Length());
-	if (abs(current_angle + adjusted_angle) >= math::pi / 2) { // Avoid Gimbal Lock
+	if (abs(current_angle + adjusted_angle) >= math::pi / 2) 
+	{ // Avoid Gimbal Lock
 		return;
 	}
 	Quat rotation = Quat::RotateAxisAngle(owner->transform.GetRightVector(), adjusted_angle);
@@ -401,7 +548,7 @@ void ComponentCamera::SetPerpesctiveView()
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
 }
 
-void ComponentCamera::SetOrthographicView()
+ENGINE_API void ComponentCamera::SetOrthographicView()
 {
 	camera_frustum.type = FrustumType::OrthographicFrustum;
 }
@@ -409,6 +556,15 @@ void ComponentCamera::SetOrthographicView()
 void ComponentCamera::SetClearMode(ComponentCamera::ClearMode clear_mode)
 {
 	camera_clear_mode = clear_mode;
+}
+
+void ComponentCamera::SetSkybox(uint32_t skybox_uuid)
+{
+	this->skybox_uuid = skybox_uuid;
+	if (skybox_uuid != 0)
+	{
+		camera_skybox = App->resources->Load<Skybox>(skybox_uuid);
+	}
 }
 
 void ComponentCamera::SetSpeedUp(bool is_speeding_up)
@@ -569,8 +725,8 @@ void ComponentCamera::GetRay(const float2& normalized_position, LineSegment &ret
 	return_value = camera_frustum.UnProjectLineSegment(normalized_position.x, normalized_position.y);
 }
 
-
-void ComponentCamera::ShowComponentWindow()
+AABB ComponentCamera::GetMinimalEnclosingAABB() const
 {
-	ComponentsUI::ShowComponentCameraWindow(this);
+	return camera_frustum.MinimalEnclosingAABB();
 }
+

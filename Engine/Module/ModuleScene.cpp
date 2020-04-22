@@ -1,17 +1,22 @@
 #include "ModuleScene.h"
-#include "Application.h"
+
+#include "Component/ComponentCamera.h"
+#include "EditorUI/Panel/PanelHierarchy.h"
+#include "Helper/Config.h"
+
+#include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
-#include "ModuleModelLoader.h"
 #include "ModuleRender.h"
-#include "Component/ComponentCamera.h"
-#include "Config.h"
+#include "ModuleResourceManager.h"
+#include "ModuleScriptManager.h"
+#include "ModuleTime.h"
 
-#include <imgui.h>
-#include <FontAwesome5/IconsFontAwesome5.h>
+#include "ResourceManagement/Manager/SceneManager.h"
+
 #include <algorithm>
 #include <stack>
-#include "Brofiler/Brofiler.h"
+#include <Brofiler/Brofiler.h>
 
 bool ModuleScene::Init()
 {
@@ -22,7 +27,16 @@ bool ModuleScene::Init()
 update_status ModuleScene::Update()
 {
 	BROFILER_CATEGORY("Scene Update", Profiler::Color::Crimson);
-	root->Update();
+	for (const auto&  game_object : game_objects_ownership)
+	{
+		game_object->Update();
+		if(!game_object->IsStatic())
+		{
+			ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
+			if(object_mesh != nullptr)
+				App->renderer->UpdateAABBTree(game_object.get());
+		}
+	}
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -33,9 +47,9 @@ bool ModuleScene::CleanUp()
 	return true;
 }
 
-GameObject* ModuleScene::CreateGameObject()
+ENGINE_API GameObject* ModuleScene::CreateGameObject()
 {
-	std::string created_game_object_name = hierarchy.GetNextGameObjectName();
+	std::string created_game_object_name = App->editor->hierarchy->GetNextGameObjectName();
 	std::unique_ptr<GameObject> created_game_object = std::make_unique<GameObject>(created_game_object_name);
 	created_game_object->SetParent(root);
 
@@ -44,7 +58,7 @@ GameObject* ModuleScene::CreateGameObject()
 	return created_game_object_ptr;
 }
 
-GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
+ENGINE_API GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 {
 	GameObject * created_game_object_ptr = CreateGameObject();
 	parent->AddChild(created_game_object_ptr);
@@ -54,7 +68,7 @@ GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 
 void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 {
-	auto it = std::find_if(game_objects_ownership.begin(), game_objects_ownership.end(), [game_object_to_remove](auto const & game_object) 
+	const auto it = std::find_if(game_objects_ownership.begin(), game_objects_ownership.end(), [game_object_to_remove](auto const& game_object)
 	{
 		return game_object_to_remove == game_object.get();
 	});
@@ -62,7 +76,7 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 	{
 		std::vector<GameObject*> children_to_remove;
 		game_object_to_remove->Delete(children_to_remove);
-		game_objects_ownership.erase(std::remove_if(begin(game_objects_ownership), end(game_objects_ownership), [children_to_remove](auto const &  game_object)
+		game_objects_ownership.erase(std::remove_if(begin(game_objects_ownership), end(game_objects_ownership), [&children_to_remove](auto const&  game_object)
 		{
 			return std::find(begin(children_to_remove), end(children_to_remove), game_object.get()) != end(children_to_remove);
 		}
@@ -70,20 +84,38 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 	}
 }
 
+
+GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject> & game_object_to_add)
+{
+	game_objects_ownership.emplace_back(std::move(game_object_to_add));
+	GameObject * game_object = game_objects_ownership.back().get();
+	game_object->SetParent(root);
+	if (!game_object->IsStatic())
+	{
+		App->renderer->InsertAABBTree(game_object);
+	}
+	return game_object;
+
+}
+
+
 GameObject* ModuleScene::GetRoot() const
 {
 	return root;
 }
 
-GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
+ENGINE_API GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 {
 	if (UUID == 0)
 	{
 		return root;
 	}
 
+	APP_LOG_INFO("Getting game object %u", UUID)
+	APP_LOG_INFO("%d", game_objects_ownership.size())
+
 	for (auto& game_object : game_objects_ownership)
-	{
+	{		
 		if (game_object->UUID == UUID) 
 		{
 			return game_object.get();
@@ -93,53 +125,62 @@ GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 	return nullptr;
 }
 
-void ModuleScene::DeleteCurrentScene()
+Component * ModuleScene::GetComponent(uint64_t UUID) const
 {
-	RemoveGameObject(root);
-	hierarchy.selected_game_object = nullptr;
-}
-
-void ModuleScene::Save(Config& serialized_scene) const
-{
-	std::vector<Config> game_objects_config(game_objects_ownership.size());
-	std::stack<GameObject*> pending_objects;
-	unsigned int current_index = 0;
-
-	for (auto& child_game_object : root->children)
+	for (auto& game_object : game_objects_ownership)
 	{
-		pending_objects.push(child_game_object);
-	}	
-	
-	while (!pending_objects.empty())
-	{
-		GameObject* current_game_object = pending_objects.top();
-		pending_objects.pop();
-
-		current_game_object->Save(game_objects_config[current_index]);
-		++current_index;
-
-		for (auto& child_game_object : current_game_object->children)
+		for(auto& component : game_object->components)
 		{
-			pending_objects.push(child_game_object);
+			if(component->UUID == UUID)
+			{
+				return component;
+			}
 		}
 	}
-	assert(current_index == game_objects_ownership.size());
 
-	serialized_scene.AddChildrenConfig(game_objects_config, "GameObjects");
+	return nullptr;
 }
 
-void ModuleScene::Load(const Config& serialized_scene)
+void ModuleScene::DeleteCurrentScene()
 {
-	DeleteCurrentScene();
+	//UndoRedo
+	App->actions->ClearUndoRedoStacks();
+	RemoveGameObject(root);
+	App->renderer->DeleteAABBTree();
+	App->scripts->scripts.clear();
+	App->editor->selected_game_object = nullptr;
+}
+
+void ModuleScene::OpenScene(const std::string &path)
+{
+	App->scene->DeleteCurrentScene();
+	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 
-	std::vector<Config> game_objects_config;
-	serialized_scene.GetChildrenConfig("GameObjects", game_objects_config);
-	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
+	App->resources->scene_manager->Load(path);
+
+	if (App->time->isGameRunning())
 	{
-		GameObject* created_game_object = CreateGameObject();
-		created_game_object->Load(game_objects_config[i]);
+		App->scripts->InitScripts();
 	}
 	App->renderer->GenerateQuadTree();
-
+	App->renderer->GenerateOctTree();
+	App->actions->ClearUndoStack();
 }
+
+void ModuleScene::OpenPendingScene()
+{
+	OpenScene(scene_to_load);
+	scene_to_load.clear();
+}
+
+void ModuleScene::LoadScene(const std::string &path)
+{
+	scene_to_load = path;
+}
+
+bool ModuleScene::HasPendingSceneToLoad() const
+{
+	return !scene_to_load.empty();
+}
+

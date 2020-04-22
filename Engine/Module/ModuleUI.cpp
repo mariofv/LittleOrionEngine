@@ -1,116 +1,207 @@
-#include "Globals.h"
-#include "Application.h"
+#include "Component/ComponentCamera.h"
+#include "Component/ComponentCanvas.h"
+#include "Component/ComponentImage.h"
+#include "Component/ComponentProgressBar.h"
+#include "Component/ComponentUI.h"
+#include "Component/ComponentText.h"
+#include "Component/ComponentButton.h"
+
+#include "GL/glew.h"
+#include "Main/Globals.h"
+#include "Main/Application.h"
+#include "Main/GameObject.h"
+
+#include "ModuleEditor.h"
+#include "ModuleScene.h"
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
-#include "UI/EngineUI.h"
 
-#include <SDL/SDL.h>
-#include <GL/glew.h>
-#include <imgui.h>
-#include <imgui_impl_opengl3.h>
-#include <imgui_impl_sdl.h>
-#include <ImGuizmo.h>
-#include <FontAwesome5/IconsFontAwesome5.h>
-#include <FontAwesome5/IconsFontAwesome5Brands.h>
 #include "Brofiler/Brofiler.h"
+#include <algorithm>
+#include <SDL/SDL.h>
+
 
 // Called before render is available
 bool ModuleUI::Init()
 {
 	APP_LOG_SECTION("************ Module UI Init ************");
 
-	APP_LOG_INIT("Initializing IMGUI editor");
-	SDL_GLContext gl_context = ImGui::CreateContext();
-
-	bool err = ImGui_ImplSDL2_InitForOpenGL(App->window->window, gl_context); 
-	if (!err)
-	{
-		APP_LOG_ERROR("Error initializing IMGUI editor SDL2.")
-		return false;
-	}
-
-	err = ImGui_ImplOpenGL3_Init("#version 330");
-	if (!err)
-	{
-		APP_LOG_ERROR("Error initializing IMGUI editor OpenGL3.")
-		return false;
-	}
-
-	LoadFonts();
-
-	editor_ui = new EngineUI();
-	editor_ui->InitUI();
-
-	APP_LOG_SUCCESS("IMGUI editor initialized correctly.");
-
 	return true;
-}
-
-update_status ModuleUI::PreUpdate()
-{
-	ImGui_ImplOpenGL3_NewFrame();
-	ImGui_ImplSDL2_NewFrame(App->window->window);
-	ImGui::NewFrame();
-	ImGuizmo::BeginFrame();
-
-	return update_status::UPDATE_CONTINUE;
 }
 
 // Called every draw update
 update_status ModuleUI::Update()
 {
-	//ImGui::ShowStyleEditor();
-	//ImGui::ShowDemoWindow();
 	return update_status::UPDATE_CONTINUE;
-}
-
-void ModuleUI::Render()
-{
-	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
-	editor_ui->ShowEngineUI();
-	ImGui::Render();
-	ImGui_ImplOpenGL3_RenderDrawData(ImGui::GetDrawData());
 }
 
 // Called before quitting
 bool ModuleUI::CleanUp()
 {
-	delete editor_ui;
-
-	ImGui_ImplOpenGL3_Shutdown();
-	ImGui_ImplSDL2_Shutdown();
-	ImGui::DestroyContext();
 	return true;
 }
 
-ImFont* ModuleUI::GetFont(const Fonts & font) const
+void ModuleUI::Render(const ComponentCamera* camera)
 {
-	ImGuiIO& io = ImGui::GetIO();
-	return io.Fonts->Fonts[static_cast<int>(font)];
+	BROFILER_CATEGORY("UI: Module Render", Profiler::Color::LightSeaGreen);
+#if GAME
+	window_width = App->window->GetWidth();
+	window_height = App->window->GetHeight();
+#else
+	window_width = App->editor->scene_panel->scene_window_content_area_width;
+	window_height = App->editor->scene_panel->scene_window_content_area_height;
+#endif
+	float4x4 projection = float4x4::D3DOrthoProjLH(-1, MAX_NUM_LAYERS, window_width, window_height);
+	if (main_canvas != nullptr)
+	{
+		glDisable(GL_DEPTH_TEST);
+		RenderUIGameObject(main_canvas->owner, &projection);
+		glEnable(GL_DEPTH_TEST);
+	}
 }
 
-
-void ModuleUI::LoadFonts()
+void  ModuleUI::RenderUIGameObject(GameObject* parent, float4x4* projection)
 {
-	ImGuiIO& io = ImGui::GetIO();
-
-	// LOADING FONT AWESOME 5 (FONT_FA)
-
-	static const ImWchar icons_ranges_fa[] = { ICON_MIN_FA, ICON_MAX_FA, 0 };
-	ImFontConfig icons_config;
-	icons_config.MergeMode = true;
-	icons_config.PixelSnapH = true;
-
-	io.Fonts->AddFontDefault();
-	io.Fonts->AddFontFromFileTTF("./resources/fonts/" FONT_ICON_FILE_NAME_FAS, 12.f, &icons_config, icons_ranges_fa);
-
-	// LOADING FONT AWESOME 5 REGULAR (FONT_FAR)
-	io.Fonts->AddFontDefault();
-	io.Fonts->AddFontFromFileTTF("./resources/fonts/" FONT_ICON_FILE_NAME_FAR, 12.f, &icons_config, icons_ranges_fa);
-
-	// LOADING FONT AWESOME 5 BRANDS (FONT_FAB)
-	io.Fonts->AddFontDefault();
-	static const ImWchar icons_ranges_fab[] = { ICON_MIN_FAB, ICON_MAX_FAB, 0 };
-	io.Fonts->AddFontFromFileTTF("./resources/fonts/" FONT_ICON_FILE_NAME_FAB, 12.f, &icons_config, icons_ranges_fab);
+	for (auto& ui_element : ordered_ui)
+	{
+		if (ui_element && ui_element->ui_type != ComponentUI::UIType::CANVAS)
+		{
+			ui_element->Render(projection);
+		}
+	}
 }
 
+ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* owner)
+{
+	ComponentUI* new_ui = nullptr;
+	switch (type)
+	{
+		case ComponentUI::UIType::CANVAS:
+			if (main_canvas == nullptr)
+			{
+				main_canvas = new ComponentCanvas(owner);
+			}
+			new_ui = main_canvas;
+			break;
+		case ComponentUI::UIType::IMAGE:
+			new_ui = new ComponentImage(owner);
+			break;
+		case ComponentUI::UIType::TEXT:
+			new_ui = new ComponentText(owner);
+			break;
+		case ComponentUI::UIType::BUTTON:
+			new_ui = new ComponentButton(owner);
+			break;
+		case ComponentUI::UIType::PROGRESSBAR:
+			new_ui = new ComponentProgressBar(owner);
+			break;
+	}
+	if(new_ui) 
+	{
+		ui_elements.push_back(new_ui);
+		SortComponentsUI();
+	}
+	return new_ui;
+}
+
+void ModuleUI::RemoveComponentUI(ComponentUI* ui_to_remove)
+{
+	const auto it = std::find(ui_elements.begin(), ui_elements.end(), ui_to_remove);
+	if (*it == main_canvas)
+	{
+		main_canvas = nullptr;
+	}
+	if (it != ui_elements.end())
+	{
+		delete *it;
+		ui_elements.erase(it);
+	}
+
+	SortComponentsUI();
+}
+
+void ModuleUI::InitGlyph()
+{
+	BROFILER_CATEGORY("UI: Init Glyph", Profiler::Color::HoneyDew);
+	// All functions return a value different than 0 whenever an error occurred
+	if (FT_Init_FreeType(&ft))
+		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+
+#if !GAME
+	// Load font as face
+	if (FT_New_Face(ft, "Assets/Fonts/Montserrat-Light.ttf", 0, &face))
+		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+#else
+	if (FT_New_Face(ft, "Library/Montserrat-Light.ttf", 0, &face))
+		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
+#endif
+
+	// Set size to load glyphs as
+	//FT_Set_Pixel_Sizes(face, 0, 16);
+	FT_Set_Char_Size(
+		face,    /* handle to face object           */
+		0,       /* char_width in 1/64th of points  */
+		16 * 64,   /* char_height in 1/64th of points */
+		1920,     /* horizontal device resolution    */
+		1080);   /* vertical device resolution      */
+	// Disable byte-alignment restriction
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
+
+	// Load first 128 characters of ASCII set
+	for (GLubyte c = 0; c < 128; c++)
+	{
+		// Load character glyph 
+		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+		{
+			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
+			continue;
+		}
+		// Generate texture
+		glGenTextures(1, &text_texture);
+		glBindTexture(GL_TEXTURE_2D, text_texture);
+		glTexImage2D(
+			GL_TEXTURE_2D,
+			0,
+			GL_RED,
+			face->glyph->bitmap.width,
+			face->glyph->bitmap.rows,
+			0,
+			GL_RED,
+			GL_UNSIGNED_BYTE,
+			face->glyph->bitmap.buffer
+		);
+		// Set texture options
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+		// Now store character for later use
+		Character character = {
+			text_texture,
+			float2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
+			float2(face->glyph->bitmap_left, face->glyph->bitmap_top),
+			face->glyph->advance.x
+		};
+		Characters.insert(std::pair<GLchar, Character>(c, character));
+	}
+	glBindTexture(GL_TEXTURE_2D, 0);
+	// Destroy FreeType once we're finished
+	FT_Done_Face(face);
+	FT_Done_FreeType(ft);
+
+	glyphInit = true;
+}
+
+void ModuleUI::SortComponentsUI()
+{
+	ordered_ui = ui_elements;
+	std::sort(ordered_ui.begin(), ordered_ui.end(), [](ComponentUI* left, ComponentUI* right)
+	{
+		return left->layer < right->layer;
+	}
+	);
+}
+
+//Guardar aqu� todos los component canvas (crear, destruir y guardar)
+//Cuando se hace el render de los canvas, a�adir un render a este modulo que renderice todos los canvas
+//

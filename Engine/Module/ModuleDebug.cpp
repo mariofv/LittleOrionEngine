@@ -1,16 +1,21 @@
 #include "ModuleDebug.h"
-#include "Application.h"
-#include "GameObject.h"
-#include "Module/ModuleModelLoader.h"
-#include "Module/ModuleRender.h"
-#include "Module/ModuleScene.h"
-#include <OLQuadTree.h>
 
-#include <random>
+#include "Filesystem/Path.h"
+#include "Helper/TemplatedGameObjectCreator.h"
+
+#include "Main/Application.h"
+#include "Main/GameObject.h"
+
+#include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScene.h"
+
+#include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
+#include "ResourceManagement/Resources/Prefab.h"
+
 #include <ctime>
 #include <GL/glew.h>
-#include <imgui.h>
-#include <FontAwesome5/IconsFontAwesome5.h>
+#include <random>
 
 // Called before render is available
 bool ModuleDebug::Init()
@@ -30,71 +35,20 @@ bool ModuleDebug::CleanUp()
 	return true;
 }
 
-void ModuleDebug::CreateHousesRandom() const
+void ModuleDebug::CreateFrustumCullingDebugScene() const
 {
 	std::srand(static_cast<unsigned int>(std::time(nullptr))); // use current time as seed for random generator
-	GameObject *houses = App->scene->CreateGameObject();
+	
+	GameObject *cubes = App->scene->CreateGameObject();
+	
 	for (int i = 0; i < num_houses; ++i)
 	{
-		GameObject *loaded_house = App->model_loader->LoadModel(HOUSE_MODEL_PATH);
+		GameObject* loaded_cube = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::CUBE);
+		loaded_cube->SetParent(cubes);
+
 		float x = static_cast<float>(std::rand() % max_dispersion_x);
 		float z = static_cast<float>(std::rand() % max_dispersion_z);
-		loaded_house->transform.SetTranslation(float3(x, 0, z));
-		houses->AddChild(loaded_house);
+		loaded_cube->transform.SetTranslation(float3(x, 0, z));
 	}
-	houses->SetStatic(true);
-}
-
-
-void ModuleDebug::ShowDebugWindow()
-{
-	if (ImGui::Begin(ICON_FA_BUG " Debug"))
-	{
-		ImGui::Checkbox("Grid", &show_grid);
-		ImGui::Checkbox("Bounding boxes", &show_bounding_boxes);
-		ImGui::Checkbox("Global bounding boxes", &show_global_bounding_boxes);
-		ImGui::Checkbox("Camera Frustum", &show_camera_frustum);
-		ImGui::Checkbox("QuadTree", &show_quadtree);
-		ImGui::Separator();
-
-		ImGui::Checkbox("Scene window culling", &culling_scene_mode);
-		int culling_mode_int = static_cast<int>(culling_mode);
-		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling"))
-		{
-			switch (culling_mode_int)
-			{
-			case 0:
-				culling_mode = CullingMode::NONE;
-				break;
-			case 1:
-				culling_mode = CullingMode::FRUSTUM_CULLING;
-				break;
-			case 2:
-				culling_mode = CullingMode::QUADTREE_CULLING;
-				break;
-			}
-		}
-
-		ImGui::DragFloat("Rendering time ",&rendering_time,NULL,NULL);
-
-		if (ImGui::SliderInt("Quadtree Depth ", &App->renderer->ol_quadtree.max_depth, 1, 10)) {
-			App->renderer->GenerateQuadTree();
-		}
-		if (ImGui::SliderInt("Quadtree bucket size ", &App->renderer->ol_quadtree.bucket_size, 1, 10)) {
-			App->renderer->GenerateQuadTree();
-		}
-
-		ImGui::Spacing();
-		ImGui::Separator();
-		ImGui::Spacing();
-
-		ImGui::SliderInt("Number of houses", &num_houses, 0, 1000);
-		ImGui::SliderInt("Dispersion X", &max_dispersion_x, 0, 1000);
-		ImGui::SliderInt("Dispersion Z", &max_dispersion_z, 0, 1000);
-		if (ImGui::Button("Create houses scene"))
-		{
-			CreateHousesRandom();
-		}
-	}
-	ImGui::End();
+	cubes->SetStatic(true);
 }

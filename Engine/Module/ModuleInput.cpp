@@ -1,24 +1,27 @@
-#include "Globals.h"
-#include "Application.h"
 #include "ModuleInput.h"
+
+#include "Component/ComponentCamera.h"
+
+#include "EditorUI/Panel/PanelProjectExplorer.h"
+#include "EditorUI/Panel/PanelScene.h"
+
+#include "Filesystem/File.h"
+#include "Filesystem/PathAtlas.h"
+
+#include "Main/Application.h"
 #include "ModuleWindow.h"
-#include "ModuleModelLoader.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleFileSystem.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 #include "ModuleUI.h"
-#include "Component/ComponentCamera.h"
-#include "UI/EngineUI.h"
-#include "UI/FileExplorerUI.h"
 
-#include <SDL/SDL.h>
-#include "imgui.h"
-#include "imgui_impl_sdl.h"
-#include <FontAwesome5/IconsFontAwesome5.h>
+#include <Brofiler/Brofiler.h>
 #include <GL/glew.h>
-#include "Brofiler/Brofiler.h"
+#include <imgui.h>
+#include <imgui_impl_sdl.h>
+#include <SDL/SDL.h>
 
 // Called before render is available
 bool ModuleInput::Init()
@@ -29,13 +32,73 @@ bool ModuleInput::Init()
 	bool ret = true;
 	SDL_Init(0);
 
-	if(SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
+	if (SDL_InitSubSystem(SDL_INIT_EVENTS) < 0)
 	{
 		APP_LOG_ERROR("SDL_EVENTS could not initialize! SDL_Error: %s\n", SDL_GetError());
 		ret = false;
 	}
 
+	for (int i = 0; i < MAX_KEYS; ++i)
+	{
+		key_bible[(KeyCode)i] = KeyState::IDLE;
+	}
+
+	for (int i = 0; i < MAX_MOUSE_BUTTONS; ++i)
+	{
+		mouse_bible[(MouseButton)i] = KeyState::IDLE;
+	}
+
+	SDL_Init(SDL_INIT_GAMECONTROLLER);
+
+	for (int i = 0; i < SDL_NumJoysticks(); ++i)
+	{
+		if (SDL_IsGameController(i) && i < MAX_PLAYERS)
+		{
+			controller[i] = SDL_GameControllerOpen(i);
+		}
+	}
+
+	std::map<ControllerCode, KeyState> temp1;
+	std::map<ControllerCode, KeyState> temp2;
+
+	for (int i = 0; i < MAX_CONTROLLER_BUTTONS; ++i)
+	{
+		temp1[(ControllerCode)i] = KeyState::IDLE;
+		temp2[(ControllerCode)i] = KeyState::IDLE;
+	}
+
+	controller_bible.push_back(std::move(temp1));
+	controller_bible.push_back(std::move(temp2));
+
+	for (int i = 0; i < MAX_PLAYERS; ++i)
+	{
+		left_joystick[i] = float2(0, 0);
+		right_joystick[i] = float2(0, 0);
+		left_controller_trigger[i] = 0;
+		right_controller_trigger[i] = 0;
+		left_joystick_raw[i] = float2(0, 0);
+		right_joystick_raw[i] = float2(0, 0);
+		left_controller_trigger_raw[i] = 0;
+		right_controller_trigger_raw[i] = 0;
+	}
+
 	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
+
+	//Load Game Inputs
+	game_inputs_file_path = App->filesystem->GetPath(RESOURCES_GAME_INPUTS_PATH + std::string("/") + RESOURCES_GAME_INPUTS_FILENAME);
+
+	FileData game_inputs_data = game_inputs_file_path->GetFile()->Load();
+	size_t readed_bytes = game_inputs_data.size;
+	char* scene_file_data = (char*)game_inputs_data.buffer;
+
+	if(scene_file_data != nullptr)
+	{
+		std::string serialized_scene_string = scene_file_data;
+		free(scene_file_data);
+
+		Config input_config(serialized_scene_string);
+		LoadGameInputs(input_config);
+	}
 
 	return ret;
 }
@@ -44,19 +107,60 @@ bool ModuleInput::Init()
 update_status ModuleInput::PreUpdate()
 {
 	BROFILER_CATEGORY("Inputs PreUpdate", Profiler::Color::BlueViolet);
-	SDL_PumpEvents();
+
+	mouse_motion = { 0, 0 };
+	mouse_wheel_motion = 0;
+
+	for (int i = 0; i < MAX_PLAYERS; ++i)
+	{
+		left_joystick[i] = float2(0, 0);
+		right_joystick[i] = float2(0, 0);
+		left_controller_trigger[i] = 0;
+		right_controller_trigger[i] = 0;
+		left_joystick_raw[i] = float2(0, 0);
+		right_joystick_raw[i] = float2(0, 0);
+		left_controller_trigger_raw[i] = 0;
+		right_controller_trigger_raw[i] = 0;
+	}
+
+	for (auto& mouse : mouse_bible)
+	{
+		if (mouse.second == KeyState::DOWN)
+		{
+			mouse.second = KeyState::REPEAT;
+		}
+		else if (mouse.second == KeyState::UP)
+		{
+			mouse.second = KeyState::IDLE;
+		}
+	}
+
+	for (int i = 0; i < controller_bible.size(); ++i)
+	{
+		for (auto& controller : controller_bible[i])
+		{
+			if (controller.second == KeyState::DOWN)
+			{
+				controller.second = KeyState::REPEAT;
+			}
+			else if (controller.second == KeyState::UP)
+			{
+				controller.second = KeyState::IDLE;
+			}
+		}
+	}
 
 	SDL_Event event;
+
 	while (SDL_PollEvent(&event) != 0)
 	{
 		ImGui_ImplSDL2_ProcessEvent(&event);
 
-		// Esc button is pressed
 		switch (event.type)
 		{
+
 		case SDL_QUIT:
 			return update_status::UPDATE_STOP;
-			break;
 
 		case SDL_WINDOWEVENT:
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
@@ -64,152 +168,89 @@ update_status ModuleInput::PreUpdate()
 			break;
 
 		case SDL_MOUSEMOTION:
-			if (event.motion.state & SDL_BUTTON_RMASK && App->editor->scene_window_is_hovered) 
-			{
-				float2 motion(event.motion.xrel, event.motion.yrel);
-				App->cameras->scene_camera->RotateCameraWithMouseMotion(motion);
-			}
-			else if (event.motion.state & SDL_BUTTON_LMASK && App->editor->scene_window_is_hovered && App->cameras->IsOrbiting())
-			{
-				float2 motion(event.motion.xrel, event.motion.yrel);
-				if (App->scene->hierarchy.selected_game_object != nullptr)
-				{
-					App->cameras->scene_camera->OrbitCameraWithMouseMotion(motion, App->scene->hierarchy.selected_game_object->transform.GetGlobalTranslation());
-				}
-				else
-				{
-					App->cameras->scene_camera->RotateCameraWithMouseMotion(motion);
-				}
-			}
+			mouse_position = float2(event.motion.x, event.motion.y);
+			mouse_motion = float2(event.motion.xrel, event.motion.yrel);
+			mouse_moving = event.motion.state;
 			break;
 
 		case SDL_MOUSEWHEEL:
-			if (event.wheel.y > 0 && App->editor->scene_window_is_hovered)
-			{
-				App->cameras->scene_camera->MoveFoward();
-			}
-			else if (event.wheel.y < 0 && App->editor->scene_window_is_hovered)
-			{
-				App->cameras->scene_camera->MoveBackward();
-			}
+			mouse_wheel_motion = event.wheel.y;
 			break;
 
 		case SDL_MOUSEBUTTONDOWN:
-			if (event.button.button == SDL_BUTTON_RIGHT && App->editor->scene_window_is_hovered)
-			{
-				App->cameras->SetMovement(true);
-			}
-			if (event.button.button == SDL_BUTTON_LEFT && App->editor->scene_window_is_hovered && !App->cameras->IsOrbiting())
-			{
-				float2 mouse_position = float2(event.button.x, event.button.y);
-				App->editor->MousePicking(mouse_position);
-
-				if (event.button.clicks == 2 && App->scene->hierarchy.selected_game_object != nullptr)
-				{
-					App->cameras->scene_camera->Center(App->scene->hierarchy.selected_game_object->aabb.global_bounding_box);
-				}
-			}
+			mouse_bible[(MouseButton)event.button.button] = KeyState::DOWN;
+			mouse_clicks = event.button.clicks;
 			break;
 
 		case SDL_MOUSEBUTTONUP:
-			if (event.button.button == SDL_BUTTON_RIGHT)
-			{
-				App->cameras->SetMovement(false);
-			}
+			mouse_bible[(MouseButton)event.button.button] = KeyState::UP;
 			break;
 
-		case SDL_KEYDOWN:
-			if (event.key.keysym.sym == SDLK_LALT)
-			{
-				App->cameras->SetOrbit(true);
-			}
-			else if (event.key.keysym.sym == SDLK_LSHIFT)
-			{
-				App->cameras->scene_camera->SetSpeedUp(true);
-			}
-			else if (event.key.keysym.sym == SDLK_f)
-			{
-				if (App->scene->hierarchy.selected_game_object != nullptr)
-				{
-					App->cameras->scene_camera->Center(App->scene->hierarchy.selected_game_object->aabb.global_bounding_box);
-				}
-			}
+		case SDL_CONTROLLERBUTTONDOWN:
+			controller_bible[event.cbutton.which][(ControllerCode)event.cbutton.button] = KeyState::DOWN;
 			break;
 
-		case SDL_KEYUP:
-			if (event.key.keysym.sym == SDLK_LALT)
-			{
-				App->cameras->SetOrbit(false);
-			}
-			else if (event.key.keysym.sym == SDLK_LSHIFT)
-			{
-				App->cameras->scene_camera->SetSpeedUp(false);
-			}
+		case SDL_CONTROLLERBUTTONUP:
+			controller_bible[event.cbutton.which][(ControllerCode)event.cbutton.button] = KeyState::UP;
 			break;
+
+		case SDL_CONTROLLERAXISMOTION:
+		{
+			int which = event.caxis.which;
+
+			left_joystick[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
+			right_joystick[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
+
+			left_joystick_raw[which] = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
+			right_joystick_raw[which] = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
+
+			left_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+			right_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+
+			left_controller_trigger_raw[which] = left_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
+			right_controller_trigger_raw[which] = right_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
+		}
+		break;
 
 		case SDL_DROPFILE:
-			char *dropped_filedir = event.drop.file;
-			App->ui->editor_ui->file_explorer_ui.CopyFileToSelectedFolder(dropped_filedir);
+			/* TODO: This
+			char* dropped_filedir = event.drop.file;
+			App->editor->project_explorer->CopyFileToSelectedFolder(dropped_filedir);
 			SDL_free(dropped_filedir);
-			
+			*/
+
 			break;
 		}
 	}
 
-	keyboard = SDL_GetKeyboardState(NULL);
+	keys = SDL_GetKeyboardState(nullptr);
 
-	if (App->cameras->IsMovementEnabled())
+	for (int i = 0; i < MAX_KEYS; ++i)
 	{
-		if (keyboard[SDL_SCANCODE_Q]) 
+		if (keys[i] == 1)
 		{
-			App->cameras->scene_camera->MoveUp();
+			if (key_bible[(KeyCode)i] == KeyState::IDLE)
+			{
+				key_bible[(KeyCode)i] = KeyState::DOWN;
+			}
+			else if (key_bible[(KeyCode)i] == KeyState::DOWN)
+			{
+				key_bible[(KeyCode)i] = KeyState::REPEAT;
+			}
 		}
-
-		if (keyboard[SDL_SCANCODE_E])
+		else if (keys[i] == 0)
 		{
-			App->cameras->scene_camera->MoveDown();
-		}
-
-		if (keyboard[SDL_SCANCODE_W])
-		{
-			App->cameras->scene_camera->MoveFoward();
-		}
-
-		if (keyboard[SDL_SCANCODE_S])
-		{
-			App->cameras->scene_camera->MoveBackward();
-		}
-
-		if (keyboard[SDL_SCANCODE_A])
-		{
-			App->cameras->scene_camera->MoveLeft();
-		}
-
-		if (keyboard[SDL_SCANCODE_D])
-		{
-			App->cameras->scene_camera->MoveRight();
+			if (key_bible[(KeyCode)i] == KeyState::REPEAT || key_bible[(KeyCode)i] == KeyState::DOWN)
+			{
+				key_bible[(KeyCode)i] = KeyState::UP;
+			}
+			else if (key_bible[(KeyCode)i] == KeyState::UP)
+			{
+				key_bible[(KeyCode)i] = KeyState::IDLE;
+			}
 		}
 	}
 
-	if (keyboard[SDL_SCANCODE_UP])
-	{
-		App->cameras->scene_camera->RotatePitch(-1.f);
-	}
-
-	if (keyboard[SDL_SCANCODE_DOWN])
-	{
-		App->cameras->scene_camera->RotatePitch(1.f);
-	}
-
-	if (keyboard[SDL_SCANCODE_LEFT])
-	{
-		App->cameras->scene_camera->RotateYaw(-1.f);
-	}
-
-	if (keyboard[SDL_SCANCODE_RIGHT])
-	{
-		App->cameras->scene_camera->RotateYaw(1.f);
-	}
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -218,63 +259,343 @@ bool ModuleInput::CleanUp()
 {
 	APP_LOG_INFO("Quitting SDL input event subsystem");
 	SDL_QuitSubSystem(SDL_INIT_EVENTS);
+	SDL_GameControllerClose(controller[0]);
+	SDL_GameControllerClose(controller[1]);
 	return true;
 }
 
-
-void ModuleInput::ShowInputOptions()
+// Returns true while the user holds down the key identified by name
+ENGINE_API bool ModuleInput::GetKey(KeyCode key)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_KEYBOARD " Input")) 
+	//If map[x] does not find x it will add the default value
+	return key_bible[key] == KeyState::REPEAT;
+}
+
+// Returns true during the frame the user starts pressing down the key identified by name
+ENGINE_API bool ModuleInput::GetKeyDown(KeyCode key)
+{
+	return key_bible[key] == KeyState::DOWN;
+}
+
+// Returns true during the frame the user releases the key identified by name
+ENGINE_API bool ModuleInput::GetKeyUp(KeyCode key)
+{
+	return key_bible[key] == KeyState::UP;
+}
+
+// Returns whether the given mouse button is held down
+ENGINE_API bool ModuleInput::GetMouseButton(MouseButton button)
+{
+	return mouse_bible[button] == KeyState::REPEAT;
+}
+
+// Returns true during the frame the user pressed the given mouse button
+ENGINE_API bool ModuleInput::GetMouseButtonDown(MouseButton button)
+{
+	return mouse_bible[button] == KeyState::DOWN;
+}
+
+// Returns true during the frame the user releases the given mouse button
+ENGINE_API bool ModuleInput::GetMouseButtonUp(MouseButton button)
+{
+	return mouse_bible[button] == KeyState::UP;
+}
+
+ENGINE_API bool ModuleInput::GetControllerButton(ControllerCode code, PlayerID player_id)
+{
+	return controller_bible[(int)player_id][code] == KeyState::REPEAT;
+}
+
+ENGINE_API bool ModuleInput::GetControllerButtonDown(ControllerCode code, PlayerID player_id)
+{
+	return controller_bible[(int)player_id][code] == KeyState::DOWN;
+}
+
+ENGINE_API bool ModuleInput::GetControllerButtonUp(ControllerCode code, PlayerID player_id)
+{
+	return controller_bible[(int)player_id][code] == KeyState::UP;
+}
+
+ENGINE_API bool ModuleInput::GetGameInput(const char* name, PlayerID player_id)
+{
+	GameInput button = game_inputs[name];
+
+	for (auto& key : button.keys)
 	{
-		ImGuiIO& io = ImGui::GetIO();
+		if (GetKey(key))
+			return true;
+	}
 
-		// Display ImGuiIO output flags
-		ImGui::Text("WantCaptureMouse: %d", io.WantCaptureMouse);
-		ImGui::Text("WantCaptureKeyboard: %d", io.WantCaptureKeyboard);
-		ImGui::Text("WantTextInput: %d", io.WantTextInput);
-		ImGui::Text("WantSetMousePos: %d", io.WantSetMousePos);
-		ImGui::Text("NavActive: %d, NavVisible: %d", io.NavActive, io.NavVisible);
+	for (auto& mouse : button.mouse_buttons)
+	{
+		if (GetMouseButton(mouse))
+			return true;
+	}
 
-		// Display Keyboard/Mouse state
-		if (ImGui::TreeNode("Keyboard, Mouse & Navigation State"))
+	for (auto& controller : button.controller_buttons)
+	{
+		if (GetControllerButton(controller, player_id))
+			return true;
+	}
+
+	return false;
+}
+
+ENGINE_API bool ModuleInput::GetGameInputDown(const char* name, PlayerID player_id)
+{
+	GameInput button = game_inputs[name];
+
+	for (auto& key : button.keys)
+	{
+		if (GetKeyDown(key))
+			return true;
+	}
+
+	for (auto& mouse : button.mouse_buttons)
+	{
+		if (GetMouseButtonDown(mouse))
+			return true;
+	}
+
+	for (auto& controller : button.controller_buttons)
+	{
+		if (GetControllerButtonDown(controller, player_id))
+			return true;
+	}
+
+	return false;
+}
+
+ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id)
+{
+	GameInput button = game_inputs[name];
+
+	for (auto& key : button.keys)
+	{
+		if (GetKeyUp(key))
+			return true;
+	}
+
+	for (auto& mouse : button.mouse_buttons)
+	{
+		if (GetMouseButtonUp(mouse))
+			return true;
+	}
+
+	for (auto& controller : button.controller_buttons)
+	{
+		if (GetControllerButtonUp(controller, player_id))
+			return true;
+	}
+
+	return false;
+}
+
+ENGINE_API bool ModuleInput::GetAnyKeyPressedDown() const
+{
+	for (auto& key : key_bible)
+	{
+		if (key.second == KeyState::DOWN)
 		{
-			if (ImGui::IsMousePosValid())
-				ImGui::Text("Mouse pos: (%g, %g)", io.MousePos.x, io.MousePos.y);
-			else
-				ImGui::Text("Mouse pos: <INVALID>");
-			ImGui::Text("Mouse delta: (%g, %g)", io.MouseDelta.x, io.MouseDelta.y);
-			ImGui::Text("Mouse down:");     for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (io.MouseDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("b%d (%.02f secs)", i, io.MouseDownDuration[i]); }
-			ImGui::Text("Mouse clicked:");  for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseClicked(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
-			ImGui::Text("Mouse dbl-clicked:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseDoubleClicked(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
-			ImGui::Text("Mouse released:"); for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (ImGui::IsMouseReleased(i)) { ImGui::SameLine(); ImGui::Text("b%d", i); }
-			ImGui::Text("Mouse wheel: %.1f", io.MouseWheel);
-
-			ImGui::Text("Keys down:");      for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (io.KeysDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("%d (0x%X) (%.02f secs)", i, i, io.KeysDownDuration[i]); }
-			ImGui::Text("Keys pressed:");   for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (ImGui::IsKeyPressed(i)) { ImGui::SameLine(); ImGui::Text("%d (0x%X)", i, i); }
-			ImGui::Text("Keys release:");   for (int i = 0; i < IM_ARRAYSIZE(io.KeysDown); i++) if (ImGui::IsKeyReleased(i)) { ImGui::SameLine(); ImGui::Text("%d (0x%X)", i, i); }
-			ImGui::Text("Keys mods: %s%s%s%s", io.KeyCtrl ? "CTRL " : "", io.KeyShift ? "SHIFT " : "", io.KeyAlt ? "ALT " : "", io.KeySuper ? "SUPER " : "");
-			ImGui::Text("Chars queue:");    for (int i = 0; i < io.InputQueueCharacters.Size; i++) { ImWchar c = io.InputQueueCharacters[i]; ImGui::SameLine();  ImGui::Text("\'%c\' (0x%04X)", (c > ' ' && c <= 255) ? (char)c : '?', c); } // FIXME: We should convert 'c' to UTF-8 here but the functions are not public.
-
-			ImGui::Text("NavInputs down:"); for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputs[i] > 0.0f) { ImGui::SameLine(); ImGui::Text("[%d] %.2f", i, io.NavInputs[i]); }
-			ImGui::Text("NavInputs pressed:"); for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputsDownDuration[i] == 0.0f) { ImGui::SameLine(); ImGui::Text("[%d]", i); }
-			ImGui::Text("NavInputs duration:"); for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputsDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("[%d] %.2f", i, io.NavInputsDownDuration[i]); }
-
-
-			ImGui::TreePop();
-		}
-
-
-		if (ImGui::TreeNode("Dragging"))
-		{
-			for (int button = 0; button < 3; button++)
-				ImGui::Text("IsMouseDragging(%d):\n  w/ default threshold: %d,\n  w/ zero threshold: %d\n  w/ large threshold: %d",
-					button, ImGui::IsMouseDragging(button), ImGui::IsMouseDragging(button, 0.0f), ImGui::IsMouseDragging(button, 20.0f));
-
-			ImVec2 value_raw = ImGui::GetMouseDragDelta(0, 0.0f);
-			ImVec2 value_with_lock_threshold = ImGui::GetMouseDragDelta(0);
-			ImVec2 mouse_delta = io.MouseDelta;
-			ImGui::Text("GetMouseDragDelta(0):\n  w/ default threshold: (%.1f, %.1f),\n  w/ zero threshold: (%.1f, %.1f)\nMouseDelta: (%.1f, %.1f)", value_with_lock_threshold.x, value_with_lock_threshold.y, value_raw.x, value_raw.y, mouse_delta.x, mouse_delta.y);
-			ImGui::TreePop();
+			return true;
 		}
 	}
+
+	for (auto& contr : controller_bible[0])
+	{
+		if (contr.second == KeyState::DOWN)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+void ModuleInput::CreateGameInput(const GameInput& game_input)
+{
+	game_inputs[game_input.name] = game_input;
+
+	Config config;
+	SaveGameInputs(config);
+
+	std::string serialized_game_input_string;
+	config.GetSerializedString(serialized_game_input_string);
+
+	Path* game_inputs_folder_path = App->filesystem->GetPath(RESOURCES_GAME_INPUTS_PATH);
+
+	game_inputs_folder_path->Save(RESOURCES_GAME_INPUTS_FILENAME, serialized_game_input_string);
+}
+
+void ModuleInput::DeleteGameInput(const GameInput& game_input)
+{
+	game_inputs.erase(game_input.name);
+
+	Config config;
+	SaveGameInputs(config);
+
+	std::string serialized_game_input_string;
+	config.GetSerializedString(serialized_game_input_string);
+
+	App->filesystem->Save(game_inputs_file_path->GetFullPath(), serialized_game_input_string);
+}
+
+// Returns the current mouse position in pixel coordinates
+float2 ModuleInput::GetMousePosition() const
+{
+	return mouse_position;
+}
+
+// Returns the current mouse motion in relative coordinates
+float2 ModuleInput::GetMouseMotion() const
+{
+	return mouse_motion;
+}
+
+// Returns the current mouse wheel motion (forward or backward)
+Sint32 ModuleInput::GetMouseWheelMotion() const
+{
+	return mouse_wheel_motion;
+}
+
+Uint8 ModuleInput::GetMouseClicks() const
+{
+	return mouse_clicks;
+}
+
+// Returns if the mouse is currently being moved
+bool ModuleInput::IsMouseMoving() const
+{
+	return mouse_moving;
+}
+
+ENGINE_API float2 ModuleInput::GetAxisController(ControllerAxis type, PlayerID player_id) const
+{
+	switch (type)
+	{
+	case ControllerAxis::LEFT_JOYSTICK:
+		return left_joystick[(int)player_id];
+
+	case ControllerAxis::RIGHT_JOYSTICK:
+		return right_joystick[(int)player_id];
+
+	case ControllerAxis::LEFT_JOYSTICK_RAW:
+		return left_joystick_raw[(int)player_id];
+
+	case ControllerAxis::RIGHT_JOYSTICK_RAW:
+		return right_joystick_raw[(int)player_id];
+
+	default:
+		return float2(0.0f, 0.0f);
+	}
+}
+
+ENGINE_API Sint16 ModuleInput::GetTriggerController(ControllerAxis type, PlayerID player_id) const
+{
+	switch (type)
+	{
+	case ControllerAxis::LEFT_TRIGGER:
+		return left_controller_trigger[(int)player_id];
+
+	case ControllerAxis::RIGHT_TRIGGER:
+		return right_controller_trigger[(int)player_id];
+
+	case ControllerAxis::LEFT_TRIGGER_RAW:
+		return left_controller_trigger_raw[(int)player_id];
+
+	case ControllerAxis::RIGHT_TRIGGER_RAW:
+		return right_controller_trigger_raw[(int)player_id];
+
+	default:
+		return 0;
+	}
+}
+
+ENGINE_API float2 ModuleInput::GetAxisControllerRaw(ControllerAxis type, PlayerID player_id) const
+{
+	switch (type)
+	{
+	case ControllerAxis::LEFT_JOYSTICK_RAW:
+		return left_joystick_raw[(int)player_id];
+
+	case ControllerAxis::RIGHT_JOYSTICK_RAW:
+		return right_joystick_raw[(int)player_id];
+
+	default:
+		return float2(0.0f, 0.0f);
+	}
+}
+
+ENGINE_API float ModuleInput::GetTriggerControllerRaw(ControllerAxis type, PlayerID player_id) const
+{
+	switch (type)
+	{
+	case ControllerAxis::LEFT_TRIGGER_RAW:
+		return left_controller_trigger_raw[(int)player_id];
+
+	case ControllerAxis::RIGHT_TRIGGER_RAW:
+		return right_controller_trigger_raw[(int)player_id];
+
+	default:
+		0.0f;
+	}
+}
+
+void ModuleInput::SaveGameInputs(Config& config)
+{
+	std::vector<Config> game_inputs_configs;
+
+	for (auto& game_input : game_inputs)
+	{
+		Config game_inputs_config;
+		game_input.second.Save(game_inputs_config);
+		game_inputs_configs.push_back(game_inputs_config);
+	}
+
+	config.AddChildrenConfig(game_inputs_configs, "GameInputs");
+}
+
+void ModuleInput::LoadGameInputs(Config& serialized_config)
+{
+	std::vector<Config> game_inputs_configs;
+	serialized_config.GetChildrenConfig("GameInputs", game_inputs_configs);
+	for (unsigned int i = 0; i < game_inputs_configs.size(); ++i)
+	{
+		GameInput game_input;
+		game_input.Load(game_inputs_configs[i]);
+
+		game_inputs[game_input.name] = game_input;
+	}
+}
+
+float2 ModuleInput::Filter2D(Sint16 input_x, Sint16 input_y) const
+{
+
+	const float dead_zone = 8000.0f;
+	const float max_value = 30000.0f;
+
+	float2 dir;
+	dir.x = (float)input_x;
+	dir.y = (float)input_y;
+
+	float length = dir.Length();
+
+	//if len < dead_zone then should be no input
+	if (length < dead_zone)
+	{
+		dir = float2::zero;
+	}
+	else
+	{
+		//Compute fractional interpolation between dead zone and max_value
+		float f = (length - dead_zone) / (max_value - dead_zone);
+
+		//Clamp f between 0.0f and 1.0f
+		f = math::Clamp(f, 0.0f, 1.0f);
+		//Normalize the vector, and then scale it to the fractional value
+		dir *= f / length;
+	}
+
+
+	return dir;
 }

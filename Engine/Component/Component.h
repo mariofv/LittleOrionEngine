@@ -1,7 +1,7 @@
 #ifndef _COMPONENT_H_
 #define _COMPONENT_H_
 
-#include "Config.h"
+#include "Helper/Config.h"
 
 #include <pcg_basic.h>
 
@@ -14,47 +14,55 @@ public:
 	{
 		AABB,
 		CAMERA,
-		MATERIAL,
-		MESH,
+		MESH_RENDERER,
 		TRANSFORM,
-		LIGHT
+		LIGHT,
+		UI,
+		SCRIPT,
+		TRANSFORM2D,
+		ANIMATION
 	};
 
+	Component(ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
 	virtual ~Component() = default;
 
-	virtual void Enable() { active = true; };
-	virtual void Disable() { active = false; };
+	//Copy and move
+	Component(const Component& component_to_copy) = default;
+	Component(Component&& component_to_move) = default;
+
+	virtual Component & operator=(const Component & component_to_copy) = default;
+	virtual Component & operator=(Component && component_to_copy)
+	{
+
+		this->active = component_to_copy.active;
+		this->UUID = component_to_copy.UUID;
+		component_to_copy.UUID = 0;
+
+		this->owner = component_to_copy.owner;
+		component_to_copy.owner = nullptr;
+		this->type = component_to_copy.type;
+		return *this;
+	}
+
+	virtual void Enable() { active = true;};
+	virtual void Disable() { active = false;};
 	virtual bool IsEnabled() const { return active; };
 
 
 	virtual void Update() {};
 	virtual void Delete() = 0;
+	virtual Component* Clone(bool create_on_module = true) const = 0;
+	virtual void Copy(Component * component_to_copy) const = 0;
 
 	virtual void Save(Config& config) const = 0;
 	virtual void Load(const Config &config) = 0;
 
 	virtual ComponentType GetType() const { return type; };
 
-	virtual void ShowComponentWindow() = 0;
-
 	static ComponentType GetComponentType(unsigned int component_type_uint)
 	{
-		switch (component_type_uint) 
-		{
-		case 0:
-			return ComponentType::AABB;
-		case 1:
-			return ComponentType::CAMERA;
-		case 2:
-			return ComponentType::MATERIAL;
-		case 3:
-			return ComponentType::MESH;
-		case 4:
-			return ComponentType::TRANSFORM;
-		case 5:
-			return ComponentType::LIGHT;
-		}
+		return ComponentType(component_type_uint);
 	}
 
 public:
@@ -63,6 +71,8 @@ public:
 	GameObject *owner = nullptr;
 	ComponentType type;
 
+	bool modified_by_user = false; //This is only for prefab and UI
+	bool added_by_user = false; //This is only for prefab and UI
 protected:
 	bool active = true;
 };

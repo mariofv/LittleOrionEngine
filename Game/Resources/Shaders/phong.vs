@@ -17,7 +17,6 @@ struct Material {
 	float k_diffuse;
 	sampler2D specular_map;
 	vec4 specular_color;
-	float shininess;
 	float k_specular;
 	sampler2D occlusion_map;
 	float k_ambient;

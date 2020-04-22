@@ -1,13 +1,35 @@
 #include "ModuleDebugDraw.h"
-#include "Application.h"
-#include "ModuleProgram.h"
+
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentLight.h"
+#include "Component/ComponentMeshRenderer.h"
+
+#include "EditorUI/Helper/Billboard.h"
+#include "EditorUI/Helper/Grid.h"
+#include "EditorUI/Panel/PanelNavMesh.h"
+
+#include "Main/Application.h"
+#include "Main/GameObject.h"
+
+#include "ModuleAI.h"
+#include "ModuleAnimation.h"
+#include "ModuleCamera.h"
+#include "ModuleDebug.h"
+#include "ModuleEditor.h"
+#include "ModuleProgram.h"
+#include "ModuleRender.h"
+#include "ModuleScene.h"
+
+#include "SpacePartition/OLQuadTree.h"
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
-#include "UI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
+#include "EditorUI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
 
-#include "GL/glew.h"
+#include <GL/glew.h>
 #include <assert.h>
+#include <Brofiler/Brofiler.h>
 
 class IDebugDrawOpenGLImplementation final : public dd::RenderInterface
 {
@@ -360,22 +382,319 @@ bool ModuleDebugDraw::Init()
 
 	dd_interface_implementation = new IDebugDrawOpenGLImplementation();
     dd::initialize(dd_interface_implementation);
-    
+
+	light_billboard = new Billboard(CoreResource::BILLBOARD_LIGHT_TEXTURE, 17.2f, 25.f);	
+	camera_billboard = new Billboard(CoreResource::BILLBOARD_CAMERA_TEXTURE, 25.f, 25.f);
+
+	grid = new Grid();
+
     APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
 
 	return true;
 }
 
-void ModuleDebugDraw::Render(const ComponentCamera& camera)
+void ModuleDebugDraw::Render()
 {
-    math::float4x4 view = camera.GetViewMatrix();
-    math::float4x4 proj = camera.GetProjectionMatrix();
+#if GAME
+	return;
+#endif
 
-    dd_interface_implementation->width = static_cast<unsigned int>(camera.GetWidth());
-    dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeigt());
-    dd_interface_implementation->mvpMatrix = proj * view;
+	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
+	if(App->debug->show_navmesh)
+	{
+		App->artificial_intelligence->RenderNavMesh(*App->cameras->scene_camera);
+	}
 
-    dd::flush();
+	if (App->debug->show_quadtree)
+	{
+		BROFILER_CATEGORY("Render QuadTree", Profiler::Color::Lavender);
+
+		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree)
+		{
+			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
+			float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
+			dd::aabb(quadtree_node_min, quadtree_node_max, float3::one);
+		}
+	}
+
+	if (App->debug->show_octtree)
+	{
+		for (auto& ol_octtree_node : App->renderer->ol_octtree.flattened_tree)
+		{
+			float3 octtree_node_min = float3(ol_octtree_node->box.minPoint.x, ol_octtree_node->box.minPoint.y, ol_octtree_node->box.minPoint.z);
+			float3 octtree_node_max = float3(ol_octtree_node->box.maxPoint.x, ol_octtree_node->box.maxPoint.y, ol_octtree_node->box.maxPoint.z);
+			dd::aabb(octtree_node_min, octtree_node_max, float3::one);
+		}
+	}
+
+	if(App->debug->show_aabbtree)
+	{
+		App->renderer->DrawAABBTree();
+	}
+
+	if (App->editor->selected_game_object != nullptr)
+	{
+		BROFILER_CATEGORY("Render Selected GameObject DebugDraws", Profiler::Color::Lavender);
+
+		RenderCameraFrustum();
+		RenderLightGizmo();
+		//RenderBones();
+		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
+	}
+
+	if (App->debug->show_bounding_boxes)
+	{
+		RenderBoundingBoxes();
+	}
+
+	if (App->debug->show_global_bounding_boxes)
+	{
+		RenderGlobalBoundingBoxes();
+	}
+
+	if(App->debug->show_pathfind_points)
+	{
+		RenderPathfinding();
+	}
+
+	RenderBillboards();
+
+	if (App->debug->show_grid)
+	{
+		float scene_camera_height = App->cameras->scene_camera->owner->transform.GetGlobalTranslation().y;
+		grid->ScaleOnDistance(scene_camera_height);
+		grid->Render();
+	}
+	RenderDebugDraws(*App->cameras->scene_camera);
+}
+
+void ModuleDebugDraw::RenderCameraFrustum() const
+{
+	BROFILER_CATEGORY("Render Selected GameObject Camera Frustum", Profiler::Color::Lavender);
+
+	if (!App->debug->show_camera_frustum)
+	{
+		return;
+	}
+
+	Component * selected_camera_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::CAMERA);
+	if (selected_camera_component != nullptr) {
+		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
+
+		dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
+	}	
+}
+
+void ModuleDebugDraw::RenderLightGizmo() const	
+{	
+	BROFILER_CATEGORY("Render Selected GameObject Light Gizmo", Profiler::Color::Lavender);
+
+	Component* selected_light_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::LIGHT);	
+	if (selected_light_component != nullptr)
+  {	
+		ComponentLight* selected_light = static_cast<ComponentLight*>(selected_light_component);	
+		ComponentTransform* selected_light_transform = &selected_light->owner->transform;
+		float gizmo_radius = 2.5F;	
+		switch (selected_light->light_type)	
+		{	
+		case ComponentLight::LightType::DIRECTIONAL_LIGHT:	
+			dd::directional_light(selected_light_transform->GetGlobalTranslation(), selected_light_transform->GetRotation().ToFloat4x4(), float3(1.f, 1.f, 0.f), 5.f, gizmo_radius);	
+			break;	
+		case ComponentLight::LightType::SPOT_LIGHT:	
+			dd::spot_light(	
+				selected_light_transform->GetGlobalTranslation(), 	
+				selected_light_transform->GetRotation().ToFloat4x4(),	
+				float3(1.f, 1.f, 0.f),	
+				selected_light->spot_light_parameters.range / 10.f,	
+				tan(DegToRad(selected_light->spot_light_parameters.spot_angle/2.f)) * selected_light->spot_light_parameters.range / 10.f
+			); 	
+			break;	
+		case ComponentLight::LightType::POINT_LIGHT:	
+			dd::point_light(selected_light_transform->GetGlobalTranslation(), float3(1.f, 1.f, 0.f), selected_light->point_light_parameters.range / 10.f);
+			break;	
+		default:	
+			break;	
+		}	
+	}	
+}	
+
+void ModuleDebugDraw::RenderBones() const
+{
+	for (auto& animation : App->animations->animations)
+	{
+		if (animation->IsEnabled())
+		{
+			GameObject* animation_game_object = animation->owner;
+			RenderBone(animation_game_object, nullptr, float3(1.f, 0.f, 0.f));
+		}
+	}
+	
+}
+
+void ModuleDebugDraw::RenderBone(const GameObject* current_bone, const GameObject* last_bone, const float3& color) const
+{
+	if (current_bone->name.substr(current_bone->name.length() - 2) == "IK" || current_bone->name.substr(current_bone->name.length() - 2) == "FK")
+	{
+		return;
+	}
+
+	if (last_bone != nullptr)
+	{
+		dd::line(last_bone->transform.GetGlobalTranslation(), current_bone->transform.GetGlobalTranslation(), color);
+	}
+
+	for (auto& child_bone : current_bone->children)
+	{
+		float3 next_color;
+		if (color.x == 1.f)
+			next_color = float3(0.f, 1.f, 0.f);
+		if (color.y == 1.f)
+			next_color = float3(0.f, 0.f, 1.f);
+		if (color.z == 1.f)
+			next_color = float3(1.f, 0.f, 0.f);
+		RenderBone(child_bone, current_bone, next_color);
+	}
+}
+
+void ModuleDebugDraw::RenderOutline() const
+{
+	BROFILER_CATEGORY("Render Outline", Profiler::Color::Lavender);
+
+	GameObject* selected_game_object = App->editor->selected_game_object;
+	Component* selected_object_mesh_component = selected_game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
+
+	if (selected_object_mesh_component != nullptr && selected_object_mesh_component->IsEnabled())
+	{
+		BROFILER_CATEGORY("Render Outline Write Stencil", Profiler::Color::Lavender);
+
+		ComponentMeshRenderer* selected_object_mesh = static_cast<ComponentMeshRenderer*>(selected_object_mesh_component);
+		glEnable(GL_STENCIL_TEST);
+		glStencilFunc(GL_ALWAYS, 1, 0xFF);
+		glStencilOp(GL_KEEP, GL_REPLACE, GL_REPLACE);
+		glStencilMask(0xFF);
+
+		selected_object_mesh->Render();
+
+		glStencilFunc(GL_NOTEQUAL, 1, 0xFF);
+		glStencilMask(0x00);
+		glDisable(GL_DEPTH_TEST);
+
+		BROFILER_CATEGORY("Render Outline Read Stencil", Profiler::Color::Lavender);
+
+		GLuint outline_shader_program = App->program->GetShaderProgramId("Outline");
+		glUseProgram(outline_shader_program);
+		float4x4 new_transformation_matrix;
+		if (selected_game_object->parent != nullptr)
+		{
+			new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * selected_game_object->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
+
+		ComponentTransform object_transform_copy = selected_game_object->transform;
+		float3 object_scale = object_transform_copy.GetScale();
+		object_transform_copy.SetScale(object_scale*1.01f);
+		object_transform_copy.GenerateGlobalModelMatrix();
+		}
+		else 
+		{
+			new_transformation_matrix =  selected_game_object->transform.GetGlobalModelMatrix() * float4x4::Scale(float3(1.01f));
+		}
+
+		
+		ModuleRender::DrawMode last_draw_mode = App->renderer->draw_mode;
+		App->renderer->SetDrawMode(ModuleRender::DrawMode::WIREFRAME);
+		glLineWidth(15.f);
+
+		glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
+		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), selected_game_object->transform.GetGlobalModelMatrix().Transposed().ptr());
+		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
+		selected_object_mesh->RenderModel();
+
+		glLineWidth(1.f);
+		App->renderer->SetDrawMode(last_draw_mode);
+
+		glStencilMask(0xFF);
+		glEnable(GL_DEPTH_TEST);
+		glDisable(GL_STENCIL_TEST);
+
+		glUseProgram(0);
+
+	}
+}
+
+void ModuleDebugDraw::RenderBoundingBoxes() const
+{
+	BROFILER_CATEGORY("Render Bounding Boxes", Profiler::Color::Lavender);
+
+	for (auto& mesh : App->renderer->meshes_to_render)
+	{
+		GameObject* mesh_game_object = mesh->owner;
+		if (!mesh_game_object->aabb.IsEmpty())
+		{
+			dd::aabb(mesh_game_object->aabb.bounding_box.minPoint, mesh_game_object->aabb.bounding_box.maxPoint, float3::one);
+		}
+	}
+}
+
+void ModuleDebugDraw::RenderGlobalBoundingBoxes() const
+{
+	BROFILER_CATEGORY("Render Global Bounding Boxes", Profiler::Color::Lavender);
+
+	for (auto& object : App->scene->game_objects_ownership)
+	{
+		dd::aabb(object->aabb.global_bounding_box.minPoint, object->aabb.global_bounding_box.maxPoint, float3::one);
+	}
+}
+
+void ModuleDebugDraw::RenderBillboards() const
+{
+	BROFILER_CATEGORY("Render Billboards", Profiler::Color::Lavender);
+
+	for (auto& object : App->scene->game_objects_ownership)
+	{
+		Component * light_component = object->GetComponent(Component::ComponentType::LIGHT);
+		if (light_component != nullptr) {
+			light_billboard->Render(object->transform.GetGlobalTranslation());
+		}
+
+		Component * camera_component = object->GetComponent(Component::ComponentType::CAMERA);
+		if (camera_component != nullptr) {
+			camera_billboard->Render(object->transform.GetGlobalTranslation());
+		}
+	}
+}
+
+void ModuleDebugDraw::RenderPathfinding() const
+{
+	//First check if starting and ending point are null and render
+	if(App->artificial_intelligence->start_initialized)
+	{
+		dd::point(App->artificial_intelligence->start_position, float3(0, 255, 0), 20.0f);
+	}
+
+	if (App->artificial_intelligence->end_initialized)
+	{
+		dd::point(App->artificial_intelligence->end_position, float3(0, 255, 255), 20.0f);
+	}
+
+	for(const auto& point : App->artificial_intelligence->debug_path)
+	{
+		dd::point(point, float3(0, 0, 255), 10.0f);
+	}
+}
+
+void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
+{
+	BROFILER_CATEGORY("Flush Debug Draw", Profiler::Color::Lavender);
+
+	math::float4x4 view = camera.GetViewMatrix();
+	math::float4x4 proj = camera.GetProjectionMatrix();
+
+	dd_interface_implementation->width = static_cast<unsigned int>(camera.GetWidth());
+	dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeight());
+	dd_interface_implementation->mvpMatrix = proj * view;
+
+	dd::flush();
+
 }
 
 // Called before quitting
@@ -387,6 +706,10 @@ bool ModuleDebugDraw::CleanUp()
 
     delete dd_interface_implementation;
     dd_interface_implementation = 0;
+
+	delete light_billboard;
+	delete camera_billboard;
+	delete grid;
 
 	return true;
 }
