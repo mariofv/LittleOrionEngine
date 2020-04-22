@@ -87,6 +87,7 @@ void ComponentTransform2D::SpecializedLoad(const Config& config)
 
 void ComponentTransform2D::OnTransformChange()
 {
+	anchor_matrix = ComputeAnchorMatrix(min_anchor, max_anchor);
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
 	GenerateGlobalModelMatrix();
 
@@ -104,7 +105,7 @@ void ComponentTransform2D::GenerateGlobalModelMatrix()
 	}
 	else
 	{
-		global_model_matrix = owner->parent->transform_2d.global_model_matrix * model_matrix;
+		global_model_matrix = owner->parent->transform_2d.global_model_matrix * anchor_matrix * model_matrix;
 	}
 }
 
@@ -128,6 +129,44 @@ void ComponentTransform2D::SetHeight(float new_height)
 void ComponentTransform2D::SetSize(float2 new_size)
 {
 	size = new_size;
+	OnTransformChange();
+}
+
+void ComponentTransform2D::SetMinAnchor(float2 new_min_anchor)
+{
+	min_anchor = new_min_anchor;
+	float4x4 new_anchor_matrix = ComputeAnchorMatrix(new_min_anchor, max_anchor);
+	ChangeAnchorSpace(new_anchor_matrix);
+}
+
+void ComponentTransform2D::SetMaxAnchor(float2 new_max_anchor)
+{
+	max_anchor = new_max_anchor;
+	float4x4 new_anchor_matrix = ComputeAnchorMatrix(min_anchor, new_max_anchor);
+	ChangeAnchorSpace(new_anchor_matrix);
+}
+
+void ComponentTransform2D::GenerateAnchorMatrix()
+{
+	anchor_matrix = ComputeAnchorMatrix(min_anchor, max_anchor);
+}
+
+float4x4 ComponentTransform2D::ComputeAnchorMatrix(float2 minimum_anchor, float2 maximum_anchor)
+{
+	if (owner->parent != nullptr)
+	{
+		return float4x4::Translate(minimum_anchor.x * owner->parent->transform_2d.size.x, minimum_anchor.y * owner->parent->transform_2d.size.y, 0.f);
+	}
+	else
+	{
+		return float4x4::identity;
+	}
+}
+
+void ComponentTransform2D::ChangeAnchorSpace(const float4x4& new_anchor_matrix)
+{
+	model_matrix = new_anchor_matrix.Inverted() * anchor_matrix * model_matrix;
+	model_matrix.Decompose(translation, rotation, scale);
 	OnTransformChange();
 }
 

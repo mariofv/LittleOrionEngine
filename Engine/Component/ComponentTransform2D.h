@@ -34,6 +34,13 @@ public:
 	void SetHeight(float new_height);
 	void SetSize(float2 new_size);
 
+	void SetMinAnchor(float2 new_min_anchor);
+	void SetMaxAnchor(float2 new_min_anchor);
+	void ChangeAnchorSpace(const float4x4& new_anchor_matrix);
+
+	void GenerateAnchorMatrix();
+	float4x4 ComputeAnchorMatrix(float2 min_anchor, float2 max_anchor);
+
 	ENGINE_API void SetTranslation(float x, float y);
 
 private:
@@ -47,6 +54,7 @@ public:
 private:
 	float2 min_anchor = float2(0.5f);
 	float2 max_anchor = float2(0.5f);
+	float4x4 anchor_matrix = float4x4::identity;
 
 	friend class PanelComponent;
 };

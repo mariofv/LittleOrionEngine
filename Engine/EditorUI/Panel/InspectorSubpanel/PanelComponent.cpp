@@ -68,13 +68,14 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 
 			if (ImGui::TreeNodeEx("Anchors", ImGuiTreeNodeFlags_DefaultOpen))
 			{
-				if (ImGui::DragFloat2("Min", ((ComponentTransform2D*)transform)->min_anchor.ptr(), 0.1f))
+				float2 current_min_anchor = ((ComponentTransform2D*)transform)->min_anchor;
+				if (ImGui::DragFloat2("Min", current_min_anchor.ptr(), 0.01f, 0.0f, 1.0f))
 				{
-
+					((ComponentTransform2D*)transform)->SetMinAnchor(current_min_anchor);
 				}
 				CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform);
 
-				if (ImGui::DragFloat2("Max", ((ComponentTransform2D*)transform)->max_anchor.ptr(), 0.1f))
+				if (ImGui::DragFloat2("Max", ((ComponentTransform2D*)transform)->max_anchor.ptr(), 0.01f, 0.0f, 1.0f))
 				{
 
 				}

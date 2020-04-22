@@ -236,7 +236,7 @@ void ComponentTransform::ChangeLocalSpace(const float4x4& new_local_space)
 {
 	model_matrix = new_local_space.Inverted() * global_model_matrix;
 	model_matrix.Decompose(translation, rotation, scale);
-	
+	OnTransformChange();
 }
 
 Component* ComponentTransform::Clone(bool original_prefab) const
