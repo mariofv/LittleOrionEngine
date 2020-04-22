@@ -63,14 +63,11 @@ enum class Fonts
 // Paths -------
 # define APP_ICON_PATH "Resources/Textures/engine_icon.png"
 
-# define VIDEO_BILLBOARD_TEXTURE_PATH "Resources/Textures/video-solid.png"
-# define LIGHT_BILLBOARD_TEXTURE_PATH "Resources/Textures/lightbulb-solid.png"
-
 # define OPENGL_MAJOR_VERSION 4
 # define OPENGL_MINOR_VERSION 0
 
 #define FULLSCREEN false
-#define RESIZABLE false
+#define RESIZABLE true
 #define BORDERED true
 
 #define VSYNC true

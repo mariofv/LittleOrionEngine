@@ -195,6 +195,7 @@ void PanelScene::RenderGizmo()
 		gizmo_released = true;
 
 		App->editor->selected_game_object->transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
+		App->editor->selected_game_object->transform.modified_by_user = true;
 	}
 	else if (gizmo_released)
 	{
