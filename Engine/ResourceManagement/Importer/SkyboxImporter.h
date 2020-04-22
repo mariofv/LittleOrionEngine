@@ -4,11 +4,6 @@
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/Skybox.h"
 
-#include <assimp/material.h>
-#include <vector>
-
-struct aiScene;
-
 class SkyboxImporter : public Importer
 {
 public:

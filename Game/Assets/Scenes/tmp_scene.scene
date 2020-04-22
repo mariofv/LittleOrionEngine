@@ -254,7 +254,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 28,
+                    "Texture": 26,
                     "Color": [
                         1.0,
                         1.0,
@@ -316,7 +316,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 27,
+                    "Texture": 25,
                     "Color": [
                         1.0,
                         1.0,
@@ -378,7 +378,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 26,
+                    "Texture": 24,
                     "Color": [
                         1.0,
                         1.0,
@@ -440,7 +440,7 @@
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 25,
+                    "Texture": 23,
                     "Color": [
                         1.0,
                         1.0,
@@ -522,7 +522,7 @@
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 24,
+                    "Texture": 22,
                     "Color": [
                         1.0,
                         1.0,
@@ -584,7 +584,7 @@
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 23,
+                    "Texture": 21,
                     "Color": [
                         1.0,
                         1.0,
@@ -646,7 +646,7 @@
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 22,
+                    "Texture": 20,
                     "Color": [
                         1.0,
                         1.0,
@@ -708,7 +708,7 @@
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 21,
+                    "Texture": 19,
                     "Color": [
                         1.0,
                         1.0,
@@ -770,7 +770,7 @@
                     "Active": true,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 20,
+                    "Texture": 18,
                     "Color": [
                         1.0,
                         1.0,
