@@ -12,10 +12,10 @@
 #include <Helper/cr.h>
 
 class ComponentScript;
-class GameObject;
-class Script;
-class Path;
 class Config;
+class GameObject;
+class Path;
+class Script;
 
 
 class ModuleScriptManager : public Module

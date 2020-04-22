@@ -1,4 +1,4 @@
-#define CR_HOST CR_SAFE
+#define CR_HOST CR_SAFE //must be here for HOT RELOADING library.
 #include "ModuleScriptManager.h"
 
 #include "Component/ComponentScript.h"
@@ -20,7 +20,7 @@ bool ModuleScriptManager::Init()
 	GetCurrentPath();
 #if GAME
 	//TODO USE THE NEW FILESYSTEM TO DO THIS
-	bool success = CopyFile(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str(), false);
+	CopyFile(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str(), false);
 	gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
 	return true;
 #endif

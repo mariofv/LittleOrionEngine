@@ -255,9 +255,9 @@ You can define these macros before including cr.h in host (CR_HOST) to customize
 - `CR_REALLOC`: override libc's realloc. default: #define CR_REALLOC(ptr, size) ::realloc(ptr, size)
 - `CR_MALLOC`: override libc's malloc. default: #define CR_MALLOC(size) ::malloc(size)
 - `CR_FREE`: override libc's free. default: #define CR_FREE(ptr) ::free(ptr)
-- `CR_DEBUG`: outputs debug messages in CR_ERROR, CR_LOG and CR_TRACE
-- `CR_ERROR`: logs debug messages to stderr. default (CR_DEBUG only): #define CR_ERROR(...) fprintf(stderr, __VA_ARGS__)
-- `CR_LOG`: logs debug messages. default (CR_DEBUG only): #define CR_LOG(...) fprintf(stdout, __VA_ARGS__)
+- `CR_DEBUG`: outputs debug messages in APP_LOG_ERROR, APP_LOG_INFO and CR_TRACE
+- `APP_LOG_ERROR`: logs debug messages to stderr. default (CR_DEBUG only): #define APP_LOG_ERROR(...) fprintf(stderr, __VA_ARGS__)
+- `APP_LOG_INFO`: logs debug messages. default (CR_DEBUG only): #define APP_LOG_INFO(...) fprintf(stdout, __VA_ARGS__)
 - `CR_TRACE`: prints function calls. default (CR_DEBUG only): #define CR_TRACE(...) fprintf(stdout, "CR_TRACE: %s\n", __FUNCTION__)
 
 ### FAQ / Troubleshooting
@@ -362,6 +362,7 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 #ifndef __CR_H__
 #define __CR_H__
 
+#include "Main/Globals.h"
 //
 // Global OS specific defines/customizations
 //
@@ -479,21 +480,21 @@ struct cr_plugin {
 #else // #ifndef CR_HOST
 
 // Overridable macros
-#ifndef CR_LOG
+#ifndef APP_LOG_INFO
 #   ifdef CR_DEBUG
 #       include <stdio.h>
-#       define CR_LOG(...)     fprintf(stdout, __VA_ARGS__)
+#       define APP_LOG_INFO(...)     fprintf(stdout, __VA_ARGS__)
 #   else
-#       define CR_LOG(...)
+#       define APP_LOG_INFO(...)
 #   endif
 #endif
 
-#ifndef CR_ERROR
+#ifndef APP_LOG_ERROR
 #   ifdef CR_DEBUG
 #       include <stdio.h>
-#       define CR_ERROR(...)     fprintf(stderr, __VA_ARGS__)
+#       define APP_LOG_ERROR(...)     fprintf(stderr, __VA_ARGS__)
 #   else
-#       define CR_ERROR(...)
+#       define APP_LOG_ERROR(...)
 #   endif
 #endif
 
@@ -1074,7 +1075,7 @@ static so_handle cr_so_load(const std::string &filename) {
     CR_WINDOWS_ConvertPath(_filename, filename);
     auto new_dll = LoadLibrary(_filename.c_str());
     if (!new_dll) {
-        CR_ERROR("Couldn't load plugin: %d\n", GetLastError());
+        APP_LOG_ERROR("Couldn't load plugin: %d\n", GetLastError());
     }
     return new_dll;
 }
@@ -1083,7 +1084,7 @@ static cr_plugin_main_func cr_so_symbol(so_handle handle) {
     CR_ASSERT(handle);
     auto new_main = (cr_plugin_main_func)GetProcAddress(handle, CR_MAIN_FUNC);
     if (!new_main) {
-        CR_ERROR("Couldn't find plugin entry point: %d\n",
+        APP_LOG_ERROR("Couldn't find plugin entry point: %d\n",
                 GetLastError());
     }
     return new_main;
@@ -1531,7 +1532,7 @@ static void cr_so_unload(cr_plugin &ctx) {
 
     const int r = dlclose(p->handle);
     if (r) {
-        CR_ERROR("Error closing plugin: %d\n", r);
+        APP_LOG_ERROR("Error closing plugin: %d\n", r);
     }
 
     p->handle = nullptr;
@@ -1542,7 +1543,7 @@ static so_handle cr_so_load(const std::string &new_file) {
     dlerror();
     auto new_dll = dlopen(new_file.c_str(), RTLD_NOW);
     if (!new_dll) {
-        CR_ERROR("Couldn't load plugin: %s\n", dlerror());
+        APP_LOG_ERROR("Couldn't load plugin: %s\n", dlerror());
     }
     return new_dll;
 }
@@ -1552,7 +1553,7 @@ static cr_plugin_main_func cr_so_symbol(so_handle handle) {
     dlerror();
     auto new_main = (cr_plugin_main_func)dlsym(handle, CR_MAIN_FUNC);
     if (!new_main) {
-        CR_ERROR("Couldn't find plugin entry point: %s\n", dlerror());
+        APP_LOG_ERROR("Couldn't find plugin entry point: %s\n", dlerror());
     }
     return new_main;
 }
@@ -1582,16 +1583,16 @@ static void cr_plat_init() {
 #endif
 
     if (sigaction(SIGILL, &sa, nullptr) == -1) {
-        CR_ERROR("Failed to setup SIGILL handler\n");
+        APP_LOG_ERROR("Failed to setup SIGILL handler\n");
     }
     if (sigaction(SIGBUS, &sa, nullptr) == -1) {
-        CR_ERROR("Failed to setup SIGBUS handler\n");
+        APP_LOG_ERROR("Failed to setup SIGBUS handler\n");
     }
     if (sigaction(SIGSEGV, &sa, nullptr) == -1) {
-        CR_ERROR("Failed to setup SIGSEGV handler\n");
+        APP_LOG_ERROR("Failed to setup SIGSEGV handler\n");
     }
     if (sigaction(SIGABRT, &sa, nullptr) == -1) {
-        CR_ERROR("Failed to setup SIGABRT handler\n");
+        APP_LOG_ERROR("Failed to setup SIGABRT handler\n");
     }
 }
 
@@ -1615,7 +1616,7 @@ static int cr_plugin_main(cr_plugin &ctx, cr_op operation) {
     if (int sig = sigsetjmp(env, 1)) {
         ctx.version = ctx.last_working_version;
         ctx.failure = cr_signal_to_failure(sig);
-        CR_LOG("1 FAILURE: %d (CR: %d)\n", sig, ctx.failure);
+        APP_LOG_INFO("1 FAILURE: %d (CR: %d)\n", sig, ctx.failure);
         return -1;
     } else {
         auto p = (cr_internal *)ctx.p;
@@ -1636,7 +1637,7 @@ static bool cr_plugin_load_internal(cr_plugin &ctx, bool rollback) {
     const auto file = p->fullname;
     if (cr_exists(file) || rollback) {
         const auto old_file = cr_version_path(file, ctx.version, p->temppath);
-        CR_LOG("unload '%s' with rollback: %d\n", old_file.c_str(), rollback);
+        APP_LOG_INFO("unload '%s' with rollback: %d\n", old_file.c_str(), rollback);
         int r = cr_plugin_unload(ctx, rollback, false);
         if (r < 0) {
             return false;
@@ -1657,7 +1658,7 @@ static bool cr_plugin_load_internal(cr_plugin &ctx, bool rollback) {
 
 #if defined(_MSC_VER)
             if (!cr_pdb_process(new_file)) {
-                CR_ERROR("Couldn't process PDB, debugging may be "
+                APP_LOG_ERROR("Couldn't process PDB, debugging may be "
                          "affected and/or reload may fail\n");
             }
 #endif // defined(_MSC_VER)
@@ -1691,9 +1692,9 @@ static bool cr_plugin_load_internal(cr_plugin &ctx, bool rollback) {
             p2->timestamp = cr_last_write_time(file);
         }
         ctx.version = new_version;
-        CR_LOG("loaded: %s (version: %d)\n", new_file.c_str(), ctx.version);
+        APP_LOG_INFO("loaded: %s (version: %d)\n", new_file.c_str(), ctx.version);
     } else {
-        CR_ERROR("Error loading plugin.\n");
+        APP_LOG_ERROR("Error loading plugin.\n");
         return false;
     }
     return true;
@@ -1834,7 +1835,7 @@ static int cr_plugin_unload(cr_plugin &ctx, bool rollback, bool close) {
             r = cr_plugin_main(ctx, close ? CR_CLOSE : CR_UNLOAD);
             // Don't store state if unload crashed.  Rollback will use backup.
             if (r < 0) {
-                CR_LOG("4 FAILURE: %d\n", r);
+                APP_LOG_INFO("4 FAILURE: %d\n", r);
             } else {
                 cr_plugin_sections_store(ctx);
             }
@@ -1875,7 +1876,7 @@ static void cr_plugin_reload(cr_plugin &ctx) {
         }
         int r = cr_plugin_main(ctx, CR_LOAD);
         if (r < 0 && !ctx.failure) {
-            CR_LOG("2 FAILURE: %d\n", r);
+            APP_LOG_INFO("2 FAILURE: %d\n", r);
             ctx.failure = CR_USER;
         }
     }
@@ -1887,9 +1888,9 @@ static void cr_plugin_reload(cr_plugin &ctx) {
 // other return values are returned directly from `cr_main`.
 extern "C" int cr_plugin_update(cr_plugin &ctx, bool reloadCheck = true) {
     if (ctx.failure) {
-        CR_LOG("1 ROLLBACK version was %d\n", ctx.version);
+        APP_LOG_INFO("1 ROLLBACK version was %d\n", ctx.version);
         cr_plugin_rollback(ctx);
-        CR_LOG("1 ROLLBACK version is now %d\n", ctx.version);
+        APP_LOG_INFO("1 ROLLBACK version is now %d\n", ctx.version);
     } else {
         if (reloadCheck) {
             cr_plugin_reload(ctx);
@@ -1899,13 +1900,13 @@ extern "C" int cr_plugin_update(cr_plugin &ctx, bool reloadCheck = true) {
     // -2 to differentiate from crash handling code path, meaning the crash
     // happened probably during load or unload and not update
     if (ctx.failure) {
-        CR_LOG("3 FAILURE: -2\n");
+        APP_LOG_INFO("3 FAILURE: -2\n");
         return -2;
     }
 
     int r = cr_plugin_main(ctx, CR_STEP);
     if (r < 0 && !ctx.failure) {
-        CR_LOG("4 FAILURE: CR_USER\n");
+        APP_LOG_INFO("4 FAILURE: CR_USER\n");
         ctx.failure = CR_USER;
     }
     return r;
