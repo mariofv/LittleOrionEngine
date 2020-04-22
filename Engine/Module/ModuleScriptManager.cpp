@@ -48,15 +48,14 @@ update_status ModuleScriptManager::Update()
 	}
 	if (!App->time->isGameRunning()) 
 	{
-		//TODO Check it not every frame.
-		last_timestamp_dll = TimeStamp(dll_file->GetFullPath().c_str());
+		last_timestamp_dll = dll_file->GetModificationTimestamp();
 		if (last_timestamp_dll != init_timestamp_dll)
 		{
 			ReloadDLL();
 			init_timestamp_dll = last_timestamp_dll;
 		}
 
-		last_timestamp_script_list = TimeStamp(scripts_list_file_path->GetFullPath().c_str());
+		last_timestamp_script_list = scripts_list_file_path->GetModificationTimestamp();
 		if (last_timestamp_script_list != init_timestamp_script_list)
 		{
 			LoadScriptList();
@@ -76,13 +75,6 @@ bool ModuleScriptManager::CleanUp()
 	cr_plugin_close(ctx);
 
 	return true;
-}
-
-long ModuleScriptManager::TimeStamp(const char* path)
-{
-	PHYSFS_Stat file_info;
-	PHYSFS_stat(path, &file_info);
-	return file_info.modtime;
 }
 
 void ModuleScriptManager::GetCurrentPath()
@@ -235,8 +227,6 @@ void ModuleScriptManager::RemoveScriptPointers()
 
 void ModuleScriptManager::InitDLL()
 {
-	//PatchDLL(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str());
-	//gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
 	auto p = (cr_internal *)ctx.p;
 	assert(p->handle);
 	gameplay_dll = (HMODULE)p->handle;
@@ -253,123 +243,10 @@ void ModuleScriptManager::ReloadDLL()
 
 
 		RemoveScriptPointers();
-		//remove(RESOURCE_SCRIPT_DLL_FILE);
 		InitDLL();
 	}
 	InitResourceScript();
 	LoadVariables(config_list);
-}
-
-bool ModuleScriptManager::PatchDLL(const char* dll_path, const char* patched_dll_path)
-{
-	// init
-	char patched_pdb_path[MAX_PATH] = { '\0' };
-
-	// open DLL and copy content to file_content for easy parsing of the DLL content
-	DWORD byte_read;
-	HANDLE file = CreateFileA(dll_path, GENERIC_READ, FILE_SHARE_READ, NULL, OPEN_EXISTING, FILE_ATTRIBUTE_NORMAL, NULL);
-	if (file == INVALID_HANDLE_VALUE) 
-	{
-		APP_LOG_ERROR("Failed to create file.\n");
-		return false;
-	}
-		
-	size_t file_size = GetFileSize((HANDLE)file, NULL);
-	BYTE* file_content = (BYTE*)malloc(file_size);
-	bool is_file_read_ok = ReadFile((HANDLE)file, file_content, (DWORD)file_size, &byte_read, NULL);
-	CloseHandle(file);
-	if (!is_file_read_ok || byte_read != file_size) 
-	{
-		APP_LOG_ERROR("Failed to read file.\n");
-	}
-
-	// check signature
-	IMAGE_DOS_HEADER dos_header = *(IMAGE_DOS_HEADER*)file_content;
-	if (dos_header.e_magic != IMAGE_DOS_SIGNATURE)
-	{
-		APP_LOG_ERROR("Not IMAGE_DOS_SIGNATURE\n");
-	}
-	// IMAGE_NT_HEADERS
-	IMAGE_NT_HEADERS nt_header = *((IMAGE_NT_HEADERS*)(file_content + dos_header.e_lfanew));
-	if (nt_header.Signature != IMAGE_NT_SIGNATURE) 
-	{
-		APP_LOG_ERROR("Not IMAGE_NT_SIGNATURE\n");
-	}
-	
-	IMAGE_DATA_DIRECTORY debug_dir;
-	if (nt_header.OptionalHeader.Magic == IMAGE_NT_OPTIONAL_HDR_MAGIC && nt_header.FileHeader.SizeOfOptionalHeader == sizeof(IMAGE_OPTIONAL_HEADER)) 
-	{
-		debug_dir = nt_header.OptionalHeader.DataDirectory[IMAGE_DIRECTORY_ENTRY_DEBUG];
-	}
-	else 
-	{
-		APP_LOG_ERROR("Not IMAGE_NT_OPTIONAL_HDR_MAGIC\n");
-	}
-		
-
-	if (debug_dir.VirtualAddress == 0 || debug_dir.Size == 0) 
-	{
-		APP_LOG_ERROR("No IMAGE_DIRECTORY_ENTRY_DEBUG data\n");
-	}
-		
-	// find debug section
-	int	debug_dir_section_index = -1;
-	IMAGE_SECTION_HEADER* all_section_headers = (IMAGE_SECTION_HEADER*)(file_content + dos_header.e_lfanew + sizeof(IMAGE_NT_HEADERS));
-	for (int j = 0; j < nt_header.FileHeader.NumberOfSections; ++j)
-	{
-		IMAGE_SECTION_HEADER section_header = all_section_headers[j];
-		if ((debug_dir.VirtualAddress >= section_header.VirtualAddress) && (debug_dir.VirtualAddress < section_header.VirtualAddress + section_header.Misc.VirtualSize))
-		{
-			debug_dir_section_index = j;
-			break;
-		}
-	}
-
-	// read debug section
-	char* pdb_path = nullptr;
-	char original_pdb_path[MAX_PATH];
-	if (debug_dir_section_index != -1)
-	{
-		// loop all debug directory
-		int	num_debug_dir = debug_dir.Size / (int)sizeof(IMAGE_DEBUG_DIRECTORY);
-		IMAGE_SECTION_HEADER section_header = all_section_headers[debug_dir_section_index];
-		IMAGE_DEBUG_DIRECTORY* all_image_debug_dir = (IMAGE_DEBUG_DIRECTORY*)(file_content + debug_dir.VirtualAddress - (section_header.VirtualAddress - section_header.PointerToRawData));
-		for (int i = 0; i < num_debug_dir; ++i)
-		{
-			IMAGE_DEBUG_DIRECTORY image_debug_dir = all_image_debug_dir[i];
-			if (image_debug_dir.Type == IMAGE_DEBUG_TYPE_CODEVIEW)
-			{
-				DWORD signature = *((DWORD*)(file_content + image_debug_dir.PointerToRawData));
-				if (signature == 'SDSR')	// RSDS type, i.e. PDB70
-				{
-					CV_INFO_PDB70* debug_info = ((CV_INFO_PDB70*)(file_content + image_debug_dir.PointerToRawData));
-					pdb_path = (char*)debug_info->PdbFileName;
-					strcpy(original_pdb_path, pdb_path);
-					break;
-				}
-			}
-		}
-	}
-
-	if (pdb_path == nullptr) 
-	{
-		APP_LOG_ERROR("No debug section is found.\n");
-	}
-		
-	// Create new DLL and pdb
-	Utils::PatchFileName(pdb_path);
-
-	strcpy(patched_pdb_path, pdb_path);
-	//App->filesystem->Copy(original_pdb_path, pdb_path);		// Copy new PDB
-	CopyFile(original_pdb_path, pdb_path,true);
-
-	HANDLE patched_dll = CreateFile(patched_dll_path, GENERIC_WRITE, 0, NULL, CREATE_ALWAYS, FILE_ATTRIBUTE_NORMAL, NULL);
-	DWORD byte_write;
-	WriteFile(patched_dll, file_content, (DWORD)file_size, &byte_write, nullptr);	// Generate patched DLL which points to the new PDB
-	CloseHandle(patched_dll);
-
-	// clean up
-	APP_LOG_INFO("Patching DLL Succeeded.\n");
 }
 
 void ModuleScriptManager::Refresh()

@@ -10,13 +10,6 @@
 #include <vector>
 
 #include <Helper/cr.h>
-struct CV_INFO_PDB70
-{
-	DWORD	CvSignature;
-	GUID	Signature;
-	DWORD	Age;
-	BYTE	PdbFileName[];
-};
 
 class ComponentScript;
 class GameObject;
@@ -49,9 +42,7 @@ public:
 	void LoadVariables(std::unordered_map<uint64_t, Config> config_list);
 
 private:
-	cr_plugin ctx;
 	void GetCurrentPath();
-	long TimeStamp(const char* path);
 
 	void LoadScriptList();
 	void SaveScriptList();
@@ -60,10 +51,18 @@ private:
 
 	void InitDLL();
 	void ReloadDLL();
-	bool PatchDLL(const char* dll_path, const char* patched_dll_path);
 
+public:
+	std::vector<ComponentScript*> scripts;
+	std::vector<std::string> scripts_list;
+
+private:
+
+	cr_plugin ctx;
 	HINSTANCE gameplay_dll;
+
 	std::string working_directory;
+
 	Path* dll_file = nullptr;
 	Path* scripts_list_file_path = nullptr;
 
@@ -72,9 +71,6 @@ private:
 	long last_timestamp_script_list;
 	long init_timestamp_script_list;
 
-public:
-	std::vector<ComponentScript*> scripts;
-	std::vector<std::string> scripts_list;
 };
 
 #endif //_MODULEMANAGERSCRIPT_H_
