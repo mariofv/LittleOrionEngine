@@ -491,6 +491,7 @@
     <ClCompile Include="Engine\Helper\BuildOptions.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -972,6 +973,7 @@
     <ClInclude Include="Engine\Helper\BuildOptions.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
