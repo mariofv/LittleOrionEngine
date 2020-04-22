@@ -4,6 +4,7 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "SpacePartition/OLQuadTree.h"
 
 #include <imgui.h>
@@ -60,13 +61,13 @@ void PanelDebug::Render()
 
 		ImGui::DragFloat("Rendering time ", &App->debug->rendering_time, NULL, NULL);
 
-		if (ImGui::SliderInt("Quadtree Depth ", &App->renderer->ol_quadtree.max_depth, 1, 10)) {
-			App->renderer->GenerateQuadTree();
-			App->renderer->GenerateOctTree();
+		if (ImGui::SliderInt("Quadtree Depth ", &App->space_partitioning->ol_quadtree->max_depth, 1, 10)) {
+			App->space_partitioning->GenerateQuadTree();
+			App->space_partitioning->GenerateOctTree();
 		}
-		if (ImGui::SliderInt("Quadtree bucket size ", &App->renderer->ol_quadtree.bucket_size, 1, 10)) {
-			App->renderer->GenerateQuadTree();
-			App->renderer->GenerateOctTree();
+		if (ImGui::SliderInt("Quadtree bucket size ", &App->space_partitioning->ol_quadtree->bucket_size, 1, 10)) {
+			App->space_partitioning->GenerateQuadTree();
+			App->space_partitioning->GenerateOctTree();
 		}
 
 		ImGui::Spacing();

@@ -12,6 +12,7 @@
 #include "ModuleRender.h"
 #include "ModuleResourceManager.h"
 #include "ModuleScriptManager.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "ModuleTime.h"
 
 
@@ -43,7 +44,7 @@ update_status ModuleScene::Update()
 		{
 			ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 			if(object_mesh != nullptr)
-				App->renderer->UpdateAABBTree(game_object.get());
+				App->space_partitioning->UpdateAABBTree(game_object.get());
 		}
 	}
 	return update_status::UPDATE_CONTINUE;
@@ -101,7 +102,7 @@ GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject> & game_object
 	game_object->SetParent(root);
 	if (!game_object->IsStatic())
 	{
-		App->renderer->InsertAABBTree(game_object);
+		App->space_partitioning->InsertAABBTree(game_object);
 	}
 	return game_object;
 
@@ -155,7 +156,7 @@ void ModuleScene::DeleteCurrentScene()
 	//UndoRedo
 	App->actions->ClearUndoRedoStacks();
 	RemoveGameObject(root);
-	App->renderer->DeleteAABBTree();
+	App->space_partitioning->ResetAABBTree();
 	App->scripts->scripts.clear();
 	App->editor->selected_game_object = nullptr;
 }
@@ -163,7 +164,6 @@ void ModuleScene::DeleteCurrentScene()
 void ModuleScene::OpenScene()
 {
 	App->scene->DeleteCurrentScene();
-	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 
 	GetSceneResource();
@@ -172,8 +172,8 @@ void ModuleScene::OpenScene()
 	{
 		App->scripts->InitScripts();
 	}
-	App->renderer->GenerateQuadTree();
-	App->renderer->GenerateOctTree();
+	App->space_partitioning->GenerateQuadTree();
+	App->space_partitioning->GenerateOctTree();
 	App->actions->ClearUndoStack();
 }
 
