@@ -17,17 +17,18 @@ FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const
 	FileData skeleton_data;
 	Skeleton imported_skeleton;
 
-
-	aiString bone_name = mesh->mBones[0]->mName;
-	aiNode * bone = scene->mRootNode->FindNode(bone_name);
-
-	//bone->mParent->mNumChildren <= 1 arbitrary rule just base in zombunny and player meshes
-	while (bone->mParent && bone->mParent != scene->mRootNode)
+	//I now doing looooooooots of loops around here, but this is only importing and new to be 100% I have the hold hierarchy
+	for (size_t i = 0; i < mesh->mNumBones; i++)
 	{
-		bone = bone->mParent;
-	}
+		aiString bone_name = mesh->mBones[0]->mName;
+		aiNode * bone = scene->mRootNode->FindNode(bone_name);
 
-	ImportChildBone(bone, -1, bone->mTransformation, bone->mTransformation, imported_skeleton, unit_scale_factor);
+		while (bone->mParent && bone->mParent != scene->mRootNode)
+		{
+			bone = bone->mParent;
+		}
+		ImportChildBone(bone, -1, bone->mTransformation, bone->mTransformation, imported_skeleton, unit_scale_factor);
+	}
 	if (imported_skeleton.skeleton.size() > 0)
 	{
 		skeleton_data = CreateBinary(imported_skeleton);

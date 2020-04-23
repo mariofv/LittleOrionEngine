@@ -110,7 +110,7 @@ std::vector<std::pair<std::vector<uint32_t>, std::vector<float>>> MeshImporter::
 		{
 			return joint.name == mesh_bone_name;
 		});
-		assert(it != skeleton->skeleton.end());
+		assert(it != skeleton->skeleton.end()); //If you are here, probably you are loading a fbx where some bone is holding a mesh
 		for (size_t k = 0; k < mesh_bone->mNumWeights; ++k)
 		{
 			aiVertexWeight vertex_weight = mesh_bone->mWeights[k];
