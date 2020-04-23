@@ -42,7 +42,6 @@ public:
 	void LoadVariables(std::unordered_map<uint64_t, Config> config_list);
 
 private:
-	void GetCurrentPath();
 
 	void LoadScriptList();
 	void SaveScriptList();

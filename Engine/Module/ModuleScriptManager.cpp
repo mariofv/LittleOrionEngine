@@ -14,18 +14,21 @@
 
 #include <algorithm>
 
+
 bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
-	GetCurrentPath();
+
 #if GAME
 	//TODO USE THE NEW FILESYSTEM TO DO THIS
+	Utils::GetCurrentPath(working_directory);
+	working_directory += "/" + std::string(RESOURCE_SCRIPT_DLL_FILE);
 	CopyFile(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str(), false);
 	gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
 	return true;
 #endif
 
-	dll_file = App->filesystem->GetPath(std::string("/") + RESOURCES_SCRIPT_DLL_PATH);
+	dll_file = App->filesystem->GetPath(std::string("/") + RESOURCES_SCRIPT_DLL_PATH);//RENAME DEFINED NAMES
 	scripts_list_file_path = App->filesystem->GetPath(RESOURCES_SCRIPT_PATH + std::string("/") + RESOURCES_SCRIPT_LIST_FILENAME);
 
 	LoadScriptList();
@@ -75,15 +78,6 @@ bool ModuleScriptManager::CleanUp()
 	cr_plugin_close(ctx);
 
 	return true;
-}
-
-void ModuleScriptManager::GetCurrentPath()
-{
-	//TODO:Move this
-	TCHAR NPath[MAX_PATH];
-	GetCurrentDirectory(MAX_PATH, NPath);
-	working_directory = NPath;
-	working_directory += "/" + std::string(RESOURCE_SCRIPT_DLL_FILE);
 }
 
 void ModuleScriptManager::CreateScript(const std::string& name)
