@@ -13,12 +13,12 @@
 #include <string>
 
 
-class GameObject;
 class Application;
-struct ImGuiContext;
-
 class ComponentScript;
+class GameObject;
+struct ImGuiContext;
 class PanelComponent;
+
 
 class Script 
 {
