@@ -21,14 +21,12 @@ DLLManager::DLLManager()
 #endif
 
 	dll_file = App->filesystem->GetPath(std::string("/") + RESOURCES_SCRIPT_DLL_PATH);//RENAME DEFINED NAMES
-	scripts_list_file_path = App->filesystem->GetPath(RESOURCES_SCRIPT_PATH + std::string("/") + RESOURCES_SCRIPT_LIST_FILENAME);
 
 	cr_plugin_open(hot_reloading_context, RESOURCES_SCRIPT_DLL_PATH);
 	cr_plugin_update(hot_reloading_context);
 	InitDLL();
 
 	init_timestamp_dll = dll_file->GetModificationTimestamp();
-	init_timestamp_script_list = scripts_list_file_path->GetModificationTimestamp();
 }
 
 bool DLLManager::DLLItsUpdated()
@@ -40,11 +38,8 @@ bool DLLManager::DLLItsUpdated()
 		init_timestamp_dll = last_timestamp_dll;
 		return true;
 	}
-	else
-	{
-		return false;
-	}
 
+	return false;
 }
 
 bool DLLManager::InitDLL()
@@ -65,11 +60,10 @@ bool DLLManager::ReloadDLL()
 	{
 
 		cr_plugin_update(hot_reloading_context);
-		if(!InitDLL())
+		if(InitDLL())
 		{
-			return false;
+			return true;
 		}
-		return true;
 	}
 	return false;
 }
