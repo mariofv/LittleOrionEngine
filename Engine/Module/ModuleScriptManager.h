@@ -53,6 +53,8 @@ public:
 
 	void SaveVariables(std::unordered_map<uint64_t, Config>& config_list);
 	void LoadVariables(std::unordered_map<uint64_t, Config> config_list);
+	
+	void CheckGameplayFolderStatus();
 
 public:
 	std::vector<ComponentScript*> scripts;

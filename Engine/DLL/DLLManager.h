@@ -14,6 +14,10 @@ public:
 	~DLLManager() = default;
 
 	bool DLLItsUpdated();
+
+	void CheckGameplayFolderStatus();
+	bool CompileGameplayProject();
+
 	bool InitDLL();
 	bool ReloadDLL();
 	void CleanUp();
@@ -27,12 +31,12 @@ private:
 	std::string working_directory;
 
 	Path* dll_file = nullptr;
-	Path* scripts_list_file_path = nullptr;
+	Path* scripts_folder = nullptr;
 
-	long last_timestamp_dll;
 	long init_timestamp_dll;
-	long last_timestamp_script_list;
-	long init_timestamp_script_list;
+	long last_timestamp_dll;
+	long init_timestamp_script_folder;
+	long last_timestamp_script_folder;
 };
 
 #endif // !_PATH_H_

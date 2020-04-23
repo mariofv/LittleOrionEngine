@@ -235,3 +235,8 @@ void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> con
 		
 	}
 }
+
+void ModuleScriptManager::CheckGameplayFolderStatus()
+{
+	dll->CheckGameplayFolderStatus();
+}

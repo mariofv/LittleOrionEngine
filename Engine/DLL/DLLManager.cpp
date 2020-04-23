@@ -7,7 +7,6 @@
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 
-
 DLLManager::DLLManager()
 {
 
@@ -21,12 +20,14 @@ DLLManager::DLLManager()
 #endif
 
 	dll_file = App->filesystem->GetPath(std::string("/") + RESOURCES_SCRIPT_DLL_PATH);//RENAME DEFINED NAMES
-
 	cr_plugin_open(hot_reloading_context, RESOURCES_SCRIPT_DLL_PATH);
 	cr_plugin_update(hot_reloading_context);
 	InitDLL();
 
 	init_timestamp_dll = dll_file->GetModificationTimestamp();
+
+	scripts_folder = App->filesystem->GetPath("/Assets/Scripts/src/Script");
+	init_timestamp_script_folder = scripts_folder->GetModificationTimestamp();
 }
 
 bool DLLManager::DLLItsUpdated()
@@ -40,6 +41,24 @@ bool DLLManager::DLLItsUpdated()
 	}
 
 	return false;
+}
+
+void DLLManager::CheckGameplayFolderStatus()
+{
+	last_timestamp_script_folder = scripts_folder->GetModificationTimestamp();
+	if (last_timestamp_script_folder != init_timestamp_script_folder)
+	{
+		CompileGameplayProject();
+		init_timestamp_script_folder = last_timestamp_script_folder;
+	}
+
+
+}
+
+bool DLLManager::CompileGameplayProject()
+{
+	APP_LOG_INFO("NOW I'M GOING TO COMPILE! TRUST ME!");
+	return true;
 }
 
 bool DLLManager::InitDLL()
