@@ -1,4 +1,3 @@
-#define CR_HOST CR_SAFE //must be here for HOT RELOADING library.
 #include "ModuleScriptManager.h"
 
 #include "Component/ComponentScript.h"
@@ -11,6 +10,7 @@
 #include "Module/ModuleTime.h"
 
 #include "Script/Script.h"
+#include "DLL/DLLManager.h"
 
 #include <algorithm>
 
@@ -18,26 +18,10 @@
 bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
-
-#if GAME
-	//TODO USE THE NEW FILESYSTEM TO DO THIS
-	Utils::GetCurrentPath(working_directory);
-	working_directory += "/" + std::string(RESOURCE_SCRIPT_DLL_FILE);
-	CopyFile(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str(), false);
-	gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
-	return true;
-#endif
-
-	dll_file = App->filesystem->GetPath(std::string("/") + RESOURCES_SCRIPT_DLL_PATH);//RENAME DEFINED NAMES
+	dll = new DLLManager();
 	scripts_list_file_path = App->filesystem->GetPath(RESOURCES_SCRIPT_PATH + std::string("/") + RESOURCES_SCRIPT_LIST_FILENAME);
-
 	LoadScriptList();
-	cr_plugin_open(ctx, RESOURCES_SCRIPT_DLL_PATH);
-	cr_plugin_update(ctx);
-	InitDLL();
-	
-	init_timestamp_dll = dll_file->GetModificationTimestamp();
-	init_timestamp_script_list = scripts_list_file_path->GetModificationTimestamp();
+
 
 	return true;
 }
@@ -51,18 +35,15 @@ update_status ModuleScriptManager::Update()
 	}
 	if (!App->time->isGameRunning()) 
 	{
-		last_timestamp_dll = dll_file->GetModificationTimestamp();
-		if (last_timestamp_dll != init_timestamp_dll)
+		//last_timestamp_script_list = scripts_list_file_path->GetModificationTimestamp();
+		//if (last_timestamp_script_list != init_timestamp_script_list)
+		//{
+		//	LoadScriptList();
+		//	init_timestamp_script_list = last_timestamp_script_list;
+		//}
+		if(dll->DLLItsUpdated())
 		{
 			ReloadDLL();
-			init_timestamp_dll = last_timestamp_dll;
-		}
-
-		last_timestamp_script_list = scripts_list_file_path->GetModificationTimestamp();
-		if (last_timestamp_script_list != init_timestamp_script_list)
-		{
-			LoadScriptList();
-			init_timestamp_script_list = last_timestamp_script_list;
 		}
 	}
 	return update_status::UPDATE_CONTINUE;
@@ -71,13 +52,27 @@ update_status ModuleScriptManager::Update()
 bool ModuleScriptManager::CleanUp()
 {
 	
-#if GAME
-	FreeLibrary(gameplay_dll);
-	return true;
-#endif
-	cr_plugin_close(ctx);
+	dll->CleanUp();
+	delete dll;
 
 	return true;
+}
+
+ComponentScript* ModuleScriptManager::CreateComponentScript()
+{
+	ComponentScript* new_script = new ComponentScript();
+	scripts.push_back(new_script);
+	return new_script;
+}
+
+void ModuleScriptManager::RemoveComponentScript(ComponentScript* script_to_remove)
+{
+	const auto it = std::find(scripts.begin(), scripts.end(), script_to_remove);
+	if (it != scripts.end())
+	{
+		delete *it;
+		scripts.erase(it);
+	}
 }
 
 void ModuleScriptManager::CreateScript(const std::string& name)
@@ -110,11 +105,11 @@ void ModuleScriptManager::CreateScript(const std::string& name)
 
 void ModuleScriptManager::InitResourceScript()
 {
-	if (gameplay_dll != nullptr)
+	if (dll->gameplay_dll != nullptr)
 	{
 		for (const auto& component_script : scripts)
 		{
-			CREATE_SCRIPT script_func = (CREATE_SCRIPT)GetProcAddress(gameplay_dll, (component_script->name + "DLL").c_str());
+			CREATE_SCRIPT script_func = (CREATE_SCRIPT)GetProcAddress(dll->gameplay_dll, (component_script->name + "DLL").c_str());
 			if (script_func != nullptr)
 			{
 				delete component_script->script;
@@ -128,9 +123,9 @@ void ModuleScriptManager::InitResourceScript()
 
 Script* ModuleScriptManager::CreateResourceScript(const std::string& script_name, GameObject* owner) 
 {
-	if (gameplay_dll != nullptr)
+	if (dll->gameplay_dll != nullptr)
 	{
-		CREATE_SCRIPT script_func = (CREATE_SCRIPT)GetProcAddress(gameplay_dll, (script_name+"DLL").c_str());
+		CREATE_SCRIPT script_func = (CREATE_SCRIPT)GetProcAddress(dll->gameplay_dll, (script_name+"DLL").c_str());
 		if (script_func != nullptr)
 		{
 			Script* script = script_func();
@@ -140,23 +135,6 @@ Script* ModuleScriptManager::CreateResourceScript(const std::string& script_name
 		}
 	}
 	return nullptr;
-}
-
-ComponentScript* ModuleScriptManager::CreateComponentScript()
-{
-	ComponentScript* new_script = new ComponentScript();
-	scripts.push_back(new_script);
-	return new_script;
-}
-
-void ModuleScriptManager::RemoveComponentScript(ComponentScript* script_to_remove)
-{
-	const auto it = std::find(scripts.begin(), scripts.end(), script_to_remove);
-	if (it != scripts.end())
-	{
-		delete *it;
-		scripts.erase(it);
-	}
 }
 
 void ModuleScriptManager::LoadScriptList() 
@@ -219,25 +197,15 @@ void ModuleScriptManager::RemoveScriptPointers()
 	}
 }
 
-void ModuleScriptManager::InitDLL()
-{
-	auto p = (cr_internal *)ctx.p;
-	assert(p->handle);
-	gameplay_dll = (HMODULE)p->handle;
-}
-
 void ModuleScriptManager::ReloadDLL() 
 {
 	std::unordered_map<uint64_t, Config> config_list;
 	SaveVariables(config_list);
-	if (gameplay_dll != nullptr) 
+	if (dll->gameplay_dll != nullptr) 
 	{
-
-		cr_plugin_update(ctx);
-
-
+		dll->ReloadDLL();
 		RemoveScriptPointers();
-		InitDLL();
+		dll->InitDLL();
 	}
 	InitResourceScript();
 	LoadVariables(config_list);

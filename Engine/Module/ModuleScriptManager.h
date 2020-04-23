@@ -9,10 +9,9 @@
 #include <unordered_map>
 #include <vector>
 
-#include <Helper/cr.h>
-
 class ComponentScript;
 class Config;
+class DLLManager;
 class GameObject;
 class Path;
 class Script;
@@ -28,13 +27,16 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	void CreateScript(const std::string& name);
-	void InitResourceScript();
-	Script* CreateResourceScript(const std::string& script_name, GameObject* owner);
 	ComponentScript* CreateComponentScript();
 	void RemoveComponentScript(ComponentScript* script_to_remove);
 
+	void CreateScript(const std::string& name);
+
+	void InitResourceScript();
+	Script* CreateResourceScript(const std::string& script_name, GameObject* owner);
+
 	void InitScripts();
+
 	void Refresh();
 	void ReLink();
 
@@ -45,10 +47,11 @@ private:
 
 	void LoadScriptList();
 	void SaveScriptList();
+
 	void RunScripts();
+
 	void RemoveScriptPointers();
 
-	void InitDLL();
 	void ReloadDLL();
 
 public:
@@ -56,19 +59,10 @@ public:
 	std::vector<std::string> scripts_list;
 
 private:
+	DLLManager* dll = nullptr;
 
-	cr_plugin ctx;
-	HINSTANCE gameplay_dll;
-
-	std::string working_directory;
-
-	Path* dll_file = nullptr;
 	Path* scripts_list_file_path = nullptr;
 
-	long last_timestamp_dll;
-	long init_timestamp_dll;
-	long last_timestamp_script_list;
-	long init_timestamp_script_list;
 
 };
 
