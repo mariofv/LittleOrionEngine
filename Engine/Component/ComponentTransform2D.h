@@ -45,7 +45,6 @@ public:
 
 private:
 	void OnTransformChange() override;
-	void UpdateRect();
 
 public:
 	float3 anchored_position = float3::zero;

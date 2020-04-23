@@ -181,11 +181,3 @@ void ComponentTransform2D::SetTranslation(float x, float y)
 	translation.y = y;
 	OnTransformChange();
 }
-
-void ComponentTransform2D::UpdateRect()
-{
-	rect.left = translation.x - size_delta.x / 2;
-	rect.right = translation.x + size_delta.x / 2;
-	rect.top = translation.y - size_delta.y / 2;
-	rect.bottom = translation.y + size_delta.y / 2;
-}
