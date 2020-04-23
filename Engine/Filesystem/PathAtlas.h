@@ -27,7 +27,7 @@
 
 #define RESOURCES_SCRIPT_TEMPLATE_CPP "/Resources/Scripts/TemplateScript.cpp"
 #define RESOURCES_SCRIPT_TEMPLATE_H "/Resources/Scripts/TemplateScript.h"
-#define SCRIPT_PATH "../GamePlaySystem/src/Script/"
+#define SCRIPT_PATH "Assets/Scripts/src/Script/"
 
 
 #define RESOURCES_GAME_INPUTS_PATH "/Resources/GameInputs"
