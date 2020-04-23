@@ -58,7 +58,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 			}
 			CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform);
 
-			if (ImGui::DragFloat2("Size", ((ComponentTransform2D*)transform)->size.ptr(), 1))
+			if (ImGui::DragFloat2("Size", ((ComponentTransform2D*)transform)->size_delta.ptr(), 1))
 			{
 				transform->OnTransformChange();
 				transform->modified_by_user = true;

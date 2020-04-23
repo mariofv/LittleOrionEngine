@@ -44,9 +44,9 @@ ComponentTransform2D & ComponentTransform2D::operator=(const ComponentTransform2
 
 	this->model_matrix = component_to_copy.model_matrix;
 
-	rect = component_to_copy.rect;
-	size = component_to_copy.size;
-	
+	size_delta = component_to_copy.size_delta;
+	anchored_position = component_to_copy.anchored_position;
+
 	OnTransformChange();
 	return *this;
 }
@@ -58,8 +58,8 @@ void ComponentTransform2D::SpecializedSave(Config& config) const
 	config.AddFloat(rect.bottom, "Bottom");
 	config.AddFloat(rect.left, "Left");
 
-	config.AddFloat(size.x, "Width");
-	config.AddFloat(size.y, "Height");
+	config.AddFloat(size_delta.x, "Width");
+	config.AddFloat(size_delta.y, "Height");
 
 	config.AddFloat(min_anchor.x, "MinAnchorX");
 	config.AddFloat(min_anchor.y, "MinAnchorY");
@@ -74,8 +74,8 @@ void ComponentTransform2D::SpecializedLoad(const Config& config)
 	rect.bottom = config.GetFloat("Bottom", 0.0f);
 	rect.right = config.GetFloat("Right", 0.0f);
 
-	size.x = config.GetFloat("Width", 100.0f);
-	size.y = config.GetFloat("Height", 100.0f);
+	size_delta.x = config.GetFloat("Width", 100.0f);
+	size_delta.y = config.GetFloat("Height", 100.0f);
 
 	min_anchor.x = config.GetFloat("MinAnchorX", 0.5f);
 	min_anchor.y = config.GetFloat("MinAnchorY", 0.5f);
@@ -113,24 +113,24 @@ void ComponentTransform2D::GenerateGlobalModelMatrix()
 
 float4x4 ComponentTransform2D::GetSizedGlobalModelMatrix() const
 {
-	return float4x4::Scale(float3(size, 1.f), GetGlobalTranslation()) * global_model_matrix;
+	return float4x4::Scale(float3(size_delta, 1.f), GetGlobalTranslation()) * global_model_matrix;
 }
 
 void ComponentTransform2D::SetWidth(float new_width)
 {
-	size.x = new_width;
+	size_delta.x = new_width;
 	OnTransformChange();
 }
 
 void ComponentTransform2D::SetHeight(float new_height)
 {
-	size.y = new_height;
+	size_delta.y = new_height;
 	OnTransformChange();
 }
 
-void ComponentTransform2D::SetSize(float2 new_size)
+void ComponentTransform2D::SetSizeDelta(float2 new_size)
 {
-	size = new_size;
+	size_delta = new_size;
 	OnTransformChange();
 }
 
@@ -158,8 +158,8 @@ float4x4 ComponentTransform2D::ComputeAnchorMatrix(float2 minimum_anchor, float2
 	if (owner->parent != nullptr)
 	{
 		return float4x4::Translate(
-			(minimum_anchor.x - 0.5f) * owner->parent->transform_2d.size.x,
-			(minimum_anchor.y - 0.5f) * owner->parent->transform_2d.size.y, 
+			(minimum_anchor.x - 0.5f) * owner->parent->transform_2d.size_delta.x,
+			(minimum_anchor.y - 0.5f) * owner->parent->transform_2d.size_delta.y,
 			0.f
 		);
 	}
@@ -184,8 +184,8 @@ void ComponentTransform2D::SetTranslation(float x, float y)
 
 void ComponentTransform2D::UpdateRect()
 {
-	rect.left = translation.x - size.x / 2;
-	rect.right = translation.x + size.x / 2;
-	rect.top = translation.y - size.y / 2;
-	rect.bottom = translation.y + size.y / 2;
+	rect.left = translation.x - size_delta.x / 2;
+	rect.right = translation.x + size_delta.x / 2;
+	rect.top = translation.y - size_delta.y / 2;
+	rect.bottom = translation.y + size_delta.y / 2;
 }

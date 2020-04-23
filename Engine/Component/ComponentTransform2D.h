@@ -32,7 +32,7 @@ public:
 
 	void SetWidth(float new_width);
 	void SetHeight(float new_height);
-	void SetSize(float2 new_size);
+	void SetSizeDelta(float2 new_size);
 
 	void SetMinAnchor(float2 new_min_anchor);
 	void SetMaxAnchor(float2 new_min_anchor);
@@ -49,7 +49,7 @@ private:
 
 public:
 	float3 anchored_position = float3::zero;
-	float2 size = float2(100.f, 100.f);
+	float2 size_delta = float2(100.f, 100.f);
 	math::Rect rect;
 
 private:
