@@ -37,16 +37,9 @@ public:
 
 	void InitScripts();
 
-	void Refresh();
-	void ReLink();
-
-	void SaveVariables(std::unordered_map<uint64_t, Config>& config_list);
-	void LoadVariables(std::unordered_map<uint64_t, Config> config_list);
-
 private:
 
 	void LoadScriptList();
-	void SaveScriptList();
 
 	void RunScripts();
 
@@ -55,14 +48,18 @@ private:
 	void ReloadDLL();
 
 public:
+	void Refresh();
+	void ReLink();
+
+	void SaveVariables(std::unordered_map<uint64_t, Config>& config_list);
+	void LoadVariables(std::unordered_map<uint64_t, Config> config_list);
+
+public:
 	std::vector<ComponentScript*> scripts;
 	std::vector<std::string> scripts_list;
 
 private:
 	DLLManager* dll = nullptr;
-
-	Path* scripts_list_file_path = nullptr;
-
 
 };
 

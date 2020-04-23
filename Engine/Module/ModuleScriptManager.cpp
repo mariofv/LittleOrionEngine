@@ -1,6 +1,7 @@
 #include "ModuleScriptManager.h"
 
 #include "Component/ComponentScript.h"
+#include "DLL/DLLManager.h"
 #include "Filesystem/Path.h"
 #include "Filesystem/PathAtlas.h"
 #include "Helper/Utils.h"
@@ -10,7 +11,6 @@
 #include "Module/ModuleTime.h"
 
 #include "Script/Script.h"
-#include "DLL/DLLManager.h"
 
 #include <algorithm>
 
@@ -18,10 +18,10 @@
 bool ModuleScriptManager::Init()
 {
 	APP_LOG_SECTION("************ Module Manager Script ************");
-	dll = new DLLManager();
-	scripts_list_file_path = App->filesystem->GetPath(RESOURCES_SCRIPT_PATH + std::string("/") + RESOURCES_SCRIPT_LIST_FILENAME);
-	LoadScriptList();
 
+	dll = new DLLManager();
+
+	LoadScriptList();
 
 	return true;
 }
@@ -35,12 +35,6 @@ update_status ModuleScriptManager::Update()
 	}
 	if (!App->time->isGameRunning()) 
 	{
-		//last_timestamp_script_list = scripts_list_file_path->GetModificationTimestamp();
-		//if (last_timestamp_script_list != init_timestamp_script_list)
-		//{
-		//	LoadScriptList();
-		//	init_timestamp_script_list = last_timestamp_script_list;
-		//}
 		if(dll->DLLItsUpdated())
 		{
 			ReloadDLL();
@@ -98,7 +92,6 @@ void ModuleScriptManager::CreateScript(const std::string& name)
 		Utils::SaveFileContent(cpp_file, SCRIPT_PATH + name + ".cpp");
 		Utils::SaveFileContent(header_file, SCRIPT_PATH + name + ".h");
 		scripts_list.push_back(name);
-		SaveScriptList();
 	}
 	
 }
@@ -143,30 +136,18 @@ void ModuleScriptManager::LoadScriptList()
 	{
 		scripts_list.clear();
 	}
-	
-	FileData scripts_list_data = scripts_list_file_path->GetFile()->Load();
-	char* scripts_file_data = (char*)scripts_list_data.buffer;
-	size_t readed_bytes = scripts_list_data.size;
-	if (scripts_file_data != nullptr)
+	Path* scripts_list_file_path = App->filesystem->GetPath("/Assets/Scripts/src/Script");
+
+	for(const auto& script : scripts_list_file_path->children )
 	{
-		std::string serialized_scripts_string = scripts_file_data;
-		free(scripts_file_data);
-
-		Config scripts_config(serialized_scripts_string);
-		scripts_config.GetVector<std::string>("Scripts", scripts_list, std::vector<std::string>());
+		std::string script_to_search = script->GetFilenameWithoutExtension();
+		bool found = std::find(scripts_list.begin(), scripts_list.end(), script_to_search) != scripts_list.end();
+		if(!found)
+		{
+			scripts_list.emplace_back(script_to_search);
+		}
 	}
-}
 
-void ModuleScriptManager::SaveScriptList()
-{
-	Config config;
-	config.AddVector<std::string>(scripts_list, "Scripts");
-
-	std::string serialized_script_list_string;
-	config.GetSerializedString(serialized_script_list_string);
-
-	Path* script_resources_path = App->filesystem->GetPath(RESOURCES_SCRIPT_PATH);
-	script_resources_path->Save(RESOURCES_SCRIPT_LIST_FILENAME, serialized_script_list_string);
 }
 
 void ModuleScriptManager::InitScripts()

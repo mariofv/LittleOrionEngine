@@ -23,7 +23,6 @@
 #define RESOURCES_SCRIPT_DLL_PATH "Resources/Scripts/GameplaySystemRelease.dll"
 #define RESOURCE_SCRIPT_DLL_FILE "GameplaySystemReleas_.dll"
 #endif
-#define RESOURCES_SCRIPT_LIST_FILENAME "scripts_list.scripts"
 
 #define RESOURCES_SCRIPT_TEMPLATE_CPP "/Resources/Scripts/TemplateScript.cpp"
 #define RESOURCES_SCRIPT_TEMPLATE_H "/Resources/Scripts/TemplateScript.h"
