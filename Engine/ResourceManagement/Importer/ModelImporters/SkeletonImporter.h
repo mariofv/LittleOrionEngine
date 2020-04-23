@@ -22,7 +22,7 @@ public:
 
 private:
 	FileData CreateBinary(const Skeleton & skeleton) const;
-	void ImportRootBone(const aiNode * previus_node, uint32_t previous_joint_index, aiMatrix4x4 & parent_global_transformation, Skeleton & skeleton, float unit_scale_factor) const;
+	void ImportRootBone(const aiNode * previus_node, aiMatrix4x4 & parent_global_transformation, Skeleton & skeleton, float unit_scale_factor) const;
 };
 
 #endif
