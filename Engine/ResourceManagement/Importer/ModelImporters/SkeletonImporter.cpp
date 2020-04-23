@@ -25,6 +25,16 @@ FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const
 		imported_skeleton.skeleton[i].parent_index = -1;
 	}
 
+	aiString bone_name = mesh->mBones[0]->mName;
+	aiNode * bone = scene->mRootNode->FindNode(bone_name);
+
+	//bone->mParent->mNumChildren <= 1 arbitrary rule just base in zombunny and player meshes
+	while (bone->mParent && bone->mParent != scene->mRootNode )
+	{
+		bone = bone->mParent;
+	}
+
+	ImportChildBone(bone, -1, bone->mTransformation, imported_skeleton, unit_scale_factor);
 	for (size_t i = 0; i < mesh->mNumBones; i++)
 	{
 		aiString bone_name = mesh->mBones[i]->mName;
@@ -48,6 +58,44 @@ FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const
 	}
 
 	return skeleton_data;
+}
+
+void SkeletonImporter::ImportChildBone(const aiNode * previus_node, uint32_t previous_joint_index, aiMatrix4x4& parent_global_transformation, Skeleton& skeleton, float unit_scale_factor) const
+{
+
+	if (previous_joint_index == -1 && std::string(previus_node->mName.C_Str()).find("$Assimp") == std::string::npos)
+	{
+		Skeleton::Joint bone{ Utils::GetTransform(previus_node->mTransformation,unit_scale_factor), -1, std::string(previus_node->mName.C_Str()) };
+
+		auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&bone](const Skeleton::Joint & joint) { return joint.name == bone.name; });
+		if (it == skeleton.skeleton.end())
+		{
+			skeleton.skeleton.push_back(bone);
+		}
+		previous_joint_index = 0;
+		parent_global_transformation = previus_node->mTransformation;
+	}
+
+
+	for (size_t i = 0; i < previus_node->mNumChildren; i++)
+	{
+		aiNode* current_node = previus_node->mChildren[i];
+		aiMatrix4x4 current_global_transformation = parent_global_transformation * current_node->mTransformation;
+		std::string bone_name = std::string(current_node->mName.C_Str());
+
+		if (bone_name.find("$Assimp") == std::string::npos)
+		{
+
+			Skeleton::Joint bone{ Utils::GetTransform(current_global_transformation,unit_scale_factor),-1, bone_name };
+			auto it = std::find_if(skeleton.skeleton.begin(), skeleton.skeleton.end(), [&bone_name](const Skeleton::Joint & joint) { return joint.name == bone_name; });
+			if (it == skeleton.skeleton.end())
+			{
+				skeleton.skeleton.push_back(bone);
+				return;
+			}
+		}
+		ImportChildBone(current_node, skeleton.skeleton.size() - 1, current_global_transformation, skeleton,unit_scale_factor);
+	}
 }
 
 FileData SkeletonImporter::CreateBinary(const Skeleton & skeleton) const
