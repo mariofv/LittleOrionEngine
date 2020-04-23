@@ -34,7 +34,7 @@ FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const
 		bone = bone->mParent;
 	}
 
-	ImportChildBone(bone, -1, bone->mTransformation, imported_skeleton, unit_scale_factor);
+	ImportRootBone(bone, -1, bone->mTransformation, imported_skeleton, unit_scale_factor);
 	for (size_t i = 0; i < mesh->mNumBones; i++)
 	{
 		aiString bone_name = mesh->mBones[i]->mName;
@@ -60,7 +60,7 @@ FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const
 	return skeleton_data;
 }
 
-void SkeletonImporter::ImportChildBone(const aiNode * previus_node, uint32_t previous_joint_index, aiMatrix4x4& parent_global_transformation, Skeleton& skeleton, float unit_scale_factor) const
+void SkeletonImporter::ImportRootBone(const aiNode * previus_node, uint32_t previous_joint_index, aiMatrix4x4& parent_global_transformation, Skeleton& skeleton, float unit_scale_factor) const
 {
 
 	if (previous_joint_index == -1 && std::string(previus_node->mName.C_Str()).find("$Assimp") == std::string::npos)
@@ -94,7 +94,7 @@ void SkeletonImporter::ImportChildBone(const aiNode * previus_node, uint32_t pre
 				return;
 			}
 		}
-		ImportChildBone(current_node, skeleton.skeleton.size() - 1, current_global_transformation, skeleton,unit_scale_factor);
+		ImportRootBone(current_node, skeleton.skeleton.size() - 1, current_global_transformation, skeleton,unit_scale_factor);
 	}
 }
 
