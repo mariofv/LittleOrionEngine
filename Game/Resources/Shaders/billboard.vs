@@ -19,14 +19,47 @@ struct Billboard
   float width;
   float height;
   sampler2D texture;
+  bool isSpritesheet;
+
+  int XTiles;
+  int YTiles;
+  float speed;
 };
 uniform Billboard billboard;
 
 out vec2 texCoord;
 
+//Frames we receive from billboard.cpp
+uniform float X;
+uniform float Y;
+
+//Frames calculations in the shader
+float shader_X = 0;
+float shader_Y = 0;
+
+float U;
+float V;
+
+out vec2 frame;
+
+
 void main()
 {
   gl_Position = alignment_selector();
+
+  if(billboard.isSpritesheet){
+	
+	shader_X = mix(X, X+1, vertex_uv0.x);
+	shader_Y = mix(Y, Y+1, vertex_uv0.y);
+
+	U = shader_X/billboard.XTiles;
+	V = shader_Y/billboard.YTiles;
+
+	frame = vec2(U, V);
+
+	
+  }
+
   texCoord = vertex_uv0;
 }
 

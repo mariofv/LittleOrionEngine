@@ -70,7 +70,7 @@ void ModuleLight::RenderDirectionalLight(const float3& mesh_position)
 void ModuleLight::RenderSpotLights(const float3& mesh_position, GLuint program)
 {
 	SortClosestLights(mesh_position, ComponentLight::LightType::SPOT_LIGHT);
-	current_number_spot_lights_rendered = 0;
+	current_number_spot_lights_rendered = 0;  
 	int i = 0;
 	while (current_number_spot_lights_rendered < MAX_SPOT_LIGHTS_RENDERED && i < closest_lights.size())
 	{

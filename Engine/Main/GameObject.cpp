@@ -96,6 +96,7 @@ void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 		prefab_reference->RemoveInstance(this);
 	}
 }
+
 bool GameObject::IsEnabled() const
 {
 	return active;

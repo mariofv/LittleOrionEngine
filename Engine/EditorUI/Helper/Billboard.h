@@ -7,6 +7,8 @@
 #include <string>
 #include <MathGeoLib.h>
 #include <GL/glew.h>
+#include "Helper/Timer.h"
+
 
 class Billboard
 {
@@ -16,19 +18,35 @@ public:
 		SCREEN,		// TODO: Parallel to the screen normal: UI, text, ...
 		VIEW_POINT,	// Alligned to the camera position
 		AXIAL,		// Rotates over Y axis
-		CROSSED		// Billboards crossed between them
-
+		CROSSED,		// Billboards crossed between them
+		SPRITESHEET
 	};
 
-	Billboard(const std::string& texture_path, float width, float height);
+	Billboard(const std::string& texture_path, float width, float height, AlignmentType type);
 	~Billboard();
 
-	void Render(const float3& position) const;
+	void Render(const float3& position);
+	void switchFrame();
+
 	AlignmentType type;
+
+	//Spritesheet params
+	int XTiles = 0;
+	int YTiles = 0;
+	float X = 0, Y = 0;
+
+	float cell_size_x = 0;
+	float cell_Size_y = 0;
+
+	Timer bbtimer;
+
+	bool top_down = false;
+	
+	float sheet_speed = 0;
 
 private:
 	std::shared_ptr<Mesh> billboard_quad;
-
+	bool isSpritesheet;
 	float width = 5.f;
 	float height = 5.f;
 	std::shared_ptr<Texture> billboard_texture = nullptr;
@@ -46,6 +64,7 @@ private:
 
 	unsigned int EBO;
 
+	int innerCount = 0;
 
 };
 

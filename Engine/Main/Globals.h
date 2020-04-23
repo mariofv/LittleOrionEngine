@@ -71,6 +71,7 @@ enum class Fonts
 
 # define VIDEO_BILLBOARD_TEXTURE_PATH "Library/Metadata/35/3575636683"
 # define LIGHT_BILLBOARD_TEXTURE_PATH "Library/Metadata/26/2664975493"
+# define FLAME_BILLBOARD_TEXTURE_PATH "Library/Metadata/11/1134776399"
 
 # define PRIMITIVE_CUBE_PATH "Library/Metadata/41/4135282941"
 # define PRIMITIVE_CYLINDER_PATH "Library/Metadata/40/4057255088"
