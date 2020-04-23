@@ -51,7 +51,7 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 	{
 		if (transform->GetType() == Component::ComponentType::TRANSFORM2D)
 		{
-			if (ImGui::DragFloat3("Position", transform->translation.ptr(), 1.0f))
+			if (ImGui::DragFloat3("Position", ((ComponentTransform2D*)transform)->anchored_position.ptr(), 1.0f))
 			{
 				transform->OnTransformChange();
 				transform->modified_by_user = true;

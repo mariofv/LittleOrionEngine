@@ -87,7 +87,9 @@ void ComponentTransform2D::SpecializedLoad(const Config& config)
 
 void ComponentTransform2D::OnTransformChange()
 {
-	anchor_matrix = ComputeAnchorMatrix(min_anchor, max_anchor);
+	GenerateAnchorMatrix();
+	anchored_position.z = translation.z;
+	translation = (anchor_matrix * float4(anchored_position, 1.f)).Float3Part();
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
 	GenerateGlobalModelMatrix();
 
@@ -105,7 +107,7 @@ void ComponentTransform2D::GenerateGlobalModelMatrix()
 	}
 	else
 	{
-		global_model_matrix = owner->parent->transform_2d.global_model_matrix * anchor_matrix * model_matrix;
+		global_model_matrix = owner->parent->transform_2d.global_model_matrix * model_matrix;
 	}
 }
 
@@ -155,7 +157,11 @@ float4x4 ComponentTransform2D::ComputeAnchorMatrix(float2 minimum_anchor, float2
 {
 	if (owner->parent != nullptr)
 	{
-		return float4x4::Translate(minimum_anchor.x * owner->parent->transform_2d.size.x, minimum_anchor.y * owner->parent->transform_2d.size.y, 0.f);
+		return float4x4::Translate(
+			(minimum_anchor.x - 0.5f) * owner->parent->transform_2d.size.x,
+			(minimum_anchor.y - 0.5f) * owner->parent->transform_2d.size.y, 
+			0.f
+		);
 	}
 	else
 	{
@@ -165,8 +171,7 @@ float4x4 ComponentTransform2D::ComputeAnchorMatrix(float2 minimum_anchor, float2
 
 void ComponentTransform2D::ChangeAnchorSpace(const float4x4& new_anchor_matrix)
 {
-	model_matrix = new_anchor_matrix.Inverted() * anchor_matrix * model_matrix;
-	model_matrix.Decompose(translation, rotation, scale);
+	anchored_position = (new_anchor_matrix.Inverted() * anchor_matrix * float4(anchored_position, 1.f)).Float3Part();
 	OnTransformChange();
 }
 
