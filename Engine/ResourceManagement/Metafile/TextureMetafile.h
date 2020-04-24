@@ -2,6 +2,13 @@
 #define _TEXTUREMETAFILE_H_
 
 #include "Metafile.h"
+
+enum TextureType
+{
+	DEFAULT,
+	NORMAL,
+	TOTAL
+};
 class TextureMetafile : public Metafile
 {
 
@@ -11,6 +18,9 @@ public:
 
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
+
+	TextureType texture_type = TextureType::NORMAL;
+	bool generate_mipmaps = true;
 
 };
 

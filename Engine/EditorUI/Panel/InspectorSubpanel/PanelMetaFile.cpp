@@ -6,6 +6,7 @@
 
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/Metafile/ModelMetafile.h"
+#include "ResourceManagement/Metafile/TextureMetafile.h"
 #include "Helper/Config.h"
 
 #include <imgui.h>
@@ -53,7 +54,8 @@ void PanelMetaFile::ShowSpecializedMetaFile(Metafile * metafile)
 	case ResourceType::MODEL:
 		ShowModelMetaFile(static_cast<ModelMetafile*>(metafile));
 		break;
-	default:
+	case ResourceType::TEXTURE:
+		ShowTextureMetaFile(static_cast<TextureMetafile*>(metafile));
 		break;
 	}
 }
@@ -71,3 +73,40 @@ void PanelMetaFile::ShowModelMetaFile(ModelMetafile * metafile)
 	ImGui::Checkbox("Import Materials", &metafile->import_material);
 }
 
+void PanelMetaFile::ShowTextureMetaFile(TextureMetafile * metafile)
+{
+	static std::vector<const char*> texture_types = {"Default", "Normal Map"};
+	if (ImGui::BeginCombo("Texture type", GetTextureTypeName(metafile->texture_type).c_str()))
+	{
+		size_t i = 0;
+		for (auto& texture_type : texture_types)
+		{
+			bool is_selected = (i == metafile->texture_type);
+			if (ImGui::Selectable(texture_type, is_selected))
+			{
+				metafile->texture_type = static_cast<TextureType>(i);
+			}
+			++i;
+		}
+		ImGui::EndCombo();
+	}
+
+	ImGui::Checkbox("Generate Mip Maps", &metafile->generate_mipmaps);
+}
+
+std::string PanelMetaFile::GetTextureTypeName(TextureType texture_type_id) const
+{
+	switch (texture_type_id)
+	{
+	case TextureType::DEFAULT:
+		return "Default";
+		break;
+	case TextureType::NORMAL:
+		return "Normal Map";
+		break;
+	default:
+		return "Default";
+		break;
+	}
+	return "";
+}

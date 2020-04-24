@@ -5,6 +5,8 @@
 
 class Metafile;
 class ModelMetafile;
+class TextureMetafile;
+enum TextureType;
 class PanelMetaFile : public Panel
 {
 public:
@@ -16,6 +18,9 @@ private:
 	void ShowSpecializedMetaFile(Metafile* meta_file);
 
 	void ShowModelMetaFile(ModelMetafile * metafile);
+	void ShowTextureMetaFile(TextureMetafile * metafile);
+
+	std::string GetTextureTypeName(TextureType texture_type_id) const;
 
 };
 

@@ -7,6 +7,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Metafile.h"
 #include "ModelMetafile.h"
+#include "TextureMetafile.h"
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/Resource.h"
 
@@ -169,8 +170,11 @@ Metafile * MetafileManager::CreateSpecializedMetafile(ResourceType resource_type
 	switch (resource_type)
 	{
 		case ResourceType::MODEL:
-				metafile = new ModelMetafile();
-				break;
+			metafile = new ModelMetafile();
+			break;
+		case ResourceType::TEXTURE:
+			metafile = new TextureMetafile();
+			break;
 		default:
 			metafile = new Metafile();
 			break;
