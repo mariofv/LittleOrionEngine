@@ -28,6 +28,8 @@ DLLManager::DLLManager()
 
 	scripts_folder = App->filesystem->GetPath("/Assets/Scripts/src/Script");
 	init_timestamp_script_folder = scripts_folder->GetModificationTimestamp();
+	//std::string aux($(DevEnvDir));
+
 }
 
 bool DLLManager::DLLItsUpdated()
@@ -58,6 +60,10 @@ void DLLManager::CheckGameplayFolderStatus()
 bool DLLManager::CompileGameplayProject()
 {
 	APP_LOG_INFO("NOW I'M GOING TO COMPILE! TRUST ME!");
+	std::wstring ws(MSBUILD_PATH);
+	std::string test(ws.begin(), ws.end());
+	std::string aux('\"' + test + "\\MSBuild.exe\" Assets\\Scripts\\GameplaySystem.vcxproj /p:Configuration=Debug /p:Platform=x86");
+	system(aux.c_str());
 	return true;
 }
 
