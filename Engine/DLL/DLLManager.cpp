@@ -28,10 +28,52 @@ DLLManager::DLLManager()
 
 	init_timestamp_dll = dll_file->GetModificationTimestamp();
 
+	InitFolderTimestamps();
+	
+
+}
+
+void DLLManager::InitFolderTimestamps()
+{
 	scripts_folder = App->filesystem->GetPath("/Assets/Scripts/src/Script");
 	init_timestamp_script_folder = scripts_folder->GetModificationTimestamp();
-	//std::string aux($(DevEnvDir));
 
+	for (const auto& script : scripts_folder->children)
+	{
+		uint32_t timestamp = script->GetModificationTimestamp();
+		std::pair<Path*, uint32_t> script_timestamp (script, timestamp);
+		scripts_timestamp_map.insert(script_timestamp);
+	}
+}
+
+bool DLLManager::CheckFolderTimestamps()
+{
+	//scripts_folder = App->filesystem->GetPath("/Assets/Scripts/src/Script");
+	//init_timestamp_script_folder = scripts_folder->GetModificationTimestamp();
+	for (const auto& script : scripts_folder->children)
+	{
+		std::unordered_map<Path*, uint32_t>::const_iterator search = scripts_timestamp_map.find(script);
+		if (search == scripts_timestamp_map.end())
+		{
+			uint32_t timestamp = script->GetModificationTimestamp();
+			std::pair<Path*, uint32_t> script_timestamp(script, timestamp);
+			scripts_timestamp_map.insert(script_timestamp);
+			APP_LOG_INFO("HEY NEW FILE FOUND");
+			return true;
+		}
+		else 
+		{
+			uint32_t new_timestamp = search->first->GetModificationTimestamp();
+			if (search->second != new_timestamp)
+			{
+				scripts_timestamp_map[search->first] = new_timestamp;
+				APP_LOG_INFO("HEY NEW FILE MODIFIED");
+				return true;
+			}
+		}
+
+	}
+	return false;
 }
 
 bool DLLManager::DLLItsUpdated()
@@ -50,10 +92,11 @@ bool DLLManager::DLLItsUpdated()
 void DLLManager::CheckGameplayFolderStatus()
 {
 	last_timestamp_script_folder = scripts_folder->GetModificationTimestamp();
-	if (last_timestamp_script_folder != init_timestamp_script_folder)
+	if (last_timestamp_script_folder != init_timestamp_script_folder || CheckFolderTimestamps())
 	{
 		std::thread(&DLLManager::CheckCompilation, this).detach();
-		init_timestamp_script_folder = last_timestamp_script_folder;
+		InitFolderTimestamps();
+		//init_timestamp_script_folder = last_timestamp_script_folder;
 	}
 
 
@@ -64,7 +107,7 @@ void DLLManager::CompileGameplayProject()
 	APP_LOG_INFO("NOW I'M GOING TO COMPILE! TRUST ME!");
 	std::wstring ws(MSBUILD_PATH);
 	std::string test(ws.begin(), ws.end());
-	std::string aux('\"' + test + "\\MSBuild.exe\" Assets\\Scripts\\GameplaySystem.vcxproj /p:Configuration=Debug /p:Platform=x86");
+	std::string aux('\"' + test + "\\MSBuild.exe\" Assets\\Scripts\\GameplaySystem.vcxproj /t:Rebuild /p:Configuration=Debug /p:Platform=x86");
 	system(aux.c_str());
 
 }
@@ -124,4 +167,3 @@ void DLLManager::CleanUp()
 #endif
 	cr_plugin_close(hot_reloading_context);
 }
-

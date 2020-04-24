@@ -4,7 +4,9 @@
 #include "Main/Globals.h"
 
 #include <cr.h>
-
+#include <iostream>
+#include <string>
+#include <unordered_map>
 class Path;
 
 class DLLManager
@@ -12,6 +14,9 @@ class DLLManager
 public:
 	DLLManager();
 	~DLLManager() = default;
+
+	void InitFolderTimestamps();
+	bool CheckFolderTimestamps();
 
 	bool DLLItsUpdated();
 
@@ -24,6 +29,7 @@ public:
 	bool ReloadDLL();
 	void CleanUp();
 
+
 public:
 	HINSTANCE gameplay_dll;
 
@@ -34,6 +40,7 @@ private:
 
 	Path* dll_file = nullptr;
 	Path* scripts_folder = nullptr;
+	std::unordered_map<Path*, uint32_t> scripts_timestamp_map;
 
 	long init_timestamp_dll;
 	long last_timestamp_dll;
