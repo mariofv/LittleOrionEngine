@@ -2,11 +2,11 @@
 #define _MODULESPACEPARTITIONING_H_
 
 #include "Module.h"
-#include <memory>
 
-class OLAABBTree;
-class OLOctTree;
-class OLQuadTree;
+#include "SpacePartition/OLQuadTree.h"
+#include "SpacePartition/OLOctTree.h"
+#include "SpacePartition/OLAABBTree.h"
+#include <memory>
 
 class ComponentCamera;
 class GameObject;

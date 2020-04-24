@@ -5,8 +5,6 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleRender.h"
 
-#include "SpacePartition/OLOctTree.h"
-#include "SpacePartition/OLQuadTree.h"
 #include "Component/Component.h"
 #include "Component/ComponentMeshRenderer.h"
 
@@ -76,11 +74,11 @@ void ModuleSpacePartitioning::GenerateOctTree()
 		global_AABB.minPoint = float3(minX, minY, minZ);
 	}
 
-	/*ol_octtree.Create(global_AABB);
+	ol_octtree->Create(global_AABB);
 	for (const auto&  mesh : App->renderer->meshes)
 	{
-		ol_octtree.Insert(*mesh->owner);
-	}*/
+		ol_octtree->Insert(*mesh->owner);
+	}
 }
 
 void ModuleSpacePartitioning::InsertAABBTree(GameObject* game_object)
