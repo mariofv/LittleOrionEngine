@@ -37,35 +37,34 @@ public:
 
 	void SetWidth(float new_width);
 	void SetHeight(float new_height);
-	void SetSizeDelta(float2 new_size);
+	void SetSize(float2 new_size);
 
 	void SetMinAnchor(float2 new_min_anchor);
 	void SetMaxAnchor(float2 new_min_anchor);
-	void ChangeAnchorSpace(const float4x4& new_anchor_matrix);
+	void ChangeAnchorSpace(const float2& new_anchor_matrix);
 
-	void GenerateAnchorMatrix();
-	float4x4 ComputeAnchorMatrix(float2 min_anchor, float2 max_anchor);
+	void GenerateAnchorPosition();
+	float2 ComputeAnchorPosition(float2 min_anchor, float2 max_anchor);
 
-	void SetLeft(float new_left);
-	void SetRight(float new_right);
-	void SetBottom(float new_bottom);
-	void SetTop(float new_top);
+	void SetLeft(float left);
+	void SetRight(float right);
+	void SetBottom(float bottom);
+	void SetTop(float top);
 	void GenerateRect();
-
-	ENGINE_API void SetTranslation(float x, float y);
 
 private:
 	void OnTransformChange() override;
 
 public:
-	float3 anchored_position = float3::zero;
-	float2 size_delta = float2(100.f, 100.f);
+	float2 anchored_position = float2::zero;
+	float2 size = float2(100.f, 100.f);
 	Rect rect;
 
 private:
 	float2 min_anchor = float2(0.5f);
 	float2 max_anchor = float2(0.5f);
-	float4x4 anchor_matrix = float4x4::identity;
+
+	float2 anchor_position = float2::zero;
 
 	friend class PanelComponent;
 };

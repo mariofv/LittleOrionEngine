@@ -44,8 +44,10 @@ ComponentTransform2D & ComponentTransform2D::operator=(const ComponentTransform2
 
 	this->model_matrix = component_to_copy.model_matrix;
 
-	size_delta = component_to_copy.size_delta;
+	size = component_to_copy.size;
 	anchored_position = component_to_copy.anchored_position;
+	min_anchor = component_to_copy.min_anchor;
+	max_anchor = component_to_copy.max_anchor;
 
 	OnTransformChange();
 	return *this;
@@ -53,43 +55,28 @@ ComponentTransform2D & ComponentTransform2D::operator=(const ComponentTransform2
 
 void ComponentTransform2D::SpecializedSave(Config& config) const
 {
-	config.AddFloat(rect.top, "Top");
-	config.AddFloat(rect.right, "Right");
-	config.AddFloat(rect.bottom, "Bottom");
-	config.AddFloat(rect.left, "Left");
+	config.AddFloat2(size, "Size");
+	config.AddFloat2(anchored_position, "AnchoredPos");
 
-	config.AddFloat(size_delta.x, "Width");
-	config.AddFloat(size_delta.y, "Height");
-
-	config.AddFloat(min_anchor.x, "MinAnchorX");
-	config.AddFloat(min_anchor.y, "MinAnchorY");
-	config.AddFloat(max_anchor.x, "MaxAnchorX");
-	config.AddFloat(max_anchor.y, "MaxAnchorY");
+	config.AddFloat2(min_anchor, "MinAnchor");
+	config.AddFloat2(max_anchor, "MaxAnchor");
 }
 
 void ComponentTransform2D::SpecializedLoad(const Config& config)
 {	
-	rect.top = config.GetFloat("Top", 0.0f);
-	rect.left = config.GetFloat("Left", 0.0f);
-	rect.bottom = config.GetFloat("Bottom", 0.0f);
-	rect.right = config.GetFloat("Right", 0.0f);
+	config.GetFloat2("Size", size, float2(100.f));
+	config.GetFloat2("AnchoredPos", anchored_position, float2::zero);
 
-	size_delta.x = config.GetFloat("Width", 100.0f);
-	size_delta.y = config.GetFloat("Height", 100.0f);
-
-	min_anchor.x = config.GetFloat("MinAnchorX", 0.5f);
-	min_anchor.y = config.GetFloat("MinAnchorY", 0.5f);
-	max_anchor.x = config.GetFloat("MaxAnchorX", 0.5f);
-	max_anchor.y = config.GetFloat("MaxAnchorY", 0.5f);
+	config.GetFloat2("MinAnchor", min_anchor, float2(0.5f));
+	config.GetFloat2("MaxAnchor", max_anchor, float2(0.5f));
 
 	OnTransformChange();
 }
 
 void ComponentTransform2D::OnTransformChange()
 {
-	GenerateAnchorMatrix();
-	anchored_position.z = translation.z;
-	translation = (anchor_matrix * float4(anchored_position, 1.f)).Float3Part();
+	GenerateAnchorPosition();
+	translation = float3(anchored_position + anchor_position, translation.z);
 	GenerateRect();
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
 	GenerateGlobalModelMatrix();
@@ -114,116 +101,113 @@ void ComponentTransform2D::GenerateGlobalModelMatrix()
 
 float4x4 ComponentTransform2D::GetSizedGlobalModelMatrix() const
 {
-	return float4x4::Scale(float3(size_delta, 1.f), GetGlobalTranslation()) * global_model_matrix;
+	return float4x4::Scale(float3(size, 1.f), GetGlobalTranslation()) * global_model_matrix;
 }
 
 void ComponentTransform2D::SetWidth(float new_width)
 {
-	size_delta.x = new_width;
+	size.x = new_width;
 	OnTransformChange();
 }
 
 void ComponentTransform2D::SetHeight(float new_height)
 {
-	size_delta.y = new_height;
+	size.y = new_height;
 	OnTransformChange();
 }
 
-void ComponentTransform2D::SetSizeDelta(float2 new_size)
+void ComponentTransform2D::SetSize(float2 new_size)
 {
-	size_delta = new_size;
+	size = new_size;
 	OnTransformChange();
 }
 
 void ComponentTransform2D::SetMinAnchor(float2 new_min_anchor)
 {
 	min_anchor = new_min_anchor;
-	float4x4 new_anchor_matrix = ComputeAnchorMatrix(new_min_anchor, max_anchor);
-	ChangeAnchorSpace(new_anchor_matrix);
+	float2 new_anchor_position = ComputeAnchorPosition(new_min_anchor, max_anchor);
+	ChangeAnchorSpace(new_anchor_position);
 }
 
 void ComponentTransform2D::SetMaxAnchor(float2 new_max_anchor)
 {
 	max_anchor = new_max_anchor;
-	float4x4 new_anchor_matrix = ComputeAnchorMatrix(min_anchor, new_max_anchor);
-	ChangeAnchorSpace(new_anchor_matrix);
+	float2 new_anchor_position = ComputeAnchorPosition(min_anchor, new_max_anchor);
+	ChangeAnchorSpace(new_anchor_position);
 }
 
-void ComponentTransform2D::GenerateAnchorMatrix()
+void ComponentTransform2D::GenerateAnchorPosition()
 {
-	anchor_matrix = ComputeAnchorMatrix(min_anchor, max_anchor);
+	anchor_position = ComputeAnchorPosition(min_anchor, max_anchor);
 }
 
-float4x4 ComponentTransform2D::ComputeAnchorMatrix(float2 minimum_anchor, float2 maximum_anchor)
+float2 ComponentTransform2D::ComputeAnchorPosition(float2 minimum_anchor, float2 maximum_anchor)
 {
 	if (owner->parent != nullptr)
 	{
-		float2 parent_size = owner->parent->transform_2d.size_delta;
+		float2 parent_size = owner->parent->transform_2d.size;
 		float anchored_position_x = parent_size.x * (maximum_anchor.x + minimum_anchor.x - 1) / 2.f;
 		float anchored_position_y = parent_size.y * (maximum_anchor.y + minimum_anchor.y - 1) / 2.f;
 
-		return float4x4::Translate(anchored_position_x, anchored_position_y, 0.f);
+		return float2(anchored_position_x, anchored_position_y);
 	}
 	else
 	{
-		return float4x4::identity;
+		return float2::zero;
 	}
 }
 
-void ComponentTransform2D::ChangeAnchorSpace(const float4x4& new_anchor_matrix)
+void ComponentTransform2D::ChangeAnchorSpace(const float2& new_anchor_position)
 {
-	anchored_position = (new_anchor_matrix.Inverted() * anchor_matrix * float4(anchored_position, 1.f)).Float3Part();
+	anchored_position = anchored_position + anchor_position - new_anchor_position;
 	OnTransformChange();
 }
 
 void ComponentTransform2D::GenerateRect()
 {
-	float2 parent_size = owner->parent != nullptr ? owner->parent->transform_2d.size_delta : float2::zero;
+	float2 parent_size = owner->parent != nullptr ? owner->parent->transform_2d.size : float2::zero;
 
-	rect.left = translation.x - size_delta.x / 2.f - parent_size.x * min_anchor.x + parent_size.x * 0.5f;
-	rect.right = parent_size.x * max_anchor.x - (translation.x + size_delta.x / 2.f) - parent_size.x * 0.5f;
-	assert(math::RoundInt(rect.left + size_delta.x + rect.right) == math::RoundInt(parent_size.x * (max_anchor.x - min_anchor.x)));
+	rect.left = translation.x - size.x / 2.f - parent_size.x * min_anchor.x + parent_size.x * 0.5f;
+	rect.right = parent_size.x * max_anchor.x - (translation.x + size.x / 2.f) - parent_size.x * 0.5f;
+	assert(math::RoundInt(rect.left + size.x + rect.right) == math::RoundInt(parent_size.x * (max_anchor.x - min_anchor.x)));
 
-	rect.bottom = translation.y - size_delta.y / 2.f - parent_size.y * min_anchor.y + parent_size.y * 0.5f;
-	rect.top = parent_size.y * max_anchor.y - (translation.y + size_delta.y / 2.f) - parent_size.y * 0.5f;
-	assert(math::RoundInt(rect.bottom + size_delta.y + rect.top) == math::RoundInt(parent_size.y * (max_anchor.y - min_anchor.y)));
+	rect.bottom = translation.y - size.y / 2.f - parent_size.y * min_anchor.y + parent_size.y * 0.5f;
+	rect.top = parent_size.y * max_anchor.y - (translation.y + size.y / 2.f) - parent_size.y * 0.5f;
+	assert(math::RoundInt(rect.bottom + size.y + rect.top) == math::RoundInt(parent_size.y * (max_anchor.y - min_anchor.y)));
 }
 
 void ComponentTransform2D::SetLeft(float left)
 {
-	float difference = left - rect.left;
+	float delta_left = left - rect.left;
 	rect.left = left;
-	anchored_position.x += difference * 0.5f;
-	size_delta.x -= difference;
+	anchored_position.x += delta_left * 0.5f;
+	size.x -= delta_left;
 	OnTransformChange();
 }
 
 void ComponentTransform2D::SetRight(float right)
 {
-	float difference = right - rect.right;
+	float delta_right = right - rect.right;
 	rect.right = right;
-	anchored_position.x -= difference * 0.5f;
-	size_delta.x -= difference;
+	anchored_position.x -= delta_right * 0.5f;
+	size.x -= delta_right;
 	OnTransformChange();
 }
 
 void ComponentTransform2D::SetBottom(float bottom)
 {
-	float difference = bottom - rect.bottom;
-	anchored_position.y += difference;
-	size_delta.y += difference;
+	float delta_bottom = bottom - rect.bottom;
+	rect.bottom = bottom;
+	anchored_position.y += delta_bottom * 0.5f;
+	size.y -= delta_bottom;
+	OnTransformChange();
 }
 
 void ComponentTransform2D::SetTop(float top)
 {
-	float difference = top - rect.top;
-	anchored_position.y -= difference;
-	size_delta.y -= difference;
-}
-
-void ComponentTransform2D::SetTranslation(float x, float y)
-{
-	translation.x = x;
-	translation.y = y;
+	float delta_top = top - rect.top;
+	rect.top = top;
+	anchored_position.y -= delta_top * 0.5f;
+	size.y -= delta_top;
 	OnTransformChange();
 }

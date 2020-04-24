@@ -59,14 +59,14 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 				transform->modified_by_user = true;
 			}
 
-			if (ImGui::DragFloat3("Position", ((ComponentTransform2D*)transform)->anchored_position.ptr(), 1.0f))
+			if (ImGui::DragFloat2("Position", ((ComponentTransform2D*)transform)->anchored_position.ptr(), 1.0f))
 			{
 				transform->OnTransformChange();
 				transform->modified_by_user = true;
 			}
 			CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform);
 
-			if (ImGui::DragFloat2("Size", ((ComponentTransform2D*)transform)->size_delta.ptr(), 1))
+			if (ImGui::DragFloat2("Size", ((ComponentTransform2D*)transform)->size.ptr(), 1))
 			{
 				transform->OnTransformChange();
 				transform->modified_by_user = true;
