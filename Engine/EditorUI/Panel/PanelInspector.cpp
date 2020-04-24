@@ -3,6 +3,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
+#include "PanelProjectExplorer.h"
 
 #include <Brofiler/Brofiler.h>
 #include <imgui.h>
