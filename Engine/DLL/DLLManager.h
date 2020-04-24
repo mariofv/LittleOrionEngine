@@ -18,6 +18,8 @@ public:
 	void CheckGameplayFolderStatus();
 	void CompileGameplayProject();
 
+	void CheckCompilation();
+
 	bool InitDLL();
 	bool ReloadDLL();
 	void CleanUp();

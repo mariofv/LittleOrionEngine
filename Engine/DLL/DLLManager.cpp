@@ -52,7 +52,7 @@ void DLLManager::CheckGameplayFolderStatus()
 	last_timestamp_script_folder = scripts_folder->GetModificationTimestamp();
 	if (last_timestamp_script_folder != init_timestamp_script_folder)
 	{
-		std::thread(&DLLManager::CompileGameplayProject, this).detach();
+		std::thread(&DLLManager::CheckCompilation, this).detach();
 		init_timestamp_script_folder = last_timestamp_script_folder;
 	}
 
@@ -67,6 +67,27 @@ void DLLManager::CompileGameplayProject()
 	std::string aux('\"' + test + "\\MSBuild.exe\" Assets\\Scripts\\GameplaySystem.vcxproj /p:Configuration=Debug /p:Platform=x86");
 	system(aux.c_str());
 
+}
+
+void DLLManager::CheckCompilation()
+{
+	std::thread compilator = std::thread(&DLLManager::CompileGameplayProject, this);
+	compilator.join();
+	if (App->filesystem->Exists("/Assets/Scripts/Debug")) 
+	{
+		if (App->filesystem->Exists("/Assets/Scripts/Debug/GameplaySystemDebug.dll"))
+		{
+			APP_LOG_SUCCESS("Compiled Scripts Correctly!");
+		}
+		else
+		{
+			APP_LOG_ERROR("Error compiling scripts, do it manually to check errors");
+		}
+	}
+	else
+	{
+		APP_LOG_ERROR("Command error, not compiled");
+	}
 }
 
 bool DLLManager::InitDLL()
