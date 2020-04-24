@@ -35,7 +35,7 @@ DLLManager::DLLManager()
 
 void DLLManager::InitFolderTimestamps()
 {
-	scripts_folder = App->filesystem->GetPath("/Assets/Scripts/src/Script");
+	scripts_folder = App->filesystem->GetPath(std::string("/") + SCRIPT_PATH);
 	init_timestamp_script_folder = scripts_folder->GetModificationTimestamp();
 
 	for (const auto& script : scripts_folder->children)
@@ -48,8 +48,6 @@ void DLLManager::InitFolderTimestamps()
 
 bool DLLManager::CheckFolderTimestamps()
 {
-	//scripts_folder = App->filesystem->GetPath("/Assets/Scripts/src/Script");
-	//init_timestamp_script_folder = scripts_folder->GetModificationTimestamp();
 	for (const auto& script : scripts_folder->children)
 	{
 		std::unordered_map<Path*, uint32_t>::const_iterator search = scripts_timestamp_map.find(script);
@@ -83,7 +81,6 @@ bool DLLManager::DLLItsUpdated()
 	if (last_timestamp_dll != init_timestamp_dll)
 	{
 		init_timestamp_dll = last_timestamp_dll;
-		InitFolderTimestamps();
 		return true;
 	}
 
@@ -97,19 +94,16 @@ void DLLManager::CheckGameplayFolderStatus()
 	{
 		std::thread(&DLLManager::CheckCompilation, this).detach();
 		InitFolderTimestamps();
-		//init_timestamp_script_folder = last_timestamp_script_folder;
 	}
-
-
 }
 
 void DLLManager::CompileGameplayProject()
 {
-	APP_LOG_INFO("NOW I'M GOING TO COMPILE! TRUST ME!");
-	std::wstring ws(MSBUILD_PATH);
-	std::string test(ws.begin(), ws.end());
-	std::string aux('\"' + test + "\\MSBuild.exe\" Assets\\Scripts\\GameplaySystem.vcxproj /t:Rebuild /p:Configuration=Debug /p:Platform=x86");
-	system(aux.c_str());
+	APP_LOG_INFO("Change detected in the Gameplay System, compilation in process.");
+	std::wstring msbuild_path(MSBUILD_PATH);
+	std::string msbuild_path_to_string(msbuild_path.begin(), msbuild_path.end());
+	std::string command('\"' + msbuild_path_to_string + COMMAND_FOR_COMPILING);
+	system(command.c_str());
 
 }
 
@@ -117,9 +111,9 @@ void DLLManager::CheckCompilation()
 {
 	std::thread compilator = std::thread(&DLLManager::CompileGameplayProject, this);
 	compilator.join();
-	if (App->filesystem->Exists("/Assets/Scripts/Debug")) 
+	if (App->filesystem->Exists(COMPILED_FOLDER_DLL_PATH))
 	{
-		if (App->filesystem->Exists("/Assets/Scripts/Debug/GameplaySystemDebug.dll"))
+		if (App->filesystem->Exists(COMPILED_SCRIPT_DLL_PATH))
 		{
 			APP_LOG_SUCCESS("Compiled Scripts Correctly!");
 		}

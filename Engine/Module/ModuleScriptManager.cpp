@@ -38,6 +38,7 @@ update_status ModuleScriptManager::Update()
 	{
 		if(dll->DLLItsUpdated())
 		{
+			hot_reloading = true;
 			ReloadDLL();
 		}
 	}
@@ -88,11 +89,11 @@ void ModuleScriptManager::CreateScript(const std::string& name)
 	std::transform(name_uppercase.begin(), name_uppercase.end(), name_uppercase.begin(), ::toupper);
 	Utils::ReplaceStringInPlace(header_file, "_TEMPLATESCRIPT_H_", "_" + name_uppercase + "_H_");
 
-	if (!App->filesystem->Exists((SCRIPT_PATH + name + ".cpp").c_str()))
+	if (!App->filesystem->Exists((std::string("/") + SCRIPT_PATH + std::string("/") + name + ".cpp").c_str()))
 	{
 		//TODO: Use filesystem for this
-		Utils::SaveFileContent(cpp_file, SCRIPT_PATH + name + ".cpp");
-		Utils::SaveFileContent(header_file, SCRIPT_PATH + name + ".h");
+		Utils::SaveFileContent(cpp_file, SCRIPT_PATH + std::string("/") + name + ".cpp");
+		Utils::SaveFileContent(header_file, SCRIPT_PATH + std::string("/") + name + ".h");
 		scripts_list.push_back(name);
 	}
 	
@@ -192,6 +193,8 @@ void ModuleScriptManager::ReloadDLL()
 	}
 	InitResourceScript();
 	LoadVariables(config_list);
+	dll->InitFolderTimestamps();
+	hot_reloading = false;
 }
 
 void ModuleScriptManager::Refresh()
@@ -240,5 +243,8 @@ void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> con
 
 void ModuleScriptManager::CheckGameplayFolderStatus()
 {
-	dll->CheckGameplayFolderStatus();
+	if(!hot_reloading)
+	{
+		dll->CheckGameplayFolderStatus();
+	}
 }

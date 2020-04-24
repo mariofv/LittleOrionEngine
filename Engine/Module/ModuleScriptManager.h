@@ -62,6 +62,7 @@ public:
 
 private:
 	DLLManager* dll = nullptr;
+	bool hot_reloading = false;
 
 };
 
