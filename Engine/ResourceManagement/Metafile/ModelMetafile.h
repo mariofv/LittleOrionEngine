@@ -15,8 +15,7 @@ public:
 
 	//Model
 	float scale_factor = 1.0f;
-	bool convert_units;
-	std::string file_units;
+	bool convert_units = true;
 
 	bool import_mesh = true;
 	bool import_rig = true;

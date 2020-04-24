@@ -7,7 +7,6 @@ void ModelMetafile::Save(Config& config) const
 	Metafile::Save(config);
 	config.AddFloat(scale_factor, "ScaleFactor");
 	config.AddBool(convert_units, "Convert");
-	config.AddString(file_units, "Units");
 
 	config.AddBool(import_mesh, "ImportMesh");
 	config.AddBool(import_rig, "ImportRig");
@@ -20,9 +19,9 @@ void ModelMetafile::Load(const Config& config)
 {
 	Metafile::Load(config);
 
-	scale_factor = config.GetFloat("ScaleFactor", 0);
-	convert_units = config.GetBool("Convert", true);
-	config.GetString("Units", file_units, "");
+	scale_factor = config.GetFloat("ScaleFactor", 1.0f);
+	convert_units = config.GetBool("Convert", false);
+
 
 	import_mesh = config.GetBool("ImportMesh", true);
 	import_rig = config.GetBool("ImportRig",true);
