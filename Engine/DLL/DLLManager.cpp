@@ -83,6 +83,7 @@ bool DLLManager::DLLItsUpdated()
 	if (last_timestamp_dll != init_timestamp_dll)
 	{
 		init_timestamp_dll = last_timestamp_dll;
+		InitFolderTimestamps();
 		return true;
 	}
 
