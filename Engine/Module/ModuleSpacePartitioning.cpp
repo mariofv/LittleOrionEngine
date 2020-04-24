@@ -22,11 +22,6 @@ bool ModuleSpacePartitioning::Init()
 	return true;
 }
 
-update_status ModuleSpacePartitioning::PreUpdate()
-{
-	return update_status();
-}
-
 bool ModuleSpacePartitioning::CleanUp()
 {
 	return true;
@@ -34,6 +29,8 @@ bool ModuleSpacePartitioning::CleanUp()
 
 void ModuleSpacePartitioning::GenerateQuadTree()
 {
+
+	BROFILER_CATEGORY("Generate QuadTree", Profiler::Color::Lavender);
 	AABB2D global_AABB;
 	global_AABB.SetNegativeInfinity();
 
@@ -57,6 +54,8 @@ void ModuleSpacePartitioning::GenerateQuadTree()
 
 void ModuleSpacePartitioning::GenerateOctTree()
 {
+
+	BROFILER_CATEGORY("Generate OctTree", Profiler::Color::Lavender);
 	AABB global_AABB;
 	global_AABB.SetNegativeInfinity();
 
@@ -101,6 +100,11 @@ void ModuleSpacePartitioning::RemoveAABBTree(GameObject* game_object)
 
 void ModuleSpacePartitioning::UpdateAABBTree(GameObject * game_object)
 {
+	if(game_object->IsStatic())
+	{
+		return;
+	}
+
 	ComponentMeshRenderer* object_mesh = static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER));
 	if (object_mesh != nullptr)
 	{
@@ -120,7 +124,7 @@ void ModuleSpacePartitioning::DrawAABBTree() const
 	ol_abbtree->Draw();
 }
 
-void ModuleSpacePartitioning::GetCullingMeshes(const ComponentCamera * camera)
+void ModuleSpacePartitioning::GetCullingMeshes(const ComponentCamera * camera) const
 {
 	BROFILER_CATEGORY("Get culling meshes", Profiler::Color::Lavender);
 

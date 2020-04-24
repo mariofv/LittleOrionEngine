@@ -40,12 +40,7 @@ update_status ModuleScene::Update()
 	for (const auto&  game_object : game_objects_ownership)
 	{
 		game_object->Update();
-		if(!game_object->IsStatic())
-		{
-			ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
-			if(object_mesh != nullptr)
-				App->space_partitioning->UpdateAABBTree(game_object.get());
-		}
+		App->space_partitioning->UpdateAABBTree(game_object.get());
 	}
 	return update_status::UPDATE_CONTINUE;
 }

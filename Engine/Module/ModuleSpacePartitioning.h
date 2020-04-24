@@ -20,7 +20,6 @@ public:
 	~ModuleSpacePartitioning() = default;
 
 	bool Init();
-	update_status PreUpdate();
 	bool CleanUp();
 
 	void GenerateQuadTree();
@@ -30,7 +29,7 @@ public:
 	void UpdateAABBTree(GameObject* game_object);
 	void ResetAABBTree();
 	void DrawAABBTree() const;
-	void GetCullingMeshes(const ComponentCamera* camera);
+	void GetCullingMeshes(const ComponentCamera* camera) const;
 
 private:
 	std::unique_ptr<OLQuadTree> ol_quadtree = nullptr;
