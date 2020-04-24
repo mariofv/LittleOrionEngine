@@ -60,13 +60,26 @@ void PanelDebug::Render()
 		}
 
 		ImGui::DragFloat("Rendering time ", &App->debug->rendering_time, NULL, NULL);
-
-		if (ImGui::SliderInt("Quadtree Depth ", &App->space_partitioning->ol_quadtree->max_depth, 1, 10)) {
+		ImGui::Spacing();
+		ImGui::Text("Space Partitioning");
+		if (ImGui::SliderInt("Quadtree Depth ", &App->space_partitioning->ol_quadtree->max_depth, 1, 10))
+		{
 			App->space_partitioning->GenerateQuadTree();
 			App->space_partitioning->GenerateOctTree();
 		}
-		if (ImGui::SliderInt("Quadtree bucket size ", &App->space_partitioning->ol_quadtree->bucket_size, 1, 10)) {
+		if (ImGui::SliderInt("Quadtree bucket size ", &App->space_partitioning->ol_quadtree->bucket_size, 1, 10)) 
+		{
 			App->space_partitioning->GenerateQuadTree();
+			App->space_partitioning->GenerateOctTree();
+		}
+
+		if(ImGui::Button("Generate QuadTree"))
+		{
+			App->space_partitioning->GenerateQuadTree();
+		}
+
+		if (ImGui::Button("Generate OctTree"))
+		{
 			App->space_partitioning->GenerateOctTree();
 		}
 
@@ -84,6 +97,8 @@ void PanelDebug::Render()
 				App->debug->CreateFrustumCullingDebugScene();
 			}
 		}
+
+		
 	}
 	ImGui::End();
 }
