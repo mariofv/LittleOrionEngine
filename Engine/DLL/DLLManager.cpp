@@ -20,7 +20,7 @@ DLLManager::DLLManager()
 	gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
 	return true;
 #endif
-
+	CleanFolder();
 	dll_file = App->filesystem->GetPath(std::string("/") + RESOURCES_SCRIPT_DLL_PATH);//RENAME DEFINED NAMES
 	cr_plugin_open(hot_reloading_context, RESOURCES_SCRIPT_DLL_PATH);
 	cr_plugin_update(hot_reloading_context);
@@ -97,7 +97,7 @@ void DLLManager::CheckGameplayFolderStatus()
 	}
 }
 
-void DLLManager::CompileGameplayProject()
+void DLLManager::CompileGameplayProject() const
 {
 	APP_LOG_INFO("Change detected in the Gameplay System, compilation in process.");
 	std::wstring msbuild_path(MSBUILD_PATH);
@@ -107,7 +107,7 @@ void DLLManager::CompileGameplayProject()
 
 }
 
-void DLLManager::CheckCompilation()
+void DLLManager::CheckCompilation() const
 {
 	std::thread compilator = std::thread(&DLLManager::CompileGameplayProject, this);
 	compilator.join();
@@ -161,4 +161,19 @@ void DLLManager::CleanUp()
 	return true;
 #endif
 	cr_plugin_close(hot_reloading_context);
+}
+
+void DLLManager::CleanFolder() const
+{
+	Path* resource_folder = App->filesystem->GetPath(std::string("/") + RESOURCES_SCRIPT_PATH);
+	for (const auto& file : resource_folder->children)
+	{
+		bool found = std::find(required_files.begin(), required_files.end(), file->GetFilenameWithoutExtension()) != required_files.end();
+		if(!found)
+		{
+			std::string filepath = file->GetFullPath();
+			filepath.erase(filepath.begin()+0);
+			remove(filepath.c_str());
+		}
+	}
 }

@@ -21,13 +21,15 @@ public:
 	bool DLLItsUpdated();
 
 	void CheckGameplayFolderStatus();
-	void CompileGameplayProject();
+	void CompileGameplayProject() const;
 
-	void CheckCompilation();
+	void CheckCompilation() const;
 
 	bool InitDLL();
 	bool ReloadDLL();
 	void CleanUp();
+
+	void CleanFolder() const;
 
 
 public:
@@ -46,6 +48,8 @@ private:
 	long last_timestamp_dll;
 	long init_timestamp_script_folder;
 	long last_timestamp_script_folder;
+
+	std::vector<std::string> required_files{ "GamePlaySystem","GameplaySystemDebug","GameplaySystemRelease","TemplateScript"};
 };
 
 #endif // !_PATH_H_

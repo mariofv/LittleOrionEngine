@@ -12,7 +12,7 @@
 #define SHADERS_PATH "/Resources/Shaders/shaders.json"
 
 #define RESOURCE_SCRIPT_DLL_FILE "GameplaySystem.dll"
-
+#define RESOURCES_SCRIPT_PATH "Resources/Scripts"
 #if DEBUG
 #define RESOURCES_SCRIPT_DLL_PATH "Resources/Scripts/GameplaySystemDebug.dll"
 #define COMPILED_FOLDER_DLL_PATH "/Assets/Scripts/Debug"
