@@ -3,13 +3,14 @@
 
 #include "EditorUI/Panel/Panel.h"
 
+class Metafile;
 class PanelMetaFile : public Panel
 {
 public:
 	PanelMetaFile();
 	~PanelMetaFile() = default;
 
-	//void Render(Path* game_object);
+	void Render(Metafile* meta_file);
 	//void ShowPrefabMenu(GameObject* game_object);
 
 };

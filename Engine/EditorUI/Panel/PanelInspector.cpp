@@ -29,6 +29,10 @@ void PanelInspector::Render()
 		{
 			gameobject_panel.Render(App->editor->selected_game_object);
 		}
+		else if (App->editor->selected_meta_file != nullptr)
+		{
+			metafile_panel.Render(App->editor->selected_meta_file);
+		}
 
 	}
 	ImGui::End();

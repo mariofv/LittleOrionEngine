@@ -210,6 +210,8 @@ void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafi
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(0))
 	{
 		selected_file = metafile_path;
+		App->editor->selected_meta_file = metafile;
+		
 	}
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseDoubleClicked(0))
 	{
