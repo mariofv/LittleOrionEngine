@@ -16,7 +16,7 @@ public:
 	bool DLLItsUpdated();
 
 	void CheckGameplayFolderStatus();
-	bool CompileGameplayProject();
+	void CompileGameplayProject();
 
 	bool InitDLL();
 	bool ReloadDLL();

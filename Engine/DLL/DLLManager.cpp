@@ -7,6 +7,8 @@
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 
+#include <thread>
+
 DLLManager::DLLManager()
 {
 
@@ -50,21 +52,21 @@ void DLLManager::CheckGameplayFolderStatus()
 	last_timestamp_script_folder = scripts_folder->GetModificationTimestamp();
 	if (last_timestamp_script_folder != init_timestamp_script_folder)
 	{
-		CompileGameplayProject();
+		std::thread(&DLLManager::CompileGameplayProject, this).detach();
 		init_timestamp_script_folder = last_timestamp_script_folder;
 	}
 
 
 }
 
-bool DLLManager::CompileGameplayProject()
+void DLLManager::CompileGameplayProject()
 {
 	APP_LOG_INFO("NOW I'M GOING TO COMPILE! TRUST ME!");
 	std::wstring ws(MSBUILD_PATH);
 	std::string test(ws.begin(), ws.end());
 	std::string aux('\"' + test + "\\MSBuild.exe\" Assets\\Scripts\\GameplaySystem.vcxproj /p:Configuration=Debug /p:Platform=x86");
 	system(aux.c_str());
-	return true;
+
 }
 
 bool DLLManager::InitDLL()
