@@ -14,14 +14,14 @@ public:
 
 
 	//Model
-	float scale = 1.0f;
+	float scale_factor = 1.0f;
 	bool convert_units;
 	std::string file_units;
 
 	bool import_mesh = true;
 	bool import_rig = true;
 	bool import_animation = true;
-	bool import_materials = true;
+	bool import_material = true;
 
 
 };
