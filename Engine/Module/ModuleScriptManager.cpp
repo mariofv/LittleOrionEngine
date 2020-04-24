@@ -20,9 +20,9 @@ bool ModuleScriptManager::Init()
 	APP_LOG_SECTION("************ Module Manager Script ************");
 
 	dll = new DLLManager();
-
+#if !GAME
 	LoadScriptList();
-
+#endif
 	return true;
 }
 
@@ -33,6 +33,7 @@ update_status ModuleScriptManager::Update()
 	{
 		RunScripts();
 	}
+#if !GAME
 	if (!App->time->isGameRunning()) 
 	{
 		if(dll->DLLItsUpdated())
@@ -40,6 +41,7 @@ update_status ModuleScriptManager::Update()
 			ReloadDLL();
 		}
 	}
+#endif
 	return update_status::UPDATE_CONTINUE;
 }
 
