@@ -14,7 +14,7 @@ public:
 
 
 	//Model
-	float scale_factor = 1.0f;
+	float scale_factor = 0.01f;
 	bool convert_units = true;
 
 	bool import_mesh = true;

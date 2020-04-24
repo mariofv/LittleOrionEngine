@@ -4,6 +4,7 @@
 #include "EditorUI/Panel/Panel.h"
 
 class Metafile;
+class ModelMetafile;
 class PanelMetaFile : public Panel
 {
 public:
@@ -11,7 +12,10 @@ public:
 	~PanelMetaFile() = default;
 
 	void Render(Metafile* meta_file);
-	//void ShowPrefabMenu(GameObject* game_object);
+private:
+	void ShowSpecializedMetaFile(Metafile* meta_file);
+
+	void ShowModelMetaFile(ModelMetafile * metafile);
 
 };
 

@@ -19,7 +19,7 @@ void ModelMetafile::Load(const Config& config)
 {
 	Metafile::Load(config);
 
-	scale_factor = config.GetFloat("ScaleFactor", 1.0f);
+	scale_factor = config.GetFloat("ScaleFactor", 0.01f);
 	convert_units = config.GetBool("Convert", false);
 
 
