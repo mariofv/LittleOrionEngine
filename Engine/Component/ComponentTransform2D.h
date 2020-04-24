@@ -8,6 +8,11 @@
 class ComponentTransform2D : public ComponentTransform
 {
 public:
+	struct Rect
+	{
+		float left, right, bottom, top;
+	};
+
 	ComponentTransform2D();
 	ComponentTransform2D(GameObject * owner);
 	~ComponentTransform2D();
@@ -41,6 +46,12 @@ public:
 	void GenerateAnchorMatrix();
 	float4x4 ComputeAnchorMatrix(float2 min_anchor, float2 max_anchor);
 
+	void SetLeft(float new_left);
+	void SetRight(float new_right);
+	void SetBottom(float new_bottom);
+	void SetTop(float new_top);
+	void GenerateRect();
+
 	ENGINE_API void SetTranslation(float x, float y);
 
 private:
@@ -49,7 +60,7 @@ private:
 public:
 	float3 anchored_position = float3::zero;
 	float2 size_delta = float2(100.f, 100.f);
-	math::Rect rect;
+	Rect rect;
 
 private:
 	float2 min_anchor = float2(0.5f);
@@ -58,5 +69,4 @@ private:
 
 	friend class PanelComponent;
 };
-#endif
-
+#endif //_COMPONENTTRANSFORM2D_H_

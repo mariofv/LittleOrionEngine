@@ -32,71 +32,22 @@
                 "UUID": 2213783332,
                 "ComponentType": "Transform 2D",
                 "Active": true,
-                "Top": 0.0,
-                "Right": 0.0,
-                "Bottom": 0.0,
-                "Left": 0.0,
+                "Top": -50.0,
+                "Right": -50.0,
+                "Bottom": -50.0,
+                "Left": -50.0,
                 "Width": 100.0,
-                "Height": 100.0
+                "Height": 100.0,
+                "MinAnchorX": 0.5,
+                "MinAnchorY": 0.5,
+                "MaxAnchorX": 0.5,
+                "MaxAnchorY": 0.5
             },
             "Components": [
                 {
                     "UUID": 3251146351,
                     "ComponentType": "Canvas",
-                    "Active": true,
-                    "Layer": 0
-                }
-            ]
-        },
-        {
-            "UUID": 4153364673,
-            "ParentUUID": 2231464608,
-            "Name": "Image",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1988908795,
-                "ComponentType": "Transform",
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 3717638134,
-                "ComponentType": "Transform 2D",
-                "Active": true,
-                "Top": 0.0,
-                "Right": 0.0,
-                "Bottom": 0.0,
-                "Left": 0.0,
-                "Width": 100.0,
-                "Height": 100.0
-            },
-            "Components": [
-                {
-                    "UUID": 2449736026,
-                    "ComponentType": "UI Image",
-                    "Active": true,
-                    "Layer": 0,
-                    "Color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 2164254039
+                    "Active": true
                 }
             ]
         },
@@ -130,16 +81,76 @@
                 "UUID": 607315229,
                 "ComponentType": "Transform 2D",
                 "Active": true,
-                "Top": 0.0,
-                "Right": 0.0,
-                "Bottom": 0.0,
-                "Left": 0.0,
-                "Width": 234.0,
-                "Height": 249.0
+                "Top": -125.0,
+                "Right": -125.0,
+                "Bottom": -125.0,
+                "Left": -125.0,
+                "Width": 250.0,
+                "Height": 250.0,
+                "MinAnchorX": 0.5,
+                "MinAnchorY": 0.5,
+                "MaxAnchorX": 0.5,
+                "MaxAnchorY": 0.5
             },
             "Components": [
                 {
                     "UUID": 3501157663,
+                    "ComponentType": "UI Image",
+                    "Active": true,
+                    "Layer": -8,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 3177191653
+                }
+            ]
+        },
+        {
+            "UUID": 4153364673,
+            "ParentUUID": 3856286221,
+            "Name": "Image",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1988908795,
+                "ComponentType": "Transform",
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3717638134,
+                "ComponentType": "Transform 2D",
+                "Active": true,
+                "Top": -50.0,
+                "Right": -50.0,
+                "Bottom": -50.0,
+                "Left": -50.0,
+                "Width": 100.0,
+                "Height": 100.0,
+                "MinAnchorX": 0.5,
+                "MinAnchorY": 0.5,
+                "MaxAnchorX": 0.5,
+                "MaxAnchorY": 0.5
+            },
+            "Components": [
+                {
+                    "UUID": 2449736026,
                     "ComponentType": "UI Image",
                     "Active": true,
                     "Layer": 0,
@@ -148,7 +159,7 @@
                         1.0,
                         1.0
                     ],
-                    "TextureUUID": 3177191653
+                    "TextureUUID": 2164254039
                 }
             ]
         },
@@ -182,12 +193,16 @@
                 "UUID": 3894984641,
                 "ComponentType": "Transform 2D",
                 "Active": true,
-                "Top": 0.0,
-                "Right": 0.0,
-                "Bottom": 0.0,
-                "Left": 0.0,
+                "Top": -50.0,
+                "Right": -50.0,
+                "Bottom": -50.0,
+                "Left": -50.0,
                 "Width": 100.0,
-                "Height": 100.0
+                "Height": 100.0,
+                "MinAnchorX": 0.5,
+                "MinAnchorY": 0.5,
+                "MaxAnchorX": 0.5,
+                "MaxAnchorY": 0.5
             },
             "Components": [
                 {
@@ -240,12 +255,16 @@
                 "UUID": 1012207212,
                 "ComponentType": "Transform 2D",
                 "Active": true,
-                "Top": 0.0,
-                "Right": 0.0,
-                "Bottom": 0.0,
-                "Left": 0.0,
+                "Top": -50.0,
+                "Right": -50.0,
+                "Bottom": -50.0,
+                "Left": -50.0,
                 "Width": 100.0,
-                "Height": 100.0
+                "Height": 100.0,
+                "MinAnchorX": 0.5,
+                "MinAnchorY": 0.5,
+                "MaxAnchorX": 0.5,
+                "MaxAnchorY": 0.5
             },
             "Components": [
                 {

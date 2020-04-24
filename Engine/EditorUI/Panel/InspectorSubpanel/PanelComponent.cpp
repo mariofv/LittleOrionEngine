@@ -51,6 +51,14 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 	{
 		if (transform->GetType() == Component::ComponentType::TRANSFORM2D)
 		{
+			float2 rect_x(((ComponentTransform2D*)transform)->rect.left, ((ComponentTransform2D*)transform)->rect.right);
+			if (ImGui::DragFloat2("Rect", rect_x.ptr(), 1.0f))
+			{
+				((ComponentTransform2D*)transform)->SetLeft(rect_x.x);
+				((ComponentTransform2D*)transform)->SetRight(rect_x.y);
+				transform->modified_by_user = true;
+			}
+
 			if (ImGui::DragFloat3("Position", ((ComponentTransform2D*)transform)->anchored_position.ptr(), 1.0f))
 			{
 				transform->OnTransformChange();
@@ -75,9 +83,10 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 				}
 				CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform);
 
-				if (ImGui::DragFloat2("Max", ((ComponentTransform2D*)transform)->max_anchor.ptr(), 0.01f, 0.0f, 1.0f))
+				float2 current_max_anchor = ((ComponentTransform2D*)transform)->max_anchor;
+				if (ImGui::DragFloat2("Max", current_max_anchor.ptr(), 0.01f, 0.0f, 1.0f))
 				{
-
+					((ComponentTransform2D*)transform)->SetMaxAnchor(current_max_anchor);
 				}
 				CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform);
 

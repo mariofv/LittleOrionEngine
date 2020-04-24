@@ -20,7 +20,7 @@ bool ModuleScriptManager::Init()
 	GetCurrentPath();
 #if GAME
 	//TODO USE THE NEW FILESYSTEM TO DO THIS
-	bool success = CopyFile(RESOURCE_SCRIPT_DLL_FILE, working_directory.c_str(), false);
+	bool success = CopyFile(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str(), false);
 	if (!success)
 	{
 		char procID[10];

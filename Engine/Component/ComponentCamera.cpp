@@ -212,7 +212,14 @@ void ComponentCamera::RecordFrame(float width, float height)
 			break;
 		case ComponentCamera::ClearMode::SKYBOX:
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-			camera_skybox->Render(*this);
+			if (skybox_uuid != 0)
+			{
+				camera_skybox->Render(*this);
+			}
+			else
+			{
+				App->cameras->world_skybox->Render(*this);
+			}
 			break;
 		default:
 			break;
@@ -549,11 +556,7 @@ void ComponentCamera::SetClearMode(ComponentCamera::ClearMode clear_mode)
 void ComponentCamera::SetSkybox(uint32_t skybox_uuid)
 {
 	this->skybox_uuid = skybox_uuid;
-	if (skybox_uuid == 0)
-	{
-		camera_skybox = App->resources->Load<Skybox>((uint32_t)CoreResource::DEFAULT_SKYBOX);
-	}
-	else
+	if (skybox_uuid != 0)
 	{
 		camera_skybox = App->resources->Load<Skybox>(skybox_uuid);
 	}

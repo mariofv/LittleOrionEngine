@@ -48,12 +48,12 @@ void MenuLogic::Start()
 // Update is called once per frame
 void MenuLogic::Update()
 {
-
+	/*
 	if(show_help && ComfirmButtonPressed())
 	{
 		help_controller->SetEnabled(false);
 		help_keyboard->SetEnabled(false);
-		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
+		owner->transform_2d.SetTranslation(&float2(owner->transform_2d.anchored_position.x, buttons[current]->transform_2d.anchored_position.y));
 		show_help = false;
 		return;
 	}
@@ -61,7 +61,7 @@ void MenuLogic::Update()
 	if (show_credits && ComfirmButtonPressed())
 	{
 		credits->SetEnabled(false);
-		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
+		owner->transform_2d.SetTranslation(&float2(owner->transform_2d.anchored_position.x, buttons[current]->transform_2d.anchored_position.y));
 		show_credits = false;
 		return;
 	}
@@ -124,6 +124,7 @@ void MenuLogic::Update()
 
 		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
 	}
+	*/
 
 }
 
