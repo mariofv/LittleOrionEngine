@@ -20,7 +20,7 @@ FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const
 	//I now doing looooooooots of loops around here, but this is only importing and new to be 100% I have the hold hierarchy
 	for (size_t i = 0; i < mesh->mNumBones; i++)
 	{
-		aiString bone_name = mesh->mBones[0]->mName;
+		aiString bone_name = mesh->mBones[i]->mName;
 		aiNode * bone = scene->mRootNode->FindNode(bone_name);
 
 		while (bone->mParent && bone->mParent != scene->mRootNode)
