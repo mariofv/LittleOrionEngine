@@ -23,6 +23,7 @@ void PanelPopups::Render()
 	material_selector_popup.Render();
 	mesh_selector_popup.Render();
 	scene_management_popup.Render();
+	texture_selector.Render();
 }
 
 void PanelPopups::RenderAssetsLoadingPopup()

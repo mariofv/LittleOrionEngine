@@ -18,9 +18,11 @@ public:
 		TRANSFORM,
 		LIGHT,
 		SCRIPT,
-		ANIMATION
+		ANIMATION,
+		BILLBOARD
 	};
 
+	Component();
 	Component(GameObject * owner, ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
 	virtual ~Component() = default;
 

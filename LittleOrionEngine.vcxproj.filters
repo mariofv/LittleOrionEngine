@@ -415,7 +415,8 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Module\ModuleSpritesheet.cpp" />
+    <ClCompile Include="Engine\Component\ComponentBillboard.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -811,7 +812,8 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Module\ModuleSpritesheet.h" />
+    <ClInclude Include="Engine\Component\ComponentBillboard.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

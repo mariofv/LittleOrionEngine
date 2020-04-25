@@ -35,17 +35,9 @@ public:
 	int YTiles = 0;
 	float X = 0, Y = 0;
 
-	float cell_size_x = 0;
-	float cell_Size_y = 0;
-
-	Timer bbtimer;
-
-	bool top_down = false;
-	
 	float sheet_speed = 0;
 
 private:
-	std::shared_ptr<Mesh> billboard_quad;
 	bool isSpritesheet;
 	float width = 5.f;
 	float height = 5.f;
@@ -64,6 +56,7 @@ private:
 
 	unsigned int EBO;
 
+	//Determines when the sprite is changed
 	int innerCount = 0;
 
 };

@@ -15,6 +15,7 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentBillboard.h"
 #include "EditorUI/DebugDraw.h"
 
 #include <SDL/SDL.h>
@@ -176,6 +177,11 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			glUseProgram(0);
 			
 		}
+	}
+
+	for (auto &bb : billboards_to_render)
+	{
+		bb->Render(bb->owner->aabb.bounding_box.CenterPoint());
 	}
 
 	rendering_measure_timer->Stop();
@@ -450,6 +456,23 @@ void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 	{
 		delete *it;
 		meshes.erase(it);
+	}
+}
+
+ComponentBillboard* ModuleRender::CreateComponentBillboard()
+{
+	ComponentBillboard *created_billboard = new ComponentBillboard(App->editor->selected_game_object);
+	billboards.push_back(created_billboard);
+	return created_billboard;
+}
+
+void ModuleRender::RemoveComponentBillboard(ComponentBillboard* billboard_to_remove)
+{
+	auto it = std::find(billboards.begin(), billboards.end(), billboard_to_remove);
+	if (it != billboards.end())
+	{
+		delete *it;
+		billboards.erase(it);
 	}
 }
 

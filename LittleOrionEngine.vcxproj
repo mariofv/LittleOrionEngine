@@ -104,9 +104,11 @@
     <ClInclude Include="Engine\AI\SampleDebugDraw.h" />
     <ClInclude Include="Engine\Animation\AnimController.h" />
     <ClInclude Include="Engine\Component\ComponentAnimation.h" />
+    <ClInclude Include="Engine\Component\ComponentBillboard.h" />
     <ClInclude Include="Engine\Component\ComponentScript.h" />
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.h" />
     <ClInclude Include="Engine\Helper\Config.h" />
     <ClInclude Include="Engine\Helper\Timer.h" />
     <ClInclude Include="Engine\Helper\TimerUs.h" />
@@ -114,7 +116,6 @@
     <ClInclude Include="Engine\Main\Application.h" />
     <ClInclude Include="Engine\Main\GameObject.h" />
     <ClInclude Include="Engine\Main\Globals.h" />
-    <ClInclude Include="Engine\Module\ModuleSpritesheet.h" />
     <ClInclude Include="Engine\Module\ModuleAnimation.h" />
     <ClInclude Include="Engine\Module\ModuleResourceManager.h" />
     <ClInclude Include="Engine\Module\ModuleScriptManager.h" />
@@ -237,9 +238,11 @@
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
     <ClCompile Include="Engine\Animation\AnimController.cpp" />
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp" />
+    <ClCompile Include="Engine\Component\ComponentBillboard.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
     <ClCompile Include="Engine\Helper\Timer.cpp" />
     <ClCompile Include="Engine\Helper\TimerUs.cpp" />
@@ -251,7 +254,6 @@
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp" />
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
     <ClCompile Include="Engine\Module\ModuleScriptManager.cpp" />
-    <ClCompile Include="Engine\Module\ModuleSpritesheet.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />

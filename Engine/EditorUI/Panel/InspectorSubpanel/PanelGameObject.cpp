@@ -5,6 +5,8 @@
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentBillboard.h"
+
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "Main/Application.h"
@@ -86,6 +88,9 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::ANIMATION:
 				component_panel.ShowComponentAnimationWindow(static_cast<ComponentAnimation*>(component));
 				break;
+			case Component::ComponentType::BILLBOARD:
+				component_panel.ShowComponentBillboard(static_cast<ComponentBillboard*>(component));
+
 			default:
 				break;
 		}

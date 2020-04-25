@@ -16,6 +16,7 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentBillboard.h"
 
 #include "Helper/Utils.h"
 
@@ -116,6 +117,76 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 		ImGui::SameLine();
 		sprintf(tmp_string, "%d", mesh->mesh_to_render->vertices.size());
 		ImGui::Button(tmp_string);
+	}
+}
+
+void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Billboard", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (ImGui::Checkbox("Active", &billboard->active))
+		{
+			//UndoRedo
+			App->actions->action_component = billboard;
+			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+			billboard->modified_by_user = true;
+		}
+		ImGui::SameLine();
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(billboard);
+			return;
+		}
+		ImGui::Separator();
+
+		ImGui::AlignTextToFramePadding();
+		
+		//char tmp_string[16];
+		ImGui::AlignTextToFramePadding();
+		ImGui::TextColored(ImVec4(1, 1, 0, 1),"Texture:");
+
+		
+
+		if (billboard->billboard_texture != nullptr)
+		{
+			if (ImGui::Button(billboard->billboard_texture->exported_file.c_str()))
+			{
+				App->editor->popups->material_selector_popup.show_material_selector_popup = true;
+			}
+			
+			ImGui::Image(
+				(void*)billboard->billboard_texture->opengl_texture,
+				ImVec2(100, 100),
+				ImVec2(0, 1),
+				ImVec2(1, 0),
+				ImVec4(1.f, 1.f, 1.f, 1.f),
+				ImVec4(1.f, 1.f, 1.f, 1.f)
+			);
+
+		}
+		else
+		{
+			if (ImGui::Button("Click to add texture"))
+			{
+				App->editor->popups->material_selector_popup.show_material_selector_popup = true;
+			}
+
+			ImGui::Text("None");
+			ImGui::Image(
+				(void*)nullptr,
+				ImVec2(100,100),
+				ImVec2(0, 1),
+				ImVec2(1, 0),
+				ImVec4(1.f, 1.f, 1.f, 1.f),
+				ImVec4(1.f, 1.f, 1.f, 1.f)
+			);
+		}
+
+
+
+		//sprintf(tmp_string, "%s", billboard->billboard_texture->exported_file.c_str());
+		//ImGui::Button(tmp_string);
+
 	}
 }
 
@@ -484,10 +555,14 @@ void PanelComponent::ShowAddNewComponentButton()
 		{
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
 
-			if (!App->editor->selected_game_object->IsStatic())
-			{
-				App->renderer->InsertAABBTree(App->editor->selected_game_object);
-			}
+
+		}
+		
+		sprintf_s(tmp_string, "%s Billboard", ICON_FA_SQUARE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->CreateComponent(Component::ComponentType::BILLBOARD);
+
 
 		}
 		sprintf_s(tmp_string, "%s Animation", ICON_FA_PLAY_CIRCLE);

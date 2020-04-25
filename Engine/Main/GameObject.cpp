@@ -19,6 +19,8 @@
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentBillboard.h"
+
 
 #include <Brofiler/Brofiler.h>
 #include <pcg_basic.h>
@@ -290,6 +292,10 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 
 	case Component::ComponentType::ANIMATION:
 		created_component = App->animations->CreateComponentAnimation();
+		break;
+
+	case Component::ComponentType::BILLBOARD:
+		created_component = App->renderer->CreateComponentBillboard();
 		break;
 
 	default:

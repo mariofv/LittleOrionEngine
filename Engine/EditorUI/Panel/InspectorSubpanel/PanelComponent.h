@@ -9,6 +9,7 @@ class Component;
 class ComponentAnimation;
 class ComponentCamera;
 class ComponentMeshRenderer;
+class ComponentBillboard;
 class ComponentTransform;
 class ComponentLight;
 class ComponentScript;
@@ -26,6 +27,7 @@ public:
 	void ShowComponentLightWindow(ComponentLight *light);
 	void ShowComponentAnimationWindow(ComponentAnimation *animation);
 	void ShowComponentScriptWindow(ComponentScript * component_script);
+	void ShowComponentBillboard(ComponentBillboard* billboard);
 	
 	void ShowAddNewComponentButton();
 
