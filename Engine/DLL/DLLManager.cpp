@@ -18,8 +18,8 @@ DLLManager::DLLManager()
 	working_directory += "/" + std::string(RESOURCE_SCRIPT_DLL_FILE);
 	CopyFile(RESOURCES_SCRIPT_DLL_PATH, working_directory.c_str(), false);
 	gameplay_dll = LoadLibrary(RESOURCE_SCRIPT_DLL_FILE);
-	return true;
-#endif
+	return;
+#else
 	CleanFolder();
 	dll_file = App->filesystem->GetPath(std::string("/") + RESOURCES_SCRIPT_DLL_PATH);
 	cr_plugin_open(hot_reloading_context, RESOURCES_SCRIPT_DLL_PATH);
@@ -29,10 +29,10 @@ DLLManager::DLLManager()
 	init_timestamp_dll = dll_file->GetModificationTimestamp();
 
 	InitFolderTimestamps();
-	
+#endif	
 
 }
-
+#if !GAME
 void DLLManager::InitFolderTimestamps()
 {
 	scripts_folder = App->filesystem->GetPath(std::string("/") + SCRIPT_PATH);
@@ -158,16 +158,16 @@ bool DLLManager::ReloadDLL()
 	}
 	return false;
 }
-
+#endif
 void DLLManager::CleanUp()
 {
 #if GAME
 	FreeLibrary(gameplay_dll);
-	return true;
+	return;
 #endif
 	cr_plugin_close(hot_reloading_context);
 }
-
+#if !GAME
 void DLLManager::CleanFolder() const
 {
 	Path* resource_folder = App->filesystem->GetPath(std::string("/") + RESOURCES_SCRIPT_PATH);
@@ -182,3 +182,4 @@ void DLLManager::CleanFolder() const
 		}
 	}
 }
+#endif

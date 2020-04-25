@@ -221,6 +221,7 @@ void ModuleScriptManager::RemoveScriptPointers()
 
 void ModuleScriptManager::ReloadDLL() 
 {
+#if !GAME
 	std::unordered_map<uint64_t, Config> config_list;
 	SaveVariables(config_list);
 	if (dll->gameplay_dll != nullptr) 
@@ -232,6 +233,7 @@ void ModuleScriptManager::ReloadDLL()
 	InitResourceScript();
 	LoadVariables(config_list);
 	dll->InitFolderTimestamps();
+#endif
 }
 
 void ModuleScriptManager::Refresh()
@@ -280,5 +282,7 @@ void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> con
 
 void ModuleScriptManager::CheckGameplayFolderStatus()
 {
+#if !GAME
 	dll->CheckGameplayFolderStatus();
+#endif
 }
