@@ -109,17 +109,19 @@ void ModuleScriptManager::CreateScript(const std::string& name)
 		bool compile = false;
 		bool include = false;
 		int count = 0;
+		int include_position = 0;
+		int compile_position = 0;
 		for (auto it = begin(text); it != end(text); ++it)
 		{
 			++count;
 			if (!include && it->find("<ClInclude Include=") != std::string::npos)
 			{
-				auto iter = text.insert(text.begin() + (count - 1), { "    <ClInclude Include=\"src\\Script\\" + name + ".h\" />" });
+				include_position = count + 1;
 				include = true;
 			}
 			if (!compile && it->find("<ClCompile Include=") != std::string::npos)
 			{
-				auto iter = text.insert(text.begin() + (count - 1), { "    <ClCompile Include=\"src\\Script\\" + name + ".cpp\" />" });
+				compile_position = count + 1;
 				compile = true;
 			}
 			if (compile && include)
@@ -127,11 +129,12 @@ void ModuleScriptManager::CreateScript(const std::string& name)
 				break;
 			}
 		}
+		text.insert(text.begin() + (include_position), { "    <ClInclude Include=\"src\\Script\\" + name + ".h\" />" });
+		text.insert(text.begin() + (compile_position), { "    <ClCompile Include=\"src\\Script\\" + name + ".cpp\" />" });
 		std::ofstream out_file("Assets/Scripts/GameplaySystem.vcxproj");
 		for (const auto &e : text) out_file << e << "\n";
 	}
 
-	APP_LOG_ERROR("HelloDarkness");
 }
 
 void ModuleScriptManager::InitResourceScript()
