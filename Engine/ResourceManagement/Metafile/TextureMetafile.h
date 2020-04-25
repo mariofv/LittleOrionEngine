@@ -19,7 +19,7 @@ public:
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
-	TextureType texture_type = TextureType::NORMAL;
+	TextureType texture_type = TextureType::DEFAULT;
 	bool generate_mipmaps = true;
 
 };

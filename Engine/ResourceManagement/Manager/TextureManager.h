@@ -53,7 +53,7 @@ public:
 
 private:
 	static std::vector<char> LoadCompressedDDS(const FileData& resource_data, DDS::DDS_HEADER & dds_header);
-	static std::vector<char> LoadImageData(const std::string& file_path, int & width, int & height);
+	static std::vector<char> LoadImageData(const FileData& resource_data,const std::string& file_path, int & width, int & height);
 
 };
 

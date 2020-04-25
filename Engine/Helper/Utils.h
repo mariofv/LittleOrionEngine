@@ -9,8 +9,8 @@ class Utils
 {
 public:
 
-	Utils();
-	~Utils();
+	Utils() = default;
+	~Utils() = default;
 
 	static Quat GenerateQuatFromDegFloat3(const float3& rotation);
 	static float3 GenerateDegFloat3FromQuat(const Quat& rotation);
@@ -31,6 +31,7 @@ public:
 	static float4x4 Interpolate(const float4x4& first, const float4x4& second, float lambda);
 
 	static float4x4 GetTransform(const aiMatrix4x4& current_transform, float scale_factor = 1.0);
+	static size_t GetImageType(const std::string& file_extension);
 };
 
 #endif //_UTILS_H_
