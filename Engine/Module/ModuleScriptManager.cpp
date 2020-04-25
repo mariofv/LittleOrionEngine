@@ -13,6 +13,7 @@
 #include "Script/Script.h"
 
 #include <algorithm>
+#include <fstream>
 
 
 bool ModuleScriptManager::Init()
@@ -38,7 +39,6 @@ update_status ModuleScriptManager::Update()
 	{
 		if(dll->DLLItsUpdated())
 		{
-			hot_reloading = true;
 			ReloadDLL();
 		}
 	}
@@ -95,8 +95,43 @@ void ModuleScriptManager::CreateScript(const std::string& name)
 		Utils::SaveFileContent(cpp_file, SCRIPT_PATH + std::string("/") + name + ".cpp");
 		Utils::SaveFileContent(header_file, SCRIPT_PATH + std::string("/") + name + ".h");
 		scripts_list.push_back(name);
+		//TODO: Move this into a function, I will do it after QA
+		std::ifstream gameplay_project("Assets/Scripts/GameplaySystem.vcxproj");
+		std::string lines;
+		std::vector<std::string> text;
+		while (std::getline(gameplay_project, lines))
+		{
+			if (lines.size() > 0)
+			{
+				text.push_back(lines);
+			}
+		}
+		bool compile = false;
+		bool include = false;
+		int count = 0;
+		for (auto it = begin(text); it != end(text); ++it)
+		{
+			++count;
+			if (!include && it->find("<ClInclude Include=") != std::string::npos)
+			{
+				auto iter = text.insert(text.begin() + (count - 1), { "    <ClInclude Include=\"src\\Script\\" + name + ".h\" />" });
+				include = true;
+			}
+			if (!compile && it->find("<ClCompile Include=") != std::string::npos)
+			{
+				auto iter = text.insert(text.begin() + (count - 1), { "    <ClCompile Include=\"src\\Script\\" + name + ".cpp\" />" });
+				compile = true;
+			}
+			if (compile && include)
+			{
+				break;
+			}
+		}
+		std::ofstream out_file("Assets/Scripts/GameplaySystem.vcxproj");
+		for (const auto &e : text) out_file << e << "\n";
 	}
-	
+
+	APP_LOG_ERROR("HelloDarkness");
 }
 
 void ModuleScriptManager::InitResourceScript()
@@ -194,7 +229,6 @@ void ModuleScriptManager::ReloadDLL()
 	InitResourceScript();
 	LoadVariables(config_list);
 	dll->InitFolderTimestamps();
-	hot_reloading = false;
 }
 
 void ModuleScriptManager::Refresh()
@@ -243,8 +277,5 @@ void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> con
 
 void ModuleScriptManager::CheckGameplayFolderStatus()
 {
-	if(!hot_reloading)
-	{
-		dll->CheckGameplayFolderStatus();
-	}
+	dll->CheckGameplayFolderStatus();
 }
