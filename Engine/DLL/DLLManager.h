@@ -23,7 +23,7 @@ public:
 	void CheckGameplayFolderStatus();
 	void CompileGameplayProject() const;
 
-	void CheckCompilation() const;
+	void CheckCompilation();
 
 	bool InitDLL();
 	bool ReloadDLL();
@@ -50,6 +50,8 @@ private:
 	long last_timestamp_script_folder;
 
 	std::vector<std::string> required_files{ "GamePlaySystem","GameplaySystemDebug","GameplaySystemRelease","TemplateScript"};
+
+	bool compiling = false;
 };
 
 #endif // !_PATH_H_

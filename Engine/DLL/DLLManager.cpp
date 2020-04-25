@@ -107,31 +107,35 @@ void DLLManager::CompileGameplayProject() const
 
 }
 
-void DLLManager::CheckCompilation() const
+void DLLManager::CheckCompilation()
 {
-	std::thread compilator = std::thread(&DLLManager::CompileGameplayProject, this);
-	compilator.join();
-	if (App->filesystem->Exists(COMPILED_FOLDER_DLL_PATH))
+	if (!compiling) 
 	{
-		if (App->filesystem->Exists(COMPILED_SCRIPT_DLL_PATH))
+		compiling = true;
+		std::thread compilator = std::thread(&DLLManager::CompileGameplayProject, this);
+		compilator.join();
+		if (App->filesystem->Exists(COMPILED_FOLDER_DLL_PATH))
 		{
-			APP_LOG_SUCCESS("Compiled Scripts Correctly!");
+			if (App->filesystem->Exists(COMPILED_SCRIPT_DLL_PATH))
+			{
+				APP_LOG_SUCCESS("Compiled Scripts Correctly!");
+			}
+			else
+			{
+				APP_LOG_ERROR("Error compiling scripts, do it manually to check errors");
+			}
 		}
 		else
 		{
-			APP_LOG_ERROR("Error compiling scripts, do it manually to check errors");
+			APP_LOG_ERROR("Command error, not compiled");
 		}
-	}
-	else
-	{
-		APP_LOG_ERROR("Command error, not compiled");
+		compiling = false;
 	}
 }
 
 bool DLLManager::InitDLL()
 {
 	auto p = (cr_internal *)hot_reloading_context.p;
-	//assert(p->handle);
 	gameplay_dll = (HMODULE)p->handle;
 	if (gameplay_dll == nullptr) 
 	{
