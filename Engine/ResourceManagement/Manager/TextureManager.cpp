@@ -18,9 +18,9 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
+constexpr size_t extension_size = 3;
 std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& resource_data)
 {
-
 	std::string extension;
 	TextureType texture_type;
 	char* cursor = (char*)resource_data.buffer;
@@ -28,28 +28,31 @@ std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& res
 	memcpy(&texture_type, cursor, bytes);
 
 	cursor += bytes;
-	bytes = 3;
-	extension.resize(3);
+	bytes = extension_size;
+	extension.resize(extension_size);
 	memcpy( extension.data(), cursor, bytes);
 
-	size_t offset =  3 + sizeof(TextureType);
-	std::shared_ptr<Texture> loaded_texture;
-	if (texture_type == TextureType::NORMAL)
+	size_t offset = extension_size + sizeof(TextureType);
+
+	std::vector<char> data;
+	int width, height;
+	bool normal_map = texture_type == TextureType::NORMAL;
+	if (normal_map)
 	{
-		int width, height;
-		std::vector<char> data = LoadImageData(resource_data, offset, extension,width, height);
-		loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), width, height, true);
+		 data = LoadImageData(resource_data, offset, extension,width, height);	
 	}
 	else
 	{
 		DDS::DDS_HEADER ddsHeader;
-		std::vector<char> data = LoadCompressedDDS(resource_data, offset, ddsHeader);
-		if (data.size())
-		{
-			loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), ddsHeader.dwWidth, ddsHeader.dwHeight);
-		}
+		data = LoadCompressedDDS(resource_data, offset, ddsHeader);
+		width = ddsHeader.dwWidth;
+		height = ddsHeader.dwHeight;
 	}
-
+	std::shared_ptr<Texture> loaded_texture;
+	if (data.size())
+	{
+		loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), width, height, normal_map);
+	}
 	return loaded_texture;
 }
 
