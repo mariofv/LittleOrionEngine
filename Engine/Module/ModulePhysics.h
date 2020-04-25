@@ -4,12 +4,13 @@
 #include "Module.h"
 #include "bullet3/btBulletDynamicsCommon.h"
 #include "bullet3/LinearMath/btIDebugDraw.h"
+#include "Component/ComponentCollider.h"
 #include "Helper/Timer.h"
 #include "Math/float3.h"
-#include "Main/GameObject.h"
-#include "Component/ComponentBoxPrimitive.h"
 
 #define BT_USE_FLOAT_PRECISION
+
+class GameObject;
 
 //Debug bullet draw
 class DebugDrawer : public btIDebugDraw
@@ -42,8 +43,8 @@ public:
 	btRigidBody* AddBody(btVector3& box_size);
 	void SetGravity(float3& newGgravity);
 	float3 GetGravity();
-	ComponentBoxPrimitive* CreateComponentBoxPrimitive(GameObject* owner);
-	void RemoveComponentBoxPrimitive(ComponentBoxPrimitive* box_to_remove);
+	ComponentCollider* CreateComponentCollider(const ComponentCollider::ColliderType collider_type, GameObject* owner);
+	void RemoveComponentCollider(ComponentCollider* collider_to_remove);
 
 public:
 
@@ -57,12 +58,12 @@ public:
 	Timer * physics_timer = nullptr;
 	float ms = 0;
 	std::vector<float> ms_info;
-	std::vector<ComponentBoxPrimitive*> boxes;
+	std::vector<ComponentCollider*> colliders;
 	math::float3 gravity = float3(0.0f, -1.0f, 0.0f); //gravity world
 
 private:
 
-	int subSteps = 0;
+	int subSteps = 1;
 	std::vector< btCollisionShape*> shapes;
 	DebugDrawer* debug_draw;
 	

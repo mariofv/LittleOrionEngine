@@ -10,6 +10,8 @@ class ComponentAnimation;
 class ComponentButton;
 class ComponentCamera;
 class ComponentCanvas;
+class ComponentCapsuleCollider;
+class ComponentCollider;
 class ComponentImage;
 class ComponentMeshRenderer;
 class ComponentLight;
@@ -19,7 +21,7 @@ class ComponentText;
 class ComponentTransform;
 class ComponentScript;
 class GameObject;
-class ComponentBoxPrimitive;
+class ComponentBoxCollider;
 
 class PanelComponent
 {
@@ -34,7 +36,7 @@ public:
 	void ShowComponentAnimationWindow(ComponentAnimation* animation);
 	void ShowComponentScriptWindow(ComponentScript* component_script);
 	void ShowComponentUIWindow(ComponentUI* ui);
-	void ShowComponentBox(ComponentBoxPrimitive* box);
+	void ShowComponentColliderWindow(ComponentCollider* collider);
 	void ShowAddNewComponentButton();
 
 	void ShowScriptsCreated(ComponentScript* component_script);
@@ -52,6 +54,10 @@ private:
 	void ShowComponentImageWindow(ComponentImage* image);
 	void ShowComponentTextWindow(ComponentText* text);
 	void ShowComponentButtonWindow(ComponentButton* button);
+
+	void ShowCommonColliderWindow(ComponentCollider* collider);
+	void ShowComponentBoxColliderWindow(ComponentBoxCollider* box);
+	void ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider* capsule_collider);
 
 	void DropStateMachine(ComponentAnimation* component_animation);
 	void DropTexture(ComponentUI* ui);

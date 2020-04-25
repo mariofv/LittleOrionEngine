@@ -1,5 +1,9 @@
 #include "ModulePhysics.h"
+#include "Component/ComponentBoxCollider.h"
+#include "Component/ComponentCapsuleCollider.h"
+#include "Component/ComponentCollider.h"
 #include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "ModuleTime.h"
 #include "ModuleDebugDraw.h"
 #include <GL/glew.h>
@@ -9,7 +13,6 @@
 
 ModulePhysics::ModulePhysics()
 {
-	subSteps = 1;
 	physics_timer = new Timer();	
 }
 
@@ -54,32 +57,18 @@ update_status ModulePhysics::Update()
 		world->debugDrawWorld();
 	}
 	
-	for (auto box : boxes) {
+	for (auto collider : colliders) {
 		
-		if (box->is_attached) {
-			if (App->time->isGameRunning())
-			{
-				box->MoveBody();
-			}
-			else
-			{
-				box->UpdateBoxDimensions();
-			}
-			world->synchronizeSingleMotionState(box->body);
+		if (App->time->isGameRunning())
+		{
+			collider->MoveBody();
 		}
-		else {
-			if (App->time->isGameRunning())
-			{
-				box->MoveNoAttachedBody();
-			}
-			else
-			{
-				box->UpdateNoAttachedBoxDimensions();
-			}
-			world->synchronizeSingleMotionState(box->body);
+		else
+		{
+			collider->UpdateBoxDimensions();
 		}
+			world->synchronizeSingleMotionState(collider->body);
 	}
-	
 	
 	float ms2;
 	ms2 = physics_timer->Read();
@@ -129,11 +118,39 @@ float3 ModulePhysics::GetGravity()
 	return gravity;
 }
 
-ComponentBoxPrimitive* ModulePhysics::CreateComponentBoxPrimitive(GameObject* owner)
+ComponentCollider* ModulePhysics::CreateComponentCollider(ComponentCollider::ColliderType collider_type, GameObject* owner)
 {
-	ComponentBoxPrimitive* createdBox = new ComponentBoxPrimitive(owner, Component::ComponentType::BOXPRIMITIVE);
-	boxes.push_back(createdBox);
-	return createdBox;
+	ComponentCollider* new_collider = nullptr;
+	switch (collider_type)
+	{
+		case ComponentCollider::ColliderType::BOX:
+			new_collider = new ComponentBoxCollider(owner);
+			break;
+		case ComponentCollider::ColliderType::CAPSULE:
+			new_collider = new ComponentCapsuleCollider(owner);
+			break;
+		case ComponentCollider::ColliderType::CIRCULE:
+			//new_collider = new ComponentCircleCollider(owner);
+			break;
+		case ComponentCollider::ColliderType::MESH:
+			//new_collider = new ComponentMeshCollider(owner);
+			break;
+	}
+	if (new_collider)
+	{
+		colliders.push_back(new_collider);
+	}
+	return new_collider;
+}
+
+void ModulePhysics::RemoveComponentCollider(ComponentCollider* collider_to_remove)
+{
+	auto it = std::find(colliders.begin(), colliders.end(), collider_to_remove);
+	if (it != colliders.end())
+	{
+		delete *it;
+		colliders.erase(it);
+	}
 }
 
 void DebugDrawer::drawLine(const btVector3 & from, const btVector3 & to, const btVector3 & color)
@@ -144,8 +161,7 @@ void DebugDrawer::drawLine(const btVector3 & from, const btVector3 & to, const b
 }
 
 void DebugDrawer::drawContactPoint(const btVector3 & PointOnB, const btVector3 & normalOnB, btScalar distance, int lifeTime, const btVector3 & color)
-{
-}
+{}
 
 void DebugDrawer::reportErrorWarning(const char * warningString)
 {
@@ -153,8 +169,7 @@ void DebugDrawer::reportErrorWarning(const char * warningString)
 }
 
 void DebugDrawer::draw3dText(const btVector3 & location, const char * textString)
-{
-}
+{}
 
 void DebugDrawer::setDebugMode(int debugMode)
 {
@@ -164,14 +179,4 @@ void DebugDrawer::setDebugMode(int debugMode)
 int DebugDrawer::getDebugMode() const
 {
 	return btIDebugDraw::DBG_DrawWireframe;
-}
-
-void ModulePhysics::RemoveComponentBoxPrimitive(ComponentBoxPrimitive* box_to_remove)
-{
-	auto it = std::find(boxes.begin(), boxes.end(), box_to_remove);
-	if (it != boxes.end())
-	{
-		delete *it;
-		boxes.erase(it);
-	}
 }

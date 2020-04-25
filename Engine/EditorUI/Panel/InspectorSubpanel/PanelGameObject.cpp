@@ -3,6 +3,7 @@
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentCapsuleCollider.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
@@ -10,7 +11,7 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentUI.h"
 #include "Component/ComponentButton.h"
-#include "Component/ComponentBoxPrimitive.h"
+#include "Component/ComponentBoxCollider.h"
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "Main/Application.h"
@@ -99,8 +100,8 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::ANIMATION:
 				component_panel.ShowComponentAnimationWindow(static_cast<ComponentAnimation*>(component));
 				break;
-			case Component::ComponentType::BOXPRIMITIVE:
-				component_panel.ShowComponentBox(static_cast<ComponentBoxPrimitive*>(component));
+			case Component::ComponentType::COLLIDER:
+				component_panel.ShowComponentColliderWindow(static_cast<ComponentCollider*>(component));
 				break;
 			default:
 				break;

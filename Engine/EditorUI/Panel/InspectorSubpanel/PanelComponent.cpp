@@ -11,10 +11,12 @@
 #include "EditorUI/Panel/PopupsPanel/PanelPopupMeshSelector.h"
 
 #include "Component/ComponentAnimation.h"
-#include "Component/ComponentBoxPrimitive.h"
+#include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentCapsuleCollider.h"
+#include "Component/ComponentCollider.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
@@ -201,12 +203,12 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		if (ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; };
-		if (ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; };
+		if (ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; }
+		if (ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; }
 
 		ImGui::Separator();
 
-		if (ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED)) { camera->modified_by_user = true; };
+		if (ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED)) { camera->modified_by_user = true; }
 
 		//UndoRedo
 		CheckClickedCamera(camera);
@@ -261,9 +263,11 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 				camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
 				camera->modified_by_user = true;
 				break;
+			default:
+				break;
 			}
 		}
-		if (ImGui::ColorEdit3("Clear Color", camera->camera_clear_color)) { camera->modified_by_user = true; };
+		if (ImGui::ColorEdit3("Clear Color", camera->camera_clear_color)) { camera->modified_by_user = true; }
 		ImGui::Separator();
 
 		if (ImGui::DragFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0.01f, 0, 100))
@@ -289,7 +293,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		if (ImGui::DragInt("Depth", &camera->depth, 0.05f)) { camera->modified_by_user = true; };
+		if (ImGui::DragInt("Depth", &camera->depth, 0.05f)) { camera->modified_by_user = true; }
 
 		//UndoRedo
 		CheckClickedCamera(camera);
@@ -317,11 +321,11 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 		}
 		ImGui::Separator();
 
-		if (ImGui::ColorEdit3("Color", light->light_color)) { light->modified_by_user = true; };
+		if (ImGui::ColorEdit3("Color", light->light_color)) { light->modified_by_user = true; }
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
-		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f)) { light->modified_by_user = true; };
+		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f)) { light->modified_by_user = true; }
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
@@ -339,6 +343,8 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 				break;
 			case 2:
 				light->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
+				break;
+			default:
 				break;
 			}
 		}
@@ -369,39 +375,6 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 			}
 		}
 
-	}
-}
-
-
-void PanelComponent::ShowComponentBox(ComponentBoxPrimitive* box)
-{
-	if (ImGui::CollapsingHeader(ICON_FA_BOX " Box Collider", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(box);
-			return;
-		}
-		ImGui::Separator();
-		if (ImGui::SliderFloat3("Scale", box->scale.ptr(), 0.1, 5))
-		{
-			box->Scale();
-		}
-
-		if (ImGui::DragFloat("Mass", &box->mass, 1.0f, 0.f, 100.f)) {
-			box->setMass(box->mass);
-		}
-		if (ImGui::Checkbox("Visualize", &box->visualize))
-		{
-			box->setVisualization();
-		}
-		if (ImGui::Checkbox("Detect collision", &box->detectCollision))
-		{
-			box->setCollisionDetection();
-		}
-		
-		
 	}
 }
 
@@ -449,7 +422,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		}
 		ImGui::AlignTextToFramePadding();
 		ImGui::Separator();
-		if (ImGui::Checkbox("Playing", &animation->playing));
+		if (ImGui::Checkbox("Playing", &animation->playing))
 		ImGui::SameLine();
 		if (ImGui::Button("Play"))
 		{
@@ -526,6 +499,26 @@ void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 		case ComponentUI::UIType::PROGRESSBAR:
 			ShowComponentProgressBarWindow(static_cast<ComponentProgressBar*>(ui));
 			break;
+	}
+}
+
+
+void PanelComponent::ShowComponentColliderWindow(ComponentCollider* collider)
+{
+	switch (collider->collider_type)
+	{
+	case ComponentCollider::ColliderType::BOX:
+		ShowComponentBoxColliderWindow(static_cast<ComponentBoxCollider*>(collider));
+		break;
+	case ComponentCollider::ColliderType::CAPSULE:
+		ShowComponentCapsuleColliderWindow(static_cast<ComponentCapsuleCollider*>(collider));
+		break;
+	case ComponentCollider::ColliderType::CIRCULE:
+		//ShowComponentCircleColliderWindow(static_cast<ComponentCircleCollider*>(collider));
+		break;
+	case ComponentCollider::ColliderType::MESH:
+		//ShowComponentMeshColliderWindow(static_cast<ComponentMeshCollider*>(collider));
+		break;
 	}
 }
 
@@ -635,7 +628,7 @@ void PanelComponent::CheckClickForUndo(ModuleActions::UndoActionType  type, Comp
 void PanelComponent::ShowAddNewComponentButton()
 {
 	float window_width = ImGui::GetWindowWidth();
-	float button_width = 0.5f * window_width;
+	float button_width = 0.5F * window_width;
 	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
 	ImGui::Button("Add Component", ImVec2(button_width, 25));
 
@@ -686,8 +679,13 @@ void PanelComponent::ShowAddNewComponentButton()
 		sprintf_s(tmp_string, "%s Box", ICON_FA_BOX);
 		if (ImGui::Selectable(tmp_string))
 		{
-			App->editor->selected_game_object->CreateComponent(Component::ComponentType::BOXPRIMITIVE);
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::BOX);
 
+		}
+		sprintf_s(tmp_string, "%s Capsule", ICON_FA_CAPSULES);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::CAPSULE);
 		}
 		ImGui::EndPopup();
 	}
@@ -840,4 +838,49 @@ void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 	DropTexture(ui);
 
 	ImGui::ColorPicker3("Color", ui->color.ptr());
+}
+
+void PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
+{
+	if (ImGui::Button("Delete"))
+	{
+		App->actions->DeleteComponentUndo(collider);
+		return;
+	}
+	ImGui::Separator();
+	if (ImGui::SliderFloat3("Scale", collider->scale.ptr(), 0.1F, 5.0F))
+	{
+		collider->Scale();
+	}
+
+	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.F, 100.F)) {
+		collider->SetMass(collider->mass);
+	}
+	if (ImGui::Checkbox("Visualize", &collider->visualize))
+	{
+		collider->SetVisualization();
+	}
+	if (ImGui::Checkbox("Detect collision", &collider->detectCollision))
+	{
+		collider->SetCollisionDetection();
+	}
+}
+
+
+void PanelComponent::ShowComponentBoxColliderWindow(ComponentBoxCollider* box)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_BOX " Box Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+
+		ShowCommonColliderWindow(box);
+	}
+}
+
+void PanelComponent::ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider* capsule_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_CAPSULES " capsule Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonColliderWindow(capsule_collider);
+		
+	}
 }

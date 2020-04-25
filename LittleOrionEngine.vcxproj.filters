@@ -457,9 +457,6 @@
     <ClCompile Include="Engine\Module\ModulePhysics.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentBoxPrimitive.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Libraries\include\NodeEditor\crude_json.cpp">
       <Filter>Libraries\NodeEditor</Filter>
     </ClCompile>
@@ -471,6 +468,15 @@
     </ClCompile>
     <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor_api.cpp">
       <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentCollider.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentBoxCollider.cpp">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentCapsuleCollider.cpp">
+      <Filter>Engine\Component\Collider</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -909,8 +915,14 @@
     <ClInclude Include="Engine\Module\ModulePhysics.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentBoxPrimitive.h">
+    <ClInclude Include="Engine\Component\ComponentCollider.h">
       <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentBoxCollider.h">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCapsuleCollider.h">
+      <Filter>Engine\Component\Collider</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -997,6 +1009,9 @@
     </Filter>
     <Filter Include="Libraries\NodeEditor">
       <UniqueIdentifier>{8917def4-6771-4d99-b8cf-0cd3bd85eff4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Component\Collider">
+      <UniqueIdentifier>{c8ef3eac-fee7-4389-b06b-74db96adeda5}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

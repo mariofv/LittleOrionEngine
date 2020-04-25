@@ -21,7 +21,7 @@ public:
 		SCRIPT,
 		TRANSFORM2D,
 		ANIMATION,
-		BOXPRIMITIVE
+		COLLIDER
 	};
 
 	Component(ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
