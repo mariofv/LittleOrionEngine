@@ -21,7 +21,7 @@ DLLManager::DLLManager()
 	return true;
 #endif
 	CleanFolder();
-	dll_file = App->filesystem->GetPath(std::string("/") + RESOURCES_SCRIPT_DLL_PATH);//RENAME DEFINED NAMES
+	dll_file = App->filesystem->GetPath(std::string("/") + RESOURCES_SCRIPT_DLL_PATH);
 	cr_plugin_open(hot_reloading_context, RESOURCES_SCRIPT_DLL_PATH);
 	cr_plugin_update(hot_reloading_context);
 	InitDLL();
@@ -56,7 +56,7 @@ bool DLLManager::CheckFolderTimestamps()
 			uint32_t timestamp = script->GetModificationTimestamp();
 			std::pair<Path*, uint32_t> script_timestamp(script, timestamp);
 			scripts_timestamp_map.insert(script_timestamp);
-			APP_LOG_INFO("HEY NEW FILE FOUND");
+			APP_LOG_INFO("HEY NEW FILE FOUND");//TO_REMOVE AFTER APPROVAL
 			return true;
 		}
 		else 
@@ -65,7 +65,7 @@ bool DLLManager::CheckFolderTimestamps()
 			if (search->second != new_timestamp)
 			{
 				scripts_timestamp_map[search->first] = new_timestamp;
-				APP_LOG_INFO("HEY NEW FILE MODIFIED");
+				APP_LOG_INFO("HEY NEW FILE MODIFIED");//TO_REMOVE AFTER APPROVAL
 				return true;
 			}
 		}
@@ -131,11 +131,12 @@ void DLLManager::CheckCompilation() const
 bool DLLManager::InitDLL()
 {
 	auto p = (cr_internal *)hot_reloading_context.p;
-	assert(p->handle);
+	//assert(p->handle);
 	gameplay_dll = (HMODULE)p->handle;
 	if (gameplay_dll == nullptr) 
 	{
-		return false;
+		cr_plugin_update(hot_reloading_context);
+		InitDLL();
 	}
 	return true;
 }
