@@ -65,6 +65,7 @@ private:
 public:
 	GameObject *selected_game_object = nullptr;
 	Metafile *selected_meta_file = nullptr;
+	bool show_game_object_inspector = true;
 	float3 selected_position = float3(0.0f, 0.0f, 0.0f);
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 	std::string current_scene_path = "";

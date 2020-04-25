@@ -299,6 +299,7 @@ void PanelHierarchy::ProcessMouseInput(GameObject *game_object)
 		if (App->input->GetMouseButtonUp(MouseButton::Left))
 		{
 			App->editor->selected_game_object = game_object;
+			App->editor->show_game_object_inspector = true;
 		}
 
 		if (ImGui::IsMouseDoubleClicked(0))

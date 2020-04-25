@@ -20,7 +20,7 @@ void ModelMetafile::Load(const Config& config)
 	Metafile::Load(config);
 
 	scale_factor = config.GetFloat("ScaleFactor", 0.01f);
-	convert_units = config.GetBool("Convert", false);
+	convert_units = config.GetBool("Convert", true);
 
 
 	import_mesh = config.GetBool("ImportMesh", true);

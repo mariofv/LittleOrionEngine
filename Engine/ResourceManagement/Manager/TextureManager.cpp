@@ -18,7 +18,7 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-constexpr size_t extension_size = 3;
+constexpr size_t extension_size = 3; //3 characters: DDS, TGA, JPG..
 std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& resource_data)
 {
 	std::string extension;

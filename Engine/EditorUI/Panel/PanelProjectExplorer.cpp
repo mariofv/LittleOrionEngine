@@ -211,6 +211,7 @@ void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafi
 	{
 		selected_file = metafile_path;
 		App->editor->selected_meta_file = metafile;
+		App->editor->show_game_object_inspector = false;
 		
 	}
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseDoubleClicked(0))
