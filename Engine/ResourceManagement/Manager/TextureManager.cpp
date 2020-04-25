@@ -23,60 +23,52 @@ std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& res
 
 	std::string extension;
 	TextureType texture_type;
-	FileData texture_file_data;
 	char* cursor = (char*)resource_data.buffer;
 	size_t bytes = sizeof(TextureType);
 	memcpy(&texture_type, cursor, bytes);
 
-	cursor += bytes; // Store indices
+	cursor += bytes;
 	bytes = 3;
 	extension.resize(3);
 	memcpy( extension.data(), cursor, bytes);
 
-	cursor += bytes; // Store vertices
-	bytes = resource_data.size - 3 - sizeof(TextureType);
-	char* texture_data = new char[bytes];
-	texture_file_data.size = bytes;
-	memcpy(texture_data, cursor, bytes);
-	texture_file_data.buffer = texture_data;
-
+	size_t offset =  3 + sizeof(TextureType);
 	std::shared_ptr<Texture> loaded_texture;
 	if (texture_type == TextureType::NORMAL)
 	{
 		int width, height;
-		std::vector<char> data = LoadImageData(texture_file_data, extension,width, height);
+		std::vector<char> data = LoadImageData(resource_data, offset, extension,width, height);
 		loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), width, height, true);
 	}
 	else
 	{
 		DDS::DDS_HEADER ddsHeader;
-		std::vector<char> data = LoadCompressedDDS(texture_file_data, ddsHeader);
+		std::vector<char> data = LoadCompressedDDS(resource_data, offset, ddsHeader);
 		if (data.size())
 		{
 			loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), ddsHeader.dwWidth, ddsHeader.dwHeight);
 		}
 	}
 
-
 	return loaded_texture;
 }
 
 
-std::vector<char> TextureManager::LoadImageData(const FileData& resource_data,const std::string& file_path, int & width, int & height)
+std::vector<char> TextureManager::LoadImageData(const FileData& resource_data, size_t offset, const std::string& extension, int & width, int & height)
 {
 	std::vector<char> data;
 	ILuint image;
 	ilGenImages(1, &image);
 	ilBindImage(image);
-	ilLoadL(Utils::GetImageType(file_path),resource_data.buffer, resource_data.size);
+	char* resource_data_with_offset = (char*)resource_data.buffer + offset;
+	ilLoadL(Utils::GetImageType(extension), resource_data_with_offset, resource_data.size - offset);
 
 	ILenum error;
 	error = ilGetError();
 	while (error != IL_NO_ERROR)
 	{
-		APP_LOG_ERROR("Error loading texture %s. %s", file_path.c_str(),iluErrorString(error));
+		APP_LOG_ERROR("Error loading texture: %s", iluErrorString(error));
 		error = ilGetError();
-		//return data;
 	}
 
 	ILinfo ImageInfo;
@@ -95,10 +87,10 @@ std::vector<char> TextureManager::LoadImageData(const FileData& resource_data,co
 	return data;
 }
 
-std::vector<char> TextureManager::LoadCompressedDDS(const FileData& resource_data, DDS::DDS_HEADER & dds_header)
+std::vector<char> TextureManager::LoadCompressedDDS(const FileData& resource_data, size_t offset, DDS::DDS_HEADER & dds_header)
 {
-	char * loaded_data = (char*)resource_data.buffer;
-	size_t dds_content_size = resource_data.size;
+	char * loaded_data = (char*)resource_data.buffer + offset;
+	size_t dds_content_size = resource_data.size - offset;
 
 	std::vector<char> data;
 	if (loaded_data)

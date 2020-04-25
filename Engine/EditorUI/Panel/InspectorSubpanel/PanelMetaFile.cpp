@@ -42,7 +42,7 @@ void PanelMetaFile::Render(Metafile * metafile)
 	{
 		App->resources->metafile_manager->TouchMetafileTimestamp(*metafile);
 		Path* imported_file_path = App->filesystem->GetPath(metafile->imported_file_path);
-		App->resources->Import(*imported_file_path);
+		App->resources->Import(*imported_file_path, true);
 	}
 }
 
