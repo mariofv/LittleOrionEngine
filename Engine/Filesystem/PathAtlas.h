@@ -33,10 +33,9 @@
 #define RESOURCES_GAME_INPUTS_PATH "/Resources/GameInputs"
 #define RESOURCES_GAME_INPUTS_FILENAME "game_inputs.inputs"
 
-# define RESOURCES_NAVMESH_PATH "/Resources/NavMesh"
+#define RESOURCES_NAVMESH_PATH "/Resources/NavMesh"
 
-#define MAIN_SCENE_PATH "/Library/Main.scene"
-#define MENU_SCENE_PATH "/Library/menuscene.scene"
+#define RESOURCES_BUILD_OPTIONS "/Resources/Scenes/build.options"
 
 #define DEFAULT_SCENE_PATH "/Resources/Scenes/default_scene.scene"
 #define SAVED_SCENE_PATH "/Assets/Scenes/scene.scene"

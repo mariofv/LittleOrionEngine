@@ -14,6 +14,7 @@
 class Component;
 
 class Panel;
+class PanelBuildOptions;
 class PanelMenuBar;
 class PanelToolBar;
 class PanelScene;
@@ -68,6 +69,7 @@ public:
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 	std::string current_scene_path = "";
 
+	PanelBuildOptions* build_options = nullptr;
 	PanelMenuBar* menu_bar = nullptr;
 	PanelToolBar* toolbar = nullptr;
 	PanelScene* scene_panel = nullptr;

@@ -85,6 +85,6 @@ void PlayerController::Save(Config& config) const
 //Use this for linking GO automatically
 void PlayerController::Load(const Config& config)
 {
-	player = config.GetUInt("Player", player);
+	player = static_cast<unsigned>(config.GetUInt("Player", player));
 }
 

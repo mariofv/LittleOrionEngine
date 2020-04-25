@@ -3,8 +3,11 @@
 #define ENGINE_EXPORTS
 
 #include "Module.h"
+#include "Helper/BuildOptions.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
+
+class Scene;
 
 class ModuleScene : public Module
 {
@@ -29,19 +32,30 @@ public:
 	void OpenPendingScene();
 	void DeleteCurrentScene();
 
-	void LoadScene(const std::string &path);
+	ENGINE_API void LoadScene(const std::string& path);
+	ENGINE_API void LoadScene(unsigned position);
+	void LoadScene();
+	void SaveScene();
+	void SaveTmpScene();
 	bool HasPendingSceneToLoad() const;
 
 private:
-	void OpenScene(const std::string &path);
+	void OpenScene();
+	inline void GetSceneResource();
+	void GetSceneFromPath(const std::string& path);
 
 private:
 	GameObject* root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
-	
+	std::shared_ptr<Scene> current_scene = nullptr;
+	uint32_t tmp_scene_uuid = 0;
 	std::string scene_to_load;
+	int build_options_position = -1;
+	bool load_tmp_scene = false;
+	std::unique_ptr<BuildOptions> build_options = nullptr;
 
 	friend class PanelScene;
+	friend class PanelBuildOptions;
 	friend class ModuleDebugDraw;
 };
 

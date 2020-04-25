@@ -14,6 +14,7 @@
 #include "ResourceManagement/Importer/ModelImporters/MeshImporter.h"
 #include "ResourceManagement/Importer/ModelImporters/SkeletonImporter.h"
 #include "ResourceManagement/Importer/PrefabImporter.h"
+#include "ResourceManagement/Importer/SceneImporter.h"
 #include "ResourceManagement/Importer/SkyboxImporter.h"
 #include "ResourceManagement/Importer/StateMachineImporter.h"
 #include "ResourceManagement/Importer/TextureImporter.h"
@@ -48,6 +49,7 @@ bool ModuleResourceManager::Init()
 	mesh_importer = std::make_unique<MeshImporter>();
 	model_importer = std::make_unique<ModelImporter>();
 	prefab_importer = std::make_unique<PrefabImporter>();
+	scene_importer = std::make_unique<SceneImporter>();
 	skeleton_importer = std::make_unique<SkeletonImporter>();
 	skybox_importer = std::make_unique<SkyboxImporter>();
 	state_machine_importer = std::make_unique<StateMachineImporter>();
@@ -191,6 +193,10 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path) const
 		case FileType::PREFAB:
 			asset_metafile = prefab_importer->Import(file_path);
 			break;
+		
+		case FileType::SCENE:
+			asset_metafile = scene_importer->Import(file_path);
+			break;
 
 		case FileType::SKELETON:
 			asset_metafile = skeleton_importer->Import(file_path);
@@ -223,7 +229,13 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path) const
 uint32_t ModuleResourceManager::CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name)
 {
 	Path* created_asset_file_path = creation_folder_path.Save(created_resource_name.c_str(), data);
-	return App->resources->InternalImport(*created_asset_file_path);
+	return InternalImport(*created_asset_file_path);
+}
+
+uint32_t ModuleResourceManager::CreateFromData(FileData data, const std::string& created_resource_path)
+{
+	Path* created_asset_file_path = App->filesystem->Save(created_resource_path, data);
+	return InternalImport(*created_asset_file_path);
 }
 
 std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32_t uuid) const
