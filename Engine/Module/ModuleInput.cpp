@@ -168,10 +168,12 @@ update_status ModuleInput::PreUpdate()
 			{
 				App->window->WindowResized(event.window.data1, event.window.data2);
 			}
+#if !GAME
 			if (event.window.event == SDL_WINDOWEVENT_EXPOSED)
 			{
 				App->scripts->CheckGameplayFolderStatus();
 			}
+#endif
 			break;
 
 		case SDL_MOUSEMOTION:
