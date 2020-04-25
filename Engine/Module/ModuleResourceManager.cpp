@@ -128,7 +128,7 @@ void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& director
 	}
 }
 
-void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path)
+void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path, bool force)
  {
 	 for (size_t i = 0; i < directory_path.children.size(); ++i)
 	 {
@@ -146,29 +146,29 @@ void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path)
 		 */
 		 if (path_child->IsDirectory())
 		 {
-			 ImportAssetsInDirectory(*path_child);
+			 ImportAssetsInDirectory(*path_child, force);
 		 }
 		 else if (path_child->IsImportable())
 		 {
-			 Import(*path_child);
+			 Import(*path_child, force);
 			 ++thread_comunication.loaded_items;
 		 }
 		 thread_comunication.thread_importing_hash = 0;
 	 }
  }
 
-uint32_t ModuleResourceManager::Import(Path& file_path)
+uint32_t ModuleResourceManager::Import(Path& file_path, bool force)
 {
 	std::lock_guard<std::mutex> lock(thread_comunication.thread_mutex);
-	uint32_t imported_resource_uuid = InternalImport(file_path);
+	uint32_t imported_resource_uuid = InternalImport(file_path, force);
 	return imported_resource_uuid;
 }
 
-uint32_t ModuleResourceManager::InternalImport(Path& file_path) const
+uint32_t ModuleResourceManager::InternalImport(Path& file_path, bool force) const
 {
 	Metafile* asset_metafile = nullptr;
 
-	if (Importer::ImportRequired(file_path))
+	if (force || Importer::ImportRequired(file_path))
 	{
 		switch (file_path.GetFile()->GetFileType())
 		{

@@ -37,14 +37,12 @@ public:
 	AnimController & operator=(AnimController&& controller_to_move) = default;
 
 	bool Update();
-	void SetActiveAnimation();
-
-	void GetPose(uint32_t skeleton_uuid, std::vector<float4x4>& pose);
+	void SetStateMachine(uint32_t state_machine_uuid);
+	void GetClipTransform(uint32_t skeleton_uuid, std::vector<math::float4x4>& pose);
 	void StartNextState(const std::string& trigger);
 private:
+	void SetActiveState(std::shared_ptr<State> & state);
 	void FinishActiveState();
-	std::vector<float4x4> InterpolatePoses(const std::vector<float4x4>& first_pose, const std::vector<float4x4>& second_pose, float weight) const;
-	void GetClipTransform(float current_time, uint32_t skeleton_uuid, const std::shared_ptr<Clip>& clip, std::vector<math::float4x4>& pose) const;
 public:
 	std::shared_ptr<StateMachine> state_machine;
 	std::vector<PlayingClip> playing_clips;

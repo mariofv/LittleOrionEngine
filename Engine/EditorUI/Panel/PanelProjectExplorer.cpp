@@ -264,6 +264,10 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 			}
 			ImGui::EndMenu();
 		}
+		if (ImGui::Selectable("Reimport"))
+		{
+			App->resources->ImportAssetsInDirectory(*path, true);
+		}
 		/* TODO: Finish this
 		if (ImGui::Selectable("Delete"))
 		{
