@@ -297,8 +297,6 @@
     <ClInclude Include="Engine\Module\ModuleAI.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelNavMesh.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelBuildOptions.h" />
-    <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h" />
-    <ClInclude Include="resource.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -471,9 +469,6 @@
     <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl" />
     <None Include="Libraries\include\NodeEditor\imgui_extra_math.inl" />
     <None Include="Libraries\include\NodeEditor\imgui_node_editor_internal.inl" />
-  </ItemGroup>
-  <ItemGroup>
-    <ResourceCompile Include="LittleOrionEngine.rc" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
