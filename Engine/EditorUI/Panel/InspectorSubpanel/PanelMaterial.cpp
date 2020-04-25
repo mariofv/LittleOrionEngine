@@ -75,7 +75,7 @@ void PanelMaterial::ShowMaterialTextureMap(Material* material, Material::Materia
 {
 	ImGui::PushID(static_cast<unsigned int>(type));
 
-	float material_texture_map_size = 20.f;
+	float material_texture_map_size = 20.F;
 
 	if (material->textures[type].get() != nullptr) {
 		char tmp_string[256];

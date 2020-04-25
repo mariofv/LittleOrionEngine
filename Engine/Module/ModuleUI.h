@@ -43,7 +43,7 @@ public:
 
 	void Render(const ComponentCamera* camera);
 
-	ComponentUI* CreateComponentUI(const ComponentUI::UIType, GameObject*);
+	ComponentUI* CreateComponentUI(const ComponentUI::UIType ui_type, GameObject* owner);
 	void RemoveComponentUI(ComponentUI* ui_to_remove);
 
 	//Glyph init 

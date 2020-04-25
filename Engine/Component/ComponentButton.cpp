@@ -31,7 +31,7 @@ void ComponentButton::Render(float4x4* projection)
 	ComponentUI* text = nullptr;
 	for (auto child : owner->children)
 	{
-		text = static_cast<ComponentUI*>(child->GetComponentUI(ComponentUI::UIType::TEXT));
+		text = static_cast<ComponentUI*>(child->GetComponent(ComponentUI::UIType::TEXT));
 		if (text)
 		{
 			ComponentTransform2D* text_transform = &text->owner->transform_2d;

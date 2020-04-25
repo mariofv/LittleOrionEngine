@@ -27,8 +27,8 @@ public:
 		public: 
 			void ChangePointLightAttenuationValues(float range)
 			{
-				linear = 4.5 / (10 * range);
-				quadratic = 75.0 / (range * range);
+				linear = 4.5F / (10 * range);
+				quadratic = 75.0F / (range * range);
 			}
 	};
 
@@ -50,8 +50,8 @@ public:
 
 			void ChangeSpotLightAttenuationValues(float range)
 			{
-				linear = 4.5 / range;
-				quadratic = 75.0 / (range * range);
+				linear = 4.5F / range;
+				quadratic = 75.0F / (range * range);
 			}
 
 		public: 
