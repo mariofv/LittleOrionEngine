@@ -90,7 +90,7 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 }
 
 
-GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject> & game_object_to_add)
+GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject>& game_object_to_add)
 {
 	game_objects_ownership.emplace_back(std::move(game_object_to_add));
 	GameObject * game_object = game_objects_ownership.back().get();
@@ -101,6 +101,30 @@ GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject> & game_object
 	}
 	return game_object;
 
+}
+
+GameObject* ModuleScene::DuplicateGameObject(GameObject* game_object, GameObject* parent_go)
+{
+	GameObject* duplicated_go = nullptr;
+	if(game_object->is_prefab_parent)
+	{
+		duplicated_go = game_object->prefab_reference->Instantiate(game_object);
+		duplicated_go->SetParent(parent_go);
+		duplicated_go->SetTransform(game_object);
+		duplicated_go->name += " (1)";
+	}
+	else if(game_object->prefab_reference == nullptr)
+	{
+		duplicated_go = AddGameObject(std::make_unique<GameObject>(*game_object));
+		duplicated_go->SetParent(parent_go);
+		duplicated_go->name += " (1)";
+	}
+	for (const auto go : game_object->children)
+	{
+		DuplicateGameObject(go, duplicated_go);
+	}
+
+	return duplicated_go;
 }
 
 
