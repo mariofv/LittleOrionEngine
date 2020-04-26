@@ -118,14 +118,19 @@ void main()
 {
 
 	vec3 result = vec3(0);
-	vec4 diffuse_color  = GetDiffuseColor(material, texCoord);
-	vec4 specular_color  = GetSpecularColor(material, texCoord);
-	vec3 occlusion_color = GetOcclusionColor(material, texCoord);
-	vec3 emissive_color  = GetEmissiveColor(material, texCoord);
+
+	//tiling
+	vec2 tiling = vec2(material.tiling_x, material.tiling_y)*texCoord; 
+
+	//computation of colors
+	vec4 diffuse_color  = GetDiffuseColor(material, tiling);
+	vec4 specular_color  = GetSpecularColor(material, tiling);
+	vec3 occlusion_color = GetOcclusionColor(material, tiling);
+	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
 	if(material.use_normal_map)
 	{
-		vec3 normal_from_texture = GetNormalMap(material, texCoord);
+		vec3 normal_from_texture = GetNormalMap(material, tiling);
 
 		vec3 fragment_normal = normalize(TBN * normal_from_texture);
 
@@ -177,37 +182,28 @@ void main()
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 {
-	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
-	tiling *= texCoord;
-	return texture(mat.diffuse_map, tiling)*mat.diffuse_color;
+	
+	return texture(mat.diffuse_map, texCoord)*mat.diffuse_color;
 }
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
 {
-	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
-	tiling *= texCoord;
-	return texture(mat.specular_map, tiling)*mat.specular_color;
+	return texture(mat.specular_map, texCoord)*mat.specular_color;
 }
 
 vec3 GetOcclusionColor(const Material mat, const vec2 texCoord)
 {
-	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
-	tiling *= texCoord;
-	return texture(mat.occlusion_map, tiling).rgb;
+	return texture(mat.occlusion_map, texCoord).rgb;
 }
 
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 {
-	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
-	tiling *= texCoord;
-	return (texture(mat.emissive_map, tiling)*mat.emissive_color).rgb;
+	return (texture(mat.emissive_map, texCoord)*mat.emissive_color).rgb;
 }
 
 vec3 GetNormalMap(const Material mat, const vec2 texCoord)
 {
-	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
-	tiling *= texCoord;
-	return texture(mat.normal_map, tiling).rgb*2.0-1.0;
+	return texture(mat.normal_map, texCoord).rgb*2.0-1.0;
 }
 
 vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
