@@ -101,9 +101,9 @@ vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 vec3 GetNormalMap(const Material mat, const vec2 texCoord);
 
 //TYPE OF LIGHTS
-vec3 CalculateDirectionalLight(const vec3 normalized_normal);
-vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal);
-vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal);
+vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
+vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
+vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 
 //BRDF
 float DistributionGGX(vec3 normal, vec3 half_dir, float roughness);
@@ -117,11 +117,11 @@ vec3 BRDF(vec3 view_pos, vec3 normal, vec3 half_dir, vec3 light_dir, float rough
 void main()
 {
 
-	vec3 normalized_normal = normalize(normal);
-	vec3 normalized_tangent = normalize(tangent);
 	vec3 result = vec3(0);
-
-	
+	vec4 diffuse_color  = GetDiffuseColor(material, texCoord);
+	vec4 specular_color  = GetSpecularColor(material, texCoord);
+	vec3 occlusion_color = GetOcclusionColor(material, texCoord);
+	vec3 emissive_color  = GetEmissiveColor(material, texCoord);
 
 	if(material.use_normal_map)
 	{
@@ -131,18 +131,18 @@ void main()
 
 		for (int i = 0; i < directional_light.num_directional_lights; ++i)
 		{
-			result += CalculateDirectionalLight(fragment_normal);
+			result += CalculateDirectionalLight(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 
 		}
 
 		for (int i = 0; i < num_spot_lights; ++i)
 		{
-			result += CalculateSpotLight(spot_lights[i], fragment_normal);
+			result += CalculateSpotLight(spot_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		}
 
 		for (int i = 0; i < num_point_lights; ++i)
 		{
-			result += CalculatePointLight(point_lights[i], fragment_normal);	
+			result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);	
 		}
 	}
 
@@ -150,18 +150,18 @@ void main()
 	{
 		for (int i = 0; i < directional_light.num_directional_lights; ++i)
 		{
-			result += CalculateDirectionalLight(normal);
+			result += CalculateDirectionalLight(normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 
 		}
 
 		for (int i = 0; i < num_spot_lights; ++i)
 		{
-			result += CalculateSpotLight(spot_lights[i], normal);
+			result += CalculateSpotLight(spot_lights[i], normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		}
 
 		for (int i = 0; i < num_point_lights; ++i)
 		{
-			result += CalculatePointLight(point_lights[i], normal);	
+			result += CalculatePointLight(point_lights[i], normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);	
 		}
 	}
 
@@ -210,7 +210,7 @@ vec3 GetNormalMap(const Material mat, const vec2 texCoord)
 	return texture(mat.normal_map, tiling).rgb*2.0-1.0;
 }
 
-vec3 CalculateDirectionalLight(const vec3 normalized_normal)
+vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
 
 	vec3 light_dir   = normalize(-directional_light.direction );
@@ -230,10 +230,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal)
 		}
 	}
 
-	vec4 diffuse_color  = GetDiffuseColor(material, texCoord);
-	vec4 specular_color  = GetSpecularColor(material, texCoord);
-	vec3 occlusion_color = GetOcclusionColor(material, texCoord);
-	vec3 emissive_color  = GetEmissiveColor(material, texCoord);
+	
 
 	return directional_light.color * (
 		emissive_color
@@ -243,7 +240,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal)
 	);
 }
 
-vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal)
+vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
 	vec3 light_dir   = normalize(spot_light.position - position);
     float diffuse    = max(0.0, dot(normalized_normal, light_dir));
@@ -261,11 +258,7 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal)
 		}
 	} 
 
-    vec4 diffuse_color  = GetDiffuseColor(material, texCoord);
-	vec4 specular_color  = GetSpecularColor(material, texCoord);
-	vec3 occlusion_color = GetOcclusionColor(material, texCoord);
-	vec3 emissive_color  = GetEmissiveColor(material, texCoord);
-
+  
     float theta = dot(light_dir, normalize(-spot_light.direction)); 
     float epsilon = (spot_light.cutOff - spot_light.outerCutOff);
     float intensity = clamp((theta - spot_light.outerCutOff) / epsilon, 0.0, 1.0);
@@ -283,7 +276,7 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal)
 
 }
 
-vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal)
+vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
 
 	vec3 light_dir   = normalize(point_light.position - position);
@@ -294,12 +287,6 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal)
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
     float spec       = max(dot(normalized_normal, half_dir), 0.0);
 	specular		 = pow(spec, material.specular_color.w);
-
-
-	vec4 diffuse_color  = GetDiffuseColor(material, texCoord);
-	vec4 specular_color  = GetSpecularColor(material, texCoord);
-	vec3 occlusion_color = GetOcclusionColor(material, texCoord);
-	vec3 emissive_color  = GetEmissiveColor(material, texCoord);
 
 
 	float distance    = length(point_light.position - position);
