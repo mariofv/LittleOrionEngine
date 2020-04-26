@@ -481,7 +481,6 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Scene.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
@@ -493,6 +492,9 @@
     </ClCompile>
     <ClCompile Include="Engine\DLL\DLLManager.cpp">
       <Filter>Engine\DLL</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -964,7 +966,6 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Scene.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
@@ -974,14 +975,14 @@
     <ClInclude Include="Engine\Helper\BuildOptions.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Helper\cr.h">
-      <Filter>Libraries\cr</Filter>
-    </ClInclude>
     <ClInclude Include="Libraries\include\cr\cr.h">
       <Filter>Libraries\cr</Filter>
     </ClInclude>
     <ClInclude Include="Engine\DLL\DLLManager.h">
       <Filter>Engine\DLL</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
