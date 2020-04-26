@@ -74,5 +74,5 @@ namespace ResourceManagement
 	};
 }
 
-#endif // !_MESH_H_
+#endif // !_MATERIAL_H_
 

@@ -65,7 +65,7 @@ void WorldManager::Update()
 
 	if(transition && App->input->GetAnyKeyPressedDown())
 	{
-		App->editor->OpenScene(MENU_SCENE_PATH);
+		App->scene->LoadScene(0);
 	}
 
 }
@@ -106,7 +106,7 @@ void WorldManager::InitPublicGameObjects()
 
 
 
-	for (int i = 0; i < public_gameobjects.size(); ++i)
+	for (unsigned i = 0; i < public_gameobjects.size(); ++i)
 	{
 		name_gameobjects.push_back(is_object);
 		go_uuids.push_back(0);

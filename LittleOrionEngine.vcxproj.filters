@@ -475,11 +475,21 @@
     <ClCompile Include="Engine\ResourceManagement\Manager\StateMachineManager.cpp">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\SceneImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Scene.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp">
-      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelBuildOptions.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helper\BuildOptions.cpp">
+      <Filter>Engine\Helper</Filter>
     </ClCompile>
     <ClCompile Include="Engine\DLL\DLLManager.cpp">
       <Filter>Engine\DLL</Filter>
@@ -948,11 +958,21 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\StateMachineManager.h">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Scene.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h">
-      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelBuildOptions.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\BuildOptions.h">
+      <Filter>Engine\Helper</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Helper\cr.h">
       <Filter>Libraries\cr</Filter>

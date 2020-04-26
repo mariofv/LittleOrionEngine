@@ -1,6 +1,7 @@
 #include "ModuleEditor.h"
 
 #include "EditorUI/Panel/PanelAbout.h"
+#include "EditorUI/Panel/PanelBuildOptions.h"
 #include "EditorUI/Panel/PanelConfiguration.h"
 #include "EditorUI/Panel/PanelConsole.h"
 #include "EditorUI/Panel/PanelDebug.h"
@@ -62,6 +63,7 @@ bool ModuleEditor::Init()
 	panels.push_back(popups = new PanelPopups());
 	panels.push_back(nav_mesh = new PanelNavMesh());
 	panels.push_back(state_machine = new PanelStateMachine());
+	panels.push_back(build_options = new PanelBuildOptions());
 
 	return ret;
 }
@@ -115,15 +117,15 @@ update_status ModuleEditor::Update()
 #if GAME
 	if (!inital_scene_loaded)
 	{
-		OpenScene(MENU_SCENE_PATH);
+		App->scene->LoadScene(0);
 		App->scripts->InitScripts();
 		inital_scene_loaded = true;
 		return update_status::UPDATE_CONTINUE;
 	}
-#else
+#else	
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
-		OpenScene(DEFAULT_SCENE_PATH);
+		App->scene->LoadScene(0);
 		inital_scene_loaded = true;
 	}
 	//ImGui::ShowStyleEditor();
@@ -239,9 +241,9 @@ ENGINE_API void ModuleEditor::OpenScene(const std::string &path) const
 	App->scene->LoadScene(path);
 }
 
-void ModuleEditor::SaveScene(const std::string &path) const
+void ModuleEditor::SaveScene(const std::string& path) const
 {
-	App->resources->scene_manager->Save(path, App->scene->GetRoot());
+	App->scene->SaveScene();
 }
 
 ImFont* ModuleEditor::GetFont(const Fonts & font) const

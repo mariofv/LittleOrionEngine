@@ -239,6 +239,7 @@ bool Path::IsImportable() const
 		|| file_type == FileType::MESH
 		|| file_type == FileType::MODEL
 		|| file_type == FileType::PREFAB
+		|| file_type == FileType::SCENE
 		|| file_type == FileType::SKELETON
 		|| file_type == FileType::SKYBOX
 		|| file_type == FileType::STATE_MACHINE
