@@ -7,6 +7,7 @@
 #include <iostream>
 #include <string>
 #include <unordered_map>
+
 class Path;
 
 class DLLManager
@@ -52,6 +53,7 @@ private:
 	std::vector<std::string> required_files{ "GamePlaySystem","GameplaySystemDebug","GameplaySystemRelease","TemplateScript"};
 
 	bool compiling = false;
+	bool hot_reloading = false;
 };
 
 #endif // !_PATH_H_
