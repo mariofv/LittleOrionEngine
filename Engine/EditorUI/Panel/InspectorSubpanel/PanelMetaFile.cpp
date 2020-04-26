@@ -37,7 +37,7 @@ void PanelMetaFile::Render(Metafile * metafile)
 	ImGui::InputScalar("###TimeStamp", ImGuiDataType_S64, &(metafile->timestamp), nullptr, nullptr, nullptr, ImGuiInputTextFlags_ReadOnly);
 	ShowSpecializedMetaFile(metafile);
 
-	ImGui::Spacing();
+	ImGui::Separator();
 	if (ImGui::Button("Apply"))
 	{
 		App->resources->metafile_manager->TouchMetafileTimestamp(*metafile);
@@ -62,9 +62,12 @@ void PanelMetaFile::ShowSpecializedMetaFile(Metafile * metafile)
 
 void PanelMetaFile::ShowModelMetaFile(ModelMetafile * metafile)
 {
-	ImGui::Text("Scale Factor"); ImGui::SameLine();
-	ImGui::InputFloat("###Scale",&(metafile->scale_factor));
 	ImGui::Checkbox("Apply scale", &metafile->convert_units);
+	if (metafile->convert_units)
+	{
+		ImGui::Text("Scale Factor"); ImGui::SameLine();
+		ImGui::InputFloat("###Scale", &(metafile->scale_factor));
+	}
 
 	ImGui::Spacing();
 	ImGui::Checkbox("Import Meshes",&metafile->import_mesh);
