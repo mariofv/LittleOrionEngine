@@ -9,6 +9,12 @@ enum TextureType
 	NORMAL,
 	TOTAL
 };
+struct TextureOptions
+{
+	TextureType texture_type = TextureType::DEFAULT;
+	bool generate_mipmaps = true;
+
+};
 class TextureMetafile : public Metafile
 {
 
@@ -19,9 +25,7 @@ public:
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
-	TextureType texture_type = TextureType::DEFAULT;
-	bool generate_mipmaps = true;
-
+	TextureOptions texture_options;
 };
 
 #endif

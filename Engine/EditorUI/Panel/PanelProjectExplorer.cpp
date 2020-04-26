@@ -207,7 +207,7 @@ void PanelProjectExplorer::ResourceDragSource(Metafile* metafile) const
 
 void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafile* metafile)
 {
-	if (ImGui::IsWindowHovered() && ImGui::IsMouseClicked(0))
+	if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(0))
 	{
 		selected_file = metafile_path;
 		App->editor->selected_meta_file = metafile;

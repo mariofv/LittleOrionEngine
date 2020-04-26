@@ -103,6 +103,7 @@ void MetafileManager::TouchMetafileTimestamp(Metafile& metafile)
 	seconds current_timestamp = duration_cast<seconds>(system_clock::now().time_since_epoch());
 	long long timestamp = current_timestamp.count();
 	metafile.timestamp = timestamp;
+	metafile.version = Importer::IMPORTER_VERSION;
 
 	Config metafile_config;
 	metafile.Save(metafile_config);

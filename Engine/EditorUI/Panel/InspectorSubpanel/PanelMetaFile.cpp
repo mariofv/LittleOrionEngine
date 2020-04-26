@@ -76,22 +76,22 @@ void PanelMetaFile::ShowModelMetaFile(ModelMetafile * metafile)
 void PanelMetaFile::ShowTextureMetaFile(TextureMetafile * metafile)
 {
 	static std::vector<const char*> texture_types = {"Default", "Normal Map"};
-	if (ImGui::BeginCombo("Texture type", GetTextureTypeName(metafile->texture_type).c_str()))
+	if (ImGui::BeginCombo("Texture type", GetTextureTypeName(metafile->texture_options.texture_type).c_str()))
 	{
 		size_t i = 0;
 		for (auto& texture_type : texture_types)
 		{
-			bool is_selected = (i == metafile->texture_type);
+			bool is_selected = (i == metafile->texture_options.texture_type);
 			if (ImGui::Selectable(texture_type, is_selected))
 			{
-				metafile->texture_type = static_cast<TextureType>(i);
+				metafile->texture_options.texture_type = static_cast<TextureType>(i);
 			}
 			++i;
 		}
 		ImGui::EndCombo();
 	}
 
-	ImGui::Checkbox("Generate Mip Maps", &metafile->generate_mipmaps);
+	ImGui::Checkbox("Generate Mip Maps", &metafile->texture_options.generate_mipmaps);
 }
 
 std::string PanelMetaFile::GetTextureTypeName(TextureType texture_type_id) const

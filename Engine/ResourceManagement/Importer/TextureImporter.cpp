@@ -25,7 +25,7 @@ FileData TextureImporter::ExtractData(Path& assets_file_path, const Metafile& me
 {
 	const TextureMetafile& texture_metafile = static_cast<const TextureMetafile&>(metafile);
 	FileData file_data;
-	if (texture_metafile.texture_type != TextureType::DEFAULT)
+	if (texture_metafile.texture_options.texture_type != TextureType::DEFAULT)
 	{
 		file_data = ExtractDataToTGA(assets_file_path);
 	}
@@ -41,12 +41,12 @@ const FileData &TextureImporter::CreateBinary(Path & assets_file_path, FileData 
 {
 	std::string extension = assets_file_path.GetExtension();
 
-	uint32_t size = sizeof(TextureType) + extension.size() + file_data.size;
+	uint32_t size = sizeof(TextureOptions) + extension.size() + file_data.size;
 
 	char* data = new char[size];
 	char* cursor = data;
-	size_t bytes = sizeof(TextureType);
-	memcpy(cursor, &texture_metafile.texture_type, bytes);
+	size_t bytes = sizeof(TextureOptions);
+	memcpy(cursor, &texture_metafile.texture_options, bytes);
 
 	cursor += bytes;
 	bytes = extension.size();

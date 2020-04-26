@@ -22,21 +22,21 @@ constexpr size_t extension_size = 3; //3 characters: DDS, TGA, JPG..
 std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& resource_data)
 {
 	std::string extension;
-	TextureType texture_type;
+	TextureOptions texture_options;
 	char* cursor = (char*)resource_data.buffer;
-	size_t bytes = sizeof(TextureType);
-	memcpy(&texture_type, cursor, bytes);
+	size_t bytes = sizeof(TextureOptions);
+	memcpy(&texture_options, cursor, bytes);
 
 	cursor += bytes;
 	bytes = extension_size;
 	extension.resize(extension_size);
 	memcpy( extension.data(), cursor, bytes);
 
-	size_t offset = extension_size + sizeof(TextureType);
+	size_t offset = extension_size + sizeof(TextureOptions);
 
 	std::vector<char> data;
 	int width, height;
-	bool normal_map = texture_type == TextureType::NORMAL;
+	bool normal_map = texture_options.texture_type == TextureType::NORMAL;
 	if (normal_map)
 	{
 		 data = LoadImageData(resource_data, offset, extension,width, height);	
@@ -51,7 +51,7 @@ std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& res
 	std::shared_ptr<Texture> loaded_texture;
 	if (data.size())
 	{
-		loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), width, height, normal_map);
+		loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), width, height, texture_options);
 	}
 	return loaded_texture;
 }
