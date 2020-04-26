@@ -47,6 +47,8 @@ private:
 
 	void ReloadDLL();
 
+	void UpdateGameplayProject(const std::string& script_name);
+
 public:
 	void Refresh();
 	void ReLink();
@@ -56,14 +58,14 @@ public:
 	
 	void CheckGameplayFolderStatus();
 
+
 public:
 	std::vector<ComponentScript*> scripts;
 	std::vector<std::string> scripts_list;
-
-private:
-	DLLManager* dll = nullptr;
 	bool hot_reloading = false;
 
+private:
+	std::shared_ptr<DLLManager> dll = nullptr;
 };
 
 #endif //_MODULEMANAGERSCRIPT_H_
