@@ -26,9 +26,11 @@ public:
 	GameObject(const GameObject& gameobject_to_copy);
 	GameObject(GameObject&& gameobject_to_move) = default;
 
-	GameObject & operator=(const GameObject& gameobject_to_copy) = default;
-	GameObject & operator<<(const GameObject& gameobject_to_copy);
-	GameObject & operator=(GameObject&& gameobject_to_move) = default;
+	GameObject& operator=(const GameObject& gameobject_to_copy);
+	GameObject& operator<<(const GameObject& gameobject_to_copy);
+	GameObject& operator=(GameObject&& gameobject_to_move) = default;
+
+	void SetTransform(GameObject* game_object);
 
 	ENGINE_API bool IsEnabled() const;
 	ENGINE_API void SetEnabled(bool able);
