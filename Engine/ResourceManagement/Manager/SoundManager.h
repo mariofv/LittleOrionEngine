@@ -13,7 +13,7 @@ public:
 	~SoundManager() = default;
 	static std::shared_ptr<Sound> Load(uint32_t uuid, const FileData& resource_data);
 private:
-	static void Init();
+	static std::shared_ptr<Sound>  Init();
 };
 
 #endif 
