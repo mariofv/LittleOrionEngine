@@ -17,6 +17,7 @@ enum class FileType
 	META,
 	MODEL,
 	PREFAB,
+	SCENE,
 	SKELETON,
 	SKYBOX,
 	STATE_MACHINE,

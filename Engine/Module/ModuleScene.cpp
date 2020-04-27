@@ -2,6 +2,8 @@
 
 #include "Component/ComponentCamera.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
+#include "Filesystem/PathAtlas.h"
+#include "Helper/BuildOptions.h"
 #include "Helper/Config.h"
 
 #include "Main/Application.h"
@@ -12,7 +14,11 @@
 #include "ModuleScriptManager.h"
 #include "ModuleTime.h"
 
+
+#include "ResourceManagement/Metafile/Metafile.h"
+#include "ResourceManagement/Metafile/MetafileManager.h"
 #include "ResourceManagement/Manager/SceneManager.h"
+#include "ResourceManagement/Resources/Scene.h"
 
 #include <algorithm>
 #include <stack>
@@ -21,6 +27,9 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
+	build_options = std::make_unique<BuildOptions>();
+	build_options->LoadOptions();
+
 	return true;
 }
 
@@ -151,13 +160,13 @@ void ModuleScene::DeleteCurrentScene()
 	App->editor->selected_game_object = nullptr;
 }
 
-void ModuleScene::OpenScene(const std::string &path)
+void ModuleScene::OpenScene()
 {
 	App->scene->DeleteCurrentScene();
 	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 
-	App->resources->scene_manager->Load(path);
+	GetSceneResource();
 
 	if (App->time->isGameRunning())
 	{
@@ -168,19 +177,93 @@ void ModuleScene::OpenScene(const std::string &path)
 	App->actions->ClearUndoStack();
 }
 
-void ModuleScene::OpenPendingScene()
+inline void ModuleScene::GetSceneResource()
 {
-	OpenScene(scene_to_load);
-	scene_to_load.clear();
+	if (load_tmp_scene)
+	{
+		assert(tmp_scene_uuid != 0);
+		current_scene = App->resources->Load<Scene>(tmp_scene_uuid);
+		current_scene.get()->Load();
+	}
+	else if (build_options_position != -1)
+	{
+		if (!build_options->is_imported)
+		{
+			//Only gets here if no build options exists
+			GetSceneFromPath(DEFAULT_SCENE_PATH);
+			current_scene.get()->Load();
+		}
+		else
+		{
+			current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(build_options_position));
+			current_scene.get()->Load();
+		}
+	}
+	else
+	{
+		int position = build_options.get()->GetPositionFromPath(scene_to_load);
+
+		#if GAME
+			assert(position != -1);
+		#endif
+
+		(position != -1)
+			? current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(position))
+			: GetSceneFromPath(scene_to_load);
+
+		current_scene.get()->Load();
+	}
 }
 
-void ModuleScene::LoadScene(const std::string &path)
+void ModuleScene::GetSceneFromPath(const std::string& path)
+{
+	Path* metafile_path = App->filesystem->GetPath(App->resources->metafile_manager->GetMetafilePath(path));
+	Metafile* scene_metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
+	assert(scene_metafile != nullptr);
+	current_scene = App->resources->Load<Scene>(scene_metafile->uuid);
+}
+
+void ModuleScene::OpenPendingScene()
+{
+	OpenScene();
+	scene_to_load.clear();
+	build_options_position = -1;
+	load_tmp_scene = false;
+}
+
+ENGINE_API void ModuleScene::LoadScene(const std::string &path)
 {
 	scene_to_load = path;
 }
 
+ENGINE_API void ModuleScene::LoadScene(unsigned position)
+{
+	build_options_position = position;
+}
+
+void ModuleScene::LoadScene()
+{
+	load_tmp_scene = true;
+}
+
+void ModuleScene::SaveScene()
+{
+	if(App->time->isGameRunning())
+	{
+		APP_LOG_INFO("You must stop play mode to save scene.");
+		return;
+	}
+
+	App->resources->Save<Scene>(current_scene);
+}
+
+void ModuleScene::SaveTmpScene()
+{
+	tmp_scene_uuid = current_scene.get()->GetUUID();
+}
+
 bool ModuleScene::HasPendingSceneToLoad() const
 {
-	return !scene_to_load.empty();
+	return !scene_to_load.empty() || build_options_position != -1 || load_tmp_scene;
 }
 
