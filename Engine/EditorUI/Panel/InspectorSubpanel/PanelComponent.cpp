@@ -751,6 +751,12 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
 
 		}
+
+		sprintf_s(tmp_string, "%s UI Image", ICON_FA_IMAGE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_IMAGE);
+		}
 		ImGui::EndPopup();
 	}
 
