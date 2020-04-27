@@ -192,8 +192,6 @@ void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
 				break;
 			case 2:
 				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
-				
-
 				break;
 			case 3:
 				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);

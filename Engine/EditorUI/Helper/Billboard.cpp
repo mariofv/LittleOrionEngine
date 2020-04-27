@@ -6,6 +6,7 @@
 
 Billboard::Billboard(const std::string& texture_path, float width, float height, AlignmentType type) : width(width), height(height), type(type)
 {
+	self_timer.Start();
 	billboard_texture = App->resources->Load<Texture>(texture_path.c_str());
 	isSpritesheet = false;
 
@@ -13,7 +14,7 @@ Billboard::Billboard(const std::string& texture_path, float width, float height,
 		isSpritesheet = true;
 	XTiles = 6;
 	YTiles = 6;
-	sheet_speed = 1;
+	sheet_speed = 30;
 
 }
 
@@ -24,10 +25,8 @@ Billboard::~Billboard()
 }
 
 void Billboard::switchFrame() {
-	innerCount++;
-
-
-	if (innerCount >= sheet_speed * 10)
+	
+	if (self_timer.Read() * sheet_speed >= 1)
 	{
 		X += 1;
 
@@ -39,7 +38,8 @@ void Billboard::switchFrame() {
 		if ((int)Y <= 0) {
 			Y = YTiles - 1;
 		}
-		innerCount = 0;
+		self_timer.Stop();
+		self_timer.Start();
 	}
 
 

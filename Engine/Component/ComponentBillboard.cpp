@@ -7,17 +7,20 @@
 
 ComponentBillboard::ComponentBillboard() : Component(nullptr, ComponentType::BILLBOARD)
 {
+	self_timer.Start();
 	//owner->aabb.GenerateBoundingBox();
 }
 
 ComponentBillboard::ComponentBillboard(GameObject * _owner) : Component(owner, ComponentType::BILLBOARD)
 {
-	
+	self_timer.Start();
+
 	//owner->aabb.GenerateBoundingBox();
 }
 
 ComponentBillboard::ComponentBillboard(const std::string& texture_path, float width, float height, AlignmentType a_type) : width(width), height(height), alignment_type(a_type), Component(nullptr, ComponentType::BILLBOARD)
 {
+	self_timer.Start();
 	billboard_texture = App->resources->Load<Texture>(texture_path.c_str());
 	is_spritesheet = false;
 	oriented_to_camera = true;
@@ -36,10 +39,10 @@ ComponentBillboard::~ComponentBillboard()
 }
 
 void ComponentBillboard::SwitchFrame() {
-	innerCount++;
 
+	APP_LOG_INFO("%.1f", self_timer.Read());
 
-	if (innerCount * sheet_speed >= 100)
+	if (self_timer.Read() * sheet_speed >= 1)
 	{
 		current_sprite_x += 1;
 
@@ -51,7 +54,8 @@ void ComponentBillboard::SwitchFrame() {
 		if ((int)current_sprite_y <= 0) {
 			current_sprite_y = y_tiles - 1;
 		}
-		innerCount = 0;
+		self_timer.Stop();
+		self_timer.Start();
 	}
 
 

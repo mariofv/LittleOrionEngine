@@ -5,6 +5,7 @@
 #include "Component/ComponentAABB.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 #include "EditorUI/Panel/PanelScene.h"
+#include "Helper/TimerUs.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
@@ -49,6 +50,7 @@ public:
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
 	AlignmentType alignment_type;
+	TimerUs self_timer;
 
 	//Spritesheet params
 	int x_tiles = 0;

@@ -3,6 +3,7 @@
 
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Texture.h"
+#include "Helper/TimerUs.h"
 
 #include <string>
 #include <MathGeoLib.h>
@@ -29,6 +30,7 @@ public:
 	void switchFrame();
 
 	AlignmentType type;
+	TimerUs self_timer;
 
 	//Spritesheet params
 	int XTiles = 0;
