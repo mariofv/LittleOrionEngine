@@ -56,6 +56,7 @@ ComponentTransform2D & ComponentTransform2D::operator=(const ComponentTransform2
 void ComponentTransform2D::SpecializedSave(Config& config) const
 {
 	config.AddFloat2(size, "Size");
+	config.AddFloat2(pivot, "Pivot");
 	config.AddFloat2(anchored_position, "AnchoredPos");
 
 	config.AddFloat2(min_anchor, "MinAnchor");
@@ -65,6 +66,7 @@ void ComponentTransform2D::SpecializedSave(Config& config) const
 void ComponentTransform2D::SpecializedLoad(const Config& config)
 {	
 	config.GetFloat2("Size", size, float2(100.f));
+	config.GetFloat2("Pivot", pivot, float2(0.5f));
 	config.GetFloat2("AnchoredPos", anchored_position, float2::zero);
 
 	config.GetFloat2("MinAnchor", min_anchor, float2(0.5f));
@@ -76,9 +78,15 @@ void ComponentTransform2D::SpecializedLoad(const Config& config)
 void ComponentTransform2D::OnTransformChange()
 {
 	GenerateAnchorPosition();
+	GeneratePivotPosition();
 	translation = float3(anchored_position + anchor_position, translation.z);
 	GenerateRect();
-	model_matrix = float4x4::FromTRS(translation, rotation, scale);
+	model_matrix = 
+		float4x4::Translate(translation) 
+		* float4x4(rotation) 
+		* float4x4::Scale(scale)
+		* float4x4::Translate(float3(-pivot_position, 0.f))
+	;
 	GenerateGlobalModelMatrix();
 
 	for (const auto& child : owner->children)
@@ -122,14 +130,40 @@ void ComponentTransform2D::SetSize(float2 new_size)
 	OnTransformChange();
 }
 
-void ComponentTransform2D::SetMinAnchor(float2 new_min_anchor)
+void ComponentTransform2D::SetPivot(const float2& new_pivot)
+{
+	pivot = new_pivot;
+	float2 new_pivot_position = ComputePivotPosition(new_pivot);
+	ChangePivotSpace(new_pivot_position);
+}
+
+void ComponentTransform2D::ChangePivotSpace(const float2& new_pivot_position)
+{
+	anchored_position = anchored_position - pivot_position + new_pivot_position;
+	OnTransformChange();
+}
+
+void ComponentTransform2D::GeneratePivotPosition()
+{
+	pivot_position = ComputePivotPosition(pivot);
+}
+
+float2 ComponentTransform2D::ComputePivotPosition(float2 pivot_point)
+{
+	float pivot_position_x = size.x * pivot_point.x - size.x * 0.5f;
+	float pivot_position_y = size.y * pivot_point.y - size.y * 0.5f;
+
+	return float2(pivot_position_x, pivot_position_y);
+}
+
+void ComponentTransform2D::SetMinAnchor(const float2& new_min_anchor)
 {
 	min_anchor = new_min_anchor;
 	float2 new_anchor_position = ComputeAnchorPosition(new_min_anchor, max_anchor);
 	ChangeAnchorSpace(new_anchor_position);
 }
 
-void ComponentTransform2D::SetMaxAnchor(float2 new_max_anchor)
+void ComponentTransform2D::SetMaxAnchor(const float2& new_max_anchor)
 {
 	max_anchor = new_max_anchor;
 	float2 new_anchor_position = ComputeAnchorPosition(min_anchor, new_max_anchor);

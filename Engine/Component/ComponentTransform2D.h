@@ -39,8 +39,14 @@ public:
 	void SetHeight(float new_height);
 	void SetSize(float2 new_size);
 
-	void SetMinAnchor(float2 new_min_anchor);
-	void SetMaxAnchor(float2 new_min_anchor);
+	void SetPivot(const float2& new_pivot);
+	void ChangePivotSpace(const float2& new_pivot_position);
+
+	void GeneratePivotPosition();
+	float2 ComputePivotPosition(float2 pivot_point);
+
+	void SetMinAnchor(const float2& new_min_anchor);
+	void SetMaxAnchor(const float2& new_min_anchor);
 	void ChangeAnchorSpace(const float2& new_anchor_matrix);
 
 	void GenerateAnchorPosition();
@@ -61,6 +67,9 @@ public:
 	Rect rect;
 
 private:
+	float2 pivot = float2(0.5f);
+	float2 pivot_position = float2::zero;
+
 	float2 min_anchor = float2(0.5f);
 	float2 max_anchor = float2(0.5f);
 

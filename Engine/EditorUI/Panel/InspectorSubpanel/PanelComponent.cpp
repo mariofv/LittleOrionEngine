@@ -92,6 +92,13 @@ void PanelComponent::ShowComponentTransformWindow(ComponentTransform *transform)
 
 				ImGui::TreePop();
 			}
+
+			float2 current_pivot = ((ComponentTransform2D*)transform)->pivot;
+			if (ImGui::DragFloat2("Pivot", current_pivot.ptr(), 0.01f, 0.0f, 1.0f))
+			{
+				((ComponentTransform2D*)transform)->SetPivot(current_pivot);
+			}
+			CheckClickForUndo(ModuleActions::UndoActionType::EDIT_RECT2D, transform);
 		}
 		else //Render transform 3d
 		{
