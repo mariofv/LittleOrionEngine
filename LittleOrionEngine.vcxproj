@@ -140,7 +140,6 @@
     <ClInclude Include="Engine\Helper\BuildOptions.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
-    <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h" />
     <ClInclude Include="Engine\Actions\EditorAction.h" />
