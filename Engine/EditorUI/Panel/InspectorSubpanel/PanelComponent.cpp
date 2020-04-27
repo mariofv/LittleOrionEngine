@@ -152,7 +152,8 @@ void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
 			{
 				App->editor->popups->material_selector_popup.show_material_selector_popup = true;
 			}
-			
+			DropBillboardTexture(billboard);
+
 			ImGui::Image(
 				(void*)billboard->billboard_texture->opengl_texture,
 				ImVec2(200, 200),
@@ -162,6 +163,7 @@ void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
 				ImVec4(1.f, 1.f, 1.f, 1.f)
 			);
 
+
 		}
 		else
 		{
@@ -169,6 +171,7 @@ void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
 			{
 				App->editor->popups->material_selector_popup.show_material_selector_popup = true;
 			}
+			DropBillboardTexture(billboard);
 
 			ImGui::Text("None");
 			ImGui::Image(
@@ -179,6 +182,7 @@ void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
 				ImVec4(1.f, 1.f, 1.f, 1.f),
 				ImVec4(1.f, 1.f, 1.f, 1.f)
 			);
+
 		}
 		int alignment_type = static_cast<int>(billboard->alignment_type);
 		if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) {
@@ -206,7 +210,6 @@ void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
 			ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
 		}
 		
-
 
 	}
 }
@@ -702,6 +705,34 @@ ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go, const std::string&
 						script_to_find = script;
 					}
 				}
+			}
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
+
+void PanelComponent::DropBillboardTexture(ComponentBillboard* billboard)
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_File"))
+		{
+			assert(payload->DataSize == sizeof(File*));
+			File* incoming_file = *(File * *)payload->Data;
+			if (incoming_file->file_type == FileType::TEXTURE)
+			{
+				/*
+				//UndoRedo
+				App->actions->type_texture = type;
+				App->actions->action_component = material;
+				App->actions->AddUndoAction(ModuleActions::UndoActionType::EDIT_COMPONENTMATERIAL);
+				*/
+				std::string meta_path = Importer::GetMetaFilePath(incoming_file->file_path);
+				ImportOptions meta;
+				Importer::GetOptionsFromMeta(meta_path, meta);
+				billboard->ChangeTexture(meta.exported_file);
+
+				//TODO: Save new texture
 			}
 		}
 		ImGui::EndDragDropTarget();

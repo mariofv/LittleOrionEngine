@@ -41,6 +41,7 @@ public:
 private:
 	void DropMeshAndMaterial(ComponentMeshRenderer* component_mesh);
 	void DropAnimationAndSkeleton(ComponentAnimation* component_animation);
+	void DropBillboardTexture(ComponentBillboard* billboard);
 };
 
 #endif //_PANELCOMPONENT_H_
