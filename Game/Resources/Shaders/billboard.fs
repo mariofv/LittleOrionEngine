@@ -18,6 +18,8 @@ struct Billboard {
   int XTiles;
   int YTiles;
   float speed;
+  int alignment_type;
+
 };
 
 

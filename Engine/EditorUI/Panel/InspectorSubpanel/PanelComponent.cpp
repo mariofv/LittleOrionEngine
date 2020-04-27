@@ -146,7 +146,6 @@ void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
 		ImGui::TextColored(ImVec4(1, 1, 0, 1),"Texture:");
 
 		
-
 		if (billboard->billboard_texture != nullptr)
 		{
 			if (ImGui::Button(billboard->billboard_texture->exported_file.c_str()))
@@ -156,7 +155,7 @@ void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
 			
 			ImGui::Image(
 				(void*)billboard->billboard_texture->opengl_texture,
-				ImVec2(100, 100),
+				ImVec2(200, 200),
 				ImVec2(0, 1),
 				ImVec2(1, 0),
 				ImVec4(1.f, 1.f, 1.f, 1.f),
@@ -181,11 +180,35 @@ void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
 				ImVec4(1.f, 1.f, 1.f, 1.f)
 			);
 		}
+		int alignment_type = static_cast<int>(billboard->alignment_type);
+		if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) {
+			switch (alignment_type)
+			{
+			case 0:
+				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+				break;
+			case 1:
+				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+				break;
+			case 2:
+				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
+				
 
+				break;
+			case 3:
+				billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+				break;
+			}
+		}
 
+		if (billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
+			ImGui::InputInt("Rows", &billboard->x_tiles, 1);
+			ImGui::InputInt("Columns", &billboard->y_tiles, 1);
+			ImGui::InputFloat("Speed", &billboard->sheet_speed, 1);
+			ImGui::Checkbox("Oriented to camera", &billboard->oriented_to_camera);
+		}
+		
 
-		//sprintf(tmp_string, "%s", billboard->billboard_texture->exported_file.c_str());
-		//ImGui::Button(tmp_string);
 
 	}
 }

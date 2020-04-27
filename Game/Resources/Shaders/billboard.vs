@@ -24,6 +24,7 @@ struct Billboard
   int XTiles;
   int YTiles;
   float speed;
+  int alignment_type;
 };
 uniform Billboard billboard;
 
@@ -70,7 +71,7 @@ subroutine (alignment_subroutine) vec4 view_point_alignment() //probably aligned
 
 subroutine (alignment_subroutine) vec4 crossed_alignment()
 {
-	return matrices.proj*matrices.view*vec4(billboard.width*vertex_position.x + billboard.center_pos.x, billboard.height*vertex_position.y + billboard.center_pos.y, 
+	return matrices.proj*matrices.view*vec4(-billboard.width*vertex_position.x + billboard.center_pos.x, billboard.height*vertex_position.y + billboard.center_pos.y, 
 											vertex_position.z + billboard.center_pos.z,1.0);
 }
 
@@ -78,8 +79,6 @@ subroutine (alignment_subroutine) vec4 axial_alignment()
 {
 	return matrices.proj*(matrices.view*vec4(billboard.center_pos,1.0) + vec4(billboard.width*vertex_position.x, billboard.height*vertex_position.y, 0.0, 0.0));
 }
-
-
 
 subroutine (alignment_subroutine) vec4 hola()
 {

@@ -10,8 +10,9 @@ ComponentBillboard::ComponentBillboard() : Component(nullptr, ComponentType::BIL
 	//owner->aabb.GenerateBoundingBox();
 }
 
-ComponentBillboard::ComponentBillboard(GameObject * owner) : Component(owner, ComponentType::BILLBOARD)
+ComponentBillboard::ComponentBillboard(GameObject * _owner) : Component(owner, ComponentType::BILLBOARD)
 {
+	
 	//owner->aabb.GenerateBoundingBox();
 }
 
@@ -19,6 +20,7 @@ ComponentBillboard::ComponentBillboard(const std::string& texture_path, float wi
 {
 	billboard_texture = App->resources->Load<Texture>(texture_path.c_str());
 	is_spritesheet = false;
+	oriented_to_camera = true;
 
 	if (a_type == SPRITESHEET)
 		is_spritesheet = true;
@@ -37,7 +39,7 @@ void ComponentBillboard::SwitchFrame() {
 	innerCount++;
 
 
-	if (innerCount >= sheet_speed * 10)
+	if (innerCount * sheet_speed >= 100)
 	{
 		current_sprite_x += 1;
 
@@ -47,12 +49,22 @@ void ComponentBillboard::SwitchFrame() {
 		}
 
 		if ((int)current_sprite_y <= 0) {
-			current_sprite_x = y_tiles - 1;
+			current_sprite_y = y_tiles - 1;
 		}
 		innerCount = 0;
 	}
 
 
+}
+
+void ComponentBillboard::ChangeBillboardType(ComponentBillboard::AlignmentType _alignment_type)
+{
+	alignment_type = _alignment_type;
+
+	if (alignment_type == SPRITESHEET)
+		is_spritesheet = true;
+	else
+		is_spritesheet = false;
 }
 
 void ComponentBillboard::Render(const float3& position)
@@ -68,8 +80,7 @@ void ComponentBillboard::Render(const float3& position)
 	GLuint viewpoint_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "view_point_alignment");
 	GLuint crossed_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "crossed_alignment");
 	GLuint axial_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "axial_alignment");
-
-	GLuint hola_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "hola");
+	//GLuint hola_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "hola");
 
 	//Subroutine uniform
 	int selector = glGetSubroutineUniformLocation(shader_program, GL_VERTEX_SHADER, "alignment_selector");
@@ -87,7 +98,12 @@ void ComponentBillboard::Render(const float3& position)
 		break;
 
 	case SPRITESHEET:
-		glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &crossed_subroutine);
+		if(oriented_to_camera)
+			glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &viewpoint_subroutine);
+
+		else
+			glUniformSubroutinesuiv(GL_VERTEX_SHADER, n, &crossed_subroutine);
+
 		glUniform1i(glGetUniformLocation(shader_program, "billboard.XTiles"), x_tiles);
 		glUniform1i(glGetUniformLocation(shader_program, "billboard.YTiles"), y_tiles);
 

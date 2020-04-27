@@ -16,11 +16,10 @@ class ComponentBillboard : public Component
 public:
 
 	enum AlignmentType {
-		SCREEN,		// TODO: Parallel to the screen normal: UI, text, ...
-		VIEW_POINT,	// Alligned to the camera position
-		AXIAL,		// Rotates over Y axis
-		CROSSED,		// Billboards crossed between them
-		SPRITESHEET
+		VIEW_POINT,
+		AXIAL,	
+		SPRITESHEET,
+		CROSSED			
 	};
 	
 	ComponentBillboard();
@@ -47,8 +46,7 @@ public:
 	//TODO
 	void ChangeTexture(std::string path);
 
-	//TODO
-	void ChangeBillboardType();
+	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 
 	AlignmentType alignment_type;
 
@@ -60,21 +58,22 @@ public:
 	float current_sprite_x = 0, current_sprite_y = 0;
 	std::shared_ptr<Texture> billboard_texture = nullptr;
 	float sheet_speed = 0;
+	bool oriented_to_camera;
 
 private:
-	bool is_spritesheet;
+	bool is_spritesheet = false;
 	float width = 5.f;
 	float height = 5.f;
 
 	float vertices[20] = {
-		 0.5f,  0.5f, 0.0f,		1.0f, 1.0f, // top right
-		 0.5f, -0.5f, 0.0f,		1.0f, 0.0f,	// bottom right
-		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,	// bottom left
-		-0.5f,  0.5f, 0.0f,		0.0f, 1.0f	// top left 
+		 0.5f,  0.5f, 0.0f,		1.0f, 1.0f,
+		 0.5f, -0.5f, 0.0f,		1.0f, 0.0f,
+		-0.5f, -0.5f, 0.0f,		0.0f, 0.0f,
+		-0.5f,  0.5f, 0.0f,		0.0f, 1.0f
 	};
 	unsigned int indices[6] = {
-		0, 1, 3,  // first Triangle
-		1, 2, 3   // second Triangle
+		0, 1, 3,
+		1, 2, 3
 	};
 
 	unsigned int EBO;

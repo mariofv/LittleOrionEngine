@@ -17,6 +17,7 @@
 #include "Component/ComponentLight.h"
 #include "Component/ComponentBillboard.h"
 #include "EditorUI/DebugDraw.h"
+#include "ModuleResourceManager.h"
 
 #include <SDL/SDL.h>
 #include "MathGeoLib.h"
@@ -179,10 +180,15 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		}
 	}
 
-	for (auto &bb : billboards_to_render)
-	{
-		bb->Render(bb->owner->aabb.bounding_box.CenterPoint());
+
+	if (billboards.size() > 0) {
+
+		for (auto &billboard : billboards)
+		{
+			billboard->Render(billboard->owner->transform.GetGlobalTranslation());
+		}
 	}
+	
 
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
@@ -462,6 +468,12 @@ void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 ComponentBillboard* ModuleRender::CreateComponentBillboard()
 {
 	ComponentBillboard *created_billboard = new ComponentBillboard(App->editor->selected_game_object);
+	created_billboard->billboard_texture = App->resources->Load<Texture>(SPRITESHEET_TEST_PATH);
+	created_billboard->alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
+	created_billboard->x_tiles = 1;
+	created_billboard->y_tiles = 1;
+	created_billboard->sheet_speed = 1;
+
 	billboards.push_back(created_billboard);
 	return created_billboard;
 }

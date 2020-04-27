@@ -16,6 +16,7 @@ public:
 
 private:
 	void DropTarget(Material* material, Material::MaterialTextureType type);
+
 	std::string GetTypeName(Material::MaterialTextureType type);
 
 };
