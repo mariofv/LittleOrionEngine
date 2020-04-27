@@ -92,33 +92,11 @@ std::vector<float> Utils::GetVertices(const AABB2D& box)
 	return vertices;
 }
 
-size_t Utils::CStrlastIndexOfChar(const char* str, char find_char)
+void Utils::GetCurrentPath(std::string& path)//to change and move to filesystem 
 {
-	intptr_t i = strlen(str) - 1;
-	while (i >= 0)
-	{
-		if (str[i] == find_char)
-		{
-			return i;
-		}
-		--i;
-	}
-	return (size_t)-1;
-}
-
-bool Utils::PatchFileName(char* filename)
-{
-	size_t	dot_idx = CStrlastIndexOfChar(filename, '.');
-	if (dot_idx != (size_t)-1)
-	{
-		filename[dot_idx - 1] = '_';
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-
+	char current_path[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, current_path);
+	path = current_path;
 }
 
 void Utils::SaveFileContent(const std::string& source, std::string& destination)

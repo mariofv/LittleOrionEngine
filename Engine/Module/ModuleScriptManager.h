@@ -9,20 +9,13 @@
 #include <unordered_map>
 #include <vector>
 
-
-struct CV_INFO_PDB70
-{
-	DWORD	CvSignature;
-	GUID	Signature;
-	DWORD	Age;
-	BYTE	PdbFileName[];
-};
-
 class ComponentScript;
-class GameObject;
-class Script;
-class Path;
 class Config;
+class DLLManager;
+class GameObject;
+class Path;
+class Script;
+
 
 class ModuleScriptManager : public Module
 {
@@ -34,45 +27,45 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	void CreateScript(const std::string& name);
-	void InitResourceScript();
-	Script* CreateResourceScript(const std::string& script_name, GameObject* owner);
 	ComponentScript* CreateComponentScript();
 	void RemoveComponentScript(ComponentScript* script_to_remove);
 
+	void CreateScript(const std::string& name);
+
+	void InitResourceScript();
+	Script* CreateResourceScript(const std::string& script_name, GameObject* owner);
+
 	void InitScripts();
+
+private:
+
+	void LoadScriptList();
+
+	void RunScripts();
+
+	void RemoveScriptPointers();
+
+	void ReloadDLL();
+
+	void UpdateGameplayProject(const std::string& script_name);
+
+public:
 	void Refresh();
 	void ReLink();
 
 	void SaveVariables(std::unordered_map<uint64_t, Config>& config_list);
 	void LoadVariables(std::unordered_map<uint64_t, Config> config_list);
+	
+	void CheckGameplayFolderStatus();
 
-private:
-	void GetCurrentPath();
-	long TimeStamp(const char* path);
-
-	void LoadScriptList();
-	void SaveScriptList();
-	void RunScripts();
-	void RemoveScriptPointers();
-
-	void InitDLL();
-	void ReloadDLL();
-	bool PatchDLL(const char* dll_path, const char* patched_dll_path);
-
-	HINSTANCE gameplay_dll;
-	std::string working_directory;
-	Path* dll_file = nullptr;
-	Path* scripts_list_file_path = nullptr;
-
-	long last_timestamp_dll;
-	long init_timestamp_dll;
-	long last_timestamp_script_list;
-	long init_timestamp_script_list;
 
 public:
 	std::vector<ComponentScript*> scripts;
 	std::vector<std::string> scripts_list;
+	bool hot_reloading = false;
+
+private:
+	std::shared_ptr<DLLManager> dll = nullptr;
 };
 
 #endif //_MODULEMANAGERSCRIPT_H_

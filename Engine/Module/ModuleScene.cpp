@@ -231,12 +231,12 @@ void ModuleScene::OpenPendingScene()
 	load_tmp_scene = false;
 }
 
-void ModuleScene::LoadScene(const std::string &path)
+ENGINE_API void ModuleScene::LoadScene(const std::string &path)
 {
 	scene_to_load = path;
 }
 
-void ModuleScene::LoadScene(unsigned position)
+ENGINE_API void ModuleScene::LoadScene(unsigned position)
 {
 	build_options_position = position;
 }
