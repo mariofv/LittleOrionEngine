@@ -468,7 +468,7 @@ void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 ComponentBillboard* ModuleRender::CreateComponentBillboard()
 {
 	ComponentBillboard *created_billboard = new ComponentBillboard(App->editor->selected_game_object);
-	created_billboard->billboard_texture = App->resources->Load<Texture>(SPRITESHEET_TEST_PATH);
+	created_billboard->billboard_texture = App->resources->Load<Texture>(DEFAULT_BILLBOARD_TEXTURE_PATH);
 	created_billboard->alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
 	created_billboard->x_tiles = 1;
 	created_billboard->y_tiles = 1;

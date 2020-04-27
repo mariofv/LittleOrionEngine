@@ -380,8 +380,7 @@ bool ModuleDebugDraw::Init()
     dd::initialize(dd_interface_implementation);
 
 	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 1.72f, 2.5f, Billboard::AlignmentType::VIEW_POINT);	
-	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 2.5f, 2.5f, Billboard::AlignmentType::CROSSED);
-	spritesheet_billboard = new Billboard(FLAME_BILLBOARD_TEXTURE_PATH, 2.5f, 2.5f, Billboard::AlignmentType::SPRITESHEET);
+	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 2.5f, 2.5f, Billboard::AlignmentType::VIEW_POINT);
 
 
 	grid = new Grid();
@@ -711,7 +710,6 @@ void ModuleDebugDraw::RenderBillboards() const
 			camera_billboard->Render(object->transform.GetGlobalTranslation());
 		}
 
-		spritesheet_billboard->Render(float3(0, 1.25, 0));
 	}
 }
 

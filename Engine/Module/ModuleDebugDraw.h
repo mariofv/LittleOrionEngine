@@ -48,7 +48,6 @@ private:
 
 	Billboard* camera_billboard = nullptr;
 	Billboard* light_billboard = nullptr;
-	Billboard* spritesheet_billboard = nullptr;
 
 	Grid* grid = nullptr;
 };
