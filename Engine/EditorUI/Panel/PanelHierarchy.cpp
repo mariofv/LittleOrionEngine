@@ -176,16 +176,10 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 				
 				App->scene->RemoveGameObject(game_object);
 
+
+
 				App->editor->selected_game_object = nullptr;
 			}
-
-			if(ImGui::Selectable("Duplicate"))
-			{
-				GameObject* duplicated_go = App->scene->DuplicateGameObject(game_object, game_object->parent);
-				App->actions->action_game_object = duplicated_go;
-				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
-			}
-
 			if (ImGui::Selectable("Move Up"))
 			{
 				game_object->MoveUpInHierarchy();
