@@ -35,6 +35,7 @@ class SceneImporter;
 class SkeletonImporter;
 class SkyboxImporter;
 class StateMachineImporter;
+class SoundImporter;
 class TextureImporter;
 
 class AnimationManager;
@@ -161,6 +162,7 @@ public:
 	std::unique_ptr<SkyboxImporter> skybox_importer = nullptr;
 	std::unique_ptr<StateMachineImporter> state_machine_importer = nullptr;
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
+	std::unique_ptr<SoundImporter> sound_importer = nullptr;
 
 	std::unique_ptr<MetafileManager> metafile_manager = nullptr;
 	std::unique_ptr<SceneManager> scene_manager = nullptr;

@@ -6,6 +6,7 @@
 
 #define LIBRARY_PATH "/Library"
 #define LIBRARY_METADATA_PATH "/Library/Metadata"
+#define WWISE_INIT_PATH "/Library/Wwise/Init.bnk"
 
 #define RESOURCES_PATH "/Resources"
 
@@ -24,6 +25,7 @@
 #define RESOURCE_SCRIPT_DLL_FILE "GameplaySystemReleas_.dll"
 #endif
 #define RESOURCES_SCRIPT_LIST_FILENAME "scripts_list.scripts"
+#define WWISE_INIT_NAME "Init.bnk"
 
 #define RESOURCES_SCRIPT_TEMPLATE_CPP "/Resources/Scripts/TemplateScript.cpp"
 #define RESOURCES_SCRIPT_TEMPLATE_H "/Resources/Scripts/TemplateScript.h"
