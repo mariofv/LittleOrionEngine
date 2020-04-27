@@ -65,9 +65,9 @@ update_status ModulePhysics::Update()
 		}
 		else
 		{
-			collider->UpdateBoxDimensions();
+			collider->UpdateDimensions();
 		}
-			world->synchronizeSingleMotionState(collider->body);
+		world->synchronizeSingleMotionState(collider->body);
 	}
 	
 	float ms2;

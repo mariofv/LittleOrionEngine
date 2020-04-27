@@ -24,27 +24,28 @@ public:
 	void Load(const Config &config) override;
 	Component* Clone(bool original_prefab = false) const override;
 
+	virtual void UpdateDimensions() {}
+	virtual void Scale() {}
+
 	btRigidBody* AddBody();
 	void MoveBody();
-	void UpdateBoxDimensions();
+	void UpdateCommonDimensions();
 	void SetMass(float new_mass);
 	void SetVisualization();
 	void SetCollisionDetection();
-	void Scale();
-
-	
 
 public:
 
 	ColliderType collider_type;
 	btRigidBody* body = nullptr;
-	float mass = 1.0f; // 0.0f would create a static or inmutable body
+	float mass = 1.0F; // 0.0F would create a static or inmutable body
 	btDefaultMotionState* motion_state;
-	float3 scale = float3(1.0f, 1.0f, 1.0f);
+	float3 scale = float3(1.0F, 1.0F, 1.0F);
 	float3 translation = float3::zero;
-	btVector3 box_size = btVector3(1.0f, 1.0f, 1.0f);
+	Quat rotation = Quat::FromEulerXYZ(0.0F, 0.0F, 0.0F);
+	btVector3 box_size = btVector3(1.0F, 1.0F, 1.0F);
 	btCollisionShape* col_shape;
-	btVector3 localInertia = btVector3(0.f, 0.f, 0.f);
+	btVector3 localInertia = btVector3(0.F, 0.F, 0.F);
 
 	float3 deviation = float3::zero;
 	bool visualize = true;

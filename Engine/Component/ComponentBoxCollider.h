@@ -13,6 +13,8 @@ public:
 	ComponentBoxCollider(GameObject* owner);
 	~ComponentBoxCollider() = default;
 	
+	void UpdateDimensions();
+	void Scale();
 };
 
 #endif // !_COMPONENTBOXCOLLIDER_H

@@ -3,8 +3,6 @@
 #include "Main/GameObject.h"
 #include "Module/ModulePhysics.h"
 
-
-
 ComponentCollider::ComponentCollider(ColliderType collider_type) : Component(ComponentType::COLLIDER), collider_type(collider_type)
 {
 
@@ -39,6 +37,7 @@ void ComponentCollider::Save(Config & config) const
 	config.AddUInt(UUID, "UUID");
 	config.AddBool(active, "Active");
 	config.AddUInt((unsigned int)type, "ComponentType");
+	config.AddUInt((unsigned int)collider_type, "ColliderType");
 	config.AddFloat(mass, "Mass");
 
 }
@@ -61,14 +60,16 @@ btRigidBody* ComponentCollider::AddBody()
 
 	float3 global_scale = owner->transform.GetGlobalScale();
 	col_shape->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
-	float3 global_translation = owner->transform.GetGlobalTranslation();
 
+	float3 global_translation = owner->transform.GetGlobalTranslation();
 	if (is_attached) {
 		deviation = owner->aabb.global_bounding_box.CenterPoint() - global_translation;
 		global_translation = owner->aabb.global_bounding_box.CenterPoint();
 	}
 
-	motion_state = new btDefaultMotionState(btTransform(btQuaternion(owner->transform.rotation.x, owner->transform.rotation.y, owner->transform.rotation.z, owner->transform.rotation.w), btVector3(global_translation.x, global_translation.y, global_translation.z)));
+	Quat global_rotation = owner->transform.GetGlobalRotation();
+
+	motion_state = new btDefaultMotionState(btTransform(btQuaternion(global_rotation.x * rotation.x, global_rotation.y * rotation.y, global_rotation.z * rotation.z, global_rotation.w * rotation.w), btVector3(global_translation.x, global_translation.y, global_translation.z)));
 
 	if (mass != 0.f) col_shape->calculateLocalInertia(mass, localInertia);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motion_state, col_shape, localInertia);
@@ -91,7 +92,7 @@ void ComponentCollider::MoveBody()
 	}
 }
 
-void ComponentCollider::UpdateBoxDimensions()
+void ComponentCollider::UpdateCommonDimensions()
 {
 	// This should only happen if the transform change
 	float3 global_translation = owner->transform.GetGlobalTranslation();
@@ -100,15 +101,16 @@ void ComponentCollider::UpdateBoxDimensions()
 		global_translation = owner->aabb.global_bounding_box.CenterPoint();
 	}
 	Quat global_rotation = owner->transform.GetGlobalRotation();
-	float3 global_scale = owner->transform.GetGlobalScale();
 
-	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w), btVector3(global_translation.x, global_translation.y, global_translation.z)));
+	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x * rotation.x, global_rotation.y * rotation.y, global_rotation.z * rotation.z, global_rotation.w * rotation.w), btVector3(global_translation.x, global_translation.y, global_translation.z)));
 	body->setMotionState(motion_state);
-	body->getCollisionShape()->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
+
+	rotation = global_rotation;
 	if (is_attached)
 	{
 		deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
 	}
+	App->physics->world->updateSingleAabb(body);
 }
 
 void ComponentCollider::SetMass(float new_mass)
@@ -140,9 +142,4 @@ void ComponentCollider::SetCollisionDetection()
 	else {
 		body->setCollisionFlags(~body->CF_NO_CONTACT_RESPONSE);
 	}
-}
-
-void ComponentCollider::Scale()
-{
-	body->getCollisionShape()->setLocalScaling(btVector3(scale.x, scale.y, scale.z));
 }

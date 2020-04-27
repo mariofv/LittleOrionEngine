@@ -13,6 +13,8 @@ public:
 	ComponentCapsuleCollider(GameObject* owner);
 	~ComponentCapsuleCollider() = default;
 
+	void UpdateDimensions();
+	void Scale();
 };
 
 #endif

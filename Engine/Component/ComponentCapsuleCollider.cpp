@@ -15,3 +15,15 @@ ComponentCapsuleCollider::ComponentCapsuleCollider(GameObject* owner) : Componen
 	AddBody();
 }
 
+void ComponentCapsuleCollider::UpdateDimensions()
+{
+	UpdateCommonDimensions();
+	Scale();
+}
+
+void ComponentCapsuleCollider::Scale()
+{
+	float3 global_scale = owner->transform.GetGlobalScale();
+	body->getCollisionShape()->setLocalScaling(btVector3(max(global_scale.x, global_scale.z) * scale.x, global_scale.y * scale.y, scale.z));
+}
+
