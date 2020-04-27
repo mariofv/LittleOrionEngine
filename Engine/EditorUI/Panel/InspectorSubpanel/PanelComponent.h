@@ -7,6 +7,7 @@
 
 class Component;
 class ComponentAnimation;
+class ComponentBoxCollider;
 class ComponentButton;
 class ComponentCamera;
 class ComponentCanvas;
@@ -16,12 +17,13 @@ class ComponentImage;
 class ComponentMeshRenderer;
 class ComponentLight;
 class ComponentProgressBar;
+class ComponentSphereCollider;
 class ComponentUI;
 class ComponentText;
 class ComponentTransform;
 class ComponentScript;
 class GameObject;
-class ComponentBoxCollider;
+
 
 class PanelComponent
 {
@@ -56,8 +58,9 @@ private:
 	void ShowComponentButtonWindow(ComponentButton* button);
 
 	void ShowCommonColliderWindow(ComponentCollider* collider);
-	void ShowComponentBoxColliderWindow(ComponentBoxCollider* box);
+	void ShowComponentBoxColliderWindow(ComponentBoxCollider* box_collider);
 	void ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider* capsule_collider);
+	void ShowComponentSphereColliderWindow(ComponentSphereCollider* sphere_collider);
 
 	void DropStateMachine(ComponentAnimation* component_animation);
 	void DropTexture(ComponentUI* ui);

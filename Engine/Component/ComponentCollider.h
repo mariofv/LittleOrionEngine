@@ -11,6 +11,7 @@ public:
 		BOX,
 		CAPSULE,
 		CIRCULE,
+		SPHERE,
 		MESH
 	};
 

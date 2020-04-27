@@ -248,7 +248,15 @@ void SceneManager::LoadPrefabModifiedComponents(const Config & config) const
 		}
 		else 
 		{
-			Component* created_component = prefab_child->CreateComponent(static_cast<Component::ComponentType>(component_type_uint));
+			Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
+			Component* created_component = nullptr;
+			if (component_type == Component::ComponentType::COLLIDER) 
+			{
+				ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(component_config.GetUInt("ColliderType", 0));
+				created_component = prefab_child->CreateComponent(collider_type);
+			}else {
+				Component* created_component = prefab_child->CreateComponent(static_cast<Component::ComponentType>(component_type_uint));
+			}
 			created_component->Load(component_config);
 			created_component->added_by_user = true;
 		}

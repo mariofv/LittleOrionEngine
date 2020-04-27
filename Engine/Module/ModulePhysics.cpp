@@ -2,6 +2,7 @@
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentCapsuleCollider.h"
 #include "Component/ComponentCollider.h"
+#include "Component/ComponentSphereCollider.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "ModuleTime.h"
@@ -128,6 +129,9 @@ ComponentCollider* ModulePhysics::CreateComponentCollider(ComponentCollider::Col
 			break;
 		case ComponentCollider::ColliderType::CAPSULE:
 			new_collider = new ComponentCapsuleCollider(owner);
+			break;
+		case ComponentCollider::ColliderType::SPHERE:
+			new_collider = new ComponentSphereCollider(owner);
 			break;
 		case ComponentCollider::ColliderType::CIRCULE:
 			//new_collider = new ComponentCircleCollider(owner);

@@ -39,6 +39,7 @@ void ComponentCollider::Save(Config & config) const
 	config.AddUInt((unsigned int)type, "ComponentType");
 	config.AddUInt((unsigned int)collider_type, "ColliderType");
 	config.AddFloat(mass, "Mass");
+	config.AddFloat3(scale, "Scale");
 
 }
 
@@ -47,6 +48,7 @@ void ComponentCollider::Load(const Config & config)
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 	mass = config.GetFloat("Mass", 1.0F);
+	config.GetFloat3("Scale", scale, float3::one);
 	AddBody();
 }
 

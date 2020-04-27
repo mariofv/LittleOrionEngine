@@ -22,6 +22,7 @@
 #include "Component/ComponentLight.h"
 #include "Component/ComponentProgressBar.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentSphereCollider.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
@@ -513,6 +514,9 @@ void PanelComponent::ShowComponentColliderWindow(ComponentCollider* collider)
 	case ComponentCollider::ColliderType::CAPSULE:
 		ShowComponentCapsuleColliderWindow(static_cast<ComponentCapsuleCollider*>(collider));
 		break;
+	case ComponentCollider::ColliderType::SPHERE:
+		ShowComponentSphereColliderWindow(static_cast<ComponentSphereCollider*>(collider));
+		break;
 	case ComponentCollider::ColliderType::CIRCULE:
 		//ShowComponentCircleColliderWindow(static_cast<ComponentCircleCollider*>(collider));
 		break;
@@ -687,6 +691,11 @@ void PanelComponent::ShowAddNewComponentButton()
 		{
 			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::CAPSULE);
 		}
+		sprintf_s(tmp_string, "%s Sphere", ICON_FA_BASKETBALL_BALL);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::SPHERE);
+		}
 		ImGui::EndPopup();
 	}
 
@@ -848,10 +857,6 @@ void PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 		return;
 	}
 	ImGui::Separator();
-	if (ImGui::SliderFloat3("Scale", collider->scale.ptr(), 0.1F, 5.0F))
-	{
-		collider->Scale();
-	}
 
 	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.F, 100.F)) {
 		collider->SetMass(collider->mass);
@@ -867,20 +872,38 @@ void PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 }
 
 
-void PanelComponent::ShowComponentBoxColliderWindow(ComponentBoxCollider* box)
+void PanelComponent::ShowComponentBoxColliderWindow(ComponentBoxCollider* box_collider)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_BOX " Box Collider", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-
-		ShowCommonColliderWindow(box);
+		ShowCommonColliderWindow(box_collider);
+	}
+	if (ImGui::SliderFloat3("Scale", box_collider->scale.ptr(), 0.1F, 5.0F))
+	{
+		box_collider->Scale();
 	}
 }
 
 void PanelComponent::ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider* capsule_collider)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_CAPSULES " capsule Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_CAPSULES " Capsule Collider", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonColliderWindow(capsule_collider);
-		
+	}
+	if (ImGui::SliderFloat3("Scale", capsule_collider->scale.ptr(), 0.1F, 5.0F))
+	{
+		capsule_collider->Scale();
+	}
+}
+
+void PanelComponent::ShowComponentSphereColliderWindow(ComponentSphereCollider * sphere_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_BASKETBALL_BALL " Sphere Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonColliderWindow(sphere_collider);
+	}
+	if (ImGui::SliderFloat("Scale", &sphere_collider->scale.x, 0.1F, 5.0F))
+	{
+		sphere_collider->Scale();
 	}
 }
