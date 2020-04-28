@@ -442,9 +442,6 @@
     <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp">
-      <Filter>Engine\Actions</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
@@ -505,6 +502,7 @@
     <ClCompile Include="Engine\ResourceManagement\Manager\FontManager.cpp">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTransform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -930,9 +928,6 @@
     <ClInclude Include="Engine\Component\ComponentTransform2D.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Actions\EditorActionRect2D.h">
-      <Filter>Engine\Actions</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Module\ModuleAnimation.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
@@ -999,6 +994,7 @@
     <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h">
       <Filter>Engine\ResourceManagement\Manager</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">

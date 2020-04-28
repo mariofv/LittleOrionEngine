@@ -49,6 +49,9 @@ public:
 	void SetMaxAnchor(const float2& new_min_anchor);
 	void ChangeAnchorSpace(const float2& new_anchor_matrix);
 
+	bool HasCoincidentHorizontalAnchors() const;
+	bool HasCoincidentVerticalAnchors() const;
+
 	void GenerateAnchorPosition();
 	float2 ComputeAnchorPosition(float2 min_anchor, float2 max_anchor);
 
@@ -75,6 +78,6 @@ private:
 
 	float2 anchor_position = float2::zero;
 
-	friend class PanelComponent;
+	friend class PanelTransform;
 };
 #endif //_COMPONENTTRANSFORM2D_H_

@@ -13,6 +13,8 @@
 #include "Component/ComponentTransform.h"
 
 #include "EditorUI/Panel/PanelInspector.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelTransform.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
@@ -67,11 +69,11 @@ void PanelGameObject::Render(GameObject* game_object)
 
 	if (game_object->GetTransformType() == Component::ComponentType::TRANSFORM)
 	{
-		component_panel.ShowComponentTransformWindow(&game_object->transform);
+		PanelTransform::ShowComponentTransformWindow(&game_object->transform);
 	}
 	else
 	{
-		component_panel.ShowComponentTransformWindow(&game_object->transform_2d);
+		PanelTransform::ShowComponentTransform2DWindow(&game_object->transform_2d);
 	}
 
 	ImGui::Spacing();

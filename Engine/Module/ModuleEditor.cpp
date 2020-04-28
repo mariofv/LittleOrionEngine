@@ -129,7 +129,7 @@ update_status ModuleEditor::Update()
 		inital_scene_loaded = true;
 	}
 	//ImGui::ShowStyleEditor();
-	//ImGui::ShowDemoWindow();
+	ImGui::ShowDemoWindow();
 #endif
 
 

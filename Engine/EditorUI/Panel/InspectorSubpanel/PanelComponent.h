@@ -26,7 +26,6 @@ public:
 	PanelComponent() = default;
 	~PanelComponent() = default;
 
-	void ShowComponentTransformWindow(ComponentTransform* transform);
 	void ShowComponentMeshRendererWindow(ComponentMeshRenderer* mesh);
 	void ShowComponentCameraWindow(ComponentCamera* camera);
 	void ShowComponentLightWindow(ComponentLight* light);

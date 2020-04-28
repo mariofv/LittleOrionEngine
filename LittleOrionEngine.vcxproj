@@ -303,6 +303,7 @@
     <ClInclude Include="Engine\Module\ModuleAI.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelNavMesh.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelBuildOptions.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTransform.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -472,6 +473,7 @@
     <ClCompile Include="Engine\Module\ModuleAI.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelNavMesh.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelBuildOptions.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTransform.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl" />

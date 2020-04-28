@@ -197,6 +197,16 @@ void ComponentTransform2D::ChangeAnchorSpace(const float2& new_anchor_position)
 	OnTransformChange();
 }
 
+bool ComponentTransform2D::HasCoincidentHorizontalAnchors() const
+{
+	return min_anchor.x == max_anchor.x;
+}
+
+bool ComponentTransform2D::HasCoincidentVerticalAnchors() const
+{
+	return min_anchor.y == max_anchor.y;
+}
+
 void ComponentTransform2D::GenerateRect()
 {
 	float2 parent_size = owner->parent != nullptr ? owner->parent->transform_2d.size : float2::zero;
