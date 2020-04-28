@@ -36,9 +36,10 @@ class Application
 {
 public:
 
-	Application();
-	~Application();
+	ENGINE_API Application();
+	ENGINE_API ~Application();
 
+	ENGINE_API void Import();
 	bool Init();
 	update_status Update();
 	bool CleanUp();
