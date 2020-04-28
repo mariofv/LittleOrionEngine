@@ -105,20 +105,18 @@ GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject>& game_object_
 
 GameObject* ModuleScene::DuplicateGameObject(GameObject* game_object, GameObject* parent_go)
 {
-	GameObject* duplicated_go = nullptr;
+	std::unique_ptr<GameObject> aux_copy_pointer = std::make_unique<GameObject>();
+	aux_copy_pointer.get()->Duplicate(*game_object);
+	GameObject* duplicated_go = App->scene->AddGameObject(aux_copy_pointer);
+	duplicated_go->SetParent(parent_go);
+	duplicated_go->SetTransform(game_object);
+	duplicated_go->name += "(1)";
+
 	if(game_object->is_prefab_parent)
 	{
-		duplicated_go = game_object->prefab_reference->Instantiate(game_object);
-		duplicated_go->SetParent(parent_go);
-		duplicated_go->SetTransform(game_object);
-		duplicated_go->name += " (1)";
+		game_object->prefab_reference->Duplicate(duplicated_go);
 	}
-	else if(game_object->prefab_reference == nullptr)
-	{
-		duplicated_go = AddGameObject(std::make_unique<GameObject>(*game_object));
-		duplicated_go->SetParent(parent_go);
-		duplicated_go->name += " (1)";
-	}
+	
 	for (const auto go : game_object->children)
 	{
 		DuplicateGameObject(go, duplicated_go);
