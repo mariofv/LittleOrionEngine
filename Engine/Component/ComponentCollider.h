@@ -12,6 +12,7 @@ public:
 		CAPSULE,
 		CIRCULE,
 		SPHERE,
+		CYLINDER,
 		MESH
 	};
 

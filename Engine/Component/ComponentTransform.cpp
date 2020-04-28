@@ -206,6 +206,7 @@ ENGINE_API float3 ComponentTransform::GetRightVector() const
 
 void ComponentTransform::OnTransformChange()
 {
+	has_changed = true;
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
 	GenerateGlobalModelMatrix();
 	owner->aabb.GenerateBoundingBox();

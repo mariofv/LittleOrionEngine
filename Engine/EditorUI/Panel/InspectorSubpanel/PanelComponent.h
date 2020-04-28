@@ -13,6 +13,7 @@ class ComponentCamera;
 class ComponentCanvas;
 class ComponentCapsuleCollider;
 class ComponentCollider;
+class ComponentCylinderCollider;
 class ComponentImage;
 class ComponentMeshRenderer;
 class ComponentLight;
@@ -61,6 +62,7 @@ private:
 	void ShowComponentBoxColliderWindow(ComponentBoxCollider* box_collider);
 	void ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider* capsule_collider);
 	void ShowComponentSphereColliderWindow(ComponentSphereCollider* sphere_collider);
+	void ShowComponentCylinderColliderWindow(ComponentCylinderCollider* cylinder_collider);
 
 	void DropStateMachine(ComponentAnimation* component_animation);
 	void DropTexture(ComponentUI* ui);

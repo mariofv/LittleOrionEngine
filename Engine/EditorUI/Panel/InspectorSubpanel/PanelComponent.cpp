@@ -17,6 +17,7 @@
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentCapsuleCollider.h"
 #include "Component/ComponentCollider.h"
+#include "Component/ComponentCylinderCollider.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
@@ -517,6 +518,9 @@ void PanelComponent::ShowComponentColliderWindow(ComponentCollider* collider)
 	case ComponentCollider::ColliderType::SPHERE:
 		ShowComponentSphereColliderWindow(static_cast<ComponentSphereCollider*>(collider));
 		break;
+	case ComponentCollider::ColliderType::CYLINDER:
+		ShowComponentCylinderColliderWindow(static_cast<ComponentCylinderCollider*>(collider));
+		break;
 	case ComponentCollider::ColliderType::CIRCULE:
 		//ShowComponentCircleColliderWindow(static_cast<ComponentCircleCollider*>(collider));
 		break;
@@ -690,6 +694,11 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::CAPSULE);
+		}
+		sprintf_s(tmp_string, "%s Cylinder", ICON_FA_COLUMNS);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::CYLINDER);
 		}
 		sprintf_s(tmp_string, "%s Sphere", ICON_FA_BASKETBALL_BALL);
 		if (ImGui::Selectable(tmp_string))
@@ -890,7 +899,11 @@ void PanelComponent::ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider
 	{
 		ShowCommonColliderWindow(capsule_collider);
 	}
-	if (ImGui::SliderFloat3("Scale", capsule_collider->scale.ptr(), 0.1F, 5.0F))
+	if (ImGui::SliderFloat("Radius", &capsule_collider->scale.x, 0.1F, 5.0F))
+	{
+		capsule_collider->Scale();
+	}
+	if (ImGui::SliderFloat("Height", &capsule_collider->scale.y, 0.1F, 5.0F))
 	{
 		capsule_collider->Scale();
 	}
@@ -902,8 +915,24 @@ void PanelComponent::ShowComponentSphereColliderWindow(ComponentSphereCollider *
 	{
 		ShowCommonColliderWindow(sphere_collider);
 	}
-	if (ImGui::SliderFloat("Scale", &sphere_collider->scale.x, 0.1F, 5.0F))
+	if (ImGui::SliderFloat("Radius", &sphere_collider->scale.x, 0.1F, 5.0F))
 	{
 		sphere_collider->Scale();
+	}
+}
+
+void PanelComponent::ShowComponentCylinderColliderWindow(ComponentCylinderCollider * cylinder_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_COLUMNS " Cylinder Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonColliderWindow(cylinder_collider);
+	}
+	if (ImGui::SliderFloat("Radius", &cylinder_collider->scale.x, 0.1F, 5.0F))
+	{
+		cylinder_collider->Scale();
+	}
+	if (ImGui::SliderFloat("Height", &cylinder_collider->scale.y, 0.1F, 5.0F))
+	{
+		cylinder_collider->Scale();
 	}
 }

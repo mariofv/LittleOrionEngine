@@ -159,6 +159,7 @@
     <ClInclude Include="Engine\Component\ComponentCanvas.h" />
     <ClInclude Include="Engine\Component\ComponentCapsuleCollider.h" />
     <ClInclude Include="Engine\Component\ComponentCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentCylinderCollider.h" />
     <ClInclude Include="Engine\Component\ComponentImage.h" />
     <ClInclude Include="Engine\Component\ComponentProgressBar.h" />
     <ClInclude Include="Engine\Component\ComponentScript.h" />
@@ -309,6 +310,7 @@
     <ClCompile Include="Engine\Component\ComponentCanvas.cpp" />
     <ClCompile Include="Engine\Component\ComponentCapsuleCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentCollider.cpp" />
+    <ClCompile Include="Engine\Component\ComponentCylinderCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentImage.cpp" />
     <ClCompile Include="Engine\Component\ComponentProgressBar.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />

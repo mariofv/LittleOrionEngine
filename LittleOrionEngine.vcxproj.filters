@@ -481,6 +481,9 @@
     <ClCompile Include="Engine\Component\ComponentSphereCollider.cpp">
       <Filter>Engine\Component\Collider</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentCylinderCollider.cpp">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -928,6 +931,9 @@
       <Filter>Engine\Component\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentSphereCollider.h">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCylinderCollider.h">
       <Filter>Engine\Component\Collider</Filter>
     </ClInclude>
   </ItemGroup>

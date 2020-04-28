@@ -71,7 +71,7 @@ btRigidBody* ComponentCollider::AddBody()
 
 	Quat global_rotation = owner->transform.GetGlobalRotation();
 
-	motion_state = new btDefaultMotionState(btTransform(btQuaternion(global_rotation.x * rotation.x, global_rotation.y * rotation.y, global_rotation.z * rotation.z, global_rotation.w * rotation.w), btVector3(global_translation.x, global_translation.y, global_translation.z)));
+	motion_state = new btDefaultMotionState(btTransform(btQuaternion(global_rotation.x , global_rotation.y , global_rotation.z , global_rotation.w ), btVector3(global_translation.x, global_translation.y, global_translation.z)));
 
 	if (mass != 0.f) col_shape->calculateLocalInertia(mass, localInertia);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motion_state, col_shape, localInertia);
@@ -96,7 +96,7 @@ void ComponentCollider::MoveBody()
 
 void ComponentCollider::UpdateCommonDimensions()
 {
-	// This should only happen if the transform change
+	
 	float3 global_translation = owner->transform.GetGlobalTranslation();
 	if (is_attached)
 	{
@@ -104,7 +104,7 @@ void ComponentCollider::UpdateCommonDimensions()
 	}
 	Quat global_rotation = owner->transform.GetGlobalRotation();
 
-	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x * rotation.x, global_rotation.y * rotation.y, global_rotation.z * rotation.z, global_rotation.w * rotation.w), btVector3(global_translation.x, global_translation.y, global_translation.z)));
+	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x , global_rotation.y , global_rotation.z , global_rotation.w ), btVector3(global_translation.x, global_translation.y, global_translation.z)));
 	body->setMotionState(motion_state);
 
 	rotation = global_rotation;

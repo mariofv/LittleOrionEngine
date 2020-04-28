@@ -1,6 +1,7 @@
 #include "ModulePhysics.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentCapsuleCollider.h"
+#include "Component/ComponentCylinderCollider.h"
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentSphereCollider.h"
 #include "Main/Application.h"
@@ -9,7 +10,6 @@
 #include "ModuleDebugDraw.h"
 #include <GL/glew.h>
 #include "EditorUI/DebugDraw.h"
-
 
 
 ModulePhysics::ModulePhysics()
@@ -66,7 +66,10 @@ update_status ModulePhysics::Update()
 		}
 		else
 		{
-			collider->UpdateDimensions();
+			if (collider->owner->transform.has_changed) {
+				collider->UpdateDimensions();
+				collider->owner->transform.has_changed = false;
+			}
 		}
 		world->synchronizeSingleMotionState(collider->body);
 	}
@@ -132,6 +135,9 @@ ComponentCollider* ModulePhysics::CreateComponentCollider(ComponentCollider::Col
 			break;
 		case ComponentCollider::ColliderType::SPHERE:
 			new_collider = new ComponentSphereCollider(owner);
+			break;
+		case ComponentCollider::ColliderType::CYLINDER:
+			new_collider = new ComponentCylinderCollider(owner);
 			break;
 		case ComponentCollider::ColliderType::CIRCULE:
 			//new_collider = new ComponentCircleCollider(owner);

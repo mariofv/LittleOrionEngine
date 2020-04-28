@@ -82,6 +82,7 @@ public:
 
 	float4x4 model_matrix = float4x4::identity;
 	float4x4 global_model_matrix = float4x4::identity;
+	bool has_changed = false; //used for physics
 
 	friend class PanelComponent;
 };
