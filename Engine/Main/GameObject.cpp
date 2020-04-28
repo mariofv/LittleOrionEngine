@@ -11,14 +11,22 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleUI.h"
+#include "ResourceManagement/Resources/Texture.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
 
+#include "Component/Component.h"
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentCanvas.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentText.h"
+#include "Component/ComponentTransform.h"
+#include "Component/ComponentUI.h"
+#include "Component/ComponentButton.h"
 
 #include <Brofiler/Brofiler.h>
 #include <pcg_basic.h>
@@ -27,30 +35,32 @@
 
 #include <algorithm>
 
-GameObject::GameObject() : aabb(this), transform(this), UUID(pcg32_random())
+GameObject::GameObject() : aabb(this), UUID(pcg32_random())
 {
+	CreateTransforms();
 }
 
-GameObject::GameObject(unsigned int UUID) : aabb(this), transform(this),  UUID(UUID)
+GameObject::GameObject(unsigned int UUID) : aabb(this),  UUID(UUID)
 {
+	CreateTransforms();
 }
 
 GameObject::GameObject(const std::string name) :
 	name(name),
 	aabb(this),
-	transform(this),
 	UUID(pcg32_random())
 {
+	CreateTransforms();
 }
-
 
 GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_to_copy.aabb), transform(gameobject_to_copy.transform), UUID(pcg32_random())
 {
-	transform.owner = this;
+	CreateTransforms();
 	aabb.owner = this;
 	*this << gameobject_to_copy;
 }
-GameObject & GameObject::operator<<(const GameObject & gameobject_to_copy)
+
+GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
 {
 
 	if(!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
@@ -71,11 +81,14 @@ GameObject & GameObject::operator<<(const GameObject & gameobject_to_copy)
 	return *this;
 }
 
-void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
+void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 {
 	children_to_remove.push_back(this);
-	if(!is_static)
+	if (!is_static)
+	{
 		App->renderer->RemoveAABBTree(this);
+	}
+
 	if (parent != nullptr)
 	{
 		parent->RemoveChild(this);
@@ -86,11 +99,13 @@ void GameObject::Delete(std::vector<GameObject*> & children_to_remove)
 		components[i]->Delete();
 		components[i] = nullptr;
 	}
+
 	for (int i = (children.size() - 1); i >= 0; --i)
 	{
 		children[i]->parent = nullptr;
 		children[i]->Delete(children_to_remove);
 	}
+
 	if (is_prefab_parent)
 	{
 		prefab_reference->RemoveInstance(this);
@@ -105,12 +120,12 @@ void GameObject::SetEnabled(bool able)
 {
 	active = able;
 	
-	for(auto component : components)
+	for(const auto& component : components)
 	{
 		(able) ? component->Enable() : component->Disable();
 	}
 
-	for(auto child : children)
+	for(const auto& child : children)
 	{
 		child->SetEnabled(able);
 	}
@@ -130,10 +145,47 @@ void GameObject::SetHierarchyStatic(bool is_static)
 	//AABBTree
 	(is_static) ? App->renderer->RemoveAABBTree(this) : App->renderer->InsertAABBTree(this);
 	
-	for (auto & child : children)
+	for (const auto& child : children)
 	{
 		child->SetStatic(is_static);
 	}
+}
+
+Config GameObject::SaveTransform() const
+{
+	Config config;
+	transform.Save(config);
+
+	return config;
+}
+
+Config GameObject::SaveTransform2D() const
+{
+	Config config;
+	transform_2d.Save(config);
+
+	return config;
+}
+
+void GameObject::LoadTransforms(Config config)
+{
+	Config transform_config;
+	config.GetChildConfig("Transform", transform_config);
+	transform.owner = this;
+	transform.Load(transform_config);
+
+	Config transform_2d_config;
+	config.GetChildConfig("Transform2D", transform_2d_config);
+	transform_2d.owner = this;
+	transform_2d.Load(transform_2d_config);
+}
+
+void GameObject::CreateTransforms()
+{
+	transform = ComponentTransform();
+	transform.owner = this;
+	
+	transform_2d = ComponentTransform2D(this);
 }
 
 bool GameObject::IsStatic() const
@@ -141,7 +193,7 @@ bool GameObject::IsStatic() const
 	return is_static;
 }
 
-bool GameObject::IsVisible(const ComponentCamera & camera) const
+bool GameObject::IsVisible(const ComponentCamera& camera) const
 {
 	ComponentMeshRenderer* mesh = static_cast<ComponentMeshRenderer*>(GetComponent(Component::ComponentType::MESH_RENDERER));
 	if ((mesh != nullptr && !mesh->IsEnabled()) || !IsEnabled() || !camera.IsInsideFrustum(aabb.bounding_box))
@@ -176,9 +228,11 @@ void GameObject::Save(Config& config) const
 	config.AddBool(is_static, "IsStatic");
 	config.AddBool(active, "Active");
 
-	Config transform_config;
-	transform.Save(transform_config);
+	Config transform_config = SaveTransform();
 	config.AddChildConfig(transform_config, "Transform");
+
+	Config transform_2d_config = SaveTransform2D();
+	config.AddChildConfig(transform_2d_config, "Transform2D");
 
 	std::vector<Config> gameobject_components_config(components.size());
 	for (unsigned int i = 0; i < components.size(); ++i)
@@ -206,24 +260,31 @@ void GameObject::Load(const Config& config)
 	SetStatic(config.GetBool("IsStatic", false));
 	active = config.GetBool("Active", true);
 
-	Config transform_config;
-	config.GetChildConfig("Transform", transform_config);
-	transform.Load(transform_config);
+	LoadTransforms(config);
 
 	std::vector<Config> gameobject_components_config;
 	config.GetChildrenConfig("Components", gameobject_components_config);
 	for (unsigned int i = 0; i < gameobject_components_config.size(); ++i)
 	{
 		uint64_t component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
+		ComponentUI::UIType ui_type = ComponentUI::UIType::IMAGE;
 		assert(component_type_uint != 0);
 		
 		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
-		Component* created_component = CreateComponent(component_type);
+		Component* created_component = nullptr;
+		if (component_type == Component::ComponentType::UI) {
+			ui_type = ComponentUI::UIType(gameobject_components_config[i].GetUInt("UIType", 0));
+			created_component = CreateComponentUI(ui_type);
+		}
+		else
+		{
+			created_component = CreateComponent(component_type);
+		}
 		created_component->Load(gameobject_components_config[i]);
 	}
 }
 
-void GameObject::SetParent(GameObject *new_parent)
+void GameObject::SetParent(GameObject* new_parent)
 {
 	if (new_parent == parent)
 	{
@@ -234,10 +295,11 @@ void GameObject::SetParent(GameObject *new_parent)
 	{
 		parent->RemoveChild(this);
 	}
+
 	new_parent->AddChild(this);
 }
 
-void GameObject::AddChild(GameObject *child)
+void GameObject::AddChild(GameObject* child)
 {
 	if (child->parent != nullptr)
 	{
@@ -252,7 +314,7 @@ void GameObject::AddChild(GameObject *child)
 	children.push_back(child);
 }
 
-void GameObject::RemoveChild(GameObject *child)
+void GameObject::RemoveChild(GameObject* child)
 {
 	std::vector<GameObject*>::iterator found = std::find(children.begin(), children.end(), child);
 	if (found == children.end())
@@ -282,7 +344,6 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	case Component::ComponentType::LIGHT:
 		created_component = App->lights->CreateComponentLight();
 		break;
-
 	case Component::ComponentType::SCRIPT:
 		created_component = App->scripts->CreateComponentScript();
 		break;
@@ -297,13 +358,25 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	}
 
 	created_component->owner = this;
+	if (type == Component::ComponentType::ANIMATION)
+	{
+		static_cast<ComponentAnimation*>(created_component)->Init();
+	}
 	components.push_back(created_component);
 	return created_component;
 }
 
-void GameObject::RemoveComponent(Component * component_to_remove) 
+
+ENGINE_API Component* GameObject::CreateComponentUI(const ComponentUI::UIType ui_type)
 {
-	auto it = std::find(components.begin(), components.end(), component_to_remove);
+	Component* created_component = App->ui->CreateComponentUI(ui_type, this);
+	components.push_back(created_component);
+	return created_component;
+}
+
+void GameObject::RemoveComponent(Component* component_to_remove) 
+{
+	const auto it = std::find(components.begin(), components.end(), component_to_remove);
 	if (it != components.end()) 
 	{
 		component_to_remove->Delete();
@@ -318,6 +391,40 @@ ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType ty
 		if (components[i]->GetType() == type)
 		{
 			return components[i];
+		}
+	}
+	return nullptr;
+}
+
+ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) const
+{
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+
+		if (components[i]->type == Component::ComponentType::SCRIPT)
+		{
+			ComponentScript* script = (ComponentScript* )components[i];
+			if (script->name == name)
+			{
+				return script;
+			}
+		}
+	}
+
+	return nullptr;
+}
+
+Component* GameObject::GetComponentUI(const ComponentUI::UIType type) const
+{
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		if (components[i]->GetType() == Component::ComponentType::UI)
+		{
+			ComponentUI* ui = static_cast<ComponentUI*>(components[i]);
+			if (ui->ui_type == type)
+			{
+				return ui;
+			}
 		}
 	}
 	return nullptr;
@@ -393,10 +500,38 @@ void GameObject::SetHierarchyDepth(int value)
 	hierarchy_depth = value;
 }
 
-void GameObject::CopyComponents(const GameObject & gameobject_to_copy)
+GameObject * GameObject::GetPrefabParent() 
+{
+	GameObject *to_reimport = this;
+	bool prefab_parent = is_prefab_parent;
+	while (to_reimport && !prefab_parent)
+	{
+		to_reimport = to_reimport->parent;
+		prefab_parent = to_reimport->is_prefab_parent;
+	}
+	return to_reimport;
+}
+
+void GameObject::UnpackPrefab()
+{
+	assert(!original_prefab);
+	if (is_prefab_parent)
+	{
+		prefab_reference->RemoveInstance(this);
+		is_prefab_parent = false;
+	}
+	prefab_reference = nullptr;
+	original_UUID = false;
+	for (const auto& child : children)
+	{
+		child->UnpackPrefab();
+	}
+}
+
+void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 {
 	this->components.reserve(gameobject_to_copy.components.size());
-	for (auto component : gameobject_to_copy.components)
+	for (const auto& component : gameobject_to_copy.components)
 	{
 		component->modified_by_user = false;
 		Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
@@ -418,12 +553,12 @@ void GameObject::CopyComponents(const GameObject & gameobject_to_copy)
 		components.begin(),
 		components.end(),
 		std::back_inserter(components_to_remove),
-		[&gameobject_to_copy](auto component)
+		[&gameobject_to_copy](const auto& component)
 	{
 		return gameobject_to_copy.GetComponent(component->type) == nullptr && !component->added_by_user;
 	}
 	);
-	for (auto component : components_to_remove)
+	for (const auto& component : components_to_remove)
 	{
 		RemoveComponent(component);
 	}

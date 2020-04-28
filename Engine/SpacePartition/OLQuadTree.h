@@ -1,10 +1,11 @@
 #ifndef _OLQUADTREE_H_
 #define _OLQUADTREE_H_
 
-#include "Main/GameObject.h"
 #include "OLQuadTreeNode.h"
 
 #include <MathGeoLib.h>
+
+class GameObject;
 
 class OLQuadTree
 {

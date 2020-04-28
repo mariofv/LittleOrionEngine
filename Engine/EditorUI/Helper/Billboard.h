@@ -8,11 +8,12 @@
 #include <MathGeoLib.h>
 #include <GL/glew.h>
 
+enum class CoreResource;
+
 class Billboard
 {
 public:
-	Billboard(const std::string& texture_path, float width, float height);
-	~Billboard();
+	Billboard(CoreResource quad_sprite, float width, float height);
 
 	void Render(const float3& position) const;
 

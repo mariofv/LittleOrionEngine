@@ -15,9 +15,8 @@ public:
 		ENABLE_NORMAL_MAP =1 << 0,
 		ENABLE_SPECULAR_MAP = 1 << 1
 	};
-	ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render);
-	ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner);
 	ComponentMeshRenderer();
+	ComponentMeshRenderer(GameObject * owner);
 	~ComponentMeshRenderer() = default;
 
 	ComponentMeshRenderer(const ComponentMeshRenderer& component_to_copy) = default;
@@ -34,12 +33,15 @@ public:
 
 	void Delete() override;
 
-	void Render() const;
+	void Render();
 	void RenderModel() const;
 	void RenderMaterial(GLuint shader_program) const;
 
-	void SetMesh(const std::shared_ptr<Mesh> & mesh_to_render);
-	void SetMaterial(const std::shared_ptr<Material> & material_to_render);
+	void SetMesh(uint32_t mesh_uuid);
+	void SetMaterial(uint32_t material_uuid);
+	void SetSkeleton(uint32_t skeleton_uuid);
+
+	void UpdatePalette(const std::vector<float4x4> & pose);
 
 private:
 	void AddDiffuseUniforms(unsigned int shader_program) const;
@@ -53,10 +55,19 @@ private:
 	bool BindTextureNormal(Material::MaterialTextureType id) const;
 
 public:
-	std::shared_ptr<Mesh> mesh_to_render;
-	std::shared_ptr<Material> material_to_render;
+	uint32_t mesh_uuid;
+	std::shared_ptr<Mesh> mesh_to_render = nullptr;
+
+	uint32_t material_uuid;
+	std::shared_ptr<Material> material_to_render = nullptr;
+
+	uint32_t skeleton_uuid;
+	std::shared_ptr<Skeleton> skeleton = nullptr;
+
+	std::vector<float4x4> palette;
 
 private:
+
 	friend class PanelComponent;
 };
 

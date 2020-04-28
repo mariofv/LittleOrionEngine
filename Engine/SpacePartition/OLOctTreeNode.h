@@ -1,10 +1,11 @@
 #ifndef _OLOCTTREENODE_H_
 #define _OLOCTTREENODE_H_
 
-#include "Main/GameObject.h"
 #include "Component/ComponentCamera.h"
 
 #include <MathGeoLib.h>
+
+class GameObject;
 
 class OLOctTreeNode
 {

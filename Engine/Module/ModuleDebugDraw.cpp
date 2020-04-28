@@ -10,15 +10,19 @@
 #include "EditorUI/Panel/PanelNavMesh.h"
 
 #include "Main/Application.h"
-#include "Module/ModuleAI.h"
+#include "Main/GameObject.h"
+
+#include "ModuleAI.h"
 #include "ModuleAnimation.h"
 #include "ModuleCamera.h"
-#include "ModuleEditor.h"
 #include "ModuleDebug.h"
+#include "ModuleEditor.h"
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
+
 #include "SpacePartition/OLQuadTree.h"
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
 #include "EditorUI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
@@ -379,8 +383,8 @@ bool ModuleDebugDraw::Init()
 	dd_interface_implementation = new IDebugDrawOpenGLImplementation();
     dd::initialize(dd_interface_implementation);
 
-	light_billboard = new Billboard(LIGHT_BILLBOARD_TEXTURE_PATH, 1.72f, 2.5f);	
-	camera_billboard = new Billboard(VIDEO_BILLBOARD_TEXTURE_PATH, 2.5f, 2.5f);
+	light_billboard = new Billboard(CoreResource::BILLBOARD_LIGHT_TEXTURE, 17.2f, 25.f);	
+	camera_billboard = new Billboard(CoreResource::BILLBOARD_CAMERA_TEXTURE, 25.f, 25.f);
 
 	grid = new Grid();
 
@@ -391,6 +395,9 @@ bool ModuleDebugDraw::Init()
 
 void ModuleDebugDraw::Render()
 {
+#if GAME
+	return;
+#endif
 
 	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
 	if(App->debug->show_navmesh)
@@ -431,7 +438,7 @@ void ModuleDebugDraw::Render()
 
 		RenderCameraFrustum();
 		RenderLightGizmo();
-		RenderBones();
+		//RenderBones();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 
@@ -451,7 +458,6 @@ void ModuleDebugDraw::Render()
 	}
 
 	RenderBillboards();
-
 
 	if (App->debug->show_grid)
 	{
@@ -485,38 +491,9 @@ void ModuleDebugDraw::RenderTangentsAndBitangents() const
 			float4x4 axis_transform = mesh->owner->transform.GetGlobalModelMatrix() * axis_object_space;
 			dd::axisTriad(axis_transform, 0.1F, 1.0F);
 		}	
-	/*	float3 pos1 = float3(mesh->mesh_to_render->vertices[0].position);
-		float3 pos2 = float3(mesh->mesh_to_render->vertices[1].position);
-		float3 pos3 = float3(mesh->mesh_to_render->vertices[2].position);
-		float2 uv1 = float2(mesh->mesh_to_render->vertices[0].tex_coords);
-		float2 uv2 = float2(mesh->mesh_to_render->vertices[1].tex_coords);
-		float2 uv3 = float2(mesh->mesh_to_render->vertices[2].tex_coords);
-		float3 edge1 = pos2 - pos1;
-		float3 edge2 = pos3 - pos1;
-		float2 deltaUV1 = uv2 - uv1;
-		float2 deltaUV2 = uv3 - uv1;
-		float4 normal = float4(mesh->mesh_to_render->vertices[0].normals, 0.0f);
-		float f = 1.0F / (deltaUV1.x * deltaUV2.y - deltaUV2.x*deltaUV1.y);
-
-		float3 tangent;
-		tangent.x = f * (deltaUV2.y * edge1.x - deltaUV1.y * edge2.x);
-		tangent.y = f * (deltaUV2.y * edge1.y - deltaUV1.y * edge2.y);
-		tangent.z = f * (deltaUV2.y * edge1.z - deltaUV1.y * edge2.z);
-		tangent = tangent.Normalized();
-		float4 tangent1 = float4(tangent, 0.0f);
-
-		float3 bitangent;
-		bitangent.x = f * (-deltaUV2.x * edge1.x + deltaUV1.x * edge2.x);
-		bitangent.y = f * (-deltaUV2.x * edge1.y + deltaUV1.x * edge2.y);
-		bitangent.z = f * (-deltaUV2.x * edge1.z + deltaUV1.x * edge2.z);
-		bitangent = bitangent.Normalized();
-		float4 bitangent1 = float4(bitangent, 0.0f);
-		float4 position = float4(pos1, 1.0f);
-		float4x4 axis_object_space = float4x4(tangent1, bitangent1, normal, position);
-		float4x4 axis_transform = mesh->owner->transform.GetGlobalModelMatrix() * axis_object_space;
-		dd::axisTriad(axis_transform, 10.F, 10.F);*/
 	}
 }
+
 void ModuleDebugDraw::RenderCameraFrustum() const
 {
 	BROFILER_CATEGORY("Render Selected GameObject Camera Frustum", Profiler::Color::Lavender);
@@ -542,8 +519,8 @@ void ModuleDebugDraw::RenderLightGizmo() const
 	if (selected_light_component != nullptr)
   {	
 		ComponentLight* selected_light = static_cast<ComponentLight*>(selected_light_component);	
-		ComponentTransform* selected_light_transform = &selected_light->owner->transform;	
-		float gizmo_radius = 2.5f;	
+		ComponentTransform* selected_light_transform = &selected_light->owner->transform;
+		float gizmo_radius = 2.5F;	
 		switch (selected_light->light_type)	
 		{	
 		case ComponentLight::LightType::DIRECTIONAL_LIGHT:	
@@ -577,7 +554,6 @@ void ModuleDebugDraw::RenderBones() const
 			RenderBone(animation_game_object, nullptr, float3(1.f, 0.f, 0.f));
 		}
 	}
-
 	
 }
 
@@ -638,6 +614,10 @@ void ModuleDebugDraw::RenderOutline() const
 		{
 			new_transformation_matrix = selected_game_object->parent->transform.GetGlobalModelMatrix() * selected_game_object->transform.GetModelMatrix() * float4x4::Scale(float3(1.01f));
 
+		ComponentTransform object_transform_copy = selected_game_object->transform;
+		float3 object_scale = object_transform_copy.GetScale();
+		object_transform_copy.SetScale(object_scale*1.01f);
+		object_transform_copy.GenerateGlobalModelMatrix();
 		}
 		else 
 		{
@@ -722,7 +702,7 @@ void ModuleDebugDraw::RenderPathfinding() const
 		dd::point(App->artificial_intelligence->end_position, float3(0, 255, 255), 20.0f);
 	}
 
-	for(auto point : App->artificial_intelligence->debug_path)
+	for(const auto& point : App->artificial_intelligence->debug_path)
 	{
 		dd::point(point, float3(0, 0, 255), 10.0f);
 	}
@@ -736,7 +716,7 @@ void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 	math::float4x4 proj = camera.GetProjectionMatrix();
 
 	dd_interface_implementation->width = static_cast<unsigned int>(camera.GetWidth());
-	dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeigt());
+	dd_interface_implementation->height = static_cast<unsigned int>(camera.GetHeight());
 	dd_interface_implementation->mvpMatrix = proj * view;
 
 	dd::flush();

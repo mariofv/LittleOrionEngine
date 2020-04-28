@@ -1,77 +1,145 @@
 #include "PrefabImporter.h"
+
+#include "Component/ComponentAnimation.h"
+#include "Component/ComponentMeshRenderer.h"
+#include "Helper/Config.h"
+
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleResourceManager.h"
 #include "Main/GameObject.h"
-#include "Helper/Config.h"
+
+#include "ResourceManagement/Resources/Material.h"
+#include "ResourceManagement/Resources/Mesh.h"
+#include "ResourceManagement/Resources/Skeleton.h"
 
 #include <stack>
 
-ImportResult PrefabImporter::Import(const File& file, bool force) const
+FileData PrefabImporter::ExtractData(Path& file_path, const Metafile& metafile) const
 {
-	ImportResult import_result;
-
-	if (file.filename.empty())
-	{
-		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
-			return import_result;
-	}
-
-	ImportOptions already_imported = GetAlreadyImportedResource(file);
-	if (already_imported.uuid != 0 && !force) 
-	{
-		import_result.success = true;
-		import_result.exported_file = already_imported.exported_file;
-		return import_result;
-	}
-
-	std::string output_file = SaveMetaFile(file.file_path, ResourceType::PREFAB);
-	bool copied = App->filesystem->Copy(file.file_path.c_str(), output_file.c_str());
-	if (!copied)
-	{
-		return import_result;
-	}
-	
-
-	import_result.success = true;
-	import_result.exported_file = output_file;
-	return import_result;
+	return file_path.GetFile()->Load();
 }
 
-void PrefabImporter::CreatePrefabResource(const File & file, GameObject * gameobject_to_save) const
+FileData PrefabImporter::ExtractFromModel(const Config& model_config, const Metafile& metafile) const
 {
-	Config scene_config;
+	std::vector<std::unique_ptr<GameObject>> game_objects;
+	std::vector<std::unique_ptr<ComponentMeshRenderer>> mesh_renderer_components;
+	std::vector<uint32_t> loaded_skeletons;
+
+	uint32_t real_uuid = metafile.uuid;
+	std::unique_ptr<GameObject> model_root_node = std::make_unique<GameObject>();
+	model_root_node->UUID = real_uuid;
+	model_root_node->original_UUID = model_root_node->UUID;
+
+	model_config.GetString("Name", model_root_node->name, "");
 
 	std::vector<Config> game_objects_config;
-	std::stack<GameObject*> pending_objects;
-
-
-	Config current_gameobject;
-	gameobject_to_save->Save(current_gameobject);
-	game_objects_config.push_back(current_gameobject);
-
-	for (auto& child_game_object : gameobject_to_save->children)
+	model_config.GetChildrenConfig("Node", game_objects_config);
+	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
-		pending_objects.push(child_game_object);
+		ExtractGameObjectFromNode(model_root_node, game_objects_config[i], game_objects, mesh_renderer_components, loaded_skeletons);
+	}
+	size_t gameobject_index = 1;
+	for (auto & game_object : game_objects)
+	{
+		game_object->UUID = real_uuid + gameobject_index++;
+		game_object->original_UUID = game_object->UUID;
 	}
 
-	while (!pending_objects.empty())
+	ExtractAnimationComponent(model_root_node.get(), model_config);
+	
+	FileData prefab_data = ExtractFromGameObject(model_root_node.get());
+
+	game_objects.clear();
+	mesh_renderer_components.clear();
+
+	return prefab_data;
+}
+
+FileData PrefabImporter::ExtractFromGameObject(GameObject* gameobject) const
+{
+	std::vector<Config> gameobjects_config;
+	std::stack<GameObject*> pending_gameobjects;
+	pending_gameobjects.push(gameobject);
+
+	while (!pending_gameobjects.empty())
 	{
-		GameObject* current_game_object = pending_objects.top();
-		pending_objects.pop();
+		GameObject* current_gameobject = pending_gameobjects.top();
+		pending_gameobjects.pop();
 
-		Config current_gameobject;
-		current_game_object->Save(current_gameobject);
-		game_objects_config.push_back(current_gameobject);
+		Config current_gameobject_config;
+		current_gameobject->Save(current_gameobject_config);
+		gameobjects_config.push_back(current_gameobject_config);
 
-		for (auto& child_game_object : current_game_object->children)
+		for (auto& child_gameobject : current_gameobject->children)
 		{
-			pending_objects.push(child_game_object);
+			pending_gameobjects.push(child_gameobject);
 		}
 	}
-	scene_config.AddChildrenConfig(game_objects_config, "GameObjects");
 
-	std::string serialized_scene_string;
-	scene_config.GetSerializedString(serialized_scene_string);
+	Config prefab_config;
+	prefab_config.AddChildrenConfig(gameobjects_config, "GameObjects");
 
-	App->filesystem->Save(file.file_path.c_str(), serialized_scene_string.c_str(), serialized_scene_string.size() + 1);
+	std::string serialized_prefab_string;
+	prefab_config.GetSerializedString(serialized_prefab_string);
+
+	char* prefab_bytes = new char[serialized_prefab_string.size() + 1];
+	memcpy(prefab_bytes, serialized_prefab_string.c_str(), serialized_prefab_string.size() + 1);
+
+	FileData prefab_data{ prefab_bytes, serialized_prefab_string.size() + 1 };
+	return prefab_data;
+}
+
+void PrefabImporter::ExtractGameObjectFromNode
+(
+	std::unique_ptr<GameObject>& parent_node,
+	const Config& node_config,
+	std::vector<std::unique_ptr<GameObject>>& game_objects,
+	std::vector<std::unique_ptr<ComponentMeshRenderer>>& mesh_renderer_components,
+	std::vector<uint32_t>& loaded_skeletons
+) {
+	game_objects.emplace_back(std::make_unique<GameObject>());
+	GameObject * node_game_object = game_objects.back().get();
+	node_game_object->parent = parent_node.get();
+	parent_node->children.push_back(node_game_object);
+
+	node_config.GetString("Name", node_game_object->name, "");
+	node_game_object->original_UUID = node_game_object->UUID;
+
+	uint32_t material_uuid = node_config.GetUInt("Material", 0);
+	uint32_t mesh_uuid = node_config.GetUInt("Mesh", 0);
+	uint32_t skeleton_uuid = node_config.GetUInt("Skeleton", 0);
+
+	if (mesh_uuid != 0)
+	{
+		ExtractMeshComponent(mesh_uuid, material_uuid, skeleton_uuid, mesh_renderer_components, node_game_object);
+		ComponentMeshRenderer* mesh_renderer = mesh_renderer_components.back().get();
+		node_game_object->Update();
+	}
+
+}
+
+void PrefabImporter::ExtractMeshComponent(
+	uint32_t mesh_uuid, uint32_t material_uuid, uint32_t skeleton_uuid,
+	std::vector<std::unique_ptr<ComponentMeshRenderer>>& mesh_renderer_components,
+	GameObject* node_game_object
+) {
+	mesh_renderer_components.emplace_back(std::make_unique<ComponentMeshRenderer>(node_game_object));
+	node_game_object->components.push_back(mesh_renderer_components.back().get());
+
+	mesh_renderer_components.back()->mesh_uuid = mesh_uuid;
+	mesh_renderer_components.back()->material_uuid = material_uuid;
+	mesh_renderer_components.back()->skeleton_uuid = skeleton_uuid;
+}
+
+void PrefabImporter::ExtractAnimationComponent(GameObject* node_game_object, const Config& node_config)
+{
+	std::vector<Config> animation_config;
+	node_config.GetChildrenConfig("Animations", animation_config);
+	if (animation_config.size() > 0)
+	{
+		ComponentAnimation * component_animation = new ComponentAnimation();
+		node_game_object->components.push_back(component_animation);
+		component_animation->owner = node_game_object;
+	}
 }

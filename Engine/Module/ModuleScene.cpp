@@ -2,13 +2,23 @@
 
 #include "Component/ComponentCamera.h"
 #include "EditorUI/Panel/PanelHierarchy.h"
+#include "Filesystem/PathAtlas.h"
+#include "Helper/BuildOptions.h"
 #include "Helper/Config.h"
+
 #include "Main/Application.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
-#include "ModuleModelLoader.h"
 #include "ModuleRender.h"
 #include "ModuleResourceManager.h"
+#include "ModuleScriptManager.h"
+#include "ModuleTime.h"
+
+
+#include "ResourceManagement/Metafile/Metafile.h"
+#include "ResourceManagement/Metafile/MetafileManager.h"
+#include "ResourceManagement/Manager/SceneManager.h"
+#include "ResourceManagement/Resources/Scene.h"
 
 #include <algorithm>
 #include <stack>
@@ -17,18 +27,21 @@
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
+	build_options = std::make_unique<BuildOptions>();
+	build_options->LoadOptions();
+
 	return true;
 }
 
 update_status ModuleScene::Update()
 {
 	BROFILER_CATEGORY("Scene Update", Profiler::Color::Crimson);
-	for (auto & game_object : game_objects_ownership)
+	for (const auto&  game_object : game_objects_ownership)
 	{
 		game_object->Update();
 		if(!game_object->IsStatic())
 		{
-			ComponentMesh* object_mesh = (ComponentMesh*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
+			ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
 			if(object_mesh != nullptr)
 				App->renderer->UpdateAABBTree(game_object.get());
 		}
@@ -64,7 +77,7 @@ ENGINE_API GameObject* ModuleScene::CreateChildGameObject(GameObject *parent)
 
 void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 {
-	auto it = std::find_if(game_objects_ownership.begin(), game_objects_ownership.end(), [game_object_to_remove](auto const & game_object) 
+	const auto it = std::find_if(game_objects_ownership.begin(), game_objects_ownership.end(), [game_object_to_remove](auto const& game_object)
 	{
 		return game_object_to_remove == game_object.get();
 	});
@@ -72,7 +85,7 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 	{
 		std::vector<GameObject*> children_to_remove;
 		game_object_to_remove->Delete(children_to_remove);
-		game_objects_ownership.erase(std::remove_if(begin(game_objects_ownership), end(game_objects_ownership), [children_to_remove](auto const &  game_object)
+		game_objects_ownership.erase(std::remove_if(begin(game_objects_ownership), end(game_objects_ownership), [&children_to_remove](auto const&  game_object)
 		{
 			return std::find(begin(children_to_remove), end(children_to_remove), game_object.get()) != end(children_to_remove);
 		}
@@ -100,15 +113,18 @@ GameObject* ModuleScene::GetRoot() const
 	return root;
 }
 
-GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
+ENGINE_API GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 {
 	if (UUID == 0)
 	{
 		return root;
 	}
 
+	APP_LOG_INFO("Getting game object %u", UUID)
+	APP_LOG_INFO("%d", game_objects_ownership.size())
+
 	for (auto& game_object : game_objects_ownership)
-	{
+	{		
 		if (game_object->UUID == UUID) 
 		{
 			return game_object.get();
@@ -140,18 +156,116 @@ void ModuleScene::DeleteCurrentScene()
 	App->actions->ClearUndoRedoStacks();
 	RemoveGameObject(root);
 	App->renderer->DeleteAABBTree();
+	App->scripts->scripts.clear();
 	App->editor->selected_game_object = nullptr;
 }
 
-void  ModuleScene::NewScene(const std::string &path)
+void ModuleScene::OpenScene()
 {
 	App->scene->DeleteCurrentScene();
 	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 
-	App->resources->scene_manager->Load(path);
+	GetSceneResource();
 
+	if (App->time->isGameRunning())
+	{
+		App->scripts->InitScripts();
+	}
 	App->renderer->GenerateQuadTree();
 	App->renderer->GenerateOctTree();
 	App->actions->ClearUndoStack();
 }
+
+inline void ModuleScene::GetSceneResource()
+{
+	if (load_tmp_scene)
+	{
+		assert(tmp_scene_uuid != 0);
+		current_scene = App->resources->Load<Scene>(tmp_scene_uuid);
+	}
+	else if (build_options_position != -1)
+	{
+		if (!build_options->is_imported)
+		{
+			//Only gets here if no build options exists
+			GetSceneFromPath(DEFAULT_SCENE_PATH);
+		}
+		else
+		{
+			current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(build_options_position));
+		}
+	}
+	else
+	{
+		int position = build_options.get()->GetPositionFromPath(scene_to_load);
+
+		#if GAME
+			assert(position != -1);
+		#endif
+
+		(position != -1)
+			? current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(position))
+			: GetSceneFromPath(scene_to_load);
+	}
+
+	current_scene.get()->Load();
+}
+
+void ModuleScene::GetSceneFromPath(const std::string& path)
+{
+	Path* metafile_path = App->filesystem->GetPath(App->resources->metafile_manager->GetMetafilePath(path));
+	Metafile* scene_metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
+	assert(scene_metafile != nullptr);
+	current_scene = App->resources->Load<Scene>(scene_metafile->uuid);
+}
+
+void ModuleScene::OpenPendingScene()
+{
+	OpenScene();
+	scene_to_load.clear();
+	build_options_position = -1;
+	load_tmp_scene = false;
+}
+
+ENGINE_API void ModuleScene::LoadScene(const std::string &path)
+{
+	scene_to_load = path;
+}
+
+ENGINE_API void ModuleScene::LoadScene(unsigned position)
+{
+	build_options_position = position;
+}
+
+void ModuleScene::LoadScene()
+{
+	load_tmp_scene = true;
+}
+
+void ModuleScene::SaveScene()
+{
+	if(App->time->isGameRunning())
+	{
+		APP_LOG_INFO("You must stop play mode to save scene.");
+		return;
+	}
+
+	App->resources->Save<Scene>(current_scene);
+}
+
+void ModuleScene::SaveTmpScene()
+{
+	tmp_scene_uuid = current_scene.get()->GetUUID();
+}
+
+bool ModuleScene::HasPendingSceneToLoad() const
+{
+	return !scene_to_load.empty() || build_options_position != -1 || load_tmp_scene;
+}
+
+void ModuleScene::SetCurrentScene(uint32_t uuid)
+{
+	current_scene = App->resources->Load<Scene>(uuid);
+}
+

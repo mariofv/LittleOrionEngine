@@ -1,6 +1,8 @@
 #ifndef _MODULETIME_H_
 #define _MODULETIME_H_
 
+#define ENGINE_EXPORTS
+
 #include "Module.h"
 #include "Main/Globals.h"
 
@@ -16,7 +18,7 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	float GetFPS() const;
+	ENGINE_API float GetFPS() const;
 	void SetMaxFPS(int fps);
 	void SetTimeScale(float time_scale);
 

@@ -1,44 +1,55 @@
-#ifndef _ModuleFileSystem_H
-#define _ModuleFileSystem_H
+#ifndef _MODULEFILESYSTEM_H_
+#define _MODULEFILESYSTEM_H_
 
+#include "Module/Module.h"
+#include "Filesystem/Path.h"
 
-#include <Module/Module.h>
-#include <string>
-#include <vector>
 #include <memory>
-
 #include <physfs/physfs.h>
-#include "Filesystem/File.h"
+#include <string>
+#include <unordered_map>
+#include <vector>
+
+
 class ModuleFileSystem : public Module
 {
-
 public:
-
-	bool Init() override;
-	bool CleanUp() override;
 	ModuleFileSystem() = default;
 	~ModuleFileSystem();
 
-	char* Load( const char* file_name, size_t & size) const;
-	bool Save(const char* file_name, const void* buffer, unsigned int size, bool append = false) const;
+	bool Init() override;
+	bool CleanUp() override;
 
-	bool Remove(const File * file) const;
-	bool Exists(const char* file) const;
-	File MakeDirectory(const std::string & new_directory_full_path) const;
-	bool Copy(const char* source, const char* destination);
+	void AddPath(Path* path);
+	Path* GetPath(const std::string& path);
+	Path* GetRootPath() const;
+
+	Path* Save(const std::string& save_path, FileData data_to_save);
+	Path* Save(const std::string& save_path, const std::string& serialized_data);
+
+	bool Exists(const std::string& path) const;
+
+	bool Remove(Path* path);
+	bool Remove(const std::string& path);
+
+	Path* Copy(const std::string& source_path, const std::string& destination_path, const std::string& copied_file_name = std::string());
+	Path* MakeDirectory(const std::string& new_directory_full_path);
 	
-	FileType GetFileType(const char *file_path, const PHYSFS_FileType & file_type = PHYSFS_FileType::PHYSFS_FILETYPE_OTHER) const;
-	void GetAllFilesInPath(const std::string & path, std::vector<std::shared_ptr<File>> & files, bool directories_only = false) const;
+	bool MountDirectory(const std::string& directory) const;
+	bool CreateMountedDir(const std::string& directory);
 
-	bool CreateMountedDir(const char * directory) const;
-	void RefreshFilesHierarchy();
 private:
-	char *save_path = NULL;
-	std::string GetFileExtension(const char *file_path) const;
+	void RefreshPathMap(); // TODO: Not allocate all at the begining, do it by demand!
 
 public:
-	std::shared_ptr<File> assets_file;
+	Path* assets_folder_path = nullptr;
+	Path* library_folder_path = nullptr;
+	Path* resources_folder_path = nullptr;
+
+private:
+	Path* root_path = nullptr;
+	std::unordered_map<std::string, Path*> paths;
 };
 
 
-#endif // !_ModuleFileSystem_H
+#endif // !_MODULEFILESYSTEM_H_

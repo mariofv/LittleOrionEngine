@@ -1,7 +1,8 @@
 #include "EditorActionScale.h"
-#include "Module/ModuleScene.h"
-#include "Main/Application.h"
 
+#include "Main/Application.h"
+#include "Main/GameObject.h"
+#include "Module/ModuleScene.h"
 
 EditorActionScale::EditorActionScale(float3 &previous, float3 &current, GameObject* go) : previous_scale(previous),
 current_scale(current), UUID_go(go->UUID) {}

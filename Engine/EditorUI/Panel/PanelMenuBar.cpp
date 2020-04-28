@@ -1,6 +1,9 @@
 #include "PanelMenuBar.h"
 
+#include "Component/ComponentCanvas.h"
+
 #include "EditorUI/Panel/PanelAbout.h"
+#include "EditorUI/Panel/PanelBuildOptions.h"
 #include "EditorUI/Panel/PanelConfiguration.h"
 #include "EditorUI/Panel/PanelConsole.h"
 #include "EditorUI/Panel/PanelDebug.h"
@@ -12,13 +15,20 @@
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelResourceDatabase.h"
-#include "EditorUI/Panel/PopupsPanel/PanelPopupSceneManagement.h"
+#include "EditorUI/Panel/PopupsPanel/PanelPopupSceneLoader.h"
+#include "EditorUI/Panel/PopupsPanel/PanelPopupSceneSaver.h"
 
+#include "Filesystem/PathAtlas.h"
+#include "Helper/TemplatedGameObjectCreator.h"
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleFileSystem.h"
-#include "Module/ModuleModelLoader.h"
+#include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleTime.h"
+#include "Module/ModuleUI.h"
+
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
@@ -54,7 +64,7 @@ void PanelMenuBar::ShowFileMenu()
 		}
 		if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Load Scene"))
 		{
-			App->editor->popups->scene_management_popup.load_scene_shown = true;
+			App->editor->popups->scene_loader_popup.popup_shown = true;
 		}
 		ImGui::Separator();
 		if (App->editor->current_scene_path != "" && ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
@@ -63,7 +73,15 @@ void PanelMenuBar::ShowFileMenu()
 		}
 		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene as"))
 		{
-			App->editor->popups->scene_management_popup.save_scene_shown = true;
+			if (!App->time->isGameRunning())
+			{
+				App->editor->popups->scene_saver_popup.popup_shown = true;
+			}
+			APP_LOG_INFO("You must stop play mode to save scene.");
+		}
+		if(ImGui::MenuItem(ICON_FA_BUILDING " Build Options"))
+		{
+			App->editor->build_options->SwitchOpen();
 		}
 		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
 		{
@@ -99,21 +117,32 @@ void PanelMenuBar::ShowGameObjectMenu()
 		
 		if (ImGui::BeginMenu("3D Object"))
 		{
+			GameObject* created_game_object = nullptr;
+
 			if (ImGui::Selectable("Cube"))
 			{
-				App->model_loader->LoadCoreModel(PRIMITIVE_CUBE_PATH);
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::CUBE);
 			}
 			if (ImGui::Selectable("Cylinder"))
 			{
-				App->model_loader->LoadCoreModel(PRIMITIVE_CYLINDER_PATH);
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::CYLINDER);
 			}
 			if (ImGui::Selectable("Sphere"))
 			{
-				App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::SPHERE);
 			}
 			if (ImGui::Selectable("Torus"))
 			{
-				App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::TORUS);
+			}
+			if (ImGui::Selectable("Quad"))
+			{
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::QUAD);
+			}
+
+			if (created_game_object != nullptr)
+			{
+				App->renderer->InsertAABBTree(created_game_object);
 			}
 
 			ImGui::EndMenu();
@@ -136,6 +165,87 @@ void PanelMenuBar::ShowGameObjectMenu()
 			GameObject* created_game_object = App->scene->CreateGameObject();
 			created_game_object->name = "Camera";
 			created_game_object->CreateComponent(Component::ComponentType::CAMERA);
+		}
+
+		if (ImGui::BeginMenu("UI"))
+		{
+			
+			if (ImGui::Selectable("Text"))
+			{
+				if (App->ui->main_canvas == nullptr)
+				{
+					CreateUIGameObject("Canvas", ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(CreateUIGameObject("Text", ComponentUI::UIType::TEXT));
+			}
+			if (ImGui::Selectable("Image"))
+			{
+				if (App->ui->main_canvas == nullptr)
+				{
+					CreateUIGameObject("Canvas", ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(CreateUIGameObject("Image", ComponentUI::UIType::IMAGE));
+			}
+			ImGui::Separator();
+			if (ImGui::Selectable("Button"))
+			{
+				GameObject* created_game_object = CreateUIGameObject("Button", ComponentUI::UIType::BUTTON);
+				created_game_object->AddChild(CreateUIGameObject("Text", ComponentUI::UIType::TEXT));
+
+				if (App->ui->main_canvas == nullptr)
+				{
+					CreateUIGameObject("Canvas", ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(created_game_object);
+				
+			}
+			if (ImGui::Selectable("Progess Bar"))
+			{
+				if (App->ui->main_canvas == nullptr)
+				{
+					CreateUIGameObject("Canvas", ComponentUI::UIType::CANVAS);
+				}
+				App->ui->main_canvas->owner->AddChild(CreateUIGameObject("Progess Bar", ComponentUI::UIType::PROGRESSBAR));
+			}
+			if (ImGui::Selectable("Slider"))
+			{
+
+			}
+			if (ImGui::Selectable("Scrollbar"))
+			{
+
+			}
+			if (ImGui::Selectable("Dropdown"))
+			{
+
+			}
+			if (ImGui::Selectable("Input Field"))
+			{
+
+			}
+			ImGui::Separator();
+			if (ImGui::Selectable("Canvas"))
+			{
+				if (App->ui->main_canvas == nullptr)
+				{
+					CreateUIGameObject("Canvas", ComponentUI::UIType::CANVAS);
+				}
+			}
+			if (ImGui::Selectable("Panel"))
+			{
+
+			}
+			if (ImGui::Selectable("Scroll View"))
+			{
+
+			}
+			ImGui::Separator();
+			if (ImGui::Selectable("Event System"))
+			{
+
+			}
+
+			ImGui::EndMenu();
 		}
 
 		ImGui::EndMenu();
@@ -214,4 +324,12 @@ void PanelMenuBar::ShowHelpMenu()
 		ImGui::PopFont();
 		ImGui::EndMenu();
 	}
+}
+
+GameObject* PanelMenuBar::CreateUIGameObject(const char* name, ComponentUI::UIType ui_type) const
+{
+	GameObject* created_game_object = App->scene->CreateGameObject();
+	created_game_object->name = name;
+	created_game_object->CreateComponentUI(ui_type);
+	return created_game_object;
 }

@@ -1,6 +1,8 @@
 #ifndef _MODULERENDER_H_
 #define _MODULERENDER_H_
 
+#define ENGINE_EXPORTS
+
 #include "Module.h"
 #include "Helper/Timer.h"
 #include "Main/Globals.h"
@@ -13,8 +15,8 @@
 
 const unsigned INITIAL_SIZE_AABBTREE = 10;
 
-class ComponentMeshRenderer;
 class ComponentCamera;
+class ComponentMeshRenderer;
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -37,25 +39,26 @@ public:
 	bool CleanUp();
 	
 	void Render() const;
-	void RenderFrame(const ComponentCamera &camera);
+	void RenderFrame(const ComponentCamera& camera);
 
 
 	ComponentMeshRenderer* CreateComponentMeshRenderer();
 	void RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove);
 
-	int GetRenderedTris() const;
+	ENGINE_API int GetRenderedTris() const;
+	ENGINE_API int GetRenderedVerts() const;
 
 	void GenerateQuadTree();
 	void GenerateOctTree();
 	void InsertAABBTree(GameObject* game_object);
-	void RemoveAABBTree(GameObject * game_object);
+	void RemoveAABBTree(GameObject* game_object);
 	void UpdateAABBTree(GameObject* game_object);
 	void DeleteAABBTree();
 	void CreateAABBTree();
 	void DrawAABBTree() const;
 
-	GameObject* GetRaycastIntertectedObject(const LineSegment & ray);
-	bool GetRaycastIntertectedObject(const LineSegment & ray, float3& position);
+	GameObject* GetRaycastIntertectedObject(const LineSegment& ray);
+	bool GetRaycastIntertectedObject(const LineSegment& ray, float3& position);
 
 private:
 	void SetVSync(bool vsync);
@@ -108,6 +111,7 @@ private:
 	typedef std::pair<float, ComponentMeshRenderer*> ipair;
 	std::list <ipair> opaque_mesh_to_render, transparent_mesh_to_render;
 	int num_rendered_tris = 0;
+	int num_rendered_verts = 0;
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;

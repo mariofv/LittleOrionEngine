@@ -1,5 +1,6 @@
 #include "MaterialImporter.h"
 
+#include "Filesystem/PathAtlas.h"
 #include "Helper/Config.h"
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
@@ -10,77 +11,49 @@
 
 #include <assimp/scene.h>
 
-ImportResult MaterialImporter::Import(const File& file, bool force) const
+FileData MaterialImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
-	ImportResult import_result;
-
-	ImportOptions already_imported = GetAlreadyImportedResource(file);
-	if (already_imported.uuid != 0 && !force) {
-		APP_LOG_INFO("Material already imported.")
-		import_result.success = true;
-		import_result.exported_file = already_imported.exported_file;
-		return import_result;
-	}
-
-	std::string library_material_file = SaveMetaFile(file.file_path, ResourceType::MATERIAL);
-
-	App->filesystem->Copy(file.file_path.c_str(), library_material_file.c_str());
-	
-
-	import_result.success = true;
-	import_result.exported_file = library_material_file;
-	return import_result;
+	return assets_file_path.GetFile()->Load();
 }
 
-
-ImportResult MaterialImporter::ExtractMaterialFromMesh(const aiScene* scene, size_t mesh_index, const char* model_file_path, const char* material_assets_file_path) const
+FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_mesh_material, const Path& material_file_folder_path)
 {
-	if (App->filesystem->Exists(material_assets_file_path))
-	{
-		APP_LOG_INFO("Material %s already exists.", material_assets_file_path)
-		return ImportResult();
-	}
-
-	Material imported_material(0, std::string(material_assets_file_path));
-
-	int mesh_material_index = scene->mMeshes[mesh_index]->mMaterialIndex;
-	std::string model_base_path = std::string(model_file_path);
+	Material imported_material;
 
 	Config material_config;
 	aiTextureMapping mapping = aiTextureMapping_UV;
 	for (size_t i = 0; i < AI_TEXTURE_TYPE_MAX; i++)
 	{
 		aiTextureType type = static_cast<aiTextureType>(i);
-		for (size_t j = 0; j < scene->mMaterials[mesh_material_index]->GetTextureCount(type); j++)
+		for (size_t j = 0; j < assimp_mesh_material->GetTextureCount(type); j++)
 		{
 			aiString file;
-			scene->mMaterials[mesh_material_index]->GetTexture(type, j, &file, &mapping, 0);
-			std::string material_texture = App->resources->texture_importer->ImportMaterialData(file.data, model_base_path);
+			assimp_mesh_material->GetTexture(type, j, &file, &mapping, 0);
+			uint32_t material_texture_uuid = ImportMaterialTexture(file.data, material_file_folder_path);
 
-			if (!material_texture.empty())
+			if (material_texture_uuid != 0)
 			{
 				switch (type)
 				{
 				case aiTextureType_DIFFUSE:
-					material_config.AddString(material_texture, "Diffuse");
+					material_config.AddUInt(material_texture_uuid, "Diffuse");
 					break;
 				case aiTextureType_SPECULAR:
-					material_config.AddString(material_texture, "Specular");
+					material_config.AddUInt(material_texture_uuid, "Specular");
 					break;
 				case aiTextureType_EMISSIVE:
-					material_config.AddString(material_texture, "Emissive");
+					material_config.AddUInt(material_texture_uuid, "Emissive");
 					break;
 				case aiTextureType_AMBIENT_OCCLUSION:
-					material_config.AddString(material_texture, "Occlusion");
+					material_config.AddUInt(material_texture_uuid, "Occlusion");
 					break;
 				default:
-					material_config.AddString(material_texture, "Unknown");
+					material_config.AddUInt(material_texture_uuid, "Unknown");
 					break;
 				}
 			}
 		}
 	}
-
 	material_config.AddBool(imported_material.show_checkerboard_texture, "Checkboard");
 	material_config.AddString(imported_material.shader_program, "ShaderProgram");
 
@@ -122,8 +95,40 @@ ImportResult MaterialImporter::ExtractMaterialFromMesh(const aiScene* scene, siz
 	std::string serialized_material_string;
 	material_config.GetSerializedString(serialized_material_string);
 
-	App->filesystem->Save(material_assets_file_path, serialized_material_string.c_str(), serialized_material_string.size() + 1);
-	return Import(File(material_assets_file_path));
+	char* material_bytes = new char[serialized_material_string.size() + 1];
+	memcpy(material_bytes, serialized_material_string.c_str(), serialized_material_string.size() + 1);
+
+	FileData material_data{ material_bytes, serialized_material_string.size() + 1 };
+	return material_data;
+}
+
+uint32_t MaterialImporter::ImportMaterialTexture(const std::string& texture_described_path, const Path& material_file_folder_path)
+{
+	APP_LOG_INIT("Loading material texture in described path %s.", texture_described_path.c_str());
+	if (App->filesystem->Exists(texture_described_path))
+	{
+		APP_LOG_SUCCESS("Material loaded correctly from %s.", texture_described_path.c_str());
+		return App->resources->InternalImport(*App->filesystem->GetPath(texture_described_path));
+	}
+
+	std::string texture_file_name = texture_described_path.substr(texture_described_path.find_last_of('/') + 1, -1);;
+	std::string textures_path = material_file_folder_path.GetFullPath() + "/" + texture_file_name;
+	APP_LOG_INIT("Loading material texture in model folder path %s.", material_file_folder_path.GetFullPath().c_str());
+	if (App->filesystem->Exists(textures_path))
+	{
+		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
+		return App->resources->InternalImport(*App->filesystem->GetPath(textures_path));
+	}
+
+	textures_path = std::string(TEXTURES_PATH) + "/" +  texture_file_name;
+	APP_LOG_INIT("Loading material texture in textures folder %s.", textures_path.c_str());
+	if (App->filesystem->Exists(textures_path))
+	{
+		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
+		return App->resources->InternalImport(*App->filesystem->GetPath(textures_path));
+	}
+
+	return 0;
 }
 
 Material::MaterialTextureType MaterialImporter::GetTextureTypeFromAssimpType(aiTextureType type) const

@@ -6,18 +6,21 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentLight.h"
 
+#include "Helper/TemplatedGameObjectCreator.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleInput.h"
-#include "Module/ModuleModelLoader.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
-#include "ResourceManagement/Resources/Prefab.h"
+
 #include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/Resources/Prefab.h"
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #include <Brofiler/Brofiler.h>
 #include <imgui.h>
@@ -122,24 +125,23 @@ void PanelHierarchy::DropTarget(GameObject *target_game_object) const
 				incoming_game_object->SetParent(target_game_object);
 			}
 		}
-		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_File"))
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_Resource"))
 		{
-			assert(payload->DataSize == sizeof(File*));
-			File *incoming_file = *(File**)payload->Data;
-			if (incoming_file->file_type == FileType::PREFAB || incoming_file->file_type == FileType::MODEL)
+			assert(payload->DataSize == sizeof(Metafile*));
+			Metafile* incoming_metafile = *((Metafile**)payload->Data);
+			if (incoming_metafile->resource_type == ResourceType::PREFAB) 
 			{
-				ImportOptions options;
-				Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(*incoming_file), options);
-				std::string prefab_exported_path = options.exported_file;
-				if (prefab_exported_path.empty())
-				{
-					prefab_exported_path = App->resources->Import(*incoming_file).exported_file;
-				}
-				auto prefab = App->resources->Load<Prefab>(prefab_exported_path);
-				if (incoming_file->file_type == FileType::MODEL)
-				{
-					prefab->overwritable = false;
-				}
+				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(incoming_metafile->uuid);
+				GameObject* new_model = prefab->Instantiate(target_game_object);
+
+				App->actions->action_game_object = new_model;
+				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
+			}
+
+			if (incoming_metafile->resource_type == ResourceType::MODEL)
+			{
+				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(incoming_metafile->uuid);
+				prefab->overwritable = false;
 				GameObject* new_model = prefab->Instantiate(target_game_object);
 
 				App->actions->action_game_object = new_model;
@@ -185,6 +187,11 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 			{
 				game_object->MoveDownInHierarchy();
 			}
+			if (game_object->prefab_reference != nullptr && ImGui::Selectable("Unpack Prefab"))
+			{
+				GameObject * prefab_parent = game_object->GetPrefabParent();
+				prefab_parent->UnpackPrefab();
+			}
 			ImGui::Separator();
 		}
 
@@ -208,33 +215,28 @@ void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 		GameObject* created_game_object = nullptr;
 		if (ImGui::Selectable("Cube"))
 		{
-			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_CUBE_PATH);
-			created_game_object->name = "Cube";
+			created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::CUBE);
 		}
 		if (ImGui::Selectable("Cylinder"))
 		{
-			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_CYLINDER_PATH);
-			created_game_object->name = "Cylinder";
+			created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::CYLINDER);
 		}
 		if (ImGui::Selectable("Sphere"))
 		{
-			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
-			created_game_object->name = "Sphere";
+			created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::SPHERE);
 		}
 		if (ImGui::Selectable("Torus"))
 		{
-			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
-			created_game_object->name = "Torus";
+			created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::TORUS);
+		}
+		if (ImGui::Selectable("Quad"))
+		{
+			created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::QUAD);
 		}
 
 		if (game_object != nullptr && created_game_object != nullptr)
 		{
 			created_game_object->SetParent(game_object);
-		}
-		if (ImGui::Selectable("Quad"))
-		{
-			created_game_object = App->model_loader->LoadCoreModel(PRIMITIVE_QUAD_PATH);
-			created_game_object->name = "Quad";
 		}
 
 		if(created_game_object != nullptr)

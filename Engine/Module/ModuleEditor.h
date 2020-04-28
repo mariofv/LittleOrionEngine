@@ -1,6 +1,8 @@
 #ifndef _MODULEEDITOR_H_
 #define _MODULEEDITOR_H_
 
+#define ENGINE_EXPORTS
+
 #include "Module.h"
 #include "Main/Globals.h"
 #include "ResourceManagement/Resources/Texture.h"
@@ -12,9 +14,11 @@
 class Component;
 
 class Panel;
+class PanelBuildOptions;
 class PanelMenuBar;
 class PanelToolBar;
 class PanelScene;
+class PanelStateMachine;
 class PanelGame;
 class PanelInspector;
 class PanelHierarchy;
@@ -43,7 +47,7 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	void OpenScene(const std::string &path) const;
+	ENGINE_API void OpenScene(const std::string &path) const;
 	void SaveScene(const std::string &path) const;
 
 	void Render();
@@ -65,6 +69,7 @@ public:
 	ImGuizmo::OPERATION gizmo_operation = ImGuizmo::TRANSLATE;
 	std::string current_scene_path = "";
 
+	PanelBuildOptions* build_options = nullptr;
 	PanelMenuBar* menu_bar = nullptr;
 	PanelToolBar* toolbar = nullptr;
 	PanelScene* scene_panel = nullptr;
@@ -79,6 +84,7 @@ public:
 	PanelResourceDatabase* resource_database = nullptr;
 	PanelPopups* popups = nullptr;
 	PanelNavMesh* nav_mesh = nullptr;
+	PanelStateMachine* state_machine = nullptr;
 
 private:
 	std::vector<Panel*> panels;

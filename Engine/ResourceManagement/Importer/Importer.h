@@ -1,36 +1,30 @@
 #ifndef _IMPORTER_H_
 #define _IMPORTER_H_
 
+#include "Filesystem/File.h"
 #include "Main/Globals.h"
-#include "ResourceManagement/ImportOptions/ImportOptions.h"
+#include "ResourceManagement/Resources/Resource.h"
 
 #include <algorithm>
 
-class File;
+class Path;
+class Metafile;
 
-struct ImportResult
+class Importer 
 {
-	bool success = false;
-	std::string exported_file;
-};
-
-class Importer {
 public:
 	Importer() = default;
+	Importer(ResourceType resource_type) : resource_type(resource_type) {};
 	virtual ~Importer() = default;
-	virtual ImportResult Import(const File & file, bool force = false) const;
 
-protected:
+	Metafile* Import(Path& assets_file_path);
+	virtual FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const = 0;
 
-	ImportOptions GetAlreadyImportedResource(const File & file_to_look_for) const;
-	std::string SaveMetaFile(const std::string& imported_path, ResourceType resource_type) const;
+	static bool ImportRequired(const Path& file_path);
 
-	const std::string LIBRARY_METADATA_PATH = "Library/Metadata";
 public:
-	static void GetOptionsFromMeta(const File& file, ImportOptions & options);
-	static std::string GetMetaFilePath(const File& file);
-private:
-	static const int IMPORTER_VERSION = 5;
+	ResourceType resource_type = ResourceType::UNKNOWN;
+	static const int IMPORTER_VERSION = 4;
 };
 #endif // !_IMPORTER_H_
 

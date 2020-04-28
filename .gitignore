@@ -332,5 +332,12 @@ ASALocalRun/
 !Libraries/**
 imgui.ini
 Game/Library/**
-Game/Assets/Scenes/**
+TwinlightSouls/
 **/LittleOrionEngine.lib
+Game/Resources/Scripts/*
+!Game/Resources/Scripts/GamePlaySystem.dll
+!Game/Resources/Scripts/GameplaySystemDebug.dll
+!Game/Resources/Scripts/GameplaySystemRelease.dll
+!Game/Resources/Scripts/TemplateScript.cpp
+!Game/Resources/Scripts/TemplateScript.h
+

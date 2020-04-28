@@ -11,32 +11,19 @@
 #include "Module/ModuleScene.h"
 #include "Module/ModuleDebugDraw.h"
 
-#include <algorithm>
-ComponentMeshRenderer::ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render) : mesh_to_render(mesh_to_render), Component(nullptr, ComponentType::MESH_RENDERER)
-{
-	owner->aabb.GenerateBoundingBox();
-}
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
-ComponentMeshRenderer::ComponentMeshRenderer(const std::shared_ptr<Mesh> & mesh_to_render, GameObject * owner) : mesh_to_render(mesh_to_render), Component(owner, ComponentType::MESH_RENDERER)
+ComponentMeshRenderer::ComponentMeshRenderer(GameObject * owner) : Component(owner, ComponentType::MESH_RENDERER)
 {
+	SetMesh(0);
+	SetMaterial(0);
 	owner->aabb.GenerateBoundingBox();
 }
 
 ComponentMeshRenderer::ComponentMeshRenderer() : Component(nullptr, ComponentType::MESH_RENDERER)
 {
-	this->mesh_to_render = App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH);
-	this->material_to_render = App->resources->Load<Material>(DEFAULT_MATERIAL_PATH);
-}
-
-void ComponentMeshRenderer::SetMesh(const std::shared_ptr<Mesh> & mesh_to_render)
-{
-	this->mesh_to_render = mesh_to_render;
-	owner->aabb.GenerateBoundingBox();
-}
-
-void ComponentMeshRenderer::SetMaterial(const std::shared_ptr<Material> & material_to_render)
-{
-	this->material_to_render = material_to_render;
+	SetMesh(0);
+	SetMaterial(0);
 }
 
 
@@ -50,8 +37,9 @@ void ComponentMeshRenderer::Save(Config& config) const
 	config.AddUInt(UUID, "UUID");
 	config.AddInt((unsigned int)type, "ComponentType");
 	config.AddBool(active, "Active");
-	config.AddString(mesh_to_render->exported_file, "MeshPath");
-	config.AddString(material_to_render->exported_file, "MaterialPath");
+	config.AddUInt(mesh_uuid, "Mesh");
+	config.AddUInt(material_uuid, "Material");
+	config.AddUInt(skeleton_uuid, "Skeleton");
 }
 
 void ComponentMeshRenderer::Load(const Config& config)
@@ -59,33 +47,17 @@ void ComponentMeshRenderer::Load(const Config& config)
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 
-	std::string mesh_path;
-	config.GetString("MeshPath", mesh_path, "");
-	std::shared_ptr<Mesh> mesh = App->resources->Load<Mesh>(mesh_path.c_str());
-	if (mesh != nullptr)
-	{
-		SetMesh(mesh);
-	}
-	else 
-	{
-		SetMesh(App->resources->Load<Mesh>(PRIMITIVE_CUBE_PATH));
-	}
+	mesh_uuid = config.GetUInt("Mesh", 0);
+	SetMesh(mesh_uuid);
 
-	std::string material_path;
-	config.GetString("MaterialPath", material_path, "");
-	std::shared_ptr<Material> material = App->resources->Load<Material>(material_path);
-	if (material != nullptr)
-	{
-		SetMaterial(material);
-	}
-	else
-	{
-		SetMaterial(App->resources->Load<Material>(DEFAULT_MATERIAL_PATH));
-	}
+	material_uuid = config.GetUInt("Material", 0);
+	SetMaterial(material_uuid);
 
+	skeleton_uuid =	config.GetUInt("Skeleton", 0);
+	SetSkeleton(skeleton_uuid);
 }
 
-void ComponentMeshRenderer::Render() const
+void ComponentMeshRenderer::Render()
 {
 	if (material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
 	{
@@ -95,15 +67,19 @@ void ComponentMeshRenderer::Render() const
 		/*glBlendFunc(GL_ONE, GL_ONE); TODO -> FIX THIS
 		glBlendEquation(GL_FUNC_ADD);*/
 	}
+	if (material_to_render == nullptr)
+	{
+		return;
+	}
 	std::string program_name = material_to_render->shader_program;
 	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
 
-	ComponentAnimation* anim = static_cast<ComponentAnimation*>(owner->parent->GetComponent(ComponentType::ANIMATION));
-	if (anim != nullptr)
+	if (palette.size() > 0)
 	{
-		anim->Render(program);
+		glUniformMatrix4fv(glGetUniformLocation(program, "palette"), palette.size(), GL_TRUE, &palette[0][0][0]);
 	}
+
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET, sizeof(float4x4), owner->transform.GetGlobalModelMatrix().Transposed().ptr());
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
@@ -120,6 +96,10 @@ void ComponentMeshRenderer::Render() const
 
 void ComponentMeshRenderer::RenderModel() const
 {
+	if (mesh_to_render == nullptr)
+	{
+		return;
+	}	
 	glBindVertexArray(mesh_to_render->GetVAO());
 	glDrawElements(GL_TRIANGLES, mesh_to_render->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
@@ -272,3 +252,58 @@ void ComponentMeshRenderer::Copy(Component* component_to_copy) const
 	*component_to_copy = *this;
 	*static_cast<ComponentMeshRenderer*>(component_to_copy) = *this;
 };
+
+void ComponentMeshRenderer::SetMesh(uint32_t mesh_uuid)
+{
+	this->mesh_uuid = mesh_uuid;
+	if (mesh_uuid != 0)
+	{
+		this->mesh_to_render = App->resources->Load<Mesh>(mesh_uuid);
+		owner->aabb.GenerateBoundingBox();
+	}
+}
+
+void ComponentMeshRenderer::SetMaterial(uint32_t material_uuid)
+{
+	this->material_uuid = material_uuid;
+	if (material_uuid != 0)
+	{
+		material_to_render = App->resources->Load<Material>(material_uuid);
+	}
+	else
+	{
+		material_to_render = App->resources->Load<Material>((uint32_t)CoreResource::DEFAULT_MATERIAL);
+	}
+}
+
+void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)
+{
+	this->skeleton_uuid = skeleton_uuid;
+	if (skeleton_uuid != 0)
+	{
+		skeleton = App->resources->Load<Skeleton>(skeleton_uuid);
+		palette.resize(skeleton->skeleton.size());
+		for (auto & matrix : palette)
+		{
+			matrix = float4x4::identity;
+		}
+	}
+}
+
+void ComponentMeshRenderer::UpdatePalette(const std::vector<float4x4>& pose)
+{
+	assert(pose.size() == palette.size());
+	for (size_t i = 0; i < pose.size(); ++i)
+	{
+		auto &  joints = skeleton->skeleton;
+		size_t joint_index = i;
+		float4x4 gobal_transform = float4x4::identity;
+		while (joints[joint_index].parent_index != -1)
+		{
+			joint_index = joints[joint_index].parent_index;
+			gobal_transform = pose[joint_index] * gobal_transform;
+
+		}
+		palette[i] =  gobal_transform * pose[i] * joints[i].transform_global;
+	}
+}

@@ -2,15 +2,21 @@
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentCanvas.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentText.h"
+#include "Component/ComponentTransform.h"
+#include "Component/ComponentUI.h"
+#include "Component/ComponentButton.h"
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
 #include <imgui.h>
@@ -30,13 +36,19 @@ void PanelGameObject::Render(GameObject* game_object)
 	{
 		return;
 	}
-	ImGui::Checkbox("", &game_object->active);
+	
+	if (ImGui::Checkbox("###State", &game_object->active)) 
+	{
+		game_object->SetEnabled(game_object->active);
+	}
 
 	ImGui::SameLine();
 	ImGui::Text(ICON_FA_CUBE);
 
 	ImGui::SameLine();
-	ImGui::InputText("###GameObject name Input", &game_object->name);
+	if (ImGui::InputText("###GameObject name Input", &game_object->name))
+	{		game_object->modified_by_user = true;
+	}
 
 	ImGui::SameLine();
 	if (ImGui::Checkbox("Static", &game_object->is_static))
@@ -83,6 +95,9 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::SCRIPT:
 				component_panel.ShowComponentScriptWindow(static_cast<ComponentScript*>(component));
 				break;
+			case Component::ComponentType::UI:
+				component_panel.ShowComponentUIWindow(static_cast<ComponentUI*>(component));
+				break;
 			case Component::ComponentType::ANIMATION:
 				component_panel.ShowComponentAnimationWindow(static_cast<ComponentAnimation*>(component));
 				break;
@@ -93,9 +108,10 @@ void PanelGameObject::Render(GameObject* game_object)
 		ImGui::PopID();
 	}
 
-	if (game_object->GetComponent(Component::ComponentType::MESH_RENDERER) != nullptr)
+	ComponentMeshRenderer* mesh_renderer_component = static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER));
+	if (mesh_renderer_component != nullptr && mesh_renderer_component->material_uuid != 0)
 	{
-		App->editor->inspector->material_panel.Render(static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER))->material_to_render.get());
+		App->editor->inspector->material_panel.Render(mesh_renderer_component->material_to_render);
 	}
 
 	ImGui::Spacing();
@@ -110,26 +126,14 @@ void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
 	ImGui::SameLine();
 	if(game_object->prefab_reference->IsOverwritable() && ImGui::Button("Apply"))
 	{
-
-		GameObject *to_reimport = GetPrefabParent(game_object);
+		GameObject *to_reimport = game_object->GetPrefabParent();
 		to_reimport->prefab_reference->Apply(to_reimport);
+		App->resources->Save<Prefab>(to_reimport->prefab_reference);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Revert"))
 	{
-		GameObject *to_reimport = GetPrefabParent(game_object);
+		GameObject *to_reimport = game_object->GetPrefabParent();
 		to_reimport->prefab_reference->Revert(to_reimport);
 	}
-}
-
-GameObject* PanelGameObject::GetPrefabParent(GameObject* game_object)
-{
-	GameObject *to_reimport = game_object;
-	bool prefab_parent = game_object->is_prefab_parent;
-	while (to_reimport && !prefab_parent)
-	{
-		to_reimport = to_reimport->parent;
-		prefab_parent = to_reimport->is_prefab_parent;
-	}
-	return to_reimport;
 }

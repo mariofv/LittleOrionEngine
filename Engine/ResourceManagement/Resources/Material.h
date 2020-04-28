@@ -4,12 +4,12 @@
 #include "Resource.h"
 
 #include "Helper/Config.h"
-#include "ResourceManagement/Loaders/MaterialLoader.h"
+#include "ResourceManagement/Manager/MaterialManager.h"
 #include "Texture.h"
 
-#include <vector>
 #include <GL/glew.h>
 #include <MathGeoLib.h>
+#include <vector>
 
 class Material : public Resource
 {
@@ -31,21 +31,20 @@ public:
 		UNKNOWN
 	};
 
-	Material(uint32_t UUID, std::string material_file_path);
+	Material() = default;
+	Material(uint32_t uuid);
 	~Material() = default;
 
 	void Save(Config& config) const;
 	void Load(const Config& config);
 
-	void SetMaterialTexture(MaterialTextureType type, const std::shared_ptr<Texture> & new_texture);
+	void SetMaterialTexture(MaterialTextureType type, uint32_t texture_id);
 	const std::shared_ptr<Texture>& GetMaterialTexture(MaterialTextureType type) const;
 
 	void RemoveMaterialTexture(MaterialTextureType type);
 
-	void LoadInMemory() override {}
-
 	void ChangeTypeOfMaterial(const MaterialType new_material_type);
-	const char* GetMaterialTypeName(const MaterialType material_type);
+	static std::string GetMaterialTypeName(const MaterialType material_type);
 
 
 public:
@@ -55,6 +54,8 @@ public:
 	MaterialType material_type = MaterialType::MATERIAL_OPAQUE;
 
 	std::string shader_program = "Blinn phong";
+	
+	std::vector<uint32_t> textures_uuid;
 	std::vector<std::shared_ptr<Texture>> textures;
 
 	float diffuse_color[4] = { 1.0f, 1.0f,1.0f,1.0f };
@@ -78,12 +79,26 @@ public:
 	bool show_checkerboard_texture = false;
 };
 
-namespace Loader
+namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<Material> Load(const std::string& uid) {
-		return MaterialLoader::Load(uid);
+	static FileData Binarize<Material>(Resource* material)
+	{
+		return MaterialManager::Binarize(static_cast<Material*>(material));
+	};
+
+	template<>
+	static std::shared_ptr<Material> Load(uint32_t uuid, const FileData& resource_data)
+	{
+		return MaterialManager::Load(uuid, resource_data);
 	}
+
+	template<>
+	static FileData Create<Material>()
+	{
+		return MaterialManager::Create();
+	};
 }
-#endif // !_MESH_H_
+
+#endif // !_MATERIAL_H_
 
