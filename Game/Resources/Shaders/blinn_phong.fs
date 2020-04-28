@@ -291,7 +291,7 @@ vec3 ComputeDiffuseColor(vec3 diffuse_color, vec3 specular_color)
 	return 	(1-specular_color)*diffuse_color;
 }
 
-float ComputeSpecularLight(vec3 normal, vec3 half_dir)
+float ComputeSpecularLight(vec3 normal, vec3 half_dir) // Refference: http://www.farbrausch.de/~fg/stuff/phong.pdf
 {
 	float spec = pow(max(dot(normal, half_dir), 0.0), 64.0);
 
