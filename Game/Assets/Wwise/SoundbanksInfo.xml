@@ -1,0 +1,35 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="12" SoundbankVersion="135">
+	<RootPaths>
+		<ProjectRoot>D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\</ProjectRoot>
+		<SourceFilesRoot>D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>D:\Izzy\gitHub\LittleOrionEngine\Game\Assets\Wwise\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\GeneratedSoundBanks\Windows</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="1355168291" Language="SFX">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+		<SoundBank Id="3196207338" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Play_Background</ObjectPath>
+			<ShortName>Play_Background</ShortName>
+			<Path>Play_Background.bnk</Path>
+			<IncludedEvents>
+				<Event Id="3650723969" Name="Background" ObjectPath="\Events\Default Work Unit\Background">
+					<IncludedMemoryFiles>
+						<File Id="436155694" Language="SFX">
+							<ShortName>Test-Orquestration_Potential.wav</ShortName>
+							<Path>SFX\Test-Orquestration_Potential_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+			</IncludedEvents>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>
