@@ -56,6 +56,7 @@ void Prefab::Duplicate(GameObject* duplicated_instance)
 {
 	instances.push_back(duplicated_instance);
 	duplicated_instance->prefab_reference = App->resources->Load<Prefab>(GetUUID());
+	duplicated_instance->is_prefab_parent = true;
 	App->animations->UpdateAnimationMeshes();
 }
 
