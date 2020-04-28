@@ -12,9 +12,10 @@ FileData SoundImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	if (assets_file_path.GetFilename() == WWISE_INIT_NAME)
 	{
 		Metafile& casted_metafile = const_cast<Metafile&>(metafile);
-		casted_metafile.exported_file_path = WWISE_INIT_PATH;
+		casted_metafile.exported_file_path = WWISE_INIT_PATH +std::string("/") + WWISE_INIT_NAME;
 		casted_metafile.uuid = 0;
-		Path* setup_exported_folder_path = App->filesystem->GetPath(WWISE_INIT_PATH);
+
+		Path* setup_exported_folder_path = App->filesystem->MakeDirectory(WWISE_INIT_PATH);
 		setup_exported_folder_path->Save(WWISE_INIT_NAME, data);
 		return { nullptr,0 };
 	}

@@ -297,7 +297,7 @@
     <ClInclude Include="Engine\Module\ModuleAI.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelNavMesh.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelBuildOptions.h" />
-    <ClInclude Include="Engine\ResourceManagement\Resources\Sound.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\SoundBank.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h" />
   </ItemGroup>
@@ -466,7 +466,7 @@
     <ClCompile Include="Engine\Module\ModuleAI.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelNavMesh.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelBuildOptions.cpp" />
-    <ClCompile Include="Engine\ResourceManagement\Resources\Sound.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\SoundBank.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\SoundImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\SoundManager.cpp" />
   </ItemGroup>

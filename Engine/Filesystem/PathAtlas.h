@@ -6,7 +6,7 @@
 
 #define LIBRARY_PATH "/Library"
 #define LIBRARY_METADATA_PATH "/Library/Metadata"
-#define WWISE_INIT_PATH "/Library/Wwise/Init.bnk"
+#define WWISE_INIT_PATH "/Library/Wwise"
 
 #define RESOURCES_PATH "/Resources"
 

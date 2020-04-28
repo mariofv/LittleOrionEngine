@@ -142,7 +142,7 @@ void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path)
 		 */
 		 if (path_child->IsDirectory())
 		 {
-			 ImportAssetsInDirectory(*path_child);
+			ImportAssetsInDirectory(*path_child);
 		 }
 		 else if (path_child->IsImportable())
 		 {
