@@ -28,7 +28,6 @@ private:
 	float3 movement_vector;
 	float3 gravity_vector;
 
-
 };
 extern "C" SCRIPT_API PlayerMovement* PlayerMovementDLL(); //This is how we are going to load the script
 #endif

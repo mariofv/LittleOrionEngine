@@ -40,6 +40,8 @@ public:
 	void SaveTmpScene();
 	bool HasPendingSceneToLoad() const;
 
+	void SetCurrentScene(uint32_t uuid);
+
 private:
 	void OpenScene();
 	inline void GetSceneResource();
@@ -58,6 +60,7 @@ private:
 	friend class PanelScene;
 	friend class PanelBuildOptions;
 	friend class ModuleDebugDraw;
+	friend class PanelPopupSceneSaver;
 };
 
 #endif // _MODULSESCENE_H

@@ -129,17 +129,17 @@
       <PreprocessorDefinitions>WIN32;_DEBUG;GAMEPLAYSYSTEM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\Libraries\include\ImGuizmo;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries/include\FreeTypeFont;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Libraries\include\ImGuizmo;..\..\..\Libraries\include\pcg_random;..\..\..\Libraries\include\MathGeoLib;..\..\..\Libraries\include;..\..\..\Libraries\include\SDL;..\..\..\Libraries\include\FreeTypeFont;..\..\..\Libraries\include\imgui;..\..\..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
       <GenerateDebugInformation>DebugFull</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalDependencies>MathGeoLib$(Configuration).lib;imgui$(Configuration).lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;LittleOrionEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
-      <AdditionalLibraryDirectories>..\Libraries\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\Libraries\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(OutDir)$(ProjectName)$(Configuration).dll" "..\Game\Resources\Scripts"</Command>
+      <Command>xcopy /y /d "$(OutDir)$(ProjectName)$(Configuration).dll" "..\..\Resources\Scripts"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
@@ -172,7 +172,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;GAMEPLAYSYSTEM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\Libraries\include\ImGuizmo;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries/include\FreeTypeFont;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Libraries\include\ImGuizmo;..\..\..\Libraries\include\pcg_random;..\..\..\Libraries\include\MathGeoLib;..\..\..\Libraries\include;..\..\..\Libraries\include\SDL;..\..\..\Libraries\include\FreeTypeFont;..\..\..\Libraries\include\imgui;..\..\..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -180,11 +180,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>..\Libraries\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\Libraries\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>MathGeoLib$(Configuration).lib;imgui$(Configuration).lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;LittleOrionEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(OutDir)$(ProjectName)$(Configuration).dll" "..\Game\Resources\Scripts"</Command>
+      <Command>xcopy /y /d "$(OutDir)$(ProjectName)$(Configuration).dll" "..\..\Resources\Scripts"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Game|Win32'">
@@ -198,7 +198,7 @@
       <PreprocessorDefinitions>WIN32;NDEBUG;GAMEPLAYSYSTEM_EXPORTS;_WINDOWS;_USRDLL;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <PrecompiledHeaderFile>pch.h</PrecompiledHeaderFile>
-      <AdditionalIncludeDirectories>..\Libraries\include\ImGuizmo;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include;..\Libraries\include\SDL;..\Libraries/include\FreeTypeFont;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\..\..\Libraries\include\ImGuizmo;..\..\..\Libraries\include\pcg_random;..\..\..\Libraries\include\MathGeoLib;..\..\..\Libraries\include;..\..\..\Libraries\include\SDL;..\..\..\Libraries\include\FreeTypeFont;..\..\..\Libraries\include\imgui;..\..\..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Windows</SubSystem>
@@ -206,11 +206,11 @@
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
-      <AdditionalLibraryDirectories>..\Libraries\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\..\..\Libraries\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
       <AdditionalDependencies>MathGeoLibRelease.lib;imguiRelease.lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;TwinlightSouls.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
-      <Command>xcopy /y /d "$(OutDir)$(ProjectName).dll" "..\Game\Resources\Scripts"</Command>
+      <Command>xcopy /y /d "$(OutDir)$(ProjectName).dll" "..\..\Resources\Scripts"</Command>
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">

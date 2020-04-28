@@ -200,7 +200,6 @@ inline void ModuleScene::GetSceneResource()
 	{
 		assert(tmp_scene_uuid != 0);
 		current_scene = App->resources->Load<Scene>(tmp_scene_uuid);
-		current_scene.get()->Load();
 	}
 	else if (build_options_position != -1)
 	{
@@ -208,12 +207,10 @@ inline void ModuleScene::GetSceneResource()
 		{
 			//Only gets here if no build options exists
 			GetSceneFromPath(DEFAULT_SCENE_PATH);
-			current_scene.get()->Load();
 		}
 		else
 		{
 			current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(build_options_position));
-			current_scene.get()->Load();
 		}
 	}
 	else
@@ -227,9 +224,9 @@ inline void ModuleScene::GetSceneResource()
 		(position != -1)
 			? current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(position))
 			: GetSceneFromPath(scene_to_load);
-
-		current_scene.get()->Load();
 	}
+
+	current_scene.get()->Load();
 }
 
 void ModuleScene::GetSceneFromPath(const std::string& path)
@@ -248,12 +245,12 @@ void ModuleScene::OpenPendingScene()
 	load_tmp_scene = false;
 }
 
-void ModuleScene::LoadScene(const std::string &path)
+ENGINE_API void ModuleScene::LoadScene(const std::string &path)
 {
 	scene_to_load = path;
 }
 
-void ModuleScene::LoadScene(unsigned position)
+ENGINE_API void ModuleScene::LoadScene(unsigned position)
 {
 	build_options_position = position;
 }
@@ -282,5 +279,10 @@ void ModuleScene::SaveTmpScene()
 bool ModuleScene::HasPendingSceneToLoad() const
 {
 	return !scene_to_load.empty() || build_options_position != -1 || load_tmp_scene;
+}
+
+void ModuleScene::SetCurrentScene(uint32_t uuid)
+{
+	current_scene = App->resources->Load<Scene>(uuid);
 }
 
