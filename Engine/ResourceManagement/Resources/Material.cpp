@@ -145,7 +145,7 @@ void Material::ChangeTypeOfMaterial(const MaterialType new_material_type)
 	material_type = new_material_type;
 }
 
-const char* Material::GetMaterialTypeName(const MaterialType material_type)
+std::string Material::GetMaterialTypeName(const MaterialType material_type)
 {
 	switch (material_type)
 	{

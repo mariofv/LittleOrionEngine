@@ -62,16 +62,16 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 			ImGui::EndCombo();
 		}
 
-		if (ImGui::BeginCombo("Material Type", material->GetMaterialTypeName(material->material_type)))
+		if (ImGui::BeginCombo("Material Type",Material::GetMaterialTypeName(material->material_type).c_str()))
 		{
 
 			for (int i = 0; i < Material::MAX_MATERIAL_TYPES; ++i)
 			{
 				bool is_selected = (material->material_type == ((Material::MaterialType)i));
-				if (ImGui::Selectable(material->GetMaterialTypeName((Material::MaterialType)i), is_selected))
+				if (ImGui::Selectable(Material::GetMaterialTypeName((Material::MaterialType)i).c_str(), is_selected))
 				{
 					material->ChangeTypeOfMaterial((Material::MaterialType)i);
-					const char* name = material->GetMaterialTypeName(material->material_type);
+					const char* name = Material::GetMaterialTypeName(material->material_type).c_str();
 					if (is_selected)
 						ImGui::SetItemDefaultFocus();
 				}
