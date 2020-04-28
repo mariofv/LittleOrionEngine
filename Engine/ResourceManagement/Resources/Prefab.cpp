@@ -52,6 +52,13 @@ GameObject* Prefab::Instantiate(GameObject* prefab_parent, std::unordered_map<in
 	return parent_prefab;
 }
 
+void Prefab::Duplicate(GameObject* duplicated_instance)
+{
+	instances.push_back(duplicated_instance);
+	duplicated_instance->prefab_reference = App->resources->Load<Prefab>(GetUUID());
+	App->animations->UpdateAnimationMeshes();
+}
+
 /*
 	We won't allow the user to call this function if the prefab is deleted from filesystem. In other words, there shouldn't be pointers to resources that
 	doesn't exist in filesystem.
