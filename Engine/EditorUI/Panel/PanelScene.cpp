@@ -157,7 +157,16 @@ void PanelScene::RenderEditorDraws()
 
 void PanelScene::RenderGizmo()
 {
-	float4x4 model_global_matrix_transposed = App->editor->selected_game_object->transform.GetGlobalModelMatrix().Transposed();
+	ComponentTransform* selected_object_transform = nullptr;
+	if (App->editor->selected_game_object->GetTransformType() == Component::ComponentType::TRANSFORM)
+	{
+		selected_object_transform = &App->editor->selected_game_object->transform;
+	}
+	else
+	{
+		selected_object_transform = &App->editor->selected_game_object->transform_2d;
+	}
+	float4x4 model_global_matrix_transposed = selected_object_transform->GetGlobalModelMatrix().Transposed();
 
 	if (!gizmo_released && !App->actions->clicked)
 	{
@@ -194,8 +203,16 @@ void PanelScene::RenderGizmo()
 	{
 		gizmo_released = true;
 
-		App->editor->selected_game_object->transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
-		App->editor->selected_game_object->transform.modified_by_user = true;
+		if (App->editor->selected_game_object->GetTransformType() == Component::ComponentType::TRANSFORM)
+		{
+			App->editor->selected_game_object->transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
+			App->editor->selected_game_object->transform.modified_by_user = true;
+		}
+		else
+		{
+			App->editor->selected_game_object->transform_2d.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
+			App->editor->selected_game_object->transform_2d.modified_by_user = true;
+		}
 	}
 	else if (gizmo_released)
 	{

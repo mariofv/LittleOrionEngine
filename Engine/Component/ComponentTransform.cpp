@@ -107,11 +107,14 @@ ENGINE_API void ComponentTransform::SetRotation(const float3x3& rotation)
 	OnTransformChange();
 }
 
+/*
+	@param new_rotation The rotation in degrees
+*/
 ENGINE_API void ComponentTransform::SetRotation(const float3& new_rotation)
 {
-	rotation = math::Quat::FromEulerXYZ(new_rotation.x, new_rotation.y, new_rotation.z);
-	rotation_radians = new_rotation;
-	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
+	rotation_radians = Utils::Float3DegToRad(new_rotation);
+	rotation = math::Quat::FromEulerXYZ(rotation_radians.x, rotation_radians.y, rotation_radians.z);
+	rotation_degrees = new_rotation;
 	OnTransformChange();
 }
 

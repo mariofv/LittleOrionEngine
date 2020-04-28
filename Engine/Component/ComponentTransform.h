@@ -36,8 +36,8 @@ public:
 	
 	ENGINE_API float3 GetGlobalTranslation() const;
 	ENGINE_API float3 GetTranslation() const;
-	ENGINE_API void SetTranslation(const float3& translation);
-	ENGINE_API void Translate(const float3& translation);
+	ENGINE_API virtual void SetTranslation(const float3& translation);
+	ENGINE_API virtual void Translate(const float3& translation);
 
 	ENGINE_API Quat GetGlobalRotation() const;
 	ENGINE_API Quat GetRotation() const;

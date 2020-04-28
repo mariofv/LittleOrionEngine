@@ -71,7 +71,7 @@ GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
 	if(!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
 	{
 		transform.SetTranslation(gameobject_to_copy.transform.GetTranslation());
-		transform.SetRotation(gameobject_to_copy.transform.GetRotationRadiants());
+		transform.SetRotation(gameobject_to_copy.transform.GetRotation());
 		//gameobject_to_copy.transform.modified_by_user = false;
 	}
 

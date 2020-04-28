@@ -22,8 +22,9 @@ bool ModuleCamera::Init()
 	int windowWidth, windowHeight;
 	SDL_GetWindowSize(App->window->window, &windowWidth, &windowHeight);
 
-	scene_camera_game_object = App->scene->CreateGameObject();
-	scene_camera_game_object->transform.SetTranslation(float3(0.5f, 2.f, -15.f));
+	scene_camera_game_object = new GameObject();
+	scene_camera_game_object->transform.SetTranslation(float3(0.f, 2.f, 15.f));
+	scene_camera_game_object->transform.SetRotation(float3(0.f, 180.f, 0.f));
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	scene_camera->SetFarDistance(5000);
 	scene_camera->depth = -1;
@@ -57,6 +58,9 @@ bool ModuleCamera::CleanUp()
 	}
 	cameras.clear();
 	main_camera = nullptr;
+
+	delete scene_camera_game_object;
+
 	return true;
 }
 

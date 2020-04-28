@@ -112,6 +112,18 @@ float4x4 ComponentTransform2D::GetSizedGlobalModelMatrix() const
 	return float4x4::Scale(float3(size, 1.f), GetGlobalTranslation()) * global_model_matrix;
 }
 
+ENGINE_API void ComponentTransform2D::SetTranslation(const float3& translation)
+{
+	this->translation = translation;
+	anchored_position = float2(translation.x, translation.y) - anchor_position;
+	OnTransformChange();
+}
+
+ENGINE_API void ComponentTransform2D::Translate(const float3& translation)
+{
+	SetTranslation(this->translation + translation);
+}
+
 void ComponentTransform2D::SetWidth(float new_width)
 {
 	size.x = new_width;
