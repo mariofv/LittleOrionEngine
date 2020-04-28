@@ -58,22 +58,7 @@ GameObject::GameObject(const GameObject& gameobject_to_copy) :  aabb(gameobject_
 {
 	CreateTransforms();
 	aabb.owner = this;
-	*this = gameobject_to_copy;
-}
-
-GameObject& GameObject::operator=(const GameObject & gameobject_to_copy)
-{
-	transform.SetTranslation(gameobject_to_copy.transform.GetTranslation());
-	transform.SetRotation(gameobject_to_copy.transform.GetRotationRadiants());
-	transform.SetScale(gameobject_to_copy.transform.GetScale());
-	CopyComponents(gameobject_to_copy);
-	this->name = gameobject_to_copy.name;
-	this->active = gameobject_to_copy.active;
-	this->SetStatic(gameobject_to_copy.is_static);
-	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
-	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
-	this->original_UUID = gameobject_to_copy.original_UUID;
-	return *this;
+	*this << gameobject_to_copy;
 }
 
 GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
@@ -87,7 +72,7 @@ GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
 	}
 
 	transform.SetScale(gameobject_to_copy.transform.GetScale());
-	CopyComponents(gameobject_to_copy);
+	CopyComponentsPrefabs(gameobject_to_copy);
 	this->name = gameobject_to_copy.name;
 	this->active = gameobject_to_copy.active;
 	this->SetStatic(gameobject_to_copy.is_static);
@@ -127,6 +112,26 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 		prefab_reference->RemoveInstance(this);
 	}
 }
+void GameObject::Duplicate(const GameObject & gameobject_to_copy)
+{
+	if (!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
+	{
+		transform.SetTranslation(gameobject_to_copy.transform.GetTranslation());
+		transform.SetRotation(gameobject_to_copy.transform.GetRotationRadiants());
+		//gameobject_to_copy.transform.modified_by_user = false;
+	}
+	transform.SetScale(gameobject_to_copy.transform.GetScale());
+	CopyComponents(gameobject_to_copy);
+	this->name = gameobject_to_copy.name;
+	this->active = gameobject_to_copy.active;
+	this->SetStatic(gameobject_to_copy.is_static);
+	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
+	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
+	this->original_UUID = gameobject_to_copy.original_UUID;
+	
+	return;
+}
+
 void GameObject::SetTransform(GameObject* game_object)
 {
 	transform.SetTranslation(game_object->transform.GetTranslation());
@@ -550,7 +555,29 @@ void GameObject::UnpackPrefab()
 	}
 }
 
-void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
+void GameObject::CopyComponentsPrefabs(const GameObject& gameobject_to_copy)
+{
+	this->components.reserve(gameobject_to_copy.components.size());
+	for (const auto& component : gameobject_to_copy.components)
+	{
+		component->modified_by_user = false;
+		Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
+		if (my_component != nullptr && !my_component->modified_by_user)
+		{
+			component->Copy(my_component);
+			my_component->owner = this;
+		}
+		else if (my_component == nullptr)
+		{
+			Component *copy = component->Clone(this->original_prefab);
+			copy->owner = this;
+			this->components.push_back(copy);
+		}
+	}
+	RemoveComponentsCopying(gameobject_to_copy);
+}
+
+void GameObject::CopyComponents(const GameObject & gameobject_to_copy)
 {
 	this->components.reserve(gameobject_to_copy.components.size());
 	for (const auto& component : gameobject_to_copy.components)
@@ -562,6 +589,11 @@ void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 		this->components.push_back(copy);
 	}
 
+	RemoveComponentsCopying(gameobject_to_copy);
+}
+
+void GameObject::RemoveComponentsCopying(const GameObject & gameobject_to_copy)
+{
 	std::vector<Component*> components_to_remove;
 	std::copy_if(
 		components.begin(),
