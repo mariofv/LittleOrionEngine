@@ -83,11 +83,13 @@ void PanelPopupSceneSaver::Render()
 		APP_LOG_INFO("Saving %s scene.", GetSelected())
 		if (App->filesystem->Exists(GetSelected()))
 		{
+			App->scene->GetSceneFromPath(GetSelected());
 			App->editor->SaveScene(GetSelected());
 		}
 		else
 		{
-			SceneManager::Create(GetSelected());
+			uint32_t uuid_scene = SceneManager::Create(GetSelected());
+			App->scene->SetCurrentScene(uuid_scene);
 			App->editor->current_scene_path = GetSelected();
 		}
 	}
