@@ -67,8 +67,8 @@ public:
 	float2 coords = float2(1.0f, 1.0f);
 
 	float transparency = 0.5F;
-	float roughness = 0.5f;
-	float metalness = 0.04f;
+//	float roughness = 0.5f;
+//	float metalness = 0.04f;
 
 	float tiling_x = 1.0f;
 	float tiling_y = 1.0f;

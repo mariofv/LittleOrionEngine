@@ -147,8 +147,8 @@ void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) con
 	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), material_to_render->specular_color[3]);
 
 	//Material BRDF variables
-	glUniform1f(glGetUniformLocation(shader_program, "material.roughness"), material_to_render->roughness);
-	glUniform1f(glGetUniformLocation(shader_program, "material.metalness"), material_to_render->metalness);
+	//glUniform1f(glGetUniformLocation(shader_program, "material.roughness"), material_to_render->roughness);
+	//glUniform1f(glGetUniformLocation(shader_program, "material.metalness"), material_to_render->metalness);
 }
 
 void ComponentMeshRenderer::AddAmbientOclusionUniforms(unsigned int shader_program) const
