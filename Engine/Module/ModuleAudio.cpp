@@ -42,32 +42,41 @@ bool ModuleAudio::Init()
 		APP_LOG_ERROR("Could not initialize the Sound Engine.");
 		return false;
 	}
-	AkBankID banck_id = 0;
-	AKRESULT eResult = AK::SoundEngine::LoadBank("Assets/Wwise/Init.bnk", banck_id);
+	AKRESULT eResult = AK::SoundEngine::LoadBank("Assets/Wwise/Init.bnk", init_banck_id);
 	if (eResult != AK_Success)
 	{
-		APP_LOG_ERROR("Unable to load the sound_bank");
+		APP_LOG_ERROR("Unable to load the init sound_bank");
 	}
 	eResult = AK::SoundEngine::LoadBank("Assets/Wwise/Play_main.bnk", banck_id);
 	if (eResult != AK_Success)
 	{
 		APP_LOG_ERROR("Unable to load the sound_bank");
 	}
-	const char * pszEvent = "play_main";
+	
+	if (!AK::SoundEngine::RegisterGameObj(main_sound_gameobject))
+	{
+		APP_LOG_ERROR("Unable to register the gameobject");
+	}
+	/*const char * pszEvent = "play_main";
 	eResult = AK::SoundEngine::PrepareEvent(AK::SoundEngine::Preparation_Load, &pszEvent, 1);
 	if (eResult != AK_Success)
 	{
 		APP_LOG_ERROR("Could not initialize the bank.");
 		return false;
-	}
-	return init_sound_bank != nullptr;
+	}*/
+	return true;
 }
 
 update_status ModuleAudio::Update()
 {
 	if (!playing)
 	{
-		
+		AkPlayingID playing_id = AK::SoundEngine::PostEvent(main_sound_event, main_sound_gameobject);
+		if (playing_id == AK_INVALID_PLAYING_ID)
+		{
+			APP_LOG_ERROR("Unable to post main event");
+		}
+		playing = true;
 	}
 	AK::SoundEngine::RenderAudio();
 	return update_status::UPDATE_CONTINUE;
@@ -75,5 +84,16 @@ update_status ModuleAudio::Update()
 
 bool ModuleAudio::CleanUp()
 {
+	AKRESULT eResult = AK::SoundEngine::UnloadBank(banck_id, NULL);
+	if (eResult != AK_Success)
+	{
+		APP_LOG_ERROR("Unable to unload the sound_bank");
+	}
+	eResult = AK::SoundEngine::UnloadBank(init_banck_id, NULL);
+	if (eResult != AK_Success)
+	{
+		APP_LOG_ERROR("Unable to unload the init sound_bank");
+	}
+
 	return true;
 }
