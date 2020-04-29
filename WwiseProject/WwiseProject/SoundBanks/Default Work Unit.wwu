@@ -3,8 +3,10 @@
 	<SoundBanks>
 		<WorkUnit Name="Default Work Unit" ID="{E75870BD-AF29-4B9E-85E7-3A06D13D9EEF}" PersistMode="Standalone">
 			<ChildrenList>
-				<SoundBank Name="Event" ID="{D59C6427-3F15-493F-8701-B97C0B3F8379}">
-					<ObjectInclusionList/>
+				<SoundBank Name="Play_main" ID="{845B4AEA-E786-49F6-BEA8-8BC22C4E0473}">
+					<ObjectInclusionList>
+						<ObjectRef Name="Play_main" ID="{C5992B2B-2E06-41C9-9A01-DD9553DD2E9F}" WorkUnitID="{74DD3C50-B2C3-4CC1-A3E2-1BC93C57412B}" Origin="Manual" Filter="7"/>
+					</ObjectInclusionList>
 					<ObjectExclusionList/>
 					<GameSyncExclusionList/>
 				</SoundBank>
