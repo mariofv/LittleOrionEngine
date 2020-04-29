@@ -500,6 +500,9 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\SoundBank.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleAudio.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -988,6 +991,9 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\SoundBank.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleAudio.h">
+      <Filter>Engine\Module</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

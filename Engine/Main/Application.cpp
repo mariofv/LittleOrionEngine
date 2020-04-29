@@ -19,6 +19,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
 #include "Module/ModuleScriptManager.h"
+#include "Module/ModuleAudio.h"
 
 #include <Brofiler/Brofiler.h>
 
@@ -41,6 +42,7 @@ Application::Application()
 	modules.emplace_back(program = new ModuleProgram());
 	modules.emplace_back(cameras = new ModuleCamera());
 	modules.emplace_back(debug = new ModuleDebug());
+	modules.emplace_back(audio = new ModuleAudio());
 #if !GAME
 	modules.emplace_back(debug_draw = new ModuleDebugDraw());
 #endif
