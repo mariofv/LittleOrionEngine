@@ -140,6 +140,7 @@
     <ClInclude Include="Engine\Helper\BuildOptions.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
+    <ClInclude Include="Engine\Module\ModuleAudio.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h" />
     <ClInclude Include="Engine\Actions\EditorAction.h" />
@@ -343,6 +344,7 @@
     <ClCompile Include="Engine\Main\Log.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp" />
+    <ClCompile Include="Engine\Module\ModuleAudio.cpp" />
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
     <ClCompile Include="Engine\Module\ModuleScriptManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp" />

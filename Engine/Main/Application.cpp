@@ -19,6 +19,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
 #include "Module/ModuleScriptManager.h"
+#include "Module/ModuleAudio.h"
 
 #include <Brofiler/Brofiler.h>
 
