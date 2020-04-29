@@ -34,8 +34,7 @@ bool ModulePhysics::Init()
 	debug_draw = new DebugDrawer();
 	debug_draw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
 	world->setDebugDrawer(debug_draw);
-
-	AddBody(btVector3(10,1,10));
+	
 	return true;
 }
 
@@ -51,7 +50,6 @@ update_status ModulePhysics::Update()
 	
 	//update the world
 	world->stepSimulation(App->time->delta_time, subSteps);
-	
 
 	if (show_physics) 
 	{
@@ -60,6 +58,7 @@ update_status ModulePhysics::Update()
 	
 	for (auto collider : colliders) {
 		
+
 		if (App->time->isGameRunning())
 		{
 			collider->MoveBody();
@@ -70,6 +69,7 @@ update_status ModulePhysics::Update()
 				collider->UpdateDimensions();
 				collider->owner->transform.has_changed = false;
 			}
+			
 		}
 		world->synchronizeSingleMotionState(collider->body);
 	}
@@ -87,29 +87,13 @@ update_status ModulePhysics::Update()
 		ms_info[99] = ms2 - ms;
 	}
 	
+
 	return update_status::UPDATE_CONTINUE;
 }
 
 bool ModulePhysics::CleanUp()
 {
 	return true;
-}
-
-btRigidBody* ModulePhysics::AddBody(btVector3& box_size)
-{
-	
-	btScalar mass = 0.0f; // 0.0f would create a static or inmutable body
-	btCollisionShape* colShape = new btBoxShape(box_size); // regular box
-	btMotionState* motionState = new btDefaultMotionState(btTransform(btQuaternion(0, 0, 0, 1), btVector3(0, -2, 0)));
-	shapes.push_back(colShape);
-	btVector3 localInertia(0.f, 0.f, 0.f);
-	if (mass != 0.f) colShape->calculateLocalInertia(mass, localInertia);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motionState, colShape, localInertia);
-	btRigidBody* body = new btRigidBody(rbInfo);
-	world->addRigidBody(body);
-
-		
-	return body;
 }
 
 void ModulePhysics::SetGravity(float3& newGravity)

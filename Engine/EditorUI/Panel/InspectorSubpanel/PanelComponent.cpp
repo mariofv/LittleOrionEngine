@@ -867,12 +867,16 @@ void PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 	}
 	ImGui::Separator();
 
-	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.F, 100.F)) {
+	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.1F, 1000.F)) {
 		collider->SetMass(collider->mass);
 	}
 	if (ImGui::Checkbox("Visualize", &collider->visualize))
 	{
 		collider->SetVisualization();
+	}
+	if (ImGui::Checkbox("Static", &collider->is_static))
+	{
+		collider->SetStatic();
 	}
 	if (ImGui::Checkbox("Detect collision", &collider->detectCollision))
 	{

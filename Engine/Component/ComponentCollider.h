@@ -35,6 +35,9 @@ public:
 	void SetMass(float new_mass);
 	void SetVisualization();
 	void SetCollisionDetection();
+	bool DetectCollision(); //returns true if collides with any object in the world
+	bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
+	void SetStatic();
 
 public:
 
@@ -53,6 +56,7 @@ public:
 	bool visualize = true;
 	bool detectCollision = true;
 	bool is_attached = false;
+	bool is_static = false;
 
 };
 

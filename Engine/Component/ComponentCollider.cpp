@@ -40,6 +40,10 @@ void ComponentCollider::Save(Config & config) const
 	config.AddUInt((unsigned int)collider_type, "ColliderType");
 	config.AddFloat(mass, "Mass");
 	config.AddFloat3(scale, "Scale");
+	config.AddBool(is_static, "Static");
+	config.AddBool(detectCollision, "Collision");
+	config.AddBool(visualize, "Visualize");
+	config.AddBool(is_attached, "Attached");
 
 }
 
@@ -49,6 +53,10 @@ void ComponentCollider::Load(const Config & config)
 	active = config.GetBool("Active", true);
 	mass = config.GetFloat("Mass", 1.0F);
 	config.GetFloat3("Scale", scale, float3::one);
+	is_static = config.GetBool("Static", false);
+	detectCollision = config.GetBool("Collision", true);
+	visualize = config.GetBool("Visualize", true);
+	is_attached = config.GetBool("Attached", false);
 	AddBody();
 }
 
@@ -76,9 +84,9 @@ btRigidBody* ComponentCollider::AddBody()
 	if (mass != 0.f) col_shape->calculateLocalInertia(mass, localInertia);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motion_state, col_shape, localInertia);
 	body = new btRigidBody(rbInfo);
-
+	
 	App->physics->world->addRigidBody(body);
-
+	
 	return body;
 }
 
@@ -118,30 +126,98 @@ void ComponentCollider::UpdateCommonDimensions()
 void ComponentCollider::SetMass(float new_mass)
 {
 
-	if (mass == 0 && new_mass != 0) {
-		body->getCollisionShape()->calculateLocalInertia(new_mass, body->getLocalInertia());
-	}
+	App->physics->world->removeRigidBody(body);
+	body->getCollisionShape()->calculateLocalInertia(new_mass, localInertia);
 	body->setMassProps(new_mass, localInertia);
-
+	App->physics->world->addRigidBody(body);
 }
 
 void ComponentCollider::SetVisualization()
 {
+	int flags = body->getCollisionFlags();
 	if (!visualize) {
-		body->setCollisionFlags(body->getCollisionFlags() | body->CF_DISABLE_VISUALIZE_OBJECT);
+		flags |= body->CF_DISABLE_VISUALIZE_OBJECT;
+		body->setCollisionFlags(flags);
 	}
 	else {
-		body->setCollisionFlags(~body->CF_DISABLE_VISUALIZE_OBJECT);
+		flags -= body->CF_DISABLE_VISUALIZE_OBJECT;
+		body->setCollisionFlags(flags);
 	}
 
 }
 
 void ComponentCollider::SetCollisionDetection()
 {
+	int flags = body->getCollisionFlags();
 	if (!detectCollision) {
-		body->setCollisionFlags(body->getCollisionFlags() | body->CF_NO_CONTACT_RESPONSE);
+		flags |= body->CF_NO_CONTACT_RESPONSE;
+		body->setCollisionFlags(flags);
 	}
 	else {
-		body->setCollisionFlags(~body->CF_NO_CONTACT_RESPONSE);
+		flags -= body->CF_NO_CONTACT_RESPONSE;
+		body->setCollisionFlags(flags);
+	}
+}
+
+bool ComponentCollider::DetectCollision()
+{
+
+	int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
+	for (int i = 0; i < numManifolds; i++)
+	{
+		btPersistentManifold* contactManifold = App->physics->world->getDispatcher()->getManifoldByIndexInternal(i);
+		const btCollisionObject* obA = contactManifold->getBody0();
+		const btCollisionObject* obB = contactManifold->getBody1();
+
+		int numContacts = contactManifold->getNumContacts();
+		for (int j = 0; j < numContacts; j++)
+		{
+			btManifoldPoint pt = contactManifold->getContactPoint(j);
+			if (obA->getWorldArrayIndex() == body->getWorldArrayIndex() || obB->getWorldArrayIndex() == body->getWorldArrayIndex()) {
+				if (pt.getDistance() < 0.0f)
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+bool ComponentCollider::DetectCollisionWith(ComponentCollider * collider)
+{
+
+	int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
+	for (int i = 0; i < numManifolds; i++)
+	{
+		btPersistentManifold* contactManifold = App->physics->world->getDispatcher()->getManifoldByIndexInternal(i);
+		const btCollisionObject* obA = contactManifold->getBody0();
+		const btCollisionObject* obB = contactManifold->getBody1();
+
+		int numContacts = contactManifold->getNumContacts();
+		for (int j = 0; j < numContacts; j++)
+		{
+			btManifoldPoint pt = contactManifold->getContactPoint(j);
+			if ((obA->getWorldArrayIndex() == body->getWorldArrayIndex() && obB->getWorldArrayIndex() == collider->body->getWorldArrayIndex()) || (obB->getWorldArrayIndex() == body->getWorldArrayIndex() && obA->getWorldArrayIndex() == collider->body->getWorldArrayIndex())) {
+				if (pt.getDistance() < 0.0f)
+				{
+					return true;
+				}
+			}
+		}
+	}
+	return false;
+}
+
+void ComponentCollider::SetStatic()
+{
+	int flags = body->getCollisionFlags();
+	if (is_static) {
+		flags |= body->CF_STATIC_OBJECT;
+		body->setCollisionFlags(flags);
+	}
+	else {
+		flags -= body->CF_STATIC_OBJECT;
+		body->setCollisionFlags(flags);
 	}
 }

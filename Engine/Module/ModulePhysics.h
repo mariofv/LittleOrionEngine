@@ -40,7 +40,6 @@ public:
 	update_status PreUpdate() override;
 	update_status Update() override;
 
-	btRigidBody* AddBody(btVector3& box_size);
 	void SetGravity(float3& newGgravity);
 	float3 GetGravity();
 	ComponentCollider* CreateComponentCollider(const ComponentCollider::ColliderType collider_type, GameObject* owner);
