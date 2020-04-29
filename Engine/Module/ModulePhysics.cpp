@@ -1,8 +1,9 @@
 #include "ModulePhysics.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentCapsuleCollider.h"
-#include "Component/ComponentCylinderCollider.h"
 #include "Component/ComponentCollider.h"
+#include "Component/ComponentCylinderCollider.h"
+#include "Component/ComponentMeshCollider.h"
 #include "Component/ComponentSphereCollider.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -47,15 +48,15 @@ update_status ModulePhysics::PreUpdate()
 update_status ModulePhysics::Update()
 {
 	ms = physics_timer->Read();
-	
+		
 	//update the world
-	world->stepSimulation(App->time->delta_time, subSteps);
+	world->stepSimulation(App->time->delta_time);
 
-	if (show_physics) 
+	if (show_physics)
 	{
 		world->debugDrawWorld();
 	}
-	
+		
 	for (auto collider : colliders) {
 		
 
@@ -71,7 +72,10 @@ update_status ModulePhysics::Update()
 			}
 			
 		}
-		world->synchronizeSingleMotionState(collider->body);
+		if(collider->collider_type != ComponentCollider::ColliderType::MESH)
+		{
+			world->synchronizeSingleMotionState(collider->body);
+		}
 	}
 	
 	float ms2;
@@ -123,11 +127,8 @@ ComponentCollider* ModulePhysics::CreateComponentCollider(ComponentCollider::Col
 		case ComponentCollider::ColliderType::CYLINDER:
 			new_collider = new ComponentCylinderCollider(owner);
 			break;
-		case ComponentCollider::ColliderType::CIRCULE:
-			//new_collider = new ComponentCircleCollider(owner);
-			break;
 		case ComponentCollider::ColliderType::MESH:
-			//new_collider = new ComponentMeshCollider(owner);
+			new_collider = new ComponentMeshCollider(owner);
 			break;
 	}
 	if (new_collider)

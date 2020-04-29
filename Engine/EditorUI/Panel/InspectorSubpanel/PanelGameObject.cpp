@@ -1,6 +1,8 @@
 #include "PanelGameObject.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentBoxCollider.h"
+#include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentCapsuleCollider.h"
@@ -10,8 +12,6 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentUI.h"
-#include "Component/ComponentButton.h"
-#include "Component/ComponentBoxCollider.h"
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "Main/Application.h"

@@ -2,7 +2,6 @@
 #define _COMPONENTCAPSULECOLLIDER_H
 
 #include "ComponentCollider.h"
-#include "bullet3/btBulletDynamicsCommon.h"
 
 
 class ComponentCapsuleCollider : public ComponentCollider

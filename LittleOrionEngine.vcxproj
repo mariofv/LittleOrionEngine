@@ -161,6 +161,7 @@
     <ClInclude Include="Engine\Component\ComponentCollider.h" />
     <ClInclude Include="Engine\Component\ComponentCylinderCollider.h" />
     <ClInclude Include="Engine\Component\ComponentImage.h" />
+    <ClInclude Include="Engine\Component\ComponentMeshCollider.h" />
     <ClInclude Include="Engine\Component\ComponentProgressBar.h" />
     <ClInclude Include="Engine\Component\ComponentScript.h" />
     <ClInclude Include="Engine\Component\ComponentSphereCollider.h" />
@@ -312,6 +313,7 @@
     <ClCompile Include="Engine\Component\ComponentCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentCylinderCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentImage.cpp" />
+    <ClCompile Include="Engine\Component\ComponentMeshCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentProgressBar.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
     <ClCompile Include="Engine\Component\ComponentSphereCollider.cpp" />
