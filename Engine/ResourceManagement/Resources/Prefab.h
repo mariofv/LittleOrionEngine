@@ -24,7 +24,7 @@ public:
 	Prefab(uint32_t uuid, std::vector<std::unique_ptr<GameObject>> && gameObjects);
 	~Prefab() = default;
 
-	GameObject* Instantiate(GameObject * prefab_parent, std::unordered_map<int64_t, int64_t> * UUIDS_pairs = nullptr);
+	GameObject* Instantiate(GameObject* prefab_parent, std::unordered_map<int64_t, int64_t>* UUIDS_pairs = nullptr);
 	void Duplicate(GameObject* instance);
 
 	void Apply(GameObject * new_reference);
