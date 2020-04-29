@@ -60,10 +60,11 @@ void PanelAbout::Render()
 		MenuURL("par_shapes", "https://github.com/prideout/par/blob/master/par_shapes.h");
 		MenuURL("ImGuizmo", "https://github.com/CedricGuillemet/ImGuizmo");
 		MenuURL("PhysFS 3.0.2", "http://icculus.org/physfs/");
+		MenuURL("cr", "https://github.com/fungos/cr");
 
 		ImGui::Separator();
 
-		MenuURL("LICENSE", "https://github.com/unnamed-company/LittleOrionEngine/blob/master/LICENSE");
+		MenuURL("LICENSE", "https://github.com/OnionGalaxy/LittleOrionEngine/blob/master/LICENSE");
 		ImGui::TextWrapped("LittleOrion Engine is licensed under the MIT License, see LICENSE for more information.");
 	}
 	ImGui::End();

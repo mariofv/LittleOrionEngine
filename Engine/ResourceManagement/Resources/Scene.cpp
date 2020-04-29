@@ -33,6 +33,8 @@ Scene::Scene(uint32_t uuid, const Config& config) : Resource(uuid)
 
 void Scene::Save(GameObject* gameobject_to_save) const
 {
+	scene_config = Config();
+
 	std::vector<Config> game_objects_config;
 	std::vector<Config> prefabs_config;
 	std::vector<Config> prefabs_components_config;
