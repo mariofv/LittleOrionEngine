@@ -12,7 +12,6 @@ public:
 	SoundManager() = default;
 	~SoundManager() = default;
 	static std::shared_ptr<SoundBank> Load(uint32_t uuid, const FileData& resource_data);
-private:
 	static std::shared_ptr<SoundBank>  Init();
 };
 

@@ -1,30 +1,30 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ValidationCache Version="1" SchemaVersion="97">
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\WwiseProject.wproj" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\WwiseProject.Anais.wsettings" DateLow="1588087331" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Virtual Acoustics\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Triggers\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Switches\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\States\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Soundcaster Sessions\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\SoundBanks\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Queries\Factory Queries.wwu" DateLow="1588068280" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Queries\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Presets\Factory Spatial Audio.wwu" DateLow="1588068280" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Presets\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Modulators\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Mixing Sessions\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Game Parameters\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Events\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Effects\Factory Effects.wwu" DateLow="1588068280" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Effects\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Dynamic Dialogue\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Conversion Settings\Factory Conversion Settings.wwu" DateLow="1588068280" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Conversion Settings\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Control Surface Sessions\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Audio Devices\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Attenuations\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
-	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1588087313" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\WwiseProject.wproj" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\WwiseProject.Anais.wsettings" DateLow="1588181369" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Virtual Acoustics\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Triggers\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Switches\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\States\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Soundcaster Sessions\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\SoundBanks\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Queries\Factory Queries.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Queries\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Presets\Factory Spatial Audio.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Presets\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Modulators\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Mixing Sessions\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Master-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Interactive Music Hierarchy\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Game Parameters\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Events\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Effects\Factory Effects.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Effects\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Dynamic Dialogue\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Conversion Settings\Factory Conversion Settings.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Conversion Settings\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Control Surface Sessions\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Audio Devices\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Attenuations\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
+	<ValidationCacheItem File="D:\Izzy\gitHub\LittleOrionEngine\WwiseProject\WwiseProject\Actor-Mixer Hierarchy\Default Work Unit.wwu" DateLow="1588178343" DateHigh="0"/>
 </ValidationCache>

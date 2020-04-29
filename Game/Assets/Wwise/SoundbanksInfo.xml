@@ -11,25 +11,25 @@
 	<StreamedFiles/>
 	<MediaFilesNotInAnyBank/>
 	<SoundBanks>
-		<SoundBank Id="1355168291" Language="SFX">
-			<ObjectPath>Init</ObjectPath>
-			<ShortName>Init</ShortName>
-			<Path>Init.bnk</Path>
-		</SoundBank>
-		<SoundBank Id="3196207338" Language="SFX">
-			<ObjectPath>\SoundBanks\Default Work Unit\Play_Background</ObjectPath>
-			<ShortName>Play_Background</ShortName>
-			<Path>Play_Background.bnk</Path>
+		<SoundBank Id="1193902085" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Play_main</ObjectPath>
+			<ShortName>Play_main</ShortName>
+			<Path>Play_main.bnk</Path>
 			<IncludedEvents>
-				<Event Id="3650723969" Name="Background" ObjectPath="\Events\Default Work Unit\Background">
+				<Event Id="1193902085" Name="Play_main" ObjectPath="\Events\Default Work Unit\Play_main">
 					<IncludedMemoryFiles>
-						<File Id="436155694" Language="SFX">
+						<File Id="261149998" Language="SFX">
 							<ShortName>Test-Orquestration_Potential.wav</ShortName>
 							<Path>SFX\Test-Orquestration_Potential_10C4C929.wem</Path>
 						</File>
 					</IncludedMemoryFiles>
 				</Event>
 			</IncludedEvents>
+		</SoundBank>
+		<SoundBank Id="1355168291" Language="SFX">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
 		</SoundBank>
 	</SoundBanks>
 </SoundBanksInfo>

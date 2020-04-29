@@ -7,7 +7,7 @@
 std::shared_ptr<SoundBank>  SoundManager::Init()
 {
 	//LOAD WWISE INIT
-	Path* resource_exported_file_path = App->filesystem->GetPath(WWISE_INIT_PATH);
+	Path* resource_exported_file_path = App->filesystem->GetPath(WWISE_INIT_PATH +std::string("/")+ WWISE_INIT_NAME);
 	FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
 	return std::make_shared<SoundBank>(0, exported_file_data.buffer, exported_file_data.size);
 }
