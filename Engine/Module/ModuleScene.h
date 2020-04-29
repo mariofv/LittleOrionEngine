@@ -51,7 +51,7 @@ private:
 	GameObject* root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
 	std::shared_ptr<Scene> current_scene = nullptr;
-	uint32_t tmp_scene_uuid = 0;
+	std::shared_ptr<Scene> tmp_scene = nullptr;
 	std::string scene_to_load;
 	int build_options_position = -1;
 	bool load_tmp_scene = false;

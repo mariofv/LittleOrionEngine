@@ -31,6 +31,11 @@ bool ModuleScene::Init()
 	build_options = std::make_unique<BuildOptions>();
 	build_options->LoadOptions();
 
+	Path* metafile_path = App->filesystem->GetPath(App->resources->metafile_manager->GetMetafilePath(TMP_SCENE_PATH));
+	Metafile* scene_metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
+	assert(scene_metafile != nullptr);
+	tmp_scene = App->resources->Load<Scene>(scene_metafile->uuid);
+
 	return true;
 }
 
@@ -198,8 +203,8 @@ inline void ModuleScene::GetSceneResource()
 {
 	if (load_tmp_scene)
 	{
-		assert(tmp_scene_uuid != 0);
-		current_scene = App->resources->Load<Scene>(tmp_scene_uuid);
+		tmp_scene.get()->Load();
+		return;
 	}
 	else if (build_options_position != -1)
 	{
@@ -273,7 +278,7 @@ void ModuleScene::SaveScene()
 
 void ModuleScene::SaveTmpScene()
 {
-	tmp_scene_uuid = current_scene.get()->GetUUID();
+	App->resources->Save<Scene>(tmp_scene);
 }
 
 bool ModuleScene::HasPendingSceneToLoad() const

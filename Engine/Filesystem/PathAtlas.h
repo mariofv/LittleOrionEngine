@@ -41,8 +41,8 @@
 
 #define DEFAULT_SCENE_PATH "/Resources/Scenes/default_scene.scene"
 #define SAVED_SCENE_PATH "/Assets/Scenes/scene.scene"
-#define TMP_SCENE_PATH "/Assets/Scenes/tmp_scene.scene"
-#define SCENE_ROOT_PATH "/Assets/Scenes"
+#define TMP_SCENE_PATH "/Resources/Scenes/tmp_scene.scene"
+#define SCENE_ROOT_PATH "/Resources/Scenes"
 
 
 #endif // !_PATHATLAS_H_
