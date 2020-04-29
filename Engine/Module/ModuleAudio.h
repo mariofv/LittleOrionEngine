@@ -27,9 +27,11 @@ private:
 	AkStreamMgrSettings streaming_manager_settings;
 	AkInitSettings init_settings;
 	AkPlatformInitSettings platform_init_settings;
+	AkDeviceSettings device_settings;
 
 	std::shared_ptr<SoundBank> init_sound_bank = nullptr;
 	std::shared_ptr<SoundBank> main_sound_bank = nullptr;
+
 };
 
 #endif //_MODULEAUDIO_H_
