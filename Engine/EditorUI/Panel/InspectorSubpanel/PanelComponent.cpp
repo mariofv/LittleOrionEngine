@@ -19,6 +19,7 @@
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentCylinderCollider.h"
 #include "Component/ComponentImage.h"
+#include "Component/ComponentMeshCollider.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentProgressBar.h"
@@ -521,11 +522,8 @@ void PanelComponent::ShowComponentColliderWindow(ComponentCollider* collider)
 	case ComponentCollider::ColliderType::CYLINDER:
 		ShowComponentCylinderColliderWindow(static_cast<ComponentCylinderCollider*>(collider));
 		break;
-	case ComponentCollider::ColliderType::CIRCULE:
-		//ShowComponentCircleColliderWindow(static_cast<ComponentCircleCollider*>(collider));
-		break;
 	case ComponentCollider::ColliderType::MESH:
-		//ShowComponentMeshColliderWindow(static_cast<ComponentMeshCollider*>(collider));
+		ShowComponentMeshColliderWindow(static_cast<ComponentMeshCollider*>(collider));
 		break;
 	}
 }
@@ -684,26 +682,31 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
 
 		}
-		sprintf_s(tmp_string, "%s Box", ICON_FA_BOX);
+		sprintf_s(tmp_string, "%s Box Collider", ICON_FA_BOX);
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::BOX);
 
 		}
-		sprintf_s(tmp_string, "%s Capsule", ICON_FA_CAPSULES);
+		sprintf_s(tmp_string, "%s Capsule Collider", ICON_FA_CAPSULES);
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::CAPSULE);
 		}
-		sprintf_s(tmp_string, "%s Cylinder", ICON_FA_COLUMNS);
+		sprintf_s(tmp_string, "%s Cylinder Collider", ICON_FA_COLUMNS);
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::CYLINDER);
 		}
-		sprintf_s(tmp_string, "%s Sphere", ICON_FA_BASKETBALL_BALL);
+		sprintf_s(tmp_string, "%s Sphere Collider", ICON_FA_BASKETBALL_BALL);
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::SPHERE);
+		}
+		sprintf_s(tmp_string, "%s Mesh Collider", ICON_FA_BORDER_NONE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::MESH);
 		}
 		ImGui::EndPopup();
 	}
@@ -934,5 +937,17 @@ void PanelComponent::ShowComponentCylinderColliderWindow(ComponentCylinderCollid
 	if (ImGui::SliderFloat("Height", &cylinder_collider->scale.y, 0.1F, 5.0F))
 	{
 		cylinder_collider->Scale();
+	}
+}
+
+void PanelComponent::ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_BORDER_NONE " Mesh Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonColliderWindow(mesh_collider);
+	}
+	if (ImGui::SliderFloat3("Scale", mesh_collider->scale.ptr(), 0.1F, 5.0F))
+	{
+		mesh_collider->Scale();
 	}
 }

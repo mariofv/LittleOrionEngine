@@ -10,7 +10,6 @@ public:
 	enum class ColliderType {
 		BOX,
 		CAPSULE,
-		CIRCULE,
 		SPHERE,
 		CYLINDER,
 		MESH
