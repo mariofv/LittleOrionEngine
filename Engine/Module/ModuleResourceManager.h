@@ -31,7 +31,7 @@ class MaterialImporter;
 class MeshImporter;
 class ModelImporter;
 class PrefabImporter;
-class SceneManager;
+class SceneImporter;
 class SkeletonImporter;
 class SkyboxImporter;
 class StateMachineImporter;
@@ -128,6 +128,7 @@ public:
 	void ImportAssetsInDirectory(const Path& directory_path, bool force = false);
 
 	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
+	uint32_t CreateFromData(FileData data, const std::string& created_resource_path);
 
 	void CleanResourceCache();
 
@@ -155,6 +156,7 @@ public:
 	std::unique_ptr<MeshImporter> mesh_importer = nullptr;
 	std::unique_ptr<ModelImporter> model_importer = nullptr;
 	std::unique_ptr<PrefabImporter> prefab_importer = nullptr;
+	std::unique_ptr<SceneImporter> scene_importer = nullptr;
 	std::unique_ptr<SkeletonImporter> skeleton_importer = nullptr;
 	std::unique_ptr<SkyboxImporter> skybox_importer = nullptr;
 	std::unique_ptr<StateMachineImporter> state_machine_importer = nullptr;

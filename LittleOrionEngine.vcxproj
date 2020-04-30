@@ -65,9 +65,9 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Libraries/include/cr;./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>_MBCS;WINDOWS_IGNORE_PACKING_MISMATCH;DEBUG;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;WINDOWS_IGNORE_PACKING_MISMATCH;DEBUG;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -91,9 +91,9 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Libraries/include/cr;./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
-      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
     </ClCompile>
     <Link>
@@ -107,6 +107,9 @@
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
     </ProjectReference>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(OutDir)$(ProjectName).lib" "./Libraries/lib/x86"</Command>
+    </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Game|Win32'">
     <ClCompile>
@@ -116,10 +119,10 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./GameplaySystem/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Libraries/include/cr;./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
-      <PreprocessorDefinitions>_MBCS;GAME;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>_MBCS;GAME;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
     </ClCompile>
     <Link>
       <GenerateDebugInformation>true</GenerateDebugInformation>
@@ -137,10 +140,12 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\DLL\DLLManager.h" />
+    <ClInclude Include="Engine\Helper\BuildOptions.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
-    <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h" />
-    <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h" />
+    <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h" />
     <ClInclude Include="Engine\Actions\EditorAction.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddComponent.h" />
@@ -204,6 +209,7 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Prefab.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Scene.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Skeleton.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\StateMachine.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Texture.h" />
@@ -262,6 +268,7 @@
     <ClInclude Include="Engine\Module\ModuleActions.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.h" />
     <ClInclude Include="Engine\EditorUI\Helper\ImGuiHelper.h" />
+    <ClInclude Include="Libraries\include\cr\cr.h" />
     <ClInclude Include="Libraries\include\NodeEditor\crude_json.h" />
     <ClInclude Include="Libraries\include\NodeEditor\imgui_bezier_math.h" />
     <ClInclude Include="Libraries\include\NodeEditor\imgui_canvas.h" />
@@ -295,7 +302,7 @@
     <ClInclude Include="Engine\AI\NavMesh.h" />
     <ClInclude Include="Engine\Module\ModuleAI.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelNavMesh.h" />
-    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\PanelBuildOptions.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -322,6 +329,7 @@
     <ClCompile Include="Engine\Component\ComponentText.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform2D.cpp" />
     <ClCompile Include="Engine\Component\ComponentUI.cpp" />
+    <ClCompile Include="Engine\DLL\DLLManager.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp" />
@@ -329,6 +337,7 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp" />
     <ClCompile Include="Engine\Filesystem\File.cpp" />
+    <ClCompile Include="Engine\Helper\BuildOptions.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />
     <ClCompile Include="Engine\Helper\TemplatedGameObjectCreator.cpp" />
     <ClCompile Include="Engine\Helper\Timer.cpp" />
@@ -346,6 +355,7 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\SkeletonImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\SceneImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\SkyboxImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\SceneManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\SkyboxManager.cpp" />
@@ -364,6 +374,7 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Prefab.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Resource.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Scene.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Skeleton.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\StateMachine.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Texture.cpp" />
@@ -461,6 +472,8 @@
     <ClCompile Include="Engine\AI\NavMesh.cpp" />
     <ClCompile Include="Engine\Module\ModuleAI.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelNavMesh.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\PanelBuildOptions.cpp" />
+    <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl" />

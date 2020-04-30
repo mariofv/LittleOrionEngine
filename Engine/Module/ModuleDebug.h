@@ -52,6 +52,7 @@ private:
 	int max_dispersion_z = 40;
 
 	friend class PanelDebug;
+	friend class PanelConfiguration;
 };
 
 #endif //_MODULEDEBUG_H_

@@ -20,11 +20,10 @@ public:
 	static std::vector<float> GetVertices(const AABB &box);
 	static std::vector<float> GetVertices(const AABB2D &box);
 
-	static size_t CStrlastIndexOfChar(const char* str, char find_char);
-	static bool PatchFileName(char* filename);
-	static void SaveFileContent(const std::string & source, std::string & destination);
+	static void GetCurrentPath(std::string& path);
+	static void SaveFileContent(const std::string& source, std::string& destination);
 
-	static void ReplaceStringInPlace(std::string & subject, const std::string & search, const std::string & replace);
+	static void ReplaceStringInPlace(std::string& subject, const std::string& search, const std::string& replace);
 
 	static float3 Interpolate(const float3& first, const float3& second, float lambda);
 	static Quat Interpolate(const Quat& first, const Quat& second, float lambda);
