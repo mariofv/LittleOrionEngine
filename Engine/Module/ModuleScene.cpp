@@ -31,6 +31,11 @@ bool ModuleScene::Init()
 	build_options = std::make_unique<BuildOptions>();
 	build_options->LoadOptions();
 
+	Path* metafile_path = App->filesystem->GetPath(App->resources->metafile_manager->GetMetafilePath(TMP_SCENE_PATH));
+	Metafile* scene_metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
+	assert(scene_metafile != nullptr);
+	tmp_scene = App->resources->Load<Scene>(scene_metafile->uuid);
+
 	return true;
 }
 
@@ -90,7 +95,7 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 }
 
 
-GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject> & game_object_to_add)
+GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject>& game_object_to_add)
 {
 	game_objects_ownership.emplace_back(std::move(game_object_to_add));
 	GameObject * game_object = game_objects_ownership.back().get();
@@ -101,6 +106,28 @@ GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject> & game_object
 	}
 	return game_object;
 
+}
+
+GameObject* ModuleScene::DuplicateGameObject(GameObject* game_object, GameObject* parent_go)
+{
+	std::unique_ptr<GameObject> aux_copy_pointer = std::make_unique<GameObject>();
+	aux_copy_pointer.get()->Duplicate(*game_object);
+	GameObject* duplicated_go = App->scene->AddGameObject(aux_copy_pointer);
+	duplicated_go->SetParent(parent_go);
+	duplicated_go->SetTransform(game_object);
+	duplicated_go->name += "(1)";
+
+	if(game_object->is_prefab_parent)
+	{
+		game_object->prefab_reference->Duplicate(duplicated_go);
+	}
+	
+	for (const auto go : game_object->children)
+	{
+		DuplicateGameObject(go, duplicated_go);
+	}
+
+	return duplicated_go;
 }
 
 
@@ -176,8 +203,8 @@ inline void ModuleScene::GetSceneResource()
 {
 	if (load_tmp_scene)
 	{
-		assert(tmp_scene_uuid != 0);
-		current_scene = App->resources->Load<Scene>(tmp_scene_uuid);
+		tmp_scene.get()->Load();
+		return;
 	}
 	else if (build_options_position != -1)
 	{
@@ -251,7 +278,7 @@ void ModuleScene::SaveScene()
 
 void ModuleScene::SaveTmpScene()
 {
-	tmp_scene_uuid = current_scene.get()->GetUUID();
+	App->resources->Save<Scene>(tmp_scene);
 }
 
 bool ModuleScene::HasPendingSceneToLoad() const
