@@ -29,6 +29,10 @@ private:
 	OLOctTreeNode *root = nullptr;
 	const size_t bucket_size = 3;
 	const size_t max_depth = 3;
+
+
+	friend class PanelConfiguration;
+
 };
 
 #endif //_OLOCTTREE_H_

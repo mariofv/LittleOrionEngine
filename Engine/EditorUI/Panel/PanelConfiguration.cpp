@@ -2,8 +2,10 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
 #include "PanelConfiguration.h"
@@ -39,6 +41,9 @@ void PanelConfiguration::Render()
 
 		ImGui::Spacing();
 		ShowInputOptions();
+
+		ImGui::Spacing();
+		ShowSpacePartitioningOptions();
 	}
 	ImGui::End();
 }
@@ -667,4 +672,78 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::TreePop();
 		}
 	}
+}
+
+void PanelConfiguration::ShowSpacePartitioningOptions()
+{
+	if (ImGui::CollapsingHeader(ICON_FA_TREE " SpacePartitioning"))
+	{
+		ImGui::Checkbox("Scene window culling", &App->debug->culling_scene_mode);
+		int culling_mode_int = static_cast<int>(App->debug->culling_mode);
+		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling\0OctTree Culling\0AabbTree Culling\0Combined Culling"))
+		{
+			switch (culling_mode_int)
+			{
+			case 0:
+				App->debug->culling_mode = ModuleDebug::CullingMode::NONE;
+				break;
+			case 1:
+				App->debug->culling_mode = ModuleDebug::CullingMode::FRUSTUM_CULLING;
+				break;
+			case 2:
+				App->debug->culling_mode = ModuleDebug::CullingMode::QUADTREE_CULLING;
+				break;
+			case 3:
+				App->debug->culling_mode = ModuleDebug::CullingMode::OCTTREE_CULLING;
+				break;
+			case 4:
+				App->debug->culling_mode = ModuleDebug::CullingMode::AABBTREE_CULLING;
+				break;
+			case 5:
+				App->debug->culling_mode = ModuleDebug::CullingMode::COMBINED_CULLING;
+				break;
+			}
+		}
+
+		ImGui::Spacing();
+		ImGui::Text("Space Partitioning");
+		if (ImGui::SliderInt("Quadtree Depth ", &App->space_partitioning->ol_quadtree->max_depth, 1, 10))
+		{
+			App->space_partitioning->GenerateQuadTree();
+			App->space_partitioning->GenerateOctTree();
+		}
+		if (ImGui::SliderInt("Quadtree bucket size ", &App->space_partitioning->ol_quadtree->bucket_size, 1, 10))
+		{
+			App->space_partitioning->GenerateQuadTree();
+			App->space_partitioning->GenerateOctTree();
+		}
+
+		if (ImGui::Button("Generate QuadTree"))
+		{
+			App->space_partitioning->GenerateQuadTree();
+		}
+
+		ImGui::Separator();
+		if (ImGui::Button("Generate OctTree"))
+		{
+			App->space_partitioning->GenerateOctTree();
+		}
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		if (ImGui::CollapsingHeader("Frustum culling scene"))
+		{
+			ImGui::SliderInt("Number of objects", &App->debug->num_houses, 0, 1000);
+			ImGui::SliderInt("Dispersion X", &App->debug->max_dispersion_x, 0, 1000);
+			ImGui::SliderInt("Dispersion Z", &App->debug->max_dispersion_z, 0, 1000);
+			if (ImGui::Button("Create scene"))
+			{
+				App->debug->CreateFrustumCullingDebugScene();
+			}
+		}
+		
+	}
+
 }
