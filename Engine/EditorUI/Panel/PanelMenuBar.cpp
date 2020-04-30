@@ -3,6 +3,7 @@
 #include "Component/ComponentCanvas.h"
 
 #include "EditorUI/Panel/PanelAbout.h"
+#include "EditorUI/Panel/PanelBuildOptions.h"
 #include "EditorUI/Panel/PanelConfiguration.h"
 #include "EditorUI/Panel/PanelConsole.h"
 #include "EditorUI/Panel/PanelDebug.h"
@@ -14,14 +15,21 @@
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "EditorUI/Panel/PanelResourceDatabase.h"
-#include "EditorUI/Panel/PopupsPanel/PanelPopupSceneManagement.h"
+#include "EditorUI/Panel/PopupsPanel/PanelPopupSceneLoader.h"
+#include "EditorUI/Panel/PopupsPanel/PanelPopupSceneSaver.h"
 
+#include "Filesystem/PathAtlas.h"
+#include "Helper/TemplatedGameObjectCreator.h"
 #include "Main/Application.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleFileSystem.h"
-#include "Module/ModuleModelLoader.h"
+#include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleSpacePartitioning.h"
+#include "Module/ModuleTime.h"
 #include "Module/ModuleUI.h"
+
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
@@ -57,7 +65,7 @@ void PanelMenuBar::ShowFileMenu()
 		}
 		if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Load Scene"))
 		{
-			App->editor->popups->scene_management_popup.load_scene_shown = true;
+			App->editor->popups->scene_loader_popup.popup_shown = true;
 		}
 		ImGui::Separator();
 		if (App->editor->current_scene_path != "" && ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
@@ -66,7 +74,15 @@ void PanelMenuBar::ShowFileMenu()
 		}
 		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene as"))
 		{
-			App->editor->popups->scene_management_popup.save_scene_shown = true;
+			if (!App->time->isGameRunning())
+			{
+				App->editor->popups->scene_saver_popup.popup_shown = true;
+			}
+			APP_LOG_INFO("You must stop play mode to save scene.");
+		}
+		if(ImGui::MenuItem(ICON_FA_BUILDING " Build Options"))
+		{
+			App->editor->build_options->SwitchOpen();
 		}
 		if (ImGui::MenuItem(ICON_FA_SIGN_OUT_ALT " Exit"))
 		{
@@ -102,21 +118,32 @@ void PanelMenuBar::ShowGameObjectMenu()
 		
 		if (ImGui::BeginMenu("3D Object"))
 		{
+			GameObject* created_game_object = nullptr;
+
 			if (ImGui::Selectable("Cube"))
 			{
-				App->model_loader->LoadCoreModel(PRIMITIVE_CUBE_PATH);
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::CUBE);
 			}
 			if (ImGui::Selectable("Cylinder"))
 			{
-				App->model_loader->LoadCoreModel(PRIMITIVE_CYLINDER_PATH);
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::CYLINDER);
 			}
 			if (ImGui::Selectable("Sphere"))
 			{
-				App->model_loader->LoadCoreModel(PRIMITIVE_SPHERE_PATH);
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::SPHERE);
 			}
 			if (ImGui::Selectable("Torus"))
 			{
-				App->model_loader->LoadCoreModel(PRIMITIVE_TORUS_PATH);
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::TORUS);
+			}
+			if (ImGui::Selectable("Quad"))
+			{
+				created_game_object = TemplatedGameObjectCreator::CreatePrimitive(CoreResource::QUAD);
+			}
+
+			if (created_game_object != nullptr)
+			{
+				App->space_partitioning->InsertAABBTree(created_game_object);
 			}
 
 			ImGui::EndMenu();

@@ -62,10 +62,9 @@ void ComponentAnimation::Copy(Component* component_to_copy) const
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;
 }
 
-void ComponentAnimation::SetStateMachine(std::shared_ptr<StateMachine>& state_machine)
+void ComponentAnimation::SetStateMachine(uint32_t state_machine_uuid)
 {
-	animation_controller->state_machine = state_machine;
-	animation_controller->SetActiveAnimation();
+	animation_controller->SetStateMachine(state_machine_uuid);
 	GenerateJointChannelMaps();
 }
 
@@ -114,7 +113,7 @@ void ComponentAnimation::UpdateMeshes()
 	{
 		pose.resize(mesh->skeleton->skeleton.size());
 		auto & skeleton = mesh->skeleton;
-		animation_controller->GetPose(skeleton->GetUUID(), pose);
+		animation_controller->GetClipTransform(skeleton->GetUUID(), pose);
 		mesh->UpdatePalette(pose);
 	}
 }
@@ -130,26 +129,25 @@ void ComponentAnimation::Save(Config& config) const
 	config.AddUInt((uint64_t)type, "ComponentType");
 	config.AddBool(active, "Active");
 
-	std::string state_machine_path = animation_controller->state_machine ? animation_controller->state_machine->exported_file : "";
-	config.AddString(state_machine_path, "StateMachineResource");
+	uint32_t state_machine_uuid = animation_controller->state_machine ? animation_controller->state_machine->GetUUID() : 0;
+	config.AddUInt(state_machine_uuid, "StateMachineResource");
 }
 
 void ComponentAnimation::Load(const Config& config)
 {
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
-	std::string state_machine_path;
-	config.GetString("StateMachineResource", state_machine_path, "");
-	if (!state_machine_path.empty())
+	uint32_t state_machine_uuid = config.GetUInt("StateMachineResource", 0);
+	if (state_machine_uuid != 0)
 	{
-		SetStateMachine(App->resources->Load<StateMachine>(state_machine_path));
+		SetStateMachine(state_machine_uuid);
 	}
 }
 
 void ComponentAnimation::GetChildrenMeshes(GameObject* current_mesh_gameobject)
 {
 	ComponentMeshRenderer* mesh_renderer = static_cast<ComponentMeshRenderer*>(current_mesh_gameobject->GetComponent(ComponentType::MESH_RENDERER));
-	if (mesh_renderer)
+	if (mesh_renderer && mesh_renderer->skeleton)
 	{
 		skinned_meshes.push_back(mesh_renderer);
 	}

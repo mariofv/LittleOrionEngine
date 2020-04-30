@@ -1,18 +1,22 @@
 #include "ModuleInput.h"
 
 #include "Component/ComponentCamera.h"
+
 #include "EditorUI/Panel/PanelProjectExplorer.h"
 #include "EditorUI/Panel/PanelScene.h"
-#include "Main/Globals.h"
+
+#include "Filesystem/File.h"
+#include "Filesystem/PathAtlas.h"
+
 #include "Main/Application.h"
-#include "ModuleWindow.h"
-#include "ModuleModelLoader.h"
-#include "ModuleCamera.h"
-#include "ModuleEditor.h"
-#include "ModuleFileSystem.h"
-#include "ModuleRender.h"
-#include "ModuleScene.h"
-#include "ModuleUI.h"
+#include "Module/ModuleWindow.h"
+#include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
+#include "Module/ModuleFileSystem.h"
+#include "Module/ModuleRender.h"
+#include "Module/ModuleScene.h"
+#include "Module/ModuleScriptManager.h"
+#include "Module/ModuleUI.h"
 
 #include <Brofiler/Brofiler.h>
 #include <GL/glew.h>
@@ -82,9 +86,13 @@ bool ModuleInput::Init()
 	APP_LOG_SUCCESS("SDL input event system initialized correctly.");
 
 	//Load Game Inputs
-	size_t readed_bytes;
-	char* scene_file_data = App->filesystem->Load(GAME_INPUT_PATH, readed_bytes);
-	if (scene_file_data != nullptr)
+	game_inputs_file_path = App->filesystem->GetPath(RESOURCES_GAME_INPUTS_PATH + std::string("/") + RESOURCES_GAME_INPUTS_FILENAME);
+
+	FileData game_inputs_data = game_inputs_file_path->GetFile()->Load();
+	size_t readed_bytes = game_inputs_data.size;
+	char* scene_file_data = (char*)game_inputs_data.buffer;
+
+	if(scene_file_data != nullptr)
 	{
 		std::string serialized_scene_string = scene_file_data;
 		free(scene_file_data);
@@ -157,7 +165,15 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_WINDOWEVENT:
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+			{
 				App->window->WindowResized(event.window.data1, event.window.data2);
+			}
+#if !GAME
+			if (event.window.event == SDL_WINDOWEVENT_EXPOSED)
+			{
+				App->scripts->CheckGameplayFolderStatus();
+			}
+#endif
 			break;
 
 		case SDL_MOUSEMOTION:
@@ -206,9 +222,12 @@ update_status ModuleInput::PreUpdate()
 		break;
 
 		case SDL_DROPFILE:
+			/* TODO: This
 			char* dropped_filedir = event.drop.file;
 			App->editor->project_explorer->CopyFileToSelectedFolder(dropped_filedir);
 			SDL_free(dropped_filedir);
+			*/
+
 			break;
 		}
 	}
@@ -381,6 +400,27 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id
 	return false;
 }
 
+ENGINE_API bool ModuleInput::GetAnyKeyPressedDown() const
+{
+	for (auto& key : key_bible)
+	{
+		if (key.second == KeyState::DOWN)
+		{
+			return true;
+		}
+	}
+
+	for (auto& contr : controller_bible[0])
+	{
+		if (contr.second == KeyState::DOWN)
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void ModuleInput::CreateGameInput(const GameInput& game_input)
 {
 	game_inputs[game_input.name] = game_input;
@@ -391,7 +431,9 @@ void ModuleInput::CreateGameInput(const GameInput& game_input)
 	std::string serialized_game_input_string;
 	config.GetSerializedString(serialized_game_input_string);
 
-	App->filesystem->Save(GAME_INPUT_PATH, serialized_game_input_string.c_str(), serialized_game_input_string.size() + 1);
+	Path* game_inputs_folder_path = App->filesystem->GetPath(RESOURCES_GAME_INPUTS_PATH);
+
+	game_inputs_folder_path->Save(RESOURCES_GAME_INPUTS_FILENAME, serialized_game_input_string);
 }
 
 void ModuleInput::DeleteGameInput(const GameInput& game_input)
@@ -404,7 +446,7 @@ void ModuleInput::DeleteGameInput(const GameInput& game_input)
 	std::string serialized_game_input_string;
 	config.GetSerializedString(serialized_game_input_string);
 
-	App->filesystem->Save(GAME_INPUT_PATH, serialized_game_input_string.c_str(), serialized_game_input_string.size() + 1);
+	App->filesystem->Save(game_inputs_file_path->GetFullPath(), serialized_game_input_string);
 }
 
 // Returns the current mouse position in pixel coordinates
@@ -512,7 +554,7 @@ void ModuleInput::SaveGameInputs(Config& config)
 {
 	std::vector<Config> game_inputs_configs;
 
-	for (auto game_input : game_inputs)
+	for (auto& game_input : game_inputs)
 	{
 		Config game_inputs_config;
 		game_input.second.Save(game_inputs_config);

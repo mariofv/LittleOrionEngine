@@ -1,10 +1,11 @@
 #ifndef _OLQUADTREE_H_
 #define _OLQUADTREE_H_
 
-#include "Main/GameObject.h"
 #include "OLQuadTreeNode.h"
 
 #include <MathGeoLib.h>
+
+class GameObject;
 
 class OLQuadTree
 {
@@ -28,7 +29,7 @@ private:
 	int bucket_size = 3;
 	int max_depth = 3;
 
-	friend class PanelDebug;
+	friend class PanelConfiguration;
 };
 
 #endif //_OLQUADTREE_H_

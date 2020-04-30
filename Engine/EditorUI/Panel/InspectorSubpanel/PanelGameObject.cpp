@@ -18,6 +18,7 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
 #include <imgui.h>
@@ -47,7 +48,9 @@ void PanelGameObject::Render(GameObject* game_object)
 	ImGui::Text(ICON_FA_CUBE);
 
 	ImGui::SameLine();
-	ImGui::InputText("###GameObject name Input", &game_object->name);
+	if (ImGui::InputText("###GameObject name Input", &game_object->name))
+	{		game_object->modified_by_user = true;
+	}
 
 	ImGui::SameLine();
 	if (ImGui::Checkbox("Static", &game_object->is_static))
@@ -110,9 +113,10 @@ void PanelGameObject::Render(GameObject* game_object)
 		ImGui::PopID();
 	}
 
-	if (game_object->GetComponent(Component::ComponentType::MESH_RENDERER) != nullptr)
+	ComponentMeshRenderer* mesh_renderer_component = static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER));
+	if (mesh_renderer_component != nullptr && mesh_renderer_component->material_uuid != 0)
 	{
-		App->editor->inspector->material_panel.Render(static_cast<ComponentMeshRenderer*>(game_object->GetComponent(Component::ComponentType::MESH_RENDERER))->material_to_render.get());
+		App->editor->inspector->material_panel.Render(mesh_renderer_component->material_to_render);
 	}
 
 	ImGui::Spacing();
@@ -129,6 +133,7 @@ void PanelGameObject::ShowPrefabMenu(GameObject* game_object)
 	{
 		GameObject *to_reimport = game_object->GetPrefabParent();
 		to_reimport->prefab_reference->Apply(to_reimport);
+		App->resources->Save<Prefab>(to_reimport->prefab_reference);
 	}
 	ImGui::SameLine();
 	if (ImGui::Button("Revert"))

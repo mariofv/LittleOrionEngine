@@ -1,48 +1,55 @@
-#ifndef _PATH_H_
-#define _PATH_H_
+#ifndef _FILE_H_
+#define _FILE_H_
+
+#include "Path.h"
 
 #include <vector>
 #include <memory>
+#include <physfs/physfs.h>
+
 enum class FileType
 {
-	MODEL,
-	PREFAB, //TODO UNIFY MODEL & PREFAB
-	TEXTURE,
+	ANIMATION,
+	ARCHIVE,
 	MATERIAL,
 	MESH,
-	ANIMATION,
+	META,
+	MODEL,
+	PREFAB,
+	SCENE,
 	SKELETON,
-	DIRECTORY,
-	ARCHIVE,
+	SKYBOX,
 	STATE_MACHINE,
+	TEXTURE,
 	UNKNOWN
 };
-class File {
-public:
-	File() = default;
-	File(const std::string & path, const std::string & name);
-	File(const std::string & path);
-	std::string filename;
-	std::string file_path;
-	std::string filename_no_extension;
-	FileType file_type;
-	size_t sub_folders = 0;
-	size_t total_sub_files_number = 0;
-	uint64_t modification_timestamp = 0;
 
-	std::vector<std::shared_ptr<File>> children;
-	File* parent = nullptr;
-	bool operator==(const File& compare);
 
-	void Refresh();
-public:
-	bool loaded_correctly = true;
-
-private:
-	void GetFileInfo();
-	void GetChildren();
-
+struct FileData
+{
+	const void* buffer; // NOTE: It's important to free this memory after usage, if not you will have a memory leak!
+	unsigned int size;
 };
 
-#endif // !_PATH_H_
+class File
+{
+public:
+	explicit File(Path* path); // Without explicit compiler is able to convert Paths to Files without noticing the user.
+	~File();
+
+	FileData Load() const;
+
+	FileType GetFileType() const;
+	void GetPath(Path* return_value) const;
+
+private:
+	void CalculateFileInfo();
+	FileType CalculateFileType(const PHYSFS_FileType& file_type = PHYSFS_FileType::PHYSFS_FILETYPE_OTHER) const;
+
+private:
+	Path* file_path;
+	FileType file_type = FileType::UNKNOWN;
+};
+
+#endif // !_FILE_H_
 

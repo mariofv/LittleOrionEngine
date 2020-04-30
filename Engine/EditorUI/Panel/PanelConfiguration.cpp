@@ -2,8 +2,10 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
 #include "PanelConfiguration.h"
@@ -43,6 +45,9 @@ void PanelConfiguration::Render()
 
 		ImGui::Spacing();
 		ShowPhysicsOptions();
+		
+		ImGui::Spacing();
+		ShowSpacePartitioningOptions();
 	}
 	ImGui::End();
 }
@@ -466,7 +471,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Separator();
 
 			ImGui::Text("Keys:");
-			for(auto key : string_keys)
+			for(const auto key : string_keys)
 			{
 				ImGui::Text(game_inputs_strings[key]);
 			}
@@ -518,7 +523,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Separator();
 
 			ImGui::Text("Mouse:");
-			for (auto mouse_key : mouse_keys)
+			for (const auto mouse_key : mouse_keys)
 			{
 				ImGui::Text(mouse_keys_string[(int)mouse_key]);
 			}
@@ -558,7 +563,7 @@ void PanelConfiguration::ShowInputOptions()
 
 
 			ImGui::Text("Controller Keys:");
-			for (auto controller_key : controller_keys)
+			for (const auto controller_key : controller_keys)
 			{
 				ImGui::Text(controller_keys_string[(int)controller_key]);
 			}
@@ -601,19 +606,19 @@ void PanelConfiguration::ShowInputOptions()
 				GameInput game_input;
 				game_input.name = name_game_input;
 				int i = 0;
-				for(auto key : keys)
+				for(const auto key : keys)
 				{
 					game_input.keys[i] = ((KeyCode)key);
 					++i;
 				}
 				int j = 0;
-				for (auto mouse : mouse_keys)
+				for (const auto mouse : mouse_keys)
 				{
 					game_input.mouse_buttons[j] = ((MouseButton)mouse);
 					++j;
 				}
 				int k = 0;
-				for (auto controller_key : controller_keys)
+				for (const auto controller_key : controller_keys)
 				{
 					game_input.controller_buttons[k] = ((ControllerCode)controller_key);
 					++k;
@@ -633,11 +638,11 @@ void PanelConfiguration::ShowInputOptions()
 
 			ImGui::Separator();
 
-			for(auto game_input : App->input->game_inputs)
+			for(const auto& game_input : App->input->game_inputs)
 			{
 				ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", game_input.first.c_str());
 				ImGui::Text("KeyCodes:");
-				for(auto key : game_input.second.keys)
+				for(const auto& key : game_input.second.keys)
 				{
 					int aux = static_cast<int>(key);
 					if (aux > FIRST_OFFSET_COND)
@@ -653,12 +658,12 @@ void PanelConfiguration::ShowInputOptions()
 					ImGui::Text("	%s", game_inputs_strings[aux]);
 				}
 				ImGui::Text("MouseCodes:");
-				for (auto mouse : game_input.second.mouse_buttons)
+				for (auto& mouse : game_input.second.mouse_buttons)
 				{
 					ImGui::Text("	%s", mouse_keys_string[(int)mouse]);
 				}
 				ImGui::Text("ControllerCodes:");
-				for (auto controller_key : game_input.second.controller_buttons)
+				for (const auto& controller_key : game_input.second.controller_buttons)
 				{
 					ImGui::Text("	%s", controller_keys_string[(int)controller_key]);
 				}
@@ -693,4 +698,84 @@ void PanelConfiguration::ShowPhysicsOptions()
 	}
 	ImGui::PopFont();
 	
+void PanelConfiguration::ShowSpacePartitioningOptions()
+{
+	if (ImGui::CollapsingHeader(ICON_FA_TREE " SpacePartitioning"))
+	{
+		ImGui::Checkbox("Scene window culling", &App->debug->culling_scene_mode);
+		int culling_mode_int = static_cast<int>(App->debug->culling_mode);
+		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling\0OctTree Culling\0AabbTree Culling\0Combined Culling"))
+		{
+			switch (culling_mode_int)
+			{
+			case 0:
+				App->debug->culling_mode = ModuleDebug::CullingMode::NONE;
+				break;
+			case 1:
+				App->debug->culling_mode = ModuleDebug::CullingMode::FRUSTUM_CULLING;
+				break;
+			case 2:
+				App->debug->culling_mode = ModuleDebug::CullingMode::QUADTREE_CULLING;
+				break;
+			case 3:
+				App->debug->culling_mode = ModuleDebug::CullingMode::OCTTREE_CULLING;
+				break;
+			case 4:
+				App->debug->culling_mode = ModuleDebug::CullingMode::AABBTREE_CULLING;
+				break;
+			case 5:
+				App->debug->culling_mode = ModuleDebug::CullingMode::COMBINED_CULLING;
+				break;
+			}
+		}
+
+		ImGui::Spacing();
+		ImGui::Text("Space Partitioning");
+		if (ImGui::SliderInt("Quadtree Depth ", &App->space_partitioning->ol_quadtree->max_depth, 1, 10))
+		{
+			App->space_partitioning->GenerateQuadTree();
+		}
+		if (ImGui::SliderInt("Quadtree bucket size ", &App->space_partitioning->ol_quadtree->bucket_size, 1, 10))
+		{
+			App->space_partitioning->GenerateQuadTree();
+		}
+
+		if (ImGui::Button("Generate QuadTree"))
+		{
+			App->space_partitioning->GenerateQuadTree();
+		}
+
+		ImGui::Separator();
+
+		if (ImGui::SliderInt("OctTree Depth ", &App->space_partitioning->ol_octtree->max_depth, 1, 10))
+		{
+			App->space_partitioning->GenerateOctTree();
+		}
+		if (ImGui::SliderInt("OctTree bucket size ", &App->space_partitioning->ol_octtree->bucket_size, 1, 10))
+		{
+			App->space_partitioning->GenerateOctTree();
+		}
+
+		if (ImGui::Button("Generate OctTree"))
+		{
+			App->space_partitioning->GenerateOctTree();
+		}
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		if (ImGui::CollapsingHeader("Frustum culling scene"))
+		{
+			ImGui::SliderInt("Number of objects", &App->debug->num_houses, 0, 1000);
+			ImGui::SliderInt("Dispersion X", &App->debug->max_dispersion_x, 0, 1000);
+			ImGui::SliderInt("Dispersion Z", &App->debug->max_dispersion_z, 0, 1000);
+			if (ImGui::Button("Create scene"))
+			{
+				App->debug->CreateFrustumCullingDebugScene();
+			}
+		}
+		
+	}
+
 }

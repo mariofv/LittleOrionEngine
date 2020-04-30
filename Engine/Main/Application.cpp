@@ -7,20 +7,20 @@
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleFileSystem.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleLight.h"
-#include "Module/ModuleModelLoader.h"
-#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModulePhysics.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleScriptManager.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleUI.h"
-#include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
-#include "Module/ModuleScriptManager.h"
-#include "Module/ModulePhysics.h"
 
 #include <Brofiler/Brofiler.h>
 
@@ -42,13 +42,13 @@ Application::Application()
 	modules.emplace_back(actions = new ModuleActions());
 	modules.emplace_back(program = new ModuleProgram());
 	modules.emplace_back(cameras = new ModuleCamera());
-	modules.emplace_back(model_loader = new ModuleModelLoader());
 	modules.emplace_back(debug = new ModuleDebug());
 #if !GAME
 	modules.emplace_back(debug_draw = new ModuleDebugDraw());
 #endif
 	modules.emplace_back(lights = new ModuleLight());
 	modules.emplace_back(scene = new ModuleScene());
+	modules.emplace_back(space_partitioning = new ModuleSpacePartitioning());
 	modules.emplace_back(artificial_intelligence = new ModuleAI());
 	modules.emplace_back(physics = new ModulePhysics());
 	modules.emplace_back(scripts = new ModuleScriptManager());
@@ -68,7 +68,7 @@ bool Application::Init()
 {
 	bool result = true;
 
-	for (auto &module : modules) 
+	for (auto& module : modules) 
 	{
 		bool ret = module->Init();
 		if (!ret) {
@@ -88,7 +88,7 @@ update_status Application::Update()
 		App->scene->OpenPendingScene();
 	}
 
-	for (auto &module : modules) 
+	for (auto& module : modules) 
 	{
 		update_status ret = module->PreUpdate();
 		if (ret == update_status::UPDATE_ERROR || ret == update_status::UPDATE_STOP) 
@@ -98,7 +98,7 @@ update_status Application::Update()
 	}
 	if (result == update_status::UPDATE_CONTINUE) 
 	{
-		for (auto &module : modules) 
+		for (auto& module : modules) 
 		{
 			update_status ret = module->Update();
 			if (ret == update_status::UPDATE_ERROR || ret == update_status::UPDATE_STOP) 
@@ -110,7 +110,7 @@ update_status Application::Update()
 
 	if (result == update_status::UPDATE_CONTINUE) 
 	{
-		for (auto &module : modules) 
+		for (auto& module : modules) 
 		{
 			update_status ret = module->PostUpdate();
 			if (ret == update_status::UPDATE_ERROR || ret == update_status::UPDATE_STOP) 

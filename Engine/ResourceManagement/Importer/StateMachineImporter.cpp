@@ -1,36 +1,35 @@
 #include "StateMachineImporter.h"
+
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 #include "ResourceManagement/Resources/StateMachine.h"
-ImportResult StateMachineImporter::Import(const File & file, bool force) const
+
+FileData StateMachineImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
-	ImportResult import_result;
+	FileData state_machine_data = assets_file_path.GetFile()->Load();
 
-	if (file.filename.empty() || !file.loaded_correctly)
-	{
-		APP_LOG_ERROR("Importing state machine error: Couldn't find the file to import.")
-			return import_result;
-	}
+	char* state_machine_data_buffer = (char*)state_machine_data.buffer;
+	std::string serialized_state_machine_string = std::string(state_machine_data_buffer, state_machine_data.size);
 
-	ImportOptions already_imported = GetAlreadyImportedResource(file);
-	if (already_imported.uuid != 0 && !force) {
-		APP_LOG_INFO("state machine already imported.")
-			import_result.success = true;
-		import_result.exported_file = already_imported.exported_file;
-		return import_result;
-	}
+	Config state_machine_config(serialized_state_machine_string);
 
-	StateMachine state_machine(file.file_path);
-	state_machine.Load(file);
+	std::vector<Config> clips_config;
+	state_machine_config.GetChildrenConfig("Clips", clips_config);
 
-	uint32_t num_clips = state_machine.clips.size();
-	uint32_t num_states = state_machine.states.size();
-	uint32_t num_transitions = state_machine.transitions.size();
+	std::vector<Config> states_config;
+	state_machine_config.GetChildrenConfig("States", states_config);
+
+	std::vector<Config> transitions_config;
+	state_machine_config.GetChildrenConfig("Transitions", transitions_config);
+
+	uint32_t num_clips = clips_config.size();
+	uint32_t num_states = states_config.size();
+	uint32_t num_transitions = transitions_config.size();
 	uint32_t ranges[3] = { num_clips, num_states, num_transitions };
 
-	uint32_t size_of_clip= sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
+	uint32_t size_of_clip = sizeof(uint64_t) + sizeof(uint32_t) + sizeof(bool);
 	uint32_t size_of_state = sizeof(uint64_t) * 2;
-	uint32_t size_of_transitions = sizeof(uint64_t) * 4;
+	uint32_t size_of_transitions = sizeof(uint64_t) * 5 + sizeof(bool);
 	uint32_t size = sizeof(ranges) + size_of_clip * num_clips + size_of_transitions * num_transitions + size_of_state * num_states + sizeof(uint64_t)/*Default state*/;
 
 	char* data = new char[size]; // Allocate
@@ -40,61 +39,88 @@ ImportResult StateMachineImporter::Import(const File & file, bool force) const
 
 	cursor += bytes; // Store Clips
 
-	for (auto & clip : state_machine.clips)
+	for (auto & clip : clips_config)
 	{
+
+		std::string name;
+		clip.GetString("Name", name, "");
+		uint64_t name_hash = std::hash<std::string>{}(name);
+
+		uint32_t animation_uuid = clip.GetUInt("AnimationUUID", 0);
+
+		bool loop = clip.GetBool("Loop", false);
+
 		bytes = sizeof(uint64_t);
-		memcpy(cursor, &clip->name_hash, bytes);
+		memcpy(cursor, &name_hash, bytes);
 		cursor += bytes; // Store Clip
 
-		bytes = sizeof(uint32_t) ;
-		uint32_t animation_uuid = clip->animation->GetUUID();
+		bytes = sizeof(uint32_t);
 		memcpy(cursor, &animation_uuid, bytes);
 		cursor += bytes;
 
 		bytes = sizeof(bool);
-		memcpy(cursor, &clip->loop, bytes);
+		memcpy(cursor, &loop, bytes);
 		cursor += bytes;
 	}
 
-	for (auto & state : state_machine.states)
+	for (auto & state : states_config)
 	{
+		std::string clip_name;
+		std::string name;
+		state.GetString("Name", name, "");
+		state.GetString("ClipName", clip_name, "");
+		uint64_t name_hash = std::hash<std::string>{}(name);
+		uint64_t clip_hash = std::hash<std::string>{}(clip_name);
+
 		bytes = sizeof(uint64_t);
-		memcpy(cursor, &state->name_hash, bytes);
+		memcpy(cursor, &name_hash, bytes);
 		cursor += bytes; // Store states
-		uint64_t clip_hash = state->clip ? state->clip->name_hash : 0;
 		bytes = sizeof(uint64_t);
 		memcpy(cursor, &clip_hash, bytes);
 		cursor += bytes; // Store states
 	}
 
-	for (auto & transition : state_machine.transitions)
+	for (auto & transition : transitions_config)
 	{
+		std::string trigger;
+		uint64_t source = transition.GetUInt("Source", 0);
+		uint64_t target = transition.GetUInt("Target", 0);
+		transition.GetString("Trigger", trigger, "");
+		int64_t interpolation_time = transition.GetInt64("Interpolation", 0);
+		uint64_t trigger_hash = std::hash<std::string>{}(trigger);
+		uint64_t priority = transition.GetUInt("Priority", 0);
+		bool automatic = transition.GetBool("Automatic", false);
+
 		bytes = sizeof(uint64_t);
-		memcpy(cursor, &transition->source_hash, bytes);
+		memcpy(cursor, &source, bytes);
 		cursor += bytes;
 
 		bytes = sizeof(uint64_t);
-		memcpy(cursor, &transition->target_hash, bytes);
+		memcpy(cursor, &target, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(uint64_t);
+		memcpy(cursor, &trigger_hash, bytes);
+		cursor += bytes;
+
+		bytes = sizeof(uint64_t);
+		memcpy(cursor, &interpolation_time, bytes);
 		cursor += bytes; 
 
 		bytes = sizeof(uint64_t);
-		memcpy(cursor, &transition->trigger_hash, bytes);
-		cursor += bytes; 
+		memcpy(cursor, &priority, bytes);
+		cursor += bytes;
 
-		bytes = sizeof(uint64_t);
-		memcpy(cursor, &transition->interpolation_time, bytes);
-		cursor += bytes; 
+		bytes = sizeof(bool);
+		memcpy(cursor, &automatic, bytes);
+
+		cursor += bytes;
 	}
 
+	uint64_t default_state = state_machine_config.GetUInt("Default", 0);
 	bytes = sizeof(uint64_t);
-	memcpy(cursor, &state_machine.default_state, bytes);
+	memcpy(cursor, &default_state, bytes);
 	cursor += bytes;
 
-	std::string exported_file = SaveMetaFile(file.file_path, ResourceType::STATE_MACHINE);
-	App->filesystem->Save(exported_file.c_str(), data, size);
-
-	import_result.success = true;
-	import_result.exported_file = exported_file;
-	free(data);
-	return import_result;
+	return FileData{data, size};
 }

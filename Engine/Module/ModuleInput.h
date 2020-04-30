@@ -1,18 +1,20 @@
 #ifndef _MODULEINPUT_H_
 #define _MODULEINPUT_H_
+
 #define ENGINE_EXPORTS
+
 #include "Module.h"
 #include "Main/Globals.h"
 #include "Helper/Config.h"
 
+#include <array>
+#include <MathGeoLib.h>
+#include <map>
 #include <SDL_scancode.h>
 #include <SDL_mouse.h>
 #include <SDL_gamecontroller.h>
-#include <MathGeoLib.h>
-#include <map>
 #include <string>
 #include <vector>
-#include <array>
 
 class PanelConfiguration;
 
@@ -391,6 +393,8 @@ struct GameInput
 	}
 };
 
+class Path;
+
 class ModuleInput : public Module
 {
 public:
@@ -416,6 +420,8 @@ public:
 	ENGINE_API bool GetGameInput(const char* name, PlayerID player_id = PlayerID::ONE);
 	ENGINE_API bool GetGameInputDown(const char* name, PlayerID player_id = PlayerID::ONE);
 	ENGINE_API bool GetGameInputUp(const char* name, PlayerID player_id = PlayerID::ONE);
+
+	ENGINE_API bool GetAnyKeyPressedDown() const;
 
 	void CreateGameInput(const GameInput& game_input);
 	void DeleteGameInput(const GameInput& game_input);
@@ -449,6 +455,7 @@ private:
 	std::vector<std::map<ControllerCode, KeyState>> controller_bible;
 
 	//Predefined buttons
+	Path* game_inputs_file_path = nullptr;
 	std::map<std::string, GameInput> game_inputs;
 
 	const Uint8 *keys = nullptr;

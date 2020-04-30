@@ -1,9 +1,12 @@
-#include "Main/Application.h"
 #include "ModuleProgram.h"
+
+#include "Filesystem/PathAtlas.h"
+#include "Helper/Config.h"
+
+#include "Main/Application.h"
 #include "ModuleFileSystem.h"
 
-#include "MathGeoLib.h"
-#include "Helper/Config.h"
+#include <MathGeoLib.h>
 
 // Called before render is available
 bool ModuleProgram::Init()
@@ -16,14 +19,14 @@ bool ModuleProgram::Init()
 // Called before quitting
 bool ModuleProgram::CleanUp()
 {
-	for ( auto & program : loaded_programs)
+	for (const auto& program : loaded_programs)
 	{
 		glDeleteProgram(program.second);
 	}
 
 	glDeleteBuffers(1, &uniform_buffer.ubo);
 
-	for (auto & name : names)
+	for (auto& name : names)
 	{
 		delete[] name;
 	}
@@ -88,8 +91,11 @@ bool ModuleProgram::LoadProgram(std::string name, const char* vertex_shader_file
 bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const char* vertex_shader_file_name) const
 {
 	APP_LOG_INFO("Loading vertex shader");
-	size_t size;
-	char *vertex_shader_loaded_file = App->filesystem->Load(vertex_shader_file_name, size);
+
+	Path* vertex_shader_path = App->filesystem->GetPath(vertex_shader_file_name);
+	FileData vertex_shader_path_data = vertex_shader_path->GetFile()->Load();
+
+	char* vertex_shader_loaded_file = (char*)vertex_shader_path_data.buffer;
 	vertex_shader = glCreateShader(GL_VERTEX_SHADER);
 	if (vertex_shader == 0) {
 		APP_LOG_ERROR("Error creating vertex shader %s", vertex_shader_file_name);
@@ -117,9 +123,11 @@ bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const char* vertex_s
 bool ModuleProgram::InitFragmentShader(GLuint &fragment_shader, const char* fragment_shader_file_name) const
 {
 	APP_LOG_INFO("Loading fragment shader");
-	size_t size;
-	char *fragment_shader_loaded_file = App->filesystem->Load(fragment_shader_file_name, size);
-	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
+
+	Path* fragment_shader_path = App->filesystem->GetPath(fragment_shader_file_name);
+	FileData fragment_shader_path_data = fragment_shader_path->GetFile()->Load();
+
+	char* fragment_shader_loaded_file = (char*)fragment_shader_path_data.buffer;	fragment_shader = glCreateShader(GL_FRAGMENT_SHADER);
 	if (fragment_shader == 0) {
 		OPENGL_LOG_ERROR("Error creating fragment shader %s", fragment_shader_file_name);
 		return false;
@@ -198,14 +206,15 @@ void ModuleProgram::BindUniformBlocks(GLuint shader_program) const
 }
 
 void ModuleProgram::LoadPrograms(const char* file_path)
-
 {
 	CleanUp();
 
 	InitUniformBuffer();
 
-	size_t readed_bytes;
-	char* shaders_file_data = App->filesystem->Load(file_path, readed_bytes);
+	Path* shaders_path = App->filesystem->GetPath(file_path);
+	FileData shaders_data = shaders_path->GetFile()->Load();
+
+	char* shaders_file_data = (char*)shaders_data.buffer;
 	std::string serialized_shaders = shaders_file_data;
 	free(shaders_file_data);
 

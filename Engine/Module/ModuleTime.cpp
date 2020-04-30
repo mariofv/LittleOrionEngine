@@ -1,10 +1,11 @@
 #include "ModuleTime.h"
 
 #include "EditorUI/EngineLog.h"
+#include "Filesystem/PathAtlas.h"
 #include "Helper/Timer.h"
 #include "Main/Application.h"
-#include "Main/Globals.h"
 #include "ModuleEditor.h"
+#include "ModuleScene.h"
 #include "ModuleScriptManager.h"
 #include "ModuleWindow.h"
 
@@ -116,7 +117,7 @@ void ModuleTime::Play()
 {
 	if (!game_time_clock->Started())
 	{
-		App->editor->SaveScene(TMP_SCENE_PATH);
+		App->scene->SaveTmpScene();
 		game_time_clock->Start();
 		frame_start_time = game_time_clock->Read();
 		App->scripts->InitScripts();
@@ -124,7 +125,7 @@ void ModuleTime::Play()
 	else
 	{
 		game_time_clock->Stop();
-		App->editor->OpenScene(TMP_SCENE_PATH);
+		App->scene->LoadScene();
 	}
 }
 

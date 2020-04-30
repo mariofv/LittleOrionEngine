@@ -1,4 +1,7 @@
 #include "ComponentCamera.h"
+
+#include "Helper/Utils.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleAI.h"
@@ -8,9 +11,11 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleWindow.h"
 
-#include "Helper/Utils.h"
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
+#include "ResourceManagement/Resources/Skybox.h"
 
 ComponentCamera::ComponentCamera() : Component(nullptr, ComponentType::CAMERA)
 {
@@ -123,6 +128,8 @@ void ComponentCamera::Save(Config& config) const
 	config.AddUInt((uint64_t)camera_clear_mode, "ClearMode");
 	config.AddColor(float4(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f), "ClearColor");
 	config.AddInt(depth, "Depth");
+
+	config.AddUInt(skybox_uuid, "Skybox");
 }
 
 void ComponentCamera::Load(const Config& config)
@@ -166,6 +173,9 @@ void ComponentCamera::Load(const Config& config)
 
 	depth = config.GetInt("Depth", 0);
 
+	skybox_uuid = config.GetUInt("Skybox", 0);
+	SetSkybox(skybox_uuid);
+
 	GenerateMatrices();
 }
 
@@ -205,9 +215,14 @@ void ComponentCamera::RecordFrame(float width, float height)
 			break;
 		case ComponentCamera::ClearMode::SKYBOX:
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-#if !GAME
-			App->cameras->skybox->Render(*this);
-#endif
+			if (skybox_uuid != 0)
+			{
+				camera_skybox->Render(*this);
+			}
+			else
+			{
+				App->cameras->world_skybox->Render(*this);
+			}
 			break;
 		default:
 			break;
@@ -539,6 +554,15 @@ ENGINE_API void ComponentCamera::SetOrthographicView()
 void ComponentCamera::SetClearMode(ComponentCamera::ClearMode clear_mode)
 {
 	camera_clear_mode = clear_mode;
+}
+
+void ComponentCamera::SetSkybox(uint32_t skybox_uuid)
+{
+	this->skybox_uuid = skybox_uuid;
+	if (skybox_uuid != 0)
+	{
+		camera_skybox = App->resources->Load<Skybox>(skybox_uuid);
+	}
 }
 
 void ComponentCamera::SetSpeedUp(bool is_speeding_up)

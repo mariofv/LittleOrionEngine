@@ -1,5 +1,7 @@
 #include "ComponentTransform2D.h"
+#include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleWindow.h"
 
 ComponentTransform2D::ComponentTransform2D() : Component(ComponentType::TRANSFORM2D)
 {
@@ -86,6 +88,12 @@ void ComponentTransform2D::Load(const Config& config)
 
 	width = config.GetFloat("Width", 10);
 	height = config.GetFloat("Height", 10);
+
+#if GAME
+	RescaleTransform();
+#endif
+
+
 	is_new = false;
 	OnTransformChange();
 }
@@ -97,7 +105,7 @@ void ComponentTransform2D::OnTransformChange()
 	GenerateGlobalModelMatrix();
 	CalculateRectMatrix(rect.Width(), rect.Height(), rect_matrix);
 
-	for (auto & child : owner->children)
+	for (const auto& child : owner->children)
 	{
 		child->transform_2d.OnTransformChange();
 	}
@@ -113,6 +121,23 @@ void ComponentTransform2D::GenerateGlobalModelMatrix()
 	{
 		global_matrix = owner->parent->transform_2d.global_matrix * model_matrix;
 	}
+}
+
+void ComponentTransform2D::RescaleTransform()
+{
+	float game_width = App->window->GetWidth();
+	float game_height = App->window->GetHeight();
+
+	//This values come from ImGui release/debug versions
+	///TODO: think a clever way of get this values
+	float scene_width = 1022.0f;
+	float scene_height = 597.0f;
+
+	width = width * game_width / scene_width;
+	height = height * game_height / scene_height;
+
+	position.x = position.x * game_width / scene_width;
+	position.y = position.y * game_height / scene_height;
 }
 
 void  ComponentTransform2D::SetSize(float new_width, float new_height)

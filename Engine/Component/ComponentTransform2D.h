@@ -27,6 +27,7 @@ public:
 	virtual void Load(const Config & config) override;
 
 	void GenerateGlobalModelMatrix();
+	void RescaleTransform();
 	void SetSize(float new_width, float new_height);
 	ENGINE_API void SetPosition(float x, float y);
 	ENGINE_API void SetPosition(float3* new_position);

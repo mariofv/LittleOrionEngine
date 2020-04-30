@@ -4,21 +4,17 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleResourceManager.h"
 
-Billboard::Billboard(const std::string& texture_path, float width, float height) : width(width), height(height)
-{
-	billboard_texture = App->resources->Load<Texture>(texture_path.c_str());
-	billboard_quad = App->resources->Load<Mesh>(PRIMITIVE_QUAD_PATH);
-}
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
-
-Billboard::~Billboard()
+Billboard::Billboard(CoreResource quad_sprite, float width, float height) : width(width), height(height)
 {
-	// TODO: Check if not deleting billboard_quad causes a memory leak.
+	billboard_texture = App->resources->Load<Texture>((uint32_t)quad_sprite);
+	billboard_quad = App->resources->Load<Mesh>((uint32_t)CoreResource::QUAD);
 }
 
 void Billboard::Render(const float3& position) const
 {
-	/*GLuint shader_program = App->program->GetShaderProgramId("Billboard");
+	GLuint shader_program = App->program->GetShaderProgramId("Billboard");
 	glUseProgram(shader_program);
 
 	glActiveTexture(GL_TEXTURE0);
@@ -32,6 +28,6 @@ void Billboard::Render(const float3& position) const
 	glDrawElements(GL_TRIANGLES, billboard_quad->indices.size(), GL_UNSIGNED_INT, 0);
 	glBindVertexArray(0);
 
-	glUseProgram(0);*/
+	glUseProgram(0);
 }
 

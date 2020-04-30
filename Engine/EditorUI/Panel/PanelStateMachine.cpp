@@ -1,13 +1,16 @@
 #include "PanelStateMachine.h"
 #include "Filesystem/File.h"
-#include <FontAwesome5/IconsFontAwesome5.h>
 
+#include "EditorUI/Helper/ImGuiHelper.h"
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleFileSystem.h"
 #include "ResourceManagement/Resources/StateMachine.h"
 
-#include "imgui_internal.h"
+#include <imgui_internal.h>
 #include <imgui_stdlib.h>
+#include <FontAwesome5/IconsFontAwesome5.h>
+
 PanelStateMachine::PanelStateMachine()
 {
 	opened = false;
@@ -27,10 +30,6 @@ PanelStateMachine::~PanelStateMachine()
 		links.erase(links.begin(), links.end());
 	}
 	ax::NodeEditor::DestroyEditor(editor_context);
-	if (state_machine != nullptr)
-	{
-		state_machine->Save();
-	}
 }
 
 void PanelStateMachine::Render()
@@ -94,7 +93,12 @@ void PanelStateMachine::RenderStates()
 
 		std::string clip_name = node->state->clip ? node->state->clip->name : "Clip";
 		ImGui::Button(clip_name.c_str());
-		DropAnimation(node->state);
+		uint32_t incoming_animation_uuid = ImGui::ResourceDropper<Animation>();
+		if (incoming_animation_uuid != 0)
+		{
+			state_machine->AddClipToState(node->state, incoming_animation_uuid);
+		}
+
 		if (node->state->clip)
 		{
 			ImGui::Checkbox("Loop", &node->state->clip->loop);
@@ -299,38 +303,19 @@ std::vector<LinkInfo*> PanelStateMachine::GetSelectedLinks()
 	return selected_links;
 }
 
-
-void PanelStateMachine::DropAnimation(std::shared_ptr<State> & state)
-{
-	if (ImGui::BeginDragDropTarget())
-	{
-		if (const ImGuiPayload * payload = ImGui::AcceptDragDropPayload("DND_File"))
-		{
-			assert(payload->DataSize == sizeof(File*));
-			File* incoming_file = *(File * *)payload->Data;
-			if (incoming_file->file_type == FileType::ANIMATION)
-			{
-				state_machine->AddClipToState(state, *incoming_file);
-			}
-		}
-		ImGui::EndDragDropTarget();
-	}
-}
-
 void PanelStateMachine::LeftPanel()
 {
 	if (ImGui::BeginChild("Details", ImVec2(300, 0)))
 	{
 		if (ImGui::Button("Save"))
 		{
-			state_machine->Save();
-			App->resources->Import(state_machine->exported_file, true);
-			*state_machine_cache = *state_machine;
+			App->resources->Save<StateMachine>(state_machine);
+			//TODO: Change this to be saved after eachtime user modifies anything, see PanelMaterial for reference
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("Load"))
 		{
-			OpenStateMachine(state_machine->exported_file);
+			OpenStateMachine(state_machine->GetUUID());
 		}
 		ImGui::Separator();
 		auto& links = GetSelectedLinks();
@@ -341,6 +326,13 @@ void PanelStateMachine::LeftPanel()
 			ImGui::Text("Interpolation time: ");
 			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(link->transition->interpolation_time)); ImGui::SameLine(); ImGui::Text("ms");
 			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Text("Conditions:");
+			ImGui::Checkbox("Exit time", &(link->transition->automatic));
+			if (link->transition->automatic)
+			{
+				ImGui::InputScalar("Priority", ImGuiDataType_U64, &(link->transition->priority));
+			}
 			ImGui::Text("Trigger Name:");
 			ImGui::InputText("###Trigger Name", &(link->transition->trigger));
 			ImGui::PopID();
@@ -349,17 +341,22 @@ void PanelStateMachine::LeftPanel()
 	ImGui::EndChild();
 	ImGui::SameLine(0.0f, 12.0f);
 }
-void PanelStateMachine::OpenStateMachine(const File & file)
+
+void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 {
 	nodes.clear();
 	links.clear();
-	state_machine = std::make_shared<StateMachine>(file.file_path);
-	state_machine->Load(file);
 
-	ImportOptions options;
-	Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(file), options);
-	state_machine_cache = App->resources->Load<StateMachine>(options.exported_file);
+	state_machine = App->resources->Load<StateMachine>(state_machine_uuid);
 
+	std::string original_file = App->resources->resource_DB->GetEntry(state_machine->GetUUID())->imported_file_path;
+	Path* state_machine_json_path = App->filesystem->GetPath(original_file);
+	FileData state_machine_data = state_machine_json_path->GetFile()->Load();
+
+	char* state_machine_data_buffer = (char*)state_machine_data.buffer;
+	std::string serialized_state_machine_string = std::string(state_machine_data_buffer, state_machine_data.size);
+
+	state_machine->Load(serialized_state_machine_string);
 	//Tranform form state machine to ui
 	for (auto & state : state_machine->states)
 	{

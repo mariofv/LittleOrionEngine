@@ -41,7 +41,7 @@ void ModuleLight::RenderDirectionalLight(const float3& mesh_position)
 {
 	SortClosestLights(mesh_position, ComponentLight::LightType::DIRECTIONAL_LIGHT);
 	current_number_directional_lights_rendered = 0;
-	int i = 0;
+	unsigned int i = 0;
 	while (current_number_directional_lights_rendered < MAX_DIRECTIONAL_LIGHTS_RENDERED && i < closest_lights.size())
 	{
 		ComponentLight* light = closest_lights[i].second;
@@ -63,7 +63,7 @@ void ModuleLight::RenderDirectionalLight(const float3& mesh_position)
 
 	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
 	size_t num_directional_lights_offset = App->program->uniform_buffer.lights_uniform_offset + 7 * sizeof(float);
-	glBufferSubData(GL_UNIFORM_BUFFER, num_directional_lights_offset, sizeof(float), &current_number_directional_lights_rendered);
+	glBufferSubData(GL_UNIFORM_BUFFER, num_directional_lights_offset, sizeof(int), &current_number_directional_lights_rendered);
 	glBindBuffer(GL_UNIFORM_BUFFER, 0);
 }
 
@@ -71,7 +71,7 @@ void ModuleLight::RenderSpotLights(const float3& mesh_position, GLuint program)
 {
 	SortClosestLights(mesh_position, ComponentLight::LightType::SPOT_LIGHT);
 	current_number_spot_lights_rendered = 0;
-	int i = 0;
+	unsigned int i = 0;
 	while (current_number_spot_lights_rendered < MAX_SPOT_LIGHTS_RENDERED && i < closest_lights.size())
 	{
 		ComponentLight* light = closest_lights[i].second;
@@ -99,7 +99,7 @@ void ModuleLight::RenderPointLights(const float3& mesh_position, GLuint program)
 {
 	SortClosestLights(mesh_position, ComponentLight::LightType::POINT_LIGHT);
 	current_number_point_lights_rendered = 0;
-	int i = 0;
+	unsigned int i = 0;
 	while (current_number_point_lights_rendered < MAX_POINT_LIGHTS_RENDERED && i < closest_lights.size())
 	{
 		ComponentLight* light = closest_lights[i].second;
@@ -129,7 +129,7 @@ ComponentLight* ModuleLight::CreateComponentLight()
 
 void ModuleLight::RemoveComponentLight(ComponentLight* light_to_remove)
 {
-	auto it = std::find(lights.begin(), lights.end(), light_to_remove);
+	auto& it = std::find(lights.begin(), lights.end(), light_to_remove);
 	if (it != lights.end())
 	{
 		delete *it;

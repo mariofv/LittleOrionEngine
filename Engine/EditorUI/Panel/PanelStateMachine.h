@@ -40,22 +40,19 @@ public:
 	void HandleInteraction();
 	void InteractionDelete();
 	void InteractionCreation();
-	void OpenStateMachine(const File & file);
+	void OpenStateMachine(uint32_t state_machine_uuid);
 
 	void RenderStates();
 	void LeftPanel();
 	void CreateNodeMenu();
 
 private:
-	void DropAnimation(std::shared_ptr<State>& state);
 	std::vector<NodeInfo*> GetSelectedNodes();
-
 	std::vector<LinkInfo*> GetSelectedLinks();
 
 private:
 	ax::NodeEditor::EditorContext* editor_context = nullptr;
 	std::shared_ptr<StateMachine> state_machine;
-	std::shared_ptr<StateMachine> state_machine_cache;
 	bool firstFrame = true;
 	uint64_t entry_hash = std::hash<std::string>{}("Entry");
 	uint64_t end_hash = std::hash<std::string>{}("End");
