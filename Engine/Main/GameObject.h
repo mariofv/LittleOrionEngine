@@ -26,9 +26,13 @@ public:
 	GameObject(const GameObject& gameobject_to_copy);
 	GameObject(GameObject&& gameobject_to_move) = default;
 
-	GameObject & operator=(const GameObject& gameobject_to_copy) = default;
-	GameObject & operator<<(const GameObject& gameobject_to_copy);
-	GameObject & operator=(GameObject&& gameobject_to_move) = default;
+	GameObject& operator=(const GameObject& gameobject_to_copy) = default;
+	GameObject& operator<<(const GameObject& gameobject_to_copy);
+	GameObject& operator=(GameObject&& gameobject_to_move) = default;
+
+	void Duplicate(const GameObject& gameobject_to_copy);
+
+	void SetTransform(GameObject* game_object);
 
 	ENGINE_API bool IsEnabled() const;
 	ENGINE_API void SetEnabled(bool able);
@@ -73,7 +77,10 @@ private:
 	Config SaveTransform2D() const;
 	void LoadTransforms(Config config);
 	void CreateTransforms();
-	void CopyComponents(const GameObject & gameobject_to_copy);
+	void CopyComponentsPrefabs(const GameObject & gameobject_to_copy);
+	void CopyComponents(const GameObject& gameobject_to_copy);
+	void RemoveComponentsCopying(const GameObject& gameobject_to_copy);
+
 
 public:
 	std::vector<Component*> components;

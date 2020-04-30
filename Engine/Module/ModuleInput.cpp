@@ -9,13 +9,14 @@
 #include "Filesystem/PathAtlas.h"
 
 #include "Main/Application.h"
-#include "ModuleWindow.h"
-#include "ModuleCamera.h"
-#include "ModuleEditor.h"
-#include "ModuleFileSystem.h"
-#include "ModuleRender.h"
-#include "ModuleScene.h"
-#include "ModuleUI.h"
+#include "Module/ModuleWindow.h"
+#include "Module/ModuleCamera.h"
+#include "Module/ModuleEditor.h"
+#include "Module/ModuleFileSystem.h"
+#include "Module/ModuleRender.h"
+#include "Module/ModuleScene.h"
+#include "Module/ModuleScriptManager.h"
+#include "Module/ModuleUI.h"
 
 #include <Brofiler/Brofiler.h>
 #include <GL/glew.h>
@@ -164,7 +165,15 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_WINDOWEVENT:
 			if (event.window.event == SDL_WINDOWEVENT_RESIZED || event.window.event == SDL_WINDOWEVENT_SIZE_CHANGED)
+			{
 				App->window->WindowResized(event.window.data1, event.window.data2);
+			}
+#if !GAME
+			if (event.window.event == SDL_WINDOWEVENT_EXPOSED)
+			{
+				App->scripts->CheckGameplayFolderStatus();
+			}
+#endif
 			break;
 
 		case SDL_MOUSEMOTION:
