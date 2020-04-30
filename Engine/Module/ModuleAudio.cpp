@@ -57,6 +57,7 @@ bool ModuleAudio::Init()
 	{
 		APP_LOG_ERROR("Unable to register the gameobject");
 	}
+	AK::SoundEngine::AddDefaultListener(main_sound_gameobject);
 	/*const char * pszEvent = "play_main";
 	eResult = AK::SoundEngine::PrepareEvent(AK::SoundEngine::Preparation_Load, &pszEvent, 1);
 	if (eResult != AK_Success)
