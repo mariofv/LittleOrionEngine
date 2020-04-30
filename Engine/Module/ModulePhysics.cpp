@@ -60,7 +60,7 @@ update_status ModulePhysics::Update()
 	for (auto collider : colliders) {
 		
 
-		if (App->time->isGameRunning())
+		if (App->time->isGameRunning() && collider->collider_type != ComponentCollider::ColliderType::MESH)
 		{
 			collider->MoveBody();
 		}
