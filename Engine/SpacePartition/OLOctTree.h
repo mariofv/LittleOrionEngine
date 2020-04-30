@@ -26,9 +26,9 @@ private:
 	void FindLeaves(const AABB &game_object, std::vector<OLOctTreeNode*> &leaves) const;
 
 private:
-	OLOctTreeNode *root = nullptr;
-	const size_t bucket_size = 3;
-	const size_t max_depth = 3;
+	OLOctTreeNode* root = nullptr;
+	int bucket_size = 3;
+	int max_depth = 3;
 
 
 	friend class PanelConfiguration;

@@ -710,12 +710,10 @@ void PanelConfiguration::ShowSpacePartitioningOptions()
 		if (ImGui::SliderInt("Quadtree Depth ", &App->space_partitioning->ol_quadtree->max_depth, 1, 10))
 		{
 			App->space_partitioning->GenerateQuadTree();
-			App->space_partitioning->GenerateOctTree();
 		}
 		if (ImGui::SliderInt("Quadtree bucket size ", &App->space_partitioning->ol_quadtree->bucket_size, 1, 10))
 		{
 			App->space_partitioning->GenerateQuadTree();
-			App->space_partitioning->GenerateOctTree();
 		}
 
 		if (ImGui::Button("Generate QuadTree"))
@@ -724,6 +722,16 @@ void PanelConfiguration::ShowSpacePartitioningOptions()
 		}
 
 		ImGui::Separator();
+
+		if (ImGui::SliderInt("OctTree Depth ", &App->space_partitioning->ol_octtree->max_depth, 1, 10))
+		{
+			App->space_partitioning->GenerateOctTree();
+		}
+		if (ImGui::SliderInt("OctTree bucket size ", &App->space_partitioning->ol_octtree->bucket_size, 1, 10))
+		{
+			App->space_partitioning->GenerateOctTree();
+		}
+
 		if (ImGui::Button("Generate OctTree"))
 		{
 			App->space_partitioning->GenerateOctTree();
