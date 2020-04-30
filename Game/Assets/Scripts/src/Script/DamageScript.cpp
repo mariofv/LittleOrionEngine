@@ -31,7 +31,7 @@ DamageScript::DamageScript()
 // Use this for initialization before Start()
 void DamageScript::Awake()
 {
-	health_component = (ComponentProgressBar*)health_bar->GetComponentUI(ComponentUI::UIType::PROGRESSBAR);
+	health_component = (ComponentProgressBar*)health_bar->GetComponent(ComponentUI::UIType::PROGRESSBAR);
 }
 
 // Use this for initialization

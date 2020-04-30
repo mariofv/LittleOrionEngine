@@ -686,17 +686,18 @@ void PanelConfiguration::ShowPhysicsOptions()
 {
 	ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAR));
 	if (ImGui::CollapsingHeader(ICON_FA_WINDOW_MAXIMIZE " Physics")) {
-		
-		if (ImGui::SliderFloat3("Gravity", &App->physics->gravity.x, -1000, 1000 ))
+
+		if (ImGui::SliderFloat3("Gravity", &App->physics->gravity.x, -1000, 1000))
 		{
 			App->physics->SetGravity(App->physics->GetGravity());
 		}
 		ImGui::Checkbox("Draw physics", &App->physics->show_physics);
-		
+
 		ImGui::Text("Consumption (ms)");
 		ImGui::PlotLines("Miliseconds", &App->physics->ms_info[0], App->physics->ms_info.size(), 0, nullptr, 0, 80);
 	}
 	ImGui::PopFont();
+}
 	
 void PanelConfiguration::ShowSpacePartitioningOptions()
 {
