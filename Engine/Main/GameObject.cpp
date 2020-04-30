@@ -10,6 +10,7 @@
 #include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleUI.h"
 #include "ResourceManagement/Resources/Texture.h"
@@ -86,7 +87,7 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 	children_to_remove.push_back(this);
 	if (!is_static)
 	{
-		App->renderer->RemoveAABBTree(this);
+		App->space_partitioning->RemoveAABBTree(this);
 	}
 
 	if (parent != nullptr)
@@ -134,8 +135,8 @@ void GameObject::SetEnabled(bool able)
 void GameObject::SetStatic(bool is_static)
 {
 	SetHierarchyStatic(is_static);
-	App->renderer->GenerateQuadTree(); // TODO: Check this. This could be called with ungenerated bounding boxes, resulting in a wrong quadtree.
-	App->renderer->GenerateOctTree();
+	App->space_partitioning->GenerateQuadTree(); // TODO: Check this. This could be called with ungenerated bounding boxes, resulting in a wrong quadtree.
+	App->space_partitioning->GenerateOctTree();
 }
 
 void GameObject::SetHierarchyStatic(bool is_static)
@@ -143,7 +144,7 @@ void GameObject::SetHierarchyStatic(bool is_static)
 	this->is_static = is_static;
 
 	//AABBTree
-	(is_static) ? App->renderer->RemoveAABBTree(this) : App->renderer->InsertAABBTree(this);
+	(is_static) ? App->space_partitioning->RemoveAABBTree(this) : App->space_partitioning->InsertAABBTree(this);
 	
 	for (const auto& child : children)
 	{

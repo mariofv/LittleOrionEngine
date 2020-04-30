@@ -6,16 +6,13 @@
 #include "Module.h"
 #include "Helper/Timer.h"
 #include "Main/Globals.h"
-#include "SpacePartition/OLAABBTree.h"
-#include "SpacePartition/OLOctTree.h"
-#include "SpacePartition/OLQuadTree.h"
 
+#include <MathGeoLib/Geometry/LineSegment.h>
 #include <GL/glew.h>
-
-const unsigned INITIAL_SIZE_AABBTREE = 10;
 
 class ComponentCamera;
 class ComponentMeshRenderer;
+class GameObject;
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -47,15 +44,6 @@ public:
 	ENGINE_API int GetRenderedTris() const;
 	ENGINE_API int GetRenderedVerts() const;
 
-	void GenerateQuadTree();
-	void GenerateOctTree();
-	void InsertAABBTree(GameObject* game_object);
-	void RemoveAABBTree(GameObject* game_object);
-	void UpdateAABBTree(GameObject* game_object);
-	void DeleteAABBTree();
-	void CreateAABBTree();
-	void DrawAABBTree() const;
-
 	GameObject* GetRaycastIntertectedObject(const LineSegment& ray);
 	bool GetRaycastIntertectedObject(const LineSegment& ray, float3& position);
 
@@ -76,17 +64,13 @@ private:
 	std::string GetDrawMode() const;
 
 	void GetMeshesToRender(const ComponentCamera* camera);
-	void GetCullingMeshes(const ComponentCamera* camera);
+
 
 public:
 	bool anti_aliasing = false;
 
 private:
 	void* context = nullptr;
-
-	OLQuadTree ol_quadtree;
-	OLOctTree ol_octtree;
-	OLAABBTree* ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
 
 
 	bool vsync = false;
@@ -112,8 +96,8 @@ private:
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;
+	friend class ModuleSpacePartitioning;
 	friend class PanelConfiguration;
-	friend class PanelDebug;
 	friend class PanelScene;
 	friend class NavMesh;
 };

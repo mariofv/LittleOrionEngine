@@ -15,8 +15,9 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleRender.h"
-#include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScene.h"
+#include "Module/ModuleSpacePartitioning.h"
 
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/Prefab.h"
@@ -241,7 +242,7 @@ void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 
 		if(created_game_object != nullptr)
 		{
-			App->renderer->InsertAABBTree(created_game_object);
+			App->space_partitioning->InsertAABBTree(created_game_object);
 		}
 
 		ImGui::EndMenu();
