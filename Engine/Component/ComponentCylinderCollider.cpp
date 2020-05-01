@@ -15,6 +15,28 @@ ComponentCylinderCollider::ComponentCylinderCollider(GameObject* owner) : Compon
 	AddBody();
 }
 
+Component* ComponentCylinderCollider::Clone(GameObject* owner, bool original_prefab) const
+{
+	ComponentCylinderCollider* created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentCylinderCollider();
+	}
+	else
+	{
+		created_component = static_cast<ComponentCylinderCollider*> (App->physics->CreateComponentCollider(collider_type, owner));
+	}
+	*created_component = *this;
+	return created_component;
+}
+
+ComponentCylinderCollider& ComponentCylinderCollider::operator=(const ComponentCylinderCollider& component_to_copy)
+{
+	col_shape = component_to_copy.col_shape;
+	CommonAssign(component_to_copy);
+	return *this;
+}
+
 void ComponentCylinderCollider::UpdateDimensions()
 {
 	UpdateCommonDimensions();

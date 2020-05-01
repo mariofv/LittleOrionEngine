@@ -18,13 +18,25 @@ ComponentCollider::ComponentCollider(GameObject* owner, ColliderType collider_ty
 	}
 }
 
-Component* ComponentCollider::Clone(bool original_prefab) const
-{
-	return nullptr;
-}
 
 void ComponentCollider::Copy(Component* component_to_copy) const
-{}
+{
+	*component_to_copy = *this;
+	*static_cast<ComponentCollider*>(component_to_copy) = *this;
+}
+
+
+void ComponentCollider::CommonAssign(const ComponentCollider& component_to_copy)
+{
+	mass = component_to_copy.mass;
+	scale = component_to_copy.scale;
+	box_size = component_to_copy.box_size;
+	visualize = component_to_copy.visualize;
+	detectCollision = component_to_copy.detectCollision;
+	is_attached = component_to_copy.is_attached;
+	is_static = component_to_copy.is_static;
+	AddBody();
+}
 
 void ComponentCollider::Delete()
 {
@@ -115,7 +127,6 @@ void ComponentCollider::UpdateCommonDimensions()
 	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x , global_rotation.y , global_rotation.z , global_rotation.w ), btVector3(global_translation.x, global_translation.y, global_translation.z)));
 	body->setMotionState(motion_state);
 
-	rotation = global_rotation;
 	if (is_attached)
 	{
 		deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
@@ -220,4 +231,9 @@ void ComponentCollider::SetStatic()
 		flags -= body->CF_STATIC_OBJECT;
 		body->setCollisionFlags(flags);
 	}
+}
+
+void ComponentCollider::AddForce(float3& force)
+{
+	body->applyCentralForce(btVector3(force.x, force.y, force.z));
 }

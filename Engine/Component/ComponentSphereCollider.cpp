@@ -15,6 +15,28 @@ ComponentSphereCollider::ComponentSphereCollider(GameObject* owner) : ComponentC
 	AddBody();
 }
 
+Component* ComponentSphereCollider::Clone(GameObject* owner, bool original_prefab) const
+{
+	ComponentSphereCollider* created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentSphereCollider();
+	}
+	else
+	{
+		created_component = static_cast<ComponentSphereCollider*> (App->physics->CreateComponentCollider(collider_type, owner));
+	}
+	*created_component = *this;
+	return created_component;
+}
+
+ComponentSphereCollider& ComponentSphereCollider::operator=(const ComponentSphereCollider& component_to_copy)
+{
+	col_shape = component_to_copy.col_shape;
+	CommonAssign(component_to_copy);
+	return *this;
+}
+
 void ComponentSphereCollider::UpdateDimensions()
 {
 	UpdateCommonDimensions();

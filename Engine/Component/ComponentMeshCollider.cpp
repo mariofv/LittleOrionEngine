@@ -1,6 +1,9 @@
 #include "ComponentMeshCollider.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModulePhysics.h"
+
 
 ComponentMeshCollider::ComponentMeshCollider() : ComponentCollider(ComponentCollider::ColliderType::MESH)
 {
@@ -30,6 +33,30 @@ ComponentMeshCollider::ComponentMeshCollider(GameObject* owner) : ComponentColli
 	}
 	CreateMeshBody();
 	AddBody();
+}
+
+Component* ComponentMeshCollider::Clone(GameObject* owner, bool original_prefab) const
+{
+	ComponentMeshCollider* created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentMeshCollider();
+	}
+	else
+	{
+		created_component = static_cast<ComponentMeshCollider*> (App->physics->CreateComponentCollider(collider_type, owner));
+	}
+	*created_component = *this;
+	return created_component;
+}
+
+ComponentMeshCollider& ComponentMeshCollider::operator=(const ComponentMeshCollider& component_to_copy)
+{
+	vertices = component_to_copy.vertices;
+	indices = component_to_copy.indices;
+	col_shape = component_to_copy.col_shape;
+	CommonAssign(component_to_copy);
+	return *this;
 }
 
 void ComponentMeshCollider::UpdateDimensions()
@@ -77,6 +104,6 @@ void ComponentMeshCollider::InitData()
 void ComponentMeshCollider::CreateMeshBody()
 {
 	btTriangleIndexVertexArray* vertex_array = new btTriangleIndexVertexArray(indices.size() / 3, indices.data(), static_cast <int>(3 * sizeof(int)), static_cast<int>(vertices.size()), vertices.data(), static_cast <int>(3 * sizeof(float)));
-	col_shape = new btBvhTriangleMeshShape(vertex_array, true);
+	col_shape = new btBvhTriangleMeshShape(vertex_array, false);
 }
 

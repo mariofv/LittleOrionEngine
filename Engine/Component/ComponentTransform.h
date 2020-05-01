@@ -12,19 +12,19 @@ class ComponentTransform : public Component
 {
 public:
 	ComponentTransform();
-	ComponentTransform(GameObject * owner);
-	ComponentTransform(GameObject * owner,const float3 translation, const Quat rotation, const float3 scale);
+	ComponentTransform(GameObject* owner);
+	ComponentTransform(GameObject* owner,const float3 translation, const Quat rotation, const float3 scale);
 
 	//Copy and move
 	ComponentTransform(const ComponentTransform& component_to_copy) = default;
 	ComponentTransform(ComponentTransform&& component_to_move) = default;
 
-	ComponentTransform & operator=(const ComponentTransform & component_to_copy);
-	ComponentTransform & operator=(ComponentTransform && component_to_move) = default;
+	ComponentTransform& operator=(const ComponentTransform& component_to_copy);
+	ComponentTransform& operator=(ComponentTransform&& component_to_move) = default;
 
 
 	Component* Clone(bool create_on_module = true) const override;
-	void Copy(Component * component_to_copy) const override;
+	void Copy(Component* component_to_copy) const override;
 
 	~ComponentTransform() = default;
 

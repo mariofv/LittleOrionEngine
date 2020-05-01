@@ -9,7 +9,7 @@ ComponentTransform::ComponentTransform() : Component(ComponentType::TRANSFORM)
 {
 }
 
-ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM)
+ComponentTransform::ComponentTransform(GameObject* owner) : Component(owner, ComponentType::TRANSFORM)
 {
 	OnTransformChange();
 }
@@ -23,13 +23,13 @@ ComponentTransform::ComponentTransform(GameObject* owner, const float3 translati
 	OnTransformChange();
 }
 
-void ComponentTransform::Copy(Component * component_to_copy) const
+void ComponentTransform::Copy(Component* component_to_copy) const
 { 
 	*component_to_copy = *this;
 	*static_cast<ComponentTransform*>(component_to_copy) = *this; 
 };
 
-ComponentTransform & ComponentTransform::operator=(const ComponentTransform & component_to_copy)
+ComponentTransform & ComponentTransform::operator=(const ComponentTransform& component_to_copy)
 {
 	this->translation = component_to_copy.translation;
 	this->rotation = component_to_copy.rotation;

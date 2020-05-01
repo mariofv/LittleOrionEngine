@@ -12,6 +12,9 @@ public:
 	ComponentCylinderCollider(GameObject* owner);
 	~ComponentCylinderCollider() = default;
 
+	Component* Clone(GameObject* owner, bool original_prefab = false) const;
+	ComponentCylinderCollider& operator=(const ComponentCylinderCollider& component_to_copy);
+
 	void UpdateDimensions();
 	void Scale();
 };

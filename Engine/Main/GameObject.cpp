@@ -617,14 +617,20 @@ void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 		component->modified_by_user = false;
 		//Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
 		Component* copy = nullptr;
-		if(component->type != Component::ComponentType::SCRIPT)
-		{
-			copy = component->Clone(this->original_prefab);
-		}
-		else
+		if(component->type == Component::ComponentType::SCRIPT)
 		{
 			copy = new ComponentScript(this, static_cast<ComponentScript*>(component)->name);
 			static_cast<ComponentScript*>(copy)->name = static_cast<ComponentScript*>(component)->name;
+			
+		}
+		if (component->type == Component::ComponentType::COLLIDER)
+		{
+			copy = component->Clone(this, this->original_prefab);
+
+		}
+		else
+		{
+			copy = component->Clone(this->original_prefab);
 		}
 		copy->owner = this;
 		this->components.push_back(copy);
