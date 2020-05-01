@@ -92,6 +92,11 @@ void ComponentAnimation::ActiveAnimation(const std::string & trigger)
 	animation_controller->StartNextState(trigger);
 }
 
+ENGINE_API bool ComponentAnimation::IsOnState(const std::string& trigger)
+{
+	return animation_controller->IsOnState(trigger);
+}
+
 
 void ComponentAnimation::Update()
 {
