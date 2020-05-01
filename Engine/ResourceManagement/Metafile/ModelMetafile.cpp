@@ -13,6 +13,8 @@ void ModelMetafile::Save(Config& config) const
 	config.AddBool(import_animation, "ImportAnimation");
 	config.AddBool(import_material, "ImportMaterial");
 
+	config.AddBool(complex_skeleton, "ComplexSkeleton");
+
 }
 
 void ModelMetafile::Load(const Config& config)
@@ -27,4 +29,6 @@ void ModelMetafile::Load(const Config& config)
 	import_rig = config.GetBool("ImportRig",true);
 	import_animation = config.GetBool("ImportAnimation", true);
 	import_material = config.GetBool( "ImportMaterial", true);
+
+	complex_skeleton = config.GetBool("ComplexSkeleton", false);
 }

@@ -73,6 +73,11 @@ void PanelMetaFile::ShowModelMetaFile(ModelMetafile * metafile)
 	ImGui::Checkbox("Import Meshes",&metafile->import_mesh);
 	ImGui::Checkbox("Import Animations", &metafile->import_animation);
 	ImGui::Checkbox("Import Rigging", &metafile->import_rig);
+	if (metafile->import_rig)
+	{
+		ImGui::SameLine();
+		ImGui::Checkbox("Complex Rigging", &metafile->complex_skeleton);
+	}
 	ImGui::Checkbox("Import Materials", &metafile->import_material);
 }
 

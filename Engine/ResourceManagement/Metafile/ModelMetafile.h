@@ -22,6 +22,9 @@ public:
 	bool import_animation = true;
 	bool import_material = true;
 
+	//Skeleton
+	bool complex_skeleton = false;
+
 
 };
 #endif // _MODELMETAFILE_H_

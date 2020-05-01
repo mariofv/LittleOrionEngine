@@ -201,7 +201,7 @@ uint32_t ModelImporter::ExtractSkeletonFromNode(const aiMesh* asssimp_mesh, std:
 	}
 	else
 	{
-		FileData skeleton_data = App->resources->skeleton_importer->ExtractSkeletonFromAssimp(current_model_data.scene, asssimp_mesh, current_model_data.scale);
+		FileData skeleton_data = App->resources->skeleton_importer->ExtractSkeletonFromAssimp(current_model_data.scene, asssimp_mesh, current_model_data.scale, current_model_data.model_metafile->complex_skeleton);
 		skeleton_uuid = App->resources->CreateFromData(skeleton_data, *current_model_data.asset_file_folder_path, mesh_name + "_skeleton.sk");
 
 		if (skeleton_uuid != 0)
