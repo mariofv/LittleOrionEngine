@@ -1,5 +1,6 @@
 #include "PlayerMovement.h"
 
+#include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 
@@ -31,6 +32,7 @@ PlayerMovement::PlayerMovement()
 void PlayerMovement::Awake()
 {
 
+	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
 }
 
 // Use this for initialization
@@ -82,7 +84,7 @@ void PlayerMovement::Move(int player_id)
 	}
 
 	//Keyboard Input
-	float3 new_transform = transform;
+	float3 new_transform = float3(0.0F, 0.0F, 0.0F);
 
 	//EXAMPLE USING PLAYER INPUT (JUST MOVE)
 	if (App->input->GetKey(KeyCode::D))
@@ -101,26 +103,11 @@ void PlayerMovement::Move(int player_id)
 	{
 		new_transform += float3(-speed, 0.0f, 0.0f);
 	}
-
-	if (!new_transform.Equals(transform))
+	if (App->input->GetKeyDown(KeyCode::Space))
 	{
-		float3 dir;
-		bool there_is_poly = App->artificial_intelligence->FindNextPolyByDirection(new_transform, dir);
-		
-		if (there_is_poly)
-		{
-			new_transform.y = dir.y;
-		}
-
-
-		owner->transform.LookAt(new_transform);
-		
-
-		if (App->artificial_intelligence->IsPointWalkable(new_transform)) 
-		{
-			owner->transform.SetTranslation(new_transform);
-		}
+		collider->AddForce(new_transform);
 	}
+	collider->AddForce(new_transform);
 }
 
 void PlayerMovement::Fall()

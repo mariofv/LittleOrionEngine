@@ -50,7 +50,7 @@ update_status ModulePhysics::Update()
 	ms = physics_timer->Read();
 		
 	//update the world
-	world->stepSimulation(App->time->delta_time);
+	world->stepSimulation(App->time->delta_time, 2);
 
 	if (show_physics)
 	{

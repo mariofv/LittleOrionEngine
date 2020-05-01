@@ -58,7 +58,7 @@ public:
 	float ms = 0;
 	std::vector<float> ms_info;
 	std::vector<ComponentCollider*> colliders;
-	math::float3 gravity = float3(0.0f, -100.0f, 0.0f); //gravity world
+	math::float3 gravity = float3(0.0f, -10.0f, 0.0f); //gravity world
 
 private:
 
