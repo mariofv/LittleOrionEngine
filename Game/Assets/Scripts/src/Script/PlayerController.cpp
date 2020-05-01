@@ -12,6 +12,7 @@
 
 #include "imgui.h"
 
+#include "PlayerAttack.h"
 #include "PlayerMovement.h"
 
 PlayerController* PlayerControllerDLL()
@@ -30,6 +31,9 @@ void PlayerController::Awake()
 {
 	ComponentScript* component = owner->GetComponentScript("PlayerMovement");
 	player_movement = (PlayerMovement*)component->script;
+
+	ComponentScript* component_attack = owner->GetComponentScript("PlayerAttack");
+	player_attack = (PlayerAttack*)component_attack->script;
 }
 
 // Use this for initialization
@@ -41,14 +45,12 @@ void PlayerController::Start()
 // Update is called once per frame
 void PlayerController::Update()
 {
-	if(!on_gravity)
+
+	bool is_attacking = player_attack->Attack();
+	
+	if(!is_attacking)
 	{
 		player_movement->Move(player);
-	}
-	else
-	{
-		//Fall
-		player_movement->Fall();
 	}
 
 }
