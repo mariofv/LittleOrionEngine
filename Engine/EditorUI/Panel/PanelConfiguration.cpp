@@ -636,6 +636,12 @@ void PanelConfiguration::ShowInputOptions()
 				ImGui::Text("KeyCodes:");
 				for(const auto& key : game_input.second.keys)
 				{
+					
+					if((uint64_t)key > 286)
+					{
+						continue;
+					}
+
 					int aux = static_cast<int>(key);
 					if (aux > FIRST_OFFSET_COND)
 						aux -= FIRST_OFFSET;
@@ -652,15 +658,26 @@ void PanelConfiguration::ShowInputOptions()
 				ImGui::Text("MouseCodes:");
 				for (auto& mouse : game_input.second.mouse_buttons)
 				{
+					if ((uint64_t)mouse > 6)
+					{
+						continue;
+					}
+
 					ImGui::Text("	%s", mouse_keys_string[(int)mouse]);
 				}
 				ImGui::Text("ControllerCodes:");
 				for (const auto& controller_key : game_input.second.controller_buttons)
 				{
+					if ((uint64_t)controller_key > 6)
+					{
+						continue;
+					}
+
 					ImGui::Text("	%s", controller_keys_string[(int)controller_key]);
 				}
 				
-				if(ImGui::Button("Delete GameInput"))
+				
+				if(ImGui::Button("Delete GameInputs"))
 				{
 					App->input->DeleteGameInput(game_input.second);
 				}

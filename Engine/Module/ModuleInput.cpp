@@ -357,19 +357,25 @@ ENGINE_API bool ModuleInput::GetGameInputDown(const char* name, PlayerID player_
 	for (auto& key : button.keys)
 	{
 		if (GetKeyDown(key))
+		{
 			return true;
+		}
 	}
 
 	for (auto& mouse : button.mouse_buttons)
 	{
 		if (GetMouseButtonDown(mouse))
+		{
 			return true;
+		}
 	}
 
 	for (auto& controller : button.controller_buttons)
 	{
 		if (GetControllerButtonDown(controller, player_id))
+		{
 			return true;
+		}
 	}
 
 	return false;

@@ -344,27 +344,47 @@ struct GameInput
 	{
 		config.AddString(name, "Name");
 		//KeyCodes
-		config.AddUInt(keys.size(), "SizeKeys");
+		unsigned real_size_keys = 0;
+		unsigned real_size_mouse = 0;
+		unsigned real_size_controller = 0;
+
 		for(unsigned int i = 0; i < keys.size(); ++i)
 		{
+			if((uint64_t)keys[i] > 286)
+			{		
+				continue;
+			}
 			std::string name_k("k" + std::to_string(i));
-			
 			config.AddUInt((uint64_t)keys[i], name_k);
+			++real_size_keys;
 		}
+		config.AddUInt(real_size_keys, "SizeKeys");
+
 		//MouseButtons
-		config.AddUInt(mouse_buttons.size(), "SizeMouse");
 		for (unsigned int j = 0; j < mouse_buttons.size(); ++j)
 		{
+			if ((uint64_t)mouse_buttons[j] > 6)
+			{
+				continue;
+			}
 			std::string name_m("m" + std::to_string(j));
 			config.AddUInt((uint64_t)mouse_buttons[j], name_m);
+			++real_size_mouse;
 		}
+		config.AddUInt(real_size_mouse, "SizeMouse");
+
 		//ControllerCodes
-		config.AddUInt(controller_buttons.size(), "SizeController");
 		for (unsigned int k = 0; k < controller_buttons.size(); ++k)
 		{
+			if ((uint64_t)controller_buttons[k] > 16)
+			{
+				continue;
+			}
 			std::string name_c("c" + std::to_string(k));
 			config.AddUInt((uint64_t)controller_buttons[k], name_c);
+			++real_size_controller;
 		}
+		config.AddUInt(real_size_controller, "SizeController");
 	}
 
 	void Load(Config &config)
