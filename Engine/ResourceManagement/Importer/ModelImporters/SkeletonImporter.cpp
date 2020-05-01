@@ -27,7 +27,7 @@ FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const
 		{
 			bone = bone->mParent;
 		}
-		ImportChildBone(bone, -1, bone->mTransformation, bone->mTransformation, imported_skeleton, unit_scale_factor);
+		ImportChildBone(bone, -1, bone->mTransformation, aiMatrix4x4(), imported_skeleton, unit_scale_factor);
 	}
 	if (imported_skeleton.skeleton.size() > 0)
 	{
