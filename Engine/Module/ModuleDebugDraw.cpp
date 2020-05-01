@@ -465,7 +465,7 @@ void ModuleDebugDraw::Render()
 		grid->ScaleOnDistance(scene_camera_height);
 		grid->Render();
 	}
-	if (App->renderer->meshes_to_render.size() != 0 && App->debug->show_axis) 
+	if (App->debug->show_axis && App->renderer->meshes_to_render.size() != 0 )
 	{
 		RenderTangentsAndBitangents();
 	}
@@ -481,7 +481,7 @@ void ModuleDebugDraw::RenderTangentsAndBitangents() const
 	for (auto& mesh : App->renderer->meshes_to_render)
 	{
 		
-		for (int i = 0; i < 30; ++i)
+		for (unsigned int i = 0; i < 30; ++i)
 		{
 			float4 normal = float4(mesh->mesh_to_render->vertices[i].normals, 0.0F);
 			float4 tangent = float4(mesh->mesh_to_render->vertices[i].tangent, 0.0F);

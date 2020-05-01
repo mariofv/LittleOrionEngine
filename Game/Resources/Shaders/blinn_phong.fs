@@ -153,7 +153,7 @@ void main()
 		for (int i = 0; i < directional_light.num_directional_lights; ++i)
 		{
 			result += CalculateDirectionalLight(normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
-
+			
 		}
 
 		for (int i = 0; i < num_spot_lights; ++i)
@@ -168,7 +168,7 @@ void main()
 	}
 
 	
-
+	result += emissive_color;
 	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
 	
@@ -180,7 +180,13 @@ void main()
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 {
 	
-	return texture(mat.diffuse_map, texCoord)*mat.diffuse_color;
+	vec4 result = texture(mat.diffuse_map, texCoord)*mat.diffuse_color;
+	//alpha testing
+	if(result.a <0.1)
+	{
+		discard;
+	}
+	return result;
 }
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
@@ -220,7 +226,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	
 
 	return directional_light.color * (
-		emissive_color
+		
 		+ diffuse_color.rgb * (occlusion_color*material.k_ambient)
 		+ ComputeDiffuseColor(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse
 		+ specular_color.rgb * specular
@@ -249,7 +255,7 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
                 spot_light.quadratic * (distance * distance));    
 
    return spot_light.color * (
-        emissive_color
+      
         + diffuse_color.rgb * (occlusion_color*material.k_ambient)*attenuation
         + ComputeDiffuseColor(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse*intensity*attenuation
         + specular_color.rgb * specular *intensity*attenuation
@@ -278,7 +284,7 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
     		    point_light.quadratic * (distance));    
 
 	return point_light.color * (
-		emissive_color
+	
 		+  diffuse_color.rgb * (occlusion_color*material.k_ambient)*attenuation
 		+ ComputeDiffuseColor(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse* attenuation
 		+ specular_color.rgb * specular * attenuation

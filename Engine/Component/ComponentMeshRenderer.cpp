@@ -3,13 +3,14 @@
 #include "ComponentAnimation.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
-#include "Module/ModuleTexture.h"
 #include "Module/ModuleScene.h"
-#include "Module/ModuleDebugDraw.h"
+#include "Module/ModuleTexture.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
@@ -64,8 +65,8 @@ void ComponentMeshRenderer::Render()
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		/*glBlendFunc(GL_ONE, GL_ONE); TODO -> FIX THIS
-		glBlendEquation(GL_FUNC_ADD);*/
+		/*glBlendFunc(GL_ONE, GL_ONE); TODO -> FIX THISÇ*/
+		glBlendEquation(GL_FUNC_ADD);
 	}
 	if (material_to_render == nullptr)
 	{
@@ -165,22 +166,6 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 	BindTexture(Material::MaterialTextureType::NORMAL);
 	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
 	glUniform1i(glGetUniformLocation(shader_program, "material.use_normal_map"), material_to_render->use_normal_map);
-	//bool texture_normal = BindTextureNormal(Material::MaterialTextureType::NORMAL);
-	//if (texture_normal)
-	//{
-	//    unsigned index = glGetSubroutineIndex(shader_program, GL_FRAGMENT_SHADER,"ComputeMaterialWithNormalMap");
-	//    unsigned indices[1]; // NUMBER_SUBROUTINES == 1 in our example
-	//    unsigned location = glGetSubroutineUniformLocation(shader_program, GL_FRAGMENT_SHADER,"NormalSoubroutine");
-	//    indices[index] = location;
-	//    glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, indices);
-	//}
-	//else {
-	//    GLint index = glGetSubroutineIndex(shader_program, GL_FRAGMENT_SHADER, "ComputeMaterialWithoutNormalMap"); 
-	//    unsigned indices[1]; 
-	//    unsigned location = glGetSubroutineUniformLocation(shader_program, GL_FRAGMENT_SHADER, "NormalSoubroutine");
-	//    indices[index] = location;
-	//    glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, indices);
-	//}
 }
 
 void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const

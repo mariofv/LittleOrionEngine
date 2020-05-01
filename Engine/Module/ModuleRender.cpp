@@ -109,6 +109,7 @@ bool ModuleRender::Init()
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -205,7 +206,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	App->debug->rendering_time = rendering_measure_timer->Read();
 }
 
-void ModuleRender::GetMeshesToRender(const ComponentCamera *camera)
+void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)
 {
 	BROFILER_CATEGORY("Get meshes to render", Profiler::Color::Aquamarine);
 
@@ -225,7 +226,7 @@ void ModuleRender::SetListOfMeshesToRender(const ComponentCamera *camera)
 	opaque_mesh_to_render.clear();
 	transparent_mesh_to_render.clear();
 	float3 camera_pos = camera->camera_frustum.pos;
-	for (int i = 0; i < meshes_to_render.size(); i++)
+	for (unsigned int i = 0; i < meshes_to_render.size(); i++)
 	{
 		if (meshes_to_render[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
 		{
