@@ -196,7 +196,6 @@ void PanelPopupSceneSaver::SetPopupSelection()
 	has_selected = true;
 	ImGui::CloseCurrentPopup();
 	pending_to_be_closed = true;
-	is_overwriting = true;
 }
 
 void PanelPopupSceneSaver::ConfirmationPopup()
@@ -206,6 +205,7 @@ void PanelPopupSceneSaver::ConfirmationPopup()
 		ImGui::Text("File already exists. Confirm?");
 		if (ImGui::Button("ok"))
 		{
+			is_overwriting = true;
 			SetPopupSelection();
 		}
 		ImGui::SameLine();
