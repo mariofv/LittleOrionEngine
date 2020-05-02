@@ -8,7 +8,7 @@
 #include "Module/ModuleScene.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
-#include "imgui.h"
+#include "imgui.h"
 
 
 PlayerAttack* PlayerAttackDLL()
