@@ -595,7 +595,7 @@ void PanelConfiguration::ShowInputOptions()
 
 			if(ImGui::Button("Create Game Input"))
 			{
-				GameInput game_input;
+				GameInput game_input = GameInput();
 				game_input.name = name_game_input;
 				int i = 0;
 				for(const auto key : keys)
@@ -637,7 +637,7 @@ void PanelConfiguration::ShowInputOptions()
 				for(const auto& key : game_input.second.keys)
 				{
 					
-					if((uint64_t)key > 286)
+					if((uint64_t)key <= 0)
 					{
 						continue;
 					}
@@ -658,7 +658,7 @@ void PanelConfiguration::ShowInputOptions()
 				ImGui::Text("MouseCodes:");
 				for (auto& mouse : game_input.second.mouse_buttons)
 				{
-					if ((uint64_t)mouse > 6)
+					if ((uint64_t)mouse <= 0)
 					{
 						continue;
 					}
@@ -668,7 +668,7 @@ void PanelConfiguration::ShowInputOptions()
 				ImGui::Text("ControllerCodes:");
 				for (const auto& controller_key : game_input.second.controller_buttons)
 				{
-					if ((uint64_t)controller_key > 6)
+					if ((uint64_t)controller_key > 17)
 					{
 						continue;
 					}

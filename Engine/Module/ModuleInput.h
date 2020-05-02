@@ -288,6 +288,7 @@ enum class KeyCode : short
 
 enum class MouseButton : Uint8
 {
+	None = 0,
 	Left = SDL_BUTTON_LEFT,
 	Middle = SDL_BUTTON_MIDDLE,
 	Right = SDL_BUTTON_RIGHT,
@@ -340,6 +341,16 @@ struct GameInput
 	std::array<MouseButton, 8> mouse_buttons;
 	std::array<ControllerCode, 8> controller_buttons;
 
+	GameInput::GameInput() 
+	{
+		for(size_t i = 0; i < 8; ++i)
+		{
+			keys[i] = KeyCode::None;
+			mouse_buttons[i] = MouseButton::None;
+			controller_buttons[i] = ControllerCode::Invalid;
+		}
+	}
+
 	void Save(Config &config)
 	{
 		config.AddString(name, "Name");
@@ -350,7 +361,7 @@ struct GameInput
 
 		for(unsigned int i = 0; i < keys.size(); ++i)
 		{
-			if((uint64_t)keys[i] > 286)
+			if((uint64_t)keys[i] <= 0)
 			{		
 				continue;
 			}
@@ -363,7 +374,7 @@ struct GameInput
 		//MouseButtons
 		for (unsigned int j = 0; j < mouse_buttons.size(); ++j)
 		{
-			if ((uint64_t)mouse_buttons[j] > 6)
+			if ((uint64_t)mouse_buttons[j] <= 0)
 			{
 				continue;
 			}
@@ -376,7 +387,7 @@ struct GameInput
 		//ControllerCodes
 		for (unsigned int k = 0; k < controller_buttons.size(); ++k)
 		{
-			if ((uint64_t)controller_buttons[k] > 16)
+			if ((uint64_t)controller_buttons[k] > 17)
 			{
 				continue;
 			}

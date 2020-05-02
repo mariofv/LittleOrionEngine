@@ -112,17 +112,17 @@ update_status ModuleInput::PreUpdate()
 	mouse_motion = { 0, 0 };
 	mouse_wheel_motion = 0;
 
-	for (int i = 0; i < MAX_PLAYERS; ++i)
-	{
-		left_joystick[i] = float2(0, 0);
-		right_joystick[i] = float2(0, 0);
-		left_controller_trigger[i] = 0;
-		right_controller_trigger[i] = 0;
-		left_joystick_raw[i] = float2(0, 0);
-		right_joystick_raw[i] = float2(0, 0);
-		left_controller_trigger_raw[i] = 0;
-		right_controller_trigger_raw[i] = 0;
-	}
+	//for (int i = 0; i < MAX_PLAYERS; ++i)
+	//{
+	//	left_joystick[i] = float2(0, 0);
+	//	right_joystick[i] = float2(0, 0);
+	//	left_controller_trigger[i] = 0;
+	//	right_controller_trigger[i] = 0;
+	//	left_joystick_raw[i] = float2(0, 0);
+	//	right_joystick_raw[i] = float2(0, 0);
+	//	left_controller_trigger_raw[i] = 0;
+	//	right_controller_trigger_raw[i] = 0;
+	//}
 
 	for (auto& mouse : mouse_bible)
 	{
@@ -276,6 +276,7 @@ bool ModuleInput::CleanUp()
 // Returns true while the user holds down the key identified by name
 ENGINE_API bool ModuleInput::GetKey(KeyCode key)
 {
+	BROFILER_CATEGORY("Get Key", Profiler::Color::Lavender);
 	//If map[x] does not find x it will add the default value
 	return key_bible[key] == KeyState::REPEAT;
 }

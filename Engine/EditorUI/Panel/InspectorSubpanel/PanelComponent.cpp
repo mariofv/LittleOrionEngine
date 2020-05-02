@@ -216,7 +216,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 			ImGui::AlignTextToFramePadding();
 			ImGui::Text("Triangles");
 			ImGui::SameLine();
-			sprintf_s(tmp_string, "%d", mesh_renderer->mesh_to_render->vertices.size() / 3);
+			sprintf_s(tmp_string, "%d", mesh_renderer->mesh_to_render->indices.size() / 3);
 			ImGui::Button(tmp_string);
 
 			ImGui::AlignTextToFramePadding();
