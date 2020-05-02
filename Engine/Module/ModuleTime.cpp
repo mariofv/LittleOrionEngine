@@ -10,6 +10,7 @@
 #include "ModuleWindow.h"
 
 #include <SDL/SDL.h>
+#include <Brofiler/Brofiler.h>
 
 ModuleTime::~ModuleTime()
 {
@@ -39,14 +40,13 @@ bool ModuleTime::Init()
 
 update_status ModuleTime::PreUpdate()
 {
-	
-
 	return update_status::UPDATE_CONTINUE;
 }
 
 
 void ModuleTime::EndFrame()
 {
+	BROFILER_CATEGORY("End Frame", Profiler::Color::Lavender);
 	++frame_count;
 
 	float real_time = real_time_clock->Read();

@@ -14,6 +14,7 @@
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #include <algorithm>
+#include <Brofiler/Brofiler.h>
 #include <SDL/SDL.h>
 
 bool ModuleCamera::Init()
@@ -44,6 +45,7 @@ update_status ModuleCamera::PreUpdate()
 // Called every draw update
 update_status ModuleCamera::Update()
 {
+	BROFILER_CATEGORY("Scene Camera Update", Profiler::Color::Lavender);
 	SelectMainCamera();
 	scene_camera->Update();
 	return update_status::UPDATE_CONTINUE;

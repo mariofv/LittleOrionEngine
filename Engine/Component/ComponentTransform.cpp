@@ -78,6 +78,7 @@ ENGINE_API float3 ComponentTransform::GetTranslation() const
 
 ENGINE_API void ComponentTransform::SetTranslation(const float3& translation)
 {
+	BROFILER_CATEGORY("SetTranslation", Profiler::Color::Lavender);
 	this->translation = translation;
 	OnTransformChange();
 }
@@ -185,6 +186,7 @@ ENGINE_API float3 ComponentTransform::GetRightVector() const
 
 void ComponentTransform::OnTransformChange()
 {
+	BROFILER_CATEGORY("OnTransformChange", Profiler::Color::Lavender);
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
 	GenerateGlobalModelMatrix();
 	owner->aabb.GenerateBoundingBox();
@@ -201,6 +203,7 @@ float4x4 ComponentTransform::GetModelMatrix() const
 
 void ComponentTransform::GenerateGlobalModelMatrix()
 {
+	BROFILER_CATEGORY("GenerateGlobalMatrix", Profiler::Color::Lavender);
 	if (owner->parent == nullptr)
 	{
 		global_model_matrix = model_matrix;

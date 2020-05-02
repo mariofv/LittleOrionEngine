@@ -33,6 +33,7 @@
 #include "ResourceManagement/Metafile/MetafileManager.h"
 
 #include <algorithm>
+#include <Brofiler/Brofiler.h>
 #include <functional> //for std::hash
 
 ModuleResourceManager::ModuleResourceManager()
@@ -71,6 +72,7 @@ bool ModuleResourceManager::Init()
 
 update_status ModuleResourceManager::PreUpdate()
 {
+	BROFILER_CATEGORY("PreUpdate ResourceManager", Profiler::Color::Lavender);
 	if ((thread_timer->Read() - last_imported_time) >= importer_interval_millis)
 	{
 		//importing_thread.join();
