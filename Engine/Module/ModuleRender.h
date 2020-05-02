@@ -66,7 +66,6 @@ private:
 
 	void GetMeshesToRender(const ComponentCamera* camera);
 	void SetListOfMeshesToRender(const ComponentCamera* camera);
-	void GetCullingMeshes(const ComponentCamera* camera);
 
 public:
 	bool anti_aliasing = false;
