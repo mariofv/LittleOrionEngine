@@ -339,6 +339,9 @@ enum class ControllerID : Uint8
 	TWO
 };
 
+const int MAX_AXIS_VALUE = 32767;
+const int MIN_AXIS_VALUE = -32768;
+
 struct GameInput
 {
 	std::string name;
@@ -444,6 +447,9 @@ public:
 
 	ENGINE_API float2 GetAxisControllerRaw(ControllerAxis type, ControllerID controller_id) const;
 	ENGINE_API float GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const;
+
+	ENGINE_API float GetVertical(PlayerID player_id);
+	ENGINE_API float GetHorizontal(PlayerID player_id);
 
 private:
 	void SaveGameInputs(Config &config);
