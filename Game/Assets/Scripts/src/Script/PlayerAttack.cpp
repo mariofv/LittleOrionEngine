@@ -32,16 +32,18 @@ void PlayerAttack::Start()
 }
 // Update is called once per frame
 bool PlayerAttack::Attack()
-{	if(App->input->GetGameInputDown("Punch"))
-	{
-		animation->ActiveAnimation("punch");
-	}
-	else if(App->input->GetGameInputDown("Kick"))
-	{
-		animation->ActiveAnimation("kick");
-	}
+{	is_attacking = animation->IsOnState("Punch") || animation->IsOnState("Kick");	if(!is_attacking)	{		if(App->input->GetGameInputDown("Punch"))
+		{
+			animation->ActiveAnimation("punch");
+			//Active colliders of hands
 
-	return animation->IsOnState("Punch") || animation->IsOnState("Kick");
+		}
+		else if(App->input->GetGameInputDown("Kick"))
+		{
+			animation->ActiveAnimation("kick");
+			//Active colliders of kick
+		}		}
+	return is_attacking;
 }
 // Use this for showing variables on inspector
 void PlayerAttack::OnInspector(ImGuiContext* context)

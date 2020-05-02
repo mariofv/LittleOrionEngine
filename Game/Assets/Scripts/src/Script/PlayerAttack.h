@@ -19,6 +19,6 @@ public:
 	void InitPublicGameObjects();
 	//void Save(Config& config) const override;
 	//void Load(const Config& config) override;
-private:	ComponentAnimation* animation = nullptr;};
+private:	ComponentAnimation* animation = nullptr;	bool is_attacking = false;};
 extern "C" SCRIPT_API PlayerAttack* PlayerAttackDLL(); //This is how we are going to load the script
 #endif
