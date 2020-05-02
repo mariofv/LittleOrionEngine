@@ -341,7 +341,7 @@ struct GameInput
 	std::array<MouseButton, 8> mouse_buttons;
 	std::array<ControllerCode, 8> controller_buttons;
 
-	GameInput::GameInput() 
+	GameInput() 
 	{
 		for(size_t i = 0; i < 8; ++i)
 		{
