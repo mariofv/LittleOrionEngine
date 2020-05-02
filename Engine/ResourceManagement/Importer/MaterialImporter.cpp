@@ -61,7 +61,6 @@ FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_me
 	material_config.AddFloat(imported_material.k_ambient, "kAmbient");
 	material_config.AddFloat(imported_material.k_specular, "kSpecular");
 	material_config.AddFloat(imported_material.k_diffuse, "kDiffuse");
-	material_config.AddFloat(imported_material.shininess, "shininess");
 
 	//colors
 	material_config.AddColor(

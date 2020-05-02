@@ -37,10 +37,17 @@ void Material::Save(Config& config) const
 			config.AddUInt(textures_uuid[i], "Emissive");
 			break;
 
+		case MaterialTextureType::NORMAL:
+			config.AddUInt(textures_uuid[i],  "Normal");
+			break;
+
 		default:
 			break;
+			
 		}
 	}
+
+	config.AddInt((int)material_type, "MaterialType");
 
 	config.AddBool(show_checkerboard_texture, "Checkboard");
 	config.AddString(shader_program, "ShaderProgram");
@@ -49,7 +56,15 @@ void Material::Save(Config& config) const
 	config.AddFloat(k_ambient, "kAmbient");
 	config.AddFloat(k_specular, "kSpecular");
 	config.AddFloat(k_diffuse, "kDiffuse");
-	config.AddFloat(shininess, "shininess");
+
+	config.AddFloat(transparency, "Transparency");
+//	config.AddFloat(roughness, "Roughness");
+//	config.AddFloat(metalness, "Metalness");
+
+	config.AddFloat(tiling_x, "Tiling X");
+	config.AddFloat(tiling_y, "Tiling Y");
+
+	config.AddBool(use_normal_map, "UseNormalMap");
 
 	//colors
 	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
@@ -63,6 +78,7 @@ void Material::Load(const Config& config)
 	SetMaterialTexture(MaterialTextureType::SPECULAR, config.GetUInt("Specular", 0));
 	SetMaterialTexture(MaterialTextureType::OCCLUSION, config.GetUInt("Occlusion", 0));
 	SetMaterialTexture(MaterialTextureType::EMISSIVE, config.GetUInt("Emissive", 0));
+	SetMaterialTexture(MaterialTextureType::NORMAL, config.GetUInt("Normal", 0));
 
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 	config.GetString("ShaderProgram", shader_program, "Blinn phong");
@@ -71,7 +87,13 @@ void Material::Load(const Config& config)
 	k_ambient = config.GetFloat("kAmbient", 1.0f);
 	k_specular = config.GetFloat("kSpecular", 1.0f);
 	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
-	shininess = config.GetFloat("shininess", 1.0f);
+
+	transparency = config.GetFloat("Transparency", 1.f);
+//	roughness = config.GetFloat("Roughness", 0.5f);
+//	metalness = config.GetFloat("Metalness", 0.04f);
+
+//	roughness = config.GetFloat("Tiling X", 0.0f);
+//	metalness = config.GetFloat("Tiling Y", 0.0f);
 
 	//colors
 	float4 diffuse;
@@ -110,9 +132,27 @@ void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uui
 	{
 		textures[type] = App->resources->Load<Texture>(texture_uuid);
 	}
+	use_normal_map = type == MaterialTextureType::NORMAL && texture_uuid !=0;
 }
 
 const std::shared_ptr<Texture>& Material::GetMaterialTexture(MaterialTextureType type) const
 {
 	return textures[type];
+}
+
+void Material::ChangeTypeOfMaterial(const MaterialType new_material_type)
+{
+	material_type = new_material_type;
+}
+
+std::string Material::GetMaterialTypeName(const MaterialType material_type)
+{
+	switch (material_type)
+	{
+	case MaterialType::MATERIAL_OPAQUE:
+		return "Opaque";
+
+	case MaterialType::MATERIAL_TRANSPARENT:
+		return "Transparent";
+	}
 }

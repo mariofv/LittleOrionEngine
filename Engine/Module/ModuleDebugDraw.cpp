@@ -467,7 +467,33 @@ void ModuleDebugDraw::Render()
 		grid->ScaleOnDistance(scene_camera_height);
 		grid->Render();
 	}
+	if (App->debug->show_axis && App->renderer->meshes_to_render.size() != 0 )
+	{
+		RenderTangentsAndBitangents();
+	}
+
 	RenderDebugDraws(*App->cameras->scene_camera);
+	
+}
+
+void ModuleDebugDraw::RenderTangentsAndBitangents() const
+{
+	BROFILER_CATEGORY("Render Tangent, Bitangent and Normal Vectors", Profiler::Color::Lavender);
+
+	for (auto& mesh : App->renderer->meshes_to_render)
+	{
+		
+		for (unsigned int i = 0; i < 30; ++i)
+		{
+			float4 normal = float4(mesh->mesh_to_render->vertices[i].normals, 0.0F);
+			float4 tangent = float4(mesh->mesh_to_render->vertices[i].tangent, 0.0F);
+			float4 bitangent = float4(mesh->mesh_to_render->vertices[i].bitangent, 0.0F);
+			float4 position = float4 (mesh->mesh_to_render->vertices[i].position, 1.0F);
+			float4x4 axis_object_space = float4x4(tangent, bitangent, normal, position);
+			float4x4 axis_transform = mesh->owner->transform.GetGlobalModelMatrix() * axis_object_space;
+			dd::axisTriad(axis_transform, 0.1F, 1.0F);
+		}	
+	}
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const

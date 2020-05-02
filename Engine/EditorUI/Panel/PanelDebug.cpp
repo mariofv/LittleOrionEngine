@@ -30,6 +30,7 @@ void PanelDebug::Render()
 		ImGui::Checkbox("OctTree", &App->debug->show_octtree);
 		ImGui::Checkbox("AABBTree", &App->debug->show_aabbtree);
 		ImGui::Checkbox("Show Navmesh", &App->debug->show_navmesh);
+		ImGui::Checkbox("Show Axis", &App->debug->show_axis);
 		ImGui::Separator();
 
 		ImGui::DragFloat("Rendering time ", &App->debug->rendering_time, NULL, NULL);
