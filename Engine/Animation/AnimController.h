@@ -44,12 +44,12 @@ private:
 	void SetActiveState(std::shared_ptr<State> & state);
 	void FinishActiveState();
 public:
-	std::shared_ptr<StateMachine> state_machine;
+	std::shared_ptr<StateMachine> state_machine = nullptr;
 	std::vector<PlayingClip> playing_clips;
 
 private:
-	std::shared_ptr<State> active_state;
-	std::shared_ptr<Transition> active_transition;
+	std::shared_ptr<State> active_state = nullptr;
+	std::shared_ptr<Transition> active_transition = nullptr;
 	bool apply_transition = false;
 	friend class PanelComponent;
 };
