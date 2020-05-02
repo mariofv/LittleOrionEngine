@@ -1,3 +1,5 @@
+#include "ModuleRender.h"
+
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleCamera.h"
@@ -5,8 +7,8 @@
 #include "ModuleDebugDraw.h"
 #include "ModuleEditor.h"
 #include "ModuleProgram.h"
-#include "ModuleRender.h"
 #include "ModuleScene.h"
+#include "ModuleSpacePartitioning.h"
 #include "ModuleTime.h"
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
@@ -221,7 +223,7 @@ void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)
 	}
 	SetListOfMeshesToRender(camera);
 }
-void ModuleRender::SetListOfMeshesToRender(const ComponentCamera *camera)
+void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
 {
 	opaque_mesh_to_render.clear();
 	transparent_mesh_to_render.clear();
@@ -254,7 +256,7 @@ void ModuleRender::SetListOfMeshesToRender(const ComponentCamera *camera)
 		}
 	}
 }
-void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
+void ModuleRender::GetCullingMeshes(const ComponentCamera* camera)
 {
 	BROFILER_CATEGORY("Get culling meshes", Profiler::Color::Lavender);
 
@@ -308,7 +310,7 @@ void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
 
 			for (const auto& object : rendered_objects)
 			{
-				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
+				ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
 				meshes_to_render.push_back(object_mesh);
 			}
 		}
@@ -509,97 +511,11 @@ void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 	}
 }
 
-void ModuleRender::GenerateQuadTree()
-{
-	AABB2D global_AABB;
-	global_AABB.SetNegativeInfinity();
-
-	for (const auto&  mesh : meshes)
-	{
-		float minX = std::fmin(mesh->owner->aabb.bounding_box2D.minPoint.x, global_AABB.minPoint.x);
-		float minY = std::fmin(mesh->owner->aabb.bounding_box2D.minPoint.y, global_AABB.minPoint.y);
-
-		float maxX = std::fmax(mesh->owner->aabb.bounding_box2D.maxPoint.x, global_AABB.maxPoint.x);
-		float maxY = std::fmax(mesh->owner->aabb.bounding_box2D.maxPoint.y, global_AABB.maxPoint.y);
-		global_AABB.maxPoint = float2(maxX,maxY);
-		global_AABB.minPoint = float2(minX, minY);
-
-	}
-
-	ol_quadtree.Create(global_AABB);
-	for (const auto&  mesh : meshes)
-	{
-		ol_quadtree.Insert(*mesh->owner);
-	}
-}
-
-void ModuleRender::GenerateOctTree()
-{
-	AABB global_AABB;
-	global_AABB.SetNegativeInfinity();
-
-	for (const auto&  mesh : meshes)
-	{
-		float minX = std::fmin(mesh->owner->aabb.bounding_box.minPoint.x, global_AABB.minPoint.x);
-		float minY = std::fmin(mesh->owner->aabb.bounding_box.minPoint.y, global_AABB.minPoint.y);
-		float minZ = std::fmin(mesh->owner->aabb.bounding_box.minPoint.z, global_AABB.minPoint.z);
-
-		float maxX = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.x, global_AABB.maxPoint.x);
-		float maxY = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.y, global_AABB.maxPoint.y);
-		float maxZ = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.z, global_AABB.maxPoint.z);
-
-		global_AABB.maxPoint = float3(maxX, maxY, maxZ);
-		global_AABB.minPoint = float3(minX, minY, minZ);
-	}
-
-	/*ol_octtree.Create(global_AABB);
-	for (const auto&  mesh : meshes)
-	{
-		ol_octtree.Insert(*mesh->owner);
-	}*/
-}
-void ModuleRender::InsertAABBTree(GameObject * game_object)
-{
-	ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
-	if(object_mesh != nullptr)
-		ol_abbtree->Insert(game_object);
-}
-
-void ModuleRender::RemoveAABBTree(GameObject * game_object)
-{
-	ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
-	if (object_mesh != nullptr)
-		ol_abbtree->Remove(game_object);
-}
-
-void ModuleRender::UpdateAABBTree(GameObject* game_object)
-{
-	ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
-	if (object_mesh != nullptr)
-		ol_abbtree->UpdateObject(game_object);
-}
-
-void ModuleRender::DeleteAABBTree()
-{
-	delete ol_abbtree;
-}
-
-void ModuleRender::CreateAABBTree()
-{
-	ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
-}
-
-void ModuleRender::DrawAABBTree() const
-{
-	BROFILER_CATEGORY("Render AABBTree", Profiler::Color::Lavender);
-
-	ol_abbtree->Draw();
-}
 
 GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 {
 	BROFILER_CATEGORY("Do Raycast", Profiler::Color::HotPink);
-	GetCullingMeshes(App->cameras->scene_camera);
+	App->space_partitioning->GetCullingMeshes(App->cameras->scene_camera);
 	std::vector<ComponentMeshRenderer*> intersected_meshes;
 	for (const auto&  mesh : meshes_to_render)
 	{
@@ -641,7 +557,7 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 
 bool ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, float3& position)
 {
-	GetCullingMeshes(App->cameras->scene_camera);
+	App->space_partitioning->GetCullingMeshes(App->cameras->scene_camera);
 	std::vector<ComponentMeshRenderer*> intersected_meshes;
 	for (const auto&  mesh : meshes_to_render)
 	{

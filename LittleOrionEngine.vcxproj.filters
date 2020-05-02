@@ -490,6 +490,7 @@
     <ClCompile Include="Engine\Helper\BuildOptions.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp" />
     <ClCompile Include="Engine\DLL\DLLManager.cpp">
       <Filter>Engine\DLL</Filter>
     </ClCompile>
@@ -975,6 +976,7 @@
     <ClInclude Include="Engine\Helper\BuildOptions.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h" />
     <ClInclude Include="Libraries\include\cr\cr.h">
       <Filter>Libraries\cr</Filter>
     </ClInclude>

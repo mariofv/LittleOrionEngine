@@ -94,7 +94,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	{
 		//Import animation
 		Config animation_config;
-		std::string animation_name = scene->mAnimations[i]->mName.C_Str();
+		std::string animation_name = assets_file_path.GetFilenameWithoutExtension() +"_"+ scene->mAnimations[i]->mName.C_Str();
 		uint32_t extracted_animation_uuid = ExtractAnimationFromNode(scene->mAnimations[i], animation_name);
 
 		animation_config.AddUInt(extracted_animation_uuid, "Animation");

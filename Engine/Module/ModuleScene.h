@@ -23,6 +23,7 @@ public:
 	ENGINE_API GameObject* CreateChildGameObject(GameObject* parent);
 	void RemoveGameObject(GameObject* game_object_to_remove);
 	GameObject* AddGameObject(std::unique_ptr<GameObject> & game_object_to_add);
+	GameObject* DuplicateGameObject(GameObject* game_object, GameObject* parent_go);
 
 	ENGINE_API GameObject* GetRoot() const;
 	ENGINE_API GameObject* GetGameObject(uint64_t UUID) const;
@@ -50,7 +51,7 @@ private:
 	GameObject* root = nullptr;
 	std::vector<std::unique_ptr<GameObject>> game_objects_ownership;
 	std::shared_ptr<Scene> current_scene = nullptr;
-	uint32_t tmp_scene_uuid = 0;
+	std::shared_ptr<Scene> tmp_scene = nullptr;
 	std::string scene_to_load;
 	int build_options_position = -1;
 	bool load_tmp_scene = false;
