@@ -3,6 +3,9 @@
 #include "Script.h"
 class ComponentAnimation;
 
+const unsigned PUNCH_DAMAGE = 33;
+const unsigned KICK_DAMAGE = 45;
+
 class PlayerAttack : public Script
 {
 public:
@@ -16,7 +19,6 @@ public:
 	void InitPublicGameObjects();
 	//void Save(Config& config) const override;
 	//void Load(const Config& config) override;
-private:	ComponentAnimation* animation = nullptr;
-};
+private:	ComponentAnimation* animation = nullptr;};
 extern "C" SCRIPT_API PlayerAttack* PlayerAttackDLL(); //This is how we are going to load the script
 #endif
