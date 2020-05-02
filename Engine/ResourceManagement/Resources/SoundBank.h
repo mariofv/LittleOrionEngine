@@ -13,7 +13,9 @@ public:
 private:
 	AkBankID banck_id = 0;
 	AkGameObjectID game_obj = 0;
-	std::vector<char> data;
+	char * aligned_buffer;
+	char * cursor;
+	size_t aligned_buffer_size = 0;
 };
 
 namespace ResourceManagement
