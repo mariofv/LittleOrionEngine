@@ -13,6 +13,9 @@
     <Filter Include="src\Script\Player">
       <UniqueIdentifier>{b463d16c-5785-4704-beba-3d59b130ec03}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Script\Enemy">
+      <UniqueIdentifier>{4f8efb08-f09a-4acb-89c9-190a535a082e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Script\ExampleScript.h">
@@ -57,6 +60,12 @@
     <ClInclude Include="src\Script\PlayerAttack.h">
       <Filter>src\Script\Player</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\EnemyController.h">
+      <Filter>src\Script\Enemy</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\EnemyManager.h">
+      <Filter>src\Script\Enemy</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -100,6 +109,12 @@
     </ClCompile>
     <ClCompile Include="src\Script\PlayerAttack.cpp">
       <Filter>src\Script\Player</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\EnemyController.cpp">
+      <Filter>src\Script\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\EnemyManager.cpp">
+      <Filter>src\Script\Enemy</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
