@@ -486,6 +486,7 @@ private:
 
 	SDL_GameController* controller[MAX_PLAYERS];
 	int total_game_controllers = 0;
+	SDL_JoystickID joyId;
 
 	friend PanelConfiguration;
 };

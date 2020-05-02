@@ -49,16 +49,15 @@ bool ModuleInput::Init()
 		mouse_bible[(MouseButton)i] = KeyState::IDLE;
 	}
 
-	SDL_Init(SDL_INIT_GAMECONTROLLER);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
 
-	for (int i = 0; i < SDL_NumJoysticks(); ++i)
+	for (int i = 0; i < SDL_NumJoysticks() && i < MAX_PLAYERS; ++i)
 	{
-		if (SDL_IsGameController(i) && i < MAX_PLAYERS)
+		if (SDL_IsGameController(i))
 		{
 			controller[i] = SDL_GameControllerOpen(i);
-			++total_game_controllers;
 		}
-	}
+	}	
 
 	std::map<ControllerCode, KeyState> temp1;
 	std::map<ControllerCode, KeyState> temp2;
@@ -112,19 +111,7 @@ update_status ModuleInput::PreUpdate()
 
 	mouse_motion = { 0, 0 };
 	mouse_wheel_motion = 0;
-	total_game_controllers = 0;
-
-	for (int i = 0; i < MAX_PLAYERS; ++i)
-		controller[i] = nullptr;
-
-	for (int i = 0; i < SDL_NumJoysticks(); ++i)
-	{
-		if (SDL_IsGameController(i) && i < MAX_PLAYERS)
-		{
-			controller[i] = SDL_GameControllerOpen(i);
-			++total_game_controllers;
-		}
-	}
+	total_game_controllers = SDL_NumJoysticks();
 
 	for (int i = 0; i < MAX_PLAYERS; ++i)
 	{
@@ -219,19 +206,22 @@ update_status ModuleInput::PreUpdate()
 
 		case SDL_CONTROLLERAXISMOTION:
 		{
-			int which = event.caxis.which;
+			if (event.caxis.value < -3200 || event.caxis.value > 3200)
+			{
+				int which = event.caxis.which;
 
-			left_joystick[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
-			right_joystick[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
+				left_joystick[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
+				right_joystick[which] = float2(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
 
-			left_joystick_raw[which] = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
-			right_joystick_raw[which] = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
+				left_joystick_raw[which] = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_LEFTY));
+				right_joystick_raw[which] = Filter2D(SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTX), SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_RIGHTY));
 
-			left_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
-			right_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
+				left_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERLEFT);
+				right_controller_trigger[which] = SDL_GameControllerGetAxis(controller[which], SDL_CONTROLLER_AXIS_TRIGGERRIGHT);
 
-			left_controller_trigger_raw[which] = left_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
-			right_controller_trigger_raw[which] = right_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
+				left_controller_trigger_raw[which] = left_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
+				right_controller_trigger_raw[which] = right_controller_trigger[which] / MAX_SDL_CONTROLLER_RANGE;
+			}
 		}
 		break;
 
@@ -241,8 +231,25 @@ update_status ModuleInput::PreUpdate()
 			App->editor->project_explorer->CopyFileToSelectedFolder(dropped_filedir);
 			SDL_free(dropped_filedir);
 			*/
-
 			break;
+
+		case SDL_CONTROLLERDEVICEADDED:
+		{
+			int which = event.cdevice.which;
+
+			if (SDL_IsGameController(which) && which < MAX_PLAYERS)
+			{
+				controller[which] = SDL_GameControllerOpen(which);
+			}
+		}
+		break;
+
+		case SDL_CONTROLLERDEVICEREMOVED:
+		{
+			int which = event.cdevice.which;
+			SDL_GameControllerClose(controller[which]);
+		}
+		break;
 		}
 	}
 
