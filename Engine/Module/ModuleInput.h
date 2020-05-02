@@ -327,9 +327,15 @@ enum class ControllerAxis
 	RIGHT_TRIGGER_RAW
 };
 
-enum class PlayerID
+enum class PlayerID : Uint8
 {
 	ONE, 
+	TWO
+};
+
+enum class ControllerID : Uint8
+{
+	ONE,
 	TWO
 };
 
@@ -413,13 +419,13 @@ public:
 	ENGINE_API bool GetMouseButtonDown(MouseButton button);
 	ENGINE_API bool GetMouseButtonUp(MouseButton button);
 
-	ENGINE_API bool GetControllerButton(ControllerCode code, PlayerID player_id = PlayerID::ONE);
-	ENGINE_API bool GetControllerButtonDown(ControllerCode code, PlayerID player_id = PlayerID::ONE);
-	ENGINE_API bool GetControllerButtonUp(ControllerCode code, PlayerID player_id = PlayerID::ONE);
+	ENGINE_API bool GetControllerButton(ControllerCode code, ControllerID controller_id);
+	ENGINE_API bool GetControllerButtonDown(ControllerCode code, ControllerID controller_id);
+	ENGINE_API bool GetControllerButtonUp(ControllerCode code, ControllerID controller_id);
 
-	ENGINE_API bool GetGameInput(const char* name, PlayerID player_id = PlayerID::ONE);
-	ENGINE_API bool GetGameInputDown(const char* name, PlayerID player_id = PlayerID::ONE);
-	ENGINE_API bool GetGameInputUp(const char* name, PlayerID player_id = PlayerID::ONE);
+	ENGINE_API bool GetGameInput(const char* name, PlayerID player_id);
+	ENGINE_API bool GetGameInputDown(const char* name, PlayerID player_id);
+	ENGINE_API bool GetGameInputUp(const char* name, PlayerID player_id);
 
 	ENGINE_API bool GetAnyKeyPressedDown() const;
 
@@ -433,18 +439,17 @@ public:
 	Uint8 GetMouseClicks() const;
 	bool IsMouseMoving() const;
 
-	ENGINE_API float2 GetAxisController(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
-	ENGINE_API Sint16 GetTriggerController(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
+	ENGINE_API float2 GetAxisController(ControllerAxis type, ControllerID controller_id) const;
+	ENGINE_API Sint16 GetTriggerController(ControllerAxis type, ControllerID controller_id) const;
 
-	ENGINE_API float2 GetAxisControllerRaw(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
-	ENGINE_API float GetTriggerControllerRaw(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
+	ENGINE_API float2 GetAxisControllerRaw(ControllerAxis type, ControllerID controller_id) const;
+	ENGINE_API float GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const;
 
 private:
 	void SaveGameInputs(Config &config);
 	void LoadGameInputs(Config &config);
 
 	float2 Filter2D(Sint16 input_x, Sint16 input_y) const;
-
 
 public:
 	const float MAX_SDL_CONTROLLER_RANGE = 32767.0f;
@@ -480,6 +485,7 @@ private:
 	float right_controller_trigger_raw[MAX_PLAYERS];
 
 	SDL_GameController* controller[MAX_PLAYERS];
+	int total_game_controllers = 0;
 
 	friend PanelConfiguration;
 };
