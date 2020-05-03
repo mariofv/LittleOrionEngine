@@ -121,6 +121,10 @@ void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& director
 		}
 		else if (path_child->IsMeta())
 		{
+			if (metafile_manager->IsMetafileMoved(*path_child))
+			{
+				metafile_manager->RefreshMetafile(*path_child);
+			}
 			if (!metafile_manager->IsMetafileConsistent(*path_child))
 			{
 				metafile_manager->DeleteMetafileInconsistencies(*path_child); // TODO: This causes memory violations because bector size is modified. Look for a better way of deleting files.
