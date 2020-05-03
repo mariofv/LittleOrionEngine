@@ -16,7 +16,7 @@ FileData MaterialImporter::ExtractData(Path& assets_file_path, const Metafile& m
 	return assets_file_path.GetFile()->Load();
 }
 
-FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_mesh_material, const Path& material_file_folder_path)
+FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_mesh_material, const Path& material_file_folder_path) const
 {
 	Material imported_material;
 
@@ -102,7 +102,7 @@ FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_me
 	return material_data;
 }
 
-uint32_t MaterialImporter::ImportMaterialTexture(const std::string& texture_described_path, const Path& material_file_folder_path)
+uint32_t MaterialImporter::ImportMaterialTexture(const std::string& texture_described_path, const Path& material_file_folder_path) const
 {
 	APP_LOG_INIT("Loading material texture in described path %s.", texture_described_path.c_str());
 	if (App->filesystem->Exists(texture_described_path))
