@@ -24,6 +24,7 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentUI.h"
+#include "Component/ComponentAudioSource.h"
 
 #include "Helper/Utils.h"
 #include "Math/Rect.h"
@@ -688,6 +689,7 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
 
 		}
+
 		sprintf_s(tmp_string, "%s Script", ICON_FA_EDIT);
 		if (ImGui::Selectable(tmp_string))
 		{
@@ -706,12 +708,21 @@ void PanelComponent::ShowAddNewComponentButton()
 			}
 
 		}
+
 		sprintf_s(tmp_string, "%s Animation", ICON_FA_PLAY_CIRCLE);
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
 
 		}
+
+		sprintf_s(tmp_string, "%s Audio Source", ICON_FA_AUDIO_DESCRIPTION);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::AUDIO_SOURCE);
+
+		}
+
 		ImGui::EndPopup();
 	}
 
@@ -788,4 +799,15 @@ void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 	}
 
 	ImGui::ColorPicker3("Color", ui->color.ptr());
+}
+
+void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* audio)
+{
+	//IMGUI Audio Source
+	ImGui::Separator();
+	if (ImGui::Button("Audio"))
+	{
+		//Test
+	}
+	ImGui::Separator();
 }

@@ -518,6 +518,9 @@
     <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp">
       <Filter>Libraries\Wwise</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentAudioSource.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1033,6 +1036,9 @@
     </ClInclude>
     <ClInclude Include="Libraries\include\SoundEngine\stdafx.h">
       <Filter>Libraries\Wwise</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentAudioSource.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

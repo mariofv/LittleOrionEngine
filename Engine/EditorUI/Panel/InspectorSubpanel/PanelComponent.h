@@ -18,6 +18,7 @@ class ComponentUI;
 class ComponentText;
 class ComponentTransform;
 class ComponentScript;
+class ComponentAudioSource;
 class GameObject;
 
 class PanelComponent
@@ -33,6 +34,7 @@ public:
 	void ShowComponentAnimationWindow(ComponentAnimation* animation);
 	void ShowComponentScriptWindow(ComponentScript* component_script);
 	void ShowComponentUIWindow(ComponentUI* ui);
+	void ShowComponentAudioSourceWindow(ComponentAudioSource* audio);
 	void ShowAddNewComponentButton();
 
 	void ShowScriptsCreated(ComponentScript* component_script);

@@ -137,6 +137,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Component\ComponentAudioSource.h" />
     <ClInclude Include="Engine\Helper\BuildOptions.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
@@ -327,6 +328,7 @@
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
     <ClCompile Include="Engine\Animation\AnimController.cpp" />
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp" />
+    <ClCompile Include="Engine\Component\ComponentAudioSource.cpp" />
     <ClCompile Include="Engine\Component\ComponentButton.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvas.cpp" />
     <ClCompile Include="Engine\Component\ComponentImage.cpp" />
