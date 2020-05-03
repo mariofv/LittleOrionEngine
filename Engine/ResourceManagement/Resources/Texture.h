@@ -8,7 +8,7 @@
 #include <string>
 
 class Metafile;
-class TextureOptions;
+struct TextureOptions;
 
 class Texture : public Resource
 {
