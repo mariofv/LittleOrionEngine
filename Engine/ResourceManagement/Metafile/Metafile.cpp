@@ -8,8 +8,11 @@ void Metafile::Save(Config& config) const
 	config.AddString(resource_name, "ResourceName");
 	config.AddUInt(static_cast<unsigned int>(resource_type), "ResourceType");
 
+	assert(!metafile_path.empty());
 	config.AddString(metafile_path, "MetfilePath");
+	assert(!imported_file_path.empty());
 	config.AddString(imported_file_path, "ImportedFilePath");
+	assert(!exported_file_path.empty());
 	config.AddString(exported_file_path, "ExportedFilePath");
 
 	config.AddInt64(timestamp, "Timestamp");
