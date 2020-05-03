@@ -142,7 +142,7 @@ bool ModuleFileSystem::Remove(Path* path)
 	assert(path != nullptr);
 	if (path->IsMeta())
 	{
-		std::string imported_file_path = path->GetFullPath().substr(0, path->GetFullPath().find_last_of("."));
+		std::string imported_file_path = path->GetFullPathWithoutExtension();
 		PHYSFS_delete(imported_file_path.c_str());
 	}
 	bool success = PHYSFS_delete(path->GetFullPath().c_str()) != 0;
@@ -187,7 +187,14 @@ Path* ModuleFileSystem::Copy(const std::string& source_path, const std::string& 
 	std::string file_name = copied_file_name == "" ? source_path_object->GetFilename() : copied_file_name;
 	Path* copied_file_path = destination_path_object->Save(file_name.c_str(), source_file_data, false);
 	
-	free((char*)source_file_data.buffer);
+	delete[] source_file_data.buffer;
+	return copied_file_path;
+}
+
+Path* ModuleFileSystem::Move(const std::string& source_path, const std::string& destination_path)
+{
+	Path* copied_file_path = Copy(source_path, destination_path);
+	Remove(source_path);
 	return copied_file_path;
 }
 

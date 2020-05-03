@@ -117,6 +117,7 @@ void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 				filename = ICON_FA_FOLDER_OPEN " " + path_child->GetFilename();
 			}
 			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
+			ResourceDropTarget(path_child);
 			if (expanded) {
 				ImGui::PushID(filename.c_str());
 				ProcessMouseInput(path_child);
@@ -207,7 +208,21 @@ void PanelProjectExplorer::ResourceDragSource(Metafile* metafile) const
 		ImGui::EndDragDropSource();
 	}
 }
-
+void PanelProjectExplorer::ResourceDropTarget(Path * folder_path) const
+{
+	if (ImGui::BeginDragDropTarget())
+	{
+		if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_Resource"))
+		{
+			assert(payload->DataSize == sizeof(Metafile*));
+			Metafile* incoming_resource_metafile = *(Metafile**)payload->Data;
+			App->filesystem->Move(incoming_resource_metafile->imported_file_path, folder_path->GetFullPath());
+			//Path* new_metafile = App->filesystem->Move(incoming_resource_metafile->metafile_path, folder_path->GetFullPath());
+			//App->resources->metafile_manager->RefreshMetafile(*new_metafile);
+		}
+		ImGui::EndDragDropTarget();
+	}
+}
 void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafile* metafile)
 {
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(0))

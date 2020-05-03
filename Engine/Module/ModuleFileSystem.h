@@ -33,6 +33,7 @@ public:
 	bool Remove(const std::string& path);
 
 	Path* Copy(const std::string& source_path, const std::string& destination_path, const std::string& copied_file_name = std::string());
+	Path * Move(const std::string & source_path, const std::string & destination_path);
 	Path* MakeDirectory(const std::string& new_directory_full_path);
 	
 	bool MountDirectory(const std::string& directory) const;

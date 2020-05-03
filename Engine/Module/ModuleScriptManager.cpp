@@ -76,11 +76,11 @@ void ModuleScriptManager::CreateScript(const std::string& name)
 {
 	FileData cpp_file_data = App->filesystem->GetPath(RESOURCES_SCRIPT_TEMPLATE_CPP)->GetFile()->Load();
 	std::string cpp_file((char*)cpp_file_data.buffer, cpp_file_data.size);
-	free((char*)cpp_file_data.buffer);
+	delete[] cpp_file_data.buffer;
 
 	FileData header_file_data = App->filesystem->GetPath(RESOURCES_SCRIPT_TEMPLATE_H)->GetFile()->Load();
 	std::string header_file((char*)header_file_data.buffer, header_file_data.size);
-	free((char*)header_file_data.buffer);
+	delete[] header_file_data.buffer;
 
 	Utils::ReplaceStringInPlace(cpp_file, "TemplateScript", name);
 	Utils::ReplaceStringInPlace(header_file, "TemplateScript", name);

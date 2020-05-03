@@ -113,7 +113,7 @@ public:
 		FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
 		loaded_resource = ResourceManagement::Load<T>(uuid, exported_file_data);
 
-		free((char*)exported_file_data.buffer);
+		delete[] exported_file_data.buffer;
 
 		if (loaded_resource != nullptr)
 		{
