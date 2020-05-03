@@ -262,6 +262,11 @@ std::string Path::GetFilenameWithoutExtension() const
 	return file_name.substr(0, file_name.find_last_of("."));
 }
 
+std::string Path::GetFullPathWithoutExtension() const
+{
+	return file_path.substr(0, file_path.find_last_of("."));
+}
+
 std::string Path::GetExtension() const
 {
 	std::size_t found = file_path.find_last_of(".");

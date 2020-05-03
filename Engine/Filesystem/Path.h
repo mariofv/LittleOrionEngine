@@ -29,6 +29,8 @@ public:
 	std::string GetFilename() const;
 	std::string GetFilenameWithoutExtension() const;
 
+	std::string GetFullPathWithoutExtension() const;
+
 	static std::string GetParentPathString(const std::string& path);
 	std::string GetExtension() const;
 	static std::string GetExtension(const std::string& path);

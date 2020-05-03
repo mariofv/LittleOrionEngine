@@ -144,14 +144,17 @@ void MetafileManager::DeleteMetafileInconsistencies(const Path& metafile_path)
 
 void MetafileManager::RefreshMetafile(const Path& metafile_path)
 {
+	std::string assets_file = metafile_path.GetFullPathWithoutExtension();
+	if (!App->filesystem->Exists(assets_file)) 
+	{
+		return;
+	}
 	Metafile* metafile = GetMetafile(metafile_path);
 	metafile->metafile_path = metafile_path.GetFullPath();
-	Path* new_imported_file_path = App->filesystem->GetPath(metafile_path.GetFilenameWithoutExtension());
-	if (new_imported_file_path)
-	{
-		metafile->imported_file_path = new_imported_file_path->GetFullPath();
-		SaveMetafile(metafile, *new_imported_file_path);
-	}
+	Path* new_imported_file_path = App->filesystem->GetPath(metafile_path.GetFullPathWithoutExtension());
+	assert(new_imported_file_path);
+	metafile->imported_file_path = new_imported_file_path->GetFullPath();
+	SaveMetafile(metafile, *new_imported_file_path);
 }
 
 void MetafileManager::DeleteMetafileInconsistencies(const Metafile& metafile)
