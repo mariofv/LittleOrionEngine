@@ -253,6 +253,18 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 	{
 		if (selected_folder != nullptr && path->IsDirectory() && ImGui::BeginMenu("Create"))
 		{
+			if (ImGui::Selectable("Folder"))
+			{
+				std::string new_directory_path = path->GetFullPath() + "/New folder";
+				size_t i = 0;
+				while (App->filesystem->Exists(new_directory_path))
+				{
+					new_directory_path = path->GetFullPath() + "/New folder" +" " + std::to_string(i);
+					i++;
+				}
+				App->filesystem->MakeDirectory(new_directory_path);
+			}
+			ImGui::Separator();
 			if (ImGui::Selectable("Material"))
 			{
 				App->resources->Create<Material>(*selected_folder, "New Material.mat");
