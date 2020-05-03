@@ -42,7 +42,6 @@ Metafile* MetafileManager::GetMetafile(const Path& metafile_path)
 	delete created_metafile;
 
 	specialized_metafile->Load(meta_config);
-	specialized_metafile->metafile_path = metafile_path.GetFullPath();
 
 	metafiles[specialized_metafile->metafile_path] = specialized_metafile;
 
