@@ -18,6 +18,9 @@
       <Platform>x64</Platform>
     </ProjectConfiguration>
   </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="CommandLine\CommandLineProject.cpp" />
+  </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>15.0</VCProjectVersion>
     <ProjectGuid>{927C1952-CFDD-42FD-98F2-EFBFD001A654}</ProjectGuid>
@@ -72,12 +75,16 @@
   <PropertyGroup Label="UserMacros" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)..\Binaries\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\Binaries\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
     <LinkIncremental>true</LinkIncremental>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
     <LinkIncremental>true</LinkIncremental>
+    <OutDir>$(SolutionDir)..\Binaries\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)..\Binaries\$(ProjectName)\$(Configuration)\</IntDir>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
@@ -91,12 +98,12 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;MSBUILD_PATH=LR"($(MSBuildBinPath))";_DEBUG;_CONSOLE;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\Libraries\include;..\..\..\Libraries\include\pcg_random;..\..\..\Libraries\include\MathGeoLib;..\..\..\Libraries\include\ImGuizmo;..\..\..\Libraries\include\SDL;..\..\..\Libraries\include\FreeTypeFont;..\..\..\Libraries\include\imgui;..\..\..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Libraries\include;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include\ImGuizmo;..\Libraries\include\SDL;..\Libraries\include\FreeTypeFont;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\Libraries\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Libraries\lib\x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>MathGeoLib$(Configuration).lib;imgui$(Configuration).lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;LittleOrionEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -126,14 +133,14 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>WIN32;MSBUILD_PATH=LR"($(MSBuildBinPath))";NDEBUG;_CONSOLE;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
-      <AdditionalIncludeDirectories>..\..\..\Libraries\include;..\..\..\Libraries\include\pcg_random;..\..\..\Libraries\include\MathGeoLib;..\..\..\Libraries\include\ImGuizmo;..\..\..\Libraries\include\SDL;..\..\..\Libraries\include\FreeTypeFont;..\..\..\Libraries\include\imgui;..\..\..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>..\Libraries\include;..\Libraries\include\pcg_random;..\Libraries\include\MathGeoLib;..\Libraries\include\ImGuizmo;..\Libraries\include\SDL;..\Libraries\include\FreeTypeFont;..\Libraries\include\imgui;..\Engine;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalLibraryDirectories>..\..\..\Libraries\lib\x86</AdditionalLibraryDirectories>
+      <AdditionalLibraryDirectories>..\Libraries\lib\x86</AdditionalLibraryDirectories>
       <AdditionalDependencies>MathGeoLib$(Configuration).lib;imgui$(Configuration).lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;LittleOrionEngine.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
   </ItemDefinitionGroup>
@@ -156,9 +163,6 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
     </Link>
   </ItemDefinitionGroup>
-  <ItemGroup>
-    <ClCompile Include="CommandLineProject.cpp" />
-  </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
   </ImportGroup>
