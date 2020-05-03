@@ -33,7 +33,7 @@ void PanelProjectExplorer::Render()
 {
 	if (ImGui::Begin(ICON_FA_FOLDER " Project Explorer", &opened))
 	{
-		hovered = ImGui::IsWindowHovered() ? true : false;
+		hovered = ImGui::IsWindowHovered();
 
 		project_explorer_dockspace_id = ImGui::GetID("ProjectExplorerDockspace");
 		bool initialized = ImGui::DockBuilderGetNode(project_explorer_dockspace_id) != NULL;
@@ -51,7 +51,7 @@ void PanelProjectExplorer::Render()
 
 		if (ImGui::Begin("Project Folder Explorer"))
 		{
-			hovered =  ImGui::IsWindowHovered() ? true : false;
+			hovered =  ImGui::IsWindowHovered();
 			ShowFoldersHierarchy(*App->filesystem->assets_folder_path);
 		}
 		ImGui::End();
