@@ -131,6 +131,11 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		{
 			material->use_normal_map = true;
 		}
+
+		if (type == Material::MaterialTextureType::SPECULAR)
+		{
+			material->use_specular_map = true;
+		}
 		std::shared_ptr<Texture>& texture = material->textures[type];
 		display_image = (void*)(intptr_t)texture->opengl_texture;
 	}
@@ -221,6 +226,8 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 
 		ImGui::ColorEdit3("Color", material->specular_color);
 		ImGui::SliderFloat("k specular", &material->k_specular, 0.f, 1.f);
+		ImGui::SliderFloat("Shininess", &material->specular_color[3], 0.f, 1.f);
+
 		//ImGui::SliderFloat("Roughness", &material->roughness, 0.f, 1.f);
 		//ImGui::SliderFloat("Metalness", &material->metalness, 0.f, 10.f);
 
@@ -239,6 +246,9 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		material->RemoveMaterialTexture(type);
 		if (type == Material::MaterialTextureType::NORMAL)
 			material->use_normal_map = false;
+
+		if (type == Material::MaterialTextureType::SPECULAR)
+			material->use_specular_map = false;
 	}
 	ImGui::SameLine();
 	ImGui::Text("Remove Texture");

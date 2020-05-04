@@ -144,7 +144,7 @@ void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) con
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)material_to_render->specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), material_to_render->k_specular);
-	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), material_to_render->specular_color[3]);
+	//glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), material_to_render->specular_color[3]);
 
 	//Material BRDF variables
 	//glUniform1f(glGetUniformLocation(shader_program, "material.roughness"), material_to_render->roughness);
@@ -165,22 +165,7 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 	BindTexture(Material::MaterialTextureType::NORMAL);
 	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
 	glUniform1i(glGetUniformLocation(shader_program, "material.use_normal_map"), material_to_render->use_normal_map);
-	//bool texture_normal = BindTextureNormal(Material::MaterialTextureType::NORMAL);
-	//if (texture_normal)
-	//{
-	//    unsigned index = glGetSubroutineIndex(shader_program, GL_FRAGMENT_SHADER,"ComputeMaterialWithNormalMap");
-	//    unsigned indices[1]; // NUMBER_SUBROUTINES == 1 in our example
-	//    unsigned location = glGetSubroutineUniformLocation(shader_program, GL_FRAGMENT_SHADER,"NormalSoubroutine");
-	//    indices[index] = location;
-	//    glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, indices);
-	//}
-	//else {
-	//    GLint index = glGetSubroutineIndex(shader_program, GL_FRAGMENT_SHADER, "ComputeMaterialWithoutNormalMap"); 
-	//    unsigned indices[1]; 
-	//    unsigned location = glGetSubroutineUniformLocation(shader_program, GL_FRAGMENT_SHADER, "NormalSoubroutine");
-	//    indices[index] = location;
-	//    glUniformSubroutinesuiv(GL_FRAGMENT_SHADER, 1, indices);
-	//}
+	glUniform1i(glGetUniformLocation(shader_program, "material.use_specular_map"), material_to_render->use_specular_map);
 }
 
 void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const

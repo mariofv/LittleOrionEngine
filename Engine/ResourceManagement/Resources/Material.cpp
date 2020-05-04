@@ -65,6 +65,8 @@ void Material::Save(Config& config) const
 	config.AddFloat(tiling_y, "Tiling Y");
 
 	config.AddBool(use_normal_map, "UseNormalMap");
+	config.AddBool(use_specular_map, "UseSpecularMap");
+
 
 	//colors
 	config.AddColor(float4(diffuse_color[0], diffuse_color[1], diffuse_color[2], diffuse_color[3]), "difusseColor");
@@ -133,6 +135,7 @@ void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uui
 		textures[type] = App->resources->Load<Texture>(texture_uuid);
 	}
 	use_normal_map = type == MaterialTextureType::NORMAL && texture_uuid !=0;
+	use_specular_map = type == MaterialTextureType::SPECULAR && texture_uuid != 0;
 }
 
 const std::shared_ptr<Texture>& Material::GetMaterialTexture(MaterialTextureType type) const

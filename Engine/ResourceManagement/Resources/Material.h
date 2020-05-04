@@ -76,6 +76,9 @@ public:
 	//This variable will allow the shader to use the normal maps if there is any assigned to the model material
 	bool use_normal_map = false;
 
+	//We also will detect if using specular map
+	bool use_specular_map = false;
+
 	bool show_checkerboard_texture = false;
 };
 

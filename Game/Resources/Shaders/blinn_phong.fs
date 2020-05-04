@@ -7,15 +7,9 @@ in vec3 normal;
 in vec2 texCoord;
 in vec3 tangent;
 
-//Without tangent transform
-in vec3 view_pos;
-in vec3 view_dir;
-in vec3 half_dir;
-
 //Tangent - Normal mapping variables
 in mat3 TBN;
-in vec3 t_view_pos;
-in vec3 t_frag_pos;
+
 
 
 
@@ -107,8 +101,8 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
 vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 
 //COMPUTE NORMALIZED LIGHTS
-vec3 ComputeDiffuseColor(vec3 diffuse_color, vec3 specular_color);
-float ComputeSpecularLight(vec3 normal, vec3 half_dir);
+vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color);
+float NormalizedSpecular(vec3 normal, vec3 half_dir);
 
 
 void main()
@@ -167,13 +161,15 @@ void main()
 		}
 	}
 
-	
+	//Ambient light
+	result +=  diffuse_color.rgb * (occlusion_color*material.k_ambient);
 
-	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
 	
-	//Gamma Correction
+	//Gamma Correction - The last operation of postprocess
 	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma));
+
+
 	FragColor.a=material.transparency;
 }
 
@@ -200,46 +196,44 @@ vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 
 vec3 GetNormalMap(const Material mat, const vec2 texCoord)
 {
-	return texture(mat.normal_map, texCoord).rgb*2.0-1.0;
+	return normalize(texture(mat.normal_map, texCoord).rgb*2.0-1.0);
 }
 
 vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
-
-	vec3 light_dir   = normalize(-directional_light.direction );
-	float diffuse    = max(0.0, dot(normalized_normal, light_dir));
-	float specular   = 0.0;
 	
+	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
+	vec3 view_dir    = normalize(view_pos - position);
+	vec3 light_dir   = normalize(-directional_light.direction );
+	float specular   = 0.0;	
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 
-	if(diffuse > 0.0 && material.k_specular > 0.0 && material.specular_color.w > 0.0)
+	if(material.k_specular > 0.0 && material.specular_color.w > 0.0)
 	{	
-		specular = ComputeSpecularLight(normalized_normal, half_dir);
+		specular = NormalizedSpecular(normalized_normal, half_dir);
 	}
-
-	
 
 	return directional_light.color * (
 		emissive_color
-		+ diffuse_color.rgb * (occlusion_color*material.k_ambient)
-		+ ComputeDiffuseColor(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse
+		+ NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI
 		+ specular_color.rgb * specular
-	);
+	) * max(0.0, dot(normalized_normal, light_dir));
+	//Last multiplication added as a recommendation
 }
 
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
+	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
+	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(spot_light.position - position);
-    float diffuse    = max(0.0, dot(normalized_normal, light_dir));
     float specular   = 0.0;
-	
+	vec3 half_dir 	 = normalize(light_dir + view_dir);
 
-	if(diffuse > 0.0 && material.k_specular > 0.0 && material.specular_color.w > 0.0)
+	if(material.k_specular > 0.0 && material.specular_color.w > 0.0)
 	{	
-		specular = ComputeSpecularLight(normalized_normal, half_dir);
+		specular = NormalizedSpecular(normalized_normal, half_dir);
 	}
 
-  
     float theta = dot(light_dir, normalize(-spot_light.direction)); 
     float epsilon = (spot_light.cutOff - spot_light.outerCutOff);
     float intensity = clamp((theta - spot_light.outerCutOff) / epsilon, 0.0, 1.0);
@@ -250,28 +244,25 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
 
    return spot_light.color * (
         emissive_color
-        + diffuse_color.rgb * (occlusion_color*material.k_ambient)*attenuation
-        + ComputeDiffuseColor(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse*intensity*attenuation
+        + NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI *intensity*attenuation
         + specular_color.rgb * specular *intensity*attenuation
-    );
+    )* max(0.0, dot(normalized_normal, light_dir));
 
 }
 
 vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
 
+	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
+	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(point_light.position - position);
-	float diffuse    = max(0.0, dot(normalized_normal, light_dir));
 	float specular   = 0.0;
-
-    
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 
-   if(diffuse > 0.0 && material.k_specular > 0.0 && material.specular_color.w > 0.0)
+   if(material.k_specular > 0.0 && material.specular_color.w > 0.0)
 	{	
-		specular = ComputeSpecularLight(normalized_normal, half_dir);
+		specular = NormalizedSpecular(normalized_normal, half_dir);
 	}
-
 
 	float distance    = length(point_light.position - position);
 	float attenuation = 1.0 / (point_light.constant + point_light.linear * distance + 
@@ -279,26 +270,27 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
 
 	return point_light.color * (
 		emissive_color
-		+  diffuse_color.rgb * (occlusion_color*material.k_ambient)*attenuation
-		+ ComputeDiffuseColor(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse* attenuation
+		+ NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI * attenuation
 		+ specular_color.rgb * specular * attenuation
-	);
+	)* max(0.0, dot(normalized_normal, light_dir));
 
 }
 
-vec3 ComputeDiffuseColor(vec3 diffuse_color, vec3 specular_color)
+vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color)
 {
-	return 	(1-specular_color)*diffuse_color;
+	return 	(1-specular_color)*diffuse_color; //The more specular, the less diffuse
 }
 
-float ComputeSpecularLight(vec3 normal, vec3 half_dir) // Refference: http://www.farbrausch.de/~fg/stuff/phong.pdf
+float NormalizedSpecular(vec3 normal, vec3 half_dir) // Old refference: http://www.farbrausch.de/~fg/stuff/phong.pdf
 {
-	float spec = pow(max(dot(normal, half_dir), 0.0), 64.0);
+	
+	float shininess = pow(7/material.specular_color.w + 1, 2); 
 
-	float normalization_denom = (material.specular_color.w + 2) * (material.specular_color.w + 4);
-	float normalization_nom = 8*PI *(pow(2, -material.specular_color.w/2) + material.specular_color.w);
+	float spec = pow(max(dot(normal, half_dir), 0.0), shininess);
 
-	return pow(spec, material.specular_color.w) * (normalization_denom/normalization_nom);
+	float normalization_factor = (material.specular_color.w + 8)/8;
+
+	return pow(spec, material.specular_color.w) * normalization_factor;
 }
 
 
