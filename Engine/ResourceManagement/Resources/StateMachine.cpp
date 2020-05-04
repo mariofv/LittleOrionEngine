@@ -72,7 +72,7 @@ std::shared_ptr<State> StateMachine::GetState(uint64_t state_hash) const
 	return nullptr;
 }
 
-std::shared_ptr<Transition> StateMachine::GetTransition(const std::string & trigger, uint64_t state_hash) const
+std::shared_ptr<Transition> StateMachine::GetTriggerTransition(const std::string & trigger, uint64_t state_hash) const
 {
 	uint64_t trigger_hash = std::hash<std::string>{}(trigger);
 	for (auto & transition : transitions)
@@ -83,6 +83,19 @@ std::shared_ptr<Transition> StateMachine::GetTransition(const std::string & trig
 		}
 	}
 	return nullptr;
+}
+
+std::shared_ptr<Transition> StateMachine::GetAutomaticTransition(uint64_t state_hash) const
+{
+	std::shared_ptr<Transition> automatic_transition = nullptr;
+	for (auto & transition : transitions)
+	{
+		if (transition->source_hash == state_hash && transition->automatic)
+		{
+			automatic_transition = !automatic_transition || automatic_transition->priority < transition->priority ?  transition : automatic_transition;
+		}
+	}
+	return automatic_transition;
 }
 
 
@@ -179,7 +192,9 @@ void StateMachine::Save(Config& config) const
 		transition_config.AddUInt(transition->source_hash, "Source");
 		transition_config.AddUInt(transition->target_hash, "Target");
 		transition_config.AddString(transition->trigger, "Trigger");
-		transition_config.AddInt64(transition->interpolation_time, "Interpolation");
+		transition_config.AddUInt(transition->interpolation_time, "Interpolation");
+		transition_config.AddBool(transition->automatic, "Automatic");
+		transition_config.AddUInt(transition->priority, "Priority");
 		transitions_config.push_back(transition_config);
 	}
 	config.AddChildrenConfig(transitions_config, "Transitions");
@@ -189,6 +204,9 @@ void StateMachine::Save(Config& config) const
 
 void StateMachine::Load(const Config& config)
 {
+	this->clips.clear();
+	this->transitions.clear();
+	this->states.clear();
 	std::vector<Config> clips_config;
 	config.GetChildrenConfig("Clips", clips_config);
 	for (auto& clip_config : clips_config)
@@ -234,8 +252,10 @@ void StateMachine::Load(const Config& config)
 		uint64_t source = transition_config.GetUInt("Source", 0);
 		uint64_t target = transition_config.GetUInt("Target", 0);
 		transition_config.GetString("Trigger", trigger, "");
-		int64_t interpolation_time = transition_config.GetInt64("Interpolation", 0);
+		uint64_t interpolation_time = transition_config.GetUInt("Interpolation", 0);
 		this->transitions.push_back(std::make_shared<Transition>(source, target, trigger, interpolation_time));
+		this->transitions.back()->automatic = transition_config.GetBool("Automatic", false);
+		this->transitions.back()->priority = transition_config.GetUInt("Priority", 0);
 	}
 
 	default_state = config.GetUInt("Default", 0);

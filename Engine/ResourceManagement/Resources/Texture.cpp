@@ -1,19 +1,18 @@
 #include "Texture.h"
 
-#include "ResourceManagement/Metafile/Metafile.h"
+#include "ResourceManagement/Metafile/TextureMetafile.h"
 
 #include <IL/il.h>
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-Texture::Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, bool normal_map)
+Texture::Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, TextureOptions& options)
 	: width(width), height(height)
-	, normal_map(normal_map)
 	, Resource(uuid)
 {
 	this->data.resize(image_size);
 	memcpy(&this->data.front(), data, image_size);
-	LoadInMemory();
+	LoadInMemory(options);
 }
 
 
@@ -22,7 +21,7 @@ Texture::~Texture()
 	glDeleteTextures(1, &opengl_texture);
 }
 
-void Texture::LoadInMemory()
+void Texture::LoadInMemory(TextureOptions& options)
 {
 	glGenTextures(1, &opengl_texture);
 	glBindTexture(GL_TEXTURE_2D, opengl_texture);
@@ -40,9 +39,9 @@ void Texture::LoadInMemory()
 	mag_filter = GL_LINEAR;
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
 
-	if (normal_map)
+	if (options.texture_type == TextureType::NORMAL)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, data.data());
+		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
 	}
 	else 
 	{
@@ -50,20 +49,17 @@ void Texture::LoadInMemory()
 	}
 
 	glBindTexture(GL_TEXTURE_2D, 0);
-	GenerateMipMap();
+	if (options.generate_mipmaps)
+	{
+		GenerateMipMap();
+	}
 }
 
 void Texture::GenerateMipMap()
 {
-	mip_map = true;
 	glBindTexture(GL_TEXTURE_2D, opengl_texture);
 	glGenerateMipmap(GL_TEXTURE_2D);
 	glBindTexture(GL_TEXTURE_2D, 0);
-}
-
-bool Texture::IsMipMapped() const
-{
-	return mip_map;
 }
 
 void Texture::SetWrapS(GLenum wrap_s)

@@ -49,7 +49,6 @@ void Skybox::Load(const Config& config)
 	textures_id[(size_t)SkyboxFace::FRONT] = config.GetUInt("Front", 0);
 	textures_id[(size_t)SkyboxFace::BACK] = config.GetUInt("Back", 0);
 
-	GenerateTextures();
 	GenerateSkyboxCubeMap();
 }
 
@@ -148,36 +147,18 @@ void Skybox::GenerateSkyboxCube()
 	glBindVertexArray(0);
 }
 
-void Skybox::GenerateTextures()
-{
-	GenerateTexture(SkyboxFace::RIGHT);
-	GenerateTexture(SkyboxFace::LEFT);
-
-	GenerateTexture(SkyboxFace::UP);
-	GenerateTexture(SkyboxFace::DOWN);
-
-	GenerateTexture(SkyboxFace::FRONT);
-	GenerateTexture(SkyboxFace::BACK);
-}
-
-void Skybox::GenerateTexture(SkyboxFace face)
-{
-	uint32_t texture_id = textures_id[(size_t)face];
-	if (texture_id != 0)
-	{
-		textures[(size_t)face] = App->resources->Load<Texture>(texture_id);
-	}
-}
 
 void Skybox::GenerateSkyboxCubeMap()
 {
 	glGenTextures(1, &cubemap);
 	glBindTexture(GL_TEXTURE_CUBE_MAP, cubemap);
 
-	for (size_t i = 0; i < textures.size(); i++)
+	for (size_t i = 0; i <= (size_t)SkyboxFace::BACK; i++)
 	{
-		if (textures_id[i] != 0)
+		uint32_t texture_id = textures_id[i];
+		if (texture_id != 0)
 		{
+			textures[i] = App->resources->Load<Texture>(texture_id);
 			std::shared_ptr<Texture> texture = textures[i];
 			glCompressedTexImage2D(GL_TEXTURE_CUBE_MAP_POSITIVE_X + i, 0, GL_COMPRESSED_RGBA_S3TC_DXT5_EXT, texture->width, texture->height, 0, texture->data.size(), texture->data.data());
 		}

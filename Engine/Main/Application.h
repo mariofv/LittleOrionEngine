@@ -25,6 +25,7 @@ class ModuleUI;
 class ModuleLight;
 class ModuleResourceManager;
 class ModuleScriptManager;
+class ModuleSpacePartitioning;
 class ModuleActions;
 class ModuleAI;
 
@@ -62,6 +63,7 @@ public:
 	ModuleLight* lights = nullptr;
 	ModuleResourceManager* resources = nullptr;
 	ModuleScriptManager* scripts = nullptr;
+	ModuleSpacePartitioning* space_partitioning = nullptr;
 	ModuleActions* actions = nullptr;
 	ModuleAI* artificial_intelligence = nullptr;
 

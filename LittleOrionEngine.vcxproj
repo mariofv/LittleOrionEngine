@@ -150,10 +150,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClInclude Include="Engine\DLL\DLLManager.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h" />
     <ClInclude Include="Engine\Helper\BuildOptions.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
+    <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h" />
+    <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h" />
     <ClInclude Include="Engine\Actions\EditorAction.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddComponent.h" />
@@ -339,6 +343,7 @@
     <ClCompile Include="Engine\Component\ComponentUI.cpp" />
     <ClCompile Include="Engine\DLL\DLLManager.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelStateMachine.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp" />
@@ -374,6 +379,8 @@
     <ClCompile Include="Engine\ResourceManagement\Metafile\MetafileManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\StateMachineImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\StateMachineManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Metafile\ModelMetafile.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Metafile\TextureMetafile.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Animation.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Material.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp" />
@@ -478,6 +485,7 @@
     <ClCompile Include="Engine\Module\ModuleAI.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelNavMesh.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelBuildOptions.cpp" />
+    <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl" />

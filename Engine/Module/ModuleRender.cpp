@@ -1,3 +1,5 @@
+#include "ModuleRender.h"
+
 #include "Main/Globals.h"
 #include "Main/Application.h"
 #include "ModuleCamera.h"
@@ -5,8 +7,8 @@
 #include "ModuleDebugDraw.h"
 #include "ModuleEditor.h"
 #include "ModuleProgram.h"
-#include "ModuleRender.h"
 #include "ModuleScene.h"
+#include "ModuleSpacePartitioning.h"
 #include "ModuleTime.h"
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
@@ -109,6 +111,7 @@ bool ModuleRender::Init()
 
 	glEnable(GL_BLEND);
 	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
 
 	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
 
@@ -173,15 +176,28 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	num_rendered_verts = 0;
 
 	GetMeshesToRender(&camera);
-	for (auto& mesh : meshes_to_render)
+	for (auto &mesh : opaque_mesh_to_render)
 	{
 		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
-		if (mesh->mesh_uuid != 0 && mesh->IsEnabled())
+		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
 		{
-			mesh->Render();
-			num_rendered_tris += mesh->mesh_to_render->GetNumTriangles();
-			num_rendered_verts += mesh->mesh_to_render->GetNumVerts();
+			mesh.second->Render();
+			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
+			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
 			glUseProgram(0);
+
+		}
+	}
+	for (auto &mesh : transparent_mesh_to_render)
+	{
+		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
+		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
+		{
+			mesh.second->Render();
+			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
+			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
+			glUseProgram(0);
+			
 		}
 	}
 	
@@ -192,161 +208,52 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	App->debug->rendering_time = rendering_measure_timer->Read();
 }
 
-void ModuleRender::GetMeshesToRender(const ComponentCamera *camera)
+void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)
 {
 	BROFILER_CATEGORY("Get meshes to render", Profiler::Color::Aquamarine);
 
 	meshes_to_render.clear();
-
 	if (camera == App->cameras->scene_camera && !App->debug->culling_scene_mode)
 	{
 		meshes_to_render = meshes;
 	}
 	else
 	{
-		GetCullingMeshes(App->cameras->main_camera);
+		App->space_partitioning->GetCullingMeshes(App->cameras->main_camera);
 	}
+	SetListOfMeshesToRender(camera);
 }
-
-void ModuleRender::GetCullingMeshes(const ComponentCamera *camera)
+void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
 {
-	BROFILER_CATEGORY("Get culling meshes", Profiler::Color::Lavender);
-
-	meshes_to_render.clear();
-	switch (App->debug->culling_mode)
+	opaque_mesh_to_render.clear();
+	transparent_mesh_to_render.clear();
+	float3 camera_pos = camera->camera_frustum.pos;
+	for (unsigned int i = 0; i < meshes_to_render.size(); i++)
 	{
-	case ModuleDebug::CullingMode::NONE:
-		std::copy_if(
-			meshes.begin(),
-			meshes.end(),
-			std::back_inserter(meshes_to_render),
-			[camera](const auto& mesh)
-			{ 
-				return mesh->IsEnabled(); 
-			}
-		);
-		break;
-
-	case ModuleDebug::CullingMode::FRUSTUM_CULLING:
-		if (camera != nullptr)
+		if (meshes_to_render[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
 		{
-			std::copy_if(
-				meshes.begin(),
-				meshes.end(),
-				std::back_inserter(meshes_to_render),
-				[camera](const auto& mesh)
-			{
-				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera);
-			}
+			meshes_to_render[i]->owner->aabb.bounding_box;
+			float3 center_bounding_box = (meshes_to_render[i]->owner->aabb.bounding_box.minPoint + meshes_to_render[i]->owner->aabb.bounding_box.maxPoint) / 2;
+			float distance = sqrt(
+				((camera_pos.x - center_bounding_box.x)*(camera_pos.x - center_bounding_box.x)) +
+				((camera_pos.y - center_bounding_box.y)*(camera_pos.y - center_bounding_box.y)) +
+				((camera_pos.z - center_bounding_box.z)*(camera_pos.z - center_bounding_box.z))
 			);
+			transparent_mesh_to_render.push_back(std::make_pair(distance, meshes_to_render[i]));
+			transparent_mesh_to_render.sort([](const ipair & a, const ipair & b) { return a.first > b.first; });
 		}
-		break;
-
-	case ModuleDebug::CullingMode::QUADTREE_CULLING:
-		if (camera != nullptr)
+		if (meshes_to_render[i]->material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
 		{
-			// First we get all non static objects inside frustum
-			std::copy_if( 
-				meshes.begin(),
-				meshes.end(),
-				std::back_inserter(meshes_to_render),
-				[camera](const auto& mesh)
-			{
-				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && !mesh->owner->IsStatic();
-			}
+			meshes_to_render[i]->owner->aabb.bounding_box;
+			float3 center_bounding_box = (meshes_to_render[i]->owner->aabb.bounding_box.minPoint + meshes_to_render[i]->owner->aabb.bounding_box.maxPoint) / 2;
+			float distance = sqrt(
+				((camera_pos.x - center_bounding_box.x)*(camera_pos.x - center_bounding_box.x)) +
+				((camera_pos.y - center_bounding_box.y)*(camera_pos.y - center_bounding_box.y)) +
+				((camera_pos.z - center_bounding_box.z)*(camera_pos.z - center_bounding_box.z))
 			);
-
-			// Then we add all static objects culled using the quadtree
-			std::vector<GameObject*> rendered_objects;
-			ol_quadtree.CollectIntersect(rendered_objects, *camera);
-
-			for (const auto& object : rendered_objects)
-			{
-				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
-				meshes_to_render.push_back(object_mesh);
-			}
+			opaque_mesh_to_render.push_back(std::make_pair(distance, meshes_to_render[i]));
+			opaque_mesh_to_render.sort([](const ipair & a, const ipair & b) { return a.first < b.first; });
 		}
-		break;
-
-	case ModuleDebug::CullingMode::OCTTREE_CULLING:
-		if (camera != nullptr)
-		{
-			// First we get all non static objects inside frustum
-			std::copy_if(
-				meshes.begin(),
-				meshes.end(),
-				std::back_inserter(meshes_to_render),
-				[camera](const auto&  mesh)
-			{
-				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && !mesh->owner->IsStatic();
-			}
-			);
-
-			// Then we add all static objects culled using the octtree
-			std::vector<GameObject*> rendered_objects;
-			ol_octtree.CollectIntersect(rendered_objects, *camera);
-
-			for (const auto& object: rendered_objects)
-			{
-				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
-				meshes_to_render.push_back(object_mesh);
-			}
-		}
-		break;
-
-	case ModuleDebug::CullingMode::AABBTREE_CULLING:
-		if (camera != nullptr)
-		{
-			// First we get all static objects inside frustum
-			std::copy_if(
-				meshes.begin(),
-				meshes.end(),
-				std::back_inserter(meshes_to_render),
-				[camera](const auto& mesh)
-			{
-				return mesh->IsEnabled() && mesh->owner->IsVisible(*camera) && mesh->owner->IsStatic();
-			}
-			);
-
-			// Then we add all dynamic objects culled using the aabbtree
-			std::vector<GameObject*> rendered_objects;
-			ol_abbtree->GetIntersection(rendered_objects, camera);
-
-			for (const auto& object : rendered_objects)
-			{
-				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
-				meshes_to_render.push_back(object_mesh);
-			}
-		}
-		break;
-	case ModuleDebug::CullingMode::COMBINED_CULLING:
-		if(camera != nullptr)
-		{
-			// We add all static objects culled using the quadtree
-			std::vector<GameObject*> rendered_static_objects;
-			ol_quadtree.CollectIntersect(rendered_static_objects, *camera);
-
-			for (const auto& object : rendered_static_objects)
-			{
-				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
-				meshes_to_render.push_back(object_mesh);
-			}
-
-			// Then we add all dynamic objects culled using the aabbtree
-			std::vector<GameObject*> rendered_dynamic_objects;
-			ol_abbtree->GetIntersection(rendered_dynamic_objects, camera);
-
-			for (const auto& object : rendered_dynamic_objects)
-			{
-				ComponentMeshRenderer *object_mesh = (ComponentMeshRenderer*)object->GetComponent(Component::ComponentType::MESH_RENDERER);
-				meshes_to_render.push_back(object_mesh);
-			}
-
-		}
-		break;
-
-	default:
-		break;
 	}
 }
 
@@ -383,7 +290,7 @@ void ModuleRender::SetStencilTest(bool gl_stencil_test)
 void ModuleRender::SetBlending(bool gl_blend)
 {
 	this->gl_blend = gl_blend;
-	gl_blend ? glEnable(GL_BLEND) : glDisable(GL_BLEND);
+
 }
 
 void ModuleRender::SetFaceCulling(bool gl_cull_face)
@@ -463,97 +370,11 @@ void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 	}
 }
 
-void ModuleRender::GenerateQuadTree()
-{
-	AABB2D global_AABB;
-	global_AABB.SetNegativeInfinity();
-
-	for (const auto&  mesh : meshes)
-	{
-		float minX = std::fmin(mesh->owner->aabb.bounding_box2D.minPoint.x, global_AABB.minPoint.x);
-		float minY = std::fmin(mesh->owner->aabb.bounding_box2D.minPoint.y, global_AABB.minPoint.y);
-
-		float maxX = std::fmax(mesh->owner->aabb.bounding_box2D.maxPoint.x, global_AABB.maxPoint.x);
-		float maxY = std::fmax(mesh->owner->aabb.bounding_box2D.maxPoint.y, global_AABB.maxPoint.y);
-		global_AABB.maxPoint = float2(maxX,maxY);
-		global_AABB.minPoint = float2(minX, minY);
-
-	}
-
-	ol_quadtree.Create(global_AABB);
-	for (const auto&  mesh : meshes)
-	{
-		ol_quadtree.Insert(*mesh->owner);
-	}
-}
-
-void ModuleRender::GenerateOctTree()
-{
-	AABB global_AABB;
-	global_AABB.SetNegativeInfinity();
-
-	for (const auto&  mesh : meshes)
-	{
-		float minX = std::fmin(mesh->owner->aabb.bounding_box.minPoint.x, global_AABB.minPoint.x);
-		float minY = std::fmin(mesh->owner->aabb.bounding_box.minPoint.y, global_AABB.minPoint.y);
-		float minZ = std::fmin(mesh->owner->aabb.bounding_box.minPoint.z, global_AABB.minPoint.z);
-
-		float maxX = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.x, global_AABB.maxPoint.x);
-		float maxY = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.y, global_AABB.maxPoint.y);
-		float maxZ = std::fmax(mesh->owner->aabb.bounding_box.maxPoint.z, global_AABB.maxPoint.z);
-
-		global_AABB.maxPoint = float3(maxX, maxY, maxZ);
-		global_AABB.minPoint = float3(minX, minY, minZ);
-	}
-
-	/*ol_octtree.Create(global_AABB);
-	for (const auto&  mesh : meshes)
-	{
-		ol_octtree.Insert(*mesh->owner);
-	}*/
-}
-void ModuleRender::InsertAABBTree(GameObject * game_object)
-{
-	ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
-	if(object_mesh != nullptr)
-		ol_abbtree->Insert(game_object);
-}
-
-void ModuleRender::RemoveAABBTree(GameObject * game_object)
-{
-	ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
-	if (object_mesh != nullptr)
-		ol_abbtree->Remove(game_object);
-}
-
-void ModuleRender::UpdateAABBTree(GameObject* game_object)
-{
-	ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
-	if (object_mesh != nullptr)
-		ol_abbtree->UpdateObject(game_object);
-}
-
-void ModuleRender::DeleteAABBTree()
-{
-	delete ol_abbtree;
-}
-
-void ModuleRender::CreateAABBTree()
-{
-	ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
-}
-
-void ModuleRender::DrawAABBTree() const
-{
-	BROFILER_CATEGORY("Render AABBTree", Profiler::Color::Lavender);
-
-	ol_abbtree->Draw();
-}
 
 GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 {
 	BROFILER_CATEGORY("Do Raycast", Profiler::Color::HotPink);
-	GetCullingMeshes(App->cameras->scene_camera);
+	App->space_partitioning->GetCullingMeshes(App->cameras->scene_camera);
 	std::vector<ComponentMeshRenderer*> intersected_meshes;
 	for (const auto&  mesh : meshes_to_render)
 	{
@@ -595,7 +416,7 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 
 bool ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, float3& position)
 {
-	GetCullingMeshes(App->cameras->scene_camera);
+	App->space_partitioning->GetCullingMeshes(App->cameras->scene_camera);
 	std::vector<ComponentMeshRenderer*> intersected_meshes;
 	for (const auto&  mesh : meshes_to_render)
 	{

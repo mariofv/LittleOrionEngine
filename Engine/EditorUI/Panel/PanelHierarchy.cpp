@@ -15,8 +15,9 @@
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleRender.h"
-#include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScene.h"
+#include "Module/ModuleSpacePartitioning.h"
 
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/Prefab.h"
@@ -175,10 +176,16 @@ void PanelHierarchy::ShowGameObjectActionsMenu(GameObject *game_object)
 				
 				App->scene->RemoveGameObject(game_object);
 
-
-
 				App->editor->selected_game_object = nullptr;
 			}
+
+			if(ImGui::Selectable("Duplicate"))
+			{
+				GameObject* duplicated_go = App->scene->DuplicateGameObject(game_object, game_object->parent);
+				App->actions->action_game_object = duplicated_go;
+				App->actions->AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
+			}
+
 			if (ImGui::Selectable("Move Up"))
 			{
 				game_object->MoveUpInHierarchy();
@@ -241,7 +248,7 @@ void PanelHierarchy::Show3DObjectCreationMenu(GameObject *game_object) const
 
 		if(created_game_object != nullptr)
 		{
-			App->renderer->InsertAABBTree(created_game_object);
+			App->space_partitioning->InsertAABBTree(created_game_object);
 		}
 
 		ImGui::EndMenu();
@@ -299,6 +306,7 @@ void PanelHierarchy::ProcessMouseInput(GameObject *game_object)
 		if (App->input->GetMouseButtonUp(MouseButton::Left))
 		{
 			App->editor->selected_game_object = game_object;
+			App->editor->show_game_object_inspector = true;
 		}
 
 		if (ImGui::IsMouseDoubleClicked(0))

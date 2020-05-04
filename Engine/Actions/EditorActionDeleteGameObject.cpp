@@ -1,9 +1,10 @@
 #include "EditorActionDeleteGameObject.h"
 
 #include "Main/GameObject.h"
-#include "Module/ModuleScene.h"
-#include "Module/ModuleRender.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleRender.h"
+#include "Module/ModuleScene.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "Main/Application.h"
 #include <stack>
 
@@ -56,7 +57,7 @@ void EditorActionDeleteGameObject::Undo()
 		}
 
 		if (!game_object->IsStatic())
-			App->renderer->InsertAABBTree(created_game_object);
+			App->space_partitioning->InsertAABBTree(created_game_object);
 	}
 	
 }

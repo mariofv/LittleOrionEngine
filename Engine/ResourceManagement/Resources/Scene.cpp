@@ -11,6 +11,7 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleScriptManager.h"
+#include "Module/ModuleSpacePartitioning.h"
 
 #include "ResourceManagement/Resources/Prefab.h"
 #include "ResourceManagement/Resources/Scene.h"
@@ -125,7 +126,7 @@ void Scene::Load(bool from_file)
 
 		if (!created_game_object->IsStatic())
 		{
-			App->renderer->InsertAABBTree(created_game_object);
+			App->space_partitioning->InsertAABBTree(created_game_object);
 		}
 		if (prefab_parents.find(created_game_object->UUID) != prefab_parents.end())
 		{
