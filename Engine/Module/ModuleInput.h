@@ -22,9 +22,6 @@ struct SDL_Cursor;
 typedef int32_t Sint32;
 typedef unsigned __int8 Uint8;
 
-const int MAX_KEYS = 286;
-const int MAX_MOUSE_BUTTONS = 5;
-const int MAX_CONTROLLER_BUTTONS = 15;
 const int MAX_PLAYERS = 2;
 
 enum class KeyState : Uint8
@@ -340,9 +337,6 @@ enum class ControllerID : Uint8
 	TWO
 };
 
-const int MAX_AXIS_VALUE = 32767;
-const int MIN_AXIS_VALUE = -32768;
-
 struct GameInput
 {
 	std::string name;
@@ -488,8 +482,18 @@ private:
 
 	float2 Filter2D(Sint16 input_x, Sint16 input_y) const;
 
+	bool CheckKeyboardInput();
+	bool CheckGameControllerInput();
+
 public:
 	const float MAX_SDL_CONTROLLER_RANGE = 32767.0f;
+	const float MIN_SDL_CONTROLLER_RANGE = -32768.0f;
+
+	const int MAX_KEYS = 286;
+	const int MAX_MOUSE_BUTTONS = 5;
+	const int MAX_CONTROLLER_BUTTONS = 15;
+
+	bool singleplayer_input = true;
 
 private:
 	std::map<KeyCode, KeyState> key_bible;
@@ -523,7 +527,6 @@ private:
 
 	SDL_GameController* controller[MAX_PLAYERS];
 	int total_game_controllers = 0;
-	SDL_JoystickID joyId;
 
 	friend PanelConfiguration;
 };

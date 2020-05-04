@@ -29,10 +29,10 @@ PlayerController::PlayerController()
 // Use this for initialization before Start()
 void PlayerController::Awake()
 {
-	ComponentScript* component = owner->GetComponentScript("PlayerMovement");
+	const ComponentScript* component = owner->GetComponentScript("PlayerMovement");
 	player_movement = (PlayerMovement*)component->script;
 
-	ComponentScript* component_attack = owner->GetComponentScript("PlayerAttack");
+	const ComponentScript* component_attack = owner->GetComponentScript("PlayerAttack");
 	player_attack = (PlayerAttack*)component_attack->script;
 }
 
