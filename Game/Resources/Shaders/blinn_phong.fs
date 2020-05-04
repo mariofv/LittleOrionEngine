@@ -285,7 +285,7 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color)
 float NormalizedSpecular(vec3 normal, vec3 half_dir) // Old refference: http://www.farbrausch.de/~fg/stuff/phong.pdf
 {
 	
-	float shininess = pow(7/material.specular_color.w + 1, 2); 
+	float shininess = pow(7*material.specular_color.w + 1, 2); 
 
 	float spec = pow(max(dot(normal, half_dir), 0.0), shininess);
 
