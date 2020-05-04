@@ -4,6 +4,7 @@
 #include "EditorUI/Helper/ImGuiHelper.h"
 #include "Main/Application.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleFileSystem.h"
 #include "ResourceManagement/Resources/StateMachine.h"
 
 #include <imgui_internal.h>
@@ -325,6 +326,13 @@ void PanelStateMachine::LeftPanel()
 			ImGui::Text("Interpolation time: ");
 			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(link->transition->interpolation_time)); ImGui::SameLine(); ImGui::Text("ms");
 			ImGui::Spacing();
+			ImGui::Separator();
+			ImGui::Text("Conditions:");
+			ImGui::Checkbox("Exit time", &(link->transition->automatic));
+			if (link->transition->automatic)
+			{
+				ImGui::InputScalar("Priority", ImGuiDataType_U64, &(link->transition->priority));
+			}
 			ImGui::Text("Trigger Name:");
 			ImGui::InputText("###Trigger Name", &(link->transition->trigger));
 			ImGui::PopID();
@@ -338,8 +346,17 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 {
 	nodes.clear();
 	links.clear();
+
 	state_machine = App->resources->Load<StateMachine>(state_machine_uuid);
 
+	std::string original_file = App->resources->resource_DB->GetEntry(state_machine->GetUUID())->imported_file_path;
+	Path* state_machine_json_path = App->filesystem->GetPath(original_file);
+	FileData state_machine_data = state_machine_json_path->GetFile()->Load();
+
+	char* state_machine_data_buffer = (char*)state_machine_data.buffer;
+	std::string serialized_state_machine_string = std::string(state_machine_data_buffer, state_machine_data.size);
+
+	state_machine->Load(serialized_state_machine_string);
 	//Tranform form state machine to ui
 	for (auto & state : state_machine->states)
 	{

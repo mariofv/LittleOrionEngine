@@ -25,6 +25,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleUI.h"
 
@@ -142,7 +143,7 @@ void PanelMenuBar::ShowGameObjectMenu()
 
 			if (created_game_object != nullptr)
 			{
-				App->renderer->InsertAABBTree(created_game_object);
+				App->space_partitioning->InsertAABBTree(created_game_object);
 			}
 
 			ImGui::EndMenu();

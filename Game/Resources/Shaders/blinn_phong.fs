@@ -39,6 +39,7 @@ struct Material
 	float tiling_x;
 	float tiling_y;
 	bool use_normal_map;
+	bool use_specular_map;
 };
 uniform Material material;
 

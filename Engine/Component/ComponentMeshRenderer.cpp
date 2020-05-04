@@ -3,13 +3,14 @@
 #include "ComponentAnimation.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
-#include "Module/ModuleTexture.h"
 #include "Module/ModuleScene.h"
-#include "Module/ModuleDebugDraw.h"
+#include "Module/ModuleTexture.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
@@ -64,8 +65,8 @@ void ComponentMeshRenderer::Render()
 
 		glEnable(GL_BLEND);
 		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		/*glBlendFunc(GL_ONE, GL_ONE); TODO -> FIX THIS
-		glBlendEquation(GL_FUNC_ADD);*/
+		/*glBlendFunc(GL_ONE, GL_ONE); TODO -> FIX THISÇ*/
+		glBlendEquation(GL_FUNC_ADD);
 	}
 	if (material_to_render == nullptr)
 	{
@@ -166,6 +167,7 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
 	glUniform1i(glGetUniformLocation(shader_program, "material.use_normal_map"), material_to_render->use_normal_map);
 	glUniform1i(glGetUniformLocation(shader_program, "material.use_specular_map"), material_to_render->use_specular_map);
+
 }
 
 void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
