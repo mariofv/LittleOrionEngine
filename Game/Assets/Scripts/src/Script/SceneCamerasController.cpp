@@ -50,7 +50,7 @@ void SceneCamerasController::Start()
 // Update is called once per frame
 void SceneCamerasController::Update()
 {
-	if (App->input->GetKeyDown(KeyCode::Alpha3) || App->input->GetControllerButtonDown(ControllerCode::LeftDpad) && debug_mode->debug_enabled)
+	if (App->input->GetKeyDown(KeyCode::Alpha3) || App->input->GetControllerButtonDown(ControllerCode::LeftDpad, ControllerID::ONE) && debug_mode->debug_enabled)
 	{
 		if (index < camera_list.size()-1) 
 		{
@@ -58,7 +58,7 @@ void SceneCamerasController::Update()
 			UpdateCameraRendering();
 		}	
 	}
-	if (App->input->GetKeyDown(KeyCode::Alpha2) || App->input->GetControllerButtonDown(ControllerCode::RightDpad) && debug_mode->debug_enabled)
+	if (App->input->GetKeyDown(KeyCode::Alpha2) || App->input->GetControllerButtonDown(ControllerCode::RightDpad, ControllerID::ONE) && debug_mode->debug_enabled)
 	{
 		if (index > 0)
 		{
