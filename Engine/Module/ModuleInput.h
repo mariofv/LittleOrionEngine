@@ -482,8 +482,8 @@ private:
 
 	float2 Filter2D(Sint16 input_x, Sint16 input_y) const;
 
-	bool CheckKeyboardInput();
-	bool CheckGameControllerInput();
+	bool DetectedKeyboardInput(const GameInput& button, KeyState state);
+	bool DetectedGameControllerInput(const GameInput& button, KeyState state, ControllerID controller_id);
 
 public:
 	const float MAX_SDL_CONTROLLER_RANGE = 32767.0f;

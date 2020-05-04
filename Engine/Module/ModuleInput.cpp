@@ -342,20 +342,9 @@ ENGINE_API bool ModuleInput::GetGameInput(const char* name, PlayerID player_id)
 	{
 		if (player_id == PlayerID::ONE)
 		{
-			for (auto& key : button.keys)
+			if (DetectedKeyboardInput(button, KeyState::REPEAT))
 			{
-				if (GetKey(key))
-				{
-					return true;
-				}
-			}
-
-			for (auto& mouse : button.mouse_buttons)
-			{
-				if (GetMouseButton(mouse))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
@@ -370,28 +359,14 @@ ENGINE_API bool ModuleInput::GetGameInput(const char* name, PlayerID player_id)
 	{
 		if (player_id == PlayerID::ONE)
 		{
-			for (auto& key : button.keys)
+			if (DetectedKeyboardInput(button, KeyState::REPEAT))
 			{
-				if (GetKey(key))
-				{
-					return true;
-				}
+				return true;
 			}
 
-			for (auto& mouse : button.mouse_buttons)
+			if (DetectedGameControllerInput(button, KeyState::REPEAT, ControllerID::ONE))
 			{
-				if (GetMouseButton(mouse))
-				{
-					return true;
-				}
-			}
-
-			for (auto& controller : button.controller_buttons)
-			{
-				if (GetControllerButton(controller, ControllerID::ONE))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
@@ -407,30 +382,16 @@ ENGINE_API bool ModuleInput::GetGameInput(const char* name, PlayerID player_id)
 	{
 		if (player_id == PlayerID::ONE)
 		{
-			for (auto& key : button.keys)
+			if (DetectedKeyboardInput(button, KeyState::REPEAT))
 			{
-				if (GetKey(key))
-				{
-					return true;
-				}
-			}
-
-			for (auto& mouse : button.mouse_buttons)
-			{
-				if (GetMouseButton(mouse))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
 		{
-			for (auto& controller : button.controller_buttons)
+			if (DetectedGameControllerInput(button, KeyState::REPEAT, ControllerID::ONE))
 			{
-				if (GetControllerButton(controller, ControllerID::ONE))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}
@@ -442,22 +403,16 @@ ENGINE_API bool ModuleInput::GetGameInput(const char* name, PlayerID player_id)
 	{
 		if (player_id == PlayerID::ONE)
 		{
-			for (auto& controller : button.controller_buttons)
+			if (DetectedGameControllerInput(button, KeyState::REPEAT, ControllerID::ONE))
 			{
-				if (GetControllerButton(controller, ControllerID::ONE))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
 		{
-			for (auto& controller : button.controller_buttons)
+			if (DetectedGameControllerInput(button, KeyState::REPEAT, ControllerID::TWO))
 			{
-				if (GetControllerButton(controller, ControllerID::TWO))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}
@@ -475,20 +430,9 @@ ENGINE_API bool ModuleInput::GetGameInputDown(const char* name, PlayerID player_
 	{
 		if (player_id == PlayerID::ONE)
 		{
-			for (auto& key : button.keys)
+			if (DetectedKeyboardInput(button, KeyState::DOWN))
 			{
-				if (GetKeyDown(key))
-				{
-					return true;
-				}
-			}
-
-			for (auto& mouse : button.mouse_buttons)
-			{
-				if (GetMouseButtonDown(mouse))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
@@ -503,28 +447,14 @@ ENGINE_API bool ModuleInput::GetGameInputDown(const char* name, PlayerID player_
 	{
 		if (player_id == PlayerID::ONE)
 		{
-			for (auto& key : button.keys)
+			if (DetectedKeyboardInput(button, KeyState::DOWN))
 			{
-				if (GetKeyDown(key))
-				{
-					return true;
-				}
+				return true;
 			}
 
-			for (auto& mouse : button.mouse_buttons)
+			if (DetectedGameControllerInput(button, KeyState::DOWN, ControllerID::ONE))
 			{
-				if (GetMouseButtonDown(mouse))
-				{
-					return true;
-				}
-			}
-
-			for (auto& controller : button.controller_buttons)
-			{
-				if (GetControllerButtonDown(controller, ControllerID::ONE))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
@@ -540,30 +470,16 @@ ENGINE_API bool ModuleInput::GetGameInputDown(const char* name, PlayerID player_
 	{
 		if (player_id == PlayerID::ONE)
 		{
-			for (auto& key : button.keys)
+			if (DetectedKeyboardInput(button, KeyState::DOWN))
 			{
-				if (GetKeyDown(key))
-				{
-					return true;
-				}
-			}
-
-			for (auto& mouse : button.mouse_buttons)
-			{
-				if (GetMouseButtonDown(mouse))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
 		{
-			for (auto& controller : button.controller_buttons)
+			if (DetectedGameControllerInput(button, KeyState::DOWN, ControllerID::ONE))
 			{
-				if (GetControllerButtonDown(controller, ControllerID::ONE))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}
@@ -575,22 +491,16 @@ ENGINE_API bool ModuleInput::GetGameInputDown(const char* name, PlayerID player_
 	{
 		if (player_id == PlayerID::ONE)
 		{
-			for (auto& controller : button.controller_buttons)
+			if (DetectedGameControllerInput(button, KeyState::DOWN, ControllerID::ONE))
 			{
-				if (GetControllerButtonDown(controller, ControllerID::ONE))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
 		{
-			for (auto& controller : button.controller_buttons)
+			if (DetectedGameControllerInput(button, KeyState::DOWN, ControllerID::TWO))
 			{
-				if (GetControllerButtonDown(controller, ControllerID::TWO))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}
@@ -608,20 +518,9 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id
 	{
 		if (player_id == PlayerID::ONE)
 		{
-			for (auto& key : button.keys)
+			if (DetectedKeyboardInput(button, KeyState::UP))
 			{
-				if (GetKeyUp(key))
-				{
-					return true;
-				}
-			}
-
-			for (auto& mouse : button.mouse_buttons)
-			{
-				if (GetMouseButtonUp(mouse))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
@@ -636,28 +535,14 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id
 	{
 		if (player_id == PlayerID::ONE)
 		{
-			for (auto& key : button.keys)
+			if (DetectedKeyboardInput(button, KeyState::UP))
 			{
-				if (GetKeyUp(key))
-				{
-					return true;
-				}
+				return true;
 			}
 
-			for (auto& mouse : button.mouse_buttons)
+			if (DetectedGameControllerInput(button, KeyState::UP, ControllerID::ONE))
 			{
-				if (GetMouseButtonUp(mouse))
-				{
-					return true;
-				}
-			}
-
-			for (auto& controller : button.controller_buttons)
-			{
-				if (GetControllerButtonUp(controller, ControllerID::ONE))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
@@ -673,30 +558,16 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id
 	{
 		if (player_id == PlayerID::ONE)
 		{
-			for (auto& key : button.keys)
+			if (DetectedKeyboardInput(button, KeyState::UP))
 			{
-				if (GetKeyUp(key))
-				{
-					return true;
-				}
-			}
-
-			for (auto& mouse : button.mouse_buttons)
-			{
-				if (GetMouseButtonUp(mouse))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
 		{
-			for (auto& controller : button.controller_buttons)
+			if (DetectedGameControllerInput(button, KeyState::UP, ControllerID::ONE))
 			{
-				if (GetControllerButtonUp(controller, ControllerID::ONE))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}
@@ -708,22 +579,16 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id
 	{
 		if (player_id == PlayerID::ONE)
 		{
-			for (auto& controller : button.controller_buttons)
+			if (DetectedGameControllerInput(button, KeyState::UP, ControllerID::ONE))
 			{
-				if (GetControllerButtonUp(controller, ControllerID::ONE))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
 		{
-			for (auto& controller : button.controller_buttons)
+			if (DetectedGameControllerInput(button, KeyState::UP, ControllerID::TWO))
 			{
-				if (GetControllerButtonUp(controller, ControllerID::TWO))
-				{
-					return true;
-				}
+				return true;
 			}
 		}
 	}
@@ -881,7 +746,7 @@ ENGINE_API float ModuleInput::GetTriggerControllerRaw(ControllerAxis type, Contr
 	}
 }
 
-ENGINE_API float ModuleInput::GetVertical(PlayerID player_id) 
+ENGINE_API float ModuleInput::GetVertical(PlayerID player_id)
 {
 	// No game controllers connected
 	// Player 1 -> Keyboard
@@ -1110,4 +975,122 @@ float2 ModuleInput::Filter2D(Sint16 input_x, Sint16 input_y) const
 
 
 	return dir;
+}
+
+bool ModuleInput::DetectedKeyboardInput(const GameInput& button, KeyState state)
+{
+	switch (state)
+	{
+	case KeyState::REPEAT:
+	{
+		for (auto& key : button.keys)
+		{
+			if (GetKey(key))
+			{
+				return true;
+			}
+		}
+
+		for (auto& mouse : button.mouse_buttons)
+		{
+			if (GetMouseButton(mouse))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	case KeyState::DOWN:
+	{
+		for (auto& key : button.keys)
+		{
+			if (GetKeyDown(key))
+			{
+				return true;
+			}
+		}
+
+		for (auto& mouse : button.mouse_buttons)
+		{
+			if (GetMouseButtonDown(mouse))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	case KeyState::UP:
+	{
+		for (auto& key : button.keys)
+		{
+			if (GetKeyUp(key))
+			{
+				return true;
+			}
+		}
+
+		for (auto& mouse : button.mouse_buttons)
+		{
+			if (GetMouseButtonUp(mouse))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	default:
+		return false;
+	}
+
+	return false;
+}
+
+bool ModuleInput::DetectedGameControllerInput(const GameInput& button, KeyState state, ControllerID controller_id)
+{
+	switch (state)
+	{
+	case KeyState::REPEAT:
+	{
+		for (auto& controller : button.controller_buttons)
+		{
+			if (GetControllerButton(controller, controller_id))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	case KeyState::DOWN:
+	{
+		for (auto& controller : button.controller_buttons)
+		{
+			if (GetControllerButtonDown(controller, controller_id))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	case KeyState::UP:
+	{
+		for (auto& controller : button.controller_buttons)
+		{
+			if (GetControllerButtonUp(controller, controller_id))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	default:
+		return false;
+	}
+
+	return false;
 }
