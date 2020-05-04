@@ -20,6 +20,9 @@
 #include "Module/ModuleModelLoader.h"
 #include "Module/ModuleScene.h"
 
+#include "Component/ComponentLight.h"
+#include "Component/ComponentParticleSystem.h"
+
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
 #include <imgui.h>
@@ -123,14 +126,38 @@ void PanelMenuBar::ShowGameObjectMenu()
 		{
 			if (ImGui::Selectable("Point Light"))
 			{
-				GameObject* created_game_object = App->scene->CreateGameObject();
+				GameObject* created_game_object =  App->scene->CreateGameObject();
 				created_game_object->name = "Point Light";
-				created_game_object->CreateComponent(Component::ComponentType::LIGHT);
+				ComponentLight* point_light_component = static_cast<ComponentLight*>(created_game_object->CreateComponent(Component::ComponentType::LIGHT));
+				point_light_component->light_type = ComponentLight::LightType::POINT_LIGHT;
 			}
-			
+			if (ImGui::Selectable("Spot Light"))
+			{
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Spot Light";
+				ComponentLight* spot_light_component = static_cast<ComponentLight*>(created_game_object->CreateComponent(Component::ComponentType::LIGHT));
+				spot_light_component->light_type = ComponentLight::LightType::SPOT_LIGHT;
+			}
+			if (ImGui::Selectable("Directional Light"))
+			{
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Directional Light";
+				ComponentLight* directional_light_component = static_cast<ComponentLight*>(created_game_object->CreateComponent(Component::ComponentType::LIGHT));
+				directional_light_component->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
+			}
 			ImGui::EndMenu();
 		}
+		if (ImGui::BeginMenu("Effects"))
+		{
+			if (ImGui::Selectable("Particle System"))
+			{
+				GameObject* created_game_object = App->scene->CreateGameObject();
+				created_game_object->name = "Particle System";
+				ComponentParticleSystem* particle_system_component = static_cast<ComponentParticleSystem*>(created_game_object->CreateComponent(Component::ComponentType::PARTICLE_SYSTEM));
+			}
 
+			ImGui::EndMenu();
+		}
 		if (ImGui::Selectable("Camera"))
 		{
 			GameObject* created_game_object = App->scene->CreateGameObject();

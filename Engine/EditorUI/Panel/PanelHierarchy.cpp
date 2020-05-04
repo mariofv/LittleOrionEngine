@@ -5,6 +5,8 @@
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentParticleSystem.h"
+
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -276,6 +278,20 @@ void PanelHierarchy::ShowComponentObjectCreationMenu(GameObject *game_object) co
 
 		ImGui::EndMenu();
 	}
+
+	if (ImGui::BeginMenu("Effects"))
+	{
+		if (ImGui::Selectable("Particle System"))
+		{
+			created_game_object = App->scene->CreateGameObject();
+			created_game_object->name = "Particle System";
+			ComponentParticleSystem* particle_system_component = static_cast<ComponentParticleSystem*>(created_game_object->CreateComponent(Component::ComponentType::PARTICLE_SYSTEM));
+		}
+
+		ImGui::EndMenu();
+	}
+
+
 
 	if (ImGui::Selectable("Camera"))
 	{
