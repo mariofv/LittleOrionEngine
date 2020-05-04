@@ -336,4 +336,4 @@ TwinlightSouls/
 Game/Resources/Scripts/GameplaySystem*[0-9]*
 
 /[Bb]inaries*
-!BuildCreator.ps1
+*.ps1
