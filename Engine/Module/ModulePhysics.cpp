@@ -60,16 +60,18 @@ update_status ModulePhysics::Update()
 	for (auto collider : colliders) {
 		
 
-		if (App->time->isGameRunning() && collider->collider_type != ComponentCollider::ColliderType::MESH)
-		{
-			collider->MoveBody();
+		if (App->time->isGameRunning()) {
+			if (collider->collider_type != ComponentCollider::ColliderType::MESH)
+			{
+				collider->MoveBody();
+			}
 		}
 		else
 		{
-			if (collider->owner->transform.has_changed) {
-				collider->UpdateDimensions();
-				collider->owner->transform.has_changed = false;
-			}
+			
+			collider->UpdateDimensions();
+			collider->owner->transform.has_changed = false;
+			
 			
 		}
 		if(collider->collider_type != ComponentCollider::ColliderType::MESH)

@@ -41,6 +41,7 @@ public:
 	bool DetectCollision(); //returns true if collides with any object in the world
 	bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
 	void SetStatic();
+	void SetRotationAxis();
 
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
@@ -62,6 +63,9 @@ public:
 	bool detectCollision = true;
 	bool is_attached = false;
 	bool is_static = false;
+	bool x_axis = true;
+	bool y_axis = true;
+	bool z_axis = true;
 
 };
 

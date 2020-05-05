@@ -56,6 +56,9 @@ void ComponentCollider::Save(Config & config) const
 	config.AddBool(detectCollision, "Collision");
 	config.AddBool(visualize, "Visualize");
 	config.AddBool(is_attached, "Attached");
+	config.AddBool(x_axis, "x_axis");
+	config.AddBool(y_axis, "y_axis");
+	config.AddBool(z_axis, "z_axis");
 
 }
 
@@ -69,7 +72,14 @@ void ComponentCollider::Load(const Config & config)
 	detectCollision = config.GetBool("Collision", true);
 	visualize = config.GetBool("Visualize", true);
 	is_attached = config.GetBool("Attached", false);
+	x_axis = config.GetBool("x_axis", true);
+	y_axis = config.GetBool("y_axis", true);
+	z_axis = config.GetBool("z_axis", true);
 	AddBody();
+	if (is_static) { SetStatic(); }
+	if (!visualize) { SetVisualization(); }
+	SetRotationAxis();
+	if (!detectCollision) { SetCollisionDetection(); }
 }
 
 btRigidBody* ComponentCollider::AddBody()
@@ -96,7 +106,6 @@ btRigidBody* ComponentCollider::AddBody()
 	if (mass != 0.f) col_shape->calculateLocalInertia(mass, localInertia);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motion_state, col_shape, localInertia);
 	body = new btRigidBody(rbInfo);
-	
 	App->physics->world->addRigidBody(body);
 	
 	return body;
@@ -224,13 +233,19 @@ void ComponentCollider::SetStatic()
 {
 	int flags = body->getCollisionFlags();
 	if (is_static) {
-		flags |= body->CF_STATIC_OBJECT;
+		flags |= body->CF_KINEMATIC_OBJECT;
 		body->setCollisionFlags(flags);
 	}
 	else {
-		flags -= body->CF_STATIC_OBJECT;
+		flags -= body->CF_KINEMATIC_OBJECT;
 		body->setCollisionFlags(flags);
 	}
+	
+}
+
+void ComponentCollider::SetRotationAxis()
+{
+	body->setAngularFactor(btVector3(int(x_axis), int(y_axis), int(z_axis)));
 }
 
 void ComponentCollider::AddForce(float3& force)

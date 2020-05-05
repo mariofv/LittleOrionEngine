@@ -874,6 +874,19 @@ void PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 	{
 		collider->SetCollisionDetection();
 	}
+	ImGui::Text("Axis Rotation");
+	if (ImGui::Checkbox("X Axis", &collider->x_axis))
+	{
+		collider->SetRotationAxis();
+	}
+	if (ImGui::Checkbox("Y Axis", &collider->y_axis))
+	{
+		collider->SetRotationAxis();
+	}
+	if (ImGui::Checkbox("Z Axis", &collider->z_axis))
+	{
+		collider->SetRotationAxis();
+	}
 }
 
 

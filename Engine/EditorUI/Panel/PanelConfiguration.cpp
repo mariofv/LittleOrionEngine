@@ -687,7 +687,7 @@ void PanelConfiguration::ShowPhysicsOptions()
 	ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAR));
 	if (ImGui::CollapsingHeader(ICON_FA_WINDOW_MAXIMIZE " Physics")) {
 
-		if (ImGui::SliderFloat3("Gravity", &App->physics->gravity.x, -1000, 1000))
+		if (ImGui::DragFloat3("Gravity", &App->physics->gravity.x, -1000, 1000))
 		{
 			App->physics->SetGravity(App->physics->GetGravity());
 		}
