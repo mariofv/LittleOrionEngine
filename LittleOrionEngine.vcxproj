@@ -271,7 +271,6 @@
     <ClInclude Include="Engine\Module\ModuleActions.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.h" />
     <ClInclude Include="Engine\EditorUI\Helper\ImGuiHelper.h" />
-    <ClInclude Include="Libraries\include\cr\cr.h" />
     <ClInclude Include="Libraries\include\NodeEditor\crude_json.h" />
     <ClInclude Include="Libraries\include\NodeEditor\imgui_bezier_math.h" />
     <ClInclude Include="Libraries\include\NodeEditor\imgui_canvas.h" />
