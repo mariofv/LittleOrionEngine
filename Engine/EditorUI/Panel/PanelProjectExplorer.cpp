@@ -217,8 +217,8 @@ void PanelProjectExplorer::ResourceDropTarget(Path * folder_path) const
 			assert(payload->DataSize == sizeof(Metafile*));
 			Metafile* incoming_resource_metafile = *(Metafile**)payload->Data;
 			App->filesystem->Move(incoming_resource_metafile->imported_file_path, folder_path->GetFullPath());
-			//Path* new_metafile = App->filesystem->Move(incoming_resource_metafile->metafile_path, folder_path->GetFullPath());
-			//App->resources->metafile_manager->RefreshMetafile(*new_metafile);
+			Path* new_metafile = App->filesystem->Move(incoming_resource_metafile->metafile_path, folder_path->GetFullPath());
+			App->resources->metafile_manager->RefreshMetafile(*new_metafile);
 		}
 		ImGui::EndDragDropTarget();
 	}

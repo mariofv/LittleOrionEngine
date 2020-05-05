@@ -103,7 +103,7 @@ Path* Path::Save(const char* file_name, const FileData& data, bool append)
 		saved_file_path->Refresh();
 	}
 
-	free((char*) data.buffer);
+	delete[] data.buffer;
 
 	return saved_file_path;
 }

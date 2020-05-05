@@ -187,14 +187,13 @@ Path* ModuleFileSystem::Copy(const std::string& source_path, const std::string& 
 	std::string file_name = copied_file_name == "" ? source_path_object->GetFilename() : copied_file_name;
 	Path* copied_file_path = destination_path_object->Save(file_name.c_str(), source_file_data, false);
 	
-	delete[] source_file_data.buffer;
 	return copied_file_path;
 }
 
 Path* ModuleFileSystem::Move(const std::string& source_path, const std::string& destination_path)
 {
 	Path* copied_file_path = Copy(source_path, destination_path);
-	Remove(source_path);
+	//Remove(source_path);
 	return copied_file_path;
 }
 
