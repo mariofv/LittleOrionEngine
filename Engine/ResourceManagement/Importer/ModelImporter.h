@@ -17,6 +17,7 @@ struct aiMesh;
 
 class Config;
 class Path;
+class ModelMetafile;
 
 class ModelImporter : public Importer
 {
@@ -27,6 +28,7 @@ struct CurrentModelData
 	Path* asset_file_folder_path = nullptr;
 	float scale = 1.f;
 	std::map<std::string, uint32_t> skeleton_cache;
+	const ModelMetafile* model_metafile;
 };
 
 public:

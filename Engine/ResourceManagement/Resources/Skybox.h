@@ -37,8 +37,6 @@ public:
 
 private:
 	void GenerateSkyboxCube();
-	void GenerateTextures();
-	void GenerateTexture(SkyboxFace face);
 	void GenerateSkyboxCubeMap();
 
 private:

@@ -6,6 +6,8 @@
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
 #include "Metafile.h"
+#include "ModelMetafile.h"
+#include "TextureMetafile.h"
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Resources/Resource.h"
 
@@ -28,18 +30,22 @@ Metafile* MetafileManager::GetMetafile(const Path& metafile_path)
 		return metafiles[metafile_path.GetFullPath()];
 	}
 
-	FileData meta_file_data = metafile_path.GetFile()->Load();
+	File* metafile_file = metafile_path.GetFile();
+	FileData meta_file_data = metafile_file->Load();
 	std::string serialized_string ((char*)meta_file_data.buffer, meta_file_data.size);
 	free((char*)meta_file_data.buffer);
-
-	Metafile* created_metafile = new Metafile();
-	created_metafile->metafile_path = metafile_path.GetFullPath();
 	Config meta_config(serialized_string);
+
+	Metafile* created_metafile = CreateSpecializedMetafile(ResourceType::UNKNOWN);
 	created_metafile->Load(meta_config);
+	Metafile* specialized_metafile = CreateSpecializedMetafile(created_metafile->resource_type);
+	delete created_metafile;
 
-	metafiles[created_metafile->metafile_path] = created_metafile;
+	specialized_metafile->Load(meta_config);
 
-	return created_metafile;
+	metafiles[specialized_metafile->metafile_path] = specialized_metafile;
+
+	return specialized_metafile;
 }
 
 
@@ -51,7 +57,7 @@ Metafile* MetafileManager::CreateMetafile(const std::string& asset_file_path_str
 Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType resource_type, uint32_t uuid)
 {
 
-	Metafile* created_metafile = new Metafile();
+	Metafile* created_metafile = CreateSpecializedMetafile(resource_type);
 
 	std::string metafile_path_string = GetMetafilePath(asset_file_path);
 	assert(metafiles.find(metafile_path_string) == metafiles.end());
@@ -96,6 +102,7 @@ void MetafileManager::TouchMetafileTimestamp(Metafile& metafile)
 	seconds current_timestamp = duration_cast<seconds>(system_clock::now().time_since_epoch());
 	long long timestamp = current_timestamp.count();
 	metafile.timestamp = timestamp;
+	metafile.version = Importer::IMPORTER_VERSION;
 
 	Config metafile_config;
 	metafile.Save(metafile_config);
@@ -134,6 +141,7 @@ void MetafileManager::DeleteMetafileInconsistencies(const Metafile& metafile)
 	App->filesystem->Remove(metafile.metafile_path);
 }
 
+
 std::string MetafileManager::GetMetafileExportedFolder(const Metafile& metafile)
 {
 	return GetUUIDExportedFolder(metafile.uuid);
@@ -154,4 +162,22 @@ std::string MetafileManager::GetUUIDExportedFile(uint32_t uuid)
 {
 	std::string uuid_string = std::to_string(uuid);
 	return std::string(LIBRARY_METADATA_PATH) + "/" + uuid_string.substr(0, 2) + "/" + uuid_string;
+}
+
+Metafile * MetafileManager::CreateSpecializedMetafile(ResourceType resource_type) const
+{
+	Metafile* metafile;
+	switch (resource_type)
+	{
+		case ResourceType::MODEL:
+			metafile = new ModelMetafile();
+			break;
+		case ResourceType::TEXTURE:
+			metafile = new TextureMetafile();
+			break;
+		default:
+			metafile = new Metafile();
+			break;
+	}
+	return metafile;
 }

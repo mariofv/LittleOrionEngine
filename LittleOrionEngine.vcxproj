@@ -18,7 +18,7 @@
     <ProjectGuid>{746CC4C3-787F-4B0E-AA66-E388FE3FF4F6}</ProjectGuid>
     <RootNamespace>SDLGame</RootNamespace>
     <ProjectName>LittleOrionEngine</ProjectName>
-    <WindowsTargetPlatformVersion>10.0.17763.0</WindowsTargetPlatformVersion>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
   </PropertyGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
@@ -147,12 +147,15 @@
     <ClInclude Include="Engine\Component\ComponentMeshCollider.h" />
     <ClInclude Include="Engine\Component\ComponentSphereCollider.h" />
     <ClInclude Include="Engine\DLL\DLLManager.h" />
+	<ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h" />
     <ClInclude Include="Engine\Helper\BuildOptions.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
     <ClInclude Include="Engine\Module\ModulePhysics.h" />
     <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h" />
+	<ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h" />
+    <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h" />
     <ClInclude Include="Engine\Actions\EditorAction.h" />
     <ClInclude Include="Engine\Actions\EditorActionAddComponent.h" />
@@ -344,6 +347,7 @@
     <ClCompile Include="Engine\Component\ComponentUI.cpp" />
     <ClCompile Include="Engine\DLL\DLLManager.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
+	<ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelStateMachine.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp" />
@@ -380,6 +384,8 @@
     <ClCompile Include="Engine\ResourceManagement\Metafile\MetafileManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\StateMachineImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\StateMachineManager.cpp" />
+	<ClCompile Include="Engine\ResourceManagement\Metafile\ModelMetafile.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Metafile\TextureMetafile.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Animation.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Material.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp" />

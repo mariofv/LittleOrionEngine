@@ -4,6 +4,8 @@
 #include "Panel.h"
 #include "InspectorSubpanel/PanelGameObject.h"
 #include "InspectorSubpanel/PanelMaterial.h"
+#include "InspectorSubpanel/PanelMetaFile.h"
+
 
 class PanelInspector : public Panel
 {
@@ -16,6 +18,7 @@ public:
 public:
 	PanelGameObject gameobject_panel;
 	PanelMaterial material_panel;
+	PanelMetaFile metafile_panel;
 
 };
 

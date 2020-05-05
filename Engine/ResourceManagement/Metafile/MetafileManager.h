@@ -44,6 +44,7 @@ public:
 
 private:
 	std::unordered_map<std::string, Metafile*> metafiles;
+	Metafile* CreateSpecializedMetafile(ResourceType resource_type) const;
 };
 
 

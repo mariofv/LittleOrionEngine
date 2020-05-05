@@ -3,8 +3,11 @@
 #include "Helper/Config.h"
 #include "Main/Application.h"
 #include "Module/ModuleFileSystem.h"
+#include "Module/ModuleResourceManager.h"
+#include "Helper/Utils.h"
 
 #include "ResourceManagement/Metafile/Metafile.h"
+#include "ResourceManagement/Metafile/TextureMetafile.h"
 #include "ResourceManagement/Metafile/MetafileManager.h"
 #include "ResourceManagement/Resources/Texture.h"
 
@@ -15,45 +18,60 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
+constexpr size_t extension_size = 3; //3 characters: DDS, TGA, JPG..
 std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& resource_data)
 {
-	std::shared_ptr<Texture> loaded_texture;
+	std::string extension;
+	TextureOptions texture_options;
+	char* cursor = (char*)resource_data.buffer;
+	size_t bytes = sizeof(TextureOptions);
+	memcpy(&texture_options, cursor, bytes);
 
-	if (MetafileManager::GetUUIDExportedFile(uuid).find("_normal") != std::string::npos)
+	cursor += bytes;
+	bytes = extension_size;
+	extension.resize(extension_size);
+	memcpy( extension.data(), cursor, bytes);
+
+	size_t offset = extension_size + sizeof(TextureOptions);
+
+	std::vector<char> data;
+	int width, height;
+	bool normal_map = texture_options.texture_type == TextureType::NORMAL;
+	if (normal_map)
 	{
-		int width, height;
-		std::vector<char> data = LoadImageData(MetafileManager::GetUUIDExportedFile(uuid), width, height);
-		loaded_texture = std::make_shared<Texture>(uuid, data.data(), 0, width, height, true);
+		 data = LoadImageData(resource_data, offset, extension,width, height);	
 	}
 	else
 	{
 		DDS::DDS_HEADER ddsHeader;
-		std::vector<char> data = LoadCompressedDDS(resource_data, ddsHeader);
-		if (data.size())
-		{
-			loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), ddsHeader.dwWidth, ddsHeader.dwHeight);
-		}
+		data = LoadCompressedDDS(resource_data, offset, ddsHeader);
+		width = ddsHeader.dwWidth;
+		height = ddsHeader.dwHeight;
 	}
-
-
+	std::shared_ptr<Texture> loaded_texture;
+	if (data.size())
+	{
+		loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), width, height, texture_options);
+	}
 	return loaded_texture;
 }
 
 
-std::vector<char> TextureManager::LoadImageData(const std::string& file_path, int & width, int & height)
+std::vector<char> TextureManager::LoadImageData(const FileData& resource_data, size_t offset, const std::string& extension, int & width, int & height)
 {
 	std::vector<char> data;
 	ILuint image;
 	ilGenImages(1, &image);
 	ilBindImage(image);
-	ilLoadImage(file_path.c_str());
+	char* resource_data_with_offset = (char*)resource_data.buffer + offset;
+	ilLoadL(Utils::GetImageType(extension), resource_data_with_offset, resource_data.size - offset);
 
 	ILenum error;
 	error = ilGetError();
-	if (error == IL_COULD_NOT_OPEN_FILE)
+	while (error != IL_NO_ERROR)
 	{
-		APP_LOG_ERROR("Error loading texture %s. File not found", file_path.c_str());
-		return data;
+		APP_LOG_ERROR("Error loading texture: %s", iluErrorString(error));
+		error = ilGetError();
 	}
 
 	ILinfo ImageInfo;
@@ -72,10 +90,10 @@ std::vector<char> TextureManager::LoadImageData(const std::string& file_path, in
 	return data;
 }
 
-std::vector<char> TextureManager::LoadCompressedDDS(const FileData& resource_data, DDS::DDS_HEADER & dds_header)
+std::vector<char> TextureManager::LoadCompressedDDS(const FileData& resource_data, size_t offset, DDS::DDS_HEADER & dds_header)
 {
-	char * loaded_data = (char*)resource_data.buffer;
-	size_t dds_content_size = resource_data.size;
+	char * loaded_data = (char*)resource_data.buffer + offset;
+	size_t dds_content_size = resource_data.size - offset;
 
 	std::vector<char> data;
 	if (loaded_data)

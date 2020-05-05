@@ -9,6 +9,7 @@
 
 #include <MathGeoLib/Geometry/LineSegment.h>
 #include <GL/glew.h>
+#include <list>
 
 class ComponentCamera;
 class ComponentMeshRenderer;
@@ -64,7 +65,7 @@ private:
 	std::string GetDrawMode() const;
 
 	void GetMeshesToRender(const ComponentCamera* camera);
-
+	void SetListOfMeshesToRender(const ComponentCamera* camera);
 
 public:
 	bool anti_aliasing = false;
@@ -78,7 +79,7 @@ private:
 	bool gl_depth_test = false;
 	bool gl_scissor_test = false;
 	bool gl_stencil_test = false;
-	bool gl_blend = false;
+	bool gl_blend = true;
 	bool gl_cull_face = false;
 	int culled_faces = 0;
 	int front_faces = 0;
@@ -90,7 +91,8 @@ private:
 
 	std::vector<ComponentMeshRenderer*> meshes;
 	std::vector<ComponentMeshRenderer*> meshes_to_render;
-
+	typedef std::pair<float, ComponentMeshRenderer*> ipair;
+	std::list <ipair> opaque_mesh_to_render, transparent_mesh_to_render;
 	int num_rendered_tris = 0;
 	int num_rendered_verts = 0;
 	Timer * rendering_measure_timer = new Timer();

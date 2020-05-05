@@ -520,6 +520,15 @@
     <ClCompile Include="Engine\Module\ModulePhysics.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.cpp">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Metafile\ModelMetafile.cpp">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Metafile\TextureMetafile.cpp">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1031,6 +1040,15 @@
     </ClInclude>
     <ClInclude Include="Engine\Module\ModulePhysics.h">
       <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
