@@ -416,36 +416,6 @@
     <ClCompile Include="Engine\ResourceManagement\Metafile\ModelMetafile.cpp">
       <Filter>Engine\ResourceManagement\Metafile</Filter>
     </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DebugUtils\DebugDraw.cpp" />
-    <ClCompile Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.cpp" />
-    <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.cpp" />
-    <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDump.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourCrowd.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourLocalBoundary.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourObstacleAvoidance.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourPathCorridor.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourPathQueue.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourProximityGrid.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourTileCache\DetourTileCache.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourTileCache\DetourTileCacheBuilder.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourAlloc.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourAssert.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourCommon.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMesh.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMeshBuilder.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMeshQuery.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNode.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\Recast.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastAlloc.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastArea.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastAssert.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastContour.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastFilter.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastLayers.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastMesh.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastMeshDetail.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastRasterization.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastRegion.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -863,30 +833,6 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DebugUtils\DebugDraw.h" />
-    <ClInclude Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.h" />
-    <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.h" />
-    <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDump.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourCrowd.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourLocalBoundary.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourObstacleAvoidance.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourPathCorridor.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourPathQueue.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourProximityGrid.h" />
-    <ClInclude Include="Libraries\include\recast\DetourTileCache\DetourTileCache.h" />
-    <ClInclude Include="Libraries\include\recast\DetourTileCache\DetourTileCacheBuilder.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourAlloc.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourAssert.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourCommon.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourMath.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMesh.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMeshBuilder.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMeshQuery.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNode.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourStatus.h" />
-    <ClInclude Include="Libraries\include\recast\Recast\Recast.h" />
-    <ClInclude Include="Libraries\include\recast\Recast\RecastAlloc.h" />
-    <ClInclude Include="Libraries\include\recast\Recast\RecastAssert.h" />
     <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h" />
     <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h" />
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h" />

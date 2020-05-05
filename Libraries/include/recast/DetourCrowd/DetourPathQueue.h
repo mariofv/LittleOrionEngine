@@ -19,8 +19,8 @@
 #ifndef DETOURPATHQUEUE_H
 #define DETOURPATHQUEUE_H
 
-#include "recast/Detour/DetourNavMesh.h"
-#include "recast/Detour/DetourNavMeshQuery.h"
+#include "Detour/DetourNavMesh.h"
+#include "Detour/DetourNavMeshQuery.h"
 
 static const unsigned int DT_PATHQ_INVALID = 0;
 

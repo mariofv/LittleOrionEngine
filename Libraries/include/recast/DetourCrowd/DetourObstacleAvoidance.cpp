@@ -17,10 +17,10 @@
 //
 
 #include "DetourObstacleAvoidance.h"
-#include "recast/Detour/DetourCommon.h"
-#include "recast/Detour/DetourMath.h"
-#include "recast/Detour/DetourAlloc.h"
-#include "recast/Detour/DetourAssert.h"
+#include "Detour/DetourCommon.h"
+#include "Detour/DetourMath.h"
+#include "Detour/DetourAlloc.h"
+#include "Detour/DetourAssert.h"
 #include <string.h>
 #include <float.h>
 #include <new>
