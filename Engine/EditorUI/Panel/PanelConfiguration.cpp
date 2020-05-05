@@ -209,6 +209,14 @@ void PanelConfiguration::ShowRenderOptions()
 			App->cameras->main_camera->toggle_msaa = true;
 		}
 
+		ImGui::SameLine();
+
+		if (ImGui::Checkbox("Render Depth", &App->renderer->render_depth))
+		{
+			App->renderer->SetRenderDepth(App->renderer->render_depth);
+
+		}
+
 		ImGui::Separator();
 		if (ImGui::Checkbox("Face culling", &App->renderer->gl_cull_face))
 		{

@@ -60,6 +60,7 @@ private:
 	void SetFrontFaces(GLenum front_faces) const;
 	void SetDithering(bool gl_dither);
 	void SetMinMaxing(bool gl_minmax);
+	void SetRenderDepth(bool render);
 
 	void SetDrawMode(DrawMode draw_mode);
 	std::string GetDrawMode() const;
@@ -69,6 +70,8 @@ private:
 
 public:
 	bool anti_aliasing = false;
+	bool render_depth = true;
+
 
 private:
 	void* context = nullptr;

@@ -10,9 +10,6 @@ in vec3 tangent;
 //Tangent - Normal mapping variables
 in mat3 TBN;
 
-
-
-
 out vec4 FragColor;
 
 //constants
@@ -87,6 +84,7 @@ uniform int num_point_lights;
 uniform PointLight point_lights[10];
 
 
+
 //COLOR TEXTURES
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord);
@@ -105,11 +103,16 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
 vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color);
 float NormalizedSpecular(vec3 normal, vec3 half_dir);
 
+//SHADOW MAPS
+float near = 0.1; //Variables that help escalate the depth
+float far = 100;
+float CalculateDepth(float depth);
 
 void main()
 {
 
 	vec3 result = vec3(0);
+
 
 	//tiling
 	vec2 tiling = vec2(material.tiling_x, material.tiling_y)*texCoord; 
@@ -162,15 +165,14 @@ void main()
 		}
 	}
 
-	//Ambient light
-	result +=  diffuse_color.rgb * (occlusion_color*material.k_ambient);
+	
+	result +=  diffuse_color.rgb * (occlusion_color*material.k_ambient); //Ambient light
 
+	float depth = CalculateDepth(gl_FragCoord.z) / far;
 	FragColor = vec4(result,1.0);
 	
-	//Gamma Correction - The last operation of postprocess
-	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma));
-
-
+	
+	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
 	FragColor.a=material.transparency;
 }
 
@@ -294,6 +296,11 @@ float NormalizedSpecular(vec3 normal, vec3 half_dir) // Old refference: http://w
 	return pow(spec, material.specular_color.w) * normalization_factor;
 }
 
+float CalculateDepth(float depth)
+{
+	float z = (depth * 2) - 1; // [0....1]
+	return (2.0 * near * far) / (far + near - z * (far - near));
+}
 
 
 

@@ -16,6 +16,13 @@ public:
 		DIRECTIONAL_LIGHT
 	};
 
+	class DirectionalLight {
+		//Shadows stuff
+		float4x4 view;
+		float4x4 proj;
+		Frustum light_frustum;
+	};
+
 	class PointLight
 	{
 		public:
@@ -95,6 +102,7 @@ public:
 
 	PointLight point_light_parameters;
 	SpotLight spot_light_parameters;
+	DirectionalLight directional_light_parameters;
 
 private:
 	friend class PanelComponent;

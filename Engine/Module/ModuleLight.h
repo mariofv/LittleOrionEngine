@@ -27,6 +27,8 @@ public:
 
 private:
 	void SortClosestLights(const float3& position, ComponentLight::LightType light_type);
+	void SetDirectionalFrustum(); //SHADOWS
+	void GenerateLightMatrices(GLuint program, bool render_depth);
 
 public:
 	static const unsigned int MAX_DIRECTIONAL_LIGHTS_RENDERED = 1;
@@ -39,6 +41,12 @@ public:
 	unsigned int current_number_point_lights_rendered = 0;
 
 	std::vector<ComponentLight*> lights;
+
+
+	float4x4 directional_view; //FOR THE SHADOWS
+	float4x4 directional_proj;
+	Frustum light_frustum;
+
 
 private:
 	std::vector< std::pair<float, ComponentLight*> >  closest_lights;

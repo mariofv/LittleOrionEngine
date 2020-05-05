@@ -293,6 +293,11 @@ void ModuleRender::SetBlending(bool gl_blend)
 
 }
 
+void ModuleRender::SetRenderDepth(bool depth)
+{
+	render_depth = depth;
+}
+
 void ModuleRender::SetFaceCulling(bool gl_cull_face)
 {
 	this->gl_cull_face = gl_cull_face;

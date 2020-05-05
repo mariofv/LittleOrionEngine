@@ -2,6 +2,7 @@
 #include "Main/Application.h"
 #include "Module/ModuleProgram.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleRender.h"
 
 #include <Brofiler/Brofiler.h>
 #include <algorithm>
@@ -35,6 +36,8 @@ void ModuleLight::Render(const float3& mesh_position, GLuint program)
 	RenderDirectionalLight(mesh_position);
 	RenderSpotLights(mesh_position, program);
 	RenderPointLights(mesh_position, program);
+	GenerateLightMatrices(program, App->renderer->render_depth);
+
 }
 
 void ModuleLight::RenderDirectionalLight(const float3& mesh_position)
@@ -53,9 +56,12 @@ void ModuleLight::RenderDirectionalLight(const float3& mesh_position)
 		glBufferSubData(GL_UNIFORM_BUFFER, App->program->uniform_buffer.lights_uniform_offset, sizeof(float3), light_color_scaled.ptr());
 
 		size_t light_direction_offset = App->program->uniform_buffer.lights_uniform_offset + 4 * sizeof(float);
-		glBufferSubData(GL_UNIFORM_BUFFER, light_direction_offset, sizeof(float3), light->owner->transform.GetFrontVector().ptr());
+		glBufferSubData(GL_UNIFORM_BUFFER, light_direction_offset, sizeof(float3), light->owner->transform.GetFrontVector().ptr()); //DIRECCIO
+
+		light_frustum.front = light->owner->transform.GetFrontVector(); //Update front vector light frustum
 
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
+
 
 		++current_number_directional_lights_rendered;
 		++i;
@@ -120,9 +126,35 @@ void ModuleLight::RenderPointLights(const float3& mesh_position, GLuint program)
 	glUniform1i(glGetUniformLocation(program, "num_point_lights"), current_number_point_lights_rendered);
 }
 
+void ModuleLight::GenerateLightMatrices(GLuint program, bool render_depth)
+{
+	directional_proj = light_frustum.ProjectionMatrix();
+	directional_view = light_frustum.ViewMatrix();
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "directional_view"), 1, GL_TRUE, &directional_view[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "directional_proj"), 1, GL_TRUE, &directional_proj[0][0]);
+	glUniform1f(glGetUniformLocation(program, "activate_depth_map"), (int)render_depth);
+
+
+}
+
+void ModuleLight::SetDirectionalFrustum()
+{
+	light_frustum.type = FrustumType::OrthographicFrustum;
+	light_frustum.pos = float3::unitX;
+	light_frustum.front = float3::unitZ;
+	light_frustum.up = float3::unitY;
+	light_frustum.nearPlaneDistance = 1.f;
+	light_frustum.farPlaneDistance = 100.0f;
+	light_frustum.orthographicWidth = 50;
+	light_frustum.orthographicHeight = 50;
+
+}
+
 ComponentLight* ModuleLight::CreateComponentLight()
 {
 	ComponentLight * created_light = new ComponentLight();
+	SetDirectionalFrustum();
 	lights.push_back(created_light);
 	return created_light;
 }
