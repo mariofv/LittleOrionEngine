@@ -54,6 +54,7 @@ public:
 	float mass = 1.0F; // 0.0F would create a static or inmutable body
 	btDefaultMotionState* motion_state = nullptr;
 	float3 scale = float3(1.0F, 1.0F, 1.0F);
+	Quat rotation = Quat::FromEulerXYX(0.0F, 0.0F, 0.0F);
 	btVector3 box_size = btVector3(1.0F, 1.0F, 1.0F);
 	btCollisionShape* col_shape;
 	btVector3 localInertia = btVector3(0.F, 0.F, 0.F);
