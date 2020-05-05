@@ -750,7 +750,10 @@ void NavMesh::SaveNavMesh(unsigned char* nav_data, unsigned int nav_data_size) c
 	Path* navmesh_path = App->filesystem->GetPath(RESOURCES_NAVMESH_PATH);
 	std::string navmesh_filename("survival_scene_navmesh.bin");
 
-	FileData navmesh_data{ reinterpret_cast<char*>(nav_data), nav_data_size };
+	unsigned char* copy_nav_data = new unsigned char[nav_data_size];
+	memcpy(copy_nav_data, nav_data, nav_data_size);
+
+	FileData navmesh_data{ reinterpret_cast<char*>(copy_nav_data), nav_data_size };
 
 	navmesh_path->Save(navmesh_filename.c_str(), navmesh_data);
 }
