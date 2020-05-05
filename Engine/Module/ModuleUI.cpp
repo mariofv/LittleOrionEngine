@@ -1,3 +1,5 @@
+#include "ModuleUI.h"
+
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentImage.h"
@@ -6,18 +8,11 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentButton.h"
 
-#include "GL/glew.h"
 #include "Main/Globals.h"
-#include "Main/Application.h"
-#include "Main/GameObject.h"
 
-#include "ModuleEditor.h"
-#include "ModuleScene.h"
-#include "ModuleUI.h"
-#include "ModuleWindow.h"
-
-#include "Brofiler/Brofiler.h"
 #include <algorithm>
+#include <Brofiler/Brofiler.h>
+#include <GL/glew.h>
 #include <SDL/SDL.h>
 
 
@@ -44,30 +39,9 @@ bool ModuleUI::CleanUp()
 void ModuleUI::Render(const ComponentCamera* camera)
 {
 	BROFILER_CATEGORY("UI: Module Render", Profiler::Color::LightSeaGreen);
-#if GAME
-	window_width = App->window->GetWidth();
-	window_height = App->window->GetHeight();
-#else
-	window_width = App->editor->scene_panel->scene_window_content_area_width;
-	window_height = App->editor->scene_panel->scene_window_content_area_height;
-#endif
-	float4x4 projection = float4x4::D3DOrthoProjLH(-1, MAX_NUM_LAYERS, window_width, window_height);
 	if (main_canvas != nullptr)
 	{
-		glDisable(GL_DEPTH_TEST);
-		RenderUIGameObject(main_canvas->owner, &projection);
-		glEnable(GL_DEPTH_TEST);
-	}
-}
-
-void ModuleUI::RenderUIGameObject(GameObject* parent, float4x4* projection)
-{
-	for (auto& ui_element : ordered_ui)
-	{
-		if (ui_element->GetType() == Component::ComponentType::UI_IMAGE)
-		{
-			static_cast<ComponentImage*>(ui_element)->Render(projection);
-		}
+		main_canvas->Render();
 	}
 }
 

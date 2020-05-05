@@ -38,11 +38,7 @@ public:
 	
 	ENGINE_API void SortComponentsUI();
 
-private:
-	void RenderUIGameObject(GameObject*, float4x4*);
-
 public:
-	float window_width, window_height;
 	ComponentCanvas* main_canvas = nullptr;
 
 private:
