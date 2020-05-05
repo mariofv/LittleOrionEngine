@@ -73,8 +73,8 @@ update_status ModuleResourceManager::PreUpdate()
 {
 	if ((thread_timer->Read() - last_imported_time) >= importer_interval_millis)
 	{
-		//importing_thread.join();
-		//importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
+		importing_thread.join();
+		importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 		CleanResourceCache();
 	}
 	return update_status::UPDATE_CONTINUE;
@@ -109,12 +109,6 @@ void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& director
 		{
 			return;
 		}
-		thread_comunication.thread_importing_hash = std::hash<std::string>{}(path_child->GetFullPath());
-		while (thread_comunication.main_importing_hash == std::hash<std::string>{}(directory_path.GetFullPath()))
-		{
-			Sleep(1000);
-		}
-
 		if (path_child->IsDirectory())
 		{
 			CleanInconsistenciesInDirectory(*path_child);
@@ -130,7 +124,6 @@ void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& director
 				metafile_manager->DeleteMetafileInconsistencies(*path_child); // TODO: This causes memory violations because bector size is modified. Look for a better way of deleting files.
 			}
 		}
-		thread_comunication.thread_importing_hash = 0;
 	}
 }
 
@@ -143,13 +136,6 @@ void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path, 
 		 {
 			 return;
 		 }
-		 /*
-		 thread_comunication.thread_importing_hash = std::hash<std::string>{}(path_child->GetFullPath());
-		 while (thread_comunication.main_importing_hash == std::hash<std::string>{}(directory_path.GetFullPath()))
-		 {
-			 Sleep(1000);
-		 }
-		 */
 		 if (path_child->IsDirectory())
 		 {
 			 ImportAssetsInDirectory(*path_child, force);
@@ -159,7 +145,6 @@ void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path, 
 			 Import(*path_child, force);
 			 ++thread_comunication.loaded_items;
 		 }
-		 thread_comunication.thread_importing_hash = 0;
 	 }
  }
 

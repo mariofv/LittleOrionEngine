@@ -12,7 +12,6 @@ void Metafile::Save(Config& config) const
 	config.AddString(metafile_path, "MetfilePath");
 	assert(!imported_file_path.empty());
 	config.AddString(imported_file_path, "ImportedFilePath");
-	assert(!exported_file_path.empty());
 	config.AddString(exported_file_path, "ExportedFilePath");
 
 	config.AddInt64(timestamp, "Timestamp");

@@ -144,8 +144,6 @@ public:
 		mutable std::mutex thread_mutex;
 		std::atomic_bool stop_thread = false;
 		std::atomic_bool finished_loading = false;
-		std::atomic_uint thread_importing_hash = 0;
-		std::atomic_uint main_importing_hash = 0;
 		std::atomic_uint loaded_items = 0;
 		std::atomic_uint total_items = 0;
 	} thread_comunication;
@@ -167,7 +165,7 @@ public:
 	std::unique_ptr<ResourceDataBase> resource_DB = nullptr;
 
 private:
-	const size_t importer_interval_millis = 60*10*1000;
+	const size_t importer_interval_millis = 15*1000;
 	float last_imported_time = 0;
 	std::thread importing_thread;
 	std::unique_ptr<Timer> thread_timer = std::make_unique<Timer>();
