@@ -127,14 +127,15 @@ public:
 	void CleanInconsistenciesInDirectory(const Path& directory_path);
 	void ImportAssetsInDirectory(const Path& directory_path, bool force = false);
 
+	void CleanResourceCache();
 	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
 	uint32_t CreateFromData(FileData data, const std::string& created_resource_path);
 
-	void CleanResourceCache();
-
 private:
+
 	void StartThread();
 	uint32_t InternalImport(Path& file_path, bool force = false) const;
+	void RefreshResourceCache();
 
 	std::shared_ptr<Resource> RetrieveFromCacheIfExist(uint32_t uuid) const;
 

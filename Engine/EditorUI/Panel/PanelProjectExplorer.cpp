@@ -298,10 +298,12 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 		if (ImGui::Selectable("Reimport"))
 		{
 			App->resources->ImportAssetsInDirectory(*selected_folder, true);
+			App->resources->CleanResourceCache();
 		}
 		if (ImGui::Selectable("Reimport All"))
 		{
 			App->resources->ImportAssetsInDirectory(*App->filesystem->GetRootPath(), true);
+			App->resources->CleanResourceCache();
 		}
 
 		/* TODO: Finish this
