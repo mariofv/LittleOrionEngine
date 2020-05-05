@@ -74,7 +74,7 @@ void EnemyController::TakeDamage(float damage)
 
 void EnemyController::Death()
 {
-
+	EnemyManager::GetInstance()->KillEnemy(this);
 }
 
 

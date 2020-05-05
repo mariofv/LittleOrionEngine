@@ -12,6 +12,8 @@
 
 #include "imgui.h"
 
+#include "EnemyController.h"
+
 EnemyManager* EnemyManager::instance_singleton = nullptr;
 
 EnemyManager* EnemyManagerDLL()
@@ -49,9 +51,14 @@ EnemyManager* EnemyManager::GetInstance()
 	return instance_singleton;
 }
 
-void EnemyManager::AddEnemy(EnemyController * enemy)
+void EnemyManager::AddEnemy(EnemyController* enemy)
 {
 	enemies.emplace_back(enemy);
+}
+
+void EnemyManager::KillEnemy(EnemyController* enemy)
+{
+	enemy->owner->transform.SetTranslation(graveyard_position);
 }
 
 // Use this for showing variables on inspector

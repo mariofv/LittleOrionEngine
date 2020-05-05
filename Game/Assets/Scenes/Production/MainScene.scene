@@ -1,10 +1,10 @@
 {
     "Prefabs": [
         {
-            "ParentUUID": 803919597,
-            "Prefab": 2876876862,
+            "ParentUUID": 0,
+            "Prefab": 2344508814,
             "Transform": {
-                "UUID": 3443953295,
+                "UUID": 1895235474,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -24,309 +24,12 @@
             },
             "UUIDS": [
                 {
-                    "UUID": 2726288449,
-                    "OriginalUUID": 2876876862
+                    "UUID": 374023203,
+                    "OriginalUUID": 2344508814
                 },
                 {
-                    "UUID": 4180854110,
-                    "OriginalUUID": 2876876863
-                }
-            ]
-        },
-        {
-            "ParentUUID": 1412395009,
-            "Prefab": 2876876862,
-            "Transform": {
-                "UUID": 3250675794,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 4262889861,
-                    "OriginalUUID": 2876876862
-                },
-                {
-                    "UUID": 1847391647,
-                    "OriginalUUID": 2876876863
-                }
-            ]
-        },
-        {
-            "ParentUUID": 1104476344,
-            "Prefab": 2876876862,
-            "Transform": {
-                "UUID": 3785104530,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 1995011745,
-                    "OriginalUUID": 2876876862
-                },
-                {
-                    "UUID": 149782014,
-                    "OriginalUUID": 2876876863
-                }
-            ]
-        },
-        {
-            "ParentUUID": 2571061186,
-            "Prefab": 2876876862,
-            "Transform": {
-                "UUID": 1912624699,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 644442104,
-                    "OriginalUUID": 2876876862
-                },
-                {
-                    "UUID": 1294464401,
-                    "OriginalUUID": 2876876863
-                }
-            ]
-        },
-        {
-            "ParentUUID": 2682051470,
-            "Prefab": 2876876862,
-            "Transform": {
-                "UUID": 2789106920,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 3614157769,
-                    "OriginalUUID": 2876876862
-                },
-                {
-                    "UUID": 4076761098,
-                    "OriginalUUID": 2876876863
-                }
-            ]
-        },
-        {
-            "ParentUUID": 1508637991,
-            "Prefab": 2876876862,
-            "Transform": {
-                "UUID": 1914354252,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 952046544,
-                    "OriginalUUID": 2876876862
-                },
-                {
-                    "UUID": 2528236156,
-                    "OriginalUUID": 2876876863
-                }
-            ]
-        },
-        {
-            "ParentUUID": 2214781112,
-            "Prefab": 2876876862,
-            "Transform": {
-                "UUID": 4091949715,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 2242016011,
-                    "OriginalUUID": 2876876862
-                },
-                {
-                    "UUID": 23200294,
-                    "OriginalUUID": 2876876863
-                }
-            ]
-        },
-        {
-            "ParentUUID": 1825268790,
-            "Prefab": 2876876862,
-            "Transform": {
-                "UUID": 1338271749,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 4249608893,
-                    "OriginalUUID": 2876876862
-                },
-                {
-                    "UUID": 183426113,
-                    "OriginalUUID": 2876876863
-                }
-            ]
-        },
-        {
-            "ParentUUID": 2592145579,
-            "Prefab": 2876876862,
-            "Transform": {
-                "UUID": 1206970123,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 398846161,
-                    "OriginalUUID": 2876876862
-                },
-                {
-                    "UUID": 822542628,
-                    "OriginalUUID": 2876876863
-                }
-            ]
-        },
-        {
-            "ParentUUID": 3962551349,
-            "Prefab": 2876876862,
-            "Transform": {
-                "UUID": 3521301598,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 3772886803,
-                    "OriginalUUID": 2876876862
-                },
-                {
-                    "UUID": 3170586992,
-                    "OriginalUUID": 2876876863
+                    "UUID": 2473895416,
+                    "OriginalUUID": 2344508815
                 }
             ]
         },
@@ -488,7 +191,43 @@
     ],
     "PrefabsComponents": [
         {
+            "Transform": {
+                "UUID": 2278221396,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
             "Components": [
+                {
+                    "UUID": 2136013022,
+                    "ComponentType": 8,
+                    "Active": true,
+                    "StateMachineResource": 507853369
+                }
+            ],
+            "UUID": 2473895416
+        },
+        {
+            "Components": [
+                {
+                    "UUID": 1350054919,
+                    "ComponentType": 8,
+                    "Active": true,
+                    "StateMachineResource": 2258225
+                },
                 {
                     "UUID": 2169249036,
                     "ComponentType": 8,
@@ -723,7 +462,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 17,
+                    "Texture": 19,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1058,382 +797,6 @@
             ]
         },
         {
-            "UUID": 803919597,
-            "ParentUUID": 0,
-            "Name": "Enemy 8",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1219630081,
-                "Active": true,
-                "Translation": [
-                    62.993473052978519,
-                    6.613801002502441,
-                    1.6614916324615479
-                ],
-                "Rotation": [
-                    -0.0,
-                    -90.0,
-                    0.0
-                ],
-                "Scale": [
-                    0.9999939799308777,
-                    1.0,
-                    0.9999939799308777
-                ]
-            },
-            "Transform2D": {
-                "UUID": 3250149949,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": []
-        },
-        {
-            "UUID": 1412395009,
-            "ParentUUID": 0,
-            "Name": "Enemy 7",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 155534845,
-                "Active": true,
-                "Translation": [
-                    37.84495544433594,
-                    7.737858295440674,
-                    -1.8990302085876465
-                ],
-                "Rotation": [
-                    -0.0,
-                    -90.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 102284900,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": []
-        },
-        {
-            "UUID": 1104476344,
-            "ParentUUID": 0,
-            "Name": "Enemy 6",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3379883441,
-                "Active": true,
-                "Translation": [
-                    25.690364837646486,
-                    7.746253490447998,
-                    -1.6483196020126343
-                ],
-                "Rotation": [
-                    -0.0,
-                    -90.0,
-                    0.0
-                ],
-                "Scale": [
-                    0.9999872446060181,
-                    1.0,
-                    0.9999872446060181
-                ]
-            },
-            "Transform2D": {
-                "UUID": 901019912,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": []
-        },
-        {
-            "UUID": 2571061186,
-            "ParentUUID": 0,
-            "Name": "Enemy 5",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 779716523,
-                "Active": true,
-                "Translation": [
-                    18.339839935302736,
-                    7.892516136169434,
-                    4.693953514099121
-                ],
-                "Rotation": [
-                    -0.0,
-                    -90.0,
-                    0.0
-                ],
-                "Scale": [
-                    0.9999944567680359,
-                    1.0,
-                    0.9999944567680359
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1769531587,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": []
-        },
-        {
-            "UUID": 2682051470,
-            "ParentUUID": 0,
-            "Name": "Enemy 4",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 850333504,
-                "Active": true,
-                "Translation": [
-                    -25.07876968383789,
-                    8.049605369567871,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    -90.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2594976357,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": []
-        },
-        {
-            "UUID": 1508637991,
-            "ParentUUID": 0,
-            "Name": "Enemy 3",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 370089507,
-                "Active": true,
-                "Translation": [
-                    -36.70760726928711,
-                    7.8401689529418949,
-                    3.825714349746704
-                ],
-                "Rotation": [
-                    -0.0,
-                    -90.0,
-                    0.0
-                ],
-                "Scale": [
-                    0.999995231628418,
-                    1.0,
-                    0.999995231628418
-                ]
-            },
-            "Transform2D": {
-                "UUID": 3178533532,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": []
-        },
-        {
-            "UUID": 2214781112,
-            "ParentUUID": 0,
-            "Name": "Enemy 2",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2002352064,
-                "Active": true,
-                "Translation": [
-                    -50.23740768432617,
-                    7.8170270919799809,
-                    -0.8817405700683594
-                ],
-                "Rotation": [
-                    -0.0,
-                    -90.0,
-                    0.0
-                ],
-                "Scale": [
-                    0.9999969005584717,
-                    1.0,
-                    0.9999969005584717
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2325613697,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": []
-        },
-        {
-            "UUID": 1825268790,
-            "ParentUUID": 0,
-            "Name": "Enemy 1",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3349738560,
-                "Active": true,
-                "Translation": [
-                    -74.08035278320313,
-                    2.4570798873901369,
-                    0.1988900899887085
-                ],
-                "Rotation": [
-                    -0.0,
-                    -90.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 3126287195,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": []
-        },
-        {
             "UUID": 172714554,
             "ParentUUID": 0,
             "Name": "Main Camera",
@@ -1599,100 +962,6 @@
                     "SpotLightOuterCutoff": 0.9588197469711304
                 }
             ]
-        },
-        {
-            "UUID": 2592145579,
-            "ParentUUID": 0,
-            "Name": "Enemy 9",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3003519825,
-                "Active": true,
-                "Translation": [
-                    100.25406646728516,
-                    17.23021697998047,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    -90.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 3561908275,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": []
-        },
-        {
-            "UUID": 3962551349,
-            "ParentUUID": 0,
-            "Name": "Enemy 10",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1968245402,
-                "Active": true,
-                "Translation": [
-                    11.597929000854493,
-                    7.899251937866211,
-                    -1.37903892993927
-                ],
-                "Rotation": [
-                    -0.0,
-                    -90.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 113308542,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": []
         },
         {
             "UUID": 993413573,
