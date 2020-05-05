@@ -35,11 +35,11 @@ std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& res
 	size_t offset = extension_size + sizeof(TextureOptions);
 
 	std::vector<char> data;
-	int width, height;
+	int width, height, num_channels = 0;
 	bool normal_map = texture_options.texture_type == TextureType::NORMAL;
 	if (normal_map)
 	{
-		 data = LoadImageData(resource_data, offset, extension,width, height);	
+		 data = LoadImageData(resource_data, offset, extension,width, height, num_channels);
 	}
 	else
 	{
@@ -51,13 +51,13 @@ std::shared_ptr<Texture> TextureManager::Load(uint32_t uuid, const FileData& res
 	std::shared_ptr<Texture> loaded_texture;
 	if (data.size())
 	{
-		loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), width, height, texture_options);
+		loaded_texture = std::make_shared<Texture>(uuid, data.data(), data.size(), width, height, num_channels, texture_options);
 	}
 	return loaded_texture;
 }
 
 
-std::vector<char> TextureManager::LoadImageData(const FileData& resource_data, size_t offset, const std::string& extension, int & width, int & height)
+std::vector<char> TextureManager::LoadImageData(const FileData& resource_data, size_t offset, const std::string& extension, int & width, int & height, int & num_channels)
 {
 	std::vector<char> data;
 	ILuint image;
@@ -65,7 +65,7 @@ std::vector<char> TextureManager::LoadImageData(const FileData& resource_data, s
 	ilBindImage(image);
 	char* resource_data_with_offset = (char*)resource_data.buffer + offset;
 	ilLoadL(Utils::GetImageType(extension), resource_data_with_offset, resource_data.size - offset);
-
+	
 	ILenum error;
 	error = ilGetError();
 	while (error != IL_NO_ERROR)
@@ -83,6 +83,7 @@ std::vector<char> TextureManager::LoadImageData(const FileData& resource_data, s
 
 	ILubyte * loaded_data = ilGetData();
 	data.resize(ilGetInteger(IL_IMAGE_SIZE_OF_DATA));
+	num_channels = ilGetInteger(IL_IMAGE_CHANNELS);
 	memcpy(&data.front(), loaded_data, data.size());
 	width = ilGetInteger(IL_IMAGE_WIDTH);
 	height = ilGetInteger(IL_IMAGE_HEIGHT);
