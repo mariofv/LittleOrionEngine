@@ -139,7 +139,7 @@ bool MetafileManager::IsMetafileMoved(const Path& metafile_path)
 void MetafileManager::DeleteMetafileInconsistencies(const Path& metafile_path)
 {
 	Metafile* metafile = GetMetafile(metafile_path);
-	DeleteMetafileInconsistencies(*metafile);
+	DeleteMetafileInconsistencies(*metafile, metafile_path);
 }
 
 void MetafileManager::RefreshMetafile(const Path& metafile_path)
@@ -157,14 +157,14 @@ void MetafileManager::RefreshMetafile(const Path& metafile_path)
 	SaveMetafile(metafile, *new_imported_file_path);
 }
 
-void MetafileManager::DeleteMetafileInconsistencies(const Metafile& metafile)
+void MetafileManager::DeleteMetafileInconsistencies(const Metafile& metafile, const Path& metafile_path)
 {
 	if (App->filesystem->Exists(metafile.exported_file_path))
 	{
 		App->filesystem->Remove(metafile.exported_file_path);
 	}
 
-	App->filesystem->Remove(metafile.metafile_path);
+	App->filesystem->Remove(metafile_path.GetFullPath());
 }
 
 

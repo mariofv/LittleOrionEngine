@@ -45,7 +45,7 @@ public:
 	*/
 	void DeleteMetafileInconsistencies(const Path& metafile_path);
 	void RefreshMetafile(const Path & metafile_path);
-	void DeleteMetafileInconsistencies(const Metafile& metafile);
+	void DeleteMetafileInconsistencies(const Metafile& metafile, const Path& metafile_path);
 
 private:
 	std::unordered_map<std::string, Metafile*> metafiles;
