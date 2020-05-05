@@ -11,17 +11,20 @@ ComponentCollider::ComponentCollider(ColliderType collider_type) : Component(Com
 
 ComponentCollider::ComponentCollider(GameObject* owner, ColliderType collider_type) : Component(owner, ComponentType::COLLIDER), collider_type(collider_type)
 {
-	ComponentMeshRenderer* owner_mesh = static_cast<ComponentMeshRenderer*>(owner->GetComponent(ComponentType::MESH_RENDERER));
-	
-	if (owner_mesh)
-	{
-		AABB box; 
-		box.SetNegativeInfinity();
-		for (auto& vertex : owner_mesh->mesh_to_render->vertices)
+	if (owner->aabb.global_bounding_box.IsFinite() && owner->aabb.global_bounding_box.Size().x != 0) {
+		ComponentMeshRenderer* mesh = static_cast<ComponentMeshRenderer*>(owner->GetComponent(Component::ComponentType::MESH_RENDERER));
+		if (mesh)
 		{
-			box.Enclose(vertex.position);
+			box_size = btVector3(owner->aabb.original_box.Size().x / 2,
+				owner->aabb.original_box.Size().y / 2,
+				owner->aabb.original_box.Size().z / 2);
 		}
-		box_size = btVector3(box.Size().x / 2, box.Size().y / 2, box.Size().z / 2);
+		else
+		{
+			box_size = btVector3(owner->aabb.global_bounding_box.Size().x / 2,
+				owner->aabb.global_bounding_box.Size().y / 2,
+				owner->aabb.global_bounding_box.Size().z / 2);
+		}
 		is_attached = true;
 	}
 }
@@ -138,7 +141,7 @@ void ComponentCollider::UpdateCommonDimensions()
 		global_translation = owner->aabb.global_bounding_box.CenterPoint();
 	}
 	Quat global_rotation = owner->transform.GetGlobalRotation();
-	motion_state->setWorldTransform(btTransform(btQuaternion(rotation.x , rotation.y , rotation.z , rotation.w ), btVector3(global_translation.x, global_translation.y, global_translation.z)));
+	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x , global_rotation.y , global_rotation.z , global_rotation.w ), btVector3(global_translation.x, global_translation.y, global_translation.z)));
 	body->setMotionState(motion_state);
 
 	if (is_attached)
