@@ -400,7 +400,6 @@
     <ClCompile Include="Engine\Helper\BuildOptions.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp" />
     <ClCompile Include="Engine\DLL\DLLManager.cpp">
       <Filter>Engine\DLL</Filter>
     </ClCompile>
@@ -415,6 +414,9 @@
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Metafile\ModelMetafile.cpp">
       <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp">
+      <Filter>Engine\Module</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -823,7 +825,6 @@
     <ClInclude Include="Engine\Helper\BuildOptions.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h" />
     <ClInclude Include="Libraries\include\cr\cr.h">
       <Filter>Libraries\cr</Filter>
     </ClInclude>
@@ -833,9 +834,18 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h" />
-    <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h" />
-    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h" />
+    <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
