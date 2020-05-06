@@ -1,6 +1,7 @@
 #include "PanelGameObject.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioSource.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentMeshRenderer.h"
@@ -100,6 +101,9 @@ void PanelGameObject::Render(GameObject* game_object)
 				break;
 			case Component::ComponentType::ANIMATION:
 				component_panel.ShowComponentAnimationWindow(static_cast<ComponentAnimation*>(component));
+				break;
+			case Component::ComponentType::AUDIO_SOURCE:
+				component_panel.ShowComponentAudioSourceWindow(static_cast<ComponentAudioSource*>(component));
 				break;
 			default:
 				break;

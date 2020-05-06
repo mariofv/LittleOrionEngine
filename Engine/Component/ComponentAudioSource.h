@@ -16,6 +16,8 @@ public:
 	void Init();
 	void Update() override;
 	void Delete() override;
+	Component* Clone(bool original_prefab = false) const override;
+	void Copy(Component* component_to_copy) const override;
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 

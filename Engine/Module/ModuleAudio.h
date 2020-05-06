@@ -10,19 +10,23 @@
 
 #include <memory>
 class SoundBank;
+class ComponentAudioSource;
+class GameObject;
+
 class ModuleAudio : public Module
 {
 public:
 	ModuleAudio();
 	~ModuleAudio();
-
 	bool Init() override;
 	update_status Update() override;
 	bool CleanUp() override;
 
-	bool playing = false;
-private:
+	ComponentAudioSource* CreateComponentAudioSource();
 
+	bool playing = false;
+
+private:
 	AkMemSettings memory_manager_settings;
 	AkStreamMgrSettings streaming_manager_settings;
 	AkInitSettings init_settings;

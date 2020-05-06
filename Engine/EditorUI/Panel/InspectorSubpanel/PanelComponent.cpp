@@ -736,7 +736,6 @@ void PanelComponent::ShowAddNewComponentButton()
 
 void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 {
-
 	if (ImGui::BeginCombo("Add Script", component_script->name.c_str()))
 	{
 		for (auto& script_name : App->scripts->scripts_list) {
@@ -801,13 +800,12 @@ void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 	ImGui::ColorPicker3("Color", ui->color.ptr());
 }
 
-void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* audio)
+void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source)
 {
-	//IMGUI Audio Source
-	ImGui::Separator();
-	if (ImGui::Button("Audio"))
+	if (ImGui::CollapsingHeader(ICON_FA_AUDIO_DESCRIPTION " Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		//Test
+		//TO-DO IMGUI Audio Source
+		ImGui::AlignTextToFramePadding();
+		ImGui::Text("Audio Source Component");
 	}
-	ImGui::Separator();
 }

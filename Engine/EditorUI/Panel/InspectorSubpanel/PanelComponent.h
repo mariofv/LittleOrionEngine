@@ -34,7 +34,7 @@ public:
 	void ShowComponentAnimationWindow(ComponentAnimation* animation);
 	void ShowComponentScriptWindow(ComponentScript* component_script);
 	void ShowComponentUIWindow(ComponentUI* ui);
-	void ShowComponentAudioSourceWindow(ComponentAudioSource* audio);
+	void ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source);
 	void ShowAddNewComponentButton();
 
 	void ShowScriptsCreated(ComponentScript* component_script);

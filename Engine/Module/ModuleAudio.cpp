@@ -1,9 +1,11 @@
 #include "ModuleAudio.h"
 #include "Main/Application.h"
+#include "Component/ComponentAudioSource.h"
 #include "Module/ModuleResourceManager.h"
 #include "ResourceManagement/Resources/SoundBank.h"
 #include <SoundEngine/AkFilePackageLowLevelIOBlocking.h>              
 CAkFilePackageLowLevelIOBlocking g_lowLevelIO;
+
 ModuleAudio::ModuleAudio()
 {
 	AK::MemoryMgr::GetDefaultSettings(memory_manager_settings);
@@ -97,4 +99,9 @@ bool ModuleAudio::CleanUp()
 	}
 
 	return true;
+}
+
+ComponentAudioSource * ModuleAudio::CreateComponentAudioSource()
+{
+	return new ComponentAudioSource();
 }

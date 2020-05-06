@@ -1,5 +1,8 @@
 #include "ComponentAudioSource.h"
 
+#include "Main/Application.h"
+#include "Module/ModuleAudio.h"
+
 ComponentAudioSource::ComponentAudioSource() : Component(nullptr, ComponentType::AUDIO_SOURCE)
 {
 
@@ -23,6 +26,27 @@ void ComponentAudioSource::Update()
 void ComponentAudioSource::Delete()
 {
 	
+}
+
+Component* ComponentAudioSource::Clone(bool original_prefab) const
+{
+	ComponentAudioSource * created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentAudioSource();
+	}
+	else
+	{
+		created_component = App->audio->CreateComponentAudioSource();
+	}
+	*created_component = *this;
+	return created_component;
+};
+
+void ComponentAudioSource::Copy(Component* component_to_copy) const
+{
+	*component_to_copy = *this;
+	*static_cast<ComponentAudioSource*>(component_to_copy) = *this;
 }
 
 void ComponentAudioSource::Save(Config& config) const
