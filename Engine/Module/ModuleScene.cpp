@@ -216,6 +216,7 @@ inline void ModuleScene::GetSceneResource()
 		else
 		{
 			current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(build_options_position));
+			App->editor->current_scene_path = build_options.get()->GetScenePath(build_options_position);
 		}
 	}
 	else
