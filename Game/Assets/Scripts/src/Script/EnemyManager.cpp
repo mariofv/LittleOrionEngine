@@ -14,8 +14,6 @@
 
 #include "EnemyController.h"
 
-EnemyManager* EnemyManager::instance_singleton = nullptr;
-
 EnemyManager* EnemyManagerDLL()
 {
 	EnemyManager* instance = new EnemyManager();
@@ -30,31 +28,20 @@ EnemyManager::EnemyManager()
 // Use this for initialization before Start()
 void EnemyManager::Awake()
 {
-	instance_singleton = static_cast<EnemyManager*>(owner->GetComponentScript("EnemyManager")->script);
-	
 
-	
 }
 
 // Use this for initialization
 void EnemyManager::Start()
 {
-
+	CreateEnemies(); //For now we only create mushdooms but in the future we create enemies depending on which level we are
+	enemies_instantiated = true;
 }
 
 // Update is called once per frame
 void EnemyManager::Update()
 {
-	if(!enemies_instantiated)
-	{
-		CreateEnemies(); //For now we only create mushdooms but in the future we create enemies depending on which level we are
-	}
 	
-}
-
-EnemyManager* EnemyManager::GetInstance()
-{
-	return instance_singleton;
 }
 
 void EnemyManager::AddEnemy(EnemyController* enemy)
@@ -65,12 +52,12 @@ void EnemyManager::AddEnemy(EnemyController* enemy)
 void EnemyManager::KillEnemy(EnemyController* enemy)
 {
 	//This method is called once the enemy animation ended
+	enemy->owner->SetEnabled(false);
 	enemy->owner->transform.SetTranslation(graveyard_position);
 
 
 	//Reset enemy
 	//enemy->ResetEnemy();
-	enemy->owner->SetEnabled(false);
 	enemy->is_alive = false;
 }
 

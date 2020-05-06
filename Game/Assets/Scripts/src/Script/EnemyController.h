@@ -27,6 +27,7 @@ private:
 	GameObject* player = nullptr;
 private:
 	float health_points = 100.0f;
+	EnemyManager* enemy_manager = nullptr;
 
 };
 extern "C" SCRIPT_API EnemyController* EnemyControllerDLL(); //This is how we are going to load the script

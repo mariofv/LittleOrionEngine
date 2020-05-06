@@ -18,8 +18,6 @@ public:
 	void Start() override;
 	void Update() override;
 
-	static EnemyManager* GetInstance();
-
 	void AddEnemy(EnemyController* enemy);
 	void KillEnemy(EnemyController* enemy);
 
@@ -35,10 +33,7 @@ public:
 private:
 	//We need a reference to an existing mushdoom to duplicate_him
 	GameObject* mushdoom_go = nullptr;
-
-	
 	std::vector<EnemyController*> enemies;
-	static EnemyManager* instance_singleton;
 
 	unsigned int current_number_of_enemies_alive = 0;
 	bool enemies_instantiated = false;
