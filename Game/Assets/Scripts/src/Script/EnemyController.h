@@ -17,11 +17,14 @@ public:
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();	void TakeDamage(float damage);
 
+	//virtual void ResetEnemy() = 0;
 	EnemyManager* punterito = nullptr;
 
 private:
 	void Death();
-
+public:
+	bool is_alive = true;
+
 private:
 	GameObject* player = nullptr;	float health_points = 100.0f;
 

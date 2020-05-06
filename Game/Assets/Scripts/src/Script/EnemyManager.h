@@ -5,7 +5,7 @@
 
 class EnemyController;
 
-const unsigned MAX_NUMBER_OF_MUSHDOOM = 100;
+const unsigned MAX_NUMBER_OF_MUSHDOOM = 10;
 const float3 graveyard_position(100.f,100.f,100.f);
 
 class EnemyManager : public Script
@@ -23,13 +23,16 @@ public:
 	void AddEnemy(EnemyController* enemy);
 	void KillEnemy(EnemyController* enemy);
 
+	void SpawnEnemy(const unsigned type, const float3& spawn_position);
+
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();
 	//void Save(Config& config) const override;
 	//void Load(const Config& config) override;
 
 private:
-	GameObject* enemy_go = nullptr;
+	//We need a reference to an existing mushdoom to duplicate_him
+	GameObject* mushdoom_go = nullptr;
 
 	
 	std::vector<EnemyController*> enemies;
