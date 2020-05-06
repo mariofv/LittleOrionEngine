@@ -2,10 +2,12 @@
 
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleAI.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
@@ -26,6 +28,7 @@ EnemyController::EnemyController()
 void EnemyController::Awake()
 {
 	EnemyManager::GetInstance()->AddEnemy(this);
+	animation = (ComponentAnimation*)owner->GetComponent(Component::ComponentType::ANIMATION);
 }
 
 // Use this for initialization
@@ -67,14 +70,41 @@ void EnemyController::TakeDamage(float damage)
 {
 	health_points -= damage;
 
-	if(health_points <= 0)
+	if (health_points <= 0)
 	{
-		Death();
-		//F
+		Die();
 	}
 }
 
-void EnemyController::Death()
+void EnemyController::Move()
+{
+	const float3 player_transform = player->transform.GetTranslation();
+	float3 transform = owner->transform.GetTranslation();
+
+	float3 direction = player_transform - transform;
+
+	if (player_transform.Distance(transform) > stopping_distance)
+	{
+		float3 position = transform + (direction.Normalized() * move_speed);
+
+		float3 next_position;
+		bool valid_position = App->artificial_intelligence->FindNextPolyByDirection(position, next_position);
+
+		if (valid_position)
+		{
+			position.y = next_position.y;
+		}
+
+		if (App->artificial_intelligence->IsPointWalkable(position))
+		{
+			owner->transform.LookAt(position);
+			owner->transform.SetTranslation(position);
+		}
+	}
+}
+
+void EnemyController::Die()
 {
 	//TODO spawn particles, loot, etc.
+	is_dead = true;
 }

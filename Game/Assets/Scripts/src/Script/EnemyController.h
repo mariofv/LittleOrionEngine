@@ -33,18 +33,21 @@ protected:
 	bool Attack();
 	bool PlayerInSight();
 	void OnCollisionEnter();
-	void Death();
+	void Die();
+	virtual void Respawn(){}
 
 protected:
 	EnemyType type;
 	GameObject* player = nullptr;
 	ComponentAnimation* animation = nullptr;
 
-	float move_speed;
+	float rot_speed = 0.01f;
+	float move_speed = 0.2f;
 	float attack_speed;
-	float attack_power = 50.f;
+	float attack_power;
 	float attack_range;
 	float health_points = 100.f;
+	float stopping_distance = 0.1f;
 	float detected_player_distance;
 
 	bool is_dead = false;
