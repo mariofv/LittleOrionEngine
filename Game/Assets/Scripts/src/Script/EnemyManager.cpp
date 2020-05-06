@@ -39,23 +39,16 @@ void EnemyManager::Awake()
 // Use this for initialization
 void EnemyManager::Start()
 {
-	//For now we only have mushdoom enemy
-	size_t number_of_instances = MAX_NUMBER_OF_MUSHDOOM - current_number_of_enemies_alive;
-	for(size_t i = 0; i < number_of_instances; ++i)
-	{
-		GameObject* duplicated_go = App->scene->DuplicateGameObject(mushdoom_go, mushdoom_go->parent);
-		
-		const ComponentScript* componnet_enemy = duplicated_go->GetComponentScript("EnemyController");
-		EnemyController* enemy = (EnemyController*)componnet_enemy->script;
-		enemies.emplace_back(enemy);
-		enemy->owner->transform.SetTranslation(graveyard_position);
-	}
+
 }
 
 // Update is called once per frame
 void EnemyManager::Update()
 {
-
+	if(!enemies_instantiated)
+	{
+		CreateEnemies(); //For now we only create mushdooms but in the future we create enemies depending on which level we are
+	}
 	
 }
 
@@ -100,6 +93,28 @@ void EnemyManager::SpawnEnemy(const unsigned type, const float3& spawn_position)
 		
 	}
 	assert(enemy != nullptr);
+}
+
+void EnemyManager::CreateEnemies()
+{
+	const ComponentScript* componnet_enemy = mushdoom_go->GetComponentScript("EnemyController");
+	EnemyController* original_enemy = (EnemyController*)componnet_enemy->script;
+
+	//For now we only have mushdoom enemy
+	size_t number_of_instances = MAX_NUMBER_OF_MUSHDOOM - enemies.size();
+	for (size_t i = 0; i < number_of_instances; ++i)
+	{
+		GameObject* duplicated_go = App->scene->DuplicateGameObject(mushdoom_go, mushdoom_go->parent);
+
+		const ComponentScript* componnet_enemy = duplicated_go->GetComponentScript("EnemyController");
+		EnemyController* enemy = (EnemyController*)componnet_enemy->script;
+		enemy->is_alive = false;
+		enemy->player = original_enemy->player;
+		enemies.emplace_back(enemy);
+		enemy->owner->transform.SetTranslation(graveyard_position);
+	}
+
+	enemies_instantiated = true;
 }
 
 // Use this for showing variables on inspector

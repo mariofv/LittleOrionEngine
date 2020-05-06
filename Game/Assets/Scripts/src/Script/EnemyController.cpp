@@ -26,13 +26,12 @@ EnemyController::EnemyController()
 // Use this for initialization before Start()
 void EnemyController::Awake()
 {
-	EnemyManager::GetInstance()->AddEnemy(this);
+	
 }
 
 // Use this for initialization
 void EnemyController::Start()
-{
-
+{	EnemyManager::GetInstance()->AddEnemy(this);
 }
 
 // Update is called once per frame

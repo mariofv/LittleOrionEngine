@@ -24,9 +24,9 @@ private:
 	void Death();
 public:
 	bool is_alive = true;
-
+	GameObject* player = nullptr;
 private:
-	GameObject* player = nullptr;	float health_points = 100.0f;
+	float health_points = 100.0f;
 
 };
 extern "C" SCRIPT_API EnemyController* EnemyControllerDLL(); //This is how we are going to load the script

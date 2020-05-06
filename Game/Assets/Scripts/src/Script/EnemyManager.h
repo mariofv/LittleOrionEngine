@@ -25,6 +25,8 @@ public:
 
 	void SpawnEnemy(const unsigned type, const float3& spawn_position);
 
+	void CreateEnemies();
+
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();
 	//void Save(Config& config) const override;
@@ -39,7 +41,7 @@ private:
 	static EnemyManager* instance_singleton;
 
 	unsigned int current_number_of_enemies_alive = 0;
-
+	bool enemies_instantiated = false;
 
 };
 extern "C" SCRIPT_API EnemyManager* EnemyManagerDLL(); //This is how we are going to load the script
