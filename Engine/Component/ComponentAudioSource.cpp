@@ -3,6 +3,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleAudio.h"
+#include "Module/ModuleResourceManager.h"
 
 ComponentAudioSource::ComponentAudioSource() : Component(nullptr, ComponentType::AUDIO_SOURCE), gameobject_source(UUID)
 {
@@ -36,6 +37,11 @@ void ComponentAudioSource::Update()
 void ComponentAudioSource::Delete()
 {
 	AK::SoundEngine::UnregisterGameObj(gameobject_source);
+}
+
+void ComponentAudioSource::SetSoundBank(uint32_t uuid)
+{
+	soundbank = App->resources->Load<SoundBank>(uuid);
 }
 
 Component* ComponentAudioSource::Clone(bool original_prefab) const

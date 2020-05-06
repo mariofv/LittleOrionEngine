@@ -807,5 +807,24 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 		//TO-DO IMGUI Audio Source
 		ImGui::AlignTextToFramePadding();
 		ImGui::Text("Audio Source Component");
+
+		std::string soundbank_name = component_audio_source->soundbank == nullptr ? "None (Sound Bank)" : App->resources->resource_DB->GetEntry(component_audio_source->soundbank->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(component_audio_source->UUID) + "SoundBankSelector").c_str());
+		if (ImGui::Button(soundbank_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::SOUND);
+		}
+		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			component_audio_source->SetSoundBank(selected_resource);
+			component_audio_source->modified_by_user = true;
+		}
+		selected_resource = ImGui::ResourceDropper<StateMachine>();
+		if (selected_resource != 0)
+		{
+			component_audio_source->SetSoundBank(selected_resource);
+			component_audio_source->modified_by_user = true;
+		}
 	}
 }

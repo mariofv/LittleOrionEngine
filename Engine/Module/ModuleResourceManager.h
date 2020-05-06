@@ -13,6 +13,7 @@
 #include "ResourceManagement/Resources/Skybox.h"
 #include "ResourceManagement/Resources/StateMachine.h"
 #include "ResourceManagement/Resources/Texture.h"
+#include "ResourceManagement/Resources/SoundBank.h"
 
 #include "ResourceManagement/Metafile/MetafileManager.h"
 #include "ResourceManagement/ResourcesDB/ResourceDataBase.h"
