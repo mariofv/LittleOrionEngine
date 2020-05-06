@@ -27,6 +27,7 @@ public:
 
 	ENGINE_API GameObject* GetRoot() const;
 	ENGINE_API GameObject* GetGameObject(uint64_t UUID) const;
+	ENGINE_API GameObject* GetGameObjectByName(const std::string& go_name) const;
 	Component* GetComponent(uint64_t UUID) const;
 
 
