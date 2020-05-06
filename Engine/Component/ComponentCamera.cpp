@@ -72,15 +72,12 @@ ComponentCamera::~ComponentCamera()
 	glDeleteRenderbuffers(1, &rbo);
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteFramebuffers(1, &msfbo);
-	glDeleteFramebuffers(1, &depthFBO);
-
 }
 
 void ComponentCamera::InitCamera()
 {
 	glGenFramebuffers(1, &fbo);
 	glGenFramebuffers(1, &msfbo);
-	glGenFramebuffers(1, &depthFBO);
 
 	aspect_ratio = 1.f;
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
@@ -206,88 +203,55 @@ void ComponentCamera::RecordFrame(float width, float height)
 	}
 
 #if !GAME
-	if (App->renderer->render_depth)
-		glBindFramebuffer(GL_FRAMEBUFFER, depthFBO);
-	else
-		App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 #endif
 
-glViewport(0, 0, width, height);
+	glViewport(0, 0, width, height);
 
-switch (camera_clear_mode)
-{
-case ComponentCamera::ClearMode::COLOR:
-	glClearColor(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f);
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	glClearColor(0.f, 0.f, 0.f, 1.f);
-	break;
-case ComponentCamera::ClearMode::SKYBOX:
-	glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
-	if (skybox_uuid != 0)
+	switch (camera_clear_mode)
 	{
-		camera_skybox->Render(*this);
+		case ComponentCamera::ClearMode::COLOR:
+			glClearColor(camera_clear_color[0], camera_clear_color[1], camera_clear_color[2], 1.f);
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+			glClearColor(0.f, 0.f, 0.f, 1.f);
+			break;
+		case ComponentCamera::ClearMode::SKYBOX:
+			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT | GL_STENCIL_BUFFER_BIT);
+			if (skybox_uuid != 0)
+			{
+				camera_skybox->Render(*this);
+			}
+			else
+			{
+				App->cameras->world_skybox->Render(*this);
+			}
+			break;
+		default:
+			break;
 	}
-	else
-	{
-		App->cameras->world_skybox->Render(*this);
-	}
-	break;
-default:
-	break;
-}
 
-App->renderer->RenderFrame(*this);
+	App->renderer->RenderFrame(*this);
 
 #if !GAME
-if (App->renderer->render_depth)
-{
-	glBindFramebuffer(GL_READ_FRAMEBUFFER, depthFBO);
-	glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-	glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-
-}
-
-else
-{
 	if (App->renderer->anti_aliasing)
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
 		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
-}
 
-
-
-glBindFramebuffer(GL_FRAMEBUFFER, 0);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif
-
+	
 }
 
 void ComponentCamera::RecordDebugDraws(float width, float height) const
 {
-	if (App->renderer->render_depth)
-	{
-		glBindFramebuffer(GL_FRAMEBUFFER, depthFBO);
-	}
-
-	else
-	{
-		App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	}
-
+	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 	glViewport(0, 0, width, height);
 
 	App->debug_draw->Render();
-
-	if (App->renderer->render_depth)
-	{
-		glBindFramebuffer(GL_READ_FRAMEBUFFER, depthFBO);
-		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
-	}
-	//
 
 	if (App->renderer->anti_aliasing)
 	{
@@ -337,41 +301,6 @@ void ComponentCamera::CreateFramebuffer(float width, float height)
 	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void ComponentCamera::CreateDepthFramebuffer(float width, float height)
-{
-
-	glGenTextures(1, &depthMap);
-	glBindTexture(GL_TEXTURE_2D, depthMap);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
-	glBindTexture(GL_TEXTURE_2D, 0);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
-
-	glGenRenderbuffers(1, &rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH24_STENCIL8, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-	
-	glBindFramebuffer(GL_FRAMEBUFFER, depthFBO);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D_MULTISAMPLE, depthMap, 0);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glBindTexture(GL_TEXTURE_2D, last_recorded_frame_texture);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 }
 

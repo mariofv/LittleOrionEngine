@@ -133,7 +133,7 @@ void ModuleLight::GenerateLightMatrices(GLuint program, bool render_depth)
 
 	glUniformMatrix4fv(glGetUniformLocation(program, "directional_view"), 1, GL_TRUE, &directional_view[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "directional_proj"), 1, GL_TRUE, &directional_proj[0][0]);
-	glUniform1f(glGetUniformLocation(program, "activate_depth_map"), (int)render_depth);
+	glUniform1f(glGetUniformLocation(program, "render_depth_from_light"), float(App->renderer->render_depth));
 
 
 }
@@ -144,8 +144,12 @@ void ModuleLight::SetDirectionalFrustum()
 	light_frustum.pos = float3::unitX;
 	light_frustum.front = float3::unitZ;
 	light_frustum.up = float3::unitY;
-	light_frustum.nearPlaneDistance = 1.f;
-	light_frustum.farPlaneDistance = 100.0f;
+
+	//Adjust near and far planes to obtain a greater shadow creation range
+	light_frustum.nearPlaneDistance = -300.0f;
+	light_frustum.farPlaneDistance = 300.0f;
+	
+	//Not very sure about what dees do ~~~~~~ i boiled these noodles in my programmer tears
 	light_frustum.orthographicWidth = 50;
 	light_frustum.orthographicHeight = 50;
 

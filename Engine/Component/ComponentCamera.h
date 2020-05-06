@@ -143,13 +143,7 @@ private:
 	GLuint rbo = 0;
 	GLuint fbo = 0;
 
-	//Depth variables
-	GLuint depthFBO = 0;
-	unsigned int depthMap = 0;
-	
-	//Shadow width - height
-	const unsigned int shadow_height = 1024;
-	const unsigned int shadow_width = 1024;
+
 
 
 private:

@@ -211,7 +211,7 @@ void PanelConfiguration::ShowRenderOptions()
 
 		ImGui::SameLine();
 
-		if (ImGui::Checkbox("Render Depth", &App->renderer->render_depth))
+		if (ImGui::Checkbox("Render depth from light", &App->renderer->render_depth))
 		{
 			App->renderer->SetRenderDepth(App->renderer->render_depth);
 

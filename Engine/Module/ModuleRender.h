@@ -70,7 +70,7 @@ private:
 
 public:
 	bool anti_aliasing = false;
-	bool render_depth = true;
+	bool render_depth = false;
 
 
 private:

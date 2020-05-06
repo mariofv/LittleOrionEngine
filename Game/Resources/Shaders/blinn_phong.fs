@@ -107,6 +107,8 @@ float NormalizedSpecular(vec3 normal, vec3 half_dir);
 float near = 0.1; //Variables that help escalate the depth
 float far = 100;
 float CalculateDepth(float depth);
+uniform float render_depth_from_light;
+in vec4 pos_from_light;
 
 void main()
 {
@@ -168,12 +170,19 @@ void main()
 	
 	result +=  diffuse_color.rgb * (occlusion_color*material.k_ambient); //Ambient light
 
-	float depth = CalculateDepth(gl_FragCoord.z) / far;
-	FragColor = vec4(result,1.0);
+	if(render_depth_from_light == 1)
+	{
+		FragColor = vec4(vec3(pos_from_light.z),1.0);
+	}
+
+	else
+	{
+		FragColor = vec4(result,1.0);
+		FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
+		FragColor.a=material.transparency;
+	}
+
 	
-	
-	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
-	FragColor.a=material.transparency;
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
@@ -301,6 +310,3 @@ float CalculateDepth(float depth)
 	float z = (depth * 2) - 1; // [0....1]
 	return (2.0 * near * far) / (far + near - z * (far - near));
 }
-
-
-
