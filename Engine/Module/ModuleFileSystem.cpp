@@ -140,14 +140,17 @@ bool ModuleFileSystem::Exists(const std::string& path) const
 bool ModuleFileSystem::Remove(Path* path)
 {
 	assert(path != nullptr);
-
+	if (path->IsMeta())
+	{
+		std::string imported_file_path = path->GetFullPath().substr(0, path->GetFullPath().find_last_of("."));
+		PHYSFS_delete(imported_file_path.c_str());
+	}
 	bool success = PHYSFS_delete(path->GetFullPath().c_str()) != 0;
-	
 	if (success)
 	{
+		path->parent->Refresh();
 		RefreshPathMap();
 	}
-
 	return success;
 }
 

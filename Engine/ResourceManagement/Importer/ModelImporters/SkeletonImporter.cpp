@@ -12,22 +12,47 @@ FileData SkeletonImporter::ExtractData(Path& assets_file_path, const Metafile& m
 	return assets_file_path.GetFile()->Load();
 }
 
-FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const aiMesh* mesh, float unit_scale_factor) const
+FileData SkeletonImporter::ExtractSkeletonFromAssimp(const aiScene* scene, const aiMesh* mesh, float unit_scale_factor, bool complex_skeleton) const
 {
 	FileData skeleton_data;
 	Skeleton imported_skeleton;
 
 	//I now doing looooooooots of loops around here, but this is only importing and new to be 100% I have the hold hierarchy
+	if (!complex_skeleton)
+	{
+		imported_skeleton.skeleton.resize(mesh->mNumBones);
+	}
 	for (size_t i = 0; i < mesh->mNumBones; i++)
 	{
+		if (!complex_skeleton)
+		{
+			imported_skeleton.skeleton[i].name = std::string(mesh->mBones[i]->mName.C_Str());
+			imported_skeleton.skeleton[i].transform_global = Utils::GetTransform(mesh->mBones[i]->mOffsetMatrix, unit_scale_factor);
+			imported_skeleton.skeleton[i].parent_index = -1;
+		}
+
 		aiString bone_name = mesh->mBones[i]->mName;
 		aiNode * bone = scene->mRootNode->FindNode(bone_name);
 
 		while (bone->mParent && bone->mParent != scene->mRootNode)
 		{
 			bone = bone->mParent;
+			if (!complex_skeleton)
+			{
+				std::string node_name(bone->mName.C_Str());
+				auto it = std::find_if(imported_skeleton.skeleton.begin(), imported_skeleton.skeleton.end(), [&node_name](const auto & joint) { return joint.name == node_name; });
+				if (it != imported_skeleton.skeleton.end())
+				{
+					imported_skeleton.skeleton[i].parent_index = it - imported_skeleton.skeleton.begin();
+					break;
+				}
+			}
 		}
-		ImportChildBone(bone, -1, bone->mTransformation, aiMatrix4x4(), imported_skeleton, unit_scale_factor);
+		if (complex_skeleton)
+		{
+			aiMatrix4x4 accumulated_local_transformation = (std::string(bone->mName.C_Str()).find("$Assimp") == std::string::npos) ? aiMatrix4x4() : bone->mTransformation;
+			ImportChildBone(bone, -1, bone->mTransformation, accumulated_local_transformation, imported_skeleton, unit_scale_factor);
+		}
 	}
 	if (imported_skeleton.skeleton.size() > 0)
 	{

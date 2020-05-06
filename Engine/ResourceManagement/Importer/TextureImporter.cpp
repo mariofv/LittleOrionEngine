@@ -1,7 +1,9 @@
 #include "TextureImporter.h"
 
 #include "Main/Application.h"
+#include "Helper/Utils.h"
 #include "Module/ModuleFileSystem.h"
+#include "ResourceManagement/Metafile/TextureMetafile.h"
 
 #include <algorithm>
 #include <Brofiler/Brofiler.h>
@@ -21,14 +23,42 @@ TextureImporter::TextureImporter() : Importer(ResourceType::TEXTURE)
 
 FileData TextureImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
-	if (assets_file_path.GetFilename().find("_normal") != std::string::npos)
+	const TextureMetafile& texture_metafile = static_cast<const TextureMetafile&>(metafile);
+	FileData file_data;
+	if (texture_metafile.texture_options.texture_type != TextureType::DEFAULT)
 	{
-		return ExtractDataToTGA(assets_file_path);
+		file_data = ExtractDataToTGA(assets_file_path);
 	}
 	else 
 	{
-		return ExtractDataToDDS(assets_file_path);
+		file_data = ExtractDataToDDS(assets_file_path);
 	}
+
+	return CreateBinary(assets_file_path, file_data, texture_metafile);
+}
+
+const FileData &TextureImporter::CreateBinary(Path & assets_file_path, FileData &file_data, const TextureMetafile & texture_metafile) const
+{
+	std::string extension = assets_file_path.GetExtension();
+
+	uint32_t size = sizeof(TextureOptions) + extension.size() + file_data.size;
+
+	char* data = new char[size];
+	char* cursor = data;
+	size_t bytes = sizeof(TextureOptions);
+	memcpy(cursor, &texture_metafile.texture_options, bytes);
+
+	cursor += bytes;
+	bytes = extension.size();
+	assert(bytes == 3);
+	memcpy(cursor, extension.data(), bytes);
+
+	cursor += bytes;
+	bytes = file_data.size;
+	memcpy(cursor, file_data.buffer, bytes);
+	delete[] file_data.buffer;
+	FileData texture_file_data{ data, size };
+	return texture_file_data;
 }
 
 FileData TextureImporter::ExtractDataToDDS(const Path& assets_file_path) const
@@ -68,7 +98,7 @@ FileData TextureImporter::ExtractDataToTGA(const Path& assets_file_path) const
 ILubyte* TextureImporter::LoadImageDataInMemory(const Path& file_path, int image_type, int& width, int& height) const
 {
 	FileData texture_data = file_path.GetFile()->Load();
-	ILenum original_image_type = GetImageType(file_path);
+	ILenum original_image_type = Utils::GetImageType(file_path.GetExtension());
 	ilLoadL(original_image_type, texture_data.buffer, texture_data.size);
 
 	ILenum error;
@@ -92,117 +122,4 @@ ILubyte* TextureImporter::LoadImageDataInMemory(const Path& file_path, int image
 	width = ilGetInteger(IL_IMAGE_WIDTH);
 	height = ilGetInteger(IL_IMAGE_HEIGHT);
 	return data;
-}
-
-ILenum TextureImporter::GetImageType(const Path& file_path) const
-{
-	std::string file_extension = file_path.GetExtension();
-	ILenum image_type;
-		
-	if (file_extension == "bmp")
-	{
-		image_type = IL_BMP;
-	}
-	else if (file_extension == "cut")
-	{
-		image_type = IL_CUT;
-	}
-	else if (file_extension == "dds")
-	{
-		image_type = IL_DDS;
-	}
-	else if (file_extension == "gif")
-	{
-		image_type = IL_GIF;
-	}
-	else if (file_extension == "ico")
-	{
-		image_type = IL_ICO;
-	}
-	else if (file_extension == "jpg")
-	{
-		image_type = IL_JPG;
-	}
-	else if (file_extension == "lif")
-	{
-		image_type = IL_LIF;
-	}
-	else if (file_extension == "mng")
-	{
-		image_type = IL_MNG;
-	}
-	else if (file_extension == "pcd")
-	{
-		image_type = IL_PCD;
-	}
-	else if (file_extension == "pcx")
-	{
-		image_type = IL_PCX;
-	}
-	else if (file_extension == "pic")
-	{
-		image_type = IL_PIC;
-	}
-	else if (file_extension == "png")
-	{
-		image_type = IL_PNG;
-	}
-	else if (file_extension == "pbm")
-	{
-		image_type = IL_PNM;
-	}
-	else if (file_extension == "pgm")
-	{
-		image_type = IL_PNM;
-	}
-	else if (file_extension == "ppm")
-	{
-		image_type = IL_PNM;
-	}
-	else if (file_extension == "psd")
-	{
-		image_type = IL_PSD;
-	}
-	else if (file_extension == "psp")
-	{
-		image_type = IL_PSP;
-	}
-	else if (file_extension == "bw")
-	{
-		image_type = IL_SGI;
-	}
-	else if (file_extension == "rgb")
-	{
-		image_type = IL_SGI;
-	}
-	else if (file_extension == "rgba")
-	{
-		image_type = IL_SGI;
-	}
-	else if (file_extension == "sgi")
-	{
-		image_type = IL_SGI;
-	}
-	else if (file_extension == "tga")
-	{
-		image_type = IL_TGA;
-	}
-	else if (file_extension == "tif")
-	{
-		image_type = IL_TIF;
-	}
-	else if (file_extension == "tiff")
-	{
-		image_type = IL_TIF;
-	}
-	else if (file_extension == "jasc")
-	{
-		image_type = IL_JASC_PAL;
-	}
-	else
-	{
-		image_type = IL_TYPE_UNKNOWN;
-	}
-
-	return image_type;
 }
