@@ -1,21 +1,31 @@
 #include "ComponentAudioSource.h"
 
 #include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleAudio.h"
 
-ComponentAudioSource::ComponentAudioSource() : Component(nullptr, ComponentType::AUDIO_SOURCE)
+ComponentAudioSource::ComponentAudioSource() : Component(nullptr, ComponentType::AUDIO_SOURCE), gameobject_source(UUID)
 {
 
 }
 
-ComponentAudioSource::ComponentAudioSource(GameObject* owner) : Component(owner, ComponentType::AUDIO_SOURCE)
+ComponentAudioSource::ComponentAudioSource(GameObject* owner) : Component(owner, ComponentType::AUDIO_SOURCE), gameobject_source(UUID)
 {
 
 }
 
 void ComponentAudioSource::Init()
 {
-
+	if (AK::SoundEngine::RegisterGameObj(gameobject_source))
+	{
+		const math::float3 owner_transform = owner->transform.GetTranslation();
+		sound_position.SetPosition( owner_transform.x, owner_transform.y, owner_transform.z );
+		AK::SoundEngine::SetPosition(gameobject_source, sound_position);
+	}
+	else
+	{
+		APP_LOG_ERROR("Unable to register sound gameobject");
+	}
 }
 
 void ComponentAudioSource::Update()
@@ -25,7 +35,7 @@ void ComponentAudioSource::Update()
 
 void ComponentAudioSource::Delete()
 {
-	
+	AK::SoundEngine::UnregisterGameObj(gameobject_source);
 }
 
 Component* ComponentAudioSource::Clone(bool original_prefab) const

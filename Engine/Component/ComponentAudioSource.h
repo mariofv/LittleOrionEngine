@@ -3,9 +3,10 @@
 
 #include "Component.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "AK/SoundEngine/Common/AkTypes.h"
 
 class GameObject;
-
+class SoundBank;
 class ComponentAudioSource : public Component
 {
 public:
@@ -22,6 +23,9 @@ public:
 	void Load(const Config& config) override;
 
 private:
+	AkGameObjectID gameobject_source = 0;
+	AkSoundPosition sound_position;
+	std::shared_ptr<SoundBank> soundbank;
 	friend class PanelComponent;
 };
 
