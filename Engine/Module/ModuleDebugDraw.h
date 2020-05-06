@@ -27,6 +27,8 @@ public:
 private:
 	void RenderOutline() const;
 
+	void RenderTangentsAndBitangents() const;
+
 	void RenderCameraFrustum() const;
 	void RenderLightGizmo() const;
 	void RenderBones() const;
