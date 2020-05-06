@@ -7,23 +7,17 @@
 
 ComponentAudioSource::ComponentAudioSource() : Component(nullptr, ComponentType::AUDIO_SOURCE), gameobject_source(UUID)
 {
-
+	Init();
 }
 
 ComponentAudioSource::ComponentAudioSource(GameObject* owner) : Component(owner, ComponentType::AUDIO_SOURCE), gameobject_source(UUID)
 {
-
+	Init();
 }
 
 void ComponentAudioSource::Init()
 {
-	if (AK::SoundEngine::RegisterGameObj(gameobject_source))
-	{
-		const math::float3 owner_transform = owner->transform.GetTranslation();
-		sound_position.SetPosition( owner_transform.x, owner_transform.y, owner_transform.z );
-		AK::SoundEngine::SetPosition(gameobject_source, sound_position);
-	}
-	else
+	if (!AK::SoundEngine::RegisterGameObj(gameobject_source))
 	{
 		APP_LOG_ERROR("Unable to register sound gameobject");
 	}
@@ -31,7 +25,12 @@ void ComponentAudioSource::Init()
 
 void ComponentAudioSource::Update()
 {
-
+	if (sound_3d)
+	{
+		const math::float3 owner_transform = owner->transform.GetTranslation();
+		sound_position.SetPosition(owner_transform.x, owner_transform.y, owner_transform.z);
+		AK::SoundEngine::SetPosition(gameobject_source, sound_position);
+	}
 }
 
 void ComponentAudioSource::Delete()
@@ -42,6 +41,15 @@ void ComponentAudioSource::Delete()
 void ComponentAudioSource::SetSoundBank(uint32_t uuid)
 {
 	soundbank = App->resources->Load<SoundBank>(uuid);
+}
+
+void ComponentAudioSource::PlayEvent(const std::string & event_to_play)
+{
+	AkPlayingID playing_id = AK::SoundEngine::PostEvent(event_to_play.c_str(), gameobject_source);
+	if (playing_id == AK_INVALID_PLAYING_ID)
+	{
+		APP_LOG_ERROR("Unable to post main event");
+	}
 }
 
 Component* ComponentAudioSource::Clone(bool original_prefab) const

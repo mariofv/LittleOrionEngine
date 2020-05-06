@@ -24,8 +24,7 @@ public:
 
 	ComponentAudioSource* CreateComponentAudioSource();
 
-	bool playing = false;
-
+	const AkGameObjectID main_sound_gameobject = 3;
 private:
 	AkMemSettings memory_manager_settings;
 	AkStreamMgrSettings streaming_manager_settings;
@@ -34,14 +33,6 @@ private:
 	AkDeviceSettings device_settings;
 
 	std::shared_ptr<SoundBank> init_sound_bank = nullptr;
-	std::shared_ptr<SoundBank> main_sound_bank = nullptr;
-
-
-	AkBankID banck_id = 0;
-	AkBankID init_banck_id = 0;
-
-	const AkGameObjectID main_sound_gameobject = 3;
-	const char * main_sound_event = "Play_main";
 };
 
 #endif //_MODULEAUDIO_H_

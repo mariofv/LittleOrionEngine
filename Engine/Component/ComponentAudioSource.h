@@ -14,10 +14,12 @@ public:
 	ComponentAudioSource(GameObject* owner);
 	~ComponentAudioSource() = default;
 
-	void Init();
+	void Init() override;
 	void Update() override;
 	void Delete() override;
+
 	void SetSoundBank(uint32_t uuid);
+	void PlayEvent(const std::string & event_to_play);
 
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
@@ -25,9 +27,11 @@ public:
 	void Load(const Config& config) override;
 
 private:
-	AkGameObjectID gameobject_source = 0;
 	AkSoundPosition sound_position;
+	AkGameObjectID gameobject_source = 0;
 	std::shared_ptr<SoundBank> soundbank;
+
+	bool sound_3d = false;
 	friend class PanelComponent;
 };
 

@@ -45,7 +45,7 @@ public:
 		this->type = component_to_copy.type;
 		return *this;
 	}
-
+	virtual void Init() {};
 	virtual void Enable() { active = true;};
 	virtual void Disable() { active = false;};
 	virtual bool IsEnabled() const { return active; };
