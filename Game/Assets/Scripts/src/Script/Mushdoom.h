@@ -14,8 +14,8 @@ public:
 	void Start() override;
 	void Update() override;
 
-	void OnInspector(ImGuiContext*) override;
-	void InitPublicGameObjects();
+	//void OnInspector(ImGuiContext*) override;
+	//void InitPublicGameObjects();
 
 private:
 };

@@ -26,13 +26,11 @@ public:
 	void InitPublicGameObjects();
 	void TakeDamage(float damage);
 
-	//EnemyManager* punterito = nullptr;
-
 protected:
 	void Move();
-	bool Attack();
+	bool Attack() {}
 	bool PlayerInSight();
-	void OnCollisionEnter();
+	void OnCollisionEnter() {}
 	void Die();
 	virtual void ResetEnemy() {}
 

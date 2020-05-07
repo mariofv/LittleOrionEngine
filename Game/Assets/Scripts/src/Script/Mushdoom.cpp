@@ -27,51 +27,45 @@ Mushdoom::Mushdoom()
 
 // Use this for initialization before Start()
 void Mushdoom::Awake()
-{
+{	EnemyController::Awake();
 
 }
 
 // Use this for initialization
 void Mushdoom::Start()
-{
+{	EnemyController::Start();
 
 }
 
 // Update is called once per frame
 void Mushdoom::Update()
-{
+{	EnemyController::Update();
 
 
 }
 
 // Use this for showing variables on inspector
-void Mushdoom::OnInspector(ImGuiContext* context)
-{
-	//Necessary to be able to write with imgui
-	ImGui::SetCurrentContext(context);
-	ShowDraggedObjects();
-	ImGui::NewLine();
-	ImGui::Text("Enemy Stats");	ImGui::InputFloat("Rot Speed", &rot_speed);	ImGui::InputFloat("Move Speed", &move_speed);	ImGui::InputFloat("Attack Speed", &attack_speed);	ImGui::InputFloat("Attack Power", &attack_power);	ImGui::InputFloat("Attack Range", &attack_range);	ImGui::InputFloat("Health Points", &health_points);	ImGui::InputFloat("Stop Distance", &stopping_distance);	ImGui::InputFloat("Detect Distance", &detected_player_distance);
-	ImGui::NewLine();
-	ImGui::Text("Enemy Debug");
-	ImGui::Checkbox("Is Dead", &is_dead);
-	ImGui::Checkbox("Is Attacking", &is_attacking);
-}
+//void Mushdoom::OnInspector(ImGuiContext* context)//
+//{//
+//	//Necessary to be able to write with imgui//
+//	ImGui::SetCurrentContext(context);//
+//	ShowDraggedObjects();
+//}
 
 //Use this for linking JUST GO automatically 
-void Mushdoom::InitPublicGameObjects()
-{
-	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
-
-	public_gameobjects.push_back(&player);
-	variable_names.push_back(GET_VARIABLE_NAME(player));
-
-	for (int i = 0; i < public_gameobjects.size(); ++i)
-	{
-		name_gameobjects.push_back(is_object);
-		go_uuids.push_back(0);
-	}
-}
+//void Mushdoom::InitPublicGameObjects()//
+//{//
+//	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size//
+////
+//	public_gameobjects.push_back(&player);//
+//	variable_names.push_back(GET_VARIABLE_NAME(player));//
+////
+//	for (int i = 0; i < public_gameobjects.size(); ++i)//
+//	{//
+//		name_gameobjects.push_back(is_object);//
+//		go_uuids.push_back(0);//
+//	}//
+//}
 //Use this for linking GO AND VARIABLES automatically if you need to save variables 
 // void Mushdoom::Save(Config& config) const
 // {

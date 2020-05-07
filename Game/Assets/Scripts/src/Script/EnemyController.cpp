@@ -50,9 +50,12 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
 
-	ImGui::Text("Player Movement Script Inspector");
-	//Example Showing variables and being able to modify it on Runtime.
-	ImGui::DragFloat("Speed", &move_speed, 0.1f, 0.f, 0.5f);
+	ImGui::NewLine();
+	ImGui::Text("Enemy Stats");	ImGui::InputFloat("Rot Speed", &rot_speed);	ImGui::InputFloat("Move Speed", &move_speed);	ImGui::InputFloat("Attack Speed", &attack_speed);	ImGui::InputFloat("Attack Power", &attack_power);	ImGui::InputFloat("Attack Range", &attack_range);	ImGui::InputFloat("Health Points", &health_points);	ImGui::InputFloat("Stop Distance", &stopping_distance);	ImGui::InputFloat("Detect Distance", &detected_player_distance);
+	ImGui::NewLine();
+	ImGui::Text("Enemy Debug");
+	ImGui::Checkbox("Is Dead", &is_dead);
+	ImGui::Checkbox("Is Attacking", &is_attacking);
 }
 
 //Use this for linking JUST GO automatically 
