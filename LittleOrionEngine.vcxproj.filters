@@ -419,6 +419,7 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.cpp" />
     <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopUpParticleSystem.cpp" />
+    <ClCompile Include="PanelPopUpParticleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -818,6 +819,7 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.h" />
     <ClInclude Include="Engine\Component\ComponentParticleSystem.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopUpParticleSystem.h" />
+    <ClInclude Include="PanelPopUpParticleSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
