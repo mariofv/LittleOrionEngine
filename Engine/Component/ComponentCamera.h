@@ -154,6 +154,9 @@ private:
 	GLuint msfb_color = 0;
 	GLuint last_recorded_frame_texture = 0;
 
+	GLuint depthfbo = 0;
+	GLuint depth_map = 0;
+
 	float last_height = 0;
 	float last_width = 0;
 

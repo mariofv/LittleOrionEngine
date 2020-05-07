@@ -27,6 +27,7 @@ mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent);
 uniform mat4 directional_view;
 uniform mat4 directional_proj;
 out vec4 pos_from_light;
+uniform float render_depth_from_light;
 
 
 void main()
@@ -51,8 +52,17 @@ void main()
 
 	TBN = transpose(mat3(T, B, N));  
 
-	pos_from_light = lightSpaceMatrix*matrices.model*vec4(position, 1.0);
-	gl_Position = matrices.proj*matrices.view*vec4(position, 1.0);
+	if(render_depth_from_light == 1)
+	{
+		gl_Position = lightSpaceMatrix*matrices.model*vec4(position, 1.0);
+	}
+
+	else
+	{
+		gl_Position = matrices.proj*matrices.view*vec4(position, 1.0);
+
+	}
+
 }
 
 mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent)

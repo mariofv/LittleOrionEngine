@@ -68,16 +68,22 @@ ComponentCamera::~ComponentCamera()
 {
 	glDeleteTextures(1, &last_recorded_frame_texture);
 	glDeleteTextures(1, &msfb_color);
+	glDeleteTextures(1, &depth_map);
+
 
 	glDeleteRenderbuffers(1, &rbo);
 	glDeleteFramebuffers(1, &fbo);
 	glDeleteFramebuffers(1, &msfbo);
+	glDeleteFramebuffers(1, &depthfbo);
+
 }
 
 void ComponentCamera::InitCamera()
 {
 	glGenFramebuffers(1, &fbo);
 	glGenFramebuffers(1, &msfbo);
+	glGenFramebuffers(1, &depthfbo);
+
 
 	aspect_ratio = 1.f;
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
@@ -203,7 +209,16 @@ void ComponentCamera::RecordFrame(float width, float height)
 	}
 
 #if !GAME
-	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+
+	if (App->renderer->render_depth)
+	{
+		glBindFramebuffer(GL_FRAMEBUFFER, depthfbo);
+	}
+	else
+	{
+		glDisable(GL_DEPTH_TEST);
+		App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+	}
 #endif
 
 	glViewport(0, 0, width, height);
@@ -282,7 +297,10 @@ void ComponentCamera::GenerateFrameBuffers(float width, float height)
 		glDeleteRenderbuffers(1, &rbo);
 	}
 
-	App->renderer->anti_aliasing ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
+	if(App->renderer->render_depth)
+		CreateDepthFramebuffer(width, height);
+	else
+		App->renderer->anti_aliasing ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
 }
 
 void ComponentCamera::CreateFramebuffer(float width, float height)
@@ -302,6 +320,37 @@ void ComponentCamera::CreateFramebuffer(float width, float height)
 	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_STENCIL_ATTACHMENT, GL_RENDERBUFFER, rbo);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+}
+
+void ComponentCamera::CreateDepthFramebuffer(float width, float height)
+{
+
+
+	glGenRenderbuffers(1, &rbo);
+	glBindRenderbuffer(GL_RENDERBUFFER, rbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_RGBA, width, height);
+	glBindRenderbuffer(GL_RENDERBUFFER, 0);
+
+	glBindFramebuffer(GL_FRAMEBUFFER, depthfbo);
+	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
+	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthfbo);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
+	glGenTextures(1, &depth_map);
+	glBindTexture(GL_TEXTURE_2D, depth_map);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);	
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
+	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
+	glBindTexture(GL_TEXTURE_2D, 0);
+
+	last_recorded_frame_texture = depth_map;
+
+	glBindFramebuffer(GL_FRAMEBUFFER, depthfbo);
+	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
+	glDrawBuffer(GL_NONE);
+	glReadBuffer(GL_NONE);
+	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+
 }
 
 void ComponentCamera::CreateMssaFramebuffer(float width, float height)

@@ -172,7 +172,7 @@ void main()
 
 	if(render_depth_from_light == 1)
 	{
-		FragColor = vec4(vec3(pos_from_light.z),1.0);
+		//FragColor = vec4(vec3(pos_from_light.z),1.0);
 	}
 
 	else
