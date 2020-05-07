@@ -26,7 +26,7 @@ public:
 	void InitPublicGameObjects();
 	void TakeDamage(float damage);
 
-	EnemyManager* punterito = nullptr;
+	//EnemyManager* punterito = nullptr;
 
 protected:
 	void Move();
@@ -34,7 +34,7 @@ protected:
 	bool PlayerInSight();
 	void OnCollisionEnter();
 	void Die();
-	virtual void Respawn(){}
+	virtual void ResetEnemy() {}
 
 protected:
 	EnemyType type;
@@ -47,7 +47,7 @@ protected:
 	float attack_power;
 	float attack_range;
 	float health_points = 100.f;
-	float stopping_distance = 0.1f;
+	float stopping_distance = 2.f;
 	float detected_player_distance;
 
 	bool is_dead = false;

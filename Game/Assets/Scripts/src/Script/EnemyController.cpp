@@ -27,8 +27,8 @@ EnemyController::EnemyController()
 // Use this for initialization before Start()
 void EnemyController::Awake()
 {
-	EnemyManager::GetInstance()->AddEnemy(this);
-	animation = (ComponentAnimation*)owner->GetComponent(Component::ComponentType::ANIMATION);
+	//EnemyManager::GetInstance()->AddEnemy(this);
+	animation = (ComponentAnimation*)owner->children[0]->children[0]->GetComponent(Component::ComponentType::ANIMATION);
 }
 
 // Use this for initialization
@@ -40,7 +40,7 @@ void EnemyController::Start()
 // Update is called once per frame
 void EnemyController::Update()
 {
-
+	Move();
 }
 
 // Use this for showing variables on inspector
@@ -63,7 +63,6 @@ void EnemyController::InitPublicGameObjects()
 		name_gameobjects.push_back(is_object);
 		go_uuids.push_back(0);
 	}
-
 }
 
 void EnemyController::TakeDamage(float damage)
