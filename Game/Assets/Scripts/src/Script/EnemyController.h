@@ -46,7 +46,7 @@ protected:
 	float attack_range = 1.f;
 	float health_points = 100.f;
 	float stopping_distance = 2.f;
-	float detected_player_distance = 1.f;
+	float detect_player_distance = 100.f;
 
 	bool is_dead = false;
 	bool is_attacking = false;

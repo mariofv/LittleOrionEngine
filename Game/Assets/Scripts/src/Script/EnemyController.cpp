@@ -51,7 +51,7 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ShowDraggedObjects();
 
 	ImGui::NewLine();
-	ImGui::Text("Enemy Stats");	ImGui::InputFloat("Rot Speed", &rot_speed);	ImGui::InputFloat("Move Speed", &move_speed);	ImGui::InputFloat("Attack Speed", &attack_speed);	ImGui::InputFloat("Attack Power", &attack_power);	ImGui::InputFloat("Attack Range", &attack_range);	ImGui::InputFloat("Health Points", &health_points);	ImGui::InputFloat("Stop Distance", &stopping_distance);	ImGui::InputFloat("Detect Distance", &detected_player_distance);
+	ImGui::Text("Enemy Stats");	ImGui::InputFloat("Rot Speed", &rot_speed);	ImGui::InputFloat("Move Speed", &move_speed);	ImGui::InputFloat("Attack Speed", &attack_speed);	ImGui::InputFloat("Attack Power", &attack_power);	ImGui::InputFloat("Attack Range", &attack_range);	ImGui::InputFloat("Health Points", &health_points);	ImGui::InputFloat("Stop Distance", &stopping_distance);	ImGui::InputFloat("Detect Distance", &detect_player_distance);
 	ImGui::NewLine();
 	ImGui::Text("Enemy Debug");
 	ImGui::Checkbox("Is Dead", &is_dead);
@@ -84,6 +84,8 @@ void EnemyController::TakeDamage(float damage)
 
 void EnemyController::Move()
 {
+	if (!PlayerInSight()) return;
+
 	const float3 player_transform = player->transform.GetTranslation();
 	float3 transform = owner->transform.GetTranslation();
 
@@ -107,6 +109,11 @@ void EnemyController::Move()
 			owner->transform.SetTranslation(position);
 		}
 	}
+}
+
+bool EnemyController::PlayerInSight()
+{
+	return player->transform.GetTranslation().Distance(owner->transform.GetTranslation()) < detect_player_distance;
 }
 
 void EnemyController::Die()
