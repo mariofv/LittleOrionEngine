@@ -49,6 +49,10 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
+
+	ImGui::Text("Player Movement Script Inspector");
+	//Example Showing variables and being able to modify it on Runtime.
+	ImGui::DragFloat("Speed", &move_speed, 0.1f, 0.f, 0.5f);
 }
 
 //Use this for linking JUST GO automatically 

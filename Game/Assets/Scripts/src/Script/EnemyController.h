@@ -43,12 +43,12 @@ protected:
 
 	float rot_speed = 0.01f;
 	float move_speed = 0.2f;
-	float attack_speed;
-	float attack_power;
-	float attack_range;
+	float attack_speed = 1.f;
+	float attack_power = 1.f;
+	float attack_range = 1.f;
 	float health_points = 100.f;
 	float stopping_distance = 2.f;
-	float detected_player_distance;
+	float detected_player_distance = 1.f;
 
 	bool is_dead = false;
 	bool is_attacking = false;
