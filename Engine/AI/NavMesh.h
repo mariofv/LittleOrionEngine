@@ -102,6 +102,10 @@ private:
 		const dtPolyRef* visited, const int nvisited);
 
 	float DistancePtLine2d(const float* pt, const float* p, const float* q) const;
+	void drawMeshTile(SampleDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query,
+		const dtMeshTile* tile, unsigned char flags);
+	void duDebugDrawNavMesh(SampleDebugDraw* dd, const dtNavMesh& mesh, unsigned char flags);
+	void duDebugDrawNavMeshWithClosedList(SampleDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags);
 
 public:
 	uint64_t mesh_floor_uuid;

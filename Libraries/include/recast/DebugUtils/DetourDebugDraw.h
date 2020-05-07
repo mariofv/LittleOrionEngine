@@ -19,10 +19,9 @@
 #ifndef DETOURDEBUGDRAW_H
 #define DETOURDEBUGDRAW_H
 
-#include "recast/Detour/DetourNavMesh.h"
-#include "recast/Detour/DetourNavMeshQuery.h"
-#include "recast/DetourTileCache/DetourTileCacheBuilder.h"
-#include "AI/SampleDebugDraw.h"
+#include "Detour/DetourNavMesh.h"
+#include "Detour/DetourNavMeshQuery.h"
+#include "DetourTileCache/DetourTileCacheBuilder.h"
 
 enum DrawNavMeshFlags
 {
@@ -32,7 +31,6 @@ enum DrawNavMeshFlags
 };
 
 void duDebugDrawNavMesh(struct DuDebugDraw* dd, const dtNavMesh& mesh, unsigned char flags);
-void duDebugDrawNavMeshWithClosedList(SampleDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags);
 void duDebugDrawNavMeshNodes(struct DuDebugDraw* dd, const dtNavMeshQuery& query);
 void duDebugDrawNavMeshBVTree(struct DuDebugDraw* dd, const dtNavMesh& mesh);
 void duDebugDrawNavMeshPortals(struct DuDebugDraw* dd, const dtNavMesh& mesh);

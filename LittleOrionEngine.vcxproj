@@ -65,7 +65,7 @@
       <Optimization>Disabled</Optimization>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Libraries/include/cr;./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Libraries/include/cr;./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include/recast;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDebugDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_MBCS;WINDOWS_IGNORE_PACKING_MISMATCH;DEBUG;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -74,7 +74,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiDebug.lib;MathGeoLibDebug.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiDebug.lib;MathGeoLibDebug.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;recastDebug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -91,7 +91,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Libraries/include/cr;./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Libraries/include/cr;./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include/recast;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <PreprocessorDefinitions>_MBCS;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
       <LanguageStandard>stdcpp17</LanguageStandard>
@@ -102,7 +102,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;recastRelease.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -119,7 +119,7 @@
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>false</SDLCheck>
       <ExceptionHandling>Sync</ExceptionHandling>
-      <AdditionalIncludeDirectories>./Libraries/include/cr;./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include</AdditionalIncludeDirectories>
+      <AdditionalIncludeDirectories>./Libraries/include/cr;./Game/Assets/Scripts/src;./Engine/;./Libraries/include/SDL;./Libraries/include/MathGeoLib;./Libraries/include/ImGuizmo;./Libraries/include/imgui;./Libraries/include/pcg_random;./Libraries/include/debug-draw;./Libraries/include/FreeTypeFont;./Libraries/include/par_shapes;./Libraries/include/recast;./Libraries/include</AdditionalIncludeDirectories>
       <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
       <LanguageStandard>stdcpp17</LanguageStandard>
       <PreprocessorDefinitions>_MBCS;GAME;%(PreprocessorDefinitions);MSBUILD_PATH=LR"($(MSBuildBinPath))"</PreprocessorDefinitions>
@@ -130,7 +130,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;recastRelease.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -271,37 +271,6 @@
     <ClInclude Include="Engine\Module\ModuleActions.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.h" />
     <ClInclude Include="Engine\EditorUI\Helper\ImGuiHelper.h" />
-    <ClInclude Include="Libraries\include\cr\cr.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\crude_json.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_bezier_math.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_canvas.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_extra_math.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor_internal.h" />
-    <ClInclude Include="Libraries\include\recast\DebugUtils\DebugDraw.h" />
-    <ClInclude Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.h" />
-    <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.h" />
-    <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDump.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourCrowd.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourLocalBoundary.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourObstacleAvoidance.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourPathCorridor.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourPathQueue.h" />
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourProximityGrid.h" />
-    <ClInclude Include="Libraries\include\recast\DetourTileCache\DetourTileCache.h" />
-    <ClInclude Include="Libraries\include\recast\DetourTileCache\DetourTileCacheBuilder.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourAlloc.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourAssert.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourCommon.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourMath.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMesh.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMeshBuilder.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMeshQuery.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNode.h" />
-    <ClInclude Include="Libraries\include\recast\Detour\DetourStatus.h" />
-    <ClInclude Include="Libraries\include\recast\Recast\Recast.h" />
-    <ClInclude Include="Libraries\include\recast\Recast\RecastAlloc.h" />
-    <ClInclude Include="Libraries\include\recast\Recast\RecastAssert.h" />
     <ClInclude Include="Engine\AI\NavMesh.h" />
     <ClInclude Include="Engine\Module\ModuleAI.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelNavMesh.h" />
@@ -442,46 +411,11 @@
     <ClCompile Include="Engine\ResourceManagement\Manager\TextureManager.cpp" />
     <ClCompile Include="Engine\Module\ModuleActions.cpp" />
     <ClCompile Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.cpp" />
-    <ClCompile Include="Libraries\include\recast\DebugUtils\DebugDraw.cpp" />
-    <ClCompile Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.cpp" />
-    <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.cpp" />
-    <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDump.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourCrowd.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourLocalBoundary.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourObstacleAvoidance.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourPathCorridor.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourPathQueue.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourProximityGrid.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourTileCache\DetourTileCache.cpp" />
-    <ClCompile Include="Libraries\include\recast\DetourTileCache\DetourTileCacheBuilder.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourAlloc.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourAssert.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourCommon.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMesh.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMeshBuilder.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMeshQuery.cpp" />
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNode.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\Recast.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastAlloc.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastArea.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastAssert.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastContour.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastFilter.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastLayers.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastMesh.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastMeshDetail.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastRasterization.cpp" />
-    <ClCompile Include="Libraries\include\recast\Recast\RecastRegion.cpp" />
     <ClCompile Include="Engine\AI\NavMesh.cpp" />
     <ClCompile Include="Engine\Module\ModuleAI.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelNavMesh.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelBuildOptions.cpp" />
     <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl" />
-    <None Include="Libraries\include\NodeEditor\imgui_extra_math.inl" />
-    <None Include="Libraries\include\NodeEditor\imgui_node_editor_internal.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
