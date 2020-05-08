@@ -509,6 +509,12 @@
                     "StateMachineResource": 2258225
                 },
                 {
+                    "UUID": 1488118109,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerAttack"
+                },
+                {
                     "UUID": 3416365998,
                     "ComponentType": 6,
                     "Active": true,
@@ -1877,7 +1883,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 19,
+                    "Texture": 17,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1939,7 +1945,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 18,
+                    "Texture": 16,
                     "Color": [
                         1.0,
                         1.0,
