@@ -11,6 +11,8 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MathGeoLib", "Libraries\Cus
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "imgui", "Libraries\CustomBuild\imgui\imgui.vcxproj", "{DE63354A-8A7A-440A-991E-E3F497351308}"
 EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "recast", "CustomBuild\recast\recast.vcxproj", "{2A2CC975-1028-4A1F-96CB-8FC85052E441}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Win32 = Debug|Win32
@@ -54,6 +56,18 @@ Global
 		{DE63354A-8A7A-440A-991E-E3F497351308}.Release|Win32.Build.0 = Release|Win32
 		{DE63354A-8A7A-440A-991E-E3F497351308}.Release|x64.ActiveCfg = Release|x64
 		{DE63354A-8A7A-440A-991E-E3F497351308}.Release|x64.Build.0 = Release|x64
+		{2A2CC975-1028-4A1F-96CB-8FC85052E441}.Debug|Win32.ActiveCfg = Debug|Win32
+		{2A2CC975-1028-4A1F-96CB-8FC85052E441}.Debug|Win32.Build.0 = Debug|Win32
+		{2A2CC975-1028-4A1F-96CB-8FC85052E441}.Debug|x64.ActiveCfg = Debug|x64
+		{2A2CC975-1028-4A1F-96CB-8FC85052E441}.Debug|x64.Build.0 = Debug|x64
+		{2A2CC975-1028-4A1F-96CB-8FC85052E441}.Game|Win32.ActiveCfg = Release|Win32
+		{2A2CC975-1028-4A1F-96CB-8FC85052E441}.Game|Win32.Build.0 = Release|Win32
+		{2A2CC975-1028-4A1F-96CB-8FC85052E441}.Game|x64.ActiveCfg = Release|x64
+		{2A2CC975-1028-4A1F-96CB-8FC85052E441}.Game|x64.Build.0 = Release|x64
+		{2A2CC975-1028-4A1F-96CB-8FC85052E441}.Release|Win32.ActiveCfg = Release|Win32
+		{2A2CC975-1028-4A1F-96CB-8FC85052E441}.Release|Win32.Build.0 = Release|Win32
+		{2A2CC975-1028-4A1F-96CB-8FC85052E441}.Release|x64.ActiveCfg = Release|x64
+		{2A2CC975-1028-4A1F-96CB-8FC85052E441}.Release|x64.Build.0 = Release|x64
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -61,6 +75,7 @@ Global
 	GlobalSection(NestedProjects) = preSolution
 		{1AF1AC42-F58A-4F67-AB3C-E4EA5B5167D7} = {0AC04287-A978-48F3-AD0B-3B43FBCA74AA}
 		{DE63354A-8A7A-440A-991E-E3F497351308} = {0AC04287-A978-48F3-AD0B-3B43FBCA74AA}
+		{2A2CC975-1028-4A1F-96CB-8FC85052E441} = {0AC04287-A978-48F3-AD0B-3B43FBCA74AA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {2EEEF8C4-9A5C-46E9-B0EB-673227070C0D}

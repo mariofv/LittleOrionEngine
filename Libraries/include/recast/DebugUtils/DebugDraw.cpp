@@ -19,8 +19,8 @@
 #define _USE_MATH_DEFINES
 #include <string.h>
 #include "DebugDraw.h"
-#include "recast/Detour/DetourMath.h"
-#include "recast//Detour/DetourNavMesh.h"
+#include "Detour/DetourMath.h"
+#include "Detour/DetourNavMesh.h"
 
 
 DuDebugDraw::~DuDebugDraw()
