@@ -19,6 +19,7 @@ public:
 	void Delete() override;
 
 	void SetSoundBank(uint32_t uuid);
+	void SetVolume(float volume);
 	void PlayEvent(const std::string & event_to_play);
 
 	Component* Clone(bool original_prefab = false) const override;
@@ -32,6 +33,7 @@ private:
 	std::shared_ptr<SoundBank> soundbank;
 
 	bool sound_3d = false;
+	float volume = 1;
 	friend class PanelComponent;
 };
 

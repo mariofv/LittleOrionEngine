@@ -35,12 +35,19 @@ void ComponentAudioSource::Update()
 
 void ComponentAudioSource::Delete()
 {
+
 	AK::SoundEngine::UnregisterGameObj(gameobject_source);
 }
 
 void ComponentAudioSource::SetSoundBank(uint32_t uuid)
 {
 	soundbank = App->resources->Load<SoundBank>(uuid);
+}
+
+void ComponentAudioSource::SetVolume(float volume)
+{
+	this->volume = volume;
+	AK::SoundEngine::SetGameObjectOutputBusVolume(gameobject_source,App->audio->main_sound_gameobject,volume);
 }
 
 void ComponentAudioSource::PlayEvent(const std::string & event_to_play)

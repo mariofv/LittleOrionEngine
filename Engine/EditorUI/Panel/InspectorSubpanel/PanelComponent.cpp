@@ -833,5 +833,9 @@ void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* compon
 				component_audio_source->PlayEvent(soundbank);
 			}
 		}
+		if (ImGui::SliderFloat("Volume", &component_audio_source->volume, 0, 30))
+		{
+			component_audio_source->SetVolume(component_audio_source->volume);
+		}
 	}
 }
