@@ -36,12 +36,12 @@ void CameraController::Awake()
 	ComponentScript* component_debug = debug->GetComponentScript("DebugModeScript");
 	debug_mode = (DebugModeScript*)component_debug->script;
 
-	player_movement_component = player->GetComponentScript("PlayerController");
+	player_movement_component = player1->GetComponentScript("PlayerController");
 	player_movement_script = (PlayerController*)player_movement_component->script;
 	rotation = owner->transform.GetRotation();
 	if(App->input->singleplayer_input)
 	{
-		offset = float3(0.f, 5.5f, 11.f);
+		selected_offset = offset_near;
 	}	
 }
 
@@ -169,15 +169,15 @@ void CameraController::Focus()
 	if (is_focusing)
 	{
 		float focus_progress = math::Min((App->time->delta_time - start_focus_time) / 100.f, 1.f);
-		float3 new_camera_position = owner->transform.GetTranslation().Lerp(player->transform.GetTranslation(), focus_progress);
-		owner->transform.SetTranslation(float3(new_camera_position.x + offset.x, player->transform.GetTranslation().y + offset.y, offset.z));
+		float3 new_camera_position = owner->transform.GetTranslation().Lerp(player1->transform.GetTranslation(), focus_progress);
+		owner->transform.SetTranslation(float3(new_camera_position.x + selected_offset.x, player1->transform.GetTranslation().y + selected_offset.y, selected_offset.z));
 		is_focusing = focus_progress != 1;
 	}
 
 }
 void CameraController::FollowPlayer() 
 {
-	float distance = abs(player->transform.GetTranslation().x - owner->transform.GetTranslation().x);
+	float distance = abs(player1->transform.GetTranslation().x - owner->transform.GetTranslation().x);
 	if ( distance > 2 && !is_focusing)
 	{
 		start_focus_time = App->time->delta_time;
@@ -193,7 +193,7 @@ void CameraController::FollowPlayer()
 }
 void CameraController::MultiplayerCamera()
 {
-	float distance = abs(player->transform.GetTranslation().x - owner->transform.GetTranslation().x);
+	float distance = abs(player1->transform.GetTranslation().x - owner->transform.GetTranslation().x);
 	if (distance > 2 && !is_focusing)
 	{
 		start_focus_time = App->time->delta_time;
@@ -211,11 +211,11 @@ void CameraController::InitPublicGameObjects()
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
 
 	public_gameobjects.push_back(&camera);
-	public_gameobjects.push_back(&player);
+	public_gameobjects.push_back(&player1);
 	public_gameobjects.push_back(&debug);
 
 	variable_names.push_back(GET_VARIABLE_NAME(camera));
-	variable_names.push_back(GET_VARIABLE_NAME(player));
+	variable_names.push_back(GET_VARIABLE_NAME(player1));
 	variable_names.push_back(GET_VARIABLE_NAME(debug));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)

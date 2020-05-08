@@ -38,16 +38,24 @@ private:
 	ComponentCamera* camera_component = nullptr;
 	float rotation_speed = 1.f;
 
-	GameObject* player = nullptr;
+	GameObject* player1 = nullptr;
 	PlayerController* player_movement_script = nullptr;
 	ComponentScript* player_movement_component = nullptr;
 
+	GameObject* player2 = nullptr;
+	PlayerController* player2_movement_script = nullptr;
+	ComponentScript* player2_movement_component = nullptr;
+
 	GameObject* debug = nullptr;
 	DebugModeScript* debug_mode = nullptr;
-	float3 offset = float3::zero;
+
+	float3 offset_near = float3(0.f, 5.5f, 11.f);
+	float3 offset_far = float3(0.f, 5.5f, 11.f);
+	float3 selected_offset = float3::zero;;
+
 	bool is_focusing = false;
 	float start_focus_time = 0.f;
-	float3 offset_multiplayer = float3::zero;
+
 
 };
 extern "C" SCRIPT_API CameraController* CameraControllerDLL(); //This is how we are going to load the script
