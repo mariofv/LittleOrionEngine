@@ -90,11 +90,12 @@ void ComponentCollider::Load(const Config & config)
 	z_axis = config.GetBool("z_axis", true);
 	disable_physics = config.GetBool("DisablePhysics", false);
 	AddBody();
-	SetStatic();
-	SetVisualization();
+	if (is_static) { SetStatic(); }
+	if (!visualize) { SetVisualization(); }
 	SetRotationAxis();
-	SetCollisionDetection();
-	DisablePhysics();
+	if (!detect_collision) { SetCollisionDetection(); }
+	if (disable_physics || !active) { DisablePhysics(); }
+	
 }
 
 btRigidBody* ComponentCollider::AddBody()
@@ -159,7 +160,6 @@ void ComponentCollider::UpdateCommonDimensions()
 
 void ComponentCollider::SetMass(float new_mass)
 {
-
 	App->physics->world->removeRigidBody(body);
 	body->getCollisionShape()->calculateLocalInertia(new_mass, local_inertia);
 	body->setMassProps(new_mass, local_inertia);
@@ -281,7 +281,7 @@ void ComponentCollider::DisablePhysics()
 {
 	if (disable_physics || !active)
 	{
-		body->setActivationState(DISABLE_SIMULATION);
+		body->forceActivationState(DISABLE_SIMULATION);
 	}
 	else
 	{

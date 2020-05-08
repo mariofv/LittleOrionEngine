@@ -68,9 +68,7 @@ update_status ModulePhysics::Update()
 		}
 		else
 		{			
-			collider->UpdateDimensions();
-			collider->owner->transform.has_changed = false;
-			
+			collider->UpdateDimensions();			
 		}
 		if(collider->collider_type != ComponentCollider::ColliderType::MESH)
 		{
