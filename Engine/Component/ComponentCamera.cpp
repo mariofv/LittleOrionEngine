@@ -622,12 +622,12 @@ std::vector<float> ComponentCamera::GetFrustumVertices() const
 	return vertices;
 }
 
-bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
+ENGINE_API bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
 {
 	return CheckAABBCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
 
-bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const
+ENGINE_API bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const
 {
 	return CheckAABB2DCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
