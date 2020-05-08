@@ -46,7 +46,7 @@ void Mushdoom::ResetEnemy()
 {
 	health_points = max_health_points;
 
-	is_dead = false;
+	is_alive = true;
 	is_attacking = false;
 
 	owner->transform.SetTranslation(init_translation);

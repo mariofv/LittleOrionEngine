@@ -64,7 +64,7 @@ void EnemyController::OnInspector(ImGuiContext* context)
 
 	ImGui::NewLine();
 	ImGui::Text("Enemy Debug");
-	ImGui::Checkbox("Is Dead", &is_dead);
+	ImGui::Checkbox("Is Alive", &is_alive);
 	ImGui::Checkbox("Is Attacking", &is_attacking);
 }
 
@@ -138,11 +138,9 @@ void EnemyController::InitMembers()
 	GameObject* enemy_manager_go = App->scene->GetGameObjectByName("EnemyManager");
 	ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
 	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
-	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
+	animation = (ComponentAnimation*)owner->GetComponent(Component::ComponentType::ANIMATION);
 
 	init_translation = owner->transform.GetTranslation();
 	init_rotation = owner->transform.GetRotation();
 	init_scale = owner->transform.GetScale();
-
-
 }

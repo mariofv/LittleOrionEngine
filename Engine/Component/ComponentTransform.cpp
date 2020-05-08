@@ -70,7 +70,6 @@ ENGINE_API float3 ComponentTransform::GetGlobalTranslation() const
 	return global_model_matrix.TranslatePart();
 }
 
-
 ENGINE_API float3 ComponentTransform::GetTranslation() const
 {
 	return translation;
@@ -87,6 +86,12 @@ ENGINE_API void ComponentTransform::Translate(const float3& translation)
 {
 	this->translation += translation;
 	OnTransformChange();
+}
+
+ENGINE_API void ComponentTransform::SetGlobalMatrixTranslation(const float3& translation)
+{
+	global_model_matrix.SetTranslatePart(translation);
+	SetGlobalModelMatrix(global_model_matrix);
 }
 
 ENGINE_API Quat ComponentTransform::GetGlobalRotation() const
@@ -128,6 +133,18 @@ ENGINE_API void ComponentTransform::SetRotation(const Quat& new_rotation)
 	OnTransformChange();
 }
 
+ENGINE_API void ComponentTransform::SetGlobalMatrixRotation(const float3x3& rotation)
+{
+	global_model_matrix.SetRotatePart(rotation);
+	SetGlobalModelMatrix(global_model_matrix);
+}
+
+ENGINE_API void ComponentTransform::SetGlobalMatrixRotation(const Quat& rotation)
+{
+	global_model_matrix.SetRotatePart(rotation);
+	SetGlobalModelMatrix(global_model_matrix);
+}
+
 void ComponentTransform::Rotate(const Quat& rotation)
 {
 	this->rotation = rotation * this->rotation;
@@ -136,8 +153,6 @@ void ComponentTransform::Rotate(const Quat& rotation)
 
 	OnTransformChange();
 }
-
-
 
 void ComponentTransform::Rotate(const float3x3& rotation)
 {
@@ -242,7 +257,6 @@ void ComponentTransform::SetGlobalModelMatrix(const float4x4& new_global_matrix)
 	SetTranslation(translation);
 	SetRotation(rotation);
 	SetScale(scale);
-	
 }
 
 void ComponentTransform::ChangeLocalSpace(const float4x4& new_local_space)

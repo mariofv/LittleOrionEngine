@@ -35,9 +35,13 @@ protected:
 	void Die();
 	virtual void ResetEnemy() {}
 
+public:
+	GameObject* player = nullptr;
+	bool is_alive = true;
+
 protected:
 	EnemyType type;
-	GameObject* player = nullptr;
+
 	ComponentAnimation* animation = nullptr;
 	EnemyManager* enemy_manager = nullptr;
 
@@ -51,7 +55,6 @@ protected:
 	float stopping_distance = 2.f;
 	float detect_player_distance = 100.f;
 
-	bool is_alive = true;
 	bool is_attacking = false;
 
 	float3 init_translation;

@@ -12,16 +12,15 @@ class ComponentTransform : public Component
 {
 public:
 	ComponentTransform();
-	ComponentTransform(GameObject * owner);
-	ComponentTransform(GameObject * owner,const float3 translation, const Quat rotation, const float3 scale);
+	ComponentTransform(GameObject* owner);
+	ComponentTransform(GameObject* owner,const float3 translation, const Quat rotation, const float3 scale);
 
 	//Copy and move
 	ComponentTransform(const ComponentTransform& component_to_copy) = default;
 	ComponentTransform(ComponentTransform&& component_to_move) = default;
 
-	ComponentTransform & operator=(const ComponentTransform & component_to_copy);
-	ComponentTransform & operator=(ComponentTransform && component_to_move) = default;
-
+	ComponentTransform& operator=(const ComponentTransform& component_to_copy);
+	ComponentTransform& operator=(ComponentTransform&& component_to_move) = default;
 
 	Component* Clone(bool create_on_module = true) const override;
 	void Copy(Component * component_to_copy) const override;
@@ -36,6 +35,7 @@ public:
 	ENGINE_API float3 GetGlobalTranslation() const;
 	ENGINE_API float3 GetTranslation() const;
 	ENGINE_API void SetTranslation(const float3& translation);
+	ENGINE_API void SetGlobalMatrixTranslation(const float3& translation);
 	ENGINE_API void Translate(const float3& translation);
 
 	ENGINE_API Quat GetGlobalRotation() const;
@@ -44,6 +44,9 @@ public:
 	ENGINE_API void SetRotation(const float3x3& rotation);
 	ENGINE_API void SetRotation(const float3& rotation);
 	ENGINE_API void SetRotation(const Quat& rotation);
+
+	ENGINE_API void SetGlobalMatrixRotation(const float3x3& rotation);
+	ENGINE_API void SetGlobalMatrixRotation(const Quat& rotation);
 
 	void Rotate(const Quat& rotation);
 	void Rotate(const float3x3& rotation);
@@ -68,6 +71,9 @@ public:
   
 private:
 	void OnTransformChange();
+
+public:
+	bool has_changed = false; //used for physics
 
 private:
 	float3 translation = float3::zero;
