@@ -160,12 +160,16 @@ ENGINE_API float3 ComponentTransform::ComponentTransform::GetScale() const
 	return scale;
 }
 
-
 ENGINE_API void ComponentTransform::SetScale(const float3& scale)
 {
 	this->scale = scale;
 	
 	OnTransformChange();
+}
+
+float3 ComponentTransform::GetGlobalScale() const
+{
+	return global_model_matrix.GetScale();
 }
 
 ENGINE_API float3 ComponentTransform::GetUpVector() const
