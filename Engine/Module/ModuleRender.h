@@ -12,9 +12,10 @@
 
 const unsigned INITIAL_SIZE_AABBTREE = 10;
 
-class ComponentMeshRenderer;
 class ComponentBillboard;
 class ComponentCamera;
+class ComponentMeshRenderer;
+class ComponentParticleSystem;
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -46,6 +47,8 @@ public:
 	ComponentBillboard* CreateComponentBillboard();
 	void RemoveComponentBillboard(ComponentBillboard* billboard_to_remove);
 
+	ComponentParticleSystem* CreateComponentParticleSystem();
+	void RemoveComponentParticleSystem(ComponentParticleSystem* particle_system_to_remove);
 
 	int GetRenderedTris() const;
 
@@ -112,6 +115,8 @@ private:
 	std::vector<ComponentBillboard*> billboards;
 	std::vector<ComponentBillboard*> billboards_to_render;
 
+	std::vector<ComponentParticleSystem*> particle_systems;
+	std::vector<ComponentParticleSystem*> particle_systems_to_render;
 
 	int num_rendered_tris = 0;
 	Timer * rendering_measure_timer = new Timer();

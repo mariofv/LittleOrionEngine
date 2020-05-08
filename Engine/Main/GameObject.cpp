@@ -17,6 +17,7 @@
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentBillboard.h"
@@ -271,7 +272,7 @@ void GameObject::RemoveChild(GameObject *child)
 
 ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type)
 {
-	Component *created_component;
+	Component* created_component;
 	switch (type)
 	{
 	case Component::ComponentType::CAMERA:
@@ -296,6 +297,10 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 
 	case Component::ComponentType::BILLBOARD:
 		created_component = App->renderer->CreateComponentBillboard();
+		break;
+
+	case Component::ComponentType::PARTICLE_SYSTEM:
+		created_component = App->renderer->CreateComponentParticleSystem();
 		break;
 
 	default:

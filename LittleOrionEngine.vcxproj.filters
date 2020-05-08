@@ -417,6 +417,7 @@
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentBillboard.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.cpp" />
+    <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -814,6 +815,7 @@
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentBillboard.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.h" />
+    <ClInclude Include="Engine\Component\ComponentParticleSystem.h" />
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -898,5 +900,7 @@
   <ItemGroup>
     <None Include="Game\Resources\Shaders\blinn_phong.fs" />
     <None Include="Game\Resources\Shaders\blinn_phong.vs" />
+    <None Include="Game\Resources\Shaders\particle.fs" />
+    <None Include="Game\Resources\Shaders\particle.vs" />
   </ItemGroup>
 </Project>

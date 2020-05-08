@@ -12,10 +12,13 @@
 #include "ModuleUI.h"
 #include "ModuleWindow.h"
 #include "ModuleLight.h"
+
+#include "Component/ComponentBillboard.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentLight.h"
-#include "Component/ComponentBillboard.h"
+
 #include "EditorUI/DebugDraw.h"
 #include "ModuleResourceManager.h"
 
@@ -180,14 +183,11 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		}
 	}
 
-
-	if (billboards.size() > 0) {
-
-		for (auto &billboard : billboards)
-		{
-			billboard->Render(billboard->owner->transform.GetGlobalTranslation());
-		}
+	for (auto &billboard : billboards)
+	{
+		billboard->Render(billboard->owner->transform.GetGlobalTranslation());
 	}
+	
 	
 
 	rendering_measure_timer->Stop();
@@ -450,7 +450,7 @@ std::string ModuleRender::GetDrawMode() const
 
 ComponentMeshRenderer* ModuleRender::CreateComponentMeshRenderer()
 {
-	ComponentMeshRenderer *created_mesh = new ComponentMeshRenderer();
+	ComponentMeshRenderer* created_mesh = new ComponentMeshRenderer();
 	meshes.push_back(created_mesh);
 	return created_mesh;
 }
@@ -467,7 +467,7 @@ void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 
 ComponentBillboard* ModuleRender::CreateComponentBillboard()
 {
-	ComponentBillboard *created_billboard = new ComponentBillboard(App->editor->selected_game_object);
+	ComponentBillboard* created_billboard = new ComponentBillboard(App->editor->selected_game_object);
 	created_billboard->billboard_texture = App->resources->Load<Texture>(DEFAULT_BILLBOARD_TEXTURE_PATH);
 	created_billboard->alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
 	created_billboard->x_tiles = 1;
@@ -488,6 +488,23 @@ void ModuleRender::RemoveComponentBillboard(ComponentBillboard* billboard_to_rem
 	}
 }
 
+
+ComponentParticleSystem* ModuleRender::CreateComponentParticleSystem()
+{
+	ComponentParticleSystem* created_particle_system = new ComponentParticleSystem();
+	particle_systems.push_back(created_particle_system);
+	return created_particle_system;
+}
+
+void ModuleRender::RemoveComponentParticleSystem(ComponentParticleSystem* particle_system_to_remove)
+{
+	auto it = std::find(particle_systems.begin(), particle_systems.end(), particle_system_to_remove);
+	if (it != particle_systems.end())
+	{
+		delete *it;
+		particle_systems.erase(it);
+	}
+}
 void ModuleRender::GenerateQuadTree()
 {
 	AABB2D global_AABB;
