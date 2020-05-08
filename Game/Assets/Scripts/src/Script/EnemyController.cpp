@@ -76,25 +76,9 @@ void EnemyController::TakeDamage(float damage)
 	}
 }
 
-void EnemyController::Spawn()
-{
-	PlayAnimation();
-}
-
-void EnemyController::StopAnimation() const
-{
-	animation->Stop();
-}
-
-void EnemyController::PlayAnimation() const
-{
-	animation->Play();
-}
-
 void EnemyController::Death()
 {
 	enemy_manager->KillEnemy(this);
-	StopAnimation();
 }
 
 

@@ -18,9 +18,6 @@ public:
 
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();	void TakeDamage(float damage);
-	void Spawn();
-	void StopAnimation() const;
-	void PlayAnimation() const;
 
 	//virtual void ResetEnemy() = 0;
 
