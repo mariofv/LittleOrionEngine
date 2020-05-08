@@ -8,18 +8,18 @@
                 "Active": true,
                 "Translation": [
                     0.0,
-                    15.442794799804688,
-                    12.456972122192383
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
-                    -0.0,
                     0.0,
-                    -0.0
+                    0.0,
+                    0.0
                 ],
                 "Scale": [
-                    5.0,
-                    5.0,
-                    5.0
+                    1.0,
+                    1.0,
+                    1.0
                 ]
             },
             "UUIDS": [
@@ -191,32 +191,22 @@
     ],
     "PrefabsComponents": [
         {
-            "Transform": {
-                "UUID": 1895235474,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    15.442794799804688,
-                    12.456972122192383
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    5.0,
-                    5.0,
-                    5.0
-                ]
-            },
-            "Components": [],
+            "Components": [
+                {
+                    "UUID": 1098470067,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "EnemyController",
+                    "Name0": "Idle",
+                    "Idle": 435457571
+                }
+            ],
             "UUID": 374023203
         },
         {
             "Components": [
                 {
-                    "UUID": 2185051855,
+                    "UUID": 2136013022,
                     "ComponentType": 8,
                     "Active": true,
                     "StateMachineResource": 507853369
@@ -226,6 +216,12 @@
         },
         {
             "Components": [
+                {
+                    "UUID": 1628064202,
+                    "ComponentType": 8,
+                    "Active": true,
+                    "StateMachineResource": 2258225
+                },
                 {
                     "UUID": 1488118109,
                     "ComponentType": 6,
@@ -269,6 +265,62 @@
         }
     ],
     "GameObjects": [
+        {
+            "UUID": 418290945,
+            "ParentUUID": 0,
+            "Name": "EnemyManager",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1610106642,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1332059736,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 3843617752,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "EnemyManager",
+                    "Name0": "mushdoom_CAT_model_4weights_v4",
+                    "mushdoom_CAT_model_4weights_v4": 374023203
+                }
+            ]
+        },
         {
             "UUID": 2861961979,
             "ParentUUID": 0,
@@ -398,7 +450,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 20,
+                    "Texture": 19,
                     "Color": [
                         1.0,
                         1.0,
@@ -460,7 +512,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 19,
+                    "Texture": 18,
                     "Color": [
                         1.0,
                         0.9999899864196777,

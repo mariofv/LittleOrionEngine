@@ -61,6 +61,7 @@ void PanelMenuBar::ShowFileMenu()
 	{
 		if (ImGui::MenuItem(ICON_FA_FILE " New Scene"))
 		{
+			App->editor->current_scene_path = "";
 			App->editor->OpenScene(DEFAULT_SCENE_PATH);
 		}
 		if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Load Scene"))

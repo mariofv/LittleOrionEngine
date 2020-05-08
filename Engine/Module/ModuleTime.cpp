@@ -5,6 +5,7 @@
 #include "Helper/Timer.h"
 #include "Main/Application.h"
 #include "ModuleEditor.h"
+#include "ModuleAnimation.h"
 #include "ModuleScene.h"
 #include "ModuleScriptManager.h"
 #include "ModuleWindow.h"
@@ -121,6 +122,7 @@ void ModuleTime::Play()
 		game_time_clock->Start();
 		frame_start_time = game_time_clock->Read();
 		App->scripts->InitScripts();
+		App->animations->PlayAnimations();
 	}
 	else
 	{
