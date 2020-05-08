@@ -82,14 +82,23 @@ void ComponentAudioSource::Copy(Component* component_to_copy) const
 
 void ComponentAudioSource::Save(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddUInt((uint64_t)type, "ComponentType");
-	config.AddBool(active, "Active");
+	Component::Save(config);
+
+	config.AddFloat(volume, "Volume");
+	uint32_t soundbank_uuid = soundbank ? soundbank->GetUUID() : 0;
+	config.AddUInt(soundbank_uuid, "SoundBank");
+	config.AddBool(sound_3d, "3DSound");
 }
 
 void ComponentAudioSource::Load(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
-	uint32_t state_machine_uuid = config.GetUInt("StateMachineResource", 0);
+	Component::Load(config);
+	volume = config.GetFloat("Volume", 1);
+	sound_3d = config.GetBool("3DSound", false);
+	uint32_t soundbank_uuid = config.GetUInt("SoundBank", 0);
+	if (soundbank_uuid != 0)
+	{
+		SetSoundBank(soundbank_uuid);
+	}
+	SetVolume(volume);
 }

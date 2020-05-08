@@ -56,8 +56,17 @@ public:
 	virtual Component* Clone(bool create_on_module = true) const = 0;
 	virtual void Copy(Component * component_to_copy) const = 0;
 
-	virtual void Save(Config& config) const = 0;
-	virtual void Load(const Config &config) = 0;
+	virtual void Save(Config& config) const 
+	{
+		config.AddUInt(UUID, "UUID");
+		config.AddInt((unsigned int)type, "ComponentType");
+		config.AddBool(active, "Active");
+	};
+	virtual void Load(const Config &config)
+	{
+		UUID = config.GetUInt("UUID", 0);
+		active = config.GetBool("Active", true);
+	};
 
 	virtual ComponentType GetType() const { return type; };
 

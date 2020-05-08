@@ -20,7 +20,7 @@ public:
 
 	void SetSoundBank(uint32_t uuid);
 	void SetVolume(float volume);
-	void PlayEvent(const std::string & event_to_play);
+	ENGINE_API void PlayEvent(const std::string & event_to_play);
 
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
