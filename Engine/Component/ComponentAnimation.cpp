@@ -62,11 +62,6 @@ void ComponentAnimation::Copy(Component* component_to_copy) const
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;
 }
 
-void ComponentAnimation::Enable() 
-{
-	active = true;
-}
-
 void ComponentAnimation::Disable()
 {
 	active = false;
