@@ -47,6 +47,7 @@ private:
 	float3 offset = float3::zero;
 	bool is_focusing = false;
 	float start_focus_time = 0.f;
+	float3 offset_multiplayer = float3::zero;
 
 };
 extern "C" SCRIPT_API CameraController* CameraControllerDLL(); //This is how we are going to load the script

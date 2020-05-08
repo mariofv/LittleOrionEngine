@@ -605,7 +605,7 @@
                 "Active": true,
                 "Translation": [
                     -98.01053619384766,
-                    14.335710525512696,
+                    11.703836441040039,
                     0.0
                 ],
                 "Rotation": [
@@ -668,9 +668,9 @@
                     "Collision": true,
                     "Visualize": true,
                     "Attached": true,
-                    "x_axis": false,
+                    "x_axis": true,
                     "y_axis": false,
-                    "z_axis": false
+                    "z_axis": true
                 }
             ]
         },

@@ -168,10 +168,9 @@ void CameraController::Focus()
 {
 	if (is_focusing)
 	{
-		float focus_progress = math::Min((App->time->real_time_delta_time - start_focus_time) / 250.f, 1.f);
-		assert(focus_progress >= 0 && focus_progress <= 1.f);
+		float focus_progress = math::Min((App->time->delta_time - start_focus_time) / 100.f, 1.f);
 		float3 new_camera_position = owner->transform.GetTranslation().Lerp(player->transform.GetTranslation(), focus_progress);
-		owner->transform.SetTranslation(new_camera_position + offset);
+		owner->transform.SetTranslation(float3(new_camera_position.x + offset.x, player->transform.GetTranslation().y + offset.y, offset.z));
 		is_focusing = focus_progress != 1;
 	}
 
@@ -179,19 +178,31 @@ void CameraController::Focus()
 void CameraController::FollowPlayer() 
 {
 	float distance = abs(player->transform.GetTranslation().x - owner->transform.GetTranslation().x);
-	if ( distance > 2)
+	if ( distance > 2 && !is_focusing)
 	{
-		start_focus_time = App->time->real_time_delta_time;
+		start_focus_time = App->time->delta_time;
 		is_focusing = true;
 	}
-	Focus();
+	if(is_focusing)
+	{
+		Focus();
+	}
 	//float3 new_position = player->transform.GetTranslation() + offset;
 	//owner->transform.SetTranslation(new_position);
 
 }
 void CameraController::MultiplayerCamera()
 {
-
+	float distance = abs(player->transform.GetTranslation().x - owner->transform.GetTranslation().x);
+	if (distance > 2 && !is_focusing)
+	{
+		start_focus_time = App->time->delta_time;
+		is_focusing = true;
+	}
+	if (is_focusing)
+	{
+		Focus();
+	}
 
 }
 
