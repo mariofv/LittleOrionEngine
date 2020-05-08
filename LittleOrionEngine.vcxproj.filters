@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp">
@@ -813,17 +813,17 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h">
-      <Filter>Engine\Module</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h">
       <Filter>Engine\ResourceManagement\Metafile</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h">
       <Filter>Engine\ResourceManagement\Metafile</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h">
-      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h">
+      <Filter>Engine\Module</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -904,6 +904,9 @@
     </Filter>
     <Filter Include="Libraries\NodeEditor">
       <UniqueIdentifier>{0962007d-0c63-4e57-a857-faada0652d87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\cr">
+      <UniqueIdentifier>{10baac58-e86a-413b-b1ae-abb70e75ee83}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\DLL">
       <UniqueIdentifier>{8b335900-d36a-4a5f-8bda-f20bee578e42}</UniqueIdentifier>
