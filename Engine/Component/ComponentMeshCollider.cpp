@@ -75,6 +75,7 @@ void ComponentMeshCollider::Scale()
 void ComponentMeshCollider::InitData()
 {
 	is_attached = false;
+	visualize = false;
 	mass = 0.0F;
 	vertices = {
 			-5.0f, -5.0f, -5.0f,
