@@ -19,8 +19,7 @@ public:
 		LIGHT,
 		SCRIPT,
 		ANIMATION,
-		BILLBOARD,
-		PARTICLE_SYSTEM
+		BILLBOARD
 	};
 
 	Component();

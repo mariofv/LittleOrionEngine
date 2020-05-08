@@ -105,10 +105,8 @@
     <ClInclude Include="Engine\Animation\AnimController.h" />
     <ClInclude Include="Engine\Component\ComponentAnimation.h" />
     <ClInclude Include="Engine\Component\ComponentBillboard.h" />
-    <ClInclude Include="Engine\Component\ComponentParticleSystem.h" />
     <ClInclude Include="Engine\Component\ComponentScript.h" />
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h" />
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopUpParticleSystem.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.h" />
     <ClInclude Include="Engine\Helper\Config.h" />
@@ -241,10 +239,8 @@
     <ClCompile Include="Engine\Animation\AnimController.cpp" />
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp" />
     <ClCompile Include="Engine\Component\ComponentBillboard.cpp" />
-    <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopUpParticleSystem.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.cpp" />
     <ClCompile Include="Engine\Helper\Config.cpp" />

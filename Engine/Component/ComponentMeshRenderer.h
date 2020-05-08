@@ -2,7 +2,6 @@
 #define _COMPONENTMESHRENDERER_H_
 
 #include "Component.h"
-#include "Component/ComponentParticleSystem.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Material.h"
 #include "ResourceManagement/Resources/Skeleton.h"
