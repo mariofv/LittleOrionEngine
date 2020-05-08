@@ -99,6 +99,7 @@ void EnemyManager::CreateEnemies()
 		enemy->player = original_enemy->player;
 		enemies.emplace_back(enemy);
 		enemy->owner->transform.SetTranslation(graveyard_position);
+		//enemy->owner->SetEnabled(false);
 	}
 
 	enemies_instantiated = true;

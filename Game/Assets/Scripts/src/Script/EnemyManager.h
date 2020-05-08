@@ -30,10 +30,13 @@ public:
 	//void Save(Config& config) const override;
 	//void Load(const Config& config) override;
 
+public:
+	std::vector<EnemyController*> enemies;
+
+
 private:
 	//We need a reference to an existing mushdoom to duplicate_him
 	GameObject* mushdoom_go = nullptr;
-	std::vector<EnemyController*> enemies;
 
 	unsigned int current_number_of_enemies_alive = 0;
 	bool enemies_instantiated = false;

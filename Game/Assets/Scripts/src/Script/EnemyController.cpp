@@ -1,5 +1,5 @@
 #include "EnemyController.h"
-
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 #include "Main/Application.h"
@@ -31,6 +31,8 @@ void EnemyController::Awake()
 	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
 	
 	enemy_manager->AddEnemy(this);
+
+	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 }
 
 // Use this for initialization
@@ -74,9 +76,25 @@ void EnemyController::TakeDamage(float damage)
 	}
 }
 
+void EnemyController::Spawn()
+{
+	PlayAnimation();
+}
+
+void EnemyController::StopAnimation() const
+{
+	animation->Stop();
+}
+
+void EnemyController::PlayAnimation() const
+{
+	animation->Play();
+}
+
 void EnemyController::Death()
 {
 	enemy_manager->KillEnemy(this);
+	StopAnimation();
 }
 
 

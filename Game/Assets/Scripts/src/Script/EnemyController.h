@@ -4,6 +4,8 @@
 
 #include "EnemyManager.h"
 
+class ComponentAnimation;
+
 class EnemyController : public Script
 {
 public:
@@ -16,9 +18,11 @@ public:
 
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();	void TakeDamage(float damage);
+	void Spawn();
+	void StopAnimation() const;
+	void PlayAnimation() const;
 
 	//virtual void ResetEnemy() = 0;
-	EnemyManager* punterito = nullptr;
 
 private:
 	void Death();
@@ -28,6 +32,7 @@ private:
 private:
 	float health_points = 100.0f;
 	EnemyManager* enemy_manager = nullptr;
+	ComponentAnimation* animation = nullptr;
 
 };
 extern "C" SCRIPT_API EnemyController* EnemyControllerDLL(); //This is how we are going to load the script

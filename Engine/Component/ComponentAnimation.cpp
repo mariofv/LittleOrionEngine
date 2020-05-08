@@ -83,7 +83,7 @@ void ComponentAnimation::Play()
 void ComponentAnimation::Stop()
 {
 	auto & playing_clip = animation_controller->playing_clips[0];
-	playing_clip.playing = false;
+ 	playing_clip.playing = false;
 	playing = false;
 }
 
@@ -114,6 +114,11 @@ ENGINE_API float ComponentAnimation::GetCurrentClipPercentatge() const
 
 void ComponentAnimation::Update()
 {
+	if(!IsEnabled())
+	{
+		return;
+	}
+
 	playing = animation_controller->Update();
 	if (playing)
 	{
