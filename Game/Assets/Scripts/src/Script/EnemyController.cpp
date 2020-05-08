@@ -27,12 +27,8 @@ EnemyController::EnemyController()
 // Use this for initialization before Start()
 void EnemyController::Awake()
 {
-	//EnemyManager::GetInstance()->AddEnemy(this);
-	animation = (ComponentAnimation*)owner->children[0]->children[0]->GetComponent(Component::ComponentType::ANIMATION);
-
-	init_translation = owner->transform.GetTranslation();
-	init_rotation = owner->transform.GetRotation();
-	init_scale = owner->transform.GetScale();
+	InitMembers();
+	enemy_manager->AddEnemy(this);
 }
 
 // Use this for initialization
@@ -133,5 +129,20 @@ bool EnemyController::PlayerInSight()
 void EnemyController::Die()
 {
 	//TODO spawn particles, loot, etc.
-	is_dead = true;
+	is_alive = false;
+	enemy_manager->KillEnemy(this);
+}
+
+void EnemyController::InitMembers()
+{
+	GameObject* enemy_manager_go = App->scene->GetGameObjectByName("EnemyManager");
+	ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
+	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
+	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
+
+	init_translation = owner->transform.GetTranslation();
+	init_rotation = owner->transform.GetRotation();
+	init_scale = owner->transform.GetScale();
+
+
 }

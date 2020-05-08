@@ -25,6 +25,7 @@ public:
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();
 	void TakeDamage(float damage);
+	void InitMembers();
 
 protected:
 	void Move();
@@ -38,6 +39,7 @@ protected:
 	EnemyType type;
 	GameObject* player = nullptr;
 	ComponentAnimation* animation = nullptr;
+	EnemyManager* enemy_manager = nullptr;
 
 	float rot_speed = 0.01f;
 	float move_speed = 0.2f;
@@ -49,7 +51,7 @@ protected:
 	float stopping_distance = 2.f;
 	float detect_player_distance = 100.f;
 
-	bool is_dead = false;
+	bool is_alive = true;
 	bool is_attacking = false;
 
 	float3 init_translation;
