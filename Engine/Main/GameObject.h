@@ -101,6 +101,7 @@ public:
 	std::shared_ptr<Prefab> prefab_reference = nullptr;
 	bool original_prefab = false;
 	bool modified_by_user = false;
+
 private:
 	bool active = true;
 	bool is_static = false;

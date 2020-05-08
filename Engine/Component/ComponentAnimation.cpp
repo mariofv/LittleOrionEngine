@@ -62,6 +62,17 @@ void ComponentAnimation::Copy(Component* component_to_copy) const
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;
 }
 
+void ComponentAnimation::Enable() 
+{
+	active = true;
+}
+
+void ComponentAnimation::Disable()
+{
+	active = false;
+	Stop();
+}
+
 void ComponentAnimation::SetStateMachine(uint32_t state_machine_uuid)
 {
 	animation_controller->SetStateMachine(state_machine_uuid);
@@ -95,6 +106,11 @@ void ComponentAnimation::ActiveAnimation(const std::string & trigger)
 
 void ComponentAnimation::Update()
 {
+	if (!active)
+	{
+		return;
+	}
+
 	playing = animation_controller->Update();
 	if (playing)
 	{

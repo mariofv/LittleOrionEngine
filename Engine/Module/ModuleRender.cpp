@@ -223,6 +223,7 @@ void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)
 	}
 	SetListOfMeshesToRender(camera);
 }
+
 void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
 {
 	opaque_mesh_to_render.clear();
@@ -234,11 +235,7 @@ void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
 		{
 			meshes_to_render[i]->owner->aabb.bounding_box;
 			float3 center_bounding_box = (meshes_to_render[i]->owner->aabb.bounding_box.minPoint + meshes_to_render[i]->owner->aabb.bounding_box.maxPoint) / 2;
-			float distance = sqrt(
-				((camera_pos.x - center_bounding_box.x)*(camera_pos.x - center_bounding_box.x)) +
-				((camera_pos.y - center_bounding_box.y)*(camera_pos.y - center_bounding_box.y)) +
-				((camera_pos.z - center_bounding_box.z)*(camera_pos.z - center_bounding_box.z))
-			);
+			float distance = center_bounding_box.Distance(camera_pos);
 			transparent_mesh_to_render.push_back(std::make_pair(distance, meshes_to_render[i]));
 			transparent_mesh_to_render.sort([](const ipair & a, const ipair & b) { return a.first > b.first; });
 		}
@@ -246,11 +243,7 @@ void ModuleRender::SetListOfMeshesToRender(const ComponentCamera* camera)
 		{
 			meshes_to_render[i]->owner->aabb.bounding_box;
 			float3 center_bounding_box = (meshes_to_render[i]->owner->aabb.bounding_box.minPoint + meshes_to_render[i]->owner->aabb.bounding_box.maxPoint) / 2;
-			float distance = sqrt(
-				((camera_pos.x - center_bounding_box.x)*(camera_pos.x - center_bounding_box.x)) +
-				((camera_pos.y - center_bounding_box.y)*(camera_pos.y - center_bounding_box.y)) +
-				((camera_pos.z - center_bounding_box.z)*(camera_pos.z - center_bounding_box.z))
-			);
+			float distance = center_bounding_box.Distance(camera_pos);
 			opaque_mesh_to_render.push_back(std::make_pair(distance, meshes_to_render[i]));
 			opaque_mesh_to_render.sort([](const ipair & a, const ipair & b) { return a.first < b.first; });
 		}
