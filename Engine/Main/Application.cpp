@@ -62,16 +62,6 @@ Application::~Application()
     }
 }
 
-void Application::Import()
-{
-
-	resources->Init();
-	while (!resources->thread_comunication.finished_loading)
-	{
-		std::cout << "vblablabla porcentaje blablabla";
-	}
-}
-
 bool Application::Init()
 {
 	bool result = true;
