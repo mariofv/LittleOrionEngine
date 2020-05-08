@@ -18,6 +18,7 @@ public:
 
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();	void TakeDamage(float damage);
+	void InitMembers();
 
 	//virtual void ResetEnemy() = 0;
 

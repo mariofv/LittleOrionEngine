@@ -57,7 +57,6 @@ bool PlayerAttack::Attack()
 			animation->ActiveAnimation("punch");
 			//Active colliders of hands
 			collider->SetEnabled(true);
-			collider->GetComponent(Component::ComponentType::MESH_RENDERER)->Disable();
 			current_damage_power = PUNCH_DAMAGE;
 		}
 		else if(App->input->GetGameInputDown("Kick", PlayerID::ONE))
@@ -65,7 +64,6 @@ bool PlayerAttack::Attack()
 			animation->ActiveAnimation("kick");
 			//Active colliders of kick
 			collider->SetEnabled(true);
-			collider->GetComponent(Component::ComponentType::MESH_RENDERER)->Disable();
 			current_damage_power = KICK_DAMAGE;
 		}	
 	}

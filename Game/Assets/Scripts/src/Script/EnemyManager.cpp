@@ -11,8 +11,12 @@
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include "imgui.h"
+#include <stdlib.h> 
+#include <time.h>
 
 #include "EnemyController.h"
+
+
 
 EnemyManager* EnemyManagerDLL()
 {
@@ -35,18 +39,23 @@ void EnemyManager::Awake()
 void EnemyManager::Start()
 {
 	CreateEnemies(); //For now we only create mushdooms but in the future we create enemies depending on which level we are
-	enemies_instantiated = true;
 }
 
 // Update is called once per frame
 void EnemyManager::Update()
 {
-	
+	srand(time(NULL));
+
+	if(current_number_of_enemies_alive < max_enemies_alive && App->input->GetKeyDown(KeyCode::F))
+	{
+		SpawnEnemy(0, spawn_points[rand() % 3]);
+	}
 }
 
 void EnemyManager::AddEnemy(EnemyController* enemy)
 {
 	enemies.emplace_back(enemy);
+	++current_number_of_enemies_alive;
 }
 
 void EnemyManager::KillEnemy(EnemyController* enemy)
@@ -59,6 +68,7 @@ void EnemyManager::KillEnemy(EnemyController* enemy)
 	//Reset enemy
 	//enemy->ResetEnemy();
 	enemy->is_alive = false;
+	--current_number_of_enemies_alive;
 }
 
 void EnemyManager::SpawnEnemy(const unsigned type, const float3& spawn_position)
@@ -74,6 +84,8 @@ void EnemyManager::SpawnEnemy(const unsigned type, const float3& spawn_position)
 			enemy->is_alive = true;
 			enemy->owner->transform.SetTranslation(spawn_position);
 			enemy->owner->SetEnabled(true);
+
+			++current_number_of_enemies_alive;
 
 			break;
 		} 
@@ -95,14 +107,13 @@ void EnemyManager::CreateEnemies()
 
 		const ComponentScript* componnet_enemy = duplicated_go->GetComponentScript("EnemyController");
 		EnemyController* enemy = (EnemyController*)componnet_enemy->script;
+		enemy->InitMembers();
 		enemy->is_alive = false;
 		enemy->player = original_enemy->player;
 		enemies.emplace_back(enemy);
 		enemy->owner->transform.SetTranslation(graveyard_position);
 		//enemy->owner->SetEnabled(false);
 	}
-
-	enemies_instantiated = true;
 }
 
 // Use this for showing variables on inspector

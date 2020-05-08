@@ -26,13 +26,8 @@ EnemyController::EnemyController()
 // Use this for initialization before Start()
 void EnemyController::Awake()
 {
-	GameObject* enemy_manager_go = App->scene->GetGameObjectByName("EnemyManager");
-	ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
-	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
-	
+	InitMembers();
 	enemy_manager->AddEnemy(this);
-
-	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 }
 
 // Use this for initialization
@@ -74,6 +69,14 @@ void EnemyController::TakeDamage(float damage)
 		Death();
 		//F
 	}
+}
+
+void EnemyController::InitMembers()
+{
+	GameObject* enemy_manager_go = App->scene->GetGameObjectByName("EnemyManager");
+	ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
+	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
+	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 }
 
 void EnemyController::Death()
