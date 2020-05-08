@@ -1,5 +1,6 @@
 #include "PlayerMovement.h"
 
+#include "Component/ComponentCamera.h"
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
@@ -30,7 +31,7 @@ PlayerMovement::PlayerMovement()
 // Use this for initialization before Start()
 void PlayerMovement::Awake()
 {
-
+	game_camera = (ComponentCamera*)camera->GetComponent(Component::ComponentType::CAMERA);
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
 }
 
@@ -51,6 +52,10 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 	ImGui::DragFloat("Speed", &speed, 0.1f, 0.f, 0.5f);
 	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.f, 0.5f);
 	ImGui::DragFloat("Jump Power", &jump_power, 2.0f, 2.0f, 10.0f);
+	ImGui::Text("Variables: ");
+	ShowDraggedObjects();
+	ImGui::Checkbox("Multiplayer", &multiplayer);
+
 }
 
 void PlayerMovement::Move(int player_id)
@@ -70,19 +75,8 @@ void PlayerMovement::Move(int player_id)
 	{
 		float3 dir;
 		float3 direction = axis_direction * speed + transform;
-		bool there_is_poly = App->artificial_intelligence->FindNextPolyByDirection(direction, dir);
-		
-		if(there_is_poly)
-		{
-			direction.y = dir.y;
-		}
-
-		if (App->artificial_intelligence->IsPointWalkable(direction))
-		{
-		
-			owner->transform.LookAt(direction);
-			owner->transform.SetTranslation(direction);
-		}
+		owner->transform.LookAt(direction);
+		collider->AddForce(direction);
 	}
 
 	//Keyboard Input
@@ -109,7 +103,17 @@ void PlayerMovement::Move(int player_id)
 	{
 		collider->AddForce(new_transform);
 	}
-	collider->AddForce(new_transform);
+	//if (multiplayer) 	
+	//{
+	//	if(CheckDistance(new_transform))
+	//	{
+	//		collider->AddForce(new_transform);
+	//	}
+	//}
+	//else
+	//{
+		collider->AddForce(new_transform);
+	//}
 }
 
 void PlayerMovement::Fall()
@@ -122,4 +126,27 @@ void PlayerMovement::Fall()
 void PlayerMovement::Dash()
 {
 	//TODO DASH
+}
+
+bool PlayerMovement::CheckDistance(float3 transform)
+{
+	AABB future_position = AABB(owner->aabb.bounding_box.minPoint + transform, owner->aabb.bounding_box.maxPoint + transform);
+
+	return (abs(transform.x - camera->transform.GetTranslation().x)) < 20;
+}
+
+
+void PlayerMovement::InitPublicGameObjects()
+{
+	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
+
+	public_gameobjects.push_back(&camera);
+
+	variable_names.push_back(GET_VARIABLE_NAME(camera));
+
+	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
+	{
+		name_gameobjects.push_back(is_object);
+		go_uuids.push_back(0);
+	}
 }

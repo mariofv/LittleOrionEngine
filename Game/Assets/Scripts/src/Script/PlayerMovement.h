@@ -3,6 +3,9 @@
 
 #include "Script.h"
 
+#include "MathGeoLib.h"
+
+class ComponentCamera;
 class ComponentCollider;
 
 class PlayerMovement : public Script
@@ -20,6 +23,10 @@ public:
 	void Fall();
 	void Dash();
 
+	bool CheckDistance(float3 transform);
+
+	void InitPublicGameObjects();
+
 private:
 	float speed = 50.0F;
 	float rotation_speed = 0.01f;
@@ -30,6 +37,10 @@ private:
 	float3 movement_vector;
 	float3 gravity_vector;
 	ComponentCollider* collider = nullptr;
+
+	GameObject* camera = nullptr;
+	ComponentCamera* game_camera = nullptr;
+	bool multiplayer = true;
 
 };
 extern "C" SCRIPT_API PlayerMovement* PlayerMovementDLL(); //This is how we are going to load the script
