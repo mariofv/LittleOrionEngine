@@ -23,7 +23,7 @@ public:
 
 	void GodCamera();
 	void ActivePlayer();
-	void Focus();
+	void Focus(float3 position_to_focus);
 	void FollowPlayer();
 
 	void MultiplayerCamera();
@@ -55,6 +55,8 @@ private:
 
 	bool is_focusing = false;
 	float start_focus_time = 0.f;
+
+	bool multiplayer = false;
 
 
 };

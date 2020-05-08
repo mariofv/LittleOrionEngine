@@ -75,7 +75,14 @@ void CameraController::Update()
 	}
 	else 
 	{
-		FollowPlayer();
+		if(multiplayer)
+		{
+			MultiplayerCamera();
+		}
+		else
+		{
+			FollowPlayer();
+		}
 	}
 
 }
@@ -89,6 +96,7 @@ void CameraController::OnInspector(ImGuiContext* context)
 	//Example to Drag and drop and link GOs in the Editor, Unity-like (WIP)
 	ImGui::Text("Variables: ");
 	ShowDraggedObjects();
+	ImGui::Checkbox("Multiplayer", &multiplayer);
 }
 
 void CameraController::GodCamera() 
@@ -164,13 +172,13 @@ void CameraController::ActivePlayer()
 	}
 
 }
-void CameraController::Focus()
+void CameraController::Focus(float3 position_to_focus)
 {
 	if (is_focusing)
 	{
 		float focus_progress = math::Min((App->time->delta_time - start_focus_time) / 100.f, 1.f);
-		float3 new_camera_position = owner->transform.GetTranslation().Lerp(player1->transform.GetTranslation(), focus_progress);
-		owner->transform.SetTranslation(float3(new_camera_position.x + selected_offset.x, player1->transform.GetTranslation().y + selected_offset.y, selected_offset.z));
+		float3 new_camera_position = owner->transform.GetTranslation().Lerp(position_to_focus, focus_progress);
+		owner->transform.SetTranslation(float3(new_camera_position.x + selected_offset.x, position_to_focus.y + selected_offset.y, selected_offset.z));
 		is_focusing = focus_progress != 1;
 	}
 
@@ -185,7 +193,7 @@ void CameraController::FollowPlayer()
 	}
 	if(is_focusing)
 	{
-		Focus();
+		Focus(player1->transform.GetTranslation());
 	}
 	//float3 new_position = player->transform.GetTranslation() + offset;
 	//owner->transform.SetTranslation(new_position);
@@ -193,15 +201,23 @@ void CameraController::FollowPlayer()
 }
 void CameraController::MultiplayerCamera()
 {
-	float distance = abs(player1->transform.GetTranslation().x - owner->transform.GetTranslation().x);
-	if (distance > 2 && !is_focusing)
+	float x_distance = player1->transform.GetTranslation().x - player2->transform.GetTranslation().x;
+	float y_distance = player1->transform.GetTranslation().y - player2->transform.GetTranslation().y;
+	if (abs(x_distance) > 5 && !is_focusing)
 	{
+		selected_offset = offset_far;
+		start_focus_time = App->time->delta_time;
+		is_focusing = true;
+	}
+	if (abs(x_distance) < 5 && !is_focusing)
+	{
+		selected_offset = offset_near;
 		start_focus_time = App->time->delta_time;
 		is_focusing = true;
 	}
 	if (is_focusing)
 	{
-		Focus();
+		Focus(float3(x_distance, y_distance,selected_offset.z));
 	}
 
 }
@@ -212,10 +228,12 @@ void CameraController::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&camera);
 	public_gameobjects.push_back(&player1);
+	public_gameobjects.push_back(&player2);
 	public_gameobjects.push_back(&debug);
 
 	variable_names.push_back(GET_VARIABLE_NAME(camera));
 	variable_names.push_back(GET_VARIABLE_NAME(player1));
+	variable_names.push_back(GET_VARIABLE_NAME(player2));
 	variable_names.push_back(GET_VARIABLE_NAME(debug));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
