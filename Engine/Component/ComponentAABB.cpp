@@ -8,12 +8,12 @@ ComponentAABB::ComponentAABB() : Component(nullptr, ComponentType::AABB)
 
 }
 
-ComponentAABB::ComponentAABB(GameObject * owner) : Component(owner, ComponentType::AABB)
+ComponentAABB::ComponentAABB(GameObject* owner) : Component(owner, ComponentType::AABB)
 {
 
 }
 
-void ComponentAABB::Copy(Component * component_to_copy) const
+void ComponentAABB::Copy(Component* component_to_copy) const
 { 
 	*static_cast<ComponentAABB*>(component_to_copy) = *this; 
 };
@@ -56,12 +56,14 @@ void ComponentAABB::GenerateBoundingBox()
 	}
 }
 
-void ComponentAABB::GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices)
+void ComponentAABB::GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex>& vertices)
 {
 	bounding_box.SetNegativeInfinity();
+	original_box.SetNegativeInfinity();
 	for (unsigned int i = 0; i < vertices.size(); ++i)
 	{
 		bounding_box.Enclose(vertices[i].position);
+		original_box.Enclose(vertices[i].position);
 	}
 }
 

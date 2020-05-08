@@ -9,6 +9,7 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
 #include "PanelConfiguration.h"
+#include "Module/ModulePhysics.h"
 
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <GL/glew.h>
@@ -42,6 +43,9 @@ void PanelConfiguration::Render()
 		ImGui::Spacing();
 		ShowInputOptions();
 
+		ImGui::Spacing();
+		ShowPhysicsOptions();
+		
 		ImGui::Spacing();
 		ShowSpacePartitioningOptions();
 	}
@@ -116,7 +120,8 @@ void PanelConfiguration::ShowHardware() const
 		sprintf_s(tmp_string, "%s %s", glGetString(GL_VENDOR), glGetString(GL_RENDERER));
 		ImGui::TextColored(ImVec4(1.0f, 1.0f, 0.0f, 1.0f), tmp_string);
 
-		int vram_budget, vram_available;
+		int vram_budget;
+		int vram_available;
 		glGetIntegerv(GL_GPU_MEMORY_INFO_TOTAL_AVAILABLE_MEMORY_NVX, &vram_budget);
 		glGetIntegerv(GL_GPU_MEMORY_INFO_CURRENT_AVAILABLE_VIDMEM_NVX, &vram_available);
 
@@ -331,6 +336,7 @@ void PanelConfiguration::ShowTimeOptions()
 		std::vector<float> frame_data = App->engine_log->getFPSData();
 
 		ImGui::PlotLines("Miliseconds", &ms_data[0], ms_data.size(), 0, nullptr, 0, 80);
+
 		ImGui::PlotLines("Frame Rate", &frame_data[0], frame_data.size(), 20, nullptr, 0, 80);
 	}
 
@@ -361,7 +367,9 @@ void PanelConfiguration::ShowInputOptions()
 				ImGui::Text("Mouse pos (IMGUI): (%g, %g)", io.MousePos.x, io.MousePos.y);
 			}
 			else
+			{
 				ImGui::Text("Mouse pos: <INVALID>");
+			}
 			ImGui::Text("Mouse delta (SDL):(%g, %g)", mouse_rel.x, mouse_rel.y);
 			ImGui::Text("Mouse delta (IMGUI): (%g, %g)", io.MouseDelta.x, io.MouseDelta.y);
 			ImGui::Text("Mouse down:");     for (int i = 0; i < IM_ARRAYSIZE(io.MouseDown); i++) if (io.MouseDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("b%d (%.02f secs)", i, io.MouseDownDuration[i]); }
@@ -475,7 +483,7 @@ void PanelConfiguration::ShowInputOptions()
 			{
 
 				unsigned int offset = 4;
-				for (int n = 0; n < game_inputs_strings.size(); ++n)
+				for (unsigned int n = 0; n < game_inputs_strings.size(); ++n)
 				{
 					//Handle offset
 					if (n > FIRST_OFFSET_COND)
@@ -525,7 +533,7 @@ void PanelConfiguration::ShowInputOptions()
 			static const char* mouse_current = mouse_keys_string[0];
 			if (ImGui::BeginCombo("MouseCode", mouse_current))
 			{
-				for (int n = 0; n < mouse_keys_string.size(); ++n)
+				for (unsigned int n = 0; n < mouse_keys_string.size(); ++n)
 				{
 					bool is_selected = (mouse_current == mouse_keys_string[n]);
 					if (ImGui::Selectable(mouse_keys_string[n], is_selected))
@@ -565,7 +573,7 @@ void PanelConfiguration::ShowInputOptions()
 			static const char* controller_current = controller_keys_string[0];
 			if (ImGui::BeginCombo("ControllerCodes", controller_current))
 			{
-				for (int n = 0; n < controller_keys_string.size(); ++n)
+				for (unsigned int n = 0; n < controller_keys_string.size(); ++n)
 				{
 					bool is_selected = (controller_current == controller_keys_string[n]);
 					if (ImGui::Selectable(controller_keys_string[n], is_selected))
@@ -691,6 +699,23 @@ void PanelConfiguration::ShowInputOptions()
 	}
 }
 
+void PanelConfiguration::ShowPhysicsOptions()
+{
+	ImGui::PushFont(App->editor->GetFont(Fonts::FONT_FAR));
+	if (ImGui::CollapsingHeader(ICON_FA_WINDOW_MAXIMIZE " Physics")) {
+
+		if (ImGui::DragFloat3("Gravity", &App->physics->gravity.x, -1000, 1000))
+		{
+			App->physics->SetGravity(App->physics->GetGravity());
+		}
+		ImGui::Checkbox("Draw physics", &App->physics->show_physics);
+
+		ImGui::Text("Consumption (ms)");
+		ImGui::PlotLines("Miliseconds", &App->physics->ms_info[0], App->physics->ms_info.size(), 0, nullptr, 0, 80);
+	}
+	ImGui::PopFont();
+}
+	
 void PanelConfiguration::ShowSpacePartitioningOptions()
 {
 	if (ImGui::CollapsingHeader(ICON_FA_TREE " SpacePartitioning"))

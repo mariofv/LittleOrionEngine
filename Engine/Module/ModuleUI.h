@@ -44,9 +44,10 @@ public:
 
 	void Render(const ComponentCamera* camera);
 
-	ComponentUI* CreateComponentUI(const ComponentUI::UIType, GameObject*);
-	void RemoveComponentUI(ComponentUI*);
-	
+	ComponentUI* CreateComponentUI(const ComponentUI::UIType ui_type, GameObject* owner);
+	void RemoveComponentUI(ComponentUI* ui_to_remove);
+
+	//Glyph init 
 	void InitGlyph();
 	ENGINE_API void SortComponentsUI();
 

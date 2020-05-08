@@ -20,7 +20,8 @@ public:
 		UI,
 		SCRIPT,
 		TRANSFORM2D,
-		ANIMATION
+		ANIMATION,
+		COLLIDER
 	};
 
 	Component(ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
@@ -31,8 +32,8 @@ public:
 	Component(const Component& component_to_copy) = default;
 	Component(Component&& component_to_move) = default;
 
-	virtual Component & operator=(const Component & component_to_copy) = default;
-	virtual Component & operator=(Component && component_to_copy)
+	virtual Component& operator=(const Component& component_to_copy) = default;
+	virtual Component& operator=(Component&& component_to_copy)
 	{
 
 		this->active = component_to_copy.active;
@@ -53,6 +54,10 @@ public:
 	virtual void Update() {};
 	virtual void Delete() = 0;
 	virtual Component* Clone(bool create_on_module = true) const = 0;
+	virtual Component* Clone(GameObject* owner, bool create_on_module = false) const
+	{
+		return nullptr;
+	}
 	virtual void Copy(Component * component_to_copy) const = 0;
 
 	virtual void Save(Config& config) const = 0;

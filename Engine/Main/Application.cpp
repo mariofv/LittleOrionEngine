@@ -7,19 +7,20 @@
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleFileSystem.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleLight.h"
-#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModulePhysics.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleScriptManager.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleUI.h"
-#include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
-#include "Module/ModuleScriptManager.h"
-#include "Module/ModuleSpacePartitioning.h"
 
 #include <Brofiler/Brofiler.h>
 
@@ -49,6 +50,7 @@ Application::Application()
 	modules.emplace_back(scene = new ModuleScene());
 	modules.emplace_back(space_partitioning = new ModuleSpacePartitioning());
 	modules.emplace_back(artificial_intelligence = new ModuleAI());
+	modules.emplace_back(physics = new ModulePhysics());
 	modules.emplace_back(scripts = new ModuleScriptManager());
 		
 	engine_log = std::make_unique<EngineLog>();

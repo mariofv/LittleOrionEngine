@@ -79,17 +79,15 @@ void ComponentCamera::InitCamera()
 	glGenFramebuffers(1, &fbo);
 	glGenFramebuffers(1, &msfbo);
 
-	aspect_ratio = 1.f;
+	aspect_ratio = 1.F;
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
 	camera_frustum.pos = float3::unitX;
 	camera_frustum.front = float3::unitZ;
 	camera_frustum.up = float3::unitY;
-	camera_frustum.nearPlaneDistance = 1.f;
-	camera_frustum.farPlaneDistance = 100.0f;
-	camera_frustum.verticalFov = math::pi / 4.0f;
-	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
-
-	SetSkybox(0);
+	camera_frustum.nearPlaneDistance = 1.F;
+	camera_frustum.farPlaneDistance = 100.0F;
+	camera_frustum.verticalFov = math::pi / 4.0F;
+	camera_frustum.horizontalFov = 2.F * atanf(tanf(camera_frustum.verticalFov * 0.5F) * aspect_ratio);
 }
 
 void ComponentCamera::Update()

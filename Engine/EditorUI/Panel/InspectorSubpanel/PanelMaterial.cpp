@@ -121,7 +121,7 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 {
 	ImGui::PushID(static_cast<unsigned int>(type));
 
-	float material_texture_map_size = 20.f;
+	float material_texture_map_size = 20.F;
 
 	void* display_image;
 	if (material->textures[type].get() != nullptr)

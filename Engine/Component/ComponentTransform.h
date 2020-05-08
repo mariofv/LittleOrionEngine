@@ -12,19 +12,19 @@ class ComponentTransform : public Component
 {
 public:
 	ComponentTransform();
-	ComponentTransform(GameObject * owner);
-	ComponentTransform(GameObject * owner,const float3 translation, const Quat rotation, const float3 scale);
+	ComponentTransform(GameObject* owner);
+	ComponentTransform(GameObject* owner,const float3 translation, const Quat rotation, const float3 scale);
 
 	//Copy and move
 	ComponentTransform(const ComponentTransform& component_to_copy) = default;
 	ComponentTransform(ComponentTransform&& component_to_move) = default;
 
-	ComponentTransform & operator=(const ComponentTransform & component_to_copy);
-	ComponentTransform & operator=(ComponentTransform && component_to_move) = default;
+	ComponentTransform& operator=(const ComponentTransform& component_to_copy);
+	ComponentTransform& operator=(ComponentTransform&& component_to_move) = default;
 
 
 	Component* Clone(bool create_on_module = true) const override;
-	void Copy(Component * component_to_copy) const override;
+	void Copy(Component* component_to_copy) const override;
 
 	~ComponentTransform() = default;
 
@@ -36,6 +36,7 @@ public:
 	ENGINE_API float3 GetGlobalTranslation() const;
 	ENGINE_API float3 GetTranslation() const;
 	ENGINE_API void SetTranslation(const float3& translation);
+	ENGINE_API void SetGlobalMatrixTranslation(const float3& translation);
 	ENGINE_API void Translate(const float3& translation);
 
 	ENGINE_API Quat GetGlobalRotation() const;
@@ -45,6 +46,9 @@ public:
 	ENGINE_API void SetRotation(const float3& rotation);
 	ENGINE_API void SetRotation(const Quat& rotation);
 
+	ENGINE_API void SetGlobalMatrixRotation(const float3x3& rotation);
+	ENGINE_API void SetGlobalMatrixRotation(const Quat& rotation);
+
 	void Rotate(const Quat& rotation);
 	void Rotate(const float3x3& rotation);
 
@@ -52,6 +56,7 @@ public:
 
 	float3 GetScale() const;
 	void SetScale(const float3& scale);
+	float3 GetGlobalScale() const;
 
 	ENGINE_API float3 GetUpVector() const;
 	ENGINE_API float3 GetFrontVector() const;
@@ -68,7 +73,7 @@ public:
 private:
 	void OnTransformChange();
 
-private:
+public:
 	float3 translation = float3::zero;
 	Quat rotation = Quat::identity;
 	float3 rotation_degrees = float3::zero;
@@ -77,6 +82,7 @@ private:
 
 	float4x4 model_matrix = float4x4::identity;
 	float4x4 global_model_matrix = float4x4::identity;
+	bool has_changed = false; //used for physics
 
 	friend class PanelComponent;
 };

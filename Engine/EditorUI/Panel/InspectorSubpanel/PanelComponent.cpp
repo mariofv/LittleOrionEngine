@@ -12,14 +12,20 @@
 #include "Helper/Utils.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentCapsuleCollider.h"
+#include "Component/ComponentCollider.h"
+#include "Component/ComponentCylinderCollider.h"
 #include "Component/ComponentImage.h"
+#include "Component/ComponentMeshCollider.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentProgressBar.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentSphereCollider.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
@@ -247,12 +253,12 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		if (ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; };
-		if (ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; };
+		if (ImGui::InputFloat3("Front", &camera->camera_frustum.front[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; }
+		if (ImGui::InputFloat3("Up", &camera->camera_frustum.up[0], 3, ImGuiInputTextFlags_ReadOnly)) { camera->modified_by_user = true; }
 
 		ImGui::Separator();
 
-		if (ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED)) { camera->modified_by_user = true; };
+		if (ImGui::DragFloat("Mov Speed", &camera->camera_movement_speed, 0.01f, camera->CAMERA_MINIMUN_MOVEMENT_SPEED, camera->CAMERA_MAXIMUN_MOVEMENT_SPEED)) { camera->modified_by_user = true; }
 
 		//UndoRedo
 		CheckClickedCamera(camera);
@@ -307,9 +313,11 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 				camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
 				camera->modified_by_user = true;
 				break;
+			default:
+				break;
 			}
 		}
-		if (ImGui::ColorEdit3("Clear Color", camera->camera_clear_color)) { camera->modified_by_user = true; };
+		if (ImGui::ColorEdit3("Clear Color", camera->camera_clear_color)) { camera->modified_by_user = true; }
 		ImGui::Separator();
 
 		if (ImGui::DragFloat("Orthographic Size", &camera->camera_frustum.orthographicHeight, 0.01f, 0, 100))
@@ -335,7 +343,7 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 		}
 		ImGui::Separator();
 
-		if (ImGui::DragInt("Depth", &camera->depth, 0.05f)) { camera->modified_by_user = true; };
+		if (ImGui::DragInt("Depth", &camera->depth, 0.05f)) { camera->modified_by_user = true; }
 
 		//UndoRedo
 		CheckClickedCamera(camera);
@@ -363,11 +371,11 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 		}
 		ImGui::Separator();
 
-		if (ImGui::ColorEdit3("Color", light->light_color)) { light->modified_by_user = true; };
+		if (ImGui::ColorEdit3("Color", light->light_color)) { light->modified_by_user = true; }
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
-		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f)) { light->modified_by_user = true; };
+		if (ImGui::DragFloat("Intensity ", &light->light_intensity, 0.01f, 0.f, 1.f)) { light->modified_by_user = true; }
 
 		CheckClickForUndo(ModuleActions::UndoActionType::EDIT_COMPONENTLIGHT, light);
 
@@ -385,6 +393,8 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 				break;
 			case 2:
 				light->light_type = ComponentLight::LightType::DIRECTIONAL_LIGHT;
+				break;
+			default:
 				break;
 			}
 		}
@@ -479,7 +489,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		}
 		ImGui::AlignTextToFramePadding();
 		ImGui::Separator();
-		if (ImGui::Checkbox("Playing", &animation->playing));
+		if (ImGui::Checkbox("Playing", &animation->playing))
 		ImGui::SameLine();
 		if (ImGui::Button("Play"))
 		{
@@ -556,6 +566,29 @@ void PanelComponent::ShowComponentUIWindow(ComponentUI *ui)
 		case ComponentUI::UIType::PROGRESSBAR:
 			ShowComponentProgressBarWindow(static_cast<ComponentProgressBar*>(ui));
 			break;
+	}
+}
+
+
+void PanelComponent::ShowComponentColliderWindow(ComponentCollider* collider)
+{
+	switch (collider->collider_type)
+	{
+	case ComponentCollider::ColliderType::BOX:
+		ShowComponentBoxColliderWindow(static_cast<ComponentBoxCollider*>(collider));
+		break;
+	case ComponentCollider::ColliderType::CAPSULE:
+		ShowComponentCapsuleColliderWindow(static_cast<ComponentCapsuleCollider*>(collider));
+		break;
+	case ComponentCollider::ColliderType::SPHERE:
+		ShowComponentSphereColliderWindow(static_cast<ComponentSphereCollider*>(collider));
+		break;
+	case ComponentCollider::ColliderType::CYLINDER:
+		ShowComponentCylinderColliderWindow(static_cast<ComponentCylinderCollider*>(collider));
+		break;
+	case ComponentCollider::ColliderType::MESH:
+		ShowComponentMeshColliderWindow(static_cast<ComponentMeshCollider*>(collider));
+		break;
 	}
 }
 
@@ -665,7 +698,7 @@ void PanelComponent::CheckClickForUndo(ModuleActions::UndoActionType  type, Comp
 void PanelComponent::ShowAddNewComponentButton()
 {
 	float window_width = ImGui::GetWindowWidth();
-	float button_width = 0.5f * window_width;
+	float button_width = 0.5F * window_width;
 	ImGui::SetCursorPosX((window_width - button_width) / 2.f);
 	ImGui::Button("Add Component", ImVec2(button_width, 25));
 
@@ -712,6 +745,32 @@ void PanelComponent::ShowAddNewComponentButton()
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
 
+		}
+		sprintf_s(tmp_string, "%s Box Collider", ICON_FA_BOX);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::BOX);
+
+		}
+		sprintf_s(tmp_string, "%s Capsule Collider", ICON_FA_CAPSULES);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::CAPSULE);
+		}
+		sprintf_s(tmp_string, "%s Cylinder Collider", ICON_FA_COLUMNS);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::CYLINDER);
+		}
+		sprintf_s(tmp_string, "%s Sphere Collider", ICON_FA_BASKETBALL_BALL);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::SPHERE);
+		}
+		sprintf_s(tmp_string, "%s Mesh Collider", ICON_FA_BORDER_NONE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::MESH);
 		}
 		ImGui::EndPopup();
 	}
@@ -789,4 +848,112 @@ void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 	}
 
 	ImGui::ColorPicker3("Color", ui->color.ptr());
+}
+
+void PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
+{
+	if (ImGui::Button("Delete"))
+	{
+		App->actions->DeleteComponentUndo(collider);
+		return;
+	}
+	ImGui::Separator();
+
+	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.1F, 1000.F)) {
+		collider->SetMass(collider->mass);
+	}
+	if (ImGui::Checkbox("Visualize", &collider->visualize))
+	{
+		collider->SetVisualization();
+	}
+	if (ImGui::Checkbox("Static", &collider->is_static))
+	{
+		collider->SetStatic();
+	}
+	if (ImGui::Checkbox("Detect collision", &collider->detectCollision))
+	{
+		collider->SetCollisionDetection();
+	}
+	ImGui::Text("Axis Rotation");
+	if (ImGui::Checkbox("X Axis", &collider->x_axis))
+	{
+		collider->SetRotationAxis();
+	}
+	if (ImGui::Checkbox("Y Axis", &collider->y_axis))
+	{
+		collider->SetRotationAxis();
+	}
+	if (ImGui::Checkbox("Z Axis", &collider->z_axis))
+	{
+		collider->SetRotationAxis();
+	}
+}
+
+
+void PanelComponent::ShowComponentBoxColliderWindow(ComponentBoxCollider* box_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_BOX " Box Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonColliderWindow(box_collider);
+	}
+	if (ImGui::SliderFloat3("Scale", box_collider->scale.ptr(), 0.1F, 5.0F))
+	{
+		box_collider->Scale();
+	}
+}
+
+void PanelComponent::ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider* capsule_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_CAPSULES " Capsule Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonColliderWindow(capsule_collider);
+	}
+	if (ImGui::SliderFloat("Radius", &capsule_collider->scale.x, 0.1F, 5.0F))
+	{
+		capsule_collider->Scale();
+	}
+	if (ImGui::SliderFloat("Height", &capsule_collider->scale.y, 0.1F, 5.0F))
+	{
+		capsule_collider->Scale();
+	}
+}
+
+void PanelComponent::ShowComponentSphereColliderWindow(ComponentSphereCollider * sphere_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_BASKETBALL_BALL " Sphere Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonColliderWindow(sphere_collider);
+	}
+	if (ImGui::SliderFloat("Radius", &sphere_collider->scale.x, 0.1F, 5.0F))
+	{
+		sphere_collider->Scale();
+	}
+}
+
+void PanelComponent::ShowComponentCylinderColliderWindow(ComponentCylinderCollider * cylinder_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_COLUMNS " Cylinder Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonColliderWindow(cylinder_collider);
+	}
+	if (ImGui::SliderFloat("Radius", &cylinder_collider->scale.x, 0.1F, 5.0F))
+	{
+		cylinder_collider->Scale();
+	}
+	if (ImGui::SliderFloat("Height", &cylinder_collider->scale.y, 0.1F, 5.0F))
+	{
+		cylinder_collider->Scale();
+	}
+}
+
+void PanelComponent::ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh_collider)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_BORDER_NONE " Mesh Collider", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonColliderWindow(mesh_collider);
+	}
+	if (ImGui::SliderFloat3("Scale", mesh_collider->scale.ptr(), 0.1F, 5.0F))
+	{
+		mesh_collider->Scale();
+	}
 }

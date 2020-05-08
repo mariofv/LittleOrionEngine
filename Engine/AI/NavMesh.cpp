@@ -488,7 +488,7 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, Pa
 	filter.setIncludeFlags(SAMPLE_POLYFLAGS_ALL ^ SAMPLE_POLYFLAGS_DISABLED);
 	filter.setExcludeFlags(0);
 
-	float poly_pick_ext[3] = { 2.0f, 4.0f, 2.0f};
+	float poly_pick_ext[3] = { 2.0F, 4.0F, 2.0F};
 
 	nav_query->findNearestPoly((float*)&start, poly_pick_ext, &filter, &start_ref, 0);
 	nav_query->findNearestPoly((float*)&end, poly_pick_ext, &filter, &end_ref, 0);
@@ -529,12 +529,13 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, Pa
 			memcpy(polys, path_ref, sizeof(dtPolyRef)*path_count);
 			int npolys = path_count;
 
-			float iter_pos[3], target_pos[3];
+			float iter_pos[3]; 
+			float target_pos[3];
 			nav_query->closestPointOnPoly(start_ref, (float*)&start, iter_pos, 0);
 			nav_query->closestPointOnPoly(polys[npolys - 1], (float*)&end, target_pos, 0);
 
-			static const float STEP_SIZE = 0.5f;
-			static const float SLOP = 0.01f;
+			static const float STEP_SIZE = 0.5F;
+			static const float SLOP = 0.01F;
 
 			int nsmooth_path = 0;
 
@@ -560,7 +561,8 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, Pa
 				bool off_mesh_connection = (steer_pos_flag & DT_STRAIGHTPATH_OFFMESH_CONNECTION) ? true : false;
 
 				// Find movement delta.
-				float delta[3], len;
+				float delta[3];
+				float len;
 				dtVsub(delta, steer_pos, iter_pos);
 				// sqrt of vector by itself to get the magnitud of the vector delta
 				len = dtMathSqrtf(dtVdot(delta, delta));
@@ -590,7 +592,7 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, Pa
 				dtVcopy(iter_pos, result);
 
 				// Handle end of path and off-mesh links when close enough.
-				if (end_of_path && InRange(iter_pos, steer_pos, SLOP, 1.0f))
+				if (end_of_path && InRange(iter_pos, steer_pos, SLOP, 1.0F))
 				{
 					// Reached end of path.
 					dtVcopy(iter_pos, target_pos);
@@ -601,10 +603,11 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, Pa
 					}
 					break;
 				}
-				else if (off_mesh_connection && InRange(iter_pos, steer_pos, SLOP, 1.0f))
+				else if (off_mesh_connection && InRange(iter_pos, steer_pos, SLOP, 1.0F))
 				{
 					// Reached off-mesh connection.
-					float startPos[3], endPos[3];
+					float startPos[3];
+					float endPos[3];
 
 					// Advance the path up to and over the off-mesh connection.
 					dtPolyRef prevRef = 0, polyRef = polys[0];
@@ -636,7 +639,7 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, Pa
 						}
 						// Move position at the other side of the off-mesh link.
 						dtVcopy(iter_pos, endPos);
-						float eh = 0.0f;
+						float eh = 0.0F;
 						nav_query->getPolyHeight(polys[0], iter_pos, &eh);
 						iter_pos[1] = eh;
 					}

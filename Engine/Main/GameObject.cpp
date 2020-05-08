@@ -13,6 +13,7 @@
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleUI.h"
+#include "Module/ModulePhysics.h"
 #include "ResourceManagement/Resources/Texture.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
@@ -299,14 +300,17 @@ void GameObject::Load(const Config& config)
 	for (unsigned int i = 0; i < gameobject_components_config.size(); ++i)
 	{
 		uint64_t component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
-		ComponentUI::UIType ui_type = ComponentUI::UIType::IMAGE;
 		assert(component_type_uint != 0);
 		
 		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
 		Component* created_component = nullptr;
 		if (component_type == Component::ComponentType::UI) {
-			ui_type = ComponentUI::UIType(gameobject_components_config[i].GetUInt("UIType", 0));
-			created_component = CreateComponentUI(ui_type);
+			ComponentUI::UIType ui_type = static_cast<ComponentUI::UIType>(gameobject_components_config[i].GetUInt("UIType", 0));
+			created_component = CreateComponent(ui_type);
+		}
+		else if (component_type == Component::ComponentType::COLLIDER) {
+			ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(gameobject_components_config[i].GetUInt("ColliderType", 0));
+			created_component = CreateComponent(collider_type);
 		}
 		else
 		{
@@ -351,7 +355,7 @@ void GameObject::RemoveChild(GameObject* child)
 	std::vector<GameObject*>::iterator found = std::find(children.begin(), children.end(), child);
 	if (found == children.end())
 	{
-		APP_LOG_ERROR("Incosistent GameObject Tree.");
+		APP_LOG_ERROR("Inconsistent GameObject Tree.")
 		return;
 	}
 	children.erase(found);
@@ -362,7 +366,7 @@ void GameObject::RemoveChild(GameObject* child)
 
 ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type)
 {
-	Component *created_component;
+	Component* created_component;
 	switch (type)
 	{
 	case Component::ComponentType::CAMERA:
@@ -383,7 +387,6 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	case Component::ComponentType::ANIMATION:
 		created_component = App->animations->CreateComponentAnimation();
 		break;
-
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
 		return nullptr;
@@ -399,9 +402,17 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 }
 
 
-ENGINE_API Component* GameObject::CreateComponentUI(const ComponentUI::UIType ui_type)
+ENGINE_API Component* GameObject::CreateComponent(const ComponentUI::UIType ui_type)
 {
 	Component* created_component = App->ui->CreateComponentUI(ui_type, this);
+	components.push_back(created_component);
+	return created_component;
+}
+
+
+ENGINE_API Component* GameObject::CreateComponent(const ComponentCollider::ColliderType collider_type)
+{
+	Component* created_component = App->physics->CreateComponentCollider(collider_type, this);
 	components.push_back(created_component);
 	return created_component;
 }
@@ -446,16 +457,32 @@ ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) con
 	return nullptr;
 }
 
-Component* GameObject::GetComponentUI(const ComponentUI::UIType type) const
+Component* GameObject::GetComponent(const ComponentUI::UIType ui_type) const
 {
-	for (unsigned int i = 0; i < components.size(); ++i)
+	for (auto component : components)
 	{
-		if (components[i]->GetType() == Component::ComponentType::UI)
+		if (component->GetType() == Component::ComponentType::UI)
 		{
-			ComponentUI* ui = static_cast<ComponentUI*>(components[i]);
-			if (ui->ui_type == type)
+			ComponentUI* ui = static_cast<ComponentUI*>(component);
+			if (ui->ui_type == ui_type)
 			{
 				return ui;
+			}
+		}
+	}
+	return nullptr;
+}
+
+Component* GameObject::GetComponent(const ComponentCollider::ColliderType collider_type) const
+{
+	for (auto component : components)
+	{
+		if (component->GetType() == Component::ComponentType::COLLIDER)
+		{
+			ComponentCollider* collider = static_cast<ComponentCollider*>(component);
+			if (collider->collider_type == collider_type)
+			{
+				return collider;
 			}
 		}
 	}
@@ -467,7 +494,7 @@ void GameObject::MoveUpInHierarchy() const
 	std::vector<GameObject*>::iterator silbings_position = std::find(parent->children.begin(), parent->children.end(), this);
 	if (silbings_position == parent->children.end())
 	{
-		APP_LOG_ERROR("Incosistent GameObject Tree.");
+		APP_LOG_ERROR("Inconsistent GameObject Tree.")
 		return;
 	}
 
@@ -480,7 +507,7 @@ void GameObject::MoveDownInHierarchy() const
 	std::vector<GameObject*>::iterator silbings_position = std::find(parent->children.begin(), parent->children.end(), this);
 	if (silbings_position == parent->children.end())
 	{
-		APP_LOG_ERROR("Incosistent GameObject Tree.");
+		APP_LOG_ERROR("Inconsistent GameObject Tree.")
 		return;
 	}
 
@@ -590,14 +617,20 @@ void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 		component->modified_by_user = false;
 		//Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
 		Component* copy = nullptr;
-		if(component->type != Component::ComponentType::SCRIPT)
-		{
-			copy = component->Clone(this->original_prefab);
-		}
-		else
+		if(component->type == Component::ComponentType::SCRIPT)
 		{
 			copy = new ComponentScript(this, static_cast<ComponentScript*>(component)->name);
 			static_cast<ComponentScript*>(copy)->name = static_cast<ComponentScript*>(component)->name;
+			
+		}
+		if (component->type == Component::ComponentType::COLLIDER)
+		{
+			copy = component->Clone(this, this->original_prefab);
+
+		}
+		else
+		{
+			copy = component->Clone(this->original_prefab);
 		}
 		copy->owner = this;
 		this->components.push_back(copy);

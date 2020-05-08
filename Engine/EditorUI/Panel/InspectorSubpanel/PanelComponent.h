@@ -7,25 +7,32 @@
 
 class Component;
 class ComponentAnimation;
+class ComponentBoxCollider;
 class ComponentButton;
 class ComponentCamera;
 class ComponentCanvas;
+class ComponentCapsuleCollider;
+class ComponentCollider;
+class ComponentCylinderCollider;
 class ComponentImage;
+class ComponentMeshCollider;
 class ComponentMeshRenderer;
 class ComponentLight;
 class ComponentProgressBar;
+class ComponentSphereCollider;
 class ComponentUI;
 class ComponentText;
 class ComponentTransform;
 class ComponentScript;
 class GameObject;
 
+
 class PanelComponent
 {
 public:
 	PanelComponent() = default;
 	~PanelComponent() = default;
-
+	
 	void ShowComponentTransformWindow(ComponentTransform* transform);
 	void ShowComponentMeshRendererWindow(ComponentMeshRenderer* mesh);
 	void ShowComponentCameraWindow(ComponentCamera* camera);
@@ -33,6 +40,7 @@ public:
 	void ShowComponentAnimationWindow(ComponentAnimation* animation);
 	void ShowComponentScriptWindow(ComponentScript* component_script);
 	void ShowComponentUIWindow(ComponentUI* ui);
+	void ShowComponentColliderWindow(ComponentCollider* collider);
 	void ShowAddNewComponentButton();
 
 	void ShowScriptsCreated(ComponentScript* component_script);
@@ -49,6 +57,13 @@ private:
 	void ShowComponentImageWindow(ComponentImage* image);
 	void ShowComponentTextWindow(ComponentText* text);
 	void ShowComponentButtonWindow(ComponentButton* button);
+
+	void ShowCommonColliderWindow(ComponentCollider* collider);
+	void ShowComponentBoxColliderWindow(ComponentBoxCollider* box_collider);
+	void ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider* capsule_collider);
+	void ShowComponentSphereColliderWindow(ComponentSphereCollider* sphere_collider);
+	void ShowComponentCylinderColliderWindow(ComponentCylinderCollider* cylinder_collider);
+	void ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh_collider);
 };
 
 #endif //_PANELCOMPONENT_H_

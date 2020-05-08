@@ -6,6 +6,7 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleSpacePartitioning.h"
 #include "SpacePartition/OLQuadTree.h"
+#include "Module/ModulePhysics.h"
 
 #include <imgui.h>
 #include <FontAwesome5/IconsFontAwesome5.h>

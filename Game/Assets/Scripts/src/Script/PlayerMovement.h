@@ -3,6 +3,8 @@
 
 #include "Script.h"
 
+class ComponentCollider;
+
 class PlayerMovement : public Script
 {
 public:
@@ -19,7 +21,7 @@ public:
 	void Dash();
 
 private:
-	float speed = 0.2f;
+	float speed = 200.0F;
 	float rotation_speed = 0.01f;
 	float falling_factor = 1.0f;
 	bool is_jumping = false;
@@ -27,6 +29,7 @@ private:
 	float jump_power = 10.0f;
 	float3 movement_vector;
 	float3 gravity_vector;
+	ComponentCollider* collider = nullptr;
 
 };
 extern "C" SCRIPT_API PlayerMovement* PlayerMovementDLL(); //This is how we are going to load the script

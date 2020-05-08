@@ -72,7 +72,7 @@ void ComponentTransform2D::Load(const Config& config)
 	UUID = config.GetUInt("UUID", 0);
 	active = config.GetBool("Active", true);
 	
-	float param = 0.0f;
+	float param = 0.0F;
 
 	rect.top = config.GetFloat("Top", param);
 	rect.left = config.GetFloat("Left", param);

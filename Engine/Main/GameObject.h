@@ -4,9 +4,10 @@
 #define ENGINE_EXPORTS
 #include "Globals.h"
 #include "Component/Component.h"
-#include "Component/ComponentTransform2D.h"
 #include "Component/ComponentAABB.h"
+#include "Component/ComponentCollider.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentTransform2D.h"
 #include "Component/ComponentUI.h"
 
 
@@ -52,11 +53,13 @@ public:
 	void RemoveChild(GameObject* child);
 
 	ENGINE_API Component* CreateComponent(const Component::ComponentType type);
-	ENGINE_API Component* CreateComponentUI(const ComponentUI::UIType ui_type);
+	ENGINE_API Component* CreateComponent(const ComponentUI::UIType ui_type);
+	ENGINE_API Component* CreateComponent(const ComponentCollider::ColliderType collider_type);
 	void RemoveComponent(Component* component);
 	ENGINE_API Component* GetComponent(const Component::ComponentType type) const;
 	ENGINE_API ComponentScript* GetComponentScript(const char* name) const;
-	ENGINE_API Component* GetComponentUI(const ComponentUI::UIType type) const;
+	ENGINE_API Component* GetComponent(const ComponentUI::UIType ui_type) const;
+	ENGINE_API Component* GetComponent(const ComponentCollider::ColliderType collider_type) const;
 
 	void MoveUpInHierarchy() const;
 	void MoveDownInHierarchy() const;

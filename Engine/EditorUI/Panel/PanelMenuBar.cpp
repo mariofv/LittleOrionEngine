@@ -200,15 +200,15 @@ void PanelMenuBar::ShowGameObjectMenu()
 				App->ui->main_canvas->owner->AddChild(created_game_object);
 				
 			}
-			if (ImGui::Selectable("Progess Bar"))
+			if (ImGui::Selectable("Progress Bar"))
 			{
 				if (App->ui->main_canvas == nullptr)
 				{
 					CreateUIGameObject("Canvas", ComponentUI::UIType::CANVAS);
 				}
-				App->ui->main_canvas->owner->AddChild(CreateUIGameObject("Progess Bar", ComponentUI::UIType::PROGRESSBAR));
+				App->ui->main_canvas->owner->AddChild(CreateUIGameObject("Progress Bar", ComponentUI::UIType::PROGRESSBAR));
 			}
-			if (ImGui::Selectable("Slider"))
+			/*if (ImGui::Selectable("Slider"))
 			{
 
 			}
@@ -216,14 +216,14 @@ void PanelMenuBar::ShowGameObjectMenu()
 			{
 
 			}
-			if (ImGui::Selectable("Dropdown"))
+			if (ImGui::Selectable("Drop-down"))
 			{
 
 			}
 			if (ImGui::Selectable("Input Field"))
 			{
 
-			}
+			}*/
 			ImGui::Separator();
 			if (ImGui::Selectable("Canvas"))
 			{
@@ -232,19 +232,19 @@ void PanelMenuBar::ShowGameObjectMenu()
 					CreateUIGameObject("Canvas", ComponentUI::UIType::CANVAS);
 				}
 			}
-			if (ImGui::Selectable("Panel"))
+			/*if (ImGui::Selectable("Panel"))
 			{
 
 			}
 			if (ImGui::Selectable("Scroll View"))
 			{
 
-			}
+			}*/
 			ImGui::Separator();
-			if (ImGui::Selectable("Event System"))
+			/*if (ImGui::Selectable("Event System"))
 			{
 
-			}
+			}*/
 
 			ImGui::EndMenu();
 		}
@@ -331,6 +331,6 @@ GameObject* PanelMenuBar::CreateUIGameObject(const char* name, ComponentUI::UITy
 {
 	GameObject* created_game_object = App->scene->CreateGameObject();
 	created_game_object->name = name;
-	created_game_object->CreateComponentUI(ui_type);
+	created_game_object->CreateComponent(ui_type);
 	return created_game_object;
 }
