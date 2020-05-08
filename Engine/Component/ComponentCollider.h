@@ -57,11 +57,11 @@ public:
 	float3 scale = float3(1.0F, 1.0F, 1.0F);
 	btVector3 box_size = btVector3(1.0F, 1.0F, 1.0F);
 	btCollisionShape* col_shape;
-	btVector3 localInertia = btVector3(0.F, 0.F, 0.F);
+	btVector3 local_inertia = btVector3(0.F, 0.F, 0.F);
 
 	float3 deviation = float3::zero;
 	bool visualize = true;
-	bool detectCollision = true;
+	bool detect_collision = true;
 	bool is_attached = false;
 	bool is_static = false;
 	bool x_axis = true;

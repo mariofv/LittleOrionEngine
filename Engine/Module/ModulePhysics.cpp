@@ -59,7 +59,8 @@ update_status ModulePhysics::Update()
 		
 	for (auto collider : colliders)
 	{
-		if (App->time->isGameRunning() && !collider->disable_physics && collider->IsEnabled()) {
+		if (App->time->isGameRunning() && !collider->disable_physics && collider->IsEnabled())
+		{
 			if (collider->collider_type != ComponentCollider::ColliderType::MESH)
 			{
 				collider->MoveBody();
