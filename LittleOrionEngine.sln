@@ -11,7 +11,7 @@ Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "MathGeoLib", "Libraries\Cus
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "imgui", "Libraries\CustomBuild\imgui\imgui.vcxproj", "{DE63354A-8A7A-440A-991E-E3F497351308}"
 EndProject
-Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "recast", "CustomBuild\recast\recast.vcxproj", "{2A2CC975-1028-4A1F-96CB-8FC85052E441}"
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "recast", "Libraries\CustomBuild\recast\recast.vcxproj", "{2A2CC975-1028-4A1F-96CB-8FC85052E441}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
