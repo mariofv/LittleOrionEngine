@@ -34,7 +34,6 @@ bool ModuleAudio::Init()
 		return false;
 	}
 	if (g_lowLevelIO.Init(device_settings) != AK_Success)
-
 	{
 		APP_LOG_ERROR("Could not create the streaming device and Low-Level I/O system");
 		return false;

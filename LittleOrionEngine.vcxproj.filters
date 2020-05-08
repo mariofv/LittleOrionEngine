@@ -418,6 +418,36 @@
     <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentAudioSource.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleAudio.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\SoundManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\SoundImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\SoundBank.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\SoundEngine\AkDefaultIOHookBlocking.cpp">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\SoundEngine\AkFilePackageLUT.cpp">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\SoundEngine\stdafx.cpp">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\SoundEngine\AkFilePackage.cpp">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -846,6 +876,45 @@
     <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentAudioSource.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleAudio.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\SoundBank.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\SoundEngine\AkDefaultIOHookBlocking.h">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\SoundEngine\AkFileHelpers.h">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\SoundEngine\AkFilePackage.h">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\SoundEngine\AkFilePackageLowLevelIO.h">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\SoundEngine\AkFilePackageLowLevelIOBlocking.h">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\SoundEngine\AkFilePackageLUT.h">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\SoundEngine\AkMultipleFileLocation.h">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\SoundEngine\stdafx.h">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -932,6 +1001,9 @@
     <Filter Include="Engine\DLL">
       <UniqueIdentifier>{8b335900-d36a-4a5f-8bda-f20bee578e42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\SoundEngine">
+      <UniqueIdentifier>{d944c34d-2880-470e-89dd-e2ba4e4fd35f}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl">
@@ -944,7 +1016,7 @@
       <Filter>Libraries\NodeEditor</Filter>
     </None>
     <None Include="Libraries\include\SoundEngine\AkFilePackageLowLevelIO.inl">
-      <Filter>Libraries\Wwise</Filter>
+      <Filter>Libraries\SoundEngine</Filter>
     </None>
   </ItemGroup>
 </Project>

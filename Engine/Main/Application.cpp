@@ -2,6 +2,7 @@
 #include "EditorUI/EngineLog.h"
 #include "Module/ModuleActions.h"
 #include "Module/ModuleAI.h"
+#include "Module/ModuleAudio.h"
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
