@@ -15,7 +15,7 @@
 #include "DebugModeScript.h"
 
 #include "imgui.h"
-
+#include <math.h>
 
 CameraController* CameraControllerDLL()
 {
@@ -39,6 +39,10 @@ void CameraController::Awake()
 	player_movement_component = player->GetComponentScript("PlayerController");
 	player_movement_script = (PlayerController*)player_movement_component->script;
 	rotation = owner->transform.GetRotation();
+	if(App->input->singleplayer_input)
+	{
+		offset = float3(0.f, 5.5f, 11.f);
+	}	
 }
 
 // Use this for initialization
@@ -160,12 +164,34 @@ void CameraController::ActivePlayer()
 	}
 
 }
+void CameraController::Focus()
+{
+	if (is_focusing)
+	{
+		float focus_progress = math::Min((App->time->real_time_delta_time - start_focus_time) / 250.f, 1.f);
+		assert(focus_progress >= 0 && focus_progress <= 1.f);
+		float3 new_camera_position = owner->transform.GetTranslation().Lerp(player->transform.GetTranslation(), focus_progress);
+		owner->transform.SetTranslation(new_camera_position + offset);
+		is_focusing = focus_progress != 1;
+	}
 
+}
 void CameraController::FollowPlayer() 
 {
-	float3 offset(0.f, 15.f, 24.f);
-	float3 new_position = player->transform.GetTranslation() + offset;
-	owner->transform.SetTranslation(new_position);
+	float distance = abs(player->transform.GetTranslation().x - owner->transform.GetTranslation().x);
+	if ( distance > 2)
+	{
+		start_focus_time = App->time->real_time_delta_time;
+		is_focusing = true;
+	}
+	Focus();
+	//float3 new_position = player->transform.GetTranslation() + offset;
+	//owner->transform.SetTranslation(new_position);
+
+}
+void CameraController::MultiplayerCamera()
+{
+
 
 }
 
