@@ -52,6 +52,7 @@ public:
 
 	ENGINE_API float3 GetScale() const;
 	ENGINE_API void SetScale(const float3& scale);
+	float3 GetGlobalScale() const;
 
 	ENGINE_API float3 GetUpVector() const;
 	ENGINE_API float3 GetFrontVector() const;
