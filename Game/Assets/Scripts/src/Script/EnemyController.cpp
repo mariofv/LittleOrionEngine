@@ -29,6 +29,10 @@ void EnemyController::Awake()
 {
 	//EnemyManager::GetInstance()->AddEnemy(this);
 	animation = (ComponentAnimation*)owner->children[0]->children[0]->GetComponent(Component::ComponentType::ANIMATION);
+
+	init_translation = owner->transform.GetTranslation();
+	init_rotation = owner->transform.GetRotation();
+	init_scale = owner->transform.GetScale();
 }
 
 // Use this for initialization
@@ -51,7 +55,17 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ShowDraggedObjects();
 
 	ImGui::NewLine();
-	ImGui::Text("Enemy Stats");	ImGui::InputFloat("Rot Speed", &rot_speed);	ImGui::InputFloat("Move Speed", &move_speed);	ImGui::InputFloat("Attack Speed", &attack_speed);	ImGui::InputFloat("Attack Power", &attack_power);	ImGui::InputFloat("Attack Range", &attack_range);	ImGui::InputFloat("Health Points", &health_points);	ImGui::InputFloat("Stop Distance", &stopping_distance);	ImGui::InputFloat("Detect Distance", &detect_player_distance);
+	ImGui::Text("Enemy Stats");
+	ImGui::InputFloat("Rot Speed", &rot_speed);
+	ImGui::InputFloat("Move Speed", &move_speed);
+	ImGui::InputFloat("Attack Speed", &attack_speed);
+	ImGui::InputFloat("Attack Power", &attack_power);
+	ImGui::InputFloat("Attack Range", &attack_range);
+	ImGui::InputFloat("Max Health", &max_health_points);
+	ImGui::InputFloat("Health Points", &health_points);
+	ImGui::InputFloat("Stop Distance", &stopping_distance);
+	ImGui::InputFloat("Detect Distance", &detect_player_distance);
+
 	ImGui::NewLine();
 	ImGui::Text("Enemy Debug");
 	ImGui::Checkbox("Is Dead", &is_dead);

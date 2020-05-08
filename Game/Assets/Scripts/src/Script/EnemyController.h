@@ -44,12 +44,17 @@ protected:
 	float attack_speed = 1.f;
 	float attack_power = 1.f;
 	float attack_range = 1.f;
-	float health_points = 100.f;
+	float max_health_points = 100.f; //not const, to modify in inspector
+	float health_points = max_health_points;
 	float stopping_distance = 2.f;
 	float detect_player_distance = 100.f;
 
 	bool is_dead = false;
 	bool is_attacking = false;
+
+	float3 init_translation;
+	Quat init_rotation;
+	float3 init_scale;
 };
 
 extern "C" SCRIPT_API EnemyController* EnemyControllerDLL(); //This is how we are going to load the script

@@ -155,13 +155,13 @@ ENGINE_API void ComponentTransform::LookAt(const float3& target)
 	SetRotation(new_rotation);
 }
 
-float3 ComponentTransform::ComponentTransform::GetScale() const
+ENGINE_API float3 ComponentTransform::ComponentTransform::GetScale() const
 {
 	return scale;
 }
 
 
-void ComponentTransform::SetScale(const float3& scale)
+ENGINE_API void ComponentTransform::SetScale(const float3& scale)
 {
 	this->scale = scale;
 	

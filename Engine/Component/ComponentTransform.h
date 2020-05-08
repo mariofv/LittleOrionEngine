@@ -50,8 +50,8 @@ public:
 
 	ENGINE_API void LookAt(const float3& target);
 
-	float3 GetScale() const;
-	void SetScale(const float3& scale);
+	ENGINE_API float3 GetScale() const;
+	ENGINE_API void SetScale(const float3& scale);
 
 	ENGINE_API float3 GetUpVector() const;
 	ENGINE_API float3 GetFrontVector() const;
