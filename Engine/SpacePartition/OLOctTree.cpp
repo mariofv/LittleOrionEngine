@@ -28,6 +28,11 @@ void OLOctTree::Clear()
 
 void OLOctTree::Insert(GameObject &game_object)
 {
+	if (!game_object.IsStatic())
+	{
+		return;
+	}
+
 	assert(root->box.Intersects(game_object.aabb.bounding_box));
 
 	std::vector<OLOctTreeNode*> intersecting_leaves;

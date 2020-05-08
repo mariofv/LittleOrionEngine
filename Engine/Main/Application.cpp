@@ -19,7 +19,7 @@
 #include "Module/ModuleFileSystem.h"
 #include "Module/ModuleWindow.h"
 #include "Module/ModuleScriptManager.h"
-#include "Module/ModuleAudio.h"
+#include "Module/ModuleSpacePartitioning.h"
 
 #include <Brofiler/Brofiler.h>
 
@@ -48,6 +48,7 @@ Application::Application()
 #endif
 	modules.emplace_back(lights = new ModuleLight());
 	modules.emplace_back(scene = new ModuleScene());
+	modules.emplace_back(space_partitioning = new ModuleSpacePartitioning());
 	modules.emplace_back(artificial_intelligence = new ModuleAI());
 	modules.emplace_back(scripts = new ModuleScriptManager());
 		

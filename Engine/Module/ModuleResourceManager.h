@@ -61,7 +61,7 @@ public:
 	update_status PreUpdate() override;
 	bool CleanUp() override;
 
-	uint32_t Import(Path& file);
+	uint32_t Import(Path& file, bool force = false);
 
 	template<typename T>
 	uint32_t Create(Path& path, const std::string& resource_name)
@@ -127,7 +127,7 @@ public:
 	}
 
 	void CleanInconsistenciesInDirectory(const Path& directory_path);
-	void ImportAssetsInDirectory(const Path& directory_path);
+	void ImportAssetsInDirectory(const Path& directory_path, bool force = false);
 
 	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
 	uint32_t CreateFromData(FileData data, const std::string& created_resource_path);
@@ -136,7 +136,7 @@ public:
 
 private:
 	void StartThread();
-	uint32_t InternalImport(Path& file_path) const;
+	uint32_t InternalImport(Path& file_path, bool force = false) const;
 
 	std::shared_ptr<Resource> RetrieveFromCacheIfExist(uint32_t uuid) const;
 

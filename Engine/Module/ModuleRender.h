@@ -6,16 +6,14 @@
 #include "Module.h"
 #include "Helper/Timer.h"
 #include "Main/Globals.h"
-#include "SpacePartition/OLAABBTree.h"
-#include "SpacePartition/OLOctTree.h"
-#include "SpacePartition/OLQuadTree.h"
 
+#include <MathGeoLib/Geometry/LineSegment.h>
 #include <GL/glew.h>
-
-const unsigned INITIAL_SIZE_AABBTREE = 10;
+#include <list>
 
 class ComponentCamera;
 class ComponentMeshRenderer;
+class GameObject;
 
 struct SDL_Texture;
 struct SDL_Renderer;
@@ -47,15 +45,6 @@ public:
 	ENGINE_API int GetRenderedTris() const;
 	ENGINE_API int GetRenderedVerts() const;
 
-	void GenerateQuadTree();
-	void GenerateOctTree();
-	void InsertAABBTree(GameObject* game_object);
-	void RemoveAABBTree(GameObject* game_object);
-	void UpdateAABBTree(GameObject* game_object);
-	void DeleteAABBTree();
-	void CreateAABBTree();
-	void DrawAABBTree() const;
-
 	GameObject* GetRaycastIntertectedObject(const LineSegment& ray);
 	bool GetRaycastIntertectedObject(const LineSegment& ray, float3& position);
 
@@ -76,7 +65,7 @@ private:
 	std::string GetDrawMode() const;
 
 	void GetMeshesToRender(const ComponentCamera* camera);
-	void GetCullingMeshes(const ComponentCamera* camera);
+	void SetListOfMeshesToRender(const ComponentCamera* camera);
 
 public:
 	bool anti_aliasing = false;
@@ -84,17 +73,13 @@ public:
 private:
 	void* context = nullptr;
 
-	OLQuadTree ol_quadtree;
-	OLOctTree ol_octtree;
-	OLAABBTree* ol_abbtree = new OLAABBTree(INITIAL_SIZE_AABBTREE);
-
 
 	bool vsync = false;
 	bool gl_alpha_test = false;
 	bool gl_depth_test = false;
 	bool gl_scissor_test = false;
 	bool gl_stencil_test = false;
-	bool gl_blend = false;
+	bool gl_blend = true;
 	bool gl_cull_face = false;
 	int culled_faces = 0;
 	int front_faces = 0;
@@ -106,14 +91,15 @@ private:
 
 	std::vector<ComponentMeshRenderer*> meshes;
 	std::vector<ComponentMeshRenderer*> meshes_to_render;
-
+	typedef std::pair<float, ComponentMeshRenderer*> ipair;
+	std::list <ipair> opaque_mesh_to_render, transparent_mesh_to_render;
 	int num_rendered_tris = 0;
 	int num_rendered_verts = 0;
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;
+	friend class ModuleSpacePartitioning;
 	friend class PanelConfiguration;
-	friend class PanelDebug;
 	friend class PanelScene;
 	friend class NavMesh;
 };

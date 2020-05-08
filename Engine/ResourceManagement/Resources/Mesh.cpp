@@ -80,14 +80,18 @@ void Mesh::LoadInMemory()
 	glEnableVertexAttribArray(3);
 	glVertexAttribPointer(3, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, tangent));
 
+	// VERTEX BITANGENT
+	glEnableVertexAttribArray(4);
+	glVertexAttribPointer(4, 3, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, bitangent));
 	
 	// VERTEX JOINTS
-	glEnableVertexAttribArray(4);
+	glEnableVertexAttribArray(5);
 	glVertexAttribIPointer(4, 4, GL_UNSIGNED_INT, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, joints));
 
 	// VERTEX WEIGHTS
-	glEnableVertexAttribArray(5);
+	glEnableVertexAttribArray(6);
 	glVertexAttribPointer(5, 4, GL_FLOAT, GL_FALSE, sizeof(Mesh::Vertex), (void*)offsetof(Mesh::Vertex, weights));
 
 	glBindVertexArray(0);
 }
+

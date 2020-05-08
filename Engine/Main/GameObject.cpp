@@ -11,6 +11,7 @@
 #include "Module/ModuleLight.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleUI.h"
 #include "ResourceManagement/Resources/Texture.h"
@@ -72,7 +73,7 @@ GameObject& GameObject::operator<<(const GameObject& gameobject_to_copy)
 	}
 
 	transform.SetScale(gameobject_to_copy.transform.GetScale());
-	CopyComponents(gameobject_to_copy);
+	CopyComponentsPrefabs(gameobject_to_copy);
 	this->name = gameobject_to_copy.name;
 	this->active = gameobject_to_copy.active;
 	this->SetStatic(gameobject_to_copy.is_static);
@@ -87,7 +88,7 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 	children_to_remove.push_back(this);
 	if (!is_static)
 	{
-		App->renderer->RemoveAABBTree(this);
+		App->space_partitioning->RemoveAABBTree(this);
 	}
 
 	if (parent != nullptr)
@@ -112,6 +113,37 @@ void GameObject::Delete(std::vector<GameObject*>& children_to_remove)
 		prefab_reference->RemoveInstance(this);
 	}
 }
+void GameObject::Duplicate(const GameObject & gameobject_to_copy)
+{
+	if (!is_prefab_parent && gameobject_to_copy.transform.modified_by_user)
+	{
+		transform.SetTranslation(gameobject_to_copy.transform.GetTranslation());
+		transform.SetRotation(gameobject_to_copy.transform.GetRotationRadiants());
+		//gameobject_to_copy.transform.modified_by_user = false;
+	}
+	transform.SetScale(gameobject_to_copy.transform.GetScale());
+	CopyComponents(gameobject_to_copy);
+	this->name = gameobject_to_copy.name;
+	this->active = gameobject_to_copy.active;
+	this->SetStatic(gameobject_to_copy.is_static);
+	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
+	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
+	this->original_UUID = gameobject_to_copy.original_UUID;
+	if(gameobject_to_copy.prefab_reference != nullptr && !gameobject_to_copy.is_prefab_parent)
+	{
+		this->original_UUID = 0;
+		this->prefab_reference = nullptr;
+	}
+	
+	return;
+}
+
+void GameObject::SetTransform(GameObject* game_object)
+{
+	transform.SetTranslation(game_object->transform.GetTranslation());
+	transform.SetRotation(game_object->transform.GetRotationRadiants());
+	transform.SetScale(game_object->transform.GetScale());
+}
 bool GameObject::IsEnabled() const
 {
 	return active;
@@ -135,8 +167,8 @@ void GameObject::SetEnabled(bool able)
 void GameObject::SetStatic(bool is_static)
 {
 	SetHierarchyStatic(is_static);
-	App->renderer->GenerateQuadTree(); // TODO: Check this. This could be called with ungenerated bounding boxes, resulting in a wrong quadtree.
-	App->renderer->GenerateOctTree();
+	App->space_partitioning->GenerateQuadTree(); // TODO: Check this. This could be called with ungenerated bounding boxes, resulting in a wrong quadtree.
+	App->space_partitioning->GenerateOctTree();
 }
 
 void GameObject::SetHierarchyStatic(bool is_static)
@@ -144,7 +176,7 @@ void GameObject::SetHierarchyStatic(bool is_static)
 	this->is_static = is_static;
 
 	//AABBTree
-	(is_static) ? App->renderer->RemoveAABBTree(this) : App->renderer->InsertAABBTree(this);
+	(is_static) ? App->space_partitioning->RemoveAABBTree(this) : App->space_partitioning->InsertAABBTree(this);
 	
 	for (const auto& child : children)
 	{
@@ -529,7 +561,7 @@ void GameObject::UnpackPrefab()
 	}
 }
 
-void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
+void GameObject::CopyComponentsPrefabs(const GameObject& gameobject_to_copy)
 {
 	this->components.reserve(gameobject_to_copy.components.size());
 	for (const auto& component : gameobject_to_copy.components)
@@ -548,7 +580,35 @@ void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 			this->components.push_back(copy);
 		}
 	}
+	RemoveComponentsCopying(gameobject_to_copy);
+}
 
+void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
+{
+	this->components.reserve(gameobject_to_copy.components.size());
+	for (const auto& component : gameobject_to_copy.components)
+	{
+		component->modified_by_user = false;
+		//Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
+		Component* copy = nullptr;
+		if(component->type != Component::ComponentType::SCRIPT)
+		{
+			copy = component->Clone(this->original_prefab);
+		}
+		else
+		{
+			copy = new ComponentScript(this, static_cast<ComponentScript*>(component)->name);
+			static_cast<ComponentScript*>(copy)->name = static_cast<ComponentScript*>(component)->name;
+		}
+		copy->owner = this;
+		this->components.push_back(copy);
+	}
+
+	RemoveComponentsCopying(gameobject_to_copy);
+}
+
+void GameObject::RemoveComponentsCopying(const GameObject & gameobject_to_copy)
+{
 	std::vector<Component*> components_to_remove;
 	std::copy_if(
 		components.begin(),

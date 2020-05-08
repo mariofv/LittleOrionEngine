@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp">
@@ -259,96 +259,6 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastRegion.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DebugUtils\DebugDraw.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourAlloc.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourAssert.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourCommon.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourCrowd.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourLocalBoundary.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMesh.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMeshBuilder.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMeshQuery.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNode.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourObstacleAvoidance.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourPathCorridor.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourPathQueue.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourProximityGrid.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourTileCache\DetourTileCache.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourTileCache\DetourTileCacheBuilder.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\Recast.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastAlloc.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastArea.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastAssert.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastContour.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDump.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastFilter.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastLayers.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastMesh.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastMeshDetail.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastRasterization.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Module\ModuleAI.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
@@ -481,7 +391,6 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Scene.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
@@ -491,35 +400,23 @@
     <ClCompile Include="Engine\Helper\BuildOptions.cpp">
       <Filter>Engine\Helper</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\SoundImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
+    <ClCompile Include="Engine\DLL\DLLManager.cpp">
+      <Filter>Engine\DLL</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Manager\SoundManager.cpp">
-      <Filter>Engine\ResourceManagement\Manager</Filter>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Resources\SoundBank.cpp">
-      <Filter>Engine\ResourceManagement\Resources</Filter>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.cpp">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Module\ModuleAudio.cpp">
+    <ClCompile Include="Engine\ResourceManagement\Metafile\TextureMetafile.cpp">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Metafile\ModelMetafile.cpp">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp">
       <Filter>Engine\Module</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\SoundEngine\AkFilePackage.cpp">
-      <Filter>Libraries\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\SoundEngine\AkFilePackageLUT.cpp">
-      <Filter>Libraries\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\SoundEngine\AkDefaultIOHookBlocking.cpp">
-      <Filter>Libraries\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\SoundEngine\stdafx.cpp">
-      <Filter>Libraries\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp">
-      <Filter>Libraries\Wwise</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentAudioSource.cpp">
-      <Filter>Engine\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -778,78 +675,6 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DebugUtils\DebugDraw.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourAlloc.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourAssert.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourCommon.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourCrowd.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourLocalBoundary.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourMath.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMesh.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMeshBuilder.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMeshQuery.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNode.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourObstacleAvoidance.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourPathCorridor.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourPathQueue.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourProximityGrid.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourStatus.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourTileCache\DetourTileCache.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourTileCache\DetourTileCacheBuilder.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Recast\Recast.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Recast\RecastAlloc.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Recast\RecastAssert.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDump.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Module\ModuleAI.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
@@ -991,7 +816,6 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Scene.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
@@ -1001,44 +825,26 @@
     <ClInclude Include="Engine\Helper\BuildOptions.h">
       <Filter>Engine\Helper</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
+    <ClInclude Include="Libraries\include\cr\cr.h">
+      <Filter>Libraries\cr</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h">
-      <Filter>Engine\ResourceManagement\Manager</Filter>
+    <ClInclude Include="Engine\DLL\DLLManager.h">
+      <Filter>Engine\DLL</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Resources\SoundBank.h">
-      <Filter>Engine\ResourceManagement\Resources</Filter>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Module\ModuleAudio.h">
+    <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h">
       <Filter>Engine\Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\SoundEngine\AkFilePackageLowLevelIOBlocking.h">
-      <Filter>Libraries\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\SoundEngine\AkFilePackageLUT.h">
-      <Filter>Libraries\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\SoundEngine\AkMultipleFileLocation.h">
-      <Filter>Libraries\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\SoundEngine\AkDefaultIOHookBlocking.h">
-      <Filter>Libraries\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\SoundEngine\AkFileHelpers.h">
-      <Filter>Libraries\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\SoundEngine\AkFilePackage.h">
-      <Filter>Libraries\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\SoundEngine\AkFilePackageLowLevelIO.h">
-      <Filter>Libraries\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\SoundEngine\stdafx.h">
-      <Filter>Libraries\Wwise</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentAudioSource.h">
-      <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -1105,9 +911,6 @@
     <Filter Include="Engine\EditorUI\Panel\PopupsPanel">
       <UniqueIdentifier>{4d3c5294-ef77-4da3-a2bc-ac29c72d5e42}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\recast">
-      <UniqueIdentifier>{380b2d72-4143-4cd0-a469-bbd10415b4c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\AI">
       <UniqueIdentifier>{799add9a-b011-4795-bae5-55a425014ca0}</UniqueIdentifier>
     </Filter>
@@ -1123,8 +926,11 @@
     <Filter Include="Libraries\NodeEditor">
       <UniqueIdentifier>{0962007d-0c63-4e57-a857-faada0652d87}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\Wwise">
-      <UniqueIdentifier>{54fd6029-9f38-49ec-941e-db4e79be6dfc}</UniqueIdentifier>
+    <Filter Include="Libraries\cr">
+      <UniqueIdentifier>{10baac58-e86a-413b-b1ae-abb70e75ee83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\DLL">
+      <UniqueIdentifier>{8b335900-d36a-4a5f-8bda-f20bee578e42}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

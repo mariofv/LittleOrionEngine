@@ -3,12 +3,14 @@
 #include "ComponentAnimation.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
-#include "Module/ModuleTexture.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleTexture.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
@@ -58,11 +60,18 @@ void ComponentMeshRenderer::Load(const Config& config)
 
 void ComponentMeshRenderer::Render()
 {
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
+	{
+
+		glEnable(GL_BLEND);
+		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+		/*glBlendFunc(GL_ONE, GL_ONE); TODO -> FIX THISÇ*/
+		glBlendEquation(GL_FUNC_ADD);
+	}
 	if (material_to_render == nullptr)
 	{
 		return;
 	}
-
 	std::string program_name = material_to_render->shader_program;
 	GLuint program = App->program->GetShaderProgramId(program_name);
 	glUseProgram(program);
@@ -79,6 +88,10 @@ void ComponentMeshRenderer::Render()
 	App->lights->Render(owner->transform.GetGlobalTranslation(), program);
 	RenderMaterial(program);
 	RenderModel();
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
+	{
+		glDisable(GL_BLEND);
+	}
 	glUseProgram(0);
 }	
 
@@ -98,7 +111,12 @@ void ComponentMeshRenderer::RenderMaterial(GLuint shader_program) const
 	AddDiffuseUniforms(shader_program);
 	AddEmissiveUniforms(shader_program);
 	AddSpecularUniforms(shader_program);
+
 	AddAmbientOclusionUniforms(shader_program);
+	AddNormalUniforms(shader_program);
+
+	AddExtraUniforms(shader_program);
+	
 }
 
 
@@ -127,7 +145,11 @@ void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) con
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)material_to_render->specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), material_to_render->k_specular);
-	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), material_to_render->shininess);
+	glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), material_to_render->specular_color[3]);
+
+	//Material BRDF variables
+	//glUniform1f(glGetUniformLocation(shader_program, "material.roughness"), material_to_render->roughness);
+	//glUniform1f(glGetUniformLocation(shader_program, "material.metalness"), material_to_render->metalness);
 }
 
 void ComponentMeshRenderer::AddAmbientOclusionUniforms(unsigned int shader_program) const
@@ -136,6 +158,29 @@ void ComponentMeshRenderer::AddAmbientOclusionUniforms(unsigned int shader_progr
 	BindTexture(Material::MaterialTextureType::OCCLUSION);
 	glUniform1i(glGetUniformLocation(shader_program, "material.occlusion_map"), 3);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_ambient"), material_to_render->k_ambient);
+}
+
+void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
+{
+	glActiveTexture(GL_TEXTURE4);
+	BindTexture(Material::MaterialTextureType::NORMAL);
+	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
+	glUniform1i(glGetUniformLocation(shader_program, "material.use_normal_map"), material_to_render->use_normal_map);
+}
+
+void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
+{
+	if (material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
+	{
+		glUniform1f(glGetUniformLocation(shader_program, "material.transparency"), 1.f);
+	}
+	else
+	{
+		glUniform1f(glGetUniformLocation(shader_program, "material.transparency"), material_to_render->transparency);
+	}
+
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_x"), material_to_render->tiling_x);
+	glUniform1f(glGetUniformLocation(shader_program, "material.tiling_y"), material_to_render->tiling_y);
 }
 
 void ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
@@ -154,6 +199,22 @@ void ComponentMeshRenderer::BindTexture(Material::MaterialTextureType id) const
 		texture_id = App->texture->whitefall_texture_id;
 	}
 	glBindTexture(GL_TEXTURE_2D, texture_id);
+}
+
+bool ComponentMeshRenderer::BindTextureNormal(Material::MaterialTextureType id) const
+{
+	GLuint texture_id;
+
+	if (material_to_render->textures[id] != nullptr)
+	{
+		texture_id = material_to_render->textures[id]->opengl_texture;
+		glBindTexture(GL_TEXTURE_2D, texture_id);
+		return true;
+	}
+	else {
+
+		return false;
+	}
 }
 
 Component* ComponentMeshRenderer::Clone(bool original_prefab) const

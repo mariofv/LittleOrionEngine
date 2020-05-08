@@ -10,6 +10,11 @@
 class ComponentMeshRenderer : public Component
 {
 public:
+	enum Variations
+	{
+		ENABLE_NORMAL_MAP =1 << 0,
+		ENABLE_SPECULAR_MAP = 1 << 1
+	};
 	ComponentMeshRenderer();
 	ComponentMeshRenderer(GameObject * owner);
 	~ComponentMeshRenderer() = default;
@@ -43,7 +48,11 @@ private:
 	void AddEmissiveUniforms(unsigned int shader_program) const;
 	void AddSpecularUniforms(unsigned int shader_program) const;
 	void AddAmbientOclusionUniforms(unsigned int shader_program) const;
+	void AddNormalUniforms(unsigned int shader_program) const;
+	void AddExtraUniforms(unsigned int shader_program) const;
+
 	void BindTexture(Material::MaterialTextureType id) const;
+	bool BindTextureNormal(Material::MaterialTextureType id) const;
 
 public:
 	uint32_t mesh_uuid;
