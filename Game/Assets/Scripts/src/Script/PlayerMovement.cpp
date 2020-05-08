@@ -55,6 +55,7 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 	ImGui::Text("Variables: ");
 	ShowDraggedObjects();
 	ImGui::Checkbox("Multiplayer", &multiplayer);
+	ImGui::Checkbox("Is Inside Frustum", &is_inside);
 
 }
 
@@ -112,8 +113,14 @@ void PlayerMovement::Move(int player_id)
 	//}
 	//else
 	//{
-		collider->AddForce(new_transform);
+	is_inside = CheckDistance(new_transform);
+
+	collider->AddForce(new_transform);
 	//}
+	//if (CheckDistance(new_transform))
+	//		{
+	//			collider->AddForce(new_transform);
+	//		}
 }
 
 void PlayerMovement::Fall()
@@ -132,7 +139,7 @@ bool PlayerMovement::CheckDistance(float3 transform)
 {
 	AABB future_position = AABB(owner->aabb.bounding_box.minPoint + transform, owner->aabb.bounding_box.maxPoint + transform);
 
-	return (abs(transform.x - camera->transform.GetTranslation().x)) < 20;
+	return game_camera->IsInsideFrustum(future_position);
 }
 
 

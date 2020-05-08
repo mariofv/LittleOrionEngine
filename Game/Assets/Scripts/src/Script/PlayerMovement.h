@@ -41,6 +41,7 @@ private:
 	GameObject* camera = nullptr;
 	ComponentCamera* game_camera = nullptr;
 	bool multiplayer = true;
+	bool is_inside = true;
 
 };
 extern "C" SCRIPT_API PlayerMovement* PlayerMovementDLL(); //This is how we are going to load the script
