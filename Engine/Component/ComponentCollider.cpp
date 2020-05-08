@@ -70,6 +70,7 @@ void ComponentCollider::Save(Config & config) const
 	config.AddBool(x_axis, "x_axis");
 	config.AddBool(y_axis, "y_axis");
 	config.AddBool(z_axis, "z_axis");
+	config.AddBool(disable_physics, "DisablePhysics");
 
 }
 
@@ -86,11 +87,13 @@ void ComponentCollider::Load(const Config & config)
 	x_axis = config.GetBool("x_axis", true);
 	y_axis = config.GetBool("y_axis", true);
 	z_axis = config.GetBool("z_axis", true);
+	disable_physics = config.GetBool("DisablePhysics", false);
 	AddBody();
 	if (is_static) { SetStatic(); }
 	if (!visualize) { SetVisualization(); }
 	SetRotationAxis();
 	if (!detectCollision) { SetCollisionDetection(); }
+	DisablePhysics();
 }
 
 btRigidBody* ComponentCollider::AddBody()
@@ -243,10 +246,12 @@ void ComponentCollider::SetStatic()
 	if (is_static) {
 		flags |= body->CF_KINEMATIC_OBJECT;
 		body->setCollisionFlags(flags);
+		mass = 0.0F;
 	}
 	else {
 		flags -= body->CF_KINEMATIC_OBJECT;
 		body->setCollisionFlags(flags);
+		mass = 1.0F;
 	}
 	
 }
@@ -260,3 +265,16 @@ void ComponentCollider::AddForce(float3& force)
 {
 	body->applyCentralForce(btVector3(force.x, force.y, force.z));
 }
+
+void ComponentCollider::DisablePhysics()
+{
+	if (disable_physics || !active)
+	{
+		body->setActivationState(DISABLE_SIMULATION);
+	}
+	else
+	{
+		body->forceActivationState(ACTIVE_TAG);
+	}
+}
+

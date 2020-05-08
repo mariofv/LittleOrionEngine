@@ -42,6 +42,7 @@ public:
 	bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
 	void SetStatic();
 	void SetRotationAxis();
+	void DisablePhysics();
 
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
@@ -66,6 +67,10 @@ public:
 	bool x_axis = true;
 	bool y_axis = true;
 	bool z_axis = true;
+	bool disable_physics = false;
+
+protected:
+	friend class PanelComponent;
 
 };
 

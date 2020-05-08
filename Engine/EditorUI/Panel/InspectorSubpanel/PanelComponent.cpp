@@ -852,6 +852,14 @@ void PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 
 void PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 {
+	if (ImGui::Checkbox("Active", &collider->active))
+	{
+		//UndoRedo
+		collider->DisablePhysics();
+		App->actions->action_component = collider;
+		App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
+	}
+	ImGui::SameLine();
 	if (ImGui::Button("Delete"))
 	{
 		App->actions->DeleteComponentUndo(collider);
@@ -874,6 +882,10 @@ void PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 	{
 		collider->SetCollisionDetection();
 	}
+	if (ImGui::Checkbox("Disable Physics", &collider->disable_physics))
+	{
+		collider->DisablePhysics();
+	}
 	ImGui::Text("Axis Rotation");
 	if (ImGui::Checkbox("X Axis", &collider->x_axis))
 	{
@@ -895,10 +907,10 @@ void PanelComponent::ShowComponentBoxColliderWindow(ComponentBoxCollider* box_co
 	if (ImGui::CollapsingHeader(ICON_FA_BOX " Box Collider", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonColliderWindow(box_collider);
-	}
-	if (ImGui::SliderFloat3("Scale", box_collider->scale.ptr(), 0.1F, 5.0F))
-	{
-		box_collider->Scale();
+		if (ImGui::DragFloat3("Scale", box_collider->scale.ptr(), 0.1F, 5.0F))
+		{
+			box_collider->Scale();
+		}
 	}
 }
 
@@ -907,14 +919,14 @@ void PanelComponent::ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider
 	if (ImGui::CollapsingHeader(ICON_FA_CAPSULES " Capsule Collider", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonColliderWindow(capsule_collider);
-	}
-	if (ImGui::SliderFloat("Radius", &capsule_collider->scale.x, 0.1F, 5.0F))
-	{
-		capsule_collider->Scale();
-	}
-	if (ImGui::SliderFloat("Height", &capsule_collider->scale.y, 0.1F, 5.0F))
-	{
-		capsule_collider->Scale();
+		if (ImGui::DragFloat("Radius", &capsule_collider->scale.x, 0.1F, 5.0F))
+		{
+			capsule_collider->Scale();
+		}
+		if (ImGui::DragFloat("Height", &capsule_collider->scale.y, 0.1F, 5.0F))
+		{
+			capsule_collider->Scale();
+		}
 	}
 }
 
@@ -923,10 +935,10 @@ void PanelComponent::ShowComponentSphereColliderWindow(ComponentSphereCollider *
 	if (ImGui::CollapsingHeader(ICON_FA_BASKETBALL_BALL " Sphere Collider", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonColliderWindow(sphere_collider);
-	}
-	if (ImGui::SliderFloat("Radius", &sphere_collider->scale.x, 0.1F, 5.0F))
-	{
-		sphere_collider->Scale();
+		if (ImGui::DragFloat("Radius", &sphere_collider->scale.x, 0.1F, 5.0F))
+		{
+			sphere_collider->Scale();
+		}
 	}
 }
 
@@ -935,14 +947,14 @@ void PanelComponent::ShowComponentCylinderColliderWindow(ComponentCylinderCollid
 	if (ImGui::CollapsingHeader(ICON_FA_COLUMNS " Cylinder Collider", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonColliderWindow(cylinder_collider);
-	}
-	if (ImGui::SliderFloat("Radius", &cylinder_collider->scale.x, 0.1F, 5.0F))
-	{
-		cylinder_collider->Scale();
-	}
-	if (ImGui::SliderFloat("Height", &cylinder_collider->scale.y, 0.1F, 5.0F))
-	{
-		cylinder_collider->Scale();
+		if (ImGui::DragFloat("Radius", &cylinder_collider->scale.x, 0.1F, 5.0F))
+		{
+			cylinder_collider->Scale();
+		}
+		if (ImGui::DragFloat("Height", &cylinder_collider->scale.y, 0.1F, 5.0F))
+		{
+			cylinder_collider->Scale();
+		}
 	}
 }
 
@@ -951,9 +963,9 @@ void PanelComponent::ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh
 	if (ImGui::CollapsingHeader(ICON_FA_BORDER_NONE " Mesh Collider", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonColliderWindow(mesh_collider);
-	}
-	if (ImGui::SliderFloat3("Scale", mesh_collider->scale.ptr(), 0.1F, 5.0F))
-	{
-		mesh_collider->Scale();
+		if (ImGui::DragFloat3("Scale", mesh_collider->scale.ptr(), 0.1F, 5.0F))
+		{
+			mesh_collider->Scale();
+		}
 	}
 }
