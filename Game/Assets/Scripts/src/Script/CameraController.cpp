@@ -178,7 +178,7 @@ void CameraController::Focus(float3 position_to_focus)
 	{
 		float focus_progress = math::Min((App->time->delta_time - start_focus_time) / 100.f, 1.f);
 		float3 new_camera_position = owner->transform.GetTranslation().Lerp(position_to_focus, focus_progress);
-		owner->transform.SetTranslation(float3(new_camera_position.x + selected_offset.x, position_to_focus.y + selected_offset.y, selected_offset.z));
+		owner->transform.SetTranslation(float3(new_camera_position.x, position_to_focus.y + selected_offset.y, selected_offset.z));
 		is_focusing = focus_progress != 1;
 	}
 
@@ -201,15 +201,19 @@ void CameraController::FollowPlayer()
 }
 void CameraController::MultiplayerCamera()
 {
-	float x_distance = player1->transform.GetTranslation().x - player2->transform.GetTranslation().x;
-	float y_distance = player1->transform.GetTranslation().y - player2->transform.GetTranslation().y;
-	if (abs(x_distance) > 5 && !is_focusing)
+	float x_distance = abs(player1->transform.GetTranslation().x - player2->transform.GetTranslation().x);
+	float y_distance = abs(player1->transform.GetTranslation().y - player2->transform.GetTranslation().y);
+
+	float min_x = math::Min(player1->transform.GetTranslation().x, player2->transform.GetTranslation().x);
+	float min_y = math::Min(player1->transform.GetTranslation().y, player2->transform.GetTranslation().y);
+
+	if (x_distance > 5 && !is_focusing)
 	{
 		selected_offset = offset_far;
 		start_focus_time = App->time->delta_time;
 		is_focusing = true;
 	}
-	if (abs(x_distance) < 5 && !is_focusing)
+	if (x_distance < 5 && !is_focusing)
 	{
 		selected_offset = offset_near;
 		start_focus_time = App->time->delta_time;
@@ -217,7 +221,7 @@ void CameraController::MultiplayerCamera()
 	}
 	if (is_focusing)
 	{
-		Focus(float3(x_distance, y_distance,selected_offset.z));
+		Focus(float3(min_x + (x_distance/2), min_y + (y_distance/2), selected_offset.z));
 	}
 
 }

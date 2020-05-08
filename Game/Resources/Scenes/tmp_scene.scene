@@ -637,8 +637,8 @@
                 "UUID": 3927511211,
                 "Active": true,
                 "Translation": [
-                    -98.01053619384766,
-                    11.139978408813477,
+                    -90.93975830078125,
+                    2.1481285095214845,
                     0.0
                 ],
                 "Rotation": [
@@ -702,7 +702,7 @@
                     "Visualize": true,
                     "Attached": true,
                     "x_axis": true,
-                    "y_axis": true,
+                    "y_axis": false,
                     "z_axis": true
                 }
             ]
@@ -773,8 +773,8 @@
                 "UUID": 2881903813,
                 "Active": true,
                 "Translation": [
-                    -98.01053619384766,
-                    11.139978408813477,
+                    -100.21371459960938,
+                    1.227287769317627,
                     0.0
                 ],
                 "Rotation": [
@@ -814,7 +814,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "PlayerController",
-                    "Player": 1
+                    "Player": 0
                 },
                 {
                     "UUID": 1049943075,

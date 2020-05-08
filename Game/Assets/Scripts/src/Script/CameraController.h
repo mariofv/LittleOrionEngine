@@ -50,13 +50,13 @@ private:
 	DebugModeScript* debug_mode = nullptr;
 
 	float3 offset_near = float3(0.f, 5.5f, 11.f);
-	float3 offset_far = float3(0.f, 5.5f, 11.f);
+	float3 offset_far = float3(0.f, 8.5f, 17.5f);
 	float3 selected_offset = float3::zero;;
 
 	bool is_focusing = false;
 	float start_focus_time = 0.f;
 
-	bool multiplayer = false;
+	bool multiplayer = true;
 
 
 };
