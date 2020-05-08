@@ -97,6 +97,8 @@ void CameraController::OnInspector(ImGuiContext* context)
 	ImGui::Text("Variables: ");
 	ShowDraggedObjects();
 	ImGui::Checkbox("Multiplayer", &multiplayer);
+	ImGui::Checkbox("Is Focusing", &is_focusing);
+	ImGui::DragFloat3("Offset", selected_offset.ptr(), 0.5f, 0.f, 100.f);
 }
 
 void CameraController::GodCamera() 
@@ -191,10 +193,8 @@ void CameraController::FollowPlayer()
 		start_focus_time = App->time->delta_time;
 		is_focusing = true;
 	}
-	if(is_focusing)
-	{
-		Focus(player1->transform.GetTranslation());
-	}
+
+	Focus(player1->transform.GetTranslation());
 	//float3 new_position = player->transform.GetTranslation() + offset;
 	//owner->transform.SetTranslation(new_position);
 
@@ -207,22 +207,28 @@ void CameraController::MultiplayerCamera()
 	float min_x = math::Min(player1->transform.GetTranslation().x, player2->transform.GetTranslation().x);
 	float min_y = math::Min(player1->transform.GetTranslation().y, player2->transform.GetTranslation().y);
 
-	if (x_distance > 5 && !is_focusing)
+	if (x_distance > 5 )
 	{
 		selected_offset = offset_far;
-		start_focus_time = App->time->delta_time;
-		is_focusing = true;
+		if (!is_focusing)
+		{
+			start_focus_time = App->time->delta_time;
+			is_focusing = true;
+		}
+
 	}
-	if (x_distance < 5 && !is_focusing)
+	if (x_distance < 5)
 	{
 		selected_offset = offset_near;
-		start_focus_time = App->time->delta_time;
-		is_focusing = true;
+		if(!is_focusing)
+		{
+			start_focus_time = App->time->delta_time;
+			is_focusing = true;
+		}
 	}
-	if (is_focusing)
-	{
-		Focus(float3(min_x + (x_distance/2), min_y + (y_distance/2), selected_offset.z));
-	}
+
+	Focus(float3(min_x + (x_distance/2), min_y + (y_distance/2), selected_offset.z));
+
 
 }
 
