@@ -42,15 +42,29 @@ void CameraController::Awake()
 
 	selected_offset = offset_near;
 
-	float3 current_position = player1->transform.GetTranslation();
-	float3 position_to_focus = float3(current_position.x, current_position.y + selected_offset.y, /*(current_position.z / 2) +*/ selected_offset.z);
-	Focus(position_to_focus);
 }
 
 // Use this for initialization
 void CameraController::Start()
 {
 	//camera_component->SetOrthographicView();
+	if (!multiplayer)
+	{
+		float3 current_position = player1->transform.GetTranslation();
+		float3 position_to_focus = float3(current_position.x, current_position.y + selected_offset.y, /*(current_position.z / 2) +*/ selected_offset.z);
+		Focus(position_to_focus);
+	}
+	else
+	{
+		float x_distance = abs(player1->transform.GetTranslation().x - player2->transform.GetTranslation().x);
+		float y_distance = abs(player1->transform.GetTranslation().y - player2->transform.GetTranslation().y);
+		float z_distance = abs(player1->transform.GetTranslation().z - player2->transform.GetTranslation().z);
+
+		float min_x = math::Min(player1->transform.GetTranslation().x, player2->transform.GetTranslation().x);
+		float min_y = math::Min(player1->transform.GetTranslation().y, player2->transform.GetTranslation().y);
+		float min_z = math::Min(player1->transform.GetTranslation().z, player2->transform.GetTranslation().z);
+		Focus(float3(min_x + (x_distance / 2), min_y + (y_distance / 2) + selected_offset.y, min_z + (z_distance / 2) + selected_offset.z));
+	}
 }
 
 // Update is called once per frame
@@ -77,14 +91,14 @@ void CameraController::Update()
 	}
 	else 
 	{
-		//if(multiplayer)
-		//{
-		//	MultiplayerCamera();
-		//}
-		//else
-		//{
+		if(multiplayer)
+		{
+			MultiplayerCamera();
+		}
+		else
+		{
 			FollowPlayer();
-		//}
+		}
 	}
 
 }
@@ -202,8 +216,6 @@ void CameraController::FollowPlayer()
 		float3 position_to_focus = float3(current_position.x, current_position.y + selected_offset.y, (current_position.z / 2) + selected_offset.z);
 		Focus(position_to_focus);
 	}
-	//float3 new_position = player->transform.GetTranslation() + offset;
-	//owner->transform.SetTranslation(new_position);
 
 }
 void CameraController::MultiplayerCamera()
@@ -226,6 +238,7 @@ void CameraController::MultiplayerCamera()
 		}
 
 	}
+
 	if (x_distance < 5)
 	{
 		selected_offset = offset_near;
@@ -236,8 +249,10 @@ void CameraController::MultiplayerCamera()
 		}
 	}
 
-	Focus(float3(min_x + (x_distance/2), min_y + (y_distance/2) + selected_offset.y, min_z + (z_distance / 2) + selected_offset.z));
-
+	if(is_focusing)
+	{
+		Focus(float3(min_x + (x_distance/2), min_y + (y_distance/2) + selected_offset.y, min_z + (z_distance / 2) + selected_offset.z));
+	}
 
 }
 
