@@ -16,8 +16,7 @@
 #include "ResourceManagement/Resources/Prefab.h"
 #include "ResourceManagement/Resources/Scene.h"
 
-
-#include <stack>
+#include <queue>
 #include <unordered_map>
 
 Scene::Scene() : Resource(0)
@@ -38,7 +37,7 @@ void Scene::Save(GameObject* gameobject_to_save) const
 	std::vector<Config> game_objects_config;
 	std::vector<Config> prefabs_config;
 	std::vector<Config> prefabs_components_config;
-	std::stack<GameObject*> pending_objects;
+	std::queue<GameObject*> pending_objects;
 
 	for (auto& child_game_object : gameobject_to_save->children)
 	{
@@ -47,7 +46,7 @@ void Scene::Save(GameObject* gameobject_to_save) const
 
 	while (!pending_objects.empty())
 	{
-		GameObject* current_game_object = pending_objects.top();
+		GameObject* current_game_object = pending_objects.front();
 		pending_objects.pop();
 
 

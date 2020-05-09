@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp">
@@ -258,96 +258,6 @@
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastRegion.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DebugUtils\DebugDraw.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourAlloc.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourAssert.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourCommon.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourCrowd.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourLocalBoundary.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMesh.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMeshBuilder.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMeshQuery.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNode.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourObstacleAvoidance.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourPathCorridor.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourPathQueue.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourProximityGrid.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourTileCache\DetourTileCache.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourTileCache\DetourTileCacheBuilder.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\Recast.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastAlloc.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastArea.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastAssert.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastContour.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDump.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastFilter.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastLayers.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastMesh.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastMeshDetail.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastRasterization.cpp">
-      <Filter>Libraries\recast</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Module\ModuleAI.cpp">
       <Filter>Engine\Module</Filter>
@@ -785,78 +695,6 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DebugUtils\DebugDraw.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourAlloc.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourAssert.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourCommon.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourCrowd.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourLocalBoundary.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourMath.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMesh.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMeshBuilder.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMeshQuery.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNode.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourObstacleAvoidance.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourPathCorridor.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourPathQueue.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourProximityGrid.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourStatus.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourTileCache\DetourTileCache.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourTileCache\DetourTileCacheBuilder.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Recast\Recast.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Recast\RecastAlloc.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Recast\RecastAssert.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDump.h">
-      <Filter>Libraries\recast</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleAI.h">
       <Filter>Engine\Module</Filter>
