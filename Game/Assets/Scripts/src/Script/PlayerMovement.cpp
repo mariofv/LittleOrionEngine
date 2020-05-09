@@ -104,12 +104,12 @@ void PlayerMovement::Move(int player_id)
 		collider->AddForce(new_transform);
 	}
 
-	is_inside = IsInside(new_transform / 10);
+	is_inside = IsInside(new_transform);
 
-	if (IsInside(new_transform/10))
-	{
+	//if (IsInside(new_transform/10))
+	//{
 		collider->AddForce(new_transform);
-	}
+	//}
 }
 
 void PlayerMovement::Fall()
@@ -124,10 +124,9 @@ void PlayerMovement::Dash()
 	//TODO DASH
 }
 
-bool PlayerMovement::IsInside(float3 transform)
+bool PlayerMovement::IsInside(float3 future_transform)
 {
-	//this is not okay
-	float3 distance = transform - owner->transform.GetTranslation();
+	float3 distance = future_transform - owner->transform.GetTranslation();
 	AABB future_position = AABB(owner->aabb.bounding_box.minPoint + distance, owner->aabb.bounding_box.maxPoint + distance);
 
 	return game_camera->IsInsideFrustum(future_position);

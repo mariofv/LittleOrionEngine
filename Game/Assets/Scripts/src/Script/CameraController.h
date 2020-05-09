@@ -56,7 +56,8 @@ private:
 	bool is_focusing = false;
 	float start_focus_time = 0.f;
 
-	bool multiplayer = true;
+	bool multiplayer = false;
+	float distance = 0.f;
 
 
 };
