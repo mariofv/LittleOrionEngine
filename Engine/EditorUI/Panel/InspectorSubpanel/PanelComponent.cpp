@@ -470,6 +470,7 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 		if (animation->animation_controller->state_machine && animation->animation_controller->active_state)
 		{
 			ImGui::InputScalar("###Interpolation", ImGuiDataType_U64, &(animation->animation_controller->active_state->name_hash), nullptr, nullptr, nullptr, ImGuiInputTextFlags_ReadOnly);
+			ImGui::InputText("Active State", &animation->animation_controller->active_state->name);
 			static std::string trigger;
 			ImGui::InputText("Trigger ", &trigger);
 			if (ImGui::Button("Activate"))
