@@ -228,6 +228,6 @@ void ComponentMeshRenderer::UpdatePalette(const std::vector<float4x4>& pose)
 			gobal_transform = pose[joint_index] * gobal_transform;
 
 		}
-		palette[i] =  gobal_transform * pose[i] * joints[i].transform_global;
+		palette[i] = gobal_transform* pose[i] * joints[i].transform_global;
 	}
 }

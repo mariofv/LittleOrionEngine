@@ -9,8 +9,9 @@
 
 #include <math.h>
 
-void AnimController::GetClipTransform( uint32_t skeleton_uuid, std::vector<math::float4x4>& pose)
+void AnimController::GetClipTransform(const std::shared_ptr<Skeleton> & skeleton, std::vector<math::float4x4>& pose)
 {
+	uint32_t skeleton_uuid = skeleton->GetUUID();
 	for (size_t j = 0; j < playing_clips.size(); j++)
 	{
 		const std::shared_ptr<Clip> clip = playing_clips[j].clip;
@@ -33,11 +34,11 @@ void AnimController::GetClipTransform( uint32_t skeleton_uuid, std::vector<math:
 			size_t joint_index = joint_channels_map[i];
 			if (joint_index < pose.size())
 			{
-				float3 last_translation = current_pose[i].translation;
-				float3 next_translation = next_pose[i].translation;
+				const float3& last_translation = current_pose[i].translation;
+				const float3& next_translation = next_pose[i].translation;
 
-				Quat last_rotation = current_pose[i].rotation;
-				Quat next_rotation = next_pose[i].rotation;
+				const Quat& last_rotation = current_pose[i].rotation;
+				const Quat& next_rotation = next_pose[i].rotation;
 
 				float3 position = Utils::Interpolate(last_translation, next_translation, interpolation_lambda);
 				Quat rotation = Utils::Interpolate(last_rotation, next_rotation, interpolation_lambda);
@@ -50,6 +51,11 @@ void AnimController::GetClipTransform( uint32_t skeleton_uuid, std::vector<math:
 					pose[joint_index] = float4x4::FromTRS(position, rotation, float3::one);
 
 				}	
+				uint32_t parent_index = skeleton->skeleton[joint_index].parent_index;
+				if (parent_index != -1)
+				{
+					//pose[joint_index] = pose[skeleton->skeleton[joint_index].parent_index] * pose[joint_index];
+				}
 			}
 		}
 		if (weight > 1.0f)

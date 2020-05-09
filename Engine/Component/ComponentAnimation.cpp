@@ -95,6 +95,7 @@ void ComponentAnimation::ActiveAnimation(const std::string & trigger)
 
 void ComponentAnimation::Update()
 {
+	BROFILER_CATEGORY("Animation", Profiler::Color::PaleGoldenRod);
 	playing = animation_controller->Update();
 	if (playing)
 	{
@@ -104,7 +105,6 @@ void ComponentAnimation::Update()
 
 void ComponentAnimation::UpdateMeshes()
 {
-	BROFILER_CATEGORY("Animation", Profiler::Color::PaleGoldenRod);
 	if (!animation_controller->state_machine)
 	{
 		return;
@@ -112,8 +112,7 @@ void ComponentAnimation::UpdateMeshes()
 	for (auto & mesh : skinned_meshes)
 	{
 		pose.resize(mesh->skeleton->skeleton.size());
-		auto & skeleton = mesh->skeleton;
-		animation_controller->GetClipTransform(skeleton->GetUUID(), pose);
+		animation_controller->GetClipTransform(mesh->skeleton, pose);
 		mesh->UpdatePalette(pose);
 	}
 }

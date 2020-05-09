@@ -7,6 +7,7 @@
 #include <vector>
 
 class StateMachine;
+class Skeleton;
 struct State;
 struct Clip;
 struct Transition;
@@ -38,7 +39,7 @@ public:
 
 	bool Update();
 	void SetStateMachine(uint32_t state_machine_uuid);
-	void GetClipTransform(uint32_t skeleton_uuid, std::vector<math::float4x4>& pose);
+	void GetClipTransform(const std::shared_ptr<Skeleton> & skeleton, std::vector<math::float4x4>& pose);
 	void StartNextState(const std::string& trigger);
 private:
 	void SetActiveState(std::shared_ptr<State> & state);
