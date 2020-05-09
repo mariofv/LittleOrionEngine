@@ -94,14 +94,15 @@ bool ModuleResourceManager::CleanUp()
 	 thread_comunication.finished_loading = false;
 	 thread_comunication.total_items = App->filesystem->assets_folder_path->total_sub_files_number;
 
-	 CleanInconsistenciesInDirectory(*App->filesystem->assets_folder_path); // Clean all incorrect meta in the folder Assets.
-	 ImportAssetsInDirectory(*App->filesystem->assets_folder_path); // Import all assets in folder Assets. All metafiles in Assets are correct"
-	// TODO: We need also to iterate over the library folder and to delete binaries that doesnt have corresponding metafiles
+	 CleanMetafilesInDirectory(*App->filesystem->assets_folder_path); // Clean all metafiles that dont have an assets file in the folder Assets.
+	 ImportAssetsInDirectory(*App->filesystem->assets_folder_path); // Import all assets in folder Assets. All metafiles in Assets have an asset file"
+	 CleanBinariesInDirectory(*App->filesystem->library_folder_path); // Delete all binaries from folder Library that dont have a metafile in Assets.
+
 	 thread_comunication.finished_loading = true;
 	 last_imported_time = thread_timer->Read();
  }
 
-void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& directory_path)
+void ModuleResourceManager::CleanMetafilesInDirectory(const Path& directory_path)
 {
 	std::vector<Path*> files_to_delete;
 
@@ -113,7 +114,7 @@ void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& director
 		}
 		if (path_child->IsDirectory())
 		{
-			CleanInconsistenciesInDirectory(*path_child);
+			CleanMetafilesInDirectory(*path_child);
 		}
 		else if (path_child->IsMeta())
 		{
@@ -135,6 +136,38 @@ void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& director
 	{
 		App->filesystem->Remove(path_to_delete->GetFullPath());
 	}
+}
+
+void ModuleResourceManager::CleanBinariesInDirectory(const Path& directory_path)
+{
+	std::vector<Path*> files_to_delete;
+
+	for (auto & path_child : directory_path.children)
+	{
+		if (thread_comunication.stop_thread)
+		{
+			return;
+		}
+		if (path_child->IsDirectory())
+		{
+			CleanBinariesInDirectory(*path_child);
+		}
+		else if (path_child->IsBinary())
+		{
+			uint32_t binary_uuid = std::stoul(path_child->GetFilenameWithoutExtension());
+			if (!resource_DB->GetEntry(binary_uuid))
+			{
+				files_to_delete.push_back(path_child);
+			}
+		}
+	}
+
+	for (auto& path_to_delete : files_to_delete)
+	{
+		App->filesystem->Remove(path_to_delete->GetFullPath());
+	}
+
+	//TODO: Delete empty directories
 }
 
 void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path, bool force)

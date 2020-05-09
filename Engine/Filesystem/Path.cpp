@@ -235,6 +235,11 @@ bool Path::IsImportable() const
 		|| file_type == FileType::TEXTURE;
 }
 
+bool Path::IsBinary() const
+{
+	return !is_directory && GetExtension() == "";
+}
+
 std::string Path::GetFullPath() const
 {
 	return file_path;

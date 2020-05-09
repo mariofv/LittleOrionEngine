@@ -124,8 +124,10 @@ public:
 		return std::static_pointer_cast<T>(loaded_resource);
 	}
 
-	void CleanInconsistenciesInDirectory(const Path& directory_path);
+	void CleanMetafilesInDirectory(const Path& directory_path);
 	void ImportAssetsInDirectory(const Path& directory_path, bool force = false);
+	void CleanBinariesInDirectory(const Path& directory_path);
+	void CleanEmptyDirectories(const Path& directory_path);
 
 	void CleanResourceCache();
 	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);

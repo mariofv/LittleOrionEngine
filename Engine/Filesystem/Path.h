@@ -23,6 +23,7 @@ public:
 	bool IsDirectory() const;
 	bool IsMeta() const;
 	bool IsImportable() const;
+	bool IsBinary() const;
 
 	std::string GetFullPath() const;
 	std::string GetFilename() const;
