@@ -127,19 +127,27 @@ bool MetafileManager::IsMetafileConsistent(const Path& metafile_path)
 
 bool MetafileManager::IsMetafileConsistent(const Metafile& metafile)
 {
-	return App->filesystem->Exists(metafile.imported_file_path) ;
+	if (!App->filesystem->Exists(metafile.imported_file_path))
+	{
+		return false;
+	}
+
+	Path* imported_file_path = App->filesystem->GetPath(metafile.imported_file_path);
+
+	std::string metafile_directory = Path::GetParentPathString(metafile.metafile_path);
+	std::string imported_file_directory = Path::GetParentPathString(metafile.imported_file_path);
+	if (metafile_directory != imported_file_directory)
+	{
+		return false;
+	}
+
+	return true;
 }
 
 bool MetafileManager::IsMetafileMoved(const Path& metafile_path)
 {
 	Metafile* metafile = GetMetafile(metafile_path);
 	return metafile->metafile_path != metafile_path.GetFullPath();
-}
-
-void MetafileManager::DeleteMetafileInconsistencies(const Path& metafile_path)
-{
-	Metafile* metafile = GetMetafile(metafile_path);
-	DeleteMetafileInconsistencies(*metafile, metafile_path);
 }
 
 void MetafileManager::RefreshMetafile(const Path& metafile_path)
@@ -151,22 +159,11 @@ void MetafileManager::RefreshMetafile(const Path& metafile_path)
 	}
 	Metafile* metafile = GetMetafile(metafile_path);
 	metafile->metafile_path = metafile_path.GetFullPath();
-	Path* new_imported_file_path = App->filesystem->GetPath(metafile_path.GetFullPathWithoutExtension());
+	Path* new_imported_file_path = App->filesystem->GetPath(assets_file);
 	assert(new_imported_file_path);
 	metafile->imported_file_path = new_imported_file_path->GetFullPath();
 	SaveMetafile(metafile, *new_imported_file_path);
 }
-
-void MetafileManager::DeleteMetafileInconsistencies(const Metafile& metafile, const Path& metafile_path)
-{
-	if (App->filesystem->Exists(metafile.exported_file_path))
-	{
-		App->filesystem->Remove(metafile.exported_file_path);
-	}
-
-	App->filesystem->Remove(metafile_path.GetFullPath());
-}
-
 
 std::string MetafileManager::GetMetafileExportedFolder(const Metafile& metafile)
 {

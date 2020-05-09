@@ -103,6 +103,8 @@ bool ModuleResourceManager::CleanUp()
 
 void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& directory_path)
 {
+	std::vector<Path*> files_to_delete;
+
 	for (auto & path_child : directory_path.children)
 	{
 		if (thread_comunication.stop_thread)
@@ -115,15 +117,23 @@ void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& director
 		}
 		else if (path_child->IsMeta())
 		{
-			if (metafile_manager->IsMetafileMoved(*path_child))
-			{
-				metafile_manager->RefreshMetafile(*path_child);
-			}
 			if (!metafile_manager->IsMetafileConsistent(*path_child))
 			{
-				metafile_manager->DeleteMetafileInconsistencies(*path_child); // TODO: This causes memory violations because bector size is modified. Look for a better way of deleting files.
+				if (metafile_manager->IsMetafileMoved(*path_child))
+				{
+					metafile_manager->RefreshMetafile(*path_child);
+				}
+				else
+				{
+					files_to_delete.push_back(path_child);
+				}
 			}
 		}
+	}
+
+	for (auto& path_to_delete : files_to_delete)
+	{
+		App->filesystem->Remove(path_to_delete->GetFullPath());
 	}
 }
 

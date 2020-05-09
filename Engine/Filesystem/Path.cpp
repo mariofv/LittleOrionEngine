@@ -27,11 +27,6 @@ Path::Path(const std::string& path, const std::string& name)
 
 Path::~Path()
 {
-	for (auto& path_child : children)
-	{
-		delete path_child;
-	}
-
 	delete file;
 }
 
@@ -42,19 +37,18 @@ bool Path::operator==(const Path& compare)
 
 void Path::Refresh()
 {
-	for (auto& path_child : children)
-	{
-		delete path_child;
-	}
-	children.clear();
-
-	delete file;
-
 	CalculatePathInfo();
 	if (is_directory)
 	{
 		CalculateChildren();
 	}
+}
+
+void Path::RemoveChild(Path* child_to_remove)
+{
+	auto it = std::find(children.begin(), children.end(), child_to_remove);
+	assert(it != children.end());
+	children.erase(it);
 }
 
 Path* Path::Save(const char* file_name, const FileData& data, bool append)
@@ -92,15 +86,13 @@ Path* Path::Save(const char* file_name, const FileData& data, bool append)
 	Path* saved_file_path = nullptr;
 	if (!already_exists)
 	{
-		saved_file_path = new Path(saved_file_path_string);
+		saved_file_path = App->filesystem->AddPath(saved_file_path_string);
 		children.push_back(saved_file_path);
 		saved_file_path->parent = this;
-		App->filesystem->AddPath(saved_file_path);
 	}
 	else
 	{
 		saved_file_path = App->filesystem->GetPath(saved_file_path_string);
-		saved_file_path->Refresh();
 	}
 
 	delete[] data.buffer;
@@ -199,7 +191,7 @@ uint32_t Path::GetModificationTimestamp() const
 	return path_info.modtime;
 }
 
-void Path::GetAllFilesInPath(std::vector<Path*>& path_children, bool directories_only)
+void Path::GetAllFilesInPath(std::vector<Path*>& path_children)
 {
 	char **files_array = PHYSFS_enumerateFiles(file_path.c_str());
 	if (*files_array == NULL)
@@ -211,11 +203,8 @@ void Path::GetAllFilesInPath(std::vector<Path*>& path_children, bool directories
 	char **filename;
 	for (filename = files_array; *filename != NULL; filename++)
 	{
-		Path* child_path = new Path(file_path, *filename);
-		if ((directories_only && child_path->is_directory) || !directories_only)
-		{
-			path_children.push_back(child_path);
-		}
+		Path* child_path = App->filesystem->AddPath(file_path + '/' +  *filename);
+		path_children.push_back(child_path);
 	}
 	PHYSFS_freeList(files_array);
 }

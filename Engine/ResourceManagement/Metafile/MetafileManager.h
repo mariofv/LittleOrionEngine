@@ -40,12 +40,8 @@ public:
 
 	bool IsMetafileMoved(const Path & metafile_path);
 
-	/*
-		Cleaning inconsistencies will delete if exist imported and exported path, along the metafile
-	*/
-	void DeleteMetafileInconsistencies(const Path& metafile_path);
+
 	void RefreshMetafile(const Path & metafile_path);
-	void DeleteMetafileInconsistencies(const Metafile& metafile, const Path& metafile_path);
 
 private:
 	std::unordered_map<std::string, Metafile*> metafiles;

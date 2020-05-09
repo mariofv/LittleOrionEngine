@@ -20,7 +20,6 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void AddPath(Path* path);
 	Path* GetPath(const std::string& path);
 	Path* GetRootPath() const;
 
@@ -40,7 +39,10 @@ public:
 	bool CreateMountedDir(const std::string& directory);
 
 private:
-	void RefreshPathMap(); // TODO: Not allocate all at the begining, do it by demand!
+	void CreatePathMap();
+
+	Path* AddPath(const std::string& path);
+	void RemovePath(Path* path_to_delete);
 
 public:
 	Path* assets_folder_path = nullptr;
@@ -50,6 +52,8 @@ public:
 private:
 	Path* root_path = nullptr;
 	std::unordered_map<std::string, Path*> paths;
+
+	friend class Path;
 };
 
 

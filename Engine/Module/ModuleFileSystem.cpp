@@ -38,7 +38,8 @@ bool ModuleFileSystem::Init()
 		return false;
 	}
 	
-	RefreshPathMap();
+	CreatePathMap();
+
 #if !GAME
 	assets_folder_path = GetPath(ASSETS_PATH);
 #endif
@@ -62,11 +63,42 @@ bool ModuleFileSystem::CleanUp()
 	return PHYSFS_deinit();
 }
 
-void ModuleFileSystem::AddPath(Path* path)
+Path* ModuleFileSystem::AddPath(const std::string& path)
 {
-	assert(Exists(path->GetFullPath()));
-	assert(paths.find(path->GetFullPath()) == paths.end());
-	paths[path->GetFullPath()] = path;
+	assert(Exists(path));
+	assert(paths.find(path) == paths.end());
+
+	Path* added_path = new Path(path);
+	paths[path] = added_path;
+
+	return added_path;
+}
+
+void ModuleFileSystem::RemovePath(Path* path)
+{
+	assert(!Exists(path->GetFullPath()));
+	assert(paths.find(path->GetFullPath()) != paths.end());
+	
+	std::vector<Path*> pathes_to_delete;
+	std::stack<Path*> pathes_to_check;
+	pathes_to_check.push(path);
+	while (!pathes_to_check.empty())
+	{
+		Path* current_path = pathes_to_check.top();
+		pathes_to_check.pop();
+		pathes_to_delete.push_back(current_path);
+
+		for (auto& child : current_path->children)
+		{
+			pathes_to_check.push(child);
+		}
+	}
+	
+	for (auto& path_to_delete : pathes_to_delete)
+	{
+		paths.erase(path_to_delete->GetFullPath());
+		delete path_to_delete;
+	}
 }
 
 Path* ModuleFileSystem::GetPath(const std::string& path)
@@ -148,8 +180,8 @@ bool ModuleFileSystem::Remove(Path* path)
 	bool success = PHYSFS_delete(path->GetFullPath().c_str()) != 0;
 	if (success)
 	{
-		path->parent->Refresh();
-		RefreshPathMap();
+		path->parent->RemoveChild(path);
+		RemovePath(path);
 	}
 	return success;
 }
@@ -213,11 +245,9 @@ bool ModuleFileSystem::MountDirectory(const std::string& directory) const
 	return true;
 }
 
-void ModuleFileSystem::RefreshPathMap()
+void ModuleFileSystem::CreatePathMap()
 {
 	delete root_path;
-	delete assets_folder_path;
-	delete library_folder_path;
 
 	paths.clear();
 

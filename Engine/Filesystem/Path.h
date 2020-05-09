@@ -12,7 +12,6 @@ struct FileData;
 class Path 
 {
 public:
-	~Path();
 	bool operator==(const Path& compare);
 
 	Path* Save(const char* file_name, const FileData& data, bool append = false);
@@ -41,11 +40,13 @@ private:
 	Path() = default;
 	Path(const std::string& path);
 	Path(const std::string& path, const std::string& name);
+	~Path();
 
 	void Refresh();
+	void RemoveChild(Path* child_to_remove);
 
 	void CleanFolderPath();
-	void GetAllFilesInPath(std::vector<Path*>& path_children, bool directories_only = false);
+	void GetAllFilesInPath(std::vector<Path*>& path_children);
 
 	void CalculatePathInfo();
 	void CalculateFile();
