@@ -35,7 +35,7 @@ void ComponentAudioSource::Update()
 
 void ComponentAudioSource::Delete()
 {
-
+	StopAll();
 	AK::SoundEngine::UnregisterGameObj(gameobject_source);
 }
 
@@ -50,13 +50,35 @@ void ComponentAudioSource::SetVolume(float volume)
 	AK::SoundEngine::SetGameObjectOutputBusVolume(gameobject_source,App->audio->main_sound_gameobject,volume);
 }
 
-void ComponentAudioSource::PlayEvent(const std::string & event_to_play)
+unsigned long ComponentAudioSource::PlayEvent(const std::string & event_to_play)
 {
 	AkPlayingID playing_id = AK::SoundEngine::PostEvent(event_to_play.c_str(), gameobject_source);
 	if (playing_id == AK_INVALID_PLAYING_ID)
 	{
 		APP_LOG_ERROR("Unable to post main event");
 	}
+	AkUInt32 event_id = AK::SoundEngine::GetIDFromString(event_to_play.c_str());
+	event_playing_ids[event_id] = playing_id;
+	return playing_id;
+}
+
+ENGINE_API void ComponentAudioSource::StopEvent(const std::string & event_to_stop)
+{
+	AkUInt32 event_id = AK::SoundEngine::GetIDFromString(event_to_stop.c_str());
+	if (event_playing_ids.find(event_id) != event_playing_ids.end())
+	{
+		StopEvent(event_playing_ids[event_id]);
+	}
+}
+
+ENGINE_API void ComponentAudioSource::StopEvent(unsigned long playing_id_to_stop)
+{
+	AK::SoundEngine::StopPlayingID(playing_id_to_stop);
+}
+
+ENGINE_API void ComponentAudioSource::StopAll()
+{
+	AK::SoundEngine::StopAll(gameobject_source);
 }
 
 Component* ComponentAudioSource::Clone(bool original_prefab) const

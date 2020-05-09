@@ -3,7 +3,9 @@
 
 #include "Component.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
+
 #include "AK/SoundEngine/Common/AkTypes.h"
+#include <unordered_map>
 
 class GameObject;
 class SoundBank;
@@ -20,7 +22,10 @@ public:
 
 	void SetSoundBank(uint32_t uuid);
 	void SetVolume(float volume);
-	ENGINE_API void PlayEvent(const std::string & event_to_play);
+	ENGINE_API unsigned long PlayEvent(const std::string & event_to_play);
+	ENGINE_API void StopEvent(const std::string & event_to_stop);
+	ENGINE_API void StopEvent(unsigned long playing_id_to_stop);
+	ENGINE_API void StopAll();
 
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
@@ -31,6 +36,8 @@ private:
 	AkSoundPosition sound_position;
 	AkGameObjectID gameobject_source = 0;
 	std::shared_ptr<SoundBank> soundbank;
+	std::unordered_map<AkUInt32,AkPlayingID> event_playing_ids;
+
 
 	bool sound_3d = false;
 	float volume = 1;
