@@ -70,6 +70,7 @@ void main()
 
 	view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
 	view_dir    = normalize(view_pos - position);
+	
 	//Tangent space matrix
 	mat3 normalMatrix = mat3(matrices.model);
 	vec3 T = normalize(normalMatrix * vertex_tangent);
@@ -77,18 +78,11 @@ void main()
 	T = normalize(T - dot(T, N) * N);
 	vec3 B = cross(N, T);
 
-	TBN = transpose(mat3(T, B, N));
+	TBN = transpose(mat3(T, B, N));  
 
 	//Computing tangent variables for normal mapping
 	t_view_pos = TBN * view_pos;
 	t_frag_pos = TBN * position;
-}
-
-mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent)
-{
-	vec3 ortho_tangent = normalize(tangent-dot(tangent, normal)*normal); // Gram-Schmidt
-	vec3 bitangent = cross(normal, ortho_tangent);
-	return mat3(tangent, bitangent, normal);
 }
 
 mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent)
