@@ -72,6 +72,7 @@ void ComponentCollider::Save(Config & config) const
 	config.AddBool(y_axis, "y_axis");
 	config.AddBool(z_axis, "z_axis");
 	config.AddBool(disable_physics, "DisablePhysics");
+	config.AddFloat(friction, "Friction");
 
 }
 
@@ -89,6 +90,7 @@ void ComponentCollider::Load(const Config & config)
 	y_axis = config.GetBool("y_axis", true);
 	z_axis = config.GetBool("z_axis", true);
 	disable_physics = config.GetBool("DisablePhysics", false);
+	friction = config.GetFloat("Friction", 1.0F);
 	AddBody();
 	if (is_static) { SetStatic(); }
 	if (!visualize) { SetVisualization(); }
@@ -123,6 +125,8 @@ btRigidBody* ComponentCollider::AddBody()
 	if (mass != 0.f) col_shape->calculateLocalInertia(mass, local_inertia);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motion_state, col_shape, local_inertia);
 	body = new btRigidBody(rbInfo);
+	body->setActivationState(DISABLE_DEACTIVATION);
+	body->setFriction(friction);
 	App->physics->world->addRigidBody(body);
 	
 	return body;
@@ -277,6 +281,12 @@ void ComponentCollider::AddForce(float3& force)
 	body->applyCentralForce(btVector3(force.x, force.y, force.z));
 }
 
+void ComponentCollider::DisablePhysics(bool disable)
+{
+	disable_physics = disable;
+	DisablePhysics();
+}
+
 void ComponentCollider::DisablePhysics()
 {
 	if (disable_physics || !active)
@@ -286,6 +296,16 @@ void ComponentCollider::DisablePhysics()
 	else
 	{
 		body->forceActivationState(ACTIVE_TAG);
+		body->forceActivationState(DISABLE_DEACTIVATION);
 	}
 }
 
+void ComponentCollider::UpdateFriction()
+{
+	body->setFriction(friction);
+}
+
+void ComponentCollider::SetVelocity(float3& velocity)
+{
+	body->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
+}

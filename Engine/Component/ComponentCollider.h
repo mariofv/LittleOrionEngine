@@ -33,7 +33,8 @@ public:
 	virtual void Scale() {}
 
 	btRigidBody* AddBody();
-	ENGINE_API void AddForce(float3& velocity);
+	ENGINE_API void AddForce(float3& force);
+	ENGINE_API void SetVelocity(float3& velocity);
 	void MoveBody();
 	void SetMass(float new_mass);
 	void SetVisualization();
@@ -42,7 +43,9 @@ public:
 	bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
 	void SetStatic();
 	void SetRotationAxis();
+	ENGINE_API void DisablePhysics(bool disable);
 	void DisablePhysics();
+	void UpdateFriction();
 
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
@@ -58,6 +61,7 @@ public:
 	btVector3 box_size = btVector3(1.0F, 1.0F, 1.0F);
 	btCollisionShape* col_shape;
 	btVector3 local_inertia = btVector3(0.F, 0.F, 0.F);
+	float friction = 1.0F;
 
 	float3 deviation = float3::zero;
 	bool visualize = true;

@@ -870,6 +870,9 @@ bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.1F, 1000.F)) {
 		collider->SetMass(collider->mass);
 	}
+	if (ImGui::DragFloat("Friction", &collider->friction, 1.0F, 0.1F, 1000.F)) {
+		collider->UpdateFriction();
+	}
 	if (ImGui::Checkbox("Visualize", &collider->visualize))
 	{
 		collider->SetVisualization();
