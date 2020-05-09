@@ -11,6 +11,7 @@
 #include <imgui_stdlib.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 
+
 PanelStateMachine::PanelStateMachine()
 {
 	opened = false;
@@ -111,13 +112,19 @@ void PanelStateMachine::RenderStates()
 		}
 	
 		ImGui::BeginGroup();
+		auto alpha = ImGui::GetStyle().Alpha; //to get alpha
 		ax::NodeEditor::BeginPin(node->input, ax::NodeEditor::PinKind::Input);
+		//Testing alignment to fix transition clipping nicely on pinsIO
+		ax::NodeEditor::PinPivotAlignment(ImVec2(1.0f, 0.5f));
+		ax::NodeEditor::PinPivotSize(ImVec2(0, 0));
+		//
 		ImGui::Text("-> In");
 		ax::NodeEditor::EndPin();
 		ImGui::EndGroup();
 		ImGui::SameLine();
 		ImGui::BeginGroup();
 		ax::NodeEditor::BeginPin(node->output, ax::NodeEditor::PinKind::Output);
+		//DrawPinIcon(node->output, IsPinLinked(output.ID), (int)(alpha * 255));
 		ImGui::Text("Out ->");
 		ax::NodeEditor::EndPin();
 		ImGui::EndGroup();
@@ -231,6 +238,7 @@ void PanelStateMachine::InteractionCreation()
 			}
 		}
 		ax::NodeEditor::PinId new_node_id;
+		//pins.push_back(new Pin{ ax::NodeEditor::PinId(uniqueid++), , PinType::Flow });
 		if (ax::NodeEditor::QueryNewNode(&new_node_id))
 		{
 			if (ax::NodeEditor::AcceptNewItem())
@@ -389,3 +397,5 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 		links.push_back(new LinkInfo{ ax::NodeEditor::LinkId(uniqueid++) , target, source, target_name, source_name, link });
 	}
 }
+
+

@@ -497,6 +497,15 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
+    <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Drawing.cpp">
+      <Filter>Libraries\ax</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Widgets.cpp">
+      <Filter>Libraries\ax</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\BlueprintUtilities\ax\Builders.cpp">
+      <Filter>Libraries\ax</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -1074,6 +1083,9 @@
     </Filter>
     <Filter Include="Engine\DLL">
       <UniqueIdentifier>{8b335900-d36a-4a5f-8bda-f20bee578e42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\ax">
+      <UniqueIdentifier>{fcb5ca76-20b4-4019-b050-ffeb0029b560}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

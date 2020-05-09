@@ -1,10 +1,24 @@
 #ifndef _PANELSTATEMACHINE_H_
 #define _PANELSTATEMACHINE_H_
+#define IMGUI_DEFINE_MATH_OPERATORS
 
 #include "NodeEditor/imgui_node_editor.h"
 #include "EditorUI/Panel/Panel.h"
 
+#include "ax/Widgets.h"
+
 #include <vector>
+#include <string>
+#include <vector>
+#include <map>
+#include <algorithm>
+#include <utility>
+
+//namespace ed = ax::NodeEditor; Implement in the future
+
+using namespace ax;
+using ax::Widgets::IconType;
+
 class StateMachine;
 struct Transition;
 struct State;
@@ -24,6 +38,9 @@ struct NodeInfo
 	ax::NodeEditor::NodeId id;
 	ax::NodeEditor::PinId input;
 	ax::NodeEditor::PinId output;
+	//ImColor Color;
+	//NodeType Type;
+	//ImVec2 Size;
 	std::shared_ptr<State> state;
 };
 
@@ -46,6 +63,8 @@ public:
 	void LeftPanel();
 	void CreateNodeMenu();
 
+
+
 private:
 	std::vector<NodeInfo*> GetSelectedNodes();
 	std::vector<LinkInfo*> GetSelectedLinks();
@@ -60,6 +79,8 @@ private:
 	//Editor
 	ImVector<LinkInfo*> links;
 	ImVector<NodeInfo*> nodes;
+
+
 	int uniqueid = 1;
 	std::shared_ptr<State> selected_state;
 };
