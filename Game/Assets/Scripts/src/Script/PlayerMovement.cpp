@@ -67,17 +67,17 @@ void PlayerMovement::Move(int player_id)
 	//float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, static_cast<ControllerID>(player_id));
 	//float3 axis_direction = float3(axis.x, 0.0f, axis.y);
 
-	float vertical = App->input->GetVertical(static_cast<PlayerID>(player_id));
-	float horizontal = App->input->GetHorizontal(static_cast<PlayerID>(player_id));
-	float3 axis_direction = float3(horizontal, 0.0f, vertical);
+	//float vertical = App->input->GetVertical(static_cast<PlayerID>(player_id));
+	//float horizontal = App->input->GetHorizontal(static_cast<PlayerID>(player_id));
+	//float3 axis_direction = float3(horizontal, 0.0f, vertical);
 
-	if (!axis_direction.Equals(float3::zero))
-	{
-		float3 dir;
-		float3 direction = axis_direction * speed + transform;
-		owner->transform.LookAt(direction);
-		collider->AddForce(direction);
-	}
+	//if (!axis_direction.Equals(float3::zero))
+	//{
+	//	float3 dir;
+	//	float3 direction = axis_direction * speed + transform;
+	//	owner->transform.LookAt(direction);
+	//	collider->AddForce(direction);
+	//}
 
 	//Keyboard Input
 	float3 new_transform = float3::zero;
@@ -104,12 +104,12 @@ void PlayerMovement::Move(int player_id)
 		collider->AddForce(new_transform);
 	}
 
-	is_inside = IsInside(new_transform);
+	is_inside = IsInside(transform + new_transform/10);
 
-	//if (IsInside(new_transform/10))
-	//{
+	if (is_inside)
+	{
 		collider->AddForce(new_transform);
-	//}
+	}
 }
 
 void PlayerMovement::Fall()
