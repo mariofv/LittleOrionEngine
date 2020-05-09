@@ -72,8 +72,6 @@ void EnemyController::OnInspector(ImGuiContext* context)
 void EnemyController::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
-	public_gameobjects.push_back(&player);
-	variable_names.push_back(GET_VARIABLE_NAME(player));
 
 	for (int i = 0; i < public_gameobjects.size(); ++i)
 	{
@@ -138,6 +136,9 @@ void EnemyController::InitMembers()
 	GameObject* enemy_manager_go = App->scene->GetGameObjectByName("EnemyManager");
 	ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
 	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
+
+	player = App->scene->GetGameObjectByName("Player");
+
 	animation = (ComponentAnimation*)owner->GetComponent(Component::ComponentType::ANIMATION);
 
 	init_translation = owner->transform.GetTranslation();

@@ -7,6 +7,7 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleScriptManager.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
@@ -109,7 +110,6 @@ void EnemyManager::CreateEnemies()
 		EnemyController* enemy = (EnemyController*)componnet_enemy->script;
 		enemy->InitMembers();
 		enemy->is_alive = false;
-		enemy->player = original_enemy->player;
 		enemies.emplace_back(enemy);
 		enemy->owner->transform.SetTranslation(graveyard_position);
 		//enemy->owner->SetEnabled(false);
