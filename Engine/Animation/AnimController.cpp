@@ -63,6 +63,11 @@ void AnimController::GetClipTransform(const std::shared_ptr<Skeleton> & skeleton
 			apply_transition = true;
 		}
 	}
+	for (size_t i = 1; i < pose.size(); i++)
+	{
+		uint32_t parent_index = skeleton->skeleton[i].parent_index;
+		pose[i] = pose[parent_index] * pose[i];
+	}
 }
 bool AnimController::Update()
 {
