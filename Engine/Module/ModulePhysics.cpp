@@ -57,22 +57,18 @@ update_status ModulePhysics::Update()
 		world->debugDrawWorld();
 	}
 		
-	for (auto collider : colliders) {
-		
-
-		if (App->time->isGameRunning()) {
+	for (auto collider : colliders)
+	{
+		if (App->time->isGameRunning() && !collider->disable_physics && collider->IsEnabled())
+		{
 			if (collider->collider_type != ComponentCollider::ColliderType::MESH)
 			{
 				collider->MoveBody();
 			}
 		}
 		else
-		{
-			
-			collider->UpdateDimensions();
-			collider->owner->transform.has_changed = false;
-			
-			
+		{			
+			collider->UpdateDimensions();			
 		}
 		if(collider->collider_type != ComponentCollider::ColliderType::MESH)
 		{

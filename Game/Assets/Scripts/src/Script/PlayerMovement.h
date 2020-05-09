@@ -29,6 +29,7 @@ public:
 
 private:
 	float speed = 35.f;
+	//float speed = 5.0F;
 	float rotation_speed = 0.01f;
 	float falling_factor = 1.0f;
 	bool is_jumping = false;

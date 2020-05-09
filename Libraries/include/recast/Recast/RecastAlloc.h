@@ -22,7 +22,7 @@
 #include <stddef.h>
 #include <stdint.h>
 
-#include <recast/Recast/RecastAssert.h>
+#include <Recast/RecastAssert.h>
 
 /// Provides hint values to the memory allocator on how long the
 /// memory is expected to be used.

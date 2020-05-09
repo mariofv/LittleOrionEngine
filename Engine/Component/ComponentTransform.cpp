@@ -9,7 +9,7 @@ ComponentTransform::ComponentTransform() : Component(ComponentType::TRANSFORM)
 {
 }
 
-ComponentTransform::ComponentTransform(GameObject* owner) : Component(owner, ComponentType::TRANSFORM)
+ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM)
 {
 	OnTransformChange();
 }
@@ -23,13 +23,13 @@ ComponentTransform::ComponentTransform(GameObject* owner, const float3 translati
 	OnTransformChange();
 }
 
-void ComponentTransform::Copy(Component* component_to_copy) const
+void ComponentTransform::Copy(Component * component_to_copy) const
 { 
 	*component_to_copy = *this;
 	*static_cast<ComponentTransform*>(component_to_copy) = *this; 
 };
 
-ComponentTransform & ComponentTransform::operator=(const ComponentTransform& component_to_copy)
+ComponentTransform & ComponentTransform::operator=(const ComponentTransform & component_to_copy)
 {
 	this->translation = component_to_copy.translation;
 	this->rotation = component_to_copy.rotation;
@@ -69,7 +69,6 @@ ENGINE_API float3 ComponentTransform::GetGlobalTranslation() const
 {
 	return global_model_matrix.TranslatePart();
 }
-
 
 ENGINE_API float3 ComponentTransform::GetTranslation() const
 {
@@ -140,7 +139,6 @@ ENGINE_API void ComponentTransform::SetGlobalMatrixRotation(const float3x3& rota
 	SetGlobalModelMatrix(global_model_matrix);
 }
 
-
 ENGINE_API void ComponentTransform::SetGlobalMatrixRotation(const Quat& rotation)
 {
 	global_model_matrix.SetRotatePart(rotation);
@@ -172,12 +170,12 @@ ENGINE_API void ComponentTransform::LookAt(const float3& target)
 	SetRotation(new_rotation);
 }
 
-float3 ComponentTransform::ComponentTransform::GetScale() const
+ENGINE_API float3 ComponentTransform::ComponentTransform::GetScale() const
 {
 	return scale;
 }
 
-void ComponentTransform::SetScale(const float3& scale)
+ENGINE_API void ComponentTransform::SetScale(const float3& scale)
 {
 	this->scale = scale;
 	
@@ -208,7 +206,6 @@ ENGINE_API float3 ComponentTransform::GetRightVector() const
 void ComponentTransform::OnTransformChange()
 {
 	BROFILER_CATEGORY("OnTransformChange", Profiler::Color::Lavender);
-	has_changed = true;
 	model_matrix = float4x4::FromTRS(translation, rotation, scale);
 	GenerateGlobalModelMatrix();
 	owner->aabb.GenerateBoundingBox();
@@ -252,10 +249,14 @@ void ComponentTransform::SetGlobalModelMatrix(const float4x4& new_global_matrix)
 		model_matrix = owner->parent->transform.global_model_matrix.Inverted() * new_global_matrix;
 	}
 
+	float3 translation, scale;
+	float3x3 rotation;
+
 	model_matrix.Decompose(translation, rotation, scale);
 
-	OnTransformChange();
-	
+	SetTranslation(translation);
+	SetRotation(rotation);
+	SetScale(scale);
 }
 
 void ComponentTransform::ChangeLocalSpace(const float4x4& new_local_space)

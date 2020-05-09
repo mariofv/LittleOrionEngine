@@ -21,8 +21,8 @@
 #include <stdio.h>
 #include <stdarg.h>
 #include <string.h>
-#include "recast/Recast/Recast.h"
-#include "recast/Recast/RecastAlloc.h"
+#include "Recast/Recast.h"
+#include "Recast/RecastAlloc.h"
 #include "RecastDump.h"
 
 

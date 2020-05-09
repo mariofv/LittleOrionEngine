@@ -38,7 +38,9 @@ void PanelGameObject::Render(GameObject* game_object)
 	{
 		return;
 	}
-	
+
+	ImGui::PushID(game_object->UUID);
+
 	if (ImGui::Checkbox("###State", &game_object->active)) 
 	{
 		game_object->SetEnabled(game_object->active);
@@ -124,6 +126,8 @@ void PanelGameObject::Render(GameObject* game_object)
 	ImGui::Spacing();
 
 	component_panel.ShowAddNewComponentButton();
+
+	ImGui::PopID();
 }
 
 void PanelGameObject::ShowPrefabMenu(GameObject* game_object)

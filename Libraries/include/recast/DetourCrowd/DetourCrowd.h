@@ -19,7 +19,7 @@
 #ifndef DETOURCROWD_H
 #define DETOURCROWD_H
 
-#include "recast/Detour/DetourNavMeshQuery.h"
+#include "Detour/DetourNavMeshQuery.h"
 #include "DetourObstacleAvoidance.h"
 #include "DetourLocalBoundary.h"
 #include "DetourPathCorridor.h"

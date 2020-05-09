@@ -1,24 +1,35 @@
 #ifndef  __PLAYERATTACK_H__
-#define  __PLAYERATTACK_H__
-#include "Script.h"
+#define  __PLAYERATTACK_H__
+#include "Script.h"
+#include "EnemyManager.h"
+
 class ComponentAnimation;
 
-const unsigned PUNCH_DAMAGE = 33;
-const unsigned KICK_DAMAGE = 45;
+const float PUNCH_DAMAGE = 33.0f;
+const float KICK_DAMAGE = 45.0f;
 
 class PlayerAttack : public Script
 {
 public:
 	PlayerAttack();
-	~PlayerAttack() = default;
+	~PlayerAttack() = default;
 
 	void Awake() override;
 	void Start() override;
-	bool Attack();
+	bool Attack();
+	void ComputeCollisions() const;
+
 	void OnInspector(ImGuiContext*) override;
-	void InitPublicGameObjects();
+	void InitPublicGameObjects();
 	//void Save(Config& config) const override;
-	//void Load(const Config& config) override;
-private:	ComponentAnimation* animation = nullptr;	bool is_attacking = false;};
-extern "C" SCRIPT_API PlayerAttack* PlayerAttackDLL(); //This is how we are going to load the script
+	//void Load(const Config& config) override;
+private:	
+	EnemyManager* enemy_manager = nullptr;
+	ComponentAnimation* animation = nullptr;	//Temporal as we dont have physics
+	GameObject* collider = nullptr;
+	unsigned current_damage_power = 0;
+	bool is_attacking = false;
+	bool collider_enabled = false;
+};
+extern "C" SCRIPT_API PlayerAttack* PlayerAttackDLL(); //This is how we are going to load the script
 #endif

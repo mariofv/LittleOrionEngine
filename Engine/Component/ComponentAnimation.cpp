@@ -83,7 +83,7 @@ void ComponentAnimation::Play()
 void ComponentAnimation::Stop()
 {
 	auto & playing_clip = animation_controller->playing_clips[0];
-	playing_clip.playing = false;
+ 	playing_clip.playing = false;
 	playing = false;
 }
 
@@ -97,9 +97,28 @@ ENGINE_API bool ComponentAnimation::IsOnState(const std::string& trigger)
 	return animation_controller->IsOnState(trigger);
 }
 
+ENGINE_API float ComponentAnimation::GetCurrentClipPercentatge() const
+{
+	for (auto& playing_clip : animation_controller->playing_clips)
+	{
+		if (!playing_clip.clip)
+		{
+			break;
+		}
+
+		return float(playing_clip.current_time) / float(playing_clip.clip->animation_time);
+
+	}
+}
+
 
 void ComponentAnimation::Update()
 {
+	if(!IsEnabled())
+	{
+		return;
+	}
+
 	playing = animation_controller->Update();
 	if (playing)
 	{
