@@ -156,13 +156,13 @@ void ModuleScriptManager::LoadScriptList()
 
 void ModuleScriptManager::InitScripts()
 {
-	for (const auto& component_script : scripts)
+	for (size_t i = 0; i < scripts.size(); ++i)
 	{
-		component_script->AwakeScript();
+		scripts[i]->AwakeScript();
 	}
-	for (const auto& component_script : scripts)
+	for (size_t i = 0; i < scripts.size(); ++i)
 	{
-		component_script->StartScript();
+		scripts[i]->StartScript();
 	}
 }
 
