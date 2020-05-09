@@ -11,7 +11,8 @@ ComponentCollider::ComponentCollider(ColliderType collider_type) : Component(Com
 
 ComponentCollider::ComponentCollider(GameObject* owner, ColliderType collider_type) : Component(owner, ComponentType::COLLIDER), collider_type(collider_type)
 {
-	if (owner->aabb.global_bounding_box.IsFinite() && owner->aabb.global_bounding_box.Size().x != 0) {
+	if (owner->aabb.global_bounding_box.IsFinite() && owner->aabb.global_bounding_box.Size().x != 0)
+	{
 		ComponentMeshRenderer* mesh = static_cast<ComponentMeshRenderer*>(owner->GetComponent(Component::ComponentType::MESH_RENDERER));
 		if (mesh)
 		{
@@ -43,7 +44,7 @@ void ComponentCollider::CommonAssign(const ComponentCollider& component_to_copy)
 	scale = component_to_copy.scale;
 	box_size = component_to_copy.box_size;
 	visualize = component_to_copy.visualize;
-	detectCollision = component_to_copy.detectCollision;
+	detect_collision = component_to_copy.detect_collision;
 	is_attached = component_to_copy.is_attached;
 	is_static = component_to_copy.is_static;
 	AddBody();
@@ -64,12 +65,14 @@ void ComponentCollider::Save(Config & config) const
 	config.AddFloat(mass, "Mass");
 	config.AddFloat3(scale, "Scale");
 	config.AddBool(is_static, "Static");
-	config.AddBool(detectCollision, "Collision");
+	config.AddBool(detect_collision, "Collision");
 	config.AddBool(visualize, "Visualize");
 	config.AddBool(is_attached, "Attached");
 	config.AddBool(x_axis, "x_axis");
 	config.AddBool(y_axis, "y_axis");
 	config.AddBool(z_axis, "z_axis");
+	config.AddBool(disable_physics, "DisablePhysics");
+	config.AddFloat(friction, "Friction");
 
 }
 
@@ -80,22 +83,27 @@ void ComponentCollider::Load(const Config & config)
 	mass = config.GetFloat("Mass", 1.0F);
 	config.GetFloat3("Scale", scale, float3::one);
 	is_static = config.GetBool("Static", false);
-	detectCollision = config.GetBool("Collision", true);
+	detect_collision = config.GetBool("Collision", true);
 	visualize = config.GetBool("Visualize", true);
 	is_attached = config.GetBool("Attached", false);
 	x_axis = config.GetBool("x_axis", true);
 	y_axis = config.GetBool("y_axis", true);
 	z_axis = config.GetBool("z_axis", true);
+	disable_physics = config.GetBool("DisablePhysics", false);
+	friction = config.GetFloat("Friction", 1.0F);
 	AddBody();
 	if (is_static) { SetStatic(); }
 	if (!visualize) { SetVisualization(); }
 	SetRotationAxis();
-	if (!detectCollision) { SetCollisionDetection(); }
+	if (!detect_collision) { SetCollisionDetection(); }
+	if (disable_physics || !active) { DisablePhysics(); }
+	
 }
 
 btRigidBody* ComponentCollider::AddBody()
 {
-	if (body) {
+	if (body)
+	{
 		App->physics->world->removeRigidBody(body);
 	}
 
@@ -105,7 +113,8 @@ btRigidBody* ComponentCollider::AddBody()
 	col_shape->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
 
 	float3 global_translation = owner->transform.GetGlobalTranslation();
-	if (is_attached) {
+	if (is_attached)
+	{
 		deviation = owner->aabb.global_bounding_box.CenterPoint() - global_translation;
 		global_translation = owner->aabb.global_bounding_box.CenterPoint();
 	}
@@ -113,9 +122,11 @@ btRigidBody* ComponentCollider::AddBody()
 	Quat global_rotation = owner->transform.GetGlobalRotation();
 	motion_state = new btDefaultMotionState(btTransform(btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w), btVector3(global_translation.x, global_translation.y, global_translation.z)));
 	
-	if (mass != 0.f) col_shape->calculateLocalInertia(mass, localInertia);
-	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motion_state, col_shape, localInertia);
+	if (mass != 0.f) col_shape->calculateLocalInertia(mass, local_inertia);
+	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motion_state, col_shape, local_inertia);
 	body = new btRigidBody(rbInfo);
+	body->setActivationState(DISABLE_DEACTIVATION);
+	body->setFriction(friction);
 	App->physics->world->addRigidBody(body);
 	
 	return body;
@@ -153,21 +164,22 @@ void ComponentCollider::UpdateCommonDimensions()
 
 void ComponentCollider::SetMass(float new_mass)
 {
-
 	App->physics->world->removeRigidBody(body);
-	body->getCollisionShape()->calculateLocalInertia(new_mass, localInertia);
-	body->setMassProps(new_mass, localInertia);
+	body->getCollisionShape()->calculateLocalInertia(new_mass, local_inertia);
+	body->setMassProps(new_mass, local_inertia);
 	App->physics->world->addRigidBody(body);
 }
 
 void ComponentCollider::SetVisualization()
 {
 	int flags = body->getCollisionFlags();
-	if (!visualize) {
+	if (!visualize)
+	{
 		flags |= body->CF_DISABLE_VISUALIZE_OBJECT;
 		body->setCollisionFlags(flags);
 	}
-	else {
+	else
+	{
 		flags -= body->CF_DISABLE_VISUALIZE_OBJECT;
 		body->setCollisionFlags(flags);
 	}
@@ -177,11 +189,13 @@ void ComponentCollider::SetVisualization()
 void ComponentCollider::SetCollisionDetection()
 {
 	int flags = body->getCollisionFlags();
-	if (!detectCollision) {
+	if (!detect_collision)
+	{
 		flags |= body->CF_NO_CONTACT_RESPONSE;
 		body->setCollisionFlags(flags);
 	}
-	else {
+	else
+	{
 		flags -= body->CF_NO_CONTACT_RESPONSE;
 		body->setCollisionFlags(flags);
 	}
@@ -201,7 +215,8 @@ bool ComponentCollider::DetectCollision()
 		for (int j = 0; j < numContacts; j++)
 		{
 			btManifoldPoint pt = contactManifold->getContactPoint(j);
-			if (obA->getWorldArrayIndex() == body->getWorldArrayIndex() || obB->getWorldArrayIndex() == body->getWorldArrayIndex()) {
+			if (obA->getWorldArrayIndex() == body->getWorldArrayIndex() || obB->getWorldArrayIndex() == body->getWorldArrayIndex())
+			{
 				if (pt.getDistance() < 0.0f)
 				{
 					return true;
@@ -226,7 +241,8 @@ bool ComponentCollider::DetectCollisionWith(ComponentCollider * collider)
 		for (int j = 0; j < numContacts; j++)
 		{
 			btManifoldPoint pt = contactManifold->getContactPoint(j);
-			if ((obA->getWorldArrayIndex() == body->getWorldArrayIndex() && obB->getWorldArrayIndex() == collider->body->getWorldArrayIndex()) || (obB->getWorldArrayIndex() == body->getWorldArrayIndex() && obA->getWorldArrayIndex() == collider->body->getWorldArrayIndex())) {
+			if ((obA->getWorldArrayIndex() == body->getWorldArrayIndex() && obB->getWorldArrayIndex() == collider->body->getWorldArrayIndex()) || (obB->getWorldArrayIndex() == body->getWorldArrayIndex() && obA->getWorldArrayIndex() == collider->body->getWorldArrayIndex()))
+			{
 				if (pt.getDistance() < 0.0f)
 				{
 					return true;
@@ -240,13 +256,17 @@ bool ComponentCollider::DetectCollisionWith(ComponentCollider * collider)
 void ComponentCollider::SetStatic()
 {
 	int flags = body->getCollisionFlags();
-	if (is_static) {
+	if (is_static)
+	{
 		flags |= body->CF_KINEMATIC_OBJECT;
 		body->setCollisionFlags(flags);
+		mass = 0.0F;
 	}
-	else {
+	else
+	{
 		flags -= body->CF_KINEMATIC_OBJECT;
 		body->setCollisionFlags(flags);
+		mass = 1.0F;
 	}
 	
 }
@@ -259,4 +279,33 @@ void ComponentCollider::SetRotationAxis()
 void ComponentCollider::AddForce(float3& force)
 {
 	body->applyCentralForce(btVector3(force.x, force.y, force.z));
+}
+
+void ComponentCollider::DisablePhysics(bool disable)
+{
+	disable_physics = disable;
+	DisablePhysics();
+}
+
+void ComponentCollider::DisablePhysics()
+{
+	if (disable_physics || !active)
+	{
+		body->forceActivationState(DISABLE_SIMULATION);
+	}
+	else
+	{
+		body->forceActivationState(ACTIVE_TAG);
+		body->forceActivationState(DISABLE_DEACTIVATION);
+	}
+}
+
+void ComponentCollider::UpdateFriction()
+{
+	body->setFriction(friction);
+}
+
+void ComponentCollider::SetVelocity(float3& velocity)
+{
+	body->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
 }

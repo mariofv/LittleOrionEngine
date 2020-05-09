@@ -58,7 +58,7 @@ private:
 	void ShowComponentTextWindow(ComponentText* text);
 	void ShowComponentButtonWindow(ComponentButton* button);
 
-	void ShowCommonColliderWindow(ComponentCollider* collider);
+	bool ShowCommonColliderWindow(ComponentCollider* collider);
 	void ShowComponentBoxColliderWindow(ComponentBoxCollider* box_collider);
 	void ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider* capsule_collider);
 	void ShowComponentSphereColliderWindow(ComponentSphereCollider* sphere_collider);
