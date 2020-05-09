@@ -173,3 +173,18 @@ int DebugDrawer::getDebugMode() const
 {
 	return btIDebugDraw::DBG_DrawWireframe;
 }
+
+bool ModulePhysics::RaycastWorld(const btVector3 &Start, btVector3 &End, btVector3 &Normal) {
+
+	btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
+	
+	world->rayTest(Start, End, RayCallback);
+	if (RayCallback.hasHit()) {
+
+		End = RayCallback.m_hitPointWorld;
+		Normal = RayCallback.m_hitNormalWorld;
+		return true;
+	}
+
+	return false;
+}

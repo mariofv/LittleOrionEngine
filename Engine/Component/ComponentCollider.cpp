@@ -73,6 +73,7 @@ void ComponentCollider::Save(Config & config) const
 	config.AddBool(z_axis, "z_axis");
 	config.AddBool(disable_physics, "DisablePhysics");
 	config.AddFloat(friction, "Friction");
+	config.AddFloat(rolling_friction, "Rolling_friction");
 
 }
 
@@ -91,13 +92,16 @@ void ComponentCollider::Load(const Config & config)
 	z_axis = config.GetBool("z_axis", true);
 	disable_physics = config.GetBool("DisablePhysics", false);
 	friction = config.GetFloat("Friction", 1.0F);
+	rolling_friction = config.GetFloat("Rolling_friction", 1.0F);
 	AddBody();
 	if (is_static) { SetStatic(); }
 	if (!visualize) { SetVisualization(); }
 	SetRotationAxis();
 	if (!detect_collision) { SetCollisionDetection(); }
 	if (disable_physics || !active) { DisablePhysics(); }
-	
+	UpdateFriction();
+	SetRollingFriction();
+
 }
 
 btRigidBody* ComponentCollider::AddBody()
@@ -128,6 +132,10 @@ btRigidBody* ComponentCollider::AddBody()
 	body->setActivationState(DISABLE_DEACTIVATION);
 	body->setFriction(friction);
 	App->physics->world->addRigidBody(body);
+	
+	if (collider_type == ComponentCollider::ColliderType::MESH) {
+		SetVisualization();
+	}
 	
 	return body;
 }
@@ -296,7 +304,7 @@ void ComponentCollider::DisablePhysics()
 	else
 	{
 		body->forceActivationState(ACTIVE_TAG);
-		body->forceActivationState(DISABLE_DEACTIVATION);
+		/*body->forceActivationState(DISABLE_DEACTIVATION);*/
 	}
 }
 
@@ -305,7 +313,30 @@ void ComponentCollider::UpdateFriction()
 	body->setFriction(friction);
 }
 
-void ComponentCollider::SetVelocity(float3& velocity)
+void ComponentCollider::SetRollingFriction()
 {
-	body->setLinearVelocity(btVector3(velocity.x, velocity.y, velocity.z));
+	body->setRollingFriction(rolling_friction);
+}
+
+void ComponentCollider::SetVelocity(float3& velocity, float speed)
+{
+	//bottom of the model
+	btVector3 bottom = body->getWorldTransform().getOrigin();
+	bottom.setY(bottom.getY() - 2*box_size.getY());
+
+	//Vector normal to the surface
+	btVector3 Normal; 
+	App->physics->RaycastWorld(body->getWorldTransform().getOrigin(), bottom, Normal);
+	float3 normal = float3(Normal);
+	normal.Normalize();
+
+	float2 normal_2D = float2(normal.x, normal.y);
+	float2 vector_vel = normal_2D.Perp();
+	
+	if (abs(velocity.x) > 0 || abs(velocity.z) > 0) 
+	{
+		velocity.Normalize();
+		body->setLinearVelocity(speed*btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
+	}
+	
 }
