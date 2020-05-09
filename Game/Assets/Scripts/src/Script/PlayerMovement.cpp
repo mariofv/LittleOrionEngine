@@ -81,35 +81,64 @@ void PlayerMovement::Move(int player_id)
 
 	//Keyboard Input
 	float3 new_transform = float3::zero;
+	if(player_id == 0)
+	{
+		new_transform = float3::zero;
+		if (App->input->GetKey(KeyCode::D))
+		{
+			new_transform += float3(speed, 0.0f, 0.0f);
+		}
+		if (App->input->GetKey(KeyCode::W))
+		{
+			new_transform += float3(0.0f, 0.0f, -speed);
+		}
+		if (App->input->GetKey(KeyCode::S))
+		{
+			new_transform += float3(0.0f, 0.0f, speed);
+		}
+		if (App->input->GetKey(KeyCode::A))
+		{
+			new_transform += float3(-speed, 0.0f, 0.0f);
+		}
+		if (App->input->GetKeyDown(KeyCode::Space))
+		{
+			collider->AddForce(new_transform);
+		}
 
+		is_inside = IsInside(transform + new_transform/10);
+
+		if (is_inside)
+		{
+			collider->AddForce(new_transform);
+		}
+	}
+	else if(player_id == 1)
+	{
+		new_transform = float3::zero;
+		if (App->input->GetKey(KeyCode::LeftArrow))
+		{
+			new_transform += float3(speed, 0.0f, 0.0f);
+		}
+		if (App->input->GetKey(KeyCode::UpArrow))
+		{
+			new_transform += float3(0.0f, 0.0f, -speed);
+		}
+		if (App->input->GetKey(KeyCode::DownArrow))
+		{
+			new_transform += float3(0.0f, 0.0f, speed);
+		}
+		if (App->input->GetKey(KeyCode::RightArrow))
+		{
+			new_transform += float3(-speed, 0.0f, 0.0f);
+		}
+		is_inside = IsInside(transform + new_transform / 10);
+
+		if (is_inside)
+		{
+			collider->AddForce(new_transform);
+		}
+	}
 	//EXAMPLE USING PLAYER INPUT (JUST MOVE)
-	if (App->input->GetKey(KeyCode::D))
-	{
-		new_transform += float3(speed, 0.0f, 0.0f);
-	}
-	if (App->input->GetKey(KeyCode::W))
-	{
-		new_transform += float3(0.0f, 0.0f, -speed);
-	}
-	if (App->input->GetKey(KeyCode::S))
-	{
-		new_transform += float3(0.0f, 0.0f, speed);
-	}
-	if (App->input->GetKey(KeyCode::A))
-	{
-		new_transform += float3(-speed, 0.0f, 0.0f);
-	}
-	if (App->input->GetKeyDown(KeyCode::Space))
-	{
-		collider->AddForce(new_transform);
-	}
-
-	is_inside = IsInside(transform + new_transform/10);
-
-	if (is_inside)
-	{
-		collider->AddForce(new_transform);
-	}
 }
 
 void PlayerMovement::Fall()
