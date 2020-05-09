@@ -23,7 +23,7 @@ public:
 	void Fall();
 	void Dash();
 
-	bool CheckDistance(float3 transform);
+	bool IsInside(float3 transform);
 
 	void InitPublicGameObjects();
 
@@ -40,7 +40,6 @@ private:
 
 	GameObject* camera = nullptr;
 	ComponentCamera* game_camera = nullptr;
-	bool multiplayer = true;
 	bool is_inside = true;
 
 };

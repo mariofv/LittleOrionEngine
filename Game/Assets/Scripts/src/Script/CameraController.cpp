@@ -86,7 +86,6 @@ void CameraController::Update()
 	}
 
 }
-
 // Use this for showing variables on inspector
 void CameraController::OnInspector(ImGuiContext* context)
 {

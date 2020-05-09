@@ -54,7 +54,6 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 	ImGui::DragFloat("Jump Power", &jump_power, 2.0f, 2.0f, 10.0f);
 	ImGui::Text("Variables: ");
 	ShowDraggedObjects();
-	ImGui::Checkbox("Multiplayer", &multiplayer);
 	ImGui::Checkbox("Is Inside Frustum", &is_inside);
 
 }
@@ -81,7 +80,7 @@ void PlayerMovement::Move(int player_id)
 	}
 
 	//Keyboard Input
-	float3 new_transform = float3(0.0F, 0.0F, 0.0F);
+	float3 new_transform = float3::zero;
 
 	//EXAMPLE USING PLAYER INPUT (JUST MOVE)
 	if (App->input->GetKey(KeyCode::D))
@@ -104,23 +103,13 @@ void PlayerMovement::Move(int player_id)
 	{
 		collider->AddForce(new_transform);
 	}
-	//if (multiplayer) 	
-	//{
-	//	if(CheckDistance(new_transform))
-	//	{
-	//		collider->AddForce(new_transform);
-	//	}
-	//}
-	//else
-	//{
-	is_inside = CheckDistance(new_transform);
 
-	collider->AddForce(new_transform);
-	//}
-	//if (CheckDistance(new_transform))
-	//		{
-	//			collider->AddForce(new_transform);
-	//		}
+	is_inside = IsInside(new_transform / 10);
+
+	if (IsInside(new_transform/10))
+	{
+		collider->AddForce(new_transform);
+	}
 }
 
 void PlayerMovement::Fall()
@@ -135,9 +124,11 @@ void PlayerMovement::Dash()
 	//TODO DASH
 }
 
-bool PlayerMovement::CheckDistance(float3 transform)
+bool PlayerMovement::IsInside(float3 transform)
 {
-	AABB future_position = AABB(owner->aabb.bounding_box.minPoint + transform, owner->aabb.bounding_box.maxPoint + transform);
+	//this is not okay
+	float3 distance = transform - owner->transform.GetTranslation();
+	AABB future_position = AABB(owner->aabb.bounding_box.minPoint + distance, owner->aabb.bounding_box.maxPoint + distance);
 
 	return game_camera->IsInsideFrustum(future_position);
 }
