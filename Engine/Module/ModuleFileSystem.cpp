@@ -237,6 +237,20 @@ Path* ModuleFileSystem::Move(const std::string& source_path, const std::string& 
 	return copied_file_path;
 }
 
+Path * ModuleFileSystem::Rename(Path * file_to_rename, const std::string & new_name)
+{
+	if (file_to_rename->IsMeta())
+	{
+		Path* assets_file_path = App->filesystem->GetPath(file_to_rename->GetFullPathWithoutExtension());
+		std::string assets_new_name = new_name.substr(0, new_name.find_last_of("."));
+		App->filesystem->Copy(assets_file_path->GetFullPath(), assets_file_path->GetParent()->GetFullPath(), assets_new_name.substr());
+		App->filesystem->Copy(file_to_rename->GetFullPath(), file_to_rename->GetParent()->GetFullPath(), new_name);
+		App->resources->metafile_manager->RefreshMetafile(*file_to_rename);
+		//Remove old
+	}
+	return nullptr;
+}
+
 bool ModuleFileSystem::CreateMountedDir(const std::string& directory)
 {
 	MakeDirectory(directory);

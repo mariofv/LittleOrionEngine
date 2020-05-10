@@ -17,11 +17,13 @@
 #include "PanelStateMachine.h"
 #include <imgui.h>
 #include <imgui_internal.h>
+#include <imgui_stdlib.h>
 #include <SDL/SDL.h>
 #include <FontAwesome5/IconsFontAwesome5.h>
 #include <FontAwesome5/IconsFontAwesome5Brands.h>
 #include <algorithm>
 
+static std::string new_name_file;
 PanelProjectExplorer::PanelProjectExplorer()
 {
 	opened = true;
@@ -181,22 +183,38 @@ void PanelProjectExplorer::ShowMetafileIcon(Path* metafile_path)
 		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*file_size_width, 0.75*file_size_width)); // TODO: Substitute this with resouce thumbnail
 		ImGui::Spacing();
 
-		float text_width = ImGui::CalcTextSize(filename.c_str()).x;
-		if (text_width < file_size_width)
+		if (renaming_file && metafile_path == renaming_file)
 		{
-			ImGui::SetCursorPosX((ImGui::GetWindowWidth() - text_width) * 0.5f);
-			ImGui::Text(filename.c_str());
+			ImGui::InputText("###NewName", &new_name_file);
 		}
 		else
 		{
-			int character_width = text_width / filename.length();
-			int string_position_wrap = file_size_width / character_width - 5;
-			assert(string_position_wrap < filename.length());
-			std::string wrapped_filename = filename.substr(0, string_position_wrap+3) + "\n" + filename.substr(string_position_wrap, filename.size());
-			ImGui::Text(wrapped_filename.c_str());
+			float text_width = ImGui::CalcTextSize(filename.c_str()).x;
+			if (text_width < file_size_width)
+			{
+				ImGui::SetCursorPosX((ImGui::GetWindowWidth() - text_width) * 0.5f);
+				ImGui::Text(filename.c_str());
+			}
+			else
+			{
+				int character_width = text_width / filename.length();
+				int string_position_wrap = file_size_width / character_width - 5;
+				assert(string_position_wrap < filename.length());
+				std::string wrapped_filename = filename.substr(0, string_position_wrap + 3) + "\n" + filename.substr(string_position_wrap, filename.size());
+				ImGui::Text(wrapped_filename.c_str());
+			}
 		}
 	}
 	ImGui::EndChild();
+}
+
+void PanelProjectExplorer::ApplyRename()
+{
+	if (renaming_file)
+	{
+		App->filesystem->Rename(renaming_file, new_name_file);
+		renaming_file = nullptr;
+	}
 }
 
 void PanelProjectExplorer::ResourceDragSource(Metafile* metafile) const
@@ -228,6 +246,7 @@ void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafi
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(0))
 	{
 		selected_file = metafile_path;
+		ApplyRename();
 		App->editor->selected_meta_file = metafile;
 		App->editor->show_game_object_inspector = false;
 		
@@ -250,6 +269,7 @@ void PanelProjectExplorer::ProcessMouseInput(Path* file_path)
 		{
 			selected_folder = file_path;
 			selected_file = nullptr;
+			ApplyRename();
 		}
 		else if (ImGui::IsMouseDoubleClicked(0))
 		{
@@ -313,6 +333,7 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 				if (success)
 				{
 					selected_file = nullptr;
+					renaming_file = nullptr;
 				}
 			}
 			if (App->editor->selected_meta_file && App->editor->selected_meta_file->resource_type == ResourceType::MODEL && ImGui::Selectable("Extract Prefab"))
@@ -322,19 +343,12 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 				Path * new_prefab = App->filesystem->Copy(App->editor->selected_meta_file->exported_file_path.c_str(), selected_folder->GetFullPath(),new_prefab_name.c_str());
 				App->resources->Import(*new_prefab);
 			}
+			if (ImGui::Selectable("Rename"))
+			{
+				renaming_file = selected_file;
+				new_name_file = selected_file->GetFilename();
+			}
 		}
-
-		/* TODO: Finish this
-
-
-		/*if (ImGui::Selectable("Rename"))
-		{
-			//TODO
-		}
-		if (ImGui::Selectable("Copy"))
-		{
-			//TODO
-		}*/
 
 		ImGui::EndPopup();
 	}
