@@ -90,10 +90,14 @@ public:
 
 	void SetClearMode(ComponentCamera::ClearMode clear_mode);
 	void SetSkybox(uint32_t skybox_uuid);
-
+	void SetFrustum(Frustum new_frustum);
 	void SetSpeedUp(bool is_speeding_up);
 
 	void SetViewMatrix(const float4x4& view_matrix);
+
+	void SetView(const float4x4& view_matrix);
+	void SetProj(const float4x4& proj_matrix);
+
 	float4x4 GetViewMatrix() const;
 	float4x4 GetProjectionMatrix() const;
 	float4x4 GetInverseClipMatrix() const;
@@ -135,27 +139,27 @@ public:
 	float4x4 proj;
 	float4x4 view;
 
-	bool toggle_msaa = false;
-	bool is_focusing = false;
-
-private:
-	Frustum camera_frustum;
-	GLuint rbo = 0;
-	GLuint fbo = 0;
-
-
-
-
-private:
-	
-	
-	
-	GLuint msfbo = 0;
-	GLuint msfb_color = 0;
+	GLuint depth_map = 0;
 	GLuint last_recorded_frame_texture = 0;
 
+
+	bool toggle_msaa = false;
+	bool is_focusing = false;
+	Frustum camera_frustum;
+
+private:
+	GLuint rbo = 0;
+	GLuint fbo = 0;
+	GLuint depth_rbo = 0;
+
+
+
+
+private:
+	GLuint msfbo = 0;
+	GLuint msfb_color = 0;
+
 	GLuint depthfbo = 0;
-	GLuint depth_map = 0;
 
 	float last_height = 0;
 	float last_width = 0;

@@ -17,10 +17,19 @@ public:
 	};
 
 	class DirectionalLight {
-		//Shadows stuff
-		float4x4 view;
+	public:
+		Frustum directional_light_camera; //From we'll record the depth buffer
+		GLuint rbo = 0;		//Crear framebuffers necessaris per sa direc_light
+		GLuint fbo = 0;
+		GLuint depth_rbo = 0;
+		GLuint depth_map = 0;
+		GLuint last_recorded_frame_texture = 0;
+
 		float4x4 proj;
-		Frustum light_frustum;
+		float4x4 view;
+
+		int SHADOW_WIDTH = 1024;
+		int SHADOW_HEIGHT = 1024;
 	};
 
 	class PointLight
@@ -91,6 +100,8 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
+	void Init();
+	void Update() override;
 	void Delete() override;
 	void Save(Config& config) const override;
 	void Load(const Config &config) override;

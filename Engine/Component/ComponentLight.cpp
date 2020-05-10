@@ -3,6 +3,7 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleCamera.h"
 
 ComponentLight::ComponentLight() : Component(nullptr, ComponentType::LIGHT)
 {
@@ -10,6 +11,22 @@ ComponentLight::ComponentLight() : Component(nullptr, ComponentType::LIGHT)
 
 ComponentLight::ComponentLight(GameObject * owner) : Component(owner, ComponentType::LIGHT)
 {
+
+}
+void ComponentLight::Init()
+{
+
+	//if is directional light
+	//App->cameras->directional_light_camera->camera_frustum.pos = float3(0, 0, 0);
+
+}
+
+void ComponentLight::Update()
+{
+	//If is directional light
+	//App->cameras->directional_light_camera->camera_frustum.front = owner->transform.GetFrontVector();
+	//App->cameras->directional_light_camera->camera_frustum.up = owner->transform.GetRotation() * float3::unitY;
+
 
 }
 
@@ -38,6 +55,8 @@ void ComponentLight::Copy(Component * component_to_copy) const
 void ComponentLight::Delete()
 {
 	App->lights->RemoveComponentLight(this);
+	glDeleteFramebuffers(1, &directional_light_parameters.fbo);
+
 }
 
 void ComponentLight::Save(Config& config) const

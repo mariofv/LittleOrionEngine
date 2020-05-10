@@ -3,6 +3,9 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleCamera.h"
+#include "Module/ModuleLight.h"
+
 
 #include <Brofiler/Brofiler.h>
 #include <imgui.h>
@@ -30,5 +33,8 @@ void PanelInspector::Render()
 		}
 
 	}
+	
+	ImGui::Image((void *)App->cameras->directional_light_camera->depth_map, ImVec2(200, 200), ImVec2(0, 1),ImVec2(1, 0));
+
 	ImGui::End();
 }

@@ -200,6 +200,7 @@ void PanelConfiguration::ShowRenderOptions()
 		if (ImGui::Checkbox("Depth test", &App->renderer->gl_depth_test))
 		{
 			App->renderer->SetDepthTest(App->renderer->gl_depth_test);
+
 		}
 
 		ImGui::SameLine();
@@ -211,13 +212,14 @@ void PanelConfiguration::ShowRenderOptions()
 
 		ImGui::SameLine();
 
-		if (ImGui::Checkbox("Render depth from light", &App->renderer->render_depth))
+		if (ImGui::Checkbox("Render shadows", &App->renderer->render_depth))
 		{
-			App->renderer->SetRenderDepth(App->renderer->render_depth);
+			App->renderer->SetRenderDepth(App->renderer->render_depth); //Activates depth buffer generation
 
 		}
 
 		ImGui::Separator();
+
 		if (ImGui::Checkbox("Face culling", &App->renderer->gl_cull_face))
 		{
 			App->renderer->SetFaceCulling(App->renderer->gl_cull_face);

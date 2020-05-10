@@ -104,11 +104,10 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color);
 float NormalizedSpecular(vec3 normal, vec3 half_dir);
 
 //SHADOW MAPS
-float near = 0.1; //Variables that help escalate the depth
-float far = 100;
-float CalculateDepth(float depth);
+float ShadowCalculation(vec4 frag_pos_light_space);
 uniform float render_depth_from_light;
 in vec4 pos_from_light;
+uniform sampler2D depth_map;
 
 void main()
 {
@@ -167,20 +166,15 @@ void main()
 		}
 	}
 
-	
-	result +=  diffuse_color.rgb * (occlusion_color*material.k_ambient); //Ambient light
 
-	if(render_depth_from_light == 1)
-	{
-		//FragColor = vec4(vec3(pos_from_light.z),1.0);
-	}
+	result += diffuse_color.rgb * (occlusion_color*material.k_ambient); //Ambient light
 
-	else
-	{
+	//if(render_depth_from_light != 1) //Because we don't need any color if we only want to see a depth buffer
+	//{
 		FragColor = vec4(result,1.0);
 		FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
 		FragColor.a=material.transparency;
-	}
+	//}
 
 	
 }
@@ -219,6 +213,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	vec3 light_dir   = normalize(-directional_light.direction );
 	float specular   = 0.0;	
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
+	float shadow	 = ShadowCalculation(pos_from_light);
 
 	if(material.k_specular > 0.0 && material.specular_color.w > 0.0)
 	{	
@@ -226,9 +221,9 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	}
 
 	return directional_light.color * (
-		emissive_color
+		(emissive_color
 		+ NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI
-		+ specular_color.rgb * specular
+		+ specular_color.rgb * specular)
 	) * max(0.0, dot(normalized_normal, light_dir));
 	//Last multiplication added as a recommendation
 }
@@ -240,6 +235,7 @@ vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4
 	vec3 light_dir   = normalize(spot_light.position - position);
     float specular   = 0.0;
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
+
 
 	if(material.k_specular > 0.0 && material.specular_color.w > 0.0)
 	{	
@@ -271,6 +267,7 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
 	float specular   = 0.0;
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 
+
    if(material.k_specular > 0.0 && material.specular_color.w > 0.0)
 	{	
 		specular = NormalizedSpecular(normalized_normal, half_dir);
@@ -300,13 +297,23 @@ float NormalizedSpecular(vec3 normal, vec3 half_dir) // Old refference: http://w
 
 	float spec = pow(max(dot(normal, half_dir), 0.0), shininess);
 
-	float normalization_factor = (material.specular_color.w + 8)/8;
+	float normalization_factor = (spec + 8)/8;
 
 	return pow(spec, material.specular_color.w) * normalization_factor;
 }
 
-float CalculateDepth(float depth)
+float ShadowCalculation(vec4 frag_pos_light_space)
 {
-	float z = (depth * 2) - 1; // [0....1]
-	return (2.0 * near * far) / (far + near - z * (far - near));
+
+    vec3 normalized_light_space = frag_pos_light_space.xyz / frag_pos_light_space.w;
+    normalized_light_space = normalized_light_space * 0.5 + 0.5;
+
+    float closest_depth = texture(depth_map, normalized_light_space.xy).r; 
+    float current_depth = normalized_light_space.z;
+
+	float bias = 0.005;
+	float shadow = current_depth - bias > closest_depth  ? 1.0 : 0.0;
+
+    return shadow;
+
 }

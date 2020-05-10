@@ -36,6 +36,8 @@ bool ModuleScene::Init()
 	assert(scene_metafile != nullptr);
 	tmp_scene = App->resources->Load<Scene>(scene_metafile->uuid);
 
+
+
 	return true;
 }
 

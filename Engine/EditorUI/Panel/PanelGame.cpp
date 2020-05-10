@@ -46,6 +46,7 @@ void PanelGame::Render()
 
 			App->cameras->main_camera->RecordFrame(game_window_content_area_width, game_window_content_area_height);
 
+
 			ImGui::Image(
 				(void *)App->cameras->main_camera->GetLastRecordedFrame(),
 				ImVec2(game_window_content_area_width, game_window_content_area_height),

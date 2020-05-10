@@ -61,6 +61,9 @@ private:
 	void SetDithering(bool gl_dither);
 	void SetMinMaxing(bool gl_minmax);
 	void SetRenderDepth(bool render);
+	void RenderShadows(const Frustum &directional_light_frustum);
+
+	ComponentCamera* helper;
 
 	void SetDrawMode(DrawMode draw_mode);
 	std::string GetDrawMode() const;
