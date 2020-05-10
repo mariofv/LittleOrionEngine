@@ -44,6 +44,7 @@ public:
 	float3 GetGravity();
 	ComponentCollider* CreateComponentCollider(const ComponentCollider::ColliderType collider_type, GameObject* owner);
 	void RemoveComponentCollider(ComponentCollider* collider_to_remove);
+	bool RaycastWorld(const btVector3 &Start, btVector3 &End, btVector3 &Normal);
 
 public:
 

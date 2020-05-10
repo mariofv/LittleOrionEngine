@@ -110,11 +110,9 @@ void PlayerMovement::Move(int player_id)
 		new_transform += float3(0.0F, jump_power, 0.0F);
 		collider->AddForce(new_transform);
 	}
-	else if (new_transform.x != 0 || new_transform.y != 0 || new_transform.z != 0)
-	{
-		//owner->transform.LookAt(new_transform);
-		collider->SetVelocity(new_transform);
-	}
+	
+	collider->SetVelocity(new_transform, speed);
+	
 }
 
 void PlayerMovement::Fall()
