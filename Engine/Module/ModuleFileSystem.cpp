@@ -247,7 +247,6 @@ Path * ModuleFileSystem::Rename(Path * file_to_rename, const std::string & new_n
 		Path* new_metafile = App->filesystem->Copy(file_to_rename->GetFullPath(), file_to_rename->GetParent()->GetFullPath(), new_name);
 		App->resources->metafile_manager->RefreshMetafile(*new_metafile);
 		Remove(file_to_rename);
-		//Remove old
 	}
 	return nullptr;
 }
