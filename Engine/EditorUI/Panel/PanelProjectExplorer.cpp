@@ -246,7 +246,6 @@ void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafi
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(0))
 	{
 		selected_file = metafile_path;
-		ApplyRename();
 		App->editor->selected_meta_file = metafile;
 		App->editor->show_game_object_inspector = false;
 		
@@ -351,6 +350,11 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 		}
 
 		ImGui::EndPopup();
+	}
+	bool enter_pressed = ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter));
+	if (enter_pressed || renaming_file && renaming_file != selected_file)
+	{
+		ApplyRename();
 	}
 }
 

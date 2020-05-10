@@ -34,6 +34,7 @@ public:
 	static std::string GetParentPathString(const std::string& path);
 	std::string GetExtension() const;
 	static std::string GetExtension(const std::string& path);
+	void Refresh();
 
 	uint32_t GetModificationTimestamp() const;
 
@@ -43,7 +44,6 @@ private:
 	Path(const std::string& path, const std::string& name);
 	~Path();
 
-	void Refresh();
 	void RemoveChild(Path* child_to_remove);
 
 	void CleanFolderPath();
