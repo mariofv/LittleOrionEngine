@@ -62,6 +62,12 @@ void ComponentAnimation::Copy(Component* component_to_copy) const
 	*static_cast<ComponentAnimation*>(component_to_copy) = *this;
 }
 
+void ComponentAnimation::Disable()
+{
+	active = false;
+	Stop();
+}
+
 void ComponentAnimation::SetStateMachine(uint32_t state_machine_uuid)
 {
 	animation_controller->SetStateMachine(state_machine_uuid);
@@ -114,7 +120,7 @@ ENGINE_API float ComponentAnimation::GetCurrentClipPercentatge() const
 
 void ComponentAnimation::Update()
 {
-	if(!IsEnabled())
+	if (!active)
 	{
 		return;
 	}
