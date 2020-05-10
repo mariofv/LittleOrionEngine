@@ -122,39 +122,41 @@ void EnemyController::Move()
 
 	float3 direction = player_transform - transform;
 
-	if (!PlayerInRange())
-	{
-		if (!animation->IsOnState("Walk"))
-		{
-			if (animation->IsOnState("Idle") && animation->GetCurrentClipPercentatge() > 0.95f)
-			{
-				animation->ActiveAnimation("walk");
-			}
-		}
-		else
-		{
-			float3 position = transform + (direction.Normalized() * move_speed);
-
-			float3 next_position;
-			bool valid_position = App->artificial_intelligence->FindNextPolyByDirection(position, next_position);
-
-			if (valid_position)
-			{
-				position.y = next_position.y;
-			}
-
-			if (App->artificial_intelligence->IsPointWalkable(position))
-			{
-				owner->transform.LookAt(position);
-				owner->transform.SetTranslation(position);
-			}
-		}
-	}
-	else
+	// If player in range attack
+	if (PlayerInRange())
 	{
 		if (!animation->IsOnState("Attack"))
 		{
 			animation->ActiveAnimation("attack");
+		}
+	}
+	// If player not in range walk
+	else
+	{
+		// If player still attacking, finish animation and then switch to walking
+		if (animation->IsOnState("Attack"))
+		{
+			return;
+		}
+		else if (animation->IsOnState("Idle"))
+		{
+			animation->ActiveAnimation("walk");
+		}
+
+		float3 position = transform + (direction.Normalized() * move_speed);
+
+		float3 next_position;
+		bool valid_position = App->artificial_intelligence->FindNextPolyByDirection(position, next_position);
+
+		if (valid_position)
+		{
+			position.y = next_position.y;
+		}
+
+		if (App->artificial_intelligence->IsPointWalkable(position))
+		{
+			owner->transform.LookAt(position);
+			owner->transform.SetTranslation(position);
 		}
 	}
 }
