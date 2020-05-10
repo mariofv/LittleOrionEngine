@@ -337,6 +337,19 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 	{
 		velocity.Normalize();
 		body->setLinearVelocity(speed*btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
+		
+		//rotate collider
+
+		/*float3 direction = float3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z);*/
+		float3 direction = float3(velocity.x, 0, velocity.z); 
+		Quat new_rotation = owner->transform.GetRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
+		
+		btTransform trans = body->getWorldTransform();
+		btQuaternion transrot = trans.getRotation();
+
+		transrot = btQuaternion(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
+		trans.setRotation(transrot);
+		body->setWorldTransform(trans);
 	}
 	
 }
