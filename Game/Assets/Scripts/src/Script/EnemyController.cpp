@@ -1,5 +1,6 @@
 #include "EnemyController.h"
 
+#include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 
@@ -140,6 +141,8 @@ void EnemyController::InitMembers()
 	player = App->scene->GetGameObjectByName("Player");
 
 	animation = (ComponentAnimation*)owner->GetComponent(Component::ComponentType::ANIMATION);
+	collider_component = static_cast<ComponentCollider*>(owner->GetComponent(ComponentCollider::ColliderType::BOX));
+	collider_component->DisablePhysics(false);
 
 	init_translation = owner->transform.GetTranslation();
 	init_rotation = owner->transform.GetRotation();

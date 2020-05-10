@@ -4,6 +4,7 @@
 #include "EnemyManager.h"
 
 class ComponentAnimation;
+class ComponentCollider;
 
 const float PUNCH_DAMAGE = 33.0f;
 const float KICK_DAMAGE = 45.0f;
@@ -27,6 +28,7 @@ private:
 	EnemyManager* enemy_manager = nullptr;
 	ComponentAnimation* animation = nullptr;	//Temporal as we dont have physics
 	GameObject* collider = nullptr;
+	ComponentCollider* component_collider = nullptr;
 	unsigned current_damage_power = 0;
 	bool is_attacking = false;
 	bool collider_enabled = false;

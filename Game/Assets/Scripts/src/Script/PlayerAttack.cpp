@@ -1,6 +1,7 @@
 #include "PlayerAttack.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 #include "Main/Application.h"
@@ -36,6 +37,9 @@ void PlayerAttack::Awake()
 	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
 
 	animation = (ComponentAnimation*) owner->GetComponent(Component::ComponentType::ANIMATION);
+	
+	component_collider = static_cast<ComponentCollider*>(collider->GetComponent(ComponentCollider::ColliderType::BOX));
+	component_collider->DisablePhysics(false);
 	collider->SetEnabled(false);
 }
 // Use this for initialization
@@ -85,7 +89,8 @@ void PlayerAttack::ComputeCollisions() const
 			continue;
 		}
 
-		if (collider->aabb.global_bounding_box.Intersects(enemy->owner->aabb.global_bounding_box))
+		//if (collider->aabb.global_bounding_box.Intersects(enemy->owner->aabb.global_bounding_box))
+		if (component_collider->DetectCollisionWith(enemy->collider_component))
 		{
 			enemy->TakeDamage(current_damage_power);
 		}

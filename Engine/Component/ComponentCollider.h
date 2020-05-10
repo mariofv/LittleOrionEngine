@@ -39,8 +39,8 @@ public:
 	void SetMass(float new_mass);
 	void SetVisualization();
 	void SetCollisionDetection();
-	bool DetectCollision(); //returns true if collides with any object in the world
-	bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
+	ENGINE_API bool DetectCollision(); //returns true if collides with any object in the world
+	ENGINE_API bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
 	void SetStatic();
 	void SetRotationAxis();
 	ENGINE_API void DisablePhysics(bool disable);

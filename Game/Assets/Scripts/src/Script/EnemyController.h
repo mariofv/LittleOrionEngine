@@ -6,6 +6,7 @@
 #include "EnemyManager.h"
 
 class ComponentAnimation;
+class ComponentCollider;
 
 enum class EnemyType
 {
@@ -37,11 +38,11 @@ protected:
 
 public:
 	GameObject* player = nullptr;
+	ComponentCollider* collider_component = nullptr;
 	bool is_alive = true;
 
 protected:
 	EnemyType type;
-
 	ComponentAnimation* animation = nullptr;
 	EnemyManager* enemy_manager = nullptr;
 
