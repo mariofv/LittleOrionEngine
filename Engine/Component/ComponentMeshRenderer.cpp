@@ -167,7 +167,6 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 	glUniform1i(glGetUniformLocation(shader_program, "material.normal_map"), 4);
 	glUniform1i(glGetUniformLocation(shader_program, "material.use_normal_map"), material_to_render->use_normal_map);
 	glUniform1i(glGetUniformLocation(shader_program, "material.use_specular_map"), material_to_render->use_specular_map);
-
 }
 
 void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const

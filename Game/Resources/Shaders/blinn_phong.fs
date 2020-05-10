@@ -171,6 +171,7 @@ void main()
 
 	//if(render_depth_from_light != 1) //Because we don't need any color if we only want to see a depth buffer
 	//{
+
 		FragColor = vec4(result,1.0);
 		FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
 		FragColor.a=material.transparency;
@@ -222,8 +223,8 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 
 	return directional_light.color * (
 		(emissive_color
-		+ NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI
-		+ specular_color.rgb * specular)
+		+ (NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI
+		+ specular_color.rgb * specular) * (1-shadow))
 	) * max(0.0, dot(normalized_normal, light_dir));
 	//Last multiplication added as a recommendation
 }
@@ -308,12 +309,11 @@ float ShadowCalculation(vec4 frag_pos_light_space)
     vec3 normalized_light_space = frag_pos_light_space.xyz / frag_pos_light_space.w;
     normalized_light_space = normalized_light_space * 0.5 + 0.5;
 
-    float closest_depth = texture(depth_map, normalized_light_space.xy).r; 
-    float current_depth = normalized_light_space.z;
+    float texture_depth = texture(depth_map, normalized_light_space.xy).r; 
 
-	float bias = 0.005;
-	float shadow = current_depth - bias > closest_depth  ? 1.0 : 0.0;
-
-    return shadow;
+	if(normalized_light_space.z < texture_depth)
+		return 0;
+	else
+		return texture_depth;
 
 }

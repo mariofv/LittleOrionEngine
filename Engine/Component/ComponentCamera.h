@@ -113,10 +113,10 @@ public:
 	void GetRay(const float2& normalized_position, LineSegment &return_value) const;
 
 	AABB GetMinimalEnclosingAABB() const;
+	void GenerateMatrices();
 
 private:
 	void GenerateFrameBuffers(float width, float height);
-	void GenerateMatrices();
 	void InitCamera();
 	void CreateFramebuffer(float width, float height);
 	void CreateDepthFramebuffer(float width, float height);

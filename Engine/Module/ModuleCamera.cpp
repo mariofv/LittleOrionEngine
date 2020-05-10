@@ -26,7 +26,7 @@ bool ModuleCamera::Init()
 	scene_camera_game_object->transform.SetTranslation(float3(0.5f, 2.f, -15.f));
 
 	dir_light_game_object = App->scene->CreateGameObject();
-	dir_light_game_object->transform.SetTranslation(float3(0.5f, 2.f, -15.f));
+	dir_light_game_object->transform.SetTranslation(float3(0, 0, 0));
 
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	
@@ -37,17 +37,24 @@ bool ModuleCamera::Init()
 	world_skybox = App->resources->Load<Skybox>((uint32_t)CoreResource::DEFAULT_SKYBOX);
 
 	directional_light_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
+	directional_light_camera->depth = -1;
+	//directional_light_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
+
 	directional_light_camera->owner = dir_light_game_object;
-	//directional_light_camera->camera_frustum.type = FrustumType::OrthographicFrustum;  Makes the light camera malfunction
+	directional_light_camera->camera_frustum.type = FrustumType::OrthographicFrustum; // Makes the light camera malfunction
+
+	directional_light_camera->SetFarDistance(100);
+	directional_light_camera->SetNearDistance(1);
+
 	
 
 	//Adjust near and far planes to obtain a greater shadow creation range
 	//directional_light_camera->SetFarDistance(300);
 	//directional_light_camera->SetNearDistance(0);
 
-	//~~~~~~ i boiled these noodles in my programmer tears
-	//directional_light_camera->camera_frustum.orthographicWidth = 1000;
-	//directional_light_camera->camera_frustum.orthographicHeight = 1000;
+	//~~~~~~ i boiled these noodles in my programmer tears ~~~~~~~~
+	directional_light_camera->camera_frustum.orthographicWidth = 2;
+	directional_light_camera->camera_frustum.orthographicHeight = 2;
 
 	return true;
 }
@@ -86,6 +93,7 @@ ComponentCamera* ModuleCamera::CreateComponentCamera()
 	cameras.push_back(new_camera);
 	return new_camera;
 }
+
 
 void ModuleCamera::RemoveComponentCamera(ComponentCamera* camera_to_remove)
 {

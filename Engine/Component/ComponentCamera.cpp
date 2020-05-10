@@ -350,7 +350,10 @@ void ComponentCamera::CreateFramebuffer(float width, float height)
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 
-	//glActiveTexture(GL_TEXTURE5);
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, depth_map);
+	glActiveTexture(0);
+
 
 }
 

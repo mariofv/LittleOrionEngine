@@ -64,6 +64,8 @@ void PanelScene::Render()
 
 		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
 		App->cameras->scene_camera->RecordDebugDraws(scene_window_content_area_width, scene_window_content_area_height);
+
+
 		//App->cameras->directional_light_camera->RecordDebugDraws(scene_window_content_area_width, scene_window_content_area_height);
 
 		ImGui::Image(

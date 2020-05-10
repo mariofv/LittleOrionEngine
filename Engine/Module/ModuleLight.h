@@ -27,6 +27,7 @@ public:
 
 private:
 	void SortClosestLights(const float3& position, ComponentLight::LightType light_type);
+	void SendShadowMatricesToShader(GLuint program);
 
 public:
 	static const unsigned int MAX_DIRECTIONAL_LIGHTS_RENDERED = 1;

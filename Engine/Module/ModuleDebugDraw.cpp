@@ -473,6 +473,7 @@ void ModuleDebugDraw::Render()
 	}
 
 	RenderDebugDraws(*App->cameras->scene_camera);
+	dd::frustum(App->cameras->directional_light_camera->GetInverseClipMatrix(), float3::one);
 	
 }
 
