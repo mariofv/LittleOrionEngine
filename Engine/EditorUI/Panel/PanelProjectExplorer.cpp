@@ -315,20 +315,17 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 					selected_file = nullptr;
 				}
 			}
+			if (App->editor->selected_meta_file && App->editor->selected_meta_file->resource_type == ResourceType::MODEL && ImGui::Selectable("Extract Prefab"))
+			{
+				std::string original_model_name = selected_file->GetFilenameWithoutExtension();
+				std::string new_prefab_name = original_model_name.substr(0, original_model_name.find_last_of(".")) + ".prefab";
+				Path * new_prefab = App->filesystem->Copy(App->editor->selected_meta_file->exported_file_path.c_str(), selected_folder->GetFullPath(),new_prefab_name.c_str());
+				App->resources->Import(*new_prefab);
+			}
 		}
 
 		/* TODO: Finish this
-		
-		if (file->file_type == FileType::MODEL && ImGui::Selectable("Extract Prefab"))
-		{
-			std::string new_prefab_name = file->GetFullPath().substr(0, file->GetFullPath().find_last_of(".")) + ".prefab";
-			ImportOptions options;
-			Importer::GetOptionsFromMeta(Importer::GetMetaFilePath(file->GetFullPath()), options);
-			App->filesystem->Copy(options.exported_file.c_str(), new_prefab_name.c_str());
-			App->resources->Import(new_prefab_name);
-			changes = true;
 
-		}
 
 		/*if (ImGui::Selectable("Rename"))
 		{
