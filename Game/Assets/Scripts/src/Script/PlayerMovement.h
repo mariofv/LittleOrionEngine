@@ -21,11 +21,7 @@ public:
 	void Dash();
 
 private:
-	void HandleKeyboardInput();
-	void HandleControllerInput(int player_id = 0);
-
-private:
-	float speed = 5.0F;
+	float speed = 5.0f;
 	float rotation_speed = 0.01f;
 	float falling_factor = 1.0f;
 	bool is_jumping = false;
