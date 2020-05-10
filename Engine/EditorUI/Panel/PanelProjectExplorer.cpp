@@ -305,6 +305,17 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 			App->resources->ImportAssetsInDirectory(*App->filesystem->GetRootPath(), true);
 			App->resources->CleanResourceCache();
 		}
+		if (selected_file != nullptr)
+		{
+			if (ImGui::Selectable("Delete"))
+			{
+				bool success = App->filesystem->Remove(selected_file);
+				if (success)
+				{
+					selected_file = nullptr;
+				}
+			}
+		}
 
 		/* TODO: Finish this
 		
@@ -318,17 +329,7 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 			changes = true;
 
 		}
-		if (selected_file != nullptr)
-		{
-			if (ImGui::Selectable("Delete"))
-			{
-				bool success = App->filesystem->Remove(selected_file);
-				if (success)
-				{
-					selected_file = nullptr;
-				}
-			}
-		}
+
 		/*if (ImGui::Selectable("Rename"))
 		{
 			//TODO
