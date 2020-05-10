@@ -57,184 +57,41 @@ void PlayerMovement::Move(int player_id)
 {
 	float3 translation = owner->transform.GetTranslation();
 	float3 rotation = owner->transform.GetRotationRadiants();
-	float3 new_translation = float3::zero;
+	new_translation = float3::zero;
 
 	// No game controllers connected
 	// Player 1 -> Keyboard
-	if (App->input->total_game_controllers < 1 && player_id == 0)
+	if (App->input->total_game_controllers == 0 && player_id == 0)
 	{
-		if (App->input->GetKey(KeyCode::D))
-		{
-			new_translation += float3(speed, 0.0f, 0.0f);
-		}
-		if (App->input->GetKey(KeyCode::W))
-		{
-			new_translation += float3(0.0f, 0.0f, -speed);
-		}
-		if (App->input->GetKey(KeyCode::S))
-		{
-			new_translation += float3(0.0f, 0.0f, speed);
-		}
-		if (App->input->GetKey(KeyCode::A))
-		{
-			new_translation += float3(-speed, 0.0f, 0.0f);
-		}
-		if (App->input->GetKeyDown(KeyCode::Space))
-		{
-			new_translation += float3(0.0F, jump_power, 0.0F);
-			collider->AddForce(new_translation);
-		}
+		HandleKeyboardInput();
 	}
-	// 1 game controller connected && singleplayer
-	// Player 1 -> Keyboard || Game Controller
-	else if (App->input->total_game_controllers > 0 && App->input->singleplayer_input && player_id == 0)
+	// 1 game controller connected and singleplayer
+	// Player 1 -> Keyboard or Game Controller
+	else if (App->input->total_game_controllers == 1 && App->input->singleplayer_input && player_id == 0)
 	{
-		float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE);
-		float deadzone = 0.25f;
-
-		if (App->input->GetKey(KeyCode::D) || axis.x > deadzone)
-		{
-			new_translation += float3(speed, 0.0f, 0.0f);
-		}
-		if (App->input->GetKey(KeyCode::W) || axis.y < -deadzone)
-		{
-			new_translation += float3(0.0f, 0.0f, -speed);
-		}
-		if (App->input->GetKey(KeyCode::S) || axis.y > deadzone)
-		{
-			new_translation += float3(0.0f, 0.0f, speed);
-		}
-		if (App->input->GetKey(KeyCode::A) || axis.x < -deadzone)
-		{
-			new_translation += float3(-speed, 0.0f, 0.0f);
-		}
-		if (App->input->GetKeyDown(KeyCode::Space) || App->input->GetControllerButtonDown(ControllerCode::A, ControllerID::ONE))
-		{
-			new_translation += float3(0.0F, jump_power, 0.0F);
-			collider->AddForce(new_translation);
-		}
+		HandleKeyboardInput();
+		HandleControllerInput();
 	}
-	// 1 game controller connected && multiplayer
+	// 1 game controller connected and multiplayer
 	// Player 1 -> Keyboard
 	// Player 2 -> Game Controller
-	else if (App->input->total_game_controllers > 0 && !App->input->singleplayer_input)
+	else if (App->input->total_game_controllers == 1 && !App->input->singleplayer_input)
 	{
-		if (player_id == 0)
-		{
-			if (App->input->GetKey(KeyCode::D))
-			{
-				new_translation += float3(speed, 0.0f, 0.0f);
-			}
-			if (App->input->GetKey(KeyCode::W))
-			{
-				new_translation += float3(0.0f, 0.0f, -speed);
-			}
-			if (App->input->GetKey(KeyCode::S))
-			{
-				new_translation += float3(0.0f, 0.0f, speed);
-			}
-			if (App->input->GetKey(KeyCode::A))
-			{
-				new_translation += float3(-speed, 0.0f, 0.0f);
-			}
-			if (App->input->GetKeyDown(KeyCode::Space))
-			{
-				new_translation += float3(0.0F, jump_power, 0.0F);
-				collider->AddForce(new_translation);
-			}
-		}
-		else if (player_id == 1)
-		{
-			float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE);
-			float deadzone = 0.25f;
-
-			if (axis.x > deadzone)
-			{
-				new_translation += float3(speed, 0.0f, 0.0f);
-			}
-			if (axis.y < -deadzone)
-			{
-				new_translation += float3(0.0f, 0.0f, -speed);
-			}
-			if (axis.y > deadzone)
-			{
-				new_translation += float3(0.0f, 0.0f, speed);
-			}
-			if (axis.x < -deadzone)
-			{
-				new_translation += float3(-speed, 0.0f, 0.0f);
-			}
-			if (App->input->GetControllerButtonDown(ControllerCode::A, ControllerID::ONE))
-			{
-				new_translation += float3(0.0F, jump_power, 0.0F);
-				collider->AddForce(new_translation);
-			}
-		}
+		player_id == 0 ? HandleKeyboardInput() : HandleControllerInput();
 	}
 	// 2 game controllers connected
 	// Player 1 -> Game Controller 1
 	// Player 2 -> Game Controller 2
-	else if (App->input->total_game_controllers > 1)
+	else if (App->input->total_game_controllers == 2)
 	{
-		float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, static_cast<ControllerID>(player_id));
-		float deadzone = 0.25f;
-
-		if (axis.x > deadzone)
-		{
-			new_translation += float3(speed, 0.0f, 0.0f);
-		}
-		if (axis.y < -deadzone)
-		{
-			new_translation += float3(0.0f, 0.0f, -speed);
-		}
-		if (axis.y > deadzone)
-		{
-			new_translation += float3(0.0f, 0.0f, speed);
-		}
-		if (axis.x < -deadzone)
-		{
-			new_translation += float3(-speed, 0.0f, 0.0f);
-		}
-		if (App->input->GetControllerButtonDown(ControllerCode::A, ControllerID::ONE))
-		{
-			new_translation += float3(0.0F, jump_power, 0.0F);
-			collider->AddForce(new_translation);
-		}
+		HandleControllerInput(player_id);
 	}
 
-	//Controller Input
-	//float vertical = App->input->GetVertical(static_cast<PlayerID>(player_id));
-	//float horizontal = App->input->GetHorizontal(static_cast<PlayerID>(player_id));
-
-
-	//float3 axis_direction = float3(axis.x, 0.0f, axis.y);
-
-	//if (!axis_direction.Equals(float3::zero))
-	//{
-	//	float3 dir;
-	//	float3 direction = axis_direction * speed + transform;
-	//	bool there_is_poly = App->artificial_intelligence->FindNextPolyByDirection(direction, dir);
-	//	
-	//	if(there_is_poly)
-	//	{
-	//		direction.y = dir.y;
-	//	}
-
-	//	if (App->artificial_intelligence->IsPointWalkable(direction))
-	//	{
-	//	
-	//		owner->transform.LookAt(direction);
-	//		owner->transform.SetTranslation(direction);
-	//	}
-	//}
-
-	//Keyboard Input
-
-
-
-
-	collider->SetVelocity(new_translation, speed);
-
+	// Move player if it has moved
+	if (!new_translation.Equals(float3::zero))
+	{
+		collider->SetVelocity(new_translation, speed);
+	}
 }
 
 void PlayerMovement::Fall()
@@ -247,4 +104,58 @@ void PlayerMovement::Fall()
 void PlayerMovement::Dash()
 {
 	//TODO DASH
+}
+
+void PlayerMovement::HandleKeyboardInput()
+{
+	if (App->input->GetKey(KeyCode::D))
+	{
+		new_translation += float3(speed, 0.0f, 0.0f);
+	}
+	if (App->input->GetKey(KeyCode::W))
+	{
+		new_translation += float3(0.0f, 0.0f, -speed);
+	}
+	if (App->input->GetKey(KeyCode::S))
+	{
+		new_translation += float3(0.0f, 0.0f, speed);
+	}
+	if (App->input->GetKey(KeyCode::A))
+	{
+		new_translation += float3(-speed, 0.0f, 0.0f);
+	}
+	if (App->input->GetKeyDown(KeyCode::Space))
+	{
+		new_translation += float3(0.0F, jump_power, 0.0F);
+		collider->AddForce(new_translation);
+	}
+}
+
+void PlayerMovement::HandleControllerInput(int player_id)
+{
+	ControllerID controller_id = static_cast<ControllerID>(player_id);
+	float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, controller_id);
+	float deadzone = 0.25f;
+
+	if (axis.x > deadzone)
+	{
+		new_translation += float3(speed, 0.0f, 0.0f);
+	}
+	if (axis.y < -deadzone)
+	{
+		new_translation += float3(0.0f, 0.0f, -speed);
+	}
+	if (axis.y > deadzone)
+	{
+		new_translation += float3(0.0f, 0.0f, speed);
+	}
+	if (axis.x < -deadzone)
+	{
+		new_translation += float3(-speed, 0.0f, 0.0f);
+	}
+	if (App->input->GetControllerButtonDown(ControllerCode::A, controller_id))
+	{
+		new_translation += float3(0.0F, jump_power, 0.0F);
+		collider->AddForce(new_translation);
+	}
 }

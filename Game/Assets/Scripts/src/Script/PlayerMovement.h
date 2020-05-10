@@ -21,6 +21,10 @@ public:
 	void Dash();
 
 private:
+	void HandleKeyboardInput();
+	void HandleControllerInput(int player_id = 0);
+
+private:
 	float speed = 5.0F;
 	float rotation_speed = 0.01f;
 	float falling_factor = 1.0f;
@@ -30,7 +34,7 @@ private:
 	float3 movement_vector;
 	float3 gravity_vector;
 	ComponentCollider* collider = nullptr;
-
+	float3 new_translation;
 };
 extern "C" SCRIPT_API PlayerMovement* PlayerMovementDLL(); //This is how we are going to load the script
 #endif
