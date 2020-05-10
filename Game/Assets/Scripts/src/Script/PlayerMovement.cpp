@@ -58,10 +58,10 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 
 }
 
-void PlayerMovement::Move(int player_id)
+void PlayerMovement::Move(int player)
 {
 
-	float3 transform = owner->transform.GetTranslation();
+	/*float3 transform = owner->transform.GetTranslation();
 	float3 rotation = owner->transform.GetRotationRadiants();
 
 	//is_inside = IsInside(transform);
@@ -168,8 +168,26 @@ void PlayerMovement::Move(int player_id)
 		collider->SetVelocity(new_transform);
 	}*/
 	
-	//collider->SetVelocity(new_transform, speed);
+	//collider->SetVelocity(new_transform, speed);*/
 	
+	new_translation = float3::zero;
+	PlayerID player_id = static_cast<PlayerID>(player - 1);
+
+	float x_axis = App->input->GetHorizontal(player_id);
+	float y_axis = App->input->GetVertical(player_id);
+
+	new_translation += float3(x_axis, 0.0f, y_axis);
+
+	if (!new_translation.Equals(float3::zero))
+	{
+		collider->SetVelocity(new_translation, speed);
+	}
+
+	if (App->input->GetGameInputDown("Jump", player_id))
+	{
+		new_translation += float3(0.0f, jump_power, 0.0f);
+		collider->AddForce(new_translation);
+	}
 }
 
 void PlayerMovement::Jump()

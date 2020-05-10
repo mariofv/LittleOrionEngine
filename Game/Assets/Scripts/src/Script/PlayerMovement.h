@@ -42,6 +42,7 @@ private:
 	ComponentCamera* game_camera = nullptr;
 	bool is_inside = true;
 
+	float3 new_translation;
 };
 extern "C" SCRIPT_API PlayerMovement* PlayerMovementDLL(); //This is how we are going to load the script
 #endif

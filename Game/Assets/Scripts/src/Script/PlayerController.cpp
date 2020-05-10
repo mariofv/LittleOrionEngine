@@ -67,11 +67,11 @@ void PlayerController::OnInspector(ImGuiContext* context)
 		
 		if (ImGui::Selectable("1"))
 		{
-			player = 0;
+			player = 1;
 		}
 		if (ImGui::Selectable("2"))
 		{
-			player = 1;
+			player = 2;
 		}
 
 		ImGui::EndCombo();

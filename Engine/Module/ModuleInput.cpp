@@ -338,7 +338,7 @@ ENGINE_API bool ModuleInput::GetGameInput(const char* name, PlayerID player_id)
 
 	// No game controllers connected
 	// Player 1 -> Keyboard
-	if (total_game_controllers < 1)
+	if (total_game_controllers == 0)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -355,7 +355,7 @@ ENGINE_API bool ModuleInput::GetGameInput(const char* name, PlayerID player_id)
 
 	// 1 game controller connected && singleplayer
 	// Player 1 -> Keyboard || Game Controller
-	else if (total_game_controllers > 0 && singleplayer_input)
+	else if (total_game_controllers == 1 && singleplayer_input)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -399,7 +399,7 @@ ENGINE_API bool ModuleInput::GetGameInput(const char* name, PlayerID player_id)
 	// 2 game controllers connected
 	// Player 1 -> Game Controller 1
 	// Player 2 -> Game Controller 2
-	else if (total_game_controllers > 1)
+	else if (total_game_controllers == 2)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -426,7 +426,7 @@ ENGINE_API bool ModuleInput::GetGameInputDown(const char* name, PlayerID player_
 
 	// No game controllers connected
 	// Player 1 -> Keyboard
-	if (total_game_controllers < 1)
+	if (total_game_controllers == 0)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -443,7 +443,7 @@ ENGINE_API bool ModuleInput::GetGameInputDown(const char* name, PlayerID player_
 
 	// 1 game controller connected && singleplayer
 	// Player 1 -> Keyboard || Game Controller
-	else if (total_game_controllers > 0 && singleplayer_input)
+	else if (total_game_controllers == 1 && singleplayer_input)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -487,7 +487,7 @@ ENGINE_API bool ModuleInput::GetGameInputDown(const char* name, PlayerID player_
 	// 2 game controllers connected
 	// Player 1 -> Game Controller 1
 	// Player 2 -> Game Controller 2
-	else if (total_game_controllers > 1)
+	else if (total_game_controllers == 2)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -514,7 +514,7 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id
 
 	// No game controllers connected
 	// Player 1 -> Keyboard
-	if (total_game_controllers < 1)
+	if (total_game_controllers == 0)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -531,7 +531,7 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id
 
 	// 1 game controller connected && singleplayer
 	// Player 1 -> Keyboard || Game Controller
-	else if (total_game_controllers > 0 && singleplayer_input)
+	else if (total_game_controllers == 1 && singleplayer_input)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -575,7 +575,7 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id
 	// 2 game controllers connected
 	// Player 1 -> Game Controller 1
 	// Player 2 -> Game Controller 2
-	else if (total_game_controllers > 1)
+	else if (total_game_controllers == 2)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -750,7 +750,7 @@ ENGINE_API float ModuleInput::GetVertical(PlayerID player_id)
 {
 	// No game controllers connected
 	// Player 1 -> Keyboard
-	if (total_game_controllers < 1)
+	if (total_game_controllers == 0)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -771,7 +771,7 @@ ENGINE_API float ModuleInput::GetVertical(PlayerID player_id)
 
 	// 1 game controller connected && singleplayer
 	// Player 1 -> Keyboard || Game Controller
-	else if (total_game_controllers > 0 && singleplayer_input)
+	else if (total_game_controllers == 1 && singleplayer_input)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -795,7 +795,7 @@ ENGINE_API float ModuleInput::GetVertical(PlayerID player_id)
 	// 1 game controller connected && multiplayer
 	// Player 1 -> Keyboard
 	// Player 2 -> Game Controller
-	else if (total_game_controllers > 0 && !singleplayer_input)
+	else if (total_game_controllers == 1 && !singleplayer_input)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -817,7 +817,7 @@ ENGINE_API float ModuleInput::GetVertical(PlayerID player_id)
 	// 2 game controllers connected
 	// Player 1 -> Game Controller 1
 	// Player 2 -> Game Controller 2
-	else if (total_game_controllers > 1)
+	else if (total_game_controllers == 2)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -836,7 +836,7 @@ ENGINE_API float ModuleInput::GetHorizontal(PlayerID player_id)
 {
 	// No game controllers connected
 	// Player 1 -> Keyboard
-	if (total_game_controllers < 1)
+	if (total_game_controllers == 0)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -857,7 +857,7 @@ ENGINE_API float ModuleInput::GetHorizontal(PlayerID player_id)
 
 	// 1 game controller connected && singleplayer
 	// Player 1 -> Keyboard || Game Controller
-	else if (total_game_controllers > 0 && singleplayer_input)
+	else if (total_game_controllers == 1 && singleplayer_input)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -881,7 +881,7 @@ ENGINE_API float ModuleInput::GetHorizontal(PlayerID player_id)
 	// 1 game controller connected && multiplayer
 	// Player 1 -> Keyboard
 	// Player 2 -> Game Controller
-	else if (total_game_controllers > 0 && !singleplayer_input)
+	else if (total_game_controllers == 1 && !singleplayer_input)
 	{
 		if (player_id == PlayerID::ONE)
 		{
@@ -903,7 +903,7 @@ ENGINE_API float ModuleInput::GetHorizontal(PlayerID player_id)
 	// 2 game controllers connected
 	// Player 1 -> Game Controller 1
 	// Player 2 -> Game Controller 2
-	else if (total_game_controllers > 1)
+	else if (total_game_controllers == 2)
 	{
 		if (player_id == PlayerID::ONE)
 		{

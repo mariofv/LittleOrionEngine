@@ -2,6 +2,7 @@
 
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentAnimation.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -59,8 +60,8 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ImGui::InputFloat("Attack Range", &attack_range);
 	ImGui::InputFloat("Max Health", &max_health_points);
 	ImGui::InputFloat("Health Points", &health_points);
-	ImGui::InputFloat("Stop Distance", &stopping_distance);
-	ImGui::InputFloat("Detect Distance", &detect_player_distance);
+	ImGui::InputFloat("Stop Distance", &stop_distance);
+	ImGui::InputFloat("Detect Distance", &detect_distance);
 
 	ImGui::NewLine();
 	ImGui::Text("Enemy Debug");
@@ -72,7 +73,6 @@ void EnemyController::OnInspector(ImGuiContext* context)
 void EnemyController::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
-
 	for (int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		name_gameobjects.push_back(is_object);
@@ -90,17 +90,60 @@ void EnemyController::TakeDamage(float damage)
 	}
 }
 
+void EnemyController::InitMembers()
+{
+	GameObject* enemy_manager_go = App->scene->GetGameObjectByName("EnemyManager");
+	ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
+	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
+
+	player = App->scene->GetGameObjectByName("Player");
+
+	animation = (ComponentAnimation*)owner->GetComponent(Component::ComponentType::ANIMATION);
+
+	init_translation = owner->transform.GetTranslation();
+	init_rotation = owner->transform.GetRotation();
+	init_scale = owner->transform.GetScale();
+}
+
 void EnemyController::Move()
 {
-	if (!PlayerInSight()) return;
+	if (!PlayerInSight())
+	{
+		if (!animation->IsOnState("Idle"))
+		{
+			animation->ActiveAnimation("idle");
+		}
+
+		return;
+	}
 
 	const float3 player_transform = player->transform.GetTranslation();
 	float3 transform = owner->transform.GetTranslation();
 
 	float3 direction = player_transform - transform;
 
-	if (player_transform.Distance(transform) > stopping_distance)
+	// If player in range attack
+	if (PlayerInRange())
 	{
+		if (!animation->IsOnState("Attack"))
+		{
+			animation->ActiveAnimation("attack");
+		}
+	}
+	// If player not in range walk
+	else
+	{
+		// If player still attacking, finish animation and then switch to walking
+		if (animation->IsOnState("Attack"))
+		{
+			return;
+		}
+		else if (animation->IsOnState("Idle"))
+		{
+			animation->ActiveAnimation("walk");
+			return;
+		}
+
 		float3 position = transform + (direction.Normalized() * move_speed);
 
 		float3 next_position;
@@ -121,27 +164,16 @@ void EnemyController::Move()
 
 bool EnemyController::PlayerInSight()
 {
-	return player->transform.GetTranslation().Distance(owner->transform.GetTranslation()) < detect_player_distance;
+	return player->transform.GetTranslation().Distance(owner->transform.GetTranslation()) < detect_distance;
+}
+
+bool EnemyController::PlayerInRange()
+{
+	return player->transform.GetTranslation().Distance(owner->transform.GetTranslation()) <= stop_distance;
 }
 
 void EnemyController::Die()
 {
-	//TODO spawn particles, loot, etc.
 	is_alive = false;
 	enemy_manager->KillEnemy(this);
-}
-
-void EnemyController::InitMembers()
-{
-	GameObject* enemy_manager_go = App->scene->GetGameObjectByName("EnemyManager");
-	ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
-	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
-
-	player = App->scene->GetGameObjectByName("Player");
-
-	animation = (ComponentAnimation*)owner->GetComponent(Component::ComponentType::ANIMATION);
-
-	init_translation = owner->transform.GetTranslation();
-	init_rotation = owner->transform.GetRotation();
-	init_scale = owner->transform.GetScale();
 }
