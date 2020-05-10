@@ -1,26 +1,19 @@
 #ifndef  __PURSUEENEMYSTATE_H__
 #define  __PURSUEENEMYSTATE_H__
 
-#include "Script.h"
+#include "EnemyState.h"
 
-class PursueEnemyState : public Script
+class PursueEnemyState : public EnemyState
 {
 public:
 	PursueEnemyState();
+	PursueEnemyState(Mushdoom* enemy);
 	~PursueEnemyState() = default;
 
-	void Awake() override;
-	void Start() override;
-	void Update() override;
-
-	void OnInspector(ImGuiContext*) override;
-	void InitPublicGameObjects();
-	//void Save(Config& config) const override;
-	//void Load(const Config& config) override;
-
-private:
-	GameObject* example = nullptr;
-
+	void OnStateEnter() override;
+	void OnStateUpdate() override;
+	void OnStateExit() override;
 };
+
 extern "C" SCRIPT_API PursueEnemyState* PursueEnemyStateDLL(); //This is how we are going to load the script
 #endif

@@ -1,18 +1,6 @@
 #include "EnemyState.h"
 
-#include "Component/ComponentScript.h"
-#include "Component/ComponentTransform.h"
-
-#include "Main/Application.h"
-#include "Main/GameObject.h"
-#include "Module/ModuleInput.h"
-#include "Module/ModuleScene.h"
-
-#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
-
-#include "imgui.h"
-
-
+#include "Mushdoom.h"
 
 EnemyState* EnemyStateDLL()
 {
@@ -22,61 +10,15 @@ EnemyState* EnemyStateDLL()
 
 EnemyState::EnemyState()
 {
-	panel = new PanelComponent();
 }
 
-// Use this for initialization before Start()
-void EnemyState::Awake()
+EnemyState::EnemyState(Mushdoom* enemy) : enemy(enemy)
 {
-
 }
 
-// Use this for initialization
-void EnemyState::Start()
+void EnemyState::Exit(EnemyState* state)
 {
-
+	enemy->current_state->OnStateExit();
+	enemy->current_state = state;
+	enemy->current_state->OnStateEnter();
 }
-
-// Update is called once per frame
-void EnemyState::Update()
-{
-
-
-}
-
-// Use this for showing variables on inspector
-void EnemyState::OnInspector(ImGuiContext* context)
-{
-	//Necessary to be able to write with imgui
-	ImGui::SetCurrentContext(context);
-	ShowDraggedObjects();
-
-}
-
-//Use this for linking JUST GO automatically 
-void EnemyState::InitPublicGameObjects()
-{
-	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
-
-	public_gameobjects.push_back(&example);
-	variable_names.push_back(GET_VARIABLE_NAME(example));
-
-	for (int i = 0; i < public_gameobjects.size(); ++i)
-	{
-		name_gameobjects.push_back(is_object);
-		go_uuids.push_back(0);
-	}
-}
-//Use this for linking GO AND VARIABLES automatically if you need to save variables 
-// void EnemyState::Save(Config& config) const
-// {
-// 	config.AddUInt(example->UUID, "ExampleNameforSave");
-// 	Script::Save(config);
-// }
-
-// //Use this for linking GO AND VARIABLES automatically
-// void EnemyState::Load(const Config& config)
-// {
-// 	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
-// 	Script::Load(config);
-// }

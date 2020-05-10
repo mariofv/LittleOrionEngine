@@ -3,24 +3,33 @@
 
 #include "EnemyController.h"
 
+class EnemyState;
+class IdleEnemyState;
+class ScreamEnemyState;
+class PursueEnemyState;
+class AttackEnemyState;
+
 class Mushdoom : public EnemyController
 {
 public:
 	Mushdoom();
-	~Mushdoom() = default;
+	~Mushdoom();
 
 	void Awake() override;
 	void Start() override;
 	void Update() override;
 
-	void ResetEnemy() override;
-	//void OnInspector(ImGuiContext*) override;
+	void OnInspector(ImGuiContext*) override;
 	//void InitPublicGameObjects();
-	//void Save(Config& config) const override;
-	//void Load(const Config& config) override;
 
-private:
-	//GameObject* example = nullptr;
+	void ResetEnemy() override;
+
+public:
+	EnemyState* current_state = nullptr;
+	EnemyState* idle_state = nullptr;
+	EnemyState* scream_state = nullptr;
+	EnemyState* pursue_state = nullptr;
+	EnemyState* attack_state = nullptr;
 };
 extern "C" SCRIPT_API Mushdoom* MushdoomDLL(); //This is how we are going to load the script
 #endif

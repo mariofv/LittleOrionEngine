@@ -28,22 +28,29 @@ public:
 	void InitMembers();
 	virtual void ResetEnemy() {}
 
+	bool PlayerInSight();
+	bool PlayerInRange();
+
+	float GetMoveSpeed() const;
+	bool PointInNavMesh(float3& position, float3& next_position);
+	bool IsPointWalkable(float3& position);
+	void LookAndMoveToPoint(float3& position);
+
 protected:
 	void Move();
 	bool Attack() {}
-	bool PlayerInSight();
-	bool PlayerInRange();
+
 	void OnCollisionEnter() {}
 	void Die();
 
 public:
 	GameObject* player = nullptr;
+	ComponentAnimation* animation = nullptr;
 	bool is_alive = true;
 
 protected:
 	EnemyType type;
 
-	ComponentAnimation* animation = nullptr;
 	EnemyManager* enemy_manager = nullptr;
 
 	float rot_speed = 0.01f;

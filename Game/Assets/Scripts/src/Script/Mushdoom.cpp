@@ -1,5 +1,11 @@
 #include "Mushdoom.h"
 
+#include "EnemyState.h"
+#include "IdleEnemyState.h"
+#include "ScreamEnemyState.h"
+#include "PursueEnemyState.h"
+#include "AttackEnemyState.h"
+
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 
@@ -20,8 +26,24 @@ Mushdoom* MushdoomDLL()
 
 Mushdoom::Mushdoom()
 {
-	type = EnemyType::MUSHDOOM;
 	panel = new PanelComponent();
+
+	type = EnemyType::MUSHDOOM;
+
+	current_state = new EnemyState();
+	idle_state = new IdleEnemyState(this);
+	scream_state = new ScreamEnemyState(this);
+	pursue_state = new PursueEnemyState(this);
+	attack_state = new AttackEnemyState(this);
+}
+
+Mushdoom::~Mushdoom()
+{
+	delete current_state;
+	delete idle_state;
+	delete scream_state;
+	delete pursue_state;
+	delete attack_state;
 }
 
 // Use this for initialization before Start()
@@ -33,13 +55,15 @@ void Mushdoom::Awake()
 // Use this for initialization
 void Mushdoom::Start()
 {
-	EnemyController::Start();
+	current_state = idle_state;
+	current_state->OnStateEnter();
 }
 
 // Update is called once per frame
 void Mushdoom::Update()
 {
-	EnemyController::Update();
+	//EnemyController::Update();
+	current_state->OnStateUpdate();
 }
 
 void Mushdoom::ResetEnemy()
@@ -54,22 +78,18 @@ void Mushdoom::ResetEnemy()
 	owner->transform.SetScale(init_scale);
 }
 
-// Use this for showing variables on inspector
-//void Mushdoom::OnInspector(ImGuiContext* context)
-//{
-//	//Necessary to be able to write with imgui
-//	ImGui::SetCurrentContext(context);
-//	ShowDraggedObjects();
-//
-//}
+//Use this for showing variables on inspector
+void Mushdoom::OnInspector(ImGuiContext* context)
+{
+	EnemyController::OnInspector(context);
 
-//Use this for linking JUST GO automatically 
+	//ImGui::Text("Current State: %s", current_state->name);
+}
+
+////Use this for linking JUST GO automatically 
 //void Mushdoom::InitPublicGameObjects()
 //{
 //	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
-//
-//	public_gameobjects.push_back(&example);
-//	variable_names.push_back(GET_VARIABLE_NAME(example));
 //
 //	for (int i = 0; i < public_gameobjects.size(); ++i)
 //	{
@@ -77,17 +97,3 @@ void Mushdoom::ResetEnemy()
 //		go_uuids.push_back(0);
 //	}
 //}
-
-//Use this for linking GO AND VARIABLES automatically if you need to save variables 
-// void Mushdoom::Save(Config& config) const
-// {
-// 	config.AddUInt(example->UUID, "ExampleNameforSave");
-// 	Script::Save(config);
-// }
-
-// //Use this for linking GO AND VARIABLES automatically
-// void Mushdoom::Load(const Config& config)
-// {
-// 	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
-// 	Script::Load(config);
-// }

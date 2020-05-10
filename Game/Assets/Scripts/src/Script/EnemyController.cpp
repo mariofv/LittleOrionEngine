@@ -35,7 +35,6 @@ void EnemyController::Awake()
 // Use this for initialization
 void EnemyController::Start()
 {
-
 }
 
 // Update is called once per frame
@@ -51,7 +50,6 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
 
-	ImGui::NewLine();
 	ImGui::Text("Enemy Stats");
 	ImGui::InputFloat("Rot Speed", &rot_speed);
 	ImGui::InputFloat("Move Speed", &move_speed);
@@ -140,7 +138,7 @@ void EnemyController::Move()
 		}
 		else if (animation->IsOnState("Idle"))
 		{
-			animation->ActiveAnimation("walk");
+			animation->ActiveAnimation("pursue");
 			return;
 		}
 
@@ -170,6 +168,27 @@ bool EnemyController::PlayerInSight()
 bool EnemyController::PlayerInRange()
 {
 	return player->transform.GetTranslation().Distance(owner->transform.GetTranslation()) <= stop_distance;
+}
+
+float EnemyController::GetMoveSpeed() const
+{
+	return move_speed;
+}
+
+bool EnemyController::PointInNavMesh(float3& position, float3& next_position)
+{
+	return App->artificial_intelligence->FindNextPolyByDirection(position, next_position);
+}
+
+bool EnemyController::IsPointWalkable(float3& position)
+{
+	return App->artificial_intelligence->IsPointWalkable(position);
+}
+
+void EnemyController::LookAndMoveToPoint(float3 & position)
+{
+	owner->transform.LookAt(position);
+	owner->transform.SetTranslation(position);
 }
 
 void EnemyController::Die()

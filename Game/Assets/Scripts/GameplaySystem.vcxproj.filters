@@ -16,6 +16,9 @@
     <Filter Include="src\Script\Enemy">
       <UniqueIdentifier>{4f8efb08-f09a-4acb-89c9-190a535a082e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Script\Enemy\States">
+      <UniqueIdentifier>{ebdb1ed7-f4d7-4356-a775-004e150837bb}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Script\ExampleScript.h">
@@ -69,6 +72,21 @@
     <ClInclude Include="src\Script\Mushdoom.h">
       <Filter>src\Script\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\AttackEnemyState.h">
+      <Filter>src\Script\Enemy\States</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\EnemyState.h">
+      <Filter>src\Script\Enemy\States</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\IdleEnemyState.h">
+      <Filter>src\Script\Enemy\States</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\PursueEnemyState.h">
+      <Filter>src\Script\Enemy\States</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\ScreamEnemyState.h">
+      <Filter>src\Script\Enemy\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -121,6 +139,21 @@
     </ClCompile>
     <ClCompile Include="src\Script\Mushdoom.cpp">
       <Filter>src\Script\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\AttackEnemyState.cpp">
+      <Filter>src\Script\Enemy\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\EnemyState.cpp">
+      <Filter>src\Script\Enemy\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\IdleEnemyState.cpp">
+      <Filter>src\Script\Enemy\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\PursueEnemyState.cpp">
+      <Filter>src\Script\Enemy\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\ScreamEnemyState.cpp">
+      <Filter>src\Script\Enemy\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

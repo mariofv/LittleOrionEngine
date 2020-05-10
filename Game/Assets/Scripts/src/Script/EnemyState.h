@@ -3,24 +3,26 @@
 
 #include "Script.h"
 
+class Mushdoom;
+
 class EnemyState : public Script
 {
 public:
 	EnemyState();
-	~EnemyState() = default;
+	EnemyState(Mushdoom* enemy);
+	virtual ~EnemyState() = default;
 
-	void Awake() override;
-	void Start() override;
-	void Update() override;
+	virtual void OnStateEnter() {}
+	virtual void OnStateUpdate() {}
+	virtual void OnStateExit() {}
 
-	void OnInspector(ImGuiContext*) override;
-	void InitPublicGameObjects();
-	//void Save(Config& config) const override;
-	//void Load(const Config& config) override;
+	void Exit(EnemyState* state);
 
-private:
-	GameObject* example = nullptr;
+public:
+	const char* name;
 
+protected:
+	Mushdoom* enemy = nullptr;
 };
 extern "C" SCRIPT_API EnemyState* EnemyStateDLL(); //This is how we are going to load the script
 #endif
