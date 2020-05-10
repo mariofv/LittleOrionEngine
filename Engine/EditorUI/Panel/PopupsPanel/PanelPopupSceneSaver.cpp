@@ -196,7 +196,6 @@ void PanelPopupSceneSaver::SetPopupSelection()
 	has_selected = true;
 	ImGui::CloseCurrentPopup();
 	pending_to_be_closed = true;
-	is_overwriting = true;
 }
 
 void PanelPopupSceneSaver::ConfirmationPopup()
@@ -207,6 +206,7 @@ void PanelPopupSceneSaver::ConfirmationPopup()
 		if (ImGui::Button("ok"))
 		{
 			SetPopupSelection();
+			is_overwriting = true;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("cancel"))
