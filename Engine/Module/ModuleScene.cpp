@@ -31,6 +31,8 @@ bool ModuleScene::Init()
 	build_options = std::make_unique<BuildOptions>();
 	build_options->LoadOptions();
 
+	Path* created_tmp = App->filesystem->Save(TMP_SCENE_PATH, std::string());
+	App->resources->Import(*created_tmp);
 	Path* metafile_path = App->filesystem->GetPath(App->resources->metafile_manager->GetMetafilePath(TMP_SCENE_PATH));
 	Metafile* scene_metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
 	assert(scene_metafile != nullptr);
