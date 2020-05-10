@@ -126,23 +126,28 @@ void EnemyController::Move()
 	{
 		if (!animation->IsOnState("Walk"))
 		{
-			animation->ActiveAnimation("walk");
+			if (animation->IsOnState("Idle") && animation->GetCurrentClipPercentatge() > 0.95f)
+			{
+				animation->ActiveAnimation("walk");
+			}
 		}
-
-		float3 position = transform + (direction.Normalized() * move_speed);
-
-		float3 next_position;
-		bool valid_position = App->artificial_intelligence->FindNextPolyByDirection(position, next_position);
-
-		if (valid_position)
+		else
 		{
-			position.y = next_position.y;
-		}
+			float3 position = transform + (direction.Normalized() * move_speed);
 
-		if (App->artificial_intelligence->IsPointWalkable(position))
-		{
-			owner->transform.LookAt(position);
-			owner->transform.SetTranslation(position);
+			float3 next_position;
+			bool valid_position = App->artificial_intelligence->FindNextPolyByDirection(position, next_position);
+
+			if (valid_position)
+			{
+				position.y = next_position.y;
+			}
+
+			if (App->artificial_intelligence->IsPointWalkable(position))
+			{
+				owner->transform.LookAt(position);
+				owner->transform.SetTranslation(position);
+			}
 		}
 	}
 	else
