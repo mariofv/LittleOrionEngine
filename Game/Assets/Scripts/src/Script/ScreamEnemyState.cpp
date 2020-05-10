@@ -22,18 +22,18 @@ ScreamEnemyState::ScreamEnemyState(Mushdoom* enemy) : EnemyState(enemy)
 
 void ScreamEnemyState::OnStateEnter()
 {
-	//if (!enemy->animation->IsOnState("Scream"))
-	//{
-	//	enemy->animation->ActiveAnimation("scream");
-	//}
+	if (!enemy->animation->IsOnState("Scream"))
+	{
+		enemy->animation->ActiveAnimation("scream");
+	}
 }
 
 void ScreamEnemyState::OnStateUpdate()
 {
-	//if (enemy->animation->GetCurrentClipPercentatge() > 0.99f)
-	//{
-	//	Exit(enemy->pursue_state);
-	//}
+	if (enemy->animation->GetCurrentClipPercentatge() > 0.99f)
+	{
+		Exit(enemy->pursue_state);
+	}
 }
 
 void ScreamEnemyState::OnStateExit()
