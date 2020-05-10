@@ -21,7 +21,7 @@ public:
 
 	void Move(int player);
 	void Jump();
-	void Dash();
+	bool IsGrounded();
 
 	bool IsInside(float3 transform);
 
@@ -41,6 +41,7 @@ private:
 	GameObject* camera = nullptr;
 	ComponentCamera* game_camera = nullptr;
 	bool is_inside = true;
+	bool is_grounded = false;
 
 	float3 new_translation;
 };

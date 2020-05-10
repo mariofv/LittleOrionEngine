@@ -11,6 +11,7 @@
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTime.h"
+#include "Module/ModulePhysics.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
@@ -55,138 +56,62 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 	ImGui::Text("Variables: ");
 	ShowDraggedObjects();
 	ImGui::Checkbox("Is Inside Frustum", &is_inside);
+	ImGui::Checkbox("Is Grounded", &is_grounded);
 
 }
 
 void PlayerMovement::Move(int player)
 {
 
-	/*float3 transform = owner->transform.GetTranslation();
-	float3 rotation = owner->transform.GetRotationRadiants();
-
-	//is_inside = IsInside(transform);
-	//if (!is_inside)
-	//{
-	//	//float3 null = float3(0.f, 0.f, 0.f);
-	//	collider->SetVelocity(transform, 0);
-
-	//}
-
-	//Controller Input
-	//float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, static_cast<ControllerID>(player_id));
-	//float3 axis_direction = float3(axis.x, 0.0f, axis.y);
-
-	//float vertical = App->input->GetVertical(static_cast<PlayerID>(player_id));
-	//float horizontal = App->input->GetHorizontal(static_cast<PlayerID>(player_id));
-	//float3 axis_direction = float3(horizontal, 0.0f, vertical);
-
-	//if (!axis_direction.Equals(float3::zero))
-	//{
-	//	float3 dir;
-	//	float3 direction = axis_direction * speed + transform;
-	//	owner->transform.LookAt(direction);
-	//	collider->AddForce(direction);
-	//}
-
-	//Keyboard Input
-	float3 new_transform = float3::zero;
-	if(player_id == 0)
-	{
-		new_transform = float3::zero;
-		if (App->input->GetKey(KeyCode::D))
-		{
-			new_transform += float3(speed, 0.0f, 0.0f);
-		}
-		if (App->input->GetKey(KeyCode::W))
-		{
-			new_transform += float3(0.0f, 0.0f, -speed);
-		}
-		if (App->input->GetKey(KeyCode::S))
-		{
-			new_transform += float3(0.0f, 0.0f, speed);
-		}
-		if (App->input->GetKey(KeyCode::A))
-		{
-			new_transform += float3(-speed, 0.0f, 0.0f);
-		}
-		if (App->input->GetKeyDown(KeyCode::Space))
-		{
-			Jump();
-		}
-		//collider->SetVelocity(new_transform, speed);
-
-		is_inside = IsInside(transform + new_transform/10);
-
-		if (is_inside)
-		{
-			//collider->AddForce(new_transform);
-			collider->SetVelocity(new_transform, speed);
-		}
-		else
-		{
-			collider->SetVelocity(transform, 0);
-		}
-	}
-	else if(player_id == 1)
-	{
-		new_transform = float3::zero;
-		if (App->input->GetKey(KeyCode::RightArrow))
-		{
-			new_transform += float3(speed, 0.0f, 0.0f);
-		}
-		if (App->input->GetKey(KeyCode::UpArrow))
-		{
-			new_transform += float3(0.0f, 0.0f, -speed);
-		}
-		if (App->input->GetKey(KeyCode::DownArrow))
-		{
-			new_transform += float3(0.0f, 0.0f, speed);
-		}
-		if (App->input->GetKey(KeyCode::LeftArrow))
-		{
-			new_transform += float3(-speed, 0.0f, 0.0f);
-		}
-		//collider->SetVelocity(new_transform, speed);
-		is_inside = IsInside(transform + new_transform / 10);
-
-		if (is_inside)
-		{
-			//collider->AddForce(new_transform);
-			collider->SetVelocity(new_transform, speed);
-		}
-		else
-		{
-			collider->SetVelocity(transform,0);
-		}
-	}
-	//EXAMPLE USING PLAYER INPUT (JUST MOVE)
-	/*	new_transform += float3(0.0F, jump_power, 0.0F);
-		collider->AddForce(new_transform);
-	}
-	if (new_transform.x != 0 || new_transform.y != 0 || new_transform.z != 0)
-	{
-		collider->SetVelocity(new_transform);
-	}*/
-	
-	//collider->SetVelocity(new_transform, speed);*/
-	
+	float3 transform = owner->transform.GetTranslation();
 	new_translation = float3::zero;
 	PlayerID player_id = static_cast<PlayerID>(player - 1);
 
 	float x_axis = App->input->GetHorizontal(player_id);
 	float y_axis = App->input->GetVertical(player_id);
 
+
 	new_translation += float3(x_axis, 0.0f, y_axis);
-
-	if (!new_translation.Equals(float3::zero))
+	if(IsGrounded())
 	{
-		collider->SetVelocity(new_translation, speed);
+		is_grounded = true;
+		if (!new_translation.Equals(float3::zero))
+		{
+			is_inside = IsInside(transform + new_translation*speed/10);
+
+			if (is_inside)
+			{
+				collider->SetVelocity(new_translation, speed);
+			}
+			else
+			{
+				collider->SetVelocity(transform, 0);
+			}
+		}
+		if (App->input->GetKey(KeyCode::Space))
+		{
+			new_translation += float3(0.0f, jump_power, 0.0f);
+			collider->AddForce(new_translation);
+		}
+
 	}
-
-	if (App->input->GetGameInputDown("Jump", player_id))
+	else 
 	{
-		new_translation += float3(0.0f, jump_power, 0.0f);
-		collider->AddForce(new_translation);
+		is_grounded = false;
+		if (!new_translation.Equals(float3::zero))
+		{
+			is_inside = IsInside(transform + new_translation * speed / 10);
+
+			if (is_inside)
+			{
+				new_translation *= speed/2;
+				collider->AddForce(new_translation);
+			}
+			else
+			{
+				collider->SetVelocity(transform, 0);
+			}
+		}
 	}
 }
 
@@ -197,9 +122,14 @@ void PlayerMovement::Jump()
 	collider->AddForce(new_transform);
 }
 
-void PlayerMovement::Dash()
+bool PlayerMovement::IsGrounded()
 {
-	//TODO DASH
+	btVector3 origin = collider->body->getWorldTransform().getOrigin();
+
+	btVector3 end = collider->body->getWorldTransform().getOrigin();
+	end.setY(end.getY() - 1.05 * collider->box_size.getY());
+
+	return collider->RaycastHit(origin,end);
 }
 
 bool PlayerMovement::IsInside(float3 future_transform)

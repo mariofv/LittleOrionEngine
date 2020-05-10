@@ -650,7 +650,7 @@
                 "Active": true,
                 "Translation": [
                     -90.93975830078125,
-                    8.585670471191407,
+                    4.314068794250488,
                     0.0
                 ],
                 "Rotation": [
@@ -690,7 +690,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "PlayerController",
-                    "Player": 1
+                    "Player": 2
                 },
                 {
                     "UUID": 1049943075,
@@ -701,10 +701,10 @@
                     "Main Camera": 172714554
                 },
                 {
-                    "UUID": 2701359889,
+                    "UUID": 3890679047,
                     "Active": true,
                     "ComponentType": 9,
-                    "ColliderType": 1,
+                    "ColliderType": 0,
                     "Mass": 1.0,
                     "Scale": [
                         1.0,
@@ -714,9 +714,9 @@
                     "Static": false,
                     "Collision": true,
                     "Visualize": true,
-                    "Attached": false,
+                    "Attached": true,
                     "x_axis": false,
-                    "y_axis": false,
+                    "y_axis": true,
                     "z_axis": false,
                     "DisablePhysics": false,
                     "Friction": 1.0,
@@ -775,7 +775,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "PlayerController",
-                    "Player": 0
+                    "Player": 2
                 },
                 {
                     "UUID": 1049943075,
@@ -786,10 +786,10 @@
                     "Main Camera": 172714554
                 },
                 {
-                    "UUID": 1678769988,
+                    "UUID": 2155168565,
                     "Active": true,
                     "ComponentType": 9,
-                    "ColliderType": 1,
+                    "ColliderType": 0,
                     "Mass": 1.0,
                     "Scale": [
                         1.0,
@@ -801,7 +801,7 @@
                     "Visualize": true,
                     "Attached": true,
                     "x_axis": false,
-                    "y_axis": false,
+                    "y_axis": true,
                     "z_axis": false,
                     "DisablePhysics": false,
                     "Friction": 1.0,
@@ -1813,90 +1813,6 @@
                     1.0
                 ]
             },
-            "UUIDS": [
-                {
-                    "UUID": 308807448,
-                    "OriginalUUID": 2597424762
-                },
-                {
-                    "UUID": 3053978680,
-                    "OriginalUUID": 2597424764
-                },
-                {
-                    "UUID": 181829584,
-                    "OriginalUUID": 2597424763
-                }
-            ]
-        }
-    ],
-    "PrefabsComponents": [
-        {
-            "Components": [
-                {
-                    "UUID": 1862055531,
-                    "Active": true,
-                    "ComponentType": 9,
-                    "ColliderType": 1,
-                    "Mass": 1.0,
-                    "Scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "Static": false,
-                    "Collision": true,
-                    "Visualize": true,
-                    "Attached": true,
-                    "x_axis": false,
-                    "y_axis": true,
-                    "z_axis": false,
-                    "DisablePhysics": false,
-                    "Friction": 1.0,
-                    "Rolling_friction": 1.0
-                },
-                {
-                    "UUID": 3236878010,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "PlayerMovement"
-                },
-                {
-                    "UUID": 3384747123,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "PlayerController",
-                    "Player": 0
-                }
-            ],
-            "UUID": 181829584
-        }
-    ],
-    "GameObjects": [
-        {
-            "UUID": 3822342038,
-            "ParentUUID": 0,
-            "Name": "GameObject (29)",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 589414195,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    -16.799999237060548
-                ],
-                "Scale": [
-                    20.0,
-                    1.0,
-                    20.0
-                ]
-            },
             "Transform2D": {
                 "UUID": 3450397253,
                 "Active": true,
@@ -2308,7 +2224,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 16,
+                    "Texture": 18,
                     "Color": [
                         1.0,
                         1.0,

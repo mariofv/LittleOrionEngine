@@ -550,7 +550,8 @@
                     "y_axis": true,
                     "z_axis": true,
                     "DisablePhysics": false,
-                    "Friction": 1.0
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
                 }
             ],
             "UUID": 299268297
@@ -576,7 +577,8 @@
                     "y_axis": true,
                     "z_axis": true,
                     "DisablePhysics": false,
-                    "Friction": 1.0
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
                 }
             ],
             "UUID": 3420948497
@@ -602,7 +604,8 @@
                     "y_axis": true,
                     "z_axis": true,
                     "DisablePhysics": false,
-                    "Friction": 1.0
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
                 }
             ],
             "UUID": 1367554656
@@ -628,7 +631,8 @@
                     "y_axis": true,
                     "z_axis": true,
                     "DisablePhysics": false,
-                    "Friction": 1.0
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
                 }
             ],
             "UUID": 960305813
@@ -686,7 +690,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "PlayerController",
-                    "Player": 1
+                    "Player": 2
                 },
                 {
                     "UUID": 1049943075,
@@ -715,7 +719,8 @@
                     "y_axis": true,
                     "z_axis": false,
                     "DisablePhysics": false,
-                    "Friction": 1.0
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
                 }
             ]
         },
@@ -770,7 +775,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "PlayerController",
-                    "Player": 0
+                    "Player": 1
                 },
                 {
                     "UUID": 1049943075,
@@ -799,7 +804,8 @@
                     "y_axis": true,
                     "z_axis": false,
                     "DisablePhysics": false,
-                    "Friction": 1.0
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
                 }
             ]
         },
@@ -2156,7 +2162,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 18,
+                    "Texture": 17,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -2218,7 +2224,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 17,
+                    "Texture": 18,
                     "Color": [
                         1.0,
                         1.0,
