@@ -38,13 +38,13 @@ bool ModuleCamera::Init()
 
 	directional_light_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	directional_light_camera->depth = -1;
-	//directional_light_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
+	directional_light_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
 
 	directional_light_camera->owner = dir_light_game_object;
 	directional_light_camera->camera_frustum.type = FrustumType::OrthographicFrustum; // Makes the light camera malfunction
 
-	directional_light_camera->SetFarDistance(100);
-	directional_light_camera->SetNearDistance(1);
+	directional_light_camera->SetFarDistance(50);
+	directional_light_camera->SetNearDistance(25);
 
 	
 
@@ -53,7 +53,7 @@ bool ModuleCamera::Init()
 	//directional_light_camera->SetNearDistance(0);
 
 	//~~~~~~ i boiled these noodles in my programmer tears ~~~~~~~~
-	directional_light_camera->camera_frustum.orthographicWidth = 2;
+	directional_light_camera->camera_frustum.orthographicWidth  = 200;
 	directional_light_camera->camera_frustum.orthographicHeight = 2;
 
 	return true;
@@ -72,7 +72,6 @@ update_status ModuleCamera::Update()
 	scene_camera->Update();
 	directional_light_camera->Update();
 
-	APP_LOG_INFO("%f", dir_light_game_object->transform.GetFrontVector().z);
 	return update_status::UPDATE_CONTINUE;
 }
 

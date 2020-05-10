@@ -11,6 +11,7 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
+#include "Module/ModuleCamera.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
@@ -171,6 +172,11 @@ void ComponentMeshRenderer::AddNormalUniforms(unsigned int shader_program) const
 
 void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 {
+	glActiveTexture(GL_TEXTURE5);
+	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_camera->depth_map);
+	glUniform1i(glGetUniformLocation(shader_program, "depth_map"), 5);
+	glActiveTexture(0);
+
 	if (material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)
 	{
 		glUniform1f(glGetUniformLocation(shader_program, "material.transparency"), 1.f);

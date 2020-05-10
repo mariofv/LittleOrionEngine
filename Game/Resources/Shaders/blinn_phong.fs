@@ -309,11 +309,11 @@ float ShadowCalculation(vec4 frag_pos_light_space)
     vec3 normalized_light_space = frag_pos_light_space.xyz / frag_pos_light_space.w;
     normalized_light_space = normalized_light_space * 0.5 + 0.5;
 
-    float texture_depth = texture(depth_map, normalized_light_space.xy).r; 
-
-	if(normalized_light_space.z < texture_depth)
-		return 0;
-	else
-		return texture_depth;
+	float closestDepth = texture(depth_map, normalized_light_space.xy).r; 
+    // get depth of current fragment from light's perspective
+    float currentDepth = normalized_light_space.z;
+    // check whether current frag pos is in shadow
+    float shadow = currentDepth > closestDepth  ? 1.0 : 0.0;
+	return shadow;
 
 }

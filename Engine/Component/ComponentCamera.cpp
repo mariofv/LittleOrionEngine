@@ -349,12 +349,6 @@ void ComponentCamera::CreateFramebuffer(float width, float height)
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glActiveTexture(GL_TEXTURE5);
-	glBindTexture(GL_TEXTURE_2D, depth_map);
-	glActiveTexture(0);
-
-
 }
 
 void ComponentCamera::CreateDepthFramebuffer(float width, float height)
@@ -375,7 +369,6 @@ void ComponentCamera::CreateDepthFramebuffer(float width, float height)
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glBindTexture(GL_TEXTURE_2D, 0);
-	APP_LOG_INFO("%d", depth_map);
 
 	last_recorded_frame_texture = depth_map;
 
@@ -385,10 +378,6 @@ void ComponentCamera::CreateDepthFramebuffer(float width, float height)
 	glDrawBuffer(GL_NONE);
 	glReadBuffer(GL_NONE);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	//glActiveTexture(GL_TEXTURE5);
-	//glBindTexture(GL_TEXTURE_2D, depth_map);
-	//glActiveTexture(0);
 
 }
 

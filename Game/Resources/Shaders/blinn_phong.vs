@@ -53,18 +53,8 @@ void main()
 	TBN = transpose(mat3(T, B, N));  
 
 //Light space
-	pos_from_light = lightSpaceMatrix*matrices.model*vec4(position, 1.0);
-
-	//if(render_depth_from_light == 1) 
-	//{
-	//	gl_Position = pos_from_light;
-	//}
-
-	//else
-	//{
-		gl_Position = matrices.proj*matrices.view*vec4(position, 1.0);
-
-	//}
+	pos_from_light = lightSpaceMatrix*matrices.model*vec4(vertex_position, 1.0);
+	gl_Position = matrices.proj*matrices.view*vec4(position, 1.0);
 
 }
 

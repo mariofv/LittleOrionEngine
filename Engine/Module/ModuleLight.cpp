@@ -59,7 +59,8 @@ void ModuleLight::RenderDirectionalLight(const float3& mesh_position)
 		glBufferSubData(GL_UNIFORM_BUFFER, light_direction_offset, sizeof(float3), light->owner->transform.GetFrontVector().ptr());
 
 		App->cameras->dir_light_game_object->transform = light->owner->transform;
-		App->cameras->dir_light_game_object->transform.SetTranslation(float3(light->owner->transform.GetTranslation().x, light->owner->transform.GetTranslation().y, light->owner->transform.GetTranslation().z + App->cameras->directional_light_camera->camera_frustum.farPlaneDistance));
+		//App->cameras->dir_light_game_object->transform.SetTranslation(App->cameras->dir_light_game_object->transform.GetTranslation() * 2);
+		//App->cameras->directional_light_camera->SetPosition(App->cameras->dir_light_game_object->transform.GetTranslation());
 
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
@@ -103,7 +104,8 @@ void ModuleLight::RenderSpotLights(const float3& mesh_position, GLuint program)
 
 void ModuleLight::SendShadowMatricesToShader(GLuint program)
 {
-	App->cameras->directional_light_camera->GenerateMatrices();
+	App->cameras->directional_light_camera->Update();
+
 	glUniformMatrix4fv(glGetUniformLocation(program, "directional_view"), 1, GL_TRUE, &App->cameras->directional_light_camera->GetViewMatrix()[0][0]);
 	glUniformMatrix4fv(glGetUniformLocation(program, "directional_proj"), 1, GL_TRUE, &App->cameras->directional_light_camera->GetProjectionMatrix()[0][0]);
 }
