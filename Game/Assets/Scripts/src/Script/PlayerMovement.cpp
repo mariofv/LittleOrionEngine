@@ -157,6 +157,9 @@ void PlayerMovement::Move(int player_id)
 	{
 		collider->SetVelocity(new_transform);
 	}*/
+	
+	//collider->SetVelocity(new_transform, speed);
+	
 }
 
 void PlayerMovement::Fall()

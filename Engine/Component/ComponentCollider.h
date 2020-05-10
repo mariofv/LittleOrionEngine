@@ -34,7 +34,7 @@ public:
 
 	btRigidBody* AddBody();
 	ENGINE_API void AddForce(float3& force);
-	ENGINE_API void SetVelocity(float3& velocity);
+	ENGINE_API void SetVelocity(float3& velocity, float speed);
 	void MoveBody();
 	void SetMass(float new_mass);
 	void SetVisualization();
@@ -46,6 +46,7 @@ public:
 	ENGINE_API void DisablePhysics(bool disable);
 	void DisablePhysics();
 	void UpdateFriction();
+	void SetRollingFriction();
 
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
@@ -62,6 +63,7 @@ public:
 	btCollisionShape* col_shape;
 	btVector3 local_inertia = btVector3(0.F, 0.F, 0.F);
 	float friction = 1.0F;
+	float rolling_friction = 1.0F;
 
 	float3 deviation = float3::zero;
 	bool visualize = true;

@@ -26,6 +26,7 @@ public:
 	void InitPublicGameObjects();
 	void TakeDamage(float damage);
 	void InitMembers();
+	virtual void ResetEnemy() {}
 
 protected:
 	void Move();
@@ -33,7 +34,6 @@ protected:
 	bool PlayerInSight();
 	void OnCollisionEnter() {}
 	void Die();
-	virtual void ResetEnemy() {}
 
 public:
 	GameObject* player = nullptr;
