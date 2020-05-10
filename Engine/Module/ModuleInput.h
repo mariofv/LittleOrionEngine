@@ -473,6 +473,9 @@ public:
 	ENGINE_API float2 GetAxisControllerRaw(ControllerAxis type, ControllerID controller_id) const;
 	ENGINE_API float GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const;
 
+	ENGINE_API float GetVerticalRaw(PlayerID player_id);
+	ENGINE_API float GetHorizontalRaw(PlayerID player_id);
+
 	ENGINE_API float GetVertical(PlayerID player_id);
 	ENGINE_API float GetHorizontal(PlayerID player_id);
 
@@ -488,6 +491,7 @@ private:
 public:
 	const float MAX_SDL_CONTROLLER_RANGE = 32767.0f;
 	const float MIN_SDL_CONTROLLER_RANGE = -32768.0f;
+	const float MAX_RAW_RANGE = 1.f;
 
 	const int MAX_KEYS = 286;
 	const int MAX_MOUSE_BUTTONS = 5;
