@@ -60,8 +60,17 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 
 void PlayerMovement::Move(int player_id)
 {
+
 	float3 transform = owner->transform.GetTranslation();
 	float3 rotation = owner->transform.GetRotationRadiants();
+
+	//is_inside = IsInside(transform);
+	//if (!is_inside)
+	//{
+	//	//float3 null = float3(0.f, 0.f, 0.f);
+	//	collider->SetVelocity(transform, 0);
+
+	//}
 
 	//Controller Input
 	//float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, static_cast<ControllerID>(player_id));
@@ -102,26 +111,26 @@ void PlayerMovement::Move(int player_id)
 		}
 		if (App->input->GetKeyDown(KeyCode::Space))
 		{
-			new_transform += float3(0.0f, jump_power, 0.0f);
-			collider->AddForce(new_transform);
+			Jump();
 		}
+		//collider->SetVelocity(new_transform, speed);
 
 		is_inside = IsInside(transform + new_transform/10);
 
 		if (is_inside)
 		{
-			collider->AddForce(new_transform);
+			//collider->AddForce(new_transform);
+			collider->SetVelocity(new_transform, speed);
 		}
 		else
 		{
-			float3 null = float3(0.f, 0.f, 0.f);
-			collider->SetVelocity(null);
+			collider->SetVelocity(transform, 0);
 		}
 	}
 	else if(player_id == 1)
 	{
 		new_transform = float3::zero;
-		if (App->input->GetKey(KeyCode::LeftArrow))
+		if (App->input->GetKey(KeyCode::RightArrow))
 		{
 			new_transform += float3(speed, 0.0f, 0.0f);
 		}
@@ -133,20 +142,21 @@ void PlayerMovement::Move(int player_id)
 		{
 			new_transform += float3(0.0f, 0.0f, speed);
 		}
-		if (App->input->GetKey(KeyCode::RightArrow))
+		if (App->input->GetKey(KeyCode::LeftArrow))
 		{
 			new_transform += float3(-speed, 0.0f, 0.0f);
 		}
+		//collider->SetVelocity(new_transform, speed);
 		is_inside = IsInside(transform + new_transform / 10);
 
 		if (is_inside)
 		{
-			collider->AddForce(new_transform);
+			//collider->AddForce(new_transform);
+			collider->SetVelocity(new_transform, speed);
 		}
 		else
 		{
-			float3 null = float3(0.f, 0.f, 0.f);
-			collider->SetVelocity(null);
+			collider->SetVelocity(transform,0);
 		}
 	}
 	//EXAMPLE USING PLAYER INPUT (JUST MOVE)
@@ -162,11 +172,11 @@ void PlayerMovement::Move(int player_id)
 	
 }
 
-void PlayerMovement::Fall()
-{
-	float3 new_position = owner->transform.GetTranslation() + gravity_vector * falling_factor * App->time->delta_time / 1000.0f;
-	falling_factor += 0.1f;
-	owner->transform.SetTranslation(new_position);
+void PlayerMovement::Jump()
+{	
+	float3 new_transform = float3::zero;
+	new_transform += float3(0.0f, jump_power, 0.0f);
+	collider->AddForce(new_transform);
 }
 
 void PlayerMovement::Dash()

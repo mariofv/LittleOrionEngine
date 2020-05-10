@@ -550,7 +550,8 @@
                     "y_axis": true,
                     "z_axis": true,
                     "DisablePhysics": false,
-                    "Friction": 1.0
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
                 }
             ],
             "UUID": 299268297
@@ -576,7 +577,8 @@
                     "y_axis": true,
                     "z_axis": true,
                     "DisablePhysics": false,
-                    "Friction": 1.0
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
                 }
             ],
             "UUID": 3420948497
@@ -602,7 +604,8 @@
                     "y_axis": true,
                     "z_axis": true,
                     "DisablePhysics": false,
-                    "Friction": 1.0
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
                 }
             ],
             "UUID": 1367554656
@@ -628,7 +631,8 @@
                     "y_axis": true,
                     "z_axis": true,
                     "DisablePhysics": false,
-                    "Friction": 1.0
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
                 }
             ],
             "UUID": 960305813
@@ -646,7 +650,7 @@
                 "Active": true,
                 "Translation": [
                     -90.93975830078125,
-                    4.314068794250488,
+                    8.585670471191407,
                     0.0
                 ],
                 "Rotation": [
@@ -697,10 +701,10 @@
                     "Main Camera": 172714554
                 },
                 {
-                    "UUID": 3890679047,
+                    "UUID": 2701359889,
                     "Active": true,
                     "ComponentType": 9,
-                    "ColliderType": 0,
+                    "ColliderType": 1,
                     "Mass": 1.0,
                     "Scale": [
                         1.0,
@@ -710,12 +714,13 @@
                     "Static": false,
                     "Collision": true,
                     "Visualize": true,
-                    "Attached": true,
+                    "Attached": false,
                     "x_axis": false,
-                    "y_axis": true,
+                    "y_axis": false,
                     "z_axis": false,
                     "DisablePhysics": false,
-                    "Friction": 1.0
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
                 }
             ]
         },
@@ -781,10 +786,10 @@
                     "Main Camera": 172714554
                 },
                 {
-                    "UUID": 2155168565,
+                    "UUID": 1678769988,
                     "Active": true,
                     "ComponentType": 9,
-                    "ColliderType": 0,
+                    "ColliderType": 1,
                     "Mass": 1.0,
                     "Scale": [
                         1.0,
@@ -796,10 +801,11 @@
                     "Visualize": true,
                     "Attached": true,
                     "x_axis": false,
-                    "y_axis": true,
+                    "y_axis": false,
                     "z_axis": false,
                     "DisablePhysics": false,
-                    "Friction": 1.0
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
                 }
             ]
         },
@@ -2116,7 +2122,7 @@
                 "Active": true,
                 "Translation": [
                     0.0,
-                    16.527605056762697,
+                    0.0,
                     0.0
                 ],
                 "Rotation": [
@@ -2156,7 +2162,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 18,
+                    "Texture": 17,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -2184,12 +2190,12 @@
                 "Rotation": [
                     0.0,
                     0.0,
-                    -16.799999237060548
+                    0.0
                 ],
                 "Scale": [
-                    20.0,
                     1.0,
-                    20.0
+                    1.0,
+                    1.0
                 ]
             },
             "Transform2D": {
@@ -2218,7 +2224,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 17,
+                    "Texture": 16,
                     "Color": [
                         1.0,
                         1.0,

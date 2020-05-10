@@ -20,7 +20,7 @@ public:
 	void OnInspector(ImGuiContext*) override;
 
 	void Move(int player);
-	void Fall();
+	void Jump();
 	void Dash();
 
 	bool IsInside(float3 transform);
@@ -28,8 +28,7 @@ public:
 	void InitPublicGameObjects();
 
 private:
-	float speed = 35.f;
-	//float speed = 5.0F;
+	float speed = 10.f;
 	float rotation_speed = 0.01f;
 	float falling_factor = 1.0f;
 	bool is_jumping = false;
