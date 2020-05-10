@@ -102,6 +102,7 @@ void PlayerMovement::Move(int player_id)
 		}
 		if (App->input->GetKeyDown(KeyCode::Space))
 		{
+			new_transform += float3(0.0f, jump_power, 0.0f);
 			collider->AddForce(new_transform);
 		}
 
@@ -110,6 +111,11 @@ void PlayerMovement::Move(int player_id)
 		if (is_inside)
 		{
 			collider->AddForce(new_transform);
+		}
+		else
+		{
+			float3 null = float3(0.f, 0.f, 0.f);
+			collider->SetVelocity(null);
 		}
 	}
 	else if(player_id == 1)
@@ -136,6 +142,11 @@ void PlayerMovement::Move(int player_id)
 		if (is_inside)
 		{
 			collider->AddForce(new_transform);
+		}
+		else
+		{
+			float3 null = float3(0.f, 0.f, 0.f);
+			collider->SetVelocity(null);
 		}
 	}
 	//EXAMPLE USING PLAYER INPUT (JUST MOVE)
