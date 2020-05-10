@@ -348,7 +348,6 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 				new_name_file = selected_file->GetFilename();
 			}
 		}
-
 		ImGui::EndPopup();
 	}
 	bool enter_pressed = ImGui::IsKeyPressed(ImGui::GetKeyIndex(ImGuiKey_Enter));
