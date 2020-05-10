@@ -1,6 +1,104 @@
 {
-    "Prefabs": [],
-    "PrefabsComponents": [],
+    "Prefabs": [
+        {
+            "ParentUUID": 0,
+            "Prefab": 2597424762,
+            "Transform": {
+                "UUID": 3638735283,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 308807448,
+                    "OriginalUUID": 2597424762
+                },
+                {
+                    "UUID": 3053978680,
+                    "OriginalUUID": 2597424764
+                },
+                {
+                    "UUID": 181829584,
+                    "OriginalUUID": 2597424763
+                }
+            ]
+        }
+    ],
+    "PrefabsComponents": [
+        {
+            "Transform": {
+                "UUID": 1481223275,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    10.738140106201172,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 1862055531,
+                    "Active": true,
+                    "ComponentType": 9,
+                    "ColliderType": 1,
+                    "Mass": 1.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": false,
+                    "Collision": true,
+                    "Visualize": true,
+                    "Attached": true,
+                    "x_axis": false,
+                    "y_axis": true,
+                    "z_axis": false,
+                    "DisablePhysics": false,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
+                },
+                {
+                    "UUID": 3236878010,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerMovement"
+                },
+                {
+                    "UUID": 3384747123,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerController",
+                    "Player": 0
+                }
+            ],
+            "UUID": 181829584
+        }
+    ],
     "GameObjects": [
         {
             "UUID": 3390986774,
@@ -236,88 +334,6 @@
             ]
         },
         {
-            "UUID": 2598567172,
-            "ParentUUID": 0,
-            "Name": "GameObject (28)",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1863197620,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    16.527605056762697,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 103539595,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 2874848793,
-                    "Active": true,
-                    "ComponentType": 9,
-                    "ColliderType": 1,
-                    "Mass": 1.0,
-                    "Scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "Static": false,
-                    "Collision": true,
-                    "Visualize": true,
-                    "Attached": false,
-                    "x_axis": false,
-                    "y_axis": true,
-                    "z_axis": false,
-                    "DisablePhysics": false,
-                    "Friction": 1.0
-                },
-                {
-                    "UUID": 1595739146,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "PlayerController",
-                    "Player": 0
-                },
-                {
-                    "UUID": 3528902273,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "PlayerMovement"
-                }
-            ]
-        },
-        {
             "UUID": 3822342038,
             "ParentUUID": 0,
             "Name": "GameObject (29)",
@@ -382,7 +398,8 @@
                     "y_axis": true,
                     "z_axis": true,
                     "DisablePhysics": false,
-                    "Friction": 1.0
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
                 }
             ]
         }
