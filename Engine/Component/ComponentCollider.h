@@ -35,6 +35,7 @@ public:
 	btRigidBody* AddBody();
 	ENGINE_API void AddForce(float3& force);
 	ENGINE_API void SetVelocity(float3& velocity, float speed);
+	ENGINE_API bool RaycastHit(btVector3& origin, btVector3& end);
 	void MoveBody();
 	void SetMass(float new_mass);
 	void SetVisualization();
