@@ -59,49 +59,50 @@ void PlayerMovement::Move(int player_id)
 	float3 rotation = owner->transform.GetRotationRadiants();
 
 	//Controller Input
-	//float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, static_cast<ControllerID>(player_id));
+	//float vertical = App->input->GetVertical(static_cast<PlayerID>(player_id));
+	//float horizontal = App->input->GetHorizontal(static_cast<PlayerID>(player_id));
+
+	float2 axis = App->input->GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE);
 	//float3 axis_direction = float3(axis.x, 0.0f, axis.y);
 
-	float vertical = App->input->GetVertical(static_cast<PlayerID>(player_id));
-	float horizontal = App->input->GetHorizontal(static_cast<PlayerID>(player_id));
-	float3 axis_direction = float3(horizontal, 0.0f, vertical);
+	//if (!axis_direction.Equals(float3::zero))
+	//{
+	//	float3 dir;
+	//	float3 direction = axis_direction * speed + transform;
+	//	bool there_is_poly = App->artificial_intelligence->FindNextPolyByDirection(direction, dir);
+	//	
+	//	if(there_is_poly)
+	//	{
+	//		direction.y = dir.y;
+	//	}
 
-	if (!axis_direction.Equals(float3::zero))
-	{
-		float3 dir;
-		float3 direction = axis_direction * speed + transform;
-		bool there_is_poly = App->artificial_intelligence->FindNextPolyByDirection(direction, dir);
-		
-		if(there_is_poly)
-		{
-			direction.y = dir.y;
-		}
-
-		if (App->artificial_intelligence->IsPointWalkable(direction))
-		{
-		
-			owner->transform.LookAt(direction);
-			owner->transform.SetTranslation(direction);
-		}
-	}
+	//	if (App->artificial_intelligence->IsPointWalkable(direction))
+	//	{
+	//	
+	//		owner->transform.LookAt(direction);
+	//		owner->transform.SetTranslation(direction);
+	//	}
+	//}
 
 	//Keyboard Input
 	float3 new_transform = float3(0.0F, 0.0F, 0.0F);
 
+	float deadzone = 0.25f;
+
 	//EXAMPLE USING PLAYER INPUT (JUST MOVE)
-	if (App->input->GetKey(KeyCode::D))
+	if (App->input->GetKey(KeyCode::D) || axis.x > deadzone)
 	{
 		new_transform += float3(speed, 0.0f, 0.0f);
 	}
-	if (App->input->GetKey(KeyCode::W))
+	if (App->input->GetKey(KeyCode::W) || axis.y < -deadzone)
 	{
 		new_transform += float3(0.0f, 0.0f, -speed);
 	}
-	if (App->input->GetKey(KeyCode::S))
+	if (App->input->GetKey(KeyCode::S) || axis.y > deadzone)
 	{
 		new_transform += float3(0.0f, 0.0f, speed);
 	}
-	if (App->input->GetKey(KeyCode::A))
+	if (App->input->GetKey(KeyCode::A) || axis.x < -deadzone)
 	{
 		new_transform += float3(-speed, 0.0f, 0.0f);
 	}
