@@ -494,6 +494,7 @@ public:
 	const int MAX_CONTROLLER_BUTTONS = 15;
 
 	bool singleplayer_input = true;
+	int total_game_controllers = 0;
 
 private:
 	std::map<KeyCode, KeyState> key_bible;
@@ -526,7 +527,6 @@ private:
 	float right_controller_trigger_raw[MAX_PLAYERS];
 
 	SDL_GameController* controller[MAX_PLAYERS];
-	int total_game_controllers = 0;
 
 	friend PanelConfiguration;
 };
