@@ -32,6 +32,7 @@ protected:
 	void Move();
 	bool Attack() {}
 	bool PlayerInSight();
+	bool PlayerInRange();
 	void OnCollisionEnter() {}
 	void Die();
 
@@ -52,8 +53,8 @@ protected:
 	float attack_range = 1.f;
 	float max_health_points = 100.f; //not const, to modify in inspector
 	float health_points = max_health_points;
-	float stopping_distance = 2.f;
-	float detect_player_distance = 10.f;
+	float stop_distance = 2.f;
+	float detect_distance = 10.f;
 
 	bool is_attacking = false;
 
