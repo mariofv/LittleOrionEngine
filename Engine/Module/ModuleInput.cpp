@@ -756,11 +756,11 @@ ENGINE_API float ModuleInput::GetVertical(PlayerID player_id)
 		{
 			if (GetKey(KeyCode::W))
 			{
-				return MIN_SDL_CONTROLLER_RANGE;
+				return -1;
 			}
 			else if (GetKey(KeyCode::S))
 			{
-				return MAX_SDL_CONTROLLER_RANGE;
+				return 1;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
@@ -777,11 +777,11 @@ ENGINE_API float ModuleInput::GetVertical(PlayerID player_id)
 		{
 			if (GetKey(KeyCode::W))
 			{
-				return MIN_SDL_CONTROLLER_RANGE;
+				return -1;
 			}
 			else if (GetKey(KeyCode::S))
 			{
-				return MAX_SDL_CONTROLLER_RANGE;
+				return 1;
 			}
 
 			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).y;
@@ -801,11 +801,11 @@ ENGINE_API float ModuleInput::GetVertical(PlayerID player_id)
 		{
 			if (GetKey(KeyCode::W))
 			{
-				return MIN_SDL_CONTROLLER_RANGE;
+				return -1;
 			}
 			else if (GetKey(KeyCode::S))
 			{
-				return MAX_SDL_CONTROLLER_RANGE;
+				return 1;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
@@ -842,11 +842,11 @@ ENGINE_API float ModuleInput::GetHorizontal(PlayerID player_id)
 		{
 			if (GetKey(KeyCode::A))
 			{
-				return MIN_SDL_CONTROLLER_RANGE;
+				return -1;
 			}
 			else if (GetKey(KeyCode::D))
 			{
-				return MAX_SDL_CONTROLLER_RANGE;
+				return 1;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
@@ -863,11 +863,11 @@ ENGINE_API float ModuleInput::GetHorizontal(PlayerID player_id)
 		{
 			if (GetKey(KeyCode::A))
 			{
-				return MIN_SDL_CONTROLLER_RANGE;
+				return -1;
 			}
 			else if (GetKey(KeyCode::D))
 			{
-				return MAX_SDL_CONTROLLER_RANGE;
+				return 1;
 			}
 
 			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).x;
@@ -887,11 +887,11 @@ ENGINE_API float ModuleInput::GetHorizontal(PlayerID player_id)
 		{
 			if (GetKey(KeyCode::A))
 			{
-				return MIN_SDL_CONTROLLER_RANGE;
+				return -1;
 			}
 			else if (GetKey(KeyCode::D))
 			{
-				return MAX_SDL_CONTROLLER_RANGE;
+				return 1;
 			}
 		}
 		else if (player_id == PlayerID::TWO)
