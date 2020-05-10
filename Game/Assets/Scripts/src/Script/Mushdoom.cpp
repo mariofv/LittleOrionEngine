@@ -83,7 +83,9 @@ void Mushdoom::OnInspector(ImGuiContext* context)
 {
 	EnemyController::OnInspector(context);
 
-	//ImGui::Text("Current State: %s", current_state->name);
+	ImGui::Text("Current State:");
+	ImGui::SameLine();
+	ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%s", current_state->name);
 }
 
 ////Use this for linking JUST GO automatically 
