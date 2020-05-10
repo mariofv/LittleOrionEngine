@@ -141,6 +141,7 @@ void EnemyController::Move()
 		else if (animation->IsOnState("Idle"))
 		{
 			animation->ActiveAnimation("walk");
+			return;
 		}
 
 		float3 position = transform + (direction.Normalized() * move_speed);
