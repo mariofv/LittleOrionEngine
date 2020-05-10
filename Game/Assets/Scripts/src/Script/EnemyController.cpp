@@ -2,6 +2,7 @@
 
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentAnimation.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -92,7 +93,15 @@ void EnemyController::TakeDamage(float damage)
 
 void EnemyController::Move()
 {
-	if (!PlayerInSight()) return;
+	if (!PlayerInSight())
+	{
+		if (!animation->IsOnState("Idle"))
+		{
+			animation->ActiveAnimation("idle");
+		}
+
+		return;
+	}
 
 	const float3 player_transform = player->transform.GetTranslation();
 	float3 transform = owner->transform.GetTranslation();
@@ -101,6 +110,11 @@ void EnemyController::Move()
 
 	if (player_transform.Distance(transform) > stopping_distance)
 	{
+		if (!animation->IsOnState("Walk"))
+		{
+			animation->ActiveAnimation("walk");
+		}
+
 		float3 position = transform + (direction.Normalized() * move_speed);
 
 		float3 next_position;
@@ -115,6 +129,13 @@ void EnemyController::Move()
 		{
 			owner->transform.LookAt(position);
 			owner->transform.SetTranslation(position);
+		}
+	}
+	else
+	{
+		if (!animation->IsOnState("Attack"))
+		{
+			animation->ActiveAnimation("attack");
 		}
 	}
 }
