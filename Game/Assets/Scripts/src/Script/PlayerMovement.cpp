@@ -88,7 +88,7 @@ void PlayerMovement::Move(int player)
 				collider->SetVelocity(transform, 0);
 			}
 		}
-		if (App->input->GetKey(KeyCode::Space))
+		if (App->input->GetKeyDown(KeyCode::Space))
 		{
 			new_translation += float3(0.0f, jump_power, 0.0f);
 			collider->AddForce(new_translation);
@@ -104,7 +104,7 @@ void PlayerMovement::Move(int player)
 
 			if (is_inside)
 			{
-				new_translation *= speed/2;
+				new_translation *= speed;
 				collider->AddForce(new_translation);
 			}
 			else
@@ -127,7 +127,7 @@ bool PlayerMovement::IsGrounded()
 	btVector3 origin = collider->body->getWorldTransform().getOrigin();
 
 	btVector3 end = collider->body->getWorldTransform().getOrigin();
-	end.setY(end.getY() - 1.05 * collider->box_size.getY());
+	end.setY(end.getY() - 1.7);
 
 	return collider->RaycastHit(origin,end);
 }

@@ -701,10 +701,10 @@
                     "Main Camera": 172714554
                 },
                 {
-                    "UUID": 3890679047,
+                    "UUID": 1725918517,
                     "Active": true,
                     "ComponentType": 9,
-                    "ColliderType": 0,
+                    "ColliderType": 1,
                     "Mass": 1.0,
                     "Scale": [
                         1.0,
@@ -714,9 +714,9 @@
                     "Static": false,
                     "Collision": true,
                     "Visualize": true,
-                    "Attached": true,
+                    "Attached": false,
                     "x_axis": false,
-                    "y_axis": true,
+                    "y_axis": false,
                     "z_axis": false,
                     "DisablePhysics": false,
                     "Friction": 1.0,
@@ -786,10 +786,10 @@
                     "Main Camera": 172714554
                 },
                 {
-                    "UUID": 2155168565,
+                    "UUID": 1009677132,
                     "Active": true,
                     "ComponentType": 9,
-                    "ColliderType": 0,
+                    "ColliderType": 1,
                     "Mass": 1.0,
                     "Scale": [
                         1.0,
@@ -801,7 +801,7 @@
                     "Visualize": true,
                     "Attached": true,
                     "x_axis": false,
-                    "y_axis": true,
+                    "y_axis": false,
                     "z_axis": false,
                     "DisablePhysics": false,
                     "Friction": 1.0,
