@@ -100,7 +100,7 @@ ILubyte* TextureImporter::LoadImageDataInMemory(const Path& file_path, int image
 	FileData texture_data = file_path.GetFile()->Load();
 	ILenum original_image_type = Utils::GetImageType(file_path.GetExtension());
 	ilLoadL(original_image_type, texture_data.buffer, texture_data.size);
-
+	delete[] texture_data.buffer;
 	ILenum error;
 	error = ilGetError();
 	if (error == IL_COULD_NOT_OPEN_FILE)

@@ -113,7 +113,7 @@ public:
 		FileData exported_file_data = resource_exported_file_path->GetFile()->Load();
 		loaded_resource = ResourceManagement::Load<T>(uuid, exported_file_data);
 
-		free((char*)exported_file_data.buffer);
+		delete[] exported_file_data.buffer;
 
 		if (loaded_resource != nullptr)
 		{
@@ -124,17 +124,20 @@ public:
 		return std::static_pointer_cast<T>(loaded_resource);
 	}
 
-	void CleanInconsistenciesInDirectory(const Path& directory_path);
+	void CleanMetafilesInDirectory(const Path& directory_path);
 	void ImportAssetsInDirectory(const Path& directory_path, bool force = false);
+	void CleanBinariesInDirectory(const Path& directory_path);
+	void CleanEmptyDirectories(const Path& directory_path);
 
+	void CleanResourceCache();
 	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
 	uint32_t CreateFromData(FileData data, const std::string& created_resource_path);
 
-	void CleanResourceCache();
-
 private:
+
 	void StartThread();
 	uint32_t InternalImport(Path& file_path, bool force = false) const;
+	void RefreshResourceCache();
 
 	std::shared_ptr<Resource> RetrieveFromCacheIfExist(uint32_t uuid) const;
 
@@ -144,8 +147,6 @@ public:
 		mutable std::mutex thread_mutex;
 		std::atomic_bool stop_thread = false;
 		std::atomic_bool finished_loading = false;
-		std::atomic_uint thread_importing_hash = 0;
-		std::atomic_uint main_importing_hash = 0;
 		std::atomic_uint loaded_items = 0;
 		std::atomic_uint total_items = 0;
 	} thread_comunication;
@@ -167,7 +168,7 @@ public:
 	std::unique_ptr<ResourceDataBase> resource_DB = nullptr;
 
 private:
-	const size_t importer_interval_millis = 60*10*1000;
+	const size_t importer_interval_millis = 15 * 1000;
 	float last_imported_time = 0;
 	std::thread importing_thread;
 	std::unique_ptr<Timer> thread_timer = std::make_unique<Timer>();

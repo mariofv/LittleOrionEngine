@@ -95,7 +95,7 @@ bool ModuleInput::Init()
 	if(scene_file_data != nullptr)
 	{
 		std::string serialized_scene_string = scene_file_data;
-		free(scene_file_data);
+		delete[] scene_file_data;
 
 		Config input_config(serialized_scene_string);
 		LoadGameInputs(input_config);
