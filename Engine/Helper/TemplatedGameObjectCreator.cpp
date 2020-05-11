@@ -28,7 +28,7 @@ GameObject* TemplatedGameObjectCreator::CreateUIElement(Component::ComponentType
 {
 	GameObject* main_canvas_game_object = App->ui->GetMainCanvasGameObject();
 
-	if (!main_canvas_game_object)
+	if (main_canvas_game_object == nullptr)
 	{
 		main_canvas_game_object = App->scene->CreateGameObject();
 		main_canvas_game_object->name = "Canvas";

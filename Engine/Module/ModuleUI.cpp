@@ -78,6 +78,8 @@ GameObject* ModuleUI::GetMainCanvasGameObject() const
 	{
 		return main_canvas->owner;
 	}
+
+	return nullptr;
 }
 
 void ModuleUI::RemoveComponentUI(Component* component_ui)
