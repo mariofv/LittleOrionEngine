@@ -31,7 +31,7 @@ public:
 	void ShowComponentLightWindow(ComponentLight* light);
 	void ShowComponentAnimationWindow(ComponentAnimation* animation);
 	void ShowComponentScriptWindow(ComponentScript* component_script);
-	bool ShowCommonUIWindow(ComponentUI* ui);
+	bool ShowCommonUIWindow(Component* ui);
 	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
 	void ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar);
 	void ShowComponentImageWindow(ComponentImage* image);

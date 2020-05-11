@@ -1,21 +1,21 @@
 #ifndef _COMPONENTPROGRESSBAR_H_
 #define _COMPONENTPROGRESSBAR_H_
 
-#include "ComponentUI.h"
+#include "Component.h"
 
-class ComponentProgressBar : public ComponentUI
+class ComponentProgressBar : public Component
 {
 public:
 	ComponentProgressBar();
 	ComponentProgressBar(GameObject * owner);
 	~ComponentProgressBar() = default;
 
-	void Delete();
+	Component* Clone(bool original_prefab = false) const override;
+	void Copy(Component* component_to_copy) const override;
 
-	void UISpecializedSave(Config& config) const override;
-	void UISpecializedLoad(const Config& config) override;
-
-	void Render(float4x4* projection);
+	void Delete() override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 
 public:
 	float percentage = 20.0F;

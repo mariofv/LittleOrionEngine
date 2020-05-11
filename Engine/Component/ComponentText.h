@@ -1,23 +1,25 @@
 #ifndef _COMPONENTTEXT_H_
 #define _COMPONENTTEXT_H_
 
-#include "ComponentUI.h"
+#include "Component.h"
 
 #include <string>
 
 class Font;
 
-class ComponentText : public ComponentUI
+class ComponentText : public Component
 {
 public:
 	ComponentText();
 	ComponentText(GameObject * owner);
 	~ComponentText() = default;
 
-	void Delete() override;
+	Component* Clone(bool original_prefab = false) const override;
+	void Copy(Component* component_to_copy) const override;
 
-	void UISpecializedSave(Config& config) const override;
-	void UISpecializedLoad(const Config& config) override;
+	void Delete() override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 
 	void Render(float4x4* projection);
 

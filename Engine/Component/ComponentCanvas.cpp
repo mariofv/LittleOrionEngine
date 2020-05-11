@@ -65,7 +65,7 @@ void ComponentCanvas::Render()
 	window_height = App->editor->scene_panel->scene_window_content_area_height;
 #endif
 
-	float4x4 projection = float4x4::D3DOrthoProjLH(-1, MAX_NUM_LAYERS, window_width, window_height);
+	float4x4 projection = float4x4::D3DOrthoProjLH(-1, 200, window_width, window_height);
 
 	glDisable(GL_DEPTH_TEST);
 	
@@ -75,7 +75,7 @@ void ComponentCanvas::Render()
 	while (!pending_game_objects.empty())
 	{
 		GameObject* current_game_object = pending_game_objects.front();
-		//if (current_game_object->GetC(Component::ComponentType::))
+		//if (current_game_object->GetC(Component::ComponentType::CANVAS_RENDERER))
 
 	}
 	

@@ -2,9 +2,9 @@
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentCanvasRenderer.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentProgressBar.h"
-#include "Component/ComponentUI.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentButton.h"
 
@@ -56,33 +56,6 @@ ComponentCanvas* ModuleUI::CreateComponentCanvas()
 	return new_canvas;
 }
 
-ComponentUI* ModuleUI::CreateComponentUI(Component::ComponentType type)
-{
-	ComponentUI* new_component_ui = nullptr;
-	switch (type)
-	{
-		case Component::ComponentType::UI_IMAGE:
-			new_component_ui = new ComponentImage();
-			break;
-		case Component::ComponentType::UI_TEXT:
-			new_component_ui = new ComponentText();
-			break;
-		case Component::ComponentType::UI_BUTTON:
-			new_component_ui = new ComponentButton();
-			break;
-		case Component::ComponentType::UI_PROGRESS_BAR:
-			new_component_ui = new ComponentProgressBar();
-			break;
-	}
-
-	if(new_component_ui)
-	{
-		ui_elements.push_back(new_component_ui);
-		SortComponentsUI();
-	}
-
-	return new_component_ui;
-}
 
 void ModuleUI::RemoveComponentCanvas(ComponentCanvas* component_canvas)
 {
@@ -98,7 +71,7 @@ void ModuleUI::RemoveComponentCanvas(ComponentCanvas* component_canvas)
 	}
 }
 
-void ModuleUI::RemoveComponentUI(ComponentUI* component_ui)
+void ModuleUI::RemoveComponentUI(Component* component_ui)
 {
 	const auto it = std::find(ui_elements.begin(), ui_elements.end(), component_ui);
 	if (it != ui_elements.end())
@@ -106,16 +79,21 @@ void ModuleUI::RemoveComponentUI(ComponentUI* component_ui)
 		delete *it;
 		ui_elements.erase(it);
 	}
-
-	SortComponentsUI();
 }
 
-void ModuleUI::SortComponentsUI()
+ComponentCanvasRenderer* ModuleUI::CreateComponentCanvasRenderer()
 {
-	ordered_ui = ui_elements;
-	std::sort(ordered_ui.begin(), ordered_ui.end(), [](ComponentUI* left, ComponentUI* right)
+	ComponentCanvasRenderer* new_canvas_renderer = new ComponentCanvasRenderer();
+	canvas_renderers.push_back(new_canvas_renderer);
+	return new_canvas_renderer;
+}
+
+void ModuleUI::RemoveComponentCanvasRenderer(ComponentCanvasRenderer* component_canvas_renderer)
+{
+	const auto it = std::find(canvas_renderers.begin(), canvas_renderers.end(), component_canvas_renderer);
+	if (it != canvas_renderers.end())
 	{
-		return left->layer < right->layer;
+		delete *it;
+		canvas_renderers.erase(it);
 	}
-	);
 }

@@ -2,7 +2,6 @@
 #define _MODULEUI_H_
 #define ENGINE_EXPORTS
 
-#include "Component/ComponentUI.h"
 #include "Module.h"
 #include "Main/Globals.h"
 
@@ -10,9 +9,9 @@
 #include <map>
 #include <GL/glew.h>
 
-#define MAX_NUM_LAYERS 8
-
+class Component;
 class ComponentCanvas;
+class ComponentCanvasRenderer;
 class ComponentCamera;
 class ComponentText;
 class ComponentButton;
@@ -33,19 +32,26 @@ public:
 	ComponentCanvas* CreateComponentCanvas();
 	void RemoveComponentCanvas(ComponentCanvas* component_canvas);
 
-	ComponentUI* CreateComponentUI(Component::ComponentType ui_component_type);
-	void RemoveComponentUI(ComponentUI* component_ui);
-	
-	ENGINE_API void SortComponentsUI();
+	template<typename T>
+	T* CreateComponentUI()
+	{
+		T* new_component_ui = new T();
+		ui_elements.push_back(new_component_ui);
+		return new_component_ui;
+	}
+	void RemoveComponentUI(Component* component_ui);
 
+	ComponentCanvasRenderer* CreateComponentCanvasRenderer();
+	void RemoveComponentCanvasRenderer(ComponentCanvasRenderer* component_canvas_renderer);
+	
 public:
 	ComponentCanvas* main_canvas = nullptr;
 
 private:
 	std::vector<ComponentCanvas*> canvases;
 
-	std::vector<ComponentUI*> ui_elements;
-	std::vector<ComponentUI*> ordered_ui;
+	std::vector<Component*> ui_elements;
+	std::vector<ComponentCanvasRenderer*> canvas_renderers;
 };
 
 #endif //_MODULEUI_H_

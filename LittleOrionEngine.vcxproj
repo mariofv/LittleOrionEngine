@@ -149,6 +149,7 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Component\ComponentCanvasRenderer.h" />
     <ClInclude Include="Engine\DLL\DLLManager.h" />
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h" />
     <ClInclude Include="Engine\Helper\BuildOptions.h" />
@@ -183,7 +184,6 @@
     <ClInclude Include="Engine\Component\ComponentScript.h" />
     <ClInclude Include="Engine\Component\ComponentText.h" />
     <ClInclude Include="Engine\Component\ComponentTransform2D.h" />
-    <ClInclude Include="Engine\Component\ComponentUI.h" />
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelStateMachine.h" />
@@ -295,6 +295,7 @@
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTransform.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteComponent.cpp" />
@@ -317,7 +318,6 @@
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
     <ClCompile Include="Engine\Component\ComponentText.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform2D.cpp" />
-    <ClCompile Include="Engine\Component\ComponentUI.cpp" />
     <ClCompile Include="Engine\DLL\DLLManager.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.cpp" />

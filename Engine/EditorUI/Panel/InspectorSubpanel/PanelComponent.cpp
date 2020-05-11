@@ -23,7 +23,6 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
-#include "Component/ComponentUI.h"
 
 #include "Helper/Utils.h"
 #include "Math/Rect.h"
@@ -719,7 +718,7 @@ ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go)
 	}
 }
 
-bool PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
+bool PanelComponent::ShowCommonUIWindow(Component* ui)
 {
 	if (ImGui::Checkbox("Active", &ui->active))
 	{
@@ -732,12 +731,6 @@ bool PanelComponent::ShowCommonUIWindow(ComponentUI* ui)
 	{
 		App->actions->DeleteComponentUndo(ui);
 		return false;
-	}
-	ImGui::Separator();
-	if (ImGui::DragInt("Layer", &ui->layer, 1.0F, -MAX_NUM_LAYERS, MAX_NUM_LAYERS))
-	{
-		//ui->owner->transform_2d.OnTransformChange();
-		App->ui->SortComponentsUI();
 	}
 
 	return true;

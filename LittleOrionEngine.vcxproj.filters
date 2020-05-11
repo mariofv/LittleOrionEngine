@@ -331,9 +331,6 @@
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentUI.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Component\ComponentButton.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
@@ -426,6 +423,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp">
       <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp">
+      <Filter>Engine\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -759,9 +759,6 @@
     <ClInclude Include="Engine\Component\ComponentAnimation.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentUI.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Component\ComponentButton.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
@@ -860,6 +857,9 @@
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h">
       <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCanvasRenderer.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

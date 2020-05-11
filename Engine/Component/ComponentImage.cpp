@@ -3,15 +3,16 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleProgram.h"
+#include "Module/ModuleUI.h"
 
 #include "ResourceManagement/Resources/Texture.h"
 
-ComponentImage::ComponentImage() : ComponentUI(ComponentType::UI_IMAGE)
+ComponentImage::ComponentImage() : Component(ComponentType::UI_IMAGE)
 {
 	InitData();
 }
 
-ComponentImage::ComponentImage(GameObject * owner) : ComponentUI(owner, ComponentType::UI_IMAGE)
+ComponentImage::ComponentImage(GameObject * owner) : Component(owner, ComponentType::UI_IMAGE)
 {
 	InitData();
 }
@@ -77,13 +78,40 @@ void ComponentImage::Render(float4x4* projection, float4x4* model)
 	}
 }
 
-void ComponentImage::UISpecializedSave(Config& config) const
+Component* ComponentImage::Clone(bool original_prefab) const
+{
+	ComponentImage * created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentImage();
+	}
+	else
+	{
+		created_component = App->ui->CreateComponentUI<ComponentImage>();
+	}
+	*created_component = *this;
+	return created_component;
+};
+
+void ComponentImage::Copy(Component* component_to_copy) const
+{
+	*component_to_copy = *this;
+	*static_cast<ComponentImage*>(component_to_copy) = *this;
+}
+
+
+void ComponentImage::Delete()
+{
+	App->ui->RemoveComponentUI(this);
+}
+
+void ComponentImage::SpecializedSave(Config& config) const
 {
 	config.AddFloat3(color, "Color");
 	config.AddUInt(texture_uuid, "TextureUUID");
 }
 
-void ComponentImage::UISpecializedLoad(const Config& config)
+void ComponentImage::SpecializedLoad(const Config& config)
 {
 	config.GetFloat3("Color", color, float3::one);
 	texture_uuid = config.GetUInt("TextureUUID", 0);

@@ -1,7 +1,6 @@
 #ifndef _COMPONENTCANVAS_H_
 #define _COMPONENTCANVAS_H_
 
-#include "ComponentUI.h"
 #include "Component/ComponentCamera.h"
 
 #include <GL/glew.h>

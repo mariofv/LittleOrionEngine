@@ -9,7 +9,6 @@
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
-#include "Component/ComponentUI.h"
 
 #include <GL/glew.h>
 

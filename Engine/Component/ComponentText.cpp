@@ -7,12 +7,12 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleUI.h"
 
-ComponentText::ComponentText() : ComponentUI(ComponentType::UI_TEXT)
+ComponentText::ComponentText() : Component(ComponentType::UI_TEXT)
 {
 	InitData();
 }
 
-ComponentText::ComponentText(GameObject * owner) : ComponentUI(owner, ComponentType::UI_TEXT)
+ComponentText::ComponentText(GameObject * owner) : Component(owner, ComponentType::UI_TEXT)
 {
 	InitData();
 }
@@ -71,18 +71,40 @@ void ComponentText::Render(float4x4* projection)
 	*/
 }
 
-void ComponentText::Delete()
+Component* ComponentText::Clone(bool original_prefab) const
 {
-	ComponentUI::Delete();
+	ComponentText* created_component;
+	if (original_prefab)
+	{
+		created_component = new ComponentText();
+	}
+	else
+	{
+		created_component = App->ui->CreateComponentUI<ComponentText>();
+	}
+	*created_component = *this;
+	return created_component;
+};
+
+void ComponentText::Copy(Component* component_to_copy) const
+{
+	*component_to_copy = *this;
+	*static_cast<ComponentText*>(component_to_copy) = *this;
 }
 
-void ComponentText::UISpecializedSave(Config& config) const
+
+void ComponentText::Delete()
+{
+	App->ui->RemoveComponentUI(this);
+}
+
+void ComponentText::SpecializedSave(Config& config) const
 {
 	config.AddString(text, "Text");
 	config.AddFloat(scale, "Scale");
 }
 
-void ComponentText::UISpecializedLoad(const Config& config)
+void ComponentText::SpecializedLoad(const Config& config)
 {
 	config.GetString("Text", text, "");
 	config.GetFloat("Scale", scale);

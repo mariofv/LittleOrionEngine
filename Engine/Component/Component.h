@@ -22,6 +22,7 @@ public:
 		TRANSFORM2D,
 		SCRIPT,
 
+		CANVAS_RENDERER,
 		UI_BUTTON,
 		UI_IMAGE,
 		UI_PROGRESS_BAR,
@@ -85,11 +86,10 @@ public:
 	GameObject *owner = nullptr;
 	ComponentType type;
 
+	bool active = true;
+
 	bool modified_by_user = false; //This is only for prefab and UI
 	bool added_by_user = false; //This is only for prefab and UI
-
-protected:
-	bool active = true;
 };
 
 #endif //_COMPONENT_H_

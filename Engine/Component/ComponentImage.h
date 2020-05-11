@@ -1,21 +1,25 @@
 #ifndef _COMPONENTIMAGE_H_
 #define _COMPONENTIMAGE_H_
 
-#include "ComponentUI.h"
+#include "Component/Component.h"
 
 #include <GL/glew.h>
 
 class Texture;
 
-class ComponentImage : public ComponentUI
+class ComponentImage : public Component
 {
 public:
 	ComponentImage();
 	ComponentImage(GameObject * owner);
 	~ComponentImage();
 
-	void UISpecializedSave(Config& config) const override;
-	void UISpecializedLoad(const Config& config) override;
+	Component* Clone(bool original_prefab = false) const override;
+	void Copy(Component* component_to_copy) const override;
+
+	void Delete() override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 
 	void SetTextureToRender(uint32_t texture_uuid);
 

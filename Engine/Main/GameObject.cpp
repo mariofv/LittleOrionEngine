@@ -19,15 +19,17 @@
 
 #include "Component/Component.h"
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentCanvasRenderer.h"
+#include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentProgressBar.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentUI.h"
-#include "Component/ComponentButton.h"
 
 #include <Brofiler/Brofiler.h>
 #include <pcg_basic.h>
@@ -372,6 +374,10 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		created_component = App->ui->CreateComponentCanvas();
 		break;
 
+	case Component::ComponentType::CANVAS_RENDERER:
+		created_component = App->ui->CreateComponentCanvasRenderer();
+		break;
+
 	case Component::ComponentType::CAMERA:
 		created_component = App->cameras->CreateComponentCamera();
 		break;
@@ -389,10 +395,19 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		break;
 
 	case Component::ComponentType::UI_BUTTON:
+		created_component = App->ui->CreateComponentUI<ComponentButton>();
+		break;
+
 	case Component::ComponentType::UI_IMAGE:
+		created_component = App->ui->CreateComponentUI<ComponentImage>();
+		break;
+
 	case Component::ComponentType::UI_PROGRESS_BAR:
+		created_component = App->ui->CreateComponentUI<ComponentProgressBar>();
+		break;
+
 	case Component::ComponentType::UI_TEXT:
-		created_component = App->ui->CreateComponentUI(type);
+		created_component = App->ui->CreateComponentUI<ComponentText>();
 		break;
 
 	default:
