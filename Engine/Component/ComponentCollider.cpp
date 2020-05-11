@@ -287,6 +287,16 @@ void ComponentCollider::SetRotationAxis()
 void ComponentCollider::AddForce(float3& force)
 {
 	body->applyCentralForce(btVector3(force.x, force.y, force.z));
+
+	float3 direction = float3(force.x, 0, force.z);
+	Quat new_rotation = owner->transform.GetRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
+
+	btTransform trans = body->getWorldTransform();
+	btQuaternion transrot = trans.getRotation();
+
+	transrot = btQuaternion(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
+	trans.setRotation(transrot);
+	body->setWorldTransform(trans);
 }
 
 void ComponentCollider::DisablePhysics(bool disable)
