@@ -49,17 +49,8 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 {
 	if (ImGui::CollapsingHeader(ICON_FA_DRAW_POLYGON " Mesh Renderer", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::Checkbox("Active", &mesh_renderer->active))
+		if (!ShowCommonComponentWindow(mesh_renderer))
 		{
-			//UndoRedo
-			App->actions->action_component = mesh_renderer;
-			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
-			mesh_renderer->modified_by_user = true;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(mesh_renderer);
 			return;
 		}
 		ImGui::Separator();
@@ -153,17 +144,8 @@ void PanelComponent::ShowComponentCameraWindow(ComponentCamera *camera)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_VIDEO " Camera", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::Checkbox("Active", &camera->active))
+		if (!ShowCommonComponentWindow(camera))
 		{
-			//UndoRedo
-			App->actions->action_component = camera;
-			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
-			camera->modified_by_user = true;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(camera);
 			return;
 		}
 		ImGui::Separator();
@@ -268,18 +250,8 @@ void PanelComponent::ShowComponentLightWindow(ComponentLight *light)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_LIGHTBULB " Light", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::Checkbox("Active", &light->active))
+		if (!ShowCommonComponentWindow(light))
 		{
-			//UndoRedo
-			App->actions->action_component = light;
-			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
-			light->modified_by_user = true;
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(light);
-
 			return;
 		}
 		ImGui::Separator();
@@ -343,17 +315,8 @@ void PanelComponent::ShowComponentAnimationWindow(ComponentAnimation* animation)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PLAY_CIRCLE " Animation", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::Checkbox("Active", &animation->active))
+		if (!ShowCommonComponentWindow(animation))
 		{
-			//UndoRedo
-			App->actions->action_component = animation;
-			App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
-		}
-		ImGui::SameLine();
-		if (ImGui::Button("Delete"))
-		{
-			App->actions->DeleteComponentUndo(animation);
-
 			return;
 		}
 		ImGui::SameLine();
@@ -428,20 +391,11 @@ void PanelComponent::ShowComponentScriptWindow(ComponentScript* component_script
 {
 	if (ImGui::CollapsingHeader(ICON_FA_EDIT " Script", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (ImGui::Checkbox("Active", &component_script->active))
+		if (!ShowCommonComponentWindow(component_script))
 		{
-			//UndoRedo TODO
-			//App->editor->action_component = component_script;
-			//App->editor->AddUndoAction(ModuleEditor::UndoActionType::ENABLE_DISABLE_COMPONENT);
-		}
-
-
-		if (ImGui::Button("Delete"))
-		{
-			component_script->owner->RemoveComponent(component_script);
-			App->scripts->RemoveComponentScript(component_script);
 			return;
 		}
+
 		ImGui::SameLine();
 		if (ImGui::Button("Refresh"))
 		{
@@ -469,7 +423,7 @@ void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image) {
 	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Image", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		if (!ShowCommonUIWindow(component_image))
+		if (!ShowCommonComponentWindow(component_image))
 		{
 			return;
 		}
@@ -508,7 +462,10 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image) {
 void PanelComponent::ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar) {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(progress_bar);
+		if (!ShowCommonComponentWindow(progress_bar))
+		{
+			return;
+		}
 		ImGui::Separator();
 		ImGui::DragFloat("Bar Value", &progress_bar->percentage, 0.1F, 0.0F, 100.0F);
 		ImGui::InputInt("Bar Image", (int*)(&progress_bar->bar_texture));
@@ -520,8 +477,10 @@ void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Text", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(text);
-
+		if (!ShowCommonComponentWindow(text))
+		{
+			return;
+		}
 		ImGui::Separator();		
 		ImGui::InputText("Text", &text->text);
 		
@@ -557,7 +516,7 @@ void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Button", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ShowCommonUIWindow(button);
+		ShowCommonComponentWindow(button);
 	}
 }
 
@@ -718,18 +677,29 @@ ENGINE_API void PanelComponent::DropGOTarget(GameObject*& go)
 	}
 }
 
-bool PanelComponent::ShowCommonUIWindow(Component* ui)
+bool PanelComponent::ShowCommonComponentWindow(Component* component)
 {
-	if (ImGui::Checkbox("Active", &ui->active))
+	if (ImGui::Checkbox("Active", &component->active))
 	{
+		component->modified_by_user = true;
+		if (component->active)
+		{
+			component->Enable();
+		}
+		else
+		{
+			component->Disable();
+		}
+
 		//UndoRedo
-		App->actions->action_component = ui;
+		App->actions->action_component = component;
 		App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
 	}
+
 	ImGui::SameLine();
 	if (ImGui::Button("Delete"))
 	{
-		App->actions->DeleteComponentUndo(ui);
+		App->actions->DeleteComponentUndo(component);
 		return false;
 	}
 

@@ -31,13 +31,14 @@ public:
 	void ShowComponentLightWindow(ComponentLight* light);
 	void ShowComponentAnimationWindow(ComponentAnimation* animation);
 	void ShowComponentScriptWindow(ComponentScript* component_script);
-	bool ShowCommonUIWindow(Component* ui);
 	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
 	void ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar);
 	void ShowComponentImageWindow(ComponentImage* image);
 	void ShowComponentTextWindow(ComponentText* text);
 	void ShowComponentButtonWindow(ComponentButton* button);
+
 	void ShowAddNewComponentButton();
+	bool ShowCommonComponentWindow(Component* component);
 
 	void ShowScriptsCreated(ComponentScript* component_script);
 
