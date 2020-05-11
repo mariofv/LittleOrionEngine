@@ -256,6 +256,7 @@
   <ItemGroup>
     <ClInclude Include="src\Script\DamageScript.h" />
     <ClInclude Include="src\Script\DebugModeScript.h" />
+    <ClInclude Include="src\Script\EventManager.h" />
     <ClInclude Include="src\Script\Mushdoom.h" />
     <ClInclude Include="src\Script\EnemyManager.h" />
     <ClInclude Include="src\Script\EnemyController.h" />
@@ -274,6 +275,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\DamageScript.cpp" />
+    <ClCompile Include="src\Script\EventManager.cpp" />
     <ClCompile Include="src\Script\Mushdoom.cpp" />
     <ClCompile Include="src\Script\EnemyManager.cpp" />
     <ClCompile Include="src\Script\EnemyController.cpp" />

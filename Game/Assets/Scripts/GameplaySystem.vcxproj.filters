@@ -69,6 +69,9 @@
     <ClInclude Include="src\Script\Mushdoom.h">
       <Filter>src\Script\Enemy</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\EventManager.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -121,6 +124,9 @@
     </ClCompile>
     <ClCompile Include="src\Script\Mushdoom.cpp">
       <Filter>src\Script\Enemy</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\EventManager.cpp">
+      <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

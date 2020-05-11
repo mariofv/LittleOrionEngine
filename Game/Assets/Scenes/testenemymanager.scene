@@ -2,39 +2,6 @@
     "Prefabs": [
         {
             "ParentUUID": 0,
-            "Prefab": 953855812,
-            "Transform": {
-                "UUID": 802039692,
-                "Active": true,
-                "Translation": [
-                    117.11154174804688,
-                    17.312171936035158,
-                    0.4954342842102051
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    600.0,
-                    700.0,
-                    800.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 2963143882,
-                    "OriginalUUID": 953855812
-                },
-                {
-                    "UUID": 1042929624,
-                    "OriginalUUID": 953855813
-                }
-            ]
-        },
-        {
-            "ParentUUID": 0,
             "Prefab": 687239812,
             "Transform": {
                 "UUID": 541033341,
@@ -190,19 +157,6 @@
         }
     ],
     "PrefabsComponents": [
-        {
-            "Components": [
-                {
-                    "UUID": 173257904,
-                    "ComponentType": 2,
-                    "Active": false,
-                    "Mesh": 1061769194,
-                    "Material": 2865577567,
-                    "Skeleton": 0
-                }
-            ],
-            "UUID": 1042929624
-        },
         {
             "Components": [
                 {
@@ -618,7 +572,16 @@
                 "Width": 10.0,
                 "Height": 10.0
             },
-            "Components": []
+            "Components": [
+                {
+                    "UUID": 219653655,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "WorldManager",
+                    "Name0": "Player",
+                    "Player": 248855188
+                }
+            ]
         },
         {
             "UUID": 1342938916,
@@ -1076,6 +1039,154 @@
             ]
         },
         {
+            "UUID": 708689603,
+            "ParentUUID": 0,
+            "Name": "EventManager",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2995579521,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 856773045,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 3904370147,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "EventManager"
+                }
+            ]
+        },
+        {
+            "UUID": 1718379930,
+            "ParentUUID": 0,
+            "Name": "Triggers",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2202236262,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 315976873,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": []
+        },
+        {
+            "UUID": 192926073,
+            "ParentUUID": 0,
+            "Name": "Spawns",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1907172869,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1336090793,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": []
+        },
+        {
             "UUID": 2406842806,
             "ParentUUID": 248855188,
             "Name": "FakeCollider",
@@ -1519,7 +1630,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 29,
+                    "Texture": 21,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1581,7 +1692,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 30,
+                    "Texture": 22,
                     "Color": [
                         1.0,
                         1.0,
@@ -1591,6 +1702,451 @@
                     "Layer": 0
                 }
             ]
+        },
+        {
+            "UUID": 3426557315,
+            "ParentUUID": 1718379930,
+            "Name": "Trigger1",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 296806345,
+                "Active": true,
+                "Translation": [
+                    -6.192837715148926,
+                    6.321720600128174,
+                    2.6007916927337648
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 4198757374,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 3375522699,
+                    "Active": true,
+                    "ComponentType": 9,
+                    "ColliderType": 0,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        6.619999885559082
+                    ],
+                    "Static": true,
+                    "Collision": false,
+                    "Visualize": true,
+                    "Attached": false,
+                    "x_axis": false,
+                    "y_axis": false,
+                    "z_axis": false,
+                    "DisablePhysics": true,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
+                }
+            ]
+        },
+        {
+            "UUID": 2119910254,
+            "ParentUUID": 1718379930,
+            "Name": "Trigger2",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 443536660,
+                "Active": true,
+                "Translation": [
+                    62.73873519897461,
+                    6.321720600128174,
+                    2.6007916927337648
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 244035800,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 2953936883,
+                    "Active": true,
+                    "ComponentType": 9,
+                    "ColliderType": 0,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        6.619999885559082
+                    ],
+                    "Static": true,
+                    "Collision": false,
+                    "Visualize": true,
+                    "Attached": false,
+                    "x_axis": false,
+                    "y_axis": false,
+                    "z_axis": false,
+                    "DisablePhysics": true,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
+                }
+            ]
+        },
+        {
+            "UUID": 3303917800,
+            "ParentUUID": 1718379930,
+            "Name": "Trigger3",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 189478561,
+                "Active": true,
+                "Translation": [
+                    107.42708587646485,
+                    18.448192596435548,
+                    2.6007916927337648
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1682671304,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 1930359033,
+                    "Active": true,
+                    "ComponentType": 9,
+                    "ColliderType": 0,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        6.619999885559082
+                    ],
+                    "Static": true,
+                    "Collision": false,
+                    "Visualize": true,
+                    "Attached": false,
+                    "x_axis": false,
+                    "y_axis": false,
+                    "z_axis": false,
+                    "DisablePhysics": true,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
+                }
+            ]
+        },
+        {
+            "UUID": 759917838,
+            "ParentUUID": 192926073,
+            "Name": "Spawn1",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1484344217,
+                "Active": true,
+                "Translation": [
+                    13.530092239379883,
+                    1.5445040464401246,
+                    -6.008069038391113
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 726417321,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": []
+        },
+        {
+            "UUID": 301463097,
+            "ParentUUID": 192926073,
+            "Name": "Spawn2",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2896634242,
+                "Active": true,
+                "Translation": [
+                    48.48588943481445,
+                    1.5445040464401246,
+                    -6.008069038391113
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2364309244,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": []
+        },
+        {
+            "UUID": 2176700751,
+            "ParentUUID": 192926073,
+            "Name": "Spawn3",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2884434592,
+                "Active": true,
+                "Translation": [
+                    80.05918884277344,
+                    2.6788108348846437,
+                    -6.008069038391113
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2766484853,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": []
+        },
+        {
+            "UUID": 3044064421,
+            "ParentUUID": 192926073,
+            "Name": "Spawn4",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3771470882,
+                "Active": true,
+                "Translation": [
+                    97.46180725097656,
+                    15.335569381713868,
+                    0.08830457925796509
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 4028733339,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": []
+        },
+        {
+            "UUID": 586454378,
+            "ParentUUID": 192926073,
+            "Name": "Spawn5",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 87633618,
+                "Active": true,
+                "Translation": [
+                    122.71542358398438,
+                    15.335569381713868,
+                    0.08830457925796509
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2541904614,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": []
         }
     ]
 } 
