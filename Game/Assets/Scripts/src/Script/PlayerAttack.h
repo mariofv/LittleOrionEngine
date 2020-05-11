@@ -26,12 +26,11 @@ public:
 	//void Load(const Config& config) override;
 private:	
 	EnemyManager* enemy_manager = nullptr;
-	ComponentAnimation* animation = nullptr;	//Temporal as we dont have physics
-	GameObject* collider = nullptr;
-	ComponentCollider* component_collider = nullptr;
+	ComponentAnimation* animation = nullptr;	
+	ComponentCollider* collider = nullptr;
 	unsigned current_damage_power = 0;
 	bool is_attacking = false;
-	bool collider_enabled = false;
+	bool raycast_cast = false;
 };
 extern "C" SCRIPT_API PlayerAttack* PlayerAttackDLL(); //This is how we are going to load the script
 #endif

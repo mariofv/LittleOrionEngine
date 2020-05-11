@@ -187,39 +187,6 @@
                     "OriginalUUID": 197215351
                 }
             ]
-        },
-        {
-            "ParentUUID": 2875220168,
-            "Prefab": 953855812,
-            "Transform": {
-                "UUID": 2069658441,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "UUIDS": [
-                {
-                    "UUID": 3385305795,
-                    "OriginalUUID": 953855812
-                },
-                {
-                    "UUID": 246459601,
-                    "OriginalUUID": 953855813
-                }
-            ]
         }
     ],
     "PrefabsComponents": [
@@ -424,41 +391,6 @@
                 }
             ],
             "UUID": 3774483745
-        },
-        {
-            "Components": [
-                {
-                    "UUID": 3564925943,
-                    "ComponentType": 2,
-                    "Active": false,
-                    "Mesh": 1061769194,
-                    "Material": 2865577567,
-                    "Skeleton": 0
-                },
-                {
-                    "UUID": 495043451,
-                    "Active": true,
-                    "ComponentType": 9,
-                    "ColliderType": 0,
-                    "Mass": 1.0,
-                    "Scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "Static": false,
-                    "Collision": false,
-                    "Visualize": true,
-                    "Attached": true,
-                    "x_axis": true,
-                    "y_axis": true,
-                    "z_axis": true,
-                    "DisablePhysics": true,
-                    "Friction": 1.0,
-                    "Rolling_friction": 1.0
-                }
-            ],
-            "UUID": 246459601
         }
     ],
     "GameObjects": [
@@ -556,7 +488,7 @@
                 "Translation": [
                     -97.90010833740235,
                     0.0,
-                    -0.28385698795318606
+                    0.24497294425964356
                 ],
                 "Rotation": [
                     -0.0,
@@ -600,9 +532,7 @@
                     "UUID": 891602066,
                     "ComponentType": 6,
                     "Active": true,
-                    "ScriptName": "PlayerAttack",
-                    "Name0": "Cube.001_0",
-                    "Cube.001_0": 246459601
+                    "ScriptName": "PlayerAttack"
                 },
                 {
                     "UUID": 1816450749,
@@ -618,24 +548,24 @@
                     "ScriptName": "PlayerMovement"
                 },
                 {
-                    "UUID": 1392017358,
+                    "UUID": 263237504,
                     "Active": true,
                     "ComponentType": 9,
-                    "ColliderType": 1,
+                    "ColliderType": 0,
                     "Mass": 1.0,
                     "Scale": [
-                        0.4000000059604645,
-                        1.3700000047683716,
-                        1.0
+                        0.7099999785423279,
+                        1.0,
+                        0.5400000214576721
                     ],
                     "Static": false,
-                    "Collision": true,
+                    "Collision": false,
                     "Visualize": true,
                     "Attached": true,
                     "x_axis": true,
                     "y_axis": true,
                     "z_axis": true,
-                    "DisablePhysics": false,
+                    "DisablePhysics": true,
                     "Friction": 1.0,
                     "Rolling_friction": 1.0
                 }
@@ -1142,53 +1072,6 @@
                     "Mushdoom": 660713151
                 }
             ]
-        },
-        {
-            "UUID": 2875220168,
-            "ParentUUID": 248855188,
-            "Name": "FakeCollider",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3437755095,
-                "Active": true,
-                "Translation": [
-                    0.03253936767578125,
-                    0.909177839756012,
-                    0.7963247895240784
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    50.0,
-                    75.0,
-                    40.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 817524215,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": []
         },
         {
             "UUID": 1591387555,

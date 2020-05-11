@@ -7,6 +7,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleInput.h"
+#include "Module/ModulePhysics.h"
 #include "Module/ModuleScene.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
@@ -37,9 +38,7 @@ void PlayerAttack::Awake()
 	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
 
 	animation = (ComponentAnimation*) owner->GetComponent(Component::ComponentType::ANIMATION);
-	
-	component_collider = static_cast<ComponentCollider*>(collider->GetComponent(ComponentCollider::ColliderType::BOX));
-	collider->SetEnabled(false);
+	collider = static_cast<ComponentCollider*>(owner->GetComponent(ComponentCollider::ColliderType::BOX));
 }
 // Use this for initialization
 
@@ -53,34 +52,50 @@ bool PlayerAttack::Attack()
 {
 	is_attacking = animation->IsOnState("Punch") || animation->IsOnState("Kick");
 
-	if(!is_attacking && !collider->IsEnabled())
+	if(!is_attacking && !raycast_cast)
 	{
 		if(App->input->GetGameInputDown("Punch", PlayerID::ONE))
 		{
 			animation->ActiveAnimation("punch");
 			//Active colliders of hands
-			collider->SetEnabled(true);
+			raycast_cast = true;
 			current_damage_power = PUNCH_DAMAGE;
 		}
 		else if(App->input->GetGameInputDown("Kick", PlayerID::ONE))
 		{
 			animation->ActiveAnimation("kick");
 			//Active colliders of kick
-			collider->SetEnabled(true);
+			raycast_cast = true;
 			current_damage_power = KICK_DAMAGE;
 		}	
 	}
 
-	if (collider->IsEnabled() && animation->GetCurrentClipPercentatge() > 0.5f)
+	if (raycast_cast && animation->GetCurrentClipPercentatge() > 0.5f)
 	{
 		ComputeCollisions();
-		collider->SetEnabled(false);		
+		raycast_cast = false;
 	}
 
 	return is_attacking;
 }
 void PlayerAttack::ComputeCollisions() const
 {
+	
+
+	btVector3 end = collider->body->getWorldTransform().getOrigin();
+	end.setX(end.getX() + collider->owner->transform.GetFrontVector().x * 4.0f);
+	end.setX(end.getY() + collider->owner->transform.GetFrontVector().y * 4.0f);
+	end.setX(end.getZ() + collider->owner->transform.GetFrontVector().z * 4.0f);
+
+	btVector3 normal;
+
+	int enemy_id_collision = App->physics->GetRaycastWorldId(collider->body->getWorldTransform().getOrigin(), end, normal);
+
+	if(enemy_id_collision == -1)
+	{
+		return;
+	}
+
 	for (auto& enemy : enemy_manager->enemies)
 	{
 		if (!enemy->is_alive)
@@ -88,8 +103,7 @@ void PlayerAttack::ComputeCollisions() const
 			continue;
 		}
 
-		//if (collider->aabb.global_bounding_box.Intersects(enemy->owner->aabb.global_bounding_box))
-		if (component_collider->DetectCollisionWith(enemy->collider_component))
+		if (enemy->collider_component->body->getWorldArrayIndex() == enemy_id_collision)
 		{
 			enemy->TakeDamage(current_damage_power);
 		}
@@ -103,18 +117,15 @@ void PlayerAttack::OnInspector(ImGuiContext* context)
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
 }
-//Use this for linking JUST GO automatically 
 
+//Use this for linking JUST GO automatically 
 void PlayerAttack::InitPublicGameObjects()
 {
-	public_gameobjects.push_back(&collider);
-	variable_names.push_back(GET_VARIABLE_NAME(collider));
-
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
 	for (int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		name_gameobjects.push_back(is_object);
 		go_uuids.push_back(0);
 	}
-
 }
+
