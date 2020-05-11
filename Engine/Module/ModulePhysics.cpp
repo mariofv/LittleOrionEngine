@@ -59,11 +59,15 @@ update_status ModulePhysics::Update()
 		
 	for (auto collider : colliders)
 	{
+		
 		if (App->time->isGameRunning() && !collider->disable_physics && collider->IsEnabled())
 		{
 			if (collider->collider_type != ComponentCollider::ColliderType::MESH)
 			{
 				collider->MoveBody();
+			}
+			if (colliders.at(0)->DetectCollisionWith(colliders.at(1))) {
+				return update_status::UPDATE_STOP;
 			}
 		}
 		else
@@ -179,8 +183,8 @@ bool ModulePhysics::RaycastWorld(const btVector3 &Start, btVector3 &End, btVecto
 	btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
 	
 	world->rayTest(Start, End, RayCallback);
-	if (RayCallback.hasHit()) {
-
+	if (RayCallback.hasHit()) 
+	{	
 		End = RayCallback.m_hitPointWorld;
 		Normal = RayCallback.m_hitNormalWorld;
 		return true;
