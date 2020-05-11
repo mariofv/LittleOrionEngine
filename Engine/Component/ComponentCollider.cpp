@@ -237,6 +237,28 @@ bool ComponentCollider::DetectCollision()
 
 bool ComponentCollider::DetectCollisionWith(ComponentCollider * collider)
 {
+	btVector3 body_minim;
+	btVector3 body_maxim;
+	btVector3 collider_minim;
+	btVector3 collider_maxim;
+
+	if (disable_physics && collider->disable_physics) 
+	{	
+		App->physics->world->updateAabbs();
+		body->getAabb(body_minim, body_maxim);
+		collider->body->getAabb(collider_minim, collider_maxim);
+		
+		if (!(body_maxim.getX() < collider_minim.getX() || collider_maxim.getX() < body_minim.getX()))
+		{
+			if (!(body_maxim.getY() < collider_minim.getY() || collider_maxim.getY() < body_minim.getY())) 
+			{
+				if (!(body_maxim.getZ() < collider_minim.getZ() || collider_maxim.getZ() < body_minim.getZ())) 
+				{
+					return true;
+				}
+			}
+		}
+	}
 
 	int numManifolds = App->physics->world->getDispatcher()->getNumManifolds();
 	for (int i = 0; i < numManifolds; i++)
@@ -359,5 +381,4 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 		trans.setRotation(transrot);
 		body->setWorldTransform(trans);
 	}
-	
 }

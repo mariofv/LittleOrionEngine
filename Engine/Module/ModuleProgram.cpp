@@ -102,7 +102,7 @@ bool ModuleProgram::InitVertexShader(GLuint &vertex_shader, const char* vertex_s
 		return false;
 	}
 	glShaderSource(vertex_shader, 1, &vertex_shader_loaded_file, NULL);
-	free(vertex_shader_loaded_file);
+	delete[] vertex_shader_loaded_file;
 
 	APP_LOG_INFO("Compiling vertex shader");
 	glCompileShader(vertex_shader);
@@ -133,7 +133,7 @@ bool ModuleProgram::InitFragmentShader(GLuint &fragment_shader, const char* frag
 		return false;
 	}
 	glShaderSource(fragment_shader, 1, &fragment_shader_loaded_file, NULL);
-	free(fragment_shader_loaded_file);
+	delete[] fragment_shader_loaded_file;
 
 	APP_LOG_INFO("Compiling fragment shader");
 	glCompileShader(fragment_shader);
@@ -216,7 +216,7 @@ void ModuleProgram::LoadPrograms(const char* file_path)
 
 	char* shaders_file_data = (char*)shaders_data.buffer;
 	std::string serialized_shaders = shaders_file_data;
-	free(shaders_file_data);
+	delete[] shaders_file_data;
 
 	std::vector<Config> shaders;
 	Config shaders_config(serialized_shaders);
