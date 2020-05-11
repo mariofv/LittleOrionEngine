@@ -8,6 +8,7 @@
 ComponentBillboard::ComponentBillboard() : Component(nullptr, ComponentType::BILLBOARD)
 {
 	self_timer.Start();
+	this->alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
 	//owner->aabb.GenerateBoundingBox();
 }
 

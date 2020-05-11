@@ -3,6 +3,8 @@
 #include "Main/Application.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleProgram.h"
+#include "Component/ComponentBillboard.h"
+#include "Module/ModuleResourceManager.h"
 #include "GL/glew.h"
 
 ComponentParticleSystem::ComponentParticleSystem() : Component(nullptr, ComponentType::PARTICLE_SYSTEM)
@@ -21,6 +23,14 @@ void ComponentParticleSystem::Init()
 	for (unsigned int i = 0; i < max_particles; ++i)
 	{
 		particles.emplace_back(Particle());
+		ComponentBillboard* created_billboard = new ComponentBillboard(owner);
+		
+		created_billboard->billboard_texture = App->resources->Load<Texture>(DEFAULT_BILLBOARD_TEXTURE_PATH);
+		created_billboard->alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
+		created_billboard->x_tiles = 1;
+		created_billboard->y_tiles = 1;
+		created_billboard->sheet_speed = 1;
+		particles[i].billboard = created_billboard;
 	}
 }
 
@@ -28,13 +38,13 @@ unsigned int ComponentParticleSystem::FirstUnusedParticle()
 {
 	for (unsigned int i =last_used_particle; i < max_particles; ++i)
 	{
-		if (particles[i].Life <= 0.0f) {
+		if (particles[i].life <= 0.0f) {
 			last_used_particle = i;
 			return i;
 		}
 	}
 	for (unsigned int i = 0; i < last_used_particle; ++i) {
-		if (particles[i].Life <= 0.0f) {
+		if (particles[i].life <= 0.0f) {
 			last_used_particle = i;
 			return i;
 		}
@@ -48,8 +58,8 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	float random = ((rand() % 100) - 50) / 10.0f;
 	float rColor = 0.5f + ((rand() % 100) / 100.0f);
 	//particle.Position = owner.Position + random + offset;
-	particle.Color = float4(rColor, rColor, rColor, 1.0f);
-	particle.Life = 1.0f;
+	particle.color = float4(rColor, rColor, rColor, 1.0f);
+	particle.life = 1.0f;
 	//particle.Velocity = object.Velocity * 0.1f;
 }
 
@@ -64,11 +74,11 @@ void ComponentParticleSystem::Update()
 	for (unsigned int i = 0; i < max_particles; ++i)
 	{
 		Particle &p = particles[i];
-		p.Life -= self_timer.Read(); // reduce life
-		if (p.Life > 0.0f)
+		p.life -= self_timer.Read(); // reduce life
+		if (p.life > 0.0f)
 		{	// particle is alive, thus update
-			p.Position -= p.Velocity * self_timer.Read();
-			p.Color.w -= self_timer.Read() * 2.5f;
+			p.position -= p.velocity * self_timer.Read();
+			p.color.w -= self_timer.Read() * 2.5f;
 		}
 	}
 }

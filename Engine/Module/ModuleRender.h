@@ -126,6 +126,7 @@ private:
 	friend class PanelDebug;
 	friend class PanelScene;
 	friend class NavMesh;
+	friend class ComponentParticleSystem;
 };
 
 #endif //_MODULERENDER_H_

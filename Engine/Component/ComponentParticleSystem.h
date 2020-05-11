@@ -12,13 +12,11 @@ class ComponentParticleSystem : public Component
 {
 public:
 	struct Particle {
-		float3 Position, Velocity;
-		float4 Color;
-		float     Life;
+		float3 position;
+		float3 velocity;
+		float4 color;
+		float  life;
 		ComponentBillboard* billboard;
-	
-		Particle()
-			: Position(0.0f), Velocity(10.0f), Color(), Life(0.0f), billboard() { }
 	};
 
 	struct Initialization

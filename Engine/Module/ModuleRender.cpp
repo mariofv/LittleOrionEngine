@@ -187,6 +187,11 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	{
 		billboard->Render(billboard->owner->transform.GetGlobalTranslation());
 	}
+	if (particle_systems.size() >0) 
+	{
+		float3 ex = { 0.0f, 0.0f, 0.0f };
+		particle_systems[0]->particles[0].billboard->Render(ex);
+	}
 	
 	
 
