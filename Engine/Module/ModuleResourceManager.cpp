@@ -116,20 +116,18 @@ void ModuleResourceManager::CleanMetafilesInDirectory(const Path& directory_path
 		{
 			CleanMetafilesInDirectory(*path_child);
 		}
-		else if (path_child->IsMeta())
+		else if (path_child->IsMeta() && !metafile_manager->IsMetafileConsistent(*path_child))
 		{
-			if (!metafile_manager->IsMetafileConsistent(*path_child))
+			if (metafile_manager->IsMetafileMoved(*path_child))
 			{
-				if (metafile_manager->IsMetafileMoved(*path_child))
-				{
-					metafile_manager->RefreshMetafile(*path_child);
-				}
-				else
-				{
-					files_to_delete.push_back(path_child);
-				}
+				metafile_manager->RefreshMetafile(*path_child);
+			}
+			else
+			{
+				files_to_delete.push_back(path_child);
 			}
 		}
+		
 	}
 
 	for (auto& path_to_delete : files_to_delete)

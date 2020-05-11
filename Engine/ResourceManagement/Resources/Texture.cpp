@@ -21,7 +21,7 @@ Texture::~Texture()
 	glDeleteTextures(1, &opengl_texture);
 }
 
-void Texture::LoadInMemory(TextureOptions& options,int num_channels)
+void Texture::LoadInMemory(TextureOptions& options, int num_channels)
 {
 	glGenTextures(1, &opengl_texture);
 	glBindTexture(GL_TEXTURE_2D, opengl_texture);

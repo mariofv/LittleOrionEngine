@@ -120,7 +120,8 @@ void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 			}
 			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
 			ResourceDropTarget(path_child);
-			if (expanded) {
+			if (expanded)
+			{
 				ImGui::PushID(filename.c_str());
 				ProcessMouseInput(path_child);
 				ShowFoldersHierarchy(*path_child);

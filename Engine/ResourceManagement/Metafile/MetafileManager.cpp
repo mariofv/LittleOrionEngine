@@ -79,7 +79,7 @@ Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType re
 	return created_metafile;
 }
 
-void MetafileManager::SaveMetafile(Metafile * created_metafile, Path & asset_file_path) const
+void MetafileManager::SaveMetafile(Metafile* created_metafile, Path& asset_file_path) const
 {
 	Config metafile_config;
 	created_metafile->Save(metafile_config);

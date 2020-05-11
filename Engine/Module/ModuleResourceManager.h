@@ -168,7 +168,7 @@ public:
 	std::unique_ptr<ResourceDataBase> resource_DB = nullptr;
 
 private:
-	const size_t importer_interval_millis = 15*1000;
+	const size_t importer_interval_millis = 15 * 1000;
 	float last_imported_time = 0;
 	std::thread importing_thread;
 	std::unique_ptr<Timer> thread_timer = std::make_unique<Timer>();

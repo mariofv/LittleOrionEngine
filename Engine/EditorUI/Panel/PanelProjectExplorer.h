@@ -26,7 +26,7 @@ public:
 	void FilesDrop() const;
 	void ResourceDragSource(Metafile* file) const;
 
-	void ResourceDropTarget(Path * folder_path) const;
+	void ResourceDropTarget(Path* folder_path) const;
 
 private:
 	void InitResourceExplorerDockspace();

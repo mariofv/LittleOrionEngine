@@ -32,7 +32,7 @@ public:
 	bool Remove(const std::string& path);
 
 	Path* Copy(const std::string& source_path, const std::string& destination_path, const std::string& copied_file_name = std::string());
-	Path * Move(const std::string & source_path, const std::string & destination_path);
+	Path * Move(const std::string& source_path, const std::string& destination_path);
 	Path* Rename(Path* file_to_rename, const std::string & new_name);
 
 	Path* MakeDirectory(const std::string& new_directory_full_path);

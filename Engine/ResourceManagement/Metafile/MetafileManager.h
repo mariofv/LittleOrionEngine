@@ -17,7 +17,7 @@ public:
 	Metafile* CreateMetafile(const std::string& asset_file_path_string, ResourceType resource_type);
 	Metafile* CreateMetafile(Path& asset_file_path, ResourceType resource_type, uint32_t uuid = 0);
 
-	void SaveMetafile(Metafile * created_metafile, Path & asset_file_path) const;
+	void SaveMetafile(Metafile* created_metafile, Path& asset_file_path) const;
 	
 	Metafile* GetMetafile(const Path& metafile_path);
 
@@ -38,10 +38,10 @@ public:
 	bool IsMetafileConsistent(const Path& metafile_path);
 	bool IsMetafileConsistent(const Metafile& metafile);
 
-	bool IsMetafileMoved(const Path & metafile_path);
+	bool IsMetafileMoved(const Path& metafile_path);
 
 
-	void RefreshMetafile(const Path & metafile_path);
+	void RefreshMetafile(const Path& metafile_path);
 
 private:
 	std::unordered_map<std::string, Metafile*> metafiles;
