@@ -459,9 +459,9 @@
                     "ColliderType": 0,
                     "Mass": 1.0,
                     "Scale": [
-                        0.47999998927116396,
-                        0.4300000071525574,
-                        0.4099999964237213
+                        0.28999999165534975,
+                        0.33000001311302187,
+                        0.20000000298023225
                     ],
                     "Static": false,
                     "Collision": true,
@@ -470,7 +470,7 @@
                     "x_axis": false,
                     "y_axis": false,
                     "z_axis": false,
-                    "DisablePhysics": false,
+                    "DisablePhysics": true,
                     "Friction": 1.0,
                     "Rolling_friction": 1.0
                 }
@@ -487,8 +487,8 @@
                 "Active": true,
                 "Translation": [
                     -97.90010833740235,
-                    0.0,
-                    0.24497294425964356
+                    -0.46419641375541689,
+                    -0.5957344174385071
                 ],
                 "Rotation": [
                     -0.0,
@@ -532,7 +532,9 @@
                     "UUID": 891602066,
                     "ComponentType": 6,
                     "Active": true,
-                    "ScriptName": "PlayerAttack"
+                    "ScriptName": "PlayerAttack",
+                    "Name0": "FakeCollider",
+                    "FakeCollider": 2406842806
                 },
                 {
                     "UUID": 1816450749,
@@ -548,24 +550,24 @@
                     "ScriptName": "PlayerMovement"
                 },
                 {
-                    "UUID": 263237504,
+                    "UUID": 3308507368,
                     "Active": true,
                     "ComponentType": 9,
-                    "ColliderType": 0,
+                    "ColliderType": 1,
                     "Mass": 1.0,
                     "Scale": [
-                        0.7099999785423279,
+                        0.4099999964237213,
                         1.0,
-                        0.5400000214576721
+                        1.0
                     ],
                     "Static": false,
-                    "Collision": false,
+                    "Collision": true,
                     "Visualize": true,
                     "Attached": true,
-                    "x_axis": true,
-                    "y_axis": true,
-                    "z_axis": true,
-                    "DisablePhysics": true,
+                    "x_axis": false,
+                    "y_axis": false,
+                    "z_axis": false,
+                    "DisablePhysics": false,
                     "Friction": 1.0,
                     "Rolling_friction": 1.0
                 }
@@ -1074,6 +1076,76 @@
             ]
         },
         {
+            "UUID": 2406842806,
+            "ParentUUID": 248855188,
+            "Name": "FakeCollider",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 358820948,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.9170538187026978,
+                    0.38703984022140505
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 109143591,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 2157790054,
+                    "Active": true,
+                    "ComponentType": 9,
+                    "ColliderType": 0,
+                    "Mass": 1.0,
+                    "Scale": [
+                        0.49000000953674319,
+                        0.9100000262260437,
+                        0.1899999976158142
+                    ],
+                    "Static": false,
+                    "Collision": false,
+                    "Visualize": true,
+                    "Attached": false,
+                    "x_axis": false,
+                    "y_axis": false,
+                    "z_axis": false,
+                    "DisablePhysics": true,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
+                }
+            ]
+        },
+        {
             "UUID": 1591387555,
             "ParentUUID": 2861961979,
             "Name": "Background",
@@ -1447,7 +1519,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 19,
+                    "Texture": 29,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1509,7 +1581,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 18,
+                    "Texture": 30,
                     "Color": [
                         1.0,
                         1.0,

@@ -26,8 +26,9 @@ public:
 	//void Load(const Config& config) override;
 private:	
 	EnemyManager* enemy_manager = nullptr;
-	ComponentAnimation* animation = nullptr;	
-	ComponentCollider* collider = nullptr;
+	ComponentAnimation* animation = nullptr;
+	GameObject* collider = nullptr;
+	ComponentCollider* collider_component = nullptr;
 	unsigned current_damage_power = 0;
 	bool is_attacking = false;
 	bool raycast_cast = false;

@@ -38,7 +38,7 @@ void PlayerAttack::Awake()
 	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
 
 	animation = (ComponentAnimation*) owner->GetComponent(Component::ComponentType::ANIMATION);
-	collider = static_cast<ComponentCollider*>(owner->GetComponent(ComponentCollider::ColliderType::BOX));
+	collider_component = static_cast<ComponentCollider*>(collider->GetComponent(ComponentCollider::ColliderType::BOX));
 }
 // Use this for initialization
 
@@ -82,19 +82,19 @@ void PlayerAttack::ComputeCollisions() const
 {
 	
 
-	btVector3 end = collider->body->getWorldTransform().getOrigin();
-	end.setX(end.getX() + collider->owner->transform.GetFrontVector().x * 4.0f);
-	end.setX(end.getY() + collider->owner->transform.GetFrontVector().y * 4.0f);
-	end.setX(end.getZ() + collider->owner->transform.GetFrontVector().z * 4.0f);
+	//btVector3 end = collider->body->getWorldTransform().getOrigin();
+	//end.setX(end.getX() + collider->owner->transform.GetFrontVector().x * 4.0f);
+	//end.setX(end.getY() + collider->owner->transform.GetFrontVector().y * 4.0f);
+	//end.setX(end.getZ() + collider->owner->transform.GetFrontVector().z * 4.0f);
 
-	btVector3 normal;
+	/*btVector3 normal;*/
 
-	int enemy_id_collision = App->physics->GetRaycastWorldId(collider->body->getWorldTransform().getOrigin(), end, normal);
+	//int enemy_id_collision = App->physics->GetRaycastWorldId(collider->body->getWorldTransform().getOrigin(), end, normal);
 
-	if(enemy_id_collision == -1)
-	{
-		return;
-	}
+	//if(enemy_id_collision == -1)
+	//{
+	//	return;
+	//}
 
 	for (auto& enemy : enemy_manager->enemies)
 	{
@@ -103,7 +103,7 @@ void PlayerAttack::ComputeCollisions() const
 			continue;
 		}
 
-		if (enemy->collider_component->body->getWorldArrayIndex() == enemy_id_collision)
+		if (collider_component->DetectCollisionWith(enemy->collider_component))
 		{
 			enemy->TakeDamage(current_damage_power);
 		}
@@ -121,6 +121,9 @@ void PlayerAttack::OnInspector(ImGuiContext* context)
 //Use this for linking JUST GO automatically 
 void PlayerAttack::InitPublicGameObjects()
 {
+	public_gameobjects.push_back(&collider);
+	variable_names.push_back(GET_VARIABLE_NAME(collider));
+
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
 	for (int i = 0; i < public_gameobjects.size(); ++i)
 	{

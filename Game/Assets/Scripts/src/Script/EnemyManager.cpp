@@ -109,7 +109,7 @@ void EnemyManager::CreateEnemies()
 		enemy->is_alive = false;
 		enemies.emplace_back(enemy);
 		enemy->owner->transform.SetTranslation(graveyard_position);
-		//enemy->owner->SetEnabled(false);
+		enemy->owner->SetEnabled(false);
 	}
 }
 
