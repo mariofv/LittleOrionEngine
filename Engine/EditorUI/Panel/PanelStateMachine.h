@@ -38,10 +38,13 @@ struct NodeInfo
 	ax::NodeEditor::NodeId id;
 	ax::NodeEditor::PinId input;
 	ax::NodeEditor::PinId output;
+	ImVec2 Pos, Size;
 	//ImColor Color;
-	//NodeType Type;
-	//ImVec2 Size;
 	std::shared_ptr<State> state;
+	//drawing pins
+	ImVec2 GetInputSlotPos(std::string target) const { return ImVec2(Pos.x, Pos.y); }
+	ImVec2 GetOutputSlotPos(std::string source) const { return ImVec2(Pos.x, Pos.y); }
+	//
 };
 
 
@@ -63,8 +66,9 @@ public:
 	void LeftPanel();
 	void CreateNodeMenu();
 
-
-
+	ImDrawList* draw_list = nullptr;
+	const float NODE_SLOT_RADIUS = 6.2f;
+	
 private:
 	std::vector<NodeInfo*> GetSelectedNodes();
 	std::vector<LinkInfo*> GetSelectedLinks();

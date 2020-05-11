@@ -63,7 +63,11 @@ void PanelStateMachine::Render()
 }
 void PanelStateMachine::RenderStates()
 {
+	ImGuiIO& io = ImGui::GetIO();
 	ImVec2 position(10,10);
+	static ImVec2 scrolling = ImVec2(0.0f, 0.0f);
+	const ImVec2 offset = ImGui::GetCursorScreenPos() + scrolling;
+	draw_list = ImGui::GetWindowDrawList();
 	for (auto & node : nodes)
 	{
 		assert(!node->id.Invalid);
@@ -72,6 +76,11 @@ void PanelStateMachine::RenderStates()
 		if (firstFrame)
 		{
 			ax::NodeEditor::SetNodePosition(node->id, position);
+			node->Pos = position;
+			if (ImGui::IsMouseDragging(ImGuiMouseButton_Left))
+			{
+				node->Pos = node->Pos + io.MouseDelta;
+			}
 		}
 		ax::NodeEditor::BeginNode(node->id);
 		ImGui::PushItemWidth(100.0f);
@@ -115,17 +124,21 @@ void PanelStateMachine::RenderStates()
 		auto alpha = ImGui::GetStyle().Alpha; //to get alpha
 		ax::NodeEditor::BeginPin(node->input, ax::NodeEditor::PinKind::Input);
 		//Testing alignment to fix transition clipping nicely on pinsIO
-		ax::NodeEditor::PinPivotAlignment(ImVec2(1.0f, 0.5f));
-		ax::NodeEditor::PinPivotSize(ImVec2(0, 0));
-		//
-		ImGui::Text("-> In");
+		ax::NodeEditor::PinPivotAlignment(ImVec2(0.5f, 0.5f));
+		ax::NodeEditor::PinPivotSize(ImVec2(0.0f, 0.0f));
+		ImGui::Text(" ");
+		draw_list->AddCircle(node->Pos + ImVec2(-102, 87), NODE_SLOT_RADIUS, IM_COL32(255, 150, 150, 150), 100.0f, 1.5f);
+		
 		ax::NodeEditor::EndPin();
 		ImGui::EndGroup();
-		ImGui::SameLine();
+		ImGui::SameLine(90);
 		ImGui::BeginGroup();
 		ax::NodeEditor::BeginPin(node->output, ax::NodeEditor::PinKind::Output);
-		//DrawPinIcon(node->output, IsPinLinked(output.ID), (int)(alpha * 255));
-		ImGui::Text("Out ->");
+		ax::NodeEditor::PinPivotAlignment(ImVec2(0.0f, 0.5f));
+		ax::NodeEditor::PinPivotSize(ImVec2(0.0f, 0.0f));
+		ImGui::Text(" ");
+		draw_list->AddTriangle(node->Pos + ImVec2(-20, 82), node->Pos + ImVec2(-20, 92), node->Pos + ImVec2(-10, 87), IM_COL32(150, 150, 255, 150), 2.0f);
+		
 		ax::NodeEditor::EndPin();
 		ImGui::EndGroup();
 		ax::NodeEditor::EndNode();
@@ -137,6 +150,7 @@ void PanelStateMachine::RenderStates()
 		}
 		position = ax::NodeEditor::GetNodePosition(node->id);
 		position.x+= ax::NodeEditor::GetNodeSize(node->id).x;
+		node->Pos = position;
 
 		ImGui::PopItemWidth();
 		ImGui::PopID();
@@ -214,18 +228,24 @@ void PanelStateMachine::InteractionCreation()
 					std::shared_ptr<Transition> new_transition = std::make_shared<Transition>();
 					std::string source_name;
 					std::string target_name;
+					ImVec2 p1 = { 0.0f, 0.0f };
+					ImVec2 p2 = { 0.0f, 0.0f };
 					for (auto node : nodes)
 					{
 						if (node->input == end_pin_id)
 						{
 							new_transition->target_hash = node->state->name_hash;
 							target_name = node->state->name;
+							p2 = node->GetInputSlotPos(target_name);
 						}
 
 						if (node->output == start_pin_id)
 						{
 							new_transition->source_hash = node->state->name_hash;
 							source_name = node->state->name;
+							p1 = node->GetOutputSlotPos(source_name);
+							draw_list = ImGui::GetWindowDrawList();
+							draw_list->AddCircleFilled(node->Pos, NODE_SLOT_RADIUS, IM_COL32(255, 150, 150, 150));
 						}
 					}
 					state_machine->transitions.push_back(new_transition);
@@ -238,7 +258,6 @@ void PanelStateMachine::InteractionCreation()
 			}
 		}
 		ax::NodeEditor::PinId new_node_id;
-		//pins.push_back(new Pin{ ax::NodeEditor::PinId(uniqueid++), , PinType::Flow });
 		if (ax::NodeEditor::QueryNewNode(&new_node_id))
 		{
 			if (ax::NodeEditor::AcceptNewItem())
