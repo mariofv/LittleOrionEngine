@@ -189,7 +189,7 @@ void ComponentAnimation::GenerateJointChannelMaps()
 		for (auto& mesh : skinned_meshes)
 		{
 			auto & skeleton = mesh->skeleton;
-			if (clip->animation && clip->skeleton_channels_joints_map.find(skeleton->GetUUID()) != clip->skeleton_channels_joints_map.end())
+			if (clip->animation == nullptr || clip->skeleton_channels_joints_map.find(skeleton->GetUUID()) != clip->skeleton_channels_joints_map.end())
 			{
 				break;
 			}

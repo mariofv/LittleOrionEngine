@@ -7,7 +7,13 @@
 //Structs
 
 Clip::Clip(std::string& name, std::shared_ptr<Animation>& animation, bool loop) :
-	name(name), name_hash(std::hash<std::string>{}(name)), animation(animation), loop(loop), animation_time((animation->frames / animation->frames_per_second) * 1000) {}
+	name(name), name_hash(std::hash<std::string>{}(name)), animation(animation), loop(loop) {
+
+	if (animation != nullptr)
+	{
+		animation_time = (animation->frames / animation->frames_per_second) * 1000;
+	}
+}
 
 void Clip::SetAnimation(const std::shared_ptr<Animation>& animation)
 {

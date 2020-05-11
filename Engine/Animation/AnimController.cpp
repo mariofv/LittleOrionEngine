@@ -126,7 +126,7 @@ void AnimController::FinishActiveState()
 
 void PlayingClip::Update()
 {
-	if (!playing || !clip)
+	if (!playing || !clip || clip->animation == nullptr)
 	{
 		return;
 	}
