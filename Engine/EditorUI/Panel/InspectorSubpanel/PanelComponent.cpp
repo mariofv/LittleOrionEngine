@@ -31,11 +31,12 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleActions.h"
-#include "Module/ModuleFileSystem.h"
-#include "Module/ModuleScriptManager.h"
 #include "Module/ModuleEditor.h"
+#include "Module/ModuleFileSystem.h"
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleScriptManager.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleUI.h"
 
 #include "ResourceManagement/Importer/Importer.h"
@@ -655,7 +656,7 @@ void PanelComponent::ShowAddNewComponentButton()
 
 			if (!App->editor->selected_game_object->IsStatic())
 			{
-				App->renderer->InsertAABBTree(App->editor->selected_game_object);
+				App->space_partitioning->InsertAABBTree(App->editor->selected_game_object);
 			}
 
 		}

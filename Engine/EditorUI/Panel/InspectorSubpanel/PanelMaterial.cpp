@@ -62,10 +62,28 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 			ImGui::EndCombo();
 		}
 
+		if (ImGui::BeginCombo("Material Type",Material::GetMaterialTypeName(material->material_type).c_str()))
+		{
+
+			for (int i = 0; i < Material::MAX_MATERIAL_TYPES; ++i)
+			{
+				bool is_selected = (material->material_type == ((Material::MaterialType)i));
+				if (ImGui::Selectable(Material::GetMaterialTypeName((Material::MaterialType)i).c_str(), is_selected))
+				{
+					material->ChangeTypeOfMaterial((Material::MaterialType)i);
+					const char* name = Material::GetMaterialTypeName(material->material_type).c_str();
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();
+				}
+
+			}
+			ImGui::EndCombo();
+		}
+
 		ImGui::Spacing();
 		ImGui::Separator();
 		ImGui::Spacing();
-
+		
 		ImGui::Text("Main Maps");
 		ImGui::Spacing();
 		ImGui::Spacing();
@@ -80,6 +98,9 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		ImGui::Spacing();
 
 		ShowMaterialTextureMap(material, Material::MaterialTextureType::OCCLUSION);
+		ImGui::Spacing();
+
+		ShowMaterialTextureMap(material, Material::MaterialTextureType::NORMAL);
 		ImGui::Spacing();
 
 		ImGui::Separator();
@@ -105,6 +126,11 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 	void* display_image;
 	if (material->textures[type].get() != nullptr)
 	{
+
+		if (type == Material::MaterialTextureType::NORMAL)
+		{
+			material->use_normal_map = true;
+		}
 		std::shared_ptr<Texture>& texture = material->textures[type];
 		display_image = (void*)(intptr_t)texture->opengl_texture;
 	}
@@ -152,7 +178,15 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Indent();
 
 		ImGui::ColorEdit3("Color", material->diffuse_color);
-		ImGui::SliderFloat("K diffuse", &material->k_diffuse, 0, 1);
+		ImGui::SliderFloat("K diffuse", &material->k_diffuse, 0.f, 1.f);
+
+		if (material->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
+		{
+			ImGui::SliderFloat("Transparency", &material->transparency, 0.01f, 1.f);
+		}
+
+		ImGui::SliderFloat("Tiling X", &material->tiling_x, 0.f, 10.f);
+		ImGui::SliderFloat("Tiling Y", &material->tiling_y, 0.f, 10.f);
 		ImGui::Unindent();
 
 		break;
@@ -186,12 +220,28 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 		ImGui::Indent();
 
 		ImGui::ColorEdit3("Color", material->specular_color);
-		ImGui::SliderFloat("k specular", &material->k_specular, 0, 1);
+		ImGui::SliderFloat("k specular", &material->k_specular, 0.f, 1.f);
+		//ImGui::SliderFloat("Roughness", &material->roughness, 0.f, 1.f);
+		//ImGui::SliderFloat("Metalness", &material->metalness, 0.f, 10.f);
+
 		ImGui::Unindent();
+
+		break;
+
+	case Material::MaterialTextureType::NORMAL:
+		ImGui::Text("Normal");
 
 		break;
 	}
 
+	if (ImGui::Button(ICON_FA_TIMES))
+	{
+		material->RemoveMaterialTexture(type);
+		if (type == Material::MaterialTextureType::NORMAL)
+			material->use_normal_map = false;
+	}
+	ImGui::SameLine();
+	ImGui::Text("Remove Texture");
 	ImGui::PopID();
 }
 
@@ -201,16 +251,14 @@ std::string PanelMaterial::GetTypeName(Material::MaterialTextureType type)
 	{
 	case  Material::MaterialTextureType::DIFFUSE:
 		return "Difusse";
-		break;
 	case  Material::MaterialTextureType::SPECULAR:
 		return "Specular";
-		break;
 	case  Material::MaterialTextureType::EMISSIVE:
 		return "Emissive";
-		break;
 	case  Material::MaterialTextureType::OCCLUSION:
 		return "Oclusion";
-		break;
+	case  Material::MaterialTextureType::NORMAL:
+		return "Normal";
 
 	default:
 		return "";

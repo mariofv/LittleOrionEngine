@@ -8,6 +8,7 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
+class TextureMetafile;
 class TextureImporter : public Importer
 {
 
@@ -17,11 +18,12 @@ public:
 
 	FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const override;
 
+
 private:
 	FileData ExtractDataToDDS(const Path& assets_file_path) const;
 	FileData ExtractDataToTGA(const Path& assets_file_path) const;
 
 	ILubyte* LoadImageDataInMemory(const Path& file_path, int image_type, int& width, int& height) const;
-	ILenum GetImageType(const Path& file_path) const;
+	const FileData &CreateBinary(Path & assets_file_path, FileData &file_data, const TextureMetafile & texture_metafile) const;
 };
 #endif // !_TEXTUREIMPORTER_H_

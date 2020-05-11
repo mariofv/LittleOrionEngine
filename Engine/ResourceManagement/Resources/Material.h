@@ -14,12 +14,20 @@
 class Material : public Resource
 {
 public:
+	enum class MaterialType
+	{
+		MATERIAL_OPAQUE,
+		MATERIAL_TRANSPARENT,
+		UNKNOWN
+	};
+
 	enum MaterialTextureType
 	{
 		DIFFUSE,
 		SPECULAR,
 		EMISSIVE,
 		OCCLUSION,
+		NORMAL,
 		UNKNOWN
 	};
 
@@ -35,8 +43,16 @@ public:
 
 	void RemoveMaterialTexture(MaterialTextureType type);
 
+	void ChangeTypeOfMaterial(const MaterialType new_material_type);
+	static std::string GetMaterialTypeName(const MaterialType material_type);
+
+
 public:
 	static const size_t MAX_MATERIAL_TEXTURE_TYPES = static_cast<size_t>(MaterialTextureType::UNKNOWN);
+	static const size_t MAX_MATERIAL_TYPES = static_cast<size_t>(MaterialType::UNKNOWN);
+
+	MaterialType material_type = MaterialType::MATERIAL_OPAQUE;
+
 	std::string shader_program = "Blinn phong";
 	
 	std::vector<uint32_t> textures_uuid;
@@ -47,8 +63,18 @@ public:
 	float specular_color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
 	float k_diffuse = 1.0f;
 	float k_specular = 1.0f;
-	float k_ambient = 0.5f;
-	float shininess = 1.0f;
+	float k_ambient = 1.0f;
+	float2 coords = float2(1.0f, 1.0f);
+
+	float transparency = 0.5F;
+//	float roughness = 0.5f;
+//	float metalness = 0.04f;
+
+	float tiling_x = 1.0f;
+	float tiling_y = 1.0f;
+
+	//This variable will allow the shader to use the normal maps if there is any assigned to the model material
+	bool use_normal_map = false;
 
 	bool show_checkerboard_texture = false;
 };

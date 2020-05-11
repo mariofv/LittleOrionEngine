@@ -81,13 +81,16 @@ void PanelPopupSceneSaver::Render()
 	if (HasSelected())
 	{
 		APP_LOG_INFO("Saving %s scene.", GetSelected())
-		if (App->filesystem->Exists(GetSelected()))
+		if (is_overwriting)
 		{
+			App->scene->GetSceneFromPath(GetSelected());
 			App->editor->SaveScene(GetSelected());
+			is_overwriting = false;
 		}
 		else
 		{
-			SceneManager::Create(GetSelected());
+			uint32_t uuid_scene = SceneManager::Create(GetSelected());
+			App->scene->SetCurrentScene(uuid_scene);
 			App->editor->current_scene_path = GetSelected();
 		}
 	}
@@ -203,6 +206,7 @@ void PanelPopupSceneSaver::ConfirmationPopup()
 		if (ImGui::Button("ok"))
 		{
 			SetPopupSelection();
+			is_overwriting = true;
 		}
 		ImGui::SameLine();
 		if (ImGui::Button("cancel"))

@@ -12,6 +12,7 @@
 #include "ModuleRender.h"
 #include "ModuleResourceManager.h"
 #include "ModuleScriptManager.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "ModuleTime.h"
 
 
@@ -30,6 +31,13 @@ bool ModuleScene::Init()
 	build_options = std::make_unique<BuildOptions>();
 	build_options->LoadOptions();
 
+	Path* created_tmp = App->filesystem->Save(TMP_SCENE_PATH, std::string());
+	App->resources->Import(*created_tmp);
+	Path* metafile_path = App->filesystem->GetPath(App->resources->metafile_manager->GetMetafilePath(TMP_SCENE_PATH));
+	Metafile* scene_metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
+	assert(scene_metafile != nullptr);
+	tmp_scene = App->resources->Load<Scene>(scene_metafile->uuid);
+
 	return true;
 }
 
@@ -39,12 +47,7 @@ update_status ModuleScene::Update()
 	for (const auto&  game_object : game_objects_ownership)
 	{
 		game_object->Update();
-		if(!game_object->IsStatic())
-		{
-			ComponentMeshRenderer* object_mesh = (ComponentMeshRenderer*)game_object->GetComponent(Component::ComponentType::MESH_RENDERER);
-			if(object_mesh != nullptr)
-				App->renderer->UpdateAABBTree(game_object.get());
-		}
+		App->space_partitioning->UpdateAABBTree(game_object.get());
 	}
 	return update_status::UPDATE_CONTINUE;
 }
@@ -94,17 +97,39 @@ void ModuleScene::RemoveGameObject(GameObject * game_object_to_remove)
 }
 
 
-GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject> & game_object_to_add)
+GameObject* ModuleScene::AddGameObject(std::unique_ptr<GameObject>& game_object_to_add)
 {
 	game_objects_ownership.emplace_back(std::move(game_object_to_add));
 	GameObject * game_object = game_objects_ownership.back().get();
 	game_object->SetParent(root);
 	if (!game_object->IsStatic())
 	{
-		App->renderer->InsertAABBTree(game_object);
+		App->space_partitioning->InsertAABBTree(game_object);
 	}
 	return game_object;
 
+}
+
+GameObject* ModuleScene::DuplicateGameObject(GameObject* game_object, GameObject* parent_go)
+{
+	std::unique_ptr<GameObject> aux_copy_pointer = std::make_unique<GameObject>();
+	aux_copy_pointer.get()->Duplicate(*game_object);
+	GameObject* duplicated_go = App->scene->AddGameObject(aux_copy_pointer);
+	duplicated_go->SetParent(parent_go);
+	duplicated_go->SetTransform(game_object);
+	duplicated_go->name += "(1)";
+
+	if(game_object->is_prefab_parent)
+	{
+		game_object->prefab_reference->Duplicate(duplicated_go);
+	}
+	
+	for (const auto go : game_object->children)
+	{
+		DuplicateGameObject(go, duplicated_go);
+	}
+
+	return duplicated_go;
 }
 
 
@@ -155,7 +180,7 @@ void ModuleScene::DeleteCurrentScene()
 	//UndoRedo
 	App->actions->ClearUndoRedoStacks();
 	RemoveGameObject(root);
-	App->renderer->DeleteAABBTree();
+	App->space_partitioning->ResetAABBTree();
 	App->scripts->scripts.clear();
 	App->editor->selected_game_object = nullptr;
 }
@@ -163,7 +188,6 @@ void ModuleScene::DeleteCurrentScene()
 void ModuleScene::OpenScene()
 {
 	App->scene->DeleteCurrentScene();
-	App->renderer->CreateAABBTree();
 	root = new GameObject(0);
 
 	GetSceneResource();
@@ -172,8 +196,8 @@ void ModuleScene::OpenScene()
 	{
 		App->scripts->InitScripts();
 	}
-	App->renderer->GenerateQuadTree();
-	App->renderer->GenerateOctTree();
+	App->space_partitioning->GenerateQuadTree();
+	App->space_partitioning->GenerateOctTree();
 	App->actions->ClearUndoStack();
 }
 
@@ -181,9 +205,8 @@ inline void ModuleScene::GetSceneResource()
 {
 	if (load_tmp_scene)
 	{
-		assert(tmp_scene_uuid != 0);
-		current_scene = App->resources->Load<Scene>(tmp_scene_uuid);
-		current_scene.get()->Load();
+		tmp_scene.get()->Load();
+		return;
 	}
 	else if (build_options_position != -1)
 	{
@@ -191,12 +214,10 @@ inline void ModuleScene::GetSceneResource()
 		{
 			//Only gets here if no build options exists
 			GetSceneFromPath(DEFAULT_SCENE_PATH);
-			current_scene.get()->Load();
 		}
 		else
 		{
 			current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(build_options_position));
-			current_scene.get()->Load();
 		}
 	}
 	else
@@ -210,9 +231,9 @@ inline void ModuleScene::GetSceneResource()
 		(position != -1)
 			? current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(position))
 			: GetSceneFromPath(scene_to_load);
-
-		current_scene.get()->Load();
 	}
+
+	current_scene.get()->Load();
 }
 
 void ModuleScene::GetSceneFromPath(const std::string& path)
@@ -259,11 +280,16 @@ void ModuleScene::SaveScene()
 
 void ModuleScene::SaveTmpScene()
 {
-	tmp_scene_uuid = current_scene.get()->GetUUID();
+	App->resources->Save<Scene>(tmp_scene);
 }
 
 bool ModuleScene::HasPendingSceneToLoad() const
 {
 	return !scene_to_load.empty() || build_options_position != -1 || load_tmp_scene;
+}
+
+void ModuleScene::SetCurrentScene(uint32_t uuid)
+{
+	current_scene = App->resources->Load<Scene>(uuid);
 }
 

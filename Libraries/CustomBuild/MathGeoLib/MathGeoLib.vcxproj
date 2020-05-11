@@ -1,0 +1,258 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\..\include\MathGeoLib\Algorithm\Random\LCG.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\AABB.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\AABB2D.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\Capsule.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\Circle.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\Cone.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\Cylinder.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\Frustum.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\GeometryAll.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\GeomType.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\HitInfo.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\Line.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\LineSegment.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\OBB.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\PBVolume.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\Plane.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\Polygon.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\Polyhedron.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\Ray.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\Sphere.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\Triangle.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Geometry\TriangleMesh.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\MathBuildConfig.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\MathGeoLib.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\MathGeoLibFwd.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\assume.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\BitOps.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\Complex.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\CoordinateAxisConvention.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\FixedPoint.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\float2.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\float3.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\float3x3.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\float3x4.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\float4.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\float4x4.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\float4x4_neon.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\float4x4_sse.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\float4_neon.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\float4_sse.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\FloatCmp.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\MathAll.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\MathConstants.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\MathFunc.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\MathLog.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\MathNamespace.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\MathTypes.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\MatrixProxy.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\myassert.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\Polynomial.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\Quat.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\quat_simd.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\Rect.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\Reinterpret.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\SSEMath.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\sse_mathfun.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Math\TransformOps.h" />
+    <ClInclude Include="..\..\include\MathGeoLib\Time\Clock.h" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\..\include\MathGeoLib\Algorithm\Random\LCG.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\AABB.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\Capsule.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\Circle.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\Cone.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\Cylinder.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\Frustum.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\Line.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\LineSegment.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\OBB.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\Plane.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\Polygon.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\Polyhedron.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\Ray.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\Sphere.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\Triangle.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Geometry\TriangleMesh.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\BitOps.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\float2.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\float3.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\float3x3.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\float3x4.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\float4.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\float4x4.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\MathFunc.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\MathLog.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\MathOps.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\Polynomial.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\Quat.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\SSEMath.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Math\TransformOps.cpp" />
+    <ClCompile Include="..\..\include\MathGeoLib\Time\Clock.cpp" />
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <VCProjectVersion>15.0</VCProjectVersion>
+    <ProjectGuid>{1AF1AC42-F58A-4F67-AB3C-E4EA5B5167D7}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>MathGeoLib</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.16299.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>StaticLibrary</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+    <OutDir>$(SolutionDir)Binaries\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Binaries\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <TargetName>$(ProjectName)$(Configuration)</TargetName>
+    <OutDir>$(SolutionDir)Binaries\$(ProjectName)\$(Configuration)\</OutDir>
+    <IntDir>$(SolutionDir)Binaries\$(ProjectName)\$(Configuration)\</IntDir>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(OutDir)$(ProjectName)$(Configuration).lib" "$(SolutionDir)Libraries\lib\x86"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>_DEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>NotUsing</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+    <PostBuildEvent>
+      <Command>xcopy /y /d "$(OutDir)$(ProjectName)$(Configuration).lib" "$(SolutionDir)Libraries\lib\x86"</Command>
+    </PostBuildEvent>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <PrecompiledHeader>Use</PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <SDLCheck>true</SDLCheck>
+      <PreprocessorDefinitions>NDEBUG;_LIB;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <ConformanceMode>true</ConformanceMode>
+    </ClCompile>
+    <Link>
+      <SubSystem>Windows</SubSystem>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

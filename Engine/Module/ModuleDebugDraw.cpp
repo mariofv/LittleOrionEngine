@@ -20,8 +20,10 @@
 #include "ModuleProgram.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
+#include "ModuleSpacePartitioning.h"
 
 #include "SpacePartition/OLQuadTree.h"
+#include "SpacePartition/OLOctTree.h"
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #define DEBUG_DRAW_IMPLEMENTATION
@@ -409,7 +411,7 @@ void ModuleDebugDraw::Render()
 	{
 		BROFILER_CATEGORY("Render QuadTree", Profiler::Color::Lavender);
 
-		for (auto& ol_quadtree_node : App->renderer->ol_quadtree.flattened_tree)
+		for (auto& ol_quadtree_node : App->space_partitioning->ol_quadtree->flattened_tree)
 		{
 			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
 			float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
@@ -419,7 +421,7 @@ void ModuleDebugDraw::Render()
 
 	if (App->debug->show_octtree)
 	{
-		for (auto& ol_octtree_node : App->renderer->ol_octtree.flattened_tree)
+		for (auto& ol_octtree_node : App->space_partitioning->ol_octtree->flattened_tree)
 		{
 			float3 octtree_node_min = float3(ol_octtree_node->box.minPoint.x, ol_octtree_node->box.minPoint.y, ol_octtree_node->box.minPoint.z);
 			float3 octtree_node_max = float3(ol_octtree_node->box.maxPoint.x, ol_octtree_node->box.maxPoint.y, ol_octtree_node->box.maxPoint.z);
@@ -429,7 +431,7 @@ void ModuleDebugDraw::Render()
 
 	if(App->debug->show_aabbtree)
 	{
-		App->renderer->DrawAABBTree();
+		App->space_partitioning->DrawAABBTree();
 	}
 
 	if (App->editor->selected_game_object != nullptr)
@@ -465,7 +467,33 @@ void ModuleDebugDraw::Render()
 		grid->ScaleOnDistance(scene_camera_height);
 		grid->Render();
 	}
+	if (App->debug->show_axis && App->renderer->meshes_to_render.size() != 0 )
+	{
+		RenderTangentsAndBitangents();
+	}
+
 	RenderDebugDraws(*App->cameras->scene_camera);
+	
+}
+
+void ModuleDebugDraw::RenderTangentsAndBitangents() const
+{
+	BROFILER_CATEGORY("Render Tangent, Bitangent and Normal Vectors", Profiler::Color::Lavender);
+
+	for (auto& mesh : App->renderer->meshes_to_render)
+	{
+		
+		for (unsigned int i = 0; i < 30; ++i)
+		{
+			float4 normal = float4(mesh->mesh_to_render->vertices[i].normals, 0.0F);
+			float4 tangent = float4(mesh->mesh_to_render->vertices[i].tangent, 0.0F);
+			float4 bitangent = float4(mesh->mesh_to_render->vertices[i].bitangent, 0.0F);
+			float4 position = float4 (mesh->mesh_to_render->vertices[i].position, 1.0F);
+			float4x4 axis_object_space = float4x4(tangent, bitangent, normal, position);
+			float4x4 axis_transform = mesh->owner->transform.GetGlobalModelMatrix() * axis_object_space;
+			dd::axisTriad(axis_transform, 0.1F, 1.0F);
+		}	
+	}
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
