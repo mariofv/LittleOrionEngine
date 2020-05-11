@@ -15,7 +15,7 @@ class ComponentCanvasRenderer;
 class ComponentCamera;
 class ComponentText;
 class ComponentButton;
-class Gameobject;
+class GameObject;
 
 class ModuleUI : public Module
 {
@@ -31,6 +31,7 @@ public:
 
 	ComponentCanvas* CreateComponentCanvas();
 	void RemoveComponentCanvas(ComponentCanvas* component_canvas);
+	GameObject* GetMainCanvasGameObject() const;
 
 	template<typename T>
 	T* CreateComponentUI()

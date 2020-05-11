@@ -9,6 +9,7 @@
 #include "Component/ComponentButton.h"
 
 #include "Main/Globals.h"
+#include "Main/GameObject.h"
 
 #include <algorithm>
 #include <Brofiler/Brofiler.h>
@@ -68,6 +69,14 @@ void ModuleUI::RemoveComponentCanvas(ComponentCanvas* component_canvas)
 	{
 		delete *it;
 		canvases.erase(it);
+	}
+}
+
+GameObject* ModuleUI::GetMainCanvasGameObject() const
+{
+	if (main_canvas != nullptr)
+	{
+		return main_canvas->owner;
 	}
 }
 

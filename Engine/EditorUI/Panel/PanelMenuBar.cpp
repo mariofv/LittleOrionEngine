@@ -173,26 +173,25 @@ void PanelMenuBar::ShowGameObjectMenu()
 			
 			if (ImGui::Selectable("Text"))
 			{
-				
+				TemplatedGameObjectCreator::CreateUIElement(Component::ComponentType::UI_TEXT);
 			}
 			if (ImGui::Selectable("Image"))
 			{
-				
+				TemplatedGameObjectCreator::CreateUIElement(Component::ComponentType::UI_IMAGE);
 			}
 			ImGui::Separator();
 			if (ImGui::Selectable("Button"))
 			{
-				
+				TemplatedGameObjectCreator::CreateUIElement(Component::ComponentType::UI_BUTTON);
 				
 			}
 			if (ImGui::Selectable("Progess Bar"))
 			{
-				
+				TemplatedGameObjectCreator::CreateUIElement(Component::ComponentType::UI_PROGRESS_BAR);
 			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenu();
-
 	}
 }
 

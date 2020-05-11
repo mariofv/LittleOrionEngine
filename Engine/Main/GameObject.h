@@ -107,6 +107,7 @@ private:
 	bool is_static = false;
 
 	uint32_t num_2d_components = 0;
+	uint32_t num_ui_components = 0;
 
 	int hierarchy_depth = 0;
 	int hierarchy_branch = 0;

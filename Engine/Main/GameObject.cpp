@@ -420,6 +420,14 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 
 	if (created_component->Is2DComponent())
 	{
+		if (type != Component::ComponentType::CANVAS)
+		{
+			Component* current_canvas_renderer = GetComponent(Component::ComponentType::CANVAS_RENDERER);
+			if (current_canvas_renderer == nullptr)
+			{
+				CreateComponent(Component::ComponentType::CANVAS_RENDERER);
+			}
+		}
 		++num_2d_components;
 	}
 	
