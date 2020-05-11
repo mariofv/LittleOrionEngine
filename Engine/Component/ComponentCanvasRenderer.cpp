@@ -1,15 +1,12 @@
 #include "ComponentCanvasRenderer.h"
 
+#include "ComponentImage.h"
+#include "ComponentText.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
-#include "Module/ModuleEditor.h"
-#include "Module/ModuleScene.h"
 #include "Module/ModuleUI.h"
-#include "Module/ModuleWindow.h"
-
-#include <queue>
-
 
 ComponentCanvasRenderer::ComponentCanvasRenderer() : Component(ComponentType::CANVAS_RENDERER)
 {
@@ -53,9 +50,19 @@ void ComponentCanvasRenderer::Delete()
 	App->ui->RemoveComponentCanvasRenderer(this);
 }
 
-void ComponentCanvasRenderer::Render()
+void ComponentCanvasRenderer::Render(float4x4* projection)
 {
-	
+	Component* component_image = owner->GetComponent(Component::ComponentType::UI_IMAGE);
+	if (component_image != nullptr)
+	{
+		static_cast<ComponentImage*>(component_image)->Render(projection);
+	}
+
+	Component* component_text = owner->GetComponent(Component::ComponentType::UI_TEXT);
+	if (component_text != nullptr)
+	{
+		static_cast<ComponentText*>(component_text)->Render(projection);
+	}
 }
 
 void ComponentCanvasRenderer::SpecializedSave(Config& config) const

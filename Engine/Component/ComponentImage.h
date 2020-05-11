@@ -24,7 +24,6 @@ public:
 	void SetTextureToRender(uint32_t texture_uuid);
 
 	void Render(float4x4* projection);
-	void Render(float4x4* projection, float4x4* model);
 
 private:
 	virtual void InitData();

@@ -19,7 +19,7 @@ public:
 	void Copy(Component* component_to_copy) const override;
 	void Delete() override;
 
-	void Render();
+	void Render(float4x4* projection);
 
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;

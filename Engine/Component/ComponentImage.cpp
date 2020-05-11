@@ -51,16 +51,12 @@ void ComponentImage::InitData()
 	glBindVertexArray(0);
 }
 
-
 void ComponentImage::Render(float4x4* projection)
-{
-	Render(projection, &owner->transform_2d.GetSizedGlobalModelMatrix());
-}
-
-void ComponentImage::Render(float4x4* projection, float4x4* model)
 {
 	if (texture_to_render != nullptr)
 	{
+		float4x4* model = &owner->transform_2d.GetSizedGlobalModelMatrix();
+
 		glUseProgram(program);
 		glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
 		glUniform1i(glGetUniformLocation(program, "image"), 0);

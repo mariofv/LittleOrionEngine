@@ -76,7 +76,7 @@ void ComponentCanvas::Render()
 	
 	for (auto& canvas_renderer : components_to_render)
 	{
-		canvas_renderer->Render();
+		canvas_renderer->Render(&projection);
 	}
 
 	glEnable(GL_DEPTH_TEST);
