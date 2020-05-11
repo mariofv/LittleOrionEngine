@@ -216,6 +216,20 @@ GameObject* Prefab::GetRootGameObject() const
 	return prefab.front().get();
 }
 
+GameObject * Prefab::GetOriginalGameObject(int64_t UUID) const
+{
+	auto it = std::find_if(prefab.begin(), prefab.end(), [UUID](const auto & prefab_gameobject) 
+	{
+		return UUID == prefab_gameobject->UUID;
+	});
+
+	if (it != prefab.end())
+	{
+		return (*it).get();
+	}
+	return nullptr;
+}
+
 bool Prefab::IsOverwritable() const
 {
 	return overwritable;

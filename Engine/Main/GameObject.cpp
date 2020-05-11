@@ -415,12 +415,31 @@ void GameObject::RemoveComponent(Component* component_to_remove)
 		components.erase(it);
 	}
 }
-
+void GameObject::RemoveComponent(uint64_t UUID)
+{
+	Component * component = GetComponent(UUID);
+	if (component)
+	{
+		RemoveComponent(component);
+	}
+}
 ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType type) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		if (components[i]->GetType() == type)
+		{
+			return components[i];
+		}
+	}
+	return nullptr;
+}
+
+ENGINE_API Component* GameObject::GetComponent(uint64_t UUID) const
+{
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		if (components[i]->UUID == UUID)
 		{
 			return components[i];
 		}
