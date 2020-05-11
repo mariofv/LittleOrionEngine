@@ -142,7 +142,6 @@ void EnemyController::InitMembers()
 
 	animation = (ComponentAnimation*)owner->GetComponent(Component::ComponentType::ANIMATION);
 	collider_component = static_cast<ComponentCollider*>(owner->GetComponent(ComponentCollider::ColliderType::BOX));
-	collider_component->DisablePhysics(false);
 
 	init_translation = owner->transform.GetTranslation();
 	init_rotation = owner->transform.GetRotation();

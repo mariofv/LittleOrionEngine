@@ -39,7 +39,6 @@ void PlayerAttack::Awake()
 	animation = (ComponentAnimation*) owner->GetComponent(Component::ComponentType::ANIMATION);
 	
 	component_collider = static_cast<ComponentCollider*>(collider->GetComponent(ComponentCollider::ColliderType::BOX));
-	component_collider->DisablePhysics(false);
 	collider->SetEnabled(false);
 }
 // Use this for initialization
