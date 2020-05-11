@@ -12,21 +12,21 @@ class Component
 public:
 	enum class ComponentType
 	{
-		AABB,
-		ANIMATION,
-		CAMERA,
-		CANVAS,
-		LIGHT,
-		MESH_RENDERER,
-		TRANSFORM,
-		TRANSFORM2D,
-		SCRIPT,
+		AABB = 0,
+		ANIMATION = 8,
+		CAMERA = 1,
+		CANVAS = 5,
+		LIGHT = 4,
+		MESH_RENDERER = 2,
+		TRANSFORM = 3,
+		TRANSFORM2D = 7,
+		SCRIPT = 6,
 
-		CANVAS_RENDERER,
-		UI_BUTTON,
-		UI_IMAGE,
-		UI_PROGRESS_BAR,
-		UI_TEXT
+		CANVAS_RENDERER = 10,
+		UI_BUTTON = 11,
+		UI_IMAGE = 12,
+		UI_PROGRESS_BAR = 13,
+		UI_TEXT = 14
 
 	};
 

@@ -3,7 +3,7 @@
 void Component::Save(Config& config) const
 {
 	config.AddUInt(UUID, "UUID");
-	config.AddString(GetComponentTypeName(type), "ComponentType");
+	config.AddUInt((uint64_t)type, "ComponentType");
 	config.AddBool(active, "Active");
 
 	SpecializedSave(config);

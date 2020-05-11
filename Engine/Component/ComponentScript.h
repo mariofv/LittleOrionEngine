@@ -10,7 +10,7 @@
 
 class Application;
 class Script;
-class ComponentScript :public Component
+class ComponentScript : public Component
 {
 public:
 	ComponentScript();

@@ -293,9 +293,10 @@ void GameObject::Load(const Config& config)
 	config.GetChildrenConfig("Components", gameobject_components_config);
 	for (unsigned int i = 0; i < gameobject_components_config.size(); ++i)
 	{
-		std::string component_type_name;
-		gameobject_components_config[i].GetString("ComponentType", component_type_name, "Unknown");
-		Component::ComponentType component_type = Component::GetComponentType(component_type_name);
+		uint64_t component_type_uint = gameobject_components_config[i].GetUInt("ComponentType", 0);
+		assert(component_type_uint != 0);
+
+		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
 
 		Component* created_component = nullptr;
 		created_component = CreateComponent(component_type);
