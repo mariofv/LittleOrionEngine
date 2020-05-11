@@ -46,7 +46,7 @@ void PlayerController::Start()
 void PlayerController::Update()
 {
 
-	bool is_attacking = player_attack->Attack();
+	bool is_attacking = player_attack->Attack(player);
 	
 	if(!is_attacking)
 	{

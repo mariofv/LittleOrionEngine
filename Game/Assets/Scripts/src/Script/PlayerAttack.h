@@ -16,7 +16,7 @@ public:
 
 	void Awake() override;
 	void Start() override;
-	bool Attack();
+	bool Attack(int player);
 	void ComputeCollisions() const;
 
 	void OnInspector(ImGuiContext*) override;

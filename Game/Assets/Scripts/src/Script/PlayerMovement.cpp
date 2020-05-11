@@ -68,7 +68,13 @@ void PlayerMovement::Move(int player)
 		collider->SetVelocity(new_translation, speed);
 	}
 
-	if (App->input->GetGameInputDown("Jump", player_id))
+	if (App->input->GetGameInputDown("Punch", player_id))
+	{
+		new_translation += float3(0.0f, jump_power, 0.0f);
+		collider->AddForce(new_translation);
+	}
+
+	if (App->input->GetKeyDown(KeyCode::Space))
 	{
 		new_translation += float3(0.0f, jump_power, 0.0f);
 		collider->AddForce(new_translation);
