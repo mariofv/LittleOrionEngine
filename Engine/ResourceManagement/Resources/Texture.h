@@ -13,7 +13,7 @@ struct TextureOptions;
 class Texture : public Resource
 {
 public:
-	Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, TextureOptions& options);
+	Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, int num_channels, TextureOptions& options);
 
 	~Texture();
 
@@ -36,7 +36,7 @@ public:
 
 private:
 	void GenerateMipMap();
-	void LoadInMemory(TextureOptions& options);
+	void LoadInMemory(TextureOptions& options, int num_channels);
 	char* GLEnumToString(GLenum gl_enum) const;
 
 public:
