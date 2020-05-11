@@ -295,6 +295,14 @@ void ComponentCollider::DisablePhysics(bool disable)
 	DisablePhysics();
 }
 
+ENGINE_API bool ComponentCollider::RaycastHit(btVector3 & origin, btVector3 & end)
+{
+	//Vector normal to the surface
+	btVector3 normal;
+	return App->physics->RaycastWorld(origin, end, normal);
+}
+
+
 void ComponentCollider::DisablePhysics()
 {
 	if (disable_physics || !active)
