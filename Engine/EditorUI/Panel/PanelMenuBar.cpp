@@ -189,9 +189,10 @@ void PanelMenuBar::ShowGameObjectMenu()
 			{
 				
 			}
+			ImGui::EndMenu();
 		}
-
 		ImGui::EndMenu();
+
 	}
 }
 

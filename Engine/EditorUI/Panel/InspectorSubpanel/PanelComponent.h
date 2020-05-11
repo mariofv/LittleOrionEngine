@@ -14,7 +14,6 @@ class ComponentImage;
 class ComponentMeshRenderer;
 class ComponentLight;
 class ComponentProgressBar;
-class ComponentUI;
 class ComponentText;
 class ComponentTransform;
 class ComponentScript;

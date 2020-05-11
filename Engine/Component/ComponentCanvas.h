@@ -6,6 +6,8 @@
 #include <GL/glew.h>
 #include <MathGeoLib.h>
 
+class ComponentCanvasRenderer;
+
 class ComponentCanvas : public Component
 {
 public:
@@ -24,6 +26,9 @@ public:
 
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
+
+private:
+	std::vector<ComponentCanvasRenderer*> GetComponentCanvasRendererToRender() const;
 	
 };
 
