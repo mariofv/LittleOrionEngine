@@ -3,6 +3,8 @@
 
 #include "Component.h"
 #include "MathGeoLib.h"
+#include "Main/Application.h"
+#include "Module/ModuleTime.h"
 #include "Helper/TimerUs.h"
 
 class GameObject;
@@ -16,6 +18,9 @@ public:
 		float3 velocity;
 		float4 color;
 		float  life;
+		bool active = true;
+		float life_remaining = 0.0f;
+		float3 velocity_variation = { 3.0f, 1.0f, 1.0f };
 		ComponentBillboard* billboard;
 	};
 
@@ -38,7 +43,7 @@ public:
 	void Init();
 	unsigned int FirstUnusedParticle();
 	void RespawnParticle(Particle& particle);
-	void Update();
+	void Render();
 	float3 GetPositionOfParticle();
 
 	void Delete() override;

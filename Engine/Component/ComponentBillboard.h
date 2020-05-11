@@ -84,6 +84,7 @@ private:
 	int innerCount = 0;
 
 	friend class PanelComponent;
+	friend class ComponentParticleSystem;
 };
 
 #endif //_COMPONENTBILLBOARD_H_
