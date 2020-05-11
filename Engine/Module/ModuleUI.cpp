@@ -28,6 +28,7 @@ bool ModuleUI::Init()
 // Called every draw update
 update_status ModuleUI::Update()
 {
+	SelectMainCanvas();
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -50,10 +51,7 @@ ComponentCanvas* ModuleUI::CreateComponentCanvas()
 {
 	ComponentCanvas* new_canvas = new ComponentCanvas();
 	canvases.push_back(new_canvas);
-	if (main_canvas == nullptr)
-	{
-		main_canvas = new_canvas;
-	}
+
 	return new_canvas;
 }
 
@@ -61,10 +59,6 @@ ComponentCanvas* ModuleUI::CreateComponentCanvas()
 void ModuleUI::RemoveComponentCanvas(ComponentCanvas* component_canvas)
 {
 	const auto it = std::find(canvases.begin(), canvases.end(), component_canvas);
-	if (*it == main_canvas)
-	{
-		main_canvas = nullptr;
-	}
 	if (it != canvases.end())
 	{
 		delete *it;
@@ -106,5 +100,19 @@ void ModuleUI::RemoveComponentCanvasRenderer(ComponentCanvasRenderer* component_
 	{
 		delete *it;
 		canvas_renderers.erase(it);
+	}
+}
+
+void ModuleUI::SelectMainCanvas()
+{
+	main_canvas = nullptr;
+
+	for (auto& canvas : canvases)
+	{
+		if (canvas->IsEnabled())
+		{
+			main_canvas = canvas;
+			return;
+		}
 	}
 }

@@ -31,7 +31,9 @@ public:
 
 	ComponentCanvas* CreateComponentCanvas();
 	void RemoveComponentCanvas(ComponentCanvas* component_canvas);
+
 	GameObject* GetMainCanvasGameObject() const;
+	void SelectMainCanvas();
 
 	template<typename T>
 	T* CreateComponentUI()

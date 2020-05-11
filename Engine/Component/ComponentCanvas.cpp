@@ -101,7 +101,7 @@ std::vector<ComponentCanvasRenderer*> ComponentCanvas::GetComponentCanvasRendere
 		pending_game_objects.pop();
 
 		Component* component_canvas_renderer = current_game_object->GetComponent(Component::ComponentType::CANVAS_RENDERER);
-		if (component_canvas_renderer)
+		if (component_canvas_renderer && component_canvas_renderer->active)
 		{
 			components_to_render.push_back(static_cast<ComponentCanvasRenderer*>(component_canvas_renderer));
 		}

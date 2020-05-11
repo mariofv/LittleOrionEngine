@@ -4,6 +4,7 @@
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentCanvasRenderer.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
@@ -97,6 +98,10 @@ void PanelGameObject::Render(GameObject* game_object)
 		{
 			case Component::ComponentType::CAMERA:
 				component_panel.ShowComponentCameraWindow(static_cast<ComponentCamera*>(component));
+				break;
+
+			case Component::ComponentType::CANVAS_RENDERER:
+				component_panel.ShowComponentCanvasRendererWindow(static_cast<ComponentCanvasRenderer*>(component));
 				break;
 
 			case Component::ComponentType::MESH_RENDERER:

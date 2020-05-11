@@ -15,6 +15,7 @@
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentCanvasRenderer.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
@@ -416,7 +417,21 @@ void PanelComponent::ShowComponentCanvasWindow(ComponentCanvas *canvas)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Canvas", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		if (!ShowCommonComponentWindow(canvas))
+		{
+			return;
+		}
+	}
+}
 
+void PanelComponent::ShowComponentCanvasRendererWindow(ComponentCanvasRenderer* canvas_renderer)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_DOT_CIRCLE " Canvas Renderer", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		if (!ShowCommonComponentWindow(canvas_renderer))
+		{
+			return;
+		}
 	}
 }
 
@@ -625,6 +640,20 @@ void PanelComponent::ShowAddNewComponentButton()
 
 		}
 
+		sprintf_s(tmp_string, "%s Canvas", ICON_FA_SQUARE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::CANVAS);
+
+		}
+
+		sprintf_s(tmp_string, "%s Canvas Renderer", ICON_FA_DOT_CIRCLE);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::CANVAS_RENDERER);
+
+		}
+		
 		sprintf_s(tmp_string, "%s UI Image", ICON_FA_IMAGE);
 		if (ImGui::Selectable(tmp_string))
 		{

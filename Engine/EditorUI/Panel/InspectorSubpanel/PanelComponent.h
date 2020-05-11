@@ -10,6 +10,7 @@ class ComponentAnimation;
 class ComponentButton;
 class ComponentCamera;
 class ComponentCanvas;
+class ComponentCanvasRenderer;
 class ComponentImage;
 class ComponentMeshRenderer;
 class ComponentLight;
@@ -25,7 +26,8 @@ public:
 	PanelComponent() = default;
 	~PanelComponent() = default;
 
-	void ShowComponentMeshRendererWindow(ComponentMeshRenderer* mesh);
+	void ShowComponentMeshRendererWindow(ComponentMeshRenderer* mesh_renderer);
+	void ShowComponentCanvasRendererWindow(ComponentCanvasRenderer* canvas_renderer);
 	void ShowComponentCameraWindow(ComponentCamera* camera);
 	void ShowComponentLightWindow(ComponentLight* light);
 	void ShowComponentAnimationWindow(ComponentAnimation* animation);

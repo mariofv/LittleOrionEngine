@@ -53,6 +53,11 @@ void ComponentImage::InitData()
 
 void ComponentImage::Render(float4x4* projection)
 {
+	if (!active)
+	{
+		return;
+	}
+
 	if (texture_to_render != nullptr)
 	{
 		float4x4* model = &owner->transform_2d.GetSizedGlobalModelMatrix();
