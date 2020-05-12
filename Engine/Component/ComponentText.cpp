@@ -7,6 +7,8 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleUI.h"
 
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
+
 ComponentText::ComponentText() : Component(ComponentType::UI_TEXT)
 {
 	InitData();
@@ -43,6 +45,8 @@ void ComponentText::InitData()
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
+
+	SetFont((uint32_t)CoreResource::DEFAULT_FONT);
 }
 
 void ComponentText::Render(float4x4* projection)
