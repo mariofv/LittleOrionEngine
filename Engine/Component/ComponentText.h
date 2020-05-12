@@ -32,9 +32,12 @@ private:
 public:
 	//Text Inputs
 	std::string text = "Default";
+
 	float scale = 12.0f;
 	float text_width = 0;
 	float text_heigth = 0;
+
+	float3 font_color = float3::one;
 
 	uint32_t font_uuid = 0;
 	std::shared_ptr<Font> font = nullptr;

@@ -36,13 +36,8 @@ std::shared_ptr<Font> FontManager::Load(uint32_t uuid, const FileData& resource_
 
 	// Set size to load glyphs as
 	//FT_Set_Pixel_Sizes(face, 0, 16);
-	FT_Set_Char_Size(
-		face,   
-		0,       // 0 means that width adapts to height
-		16 * 64,   // char_height in 1/64th of points 
-		0,     // horizontal device resolution 
-		0	// vertical device resolution 
-	);   
+	FT_Set_Pixel_Sizes(face, 0, 64);
+
 	// Disable byte-alignment restriction
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
 
