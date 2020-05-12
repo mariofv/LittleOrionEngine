@@ -53,8 +53,8 @@ bool ModuleCamera::Init()
 	//directional_light_camera->SetNearDistance(0);
 
 	//~~~~~~ i boiled these noodles in my programmer tears ~~~~~~~~
-	directional_light_camera->camera_frustum.orthographicWidth  = 200;
-	directional_light_camera->camera_frustum.orthographicHeight = 2;
+	//directional_light_camera->camera_frustum.orthographicWidth  = 200;
+	//directional_light_camera->camera_frustum.orthographicHeight = 2;
 
 	return true;
 }

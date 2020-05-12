@@ -42,7 +42,7 @@ public:
 	ComponentCamera* main_camera = nullptr;
 	ComponentCamera* directional_light_camera = nullptr;
 	GameObject *dir_light_game_object = nullptr;
-
+	float xpos = 0;
 
 	std::shared_ptr<Skybox> world_skybox = nullptr;
 
