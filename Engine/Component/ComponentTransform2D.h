@@ -68,6 +68,7 @@ public:
 
 	void GenerateGlobalModelMatrix();
 	float4x4 GetSizedGlobalModelMatrix() const;
+	void SetGlobalModelMatrix(const float4x4& new_global_matrix) override;
 
 	ENGINE_API void SetTranslation(const float3& translation) override;
 	ENGINE_API void Translate(const float3& translation) override;

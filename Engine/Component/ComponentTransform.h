@@ -64,7 +64,7 @@ public:
 	
 	void GenerateGlobalModelMatrix();
 	float4x4 GetGlobalModelMatrix() const;
-	void SetGlobalModelMatrix(const float4x4& new_global_matrix);
+	virtual void SetGlobalModelMatrix(const float4x4& new_global_matrix);
   
 protected:
 	virtual void OnTransformChange();

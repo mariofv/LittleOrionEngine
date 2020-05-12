@@ -132,8 +132,29 @@ void ComponentTransform2D::GenerateGlobalModelMatrix()
 
 float4x4 ComponentTransform2D::GetSizedGlobalModelMatrix() const
 {
-	//return float4x4::Scale(float3(size, 1.f), GetGlobalTranslation()) * global_model_matrix;
 	return global_model_matrix * float4x4::Scale(float3(size, 1.f));
+}
+
+void ComponentTransform2D::SetGlobalModelMatrix(const float4x4& new_global_matrix)
+{
+	if (owner->parent == nullptr)
+	{
+		model_matrix = new_global_matrix;
+	}
+	else
+	{
+		model_matrix = owner->parent->transform_2d.global_model_matrix.Inverted() * new_global_matrix;
+	}
+
+	float3 translation, scale;
+	float3x3 rotation;
+
+	model_matrix.Decompose(translation, rotation, scale);
+
+	SetTranslation(translation);
+	SetRotation(rotation);
+	SetScale(scale);
+
 }
 
 ENGINE_API void ComponentTransform2D::SetTranslation(const float3& translation)

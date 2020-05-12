@@ -202,17 +202,8 @@ void PanelScene::RenderGizmo()
 	if (ImGuizmo::IsUsing())
 	{
 		gizmo_released = true;
-
-		if (App->editor->selected_game_object->GetTransformType() == Component::ComponentType::TRANSFORM)
-		{
-			App->editor->selected_game_object->transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
-			App->editor->selected_game_object->transform.modified_by_user = true;
-		}
-		else
-		{
-			App->editor->selected_game_object->transform_2d.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
-			App->editor->selected_game_object->transform_2d.modified_by_user = true;
-		}
+		selected_object_transform->SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
+		selected_object_transform->modified_by_user = true;
 	}
 	else if (gizmo_released)
 	{
