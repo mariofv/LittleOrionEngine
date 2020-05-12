@@ -12,6 +12,7 @@
 #include "Helper/Utils.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioSource.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
@@ -24,7 +25,6 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentUI.h"
-#include "Component/ComponentAudioSource.h"
 
 #include "Helper/Utils.h"
 #include "Math/Rect.h"

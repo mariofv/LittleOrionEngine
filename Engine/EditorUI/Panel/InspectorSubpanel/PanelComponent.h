@@ -7,6 +7,7 @@
 
 class Component;
 class ComponentAnimation;
+class ComponentAudioSource;
 class ComponentButton;
 class ComponentCamera;
 class ComponentCanvas;
@@ -18,7 +19,6 @@ class ComponentUI;
 class ComponentText;
 class ComponentTransform;
 class ComponentScript;
-class ComponentAudioSource;
 class GameObject;
 
 class PanelComponent
