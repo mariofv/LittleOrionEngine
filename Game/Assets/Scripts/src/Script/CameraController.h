@@ -21,7 +21,6 @@ public:
 
 	void OnInspector(ImGuiContext*) override;
 
-	void GodCamera();
 	void ActivePlayer();
 	void Focus(float3 position_to_focus);
 	void FollowPlayer();
@@ -52,9 +51,11 @@ private:
 
 	bool is_focusing = false;
 	float start_focus_time = 0.f;
+	float current_time = 0.f;
 
 	bool multiplayer = false;
-	float distance = 0.f;
+	float distance_x = 0.f;
+	float distance_z = 0.f;
 
 	bool freeze = false;
 

@@ -94,7 +94,7 @@ void CameraController::OnInspector(ImGuiContext* context)
 	ImGui::Checkbox("Multiplayer", &multiplayer);
 	ImGui::Checkbox("Is Focusing", &is_focusing);
 	ImGui::DragFloat3("Offset", selected_offset.ptr(), 0.5f, 0.f, 100.f);
-	ImGui::DragFloat("Distance", &distance, 0.5f, 0.f, 100.f);
+	ImGui::DragFloat("Distance", &distance_x, 0.5f, 0.f, 100.f);
 }
 
 void CameraController::ActivePlayer()
@@ -120,8 +120,8 @@ void CameraController::ActivePlayer()
 
 void CameraController::Focus(float3 position_to_focus)
 {
-
-	float focus_progress = math::Min((App->time->delta_time - start_focus_time) / 100.f, 1.f);
+	current_time += App->time->delta_time;
+	float focus_progress = math::Min((current_time - start_focus_time) / 150.f, 1.f);
 	float3 new_camera_position = owner->transform.GetTranslation().Lerp(position_to_focus, focus_progress);
 	owner->transform.SetTranslation(float3(new_camera_position.x, position_to_focus.y, new_camera_position.z));
 	is_focusing = focus_progress != 1;
@@ -130,10 +130,19 @@ void CameraController::Focus(float3 position_to_focus)
 
 void CameraController::FollowPlayer() 
 {
-	distance = abs(player1->transform.GetTranslation().x - owner->transform.GetTranslation().x);
-	if ( distance > 2.f && !is_focusing)
+	distance_x = abs(player1->transform.GetTranslation().x - owner->transform.GetTranslation().x);
+	if ( distance_x > 2.f && !is_focusing)
 	{
 		start_focus_time = App->time->delta_time;
+		current_time = start_focus_time;
+		is_focusing = true;
+	}
+
+	distance_z = abs(player1->transform.GetTranslation().z);
+	if (distance_z > 1.f && !is_focusing)
+	{
+		start_focus_time = App->time->delta_time;
+		current_time = start_focus_time;
 		is_focusing = true;
 	}
 
