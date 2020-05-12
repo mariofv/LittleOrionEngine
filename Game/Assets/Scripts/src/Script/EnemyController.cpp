@@ -198,6 +198,11 @@ void EnemyController::LookAndMoveToPoint(float3 & position)
 	owner->transform.SetTranslation(position);
 }
 
+void EnemyController::LookToPoint(float3 & position)
+{
+	owner->transform.LookAt(position);
+}
+
 void EnemyController::SetVelocity(float3 & position)
 {
 	collider->SetVelocity(position, move_speed);

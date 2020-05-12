@@ -49,8 +49,9 @@ void PursueEnemyState::OnStateUpdate()
 
 		if (enemy->IsPointWalkable(position))
 		{
-			enemy->LookAndMoveToPoint(position);
-			//enemy->SetVelocity(position);
+			//enemy->LookAndMoveToPoint(position);
+			enemy->LookToPoint(position);
+			enemy->SetVelocity(direction);
 		}
 	}
 	else

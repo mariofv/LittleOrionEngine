@@ -36,6 +36,7 @@ public:
 	bool PointInNavMesh(float3& position, float3& next_position);
 	bool IsPointWalkable(float3& position);
 	void LookAndMoveToPoint(float3& position);
+	void LookToPoint(float3& position);
 	void SetVelocity(float3& position);
 
 protected:
@@ -59,7 +60,7 @@ protected:
 	EnemyManager* enemy_manager = nullptr;
 
 	float rot_speed = 0.01f;
-	float move_speed = 0.01f;
+	float move_speed = 1.f;// 0.01f;
 	float attack_speed = 1.f;
 	float attack_power = 1.f;
 	float attack_range = 1.f;
