@@ -3,6 +3,7 @@
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "Helper/Config.h"
 #include "Module/ModuleAnimation.h"
+#include "Module/ModuleAudio.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScriptManager.h"
@@ -16,9 +17,9 @@
 #include "ResourceManagement/Resources/Texture.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
-
 #include "Component/Component.h"
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioSource.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentMeshRenderer.h"
@@ -384,16 +385,16 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		created_component = App->animations->CreateComponentAnimation();
 		break;
 
+	case Component::ComponentType::AUDIO_SOURCE:
+		created_component = App->audio->CreateComponentAudioSource();
+		break;
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
 		return nullptr;
 	}
 
 	created_component->owner = this;
-	if (type == Component::ComponentType::ANIMATION)
-	{
-		static_cast<ComponentAnimation*>(created_component)->Init();
-	}
+	created_component->Init();
 	components.push_back(created_component);
 	return created_component;
 }

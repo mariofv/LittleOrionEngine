@@ -3,6 +3,7 @@
 
 #include "Script.h"
 
+class ComponentAudioSource;
 class MenuLogic : public Script
 {
 public:
@@ -31,6 +32,8 @@ private:
 	GameObject* help_controller = nullptr;
 	GameObject* help_keyboard = nullptr;
 	GameObject* credits = nullptr;
+	//GameObject* audio_controller = nullptr;
+	//ComponentAudioSource* audio_source = nullptr;
 
 	std::vector<GameObject*> buttons;
 	unsigned current = 0;
