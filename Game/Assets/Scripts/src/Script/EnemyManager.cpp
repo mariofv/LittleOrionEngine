@@ -190,9 +190,9 @@ bool EnemyManager::CheckSpawnAvailability(float3 & spawn_position)
 			continue;
 		}
 
-		if(enemy->owner->transform.GetTranslation().Distance(spawn_position) <= 4.0f)
+		if(enemy->owner->transform.GetTranslation().Distance(spawn_position) <= 10.0f)
 		{
-			false;
+			return false;
 		}
 	}
 

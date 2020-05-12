@@ -128,8 +128,10 @@ void WorldManager::CheckTriggers()
 
 	if(static_cast<ComponentCollider*>(player->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[current_event_trigger]))
 	{
-		event_manager->TriggerEvent(current_event_trigger);
-		++current_event_trigger;
+		if(event_manager->TriggerEvent(current_event_trigger))
+		{
+			++current_event_trigger;
+		}
 	}
 	
 }

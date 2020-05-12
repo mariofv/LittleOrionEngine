@@ -76,9 +76,14 @@ void EventManager::InitPublicGameObjects()
 	}
 }
 
-void EventManager::TriggerEvent(unsigned event)
+bool EventManager::TriggerEvent(unsigned event)
 {
-	
+	//Right now only one event at the same time can occour
+	if(event_triggered)
+	{
+		return false;
+	}
+
 	switch (event)
 	{
 		case 0:
@@ -86,19 +91,22 @@ void EventManager::TriggerEvent(unsigned event)
 			enemies_per_wave = 4;
 			current_event = event;
 			enemy_manager->SpawnWave(current_event, enemies_per_wave);
-			break;		
+			break;
 		case 1:
 			waves_left = 1;
 			enemies_per_wave = 6;
-			break;		
+			break;
 		case 2:
 			waves_left = 2;
 			enemies_per_wave = 6;
 			break;
 
 		default:
-			return;
+			return false;
 	}
 
 	event_triggered = true;
-}
+
+	return true;
+}
+

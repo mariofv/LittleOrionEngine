@@ -16,7 +16,7 @@ public:
 
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();
-	void TriggerEvent(unsigned event);
+	bool TriggerEvent(unsigned event);
 
 private:
 	EnemyManager* enemy_manager = nullptr;
