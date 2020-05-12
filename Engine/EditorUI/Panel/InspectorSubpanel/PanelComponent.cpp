@@ -513,6 +513,23 @@ void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 			text->modified_by_user = true;
 		}
 		
+		int horizontal_alignment = static_cast<int>(text->horizontal_alignment);
+		if (ImGui::Combo("Horizontal Alignment", &horizontal_alignment, "Left\0Center\0Right"))
+		{
+			switch (horizontal_alignment)
+			{
+			case 0:
+				text->SetHorizontalAlignment(ComponentText::HorizontalAlignment::LEFT);
+				break;
+			case 1:
+				text->SetHorizontalAlignment(ComponentText::HorizontalAlignment::CENTER);
+				break;
+			case 2:
+				text->SetHorizontalAlignment(ComponentText::HorizontalAlignment::RIGHT);
+				break;
+			}
+		}
+
 	}
 }
 void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)

@@ -33,6 +33,8 @@ public:
 	void Render(float4x4* projection);
 
 	void SetText(const std::string& new_text);
+	void SetHorizontalAlignment(HorizontalAlignment horizontal_alignment);
+
 	void SetFont(uint32_t font_uuid);
 	void SetFontSize(int font_size);
 

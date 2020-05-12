@@ -97,6 +97,7 @@ void ComponentText::Render(float4x4* projection)
 			else
 			{
 				cursor_x = 0;
+				++current_line;
 				x = GetLineStartPosition(line_sizes[current_line]);
 
 				cursor_y = font->GetMaxHeight() * scale_factor;
@@ -177,7 +178,7 @@ float ComponentText::GetLineStartPosition(float line_size) const
 	switch (horizontal_alignment)
 	{
 	case HorizontalAlignment::LEFT:
-		return 0.f;
+		return  -owner->transform_2d.size.x * 0.5f;
 
 	case HorizontalAlignment::CENTER:
 		return -line_size / 2.f;
@@ -233,6 +234,11 @@ void ComponentText::SetText(const std::string& new_text)
 {
 	text = new_text;
 	ComputeTextLines();
+}
+
+void ComponentText::SetHorizontalAlignment(HorizontalAlignment horizontal_alignment)
+{
+	this->horizontal_alignment = horizontal_alignment;
 }
 
 void ComponentText::SetFont(uint32_t font_uuid)
