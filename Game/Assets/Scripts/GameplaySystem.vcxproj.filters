@@ -69,19 +69,19 @@
     <ClInclude Include="src\Script\Mushdoom.h">
       <Filter>src\Script\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\AttackEnemyState.h" />
+    <ClInclude Include="src\Script\AttackEnemyState.h">
       <Filter>src\Script\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\PursueEnemyState.h" />
+    <ClInclude Include="src\Script\PursueEnemyState.h">
       <Filter>src\Script\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\ScreamEnemyState.h" />
+    <ClInclude Include="src\Script\ScreamEnemyState.h">
       <Filter>src\Script\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\IdleEnemyState.h" />
+    <ClInclude Include="src\Script\IdleEnemyState.h">
       <Filter>src\Script\Enemy</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\EnemyState.h" />
+    <ClInclude Include="src\Script\EnemyState.h">
       <Filter>src\Script\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="src\Script\GodCamera.h">
@@ -143,19 +143,19 @@
     <ClCompile Include="src\Script\Mushdoom.cpp">
       <Filter>src\Script\Enemy</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\AttackEnemyState.cpp" />
+    <ClCompile Include="src\Script\AttackEnemyState.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\PursueEnemyState.cpp" />
+    <ClCompile Include="src\Script\PursueEnemyState.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\ScreamEnemyState.cpp" />
+    <ClCompile Include="src\Script\ScreamEnemyState.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\IdleEnemyState.cpp" />
+    <ClCompile Include="src\Script\IdleEnemyState.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\EnemyState.cpp" />
+    <ClCompile Include="src\Script\EnemyState.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\GodCamera.cpp">
