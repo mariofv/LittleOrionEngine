@@ -407,10 +407,3 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 	}
 
 }
-
-bool ComponentCollider::RaycastHit(btVector3& origin, btVector3& end)
-{
-	//Vector normal to the surface
-	btVector3 normal;
-	return App->physics->RaycastWorld(origin, end, normal);
-}
