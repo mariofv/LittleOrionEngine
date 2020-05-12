@@ -150,6 +150,7 @@ void ModuleRender::Render() const
 	if (App->cameras->main_camera != nullptr) 
 	{
 		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
+		App->cameras->directional_light_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
 	}
 #else
 	App->editor->Render();
@@ -203,7 +204,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		}
 	}
 
-	//RenderShadows(App->cameras->directional_light_camera->camera_frustum);
 
 	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
 	App->ui->Render(&camera);

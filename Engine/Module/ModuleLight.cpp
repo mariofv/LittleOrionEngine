@@ -58,11 +58,8 @@ void ModuleLight::RenderDirectionalLight(const float3& mesh_position)
 		size_t light_direction_offset = App->program->uniform_buffer.lights_uniform_offset + 4 * sizeof(float);
 		glBufferSubData(GL_UNIFORM_BUFFER, light_direction_offset, sizeof(float3), light->owner->transform.GetFrontVector().ptr());
 
-		APP_LOG_INFO("%f", light->owner->transform.GetTranslation().x);
-
-		App->cameras->dir_light_game_object->transform = light->owner->transform;
-		//App->cameras->dir_light_game_object->transform.SetTranslation(light->owner->transform.GetTranslation());
-		//App->cameras->directional_light_camera->SetPosition(App->cameras->dir_light_game_object->transform.GetTranslation());
+		App->cameras->dir_light_game_object->transform = light->owner->transform; //Directional light transform
+		
 
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 

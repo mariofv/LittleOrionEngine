@@ -222,15 +222,7 @@ void ComponentCamera::RecordFrame(float width, float height)
 	}
 
 #if !GAME
-
-	//if (App->renderer->render_depth)
-	//{
-	//	glBindFramebuffer(GL_FRAMEBUFFER, depthfbo);
-	//}
-	//else
-	//{
 		App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
-	//}
 #endif
 
 	glViewport(0, 0, width, height);
@@ -314,9 +306,7 @@ void ComponentCamera::GenerateFrameBuffers(float width, float height)
 		glDeleteRenderbuffers(1, &depth_rbo);
 	}
 
-	//if(App->renderer->render_depth)
-	//CreateDepthFramebuffer(width, height);
-	//else
+	
 	App->renderer->anti_aliasing ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
 }
 
@@ -332,7 +322,6 @@ void ComponentCamera::CreateFramebuffer(float width, float height)
 	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
 	glBindRenderbuffer(GL_RENDERBUFFER, 0);
 
-	
 	glBindTexture(GL_TEXTURE_2D, last_recorded_frame_texture);
 	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, width, height, 0, GL_RGB, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
@@ -341,7 +330,7 @@ void ComponentCamera::CreateFramebuffer(float width, float height)
 
 	glGenTextures(1, &depth_map);
 	glBindTexture(GL_TEXTURE_2D, depth_map);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_UNSIGNED_BYTE, NULL);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_BORDER);

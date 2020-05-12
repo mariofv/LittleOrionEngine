@@ -44,6 +44,7 @@ void PanelGame::Render()
 			float game_window_content_area_width = game_window_content_area_max_point.x - game_window_content_area_pos.x;
 			float game_window_content_area_height = game_window_content_area_max_point.y - game_window_content_area_pos.y;
 
+			App->cameras->directional_light_camera->RecordFrame(game_window_content_area_width, game_window_content_area_height);
 			App->cameras->main_camera->RecordFrame(game_window_content_area_width, game_window_content_area_height);
 
 
