@@ -210,7 +210,10 @@ void ModuleScriptManager::ReLink()
 {
 	for (const auto& component_script : scripts)
 	{
-		component_script->script->Link();
+		if (component_script->script)
+		{
+			component_script->script->Link();
+		}
 	}
 }
 

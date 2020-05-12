@@ -2,7 +2,7 @@
 
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
-
+#include "Component/ComponentAudioSource.h"
 #include "Filesystem/PathAtlas.h"
 
 #include "Main/Application.h"
@@ -36,7 +36,8 @@ void MenuLogic::Awake()
 	buttons.push_back(button1);
 	buttons.push_back(button2);
 	buttons.push_back(button3);
-
+	//audio_source = (ComponentAudioSource*) audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
+	//audio_source->PlayEvent("Play_ingame_music");
 }
 
 // Use this for initialization
@@ -55,6 +56,7 @@ void MenuLogic::Update()
 		help_keyboard->SetEnabled(false);
 		owner->transform_2d.SetTranslation(&float2(owner->transform_2d.anchored_position.x, buttons[current]->transform_2d.anchored_position.y));
 		show_help = false;
+		//audio_source->PlayEvent("Click_backward");
 		return;
 	}
 
@@ -63,6 +65,7 @@ void MenuLogic::Update()
 		credits->SetEnabled(false);
 		owner->transform_2d.SetTranslation(&float2(owner->transform_2d.anchored_position.x, buttons[current]->transform_2d.anchored_position.y));
 		show_credits = false;
+		//audio_source->PlayEvent("Click_backward");
 		return;
 	}
 
@@ -80,6 +83,7 @@ void MenuLogic::Update()
 
 	if (ComfirmButtonPressed())
 	{
+		//audio_source->PlayEvent("Click_fordward");
 		//Change scene
 		switch (current)
 		{
@@ -163,6 +167,8 @@ void MenuLogic::InitPublicGameObjects()
 	public_gameobjects.push_back(&credits);
 	variable_names.push_back(GET_VARIABLE_NAME(credits));
 
+	public_gameobjects.push_back(&audio_controller);
+	variable_names.push_back(GET_VARIABLE_NAME(audio_controller));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{

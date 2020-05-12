@@ -28,6 +28,7 @@ class ModuleScriptManager;
 class ModuleSpacePartitioning;
 class ModuleActions;
 class ModuleAI;
+class ModuleAudio;
 
 class EngineLog;
 
@@ -65,6 +66,7 @@ public:
 	ModuleSpacePartitioning* space_partitioning = nullptr;
 	ModuleActions* actions = nullptr;
 	ModuleAI* artificial_intelligence = nullptr;
+	ModuleAudio* audio = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
 

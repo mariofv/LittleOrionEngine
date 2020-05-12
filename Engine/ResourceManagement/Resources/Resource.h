@@ -24,6 +24,7 @@ enum class ResourceType
 	TEXTURE,
 	STATE_MACHINE,
 	FONT,
+	SOUND,
 	UNKNOWN
 };
 

@@ -20,7 +20,7 @@ public:
 	ComponentAnimation(GameObject* owner);
 	~ComponentAnimation() = default;
 
-	void Init();
+	void Init() override;
 
 	//Copy and move
 	ComponentAnimation(const ComponentAnimation& component_to_copy) = default;

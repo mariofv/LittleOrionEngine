@@ -14,6 +14,7 @@
 #include "ResourceManagement/Resources/Skybox.h"
 #include "ResourceManagement/Resources/StateMachine.h"
 #include "ResourceManagement/Resources/Texture.h"
+#include "ResourceManagement/Resources/SoundBank.h"
 
 #include "ResourceManagement/Metafile/MetafileManager.h"
 #include "ResourceManagement/ResourcesDB/ResourceDataBase.h"
@@ -37,6 +38,7 @@ class SceneImporter;
 class SkeletonImporter;
 class SkyboxImporter;
 class StateMachineImporter;
+class SoundImporter;
 class TextureImporter;
 
 class SceneManager;
@@ -157,6 +159,7 @@ public:
 	std::unique_ptr<SkyboxImporter> skybox_importer = nullptr;
 	std::unique_ptr<StateMachineImporter> state_machine_importer = nullptr;
 	std::unique_ptr<TextureImporter> texture_importer = nullptr;
+	std::unique_ptr<SoundImporter> sound_importer = nullptr;
 
 	std::unique_ptr<MetafileManager> metafile_manager = nullptr;
 	std::unique_ptr<SceneManager> scene_manager = nullptr;

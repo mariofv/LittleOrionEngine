@@ -25,8 +25,9 @@ public:
 		CANVAS_RENDERER = 10,
 		UI_BUTTON = 11,
 		UI_IMAGE = 12,
-		UI_TEXT = 13
+		UI_TEXT = 13,
 
+		AUDIO_SOURCE = 14
 	};
 
 	Component(ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
@@ -50,7 +51,7 @@ public:
 		this->type = component_to_move.type;
 		return *this;
 	}
-
+	virtual void Init() {};
 	virtual void Enable() { active = true;};
 	virtual void Disable() { active = false;};
 	virtual bool IsEnabled() const { return active; };

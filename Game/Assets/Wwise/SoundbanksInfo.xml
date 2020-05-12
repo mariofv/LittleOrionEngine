@@ -1,0 +1,98 @@
+<?xml version="1.0" encoding="utf-8"?>
+<SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="12" SoundbankVersion="135">
+	<RootPaths>
+		<ProjectRoot>D:\Izzy\gitHub\WWiseProject\WwiseProject\</ProjectRoot>
+		<SourceFilesRoot>D:\Izzy\gitHub\WWiseProject\WwiseProject\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>D:\Izzy\gitHub\LittleOrionEngine\Game\Assets\Wwise\</SoundBanksRoot>
+		<ExternalSourcesInputFile></ExternalSourcesInputFile>
+		<ExternalSourcesOutputRoot>D:\Izzy\gitHub\WWiseProject\WwiseProject\GeneratedSoundBanks\Windows</ExternalSourcesOutputRoot>
+	</RootPaths>
+	<DialogueEvents/>
+	<StreamedFiles/>
+	<MediaFilesNotInAnyBank/>
+	<SoundBanks>
+		<SoundBank Id="1193902085" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Play_main</ObjectPath>
+			<ShortName>Play_main</ShortName>
+			<Path>Play_main.bnk</Path>
+			<IncludedEvents>
+				<Event Id="1193902085" Name="Play_main" ObjectPath="\Events\Default Work Unit\Play_main">
+					<IncludedMemoryFiles>
+						<File Id="261149998" Language="SFX">
+							<ShortName>Test-Orquestration_Potential.wav</ShortName>
+							<Path>SFX\Test-Orquestration_Potential_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+			</IncludedEvents>
+		</SoundBank>
+		<SoundBank Id="1355168291" Language="SFX">
+			<ObjectPath>Init</ObjectPath>
+			<ShortName>Init</ShortName>
+			<Path>Init.bnk</Path>
+		</SoundBank>
+		<SoundBank Id="1471806992" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Menu_main</ObjectPath>
+			<ShortName>Menu_main</ShortName>
+			<Path>Menu_main.bnk</Path>
+			<IncludedEvents>
+				<Event Id="4139987437" Name="Click_backward" ObjectPath="\Events\Default Work Unit\Click_backward">
+					<IncludedMemoryFiles>
+						<File Id="421477461" Language="SFX">
+							<ShortName>Backward\SFX_Menu_ClicksBackward_V4.wav</ShortName>
+							<Path>SFX\Backward\SFX_Menu_ClicksBackward_V4_10C4C929.wem</Path>
+						</File>
+						<File Id="440421278" Language="SFX">
+							<ShortName>Backward\SFX_Menu_ClicksBackward_V5.wav</ShortName>
+							<Path>SFX\Backward\SFX_Menu_ClicksBackward_V5_10C4C929.wem</Path>
+						</File>
+						<File Id="552982647" Language="SFX">
+							<ShortName>Backward\SFX_Menu_ClicksBackward_V2.wav</ShortName>
+							<Path>SFX\Backward\SFX_Menu_ClicksBackward_V2_10C4C929.wem</Path>
+						</File>
+						<File Id="703338044" Language="SFX">
+							<ShortName>Backward\SFX_Menu_ClicksBackward_V3.wav</ShortName>
+							<Path>SFX\Backward\SFX_Menu_ClicksBackward_V3_10C4C929.wem</Path>
+						</File>
+						<File Id="854611496" Language="SFX">
+							<ShortName>Backward\SFX_Menu_ClicksBackward_V1.wav</ShortName>
+							<Path>SFX\Backward\SFX_Menu_ClicksBackward_V1_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="2642673271" Name="Click_fordward" ObjectPath="\Events\Default Work Unit\Click_fordward">
+					<IncludedMemoryFiles>
+						<File Id="49311901" Language="SFX">
+							<ShortName>Fordward\SFX_Menu_ClicksForward_V5.wav</ShortName>
+							<Path>SFX\Fordward\SFX_Menu_ClicksForward_V5_10C4C929.wem</Path>
+						</File>
+						<File Id="60945481" Language="SFX">
+							<ShortName>Fordward\SFX_Menu_ClicksForward_V1.wav</ShortName>
+							<Path>SFX\Fordward\SFX_Menu_ClicksForward_V1_10C4C929.wem</Path>
+						</File>
+						<File Id="63557551" Language="SFX">
+							<ShortName>Fordward\SFX_Menu_ClicksForward_V3.wav</ShortName>
+							<Path>SFX\Fordward\SFX_Menu_ClicksForward_V3_10C4C929.wem</Path>
+						</File>
+						<File Id="618545020" Language="SFX">
+							<ShortName>Fordward\SFX_Menu_ClicksForward_V2.wav</ShortName>
+							<Path>SFX\Fordward\SFX_Menu_ClicksForward_V2_10C4C929.wem</Path>
+						</File>
+						<File Id="966780011" Language="SFX">
+							<ShortName>Fordward\SFX_Menu_ClicksForward_V4.wav</ShortName>
+							<Path>SFX\Fordward\SFX_Menu_ClicksForward_V4_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="347845317" Name="Play_ingame_music" ObjectPath="\Events\Default Work Unit\Play_ingame_music">
+					<IncludedMemoryFiles>
+						<File Id="271477756" Language="SFX">
+							<ShortName>TwinlightSouls_Menu_InGame_Ambient.wav</ShortName>
+							<Path>SFX\TwinlightSouls_Menu_InGame_Ambient_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+			</IncludedEvents>
+		</SoundBank>
+	</SoundBanks>
+</SoundBanksInfo>

@@ -7,6 +7,7 @@
 
 class Component;
 class ComponentAnimation;
+class ComponentAudioSource;
 class ComponentButton;
 class ComponentCamera;
 class ComponentCanvas;
@@ -35,6 +36,7 @@ public:
 	void ShowComponentImageWindow(ComponentImage* image);
 	void ShowComponentTextWindow(ComponentText* text);
 	void ShowComponentButtonWindow(ComponentButton* button);
+	void ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source);
 
 	void ShowAddNewComponentButton();
 	bool ShowCommonComponentWindow(Component* component);
