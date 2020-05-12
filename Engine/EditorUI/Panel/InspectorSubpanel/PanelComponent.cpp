@@ -867,13 +867,15 @@ bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 	}
 	ImGui::Separator();
 
-	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.1F, 1000.F)) {
+	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.1F, 1000.F))
+	{
 		collider->SetMass(collider->mass);
 	}
-	if (ImGui::DragFloat("Friction", &collider->friction, 1.0F, 0.1F, 1000.F)) {
+	if (ImGui::DragFloat("Friction", &collider->friction, 0.1F, 0.1F, 1.F)) {
 		collider->UpdateFriction();
 	}
-	if (ImGui::DragFloat("Rolling friction", &collider->rolling_friction, 1.0F, 0.1F, 2000.F)) {
+	if (ImGui::DragFloat("Rolling friction", &collider->rolling_friction, 1.0F, 0.1F, 2000.F))
+	{
 		collider->SetRollingFriction();
 	}
 	if (ImGui::Checkbox("Visualize", &collider->visualize))
@@ -915,7 +917,7 @@ void PanelComponent::ShowComponentBoxColliderWindow(ComponentBoxCollider* box_co
 	{
 		if (ShowCommonColliderWindow(box_collider))
 		{
-			if (ImGui::DragFloat3("Scale", box_collider->scale.ptr()))
+			if (ImGui::DragFloat3("Scale", box_collider->scale.ptr(), 0.01f))
 			{
 				box_collider->Scale();
 			}
@@ -929,11 +931,11 @@ void PanelComponent::ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider
 	{
 		if(ShowCommonColliderWindow(capsule_collider))
 		{
-			if (ImGui::DragFloat("Radius", &capsule_collider->scale.x))
+			if (ImGui::DragFloat("Radius", &capsule_collider->scale.x, 0.01f))
 			{
 				capsule_collider->Scale();
 			}
-			if (ImGui::DragFloat("Height", &capsule_collider->scale.y))
+			if (ImGui::DragFloat("Height", &capsule_collider->scale.y, 0.01f))
 			{
 				capsule_collider->Scale();
 			}
@@ -947,7 +949,7 @@ void PanelComponent::ShowComponentSphereColliderWindow(ComponentSphereCollider* 
 	{
 		if (ShowCommonColliderWindow(sphere_collider))
 		{
-			if (ImGui::DragFloat("Radius", &sphere_collider->scale.x))
+			if (ImGui::DragFloat("Radius", &sphere_collider->scale.x, 0.01f))
 			{
 				sphere_collider->Scale();
 			}
@@ -961,11 +963,11 @@ void PanelComponent::ShowComponentCylinderColliderWindow(ComponentCylinderCollid
 	{
 		if(ShowCommonColliderWindow(cylinder_collider))
 		{
-			if (ImGui::DragFloat("Radius", &cylinder_collider->scale.x))
+			if (ImGui::DragFloat("Radius", &cylinder_collider->scale.x, 0.01f))
 			{
 				cylinder_collider->Scale();
 			}
-			if (ImGui::DragFloat("Height", &cylinder_collider->scale.y))
+			if (ImGui::DragFloat("Height", &cylinder_collider->scale.y, 0.01f))
 			{
 				cylinder_collider->Scale();
 			}
@@ -979,7 +981,7 @@ void PanelComponent::ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh
 	{
 		if (ShowCommonColliderWindow(mesh_collider))
 		{
-			if (ImGui::DragFloat3("Scale", mesh_collider->scale.ptr()))
+			if (ImGui::DragFloat3("Scale", mesh_collider->scale.ptr(), 0.01f))
 			{
 				mesh_collider->Scale();
 			}

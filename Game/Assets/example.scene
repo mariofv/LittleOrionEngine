@@ -4,7 +4,7 @@
             "ParentUUID": 0,
             "Prefab": 2597424762,
             "Transform": {
-                "UUID": 3638735283,
+                "UUID": 2157659599,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -24,15 +24,15 @@
             },
             "UUIDS": [
                 {
-                    "UUID": 308807448,
+                    "UUID": 3378367923,
                     "OriginalUUID": 2597424762
                 },
                 {
-                    "UUID": 3053978680,
+                    "UUID": 2519975133,
                     "OriginalUUID": 2597424764
                 },
                 {
-                    "UUID": 181829584,
+                    "UUID": 438102364,
                     "OriginalUUID": 2597424763
                 }
             ]
@@ -40,28 +40,9 @@
     ],
     "PrefabsComponents": [
         {
-            "Transform": {
-                "UUID": 1481223275,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    10.738140106201172,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
             "Components": [
                 {
-                    "UUID": 1862055531,
+                    "UUID": 3777439639,
                     "Active": true,
                     "ComponentType": 9,
                     "ColliderType": 1,
@@ -83,117 +64,23 @@
                     "Rolling_friction": 1.0
                 },
                 {
-                    "UUID": 3236878010,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "PlayerMovement"
-                },
-                {
-                    "UUID": 3384747123,
+                    "UUID": 113629823,
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "PlayerController",
                     "Player": 0
+                },
+                {
+                    "UUID": 3085636863,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerMovement"
                 }
             ],
-            "UUID": 181829584
+            "UUID": 438102364
         }
     ],
     "GameObjects": [
-        {
-            "UUID": 3390986774,
-            "ParentUUID": 0,
-            "Name": "GameObject (6)",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 4075655835,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 433273853,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": []
-        },
-        {
-            "UUID": 850366214,
-            "ParentUUID": 0,
-            "Name": "GameObject (5)",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1258662811,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 465049377,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": []
-        },
         {
             "UUID": 1690967942,
             "ParentUUID": 0,
@@ -334,13 +221,13 @@
             ]
         },
         {
-            "UUID": 3822342038,
+            "UUID": 1063163618,
             "ParentUUID": 0,
-            "Name": "GameObject (29)",
+            "Name": "GameObject (6)",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 589414195,
+                "UUID": 3485482216,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -350,16 +237,16 @@
                 "Rotation": [
                     0.0,
                     0.0,
-                    -16.799999237060548
+                    0.0
                 ],
                 "Scale": [
-                    20.0,
+                    29.0,
                     1.0,
-                    20.0
+                    29.0
                 ]
             },
             "Transform2D": {
-                "UUID": 1898305910,
+                "UUID": 2031682651,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -380,7 +267,7 @@
             },
             "Components": [
                 {
-                    "UUID": 2484493183,
+                    "UUID": 1764144110,
                     "Active": true,
                     "ComponentType": 9,
                     "ColliderType": 0,

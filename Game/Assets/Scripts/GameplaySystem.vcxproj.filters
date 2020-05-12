@@ -70,11 +70,24 @@
       <Filter>src\Script\Enemy</Filter>
     </ClInclude>
     <ClInclude Include="src\Script\AttackEnemyState.h" />
+      <Filter>src\Script\Enemy</Filter>
+    </ClInclude>
     <ClInclude Include="src\Script\PursueEnemyState.h" />
+      <Filter>src\Script\Enemy</Filter>
+    </ClInclude>
     <ClInclude Include="src\Script\ScreamEnemyState.h" />
+      <Filter>src\Script\Enemy</Filter>
+    </ClInclude>
     <ClInclude Include="src\Script\IdleEnemyState.h" />
+      <Filter>src\Script\Enemy</Filter>
+    </ClInclude>
     <ClInclude Include="src\Script\EnemyState.h" />
+      <Filter>src\Script\Enemy</Filter>
+    </ClInclude>
     <ClInclude Include="src\Script\GodCamera.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\EventManager.h">
       <Filter>src\Script</Filter>
     </ClInclude>
   </ItemGroup>
@@ -131,11 +144,24 @@
       <Filter>src\Script\Enemy</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\AttackEnemyState.cpp" />
+      <Filter>src\Script</Filter>
+    </ClCompile>
     <ClCompile Include="src\Script\PursueEnemyState.cpp" />
+      <Filter>src\Script</Filter>
+    </ClCompile>
     <ClCompile Include="src\Script\ScreamEnemyState.cpp" />
+      <Filter>src\Script</Filter>
+    </ClCompile>
     <ClCompile Include="src\Script\IdleEnemyState.cpp" />
+      <Filter>src\Script</Filter>
+    </ClCompile>
     <ClCompile Include="src\Script\EnemyState.cpp" />
+      <Filter>src\Script</Filter>
+    </ClCompile>
     <ClCompile Include="src\Script\GodCamera.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\EventManager.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>

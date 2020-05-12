@@ -41,13 +41,16 @@ public:
 	void SetVisualization();
 	void SetCollisionDetection();
 	ENGINE_API bool DetectCollision(); //returns true if collides with any object in the world
-	bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
+	ENGINE_API bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
 	void SetStatic();
 	void SetRotationAxis();
 	ENGINE_API void DisablePhysics(bool disable);
+	ENGINE_API bool RaycastHit(btVector3& origin, btVector3& end);
 	void DisablePhysics();
 	void UpdateFriction();
 	void SetRollingFriction();
+	void SetConfiguration();
+
 
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
