@@ -1,213 +1,86 @@
 {
-    "Prefabs": [],
-    "PrefabsComponents": [],
+    "Prefabs": [
+        {
+            "ParentUUID": 0,
+            "Prefab": 2597424762,
+            "Transform": {
+                "UUID": 2157659599,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 3378367923,
+                    "OriginalUUID": 2597424762
+                },
+                {
+                    "UUID": 2519975133,
+                    "OriginalUUID": 2597424764
+                },
+                {
+                    "UUID": 438102364,
+                    "OriginalUUID": 2597424763
+                }
+            ]
+        }
+    ],
+    "PrefabsComponents": [
+        {
+            "Components": [
+                {
+                    "UUID": 3777439639,
+                    "Active": true,
+                    "ComponentType": 9,
+                    "ColliderType": 1,
+                    "Mass": 1.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": false,
+                    "Collision": true,
+                    "Visualize": true,
+                    "Attached": true,
+                    "x_axis": false,
+                    "y_axis": true,
+                    "z_axis": false,
+                    "DisablePhysics": false,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
+                },
+                {
+                    "UUID": 113629823,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerController",
+                    "Player": 0
+                },
+                {
+                    "UUID": 3085636863,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerMovement"
+                }
+            ],
+            "UUID": 438102364
+        }
+    ],
     "GameObjects": [
-        {
-            "UUID": 3240485868,
-            "ParentUUID": 0,
-            "Name": "GameObject (7)",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 796514964,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    16.466379165649415,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2647993254,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 3668842631,
-                    "Active": true,
-                    "ComponentType": 9,
-                    "ColliderType": 0,
-                    "Mass": 1.0,
-                    "Scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "Static": false,
-                    "Collision": false,
-                    "Visualize": true,
-                    "Attached": false,
-                    "x_axis": true,
-                    "y_axis": true,
-                    "z_axis": true,
-                    "DisablePhysics": true,
-                    "Friction": 1.0,
-                    "Rolling_friction": 1.0
-                }
-            ]
-        },
-        {
-            "UUID": 3823477428,
-            "ParentUUID": 0,
-            "Name": "GameObject (6)",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 2436277425,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    16.591659545898439,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    3.0,
-                    3.0,
-                    3.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1440965147,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 596848042,
-                    "Active": true,
-                    "ComponentType": 9,
-                    "ColliderType": 0,
-                    "Mass": 1.0,
-                    "Scale": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "Static": false,
-                    "Collision": false,
-                    "Visualize": true,
-                    "Attached": false,
-                    "x_axis": true,
-                    "y_axis": true,
-                    "z_axis": true,
-                    "DisablePhysics": true,
-                    "Friction": 1.0,
-                    "Rolling_friction": 1.0
-                }
-            ]
-        },
-        {
-            "UUID": 172714554,
-            "ParentUUID": 0,
-            "Name": "Main Camera",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1527511923,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 3894984641,
-                "Active": true,
-                "Top": -5.0,
-                "Right": 5.0,
-                "Bottom": 5.0,
-                "Left": -5.0,
-                "Rotation": 0.0,
-                "Scale": [
-                    1.0,
-                    1.0
-                ],
-                "Position": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Width": 10.0,
-                "Height": 10.0
-            },
-            "Components": [
-                {
-                    "UUID": 3641786684,
-                    "ComponentType": 1,
-                    "Active": true,
-                    "FrustumType": 2,
-                    "NearPlaneDistance": 1.0,
-                    "FarPlaneDistance": 500.0,
-                    "VerticalFOV": 0.7853981852531433,
-                    "ClearMode": 0,
-                    "ClearColor": [
-                        0.0,
-                        0.0,
-                        0.0,
-                        1.0
-                    ],
-                    "Depth": 0,
-                    "Skybox": 0
-                }
-            ]
-        },
         {
             "UUID": 1690967942,
             "ParentUUID": 0,
@@ -282,13 +155,13 @@
             ]
         },
         {
-            "UUID": 850366214,
+            "UUID": 172714554,
             "ParentUUID": 0,
-            "Name": "GameObject (5)",
+            "Name": "Main Camera",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1258662811,
+                "UUID": 1527511923,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -307,7 +180,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 465049377,
+                "UUID": 3894984641,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -326,16 +199,35 @@
                 "Width": 10.0,
                 "Height": 10.0
             },
-            "Components": []
+            "Components": [
+                {
+                    "UUID": 3641786684,
+                    "ComponentType": 1,
+                    "Active": true,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 500.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0,
+                    "Skybox": 0
+                }
+            ]
         },
         {
-            "UUID": 3390986774,
+            "UUID": 1063163618,
             "ParentUUID": 0,
             "Name": "GameObject (6)",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 4075655835,
+                "UUID": 3485482216,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -348,13 +240,13 @@
                     0.0
                 ],
                 "Scale": [
+                    29.0,
                     1.0,
-                    1.0,
-                    1.0
+                    29.0
                 ]
             },
             "Transform2D": {
-                "UUID": 433273853,
+                "UUID": 2031682651,
                 "Active": true,
                 "Top": -5.0,
                 "Right": 5.0,
@@ -373,7 +265,30 @@
                 "Width": 10.0,
                 "Height": 10.0
             },
-            "Components": []
+            "Components": [
+                {
+                    "UUID": 1764144110,
+                    "Active": true,
+                    "ComponentType": 9,
+                    "ColliderType": 0,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": true,
+                    "Collision": true,
+                    "Visualize": true,
+                    "Attached": false,
+                    "x_axis": true,
+                    "y_axis": true,
+                    "z_axis": true,
+                    "DisablePhysics": false,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
+                }
+            ]
         }
     ]
 } 

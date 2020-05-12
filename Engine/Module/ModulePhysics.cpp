@@ -66,9 +66,6 @@ update_status ModulePhysics::Update()
 			{
 				collider->MoveBody();
 			}
-			if (colliders.at(0)->DetectCollisionWith(colliders.at(1))) {
-				return update_status::UPDATE_STOP;
-			}
 		}
 		else
 		{			
