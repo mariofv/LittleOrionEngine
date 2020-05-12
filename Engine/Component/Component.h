@@ -21,7 +21,7 @@ public:
 		SCRIPT,
 		TRANSFORM2D,
 		ANIMATION,
-		AUDIO_SOURCE
+		AUDIO_SOURCE = 14
 	};
 
 	Component(ComponentType componentType) : owner(owner), type(componentType), UUID(pcg32_random()) {};
