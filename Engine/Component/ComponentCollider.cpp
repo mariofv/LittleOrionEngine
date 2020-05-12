@@ -141,14 +141,6 @@ btRigidBody* ComponentCollider::AddBody()
 	return body;
 }
 
-ENGINE_API void ComponentCollider::MoveWhileAir(float3 & velocity)
-{
-	if (abs(velocity.x) > 0 || abs(velocity.z) > 0)
-	{
-		velocity.Normalize();
-		body->applyCentralImpulse(btVector3(velocity.x*0.1, 0, 0));
-	}
-}
 
 void ComponentCollider::MoveBody()
 {
@@ -317,7 +309,7 @@ void ComponentCollider::SetRotationAxis()
 	body->setAngularFactor(btVector3(int(x_axis), int(y_axis), int(z_axis)));
 }
 
-void ComponentCollider::Jump(float3& force)
+void ComponentCollider::AddForce(float3& force)
 {
 	body->applyCentralForce(btVector3(force.x, force.y, force.z));
 }
