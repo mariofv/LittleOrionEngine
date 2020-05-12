@@ -180,7 +180,6 @@
     <ClInclude Include="Engine\Component\ComponentButton.h" />
     <ClInclude Include="Engine\Component\ComponentCanvas.h" />
     <ClInclude Include="Engine\Component\ComponentImage.h" />
-    <ClInclude Include="Engine\Component\ComponentProgressBar.h" />
     <ClInclude Include="Engine\Component\ComponentScript.h" />
     <ClInclude Include="Engine\Component\ComponentText.h" />
     <ClInclude Include="Engine\Component\ComponentTransform2D.h" />
@@ -314,7 +313,6 @@
     <ClCompile Include="Engine\Component\ComponentButton.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvas.cpp" />
     <ClCompile Include="Engine\Component\ComponentImage.cpp" />
-    <ClCompile Include="Engine\Component\ComponentProgressBar.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
     <ClCompile Include="Engine\Component\ComponentText.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform2D.cpp" />

@@ -185,10 +185,6 @@ void PanelMenuBar::ShowGameObjectMenu()
 				TemplatedGameObjectCreator::CreateUIElement(Component::ComponentType::UI_BUTTON);
 				
 			}
-			if (ImGui::Selectable("Progess Bar"))
-			{
-				TemplatedGameObjectCreator::CreateUIElement(Component::ComponentType::UI_PROGRESS_BAR);
-			}
 			ImGui::EndMenu();
 		}
 		ImGui::EndMenu();

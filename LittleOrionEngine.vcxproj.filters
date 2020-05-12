@@ -340,9 +340,6 @@
     <ClCompile Include="Engine\Component\ComponentImage.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentProgressBar.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Component\ComponentText.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
@@ -766,9 +763,6 @@
       <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentImage.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentProgressBar.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentText.h">

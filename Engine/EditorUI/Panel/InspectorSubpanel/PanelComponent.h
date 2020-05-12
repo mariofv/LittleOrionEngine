@@ -14,7 +14,6 @@ class ComponentCanvasRenderer;
 class ComponentImage;
 class ComponentMeshRenderer;
 class ComponentLight;
-class ComponentProgressBar;
 class ComponentText;
 class ComponentTransform;
 class ComponentScript;
@@ -33,7 +32,6 @@ public:
 	void ShowComponentAnimationWindow(ComponentAnimation* animation);
 	void ShowComponentScriptWindow(ComponentScript* component_script);
 	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
-	void ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar);
 	void ShowComponentImageWindow(ComponentImage* image);
 	void ShowComponentTextWindow(ComponentText* text);
 	void ShowComponentButtonWindow(ComponentButton* button);

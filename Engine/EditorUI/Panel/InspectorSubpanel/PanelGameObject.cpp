@@ -8,7 +8,6 @@
 #include "Component/ComponentImage.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
-#include "Component/ComponentProgressBar.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
@@ -134,10 +133,6 @@ void PanelGameObject::Render(GameObject* game_object)
 
 			case Component::ComponentType::UI_BUTTON:
 				component_panel.ShowComponentButtonWindow(static_cast<ComponentButton*>(component));
-				break;
-
-			case Component::ComponentType::UI_PROGRESS_BAR:
-				component_panel.ShowComponentProgressBarWindow(static_cast<ComponentProgressBar*>(component));
 				break;
 
 			default:

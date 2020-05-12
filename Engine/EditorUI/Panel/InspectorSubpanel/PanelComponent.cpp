@@ -19,7 +19,6 @@
 #include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
-#include "Component/ComponentProgressBar.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
@@ -470,21 +469,6 @@ void PanelComponent::ShowComponentImageWindow(ComponentImage* component_image) {
 		}
 
 		ImGui::ColorPicker3("Color", component_image->color.ptr());
-	}
-}
-
-
-void PanelComponent::ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar) {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Progress Bar", ImGuiTreeNodeFlags_DefaultOpen))
-	{
-		if (!ShowCommonComponentWindow(progress_bar))
-		{
-			return;
-		}
-		ImGui::Separator();
-		ImGui::DragFloat("Bar Value", &progress_bar->percentage, 0.1F, 0.0F, 100.0F);
-		ImGui::InputInt("Bar Image", (int*)(&progress_bar->bar_texture));
-		ImGui::ColorPicker3("Bar Color", progress_bar->bar_color.ptr());
 	}
 }
 

@@ -25,7 +25,6 @@
 #include "Component/ComponentCanvasRenderer.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
-#include "Component/ComponentProgressBar.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentText.h"
@@ -401,10 +400,6 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 
 	case Component::ComponentType::UI_IMAGE:
 		created_component = App->ui->CreateComponentUI<ComponentImage>();
-		break;
-
-	case Component::ComponentType::UI_PROGRESS_BAR:
-		created_component = App->ui->CreateComponentUI<ComponentProgressBar>();
 		break;
 
 	case Component::ComponentType::UI_TEXT:

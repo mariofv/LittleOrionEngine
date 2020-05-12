@@ -23,64 +23,7 @@ bool Component::Is2DComponent() const
 		type == ComponentType::CANVAS
 		|| type == ComponentType::UI_BUTTON
 		|| type == ComponentType::UI_IMAGE
-		|| type == ComponentType::UI_PROGRESS_BAR
 		|| type == ComponentType::UI_TEXT;
-}
-
-Component::ComponentType Component::GetComponentType(const std::string& component_type_name)
-{
-	if (component_type_name == "AABB")
-	{
-		return Component::ComponentType::AABB;
-	}
-	if (component_type_name == "Animation")
-	{
-		return Component::ComponentType::ANIMATION;
-	}
-	if (component_type_name == "Camera")
-	{
-		return Component::ComponentType::CAMERA;
-	}
-	if (component_type_name == "Canvas")
-	{
-		return Component::ComponentType::CANVAS;
-	}
-	if (component_type_name == "Light")
-	{
-		return Component::ComponentType::LIGHT;
-	}
-	if (component_type_name == "Mesh Renderer")
-	{
-		return Component::ComponentType::MESH_RENDERER;
-	}
-	if (component_type_name == "Transform")
-	{
-		return Component::ComponentType::TRANSFORM;
-	}
-	if (component_type_name == "Transform 2D")
-	{
-		return Component::ComponentType::TRANSFORM2D;
-	}
-	if (component_type_name == "Script")
-	{
-		return Component::ComponentType::SCRIPT;
-	}
-	if (component_type_name == "UI Button")
-	{
-		return Component::ComponentType::UI_BUTTON;
-	}
-	if (component_type_name == "UI Image")
-	{
-		return Component::ComponentType::UI_IMAGE;
-	}
-	if (component_type_name == "UI Progress Bar")
-	{
-		return Component::ComponentType::UI_PROGRESS_BAR;
-	}
-	if (component_type_name == "UI Text")
-	{
-		return Component::ComponentType::UI_TEXT;
-	}
 }
 
 std::string Component::GetComponentTypeName(Component::ComponentType component_type)
@@ -119,9 +62,6 @@ std::string Component::GetComponentTypeName(Component::ComponentType component_t
 
 	case Component::ComponentType::UI_IMAGE:
 		return "UI Image";
-
-	case Component::ComponentType::UI_PROGRESS_BAR:
-		return "UI Progress Bar";
 
 	case Component::ComponentType::UI_TEXT:
 		return "UI Text";

@@ -25,8 +25,7 @@ public:
 		CANVAS_RENDERER = 10,
 		UI_BUTTON = 11,
 		UI_IMAGE = 12,
-		UI_PROGRESS_BAR = 13,
-		UI_TEXT = 14
+		UI_TEXT = 13
 
 	};
 
@@ -77,7 +76,6 @@ public:
 		return ComponentType(component_type_uint);
 	}
 
-	static ComponentType GetComponentType(const std::string& component_type_name);
 	static std::string GetComponentTypeName(ComponentType component_type);
 
 public:

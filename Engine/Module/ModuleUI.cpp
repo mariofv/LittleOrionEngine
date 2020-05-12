@@ -4,7 +4,6 @@
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentCanvasRenderer.h"
 #include "Component/ComponentImage.h"
-#include "Component/ComponentProgressBar.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentButton.h"
 
