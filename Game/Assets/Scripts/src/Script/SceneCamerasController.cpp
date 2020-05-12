@@ -31,11 +31,12 @@ SceneCamerasController::SceneCamerasController()
 // Use this for initialization before Start()
 void SceneCamerasController::Awake()
 {
-	camera_list.push_back(main_camera);
+	camera_list.push_back(game_camera);
+	camera_list.push_back(god_camera);
 	camera_list.push_back(camera_1);
 	camera_list.push_back(camera_2);
 	camera_list.push_back(camera_3);
-	camera_rendering = (ComponentCamera*)main_camera->GetComponent(Component::ComponentType::CAMERA);
+	camera_rendering = (ComponentCamera*)game_camera->GetComponent(Component::ComponentType::CAMERA);
 
 	ComponentScript* component_debug = debug->GetComponentScript("DebugModeScript");
 	debug_mode = (DebugModeScript*)component_debug->script;
@@ -96,13 +97,15 @@ void SceneCamerasController::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
 
-	public_gameobjects.push_back(&main_camera);
+	public_gameobjects.push_back(&game_camera);
+	public_gameobjects.push_back(&god_camera);
 	public_gameobjects.push_back(&camera_1);
 	public_gameobjects.push_back(&camera_2);
 	public_gameobjects.push_back(&camera_3);
 	public_gameobjects.push_back(&debug);
 
-	variable_names.push_back(GET_VARIABLE_NAME(main_camera));
+	variable_names.push_back(GET_VARIABLE_NAME(game_camera));
+	variable_names.push_back(GET_VARIABLE_NAME(god_camera));
 	variable_names.push_back(GET_VARIABLE_NAME(camera_1));
 	variable_names.push_back(GET_VARIABLE_NAME(camera_2));
 	variable_names.push_back(GET_VARIABLE_NAME(camera_3));
