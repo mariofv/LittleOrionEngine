@@ -218,6 +218,11 @@ bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_
 		config.AddChildConfig(transform_config, "Transform");
 		modified = true;
 	}
+	if (gameobject_to_save->modified_by_user)
+	{
+		config.AddString(gameobject_to_save->name, "Name");
+		modified = true;
+	}
 	std::vector<Config> gameobject_components_config;
 	for (auto & component : gameobject_to_save->components)
 	{
@@ -247,6 +252,11 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 		config.GetChildConfig("Transform", transform_config);
 
 		prefab_child->transform.Load(transform_config);
+	}
+	if (config.config_document.HasMember("Name"))
+	{
+		config.GetString("Name", prefab_child->name, prefab_child->name);
+		prefab_child->modified_by_user = true;
 	}
 
 	std::vector<Config> prefab_components_config;

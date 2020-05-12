@@ -1,26 +1,19 @@
 #ifndef  __IDLEENEMYSTATE_H__
 #define  __IDLEENEMYSTATE_H__
 
-#include "Script.h"
+#include "EnemyState.h"
 
-class IdleEnemyState : public Script
+class IdleEnemyState : public EnemyState
 {
 public:
 	IdleEnemyState();
+	IdleEnemyState(Mushdoom* enemy);
 	~IdleEnemyState() = default;
 
-	void Awake() override;
-	void Start() override;
-	void Update() override;
-
-	void OnInspector(ImGuiContext*) override;
-	void InitPublicGameObjects();
-	//void Save(Config& config) const override;
-	//void Load(const Config& config) override;
-
-private:
-	GameObject* example = nullptr;
-
+	void OnStateEnter() override;
+	void OnStateUpdate() override;
+	void OnStateExit() override;
 };
+
 extern "C" SCRIPT_API IdleEnemyState* IdleEnemyStateDLL(); //This is how we are going to load the script
 #endif
