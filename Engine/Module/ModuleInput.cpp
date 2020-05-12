@@ -921,7 +921,7 @@ ENGINE_API float ModuleInput::GetHorizontalRaw(PlayerID player_id)
 ENGINE_API float ModuleInput::GetVertical(PlayerID player_id)
 {
 	// No game controllers connected
-// Player 1 -> Keyboard
+	// Player 1 -> Keyboard
 	if (total_game_controllers == 0)
 	{
 		if (player_id == PlayerID::ONE)
