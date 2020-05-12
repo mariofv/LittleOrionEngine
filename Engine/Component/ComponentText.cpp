@@ -17,6 +17,7 @@ ComponentText::ComponentText() : Component(ComponentType::UI_TEXT)
 ComponentText::ComponentText(GameObject * owner) : Component(owner, ComponentType::UI_TEXT)
 {
 	InitData();
+	ComputeTextLines();
 }
 
 void ComponentText::InitData()
@@ -47,6 +48,7 @@ void ComponentText::InitData()
 	glBindVertexArray(0);
 
 	SetFont((uint32_t)CoreResource::DEFAULT_FONT);
+	SetFontSize(12);
 }
 
 void ComponentText::Render(float4x4* projection)
@@ -62,9 +64,9 @@ void ComponentText::Render(float4x4* projection)
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(vao);
 
-	float x = 0;
+	int current_line = 0;
+	float x = GetLineStartPosition(text_lines.line_sizes[current_line]);
 	float y = 0;
-	float scale_factor = font_size / 64.f;
 
 	// Iterate through all characters
 	for (char const &c : text)
@@ -85,12 +87,67 @@ void ComponentText::Render(float4x4* projection)
 		glBindTexture(GL_TEXTURE_2D, character.glyph_texture_id);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		x += (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		float next_character_pos = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		if (x + next_character_pos > owner->transform_2d.size.x)
+		{
+			++current_line;
+			x = GetLineStartPosition(text_lines.line_sizes[current_line]);
+			y -= font->GetMaxHeight();
+		}
+		else
+		{
+			x += next_character_pos;
+		}
 	}
 
 	glBindVertexArray(0);
 	glBindTexture(GL_TEXTURE_2D, 0);
 	glUseProgram(0);
+}
+
+void ComponentText::ComputeTextLines()
+{
+	text_lines.line_sizes.clear();
+	text_lines.line_sizes.push_back(0);
+
+	int current_line = 0;
+	float x = 0;
+	float y = 0;
+
+	// Iterate through all characters
+	for (unsigned int i = 0; i < text.size(); ++i)
+	{
+		char const &c = text[i];
+
+		Font::Character character = font->GetCharacter(c);
+		int next_character_pos = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		if (x + next_character_pos > owner->transform_2d.size.x)
+		{
+			x = 0;
+			++current_line;
+			text_lines.line_sizes.push_back(0);
+		}
+		else
+		{
+			x += next_character_pos;
+			text_lines.line_sizes[current_line] += next_character_pos;
+		} 
+	}
+}
+
+float ComponentText::GetLineStartPosition(float line_size) const
+{
+	switch (horizontal_alignment)
+	{
+	case HorizontalAlignment::LEFT:
+		return 0.f;
+
+	case HorizontalAlignment::CENTER:
+		return -line_size / 2.f;
+
+	case HorizontalAlignment::RIGHT:
+		return owner->transform_2d.size.x * 0.5f - line_size;
+	}
 }
 
 Component* ComponentText::Clone(bool original_prefab) const
@@ -138,6 +195,7 @@ void ComponentText::SpecializedLoad(const Config& config)
 void ComponentText::SetText(const std::string& new_text)
 {
 	text = new_text;
+	ComputeTextLines();
 }
 
 void ComponentText::SetFont(uint32_t font_uuid)
@@ -146,4 +204,8 @@ void ComponentText::SetFont(uint32_t font_uuid)
 	font = App->resources->Load<Font>(font_uuid);
 }
 
-	
+void ComponentText::SetFontSize(int font_size)
+{
+	this->font_size = font_size;
+	scale_factor = font_size / 64.f;
+}

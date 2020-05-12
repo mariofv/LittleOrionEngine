@@ -18,6 +18,12 @@ public:
 		RIGHT
 	};
 
+	struct TextLines
+	{
+		int num_lines = 0;
+		std::vector<float> line_sizes;
+	};
+
 	ComponentText();
 	ComponentText(GameObject * owner);
 	~ComponentText() = default;
@@ -33,9 +39,13 @@ public:
 
 	void SetText(const std::string& new_text);
 	void SetFont(uint32_t font_uuid);
+	void SetFontSize(int font_size);
 
 private:
 	void InitData();
+
+	void ComputeTextLines();
+	float GetLineStartPosition(float line_size) const;
 
 public:
 	//Text Inputs
@@ -53,5 +63,7 @@ public:
 
 private:
 	GLuint program, vao, vbo;
+	float scale_factor = 0.f;
+	TextLines text_lines;
 };
 #endif

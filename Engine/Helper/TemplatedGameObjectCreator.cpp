@@ -96,6 +96,7 @@ GameObject* TemplatedGameObjectCreator::CreateUIText()
 	created_text->transform_2d.SetSize(float2(160, 30));
 	ComponentText* component_text = static_cast<ComponentText*>(created_text->CreateComponent(Component::ComponentType::UI_TEXT));
 	component_text->SetText("New Text");
+	component_text->horizontal_alignment = ComponentText::HorizontalAlignment::CENTER;
 
 	main_canvas_game_object->AddChild(created_text);
 

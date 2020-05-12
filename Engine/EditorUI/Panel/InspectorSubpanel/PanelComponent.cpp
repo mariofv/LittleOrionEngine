@@ -481,7 +481,10 @@ void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 			return;
 		}
 		ImGui::Separator();		
-		ImGui::InputText("Text", &text->text);
+		if (ImGui::InputText("Text", &text->text))
+		{
+			text->SetText(text->text);
+		}
 		
 		ImGui::Separator();
 		ImGui::Text("Font");
@@ -504,8 +507,9 @@ void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 			text->SetFont(selected_resource);
 		}
 
-		if (ImGui::DragFloat("Font Size", (float*)(&text->scale)))
+		if (ImGui::DragFloat("Font Size", (float*)(&text->font_size)))
 		{
+			text->SetFontSize(text->font_size);
 			text->modified_by_user = true;
 		}
 		
