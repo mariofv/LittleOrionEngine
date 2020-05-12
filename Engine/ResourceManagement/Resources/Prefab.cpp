@@ -46,7 +46,6 @@ GameObject* Prefab::Instantiate(GameObject* prefab_parent, std::unordered_map<in
 		}
 		copy_in_scene->prefab_reference = App->resources->Load<Prefab>(GetUUID());
 		copy_in_scene->transform = gameObject->transform;
-		copy_in_scene->transform.Translate(float3::zero); //:D
 	}
 	parent_prefab->SetParent(prefab_parent);
 	App->animations->UpdateAnimationMeshes();
