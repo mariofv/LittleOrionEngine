@@ -4,6 +4,7 @@
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentCollider.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -36,7 +37,6 @@ void EnemyController::Awake()
 // Use this for initialization
 void EnemyController::Start()
 {
-
 }
 
 // Update is called once per frame
@@ -52,7 +52,6 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
 
-	ImGui::NewLine();
 	ImGui::Text("Enemy Stats");
 	ImGui::InputFloat("Rot Speed", &rot_speed);
 	ImGui::InputFloat("Move Speed", &move_speed);
@@ -74,6 +73,9 @@ void EnemyController::OnInspector(ImGuiContext* context)
 void EnemyController::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
+	//public_gameobjects.push_back(&object_collider);
+	//variable_names.push_back(GET_VARIABLE_NAME(object_collider));
+
 	for (int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		name_gameobjects.push_back(is_object);
@@ -89,6 +91,24 @@ void EnemyController::TakeDamage(float damage)
 	{
 		Die();
 	}
+}
+
+void EnemyController::InitMembers()
+{
+	GameObject* enemy_manager_go = App->scene->GetGameObjectByName("EnemyManager");
+	ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
+	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
+
+	player = App->scene->GetGameObjectByName("Player");
+
+	animation = (ComponentAnimation*)owner->GetComponent(Component::ComponentType::ANIMATION);
+
+	init_translation = owner->transform.GetTranslation();
+	init_rotation = owner->transform.GetRotation();
+	init_scale = owner->transform.GetScale();
+
+	//if (object_collider != nullptr)
+	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
 }
 
 void EnemyController::Move()
@@ -126,7 +146,7 @@ void EnemyController::Move()
 		}
 		else if (animation->IsOnState("Idle"))
 		{
-			animation->ActiveAnimation("walk");
+			animation->ActiveAnimation("pursue");
 			return;
 		}
 
@@ -158,24 +178,39 @@ bool EnemyController::PlayerInRange()
 	return player->transform.GetTranslation().Distance(owner->transform.GetTranslation()) <= stop_distance;
 }
 
+float EnemyController::GetMoveSpeed() const
+{
+	return move_speed;
+}
+
+bool EnemyController::PointInNavMesh(float3& position, float3& next_position)
+{
+	return App->artificial_intelligence->FindNextPolyByDirection(position, next_position);
+}
+
+bool EnemyController::IsPointWalkable(float3& position)
+{
+	return App->artificial_intelligence->IsPointWalkable(position);
+}
+
+void EnemyController::LookAndMoveToPoint(float3 & position)
+{
+	owner->transform.LookAt(position);
+	owner->transform.SetTranslation(position);
+}
+
+void EnemyController::LookToPoint(float3 & position)
+{
+	owner->transform.LookAt(position);
+}
+
+void EnemyController::SetVelocity(float3 & position)
+{
+	collider->SetVelocity(position, move_speed);
+}
+
 void EnemyController::Die()
 {
 	is_alive = false;
 	enemy_manager->KillEnemy(this);
-}
-
-void EnemyController::InitMembers()
-{
-	GameObject* enemy_manager_go = App->scene->GetGameObjectByName("EnemyManager");
-	ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
-	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
-
-	player = App->scene->GetGameObjectByName("Player");
-
-	animation = (ComponentAnimation*)owner->GetComponent(Component::ComponentType::ANIMATION);
-	collider_component = static_cast<ComponentCollider*>(owner->GetComponent(ComponentCollider::ColliderType::BOX));
-
-	init_translation = owner->transform.GetTranslation();
-	init_rotation = owner->transform.GetRotation();
-	init_scale = owner->transform.GetScale();
 }

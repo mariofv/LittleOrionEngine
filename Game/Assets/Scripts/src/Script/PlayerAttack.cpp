@@ -37,6 +37,9 @@ void PlayerAttack::Awake()
 	ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
 	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
 
+	//animation = (ComponentAnimation*)owner->GetComponent(Component::ComponentType::ANIMATION);
+	collider->SetEnabled(false);
+
 	animation = (ComponentAnimation*) owner->GetComponent(Component::ComponentType::ANIMATION);
 	collider_component = static_cast<ComponentCollider*>(collider->GetComponent(ComponentCollider::ColliderType::BOX));
 }
@@ -48,31 +51,32 @@ void PlayerAttack::Start()
 }
 // Update is called once per frame
 
-bool PlayerAttack::Attack()
+bool PlayerAttack::Attack(int player)
 {
 	is_attacking = animation->IsOnState("Punch") || animation->IsOnState("Kick");
 
 	if(!is_attacking && !raycast_cast)
 	{
-		if(App->input->GetGameInputDown("Punch", PlayerID::ONE))
+		if (App->input->GetGameInputDown("Punch", static_cast<PlayerID>(player)))
 		{
 			animation->ActiveAnimation("punch");
 			//Active colliders of hands
 			raycast_cast = true;
 			current_damage_power = PUNCH_DAMAGE;
 		}
-		else if(App->input->GetGameInputDown("Kick", PlayerID::ONE))
+		else if (App->input->GetGameInputDown("Kick", static_cast<PlayerID>(player)))
 		{
 			animation->ActiveAnimation("kick");
 			//Active colliders of kick
 			raycast_cast = true;
 			current_damage_power = KICK_DAMAGE;
-		}	
+		}
 	}
 
 	if (raycast_cast && animation->GetCurrentClipPercentatge() > 0.5f)
 	{
 		ComputeCollisions();
+		collider->SetEnabled(false);
 		raycast_cast = false;
 	}
 

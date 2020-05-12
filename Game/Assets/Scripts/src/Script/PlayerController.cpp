@@ -45,14 +45,12 @@ void PlayerController::Start()
 // Update is called once per frame
 void PlayerController::Update()
 {
+	bool is_attacking = player_attack->Attack(player);
 
-	bool is_attacking = player_attack->Attack();
-	
 	if(!is_attacking)
 	{
 		player_movement->Move(player);
 	}
-
 }
 
 // Use this for showing variables on inspector
@@ -88,5 +86,10 @@ void PlayerController::Save(Config& config) const
 void PlayerController::Load(const Config& config)
 {
 	player = static_cast<unsigned>(config.GetUInt("Player", player));
+}
+
+void PlayerController::TakeDamage(float damage)
+{
+	health_points -= damage;
 }
 
