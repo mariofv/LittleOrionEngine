@@ -698,7 +698,9 @@
                     "Active": true,
                     "ScriptName": "PlayerMovement",
                     "Name0": "Main Camera",
-                    "Main Camera": 172714554
+                    "Main Camera": 172714554,
+                    "Name1": "Player1",
+                    "Player1": 3144502856
                 },
                 {
                     "UUID": 1725918517,
@@ -775,7 +777,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "PlayerController",
-                    "Player": 1
+                    "Player": 2
                 },
                 {
                     "UUID": 1049943075,
@@ -783,7 +785,9 @@
                     "Active": true,
                     "ScriptName": "PlayerMovement",
                     "Name0": "Main Camera",
-                    "Main Camera": 172714554
+                    "Main Camera": 172714554,
+                    "Name1": "Player2",
+                    "Player2": 4121580582
                 },
                 {
                     "UUID": 1009677132,
@@ -804,7 +808,7 @@
                     "y_axis": false,
                     "z_axis": false,
                     "DisablePhysics": false,
-                    "Friction": 1.0,
+                    "Friction": 10.0,
                     "Rolling_friction": 1.0
                 }
             ]
@@ -1307,14 +1311,10 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "CameraController",
-                    "Name0": "Main Camera",
-                    "Main Camera": 172714554,
-                    "Name1": "Player1",
+                    "Name0": "Player1",
                     "Player1": 3144502856,
-                    "Name2": "Player2",
-                    "Player2": 4121580582,
-                    "Name3": "Canvas",
-                    "Canvas": 2861961979
+                    "Name1": "Player2",
+                    "Player2": 4121580582
                 },
                 {
                     "UUID": 3578813239,
@@ -1325,11 +1325,13 @@
                     "Main Camera": 172714554,
                     "Name1": "Camera1",
                     "Camera1": 993413573,
-                    "Name2": "Camera2",
+                    "Name2": "Camera1",
+                    "Camera1": 993413573,
+                    "Name3": "Camera2",
                     "Camera2": 2874253772,
-                    "Name3": "Camera3",
+                    "Name4": "Camera3",
                     "Camera3": 1342938916,
-                    "Name4": "Canvas",
+                    "Name5": "Canvas",
                     "Canvas": 2861961979
                 }
             ]
@@ -1785,6 +1787,82 @@
                     "TextFPS": 2653028286,
                     "Name4": "Main Camera",
                     "Main Camera": 172714554
+                }
+            ]
+        },
+        {
+            "UUID": 3478853517,
+            "ParentUUID": 0,
+            "Name": "God Camera",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2206010165,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3236555602,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 900139567,
+                    "ComponentType": 1,
+                    "Active": false,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 100.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 1,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0,
+                    "Skybox": 0
+                },
+                {
+                    "UUID": 852303529,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "GodCamera",
+                    "Name0": "Main Camera",
+                    "Main Camera": 172714554,
+                    "Name1": "Canvas",
+                    "Canvas": 2861961979
                 }
             ]
         },

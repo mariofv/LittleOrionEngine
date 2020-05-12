@@ -62,7 +62,7 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 
 void PlayerMovement::Move(int player)
 {
-
+	
 	float3 transform = owner->transform.GetTranslation();
 	new_translation = float3::zero;
 	PlayerID player_id = static_cast<PlayerID>(player - 1);
@@ -77,21 +77,23 @@ void PlayerMovement::Move(int player)
 		is_grounded = true;
 		if (!new_translation.Equals(float3::zero))
 		{
-			is_inside = IsInside(transform + new_translation*speed/10);
+			is_inside = IsInside(transform + new_translation * speed / 10 );
 
 			if (is_inside)
 			{
-				collider->SetVelocity(new_translation, speed);
+				collider->SetVelocity(new_translation, speed*App->time->delta_time);
 			}
 			else
 			{
-				collider->SetVelocity(transform, 0);
+				new_translation = float3::zero;
+				collider->AddForce(new_translation);
+				collider->SetVelocity(new_translation, 0);
 			}
 		}
 		if (App->input->GetKeyDown(KeyCode::Space))
 		{
-			new_translation += float3(0.0f, jump_power, 0.0f);
-			collider->AddForce(new_translation);
+			//collider->SetVelocity(transform, 0);
+			Jump();
 		}
 
 	}
@@ -104,11 +106,13 @@ void PlayerMovement::Move(int player)
 
 			if (is_inside)
 			{
-				new_translation *= speed;
+				new_translation *= App->time->delta_time * speed;
 				collider->AddForce(new_translation);
 			}
 			else
 			{
+				new_translation = float3::zero;
+				collider->AddForce(new_translation);
 				collider->SetVelocity(transform, 0);
 			}
 		}
@@ -118,7 +122,7 @@ void PlayerMovement::Move(int player)
 void PlayerMovement::Jump()
 {	
 	float3 new_transform = float3::zero;
-	new_transform += float3(0.0f, jump_power, 0.0f);
+	new_transform += float3(0.0f, jump_power * App->time->delta_time, 0.0f);
 	collider->AddForce(new_transform);
 }
 
@@ -136,7 +140,12 @@ bool PlayerMovement::IsInside(float3 future_transform)
 {
 	float3 distance = future_transform - owner->transform.GetTranslation();
 	AABB future_position = AABB(owner->aabb.bounding_box.minPoint + distance, owner->aabb.bounding_box.maxPoint + distance);
-
+	
+	if(second_player != nullptr && App->input->singleplayer_input)
+	{
+		float3 go_distance = second_player->transform.GetTranslation() - future_transform;
+		return game_camera->IsInsideFrustum(future_position) && go_distance.x < 18;
+	}
 	return game_camera->IsInsideFrustum(future_position);
 }
 
@@ -146,8 +155,10 @@ void PlayerMovement::InitPublicGameObjects()
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
 
 	public_gameobjects.push_back(&camera);
+	public_gameobjects.push_back(&second_player);
 
 	variable_names.push_back(GET_VARIABLE_NAME(camera));
+	variable_names.push_back(GET_VARIABLE_NAME(second_player));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
