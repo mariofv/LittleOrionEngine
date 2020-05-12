@@ -27,7 +27,7 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	void Render(const ComponentCamera* camera);
+	void Render(const ComponentCamera* camera, bool scene_mode);
 
 	ComponentCanvas* CreateComponentCanvas();
 	void RemoveComponentCanvas(ComponentCanvas* component_canvas);

@@ -4,6 +4,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleUI.h"
@@ -54,7 +55,7 @@ void ComponentCanvas::Delete()
 	App->ui->RemoveComponentCanvas(this);
 }
 
-void ComponentCanvas::Render() 
+void ComponentCanvas::Render(bool scene_mode)
 {
 	std::vector<ComponentCanvasRenderer*> components_to_render = GetComponentCanvasRendererToRender();
 
@@ -68,7 +69,17 @@ void ComponentCanvas::Render()
 	canvas_height = App->editor->scene_panel->scene_window_content_area_height;
 #endif
 
-	float4x4 projection = float4x4::D3DOrthoProjLH(-1, 200, canvas_width, canvas_height);
+	float4x4 projection_view;
+	if (scene_mode)
+	{
+		owner->transform_2d.SetTranslation(float3(canvas_width/2.f, canvas_height / 2.f, 0.f));
+		projection_view = App->cameras->scene_camera->GetProjectionMatrix() * App->cameras->scene_camera->GetViewMatrix();
+	}
+	else
+	{
+		owner->transform_2d.SetTranslation(float3::zero);
+		projection_view = float4x4::D3DOrthoProjLH(-1, 200, canvas_width, canvas_height);
+	}
 	owner->transform_2d.SetWidth(canvas_width);
 	owner->transform_2d.SetHeight(canvas_height);
 
@@ -76,7 +87,7 @@ void ComponentCanvas::Render()
 	
 	for (auto& canvas_renderer : components_to_render)
 	{
-		canvas_renderer->Render(&projection);
+		canvas_renderer->Render(&projection_view);
 	}
 
 	glEnable(GL_DEPTH_TEST);

@@ -47,7 +47,7 @@ public:
 	float GetWidth() const;
 	float GetHeight() const;
 
-	void RecordFrame(float width, float height);
+	void RecordFrame(float width, float height, bool scene_mode = false);
 	void RecordDebugDraws(float width, float height) const;
 	GLuint GetLastRecordedFrame() const;
 

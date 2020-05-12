@@ -12,6 +12,7 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleUI.h"
 #include "Module/ModuleWindow.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
@@ -186,7 +187,7 @@ float ComponentCamera::GetHeight() const
 	return last_height;
 }
 
-void ComponentCamera::RecordFrame(float width, float height)
+void ComponentCamera::RecordFrame(float width, float height, bool scene_mode)
 {
 	if (last_width != width || last_height != height || toggle_msaa)
 	{
@@ -226,6 +227,8 @@ void ComponentCamera::RecordFrame(float width, float height)
 	}
 
 	App->renderer->RenderFrame(*this);
+	App->ui->Render(this, scene_mode);
+
 
 #if !GAME
 	if (App->renderer->anti_aliasing)

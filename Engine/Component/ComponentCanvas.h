@@ -22,7 +22,7 @@ public:
 	void Copy(Component* component_to_copy) const override;
 	void Delete() override;
 
-	void Render();
+	void Render(bool scene_mode = false);
 
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;

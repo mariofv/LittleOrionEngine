@@ -29,6 +29,7 @@ private:
 
 	void RenderTangentsAndBitangents() const;
 
+	void RenderRectTransform(const GameObject* rect_owner) const;
 	void RenderCameraFrustum() const;
 	void RenderLightGizmo() const;
 	void RenderBones() const;
