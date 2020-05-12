@@ -28,14 +28,14 @@ public:
 
 	void MultiplayerCamera();
 
+	void SetFreeze();
+
 
 	void InitPublicGameObjects();
+	bool god_mode = false;
 
 private:
-	bool god_mode = false;
 	Quat rotation = Quat::identity;
-	GameObject* camera = nullptr;
-	ComponentCamera* camera_component = nullptr;
 	float rotation_speed = 1.f;
 
 	GameObject* player1 = nullptr;
@@ -45,9 +45,6 @@ private:
 	GameObject* player2 = nullptr;
 	PlayerController* player2_movement_script = nullptr;
 	ComponentScript* player2_movement_component = nullptr;
-
-	GameObject* debug = nullptr;
-	DebugModeScript* debug_mode = nullptr;
 
 	float3 offset_near = float3(0.f, 5.5f, 11.f);
 	float3 offset_far = float3(0.f, 8.5f, 17.5f);
@@ -59,6 +56,7 @@ private:
 	bool multiplayer = false;
 	float distance = 0.f;
 
+	bool freeze = false;
 
 };
 extern "C" SCRIPT_API CameraController* CameraControllerDLL(); //This is how we are going to load the script
