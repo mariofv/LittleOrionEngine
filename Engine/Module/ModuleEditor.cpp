@@ -23,7 +23,6 @@
 #include "Main/Application.h"
 #include "ModuleResourceManager.h"
 #include "ModuleScene.h"
-#include "ModuleScriptManager.h"
 #include "ModuleActions.h"
 #include "ModuleWindow.h"
 #include "ModuleInput.h"
@@ -118,7 +117,6 @@ update_status ModuleEditor::Update()
 	if (!inital_scene_loaded)
 	{
 		App->scene->LoadScene(0);
-		App->scripts->InitScripts();
 		inital_scene_loaded = true;
 		return update_status::UPDATE_CONTINUE;
 	}

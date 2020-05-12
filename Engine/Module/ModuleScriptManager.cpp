@@ -237,7 +237,8 @@ void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> con
 		if (component_script->script != nullptr)
 		{
 			std::unordered_map<uint64_t, Config>::const_iterator got = config_list.find(component_script->UUID);
-			if (got != config_list.end()) {
+			if (got != config_list.end()) 
+			{
 				component_script->script->Load(got->second);
 				component_script->script->Link();
 			}

@@ -7,6 +7,7 @@
 #include "Helper/Config.h"
 
 #include "Main/Application.h"
+#include "ModuleAnimation.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleRender.h"
@@ -211,6 +212,7 @@ void ModuleScene::OpenScene()
 	if (App->time->isGameRunning())
 	{
 		App->scripts->InitScripts();
+		App->animations->PlayAnimations();
 	}
 	App->space_partitioning->GenerateQuadTree();
 	App->space_partitioning->GenerateOctTree();
