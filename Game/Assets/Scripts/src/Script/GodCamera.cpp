@@ -59,6 +59,7 @@ void GodCamera::Update()
 {
 	if (!debug_mode->debug_enabled && god_mode)
 	{
+		owner->transform.SetTranslation(game_camera->transform.GetTranslation());
 		owner->transform.SetRotation(game_camera->transform.GetRotation());
 		god_mode != god_mode;
 		Active();
@@ -67,6 +68,7 @@ void GodCamera::Update()
 	{
 		if (debug_mode->debug_enabled || god_mode)
 		{
+			owner->transform.SetTranslation(game_camera->transform.GetTranslation());
 			owner->transform.SetRotation(game_camera->transform.GetRotation());
 			god_mode = !god_mode;
 			Active();
