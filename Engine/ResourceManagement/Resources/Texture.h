@@ -8,16 +8,14 @@
 #include <string>
 
 class Metafile;
-class Skybox;
+struct TextureOptions;
 
 class Texture : public Resource
 {
 public:
-	Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, bool normal_map = false);
+	Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, int num_channels, TextureOptions& options);
 
 	~Texture();
-
-	bool IsMipMapped() const;
 
 	void SetWrapS(GLenum wrap_s);
 	GLenum GetWrapS() const;
@@ -38,7 +36,7 @@ public:
 
 private:
 	void GenerateMipMap();
-	void LoadInMemory();
+	void LoadInMemory(TextureOptions& options, int num_channels);
 	char* GLEnumToString(GLenum gl_enum) const;
 
 public:
@@ -46,10 +44,8 @@ public:
 
 	int width = 0;
 	int height = 0;
-	bool normal_map = false;
 
 private:
-	bool mip_map = false;
 
 	GLenum wrap_s;
 	GLenum wrap_t;

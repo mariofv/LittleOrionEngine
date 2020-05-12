@@ -71,10 +71,10 @@ bool ModuleResourceManager::Init()
 
 update_status ModuleResourceManager::PreUpdate()
 {
-	if ((thread_timer->Read() - last_imported_time) >= importer_interval_millis)
+	if (last_imported_time > 0.0f && (thread_timer->Read() - last_imported_time) >= importer_interval_millis)
 	{
-		//importing_thread.join();
-		//importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
+		importing_thread.join();
+		importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 		CleanResourceCache();
 	}
 	return update_status::UPDATE_CONTINUE;
@@ -94,40 +94,78 @@ bool ModuleResourceManager::CleanUp()
 	 thread_comunication.finished_loading = false;
 	 thread_comunication.total_items = App->filesystem->assets_folder_path->total_sub_files_number;
 
-	 CleanInconsistenciesInDirectory(*App->filesystem->assets_folder_path); // Clean all incorrect meta in the folder Assets.
-	 ImportAssetsInDirectory(*App->filesystem->assets_folder_path); // Import all assets in folder Assets. All metafiles in Assets are correct"
-	// TODO: We need also to iterate over the library folder and to delete binaries that doesnt have corresponding metafiles
+	 CleanMetafilesInDirectory(*App->filesystem->assets_folder_path); // Clean all metafiles that dont have an assets file in the folder Assets.
+	 ImportAssetsInDirectory(*App->filesystem->assets_folder_path); // Import all assets in folder Assets. All metafiles in Assets have an asset file"
+	 CleanBinariesInDirectory(*App->filesystem->library_folder_path); // Delete all binaries from folder Library that dont have a metafile in Assets.
+
 	 thread_comunication.finished_loading = true;
 	 last_imported_time = thread_timer->Read();
  }
 
-void ModuleResourceManager::CleanInconsistenciesInDirectory(const Path& directory_path)
+void ModuleResourceManager::CleanMetafilesInDirectory(const Path& directory_path)
 {
+	std::vector<Path*> files_to_delete;
+
 	for (auto & path_child : directory_path.children)
 	{
 		if (thread_comunication.stop_thread)
 		{
 			return;
 		}
-		thread_comunication.thread_importing_hash = std::hash<std::string>{}(path_child->GetFullPath());
-		while (thread_comunication.main_importing_hash == std::hash<std::string>{}(directory_path.GetFullPath()))
-		{
-			Sleep(1000);
-		}
-
 		if (path_child->IsDirectory())
 		{
-			CleanInconsistenciesInDirectory(*path_child);
+			CleanMetafilesInDirectory(*path_child);
 		}
-		else if (path_child->IsMeta())
+		else if (path_child->IsMeta() && !metafile_manager->IsMetafileConsistent(*path_child))
 		{
-			if (!metafile_manager->IsMetafileConsistent(*path_child))
+			if (metafile_manager->IsMetafileMoved(*path_child))
 			{
-				metafile_manager->DeleteMetafileInconsistencies(*path_child); // TODO: This causes memory violations because bector size is modified. Look for a better way of deleting files.
+				metafile_manager->RefreshMetafile(*path_child);
+			}
+			else
+			{
+				files_to_delete.push_back(path_child);
 			}
 		}
-		thread_comunication.thread_importing_hash = 0;
+		
 	}
+
+	for (auto& path_to_delete : files_to_delete)
+	{
+		App->filesystem->Remove(path_to_delete->GetFullPath());
+	}
+}
+
+void ModuleResourceManager::CleanBinariesInDirectory(const Path& directory_path)
+{
+	std::vector<Path*> files_to_delete;
+
+	for (auto & path_child : directory_path.children)
+	{
+		if (thread_comunication.stop_thread)
+		{
+			return;
+		}
+		if (path_child->IsDirectory())
+		{
+			CleanBinariesInDirectory(*path_child);
+		}
+		else if (path_child->IsBinary())
+		{
+			uint32_t binary_uuid = std::stoul(path_child->GetFilenameWithoutExtension());
+			if (!resource_DB->GetEntry(binary_uuid))
+			{
+				files_to_delete.push_back(path_child);
+			}
+		}
+	}
+
+	for (auto& path_to_delete : files_to_delete)
+	{
+		App->filesystem->Remove(path_to_delete->GetFullPath());
+	}
+
+	//TODO: Delete empty directories
 }
 
 void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path, bool force)
@@ -139,13 +177,6 @@ void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path, 
 		 {
 			 return;
 		 }
-		 /*
-		 thread_comunication.thread_importing_hash = std::hash<std::string>{}(path_child->GetFullPath());
-		 while (thread_comunication.main_importing_hash == std::hash<std::string>{}(directory_path.GetFullPath()))
-		 {
-			 Sleep(1000);
-		 }
-		 */
 		 if (path_child->IsDirectory())
 		 {
 			 ImportAssetsInDirectory(*path_child, force);
@@ -155,7 +186,6 @@ void ModuleResourceManager::ImportAssetsInDirectory(const Path& directory_path, 
 			 Import(*path_child, force);
 			 ++thread_comunication.loaded_items;
 		 }
-		 thread_comunication.thread_importing_hash = 0;
 	 }
  }
 
@@ -254,7 +284,7 @@ std::shared_ptr<Resource> ModuleResourceManager::RetrieveFromCacheIfExist(uint32
 	return nullptr;
 }
 
-void ModuleResourceManager::CleanResourceCache()
+void ModuleResourceManager::RefreshResourceCache()
 {
 	const auto it = std::remove_if(resource_cache.begin(), resource_cache.end(), [](const std::shared_ptr<Resource> & resource) {
 		return resource.use_count() == 1;
@@ -263,4 +293,8 @@ void ModuleResourceManager::CleanResourceCache()
 	{
 		resource_cache.erase(it, resource_cache.end());
 	}
+}
+void ModuleResourceManager::CleanResourceCache()
+{
+	resource_cache.clear();
 }

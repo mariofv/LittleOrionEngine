@@ -6,6 +6,7 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleLight.h"
 
+#include "PanelProjectExplorer.h"
 
 #include <Brofiler/Brofiler.h>
 #include <imgui.h>
@@ -27,9 +28,13 @@ void PanelInspector::Render()
 		hovered = ImGui::IsWindowHovered();
 		focused = ImGui::IsWindowFocused();
 
-		if (App->editor->selected_game_object != nullptr)
+		if (App->editor->selected_game_object != nullptr && App->editor->show_game_object_inspector)
 		{
 			gameobject_panel.Render(App->editor->selected_game_object);
+		}
+		else if (App->editor->selected_meta_file != nullptr)
+		{
+			metafile_panel.Render(App->editor->selected_meta_file);
 		}
 
 	}
