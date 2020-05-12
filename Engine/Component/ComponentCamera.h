@@ -119,7 +119,6 @@ private:
 	void GenerateFrameBuffers(float width, float height);
 	void InitCamera();
 	void CreateFramebuffer(float width, float height);
-	void CreateDepthFramebuffer(float width, float height);
 	void CreateMssaFramebuffer(float width, float height);
 
 public:

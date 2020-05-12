@@ -219,6 +219,12 @@ void ComponentCamera::RecordFrame(float width, float height)
 		SetAspectRatio(width/height);
 		GenerateFrameBuffers(width, height);
 		toggle_msaa = false;
+
+		if (camera_frustum.type == FrustumType::OrthographicFrustum) //No cameras should be ortho but the directional light one
+		{
+			camera_frustum.orthographicWidth = 100;
+			camera_frustum.orthographicHeight = 100;
+		}
 	}
 
 #if !GAME
@@ -343,36 +349,6 @@ void ComponentCamera::CreateFramebuffer(float width, float height)
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_COLOR_ATTACHMENT0, GL_TEXTURE_2D, last_recorded_frame_texture, 0);
 	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-}
-
-void ComponentCamera::CreateDepthFramebuffer(float width, float height)
-{
-	glGenRenderbuffers(1, &depth_rbo);
-	glBindRenderbuffer(GL_RENDERBUFFER, depth_rbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT, width, height);
-	glBindRenderbuffer(GL_RENDERBUFFER, 0);
-
-	glBindFramebuffer(GL_FRAMEBUFFER, depthfbo);
-	glRenderbufferStorage(GL_RENDERBUFFER, GL_DEPTH_COMPONENT24, width, height);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_RENDERBUFFER, depthfbo);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
-	glGenTextures(1, &depth_map);
-	glBindTexture(GL_TEXTURE_2D, depth_map);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_DEPTH_COMPONENT24, width, height, 0, GL_DEPTH_COMPONENT, GL_FLOAT, NULL);	
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-	glBindTexture(GL_TEXTURE_2D, 0);
-
-	last_recorded_frame_texture = depth_map;
-
-	glBindFramebuffer(GL_FRAMEBUFFER, depthfbo);
-	glFramebufferRenderbuffer(GL_FRAMEBUFFER, GL_DEPTH_COMPONENT, GL_RENDERBUFFER, depth_rbo);
-	glFramebufferTexture2D(GL_FRAMEBUFFER, GL_DEPTH_ATTACHMENT, GL_TEXTURE_2D, depth_map, 0);
-	glDrawBuffer(GL_NONE);
-	glReadBuffer(GL_NONE);
-	glBindFramebuffer(GL_FRAMEBUFFER, 0);
-
 }
 
 void ComponentCamera::CreateMssaFramebuffer(float width, float height)

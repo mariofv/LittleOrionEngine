@@ -296,6 +296,15 @@ void PanelConfiguration::ShowRenderOptions()
 			}
 			ImGui::TreePop();
 		}
+
+		ImGui::Separator();
+
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Depth buffer from Directional Light");
+		ImGui::Image((void *)App->cameras->directional_light_camera->depth_map, ImVec2(200, 200), ImVec2(0, 1), ImVec2(1, 0));
+		ImGui::SliderFloat("Frustum width", &App->cameras->directional_light_camera->camera_frustum.orthographicWidth, 0, 100);
+		ImGui::SliderFloat("Frustum height", &App->cameras->directional_light_camera->camera_frustum.orthographicHeight, 0, 100);
+		ImGui::SliderFloat("Near Plane", &App->cameras->directional_light_camera->camera_frustum.nearPlaneDistance, 0, 100);
+		ImGui::SliderFloat("Far Plane", &App->cameras->directional_light_camera->camera_frustum.farPlaneDistance, 0, 100);
 	}
 }
 

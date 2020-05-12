@@ -33,12 +33,6 @@ void PanelInspector::Render()
 		}
 
 	}
-	
-	ImGui::Image((void *)App->cameras->directional_light_camera->last_recorded_frame_texture, ImVec2(200, 200), ImVec2(0, 1),ImVec2(1, 0));
-	ImGui::SliderFloat("Ortho camera width", &App->cameras->directional_light_camera->camera_frustum.orthographicWidth, 0, 100);
-	ImGui::SliderFloat("Ortho camera height", &App->cameras->directional_light_camera->camera_frustum.orthographicHeight, 0, 100);
-	ImGui::SliderFloat("Near Plane", &App->cameras->directional_light_camera->camera_frustum.nearPlaneDistance, 0, 100);
-	ImGui::SliderFloat("Far Plane", &App->cameras->directional_light_camera->camera_frustum.farPlaneDistance, 0, 100);
 
 	ImGui::End();
 }
