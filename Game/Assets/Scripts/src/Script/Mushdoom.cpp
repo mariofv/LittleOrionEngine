@@ -63,7 +63,10 @@ void Mushdoom::Start()
 void Mushdoom::Update()
 {
 	//EnemyController::Update();
-	current_state->OnStateUpdate();
+	if(is_alive)
+	{
+		current_state->OnStateUpdate();
+	}
 }
 
 void Mushdoom::ResetEnemy()
@@ -73,7 +76,7 @@ void Mushdoom::ResetEnemy()
 	is_alive = true;
 	is_attacking = false;
 
-	owner->transform.SetTranslation(init_translation);
+	//IMPORTANT: DONT RESET POSITION
 	owner->transform.SetRotation(init_rotation);
 	owner->transform.SetScale(init_scale);
 }

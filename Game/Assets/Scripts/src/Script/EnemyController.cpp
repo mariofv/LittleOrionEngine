@@ -42,7 +42,7 @@ void EnemyController::Start()
 // Update is called once per frame
 void EnemyController::Update()
 {
-	Move();
+
 }
 
 // Use this for showing variables on inspector
@@ -163,7 +163,7 @@ void EnemyController::Move()
 		if (App->artificial_intelligence->IsPointWalkable(position))
 		{
 			owner->transform.LookAt(position);
-			owner->transform.SetTranslation(position);
+			//owner->transform.SetTranslation(position);
 		}
 	}
 }

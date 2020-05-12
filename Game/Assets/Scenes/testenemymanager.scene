@@ -424,7 +424,7 @@
                     "x_axis": false,
                     "y_axis": false,
                     "z_axis": false,
-                    "DisablePhysics": true,
+                    "DisablePhysics": false,
                     "Friction": 1.0,
                     "Rolling_friction": 1.0
                 }
@@ -526,7 +526,7 @@
                     "y_axis": false,
                     "z_axis": false,
                     "DisablePhysics": false,
-                    "Friction": 1.0,
+                    "Friction": 0.5,
                     "Rolling_friction": 1.0
                 }
             ]
@@ -1644,7 +1644,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 33,
+                    "Texture": 18,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1706,7 +1706,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 34,
+                    "Texture": 19,
                     "Color": [
                         1.0,
                         1.0,
@@ -1938,8 +1938,8 @@
                 "Active": true,
                 "Translation": [
                     13.530092239379883,
-                    5.549376487731934,
-                    0.3166468143463135
+                    12.070497512817383,
+                    0.7089619636535645
                 ],
                 "Rotation": [
                     -0.0,
@@ -1985,7 +1985,7 @@
                 "Active": true,
                 "Translation": [
                     48.48588943481445,
-                    7.86367130279541,
+                    8.422647476196289,
                     2.7168540954589845
                 ],
                 "Rotation": [
@@ -2032,7 +2032,7 @@
                 "Active": true,
                 "Translation": [
                     80.05918884277344,
-                    8.295964241027832,
+                    9.24053955078125,
                     -0.9533915519714356
                 ],
                 "Rotation": [
@@ -2079,7 +2079,7 @@
                 "Active": true,
                 "Translation": [
                     97.46180725097656,
-                    17.168455123901368,
+                    18.08277130126953,
                     1.4272150993347169
                 ],
                 "Rotation": [
@@ -2126,7 +2126,7 @@
                 "Active": true,
                 "Translation": [
                     120.14466094970703,
-                    16.590728759765626,
+                    16.915119171142579,
                     0.08830457925796509
                 ],
                 "Rotation": [

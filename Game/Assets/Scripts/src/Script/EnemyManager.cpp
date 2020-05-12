@@ -70,30 +70,30 @@ void EnemyManager::AddEnemy(EnemyController* enemy)
 void EnemyManager::KillEnemy(EnemyController* enemy)
 {
 	//This method is called once the enemy animation ended
-	enemy->collider->DisablePhysics(true);
+	enemy->collider->SwitchPhysics(true);
 	enemy->owner->transform.SetTranslation(graveyard_position);
 	enemy->owner->SetEnabled(false);
 
 	//Reset enemy
 	enemy->ResetEnemy();
-	enemy->is_alive = false;
 	--current_number_of_enemies_alive;
 }
 
 void EnemyManager::SpawnEnemy(const unsigned type, const float3& spawn_position)
 {
 	//We only will have mushdoom for vs2
-	EnemyController* enemy = nullptr;
+	Mushdoom* enemy = nullptr;
 
 	for(size_t i = 0; i < enemies.size(); ++i)
 	{
 		if(!enemies[i]->is_alive) // also have to match with the enemy type 
 		{
-			enemy = enemies[i];
+			enemy = static_cast<Mushdoom*>(enemies[i]);
 			enemy->is_alive = true;
-			enemy->collider->DisablePhysics(true);
+			enemy->Start();
 			enemy->owner->transform.SetTranslation(spawn_position);
-			enemy->collider->DisablePhysics(false);
+			enemy->collider->UpdateDimensions();
+			enemy->collider->SwitchPhysics(false);
 			enemy->owner->SetEnabled(true);
 
 			++current_number_of_enemies_alive;
@@ -137,6 +137,8 @@ void EnemyManager::SpawnWave(unsigned event, unsigned enemies_per_wave)
 
 void EnemyManager::CreateEnemies()
 {
+	//static_cast<ComponentCollider*>(mushdoom_go->GetComponent(Component::ComponentType::COLLIDER))->SwitchPhysics(true);
+
 	//For now we only have mushdoom enemy
 	size_t number_of_instances = MAX_NUMBER_OF_MUSHDOOM - enemies.size();
 	for (size_t i = 0; i < number_of_instances; ++i)
@@ -147,9 +149,10 @@ void EnemyManager::CreateEnemies()
 		Mushdoom* enemy = (Mushdoom*)componnet_enemy->script;
 		enemy->InitMembers();
 		enemy->is_alive = false;
-		enemies.emplace_back(enemy);
-		enemy->owner->transform.SetTranslation(graveyard_position);
+		enemy->collider->SwitchPhysics(true);
 		enemy->owner->SetEnabled(false);
+		enemy->owner->transform.SetTranslation(graveyard_position);
+		enemies.emplace_back(enemy);
 	}
 }
 
