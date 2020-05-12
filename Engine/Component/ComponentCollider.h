@@ -45,7 +45,6 @@ public:
 	void SetStatic();
 	void SetRotationAxis();
 	ENGINE_API void DisablePhysics(bool disable);
-	ENGINE_API bool RaycastHit(btVector3& origin, btVector3& end);
 	void DisablePhysics();
 	void UpdateFriction();
 	void SetRollingFriction();
