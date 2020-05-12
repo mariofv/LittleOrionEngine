@@ -141,11 +141,12 @@ bool PlayerMovement::IsInside(float3 future_transform)
 	float3 distance = future_transform - owner->transform.GetTranslation();
 	AABB future_position = AABB(owner->aabb.bounding_box.minPoint + distance, owner->aabb.bounding_box.maxPoint + distance);
 	
-	if(second_player != nullptr && App->input->singleplayer_input)
-	{
-		float3 go_distance = second_player->transform.GetTranslation() - future_transform;
-		return game_camera->IsInsideFrustum(future_position) && go_distance.x < 18;
-	}
+	//if(second_player != nullptr && App->input->singleplayer_input)
+	//{
+	//	float3 go_distance = second_player->transform.GetTranslation() - future_transform;
+	//	return game_camera->IsInsideFrustum(future_position) && go_distance.x < 18;
+	//}
+
 	return game_camera->IsInsideFrustum(future_position);
 }
 
