@@ -105,6 +105,18 @@ void ComponentCollider::Load(const Config & config)
 
 }
 
+void ComponentCollider::Disable()
+{
+	active = false;
+	SwitchPhysics();
+}
+
+void ComponentCollider::Enable()
+{
+	active = true;
+	SwitchPhysics();
+}
+
 btRigidBody* ComponentCollider::AddBody()
 {
 	if (body)
@@ -324,10 +336,10 @@ void ComponentCollider::AddForce(float3& force)
 	body->setWorldTransform(trans);
 }
 
-void ComponentCollider::DisablePhysics(bool disable)
+void ComponentCollider::SwitchPhysics(bool disable)
 {
 	disable_physics = disable;
-	DisablePhysics();
+	SwitchPhysics();
 }
 
 ENGINE_API bool ComponentCollider::RaycastHit(btVector3 & origin, btVector3 & end)
@@ -338,7 +350,7 @@ ENGINE_API bool ComponentCollider::RaycastHit(btVector3 & origin, btVector3 & en
 }
 
 
-void ComponentCollider::DisablePhysics()
+void ComponentCollider::SwitchPhysics()
 {
 	if (disable_physics || !active)
 	{
@@ -347,7 +359,7 @@ void ComponentCollider::DisablePhysics()
 	else
 	{
 		body->forceActivationState(ACTIVE_TAG);
-		/*body->forceActivationState(DISABLE_DEACTIVATION);*/
+		body->setActivationState(DISABLE_DEACTIVATION);
 	}
 }
 
@@ -367,7 +379,7 @@ void ComponentCollider::SetConfiguration()
 	if (!visualize) { SetVisualization(); }
 	SetRotationAxis();
 	if (!detect_collision) { SetCollisionDetection(); }
-	if (disable_physics || !active) { DisablePhysics(); }
+	if (disable_physics || !active) { SwitchPhysics(); }
 	UpdateFriction();
 	SetRollingFriction();
 }

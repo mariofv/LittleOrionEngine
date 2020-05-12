@@ -28,7 +28,8 @@ public:
 	void Load(const Config &config) override;
 	Component* Clone(bool original_prefab = false) const { return nullptr; }
 	virtual Component* Clone(GameObject* owner, bool original_prefab = false) const { return nullptr; }
-
+	void Disable() override;
+	void Enable() override;
 	virtual void UpdateDimensions() {}
 	virtual void Scale() {}
 
@@ -44,8 +45,8 @@ public:
 	ENGINE_API bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
 	void SetStatic();
 	void SetRotationAxis();
-	ENGINE_API void DisablePhysics(bool disable);
-	void DisablePhysics();
+	ENGINE_API void SwitchPhysics(bool disable);
+	void SwitchPhysics();
 	void UpdateFriction();
 	void SetRollingFriction();
 	void SetConfiguration();
