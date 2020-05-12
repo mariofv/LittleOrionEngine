@@ -4,6 +4,7 @@
 #include "Component.h"
 
 #include <string>
+#include <GL/glew.h>
 
 class Font;
 
@@ -35,9 +36,10 @@ public:
 	float text_width = 0;
 	float text_heigth = 0;
 
-public:
 	uint32_t font_uuid = 0;
 	std::shared_ptr<Font> font = nullptr;
 
+private:
+	GLuint program, vao, vbo;
 };
 #endif

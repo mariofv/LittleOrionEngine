@@ -3,7 +3,7 @@
 in vec2 v_TexCoords;
 in vec4 v_Color;
 
-uniform sampler2D u_glyphTexture;
+uniform sampler2D image;
 out vec4 out_FragColor;
 
 void main()

@@ -109,7 +109,8 @@ void ComponentTransform2D::GenerateGlobalModelMatrix()
 
 float4x4 ComponentTransform2D::GetSizedGlobalModelMatrix() const
 {
-	return float4x4::Scale(float3(size, 1.f), GetGlobalTranslation()) * global_model_matrix;
+	//return float4x4::Scale(float3(size, 1.f), GetGlobalTranslation()) * global_model_matrix;
+	return global_model_matrix * float4x4::Scale(float3(size, 1.f));
 }
 
 ENGINE_API void ComponentTransform2D::SetTranslation(const float3& translation)

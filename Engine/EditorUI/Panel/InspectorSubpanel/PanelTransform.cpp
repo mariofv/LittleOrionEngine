@@ -223,7 +223,7 @@ void PanelTransform::ShowComponentTransform2DWindow(ComponentTransform2D *transf
 				ImGui::PushItemWidth(-1);
 				if (ImGui::DragFloat("###Bottom drag", &rect_bottom, 1.0f))
 				{
-					transform_2D->SetRight(rect_bottom);
+					transform_2D->SetBottom(rect_bottom);
 					transform_2D->modified_by_user = true;
 				}
 				ImGui::PopItemWidth();

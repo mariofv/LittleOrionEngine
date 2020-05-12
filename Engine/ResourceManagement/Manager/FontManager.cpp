@@ -40,8 +40,8 @@ std::shared_ptr<Font> FontManager::Load(uint32_t uuid, const FileData& resource_
 		face,   
 		0,       // 0 means that width adapts to height
 		16 * 64,   // char_height in 1/64th of points 
-		App->editor->scene_panel->scene_window_content_area_width,     // horizontal device resolution 
-		App->editor->scene_panel->scene_window_content_area_height	// vertical device resolution 
+		300,     // horizontal device resolution 
+		300	// vertical device resolution 
 	);   
 	// Disable byte-alignment restriction
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
