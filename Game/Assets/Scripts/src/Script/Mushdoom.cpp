@@ -88,11 +88,10 @@ void Mushdoom::OnInspector(ImGuiContext* context)
 	ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%s", current_state->name);
 }
 
-////Use this for linking JUST GO automatically 
+//Use this for linking JUST GO automatically 
 //void Mushdoom::InitPublicGameObjects()
 //{
 //	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
-//
 //	for (int i = 0; i < public_gameobjects.size(); ++i)
 //	{
 //		name_gameobjects.push_back(is_object);

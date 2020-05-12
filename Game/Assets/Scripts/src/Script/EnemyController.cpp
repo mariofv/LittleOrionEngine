@@ -3,6 +3,7 @@
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentCollider.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -71,6 +72,9 @@ void EnemyController::OnInspector(ImGuiContext* context)
 void EnemyController::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
+	//public_gameobjects.push_back(&object_collider);
+	//variable_names.push_back(GET_VARIABLE_NAME(object_collider));
+
 	for (int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		name_gameobjects.push_back(is_object);
@@ -101,6 +105,9 @@ void EnemyController::InitMembers()
 	init_translation = owner->transform.GetTranslation();
 	init_rotation = owner->transform.GetRotation();
 	init_scale = owner->transform.GetScale();
+
+	//if (object_collider != nullptr)
+	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
 }
 
 void EnemyController::Move()
@@ -189,6 +196,11 @@ void EnemyController::LookAndMoveToPoint(float3 & position)
 {
 	owner->transform.LookAt(position);
 	owner->transform.SetTranslation(position);
+}
+
+void EnemyController::SetVelocity(float3 & position)
+{
+	collider->SetVelocity(position, move_speed);
 }
 
 void EnemyController::Die()

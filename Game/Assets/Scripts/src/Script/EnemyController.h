@@ -6,6 +6,7 @@
 #include "EnemyManager.h"
 
 class ComponentAnimation;
+class ComponentCollider;
 
 enum class EnemyType
 {
@@ -35,6 +36,7 @@ public:
 	bool PointInNavMesh(float3& position, float3& next_position);
 	bool IsPointWalkable(float3& position);
 	void LookAndMoveToPoint(float3& position);
+	void SetVelocity(float3& position);
 
 protected:
 	void Move();
@@ -47,6 +49,9 @@ public:
 	GameObject* player = nullptr;
 	ComponentAnimation* animation = nullptr;
 	bool is_alive = true;
+
+	//GameObject* object_collider = nullptr;
+	ComponentCollider* collider = nullptr;
 
 protected:
 	EnemyType type;

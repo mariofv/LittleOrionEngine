@@ -30,6 +30,9 @@ public:
 	EnemyState* scream_state = nullptr;
 	EnemyState* pursue_state = nullptr;
 	EnemyState* attack_state = nullptr;
+
+public:
+
 };
 extern "C" SCRIPT_API Mushdoom* MushdoomDLL(); //This is how we are going to load the script
 #endif

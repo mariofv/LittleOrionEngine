@@ -90,3 +90,8 @@ void PlayerController::Load(const Config& config)
 	player = static_cast<unsigned>(config.GetUInt("Player", player));
 }
 
+void PlayerController::TakeDamage(float damage)
+{
+	health_points -= damage;
+}
+

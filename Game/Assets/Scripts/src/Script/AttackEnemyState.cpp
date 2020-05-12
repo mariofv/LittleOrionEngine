@@ -30,9 +30,12 @@ void AttackEnemyState::OnStateEnter()
 
 void AttackEnemyState::OnStateUpdate()
 {
-	if (enemy->animation->IsOnState("Pursue"))
+	if (!enemy->PlayerInRange())
 	{
-		Exit(enemy->pursue_state);
+		if (enemy->animation->GetCurrentClipPercentatge() >= 0.95f)
+		{
+			Exit(enemy->pursue_state);
+		}
 	}
 }
 
