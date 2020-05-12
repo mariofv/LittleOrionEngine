@@ -24,14 +24,20 @@ public:
 
 	Font() = default;
 	Font(uint32_t uuid) : Resource(uuid) {};
-	Font(uint32_t uuid, std::map<GLchar, Character> characters) : Resource(uuid), characters(characters) {};
+	Font(uint32_t uuid, std::map<GLchar, Character> characters);
 
 	~Font() = default;
 
 	Character GetCharacter(const char& c);
 
+	int GetMaxHeight() const;
+	int GetMaxAdvance() const;
+
 private:
 	std::map<GLchar, Character> characters;
+
+	int max_height = 0;
+	int max_advance = 0;
 };
 
 namespace ResourceManagement

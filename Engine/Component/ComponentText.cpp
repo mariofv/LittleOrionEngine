@@ -62,7 +62,6 @@ void ComponentText::Render(float4x4* projection)
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(vao);
 
-
 	float x = 0;
 	float y = 0;
 	float scale_factor = scale / 64.f;
@@ -72,7 +71,7 @@ void ComponentText::Render(float4x4* projection)
 	{
 		Font::Character character = font->GetCharacter(c);
 		float x_pos = x + character.bearing.x * scale_factor;
-		float y_pos = y - (character.glyph_size.y - character.bearing.y) * scale_factor;
+		float y_pos = y - (character.glyph_size.y - character.bearing.y + font->GetMaxHeight() * 0.5f) * scale_factor;
 
 		float width = character.glyph_size.x * scale_factor;
 		float height = character.glyph_size.y * scale_factor;

@@ -40,7 +40,7 @@ std::shared_ptr<Font> FontManager::Load(uint32_t uuid, const FileData& resource_
 
 	// Disable byte-alignment restriction
 	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
+	
 	for (GLubyte character = 0; character < 128; character++)
 	{
 		if (FT_Load_Char(face, character, FT_LOAD_RENDER))
@@ -80,8 +80,10 @@ std::shared_ptr<Font> FontManager::Load(uint32_t uuid, const FileData& resource_
 		glBindTexture(GL_TEXTURE_2D, 0);
 	}
 
+	std::shared_ptr<Font> loaded_font = std::make_shared<Font>(uuid, font_characters);
+
 	FT_Done_Face(face);
 	FT_Done_FreeType(ft);
 
-	return std::make_shared<Font>(uuid, font_characters);
+	return loaded_font;
 }
