@@ -70,9 +70,9 @@ void EnemyManager::AddEnemy(EnemyController* enemy)
 void EnemyManager::KillEnemy(EnemyController* enemy)
 {
 	//This method is called once the enemy animation ended
-	enemy->owner->SetEnabled(false);
+	enemy->collider->DisablePhysics(true);
 	enemy->owner->transform.SetTranslation(graveyard_position);
-
+	enemy->owner->SetEnabled(false);
 
 	//Reset enemy
 	enemy->ResetEnemy();
@@ -91,7 +91,9 @@ void EnemyManager::SpawnEnemy(const unsigned type, const float3& spawn_position)
 		{
 			enemy = enemies[i];
 			enemy->is_alive = true;
+			enemy->collider->DisablePhysics(true);
 			enemy->owner->transform.SetTranslation(spawn_position);
+			enemy->collider->DisablePhysics(false);
 			enemy->owner->SetEnabled(true);
 
 			++current_number_of_enemies_alive;

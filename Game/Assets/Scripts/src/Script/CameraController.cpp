@@ -121,7 +121,7 @@ void CameraController::ActivePlayer()
 void CameraController::Focus(float3 position_to_focus)
 {
 	current_time += App->time->delta_time;
-	float focus_progress = math::Min((current_time - start_focus_time) / 150.f, 1.f);
+	float focus_progress = math::Min((current_time - start_focus_time) / 20000.0f, 1.f);
 	float3 new_camera_position = owner->transform.GetTranslation().Lerp(position_to_focus, focus_progress);
 	owner->transform.SetTranslation(float3(new_camera_position.x, position_to_focus.y, new_camera_position.z));
 	is_focusing = focus_progress != 1;
@@ -131,7 +131,7 @@ void CameraController::Focus(float3 position_to_focus)
 void CameraController::FollowPlayer() 
 {
 	distance_x = abs(player1->transform.GetTranslation().x - owner->transform.GetTranslation().x);
-	if ( distance_x > 2.f && !is_focusing)
+	if ( distance_x > 1.f && !is_focusing)
 	{
 		start_focus_time = App->time->delta_time;
 		current_time = start_focus_time;

@@ -37,9 +37,6 @@ void PlayerAttack::Awake()
 	ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
 	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
 
-	//animation = (ComponentAnimation*)owner->GetComponent(Component::ComponentType::ANIMATION);
-	collider->SetEnabled(false);
-
 	animation = (ComponentAnimation*) owner->GetComponent(Component::ComponentType::ANIMATION);
 	collider_component = static_cast<ComponentCollider*>(collider->GetComponent(ComponentCollider::ColliderType::BOX));
 }
@@ -57,14 +54,14 @@ bool PlayerAttack::Attack(int player)
 
 	if(!is_attacking && !raycast_cast)
 	{
-		if (App->input->GetGameInputDown("Punch", static_cast<PlayerID>(player)))
+		if (App->input->GetGameInputDown("Punch", static_cast<PlayerID>(player - 1)))
 		{
 			animation->ActiveAnimation("punch");
 			//Active colliders of hands
 			raycast_cast = true;
 			current_damage_power = PUNCH_DAMAGE;
 		}
-		else if (App->input->GetGameInputDown("Kick", static_cast<PlayerID>(player)))
+		else if (App->input->GetGameInputDown("Kick", static_cast<PlayerID>(player - 1)))
 		{
 			animation->ActiveAnimation("kick");
 			//Active colliders of kick
@@ -76,7 +73,6 @@ bool PlayerAttack::Attack(int player)
 	if (raycast_cast && animation->GetCurrentClipPercentatge() > 0.5f)
 	{
 		ComputeCollisions();
-		collider->SetEnabled(false);
 		raycast_cast = false;
 	}
 
@@ -107,7 +103,7 @@ void PlayerAttack::ComputeCollisions() const
 			continue;
 		}
 
-		if (collider_component->DetectCollisionWith(enemy->collider_component))
+		if (collider_component->DetectCollisionWith(enemy->collider))
 		{
 			enemy->TakeDamage(current_damage_power);
 		}

@@ -28,12 +28,12 @@ public:
 	void InitPublicGameObjects();
 
 private:
-	float speed = 1.f;
+	float speed = 0.2f;
 	float rotation_speed = 0.01f;
 	float falling_factor = 1.0f;
 	bool is_jumping = false;
 	float current_y = 0.0f;
-	float jump_power = 0.50f;
+	float jump_power = 10.0f;
 	float3 movement_vector;
 	float3 gravity_vector;
 	ComponentCollider* collider = nullptr;
