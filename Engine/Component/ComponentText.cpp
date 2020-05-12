@@ -64,7 +64,7 @@ void ComponentText::Render(float4x4* projection)
 
 	float x = 0;
 	float y = 0;
-	float scale_factor = scale / 64.f;
+	float scale_factor = font_size / 64.f;
 
 	// Iterate through all characters
 	for (char const &c : text)
@@ -123,13 +123,16 @@ void ComponentText::Delete()
 void ComponentText::SpecializedSave(Config& config) const
 {
 	config.AddString(text, "Text");
-	config.AddFloat(scale, "Scale");
+	config.AddFloat(font_size, "FontSize");
+	config.AddUInt((uint32_t)horizontal_alignment, "HorizontalAlignment");
 }
 
 void ComponentText::SpecializedLoad(const Config& config)
 {
 	config.GetString("Text", text, "");
-	config.GetFloat("Scale", scale);
+	config.GetFloat("FontSize", font_size);
+	uint32_t horizontal_alignment_uint32 = config.GetUInt("HorizontalAlignment", 0);
+	horizontal_alignment = static_cast<HorizontalAlignment>(horizontal_alignment_uint32);
 }
 
 void ComponentText::SetText(const std::string& new_text)

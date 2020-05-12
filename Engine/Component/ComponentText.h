@@ -11,6 +11,13 @@ class Font;
 class ComponentText : public Component
 {
 public:
+	enum class HorizontalAlignment
+	{
+		LEFT,
+		CENTER,
+		RIGHT
+	};
+
 	ComponentText();
 	ComponentText(GameObject * owner);
 	~ComponentText() = default;
@@ -33,15 +40,16 @@ private:
 public:
 	//Text Inputs
 	std::string text = "Default";
-
-	float scale = 12.0f;
-	float text_width = 0;
-	float text_heigth = 0;
-
-	float3 font_color = float3::one;
+	HorizontalAlignment horizontal_alignment = HorizontalAlignment::LEFT;
 
 	uint32_t font_uuid = 0;
 	std::shared_ptr<Font> font = nullptr;
+
+	float font_size = 12.0f;
+	float3 font_color = float3::one;
+
+	float text_width = 0;
+	float text_heigth = 0;
 
 private:
 	GLuint program, vao, vbo;
