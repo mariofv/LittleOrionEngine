@@ -256,11 +256,13 @@
   <ItemGroup>
     <ClInclude Include="src\Script\DamageScript.h" />
     <ClInclude Include="src\Script\DebugModeScript.h" />
+    <ClInclude Include="src\Script\GodCamera.h" />
     <ClInclude Include="src\Script\AttackEnemyState.h" />
     <ClInclude Include="src\Script\PursueEnemyState.h" />
     <ClInclude Include="src\Script\ScreamEnemyState.h" />
     <ClInclude Include="src\Script\IdleEnemyState.h" />
     <ClInclude Include="src\Script\EnemyState.h" />
+    <ClInclude Include="src\Script\EventManager.h" />
     <ClInclude Include="src\Script\Mushdoom.h" />
     <ClInclude Include="src\Script\EnemyManager.h" />
     <ClInclude Include="src\Script\EnemyController.h" />
@@ -279,11 +281,13 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\DamageScript.cpp" />
+    <ClCompile Include="src\Script\GodCamera.cpp" />
     <ClCompile Include="src\Script\AttackEnemyState.cpp" />
     <ClCompile Include="src\Script\PursueEnemyState.cpp" />
     <ClCompile Include="src\Script\ScreamEnemyState.cpp" />
     <ClCompile Include="src\Script\IdleEnemyState.cpp" />
     <ClCompile Include="src\Script\EnemyState.cpp" />
+    <ClCompile Include="src\Script\EventManager.cpp" />
     <ClCompile Include="src\Script\Mushdoom.cpp" />
     <ClCompile Include="src\Script\EnemyManager.cpp" />
     <ClCompile Include="src\Script\EnemyController.cpp" />

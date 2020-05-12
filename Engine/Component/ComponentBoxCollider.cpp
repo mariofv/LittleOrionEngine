@@ -28,6 +28,7 @@ Component* ComponentBoxCollider::Clone(GameObject* owner, bool original_prefab) 
 		created_component = static_cast<ComponentBoxCollider*> (App->physics->CreateComponentCollider(collider_type, owner));
 	}
 	*created_component = *this;
+	created_component->SetConfiguration();
 	return created_component;
 }
 

@@ -32,8 +32,8 @@ void PlayerController::Awake()
 	const ComponentScript* component = owner->GetComponentScript("PlayerMovement");
 	player_movement = (PlayerMovement*)component->script;
 
-	const ComponentScript* component_attack = owner->GetComponentScript("PlayerAttack");
-	player_attack = (PlayerAttack*)component_attack->script;
+	//const ComponentScript* component_attack = owner->GetComponentScript("PlayerAttack");
+	//player_attack = (PlayerAttack*)component_attack->script;
 }
 
 // Use this for initialization
@@ -46,12 +46,16 @@ void PlayerController::Start()
 void PlayerController::Update()
 {
 
+
 	bool is_attacking = player_attack->Attack(player);
+
+	//bool is_attacking = player_attack->Attack();
+
 	
-	if(!is_attacking)
-	{
+	//if(!is_attacking)
+	//{
 		player_movement->Move(player);
-	}
+	//}
 
 }
 

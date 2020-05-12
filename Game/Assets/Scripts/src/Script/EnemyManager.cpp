@@ -33,7 +33,7 @@ EnemyManager::EnemyManager()
 // Use this for initialization before Start()
 void EnemyManager::Awake()
 {
-
+	InitSpawnPoints();
 }
 
 // Use this for initialization
@@ -47,9 +47,17 @@ void EnemyManager::Update()
 {
 	srand(time(NULL));
 
-	if(current_number_of_enemies_alive < max_enemies_alive && App->input->GetKeyDown(KeyCode::F))
+	if(!enemies_spawning_queue.empty() && current_number_of_enemies_alive < MAX_NUMBER_OF_MUSHDOOM)
 	{
-		SpawnEnemy(0, spawn_points[rand() % 3]);
+		for(auto it = enemies_spawning_queue.begin(); it != enemies_spawning_queue.end(); ++it)
+		{
+			if(CheckSpawnAvailability(*it))
+			{
+				SpawnEnemy(0, *it);
+				enemies_spawning_queue.erase(it);
+				break;
+			}
+		}
 	}
 }
 
@@ -95,6 +103,36 @@ void EnemyManager::SpawnEnemy(const unsigned type, const float3& spawn_position)
 	assert(enemy != nullptr);
 }
 
+void EnemyManager::SpawnWave(unsigned event, unsigned enemies_per_wave)
+{
+
+	switch (event)
+	{
+		case 0:
+			for(size_t i = 0; i < enemies_per_wave; ++i)
+			{
+				enemies_spawning_queue.emplace_back(spawn_points[0]);
+			}
+			break;
+		case 1:
+			for (size_t i = 0; i < enemies_per_wave; ++i)
+			{
+				int random_spawn = (rand() % 2) + 1;
+				enemies_spawning_queue.emplace_back(spawn_points[random_spawn]);
+			}
+			break;
+		case 2:
+			for (size_t i = 0; i < enemies_per_wave; ++i)
+			{
+				int random_spawn = (rand() % 2) + 3;
+				enemies_spawning_queue.emplace_back(spawn_points[random_spawn]);
+			}
+			break;
+		default:
+			return;
+	}
+}
+
 void EnemyManager::CreateEnemies()
 {
 	//For now we only have mushdoom enemy
@@ -109,7 +147,7 @@ void EnemyManager::CreateEnemies()
 		enemy->is_alive = false;
 		enemies.emplace_back(enemy);
 		enemy->owner->transform.SetTranslation(graveyard_position);
-		//enemy->owner->SetEnabled(false);
+		enemy->owner->SetEnabled(false);
 	}
 }
 
@@ -134,6 +172,31 @@ void EnemyManager::InitPublicGameObjects()
 		name_gameobjects.push_back(is_object);
 		go_uuids.push_back(0);
 	}
+}
+void EnemyManager::InitSpawnPoints()
+{
+	GameObject* spawn_go_dad = App->scene->GetGameObjectByName("Spawns");
+	for (size_t i = 0; i < spawn_go_dad->children.size(); ++i)
+	{
+		spawn_points[i] = spawn_go_dad->children[i]->transform.GetTranslation();
+	}
+}
+bool EnemyManager::CheckSpawnAvailability(float3 & spawn_position)
+{
+	for(const auto& enemy : enemies)
+	{
+		if(!enemy->is_alive)
+		{
+			continue;
+		}
+
+		if(enemy->owner->transform.GetTranslation().Distance(spawn_position) <= 10.0f)
+		{
+			return false;
+		}
+	}
+
+	return true;
 }
 //Use this for linking GO AND VARIABLES automatically if you need to save variables 
 // void EnemyManager::Save(Config& config) const

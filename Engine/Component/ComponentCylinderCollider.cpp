@@ -27,6 +27,7 @@ Component* ComponentCylinderCollider::Clone(GameObject* owner, bool original_pre
 		created_component = static_cast<ComponentCylinderCollider*> (App->physics->CreateComponentCollider(collider_type, owner));
 	}
 	*created_component = *this;
+	created_component->SetConfiguration();
 	return created_component;
 }
 

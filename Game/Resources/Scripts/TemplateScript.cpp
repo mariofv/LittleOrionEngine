@@ -13,7 +13,6 @@
 #include "imgui.h"
 
 
-
 TemplateScript* TemplateScriptDLL()
 {
 	TemplateScript* instance = new TemplateScript();

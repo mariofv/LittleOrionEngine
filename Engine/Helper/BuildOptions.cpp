@@ -49,7 +49,7 @@ bool BuildOptions::LoadOptions()
 
 
 	std::string serialized_scene_string = scene_file_data;
-	free(scene_file_data);
+	delete[] scene_file_data;
 
 	Config build_config(serialized_scene_string);
 	std::vector<Config> build_options_configs;

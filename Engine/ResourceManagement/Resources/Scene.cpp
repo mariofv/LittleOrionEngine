@@ -90,7 +90,7 @@ void Scene::Load(bool from_file)
 		size_t readed_bytes = scene_data.size;
 		char* scene_file_data = (char*)scene_data.buffer;
 		std::string serialized_scene_string = scene_file_data;
-		free(scene_file_data);
+		delete[] scene_file_data;
 
 		Config scene_config(serialized_scene_string);
 	}

@@ -867,13 +867,15 @@ bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 	}
 	ImGui::Separator();
 
-	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.1F, 1000.F)) {
+	if (ImGui::DragFloat("Mass", &collider->mass, 1.0F, 0.1F, 1000.F))
+	{
 		collider->SetMass(collider->mass);
 	}
-	if (ImGui::DragFloat("Friction", &collider->friction, 1.0F, 0.1F, 1000.F)) {
+	if (ImGui::DragFloat("Friction", &collider->friction, 0.1F, 0.1F, 1.F)) {
 		collider->UpdateFriction();
 	}
-	if (ImGui::DragFloat("Rolling friction", &collider->rolling_friction, 1.0F, 0.1F, 2000.F)) {
+	if (ImGui::DragFloat("Rolling friction", &collider->rolling_friction, 1.0F, 0.1F, 2000.F))
+	{
 		collider->SetRollingFriction();
 	}
 	if (ImGui::Checkbox("Visualize", &collider->visualize))

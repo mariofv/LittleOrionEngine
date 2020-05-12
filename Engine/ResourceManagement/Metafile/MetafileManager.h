@@ -16,11 +16,13 @@ public:
 
 	Metafile* CreateMetafile(const std::string& asset_file_path_string, ResourceType resource_type);
 	Metafile* CreateMetafile(Path& asset_file_path, ResourceType resource_type, uint32_t uuid = 0);
+
+	void SaveMetafile(Metafile* created_metafile, Path& asset_file_path) const;
 	
 	Metafile* GetMetafile(const Path& metafile_path);
 
-	std::string GetMetafilePath(const Path& file_path);
-	std::string GetMetafilePath(const std::string& file_path_string);
+	std::string GetMetafilePath(const Path& file_path) const;
+	std::string GetMetafilePath(const std::string& file_path_string) const;
 
 	static std::string GetMetafileExportedFolder(const Metafile& metafile);
 	static std::string GetUUIDExportedFolder(uint32_t uuid);
@@ -36,11 +38,10 @@ public:
 	bool IsMetafileConsistent(const Path& metafile_path);
 	bool IsMetafileConsistent(const Metafile& metafile);
 
-	/*
-		Cleaning inconsistencies will delete if exist imported and exported path, along the metafile
-	*/
-	void DeleteMetafileInconsistencies(const Path& metafile_path);
-	void DeleteMetafileInconsistencies(const Metafile& metafile);
+	bool IsMetafileMoved(const Path& metafile_path);
+
+
+	void RefreshMetafile(const Path& metafile_path);
 
 private:
 	std::unordered_map<std::string, Metafile*> metafiles;

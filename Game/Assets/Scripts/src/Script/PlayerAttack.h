@@ -4,6 +4,7 @@
 #include "EnemyManager.h"
 
 class ComponentAnimation;
+class ComponentCollider;
 
 const float PUNCH_DAMAGE = 33.0f;
 const float KICK_DAMAGE = 45.0f;
@@ -25,11 +26,12 @@ public:
 	//void Load(const Config& config) override;
 private:	
 	EnemyManager* enemy_manager = nullptr;
-	ComponentAnimation* animation = nullptr;	//Temporal as we dont have physics
+	ComponentAnimation* animation = nullptr;
 	GameObject* collider = nullptr;
+	ComponentCollider* collider_component = nullptr;
 	unsigned current_damage_power = 0;
 	bool is_attacking = false;
-	bool collider_enabled = false;
+	bool raycast_cast = false;
 };
 extern "C" SCRIPT_API PlayerAttack* PlayerAttackDLL(); //This is how we are going to load the script
 #endif

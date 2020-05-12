@@ -87,6 +87,12 @@
     <ClInclude Include="src\Script\ScreamEnemyState.h">
       <Filter>src\Script\Enemy\States</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\GodCamera.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\EventManager.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -154,6 +160,12 @@
     </ClCompile>
     <ClCompile Include="src\Script\ScreamEnemyState.cpp">
       <Filter>src\Script\Enemy\States</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\GodCamera.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\EventManager.cpp">
+      <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

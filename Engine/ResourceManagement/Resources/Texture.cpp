@@ -6,13 +6,13 @@
 #include <IL/ilu.h>
 #include <IL/ilut.h>
 
-Texture::Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, TextureOptions& options)
+Texture::Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, int num_channels, TextureOptions& options)
 	: width(width), height(height)
 	, Resource(uuid)
 {
 	this->data.resize(image_size);
 	memcpy(&this->data.front(), data, image_size);
-	LoadInMemory(options);
+	LoadInMemory(options, num_channels);
 }
 
 
@@ -21,7 +21,7 @@ Texture::~Texture()
 	glDeleteTextures(1, &opengl_texture);
 }
 
-void Texture::LoadInMemory(TextureOptions& options)
+void Texture::LoadInMemory(TextureOptions& options, int num_channels)
 {
 	glGenTextures(1, &opengl_texture);
 	glBindTexture(GL_TEXTURE_2D, opengl_texture);
@@ -39,9 +39,10 @@ void Texture::LoadInMemory(TextureOptions& options)
 	mag_filter = GL_LINEAR;
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, mag_filter);
 
+	GLint channels = num_channels > 3 ? GL_RGBA : GL_RGB;
 	if (options.texture_type == TextureType::NORMAL)
 	{
-		glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, width, height, 0, GL_RGBA, GL_UNSIGNED_BYTE, data.data());
+		glTexImage2D(GL_TEXTURE_2D, 0, channels, width, height, 0, channels, GL_UNSIGNED_BYTE, data.data());
 	}
 	else 
 	{

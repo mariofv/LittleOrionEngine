@@ -29,6 +29,8 @@ public:
 private:
 	PlayerMovement* player_movement = nullptr;
 	PlayerAttack* player_attack = nullptr;
+
+	//unsigned player = 0;
 	unsigned int player = 1;
 	float health_points = 100.0f;
 };

@@ -38,7 +38,8 @@ bool ModuleFileSystem::Init()
 		return false;
 	}
 	
-	RefreshPathMap();
+	CreatePathMap();
+
 #if !GAME
 	assets_folder_path = GetPath(ASSETS_PATH);
 #endif
@@ -62,11 +63,42 @@ bool ModuleFileSystem::CleanUp()
 	return PHYSFS_deinit();
 }
 
-void ModuleFileSystem::AddPath(Path* path)
+Path* ModuleFileSystem::AddPath(const std::string& path)
 {
-	assert(Exists(path->GetFullPath()));
-	assert(paths.find(path->GetFullPath()) == paths.end());
-	paths[path->GetFullPath()] = path;
+	assert(Exists(path));
+	assert(paths.find(path) == paths.end());
+
+	Path* added_path = new Path(path);
+	paths[path] = added_path;
+
+	return added_path;
+}
+
+void ModuleFileSystem::RemovePath(Path* path)
+{
+	assert(!Exists(path->GetFullPath()));
+	assert(paths.find(path->GetFullPath()) != paths.end());
+	
+	std::vector<Path*> pathes_to_delete;
+	std::stack<Path*> pathes_to_check;
+	pathes_to_check.push(path);
+	while (!pathes_to_check.empty())
+	{
+		Path* current_path = pathes_to_check.top();
+		pathes_to_check.pop();
+		pathes_to_delete.push_back(current_path);
+
+		for (auto& child : current_path->children)
+		{
+			pathes_to_check.push(child);
+		}
+	}
+	
+	for (auto& path_to_delete : pathes_to_delete)
+	{
+		paths.erase(path_to_delete->GetFullPath());
+		delete path_to_delete;
+	}
 }
 
 Path* ModuleFileSystem::GetPath(const std::string& path)
@@ -142,14 +174,23 @@ bool ModuleFileSystem::Remove(Path* path)
 	assert(path != nullptr);
 	if (path->IsMeta())
 	{
-		std::string imported_file_path = path->GetFullPath().substr(0, path->GetFullPath().find_last_of("."));
-		PHYSFS_delete(imported_file_path.c_str());
+		std::string imported_file_path = path->GetFullPathWithoutExtension();
+		if (Exists(imported_file_path))
+		{
+			Path* imported_path = GetPath(imported_file_path);
+			bool success = PHYSFS_delete(imported_file_path.c_str());
+			if (success)
+			{
+				imported_path->parent->RemoveChild(imported_path);
+				RemovePath(imported_path);
+			}
+		}
 	}
 	bool success = PHYSFS_delete(path->GetFullPath().c_str()) != 0;
 	if (success)
 	{
-		path->parent->Refresh();
-		RefreshPathMap();
+		path->parent->RemoveChild(path);
+		RemovePath(path);
 	}
 	return success;
 }
@@ -173,7 +214,6 @@ Path* ModuleFileSystem::MakeDirectory(const std::string& new_directory_full_path
 	parent_path->children.push_back(created_dir);
 	created_dir->parent = parent_path;
 	paths[created_dir->GetFullPath()] = created_dir;
-
 	return created_dir;
 }
 
@@ -187,8 +227,28 @@ Path* ModuleFileSystem::Copy(const std::string& source_path, const std::string& 
 	std::string file_name = copied_file_name == "" ? source_path_object->GetFilename() : copied_file_name;
 	Path* copied_file_path = destination_path_object->Save(file_name.c_str(), source_file_data, false);
 	
-	free((char*)source_file_data.buffer);
 	return copied_file_path;
+}
+
+Path* ModuleFileSystem::Move(const std::string& source_path, const std::string& destination_path)
+{
+	Path* copied_file_path = Copy(source_path, destination_path);
+	Remove(source_path);
+	return copied_file_path;
+}
+
+Path * ModuleFileSystem::Rename(Path * file_to_rename, const std::string & new_name)
+{
+	if (file_to_rename->IsMeta())
+	{
+		Path* assets_file_path = App->filesystem->GetPath(file_to_rename->GetFullPathWithoutExtension());
+		std::string assets_new_name = new_name.substr(0, new_name.find_last_of("."));
+		App->filesystem->Copy(assets_file_path->GetFullPath(), assets_file_path->GetParent()->GetFullPath(), assets_new_name.substr());
+		Path* new_metafile = App->filesystem->Copy(file_to_rename->GetFullPath(), file_to_rename->GetParent()->GetFullPath(), new_name);
+		App->resources->metafile_manager->RefreshMetafile(*new_metafile);
+		Remove(file_to_rename);
+	}
+	return nullptr;
 }
 
 bool ModuleFileSystem::CreateMountedDir(const std::string& directory)
@@ -207,11 +267,9 @@ bool ModuleFileSystem::MountDirectory(const std::string& directory) const
 	return true;
 }
 
-void ModuleFileSystem::RefreshPathMap()
+void ModuleFileSystem::CreatePathMap()
 {
 	delete root_path;
-	delete assets_folder_path;
-	delete library_folder_path;
 
 	paths.clear();
 

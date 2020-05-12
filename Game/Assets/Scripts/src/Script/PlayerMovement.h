@@ -3,6 +3,9 @@
 
 #include "Script.h"
 
+#include "MathGeoLib.h"
+
+class ComponentCamera;
 class ComponentCollider;
 
 class PlayerMovement : public Script
@@ -17,20 +20,31 @@ public:
 	void OnInspector(ImGuiContext*) override;
 
 	void Move(int player);
-	void Fall();
-	void Dash();
+	void Jump();
+	bool IsGrounded();
+
+	bool IsInside(float3 transform);
+
+	void InitPublicGameObjects();
 
 private:
-	float speed = 5.0f;
+	float speed = 1.f;
 	float rotation_speed = 0.01f;
 	float falling_factor = 1.0f;
 	bool is_jumping = false;
 	float current_y = 0.0f;
-	float jump_power = 10.0f;
+	float jump_power = 0.50f;
 	float3 movement_vector;
 	float3 gravity_vector;
 	ComponentCollider* collider = nullptr;
+
+	GameObject* camera = nullptr;
+	ComponentCamera* game_camera = nullptr;
+	bool is_inside = true;
+	bool is_grounded = false;
+
 	float3 new_translation;
+	GameObject* second_player = nullptr;
 };
 extern "C" SCRIPT_API PlayerMovement* PlayerMovementDLL(); //This is how we are going to load the script
 #endif

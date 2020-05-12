@@ -49,6 +49,8 @@ protected:
 public:
 	GameObject* player = nullptr;
 	ComponentAnimation* animation = nullptr;
+	ComponentCollider* collider_component = nullptr;
+
 	bool is_alive = true;
 
 	//GameObject* object_collider = nullptr;
