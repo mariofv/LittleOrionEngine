@@ -60,7 +60,7 @@ void ModuleLight::RenderDirectionalLight(const float3& mesh_position)
 
 		APP_LOG_INFO("%f", light->owner->transform.GetTranslation().x);
 
-		//App->cameras->dir_light_game_object->transform = light->owner->transform;
+		App->cameras->dir_light_game_object->transform = light->owner->transform;
 		//App->cameras->dir_light_game_object->transform.SetTranslation(light->owner->transform.GetTranslation());
 		//App->cameras->directional_light_camera->SetPosition(App->cameras->dir_light_game_object->transform.GetTranslation());
 

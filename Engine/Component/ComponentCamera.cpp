@@ -118,7 +118,10 @@ void ComponentCamera::Update()
 	camera_frustum.up = owner_rotation * float3::unitY;
 	camera_frustum.front = owner_rotation * float3::unitZ;
 
-
+	if (camera_frustum.type == FrustumType::OrthographicFrustum)
+	{
+		SetOrthographicSize(float2(camera_frustum.orthographicWidth, camera_frustum.orthographicHeight));
+	}
 
 
 	GenerateMatrices();

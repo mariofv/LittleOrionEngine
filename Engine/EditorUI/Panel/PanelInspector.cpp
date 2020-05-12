@@ -35,7 +35,9 @@ void PanelInspector::Render()
 	}
 	
 	ImGui::Image((void *)App->cameras->directional_light_camera->depth_map, ImVec2(200, 200), ImVec2(0, 1),ImVec2(1, 0));
-	ImGui::SliderFloat("x pos", &App->cameras->xpos, -10, 10);
-	App->cameras->dir_light_game_object->transform.SetTranslation(float3(App->cameras->xpos, 0, 0));
+	ImGui::SliderFloat("Ortho camera width", &App->cameras->directional_light_camera->camera_frustum.orthographicWidth, 0, 100);
+	ImGui::SliderFloat("Ortho camera height", &App->cameras->directional_light_camera->camera_frustum.orthographicHeight, 0, 100);
+
+	//App->cameras->dir_light_game_object->transform.SetTranslation(float3(App->cameras->xpos, 0, 0));
 	ImGui::End();
 }
