@@ -1,5 +1,6 @@
 #include "ComponentCanvas.h"
 
+#include "EditorUI/Panel/PanelGame.h"
 #include "Component/ComponentCanvasRenderer.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -65,8 +66,8 @@ void ComponentCanvas::Render(bool scene_mode)
 	canvas_width = App->window->GetWidth();
 	window_height = App->window->GetHeight();
 #else
-	canvas_width = App->editor->scene_panel->scene_window_content_area_width;
-	canvas_height = App->editor->scene_panel->scene_window_content_area_height;
+	canvas_width = App->editor->game_panel->game_window_content_area_width;
+	canvas_height = App->editor->game_panel->game_window_content_area_height;
 #endif
 
 	float4x4 projection_view;
