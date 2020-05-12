@@ -106,7 +106,7 @@ void PlayerMovement::Move(int player_id)
 	if (App->input->GetKeyDown(KeyCode::Space))
 	{
 		new_transform += float3(0.0F, jump_power, 0.0F);
-		collider->AddForce(new_transform);
+		collider->Jump(new_transform);
 	}
 	
 	collider->SetVelocity(new_transform, speed);

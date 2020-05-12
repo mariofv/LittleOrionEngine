@@ -19,6 +19,7 @@ ComponentCollider::ComponentCollider(GameObject* owner, ColliderType collider_ty
 			box_size = btVector3(owner->aabb.original_box.Size().x / 2,
 				owner->aabb.original_box.Size().y / 2,
 				owner->aabb.original_box.Size().z / 2);
+			
 		}
 		else
 		{
@@ -43,10 +44,16 @@ void ComponentCollider::CommonAssign(const ComponentCollider& component_to_copy)
 	mass = component_to_copy.mass;
 	scale = component_to_copy.scale;
 	box_size = component_to_copy.box_size;
+	x_axis = component_to_copy.x_axis;
+	y_axis = component_to_copy.y_axis;
+	z_axis = component_to_copy.z_axis;
+	friction = component_to_copy.friction;
+	rolling_friction = component_to_copy.rolling_friction;
 	visualize = component_to_copy.visualize;
 	detect_collision = component_to_copy.detect_collision;
 	is_attached = component_to_copy.is_attached;
 	is_static = component_to_copy.is_static;
+	disable_physics = component_to_copy.disable_physics;
 	AddBody();
 }
 
@@ -94,13 +101,7 @@ void ComponentCollider::Load(const Config & config)
 	friction = config.GetFloat("Friction", 1.0F);
 	rolling_friction = config.GetFloat("Rolling_friction", 1.0F);
 	AddBody();
-	if (is_static) { SetStatic(); }
-	if (!visualize) { SetVisualization(); }
-	SetRotationAxis();
-	if (!detect_collision) { SetCollisionDetection(); }
-	if (disable_physics || !active) { DisablePhysics(); }
-	UpdateFriction();
-	SetRollingFriction();
+	SetConfiguration();
 
 }
 
@@ -140,6 +141,15 @@ btRigidBody* ComponentCollider::AddBody()
 	return body;
 }
 
+ENGINE_API void ComponentCollider::MoveWhileAir(float3 & velocity)
+{
+	if (abs(velocity.x) > 0 || abs(velocity.z) > 0)
+	{
+		velocity.Normalize();
+		body->applyCentralImpulse(btVector3(velocity.x*0.1, 0, 0));
+	}
+}
+
 void ComponentCollider::MoveBody()
 {
 	btTransform trans;
@@ -162,12 +172,13 @@ void ComponentCollider::UpdateCommonDimensions()
 	Quat global_rotation = owner->transform.GetGlobalRotation();
 	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x , global_rotation.y , global_rotation.z , global_rotation.w ), btVector3(global_translation.x, global_translation.y, global_translation.z)));
 	body->setMotionState(motion_state);
-
+	
 	if (is_attached)
 	{
 		deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
 	}
 	App->physics->world->updateSingleAabb(body);
+
 }
 
 void ComponentCollider::SetMass(float new_mass)
@@ -306,7 +317,7 @@ void ComponentCollider::SetRotationAxis()
 	body->setAngularFactor(btVector3(int(x_axis), int(y_axis), int(z_axis)));
 }
 
-void ComponentCollider::AddForce(float3& force)
+void ComponentCollider::Jump(float3& force)
 {
 	body->applyCentralForce(btVector3(force.x, force.y, force.z));
 }
@@ -338,6 +349,17 @@ void ComponentCollider::UpdateFriction()
 void ComponentCollider::SetRollingFriction()
 {
 	body->setRollingFriction(rolling_friction);
+}
+
+void ComponentCollider::SetConfiguration()
+{
+	if (is_static) { SetStatic(); }
+	if (!visualize) { SetVisualization(); }
+	SetRotationAxis();
+	if (!detect_collision) { SetCollisionDetection(); }
+	if (disable_physics || !active) { DisablePhysics(); }
+	UpdateFriction();
+	SetRollingFriction();
 }
 
 void ComponentCollider::SetVelocity(float3& velocity, float speed)
@@ -373,4 +395,5 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 		trans.setRotation(transrot);
 		body->setWorldTransform(trans);
 	}
+
 }

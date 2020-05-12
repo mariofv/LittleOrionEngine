@@ -33,8 +33,10 @@ public:
 	virtual void Scale() {}
 
 	btRigidBody* AddBody();
-	ENGINE_API void AddForce(float3& force);
+	ENGINE_API void Jump(float3& force);
+	ENGINE_API void MoveWhileAir(float3& velocity);
 	ENGINE_API void SetVelocity(float3& velocity, float speed);
+
 	void MoveBody();
 	void SetMass(float new_mass);
 	void SetVisualization();
@@ -47,6 +49,8 @@ public:
 	void DisablePhysics();
 	void UpdateFriction();
 	void SetRollingFriction();
+	void SetConfiguration();
+
 
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
