@@ -249,7 +249,7 @@ void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> con
 void ModuleScriptManager::CheckGameplayFolderStatus()
 {
 #if !GAME
-	if(!hot_reloading)
+	if(!hot_reloading && !App->time->isGameRunning())
 	{
 		dll->CheckGameplayFolderStatus();
 	}
