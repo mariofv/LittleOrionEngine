@@ -43,7 +43,7 @@ bool ModuleAudio::Init()
 		APP_LOG_ERROR("Could not initialize the Sound Engine.");
 		return false;
 	}
-	init_sound_bank = SoundManager::Init();
+	//init_sound_bank = SoundManager::Init();
 	if (!AK::SoundEngine::RegisterGameObj(main_sound_gameobject))
 	{
 		APP_LOG_ERROR("Unable to register the gameobject");

@@ -71,4 +71,3 @@ namespace ResourceManagement
 }
 
 #endif // !_RESOURCE_H_
-
