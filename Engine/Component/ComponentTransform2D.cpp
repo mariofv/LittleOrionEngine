@@ -3,6 +3,29 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleWindow.h"
 
+const std::array<AnchorPreset, 16> ComponentTransform2D::anchor_presets =
+{
+	AnchorPreset{ AnchorPreset::AnchorPresetType::LEFT_HORIZONTAL_TOP_VERTICAL, float2(0.f, 1.f), float2(0.f, 1.f) },
+	AnchorPreset{ AnchorPreset::AnchorPresetType::CENTER_HORIZONTAL_TOP_VERTICAL, float2(0.5f, 1.f), float2(0.5f, 1.f) },
+	AnchorPreset{ AnchorPreset::AnchorPresetType::RIGHT_HORIZONTAL_TOP_VERTICAL, float2(1.f, 1.f), float2(1.f, 1.f) },
+	AnchorPreset{ AnchorPreset::AnchorPresetType::STRETCH_HORIZONTAL_TOP_VERTICAL, float2(0.f, 1.f), float2(1.f, 1.f) },
+
+	AnchorPreset{ AnchorPreset::AnchorPresetType::LEFT_HORIZONTAL_CENTER_VERTICAL, float2(0.f, 0.5f), float2(0.f, 0.5f) },
+	AnchorPreset{ AnchorPreset::AnchorPresetType::CENTER_HORIZONTAL_CENTER_VERTICAL, float2(0.5f, 0.5f), float2(0.5f, 0.5f) },
+	AnchorPreset{ AnchorPreset::AnchorPresetType::RIGHT_HORIZONTAL_CENTER_VERTICAL, float2(1.f, 0.5f), float2(1.f, 0.5f) },
+	AnchorPreset{ AnchorPreset::AnchorPresetType::STRETCH_HORIZONTAL_CENTER_VERTICAL, float2(0.f, 0.5f), float2(1.f, 0.5f) },
+
+	AnchorPreset{ AnchorPreset::AnchorPresetType::LEFT_HORIZONTAL_BOTTOM_VERTICAL, float2(0.f, 0.f), float2(0.f, 0.f) },
+	AnchorPreset{ AnchorPreset::AnchorPresetType::CENTER_HORIZONTAL_BOTTOM_VERTICAL, float2(0.5f, 0.f), float2(0.5f, 0.f) },
+	AnchorPreset{ AnchorPreset::AnchorPresetType::RIGHT_HORIZONTAL_BOTTOM_VERTICAL, float2(1.f, 0.f), float2(1.f, 0.f) },
+	AnchorPreset{ AnchorPreset::AnchorPresetType::STRETCH_HORIZONTAL_BOTTOM_VERTICAL, float2(0.f, 0.f), float2(1.f, 0.f) },
+
+	AnchorPreset{ AnchorPreset::AnchorPresetType::LEFT_HORIZONTAL_STRETCH_VERTICAL, float2(0.f, 0.f), float2(0.f, 1.f) },
+	AnchorPreset{ AnchorPreset::AnchorPresetType::CENTER_HORIZONTAL_STRETCH_VERTICAL, float2(0.5f, 0.f), float2(0.5f, 1.f) },
+	AnchorPreset{ AnchorPreset::AnchorPresetType::RIGHT_HORIZONTAL_STRETCH_VERTICAL, float2(1.f, 0.f), float2(1.f, 1.f) },
+	AnchorPreset{ AnchorPreset::AnchorPresetType::STRETCH_HORIZONTAL_STRETCH_VERTICAL, float2(0.f, 0.f), float2(1.f, 1.f) }
+};
+
 ComponentTransform2D::ComponentTransform2D() : ComponentTransform(ComponentType::TRANSFORM2D)
 {
 }
@@ -169,11 +192,51 @@ float2 ComponentTransform2D::ComputePivotPosition(float2 pivot_point)
 	return float2(pivot_position_x, pivot_position_y);
 }
 
+
+void ComponentTransform2D::SetAnchorPreset(AnchorPreset::AnchorPresetType new_anchor_preset)
+{
+	for (auto& anchor_preset_struct : anchor_presets)
+	{
+		if (anchor_preset_struct.type == new_anchor_preset)
+		{
+			anchor_preset = new_anchor_preset;
+			SetMinAnchor(anchor_preset_struct.min_anchor);
+			SetMaxAnchor(anchor_preset_struct.max_anchor);
+			return;
+		}
+	}
+}
+
+AnchorPreset::AnchorPresetType ComponentTransform2D::GetAnchorPreset() const
+{
+	return anchor_preset;
+}
+
+void ComponentTransform2D::UpdateAnchorPreset()
+{
+	for (auto& anchor_preset_struct : anchor_presets)
+	{
+		if (
+			anchor_preset_struct.min_anchor.x == min_anchor.x
+			&& anchor_preset_struct.min_anchor.y == min_anchor.y
+			&& anchor_preset_struct.max_anchor.x == max_anchor.x
+			&& anchor_preset_struct.max_anchor.y == max_anchor.y
+		)
+		{
+			anchor_preset = anchor_preset_struct.type;
+			return;
+		}
+	}
+
+	anchor_preset = AnchorPreset::AnchorPresetType::CUSTOM;
+}
+
 void ComponentTransform2D::SetMinAnchor(const float2& new_min_anchor)
 {
 	min_anchor = new_min_anchor;
 	float2 new_anchor_position = ComputeAnchorPosition(new_min_anchor, max_anchor);
 	ChangeAnchorSpace(new_anchor_position);
+	UpdateAnchorPreset();
 }
 
 void ComponentTransform2D::SetMaxAnchor(const float2& new_max_anchor)
@@ -181,6 +244,7 @@ void ComponentTransform2D::SetMaxAnchor(const float2& new_max_anchor)
 	max_anchor = new_max_anchor;
 	float2 new_anchor_position = ComputeAnchorPosition(min_anchor, new_max_anchor);
 	ChangeAnchorSpace(new_anchor_position);
+	UpdateAnchorPreset();
 }
 
 void ComponentTransform2D::GenerateAnchorPosition()

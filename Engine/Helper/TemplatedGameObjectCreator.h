@@ -16,7 +16,10 @@ public:
 	~TemplatedGameObjectCreator() = default;
 
 	static GameObject* CreatePrimitive(CoreResource resource_type);
-	static GameObject* CreateUIElement(Component::ComponentType ui_type);
+
+	static GameObject* CreateUIImage();
+	static GameObject* CreateUIButton();
+	static GameObject* CreateUIText();
 
 private:
 	static std::string GetCoreResourceName(CoreResource resource_type);

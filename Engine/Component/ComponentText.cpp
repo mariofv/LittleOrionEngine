@@ -132,6 +132,11 @@ void ComponentText::SpecializedLoad(const Config& config)
 	config.GetFloat("Scale", scale);
 }
 
+void ComponentText::SetText(const std::string& new_text)
+{
+	text = new_text;
+}
+
 void ComponentText::SetFont(uint32_t font_uuid)
 {
 	this->font_uuid = font_uuid;

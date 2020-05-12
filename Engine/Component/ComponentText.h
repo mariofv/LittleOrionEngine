@@ -24,6 +24,7 @@ public:
 
 	void Render(float4x4* projection);
 
+	void SetText(const std::string& new_text);
 	void SetFont(uint32_t font_uuid);
 
 private:

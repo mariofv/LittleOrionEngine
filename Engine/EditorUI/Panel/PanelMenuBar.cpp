@@ -173,16 +173,16 @@ void PanelMenuBar::ShowGameObjectMenu()
 			
 			if (ImGui::Selectable("Text"))
 			{
-				TemplatedGameObjectCreator::CreateUIElement(Component::ComponentType::UI_TEXT);
+				TemplatedGameObjectCreator::CreateUIText();
 			}
 			if (ImGui::Selectable("Image"))
 			{
-				TemplatedGameObjectCreator::CreateUIElement(Component::ComponentType::UI_IMAGE);
+				TemplatedGameObjectCreator::CreateUIImage();
 			}
 			ImGui::Separator();
 			if (ImGui::Selectable("Button"))
 			{
-				TemplatedGameObjectCreator::CreateUIElement(Component::ComponentType::UI_BUTTON);
+				TemplatedGameObjectCreator::CreateUIButton();
 				
 			}
 			ImGui::EndMenu();

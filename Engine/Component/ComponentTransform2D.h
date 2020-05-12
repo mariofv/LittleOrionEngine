@@ -5,6 +5,40 @@
 
 #include "ComponentTransform.h"
 
+#include <array>
+
+struct AnchorPreset
+{
+	enum class AnchorPresetType
+	{
+		LEFT_HORIZONTAL_TOP_VERTICAL,
+		CENTER_HORIZONTAL_TOP_VERTICAL,
+		RIGHT_HORIZONTAL_TOP_VERTICAL,
+		STRETCH_HORIZONTAL_TOP_VERTICAL,
+
+		LEFT_HORIZONTAL_CENTER_VERTICAL,
+		CENTER_HORIZONTAL_CENTER_VERTICAL,
+		RIGHT_HORIZONTAL_CENTER_VERTICAL,
+		STRETCH_HORIZONTAL_CENTER_VERTICAL,
+
+		LEFT_HORIZONTAL_BOTTOM_VERTICAL,
+		CENTER_HORIZONTAL_BOTTOM_VERTICAL,
+		RIGHT_HORIZONTAL_BOTTOM_VERTICAL,
+		STRETCH_HORIZONTAL_BOTTOM_VERTICAL,
+
+		LEFT_HORIZONTAL_STRETCH_VERTICAL,
+		CENTER_HORIZONTAL_STRETCH_VERTICAL,
+		RIGHT_HORIZONTAL_STRETCH_VERTICAL,
+		STRETCH_HORIZONTAL_STRETCH_VERTICAL,
+
+		CUSTOM
+	};
+
+	AnchorPresetType type;
+	float2 min_anchor;
+	float2 max_anchor;
+};
+
 class ComponentTransform2D : public ComponentTransform
 {
 public:
@@ -48,6 +82,10 @@ public:
 	void GeneratePivotPosition();
 	float2 ComputePivotPosition(float2 pivot_point);
 
+	void SetAnchorPreset(AnchorPreset::AnchorPresetType new_anchor_preset);
+	AnchorPreset::AnchorPresetType GetAnchorPreset() const;
+	void UpdateAnchorPreset();
+
 	void SetMinAnchor(const float2& new_min_anchor);
 	void SetMaxAnchor(const float2& new_min_anchor);
 	void ChangeAnchorSpace(const float2& new_anchor_matrix);
@@ -73,6 +111,8 @@ public:
 	Rect rect;
 
 private:
+	AnchorPreset::AnchorPresetType anchor_preset = AnchorPreset::AnchorPresetType::CENTER_HORIZONTAL_CENTER_VERTICAL;
+
 	float2 pivot = float2(0.5f);
 	float2 pivot_position = float2::zero;
 
@@ -81,6 +121,9 @@ private:
 
 	float2 anchor_position = float2::zero;
 
+	static const std::array<AnchorPreset, 16> anchor_presets;
+
 	friend class PanelTransform;
 };
+
 #endif //_COMPONENTTRANSFORM2D_H_
