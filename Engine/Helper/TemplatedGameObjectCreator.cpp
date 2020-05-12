@@ -95,6 +95,8 @@ GameObject* TemplatedGameObjectCreator::CreateUIText()
 	created_text->name = Component::GetComponentTypeName(Component::ComponentType::UI_TEXT);
 	created_text->transform_2d.SetSize(float2(160, 30));
 	ComponentText* component_text = static_cast<ComponentText*>(created_text->CreateComponent(Component::ComponentType::UI_TEXT));
+	component_text->SetFont((uint32_t)CoreResource::DEFAULT_FONT);
+	component_text->SetFontSize(12);
 	component_text->SetText("New Text");
 	component_text->horizontal_alignment = ComponentText::HorizontalAlignment::CENTER;
 

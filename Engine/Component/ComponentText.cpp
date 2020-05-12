@@ -17,7 +17,8 @@ ComponentText::ComponentText() : Component(ComponentType::UI_TEXT)
 ComponentText::ComponentText(GameObject * owner) : Component(owner, ComponentType::UI_TEXT)
 {
 	InitData();
-	ComputeTextLines();
+	SetFont((uint32_t)CoreResource::DEFAULT_FONT);
+	SetFontSize(12);
 }
 
 void ComponentText::InitData()
@@ -46,14 +47,21 @@ void ComponentText::InitData()
 	glVertexAttribPointer(0, 4, GL_FLOAT, GL_FALSE, 4 * sizeof(GLfloat), (GLvoid*)0);
 	glBindBuffer(GL_ARRAY_BUFFER, 0);
 	glBindVertexArray(0);
-
-	SetFont((uint32_t)CoreResource::DEFAULT_FONT);
-	SetFontSize(12);
 }
 
+void ComponentText::Update()
+{
+	ComputeTextLines();
+}
+
+//TODO: Improve this shit
 void ComponentText::Render(float4x4* projection)
 {	
 	if (font_uuid == 0)
+	{
+		return;
+	}
+	if (line_sizes.size() == 0)
 	{
 		return;
 	}
@@ -64,14 +72,43 @@ void ComponentText::Render(float4x4* projection)
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(vao);
 
+
 	int current_line = 0;
-	float x = GetLineStartPosition(text_lines.line_sizes[current_line]);
+	
+	float cursor_x = 0;
+	float cursor_y = 0;
+	float x = GetLineStartPosition(line_sizes[current_line]);
 	float y = 0;
 
 	// Iterate through all characters
 	for (char const &c : text)
 	{
 		Font::Character character = font->GetCharacter(c);
+		float character_size = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		
+		float next_cursor_x = cursor_x + character_size; 
+		if (next_cursor_x > owner->transform_2d.size.x)
+		{
+			float next_cursor_y = cursor_y + font->GetMaxHeight() * scale_factor;
+			if (next_cursor_y > owner->transform_2d.size.y)
+			{
+				break;
+			}
+			else
+			{
+				cursor_x = 0;
+				x = GetLineStartPosition(line_sizes[current_line]);
+
+				cursor_y = font->GetMaxHeight() * scale_factor;
+				y -= font->GetMaxHeight() * scale_factor;
+			}
+			
+		}
+		else
+		{
+			cursor_x = next_cursor_x;
+		}
+
 		float x_pos = x + character.bearing.x * scale_factor;
 		float y_pos = y - (character.glyph_size.y - character.bearing.y + font->GetMaxHeight() * 0.5f) * scale_factor;
 
@@ -87,17 +124,7 @@ void ComponentText::Render(float4x4* projection)
 		glBindTexture(GL_TEXTURE_2D, character.glyph_texture_id);
 		glDrawArrays(GL_TRIANGLES, 0, 6);
 
-		float next_character_pos = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
-		if (x + next_character_pos > owner->transform_2d.size.x)
-		{
-			++current_line;
-			x = GetLineStartPosition(text_lines.line_sizes[current_line]);
-			y -= font->GetMaxHeight();
-		}
-		else
-		{
-			x += next_character_pos;
-		}
+		x += character_size;
 	}
 
 	glBindVertexArray(0);
@@ -107,32 +134,42 @@ void ComponentText::Render(float4x4* projection)
 
 void ComponentText::ComputeTextLines()
 {
-	text_lines.line_sizes.clear();
-	text_lines.line_sizes.push_back(0);
+	line_sizes.clear();
 
-	int current_line = 0;
-	float x = 0;
-	float y = 0;
+	float cursor_x = 0;
+	float cursor_y = 0;
 
 	// Iterate through all characters
 	for (unsigned int i = 0; i < text.size(); ++i)
 	{
 		char const &c = text[i];
-
 		Font::Character character = font->GetCharacter(c);
-		int next_character_pos = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
-		if (x + next_character_pos > owner->transform_2d.size.x)
+
+		float next_cursor_x = cursor_x + (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+	
+		if (next_cursor_x > owner->transform_2d.size.x)
 		{
-			x = 0;
-			++current_line;
-			text_lines.line_sizes.push_back(0);
+			float next_cursor_y = cursor_y + font->GetMaxHeight() * scale_factor;
+			if (next_cursor_y > owner->transform_2d.size.x)
+			{
+				return;
+			}
+			else
+			{
+				line_sizes.push_back(cursor_x);
+				cursor_x = 0;
+
+				cursor_y = next_cursor_y;
+			}
 		}
 		else
 		{
-			x += next_character_pos;
-			text_lines.line_sizes[current_line] += next_character_pos;
-		} 
+			cursor_x = next_cursor_x;
+		}
+		
 	}
+
+	line_sizes.push_back(cursor_x);
 }
 
 float ComponentText::GetLineStartPosition(float line_size) const
@@ -202,10 +239,12 @@ void ComponentText::SetFont(uint32_t font_uuid)
 {
 	this->font_uuid = font_uuid;
 	font = App->resources->Load<Font>(font_uuid);
+	ComputeTextLines();
 }
 
 void ComponentText::SetFontSize(int font_size)
 {
 	this->font_size = font_size;
 	scale_factor = font_size / 64.f;
+	ComputeTextLines();
 }

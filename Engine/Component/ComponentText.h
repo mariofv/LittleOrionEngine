@@ -18,12 +18,6 @@ public:
 		RIGHT
 	};
 
-	struct TextLines
-	{
-		int num_lines = 0;
-		std::vector<float> line_sizes;
-	};
-
 	ComponentText();
 	ComponentText(GameObject * owner);
 	~ComponentText() = default;
@@ -35,6 +29,7 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+	void Update() override;
 	void Render(float4x4* projection);
 
 	void SetText(const std::string& new_text);
@@ -63,7 +58,8 @@ public:
 
 private:
 	GLuint program, vao, vbo;
+
 	float scale_factor = 0.f;
-	TextLines text_lines;
+	std::vector<float> line_sizes;
 };
 #endif
