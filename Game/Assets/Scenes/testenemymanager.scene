@@ -495,13 +495,17 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "PlayerController",
-                    "Player": 0
+                    "Player": 1
                 },
                 {
                     "UUID": 2457128993,
                     "ComponentType": 6,
                     "Active": true,
-                    "ScriptName": "PlayerMovement"
+                    "ScriptName": "PlayerMovement",
+                    "Name0": "Main Camera",
+                    "Main Camera": 172714554,
+                    "Name1": "Player",
+                    "Player": 248855188
                 },
                 {
                     "UUID": 3308507368,
@@ -917,6 +921,16 @@
                     ],
                     "Depth": 0,
                     "Skybox": 0
+                },
+                {
+                    "UUID": 2263639299,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "CameraController",
+                    "Name0": "Player",
+                    "Player": 248855188,
+                    "Name1": "Player",
+                    "Player": 248855188
                 }
             ]
         },
@@ -1630,7 +1644,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 21,
+                    "Texture": 23,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1692,7 +1706,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 22,
+                    "Texture": 24,
                     "Color": [
                         1.0,
                         1.0,
