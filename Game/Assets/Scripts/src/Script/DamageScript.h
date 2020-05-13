@@ -3,8 +3,6 @@
 
 #include "Script.h"
 
-class ComponentProgressBar;
-
 class DamageScript : public Script
 {
 public:
@@ -24,7 +22,7 @@ public:
 private:
 	GameObject* player = nullptr;
 	GameObject* health_bar = nullptr;
-	ComponentProgressBar* health_component = nullptr;
+	//ComponentProgressBar* health_component = nullptr;
 	float damage = 20.0f;
 
 };

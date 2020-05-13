@@ -37,13 +37,13 @@ DebugModeScript::DebugModeScript()
 void DebugModeScript::Awake()
 {
 	background = (ComponentImage*)background_go->GetComponent(Component::ComponentType::UI_IMAGE);
-	text_fps = (ComponentText*)text_fps_go->GetComponent(ComponentUI::ComponentType::UI_TEXT);
-	text_tris = (ComponentText*)text_tris_go->GetComponent(ComponentUI::ComponentType::UI_TEXT);
-	text_verts = (ComponentText*)text_verts_go->GetComponent(ComponentUI::ComponentType::UI_TEXT);
+	text_fps = (ComponentText*)text_fps_go->GetComponent(Component::ComponentType::UI_TEXT);
+	text_tris = (ComponentText*)text_tris_go->GetComponent(Component::ComponentType::UI_TEXT);
+	text_verts = (ComponentText*)text_verts_go->GetComponent(Component::ComponentType::UI_TEXT);
 
-	text_fps->scale = 8.0f;
-	text_tris->scale = 8.0f;
-	text_verts->scale = 8.0f;
+	text_fps->SetFontSize(8.0f);
+	text_tris->SetFontSize(8.0f);
+	text_verts->SetFontSize(8.0f);
 
 	/*
 	text_fps->color = float3::zero;

@@ -1,6 +1,8 @@
 #ifndef _COMPONENTTEXT_H_
 #define _COMPONENTTEXT_H_
 
+#define ENGINE_EXPORTS
+
 #include "Component.h"
 
 #include <string>
@@ -36,7 +38,7 @@ public:
 	void SetHorizontalAlignment(HorizontalAlignment horizontal_alignment);
 
 	void SetFont(uint32_t font_uuid);
-	void SetFontSize(int font_size);
+	ENGINE_API void SetFontSize(int font_size);
 
 private:
 	void InitData();
