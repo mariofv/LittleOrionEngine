@@ -311,11 +311,9 @@ void ComponentTransform2D::GenerateRect()
 
 	rect.left = translation.x - size.x / 2.f - parent_size.x * min_anchor.x + parent_size.x * 0.5f;
 	rect.right = parent_size.x * max_anchor.x - (translation.x + size.x / 2.f) - parent_size.x * 0.5f;
-	assert(math::RoundInt(rect.left + size.x + rect.right) == math::RoundInt(parent_size.x * (max_anchor.x - min_anchor.x)));
 
 	rect.bottom = translation.y - size.y / 2.f - parent_size.y * min_anchor.y + parent_size.y * 0.5f;
 	rect.top = parent_size.y * max_anchor.y - (translation.y + size.y / 2.f) - parent_size.y * 0.5f;
-	assert(math::RoundInt(rect.bottom + size.y + rect.top) == math::RoundInt(parent_size.y * (max_anchor.y - min_anchor.y)));
 }
 
 void ComponentTransform2D::SetLeft(float left)
