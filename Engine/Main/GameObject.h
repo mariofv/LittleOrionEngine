@@ -54,7 +54,9 @@ public:
 	ENGINE_API Component* CreateComponent(const Component::ComponentType type);
 	ENGINE_API Component* CreateComponentUI(const ComponentUI::UIType ui_type);
 	void RemoveComponent(Component* component);
+	void RemoveComponent(uint64_t UUID);
 	ENGINE_API Component* GetComponent(const Component::ComponentType type) const;
+	ENGINE_API Component * GetComponent(uint64_t UUID) const;
 	ENGINE_API ComponentScript* GetComponentScript(const char* name) const;
 	ENGINE_API Component* GetComponentUI(const ComponentUI::UIType type) const;
 
