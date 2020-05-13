@@ -73,6 +73,8 @@ GameObject* TemplatedGameObjectCreator::CreateUIButton()
 	button_text->transform_2d.SetRight(0.f);
 
 	ComponentText* component_text = static_cast<ComponentText*>(button_text->CreateComponent(Component::ComponentType::UI_TEXT));
+	component_text->SetFont(static_cast<uint32_t>(CoreResource::DEFAULT_FONT));
+	component_text->SetFontSize(12);
 	component_text->SetText("Text");
 
 	main_canvas_game_object->AddChild(created_button);
