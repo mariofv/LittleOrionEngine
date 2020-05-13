@@ -7,6 +7,7 @@
 
 class Component;
 class ComponentAnimation;
+class ComponentAudioSource;
 class ComponentBoxCollider;
 class ComponentButton;
 class ComponentCamera;
@@ -41,6 +42,7 @@ public:
 	void ShowComponentScriptWindow(ComponentScript* component_script);
 	void ShowComponentUIWindow(ComponentUI* ui);
 	void ShowComponentColliderWindow(ComponentCollider* collider);
+	void ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source);
 	void ShowAddNewComponentButton();
 
 	void ShowScriptsCreated(ComponentScript* component_script);

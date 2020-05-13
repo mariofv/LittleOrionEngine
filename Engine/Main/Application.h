@@ -29,6 +29,7 @@ class ModuleSpacePartitioning;
 class ModuleActions;
 class ModuleAI;
 class ModulePhysics;
+class ModuleAudio;
 
 class EngineLog;
 
@@ -67,6 +68,7 @@ public:
 	ModuleActions* actions = nullptr;
 	ModuleAI* artificial_intelligence = nullptr;
 	ModulePhysics* physics = nullptr;
+	ModuleAudio* audio = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
 

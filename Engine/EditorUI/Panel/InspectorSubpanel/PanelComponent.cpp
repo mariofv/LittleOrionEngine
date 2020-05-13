@@ -12,6 +12,7 @@
 #include "Helper/Utils.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioSource.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
@@ -722,6 +723,7 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::LIGHT);
 
 		}
+
 		sprintf_s(tmp_string, "%s Script", ICON_FA_EDIT);
 		if (ImGui::Selectable(tmp_string))
 		{
@@ -740,6 +742,7 @@ void PanelComponent::ShowAddNewComponentButton()
 			}
 
 		}
+
 		sprintf_s(tmp_string, "%s Animation", ICON_FA_PLAY_CIRCLE);
 		if (ImGui::Selectable(tmp_string))
 		{
@@ -772,6 +775,14 @@ void PanelComponent::ShowAddNewComponentButton()
 		{
 			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::MESH);
 		}
+
+		sprintf_s(tmp_string, "%s Audio Source", ICON_FA_AUDIO_DESCRIPTION);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::AUDIO_SOURCE);
+
+		}
+
 		ImGui::EndPopup();
 	}
 
@@ -785,7 +796,6 @@ void PanelComponent::ShowAddNewComponentButton()
 
 void PanelComponent::ShowScriptsCreated(ComponentScript* component_script)
 {
-
 	if (ImGui::BeginCombo("Add Script", component_script->name.c_str()))
 	{
 		for (auto& script_name : App->scripts->scripts_list) {
@@ -985,6 +995,45 @@ void PanelComponent::ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh
 			{
 				mesh_collider->Scale();
 			}
+		}
+	}
+}
+void PanelComponent::ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_AUDIO_DESCRIPTION " Audio Source", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		//ImGui::AlignTextToFramePadding();
+		ImGui::Checkbox("3D Sound", &component_audio_source->sound_3d);
+		std::string soundbank_name = component_audio_source->soundbank == nullptr ? "None (Sound Bank)" : App->resources->resource_DB->GetEntry(component_audio_source->soundbank->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(component_audio_source->UUID) + "SoundBankSelector").c_str());
+		if (ImGui::Button(soundbank_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::SOUND);
+		}
+		uint32_t selected_resource = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource != 0)
+		{
+			component_audio_source->SetSoundBank(selected_resource);
+			component_audio_source->modified_by_user = true;
+		}
+		selected_resource = ImGui::ResourceDropper<StateMachine>();
+		if (selected_resource != 0)
+		{
+			component_audio_source->SetSoundBank(selected_resource);
+			component_audio_source->modified_by_user = true;
+		}
+		if (component_audio_source->soundbank)
+		{
+			static std::string soundbank;
+			ImGui::InputText("SoundBank ", &soundbank);
+			if (ImGui::Button("Play"))
+			{
+				component_audio_source->PlayEvent(soundbank);
+			}
+		}
+		if (ImGui::SliderFloat("Volume", &component_audio_source->volume, 0, 30))
+		{
+			component_audio_source->SetVolume(component_audio_source->volume);
 		}
 	}
 }

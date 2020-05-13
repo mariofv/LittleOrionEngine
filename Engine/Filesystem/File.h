@@ -21,6 +21,7 @@ enum class FileType
 	SKYBOX,
 	STATE_MACHINE,
 	TEXTURE,
+	SOUND,
 	UNKNOWN
 };
 
