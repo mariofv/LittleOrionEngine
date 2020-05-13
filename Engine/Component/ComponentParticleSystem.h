@@ -5,7 +5,6 @@
 #include "MathGeoLib.h"
 #include "Main/Application.h"
 #include "Module/ModuleTime.h"
-#include "Helper/TimerUs.h"
 
 class GameObject;
 class ComponentBillboard;
@@ -18,9 +17,6 @@ public:
 		float3 velocity;
 		float4 color;
 		float  life;
-		bool active = true;
-		float life_remaining = 0.0f;
-		float3 velocity_variation = { 3.0f, 1.0f, 1.0f };
 		ComponentBillboard* billboard;
 	};
 
@@ -66,10 +62,8 @@ public:
 
 	
 public:
-	unsigned int VAO;
-	TimerUs self_timer;
 	std::vector<Particle> particles;
-	unsigned int max_particles = 10;
+	unsigned int max_particles = 5;
 	unsigned int last_used_particle = 0;
 	unsigned int nr_new_particles = 2;
 };

@@ -10,7 +10,6 @@
 
 ComponentParticleSystem::ComponentParticleSystem() : Component(nullptr, ComponentType::PARTICLE_SYSTEM)
 {
-	self_timer.Start();
 	Init();
 }
 
@@ -26,7 +25,8 @@ void ComponentParticleSystem::Init()
 	{
 		particles.emplace_back(Particle());
 		particles[i].billboard = new ComponentBillboard(owner);
-		particles[i].billboard->width = 0.5f; particles[i].billboard->height= 0.5f;
+		particles[i].billboard->width = 0.2f; particles[i].billboard->height= 0.2f;
+		particles[i].billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
 
 	}
 }
@@ -52,30 +52,27 @@ unsigned int ComponentParticleSystem::FirstUnusedParticle()
 
 void ComponentParticleSystem::RespawnParticle(Particle& particle)
 {
-	float random = ((rand() % 100) - 50) / 10.0f;
+	float random = (rand() % 100) / 100.f;
 	float rColor = 0.5f + ((rand() % 100) / 100.0f);
 	particle.position = owner->transform.GetGlobalTranslation();
+	particle.position.x += random;
+	particle.position.z += random;
 	particle.color = float4(rColor, rColor, rColor, 1.0f);
-	particle.life = 4000.0f;
-	particle.velocity.y =  0.001f;
+	particle.life = 3000.0f;
+	particle.velocity.y = 0.001F;
 }
 
 void ComponentParticleSystem::Render()
 {
-
 	
-	// update all particles
+	// update all particlesa
 	for (unsigned int i = 0; i < max_particles; ++i)
 	{
 		Particle &p = particles[i];
 		p.life -= App->time->real_time_delta_time; // reduce life
-		float random = (rand() % 100)/1000.f;
 		if (p.life > 0.0f)
 		{	// particle is alive, thus update
-			
 			p.position.y +=  p.velocity.y*App->time->real_time_delta_time;
-			//p.color.w -= App->time->real_time_delta_time * 2.5f;
-			//fade
 			p.billboard->Render(p.position);
 		}
 		else 
@@ -83,6 +80,7 @@ void ComponentParticleSystem::Render()
 			int unused_particle = FirstUnusedParticle();
 			RespawnParticle(particles[unused_particle]);
 		}
+	
 	}
 }
 
