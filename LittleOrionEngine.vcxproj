@@ -296,14 +296,6 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\SoundBank.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h" />
-    <ClInclude Include="Libraries\include\SoundEngine\AkDefaultIOHookBlocking.h" />
-    <ClInclude Include="Libraries\include\SoundEngine\AkFileHelpers.h" />
-    <ClInclude Include="Libraries\include\SoundEngine\AkFilePackage.h" />
-    <ClInclude Include="Libraries\include\SoundEngine\AkFilePackageLowLevelIO.h" />
-    <ClInclude Include="Libraries\include\SoundEngine\AkFilePackageLowLevelIOBlocking.h" />
-    <ClInclude Include="Libraries\include\SoundEngine\AkFilePackageLUT.h" />
-    <ClInclude Include="Libraries\include\SoundEngine\AkMultipleFileLocation.h" />
-    <ClInclude Include="Libraries\include\SoundEngine\stdafx.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
@@ -460,7 +452,6 @@
     <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl" />
     <None Include="Libraries\include\NodeEditor\imgui_extra_math.inl" />
     <None Include="Libraries\include\NodeEditor\imgui_node_editor_internal.inl" />
-    <None Include="Libraries\include\SoundEngine\AkFilePackageLowLevelIO.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
