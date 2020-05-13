@@ -7,7 +7,9 @@
 #include <vector>
 #include <memory>
 
+class ModuleAI;
 class ModuleAnimation;
+class ModuleAudio;
 class ModuleRender;
 class ModuleWindow;
 class ModuleTextures;
@@ -27,7 +29,6 @@ class ModuleResourceManager;
 class ModuleScriptManager;
 class ModuleSpacePartitioning;
 class ModuleActions;
-class ModuleAI;
 class ModulePhysics;
 
 class EngineLog;
@@ -67,6 +68,7 @@ public:
 	ModuleActions* actions = nullptr;
 	ModuleAI* artificial_intelligence = nullptr;
 	ModulePhysics* physics = nullptr;
+	ModuleAudio* audio = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
 

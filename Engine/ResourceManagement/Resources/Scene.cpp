@@ -210,6 +210,7 @@ GameObject* Scene::LoadPrefab(const Config & config) const
 
 bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_to_save) const
 {
+	GameObject * original = gameobject_to_save->prefab_reference->GetOriginalGameObject(gameobject_to_save->original_UUID);
 	bool modified = false;
 	if (gameobject_to_save->transform.modified_by_user)
 	{
@@ -234,8 +235,31 @@ bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_
 			modified = true;
 		}
 	}
+
+
+	std::vector<Component*> removed_components;
+	std::copy_if(
+		original->components.begin(),
+		original->components.end(),
+		std::back_inserter(removed_components),
+		[gameobject_to_save](const auto& component)
+	{
+		return gameobject_to_save->GetComponent(component->type) == nullptr && !component->added_by_user;
+	}
+	);
+
+	std::vector<Config> removed_components_config;
+	for (const auto& removed_component : removed_components)
+	{
+		Config removed_config;
+		removed_config.AddUInt(removed_component->UUID, "Removed");
+		removed_components_config.push_back(removed_config);
+		modified = true;
+	}
+
 	if (modified)
 	{
+		config.AddChildrenConfig(removed_components_config, "RemovedComponents");
 		config.AddChildrenConfig(gameobject_components_config, "Components");
 		config.AddUInt(gameobject_to_save->UUID, "UUID");
 	}
@@ -289,6 +313,14 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 			created_component->Load(component_config);
 			created_component->added_by_user = true;
 		}
+	}
+
+	std::vector<Config> removed_components_config;
+	config.GetChildrenConfig("RemovedComponents", removed_components_config);
+	for (auto & removed_config : removed_components_config)
+	{
+		uint64_t removed_uuid = removed_config.GetUInt( "Removed", 0);
+		prefab_child->RemoveComponent(removed_uuid);
 	}
 }
 

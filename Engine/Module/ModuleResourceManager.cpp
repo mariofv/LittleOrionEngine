@@ -18,17 +18,10 @@
 #include "ResourceManagement/Importer/SceneImporter.h"
 #include "ResourceManagement/Importer/SkyboxImporter.h"
 #include "ResourceManagement/Importer/StateMachineImporter.h"
+#include "ResourceManagement/Importer/SoundImporter.h"
 #include "ResourceManagement/Importer/TextureImporter.h"
 
-#include "ResourceManagement/Manager/AnimationManager.h"
-#include "ResourceManagement/Manager/MaterialManager.h"
-#include "ResourceManagement/Manager/MeshManager.h"
-#include "ResourceManagement/Manager/PrefabManager.h"
 #include "ResourceManagement/Manager/SceneManager.h"
-#include "ResourceManagement/Manager/SkeletonManager.h"
-#include "ResourceManagement/Manager/SkyboxManager.h"
-#include "ResourceManagement/Manager/StateMachineManager.h"
-#include "ResourceManagement/Manager/TextureManager.h"
 
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/Metafile/MetafileManager.h"
@@ -55,6 +48,7 @@ bool ModuleResourceManager::Init()
 	skeleton_importer = std::make_unique<SkeletonImporter>();
 	skybox_importer = std::make_unique<SkyboxImporter>();
 	state_machine_importer = std::make_unique<StateMachineImporter>();
+	sound_importer = std::make_unique<SoundImporter>();
 	texture_importer = std::make_unique<TextureImporter>();
 
 	metafile_manager = std::make_unique<MetafileManager>();
@@ -252,6 +246,9 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path, bool force) cons
 
 		case FileType::TEXTURE:
 			asset_metafile = texture_importer->Import(file_path);
+			break;
+		case FileType::SOUND:
+			asset_metafile = sound_importer->Import(file_path);
 			break;
 		}
 	}

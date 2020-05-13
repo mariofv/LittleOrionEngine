@@ -23,6 +23,14 @@ ComponentAnimation::ComponentAnimation(GameObject* owner) : Component(owner, Com
 	Init();
 }
 
+ComponentAnimation::~ComponentAnimation()
+{
+	if (animation_controller)
+	{
+		delete animation_controller;
+	}
+}
+
 void ComponentAnimation::Init()
 {
 	skinned_meshes.clear();

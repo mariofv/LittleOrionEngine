@@ -3,6 +3,7 @@
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
+#include "Component/ComponentAudioSource.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentCapsuleCollider.h"
@@ -107,6 +108,9 @@ void PanelGameObject::Render(GameObject* game_object)
 				break;
 			case Component::ComponentType::COLLIDER:
 				component_panel.ShowComponentColliderWindow(static_cast<ComponentCollider*>(component));
+				break;
+			case Component::ComponentType::AUDIO_SOURCE:
+				component_panel.ShowComponentAudioSourceWindow(static_cast<ComponentAudioSource*>(component));
 				break;
 			default:
 				break;

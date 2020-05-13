@@ -23,6 +23,7 @@ enum class ResourceType
 	SKYBOX,
 	TEXTURE,
 	STATE_MACHINE,
+	SOUND,
 	UNKNOWN
 };
 

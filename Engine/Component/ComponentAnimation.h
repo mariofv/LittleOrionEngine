@@ -18,9 +18,9 @@ class ComponentAnimation :	public Component
 public:
 	ComponentAnimation();
 	ComponentAnimation(GameObject* owner);
-	~ComponentAnimation() = default;
+	~ComponentAnimation();
 
-	void Init();
+	void Init() override;
 
 	//Copy and move
 	ComponentAnimation(const ComponentAnimation& component_to_copy) = default;

@@ -3,6 +3,7 @@
 #include "EditorUI/Panel/PanelHierarchy.h"
 #include "Helper/Config.h"
 #include "Module/ModuleAnimation.h"
+#include "Module/ModuleAudio.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScriptManager.h"
@@ -17,9 +18,9 @@
 #include "ResourceManagement/Resources/Texture.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
-
 #include "Component/Component.h"
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioSource.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentMeshRenderer.h"
@@ -387,16 +388,17 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 	case Component::ComponentType::ANIMATION:
 		created_component = App->animations->CreateComponentAnimation();
 		break;
+
+	case Component::ComponentType::AUDIO_SOURCE:
+		created_component = App->audio->CreateComponentAudioSource();
+		break;
 	default:
 		APP_LOG_ERROR("Error creating component. Incorrect component type.");
 		return nullptr;
 	}
 
 	created_component->owner = this;
-	if (type == Component::ComponentType::ANIMATION)
-	{
-		static_cast<ComponentAnimation*>(created_component)->Init();
-	}
+	created_component->Init();
 	components.push_back(created_component);
 	return created_component;
 }
@@ -426,12 +428,31 @@ void GameObject::RemoveComponent(Component* component_to_remove)
 		components.erase(it);
 	}
 }
-
+void GameObject::RemoveComponent(uint64_t UUID)
+{
+	Component * component = GetComponent(UUID);
+	if (component)
+	{
+		RemoveComponent(component);
+	}
+}
 ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType type) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		if (components[i]->GetType() == type)
+		{
+			return components[i];
+		}
+	}
+	return nullptr;
+}
+
+ENGINE_API Component* GameObject::GetComponent(uint64_t UUID) const
+{
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		if (components[i]->UUID == UUID)
 		{
 			return components[i];
 		}
