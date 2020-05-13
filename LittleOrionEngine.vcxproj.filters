@@ -439,36 +439,6 @@
     <ClCompile Include="Engine\ResourceManagement\Metafile\TextureMetafile.cpp">
       <Filter>Engine\ResourceManagement\Metafile</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentAudioSource.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Module\ModuleAudio.cpp">
-      <Filter>Engine\Module</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Manager\SoundManager.cpp">
-      <Filter>Engine\ResourceManagement\Manager</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\SoundImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Resources\SoundBank.cpp">
-      <Filter>Engine\ResourceManagement\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\SoundEngine\AkDefaultIOHookBlocking.cpp">
-      <Filter>Libraries\SoundEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\SoundEngine\AkFilePackageLUT.cpp">
-      <Filter>Libraries\SoundEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp">
-      <Filter>Libraries\SoundEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\SoundEngine\stdafx.cpp">
-      <Filter>Libraries\SoundEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\SoundEngine\AkFilePackage.cpp">
-      <Filter>Libraries\SoundEngine</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -918,21 +888,6 @@
     <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h">
       <Filter>Engine\ResourceManagement\Metafile</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentAudioSource.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Module\ModuleAudio.h">
-      <Filter>Engine\Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Resources\SoundBank.h">
-      <Filter>Engine\ResourceManagement\Resources</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h">
-      <Filter>Engine\ResourceManagement\Manager</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -1027,8 +982,6 @@
     </Filter>
     <Filter Include="Engine\Component\Collider">
       <UniqueIdentifier>{cf44b757-a8ce-4d05-8f2c-587be25f5298}</UniqueIdentifier>
-    <Filter Include="Libraries\SoundEngine">
-      <UniqueIdentifier>{d944c34d-2880-470e-89dd-e2ba4e4fd35f}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
