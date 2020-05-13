@@ -18,9 +18,13 @@ public:
 	void InitPublicGameObjects();
 	bool TriggerEvent(unsigned event);
 
+
+public:
+	unsigned enemies_killed_on_wave = 0;
+	bool event_triggered = false;
+
 private:
 	EnemyManager* enemy_manager = nullptr;
-	bool event_triggered = false;
 	unsigned waves_left = 0;
 	unsigned enemies_per_wave = 0;
 	unsigned current_event = 0;

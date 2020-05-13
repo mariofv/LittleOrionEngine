@@ -15,6 +15,7 @@
 #include <stdlib.h> 
 #include <time.h>
 
+#include "EventManager.h"
 #include "Mushdoom.h"
 
 
@@ -33,6 +34,10 @@ EnemyManager::EnemyManager()
 // Use this for initialization before Start()
 void EnemyManager::Awake()
 {
+	GameObject* event_manager_go = App->scene->GetGameObjectByName("EventManager");
+	ComponentScript* event_manager_component = event_manager_go->GetComponentScript("EventManager");
+	event_manager = static_cast<EventManager*>(event_manager_component->script);
+
 	InitSpawnPoints();
 }
 
@@ -77,6 +82,11 @@ void EnemyManager::KillEnemy(EnemyController* enemy)
 	//Reset enemy
 	enemy->ResetEnemy();
 	--current_number_of_enemies_alive;
+
+	if(event_manager->event_triggered)
+	{
+		++event_manager->enemies_killed_on_wave;
+	}
 }
 
 void EnemyManager::SpawnEnemy(const unsigned type, const float3& spawn_position)
@@ -162,6 +172,8 @@ void EnemyManager::OnInspector(ImGuiContext* context)
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
+
+	ImGui::Text("enemies_spawning_queue size:  %d", enemies_spawning_queue.size());
 
 }
 

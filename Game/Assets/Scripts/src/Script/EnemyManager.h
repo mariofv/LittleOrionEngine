@@ -3,6 +3,7 @@
 
 #include "Script.h"
 
+class EventManager;
 class EnemyController;
 
 const unsigned MAX_NUMBER_OF_MUSHDOOM = 10;
@@ -42,6 +43,7 @@ public:
 private:
 	//We need a reference to an existing mushdoom to duplicate_him
 	GameObject* mushdoom_go = nullptr;
+	EventManager* event_manager = nullptr;
 	std::vector<float3> enemies_spawning_queue;
 	float3 spawn_points[5];
 };

@@ -69,7 +69,7 @@ protected:
 	float max_health_points = 100.f; //not const, to modify in inspector
 	float health_points = max_health_points;
 	float stop_distance = 2.f;
-	float detect_distance = 10.f;
+	float detect_distance = 25.f;
 
 	bool is_attacking = false;
 

@@ -80,22 +80,6 @@ bool PlayerAttack::Attack(int player)
 }
 void PlayerAttack::ComputeCollisions() const
 {
-	
-
-	//btVector3 end = collider->body->getWorldTransform().getOrigin();
-	//end.setX(end.getX() + collider->owner->transform.GetFrontVector().x * 4.0f);
-	//end.setX(end.getY() + collider->owner->transform.GetFrontVector().y * 4.0f);
-	//end.setX(end.getZ() + collider->owner->transform.GetFrontVector().z * 4.0f);
-
-	/*btVector3 normal;*/
-
-	//int enemy_id_collision = App->physics->GetRaycastWorldId(collider->body->getWorldTransform().getOrigin(), end, normal);
-
-	//if(enemy_id_collision == -1)
-	//{
-	//	return;
-	//}
-
 	for (auto& enemy : enemy_manager->enemies)
 	{
 		if (!enemy->is_alive)

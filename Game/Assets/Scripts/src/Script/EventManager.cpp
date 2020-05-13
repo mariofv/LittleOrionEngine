@@ -41,8 +41,9 @@ void EventManager::Update()
 {	//For now the only event we have is enemy spawning
 	if(event_triggered)
 	{
-		if(enemy_manager->current_number_of_enemies_alive <= 0)
+		if(enemies_killed_on_wave >= enemies_per_wave)
 		{
+			enemies_killed_on_wave = 0;
 			--waves_left;
 			if(waves_left == 0)
 			{
@@ -63,6 +64,8 @@ void EventManager::OnInspector(ImGuiContext* context)
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
+	ImGui::Text("enemies_killed_on_wave: %d", enemies_killed_on_wave);
+	ImGui::Text("enemies_per_wave: %d", enemies_per_wave);
 }
 
 //Use this for linking JUST GO automatically 
