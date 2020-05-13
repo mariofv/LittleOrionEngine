@@ -2,7 +2,6 @@
 #include "Main/Application.h"
 #include "Component/ComponentAudioSource.h"
 #include "Module/ModuleResourceManager.h"
-#include "ResourceManagement/Resources/SoundBank.h"
 #include <SoundEngine/AkFilePackageLowLevelIOBlocking.h>              
 CAkFilePackageLowLevelIOBlocking g_lowLevelIO;
 
@@ -43,7 +42,6 @@ bool ModuleAudio::Init()
 		APP_LOG_ERROR("Could not initialize the Sound Engine.");
 		return false;
 	}
-	init_sound_bank = SoundManager::Init();
 	if (!AK::SoundEngine::RegisterGameObj(main_sound_gameobject))
 	{
 		APP_LOG_ERROR("Unable to register the gameobject");
