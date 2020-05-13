@@ -7,6 +7,7 @@
 #include "Component/ComponentAABB.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 #include "EditorUI/Panel/PanelScene.h"
+#include "ResourceManagement/Resources/Skybox.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>

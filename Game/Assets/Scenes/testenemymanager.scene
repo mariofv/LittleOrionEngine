@@ -178,6 +178,7 @@
     ],
     "PrefabsComponents": [
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 2132626039,
@@ -205,6 +206,7 @@
             "UUID": 299268297
         },
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 2899772861,
@@ -232,6 +234,7 @@
             "UUID": 3420948497
         },
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 387952792,
@@ -259,6 +262,7 @@
             "UUID": 1367554656
         },
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 4117584551,
@@ -286,6 +290,7 @@
             "UUID": 960305813
         },
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 2008771200,
@@ -313,6 +318,7 @@
             "UUID": 2122564851
         },
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 1874460943,
@@ -340,6 +346,7 @@
             "UUID": 3816290468
         },
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 2907332931,
@@ -532,7 +539,7 @@
                     "Active": true,
                     "ComponentType": 9,
                     "ColliderType": 1,
-                    "Mass": 100.0,
+                    "Mass": 1.0,
                     "Scale": [
                         0.4099999964237213,
                         1.0,

@@ -167,8 +167,8 @@ void MenuLogic::InitPublicGameObjects()
 	public_gameobjects.push_back(&credits);
 	variable_names.push_back(GET_VARIABLE_NAME(credits));
 
-	public_gameobjects.push_back(&audio_controller);
-	variable_names.push_back(GET_VARIABLE_NAME(audio_controller));
+	//public_gameobjects.push_back(&audio_controller);
+	//variable_names.push_back(GET_VARIABLE_NAME(audio_controller));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
