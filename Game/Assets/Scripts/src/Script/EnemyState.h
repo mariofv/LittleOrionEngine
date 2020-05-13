@@ -23,8 +23,6 @@ public:
 
 protected:
 	Mushdoom* enemy = nullptr;
-
-	//friend class Mushdoom;
 };
 extern "C" SCRIPT_API EnemyState* EnemyStateDLL(); //This is how we are going to load the script
 #endif
