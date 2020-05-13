@@ -44,16 +44,16 @@ void ComponentCollider::CommonAssign(const ComponentCollider& component_to_copy)
 	mass = component_to_copy.mass;
 	scale = component_to_copy.scale;
 	box_size = component_to_copy.box_size;
-	x_axis = component_to_copy.x_axis;
-	y_axis = component_to_copy.y_axis;
-	z_axis = component_to_copy.z_axis;
+	freeze_rotation_x = component_to_copy.freeze_rotation_x;
+	freeze_rotation_y = component_to_copy.freeze_rotation_y;
+	freeze_rotation_z = component_to_copy.freeze_rotation_z;
 	friction = component_to_copy.friction;
 	rolling_friction = component_to_copy.rolling_friction;
 	visualize = component_to_copy.visualize;
 	detect_collision = component_to_copy.detect_collision;
 	is_attached = component_to_copy.is_attached;
 	is_static = component_to_copy.is_static;
-	disable_physics = component_to_copy.disable_physics;
+	active_physics = component_to_copy.active_physics;
 	AddBody();
 }
 
@@ -75,10 +75,10 @@ void ComponentCollider::Save(Config & config) const
 	config.AddBool(detect_collision, "Collision");
 	config.AddBool(visualize, "Visualize");
 	config.AddBool(is_attached, "Attached");
-	config.AddBool(x_axis, "x_axis");
-	config.AddBool(y_axis, "y_axis");
-	config.AddBool(z_axis, "z_axis");
-	config.AddBool(disable_physics, "DisablePhysics");
+	config.AddBool(freeze_rotation_x, "Freeze_rotation_x");
+	config.AddBool(freeze_rotation_z, "Freeze_rotation_y");
+	config.AddBool(freeze_rotation_y, "Freeze_rotation_z");
+	config.AddBool(active_physics, "ActivePhysics");
 	config.AddFloat(friction, "Friction");
 	config.AddFloat(rolling_friction, "Rolling_friction");
 
@@ -94,10 +94,10 @@ void ComponentCollider::Load(const Config & config)
 	detect_collision = config.GetBool("Collision", true);
 	visualize = config.GetBool("Visualize", true);
 	is_attached = config.GetBool("Attached", false);
-	x_axis = config.GetBool("x_axis", true);
-	y_axis = config.GetBool("y_axis", true);
-	z_axis = config.GetBool("z_axis", true);
-	disable_physics = config.GetBool("DisablePhysics", false);
+	freeze_rotation_x = config.GetBool("Freeze_rotation_x", true);
+	freeze_rotation_y = config.GetBool("Freeze_rotation_y", true);
+	freeze_rotation_z = config.GetBool("Freeze_rotation_z", true);
+	active_physics = config.GetBool("Active_Physics", false);
 	friction = config.GetFloat("Friction", 1.0F);
 	rolling_friction = config.GetFloat("Rolling_friction", 1.0F);
 	AddBody();
@@ -245,7 +245,7 @@ bool ComponentCollider::DetectCollisionWith(ComponentCollider * collider)
 	btVector3 collider_minim;
 	btVector3 collider_maxim;
 
-	if (disable_physics && collider->disable_physics) 
+	if (!active_physics && !collider->active_physics) 
 	{	
 		App->physics->world->updateAabbs();
 		body->getAabb(body_minim, body_maxim);
@@ -306,7 +306,7 @@ void ComponentCollider::SetStatic()
 
 void ComponentCollider::SetRotationAxis()
 {
-	body->setAngularFactor(btVector3(int(x_axis), int(y_axis), int(z_axis)));
+	body->setAngularFactor(btVector3(int(freeze_rotation_x), int(freeze_rotation_y), int(freeze_rotation_z)));
 }
 
 void ComponentCollider::AddForce(float3& force)
@@ -314,22 +314,22 @@ void ComponentCollider::AddForce(float3& force)
 	body->applyCentralForce(btVector3(force.x, force.y, force.z));
 }
 
-void ComponentCollider::DisablePhysics(bool disable)
+void ComponentCollider::SwitchPhysics(bool active)
 {
-	disable_physics = disable;
-	DisablePhysics();
+	active_physics = active;
+	SwitchPhysics();
 }
 
-void ComponentCollider::DisablePhysics()
+void ComponentCollider::SwitchPhysics()
 {
-	if (disable_physics || !active)
+	if (active_physics && active)
 	{
-		body->forceActivationState(DISABLE_SIMULATION);
+		body->forceActivationState(ACTIVE_TAG);
+		body->setActivationState(DISABLE_DEACTIVATION);
 	}
 	else
 	{
-		body->forceActivationState(ACTIVE_TAG);
-		/*body->forceActivationState(DISABLE_DEACTIVATION);*/
+		body->forceActivationState(DISABLE_SIMULATION);
 	}
 }
 
@@ -349,7 +349,7 @@ void ComponentCollider::SetConfiguration()
 	if (!visualize) { SetVisualization(); }
 	SetRotationAxis();
 	if (!detect_collision) { SetCollisionDetection(); }
-	if (disable_physics || !active) { DisablePhysics(); }
+	if (active_physics && active) { SwitchPhysics(); }
 	UpdateFriction();
 	SetRollingFriction();
 }
@@ -358,7 +358,7 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 {
 	//bottom of the model
 	btVector3 bottom = body->getWorldTransform().getOrigin();
-	bottom.setY(bottom.getY() - 2*box_size.getY());
+	bottom.setY(bottom.getY() - 2 * box_size.getY());
 
 	//Vector normal to the surface
 	btVector3 Normal; 

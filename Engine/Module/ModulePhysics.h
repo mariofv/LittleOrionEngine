@@ -18,9 +18,9 @@ class DebugDrawer : public btIDebugDraw
 public:
 	DebugDrawer() {}
 	void drawLine(const btVector3& from, const btVector3& to, const btVector3& color);
-	void drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color);
-	void reportErrorWarning(const char* warningString);
-	void draw3dText(const btVector3& location, const char* textString);
+	void drawContactPoint(const btVector3& PointOnB, const btVector3& normalOnB, btScalar distance, int lifeTime, const btVector3& color) {}
+	void reportErrorWarning(const char* warningString) {}
+	void draw3dText(const btVector3& location, const char* textString) {}
 	void setDebugMode(int debugMode);
 	int getDebugMode() const;
 public:
@@ -41,7 +41,7 @@ public:
 	update_status Update() override;
 
 	void SetGravity(float3& newGgravity);
-	float3 GetGravity();
+	float3 GetGravity() const;
 	ComponentCollider* CreateComponentCollider(const ComponentCollider::ColliderType collider_type, GameObject* owner);
 	void RemoveComponentCollider(ComponentCollider* collider_to_remove);
 	bool RaycastWorld(const btVector3 &Start, btVector3 &End, btVector3 &Normal);

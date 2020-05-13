@@ -44,8 +44,8 @@ public:
 	bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
 	void SetStatic();
 	void SetRotationAxis();
-	ENGINE_API void DisablePhysics(bool disable);
-	void DisablePhysics();
+	ENGINE_API void SwitchPhysics(bool active);
+	void SwitchPhysics();
 	void UpdateFriction();
 	void SetRollingFriction();
 	void SetConfiguration();
@@ -73,10 +73,10 @@ public:
 	bool detect_collision = true;
 	bool is_attached = false;
 	bool is_static = false;
-	bool x_axis = true;
-	bool y_axis = true;
-	bool z_axis = true;
-	bool disable_physics = false;
+	bool freeze_rotation_x = true;
+	bool freeze_rotation_y = true;
+	bool freeze_rotation_z = true;
+	bool active_physics = true;
 
 protected:
 	friend class PanelComponent;

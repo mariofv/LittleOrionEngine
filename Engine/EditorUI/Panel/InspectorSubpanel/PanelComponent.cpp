@@ -865,7 +865,7 @@ bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 	if (ImGui::Checkbox("Active", &collider->active))
 	{
 		//UndoRedo
-		collider->DisablePhysics();
+		collider->SwitchPhysics();
 		App->actions->action_component = collider;
 		App->actions->AddUndoAction(ModuleActions::UndoActionType::ENABLE_DISABLE_COMPONENT);
 	}
@@ -900,20 +900,20 @@ bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 	{
 		collider->SetCollisionDetection();
 	}
-	if (ImGui::Checkbox("Disable Physics", &collider->disable_physics))
+	if (ImGui::Checkbox("Active Physics", &collider->active_physics))
 	{
-		collider->DisablePhysics();
+		collider->SwitchPhysics();
 	}
-	ImGui::Text("Axis Rotation");
-	if (ImGui::Checkbox("X Axis", &collider->x_axis))
-	{
-		collider->SetRotationAxis();
-	}
-	if (ImGui::Checkbox("Y Axis", &collider->y_axis))
+	ImGui::Text("Freeze Axis Rotation");
+	if (ImGui::Checkbox("X Axis", &collider->freeze_rotation_x))
 	{
 		collider->SetRotationAxis();
 	}
-	if (ImGui::Checkbox("Z Axis", &collider->z_axis))
+	if (ImGui::Checkbox("Y Axis", &collider->freeze_rotation_y))
+	{
+		collider->SetRotationAxis();
+	}
+	if (ImGui::Checkbox("Z Axis", &collider->freeze_rotation_z))
 	{
 		collider->SetRotationAxis();
 	}
