@@ -57,73 +57,78 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 	ShowDraggedObjects();
 	ImGui::Checkbox("Is Inside Frustum", &is_inside);
 	ImGui::Checkbox("Is Grounded", &is_grounded);
+	ImGui::DragFloat3("VELOCITY", velocity.ptr(), 0.1f, 0.f, 300.f);
 
 }
 
 void PlayerMovement::Move(int player)
 {
 	
+	velocity = collider->GetCurrentVelocity();
 	float3 transform = owner->transform.GetTranslation();
-	new_translation = float3::zero;
+	direction = float3::zero; //change direction
 	PlayerID player_id = static_cast<PlayerID>(player - 1);
 
 	float x_axis = App->input->GetHorizontal(player_id);
 	float y_axis = App->input->GetVertical(player_id);
 
+	if (!IsGrounded() && is_jumping)
+	{
+		is_jumping = false;
+	}
 
-	new_translation += float3(x_axis, 0.0f, y_axis);
-	if(IsGrounded())
+	direction = float3(x_axis, 0.0f, y_axis); // not add just assing
+	if (abs(velocity.y) < 0.01 && !is_jumping)
 	{
 		is_grounded = true;
-		if (!new_translation.Equals(float3::zero))
+		if (!direction.Equals(float3::zero))
 		{
-			is_inside = IsInside(transform + new_translation * speed / 10 );
-
+			is_inside = IsInside(transform + direction * speed / 10);
 			if (is_inside)
 			{
-				collider->SetVelocity(new_translation, speed*App->time->delta_time);
+				collider->SetVelocity(direction, speed * App->time->delta_time);
 			}
 			else
 			{
-				new_translation = float3::zero;
-				collider->AddForce(new_translation);
-				collider->SetVelocity(new_translation, 0);
+				direction = float3::zero;
+				collider->AddForce(direction);
+				collider->SetVelocity(direction, 0);
 			}
 		}
 		if (App->input->GetKeyDown(KeyCode::Space))
 		{
-			//collider->SetVelocity(transform, 0);
-			Jump();
+			is_jumping = true;
+			Jump(direction);
 		}
 
 	}
-	else 
+	else
 	{
 		is_grounded = false;
-		if (!new_translation.Equals(float3::zero))
+		if (!direction.Equals(float3::zero))
 		{
-			is_inside = IsInside(transform + new_translation * speed / 10);
+			is_inside = IsInside(transform + direction * speed / 10);
 
 			if (is_inside)
 			{
-				new_translation *= App->time->delta_time * speed;
-				collider->AddForce(new_translation);
+				direction *= App->time->delta_time * speed;
+				collider->AddForce(direction);
 			}
 			else
 			{
-				new_translation = float3::zero;
-				collider->AddForce(new_translation);
+				direction = float3::zero;
+				collider->AddForce(direction);
 				collider->SetVelocity(transform, 0);
 			}
 		}
 	}
+	
 }
 
-void PlayerMovement::Jump()
-{	
-	float3 new_transform = float3::zero;
-	new_transform += float3(0.0f, jump_power * App->time->delta_time, 0.0f);
-	collider->AddForce(new_transform);
+void PlayerMovement::Jump(float3& direction)
+{
+	direction += float3(0.0f, jump_power * App->time->delta_time, 0.0f);
+	collider->AddForce(direction);
 }
 
 bool PlayerMovement::IsGrounded()
@@ -131,7 +136,7 @@ bool PlayerMovement::IsGrounded()
 	btVector3 origin = collider->body->getWorldTransform().getOrigin();
 
 	btVector3 end = collider->body->getWorldTransform().getOrigin();
-	end.setY(end.getY() - 1.7);
+	end.setY(end.getY() - 1.7f);
 
 	return collider->RaycastHit(origin,end);
 }

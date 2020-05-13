@@ -20,7 +20,7 @@ public:
 	void OnInspector(ImGuiContext*) override;
 
 	void Move(int player);
-	void Jump();
+	void Jump(float3& direction);
 	bool IsGrounded();
 
 	bool IsInside(float3 transform);
@@ -43,8 +43,9 @@ private:
 	bool is_inside = true;
 	bool is_grounded = false;
 
-	float3 new_translation;
+	float3 direction;
 	GameObject* second_player = nullptr;
+	float3 velocity = float3::zero;
 };
 extern "C" SCRIPT_API PlayerMovement* PlayerMovementDLL(); //This is how we are going to load the script
 #endif

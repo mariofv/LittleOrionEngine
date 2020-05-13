@@ -422,3 +422,10 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 	}
 
 }
+
+float3 ComponentCollider::GetCurrentVelocity() const
+{
+	btVector3 velocity = body->getLinearVelocity();
+
+	return float3(velocity.getX(), velocity.getY(), velocity.getZ());
+}

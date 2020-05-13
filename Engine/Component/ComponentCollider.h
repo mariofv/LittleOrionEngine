@@ -37,6 +37,7 @@ public:
 	ENGINE_API void AddForce(float3& force);
 	ENGINE_API void SetVelocity(float3& velocity, float speed);
 	ENGINE_API bool RaycastHit(btVector3& origin, btVector3& end);
+	ENGINE_API float3 GetCurrentVelocity() const;
 	void MoveBody();
 	void SetMass(float new_mass);
 	void SetVisualization();

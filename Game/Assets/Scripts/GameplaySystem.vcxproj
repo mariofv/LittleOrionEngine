@@ -207,7 +207,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>..\..\..\Libraries\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>MathGeoLibRelease.lib;imguiRelease.lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;TwinlightSouls.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MathGeoLibRelease.lib;imguiRelease.lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;TwinlightSouls.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(OutDir)$(ProjectName).dll" "..\..\Resources\Scripts"</Command>
