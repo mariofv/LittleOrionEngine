@@ -227,7 +227,7 @@ void ComponentCamera::RecordFrame(float width, float height, bool scene_mode)
 	}
 
 	App->renderer->RenderFrame(*this);
-	App->ui->Render(this, scene_mode);
+	App->ui->Render(scene_mode);
 
 
 #if !GAME

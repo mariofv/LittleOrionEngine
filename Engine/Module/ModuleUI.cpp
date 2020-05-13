@@ -37,7 +37,7 @@ bool ModuleUI::CleanUp()
 	return true;
 }
 
-void ModuleUI::Render(const ComponentCamera* camera, bool scene_mode)
+void ModuleUI::Render(bool scene_mode)
 {
 	BROFILER_CATEGORY("UI: Module Render", Profiler::Color::LightSeaGreen);
 	if (main_canvas != nullptr)

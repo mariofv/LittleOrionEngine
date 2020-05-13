@@ -10,11 +10,10 @@
 #include <GL/glew.h>
 
 class Component;
+class ComponentButton;
 class ComponentCanvas;
 class ComponentCanvasRenderer;
-class ComponentCamera;
 class ComponentText;
-class ComponentButton;
 class GameObject;
 
 class ModuleUI : public Module
@@ -27,7 +26,7 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	void Render(const ComponentCamera* camera, bool scene_mode);
+	void Render(bool scene_mode);
 
 	ComponentCanvas* CreateComponentCanvas();
 	void RemoveComponentCanvas(ComponentCanvas* component_canvas);
