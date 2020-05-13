@@ -27,7 +27,7 @@ void ComponentParticleSystem::Init()
 		particles[i].billboard = new ComponentBillboard(owner);
 		particles[i].billboard->width = 0.2f; particles[i].billboard->height= 0.2f;
 		particles[i].billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
-
+		particles[i].life = 0.0F;
 	}
 }
 
@@ -64,7 +64,14 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 void ComponentParticleSystem::Render()
 {
-	
+	time_counter += App->time->real_time_delta_time;
+	if (time_counter >= time_between_particles)
+	{
+		int unused_particle = FirstUnusedParticle();
+		RespawnParticle(particles[unused_particle]);
+		time_counter = 0.0F;
+	}
+
 	// update all particlesa
 	for (unsigned int i = 0; i < max_particles; ++i)
 	{
@@ -75,13 +82,8 @@ void ComponentParticleSystem::Render()
 			p.position.y +=  p.velocity.y*App->time->real_time_delta_time;
 			p.billboard->Render(p.position);
 		}
-		else 
-		{
-			int unused_particle = FirstUnusedParticle();
-			RespawnParticle(particles[unused_particle]);
-		}
-	
 	}
+	
 }
 
 void ComponentParticleSystem::Delete()

@@ -16,7 +16,9 @@ public:
 		float3 position;
 		float3 velocity;
 		float4 color;
+		float time_counter;
 		float  life;
+		bool counter = false;
 		ComponentBillboard* billboard;
 	};
 
@@ -40,6 +42,7 @@ public:
 	unsigned int FirstUnusedParticle();
 	void RespawnParticle(Particle& particle);
 	void Render();
+	void UpdateParticle();
 	float3 GetPositionOfParticle();
 
 	void Delete() override;
@@ -62,6 +65,8 @@ public:
 
 	
 public:
+	float time_counter = 0.0F;
+	float time_between_particles = 1000.0F;
 	std::vector<Particle> particles;
 	unsigned int max_particles = 5;
 	unsigned int last_used_particle = 0;
