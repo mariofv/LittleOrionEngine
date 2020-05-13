@@ -54,10 +54,10 @@ protected:
 	float rotate_speed = 0.01f;
 	float attack_speed = 1.f;
 	float attack_power = 10.f;
-	float attack_range = 2.f;
+	float attack_range = 1.4f;
 	const float MAX_HEALTH_POINTS = 100.f;
 	float health_points = MAX_HEALTH_POINTS;
-	float detect_distance = 10.f;
+	float detect_distance = 50.f;
 
 	bool move_with_physics = true;
 

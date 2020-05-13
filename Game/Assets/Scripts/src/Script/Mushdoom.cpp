@@ -6,6 +6,7 @@
 #include "PursueEnemyState.h"
 #include "AttackEnemyState.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 
@@ -74,6 +75,10 @@ void Mushdoom::ResetEnemy()
 
 	is_alive = true;
 	is_attacking = false;
+
+	current_state = pursue_state;
+	animation->Stop();
+	animation->Play();
 
 	//IMPORTANT: DONT RESET POSITION
 	owner->transform.SetRotation(init_rotation);
