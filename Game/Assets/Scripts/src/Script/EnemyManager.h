@@ -45,6 +45,7 @@ private:
 	GameObject* mushdoom_go = nullptr;
 	EventManager* event_manager = nullptr;
 	std::vector<float3> enemies_spawning_queue;
+	unsigned total_enemies_killed = 0;
 	float3 spawn_points[5];
 };
 extern "C" SCRIPT_API EnemyManager* EnemyManagerDLL(); //This is how we are going to load the script

@@ -26,6 +26,8 @@ void AttackEnemyState::OnStateEnter()
 	{
 		enemy->animation->ActiveAnimation("attack");
 	}
+
+	enemy->is_attacking = true;
 }
 
 void AttackEnemyState::OnStateUpdate()
@@ -41,4 +43,5 @@ void AttackEnemyState::OnStateUpdate()
 
 void AttackEnemyState::OnStateExit()
 {
+	enemy->is_attacking = false;
 }

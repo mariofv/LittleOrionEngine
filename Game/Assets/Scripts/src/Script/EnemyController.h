@@ -25,53 +25,41 @@ public:
 
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();
-	void TakeDamage(float damage);
 	void InitMembers();
-	virtual void ResetEnemy() {}
 
 	bool PlayerInSight();
 	bool PlayerInRange();
+	void MoveTowardsPlayer();
+	void TakeDamage(float damage);
 
-	float GetMoveSpeed() const;
-	bool PointInNavMesh(float3& position, float3& next_position);
-	bool IsPointWalkable(float3& position);
-	void LookAndMoveToPoint(float3& position);
-	void LookToPoint(float3& position);
-	void SetVelocity(float3& position);
+	virtual void ResetEnemy() {}
 
 protected:
-	void Move();
-	bool Attack() {}
-
-	void OnCollisionEnter() {}
 	void Die();
 
 public:
-	GameObject* player = nullptr;
 	ComponentAnimation* animation = nullptr;
-	ComponentCollider* collider_component = nullptr;
+	ComponentCollider* collider = nullptr;
 
 	bool is_alive = true;
-
-	//GameObject* object_collider = nullptr;
-	ComponentCollider* collider = nullptr;
+	bool is_attacking = false;
 
 protected:
 	EnemyType type;
 
+	GameObject* player = nullptr;
 	EnemyManager* enemy_manager = nullptr;
 
-	float rot_speed = 0.01f;
-	float move_speed = 1.f;// 0.01f;
+	float move_speed = 1.f;
+	float rotate_speed = 0.01f;
 	float attack_speed = 1.f;
-	float attack_power = 1.f;
-	float attack_range = 1.f;
-	float max_health_points = 100.f; //not const, to modify in inspector
-	float health_points = max_health_points;
-	float stop_distance = 2.f;
-	float detect_distance = 25.f;
+	float attack_power = 10.f;
+	float attack_range = 1.4f;
+	const float MAX_HEALTH_POINTS = 100.f;
+	float health_points = MAX_HEALTH_POINTS;
+	float detect_distance = 50.f;
 
-	bool is_attacking = false;
+	bool move_with_physics = true;
 
 	float3 init_translation;
 	Quat init_rotation;

@@ -48,6 +48,7 @@ void EventManager::Update()
 			if(waves_left == 0)
 			{
 				event_triggered = false;
+				waves_left = 0;
 			}
 			else
 			{
@@ -87,21 +88,24 @@ bool EventManager::TriggerEvent(unsigned event)
 		return false;
 	}
 
+	current_event = event;
+
 	switch (event)
 	{
 		case 0:
 			waves_left = 2;
 			enemies_per_wave = 4;
-			current_event = event;
 			enemy_manager->SpawnWave(current_event, enemies_per_wave);
 			break;
 		case 1:
 			waves_left = 1;
 			enemies_per_wave = 6;
+			enemy_manager->SpawnWave(current_event, enemies_per_wave);
 			break;
 		case 2:
 			waves_left = 2;
 			enemies_per_wave = 6;
+			enemy_manager->SpawnWave(current_event, enemies_per_wave);
 			break;
 
 		default:

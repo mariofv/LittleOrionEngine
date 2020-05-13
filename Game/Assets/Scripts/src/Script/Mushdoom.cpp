@@ -6,6 +6,7 @@
 #include "PursueEnemyState.h"
 #include "AttackEnemyState.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 
@@ -62,8 +63,7 @@ void Mushdoom::Start()
 // Update is called once per frame
 void Mushdoom::Update()
 {
-	//EnemyController::Update();
-	if(is_alive)
+	if (is_alive)
 	{
 		current_state->OnStateUpdate();
 	}
@@ -71,10 +71,14 @@ void Mushdoom::Update()
 
 void Mushdoom::ResetEnemy()
 {
-	health_points = max_health_points;
+	health_points = MAX_HEALTH_POINTS;
 
 	is_alive = true;
 	is_attacking = false;
+
+	current_state = pursue_state;
+	animation->Stop();
+	animation->Play();
 
 	//IMPORTANT: DONT RESET POSITION
 	owner->transform.SetRotation(init_rotation);
@@ -86,6 +90,7 @@ void Mushdoom::OnInspector(ImGuiContext* context)
 {
 	EnemyController::OnInspector(context);
 
+	ImGui::NewLine();
 	ImGui::Text("Current State:");
 	ImGui::SameLine();
 	ImGui::TextColored(ImVec4(1.f, 1.f, 0.f, 1.f), "%s", current_state->name);

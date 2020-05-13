@@ -14,6 +14,5 @@ public:
 	void OnStateUpdate() override;
 	void OnStateExit() override;
 };
-
 extern "C" SCRIPT_API AttackEnemyState* AttackEnemyStateDLL(); //This is how we are going to load the script
 #endif

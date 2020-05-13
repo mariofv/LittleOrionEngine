@@ -79,9 +79,8 @@ void EnemyManager::KillEnemy(EnemyController* enemy)
 	enemy->owner->transform.SetTranslation(graveyard_position);
 	enemy->owner->SetEnabled(false);
 
-	//Reset enemy
-	enemy->ResetEnemy();
 	--current_number_of_enemies_alive;
+	++total_enemies_killed;
 
 	if(event_manager->event_triggered)
 	{
@@ -100,6 +99,10 @@ void EnemyManager::SpawnEnemy(const unsigned type, const float3& spawn_position)
 		{
 			enemy = static_cast<Mushdoom*>(enemies[i]);
 			enemy->is_alive = true;
+
+			//Reset enemy
+			enemy->ResetEnemy();
+
 			enemy->Start();
 			enemy->owner->transform.SetTranslation(spawn_position);
 			enemy->collider->UpdateDimensions();
@@ -117,7 +120,6 @@ void EnemyManager::SpawnEnemy(const unsigned type, const float3& spawn_position)
 
 void EnemyManager::SpawnWave(unsigned event, unsigned enemies_per_wave)
 {
-
 	switch (event)
 	{
 		case 0:
@@ -174,7 +176,15 @@ void EnemyManager::OnInspector(ImGuiContext* context)
 	ShowDraggedObjects();
 
 	ImGui::Text("enemies_spawning_queue size:  %d", enemies_spawning_queue.size());
+	ImGui::Text("current_number_of_enemies_alive: %d", current_number_of_enemies_alive);
+	ImGui::Text("total_enemies_killed: %d", total_enemies_killed);
+	ImGui::Text("enemies: %d", enemies.size());
 
+	ImGui::Separator();
+	for(const auto& enemy : enemies)
+	{
+		ImGui::Text("Is Alive: %d", enemy->is_alive);
+	}
 }
 
 //Use this for linking JUST GO automatically 
@@ -198,7 +208,7 @@ void EnemyManager::InitSpawnPoints()
 		spawn_points[i] = spawn_go_dad->children[i]->transform.GetTranslation();
 	}
 }
-bool EnemyManager::CheckSpawnAvailability(float3 & spawn_position)
+bool EnemyManager::CheckSpawnAvailability(float3& spawn_position)
 {
 	for(const auto& enemy : enemies)
 	{
@@ -207,7 +217,7 @@ bool EnemyManager::CheckSpawnAvailability(float3 & spawn_position)
 			continue;
 		}
 
-		if(enemy->owner->transform.GetTranslation().Distance(spawn_position) <= 10.0f)
+		if(enemy->owner->transform.GetTranslation().Distance(spawn_position) <= 2.5f)
 		{
 			return false;
 		}

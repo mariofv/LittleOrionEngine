@@ -87,9 +87,9 @@
         },
         {
             "ParentUUID": 660713151,
-            "Prefab": 2344508814,
+            "Prefab": 81171893,
             "Transform": {
-                "UUID": 1853729602,
+                "UUID": 1611523453,
                 "Active": true,
                 "Translation": [
                     0.0,
@@ -109,12 +109,32 @@
             },
             "UUIDS": [
                 {
-                    "UUID": 1217576065,
-                    "OriginalUUID": 2344508814
+                    "UUID": 2539488176,
+                    "OriginalUUID": 81171893
                 },
                 {
-                    "UUID": 1542223318,
-                    "OriginalUUID": 2344508815
+                    "UUID": 3362562407,
+                    "OriginalUUID": 81171899
+                },
+                {
+                    "UUID": 3244042863,
+                    "OriginalUUID": 81171898
+                },
+                {
+                    "UUID": 369082625,
+                    "OriginalUUID": 81171897
+                },
+                {
+                    "UUID": 2984060178,
+                    "OriginalUUID": 81171896
+                },
+                {
+                    "UUID": 3441603299,
+                    "OriginalUUID": 81171895
+                },
+                {
+                    "UUID": 167395237,
+                    "OriginalUUID": 81171894
                 }
             ]
         },
@@ -359,18 +379,18 @@
                 "Active": true,
                 "Translation": [
                     -103.47425079345703,
-                    -1.3713780641555787,
+                    0.0,
                     0.9316221475601196
                 ],
                 "Rotation": [
-                    179.99989318847657,
-                    -89.00004577636719,
-                    179.99989318847657
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Scale": [
-                    2.000001907348633,
                     2.0,
-                    2.000001907348633
+                    2.0,
+                    2.0
                 ]
             },
             "Transform2D": {
@@ -398,7 +418,7 @@
                     "UUID": 1272613086,
                     "ComponentType": 8,
                     "Active": true,
-                    "StateMachineResource": 507853369
+                    "StateMachineResource": 927869490
                 },
                 {
                     "UUID": 110682064,
@@ -407,15 +427,15 @@
                     "ScriptName": "Mushdoom"
                 },
                 {
-                    "UUID": 203756950,
+                    "UUID": 2407668496,
                     "Active": true,
                     "ComponentType": 9,
                     "ColliderType": 0,
                     "Mass": 1.0,
                     "Scale": [
-                        0.28999999165534975,
-                        0.33000001311302187,
-                        0.20000000298023225
+                        0.4099999964237213,
+                        0.3199999928474426,
+                        0.3400000035762787
                     ],
                     "Static": false,
                     "Collision": true,
@@ -440,9 +460,9 @@
                 "UUID": 3715891772,
                 "Active": true,
                 "Translation": [
-                    -97.90010833740235,
-                    -0.46419641375541689,
-                    -0.5957344174385071
+                    -95.51750946044922,
+                    2.4621639251708986,
+                    2.589632987976074
                 ],
                 "Rotation": [
                     -0.0,
@@ -1644,7 +1664,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 18,
+                    "Texture": 55,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1706,7 +1726,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 19,
+                    "Texture": 57,
                     "Color": [
                         1.0,
                         1.0,
