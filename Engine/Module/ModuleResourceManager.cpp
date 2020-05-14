@@ -9,6 +9,7 @@
 #include "Module/ModuleTime.h"
 
 #include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/Importer/FontImporter.h"
 #include "ResourceManagement/Importer/MaterialImporter.h"
 #include "ResourceManagement/Importer/ModelImporter.h"
 #include "ResourceManagement/Importer/ModelImporters/AnimationImporter.h"
@@ -20,6 +21,12 @@
 #include "ResourceManagement/Importer/StateMachineImporter.h"
 #include "ResourceManagement/Importer/SoundImporter.h"
 #include "ResourceManagement/Importer/TextureImporter.h"
+
+#include "ResourceManagement/Manager/AnimationManager.h"
+#include "ResourceManagement/Manager/FontManager.h"
+#include "ResourceManagement/Manager/MaterialManager.h"
+#include "ResourceManagement/Manager/MeshManager.h"
+#include "ResourceManagement/Manager/PrefabManager.h"
 
 #include "ResourceManagement/Manager/SceneManager.h"
 
@@ -40,6 +47,7 @@ bool ModuleResourceManager::Init()
 	APP_LOG_SECTION("************ Module Resource Manager Init ************");
 
 	animation_importer = std::make_unique<AnimationImporter>();
+	font_importer = std::make_unique<FontImporter>();
 	material_importer = std::make_unique<MaterialImporter>();
 	mesh_importer = std::make_unique<MeshImporter>();
 	model_importer = std::make_unique<ModelImporter>();
@@ -210,6 +218,10 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path, bool force) cons
 		{
 		case FileType::ANIMATION:
 			asset_metafile = animation_importer->Import(file_path);
+			break;
+
+		case FileType::FONT:
+			asset_metafile = font_importer->Import(file_path);
 			break;
 		
 		case FileType::MATERIAL:

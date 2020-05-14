@@ -3,13 +3,52 @@
 
 #define ENGINE_EXPORTS
 
-#include "Component.h"
-class ComponentTransform2D : public Component
+#include "ComponentTransform.h"
+
+#include <array>
+
+struct AnchorPreset
+{
+	enum class AnchorPresetType
+	{
+		LEFT_HORIZONTAL_TOP_VERTICAL,
+		CENTER_HORIZONTAL_TOP_VERTICAL,
+		RIGHT_HORIZONTAL_TOP_VERTICAL,
+		STRETCH_HORIZONTAL_TOP_VERTICAL,
+
+		LEFT_HORIZONTAL_CENTER_VERTICAL,
+		CENTER_HORIZONTAL_CENTER_VERTICAL,
+		RIGHT_HORIZONTAL_CENTER_VERTICAL,
+		STRETCH_HORIZONTAL_CENTER_VERTICAL,
+
+		LEFT_HORIZONTAL_BOTTOM_VERTICAL,
+		CENTER_HORIZONTAL_BOTTOM_VERTICAL,
+		RIGHT_HORIZONTAL_BOTTOM_VERTICAL,
+		STRETCH_HORIZONTAL_BOTTOM_VERTICAL,
+
+		LEFT_HORIZONTAL_STRETCH_VERTICAL,
+		CENTER_HORIZONTAL_STRETCH_VERTICAL,
+		RIGHT_HORIZONTAL_STRETCH_VERTICAL,
+		STRETCH_HORIZONTAL_STRETCH_VERTICAL,
+
+		CUSTOM
+	};
+
+	AnchorPresetType type;
+	float2 min_anchor;
+	float2 max_anchor;
+};
+
+class ComponentTransform2D : public ComponentTransform
 {
 public:
+	struct Rect
+	{
+		float left, right, bottom, top;
+	};
+
 	ComponentTransform2D();
 	ComponentTransform2D(GameObject * owner);
-	ComponentTransform2D(GameObject * owner, const Rect rect, const float rotation);
 	~ComponentTransform2D();
 
 	//Copy and move
@@ -19,36 +58,73 @@ public:
 	ComponentTransform2D & operator=(const ComponentTransform2D & component_to_copy);
 	ComponentTransform2D & operator=(ComponentTransform2D && component_to_move) = default;
 
-	// Heredado v�a Component
-	virtual void Delete() override;
-	virtual Component * Clone(bool create_on_module = true) const override;
-	virtual void Copy(Component * component_to_copy) const override;
-	virtual void Save(Config & config) const override;
-	virtual void Load(const Config & config) override;
+	Component * Clone(bool create_on_module = true) const override;
+	void Copy(Component * component_to_copy) const override;
+
+	void Delete() override;
+
+	void SpecializedSave(Config & config) const override;
+	void SpecializedLoad(const Config & config) override;
 
 	void GenerateGlobalModelMatrix();
-	void RescaleTransform();
-	void SetSize(float new_width, float new_height);
-	ENGINE_API void SetPosition(float x, float y);
-	ENGINE_API void SetPosition(float3* new_position);
-	void CalculateRectMatrix(float new_width, float new_height, float4x4& matrix);
-	void CalculateRectMatrix(float x, float y, float new_width, float new_height, float4x4& matrix);
+	float4x4 GetSizedGlobalModelMatrix() const;
+	void SetGlobalModelMatrix(const float4x4& new_global_matrix) override;
+
+	ENGINE_API void SetTranslation(const float3& translation) override;
+	ENGINE_API void Translate(const float3& translation) override;
+
+	void SetWidth(float new_width);
+	void SetHeight(float new_height);
+	void SetSize(float2 new_size);
+
+	void SetPivot(const float2& new_pivot);
+	void ChangePivotSpace(const float2& new_pivot_position);
+
+	void GeneratePivotPosition();
+	float2 ComputePivotPosition(float2 pivot_point);
+
+	void SetAnchorPreset(AnchorPreset::AnchorPresetType new_anchor_preset);
+	AnchorPreset::AnchorPresetType GetAnchorPreset() const;
+	void UpdateAnchorPreset();
+
+	void SetMinAnchor(const float2& new_min_anchor);
+	void SetMaxAnchor(const float2& new_min_anchor);
+	void ChangeAnchorSpace(const float2& new_anchor_matrix);
+
+	bool HasCoincidentHorizontalAnchors() const;
+	bool HasCoincidentVerticalAnchors() const;
+
+	void GenerateAnchorPosition();
+	float2 ComputeAnchorPosition(float2 min_anchor, float2 max_anchor);
+
+	void SetLeft(float left);
+	void SetRight(float right);
+	void SetBottom(float bottom);
+	void SetTop(float top);
+	void GenerateRect();
+
 private:
-	void OnTransformChange();
-	void UpdateRect();
-	friend class PanelComponent;
+	void OnTransformChange() override;
 
 public:
-	float width = 10;
-	float height = 10;
-	bool is_new = true;
-	math::Rect rect = math::Rect(0, 0, 10, 10);
-	float rotation = 0.0f;
-	float3 position = float3::zero;
-	float2 scale = float2::one;
-	float4x4 global_matrix = float4x4::identity;
-	float4x4 model_matrix = float4x4::identity;
-	float4x4 rect_matrix = float4x4::identity;
-};
-#endif
+	float2 anchored_position = float2::zero;
+	float2 size = float2(100.f, 100.f);
+	Rect rect;
 
+private:
+	AnchorPreset::AnchorPresetType anchor_preset = AnchorPreset::AnchorPresetType::CENTER_HORIZONTAL_CENTER_VERTICAL;
+
+	float2 pivot = float2(0.5f);
+	float2 pivot_position = float2::zero;
+
+	float2 min_anchor = float2(0.5f);
+	float2 max_anchor = float2(0.5f);
+
+	float2 anchor_position = float2::zero;
+
+	static const std::array<AnchorPreset, 16> anchor_presets;
+
+	friend class PanelTransform;
+};
+
+#endif //_COMPONENTTRANSFORM2D_H_

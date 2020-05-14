@@ -1,8 +1,6 @@
 #include "WorldManager.h"
-#include "Component/ComponentImage.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentProgressBar.h"
 
 #include "Filesystem/PathAtlas.h"
 
@@ -32,9 +30,7 @@ WorldManager::WorldManager()
 // Use this for initialization before Start()
 void WorldManager::Awake()
 {
-	//health_component = (ComponentProgressBar*)health_bar->GetComponent(ComponentUI::UIType::PROGRESSBAR);
-	//lose_component = (ComponentImage*)lose_screen->GetComponent(ComponentUI::UIType::IMAGE);
-	//win_component = (ComponentImage*)win_screen->GetComponent(ComponentUI::UIType::IMAGE);
+	//health_component = (ComponentProgressBar*)health_bar->GetComponent(Component::ComponentType::UI_PROGRESS_BAR);
 	player_controller = (ComponentScript*)player->GetComponentScript("PlayerController");
 
 	GameObject* event_manager_go = App->scene->GetGameObjectByName("EventManager");
@@ -53,28 +49,29 @@ void WorldManager::Start()
 // Update is called once per frame
 void WorldManager::Update()
 {
-	//if(health_component->percentage <= 0.0f)
-	//{
-	//	//Lose
-	//	player_controller->Disable();
-	//	lose_component->Enable();
-	//	transition = true;
-	//}
-
-	//if(OnTriggerEnter())
-	//{
-	//	//Win
-	//	player_controller->Disable();
-	//	win_component->Enable();
-	//	transition = true;
-	//}
-
-	//if(transition && App->input->GetAnyKeyPressedDown())
-	//{
-	//	App->scene->LoadScene(0);
-	//}
-
 	CheckTriggers();
+	/*
+	if(health_component->percentage <= 0.0f)
+	{
+		//Lose
+		player_controller->Disable();
+		lose_component->Enable();
+		transition = true;
+	}
+
+	if(OnTriggerEnter())
+	{
+		//Win
+		player_controller->Disable();
+		win_component->Enable();
+		transition = true;
+	}
+
+	if(transition && App->input->GetAnyKeyPressedDown())
+	{
+		App->scene->LoadScene(0);
+	}
+	*/
 
 }
 
@@ -87,7 +84,7 @@ void WorldManager::OnInspector(ImGuiContext* context)
 
 }
 
-//Use this for linking JUST GO automatically 
+//Use this for linking JUST GO automatically
 void WorldManager::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
@@ -133,10 +130,10 @@ void WorldManager::CheckTriggers()
 			++current_event_trigger;
 		}
 	}
-	
+
 }
 
-//Use this for linking GO AND VARIABLES automatically if you need to save variables 
+//Use this for linking GO AND VARIABLES automatically if you need to save variables
 // void WorldManager::Save(Config& config) const
 // {
 // 	config.AddUInt(example->UUID, "ExampleNameforSave");
@@ -149,4 +146,3 @@ void WorldManager::CheckTriggers()
 // 	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
 // 	Script::Load(config);
 // }
-

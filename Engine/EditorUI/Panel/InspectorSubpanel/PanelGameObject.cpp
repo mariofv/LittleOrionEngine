@@ -4,17 +4,20 @@
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentCanvasRenderer.h"
 #include "Component/ComponentCapsuleCollider.h"
-#include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentImage.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentUI.h"
-
 #include "EditorUI/Panel/PanelInspector.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelTransform.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
@@ -42,7 +45,7 @@ void PanelGameObject::Render(GameObject* game_object)
 
 	ImGui::PushID(game_object->UUID);
 
-	if (ImGui::Checkbox("###State", &game_object->active)) 
+	if (ImGui::Checkbox("###State", &game_object->active))
 	{
 		game_object->SetEnabled(game_object->active);
 	}
@@ -69,7 +72,14 @@ void PanelGameObject::Render(GameObject* game_object)
 	ImGui::Separator();
 	ImGui::Spacing();
 
-	component_panel.ShowComponentTransformWindow(&game_object->transform);
+	if (game_object->GetTransformType() == Component::ComponentType::TRANSFORM)
+	{
+		PanelTransform::ShowComponentTransformWindow(&game_object->transform);
+	}
+	else
+	{
+		PanelTransform::ShowComponentTransform2DWindow(&game_object->transform_2d);
+	}
 
 	ImGui::Spacing();
 	ImGui::Separator();
@@ -91,27 +101,51 @@ void PanelGameObject::Render(GameObject* game_object)
 			case Component::ComponentType::CAMERA:
 				component_panel.ShowComponentCameraWindow(static_cast<ComponentCamera*>(component));
 				break;
+
+			case Component::ComponentType::CANVAS_RENDERER:
+				component_panel.ShowComponentCanvasRendererWindow(static_cast<ComponentCanvasRenderer*>(component));
+				break;
+
 			case Component::ComponentType::MESH_RENDERER:
 				component_panel.ShowComponentMeshRendererWindow(static_cast<ComponentMeshRenderer*>(component));
 				break;
+
 			case Component::ComponentType::LIGHT:
 				component_panel.ShowComponentLightWindow(static_cast<ComponentLight*>(component));
 				break;
+
 			case Component::ComponentType::SCRIPT:
 				component_panel.ShowComponentScriptWindow(static_cast<ComponentScript*>(component));
 				break;
-			case Component::ComponentType::UI:
-				component_panel.ShowComponentUIWindow(static_cast<ComponentUI*>(component));
-				break;
+
 			case Component::ComponentType::ANIMATION:
 				component_panel.ShowComponentAnimationWindow(static_cast<ComponentAnimation*>(component));
 				break;
+
+			case Component::ComponentType::CANVAS:
+				component_panel.ShowComponentCanvasWindow(static_cast<ComponentCanvas*>(component));
+				break;
+
+			case Component::ComponentType::UI_IMAGE:
+				component_panel.ShowComponentImageWindow(static_cast<ComponentImage*>(component));
+				break;
+
+			case Component::ComponentType::UI_TEXT:
+				component_panel.ShowComponentTextWindow(static_cast<ComponentText*>(component));
+				break;
+
+			case Component::ComponentType::UI_BUTTON:
+				component_panel.ShowComponentButtonWindow(static_cast<ComponentButton*>(component));
+				break;
+
 			case Component::ComponentType::COLLIDER:
 				component_panel.ShowComponentColliderWindow(static_cast<ComponentCollider*>(component));
 				break;
+
 			case Component::ComponentType::AUDIO_SOURCE:
 				component_panel.ShowComponentAudioSourceWindow(static_cast<ComponentAudioSource*>(component));
 				break;
+
 			default:
 				break;
 		}

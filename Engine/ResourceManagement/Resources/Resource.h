@@ -23,6 +23,7 @@ enum class ResourceType
 	SKYBOX,
 	TEXTURE,
 	STATE_MACHINE,
+	FONT,
 	SOUND,
 	UNKNOWN
 };
@@ -70,4 +71,3 @@ namespace ResourceManagement
 }
 
 #endif // !_RESOURCE_H_
-

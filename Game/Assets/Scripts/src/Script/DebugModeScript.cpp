@@ -36,17 +36,20 @@ DebugModeScript::DebugModeScript()
 // Use this for initialization before Start()
 void DebugModeScript::Awake()
 {
-	background = (ComponentImage*)background_go->GetComponent(ComponentUI::UIType::IMAGE);
-	text_fps = (ComponentText*)text_fps_go->GetComponent(ComponentUI::UIType::TEXT);
-	text_tris = (ComponentText*)text_tris_go->GetComponent(ComponentUI::UIType::TEXT);
-	text_verts = (ComponentText*)text_verts_go->GetComponent(ComponentUI::UIType::TEXT);
+	background = (ComponentImage*)background_go->GetComponent(Component::ComponentType::UI_IMAGE);
+	text_fps = (ComponentText*)text_fps_go->GetComponent(Component::ComponentType::UI_TEXT);
+	text_tris = (ComponentText*)text_tris_go->GetComponent(Component::ComponentType::UI_TEXT);
+	text_verts = (ComponentText*)text_verts_go->GetComponent(Component::ComponentType::UI_TEXT);
 
-	text_fps->scale = 8.0f;
-	text_tris->scale = 8.0f;
-	text_verts->scale = 8.0f;
+	text_fps->SetFontSize(8.0f);
+	text_tris->SetFontSize(8.0f);
+	text_verts->SetFontSize(8.0f);
+
+	/*
 	text_fps->color = float3::zero;
 	text_tris->color = float3::zero;
 	text_verts->color = float3::zero;
+	*/
 
 	ComponentScript* component = camera_manager->GetComponentScript("SceneCamerasController");
 	scene_cameras = (SceneCamerasController*)component->script;
@@ -70,8 +73,8 @@ void DebugModeScript::Update()
 		(debug_enabled) ? background->Disable() : background->Enable();
 		(debug_enabled) ? scene_cameras->SetMainCameraRendering() : scene_cameras->SetMainCameraRendering();
 		debug_enabled = !debug_enabled;
-		
-		
+
+
 	}
 
 	if (debug_enabled)
@@ -96,7 +99,7 @@ void DebugModeScript::OnInspector(ImGuiContext* context)
 
 }
 
-//Use this for linking JUST GO automatically 
+//Use this for linking JUST GO automatically
 void DebugModeScript::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
@@ -122,7 +125,7 @@ void DebugModeScript::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
-//Use this for linking GO AND VARIABLES automatically if you need to save variables 
+//Use this for linking GO AND VARIABLES automatically if you need to save variables
 // void DebugModeScript::Save(Config& config) const
 // {
 // 	config.AddUInt(example->UUID, "ExampleNameforSave");
@@ -135,4 +138,3 @@ void DebugModeScript::InitPublicGameObjects()
 // 	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
 // 	Script::Load(config);
 // }
-

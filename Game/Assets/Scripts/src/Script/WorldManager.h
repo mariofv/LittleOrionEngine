@@ -4,8 +4,6 @@
 #include "Script.h"
 #include "EventManager.h"
 
-class ComponentProgressBar;
-class ComponentImage;
 class ComponentCollider;
 
 
@@ -35,9 +33,7 @@ private:
 	GameObject* lose_screen = nullptr;
 	GameObject* win_screen = nullptr;
 	GameObject* player = nullptr;
-	ComponentImage* lose_component = nullptr;
-	ComponentImage* win_component = nullptr;
-	ComponentProgressBar* health_component = nullptr;
+	
 	ComponentScript* player_controller = nullptr;
 	EventManager* event_manager = nullptr;
 

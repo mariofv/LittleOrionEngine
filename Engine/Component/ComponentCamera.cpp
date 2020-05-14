@@ -12,6 +12,7 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleUI.h"
 #include "Module/ModuleWindow.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
@@ -116,11 +117,8 @@ void ComponentCamera::Delete()
 	App->cameras->RemoveComponentCamera(this);
 }
 
-void ComponentCamera::Save(Config& config) const
+void ComponentCamera::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddUInt((uint64_t)type, "ComponentType");
-	config.AddBool(active, "Active");
 	config.AddUInt(camera_frustum.type, "FrustumType");
 	config.AddFloat(camera_frustum.nearPlaneDistance, "NearPlaneDistance");
 	config.AddFloat(camera_frustum.farPlaneDistance, "FarPlaneDistance");
@@ -132,10 +130,8 @@ void ComponentCamera::Save(Config& config) const
 	config.AddUInt(skybox_uuid, "Skybox");
 }
 
-void ComponentCamera::Load(const Config& config)
+void ComponentCamera::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
 	uint64_t frustum_type_int = config.GetUInt("FrustumType", 1);
 	switch (frustum_type_int)
 	{
@@ -189,7 +185,7 @@ float ComponentCamera::GetHeight() const
 	return last_height;
 }
 
-void ComponentCamera::RecordFrame(float width, float height)
+void ComponentCamera::RecordFrame(float width, float height, bool scene_mode)
 {
 	if (last_width != width || last_height != height || toggle_msaa)
 	{
@@ -229,6 +225,8 @@ void ComponentCamera::RecordFrame(float width, float height)
 	}
 
 	App->renderer->RenderFrame(*this);
+	App->ui->Render(scene_mode);
+
 
 #if !GAME
 	if (App->renderer->anti_aliasing)

@@ -5,50 +5,47 @@
 #include "Main/Gameobject.h"
 
 #include "Module/ModuleScene.h"
-ComponentButton::ComponentButton() : ComponentUI(ComponentUI::UIType::BUTTON)
+#include "Module/ModuleUI.h"
+
+ComponentButton::ComponentButton() : Component(ComponentType::UI_BUTTON)
 {
 }
 
-ComponentButton::ComponentButton(GameObject * owner) : ComponentUI(owner, ComponentUI::UIType::BUTTON)
+ComponentButton::ComponentButton(GameObject * owner) : Component(owner, ComponentType::UI_BUTTON)
 {
-	if (owner->transform_2d.is_new)
-	{
-		owner->transform_2d.SetSize(170, 23);
-		owner->transform_2d.SetPosition(&float3(0, 0, 1));
-	}
 }
 
-void ComponentButton::Render(float4x4* projection)
+Component* ComponentButton::Clone(bool original_prefab) const
 {
-	owner->transform_2d.position.z = 1;
-	
-	ComponentUI* text = nullptr;
-	for (const auto& child : owner->children)
+	ComponentButton * created_component;
+	if (original_prefab)
 	{
-		text = static_cast<ComponentUI*>(child->GetComponent(ComponentUI::UIType::TEXT));
-		if (text)
-		{
-			ComponentTransform2D* text_transform = &text->owner->transform_2d;
-			owner->transform_2d.SetSize(text_transform->rect.Width(), text_transform->rect.Height());
-			break;
-		}
+		created_component = new ComponentButton();
 	}
-	ComponentUI::Render(projection);
+	else
+	{
+		created_component = App->ui->CreateComponentUI<ComponentButton>();
+	}
+	*created_component = *this;
+	return created_component;
+};
+
+void ComponentButton::Copy(Component* component_to_copy) const
+{
+	*component_to_copy = *this;
+	*static_cast<ComponentButton*>(component_to_copy) = *this;
 }
+
 
 void ComponentButton::Delete()
 {
-	ComponentUI::Delete();
+	App->ui->RemoveComponentUI(this);
 }
 
-
-void ComponentButton::Save(Config& config) const
+void ComponentButton::SpecializedSave(Config& config) const
 {
-	ComponentUI::Save(config);
 }
 
-void ComponentButton::Load(const Config& config)
+void ComponentButton::SpecializedLoad(const Config& config)
 {
-	ComponentUI::Load(config);
 }
-
