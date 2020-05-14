@@ -97,7 +97,7 @@ void PlayerMovement::Move(int player)
 				collider->SetVelocity(direction, 0);
 			}
 		}
-		if (App->input->GetKeyDown(KeyCode::Space))
+		if (App->input->GetGameInputDown("Jump", player_id))
 		{
 			is_jumping = true;
 			Jump(direction);
