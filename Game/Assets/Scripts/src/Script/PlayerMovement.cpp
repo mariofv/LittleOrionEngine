@@ -72,18 +72,18 @@ void PlayerMovement::Move(int player)
 	float x_axis = App->input->GetHorizontal(player_id);
 	float y_axis = App->input->GetVertical(player_id);
 
-	if (!IsGrounded() && is_jumping)
+	if (abs(velocity.y) < 0.01 && is_jumping)
 	{
 		is_jumping = false;
 	}
 
 	direction = float3(x_axis, 0.0f, y_axis); // not add just assing
-	if (abs(velocity.y) < 0.01 && !is_jumping)
+	if (IsGrounded() && !is_jumping)
 	{
 		is_grounded = true;
 		if (!direction.Equals(float3::zero))
 		{
-			is_inside = IsInside(transform + direction * speed / 10);
+			is_inside = IsInside(transform + direction  * speed / 10.f);
 			if (is_inside)
 			{
 				collider->SetVelocity(direction, speed * App->time->delta_time);
@@ -144,7 +144,8 @@ bool PlayerMovement::IsGrounded()
 bool PlayerMovement::IsInside(float3 future_transform)
 {
 	float3 distance = future_transform - owner->transform.GetTranslation();
-	AABB future_position = AABB(owner->aabb.bounding_box.minPoint + distance, owner->aabb.bounding_box.maxPoint + distance);
+	distance *= 2.0f;
+	AABB future_position = AABB(owner->aabb.global_bounding_box.minPoint + distance, owner->aabb.global_bounding_box.maxPoint + distance);
 	
 	if(second_player != nullptr && App->input->singleplayer_input)
 	{
