@@ -64,7 +64,7 @@ void ComponentCanvas::Render(bool scene_mode)
 
 #if GAME
 	canvas_width = App->window->GetWidth();
-	window_height = App->window->GetHeight();
+	canvas_height = App->window->GetHeight();
 #else
 	canvas_width = App->editor->game_panel->game_window_content_area_width;
 	canvas_height = App->editor->game_panel->game_window_content_area_height;
