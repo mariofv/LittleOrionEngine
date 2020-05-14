@@ -29,7 +29,7 @@ public:
 
 	bool PlayerInSight();
 	bool PlayerInRange();
-	void MoveTowardsPlayer();
+	void SeekPlayer();
 	void TakeDamage(float damage);
 
 	virtual void ResetEnemy() {}

@@ -174,10 +174,48 @@
                     "OriginalUUID": 197215351
                 }
             ]
+        },
+        {
+            "ParentUUID": 3144327730,
+            "Prefab": 197215350,
+            "Transform": {
+                "UUID": 2423019692,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 3109912763,
+                    "OriginalUUID": 197215350
+                },
+                {
+                    "UUID": 3091889874,
+                    "OriginalUUID": 0
+                },
+                {
+                    "UUID": 199419433,
+                    "OriginalUUID": 0
+                }
+            ]
         }
     ],
     "PrefabsComponents": [
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 2132626039,
@@ -205,6 +243,7 @@
             "UUID": 299268297
         },
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 2899772861,
@@ -232,6 +271,7 @@
             "UUID": 3420948497
         },
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 387952792,
@@ -259,6 +299,7 @@
             "UUID": 1367554656
         },
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 4117584551,
@@ -286,6 +327,7 @@
             "UUID": 960305813
         },
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 2008771200,
@@ -313,6 +355,7 @@
             "UUID": 2122564851
         },
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 1874460943,
@@ -340,6 +383,7 @@
             "UUID": 3816290468
         },
         {
+            "RemovedComponents": [],
             "Components": [
                 {
                     "UUID": 2907332931,
@@ -444,7 +488,7 @@
                     "x_axis": false,
                     "y_axis": false,
                     "z_axis": false,
-                    "DisablePhysics": true,
+                    "DisablePhysics": false,
                     "Friction": 1.0,
                     "Rolling_friction": 1.0
                 }
@@ -524,8 +568,8 @@
                     "ScriptName": "PlayerMovement",
                     "Name0": "Main Camera",
                     "Main Camera": 172714554,
-                    "Name1": "Player",
-                    "Player": 248855188
+                    "Name1": "Player2",
+                    "Player2": 3144327730
                 },
                 {
                     "UUID": 3308507368,
@@ -949,8 +993,8 @@
                     "ScriptName": "CameraController",
                     "Name0": "Player",
                     "Player": 248855188,
-                    "Name1": "Player",
-                    "Player": 248855188
+                    "Name1": "Player2",
+                    "Player2": 3144327730
                 }
             ]
         },
@@ -1219,6 +1263,107 @@
                 "Height": 10.0
             },
             "Components": []
+        },
+        {
+            "UUID": 3144327730,
+            "ParentUUID": 0,
+            "Name": "Player2",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1504245351,
+                "Active": true,
+                "Translation": [
+                    -96.39868927001953,
+                    -0.46419641375541689,
+                    -2.174659252166748
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3366500393,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 3273322402,
+                    "ComponentType": 8,
+                    "Active": true,
+                    "StateMachineResource": 2258225
+                },
+                {
+                    "UUID": 1347686997,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerAttack",
+                    "Name0": "FakeCollider(1)",
+                    "FakeCollider(1)": 3621626658
+                },
+                {
+                    "UUID": 2807865088,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerController",
+                    "Player": 2
+                },
+                {
+                    "UUID": 752853618,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerMovement",
+                    "Name0": "Main Camera",
+                    "Main Camera": 172714554,
+                    "Name1": "Player2",
+                    "Player2": 3144327730
+                },
+                {
+                    "UUID": 525120729,
+                    "Active": true,
+                    "ComponentType": 9,
+                    "ColliderType": 1,
+                    "Mass": 1.0,
+                    "Scale": [
+                        0.4099999964237213,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": false,
+                    "Collision": true,
+                    "Visualize": true,
+                    "Attached": true,
+                    "x_axis": false,
+                    "y_axis": false,
+                    "z_axis": false,
+                    "DisablePhysics": false,
+                    "Friction": 0.5,
+                    "Rolling_friction": 1.0
+                }
+            ]
         },
         {
             "UUID": 2406842806,
@@ -1664,7 +1809,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 39,
+                    "Texture": 26,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1726,7 +1871,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 41,
+                    "Texture": 28,
                     "Color": [
                         1.0,
                         1.0,
@@ -2181,6 +2326,188 @@
                 "Height": 10.0
             },
             "Components": []
+        },
+        {
+            "UUID": 3621626658,
+            "ParentUUID": 3144327730,
+            "Name": "FakeCollider(1)",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3656278521,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.9170538187026978,
+                    0.38703984022140505
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1408777391,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 4189900843,
+                    "Active": true,
+                    "ComponentType": 9,
+                    "ColliderType": 0,
+                    "Mass": 1.0,
+                    "Scale": [
+                        0.49000000953674319,
+                        0.9100000262260437,
+                        0.1899999976158142
+                    ],
+                    "Static": false,
+                    "Collision": false,
+                    "Visualize": true,
+                    "Attached": false,
+                    "x_axis": false,
+                    "y_axis": false,
+                    "z_axis": false,
+                    "DisablePhysics": true,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0
+                }
+            ]
+        },
+        {
+            "UUID": 3091889874,
+            "ParentUUID": 3109912763,
+            "Name": "Beta_Joints_0(1)",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2363747687,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2414207236,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 4427086,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Mesh": 682834458,
+                    "Material": 191260840,
+                    "Skeleton": 2050280920
+                }
+            ]
+        },
+        {
+            "UUID": 199419433,
+            "ParentUUID": 3109912763,
+            "Name": "Beta_Surface_0(1)",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 4137491746,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2905581999,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 806675723,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Mesh": 2181622064,
+                    "Material": 3605666792,
+                    "Skeleton": 2050280920
+                }
+            ]
         }
     ]
 } 

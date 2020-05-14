@@ -11,6 +11,7 @@
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleAI.h"
+#include "Module/ModuleTime.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
@@ -106,17 +107,17 @@ bool EnemyController::PlayerInRange()
 	return player->transform.GetTranslation().Distance(owner->transform.GetTranslation()) <= attack_range;
 }
 
-void EnemyController::MoveTowardsPlayer()
+void EnemyController::SeekPlayer()
 {
-	const float3 player_translation = player->transform.GetTranslation();
-	float3 translation = owner->transform.GetTranslation();
+	float3 target = player->transform.GetTranslation();
+	float3 position = owner->transform.GetTranslation();
 
-	float3 direction = player_translation - translation;
+	float3 desired_velocity = target - position;
+	float speed = (move_with_physics) ? move_speed : move_speed / 40.f;
 
-	float speed = (move_with_physics) ? move_speed : move_speed / 50.f;
-	float3 position = translation + (direction.Normalized() * speed);
+	position = position + (desired_velocity.Normalized() * speed);
 
-	float3 next_position;
+	float3 next_position = float3::zero;
 	if (App->artificial_intelligence->FindNextPolyByDirection(position, next_position))
 	{
 		position.y = next_position.y;
@@ -126,8 +127,8 @@ void EnemyController::MoveTowardsPlayer()
 	{
 		if (move_with_physics)
 		{
-			float3 direction_norm = direction.Normalized();
-			collider->SetVelocity(direction_norm, move_speed);
+			float3 desired_velocity_normalized = desired_velocity.Normalized();
+			collider->SetVelocity(desired_velocity_normalized, speed);
 		}
 		else
 		{

@@ -34,7 +34,7 @@ void PursueEnemyState::OnStateUpdate()
 {
 	if (!enemy->PlayerInRange())
 	{
-		enemy->MoveTowardsPlayer();
+		enemy->SeekPlayer();
 	}
 	else
 	{
