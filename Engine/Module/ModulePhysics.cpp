@@ -180,6 +180,8 @@ bool ModulePhysics::RaycastWorld(const btVector3 &Start, btVector3 &End, btVecto
 
 	btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
 	//btCollisionWorld::RayResultCallback RayCallback(Start, End);
+	//Magic Line for not jumping on enemies
+	//RayCallback.m_collisionFilterMask = btBroadphaseProxy::StaticFilter;
 	
 	world->rayTest(Start, End, RayCallback);
 	if (RayCallback.hasHit())

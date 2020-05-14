@@ -298,6 +298,11 @@ bool ComponentCollider::DetectCollisionWith(ComponentCollider * collider)
 	return false;
 }
 
+ENGINE_API void ComponentCollider::ClearForces() const
+{
+	body->clearForces();
+}
+
 void ComponentCollider::SetStatic()
 {
 	int flags = body->getCollisionFlags();

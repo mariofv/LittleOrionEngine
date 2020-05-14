@@ -44,6 +44,7 @@ public:
 	void SetCollisionDetection();
 	ENGINE_API bool DetectCollision(); //returns true if collides with any object in the world
 	ENGINE_API bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
+	ENGINE_API void ClearForces() const;
 	void SetStatic();
 	void SetRotationAxis();
 	ENGINE_API void SwitchPhysics(bool disable);
