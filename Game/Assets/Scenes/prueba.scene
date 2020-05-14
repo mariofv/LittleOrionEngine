@@ -1,0 +1,286 @@
+{
+    "Prefabs": [
+        {
+            "ParentUUID": 0,
+            "Prefab": 1881847384,
+            "Transform": {
+                "UUID": 4185902301,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    17.780345916748048,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 3724781222,
+                    "OriginalUUID": 1881847384
+                },
+                {
+                    "UUID": 5101699,
+                    "OriginalUUID": 1881847385
+                }
+            ]
+        }
+    ],
+    "PrefabsComponents": [
+        {
+            "Components": [
+                {
+                    "UUID": 2646784746,
+                    "Active": true,
+                    "ComponentType": 9,
+                    "ColliderType": 0,
+                    "Mass": 1.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": false,
+                    "Collision": true,
+                    "Visualize": true,
+                    "Attached": true,
+                    "x_axis": false,
+                    "y_axis": false,
+                    "z_axis": false,
+                    "DisablePhysics": false
+                },
+                {
+                    "UUID": 1670593420,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerController",
+                    "Player": 1
+                },
+                {
+                    "UUID": 3587055491,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerMovement"
+                }
+            ],
+            "UUID": 5101699
+        }
+    ],
+    "GameObjects": [
+        {
+            "UUID": 3869451195,
+            "ParentUUID": 0,
+            "Name": "GameObject (15)",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2689024034,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    15.756451606750489,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    -15.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1122532027,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 1350202826,
+                    "Active": true,
+                    "ComponentType": 9,
+                    "ColliderType": 4,
+                    "Mass": 0.0,
+                    "Scale": [
+                        3.0,
+                        3.0,
+                        3.0
+                    ],
+                    "Static": false,
+                    "Collision": true,
+                    "Visualize": true,
+                    "Attached": false,
+                    "x_axis": true,
+                    "y_axis": true,
+                    "z_axis": true,
+                    "DisablePhysics": false
+                }
+            ]
+        },
+        {
+            "UUID": 172714554,
+            "ParentUUID": 0,
+            "Name": "Main Camera",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1527511923,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3894984641,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 3641786684,
+                    "ComponentType": 1,
+                    "Active": true,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 500.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0,
+                    "Skybox": 0
+                }
+            ]
+        },
+        {
+            "UUID": 1690967942,
+            "ParentUUID": 0,
+            "Name": "Light",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3749479261,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1012207212,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 2143224420,
+                    "ComponentType": 4,
+                    "Active": true,
+                    "LightColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Intensity": 1.0,
+                    "LightType": 2,
+                    "PointLightRange": 16.0,
+                    "PointLightConstant": 1.0,
+                    "PointLightLinear": 0.04500000178813934,
+                    "PointLightQuadratic": 0.007499999832361937,
+                    "SpotLightRange": 10.0,
+                    "SpotLightConstant": 1.0,
+                    "SpotLightLinear": 0.04500000178813934,
+                    "SpotLightQuadratic": 0.007499999832361937,
+                    "SpotLightSpotAngle": 30.0,
+                    "SpotLightCutoff": 0.9659258127212524,
+                    "SpotLightSoftness": 0.10000000149011612,
+                    "SpotLightOuterCutoff": 0.9588197469711304
+                }
+            ]
+        }
+    ]
+} 

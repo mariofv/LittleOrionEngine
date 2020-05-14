@@ -22,6 +22,7 @@ private:
 	void ShowRenderOptions();
 	void ShowTimeOptions();
 	void ShowInputOptions();
+	void ShowPhysicsOptions();
 	void ShowSpacePartitioningOptions();
 
 	std::vector<const char*> game_inputs_strings

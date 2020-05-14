@@ -7,6 +7,7 @@
 #include "Component/ComponentAABB.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 #include "EditorUI/Panel/PanelScene.h"
+#include "ResourceManagement/Resources/Skybox.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
@@ -100,7 +101,7 @@ public:
 
 	std::vector<float> GetFrustumVertices() const;
 	
-	bool IsInsideFrustum(const AABB& aabb) const;
+	ENGINE_API bool IsInsideFrustum(const AABB& aabb) const;
 	ComponentAABB::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
 
 	ENGINE_API bool IsInsideFrustum(const AABB2D& aabb) const;

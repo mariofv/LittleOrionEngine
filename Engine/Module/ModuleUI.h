@@ -45,7 +45,7 @@ public:
 
 	ComponentCanvasRenderer* CreateComponentCanvasRenderer();
 	void RemoveComponentCanvasRenderer(ComponentCanvasRenderer* component_canvas_renderer);
-	
+
 public:
 	ComponentCanvas* main_canvas = nullptr;
 

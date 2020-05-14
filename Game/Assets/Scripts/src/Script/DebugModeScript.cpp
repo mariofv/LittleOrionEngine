@@ -65,7 +65,7 @@ void DebugModeScript::Start()
 void DebugModeScript::Update()
 {
 
-	if(App->input->GetKeyDown(KeyCode::F1) || App->input->GetControllerButtonDown(ControllerCode::RightStick))
+	if(App->input->GetKeyDown(KeyCode::F1) || App->input->GetControllerButtonDown(ControllerCode::RightStick, ControllerID::ONE))
 	{
 		(debug_enabled) ? text_fps->Disable() : text_fps->Enable();
 		(debug_enabled) ? text_tris->Disable() : text_tris->Enable();
@@ -73,8 +73,8 @@ void DebugModeScript::Update()
 		(debug_enabled) ? background->Disable() : background->Enable();
 		(debug_enabled) ? scene_cameras->SetMainCameraRendering() : scene_cameras->SetMainCameraRendering();
 		debug_enabled = !debug_enabled;
-		
-		
+
+
 	}
 
 	if (debug_enabled)
@@ -99,7 +99,7 @@ void DebugModeScript::OnInspector(ImGuiContext* context)
 
 }
 
-//Use this for linking JUST GO automatically 
+//Use this for linking JUST GO automatically
 void DebugModeScript::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
@@ -125,7 +125,7 @@ void DebugModeScript::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
-//Use this for linking GO AND VARIABLES automatically if you need to save variables 
+//Use this for linking GO AND VARIABLES automatically if you need to save variables
 // void DebugModeScript::Save(Config& config) const
 // {
 // 	config.AddUInt(example->UUID, "ExampleNameforSave");
@@ -138,4 +138,3 @@ void DebugModeScript::InitPublicGameObjects()
 // 	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
 // 	Script::Load(config);
 // }
-

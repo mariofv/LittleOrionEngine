@@ -21,10 +21,8 @@ public:
 	ComponentTransform(const ComponentTransform& component_to_copy) = default;
 	ComponentTransform(ComponentTransform&& component_to_move) = default;
 
-	ComponentTransform & operator=(const ComponentTransform & component_to_copy);
-	ComponentTransform & operator=(ComponentTransform && component_to_move) = default;
-
-	~ComponentTransform() = default;
+	ComponentTransform& operator=(const ComponentTransform& component_to_copy);
+	ComponentTransform& operator=(ComponentTransform&& component_to_move) = default;
 
 	Component* Clone(bool create_on_module = true) const override;
 	void Copy(Component * component_to_copy) const override;
@@ -33,11 +31,12 @@ public:
 
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
-	
+
 	ENGINE_API float3 GetGlobalTranslation() const;
 	ENGINE_API float3 GetTranslation() const;
 	ENGINE_API virtual void SetTranslation(const float3& translation);
 	ENGINE_API virtual void Translate(const float3& translation);
+	ENGINE_API void SetGlobalMatrixTranslation(const float3& translation);
 
 	ENGINE_API Quat GetGlobalRotation() const;
 	ENGINE_API Quat GetRotation() const;
@@ -46,13 +45,17 @@ public:
 	ENGINE_API void SetRotation(const float3& rotation);
 	ENGINE_API void SetRotation(const Quat& rotation);
 
+	ENGINE_API void SetGlobalMatrixRotation(const float3x3& rotation);
+	ENGINE_API void SetGlobalMatrixRotation(const Quat& rotation);
+
 	void Rotate(const Quat& rotation);
 	void Rotate(const float3x3& rotation);
 
 	ENGINE_API void LookAt(const float3& target);
 
-	float3 GetScale() const;
-	void SetScale(const float3& scale);
+	ENGINE_API float3 GetScale() const;
+	ENGINE_API void SetScale(const float3& scale);
+	float3 GetGlobalScale() const;
 
 	ENGINE_API float3 GetUpVector() const;
 	ENGINE_API float3 GetFrontVector() const;
@@ -61,13 +64,16 @@ public:
 	void ChangeLocalSpace(const float4x4& new_local_space);
 
 	float4x4 GetModelMatrix() const;
-	
+
 	void GenerateGlobalModelMatrix();
 	float4x4 GetGlobalModelMatrix() const;
 	virtual void SetGlobalModelMatrix(const float4x4& new_global_matrix);
-  
+
 protected:
 	virtual void OnTransformChange();
+
+public:
+	bool has_changed = false; //used for physics
 
 protected:
 	float3 translation = float3::zero;

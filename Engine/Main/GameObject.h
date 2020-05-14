@@ -6,6 +6,7 @@
 #include "Globals.h"
 #include "Component/Component.h"
 #include "Component/ComponentAABB.h"
+#include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
@@ -13,7 +14,7 @@
 #include <GL/glew.h>
 
 class Prefab;
-class ComponentCamera; 
+class ComponentCamera;
 class GameObject
 {
 public:
@@ -54,9 +55,13 @@ public:
 	Component::ComponentType GetTransformType() const;
 
 	ENGINE_API Component* CreateComponent(const Component::ComponentType type);
+	ENGINE_API Component* CreateComponent(const ComponentCollider::ColliderType collider_type);
 	void RemoveComponent(Component* component);
+	void RemoveComponent(uint64_t UUID);
 	ENGINE_API Component* GetComponent(const Component::ComponentType type) const;
+	ENGINE_API Component * GetComponent(uint64_t UUID) const;
 	ENGINE_API ComponentScript* GetComponentScript(const char* name) const;
+	ENGINE_API Component* GetComponent(const ComponentCollider::ColliderType collider_type) const;
 
 	void MoveUpInHierarchy() const;
 	void MoveDownInHierarchy() const;
@@ -93,10 +98,10 @@ public:
 	ComponentTransform2D transform_2d;
 
 	ComponentAABB aabb;
-	
+
 	//TODO: Maybe move this to a component editor?
 	// This should not be public. Public for now while implementing prefab.
-	uint64_t original_UUID = 0; 
+	uint64_t original_UUID = 0;
 	bool is_prefab_parent = false;
 	std::shared_ptr<Prefab> prefab_reference = nullptr;
 	bool original_prefab = false;

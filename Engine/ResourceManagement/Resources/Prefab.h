@@ -33,6 +33,7 @@ public:
 	bool IsOverwritable() const;
 
 	GameObject* GetRootGameObject() const;
+	GameObject* GetOriginalGameObject(int64_t UUID) const;
 
 public:
 	std::vector<GameObject*> instances;

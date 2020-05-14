@@ -7,18 +7,25 @@
 
 class Component;
 class ComponentAnimation;
+class ComponentBoxCollider;
 class ComponentAudioSource;
 class ComponentButton;
 class ComponentCamera;
 class ComponentCanvas;
 class ComponentCanvasRenderer;
+class ComponentCapsuleCollider;
+class ComponentCollider;
+class ComponentCylinderCollider;
 class ComponentImage;
+class ComponentMeshCollider;
 class ComponentMeshRenderer;
 class ComponentLight;
+class ComponentSphereCollider;
 class ComponentText;
 class ComponentTransform;
 class ComponentScript;
 class GameObject;
+
 
 class PanelComponent
 {
@@ -36,6 +43,8 @@ public:
 	void ShowComponentImageWindow(ComponentImage* image);
 	void ShowComponentTextWindow(ComponentText* text);
 	void ShowComponentButtonWindow(ComponentButton* button);
+
+	void ShowComponentColliderWindow(ComponentCollider* collider);
 	void ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source);
 
 	void ShowAddNewComponentButton();
@@ -48,7 +57,13 @@ public:
 
 	ENGINE_API void DropGOTarget(GameObject*& go);
 
+private:
+	bool ShowCommonColliderWindow(ComponentCollider* collider);
+	void ShowComponentBoxColliderWindow(ComponentBoxCollider* box_collider);
+	void ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider* capsule_collider);
+	void ShowComponentSphereColliderWindow(ComponentSphereCollider* sphere_collider);
+	void ShowComponentCylinderColliderWindow(ComponentCylinderCollider* cylinder_collider);
+	void ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh_collider);
 };
 
 #endif //_PANELCOMPONENT_H_
-

@@ -7,6 +7,7 @@
 #include "Helper/Config.h"
 
 #include "Main/Application.h"
+#include "ModuleAnimation.h"
 #include "ModuleCamera.h"
 #include "ModuleEditor.h"
 #include "ModuleRender.h"
@@ -159,6 +160,22 @@ ENGINE_API GameObject* ModuleScene::GetGameObject(uint64_t UUID) const
 	return nullptr;
 }
 
+ENGINE_API GameObject* ModuleScene::GetGameObjectByName(const std::string & go_name) const
+{
+		APP_LOG_INFO("Getting game object %s", go_name.c_str());
+		APP_LOG_INFO("%d", game_objects_ownership.size())
+
+		for (auto& game_object : game_objects_ownership)
+		{
+			if (game_object->name == go_name)
+			{
+				return game_object.get();
+			}
+		}
+
+	return nullptr;
+}
+
 Component * ModuleScene::GetComponent(uint64_t UUID) const
 {
 	for (auto& game_object : game_objects_ownership)
@@ -195,6 +212,7 @@ void ModuleScene::OpenScene()
 	if (App->time->isGameRunning())
 	{
 		App->scripts->InitScripts();
+		App->animations->PlayAnimations();
 	}
 	App->space_partitioning->GenerateQuadTree();
 	App->space_partitioning->GenerateOctTree();
@@ -218,6 +236,7 @@ inline void ModuleScene::GetSceneResource()
 		else
 		{
 			current_scene = App->resources->Load<Scene>(build_options.get()->GetSceneUUID(build_options_position));
+			App->editor->current_scene_path = build_options.get()->GetScenePath(build_options_position);
 		}
 	}
 	else

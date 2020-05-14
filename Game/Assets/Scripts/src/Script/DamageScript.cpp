@@ -65,7 +65,7 @@ void DamageScript::OnInspector(ImGuiContext* context)
 
 }
 
-//Use this for linking JUST GO automatically 
+//Use this for linking JUST GO automatically
 void DamageScript::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
@@ -81,7 +81,7 @@ void DamageScript::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
-//Use this for linking GO AND VARIABLES automatically if you need to save variables 
+//Use this for linking GO AND VARIABLES automatically if you need to save variables
 // void DamageScript::Save(Config& config) const
 // {
 // 	config.AddUInt(example->UUID, "ExampleNameforSave");
@@ -94,4 +94,3 @@ void DamageScript::InitPublicGameObjects()
 // 	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
 // 	Script::Load(config);
 // }
-

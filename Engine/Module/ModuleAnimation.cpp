@@ -54,3 +54,11 @@ void ModuleAnimation::UpdateAnimationMeshes()
 		animation->Init();
 	}
 }
+
+void ModuleAnimation::PlayAnimations() const
+{
+	for(const auto& anim : animations)
+	{
+		anim->Play();
+	}
+}

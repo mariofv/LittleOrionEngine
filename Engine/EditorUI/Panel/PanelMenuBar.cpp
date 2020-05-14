@@ -61,6 +61,7 @@ void PanelMenuBar::ShowFileMenu()
 	{
 		if (ImGui::MenuItem(ICON_FA_FILE " New Scene"))
 		{
+			App->editor->current_scene_path = "";
 			App->editor->OpenScene(DEFAULT_SCENE_PATH);
 		}
 		if (ImGui::MenuItem(ICON_FA_FOLDER_OPEN " Load Scene"))
@@ -115,7 +116,7 @@ void PanelMenuBar::ShowGameObjectMenu()
 				App->scene->CreateGameObject();
 			}
 		}
-		
+
 		if (ImGui::BeginMenu("3D Object"))
 		{
 			GameObject* created_game_object = nullptr;
@@ -157,7 +158,7 @@ void PanelMenuBar::ShowGameObjectMenu()
 				created_game_object->name = "Point Light";
 				created_game_object->CreateComponent(Component::ComponentType::LIGHT);
 			}
-			
+
 			ImGui::EndMenu();
 		}
 
@@ -170,7 +171,7 @@ void PanelMenuBar::ShowGameObjectMenu()
 
 		if (ImGui::BeginMenu("UI"))
 		{
-			
+
 			if (ImGui::Selectable("Text"))
 			{
 				TemplatedGameObjectCreator::CreateUIText();
@@ -183,7 +184,7 @@ void PanelMenuBar::ShowGameObjectMenu()
 			if (ImGui::Selectable("Button"))
 			{
 				TemplatedGameObjectCreator::CreateUIButton();
-				
+
 			}
 			ImGui::EndMenu();
 		}
@@ -242,7 +243,7 @@ void PanelMenuBar::ShowWindowMenu()
 		{
 			App->editor->debug_panel->SwitchOpen();
 		}
-		
+
 		ImGui::EndMenu();
 	}
 }

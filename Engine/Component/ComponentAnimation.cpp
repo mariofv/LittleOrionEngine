@@ -23,6 +23,14 @@ ComponentAnimation::ComponentAnimation(GameObject* owner) : Component(owner, Com
 	Init();
 }
 
+ComponentAnimation::~ComponentAnimation()
+{
+	if (animation_controller)
+	{
+		delete animation_controller;
+	}
+}
+
 void ComponentAnimation::Init()
 {
 	skinned_meshes.clear();
@@ -89,13 +97,32 @@ void ComponentAnimation::Play()
 void ComponentAnimation::Stop()
 {
 	auto & playing_clip = animation_controller->playing_clips[0];
-	playing_clip.playing = false;
+ 	playing_clip.playing = false;
 	playing = false;
 }
 
 void ComponentAnimation::ActiveAnimation(const std::string & trigger)
 {
 	animation_controller->StartNextState(trigger);
+}
+
+ENGINE_API bool ComponentAnimation::IsOnState(const std::string& trigger)
+{
+	return animation_controller->IsOnState(trigger);
+}
+
+ENGINE_API float ComponentAnimation::GetCurrentClipPercentatge() const
+{
+	for (auto& playing_clip : animation_controller->playing_clips)
+	{
+		if (!playing_clip.clip)
+		{
+			break;
+		}
+
+		return float(playing_clip.current_time) / float(playing_clip.clip->animation_time);
+
+	}
 }
 
 
@@ -170,7 +197,7 @@ void ComponentAnimation::GenerateJointChannelMaps()
 		for (auto& mesh : skinned_meshes)
 		{
 			auto & skeleton = mesh->skeleton;
-			if (clip->animation && clip->skeleton_channels_joints_map.find(skeleton->GetUUID()) != clip->skeleton_channels_joints_map.end())
+			if (clip->animation == nullptr || clip->skeleton_channels_joints_map.find(skeleton->GetUUID()) != clip->skeleton_channels_joints_map.end())
 			{
 				break;
 			}

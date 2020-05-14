@@ -45,7 +45,7 @@ GameObject* Prefab::Instantiate(GameObject* prefab_parent, std::unordered_map<in
 			parent_prefab = copy_in_scene;
 		}
 		copy_in_scene->prefab_reference = App->resources->Load<Prefab>(GetUUID());
-		copy_in_scene->transform.Translate(float3::zero); //:D
+		copy_in_scene->transform = gameObject->transform;
 	}
 	parent_prefab->SetParent(prefab_parent);
 	App->animations->UpdateAnimationMeshes();
@@ -214,6 +214,20 @@ void Prefab::RemoveInstance(GameObject * instance)
 GameObject* Prefab::GetRootGameObject() const
 {
 	return prefab.front().get();
+}
+
+GameObject * Prefab::GetOriginalGameObject(int64_t UUID) const
+{
+	auto it = std::find_if(prefab.begin(), prefab.end(), [UUID](const auto & prefab_gameobject) 
+	{
+		return UUID == prefab_gameobject->UUID;
+	});
+
+	if (it != prefab.end())
+	{
+		return (*it).get();
+	}
+	return nullptr;
 }
 
 bool Prefab::IsOverwritable() const

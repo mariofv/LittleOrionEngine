@@ -21,27 +21,44 @@ public:
 
 	void OnInspector(ImGuiContext*) override;
 
-	void GodCamera();
 	void ActivePlayer();
+	void Focus(float3 position_to_focus);
 	void FollowPlayer();
+
+	void MultiplayerCamera();
+
+	void SetFreeze();
 
 
 	void InitPublicGameObjects();
+	bool god_mode = false;
 
 private:
-	bool god_mode = false;
 	Quat rotation = Quat::identity;
-	GameObject* camera = nullptr;
-	ComponentCamera* camera_component = nullptr;
 	float rotation_speed = 1.f;
 
-	GameObject* player = nullptr;
+	GameObject* player1 = nullptr;
 	PlayerController* player_movement_script = nullptr;
 	ComponentScript* player_movement_component = nullptr;
 
-	GameObject* debug = nullptr;
-	DebugModeScript* debug_mode = nullptr;
+	GameObject* player2 = nullptr;
+	PlayerController* player2_movement_script = nullptr;
+	ComponentScript* player2_movement_component = nullptr;
 
+	const float CENTER_TIME = 30000.f;
+	float3 offset_near = float3(0.f, 5.5f, 11.f);
+	float3 offset_far = float3(0.f, 8.5f, 17.5f);
+	float3 selected_offset = float3::zero;;
+
+	bool is_focusing = false;
+	float start_focus_time = 0.f;
+	float current_time = 0.f;
+
+	bool multiplayer = false;
+	float distance_x = 0.f;
+	float distance_z = 0.f;
+
+	bool freeze = false;
 
 };
 extern "C" SCRIPT_API CameraController* CameraControllerDLL(); //This is how we are going to load the script

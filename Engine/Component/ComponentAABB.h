@@ -18,16 +18,16 @@ public:
 	};
 
 	ComponentAABB();
-	ComponentAABB(GameObject * owner);
+	ComponentAABB(GameObject* owner);
 	~ComponentAABB() = default;
 
 	//Copy and move
 	ComponentAABB(const ComponentAABB& component_to_copy) = default;
 	ComponentAABB(ComponentAABB&& component_to_move) = default;
 
-	ComponentAABB & operator=(const ComponentAABB & component_to_copy) = default;
-	ComponentAABB & operator=(ComponentAABB && component_to_move) = default;
-	void Copy(Component * component_to_copy) const override;
+	ComponentAABB & operator=(const ComponentAABB& component_to_copy) = default;
+	ComponentAABB & operator=(ComponentAABB&& component_to_move) = default;
+	void Copy(Component* component_to_copy) const override;
 
 	void Delete() override {};
 	void GenerateBoundingBox();
@@ -38,12 +38,13 @@ public:
 	bool IsEmpty() const;
 
 private:
-	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex> & vertices);
+	void GenerateBoundingBoxFromVertices(const std::vector<Mesh::Vertex>& vertices);
 	void GenerateGlobalBoundingBox();
 	Component* Clone(bool original_prefab = true) const override;
 public:
 	AABB bounding_box;
 	AABB global_bounding_box;
+	AABB original_box;
 	AABB2D bounding_box2D;
 
 };

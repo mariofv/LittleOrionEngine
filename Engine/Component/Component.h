@@ -16,17 +16,16 @@ public:
 		ANIMATION = 8,
 		CAMERA = 1,
 		CANVAS = 5,
+		COLLIDER = 9,
 		LIGHT = 4,
 		MESH_RENDERER = 2,
 		TRANSFORM = 3,
 		TRANSFORM2D = 7,
 		SCRIPT = 6,
-
 		CANVAS_RENDERER = 10,
 		UI_BUTTON = 11,
 		UI_IMAGE = 12,
 		UI_TEXT = 13,
-
 		AUDIO_SOURCE = 14
 	};
 
@@ -38,8 +37,8 @@ public:
 	Component(const Component& component_to_copy) = default;
 	Component(Component&& component_to_move) = default;
 
-	virtual Component & operator=(const Component & component_to_copy) = default;
-	virtual Component & operator=(Component && component_to_move)
+	virtual Component& operator=(const Component& component_to_copy) = default;
+	virtual Component& operator=(Component&& component_to_copy)
 	{
 
 		this->active = component_to_move.active;
@@ -60,6 +59,10 @@ public:
 	virtual void Update() {};
 	virtual void Delete() = 0;
 	virtual Component* Clone(bool create_on_module = true) const = 0;
+	virtual Component* Clone(GameObject* owner, bool create_on_module = false) const
+	{
+		return nullptr;
+	}
 	virtual void Copy(Component * component_to_copy) const = 0;
 
 	void Save(Config& config) const;
@@ -92,4 +95,3 @@ public:
 };
 
 #endif //_COMPONENT_H_
-

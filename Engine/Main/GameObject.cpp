@@ -14,6 +14,7 @@
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleUI.h"
+#include "Module/ModulePhysics.h"
 #include "ResourceManagement/Resources/Texture.h"
 #include "ResourceManagement/Resources/Prefab.h"
 
@@ -57,8 +58,8 @@ GameObject::GameObject(const std::string name) :
 }
 
 GameObject::GameObject(const GameObject& gameobject_to_copy) :
-	aabb(gameobject_to_copy.aabb), 
-	transform(gameobject_to_copy.transform), 
+	aabb(gameobject_to_copy.aabb),
+	transform(gameobject_to_copy.transform),
 	transform_2d(gameobject_to_copy.transform_2d),
 	UUID(pcg32_random())
 {
@@ -140,7 +141,7 @@ void GameObject::Duplicate(const GameObject & gameobject_to_copy)
 		this->original_UUID = 0;
 		this->prefab_reference = nullptr;
 	}
-	
+
 	return;
 }
 
@@ -158,7 +159,7 @@ bool GameObject::IsEnabled() const
 void GameObject::SetEnabled(bool able)
 {
 	active = able;
-	
+
 	for(const auto& component : components)
 	{
 		(able) ? component->Enable() : component->Disable();
@@ -183,7 +184,7 @@ void GameObject::SetHierarchyStatic(bool is_static)
 
 	//AABBTree
 	(is_static) ? App->space_partitioning->RemoveAABBTree(this) : App->space_partitioning->InsertAABBTree(this);
-	
+
 	for (const auto& child : children)
 	{
 		child->SetStatic(is_static);
@@ -207,7 +208,7 @@ void GameObject::CreateTransforms()
 {
 	transform = ComponentTransform();
 	transform.owner = this;
-	
+
 	transform_2d = ComponentTransform2D();
 	transform_2d.owner = this;
 }
@@ -233,7 +234,7 @@ ENGINE_API void GameObject::Update()
 
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
-		if (components[i]->type != Component::ComponentType::SCRIPT) 
+		if (components[i]->type != Component::ComponentType::SCRIPT)
 		{
 			components[i]->Update();
 		}
@@ -277,7 +278,7 @@ void GameObject::Load(const Config& config)
 	config.GetString("Name", name, "GameObject");
 
 	uint64_t parent_UUID = config.GetUInt("ParentUUID", 0);
-	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID); 
+	GameObject* game_object_parent = App->scene->GetGameObject(parent_UUID);
 	//assert(game_object_parent != nullptr);
 	if (game_object_parent != nullptr && parent_UUID != 0)
 	{
@@ -299,8 +300,14 @@ void GameObject::Load(const Config& config)
 		Component::ComponentType component_type = static_cast<Component::ComponentType>(component_type_uint);
 
 		Component* created_component = nullptr;
-		created_component = CreateComponent(component_type);
-		
+		if (component_type == Component::ComponentType::COLLIDER) {
+			ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(gameobject_components_config[i].GetUInt("ColliderType", 0));
+			created_component = CreateComponent(collider_type);
+		}
+		else
+		{
+			created_component = CreateComponent(component_type);
+		}
 		created_component->Load(gameobject_components_config[i]);
 	}
 }
@@ -312,7 +319,7 @@ void GameObject::SetParent(GameObject* new_parent)
 		return;
 	}
 
-	if (parent != nullptr) 
+	if (parent != nullptr)
 	{
 		parent->RemoveChild(this);
 	}
@@ -326,7 +333,7 @@ void GameObject::AddChild(GameObject* child)
 	{
 		child->parent->RemoveChild(child);
 	}
-	
+
 	child->parent = this;
 	child->UpdateHierarchyDepth();
 	child->UpdateHierarchyBranch();
@@ -341,7 +348,7 @@ void GameObject::RemoveChild(GameObject* child)
 	std::vector<GameObject*>::iterator found = std::find(children.begin(), children.end(), child);
 	if (found == children.end())
 	{
-		APP_LOG_ERROR("Incosistent GameObject Tree.");
+		APP_LOG_ERROR("Inconsistent GameObject Tree.")
 		return;
 	}
 	children.erase(found);
@@ -364,7 +371,7 @@ Component::ComponentType GameObject::GetTransformType() const
 
 ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type)
 {
-	Component *created_component;
+	Component* created_component;
 	switch (type)
 	{
 	case Component::ComponentType::ANIMATION:
@@ -415,7 +422,7 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		return nullptr;
 	}
 	created_component->owner = this;
-	
+
 	created_component->Init();
 
 	components.push_back(created_component);
@@ -432,14 +439,22 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 		}
 		++num_2d_components;
 	}
-	
+
 	return created_component;
 }
 
-void GameObject::RemoveComponent(Component* component_to_remove) 
+
+ENGINE_API Component* GameObject::CreateComponent(const ComponentCollider::ColliderType collider_type)
+{
+	Component* created_component = App->physics->CreateComponentCollider(collider_type, this);
+	components.push_back(created_component);
+	return created_component;
+}
+
+void GameObject::RemoveComponent(Component* component_to_remove)
 {
 	const auto it = std::find(components.begin(), components.end(), component_to_remove);
-	if (it != components.end()) 
+	if (it != components.end())
 	{
 		if (component_to_remove->Is2DComponent())
 		{
@@ -450,12 +465,31 @@ void GameObject::RemoveComponent(Component* component_to_remove)
 		components.erase(it);
 	}
 }
-
+void GameObject::RemoveComponent(uint64_t UUID)
+{
+	Component * component = GetComponent(UUID);
+	if (component)
+	{
+		RemoveComponent(component);
+	}
+}
 ENGINE_API Component* GameObject::GetComponent(const Component::ComponentType type) const
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
 		if (components[i]->GetType() == type)
+		{
+			return components[i];
+		}
+	}
+	return nullptr;
+}
+
+ENGINE_API Component* GameObject::GetComponent(uint64_t UUID) const
+{
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		if (components[i]->UUID == UUID)
 		{
 			return components[i];
 		}
@@ -481,12 +515,28 @@ ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) con
 	return nullptr;
 }
 
+Component* GameObject::GetComponent(const ComponentCollider::ColliderType collider_type) const
+{
+	for (auto component : components)
+	{
+		if (component->GetType() == Component::ComponentType::COLLIDER)
+		{
+			ComponentCollider* collider = static_cast<ComponentCollider*>(component);
+			if (collider->collider_type == collider_type)
+			{
+				return collider;
+			}
+		}
+	}
+	return nullptr;
+}
+
 void GameObject::MoveUpInHierarchy() const
 {
 	std::vector<GameObject*>::iterator silbings_position = std::find(parent->children.begin(), parent->children.end(), this);
 	if (silbings_position == parent->children.end())
 	{
-		APP_LOG_ERROR("Incosistent GameObject Tree.");
+		APP_LOG_ERROR("Inconsistent GameObject Tree.")
 		return;
 	}
 
@@ -499,7 +549,7 @@ void GameObject::MoveDownInHierarchy() const
 	std::vector<GameObject*>::iterator silbings_position = std::find(parent->children.begin(), parent->children.end(), this);
 	if (silbings_position == parent->children.end())
 	{
-		APP_LOG_ERROR("Incosistent GameObject Tree.");
+		APP_LOG_ERROR("Inconsistent GameObject Tree.")
 		return;
 	}
 
@@ -551,7 +601,7 @@ void GameObject::SetHierarchyDepth(int value)
 	hierarchy_depth = value;
 }
 
-GameObject * GameObject::GetPrefabParent() 
+GameObject * GameObject::GetPrefabParent()
 {
 	GameObject *to_reimport = this;
 	bool prefab_parent = is_prefab_parent;
@@ -609,14 +659,19 @@ void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 		component->modified_by_user = false;
 		//Component * my_component = GetComponent(component->type); //TODO: This doesn't allow multiple components of the same type
 		Component* copy = nullptr;
-		if(component->type != Component::ComponentType::SCRIPT)
-		{
-			copy = component->Clone(this->original_prefab);
-		}
-		else
+		if(component->type == Component::ComponentType::SCRIPT)
 		{
 			copy = new ComponentScript(this, static_cast<ComponentScript*>(component)->name);
 			static_cast<ComponentScript*>(copy)->name = static_cast<ComponentScript*>(component)->name;
+
+		}
+		else if (component->type == Component::ComponentType::COLLIDER)
+		{
+			copy = component->Clone(this, this->original_prefab);
+		}
+		else
+		{
+			copy = component->Clone(this->original_prefab);
 		}
 		copy->owner = this;
 		this->components.push_back(copy);

@@ -49,4 +49,3 @@ void ComponentButton::SpecializedSave(Config& config) const
 void ComponentButton::SpecializedLoad(const Config& config)
 {
 }
-

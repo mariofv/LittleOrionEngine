@@ -1,18 +1,20 @@
 #include "PanelGameObject.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentBoxCollider.h"
+#include "Component/ComponentButton.h"
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentCanvasRenderer.h"
+#include "Component/ComponentCapsuleCollider.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
-
 #include "EditorUI/Panel/PanelInspector.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelTransform.h"
 
@@ -43,7 +45,7 @@ void PanelGameObject::Render(GameObject* game_object)
 
 	ImGui::PushID(game_object->UUID);
 
-	if (ImGui::Checkbox("###State", &game_object->active)) 
+	if (ImGui::Checkbox("###State", &game_object->active))
 	{
 		game_object->SetEnabled(game_object->active);
 	}
@@ -134,6 +136,10 @@ void PanelGameObject::Render(GameObject* game_object)
 
 			case Component::ComponentType::UI_BUTTON:
 				component_panel.ShowComponentButtonWindow(static_cast<ComponentButton*>(component));
+				break;
+
+			case Component::ComponentType::COLLIDER:
+				component_panel.ShowComponentColliderWindow(static_cast<ComponentCollider*>(component));
 				break;
 
 			case Component::ComponentType::AUDIO_SOURCE:

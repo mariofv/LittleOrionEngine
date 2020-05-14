@@ -170,7 +170,9 @@ private:
 	float last_imported_time = 0;
 	std::thread importing_thread;
 	std::unique_ptr<Timer> thread_timer = std::make_unique<Timer>();
-
+	
+	float cache_time = 0;
+	const size_t cache_interval_millis = 15 * 1000;
 	mutable std::vector<std::shared_ptr<Resource>> resource_cache;
 
 	friend class MaterialImporter;

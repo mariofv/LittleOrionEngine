@@ -87,7 +87,7 @@ void ComponentTransform2D::SpecializedSave(Config& config) const
 }
 
 void ComponentTransform2D::SpecializedLoad(const Config& config)
-{	
+{
 	config.GetFloat2("Size", size, float2(100.f));
 	config.GetFloat2("Pivot", pivot, float2(0.5f));
 	config.GetFloat2("AnchoredPos", anchored_position, float2::zero);
@@ -104,9 +104,9 @@ void ComponentTransform2D::OnTransformChange()
 	GeneratePivotPosition();
 	translation = float3(anchored_position + anchor_position, translation.z);
 	GenerateRect();
-	model_matrix = 
-		float4x4::Translate(translation) 
-		* float4x4(rotation) 
+	model_matrix =
+		float4x4::Translate(translation)
+		* float4x4(rotation)
 		* float4x4::Scale(scale)
 		* float4x4::Translate(float3(-pivot_position, 0.f))
 	;

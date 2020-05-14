@@ -6,6 +6,7 @@
 #include "Helper/Timer.h"
 
 #include "Main/GameObject.h"
+#include "Module/ModuleTime.h"
 
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/Importer/FontImporter.h"
@@ -33,6 +34,7 @@
 #include "ResourceManagement/Metafile/MetafileManager.h"
 
 #include <algorithm>
+#include <Brofiler/Brofiler.h>
 #include <functional> //for std::hash
 
 ModuleResourceManager::ModuleResourceManager()
@@ -73,12 +75,20 @@ bool ModuleResourceManager::Init()
 
 update_status ModuleResourceManager::PreUpdate()
 {
-	if (last_imported_time > 0.0f && (thread_timer->Read() - last_imported_time) >= importer_interval_millis)
+	BROFILER_CATEGORY("PreUpdate ResourceManager", Profiler::Color::Lavender);
+	if (!App->time->isGameRunning() && last_imported_time > 0.0f && (thread_timer->Read() - last_imported_time) >= importer_interval_millis)
 	{
 		importing_thread.join();
 		importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
 		CleanResourceCache();
 	}
+
+	if(cache_time > 0.0f && (thread_timer->Read() - cache_time) >= cache_interval_millis)
+	{
+		cache_time = thread_timer->Read();
+		CleanResourceCache();
+	}
+
 	return update_status::UPDATE_CONTINUE;
 }
 
