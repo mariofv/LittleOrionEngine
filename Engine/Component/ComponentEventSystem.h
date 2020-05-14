@@ -22,6 +22,11 @@ public:
 
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
+
+	void Update() override;
+
+private:
+	void MousePicking(float2 mouse_position);
 };
 
 #endif //_COMPONENTEVENTSYSTEM_H_
