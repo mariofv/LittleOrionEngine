@@ -62,6 +62,7 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ImGui::InputFloat("Max Health", const_cast<float*>(&MAX_HEALTH_POINTS));
 	ImGui::InputFloat("Health Points", &health_points);
 	ImGui::InputFloat("Detect Distance", &detect_distance);
+	ImGui::InputFloat("Target Distance", &switch_target_distance);
 
 	ImGui::NewLine();
 	ImGui::Text("Enemy Flags");
@@ -83,14 +84,28 @@ void EnemyController::InitPublicGameObjects()
 
 void EnemyController::InitMembers()
 {
-	GameObject* enemy_manager_go = App->scene->GetGameObjectByName("EnemyManager");
-	ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
+	const GameObject* enemy_manager_go = App->scene->GetGameObjectByName("EnemyManager");
+	const ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
 	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
 
 	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
 
-	player = App->scene->GetGameObjectByName("Player");
+	player1 = App->scene->GetGameObjectByName("Player");
+	if (player1 != nullptr)
+	{
+		const ComponentScript* player1_controller_component = player1->GetComponentScript("PlayerController");
+		player1_controller = static_cast<PlayerController*>(player1_controller_component->script);
+	}
+
+	player2 = App->scene->GetGameObjectByName("Player2");
+	if (player2 != nullptr)
+	{
+		const ComponentScript* player2_controller_component = player2->GetComponentScript("PlayerController");
+		player2_controller = static_cast<PlayerController*>(player2_controller_component->script);
+	}
+
+	current_player_target = player1;
 
 	init_translation = owner->transform.GetTranslation();
 	init_rotation = owner->transform.GetRotation();
@@ -99,17 +114,19 @@ void EnemyController::InitMembers()
 
 bool EnemyController::PlayerInSight()
 {
-	return player->transform.GetTranslation().Distance(owner->transform.GetTranslation()) < detect_distance;
+	return current_player_target->transform.GetTranslation().Distance(owner->transform.GetTranslation()) < detect_distance;
 }
 
 bool EnemyController::PlayerInRange()
 {
-	return player->transform.GetTranslation().Distance(owner->transform.GetTranslation()) <= attack_range;
+	return current_player_target->transform.GetTranslation().Distance(owner->transform.GetTranslation()) <= attack_range;
 }
 
 void EnemyController::SeekPlayer()
 {
-	float3 target = player->transform.GetTranslation();
+	SetCurrentPlayerTarget();
+
+	float3 target = current_player_target->transform.GetTranslation();
 	float3 position = owner->transform.GetTranslation();
 
 	float3 desired_velocity = target - position;
@@ -145,6 +162,47 @@ void EnemyController::TakeDamage(float damage)
 	if (health_points <= 0)
 	{
 		Die();
+	}
+}
+
+void EnemyController::SetCurrentPlayerTarget()
+{
+	if (player2 == nullptr)
+	{
+		current_player_target = player1;
+		return;
+	}
+
+	if (player1_controller->is_alive && player2_controller->is_alive)
+	{
+		float3 position = owner->transform.GetTranslation();
+
+		float distance_player1 = player1->transform.GetTranslation().Distance(position);
+		float distance_player2 = player2->transform.GetTranslation().Distance(position);
+
+		if (abs(distance_player1 - distance_player2) >= switch_target_distance)
+		{
+			if (distance_player1 < distance_player2)
+			{
+				current_player_target = player1;
+			}
+			else
+			{
+				current_player_target = player2;
+			}
+		}
+	}
+	else if (!player1_controller->is_alive && player2_controller->is_alive)
+	{
+		current_player_target = player2;
+	}
+	else if (player1_controller->is_alive && !player2_controller->is_alive)
+	{
+		current_player_target = player1;
+	}
+	else if (!player1_controller->is_alive && !player2_controller->is_alive)
+	{
+		current_player_target = player1;
 	}
 }
 

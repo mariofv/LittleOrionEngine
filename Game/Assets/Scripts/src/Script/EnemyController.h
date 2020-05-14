@@ -4,6 +4,7 @@
 #include "Script.h"
 
 #include "EnemyManager.h"
+#include "PlayerController.h"
 
 class ComponentAnimation;
 class ComponentCollider;
@@ -35,6 +36,7 @@ public:
 	virtual void ResetEnemy() {}
 
 protected:
+	void SetCurrentPlayerTarget();
 	void Die();
 
 public:
@@ -47,17 +49,23 @@ public:
 protected:
 	EnemyType type;
 
-	GameObject* player = nullptr;
+	GameObject* player1 = nullptr;
+	GameObject* player2 = nullptr;
+	GameObject* current_player_target = nullptr;
+
 	EnemyManager* enemy_manager = nullptr;
+	PlayerController* player1_controller = nullptr;
+	PlayerController* player2_controller = nullptr;
 
 	float move_speed = 1.f;
-	float rotate_speed = 0.01f;
+	float rotate_speed = 1.f;
 	float attack_speed = 1.f;
 	float attack_power = 10.f;
 	float attack_range = 1.4f;
 	const float MAX_HEALTH_POINTS = 100.f;
 	float health_points = MAX_HEALTH_POINTS;
 	float detect_distance = 50.f;
+	float switch_target_distance = 0.5f;
 
 	bool move_with_physics = true;
 
