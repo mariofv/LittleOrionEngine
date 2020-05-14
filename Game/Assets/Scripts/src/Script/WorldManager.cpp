@@ -1,5 +1,4 @@
 #include "WorldManager.h"
-#include "Component/ComponentImage.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 
@@ -32,8 +31,6 @@ WorldManager::WorldManager()
 void WorldManager::Awake()
 {
 	//health_component = (ComponentProgressBar*)health_bar->GetComponent(Component::ComponentType::UI_PROGRESS_BAR);
-	lose_component = (ComponentImage*)lose_screen->GetComponent(Component::ComponentType::UI_IMAGE);;
-	win_component = (ComponentImage*)win_screen->GetComponent(Component::ComponentType::UI_IMAGE);;
 	player_controller = (ComponentScript*)player->GetComponentScript("PlayerController");
 
 	GameObject* event_manager_go = App->scene->GetGameObjectByName("EventManager");
@@ -52,6 +49,7 @@ void WorldManager::Start()
 // Update is called once per frame
 void WorldManager::Update()
 {
+	CheckTriggers();
 	/*
 	if(health_component->percentage <= 0.0f)
 	{
@@ -60,7 +58,6 @@ void WorldManager::Update()
 		lose_component->Enable();
 		transition = true;
 	}
-	*/
 
 	if(OnTriggerEnter())
 	{
@@ -74,6 +71,7 @@ void WorldManager::Update()
 	{
 		App->scene->LoadScene(0);
 	}
+	*/
 
 }
 

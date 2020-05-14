@@ -38,7 +38,7 @@ public:
 	Component(Component&& component_to_move) = default;
 
 	virtual Component& operator=(const Component& component_to_copy) = default;
-	virtual Component& operator=(Component&& component_to_copy)
+	virtual Component& operator=(Component&& component_to_move)
 	{
 
 		this->active = component_to_move.active;

@@ -24,12 +24,16 @@ public:
 
 	void Copy(Component* component_to_copy) const override;
 	void Delete() override;
-	void Save(Config& config) const override;
-	void Load(const Config &config) override;
+
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config &config) override;
+
 	Component* Clone(bool original_prefab = false) const { return nullptr; }
 	virtual Component* Clone(GameObject* owner, bool original_prefab = false) const { return nullptr; }
+	
 	void Disable() override;
 	void Enable() override;
+	
 	virtual void UpdateDimensions() {}
 	virtual void Scale() {}
 
