@@ -448,6 +448,12 @@
     <ClCompile Include="Libraries\include\SoundEngine\AkFilePackage.cpp">
       <Filter>Libraries\SoundEngine</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Module\ModulePhysics.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentMeshCollider.cpp">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Component\ComponentSphereCollider.cpp">
       <Filter>Engine\Component\Collider</Filter>
     </ClCompile>
@@ -460,14 +466,8 @@
     <ClCompile Include="Engine\Component\ComponentCylinderCollider.cpp">
       <Filter>Engine\Component\Collider</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentMeshCollider.cpp">
-      <Filter>Engine\Component\Collider</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Component\ComponentCollider.cpp">
       <Filter>Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Module\ModulePhysics.cpp">
-      <Filter>Engine\Module</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -891,6 +891,12 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Module\ModulePhysics.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentMeshCollider.h">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Component\ComponentSphereCollider.h">
       <Filter>Engine\Component\Collider</Filter>
     </ClInclude>
@@ -903,14 +909,8 @@
     <ClInclude Include="Engine\Component\ComponentCylinderCollider.h">
       <Filter>Engine\Component\Collider</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentMeshCollider.h">
-      <Filter>Engine\Component\Collider</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Component\ComponentCollider.h">
       <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Module\ModulePhysics.h">
-      <Filter>Engine\Module</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -999,7 +999,7 @@
       <UniqueIdentifier>{d944c34d-2880-470e-89dd-e2ba4e4fd35f}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Component\Collider">
-      <UniqueIdentifier>{1045193d-e110-40c1-9317-1f9822f81d81}</UniqueIdentifier>
+      <UniqueIdentifier>{2234ff4f-964f-49d9-9553-0f966006fc99}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
 </Project>

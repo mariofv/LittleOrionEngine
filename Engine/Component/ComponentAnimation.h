@@ -18,7 +18,7 @@ class ComponentAnimation :	public Component
 public:
 	ComponentAnimation();
 	ComponentAnimation(GameObject* owner);
-	~ComponentAnimation() = default;
+	~ComponentAnimation();
 
 	void Init() override;
 
