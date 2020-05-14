@@ -8,7 +8,7 @@
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
-#include "imgui.h"
+#include "imgui.h"
 
 
 EventManager* EventManagerDLL()
@@ -28,6 +28,11 @@ void EventManager::Awake()
 	GameObject* enemy_manager_go = App->scene->GetGameObjectByName("EnemyManager");
 	ComponentScript* enemy_manager_component = enemy_manager_go->GetComponentScript("EnemyManager");
 	enemy_manager = static_cast<EnemyManager*>(enemy_manager_component->script);
+
+
+	GameObject* camera_controller_go = App->scene->GetGameObjectByName("Main Camera");
+	ComponentScript* camera_controller_component = camera_controller_go->GetComponentScript("CameraController");
+	camera_controller = static_cast<CameraController*>(camera_controller_component->script);
 }
 
 // Use this for initialization
@@ -48,6 +53,7 @@ void EventManager::Update()
 			if(waves_left == 0)
 			{
 				event_triggered = false;
+				camera_controller->SetFreeze();
 				waves_left = 0;
 			}
 			else
@@ -113,6 +119,7 @@ bool EventManager::TriggerEvent(unsigned event)
 	}
 
 	event_triggered = true;
+	camera_controller->SetFreeze();
 
 	return true;
 }

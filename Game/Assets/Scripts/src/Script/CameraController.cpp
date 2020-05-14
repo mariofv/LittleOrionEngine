@@ -95,6 +95,7 @@ void CameraController::OnInspector(ImGuiContext* context)
 	ImGui::Checkbox("Is Focusing", &is_focusing);
 	ImGui::DragFloat3("Offset", selected_offset.ptr(), 0.5f, 0.f, 100.f);
 	ImGui::DragFloat("Distance", &distance_x, 0.5f, 0.f, 100.f);
+	ImGui::Checkbox("Freeze", &freeze);
 }
 
 void CameraController::ActivePlayer()
@@ -193,7 +194,7 @@ void CameraController::MultiplayerCamera()
 
 void CameraController::SetFreeze()
 {
-	freeze != freeze;
+	freeze = !freeze;
 }
 
 void CameraController::InitPublicGameObjects()
