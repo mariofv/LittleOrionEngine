@@ -184,16 +184,16 @@
                 "ComponentType": 7,
                 "Active": true,
                 "Size": [
-                    1888.0,
-                    914.0
+                    943.0,
+                    702.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    944.0,
-                    457.0
+                    0.0,
+                    0.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -215,7 +215,7 @@
         {
             "UUID": 285203001,
             "ParentUUID": 0,
-            "Name": "Music_controller",
+            "Name": "Audio_controller",
             "IsStatic": false,
             "Active": true,
             "Transform": {
@@ -271,78 +271,6 @@
                     "Volume": 1.0,
                     "SoundBank": 3907880643,
                     "3DSound": false
-                }
-            ]
-        },
-        {
-            "UUID": 1012766603,
-            "ParentUUID": 0,
-            "Name": "Logic_controller",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3937390144,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1383784367,
-                "ComponentType": 7,
-                "Active": true,
-                "Size": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 2771777345,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "MenuLogic",
-                    "Name0": "Play_Button",
-                    "Play_Button": 19876781,
-                    "Name1": "Help_Button",
-                    "Help_Button": 572364089,
-                    "Name2": "Credits_Button",
-                    "Credits_Button": 1481899329,
-                    "Name3": "Exit_Button",
-                    "Exit_Button": 1227334976,
-                    "Name6": "Credits",
-                    "Credits": 1981056088,
-                    "Name7": "Music_controller",
-                    "Music_controller": 285203001
                 }
             ]
         },
@@ -572,21 +500,92 @@
                     "UUID": 3034883159,
                     "ComponentType": 10,
                     "Active": true
+                }
+            ]
+        },
+        {
+            "UUID": 3838922643,
+            "ParentUUID": 3053128562,
+            "Name": "cursor",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1470118286,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2698545445,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    175.0,
+                    71.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    -300.0,
+                    65.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 78061716,
+                    "ComponentType": 12,
+                    "Active": true,
+                    "Color": [
+                        0.20180964469909669,
+                        0.2691567838191986,
+                        0.5446428656578064
+                    ],
+                    "TextureUUID": 895393629
                 },
                 {
-                    "UUID": 1398561473,
+                    "UUID": 3781209346,
                     "ComponentType": 10,
                     "Active": true
                 },
                 {
-                    "UUID": 3219956833,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 19426919,
-                    "ComponentType": 10,
-                    "Active": true
+                    "UUID": 228338573,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "MenuLogic",
+                    "Name0": "Play_Button",
+                    "Play_Button": 19876781,
+                    "Name1": "Help_Button",
+                    "Help_Button": 572364089,
+                    "Name2": "Credits_Button",
+                    "Credits_Button": 1481899329,
+                    "Name3": "Exit_Button",
+                    "Exit_Button": 1227334976,
+                    "Name7": "Audio_controller",
+                    "Audio_controller": 285203001
                 }
             ]
         },
@@ -655,21 +654,6 @@
                 },
                 {
                     "UUID": 958603652,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 2404119112,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 2094052253,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 107873781,
                     "ComponentType": 10,
                     "Active": true
                 },
@@ -745,16 +729,6 @@
                 },
                 {
                     "UUID": 2134468580,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 403397517,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 2198799937,
                     "ComponentType": 10,
                     "Active": true
                 },
@@ -931,86 +905,6 @@
                 {
                     "UUID": 743355395,
                     "ComponentType": 11,
-                    "Active": true
-                }
-            ]
-        },
-        {
-            "UUID": 3838922643,
-            "ParentUUID": 3053128562,
-            "Name": "UI Image",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1470118286,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2698545445,
-                "ComponentType": 7,
-                "Active": true,
-                "Size": [
-                    19.0,
-                    41.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    -421.0,
-                    65.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Components": [
-                {
-                    "UUID": 78061716,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "Color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 895393629
-                },
-                {
-                    "UUID": 3781209346,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 1914810153,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 1454745875,
-                    "ComponentType": 10,
                     "Active": true
                 }
             ]
@@ -1247,16 +1141,6 @@
                     "UUID": 2537319997,
                     "ComponentType": 10,
                     "Active": true
-                },
-                {
-                    "UUID": 569106316,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 556386494,
-                    "ComponentType": 10,
-                    "Active": false
                 }
             ]
         },

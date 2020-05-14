@@ -23,18 +23,20 @@ private:
 	bool ComfirmButtonPressed();
 
 private:
-	GameObject* button0 = nullptr;
-	GameObject* button1 = nullptr;
-	GameObject* button2 = nullptr;
-	GameObject* button3 = nullptr;
+	GameObject* play_button = nullptr;
+	GameObject* help_button = nullptr;
+	GameObject* credits_button = nullptr;
+	GameObject* exit_button = nullptr;
+	GameObject* cursor = nullptr;
 
 	GameObject* background = nullptr;
 	GameObject* help_controller = nullptr;
 	GameObject* help_keyboard = nullptr;
-	GameObject* credits = nullptr;
-	//GameObject* audio_controller = nullptr;
-	//ComponentAudioSource* audio_source = nullptr;
+	GameObject* credits_panel = nullptr;
+	GameObject* audio_controller = nullptr;
 
+
+	ComponentAudioSource* audio_source = nullptr;
 	std::vector<GameObject*> buttons;
 	unsigned current = 0;
 	

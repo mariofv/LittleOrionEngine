@@ -32,12 +32,12 @@ MenuLogic::MenuLogic()
 // Use this for initialization before Start()
 void MenuLogic::Awake()
 {
-	buttons.push_back(button0);
-	buttons.push_back(button1);
-	buttons.push_back(button2);
-	buttons.push_back(button3);
-	//audio_source = (ComponentAudioSource*) audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
-	//audio_source->PlayEvent("Play_ingame_music");
+	buttons.push_back(play_button);
+	buttons.push_back(help_button);
+	buttons.push_back(credits_button);
+	buttons.push_back(exit_button);
+	audio_source = (ComponentAudioSource*) audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
+	audio_source->PlayEvent("Play_ingame_music");
 }
 
 // Use this for initialization
@@ -80,7 +80,7 @@ void MenuLogic::Update()
 	if(show_credits || show_help)
 	{
 		return;
-	}
+	}*/
 
 	if (ComfirmButtonPressed())
 	{
@@ -95,13 +95,13 @@ void MenuLogic::Update()
 			//Active help
 			help_controller->SetEnabled(true);
 			help_keyboard->SetEnabled(false);
-			owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, (help_controller->transform_2d.height * -236.0f) / 604.0f, owner->transform_2d.position.z));
+			//owner->transform_2d.SetTranslation();
 			show_help = true;
 			return;
 		case 2:
 			//Active credits
-			credits->SetEnabled(true);
-			owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, (credits->transform_2d.height * -236.0f) / 604.0f, owner->transform_2d.position.z));
+			//credits->SetEnabled(true);
+			//owner->transform_2d.SetTranslation(&float3(owner->transform_2d.position.x, (credits->transform_2d.height * -236.0f) / 604.0f, owner->transform_2d.position.z));
 			show_credits = true;
 			return;
 		case 3:
@@ -119,17 +119,16 @@ void MenuLogic::Update()
 	{
 		current -= 1;
 		current = current % 4;
-
-		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
+		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x, buttons[current]->transform_2d.GetTranslation().y, owner->transform_2d.GetTranslation().z));
 	}
 	else if(App->input->GetKeyDown(KeyCode::S) || App->input->GetControllerButtonDown(ControllerCode::DownDpad, ControllerID::ONE))
 	{
 		current += 1;
 		current = current % 4;
 
-		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
+		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x, buttons[current]->transform_2d.GetTranslation().y, owner->transform_2d.GetTranslation().z));
 	}
-	*/
+
 
 }
 
@@ -147,17 +146,17 @@ void MenuLogic::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
 
-	public_gameobjects.push_back(&button0);
-	variable_names.push_back(GET_VARIABLE_NAME(button0));
+	public_gameobjects.push_back(&play_button);
+	variable_names.push_back(GET_VARIABLE_NAME(play_button));
 
-	public_gameobjects.push_back(&button1);
-	variable_names.push_back(GET_VARIABLE_NAME(button1));
+	public_gameobjects.push_back(&help_button);
+	variable_names.push_back(GET_VARIABLE_NAME(help_button));
 
-	public_gameobjects.push_back(&button2);
-	variable_names.push_back(GET_VARIABLE_NAME(button2));
+	public_gameobjects.push_back(&credits_button);
+	variable_names.push_back(GET_VARIABLE_NAME(credits_button));
 
-	public_gameobjects.push_back(&button3);
-	variable_names.push_back(GET_VARIABLE_NAME(button3));
+	public_gameobjects.push_back(&exit_button);
+	variable_names.push_back(GET_VARIABLE_NAME(exit_button));
 
 	public_gameobjects.push_back(&help_controller);
 	variable_names.push_back(GET_VARIABLE_NAME(help_controller));
@@ -165,13 +164,11 @@ void MenuLogic::InitPublicGameObjects()
 	public_gameobjects.push_back(&help_keyboard);
 	variable_names.push_back(GET_VARIABLE_NAME(help_keyboard));
 
-	public_gameobjects.push_back(&credits);
-	variable_names.push_back(GET_VARIABLE_NAME(credits));
+	public_gameobjects.push_back(&credits_panel);
+	variable_names.push_back(GET_VARIABLE_NAME(credits_panel));
 
-	/*
 	public_gameobjects.push_back(&audio_controller);
 	variable_names.push_back(GET_VARIABLE_NAME(audio_controller));
-	*/
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
