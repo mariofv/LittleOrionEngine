@@ -21,6 +21,7 @@
 #include "Component/ComponentCapsuleCollider.h"
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentCylinderCollider.h"
+#include "Component/ComponentEventSystem.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentMeshCollider.h"
 #include "Component/ComponentMeshRenderer.h"
@@ -573,6 +574,14 @@ void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)
 	}
 }
 
+void PanelComponent::ShowComponentEventSystem(ComponentEventSystem* event_system)
+{
+	if (ImGui::CollapsingHeader(ICON_FA_BULLHORN " Event System", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ShowCommonComponentWindow(event_system);
+	}
+}
+
 void PanelComponent::CheckClickedCamera(ComponentCamera* camera)
 {
 	//UndoRedo
@@ -679,6 +688,9 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::ANIMATION);
 
 		}
+
+		ImGui::Separator();
+
 		sprintf_s(tmp_string, "%s Box Collider", ICON_FA_BOX);
 		if (ImGui::Selectable(tmp_string))
 		{
@@ -706,6 +718,8 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(ComponentCollider::ColliderType::MESH);
 		}
 
+		ImGui::Separator();
+
 		sprintf_s(tmp_string, "%s Canvas", ICON_FA_SQUARE);
 		if (ImGui::Selectable(tmp_string))
 		{
@@ -725,6 +739,14 @@ void PanelComponent::ShowAddNewComponentButton()
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_IMAGE);
 		}
+
+		sprintf_s(tmp_string, "%s Event System", ICON_FA_BULLHORN);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::EVENT_SYSTEM);
+
+		}
+		ImGui::Separator();
 
 		sprintf_s(tmp_string, "%s Audio Source", ICON_FA_AUDIO_DESCRIPTION);
 		if (ImGui::Selectable(tmp_string))

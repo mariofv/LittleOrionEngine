@@ -475,6 +475,9 @@
     <ClCompile Include="Engine\ResourceManagement\Manager\SoundManager.cpp">
       <Filter>Engine\Audio</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentEventSystem.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -956,6 +959,9 @@
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h">
       <Filter>Engine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentEventSystem.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

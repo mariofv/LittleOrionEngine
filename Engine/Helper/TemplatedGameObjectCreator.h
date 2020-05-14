@@ -21,6 +21,9 @@ public:
 	static GameObject* CreateUIButton();
 	static GameObject* CreateUIText();
 
+	static GameObject* CreateMainCanvas();
+	static GameObject* CreateEventSystem();
+
 private:
 	static std::string GetCoreResourceName(CoreResource resource_type);
 };

@@ -42,6 +42,9 @@ std::string Component::GetComponentTypeName(Component::ComponentType component_t
 	case Component::ComponentType::CANVAS:
 		return "Canvas";
 
+	case Component::ComponentType::EVENT_SYSTEM:
+		return "Event System";
+
 	case Component::ComponentType::LIGHT:
 		return "Light";
 

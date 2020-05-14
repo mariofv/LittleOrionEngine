@@ -25,6 +25,7 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentCanvasRenderer.h"
+#include "Component/ComponentEventSystem.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
@@ -388,6 +389,10 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 
 	case Component::ComponentType::CAMERA:
 		created_component = App->cameras->CreateComponentCamera();
+		break;
+
+	case Component::ComponentType::EVENT_SYSTEM:
+		created_component = App->ui->CreateComponentEventSystem();
 		break;
 
 	case Component::ComponentType::MESH_RENDERER:

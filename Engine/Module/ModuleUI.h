@@ -31,6 +31,7 @@ public:
 
 	ComponentEventSystem* CreateComponentEventSystem();
 	void RemoveComponentEventSystem(ComponentEventSystem* component_event_system);
+	bool ExistEventSystem() const;
 
 	ComponentCanvas* CreateComponentCanvas();
 	void RemoveComponentCanvas(ComponentCanvas* component_canvas);

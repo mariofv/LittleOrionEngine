@@ -16,6 +16,7 @@ class ComponentCanvasRenderer;
 class ComponentCapsuleCollider;
 class ComponentCollider;
 class ComponentCylinderCollider;
+class ComponentEventSystem;
 class ComponentImage;
 class ComponentMeshCollider;
 class ComponentMeshRenderer;
@@ -35,14 +36,18 @@ public:
 
 	void ShowComponentMeshRendererWindow(ComponentMeshRenderer* mesh_renderer);
 	void ShowComponentCanvasRendererWindow(ComponentCanvasRenderer* canvas_renderer);
+
 	void ShowComponentCameraWindow(ComponentCamera* camera);
 	void ShowComponentLightWindow(ComponentLight* light);
 	void ShowComponentAnimationWindow(ComponentAnimation* animation);
 	void ShowComponentScriptWindow(ComponentScript* component_script);
+
 	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
 	void ShowComponentImageWindow(ComponentImage* image);
 	void ShowComponentTextWindow(ComponentText* text);
 	void ShowComponentButtonWindow(ComponentButton* button);
+
+	void ShowComponentEventSystem(ComponentEventSystem* event_system);
 
 	void ShowComponentColliderWindow(ComponentCollider* collider);
 	void ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source);

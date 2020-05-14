@@ -1,14 +1,15 @@
 #include "PanelGameObject.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioSource.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
-#include "Component/ComponentAudioSource.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentCanvasRenderer.h"
 #include "Component/ComponentCapsuleCollider.h"
+#include "Component/ComponentEventSystem.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
@@ -136,6 +137,10 @@ void PanelGameObject::Render(GameObject* game_object)
 
 			case Component::ComponentType::UI_BUTTON:
 				component_panel.ShowComponentButtonWindow(static_cast<ComponentButton*>(component));
+				break;
+
+			case Component::ComponentType::EVENT_SYSTEM:
+				component_panel.ShowComponentEventSystem(static_cast<ComponentEventSystem*>(component));
 				break;
 
 			case Component::ComponentType::COLLIDER:

@@ -17,6 +17,7 @@ public:
 		CAMERA = 1,
 		CANVAS = 5,
 		COLLIDER = 9,
+		EVENT_SYSTEM = 15,
 		LIGHT = 4,
 		MESH_RENDERER = 2,
 		TRANSFORM = 3,

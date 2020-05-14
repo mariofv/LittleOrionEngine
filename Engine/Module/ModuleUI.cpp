@@ -65,6 +65,12 @@ void ModuleUI::RemoveComponentEventSystem(ComponentEventSystem* component_event_
 	}
 }
 
+bool ModuleUI::ExistEventSystem() const
+{
+	return !event_systems.empty();
+}
+
+
 ComponentCanvas* ModuleUI::CreateComponentCanvas()
 {
 	ComponentCanvas* new_canvas = new ComponentCanvas();

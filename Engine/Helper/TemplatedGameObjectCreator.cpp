@@ -31,9 +31,11 @@ GameObject* TemplatedGameObjectCreator::CreateUIImage()
 
 	if (main_canvas_game_object == nullptr)
 	{
-		main_canvas_game_object = App->scene->CreateGameObject();
-		main_canvas_game_object->name = "Canvas";
-		main_canvas_game_object->CreateComponent(Component::ComponentType::CANVAS);
+		main_canvas_game_object = CreateMainCanvas();
+	}
+	if (!App->ui->ExistEventSystem())
+	{
+		CreateEventSystem();
 	}
 
 	GameObject* created_ui_element = App->scene->CreateGameObject();
@@ -48,12 +50,14 @@ GameObject* TemplatedGameObjectCreator::CreateUIImage()
 GameObject* TemplatedGameObjectCreator::CreateUIButton()
 {
 	GameObject* main_canvas_game_object = App->ui->GetMainCanvasGameObject();
-
+ 
 	if (main_canvas_game_object == nullptr)
 	{
-		main_canvas_game_object = App->scene->CreateGameObject();
-		main_canvas_game_object->name = "Canvas";
-		main_canvas_game_object->CreateComponent(Component::ComponentType::CANVAS);
+		main_canvas_game_object = CreateMainCanvas();
+	}
+	if (!App->ui->ExistEventSystem())
+	{
+		CreateEventSystem();
 	}
 
 	GameObject* created_button = App->scene->CreateGameObject();
@@ -88,9 +92,11 @@ GameObject* TemplatedGameObjectCreator::CreateUIText()
 
 	if (main_canvas_game_object == nullptr)
 	{
-		main_canvas_game_object = App->scene->CreateGameObject();
-		main_canvas_game_object->name = "Canvas";
-		main_canvas_game_object->CreateComponent(Component::ComponentType::CANVAS);
+		main_canvas_game_object = CreateMainCanvas();
+	}
+	if (!App->ui->ExistEventSystem())
+	{
+		CreateEventSystem();
 	}
 
 	GameObject* created_text = App->scene->CreateGameObject();
@@ -105,6 +111,24 @@ GameObject* TemplatedGameObjectCreator::CreateUIText()
 	main_canvas_game_object->AddChild(created_text);
 
 	return created_text;
+}
+
+GameObject* TemplatedGameObjectCreator::CreateMainCanvas()
+{
+	GameObject* main_canvas_game_object = App->scene->CreateGameObject();
+	main_canvas_game_object->name = "Canvas";
+	main_canvas_game_object->CreateComponent(Component::ComponentType::CANVAS);
+
+	return main_canvas_game_object;
+}
+
+GameObject* TemplatedGameObjectCreator::CreateEventSystem()
+{
+	GameObject* event_system_game_object = App->scene->CreateGameObject();
+	event_system_game_object->name = "Event System";
+	event_system_game_object->CreateComponent(Component::ComponentType::EVENT_SYSTEM);
+
+	return event_system_game_object;
 }
 
 
