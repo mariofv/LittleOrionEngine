@@ -16,17 +16,10 @@ ComponentLight::ComponentLight(GameObject * owner) : Component(owner, ComponentT
 void ComponentLight::Init()
 {
 
-	//if is directional light
-	//App->cameras->directional_light_camera->camera_frustum.pos = float3(0, 0, 0);
-
 }
 
 void ComponentLight::Update()
 {
-	//If is directional light
-	//App->cameras->directional_light_camera->camera_frustum.front = owner->transform.GetFrontVector();
-	//App->cameras->directional_light_camera->camera_frustum.up = owner->transform.GetRotation() * float3::unitY;
-
 
 }
 

@@ -83,8 +83,6 @@ uniform SpotLight spot_lights[10];
 uniform int num_point_lights;
 uniform PointLight point_lights[10];
 
-
-
 //COLOR TEXTURES
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord);
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord);
@@ -104,16 +102,15 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color);
 float NormalizedSpecular(vec3 normal, vec3 half_dir);
 
 //SHADOW MAPS
-float ShadowCalculation(vec4 frag_pos_light_space);
+float ShadowCalculation(vec4 frag_pos_light_space, vec3 frag_normal);
 uniform float render_depth_from_light;
 in vec4 pos_from_light;
-uniform sampler2D depth_map;
+uniform sampler2DShadow depth_map;
 
 void main()
 {
 
 	vec3 result = vec3(0);
-
 
 	//tiling
 	vec2 tiling = vec2(material.tiling_x, material.tiling_y)*texCoord;
@@ -167,17 +164,11 @@ void main()
 	}
 
 
-	result += diffuse_color.rgb * (occlusion_color*material.k_ambient); //Ambient light
-
-	//if(render_depth_from_light != 1) //Because we don't need any color if we only want to see a depth buffer
-	//{
+	result += diffuse_color.rgb * (occlusion_color*0.01); //Ambient light
 
 		FragColor = vec4(result,1.0);
 		FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
-		FragColor.a=material.transparency;
-	//}
-
-	
+		FragColor.a=material.transparency;	
 }
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
@@ -220,7 +211,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	vec3 light_dir   = normalize(-directional_light.direction );
 	float specular   = 0.0;	
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
-	float shadow	 = ShadowCalculation(pos_from_light);
+	float shadow	 = ShadowCalculation(pos_from_light, normalized_normal);
 
 	if(material.k_specular > 0.0 && material.specular_color.w > 0.0)
 	{	
@@ -230,7 +221,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	return directional_light.color * (
 		(emissive_color
 		+ (NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI
-		+ specular_color.rgb * specular) * (1-shadow))
+		+ specular_color.rgb * specular) * (shadow))
 	) * max(0.0, dot(normalized_normal, light_dir));
 	//Last multiplication added as a recommendation
 }
@@ -294,32 +285,50 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
 
 vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color)
 {
-	return 	(1-specular_color)*diffuse_color; //The more specular, the less diffuse
+	return 	(1-specular_color)*diffuse_color * material.k_diffuse; //The more specular, the less diffuse
 }
 
 float NormalizedSpecular(vec3 normal, vec3 half_dir) // Old refference: http://www.farbrausch.de/~fg/stuff/phong.pdf
 {
 	
-	float shininess = pow(7*material.specular_color.w + 1, 2); 
-
+	float shininess = pow(7*material.specular_color.w + 1, 2)*2; 
 	float spec = pow(max(dot(normal, half_dir), 0.0), shininess);
-
 	float normalization_factor = (spec + 8)/8;
 
-	return pow(spec, material.specular_color.w) * normalization_factor;
+	return spec* normalization_factor;
 }
 
-float ShadowCalculation(vec4 frag_pos_light_space)
+float ShadowCalculation(vec4 frag_pos_light_space, vec3 frag_normal)
 {
 
     vec3 normalized_light_space = frag_pos_light_space.xyz / frag_pos_light_space.w;
     normalized_light_space = normalized_light_space * 0.5 + 0.5;
-	float texture_depth = texture(depth_map, normalized_light_space.xy).r; 
 
-	if(normalized_light_space.z < texture_depth + 0.05)
-		return 0;
+	float bias = 0.005;  
 
-	else
-		return 1;
+	float factor = 0.0;
+	vec3 coord = vec3(normalized_light_space.xy, normalized_light_space.z - bias);
+
+	vec2 depth_map_size = 1.0 / textureSize(depth_map, 0); //Represents the size of a texel
+
+	for(int x = -1; x <= 1; ++x) //PCF, solution for hard shadows seen from a distance
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+			//We sample the texture given from the light camera
+			//A few times at different texture coordinates
+
+			coord.xy = normalized_light_space.xy + vec2(x, y)*depth_map_size;
+			factor += texture(depth_map, coord);
+        }    
+    }
+    factor /= 9.0;
+
+	if(normalized_light_space.z > 1.0)
+	{
+		factor = 1;
+	}
+
+	return factor;
 
 }
