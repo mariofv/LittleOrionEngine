@@ -13,6 +13,7 @@ class Component;
 class ComponentButton;
 class ComponentCanvas;
 class ComponentCanvasRenderer;
+class ComponentEventSystem;
 class ComponentText;
 class GameObject;
 
@@ -27,6 +28,9 @@ public:
 	bool CleanUp() override;
 
 	void Render(bool scene_mode);
+
+	ComponentEventSystem* CreateComponentEventSystem();
+	void RemoveComponentEventSystem(ComponentEventSystem* component_event_system);
 
 	ComponentCanvas* CreateComponentCanvas();
 	void RemoveComponentCanvas(ComponentCanvas* component_canvas);
@@ -50,6 +54,7 @@ public:
 	ComponentCanvas* main_canvas = nullptr;
 
 private:
+	std::vector<ComponentEventSystem*> event_systems;
 	std::vector<ComponentCanvas*> canvases;
 
 	std::vector<Component*> ui_elements;

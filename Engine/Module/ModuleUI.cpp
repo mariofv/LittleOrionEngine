@@ -3,6 +3,7 @@
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentCanvasRenderer.h"
+#include "Component/ComponentEventSystem.h"
 #include "Component/ComponentImage.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentButton.h"
@@ -43,6 +44,24 @@ void ModuleUI::Render(bool scene_mode)
 	if (main_canvas != nullptr)
 	{
 		main_canvas->Render(scene_mode);
+	}
+}
+
+ComponentEventSystem* ModuleUI::CreateComponentEventSystem()
+{
+	ComponentEventSystem* new_event_system = new ComponentEventSystem();
+	event_systems.push_back(new_event_system);
+
+	return new_event_system;
+}
+
+void ModuleUI::RemoveComponentEventSystem(ComponentEventSystem* component_event_system)
+{
+	const auto it = std::find(event_systems.begin(), event_systems.end(), component_event_system);
+	if (it != event_systems.end())
+	{
+		delete *it;
+		event_systems.erase(it);
 	}
 }
 
