@@ -103,7 +103,7 @@ void CameraController::ActivePlayer()
 	if (god_mode) 
 	{
 		player_movement_component->Disable();
-		if(App->input->singleplayer_input)
+		if(!App->input->singleplayer_input)
 		{
 			player2_movement_component->Disable();
 		}
@@ -111,7 +111,7 @@ void CameraController::ActivePlayer()
 	else 
 	{
 		player_movement_component->Enable();
-		if (App->input->singleplayer_input)
+		if (!App->input->singleplayer_input)
 		{
 			player2_movement_component->Enable();
 		}

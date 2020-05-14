@@ -156,7 +156,7 @@ bool PlayerMovement::IsInside(float3 future_transform)
 		App->debug_draw->RenderSingleAABB(future_position);
 	}
 
-	if(second_player != nullptr && App->input->singleplayer_input)
+	if(second_player != nullptr && !App->input->singleplayer_input)
 	{
 		float3 go_distance = second_player->transform.GetTranslation() - future_transform;
 		return game_camera->IsInsideFrustum(future_position) && go_distance.x < 18;
