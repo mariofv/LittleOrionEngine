@@ -49,4 +49,5 @@ void ComponentBoxCollider::Scale()
 {
 	float3 global_scale = owner->transform.GetGlobalScale();
 	body->getCollisionShape()->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
+	box_size = btVector3(scale.x, scale.y, scale.z);
 }

@@ -917,6 +917,10 @@ bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 	{
 		collider->SetRotationAxis();
 	}
+	if (ImGui::DragFloat3("Center", collider->center.ptr(), 0.01F))
+	{
+		collider->SetColliderCenter(collider->center);
+	}
 	return true;
 }
 
@@ -927,7 +931,7 @@ void PanelComponent::ShowComponentBoxColliderWindow(ComponentBoxCollider* box_co
 	{
 		if (ShowCommonColliderWindow(box_collider))
 		{
-			if (ImGui::DragFloat3("Scale", box_collider->scale.ptr(), 0.01F))
+			if (ImGui::DragFloat3("Scale", box_collider->scale.ptr(), 0.01F, 0.1F, 10.0F))
 			{
 				box_collider->Scale();
 			}
@@ -941,11 +945,11 @@ void PanelComponent::ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider
 	{
 		if(ShowCommonColliderWindow(capsule_collider))
 		{
-			if (ImGui::DragFloat("Radius", &capsule_collider->scale.x, 0.01F))
+			if (ImGui::DragFloat("Radius", &capsule_collider->scale.x, 0.01F, 0.1F, 10.0F))
 			{
 				capsule_collider->Scale();
 			}
-			if (ImGui::DragFloat("Height", &capsule_collider->scale.y, 0.01F))
+			if (ImGui::DragFloat("Height", &capsule_collider->scale.y, 0.01F, 0.1F, 10.0F))
 			{
 				capsule_collider->Scale();
 			}
@@ -959,7 +963,7 @@ void PanelComponent::ShowComponentSphereColliderWindow(ComponentSphereCollider* 
 	{
 		if (ShowCommonColliderWindow(sphere_collider))
 		{
-			if (ImGui::DragFloat("Radius", &sphere_collider->scale.x, 0.01F))
+			if (ImGui::DragFloat("Radius", &sphere_collider->scale.x, 0.01F, 0.1F, 10.0F))
 			{
 				sphere_collider->Scale();
 			}
@@ -973,11 +977,11 @@ void PanelComponent::ShowComponentCylinderColliderWindow(ComponentCylinderCollid
 	{
 		if(ShowCommonColliderWindow(cylinder_collider))
 		{
-			if (ImGui::DragFloat("Radius", &cylinder_collider->scale.x, 0.01F))
+			if (ImGui::DragFloat("Radius", &cylinder_collider->scale.x, 0.01F, 0.1F, 10.0F))
 			{
 				cylinder_collider->Scale();
 			}
-			if (ImGui::DragFloat("Height", &cylinder_collider->scale.y, 0.01F))
+			if (ImGui::DragFloat("Height", &cylinder_collider->scale.y, 0.01F, 0.1F, 10.0F))
 			{
 				cylinder_collider->Scale();
 			}

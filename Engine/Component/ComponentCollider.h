@@ -29,6 +29,9 @@ public:
 	Component* Clone(bool original_prefab = false) const { return nullptr; }
 	virtual Component* Clone(GameObject* owner, bool original_prefab = false) const { return nullptr; }
 
+	void Enable();
+	void Disable();
+
 	virtual void UpdateDimensions() {}
 	virtual void Scale() {}
 
@@ -49,7 +52,9 @@ public:
 	void UpdateFriction();
 	void SetRollingFriction();
 	void SetConfiguration();
-
+	void SetColliderCenter(float3& new_center);
+	float3 GetColliderCenter() const;
+	
 
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
@@ -67,7 +72,8 @@ public:
 	btVector3 local_inertia = btVector3(0.F, 0.F, 0.F);
 	float friction = 1.0F;
 	float rolling_friction = 1.0F;
-
+	float3 center;
+	float3 center_deviation = float3::zero;
 	float3 deviation = float3::zero;
 	bool visualize = true;
 	bool detect_collision = true;
