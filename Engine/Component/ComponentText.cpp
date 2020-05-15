@@ -21,6 +21,12 @@ ComponentText::ComponentText(GameObject * owner) : Component(owner, ComponentTyp
 	SetFontSize(12);
 }
 
+ComponentText::~ComponentText()
+{
+	glDeleteBuffers(1, &vbo);
+	glDeleteVertexArrays(1, &vao);
+}
+
 void ComponentText::InitData()
 {
 	program = App->program->GetShaderProgramId("UI Text");
