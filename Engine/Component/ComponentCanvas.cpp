@@ -152,14 +152,34 @@ bool ComponentCanvas::IsFocused() const
 
 ComponentButton* ComponentCanvas::GetUIElementAtPosition(float2 mouse_position)
 {
-	GameObject* dummy = App->scene->CreateGameObject();
-	dummy->name = "Dummy";
-	
-	ComponentImage* created_component = static_cast<ComponentImage*>(dummy->CreateComponent(Component::ComponentType::UI_IMAGE));
-	created_component->SetTextureToRender(231082784);
+	std::queue<GameObject*> pending_game_objects;
+	pending_game_objects.push(owner);
+	while (!pending_game_objects.empty())
+	{
+		GameObject* current_game_object = pending_game_objects.front();
+		pending_game_objects.pop();
 
-	dummy->transform_2d.SetTranslation(float3(mouse_position, 0.f));
-	owner->AddChild(dummy);
+		Component* component_button = current_game_object->GetComponent(Component::ComponentType::UI_BUTTON);
+		if (component_button && component_button->active)
+		{
+			float2 canvas_translation = App->ui->main_canvas->owner->transform_2d.GetGlobalTranslation().xy();
+			AABB2D button_global_rect = component_button->owner->transform_2d.GetGlobalRectAABB2D();
+
+			float2 button_canvas_rect_min_point = button_global_rect.minPoint - canvas_translation;
+			float2 button_canvas_rect_max_point = button_global_rect.maxPoint - canvas_translation;
+			AABB2D button_canvas_rect = AABB2D(button_canvas_rect_min_point, button_canvas_rect_max_point);
+
+			if (button_canvas_rect.Contains(AABB2D(mouse_position, mouse_position)))
+			{
+				return static_cast<ComponentButton*>(component_button);
+			}
+		}
+
+		for (auto& child : current_game_object->children)
+		{
+			pending_game_objects.push(child);
+		}
+	}
 
 	return nullptr;
 }

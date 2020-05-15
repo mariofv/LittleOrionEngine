@@ -1,6 +1,7 @@
 #include "ComponentEventSystem.h"
 
 #include "ComponentCanvas.h"
+#include "ComponentButton.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -86,6 +87,10 @@ void ComponentEventSystem::MousePicking(float2 mouse_position)
 	float2 canvas_center_pos = canvas_position + canvas_size / 2;
 	float2 canvas_mouse_position = mouse_position - canvas_center_pos;
 	canvas_mouse_position.y = -canvas_mouse_position.y;
-
+	
 	ComponentButton* intersected_button = main_canvas->GetUIElementAtPosition(canvas_mouse_position);
+	if (intersected_button != nullptr)
+	{
+		intersected_button->SetClicked(true);
+	}
 }

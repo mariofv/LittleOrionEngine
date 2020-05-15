@@ -810,15 +810,6 @@
     <ClInclude Include="Engine\Component\ComponentAnimation.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentButton.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentCanvas.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentImage.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Component\ComponentText.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
@@ -963,6 +954,15 @@
     <ClInclude Include="Engine\Component\ComponentEventSystem.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentImage.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentButton.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCanvas.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <Filter Include="Libraries">
@@ -1051,9 +1051,6 @@
     </Filter>
     <Filter Include="Engine\DLL">
       <UniqueIdentifier>{8b335900-d36a-4a5f-8bda-f20bee578e42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Component\UI">
-      <UniqueIdentifier>{8c22140c-173f-42f6-aedf-3539695a1124}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Component\Collider">
       <UniqueIdentifier>{cf44b757-a8ce-4d05-8f2c-587be25f5298}</UniqueIdentifier>

@@ -571,6 +571,8 @@ void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)
 	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Button", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonComponentWindow(button);
+		bool clicked = button->IsClicked();
+		ImGui::Checkbox("Clicked", &clicked);
 	}
 }
 

@@ -110,7 +110,10 @@ void ComponentTransform2D::OnTransformChange()
 		* float4x4::Scale(scale)
 		* float4x4::Translate(float3(-pivot_position, 0.f))
 	;
+	ComputeRectAABB2D();
+	
 	GenerateGlobalModelMatrix();
+	ComputeGlobalRectAABB2D();
 
 	for (const auto& child : owner->children)
 	{
@@ -350,4 +353,37 @@ void ComponentTransform2D::SetTop(float top)
 	anchored_position.y -= delta_top * 0.5f;
 	size.y -= delta_top;
 	OnTransformChange();
+}
+
+void ComponentTransform2D::ComputeGlobalRectAABB2D()
+{
+	if (owner->parent == nullptr)
+	{
+		global_rect_aabb_2d = rect_aabb_2d;
+	}
+	else
+	{
+		float2 global_rect_aabb_2d_min_point = float2((owner->parent->transform_2d.global_model_matrix * float4(rect_aabb_2d.minPoint, 0.f, 1.f)).xy());
+		float2 global_rect_aabb_2d_max_point = float2((owner->parent->transform_2d.global_model_matrix * float4(rect_aabb_2d.maxPoint, 0.f, 1.f)).xy());
+
+		global_rect_aabb_2d = AABB2D(global_rect_aabb_2d_min_point, global_rect_aabb_2d_max_point);
+	}
+}
+
+AABB2D ComponentTransform2D::GetGlobalRectAABB2D() const
+{
+
+	return global_rect_aabb_2d;
+}
+
+void ComponentTransform2D::ComputeRectAABB2D()
+{
+	float2 rect_aabb_2d_min_point = float2((GetSizedGlobalModelMatrix() * float4(-0.5f, -0.5f, 0.f, 1.f)).xy());
+	float2 rect_aabb_2d_max_point = float2((GetSizedGlobalModelMatrix() * float4(0.5f, 0.5f, 0.f, 1.f)).xy());
+	rect_aabb_2d = AABB2D(rect_aabb_2d_min_point, rect_aabb_2d_max_point);
+}
+
+AABB2D ComponentTransform2D::GetRectAABB2D() const
+{
+	return rect_aabb_2d;
 }

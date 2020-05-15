@@ -18,8 +18,11 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+	void SetClicked(bool clicked);
+	bool IsClicked() const;
+
 private:
-	bool hasText = false;
+	bool clicked = false;
 };
 #endif
 

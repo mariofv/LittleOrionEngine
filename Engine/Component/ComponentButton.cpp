@@ -49,3 +49,13 @@ void ComponentButton::SpecializedSave(Config& config) const
 void ComponentButton::SpecializedLoad(const Config& config)
 {
 }
+
+void ComponentButton::SetClicked(bool clicked)
+{
+	this->clicked = clicked;
+}
+
+bool ComponentButton::IsClicked() const
+{
+	return clicked;
+}

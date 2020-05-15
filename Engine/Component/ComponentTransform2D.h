@@ -103,13 +103,22 @@ public:
 	void SetTop(float top);
 	void GenerateRect();
 
+	void ComputeGlobalRectAABB2D();
+	AABB2D GetGlobalRectAABB2D() const;
+
+	void ComputeRectAABB2D();
+	AABB2D GetRectAABB2D() const;
+
 private:
 	void OnTransformChange() override;
 
 public:
 	float2 anchored_position = float2::zero;
 	float2 size = float2(100.f, 100.f);
+	
 	Rect rect;
+	AABB2D rect_aabb_2d;
+	AABB2D global_rect_aabb_2d;
 
 private:
 	AnchorPreset::AnchorPresetType anchor_preset = AnchorPreset::AnchorPresetType::CENTER_HORIZONTAL_CENTER_VERTICAL;
