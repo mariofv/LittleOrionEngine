@@ -475,11 +475,11 @@
                     "Active": true,
                     "ComponentType": 9,
                     "ColliderType": 0,
-                    "Mass": 1.0,
+                    "Mass": 100.0,
                     "Scale": [
                         0.28999999165534975,
-                        0.33000001311302187,
-                        0.20000000298023225
+                        0.12999999523162843,
+                        0.20999999344348908
                     ],
                     "Static": false,
                     "Collision": true,
@@ -559,7 +559,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "PlayerController",
-                    "Player": 1
+                    "Player": 2
                 },
                 {
                     "UUID": 2457128993,
@@ -576,7 +576,7 @@
                     "Active": true,
                     "ComponentType": 9,
                     "ColliderType": 1,
-                    "Mass": 100.0,
+                    "Mass": 1.0,
                     "Scale": [
                         0.4099999964237213,
                         1.0,
@@ -1329,7 +1329,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "PlayerController",
-                    "Player": 2
+                    "Player": 1
                 },
                 {
                     "UUID": 752853618,
@@ -1346,7 +1346,7 @@
                     "Active": true,
                     "ComponentType": 9,
                     "ColliderType": 1,
-                    "Mass": 100.0,
+                    "Mass": 1.0,
                     "Scale": [
                         0.4099999964237213,
                         1.0,
@@ -1809,7 +1809,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 45,
+                    "Texture": 19,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1871,7 +1871,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 47,
+                    "Texture": 22,
                     "Color": [
                         1.0,
                         1.0,

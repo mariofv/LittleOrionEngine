@@ -31,6 +31,7 @@ public:
 	bool PlayerInSight();
 	bool PlayerInRange();
 	void SeekPlayer();
+	void SeekPlayerWithSeparation();
 	void TakeDamage(float damage);
 	bool SlotsAvailable();
 
@@ -70,6 +71,8 @@ protected:
 	float health_points = MAX_HEALTH_POINTS;
 	float detect_distance = 50.f;
 	float switch_target_distance = 0.5f;
+	float attack_radius = 2.2f;
+	float separation_distance = 2.f;
 
 	bool move_with_physics = true;
 

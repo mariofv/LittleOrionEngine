@@ -63,6 +63,7 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ImGui::InputFloat("Health Points", &health_points);
 	ImGui::InputFloat("Detect Distance", &detect_distance);
 	ImGui::InputFloat("Target Distance", &switch_target_distance);
+	ImGui::InputFloat("Separation Distance", &separation_distance);
 
 	ImGui::NewLine();
 	ImGui::Text("Enemy Flags");
@@ -146,6 +147,56 @@ void EnemyController::SeekPlayer()
 		{
 			float3 desired_velocity_normalized = desired_velocity.Normalized();
 			collider->SetVelocity(desired_velocity_normalized, speed);
+		}
+		else
+		{
+			owner->transform.LookAt(position);
+			owner->transform.SetTranslation(position);
+		}
+	}
+}
+
+void EnemyController::SeekPlayerWithSeparation()
+{
+	UpdateCurrentPlayerTarget();
+
+	float3 target = current_player_target->transform.GetTranslation();
+	float3 position = owner->transform.GetTranslation();
+
+	float3 desired_velocity = target - position;
+	float3 separation_velocity = float3::zero;
+
+	for (auto& enemy : enemy_manager->enemies)
+	{
+		if (!enemy->is_alive)
+		{
+			continue;
+		}
+
+		if (enemy->owner->transform.GetTranslation().Distance(position) <= separation_distance)
+		{
+			separation_velocity += enemy->owner->transform.GetTranslation() - position;
+		}
+	}
+
+	desired_velocity = desired_velocity + (separation_velocity * -1.f);
+
+	float speed = (move_with_physics) ? move_speed : move_speed / 40.f;
+
+	position = position + (desired_velocity.Normalized() * speed);
+
+	float3 next_position = float3::zero;
+	if (App->artificial_intelligence->FindNextPolyByDirection(position, next_position))
+	{
+		position.y = next_position.y;
+	}
+
+	if (App->artificial_intelligence->IsPointWalkable(position))
+	{
+		if (move_with_physics)
+		{
+			float3 desired_velocity_normalized = desired_velocity.Normalized();
+			collider->SetVelocityEnemy(desired_velocity_normalized, speed);
 		}
 		else
 		{
