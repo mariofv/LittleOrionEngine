@@ -12,9 +12,6 @@ public:
 
 	void Render() override;
 
-private:
-	std::string GetResourceTypeName(ResourceType resource_type) const;
-
 };
 
 #endif //_PANELRESOURCEDATABASE_H_

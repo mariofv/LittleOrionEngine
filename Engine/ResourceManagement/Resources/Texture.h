@@ -1,20 +1,21 @@
 #ifndef _TEXTURE_H_
 #define _TEXTURE_H_
 
-#include "Main/Globals.h"
+#include "Resource.h"
+#include "ResourceManagement/Manager/TextureManager.h"
+
 #include <GL/glew.h>
 #include <string>
-#include "Resource.h"
-#include <ResourceManagement/Loaders/TextureLoader.h>
+
+class Metafile;
+struct TextureOptions;
+
 class Texture : public Resource
 {
 public:
-
-	Texture(char * data, size_t image_size, int width, int height, const std::string& path, bool normal_map = false);
+	Texture(uint32_t uuid, char* data, size_t image_size, int width, int height, int num_channels, TextureOptions& options);
 
 	~Texture();
-
-	bool IsMipMapped() const;
 
 	void SetWrapS(GLenum wrap_s);
 	GLenum GetWrapS() const;
@@ -35,35 +36,35 @@ public:
 
 private:
 	void GenerateMipMap();
-	void LoadInMemory() override;
+	void LoadInMemory(TextureOptions& options, int num_channels);
 	char* GLEnumToString(GLenum gl_enum) const;
 
 public:
-
 	GLuint opengl_texture = 0;
 
 	int width = 0;
 	int height = 0;
-	size_t image_size;
-	bool normal_map = false;
+
 private:
-	bool mip_map = false;
 
 	GLenum wrap_s;
 	GLenum wrap_t;
 
 	GLenum min_filter;	
 	GLenum mag_filter;
-	char * data;
+	std::vector<char> data;
+
+	friend class Skybox;
 };
 
-
-namespace Loader
+namespace ResourceManagement
 {
 	template<>
-	static std::shared_ptr<Texture> Load(const std::string& uid) {
-		return TextureLoader::Load(uid);
+	static std::shared_ptr<Texture> Load(uint32_t uuid, const FileData& resource_data)
+	{
+		return TextureManager::Load(uuid, resource_data);
 	}
 }
+
 
 #endif //_TEXTURE_H_

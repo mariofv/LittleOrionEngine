@@ -1,0 +1,765 @@
+{
+    "Prefabs": [],
+    "PrefabsComponents": [],
+    "GameObjects": [
+        {
+            "UUID": 1690967942,
+            "ParentUUID": 0,
+            "Name": "Light",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3749479261,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1012207212,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 2143224420,
+                    "ComponentType": 4,
+                    "Active": true,
+                    "LightColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Intensity": 1.0,
+                    "LightType": 2,
+                    "PointLightRange": 16.0,
+                    "PointLightConstant": 1.0,
+                    "PointLightLinear": 0.04500000178813934,
+                    "PointLightQuadratic": 0.007499999832361937,
+                    "SpotLightRange": 10.0,
+                    "SpotLightConstant": 1.0,
+                    "SpotLightLinear": 0.04500000178813934,
+                    "SpotLightQuadratic": 0.007499999832361937,
+                    "SpotLightSpotAngle": 30.0,
+                    "SpotLightCutoff": 0.9659258127212524,
+                    "SpotLightSoftness": 0.10000000149011612,
+                    "SpotLightOuterCutoff": 0.9588197469711304
+                }
+            ]
+        },
+        {
+            "UUID": 172714554,
+            "ParentUUID": 0,
+            "Name": "Main Camera",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1527511923,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3894984641,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 3641786684,
+                    "ComponentType": 1,
+                    "Active": true,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 500.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 0,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+                        1.0
+                    ],
+                    "Depth": 0,
+                    "Skybox": 0
+                }
+            ]
+        },
+        {
+            "UUID": 1544526573,
+            "ParentUUID": 0,
+            "Name": "Canvas",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 376814813,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1488816099,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 1493623437,
+                    "Active": true,
+                    "ComponentType": 5,
+                    "UIType": 0,
+                    "Texture": 2,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 0,
+                    "Layer": 0
+                }
+            ]
+        },
+        {
+            "UUID": 2988415043,
+            "ParentUUID": 1544526573,
+            "Name": "ControllerHelp",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 740833670,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1743839520,
+                "Active": true,
+                "Top": -289.0,
+                "Right": 448.0,
+                "Bottom": 289.0,
+                "Left": -448.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 896.0,
+                "Height": 578.0
+            },
+            "Components": [
+                {
+                    "UUID": 1377192513,
+                    "Active": false,
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 24,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 495163810,
+                    "Layer": 3
+                }
+            ]
+        },
+        {
+            "UUID": 1241943714,
+            "ParentUUID": 1544526573,
+            "Name": "KeyboardHelp",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 2467690042,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2221201698,
+                "Active": true,
+                "Top": -293.0,
+                "Right": 444.0,
+                "Bottom": 293.0,
+                "Left": -444.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 889.0,
+                "Height": 586.0
+            },
+            "Components": [
+                {
+                    "UUID": 3608281918,
+                    "Active": false,
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 23,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 1822956192,
+                    "Layer": 3
+                }
+            ]
+        },
+        {
+            "UUID": 2085583512,
+            "ParentUUID": 1544526573,
+            "Name": "Credits",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 425335519,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 309281423,
+                "Active": true,
+                "Top": -287.0,
+                "Right": 440.0,
+                "Bottom": 287.0,
+                "Left": -440.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 880.0,
+                "Height": 574.0
+            },
+            "Components": [
+                {
+                    "UUID": 31589047,
+                    "Active": false,
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 22,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 205021170,
+                    "Layer": 3
+                }
+            ]
+        },
+        {
+            "UUID": 1845993702,
+            "ParentUUID": 1544526573,
+            "Name": "Cursor",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 525647175,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1378703264,
+                "Active": true,
+                "Top": 15.0,
+                "Right": -384.0,
+                "Bottom": 75.0,
+                "Left": -414.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    -399.0,
+                    45.0,
+                    0.0
+                ],
+                "Width": 30.0,
+                "Height": 60.0
+            },
+            "Components": [
+                {
+                    "UUID": 499996738,
+                    "Active": true,
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 21,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 2907833219,
+                    "Layer": 6
+                }
+            ]
+        },
+        {
+            "UUID": 1937021412,
+            "ParentUUID": 1544526573,
+            "Name": "Button4",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1238753719,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1382452917,
+                "Active": true,
+                "Top": -250.0,
+                "Right": -174.0,
+                "Bottom": -190.0,
+                "Left": -364.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    -269.0,
+                    -220.0,
+                    0.0
+                ],
+                "Width": 190.0,
+                "Height": 60.0
+            },
+            "Components": [
+                {
+                    "UUID": 1821895371,
+                    "Active": true,
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 20,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 3092987197,
+                    "Layer": 0
+                }
+            ]
+        },
+        {
+            "UUID": 2206660360,
+            "ParentUUID": 1544526573,
+            "Name": "Button3",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1698337658,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1447814438,
+                "Active": true,
+                "Top": -180.0,
+                "Right": -174.0,
+                "Bottom": -120.0,
+                "Left": -364.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    -269.0,
+                    -150.0,
+                    0.0
+                ],
+                "Width": 190.0,
+                "Height": 60.0
+            },
+            "Components": [
+                {
+                    "UUID": 2698875292,
+                    "Active": true,
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 19,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 605169162,
+                    "Layer": 0
+                }
+            ]
+        },
+        {
+            "UUID": 640905594,
+            "ParentUUID": 1544526573,
+            "Name": "Button2",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 626236867,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2510394188,
+                "Active": true,
+                "Top": -110.0,
+                "Right": -174.0,
+                "Bottom": -50.0,
+                "Left": -364.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    -269.0,
+                    -80.0,
+                    0.0
+                ],
+                "Width": 190.0,
+                "Height": 60.0
+            },
+            "Components": [
+                {
+                    "UUID": 2983542544,
+                    "Active": true,
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 18,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 1715501669,
+                    "Layer": 0
+                }
+            ]
+        },
+        {
+            "UUID": 1610644696,
+            "ParentUUID": 1544526573,
+            "Name": "Background",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1791998304,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3799952138,
+                "Active": true,
+                "Top": -291.0,
+                "Right": 453.0,
+                "Bottom": 291.0,
+                "Left": -453.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 906.0,
+                "Height": 583.0
+            },
+            "Components": [
+                {
+                    "UUID": 459223191,
+                    "Active": true,
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 17,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 231082784,
+                    "Layer": -2
+                }
+            ]
+        },
+        {
+            "UUID": 2113613403,
+            "ParentUUID": 1544526573,
+            "Name": "Button1",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2488195038,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1234503158,
+                "Active": true,
+                "Top": 15.0,
+                "Right": -174.0,
+                "Bottom": 75.0,
+                "Left": -364.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    -269.0,
+                    45.0,
+                    0.0
+                ],
+                "Width": 190.0,
+                "Height": 60.0
+            },
+            "Components": [
+                {
+                    "UUID": 129609205,
+                    "Active": true,
+                    "ComponentType": 5,
+                    "UIType": 1,
+                    "Texture": 16,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 1134068717,
+                    "Layer": 0
+                }
+            ]
+        }
+    ]
+} 

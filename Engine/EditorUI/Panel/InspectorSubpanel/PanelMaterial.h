@@ -10,15 +10,14 @@ public:
 	PanelMaterial();
 	~PanelMaterial() = default;
 	
-	void Render(Material* material);
-	void ShowMaterialTextureMap(Material* material, Material::MaterialTextureType type);
-	void SaveMaterial(Material* material);
+	void Render(std::shared_ptr<Material> material);
+	void ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type);
 
 private:
-	void DropTarget(Material* material, Material::MaterialTextureType type);
-
 	std::string GetTypeName(Material::MaterialTextureType type);
 
+private:
+	bool modified_by_user = false;
 };
 
 #endif //_PANELGAMEOBJECT_H_

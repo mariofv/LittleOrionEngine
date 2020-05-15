@@ -2,8 +2,9 @@
 #define _EDITORACTIONROTATION_H_
 
 #include "EditorAction.h"
-#include "Main/GameObject.h"
 #include "MathGeoLib.h"
+
+class GameObject;
 
 class EditorActionRotation : public EditorAction
 {

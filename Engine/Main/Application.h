@@ -12,12 +12,10 @@ class ModuleRender;
 class ModuleWindow;
 class ModuleTextures;
 class ModuleInput;
-class ModuleRenderExercise;
 class ModuleProgram;
 class ModuleTexture;
 class ModuleEditor;
 class ModuleCamera;
-class ModuleModelLoader;
 class ModuleTime;
 class ModuleScene;
 class ModuleFileSystem;
@@ -27,8 +25,10 @@ class ModuleUI;
 class ModuleLight;
 class ModuleResourceManager;
 class ModuleScriptManager;
+class ModuleSpacePartitioning;
 class ModuleActions;
 class ModuleAI;
+class ModuleAudio;
 
 class EngineLog;
 
@@ -54,7 +54,6 @@ public:
 	ModuleTexture* texture = nullptr;
 	ModuleEditor* editor = nullptr;
 	ModuleCamera* cameras = nullptr;
-	ModuleModelLoader* model_loader = nullptr;
 	ModuleTime* time = nullptr;
 	ModuleScene* scene = nullptr;
 	ModuleFileSystem* filesystem = nullptr;
@@ -64,8 +63,10 @@ public:
 	ModuleLight* lights = nullptr;
 	ModuleResourceManager* resources = nullptr;
 	ModuleScriptManager* scripts = nullptr;
+	ModuleSpacePartitioning* space_partitioning = nullptr;
 	ModuleActions* actions = nullptr;
 	ModuleAI* artificial_intelligence = nullptr;
+	ModuleAudio* audio = nullptr;
 
 	std::unique_ptr<EngineLog> engine_log = nullptr;
 

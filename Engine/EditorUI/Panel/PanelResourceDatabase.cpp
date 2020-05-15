@@ -37,47 +37,18 @@ void PanelResourceDatabase::Render()
 			{
 				++i;
 				ImGui::PushID(pair.first);
-				if (ImGui::Selectable(std::to_string(pair.first).c_str(), selected == i, ImGuiSelectableFlags_SpanAllColumns))
+				if (ImGui::Selectable(std::to_string((unsigned long)pair.first).c_str(), selected == i, ImGuiSelectableFlags_SpanAllColumns))
 				{
 					selected = i;
 				}
 				ImGui::NextColumn();
-				ImGui::Text(pair.second->imported_file.c_str()); ImGui::NextColumn();
-				ImGui::Text(pair.second->exported_file.c_str()); ImGui::NextColumn();
-				ImGui::Text(GetResourceTypeName(pair.second->resource_type).c_str()); ImGui::NextColumn();
+				ImGui::Text(pair.second->imported_file_path.c_str()); ImGui::NextColumn();
+				ImGui::Text(pair.second->exported_file_path.c_str()); ImGui::NextColumn();
+				ImGui::Text(Resource::GetResourceTypeName(pair.second->resource_type).c_str()); ImGui::NextColumn();
 				ImGui::PopID();
 			}
 		}
 		ImGui::Columns(1);
 	}
 	ImGui::End();
-}
-
-std::string PanelResourceDatabase::GetResourceTypeName(ResourceType resource_type) const
-{
-	switch (resource_type)
-	{
-	case ResourceType::ANIMATION:
-		return "Animation";
-	case ResourceType::AUDIO:
-		return "Audio";
-	case ResourceType::MATERIAL:
-		return "Material";
-	case ResourceType::MESH:
-		return "Mesh";
-	case ResourceType::NAVMESH:
-		return "NavMesh";
-	case ResourceType::PREFAB:
-		return "Prefab";
-	case ResourceType::SCENE:
-		return "Scene";
-	case ResourceType::SKELETON:
-		return "Skeleton";
-	case ResourceType::SKYBOX:
-		return "Skybox";
-	case ResourceType::TEXTURE:
-		return "Texture";
-	case ResourceType::UNKNOWN:
-		return "Unknown";
-	}
 }

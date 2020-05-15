@@ -1,44 +1,52 @@
 #ifndef _MODELIMPORTER_H_
 #define _MODELIMPORTER_H_
 
-#include "Importer.h"
+#include "ResourceManagement/Importer/Importer.h"
 
 #include "Helper/Timer.h"
 
 #include <assimp/LogStream.hpp>
 #include <assimp/Logger.hpp>
+#include <map>
 #include <memory>
 
-
-
+struct aiAnimation;
 struct aiNode;
 struct aiScene;
+struct aiMesh;
+
 class Config;
-class Mesh;
-class GameObject;
-class MeshImporter;
-class SkeletonImporter;
-class AnimationImporter;
-class ModelPrefabImporter;
+class Path;
+class ModelMetafile;
 
-
-class ModelImporter : Importer
+class ModelImporter : public Importer
 {
+
+struct CurrentModelData
+{
+	const aiScene* scene = nullptr;
+	Path* asset_file_folder_path = nullptr;
+	float scale = 1.f;
+	std::map<std::string, uint32_t> skeleton_cache;
+	const ModelMetafile* model_metafile;
+};
+
 public:
 	ModelImporter();
 	~ModelImporter();
-	ImportResult Import(const File & file, bool force = false) const override;
-	ImportResult ImportExtractedResources(const File & file, bool force = false) const;
+
+	FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const override;
 
 private:
-	std::vector<Config> ImportNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation, const aiScene* scene, const std::string& base_path) const;
+	std::vector<Config> ExtractDataFromNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation) const;
+	uint32_t ExtractMaterialFromNode(size_t mesh_index, const std::string& mesh_name) const;
+	uint32_t ExtractMeshFromNode(const aiMesh* asssimp_mesh, std::string mesh_name, const aiMatrix4x4& mesh_transformation, uint32_t mesh_skeleton_uuid) const;
+	uint32_t ExtractSkeletonFromNode(const aiMesh* asssimp_mesh, std::string mesh_name) const;
+	uint32_t ExtractAnimationFromNode(const aiAnimation* assimp_animation, std::string animation_name) const;
 
 private:
 	mutable Timer performance_timer;
-	std::unique_ptr<MeshImporter> mesh_importer;
-	std::unique_ptr<SkeletonImporter> skeleton_importer;
-	std::unique_ptr<AnimationImporter> animation_importer;
-	std::unique_ptr<ModelPrefabImporter> model_prefab_importer;
+	mutable CurrentModelData current_model_data;
 };
 
 

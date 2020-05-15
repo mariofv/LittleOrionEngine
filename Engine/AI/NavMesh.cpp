@@ -5,6 +5,8 @@
 
 #include "EditorUI/DebugDraw.h"
 
+#include "Filesystem/PathAtlas.h"
+
 #include "Main/Application.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleFileSystem.h"
@@ -40,21 +42,12 @@ bool NavMesh::CleanUp()
 {
 	m_dd.CleanUp();
 	is_mesh_computed = false;
-	//Free memory allocated on the heap
-	free(navmesh_read_data);
 
 	return true;
 }
 
 bool NavMesh::Update()
 {
-	//if (is_mesh_computed)
-	//{
-	//	// Draw bounds
-	//	//const float* bmin = &global_AABB.minPoint[0];
-	//	//const float* bmax = &global_AABB.maxPoint[0];
-	//	//dd::aabb(math::float3(bmin[0], bmin[1], bmin[2]), math::float3(bmax[0], bmax[1], bmax[2]), math::float3(1.0f, 0.0f, 0.0f));
-	//}
 	return true;
 }
 
@@ -452,14 +445,16 @@ bool NavMesh::CreateNavMesh()
 void NavMesh::RenderNavMesh(ComponentCamera& camera)
 {
 	if (is_mesh_computed)
+	{
 		m_dd.DrawMesh(camera);
+	}
 }
 
 void NavMesh::InitAABB()
 {
 	global_AABB.SetNegativeInfinity();
 
-	for (auto & mesh : App->renderer->meshes)
+	for (const auto& mesh : App->renderer->meshes)
 	{
 		float minX = std::fmin(mesh->owner->aabb.bounding_box.minPoint.x, global_AABB.minPoint.x);
 		float minY = std::fmin(mesh->owner->aabb.bounding_box.minPoint.y, global_AABB.minPoint.y);
@@ -477,7 +472,7 @@ void NavMesh::InitAABB()
 	}
 }
 
-bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path)
+bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path, PathMode path_mode)
 {
 
 	path.clear();
@@ -498,6 +493,7 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path)
 	nav_query->findNearestPoly((float*)&start, poly_pick_ext, &filter, &start_ref, 0);
 	nav_query->findNearestPoly((float*)&end, poly_pick_ext, &filter, &end_ref, 0);
 
+	
 
 	if(!start_ref)
 	{
@@ -655,7 +651,7 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path)
 
 			}
 
-			for(size_t i = 0; i < nsmooth_path; ++i)
+			for(int i = 0; i < nsmooth_path; ++i)
 			{
 				path.push_back(float3(smooth_path[i * 3], smooth_path[i * 3 + 1], smooth_path[i * 3 + 2]));
 			}
@@ -704,27 +700,80 @@ bool NavMesh::FindPath(float3& start, float3& end, std::vector<float3>& path)
 	return true;
 }
 
+bool NavMesh::IsPointWalkable(float3 & target_position)
+{
+	dtPolyRef target_ref;
+	dtQueryFilter filter;
+	filter.setIncludeFlags(SAMPLE_POLYFLAGS_ALL ^ SAMPLE_POLYFLAGS_DISABLED);
+	filter.setExcludeFlags(0);
+
+	float3 diff = math::float3(0.1f, 2.f, 0.1f);
+	float poly_pick_ext[3] = { diff.x, diff.y, diff.z };
+
+	nav_query->findNearestPoly((float*)&target_position, poly_pick_ext, &filter, &target_ref, diff.ptr());
+
+	if (target_ref == 0)
+		return false;
+
+	return Distance(diff, target_position) < 0.45f;
+}
+
+bool NavMesh::FindNextPolyByDirection(float3& position, float3& next_position)
+{
+	float3 aux_position = position;
+	dtPolyRef target_ref;
+	dtQueryFilter filter;
+	float3 diff = math::float3(0.1f, 2.f, 0.1f);
+	float poly_pick_ext[3] = { diff.x, diff.y, diff.z };
+
+	nav_query->findNearestPoly((float*)&aux_position, poly_pick_ext, &filter, &target_ref, diff.ptr());
+	//PolyNotFound
+	if(target_ref == 0)
+	{
+		return false;
+	}
+	
+	float pos[3];
+	nav_query->closestPointOnPoly(target_ref, (float*)&aux_position, pos, 0);
+
+	next_position.x = pos[0];
+	next_position.y = pos[1];
+	next_position.z = pos[2];
+
+	return true;
+}
+
+
+
 void NavMesh::SaveNavMesh(unsigned char* nav_data, unsigned int nav_data_size) const
 {
-	std::string filepath(NAVMESH_PATH);
-	filepath.append("survival_scene_navmesh.bin");
+	Path* navmesh_path = App->filesystem->GetPath(RESOURCES_NAVMESH_PATH);
+	std::string navmesh_filename("survival_scene_navmesh.bin");
 
-	App->filesystem->Save(filepath.c_str(), reinterpret_cast<char*>(nav_data), nav_data_size);
+	unsigned char* copy_nav_data = new unsigned char[nav_data_size];
+	memcpy(copy_nav_data, nav_data, nav_data_size);
+
+	FileData navmesh_data{ reinterpret_cast<char*>(copy_nav_data), nav_data_size };
+
+	navmesh_path->Save(navmesh_filename.c_str(), navmesh_data);
 }
 
 void NavMesh::LoadNavMesh()
 {
-	std::string filepath(NAVMESH_PATH);
-	filepath.append("survival_scene_navmesh.bin");
-	size_t readed_bytes;
-	navmesh_read_data = App->filesystem->Load(filepath.c_str(), readed_bytes);
+	std::string navmesh_file_path_string(RESOURCES_NAVMESH_PATH);
+	navmesh_file_path_string.append("/survival_scene_navmesh.bin");
 
-
-	if (navmesh_read_data == nullptr)
+	if (!App->filesystem->Exists(navmesh_file_path_string))
 	{
 		APP_LOG_ERROR("Cannot load navmesh.");
 		return;
 	}
+
+	Path* navmesh_file_path = App->filesystem->GetPath(navmesh_file_path_string);
+	FileData navmesh_data = navmesh_file_path->GetFile()->Load();
+
+	size_t readed_bytes = navmesh_data.size;
+	navmesh_read_data = (char*)navmesh_data.buffer;
 
 	nav_mesh = dtAllocNavMesh();
 	if (!nav_mesh)
@@ -764,9 +813,9 @@ void NavMesh::GetVerticesScene()
 	verts_vec.clear();
 	unwalkable_verts.clear();
 
-	for (auto mesh : App->renderer->meshes)
+	for (const auto& mesh : App->renderer->meshes)
 	{
-		for (int i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
+		for (size_t i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
 		{
 			float4 vertss(mesh->mesh_to_render.get()->vertices[i].position, 1.0f);
 			vertss = mesh->owner->transform.GetGlobalModelMatrix() * vertss;
@@ -789,17 +838,17 @@ void NavMesh::GetIndicesScene()
 		return;
 
 	std::vector<int>max_vert_mesh(App->renderer->meshes.size() + 1, 0);
-	for(int i = 0; i < App->renderer->meshes.size(); ++i)
+	for(size_t i = 0; i < App->renderer->meshes.size(); ++i)
 	{
 		ntris += App->renderer->meshes[i]->mesh_to_render.get()->indices.size() / 3;
 		max_vert_mesh[i + 1] = App->renderer->meshes[i]->mesh_to_render.get()->vertices.size();
 	}
 
 	int vert_overload = 0;
-	for(int j = 0; j < App->renderer->meshes.size(); ++j)
+	for(size_t j = 0; j < App->renderer->meshes.size(); ++j)
 	{
 		vert_overload += max_vert_mesh[j];
-		for(int i = 0; i < App->renderer->meshes[j]->mesh_to_render.get()->indices.size(); i+= 3)
+		for(size_t i = 0; i < App->renderer->meshes[j]->mesh_to_render.get()->indices.size(); i+= 3)
 		{
 			tris_vec.push_back(App->renderer->meshes[j]->mesh_to_render.get()->indices[i] + vert_overload);
 			tris_vec.push_back(App->renderer->meshes[j]->mesh_to_render.get()->indices[i + 1] + vert_overload);
@@ -815,9 +864,9 @@ void NavMesh::GetNormalsScene()
 	//Clear normals vector
 	normals_vec.clear();
 
-	for (auto mesh : App->renderer->meshes)
+	for (const const auto&  mesh : App->renderer->meshes)
 	{
-		for (int i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
+		for (size_t i = 0; i < mesh->mesh_to_render.get()->vertices.size(); ++i)
 		{
 			normals_vec.push_back(mesh->mesh_to_render.get()->vertices[i].normals.x);
 			normals_vec.push_back(mesh->mesh_to_render.get()->vertices[i].normals.y);
@@ -997,5 +1046,145 @@ float NavMesh::DistancePtLine2d(const float * pt, const float * p, const float *
 	dx = p[0] + t * pqx - pt[0];
 	dz = p[2] + t * pqz - pt[2];
 	return dx * dx + dz * dz;
+}
+
+void NavMesh::drawMeshTile(SampleDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery* query,
+	const dtMeshTile* tile, unsigned char flags)
+{
+	dtPolyRef base = mesh.getPolyRefBase(tile);
+
+	int tileNum = mesh.decodePolyIdTile(base);
+	const unsigned int tileColor = DuIntToCol(tileNum, 128);
+
+
+	for (int i = 0; i < tile->header->polyCount; ++i)
+	{
+		const dtPoly* p = &tile->polys[i];
+		if (p->getType() == DT_POLYTYPE_OFFMESH_CONNECTION)	// Skip off-mesh links.
+			continue;
+
+		const dtPolyDetail* pd = &tile->detailMeshes[i];
+
+		unsigned int col;
+		if (query && query->isInClosedList(base | (dtPolyRef)i))
+			col = DuRGBA(255, 196, 0, 64);
+		else
+		{
+			if (flags & DU_DRAWNAVMESH_COLOR_TILES)
+				col = tileColor;
+			else
+				col = DuTransCol(dd->AreaToCol(p->getArea()), 64);
+		}
+
+		for (int j = 0; j < pd->triCount; ++j)
+		{
+			const unsigned char* t = &tile->detailTris[(pd->triBase + j) * 4];
+			for (int k = 0; k < 3; ++k)
+			{
+				if (t[k] < p->vertCount)
+					dd->Vertex(&tile->verts[p->verts[t[k]] * 3], col);
+				else
+					dd->Vertex(&tile->detailVerts[(pd->vertBase + t[k] - p->vertCount) * 3], col);
+			}
+		}
+	}
+	/*
+	// Draw inter poly boundaries
+	drawPolyBoundaries(dd, tile, duRGBA(0,48,64,32), 1.5f, true);
+
+	// Draw outer poly boundaries
+	drawPolyBoundaries(dd, tile, duRGBA(0,48,64,220), 2.5f, false);
+
+	if (flags & DU_DRAWNAVMESH_OFFMESHCONS)
+	{
+		dd->begin(DU_DRAW_LINES, 2.0f);
+		for (int i = 0; i < tile->header->polyCount; ++i)
+		{
+			const dtPoly* p = &tile->polys[i];
+			if (p->getType() != DT_POLYTYPE_OFFMESH_CONNECTION)	// Skip regular polys.
+				continue;
+
+			unsigned int col, col2;
+			if (query && query->isInClosedList(base | (dtPolyRef)i))
+				col = duRGBA(255,196,0,220);
+			else
+				col = duDarkenCol(duTransCol(dd->areaToCol(p->getArea()), 220));
+
+			const dtOffMeshConnection* con = &tile->offMeshCons[i - tile->header->offMeshBase];
+			const float* va = &tile->verts[p->verts[0]*3];
+			const float* vb = &tile->verts[p->verts[1]*3];
+
+			// Check to see if start and end end-points have links.
+			bool startSet = false;
+			bool endSet = false;
+			for (unsigned int k = p->firstLink; k != DT_NULL_LINK; k = tile->links[k].next)
+			{
+				if (tile->links[k].edge == 0)
+					startSet = true;
+				if (tile->links[k].edge == 1)
+					endSet = true;
+			}
+
+			// End points and their on-mesh locations.
+			dd->vertex(va[0],va[1],va[2], col);
+			dd->vertex(con->pos[0],con->pos[1],con->pos[2], col);
+			col2 = startSet ? col : duRGBA(220,32,16,196);
+			duAppendCircle(dd, con->pos[0],con->pos[1]+0.1f,con->pos[2], con->rad, col2);
+
+			dd->vertex(vb[0],vb[1],vb[2], col);
+			dd->vertex(con->pos[3],con->pos[4],con->pos[5], col);
+			col2 = endSet ? col : duRGBA(220,32,16,196);
+			duAppendCircle(dd, con->pos[3],con->pos[4]+0.1f,con->pos[5], con->rad, col2);
+
+			// End point vertices.
+			dd->vertex(con->pos[0],con->pos[1],con->pos[2], duRGBA(0,48,64,196));
+			dd->vertex(con->pos[0],con->pos[1]+0.2f,con->pos[2], duRGBA(0,48,64,196));
+
+			dd->vertex(con->pos[3],con->pos[4],con->pos[5], duRGBA(0,48,64,196));
+			dd->vertex(con->pos[3],con->pos[4]+0.2f,con->pos[5], duRGBA(0,48,64,196));
+
+			// Connection arc.
+			duAppendArc(dd, con->pos[0],con->pos[1],con->pos[2], con->pos[3],con->pos[4],con->pos[5], 0.25f,
+						(con->flags & 1) ? 0.6f : 0, 0.6f, col);
+		}
+		dd->end();
+	}
+
+	const unsigned int vcol = duRGBA(0,0,0,196);
+	dd->begin(DU_DRAW_POINTS, 3.0f);
+	for (int i = 0; i < tile->header->vertCount; ++i)
+	{
+		const float* v = &tile->verts[i*3];
+		dd->vertex(v[0], v[1], v[2], vcol);
+	}
+	dd->end();
+
+	*/
+}
+
+void NavMesh::duDebugDrawNavMesh(SampleDebugDraw* dd, const dtNavMesh& mesh, unsigned char flags)
+{
+	if (!dd) return;
+
+	for (int i = 0; i < mesh.getMaxTiles(); ++i)
+	{
+		const dtMeshTile* tile = mesh.getTile(i);
+		if (!tile->header) continue;
+		drawMeshTile(dd, mesh, 0, tile, flags);
+	}
+}
+
+void NavMesh::duDebugDrawNavMeshWithClosedList(SampleDebugDraw* dd, const dtNavMesh& mesh, const dtNavMeshQuery& query, unsigned char flags)
+{
+	if (!dd) return;
+
+	const dtNavMeshQuery* q = (flags & DU_DRAWNAVMESH_CLOSEDLIST) ? &query : 0;
+
+	for (int i = 0; i < mesh.getMaxTiles(); ++i)
+	{
+		const dtMeshTile* tile = mesh.getTile(i);
+		if (!tile->header) continue;
+		drawMeshTile(dd, mesh, q, tile, flags);
+	}
 }
 

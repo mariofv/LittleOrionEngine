@@ -17,17 +17,21 @@ class AnimationImporter : public Importer
 {
 public:
 
-	AnimationImporter() = default;
+	AnimationImporter() : Importer(ResourceType::ANIMATION) {};
 	~AnimationImporter() = default;
 
-	bool ImportAnimation(const aiScene* scene, const aiAnimation* animation, const std::string& imported_file, std::string& exported_file) const;
+	FileData ExtractData(Path& assets_file_path, const Metafile& metafile) const override;
+	FileData ExtractAnimationFromAssimp(const aiScene* scene, const aiAnimation* animation, float unit_scale_factor) const;
 
 private:
-	void GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation & own_format_animation, float scale_factor) const;
-	void GetChannelTranslations(const aiNodeAnim* sample, std::map<size_t, float3>& sample_translations) const;
-	void GetChannelRotations(const aiNodeAnim* sample, std::map<size_t, Quat>& sample_rotations) const;
-	void SaveBinary(const Animation& animation, const std::string& exported_file, const std::string& imported_file) const;
+	FileData CreateBinary(const Animation& own_format_animation) const;
 
+	void GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const;
+	void GetChannelTransform(const float4x4 &pre_transform, const aiNodeAnim* sample, size_t animation_duration,std::map<size_t, float4x4>& sample_transform) const;
+
+	void GetAcumulatedAssimpTransformations(const aiNodeAnim * animation_channel, const std::vector<aiNodeAnim *> & channel_vector, const aiNode* root_node, float4x4 & pre_transform) const;
+	void GetAssimpNodeTansformationOutSideChannels(const aiNode* root_node, const Animation& animation, std::map<const std::string, std::vector<const aiNode *>>  & nodes) const;
+	void ApplyNodeTansformationOutSideChannels(std::map<const std::string, std::vector<const aiNode *>> &nodes, float unit_scale_factor, Animation &own_format_animation) const;
 };
 #endif
 

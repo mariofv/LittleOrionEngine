@@ -1,10 +1,10 @@
 #include "EditorActionAddGameObject.h"
+
+#include "Main/Application.h"
+#include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleRender.h"
-#include "Main/Application.h"
-
-
 
 EditorActionAddGameObject::EditorActionAddGameObject(GameObject * go) : game_object(go)
 {

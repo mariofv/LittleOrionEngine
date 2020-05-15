@@ -1,11 +1,14 @@
 #include "TextureImporter.h"
+
 #include "Main/Application.h"
+#include "Helper/Utils.h"
 #include "Module/ModuleFileSystem.h"
+#include "ResourceManagement/Metafile/TextureMetafile.h"
 
 #include <algorithm>
-#include "Brofiler/Brofiler.h"
+#include <Brofiler/Brofiler.h>
 
-TextureImporter::TextureImporter()
+TextureImporter::TextureImporter() : Importer(ResourceType::TEXTURE) 
 {
 	APP_LOG_INIT("Initializing DevIL image loader.")
 	ilInit();
@@ -18,82 +21,91 @@ TextureImporter::TextureImporter()
 
 }
 
-ImportResult TextureImporter::Import(const File& imported_file, bool force) const
+FileData TextureImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
-	ImportResult import_result;
-
-	if (imported_file.filename.empty() || !imported_file.loaded_correctly)
+	const TextureMetafile& texture_metafile = static_cast<const TextureMetafile&>(metafile);
+	FileData file_data;
+	if (texture_metafile.texture_options.texture_type != TextureType::DEFAULT)
 	{
-		APP_LOG_ERROR("Importing material error: Couldn't find the file to import.")
-		return import_result;
-	}
-
-	ImportOptions already_imported = GetAlreadyImportedResource(imported_file);
-	if (already_imported.uuid != 0 && !force) {
-		APP_LOG_INFO("Texture already imported.")
-		import_result.success = true;
-		import_result.exported_file = already_imported.exported_file;
-		return import_result;
-	}
-
-	std::string output_file;
-
-	if (imported_file.filename.find("_normal") != std::string::npos)
-	{
-		output_file = ImportToTGA(imported_file);
+		file_data = ExtractDataToTGA(assets_file_path);
 	}
 	else 
 	{
-		output_file = ImportToDDS(imported_file);
+		file_data = ExtractDataToDDS(assets_file_path);
 	}
 
-	import_result.success = true;
-	import_result.exported_file = output_file;
-
-	return import_result;
+	return CreateBinary(assets_file_path, file_data, texture_metafile);
 }
 
-std::string TextureImporter::ImportMaterialData(const std::string & material_path, const std::string model_base_path) const
+const FileData &TextureImporter::CreateBinary(Path & assets_file_path, FileData &file_data, const TextureMetafile & texture_metafile) const
 {
-	APP_LOG_INIT("Loading material texture in described path %s.", material_path.c_str());
-	ImportResult import_result = Import(material_path);
-	if (import_result.success)
-	{
-		APP_LOG_SUCCESS("Material loaded correctly from %s.", material_path.c_str());
-		return import_result.exported_file;
-	}
+	std::string extension = assets_file_path.GetExtension();
 
-	std::string texture_file_name = GetTextureFileName(material_path);
-	std::string textures_path = model_base_path+ "/" + texture_file_name;
-	APP_LOG_INIT("Loading material texture in model folder path %s.", model_base_path.c_str());
-	import_result = Import(textures_path);
-	if (import_result.success)
-	{
-		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
-		return import_result.exported_file;
-	}
+	uint32_t size = sizeof(TextureOptions) + extension.size() + file_data.size;
 
-	textures_path = std::string(TEXTURES_PATH) + texture_file_name;
-	APP_LOG_INIT("Loading material texture in textures folder %s.", textures_path.c_str());
-	import_result = Import(textures_path);
-	if (import_result.success)
-	{
-		APP_LOG_SUCCESS("Material loaded correctly from %s.", textures_path.c_str());
-		return import_result.exported_file;
-	}
-	return "";
+	char* data = new char[size];
+	char* cursor = data;
+	size_t bytes = sizeof(TextureOptions);
+	memcpy(cursor, &texture_metafile.texture_options, bytes);
+
+	cursor += bytes;
+	bytes = extension.size();
+	assert(bytes == 3);
+	memcpy(cursor, extension.data(), bytes);
+
+	cursor += bytes;
+	bytes = file_data.size;
+	memcpy(cursor, file_data.buffer, bytes);
+	delete[] file_data.buffer;
+	FileData texture_file_data{ data, size };
+	return texture_file_data;
 }
 
-
-ILubyte * TextureImporter::LoadImageDataInMemory(const std::string& file_path, int image_type ,int & width, int & height ) const
+FileData TextureImporter::ExtractDataToDDS(const Path& assets_file_path) const
 {
-	ilLoadImage(file_path.c_str());
+	FileData texture_data;
 
+	ILuint image;
+	ilGenImages(1, &image);
+	ilBindImage(image);
+	int width, height;
+	ILubyte* save_data = LoadImageDataInMemory(assets_file_path, IL_RGBA, width, height);
+
+	//Save data
+	ILuint size;
+
+	size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
+	if (size > 0)
+	{
+		if (ilSaveL(IL_DDS, save_data, size) > 0) // Save to buffer with the ilSaveIL function
+		{
+			texture_data.size = size;
+			char* texture_bytes_data = new char[size];
+			memcpy(texture_bytes_data, save_data, size);
+			texture_data.buffer = texture_bytes_data;
+		}		
+		ilDeleteImages(1, &image);
+	};
+
+	return texture_data;
+}
+
+FileData TextureImporter::ExtractDataToTGA(const Path& assets_file_path) const
+{
+	return assets_file_path.GetFile()->Load();
+}
+
+ILubyte* TextureImporter::LoadImageDataInMemory(const Path& file_path, int image_type, int& width, int& height) const
+{
+	FileData texture_data = file_path.GetFile()->Load();
+	ILenum original_image_type = Utils::GetImageType(file_path.GetExtension());
+	ilLoadL(original_image_type, texture_data.buffer, texture_data.size);
+	delete[] texture_data.buffer;
 	ILenum error;
 	error = ilGetError();
 	if (error == IL_COULD_NOT_OPEN_FILE)
 	{
-		APP_LOG_ERROR("Error loading texture %s. File not found", file_path.c_str());
+		APP_LOG_ERROR("Error loading texture %s. File not found", file_path.GetFullPath().c_str());
 		return nullptr;
 	}
 
@@ -106,65 +118,8 @@ ILubyte * TextureImporter::LoadImageDataInMemory(const std::string& file_path, i
 		iluFlipImage();
 	}
 
-	ILubyte * data = ilGetData();
+	ILubyte* data = ilGetData();
 	width = ilGetInteger(IL_IMAGE_WIDTH);
 	height = ilGetInteger(IL_IMAGE_HEIGHT);
 	return data;
-}
-
-//Remove the material from the cache if the only owner is the cache itself
-
-
-std::string TextureImporter::GetTextureFileName(std::string texture_file_path) const
-{
-	std::replace(texture_file_path.begin(), texture_file_path.end(), '\\', '/');
-	std::size_t found = texture_file_path.find_last_of("/");
-	if (found == std::string::npos)
-	{
-		return texture_file_path;
-	}
-	else
-	{
-		std::string texture_filename = texture_file_path.substr(found, texture_file_path.length());
-
-		return texture_filename;
-	}
-}
-
-std::string TextureImporter::ImportToDDS(const File & file) const
-{
-	ILuint image;
-	ilGenImages(1, &image);
-	ilBindImage(image);
-	int width, height;
-	ILubyte * save_data = LoadImageDataInMemory(file.file_path.c_str(), IL_RGBA, width, height);
-	//Get new Name
-
-	std::string texture_name_no_extension = file.filename.substr(0, file.filename.find_last_of("."));
-	std::string output_file = SaveMetaFile(file.file_path, ResourceType::TEXTURE);
-
-	//Save data
-	ILuint size;
-
-	size = ilSaveL(IL_DDS, NULL, 0); // Get the size of the data buffer
-	if (size > 0) {
-
-		if (ilSaveL(IL_DDS, save_data, size) > 0) // Save to buffer with the ilSaveIL function
-		{
-			App->filesystem->Save(output_file.c_str(), (unsigned int *)save_data, size);
-		}
-		ilDeleteImages(1, &image);
-	}
-	return output_file;
-}
-
-std::string TextureImporter::ImportToTGA(const File & file) const
-{
-	std::string output_file = SaveMetaFile(file.file_path, ResourceType::TEXTURE);
-	bool copied = App->filesystem->Copy(file.file_path.c_str(), output_file.c_str());
-	if (!copied)
-	{
-		return "";
-	}
-	return output_file;
 }

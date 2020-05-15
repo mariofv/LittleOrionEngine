@@ -1,15 +1,7 @@
 #include "Utils.h"
 
 #include <fstream>
-
-Utils::Utils()
-{
-}
-
-
-Utils::~Utils()
-{
-}
+#include <IL/il.h>
 
 Quat Utils::GenerateQuatFromDegFloat3(const float3& rotation)
 {
@@ -92,38 +84,11 @@ std::vector<float> Utils::GetVertices(const AABB2D& box)
 	return vertices;
 }
 
-size_t Utils::CStrlastIndexOfChar(const char* str, char find_char)
+void Utils::GetCurrentPath(std::string& path)//to change and move to filesystem 
 {
-	intptr_t i = strlen(str) - 1;
-	while (i >= 0)
-	{
-		if (str[i] == find_char)
-		{
-			return i;
-		}
-		--i;
-	}
-	return (size_t)-1;
-}
-
-bool Utils::PatchFileName(char* filename)
-{
-	size_t	dot_idx = CStrlastIndexOfChar(filename, '.');
-	if (dot_idx != (size_t)-1)
-	{
-		filename[dot_idx - 1] = '_';
-		return true;
-	}
-	else
-	{
-		return false;
-	}
-
-}
-
-std::string Utils::LoadFileContent(const std::string& path) {
-	std::ifstream file(path);
-	return std::string((std::istreambuf_iterator<char>(file)), std::istreambuf_iterator<char>());
+	char current_path[MAX_PATH];
+	GetCurrentDirectory(MAX_PATH, current_path);
+	path = current_path;
 }
 
 void Utils::SaveFileContent(const std::string& source, std::string& destination)
@@ -179,7 +144,136 @@ float4x4 Utils::Interpolate(const float4x4& first, const float4x4& second, float
 	float3 second_translation;
 	Quat second_rotation;
 	float3 second_scale;
-	first.Decompose(second_translation, second_rotation, second_scale);
+	second.Decompose(second_translation, second_rotation, second_scale);
 	result = float4x4::FromTRS(Interpolate(first_translation, second_translation, lambda), Interpolate(first_rotation, second_rotation, lambda), second_scale);
 	return result;
+}
+
+float4x4 Utils::GetTransform(const aiMatrix4x4& current_transform, float scale_factor)
+{
+	aiVector3t<float> pScaling, pPosition;
+	aiQuaterniont<float> pRotation;
+
+	aiMatrix4x4 scale_matrix = aiMatrix4x4() * scale_factor;
+	scale_matrix[3][3] = 1;
+
+	aiMatrix4x4 node_transformation = scale_matrix * current_transform * scale_matrix.Inverse();
+	node_transformation.Decompose(pScaling, pRotation, pPosition);
+
+	math::float3 scale(pScaling.x, pScaling.y, pScaling.z);
+	math::Quat rotation(pRotation.x, pRotation.y, pRotation.z, pRotation.w);
+	math::float3 translation(pPosition.x, pPosition.y, pPosition.z);
+	return math::float4x4::FromTRS(translation, rotation, scale);
+}
+
+size_t Utils::GetImageType(const std::string& file_extension)
+{
+	size_t image_type;
+
+	if (file_extension == "bmp")
+	{
+		image_type = IL_BMP;
+	}
+	else if (file_extension == "cut")
+	{
+		image_type = IL_CUT;
+	}
+	else if (file_extension == "dds")
+	{
+		image_type = IL_DDS;
+	}
+	else if (file_extension == "gif")
+	{
+		image_type = IL_GIF;
+	}
+	else if (file_extension == "ico")
+	{
+		image_type = IL_ICO;
+	}
+	else if (file_extension == "jpg")
+	{
+		image_type = IL_JPG;
+	}
+	else if (file_extension == "lif")
+	{
+		image_type = IL_LIF;
+	}
+	else if (file_extension == "mng")
+	{
+		image_type = IL_MNG;
+	}
+	else if (file_extension == "pcd")
+	{
+		image_type = IL_PCD;
+	}
+	else if (file_extension == "pcx")
+	{
+		image_type = IL_PCX;
+	}
+	else if (file_extension == "pic")
+	{
+		image_type = IL_PIC;
+	}
+	else if (file_extension == "png")
+	{
+		image_type = IL_PNG;
+	}
+	else if (file_extension == "pbm")
+	{
+		image_type = IL_PNM;
+	}
+	else if (file_extension == "pgm")
+	{
+		image_type = IL_PNM;
+	}
+	else if (file_extension == "ppm")
+	{
+		image_type = IL_PNM;
+	}
+	else if (file_extension == "psd")
+	{
+		image_type = IL_PSD;
+	}
+	else if (file_extension == "psp")
+	{
+		image_type = IL_PSP;
+	}
+	else if (file_extension == "bw")
+	{
+		image_type = IL_SGI;
+	}
+	else if (file_extension == "rgb")
+	{
+		image_type = IL_SGI;
+	}
+	else if (file_extension == "rgba")
+	{
+		image_type = IL_SGI;
+	}
+	else if (file_extension == "sgi")
+	{
+		image_type = IL_SGI;
+	}
+	else if (file_extension == "tga")
+	{
+		image_type = IL_TGA;
+	}
+	else if (file_extension == "tif")
+	{
+		image_type = IL_TIF;
+	}
+	else if (file_extension == "tiff")
+	{
+		image_type = IL_TIF;
+	}
+	else if (file_extension == "jasc")
+	{
+		image_type = IL_JASC_PAL;
+	}
+	else
+	{
+		image_type = IL_TYPE_UNKNOWN;
+	}
+
+	return image_type;
 }

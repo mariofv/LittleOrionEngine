@@ -22,8 +22,6 @@ bld/
 [Bb]in/
 [Oo]bj/
 [Ll]og/
-/[Bb]uild*
-!BuildCreator.ps1
 
 # Visual Studio 2015/2017 cache/options directory
 .vs/
@@ -332,5 +330,11 @@ ASALocalRun/
 !Libraries/**
 imgui.ini
 Game/Library/**
-Game/Assets/Scenes/**
+TwinlightSouls/
 **/LittleOrionEngine.lib
+
+Game/Resources/Scenes/tmp_scene.*
+Game/Resources/Scripts/GameplaySystem*[0-9]*
+
+/[Bb]inaries*
+*.ps1

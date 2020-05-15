@@ -18,10 +18,10 @@
 
 #include <string.h>
 #include "DetourPathQueue.h"
-#include "recast/Detour/DetourNavMesh.h"
-#include "recast/Detour/DetourNavMeshQuery.h"
-#include "recast/Detour/DetourAlloc.h"
-#include "recast/Detour/DetourCommon.h"
+#include "Detour/DetourNavMesh.h"
+#include "Detour/DetourNavMeshQuery.h"
+#include "Detour/DetourAlloc.h"
+#include "Detour/DetourCommon.h"
 
 
 dtPathQueue::dtPathQueue() :

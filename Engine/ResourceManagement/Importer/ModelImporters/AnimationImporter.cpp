@@ -10,36 +10,32 @@
 #include <cmath>
 #include <map>
 
-bool AnimationImporter::ImportAnimation(const aiScene* scene, const aiAnimation* animation, const std::string& imported_file, std::string& exported_file) const
+FileData AnimationImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
-	float unit_scale_factor = 1.f;
-	for (unsigned int i = 0; i < scene->mMetaData->mNumProperties; ++i)
-	{
-		if (scene->mMetaData->mKeys[i] == aiString("UnitScaleFactor"))
-		{
-			aiMetadataEntry unit_scale_entry = scene->mMetaData->mValues[i];
-			unit_scale_factor = *(double*)unit_scale_entry.mData;
-		};
-	}
-	unit_scale_factor *= 0.01f;
+	return assets_file_path.GetFile()->Load();
+}
 
+FileData AnimationImporter::ExtractAnimationFromAssimp(const aiScene* scene, const aiAnimation* animation, float unit_scale_factor) const
+{
+	Animation own_format_animation;
 
-	Animation own_format_animation(0,"");
 	GetCleanAnimation(scene->mRootNode, animation, own_format_animation, unit_scale_factor);
+
 	own_format_animation.frames = static_cast<float>(animation->mDuration);
 	own_format_animation.frames_per_second = static_cast<float>(animation->mTicksPerSecond);
 	own_format_animation.name = std::string(animation->mName.C_Str());
 
-	exported_file = SaveMetaFile(imported_file, ResourceType::ANIMATION);
-	SaveBinary(own_format_animation, exported_file, imported_file);
+	std::map<const std::string, std::vector<const aiNode *>> nodes;
+	GetAssimpNodeTansformationOutSideChannels(scene->mRootNode, own_format_animation, nodes);
 
-	return true;
+	ApplyNodeTansformationOutSideChannels(nodes, unit_scale_factor, own_format_animation);
+
+	return CreateBinary(own_format_animation);
 }
 
-void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float scale_factor) const
-{
-	assert(animation->mDuration == (int)animation->mDuration);
 
+void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnimation* animation, Animation& own_format_animation, float unit_scale_factor) const
+{
 	std::map<std::string, std::vector<aiNodeAnim *>> aiNode_by_channel;
 
 	//Organize channels
@@ -56,88 +52,30 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 		aiNode_by_channel[channel_name].push_back(channel);
 	}
 
+
 	std::map<double, std::vector<Animation::Channel>> keyframes;
 	//Merge channels with same name
 	for (auto& channel_set : aiNode_by_channel)
 	{
-		const aiNode* current_node = root_node->FindNode(aiString(channel_set.first));
-		std::vector<const aiNode*> assimp_hierarchy_nodes;
-
-		const aiNode* next_node = current_node->mParent;
-		std::string next_node_name(next_node->mName.C_Str());
-		while (next_node_name.find("$Assimp") != std::string::npos)
-		{
-			assimp_hierarchy_nodes.push_back(next_node);
-			next_node = next_node->mParent;
-			next_node_name = next_node->mName.C_Str();
-		}
-		aiMatrix4x4 accumulated_assimp_local_transformation;
-		for (int i = assimp_hierarchy_nodes.size() - 1; i >= 0; --i)
-		{
-			const aiNode* hierarchy_node = assimp_hierarchy_nodes[i];
-			auto it = std::find_if(channel_set.second.begin(), channel_set.second.end(), [hierarchy_node](const aiNodeAnim * node)
-			{
-				return node->mNodeName == hierarchy_node->mName;
-			}
-			);
-			if (it == channel_set.second.end())
-			{
-				accumulated_assimp_local_transformation = accumulated_assimp_local_transformation * assimp_hierarchy_nodes[i]->mTransformation;
-			}
-		}
-
-		float4x4 accumulated_assimp_transformation = SkeletonImporter::GetTransform(accumulated_assimp_local_transformation);
-
-		std::map<size_t, float3> channel_translations;
-		std::map<size_t, Quat> channel_rotations;
+		std::map<size_t, float4x4> channel_transform;
+		float animation_duration = animation->mDuration;
 		for (auto channel : channel_set.second)
 		{
-			GetChannelTranslations(channel, channel_translations);
-			GetChannelRotations(channel, channel_rotations);
-
+			float4x4 pre_transform;
+			GetAcumulatedAssimpTransformations(channel, channel_set.second,root_node, pre_transform);
+			GetChannelTransform(pre_transform, channel, animation_duration,channel_transform);
 		}
 
-		float animation_duration = animation->mDuration;
 		for (size_t i = 0; i <= animation_duration; ++i)
 		{
-			bool is_translated;
-			float3 translation;
-			if (channel_translations.size() > 1 && channel_translations.find(i) != channel_translations.end())
-			{
-				is_translated = true;
-				translation = channel_translations[i];
-			}
-			else
-			{
-				is_translated = false;
-				translation = channel_translations[0];
-			}
+			float3 euler_rotation = channel_transform[i].ToEulerXYX();
+			Quat rotation = Quat::FromEulerXYX(euler_rotation.x, euler_rotation.y, euler_rotation.z);
+			float3 translation = channel_transform[i].Col3(3) * unit_scale_factor;
 
-			bool is_rotated;
-			Quat rotation;
-			if (channel_rotations.size() > 1 && channel_rotations.find(i) != channel_rotations.end())
-			{
-				is_rotated = true;
-				rotation = channel_rotations[i];
-			}
-			else
-			{
-				is_rotated = false;
-				rotation = channel_rotations[0];
-			}
-			if (is_rotated || is_translated)
-			{
-				float4x4 animation_transform = float4x4::FromTRS(translation, rotation, float3::one);
-				animation_transform = accumulated_assimp_transformation * animation_transform;
-				float4x4 scale_matrix = float4x4::identity * scale_factor;
-				scale_matrix[3][3] = 1;
+			Animation::Channel imported_channel{ channel_set.first, translation, rotation };
+			keyframes[i].push_back(imported_channel);
 
-				animation_transform = scale_matrix * animation_transform * scale_matrix.Inverted();
-				float3 scale;
-				animation_transform.Decompose(translation,rotation,scale);
-				Animation::Channel imported_channel{ channel_set.first, is_translated, translation, is_rotated, rotation };
-				keyframes[i].push_back(imported_channel);
-			}
+
 		}
 	}
 
@@ -149,40 +87,53 @@ void AnimationImporter::GetCleanAnimation(const aiNode* root_node, const aiAnima
 
 }
 
-void AnimationImporter::GetChannelTranslations(const aiNodeAnim* sample,std::map<size_t, float3>& sample_translations) const
+void AnimationImporter::ApplyNodeTansformationOutSideChannels(std::map<const std::string, std::vector<const aiNode *>> &nodes, float unit_scale_factor, Animation &own_format_animation) const
 {
-	for (size_t j = 0; j < sample->mNumPositionKeys; j++)
+	for (auto& pair : nodes)
 	{
-		if (sample->mPositionKeys[j].mTime >= 0)
+		Animation::Channel channel;
+		channel.name = pair.first;
+		float4x4 assimp_transform;
+
+		float3 scale;
+		for (auto & second : pair.second)
 		{
-			// Some animation sample times are stored with an small rounding error, so we need to round them
-			double integer_time = std::round(sample->mPositionKeys[j].mTime);
-			aiVector3D position = sample->mPositionKeys[j].mValue;
-			sample_translations[integer_time] = float3(position.x, position.y, position.z);
+			assimp_transform = assimp_transform * Utils::GetTransform(second->mTransformation);
 		}
-	}
-
-}
-
-void AnimationImporter::GetChannelRotations(const aiNodeAnim* sample, std::map<size_t, Quat>& sample_rotations) const
-{
-	for (size_t j = 0; j < sample->mNumRotationKeys; j++)
-	{
-		if (sample->mRotationKeys[j].mTime >= 0)
+		assimp_transform.Decompose(channel.translation, channel.rotation, scale);
+		channel.translation *= unit_scale_factor;
+		for (auto & keyframe : own_format_animation.keyframes)
 		{
-			// Some animation sample times are stored with an small rounding error, so we need to round them
-			size_t integer_time = std::round(sample->mRotationKeys[j].mTime);
-			aiQuaternion rotation = sample->mRotationKeys[j].mValue;
-			sample_rotations[integer_time] = Quat(rotation.x, rotation.y, rotation.z, rotation.w);
+			keyframe.channels.push_back(channel);
 		}
 	}
 }
 
-void AnimationImporter::SaveBinary(const Animation& animation, const std::string& exported_file, const std::string& imported_file) const
+void AnimationImporter::GetChannelTransform(const float4x4 & pre_transform, const aiNodeAnim * sample, size_t animation_duration, std::map<size_t, float4x4>& sample_transform ) const
+{
+	float3 position = float3::zero;
+	Quat rotation = Quat::identity;
+	for (size_t j = 0; j <= animation_duration; j++)
+	{
+		if (sample->mNumPositionKeys >= j && sample->mPositionKeys[j].mTime >= 0.0f)
+		{
+			aiVector3D position_assimp = sample->mPositionKeys[j].mValue;
+			position = float3(position_assimp.x, position_assimp.y, position_assimp.z);
+		}
+		if (sample->mNumRotationKeys >= j &&sample->mRotationKeys[j].mTime >= 0.0f )
+		{
+			aiQuaternion rotation_assimp = sample->mRotationKeys[j].mValue;
+			rotation = Quat(rotation_assimp.x, rotation_assimp.y, rotation_assimp.z, rotation_assimp.w);
+		}
+
+		sample_transform[j] =  sample_transform[j] * pre_transform * float4x4::FromTRS(position,rotation, float3::one);
+	}
+}
+
+FileData AnimationImporter::CreateBinary(const Animation& animation) const
 {
 	// number of keyframes +  name size + name + duration
 	uint32_t size = sizeof(uint32_t) * 2 + animation.name.size() + sizeof(float);
-
 
 	for (auto & keyframe : animation.keyframes)
 	{
@@ -192,7 +143,7 @@ void AnimationImporter::SaveBinary(const Animation& animation, const std::string
 		for (auto & channel : keyframe.channels)
 		{
 			//name size + name + translation + rotation
-			size += sizeof(uint32_t) + channel.name.size() + sizeof(bool) + sizeof(float3) + sizeof(bool) + sizeof(Quat);
+			size += sizeof(uint32_t) + channel.name.size() + sizeof(float3) + sizeof(Quat);
 		}
 	}
 
@@ -237,21 +188,75 @@ void AnimationImporter::SaveBinary(const Animation& animation, const std::string
 			memcpy(cursor, channel.name.data(), name_size);
 			cursor += name_size;
 
-			memcpy(cursor, &channel.is_translated, sizeof(bool));
-			cursor += sizeof(bool);
-
 			memcpy(cursor, &channel.translation, sizeof(float3));
 			cursor += sizeof(float3);
 
-			memcpy(cursor, &channel.is_rotated, sizeof(bool));
-			cursor += sizeof(bool);
 
 			memcpy(cursor, &channel.rotation, sizeof(Quat));
 			cursor += sizeof(Quat);
 		}
 	}
 
-	App->filesystem->Save(exported_file.c_str(), data, size);
-	App->filesystem->Save(imported_file.c_str(), data, size);
-	free(data);
+	FileData animation_data{data, size};
+	return animation_data;
+}
+
+void AnimationImporter::GetAcumulatedAssimpTransformations(const aiNodeAnim * animation_channel, const std::vector<aiNodeAnim *> & channel_vector, const aiNode* root_node, float4x4 & pre_transform) const
+{
+	const aiNode* node_parent = root_node->FindNode(animation_channel->mNodeName)->mParent;
+	auto it = std::find_if(channel_vector.begin(), channel_vector.end(), [node_parent](const aiNodeAnim * node)
+	{
+		return node->mNodeName == node_parent->mName;
+	});
+	bool assimp_node = std::string(node_parent->mName.C_Str()).find("$Assimp") != std::string::npos;
+	bool not_added = it == channel_vector.end();
+	pre_transform = float4x4::identity;
+
+	while (assimp_node && not_added && node_parent!= root_node)
+	{
+		pre_transform =  Utils::GetTransform(node_parent->mTransformation) * pre_transform;
+		node_parent = node_parent->mParent;
+		assimp_node = std::string(node_parent->mName.C_Str()).find("$Assimp") != std::string::npos;
+		auto it = std::find_if(channel_vector.begin(), channel_vector.end(), [node_parent](const aiNodeAnim * node)
+		{
+			return node->mNodeName == node_parent->mName;
+		});
+		not_added = it == channel_vector.end();
+	}
+}
+
+void AnimationImporter::GetAssimpNodeTansformationOutSideChannels(const aiNode * root_node, const Animation& animation, std::map<const std::string, std::vector<const aiNode *>> & nodes) const
+{
+
+	for (size_t i = 0; i < root_node->mNumChildren; i++)
+	{
+		const aiNode * child = root_node->mChildren[i];
+		std::string node_name(child->mName.C_Str());
+
+		bool assimp_node = node_name.find("$Assimp") != std::string::npos;
+		bool part_of_channels = false;
+		size_t j = 0;
+		auto & channels_vector = animation.keyframes[0].channels;
+		while (j < channels_vector.size() && !part_of_channels && assimp_node)
+		{
+			if (std::string(child->mName.C_Str()).find(channels_vector[j].name) != std::string::npos)
+			{
+				part_of_channels = true;
+			}
+			++j;
+		}
+
+		if (assimp_node && !part_of_channels)
+		{
+			std::string channel_name(child->mName.C_Str());
+
+			size_t assimp_key_index = channel_name.find("$Assimp");
+			if (assimp_key_index != std::string::npos)
+			{
+				channel_name = channel_name.substr(0, assimp_key_index - 1);
+			}
+			nodes[channel_name].push_back(child);
+		}
+		GetAssimpNodeTansformationOutSideChannels(child, animation, nodes);
+	}
 }

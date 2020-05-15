@@ -2,38 +2,56 @@
 #define _ANIMCONTROLLER_H_
 
 #include "ResourceManagement/Resources/Animation.h"
-#include "ResourceManagement/Resources/Skeleton.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
-#include <map>
 #include <vector>
+
+class StateMachine;
+struct State;
+struct Clip;
+struct Transition;
+
+struct PlayingClip
+{
+	std::shared_ptr<Clip> clip;
+	int current_time = 0;
+	bool playing = false;
+	void Update();
+};
+
+enum ClipType
+{
+	ACTIVE = 0,
+	NEXT
+};
 class AnimController
 {
 public:
-	AnimController() = default;
+	AnimController() { playing_clips.resize(2); };
 	~AnimController() = default;
-	void Init();
 
-	void Play();
-	void Stop();
-	void Update(); 
+	AnimController(const AnimController& controller_to_copy) = default;
+	AnimController(AnimController&& controller_to_move) = default;
 
-	bool GetTranslation(const std::string& channel_name, float3& position);
-	bool GetRotation(const std::string& channel_name, Quat& rotation);
+	AnimController & operator=(const AnimController& controller_to_copy) = default;
+	AnimController & operator=(AnimController&& controller_to_move) = default;
+
+	bool Update();
+	void SetStateMachine(uint32_t state_machine_uuid);
+	void GetClipTransform(uint32_t skeleton_uuid, std::vector<math::float4x4>& pose);
+	void StartNextState(const std::string& trigger);
+private:
+	void SetActiveState(std::shared_ptr<State> & state);
+	void FinishActiveState();
+public:
+	std::shared_ptr<StateMachine> state_machine = nullptr;
+	std::vector<PlayingClip> playing_clips;
 
 private:
-	void UpdateChannelsGlobalTransformation();
-public:
-	std::shared_ptr<Animation> animation = nullptr;
-	std::shared_ptr<Skeleton> skeleton = nullptr;
-
-	std::map<size_t, std::vector<uint32_t>> channel_hierarchy_cache;
-	std::vector<float4x4> channel_global_transformation;
-
-	bool loop = false;
-	bool playing = false;
-
-	int current_time = 0;
-	int animation_time = 0;
+	std::shared_ptr<State> active_state = nullptr;
+	std::shared_ptr<Transition> active_transition = nullptr;
+	bool apply_transition = false;
+	friend class PanelComponent;
 };
 
 #endif //_ANIMCONTROLLER_H_

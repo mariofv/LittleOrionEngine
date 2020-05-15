@@ -1,4 +1,5 @@
 #version 430 core
+#define PI 3.14159
 
 //General variables
 in vec3 position;
@@ -9,7 +10,6 @@ in vec3 tangent;
 //Without tangent transform
 in vec3 view_pos;
 in vec3 view_dir;
-in vec3 half_dir;
 
 //Tangent - Normal mapping variables
 in mat3 TBN;
@@ -32,7 +32,7 @@ struct Material
 	vec4 specular_color;
 	float k_specular;
 
-	sampler2D occlusion_map; 
+	sampler2D occlusion_map;
 	float k_ambient;
 	sampler2D emissive_map;
 	vec4 emissive_color;
@@ -61,17 +61,17 @@ layout (std140) uniform DirectionalLight
 	int num_directional_lights;
 } directional_light;
 
-struct SpotLight 
+struct SpotLight
 {
 	vec3 color;
     vec3 position;
     vec3 direction;
     float cutOff;
     float outerCutOff;
-  
+
     float constant;
     float linear;
-    float quadratic;     
+    float quadratic;
 };
 
 struct PointLight
@@ -101,48 +101,49 @@ vec3 GetEmissiveColor(const Material mat, const vec2 texCoord);
 vec3 GetNormalMap(const Material mat, const vec2 texCoord);
 
 //TYPE OF LIGHTS
-vec3 CalculateDirectionalLight(const vec3 normalized_normal);
-vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal);
-vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal);
+vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
+vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
+vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color);
 
-//BRDF
-float DistributionGGX(vec3 normal, vec3 half_dir, float roughness);
-float GeometrySchlick(float Ndot, float roughness);
-float GeometrySmith(vec3 normal, vec3 view_pos, vec3 light_dir, float roughness);
-vec3 Fresnel(vec3 light_dir, vec3 normal, float metalness);
-vec3 BRDF(vec3 view_pos, vec3 normal, vec3 half_dir, vec3 light_dir, float roughness, float metalness);
-
+//COMPUTE NORMALIZED LIGHTS
+vec3 ComputeDiffuseColor(vec3 diffuse_color, vec3 specular_color);
+float ComputeSpecularLight(vec3 normal, vec3 half_dir);
 
 
 void main()
 {
 
-	vec3 normalized_normal = normalize(normal);
-	vec3 normalized_tangent = normalize(tangent);
 	vec3 result = vec3(0);
 
-	
+	//tiling
+	vec2 tiling = vec2(material.tiling_x, material.tiling_y)*texCoord;
+
+	//computation of colors
+	vec4 diffuse_color  = GetDiffuseColor(material, tiling);
+	vec4 specular_color  = GetSpecularColor(material, tiling);
+	vec3 occlusion_color = GetOcclusionColor(material, tiling);
+	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
 	if(material.use_normal_map)
 	{
-		vec3 normal_from_texture = GetNormalMap(material, texCoord);
+		vec3 normal_from_texture = GetNormalMap(material, tiling);
 
 		vec3 fragment_normal = normalize(TBN * normal_from_texture);
 
 		for (int i = 0; i < directional_light.num_directional_lights; ++i)
 		{
-			result += CalculateDirectionalLight(fragment_normal);
+			result += CalculateDirectionalLight(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 
 		}
 
 		for (int i = 0; i < num_spot_lights; ++i)
 		{
-			result += CalculateSpotLight(spot_lights[i], fragment_normal);
+			result += CalculateSpotLight(spot_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		}
 
 		for (int i = 0; i < num_point_lights; ++i)
 		{
-			result += CalculatePointLight(point_lights[i], fragment_normal);	
+			result += CalculatePointLight(point_lights[i], fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		}
 	}
 
@@ -150,26 +151,26 @@ void main()
 	{
 		for (int i = 0; i < directional_light.num_directional_lights; ++i)
 		{
-			result += CalculateDirectionalLight(normalized_normal);
+			result += CalculateDirectionalLight(normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 
 		}
 
 		for (int i = 0; i < num_spot_lights; ++i)
 		{
-			result += CalculateSpotLight(spot_lights[i], normalized_normal);
+			result += CalculateSpotLight(spot_lights[i], normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		}
 
 		for (int i = 0; i < num_point_lights; ++i)
 		{
-			result += CalculatePointLight(point_lights[i], normalized_normal);	
+			result += CalculatePointLight(point_lights[i], normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		}
 	}
 
-	
 
+	result += emissive_color;
 	//FragColor = vec4(vec3(normalize(tangent)),1.0);
 	FragColor = vec4(result,1.0);
-	
+
 	//Gamma Correction
 	FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma));
 	FragColor.a=material.transparency;
@@ -177,214 +178,131 @@ void main()
 
 vec4 GetDiffuseColor(const Material mat, const vec2 texCoord)
 {
-	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
-	tiling *= texCoord;
-	return texture(mat.diffuse_map, tiling)*mat.diffuse_color;
+
+	vec4 result = texture(mat.diffuse_map, texCoord)*mat.diffuse_color;
+	//alpha testing
+	if(result.a <0.1)
+	{
+		discard;
+	}
+	return result;
 }
 
 vec4 GetSpecularColor(const Material mat, const vec2 texCoord)
 {
-	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
-	tiling *= texCoord;
-	return texture(mat.specular_map, tiling)*mat.specular_color;
+	return texture(mat.specular_map, texCoord)*mat.specular_color;
 }
 
 vec3 GetOcclusionColor(const Material mat, const vec2 texCoord)
 {
-	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
-	tiling *= texCoord;
-	return texture(mat.occlusion_map, tiling).rgb * vec3(1.0,1.0,1.0);
+	return texture(mat.occlusion_map, texCoord).rgb;
 }
 
 vec3 GetEmissiveColor(const Material mat, const vec2 texCoord)
 {
-	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
-	tiling *= texCoord;
-	return (texture(mat.emissive_map, tiling)*mat.emissive_color).rgb;
+	return (texture(mat.emissive_map, texCoord)*mat.emissive_color).rgb;
 }
 
 vec3 GetNormalMap(const Material mat, const vec2 texCoord)
 {
-	vec2 tiling = vec2(mat.tiling_x, mat.tiling_y); 
-	tiling *= texCoord;
-	return texture(mat.normal_map, tiling).rgb*2.0-1.0;
+	return texture(mat.normal_map, texCoord).rgb*2.0-1.0;
 }
 
-vec3 CalculateDirectionalLight(const vec3 normalized_normal)
+vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
 
 	vec3 light_dir   = normalize(-directional_light.direction );
 	float diffuse    = max(0.0, dot(normalized_normal, light_dir));
 	float specular   = 0.0;
-	
-	vec3 half_dir 	 = normalize(light_dir + view_dir);
+
+	vec3 half_dir = normalize(light_dir + view_dir);
 
 	if(diffuse > 0.0 && material.k_specular > 0.0 && material.specular_color.w > 0.0)
 	{
-		
-		float spec       = max(dot(normalized_normal, half_dir), 0.0);
-
-		if(spec > 0.0)
-		{
-			specular = pow(spec, material.specular_color.w);
-		}
+		specular = ComputeSpecularLight(normalized_normal, half_dir);
 	}
 
-	vec4 diffuse_color  = GetDiffuseColor(material, texCoord);
-	vec4 specular_color  = GetSpecularColor(material, texCoord);
-	vec3 occlusion_color = GetOcclusionColor(material, texCoord);
-	vec3 emissive_color  = GetEmissiveColor(material, texCoord);
+
 
 	return directional_light.color * (
-		emissive_color
+
 		+ diffuse_color.rgb * (occlusion_color*material.k_ambient)
-		+ diffuse_color.rgb * material.k_diffuse * diffuse
-		+ specular_color.rgb * material.k_specular * BRDF(view_dir, normalized_normal, half_dir, light_dir, material.roughness, material.metalness)
+		+ ComputeDiffuseColor(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse
+		+ specular_color.rgb * specular
 	);
 }
 
-vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal)
+vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
 	vec3 light_dir   = normalize(spot_light.position - position);
     float diffuse    = max(0.0, dot(normalized_normal, light_dir));
     float specular   = 0.0;
-	
+
 
 	if(diffuse > 0.0 && material.k_specular > 0.0 && material.specular_color.w > 0.0)
 	{
-		
-		float spec       = max(dot(normalized_normal, half_dir), 0.0);
+		vec3 half_dir = normalize(light_dir + view_dir);
+		specular = ComputeSpecularLight(normalized_normal, half_dir);
+	}
 
-		if(spec > 0.0)
-		{
-			specular = pow(spec, material.specular_color.w);
-		}
-	} 
 
-    vec4 diffuse_color  = GetDiffuseColor(material, texCoord);
-	vec4 specular_color  = GetSpecularColor(material, texCoord);
-	vec3 occlusion_color = GetOcclusionColor(material, texCoord);
-	vec3 emissive_color  = GetEmissiveColor(material, texCoord);
-
-    float theta = dot(light_dir, normalize(-spot_light.direction)); 
+    float theta = dot(light_dir, normalize(-spot_light.direction));
     float epsilon = (spot_light.cutOff - spot_light.outerCutOff);
     float intensity = clamp((theta - spot_light.outerCutOff) / epsilon, 0.0, 1.0);
-    
+
     float distance    = length(spot_light.position - position);
-    float attenuation = 1.0 / (spot_light.constant + spot_light.linear * distance + 
-                spot_light.quadratic * (distance * distance));    
+    float attenuation = 1.0 / (spot_light.constant + spot_light.linear * distance +
+                spot_light.quadratic * (distance * distance));
 
    return spot_light.color * (
-        emissive_color
+
         + diffuse_color.rgb * (occlusion_color*material.k_ambient)*attenuation
-        + diffuse_color.rgb * material.k_diffuse * diffuse*intensity*attenuation
-        + specular_color.rgb * material.k_specular * BRDF(view_dir, normalized_normal, half_dir, light_dir, material.roughness, material.metalness)*intensity*attenuation
+        + ComputeDiffuseColor(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse*intensity*attenuation
+        + specular_color.rgb * specular *intensity*attenuation
     );
 
 }
 
-vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal)
+vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
 {
 
 	vec3 light_dir   = normalize(point_light.position - position);
 	float diffuse    = max(0.0, dot(normalized_normal, light_dir));
 	float specular   = 0.0;
 
-    
+
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
-    float spec       = max(dot(normalized_normal, half_dir), 0.0);
-	specular		 = pow(spec, material.specular_color.w);
 
-
-	vec4 diffuse_color  = GetDiffuseColor(material, texCoord);
-	vec4 specular_color  = GetSpecularColor(material, texCoord);
-	vec3 occlusion_color = GetOcclusionColor(material, texCoord);
-	vec3 emissive_color  = GetEmissiveColor(material, texCoord);
+   if(diffuse > 0.0 && material.k_specular > 0.0 && material.specular_color.w > 0.0)
+	{
+		specular = ComputeSpecularLight(normalized_normal, half_dir);
+	}
 
 
 	float distance    = length(point_light.position - position);
-	float attenuation = 1.0 / (point_light.constant + point_light.linear * distance + 
-    		    point_light.quadratic * (distance));    
+	float attenuation = 1.0 / (point_light.constant + point_light.linear * distance +
+    		    point_light.quadratic * (distance));
 
 	return point_light.color * (
-		emissive_color
+
 		+  diffuse_color.rgb * (occlusion_color*material.k_ambient)*attenuation
-		+ diffuse_color.rgb * material.k_diffuse * diffuse* attenuation
-		+ specular_color.rgb * material.k_specular * BRDF(view_dir, normalized_normal, half_dir, light_dir, material.roughness, material.metalness)* attenuation
+		+ ComputeDiffuseColor(diffuse_color.rgb, specular_color.rgb) * 1/PI * diffuse* attenuation
+		+ specular_color.rgb * specular * attenuation
 	);
 
 }
-//BRDF
 
-//Distribution Function GGX
-float DistributionGGX(vec3 normal, vec3 half_dir, float roughness)
+vec3 ComputeDiffuseColor(vec3 diffuse_color, vec3 specular_color)
 {
-    float r     = roughness*roughness;
-	float r2 = r*r;
-
-    float NdotH  = max(dot(normal, half_dir), 0.0);
-    float NdotH2 = NdotH*NdotH;
-	
-    float nom    = r2;
-    float denom  = (NdotH2 * (r2 - 1.0) + 1.0);
-    denom        = 3.14159 * denom * denom;
-	
-    return nom / denom;
+	return 	(1-specular_color)*diffuse_color;
 }
 
-//Geometry Functions
-float GeometrySchlick(float Ndot, float roughness)
+float ComputeSpecularLight(vec3 normal, vec3 half_dir) // Refference: http://www.farbrausch.de/~fg/stuff/phong.pdf
 {
-	float r = (roughness + 1.0);
-    float k = (r*r) / 8.0;
+	float spec = pow(max(dot(normal, half_dir), 0.0), 64.0);
 
-    float nom   = Ndot;
-    float denom = Ndot * (1.0 - k) + k;
-	
-    return nom / denom;
+	float normalization_denom = (material.specular_color.w + 2) * (material.specular_color.w + 4);
+	float normalization_nom = 8*PI *(pow(2, -material.specular_color.w/2) + material.specular_color.w);
+
+	return pow(spec, material.specular_color.w) * (normalization_denom/normalization_nom);
 }
-
-float GeometrySmith(vec3 normal, vec3 view_dir, vec3 light_dir, float roughness)
-{
-   
-   float NdotV = max(dot(normal, view_dir), 0.0);
-    float NdotL = max(dot(normal, light_dir), 0.0);
-
-    float ggx1 = GeometrySchlick(NdotV, roughness);
-    float ggx2 = GeometrySchlick(NdotL, roughness);
-	
-    return ggx1 * ggx2;
-}
-
-//Schlick
-vec3 Fresnel(vec3 light_dir, vec3 normal, float metalness)
-{
-
-	vec3 F0 = vec3(metalness); 
-	float cosTheta = max(dot(light_dir, normal), 0.0);
-
-    return F0 + (1.0 - F0) * pow((1.0 - cosTheta), 5.0);
-}
-
-//Cook-Torrance
-vec3 BRDF(vec3 view_dir, vec3 normal, vec3 half_dir, vec3 light_dir, float roughness, float metalness)
-{
-	
-	float D = DistributionGGX(normal, half_dir, roughness);
-	float G = GeometrySmith(normal, view_dir, light_dir, roughness);
-	vec3 F = Fresnel(light_dir, normal, metalness);
-
-	vec3 num = D*G*F;
-
-	float denom = 4.0 * max(dot(normal, view_dir), 0.0) * max(dot(normal, light_dir), 0.0);
-	vec3 specular = num / max(denom, 0.001); 
-	
-	return specular;	
-}
-
-
-
-
-
-
-

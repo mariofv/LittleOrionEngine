@@ -2,8 +2,10 @@
 
 #include "Main/Application.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleTime.h"
 #include "Module/ModuleWindow.h"
 #include "PanelConfiguration.h"
@@ -39,6 +41,9 @@ void PanelConfiguration::Render()
 
 		ImGui::Spacing();
 		ShowInputOptions();
+
+		ImGui::Spacing();
+		ShowSpacePartitioningOptions();
 	}
 	ImGui::End();
 }
@@ -376,7 +381,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("NavInputs duration:"); for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputsDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("[%d] %.2f", i, io.NavInputsDownDuration[i]); }
 
 
-			ImGui::Text("Controller:");
+			ImGui::Text("Controller 1:");
 			ImGui::Text("A: %d", App->input->GetControllerButton(ControllerCode::A));
 			ImGui::Text("B: %d", App->input->GetControllerButton(ControllerCode::B));
 			ImGui::Text("X: %d", App->input->GetControllerButton(ControllerCode::X));
@@ -393,17 +398,46 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("Start: %d", App->input->GetControllerButton(ControllerCode::Start));
 			ImGui::Text("UpDpad: %d", App->input->GetControllerButton(ControllerCode::UpDpad));
 
-			ImGui::Text("Left Joystick : (%.3f, %.3f)", App->input->GetAxisContoller(ControllerAxis::LEFT_JOYSTICK).x, App->input->GetAxisContoller(ControllerAxis::LEFT_JOYSTICK).y);
-			ImGui::Text("Right Joystick : (%.3f, %.3f)", App->input->GetAxisContoller(ControllerAxis::RIGHT_JOYSTICK).x, App->input->GetAxisContoller(ControllerAxis::RIGHT_JOYSTICK).y);
+			ImGui::Text("Left Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK).y);
+			ImGui::Text("Right Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK).y);
 
-			ImGui::Text("Left Joystick : (%.3f, %.3f)", App->input->GetAxisContoller(ControllerAxis::LEFT_JOYSTICK_RAW).x, App->input->GetAxisContoller(ControllerAxis::LEFT_JOYSTICK_RAW).y);
-			ImGui::Text("Right Joystick : (%.3f, %.3f)", App->input->GetAxisContoller(ControllerAxis::RIGHT_JOYSTICK_RAW).x, App->input->GetAxisContoller(ControllerAxis::RIGHT_JOYSTICK_RAW).y);
+			ImGui::Text("Left Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW).y);
+			ImGui::Text("Right Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW).y);
 
 			ImGui::Text("Left Trigger : %d", App->input->GetTriggerController(ControllerAxis::LEFT_TRIGGER));
 			ImGui::Text("Right Trigger : %d", App->input->GetTriggerController(ControllerAxis::RIGHT_TRIGGER));
 
 			ImGui::Text("Left Raw Trigger : %.3f", App->input->GetTriggerControllerRaw(ControllerAxis::LEFT_TRIGGER_RAW));
 			ImGui::Text("Right Raw Trigger : %.3f", App->input->GetTriggerControllerRaw(ControllerAxis::RIGHT_TRIGGER_RAW));
+
+			ImGui::Text("Controller 2:");
+			ImGui::Text("A: %d", App->input->GetControllerButton(ControllerCode::A, PlayerID::TWO));
+			ImGui::Text("B: %d", App->input->GetControllerButton(ControllerCode::B, PlayerID::TWO));
+			ImGui::Text("X: %d", App->input->GetControllerButton(ControllerCode::X, PlayerID::TWO));
+			ImGui::Text("Y: %d", App->input->GetControllerButton(ControllerCode::Y, PlayerID::TWO));
+			ImGui::Text("Back: %d", App->input->GetControllerButton(ControllerCode::Back, PlayerID::TWO));
+			ImGui::Text("DownDpad: %d", App->input->GetControllerButton(ControllerCode::DownDpad, PlayerID::TWO));
+			ImGui::Text("Guide: %d", App->input->GetControllerButton(ControllerCode::Guide, PlayerID::TWO));
+			ImGui::Text("LeftDpad: %d", App->input->GetControllerButton(ControllerCode::LeftDpad, PlayerID::TWO));
+			ImGui::Text("LeftShoulder: %d", App->input->GetControllerButton(ControllerCode::LeftShoulder, PlayerID::TWO));
+			ImGui::Text("LeftStick: %d", App->input->GetControllerButton(ControllerCode::LeftStick, PlayerID::TWO));
+			ImGui::Text("RightDpad: %d", App->input->GetControllerButton(ControllerCode::RightDpad, PlayerID::TWO));
+			ImGui::Text("RightShoulder: %d", App->input->GetControllerButton(ControllerCode::RightShoulder, PlayerID::TWO));
+			ImGui::Text("RightStick: %d", App->input->GetControllerButton(ControllerCode::RightStick, PlayerID::TWO));
+			ImGui::Text("Start: %d", App->input->GetControllerButton(ControllerCode::Start, PlayerID::TWO));
+			ImGui::Text("UpDpad: %d", App->input->GetControllerButton(ControllerCode::UpDpad, PlayerID::TWO));
+
+			ImGui::Text("Left Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK, PlayerID::TWO).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK, PlayerID::TWO).y);
+			ImGui::Text("Right Joystick : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK, PlayerID::TWO).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK, PlayerID::TWO).y);
+
+			ImGui::Text("Left Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW, PlayerID::TWO).x, App->input->GetAxisController(ControllerAxis::LEFT_JOYSTICK_RAW, PlayerID::TWO).y);
+			ImGui::Text("Right Joystick Raw : (%.3f, %.3f)", App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW, PlayerID::TWO).x, App->input->GetAxisController(ControllerAxis::RIGHT_JOYSTICK_RAW, PlayerID::TWO).y);
+
+			ImGui::Text("Left Trigger : %d", App->input->GetTriggerController(ControllerAxis::LEFT_TRIGGER, PlayerID::TWO));
+			ImGui::Text("Right Trigger : %d", App->input->GetTriggerController(ControllerAxis::RIGHT_TRIGGER, PlayerID::TWO));
+
+			ImGui::Text("Left Raw Trigger : %.3f", App->input->GetTriggerControllerRaw(ControllerAxis::LEFT_TRIGGER_RAW, PlayerID::TWO));
+			ImGui::Text("Right Raw Trigger : %.3f", App->input->GetTriggerControllerRaw(ControllerAxis::RIGHT_TRIGGER_RAW, PlayerID::TWO));
 
 			ImGui::TreePop();
 		}
@@ -421,7 +455,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::TreePop();
 		}
 
-		if(ImGui::TreeNode("Game Input"))
+		if(ImGui::TreeNode("Create Game Input"))
 		{
 
 			ImGui::InputText("Name: ", &name_game_input);
@@ -429,7 +463,7 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Separator();
 
 			ImGui::Text("Keys:");
-			for(auto key : string_keys)
+			for(const auto key : string_keys)
 			{
 				ImGui::Text(game_inputs_strings[key]);
 			}
@@ -475,12 +509,13 @@ void PanelConfiguration::ShowInputOptions()
 			if(ImGui::Button("Delete Keycodes"))
 			{
 				keys.clear();
+				string_keys.clear();
 			}
 
 			ImGui::Separator();
 
 			ImGui::Text("Mouse:");
-			for (auto mouse_key : mouse_keys)
+			for (const auto mouse_key : mouse_keys)
 			{
 				ImGui::Text(mouse_keys_string[(int)mouse_key]);
 			}
@@ -518,18 +553,67 @@ void PanelConfiguration::ShowInputOptions()
 
 			ImGui::Separator();
 
+
+			ImGui::Text("Controller Keys:");
+			for (const auto controller_key : controller_keys)
+			{
+				ImGui::Text(controller_keys_string[(int)controller_key]);
+			}
+
+			ImGui::Separator();
+
+			static const char* controller_current = controller_keys_string[0];
+			if (ImGui::BeginCombo("ControllerCodes", controller_current))
+			{
+				for (int n = 0; n < controller_keys_string.size(); ++n)
+				{
+					bool is_selected = (controller_current == controller_keys_string[n]);
+					if (ImGui::Selectable(controller_keys_string[n], is_selected))
+					{
+						controller_current = controller_keys_string[n];
+						selected_controller = ControllerCode(n);
+					}
+					if (is_selected)
+						ImGui::SetItemDefaultFocus();   // Set the initial focus when opening the combo (scrolling + for keyboard navigation support in the upcoming navigation branch)
+				}
+				ImGui::EndCombo();
+			}
+
+			if (ImGui::Button("Add Controller Button"))
+			{
+				controller_keys.insert((int)selected_controller);
+			}
+
+			ImGui::SameLine();
+
+			if (ImGui::Button("Delete Controller Buttons"))
+			{
+				controller_keys.clear();
+			}
+
+			ImGui::Separator();
+
 			if(ImGui::Button("Create Game Input"))
 			{
 				GameInput game_input;
 				game_input.name = name_game_input;
-				for(auto key : keys)
+				int i = 0;
+				for(const auto key : keys)
 				{
-					game_input.keys.push_back((KeyCode)key);
+					game_input.keys[i] = ((KeyCode)key);
+					++i;
 				}
-
-				for (auto mouse : mouse_keys)
+				int j = 0;
+				for (const auto mouse : mouse_keys)
 				{
-					game_input.mouse_buttons.push_back((MouseButton)mouse);
+					game_input.mouse_buttons[j] = ((MouseButton)mouse);
+					++j;
+				}
+				int k = 0;
+				for (const auto controller_key : controller_keys)
+				{
+					game_input.controller_buttons[k] = ((ControllerCode)controller_key);
+					++k;
 				}
 
 				App->input->CreateGameInput(game_input);
@@ -539,6 +623,135 @@ void PanelConfiguration::ShowInputOptions()
 		}
 
 		
+		if (ImGui::TreeNode("See Game Inputs"))
+		{
+
+			ImGui::Text("Game Inputs:");
+
+			ImGui::Separator();
+
+			for(const auto& game_input : App->input->game_inputs)
+			{
+				ImGui::TextColored(ImVec4(1, 1, 0, 1), "%s", game_input.first.c_str());
+				ImGui::Text("KeyCodes:");
+				for(const auto& key : game_input.second.keys)
+				{
+					int aux = static_cast<int>(key);
+					if (aux > FIRST_OFFSET_COND)
+						aux -= FIRST_OFFSET;
+					else if (aux > SECOND_OFFSET_COND)
+						aux -= SECOND_OFFSET;
+					else if (aux > THIRD_OFFSET_COND)
+						aux -= THIRD_OFFSET;
+					else
+						aux -= 4;
+
+
+					ImGui::Text("	%s", game_inputs_strings[aux]);
+				}
+				ImGui::Text("MouseCodes:");
+				for (auto& mouse : game_input.second.mouse_buttons)
+				{
+					ImGui::Text("	%s", mouse_keys_string[(int)mouse]);
+				}
+				ImGui::Text("ControllerCodes:");
+				for (const auto& controller_key : game_input.second.controller_buttons)
+				{
+					ImGui::Text("	%s", controller_keys_string[(int)controller_key]);
+				}
+				
+				if(ImGui::Button("Delete GameInput"))
+				{
+					App->input->DeleteGameInput(game_input.second);
+				}
+
+				ImGui::Separator();
+
+			}
+		
+			ImGui::TreePop();
+		}
+	}
+}
+
+void PanelConfiguration::ShowSpacePartitioningOptions()
+{
+	if (ImGui::CollapsingHeader(ICON_FA_TREE " SpacePartitioning"))
+	{
+		ImGui::Checkbox("Scene window culling", &App->debug->culling_scene_mode);
+		int culling_mode_int = static_cast<int>(App->debug->culling_mode);
+		if (ImGui::Combo("Culling Mode", &culling_mode_int, "None\0Frustum Culling\0QuadTree Culling\0OctTree Culling\0AabbTree Culling\0Combined Culling"))
+		{
+			switch (culling_mode_int)
+			{
+			case 0:
+				App->debug->culling_mode = ModuleDebug::CullingMode::NONE;
+				break;
+			case 1:
+				App->debug->culling_mode = ModuleDebug::CullingMode::FRUSTUM_CULLING;
+				break;
+			case 2:
+				App->debug->culling_mode = ModuleDebug::CullingMode::QUADTREE_CULLING;
+				break;
+			case 3:
+				App->debug->culling_mode = ModuleDebug::CullingMode::OCTTREE_CULLING;
+				break;
+			case 4:
+				App->debug->culling_mode = ModuleDebug::CullingMode::AABBTREE_CULLING;
+				break;
+			case 5:
+				App->debug->culling_mode = ModuleDebug::CullingMode::COMBINED_CULLING;
+				break;
+			}
+		}
+
+		ImGui::Spacing();
+		ImGui::Text("Space Partitioning");
+		if (ImGui::SliderInt("Quadtree Depth ", &App->space_partitioning->ol_quadtree->max_depth, 1, 10))
+		{
+			App->space_partitioning->GenerateQuadTree();
+		}
+		if (ImGui::SliderInt("Quadtree bucket size ", &App->space_partitioning->ol_quadtree->bucket_size, 1, 10))
+		{
+			App->space_partitioning->GenerateQuadTree();
+		}
+
+		if (ImGui::Button("Generate QuadTree"))
+		{
+			App->space_partitioning->GenerateQuadTree();
+		}
+
+		ImGui::Separator();
+
+		if (ImGui::SliderInt("OctTree Depth ", &App->space_partitioning->ol_octtree->max_depth, 1, 10))
+		{
+			App->space_partitioning->GenerateOctTree();
+		}
+		if (ImGui::SliderInt("OctTree bucket size ", &App->space_partitioning->ol_octtree->bucket_size, 1, 10))
+		{
+			App->space_partitioning->GenerateOctTree();
+		}
+
+		if (ImGui::Button("Generate OctTree"))
+		{
+			App->space_partitioning->GenerateOctTree();
+		}
+
+		ImGui::Spacing();
+		ImGui::Separator();
+		ImGui::Spacing();
+
+		if (ImGui::CollapsingHeader("Frustum culling scene"))
+		{
+			ImGui::SliderInt("Number of objects", &App->debug->num_houses, 0, 1000);
+			ImGui::SliderInt("Dispersion X", &App->debug->max_dispersion_x, 0, 1000);
+			ImGui::SliderInt("Dispersion Z", &App->debug->max_dispersion_z, 0, 1000);
+			if (ImGui::Button("Create scene"))
+			{
+				App->debug->CreateFrustumCullingDebugScene();
+			}
+		}
 		
 	}
+
 }

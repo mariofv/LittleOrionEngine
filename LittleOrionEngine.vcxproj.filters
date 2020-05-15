@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
     <ClCompile Include="Libraries\include\ImGuizmo\ImCurveEdit.cpp">
@@ -49,9 +49,6 @@
     <ClCompile Include="Engine\Module\ModuleLight.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Module\ModuleModelLoader.cpp">
-      <Filter>Engine\Module</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Module\ModuleProgram.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
@@ -72,9 +69,6 @@
     </ClCompile>
     <ClCompile Include="Engine\Module\ModuleWindow.cpp">
       <Filter>Engine\Module</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Filesystem\File.cpp">
-      <Filter>Engine\Filesystem</Filter>
     </ClCompile>
     <ClCompile Include="Libraries\include\pcg_random\pcg_basic.c">
       <Filter>Libraries\pcg_random</Filter>
@@ -139,12 +133,6 @@
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\MeshLoader.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\TextureLoader.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp">
       <Filter>Engine\Actions</Filter>
     </ClCompile>
@@ -184,12 +172,6 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Animation.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\AnimationLoader.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\SkeletonLoader.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClCompile>
@@ -208,16 +190,7 @@
     <ClCompile Include="Engine\Module\ModuleScriptManager.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\ImportOptions\ImportOptions.cpp">
-      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\PrefabLoader.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\SceneManager.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelComponent.cpp">
@@ -280,113 +253,11 @@
     <ClCompile Include="Engine\ResourceManagement\Resources\Material.cpp">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Loaders\MaterialLoader.cpp">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMaterial.cpp">
       <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
     </ClCompile>
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp">
       <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\ModelPrefabImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMaterialSelector.cpp">
-      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMeshSelector.cpp">
-      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastRegion.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DebugUtils\DebugDraw.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourAlloc.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourAssert.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourCommon.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourCrowd.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourLocalBoundary.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMesh.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMeshBuilder.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNavMeshQuery.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Detour\DetourNode.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourObstacleAvoidance.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourPathCorridor.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourPathQueue.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourCrowd\DetourProximityGrid.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourTileCache\DetourTileCache.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DetourTileCache\DetourTileCacheBuilder.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\Recast.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastAlloc.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastArea.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastAssert.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastContour.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\DebugUtils\RecastDump.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastFilter.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastLayers.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastMesh.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastMeshDetail.cpp">
-      <Filter>Libraries\recast</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\recast\Recast\RecastRasterization.cpp">
-      <Filter>Libraries\recast</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Module\ModuleAI.cpp">
       <Filter>Engine\Module</Filter>
@@ -403,17 +274,179 @@
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp">
       <Filter>Engine\AI</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Filesystem\Path.cpp">
+      <Filter>Engine\Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Filesystem\File.cpp">
+      <Filter>Engine\Filesystem</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Metafile\Metafile.cpp">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Metafile\MetafileManager.cpp">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\MaterialManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\MeshManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\SkeletonManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\AnimationManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\PrefabManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\TextureManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Resource.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\SceneManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\SkyboxManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\SkyboxImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helper\TemplatedGameObjectCreator.cpp">
+      <Filter>Engine\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Helper\ImGuiHelper.cpp">
+      <Filter>Engine\EditorUI\Helper</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Animation\AnimController.cpp">
       <Filter>Engine\Animation</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentUI.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentButton.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentCanvas.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentImage.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentProgressBar.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentText.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp">
+      <Filter>Engine\Actions</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.cpp">
+    <ClCompile Include="Engine\ResourceManagement\Resources\StateMachine.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\StateMachineImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\crude_json.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_canvas.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\NodeEditor\imgui_node_editor_api.cpp">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelStateMachine.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\StateMachineManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\SceneImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Scene.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PanelBuildOptions.cpp">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Helper\BuildOptions.cpp">
+      <Filter>Engine\Helper</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\DLL\DLLManager.cpp">
+      <Filter>Engine\DLL</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.cpp">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Metafile\TextureMetafile.cpp">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Metafile\ModelMetafile.cpp">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentAudioSource.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModuleAudio.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\SoundManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\SoundImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\SoundBank.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\SoundEngine\AkDefaultIOHookBlocking.cpp">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\SoundEngine\AkFilePackageLUT.cpp">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\SoundEngine\stdafx.cpp">
+      <Filter>Libraries\SoundEngine</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\SoundEngine\AkFilePackage.cpp">
+      <Filter>Libraries\SoundEngine</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentBillboard.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.cpp" />
@@ -462,9 +495,6 @@
     <ClInclude Include="Engine\Module\ModuleLight.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Module\ModuleModelLoader.h">
-      <Filter>Engine\Module</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Module\ModuleProgram.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
@@ -485,9 +515,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleWindow.h">
       <Filter>Engine\Module</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Filesystem\File.h">
-      <Filter>Engine\Filesystem</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Main\GameObject.h">
       <Filter>Engine\Main</Filter>
@@ -591,12 +618,6 @@
     <ClInclude Include="Engine\Module\ModuleResourceManager.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\MeshLoader.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\TextureLoader.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Resources\Resource.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
@@ -642,12 +663,6 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Animation.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\AnimationLoader.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\SkeletonLoader.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.h">
       <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
     </ClInclude>
@@ -666,16 +681,7 @@
     <ClInclude Include="Engine\Module\ModuleScriptManager.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\ImportOptions\ImportOptions.h">
-      <Filter>Engine\ResourceManagement\ImportOptions</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\PrefabImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\PrefabLoader.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\SceneManager.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\EngineLog.h">
@@ -696,95 +702,11 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\Material.h">
       <Filter>Engine\ResourceManagement\Resources</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Loaders\MaterialLoader.h">
-      <Filter>Engine\ResourceManagement\Loaders</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMaterial.h">
       <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\MaterialImporter.h">
       <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Importer\ModelImporters\ModelPrefabImporter.h">
-      <Filter>Engine\ResourceManagement\Importer\ModelImporters</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMaterialSelector.h">
-      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupMeshSelector.h">
-      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DebugUtils\DebugDraw.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourAlloc.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourAssert.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourCommon.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourCrowd.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DebugUtils\DetourDebugDraw.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourLocalBoundary.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourMath.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMesh.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMeshBuilder.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNavMeshQuery.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourNode.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourObstacleAvoidance.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourPathCorridor.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourPathQueue.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourCrowd\DetourProximityGrid.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Detour\DetourStatus.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourTileCache\DetourTileCache.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DetourTileCache\DetourTileCacheBuilder.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Recast\Recast.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Recast\RecastAlloc.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\Recast\RecastAssert.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDebugDraw.h">
-      <Filter>Libraries\recast</Filter>
-    </ClInclude>
-    <ClInclude Include="Libraries\include\recast\DebugUtils\RecastDump.h">
-      <Filter>Libraries\recast</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleAI.h">
       <Filter>Engine\Module</Filter>
@@ -801,17 +723,176 @@
     <ClInclude Include="Engine\AI\SampleDebugDraw.h">
       <Filter>Engine\AI</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Filesystem\Path.h">
+      <Filter>Engine\Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Filesystem\File.h">
+      <Filter>Engine\Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\Metafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\MetafileManager.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Filesystem\PathAtlas.h">
+      <Filter>Engine\Filesystem</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\MaterialManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\MeshManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\SkeletonManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\AnimationManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\PrefabManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\TextureManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\SceneManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\SkyboxManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\SkyboxImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\ResourcesDB\CoreResources.h">
+      <Filter>Engine\ResourceManagement\ResourcesDB</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Helper\ImGuiHelper.h">
+      <Filter>Engine\EditorUI\Helper</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Animation\AnimController.h">
       <Filter>Engine\Animation</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentAnimation.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentUI.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentButton.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCanvas.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentImage.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentProgressBar.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentText.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentTransform2D.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionRect2D.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Actions\EditorActionRotation2D.h">
+      <Filter>Engine\Actions</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Module\ModuleAnimation.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneManagement.h">
+    <ClInclude Include="Engine\ResourceManagement\Resources\StateMachine.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\StateMachineImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\crude_json.h">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_bezier_math.h">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_canvas.h">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_extra_math.h">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor.h">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor_internal.h">
+      <Filter>Libraries\NodeEditor</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelStateMachine.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\StateMachineManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Scene.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PanelBuildOptions.h">
+      <Filter>Engine\EditorUI\Panel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Helper\BuildOptions.h">
+      <Filter>Engine\Helper</Filter>
+    </ClInclude>
+    <ClInclude Include="Libraries\include\cr\cr.h">
+      <Filter>Libraries\cr</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\DLL\DLLManager.h">
+      <Filter>Engine\DLL</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h">
+      <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentAudioSource.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModuleAudio.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\SoundBank.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentBillboard.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.h" />
@@ -860,14 +941,8 @@
     <Filter Include="Engine\ResourceManagement\Importer\ModelImporters">
       <UniqueIdentifier>{9daec75e-3bbb-4792-bc2c-04d03e1b6f21}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\ResourceManagement\Loaders">
-      <UniqueIdentifier>{af8a22c1-2b23-42fc-b542-ec1112f7066d}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\Actions">
       <UniqueIdentifier>{3f3b0f7b-d67b-4384-a9ba-a7e803bb2a53}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\ResourceManagement\ImportOptions">
-      <UniqueIdentifier>{af162ed0-dacf-4e8f-850b-8e8130bb9f6e}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\EditorUI">
       <UniqueIdentifier>{0032cc3c-b82d-4579-9ba1-11c9c0786d10}</UniqueIdentifier>
@@ -887,15 +962,41 @@
     <Filter Include="Engine\EditorUI\Panel\PopupsPanel">
       <UniqueIdentifier>{4d3c5294-ef77-4da3-a2bc-ac29c72d5e42}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\recast">
-      <UniqueIdentifier>{380b2d72-4143-4cd0-a469-bbd10415b4c7}</UniqueIdentifier>
-    </Filter>
     <Filter Include="Engine\AI">
       <UniqueIdentifier>{799add9a-b011-4795-bae5-55a425014ca0}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Engine\Animation">
-      <UniqueIdentifier>{ecb044c0-b431-4c8e-ab13-ad262d334b04}</UniqueIdentifier>
+    <Filter Include="Engine\ResourceManagement\Metafile">
+      <UniqueIdentifier>{af162ed0-dacf-4e8f-850b-8e8130bb9f6e}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Engine\ResourceManagement\Manager">
+      <UniqueIdentifier>{af8a22c1-2b23-42fc-b542-ec1112f7066d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Animation">
+      <UniqueIdentifier>{64f0a9f8-590b-4318-84a1-d3f7a693b4ac}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\NodeEditor">
+      <UniqueIdentifier>{0962007d-0c63-4e57-a857-faada0652d87}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\cr">
+      <UniqueIdentifier>{10baac58-e86a-413b-b1ae-abb70e75ee83}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\DLL">
+      <UniqueIdentifier>{8b335900-d36a-4a5f-8bda-f20bee578e42}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Libraries\SoundEngine">
+      <UniqueIdentifier>{d944c34d-2880-470e-89dd-e2ba4e4fd35f}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl">
+      <Filter>Libraries\NodeEditor</Filter>
+    </None>
+    <None Include="Libraries\include\NodeEditor\imgui_extra_math.inl">
+      <Filter>Libraries\NodeEditor</Filter>
+    </None>
+    <None Include="Libraries\include\NodeEditor\imgui_node_editor_internal.inl">
+      <Filter>Libraries\NodeEditor</Filter>
+    </None>
   </ItemGroup>
   <ItemGroup>
     <None Include="Game\Resources\Shaders\blinn_phong.fs" />

@@ -1,19 +1,7 @@
 #include "Skeleton.h"
 
+#include "ResourceManagement/Metafile/Metafile.h"
 
-Skeleton::Skeleton(const uint32_t UID, const std::string & exported_file) : Resource(UID, exported_file)
-{
+Skeleton::Skeleton(uint32_t uuid) : Resource(uuid) {};
 
-}
-
-Skeleton::Skeleton(std::vector<Joint> && joints, const std::string & exported_file) :
-skeleton(joints),
-Resource(0, exported_file)
-{
-	LoadInMemory();
-
-}
-
-void Skeleton::LoadInMemory() {
-
-}
+Skeleton::Skeleton(uint32_t uuid, std::vector<Joint> && joints) : skeleton(joints), Resource(uuid) {}

@@ -5,45 +5,45 @@
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleResourceManager.h"
 
-Material::Material(uint32_t UUID, std::string material_file_path) :
-	Resource(UUID, material_file_path)
+#include "ResourceManagement/Metafile/Metafile.h"
+
+Material::Material(uint32_t uuid) : Resource(uuid)
 {
 	textures.resize(MAX_MATERIAL_TEXTURE_TYPES);
+	textures_uuid.resize(MAX_MATERIAL_TEXTURE_TYPES);
 }
 
 void Material::Save(Config& config) const
 {
-	for (size_t i = 0; i < textures.size(); i++)
+	for (size_t i = 0; i < textures_uuid.size(); i++)
 	{
-		if (textures[i] != nullptr)
+		MaterialTextureType type = static_cast<MaterialTextureType>(i);
+
+		switch (type)
 		{
-			MaterialTextureType type = static_cast<MaterialTextureType>(i);
+		case MaterialTextureType::DIFFUSE:
+			config.AddUInt(textures_uuid[i], "Diffuse");
+			break;
 
-			switch (type)
-			{
-			case MaterialTextureType::DIFFUSE:
-				config.AddString(textures[i]->exported_file, "Diffuse");
-				break;
+		case MaterialTextureType::SPECULAR:
+			config.AddUInt(textures_uuid[i], "Specular");
+			break;
 
-			case MaterialTextureType::SPECULAR:
-				config.AddString(textures[i]->exported_file, "Specular");
-				break;
+		case MaterialTextureType::OCCLUSION:
+			config.AddUInt(textures_uuid[i], "Occlusion");
+			break;
 
-			case MaterialTextureType::OCCLUSION:
-				config.AddString(textures[i]->exported_file, "Occlusion");
-				break;
+		case MaterialTextureType::EMISSIVE:
+			config.AddUInt(textures_uuid[i], "Emissive");
+			break;
 
-			case MaterialTextureType::EMISSIVE:
-				config.AddString(textures[i]->exported_file, "Emissive");
-				break;
+		case MaterialTextureType::NORMAL:
+			config.AddUInt(textures_uuid[i],  "Normal");
+			break;
 
-			case MaterialTextureType::NORMAL:
-				config.AddString(textures[i]->exported_file, "Normal");
-				break;
-
-			default:
-				break;
-			}
+		default:
+			break;
+			
 		}
 	}
 
@@ -58,8 +58,8 @@ void Material::Save(Config& config) const
 	config.AddFloat(k_diffuse, "kDiffuse");
 
 	config.AddFloat(transparency, "Transparency");
-	config.AddFloat(roughness, "Roughness");
-	config.AddFloat(metalness, "Metalness");
+//	config.AddFloat(roughness, "Roughness");
+//	config.AddFloat(metalness, "Metalness");
 
 	config.AddFloat(tiling_x, "Tiling X");
 	config.AddFloat(tiling_y, "Tiling Y");
@@ -74,49 +74,11 @@ void Material::Save(Config& config) const
 
 void Material::Load(const Config& config)
 {
-	material_type = (MaterialType)config.GetInt("MaterialType", 0);
-
-	std::string texture_path;
-	config.GetString("Diffuse", texture_path, "");
-	std::shared_ptr<Texture> texture_resource = App->resources->Load<Texture>(texture_path);
-	if (texture_resource.get() != nullptr)
-	{
-		SetMaterialTexture(Material::MaterialTextureType::DIFFUSE, texture_resource);
-	}
-
-	config.GetString("Specular", texture_path, "");
-	texture_resource = App->resources->Load<Texture>(texture_path);
-	if (texture_resource.get() != nullptr)
-	{
-		SetMaterialTexture(Material::MaterialTextureType::SPECULAR, texture_resource);
-	}
-
-	config.GetString("Occlusion", texture_path, "");
-	texture_resource = App->resources->Load<Texture>(texture_path);
-	if (texture_resource.get() != nullptr)
-	{
-		SetMaterialTexture(Material::MaterialTextureType::OCCLUSION, texture_resource);
-	}
-
-	config.GetString("Emissive", texture_path, "");
-	texture_resource = App->resources->Load<Texture>(texture_path);
-	if (texture_resource.get() != nullptr)
-	{
-		SetMaterialTexture(Material::MaterialTextureType::EMISSIVE, texture_resource);
-	}
-
-	config.GetString("Normal", texture_path, "");
-	texture_resource = App->resources->Load<Texture>(texture_path);
-	if (texture_resource.get() != nullptr)
-	{
-		SetMaterialTexture(Material::MaterialTextureType::NORMAL, texture_resource);
-		use_normal_map = true;
-	}
-
-	else 
-	{
-		use_normal_map = false;
-	}
+	SetMaterialTexture(MaterialTextureType::DIFFUSE, config.GetUInt("Diffuse", 0));
+	SetMaterialTexture(MaterialTextureType::SPECULAR, config.GetUInt("Specular", 0));
+	SetMaterialTexture(MaterialTextureType::OCCLUSION, config.GetUInt("Occlusion", 0));
+	SetMaterialTexture(MaterialTextureType::EMISSIVE, config.GetUInt("Emissive", 0));
+	SetMaterialTexture(MaterialTextureType::NORMAL, config.GetUInt("Normal", 0));
 
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 	config.GetString("ShaderProgram", shader_program, "Blinn phong");
@@ -127,11 +89,11 @@ void Material::Load(const Config& config)
 	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
 
 	transparency = config.GetFloat("Transparency", 1.f);
-	roughness = config.GetFloat("Roughness", 0.5f);
-	metalness = config.GetFloat("Metalness", 0.04f);
+//	roughness = config.GetFloat("Roughness", 0.5f);
+//	metalness = config.GetFloat("Metalness", 0.04f);
 
-	roughness = config.GetFloat("Tiling X", 0.0f);
-	metalness = config.GetFloat("Tiling Y", 0.0f);
+//	roughness = config.GetFloat("Tiling X", 0.0f);
+//	metalness = config.GetFloat("Tiling Y", 0.0f);
 
 	//colors
 	float4 diffuse;
@@ -163,9 +125,14 @@ void Material::RemoveMaterialTexture(MaterialTextureType type)
 	textures[type] = nullptr;
 }
 
-void Material::SetMaterialTexture(MaterialTextureType type, const std::shared_ptr<Texture> & new_texture)
+void Material::SetMaterialTexture(MaterialTextureType type, uint32_t texture_uuid)
 {
-	textures[type] = new_texture;
+	textures_uuid[type] = texture_uuid;
+	if (textures_uuid[type] != 0)
+	{
+		textures[type] = App->resources->Load<Texture>(texture_uuid);
+	}
+	use_normal_map = type == MaterialTextureType::NORMAL && texture_uuid !=0;
 }
 
 const std::shared_ptr<Texture>& Material::GetMaterialTexture(MaterialTextureType type) const
@@ -178,7 +145,7 @@ void Material::ChangeTypeOfMaterial(const MaterialType new_material_type)
 	material_type = new_material_type;
 }
 
-const char* Material::GetMaterialTypeName(const MaterialType material_type)
+std::string Material::GetMaterialTypeName(const MaterialType material_type)
 {
 	switch (material_type)
 	{

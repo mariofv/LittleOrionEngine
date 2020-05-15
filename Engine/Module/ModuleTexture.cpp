@@ -1,15 +1,18 @@
 #include "ModuleTexture.h"
-#include "Main/Globals.h"
+
+#include "Filesystem/Path.h"
+
 #include "Main/Application.h"
-#include "Module/ModuleResourceManager.h"
-#include "ResourceManagement/Resources/Texture.h"
 #include "Main/GameObject.h"
-#include <Filesystem/File.h>
-#include <ResourceManagement/Importer/TextureImporter.h>
-#include <ResourceManagement/Loaders/TextureLoader.h>
-#include <SDL/SDL.h>
+#include "Main/Globals.h"
+#include "Module/ModuleResourceManager.h"
+
+#include "ResourceManagement/Importer/TextureImporter.h"
+#include "ResourceManagement/Resources/Texture.h"
+
 #include <algorithm>
 #include <memory>
+#include <SDL/SDL.h>
 
 // Called before render is available
 bool ModuleTexture::Init()
@@ -28,24 +31,8 @@ bool ModuleTexture::CleanUp()
 	return true;
 }
 
-std::shared_ptr<Texture> ModuleTexture::LoadTexture(const char* texture_path)
+GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const
 {
-	ImportResult import_result = App->resources->Import(File(texture_path));
-	if (!import_result.success)
-	{
-		return nullptr;
-	}
-	return App->resources->Load<Texture>(import_result.exported_file);
-}
-
-GLuint ModuleTexture::LoadCubemap(const std::vector<std::string> & faces_paths) const
-{
-	return static_cast<GLuint>(App->resources->LoadCubemap(faces_paths));
-}
-
-GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const{
-
-
 	switch (color_id)
 	{
 	case PATRON::CHECKBOARD:
@@ -58,20 +45,34 @@ GLubyte ModuleTexture::GetColor(size_t i, size_t j, PATRON color_id) const{
 		return 0;
 		break;
 	}
+
+	
 }
 
 void ModuleTexture::GenerateTexture(GLuint &texture_id_to_store, PATRON color_id)
 {
-	static GLubyte image[generate_texture_height][generate_texture_width][3];
-	int i, j, color;
-	for (i = 0; i < generate_texture_height; i++) {
-		for (j = 0; j < generate_texture_width; j++) {
-			color = GetColor(i,j,color_id),
-			image[i][j][0] = (GLubyte)color; //R
-			image[i][j][1] = (GLubyte)color; //G
-			image[i][j][2] = (GLubyte)color; //B
-		}
-	}
+	//static GLubyte image[generate_texture_height][generate_texture_width][3];
+	//int i, j, color;
+	//for (i = 0; i < generate_texture_height; i++) {
+	//	for (j = 0; j < generate_texture_width; j++) {
+	//		color = GetColor(i,j,color_id),
+	//		image[i][j][0] = (GLubyte)color; //R
+	//		image[i][j][1] = (GLubyte)color; //G
+	//		image[i][j][2] = (GLubyte)color; //B
+	//	}
+	//}
+	//glGenTextures(1, &texture_id_to_store);
+	//glBindTexture(GL_TEXTURE_2D, texture_id_to_store);
+
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
+	//glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
+	//glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, generate_texture_width, generate_texture_height, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	//glBindTexture(GL_TEXTURE_2D, 0);
+
+	GLubyte texData[] = { 255, 255, 255, 255 };
+
 	glGenTextures(1, &texture_id_to_store);
 	glBindTexture(GL_TEXTURE_2D, texture_id_to_store);
 
@@ -79,7 +80,7 @@ void ModuleTexture::GenerateTexture(GLuint &texture_id_to_store, PATRON color_id
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_REPEAT);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_NEAREST);
 	glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_NEAREST);
-	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGB, generate_texture_height, generate_texture_width, 0, GL_RGB, GL_UNSIGNED_BYTE, image);
+	glTexImage2D(GL_TEXTURE_2D, 0, GL_RGBA, 1, 1, 0, GL_RGBA, GL_UNSIGNED_BYTE, texData);
 	glBindTexture(GL_TEXTURE_2D, 0);
 }
 
