@@ -382,13 +382,7 @@ void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 
 ComponentBillboard* ModuleRender::CreateComponentBillboard()
 {
-	ComponentBillboard* created_billboard = new ComponentBillboard(App->editor->selected_game_object);
-	created_billboard->billboard_texture = App->resources->Load<Texture>(DEFAULT_BILLBOARD_TEXTURE_PATH);
-	created_billboard->alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
-	created_billboard->x_tiles = 1;
-	created_billboard->y_tiles = 1;
-	created_billboard->sheet_speed = 1;
-
+	ComponentBillboard* created_billboard = new ComponentBillboard();
 	billboards.push_back(created_billboard);
 	return created_billboard;
 }
@@ -420,11 +414,6 @@ void ModuleRender::RemoveComponentParticleSystem(ComponentParticleSystem* partic
 		particle_systems.erase(it);
 	}
 }
-void ModuleRender::GenerateQuadTree()
-{
-	AABB2D global_AABB;
-	global_AABB.SetNegativeInfinity();
-
 GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 {
 	BROFILER_CATEGORY("Do Raycast", Profiler::Color::HotPink);

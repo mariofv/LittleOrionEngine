@@ -45,7 +45,7 @@ public:
 	void SwitchFrame();
 
 	//TODO
-	void ChangeTexture(std::string path);
+	void ChangeTexture(uint32_t texture_uuid);
 
 	void ChangeBillboardType(ComponentBillboard::AlignmentType alignment_type);
 

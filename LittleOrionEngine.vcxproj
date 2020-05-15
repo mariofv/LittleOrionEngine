@@ -234,7 +234,6 @@
     <ClInclude Include="Engine\SpacePartition\OLOctTreeNode.h" />
     <ClInclude Include="Engine\SpacePartition\OLQuadTree.h" />
     <ClInclude Include="Engine\SpacePartition\OLQuadTreeNode.h" />
-    <ClInclude Include="Engine\EditorUI\Helper\Billboard.h" />
     <ClInclude Include="Engine\Component\ComponentLight.h" />
     <ClInclude Include="Engine\Filesystem\Path.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\Importer.h" />
@@ -385,7 +384,6 @@
     <ClCompile Include="Engine\SpacePartition\OLOctTreeNode.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLQuadTree.cpp" />
     <ClCompile Include="Engine\SpacePartition\OLQuadTreeNode.cpp" />
-    <ClCompile Include="Engine\EditorUI\Helper\Billboard.cpp" />
     <ClCompile Include="Engine\Component\ComponentLight.cpp" />
     <ClCompile Include="Engine\Filesystem\Path.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\Importer.cpp" />

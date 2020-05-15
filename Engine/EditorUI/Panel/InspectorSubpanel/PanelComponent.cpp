@@ -26,6 +26,7 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentTransform2D.h"
 #include "Component/ComponentUI.h"
+
 #include "Helper/Utils.h"
 #include "Math/Rect.h"
 
@@ -250,48 +251,26 @@ void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
 
 		ImGui::AlignTextToFramePadding();
 		
-		//char tmp_string[16];
-		ImGui::AlignTextToFramePadding();
-		ImGui::TextColored(ImVec4(1, 1, 0, 1),"Texture:");
 
-		
-		if (billboard->billboard_texture != nullptr)
+		ImGui::Text("Texture");
+		ImGui::SameLine();
+
+		std::string texture_name = billboard->billboard_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(billboard->billboard_texture->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(billboard->UUID) + "TextureSelector").c_str());
+		if (ImGui::Button(texture_name.c_str()))
 		{
-			if (ImGui::Button(billboard->billboard_texture->exported_file.c_str()))
-			{
-				App->editor->popups->material_selector_popup.show_material_selector_popup = true;
-			}
-			DropBillboardTexture(billboard);
-
-			ImGui::Image(
-				(void*)billboard->billboard_texture->opengl_texture,
-				ImVec2(200, 200),
-				ImVec2(0, 1),
-				ImVec2(1, 0),
-				ImVec4(1.f, 1.f, 1.f, 1.f),
-				ImVec4(1.f, 1.f, 1.f, 1.f)
-			);
-
-
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
 		}
-		else
+
+		uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource_uuid != 0)
 		{
-			if (ImGui::Button("Click to add texture"))
-			{
-				App->editor->popups->material_selector_popup.show_material_selector_popup = true;
-			}
-			DropBillboardTexture(billboard);
-
-			ImGui::Text("None");
-			ImGui::Image(
-				(void*)nullptr,
-				ImVec2(100,100),
-				ImVec2(0, 1),
-				ImVec2(1, 0),
-				ImVec4(1.f, 1.f, 1.f, 1.f),
-				ImVec4(1.f, 1.f, 1.f, 1.f)
-			);
-
+			billboard->ChangeTexture(selected_resource_uuid);
+		}
+		selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+		if (selected_resource_uuid != 0)
+		{
+			billboard->ChangeTexture(selected_resource_uuid);
 		}
 		int alignment_type = static_cast<int>(billboard->alignment_type);
 		if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) {
@@ -796,7 +775,6 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::MESH_RENDERER);
-
 			if (!App->editor->selected_game_object->IsStatic())
 			{
 				App->space_partitioning->InsertAABBTree(App->editor->selected_game_object);
@@ -808,8 +786,8 @@ void PanelComponent::ShowAddNewComponentButton()
 		{
 			App->editor->selected_game_object->CreateComponent(Component::ComponentType::BILLBOARD);
 
-		}
 
+		}
 		sprintf_s(tmp_string, "%s Particle System", ICON_FA_SQUARE);
 		if (ImGui::Selectable(tmp_string))
 		{

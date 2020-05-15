@@ -5,7 +5,6 @@
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
 
-#include "EditorUI/Helper/Billboard.h"
 #include "EditorUI/Helper/Grid.h"
 #include "EditorUI/Panel/PanelNavMesh.h"
 
@@ -681,12 +680,12 @@ void ModuleDebugDraw::RenderBillboards() const
 	{
 		Component * light_component = object->GetComponent(Component::ComponentType::LIGHT);
 		if (light_component != nullptr) {
-			light_billboard->Render(object->transform.GetGlobalTranslation());
+			//light_billboard->Render(object->transform.GetGlobalTranslation());
 		}
 
 		Component * camera_component = object->GetComponent(Component::ComponentType::CAMERA);
 		if (camera_component != nullptr) {
-			camera_billboard->Render(object->transform.GetGlobalTranslation());
+			//camera_billboard->Render(object->transform.GetGlobalTranslation());
 		}
 
 	}

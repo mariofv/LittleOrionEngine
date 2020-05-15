@@ -238,9 +238,6 @@
     <ClCompile Include="Engine\EditorUI\EngineLog.cpp">
       <Filter>Engine\EditorUI</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Helper\Billboard.cpp">
-      <Filter>Engine\EditorUI\Helper</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp">
       <Filter>Engine\EditorUI\Helper</Filter>
     </ClCompile>
@@ -449,7 +446,6 @@
       <Filter>Libraries\SoundEngine</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentBillboard.cpp" />
-    <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.cpp" />
     <ClCompile Include="Engine\Component\ComponentParticleSystem.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -687,9 +683,6 @@
     <ClInclude Include="Engine\EditorUI\EngineLog.h">
       <Filter>Engine\EditorUI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Helper\Billboard.h">
-      <Filter>Engine\EditorUI\Helper</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h">
       <Filter>Engine\EditorUI\Helper</Filter>
     </ClInclude>
@@ -895,7 +888,6 @@
       <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentBillboard.h" />
-    <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupTextureSelector.h" />
     <ClInclude Include="Engine\Component\ComponentParticleSystem.h" />
   </ItemGroup>
   <ItemGroup>

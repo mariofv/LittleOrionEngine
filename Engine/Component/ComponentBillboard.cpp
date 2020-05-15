@@ -5,6 +5,8 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleRender.h"
 
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
+
 ComponentBillboard::ComponentBillboard() : Component(nullptr, ComponentType::BILLBOARD)
 {
 	self_timer.Start();
@@ -15,7 +17,7 @@ ComponentBillboard::ComponentBillboard() : Component(nullptr, ComponentType::BIL
 ComponentBillboard::ComponentBillboard(GameObject * _owner) : Component(owner, ComponentType::BILLBOARD)
 {
 	self_timer.Start();
-	this->billboard_texture = App->resources->Load<Texture>(DEFAULT_BILLBOARD_TEXTURE_PATH);
+	this->billboard_texture = App->resources->Load<Texture>(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 	this->alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
 	this->x_tiles = 1;
 	this->y_tiles = 1;
@@ -26,7 +28,7 @@ ComponentBillboard::ComponentBillboard(GameObject * _owner) : Component(owner, C
 ComponentBillboard::ComponentBillboard(const std::string& texture_path, float width, float height, AlignmentType a_type) : width(width), height(height), alignment_type(a_type), Component(nullptr, ComponentType::BILLBOARD)
 {
 	self_timer.Start();
-	billboard_texture = App->resources->Load<Texture>(texture_path.c_str());
+	billboard_texture = App->resources->Load<Texture>(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
 	is_spritesheet = false;
 	oriented_to_camera = true;
 
@@ -219,8 +221,8 @@ void ComponentBillboard::Load(const Config& config)
 	*/
 }
 
-void ComponentBillboard::ChangeTexture(std::string texture_path) {
-	billboard_texture = App->resources->Load<Texture>(texture_path.c_str());
+void ComponentBillboard::ChangeTexture(uint32_t texture_uuid) {
+	billboard_texture = App->resources->Load<Texture>(texture_uuid);
 }
 
 
