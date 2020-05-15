@@ -320,7 +320,7 @@
                     "y_axis": true,
                     "z_axis": true,
                     "DisablePhysics": false,
-                    "Friction": 1.0,
+                    "Friction": 2.0,
                     "Rolling_friction": 1.0
                 }
             ],
@@ -489,7 +489,7 @@
                     "y_axis": false,
                     "z_axis": false,
                     "DisablePhysics": false,
-                    "Friction": 1.0,
+                    "Friction": 0.10000000149011612,
                     "Rolling_friction": 1.0
                 }
             ]
@@ -1809,7 +1809,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 17,
+                    "Texture": 63,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1871,7 +1871,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 18,
+                    "Texture": 65,
                     "Color": [
                         1.0,
                         1.0,
@@ -2102,8 +2102,8 @@
                 "UUID": 1484344217,
                 "Active": true,
                 "Translation": [
-                    0.5778106451034546,
-                    5.90118932723999,
+                    7.229726791381836,
+                    12.104043960571289,
                     0.7089619636535645
                 ],
                 "Rotation": [

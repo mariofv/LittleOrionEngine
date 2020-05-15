@@ -38,6 +38,7 @@ public:
 	virtual void ResetEnemy() {}
 
 	void UpdateCurrentPlayerTarget();
+	bool IsGrounded() const; //ty enrique
 
 protected:
 	void Die();

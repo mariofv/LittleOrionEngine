@@ -120,14 +120,17 @@ bool EnemyController::PlayerInSight()
 
 bool EnemyController::PlayerInRange()
 {
-	return current_player_target->transform.GetTranslation().Distance(owner->transform.GetTranslation()) <= attack_range;
+	float3 target = current_player_target->transform.GetTranslation() + (current_player_target->transform.GetFrontVector());
+	return target.Distance(owner->transform.GetTranslation()) <= attack_range;
 }
 
 void EnemyController::SeekPlayer()
 {
+	if (!IsGrounded()) return;
+
 	UpdateCurrentPlayerTarget();
 
-	float3 target = current_player_target->transform.GetTranslation();
+	float3 target = current_player_target->transform.GetTranslation() + (current_player_target->transform.GetFrontVector());
 	float3 position = owner->transform.GetTranslation();
 
 	float3 desired_velocity = target - position;
@@ -281,4 +284,14 @@ void EnemyController::Die()
 {
 	is_alive = false;
 	enemy_manager->KillEnemy(this);
+}
+
+bool EnemyController::IsGrounded() const
+{
+	btVector3 origin = collider->body->getWorldTransform().getOrigin();
+
+	btVector3 end = collider->body->getWorldTransform().getOrigin();
+	end.setY(end.getY() - (collider->box_size.getY()/2));
+
+	return collider->RaycastHit(origin, end);
 }
