@@ -22,9 +22,8 @@ public:
 	ComponentTransform& operator=(const ComponentTransform& component_to_copy);
 	ComponentTransform& operator=(ComponentTransform&& component_to_move) = default;
 
-
 	Component* Clone(bool create_on_module = true) const override;
-	void Copy(Component* component_to_copy) const override;
+	void Copy(Component * component_to_copy) const override;
 
 	~ComponentTransform() = default;
 
@@ -54,8 +53,8 @@ public:
 
 	ENGINE_API void LookAt(const float3& target);
 
-	float3 GetScale() const;
-	void SetScale(const float3& scale);
+	ENGINE_API float3 GetScale() const;
+	ENGINE_API void SetScale(const float3& scale);
 	float3 GetGlobalScale() const;
 
 	ENGINE_API float3 GetUpVector() const;
@@ -74,6 +73,9 @@ private:
 	void OnTransformChange();
 
 public:
+	bool has_changed = false; //used for physics
+
+private:
 	float3 translation = float3::zero;
 	Quat rotation = Quat::identity;
 	float3 rotation_degrees = float3::zero;
@@ -82,7 +84,6 @@ public:
 
 	float4x4 model_matrix = float4x4::identity;
 	float4x4 global_model_matrix = float4x4::identity;
-	bool has_changed = false; //used for physics
 
 	friend class PanelComponent;
 };

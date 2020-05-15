@@ -32,10 +32,16 @@ WorldManager::WorldManager()
 // Use this for initialization before Start()
 void WorldManager::Awake()
 {
-	health_component = (ComponentProgressBar*)health_bar->GetComponent(ComponentUI::UIType::PROGRESSBAR);
-	lose_component = (ComponentImage*)lose_screen->GetComponent(ComponentUI::UIType::IMAGE);
-	win_component = (ComponentImage*)win_screen->GetComponent(ComponentUI::UIType::IMAGE);
+	//health_component = (ComponentProgressBar*)health_bar->GetComponent(ComponentUI::UIType::PROGRESSBAR);
+	//lose_component = (ComponentImage*)lose_screen->GetComponent(ComponentUI::UIType::IMAGE);
+	//win_component = (ComponentImage*)win_screen->GetComponent(ComponentUI::UIType::IMAGE);
 	player_controller = (ComponentScript*)player->GetComponentScript("PlayerController");
+
+	GameObject* event_manager_go = App->scene->GetGameObjectByName("EventManager");
+	ComponentScript* event_manager_component = event_manager_go->GetComponentScript("EventManager");
+	event_manager = static_cast<EventManager*>(event_manager_component->script);
+
+	InitTriggers();
 }
 
 // Use this for initialization
@@ -47,32 +53,29 @@ void WorldManager::Start()
 // Update is called once per frame
 void WorldManager::Update()
 {
-	if(health_component->percentage <= 0.0f)
-	{
-		//Lose
-		player_controller->Disable();
-		lose_component->Enable();
-		transition = true;
-	}
+	//if(health_component->percentage <= 0.0f)
+	//{
+	//	//Lose
+	//	player_controller->Disable();
+	//	lose_component->Enable();
+	//	transition = true;
+	//}
 
-	if(OnTriggerEnter())
-	{
-		//Win
-		player_controller->Disable();
-		win_component->Enable();
-		transition = true;
-	}
+	//if(OnTriggerEnter())
+	//{
+	//	//Win
+	//	player_controller->Disable();
+	//	win_component->Enable();
+	//	transition = true;
+	//}
 
-	if(transition && App->input->GetAnyKeyPressedDown())
-	{
-		App->scene->LoadScene(0);
-	}
+	//if(transition && App->input->GetAnyKeyPressedDown())
+	//{
+	//	App->scene->LoadScene(0);
+	//}
 
-}
+	CheckTriggers();
 
-bool WorldManager::OnTriggerEnter() const
-{
-	return end_level && player->aabb.global_bounding_box.Intersects(end_level->aabb.global_bounding_box);
 }
 
 // Use this for showing variables on inspector
@@ -88,18 +91,14 @@ void WorldManager::OnInspector(ImGuiContext* context)
 void WorldManager::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
+	//public_gameobjects.push_back(&health_bar);
+	//variable_names.push_back(GET_VARIABLE_NAME(health_bar));
 
-	public_gameobjects.push_back(&end_level);
-	variable_names.push_back(GET_VARIABLE_NAME(end_level));
+	//public_gameobjects.push_back(&lose_screen);
+	//variable_names.push_back(GET_VARIABLE_NAME(lose_screen));
 
-	public_gameobjects.push_back(&health_bar);
-	variable_names.push_back(GET_VARIABLE_NAME(health_bar));
-
-	public_gameobjects.push_back(&lose_screen);
-	variable_names.push_back(GET_VARIABLE_NAME(lose_screen));
-
-	public_gameobjects.push_back(&win_screen);
-	variable_names.push_back(GET_VARIABLE_NAME(win_screen));
+	//public_gameobjects.push_back(&win_screen);
+	//variable_names.push_back(GET_VARIABLE_NAME(win_screen));
 
 	public_gameobjects.push_back(&player);
 	variable_names.push_back(GET_VARIABLE_NAME(player));
@@ -112,6 +111,31 @@ void WorldManager::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
+void WorldManager::InitTriggers()
+{
+	GameObject* trigger_go_dad = App->scene->GetGameObjectByName("Triggers");
+	for(size_t i = 0; i < trigger_go_dad->children.size();++i)
+	{
+		event_triggers[i] = static_cast<ComponentCollider*>(trigger_go_dad->children[i]->GetComponent(ComponentCollider::ColliderType::BOX));
+	}
+}
+void WorldManager::CheckTriggers()
+{
+	if(current_event_trigger > 2)
+	{
+		return;
+	}
+
+	if(static_cast<ComponentCollider*>(player->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[current_event_trigger]))
+	{
+		if(event_manager->TriggerEvent(current_event_trigger))
+		{
+			++current_event_trigger;
+		}
+	}
+	
+}
+
 //Use this for linking GO AND VARIABLES automatically if you need to save variables 
 // void WorldManager::Save(Config& config) const
 // {

@@ -62,7 +62,7 @@ void DebugModeScript::Start()
 void DebugModeScript::Update()
 {
 
-	if(App->input->GetKeyDown(KeyCode::F1) || App->input->GetControllerButtonDown(ControllerCode::RightStick))
+	if(App->input->GetKeyDown(KeyCode::F1) || App->input->GetControllerButtonDown(ControllerCode::RightStick, ControllerID::ONE))
 	{
 		(debug_enabled) ? text_fps->Disable() : text_fps->Enable();
 		(debug_enabled) ? text_tris->Disable() : text_tris->Enable();

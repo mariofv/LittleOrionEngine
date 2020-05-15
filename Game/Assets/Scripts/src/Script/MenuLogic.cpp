@@ -69,7 +69,8 @@ void MenuLogic::Update()
 		return;
 	}
 
-	if(show_help && (App->input->GetKeyDown(KeyCode::D) || App->input->GetControllerButtonDown(ControllerCode::RightDpad) || App->input->GetKeyDown(KeyCode::A) || App->input->GetControllerButtonDown(ControllerCode::LeftDpad)))
+	if(show_help && (App->input->GetKeyDown(KeyCode::D) || App->input->GetControllerButtonDown(ControllerCode::RightDpad, ControllerID::ONE) || 
+		App->input->GetKeyDown(KeyCode::A) || App->input->GetControllerButtonDown(ControllerCode::LeftDpad, ControllerID::ONE)))
 	{
 		help_controller->SetEnabled(!help_controller->IsEnabled());
 		help_keyboard->SetEnabled(!help_keyboard->IsEnabled());
@@ -114,14 +115,14 @@ void MenuLogic::Update()
 		}
 	}
 
-	if(App->input->GetKeyDown(KeyCode::W) || App->input->GetControllerButtonDown(ControllerCode::UpDpad))
+	if(App->input->GetKeyDown(KeyCode::W) || App->input->GetControllerButtonDown(ControllerCode::UpDpad, ControllerID::ONE))
 	{
 		current -= 1;
 		current = current % 4;
 
 		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
 	}
-	else if(App->input->GetKeyDown(KeyCode::S) || App->input->GetControllerButtonDown(ControllerCode::DownDpad))
+	else if(App->input->GetKeyDown(KeyCode::S) || App->input->GetControllerButtonDown(ControllerCode::DownDpad, ControllerID::ONE))
 	{
 		current += 1;
 		current = current % 4;
@@ -166,8 +167,8 @@ void MenuLogic::InitPublicGameObjects()
 	public_gameobjects.push_back(&credits);
 	variable_names.push_back(GET_VARIABLE_NAME(credits));
 
-	public_gameobjects.push_back(&audio_controller);
-	variable_names.push_back(GET_VARIABLE_NAME(audio_controller));
+	//public_gameobjects.push_back(&audio_controller);
+	//variable_names.push_back(GET_VARIABLE_NAME(audio_controller));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
@@ -177,7 +178,7 @@ void MenuLogic::InitPublicGameObjects()
 }
 bool MenuLogic::ComfirmButtonPressed()
 {
-	return (App->input->GetKeyDown(KeyCode::Space) || App->input->GetControllerButtonDown(ControllerCode::A));
+	return (App->input->GetKeyDown(KeyCode::Space) || App->input->GetControllerButtonDown(ControllerCode::A, ControllerID::ONE));
 }
 
 //Use this for linking GO AND VARIABLES automatically if you need to save variables 

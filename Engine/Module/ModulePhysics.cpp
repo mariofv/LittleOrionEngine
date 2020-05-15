@@ -164,17 +164,36 @@ int DebugDrawer::getDebugMode() const
 	return btIDebugDraw::DBG_DrawWireframe;
 }
 
-bool ModulePhysics::RaycastWorld(const btVector3 &Start, btVector3 &End, btVector3 &Normal) {
+bool ModulePhysics::RaycastWorld(const btVector3 &Start, btVector3 &End, btVector3 &Normal)
+{
 
 	btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
+	//btCollisionWorld::RayResultCallback RayCallback(Start, End);
+	//Magic Line for not jumping on enemies
+	//RayCallback.m_collisionFilterMask = btBroadphaseProxy::StaticFilter;
 	
 	world->rayTest(Start, End, RayCallback);
-	if (RayCallback.hasHit()) 
-	{	
+	if (RayCallback.hasHit())
+	{
 		End = RayCallback.m_hitPointWorld;
 		Normal = RayCallback.m_hitNormalWorld;
 		return true;
 	}
 
 	return false;
+}
+
+int ModulePhysics::GetRaycastWorldId(const btVector3& start, btVector3& end, btVector3& normal)
+{
+	btCollisionWorld::ClosestRayResultCallback RayCallback(start, end);
+
+	world->rayTest(start, end, RayCallback);
+	if (RayCallback.hasHit())
+	{
+		end = RayCallback.m_hitPointWorld;
+		normal = RayCallback.m_hitNormalWorld;
+		return RayCallback.m_collisionObject->getWorldArrayIndex();
+	}
+
+	return -1;
 }

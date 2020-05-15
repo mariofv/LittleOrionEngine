@@ -12,6 +12,7 @@
 
 #include "imgui.h"
 
+#include "PlayerAttack.h"
 #include "PlayerMovement.h"
 
 PlayerController* PlayerControllerDLL()
@@ -28,8 +29,11 @@ PlayerController::PlayerController()
 // Use this for initialization before Start()
 void PlayerController::Awake()
 {
-	ComponentScript* component = owner->GetComponentScript("PlayerMovement");
+	const ComponentScript* component = owner->GetComponentScript("PlayerMovement");
 	player_movement = (PlayerMovement*)component->script;
+
+	const ComponentScript* component_attack = owner->GetComponentScript("PlayerAttack");
+	player_attack = (PlayerAttack*)component_attack->script;
 }
 
 // Use this for initialization
@@ -41,16 +45,12 @@ void PlayerController::Start()
 // Update is called once per frame
 void PlayerController::Update()
 {
-	if(!on_gravity)
+	bool is_attacking = player_attack->Attack(player);
+
+	if(!is_attacking)
 	{
 		player_movement->Move(player);
 	}
-	else
-	{
-		//Fall
-		player_movement->Fall();
-	}
-
 }
 
 // Use this for showing variables on inspector
@@ -65,11 +65,11 @@ void PlayerController::OnInspector(ImGuiContext* context)
 		
 		if (ImGui::Selectable("1"))
 		{
-			player = 0;
+			player = 1;
 		}
 		if (ImGui::Selectable("2"))
 		{
-			player = 1;
+			player = 2;
 		}
 
 		ImGui::EndCombo();
@@ -86,5 +86,10 @@ void PlayerController::Save(Config& config) const
 void PlayerController::Load(const Config& config)
 {
 	player = static_cast<unsigned>(config.GetUInt("Player", player));
+}
+
+void PlayerController::TakeDamage(float damage)
+{
+	health_points -= damage;
 }
 

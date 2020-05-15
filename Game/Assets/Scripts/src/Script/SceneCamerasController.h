@@ -24,7 +24,8 @@ public:
 
 
 private:
-	GameObject* main_camera = nullptr;
+	GameObject* game_camera = nullptr;
+	GameObject* god_camera = nullptr;
 	GameObject* camera_1 = nullptr;
 	GameObject* camera_2 = nullptr;
 	GameObject* camera_3 = nullptr;

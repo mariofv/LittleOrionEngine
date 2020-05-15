@@ -40,6 +40,8 @@ public:
 	ENGINE_API void Play();
 	ENGINE_API void Stop();
 	ENGINE_API void ActiveAnimation(const std::string & trigger);
+	ENGINE_API bool IsOnState(const std::string & trigger);
+	ENGINE_API float GetCurrentClipPercentatge() const;
 
 	void Update() override;
 	void UpdateMeshes();

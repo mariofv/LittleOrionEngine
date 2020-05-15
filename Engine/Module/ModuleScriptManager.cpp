@@ -13,8 +13,8 @@
 #include "Script/Script.h"
 
 #include <algorithm>
+#include <Brofiler/Brofiler.h>
 #include <fstream>
-
 
 bool ModuleScriptManager::Init()
 {
@@ -156,20 +156,22 @@ void ModuleScriptManager::LoadScriptList()
 
 void ModuleScriptManager::InitScripts()
 {
-	for (const auto& component_script : scripts)
+	for (size_t i = 0; i < scripts.size(); ++i)
 	{
-		component_script->AwakeScript();
+		scripts[i]->AwakeScript();
 	}
-	for (const auto& component_script : scripts)
+	for (size_t i = 0; i < scripts.size(); ++i)
 	{
-		component_script->StartScript();
+		scripts[i]->StartScript();
 	}
 }
 
 void ModuleScriptManager::RunScripts()
 {
+	BROFILER_CATEGORY("Run Scripts", Profiler::Color::Aqua);
 	for (const auto& component_script : scripts)
 	{
+		BROFILER_CATEGORY("Script", Profiler::Color::Lavender);
 		component_script->Update();
 	}
 }
@@ -238,7 +240,8 @@ void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> con
 		if (component_script->script != nullptr)
 		{
 			std::unordered_map<uint64_t, Config>::const_iterator got = config_list.find(component_script->UUID);
-			if (got != config_list.end()) {
+			if (got != config_list.end()) 
+			{
 				component_script->script->Load(got->second);
 				component_script->script->Link();
 			}
@@ -250,7 +253,7 @@ void ModuleScriptManager::LoadVariables(std::unordered_map<uint64_t, Config> con
 void ModuleScriptManager::CheckGameplayFolderStatus()
 {
 #if !GAME
-	if(!hot_reloading)
+	if(!hot_reloading && !App->time->isGameRunning())
 	{
 		dll->CheckGameplayFolderStatus();
 	}

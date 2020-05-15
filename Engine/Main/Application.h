@@ -7,7 +7,9 @@
 #include <vector>
 #include <memory>
 
+class ModuleAI;
 class ModuleAnimation;
+class ModuleAudio;
 class ModuleRender;
 class ModuleWindow;
 class ModuleTextures;
@@ -27,9 +29,7 @@ class ModuleResourceManager;
 class ModuleScriptManager;
 class ModuleSpacePartitioning;
 class ModuleActions;
-class ModuleAI;
 class ModulePhysics;
-class ModuleAudio;
 
 class EngineLog;
 

@@ -711,6 +711,11 @@ void ModuleDebugDraw::RenderPathfinding() const
 	}
 }
 
+ENGINE_API void ModuleDebugDraw::RenderSingleAABB(AABB& aabb) const
+{
+	dd::aabb(aabb.minPoint, aabb.maxPoint, float3::one);
+}
+
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 {
 	BROFILER_CATEGORY("Flush Debug Draw", Profiler::Color::Lavender);

@@ -109,6 +109,12 @@ void AnimController::StartNextState(const std::string& trigger)
 	playing_clips[ClipType::NEXT] ={ next_state->clip, 0, true};
 }
 
+bool AnimController::IsOnState(const std::string& state)
+{
+	uint64_t state_hash = std::hash<std::string>{}(state);
+	return active_state.get()->name_hash == state_hash;
+}
+
 void AnimController::FinishActiveState()
 {
 	std::shared_ptr<State> next_state = state_machine->GetState(active_transition->target_hash);
@@ -120,7 +126,7 @@ void AnimController::FinishActiveState()
 
 void PlayingClip::Update()
 {
-	if (!playing || !clip)
+	if (!playing || !clip || clip->animation == nullptr)
 	{
 		return;
 	}

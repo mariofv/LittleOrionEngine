@@ -644,10 +644,9 @@ void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 			static_cast<ComponentScript*>(copy)->name = static_cast<ComponentScript*>(component)->name;
 			
 		}
-		if (component->type == Component::ComponentType::COLLIDER)
+		else if (component->type == Component::ComponentType::COLLIDER)
 		{
 			copy = component->Clone(this, this->original_prefab);
-
 		}
 		else
 		{

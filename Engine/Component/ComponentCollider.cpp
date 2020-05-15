@@ -106,15 +106,15 @@ void ComponentCollider::Load(const Config & config)
 
 }
 
-void ComponentCollider::Enable()
-{
-	active = true;
-	SwitchPhysics();
-}
-
 void ComponentCollider::Disable()
 {
 	active = false;
+	SwitchPhysics();
+}
+
+void ComponentCollider::Enable()
+{
+	active = true;
 	SwitchPhysics();
 }
 
@@ -296,6 +296,11 @@ bool ComponentCollider::DetectCollisionWith(ComponentCollider * collider)
 	return false;
 }
 
+ENGINE_API void ComponentCollider::ClearForces() const
+{
+	body->clearForces();
+}
+
 void ComponentCollider::SetStatic()
 {
 	int flags = body->getCollisionFlags();
@@ -318,6 +323,19 @@ void ComponentCollider::SetRotationAxis()
 void ComponentCollider::AddForce(float3& force)
 {
 	body->applyCentralForce(btVector3(force.x, force.y, force.z));
+
+	if (abs(force.x) > 0 || abs(force.z) > 0) {
+
+		float3 direction = float3(force.x, 0, force.z);
+		Quat new_rotation = owner->transform.GetRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
+
+		btTransform trans = body->getWorldTransform();
+		btQuaternion transrot = trans.getRotation();
+
+		transrot = btQuaternion(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
+		trans.setRotation(transrot);
+		body->setWorldTransform(trans);
+	}
 }
 
 void ComponentCollider::SwitchPhysics(bool active)
@@ -325,6 +343,14 @@ void ComponentCollider::SwitchPhysics(bool active)
 	active_physics = active;
 	SwitchPhysics();
 }
+
+ENGINE_API bool ComponentCollider::RaycastHit(btVector3& origin, btVector3& end)
+{
+	//Vector normal to the surface
+	btVector3 normal;
+	return App->physics->RaycastWorld(origin, end, normal);
+}
+
 
 void ComponentCollider::SwitchPhysics()
 {
@@ -408,4 +434,11 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 		body->setWorldTransform(trans);
 	}
 
+}
+
+float3 ComponentCollider::GetCurrentVelocity() const
+{
+	btVector3 velocity = body->getLinearVelocity();
+
+	return float3(velocity.getX(), velocity.getY(), velocity.getZ());
 }
