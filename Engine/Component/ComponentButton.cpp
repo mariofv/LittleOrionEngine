@@ -15,6 +15,11 @@ ComponentButton::ComponentButton(GameObject * owner) : Component(owner, Componen
 {
 }
 
+void ComponentButton::PostUpdate()
+{
+	clicked = false;
+}
+
 Component* ComponentButton::Clone(bool original_prefab) const
 {
 	ComponentButton * created_component;

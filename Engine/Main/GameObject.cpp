@@ -229,6 +229,20 @@ bool GameObject::IsVisible(const ComponentCamera& camera) const
 	return true;
 }
 
+void GameObject::PreUpdate()
+{
+	BROFILER_CATEGORY("GameObject PreUpdate", Profiler::Color::Green);
+
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		if (components[i]->type != Component::ComponentType::SCRIPT)
+		{
+			components[i]->PreUpdate();
+		}
+
+	}
+}
+
 ENGINE_API void GameObject::Update()
 {
 	BROFILER_CATEGORY("GameObject Update", Profiler::Color::Green);
@@ -238,6 +252,20 @@ ENGINE_API void GameObject::Update()
 		if (components[i]->type != Component::ComponentType::SCRIPT)
 		{
 			components[i]->Update();
+		}
+
+	}
+}
+
+void GameObject::PostUpdate()
+{
+	BROFILER_CATEGORY("GameObject PostUpdate", Profiler::Color::Green);
+
+	for (unsigned int i = 0; i < components.size(); ++i)
+	{
+		if (components[i]->type != Component::ComponentType::SCRIPT)
+		{
+			components[i]->PostUpdate();
 		}
 
 	}

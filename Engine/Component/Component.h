@@ -56,8 +56,10 @@ public:
 	virtual void Disable() { active = false;};
 	virtual bool IsEnabled() const { return active; };
 
-
+	virtual void PreUpdate() {};
 	virtual void Update() {};
+	virtual void PostUpdate() {};
+
 	virtual void Delete() = 0;
 	virtual Component* Clone(bool create_on_module = true) const = 0;
 	virtual Component* Clone(GameObject* owner, bool create_on_module = false) const

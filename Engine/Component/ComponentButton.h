@@ -11,6 +11,8 @@ public:
 
 	~ComponentButton() = default;
 
+	void PostUpdate() override;
+
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
