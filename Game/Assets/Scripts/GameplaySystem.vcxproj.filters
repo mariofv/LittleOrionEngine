@@ -19,6 +19,9 @@
     <Filter Include="src\Script\Enemy\States">
       <UniqueIdentifier>{ebdb1ed7-f4d7-4356-a775-004e150837bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Script\UI">
+      <UniqueIdentifier>{730085b1-319b-41f8-ae9c-13fed5bc7d53}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Script\ExampleScript.h">
@@ -40,9 +43,6 @@
       <Filter>src\Script</Filter>
     </ClInclude>
     <ClInclude Include="src\Script\TriggerGravity.h">
-      <Filter>src\Script</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Script\MenuLogic.h">
       <Filter>src\Script</Filter>
     </ClInclude>
     <ClInclude Include="src\Script\DamageScript.h">
@@ -93,6 +93,12 @@
     <ClInclude Include="src\Script\EventManager.h">
       <Filter>src\Script</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\MainMenuLogic.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\HelpMenuLogic.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -114,9 +120,6 @@
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\TriggerGravity.cpp">
-      <Filter>src\Script</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\MenuLogic.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\DamageScript.cpp">
@@ -166,6 +169,12 @@
     </ClCompile>
     <ClCompile Include="src\Script\EventManager.cpp">
       <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\MainMenuLogic.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\HelpMenuLogic.cpp">
+      <Filter>src\Script\UI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

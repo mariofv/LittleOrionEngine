@@ -1,4 +1,4 @@
-#include "MenuLogic.h"
+#include "MainMenuLogic.h"
 
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
@@ -18,19 +18,19 @@
 
 
 
-MenuLogic* MenuLogicDLL()
+MainMenuLogic* MainMenuLogicDLL()
 {
-	MenuLogic* instance = new MenuLogic();
+	MainMenuLogic* instance = new MainMenuLogic();
 	return instance;
 }
 
-MenuLogic::MenuLogic()
+MainMenuLogic::MainMenuLogic()
 {
 	panel = new PanelComponent();
 }
 
 // Use this for initialization before Start()
-void MenuLogic::Awake()
+void MainMenuLogic::Awake()
 {
 	buttons.push_back(play_button);
 	buttons.push_back(help_button);
@@ -38,53 +38,51 @@ void MenuLogic::Awake()
 	buttons.push_back(exit_button);
 	audio_source = (ComponentAudioSource*) audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
 	audio_source->PlayEvent("Play_ingame_music");
+
+	for (auto & child : credits_panel->children)
+	{
+		if (child->GetComponent(Component::ComponentType::UI_BUTTON))
+		{
+			credits_back_button = &child->transform_2d;
+		}
+	}
 }
 
 // Use this for initialization
-void MenuLogic::Start()
+void MainMenuLogic::Start()
 {
 
 }
 
 // Update is called once per frame
-void MenuLogic::Update()
+void MainMenuLogic::Update()
 {
-	/*
+	
 	if(show_help && ComfirmButtonPressed())
 	{
-		help_controller->SetEnabled(false);
-		help_keyboard->SetEnabled(false);
-		owner->transform_2d.SetTranslation(&float2(owner->transform_2d.anchored_position.x, buttons[current]->transform_2d.anchored_position.y));
+		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x, buttons[current]->transform_2d.GetTranslation().y, 0.0f));
 		show_help = false;
-		//audio_source->PlayEvent("Click_backward");
+		audio_source->PlayEvent("Click_backward");
 		return;
 	}
 
 	if (show_credits && ComfirmButtonPressed())
 	{
-		credits->SetEnabled(false);
-		owner->transform_2d.SetTranslation(&float2(owner->transform_2d.anchored_position.x, buttons[current]->transform_2d.anchored_position.y));
+		credits_panel->SetEnabled(false);
+		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x, buttons[current]->transform_2d.GetTranslation().y, 0.0f));
 		show_credits = false;
-		//audio_source->PlayEvent("Click_backward");
+		audio_source->PlayEvent("Click_backward");
 		return;
-	}
-
-	if(show_help && (App->input->GetKeyDown(KeyCode::D) || App->input->GetControllerButtonDown(ControllerCode::RightDpad, ControllerID::ONE) ||
-		App->input->GetKeyDown(KeyCode::A) || App->input->GetControllerButtonDown(ControllerCode::LeftDpad, ControllerID::ONE)))
-	{
-		help_controller->SetEnabled(!help_controller->IsEnabled());
-		help_keyboard->SetEnabled(!help_keyboard->IsEnabled());
-		App->ui->SortComponentsUI();
 	}
 
 	if(show_credits || show_help)
 	{
 		return;
-	}*/
+	}
 
 	if (ComfirmButtonPressed())
 	{
-		//audio_source->PlayEvent("Click_fordward");
+		audio_source->PlayEvent("Click_fordward");
 		//Change scene
 		switch (current)
 		{
@@ -93,15 +91,12 @@ void MenuLogic::Update()
 			break;
 		case 1:
 			//Active help
-			help_controller->SetEnabled(true);
-			help_keyboard->SetEnabled(false);
-			//owner->transform_2d.SetTranslation();
+			help_panel->SetEnabled(true);
 			show_help = true;
 			return;
 		case 2:
 			//Active credits
-			//credits->SetEnabled(true);
-			//owner->transform_2d.SetTranslation(&float3(owner->transform_2d.position.x, (credits->transform_2d.height * -236.0f) / 604.0f, owner->transform_2d.position.z));
+			credits_panel->SetEnabled(true);
 			show_credits = true;
 			return;
 		case 3:
@@ -115,25 +110,25 @@ void MenuLogic::Update()
 		}
 	}
 
-	if(App->input->GetKeyDown(KeyCode::W) || App->input->GetControllerButtonDown(ControllerCode::UpDpad, ControllerID::ONE))
+	if(ConfirmMovedUp())
 	{
 		current -= 1;
 		current = current % 4;
-		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x, buttons[current]->transform_2d.GetTranslation().y, owner->transform_2d.GetTranslation().z));
+		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x, buttons[current]->transform_2d.GetTranslation().y, 0.0f));
 	}
-	else if(App->input->GetKeyDown(KeyCode::S) || App->input->GetControllerButtonDown(ControllerCode::DownDpad, ControllerID::ONE))
+	else if(ConfirmMovedDown())
 	{
 		current += 1;
 		current = current % 4;
 
-		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x, buttons[current]->transform_2d.GetTranslation().y, owner->transform_2d.GetTranslation().z));
+		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x,buttons[current]->transform_2d.GetTranslation().y,0.0f));
 	}
 
 
 }
 
 // Use this for showing variables on inspector
-void MenuLogic::OnInspector(ImGuiContext* context)
+void MainMenuLogic::OnInspector(ImGuiContext* context)
 {
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
@@ -142,7 +137,7 @@ void MenuLogic::OnInspector(ImGuiContext* context)
 }
 
 //Use this for linking JUST GO automatically
-void MenuLogic::InitPublicGameObjects()
+void MainMenuLogic::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
 
@@ -158,14 +153,11 @@ void MenuLogic::InitPublicGameObjects()
 	public_gameobjects.push_back(&exit_button);
 	variable_names.push_back(GET_VARIABLE_NAME(exit_button));
 
-	public_gameobjects.push_back(&help_controller);
-	variable_names.push_back(GET_VARIABLE_NAME(help_controller));
-
-	public_gameobjects.push_back(&help_keyboard);
-	variable_names.push_back(GET_VARIABLE_NAME(help_keyboard));
-
 	public_gameobjects.push_back(&credits_panel);
 	variable_names.push_back(GET_VARIABLE_NAME(credits_panel));
+
+	public_gameobjects.push_back(&help_panel);
+	variable_names.push_back(GET_VARIABLE_NAME(help_panel));
 
 	public_gameobjects.push_back(&audio_controller);
 	variable_names.push_back(GET_VARIABLE_NAME(audio_controller));
@@ -176,21 +168,20 @@ void MenuLogic::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
-bool MenuLogic::ComfirmButtonPressed()
+
+bool MainMenuLogic::ConfirmMovedUp()
+{
+	return (App->input->GetKeyDown(KeyCode::W) || App->input->GetControllerButtonDown(ControllerCode::UpDpad, ControllerID::ONE));
+}
+
+bool MainMenuLogic::ConfirmMovedDown()
+{
+	return (App->input->GetKeyDown(KeyCode::S) || App->input->GetControllerButtonDown(ControllerCode::DownDpad, ControllerID::ONE));
+}
+
+bool MainMenuLogic::ComfirmButtonPressed()
 {
 	return (App->input->GetKeyDown(KeyCode::Space) || App->input->GetControllerButtonDown(ControllerCode::A, ControllerID::ONE));
 }
 
-//Use this for linking GO AND VARIABLES automatically if you need to save variables
-// void MenuLogic::Save(Config& config) const
-// {
-// 	config.AddUInt(example->UUID, "ExampleNameforSave");
-// 	Script::Save(config);
-// }
 
-// //Use this for linking GO AND VARIABLES automatically
-// void MenuLogic::Load(const Config& config)
-// {
-// 	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
-// 	Script::Load(config);
-// }

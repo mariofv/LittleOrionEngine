@@ -192,8 +192,8 @@
                     0.5
                 ],
                 "AnchoredPos": [
-                    0.0,
-                    0.0
+                    471.5,
+                    351.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -534,15 +534,15 @@
                 "ComponentType": 7,
                 "Active": true,
                 "Size": [
-                    175.0,
-                    71.0
+                    19.0,
+                    50.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    -300.0,
+                    -403.2284851074219,
                     65.0
                 ],
                 "MinAnchor": [
@@ -575,7 +575,7 @@
                     "UUID": 228338573,
                     "ComponentType": 6,
                     "Active": true,
-                    "ScriptName": "MenuLogic",
+                    "ScriptName": "MainMenuLogic",
                     "Name0": "Play_Button",
                     "Play_Button": 19876781,
                     "Name1": "Help_Button",
@@ -584,7 +584,11 @@
                     "Credits_Button": 1481899329,
                     "Name3": "Exit_Button",
                     "Exit_Button": 1227334976,
-                    "Name7": "Audio_controller",
+                    "Name4": "Credits",
+                    "Credits": 1981056088,
+                    "Name5": "Help",
+                    "Help": 3084341729,
+                    "Name6": "Audio_controller",
                     "Audio_controller": 285203001
                 }
             ]
@@ -975,17 +979,17 @@
                 {
                     "UUID": 3605793530,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 },
                 {
                     "UUID": 311120270,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 },
                 {
                     "UUID": 1570371615,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         },
@@ -1028,7 +1032,7 @@
                     0.5
                 ],
                 "AnchoredPos": [
-                    -296.0,
+                    -300.0,
                     -278.0
                 ],
                 "MinAnchor": [
@@ -1055,17 +1059,17 @@
                 {
                     "UUID": 3761324316,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 },
                 {
                     "UUID": 1756750234,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 },
                 {
                     "UUID": 2074447569,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 },
                 {
                     "UUID": 933930168,
@@ -1140,7 +1144,7 @@
                 {
                     "UUID": 2537319997,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         },
@@ -1175,16 +1179,16 @@
                 "ComponentType": 7,
                 "Active": true,
                 "Size": [
-                    160.0,
-                    30.0
+                    155.0,
+                    55.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    -232.0,
-                    -264.0
+                    -300.0,
+                    -299.1968078613281
                 ],
                 "MinAnchor": [
                     0.5,
@@ -1210,21 +1214,450 @@
                 {
                     "UUID": 4220428626,
                     "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 3044981392,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 4194247294,
-                    "ComponentType": 10,
                     "Active": false
                 },
                 {
                     "UUID": 2910491477,
                     "ComponentType": 11,
+                    "Active": false
+                }
+            ]
+        },
+        {
+            "UUID": 2613957218,
+            "ParentUUID": 3084341729,
+            "Name": "Joycon",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 1714941444,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1505990781,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": []
+        },
+        {
+            "UUID": 2247644699,
+            "ParentUUID": 3084341729,
+            "Name": "Keyboard",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 3748652641,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1043874755,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": []
+        },
+        {
+            "UUID": 1524226290,
+            "ParentUUID": 3084341729,
+            "Name": "Cursor_help",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3385779712,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2803847846,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": []
+        },
+        {
+            "UUID": 1957794541,
+            "ParentUUID": 2613957218,
+            "Name": "Joycon_image",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 2977889571,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3694941829,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    762.0,
+                    412.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    -66.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 1699295080,
+                    "ComponentType": 12,
+                    "Active": false,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 947713538
+                },
+                {
+                    "UUID": 1577225359,
+                    "ComponentType": 10,
+                    "Active": false
+                }
+            ]
+        },
+        {
+            "UUID": 1926219840,
+            "ParentUUID": 2613957218,
+            "Name": "Joycon_tab",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 634006413,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 906289370,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    155.0,
+                    55.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    64.0,
+                    167.8873291015625
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 107554315,
+                    "ComponentType": 12,
+                    "Active": false,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 3919387092
+                },
+                {
+                    "UUID": 2431368122,
+                    "ComponentType": 10,
+                    "Active": false
+                }
+            ]
+        },
+        {
+            "UUID": 2754607341,
+            "ParentUUID": 2247644699,
+            "Name": "keyboard_image",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 3222902611,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1108655426,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    762.0,
+                    412.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    -66.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 1965122204,
+                    "ComponentType": 12,
+                    "Active": false,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 3260681504
+                },
+                {
+                    "UUID": 2597280688,
+                    "ComponentType": 10,
+                    "Active": false
+                }
+            ]
+        },
+        {
+            "UUID": 717796875,
+            "ParentUUID": 2247644699,
+            "Name": "Keyboard_tab",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 1536956305,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3942542484,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 107554315,
+                    "ComponentType": 12,
+                    "Active": false,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 3919387092
+                },
+                {
+                    "UUID": 2431368122,
+                    "ComponentType": 10,
                     "Active": false
                 }
             ]
