@@ -32,16 +32,21 @@ public:
 	bool PlayerInRange();
 	void SeekPlayer();
 	void TakeDamage(float damage);
+	bool SlotsAvailable();
 
 	virtual void ResetEnemy() {}
 
+	void UpdateCurrentPlayerTarget();
+
 protected:
-	void SetCurrentPlayerTarget();
 	void Die();
 
 public:
 	ComponentAnimation* animation = nullptr;
 	ComponentCollider* collider = nullptr;
+
+	GameObject* current_player_target = nullptr;
+	GameObject* current_player_target_on_idle = nullptr;
 
 	bool is_alive = true;
 	bool is_attacking = false;
@@ -51,7 +56,6 @@ protected:
 
 	GameObject* player1 = nullptr;
 	GameObject* player2 = nullptr;
-	GameObject* current_player_target = nullptr;
 
 	EnemyManager* enemy_manager = nullptr;
 	PlayerController* player1_controller = nullptr;

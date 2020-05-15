@@ -124,7 +124,7 @@ bool EnemyController::PlayerInRange()
 
 void EnemyController::SeekPlayer()
 {
-	SetCurrentPlayerTarget();
+	UpdateCurrentPlayerTarget();
 
 	float3 target = current_player_target->transform.GetTranslation();
 	float3 position = owner->transform.GetTranslation();
@@ -165,7 +165,27 @@ void EnemyController::TakeDamage(float damage)
 	}
 }
 
-void EnemyController::SetCurrentPlayerTarget()
+bool EnemyController::SlotsAvailable()
+{
+	if (is_attacking) return true;
+
+	for (auto& enemy : enemy_manager->enemies)
+	{
+		if (!enemy->is_alive)
+		{
+			continue;
+		}
+
+		if (current_player_target == enemy->current_player_target && enemy->is_attacking)
+		{
+			return false;
+		}
+	}
+
+	return true;
+}
+
+void EnemyController::UpdateCurrentPlayerTarget()
 {
 	if (player2 == nullptr)
 	{

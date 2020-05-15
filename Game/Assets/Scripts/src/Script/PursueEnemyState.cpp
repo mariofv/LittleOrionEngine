@@ -32,13 +32,25 @@ void PursueEnemyState::OnStateEnter()
 
 void PursueEnemyState::OnStateUpdate()
 {
-	if (!enemy->PlayerInRange())
+	if (enemy->SlotsAvailable())
 	{
-		enemy->SeekPlayer();
+		if (!enemy->PlayerInRange())
+		{
+			enemy->SeekPlayer();
+		}
+		else
+		{
+			Exit(enemy->attack_state);
+		}
 	}
 	else
 	{
-		Exit(enemy->attack_state);
+		if (!enemy->animation->IsOnState("Idle"))
+		{
+			enemy->animation->ActiveAnimation("idle");
+		}
+
+		Exit(enemy->idle_state);
 	}
 }
 
