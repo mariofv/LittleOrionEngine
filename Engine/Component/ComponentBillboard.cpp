@@ -11,6 +11,10 @@ ComponentBillboard::ComponentBillboard() : Component(nullptr, ComponentType::BIL
 {
 	self_timer.Start();
 	this->alignment_type = ComponentBillboard::AlignmentType::VIEW_POINT;
+	this->billboard_texture = App->resources->Load<Texture>(static_cast<uint32_t>(CoreResource::BILLBOARD_DEFAULT_TEXTURE));
+	this->x_tiles = 1;
+	this->y_tiles = 1;
+	this->sheet_speed = 1;
 	//owner->aabb.GenerateBoundingBox();
 }
 

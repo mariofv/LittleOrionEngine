@@ -214,9 +214,9 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	{
 		billboard->Render(billboard->owner->transform.GetGlobalTranslation());
 	}
-	if (particle_systems.size() >0) 
+	for (auto &particles : particle_systems)
 	{
-		particle_systems[0]->Render();
+		particles->Render();
 	}
 	
 	

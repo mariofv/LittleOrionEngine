@@ -107,7 +107,7 @@ void PanelGameObject::Render(GameObject* game_object)
 				break;
 			case Component::ComponentType::BILLBOARD:
 				component_panel.ShowComponentBillboard(static_cast<ComponentBillboard*>(component));
-
+				break;
 			case Component::ComponentType::AUDIO_SOURCE:
 				component_panel.ShowComponentAudioSourceWindow(static_cast<ComponentAudioSource*>(component));
 				break;

@@ -51,7 +51,7 @@ static std::unordered_map<std::string, CoreResource> core_resources_uuid_mapping
 	{ "/Resources/Textures/video-solid.png", CoreResource::BILLBOARD_CAMERA_TEXTURE },
 	{ "/Resources/Textures/lightbulb-solid.png", CoreResource::BILLBOARD_LIGHT_TEXTURE },
 
-	{ "/Resources/Textures/default_particle.jpg", CoreResource::BILLBOARD_DEFAULT_TEXTURE},
+	{ "/Resources/Textures/Leaves Tree Set 1 Life Difuse Alpha.tga", CoreResource::BILLBOARD_DEFAULT_TEXTURE},
 
 });
 

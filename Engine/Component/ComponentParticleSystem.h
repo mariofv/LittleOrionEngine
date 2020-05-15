@@ -19,7 +19,6 @@ public:
 		float time_counter;
 		float  life;
 		bool counter = false;
-		ComponentBillboard* billboard;
 	};
 
 	struct Initialization
@@ -42,6 +41,7 @@ public:
 	unsigned int FirstUnusedParticle();
 	void RespawnParticle(Particle& particle);
 	void Render();
+	void SetParticleTexture(uint32_t texture_uuid);
 	void UpdateParticle();
 	float3 GetPositionOfParticle();
 
@@ -65,10 +65,12 @@ public:
 
 	
 public:
+	uint32_t texture_uuid;
+	ComponentBillboard* billboard;
 	float time_counter = 0.0F;
-	float time_between_particles = 1000.0F;
+	float time_between_particles = 200.0F;
 	std::vector<Particle> particles;
-	unsigned int max_particles = 5;
+	unsigned int max_particles = 50;
 	unsigned int last_used_particle = 0;
 	unsigned int nr_new_particles = 2;
 };

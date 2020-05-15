@@ -24,11 +24,11 @@ void ComponentParticleSystem::Init()
 	for (unsigned int i = 0; i < max_particles; ++i)
 	{
 		particles.emplace_back(Particle());
-		particles[i].billboard = new ComponentBillboard(owner);
-		particles[i].billboard->width = 0.2f; particles[i].billboard->height= 0.2f;
-		particles[i].billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
 		particles[i].life = 0.0F;
 	}
+	billboard = new ComponentBillboard(owner);
+	billboard->width = 0.2f; billboard->height = 0.2f;
+	billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
 }
 
 unsigned int ComponentParticleSystem::FirstUnusedParticle()
@@ -64,6 +64,10 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 void ComponentParticleSystem::Render()
 {
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	/*glBlendFunc(GL_ONE, GL_ONE); TODO -> FIX THISÇ*/
+	glBlendEquation(GL_FUNC_ADD);
 	time_counter += App->time->real_time_delta_time;
 	if (time_counter >= time_between_particles)
 	{
@@ -80,12 +84,17 @@ void ComponentParticleSystem::Render()
 		if (p.life > 0.0f)
 		{	// particle is alive, thus update
 			p.position.y +=  p.velocity.y*App->time->real_time_delta_time;
-			p.billboard->Render(p.position);
+			billboard->Render(p.position);
 		}
+		
 	}
-	
+	glDisable(GL_BLEND);
 }
-
+void ComponentParticleSystem::SetParticleTexture(uint32_t texture_uuid)
+{
+	this->texture_uuid = texture_uuid;
+	billboard->ChangeTexture(texture_uuid);
+}
 void ComponentParticleSystem::Delete()
 {
 	App->renderer->RemoveComponentParticleSystem(this);

@@ -34,12 +34,20 @@ void main()
 	if(!billboard.isSpritesheet)
 	{
 		vec4 texture_color = texture(billboard.texture, texCoord);
+		if(texture_color.a <0.1)
+		{
+			discard;
+		}
 		FragColor =  texture_color;
 	}
 
 	else
 	{
 		vec4 texture_color = texture(billboard.texture, frame);
+		if(texture_color.a <0.1)
+		{
+			discard;
+		}
 		FragColor =  texture_color;
 	}
 
