@@ -18,8 +18,8 @@ public:
 
 	class DirectionalLight {
 	public:
-		Frustum directional_light_camera; //From we'll record the depth buffer
-		GLuint rbo = 0;		//Crear framebuffers necessaris per sa direc_light
+		Frustum directional_light_camera; //From where we'll record the depth buffer
+		GLuint rbo = 0;					  //Direc_light buffers
 		GLuint fbo = 0;
 		GLuint depth_rbo = 0;
 		GLuint depth_map = 0;
@@ -100,8 +100,6 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
-	void Init();
-	void Update() override;
 	void Delete() override;
 	void Save(Config& config) const override;
 	void Load(const Config &config) override;

@@ -13,15 +13,6 @@ ComponentLight::ComponentLight(GameObject * owner) : Component(owner, ComponentT
 {
 
 }
-void ComponentLight::Init()
-{
-
-}
-
-void ComponentLight::Update()
-{
-
-}
 
 Component* ComponentLight::Clone(bool original_prefab) const
 {

@@ -38,10 +38,10 @@ private:
 	void HandleSceneCameraMovements();
 	
 public:
-	ComponentCamera *scene_camera = nullptr;
+	ComponentCamera* scene_camera = nullptr;
 	ComponentCamera* main_camera = nullptr;
 	ComponentCamera* directional_light_camera = nullptr;
-	GameObject *dir_light_game_object = nullptr;
+	GameObject*		 dir_light_game_object = nullptr;
 
 	std::shared_ptr<Skybox> world_skybox = nullptr;
 

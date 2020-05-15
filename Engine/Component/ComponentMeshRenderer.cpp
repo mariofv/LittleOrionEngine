@@ -4,6 +4,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleLight.h"
 #include "Module/ModuleProgram.h"
@@ -11,7 +12,6 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
-#include "Module/ModuleCamera.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
@@ -146,7 +146,6 @@ void ComponentMeshRenderer::AddSpecularUniforms(unsigned int shader_program) con
 	glUniform1i(glGetUniformLocation(shader_program, "material.specular_map"), 2);
 	glUniform4fv(glGetUniformLocation(shader_program, "material.specular_color"), 1, (float*)material_to_render->specular_color);
 	glUniform1f(glGetUniformLocation(shader_program, "material.k_specular"), material_to_render->k_specular);
-	//glUniform1f(glGetUniformLocation(shader_program, "material.shininess"), material_to_render->specular_color[3]);
 
 	//Material BRDF variables
 	//glUniform1f(glGetUniformLocation(shader_program, "material.roughness"), material_to_render->roughness);

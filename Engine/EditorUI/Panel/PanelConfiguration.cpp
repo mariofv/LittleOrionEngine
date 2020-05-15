@@ -212,10 +212,9 @@ void PanelConfiguration::ShowRenderOptions()
 
 		ImGui::SameLine();
 
-		if (ImGui::Checkbox("Render shadows", &App->renderer->render_depth))
+		if (ImGui::Checkbox("Render shadows", &App->renderer->render_shadows))
 		{
-			App->renderer->SetRenderDepth(App->renderer->render_depth); //Activates depth buffer generation
-
+			App->renderer->SetRenderShadows(App->renderer->render_shadows);
 		}
 
 		ImGui::Separator();

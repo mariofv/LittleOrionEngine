@@ -1,9 +1,9 @@
 #include "ModuleLight.h"
 #include "Main/Application.h"
-#include "Module/ModuleProgram.h"
 #include "Main/GameObject.h"
-#include "Module/ModuleRender.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModuleProgram.h"
+#include "Module/ModuleRender.h"
 
 #include <Brofiler/Brofiler.h>
 #include <algorithm>

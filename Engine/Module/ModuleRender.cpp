@@ -117,8 +117,6 @@ bool ModuleRender::Init()
 
 	APP_LOG_SUCCESS("Glew initialized correctly.");
 
-	helper = new ComponentCamera();
-
 	return true;
 }
 
@@ -212,60 +210,6 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 	App->debug->rendering_time = rendering_measure_timer->Read();
 }
 
-void ModuleRender::RenderShadows(const Frustum &directional_light_frustum)
-{
-	//BROFILER_CATEGORY("Render Frame", Profiler::Color::Azure);
-
-	//rendering_measure_timer->Start();
-	glBindBuffer(GL_UNIFORM_BUFFER, App->program->uniform_buffer.ubo);
-
-	static size_t projection_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + sizeof(float4x4);
-	glBufferSubData(GL_UNIFORM_BUFFER, projection_matrix_offset, sizeof(float4x4), directional_light_frustum.ProjectionMatrix().Transposed().ptr());
-
-	static size_t view_matrix_offset = App->program->uniform_buffer.MATRICES_UNIFORMS_OFFSET + 2 * sizeof(float4x4);
-	glBufferSubData(GL_UNIFORM_BUFFER, view_matrix_offset, sizeof(float4x4), directional_light_frustum.ViewMatrix().ptr());
-
-	glBindBuffer(GL_UNIFORM_BUFFER, 0);
-
-	num_rendered_tris = 0;
-	num_rendered_verts = 0;
-
-	helper->camera_frustum = directional_light_frustum;
-
-	APP_LOG_INFO("%d", helper->camera_frustum.pos.x);
-
-	GetMeshesToRender(helper);
-	for (auto &mesh : opaque_mesh_to_render)
-	{
-		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
-		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
-		{
-			mesh.second->Render();
-			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
-			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-			glUseProgram(0);
-
-		}
-	}
-	for (auto &mesh : transparent_mesh_to_render)
-	{
-		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
-		if (mesh.second->mesh_uuid != 0 && mesh.second->IsEnabled())
-		{
-			mesh.second->Render();
-			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
-			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-			glUseProgram(0);
-
-		}
-	}
-
-	
-	App->ui->Render(helper);
-
-
-}
-
 void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)
 {
 	BROFILER_CATEGORY("Get meshes to render", Profiler::Color::Aquamarine);
@@ -344,9 +288,9 @@ void ModuleRender::SetBlending(bool gl_blend)
 
 }
 
-void ModuleRender::SetRenderDepth(bool depth)
+void ModuleRender::SetRenderShadows(bool render)
 {
-	render_depth = depth;
+	render_shadows = render;
 }
 
 void ModuleRender::SetFaceCulling(bool gl_cull_face)
