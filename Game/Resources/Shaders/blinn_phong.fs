@@ -121,6 +121,9 @@ void main()
 	vec3 occlusion_color = GetOcclusionColor(material, tiling);
 	vec3 emissive_color  = GetEmissiveColor(material, tiling);
 
+	vec3 normalized_normal = normal;
+	normalized_normal =  normalize(normalized_normal);
+
 	if(material.use_normal_map)
 	{
 		vec3 normal_from_texture = GetNormalMap(material, tiling);
@@ -130,7 +133,6 @@ void main()
 		for (int i = 0; i < directional_light.num_directional_lights; ++i)
 		{
 			result += CalculateDirectionalLight(fragment_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
-
 		}
 
 		for (int i = 0; i < num_spot_lights; ++i)
@@ -148,18 +150,18 @@ void main()
 	{
 		for (int i = 0; i < directional_light.num_directional_lights; ++i)
 		{
-			result += CalculateDirectionalLight(normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
+			result += CalculateDirectionalLight(normalized_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 
 		}
 
 		for (int i = 0; i < num_spot_lights; ++i)
 		{
-			result += CalculateSpotLight(spot_lights[i], normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
+			result += CalculateSpotLight(spot_lights[i], normalized_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		}
 
 		for (int i = 0; i < num_point_lights; ++i)
 		{
-			result += CalculatePointLight(point_lights[i], normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
+			result += CalculatePointLight(point_lights[i], normalized_normal, diffuse_color,  specular_color, occlusion_color,  emissive_color);
 		}
 	}
 
@@ -209,19 +211,15 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	vec3 view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
 	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(-directional_light.direction );
-	float specular   = 0.0;	
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
 	float shadow	 = ShadowCalculation(pos_from_light, normalized_normal);
+	float specular = NormalizedSpecular(normalized_normal, half_dir);
 
-	if(material.k_specular > 0.0 && material.specular_color.w > 0.0)
-	{	
-		specular = NormalizedSpecular(normalized_normal, half_dir);
-	}
 
 	return directional_light.color * (
 		(emissive_color
 		+ (NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI
-		+ specular_color.rgb * specular) * (shadow))
+		+ specular) * (shadow))
 	) * max(0.0, dot(normalized_normal, light_dir));
 	//Last multiplication added as a recommendation
 }
