@@ -305,19 +305,20 @@ void ComponentCollider::SetStatic()
 {
 	int flags = body->getCollisionFlags();
 	flags |= body->CF_KINEMATIC_OBJECT;
-	mass = 0.0F;
+	float new_mass = 0.0F;
 	if (!is_static)
 	{
 		flags -= body->CF_KINEMATIC_OBJECT;
-		mass = 1.0F;
+		new_mass = mass;
 	}
+	mass = new_mass;
 	body->setCollisionFlags(flags);
 	
 }
 
 void ComponentCollider::SetRotationAxis()
 {
-	body->setAngularFactor(btVector3(int(freeze_rotation_x), int(freeze_rotation_y), int(freeze_rotation_z)));
+	body->setAngularFactor(btVector3(int(!freeze_rotation_x), int(!freeze_rotation_y), int(!freeze_rotation_z)));
 }
 
 void ComponentCollider::AddForce(float3& force)
@@ -404,7 +405,7 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 {
 	//bottom of the model
 	btVector3 bottom = body->getWorldTransform().getOrigin();
-	bottom.setY(bottom.getY() - 2 * box_size.getY());
+	bottom.setY(bottom.getY() - (5 * box_size.getY()));
 
 	//Vector normal to the surface
 	btVector3 Normal; 
@@ -418,7 +419,7 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 	if (abs(velocity.x) > 0 || abs(velocity.z) > 0) 
 	{
 		velocity.Normalize();
-		body->setLinearVelocity(speed*btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
+		body->setLinearVelocity(speed * btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
 		
 		//rotate collider
 

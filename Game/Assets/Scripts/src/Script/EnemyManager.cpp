@@ -75,10 +75,10 @@ void EnemyManager::AddEnemy(EnemyController* enemy)
 void EnemyManager::KillEnemy(EnemyController* enemy)
 {
 	//This method is called once the enemy animation ended
-	enemy->collider->SwitchPhysics(true);
-	enemy->owner->transform.SetTranslation(graveyard_position);
+	enemy->collider->active_physics = false;
 	enemy->owner->SetEnabled(false);
-
+	enemy->owner->transform.SetTranslation(graveyard_position);
+	
 	--current_number_of_enemies_alive;
 	++total_enemies_killed;
 
@@ -106,7 +106,7 @@ void EnemyManager::SpawnEnemy(const unsigned type, const float3& spawn_position)
 			enemy->Start();
 			enemy->owner->transform.SetTranslation(spawn_position);
 			enemy->collider->UpdateDimensions();
-			enemy->collider->SwitchPhysics(false);
+			enemy->collider->active_physics = true;
 			enemy->owner->SetEnabled(true);
 
 			++current_number_of_enemies_alive;
@@ -161,7 +161,7 @@ void EnemyManager::CreateEnemies()
 		Mushdoom* enemy = (Mushdoom*)componnet_enemy->script;
 		enemy->InitMembers();
 		enemy->is_alive = false;
-		enemy->collider->SwitchPhysics(true);
+		enemy->collider->active_physics = false;
 		enemy->owner->SetEnabled(false);
 		enemy->owner->transform.SetTranslation(graveyard_position);
 		enemies.emplace_back(enemy);

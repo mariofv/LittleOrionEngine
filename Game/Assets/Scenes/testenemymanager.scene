@@ -195,12 +195,17 @@
                     "Collision": true,
                     "Visualize": false,
                     "Attached": false,
-                    "x_axis": true,
-                    "y_axis": true,
-                    "z_axis": true,
-                    "DisablePhysics": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
                     "Friction": 1.0,
-                    "Rolling_friction": 1.0
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ],
             "UUID": 299268297
@@ -223,12 +228,17 @@
                     "Collision": true,
                     "Visualize": false,
                     "Attached": false,
-                    "x_axis": true,
-                    "y_axis": true,
-                    "z_axis": true,
-                    "DisablePhysics": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
                     "Friction": 1.0,
-                    "Rolling_friction": 1.0
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ],
             "UUID": 3420948497
@@ -251,12 +261,17 @@
                     "Collision": true,
                     "Visualize": false,
                     "Attached": false,
-                    "x_axis": true,
-                    "y_axis": true,
-                    "z_axis": true,
-                    "DisablePhysics": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
                     "Friction": 1.0,
-                    "Rolling_friction": 1.0
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ],
             "UUID": 1367554656
@@ -279,12 +294,17 @@
                     "Collision": true,
                     "Visualize": false,
                     "Attached": false,
-                    "x_axis": true,
-                    "y_axis": true,
-                    "z_axis": true,
-                    "DisablePhysics": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
                     "Friction": 1.0,
-                    "Rolling_friction": 1.0
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ],
             "UUID": 960305813
@@ -307,12 +327,17 @@
                     "Collision": true,
                     "Visualize": false,
                     "Attached": false,
-                    "x_axis": true,
-                    "y_axis": true,
-                    "z_axis": true,
-                    "DisablePhysics": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
                     "Friction": 1.0,
-                    "Rolling_friction": 1.0
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ],
             "UUID": 2122564851
@@ -335,12 +360,17 @@
                     "Collision": true,
                     "Visualize": false,
                     "Attached": false,
-                    "x_axis": true,
-                    "y_axis": true,
-                    "z_axis": true,
-                    "DisablePhysics": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
                     "Friction": 1.0,
-                    "Rolling_friction": 1.0
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ],
             "UUID": 3816290468
@@ -363,12 +393,17 @@
                     "Collision": true,
                     "Visualize": false,
                     "Attached": false,
-                    "x_axis": true,
-                    "y_axis": true,
-                    "z_axis": true,
-                    "DisablePhysics": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
                     "Friction": 1.0,
-                    "Rolling_friction": 1.0
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ],
             "UUID": 3774483745
@@ -448,12 +483,17 @@
                     "Collision": true,
                     "Visualize": true,
                     "Attached": true,
-                    "x_axis": false,
-                    "y_axis": false,
-                    "z_axis": false,
-                    "DisablePhysics": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": true,
                     "Friction": 1.0,
-                    "Rolling_friction": 1.0
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ]
         },
@@ -549,12 +589,17 @@
                     "Collision": true,
                     "Visualize": true,
                     "Attached": true,
-                    "x_axis": false,
-                    "y_axis": false,
-                    "z_axis": false,
-                    "DisablePhysics": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": true,
                     "Friction": 1.0,
-                    "Rolling_friction": 1.0
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ]
         },
@@ -1226,12 +1271,17 @@
                     "Collision": false,
                     "Visualize": true,
                     "Attached": false,
-                    "x_axis": false,
-                    "y_axis": false,
-                    "z_axis": false,
-                    "DisablePhysics": true,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
                     "Friction": 1.0,
-                    "Rolling_friction": 1.0
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ]
         },
@@ -1296,12 +1346,17 @@
                     "Collision": false,
                     "Visualize": true,
                     "Attached": false,
-                    "x_axis": false,
-                    "y_axis": false,
-                    "z_axis": false,
-                    "DisablePhysics": true,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
                     "Friction": 1.0,
-                    "Rolling_friction": 1.0
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ]
         },
@@ -1366,12 +1421,17 @@
                     "Collision": false,
                     "Visualize": true,
                     "Attached": false,
-                    "x_axis": false,
-                    "y_axis": false,
-                    "z_axis": false,
-                    "DisablePhysics": true,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
                     "Friction": 1.0,
-                    "Rolling_friction": 1.0
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ]
         },
@@ -1436,12 +1496,17 @@
                     "Collision": false,
                     "Visualize": true,
                     "Attached": false,
-                    "x_axis": false,
-                    "y_axis": false,
-                    "z_axis": false,
-                    "DisablePhysics": true,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
                     "Friction": 1.0,
-                    "Rolling_friction": 1.0
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ]
         },
