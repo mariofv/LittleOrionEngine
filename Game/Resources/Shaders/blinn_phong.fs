@@ -219,7 +219,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	return directional_light.color * (
 		(emissive_color
 		+ (NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI
-		+ specular) * (shadow))
+		+ specular_color.rgb * specular ) * shadow)
 	) * max(0.0, dot(normalized_normal, light_dir));
 	//Last multiplication added as a recommendation
 }
