@@ -166,7 +166,7 @@ void main()
 	}
 
 
-	result += diffuse_color.rgb * (occlusion_color*0.01); //Ambient light
+	result += diffuse_color.rgb * (occlusion_color*0.2); //Ambient light
 
 		FragColor = vec4(result,1.0);
 		FragColor.rgb = pow(FragColor.rgb, vec3(1/gamma)); //Gamma Correction - The last operation of postprocess
@@ -216,12 +216,15 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	float specular = NormalizedSpecular(normalized_normal, half_dir);
 
 
-	return directional_light.color * (
+		return directional_light.color * (
 		(emissive_color
-		+ (NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb) * 1/PI
+		+ (NormalizedDiffuse(diffuse_color.rgb, specular_color.rgb)
 		+ specular_color.rgb * specular ) * shadow)
 	) * max(0.0, dot(normalized_normal, light_dir));
 	//Last multiplication added as a recommendation
+
+
+	
 }
 
 vec3 CalculateSpotLight(SpotLight spot_light, const vec3 normalized_normal, vec4 diffuse_color, vec4 specular_color, vec3 occlusion_color, vec3 emissive_color)
@@ -283,13 +286,21 @@ vec3 CalculatePointLight(PointLight point_light, const vec3 normalized_normal, v
 
 vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color)
 {
-	return 	(1-specular_color)*diffuse_color * material.k_diffuse; //The more specular, the less diffuse
+	if(material.use_specular_map)
+	{
+		return 	(1-specular_color)*diffuse_color * material.k_diffuse * 1/PI; //The more specular, the less diffuse
+	}
+
+	else
+	{
+		return 	diffuse_color * material.k_diffuse;
+	}
 }
 
 float NormalizedSpecular(vec3 normal, vec3 half_dir) // Old refference: http://www.farbrausch.de/~fg/stuff/phong.pdf
 {
 	
-	float shininess = pow(7*material.specular_color.w + 1, 2)*2; 
+	float shininess = pow(7*material.specular_color.w + 1, 2); 
 	float spec = pow(max(dot(normal, half_dir), 0.0), shininess);
 	float normalization_factor = (spec + 8)/8;
 

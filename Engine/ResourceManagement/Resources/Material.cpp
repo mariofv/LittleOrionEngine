@@ -91,11 +91,6 @@ void Material::Load(const Config& config)
 	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
 
 	transparency = config.GetFloat("Transparency", 1.f);
-//	roughness = config.GetFloat("Roughness", 0.5f);
-//	metalness = config.GetFloat("Metalness", 0.04f);
-
-//	roughness = config.GetFloat("Tiling X", 0.0f);
-//	metalness = config.GetFloat("Tiling Y", 0.0f);
 
 	//colors
 	float4 diffuse;
