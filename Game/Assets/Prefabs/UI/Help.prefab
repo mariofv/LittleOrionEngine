@@ -639,7 +639,15 @@
                     "UUID": 3529982493,
                     "ComponentType": 6,
                     "Active": false,
-                    "ScriptName": "HelpMenuLogic"
+                    "ScriptName": "HelpMenuLogic",
+                    "Name0": "Joycon",
+                    "Joycon": 1794624703,
+                    "Name1": "Keyboard",
+                    "Keyboard": 135901287,
+                    "Name2": "Pause_menu",
+                    "Pause_menu": 1970104844,
+                    "Name3": "Menu_audio_controller",
+                    "Menu_audio_controller": 2326306856
                 }
             ]
         }

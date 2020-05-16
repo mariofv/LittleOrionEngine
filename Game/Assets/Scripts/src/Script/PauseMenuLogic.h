@@ -30,6 +30,8 @@ private:
 
 	GameObject* audio_controller = nullptr;
 	ComponentAudioSource* audio_source = nullptr;
+
+	const size_t MAIN_MENU_SCENE = 1;
 };
 extern "C" SCRIPT_API PauseMenuLogic* PauseMenuLogicDLL(); //This is how we are going to load the script
 #endif

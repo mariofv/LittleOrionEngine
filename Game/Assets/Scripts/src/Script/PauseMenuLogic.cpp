@@ -3,6 +3,7 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleTime.h"
+#include "Module/ModuleScene.h"
 
 #include "Component/ComponentAudioSource.h"
 
@@ -26,19 +27,20 @@ void PauseMenuLogic::Awake()
 	buttons.push_back(help_button);
 	buttons.push_back(resume_button);
 	//buttons.push_back(level_selection_button);
-	//audio_source = (ComponentAudioSource*)audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
+	audio_source = (ComponentAudioSource*)audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
 	current = buttons.size() - 1;
-	if (!game_paused && owner->IsEnabled())
-	{
-		game_paused = true;
-		time_scale = App->time->time_scale;
-		App->time->time_scale = 0.0f;
-	}
+
 }
 
 void PauseMenuLogic::Update()
 {
-
+	if (!game_paused && owner->IsEnabled())
+	{
+		game_paused = true;
+		time_scale = App->time->time_scale;
+		//App->time->time_scale = 0.0f;
+		audio_source->PlayEvent("Play_ingame_music");
+	}
 	if (MenuController::ComfirmButtonPressed(*App->input))
 	{
 		audio_source->PlayEvent("Click_fordward");
@@ -46,7 +48,7 @@ void PauseMenuLogic::Update()
 		switch (current)
 		{
 		case 0:
-			//App->scene->LoadScene("/Assets/Scenes/Production/MainMenu.scene");
+			App->scene->LoadScene(MAIN_MENU_SCENE);
 			break;
 		case 1:
 			//Active help
@@ -56,7 +58,8 @@ void PauseMenuLogic::Update()
 			//Resume game
 			game_paused = false;
 			App->time->time_scale = time_scale;
-			owner->SetEnabled(false);
+			owner->parent->SetEnabled(false);
+			audio_source->StopEvent("Play_ingame_music");
 			return;
 		case 3:
 			//Active level selection
@@ -68,8 +71,7 @@ void PauseMenuLogic::Update()
 	}
 	if (MenuController::ConfirmMovedUp(*App->input))
 	{
-		current = (current - 1) == 0 ? buttons.size() -1: current-1;
-		current = current % buttons.size();
+		current = (current - 1) == -1 ? buttons.size() -1: current-1;
 		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x, buttons[current]->transform_2d.GetTranslation().y, 0.0f));
 	}
 

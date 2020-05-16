@@ -410,7 +410,11 @@
                     "Name1": "Help_button",
                     "Help_button": 637967882,
                     "Name2": "Main_menu_button",
-                    "Main_menu_button": 377925581
+                    "Main_menu_button": 377925581,
+                    "Name3": "Help",
+                    "Help": 26334951,
+                    "Name4": "Menu_audio_controller",
+                    "Menu_audio_controller": 2326306856
                 }
             ]
         }

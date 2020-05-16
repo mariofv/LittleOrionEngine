@@ -211,28 +211,86 @@
                     "OriginalUUID": 2225627187
                 },
                 {
-                    "UUID": 3303877534,
-                    "OriginalUUID": 2603793581
-                },
-                {
-                    "UUID": 1436572100,
-                    "OriginalUUID": 2493316692
-                },
-                {
-                    "UUID": 377925581,
-                    "OriginalUUID": 783565291
-                },
-                {
-                    "UUID": 299650025,
-                    "OriginalUUID": 3085890825
+                    "UUID": 388858658,
+                    "OriginalUUID": 958588979
                 },
                 {
                     "UUID": 637967882,
                     "OriginalUUID": 1875478065
                 },
                 {
-                    "UUID": 388858658,
-                    "OriginalUUID": 958588979
+                    "UUID": 377925581,
+                    "OriginalUUID": 783565291
+                },
+                {
+                    "UUID": 3303877534,
+                    "OriginalUUID": 2603793581
+                }
+            ]
+        },
+        {
+            "ParentUUID": 3232256966,
+            "Prefab": 1498603538,
+            "Transform": {
+                "UUID": 3544079860,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 26334951,
+                    "OriginalUUID": 3084341729
+                },
+                {
+                    "UUID": 3087024709,
+                    "OriginalUUID": 4293310616
+                },
+                {
+                    "UUID": 1525412501,
+                    "OriginalUUID": 161228581
+                },
+                {
+                    "UUID": 1794624703,
+                    "OriginalUUID": 2613957218
+                },
+                {
+                    "UUID": 2388147659,
+                    "OriginalUUID": 1957794541
+                },
+                {
+                    "UUID": 1023111449,
+                    "OriginalUUID": 1926219840
+                },
+                {
+                    "UUID": 135901287,
+                    "OriginalUUID": 2247644699
+                },
+                {
+                    "UUID": 3455707685,
+                    "OriginalUUID": 2754607341
+                },
+                {
+                    "UUID": 1654659734,
+                    "OriginalUUID": 717796875
+                },
+                {
+                    "UUID": 1928202438,
+                    "OriginalUUID": 1524226290
                 }
             ]
         }
@@ -1329,7 +1387,7 @@
                 "ComponentType": 7,
                 "Active": true,
                 "Size": [
-                    922.0,
+                    1064.0,
                     702.0
                 ],
                 "Pivot": [
@@ -1354,6 +1412,68 @@
                     "UUID": 4155201756,
                     "ComponentType": 5,
                     "Active": true
+                }
+            ]
+        },
+        {
+            "UUID": 2326306856,
+            "ParentUUID": 0,
+            "Name": "Menu_audio_controller",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 909582761,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 55749231,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 554960949,
+                    "ComponentType": 14,
+                    "Active": true,
+                    "Volume": 1.0,
+                    "SoundBank": 3907880643,
+                    "3DSound": false
                 }
             ]
         },
