@@ -59,10 +59,28 @@ update_status ModuleAudio::Update()
 bool ModuleAudio::CleanUp()
 {
 	AK::SoundEngine::UnregisterGameObj(main_sound_gameobject);
+
+	for (auto& audio_source : audio_sources)
+	{
+		audio_source->owner->RemoveComponent(audio_source);
+	}
+	audio_sources.clear();
 	return true;
 }
 
 ComponentAudioSource * ModuleAudio::CreateComponentAudioSource()
 {
-	return new ComponentAudioSource();
+	ComponentAudioSource * new_audio_source = new ComponentAudioSource();
+	audio_sources.push_back(new_audio_source);
+	return new_audio_source;
+}
+
+void ModuleAudio::RemoveComponentAudioSource(ComponentAudioSource* audio_source_to_remove)
+{
+	const auto it = std::find(audio_sources.begin(), audio_sources.end(), audio_source_to_remove);
+	if (it != audio_sources.end())
+	{
+		delete *it;
+		audio_sources.erase(it);
+	}
 }
