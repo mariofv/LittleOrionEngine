@@ -282,11 +282,6 @@ void PanelTransform::ShowComponentTransform2DWindow(ComponentTransform2D *transf
 		}
 		//UndoRedo
 		CheckClickForUndo(ModuleActions::UndoActionType::SCALE, transform_2D);
-
-		if (ImGui::DragFloat2("DeltaSize", transform_2D->size_delta.ptr(), 0.01f))
-		{
-			
-		}
 	}
 }
 
