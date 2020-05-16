@@ -1809,7 +1809,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 48,
+                    "Texture": 17,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1871,7 +1871,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 51,
+                    "Texture": 18,
                     "Color": [
                         1.0,
                         1.0,

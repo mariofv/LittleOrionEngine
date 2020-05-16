@@ -241,7 +241,7 @@ void EnemyController::BattleCircleAI()
 
 	if (!(!desired_velocity.Equals(float3::zero) && distance <= danger_distance) && !engage_player && distance <= attack_distance)
 	{
-		engage_player = true;
+		//engage_player = true;
 	}
 
 	bool avoid = !desired_velocity.Equals(float3::zero) && distance <= danger_distance;
@@ -291,6 +291,8 @@ void EnemyController::Seek(float3& velocity)
 		if (move_with_physics)
 		{
 			float3 velocity_normalized = velocity.Normalized();
+			float3 look_pos = current_target->transform.GetTranslation() - owner->transform.GetTranslation();
+			collider->LookAt(look_pos, rotate_speed);
 			collider->SetVelocityEnemy(velocity_normalized, speed);
 		}
 		else
