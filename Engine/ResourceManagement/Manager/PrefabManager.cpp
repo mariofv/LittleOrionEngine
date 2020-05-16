@@ -5,6 +5,11 @@
 #include "Component/ComponentLight.h"
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentScript.h"
+#include "Component/ComponentButton.h"
+#include "Component/ComponentImage.h"
+#include "Component/ComponentCanvas.h"
+#include "Component/ComponentCanvasRenderer.h"
+#include "Component/ComponentAudioSource.h"
 
 #include "Helper/Config.h"
 
@@ -118,6 +123,21 @@ void PrefabManager::CreateComponents(const Config& config, std::unique_ptr<GameO
 
 		case Component::ComponentType::SCRIPT:
 			created_component = new ComponentScript();
+			break;
+		case Component::ComponentType::UI_IMAGE:
+			created_component = new ComponentImage();
+			break;
+		case Component::ComponentType::CANVAS:
+			created_component = new ComponentCanvas();
+			break;
+		case Component::ComponentType::CANVAS_RENDERER:
+			created_component = new ComponentCanvasRenderer();
+			break;
+		case Component::ComponentType::UI_BUTTON:
+			created_component = new ComponentButton();
+			break;
+		case Component::ComponentType::AUDIO_SOURCE:
+			created_component = new ComponentAudioSource();
 			break;
 		}
 		created_component->owner = loaded_gameObject.get();

@@ -57,10 +57,6 @@ void MainMenuLogic::Start()
 // Update is called once per frame
 void MainMenuLogic::Update()
 {
-	if (!owner->IsEnabled())
-	{
-		return;
-	}
 
 	if (show_credits && MenuController::ComfirmButtonPressed(*App->input))
 	{

@@ -26,10 +26,6 @@ void HelpMenuLogic::Awake()
 
 void HelpMenuLogic::Update()
 {
-	if (!owner->IsEnabled())
-	{
-		return;
-	}
 	if (!enable && owner->IsEnabled())
 	{
 		enable = true;

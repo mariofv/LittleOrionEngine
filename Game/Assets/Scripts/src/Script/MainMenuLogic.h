@@ -32,8 +32,8 @@ private:
 
 
 	ComponentAudioSource* audio_source = nullptr;
-	std::vector<GameObject*> buttons;
 	ComponentTransform2D* credits_back_button = nullptr;
+	std::vector<GameObject*> buttons;
 	unsigned current = 0;
 	
 	bool show_credits = false;

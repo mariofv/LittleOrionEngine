@@ -177,6 +177,64 @@
                     "OriginalUUID": 197215351
                 }
             ]
+        },
+        {
+            "ParentUUID": 3232256966,
+            "Prefab": 4277971994,
+            "Transform": {
+                "UUID": 1686477250,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "UUIDS": [
+                {
+                    "UUID": 1970104844,
+                    "OriginalUUID": 2731966151
+                },
+                {
+                    "UUID": 1022166836,
+                    "OriginalUUID": 2225627187
+                },
+                {
+                    "UUID": 3303877534,
+                    "OriginalUUID": 2603793581
+                },
+                {
+                    "UUID": 1436572100,
+                    "OriginalUUID": 2493316692
+                },
+                {
+                    "UUID": 377925581,
+                    "OriginalUUID": 783565291
+                },
+                {
+                    "UUID": 299650025,
+                    "OriginalUUID": 3085890825
+                },
+                {
+                    "UUID": 637967882,
+                    "OriginalUUID": 1875478065
+                },
+                {
+                    "UUID": 388858658,
+                    "OriginalUUID": 958588979
+                }
+            ]
         }
     ],
     "PrefabsComponents": [
@@ -1239,6 +1297,65 @@
                 ]
             },
             "Components": []
+        },
+        {
+            "UUID": 3232256966,
+            "ParentUUID": 0,
+            "Name": "GameObject (29)",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1449441224,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 4276229678,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    922.0,
+                    702.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 4155201756,
+                    "ComponentType": 5,
+                    "Active": true
+                }
+            ]
         },
         {
             "UUID": 2406842806,
