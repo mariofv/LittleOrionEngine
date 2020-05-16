@@ -74,6 +74,7 @@ void PlayerController::OnInspector(ImGuiContext* context)
 
 		ImGui::EndCombo();
 	}
+	ImGui::DragFloat("Health", &health_points);
 }
 
 //Use this for linking GO automatically
@@ -91,5 +92,7 @@ void PlayerController::Load(const Config& config)
 void PlayerController::TakeDamage(float damage)
 {
 	health_points -= damage;
+	//UPDATE HEALTH_BAR HERE
+	//also addforce here
 }
 
