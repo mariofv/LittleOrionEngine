@@ -39,6 +39,10 @@ void AttackEnemyState::OnStateUpdate()
 			Exit(enemy->pursue_state);
 		}
 	}
+	if(enemy->PlayerHit())
+	{
+		enemy->Attack();
+	}
 }
 
 void AttackEnemyState::OnStateExit()
