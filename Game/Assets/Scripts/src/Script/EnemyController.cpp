@@ -143,6 +143,11 @@ void EnemyController::MoveTowardsPlayer()
 	}
 }
 
+bool EnemyController::PlayerHit()
+{
+	return collider->DetectCollisionWith(player_controller->GetCollider());
+}
+
 void EnemyController::Attack()
 {
 	player_controller->TakeDamage(attack_damage);

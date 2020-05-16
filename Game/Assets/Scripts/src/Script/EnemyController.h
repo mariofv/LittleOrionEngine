@@ -31,6 +31,7 @@ public:
 	bool PlayerInSight();
 	bool PlayerInRange();
 	void MoveTowardsPlayer();
+	bool PlayerHit();
 	void Attack();
 	void TakeDamage(float damage);
 

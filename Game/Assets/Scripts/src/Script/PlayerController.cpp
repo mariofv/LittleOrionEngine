@@ -1,5 +1,6 @@
 #include "PlayerController.h"
 
+#include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 
@@ -94,5 +95,10 @@ void PlayerController::TakeDamage(float damage)
 	health_points -= damage;
 	//UPDATE HEALTH_BAR HERE
 	//also addforce here
+}
+
+ComponentCollider* PlayerController::GetCollider()
+{
+	return static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
 }
 
