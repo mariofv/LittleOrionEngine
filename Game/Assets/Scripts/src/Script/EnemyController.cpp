@@ -185,7 +185,7 @@ void EnemyController::SeekPlayerWithSeparation()
 	if (!separation_velocity.Equals(float3::zero))
 	{
 		desired_velocity = /*desired_velocity +*/ (separation_velocity * -1.f);
-		
+
 
 	}
 
@@ -239,9 +239,25 @@ void EnemyController::BattleCircleAI()
 		}
 	}
 
+	if (get_out)
+	{
+		if (distance <= attack_range + 2.f)
+		{
+			desired_velocity = target - position;
+			desired_velocity *= -1;
+			Seek(desired_velocity);
+		}
+		else
+		{
+			get_out = false;
+		}
+
+		return;
+	}
+
 	if (!(!desired_velocity.Equals(float3::zero) && distance <= danger_distance) && !engage_player && distance <= attack_distance)
 	{
-		//engage_player = true;
+		enemy_manager->RequestAttack(this);
 	}
 
 	bool avoid = !desired_velocity.Equals(float3::zero) && distance <= danger_distance;
@@ -264,7 +280,17 @@ void EnemyController::BattleCircleAI()
 	}
 	else if (attack)
 	{
-		is_attacking = true;
+		//is_attacking = true;
+		//seek until attack_range the switch to attack_state
+		if (distance > attack_range)
+		{
+			desired_velocity = target - position;
+			Seek(desired_velocity);
+		}
+		else
+		{
+			is_attacking = true;
+		}
 	}
 	else
 	{
@@ -314,6 +340,16 @@ void EnemyController::Strafe(float3& target_position, float direction)
 	float3 perpendicular_vec = float3::unitY.Cross(target_position);
 	float3 desired_velocity = perpendicular_vec * direction;
 	Seek(desired_velocity);
+}
+
+void EnemyController::CancelAttack()
+{
+	enemy_manager->CancelAttack(this);
+}
+
+void EnemyController::GetOutOfAttackRange()
+{
+	get_out = true;
 }
 
 void EnemyController::TakeDamage(float damage)

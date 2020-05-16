@@ -39,6 +39,8 @@ public:
 	void Seek(float3& velocity);
 	void Avoid(float3& velocity);
 	void Strafe(float3& velocity, float direction);
+	void CancelAttack();
+	void GetOutOfAttackRange();
 	/* ai*/
 
 	void TakeDamage(float damage);
@@ -61,6 +63,7 @@ public:
 	bool is_alive = true;
 	bool is_attacking = false;
 	bool engage_player = false;
+	bool get_out = false;
 
 protected:
 	EnemyType type;
@@ -84,8 +87,8 @@ protected:
 	float attack_radius = 2.2f;
 	float separation_distance = 2.f;
 
-	float danger_distance = 5.f;
-	float attack_distance = 3.f;
+	float danger_distance = 6.f;
+	float attack_distance = 4.f;
 
 	bool move_with_physics = true;
 

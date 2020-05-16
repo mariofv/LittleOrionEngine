@@ -432,9 +432,9 @@
                     179.99989318847657
                 ],
                 "Scale": [
-                    2.000002384185791,
                     2.0,
-                    2.000002384185791
+                    2.0,
+                    2.0
                 ]
             },
             "Transform2D": {
@@ -475,7 +475,7 @@
                     "Active": true,
                     "ComponentType": 9,
                     "ColliderType": 0,
-                    "Mass": 1.0,
+                    "Mass": 100.0,
                     "Scale": [
                         0.17000000178813935,
                         0.12999999523162843,
@@ -576,7 +576,7 @@
                     "Active": true,
                     "ComponentType": 9,
                     "ColliderType": 1,
-                    "Mass": 100.0,
+                    "Mass": 1.0,
                     "Scale": [
                         0.4099999964237213,
                         1.0,
@@ -1809,7 +1809,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 17,
+                    "Texture": 62,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1871,7 +1871,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 18,
+                    "Texture": 64,
                     "Color": [
                         1.0,
                         1.0,
@@ -2103,7 +2103,7 @@
                 "Active": true,
                 "Translation": [
                     0.5778106451034546,
-                    5.90118932723999,
+                    8.69051742553711,
                     0.7089619636535645
                 ],
                 "Rotation": [

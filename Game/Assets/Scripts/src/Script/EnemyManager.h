@@ -3,6 +3,8 @@
 
 #include "Script.h"
 
+#include <list>
+
 class EventManager;
 class EnemyController;
 
@@ -31,6 +33,9 @@ public:
 	//void Save(Config& config) const override;
 	//void Load(const Config& config) override;
 
+	void RequestAttack(EnemyController* enemy);
+	void CancelAttack(EnemyController* enemy);
+
 private:
 	void InitSpawnPoints();
 	bool CheckSpawnAvailability(float3& spawn_position);
@@ -39,7 +44,6 @@ public:
 	std::vector<EnemyController*> enemies;
 	unsigned current_number_of_enemies_alive = 0;
 
-
 private:
 	//We need a reference to an existing mushdoom to duplicate_him
 	GameObject* mushdoom_go = nullptr;
@@ -47,6 +51,9 @@ private:
 	std::vector<float3> enemies_spawning_queue;
 	unsigned total_enemies_killed = 0;
 	float3 spawn_points[5];
+
+	std::list<EnemyController*> attackers;
+	int simultaneousAttackers = 2;
 };
 extern "C" SCRIPT_API EnemyManager* EnemyManagerDLL(); //This is how we are going to load the script
 #endif
