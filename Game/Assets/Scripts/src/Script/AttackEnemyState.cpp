@@ -27,17 +27,22 @@ void AttackEnemyState::OnStateEnter()
 		enemy->animation->ActiveAnimation("attack");
 	}
 
-	enemy->is_attacking = true;
+	//enemy->is_attacking = true;
 }
 
 void AttackEnemyState::OnStateUpdate()
 {
-	if (!enemy->PlayerInRange())
+	//if (!enemy->PlayerInRange())
+	//{
+	//	if (enemy->animation->GetCurrentClipPercentatge() >= 0.95f)
+	//	{
+	//		Exit(enemy->pursue_state);
+	//	}
+	//}
+
+	if (enemy->animation->GetCurrentClipPercentatge() >= 0.95f)
 	{
-		if (enemy->animation->GetCurrentClipPercentatge() >= 0.95f)
-		{
-			Exit(enemy->pursue_state);
-		}
+		Exit(enemy->pursue_state);
 	}
 }
 

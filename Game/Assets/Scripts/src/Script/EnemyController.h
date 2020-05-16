@@ -32,13 +32,21 @@ public:
 	bool PlayerInRange();
 	void SeekPlayer();
 	void SeekPlayerWithSeparation();
+
+	/* ai*/
+	GameObject* GetClosestTarget();
+	void BattleCircleAI();
+	void Seek(float3& velocity);
+	void Avoid(float3& velocity);
+	void Strafe(float3& velocity, float direction);
+	/* ai*/
+
 	void TakeDamage(float damage);
 	bool SlotsAvailable();
 
 	virtual void ResetEnemy() {}
 
-	void UpdateCurrentPlayerTarget();
-	bool IsGrounded() const; //ty enrique
+	bool IsGrounded() const;
 
 protected:
 	void Die();
@@ -47,11 +55,12 @@ public:
 	ComponentAnimation* animation = nullptr;
 	ComponentCollider* collider = nullptr;
 
-	GameObject* current_player_target = nullptr;
-	GameObject* current_player_target_on_idle = nullptr;
+	GameObject* current_target = nullptr;
+	GameObject* target_on_idle = nullptr;
 
 	bool is_alive = true;
 	bool is_attacking = false;
+	bool engage_player = false;
 
 protected:
 	EnemyType type;
@@ -74,6 +83,9 @@ protected:
 	float switch_target_distance = 0.5f;
 	float attack_radius = 2.2f;
 	float separation_distance = 2.f;
+
+	float danger_distance = 5.f;
+	float attack_distance = 3.f;
 
 	bool move_with_physics = true;
 

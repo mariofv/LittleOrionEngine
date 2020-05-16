@@ -106,7 +106,7 @@ void EnemyController::InitMembers()
 		player2_controller = static_cast<PlayerController*>(player2_controller_component->script);
 	}
 
-	current_player_target = player1;
+	current_target = player1;
 
 	init_translation = owner->transform.GetTranslation();
 	init_rotation = owner->transform.GetRotation();
@@ -115,12 +115,12 @@ void EnemyController::InitMembers()
 
 bool EnemyController::PlayerInSight()
 {
-	return current_player_target->transform.GetTranslation().Distance(owner->transform.GetTranslation()) < detect_distance;
+	return current_target->transform.GetTranslation().Distance(owner->transform.GetTranslation()) < detect_distance;
 }
 
 bool EnemyController::PlayerInRange()
 {
-	float3 target = current_player_target->transform.GetTranslation() + (current_player_target->transform.GetFrontVector());
+	float3 target = current_target->transform.GetTranslation() + (current_target->transform.GetFrontVector());
 	return target.Distance(owner->transform.GetTranslation()) <= attack_range;
 }
 
@@ -128,9 +128,9 @@ void EnemyController::SeekPlayer()
 {
 	if (!IsGrounded()) return;
 
-	UpdateCurrentPlayerTarget();
+	GetClosestTarget();
 
-	float3 target = current_player_target->transform.GetTranslation() + (current_player_target->transform.GetFrontVector());
+	float3 target = current_target->transform.GetTranslation(); //+ (current_player_target->transform.GetFrontVector());
 	float3 position = owner->transform.GetTranslation();
 
 	float3 desired_velocity = target - position;
@@ -161,9 +161,9 @@ void EnemyController::SeekPlayer()
 
 void EnemyController::SeekPlayerWithSeparation()
 {
-	UpdateCurrentPlayerTarget();
+	GetClosestTarget();
 
-	float3 target = current_player_target->transform.GetTranslation();
+	float3 target = current_target->transform.GetTranslation();
 	float3 position = owner->transform.GetTranslation();
 
 	float3 desired_velocity = target - position;
@@ -182,7 +182,12 @@ void EnemyController::SeekPlayerWithSeparation()
 		}
 	}
 
-	desired_velocity = desired_velocity + (separation_velocity * -1.f);
+	if (!separation_velocity.Equals(float3::zero))
+	{
+		desired_velocity = /*desired_velocity +*/ (separation_velocity * -1.f);
+		
+
+	}
 
 	float speed = (move_with_physics) ? move_speed : move_speed / 40.f;
 
@@ -209,6 +214,107 @@ void EnemyController::SeekPlayerWithSeparation()
 	}
 }
 
+void EnemyController::BattleCircleAI()
+{
+	if (!IsGrounded()) return;
+
+	current_target = GetClosestTarget();
+
+	float3 target = current_target->transform.GetTranslation();
+	float3 position = owner->transform.GetTranslation();
+	float3 desired_velocity = float3::zero;
+
+	float distance = abs(position.DistanceSq(target));
+
+	for (auto& enemy : enemy_manager->enemies)
+	{
+		if (!enemy->is_alive)
+		{
+			continue;
+		}
+
+		if (enemy->owner->transform.GetTranslation().Distance(position) <= separation_distance)
+		{
+			desired_velocity += enemy->owner->transform.GetTranslation() - position;
+		}
+	}
+
+	bool avoid = !desired_velocity.Equals(float3::zero) && distance <= danger_distance;
+	bool strafe = !avoid && !engage_player && distance <= attack_distance;
+	bool attack = engage_player && distance <= attack_distance;
+
+	if (strafe)
+	{
+		//TODO ask player or enemy manager if can attack
+	}
+
+	if (avoid)
+	{
+		Avoid(desired_velocity);
+	}
+	else if (strafe)
+	{
+		float direction = rand() % 1;
+		if (direction == 0)
+		{
+			direction = -1.f;
+		}
+
+		Strafe(target, direction);
+	}
+	else if (attack)
+	{
+		is_attacking = true;
+		// if 
+	}
+	else
+	{
+		desired_velocity = target - position;
+		Seek(desired_velocity);
+	}
+}
+
+void EnemyController::Seek(float3& velocity)
+{
+	// Movement logic
+	float speed = (move_with_physics) ? move_speed : move_speed / 40.f;
+
+	float3 position = owner->transform.GetTranslation() + (velocity.Normalized() * speed);
+
+	float3 next_position = float3::zero;
+	if (App->artificial_intelligence->FindNextPolyByDirection(position, next_position))
+	{
+		position.y = next_position.y;
+	}
+
+	if (App->artificial_intelligence->IsPointWalkable(position))
+	{
+		if (move_with_physics)
+		{
+			float3 velocity_normalized = velocity.Normalized();
+			collider->SetVelocityEnemy(velocity_normalized, speed);
+		}
+		else
+		{
+			owner->transform.LookAt(position);
+			owner->transform.SetTranslation(position);
+		}
+	}
+}
+
+void EnemyController::Avoid(float3& velocity)
+{
+	float3 avoid_velocity = velocity * -1;
+	Seek(avoid_velocity);
+}
+
+void EnemyController::Strafe(float3& target_position, float direction)
+{
+	float3 perpendicular_vec = float3::unitY.Cross(target_position);
+	float3 desired_velocity = perpendicular_vec * direction;
+	Seek(desired_velocity);
+}
+
 void EnemyController::TakeDamage(float damage)
 {
 	health_points -= damage;
@@ -230,7 +336,7 @@ bool EnemyController::SlotsAvailable()
 			continue;
 		}
 
-		if (current_player_target == enemy->current_player_target && enemy->is_attacking)
+		if (current_target == enemy->current_target && enemy->is_attacking)
 		{
 			return false;
 		}
@@ -239,45 +345,48 @@ bool EnemyController::SlotsAvailable()
 	return true;
 }
 
-void EnemyController::UpdateCurrentPlayerTarget()
+GameObject* EnemyController::GetClosestTarget()
 {
 	if (player2 == nullptr)
 	{
-		current_player_target = player1;
-		return;
+		current_target = player1;
 	}
-
-	if (player1_controller->is_alive && player2_controller->is_alive)
+	else
 	{
-		float3 position = owner->transform.GetTranslation();
-
-		float distance_player1 = player1->transform.GetTranslation().Distance(position);
-		float distance_player2 = player2->transform.GetTranslation().Distance(position);
-
-		if (abs(distance_player1 - distance_player2) >= switch_target_distance)
+		if (player1_controller->is_alive && player2_controller->is_alive)
 		{
-			if (distance_player1 < distance_player2)
+			float3 position = owner->transform.GetTranslation();
+
+			float distance_player1 = player1->transform.GetTranslation().Distance(position);
+			float distance_player2 = player2->transform.GetTranslation().Distance(position);
+
+			if (abs(distance_player1 - distance_player2) >= switch_target_distance)
 			{
-				current_player_target = player1;
-			}
-			else
-			{
-				current_player_target = player2;
+				if (distance_player1 < distance_player2)
+				{
+					current_target = player1;
+				}
+				else
+				{
+					current_target = player2;
+				}
 			}
 		}
+		else if (!player1_controller->is_alive && player2_controller->is_alive)
+		{
+			current_target = player2;
+		}
+		else if (player1_controller->is_alive && !player2_controller->is_alive)
+		{
+			current_target = player1;
+		}
+		else if (!player1_controller->is_alive && !player2_controller->is_alive)
+		{
+			current_target = player1;
+		}
 	}
-	else if (!player1_controller->is_alive && player2_controller->is_alive)
-	{
-		current_player_target = player2;
-	}
-	else if (player1_controller->is_alive && !player2_controller->is_alive)
-	{
-		current_player_target = player1;
-	}
-	else if (!player1_controller->is_alive && !player2_controller->is_alive)
-	{
-		current_player_target = player1;
-	}
+
+	return current_target;
 }
 
 void EnemyController::Die()
@@ -291,7 +400,7 @@ bool EnemyController::IsGrounded() const
 	btVector3 origin = collider->body->getWorldTransform().getOrigin();
 
 	btVector3 end = collider->body->getWorldTransform().getOrigin();
-	end.setY(end.getY() - (collider->box_size.getY()/2));
+	end.setY(end.getY() - (collider->box_size.getY() / 2));
 
 	return collider->RaycastHit(origin, end);
 }
