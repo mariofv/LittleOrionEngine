@@ -335,7 +335,7 @@ float ShadowCalculation(vec4 frag_pos_light_space, vec3 frag_normal)
 
 	if(normalized_light_space.z > 1.0)
 	{
-		factor = 1;
+		factor = 0;
 	}
 
 	return factor;

@@ -42,11 +42,15 @@ public:
 	ComponentCamera* main_camera = nullptr;
 	ComponentCamera* directional_light_camera = nullptr;
 	GameObject*		 dir_light_game_object = nullptr;
+	float aux_ortho_near_distance = 25;
+	float aux_ortho_far_distance = 50;
 
 	std::shared_ptr<Skybox> world_skybox = nullptr;
 
 private:
 	GameObject *scene_camera_game_object = nullptr;
+	
+
 
 	bool movement_enabled = false;
 	bool game_window_is_hovered = false;
