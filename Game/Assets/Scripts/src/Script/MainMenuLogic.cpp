@@ -57,16 +57,12 @@ void MainMenuLogic::Start()
 // Update is called once per frame
 void MainMenuLogic::Update()
 {
-	
-	if(show_help && ComfirmButtonPressed())
+	if (!owner->IsEnabled())
 	{
-		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x, buttons[current]->transform_2d.GetTranslation().y, 0.0f));
-		show_help = false;
-		audio_source->PlayEvent("Click_backward");
 		return;
 	}
 
-	if (show_credits && ComfirmButtonPressed())
+	if (show_credits && MenuController::ComfirmButtonPressed(*App->input))
 	{
 		credits_panel->SetEnabled(false);
 		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x, buttons[current]->transform_2d.GetTranslation().y, 0.0f));
@@ -75,12 +71,12 @@ void MainMenuLogic::Update()
 		return;
 	}
 
-	if(show_credits || show_help)
+	if(show_credits)
 	{
 		return;
 	}
 
-	if (ComfirmButtonPressed())
+	if (MenuController::ComfirmButtonPressed(*App->input))
 	{
 		audio_source->PlayEvent("Click_fordward");
 		//Change scene
@@ -92,7 +88,6 @@ void MainMenuLogic::Update()
 		case 1:
 			//Active help
 			help_panel->SetEnabled(true);
-			show_help = true;
 			return;
 		case 2:
 			//Active credits
@@ -110,20 +105,19 @@ void MainMenuLogic::Update()
 		}
 	}
 
-	if(ConfirmMovedUp())
+	if(MenuController::ConfirmMovedUp(*App->input))
 	{
 		current -= 1;
 		current = current % 4;
 		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x, buttons[current]->transform_2d.GetTranslation().y, 0.0f));
 	}
-	else if(ConfirmMovedDown())
+	else if(MenuController::ConfirmMovedDown(*App->input))
 	{
 		current += 1;
 		current = current % 4;
 
 		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x,buttons[current]->transform_2d.GetTranslation().y,0.0f));
 	}
-
 
 }
 
@@ -169,19 +163,5 @@ void MainMenuLogic::InitPublicGameObjects()
 	}
 }
 
-bool MainMenuLogic::ConfirmMovedUp()
-{
-	return (App->input->GetKeyDown(KeyCode::W) || App->input->GetControllerButtonDown(ControllerCode::UpDpad, ControllerID::ONE));
-}
-
-bool MainMenuLogic::ConfirmMovedDown()
-{
-	return (App->input->GetKeyDown(KeyCode::S) || App->input->GetControllerButtonDown(ControllerCode::DownDpad, ControllerID::ONE));
-}
-
-bool MainMenuLogic::ComfirmButtonPressed()
-{
-	return (App->input->GetKeyDown(KeyCode::Space) || App->input->GetControllerButtonDown(ControllerCode::A, ControllerID::ONE));
-}
 
 

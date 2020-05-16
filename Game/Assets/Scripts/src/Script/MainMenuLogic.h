@@ -2,6 +2,7 @@
 #define  __MAINMENULOGIC_H__
 
 #include "Script.h"
+#include "MenuController.h"
 
 class ComponentAudioSource;
 class ComponentTransform2D;
@@ -17,13 +18,6 @@ public:
 
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects() override;
-
-private:
-	bool ConfirmMovedUp();
-	bool ConfirmMovedDown();
-	bool ComfirmButtonPressed();
-	//void Save(Config& config) const override;
-	//void Load(const Config& config) override;
 
 private:
 	GameObject* play_button = nullptr;
@@ -42,7 +36,6 @@ private:
 	ComponentTransform2D* credits_back_button = nullptr;
 	unsigned current = 0;
 	
-	bool show_help = false;
 	bool show_credits = false;
 
 };

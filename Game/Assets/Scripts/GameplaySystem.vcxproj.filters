@@ -99,6 +99,12 @@
     <ClInclude Include="src\Script\HelpMenuLogic.h">
       <Filter>src\Script\UI</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\PauseMenuLogic.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\MenuController.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -174,6 +180,12 @@
       <Filter>src\Script\UI</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\HelpMenuLogic.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\PauseMenuLogic.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\MenuController.cpp">
       <Filter>src\Script\UI</Filter>
     </ClCompile>
   </ItemGroup>
