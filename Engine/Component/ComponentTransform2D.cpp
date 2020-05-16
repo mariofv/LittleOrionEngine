@@ -101,7 +101,7 @@ void ComponentTransform2D::SpecializedLoad(const Config& config)
 void ComponentTransform2D::OnTransformChange()
 {
 	GenerateAnchorPosition();
-	//GeneratePivotPosition();
+	GeneratePivotPosition();
 	ComputeSize();
 	translation = float3(anchored_position + anchor_position, translation.z);
 	ComputeRect();
@@ -109,7 +109,7 @@ void ComponentTransform2D::OnTransformChange()
 		float4x4::Translate(translation)
 		* float4x4(rotation)
 		* float4x4::Scale(scale)
-		//* float4x4::Translate(float3(-pivot_position, 0.f))
+		* float4x4::Translate(float3(-pivot_position, 0.f))
 	;
 	ComputeRectAABB2D();
 	
