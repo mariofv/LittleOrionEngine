@@ -16,6 +16,8 @@
 
 #include "imgui.h"
 
+#include "PlayerController.h"
+
 EnemyController* EnemyControllerDLL()
 {
 	EnemyController* instance = new EnemyController();
@@ -89,7 +91,11 @@ void EnemyController::InitMembers()
 	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
 
+	attack_collider = static_cast<ComponentCollider*>(attack_detector->GetComponent(Component::ComponentType::COLLIDER));
+
 	player = App->scene->GetGameObjectByName("Player");
+	ComponentScript* player_component = player->GetComponentScript("PlayerController");
+	player_controller = static_cast<PlayerController*>(player_component->script);
 
 	init_translation = owner->transform.GetTranslation();
 	init_rotation = owner->transform.GetRotation();
@@ -135,6 +141,11 @@ void EnemyController::MoveTowardsPlayer()
 			owner->transform.SetTranslation(position);
 		}
 	}
+}
+
+void EnemyController::Attack()
+{
+	player_controller->TakeDamage(attack_damage);
 }
 
 void EnemyController::TakeDamage(float damage)

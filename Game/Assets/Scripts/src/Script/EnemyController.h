@@ -7,6 +7,7 @@
 
 class ComponentAnimation;
 class ComponentCollider;
+class PlayerController;
 
 enum class EnemyType
 {
@@ -30,6 +31,7 @@ public:
 	bool PlayerInSight();
 	bool PlayerInRange();
 	void MoveTowardsPlayer();
+	void Attack();
 	void TakeDamage(float damage);
 
 	virtual void ResetEnemy() {}
@@ -48,6 +50,11 @@ protected:
 	EnemyType type;
 
 	GameObject* player = nullptr;
+	PlayerController* player_controller = nullptr;
+
+	GameObject* attack_detector = nullptr;
+	ComponentCollider* attack_collider = nullptr;
+
 	EnemyManager* enemy_manager = nullptr;
 
 	float move_speed = 1.f;
@@ -58,6 +65,7 @@ protected:
 	const float MAX_HEALTH_POINTS = 100.f;
 	float health_points = MAX_HEALTH_POINTS;
 	float detect_distance = 50.f;
+	float attack_damage = 15.f;
 
 	bool move_with_physics = true;
 
