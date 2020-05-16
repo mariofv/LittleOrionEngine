@@ -164,6 +164,7 @@ void PanelTransform::ShowComponentTransform2DWindow(ComponentTransform2D *transf
 				ImGui::PushItemWidth(-1);
 				if (ImGui::DragFloat("###Width drag", &transform_2D->size.x, 1.0f))
 				{
+					transform_2D->SetWidth(transform_2D->size.x);
 					transform_2D->OnTransformChange();
 					transform_2D->modified_by_user = true;
 				}
@@ -205,6 +206,7 @@ void PanelTransform::ShowComponentTransform2DWindow(ComponentTransform2D *transf
 				ImGui::PushItemWidth(-1);
 				if (ImGui::DragFloat("###Height drag", &transform_2D->size.y, 1.0f))
 				{
+					transform_2D->SetHeight(transform_2D->size.y);
 					transform_2D->OnTransformChange();
 					transform_2D->modified_by_user = true;
 				}
@@ -280,6 +282,11 @@ void PanelTransform::ShowComponentTransform2DWindow(ComponentTransform2D *transf
 		}
 		//UndoRedo
 		CheckClickForUndo(ModuleActions::UndoActionType::SCALE, transform_2D);
+
+		if (ImGui::DragFloat2("DeltaSize", transform_2D->size_delta.ptr(), 0.01f))
+		{
+			
+		}
 	}
 }
 

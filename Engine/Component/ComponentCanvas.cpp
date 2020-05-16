@@ -64,6 +64,8 @@ void ComponentCanvas::Render(bool scene_mode)
 {
 	std::vector<ComponentCanvasRenderer*> components_to_render = GetComponentCanvasRendererToRender();
 
+	float2 last_canvas_screen_size = canvas_screen_size;
+
 #if GAME
 	canvas_screen_size.x = App->window->GetWidth();
 	canvas_screen_size.y = App->window->GetHeight();
@@ -90,8 +92,15 @@ void ComponentCanvas::Render(bool scene_mode)
 		owner->transform_2d.SetTranslation(float3::zero);
 		projection_view = float4x4::D3DOrthoProjLH(-1, 200, canvas_screen_size.x, canvas_screen_size.y);
 	}
-	owner->transform_2d.SetWidth(canvas_screen_size.x);
-	owner->transform_2d.SetHeight(canvas_screen_size.y);
+
+	if (last_canvas_screen_size.x != canvas_screen_size.x)
+	{
+		owner->transform_2d.SetWidth(canvas_screen_size.x);
+	}
+	if (last_canvas_screen_size.y != canvas_screen_size.y)
+	{
+		owner->transform_2d.SetHeight(canvas_screen_size.y);
+	}
 
 	glDisable(GL_DEPTH_TEST);
 	
