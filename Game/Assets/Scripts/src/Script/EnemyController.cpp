@@ -239,14 +239,14 @@ void EnemyController::BattleCircleAI()
 		}
 	}
 
+	if (!(!desired_velocity.Equals(float3::zero) && distance <= danger_distance) && !engage_player && distance <= attack_distance)
+	{
+		engage_player = true;
+	}
+
 	bool avoid = !desired_velocity.Equals(float3::zero) && distance <= danger_distance;
 	bool strafe = !avoid && !engage_player && distance <= attack_distance;
 	bool attack = engage_player && distance <= attack_distance;
-
-	if (strafe)
-	{
-		//TODO ask player or enemy manager if can attack
-	}
 
 	if (avoid)
 	{
@@ -265,7 +265,6 @@ void EnemyController::BattleCircleAI()
 	else if (attack)
 	{
 		is_attacking = true;
-		// if 
 	}
 	else
 	{
