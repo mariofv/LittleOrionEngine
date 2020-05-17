@@ -1,7 +1,7 @@
 {
     "GameObjects": [
         {
-            "UUID": 1194511116,
+            "UUID": 2731966151,
             "Name": "Pause_menu",
             "IsStatic": false,
             "Active": true,
@@ -29,7 +29,7 @@
                 "UUID": 3752625419,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
+                "Size": [
                     100.0,
                     100.0
                 ],
@@ -50,12 +50,11 @@
                     0.5
                 ]
             },
-            "Transform2DEnabled": false,
             "Components": []
         },
         {
-            "UUID": 948166624,
-            "ParentUUID": 1194511116,
+            "UUID": 2225627187,
+            "ParentUUID": 2731966151,
             "Name": "bg",
             "IsStatic": false,
             "Active": true,
@@ -83,9 +82,9 @@
                 "UUID": 4244894752,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    1063.0,
-                    702.0
+                "Size": [
+                    1920.0,
+                    1080.0
                 ],
                 "Pivot": [
                     0.5,
@@ -104,7 +103,6 @@
                     0.5
                 ]
             },
-            "Transform2DEnabled": false,
             "Components": [
                 {
                     "UUID": 37554887,
@@ -125,8 +123,8 @@
             ]
         },
         {
-            "UUID": 3795937942,
-            "ParentUUID": 1194511116,
+            "UUID": 958588979,
+            "ParentUUID": 2731966151,
             "Name": "Resume_button",
             "IsStatic": false,
             "Active": true,
@@ -154,17 +152,17 @@
                 "UUID": 111050050,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    165.0,
-                    55.0
+                "Size": [
+                    302.0,
+                    84.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    -4.0,
-                    -163.0
+                    -7.0,
+                    -252.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -175,7 +173,6 @@
                     0.5
                 ]
             },
-            "Transform2DEnabled": false,
             "Components": [
                 {
                     "UUID": 1769477340,
@@ -196,8 +193,8 @@
             ]
         },
         {
-            "UUID": 1351201730,
-            "ParentUUID": 1194511116,
+            "UUID": 1875478065,
+            "ParentUUID": 2731966151,
             "Name": "Help_button",
             "IsStatic": false,
             "Active": true,
@@ -225,17 +222,17 @@
                 "UUID": 862812464,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    200.0,
-                    55.0
+                "Size": [
+                    302.0,
+                    84.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    0.0,
-                    7.0
+                    -7.0,
+                    55.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -246,7 +243,6 @@
                     0.5
                 ]
             },
-            "Transform2DEnabled": false,
             "Components": [
                 {
                     "UUID": 2270301426,
@@ -267,8 +263,8 @@
             ]
         },
         {
-            "UUID": 2484511566,
-            "ParentUUID": 1194511116,
+            "UUID": 783565291,
+            "ParentUUID": 2731966151,
             "Name": "Main_menu_button",
             "IsStatic": false,
             "Active": true,
@@ -296,17 +292,17 @@
                 "UUID": 4066939476,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    200.0,
-                    55.0
+                "Size": [
+                    302.0,
+                    84.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    0.0,
-                    84.0
+                    -7.0,
+                    156.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -317,7 +313,6 @@
                     0.5
                 ]
             },
-            "Transform2DEnabled": false,
             "Components": [
                 {
                     "UUID": 43860975,
@@ -338,8 +333,8 @@
             ]
         },
         {
-            "UUID": 3493558189,
-            "ParentUUID": 1194511116,
+            "UUID": 2603793581,
+            "ParentUUID": 2731966151,
             "Name": "Cursor_pause_menu",
             "IsStatic": false,
             "Active": true,
@@ -367,17 +362,17 @@
                 "UUID": 697507887,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
+                "Size": [
                     20.0,
-                    50.0
+                    86.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    -109.0,
-                    -162.0
+                    -179.0,
+                    -251.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -388,7 +383,6 @@
                     0.5
                 ]
             },
-            "Transform2DEnabled": false,
             "Components": [
                 {
                     "UUID": 3169099538,
