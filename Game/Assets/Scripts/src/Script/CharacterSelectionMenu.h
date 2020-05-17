@@ -13,12 +13,15 @@ public:
 	void Awake() override;
 	void Update() override;
 
+	void SelectCharacter();
+
 	void OnInspector(ImGuiContext * context) override;
 
 	void InitPublicGameObjects() override;
 private:
 	std::vector<GameObject*> buttons;
 	unsigned current = 0;
+	bool player1_character1 = true;
 	bool selecting_character = false;
 
 	bool awaked = false;
@@ -26,6 +29,16 @@ private:
 
 	GameObject* previous_panel = nullptr;
 	GameObject* level_selection = nullptr;
+
+	GameObject* p1_position = nullptr;
+	GameObject* p2_position = nullptr;
+
+	GameObject* character_selector1= nullptr;
+	GameObject* character_selector2 = nullptr;
+
+
+	GameObject* confirm_multiplayer = nullptr;
+	GameObject* confirm_singleplayer = nullptr;
 
 	GameObject* back_button = nullptr;
 	GameObject* level_selection_button = nullptr;

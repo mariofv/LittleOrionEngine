@@ -33,9 +33,37 @@ void CharacterSelectionMenu::Update()
 	{
 		enabled = true;
 		previous_panel->SetEnabled(false);
+
+		if (App->input->singleplayer_input)
+		{
+			character_selector2->SetEnabled(false);
+		}
+		confirm_multiplayer->SetEnabled(false);
+		confirm_singleplayer->SetEnabled(false);
 		return;
 	}
-	if (MenuController::ComfirmButtonPressed(*App->input))
+	if (selecting_character && App->input->singleplayer_input && MenuController::ComfirmButtonPressed(*App->input))
+	{
+		App->input->singleplayer_input = false;
+		character_selector2->SetEnabled(true);
+		const float3& translation_p2 = player1_character1 ? p2_position->transform_2d.GetTranslation() : p1_position->transform_2d.GetTranslation();
+		character_selector2->transform_2d.SetTranslation(translation_p2);
+
+		confirm_multiplayer->SetEnabled(false);
+		confirm_singleplayer->SetEnabled(true);
+	}
+	else if (selecting_character && !App->input->singleplayer_input && MenuController::ComfirmButtonPressed(*App->input))
+	{
+
+		App->input->singleplayer_input = true;
+		character_selector2->SetEnabled(false);
+		const float3& translation_p2 = player1_character1 ? p2_position->transform_2d.GetTranslation() : p1_position->transform_2d.GetTranslation();
+		character_selector2->transform_2d.SetTranslation(translation_p2);
+
+		confirm_multiplayer->SetEnabled(true);
+		confirm_singleplayer->SetEnabled(false);
+	}
+	if (!selecting_character && MenuController::ComfirmButtonPressed(*App->input))
 	{
 		audio_source->PlayEvent("Click_fordward");
 		//Change scene
@@ -61,10 +89,14 @@ void CharacterSelectionMenu::Update()
 	if (MenuController::ConfirmMovedUp(*App->input))
 	{
 		selecting_character = true;
+		confirm_multiplayer->SetEnabled(App->input->singleplayer_input);
+		confirm_singleplayer->SetEnabled(!App->input->singleplayer_input);
 	}
 	if (MenuController::ConfirmMovedDown(*App->input))
 	{
 		selecting_character = false;
+		confirm_singleplayer->SetEnabled(false);
+		confirm_multiplayer->SetEnabled(false);
 	}
 	if (MenuController::ConfirmMovedLeft(*App->input))
 	{
@@ -76,9 +108,14 @@ void CharacterSelectionMenu::Update()
 			float x = button_transform.GetTranslation().x - button_transform.GetWidth() / 2 - owner->transform_2d.GetWidth();
 			owner->transform_2d.SetTranslation(float3(x, owner->transform_2d.GetTranslation().y, 0.0f));
 		}
+		else
+		{
+			SelectCharacter();
+		}
+	
 	}
 	else if (MenuController::ConfirmMovedRight(*App->input))
-	{
+	{	
 		if (!selecting_character)
 		{
 			current += 1;
@@ -87,8 +124,24 @@ void CharacterSelectionMenu::Update()
 			float x = button_transform.GetTranslation().x - button_transform.GetWidth() / 2 - owner->transform_2d.GetWidth();
 			owner->transform_2d.SetTranslation(float3(x, owner->transform_2d.GetTranslation().y, 0.0f));
 		}
+		else
+		{
+			SelectCharacter();
+		}
 	}
 
+}
+
+void CharacterSelectionMenu::SelectCharacter()
+{
+	player1_character1 = !player1_character1;
+	const float3& translation = player1_character1 ? p1_position->transform_2d.GetTranslation() : p2_position->transform_2d.GetTranslation();
+	character_selector1->transform_2d.SetTranslation(translation);
+	if (!App->input->singleplayer_input)
+	{
+		const float3& translation_p2 = player1_character1 ? p2_position->transform_2d.GetTranslation() : p1_position->transform_2d.GetTranslation();
+		character_selector2->transform_2d.SetTranslation(translation_p2);
+	}
 }
 
 void CharacterSelectionMenu::OnInspector(ImGuiContext * context)
@@ -103,7 +156,6 @@ void CharacterSelectionMenu::InitPublicGameObjects()
 	public_gameobjects.push_back(&previous_panel);
 	variable_names.push_back(GET_VARIABLE_NAME(previous_panel));
 
-
 	public_gameobjects.push_back(&level_selection);
 	variable_names.push_back(GET_VARIABLE_NAME(level_selection));
 
@@ -115,6 +167,26 @@ void CharacterSelectionMenu::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&audio_controller);
 	variable_names.push_back(GET_VARIABLE_NAME(audio_controller));
+
+	public_gameobjects.push_back(&p1_position);
+	variable_names.push_back(GET_VARIABLE_NAME(p1_position));
+
+	public_gameobjects.push_back(&p2_position);
+	variable_names.push_back(GET_VARIABLE_NAME(p2_position));
+
+
+	public_gameobjects.push_back(&character_selector1);
+	variable_names.push_back(GET_VARIABLE_NAME(character_selector1));
+
+	public_gameobjects.push_back(&character_selector2);
+	variable_names.push_back(GET_VARIABLE_NAME(character_selector2));
+
+	public_gameobjects.push_back(&confirm_multiplayer);
+	variable_names.push_back(GET_VARIABLE_NAME(confirm_multiplayer));
+
+
+	public_gameobjects.push_back(&confirm_singleplayer);
+	variable_names.push_back(GET_VARIABLE_NAME(confirm_singleplayer));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
