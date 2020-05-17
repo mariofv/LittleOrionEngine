@@ -99,7 +99,6 @@ void EnemyController::InitMembers()
 
 	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
-	//attack_collider = static_cast<ComponentCollider*>(attack_detector->GetComponent(Component::ComponentType::COLLIDER));
 
 	player1 = App->scene->GetGameObjectByName("Player1");
 	if (player1 != nullptr)
@@ -129,7 +128,7 @@ bool EnemyController::PlayerInSight()
 
 bool EnemyController::PlayerInRange()
 {
-	float3 target = current_target->transform.GetTranslation() + (current_target->transform.GetFrontVector());
+	float3 target = current_target->transform.GetTranslation();
 	return target.Distance(owner->transform.GetTranslation()) <= attack_range;
 }
 
