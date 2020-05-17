@@ -102,10 +102,16 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color);
 float NormalizedSpecular(vec3 normal, vec3 half_dir);
 
 //SHADOW MAPS
-float ShadowCalculation(vec4 frag_pos_light_space, vec3 frag_normal);
+float ShadowCalculation(vec3 frag_normal);
 uniform float render_depth_from_light;
-in vec4 pos_from_light;
-uniform sampler2DShadow depth_map;
+
+in vec4 close_pos_from_light;
+in vec4 mid_pos_from_light;
+in vec4 far_pos_from_light;
+
+uniform sampler2DShadow close_depth_map;
+uniform sampler2DShadow mid_depth_map;
+uniform sampler2DShadow far_depth_map;
 
 void main()
 {
@@ -212,7 +218,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(-directional_light.direction );
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
-	float shadow	 = ShadowCalculation(pos_from_light, normalized_normal);
+	float shadow	 = ShadowCalculation(normalized_normal);
 	float specular = NormalizedSpecular(normalized_normal, half_dir);
 
 
@@ -307,35 +313,42 @@ float NormalizedSpecular(vec3 normal, vec3 half_dir) // Old refference: http://w
 	return spec* normalization_factor;
 }
 
-float ShadowCalculation(vec4 frag_pos_light_space, vec3 frag_normal)
+float ShadowCalculation(vec3 frag_normal)
 {
+	vec3 normalized_close_depth = close_pos_from_light.xyz / close_pos_from_light.w;
+	normalized_close_depth = normalized_close_depth * 0.5 + 0.5;
 
-    vec3 normalized_light_space = frag_pos_light_space.xyz / frag_pos_light_space.w;
-    normalized_light_space = normalized_light_space * 0.5 + 0.5;
+	vec3 normalized_mid_depth = mid_pos_from_light.xyz / mid_pos_from_light.w;
+	normalized_mid_depth = normalized_mid_depth * 0.5 + 0.5;
 
+	vec3 normalized_far_depth = far_pos_from_light.xyz / far_pos_from_light.w;
+	normalized_far_depth = normalized_far_depth * 0.5 + 0.5;
+	
 	float bias = 0.005;  
-
 	float factor = 0.0;
-	vec3 coord = vec3(normalized_light_space.xy, normalized_light_space.z - bias);
 
-	vec2 depth_map_size = 1.0 / textureSize(depth_map, 0); //Represents the size of a texel
+	vec3 close_coords = vec3(normalized_close_depth.xy, normalized_close_depth.z - bias);
+	vec3 mid_coords = vec3(normalized_mid_depth.xy, normalized_mid_depth.z - bias);
+	vec3 far_coords = vec3(normalized_far_depth.xy, normalized_far_depth.z - bias);
 
-	for(int x = -1; x <= 1; ++x) //PCF, solution for hard shadows seen from a distance
+
+	vec2 depth_map_size = 1.0 / textureSize(close_depth_map, 0); //Represents the size of a texel
+
+	for(int x = -1; x <= 1; ++x) //PCF, solution for edgy shadoes
     {
         for(int y = -1; y <= 1; ++y)
         {
 			//We sample the texture given from the light camera
 			//A few times at different texture coordinates
-
-			coord.xy = normalized_light_space.xy + vec2(x, y)*depth_map_size;
-			factor += texture(depth_map, coord);
+			far_coords.xy = normalized_far_depth.xy + vec2(x, y)*depth_map_size;
+			factor += texture(far_depth_map, far_coords);
         }    
     }
     factor /= 9.0;
 
-	if(normalized_light_space.z > 1.0)
+	if(normalized_far_depth.z > 1.0)
 	{
-		factor = 0;
+		factor = 1;
 	}
 
 	return factor;

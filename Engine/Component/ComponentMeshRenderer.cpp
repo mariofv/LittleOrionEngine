@@ -185,7 +185,17 @@ void ComponentMeshRenderer::AddExtraUniforms(unsigned int shader_program) const
 {
 	glActiveTexture(GL_TEXTURE5);
 	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_camera->depth_map);
-	glUniform1i(glGetUniformLocation(shader_program, "depth_map"), 5);
+	glUniform1i(glGetUniformLocation(shader_program, "close_depth_map"), 5);
+	glActiveTexture(0);
+
+	glActiveTexture(GL_TEXTURE6);
+	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_mid->depth_map);
+	glUniform1i(glGetUniformLocation(shader_program, "mid_depth_map"), 6);
+	glActiveTexture(0);
+
+	glActiveTexture(GL_TEXTURE7);
+	glBindTexture(GL_TEXTURE_2D, App->cameras->directional_light_far->depth_map);
+	glUniform1i(glGetUniformLocation(shader_program, "far_depth_map"), 7);
 	glActiveTexture(0);
 
 	if (material_to_render->material_type == Material::MaterialType::MATERIAL_OPAQUE)

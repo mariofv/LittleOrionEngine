@@ -103,8 +103,14 @@ void ModuleLight::RenderSpotLights(const float3& mesh_position, GLuint program)
 
 void ModuleLight::SendShadowMatricesToShader(GLuint program)
 {
-	glUniformMatrix4fv(glGetUniformLocation(program, "directional_view"), 1, GL_TRUE, &App->cameras->directional_light_camera->GetViewMatrix()[0][0]);
-	glUniformMatrix4fv(glGetUniformLocation(program, "directional_proj"), 1, GL_TRUE, &App->cameras->directional_light_camera->GetProjectionMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_view"), 1, GL_TRUE, &App->cameras->directional_light_camera->GetViewMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "close_directional_proj"), 1, GL_TRUE, &App->cameras->directional_light_camera->GetProjectionMatrix()[0][0]);
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_view"), 1, GL_TRUE, &App->cameras->directional_light_mid->GetViewMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "mid_directional_proj"), 1, GL_TRUE, &App->cameras->directional_light_mid->GetProjectionMatrix()[0][0]);
+
+	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_view"), 1, GL_TRUE, &App->cameras->directional_light_far->GetViewMatrix()[0][0]);
+	glUniformMatrix4fv(glGetUniformLocation(program, "far_directional_proj"), 1, GL_TRUE, &App->cameras->directional_light_far->GetProjectionMatrix()[0][0]);
 }
 
 void ModuleLight::RenderPointLights(const float3& mesh_position, GLuint program)

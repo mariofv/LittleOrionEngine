@@ -60,12 +60,13 @@ void PanelScene::Render()
 		scene_window_content_area_height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
 		
 		App->cameras->directional_light_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
+		App->cameras->directional_light_mid->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
+		App->cameras->directional_light_far->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
+
 
 		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
 		App->cameras->scene_camera->RecordDebugDraws(scene_window_content_area_width, scene_window_content_area_height);
 
-
-		//App->cameras->directional_light_camera->RecordDebugDraws(scene_window_content_area_width, scene_window_content_area_height);
 
 		ImGui::Image(
 			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),

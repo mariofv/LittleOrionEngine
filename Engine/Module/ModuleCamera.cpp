@@ -107,10 +107,10 @@ update_status ModuleCamera::Update()
 	App->cameras->directional_light_far->SetNearDistance(App->cameras->far_plane / 2);
 	App->cameras->directional_light_far->SetFarDistance(App->cameras->far_plane);
 
-	directional_light_far->Update();
-	directional_light_mid->Update();
 	directional_light_camera->Update();
-	
+	directional_light_mid->Update();
+	directional_light_far->Update();
+
 	
 
 	return update_status::UPDATE_CONTINUE;
