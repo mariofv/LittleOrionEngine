@@ -1,63 +1,100 @@
-#include "DamageScript.h"
+#include "DebugModeScript.h"
 
+#include "Component/ComponentImage.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentProgressBar.h"
-#include "Component/ComponentUI.h"
+#include "Component/ComponentText.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleInput.h"
+#include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTime.h"
+#include "Module/ModuleDebug.h"
+#include "Module/ModuleSpacePartitioning.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
+#include "SceneCamerasController.h"
+
 #include "imgui.h"
+#include <iomanip>
+#include <sstream>
 
 
 
-DamageScript* DamageScriptDLL()
+DebugModeScript* DebugModeScriptDLL()
 {
-	DamageScript* instance = new DamageScript();
+	DebugModeScript* instance = new DebugModeScript();
 	return instance;
 }
 
-DamageScript::DamageScript()
+DebugModeScript::DebugModeScript()
 {
 	panel = new PanelComponent();
 }
 
 // Use this for initialization before Start()
-void DamageScript::Awake()
+void DebugModeScript::Awake()
 {
-	health_component = (ComponentProgressBar*)health_bar->GetComponent(ComponentUI::UIType::PROGRESSBAR);
+	ComponentScript* component = camera_manager->GetComponentScript("SceneCamerasController");
+	scene_cameras = (SceneCamerasController*)component->script;
 }
 
 // Use this for initialization
-void DamageScript::Start()
+void DebugModeScript::Start()
 {
 
 }
 
 // Update is called once per frame
-void DamageScript::Update()
+void DebugModeScript::Update()
 {
-	if (OnTriggerEnter())
+	if (App->input->GetKeyDown(KeyCode::F1) || App->input->GetControllerButtonDown(ControllerCode::RightStick))
 	{
-		float aux_health = health_component->percentage;
-		aux_health -= damage * App->time->delta_time / 1000.f;
-		health_component->percentage = math::Clamp(aux_health, 0.0f, 100.0f);
+		(debug_enabled) ? scene_cameras->SetMainCameraRendering() : scene_cameras->SetMainCameraRendering();
+		debug_enabled = !debug_enabled;
 	}
 }
 
-bool DamageScript::OnTriggerEnter() const
+void DebugModeScript::UpdateImGui(ImGuiContext* context)
 {
-	return player && owner->aabb.global_bounding_box.Intersects(player->aabb.global_bounding_box);
+	//Necessary to be able to write with imgui
+	ImGui::SetCurrentContext(context);
+
+	if (debug_enabled)
+	{
+		if (ImGui::Begin("Ingame debug (Shhhhhh!! This is a secret!)"))
+		{
+			std::stringstream stream_fps;
+			std::stringstream stream_ms;
+			stream_fps << std::fixed << std::setprecision(2) << App->time->GetFPS();
+			stream_ms << std::fixed << std::setprecision(2) << App->time->delta_time;
+
+			ImGui::LabelText((stream_fps.str() + std::string(" (") + stream_ms.str() + std::string("ms)")).c_str(), base_str_fps.c_str());
+			ImGui::LabelText(std::to_string(App->renderer->GetRenderedTris()).c_str(), base_str_tris.c_str());
+			ImGui::LabelText(std::to_string(App->renderer->GetRenderedVerts()).c_str(), base_str_verts.c_str());
+
+			ImGui::Separator();
+
+			if (ImGui::Checkbox("Draw Wireframe? ", &render_wireframe))
+			{
+				App->renderer->SetDrawMode(render_wireframe ? ModuleRender::DrawMode::WIREFRAME : ModuleRender::DrawMode::SHADED);
+			}
+
+			if (ImGui::Checkbox("Draw AABB? ", &render_AABB))
+			{
+				App->space_partitioning->DrawAABBTree();
+			}
+
+			ImGui::End();
+		}
+	}
 }
 
 // Use this for showing variables on inspector
-void DamageScript::OnInspector(ImGuiContext* context)
+void DebugModeScript::OnInspector(ImGuiContext* context)
 {
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
@@ -66,14 +103,11 @@ void DamageScript::OnInspector(ImGuiContext* context)
 }
 
 //Use this for linking JUST GO automatically 
-void DamageScript::InitPublicGameObjects()
+void DebugModeScript::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
-
-	public_gameobjects.push_back(&player);
-	variable_names.push_back(GET_VARIABLE_NAME(player));
-	public_gameobjects.push_back(&health_bar);
-	variable_names.push_back(GET_VARIABLE_NAME(health_bar));
+	public_gameobjects.push_back(&camera_manager);
+	variable_names.push_back(GET_VARIABLE_NAME(camera_manager));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
@@ -82,14 +116,14 @@ void DamageScript::InitPublicGameObjects()
 	}
 }
 //Use this for linking GO AND VARIABLES automatically if you need to save variables 
-// void DamageScript::Save(Config& config) const
+// void DebugModeScript::Save(Config& config) const
 // {
 // 	config.AddUInt(example->UUID, "ExampleNameforSave");
 // 	Script::Save(config);
 // }
 
 // //Use this for linking GO AND VARIABLES automatically
-// void DamageScript::Load(const Config& config)
+// void DebugModeScript::Load(const Config& config)
 // {
 // 	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
 // 	Script::Load(config);

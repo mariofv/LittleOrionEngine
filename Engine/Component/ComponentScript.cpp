@@ -50,6 +50,7 @@ void ComponentScript::Update()
 	if (script && active) 
 	{
 		script->Update();
+		script->UpdateWithImGui(ImGui::GetCurrentContext());
 	}
 }
 
