@@ -299,12 +299,33 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::Separator();
 
 		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Ortho frustum settings - Directional Light");
-		ImGui::SliderFloat("Frustum width", &App->cameras->directional_light_camera->camera_frustum.orthographicWidth, 0, 100);
-		ImGui::SliderFloat("Frustum height", &App->cameras->directional_light_camera->camera_frustum.orthographicHeight, 0, 100);
-		ImGui::SliderFloat("Far Plane", &App->cameras->aux_ortho_far_distance, 0, 1000);
-		
-		App->cameras->directional_light_camera->SetNearDistance(App->cameras->aux_ortho_far_distance/2);
-		App->cameras->directional_light_camera->SetFarDistance(App->cameras->aux_ortho_far_distance);
+		ImGui::SliderFloat("Frustum width", &App->cameras->aux_width, 0, 100);
+		ImGui::SliderFloat("Frustum height", &App->cameras->aux_height, 0, 100);
+		ImGui::SliderFloat("Close - Mid Separation", &App->cameras->close_mid_separation, 0, App->cameras->mid_far_separation);
+		ImGui::SliderFloat("Mid - Far Separation", &App->cameras->mid_far_separation, App->cameras->close_mid_separation, App->cameras->far_plane);
+		ImGui::SliderFloat("Far Plane", &App->cameras->far_plane, App->cameras->mid_far_separation, App->cameras->mid_far_separation + 100);
+
+		//Setting Ortho width and height
+		App->cameras->directional_light_camera->camera_frustum.orthographicWidth = App->cameras->aux_width;
+		App->cameras->directional_light_camera->camera_frustum.orthographicHeight = App->cameras->aux_height;
+
+		App->cameras->directional_light_mid->camera_frustum.orthographicWidth = App->cameras->aux_width;
+		App->cameras->directional_light_mid->camera_frustum.orthographicHeight = App->cameras->aux_height;
+
+		App->cameras->directional_light_far->camera_frustum.orthographicWidth = App->cameras->aux_width;
+		App->cameras->directional_light_far->camera_frustum.orthographicHeight = App->cameras->aux_height;
+
+		//Setting close and far planes
+		App->cameras->directional_light_camera->SetNearDistance(App->cameras->close_mid_separation/2);
+		App->cameras->directional_light_camera->SetFarDistance(App->cameras->close_mid_separation);
+
+		App->cameras->directional_light_mid->SetNearDistance(App->cameras->mid_far_separation/2);
+		App->cameras->directional_light_mid->SetFarDistance(App->cameras->mid_far_separation);
+
+		App->cameras->directional_light_far->SetNearDistance(App->cameras->far_plane/2);
+		App->cameras->directional_light_far->SetFarDistance(App->cameras->far_plane);
+
+
 	}
 }
 

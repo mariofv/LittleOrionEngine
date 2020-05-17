@@ -28,6 +28,12 @@ bool ModuleCamera::Init()
 	dir_light_game_object = App->scene->CreateGameObject();
 	dir_light_game_object->transform.SetTranslation(float3(0, 0, 0));
 
+	dir_light_game_object_mid = App->scene->CreateGameObject();
+	dir_light_game_object_mid->transform.SetTranslation(float3(0, 0, 0));
+
+	dir_light_game_object_far = App->scene->CreateGameObject();
+	dir_light_game_object_far->transform.SetTranslation(float3(0, 0, 0));
+
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 
 	scene_camera->SetFarDistance(5000);
@@ -45,6 +51,26 @@ bool ModuleCamera::Init()
 	directional_light_camera->SetFarDistance(50);
 	directional_light_camera->SetNearDistance(25);
 
+	directional_light_mid = (ComponentCamera*)dir_light_game_object_mid->CreateComponent(Component::ComponentType::CAMERA);
+	directional_light_mid->depth = -1;
+	directional_light_mid->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
+
+	directional_light_mid->owner = dir_light_game_object;
+	directional_light_mid->camera_frustum.type = FrustumType::OrthographicFrustum;
+
+	directional_light_mid->SetFarDistance(75);
+	directional_light_mid->SetNearDistance(50);
+
+	directional_light_far = (ComponentCamera*)dir_light_game_object_far->CreateComponent(Component::ComponentType::CAMERA);
+	directional_light_far->depth = -1;
+	directional_light_far->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
+
+	directional_light_far->owner = dir_light_game_object;
+	directional_light_far->camera_frustum.type = FrustumType::OrthographicFrustum;
+
+	directional_light_far->SetFarDistance(100);
+	directional_light_far->SetNearDistance(75);
+
 
 	return true;
 }
@@ -61,6 +87,8 @@ update_status ModuleCamera::Update()
 	SelectMainCamera();
 	scene_camera->Update();
 	directional_light_camera->Update();
+	//directional_light_mid->Update();
+	//directional_light_far->Update();
 
 	return update_status::UPDATE_CONTINUE;
 }

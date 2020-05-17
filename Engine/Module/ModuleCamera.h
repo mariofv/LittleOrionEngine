@@ -40,10 +40,21 @@ private:
 public:
 	ComponentCamera* scene_camera = nullptr;
 	ComponentCamera* main_camera = nullptr;
+
 	ComponentCamera* directional_light_camera = nullptr;
+	ComponentCamera* directional_light_mid = nullptr;
+	ComponentCamera* directional_light_far = nullptr;
+
 	GameObject*		 dir_light_game_object = nullptr;
-	float aux_ortho_near_distance = 25;
-	float aux_ortho_far_distance = 50;
+	GameObject*		 dir_light_game_object_mid = nullptr;
+	GameObject*		 dir_light_game_object_far = nullptr;
+
+	float aux_width = 25;
+	float aux_height = 25;
+
+	float close_mid_separation = 25;
+	float mid_far_separation = 50;
+	float far_plane = 75;
 
 	std::shared_ptr<Skybox> world_skybox = nullptr;
 
