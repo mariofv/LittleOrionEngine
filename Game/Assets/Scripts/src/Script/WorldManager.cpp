@@ -16,6 +16,8 @@
 
 #include "imgui.h"
 
+#include "PlayerController.h"
+
 
 bool WorldManager::singleplayer;
 bool WorldManager::player1_choice;
@@ -36,10 +38,60 @@ WorldManager::WorldManager()
 // Use this for initialization before Start()
 void WorldManager::Awake()
 {
-	//health_component = (ComponentProgressBar*)health_bar->GetComponent(ComponentUI::UIType::PROGRESSBAR);
-	//lose_component = (ComponentImage*)lose_screen->GetComponent(ComponentUI::UIType::IMAGE);
-	//win_component = (ComponentImage*)win_screen->GetComponent(ComponentUI::UIType::IMAGE);
-	player_controller = (ComponentScript*)player->GetComponentScript("PlayerController");
+	if(!on_main_menu)
+	{
+		
+
+		return;
+	}
+
+	////Male model
+	player1_go = App->scene->GetGameObjectByName("Player1");
+	ComponentScript* player1_controller_component = (ComponentScript*)player1_go->GetComponentScript("PlayerController");
+	player1_controller = static_cast<PlayerController*>(player1_controller_component->script);
+	
+	////Female model
+	player2_go = App->scene->GetGameObjectByName("Player2");
+	ComponentScript* player2_controller_component = (ComponentScript*)player2_go->GetComponentScript("PlayerController");
+	player2_controller = static_cast<PlayerController*>(player2_controller_component->script);
+	
+	singleplayer = true;
+	player1_choice = true;
+	//Logic of choosing character and single/multi player
+	//Singleplayer
+	if(singleplayer)
+	{
+		//If player1_choice == 0 he is chosing male model
+		if(!player1_choice)
+		{
+			player1_controller->player = 1;
+			player2_go->SetEnabled(false);
+			player2_go->transform.SetTranslation(float3(100.f, 100.f, 100.f));
+		}
+		//Chosing female model
+		else
+		{
+			player2_controller->player = 1;
+			player1_go->SetEnabled(false);
+			player1_go->transform.SetTranslation(float3(100.f, 100.f, 100.f));
+		}
+	}
+	//Multiplayer
+	else
+	{
+		//If player1_choice == 0 he is chosing male model
+		if (!player1_choice)
+		{
+			player1_controller->player = 1;
+			player2_controller->player = 2;
+		}
+		//Chosing female model
+		else
+		{
+			player2_controller->player = 1;
+			player1_controller->player = 2;
+		}
+	}
 
 	GameObject* event_manager_go = App->scene->GetGameObjectByName("EventManager");
 	ComponentScript* event_manager_component = event_manager_go->GetComponentScript("EventManager");
@@ -83,7 +135,8 @@ void WorldManager::Update()
 	if(event_manager->current_event > 2)
 	{
 		//We won the level!
-		//player_controller->Disable();
+		player1_controller->owner->SetEnabled(false);
+		player2_controller->owner->SetEnabled(false);
 		//win_component->Enable();
 		transition = true;
 	}
@@ -110,10 +163,6 @@ void WorldManager::InitPublicGameObjects()
 
 	//public_gameobjects.push_back(&win_screen);
 	//variable_names.push_back(GET_VARIABLE_NAME(win_screen));
-
-	public_gameobjects.push_back(&player);
-	variable_names.push_back(GET_VARIABLE_NAME(player));
-
 
 
 	for (unsigned i = 0; i < public_gameobjects.size(); ++i)
@@ -160,7 +209,7 @@ void WorldManager::CheckTriggers()
 		return;
 	}
 
-	if(static_cast<ComponentCollider*>(player->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[current_event_trigger]))
+	if(static_cast<ComponentCollider*>(player1_go->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[current_event_trigger]))
 	{
 		if(event_manager->TriggerEvent(current_event_trigger))
 		{
@@ -173,14 +222,14 @@ void WorldManager::CheckTriggers()
 //Use this for linking GO AND VARIABLES automatically if you need to save variables 
 // void WorldManager::Save(Config& config) const
 // {
-// 	config.AddUInt(example->UUID, "ExampleNameforSave");
+//	config.AddBool(on_main_menu, "OnMainMenu");
 // 	Script::Save(config);
 // }
-
-// //Use this for linking GO AND VARIABLES automatically
+//
+//// //Use this for linking GO AND VARIABLES automatically
 // void WorldManager::Load(const Config& config)
 // {
-// 	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
+// 	on_main_menu = config.GetUInt("OnMainMenu", 0);
 // 	Script::Load(config);
 // }
 

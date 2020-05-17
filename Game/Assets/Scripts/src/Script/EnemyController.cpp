@@ -91,9 +91,9 @@ void EnemyController::InitMembers()
 	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
 
-	attack_collider = static_cast<ComponentCollider*>(attack_detector->GetComponent(Component::ComponentType::COLLIDER));
+	//attack_collider = static_cast<ComponentCollider*>(attack_detector->GetComponent(Component::ComponentType::COLLIDER));
 
-	player = App->scene->GetGameObjectByName("Player");
+	player = App->scene->GetGameObjectByName("Player1");
 	ComponentScript* player_component = player->GetComponentScript("PlayerController");
 	player_controller = static_cast<PlayerController*>(player_component->script);
 
