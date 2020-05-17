@@ -234,13 +234,15 @@ void ComponentText::SpecializedSave(Config& config) const
 void ComponentText::SpecializedLoad(const Config& config)
 {
 	config.GetString("Text", text, "");
-	
-	config.GetFloat("FontSize", font_size);
+
 	font_uuid = config.GetUInt("FontUUID", 0);
 	if (font_uuid != 0)
 	{
 		SetFont(font_uuid);
 	}
+
+	config.GetFloat("FontSize", font_size);
+	SetFontSize(font_size);
 
 	uint32_t horizontal_alignment_uint32 = config.GetUInt("HorizontalAlignment", 0);
 	horizontal_alignment = static_cast<HorizontalAlignment>(horizontal_alignment_uint32);
