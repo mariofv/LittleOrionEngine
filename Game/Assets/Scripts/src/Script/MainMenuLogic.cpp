@@ -48,11 +48,6 @@ void MainMenuLogic::Awake()
 	}
 }
 
-// Use this for initialization
-void MainMenuLogic::Start()
-{
-
-}
 
 // Update is called once per frame
 void MainMenuLogic::Update()
@@ -79,7 +74,7 @@ void MainMenuLogic::Update()
 		switch (current)
 		{
 		case 0:
-			App->scene->LoadScene("/Assets/Scenes/Production/MainScene.scene");
+			character_selection_panel->SetEnabled(true);
 			break;
 		case 1:
 			//Active help
@@ -111,7 +106,6 @@ void MainMenuLogic::Update()
 	{
 		current += 1;
 		current = current % 4;
-
 		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x,buttons[current]->transform_2d.GetTranslation().y,0.0f));
 	}
 
@@ -148,6 +142,9 @@ void MainMenuLogic::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&help_panel);
 	variable_names.push_back(GET_VARIABLE_NAME(help_panel));
+
+	public_gameobjects.push_back(&character_selection_panel);
+	variable_names.push_back(GET_VARIABLE_NAME(character_selection_panel));
 
 	public_gameobjects.push_back(&audio_controller);
 	variable_names.push_back(GET_VARIABLE_NAME(audio_controller));

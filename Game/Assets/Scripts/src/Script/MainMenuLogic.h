@@ -13,7 +13,6 @@ public:
 	~MainMenuLogic() = default;
 
 	void Awake() override;
-	void Start() override;
 	void Update() override;
 
 	void OnInspector(ImGuiContext*) override;
@@ -26,6 +25,7 @@ private:
 	GameObject* exit_button = nullptr;
 	GameObject* cursor = nullptr;
 
+	GameObject* character_selection_panel = nullptr;
 	GameObject* credits_panel = nullptr;
 	GameObject* help_panel = nullptr;
 	GameObject* audio_controller = nullptr;

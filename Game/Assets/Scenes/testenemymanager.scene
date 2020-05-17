@@ -1387,16 +1387,16 @@
                 "ComponentType": 7,
                 "Active": true,
                 "Size": [
-                    1064.0,
-                    702.0
+                    1888.0,
+                    914.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    0.0,
-                    0.0
+                    944.0,
+                    457.0
                 ],
                 "MinAnchor": [
                     0.5,

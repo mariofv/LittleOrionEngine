@@ -105,6 +105,9 @@
     <ClInclude Include="src\Script\MenuController.h">
       <Filter>src\Script\UI</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\CharacterSelectionMenu.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -186,6 +189,9 @@
       <Filter>src\Script\UI</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\MenuController.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\CharacterSelectionMenu.cpp">
       <Filter>src\Script\UI</Filter>
     </ClCompile>
   </ItemGroup>

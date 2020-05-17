@@ -21,7 +21,7 @@ private:
 	unsigned current = 0;
 	bool game_paused = false;
 	float time_scale = 0.0f;
-
+	bool awaked = false;
 	GameObject* resume_button = nullptr;
 	GameObject* help_button = nullptr;
 	//GameObject* level_selection_button = nullptr;

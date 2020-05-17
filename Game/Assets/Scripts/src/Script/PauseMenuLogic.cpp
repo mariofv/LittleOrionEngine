@@ -29,11 +29,16 @@ void PauseMenuLogic::Awake()
 	//buttons.push_back(level_selection_button);
 	audio_source = (ComponentAudioSource*)audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
 	current = buttons.size() - 1;
+	awaked = true;
 
 }
 
 void PauseMenuLogic::Update()
 {
+	if (!awaked)
+	{
+		Awake();
+	}
 	if (!game_paused && owner->IsEnabled())
 	{
 		game_paused = true;
