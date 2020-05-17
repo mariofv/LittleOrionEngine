@@ -85,23 +85,19 @@ protected:
 	GameObject* attack_detector = nullptr;
 	ComponentCollider* attack_collider = nullptr;
 
-	EnemyManager* enemy_manager = nullptr;
-
 	float move_speed = 1.f;
 	float rotate_speed = 1.f;
 	float attack_speed = 1.f;
 	float attack_power = 10.f;
-	float attack_range = 1.4f;
-	const float MAX_HEALTH_POINTS = 10.f;
+	const float MAX_HEALTH_POINTS = 100.f;
 	float health_points = MAX_HEALTH_POINTS;
 	float detect_distance = 50.f;
 
-	float switch_target_distance = 0.5f;
-	float attack_radius = 2.2f;
+	float attack_range = 2.4f;
+	float switch_target_distance = 1.f;
 	float separation_distance = 2.f;
-
-	float danger_distance = 6.f;
-	float attack_distance = 4.f;
+	float danger_distance = 8.f;
+	float attack_distance = 5.f;
 
 	float attack_damage = 15.f;
 

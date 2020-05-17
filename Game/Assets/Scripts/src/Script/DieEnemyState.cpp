@@ -46,7 +46,7 @@ void DieEnemyState::OnStateUpdate()
 	if (enemy->animation->IsOnState("Die") && enemy->animation->GetCurrentClipPercentatge() >= 0.95f)
 	{
 		enemy->collider->detect_collision = false;
-		enemy->collider->disable_physics = true;
+		enemy->collider->active_physics = false;
 
 		enemy->collider->Disable();
 		enemy->collider->SetCollisionDetection();

@@ -72,6 +72,12 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ImGui::Checkbox("Is Alive", &is_alive);
 	ImGui::Checkbox("Is Attacking", &is_attacking);
 	ImGui::Checkbox("Move with Physics", &move_with_physics);
+
+	ImGui::InputFloat("attack_range", &attack_range);
+	ImGui::InputFloat("switch_target_distance", &switch_target_distance);
+	ImGui::InputFloat("separation_distance", &separation_distance);
+	ImGui::InputFloat("danger_distance", &danger_distance);
+	ImGui::InputFloat("attack_distance", &attack_distance);
 }
 
 //Use this for linking JUST GO automatically 
@@ -93,9 +99,9 @@ void EnemyController::InitMembers()
 
 	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
-	attack_collider = static_cast<ComponentCollider*>(attack_detector->GetComponent(Component::ComponentType::COLLIDER));
+	//attack_collider = static_cast<ComponentCollider*>(attack_detector->GetComponent(Component::ComponentType::COLLIDER));
 
-	player1 = App->scene->GetGameObjectByName("Player");
+	player1 = App->scene->GetGameObjectByName("Player1");
 	if (player1 != nullptr)
 	{
 		const ComponentScript* player1_controller_component = player1->GetComponentScript("PlayerController");
@@ -466,7 +472,7 @@ bool EnemyController::IsGrounded() const
 	btVector3 origin = collider->body->getWorldTransform().getOrigin();
 
 	btVector3 end = collider->body->getWorldTransform().getOrigin();
-	end.setY(end.getY() - (collider->box_size.getY() / 2));
+	end.setY(end.getY() - (collider->box_size.getY()) * 5);
 
 	return collider->RaycastHit(origin, end);
 }

@@ -443,7 +443,7 @@ void ComponentCollider::SetVelocityEnemy(float3 & velocity, float speed)
 {
 	//bottom of the model
 	btVector3 bottom = body->getWorldTransform().getOrigin();
-	bottom.setY(bottom.getY() - 2 * box_size.getY());
+	bottom.setY(bottom.getY() - 200 * box_size.getY());
 
 	//Vector normal to the surface
 	btVector3 Normal;
@@ -478,7 +478,7 @@ void ComponentCollider::LookAt(float3& velocity, float speed)
 {
 	//bottom of the model
 	btVector3 bottom = body->getWorldTransform().getOrigin();
-	bottom.setY(bottom.getY() - 2 * box_size.getY());
+	bottom.setY(bottom.getY() - 200 * box_size.getY());
 
 	//Vector normal to the surface
 	btVector3 Normal;

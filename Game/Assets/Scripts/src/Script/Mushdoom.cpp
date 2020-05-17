@@ -94,7 +94,7 @@ void Mushdoom::ResetEnemy()
 	is_attacking = false;
 
 	collider->detect_collision = true;
-	collider->disable_physics = false;
+	collider->active_physics = true;
 
 	collider->Enable();
 	collider->SetCollisionDetection();
