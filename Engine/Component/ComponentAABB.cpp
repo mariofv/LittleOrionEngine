@@ -18,12 +18,12 @@ void ComponentAABB::Copy(Component* component_to_copy) const
 	*static_cast<ComponentAABB*>(component_to_copy) = *this; 
 };
 
-void ComponentAABB::Save(Config& config) const
+void ComponentAABB::SpecializedSave(Config& config) const
 {
 
 }
 
-void ComponentAABB::Load(const Config& config)
+void ComponentAABB::SpecializedLoad(const Config& config)
 {
 
 }

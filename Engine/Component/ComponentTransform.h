@@ -2,18 +2,20 @@
 #define _COMPONENTTRANSFORM_H_
 
 #define ENGINE_EXPORTS
+
 #include "Component.h"
-#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
 
+class PanelTransform;
+
 class ComponentTransform : public Component
 {
 public:
-	ComponentTransform();
-	ComponentTransform(GameObject* owner);
-	ComponentTransform(GameObject* owner,const float3 translation, const Quat rotation, const float3 scale);
+	ComponentTransform(ComponentType transform_type = ComponentType::TRANSFORM);
+	ComponentTransform(GameObject* owner, ComponentType transform_type = ComponentType::TRANSFORM);
+	ComponentTransform(GameObject* owner, const float3 translation, const Quat rotation, const float3 scale);
 
 	//Copy and move
 	ComponentTransform(const ComponentTransform& component_to_copy) = default;
@@ -25,18 +27,16 @@ public:
 	Component* Clone(bool create_on_module = true) const override;
 	void Copy(Component * component_to_copy) const override;
 
-	~ComponentTransform() = default;
-
 	void Delete() override {};
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
-	
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
+
 	ENGINE_API float3 GetGlobalTranslation() const;
 	ENGINE_API float3 GetTranslation() const;
-	ENGINE_API void SetTranslation(const float3& translation);
+	ENGINE_API virtual void SetTranslation(const float3& translation);
+	ENGINE_API virtual void Translate(const float3& translation);
 	ENGINE_API void SetGlobalMatrixTranslation(const float3& translation);
-	ENGINE_API void Translate(const float3& translation);
 
 	ENGINE_API Quat GetGlobalRotation() const;
 	ENGINE_API Quat GetRotation() const;
@@ -64,18 +64,18 @@ public:
 	void ChangeLocalSpace(const float4x4& new_local_space);
 
 	float4x4 GetModelMatrix() const;
-	
+
 	void GenerateGlobalModelMatrix();
 	float4x4 GetGlobalModelMatrix() const;
-	void SetGlobalModelMatrix(const float4x4& new_global_matrix);
-  
-private:
-	void OnTransformChange();
+	virtual void SetGlobalModelMatrix(const float4x4& new_global_matrix);
+
+protected:
+	virtual void OnTransformChange();
 
 public:
 	bool has_changed = false; //used for physics
 
-private:
+protected:
 	float3 translation = float3::zero;
 	Quat rotation = Quat::identity;
 	float3 rotation_degrees = float3::zero;
@@ -85,7 +85,7 @@ private:
 	float4x4 model_matrix = float4x4::identity;
 	float4x4 global_model_matrix = float4x4::identity;
 
-	friend class PanelComponent;
+	friend class PanelTransform;
 };
 
 #endif //_COMPONENTTRANSFORM_H_

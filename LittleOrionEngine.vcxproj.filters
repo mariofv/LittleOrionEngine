@@ -331,14 +331,20 @@
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentUI.cpp">
+    <ClCompile Include="Engine\Component\ComponentButton.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp">
-      <Filter>Engine\Actions</Filter>
+    <ClCompile Include="Engine\Component\ComponentCanvas.cpp">
+      <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp">
-      <Filter>Engine\Actions</Filter>
+    <ClCompile Include="Engine\Component\ComponentImage.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentText.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
+      <Filter>Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp">
       <Filter>Engine\Module</Filter>
@@ -376,6 +382,9 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Font.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\PanelBuildOptions.cpp">
       <Filter>Engine\EditorUI\Panel</Filter>
     </ClCompile>
@@ -388,26 +397,20 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\Component\Component.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\FontImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\FontManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTransform.cpp">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp">
       <Filter>Engine\Module</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentButton.cpp">
-      <Filter>Engine\Component\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentCanvas.cpp">
-      <Filter>Engine\Component\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentImage.cpp">
-      <Filter>Engine\Component\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentProgressBar.cpp">
-      <Filter>Engine\Component\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentText.cpp">
-      <Filter>Engine\Component\UI</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
-      <Filter>Engine\Component\UI</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentCollider.cpp">
       <Filter>Engine\Component</Filter>
@@ -441,6 +444,9 @@
     </ClCompile>
     <ClCompile Include="Engine\Module\ModuleAudio.cpp">
       <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp">
+      <Filter>Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentAudioSource.cpp">
       <Filter>Engine\Component</Filter>
@@ -488,6 +494,9 @@
       <Filter>Engine\Component\Collider</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentCollider.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentEventSystem.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
   </ItemGroup>
@@ -822,14 +831,11 @@
     <ClInclude Include="Engine\Component\ComponentAnimation.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentUI.h">
+    <ClInclude Include="Engine\Component\ComponentText.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Actions\EditorActionRect2D.h">
-      <Filter>Engine\Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Actions\EditorActionRotation2D.h">
-      <Filter>Engine\Actions</Filter>
+    <ClInclude Include="Engine\Component\ComponentTransform2D.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleAnimation.h">
       <Filter>Engine\Module</Filter>
@@ -855,6 +861,9 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Font.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PanelBuildOptions.h">
       <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
@@ -866,6 +875,18 @@
     </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\FontImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTransform.h">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h">
       <Filter>Engine\Module</Filter>
@@ -879,14 +900,11 @@
     <ClInclude Include="Engine\Component\ComponentImage.h">
       <Filter>Engine\Component\UI</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentProgressBar.h">
-      <Filter>Engine\Component\UI</Filter>
+    <ClInclude Include="Engine\Component\ComponentCanvasRenderer.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentText.h">
-      <Filter>Engine\Component\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentTransform2D.h">
-      <Filter>Engine\Component\UI</Filter>
+    <ClInclude Include="Engine\Component\ComponentAudioSource.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentCollider.h">
       <Filter>Engine\Component</Filter>
@@ -952,6 +970,18 @@
       <Filter>Engine\Component\Collider</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentCollider.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentEventSystem.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentImage.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentButton.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCanvas.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
@@ -1036,9 +1066,6 @@
     </Filter>
     <Filter Include="Engine\DLL">
       <UniqueIdentifier>{8b335900-d36a-4a5f-8bda-f20bee578e42}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="Engine\Component\UI">
-      <UniqueIdentifier>{8c22140c-173f-42f6-aedf-3539695a1124}</UniqueIdentifier>
     </Filter>
     <Filter Include="Engine\Component\Collider">
       <UniqueIdentifier>{cf44b757-a8ce-4d05-8f2c-587be25f5298}</UniqueIdentifier>

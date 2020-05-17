@@ -1,8 +1,6 @@
 #include "WorldManager.h"
-#include "Component/ComponentImage.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentProgressBar.h"
 
 #include "Filesystem/PathAtlas.h"
 
@@ -111,28 +109,29 @@ void WorldManager::Start()
 // Update is called once per frame
 void WorldManager::Update()
 {
-	//if(health_component->percentage <= 0.0f)
-	//{
-	//	//Lose
-	//	player_controller->Disable();
-	//	lose_component->Enable();
-	//	transition = true;
-	//}
-
-	//if(OnTriggerEnter())
-	//{
-	//	//Win
-	//	player_controller->Disable();
-	//	win_component->Enable();
-	//	transition = true;
-	//}
-
-	//if(transition && App->input->GetAnyKeyPressedDown())
-	//{
-	//	App->scene->LoadScene(0);
-	//}
-
 	CheckTriggers();
+	/*
+	if(health_component->percentage <= 0.0f)
+	{
+		//Lose
+		player_controller->Disable();
+		lose_component->Enable();
+		transition = true;
+	}
+
+	if(OnTriggerEnter())
+	{
+		//Win
+		player_controller->Disable();
+		win_component->Enable();
+		transition = true;
+	}
+
+	if(transition && App->input->GetAnyKeyPressedDown())
+	{
+		App->scene->LoadScene(0);
+	}
+	*/
 
 	if(event_manager->current_event > 2)
 	{
@@ -155,7 +154,7 @@ void WorldManager::OnInspector(ImGuiContext* context)
 	ImGui::Checkbox("Main menu", &on_main_menu);
 }
 
-//Use this for linking JUST GO automatically 
+//Use this for linking JUST GO automatically
 void WorldManager::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
@@ -220,10 +219,10 @@ void WorldManager::CheckTriggers()
 			++current_event_trigger;
 		}
 	}
-	
+
 }
 
-//Use this for linking GO AND VARIABLES automatically if you need to save variables 
+//Use this for linking GO AND VARIABLES automatically if you need to save variables
 // void WorldManager::Save(Config& config) const
 // {
 //	config.AddBool(on_main_menu, "OnMainMenu");
@@ -236,4 +235,3 @@ void WorldManager::CheckTriggers()
 // 	on_main_menu = config.GetUInt("OnMainMenu", 0);
 // 	Script::Load(config);
 // }
-

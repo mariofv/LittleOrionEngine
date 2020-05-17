@@ -94,6 +94,12 @@ bool ModuleWindow::CleanUp()
 	return true;
 }
 
+bool ModuleWindow::IsFocused() const
+{
+	uint32_t window_flags = SDL_GetWindowFlags(window);
+	return window_flags & SDL_WINDOW_MOUSE_FOCUS;
+}
+
 void ModuleWindow::SetResizable(bool resizable) const
 {
 	if (resizable) {

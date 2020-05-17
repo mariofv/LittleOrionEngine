@@ -1,27 +1,39 @@
-#include "EventManager.h"
+#include "EventManager.h"
+
 #include "Component/ComponentScript.h"
-#include "Component/ComponentTransform.h"
+#include "Component/ComponentTransform.h"
+
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleInput.h"
-#include "Module/ModuleScene.h"
+#include "Module/ModuleScene.h"
 
-#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
-#include "imgui.h"
-
-
+#include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
+
+
+#include "imgui.h"
+
+
+
+
+
+
 EventManager* EventManagerDLL()
 {
 	EventManager* instance = new EventManager();
 	return instance;
-}
-
+}
+
+
+
 EventManager::EventManager()
 {
 	panel = new PanelComponent();
-}
-
+}
+
+
+
 // Use this for initialization before Start()
 void EventManager::Awake()
 {
@@ -33,17 +45,22 @@ void EventManager::Awake()
 	GameObject* camera_controller_go = App->scene->GetGameObjectByName("Main Camera");
 	ComponentScript* camera_controller_component = camera_controller_go->GetComponentScript("CameraController");
 	camera_controller = static_cast<CameraController*>(camera_controller_component->script);
-}
-
+}
+
+
+
 // Use this for initialization
 void EventManager::Start()
-{
+{
 
-}
+
+}
+
 
 // Update is called once per frame
 void EventManager::Update()
-{	//For now the only event we have is enemy spawning
+{
+	//For now the only event we have is enemy spawning
 	if(event_triggered)
 	{
 		if(enemies_killed_on_wave >= enemies_per_wave)
@@ -64,17 +81,22 @@ void EventManager::Update()
 
 	}
 
-}
+}
+
+
 // Use this for showing variables on inspector
 void EventManager::OnInspector(ImGuiContext* context)
 {
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
-	ShowDraggedObjects();
+	ShowDraggedObjects();
+
 	ImGui::Text("enemies_killed_on_wave: %d", enemies_killed_on_wave);
 	ImGui::Text("enemies_per_wave: %d", enemies_per_wave);
-}
-
+}
+
+
+
 //Use this for linking JUST GO automatically 
 void EventManager::InitPublicGameObjects()
 {

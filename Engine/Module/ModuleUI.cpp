@@ -1,23 +1,19 @@
+#include "ModuleUI.h"
+
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
+#include "Component/ComponentCanvasRenderer.h"
+#include "Component/ComponentEventSystem.h"
 #include "Component/ComponentImage.h"
-#include "Component/ComponentProgressBar.h"
-#include "Component/ComponentUI.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentButton.h"
 
-#include "GL/glew.h"
 #include "Main/Globals.h"
-#include "Main/Application.h"
 #include "Main/GameObject.h"
 
-#include "ModuleEditor.h"
-#include "ModuleScene.h"
-#include "ModuleUI.h"
-#include "ModuleWindow.h"
-
-#include "Brofiler/Brofiler.h"
 #include <algorithm>
+#include <Brofiler/Brofiler.h>
+#include <GL/glew.h>
 #include <SDL/SDL.h>
 
 
@@ -32,6 +28,7 @@ bool ModuleUI::Init()
 // Called every draw update
 update_status ModuleUI::Update()
 {
+	SelectMainCanvas();
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -41,167 +38,105 @@ bool ModuleUI::CleanUp()
 	return true;
 }
 
-void ModuleUI::Render(const ComponentCamera* camera)
+void ModuleUI::Render(bool scene_mode)
 {
 	BROFILER_CATEGORY("UI: Module Render", Profiler::Color::LightSeaGreen);
-#if GAME
-	window_width = App->window->GetWidth();
-	window_height = App->window->GetHeight();
-#else
-	window_width = App->editor->scene_panel->scene_window_content_area_width;
-	window_height = App->editor->scene_panel->scene_window_content_area_height;
-#endif
-	float4x4 projection = float4x4::D3DOrthoProjLH(-1, MAX_NUM_LAYERS, window_width, window_height);
 	if (main_canvas != nullptr)
 	{
-		glDisable(GL_DEPTH_TEST);
-		RenderUIGameObject(main_canvas->owner, &projection);
-		glEnable(GL_DEPTH_TEST);
+		main_canvas->Render(scene_mode);
 	}
 }
 
-void  ModuleUI::RenderUIGameObject(GameObject* parent, float4x4* projection)
+ComponentEventSystem* ModuleUI::CreateComponentEventSystem()
 {
-	for (auto& ui_element : ordered_ui)
+	ComponentEventSystem* new_event_system = new ComponentEventSystem();
+	event_systems.push_back(new_event_system);
+
+	return new_event_system;
+}
+
+void ModuleUI::RemoveComponentEventSystem(ComponentEventSystem* component_event_system)
+{
+	const auto it = std::find(event_systems.begin(), event_systems.end(), component_event_system);
+	if (it != event_systems.end())
 	{
-		if (ui_element && ui_element->ui_type != ComponentUI::UIType::CANVAS)
-		{
-			ui_element->Render(projection);
-		}
+		delete *it;
+		event_systems.erase(it);
 	}
 }
 
-ComponentUI* ModuleUI::CreateComponentUI(ComponentUI::UIType type, GameObject* owner)
+bool ModuleUI::ExistEventSystem() const
 {
-	ComponentUI* new_ui = nullptr;
-	switch (type)
-	{
-		case ComponentUI::UIType::CANVAS:
-			if (main_canvas == nullptr)
-			{
-				main_canvas = new ComponentCanvas(owner);
-			}
-			new_ui = main_canvas;
-			break;
-		case ComponentUI::UIType::IMAGE:
-			new_ui = new ComponentImage(owner);
-			break;
-		case ComponentUI::UIType::TEXT:
-			new_ui = new ComponentText(owner);
-			break;
-		case ComponentUI::UIType::BUTTON:
-			new_ui = new ComponentButton(owner);
-			break;
-		case ComponentUI::UIType::PROGRESSBAR:
-			new_ui = new ComponentProgressBar(owner);
-			break;
-	}
-	if(new_ui) 
-	{
-		ui_elements.push_back(new_ui);
-		SortComponentsUI();
-	}
-	return new_ui;
+	return !event_systems.empty();
 }
 
-void ModuleUI::RemoveComponentUI(ComponentUI* ui_to_remove)
+
+ComponentCanvas* ModuleUI::CreateComponentCanvas()
 {
-	const auto it = std::find(ui_elements.begin(), ui_elements.end(), ui_to_remove);
-	if (*it == main_canvas)
+	ComponentCanvas* new_canvas = new ComponentCanvas();
+	canvases.push_back(new_canvas);
+
+	return new_canvas;
+}
+
+
+void ModuleUI::RemoveComponentCanvas(ComponentCanvas* component_canvas)
+{
+	const auto it = std::find(canvases.begin(), canvases.end(), component_canvas);
+	if (it != canvases.end())
 	{
-		main_canvas = nullptr;
+		delete *it;
+		canvases.erase(it);
 	}
+}
+
+GameObject* ModuleUI::GetMainCanvasGameObject() const
+{
+	if (main_canvas != nullptr)
+	{
+		return main_canvas->owner;
+	}
+
+	return nullptr;
+}
+
+void ModuleUI::RemoveComponentUI(Component* component_ui)
+{
+	const auto it = std::find(ui_elements.begin(), ui_elements.end(), component_ui);
 	if (it != ui_elements.end())
 	{
 		delete *it;
 		ui_elements.erase(it);
 	}
-
-	SortComponentsUI();
 }
 
-void ModuleUI::InitGlyph()
+ComponentCanvasRenderer* ModuleUI::CreateComponentCanvasRenderer()
 {
-	BROFILER_CATEGORY("UI: Init Glyph", Profiler::Color::HoneyDew);
-	// All functions return a value different than 0 whenever an error occurred
-	if (FT_Init_FreeType(&ft))
-		std::cout << "ERROR::FREETYPE: Could not init FreeType Library" << std::endl;
+	ComponentCanvasRenderer* new_canvas_renderer = new ComponentCanvasRenderer();
+	canvas_renderers.push_back(new_canvas_renderer);
+	return new_canvas_renderer;
+}
 
-#if !GAME
-	// Load font as face
-	if (FT_New_Face(ft, "Assets/Fonts/Montserrat-Light.ttf", 0, &face))
-		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-#else
-	if (FT_New_Face(ft, "Library/Montserrat-Light.ttf", 0, &face))
-		std::cout << "ERROR::FREETYPE: Failed to load font" << std::endl;
-#endif
-
-	// Set size to load glyphs as
-	//FT_Set_Pixel_Sizes(face, 0, 16);
-	FT_Set_Char_Size(
-		face,    /* handle to face object           */
-		0,       /* char_width in 1/64th of points  */
-		16 * 64,   /* char_height in 1/64th of points */
-		1920,     /* horizontal device resolution    */
-		1080);   /* vertical device resolution      */
-	// Disable byte-alignment restriction
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);
-
-	// Load first 128 characters of ASCII set
-	for (GLubyte c = 0; c < 128; c++)
+void ModuleUI::RemoveComponentCanvasRenderer(ComponentCanvasRenderer* component_canvas_renderer)
+{
+	const auto it = std::find(canvas_renderers.begin(), canvas_renderers.end(), component_canvas_renderer);
+	if (it != canvas_renderers.end())
 	{
-		// Load character glyph 
-		if (FT_Load_Char(face, c, FT_LOAD_RENDER))
+		delete *it;
+		canvas_renderers.erase(it);
+	}
+}
+
+void ModuleUI::SelectMainCanvas()
+{
+	main_canvas = nullptr;
+
+	for (auto& canvas : canvases)
+	{
+		if (canvas->IsEnabled())
 		{
-			std::cout << "ERROR::FREETYTPE: Failed to load Glyph" << std::endl;
-			continue;
+			main_canvas = canvas;
+			return;
 		}
-		// Generate texture
-		glGenTextures(1, &text_texture);
-		glBindTexture(GL_TEXTURE_2D, text_texture);
-		glTexImage2D(
-			GL_TEXTURE_2D,
-			0,
-			GL_RED,
-			face->glyph->bitmap.width,
-			face->glyph->bitmap.rows,
-			0,
-			GL_RED,
-			GL_UNSIGNED_BYTE,
-			face->glyph->bitmap.buffer
-		);
-		// Set texture options
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_S, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_WRAP_T, GL_CLAMP_TO_EDGE);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR);
-		glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
-		// Now store character for later use
-		Character character = {
-			text_texture,
-			float2(face->glyph->bitmap.width, face->glyph->bitmap.rows),
-			float2(face->glyph->bitmap_left, face->glyph->bitmap_top),
-			face->glyph->advance.x
-		};
-		Characters.insert(std::pair<GLchar, Character>(c, character));
 	}
-	glBindTexture(GL_TEXTURE_2D, 0);
-	// Destroy FreeType once we're finished
-	FT_Done_Face(face);
-	FT_Done_FreeType(ft);
-
-	glyphInit = true;
 }
-
-void ModuleUI::SortComponentsUI()
-{
-	ordered_ui = ui_elements;
-	std::sort(ordered_ui.begin(), ordered_ui.end(), [](ComponentUI* left, ComponentUI* right)
-	{
-		return left->layer < right->layer;
-	}
-	);
-}
-
-//Guardar aqu� todos los component canvas (crear, destruir y guardar)
-//Cuando se hace el render de los canvas, a�adir un render a este modulo que renderice todos los canvas
-//

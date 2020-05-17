@@ -4,8 +4,6 @@
 #include "Script.h"
 #include "EventManager.h"
 
-class ComponentProgressBar;
-class ComponentImage;
 class ComponentCollider;
 class PlayerController;
 

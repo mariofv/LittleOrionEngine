@@ -5,11 +5,11 @@
 #include "Helper/Utils.h"
 #include <Brofiler/Brofiler.h>
 
-ComponentTransform::ComponentTransform() : Component(ComponentType::TRANSFORM)
+ComponentTransform::ComponentTransform(ComponentType transform_type) : Component(transform_type)
 {
 }
 
-ComponentTransform::ComponentTransform(GameObject * owner) : Component(owner, ComponentType::TRANSFORM)
+ComponentTransform::ComponentTransform(GameObject* owner, ComponentType transform_type) : Component(owner, transform_type)
 {
 	OnTransformChange();
 }
@@ -43,19 +43,15 @@ ComponentTransform & ComponentTransform::operator=(const ComponentTransform & co
 	return *this;
 }
 
-void ComponentTransform::Save(Config& config) const
+void ComponentTransform::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddBool(active, "Active");
 	config.AddFloat3(translation, "Translation");
 	config.AddFloat3(rotation_degrees, "Rotation");
 	config.AddFloat3(scale, "Scale");
 }
 
-void ComponentTransform::Load(const Config& config)
+void ComponentTransform::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
 	config.GetFloat3("Translation", translation, float3::zero);
 	config.GetFloat3("Rotation", rotation_degrees, float3::zero);
 	rotation = Utils::GenerateQuatFromDegFloat3(rotation_degrees);
@@ -117,11 +113,14 @@ ENGINE_API void ComponentTransform::SetRotation(const float3x3& rotation)
 	OnTransformChange();
 }
 
+/*
+	@param new_rotation The rotation in degrees
+*/
 ENGINE_API void ComponentTransform::SetRotation(const float3& new_rotation)
 {
-	rotation = math::Quat::FromEulerXYZ(new_rotation.x, new_rotation.y, new_rotation.z);
-	rotation_radians = new_rotation;
-	rotation_degrees = Utils::Float3RadToDeg(rotation_radians);
+	rotation_radians = Utils::Float3DegToRad(new_rotation);
+	rotation = math::Quat::FromEulerXYZ(rotation_radians.x, rotation_radians.y, rotation_radians.z);
+	rotation_degrees = new_rotation;
 	OnTransformChange();
 }
 
@@ -263,7 +262,7 @@ void ComponentTransform::ChangeLocalSpace(const float4x4& new_local_space)
 {
 	model_matrix = new_local_space.Inverted() * global_model_matrix;
 	model_matrix.Decompose(translation, rotation, scale);
-	
+	OnTransformChange();
 }
 
 Component* ComponentTransform::Clone(bool original_prefab) const
