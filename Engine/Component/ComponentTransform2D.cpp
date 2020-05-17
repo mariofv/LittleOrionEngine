@@ -78,7 +78,7 @@ ComponentTransform2D & ComponentTransform2D::operator=(const ComponentTransform2
 
 void ComponentTransform2D::SpecializedSave(Config& config) const
 {
-	config.AddFloat2(size, "Size");
+	config.AddFloat2(size_delta, "SizeDelta");
 	config.AddFloat2(pivot, "Pivot");
 	config.AddFloat2(anchored_position, "AnchoredPos");
 
@@ -88,7 +88,7 @@ void ComponentTransform2D::SpecializedSave(Config& config) const
 
 void ComponentTransform2D::SpecializedLoad(const Config& config)
 {
-	config.GetFloat2("Size", size, float2(100.f));
+	config.GetFloat2("SizeDelta", size_delta, float2(100.f));
 	config.GetFloat2("Pivot", pivot, float2(0.5f));
 	config.GetFloat2("AnchoredPos", anchored_position, float2::zero);
 
