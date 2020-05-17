@@ -76,10 +76,16 @@ public:
 
 	float particles_life_time= 3.0F;
 
+
+	bool enabled_random_x = true;
 	int max_range_random_x = 100;
 	int min_range_random_x = -100;
+	int position_x = 0;
+
+	bool enabled_random_z = true;
 	int max_range_random_z = 100;
 	int min_range_random_z = -100;
+	int position_z = 0;
 };
 
 #endif

@@ -256,11 +256,33 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 		{
 			particle_system->billboard->ChangeTexture(selected_resource_uuid);
 		}
-		ImGui::DragFloat("Life", &particle_system->particles_life_time, 1.0F, 0.0F, 10.0F);
-		ImGui::DragInt("Max X random range", &particle_system->max_range_random_x, 1.0F, 0, 1000);
-		ImGui::DragInt("Min X random range", &particle_system->min_range_random_x, 1.0F, -1000, 0);
-		ImGui::DragInt("Max Z random range", &particle_system->max_range_random_z, 1.0F, 0, 1000);
-		ImGui::DragInt("Min Z random range", &particle_system->min_range_random_z, 1.0F, -1000, 0);
+		ImGui::DragFloat("Life (in seconds)", &particle_system->particles_life_time, 1.0F, 0.0F, 10.0F);
+		
+		if (particle_system->enabled_random_x)
+		{
+			ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 1000);
+			ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -1000, 0);
+		}
+		else
+		{
+			ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -1000, 1000);
+		}
+		ImGui::SameLine();
+		ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
+
+		if (particle_system->enabled_random_z)
+		{
+			ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 1000);
+			ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -1000, 0);
+		}
+		else
+		{
+			ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -1000, 1000);
+		}
+		ImGui::SameLine();
+		ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
+		
+		
 	}
 
 }
