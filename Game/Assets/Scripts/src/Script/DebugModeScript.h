@@ -6,6 +6,7 @@
 class ComponentImage;
 class ComponentText;
 class SceneCamerasController;
+class EnemyManager;
 
 class DebugModeScript : public Script
 {
@@ -26,6 +27,8 @@ public:
 	bool render_wireframe = false;
 	bool render_AABB = false;
 	bool is_player_invincible = false;
+
+	GameObject* enemy_obj;
 private:
 	std::string base_str_tris = "#Tris: ";
 	std::string base_str_verts = "#Verts: ";
@@ -33,6 +36,7 @@ private:
 
 	GameObject* camera_manager = nullptr;
 	SceneCamerasController* scene_cameras = nullptr;
+	EnemyManager* enemy_manager;
 };
 extern "C" SCRIPT_API DebugModeScript* DebugModeScriptDLL(); //This is how we are going to load the script
 #endif

@@ -15,6 +15,7 @@
 
 #include "PlayerAttack.h"
 #include "PlayerMovement.h"
+#include "DebugModeScript.h"
 
 PlayerController* PlayerControllerDLL()
 {

@@ -17,6 +17,7 @@
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include "SceneCamerasController.h"
+#include "EnemyManager.h"
 
 #include "imgui.h"
 #include <iomanip>
@@ -38,6 +39,8 @@ DebugModeScript::DebugModeScript()
 // Use this for initialization before Start()
 void DebugModeScript::Awake()
 {
+	const ComponentScript* component = owner->GetComponentScript("EnemyManager");
+	enemy_manager = (EnemyManager*)component->script;
 }
 
 // Use this for initialization
@@ -89,7 +92,13 @@ void DebugModeScript::UpdateWithImGui(ImGuiContext* context)
 			}
 
 			ImGui::Checkbox("Draw AABB? ", &render_AABB);
+			
 			ImGui::Checkbox("Toggle Invincible mode ", &is_player_invincible);
+
+			if(ImGui::Button("Spawn enemy wave"))
+			{
+				enemy_manager->SpawnWave(0, 5);
+			}
 
 			ImGui::End();
 		}
@@ -108,6 +117,9 @@ void DebugModeScript::OnInspector(ImGuiContext* context)
 //Use this for linking JUST GO automatically 
 void DebugModeScript::InitPublicGameObjects()
 {
+	public_gameobjects.push_back(&enemy_obj);
+	variable_names.push_back(GET_VARIABLE_NAME(enemy_obj));
+
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		name_gameobjects.push_back(is_object);

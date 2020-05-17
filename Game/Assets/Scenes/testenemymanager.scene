@@ -691,14 +691,6 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "WorldManager"
-                },
-                {
-                    "UUID": 2100486565,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "DebugModeScript",
-                    "Name0": "Main Camera",
-                    "Main Camera": 172714554
                 }
             ]
         },
@@ -1356,6 +1348,62 @@
                         0.0,
                         0.0
                     ]
+                }
+            ]
+        },
+        {
+            "UUID": 3372183300,
+            "ParentUUID": 0,
+            "Name": "DebugSystem",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2002713579,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1688253936,
+                "Active": true,
+                "Top": -5.0,
+                "Right": 5.0,
+                "Bottom": 5.0,
+                "Left": -5.0,
+                "Rotation": 0.0,
+                "Scale": [
+                    1.0,
+                    1.0
+                ],
+                "Position": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Width": 10.0,
+                "Height": 10.0
+            },
+            "Components": [
+                {
+                    "UUID": 817654811,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DebugModeScript",
+                    "Name0": "EnemyManager",
+                    "EnemyManager": 418290945
                 }
             ]
         },
