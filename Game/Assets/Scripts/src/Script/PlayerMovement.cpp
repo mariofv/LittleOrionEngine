@@ -58,7 +58,7 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 	ShowDraggedObjects();
 	ImGui::Checkbox("Is Inside Frustum", &is_inside);
 	ImGui::Checkbox("Is Grounded", &is_grounded);
-	ImGui::DragFloat3("VELOCITY", velocity.ptr(), 0.1f, 0.f, 300.f);
+	ImGui::DragFloat3("Velocity", velocity.ptr(), 0.1f, 0.f, 300.f);
 	ImGui::Checkbox("Future AABB", &visualize_future_aabb);
 	ImGui::DragFloat3("Distance", distance.ptr(), 0.1f, 0.f, 300.f);
 }
