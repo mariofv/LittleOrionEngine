@@ -13,6 +13,9 @@ public:
 	void OnStateEnter() override;
 	void OnStateUpdate() override;
 	void OnStateExit() override;
+
+private:
+	bool attacked = false;
 };
 extern "C" SCRIPT_API AttackEnemyState* AttackEnemyStateDLL(); //This is how we are going to load the script
 #endif
