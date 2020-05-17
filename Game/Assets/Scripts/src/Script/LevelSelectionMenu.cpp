@@ -53,6 +53,7 @@ void LevelSelectionMenu::Update()
 	if (!selecting_level && MenuController::ComfirmButtonPressed(*App->input))
 	{
 		//Back
+		audio_source->PlayEvent("Click_backward");
 		owner->parent->SetEnabled(false);
 		previous_panel->SetEnabled(true);
 		enabled = false;

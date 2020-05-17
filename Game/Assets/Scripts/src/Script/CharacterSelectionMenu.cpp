@@ -42,41 +42,33 @@ void CharacterSelectionMenu::Update()
 		confirm_singleplayer->SetEnabled(false);
 		return;
 	}
-	if (selecting_character && App->input->singleplayer_input && MenuController::ComfirmButtonPressed(*App->input))
+	if (selecting_character  && MenuController::ComfirmButtonPressed(*App->input))
 	{
-		App->input->singleplayer_input = false;
-		character_selector2->SetEnabled(true);
-		const float3& translation_p2 = player1_character1 ? p2_position->transform_2d.GetTranslation() : p1_position->transform_2d.GetTranslation();
+		App->input->singleplayer_input = !App->input->singleplayer_input;
+		character_selector2->SetEnabled(!character_selector2->IsEnabled());
+		const float3& translation_p2 = player1_choice ? p2_position->transform_2d.GetTranslation() : p1_position->transform_2d.GetTranslation();
 		character_selector2->transform_2d.SetTranslation(translation_p2);
 
-		confirm_multiplayer->SetEnabled(false);
-		confirm_singleplayer->SetEnabled(true);
+		confirm_multiplayer->SetEnabled(!confirm_multiplayer->IsEnabled());
+		confirm_singleplayer->SetEnabled(!confirm_singleplayer->IsEnabled());
 	}
-	else if (selecting_character && !App->input->singleplayer_input && MenuController::ComfirmButtonPressed(*App->input))
-	{
 
-		App->input->singleplayer_input = true;
-		character_selector2->SetEnabled(false);
-		const float3& translation_p2 = player1_character1 ? p2_position->transform_2d.GetTranslation() : p1_position->transform_2d.GetTranslation();
-		character_selector2->transform_2d.SetTranslation(translation_p2);
-
-		confirm_multiplayer->SetEnabled(true);
-		confirm_singleplayer->SetEnabled(false);
-	}
 	if (!selecting_character && MenuController::ComfirmButtonPressed(*App->input))
 	{
-		audio_source->PlayEvent("Click_fordward");
+		
 		//Change scene
 		switch (current)
 		{
 		case 0:
 			//Back
+			audio_source->PlayEvent("Click_backward");
 			owner->parent->SetEnabled(false);
 			previous_panel->SetEnabled(true);
 			enabled = false;
 			break;
 		case 1:
 			//Level selection
+			audio_source->PlayEvent("Click_fordward");
 			owner->parent->SetEnabled(false);
 			level_selection->SetEnabled(true);
 			enabled = false;
@@ -134,12 +126,12 @@ void CharacterSelectionMenu::Update()
 
 void CharacterSelectionMenu::SelectCharacter()
 {
-	player1_character1 = !player1_character1;
-	const float3& translation = player1_character1 ? p1_position->transform_2d.GetTranslation() : p2_position->transform_2d.GetTranslation();
+	player1_choice = !player1_choice;
+	const float3& translation = player1_choice ? p1_position->transform_2d.GetTranslation() : p2_position->transform_2d.GetTranslation();
 	character_selector1->transform_2d.SetTranslation(translation);
 	if (!App->input->singleplayer_input)
 	{
-		const float3& translation_p2 = player1_character1 ? p2_position->transform_2d.GetTranslation() : p1_position->transform_2d.GetTranslation();
+		const float3& translation_p2 = player1_choice ? p2_position->transform_2d.GetTranslation() : p1_position->transform_2d.GetTranslation();
 		character_selector2->transform_2d.SetTranslation(translation_p2);
 	}
 }

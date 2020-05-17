@@ -43,7 +43,7 @@ void PauseMenuLogic::Update()
 	{
 		game_paused = true;
 		time_scale = App->time->time_scale;
-		//App->time->time_scale = 0.0f;
+		App->time->time_scale = 0.0f;
 		audio_source->PlayEvent("Play_ingame_music");
 	}
 	if (MenuController::ComfirmButtonPressed(*App->input))

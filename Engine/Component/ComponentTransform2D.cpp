@@ -175,10 +175,20 @@ void ComponentTransform2D::SetWidth(float new_width)
 	OnTransformChange();
 }
 
+float ComponentTransform2D::GetWidth() const
+{
+	return size.x;
+}
+
 void ComponentTransform2D::SetHeight(float new_height)
 {
 	size.y = new_height;
 	OnTransformChange();
+}
+
+float ComponentTransform2D::GetHeight() const
+{
+	return size.y;
 }
 
 void ComponentTransform2D::SetSize(float2 new_size)
