@@ -64,6 +64,7 @@ GameObject* TemplatedGameObjectCreator::CreateUIButton()
 	created_button->name = Component::GetComponentTypeName(Component::ComponentType::UI_BUTTON);
 	created_button->CreateComponent(Component::ComponentType::UI_IMAGE);
 	created_button->CreateComponent(Component::ComponentType::UI_BUTTON);
+	created_button->CreateComponent(Component::ComponentType::CANVAS_RENDERER);
 	created_button->transform_2d.SetSize(float2(160, 30));
 
 	GameObject* button_text = App->scene->CreateGameObject();
@@ -107,6 +108,8 @@ GameObject* TemplatedGameObjectCreator::CreateUIText()
 	component_text->SetFontSize(12);
 	component_text->SetText("New Text");
 	component_text->horizontal_alignment = ComponentText::HorizontalAlignment::CENTER;
+
+	created_text->CreateComponent(Component::ComponentType::CANVAS_RENDERER);
 
 	main_canvas_game_object->AddChild(created_text);
 
