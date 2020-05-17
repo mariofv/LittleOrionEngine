@@ -47,6 +47,7 @@ public:
 
 	GameObject* GetRaycastIntertectedObject(const LineSegment& ray);
 	bool GetRaycastIntertectedObject(const LineSegment& ray, float3& position);
+	void SetDrawMode(DrawMode draw_mode);
 
 private:
 	void SetVSync(bool vsync);
@@ -61,7 +62,6 @@ private:
 	void SetDithering(bool gl_dither);
 	void SetMinMaxing(bool gl_minmax);
 
-	void SetDrawMode(DrawMode draw_mode);
 	std::string GetDrawMode() const;
 
 	void GetMeshesToRender(const ComponentCamera* camera);
