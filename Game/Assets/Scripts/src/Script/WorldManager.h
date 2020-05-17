@@ -6,6 +6,7 @@
 
 class ComponentCollider;
 class PlayerController;
+class ComponentImage;
 
 
 class WorldManager : public Script
@@ -38,7 +39,6 @@ private:
 	GameObject* player2_go = nullptr;
 	ComponentImage* lose_component = nullptr;
 	ComponentImage* win_component = nullptr;
-	ComponentProgressBar* health_component = nullptr;
 	PlayerController* player1_controller = nullptr;
 	PlayerController* player2_controller = nullptr;
 	EventManager* event_manager = nullptr;
