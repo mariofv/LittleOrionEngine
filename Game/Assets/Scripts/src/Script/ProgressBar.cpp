@@ -57,9 +57,16 @@ void ProgressBar::SetProgress(float new_progress)
 
 	progress = new_progress;
 	float progress_bar_width = progress_bar_transform->GetWidth();
-	float fill_bar_right = progress_bar_width * (1 - progress);
+	float fill_bar_padding = progress_bar_width * (1 - progress);
 
-	fill_bar_transform->SetRight(fill_bar_right);
+	if (!inverted)
+	{
+		fill_bar_transform->SetRight(fill_bar_padding);
+	}
+	else
+	{
+		fill_bar_transform->SetLeft(fill_bar_padding);
+	}
 }
 
 // Use this for showing variables on inspector
@@ -69,6 +76,7 @@ void ProgressBar::OnInspector(ImGuiContext* context)
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
 
+	ImGui::Checkbox("Inverted", &inverted);
 }
 
 //Use this for linking JUST GO automatically 
@@ -84,4 +92,16 @@ void ProgressBar::InitPublicGameObjects()
 		name_gameobjects.push_back(is_object);
 		go_uuids.push_back(0);
 	}
+}
+
+void ProgressBar::Save(Config& config) const
+{
+	config.AddBool(inverted, "Inverted");
+	Script::Save(config);
+}
+
+void ProgressBar::Load(const Config& config)
+{
+	inverted = config.GetBool("Inverted", false);
+	Script::Load(config);
 }

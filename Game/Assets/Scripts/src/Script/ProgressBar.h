@@ -20,8 +20,12 @@ public:
 	
 	void SetProgress(float new_progress);
 
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
+
 private:
 	float progress = 1.f;
+	bool inverted = false;
 
 	GameObject* fill_bar_game_object = nullptr;
 
