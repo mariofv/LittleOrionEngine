@@ -708,9 +708,7 @@
                     "UUID": 219653655,
                     "ComponentType": 6,
                     "Active": true,
-                    "ScriptName": "WorldManager",
-                    "Name0": "Player1",
-                    "Player1": 248855188
+                    "ScriptName": "WorldManager"
                 }
             ]
         },
