@@ -73,9 +73,13 @@ public:
 	ENGINE_API void SetTranslation(const float3& translation) override;
 	ENGINE_API void Translate(const float3& translation) override;
 
-	void SetWidth(float new_width);
-	void SetHeight(float new_height);
-	void SetSize(float2 new_size);
+	ENGINE_API float GetWidth() const;
+	ENGINE_API void SetWidth(float new_width);
+
+	ENGINE_API float GetHeight() const;
+	ENGINE_API void SetHeight(float new_height);
+
+	ENGINE_API void SetSize(float2 new_size);
 	void ComputeSize();
 	void ComputeSizeDelta();
 
@@ -99,10 +103,10 @@ public:
 	void GenerateAnchorPosition();
 	float2 ComputeAnchorPosition(float2 min_anchor, float2 max_anchor);
 
-	void SetLeft(float left);
-	void SetRight(float right);
-	void SetBottom(float bottom);
-	void SetTop(float top);
+	ENGINE_API void SetLeft(float left);
+	ENGINE_API void SetRight(float right);
+	ENGINE_API void SetBottom(float bottom);
+	ENGINE_API void SetTop(float top);
 	void ComputeRect();
 
 	void ComputeGlobalRectAABB2D();

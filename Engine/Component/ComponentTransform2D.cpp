@@ -78,7 +78,7 @@ ComponentTransform2D & ComponentTransform2D::operator=(const ComponentTransform2
 
 void ComponentTransform2D::SpecializedSave(Config& config) const
 {
-	config.AddFloat2(size, "Size");
+	config.AddFloat2(size_delta, "SizeDelta");
 	config.AddFloat2(pivot, "Pivot");
 	config.AddFloat2(anchored_position, "AnchoredPos");
 
@@ -88,7 +88,7 @@ void ComponentTransform2D::SpecializedSave(Config& config) const
 
 void ComponentTransform2D::SpecializedLoad(const Config& config)
 {
-	config.GetFloat2("Size", size, float2(100.f));
+	config.GetFloat2("SizeDelta", size_delta, float2(100.f));
 	config.GetFloat2("Pivot", pivot, float2(0.5f));
 	config.GetFloat2("AnchoredPos", anchored_position, float2::zero);
 
@@ -161,16 +161,21 @@ void ComponentTransform2D::SetGlobalModelMatrix(const float4x4& new_global_matri
 
 }
 
-ENGINE_API void ComponentTransform2D::SetTranslation(const float3& translation)
+void ComponentTransform2D::SetTranslation(const float3& translation)
 {
 	this->translation = translation;
 	anchored_position = float2(translation.x, translation.y) - anchor_position;
 	OnTransformChange();
 }
 
-ENGINE_API void ComponentTransform2D::Translate(const float3& translation)
+void ComponentTransform2D::Translate(const float3& translation)
 {
 	SetTranslation(this->translation + translation);
+}
+
+float ComponentTransform2D::GetWidth() const
+{
+	return size.x;
 }
 
 void ComponentTransform2D::SetWidth(float new_width)
@@ -178,6 +183,11 @@ void ComponentTransform2D::SetWidth(float new_width)
 	size.x = new_width;
 	ComputeSizeDelta();
 	OnTransformChange();
+}
+
+float ComponentTransform2D::GetHeight() const
+{
+	return size.y;
 }
 
 void ComponentTransform2D::SetHeight(float new_height)

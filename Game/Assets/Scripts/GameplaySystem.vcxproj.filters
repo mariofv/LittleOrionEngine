@@ -19,6 +19,9 @@
     <Filter Include="src\Script\Enemy\States">
       <UniqueIdentifier>{ebdb1ed7-f4d7-4356-a775-004e150837bb}</UniqueIdentifier>
     </Filter>
+    <Filter Include="src\Script\UI">
+      <UniqueIdentifier>{4e17044f-868c-45b1-9ee8-f7edd4c56a9e}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Script\ExampleScript.h">
@@ -93,6 +96,9 @@
     <ClInclude Include="src\Script\EventManager.h">
       <Filter>src\Script</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\ProgressBar.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -166,6 +172,9 @@
     </ClCompile>
     <ClCompile Include="src\Script\EventManager.cpp">
       <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\ProgressBar.cpp">
+      <Filter>src\Script\UI</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
