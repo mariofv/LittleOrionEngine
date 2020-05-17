@@ -31,9 +31,11 @@ GameObject* TemplatedGameObjectCreator::CreateUIImage()
 
 	if (main_canvas_game_object == nullptr)
 	{
-		main_canvas_game_object = App->scene->CreateGameObject();
-		main_canvas_game_object->name = "Canvas";
-		main_canvas_game_object->CreateComponent(Component::ComponentType::CANVAS);
+		main_canvas_game_object = CreateMainCanvas();
+	}
+	if (!App->ui->ExistEventSystem())
+	{
+		CreateEventSystem();
 	}
 
 	GameObject* created_ui_element = App->scene->CreateGameObject();
@@ -48,18 +50,21 @@ GameObject* TemplatedGameObjectCreator::CreateUIImage()
 GameObject* TemplatedGameObjectCreator::CreateUIButton()
 {
 	GameObject* main_canvas_game_object = App->ui->GetMainCanvasGameObject();
-
+ 
 	if (main_canvas_game_object == nullptr)
 	{
-		main_canvas_game_object = App->scene->CreateGameObject();
-		main_canvas_game_object->name = "Canvas";
-		main_canvas_game_object->CreateComponent(Component::ComponentType::CANVAS);
+		main_canvas_game_object = CreateMainCanvas();
+	}
+	if (!App->ui->ExistEventSystem())
+	{
+		CreateEventSystem();
 	}
 
 	GameObject* created_button = App->scene->CreateGameObject();
 	created_button->name = Component::GetComponentTypeName(Component::ComponentType::UI_BUTTON);
 	created_button->CreateComponent(Component::ComponentType::UI_IMAGE);
 	created_button->CreateComponent(Component::ComponentType::UI_BUTTON);
+	created_button->CreateComponent(Component::ComponentType::CANVAS_RENDERER);
 	created_button->transform_2d.SetSize(float2(160, 30));
 
 	GameObject* button_text = App->scene->CreateGameObject();
@@ -88,9 +93,11 @@ GameObject* TemplatedGameObjectCreator::CreateUIText()
 
 	if (main_canvas_game_object == nullptr)
 	{
-		main_canvas_game_object = App->scene->CreateGameObject();
-		main_canvas_game_object->name = "Canvas";
-		main_canvas_game_object->CreateComponent(Component::ComponentType::CANVAS);
+		main_canvas_game_object = CreateMainCanvas();
+	}
+	if (!App->ui->ExistEventSystem())
+	{
+		CreateEventSystem();
 	}
 
 	GameObject* created_text = App->scene->CreateGameObject();
@@ -102,9 +109,29 @@ GameObject* TemplatedGameObjectCreator::CreateUIText()
 	component_text->SetText("New Text");
 	component_text->horizontal_alignment = ComponentText::HorizontalAlignment::CENTER;
 
+	created_text->CreateComponent(Component::ComponentType::CANVAS_RENDERER);
+
 	main_canvas_game_object->AddChild(created_text);
 
 	return created_text;
+}
+
+GameObject* TemplatedGameObjectCreator::CreateMainCanvas()
+{
+	GameObject* main_canvas_game_object = App->scene->CreateGameObject();
+	main_canvas_game_object->name = "Canvas";
+	main_canvas_game_object->CreateComponent(Component::ComponentType::CANVAS);
+
+	return main_canvas_game_object;
+}
+
+GameObject* TemplatedGameObjectCreator::CreateEventSystem()
+{
+	GameObject* event_system_game_object = App->scene->CreateGameObject();
+	event_system_game_object->name = "Event System";
+	event_system_game_object->CreateComponent(Component::ComponentType::EVENT_SYSTEM);
+
+	return event_system_game_object;
 }
 
 

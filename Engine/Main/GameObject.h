@@ -41,18 +41,20 @@ public:
 	void SetStatic(bool is_static);
 	bool IsStatic() const;
 
-	bool IsVisible(const ComponentCamera& camera) const;
+	ENGINE_API void PreUpdate();
 	ENGINE_API void Update();
-	void Delete(std::vector<GameObject*>& children_to_remove);
+	ENGINE_API void PostUpdate();
 
 	void Save(Config& config) const;
 	void Load(const Config& config);
+	void Delete(std::vector<GameObject*>& children_to_remove);
 
 	void SetParent(GameObject* new_parent);
 	void AddChild(GameObject* child);
 	void RemoveChild(GameObject* child);
 
 	Component::ComponentType GetTransformType() const;
+	void SetTransform2DStatus(bool enabled);
 
 	ENGINE_API Component* CreateComponent(const Component::ComponentType type);
 	ENGINE_API Component* CreateComponent(const ComponentCollider::ColliderType collider_type);
@@ -71,6 +73,8 @@ public:
 
 	int GetHierarchyDepth() const;
 	void SetHierarchyDepth(int value);
+
+	bool IsVisible(const ComponentCamera& camera) const;
 
 	//Prefabs
 	GameObject * GetPrefabParent();
@@ -111,8 +115,7 @@ private:
 	bool active = true;
 	bool is_static = false;
 
-	uint32_t num_2d_components = 0;
-	uint32_t num_ui_components = 0;
+	bool transform_2d_enabled = false;
 
 	int hierarchy_depth = 0;
 	int hierarchy_branch = 0;

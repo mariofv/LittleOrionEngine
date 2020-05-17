@@ -6,6 +6,7 @@
 #include "Helper/Utils.h"
 
 #include "Main/Application.h"
+#include "Main/GameObject.h"
 
 #include <imgui.h>
 #include <MathGeoLib.h>
@@ -45,8 +46,14 @@ void PanelTransform::ShowComponentTransformWindow(ComponentTransform *transform)
 
 void PanelTransform::ShowComponentTransform2DWindow(ComponentTransform2D *transform_2D)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_RULER_COMBINED " Transform 2D", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		if (ImGui::Button("Delete"))
+		{
+			transform_2D->owner->SetTransform2DStatus(false);
+			return;
+		}
+
 		float child_width = (ImGui::GetContentRegionAvail().x - 2 * ImGui::GetStyle().ItemSpacing.x) / 3;
 		child_width = math::Max(10.f, child_width);
 		float child_height = 20.f;
@@ -164,6 +171,7 @@ void PanelTransform::ShowComponentTransform2DWindow(ComponentTransform2D *transf
 				ImGui::PushItemWidth(-1);
 				if (ImGui::DragFloat("###Width drag", &transform_2D->size.x, 1.0f))
 				{
+					transform_2D->SetWidth(transform_2D->size.x);
 					transform_2D->OnTransformChange();
 					transform_2D->modified_by_user = true;
 				}
@@ -205,6 +213,7 @@ void PanelTransform::ShowComponentTransform2DWindow(ComponentTransform2D *transf
 				ImGui::PushItemWidth(-1);
 				if (ImGui::DragFloat("###Height drag", &transform_2D->size.y, 1.0f))
 				{
+					transform_2D->SetHeight(transform_2D->size.y);
 					transform_2D->OnTransformChange();
 					transform_2D->modified_by_user = true;
 				}

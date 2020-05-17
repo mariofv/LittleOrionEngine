@@ -39,7 +39,7 @@ void PanelGame::Render()
 			float2 game_window_content_area_max_point = float2(game_window_content_area_max_point_ImVec2.x, game_window_content_area_max_point_ImVec2.y);
 
 			ImVec2 game_window_content_area_pos_ImVec2 = ImGui::GetCursorScreenPos();
-			float2 game_window_content_area_pos = float2(game_window_content_area_pos_ImVec2.x, game_window_content_area_pos_ImVec2.y);
+			game_window_content_area_pos = float2(game_window_content_area_pos_ImVec2.x, game_window_content_area_pos_ImVec2.y);
 
 			game_window_content_area_width = game_window_content_area_max_point.x - game_window_content_area_pos.x;
 			game_window_content_area_height = game_window_content_area_max_point.y - game_window_content_area_pos.y;

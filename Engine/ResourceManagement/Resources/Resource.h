@@ -11,21 +11,20 @@ class Metafile;
 
 enum class ResourceType
 {
-	ANIMATION,
-	AUDIO,
-	MATERIAL,
-	MODEL,
-	MESH,
-	NAVMESH,
-	PREFAB,
-	SCENE,
-	SKELETON,
-	SKYBOX,
-	TEXTURE,
-	STATE_MACHINE,
-	FONT,
-	SOUND,
-	UNKNOWN
+	ANIMATION = 0,
+	MATERIAL = 2,
+	MODEL = 3,
+	MESH = 4,
+	NAVMESH = 5,
+	PREFAB = 6,
+	SCENE = 7,
+	SKELETON = 8,
+	SKYBOX = 9,
+	TEXTURE = 10,
+	STATE_MACHINE = 11,
+	FONT = 12,
+	SOUND = 1,
+	UNKNOWN = 13
 };
 
 class Resource

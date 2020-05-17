@@ -17,6 +17,8 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
+	bool IsFocused() const;
+
 	void SetResizable(bool resizable) const;
 	void SetBordered(bool bordered) const;
 
@@ -35,6 +37,7 @@ public:
 
 private:
 	void InitOpenGLAttributes() const;
+
 public:
 	//The window we'll be rendering to
 	SDL_Window* window = nullptr;

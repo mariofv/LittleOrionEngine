@@ -15,6 +15,11 @@ ComponentButton::ComponentButton(GameObject * owner) : Component(owner, Componen
 {
 }
 
+void ComponentButton::PostUpdate()
+{
+	clicked = false;
+}
+
 Component* ComponentButton::Clone(bool original_prefab) const
 {
 	ComponentButton * created_component;
@@ -48,4 +53,14 @@ void ComponentButton::SpecializedSave(Config& config) const
 
 void ComponentButton::SpecializedLoad(const Config& config)
 {
+}
+
+void ComponentButton::SetClicked(bool clicked)
+{
+	this->clicked = clicked;
+}
+
+bool ComponentButton::IsClicked() const
+{
+	return clicked;
 }
