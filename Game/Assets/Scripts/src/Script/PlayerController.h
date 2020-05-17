@@ -28,6 +28,7 @@ public:
 public:
 	bool on_gravity = false;
 	unsigned int player = 1;
+	bool is_alive = true;
 
 private:
 	PlayerMovement* player_movement = nullptr;

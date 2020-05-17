@@ -25,11 +25,20 @@ void IdleEnemyState::OnStateEnter()
 	{
 		enemy->animation->ActiveAnimation("idle");
 	}
+
+	enemy->target_on_idle = enemy->current_target;
 }
 
 void IdleEnemyState::OnStateUpdate()
 {
-	if (enemy->PlayerInSight())
+	//if (!enemy->animation->IsOnState("Idle"))
+	//{
+	//	enemy->animation->ActiveAnimation("idle");
+	//}
+
+	//enemy->GetClosestTarget();
+
+	if (enemy->PlayerInSight() /*&& (enemy->SlotsAvailable() || enemy->current_target != enemy->target_on_idle)*/)
 	{
 		Exit(enemy->pursue_state);
 	}
@@ -37,4 +46,5 @@ void IdleEnemyState::OnStateUpdate()
 
 void IdleEnemyState::OnStateExit()
 {
+	enemy->target_on_idle = enemy->current_target;
 }

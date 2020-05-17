@@ -497,7 +497,7 @@ public:
 	const int MAX_MOUSE_BUTTONS = 5;
 	const int MAX_CONTROLLER_BUTTONS = 15;
 
-	bool singleplayer_input = true;
+	bool singleplayer_input = false;
 	int total_game_controllers = 0;
 
 private:

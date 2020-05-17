@@ -36,12 +36,14 @@ public:
 	btRigidBody* AddBody();
 	ENGINE_API void AddForce(float3& force);
 	ENGINE_API void SetVelocity(float3& velocity, float speed);
+	ENGINE_API void SetVelocityEnemy(float3& velocity, float speed);
+	ENGINE_API void LookAt(float3& velocity, float speed);
 	ENGINE_API bool RaycastHit(btVector3& origin, btVector3& end);
 	ENGINE_API float3 GetCurrentVelocity() const;
 	void MoveBody();
 	void SetMass(float new_mass);
 	void SetVisualization();
-	void SetCollisionDetection();
+	ENGINE_API void SetCollisionDetection();
 	ENGINE_API bool DetectCollision(); //returns true if collides with any object in the world
 	ENGINE_API bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
 	ENGINE_API void ClearForces() const;

@@ -256,6 +256,7 @@
   <ItemGroup>
     <ClInclude Include="src\Script\DamageScript.h" />
     <ClInclude Include="src\Script\DebugModeScript.h" />
+    <ClInclude Include="src\Script\DieEnemyState.h" />
     <ClInclude Include="src\Script\GodCamera.h" />
     <ClInclude Include="src\Script\AttackEnemyState.h" />
     <ClInclude Include="src\Script\PursueEnemyState.h" />
@@ -281,6 +282,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\DamageScript.cpp" />
+    <ClCompile Include="src\Script\DieEnemyState.cpp" />
     <ClCompile Include="src\Script\GodCamera.cpp" />
     <ClCompile Include="src\Script\AttackEnemyState.cpp" />
     <ClCompile Include="src\Script\PursueEnemyState.cpp" />

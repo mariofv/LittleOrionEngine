@@ -32,12 +32,17 @@ void AttackEnemyState::OnStateEnter()
 
 void AttackEnemyState::OnStateUpdate()
 {
-	if (!enemy->PlayerInRange())
+	//if (!enemy->PlayerInRange())
+	//{
+	//	if (enemy->animation->GetCurrentClipPercentatge() >= 0.95f)
+	//	{
+	//		Exit(enemy->pursue_state);
+	//	}
+	//}
+
+	if (enemy->animation->GetCurrentClipPercentatge() >= 0.95f)
 	{
-		if (enemy->animation->GetCurrentClipPercentatge() >= 0.95f)
-		{
-			Exit(enemy->pursue_state);
-		}
+		Exit(enemy->pursue_state);
 	}
 	if(enemy->PlayerHit())
 	{
@@ -48,4 +53,6 @@ void AttackEnemyState::OnStateUpdate()
 void AttackEnemyState::OnStateExit()
 {
 	enemy->is_attacking = false;
+	enemy->CancelAttack();
+	enemy->GetOutOfAttackRange();
 }

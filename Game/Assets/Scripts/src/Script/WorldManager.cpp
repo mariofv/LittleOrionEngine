@@ -148,6 +148,8 @@ void WorldManager::OnInspector(ImGuiContext* context)
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
+
+	ImGui::Checkbox("Singleplayer", &App->input->singleplayer_input);
 	ImGui::Checkbox("Main menu", &on_main_menu);
 }
 

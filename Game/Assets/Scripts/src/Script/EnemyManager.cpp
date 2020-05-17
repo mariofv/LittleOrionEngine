@@ -190,7 +190,6 @@ void EnemyManager::OnInspector(ImGuiContext* context)
 //Use this for linking JUST GO automatically 
 void EnemyManager::InitPublicGameObjects()
 {
-
 	public_gameobjects.push_back(&mushdoom_go);
 	variable_names.push_back(GET_VARIABLE_NAME(mushdoom_go));
 
@@ -200,6 +199,52 @@ void EnemyManager::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
+
+void EnemyManager::RequestAttack(EnemyController* enemy)
+{
+	if (attackers.size() < simultaneousAttackers)
+	{
+		bool enemy_not_found = true;
+
+		for (std::list<EnemyController*>::iterator it = attackers.begin(); it != attackers.end(); ++it)
+		{
+			if ((*it) == enemy)
+			{
+				enemy_not_found = false;
+				break;
+			}
+		}
+
+		if (enemy_not_found)
+		{
+			attackers.emplace_back(enemy);
+			enemy->engage_player = true;
+		}
+	}
+}
+
+void EnemyManager::CancelAttack(EnemyController* enemy)
+{
+	//int index_to_erase = -1;
+	//int counter = 0;
+	//std::list<EnemyController*>::iterator toerase;
+
+	//for (std::list<EnemyController*>::iterator it = attackers.begin(); it != attackers.end(); ++it)
+	//{
+	//	if ((*it) == enemy)
+	//	{
+	//		index_to_erase = counter;
+	//		toerase = (*it);
+	//		break;
+	//	}
+
+	//	++counter;
+	//}
+
+	//attackers.erase(index_to_erase);
+	attackers.remove(enemy);
+}
+
 void EnemyManager::InitSpawnPoints()
 {
 	GameObject* spawn_go_dad = App->scene->GetGameObjectByName("Spawns");
