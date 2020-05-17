@@ -37,6 +37,7 @@ void ComponentAudioSource::Delete()
 {
 	StopAll();
 	AK::SoundEngine::UnregisterGameObj(gameobject_source);
+	App->audio->RemoveComponentAudioSource(this);
 }
 
 void ComponentAudioSource::SetSoundBank(uint32_t uuid)
