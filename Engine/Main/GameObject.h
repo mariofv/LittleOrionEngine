@@ -54,6 +54,7 @@ public:
 	void RemoveChild(GameObject* child);
 
 	Component::ComponentType GetTransformType() const;
+	void SetTransform2DStatus(bool enabled);
 
 	ENGINE_API Component* CreateComponent(const Component::ComponentType type);
 	ENGINE_API Component* CreateComponent(const ComponentCollider::ColliderType collider_type);
@@ -114,8 +115,7 @@ private:
 	bool active = true;
 	bool is_static = false;
 
-	uint32_t num_2d_components = 0;
-	uint32_t num_ui_components = 0;
+	bool transform_2d_enabled = false;
 
 	int hierarchy_depth = 0;
 	int hierarchy_branch = 0;
