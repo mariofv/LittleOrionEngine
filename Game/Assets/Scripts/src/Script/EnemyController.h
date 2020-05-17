@@ -65,7 +65,7 @@ public:
 	bool engage_player = false;
 	bool get_out = false;
 	EnemyManager* enemy_manager = nullptr;
-	int seconds_to_disappear = 5;
+	int seconds_to_disappear = 1;
 	bool activate_timer = false;
 
 protected:
