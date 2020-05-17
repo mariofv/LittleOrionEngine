@@ -65,6 +65,7 @@ void WorldManager::Awake()
 		if(!player1_choice)
 		{
 			player1_controller->player = 1;
+			player2_controller->is_alive = false;
 			player2_go->SetEnabled(false);
 			player2_go->transform.SetTranslation(float3(100.f, 100.f, 100.f));
 		}
@@ -72,6 +73,7 @@ void WorldManager::Awake()
 		else
 		{
 			player2_controller->player = 1;
+			player1_controller->is_alive = false;
 			player1_go->SetEnabled(false);
 			player1_go->transform.SetTranslation(float3(100.f, 100.f, 100.f));
 		}
