@@ -143,6 +143,10 @@ bool ModuleRender::CleanUp()
 	{
 		mesh->owner->RemoveComponent(mesh);
 	}
+	for (auto& particle : particle_systems)
+	{
+		particle->owner->RemoveComponent(particle);
+	}
 	return true;
 }
 

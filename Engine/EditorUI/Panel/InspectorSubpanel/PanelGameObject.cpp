@@ -2,16 +2,17 @@
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentBillboard.h"
+#include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentMeshRenderer.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentScript.h"
-#include "Component/ComponentBillboard.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentUI.h"
-#include "Component/ComponentButton.h"
 
 #include "EditorUI/Panel/PanelInspector.h"
 #include "Main/Application.h"
@@ -107,6 +108,9 @@ void PanelGameObject::Render(GameObject* game_object)
 				break;
 			case Component::ComponentType::BILLBOARD:
 				component_panel.ShowComponentBillboard(static_cast<ComponentBillboard*>(component));
+				break;
+			case Component::ComponentType::PARTICLE_SYSTEM:
+				component_panel.ShowComponentParticleSystem(static_cast<ComponentParticleSystem*>(component));
 				break;
 			case Component::ComponentType::AUDIO_SOURCE:
 				component_panel.ShowComponentAudioSourceWindow(static_cast<ComponentAudioSource*>(component));

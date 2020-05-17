@@ -73,6 +73,13 @@ public:
 	unsigned int max_particles = 50;
 	unsigned int last_used_particle = 0;
 	unsigned int nr_new_particles = 2;
+
+	float particles_life_time= 3.0F;
+
+	int max_range_random_x = 100;
+	int min_range_random_x = -100;
+	int max_range_random_z = 100;
+	int min_range_random_z = -100;
 };
 
 #endif

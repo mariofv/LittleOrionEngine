@@ -8,14 +8,15 @@
 class Component;
 class ComponentAnimation;
 class ComponentAudioSource;
+class ComponentBillboard;
 class ComponentButton;
 class ComponentCamera;
 class ComponentCanvas;
 class ComponentImage;
 class ComponentMeshRenderer;
-class ComponentBillboard;
 class ComponentTransform;
 class ComponentLight;
+class ComponentParticleSystem;
 class ComponentProgressBar;
 class ComponentUI;
 class ComponentText;
@@ -29,6 +30,7 @@ public:
 	PanelComponent() = default;
 	~PanelComponent() = default;
 
+	
 	void ShowComponentBillboard(ComponentBillboard* billboard);
 	void ShowComponentTransformWindow(ComponentTransform* transform);
 	void ShowComponentMeshRendererWindow(ComponentMeshRenderer* mesh);
@@ -38,6 +40,7 @@ public:
 	void ShowComponentScriptWindow(ComponentScript* component_script);
 	void ShowComponentUIWindow(ComponentUI* ui);
 	void ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source);
+	void ShowComponentParticleSystem(ComponentParticleSystem* particle_system);
 	void ShowAddNewComponentButton();
 
 	void ShowScriptsCreated(ComponentScript* component_script);

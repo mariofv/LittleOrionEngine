@@ -52,13 +52,14 @@ unsigned int ComponentParticleSystem::FirstUnusedParticle()
 
 void ComponentParticleSystem::RespawnParticle(Particle& particle)
 {
-	float random = (rand() % 100) / 100.f;
+	float randomX = (rand() % ((max_range_random_x - min_range_random_x) + 1) + min_range_random_x) / 100.f;
+	float randomZ = (rand() % ((max_range_random_z - min_range_random_x) + 1) + min_range_random_z) / 100.f;
 	float rColor = 0.5f + ((rand() % 100) / 100.0f);
 	particle.position = owner->transform.GetGlobalTranslation();
-	particle.position.x += random;
-	particle.position.z += random;
+	particle.position.x += randomX;
+	particle.position.z += randomZ;
 	particle.color = float4(rColor, rColor, rColor, 1.0f);
-	particle.life = 3000.0f;
+	particle.life = particles_life_time*1000;
 	particle.velocity.y = 0.001F;
 }
 

@@ -19,6 +19,7 @@
 #include "Component/ComponentImage.h"
 #include "Component/ComponentMeshRenderer.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentProgressBar.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentBillboard.h"
@@ -230,6 +231,39 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 	}
 }
 
+void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* particle_system)
+{
+
+	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Particle System", ImGuiTreeNodeFlags_DefaultOpen))
+	{
+		ImGui::Text("Texture");
+		ImGui::SameLine();
+
+		std::string texture_name = particle_system->billboard->billboard_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(particle_system->billboard->billboard_texture->GetUUID())->resource_name;
+		ImGuiID element_id = ImGui::GetID((std::to_string(particle_system->UUID) + "TextureSelector").c_str());
+		if (ImGui::Button(texture_name.c_str()))
+		{
+			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+		}
+
+		uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+		if (selected_resource_uuid != 0)
+		{
+			particle_system->billboard->ChangeTexture(selected_resource_uuid);
+		}
+		selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+		if (selected_resource_uuid != 0)
+		{
+			particle_system->billboard->ChangeTexture(selected_resource_uuid);
+		}
+		ImGui::DragFloat("Life", &particle_system->particles_life_time, 1.0F, 0.0F, 10.0F);
+		ImGui::DragInt("Max X random range", &particle_system->max_range_random_x, 1.0F, 0, 1000);
+		ImGui::DragInt("Min X random range", &particle_system->min_range_random_x, 1.0F, -1000, 0);
+		ImGui::DragInt("Max Z random range", &particle_system->max_range_random_z, 1.0F, 0, 1000);
+		ImGui::DragInt("Min Z random range", &particle_system->min_range_random_z, 1.0F, -1000, 0);
+	}
+
+}
 void PanelComponent::ShowComponentBillboard(ComponentBillboard *billboard)
 {
 	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Billboard", ImGuiTreeNodeFlags_DefaultOpen))
