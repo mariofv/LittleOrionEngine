@@ -219,7 +219,11 @@ bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_
 		config.AddChildConfig(transform_config, "Transform");
 		modified = true;
 	}
-
+	if (gameobject_to_save->modified_by_user)
+	{
+		config.AddString(gameobject_to_save->name, "Name");
+		modified = true;
+	}
 	std::vector<Config> gameobject_components_config;
 	for (auto & component : gameobject_to_save->components)
 	{
@@ -273,17 +277,22 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 
 		prefab_child->transform.Load(transform_config);
 	}
+	if (config.config_document.HasMember("Name"))
+	{
+		config.GetString("Name", prefab_child->name, prefab_child->name);
+		prefab_child->modified_by_user = true;
+	}
 
 	std::vector<Config> prefab_components_config;
 	config.GetChildrenConfig("Components", prefab_components_config);
 	for (auto & component_config : prefab_components_config)
 	{
-		uint64_t component_type_uint = component_config.GetUInt("ComponentType", 0);
-		assert(component_type_uint != 0);
+		Component::ComponentType component_type_uint = static_cast<Component::ComponentType>(component_config.GetUInt("ComponentType", 0));
+		assert(static_cast<uint64_t>(component_type_uint) != 0);
 
 		uint64_t UUID = component_config.GetUInt("UUID", 0);
 
-		Component * component = prefab_child->GetComponent(static_cast<Component::ComponentType>(component_type_uint));
+		Component * component = prefab_child->GetComponent(component_type_uint);
 		if (component != nullptr && component->UUID == UUID)
 		{
 			component->Load(component_config);
@@ -291,7 +300,16 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 		}
 		else
 		{
-			Component* created_component = prefab_child->CreateComponent(static_cast<Component::ComponentType>(component_type_uint));
+			Component* created_component;
+			if (component_type_uint == Component::ComponentType::COLLIDER)
+			{
+				ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(component_config.GetUInt("ColliderType", 0));
+				created_component = prefab_child->CreateComponent(collider_type);
+			}
+			else
+			{
+				created_component = prefab_child->CreateComponent(static_cast<Component::ComponentType>(component_type_uint));
+			}
 			created_component->Load(component_config);
 			created_component->added_by_user = true;
 		}

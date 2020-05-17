@@ -201,11 +201,9 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 		}
 	}
 	
-	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
-	App->ui->Render(&camera);
-
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
+	
 }
 
 void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)

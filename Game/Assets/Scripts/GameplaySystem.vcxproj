@@ -207,7 +207,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>..\..\..\Libraries\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>MathGeoLibRelease.lib;imguiRelease.lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;TwinlightSouls.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MathGeoLibRelease.lib;imguiRelease.lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;TwinlightSouls.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(OutDir)$(ProjectName).dll" "..\..\Resources\Scripts"</Command>
@@ -256,6 +256,17 @@
   <ItemGroup>
     <ClInclude Include="src\Script\DamageScript.h" />
     <ClInclude Include="src\Script\DebugModeScript.h" />
+    <ClInclude Include="src\Script\GodCamera.h" />
+    <ClInclude Include="src\Script\AttackEnemyState.h" />
+    <ClInclude Include="src\Script\PursueEnemyState.h" />
+    <ClInclude Include="src\Script\ScreamEnemyState.h" />
+    <ClInclude Include="src\Script\IdleEnemyState.h" />
+    <ClInclude Include="src\Script\EnemyState.h" />
+    <ClInclude Include="src\Script\EventManager.h" />
+    <ClInclude Include="src\Script\Mushdoom.h" />
+    <ClInclude Include="src\Script\EnemyManager.h" />
+    <ClInclude Include="src\Script\EnemyController.h" />
+    <ClInclude Include="src\Script\PlayerAttack.h" />
     <ClInclude Include="src\Script\EndOfLevelScript.h" />
     <ClInclude Include="src\Script\ExampleScript.h" />
     <ClInclude Include="src\Script\MenuLogic.h" />
@@ -270,6 +281,17 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\DamageScript.cpp" />
+    <ClCompile Include="src\Script\GodCamera.cpp" />
+    <ClCompile Include="src\Script\AttackEnemyState.cpp" />
+    <ClCompile Include="src\Script\PursueEnemyState.cpp" />
+    <ClCompile Include="src\Script\ScreamEnemyState.cpp" />
+    <ClCompile Include="src\Script\IdleEnemyState.cpp" />
+    <ClCompile Include="src\Script\EnemyState.cpp" />
+    <ClCompile Include="src\Script\EventManager.cpp" />
+    <ClCompile Include="src\Script\Mushdoom.cpp" />
+    <ClCompile Include="src\Script\EnemyManager.cpp" />
+    <ClCompile Include="src\Script\EnemyController.cpp" />
+    <ClCompile Include="src\Script\PlayerAttack.cpp" />
     <ClCompile Include="src\Script\DebugModeScript.cpp" />
     <ClCompile Include="src\Script\EndOfLevelScript.cpp" />
     <ClCompile Include="src\Script\ExampleScript.cpp" />

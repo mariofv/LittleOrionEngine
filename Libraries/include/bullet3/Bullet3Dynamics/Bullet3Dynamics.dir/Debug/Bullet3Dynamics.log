@@ -1,0 +1,9 @@
+﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/src/Bullet3Dynamics/CMakeLists.txt
+  b3CpuRigidBodyPipeline.cpp
+  b3FixedConstraint.cpp
+  b3Generic6DofConstraint.cpp
+  b3PgsJacobiSolver.cpp
+  b3Point2PointConstraint.cpp
+  b3TypedConstraint.cpp
+  Generando código...
+  Bullet3Dynamics.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\lib\Debug\Bullet3Dynamics_Debug.lib

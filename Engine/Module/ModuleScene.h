@@ -16,17 +16,20 @@ public:
 	~ModuleScene() = default;
 
 	bool Init() override;
+	update_status PreUpdate() override;
 	update_status Update() override;
+	update_status PostUpdate() override;
 	bool CleanUp() override;
 
 	ENGINE_API GameObject* CreateGameObject();
 	ENGINE_API GameObject* CreateChildGameObject(GameObject* parent);
 	void RemoveGameObject(GameObject* game_object_to_remove);
 	GameObject* AddGameObject(std::unique_ptr<GameObject> & game_object_to_add);
-	GameObject* DuplicateGameObject(GameObject* game_object, GameObject* parent_go);
+	ENGINE_API GameObject* DuplicateGameObject(GameObject* game_object, GameObject* parent_go);
 
 	ENGINE_API GameObject* GetRoot() const;
 	ENGINE_API GameObject* GetGameObject(uint64_t UUID) const;
+	ENGINE_API GameObject* GetGameObjectByName(const std::string& go_name) const;
 	Component* GetComponent(uint64_t UUID) const;
 
 

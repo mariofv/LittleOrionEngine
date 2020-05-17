@@ -2,8 +2,6 @@
 
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentProgressBar.h"
-#include "Component/ComponentUI.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -31,7 +29,7 @@ DamageScript::DamageScript()
 // Use this for initialization before Start()
 void DamageScript::Awake()
 {
-	health_component = (ComponentProgressBar*)health_bar->GetComponentUI(ComponentUI::UIType::PROGRESSBAR);
+	//health_component = (ComponentProgressBar*)health_bar->GetComponent(Component::ComponentType::UI_PROGRESS_BAR);
 }
 
 // Use this for initialization
@@ -43,12 +41,14 @@ void DamageScript::Start()
 // Update is called once per frame
 void DamageScript::Update()
 {
+	/*
 	if (OnTriggerEnter())
 	{
 		float aux_health = health_component->percentage;
 		aux_health -= damage * App->time->delta_time / 1000.f;
 		health_component->percentage = math::Clamp(aux_health, 0.0f, 100.0f);
 	}
+	*/
 }
 
 bool DamageScript::OnTriggerEnter() const
@@ -65,7 +65,7 @@ void DamageScript::OnInspector(ImGuiContext* context)
 
 }
 
-//Use this for linking JUST GO automatically 
+//Use this for linking JUST GO automatically
 void DamageScript::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
@@ -81,7 +81,7 @@ void DamageScript::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
-//Use this for linking GO AND VARIABLES automatically if you need to save variables 
+//Use this for linking GO AND VARIABLES automatically if you need to save variables
 // void DamageScript::Save(Config& config) const
 // {
 // 	config.AddUInt(example->UUID, "ExampleNameforSave");
@@ -94,4 +94,3 @@ void DamageScript::InitPublicGameObjects()
 // 	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
 // 	Script::Load(config);
 // }
-

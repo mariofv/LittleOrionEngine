@@ -49,11 +49,11 @@ bool ModuleInput::Init()
 		mouse_bible[(MouseButton)i] = KeyState::IDLE;
 	}
 
-	SDL_Init(SDL_INIT_GAMECONTROLLER);
+	SDL_Init(SDL_INIT_VIDEO | SDL_INIT_GAMECONTROLLER);
 
-	for (int i = 0; i < SDL_NumJoysticks(); ++i)
+	for (int i = 0; i < SDL_NumJoysticks() && i < MAX_PLAYERS; ++i)
 	{
-		if (SDL_IsGameController(i) && i < MAX_PLAYERS)
+		if (SDL_IsGameController(i))
 		{
 			controller[i] = SDL_GameControllerOpen(i);
 		}
@@ -92,7 +92,7 @@ bool ModuleInput::Init()
 	size_t readed_bytes = game_inputs_data.size;
 	char* scene_file_data = (char*)game_inputs_data.buffer;
 
-	if(scene_file_data != nullptr)
+	if (scene_file_data != nullptr)
 	{
 		std::string serialized_scene_string = scene_file_data;
 		delete[] scene_file_data;
@@ -111,18 +111,7 @@ update_status ModuleInput::PreUpdate()
 
 	mouse_motion = { 0, 0 };
 	mouse_wheel_motion = 0;
-
-	for (int i = 0; i < MAX_PLAYERS; ++i)
-	{
-		left_joystick[i] = float2(0, 0);
-		right_joystick[i] = float2(0, 0);
-		left_controller_trigger[i] = 0;
-		right_controller_trigger[i] = 0;
-		left_joystick_raw[i] = float2(0, 0);
-		right_joystick_raw[i] = float2(0, 0);
-		left_controller_trigger_raw[i] = 0;
-		right_controller_trigger_raw[i] = 0;
-	}
+	total_game_controllers = SDL_NumJoysticks();
 
 	for (auto& mouse : mouse_bible)
 	{
@@ -227,8 +216,25 @@ update_status ModuleInput::PreUpdate()
 			App->editor->project_explorer->CopyFileToSelectedFolder(dropped_filedir);
 			SDL_free(dropped_filedir);
 			*/
-
 			break;
+
+		case SDL_CONTROLLERDEVICEADDED:
+		{
+			int which = event.cdevice.which;
+
+			if (SDL_IsGameController(which) && which < MAX_PLAYERS)
+			{
+				controller[which] = SDL_GameControllerOpen(which);
+			}
+		}
+		break;
+
+		case SDL_CONTROLLERDEVICEREMOVED:
+		{
+			int which = event.cdevice.which;
+			SDL_GameControllerClose(controller[which]);
+		}
+		break;
 		}
 	}
 
@@ -276,6 +282,7 @@ bool ModuleInput::CleanUp()
 // Returns true while the user holds down the key identified by name
 ENGINE_API bool ModuleInput::GetKey(KeyCode key)
 {
+	BROFILER_CATEGORY("Get Key", Profiler::Color::Lavender);
 	//If map[x] does not find x it will add the default value
 	return key_bible[key] == KeyState::REPEAT;
 }
@@ -310,41 +317,104 @@ ENGINE_API bool ModuleInput::GetMouseButtonUp(MouseButton button)
 	return mouse_bible[button] == KeyState::UP;
 }
 
-ENGINE_API bool ModuleInput::GetControllerButton(ControllerCode code, PlayerID player_id)
+ENGINE_API bool ModuleInput::GetControllerButton(ControllerCode code, ControllerID controller_id)
 {
-	return controller_bible[(int)player_id][code] == KeyState::REPEAT;
+	return controller_bible[(int)controller_id][code] == KeyState::REPEAT;
 }
 
-ENGINE_API bool ModuleInput::GetControllerButtonDown(ControllerCode code, PlayerID player_id)
+ENGINE_API bool ModuleInput::GetControllerButtonDown(ControllerCode code, ControllerID controller_id)
 {
-	return controller_bible[(int)player_id][code] == KeyState::DOWN;
+	return controller_bible[(int)controller_id][code] == KeyState::DOWN;
 }
 
-ENGINE_API bool ModuleInput::GetControllerButtonUp(ControllerCode code, PlayerID player_id)
+ENGINE_API bool ModuleInput::GetControllerButtonUp(ControllerCode code, ControllerID controller_id)
 {
-	return controller_bible[(int)player_id][code] == KeyState::UP;
+	return controller_bible[(int)controller_id][code] == KeyState::UP;
 }
 
 ENGINE_API bool ModuleInput::GetGameInput(const char* name, PlayerID player_id)
 {
 	GameInput button = game_inputs[name];
 
-	for (auto& key : button.keys)
+	// No game controllers connected
+	// Player 1 -> Keyboard
+	if (total_game_controllers == 0)
 	{
-		if (GetKey(key))
-			return true;
+		if (player_id == PlayerID::ONE)
+		{
+			if (DetectedKeyboardInput(button, KeyState::REPEAT))
+			{
+				return true;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return false;
+		}
 	}
 
-	for (auto& mouse : button.mouse_buttons)
+	// 1 game controller connected && singleplayer
+	// Player 1 -> Keyboard || Game Controller
+	else if (total_game_controllers == 1 && singleplayer_input)
 	{
-		if (GetMouseButton(mouse))
-			return true;
+		if (player_id == PlayerID::ONE)
+		{
+			if (DetectedKeyboardInput(button, KeyState::REPEAT))
+			{
+				return true;
+			}
+
+			if (DetectedGameControllerInput(button, KeyState::REPEAT, ControllerID::ONE))
+			{
+				return true;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return false;
+		}
 	}
 
-	for (auto& controller : button.controller_buttons)
+	// 1 game controller connected && multiplayer
+	// Player 1 -> Keyboard
+	// Player 2 -> Game Controller
+	else if (total_game_controllers == 1 && !singleplayer_input)
 	{
-		if (GetControllerButton(controller, player_id))
-			return true;
+		if (player_id == PlayerID::ONE)
+		{
+			if (DetectedKeyboardInput(button, KeyState::REPEAT))
+			{
+				return true;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			if (DetectedGameControllerInput(button, KeyState::REPEAT, ControllerID::ONE))
+			{
+				return true;
+			}
+		}
+	}
+
+	// 2 game controllers connected
+	// Player 1 -> Game Controller 1
+	// Player 2 -> Game Controller 2
+	else if (total_game_controllers == 2)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (DetectedGameControllerInput(button, KeyState::REPEAT, ControllerID::ONE))
+			{
+				return true;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			if (DetectedGameControllerInput(button, KeyState::REPEAT, ControllerID::TWO))
+			{
+				return true;
+			}
+		}
 	}
 
 	return false;
@@ -354,22 +424,85 @@ ENGINE_API bool ModuleInput::GetGameInputDown(const char* name, PlayerID player_
 {
 	GameInput button = game_inputs[name];
 
-	for (auto& key : button.keys)
+	// No game controllers connected
+	// Player 1 -> Keyboard
+	if (total_game_controllers == 0)
 	{
-		if (GetKeyDown(key))
-			return true;
+		if (player_id == PlayerID::ONE)
+		{
+			if (DetectedKeyboardInput(button, KeyState::DOWN))
+			{
+				return true;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return false;
+		}
 	}
 
-	for (auto& mouse : button.mouse_buttons)
+	// 1 game controller connected && singleplayer
+	// Player 1 -> Keyboard || Game Controller
+	else if (total_game_controllers == 1 && singleplayer_input)
 	{
-		if (GetMouseButtonDown(mouse))
-			return true;
+		if (player_id == PlayerID::ONE)
+		{
+			if (DetectedKeyboardInput(button, KeyState::DOWN))
+			{
+				return true;
+			}
+
+			if (DetectedGameControllerInput(button, KeyState::DOWN, ControllerID::ONE))
+			{
+				return true;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return false;
+		}
 	}
 
-	for (auto& controller : button.controller_buttons)
+	// 1 game controller connected && multiplayer
+	// Player 1 -> Keyboard
+	// Player 2 -> Game Controller
+	else if (total_game_controllers == 1 && !singleplayer_input)
 	{
-		if (GetControllerButtonDown(controller, player_id))
-			return true;
+		if (player_id == PlayerID::ONE)
+		{
+			if (DetectedKeyboardInput(button, KeyState::DOWN))
+			{
+				return true;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			if (DetectedGameControllerInput(button, KeyState::DOWN, ControllerID::ONE))
+			{
+				return true;
+			}
+		}
+	}
+
+	// 2 game controllers connected
+	// Player 1 -> Game Controller 1
+	// Player 2 -> Game Controller 2
+	else if (total_game_controllers == 2)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (DetectedGameControllerInput(button, KeyState::DOWN, ControllerID::ONE))
+			{
+				return true;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			if (DetectedGameControllerInput(button, KeyState::DOWN, ControllerID::TWO))
+			{
+				return true;
+			}
+		}
 	}
 
 	return false;
@@ -379,22 +512,85 @@ ENGINE_API bool ModuleInput::GetGameInputUp(const char* name, PlayerID player_id
 {
 	GameInput button = game_inputs[name];
 
-	for (auto& key : button.keys)
+	// No game controllers connected
+	// Player 1 -> Keyboard
+	if (total_game_controllers == 0)
 	{
-		if (GetKeyUp(key))
-			return true;
+		if (player_id == PlayerID::ONE)
+		{
+			if (DetectedKeyboardInput(button, KeyState::UP))
+			{
+				return true;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return false;
+		}
 	}
 
-	for (auto& mouse : button.mouse_buttons)
+	// 1 game controller connected && singleplayer
+	// Player 1 -> Keyboard || Game Controller
+	else if (total_game_controllers == 1 && singleplayer_input)
 	{
-		if (GetMouseButtonUp(mouse))
-			return true;
+		if (player_id == PlayerID::ONE)
+		{
+			if (DetectedKeyboardInput(button, KeyState::UP))
+			{
+				return true;
+			}
+
+			if (DetectedGameControllerInput(button, KeyState::UP, ControllerID::ONE))
+			{
+				return true;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return false;
+		}
 	}
 
-	for (auto& controller : button.controller_buttons)
+	// 1 game controller connected && multiplayer
+	// Player 1 -> Keyboard
+	// Player 2 -> Game Controller
+	else if (total_game_controllers == 1 && !singleplayer_input)
 	{
-		if (GetControllerButtonUp(controller, player_id))
-			return true;
+		if (player_id == PlayerID::ONE)
+		{
+			if (DetectedKeyboardInput(button, KeyState::UP))
+			{
+				return true;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			if (DetectedGameControllerInput(button, KeyState::UP, ControllerID::ONE))
+			{
+				return true;
+			}
+		}
+	}
+
+	// 2 game controllers connected
+	// Player 1 -> Game Controller 1
+	// Player 2 -> Game Controller 2
+	else if (total_game_controllers == 2)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (DetectedGameControllerInput(button, KeyState::UP, ControllerID::ONE))
+			{
+				return true;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			if (DetectedGameControllerInput(button, KeyState::UP, ControllerID::TWO))
+			{
+				return true;
+			}
+		}
 	}
 
 	return false;
@@ -478,76 +674,420 @@ bool ModuleInput::IsMouseMoving() const
 	return mouse_moving;
 }
 
-ENGINE_API float2 ModuleInput::GetAxisController(ControllerAxis type, PlayerID player_id) const
+ENGINE_API float2 ModuleInput::GetAxisController(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
 	case ControllerAxis::LEFT_JOYSTICK:
-		return left_joystick[(int)player_id];
+		return left_joystick[(int)controller_id];
 
 	case ControllerAxis::RIGHT_JOYSTICK:
-		return right_joystick[(int)player_id];
+		return right_joystick[(int)controller_id];
 
 	case ControllerAxis::LEFT_JOYSTICK_RAW:
-		return left_joystick_raw[(int)player_id];
+		return left_joystick_raw[(int)controller_id];
 
 	case ControllerAxis::RIGHT_JOYSTICK_RAW:
-		return right_joystick_raw[(int)player_id];
+		return right_joystick_raw[(int)controller_id];
 
 	default:
 		return float2(0.0f, 0.0f);
 	}
 }
 
-ENGINE_API Sint16 ModuleInput::GetTriggerController(ControllerAxis type, PlayerID player_id) const
+ENGINE_API Sint16 ModuleInput::GetTriggerController(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
 	case ControllerAxis::LEFT_TRIGGER:
-		return left_controller_trigger[(int)player_id];
+		return left_controller_trigger[(int)controller_id];
 
 	case ControllerAxis::RIGHT_TRIGGER:
-		return right_controller_trigger[(int)player_id];
+		return right_controller_trigger[(int)controller_id];
 
 	case ControllerAxis::LEFT_TRIGGER_RAW:
-		return left_controller_trigger_raw[(int)player_id];
+		return left_controller_trigger_raw[(int)controller_id];
 
 	case ControllerAxis::RIGHT_TRIGGER_RAW:
-		return right_controller_trigger_raw[(int)player_id];
+		return right_controller_trigger_raw[(int)controller_id];
 
 	default:
 		return 0;
 	}
 }
 
-ENGINE_API float2 ModuleInput::GetAxisControllerRaw(ControllerAxis type, PlayerID player_id) const
+ENGINE_API float2 ModuleInput::GetAxisControllerRaw(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
 	case ControllerAxis::LEFT_JOYSTICK_RAW:
-		return left_joystick_raw[(int)player_id];
+		return left_joystick_raw[(int)controller_id];
 
 	case ControllerAxis::RIGHT_JOYSTICK_RAW:
-		return right_joystick_raw[(int)player_id];
+		return right_joystick_raw[(int)controller_id];
 
 	default:
 		return float2(0.0f, 0.0f);
 	}
 }
 
-ENGINE_API float ModuleInput::GetTriggerControllerRaw(ControllerAxis type, PlayerID player_id) const
+ENGINE_API float ModuleInput::GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const
 {
 	switch (type)
 	{
 	case ControllerAxis::LEFT_TRIGGER_RAW:
-		return left_controller_trigger_raw[(int)player_id];
+		return left_controller_trigger_raw[(int)controller_id];
 
 	case ControllerAxis::RIGHT_TRIGGER_RAW:
-		return right_controller_trigger_raw[(int)player_id];
+		return right_controller_trigger_raw[(int)controller_id];
 
 	default:
 		0.0f;
 	}
+}
+
+ENGINE_API float ModuleInput::GetVerticalRaw(PlayerID player_id)
+{
+	// No game controllers connected
+	// Player 1 -> Keyboard
+	if (total_game_controllers == 0)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (GetKey(KeyCode::W))
+			{
+				return -1;
+			}
+			else if (GetKey(KeyCode::S))
+			{
+				return 1;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return 0.f;
+		}
+	}
+
+	// 1 game controller connected && singleplayer
+	// Player 1 -> Keyboard || Game Controller
+	else if (total_game_controllers == 1 && singleplayer_input)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (GetKey(KeyCode::W))
+			{
+				return -1;
+			}
+			else if (GetKey(KeyCode::S))
+			{
+				return 1;
+			}
+
+			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).y;
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return 0.f;
+		}
+	}
+
+	// 1 game controller connected && multiplayer
+	// Player 1 -> Keyboard
+	// Player 2 -> Game Controller
+	else if (total_game_controllers == 1 && !singleplayer_input)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (GetKey(KeyCode::W))
+			{
+				return -1;
+			}
+			else if (GetKey(KeyCode::S))
+			{
+				return 1;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).y;
+		}
+	}
+
+	// 2 game controllers connected
+	// Player 1 -> Game Controller 1
+	// Player 2 -> Game Controller 2
+	else if (total_game_controllers == 2)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).y;
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::TWO).y;
+		}
+	}
+
+	return 0.f;
+}
+
+ENGINE_API float ModuleInput::GetHorizontalRaw(PlayerID player_id)
+{
+	// No game controllers connected
+	// Player 1 -> Keyboard
+	if (total_game_controllers == 0)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (GetKey(KeyCode::A))
+			{
+				return -1;
+			}
+			else if (GetKey(KeyCode::D))
+			{
+				return 1;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return 0.f;
+		}
+	}
+
+	// 1 game controller connected && singleplayer
+	// Player 1 -> Keyboard || Game Controller
+	else if (total_game_controllers == 1 && singleplayer_input)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (GetKey(KeyCode::A))
+			{
+				return -1;
+			}
+			else if (GetKey(KeyCode::D))
+			{
+				return 1;
+			}
+
+			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).x;
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return 0.f;
+		}
+	}
+
+	// 1 game controller connected && multiplayer
+	// Player 1 -> Keyboard
+	// Player 2 -> Game Controller
+	else if (total_game_controllers == 1 && !singleplayer_input)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (GetKey(KeyCode::A))
+			{
+				return -1;
+			}
+			else if (GetKey(KeyCode::D))
+			{
+				return 1;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).x;
+		}
+	}
+
+	// 2 game controllers connected
+	// Player 1 -> Game Controller 1
+	// Player 2 -> Game Controller 2
+	else if (total_game_controllers == 2)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::ONE).x;
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return GetAxisControllerRaw(ControllerAxis::LEFT_JOYSTICK_RAW, ControllerID::TWO).x;
+		}
+	}
+
+	return 0.f;
+}
+
+ENGINE_API float ModuleInput::GetVertical(PlayerID player_id)
+{
+	// No game controllers connected
+	// Player 1 -> Keyboard
+	if (total_game_controllers == 0)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (GetKey(KeyCode::W))
+			{
+				return -MAX_RAW_RANGE;
+			}
+			else if (GetKey(KeyCode::S))
+			{
+				return MAX_RAW_RANGE;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return 0.f;
+		}
+	}
+
+	// 1 game controller connected && singleplayer
+	// Player 1 -> Keyboard || Game Controller
+	else if (total_game_controllers == 1 && singleplayer_input)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (GetKey(KeyCode::W))
+			{
+				return -MAX_RAW_RANGE;
+			}
+			else if (GetKey(KeyCode::S))
+			{
+				return MAX_RAW_RANGE;
+			}
+
+			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).y;
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return 0.f;
+		}
+	}
+
+	// 1 game controller connected && multiplayer
+	// Player 1 -> Keyboard
+	// Player 2 -> Game Controller
+	else if (total_game_controllers == 1 && !singleplayer_input)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (GetKey(KeyCode::W))
+			{
+				return -MAX_RAW_RANGE;
+			}
+			else if (GetKey(KeyCode::S))
+			{
+				return MAX_RAW_RANGE;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).y;
+		}
+	}
+
+	// 2 game controllers connected
+	// Player 1 -> Game Controller 1
+	// Player 2 -> Game Controller 2
+	else if (total_game_controllers == 2)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).y;
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::TWO).y;
+		}
+	}
+
+	return 0.f;
+}
+
+ENGINE_API float ModuleInput::GetHorizontal(PlayerID player_id)
+{
+	// No game controllers connected
+// Player 1 -> Keyboard
+	if (total_game_controllers == 0)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (GetKey(KeyCode::A))
+			{
+				return -MAX_RAW_RANGE;
+			}
+			else if (GetKey(KeyCode::D))
+			{
+				return MAX_RAW_RANGE;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return 0.f;
+		}
+	}
+
+	// 1 game controller connected && singleplayer
+	// Player 1 -> Keyboard || Game Controller
+	else if (total_game_controllers == 1 && singleplayer_input)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (GetKey(KeyCode::A))
+			{
+				return -MAX_RAW_RANGE;
+			}
+			else if (GetKey(KeyCode::D))
+			{
+				return MAX_RAW_RANGE;
+			}
+
+			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).x;
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return 0.f;
+		}
+	}
+
+	// 1 game controller connected && multiplayer
+	// Player 1 -> Keyboard
+	// Player 2 -> Game Controller
+	else if (total_game_controllers == 1 && !singleplayer_input)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			if (GetKey(KeyCode::A))
+			{
+				return -MAX_RAW_RANGE;
+			}
+			else if (GetKey(KeyCode::D))
+			{
+				return MAX_RAW_RANGE;
+			}
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).x;
+		}
+	}
+
+	// 2 game controllers connected
+	// Player 1 -> Game Controller 1
+	// Player 2 -> Game Controller 2
+	else if (total_game_controllers == 2)
+	{
+		if (player_id == PlayerID::ONE)
+		{
+			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::ONE).x;
+		}
+		else if (player_id == PlayerID::TWO)
+		{
+			return GetAxisController(ControllerAxis::LEFT_JOYSTICK, ControllerID::TWO).x;
+		}
+	}
+
+	return 0.f;
 }
 
 void ModuleInput::SaveGameInputs(Config& config)
@@ -607,4 +1147,122 @@ float2 ModuleInput::Filter2D(Sint16 input_x, Sint16 input_y) const
 
 
 	return dir;
+}
+
+bool ModuleInput::DetectedKeyboardInput(const GameInput& button, KeyState state)
+{
+	switch (state)
+	{
+	case KeyState::REPEAT:
+	{
+		for (auto& key : button.keys)
+		{
+			if (GetKey(key))
+			{
+				return true;
+			}
+		}
+
+		for (auto& mouse : button.mouse_buttons)
+		{
+			if (GetMouseButton(mouse))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	case KeyState::DOWN:
+	{
+		for (auto& key : button.keys)
+		{
+			if (GetKeyDown(key))
+			{
+				return true;
+			}
+		}
+
+		for (auto& mouse : button.mouse_buttons)
+		{
+			if (GetMouseButtonDown(mouse))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	case KeyState::UP:
+	{
+		for (auto& key : button.keys)
+		{
+			if (GetKeyUp(key))
+			{
+				return true;
+			}
+		}
+
+		for (auto& mouse : button.mouse_buttons)
+		{
+			if (GetMouseButtonUp(mouse))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	default:
+		return false;
+	}
+
+	return false;
+}
+
+bool ModuleInput::DetectedGameControllerInput(const GameInput& button, KeyState state, ControllerID controller_id)
+{
+	switch (state)
+	{
+	case KeyState::REPEAT:
+	{
+		for (auto& controller : button.controller_buttons)
+		{
+			if (GetControllerButton(controller, controller_id))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	case KeyState::DOWN:
+	{
+		for (auto& controller : button.controller_buttons)
+		{
+			if (GetControllerButtonDown(controller, controller_id))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	case KeyState::UP:
+	{
+		for (auto& controller : button.controller_buttons)
+		{
+			if (GetControllerButtonUp(controller, controller_id))
+			{
+				return true;
+			}
+		}
+	}
+	break;
+
+	default:
+		return false;
+	}
+
+	return false;
 }

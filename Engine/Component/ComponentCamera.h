@@ -7,6 +7,7 @@
 #include "Component/ComponentAABB.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 #include "EditorUI/Panel/PanelScene.h"
+#include "ResourceManagement/Resources/Skybox.h"
 
 #include "MathGeoLib.h"
 #include <GL/glew.h>
@@ -39,15 +40,15 @@ public:
 	void Update() override;
 	void Delete() override;
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
 	float GetWidth() const;
 	float GetHeight() const;
 
-	void RecordFrame(float width, float height);
+	void RecordFrame(float width, float height, bool scene_mode = false);
 	void RecordDebugDraws(float width, float height) const;
 	GLuint GetLastRecordedFrame() const;
 
@@ -100,7 +101,7 @@ public:
 
 	std::vector<float> GetFrustumVertices() const;
 	
-	bool IsInsideFrustum(const AABB& aabb) const;
+	ENGINE_API bool IsInsideFrustum(const AABB& aabb) const;
 	ComponentAABB::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
 
 	ENGINE_API bool IsInsideFrustum(const AABB2D& aabb) const;

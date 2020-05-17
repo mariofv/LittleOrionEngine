@@ -33,21 +33,15 @@ void ComponentMeshRenderer::Delete()
 	App->renderer->RemoveComponentMesh(this);
 }
 
-void ComponentMeshRenderer::Save(Config& config) const
+void ComponentMeshRenderer::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddInt((unsigned int)type, "ComponentType");
-	config.AddBool(active, "Active");
 	config.AddUInt(mesh_uuid, "Mesh");
 	config.AddUInt(material_uuid, "Material");
 	config.AddUInt(skeleton_uuid, "Skeleton");
 }
 
-void ComponentMeshRenderer::Load(const Config& config)
+void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
-
 	mesh_uuid = config.GetUInt("Mesh", 0);
 	SetMesh(mesh_uuid);
 

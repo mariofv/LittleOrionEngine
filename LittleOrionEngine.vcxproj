@@ -82,7 +82,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiDebug.lib;MathGeoLibDebug.lib;recastDebug.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiDebug.lib;MathGeoLibDebug.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;recastDebug.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -110,7 +110,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;recastRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;recastRelease.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -138,7 +138,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;recastRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;recastRelease.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -149,12 +149,23 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Component\ComponentCanvasRenderer.h" />
+    <ClInclude Include="Engine\Component\ComponentBoxCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentCapsuleCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentCylinderCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentEventSystem.h" />
+    <ClInclude Include="Engine\Component\ComponentMeshCollider.h" />
+    <ClInclude Include="Engine\Component\ComponentSphereCollider.h" />
     <ClInclude Include="Engine\Component\ComponentAudioSource.h" />
     <ClInclude Include="Engine\DLL\DLLManager.h" />
     <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h" />
     <ClInclude Include="Engine\Helper\BuildOptions.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h" />
     <ClInclude Include="Engine\Helper\TemplatedGameObjectCreator.h" />
+    <ClInclude Include="Engine\ResourceManagement\Importer\FontImporter.h" />
+    <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h" />
+    <ClInclude Include="Engine\Module\ModulePhysics.h" />
     <ClInclude Include="Engine\Module\ModuleAudio.h" />
     <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\SceneImporter.h" />
@@ -169,9 +180,7 @@
     <ClInclude Include="Engine\Actions\EditorActionEnableDisableComponent.h" />
     <ClInclude Include="Engine\Actions\EditorActionModifyCamera.h" />
     <ClInclude Include="Engine\Actions\EditorActionModifyLight.h" />
-    <ClInclude Include="Engine\Actions\EditorActionRect2D.h" />
     <ClInclude Include="Engine\Actions\EditorActionRotation.h" />
-    <ClInclude Include="Engine\Actions\EditorActionRotation2D.h" />
     <ClInclude Include="Engine\Actions\EditorActionScale.h" />
     <ClInclude Include="Engine\Actions\EditorActionTranslate.h" />
     <ClInclude Include="Engine\AI\DebugDrawGL.h" />
@@ -181,11 +190,9 @@
     <ClInclude Include="Engine\Component\ComponentButton.h" />
     <ClInclude Include="Engine\Component\ComponentCanvas.h" />
     <ClInclude Include="Engine\Component\ComponentImage.h" />
-    <ClInclude Include="Engine\Component\ComponentProgressBar.h" />
     <ClInclude Include="Engine\Component\ComponentScript.h" />
     <ClInclude Include="Engine\Component\ComponentText.h" />
     <ClInclude Include="Engine\Component\ComponentTransform2D.h" />
-    <ClInclude Include="Engine\Component\ComponentUI.h" />
     <ClInclude Include="Engine\EditorUI\Helper\Grid.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupResourceSelector.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelStateMachine.h" />
@@ -219,6 +226,7 @@
     <ClInclude Include="Engine\ResourceManagement\Importer\StateMachineImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\StateMachineManager.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Animation.h" />
+    <ClInclude Include="Engine\ResourceManagement\Resources\Font.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Material.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Mesh.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\Prefab.h" />
@@ -293,11 +301,13 @@
     <ClInclude Include="Engine\Module\ModuleAI.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelNavMesh.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelBuildOptions.h" />
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTransform.h" />
     <ClInclude Include="Engine\ResourceManagement\Resources\SoundBank.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionDeleteComponent.cpp" />
@@ -305,24 +315,28 @@
     <ClCompile Include="Engine\Actions\EditorActionEnableDisableComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionModifyCamera.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionModifyLight.cpp" />
-    <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionRotation.cpp" />
-    <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionScale.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionTranslate.cpp" />
     <ClCompile Include="Engine\AI\DebugDrawGL.cpp" />
     <ClCompile Include="Engine\AI\SampleDebugDraw.cpp" />
     <ClCompile Include="Engine\Animation\AnimController.cpp" />
+    <ClCompile Include="Engine\Component\Component.cpp" />
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp" />
     <ClCompile Include="Engine\Component\ComponentAudioSource.cpp" />
+    <ClCompile Include="Engine\Component\ComponentBoxCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentButton.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvas.cpp" />
+    <ClCompile Include="Engine\Component\ComponentCapsuleCollider.cpp" />
+    <ClCompile Include="Engine\Component\ComponentCollider.cpp" />
+    <ClCompile Include="Engine\Component\ComponentCylinderCollider.cpp" />
+    <ClCompile Include="Engine\Component\ComponentEventSystem.cpp" />
     <ClCompile Include="Engine\Component\ComponentImage.cpp" />
-    <ClCompile Include="Engine\Component\ComponentProgressBar.cpp" />
+    <ClCompile Include="Engine\Component\ComponentMeshCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentScript.cpp" />
+    <ClCompile Include="Engine\Component\ComponentSphereCollider.cpp" />
     <ClCompile Include="Engine\Component\ComponentText.cpp" />
     <ClCompile Include="Engine\Component\ComponentTransform2D.cpp" />
-    <ClCompile Include="Engine\Component\ComponentUI.cpp" />
     <ClCompile Include="Engine\DLL\DLLManager.cpp" />
     <ClCompile Include="Engine\EditorUI\Helper\Grid.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.cpp" />
@@ -342,9 +356,11 @@
     <ClCompile Include="Engine\Main\Log.cpp" />
     <ClCompile Include="Engine\Main\Main.cpp" />
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp" />
+    <ClCompile Include="Engine\Module\ModulePhysics.cpp" />
     <ClCompile Include="Engine\Module\ModuleAudio.cpp" />
     <ClCompile Include="Engine\Module\ModuleResourceManager.cpp" />
     <ClCompile Include="Engine\Module\ModuleScriptManager.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Importer\FontImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\MaterialImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\AnimationImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\ModelImporters\MeshImporter.cpp" />
@@ -352,6 +368,7 @@
     <ClCompile Include="Engine\ResourceManagement\Importer\PrefabImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\SceneImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\SkyboxImporter.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Manager\FontManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Importer\SoundImporter.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\SceneManager.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Manager\SkyboxManager.cpp" />
@@ -367,6 +384,7 @@
     <ClCompile Include="Engine\ResourceManagement\Metafile\ModelMetafile.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Metafile\TextureMetafile.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Animation.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Resources\Font.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Material.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Mesh.cpp" />
     <ClCompile Include="Engine\ResourceManagement\Resources\Prefab.cpp" />
@@ -441,6 +459,7 @@
     <ClCompile Include="Engine\Module\ModuleAI.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelNavMesh.cpp" />
     <ClCompile Include="Engine\EditorUI\Panel\PanelBuildOptions.cpp" />
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTransform.cpp" />
     <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp" />
     <ClCompile Include="Libraries\include\SoundEngine\AkDefaultIOHookBlocking.cpp" />
     <ClCompile Include="Libraries\include\SoundEngine\AkFilePackage.cpp" />

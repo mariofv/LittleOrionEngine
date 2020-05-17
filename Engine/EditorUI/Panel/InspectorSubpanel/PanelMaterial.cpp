@@ -34,7 +34,7 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 	}
 	modified_by_user = false;
 
-	if (ImGui::CollapsingHeader(ICON_FA_IMAGE " Material", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_CIRCLE " Material", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ImGui::Spacing();
 		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(50, 50)); // TODO: Substitute this with resouce thumbnail
@@ -121,7 +121,7 @@ void PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 {
 	ImGui::PushID(static_cast<unsigned int>(type));
 
-	float material_texture_map_size = 20.f;
+	float material_texture_map_size = 20.F;
 
 	void* display_image;
 	if (material->textures[type].get() != nullptr)

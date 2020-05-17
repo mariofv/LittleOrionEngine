@@ -2,9 +2,9 @@
 #define  __WORLDMANAGER_H__
 
 #include "Script.h"
+#include "EventManager.h"
 
-class ComponentProgressBar;
-class ComponentImage;
+class ComponentCollider;
 
 
 class WorldManager : public Script
@@ -20,20 +20,25 @@ public:
 	bool OnTriggerEnter() const;
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();
+
 	//void Save(Config& config) const override;
 	//void Load(const Config& config) override;
 
 private:
-	GameObject* end_level = nullptr;
+	void InitTriggers();
+	void CheckTriggers();
+
+private:
 	GameObject* health_bar = nullptr;
 	GameObject* lose_screen = nullptr;
 	GameObject* win_screen = nullptr;
 	GameObject* player = nullptr;
-	ComponentImage* lose_component = nullptr;
-	ComponentImage* win_component = nullptr;
-	ComponentProgressBar* health_component = nullptr;
+	
 	ComponentScript* player_controller = nullptr;
+	EventManager* event_manager = nullptr;
 
+	ComponentCollider* event_triggers[3];
+	unsigned current_event_trigger = 0;
 	bool transition = false;
 
 };

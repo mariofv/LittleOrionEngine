@@ -21,12 +21,14 @@
 #include "Helper/Config.h"
 
 #include "Main/Application.h"
+#include "ModuleActions.h"
+#include "ModuleDebug.h"
+#include "ModuleInput.h"
 #include "ModuleResourceManager.h"
 #include "ModuleScene.h"
 #include "ModuleScriptManager.h"
 #include "ModuleActions.h"
 #include "ModuleWindow.h"
-#include "ModuleInput.h"
 
 #include "ResourceManagement/Manager/SceneManager.h"
 
@@ -118,18 +120,20 @@ update_status ModuleEditor::Update()
 	if (!inital_scene_loaded)
 	{
 		App->scene->LoadScene(0);
-		App->scripts->InitScripts();
 		inital_scene_loaded = true;
 		return update_status::UPDATE_CONTINUE;
 	}
-#else	
+#else
 	if (!inital_scene_loaded && App->resources->thread_comunication.finished_loading)
 	{
 		App->scene->LoadScene(0);
 		inital_scene_loaded = true;
 	}
-	//ImGui::ShowStyleEditor();
-	//ImGui::ShowDemoWindow();
+	if (App->debug->show_imgui_demo)
+	{
+		ImGui::ShowDemoWindow();
+	}
+
 #endif
 
 
@@ -143,7 +147,7 @@ void ModuleEditor::Render()
 #endif
 
 	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
-	
+
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight()));
 	if (ImGui::Begin("MainWindow", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBringToFrontOnFocus))
@@ -169,7 +173,7 @@ void ModuleEditor::RenderEditorDockspace()
 	{
 		editor_dockspace_id = ImGui::GetID("EditorDockspace");
 		bool initialized = ImGui::DockBuilderGetNode(editor_dockspace_id) != NULL;
-		
+
 		ImGui::DockSpace(editor_dockspace_id);
 
 		if (!initialized)

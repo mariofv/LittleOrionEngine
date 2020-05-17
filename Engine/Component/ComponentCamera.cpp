@@ -12,6 +12,7 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleUI.h"
 #include "Module/ModuleWindow.h"
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
@@ -79,17 +80,15 @@ void ComponentCamera::InitCamera()
 	glGenFramebuffers(1, &fbo);
 	glGenFramebuffers(1, &msfbo);
 
-	aspect_ratio = 1.f;
+	aspect_ratio = 1.F;
 	camera_frustum.type = FrustumType::PerspectiveFrustum;
 	camera_frustum.pos = float3::unitX;
 	camera_frustum.front = float3::unitZ;
 	camera_frustum.up = float3::unitY;
-	camera_frustum.nearPlaneDistance = 1.f;
-	camera_frustum.farPlaneDistance = 100.0f;
-	camera_frustum.verticalFov = math::pi / 4.0f;
-	camera_frustum.horizontalFov = 2.f * atanf(tanf(camera_frustum.verticalFov * 0.5f) * aspect_ratio);
-
-	SetSkybox(0);
+	camera_frustum.nearPlaneDistance = 1.F;
+	camera_frustum.farPlaneDistance = 100.0F;
+	camera_frustum.verticalFov = math::pi / 4.0F;
+	camera_frustum.horizontalFov = 2.F * atanf(tanf(camera_frustum.verticalFov * 0.5F) * aspect_ratio);
 }
 
 void ComponentCamera::Update()
@@ -118,11 +117,8 @@ void ComponentCamera::Delete()
 	App->cameras->RemoveComponentCamera(this);
 }
 
-void ComponentCamera::Save(Config& config) const
+void ComponentCamera::SpecializedSave(Config& config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddUInt((uint64_t)type, "ComponentType");
-	config.AddBool(active, "Active");
 	config.AddUInt(camera_frustum.type, "FrustumType");
 	config.AddFloat(camera_frustum.nearPlaneDistance, "NearPlaneDistance");
 	config.AddFloat(camera_frustum.farPlaneDistance, "FarPlaneDistance");
@@ -134,10 +130,8 @@ void ComponentCamera::Save(Config& config) const
 	config.AddUInt(skybox_uuid, "Skybox");
 }
 
-void ComponentCamera::Load(const Config& config)
+void ComponentCamera::SpecializedLoad(const Config& config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
 	uint64_t frustum_type_int = config.GetUInt("FrustumType", 1);
 	switch (frustum_type_int)
 	{
@@ -191,7 +185,7 @@ float ComponentCamera::GetHeight() const
 	return last_height;
 }
 
-void ComponentCamera::RecordFrame(float width, float height)
+void ComponentCamera::RecordFrame(float width, float height, bool scene_mode)
 {
 	if (last_width != width || last_height != height || toggle_msaa)
 	{
@@ -231,6 +225,8 @@ void ComponentCamera::RecordFrame(float width, float height)
 	}
 
 	App->renderer->RenderFrame(*this);
+	App->ui->Render(scene_mode);
+
 
 #if !GAME
 	if (App->renderer->anti_aliasing)
@@ -624,12 +620,12 @@ std::vector<float> ComponentCamera::GetFrustumVertices() const
 	return vertices;
 }
 
-bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
+ENGINE_API bool ComponentCamera::IsInsideFrustum(const AABB& aabb) const
 {
 	return CheckAABBCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
 
-bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const
+ENGINE_API bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const
 {
 	return CheckAABB2DCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }

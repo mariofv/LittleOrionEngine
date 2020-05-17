@@ -331,9 +331,6 @@
     <ClCompile Include="Engine\Component\ComponentAnimation.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentUI.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Component\ComponentButton.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
@@ -343,20 +340,11 @@
     <ClCompile Include="Engine\Component\ComponentImage.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentProgressBar.cpp">
-      <Filter>Engine\Component</Filter>
-    </ClCompile>
     <ClCompile Include="Engine\Component\ComponentText.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Component\ComponentTransform2D.cpp">
       <Filter>Engine\Component</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Actions\EditorActionRect2D.cpp">
-      <Filter>Engine\Actions</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\Actions\EditorActionRotation2D.cpp">
-      <Filter>Engine\Actions</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Module\ModuleAnimation.cpp">
       <Filter>Engine\Module</Filter>
@@ -394,6 +382,9 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\Font.cpp">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClCompile>
     <ClCompile Include="Engine\EditorUI\Panel\PanelBuildOptions.cpp">
       <Filter>Engine\EditorUI\Panel</Filter>
     </ClCompile>
@@ -406,47 +397,86 @@
     <ClCompile Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.cpp">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.cpp">
+    <ClCompile Include="Engine\Component\Component.cpp">
+      <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\FontImporter.cpp">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\FontManager.cpp">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTransform.cpp">
       <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Metafile\TextureMetafile.cpp">
-      <Filter>Engine\ResourceManagement\Metafile</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Metafile\ModelMetafile.cpp">
-      <Filter>Engine\ResourceManagement\Metafile</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Module\ModuleSpacePartitioning.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\Component\ComponentAudioSource.cpp">
+    <ClCompile Include="Engine\Component\ComponentCollider.cpp">
       <Filter>Engine\Component</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentSphereCollider.cpp">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentBoxCollider.cpp">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentCapsuleCollider.cpp">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentCylinderCollider.cpp">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentMeshCollider.cpp">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Module\ModulePhysics.cpp">
+      <Filter>Engine\Module</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.cpp">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Metafile\ModelMetafile.cpp">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Metafile\TextureMetafile.cpp">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
     </ClCompile>
     <ClCompile Include="Engine\Module\ModuleAudio.cpp">
       <Filter>Engine\Module</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Manager\SoundManager.cpp">
-      <Filter>Engine\ResourceManagement\Manager</Filter>
+    <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp">
+      <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Importer\SoundImporter.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Resources\SoundBank.cpp">
-      <Filter>Engine\ResourceManagement\Resources</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\SoundEngine\AkDefaultIOHookBlocking.cpp">
-      <Filter>Libraries\SoundEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\SoundEngine\AkFilePackageLUT.cpp">
-      <Filter>Libraries\SoundEngine</Filter>
-    </ClCompile>
-    <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp">
-      <Filter>Libraries\SoundEngine</Filter>
+    <ClCompile Include="Engine\Component\ComponentAudioSource.cpp">
+      <Filter>Engine\Component</Filter>
     </ClCompile>
     <ClCompile Include="Libraries\include\SoundEngine\stdafx.cpp">
-      <Filter>Libraries\SoundEngine</Filter>
+      <Filter>Engine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\SoundEngine\AkDefaultIOHookBlocking.cpp">
+      <Filter>Engine\Audio</Filter>
     </ClCompile>
     <ClCompile Include="Libraries\include\SoundEngine\AkFilePackage.cpp">
-      <Filter>Libraries\SoundEngine</Filter>
+      <Filter>Engine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\SoundEngine\AkFilePackageLUT.cpp">
+      <Filter>Engine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp">
+      <Filter>Engine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Resources\SoundBank.cpp">
+      <Filter>Engine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Importer\SoundImporter.cpp">
+      <Filter>Engine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\ResourceManagement\Manager\SoundManager.cpp">
+      <Filter>Engine\Audio</Filter>
+    </ClCompile>
+    <ClCompile Include="Engine\Component\ComponentEventSystem.cpp">
+      <Filter>Engine\Component</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -780,32 +810,11 @@
     <ClInclude Include="Engine\Component\ComponentAnimation.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentUI.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentButton.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentCanvas.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentImage.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentProgressBar.h">
-      <Filter>Engine\Component</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Component\ComponentText.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentTransform2D.h">
       <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Actions\EditorActionRect2D.h">
-      <Filter>Engine\Actions</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Actions\EditorActionRotation2D.h">
-      <Filter>Engine\Actions</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleAnimation.h">
       <Filter>Engine\Module</Filter>
@@ -849,6 +858,9 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneLoader.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Resources\Font.h">
+      <Filter>Engine\ResourceManagement\Resources</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\EditorUI\Panel\PanelBuildOptions.h">
       <Filter>Engine\EditorUI\Panel</Filter>
     </ClInclude>
@@ -864,32 +876,92 @@
     <ClInclude Include="Engine\EditorUI\Panel\PopupsPanel\PanelPopupSceneSaver.h">
       <Filter>Engine\EditorUI\Panel\PopupsPanel</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Importer\FontImporter.h">
+      <Filter>Engine\ResourceManagement\Importer</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\FontManager.h">
+      <Filter>Engine\ResourceManagement\Manager</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelTransform.h">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h">
-      <Filter>Engine\ResourceManagement\Metafile</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h">
-      <Filter>Engine\ResourceManagement\Metafile</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h">
       <Filter>Engine\ResourceManagement\Metafile</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentButton.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCanvas.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentImage.h">
+      <Filter>Engine\Component\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCanvasRenderer.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
     <ClInclude Include="Engine\Component\ComponentAudioSource.h">
       <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCollider.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentSphereCollider.h">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentBoxCollider.h">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCapsuleCollider.h">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCylinderCollider.h">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentMeshCollider.h">
+      <Filter>Engine\Component\Collider</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Module\ModulePhysics.h">
+      <Filter>Engine\Module</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\EditorUI\Panel\InspectorSubpanel\PanelMetaFile.h">
+      <Filter>Engine\EditorUI\Panel\InspectorSubpanel</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\ModelMetafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Metafile\TextureMetafile.h">
+      <Filter>Engine\ResourceManagement\Metafile</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Module\ModuleAudio.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Resources\SoundBank.h">
-      <Filter>Engine\ResourceManagement\Resources</Filter>
+    <ClInclude Include="Engine\Component\ComponentAudioSource.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h">
-      <Filter>Engine\ResourceManagement\Manager</Filter>
+    <ClInclude Include="Engine\ResourceManagement\Resources\SoundBank.h">
+      <Filter>Engine\Audio</Filter>
     </ClInclude>
     <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
+      <Filter>Engine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h">
+      <Filter>Engine\Audio</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentEventSystem.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentImage.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentButton.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCanvas.h">
+      <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
@@ -956,6 +1028,9 @@
     <Filter Include="Engine\EditorUI\Panel\PopupsPanel">
       <UniqueIdentifier>{4d3c5294-ef77-4da3-a2bc-ac29c72d5e42}</UniqueIdentifier>
     </Filter>
+    <Filter Include="Libraries\recast">
+      <UniqueIdentifier>{380b2d72-4143-4cd0-a469-bbd10415b4c7}</UniqueIdentifier>
+    </Filter>
     <Filter Include="Engine\AI">
       <UniqueIdentifier>{799add9a-b011-4795-bae5-55a425014ca0}</UniqueIdentifier>
     </Filter>
@@ -977,8 +1052,11 @@
     <Filter Include="Engine\DLL">
       <UniqueIdentifier>{8b335900-d36a-4a5f-8bda-f20bee578e42}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Libraries\SoundEngine">
-      <UniqueIdentifier>{d944c34d-2880-470e-89dd-e2ba4e4fd35f}</UniqueIdentifier>
+    <Filter Include="Engine\Component\Collider">
+      <UniqueIdentifier>{cf44b757-a8ce-4d05-8f2c-587be25f5298}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Engine\Audio">
+      <UniqueIdentifier>{a496c958-f07d-4a0a-b760-abae59e88466}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>

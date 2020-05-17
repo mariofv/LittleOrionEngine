@@ -7,6 +7,7 @@
 #include <imgui.h>
 
 class Animation;
+class Font;
 class Material;
 class Mesh;
 class Prefab;
@@ -37,6 +38,25 @@ namespace ImGui
 				assert(payload->DataSize == sizeof(Metafile*));
 				Metafile* incoming_resource_metafile = *(Metafile**)payload->Data;
 				if (incoming_resource_metafile->resource_type == ResourceType::ANIMATION)
+				{
+					return incoming_resource_metafile->uuid;
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
+		return 0;
+	};
+
+	template<>
+	static uint32_t ResourceDropper<Font>()
+	{
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_Resource"))
+			{
+				assert(payload->DataSize == sizeof(Metafile*));
+				Metafile* incoming_resource_metafile = *(Metafile**)payload->Data;
+				if (incoming_resource_metafile->resource_type == ResourceType::FONT)
 				{
 					return incoming_resource_metafile->uuid;
 				}

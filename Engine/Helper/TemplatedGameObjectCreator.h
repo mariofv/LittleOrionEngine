@@ -1,6 +1,8 @@
 #ifndef _TEMPLATEDGAMEOBJECTCREATOR_H_
 #define _TEMPLATEDGAMEOBJECTCREATOR_H_
 
+#include "Component/Component.h"
+
 #include <string>
 
 enum class CoreResource;
@@ -14,6 +16,13 @@ public:
 	~TemplatedGameObjectCreator() = default;
 
 	static GameObject* CreatePrimitive(CoreResource resource_type);
+
+	static GameObject* CreateUIImage();
+	static GameObject* CreateUIButton();
+	static GameObject* CreateUIText();
+
+	static GameObject* CreateMainCanvas();
+	static GameObject* CreateEventSystem();
 
 private:
 	static std::string GetCoreResourceName(CoreResource resource_type);
