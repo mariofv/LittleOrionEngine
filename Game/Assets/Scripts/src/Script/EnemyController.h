@@ -36,7 +36,7 @@ public:
 	void SeekPlayerWithSeparation();
 
 	/* ai*/
-	GameObject* GetClosestTarget();
+	PlayerController* GetClosestTarget();
 	void BattleCircleAI();
 	void Seek(float3& velocity);
 	void Avoid(float3& velocity);
@@ -62,7 +62,7 @@ public:
 	ComponentAnimation* animation = nullptr;
 	ComponentCollider* collider = nullptr;
 
-	GameObject* current_target = nullptr;
+	PlayerController* current_target = nullptr;
 	GameObject* target_on_idle = nullptr;
 
 	bool is_alive = true;

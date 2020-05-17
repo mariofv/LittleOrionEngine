@@ -26,7 +26,7 @@ void IdleEnemyState::OnStateEnter()
 		enemy->animation->ActiveAnimation("idle");
 	}
 
-	enemy->target_on_idle = enemy->current_target;
+	enemy->target_on_idle = enemy->current_target->owner;
 }
 
 void IdleEnemyState::OnStateUpdate()
@@ -46,5 +46,5 @@ void IdleEnemyState::OnStateUpdate()
 
 void IdleEnemyState::OnStateExit()
 {
-	enemy->target_on_idle = enemy->current_target;
+	enemy->target_on_idle = enemy->current_target->owner;
 }

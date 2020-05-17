@@ -1034,10 +1034,10 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "CameraController",
-                    "Name0": "Player",
-                    "Player": 248855188,
-                    "Name1": "Player",
-                    "Player": 248855188
+                    "Name0": "Player1",
+                    "Player1": 248855188,
+                    "Name1": "Player1",
+                    "Player1": 248855188
                 }
             ]
         },
@@ -1250,13 +1250,13 @@
             "ParentUUID": 0,
             "Name": "Player2",
             "IsStatic": false,
-            "Active": false,
+            "Active": true,
             "Transform": {
                 "UUID": 3302465632,
                 "Active": true,
                 "Translation": [
-                    -95.51750946044922,
-                    15.631143569946289,
+                    -105.88844299316406,
+                    1.3499345779418946,
                     2.589632987976074
                 ],
                 "Rotation": [
@@ -1294,13 +1294,13 @@
                 {
                     "UUID": 3273322402,
                     "ComponentType": 8,
-                    "Active": false,
+                    "Active": true,
                     "StateMachineResource": 2258225
                 },
                 {
                     "UUID": 3168858910,
                     "ComponentType": 6,
-                    "Active": false,
+                    "Active": true,
                     "ScriptName": "PlayerAttack",
                     "Name0": "FakeCollider(1)",
                     "FakeCollider(1)": 2439136978
@@ -1308,14 +1308,14 @@
                 {
                     "UUID": 1445660833,
                     "ComponentType": 6,
-                    "Active": false,
+                    "Active": true,
                     "ScriptName": "PlayerController",
-                    "Player": 1
+                    "Player": 2
                 },
                 {
                     "UUID": 3462575723,
                     "ComponentType": 6,
-                    "Active": false,
+                    "Active": true,
                     "ScriptName": "PlayerMovement",
                     "Name0": "Main Camera",
                     "Main Camera": 172714554,
@@ -1324,7 +1324,7 @@
                 },
                 {
                     "UUID": 864854195,
-                    "Active": false,
+                    "Active": true,
                     "ComponentType": 9,
                     "ColliderType": 1,
                     "Mass": 10.0,
@@ -1891,7 +1891,7 @@
             "ParentUUID": 2381648264,
             "Name": "FakeCollider(1)",
             "IsStatic": false,
-            "Active": false,
+            "Active": true,
             "Transform": {
                 "UUID": 1749737093,
                 "Active": true,
@@ -1934,7 +1934,7 @@
             "Components": [
                 {
                     "UUID": 2240086239,
-                    "Active": false,
+                    "Active": true,
                     "ComponentType": 9,
                     "ColliderType": 0,
                     "Mass": 1.0,
@@ -1966,7 +1966,7 @@
             "ParentUUID": 2917641285,
             "Name": "Beta_Joints_0(1)",
             "IsStatic": false,
-            "Active": false,
+            "Active": true,
             "Transform": {
                 "UUID": 2005581366,
                 "Active": true,
@@ -2010,7 +2010,7 @@
                 {
                     "UUID": 698764819,
                     "ComponentType": 2,
-                    "Active": false,
+                    "Active": true,
                     "Mesh": 682834458,
                     "Material": 191260840,
                     "Skeleton": 2050280920
@@ -2022,7 +2022,7 @@
             "ParentUUID": 2917641285,
             "Name": "Beta_Surface_0(1)",
             "IsStatic": false,
-            "Active": false,
+            "Active": true,
             "Transform": {
                 "UUID": 3343725425,
                 "Active": true,
@@ -2066,7 +2066,7 @@
                 {
                     "UUID": 1036927570,
                     "ComponentType": 2,
-                    "Active": false,
+                    "Active": true,
                     "Mesh": 2181622064,
                     "Material": 3605666792,
                     "Skeleton": 2050280920

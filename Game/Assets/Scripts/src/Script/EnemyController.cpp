@@ -114,7 +114,7 @@ void EnemyController::InitMembers()
 		player2_controller = static_cast<PlayerController*>(player2_controller_component->script);
 	}
 
-	current_target = player1;
+	current_target = player1_controller;
 
 	init_translation = owner->transform.GetTranslation();
 	init_rotation = owner->transform.GetRotation();
@@ -123,12 +123,12 @@ void EnemyController::InitMembers()
 
 bool EnemyController::PlayerInSight()
 {
-	return current_target->transform.GetTranslation().Distance(owner->transform.GetTranslation()) < detect_distance;
+	return current_target->owner->transform.GetTranslation().Distance(owner->transform.GetTranslation()) < detect_distance;
 }
 
 bool EnemyController::PlayerInRange()
 {
-	float3 target = current_target->transform.GetTranslation();
+	float3 target = current_target->owner->transform.GetTranslation();
 	return target.Distance(owner->transform.GetTranslation()) <= attack_range;
 }
 
@@ -138,7 +138,7 @@ void EnemyController::SeekPlayer()
 
 	GetClosestTarget();
 
-	float3 target = current_target->transform.GetTranslation();
+	float3 target = current_target->owner->transform.GetTranslation();
 	float3 position = owner->transform.GetTranslation();
 
 	float3 desired_velocity = target - position;
@@ -171,7 +171,7 @@ void EnemyController::SeekPlayerWithSeparation()
 {
 	GetClosestTarget();
 
-	float3 target = current_target->transform.GetTranslation();
+	float3 target = current_target->owner->transform.GetTranslation();
 	float3 position = owner->transform.GetTranslation();
 
 	float3 desired_velocity = target - position;
@@ -228,7 +228,7 @@ void EnemyController::BattleCircleAI()
 
 	current_target = GetClosestTarget();
 
-	float3 target = current_target->transform.GetTranslation();
+	float3 target = current_target->owner->transform.GetTranslation();
 	float3 position = owner->transform.GetTranslation();
 	float3 desired_velocity = float3::zero;
 
@@ -325,7 +325,7 @@ void EnemyController::Seek(float3& velocity)
 		if (move_with_physics)
 		{
 			float3 velocity_normalized = velocity.Normalized();
-			float3 look_pos = current_target->transform.GetTranslation() - owner->transform.GetTranslation();
+			float3 look_pos = current_target->owner->transform.GetTranslation() - owner->transform.GetTranslation();
 			collider->LookAt(look_pos, rotate_speed);
 			collider->SetVelocityEnemy(velocity_normalized, speed);
 		}
@@ -362,34 +362,13 @@ void EnemyController::GetOutOfAttackRange()
 
 bool EnemyController::PlayerHit()
 {
-	if (player2_controller == nullptr)
-	{
-		return collider->DetectCollisionWith(player1_controller->GetCollider());
-	}
-	else
-	{
-		return collider->DetectCollisionWith(player1_controller->GetCollider()) || collider->DetectCollisionWith(player2_controller->GetCollider());
-	}
+
+	return collider->DetectCollisionWith(current_target->GetCollider());
 }
 
 void EnemyController::Attack()
 {
-	if (player2_controller == nullptr)
-	{
-		player1_controller->TakeDamage(attack_damage);
-	}
-	else
-	{
-		if (current_target == player1)
-		{
-			player1_controller->TakeDamage(attack_damage);
-
-		}
-		else if (current_target == player2)
-		{
-			player2_controller->TakeDamage(attack_damage);
-		}
-	}
+	current_target->TakeDamage(attack_damage);
 }
 
 void EnemyController::TakeDamage(float damage)
@@ -422,45 +401,39 @@ bool EnemyController::SlotsAvailable()
 	return true;
 }
 
-GameObject* EnemyController::GetClosestTarget()
+PlayerController* EnemyController::GetClosestTarget()
 {
-	if (player2 == nullptr)
+
+	if (player1_controller->is_alive && player2_controller->is_alive)
 	{
-		current_target = player1;
-	}
-	else
-	{
-		if (player1_controller->is_alive && player2_controller->is_alive)
+		float3 position = owner->transform.GetTranslation();
+
+		float distance_player1 = player1->transform.GetTranslation().Distance(position);
+		float distance_player2 = player2->transform.GetTranslation().Distance(position);
+
+		if (abs(distance_player1 - distance_player2) >= switch_target_distance)
 		{
-			float3 position = owner->transform.GetTranslation();
-
-			float distance_player1 = player1->transform.GetTranslation().Distance(position);
-			float distance_player2 = player2->transform.GetTranslation().Distance(position);
-
-			if (abs(distance_player1 - distance_player2) >= switch_target_distance)
+			if (distance_player1 < distance_player2)
 			{
-				if (distance_player1 < distance_player2)
-				{
-					current_target = player1;
-				}
-				else
-				{
-					current_target = player2;
-				}
+				current_target = player1_controller;
+			}
+			else
+			{
+				current_target = player2_controller;
 			}
 		}
-		else if (!player1_controller->is_alive && player2_controller->is_alive)
-		{
-			current_target = player2;
-		}
-		else if (player1_controller->is_alive && !player2_controller->is_alive)
-		{
-			current_target = player1;
-		}
-		else if (!player1_controller->is_alive && !player2_controller->is_alive)
-		{
-			current_target = player1;
-		}
+	}
+	else if (!player1_controller->is_alive && player2_controller->is_alive)
+	{
+		current_target = player2_controller;
+	}
+	else if (player1_controller->is_alive && !player2_controller->is_alive)
+	{
+		current_target = player1_controller;
+	}
+	else if (!player1_controller->is_alive && !player2_controller->is_alive)
+	{
+		current_target = player1_controller;
 	}
 
 	return current_target;
