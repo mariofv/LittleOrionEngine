@@ -358,7 +358,7 @@ void EnemyController::TakeDamage(float damage)
 
 	if (health_points <= 0)
 	{
-		Die();
+		OnDeath();
 	}
 }
 
@@ -424,12 +424,6 @@ GameObject* EnemyController::GetClosestTarget()
 	}
 
 	return current_target;
-}
-
-void EnemyController::Die()
-{
-	is_alive = false;
-	enemy_manager->KillEnemy(this);
 }
 
 bool EnemyController::IsGrounded() const

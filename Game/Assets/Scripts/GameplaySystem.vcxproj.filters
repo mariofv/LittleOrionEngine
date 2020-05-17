@@ -93,6 +93,9 @@
     <ClInclude Include="src\Script\EventManager.h">
       <Filter>src\Script</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\DieEnemyState.h">
+      <Filter>src\Script\Enemy\States</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -166,6 +169,9 @@
     </ClCompile>
     <ClCompile Include="src\Script\EventManager.cpp">
       <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\DieEnemyState.cpp">
+      <Filter>src\Script\Enemy\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

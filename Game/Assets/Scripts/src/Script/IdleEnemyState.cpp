@@ -31,14 +31,14 @@ void IdleEnemyState::OnStateEnter()
 
 void IdleEnemyState::OnStateUpdate()
 {
-	if (!enemy->animation->IsOnState("Idle"))
-	{
-		enemy->animation->ActiveAnimation("idle");
-	}
+	//if (!enemy->animation->IsOnState("Idle"))
+	//{
+	//	enemy->animation->ActiveAnimation("idle");
+	//}
 
-	enemy->GetClosestTarget();
+	//enemy->GetClosestTarget();
 
-	if (enemy->PlayerInSight() && (enemy->SlotsAvailable() || enemy->current_target != enemy->target_on_idle))
+	if (enemy->PlayerInSight() /*&& (enemy->SlotsAvailable() || enemy->current_target != enemy->target_on_idle)*/)
 	{
 		Exit(enemy->pursue_state);
 	}

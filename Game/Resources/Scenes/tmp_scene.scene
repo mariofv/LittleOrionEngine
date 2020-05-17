@@ -1809,7 +1809,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 64,
+                    "Texture": 23,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1871,7 +1871,7 @@
                     "Active": false,
                     "ComponentType": 5,
                     "UIType": 1,
-                    "Texture": 66,
+                    "Texture": 25,
                     "Color": [
                         1.0,
                         1.0,
@@ -2103,7 +2103,7 @@
                 "Active": true,
                 "Translation": [
                     0.5778106451034546,
-                    8.69051742553711,
+                    5.90118932723999,
                     0.7089619636535645
                 ],
                 "Rotation": [

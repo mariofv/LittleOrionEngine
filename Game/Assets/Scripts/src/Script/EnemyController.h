@@ -51,7 +51,7 @@ public:
 	bool IsGrounded() const;
 
 protected:
-	void Die();
+	virtual void OnDeath() {}
 
 public:
 	ComponentAnimation* animation = nullptr;
@@ -64,6 +64,9 @@ public:
 	bool is_attacking = false;
 	bool engage_player = false;
 	bool get_out = false;
+	EnemyManager* enemy_manager = nullptr;
+	int seconds_to_disappear = 5;
+	bool activate_timer = false;
 
 protected:
 	EnemyType type;
@@ -71,7 +74,6 @@ protected:
 	GameObject* player1 = nullptr;
 	GameObject* player2 = nullptr;
 
-	EnemyManager* enemy_manager = nullptr;
 	PlayerController* player1_controller = nullptr;
 	PlayerController* player2_controller = nullptr;
 
@@ -80,7 +82,7 @@ protected:
 	float attack_speed = 1.f;
 	float attack_power = 10.f;
 	float attack_range = 1.4f;
-	const float MAX_HEALTH_POINTS = 100.f;
+	const float MAX_HEALTH_POINTS = 10.f;
 	float health_points = MAX_HEALTH_POINTS;
 	float detect_distance = 50.f;
 	float switch_target_distance = 0.5f;

@@ -5,6 +5,7 @@
 #include "ScreamEnemyState.h"
 #include "PursueEnemyState.h"
 #include "AttackEnemyState.h"
+#include "DieEnemyState.h"
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentScript.h"
@@ -14,6 +15,7 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleTime.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
@@ -36,6 +38,7 @@ Mushdoom::Mushdoom()
 	scream_state = new ScreamEnemyState(this);
 	pursue_state = new PursueEnemyState(this);
 	attack_state = new AttackEnemyState(this);
+	die_state = new DieEnemyState(this);
 }
 
 Mushdoom::~Mushdoom()
@@ -66,6 +69,20 @@ void Mushdoom::Update()
 	if (is_alive)
 	{
 		current_state->OnStateUpdate();
+
+		if (activate_timer)
+		{
+
+
+			current_time += App->time->delta_time;
+
+			if (current_time > (seconds_to_disappear * 1000))
+			{
+				current_state->OnStateExit();
+				activate_timer = false;
+				current_time = 0;
+			}
+		}
 	}
 }
 
@@ -76,13 +93,25 @@ void Mushdoom::ResetEnemy()
 	is_alive = true;
 	is_attacking = false;
 
-	current_state = pursue_state;
+	collider->detect_collision = true;
+	collider->disable_physics = false;
+
+	collider->Enable();
+	collider->SetCollisionDetection();
+
 	animation->Stop();
+	current_state = pursue_state;
+	current_state->OnStateEnter();
 	animation->Play();
 
 	//IMPORTANT: DONT RESET POSITION
 	owner->transform.SetRotation(init_rotation);
 	owner->transform.SetScale(init_scale);
+}
+
+void Mushdoom::OnDeath()
+{
+	current_state->Exit(die_state);
 }
 
 //Use this for showing variables on inspector
