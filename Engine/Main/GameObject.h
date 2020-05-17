@@ -41,12 +41,13 @@ public:
 	void SetStatic(bool is_static);
 	bool IsStatic() const;
 
-	bool IsVisible(const ComponentCamera& camera) const;
+	ENGINE_API void PreUpdate();
 	ENGINE_API void Update();
-	void Delete(std::vector<GameObject*>& children_to_remove);
+	ENGINE_API void PostUpdate();
 
 	void Save(Config& config) const;
 	void Load(const Config& config);
+	void Delete(std::vector<GameObject*>& children_to_remove);
 
 	void SetParent(GameObject* new_parent);
 	void AddChild(GameObject* child);
@@ -71,6 +72,8 @@ public:
 
 	int GetHierarchyDepth() const;
 	void SetHierarchyDepth(int value);
+
+	bool IsVisible(const ComponentCamera& camera) const;
 
 	//Prefabs
 	GameObject * GetPrefabParent();

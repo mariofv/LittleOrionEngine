@@ -76,6 +76,8 @@ public:
 	void SetWidth(float new_width);
 	void SetHeight(float new_height);
 	void SetSize(float2 new_size);
+	void ComputeSize();
+	void ComputeSizeDelta();
 
 	void SetPivot(const float2& new_pivot);
 	void ChangePivotSpace(const float2& new_pivot_position);
@@ -101,7 +103,13 @@ public:
 	void SetRight(float right);
 	void SetBottom(float bottom);
 	void SetTop(float top);
-	void GenerateRect();
+	void ComputeRect();
+
+	void ComputeGlobalRectAABB2D();
+	AABB2D GetGlobalRectAABB2D() const;
+
+	void ComputeRectAABB2D();
+	AABB2D GetRectAABB2D() const;
 
 private:
 	void OnTransformChange() override;
@@ -109,7 +117,11 @@ private:
 public:
 	float2 anchored_position = float2::zero;
 	float2 size = float2(100.f, 100.f);
+	float2 size_delta = float2(100.f, 100.f);
+
 	Rect rect;
+	AABB2D rect_aabb_2d;
+	AABB2D global_rect_aabb_2d;
 
 private:
 	AnchorPreset::AnchorPresetType anchor_preset = AnchorPreset::AnchorPresetType::CENTER_HORIZONTAL_CENTER_VERTICAL;

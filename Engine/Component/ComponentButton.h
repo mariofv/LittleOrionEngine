@@ -11,6 +11,8 @@ public:
 
 	~ComponentButton() = default;
 
+	void PostUpdate() override;
+
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
@@ -18,8 +20,11 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+	void SetClicked(bool clicked);
+	bool IsClicked() const;
+
 private:
-	bool hasText = false;
+	bool clicked = false;
 };
 #endif
 

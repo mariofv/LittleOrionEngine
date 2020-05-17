@@ -6,6 +6,7 @@
 #include <GL/glew.h>
 #include <MathGeoLib.h>
 
+class ComponentButton;
 class ComponentCanvasRenderer;
 
 class ComponentCanvas : public Component
@@ -27,9 +28,19 @@ public:
 	void SpecializedSave(Config& config) const override;
 	void SpecializedLoad(const Config& config) override;
 
+	float2 GetCanvasScreenPosition() const;
+	float2 GetCanvasScreenSize() const;
+
+	bool IsFocused() const;
+	ComponentButton* GetUIElementAtPosition(float2 mouse_position);
+
 private:
 	std::vector<ComponentCanvasRenderer*> GetComponentCanvasRendererToRender() const;
-	
+
+	float2 canvas_screen_size = float2::zero;
+	float2 canvas_screen_position = float2::zero;
+
+	bool focused = false;
 };
 
 #endif //_COMPONENTCANVAS_H_

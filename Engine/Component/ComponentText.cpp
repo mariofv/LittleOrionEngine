@@ -21,6 +21,12 @@ ComponentText::ComponentText(GameObject * owner) : Component(owner, ComponentTyp
 	SetFontSize(12);
 }
 
+ComponentText::~ComponentText()
+{
+	glDeleteBuffers(1, &vbo);
+	glDeleteVertexArrays(1, &vao);
+}
+
 void ComponentText::InitData()
 {
 	program = App->program->GetShaderProgramId("UI Text");
@@ -218,14 +224,26 @@ void ComponentText::Delete()
 void ComponentText::SpecializedSave(Config& config) const
 {
 	config.AddString(text, "Text");
+	
 	config.AddFloat(font_size, "FontSize");
+	config.AddUInt(font_uuid, "FontUUID");
+	
 	config.AddUInt((uint32_t)horizontal_alignment, "HorizontalAlignment");
 }
 
 void ComponentText::SpecializedLoad(const Config& config)
 {
 	config.GetString("Text", text, "");
+
+	font_uuid = config.GetUInt("FontUUID", 0);
+	if (font_uuid != 0)
+	{
+		SetFont(font_uuid);
+	}
+
 	config.GetFloat("FontSize", font_size);
+	SetFontSize(font_size);
+
 	uint32_t horizontal_alignment_uint32 = config.GetUInt("HorizontalAlignment", 0);
 	horizontal_alignment = static_cast<HorizontalAlignment>(horizontal_alignment_uint32);
 }

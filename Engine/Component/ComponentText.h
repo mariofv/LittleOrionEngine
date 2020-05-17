@@ -22,7 +22,7 @@ public:
 
 	ComponentText();
 	ComponentText(GameObject * owner);
-	~ComponentText() = default;
+	~ComponentText();
 
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
