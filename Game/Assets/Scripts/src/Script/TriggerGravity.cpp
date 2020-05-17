@@ -43,7 +43,7 @@ void TriggerGravity::Update()
 {
 	if (OnTriggerEnter())
 	{
-		movement_script->on_gravity = up_down;
+		//movement_script->on_gravity = up_down;
 	}
 }
 
