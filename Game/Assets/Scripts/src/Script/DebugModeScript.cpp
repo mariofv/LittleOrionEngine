@@ -92,7 +92,6 @@ void DebugModeScript::UpdateWithImGui(ImGuiContext* context)
 			}
 
 			ImGui::Checkbox("Draw AABB? ", &render_AABB);
-			
 
 			ImGui::End();
 		}

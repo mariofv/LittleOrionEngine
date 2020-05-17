@@ -47,7 +47,7 @@ public:
 
 	GameObject* GetRaycastIntertectedObject(const LineSegment& ray);
 	bool GetRaycastIntertectedObject(const LineSegment& ray, float3& position);
-	void SetDrawMode(DrawMode draw_mode);
+	ENGINE_API void SetDrawMode(DrawMode draw_mode);
 
 private:
 	void SetVSync(bool vsync);
