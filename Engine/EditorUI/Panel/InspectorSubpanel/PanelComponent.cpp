@@ -722,6 +722,12 @@ void PanelComponent::ShowAddNewComponentButton()
 
 		ImGui::Separator();
 
+		sprintf_s(tmp_string, "%s Transform 2D", ICON_FA_RULER_COMBINED);
+		if (ImGui::Selectable(tmp_string))
+		{
+			App->editor->selected_game_object->SetTransform2DStatus(true);
+		}
+
 		sprintf_s(tmp_string, "%s Canvas", ICON_FA_SQUARE);
 		if (ImGui::Selectable(tmp_string))
 		{
