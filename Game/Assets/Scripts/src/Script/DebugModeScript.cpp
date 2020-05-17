@@ -38,8 +38,6 @@ DebugModeScript::DebugModeScript()
 // Use this for initialization before Start()
 void DebugModeScript::Awake()
 {
-	ComponentScript* component = camera_manager->GetComponentScript("SceneCamerasController");
-	scene_cameras = (SceneCamerasController*)component->script;
 }
 
 // Use this for initialization
@@ -53,7 +51,6 @@ void DebugModeScript::Update()
 {
 	if (App->input->GetKeyDown(KeyCode::F1) || App->input->GetControllerButtonDown(ControllerCode::RightStick, ControllerID::ONE))
 	{
-		(debug_enabled) ? scene_cameras->SetMainCameraRendering() : scene_cameras->SetMainCameraRendering();
 		debug_enabled = !debug_enabled;
 
 		if (debug_enabled)
@@ -92,6 +89,7 @@ void DebugModeScript::UpdateWithImGui(ImGuiContext* context)
 			}
 
 			ImGui::Checkbox("Draw AABB? ", &render_AABB);
+			ImGui::Checkbox("Toggle Invincible mode ", &is_player_invincible);
 
 			ImGui::End();
 		}
@@ -110,10 +108,6 @@ void DebugModeScript::OnInspector(ImGuiContext* context)
 //Use this for linking JUST GO automatically 
 void DebugModeScript::InitPublicGameObjects()
 {
-	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
-	public_gameobjects.push_back(&camera_manager);
-	variable_names.push_back(GET_VARIABLE_NAME(camera_manager));
-
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
 		name_gameobjects.push_back(is_object);

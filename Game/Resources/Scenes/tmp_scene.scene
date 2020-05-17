@@ -691,6 +691,12 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "WorldManager"
+                },
+                {
+                    "UUID": 2100486565,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DebugModeScript"
                 }
             ]
         },

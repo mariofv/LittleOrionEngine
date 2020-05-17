@@ -6,6 +6,7 @@
 class ComponentCollider;
 class PlayerMovement;
 class PlayerAttack;
+class DebugModeScript;
 
 class PlayerController : public Script
 {
@@ -24,16 +25,18 @@ public:
 
 	void TakeDamage(float damage);
 	ComponentCollider* GetCollider();
+	void InitPublicGameObjects() override;
 
 public:
 	bool on_gravity = false;
 	unsigned int player = 1;
 	bool is_alive = true;
+	GameObject* debug_system = nullptr;
 
 private:
 	PlayerMovement* player_movement = nullptr;
 	PlayerAttack* player_attack = nullptr;
-
+	DebugModeScript* debug = nullptr;
 	//unsigned player = 0;
 	float health_points = 100.0f;
 };

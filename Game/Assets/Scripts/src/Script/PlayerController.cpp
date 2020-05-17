@@ -35,6 +35,9 @@ void PlayerController::Awake()
 
 	const ComponentScript* component_attack = owner->GetComponentScript("PlayerAttack");
 	player_attack = (PlayerAttack*)component_attack->script;
+
+	const ComponentScript* component_debug = owner->GetComponentScript("DebugModeScript");
+	debug = (DebugModeScript*)component_debug->script;
 }
 
 // Use this for initialization
@@ -59,6 +62,7 @@ void PlayerController::OnInspector(ImGuiContext* context)
 {
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
+	ShowDraggedObjects();
 	ImGui::Text("Player Controller Script Inspector");
 	std::string selected = std::to_string(player);
 	if (ImGui::BeginCombo("Player", selected.c_str()))
@@ -92,6 +96,8 @@ void PlayerController::Load(const Config& config)
 
 void PlayerController::TakeDamage(float damage)
 {
+	if (debug->is_player_invincible) return;
+
 	health_points -= damage;
 	//UPDATE HEALTH_BAR HERE
 	//also addforce here
@@ -100,5 +106,19 @@ void PlayerController::TakeDamage(float damage)
 ComponentCollider* PlayerController::GetCollider()
 {
 	return static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
+}
+
+//Use this for linking JUST GO automatically 
+void PlayerController::InitPublicGameObjects()
+{
+	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
+	public_gameobjects.push_back(&debug_system);
+	variable_names.push_back(GET_VARIABLE_NAME(debug_system));
+
+	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
+	{
+		name_gameobjects.push_back(is_object);
+		go_uuids.push_back(0);
+	}
 }
 

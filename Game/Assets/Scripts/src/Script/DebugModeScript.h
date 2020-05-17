@@ -25,7 +25,7 @@ public:
 	bool debug_enabled = false;
 	bool render_wireframe = false;
 	bool render_AABB = false;
-
+	bool is_player_invincible = false;
 private:
 	std::string base_str_tris = "#Tris: ";
 	std::string base_str_verts = "#Verts: ";
