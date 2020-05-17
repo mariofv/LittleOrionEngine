@@ -113,7 +113,7 @@
                         1.0,
                         1.0
                     ],
-                    "TextureUUID": 3433957624
+                    "TextureUUID": 932342779
                 },
                 {
                     "UUID": 1552194798,
@@ -183,7 +183,7 @@
                         1.0,
                         1.0
                     ],
-                    "TextureUUID": 2374305719
+                    "TextureUUID": 3719754817
                 },
                 {
                     "UUID": 2114841388,
@@ -253,7 +253,7 @@
                         1.0,
                         1.0
                     ],
-                    "TextureUUID": 970077998
+                    "TextureUUID": 3275759371
                 },
                 {
                     "UUID": 3602954063,
@@ -323,7 +323,7 @@
                         1.0,
                         1.0
                     ],
-                    "TextureUUID": 3105850649
+                    "TextureUUID": 606077624
                 },
                 {
                     "UUID": 1252102067,
@@ -404,17 +404,7 @@
                     "UUID": 431366398,
                     "ComponentType": 6,
                     "Active": true,
-                    "ScriptName": "PauseMenuLogic",
-                    "Name0": "Resume_button",
-                    "Resume_button": 388858658,
-                    "Name1": "Help_button",
-                    "Help_button": 637967882,
-                    "Name2": "Main_menu_button",
-                    "Main_menu_button": 377925581,
-                    "Name3": "Help",
-                    "Help": 26334951,
-                    "Name4": "Menu_audio_controller",
-                    "Menu_audio_controller": 2326306856
+                    "ScriptName": "PauseMenuLogic"
                 }
             ]
         }
