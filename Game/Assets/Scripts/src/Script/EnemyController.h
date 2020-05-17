@@ -8,6 +8,7 @@
 
 class ComponentAnimation;
 class ComponentCollider;
+class PlayerController;
 
 enum class EnemyType
 {
@@ -30,6 +31,7 @@ public:
 
 	bool PlayerInSight();
 	bool PlayerInRange();
+
 	void SeekPlayer();
 	void SeekPlayerWithSeparation();
 
@@ -42,6 +44,9 @@ public:
 	void CancelAttack();
 	void GetOutOfAttackRange();
 	/* ai*/
+
+	bool PlayerHit();
+	void Attack();
 
 	void TakeDamage(float damage);
 	bool SlotsAvailable();
@@ -77,6 +82,11 @@ protected:
 	PlayerController* player1_controller = nullptr;
 	PlayerController* player2_controller = nullptr;
 
+	GameObject* attack_detector = nullptr;
+	ComponentCollider* attack_collider = nullptr;
+
+	EnemyManager* enemy_manager = nullptr;
+
 	float move_speed = 1.f;
 	float rotate_speed = 1.f;
 	float attack_speed = 1.f;
@@ -85,6 +95,7 @@ protected:
 	const float MAX_HEALTH_POINTS = 10.f;
 	float health_points = MAX_HEALTH_POINTS;
 	float detect_distance = 50.f;
+
 	float switch_target_distance = 0.5f;
 	float attack_radius = 2.2f;
 	float separation_distance = 2.f;
@@ -92,13 +103,13 @@ protected:
 	float danger_distance = 6.f;
 	float attack_distance = 4.f;
 
+	float attack_damage = 15.f;
+
 	bool move_with_physics = true;
 
 	float3 init_translation;
 	Quat init_rotation;
 	float3 init_scale;
 };
-
 extern "C" SCRIPT_API EnemyController* EnemyControllerDLL(); //This is how we are going to load the script
-
 #endif

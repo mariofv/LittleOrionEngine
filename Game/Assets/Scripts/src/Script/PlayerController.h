@@ -3,6 +3,7 @@
 
 #include "Script.h"
 
+class ComponentCollider;
 class PlayerMovement;
 class PlayerAttack;
 
@@ -22,6 +23,7 @@ public:
 	void Load(const Config& config) override;
 
 	void TakeDamage(float damage);
+	ComponentCollider* GetCollider();
 
 public:
 	bool on_gravity = false;

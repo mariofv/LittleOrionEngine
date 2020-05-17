@@ -1,9 +1,9 @@
 #include "PanelGameObject.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioSource.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
-#include "Component/ComponentAudioSource.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentCapsuleCollider.h"

@@ -7,8 +7,8 @@
 
 class Component;
 class ComponentAnimation;
-class ComponentBoxCollider;
 class ComponentAudioSource;
+class ComponentBoxCollider;
 class ComponentButton;
 class ComponentCamera;
 class ComponentCanvas;

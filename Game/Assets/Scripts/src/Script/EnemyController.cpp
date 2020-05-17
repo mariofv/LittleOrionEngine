@@ -17,6 +17,8 @@
 
 #include "imgui.h"
 
+#include "PlayerController.h"
+
 EnemyController* EnemyControllerDLL()
 {
 	EnemyController* instance = new EnemyController();
@@ -91,6 +93,7 @@ void EnemyController::InitMembers()
 
 	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
+	attack_collider = static_cast<ComponentCollider*>(attack_detector->GetComponent(Component::ComponentType::COLLIDER));
 
 	player1 = App->scene->GetGameObjectByName("Player");
 	if (player1 != nullptr)
@@ -130,7 +133,7 @@ void EnemyController::SeekPlayer()
 
 	GetClosestTarget();
 
-	float3 target = current_target->transform.GetTranslation(); //+ (current_player_target->transform.GetFrontVector());
+	float3 target = current_target->transform.GetTranslation();
 	float3 position = owner->transform.GetTranslation();
 
 	float3 desired_velocity = target - position;
@@ -350,6 +353,38 @@ void EnemyController::CancelAttack()
 void EnemyController::GetOutOfAttackRange()
 {
 	get_out = true;
+}
+
+bool EnemyController::PlayerHit()
+{
+	if (player2_controller == nullptr)
+	{
+		return collider->DetectCollisionWith(player1_controller->GetCollider());
+	}
+	else
+	{
+		return collider->DetectCollisionWith(player1_controller->GetCollider()) || collider->DetectCollisionWith(player2_controller->GetCollider());
+	}
+}
+
+void EnemyController::Attack()
+{
+	if (player2_controller == nullptr)
+	{
+		player1_controller->TakeDamage(attack_damage);
+	}
+	else
+	{
+		if (current_target == player1)
+		{
+			player1_controller->TakeDamage(attack_damage);
+
+		}
+		else if (current_target == player2)
+		{
+			player2_controller->TakeDamage(attack_damage);
+		}
+	}
 }
 
 void EnemyController::TakeDamage(float damage)

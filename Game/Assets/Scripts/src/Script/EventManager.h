@@ -5,6 +5,8 @@
 #include "EnemyManager.h"
 #include "CameraController.h"
 
+class WorldManager;
+
 class EventManager : public Script
 {
 public:
@@ -30,6 +32,8 @@ private:
 	unsigned waves_left = 0;
 	unsigned enemies_per_wave = 0;
 	unsigned current_event = 0;
+
+	friend WorldManager;
 
 };
 extern "C" SCRIPT_API EventManager* EventManagerDLL(); //This is how we are going to load the script

@@ -19,12 +19,13 @@ public:
 	void Start() override;
 	void Update() override;
 
-	bool OnTriggerEnter() const;
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();
 
 	//void Save(Config& config) const override;
 	//void Load(const Config& config) override;
+
+	bool LoadLevel() const;
 
 private:
 	void InitTriggers();
@@ -44,6 +45,16 @@ private:
 	ComponentCollider* event_triggers[3];
 	unsigned current_event_trigger = 0;
 	bool transition = false;
+	bool on_main_menu = true;
+	
+
+
+	static bool singleplayer;
+
+	//Which player is each one
+	static bool player1_choice;
+	static bool player2_choice;
+
 
 };
 extern "C" SCRIPT_API WorldManager* WorldManagerDLL(); //This is how we are going to load the script

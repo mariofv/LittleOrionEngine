@@ -44,16 +44,16 @@ void ComponentCollider::CommonAssign(const ComponentCollider& component_to_copy)
 	mass = component_to_copy.mass;
 	scale = component_to_copy.scale;
 	box_size = component_to_copy.box_size;
-	x_axis = component_to_copy.x_axis;
-	y_axis = component_to_copy.y_axis;
-	z_axis = component_to_copy.z_axis;
+	freeze_rotation_x = component_to_copy.freeze_rotation_x;
+	freeze_rotation_y = component_to_copy.freeze_rotation_y;
+	freeze_rotation_z = component_to_copy.freeze_rotation_z;
 	friction = component_to_copy.friction;
 	rolling_friction = component_to_copy.rolling_friction;
 	visualize = component_to_copy.visualize;
 	detect_collision = component_to_copy.detect_collision;
 	is_attached = component_to_copy.is_attached;
 	is_static = component_to_copy.is_static;
-	disable_physics = component_to_copy.disable_physics;
+	active_physics = component_to_copy.active_physics;
 	AddBody();
 }
 
@@ -75,13 +75,13 @@ void ComponentCollider::Save(Config & config) const
 	config.AddBool(detect_collision, "Collision");
 	config.AddBool(visualize, "Visualize");
 	config.AddBool(is_attached, "Attached");
-	config.AddBool(x_axis, "x_axis");
-	config.AddBool(y_axis, "y_axis");
-	config.AddBool(z_axis, "z_axis");
-	config.AddBool(disable_physics, "DisablePhysics");
+	config.AddBool(freeze_rotation_x, "Freeze_rotation_x");
+	config.AddBool(freeze_rotation_z, "Freeze_rotation_y");
+	config.AddBool(freeze_rotation_y, "Freeze_rotation_z");
+	config.AddBool(active_physics, "Active_Physics");
 	config.AddFloat(friction, "Friction");
 	config.AddFloat(rolling_friction, "Rolling_friction");
-
+	config.AddFloat3(center_deviation, "Center_deviation");
 }
 
 void ComponentCollider::Load(const Config & config)
@@ -94,12 +94,13 @@ void ComponentCollider::Load(const Config & config)
 	detect_collision = config.GetBool("Collision", true);
 	visualize = config.GetBool("Visualize", true);
 	is_attached = config.GetBool("Attached", false);
-	x_axis = config.GetBool("x_axis", true);
-	y_axis = config.GetBool("y_axis", true);
-	z_axis = config.GetBool("z_axis", true);
-	disable_physics = config.GetBool("DisablePhysics", false);
+	freeze_rotation_x = config.GetBool("Freeze_rotation_x", true);
+	freeze_rotation_y = config.GetBool("Freeze_rotation_y", true);
+	freeze_rotation_z = config.GetBool("Freeze_rotation_z", true);
+	active_physics = config.GetBool("Active_Physics", false);
 	friction = config.GetFloat("Friction", 1.0F);
 	rolling_friction = config.GetFloat("Rolling_friction", 1.0F);
+	config.GetFloat3("Center_deviation", center_deviation, float3::zero);
 	AddBody();
 	SetConfiguration();
 
@@ -149,6 +150,7 @@ btRigidBody* ComponentCollider::AddBody()
 	if (collider_type == ComponentCollider::ColliderType::MESH) {
 		SetVisualization();
 	}
+	center = float3(body->getWorldTransform().getOrigin());
 	
 	return body;
 }
@@ -158,7 +160,7 @@ void ComponentCollider::MoveBody()
 {
 	btTransform trans;
 	motion_state->getWorldTransform(trans);
-	owner->transform.SetGlobalMatrixTranslation(float3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()) - deviation);
+	owner->transform.SetGlobalMatrixTranslation(float3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()) - deviation+center_deviation);
 	owner->transform.SetRotation(Quat(trans.getRotation().x(), trans.getRotation().y(), trans.getRotation().z(), trans.getRotation().w()));
 	if (is_attached)
 	{
@@ -168,10 +170,11 @@ void ComponentCollider::MoveBody()
 
 void ComponentCollider::UpdateCommonDimensions()
 {
-	float3 global_translation = owner->transform.GetGlobalTranslation();
+	
+	float3 global_translation = owner->transform.GetGlobalTranslation() - center_deviation;
 	if (is_attached)
 	{
-		global_translation = owner->aabb.global_bounding_box.CenterPoint();
+		global_translation = owner->aabb.global_bounding_box.CenterPoint() - center_deviation;
 	}
 	Quat global_rotation = owner->transform.GetGlobalRotation();
 	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x , global_rotation.y , global_rotation.z , global_rotation.w ), btVector3(global_translation.x, global_translation.y, global_translation.z)));
@@ -182,7 +185,8 @@ void ComponentCollider::UpdateCommonDimensions()
 		deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
 	}
 	App->physics->world->updateSingleAabb(body);
-
+	
+	center = float3(body->getWorldTransform().getOrigin());
 }
 
 void ComponentCollider::SetMass(float new_mass)
@@ -196,32 +200,30 @@ void ComponentCollider::SetMass(float new_mass)
 void ComponentCollider::SetVisualization()
 {
 	int flags = body->getCollisionFlags();
-	if (!visualize)
-	{
-		flags |= body->CF_DISABLE_VISUALIZE_OBJECT;
-		body->setCollisionFlags(flags);
-	}
-	else
+	flags |= body->CF_DISABLE_VISUALIZE_OBJECT;
+	if (visualize)
 	{
 		flags -= body->CF_DISABLE_VISUALIZE_OBJECT;
-		body->setCollisionFlags(flags);
+		
 	}
+	body->setCollisionFlags(flags);
 
 }
 
 void ComponentCollider::SetCollisionDetection()
 {
 	int flags = body->getCollisionFlags();
+
 	if (!detect_collision)
 	{
 		flags |= body->CF_NO_CONTACT_RESPONSE;
-		body->setCollisionFlags(flags);
 	}
 	else
 	{
 		flags &= ~(body->CF_NO_CONTACT_RESPONSE);
-		body->setCollisionFlags(flags);
 	}
+
+	body->setCollisionFlags(flags);
 }
 
 bool ComponentCollider::DetectCollision()
@@ -257,7 +259,7 @@ bool ComponentCollider::DetectCollisionWith(ComponentCollider * collider)
 	btVector3 collider_minim;
 	btVector3 collider_maxim;
 
-	if (disable_physics && collider->disable_physics) 
+	if (!active_physics && !collider->active_physics) 
 	{	
 		App->physics->world->updateAabbs();
 		body->getAabb(body_minim, body_maxim);
@@ -306,24 +308,21 @@ ENGINE_API void ComponentCollider::ClearForces() const
 void ComponentCollider::SetStatic()
 {
 	int flags = body->getCollisionFlags();
-	if (is_static)
-	{
-		flags |= body->CF_KINEMATIC_OBJECT;
-		body->setCollisionFlags(flags);
-		mass = 0.0F;
-	}
-	else
+	flags |= body->CF_KINEMATIC_OBJECT;
+	float new_mass = 0.0F;
+	if (!is_static)
 	{
 		flags -= body->CF_KINEMATIC_OBJECT;
-		body->setCollisionFlags(flags);
-		mass = 1.0F;
+		new_mass = mass;
 	}
+	mass = new_mass;
+	body->setCollisionFlags(flags);
 	
 }
 
 void ComponentCollider::SetRotationAxis()
 {
-	body->setAngularFactor(btVector3(int(x_axis), int(y_axis), int(z_axis)));
+	body->setAngularFactor(btVector3(int(!freeze_rotation_x), int(!freeze_rotation_y), int(!freeze_rotation_z)));
 }
 
 void ComponentCollider::AddForce(float3& force)
@@ -344,13 +343,13 @@ void ComponentCollider::AddForce(float3& force)
 	}
 }
 
-void ComponentCollider::SwitchPhysics(bool disable)
+void ComponentCollider::SwitchPhysics(bool active)
 {
-	disable_physics = disable;
+	active_physics = active;
 	SwitchPhysics();
 }
 
-ENGINE_API bool ComponentCollider::RaycastHit(btVector3 & origin, btVector3 & end)
+ENGINE_API bool ComponentCollider::RaycastHit(btVector3& origin, btVector3& end)
 {
 	//Vector normal to the surface
 	btVector3 normal;
@@ -360,14 +359,14 @@ ENGINE_API bool ComponentCollider::RaycastHit(btVector3 & origin, btVector3 & en
 
 void ComponentCollider::SwitchPhysics()
 {
-	if (disable_physics || !active)
-	{
-		body->forceActivationState(DISABLE_SIMULATION);
-	}
-	else
+	if (active_physics && active)
 	{
 		body->forceActivationState(ACTIVE_TAG);
 		body->setActivationState(DISABLE_DEACTIVATION);
+	}
+	else
+	{
+		body->forceActivationState(DISABLE_SIMULATION);
 	}
 }
 
@@ -383,20 +382,32 @@ void ComponentCollider::SetRollingFriction()
 
 void ComponentCollider::SetConfiguration()
 {
-	if (is_static) { SetStatic(); }
-	if (!visualize) { SetVisualization(); }
+	SetStatic(); 
+	SetVisualization(); 
 	SetRotationAxis();
-	if (!detect_collision) { SetCollisionDetection(); }
-	if (disable_physics || !active) { SwitchPhysics(); }
+	SetCollisionDetection(); 
+	SwitchPhysics(); 
 	UpdateFriction();
 	SetRollingFriction();
+}
+
+void ComponentCollider::SetColliderCenter(float3& new_center)
+{
+	center_deviation = owner->aabb.global_bounding_box.CenterPoint() - center;
+	UpdateCommonDimensions();
+	
+}
+
+float3 ComponentCollider::GetColliderCenter() const
+{
+	return center;
 }
 
 void ComponentCollider::SetVelocity(float3& velocity, float speed)
 {
 	//bottom of the model
 	btVector3 bottom = body->getWorldTransform().getOrigin();
-	bottom.setY(bottom.getY() - 2*box_size.getY());
+	bottom.setY(bottom.getY() - (5 * box_size.getY()));
 
 	//Vector normal to the surface
 	btVector3 Normal; 
@@ -410,7 +421,7 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 	if (abs(velocity.x) > 0 || abs(velocity.z) > 0) 
 	{
 		velocity.Normalize();
-		body->setLinearVelocity(speed*btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
+		body->setLinearVelocity(speed * btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
 		
 		//rotate collider
 
@@ -428,7 +439,7 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 
 }
 
-ENGINE_API void ComponentCollider::SetVelocityEnemy(float3 & velocity, float speed)
+void ComponentCollider::SetVelocityEnemy(float3 & velocity, float speed)
 {
 	//bottom of the model
 	btVector3 bottom = body->getWorldTransform().getOrigin();

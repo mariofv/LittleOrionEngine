@@ -17,6 +17,10 @@
 #include "imgui.h"
 
 
+bool WorldManager::singleplayer;
+bool WorldManager::player1_choice;
+bool WorldManager::player2_choice;
+
 
 WorldManager* WorldManagerDLL()
 {
@@ -76,6 +80,13 @@ void WorldManager::Update()
 
 	CheckTriggers();
 
+	if(event_manager->current_event > 2)
+	{
+		//We won the level!
+		//player_controller->Disable();
+		//win_component->Enable();
+		transition = true;
+	}
 }
 
 // Use this for showing variables on inspector
@@ -86,6 +97,7 @@ void WorldManager::OnInspector(ImGuiContext* context)
 	ShowDraggedObjects();
 
 	ImGui::Checkbox("Singleplayer", &App->input->singleplayer_input);
+	ImGui::Checkbox("Main menu", &on_main_menu);
 }
 
 //Use this for linking JUST GO automatically 
@@ -112,6 +124,29 @@ void WorldManager::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
+
+
+bool WorldManager::LoadLevel() const
+{
+	if(singleplayer)
+	{
+		App->scene->LoadScene(0);
+		return true;
+	}
+	else
+	{
+		//If players are different
+		if(player1_choice ^ player2_choice)
+		{
+			//Get players
+			App->scene->LoadScene(0);
+			return true;
+		}
+	}
+
+	return false;
+}
+
 void WorldManager::InitTriggers()
 {
 	GameObject* trigger_go_dad = App->scene->GetGameObjectByName("Triggers");

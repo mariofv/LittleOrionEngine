@@ -82,7 +82,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiDebug.lib;MathGeoLibDebug.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;recastDebug.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiDebug.lib;MathGeoLibDebug.lib;recastDebug.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;BulletCollision_Debug.lib;BulletDynamics_Debug.lib;LinearMath_Debug.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -110,7 +110,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;recastRelease.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;recastRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -138,7 +138,7 @@
       <OptimizeReferences>true</OptimizeReferences>
       <SubSystem>Windows</SubSystem>
       <AdditionalLibraryDirectories>./Libraries/lib/x86</AdditionalLibraryDirectories>
-      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;recastRelease.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>imguiRelease.lib;MathGeoLibRelease.lib;recastRelease.lib;opengl32.lib;glew32.lib;DevIL.lib;ilu.lib;ilut.lib;SDL2.lib;SDL2_image.lib;SDL2main.lib;assimp-vc141-mtd.lib;ProfilerCore32.lib;physfs-static.lib;freetype.lib;AkMemoryMgr.lib;AkMusicEngine.lib;AkSoundEngine.lib;AkSpatialAudio.lib;AkStreamMgr.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <ProjectReference>
       <UseLibraryDependencyInputs>true</UseLibraryDependencyInputs>
@@ -289,13 +289,6 @@
     <ClInclude Include="Engine\Module\ModuleActions.h" />
     <ClInclude Include="Engine\ResourceManagement\ResourcesDB\ResourceDataBase.h" />
     <ClInclude Include="Engine\EditorUI\Helper\ImGuiHelper.h" />
-    <ClInclude Include="Libraries\include\cr\cr.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\crude_json.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_bezier_math.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_canvas.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_extra_math.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor.h" />
-    <ClInclude Include="Libraries\include\NodeEditor\imgui_node_editor_internal.h" />
     <ClInclude Include="Engine\AI\NavMesh.h" />
     <ClInclude Include="Engine\Module\ModuleAI.h" />
     <ClInclude Include="Engine\EditorUI\Panel\PanelNavMesh.h" />
@@ -461,12 +454,6 @@
     <ClCompile Include="Libraries\include\SoundEngine\AkFilePackageLUT.cpp" />
     <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp" />
     <ClCompile Include="Libraries\include\SoundEngine\stdafx.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="cpp.hint" />
-    <None Include="Libraries\include\NodeEditor\imgui_bezier_math.inl" />
-    <None Include="Libraries\include\NodeEditor\imgui_extra_math.inl" />
-    <None Include="Libraries\include\NodeEditor\imgui_node_editor_internal.inl" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
