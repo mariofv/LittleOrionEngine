@@ -86,9 +86,32 @@ update_status ModuleCamera::Update()
 {
 	SelectMainCamera();
 	scene_camera->Update();
+
+	//Setting Ortho width and height
+	App->cameras->directional_light_camera->camera_frustum.orthographicWidth = App->cameras->aux_width;
+	App->cameras->directional_light_camera->camera_frustum.orthographicHeight = App->cameras->aux_height;
+
+	App->cameras->directional_light_mid->camera_frustum.orthographicWidth = App->cameras->aux_width;
+	App->cameras->directional_light_mid->camera_frustum.orthographicHeight = App->cameras->aux_height;
+
+	App->cameras->directional_light_far->camera_frustum.orthographicWidth = App->cameras->aux_width;
+	App->cameras->directional_light_far->camera_frustum.orthographicHeight = App->cameras->aux_height;
+
+	//Setting close and far planes
+	App->cameras->directional_light_camera->SetNearDistance(App->cameras->close_mid_separation / 2);
+	App->cameras->directional_light_camera->SetFarDistance(App->cameras->close_mid_separation);
+
+	App->cameras->directional_light_mid->SetNearDistance(App->cameras->mid_far_separation / 2);
+	App->cameras->directional_light_mid->SetFarDistance(App->cameras->mid_far_separation);
+
+	App->cameras->directional_light_far->SetNearDistance(App->cameras->far_plane / 2);
+	App->cameras->directional_light_far->SetFarDistance(App->cameras->far_plane);
+
+	directional_light_far->Update();
+	directional_light_mid->Update();
 	directional_light_camera->Update();
-	//directional_light_mid->Update();
-	//directional_light_far->Update();
+	
+	
 
 	return update_status::UPDATE_CONTINUE;
 }

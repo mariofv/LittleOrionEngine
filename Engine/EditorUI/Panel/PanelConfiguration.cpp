@@ -305,25 +305,7 @@ void PanelConfiguration::ShowRenderOptions()
 		ImGui::SliderFloat("Mid - Far Separation", &App->cameras->mid_far_separation, App->cameras->close_mid_separation, App->cameras->far_plane);
 		ImGui::SliderFloat("Far Plane", &App->cameras->far_plane, App->cameras->mid_far_separation, App->cameras->mid_far_separation + 100);
 
-		//Setting Ortho width and height
-		App->cameras->directional_light_camera->camera_frustum.orthographicWidth = App->cameras->aux_width;
-		App->cameras->directional_light_camera->camera_frustum.orthographicHeight = App->cameras->aux_height;
-
-		App->cameras->directional_light_mid->camera_frustum.orthographicWidth = App->cameras->aux_width;
-		App->cameras->directional_light_mid->camera_frustum.orthographicHeight = App->cameras->aux_height;
-
-		App->cameras->directional_light_far->camera_frustum.orthographicWidth = App->cameras->aux_width;
-		App->cameras->directional_light_far->camera_frustum.orthographicHeight = App->cameras->aux_height;
-
-		//Setting close and far planes
-		App->cameras->directional_light_camera->SetNearDistance(App->cameras->close_mid_separation/2);
-		App->cameras->directional_light_camera->SetFarDistance(App->cameras->close_mid_separation);
-
-		App->cameras->directional_light_mid->SetNearDistance(App->cameras->mid_far_separation/2);
-		App->cameras->directional_light_mid->SetFarDistance(App->cameras->mid_far_separation);
-
-		App->cameras->directional_light_far->SetNearDistance(App->cameras->far_plane/2);
-		App->cameras->directional_light_far->SetFarDistance(App->cameras->far_plane);
+		
 
 
 	}
