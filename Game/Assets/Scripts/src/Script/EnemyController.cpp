@@ -403,8 +403,7 @@ bool EnemyController::SlotsAvailable()
 
 PlayerController* EnemyController::GetClosestTarget()
 {
-
-	if (player1_controller->is_alive && player2_controller->is_alive)
+	if (player1_controller->is_alive  && player2_controller->is_alive)
 	{
 		float3 position = owner->transform.GetTranslation();
 
