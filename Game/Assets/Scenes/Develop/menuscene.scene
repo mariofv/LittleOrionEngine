@@ -438,7 +438,7 @@
             "ParentUUID": 145392767,
             "Name": "Character_selection",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 978169864,
                 "ComponentType": 3,
@@ -491,7 +491,7 @@
             "ParentUUID": 145392767,
             "Name": "Level_selection_panel",
             "IsStatic": false,
-            "Active": false,
+            "Active": true,
             "Transform": {
                 "UUID": 7670972,
                 "ComponentType": 3,
@@ -1354,7 +1354,7 @@
             "ParentUUID": 4152763998,
             "Name": "Selection_background",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 186617059,
                 "ComponentType": 3,
@@ -1404,7 +1404,7 @@
                 {
                     "UUID": 3519686083,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -1415,7 +1415,7 @@
                 {
                     "UUID": 3843971317,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         },
@@ -1424,7 +1424,7 @@
             "ParentUUID": 4152763998,
             "Name": "Back",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 2259457585,
                 "ComponentType": 3,
@@ -1474,7 +1474,7 @@
                 {
                     "UUID": 2180782996,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -1485,7 +1485,7 @@
                 {
                     "UUID": 235993928,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         },
@@ -1494,7 +1494,7 @@
             "ParentUUID": 4152763998,
             "Name": "cursor_characters",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 1970301554,
                 "ComponentType": 3,
@@ -1544,7 +1544,7 @@
                 {
                     "UUID": 3304550399,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -1555,12 +1555,12 @@
                 {
                     "UUID": 500348716,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 },
                 {
                     "UUID": 2047971874,
                     "ComponentType": 6,
-                    "Active": true,
+                    "Active": false,
                     "ScriptName": "CharacterSelectionMenu",
                     "Name0": "Main_Menu",
                     "Main_Menu": 3053128562,
@@ -1592,7 +1592,7 @@
             "ParentUUID": 4152763998,
             "Name": "p1_p1",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 3266247399,
                 "ComponentType": 3,
@@ -1642,7 +1642,7 @@
                 {
                     "UUID": 1812407552,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1653,7 +1653,7 @@
                 {
                     "UUID": 281559464,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         },
@@ -1662,7 +1662,7 @@
             "ParentUUID": 4152763998,
             "Name": "p2_p2",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 3035100960,
                 "ComponentType": 3,
@@ -1712,7 +1712,7 @@
                 {
                     "UUID": 1812407552,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         0.9999899864196777,
@@ -1723,7 +1723,7 @@
                 {
                     "UUID": 281559464,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         },
@@ -1732,7 +1732,7 @@
             "ParentUUID": 4152763998,
             "Name": "Level_selection_button",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 293102178,
                 "ComponentType": 3,
@@ -1782,7 +1782,7 @@
                 {
                     "UUID": 343823521,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -1793,7 +1793,7 @@
                 {
                     "UUID": 275819551,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         },
@@ -1802,7 +1802,7 @@
             "ParentUUID": 4152763998,
             "Name": "Character_selector1",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 1591747943,
                 "ComponentType": 3,
@@ -1852,7 +1852,7 @@
                 {
                     "UUID": 4290892381,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -1863,7 +1863,7 @@
                 {
                     "UUID": 1108597637,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         },
@@ -1872,7 +1872,7 @@
             "ParentUUID": 4152763998,
             "Name": "Character_selector2",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 2177584080,
                 "ComponentType": 3,
@@ -1922,7 +1922,7 @@
                 {
                     "UUID": 4290892381,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -1933,7 +1933,7 @@
                 {
                     "UUID": 1108597637,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         },
@@ -1942,7 +1942,7 @@
             "ParentUUID": 4152763998,
             "Name": "p1_position",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 324300502,
                 "ComponentType": 3,
@@ -1992,7 +1992,7 @@
                 {
                     "UUID": 1569122954,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -2007,7 +2007,7 @@
             "ParentUUID": 4152763998,
             "Name": "p2_position",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 1475959688,
                 "ComponentType": 3,
@@ -2057,7 +2057,7 @@
                 {
                     "UUID": 1569122954,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -2072,7 +2072,7 @@
             "ParentUUID": 4152763998,
             "Name": "confirm_multi",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 3106863086,
                 "ComponentType": 3,
@@ -2122,7 +2122,7 @@
                 {
                     "UUID": 18680535,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -2133,7 +2133,7 @@
                 {
                     "UUID": 3502500134,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         },
@@ -2142,7 +2142,7 @@
             "ParentUUID": 4152763998,
             "Name": "confirm_single",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 1188514885,
                 "ComponentType": 3,
@@ -2192,7 +2192,7 @@
                 {
                     "UUID": 1618421548,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -2203,7 +2203,7 @@
                 {
                     "UUID": 2298593533,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         },
@@ -2212,7 +2212,7 @@
             "ParentUUID": 1586329215,
             "Name": "Background",
             "IsStatic": false,
-            "Active": false,
+            "Active": true,
             "Transform": {
                 "UUID": 754208504,
                 "ComponentType": 3,
@@ -2262,7 +2262,7 @@
                 {
                     "UUID": 1425866878,
                     "ComponentType": 12,
-                    "Active": false,
+                    "Active": true,
                     "Color": [
                         1.0,
                         1.0,
@@ -2273,7 +2273,7 @@
                 {
                     "UUID": 2372584398,
                     "ComponentType": 10,
-                    "Active": false
+                    "Active": true
                 }
             ]
         },
@@ -2282,7 +2282,7 @@
             "ParentUUID": 1586329215,
             "Name": "Back_button",
             "IsStatic": false,
-            "Active": false,
+            "Active": true,
             "Transform": {
                 "UUID": 2066659367,
                 "ComponentType": 3,
@@ -2332,7 +2332,7 @@
                 {
                     "UUID": 2073637599,
                     "ComponentType": 12,
-                    "Active": false,
+                    "Active": true,
                     "Color": [
                         1.0,
                         1.0,
@@ -2343,7 +2343,7 @@
                 {
                     "UUID": 267180603,
                     "ComponentType": 10,
-                    "Active": false
+                    "Active": true
                 }
             ]
         },
@@ -2352,7 +2352,7 @@
             "ParentUUID": 1586329215,
             "Name": "cursor_levels",
             "IsStatic": false,
-            "Active": false,
+            "Active": true,
             "Transform": {
                 "UUID": 3173768596,
                 "ComponentType": 3,
@@ -2402,7 +2402,7 @@
                 {
                     "UUID": 3857650893,
                     "ComponentType": 12,
-                    "Active": false,
+                    "Active": true,
                     "Color": [
                         1.0,
                         1.0,
@@ -2413,7 +2413,290 @@
                 {
                     "UUID": 873215747,
                     "ComponentType": 10,
-                    "Active": false
+                    "Active": true
+                },
+                {
+                    "UUID": 3543829844,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "LevelSelectionMenu",
+                    "Name0": "level1_position",
+                    "level1_position": 2944641222,
+                    "Name1": "level2_position",
+                    "level2_position": 1431973882,
+                    "Name2": "level3_position",
+                    "level3_position": 1401462934,
+                    "Name3": "Back_button",
+                    "Back_button": 3411494713,
+                    "Name4": "Character_selection",
+                    "Character_selection": 4152763998,
+                    "Name5": "Audio_controller",
+                    "Audio_controller": 285203001
+                }
+            ]
+        },
+        {
+            "UUID": 2944641222,
+            "ParentUUID": 1586329215,
+            "Name": "level1_position",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 60941702,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1672511166,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    96.0,
+                    159.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    -304.0,
+                    -180.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 3857650893,
+                    "ComponentType": 12,
+                    "Active": true,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 1670969248
+                }
+            ]
+        },
+        {
+            "UUID": 1431973882,
+            "ParentUUID": 1586329215,
+            "Name": "level2_position",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2970429743,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1478466220,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    96.0,
+                    159.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    -11.0,
+                    -180.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 3857650893,
+                    "ComponentType": 12,
+                    "Active": true,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 1670969248
+                }
+            ]
+        },
+        {
+            "UUID": 1401462934,
+            "ParentUUID": 1586329215,
+            "Name": "level3_position",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1023272796,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3355087005,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    96.0,
+                    159.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    312.0,
+                    -188.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 3857650893,
+                    "ComponentType": 12,
+                    "Active": true,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 1670969248
+                }
+            ]
+        },
+        {
+            "UUID": 172169170,
+            "ParentUUID": 1586329215,
+            "Name": "Back_cursor",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2158537483,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 53562378,
+                "ComponentType": 7,
+                "Active": true,
+                "Size": [
+                    20.0,
+                    50.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    -449.0,
+                    -292.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Components": [
+                {
+                    "UUID": 2313887479,
+                    "ComponentType": 12,
+                    "Active": true,
+                    "Color": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 2907833219
+                },
+                {
+                    "UUID": 3552103925,
+                    "ComponentType": 10,
+                    "Active": true
                 }
             ]
         }

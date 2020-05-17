@@ -254,6 +254,7 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="src\Script\LevelSelectionMenu.h" />
     <ClInclude Include="src\Script\CharacterSelectionMenu.h" />
     <ClInclude Include="src\Script\MenuController.h" />
     <ClInclude Include="src\Script\PauseMenuLogic.h" />
@@ -284,6 +285,7 @@
     <ClInclude Include="src\Script\WorldManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Script\LevelSelectionMenu.cpp" />
     <ClCompile Include="src\Script\CharacterSelectionMenu.cpp" />
     <ClCompile Include="src\Script\MenuController.cpp" />
     <ClCompile Include="src\Script\PauseMenuLogic.cpp" />
