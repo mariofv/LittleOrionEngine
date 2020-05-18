@@ -47,7 +47,7 @@ FileData PrefabImporter::ExtractFromModel(const Config& model_config, const Meta
 	}
 
 	ExtractAnimationComponent(model_root_node.get(), model_config);
-	FileData prefab_data = ExtractFromGameObject(model_root_node.get());
+	FileData prefab_data = ExtractFromGameObject(model_root_node.get(), false);
 
 	game_objects.clear();
 	mesh_renderer_components.clear();
@@ -55,7 +55,7 @@ FileData PrefabImporter::ExtractFromModel(const Config& model_config, const Meta
 	return prefab_data;
 }
 
-FileData PrefabImporter::ExtractFromGameObject(GameObject* gameobject) const
+FileData PrefabImporter::ExtractFromGameObject(GameObject* gameobject, bool overwritable) const
 {
 	std::vector<Config> gameobjects_config;
 	std::stack<GameObject*> pending_gameobjects;
@@ -80,6 +80,7 @@ FileData PrefabImporter::ExtractFromGameObject(GameObject* gameobject) const
 	prefab_config.AddChildrenConfig(gameobjects_config, "GameObjects");
 
 	std::string serialized_prefab_string;
+	prefab_config.AddBool(overwritable, "Overwritable");
 	prefab_config.GetSerializedString(serialized_prefab_string);
 
 	char* prefab_bytes = new char[serialized_prefab_string.size() + 1];

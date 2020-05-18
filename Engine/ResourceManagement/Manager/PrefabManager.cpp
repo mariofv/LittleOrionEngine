@@ -35,7 +35,13 @@ std::shared_ptr<Prefab> PrefabManager::Load(uint32_t uuid, const FileData& resou
 	scene_config.GetChildrenConfig("GameObjects", game_objects_config);
 
 	std::vector<std::unique_ptr<GameObject>> gameObjects;
-	gameObjects.reserve(game_objects_config.size());
+	gameObjects.reserve(game_objects_config.size());	
+	
+	bool overwritable = true;
+	if (scene_config.config_document.HasMember("Overwritable"))
+	{
+		overwritable = scene_config.GetBool("Overwritable", true);
+	}
 
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
@@ -55,7 +61,8 @@ std::shared_ptr<Prefab> PrefabManager::Load(uint32_t uuid, const FileData& resou
 		gameObjects.emplace_back(std::move(created_game_object));
 	}
 
-	std::shared_ptr<Prefab> new_prefab = std::make_shared<Prefab>(uuid, std::move(gameObjects));
+
+	std::shared_ptr<Prefab> new_prefab = std::make_shared<Prefab>(uuid, std::move(gameObjects), overwritable);
 	return new_prefab;
 }
 

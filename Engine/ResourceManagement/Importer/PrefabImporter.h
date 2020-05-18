@@ -15,7 +15,7 @@ public:
 
 	FileData ExtractData(Path& file_path, const Metafile& metafile) const override;
 	FileData ExtractFromModel(const Config& model_config, const Metafile& metafile) const;
-	FileData ExtractFromGameObject(GameObject* gameobject) const;
+	FileData ExtractFromGameObject(GameObject* gameobject, bool overwritable = true) const;
 
 private:
 	static void ExtractGameObjectFromNode(

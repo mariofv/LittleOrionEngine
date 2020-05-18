@@ -11,7 +11,7 @@
 
 #include <algorithm>
 
-Prefab::Prefab(uint32_t uuid, std::vector<std::unique_ptr<GameObject>> && gameObjects) : Resource(uuid), prefab(std::move(gameObjects))
+Prefab::Prefab(uint32_t uuid, std::vector<std::unique_ptr<GameObject>> && gameObjects, bool overwritable) : Resource(uuid), prefab(std::move(gameObjects)), overwritable(overwritable)
 {
 }
 
