@@ -241,7 +241,7 @@ void ComponentText::SpecializedLoad(const Config& config)
 		SetFont(font_uuid);
 	}
 
-	config.GetFloat("FontSize", font_size);
+	font_size = config.GetFloat("FontSize", 12);
 	SetFontSize(font_size);
 
 	uint32_t horizontal_alignment_uint32 = config.GetUInt("HorizontalAlignment", 0);

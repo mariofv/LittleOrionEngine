@@ -32,23 +32,33 @@
                 "UUID": 1012207212,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -112,23 +122,33 @@
                 "UUID": 3894984641,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -185,23 +205,33 @@
                 "UUID": 3956872861,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    1145.0,
-                    685.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    1145.0,
+                    685.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -245,23 +275,33 @@
                 "UUID": 815926540,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -305,23 +345,33 @@
                 "UUID": 1516934854,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -337,197 +387,8 @@
                     "HealthBar": 1518932593,
                     "Name1": "HealthBar",
                     "HealthBar": 1518932593,
-                    "Name2": "Damage Indicator",
-                    "Damage Indicator": 108641919
-                }
-            ]
-        },
-        {
-            "UUID": 1621670682,
-            "ParentUUID": 0,
-            "Name": "Cylinder",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 769565181,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    100.0,
-                    100.0,
-                    100.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 836843172,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": false,
-            "Components": [
-                {
-                    "UUID": 3094770570,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Mesh": 4,
-                    "Material": 0,
-                    "Skeleton": 3452816845
-                }
-            ]
-        },
-        {
-            "UUID": 2333994840,
-            "ParentUUID": 0,
-            "Name": "Cylinder(1)",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3583191681,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    25.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    90.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    100.0,
-                    100.0,
-                    100.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 3906390460,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": false,
-            "Components": [
-                {
-                    "UUID": 3094770570,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Mesh": 4,
-                    "Material": 0,
-                    "Skeleton": 3452816845
-                }
-            ]
-        },
-        {
-            "UUID": 1149188703,
-            "ParentUUID": 0,
-            "Name": "Cylinder(1)(1)",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1455684172,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    -25.0,
-                    -19.170000076293947,
-                    25.0
-                ],
-                "Rotation": [
-                    1.5707963705062867,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    100.0,
-                    100.0,
-                    100.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 4277036692,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": false,
-            "Components": [
-                {
-                    "UUID": 3094770570,
-                    "ComponentType": 2,
-                    "Active": true,
-                    "Mesh": 4,
-                    "Material": 0,
-                    "Skeleton": 3452816845
+                    "Name2": "Damage Indicators",
+                    "Damage Indicators": 3477723809
                 }
             ]
         },
@@ -561,17 +422,19 @@
                 "UUID": 1015534379,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    0.0,
-                    0.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.0,
@@ -580,6 +443,14 @@
                 "MaxAnchor": [
                     1.0,
                     1.0
+                ],
+                "SizeDelta": [
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
                 ]
             },
             "Transform2DEnabled": true,
@@ -615,17 +486,19 @@
                 "UUID": 1275027689,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    0.0,
-                    0.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.0,
@@ -634,19 +507,27 @@
                 "MaxAnchor": [
                     1.0,
                     1.0
+                ],
+                "SizeDelta": [
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
                 ]
             },
             "Transform2DEnabled": true,
             "Components": []
         },
         {
-            "UUID": 108641919,
+            "UUID": 3477723809,
             "ParentUUID": 3318139328,
-            "Name": "Damage Indicator",
+            "Name": "Damage Indicators",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 447168571,
+                "UUID": 1754038065,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -666,26 +547,36 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 1478863996,
+                "UUID": 2290964685,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    1184.0,
-                    101.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
-                    2.0,
-                    103.0
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
-                    0.5,
-                    0.5
+                    0.0,
+                    0.0
                 ],
                 "MaxAnchor": [
+                    1.0,
+                    1.0
+                ],
+                "SizeDelta": [
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -693,18 +584,10 @@
             "Transform2DEnabled": true,
             "Components": [
                 {
-                    "UUID": 1898336405,
-                    "ComponentType": 13,
+                    "UUID": 3520576276,
+                    "ComponentType": 6,
                     "Active": true,
-                    "Text": "10",
-                    "FontSize": 100.0,
-                    "FontUUID": 16,
-                    "HorizontalAlignment": 1
-                },
-                {
-                    "UUID": 467999035,
-                    "ComponentType": 10,
-                    "Active": true
+                    "ScriptName": "DamageIndicatorSpawner"
                 }
             ]
         },
@@ -738,23 +621,33 @@
                 "UUID": 1552967042,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    324.0,
-                    116.0
-                ],
-                "Pivot": [
-                    0.0,
-                    1.0
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.0,
                     1.0
                 ],
                 "MaxAnchor": [
+                    0.0,
+                    1.0
+                ],
+                "SizeDelta": [
+                    324.0,
+                    116.0
+                ],
+                "Pivot": [
                     0.0,
                     1.0
                 ]
@@ -809,23 +702,33 @@
                 "UUID": 3402692086,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    324.0,
-                    117.0
-                ],
-                "Pivot": [
-                    1.0,
-                    1.0
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     1.0,
                     1.0
                 ],
                 "MaxAnchor": [
+                    1.0,
+                    1.0
+                ],
+                "SizeDelta": [
+                    324.0,
+                    117.0
+                ],
+                "Pivot": [
                     1.0,
                     1.0
                 ]
@@ -845,6 +748,85 @@
                 },
                 {
                     "UUID": 858930374,
+                    "ComponentType": 10,
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "UUID": 108641919,
+            "ParentUUID": 3477723809,
+            "Name": "Damage Indicator",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 447168571,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1478863996,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    2.0,
+                    103.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.3499999940395355,
+                    0.3499999940395355,
+                    0.3499999940395355
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    200.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 1898336405,
+                    "ComponentType": 13,
+                    "Active": true,
+                    "Text": "10",
+                    "FontSize": 100.0,
+                    "FontUUID": 16,
+                    "HorizontalAlignment": 1
+                },
+                {
+                    "UUID": 467999035,
                     "ComponentType": 10,
                     "Active": true
                 }
@@ -880,17 +862,19 @@
                 "UUID": 1735426027,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    250.0,
-                    30.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     240.0,
                     -40.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.0,
@@ -899,6 +883,14 @@
                 "MaxAnchor": [
                     0.0,
                     1.0
+                ],
+                "SizeDelta": [
+                    250.0,
+                    30.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
                 ]
             },
             "Transform2DEnabled": true,
@@ -960,17 +952,19 @@
                 "UUID": 276968320,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    250.0,
-                    30.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -240.0,
                     -40.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     1.0,
@@ -979,6 +973,14 @@
                 "MaxAnchor": [
                     1.0,
                     1.0
+                ],
+                "SizeDelta": [
+                    250.0,
+                    30.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
                 ]
             },
             "Transform2DEnabled": true,
@@ -1040,17 +1042,19 @@
                 "UUID": 602056501,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    0.0,
-                    0.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.0,
@@ -1059,6 +1063,14 @@
                 "MaxAnchor": [
                     1.0,
                     1.0
+                ],
+                "SizeDelta": [
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
                 ]
             },
             "Transform2DEnabled": true,
@@ -1111,17 +1123,19 @@
                 "UUID": 2075609263,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    0.0,
-                    0.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.0,
@@ -1130,6 +1144,14 @@
                 "MaxAnchor": [
                     1.0,
                     1.0
+                ],
+                "SizeDelta": [
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
                 ]
             },
             "Transform2DEnabled": true,

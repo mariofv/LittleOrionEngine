@@ -2,7 +2,9 @@
 #define  __UIMANAGER_H__
 
 #include "Script.h"
-#include "ProgressBar.h"
+
+class DamageIndicatorSpawner;
+class ProgressBar;
 
 class UIManager : public Script
 {
@@ -31,8 +33,8 @@ private:
 	GameObject* player2_progress_bar_game_object = nullptr;
 	ProgressBar* player2_progress_bar = nullptr;
 
-	float3 number_position = float3::zero;
-	GameObject* number_game_object = nullptr;
+	GameObject* damage_indicator_spawner_game_object = nullptr;
+	DamageIndicatorSpawner* damage_indicator_spawner = nullptr;
 };
 extern "C" SCRIPT_API UIManager* UIManagerDLL(); //This is how we are going to load the script
 #endif
