@@ -39,7 +39,7 @@ DebugModeScript::DebugModeScript()
 // Use this for initialization before Start()
 void DebugModeScript::Awake()
 {
-	const ComponentScript* component = owner->GetComponentScript("EnemyManager");
+	const ComponentScript* component = enemy_obj->GetComponentScript("EnemyManager");
 	enemy_manager = (EnemyManager*)component->script;
 }
 

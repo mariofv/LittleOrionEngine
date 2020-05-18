@@ -365,7 +365,7 @@ void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 }
 
 
-GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
+RaycastHit* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 {
 	BROFILER_CATEGORY("Do Raycast", Profiler::Color::HotPink);
 	App->space_partitioning->GetCullingMeshes(App->cameras->scene_camera);
@@ -382,6 +382,9 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 	std::vector<GameObject*> intersected;
 	GameObject* selected = nullptr;
 	float min_distance = INFINITY;
+
+	RaycastHit* result = new RaycastHit();
+
 	for (const auto&  mesh : intersected_meshes)
 	{
 		LineSegment transformed_ray = ray;
@@ -397,18 +400,23 @@ GameObject* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray)
 			Triangle triangle(first_point, second_point, third_point);
 
 			float distance;
-			bool intersected = triangle.Intersects(transformed_ray, &distance);
+			float3 intersected_point;
+			bool intersected = triangle.Intersects(transformed_ray, &distance, &intersected_point);
 			if (intersected && distance < min_distance)
 			{
 				selected = mesh->owner;
 				min_distance = distance;
+
+				result->game_object = mesh->owner;
+				result->hit_distance = distance;
+				result->hit_point = intersected_point;
 			}
 		}
 	}
-	return selected;
+	return result;
 }
 
-bool ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, float3& position)
+RaycastHit* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, float3& position)
 {
 	App->space_partitioning->GetCullingMeshes(App->cameras->scene_camera);
 	std::vector<ComponentMeshRenderer*> intersected_meshes;
@@ -422,6 +430,9 @@ bool ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, float3& p
 
 	bool intersected = false;
 	float min_distance = INFINITY;
+	
+	RaycastHit* result = new RaycastHit();
+
 	for (const auto&  mesh : intersected_meshes)
 	{
 		LineSegment transformed_ray = ray;
@@ -436,10 +447,14 @@ bool ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, float3& p
 			{
 				position = intersected_point;
 				min_distance = distance;
+
+				result->game_object = mesh->owner;
+				result->hit_distance = distance;
+				result->hit_point = intersected_point;
 			}
 		}
 	}
-	return intersected;
+	return result;
 }
 
 int ModuleRender::GetRenderedTris() const

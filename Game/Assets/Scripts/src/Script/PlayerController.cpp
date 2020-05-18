@@ -37,7 +37,7 @@ void PlayerController::Awake()
 	const ComponentScript* component_attack = owner->GetComponentScript("PlayerAttack");
 	player_attack = (PlayerAttack*)component_attack->script;
 
-	const ComponentScript* component_debug = owner->GetComponentScript("DebugModeScript");
+	const ComponentScript* component_debug = debug_system->GetComponentScript("DebugModeScript");
 	debug = (DebugModeScript*)component_debug->script;
 }
 
@@ -63,7 +63,6 @@ void PlayerController::OnInspector(ImGuiContext* context)
 {
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
-	ShowDraggedObjects();
 	ImGui::Text("Player Controller Script Inspector");
 	std::string selected = std::to_string(player);
 	if (ImGui::BeginCombo("Player", selected.c_str()))
@@ -81,6 +80,8 @@ void PlayerController::OnInspector(ImGuiContext* context)
 		ImGui::EndCombo();
 	}
 	ImGui::DragFloat("Health", &health_points);
+	
+	ShowDraggedObjects();
 }
 
 //Use this for linking GO automatically
