@@ -40,22 +40,27 @@ public:
 	btRigidBody* AddBody();
 	ENGINE_API void AddForce(float3& force);
 	ENGINE_API void SetVelocity(float3& velocity, float speed);
+	ENGINE_API void SetVelocityEnemy(float3& velocity, float speed);
+	ENGINE_API void LookAt(float3& velocity, float speed);
 	ENGINE_API bool RaycastHit(btVector3& origin, btVector3& end);
 	ENGINE_API float3 GetCurrentVelocity() const;
 	void MoveBody();
 	void SetMass(float new_mass);
 	void SetVisualization();
-	void SetCollisionDetection();
+	ENGINE_API void SetCollisionDetection();
 	ENGINE_API bool DetectCollision(); //returns true if collides with any object in the world
 	ENGINE_API bool DetectCollisionWith(ComponentCollider* collider); //returns true if collides with a concrete object
+	ENGINE_API void ClearForces() const;
 	void SetStatic();
 	void SetRotationAxis();
-	ENGINE_API void SwitchPhysics(bool disable);
+	ENGINE_API void SwitchPhysics(bool active);
 	void SwitchPhysics();
 	void UpdateFriction();
 	void SetRollingFriction();
 	void SetConfiguration();
-
+	void SetColliderCenter(float3& new_center);
+	float3 GetColliderCenter() const;
+	
 
 protected:
 	void CommonAssign(const ComponentCollider& component_to_copy);
@@ -73,16 +78,17 @@ public:
 	btVector3 local_inertia = btVector3(0.F, 0.F, 0.F);
 	float friction = 1.0F;
 	float rolling_friction = 1.0F;
-
+	float3 center;
+	float3 center_deviation = float3::zero;
 	float3 deviation = float3::zero;
 	bool visualize = true;
 	bool detect_collision = true;
 	bool is_attached = false;
 	bool is_static = false;
-	bool x_axis = true;
-	bool y_axis = true;
-	bool z_axis = true;
-	bool disable_physics = false;
+	bool freeze_rotation_x = true;
+	bool freeze_rotation_y = true;
+	bool freeze_rotation_z = true;
+	bool active_physics = true;
 
 protected:
 	friend class PanelComponent;
