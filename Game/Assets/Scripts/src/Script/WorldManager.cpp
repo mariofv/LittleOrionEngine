@@ -53,8 +53,8 @@ void WorldManager::Awake()
 	ComponentScript* player2_controller_component = (ComponentScript*)player2_go->GetComponentScript("PlayerController");
 	player2_controller = static_cast<PlayerController*>(player2_controller_component->script);
 	
-	singleplayer = true;
-	player1_choice = false;
+	singleplayer = false;
+	player1_choice = true;
 	//Logic of choosing character and single/multi player
 	//Singleplayer
 	if(singleplayer)
@@ -63,6 +63,7 @@ void WorldManager::Awake()
 		if(!player1_choice)
 		{
 			player1_controller->player = 1;
+			player2_controller->player = 2;
 			player2_controller->is_alive = false;
 			player2_go->SetEnabled(false);
 			player2_go->transform.SetTranslation(float3(100.f, 100.f, 100.f));
@@ -71,6 +72,7 @@ void WorldManager::Awake()
 		else
 		{
 			player2_controller->player = 1;
+			player1_controller->player = 2;
 			player1_controller->is_alive = false;
 			player1_go->SetEnabled(false);
 			player1_go->transform.SetTranslation(float3(100.f, 100.f, 100.f));
