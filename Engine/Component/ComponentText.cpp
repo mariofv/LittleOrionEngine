@@ -74,7 +74,7 @@ void ComponentText::Render(float4x4* projection)
 
 	glUseProgram(program);
 	glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
-	glUniform3fv(glGetUniformLocation(program, "font_color"), 1, font_color.ptr());
+	glUniform4fv(glGetUniformLocation(program, "font_color"), 1, font_color.ptr());
 	glActiveTexture(GL_TEXTURE0);
 	glBindVertexArray(vao);
 
@@ -225,8 +225,10 @@ void ComponentText::SpecializedSave(Config& config) const
 {
 	config.AddString(text, "Text");
 	
-	config.AddFloat(font_size, "FontSize");
 	config.AddUInt(font_uuid, "FontUUID");
+
+	config.AddFloat(font_size, "FontSize");
+	config.AddColor(font_color, "FontColor");
 	
 	config.AddUInt((uint32_t)horizontal_alignment, "HorizontalAlignment");
 }
@@ -243,6 +245,8 @@ void ComponentText::SpecializedLoad(const Config& config)
 
 	font_size = config.GetFloat("FontSize", 12);
 	SetFontSize(font_size);
+
+	config.GetColor("FontColor", font_color, float4::one);
 
 	uint32_t horizontal_alignment_uint32 = config.GetUInt("HorizontalAlignment", 0);
 	horizontal_alignment = static_cast<HorizontalAlignment>(horizontal_alignment_uint32);
@@ -271,4 +275,14 @@ void ComponentText::SetFontSize(int font_size)
 	this->font_size = font_size;
 	scale_factor = font_size / 64.f;
 	ComputeTextLines();
+}
+
+void ComponentText::SetFontColor(const float4& new_color)
+{
+	font_color = new_color;
+}
+
+float4 ComponentText::GetFontColor() const
+{
+	return font_color;
 }

@@ -40,6 +40,9 @@ public:
 	void SetFont(uint32_t font_uuid);
 	ENGINE_API void SetFontSize(int font_size);
 
+	ENGINE_API void SetFontColor(const float4& new_color);
+	ENGINE_API float4 GetFontColor() const;
+
 private:
 	void InitData();
 
@@ -55,7 +58,7 @@ public:
 	std::shared_ptr<Font> font = nullptr;
 
 	float font_size = 12.0f;
-	float3 font_color = float3::one;
+	float4 font_color = float4::one;
 
 	float text_width = 0;
 	float text_heigth = 0;

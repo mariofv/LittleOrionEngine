@@ -831,8 +831,14 @@
                     "ComponentType": 13,
                     "Active": true,
                     "Text": "10",
-                    "FontSize": 100.0,
                     "FontUUID": 16,
+                    "FontSize": 100.0,
+                    "FontColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
                     "HorizontalAlignment": 1
                 },
                 {
@@ -918,8 +924,14 @@
                     "ComponentType": 13,
                     "Active": true,
                     "Text": "10",
-                    "FontSize": 100.0,
                     "FontUUID": 16,
+                    "FontSize": 100.0,
+                    "FontColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
                     "HorizontalAlignment": 1
                 },
                 {
@@ -1005,8 +1017,14 @@
                     "ComponentType": 13,
                     "Active": true,
                     "Text": "10",
-                    "FontSize": 100.0,
                     "FontUUID": 16,
+                    "FontSize": 100.0,
+                    "FontColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
                     "HorizontalAlignment": 1
                 },
                 {
@@ -1092,8 +1110,14 @@
                     "ComponentType": 13,
                     "Active": true,
                     "Text": "10",
-                    "FontSize": 100.0,
                     "FontUUID": 16,
+                    "FontSize": 100.0,
+                    "FontColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
                     "HorizontalAlignment": 1
                 },
                 {
@@ -1179,8 +1203,14 @@
                     "ComponentType": 13,
                     "Active": true,
                     "Text": "10",
-                    "FontSize": 100.0,
                     "FontUUID": 16,
+                    "FontSize": 100.0,
+                    "FontColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
                     "HorizontalAlignment": 1
                 },
                 {

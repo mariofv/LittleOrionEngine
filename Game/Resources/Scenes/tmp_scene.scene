@@ -831,8 +831,14 @@
                     "ComponentType": 13,
                     "Active": true,
                     "Text": "10",
-                    "FontSize": 100.0,
                     "FontUUID": 16,
+                    "FontSize": 100.0,
+                    "FontColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
                     "HorizontalAlignment": 1
                 },
                 {
@@ -845,7 +851,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "DamageIndicator",
-                    "Speed": 0.25,
+                    "Speed": 0.3499999940395355,
                     "Duration": 500.0
                 }
             ]
@@ -918,8 +924,14 @@
                     "ComponentType": 13,
                     "Active": true,
                     "Text": "10",
-                    "FontSize": 100.0,
                     "FontUUID": 16,
+                    "FontSize": 100.0,
+                    "FontColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
                     "HorizontalAlignment": 1
                 },
                 {
@@ -932,7 +944,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "DamageIndicator",
-                    "Speed": 1.0,
+                    "Speed": 0.3499999940395355,
                     "Duration": 500.0
                 }
             ]
@@ -1005,8 +1017,14 @@
                     "ComponentType": 13,
                     "Active": true,
                     "Text": "10",
-                    "FontSize": 100.0,
                     "FontUUID": 16,
+                    "FontSize": 100.0,
+                    "FontColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
                     "HorizontalAlignment": 1
                 },
                 {
@@ -1019,7 +1037,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "DamageIndicator",
-                    "Speed": 1.0,
+                    "Speed": 0.3499999940395355,
                     "Duration": 500.0
                 }
             ]
@@ -1092,8 +1110,14 @@
                     "ComponentType": 13,
                     "Active": true,
                     "Text": "10",
-                    "FontSize": 100.0,
                     "FontUUID": 16,
+                    "FontSize": 100.0,
+                    "FontColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
                     "HorizontalAlignment": 1
                 },
                 {
@@ -1106,7 +1130,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "DamageIndicator",
-                    "Speed": 1.0,
+                    "Speed": 0.3499999940395355,
                     "Duration": 500.0
                 }
             ]
@@ -1179,8 +1203,14 @@
                     "ComponentType": 13,
                     "Active": true,
                     "Text": "10",
-                    "FontSize": 100.0,
                     "FontUUID": 16,
+                    "FontSize": 100.0,
+                    "FontColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
                     "HorizontalAlignment": 1
                 },
                 {
@@ -1193,7 +1223,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "DamageIndicator",
-                    "Speed": 1.0,
+                    "Speed": 0.3499999940395355,
                     "Duration": 500.0
                 }
             ]
