@@ -14,12 +14,12 @@
 #include <queue>
 
 
-ComponentEventSystem::ComponentEventSystem() : Component(ComponentType::CANVAS)
+ComponentEventSystem::ComponentEventSystem() : Component(ComponentType::EVENT_SYSTEM)
 {
 	
 }
 
-ComponentEventSystem::ComponentEventSystem(GameObject* owner) : Component(owner, ComponentType::CANVAS)
+ComponentEventSystem::ComponentEventSystem(GameObject* owner) : Component(owner, ComponentType::EVENT_SYSTEM)
 {
 	
 }

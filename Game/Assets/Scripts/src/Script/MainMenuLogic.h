@@ -5,6 +5,7 @@
 #include "MenuController.h"
 
 class ComponentAudioSource;
+class ComponentButton;
 class ComponentTransform2D;
 class MainMenuLogic : public Script
 {
@@ -18,6 +19,8 @@ public:
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects() override;
 
+	void OpenSubMenu(int menu_index);
+
 private:
 	GameObject* play_button = nullptr;
 	GameObject* help_button = nullptr;
@@ -30,13 +33,11 @@ private:
 	GameObject* help_panel = nullptr;
 	GameObject* audio_controller = nullptr;
 
-
 	ComponentAudioSource* audio_source = nullptr;
-	ComponentTransform2D* credits_back_button = nullptr;
-	std::vector<GameObject*> buttons;
-	unsigned current = 0;
-	
-	bool show_credits = false;
+
+	std::vector<ComponentTransform2D*> buttons_transforms;
+	std::vector<ComponentButton*> buttons_components;
+	unsigned current_highlighted_button = 0;
 
 };
 extern "C" SCRIPT_API MainMenuLogic* MainMenuLogicDLL(); //This is how we are going to load the script
