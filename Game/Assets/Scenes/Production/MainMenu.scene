@@ -920,7 +920,23 @@
                     "UUID": 228338573,
                     "ComponentType": 6,
                     "Active": true,
-                    "ScriptName": "MainMenuLogic"
+                    "ScriptName": "MainMenuLogic",
+                    "Name0": "Play_Button",
+                    "Play_Button": 19876781,
+                    "Name1": "Help_Button",
+                    "Help_Button": 572364089,
+                    "Name2": "Credits_Button",
+                    "Credits_Button": 1481899329,
+                    "Name3": "Exit_Button",
+                    "Exit_Button": 1227334976,
+                    "Name4": "Credits",
+                    "Credits": 1981056088,
+                    "Name5": "Help",
+                    "Help": 296542632,
+                    "Name6": "Character_selection",
+                    "Character_selection": 4152763998,
+                    "Name7": "Audio_controller",
+                    "Audio_controller": 285203001
                 }
             ]
         },
@@ -1253,7 +1269,15 @@
                     "UUID": 3529982493,
                     "ComponentType": 6,
                     "Active": false,
-                    "ScriptName": "HelpMenuLogic"
+                    "ScriptName": "HelpMenuLogic",
+                    "Name0": "Joycon",
+                    "Joycon": 2143317194,
+                    "Name1": "KeyBoard",
+                    "KeyBoard": 3698255015,
+                    "Name2": "Main_Menu",
+                    "Main_Menu": 3053128562,
+                    "Name3": "Audio_controller",
+                    "Audio_controller": 285203001
                 }
             ]
         },
@@ -1685,7 +1709,29 @@
                     "UUID": 2047971874,
                     "ComponentType": 6,
                     "Active": false,
-                    "ScriptName": "CharacterSelectionMenu"
+                    "ScriptName": "CharacterSelectionMenu",
+                    "Name0": "Main_Menu",
+                    "Main_Menu": 3053128562,
+                    "Name1": "Level_selection",
+                    "Level_selection": 1586329215,
+                    "Name2": "Back",
+                    "Back": 3739545748,
+                    "Name3": "Level_selection_button",
+                    "Level_selection_button": 2634243702,
+                    "Name4": "Audio_controller",
+                    "Audio_controller": 285203001,
+                    "Name5": "p1_position",
+                    "p1_position": 652130620,
+                    "Name6": "p2_position",
+                    "p2_position": 1399119569,
+                    "Name7": "Character_selector1",
+                    "Character_selector1": 3292514778,
+                    "Name8": "Character_selector2",
+                    "Character_selector2": 1972725956,
+                    "Name9": "confirm_multi",
+                    "confirm_multi": 675621185,
+                    "Name10": "confirm_single",
+                    "confirm_single": 1108291097
                 }
             ]
         },
@@ -2467,7 +2513,21 @@
                     "UUID": 3543829844,
                     "ComponentType": 6,
                     "Active": false,
-                    "ScriptName": "LevelSelectionMenu"
+                    "ScriptName": "LevelSelectionMenu",
+                    "Name0": "level1_position",
+                    "level1_position": 2944641222,
+                    "Name1": "level2_position",
+                    "level2_position": 1431973882,
+                    "Name2": "level3_position",
+                    "level3_position": 1401462934,
+                    "Name3": "Back_button",
+                    "Back_button": 3411494713,
+                    "Name4": "Character_selection",
+                    "Character_selection": 4152763998,
+                    "Name5": "Audio_controller",
+                    "Audio_controller": 285203001,
+                    "Name6": "Back_cursor",
+                    "Back_cursor": 172169170
                 }
             ]
         },
@@ -2510,7 +2570,7 @@
                     0.5
                 ],
                 "AnchoredPos": [
-                    -2076.0,
+                    -276.0,
                     -122.0
                 ],
                 "MinAnchor": [

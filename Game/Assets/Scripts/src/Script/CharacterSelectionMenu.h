@@ -21,7 +21,7 @@ public:
 private:
 	std::vector<GameObject*> buttons;
 	unsigned current = 0;
-	bool player1_choice = true; //TODO: CHANGE THIS FOR THE MODULE INPUT VARIABLE
+	bool player1_choice = true; //TODO: CHANGE THIS FOR THE WORLDMANAGER VARIABLE
 	bool selecting_character = false;
 
 	bool awaked = false;

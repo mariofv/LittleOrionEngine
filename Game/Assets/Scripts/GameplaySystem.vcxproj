@@ -259,7 +259,6 @@
     <ClInclude Include="src\Script\MenuController.h" />
     <ClInclude Include="src\Script\PauseMenuLogic.h" />
     <ClInclude Include="src\Script\HelpMenuLogic.h" />
-    <ClInclude Include="src\Script\DamageScript.h" />
     <ClInclude Include="src\Script\DebugModeScript.h" />
     <ClInclude Include="src\Script\DieEnemyState.h" />
     <ClInclude Include="src\Script\GodCamera.h" />
@@ -284,12 +283,12 @@
     <ClInclude Include="src\Script\WorldManager.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="src\Script\DieEnemyState.cpp" />
     <ClCompile Include="src\Script\LevelSelectionMenu.cpp" />
     <ClCompile Include="src\Script\CharacterSelectionMenu.cpp" />
     <ClCompile Include="src\Script\MenuController.cpp" />
     <ClCompile Include="src\Script\PauseMenuLogic.cpp" />
     <ClCompile Include="src\Script\HelpMenuLogic.cpp" />
-    <ClCompile Include="src\Script\DamageScript.cpp" />
     <ClCompile Include="src\Script\GodCamera.cpp" />
     <ClCompile Include="src\Script\AttackEnemyState.cpp" />
     <ClCompile Include="src\Script\PursueEnemyState.cpp" />
