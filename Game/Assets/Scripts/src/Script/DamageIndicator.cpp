@@ -1,5 +1,6 @@
 #include "DamageIndicator.h"
 
+#include "Component/ComponentCanvasRenderer.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentTransform.h"
@@ -47,10 +48,14 @@ void DamageIndicator::Update()
 		current_time += elapsed_time;
 		if (current_time > duration)
 		{
+			static_cast<ComponentText*>(owner->GetComponent(Component::ComponentType::CANVAS_RENDERER))->Disable();
 			alive = false;
 			return;
 		}
 
+		float alpha = 1 - current_time / duration;
+		float4 font_color = damage_indicator_text->GetFontColor();
+		damage_indicator_text->SetFontColor(float4(font_color.xyz(), alpha));
 		owner->transform_2d.Translate(float3::unitY * speed * elapsed_time);
 	}
 
@@ -66,6 +71,7 @@ void DamageIndicator::Spawn(int number, float2 position)
 	alive = true;
 	damage_indicator_text->SetText(std::to_string(number));
 	owner->transform_2d.SetTranslation(float3(position, 0.f));
+	static_cast<ComponentText*>(owner->GetComponent(Component::ComponentType::CANVAS_RENDERER))->Enable();
 
 	current_time = 0.f;
 }
@@ -95,6 +101,7 @@ void DamageIndicator::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
+
 //Use this for linking GO AND VARIABLES automatically if you need to save variables 
 void DamageIndicator::Save(Config& config) const
 {

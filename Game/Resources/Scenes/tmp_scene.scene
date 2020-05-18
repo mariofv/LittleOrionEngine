@@ -844,7 +844,7 @@
                 {
                     "UUID": 467999035,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 },
                 {
                     "UUID": 1743773966,
@@ -937,7 +937,7 @@
                 {
                     "UUID": 467999035,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 },
                 {
                     "UUID": 2349022440,
@@ -1030,7 +1030,7 @@
                 {
                     "UUID": 467999035,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 },
                 {
                     "UUID": 480851135,
@@ -1123,12 +1123,12 @@
                 {
                     "UUID": 467999035,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 },
                 {
                     "UUID": 2938341285,
                     "ComponentType": 6,
-                    "Active": true,
+                    "Active": false,
                     "ScriptName": "DamageIndicator",
                     "Speed": 0.3499999940395355,
                     "Duration": 500.0
@@ -1216,12 +1216,12 @@
                 {
                     "UUID": 467999035,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 },
                 {
                     "UUID": 917720971,
                     "ComponentType": 6,
-                    "Active": true,
+                    "Active": false,
                     "ScriptName": "DamageIndicator",
                     "Speed": 0.3499999940395355,
                     "Duration": 500.0
