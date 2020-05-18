@@ -587,7 +587,17 @@
                     "UUID": 3520576276,
                     "ComponentType": 6,
                     "Active": true,
-                    "ScriptName": "DamageIndicatorSpawner"
+                    "ScriptName": "DamageIndicatorSpawner",
+                    "Name0": "Damage Indicator 0",
+                    "Damage Indicator 0": 108641919,
+                    "Name1": "Damage Indicator 1",
+                    "Damage Indicator 1": 829483130,
+                    "Name2": "Damage Indicator 2",
+                    "Damage Indicator 2": 2744352690,
+                    "Name3": "Damage Indicator 3",
+                    "Damage Indicator 3": 1399237250,
+                    "Name4": "Damage Indicator 4",
+                    "Damage Indicator 4": 672850800
                 }
             ]
         },
@@ -756,7 +766,7 @@
         {
             "UUID": 108641919,
             "ParentUUID": 3477723809,
-            "Name": "Damage Indicator",
+            "Name": "Damage Indicator 0",
             "IsStatic": false,
             "Active": true,
             "Transform": {
@@ -784,8 +794,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    2.0,
-                    103.0
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     0.0,
@@ -829,6 +839,362 @@
                     "UUID": 467999035,
                     "ComponentType": 10,
                     "Active": true
+                },
+                {
+                    "UUID": 1743773966,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageIndicator",
+                    "Speed": 0.3499999940395355,
+                    "Duration": 500.0
+                }
+            ]
+        },
+        {
+            "UUID": 829483130,
+            "ParentUUID": 3477723809,
+            "Name": "Damage Indicator 1",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3629470448,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 4271447605,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.3499999940395355,
+                    0.3499999940395355,
+                    0.3499999940395355
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    200.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 1898336405,
+                    "ComponentType": 13,
+                    "Active": true,
+                    "Text": "10",
+                    "FontSize": 100.0,
+                    "FontUUID": 16,
+                    "HorizontalAlignment": 1
+                },
+                {
+                    "UUID": 467999035,
+                    "ComponentType": 10,
+                    "Active": true
+                },
+                {
+                    "UUID": 2349022440,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageIndicator",
+                    "Speed": 0.3499999940395355,
+                    "Duration": 500.0
+                }
+            ]
+        },
+        {
+            "UUID": 2744352690,
+            "ParentUUID": 3477723809,
+            "Name": "Damage Indicator 2",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2258080107,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2476250372,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.3499999940395355,
+                    0.3499999940395355,
+                    0.3499999940395355
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    200.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 1898336405,
+                    "ComponentType": 13,
+                    "Active": true,
+                    "Text": "10",
+                    "FontSize": 100.0,
+                    "FontUUID": 16,
+                    "HorizontalAlignment": 1
+                },
+                {
+                    "UUID": 467999035,
+                    "ComponentType": 10,
+                    "Active": true
+                },
+                {
+                    "UUID": 480851135,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageIndicator",
+                    "Speed": 0.3499999940395355,
+                    "Duration": 500.0
+                }
+            ]
+        },
+        {
+            "UUID": 1399237250,
+            "ParentUUID": 3477723809,
+            "Name": "Damage Indicator 3",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 941939082,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 504647470,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.3499999940395355,
+                    0.3499999940395355,
+                    0.3499999940395355
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    200.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 1898336405,
+                    "ComponentType": 13,
+                    "Active": true,
+                    "Text": "10",
+                    "FontSize": 100.0,
+                    "FontUUID": 16,
+                    "HorizontalAlignment": 1
+                },
+                {
+                    "UUID": 467999035,
+                    "ComponentType": 10,
+                    "Active": true
+                },
+                {
+                    "UUID": 2938341285,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageIndicator",
+                    "Speed": 0.3499999940395355,
+                    "Duration": 500.0
+                }
+            ]
+        },
+        {
+            "UUID": 672850800,
+            "ParentUUID": 3477723809,
+            "Name": "Damage Indicator 4",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2334697957,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3895837912,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    0.3499999940395355,
+                    0.3499999940395355,
+                    0.3499999940395355
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    200.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 1898336405,
+                    "ComponentType": 13,
+                    "Active": true,
+                    "Text": "10",
+                    "FontSize": 100.0,
+                    "FontUUID": 16,
+                    "HorizontalAlignment": 1
+                },
+                {
+                    "UUID": 467999035,
+                    "ComponentType": 10,
+                    "Active": true
+                },
+                {
+                    "UUID": 917720971,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DamageIndicator",
+                    "Speed": 0.3499999940395355,
+                    "Duration": 500.0
                 }
             ]
         },

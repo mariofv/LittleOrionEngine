@@ -14,6 +14,8 @@
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
+#include "DamageIndicator.h"
+
 #include "imgui.h"
 
 
@@ -37,11 +39,11 @@ void DamageIndicatorSpawner::Awake()
 // Use this for initialization
 void DamageIndicatorSpawner::Start()
 {
-	damage_indicators_game_objects[0] = damage_indicator_game_object_0;
-	damage_indicators_game_objects[1] = damage_indicator_game_object_1;
-	damage_indicators_game_objects[2] = damage_indicator_game_object_2;
-	damage_indicators_game_objects[3] = damage_indicator_game_object_3;
-	damage_indicators_game_objects[4] = damage_indicator_game_object_4;
+	damage_indicators[0] = static_cast<DamageIndicator*>(damage_indicator_game_object_0->GetComponentScript("DamageIndicator")->script);
+	damage_indicators[1] = static_cast<DamageIndicator*>(damage_indicator_game_object_1->GetComponentScript("DamageIndicator")->script);
+	damage_indicators[2] = static_cast<DamageIndicator*>(damage_indicator_game_object_2->GetComponentScript("DamageIndicator")->script);
+	damage_indicators[3] = static_cast<DamageIndicator*>(damage_indicator_game_object_3->GetComponentScript("DamageIndicator")->script);
+	damage_indicators[4] = static_cast<DamageIndicator*>(damage_indicator_game_object_4->GetComponentScript("DamageIndicator")->script);
 }
 
 // Update is called once per frame
@@ -63,14 +65,22 @@ void DamageIndicatorSpawner::SpawnDamageIndicator(int damage, float3 position)
 		device_coordinates.y * App->ui->main_canvas->GetCanvasScreenSize().y / 2.f
 	);
 
-	GameObject* damage_indicator_game_object = GetAvailableDamageIndicator();
+	DamageIndicator* damage_indicator = GetAvailableDamageIndicator();
 
-	damage_indicator_game_object->transform_2d.SetTranslation(float3(canvas_position, 0.f));
+	damage_indicator->Spawn(damage, canvas_position);
 }
 
-GameObject* DamageIndicatorSpawner::GetAvailableDamageIndicator()
+DamageIndicator* DamageIndicatorSpawner::GetAvailableDamageIndicator()
 {
-	return damage_indicators_game_objects[0];
+	for (auto& damage_indicator : damage_indicators)
+	{
+		if (!damage_indicator->IsAlive())
+		{
+			return damage_indicator;
+		}
+	}
+
+	return nullptr;
 }
 
 // Use this for showing variables on inspector

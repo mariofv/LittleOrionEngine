@@ -46,7 +46,7 @@ void UIManager::Update()
 {
 	if (App->input->GetKeyDown(KeyCode::Space))
 	{
-		SpawnDamageIndicator(10, float3(10.f, 21.f, 10.f));
+		SpawnDamageIndicator(10, float3(0.f, 0.f, 0.f));
 	}
 }
 

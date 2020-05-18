@@ -5,6 +5,8 @@
 
 #include <array>
 
+class DamageIndicator;
+
 class DamageIndicatorSpawner : public Script
 {
 public:
@@ -21,10 +23,10 @@ public:
 	//void Load(const Config& config) override;
 
 	void SpawnDamageIndicator(int damage, float3 position);
-	GameObject* GetAvailableDamageIndicator();
+	DamageIndicator* GetAvailableDamageIndicator();
 
 private:
-	std::array<GameObject*, 5> damage_indicators_game_objects;
+	std::array<DamageIndicator*, 5> damage_indicators;
 
 	GameObject* damage_indicator_game_object_0 = nullptr;
 	GameObject* damage_indicator_game_object_1 = nullptr;

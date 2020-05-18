@@ -34,7 +34,7 @@ public:
 	void Update() override;
 	void Render(float4x4* projection);
 
-	void SetText(const std::string& new_text);
+	ENGINE_API void SetText(const std::string& new_text);
 	void SetHorizontalAlignment(HorizontalAlignment horizontal_alignment);
 
 	void SetFont(uint32_t font_uuid);

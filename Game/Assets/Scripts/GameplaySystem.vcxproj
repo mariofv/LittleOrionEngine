@@ -256,6 +256,7 @@
   <ItemGroup>
     <ClInclude Include="src\Script\DamageScript.h" />
     <ClInclude Include="src\Script\DebugModeScript.h" />
+    <ClInclude Include="src\Script\DamageIndicator.h" />
     <ClInclude Include="src\Script\DamageIndicatorSpawner.h" />
     <ClInclude Include="src\Script\UIManager.h" />
     <ClInclude Include="src\Script\ProgressBar.h" />
@@ -284,6 +285,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\DamageScript.cpp" />
+    <ClCompile Include="src\Script\DamageIndicator.cpp" />
     <ClCompile Include="src\Script\DamageIndicatorSpawner.cpp" />
     <ClCompile Include="src\Script\UIManager.cpp" />
     <ClCompile Include="src\Script\ProgressBar.cpp" />
