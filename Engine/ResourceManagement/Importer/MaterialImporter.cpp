@@ -11,6 +11,9 @@
 
 #include <assimp/scene.h>
 
+#include <regex>
+
+
 FileData MaterialImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
 	return assets_file_path.GetFile()->Load();
@@ -104,14 +107,21 @@ FileData MaterialImporter::ExtractMaterialFromAssimp(const aiMaterial* assimp_me
 
 uint32_t MaterialImporter::ImportMaterialTexture(const std::string& texture_described_path, const Path& material_file_folder_path) const
 {
-	APP_LOG_INIT("Loading material texture in described path %s.", texture_described_path.c_str());
-	if (App->filesystem->Exists(texture_described_path))
-	{
-		APP_LOG_SUCCESS("Material loaded correctly from %s.", texture_described_path.c_str());
-		return App->resources->InternalImport(*App->filesystem->GetPath(texture_described_path));
+	std::string sanitazed_string = texture_described_path;
+	size_t pos = 0;
+	while ((pos = sanitazed_string.find("\\", pos)) != std::string::npos) {
+		sanitazed_string.replace(pos, std::string("\\").length(), "/");
+		pos += std::string("/").length();
 	}
 
-	std::string texture_file_name = texture_described_path.substr(texture_described_path.find_last_of('/') + 1, -1);;
+	APP_LOG_INIT("Loading material texture in described path %s.", sanitazed_string.c_str());
+	if (App->filesystem->Exists(sanitazed_string))
+	{
+		APP_LOG_SUCCESS("Material loaded correctly from %s.", sanitazed_string.c_str());
+		return App->resources->InternalImport(*App->filesystem->GetPath(sanitazed_string));
+	}
+
+	std::string texture_file_name = texture_described_path.substr(sanitazed_string.find_last_of('/') + 1, -1);;
 	std::string textures_path = material_file_folder_path.GetFullPath() + "/" + texture_file_name;
 	APP_LOG_INIT("Loading material texture in model folder path %s.", material_file_folder_path.GetFullPath().c_str());
 	if (App->filesystem->Exists(textures_path))

@@ -3,6 +3,7 @@
 
 #include "Script.h"
 
+class ComponentCollider;
 class PlayerMovement;
 class PlayerAttack;
 
@@ -22,16 +23,17 @@ public:
 	void Load(const Config& config) override;
 
 	void TakeDamage(float damage);
+	ComponentCollider* GetCollider();
 
 public:
-	bool on_gravity = false;
+	unsigned int player = 1;
+	bool is_alive = true;
 
 private:
 	PlayerMovement* player_movement = nullptr;
 	PlayerAttack* player_attack = nullptr;
 
 	//unsigned player = 0;
-	unsigned int player = 1;
 	float health_points = 100.0f;
 };
 extern "C" SCRIPT_API PlayerController* PlayerControllerDLL(); //This is how we are going to load the script

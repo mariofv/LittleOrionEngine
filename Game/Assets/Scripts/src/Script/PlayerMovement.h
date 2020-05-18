@@ -33,7 +33,7 @@ private:
 	float falling_factor = 1.0f;
 	bool is_jumping = false;
 	float current_y = 0.0f;
-	float jump_power = 10.0f;
+	float jump_power = 130.0f;
 	float3 movement_vector;
 	float3 gravity_vector;
 	ComponentCollider* collider = nullptr;
@@ -42,8 +42,10 @@ private:
 	ComponentCamera* game_camera = nullptr;
 	bool is_inside = true;
 	bool is_grounded = false;
+	bool visualize_future_aabb = false;
 
-	float3 direction;
+	float3 direction = float3::zero;
+	float3 distance = float3::zero;
 	GameObject* second_player = nullptr;
 	float3 velocity = float3::zero;
 };

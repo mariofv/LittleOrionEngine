@@ -95,6 +95,7 @@ void CameraController::OnInspector(ImGuiContext* context)
 	ImGui::Checkbox("Is Focusing", &is_focusing);
 	ImGui::DragFloat3("Offset", selected_offset.ptr(), 0.5f, 0.f, 100.f);
 	ImGui::DragFloat("Distance", &distance_x, 0.5f, 0.f, 100.f);
+	ImGui::Checkbox("Freeze", &freeze);
 }
 
 void CameraController::ActivePlayer()
@@ -102,7 +103,7 @@ void CameraController::ActivePlayer()
 	if (god_mode) 
 	{
 		player_movement_component->Disable();
-		if(App->input->singleplayer_input)
+		if(!App->input->singleplayer_input)
 		{
 			player2_movement_component->Disable();
 		}
@@ -110,7 +111,7 @@ void CameraController::ActivePlayer()
 	else 
 	{
 		player_movement_component->Enable();
-		if (App->input->singleplayer_input)
+		if (!App->input->singleplayer_input)
 		{
 			player2_movement_component->Enable();
 		}
@@ -193,7 +194,7 @@ void CameraController::MultiplayerCamera()
 
 void CameraController::SetFreeze()
 {
-	freeze != freeze;
+	freeze = !freeze;
 }
 
 void CameraController::InitPublicGameObjects()
