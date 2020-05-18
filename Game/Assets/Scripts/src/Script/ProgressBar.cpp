@@ -41,11 +41,6 @@ void ProgressBar::Start()
 // Update is called once per frame
 void ProgressBar::Update()
 {
-	if (App->input->GetKeyDown(KeyCode::Space))
-	{
-		SetProgress(progress - 0.1f);
-	}
-
 }
 
 void ProgressBar::SetProgress(float new_progress)

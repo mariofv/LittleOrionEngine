@@ -186,8 +186,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    1032.0,
-                    607.0
+                    954.0,
+                    685.0
                 ],
                 "Pivot": [
                     0.5,
@@ -276,13 +276,13 @@
             ]
         },
         {
-            "UUID": 4035123900,
+            "UUID": 202876771,
             "ParentUUID": 0,
-            "Name": "Event System",
+            "Name": "UIManager",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1289463397,
+                "UUID": 2504285158,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -302,7 +302,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 1448535924,
+                "UUID": 1516934854,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
@@ -326,12 +326,17 @@
                     0.5
                 ]
             },
-            "Transform2DEnabled": true,
+            "Transform2DEnabled": false,
             "Components": [
                 {
-                    "UUID": 2794572495,
-                    "ComponentType": 5,
-                    "Active": true
+                    "UUID": 437558522,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "UIManager",
+                    "Name0": "HealthBar",
+                    "HealthBar": 1518932593,
+                    "Name1": "HealthBar",
+                    "HealthBar": 3981025267
                 }
             ]
         },
