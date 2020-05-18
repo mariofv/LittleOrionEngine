@@ -80,13 +80,13 @@ update_status ModuleResourceManager::PreUpdate()
 	{
 		importing_thread.join();
 		importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
-		CleanResourceCache();
+		RefreshResourceCache();
 	}
 
 	if(cache_time > 0.0f && (thread_timer->Read() - cache_time) >= cache_interval_millis)
 	{
 		cache_time = thread_timer->Read();
-		CleanResourceCache();
+		RefreshResourceCache();
 	}
 
 	return update_status::UPDATE_CONTINUE;

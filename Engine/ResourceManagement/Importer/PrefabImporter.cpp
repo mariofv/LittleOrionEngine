@@ -47,7 +47,6 @@ FileData PrefabImporter::ExtractFromModel(const Config& model_config, const Meta
 	}
 
 	ExtractAnimationComponent(model_root_node.get(), model_config);
-	
 	FileData prefab_data = ExtractFromGameObject(model_root_node.get());
 
 	game_objects.clear();
