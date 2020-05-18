@@ -8,6 +8,12 @@
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
 
+
+#include "Module/ModuleCamera.h"
+#include "Component/ComponentCamera.h"
+#include "Module/ModuleUI.h"
+#include "Component/ComponentCanvas.h"
+
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
 #include "imgui.h"
@@ -42,7 +48,7 @@ void UIManager::Update()
 {
 	if (App->input->GetKeyDown(KeyCode::Space))
 	{
-		SetPlayer1Health(0.1f);
+		SpawnDamageIndicator(10, number_position);
 	}
 }
 
@@ -56,12 +62,29 @@ void UIManager::SetPlayer2Health(float percentage)
 	player2_progress_bar->SetProgress(percentage);
 }
 
+void UIManager::SpawnDamageIndicator(int damage, float3 position)
+{
+	float4 position_float4 = float4(position, 1.f);
+	float4 clip_coordinates = App->cameras->main_camera->GetClipMatrix() * position_float4;
+	float3 device_coordinates = clip_coordinates.xyz() / clip_coordinates.w;
+
+	float2 canvas_position = float2
+	(
+		device_coordinates.x * App->ui->main_canvas->GetCanvasScreenSize().x / 2.f,
+		device_coordinates.y * App->ui->main_canvas->GetCanvasScreenSize().y / 2.f
+	);
+
+	number_game_object->transform_2d.SetTranslation(float3(canvas_position, 0.f));
+}
+
 // Use this for showing variables on inspector
 void UIManager::OnInspector(ImGuiContext* context)
 {
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
+
+	ImGui::InputFloat3("Number position", number_position.ptr());
 
 }
 
@@ -75,6 +98,9 @@ void UIManager::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&player2_progress_bar_game_object);
 	variable_names.push_back(GET_VARIABLE_NAME(player2_progress_bar_game_object));
+
+	public_gameobjects.push_back(&number_game_object);
+	variable_names.push_back(GET_VARIABLE_NAME(number_game_object));
 
 	for (int i = 0; i < public_gameobjects.size(); ++i)
 	{

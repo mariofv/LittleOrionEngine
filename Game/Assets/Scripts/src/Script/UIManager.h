@@ -22,6 +22,8 @@ public:
 	void SetPlayer1Health(float percentage);
 	void SetPlayer2Health(float percentage);
 
+	void SpawnDamageIndicator(int damage, float3 position);
+
 private:
 	GameObject* player1_progress_bar_game_object = nullptr;
 	ProgressBar* player1_progress_bar = nullptr;
@@ -29,6 +31,8 @@ private:
 	GameObject* player2_progress_bar_game_object = nullptr;
 	ProgressBar* player2_progress_bar = nullptr;
 
+	float3 number_position = float3::zero;
+	GameObject* number_game_object = nullptr;
 };
 extern "C" SCRIPT_API UIManager* UIManagerDLL(); //This is how we are going to load the script
 #endif

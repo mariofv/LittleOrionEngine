@@ -95,12 +95,12 @@
                 "Translation": [
                     0.0,
                     0.0,
-                    0.0
+                    -71.15461730957031
                 ],
                 "Rotation": [
+                    -0.0,
                     0.0,
-                    0.0,
-                    0.0
+                    -0.0
                 ],
                 "Scale": [
                     1.0,
@@ -186,7 +186,7 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    954.0,
+                    1145.0,
                     685.0
                 ],
                 "Pivot": [
@@ -336,7 +336,198 @@
                     "Name0": "HealthBar",
                     "HealthBar": 1518932593,
                     "Name1": "HealthBar",
-                    "HealthBar": 3981025267
+                    "HealthBar": 1518932593,
+                    "Name2": "Damage Indicator",
+                    "Damage Indicator": 108641919
+                }
+            ]
+        },
+        {
+            "UUID": 1621670682,
+            "ParentUUID": 0,
+            "Name": "Cylinder",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 769565181,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    100.0,
+                    100.0,
+                    100.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 836843172,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 3094770570,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Mesh": 4,
+                    "Material": 0,
+                    "Skeleton": 3452816845
+                }
+            ]
+        },
+        {
+            "UUID": 2333994840,
+            "ParentUUID": 0,
+            "Name": "Cylinder(1)",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3583191681,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    25.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    90.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    100.0,
+                    100.0,
+                    100.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3906390460,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 3094770570,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Mesh": 4,
+                    "Material": 0,
+                    "Skeleton": 3452816845
+                }
+            ]
+        },
+        {
+            "UUID": 1149188703,
+            "ParentUUID": 0,
+            "Name": "Cylinder(1)(1)",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1455684172,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    -25.0,
+                    -19.170000076293947,
+                    25.0
+                ],
+                "Rotation": [
+                    1.5707963705062867,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    100.0,
+                    100.0,
+                    100.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 4277036692,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 3094770570,
+                    "ComponentType": 2,
+                    "Active": true,
+                    "Mesh": 4,
+                    "Material": 0,
+                    "Skeleton": 3452816845
                 }
             ]
         },
@@ -505,8 +696,8 @@
                     "UUID": 1898336405,
                     "ComponentType": 13,
                     "Active": true,
-                    "Text": "",
-                    "FontSize": 12.0,
+                    "Text": "10",
+                    "FontSize": 100.0,
                     "FontUUID": 16,
                     "HorizontalAlignment": 1
                 },

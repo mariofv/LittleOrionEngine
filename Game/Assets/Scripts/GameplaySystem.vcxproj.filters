@@ -99,6 +99,9 @@
     <ClInclude Include="src\Script\ProgressBar.h">
       <Filter>src\Script\UI</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\UIManager.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\ExampleScript.cpp">
@@ -174,6 +177,9 @@
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\ProgressBar.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\UIManager.cpp">
       <Filter>src\Script\UI</Filter>
     </ClCompile>
   </ItemGroup>
