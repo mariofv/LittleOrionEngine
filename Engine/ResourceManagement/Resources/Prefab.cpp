@@ -15,6 +15,18 @@ Prefab::Prefab(uint32_t uuid, std::vector<std::unique_ptr<GameObject>> && gameOb
 {
 }
 
+Prefab::~Prefab()
+{
+	for (auto & gameobject : prefab)
+	{
+		for (auto & component : gameobject->components)
+		{
+			delete component;
+		}
+		gameobject->components.clear();
+	}
+}
+
 GameObject* Prefab::Instantiate(GameObject* prefab_parent, std::unordered_map<int64_t, int64_t>* UUIDS_pairs)
 {
 	std::unordered_map<uint64_t, GameObject*> original_gameObject_reference;
