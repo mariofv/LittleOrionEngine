@@ -24,6 +24,13 @@ public:
 		ORTHO = 2
 	};
 
+	enum OrthoIndex
+	{
+		CLOSE = 0,
+		MID = 1,
+		AWAY = 2
+	};
+
 	ComponentCamera();
 	ComponentCamera(GameObject * owner);
 
@@ -119,6 +126,7 @@ private:
 	void GenerateFrameBuffers(float width, float height);
 	void InitCamera();
 	void CreateFramebuffer(float width, float height);
+	void CreateOrthographicFramebuffer(float width, float height);
 	void CreateMssaFramebuffer(float width, float height);
 
 public:
@@ -140,6 +148,8 @@ public:
 
 	GLuint depth_map = 0;
 	GLuint last_recorded_frame_texture = 0;
+
+	OrthoIndex ortho_index; //Only for orthographic cameras
 
 
 	bool toggle_msaa = false;

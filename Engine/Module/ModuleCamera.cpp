@@ -50,6 +50,7 @@ bool ModuleCamera::Init()
 
 	directional_light_camera->SetFarDistance(50);
 	directional_light_camera->SetNearDistance(25);
+	directional_light_camera->ortho_index = ComponentCamera::OrthoIndex::CLOSE;
 
 	directional_light_mid = (ComponentCamera*)dir_light_game_object_mid->CreateComponent(Component::ComponentType::CAMERA);
 	directional_light_mid->depth = -1;
@@ -60,6 +61,8 @@ bool ModuleCamera::Init()
 
 	directional_light_mid->SetFarDistance(75);
 	directional_light_mid->SetNearDistance(50);
+	directional_light_mid->ortho_index = ComponentCamera::OrthoIndex::MID;
+
 
 	directional_light_far = (ComponentCamera*)dir_light_game_object_far->CreateComponent(Component::ComponentType::CAMERA);
 	directional_light_far->depth = -1;
@@ -70,6 +73,8 @@ bool ModuleCamera::Init()
 
 	directional_light_far->SetFarDistance(100);
 	directional_light_far->SetNearDistance(75);
+	directional_light_far->ortho_index = ComponentCamera::OrthoIndex::AWAY;
+
 
 
 	return true;

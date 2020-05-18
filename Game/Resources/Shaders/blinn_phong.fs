@@ -341,19 +341,19 @@ float ShadowCalculation(vec3 frag_normal)
 			//We sample the texture given from the light camera
 			//A few times at different texture coordinates
 
-			if(normalized_close_depth.z - bias <= 0.999)
+			if(close_coords.z > 0 && close_coords.z <= 1)
 			{
 				close_coords.xy = normalized_close_depth.xy + vec2(x, y)*depth_map_size;
 				factor += texture(close_depth_map, close_coords);
 			}
 
-			if(normalized_mid_depth.z - bias > 0 && normalized_mid_depth.z - bias < 0.999)
+			if(mid_coords.z > 0.25 - bias/2 && mid_coords.z < 1) // Until depth detection is fixed (stops calculating at 50% depth)
 			{
 				mid_coords.xy = normalized_mid_depth.xy + vec2(x, y)*depth_map_size;
 				factor += texture(mid_depth_map, mid_coords);
 			}
 
-			if(normalized_far_depth.z - bias > 0 && normalized_far_depth.z - bias < 0.999)
+			if(far_coords.z > 0.3341 - bias/2 && far_coords.z < 1) // Looks weird, but works
 			{
 				far_coords.xy = normalized_far_depth.xy + vec2(x, y)*depth_map_size;
 				factor += texture(far_depth_map, far_coords);
