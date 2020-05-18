@@ -233,55 +233,80 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 
 void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* particle_system)
 {
-
 	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
-		ImGui::Text("Texture");
-		ImGui::SameLine();
+		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
+		{
+			ImGui::Text("Texture");
+			ImGui::SameLine();
 
-		std::string texture_name = particle_system->billboard->billboard_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(particle_system->billboard->billboard_texture->GetUUID())->resource_name;
-		ImGuiID element_id = ImGui::GetID((std::to_string(particle_system->UUID) + "TextureSelector").c_str());
-		if (ImGui::Button(texture_name.c_str()))
-		{
-			App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
-		}
+			std::string texture_name = particle_system->billboard->billboard_texture == nullptr ? "None (Texture)" : App->resources->resource_DB->GetEntry(particle_system->billboard->billboard_texture->GetUUID())->resource_name;
+			ImGuiID element_id = ImGui::GetID((std::to_string(particle_system->UUID) + "TextureSelector").c_str());
+			if (ImGui::Button(texture_name.c_str()))
+			{
+				App->editor->popups->resource_selector_popup.ShowPanel(element_id, ResourceType::TEXTURE);
+			}
 
-		uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
-		if (selected_resource_uuid != 0)
-		{
-			particle_system->billboard->ChangeTexture(selected_resource_uuid);
-		}
-		selected_resource_uuid = ImGui::ResourceDropper<Texture>();
-		if (selected_resource_uuid != 0)
-		{
-			particle_system->billboard->ChangeTexture(selected_resource_uuid);
-		}
-		ImGui::DragFloat("Life (in seconds)", &particle_system->particles_life_time, 1.0F, 0.0F, 10.0F);
-		
-		if (particle_system->enabled_random_x)
-		{
-			ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 1000);
-			ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -1000, 0);
-		}
-		else
-		{
-			ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -1000, 1000);
-		}
-		ImGui::SameLine();
-		ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
+			uint32_t selected_resource_uuid = App->editor->popups->resource_selector_popup.GetSelectedResource(element_id);
+			if (selected_resource_uuid != 0)
+			{
+				particle_system->billboard->ChangeTexture(selected_resource_uuid);
+			}
+			selected_resource_uuid = ImGui::ResourceDropper<Texture>();
+			if (selected_resource_uuid != 0)
+			{
+				particle_system->billboard->ChangeTexture(selected_resource_uuid);
+			}
+			ImGui::Checkbox("Loop", &particle_system->loop);
+			ImGui::Spacing();
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+			ImGui::DragFloat("Width", &particle_system->billboard->width, 0.01f, 0.0f, 100.0F);
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+			ImGui::DragFloat("Height", &particle_system->billboard->height, 0.01f, 0.0f, 100.0F);
+			ImGui::Spacing();
 
-		if (particle_system->enabled_random_z)
-		{
-			ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 1000);
-			ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -1000, 0);
+			ImGui::DragFloat("Velocity", &particle_system->velocity_particles, 0.01f, 0.0f, 100.0F);
+			ImGui::Spacing();
+
+			ImGui::DragFloat("Life (in seconds)", &particle_system->particles_life_time, 1.0F, 0.0F, 100.0F);
+			ImGui::Spacing();
+
+			/*ImGui::DragInt("Number of Particles", &particle_system->max_particles, 1.0F, 0.0F, 1000.0F);
+			ImGui::Spacing();*/
+
+			ImGui::DragFloat("Time Between Particles", &particle_system->time_between_particles, 0.1F, 0.0F, 10.0f);
+			ImGui::Spacing();
+			if (particle_system->enabled_random_x)
+			{
+				ImGui::DragInt("Max X range", &particle_system->max_range_random_x, 1.0F, 0, 1000);
+				ImGui::DragInt("Min X range", &particle_system->min_range_random_x, 1.0F, -1000, 0);
+			}
+			else
+			{
+				ImGui::DragInt("X position", &particle_system->position_x, 1.0F, -100, 1000);
+			}
+			ImGui::SameLine();
+			ImGui::Checkbox("Rand X", &particle_system->enabled_random_x);
+
+			ImGui::Spacing();
+
+			if (particle_system->enabled_random_z)
+			{
+				ImGui::DragInt("Max Z range", &particle_system->max_range_random_z, 1.0F, 0, 1000);
+				ImGui::DragInt("Min Z range", &particle_system->min_range_random_z, 1.0F, -1000, 0);
+			}
+			else
+			{
+				ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -100, 1000);
+			}
+			ImGui::SameLine();
+			ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
 		}
-		else
+		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Color Over Time"))
 		{
-			ImGui::DragInt("Z position", &particle_system->position_z, 1.0F, -1000, 1000);
+			ImGui::Text("Texture");
 		}
-		ImGui::SameLine();
-		ImGui::Checkbox("Rand Z", &particle_system->enabled_random_z);
-		
 		
 	}
 

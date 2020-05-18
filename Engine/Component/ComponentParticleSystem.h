@@ -65,17 +65,22 @@ public:
 
 	
 public:
+
 	uint32_t texture_uuid;
 	ComponentBillboard* billboard;
-	float time_counter = 0.0F;
-	float time_between_particles = 200.0F;
+
 	std::vector<Particle> particles;
-	unsigned int max_particles = 50;
+		
+	float velocity_particles = 1.0F;
+
+	float time_counter = 0.0F;
+	float time_between_particles = 0.2F;
+	float particles_life_time = 3.0F;
+
+	int max_particles = 50;
+
 	unsigned int last_used_particle = 0;
 	unsigned int nr_new_particles = 2;
-
-	float particles_life_time= 3.0F;
-
 
 	bool enabled_random_x = true;
 	int max_range_random_x = 100;
@@ -86,6 +91,8 @@ public:
 	int max_range_random_z = 100;
 	int min_range_random_z = -100;
 	int position_z = 0;
+
+	bool loop = true;
 };
 
 #endif

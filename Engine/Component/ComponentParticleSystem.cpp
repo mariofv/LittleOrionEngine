@@ -21,14 +21,18 @@ ComponentParticleSystem::ComponentParticleSystem(GameObject * owner) : Component
 void ComponentParticleSystem::Init() 
 {
 	particles.reserve(max_particles);
+
+	billboard = new ComponentBillboard(owner);
+	billboard->width = 0.2f; billboard->height = 0.2f;
+	billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+
 	for (unsigned int i = 0; i < max_particles; ++i)
 	{
 		particles.emplace_back(Particle());
 		particles[i].life = 0.0F;
 	}
-	billboard = new ComponentBillboard(owner);
-	billboard->width = 0.2f; billboard->height = 0.2f;
-	billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+	
+	
 }
 
 unsigned int ComponentParticleSystem::FirstUnusedParticle()
@@ -75,34 +79,34 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	
 	particle.color = float4(rColor, rColor, rColor, 1.0f);
 	particle.life = particles_life_time*1000;
-	particle.velocity.y = 0.01F;
+	particle.velocity.y = velocity_particles/1000.F;
 }
 
 void ComponentParticleSystem::Render()
 {
 	glEnable(GL_BLEND);
-	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-	/*glBlendFunc(GL_ONE, GL_ONE); TODO -> FIX THISÇ*/
-	glBlendEquation(GL_FUNC_ADD);
 	time_counter += App->time->real_time_delta_time;
-	if (time_counter >= time_between_particles)
-	{
-		int unused_particle = FirstUnusedParticle();
-		RespawnParticle(particles[unused_particle]);
-		time_counter = 0.0F;
-	}
 
-	// update all particlesa
+	if (time_counter >= (time_between_particles * 1000))
+	{
+		if (loop)
+		{
+			int unused_particle = FirstUnusedParticle();
+			RespawnParticle(particles[unused_particle]);
+			time_counter = 0.0F;
+		}	
+	}
+	
+	// update all particles
 	for (unsigned int i = 0; i < max_particles; ++i)
 	{
-		Particle &p = particles[i];
+		Particle& p = particles[i];
 		p.life -= App->time->real_time_delta_time; // reduce life
 		if (p.life > 0.0f)
 		{	// particle is alive, thus update
-			p.position.y +=  p.velocity.y*App->time->real_time_delta_time;
+			p.position.y += p.velocity.y*App->time->real_time_delta_time;
 			billboard->Render(p.position);
 		}
-		
 	}
 	glDisable(GL_BLEND);
 }
