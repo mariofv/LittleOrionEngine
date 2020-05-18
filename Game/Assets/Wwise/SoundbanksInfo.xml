@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <SoundBanksInfo Platform="Windows" BasePlatform="Windows" SchemaVersion="12" SoundbankVersion="135">
 	<RootPaths>
-		<ProjectRoot>D:\Izzy\gitHub\WWiseProject\WwiseProject\</ProjectRoot>
-		<SourceFilesRoot>D:\Izzy\gitHub\WWiseProject\WwiseProject\.cache\Windows\</SourceFilesRoot>
-		<SoundBanksRoot>D:\Izzy\gitHub\LittleOrionEngine\Game\Assets\Wwise\</SoundBanksRoot>
+		<ProjectRoot>D:\Projectes\WWiseProject\WwiseProject\</ProjectRoot>
+		<SourceFilesRoot>D:\Projectes\WWiseProject\WwiseProject\.cache\Windows\</SourceFilesRoot>
+		<SoundBanksRoot>D:\Projectes\LittleOrionEngine\Game\Assets\Wwise\</SoundBanksRoot>
 		<ExternalSourcesInputFile></ExternalSourcesInputFile>
-		<ExternalSourcesOutputRoot>D:\Izzy\gitHub\WWiseProject\WwiseProject\GeneratedSoundBanks\Windows</ExternalSourcesOutputRoot>
+		<ExternalSourcesOutputRoot>D:\Projectes\WWiseProject\WwiseProject\GeneratedSoundBanks\Windows</ExternalSourcesOutputRoot>
 	</RootPaths>
 	<DialogueEvents/>
 	<StreamedFiles/>
@@ -89,6 +89,48 @@
 						<File Id="271477756" Language="SFX">
 							<ShortName>TwinlightSouls_Menu_InGame_Ambient.wav</ShortName>
 							<Path>SFX\TwinlightSouls_Menu_InGame_Ambient_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+			</IncludedEvents>
+		</SoundBank>
+		<SoundBank Id="2385628198" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Footsteps</ObjectPath>
+			<ShortName>Footsteps</ShortName>
+			<Path>Footsteps.bnk</Path>
+			<IncludedEvents>
+				<Event Id="1602358412" Name="Play_Footstep" ObjectPath="\Events\Default Work Unit\Play_Footstep">
+					<IncludedMemoryFiles>
+						<File Id="127024558" Language="SFX">
+							<ShortName>SFX_Character_Mushdoom_Walk1.wav</ShortName>
+							<Path>SFX\SFX_Character_Mushdoom_Walk1_10C4C929.wem</Path>
+						</File>
+						<File Id="173466054" Language="SFX">
+							<ShortName>SFX_Character_Mushdoom_Walk3.wav</ShortName>
+							<Path>SFX\SFX_Character_Mushdoom_Walk3_10C4C929.wem</Path>
+						</File>
+						<File Id="759245099" Language="SFX">
+							<ShortName>SFX_Character_Mushdoom_Walk4.wav</ShortName>
+							<Path>SFX\SFX_Character_Mushdoom_Walk4_10C4C929.wem</Path>
+						</File>
+						<File Id="839875782" Language="SFX">
+							<ShortName>SFX_Character_Mushdoom_Walk2.wav</ShortName>
+							<Path>SFX\SFX_Character_Mushdoom_Walk2_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+			</IncludedEvents>
+		</SoundBank>
+		<SoundBank Id="2764240573" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Combat</ObjectPath>
+			<ShortName>Combat</ShortName>
+			<Path>Combat.bnk</Path>
+			<IncludedEvents>
+				<Event Id="1967549118" Name="Start_Combat_Music" ObjectPath="\Events\Default Work Unit\Start_Combat_Music">
+					<IncludedMemoryFiles>
+						<File Id="223251098" Language="SFX">
+							<ShortName>Music_TwinlightSouls_StartingCombat.wav</ShortName>
+							<Path>SFX\Music_TwinlightSouls_StartingCombat_10C4C929.wem</Path>
 						</File>
 					</IncludedMemoryFiles>
 				</Event>
