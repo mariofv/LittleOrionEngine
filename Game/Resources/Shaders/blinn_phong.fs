@@ -334,14 +334,31 @@ float ShadowCalculation(vec3 frag_normal)
 
 	vec2 depth_map_size = 1.0 / textureSize(close_depth_map, 0); //Represents the size of a texel
 
-	for(int x = -1; x <= 1; ++x) //PCF, solution for edgy shadoes
+	for(int x = -1; x <= 1; ++x) //PCF, solution for edgy shadoWs
     {
         for(int y = -1; y <= 1; ++y)
         {
 			//We sample the texture given from the light camera
 			//A few times at different texture coordinates
-			far_coords.xy = normalized_far_depth.xy + vec2(x, y)*depth_map_size;
-			factor += texture(far_depth_map, far_coords);
+
+			if(normalized_close_depth.z - bias <= 0.999)
+			{
+				close_coords.xy = normalized_close_depth.xy + vec2(x, y)*depth_map_size;
+				factor += texture(close_depth_map, close_coords);
+			}
+
+			if(normalized_mid_depth.z - bias > 0 && normalized_mid_depth.z - bias < 0.999)
+			{
+				mid_coords.xy = normalized_mid_depth.xy + vec2(x, y)*depth_map_size;
+				factor += texture(mid_depth_map, mid_coords);
+			}
+
+			if(normalized_far_depth.z - bias > 0 && normalized_far_depth.z - bias < 0.999)
+			{
+				far_coords.xy = normalized_far_depth.xy + vec2(x, y)*depth_map_size;
+				factor += texture(far_depth_map, far_coords);
+			}
+			
         }    
     }
     factor /= 9.0;
