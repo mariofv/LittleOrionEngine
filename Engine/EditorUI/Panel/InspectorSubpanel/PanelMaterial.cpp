@@ -198,11 +198,11 @@ bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, M
 			}
 		}
 
-		if (ImGui::SliderFloat("Tiling X", &material->tiling_x, 0.f, 10.f))
+		if (ImGui::DragFloat("Tiling X", &material->tiling_x, 0.f, 10.f))
 		{
 			modified_by_user = true;
 		}
-		if (ImGui::SliderFloat("Tiling Y", &material->tiling_y, 0.f, 10.f))
+		if (ImGui::DragFloat("Tiling Y", &material->tiling_y, 0.f, 10.f))
 		{
 			modified_by_user = true;
 		}

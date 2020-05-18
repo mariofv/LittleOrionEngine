@@ -92,8 +92,8 @@ void Material::Load(const Config& config)
 
 	transparency = config.GetFloat("Transparency", 1.f);
 
-	tiling_x = config.GetFloat("Tiling X", 0.0f);
-	tiling_y = config.GetFloat("Tiling Y", 0.0f);
+	tiling_x = config.GetFloat("Tiling X", 1.0f);
+	tiling_y = config.GetFloat("Tiling Y", 1.0f);
 
 	//colors
 	float4 diffuse;
