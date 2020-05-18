@@ -17,6 +17,9 @@
 #include "imgui.h"
 #include <math.h>
 
+#include "WorldManager.h"
+#include "PlayerController.h"
+
 CameraController* CameraControllerDLL()
 {
 	CameraController* instance = new CameraController();
@@ -42,13 +45,24 @@ void CameraController::Awake()
 
 	selected_offset = offset_near;
 
+	GameObject* world_manager_go = App->scene->GetGameObjectByName("World Manager");
+	ComponentScript* world_manager_component = world_manager_go->GetComponentScript("WorldManager");
+	world_manager = static_cast<WorldManager*>(world_manager_component->script);
+
 }
 
 // Use this for initialization
 void CameraController::Start()
 {
 	//camera_component->SetOrthographicView();
-	if (!multiplayer)
+	//Dirty AF but hope it works
+	if(player_movement_script->player == 2)
+	{
+		std::swap(player1, player2);
+		std::swap(player2_movement_script, player_movement_script);
+	}
+
+	if (world_manager->singleplayer)
 	{
 		float3 current_position = player1->transform.GetTranslation();
 		float3 position_to_focus = float3(current_position.x, current_position.y + selected_offset.y, (current_position.z * 0.5) + selected_offset.z);
@@ -72,7 +86,7 @@ void CameraController::Update()
 {
 	if(!freeze)
 	{
-		if(multiplayer)
+		if(!world_manager->singleplayer)
 		{
 			MultiplayerCamera();
 		}
@@ -91,7 +105,7 @@ void CameraController::OnInspector(ImGuiContext* context)
 	//Example to Drag and drop and link GOs in the Editor, Unity-like (WIP)
 	ImGui::Text("Variables: ");
 	ShowDraggedObjects();
-	ImGui::Checkbox("Multiplayer", &multiplayer);
+	ImGui::Checkbox("Singleplayer", &world_manager->singleplayer);
 	ImGui::Checkbox("Is Focusing", &is_focusing);
 	ImGui::DragFloat3("Offset", selected_offset.ptr(), 0.5f, 0.f, 100.f);
 	ImGui::DragFloat("Distance", &distance_x, 0.5f, 0.f, 100.f);

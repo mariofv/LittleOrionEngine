@@ -8,6 +8,7 @@
 class ComponentCamera;
 class DebugModeScript;
 class PlayerController;
+class WorldManager;
 
 class CameraController : public Script
 {
@@ -44,6 +45,7 @@ private:
 	GameObject* player2 = nullptr;
 	PlayerController* player2_movement_script = nullptr;
 	ComponentScript* player2_movement_component = nullptr;
+	WorldManager* world_manager = nullptr;
 
 	const float CENTER_TIME = 30000.f;
 	float3 offset_near = float3(0.f, 5.5f, 11.f);
