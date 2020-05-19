@@ -41,16 +41,16 @@ public:
 	void Update() override;
 	void Delete() override;
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
 	float GetWidth() const;
 	float GetHeight() const;
 
-	void RecordFrame(float width, float height);
-	void RecordDebugDraws(float width, float height);
+	void RecordFrame(float width, float height, bool scene_mode = false);
+	void RecordDebugDraws(float width, float height) const;
 	GLuint GetLastRecordedFrame() const;
 
 	void SetFOV(float fov);

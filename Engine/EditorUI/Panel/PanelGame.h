@@ -17,7 +17,6 @@ public:
 	float2 game_window_content_area_pos = float2::zero;
 private:
 	void ShowEmptyGameWindow() const;
-
 };
 
 #endif //_PANELGAME_H_

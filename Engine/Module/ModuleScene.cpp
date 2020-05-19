@@ -42,6 +42,16 @@ bool ModuleScene::Init()
 	return true;
 }
 
+update_status ModuleScene::PreUpdate()
+{
+	BROFILER_CATEGORY("Scene PreUpdate", Profiler::Color::Crimson);
+	for (const auto& game_object : game_objects_ownership)
+	{
+		game_object->PreUpdate();
+	}
+	return update_status::UPDATE_CONTINUE;
+}
+
 update_status ModuleScene::Update()
 {
 	BROFILER_CATEGORY("Scene Update", Profiler::Color::Crimson);
@@ -53,6 +63,15 @@ update_status ModuleScene::Update()
 	return update_status::UPDATE_CONTINUE;
 }
 
+update_status ModuleScene::PostUpdate()
+{
+	BROFILER_CATEGORY("Scene PostUpdate", Profiler::Color::Crimson);
+	for (const auto& game_object : game_objects_ownership)
+	{
+		game_object->PostUpdate();
+	}
+	return update_status::UPDATE_CONTINUE;
+}
 
 bool ModuleScene::CleanUp()
 {

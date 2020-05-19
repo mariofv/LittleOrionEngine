@@ -23,9 +23,12 @@ void PanelDebug::Render()
 		hovered = ImGui::IsWindowHovered();
 		focused = ImGui::IsWindowFocused();
 
+		ImGui::Checkbox("ImGui Demo", &App->debug->show_imgui_demo);
 		ImGui::Checkbox("Grid", &App->debug->show_grid);
 		ImGui::Checkbox("Bounding boxes", &App->debug->show_bounding_boxes);
 		ImGui::Checkbox("Global bounding boxes", &App->debug->show_global_bounding_boxes);
+		ImGui::Checkbox("Canvas", &App->debug->show_canvas);
+		ImGui::Checkbox("Transform 2D", &App->debug->show_transform_2d);
 		ImGui::Checkbox("Camera Frustum", &App->debug->show_camera_frustum);
 		ImGui::Checkbox("QuadTree", &App->debug->show_quadtree);
 		ImGui::Checkbox("OctTree", &App->debug->show_octtree);

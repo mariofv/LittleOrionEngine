@@ -23,16 +23,18 @@ public:
 	bool CleanUp() override;
 
 	ComponentAudioSource* CreateComponentAudioSource();
+	void RemoveComponentAudioSource(ComponentAudioSource* audio_source_to_remove);
 
 	const AkGameObjectID main_sound_gameobject = 3;
+
 private:
+	std::vector<ComponentAudioSource*> audio_sources;
+
 	AkMemSettings memory_manager_settings;
 	AkStreamMgrSettings streaming_manager_settings;
 	AkInitSettings init_settings;
 	AkPlatformInitSettings platform_init_settings;
 	AkDeviceSettings device_settings;
-
-
 };
 
 #endif //_MODULEAUDIO_H_

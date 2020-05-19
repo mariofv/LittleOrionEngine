@@ -47,8 +47,8 @@ public:
 	void UpdateMeshes();
 	void Delete() override;
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
 
 private:
 	void GetChildrenMeshes(GameObject * current_mesh);

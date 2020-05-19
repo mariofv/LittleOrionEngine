@@ -12,16 +12,16 @@ class ComponentBoxCollider;
 class ComponentButton;
 class ComponentCamera;
 class ComponentCanvas;
+class ComponentCanvasRenderer;
 class ComponentCapsuleCollider;
 class ComponentCollider;
 class ComponentCylinderCollider;
+class ComponentEventSystem;
 class ComponentImage;
 class ComponentMeshCollider;
 class ComponentMeshRenderer;
 class ComponentLight;
-class ComponentProgressBar;
 class ComponentSphereCollider;
-class ComponentUI;
 class ComponentText;
 class ComponentTransform;
 class ComponentScript;
@@ -33,17 +33,27 @@ class PanelComponent
 public:
 	PanelComponent() = default;
 	~PanelComponent() = default;
-	
-	void ShowComponentTransformWindow(ComponentTransform* transform);
-	void ShowComponentMeshRendererWindow(ComponentMeshRenderer* mesh);
+
+	void ShowComponentMeshRendererWindow(ComponentMeshRenderer* mesh_renderer);
+	void ShowComponentCanvasRendererWindow(ComponentCanvasRenderer* canvas_renderer);
+
 	void ShowComponentCameraWindow(ComponentCamera* camera);
 	void ShowComponentLightWindow(ComponentLight* light);
 	void ShowComponentAnimationWindow(ComponentAnimation* animation);
 	void ShowComponentScriptWindow(ComponentScript* component_script);
-	void ShowComponentUIWindow(ComponentUI* ui);
+
+	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
+	void ShowComponentImageWindow(ComponentImage* image);
+	void ShowComponentTextWindow(ComponentText* text);
+	void ShowComponentButtonWindow(ComponentButton* button);
+
+	void ShowComponentEventSystem(ComponentEventSystem* event_system);
+
 	void ShowComponentColliderWindow(ComponentCollider* collider);
 	void ShowComponentAudioSourceWindow(ComponentAudioSource* component_audio_source);
+
 	void ShowAddNewComponentButton();
+	bool ShowCommonComponentWindow(Component* component);
 
 	void ShowScriptsCreated(ComponentScript* component_script);
 
@@ -53,13 +63,6 @@ public:
 	ENGINE_API void DropGOTarget(GameObject*& go);
 
 private:
-	void ShowCommonUIWindow(ComponentUI* ui);
-	void ShowComponentCanvasWindow(ComponentCanvas* canvas);
-	void ShowComponentProgressBarWindow(ComponentProgressBar* progress_bar);
-	void ShowComponentImageWindow(ComponentImage* image);
-	void ShowComponentTextWindow(ComponentText* text);
-	void ShowComponentButtonWindow(ComponentButton* button);
-
 	bool ShowCommonColliderWindow(ComponentCollider* collider);
 	void ShowComponentBoxColliderWindow(ComponentBoxCollider* box_collider);
 	void ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider* capsule_collider);
@@ -69,4 +72,3 @@ private:
 };
 
 #endif //_PANELCOMPONENT_H_
-

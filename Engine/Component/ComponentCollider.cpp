@@ -63,11 +63,8 @@ void ComponentCollider::Delete()
 	App->physics->RemoveComponentCollider(this);
 }
 
-void ComponentCollider::Save(Config & config) const
+void ComponentCollider::SpecializedSave(Config & config) const
 {
-	config.AddUInt(UUID, "UUID");
-	config.AddBool(active, "Active");
-	config.AddUInt((unsigned int)type, "ComponentType");
 	config.AddUInt((unsigned int)collider_type, "ColliderType");
 	config.AddFloat(mass, "Mass");
 	config.AddFloat3(scale, "Scale");
@@ -84,10 +81,8 @@ void ComponentCollider::Save(Config & config) const
 	config.AddFloat3(center_deviation, "Center_deviation");
 }
 
-void ComponentCollider::Load(const Config & config)
+void ComponentCollider::SpecializedLoad(const Config & config)
 {
-	UUID = config.GetUInt("UUID", 0);
-	active = config.GetBool("Active", true);
 	mass = config.GetFloat("Mass", 1.0F);
 	config.GetFloat3("Scale", scale, float3::one);
 	is_static = config.GetBool("Static", false);
@@ -160,12 +155,23 @@ void ComponentCollider::MoveBody()
 {
 	btTransform trans;
 	motion_state->getWorldTransform(trans);
-	owner->transform.SetGlobalMatrixTranslation(float3(trans.getOrigin().getX(), trans.getOrigin().getY(), trans.getOrigin().getZ()) - deviation+center_deviation);
-	owner->transform.SetRotation(Quat(trans.getRotation().x(), trans.getRotation().y(), trans.getRotation().z(), trans.getRotation().w()));
+	center_deviation = owner->aabb.global_bounding_box.CenterPoint() - center;
+
+	owner->transform.SetGlobalMatrixTranslation(float3(trans.getOrigin().getX(),
+		trans.getOrigin().getY(),
+		trans.getOrigin().getZ()) - deviation + center_deviation);
+
+	owner->transform.SetRotation(Quat(trans.getRotation().x(),
+		trans.getRotation().y(),
+		trans.getRotation().z(),
+		trans.getRotation().w()));
+
 	if (is_attached)
 	{
 		deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
 	}
+
+	center = float3(body->getWorldTransform().getOrigin());
 }
 
 void ComponentCollider::UpdateCommonDimensions()
@@ -417,22 +423,21 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 	float2 normal_2D = float2(normal.x, normal.y);
 	float2 vector_vel = normal_2D.Perp();
 	
-	if (abs(velocity.x) > 0 || abs(velocity.z) > 0) 
+	if (velocity.Length() > 0) 
 	{
 		velocity.Normalize();
 		body->setLinearVelocity(speed * btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
 		
 		//rotate collider
-
-		/*float3 direction = float3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z);*/
-		float3 direction = float3(velocity.x, 0, velocity.z); 
-		Quat new_rotation = owner->transform.GetRotation().LookAt(float3::unitZ, direction.Normalized(), float3::unitY, float3::unitY);
+		float3 direction = velocity.Normalized();
+		Quat new_rotation = Quat::LookAt(owner->transform.GetFrontVector(), direction, owner->transform.GetUpVector(), float3::unitY);
 		
 		btTransform trans = body->getWorldTransform();
-		btQuaternion transrot = trans.getRotation();
 
-		transrot = btQuaternion(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
-		trans.setRotation(transrot);
+		btQuaternion quat = trans.getRotation();
+		btQuaternion transrot = btQuaternion(new_rotation.x, new_rotation.y, new_rotation.z, new_rotation.w);
+		quat *= transrot;
+		trans.setRotation(quat);
 		body->setWorldTransform(trans);
 	}
 

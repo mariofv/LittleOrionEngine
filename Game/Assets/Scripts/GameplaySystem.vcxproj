@@ -254,7 +254,6 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Script\DamageScript.h" />
     <ClInclude Include="src\Script\DebugModeScript.h" />
     <ClInclude Include="src\Script\DieEnemyState.h" />
     <ClInclude Include="src\Script\GodCamera.h" />
@@ -268,7 +267,6 @@
     <ClInclude Include="src\Script\EnemyManager.h" />
     <ClInclude Include="src\Script\EnemyController.h" />
     <ClInclude Include="src\Script\PlayerAttack.h" />
-    <ClInclude Include="src\Script\EndOfLevelScript.h" />
     <ClInclude Include="src\Script\ExampleScript.h" />
     <ClInclude Include="src\Script\MenuLogic.h" />
     <ClInclude Include="src\Script\PlayerController.h" />
@@ -276,12 +274,10 @@
     <ClInclude Include="src\Script\CameraController.h" />
     <ClInclude Include="src\Script\SceneCamerasController.h" />
     <ClInclude Include="src\Script\Script.h" />
-    <ClInclude Include="src\Script\TriggerActionScript.h" />
     <ClInclude Include="src\Script\TriggerGravity.h" />
     <ClInclude Include="src\Script\WorldManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Script\DamageScript.cpp" />
     <ClCompile Include="src\Script\DieEnemyState.cpp" />
     <ClCompile Include="src\Script\GodCamera.cpp" />
     <ClCompile Include="src\Script\AttackEnemyState.cpp" />
@@ -295,7 +291,6 @@
     <ClCompile Include="src\Script\EnemyController.cpp" />
     <ClCompile Include="src\Script\PlayerAttack.cpp" />
     <ClCompile Include="src\Script\DebugModeScript.cpp" />
-    <ClCompile Include="src\Script\EndOfLevelScript.cpp" />
     <ClCompile Include="src\Script\ExampleScript.cpp" />
     <ClCompile Include="src\Script\MenuLogic.cpp" />
     <ClCompile Include="src\Script\PlayerController.cpp" />
@@ -303,7 +298,6 @@
     <ClCompile Include="src\Script\CameraController.cpp" />
     <ClCompile Include="src\Script\SceneCamerasController.cpp" />
     <ClCompile Include="src\Script\Script.cpp" />
-    <ClCompile Include="src\Script\TriggerActionScript.cpp" />
     <ClCompile Include="src\Script\TriggerGravity.cpp" />
     <ClCompile Include="src\Script\WorldManager.cpp" />
   </ItemGroup>

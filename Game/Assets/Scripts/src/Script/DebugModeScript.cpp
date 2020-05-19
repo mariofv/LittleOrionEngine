@@ -191,7 +191,7 @@ void DebugModeScript::OnInspector(ImGuiContext* context)
 
 }
 
-//Use this for linking JUST GO automatically 
+//Use this for linking JUST GO automatically
 void DebugModeScript::InitPublicGameObjects()
 {
 	public_gameobjects.push_back(&enemy_manager_obj);
@@ -209,7 +209,7 @@ void DebugModeScript::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
-//Use this for linking GO AND VARIABLES automatically if you need to save variables 
+//Use this for linking GO AND VARIABLES automatically if you need to save variables
 // void DebugModeScript::Save(Config& config) const
 // {
 // 	config.AddUInt(example->UUID, "ExampleNameforSave");
@@ -222,4 +222,3 @@ void DebugModeScript::InitPublicGameObjects()
 // 	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
 // 	Script::Load(config);
 // }
-

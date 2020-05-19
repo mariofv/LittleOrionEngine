@@ -1,8 +1,9 @@
 #ifndef _COMPONENTBUTTON_H_
 #define _COMPONENTBUTTON_H_
 
-#include "ComponentUI.h"
-class ComponentButton : public ComponentUI
+#include "Component.h"
+
+class ComponentButton : public Component
 {
 public:
 	ComponentButton();
@@ -10,13 +11,20 @@ public:
 
 	~ComponentButton() = default;
 
-	void Delete() override;
+	void PostUpdate() override;
 
-	void Save(Config& config) const override;
-	void Load(const Config& config) override;
-	void Render(float4x4* projection);
+	Component* Clone(bool original_prefab = false) const override;
+	void Copy(Component* component_to_copy) const override;
+
+	void Delete() override;
+	void SpecializedSave(Config& config) const override;
+	void SpecializedLoad(const Config& config) override;
+
+	void SetClicked(bool clicked);
+	bool IsClicked() const;
+
 private:
-	bool hasText = false;
+	bool clicked = false;
 };
 #endif
 

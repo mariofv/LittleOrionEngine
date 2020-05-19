@@ -6,6 +6,7 @@
 #include "ModuleFileSystem.h"
 
 #include "ResourceManagement/Resources/Animation.h"
+#include "ResourceManagement/Resources/Font.h"
 #include "ResourceManagement/Resources/Material.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Prefab.h"
@@ -28,6 +29,7 @@ class Path;
 class Timer;
 
 class AnimationImporter;
+class FontImporter;
 class MaterialImporter;
 class MeshImporter;
 class ModelImporter;
@@ -39,15 +41,7 @@ class StateMachineImporter;
 class SoundImporter;
 class TextureImporter;
 
-class AnimationManager;
-class MaterialManager;
-class MeshManager;
-class PrefabManager;
 class SceneManager;
-class SkeletonManager;
-class SkyboxManager;
-class StateMachineManager;
-class TextureManager;
 
 class ModuleResourceManager : public Module
 {
@@ -155,6 +149,7 @@ public:
 
 	//Importers
 	std::unique_ptr<AnimationImporter> animation_importer = nullptr;
+	std::unique_ptr<FontImporter> font_importer = nullptr;
 	std::unique_ptr<MaterialImporter> material_importer = nullptr;
 	std::unique_ptr<MeshImporter> mesh_importer = nullptr;
 	std::unique_ptr<ModelImporter> model_importer = nullptr;

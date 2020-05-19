@@ -18,6 +18,8 @@ public:
 	bool CleanUp() override;
 	
 	ComponentAnimation* CreateComponentAnimation();
+	ComponentAnimation* CreateComponentAnimation(GameObject* owner);
+
 	void RemoveComponentAnimation(ComponentAnimation* animation_to_remove);
 	void UpdateAnimationMeshes();
 	void PlayAnimations() const;

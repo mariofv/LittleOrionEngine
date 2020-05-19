@@ -1,5 +1,6 @@
 #include "PlayerMovement.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
@@ -35,6 +36,7 @@ void PlayerMovement::Awake()
 {
 	game_camera = (ComponentCamera*)camera->GetComponent(Component::ComponentType::CAMERA);
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
+	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 }
 
 // Use this for initialization
@@ -57,10 +59,12 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 	ImGui::Text("Variables: ");
 	ShowDraggedObjects();
 	ImGui::Checkbox("Is Inside Frustum", &is_inside);
+	ImGui::Checkbox("Is Jumping", &is_jumping);
 	ImGui::Checkbox("Is Grounded", &is_grounded);
-	ImGui::DragFloat3("VELOCITY", velocity.ptr(), 0.1f, 0.f, 300.f);
+	ImGui::DragFloat3("Velocity", velocity.ptr(), 0.1f, 0.f, 300.f);
 	ImGui::Checkbox("Future AABB", &visualize_future_aabb);
 	ImGui::DragFloat3("Distance", distance.ptr(), 0.1f, 0.f, 300.f);
+	ImGui::DragFloat3("Direction", direction.ptr(), 0.1f, 0.f, 300.f);
 }
 
 void PlayerMovement::Move(int player)
@@ -68,7 +72,7 @@ void PlayerMovement::Move(int player)
 	
 	velocity = collider->GetCurrentVelocity();
 	float3 transform = owner->transform.GetTranslation();
-	direction = float3::zero; //change direction
+	direction = float3::zero; 
 	PlayerID player_id = static_cast<PlayerID>(player - 1);
 
 	float x_axis = App->input->GetHorizontal(player_id);
@@ -77,9 +81,10 @@ void PlayerMovement::Move(int player)
 	if (abs(velocity.y) < 0.01 && is_jumping)
 	{
 		is_jumping = false;
+		is_second_jump = false;
 	}
 
-	direction = float3(x_axis, 0.0f, y_axis); // not add just assing
+	direction = float3(x_axis, 0.0f, y_axis);
 	if (IsGrounded() && !is_jumping)
 	{
 		is_grounded = true;
@@ -88,7 +93,11 @@ void PlayerMovement::Move(int player)
 			is_inside = IsInside(transform + direction  * speed);
 			if (is_inside)
 			{
+				//collider->SwitchPhysics(false);
+				//owner->transform.LookAt(direction + transform);
+				//collider->SwitchPhysics(true);
 				collider->SetVelocity(direction, speed * App->time->delta_time);
+				animation->ActiveAnimation("run");
 			}
 			else
 			{
@@ -97,6 +106,11 @@ void PlayerMovement::Move(int player)
 				collider->SetVelocity(direction, 0);
 			}
 		}
+		else
+		{
+			animation->ActiveAnimation("idle");
+		}
+		
 		if (App->input->GetGameInputDown("Jump", player_id))
 		{
 			is_jumping = true;
@@ -122,6 +136,12 @@ void PlayerMovement::Move(int player)
 				collider->AddForce(direction);
 				collider->SetVelocity(transform, 0);
 			}
+		}
+		if (App->input->GetGameInputDown("Jump", player_id) && !is_second_jump)
+		{
+			is_second_jump = true;
+			direction.y = -1000;
+			Jump(direction);
 		}
 	}
 	
@@ -164,7 +184,6 @@ bool PlayerMovement::IsInside(float3 future_transform)
 
 	return game_camera->IsInsideFrustum(future_position);
 }
-
 
 void PlayerMovement::InitPublicGameObjects()
 {

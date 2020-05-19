@@ -2,36 +2,21 @@
 #define _MODULEUI_H_
 #define ENGINE_EXPORTS
 
-#include "Component/ComponentUI.h"
 #include "Module.h"
 #include "Main/Globals.h"
 
-// Std. Includes
 #include <iostream>
 #include <map>
-// GLEW
 #include <GL/glew.h>
-// FreeType
-#include <ft2build.h>
-#include FT_FREETYPE_H
 
-#define MAX_NUM_LAYERS 8
-
-class ComponentCanvas;
-class ComponentCamera;
-class ComponentText;
+class Component;
 class ComponentButton;
-class Gameobject;
+class ComponentCanvas;
+class ComponentCanvasRenderer;
+class ComponentEventSystem;
+class ComponentText;
+class GameObject;
 
-struct SDL_Renderer;
-
-/// Holds all state information relevant to a character as loaded using FreeType
-struct Character {
-	GLuint TextureID;   // ID handle of the glyph texture
-	float2 Size;    // Size of glyph
-	float2 Bearing;  // Offset from baseline to left/top of glyph
-	GLuint Advance;    // Horizontal offset to advance to next glyph
-};
 class ModuleUI : public Module
 {
 public:
@@ -42,31 +27,39 @@ public:
 	update_status Update() override;
 	bool CleanUp() override;
 
-	void Render(const ComponentCamera* camera);
+	void Render(bool scene_mode);
 
-	ComponentUI* CreateComponentUI(const ComponentUI::UIType ui_type, GameObject* owner);
-	void RemoveComponentUI(ComponentUI* ui_to_remove);
+	ComponentEventSystem* CreateComponentEventSystem();
+	void RemoveComponentEventSystem(ComponentEventSystem* component_event_system);
+	bool ExistEventSystem() const;
 
-	//Glyph init 
-	void InitGlyph();
-	ENGINE_API void SortComponentsUI();
+	ComponentCanvas* CreateComponentCanvas();
+	void RemoveComponentCanvas(ComponentCanvas* component_canvas);
 
-private:
-	void RenderUIGameObject(GameObject*, float4x4*);
+	GameObject* GetMainCanvasGameObject() const;
+	void SelectMainCanvas();
+
+	template<typename T>
+	T* CreateComponentUI()
+	{
+		T* new_component_ui = new T();
+		ui_elements.push_back(new_component_ui);
+		return new_component_ui;
+	}
+	void RemoveComponentUI(Component* component_ui);
+
+	ComponentCanvasRenderer* CreateComponentCanvasRenderer();
+	void RemoveComponentCanvasRenderer(ComponentCanvasRenderer* component_canvas_renderer);
 
 public:
-	std::map<GLchar, Character> Characters;
-	float window_width, window_height;
-	bool glyphInit = false;
 	ComponentCanvas* main_canvas = nullptr;
 
 private:
-	FT_Library ft;
-	FT_Face face;
-	unsigned int text_texture;
-	std::vector<ComponentUI*> ui_elements;
-	std::vector<ComponentUI*> ordered_ui;
+	std::vector<ComponentEventSystem*> event_systems;
+	std::vector<ComponentCanvas*> canvases;
 
+	std::vector<Component*> ui_elements;
+	std::vector<ComponentCanvasRenderer*> canvas_renderers;
 };
 
 #endif //_MODULEUI_H_

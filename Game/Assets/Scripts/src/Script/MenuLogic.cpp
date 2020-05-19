@@ -49,12 +49,12 @@ void MenuLogic::Start()
 // Update is called once per frame
 void MenuLogic::Update()
 {
-
+	/*
 	if(show_help && ComfirmButtonPressed())
 	{
 		help_controller->SetEnabled(false);
 		help_keyboard->SetEnabled(false);
-		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
+		owner->transform_2d.SetTranslation(&float2(owner->transform_2d.anchored_position.x, buttons[current]->transform_2d.anchored_position.y));
 		show_help = false;
 		//audio_source->PlayEvent("Click_backward");
 		return;
@@ -63,13 +63,13 @@ void MenuLogic::Update()
 	if (show_credits && ComfirmButtonPressed())
 	{
 		credits->SetEnabled(false);
-		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
+		owner->transform_2d.SetTranslation(&float2(owner->transform_2d.anchored_position.x, buttons[current]->transform_2d.anchored_position.y));
 		show_credits = false;
 		//audio_source->PlayEvent("Click_backward");
 		return;
 	}
 
-	if(show_help && (App->input->GetKeyDown(KeyCode::D) || App->input->GetControllerButtonDown(ControllerCode::RightDpad, ControllerID::ONE) || 
+	if(show_help && (App->input->GetKeyDown(KeyCode::D) || App->input->GetControllerButtonDown(ControllerCode::RightDpad, ControllerID::ONE) ||
 		App->input->GetKeyDown(KeyCode::A) || App->input->GetControllerButtonDown(ControllerCode::LeftDpad, ControllerID::ONE)))
 	{
 		help_controller->SetEnabled(!help_controller->IsEnabled());
@@ -129,6 +129,7 @@ void MenuLogic::Update()
 
 		owner->transform_2d.SetPosition(&float3(owner->transform_2d.position.x, buttons[current]->transform_2d.position.y, owner->transform_2d.position.z));
 	}
+	*/
 
 }
 
@@ -141,7 +142,7 @@ void MenuLogic::OnInspector(ImGuiContext* context)
 
 }
 
-//Use this for linking JUST GO automatically 
+//Use this for linking JUST GO automatically
 void MenuLogic::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
@@ -163,12 +164,14 @@ void MenuLogic::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&help_keyboard);
 	variable_names.push_back(GET_VARIABLE_NAME(help_keyboard));
-	
+
 	public_gameobjects.push_back(&credits);
 	variable_names.push_back(GET_VARIABLE_NAME(credits));
 
-	//public_gameobjects.push_back(&audio_controller);
-	//variable_names.push_back(GET_VARIABLE_NAME(audio_controller));
+	/*
+	public_gameobjects.push_back(&audio_controller);
+	variable_names.push_back(GET_VARIABLE_NAME(audio_controller));
+	*/
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
@@ -181,7 +184,7 @@ bool MenuLogic::ComfirmButtonPressed()
 	return (App->input->GetKeyDown(KeyCode::Space) || App->input->GetControllerButtonDown(ControllerCode::A, ControllerID::ONE));
 }
 
-//Use this for linking GO AND VARIABLES automatically if you need to save variables 
+//Use this for linking GO AND VARIABLES automatically if you need to save variables
 // void MenuLogic::Save(Config& config) const
 // {
 // 	config.AddUInt(example->UUID, "ExampleNameforSave");
@@ -194,4 +197,3 @@ bool MenuLogic::ComfirmButtonPressed()
 // 	exampleUUID = config.GetUInt("ExampleNameforSave", 0);
 // 	Script::Load(config);
 // }
-
