@@ -1,5 +1,6 @@
 #include "PlayerMovement.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
@@ -35,6 +36,7 @@ void PlayerMovement::Awake()
 {
 	game_camera = (ComponentCamera*)camera->GetComponent(Component::ComponentType::CAMERA);
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
+	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 }
 
 // Use this for initialization
@@ -90,7 +92,11 @@ void PlayerMovement::Move(int player)
 			is_inside = IsInside(transform + direction  * speed);
 			if (is_inside)
 			{
+				//collider->SwitchPhysics(false);
+				//owner->transform.LookAt(direction + transform);
+				//collider->SwitchPhysics(true);
 				collider->SetVelocity(direction, speed * App->time->delta_time);
+				animation->ActiveAnimation("run");
 			}
 			else
 			{
@@ -99,6 +105,11 @@ void PlayerMovement::Move(int player)
 				collider->SetVelocity(direction, 0);
 			}
 		}
+		else
+		{
+			animation->ActiveAnimation("idle");
+		}
+		
 		if (App->input->GetGameInputDown("Jump", player_id))
 		{
 			is_jumping = true;

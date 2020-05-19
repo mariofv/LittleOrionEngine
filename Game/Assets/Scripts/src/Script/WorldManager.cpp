@@ -111,6 +111,11 @@ void WorldManager::Start()
 // Update is called once per frame
 void WorldManager::Update()
 {
+	if(on_main_menu)
+	{
+		return;
+	}
+
 	CheckTriggers();
 	/*
 	if(health_component->percentage <= 0.0f)

@@ -5,6 +5,7 @@
 
 #include "MathGeoLib.h"
 
+class ComponentAnimation;
 class ComponentCamera;
 class ComponentCollider;
 
@@ -37,12 +38,13 @@ private:
 	float3 movement_vector;
 	float3 gravity_vector;
 	ComponentCollider* collider = nullptr;
-
+	ComponentAnimation* animation = nullptr;
 	GameObject* camera = nullptr;
 	ComponentCamera* game_camera = nullptr;
 	bool is_inside = true;
 	bool is_grounded = false;
 	bool visualize_future_aabb = false;
+	bool turning_back = false;
 
 	float3 direction = float3::zero;
 	float3 distance = float3::zero;
