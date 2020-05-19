@@ -223,10 +223,10 @@
             ]
         },
         {
-            "ParentUUID": 4004170792,
-            "Prefab": 197215350,
+            "ParentUUID": 3966630548,
+            "Prefab": 3399448478,
             "Transform": {
-                "UUID": 3111319595,
+                "UUID": 106576703,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -247,24 +247,20 @@
             },
             "UUIDS": [
                 {
-                    "UUID": 4106274841,
-                    "OriginalUUID": 197215350
+                    "UUID": 420395374,
+                    "OriginalUUID": 3399448478
                 },
                 {
-                    "UUID": 2008174456,
-                    "OriginalUUID": 197215352
-                },
-                {
-                    "UUID": 2371271121,
-                    "OriginalUUID": 197215351
+                    "UUID": 3478628191,
+                    "OriginalUUID": 3399448479
                 }
             ]
         },
         {
-            "ParentUUID": 974694911,
-            "Prefab": 197215350,
+            "ParentUUID": 2296910557,
+            "Prefab": 3399448478,
             "Transform": {
-                "UUID": 3760474618,
+                "UUID": 2327339435,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -285,15 +281,11 @@
             },
             "UUIDS": [
                 {
-                    "UUID": 4012452726,
-                    "OriginalUUID": 197215350
+                    "UUID": 898367321,
+                    "OriginalUUID": 3399448478
                 },
                 {
-                    "UUID": 974031227,
-                    "OriginalUUID": 0
-                },
-                {
-                    "UUID": 2270166900,
+                    "UUID": 2166971526,
                     "OriginalUUID": 0
                 }
             ]
@@ -301,26 +293,24 @@
     ],
     "PrefabsComponents": [
         {
-            "RemovedComponents": [
-                {
-                    "Removed": 571396198
-                }
-            ],
-            "Components": [],
-            "UUID": 4106274841
-        },
-        {
-            "RemovedComponents": [
-                {
-                    "Removed": 571396198
-                }
-            ],
-            "Components": [],
-            "UUID": 4012452726
-        },
-        {
             "RemovedComponents": [],
             "Components": [
+                {
+                    "UUID": 681500885,
+                    "ComponentType": 2,
+                    "Active": false,
+                    "Mesh": 3348717978,
+                    "Material": 1582005317,
+                    "Skeleton": 0
+                },
+                {
+                    "UUID": 833751351,
+                    "ComponentType": 2,
+                    "Active": false,
+                    "Mesh": 3348717978,
+                    "Material": 1582005317,
+                    "Skeleton": 0
+                },
                 {
                     "UUID": 1250248877,
                     "ComponentType": 2,
@@ -348,7 +338,7 @@
                     "Freeze_rotation_y": true,
                     "Freeze_rotation_z": true,
                     "Active_Physics": true,
-                    "Friction": 1.0,
+                    "Friction": 3.0,
                     "Rolling_friction": 1.0,
                     "Center_deviation": [
                         0.0,
@@ -573,9 +563,9 @@
                     "Active": true,
                     "ScriptName": "CameraController",
                     "Name0": "Player1",
-                    "Player1": 4004170792,
+                    "Player1": 3966630548,
                     "Name1": "Player2",
-                    "Player2": 974694911
+                    "Player2": 2296910557
                 }
             ]
         },
@@ -591,7 +581,7 @@
                 "Active": true,
                 "Translation": [
                     -51.97651290893555,
-                    -5.017028331756592,
+                    -1.813460350036621,
                     -3.99362850189209
                 ],
                 "Rotation": [
@@ -668,7 +658,7 @@
                 {
                     "UUID": 3132349959,
                     "ComponentType": 6,
-                    "Active": false,
+                    "Active": true,
                     "ScriptName": "Mushdoom"
                 }
             ]
@@ -870,8 +860,8 @@
                 "Active": true,
                 "Translation": [
                     0.0,
-                    0.0,
-                    -16.829757690429689
+                    2.0,
+                    -26.916725158691408
                 ],
                 "Rotation": [
                     -0.0,
@@ -967,232 +957,6 @@
             "Components": []
         },
         {
-            "UUID": 4004170792,
-            "ParentUUID": 0,
-            "Name": "Player1",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1570610886,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    -57.00803756713867,
-                    -4.909248352050781,
-                    -6.710150718688965
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 3033465419,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": false,
-            "Components": [
-                {
-                    "UUID": 3206077969,
-                    "ComponentType": 9,
-                    "Active": true,
-                    "ColliderType": 1,
-                    "Mass": 10.0,
-                    "Scale": [
-                        0.550000011920929,
-                        1.0,
-                        1.0
-                    ],
-                    "Static": false,
-                    "Collision": true,
-                    "Visualize": true,
-                    "Attached": true,
-                    "Freeze_rotation_x": true,
-                    "Freeze_rotation_y": true,
-                    "Freeze_rotation_z": true,
-                    "Active_Physics": true,
-                    "Friction": 1.0,
-                    "Rolling_friction": 1.0,
-                    "Center_deviation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ]
-                },
-                {
-                    "UUID": 1943097588,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "PlayerController",
-                    "Player": 1
-                },
-                {
-                    "UUID": 4095649778,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "PlayerMovement",
-                    "Name0": "Main Camera",
-                    "Main Camera": 172714554,
-                    "Name1": "Player2",
-                    "Player2": 974694911
-                },
-                {
-                    "UUID": 4238471797,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "PlayerAttack",
-                    "Name0": "Attack Collider",
-                    "Attack Collider": 1416514312
-                },
-                {
-                    "UUID": 3124140472,
-                    "ComponentType": 8,
-                    "Active": true,
-                    "StateMachineResource": 2258225
-                }
-            ]
-        },
-        {
-            "UUID": 974694911,
-            "ParentUUID": 0,
-            "Name": "Player2",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1546545281,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    -59.080482482910159,
-                    -4.909248352050781,
-                    -4.433545112609863
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2416481335,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": false,
-            "Components": [
-                {
-                    "UUID": 1635743156,
-                    "ComponentType": 9,
-                    "Active": true,
-                    "ColliderType": 1,
-                    "Mass": 10.0,
-                    "Scale": [
-                        0.550000011920929,
-                        1.0,
-                        1.0
-                    ],
-                    "Static": false,
-                    "Collision": true,
-                    "Visualize": true,
-                    "Attached": true,
-                    "Freeze_rotation_x": true,
-                    "Freeze_rotation_y": true,
-                    "Freeze_rotation_z": true,
-                    "Active_Physics": true,
-                    "Friction": 1.0,
-                    "Rolling_friction": 1.0,
-                    "Center_deviation": [
-                        0.0,
-                        0.0,
-                        0.0
-                    ]
-                },
-                {
-                    "UUID": 2730948393,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "PlayerController",
-                    "Player": 2
-                },
-                {
-                    "UUID": 2107251168,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "PlayerMovement",
-                    "Name0": "Main Camera",
-                    "Main Camera": 172714554,
-                    "Name1": "Player1",
-                    "Player1": 4004170792
-                },
-                {
-                    "UUID": 2571270438,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "PlayerAttack",
-                    "Name0": "Attack Collider2",
-                    "Attack Collider2": 1878556450
-                },
-                {
-                    "UUID": 1567865162,
-                    "ComponentType": 8,
-                    "Active": true,
-                    "StateMachineResource": 2258225
-                }
-            ]
-        },
-        {
             "UUID": 2050044260,
             "ParentUUID": 0,
             "Name": "Triggers",
@@ -1205,12 +969,12 @@
                 "Translation": [
                     0.0,
                     0.0,
-                    0.0
+                    -27.20089340209961
                 ],
                 "Rotation": [
+                    -0.0,
                     0.0,
-                    0.0,
-                    0.0
+                    -0.0
                 ],
                 "Scale": [
                     1.0,
@@ -1301,19 +1065,19 @@
             "Components": []
         },
         {
-            "UUID": 1416514312,
-            "ParentUUID": 4004170792,
-            "Name": "Attack Collider",
+            "UUID": 3966630548,
+            "ParentUUID": 0,
+            "Name": "Player1",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 1471449176,
+                "UUID": 1273950381,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
                     0.0,
-                    0.8989005088806152,
-                    0.25540924072265627
+                    4.251105308532715,
+                    -7.214937686920166
                 ],
                 "Rotation": [
                     -0.0,
@@ -1327,7 +1091,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 1612651346,
+                "UUID": 2529126870,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
@@ -1354,48 +1118,79 @@
             "Transform2DEnabled": false,
             "Components": [
                 {
-                    "UUID": 2314609472,
+                    "UUID": 1630708050,
+                    "ComponentType": 8,
+                    "Active": true,
+                    "StateMachineResource": 478709234
+                },
+                {
+                    "UUID": 3456566339,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerAttack",
+                    "Name0": "AttackCollider",
+                    "AttackCollider": 610672952
+                },
+                {
+                    "UUID": 3537245059,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerMovement",
+                    "Name0": "Main Camera",
+                    "Main Camera": 172714554,
+                    "Name1": "Player1",
+                    "Player1": 3966630548
+                },
+                {
+                    "UUID": 2314854937,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerController",
+                    "Player": 1
+                },
+                {
+                    "UUID": 719121575,
                     "ComponentType": 9,
                     "Active": true,
-                    "ColliderType": 0,
-                    "Mass": 1.0,
+                    "ColliderType": 1,
+                    "Mass": 10.0,
                     "Scale": [
-                        0.3700000047683716,
-                        1.059999942779541,
-                        0.3700000047683716
+                        0.44999998807907107,
+                        1.4199999570846558,
+                        1.0
                     ],
                     "Static": false,
                     "Collision": true,
                     "Visualize": true,
-                    "Attached": false,
+                    "Attached": true,
                     "Freeze_rotation_x": true,
                     "Freeze_rotation_y": true,
                     "Freeze_rotation_z": true,
-                    "Active_Physics": false,
+                    "Active_Physics": true,
                     "Friction": 1.0,
                     "Rolling_friction": 1.0,
                     "Center_deviation": [
-                        -0.010036468505859375,
-                        -0.030347824096679689,
-                        -0.2503013610839844
+                        0.0,
+                        0.010199904441833496,
+                        -0.7899119853973389
                     ]
                 }
             ]
         },
         {
-            "UUID": 1878556450,
-            "ParentUUID": 974694911,
-            "Name": "Attack Collider2",
+            "UUID": 2296910557,
+            "ParentUUID": 0,
+            "Name": "Player2",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 2826809570,
+                "UUID": 640350271,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    0.0,
-                    0.8989005088806152,
-                    0.25540924072265627
+                    -3.814803123474121,
+                    3.613318920135498,
+                    -4.379925727844238
                 ],
                 "Rotation": [
                     -0.0,
@@ -1409,7 +1204,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 2185566865,
+                "UUID": 583151990,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
@@ -1436,30 +1231,55 @@
             "Transform2DEnabled": false,
             "Components": [
                 {
-                    "UUID": 2902709485,
+                    "UUID": 1630708050,
+                    "ComponentType": 8,
+                    "Active": true,
+                    "StateMachineResource": 478709234
+                },
+                {
+                    "UUID": 1631576064,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerAttack"
+                },
+                {
+                    "UUID": 2084602319,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerMovement"
+                },
+                {
+                    "UUID": 4105875931,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerController",
+                    "Player": 1
+                },
+                {
+                    "UUID": 3878275735,
                     "ComponentType": 9,
                     "Active": true,
-                    "ColliderType": 0,
+                    "ColliderType": 1,
                     "Mass": 1.0,
                     "Scale": [
-                        0.3700000047683716,
-                        1.059999942779541,
-                        0.3700000047683716
+                        0.49000000953674319,
+                        1.3300000429153443,
+                        1.0
                     ],
                     "Static": false,
                     "Collision": true,
                     "Visualize": true,
-                    "Attached": false,
+                    "Attached": true,
                     "Freeze_rotation_x": true,
                     "Freeze_rotation_y": true,
                     "Freeze_rotation_z": true,
-                    "Active_Physics": false,
+                    "Active_Physics": true,
                     "Friction": 1.0,
                     "Rolling_friction": 1.0,
                     "Center_deviation": [
                         0.0,
                         0.0,
-                        0.0
+                        -0.799837589263916
                     ]
                 }
             ]
@@ -1559,7 +1379,7 @@
                 "Translation": [
                     156.45693969726563,
                     -26.936532974243165,
-                    17.73095703125
+                    20.194570541381837
                 ],
                 "Rotation": [
                     -0.0,
@@ -1981,13 +1801,13 @@
             "Components": []
         },
         {
-            "UUID": 974031227,
-            "ParentUUID": 4012452726,
-            "Name": "Beta_Joints_0(1)",
+            "UUID": 610672952,
+            "ParentUUID": 3966630548,
+            "Name": "AttackCollider",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3847365096,
+                "UUID": 3707076931,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2007,7 +1827,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 1513582361,
+                "UUID": 588037923,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
@@ -2034,23 +1854,42 @@
             "Transform2DEnabled": false,
             "Components": [
                 {
-                    "UUID": 1328626971,
-                    "ComponentType": 2,
+                    "UUID": 931831205,
+                    "ComponentType": 9,
                     "Active": true,
-                    "Mesh": 682834458,
-                    "Material": 191260840,
-                    "Skeleton": 2050280920
+                    "ColliderType": 0,
+                    "Mass": 1.0,
+                    "Scale": [
+                        0.6700000166893005,
+                        1.0,
+                        0.18000000715255738
+                    ],
+                    "Static": false,
+                    "Collision": false,
+                    "Visualize": true,
+                    "Attached": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        -1.399999976158142,
+                        -0.4399999976158142
+                    ]
                 }
             ]
         },
         {
-            "UUID": 2270166900,
-            "ParentUUID": 4012452726,
-            "Name": "Beta_Surface_0(1)",
+            "UUID": 232040959,
+            "ParentUUID": 2296910557,
+            "Name": "AttackCollider(1)",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3389099533,
+                "UUID": 4237750827,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2070,7 +1909,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 4020883397,
+                "UUID": 3404808273,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
@@ -2097,12 +1936,94 @@
             "Transform2DEnabled": false,
             "Components": [
                 {
-                    "UUID": 4053654356,
+                    "UUID": 1089442216,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 0,
+                    "Mass": 1.0,
+                    "Scale": [
+                        0.6700000166893005,
+                        1.0,
+                        0.18000000715255738
+                    ],
+                    "Static": false,
+                    "Collision": false,
+                    "Visualize": true,
+                    "Attached": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        -1.189681053161621,
+                        -0.23992586135864259
+                    ]
+                }
+            ]
+        },
+        {
+            "UUID": 2166971526,
+            "ParentUUID": 898367321,
+            "Name": "Player1_Mesh_0(1)",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 4154037602,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 4035600162,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 430374902,
                     "ComponentType": 2,
                     "Active": true,
-                    "Mesh": 2181622064,
-                    "Material": 3605666792,
-                    "Skeleton": 2050280920
+                    "Mesh": 801669158,
+                    "Material": 1905743869,
+                    "Skeleton": 935428450
                 }
             ]
         }
