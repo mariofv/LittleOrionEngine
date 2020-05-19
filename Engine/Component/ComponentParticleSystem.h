@@ -50,30 +50,36 @@ public:
 	ComponentBillboard* billboard;
 
 	std::vector<Particle> particles;
-		
+	
+	//standard values
+	bool loop = true;
+	int max_particles = 50;
+	unsigned int last_used_particle = 0;
+	unsigned int nr_new_particles = 2;
+
 	float velocity_particles = 1.0F;
 
+	//time
 	float time_counter = 0.0F;
 	float time_between_particles = 0.2F;
 	float particles_life_time = 3.0F;
 
-	int max_particles = 50;
-
-	unsigned int last_used_particle = 0;
-	unsigned int nr_new_particles = 2;
-
+	//position X
 	bool enabled_random_x = true;
 	int max_range_random_x = 100;
 	int min_range_random_x = -100;
 	int position_x = 0;
 
+	//position Y
 	bool enabled_random_z = true;
 	int max_range_random_z = 100;
 	int min_range_random_z = -100;
 	int position_z = 0;
 
-	bool loop = true;
+	
+	//color
 	bool color_fade = false;
+	float color_fade_time = 1.0F;
 };
 
 #endif

@@ -307,7 +307,13 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Color Over Time"))
 		{
 			ImGui::Checkbox("Color Fade", &particle_system->color_fade);
+			if (particle_system->color_fade)
+			{
+				ImGui::DragFloat("Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);
+			}
 			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->billboard->color, ImGuiColorEditFlags_Float );
+			
+			
 		}
 		
 	}

@@ -105,7 +105,7 @@ void ComponentParticleSystem::Render()
 		if (p.life > 0.0f)
 		{	// particle is alive, thus update
 			p.position.y += p.velocity.y*App->time->real_time_delta_time;
-			p.color.w -= App->time->real_time_delta_time * p.velocity.y;
+			p.color.w -= App->time->real_time_delta_time * (color_fade_time/1000);
 			if (color_fade)
 			{
 				billboard->color[3] = p.color.w;
