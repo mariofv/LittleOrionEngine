@@ -291,6 +291,8 @@ void GameObject::Save(Config& config) const
 	transform_2d.Save(transform_2d_config);
 	config.AddChildConfig(transform_2d_config, "Transform2D");
 
+	config.AddBool(transform_2d_enabled, "Transform2DEnabled");
+
 	std::vector<Config> gameobject_components_config(components.size());
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
@@ -318,6 +320,8 @@ void GameObject::Load(const Config& config)
 	active = config.GetBool("Active", true);
 
 	LoadTransforms(config);
+
+	transform_2d_enabled = config.GetBool("Transform2DEnabled", false);
 
 	std::vector<Config> gameobject_components_config;
 	config.GetChildrenConfig("Components", gameobject_components_config);
@@ -387,7 +391,7 @@ void GameObject::RemoveChild(GameObject* child)
 
 Component::ComponentType GameObject::GetTransformType() const
 {
-	if (num_2d_components > 0)
+	if (transform_2d_enabled)
 	{
 		return Component::ComponentType::TRANSFORM2D;
 	}
@@ -397,6 +401,10 @@ Component::ComponentType GameObject::GetTransformType() const
 	}
 }
 
+void GameObject::SetTransform2DStatus(bool enabled)
+{
+	transform_2d_enabled = enabled;
+}
 
 ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType type)
 {
@@ -462,15 +470,7 @@ ENGINE_API Component* GameObject::CreateComponent(const Component::ComponentType
 
 	if (created_component->Is2DComponent())
 	{
-		if (type != Component::ComponentType::CANVAS)
-		{
-			Component* current_canvas_renderer = GetComponent(Component::ComponentType::CANVAS_RENDERER);
-			if (current_canvas_renderer == nullptr)
-			{
-				CreateComponent(Component::ComponentType::CANVAS_RENDERER);
-			}
-		}
-		++num_2d_components;
+		transform_2d_enabled = true;
 	}
 
 	return created_component;
@@ -489,11 +489,6 @@ void GameObject::RemoveComponent(Component* component_to_remove)
 	const auto it = std::find(components.begin(), components.end(), component_to_remove);
 	if (it != components.end())
 	{
-		if (component_to_remove->Is2DComponent())
-		{
-			--num_2d_components;
-			assert(num_2d_components >= 0);
-		}
 		component_to_remove->Delete();
 		components.erase(it);
 	}

@@ -4,7 +4,6 @@
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
-#include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
 #include "Component/ComponentCanvasRenderer.h"
