@@ -9,6 +9,7 @@
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleEditor.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
@@ -24,6 +25,8 @@
 #include "EnemyManager.h"
 
 #include "imgui.h"
+#include <imgui_internal.h>
+#include <imgui_stdlib.h>
 #include <iomanip>
 #include <sstream>
 
@@ -56,6 +59,9 @@ void DebugModeScript::Start()
 // Update is called once per frame
 void DebugModeScript::Update()
 {
+	//Necessary to be able to write with imgui
+	//ImGui::SetCurrentContext(ImGui::GetCurrentContext());
+
 	if (App->input->GetKeyDown(KeyCode::F1) || App->input->GetControllerButtonDown(ControllerCode::RightStick, ControllerID::ONE))
 	{
 		debug_enabled = !debug_enabled;
@@ -63,65 +69,8 @@ void DebugModeScript::Update()
 
 	if (debug_enabled)
 	{
-		if (App->input->GetMouseButtonDown(MouseButton::Left))
-		{
-			LineSegment ray;
-			App->cameras->main_camera->GetRay(App->input->GetMousePosition(), ray);
-			RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->main_camera);
+		ImGui::SetCurrentContext(App->editor->GetImGuiContext());
 
-			if (hit->game_object != nullptr)
-			{
-				if (is_warping_player_one || is_warping_player_two)
-				{
-					ComponentCapsuleCollider* collider = nullptr;
-
-					if (is_warping_player_one) collider = (ComponentCapsuleCollider*)player_one_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
-					else collider = (ComponentCapsuleCollider*)player_two_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
-
-					collider->active_physics = false;
-
-					if (is_warping_player_one) player_one_obj->transform.SetTranslation(hit->hit_point);
-					else player_two_obj->transform.SetTranslation(hit->hit_point);
-
-					is_warping_player_one = false;
-					is_warping_player_two = false;
-					has_warped_player_recently = true;
-				}
-
-				if (is_spawning_enemy)
-				{
-					LineSegment ray;
-					App->cameras->main_camera->GetRay(App->input->GetMousePosition(), ray);
-					RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->main_camera);
-
-					enemy_manager->SpawnEnemy(0, hit->hit_point);
-					is_spawning_enemy = false;
-				}
-			}
-		}
-
-		if (has_warped_player_recently)
-		{
-			warp_cooldown += (App->time->delta_time / 1000);
-			if (warp_cooldown >= 1.5f)//Half a second cooldown
-			{
-				warp_cooldown = 0.0f;
-				has_warped_player_recently = false;
-				ComponentCapsuleCollider* collider = (ComponentCapsuleCollider*)player_one_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
-				collider->active_physics = true;
-			}
-
-		}
-	}
-}
-
-void DebugModeScript::UpdateWithImGui(ImGuiContext* context)
-{
-	//Necessary to be able to write with imgui
-	ImGui::SetCurrentContext(context);
-
-	if (debug_enabled)
-	{
 		if (ImGui::Begin("Ingame debug (Shhhhhh!! This is a secret!)"))
 		{
 			std::stringstream stream_fps;
@@ -179,6 +128,56 @@ void DebugModeScript::UpdateWithImGui(ImGuiContext* context)
 			}
 
 			ImGui::End();
+		}
+
+		if (App->input->GetMouseButtonDown(MouseButton::Left))
+		{
+			LineSegment ray;
+			App->cameras->main_camera->GetRay(App->input->GetMousePosition(), ray);
+			RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->main_camera);
+
+			if (hit->game_object != nullptr)
+			{
+				if (is_warping_player_one || is_warping_player_two)
+				{
+					ComponentCapsuleCollider* collider = nullptr;
+
+					if (is_warping_player_one) collider = (ComponentCapsuleCollider*)player_one_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
+					else collider = (ComponentCapsuleCollider*)player_two_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
+
+					collider->active_physics = false;
+
+					if (is_warping_player_one) player_one_obj->transform.SetTranslation(hit->hit_point);
+					else player_two_obj->transform.SetTranslation(hit->hit_point);
+
+					is_warping_player_one = false;
+					is_warping_player_two = false;
+					has_warped_player_recently = true;
+				}
+
+				if (is_spawning_enemy)
+				{
+					LineSegment ray;
+					App->cameras->main_camera->GetRay(App->input->GetMousePosition(), ray);
+					RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->main_camera);
+
+					enemy_manager->SpawnEnemy(0, hit->hit_point);
+					is_spawning_enemy = false;
+				}
+			}
+		}
+
+		if (has_warped_player_recently)
+		{
+			warp_cooldown += (App->time->delta_time / 1000);
+			if (warp_cooldown >= 1.5f)//Half a second cooldown
+			{
+				warp_cooldown = 0.0f;
+				has_warped_player_recently = false;
+				ComponentCapsuleCollider* collider = (ComponentCapsuleCollider*)player_one_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
+				collider->active_physics = true;
+			}
+
 		}
 	}
 }

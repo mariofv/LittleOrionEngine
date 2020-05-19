@@ -127,6 +127,7 @@ update_status ModuleEditor::Update()
 	//ImGui::ShowDemoWindow();
 #endif
 
+	imgui_context = ImGui::GetCurrentContext();
 
 	return update_status::UPDATE_CONTINUE;
 }
@@ -243,6 +244,11 @@ ImFont* ModuleEditor::GetFont(const Fonts & font) const
 {
 	ImGuiIO& io = ImGui::GetIO();
 	return io.Fonts->Fonts[static_cast<int>(font)];
+}
+
+ImGuiContext * ModuleEditor::GetImGuiContext() const
+{
+	return imgui_context;
 }
 
 void ModuleEditor::LoadFonts()

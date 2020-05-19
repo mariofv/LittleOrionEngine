@@ -20,7 +20,6 @@ public:
 	void Awake() override;
 	void Start() override;
 	void Update() override;
-	void UpdateWithImGui(ImGuiContext*) override;
 
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();
