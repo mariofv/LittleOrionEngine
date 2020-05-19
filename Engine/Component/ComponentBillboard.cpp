@@ -95,7 +95,6 @@ void ComponentBillboard::Render(const float3& position)
 	GLuint viewpoint_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "view_point_alignment");
 	GLuint crossed_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "crossed_alignment");
 	GLuint axial_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "axial_alignment");
-	//GLuint hola_subroutine = glGetSubroutineIndex(shader_program, GL_VERTEX_SHADER, "hola");
 
 	//Subroutine uniform
 	int selector = glGetSubroutineUniformLocation(shader_program, GL_VERTEX_SHADER, "alignment_selector");
@@ -121,7 +120,6 @@ void ComponentBillboard::Render(const float3& position)
 
 		glUniform1i(glGetUniformLocation(shader_program, "billboard.XTiles"), x_tiles);
 		glUniform1i(glGetUniformLocation(shader_program, "billboard.YTiles"), y_tiles);
-
 		glUniform1f(glGetUniformLocation(shader_program, "X"), current_sprite_x);
 		glUniform1f(glGetUniformLocation(shader_program, "Y"), current_sprite_y);
 
@@ -141,6 +139,7 @@ void ComponentBillboard::Render(const float3& position)
 	glUniform1f(glGetUniformLocation(shader_program, "billboard.width"), width);
 	glUniform1f(glGetUniformLocation(shader_program, "billboard.height"), height);
 	glUniform1f(glGetUniformLocation(shader_program, "billboard.isSpritesheet"), is_spritesheet);
+	glUniform4fv(glGetUniformLocation(shader_program, "billboard.color"),1, (float*)color);
 	glUniform3fv(glGetUniformLocation(shader_program, "billboard.center_pos"), 1, position.ptr());
 
 	unsigned int VBO, VAO, EBO;

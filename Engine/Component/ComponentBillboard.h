@@ -56,6 +56,9 @@ public:
 	int x_tiles = 0;
 	int y_tiles = 0;
 
+	//color
+	float color[4] = { 1.0f, 1.0f, 1.0f, 1.0f };
+
 	//Current sprite position
 	float current_sprite_x = 0, current_sprite_y = 0;
 	std::shared_ptr<Texture> billboard_texture = nullptr;

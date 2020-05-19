@@ -21,6 +21,8 @@ struct Billboard
   sampler2D texture;
   bool isSpritesheet;
 
+  vec4 color;
+
   int XTiles;
   int YTiles;
   float speed;

@@ -18,19 +18,8 @@ public:
 		float4 color;
 		float time_counter;
 		float  life;
-		bool counter = false;
 	};
 
-	struct Initialization
-		{
-			float3 position;
-			float3 rotation;
-			float life;
-			float3 velocity;
-			float gravity;
-			float size;
-			float duration = 0;
-		};
 	ComponentParticleSystem();
 	~ComponentParticleSystem() = default;
 
@@ -53,15 +42,6 @@ public:
 	
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
-
-public:
-
-		
-		struct ColorOverLifetime
-		{
-			float4 color_over_lifetime;
-		};
-		
 
 	
 public:
@@ -93,6 +73,7 @@ public:
 	int position_z = 0;
 
 	bool loop = true;
+	bool color_fade = false;
 };
 
 #endif

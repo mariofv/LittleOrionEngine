@@ -77,7 +77,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 		particle.position.z += position_z / 100.0F;
 	}
 	
-	particle.color = float4(rColor, rColor, rColor, 1.0f);
+	particle.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	particle.life = particles_life_time*1000;
 	particle.velocity.y = velocity_particles/1000.F;
 }
@@ -105,6 +105,16 @@ void ComponentParticleSystem::Render()
 		if (p.life > 0.0f)
 		{	// particle is alive, thus update
 			p.position.y += p.velocity.y*App->time->real_time_delta_time;
+			p.color.w -= App->time->real_time_delta_time * p.velocity.y;
+			if (color_fade)
+			{
+				billboard->color[3] = p.color.w;
+			}
+			else 
+			{
+				billboard->color[3] = 1.0F;
+			}
+		
 			billboard->Render(p.position);
 		}
 	}

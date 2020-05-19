@@ -233,6 +233,7 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 
 void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* particle_system)
 {
+	ImGui::ShowDemoWindow();
 	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
@@ -305,7 +306,8 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 		}
 		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Color Over Time"))
 		{
-			ImGui::Text("Texture");
+			ImGui::Checkbox("Color Fade", &particle_system->color_fade);
+			ImGui::ColorEdit4("Particle Color##2f", (float*)&particle_system->billboard->color, ImGuiColorEditFlags_Float );
 		}
 		
 	}

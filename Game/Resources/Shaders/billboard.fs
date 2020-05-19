@@ -15,6 +15,8 @@ struct Billboard {
   sampler2D texture;
   bool isSpritesheet;
 
+  vec4 color;
+
   int XTiles;
   int YTiles;
   float speed;
@@ -33,7 +35,7 @@ void main()
 	// Change to preprocessor directives
 	if(!billboard.isSpritesheet)
 	{
-		vec4 texture_color = texture(billboard.texture, texCoord);
+		vec4 texture_color = texture(billboard.texture, texCoord)*billboard.color;
 		if(texture_color.a <0.1)
 		{
 			discard;
@@ -43,7 +45,7 @@ void main()
 
 	else
 	{
-		vec4 texture_color = texture(billboard.texture, frame);
+		vec4 texture_color = texture(billboard.texture, frame)*billboard.color;
 		if(texture_color.a <0.1)
 		{
 			discard;
