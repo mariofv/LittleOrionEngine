@@ -62,6 +62,69 @@
 				</Event>
 			</IncludedEvents>
 		</SoundBank>
+		<SoundBank Id="1069431850" Language="SFX">
+			<ObjectPath>\SoundBanks\Default Work Unit\Player</ObjectPath>
+			<ShortName>Player</ShortName>
+			<Path>Player.bnk</Path>
+			<IncludedEvents>
+				<Event Id="4134779396" Name="play_footstep_player" ObjectPath="\Events\Default Work Unit\Player\play_footstep_player">
+					<IncludedMemoryFiles>
+						<File Id="93035261" Language="SFX">
+							<ShortName>SFX_Character_Character1_Walk3.wav</ShortName>
+							<Path>SFX\SFX_Character_Character1_Walk3_10C4C929.wem</Path>
+						</File>
+						<File Id="526528986" Language="SFX">
+							<ShortName>SFX_Character_Character1_Walk2.wav</ShortName>
+							<Path>SFX\SFX_Character_Character1_Walk2_10C4C929.wem</Path>
+						</File>
+						<File Id="924322500" Language="SFX">
+							<ShortName>SFX_Character_Character1_Walk1.wav</ShortName>
+							<Path>SFX\SFX_Character_Character1_Walk1_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="270644822" Name="play_jump_player" ObjectPath="\Events\Default Work Unit\Player\play_jump_player">
+					<IncludedMemoryFiles>
+						<File Id="622200536" Language="SFX">
+							<ShortName>SFX_Character_Character1_Jump.wav</ShortName>
+							<Path>SFX\SFX_Character_Character1_Jump_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="3382769113" Name="play_kick1_hit_player" ObjectPath="\Events\Default Work Unit\Player\play_kick1_hit_player">
+					<IncludedMemoryFiles>
+						<File Id="173909941" Language="SFX">
+							<ShortName>SFX_Character_Character1_KickHitsEnemy1.wav</ShortName>
+							<Path>SFX\SFX_Character_Character1_KickHitsEnemy1_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="2293117811" Name="play_kick1_player" ObjectPath="\Events\Default Work Unit\Player\play_kick1_player">
+					<IncludedMemoryFiles>
+						<File Id="755204042" Language="SFX">
+							<ShortName>SFX_Character_Character1_Kick1.wav</ShortName>
+							<Path>SFX\SFX_Character_Character1_Kick1_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="1070825227" Name="play_punch1_hit_player" ObjectPath="\Events\Default Work Unit\Player\play_punch1_hit_player">
+					<IncludedMemoryFiles>
+						<File Id="769742738" Language="SFX">
+							<ShortName>SFX_Character_Character1_PunchHitsEnemy1.wav</ShortName>
+							<Path>SFX\SFX_Character_Character1_PunchHitsEnemy1_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+				<Event Id="3194311409" Name="play_punch1_player" ObjectPath="\Events\Default Work Unit\Player\play_punch1_player">
+					<IncludedMemoryFiles>
+						<File Id="978598382" Language="SFX">
+							<ShortName>SFX_Character_Character1_Punch1.wav</ShortName>
+							<Path>SFX\SFX_Character_Character1_Punch1_10C4C929.wem</Path>
+						</File>
+					</IncludedMemoryFiles>
+				</Event>
+			</IncludedEvents>
+		</SoundBank>
 		<SoundBank Id="1193902085" Language="SFX">
 			<ObjectPath>\SoundBanks\Default Work Unit\Play_main</ObjectPath>
 			<ShortName>Play_main</ShortName>
