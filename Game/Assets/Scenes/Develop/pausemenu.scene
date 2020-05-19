@@ -186,8 +186,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    1109.0,
-                    839.0
+                    1106.0,
+                    721.0
                 ],
                 "Pivot": [
                     0.5,
@@ -330,7 +330,22 @@
                 ]
             },
             "Transform2DEnabled": false,
-            "Components": []
+            "Components": [
+                {
+                    "UUID": 4020646057,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PauseMenuController",
+                    "Name0": "Resume_button",
+                    "Resume_button": 3795937942,
+                    "Name1": "Help_button",
+                    "Help_button": 1351201730,
+                    "Name2": "Main_menu_button",
+                    "Main_menu_button": 2484511566,
+                    "Name4": "AudioController",
+                    "AudioController": 3200737190
+                }
+            ]
         },
         {
             "UUID": 948166624,
@@ -363,8 +378,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    960.0,
-                    540.0
+                    1280.0,
+                    720.0
                 ],
                 "Pivot": [
                     0.5,
@@ -389,7 +404,8 @@
                     "UUID": 37554887,
                     "ComponentType": 12,
                     "Active": true,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -434,16 +450,16 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    151.0,
-                    41.5
+                    198.0,
+                    56.5
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    -4.0,
-                    -126.0
+                    -5.0,
+                    -168.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -457,19 +473,13 @@
             "Transform2DEnabled": true,
             "Components": [
                 {
-                    "UUID": 1769477340,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "Color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 3719754817
-                },
-                {
                     "UUID": 2114841388,
                     "ComponentType": 10,
+                    "Active": true
+                },
+                {
+                    "UUID": 1947584795,
+                    "ComponentType": 11,
                     "Active": true
                 }
             ]
@@ -505,8 +515,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    243.0,
-                    42.5
+                    338.0,
+                    54.0
                 ],
                 "Pivot": [
                     0.5,
@@ -514,7 +524,7 @@
                 ],
                 "AnchoredPos": [
                     0.0,
-                    7.0
+                    -45.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -531,7 +541,8 @@
                     "UUID": 2270301426,
                     "ComponentType": 12,
                     "Active": true,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -576,8 +587,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    243.0,
-                    42.5
+                    338.0,
+                    54.0
                 ],
                 "Pivot": [
                     0.5,
@@ -585,7 +596,7 @@
                 ],
                 "AnchoredPos": [
                     0.0,
-                    66.0
+                    45.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -602,7 +613,8 @@
                     "UUID": 43860975,
                     "ComponentType": 12,
                     "Active": true,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -647,16 +659,16 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    12.5,
-                    40.0
+                    16.0,
+                    56.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    -77.0,
-                    -126.0
+                    -120.0,
+                    -169.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -673,7 +685,8 @@
                     "UUID": 3169099538,
                     "ComponentType": 12,
                     "Active": true,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -684,12 +697,6 @@
                     "UUID": 2299176387,
                     "ComponentType": 10,
                     "Active": true
-                },
-                {
-                    "UUID": 431366398,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "PauseMenuLogic"
                 }
             ]
         }
