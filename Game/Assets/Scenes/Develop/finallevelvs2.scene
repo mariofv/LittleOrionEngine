@@ -415,7 +415,7 @@
                         1.0
                     ],
                     "Static": false,
-                    "Collision": true,
+                    "Collision": false,
                     "Visualize": true,
                     "Attached": false,
                     "Freeze_rotation_x": true,

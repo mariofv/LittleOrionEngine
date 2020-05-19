@@ -61,6 +61,7 @@ private:
 
 	ComponentCollider* hole = nullptr;
 	bool disable_hole = false;
+	float3 fall = float3(3.f, -10000.f, 0.f);
 	
 
 

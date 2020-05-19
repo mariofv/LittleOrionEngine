@@ -256,6 +256,24 @@ void WorldManager::CheckHole()
 	if (disable_hole)
 	{
 		hole->owner->SetEnabled(false);
+		if (singleplayer)
+		{
+			if (!player1_choice)
+			{
+				player1_controller->MakePlayerFall(fall);
+			}
+			else
+			{
+				player2_controller->MakePlayerFall(fall);
+			}
+		}
+		else
+		{
+			player1_controller->MakePlayerFall(fall);
+			player2_controller->MakePlayerFall(fall);
+
+		}
+		
 	}
 
 }

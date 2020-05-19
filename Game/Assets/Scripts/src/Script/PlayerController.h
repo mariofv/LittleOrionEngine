@@ -24,6 +24,7 @@ public:
 
 	void TakeDamage(float damage);
 	ComponentCollider* GetCollider();
+	void MakePlayerFall(float3& direction) const;
 
 public:
 	unsigned int player = 1;

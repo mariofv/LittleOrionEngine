@@ -102,3 +102,8 @@ ComponentCollider* PlayerController::GetCollider()
 	return static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
 }
 
+void PlayerController::MakePlayerFall(float3& direction) const
+{
+	player_movement->Jump(direction);
+}
+
