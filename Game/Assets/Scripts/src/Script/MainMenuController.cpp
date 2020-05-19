@@ -91,7 +91,7 @@ void MainMenuController::Update()
 		current_highlighted_button = current_highlighted_button % 4;
 		cursor->transform_2d.SetTranslation(float3(
 				cursor->transform_2d.GetTranslation().x,
-				buttons_transforms[current_highlighted_button]->GetTranslation().y,
+				buttons_transforms[current_highlighted_button]->GetGlobalTranslation().y,
 				0.0f
 		));
 	}
@@ -101,7 +101,7 @@ void MainMenuController::Update()
 		current_highlighted_button = current_highlighted_button % 4;
 		cursor->transform_2d.SetTranslation(float3(
 			cursor->transform_2d.GetTranslation().x,
-			buttons_transforms[current_highlighted_button]->GetTranslation().y,
+			buttons_transforms[current_highlighted_button]->GetGlobalTranslation().y,
 			0.0f
 		));
 	}

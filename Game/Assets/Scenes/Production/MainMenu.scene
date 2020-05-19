@@ -186,8 +186,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    1097.0,
-                    667.0
+                    1281.0,
+                    721.0
                 ],
                 "Pivot": [
                     0.5,
@@ -436,8 +436,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    100.0,
-                    100.0
+                    0.0,
+                    0.0
                 ],
                 "Pivot": [
                     0.5,
@@ -517,8 +517,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    100.0,
-                    100.0
+                    0.0,
+                    0.0
                 ],
                 "Pivot": [
                     0.5,
@@ -598,12 +598,12 @@
                     0.0
                 ],
                 "MinAnchor": [
-                    0.0,
-                    0.0
+                    0.5,
+                    0.5
                 ],
                 "MaxAnchor": [
-                    1.0,
-                    1.0
+                    0.5,
+                    0.5
                 ]
             },
             "Transform2DEnabled": true,
@@ -788,7 +788,9 @@
                     "Name6": "Audio_controller",
                     "Audio_controller": 285203001,
                     "Name7": "Back_cursor",
-                    "Back_cursor": 172169170
+                    "Back_cursor": 172169170,
+                    "Name8": "cursor_levels",
+                    "cursor_levels": 3311260837
                 }
             ]
         },
@@ -877,8 +879,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    100.0,
-                    100.0
+                    0.0,
+                    0.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1093,8 +1095,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    960.0,
-                    540.0
+                    1280.0,
+                    720.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1135,237 +1137,6 @@
             ]
         },
         {
-            "UUID": 19876781,
-            "ParentUUID": 3053128562,
-            "Name": "Play_Button",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 158282361,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 3704972992,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    152.0,
-                    42.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    -300.0,
-                    65.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 1540942339,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "ImageColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 1134068717
-                },
-                {
-                    "UUID": 958603652,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 194630783,
-                    "ComponentType": 11,
-                    "Active": true
-                }
-            ]
-        },
-        {
-            "UUID": 572364089,
-            "ParentUUID": 3053128562,
-            "Name": "Help_Button",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 628000403,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2363242214,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    152.0,
-                    42.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    -300.0,
-                    -15.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 3067938811,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "ImageColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 1715501669
-                },
-                {
-                    "UUID": 2134468580,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 2336487701,
-                    "ComponentType": 11,
-                    "Active": true
-                }
-            ]
-        },
-        {
-            "UUID": 1481899329,
-            "ParentUUID": 3053128562,
-            "Name": "Credits_Button",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 1050298341,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 465548265,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    152.0,
-                    42.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    -300.0,
-                    -81.75225830078125
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 868466341,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "ImageColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 605169162
-                },
-                {
-                    "UUID": 3674781245,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 92886248,
-                    "ComponentType": 11,
-                    "Active": true
-                }
-            ]
-        },
-        {
             "UUID": 3838922643,
             "ParentUUID": 3053128562,
             "Name": "cursor",
@@ -1396,16 +1167,16 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    12.5,
-                    40.0
+                    16.0,
+                    56.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    -403.2284851074219,
-                    65.0
+                    -530.0,
+                    63.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -1438,13 +1209,13 @@
             ]
         },
         {
-            "UUID": 1227334976,
+            "UUID": 3701047251,
             "ParentUUID": 3053128562,
-            "Name": "Exit_Button",
+            "Name": "Buttons",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3497823889,
+                "UUID": 1762149087,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1464,20 +1235,20 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 517874660,
+                "UUID": 3404759824,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    152.0,
-                    42.0
+                    100.0,
+                    100.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    -300.0,
-                    -218.60272216796876
+                    -402.0,
+                    -48.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -1489,30 +1260,7 @@
                 ]
             },
             "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 4268227044,
-                    "ComponentType": 12,
-                    "Active": true,
-                    "ImageColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 3092987197
-                },
-                {
-                    "UUID": 2222091869,
-                    "ComponentType": 10,
-                    "Active": true
-                },
-                {
-                    "UUID": 743355395,
-                    "ComponentType": 11,
-                    "Active": true
-                }
-            ]
+            "Components": []
         },
         {
             "UUID": 3956219888,
@@ -1545,8 +1293,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    960.0,
-                    540.0
+                    1280.0,
+                    720.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1587,78 +1335,6 @@
             ]
         },
         {
-            "UUID": 1034313252,
-            "ParentUUID": 2031867254,
-            "Name": "cursor_credits",
-            "IsStatic": false,
-            "Active": false,
-            "Transform": {
-                "UUID": 1889799698,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 3349931896,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    12.0,
-                    40.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    -409.5,
-                    -211.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 78061716,
-                    "ComponentType": 12,
-                    "Active": false,
-                    "ImageColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 2907833219
-                },
-                {
-                    "UUID": 3781209346,
-                    "ComponentType": 10,
-                    "Active": false
-                }
-            ]
-        },
-        {
             "UUID": 1213442019,
             "ParentUUID": 2031867254,
             "Name": "Back Button",
@@ -1689,16 +1365,16 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    150.0,
-                    40.0
+                    200.0,
+                    54.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    -304.998046875,
-                    -210.0
+                    -406.44903564453127,
+                    -283.3291015625
                 ],
                 "MinAnchor": [
                     0.5,
@@ -1754,8 +1430,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    960.0,
-                    540.0
+                    1280.0,
+                    720.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1826,8 +1502,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    960.0,
-                    540.0
+                    1280.0,
+                    720.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1898,16 +1574,16 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    150.0,
-                    41.5
+                    200.0,
+                    54.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    -344.0,
-                    -244.0
+                    -406.45001220703127,
+                    -283.3290100097656
                 ],
                 "MinAnchor": [
                     0.5,
@@ -1975,16 +1651,16 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    187.0,
-                    45.0
+                    249.0,
+                    56.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    11.0,
-                    155.0
+                    15.0,
+                    206.35000610351563
                 ],
                 "MinAnchor": [
                     0.5,
@@ -2040,16 +1716,16 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    187.0,
-                    45.0
+                    249.0,
+                    56.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    200.0,
-                    155.0
+                    264.0,
+                    206.35000610351563
                 ],
                 "MinAnchor": [
                     0.5,
@@ -2609,8 +2285,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    960.0,
-                    540.0
+                    1280.0,
+                    720.0
                 ],
                 "Pivot": [
                     0.5,
@@ -2681,16 +2357,16 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    239.0,
-                    41.5
+                    318.0,
+                    55.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    -289.0,
-                    -241.0
+                    -427.0,
+                    -295.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -2713,90 +2389,17 @@
                         1.0,
                         1.0
                     ],
-                    "TextureUUID": 1142254590
+                    "TextureUUID": 586844446
                 },
                 {
                     "UUID": 267180603,
                     "ComponentType": 10,
                     "Active": false
-                }
-            ]
-        },
-        {
-            "UUID": 3311260837,
-            "ParentUUID": 1586329215,
-            "Name": "cursor_levels",
-            "IsStatic": false,
-            "Active": false,
-            "Transform": {
-                "UUID": 3173768596,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1544508567,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    85.0,
-                    115.5
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    -274.0,
-                    -122.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 3857650893,
-                    "ComponentType": 12,
-                    "Active": false,
-                    "ImageColor": [
-                        1.0,
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 1670969248
                 },
                 {
-                    "UUID": 873215747,
-                    "ComponentType": 10,
+                    "UUID": 1729548195,
+                    "ComponentType": 11,
                     "Active": false
-                },
-                {
-                    "UUID": 3543829844,
-                    "ComponentType": 6,
-                    "Active": false,
-                    "ScriptName": "LevelSelectionMenu"
                 }
             ]
         },
@@ -2839,8 +2442,8 @@
                     0.5
                 ],
                 "AnchoredPos": [
-                    -276.0,
-                    -122.0
+                    -274.0,
+                    -54.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -2907,7 +2510,7 @@
                 ],
                 "AnchoredPos": [
                     -10.0,
-                    -122.0
+                    -54.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -2974,7 +2577,7 @@
                 ],
                 "AnchoredPos": [
                     282.0,
-                    -126.0
+                    -54.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -3002,13 +2605,13 @@
             ]
         },
         {
-            "UUID": 172169170,
+            "UUID": 3311260837,
             "ParentUUID": 1586329215,
-            "Name": "Back_cursor",
+            "Name": "cursor_levels",
             "IsStatic": false,
             "Active": false,
             "Transform": {
-                "UUID": 2158537483,
+                "UUID": 3173768596,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -3028,20 +2631,20 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 53562378,
+                "UUID": 1544508567,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    12.5,
-                    40.0
+                    32.0,
+                    32.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    -432.0,
-                    -241.0
+                    -366.0,
+                    -73.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -3055,7 +2658,393 @@
             "Transform2DEnabled": true,
             "Components": [
                 {
-                    "UUID": 2313887479,
+                    "UUID": 3857650893,
+                    "ComponentType": 12,
+                    "Active": false,
+                    "ImageColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 909331905
+                },
+                {
+                    "UUID": 873215747,
+                    "ComponentType": 10,
+                    "Active": false
+                },
+                {
+                    "UUID": 3543829844,
+                    "ComponentType": 6,
+                    "Active": false,
+                    "ScriptName": "LevelSelectionMenu"
+                }
+            ]
+        },
+        {
+            "UUID": 19876781,
+            "ParentUUID": 3701047251,
+            "Name": "Play_Button",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 158282361,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3704972992,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    200.0,
+                    54.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    111.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 1540942339,
+                    "ComponentType": 12,
+                    "Active": true,
+                    "ImageColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 1134068717
+                },
+                {
+                    "UUID": 958603652,
+                    "ComponentType": 10,
+                    "Active": true
+                },
+                {
+                    "UUID": 194630783,
+                    "ComponentType": 11,
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "UUID": 572364089,
+            "ParentUUID": 3701047251,
+            "Name": "Help_Button",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 628000403,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2363242214,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    200.0,
+                    54.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    37.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 3067938811,
+                    "ComponentType": 12,
+                    "Active": true,
+                    "ImageColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 1715501669
+                },
+                {
+                    "UUID": 2134468580,
+                    "ComponentType": 10,
+                    "Active": true
+                },
+                {
+                    "UUID": 2336487701,
+                    "ComponentType": 11,
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "UUID": 1481899329,
+            "ParentUUID": 3701047251,
+            "Name": "Credits_Button",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1050298341,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 465548265,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    200.0,
+                    54.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    -37.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 868466341,
+                    "ComponentType": 12,
+                    "Active": true,
+                    "ImageColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 605169162
+                },
+                {
+                    "UUID": 3674781245,
+                    "ComponentType": 10,
+                    "Active": true
+                },
+                {
+                    "UUID": 92886248,
+                    "ComponentType": 11,
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "UUID": 1227334976,
+            "ParentUUID": 3701047251,
+            "Name": "Exit_Button",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3497823889,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 517874660,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    200.0,
+                    54.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    -111.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 4268227044,
+                    "ComponentType": 12,
+                    "Active": true,
+                    "ImageColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 3092987197
+                },
+                {
+                    "UUID": 2222091869,
+                    "ComponentType": 10,
+                    "Active": true
+                },
+                {
+                    "UUID": 743355395,
+                    "ComponentType": 11,
+                    "Active": true
+                }
+            ]
+        },
+        {
+            "UUID": 1034313252,
+            "ParentUUID": 1213442019,
+            "Name": "cursor_credits",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 1889799698,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3349931896,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    16.0,
+                    56.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    -114.82026672363281,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 78061716,
                     "ComponentType": 12,
                     "Active": false,
                     "ImageColor": [
@@ -3067,7 +3056,7 @@
                     "TextureUUID": 2907833219
                 },
                 {
-                    "UUID": 3552103925,
+                    "UUID": 3781209346,
                     "ComponentType": 10,
                     "Active": false
                 }
@@ -3104,15 +3093,15 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    12.0,
-                    40.0
+                    16.0,
+                    56.0
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
-                    -92.0,
+                    -118.0,
                     0.0
                 ],
                 "MinAnchor": [
@@ -3140,6 +3129,78 @@
                 },
                 {
                     "UUID": 2897791854,
+                    "ComponentType": 10,
+                    "Active": false
+                }
+            ]
+        },
+        {
+            "UUID": 172169170,
+            "ParentUUID": 3411494713,
+            "Name": "Back_cursor",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 2158537483,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 53562378,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    16.0,
+                    56.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    -182.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 2313887479,
+                    "ComponentType": 12,
+                    "Active": false,
+                    "ImageColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "TextureUUID": 2907833219
+                },
+                {
+                    "UUID": 3552103925,
                     "ComponentType": 10,
                     "Active": false
                 }

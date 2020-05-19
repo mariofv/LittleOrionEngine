@@ -173,11 +173,10 @@ ComponentButton* ComponentCanvas::GetUIElementAtPosition(float2 mouse_position)
 		Component* component_button = current_game_object->GetComponent(Component::ComponentType::UI_BUTTON);
 		if (component_button && component_button->active)
 		{
-			float2 canvas_translation = App->ui->main_canvas->owner->transform_2d.GetGlobalTranslation().xy();
 			AABB2D button_global_rect = component_button->owner->transform_2d.GetGlobalRectAABB2D();
 
-			float2 button_canvas_rect_min_point = button_global_rect.minPoint - canvas_translation;
-			float2 button_canvas_rect_max_point = button_global_rect.maxPoint - canvas_translation;
+			float2 button_canvas_rect_min_point = button_global_rect.minPoint;
+			float2 button_canvas_rect_max_point = button_global_rect.maxPoint;
 			AABB2D button_canvas_rect = AABB2D(button_canvas_rect_min_point, button_canvas_rect_max_point);
 
 			if (button_canvas_rect.Contains(AABB2D(mouse_position, mouse_position)))

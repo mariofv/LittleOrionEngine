@@ -1,14 +1,17 @@
 #include "LevelSelectionMenuController.h"
 
-#include "Component/ComponentScript.h"
-#include "Component/ComponentTransform.h"
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentButton.h"
+#include "Component/ComponentImage.h"
+#include "Component/ComponentScript.h"
+#include "Component/ComponentTransform2D.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleTime.h"
 #include "UIMainMenuInputController.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
@@ -31,11 +34,12 @@ LevelSelectionMenuController::LevelSelectionMenuController()
 // Use this for initialization before Start()
 void LevelSelectionMenuController::Awake()
 {
-	buttons.push_back(level1);
-	buttons.push_back(level2);
-	buttons.push_back(level3);
+	cursor_positions.push_back(&level1_cursor_position->transform_2d);
+	cursor_positions.push_back(&level2_cursor_position->transform_2d);
+	cursor_positions.push_back(&level3_cursor_position->transform_2d);
 
 	character_menu_controller = static_cast<CharacterSelectionMenuController*>(character_menu_game_object->GetComponentScript("CharacterSelectionMenuController")->script);
+	back_button = static_cast<ComponentButton*>(back_button_game_object->GetComponent(Component::ComponentType::UI_BUTTON));
 	audio_source = (ComponentAudioSource*)audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
 }
 
@@ -52,12 +56,18 @@ void LevelSelectionMenuController::Update()
 		return;
 	}
 
+	//Back
 	if (!selecting_level && UIMainMenuInputController::ComfirmButtonPressed(*App->input))
 	{
-		//Back
 		Close();
 		return;
 	}
+	if (!selecting_level && back_button->IsClicked())
+	{
+		Close();
+		return;
+	}
+
 	if (selecting_level && UIMainMenuInputController::ComfirmButtonPressed(*App->input))
 	{
 		audio_source->PlayEvent("Click_fordward");
@@ -66,7 +76,7 @@ void LevelSelectionMenuController::Update()
 		{
 		case 0:
 			//level1
-			App->scene->LoadScene(LEVEL1_POSITION);
+			App->scene->LoadScene(LEVEL1_BUILD_OPTIONS_POSITION);
 			return;
 		case 1:
 			//level2
@@ -84,26 +94,39 @@ void LevelSelectionMenuController::Update()
 		selecting_level = !selecting_level;
 		back_cursor->SetEnabled(!back_cursor->IsEnabled());
 	}
+
+	float4 color = float4::one;
+	if (selecting_level)
+	{
+		color.x = (math::Sin(App->time->time * 0.01f) + 1) * 0.5f;
+	}
+	static_cast<ComponentImage*>(level_selection_cursor->GetComponent(Component::ComponentType::UI_IMAGE))->SetColor(color);
+
+
+	// This code is not needed atm as we have just one level
+	/*
 	if (selecting_level && UIMainMenuInputController::ConfirmMovedLeft(*App->input))
 	{
-		current = (current - 1) == -1 ? buttons.size() - 1 : current - 1;
-		current = current % buttons.size();
-		owner->transform_2d.SetTranslation( buttons[current]->transform_2d.GetTranslation());
+		current = (current - 1) == -1 ? cursor_positions.size() - 1 : current - 1;
+		current = current % cursor_positions.size();
+		level_selection_cursor->transform_2d.SetTranslation(cursor_positions[current]->GetTranslation());
 	}
 	else if (selecting_level && UIMainMenuInputController::ConfirmMovedRight(*App->input))
 	{
 		current += 1;
-		current = current % buttons.size();
-		owner->transform_2d.SetTranslation(buttons[current]->transform_2d.GetTranslation());
+		current = current % cursor_positions.size();
+		level_selection_cursor->transform_2d.SetTranslation(cursor_positions[current]->GetTranslation());
 	}
-
+	*/
 }
 
 void LevelSelectionMenuController::Open()
 {
 	enabled = true;
 	just_opened = true;
+	selecting_level = true;
 	level_selection_panel->SetEnabled(true);
+	back_cursor->SetEnabled(false);
 }
 
 void LevelSelectionMenuController::Close()
@@ -124,16 +147,16 @@ void LevelSelectionMenuController::OnInspector(ImGuiContext* context)
 void LevelSelectionMenuController::InitPublicGameObjects()
 {
 
-	public_gameobjects.push_back(&level1);
+	public_gameobjects.push_back(&level1_cursor_position);
 	variable_names.push_back(GET_VARIABLE_NAME(level1));
 
-	public_gameobjects.push_back(&level2);
+	public_gameobjects.push_back(&level2_cursor_position);
 	variable_names.push_back(GET_VARIABLE_NAME(level2));
 
-	public_gameobjects.push_back(&level3);
+	public_gameobjects.push_back(&level3_cursor_position);
 	variable_names.push_back(GET_VARIABLE_NAME(level3));
 
-	public_gameobjects.push_back(&back);
+	public_gameobjects.push_back(&back_button_game_object);
 	variable_names.push_back(GET_VARIABLE_NAME(back));
 	
 	public_gameobjects.push_back(&character_menu_game_object);
@@ -146,7 +169,10 @@ void LevelSelectionMenuController::InitPublicGameObjects()
 	variable_names.push_back(GET_VARIABLE_NAME(audio_controller));
 
 	public_gameobjects.push_back(&back_cursor);
-	variable_names.push_back(GET_VARIABLE_NAME(back_cursor));
+	variable_names.push_back(GET_VARIABLE_NAME(back_cursor));	
+	
+	public_gameobjects.push_back(&level_selection_cursor);
+	variable_names.push_back(GET_VARIABLE_NAME(level_selection_cursor));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{

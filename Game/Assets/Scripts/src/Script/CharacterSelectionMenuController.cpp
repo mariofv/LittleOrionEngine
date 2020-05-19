@@ -69,6 +69,8 @@ void CharacterSelectionMenuController::Update()
 
 			if (UIMainMenuInputController::ComfirmButtonPressed(*App->input))
 			{
+				main_menu_controller->Open();
+				audio_source->PlayEvent("Click_backward");
 				Close();
 			}
 			break;
@@ -115,6 +117,8 @@ void CharacterSelectionMenuController::Update()
 	if (back_button->IsClicked())
 	{
 		Close();
+		main_menu_controller->Open();
+		audio_source->PlayEvent("Click_backward");
 	}
 
 	UpdateCursorsColors();
@@ -188,8 +192,6 @@ void CharacterSelectionMenuController::Close()
 {
 	enabled = false;
 	character_selection_panel->SetEnabled(false);
-	main_menu_controller->Open();
-	audio_source->PlayEvent("Click_backward");
 }
 
 void CharacterSelectionMenuController::OnInspector(ImGuiContext * context)

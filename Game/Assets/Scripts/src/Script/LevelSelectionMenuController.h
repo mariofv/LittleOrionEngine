@@ -4,6 +4,8 @@
 #include "Script.h"
 
 class ComponentAudioSource;
+class ComponentButton;
+class ComponentTransform2D;
 class CharacterSelectionMenuController;
 
 class LevelSelectionMenuController : public Script
@@ -23,9 +25,6 @@ public:
 	void Close();
 
 private:
-	std::vector<GameObject*> buttons;
-	unsigned current = 0;
-
 	bool selecting_level = false;
 	bool enabled = false;
 	bool just_opened = false;
@@ -35,18 +34,24 @@ private:
 	GameObject* character_menu_game_object = nullptr;
 	CharacterSelectionMenuController* character_menu_controller = nullptr;
 
-	GameObject* level1 = nullptr;
-	GameObject* level2 = nullptr;
-	GameObject* level3 = nullptr;
-	GameObject* back = nullptr;
+	GameObject* level_selection_cursor = nullptr;
+	unsigned current = 0;
+	std::vector<ComponentTransform2D*> cursor_positions;
+	GameObject* level1_cursor_position = nullptr;
+	GameObject* level2_cursor_position = nullptr;
+	GameObject* level3_cursor_position = nullptr;
+
+	GameObject* back_button_game_object = nullptr;
+	ComponentButton* back_button = nullptr;
+
 	GameObject* back_cursor = nullptr;
 
 	GameObject* audio_controller = nullptr;
 	ComponentAudioSource* audio_source = nullptr;
 
-	const size_t LEVEL1_POSITION = 0;
-	const size_t LEVEL2_POSITION = 0;
-	const size_t LEVEL3_POSITION = 0;
+	const size_t LEVEL1_BUILD_OPTIONS_POSITION = 0;
+	const size_t LEVEL2_BUILD_OPTIONS_POSITION = 1;
+	const size_t LEVEL3_BUILD_OPTIONS_POSITION = 2;
 
 };
 extern "C" SCRIPT_API LevelSelectionMenuController* LevelSelectionMenuControllerDLL(); //This is how we are going to load the script
