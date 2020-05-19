@@ -62,29 +62,39 @@ void DebugModeScript::Update()
 
 	if (debug_enabled)
 	{
-		if (is_warping_player_one || is_warping_player_two)
+		if (App->input->GetMouseButtonDown(MouseButton::Left))
 		{
-			if (App->input->GetMouseButtonDown(MouseButton::Left))
-			{
-				LineSegment ray;
-				App->cameras->main_camera->GetRay(App->input->GetMousePosition(), ray);
-				RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->main_camera);
+			LineSegment ray;
+			App->cameras->main_camera->GetRay(App->input->GetMousePosition(), ray);
+			RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->main_camera);
 
-				if (hit->game_object != nullptr)
+			if (hit->game_object != nullptr)
+			{
+				if (is_warping_player_one || is_warping_player_two)
 				{
 					ComponentCapsuleCollider* collider = nullptr;
-					
-					if(is_warping_player_one) collider = (ComponentCapsuleCollider*)player_one_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
+
+					if (is_warping_player_one) collider = (ComponentCapsuleCollider*)player_one_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
 					else collider = (ComponentCapsuleCollider*)player_two_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
-					
+
 					collider->active_physics = false;
-					
-					if(is_warping_player_one) player_one_obj->transform.SetTranslation(hit->hit_point);
+
+					if (is_warping_player_one) player_one_obj->transform.SetTranslation(hit->hit_point);
 					else player_two_obj->transform.SetTranslation(hit->hit_point);
-					
+
 					is_warping_player_one = false;
 					is_warping_player_two = false;
 					has_warped_player_recently = true;
+				}
+
+				if (is_spawning_enemy)
+				{
+					LineSegment ray;
+					App->cameras->main_camera->GetRay(App->input->GetMousePosition(), ray);
+					RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->main_camera);
+
+					enemy_manager->SpawnEnemy(0, hit->hit_point);
+					is_spawning_enemy = false;
 				}
 			}
 		}
@@ -138,15 +148,19 @@ void DebugModeScript::UpdateWithImGui(ImGuiContext* context)
 			ImGui::Checkbox("Draw Pathfinding? ", &App->debug->show_pathfind_points);
 			
 			ImGui::Checkbox("Toggle Invincible mode ", &is_player_invincible);
-
-			if(ImGui::Button("Spawn enemy wave"))
+			
+			if (is_spawning_enemy)
 			{
-				enemy_manager->SpawnWave(0, 5);
+				ImGui::Text("Please touch anywhere to spawn the enemy");
+			}
+			else if(ImGui::Button("Spawn enemy"))
+			{
+				is_spawning_enemy = true;
 			}
 
 			if (is_warping_player_one || is_warping_player_two)
 			{
-				ImGui::LabelText("", "Please touch somewhere to warp the character");
+				ImGui::Text("Please touch somewhere to warp the character");
 			}
 			else if(!has_warped_player_recently)
 			{

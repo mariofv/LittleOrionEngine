@@ -45,6 +45,8 @@ private:
 	EnemyManager* enemy_manager;
 	bool has_warped_player_recently = false;
 	float warp_cooldown = 0.0f;
+	int selected_spawner = 0;
+	bool is_spawning_enemy = false;
 };
 extern "C" SCRIPT_API DebugModeScript* DebugModeScriptDLL(); //This is how we are going to load the script
 #endif
