@@ -78,22 +78,29 @@ ComponentTransform2D & ComponentTransform2D::operator=(const ComponentTransform2
 
 void ComponentTransform2D::SpecializedSave(Config& config) const
 {
-	config.AddFloat2(size_delta, "SizeDelta");
-	config.AddFloat2(pivot, "Pivot");
 	config.AddFloat2(anchored_position, "AnchoredPos");
+	config.AddFloat3(rotation_degrees, "Rotation");
+	config.AddFloat3(scale, "Scale");
 
 	config.AddFloat2(min_anchor, "MinAnchor");
 	config.AddFloat2(max_anchor, "MaxAnchor");
+
+	config.AddFloat2(size_delta, "SizeDelta");
+	config.AddFloat2(pivot, "Pivot");
 }
 
 void ComponentTransform2D::SpecializedLoad(const Config& config)
 {
-	config.GetFloat2("SizeDelta", size_delta, float2(100.f));
-	config.GetFloat2("Pivot", pivot, float2(0.5f));
 	config.GetFloat2("AnchoredPos", anchored_position, float2::zero);
-
+	config.GetFloat3("Rotation", rotation_degrees, float3::zero);
+	config.GetFloat3("Scale", scale, float3::one);
+	
 	config.GetFloat2("MinAnchor", min_anchor, float2(0.5f));
 	config.GetFloat2("MaxAnchor", max_anchor, float2(0.5f));
+
+	config.GetFloat2("SizeDelta", size_delta, float2(100.f));
+	config.GetFloat2("Pivot", pivot, float2(0.5f));
+
 
 	OnTransformChange();
 }
@@ -161,14 +168,14 @@ void ComponentTransform2D::SetGlobalModelMatrix(const float4x4& new_global_matri
 
 }
 
-ENGINE_API void ComponentTransform2D::SetTranslation(const float3& translation)
+void ComponentTransform2D::SetTranslation(const float3& translation)
 {
 	this->translation = translation;
 	anchored_position = float2(translation.x, translation.y) - anchor_position;
 	OnTransformChange();
 }
 
-ENGINE_API void ComponentTransform2D::Translate(const float3& translation)
+void ComponentTransform2D::Translate(const float3& translation)
 {
 	SetTranslation(this->translation + translation);
 }

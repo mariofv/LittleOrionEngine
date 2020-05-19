@@ -100,6 +100,18 @@
     <ClInclude Include="src\Script\CreditsMenuController.h">
       <Filter>src\Script\UI</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\ProgressBar.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\UIManager.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\DamageIndicatorSpawner.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\DamageIndicator.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\TriggerGravity.cpp">
@@ -154,7 +166,6 @@
     <ClCompile Include="src\Script\CameraController.cpp" />
     <ClCompile Include="src\Script\SceneCamerasController.cpp" />
     <ClCompile Include="src\Script\Script.cpp" />
-    <ClCompile Include="src\Script\DieEnemyState.cpp" />
     <ClCompile Include="src\Script\CharacterSelectionMenuController.cpp">
       <Filter>src\Script\UI</Filter>
     </ClCompile>
@@ -175,6 +186,21 @@
     </ClCompile>
     <ClCompile Include="src\Script\CreditsMenuController.cpp">
       <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\ProgressBar.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\UIManager.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\DamageIndicatorSpawner.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\DamageIndicator.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\DieEnemyState.cpp">
+      <Filter>src\Script\Enemy\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>
