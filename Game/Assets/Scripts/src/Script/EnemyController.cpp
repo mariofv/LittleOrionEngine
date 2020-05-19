@@ -5,6 +5,7 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCollider.h"
+#include "Component/ComponentAudioSource.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -99,6 +100,7 @@ void EnemyController::InitMembers()
 
 	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
+	audio_source = static_cast<ComponentAudioSource*>(owner->GetComponent(Component::ComponentType::AUDIO_SOURCE));
 
 	player1 = App->scene->GetGameObjectByName("Player1");
 	if (player1 != nullptr)

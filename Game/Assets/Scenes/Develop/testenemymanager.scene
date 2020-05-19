@@ -448,31 +448,6 @@
                 }
             ],
             "UUID": 3774483745
-        },
-        {
-            "Transform": {
-                "UUID": 3333158521,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "RemovedComponents": [],
-            "Components": [],
-            "UUID": 3335175199
         }
     ],
     "GameObjects": [
@@ -567,6 +542,14 @@
                         0.0,
                         0.0
                     ]
+                },
+                {
+                    "UUID": 1876513512,
+                    "ComponentType": 14,
+                    "Active": true,
+                    "Volume": 1.0,
+                    "SoundBank": 2438880932,
+                    "3DSound": false
                 }
             ]
         },
