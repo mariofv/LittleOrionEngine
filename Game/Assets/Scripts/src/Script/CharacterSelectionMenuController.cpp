@@ -70,6 +70,11 @@ void CharacterSelectionMenuController::Update()
 		}
 	}
 
+	if (back_button->IsClicked())
+	{
+		Close();
+	}
+
 	if (UIMainMenuInputController::ConfirmMovedUp(*App->input))
 	{
 		selecting_character = true;
@@ -123,6 +128,7 @@ void CharacterSelectionMenuController::Open()
 	enabled = true;
 	just_opened = true;
 	character_selection_panel->SetEnabled(true);
+	selecting_character = false;
 	SwitchMultiplayer(false);
 }
 
