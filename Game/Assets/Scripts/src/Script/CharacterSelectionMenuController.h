@@ -72,6 +72,9 @@ private:
 	GameObject* world_manager_game_object = nullptr;
 	WorldManager* world_manager = nullptr;
 
+	GameObject* player2_press_start_text = nullptr;
+	GameObject* press_space_continue_text = nullptr;
+
 	GameObject* audio_controller = nullptr;
 	ComponentAudioSource* audio_source = nullptr;
 

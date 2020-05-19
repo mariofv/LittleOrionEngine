@@ -87,6 +87,8 @@ void CharacterSelectionMenuController::Update()
 			{
 					audio_source->PlayEvent("Click_fordward");
 					character_selection_status = CharacterSelectionStatus::PLAYER_SELECTED;
+					press_space_continue_text->SetEnabled(true);
+					player2_press_start_text->SetEnabled(false);
 			}
 
 			if (UIMainMenuInputController::ConfirmMovedLeft(*App->input) || UIMainMenuInputController::ConfirmMovedRight(*App->input))
@@ -110,6 +112,8 @@ void CharacterSelectionMenuController::Update()
 			{
 				audio_source->PlayEvent("Click_backward");
 				character_selection_status = CharacterSelectionStatus::SELECTING_PLAYER;
+				press_space_continue_text->SetEnabled(false);
+				player2_press_start_text->SetEnabled(!multiplayer);
 			}
 			break;
 	}
@@ -145,36 +149,40 @@ void CharacterSelectionMenuController::SwitchMultiplayer(bool enabled)
 		character_selector2->SetEnabled(true);
 		const float3& translation_p2 = player1_choice ? male_character_position->transform_2d.GetTranslation() : female_character_position->transform_2d.GetTranslation();
 		character_selector2->transform_2d.SetTranslation(translation_p2);
+
+		player2_press_start_text->SetEnabled(false);
 	}
 	else
 	{
 		App->input->singleplayer_input = false;
 		character_selector2->SetEnabled(false);
+
+		player2_press_start_text->SetEnabled(character_selection_status == CharacterSelectionStatus::SELECTING_PLAYER);
 	}
 }
 
 void CharacterSelectionMenuController::UpdateCursorsColors()
 {
-	float4 color = float4::one;
+	float4 src_color = float4::one;
+	float4 dst_color = float4(0, 1.f, 0.7f, 1.f);
 	switch (character_selection_status)
 	{
-		case CharacterSelectionStatus::BACK_HOVERED:
-			color.x = 1.f;
-			break;
-
 		case CharacterSelectionStatus::SELECTING_PLAYER:
-			color.x = (math::Sin(App->time->time * 0.01f) + 1) * 0.5f;
+		{
+			float progress = (math::Sin(App->time->time * 0.01f) + 1) * 0.5f;
+			src_color.x = 1 - progress;
+			src_color.z = 1 - progress * 0.3f;
 			break;
-
+		}
 		case CharacterSelectionStatus::PLAYER_SELECTED:
-			color.x = 0;
+			src_color = dst_color;
 			break;
 	}
 
-	static_cast<ComponentImage*>(character_selector1->GetComponent(Component::ComponentType::UI_IMAGE))->SetColor(color);
+	static_cast<ComponentImage*>(character_selector1->GetComponent(Component::ComponentType::UI_IMAGE))->SetColor(src_color);
 	if (multiplayer)
 	{
-		static_cast<ComponentImage*>(character_selector2->GetComponent(Component::ComponentType::UI_IMAGE))->SetColor(color);
+		static_cast<ComponentImage*>(character_selector2->GetComponent(Component::ComponentType::UI_IMAGE))->SetColor(src_color);
 	}
 }
 
@@ -185,6 +193,7 @@ void CharacterSelectionMenuController::Open()
 	character_selection_panel->SetEnabled(true);
 	character_selection_status = CharacterSelectionStatus::SELECTING_PLAYER;
 	cursor->SetEnabled(false);
+	press_space_continue_text->SetEnabled(false);
 	SwitchMultiplayer(false);
 }
 
@@ -236,6 +245,12 @@ void CharacterSelectionMenuController::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&cursor);
 	variable_names.push_back(GET_VARIABLE_NAME(cursor));
+
+	public_gameobjects.push_back(&player2_press_start_text);
+	variable_names.push_back(GET_VARIABLE_NAME(player2_press_start_text));
+
+	public_gameobjects.push_back(&press_space_continue_text);
+	variable_names.push_back(GET_VARIABLE_NAME(press_space_continue_text));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
