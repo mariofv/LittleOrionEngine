@@ -725,7 +725,7 @@ void ComponentCamera::GetRay(const float2 &mouse_position, LineSegment &return_v
 	float2 normalized_position = float2::zero;
 #if GAME
 	float2 window_mouse_position = mouse_position - float2(App->window->GetWidth()/2, App->window->GetHeight()/2);
-	normalized_position = float2(mouse_position.x / App->window->GetWidth(), mouse_position.y / App->window->GetHeight());
+	normalized_position = float2(window_mouse_position.x * 2 / App->window->GetWidth(), -window_mouse_position.y * 2 / App->window->GetHeight());
 #else
 	if (App->time->isGameRunning())
 	{

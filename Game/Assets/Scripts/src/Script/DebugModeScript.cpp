@@ -5,6 +5,7 @@
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentText.h"
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentCapsuleCollider.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -71,10 +72,27 @@ void DebugModeScript::Update()
 
 				if (hit->game_object != nullptr)
 				{
+					ComponentCapsuleCollider* collider = (ComponentCapsuleCollider*)player_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
+					
+					collider->active_physics = false;
 					player_obj->transform.SetTranslation(hit->hit_point);
 					is_warping_player = false;
+					has_warped_player_recently = true;
 				}
 			}
+		}
+
+		if (has_warped_player_recently)
+		{
+			warp_cooldown += (App->time->delta_time / 1000);
+			if (warp_cooldown >= 2.5f)//Half a second cooldown
+			{
+				warp_cooldown = 0.0f;
+				has_warped_player_recently = false;
+				ComponentCapsuleCollider* collider = (ComponentCapsuleCollider*)player_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
+				collider->active_physics = true;
+			}
+
 		}
 	}
 }

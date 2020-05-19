@@ -41,6 +41,8 @@ private:
 	GameObject* camera_manager = nullptr;
 	SceneCamerasController* scene_cameras = nullptr;
 	EnemyManager* enemy_manager;
+	bool has_warped_player_recently = false;
+	float warp_cooldown = 0.0f;
 };
 extern "C" SCRIPT_API DebugModeScript* DebugModeScriptDLL(); //This is how we are going to load the script
 #endif
