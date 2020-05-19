@@ -1,30 +1,39 @@
-#ifndef  __CHARATERSELECTIONMENU_H
-#define  __CHARATERSELECTIONMENU_H
+#ifndef  _LEVELSELECTIONMENUCONTROLLER_H_
+#define  _LEVELSELECTIONMENUCONTROLLER_H_
 
 #include "Script.h"
+
 class ComponentAudioSource;
-class LevelSelectionMenu : public Script
+class MainMenuController;
+
+class LevelSelectionMenuController : public Script
 {
 
 public:
-	LevelSelectionMenu();
-	~LevelSelectionMenu() = default;
+	LevelSelectionMenuController();
+	~LevelSelectionMenuController() = default;
 
 	void Awake() override;
 	void Update() override;
 
 	void OnInspector(ImGuiContext * context) override;
-
 	void InitPublicGameObjects() override;
+
+	void Open();
+	void Close();
+
 private:
 	std::vector<GameObject*> buttons;
 	unsigned current = 0;
 
-	bool awaked = false;
 	bool selecting_level = false;
 	bool enabled = false;
+	bool just_opened = false;
 
-	GameObject* previous_panel = nullptr;
+	GameObject* level_selection_panel = nullptr;
+
+	GameObject* main_menu_game_object = nullptr;
+	MainMenuController* main_menu_controller = nullptr;
 
 	GameObject* level1 = nullptr;
 	GameObject* level2 = nullptr;
@@ -40,7 +49,7 @@ private:
 	const size_t LEVEL3_POSITION = 0;
 
 };
-extern "C" SCRIPT_API LevelSelectionMenu* LevelSelectionMenuDLL(); //This is how we are going to load the script
+extern "C" SCRIPT_API LevelSelectionMenuController* LevelSelectionMenuControllerDLL(); //This is how we are going to load the script
 #endif
 
 

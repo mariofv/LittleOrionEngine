@@ -1,4 +1,4 @@
-#include "MainMenuLogic.h"
+#include "MainMenuController.h"
 
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentButton.h"
@@ -15,23 +15,28 @@
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
+#include "UIMainMenuInputController.h"
+#include "CharacterSelectionMenuController.h"
+#include "CreditsMenuController.h"
+#include "HelpMenuController.h"
+
 #include "imgui.h"
 
 
 
-MainMenuLogic* MainMenuLogicDLL()
+MainMenuController* MainMenuControllerDLL()
 {
-	MainMenuLogic* instance = new MainMenuLogic();
+	MainMenuController* instance = new MainMenuController();
 	return instance;
 }
 
-MainMenuLogic::MainMenuLogic()
+MainMenuController::MainMenuController()
 {
 	panel = new PanelComponent();
 }
 
 // Use this for initialization before Start()
-void MainMenuLogic::Awake()
+void MainMenuController::Awake()
 {
 	buttons_transforms.push_back(&play_button->transform_2d);
 	buttons_transforms.push_back(&help_button->transform_2d);
@@ -43,14 +48,30 @@ void MainMenuLogic::Awake()
 	buttons_components.push_back(static_cast<ComponentButton*>(credits_button->GetComponent(Component::ComponentType::UI_BUTTON)));
 	buttons_components.push_back(static_cast<ComponentButton*>(exit_button->GetComponent(Component::ComponentType::UI_BUTTON)));
 
+	character_selection_controller = static_cast<CharacterSelectionMenuController*>(character_selection_game_object->GetComponentScript("CharacterSelectionMenuController")->script);
+	credits_controller = static_cast<CreditsMenuController*>(credits_game_object->GetComponentScript("CreditsMenuController")->script);
+	help_controller = static_cast<HelpMenuController*>(help_game_object->GetComponentScript("HelpMenuController")->script);
+
+
 	audio_source = (ComponentAudioSource*) audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
 	audio_source->PlayEvent("Play_ingame_music");
 }
 
 
 // Update is called once per frame
-void MainMenuLogic::Update()
+void MainMenuController::Update()
 {
+	if (!enabled)
+	{
+		return;
+	}
+
+	if (just_opened)
+	{
+		just_opened = false;
+		return;
+	}
+
 	for (unsigned int i = 0; i < buttons_components.size(); ++i)
 	{
 		if (buttons_components[i]->IsClicked())
@@ -59,12 +80,12 @@ void MainMenuLogic::Update()
 		}
 	}
 
-	if (MenuController::ComfirmButtonPressed(*App->input))
+	if (UIMainMenuInputController::ComfirmButtonPressed(*App->input))
 	{
 		OpenSubMenu(current_highlighted_button);
 	}
 
-	if(MenuController::ConfirmMovedUp(*App->input))
+	if(UIMainMenuInputController::ConfirmMovedUp(*App->input))
 	{
 		current_highlighted_button -= 1;
 		current_highlighted_button = current_highlighted_button % 4;
@@ -74,7 +95,7 @@ void MainMenuLogic::Update()
 				0.0f
 		));
 	}
-	else if(MenuController::ConfirmMovedDown(*App->input))
+	else if(UIMainMenuInputController::ConfirmMovedDown(*App->input))
 	{
 		current_highlighted_button += 1;
 		current_highlighted_button = current_highlighted_button % 4;
@@ -86,23 +107,23 @@ void MainMenuLogic::Update()
 	}
 }
 
-void MainMenuLogic::OpenSubMenu(int menu_index)
+void MainMenuController::OpenSubMenu(int menu_index)
 {
 	audio_source->PlayEvent("Click_fordward");
 	//Change scene
 	switch (menu_index)
 	{
 	case 0:
-		character_selection_panel->SetEnabled(true);
+		character_selection_controller->Open();
 		break;
 	case 1:
 		//Active help
-		help_panel->SetEnabled(true);
-		return;
+		help_controller->Open();
+		break;
 	case 2:
 		//Active credits
-		credits_panel->SetEnabled(true);
-		return;
+		credits_controller->Open();
+		break;
 	case 3:
 		//Close game
 		SDL_Event quit_event;
@@ -112,10 +133,25 @@ void MainMenuLogic::OpenSubMenu(int menu_index)
 	default:
 		break;
 	}
+
+	Close();
+}
+
+void MainMenuController::Open()
+{
+	enabled = true;
+	just_opened = true;
+	main_menu_panel->SetEnabled(true);
+}
+
+void MainMenuController::Close()
+{
+	enabled = false;
+	main_menu_panel->SetEnabled(false);
 }
 
 // Use this for showing variables on inspector
-void MainMenuLogic::OnInspector(ImGuiContext* context)
+void MainMenuController::OnInspector(ImGuiContext* context)
 {
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
@@ -124,7 +160,7 @@ void MainMenuLogic::OnInspector(ImGuiContext* context)
 }
 
 //Use this for linking JUST GO automatically
-void MainMenuLogic::InitPublicGameObjects()
+void MainMenuController::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
 
@@ -140,15 +176,18 @@ void MainMenuLogic::InitPublicGameObjects()
 	public_gameobjects.push_back(&exit_button);
 	variable_names.push_back(GET_VARIABLE_NAME(exit_button));
 
-	public_gameobjects.push_back(&credits_panel);
-	variable_names.push_back(GET_VARIABLE_NAME(credits_panel));
+	public_gameobjects.push_back(&credits_game_object);
+	variable_names.push_back(GET_VARIABLE_NAME(credits_game_object));
 
-	public_gameobjects.push_back(&help_panel);
-	variable_names.push_back(GET_VARIABLE_NAME(help_panel));
+	public_gameobjects.push_back(&help_game_object);
+	variable_names.push_back(GET_VARIABLE_NAME(help_game_object));
 
-	public_gameobjects.push_back(&character_selection_panel);
-	variable_names.push_back(GET_VARIABLE_NAME(character_selection_panel));	
+	public_gameobjects.push_back(&character_selection_game_object);
+	variable_names.push_back(GET_VARIABLE_NAME(character_selection_game_object));
 	
+	public_gameobjects.push_back(&main_menu_panel);
+	variable_names.push_back(GET_VARIABLE_NAME(main_menu_panel));
+
 	public_gameobjects.push_back(&cursor);
 	variable_names.push_back(GET_VARIABLE_NAME(cursor));
 

@@ -212,6 +212,12 @@
                     "UUID": 1359960123,
                     "ComponentType": 5,
                     "Active": true
+                },
+                {
+                    "UUID": 2840425165,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "UIMainMenuManager"
                 }
             ]
         },
@@ -339,9 +345,390 @@
             ]
         },
         {
-            "UUID": 3053128562,
+            "UUID": 4031375053,
             "ParentUUID": 145392767,
             "Name": "Main_Menu",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 976409455,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3182345439,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 4143018507,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "MainMenuController",
+                    "Name0": "Play_Button",
+                    "Play_Button": 19876781,
+                    "Name1": "Help_Button",
+                    "Help_Button": 572364089,
+                    "Name2": "Credits_Button",
+                    "Credits_Button": 1481899329,
+                    "Name3": "Exit_Button",
+                    "Exit_Button": 1227334976,
+                    "Name4": "Credits",
+                    "Credits": 1981056088,
+                    "Name5": "Help",
+                    "Help": 296542632,
+                    "Name6": "Character_selection",
+                    "Character_selection": 4152763998,
+                    "Name7": "Main_Menu Panel",
+                    "Main_Menu Panel": 3053128562,
+                    "Name8": "cursor",
+                    "cursor": 3838922643,
+                    "Name9": "Audio_controller",
+                    "Audio_controller": 285203001
+                }
+            ]
+        },
+        {
+            "UUID": 1981056088,
+            "ParentUUID": 145392767,
+            "Name": "Credits",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 4150318378,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3121515641,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 802561862,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "CreditsMenuController",
+                    "Name0": "Credits Panel",
+                    "Credits Panel": 2031867254,
+                    "Name1": "Main_Menu",
+                    "Main_Menu": 4031375053,
+                    "Name2": "Audio_controller",
+                    "Audio_controller": 285203001
+                }
+            ]
+        },
+        {
+            "UUID": 296542632,
+            "ParentUUID": 145392767,
+            "Name": "Help",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3544079860,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 4241230447,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.0,
+                    0.0
+                ],
+                "MaxAnchor": [
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 2519002852,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "HelpMenuController",
+                    "Name0": "Main_Menu",
+                    "Main_Menu": 4031375053,
+                    "Name1": "Help Panel",
+                    "Help Panel": 2227599245,
+                    "Name2": "Joycon",
+                    "Joycon": 2143317194,
+                    "Name3": "KeyBoard",
+                    "KeyBoard": 3698255015,
+                    "Name4": "Audio_controller",
+                    "Audio_controller": 285203001
+                }
+            ]
+        },
+        {
+            "UUID": 4152763998,
+            "ParentUUID": 145392767,
+            "Name": "Character_selection",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 978169864,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2475606426,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.0,
+                    0.0
+                ],
+                "MaxAnchor": [
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 3834522149,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "CharacterSelectionMenuController",
+                    "Name0": "Character Selection Panel",
+                    "Character Selection Panel": 4143080280,
+                    "Name1": "Main_Menu",
+                    "Main_Menu": 4031375053,
+                    "Name2": "Level Selection",
+                    "Level Selection": 3300806217,
+                    "Name3": "Back",
+                    "Back": 3739545748,
+                    "Name4": "Level_selection_button",
+                    "Level_selection_button": 2634243702,
+                    "Name5": "Audio_controller",
+                    "Audio_controller": 285203001,
+                    "Name6": "p1_position",
+                    "p1_position": 652130620,
+                    "Name7": "p2_position",
+                    "p2_position": 1399119569,
+                    "Name8": "Character_selector1",
+                    "Character_selector1": 3292514778,
+                    "Name9": "Character_selector2",
+                    "Character_selector2": 1972725956,
+                    "Name10": "confirm_multi",
+                    "confirm_multi": 675621185,
+                    "Name11": "confirm_single",
+                    "confirm_single": 1108291097
+                }
+            ]
+        },
+        {
+            "UUID": 3300806217,
+            "ParentUUID": 145392767,
+            "Name": "Level Selection",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2941168624,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 60551251,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 1207501919,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "LevelSelectionMenuController",
+                    "Name0": "level1_position",
+                    "level1_position": 2944641222,
+                    "Name1": "level2_position",
+                    "level2_position": 1431973882,
+                    "Name2": "level3_position",
+                    "level3_position": 1401462934,
+                    "Name3": "Back_button",
+                    "Back_button": 3411494713,
+                    "Name4": "Main_Menu",
+                    "Main_Menu": 4031375053,
+                    "Name5": "Level Selection Panel",
+                    "Level Selection Panel": 1586329215,
+                    "Name6": "Audio_controller",
+                    "Audio_controller": 285203001,
+                    "Name7": "Back_cursor",
+                    "Back_cursor": 172169170
+                }
+            ]
+        },
+        {
+            "UUID": 3053128562,
+            "ParentUUID": 4031375053,
+            "Name": "Main_Menu Panel",
             "IsStatic": false,
             "Active": true,
             "Transform": {
@@ -390,41 +777,16 @@
                 ]
             },
             "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 3355668122,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "MainMenuLogic",
-                    "Name0": "Play_Button",
-                    "Play_Button": 19876781,
-                    "Name1": "Help_Button",
-                    "Help_Button": 572364089,
-                    "Name2": "Credits_Button",
-                    "Credits_Button": 1481899329,
-                    "Name3": "Exit_Button",
-                    "Exit_Button": 1227334976,
-                    "Name4": "Credits",
-                    "Credits": 1981056088,
-                    "Name5": "Help",
-                    "Help": 296542632,
-                    "Name6": "Character_selection",
-                    "Character_selection": 4152763998,
-                    "Name7": "cursor",
-                    "cursor": 3838922643,
-                    "Name8": "Audio_controller",
-                    "Audio_controller": 285203001
-                }
-            ]
+            "Components": []
         },
         {
-            "UUID": 1981056088,
-            "ParentUUID": 145392767,
-            "Name": "Credits",
+            "UUID": 2031867254,
+            "ParentUUID": 1981056088,
+            "Name": "Credits Panel",
             "IsStatic": false,
             "Active": false,
             "Transform": {
-                "UUID": 4150318378,
+                "UUID": 2946050368,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -444,12 +806,12 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 3121515641,
+                "UUID": 3909787182,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    0.0,
-                    0.0
+                    100.0,
+                    100.0
                 ],
                 "Pivot": [
                     0.5,
@@ -460,25 +822,25 @@
                     0.0
                 ],
                 "MinAnchor": [
-                    0.0,
-                    0.0
+                    0.5,
+                    0.5
                 ],
                 "MaxAnchor": [
-                    1.0,
-                    1.0
+                    0.5,
+                    0.5
                 ]
             },
             "Transform2DEnabled": true,
             "Components": []
         },
         {
-            "UUID": 296542632,
-            "ParentUUID": 145392767,
-            "Name": "Help",
+            "UUID": 2227599245,
+            "ParentUUID": 296542632,
+            "Name": "Help Panel",
             "IsStatic": false,
             "Active": false,
             "Transform": {
-                "UUID": 3544079860,
+                "UUID": 2899995701,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -498,12 +860,12 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 4241230447,
+                "UUID": 1694757936,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    0.0,
-                    0.0
+                    100.0,
+                    100.0
                 ],
                 "Pivot": [
                     0.5,
@@ -514,25 +876,25 @@
                     0.0
                 ],
                 "MinAnchor": [
-                    0.0,
-                    0.0
+                    0.5,
+                    0.5
                 ],
                 "MaxAnchor": [
-                    1.0,
-                    1.0
+                    0.5,
+                    0.5
                 ]
             },
             "Transform2DEnabled": true,
             "Components": []
         },
         {
-            "UUID": 4152763998,
-            "ParentUUID": 145392767,
-            "Name": "Character_selection",
+            "UUID": 4143080280,
+            "ParentUUID": 4152763998,
+            "Name": "Character Selection Panel",
             "IsStatic": false,
             "Active": false,
             "Transform": {
-                "UUID": 978169864,
+                "UUID": 1207725900,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -552,12 +914,12 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 2475606426,
+                "UUID": 2106287300,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    0.0,
-                    0.0
+                    100.0,
+                    100.0
                 ],
                 "Pivot": [
                     0.5,
@@ -568,21 +930,21 @@
                     0.0
                 ],
                 "MinAnchor": [
-                    0.0,
-                    0.0
+                    0.5,
+                    0.5
                 ],
                 "MaxAnchor": [
-                    1.0,
-                    1.0
+                    0.5,
+                    0.5
                 ]
             },
-            "Transform2DEnabled": true,
+            "Transform2DEnabled": false,
             "Components": []
         },
         {
             "UUID": 1586329215,
-            "ParentUUID": 145392767,
-            "Name": "Level_selection",
+            "ParentUUID": 3300806217,
+            "Name": "Level Selection Panel",
             "IsStatic": false,
             "Active": false,
             "Transform": {
@@ -1080,62 +1442,8 @@
             ]
         },
         {
-            "UUID": 3704827322,
-            "ParentUUID": 3053128562,
-            "Name": "Buttons",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 3544591725,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 869690872,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    489.0,
-                    0.0
-                ],
-                "MinAnchor": [
-                    0.0,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.0,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": []
-        },
-        {
             "UUID": 3956219888,
-            "ParentUUID": 1981056088,
+            "ParentUUID": 2031867254,
             "Name": "Credits_bg",
             "IsStatic": false,
             "Active": false,
@@ -1206,7 +1514,7 @@
         },
         {
             "UUID": 1034313252,
-            "ParentUUID": 1981056088,
+            "ParentUUID": 2031867254,
             "Name": "cursor_credits",
             "IsStatic": false,
             "Active": false,
@@ -1277,7 +1585,7 @@
         },
         {
             "UUID": 565577943,
-            "ParentUUID": 296542632,
+            "ParentUUID": 2227599245,
             "Name": "Cursor_help",
             "IsStatic": false,
             "Active": false,
@@ -1327,26 +1635,11 @@
                 ]
             },
             "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 3529982493,
-                    "ComponentType": 6,
-                    "Active": false,
-                    "ScriptName": "HelpMenuLogic",
-                    "Name0": "Joycon",
-                    "Joycon": 2143317194,
-                    "Name1": "KeyBoard",
-                    "KeyBoard": 3698255015,
-                    "Name2": "Main_Menu",
-                    "Main_Menu": 3053128562,
-                    "Name3": "Audio_controller",
-                    "Audio_controller": 285203001
-                }
-            ]
+            "Components": []
         },
         {
             "UUID": 3698255015,
-            "ParentUUID": 296542632,
+            "ParentUUID": 2227599245,
             "Name": "KeyBoard",
             "IsStatic": false,
             "Active": false,
@@ -1417,7 +1710,7 @@
         },
         {
             "UUID": 2143317194,
-            "ParentUUID": 296542632,
+            "ParentUUID": 2227599245,
             "Name": "Joycon",
             "IsStatic": false,
             "Active": false,
@@ -1488,7 +1781,7 @@
         },
         {
             "UUID": 2404175187,
-            "ParentUUID": 4152763998,
+            "ParentUUID": 4143080280,
             "Name": "Selection_background",
             "IsStatic": false,
             "Active": false,
@@ -1559,7 +1852,7 @@
         },
         {
             "UUID": 3739545748,
-            "ParentUUID": 4152763998,
+            "ParentUUID": 4143080280,
             "Name": "Back",
             "IsStatic": false,
             "Active": false,
@@ -1630,7 +1923,7 @@
         },
         {
             "UUID": 2634243702,
-            "ParentUUID": 4152763998,
+            "ParentUUID": 4143080280,
             "Name": "Level_selection_button",
             "IsStatic": false,
             "Active": false,
@@ -1701,7 +1994,7 @@
         },
         {
             "UUID": 677558714,
-            "ParentUUID": 4152763998,
+            "ParentUUID": 4143080280,
             "Name": "cursor_characters",
             "IsStatic": false,
             "Active": false,
@@ -1767,40 +2060,12 @@
                     "UUID": 500348716,
                     "ComponentType": 10,
                     "Active": false
-                },
-                {
-                    "UUID": 2047971874,
-                    "ComponentType": 6,
-                    "Active": false,
-                    "ScriptName": "CharacterSelectionMenu",
-                    "Name0": "Main_Menu",
-                    "Main_Menu": 3053128562,
-                    "Name1": "Level_selection",
-                    "Level_selection": 1586329215,
-                    "Name2": "Back",
-                    "Back": 3739545748,
-                    "Name3": "Level_selection_button",
-                    "Level_selection_button": 2634243702,
-                    "Name4": "Audio_controller",
-                    "Audio_controller": 285203001,
-                    "Name5": "p1_position",
-                    "p1_position": 652130620,
-                    "Name6": "p2_position",
-                    "p2_position": 1399119569,
-                    "Name7": "Character_selector1",
-                    "Character_selector1": 3292514778,
-                    "Name8": "Character_selector2",
-                    "Character_selector2": 1972725956,
-                    "Name9": "confirm_multi",
-                    "confirm_multi": 675621185,
-                    "Name10": "confirm_single",
-                    "confirm_single": 1108291097
                 }
             ]
         },
         {
             "UUID": 2417769144,
-            "ParentUUID": 4152763998,
+            "ParentUUID": 4143080280,
             "Name": "p1_p1",
             "IsStatic": false,
             "Active": false,
@@ -1871,7 +2136,7 @@
         },
         {
             "UUID": 2067935765,
-            "ParentUUID": 4152763998,
+            "ParentUUID": 4143080280,
             "Name": "p2_p2",
             "IsStatic": false,
             "Active": false,
@@ -1942,7 +2207,7 @@
         },
         {
             "UUID": 3292514778,
-            "ParentUUID": 4152763998,
+            "ParentUUID": 4143080280,
             "Name": "Character_selector1",
             "IsStatic": false,
             "Active": false,
@@ -2013,7 +2278,7 @@
         },
         {
             "UUID": 1972725956,
-            "ParentUUID": 4152763998,
+            "ParentUUID": 4143080280,
             "Name": "Character_selector2",
             "IsStatic": false,
             "Active": false,
@@ -2084,7 +2349,7 @@
         },
         {
             "UUID": 652130620,
-            "ParentUUID": 4152763998,
+            "ParentUUID": 4143080280,
             "Name": "p1_position",
             "IsStatic": false,
             "Active": false,
@@ -2155,7 +2420,7 @@
         },
         {
             "UUID": 1399119569,
-            "ParentUUID": 4152763998,
+            "ParentUUID": 4143080280,
             "Name": "p2_position",
             "IsStatic": false,
             "Active": false,
@@ -2221,7 +2486,7 @@
         },
         {
             "UUID": 675621185,
-            "ParentUUID": 4152763998,
+            "ParentUUID": 4143080280,
             "Name": "confirm_multi",
             "IsStatic": false,
             "Active": false,
@@ -2292,7 +2557,7 @@
         },
         {
             "UUID": 1108291097,
-            "ParentUUID": 4152763998,
+            "ParentUUID": 4143080280,
             "Name": "confirm_single",
             "IsStatic": false,
             "Active": false,
@@ -2576,21 +2841,7 @@
                     "UUID": 3543829844,
                     "ComponentType": 6,
                     "Active": false,
-                    "ScriptName": "LevelSelectionMenu",
-                    "Name0": "level1_position",
-                    "level1_position": 2944641222,
-                    "Name1": "level2_position",
-                    "level2_position": 1431973882,
-                    "Name2": "level3_position",
-                    "level3_position": 1401462934,
-                    "Name3": "Back_button",
-                    "Back_button": 3411494713,
-                    "Name4": "Character_selection",
-                    "Character_selection": 4152763998,
-                    "Name5": "Audio_controller",
-                    "Audio_controller": 285203001,
-                    "Name6": "Back_cursor",
-                    "Back_cursor": 172169170
+                    "ScriptName": "LevelSelectionMenu"
                 }
             ]
         },

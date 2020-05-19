@@ -1,11 +1,13 @@
-#ifndef  __MENUCONTROLLER_H__
-#define  __MENUCONTROLLER_H__
+#ifndef  __UIMAINMENUINPUTCONTROLLER_H__
+#define  __UIMAINMENUINPUTCONTROLLER_H__
+
 class ModuleInput;
-class MenuController
+
+class UIMainMenuInputController
 {
 public:
-	MenuController() = default;
-	~MenuController() = default;
+	UIMainMenuInputController() = default;
+	~UIMainMenuInputController() = default;
 
 	static bool ConfirmMovedUp( ModuleInput& input);
 	static bool ConfirmMovedDown( ModuleInput& input);

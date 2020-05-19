@@ -254,11 +254,12 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Script\LevelSelectionMenu.h" />
-    <ClInclude Include="src\Script\CharacterSelectionMenu.h" />
-    <ClInclude Include="src\Script\MenuController.h" />
-    <ClInclude Include="src\Script\PauseMenuLogic.h" />
-    <ClInclude Include="src\Script\HelpMenuLogic.h" />
+    <ClInclude Include="src\Script\LevelSelectionMenuController.h" />
+    <ClInclude Include="src\Script\CharacterSelectionMenuController.h" />
+    <ClInclude Include="src\Script\CreditsMenuController.h" />
+    <ClInclude Include="src\Script\UIMainMenuInputController.h" />
+    <ClInclude Include="src\Script\PauseMenuController.h" />
+    <ClInclude Include="src\Script\HelpMenuController.h" />
     <ClInclude Include="src\Script\DebugModeScript.h" />
     <ClInclude Include="src\Script\DieEnemyState.h" />
     <ClInclude Include="src\Script\GodCamera.h" />
@@ -273,7 +274,7 @@
     <ClInclude Include="src\Script\EnemyController.h" />
     <ClInclude Include="src\Script\PlayerAttack.h" />
     <ClInclude Include="src\Script\ExampleScript.h" />
-    <ClInclude Include="src\Script\MainMenuLogic.h" />
+    <ClInclude Include="src\Script\MainMenuController.h" />
     <ClInclude Include="src\Script\PlayerController.h" />
     <ClInclude Include="src\Script\PlayerMovement.h" />
     <ClInclude Include="src\Script\CameraController.h" />
@@ -284,11 +285,12 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\DieEnemyState.cpp" />
-    <ClCompile Include="src\Script\LevelSelectionMenu.cpp" />
-    <ClCompile Include="src\Script\CharacterSelectionMenu.cpp" />
-    <ClCompile Include="src\Script\MenuController.cpp" />
-    <ClCompile Include="src\Script\PauseMenuLogic.cpp" />
-    <ClCompile Include="src\Script\HelpMenuLogic.cpp" />
+    <ClCompile Include="src\Script\CreditsMenuController.cpp" />
+    <ClCompile Include="src\Script\LevelSelectionMenuController.cpp" />
+    <ClCompile Include="src\Script\CharacterSelectionMenuController.cpp" />
+    <ClCompile Include="src\Script\UIMainMenuInputController.cpp" />
+    <ClCompile Include="src\Script\PauseMenuController.cpp" />
+    <ClCompile Include="src\Script\HelpMenuController.cpp" />
     <ClCompile Include="src\Script\GodCamera.cpp" />
     <ClCompile Include="src\Script\AttackEnemyState.cpp" />
     <ClCompile Include="src\Script\PursueEnemyState.cpp" />
@@ -302,7 +304,7 @@
     <ClCompile Include="src\Script\PlayerAttack.cpp" />
     <ClCompile Include="src\Script\DebugModeScript.cpp" />
     <ClCompile Include="src\Script\ExampleScript.cpp" />
-    <ClCompile Include="src\Script\MainMenuLogic.cpp" />
+    <ClCompile Include="src\Script\MainMenuController.cpp" />
     <ClCompile Include="src\Script\PlayerController.cpp" />
     <ClCompile Include="src\Script\PlayerMovement.cpp" />
     <ClCompile Include="src\Script\CameraController.cpp" />

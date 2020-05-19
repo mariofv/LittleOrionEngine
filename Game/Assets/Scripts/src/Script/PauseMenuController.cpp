@@ -1,4 +1,4 @@
-#include "PauseMenuLogic.h"
+#include "PauseMenuController.h"
 
 #include "Component/ComponentAudioSource.h"
 
@@ -8,21 +8,22 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleScene.h"
 
-#include "MenuController.h"
+#include "UIMainMenuInputController.h"
 
 #include "imgui.h"
-PauseMenuLogic* PauseMenuLogicDLL()
+
+PauseMenuController* PauseMenuControllerDLL()
 {
-	PauseMenuLogic* instance = new PauseMenuLogic();
+	PauseMenuController* instance = new PauseMenuController();
 	return instance;
 }
 
-PauseMenuLogic::PauseMenuLogic()
+PauseMenuController::PauseMenuController()
 {
 	panel = new PanelComponent();
 }
 
-void PauseMenuLogic::Awake()
+void PauseMenuController::Awake()
 {
 	buttons.push_back(main_menu_button);
 	buttons.push_back(help_button);
@@ -34,7 +35,7 @@ void PauseMenuLogic::Awake()
 
 }
 
-void PauseMenuLogic::Update()
+void PauseMenuController::Update()
 {
 	if (!awaked)
 	{
@@ -47,7 +48,7 @@ void PauseMenuLogic::Update()
 		App->time->time_scale = 0.0f;
 		audio_source->PlayEvent("Play_ingame_music");
 	}
-	if (MenuController::ComfirmButtonPressed(*App->input))
+	if (UIMainMenuInputController::ComfirmButtonPressed(*App->input))
 	{
 		audio_source->PlayEvent("Click_fordward");
 		//Change scene
@@ -75,13 +76,13 @@ void PauseMenuLogic::Update()
 			break;
 		}
 	}
-	if (MenuController::ConfirmMovedUp(*App->input))
+	if (UIMainMenuInputController::ConfirmMovedUp(*App->input))
 	{
 		current = (current - 1) == -1 ? buttons.size() -1: current-1;
 		owner->transform_2d.SetTranslation(float3(owner->transform_2d.GetTranslation().x, buttons[current]->transform_2d.GetTranslation().y, 0.0f));
 	}
 
-	else if (MenuController::ConfirmMovedDown(*App->input))
+	else if (UIMainMenuInputController::ConfirmMovedDown(*App->input))
 	{
 		current += 1;
 		current = current % buttons.size();
@@ -89,14 +90,14 @@ void PauseMenuLogic::Update()
 	}
 }
 
-void PauseMenuLogic::OnInspector(ImGuiContext* context)
+void PauseMenuController::OnInspector(ImGuiContext* context)
 {
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
 
 }
 
-void PauseMenuLogic::InitPublicGameObjects()
+void PauseMenuController::InitPublicGameObjects()
 {
 	public_gameobjects.push_back(&resume_button);
 	variable_names.push_back(GET_VARIABLE_NAME(resume_button));

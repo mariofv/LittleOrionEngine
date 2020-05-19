@@ -752,7 +752,6 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::EVENT_SYSTEM);
-
 		}
 		ImGui::Separator();
 

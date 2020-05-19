@@ -1,14 +1,16 @@
-#ifndef  __PAUSEMENULOGIC_H__
-#define  __PAUSEMENULOGIC_H__
+#ifndef  __PAUSEMENUCONTROLLER_H__
+#define  __PAUSEMENUCONTROLLER_H__
 
 #include "Script.h"
+
 class ComponentAudioSource;
-class PauseMenuLogic : public Script
+
+class PauseMenuController : public Script
 {
 
 public:
-	PauseMenuLogic();
-	~PauseMenuLogic() = default;
+	PauseMenuController();
+	~PauseMenuController() = default;
 
 	void Awake() override;
 	void Update() override;
@@ -33,5 +35,5 @@ private:
 
 	const size_t MAIN_MENU_SCENE = 1;
 };
-extern "C" SCRIPT_API PauseMenuLogic* PauseMenuLogicDLL(); //This is how we are going to load the script
+extern "C" SCRIPT_API PauseMenuController* PauseMenuControllerDLL(); //This is how we are going to load the script
 #endif

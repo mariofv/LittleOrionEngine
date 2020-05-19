@@ -1,4 +1,4 @@
-#include "CharacterSelectionMenu.h"
+#include "CharacterSelectionMenuController.h"
 
 #include "Component/ComponentAudioSource.h"
 
@@ -8,43 +8,41 @@
 #include "Module/ModuleScene.h"
 
 
-#include "MenuController.h"
+#include "MainMenuController.h"
+#include "LevelSelectionMenuController.h"
+#include "UIMainMenuInputController.h"
 #include "WorldManager.h"
 
-CharacterSelectionMenu::CharacterSelectionMenu()
+CharacterSelectionMenuController::CharacterSelectionMenuController()
 {
 	panel = new PanelComponent();
 }
 
-void CharacterSelectionMenu::Awake()
+void CharacterSelectionMenuController::Awake()
 {
 	buttons.push_back(back_button);
 	buttons.push_back(level_selection_button);
+
+	main_menu_controller = static_cast<MainMenuController*>(main_menu_game_object->GetComponentScript("MainMenuController")->script);
+	level_selection_controller = static_cast<LevelSelectionMenuController*>(level_selection_game_object->GetComponentScript("LevelSelectionMenuController")->script);
+
 	audio_source = (ComponentAudioSource*)audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
-	awaked = true;
 }
 
-void CharacterSelectionMenu::Update()
+void CharacterSelectionMenuController::Update()
 {
-	if (!awaked)
+	if (!enabled)
 	{
-		Awake();
 		return;
 	}
-	if (!enabled && owner->IsEnabled())
-	{
-		enabled = true;
-		previous_panel->SetEnabled(false);
 
-		if (App->input->singleplayer_input)
-		{
-			character_selector2->SetEnabled(false);
-		}
-		confirm_multiplayer->SetEnabled(false);
-		confirm_singleplayer->SetEnabled(false);
+	if (just_opened)
+	{
+		just_opened = false;
 		return;
 	}
-	if (selecting_character  && MenuController::ComfirmButtonPressed(*App->input))
+
+	if (selecting_character  && UIMainMenuInputController::ComfirmButtonPressed(*App->input))
 	{
 		App->input->singleplayer_input = !App->input->singleplayer_input;
 		character_selector2->SetEnabled(!character_selector2->IsEnabled());
@@ -55,44 +53,24 @@ void CharacterSelectionMenu::Update()
 		confirm_singleplayer->SetEnabled(!confirm_singleplayer->IsEnabled());
 	}
 
-	if (!selecting_character && MenuController::ComfirmButtonPressed(*App->input))
+	if (!selecting_character && UIMainMenuInputController::ComfirmButtonPressed(*App->input))
 	{
-		
-		//Change scene
-		switch (current)
-		{
-		case 0:
-			//Back
-			audio_source->PlayEvent("Click_backward");
-			owner->parent->SetEnabled(false);
-			previous_panel->SetEnabled(true);
-			enabled = false;
-			break;
-		case 1:
-			//Level selection
-			audio_source->PlayEvent("Click_fordward");
-			owner->parent->SetEnabled(false);
-			level_selection->SetEnabled(true);
-			enabled = false;
-			return;
-		default:
-			break;
-		}
+		OpenSubMenu(current);
 	}
 
-	if (MenuController::ConfirmMovedUp(*App->input))
+	if (UIMainMenuInputController::ConfirmMovedUp(*App->input))
 	{
 		selecting_character = true;
 		confirm_multiplayer->SetEnabled(App->input->singleplayer_input);
 		confirm_singleplayer->SetEnabled(!App->input->singleplayer_input);
 	}
-	if (MenuController::ConfirmMovedDown(*App->input))
+	if (UIMainMenuInputController::ConfirmMovedDown(*App->input))
 	{
 		selecting_character = false;
 		confirm_singleplayer->SetEnabled(false);
 		confirm_multiplayer->SetEnabled(false);
 	}
-	if (MenuController::ConfirmMovedLeft(*App->input))
+	if (UIMainMenuInputController::ConfirmMovedLeft(*App->input))
 	{
 		if (!selecting_character)
 		{
@@ -108,7 +86,7 @@ void CharacterSelectionMenu::Update()
 		}
 	
 	}
-	else if (MenuController::ConfirmMovedRight(*App->input))
+	else if (UIMainMenuInputController::ConfirmMovedRight(*App->input))
 	{	
 		if (!selecting_character)
 		{
@@ -126,7 +104,7 @@ void CharacterSelectionMenu::Update()
 
 }
 
-void CharacterSelectionMenu::SelectCharacter()
+void CharacterSelectionMenuController::SelectCharacter()
 {
 	player1_choice = !player1_choice;
 	const float3& translation = player1_choice ? p1_position->transform_2d.GetTranslation() : p2_position->transform_2d.GetTranslation();
@@ -138,20 +116,65 @@ void CharacterSelectionMenu::SelectCharacter()
 	}
 }
 
-void CharacterSelectionMenu::OnInspector(ImGuiContext * context)
+void CharacterSelectionMenuController::OpenSubMenu(int index)
+{
+	//Change scene
+	switch (index)
+	{
+	case 0:
+		//Back
+		Close();
+		break;
+	case 1:
+		//Level selection
+		audio_source->PlayEvent("Click_fordward");
+		level_selection_controller->Open();
+		Close();
+		break;
+	default:
+		break;
+	}
+	return;
+}
+
+void CharacterSelectionMenuController::Open()
+{
+	enabled = true;
+	just_opened = true;
+	character_selection_panel->SetEnabled(true);
+	if (App->input->singleplayer_input)
+	{
+		character_selector2->SetEnabled(false);
+	}
+	confirm_multiplayer->SetEnabled(false);
+	confirm_singleplayer->SetEnabled(false);
+}
+
+void CharacterSelectionMenuController::Close()
+{
+	enabled = false;
+	character_selection_panel->SetEnabled(false);
+	main_menu_controller->Open();
+	audio_source->PlayEvent("Click_backward");
+}
+
+void CharacterSelectionMenuController::OnInspector(ImGuiContext * context)
 {
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
 
 }
 
-void CharacterSelectionMenu::InitPublicGameObjects()
+void CharacterSelectionMenuController::InitPublicGameObjects()
 {
-	public_gameobjects.push_back(&previous_panel);
-	variable_names.push_back(GET_VARIABLE_NAME(previous_panel));
+	public_gameobjects.push_back(&character_selection_panel);
+	variable_names.push_back(GET_VARIABLE_NAME(character_selection_panel));
 
-	public_gameobjects.push_back(&level_selection);
-	variable_names.push_back(GET_VARIABLE_NAME(level_selection));
+	public_gameobjects.push_back(&main_menu_game_object);
+	variable_names.push_back(GET_VARIABLE_NAME(main_menu_game_object));
+
+	public_gameobjects.push_back(&level_selection_game_object);
+	variable_names.push_back(GET_VARIABLE_NAME(level_selection_game_object));
 
 	public_gameobjects.push_back(&back_button);
 	variable_names.push_back(GET_VARIABLE_NAME(back_button));
@@ -189,8 +212,8 @@ void CharacterSelectionMenu::InitPublicGameObjects()
 	}
 }
 
-CharacterSelectionMenu * CharacterSelectionMenuDLL()
+CharacterSelectionMenuController * CharacterSelectionMenuControllerDLL()
 {
-	CharacterSelectionMenu* instance = new CharacterSelectionMenu();
+	CharacterSelectionMenuController* instance = new CharacterSelectionMenuController();
 	return instance;
 }
