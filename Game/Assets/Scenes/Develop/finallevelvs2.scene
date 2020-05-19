@@ -301,26 +301,16 @@
     ],
     "PrefabsComponents": [
         {
-            "RemovedComponents": [
-                {
-                    "Removed": 571396198
-                }
-            ],
-            "Components": [],
-            "UUID": 4106274841
-        },
-        {
-            "RemovedComponents": [
-                {
-                    "Removed": 571396198
-                }
-            ],
-            "Components": [],
-            "UUID": 4012452726
-        },
-        {
             "RemovedComponents": [],
             "Components": [
+                {
+                    "UUID": 833751351,
+                    "ComponentType": 2,
+                    "Active": false,
+                    "Mesh": 3348717978,
+                    "Material": 1582005317,
+                    "Skeleton": 0
+                },
                 {
                     "UUID": 1250248877,
                     "ComponentType": 2,
@@ -342,13 +332,13 @@
                     ],
                     "Static": true,
                     "Collision": true,
-                    "Visualize": false,
+                    "Visualize": true,
                     "Attached": false,
                     "Freeze_rotation_x": true,
                     "Freeze_rotation_y": true,
                     "Freeze_rotation_z": true,
                     "Active_Physics": true,
-                    "Friction": 1.0,
+                    "Friction": 3.0,
                     "Rolling_friction": 1.0,
                     "Center_deviation": [
                         0.0,
@@ -591,7 +581,7 @@
                 "Active": true,
                 "Translation": [
                     -51.97651290893555,
-                    -5.017028331756592,
+                    -1.813460350036621,
                     -3.99362850189209
                 ],
                 "Rotation": [
@@ -668,7 +658,7 @@
                 {
                     "UUID": 3132349959,
                     "ComponentType": 6,
-                    "Active": false,
+                    "Active": true,
                     "ScriptName": "Mushdoom"
                 }
             ]
@@ -870,8 +860,8 @@
                 "Active": true,
                 "Translation": [
                     0.0,
-                    0.0,
-                    -16.829757690429689
+                    2.0,
+                    -26.916725158691408
                 ],
                 "Rotation": [
                     -0.0,
@@ -978,8 +968,8 @@
                 "Active": true,
                 "Translation": [
                     -57.00803756713867,
-                    -4.909248352050781,
-                    -6.710150718688965
+                    0.6112798452377319,
+                    -1.7560734748840333
                 ],
                 "Rotation": [
                     -0.0,
@@ -1091,7 +1081,7 @@
                 "Active": true,
                 "Translation": [
                     -59.080482482910159,
-                    -4.909248352050781,
+                    -2.3619232177734377,
                     -4.433545112609863
                 ],
                 "Rotation": [
@@ -1365,7 +1355,7 @@
                         0.3700000047683716
                     ],
                     "Static": false,
-                    "Collision": true,
+                    "Collision": false,
                     "Visualize": true,
                     "Attached": false,
                     "Freeze_rotation_x": true,
@@ -1447,7 +1437,7 @@
                         0.3700000047683716
                     ],
                     "Static": false,
-                    "Collision": true,
+                    "Collision": false,
                     "Visualize": true,
                     "Attached": false,
                     "Freeze_rotation_x": true,
