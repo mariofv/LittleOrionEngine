@@ -2,11 +2,13 @@
 
 #include "Component/ComponentAudioSource.h"
 #include "Component/ComponentButton.h"
+#include "Component/ComponentImage.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleTime.h"
 
 
 #include "MainMenuController.h"
@@ -49,25 +51,65 @@ void CharacterSelectionMenuController::Update()
 	{
 		SwitchMultiplayer(true);
 	}
+
 	if (multiplayer &&  App->input->GetControllerButtonDown(ControllerCode::B, ControllerID::ONE) || App->input->GetControllerButtonDown(ControllerCode::B, ControllerID::TWO))
 	{
 		SwitchMultiplayer(false);
 	}
 
-	if (UIMainMenuInputController::ComfirmButtonPressed(*App->input))
+	switch (character_selection_status)
 	{
-		if (!selecting_character)
-		{
-			Close();
-		}
-		else
-		{
-			audio_source->PlayEvent("Click_fordward");
-			world_manager->singleplayer = !multiplayer;
-			world_manager->player1_choice = player1_choice;
-			level_selection_controller->Open();
-			Close();
-		}
+		case CharacterSelectionStatus::BACK_HOVERED:
+
+			if (UIMainMenuInputController::ConfirmMovedUp(*App->input))
+			{
+				character_selection_status = CharacterSelectionStatus::SELECTING_PLAYER;
+				cursor->SetEnabled(false);
+			}
+
+			if (UIMainMenuInputController::ComfirmButtonPressed(*App->input))
+			{
+				Close();
+			}
+			break;
+
+		case CharacterSelectionStatus::SELECTING_PLAYER:
+
+			if (UIMainMenuInputController::ConfirmMovedDown(*App->input))
+			{
+				character_selection_status = CharacterSelectionStatus::BACK_HOVERED;
+				cursor->SetEnabled(true);
+			}
+
+			if (UIMainMenuInputController::ComfirmButtonPressed(*App->input))
+			{
+					audio_source->PlayEvent("Click_fordward");
+					character_selection_status = CharacterSelectionStatus::PLAYER_SELECTED;
+			}
+
+			if (UIMainMenuInputController::ConfirmMovedLeft(*App->input) || UIMainMenuInputController::ConfirmMovedRight(*App->input))
+			{
+				SwitchCharacterSelection();
+			}
+			break;
+
+		case CharacterSelectionStatus::PLAYER_SELECTED:
+
+			if (UIMainMenuInputController::ComfirmButtonPressed(*App->input))
+			{
+				audio_source->PlayEvent("Click_fordward");
+				world_manager->singleplayer = !multiplayer;
+				world_manager->player1_choice = player1_choice;
+				level_selection_controller->Open();
+				Close();
+			}
+
+			if (UIMainMenuInputController::CancelButtonPressed(*App->input))
+			{
+				audio_source->PlayEvent("Click_backward");
+				character_selection_status = CharacterSelectionStatus::SELECTING_PLAYER;
+			}
+			break;
 	}
 
 	if (back_button->IsClicked())
@@ -75,26 +117,10 @@ void CharacterSelectionMenuController::Update()
 		Close();
 	}
 
-	if (UIMainMenuInputController::ConfirmMovedUp(*App->input))
-	{
-		selecting_character = true;
-		cursor->SetEnabled(false);
-	}
-
-	if (UIMainMenuInputController::ConfirmMovedDown(*App->input))
-	{
-		selecting_character = false;
-		cursor->SetEnabled(true);
-	}
-
-	if (selecting_character && (UIMainMenuInputController::ConfirmMovedLeft(*App->input) || UIMainMenuInputController::ConfirmMovedRight(*App->input)))
-	{
-		SelectCharacter();
-	}
-
+	UpdateCursorsColors();
 }
 
-void CharacterSelectionMenuController::SelectCharacter()
+void CharacterSelectionMenuController::SwitchCharacterSelection()
 {
 	player1_choice = !player1_choice;
 	const float3& translation = player1_choice ? female_character_position->transform_2d.GetTranslation() : male_character_position->transform_2d.GetTranslation();
@@ -123,12 +149,38 @@ void CharacterSelectionMenuController::SwitchMultiplayer(bool enabled)
 	}
 }
 
+void CharacterSelectionMenuController::UpdateCursorsColors()
+{
+	float4 color = float4::one;
+	switch (character_selection_status)
+	{
+		case CharacterSelectionStatus::BACK_HOVERED:
+			color.x = 1.f;
+			break;
+
+		case CharacterSelectionStatus::SELECTING_PLAYER:
+			color.x = (math::Sin(App->time->time * 0.01f) + 1) * 0.5f;
+			break;
+
+		case CharacterSelectionStatus::PLAYER_SELECTED:
+			color.x = 0;
+			break;
+	}
+
+	static_cast<ComponentImage*>(character_selector1->GetComponent(Component::ComponentType::UI_IMAGE))->SetColor(color);
+	if (multiplayer)
+	{
+		static_cast<ComponentImage*>(character_selector2->GetComponent(Component::ComponentType::UI_IMAGE))->SetColor(color);
+	}
+}
+
 void CharacterSelectionMenuController::Open()
 {
 	enabled = true;
 	just_opened = true;
 	character_selection_panel->SetEnabled(true);
-	selecting_character = false;
+	character_selection_status = CharacterSelectionStatus::SELECTING_PLAYER;
+	cursor->SetEnabled(false);
 	SwitchMultiplayer(false);
 }
 

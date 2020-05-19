@@ -13,8 +13,15 @@ class WorldManager;
 
 class CharacterSelectionMenuController : public Script
 {
-
 public:
+
+	enum class CharacterSelectionStatus
+	{
+		BACK_HOVERED,
+		SELECTING_PLAYER,
+		PLAYER_SELECTED
+	};
+
 	CharacterSelectionMenuController();
 	~CharacterSelectionMenuController() = default;
 
@@ -24,8 +31,10 @@ public:
 	void OnInspector(ImGuiContext * context) override;
 	void InitPublicGameObjects() override;
 
-	void SelectCharacter();
+	void SwitchCharacterSelection();
 	void SwitchMultiplayer(bool enabled);
+
+	void UpdateCursorsColors();
 
 	void Open();
 	void Close();
@@ -33,7 +42,7 @@ public:
 private:
 	unsigned current = 0;
 
-	bool selecting_character = false;
+	CharacterSelectionStatus character_selection_status = CharacterSelectionStatus::SELECTING_PLAYER;
 	bool player1_choice = false;
 	bool multiplayer = false;
 
@@ -51,7 +60,7 @@ private:
 	GameObject* male_character_position = nullptr;
 	GameObject* female_character_position = nullptr;
 
-	GameObject* character_selector1= nullptr;
+	GameObject* character_selector1 = nullptr;
 	GameObject* character_selector2 = nullptr;
 
 	GameObject* back_button_game_object = nullptr;

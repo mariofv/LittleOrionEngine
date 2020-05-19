@@ -1119,7 +1119,8 @@
                     "UUID": 1833944253,
                     "ComponentType": 12,
                     "Active": true,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -1190,7 +1191,8 @@
                     "UUID": 1540942339,
                     "ComponentType": 12,
                     "Active": true,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -1266,7 +1268,8 @@
                     "UUID": 3067938811,
                     "ComponentType": 12,
                     "Active": true,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -1342,7 +1345,8 @@
                     "UUID": 868466341,
                     "ComponentType": 12,
                     "Active": true,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -1418,9 +1422,10 @@
                     "UUID": 78061716,
                     "ComponentType": 12,
                     "Active": true,
-                    "Color": [
-                        0.9999899864196777,
-                        0.9999919533729553,
+                    "ImageColor": [
+                        1.0,
+                        1.0,
+                        1.0,
                         1.0
                     ],
                     "TextureUUID": 2907833219
@@ -1489,7 +1494,8 @@
                     "UUID": 4268227044,
                     "ComponentType": 12,
                     "Active": true,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -1565,7 +1571,8 @@
                     "UUID": 1871776304,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -1636,9 +1643,10 @@
                     "UUID": 78061716,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
-                        0.9999899864196777,
-                        0.9999919533729553,
+                    "ImageColor": [
+                        1.0,
+                        1.0,
+                        1.0,
                         1.0
                     ],
                     "TextureUUID": 2907833219
@@ -1772,7 +1780,8 @@
                     "UUID": 3831380222,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -1843,7 +1852,8 @@
                     "UUID": 2286449215,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -1914,7 +1924,8 @@
                     "UUID": 2180782996,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -2120,7 +2131,8 @@
                     "UUID": 3519686083,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -2191,7 +2203,8 @@
                     "UUID": 2180782996,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -2267,7 +2280,8 @@
                     "UUID": 3304550399,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -2276,148 +2290,6 @@
                 },
                 {
                     "UUID": 500348716,
-                    "ComponentType": 10,
-                    "Active": false
-                }
-            ]
-        },
-        {
-            "UUID": 2417769144,
-            "ParentUUID": 4143080280,
-            "Name": "p1_p1",
-            "IsStatic": false,
-            "Active": false,
-            "Transform": {
-                "UUID": 3266247399,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 218508915,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    78.5,
-                    97.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    -181.5,
-                    30.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 1812407552,
-                    "ComponentType": 12,
-                    "Active": false,
-                    "Color": [
-                        1.0,
-                        0.9999899864196777,
-                        0.9999899864196777
-                    ],
-                    "TextureUUID": 864870810
-                },
-                {
-                    "UUID": 281559464,
-                    "ComponentType": 10,
-                    "Active": false
-                }
-            ]
-        },
-        {
-            "UUID": 2067935765,
-            "ParentUUID": 4143080280,
-            "Name": "p2_p2",
-            "IsStatic": false,
-            "Active": false,
-            "Transform": {
-                "UUID": 3035100960,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 1371180759,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    65.0,
-                    77.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    194.0,
-                    30.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 1812407552,
-                    "ComponentType": 12,
-                    "Active": false,
-                    "Color": [
-                        1.0,
-                        0.9999899864196777,
-                        0.9999899864196777
-                    ],
-                    "TextureUUID": 114790192
-                },
-                {
-                    "UUID": 281559464,
                     "ComponentType": 10,
                     "Active": false
                 }
@@ -2480,7 +2352,8 @@
                     "UUID": 4290892381,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -2551,7 +2424,8 @@
                     "UUID": 4290892381,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -2622,10 +2496,11 @@
                     "UUID": 1569122954,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
                         1.0,
-                        0.9999899864196777,
-                        0.9999899864196777
+                        1.0,
+                        1.0,
+                        1.0
                     ],
                     "TextureUUID": 0
                 },
@@ -2693,7 +2568,8 @@
                     "UUID": 1569122954,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -2759,7 +2635,8 @@
                     "UUID": 1425866878,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -2830,7 +2707,8 @@
                     "UUID": 2073637599,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -2901,10 +2779,11 @@
                     "UUID": 3857650893,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
-                        0.045184895396232608,
-                        0.4038205146789551,
-                        0.4798206090927124
+                    "ImageColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
                     ],
                     "TextureUUID": 1670969248
                 },
@@ -2978,7 +2857,8 @@
                     "UUID": 3857650893,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -3044,7 +2924,8 @@
                     "UUID": 3857650893,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -3110,7 +2991,8 @@
                     "UUID": 3857650893,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -3176,7 +3058,8 @@
                     "UUID": 2313887479,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0
@@ -3247,7 +3130,8 @@
                     "UUID": 537082655,
                     "ComponentType": 12,
                     "Active": false,
-                    "Color": [
+                    "ImageColor": [
+                        1.0,
                         1.0,
                         1.0,
                         1.0

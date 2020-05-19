@@ -11,9 +11,10 @@ public:
 
 	static bool ConfirmMovedUp( ModuleInput& input);
 	static bool ConfirmMovedDown( ModuleInput& input);
-	static bool ComfirmButtonPressed( ModuleInput& input);
 	static bool ConfirmMovedRight( ModuleInput& input);
 	static bool ConfirmMovedLeft( ModuleInput& input);
+	static bool ComfirmButtonPressed( ModuleInput& input);
+	static bool CancelButtonPressed( ModuleInput& input);
 
 }; 
 #endif
