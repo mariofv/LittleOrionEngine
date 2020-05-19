@@ -29,7 +29,7 @@ public:
 	void SpecializedLoad(const Config& config) override;
 
 	float2 GetCanvasScreenPosition() const;
-	float2 GetCanvasScreenSize() const;
+	ENGINE_API float2 GetCanvasScreenSize() const;
 
 	bool IsFocused() const;
 	ComponentButton* GetUIElementAtPosition(float2 mouse_position);

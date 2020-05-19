@@ -39,6 +39,13 @@ public:
 	static bool player1_choice;
 	static bool player2_choice;
 
+public:
+	static bool singleplayer;
+
+	//Which player is each one
+	static bool player1_choice;
+	static bool player2_choice;
+
 private:
 	GameObject* health_bar = nullptr;
 	GameObject* lose_screen = nullptr;

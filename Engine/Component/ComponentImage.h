@@ -22,6 +22,7 @@ public:
 	void SpecializedLoad(const Config& config) override;
 
 	void SetTextureToRender(uint32_t texture_uuid);
+	ENGINE_API void SetColor(float4 color);
 
 	void Render(float4x4* projection);
 
@@ -32,7 +33,7 @@ public:
 	uint32_t texture_uuid = 0;
 	std::shared_ptr<Texture> texture_to_render;
 
-	float3 color = float3::one;
+	float4 color = float4::one;
 
 private:
 	GLuint program, vao, vbo;

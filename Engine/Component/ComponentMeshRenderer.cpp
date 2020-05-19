@@ -54,14 +54,6 @@ void ComponentMeshRenderer::SpecializedLoad(const Config& config)
 
 void ComponentMeshRenderer::Render()
 {
-	if (material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
-	{
-
-		glEnable(GL_BLEND);
-		glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
-		/*glBlendFunc(GL_ONE, GL_ONE); TODO -> FIX THISÇ*/
-		glBlendEquation(GL_FUNC_ADD);
-	}
 	if (material_to_render == nullptr)
 	{
 		return;
@@ -82,10 +74,7 @@ void ComponentMeshRenderer::Render()
 	App->lights->Render(owner->transform.GetGlobalTranslation(), program);
 	RenderMaterial(program);
 	RenderModel();
-	if (material_to_render->material_type == Material::MaterialType::MATERIAL_TRANSPARENT)
-	{
-		glDisable(GL_BLEND);
-	}
+
 	glUseProgram(0);
 }	
 
