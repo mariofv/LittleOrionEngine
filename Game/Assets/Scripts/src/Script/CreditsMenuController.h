@@ -4,6 +4,7 @@
 #include "Script.h"
 
 class ComponentAudioSource;
+class ComponentButton;
 class MainMenuController;
 
 class CreditsMenuController : public Script
@@ -29,6 +30,9 @@ private:
 
 	GameObject* main_menu_game_object = nullptr;
 	MainMenuController* main_menu_controller = nullptr;
+
+	GameObject* back_buttton_game_object = nullptr;
+	ComponentButton* back_button = nullptr;
 
 	GameObject* audio_controller = nullptr;
 	ComponentAudioSource* audio_source = nullptr;

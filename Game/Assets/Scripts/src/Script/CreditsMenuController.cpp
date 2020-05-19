@@ -1,6 +1,7 @@
 #include "CreditsMenuController.h"
 
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentButton.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 
@@ -33,6 +34,7 @@ CreditsMenuController::CreditsMenuController()
 void CreditsMenuController::Awake()
 {
 	main_menu_controller = static_cast<MainMenuController*>(main_menu_game_object->GetComponentScript("MainMenuController")->script);
+	back_button = (ComponentButton*)back_buttton_game_object->GetComponent(Component::ComponentType::UI_BUTTON);
 	audio_source = (ComponentAudioSource*)audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
 }
 
@@ -55,8 +57,8 @@ void CreditsMenuController::Update()
 		just_opened = false;
 		return;
 	}
-	
-	if (UIMainMenuInputController::ComfirmButtonPressed(*App->input))
+
+	if (UIMainMenuInputController::ComfirmButtonPressed(*App->input) || back_button->IsClicked())
 	{
 		Close();
 	}
@@ -96,6 +98,9 @@ void CreditsMenuController::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&main_menu_game_object);
 	variable_names.push_back(GET_VARIABLE_NAME(main_menu_game_object));
+
+	public_gameobjects.push_back(&back_buttton_game_object);
+	variable_names.push_back(GET_VARIABLE_NAME(back_buttton_game_object));
 
 	public_gameobjects.push_back(&audio_controller);
 	variable_names.push_back(GET_VARIABLE_NAME(audio_controller));
