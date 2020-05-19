@@ -52,7 +52,7 @@ public:
 	ENGINE_API int GetRenderedTris() const;
 	ENGINE_API int GetRenderedVerts() const;
 
-	RaycastHit* GetRaycastIntertectedObject(const LineSegment& ray);
+	ENGINE_API RaycastHit* GetRaycastIntertectedObject(const LineSegment& ray, const ComponentCamera* cam);
 	RaycastHit* GetRaycastIntertectedObject(const LineSegment& ray, float3& position);
 	ENGINE_API void SetDrawMode(DrawMode draw_mode);
 
@@ -105,6 +105,7 @@ private:
 	Timer * rendering_measure_timer = new Timer();
 
 	friend class ModuleDebugDraw;
+	friend class ModuleDebug;
 	friend class ModuleSpacePartitioning;
 	friend class PanelConfiguration;
 	friend class PanelScene;

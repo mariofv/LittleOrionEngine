@@ -13,6 +13,7 @@
 #include "Module/ModuleTime.h"
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleSpacePartitioning.h"
+#include "Module/ModuleCamera.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
@@ -39,7 +40,7 @@ DebugModeScript::DebugModeScript()
 // Use this for initialization before Start()
 void DebugModeScript::Awake()
 {
-	const ComponentScript* component = enemy_obj->GetComponentScript("EnemyManager");
+	const ComponentScript* component = enemy_manager_obj->GetComponentScript("EnemyManager");
 	enemy_manager = (EnemyManager*)component->script;
 }
 
@@ -55,12 +56,28 @@ void DebugModeScript::Update()
 	if (App->input->GetKeyDown(KeyCode::F1) || App->input->GetControllerButtonDown(ControllerCode::RightStick, ControllerID::ONE))
 	{
 		debug_enabled = !debug_enabled;
+	}
 
-		if (debug_enabled)
+	if (debug_enabled)
+	{
+		if (render_AABB)
 		{
-			if(render_AABB)
+			App->space_partitioning->DrawAABBTree();
+		}
+
+		if (is_warping_player)
+		{
+			if (App->input->GetMouseButtonDown(MouseButton::Left))
 			{
-				App->space_partitioning->DrawAABBTree();
+				LineSegment ray;
+				//App->cameras->scene_camera->GetRay(window_mouse_position_normalized, ray);
+				RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->current_camera);
+
+				if (hit->game_object != nullptr)
+				{
+					player_obj->transform.SetTranslation(hit->hit_point);
+					is_warping_player = false;
+				}
 			}
 		}
 	}
@@ -100,6 +117,15 @@ void DebugModeScript::UpdateWithImGui(ImGuiContext* context)
 				enemy_manager->SpawnWave(0, 5);
 			}
 
+			if (is_warping_player)
+			{
+				ImGui::LabelText("", "Please touch somewhere to warp the character");
+			}
+			else if (ImGui::Button("Warp Player"))
+			{
+				is_warping_player = true;
+			}
+
 			ImGui::End();
 		}
 	}
@@ -117,8 +143,11 @@ void DebugModeScript::OnInspector(ImGuiContext* context)
 //Use this for linking JUST GO automatically 
 void DebugModeScript::InitPublicGameObjects()
 {
-	public_gameobjects.push_back(&enemy_obj);
-	variable_names.push_back(GET_VARIABLE_NAME(enemy_obj));
+	public_gameobjects.push_back(&enemy_manager_obj);
+	variable_names.push_back(GET_VARIABLE_NAME(enemy_manager_obj));
+	
+	public_gameobjects.push_back(&player_obj);
+	variable_names.push_back(GET_VARIABLE_NAME(player_obj));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{

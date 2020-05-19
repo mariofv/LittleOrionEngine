@@ -2,6 +2,7 @@
 #define _MODULEDEBUG_H_
 
 #include "Module.h"
+#include "Component/ComponentCamera.h"
 
 #include <GL/glew.h>
 
@@ -23,6 +24,7 @@ public:
 
 	bool Init() override;
 	bool CleanUp() override;
+	void Render(ComponentCamera* cam);
 	
 	void CreateFrustumCullingDebugScene() const;
 	

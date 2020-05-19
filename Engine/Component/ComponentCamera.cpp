@@ -7,6 +7,7 @@
 #include "Module/ModuleAI.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebugDraw.h"
+#include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTime.h"
@@ -243,13 +244,13 @@ void ComponentCamera::RecordFrame(float width, float height)
 	
 }
 
-void ComponentCamera::RecordDebugDraws(float width, float height) const
+void ComponentCamera::RecordDebugDraws(float width, float height)
 {
 	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 	glViewport(0, 0, width, height);
 
-	App->debug_draw->Render();
+	App->debug->Render(this);
 
 	if (App->renderer->anti_aliasing)
 	{

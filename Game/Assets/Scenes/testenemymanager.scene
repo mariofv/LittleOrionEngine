@@ -1038,6 +1038,16 @@
                     "Player1": 248855188,
                     "Name1": "Player2",
                     "Player2": 35252321
+                },
+                {
+                    "UUID": 1236973950,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "GodCamera",
+                    "Name0": "Main Camera",
+                    "Main Camera": 172714554,
+                    "Name1": "DebugSystem",
+                    "DebugSystem": 3372183300
                 }
             ]
         },
@@ -1403,7 +1413,27 @@
                     "Active": true,
                     "ScriptName": "DebugModeScript",
                     "Name0": "EnemyManager",
-                    "EnemyManager": 418290945
+                    "EnemyManager": 418290945,
+                    "Name1": "Player1",
+                    "Player1": 248855188
+                },
+                {
+                    "UUID": 4103893942,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "SceneCamerasController",
+                    "Name0": "Main Camera",
+                    "Main Camera": 172714554,
+                    "Name1": "Camera1",
+                    "Camera1": 993413573,
+                    "Name2": "Camera1",
+                    "Camera1": 993413573,
+                    "Name3": "Camera2",
+                    "Camera2": 2874253772,
+                    "Name4": "Camera3",
+                    "Camera3": 1342938916,
+                    "Name5": "DebugSystem",
+                    "DebugSystem": 3372183300
                 }
             ]
         },

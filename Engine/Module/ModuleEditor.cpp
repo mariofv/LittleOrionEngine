@@ -97,14 +97,11 @@ bool ModuleEditor::InitImgui()
 
 update_status ModuleEditor::PreUpdate()
 {
-#if GAME
-	return update_status::UPDATE_CONTINUE;
-#endif
-
 	ImGui_ImplOpenGL3_NewFrame();
 	ImGui_ImplSDL2_NewFrame(App->window->window);
 	ImGui::NewFrame();
 	ImGuizmo::BeginFrame();
+	
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -136,14 +133,11 @@ update_status ModuleEditor::Update()
 
 void ModuleEditor::Render()
 {
-#if GAME
-	return;
-#endif
-
 	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
 	
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight()));
+#if !GAME
 	if (ImGui::Begin("MainWindow", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBringToFrontOnFocus))
 	{
 		menu_bar->Render();
@@ -154,7 +148,7 @@ void ModuleEditor::Render()
 		RenderEditorDockspace();
 	}
 	ImGui::End();
-
+#endif
 	ImGui::Render();
 
 	BROFILER_CATEGORY("Render ImGui Draws", Profiler::Color::BlueViolet);

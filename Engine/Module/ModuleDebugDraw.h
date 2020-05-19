@@ -23,26 +23,28 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void Render();
 	void RenderDebugDraws(const ComponentCamera& camera);
 	ENGINE_API void RenderSingleAABB(AABB& aabb) const;
 
+	void RenderNavMesh(ComponentCamera& cam) const;
+	void RenderQuadTree() const;
+	void RenderOcTree() const;
+	void RenderAABBTree() const;
+	void RenderSelectedGameObjectHelpers() const;
+	void RenderBoundingBoxes() const;
+	void RenderGlobalBoundingBoxes() const;
+	void RenderPathfinding() const;
+	void RenderGrid() const;
+	void RenderBillboards() const;
+	void RenderTangentsAndBitangents() const;
+
 private:
 	void RenderOutline() const;
-
-	void RenderTangentsAndBitangents() const;
 
 	void RenderCameraFrustum() const;
 	void RenderLightGizmo() const;
 	void RenderBones() const;
 	void RenderBone(const GameObject* current_bone, const GameObject* last_bone, const float3& color) const;
-
-	void RenderBoundingBoxes() const;
-	void RenderGlobalBoundingBoxes() const;
-	void RenderBillboards() const;
-	void RenderPathfinding() const;
-
-
 
 private:
 	static IDebugDrawOpenGLImplementation* dd_interface_implementation;

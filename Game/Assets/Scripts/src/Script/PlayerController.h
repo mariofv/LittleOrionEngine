@@ -25,13 +25,11 @@ public:
 
 	void TakeDamage(float damage);
 	ComponentCollider* GetCollider();
-	void InitPublicGameObjects() override;
 
 public:
 	bool on_gravity = false;
 	unsigned int player = 1;
 	bool is_alive = true;
-	GameObject* debug_system = nullptr;
 
 private:
 	PlayerMovement* player_movement = nullptr;

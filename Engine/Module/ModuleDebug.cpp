@@ -8,6 +8,9 @@
 
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
+#include "Module/ModuleCamera.h"
+#include "Module/ModuleDebugDraw.h"
+#include "Module/ModuleRender.h"
 
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
@@ -33,6 +36,61 @@ bool ModuleDebug::CleanUp()
 {
 	APP_LOG_INFO("Destroying Debug");	
 	return true;
+}
+
+void ModuleDebug::Render(ComponentCamera* cam)
+{
+	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
+	if (show_navmesh)
+	{
+		App->debug_draw->RenderNavMesh(*cam);
+	}
+
+	if (show_quadtree)
+	{
+		App->debug_draw->RenderQuadTree();
+	}
+
+	if (show_octtree)
+	{
+		App->debug_draw->RenderOcTree();
+	}
+
+	if (show_aabbtree)
+	{
+		App->debug_draw->RenderAABBTree();
+	}
+
+	App->debug_draw->RenderSelectedGameObjectHelpers();
+
+	if (show_bounding_boxes)
+	{
+		App->debug_draw->RenderBoundingBoxes();
+	}
+
+	if (show_global_bounding_boxes)
+	{
+		App->debug_draw->RenderGlobalBoundingBoxes();
+	}
+
+	if (show_pathfind_points)
+	{
+		App->debug_draw->RenderPathfinding();
+	}
+
+	App->debug_draw->RenderBillboards();
+
+	if (show_grid)
+	{
+		App->debug_draw->RenderGrid();
+	}
+
+	if (show_axis && App->renderer->meshes_to_render.size() != 0)
+	{
+		App->debug_draw->RenderTangentsAndBitangents();
+	}
+
+	App->debug_draw->RenderDebugDraws(*cam);
 }
 
 void ModuleDebug::CreateFrustumCullingDebugScene() const
