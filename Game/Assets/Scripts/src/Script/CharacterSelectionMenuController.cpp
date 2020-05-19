@@ -50,9 +50,6 @@ void CharacterSelectionMenuController::Update()
 		character_selector2->SetEnabled(!character_selector2->IsEnabled());
 		const float3& translation_p2 = player1_choice ? p2_position->transform_2d.GetTranslation() : p1_position->transform_2d.GetTranslation();
 		character_selector2->transform_2d.SetTranslation(translation_p2);
-
-		confirm_multiplayer->SetEnabled(!confirm_multiplayer->IsEnabled());
-		confirm_singleplayer->SetEnabled(!confirm_singleplayer->IsEnabled());
 	}
 
 	if (!selecting_character && UIMainMenuInputController::ComfirmButtonPressed(*App->input))
@@ -63,14 +60,10 @@ void CharacterSelectionMenuController::Update()
 	if (UIMainMenuInputController::ConfirmMovedUp(*App->input))
 	{
 		selecting_character = true;
-		confirm_multiplayer->SetEnabled(App->input->singleplayer_input);
-		confirm_singleplayer->SetEnabled(!App->input->singleplayer_input);
 	}
 	if (UIMainMenuInputController::ConfirmMovedDown(*App->input))
 	{
 		selecting_character = false;
-		confirm_singleplayer->SetEnabled(false);
-		confirm_multiplayer->SetEnabled(false);
 	}
 	if (UIMainMenuInputController::ConfirmMovedLeft(*App->input))
 	{
@@ -144,12 +137,6 @@ void CharacterSelectionMenuController::Open()
 	enabled = true;
 	just_opened = true;
 	character_selection_panel->SetEnabled(true);
-	if (App->input->singleplayer_input)
-	{
-		character_selector2->SetEnabled(false);
-	}
-	confirm_multiplayer->SetEnabled(false);
-	confirm_singleplayer->SetEnabled(false);
 }
 
 void CharacterSelectionMenuController::Close()
@@ -199,13 +186,6 @@ void CharacterSelectionMenuController::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&character_selector2);
 	variable_names.push_back(GET_VARIABLE_NAME(character_selector2));
-
-	public_gameobjects.push_back(&confirm_multiplayer);
-	variable_names.push_back(GET_VARIABLE_NAME(confirm_multiplayer));
-
-
-	public_gameobjects.push_back(&confirm_singleplayer);
-	variable_names.push_back(GET_VARIABLE_NAME(confirm_singleplayer));
 
 	public_gameobjects.push_back(&cursor);
 	variable_names.push_back(GET_VARIABLE_NAME(cursor));

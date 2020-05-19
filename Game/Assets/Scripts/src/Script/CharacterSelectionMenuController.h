@@ -52,9 +52,6 @@ private:
 	GameObject* character_selector1= nullptr;
 	GameObject* character_selector2 = nullptr;
 
-	GameObject* confirm_multiplayer = nullptr;
-	GameObject* confirm_singleplayer = nullptr;
-
 	GameObject* back_button = nullptr;
 	GameObject* level_selection_button = nullptr;
 
