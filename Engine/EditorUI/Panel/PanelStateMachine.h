@@ -38,9 +38,10 @@ struct NodeInfo
 	ax::NodeEditor::NodeId id;
 	ax::NodeEditor::PinId input;
 	ax::NodeEditor::PinId output;
-	ImVec2 Pos, Size;
+	ImVec2 Pos, Size = {100.0f, 100.0f};
 	//ImColor Color;
 	std::shared_ptr<State> state;
+	float speed = 1.0f;
 	//drawing pins
 	ImVec2 GetInputSlotPos(std::string target) const { return ImVec2(Pos.x, Pos.y); }
 	ImVec2 GetOutputSlotPos(std::string source) const { return ImVec2(Pos.x, Pos.y); }
@@ -69,6 +70,7 @@ public:
 	ImDrawList* draw_list = nullptr;
 	const float NODE_SLOT_RADIUS = 6.2f;
 	
+	
 private:
 	std::vector<NodeInfo*> GetSelectedNodes();
 	std::vector<LinkInfo*> GetSelectedLinks();
@@ -87,6 +89,7 @@ private:
 
 	int uniqueid = 1;
 	std::shared_ptr<State> selected_state;
+	bool modified_by_user = false;
 };
 #endif // !_PANELSTATEMACHINE_H_
 

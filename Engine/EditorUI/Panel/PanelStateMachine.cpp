@@ -35,6 +35,7 @@ PanelStateMachine::~PanelStateMachine()
 
 void PanelStateMachine::Render()
 {
+	modified_by_user = false;
 	if (ImGui::Begin(window_name.c_str(), &opened, ImGuiWindowFlags_MenuBar))
 	{
 			ax::NodeEditor::SetCurrentEditor(editor_context);
@@ -60,6 +61,10 @@ void PanelStateMachine::Render()
 
 	}
 	ImGui::End();
+	if (modified_by_user)//save each time user modifies smth
+	{
+		App->resources->Save<StateMachine>(state_machine);
+	}
 }
 void PanelStateMachine::RenderStates()
 {
@@ -83,8 +88,10 @@ void PanelStateMachine::RenderStates()
 			}
 		}
 		ax::NodeEditor::BeginNode(node->id);
-		ImGui::PushItemWidth(100.0f);
+		ImGui::PushItemWidth(node->Size.x);
 		uint64_t old_hash = node->state->name_hash;
+		//ImGui::BeginHorizontal("State:", ImVec2(node->Size.x, 20), -1.0f);
+		ImGui::BeginVertical("", ImVec2(0, 0), -1.0f);
 		if(ImGui::InputText("###Node name Input", &node->state->name))
 		{
 			node->state->name_hash = std::hash<std::string>{}(node->state->name);
@@ -99,10 +106,12 @@ void PanelStateMachine::RenderStates()
 					link->transition->target_hash = node->state->name_hash;
 				}
 			}
+			modified_by_user = true;
 		}
-
+		//ImGui::EndHorizontal();
+		
 		std::string clip_name = node->state->clip ? node->state->clip->name : "Clip";
-		ImGui::Button(clip_name.c_str());
+		ImGui::Button(clip_name.c_str(), ImVec2(node->Size.x, 0));
 		uint32_t incoming_animation_uuid = ImGui::ResourceDropper<Animation>();
 		if (incoming_animation_uuid != 0)
 		{
@@ -112,36 +121,46 @@ void PanelStateMachine::RenderStates()
 		if (node->state->clip)
 		{
 			ImGui::Checkbox("Loop", &node->state->clip->loop);
+			modified_by_user = true;
 			ImGui::SameLine();
 		}
 		bool is_default_state = node->state->name_hash == state_machine->default_state;
 		if (ImGui::Checkbox("Default", &is_default_state))
 		{
 			state_machine->default_state = node->state->name_hash;
+			modified_by_user = true;
 		}
-	
-		ImGui::BeginGroup();
+		
+		if (ImGui::InputFloat("Speed", &node->speed, 0.1f, 1.0f, "%.2f", 0))
+		{
+			node->state->speed = node->speed;
+			modified_by_user = true;
+		}
+		//ImGui::BeginGroup();
 		auto alpha = ImGui::GetStyle().Alpha; //to get alpha
+		ImGui::BeginHorizontal("State:", ImVec2(node->Size.x, 0), 0.0f);
 		ax::NodeEditor::BeginPin(node->input, ax::NodeEditor::PinKind::Input);
 		//Testing alignment to fix transition clipping nicely on pinsIO
-		ax::NodeEditor::PinPivotAlignment(ImVec2(0.5f, 0.5f));
-		ax::NodeEditor::PinPivotSize(ImVec2(0.0f, 0.0f));
-		ImGui::Text(" ");
-		draw_list->AddCircle(node->Pos + ImVec2(-102, 87), NODE_SLOT_RADIUS, IM_COL32(255, 150, 150, 150), 100.0f, 1.5f);
+		//ax::NodeEditor::PinPivotAlignment(ImVec2(0.5f, 0.5f));
+		//ax::NodeEditor::PinPivotSize(ImVec2(0.0f, 0.0f));
+		ImGui::Text("In");
+		//draw_list->AddCircle(node->Pos + ImVec2(-node->Size.x, node->Size.y), NODE_SLOT_RADIUS, IM_COL32(255, 150, 150, 150), 100.0f, 1.5f);
 		
 		ax::NodeEditor::EndPin();
-		ImGui::EndGroup();
-		ImGui::SameLine(90);
-		ImGui::BeginGroup();
+		//ImGui::EndGroup();
+		ImGui::SameLine(node->Size.x, -1.0f);
+		//ImGui::BeginGroup();
 		ax::NodeEditor::BeginPin(node->output, ax::NodeEditor::PinKind::Output);
-		ax::NodeEditor::PinPivotAlignment(ImVec2(0.0f, 0.5f));
-		ax::NodeEditor::PinPivotSize(ImVec2(0.0f, 0.0f));
-		ImGui::Text(" ");
-		draw_list->AddTriangle(node->Pos + ImVec2(-20, 82), node->Pos + ImVec2(-20, 92), node->Pos + ImVec2(-10, 87), IM_COL32(150, 150, 255, 150), 2.0f);
+		//ax::NodeEditor::PinPivotAlignment(ImVec2(0.0f, 0.5f));
+		//ax::NodeEditor::PinPivotSize(ImVec2(0.0f, 0.0f));
+		ImGui::Text("Out");
+		//draw_list->AddTriangle(node->Pos + ImVec2(-node->Size.x, node->Size.y), node->Pos + ImVec2(-node->Size.x, node->Size.y-1), node->Pos + ImVec2(-node->Size.x+10, node->Size.y - 5), IM_COL32(150, 150, 255, 150), 2.0f);
 		
 		ax::NodeEditor::EndPin();
-		ImGui::EndGroup();
+		ImGui::EndHorizontal();
+		//ImGui::EndGroup();
 		ax::NodeEditor::EndNode();
+		ImGui::EndVertical();
 		if (ImGui::IsMouseClicked(1) && ImGui::IsItemHovered())
 		{
 			ax::NodeEditor::Suspend();
@@ -244,8 +263,8 @@ void PanelStateMachine::InteractionCreation()
 							new_transition->source_hash = node->state->name_hash;
 							source_name = node->state->name;
 							p1 = node->GetOutputSlotPos(source_name);
-							draw_list = ImGui::GetWindowDrawList();
-							draw_list->AddCircleFilled(node->Pos, NODE_SLOT_RADIUS, IM_COL32(255, 150, 150, 150));
+							//draw_list = ImGui::GetWindowDrawList();
+							//draw_list->AddCircleFilled(node->Pos, NODE_SLOT_RADIUS, IM_COL32(255, 150, 150, 150));
 						}
 					}
 					state_machine->transitions.push_back(new_transition);
@@ -285,6 +304,7 @@ void PanelStateMachine::CreateNodeMenu()
 				state_machine->states.push_back(node->state);
 				node->input = uniqueid++;
 				node->output = uniqueid++;
+				node->speed = uniqueid++;
 				nodes.push_back(std::move(node));
 			}
 			ImGui::EndMenu();
@@ -336,6 +356,7 @@ void PanelStateMachine::LeftPanel()
 	{
 		if (ImGui::Button("Save"))
 		{
+			modified_by_user = true;
 			App->resources->Save<StateMachine>(state_machine);
 			//TODO: Change this to be saved after eachtime user modifies anything, see PanelMaterial for reference
 		}
@@ -391,6 +412,7 @@ void PanelStateMachine::OpenStateMachine(uint32_t state_machine_uuid)
 		node->state = state;
 		node->output = uniqueid++;
 		node->input = uniqueid++;
+		node->speed = uniqueid++;
 		nodes.push_back(node);
 	}
 

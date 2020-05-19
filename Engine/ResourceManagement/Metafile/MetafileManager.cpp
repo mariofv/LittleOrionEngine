@@ -67,7 +67,7 @@ Metafile* MetafileManager::CreateMetafile(Path& asset_file_path, ResourceType re
 	created_metafile->version = Importer::IMPORTER_VERSION;
 
 	Config metafile_config;
-	created_metafile->Save(metafile_config);
+	created_metafile->Save(metafile_config); 
 
 	std::string metafile_config_string;
 	metafile_config.GetSerializedString(metafile_config_string);

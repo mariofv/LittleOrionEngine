@@ -17,7 +17,7 @@ struct PlayingClip
 	std::shared_ptr<Clip> clip;
 	int current_time = 0;
 	bool playing = false;
-	void Update();
+	void Update(float speed);
 };
 
 enum ClipType

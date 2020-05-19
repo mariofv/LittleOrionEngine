@@ -31,10 +31,13 @@ struct State
 {
 	State() = default;
 	State(std::string name, std::shared_ptr<Clip> clip);
-
+	State(std::string name, std::shared_ptr<Clip> clip, float speed);
 	std::string name;
 	uint64_t name_hash = 0;
 	std::shared_ptr<Clip> clip = nullptr;
+	//Adding speed parameter for accelerate/decelerate clip
+	float speed = 1.0f;
+	
 };
 
 template <typename T>
@@ -92,6 +95,7 @@ public:
 	std::vector<std::shared_ptr<Parameter<int>>> parameters;
 	uint64_t default_state = 0;
 	friend class PanelStateMachine;
+	
 };
 
 namespace ResourceManagement

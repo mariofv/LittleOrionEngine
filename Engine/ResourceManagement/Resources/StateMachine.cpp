@@ -17,7 +17,11 @@ void Clip::SetAnimation(const std::shared_ptr<Animation>& animation)
 
 
 State::State(std::string name, std::shared_ptr<Clip> clip) :
-	name(name), name_hash(std::hash<std::string>{}(name)),clip(clip)  {
+	name(name), name_hash(std::hash<std::string>{}(name)),clip(clip) {
+}
+
+State::State(std::string name, std::shared_ptr<Clip> clip, float speed) :
+	name(name), name_hash(std::hash<std::string>{}(name)), clip(clip), speed(speed) {
 }
 
 Transition::Transition(uint64_t source, uint64_t target, std::string & trigger, long interpolation) :
@@ -181,6 +185,7 @@ void StateMachine::Save(Config& config) const
 		{
 			state_config.AddString(state->clip->name, "ClipName");
 		}
+		state_config.AddInt64(state->speed, "Speed");//Saving speed
 		states_config.push_back(state_config);
 	}
 	config.AddChildrenConfig(states_config, "States");
@@ -233,6 +238,7 @@ void StateMachine::Load(const Config& config)
 		std::string name;
 		state_config.GetString("Name", name, "");
 		state_config.GetString("ClipName", clip_name, "");
+		int64_t clip_speed = state_config.GetInt64("Speed", 1.0f);
 		std::shared_ptr<Clip> state_clip;
 		for (auto& clip : clips)
 		{
@@ -241,7 +247,7 @@ void StateMachine::Load(const Config& config)
 				state_clip = clip;
 			}
 		}
-		this->states.push_back(std::make_shared<State>(name, state_clip));
+		this->states.push_back(std::make_shared<State>(name, state_clip, clip_speed));
 	}
 
 	std::vector<Config> transitions_config;

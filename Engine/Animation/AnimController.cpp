@@ -73,7 +73,16 @@ bool AnimController::Update()
 {
 	for (auto & playing_clip : playing_clips)
 	{
-		 playing_clip.Update();
+		playing_clip.Update(1.0f);
+		if (active_state)
+		{
+			playing_clip.Update(active_state->speed);
+		}
+		if (active_transition) 
+		{
+			playing_clip.Update(1.0f);
+		}
+		 
 	}
 	if (active_transition && active_transition->automatic)
 	{
@@ -129,13 +138,13 @@ void AnimController::FinishActiveState()
 	apply_transition = false;
 }
 
-void PlayingClip::Update()
+void PlayingClip::Update(float speed)
 {
 	if (!playing || !clip)
 	{
 		return;
 	}
-	current_time = current_time + static_cast<int>(App->time->delta_time);
+	current_time = (current_time + static_cast<int>(App->time->delta_time)) * speed;
 	if (current_time >= clip->animation_time)
 	{
 		if (clip->loop)
