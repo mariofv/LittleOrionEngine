@@ -1,6 +1,0 @@
-Event	ID	Name			Wwise Object Path	Notes
-	1967549118	Start_Combat_Music			\Default Work Unit\Start_Combat_Music	
-
-In Memory Audio	ID	Name	Audio source file		Wwise Object Path	Notes	Data Size
-	223251098	Music_TwinlightSouls_StartingCombat	D:\Projectes\WWiseProject\WwiseProject\.cache\Windows\SFX\Music_TwinlightSouls_StartingCombat_10C4C929.wem		\Actor-Mixer Hierarchy\Combat\Music_TwinlightSouls_StartingCombat		21190116
-
