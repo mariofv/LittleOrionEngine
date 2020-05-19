@@ -42,6 +42,7 @@ private:
 	ComponentCamera* game_camera = nullptr;
 	bool is_inside = true;
 	bool is_grounded = false;
+	bool is_second_jump = false;
 	bool visualize_future_aabb = false;
 
 	float3 direction = float3::zero;

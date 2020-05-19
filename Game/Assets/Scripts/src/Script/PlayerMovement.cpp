@@ -70,7 +70,7 @@ void PlayerMovement::Move(int player)
 	
 	velocity = collider->GetCurrentVelocity();
 	float3 transform = owner->transform.GetTranslation();
-	direction = float3::zero; //change direction
+	direction = float3::zero; 
 	PlayerID player_id = static_cast<PlayerID>(player - 1);
 
 	float x_axis = App->input->GetHorizontal(player_id);
@@ -79,9 +79,10 @@ void PlayerMovement::Move(int player)
 	if (abs(velocity.y) < 0.01 && is_jumping)
 	{
 		is_jumping = false;
+		is_second_jump = false;
 	}
 
-	direction = float3(x_axis, 0.0f, y_axis); // not add just assing
+	direction = float3(x_axis, 0.0f, y_axis);
 	if (IsGrounded() && !is_jumping)
 	{
 		is_grounded = true;
@@ -125,6 +126,12 @@ void PlayerMovement::Move(int player)
 				collider->SetVelocity(transform, 0);
 			}
 		}
+		if (App->input->GetGameInputDown("Jump", player_id) && !is_second_jump)
+		{
+			is_second_jump = true;
+			direction.y = -1000;
+			Jump(direction);
+		}
 	}
 	
 }
@@ -166,7 +173,6 @@ bool PlayerMovement::IsInside(float3 future_transform)
 
 	return game_camera->IsInsideFrustum(future_position);
 }
-
 
 void PlayerMovement::InitPublicGameObjects()
 {
