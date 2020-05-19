@@ -568,7 +568,7 @@ void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 }
 void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Button", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_TOGGLE_ON " Button", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonComponentWindow(button);
 		bool clicked = button->IsClicked();
@@ -746,6 +746,12 @@ void PanelComponent::ShowAddNewComponentButton()
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_IMAGE);
+		}
+
+		sprintf_s(tmp_string, "%s UI Button", ICON_FA_TOGGLE_ON);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_BUTTON);
 		}
 
 		sprintf_s(tmp_string, "%s Event System", ICON_FA_BULLHORN);

@@ -560,7 +560,13 @@
                     "Joycon": 2143317194,
                     "Name3": "KeyBoard",
                     "KeyBoard": 3698255015,
-                    "Name4": "Audio_controller",
+                    "Name4": "KeyboardButton",
+                    "KeyboardButton": 2722775980,
+                    "Name5": "JoyconButton",
+                    "JoyconButton": 3633244300,
+                    "Name6": "Back",
+                    "Back": 3030505552,
+                    "Name7": "Audio_controller",
                     "Audio_controller": 285203001
                 }
             ]
@@ -838,7 +844,7 @@
             "ParentUUID": 296542632,
             "Name": "Help Panel",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 2899995701,
                 "ComponentType": 3,
@@ -1653,7 +1659,7 @@
             "ParentUUID": 2227599245,
             "Name": "KeyBoard",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 1782470902,
                 "ComponentType": 3,
@@ -1704,7 +1710,7 @@
                 {
                     "UUID": 3831380222,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -1715,7 +1721,7 @@
                 {
                     "UUID": 3974422679,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         },
@@ -1724,7 +1730,7 @@
             "ParentUUID": 2227599245,
             "Name": "Joycon",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 1705797953,
                 "ComponentType": 3,
@@ -1775,7 +1781,7 @@
                 {
                     "UUID": 2286449215,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -1786,7 +1792,7 @@
                 {
                     "UUID": 1340415376,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         },
@@ -1795,7 +1801,7 @@
             "ParentUUID": 2227599245,
             "Name": "Back",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 3879020371,
                 "ComponentType": 3,
@@ -1846,7 +1852,7 @@
                 {
                     "UUID": 2180782996,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -1857,7 +1863,142 @@
                 {
                     "UUID": 235993928,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
+                },
+                {
+                    "UUID": 3274832209,
+                    "ComponentType": 11,
+                    "Active": false
+                }
+            ]
+        },
+        {
+            "UUID": 2722775980,
+            "ParentUUID": 2227599245,
+            "Name": "KeyboardButton",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 393765552,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2012998430,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    187.0,
+                    45.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    11.0,
+                    155.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 1487994802,
+                    "ComponentType": 11,
+                    "Active": false
+                },
+                {
+                    "UUID": 2584453341,
+                    "ComponentType": 10,
+                    "Active": false
+                }
+            ]
+        },
+        {
+            "UUID": 3633244300,
+            "ParentUUID": 2227599245,
+            "Name": "JoyconButton",
+            "IsStatic": false,
+            "Active": false,
+            "Transform": {
+                "UUID": 1514252881,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3086516120,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    187.0,
+                    45.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    200.0,
+                    155.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": true,
+            "Components": [
+                {
+                    "UUID": 2422245107,
+                    "ComponentType": 11,
+                    "Active": false
+                },
+                {
+                    "UUID": 2993586798,
+                    "ComponentType": 10,
+                    "Active": false
                 }
             ]
         },
@@ -3059,7 +3200,7 @@
             "ParentUUID": 3030505552,
             "Name": "Cursor_help",
             "IsStatic": false,
-            "Active": true,
+            "Active": false,
             "Transform": {
                 "UUID": 3385779712,
                 "ComponentType": 3,
@@ -3110,7 +3251,7 @@
                 {
                     "UUID": 537082655,
                     "ComponentType": 12,
-                    "Active": true,
+                    "Active": false,
                     "Color": [
                         1.0,
                         1.0,
@@ -3121,7 +3262,7 @@
                 {
                     "UUID": 2897791854,
                     "ComponentType": 10,
-                    "Active": true
+                    "Active": false
                 }
             ]
         }
