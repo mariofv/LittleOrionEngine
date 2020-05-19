@@ -108,6 +108,8 @@ uniform float render_depth_from_light;
 in vec4 close_pos_from_light;
 in vec4 mid_pos_from_light;
 in vec4 far_pos_from_light;
+in vec4 pos_from_main_camera;
+uniform float main_cam_far_plane;
 
 uniform sampler2DShadow close_depth_map;
 uniform sampler2DShadow mid_depth_map;
@@ -323,6 +325,9 @@ float ShadowCalculation(vec3 frag_normal)
 
 	vec3 normalized_far_depth = far_pos_from_light.xyz / far_pos_from_light.w;
 	normalized_far_depth = normalized_far_depth * 0.5 + 0.5;
+
+	vec3 normalized_main_cam_pos = pos_from_main_camera.xyz/pos_from_main_camera.w;
+	normalized_main_cam_pos = normalized_main_cam_pos * 0.5 + 0.5;
 	
 	float bias = 0.005;  
 	float factor = 0.0;
@@ -341,19 +346,19 @@ float ShadowCalculation(vec3 frag_normal)
 			//We sample the texture given from the light camera
 			//A few times at different texture coordinates
 
-			if(close_coords.z > 0 && close_coords.z <= 1)
+			if(normalized_main_cam_pos.z > 0 && normalized_main_cam_pos.z < main_cam_far_plane/3)
 			{
 				close_coords.xy = normalized_close_depth.xy + vec2(x, y)*depth_map_size;
 				factor += texture(close_depth_map, close_coords);
 			}
 
-			if(mid_coords.z > 0.25 - bias/2 && mid_coords.z < 1) // Until depth detection is fixed (stops calculating at 50% depth)
+			if(normalized_main_cam_pos.z >= main_cam_far_plane/3 && normalized_main_cam_pos.z < (2 * main_cam_far_plane)/3) // Until depth detection is fixed (stops calculating at 50% depth)
 			{
 				mid_coords.xy = normalized_mid_depth.xy + vec2(x, y)*depth_map_size;
 				factor += texture(mid_depth_map, mid_coords);
 			}
 
-			if(far_coords.z > 0.3341 - bias/2 && far_coords.z < 1) // Looks weird, but works
+			if(normalized_main_cam_pos.z >= (2 * main_cam_far_plane)/3 && normalized_main_cam_pos.z < main_cam_far_plane) // Looks weird, but works
 			{
 				far_coords.xy = normalized_far_depth.xy + vec2(x, y)*depth_map_size;
 				factor += texture(far_depth_map, far_coords);
@@ -363,7 +368,7 @@ float ShadowCalculation(vec3 frag_normal)
     }
     factor /= 9.0;
 
-	if(normalized_far_depth.z > 1.0)
+	if(normalized_main_cam_pos.z > 1.0)
 	{
 		factor = 1;
 	}

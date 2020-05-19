@@ -311,7 +311,6 @@ void ComponentCamera::GenerateFrameBuffers(float width, float height)
 		glDeleteRenderbuffers(1, &depth_rbo);
 	}
 
-	
 	App->renderer->anti_aliasing ? CreateMssaFramebuffer(width, height) : CreateFramebuffer(width, height);
 }
 
@@ -340,20 +339,6 @@ void ComponentCamera::CreateFramebuffer(float width, float height)
 	if (camera_frustum.type == FrustumType::OrthographicFrustum) //Light cameras render this way
 	{
 		CreateOrthographicFramebuffer(width, height);
-
-		/*switch (ortho_index)
-		{
-		case OrthoIndex::CLOSE:
-			CreateOrthographicFramebuffer(width, height);
-			break;
-		case OrthoIndex::MID:
-			CreateOrthographicFramebuffer(width, height);
-			break;
-		case OrthoIndex::AWAY:
-			CreateOrthographicFramebuffer(512, 512);
-			break;
-
-		}*/
 	}
 	
 }

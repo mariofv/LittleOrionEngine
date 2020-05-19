@@ -33,6 +33,10 @@ uniform mat4 mid_directional_proj;
 uniform mat4 far_directional_view;
 uniform mat4 far_directional_proj;
 
+uniform mat4 main_cam_proj;
+uniform mat4 main_cam_view;
+out vec4 pos_from_main_camera;
+
 out vec4 close_pos_from_light;
 out vec4 mid_pos_from_light;
 out vec4 far_pos_from_light;
@@ -45,6 +49,7 @@ void main()
 	mat4 close_lightSpaceMatrix = close_directional_proj * close_directional_view;
 	mat4 mid_lightSpaceMatrix   = mid_directional_proj * mid_directional_view;
 	mat4 far_lightSpaceMatrix   = far_directional_proj * far_directional_view;
+	mat4 main_cam_space			= main_cam_proj * main_cam_view;
 
 
 // General variables
@@ -68,6 +73,7 @@ void main()
 	close_pos_from_light = close_lightSpaceMatrix*matrices.model*vec4(vertex_position, 1.0);
 	mid_pos_from_light = mid_lightSpaceMatrix*matrices.model*vec4(vertex_position, 1.0);
 	far_pos_from_light = far_lightSpaceMatrix*matrices.model*vec4(vertex_position, 1.0);
+	pos_from_main_camera = main_cam_space * matrices.model*vec4(vertex_position, 1.0);
 	gl_Position = matrices.proj*matrices.view*vec4(position, 1.0);
 
 }

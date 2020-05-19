@@ -97,12 +97,9 @@ public:
 
 	void SetClearMode(ComponentCamera::ClearMode clear_mode);
 	void SetSkybox(uint32_t skybox_uuid);
-	void SetFrustum(Frustum new_frustum);
 	void SetSpeedUp(bool is_speeding_up);
 
 	void SetViewMatrix(const float4x4& view_matrix);
-
-	void SetView(const float4x4& view_matrix);
 	void SetProj(const float4x4& proj_matrix);
 
 	float4x4 GetViewMatrix() const;
