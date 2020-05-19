@@ -77,6 +77,11 @@ void ModuleDebug::Render(ComponentCamera* cam)
 		App->debug_draw->RenderPathfinding();
 	}
 
+	if (show_axis && App->renderer->meshes_to_render.size() != 0)
+	{
+		App->debug_draw->RenderTangentsAndBitangents();
+	}
+
 #if !GAME
 	App->debug_draw->RenderSelectedGameObjectHelpers();
 	App->debug_draw->RenderBillboards();
@@ -85,13 +90,9 @@ void ModuleDebug::Render(ComponentCamera* cam)
 	{
 		App->debug_draw->RenderGrid();
 	}
-	if (show_axis && App->renderer->meshes_to_render.size() != 0)
-	{
-		App->debug_draw->RenderTangentsAndBitangents();
-	}
-#endif
 
 	App->debug_draw->RenderDebugDraws(*cam);
+#endif
 }
 
 void ModuleDebug::CreateFrustumCullingDebugScene() const

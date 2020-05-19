@@ -144,13 +144,17 @@ void ModuleRender::Render() const
 {
 	BROFILER_CATEGORY("Global Render",Profiler::Color::Aqua);
 
+#if GAME
 	if (App->cameras->main_camera != nullptr) 
 	{
 		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
+		App->debug_draw->RenderDebugDraws(*App->cameras->main_camera);
 	}
-	
-	App->editor->Render();
 
+#endif
+
+	App->editor->Render();
+	
 	BROFILER_CATEGORY("Swap Window (VSYNC)", Profiler::Color::Aquamarine);
 	SDL_GL_SwapWindow(App->window->window);
 }

@@ -135,9 +135,10 @@ void ModuleEditor::Render()
 {
 	BROFILER_CATEGORY("Render UI", Profiler::Color::BlueViolet);
 	
+#if !GAME
 	ImGui::SetNextWindowPos(ImVec2(0, 0));
 	ImGui::SetNextWindowSize(ImVec2(App->window->GetWidth(), App->window->GetHeight()));
-#if !GAME
+	
 	if (ImGui::Begin("MainWindow", NULL, ImGuiWindowFlags_MenuBar | ImGuiWindowFlags_NoDecoration | ImGuiWindowFlags_NoBringToFrontOnFocus))
 	{
 		menu_bar->Render();

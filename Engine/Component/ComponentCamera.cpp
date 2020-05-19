@@ -230,7 +230,6 @@ void ComponentCamera::RecordFrame(float width, float height)
 	}
 
 	App->renderer->RenderFrame(*this);
-	RecordDebugDraws(width, height);
 
 #if !GAME
 	if (App->renderer->anti_aliasing)
@@ -242,6 +241,8 @@ void ComponentCamera::RecordFrame(float width, float height)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif
+
+	RecordDebugDraws(width, height);
 	
 }
 

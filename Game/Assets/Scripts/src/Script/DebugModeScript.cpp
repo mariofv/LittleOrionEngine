@@ -16,6 +16,7 @@
 #include "Module/ModuleDebug.h"
 #include "Module/ModuleSpacePartitioning.h"
 #include "Module/ModuleCamera.h"
+#include "Module/ModulePhysics.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
@@ -146,6 +147,8 @@ void DebugModeScript::UpdateWithImGui(ImGuiContext* context)
 			ImGui::Checkbox("Draw Bounding boxes? ", &App->debug->show_bounding_boxes);
 			ImGui::Checkbox("Draw Global bounding boxes? ", &App->debug->show_global_bounding_boxes);
 			ImGui::Checkbox("Draw Pathfinding? ", &App->debug->show_pathfind_points);
+			ImGui::Checkbox("Draw Physics? ", &App->physics->show_physics);
+
 			
 			ImGui::Checkbox("Toggle Invincible mode ", &is_player_invincible);
 			
