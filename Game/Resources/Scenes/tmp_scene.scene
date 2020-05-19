@@ -544,7 +544,7 @@
                     ]
                 },
                 {
-                    "UUID": 1876513512,
+                    "UUID": 1339401240,
                     "ComponentType": 14,
                     "Active": true,
                     "Volume": 1.0,
@@ -663,6 +663,14 @@
                         0.0,
                         0.0
                     ]
+                },
+                {
+                    "UUID": 79432852,
+                    "ComponentType": 14,
+                    "Active": true,
+                    "Volume": 1.0,
+                    "SoundBank": 2438880932,
+                    "3DSound": false
                 }
             ]
         },
