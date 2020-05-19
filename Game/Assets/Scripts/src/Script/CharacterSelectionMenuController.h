@@ -4,6 +4,7 @@
 #include "Script.h"
 
 class ComponentAudioSource;
+class ComponentTransform2D;
 
 class LevelSelectionMenuController;
 class MainMenuController;
@@ -56,6 +57,9 @@ private:
 
 	GameObject* back_button = nullptr;
 	GameObject* level_selection_button = nullptr;
+
+	GameObject* cursor;
+	ComponentTransform2D* cursor_transform;
 
 	GameObject* audio_controller = nullptr;
 	ComponentAudioSource* audio_source = nullptr;

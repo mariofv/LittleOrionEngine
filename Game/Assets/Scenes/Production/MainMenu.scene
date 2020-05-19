@@ -194,8 +194,8 @@
                     0.5
                 ],
                 "AnchoredPos": [
-                    0.0,
-                    0.0
+                    556.5,
+                    353.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -644,7 +644,9 @@
                     "Name10": "confirm_multi",
                     "confirm_multi": 675621185,
                     "Name11": "confirm_single",
-                    "confirm_single": 1108291097
+                    "confirm_single": 1108291097,
+                    "Name12": "cursor_characters",
+                    "cursor_characters": 677558714
                 }
             ]
         },

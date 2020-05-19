@@ -26,6 +26,8 @@ void CharacterSelectionMenuController::Awake()
 	main_menu_controller = static_cast<MainMenuController*>(main_menu_game_object->GetComponentScript("MainMenuController")->script);
 	level_selection_controller = static_cast<LevelSelectionMenuController*>(level_selection_game_object->GetComponentScript("LevelSelectionMenuController")->script);
 
+	cursor_transform = &cursor->transform_2d;
+
 	audio_source = (ComponentAudioSource*)audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
 }
 
@@ -77,8 +79,8 @@ void CharacterSelectionMenuController::Update()
 			current -= 1;
 			current = current % buttons.size();
 			ComponentTransform2D& button_transform = buttons[current]->transform_2d;
-			float x = button_transform.GetTranslation().x - button_transform.GetWidth() / 2 - owner->transform_2d.GetWidth();
-			owner->transform_2d.SetTranslation(float3(x, owner->transform_2d.GetTranslation().y, 0.0f));
+			float x = button_transform.GetTranslation().x - button_transform.GetWidth() / 2 - cursor_transform->GetWidth();
+			cursor_transform->SetTranslation(float3(x, cursor_transform->GetTranslation().y, 0.0f));
 		}
 		else
 		{
@@ -93,8 +95,8 @@ void CharacterSelectionMenuController::Update()
 			current += 1;
 			current = current % buttons.size();
 			ComponentTransform2D& button_transform = buttons[current]->transform_2d;
-			float x = button_transform.GetTranslation().x - button_transform.GetWidth() / 2 - owner->transform_2d.GetWidth();
-			owner->transform_2d.SetTranslation(float3(x, owner->transform_2d.GetTranslation().y, 0.0f));
+			float x = button_transform.GetTranslation().x - button_transform.GetWidth() / 2 - cursor_transform->GetWidth();
+			cursor_transform->SetTranslation(float3(x, cursor_transform->GetTranslation().y, 0.0f));
 		}
 		else
 		{
@@ -204,6 +206,9 @@ void CharacterSelectionMenuController::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&confirm_singleplayer);
 	variable_names.push_back(GET_VARIABLE_NAME(confirm_singleplayer));
+
+	public_gameobjects.push_back(&cursor);
+	variable_names.push_back(GET_VARIABLE_NAME(cursor));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
