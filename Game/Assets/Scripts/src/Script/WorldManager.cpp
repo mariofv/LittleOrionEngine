@@ -51,8 +51,8 @@ void WorldManager::Awake()
 	ComponentScript* player2_controller_component = (ComponentScript*)player2_go->GetComponentScript("PlayerController");
 	player2_controller = static_cast<PlayerController*>(player2_controller_component->script);
 	
-	singleplayer = false;
-	player1_choice = true;
+	singleplayer = true;
+	player1_choice = false;
 	//Logic of choosing character and single/multi player
 	//Singleplayer
 	if(singleplayer)

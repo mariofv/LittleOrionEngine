@@ -478,7 +478,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 3544079860,
+=======
+                "UUID": 541033341,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -787,7 +791,11 @@
             "IsStatic": false,
             "Active": true,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 628000403,
+=======
+                "UUID": 3333158521,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -806,6 +814,7 @@
                     1.0
                 ]
             },
+<<<<<<< HEAD
             "Transform2D": {
                 "UUID": 2363242214,
                 "ComponentType": 7,
@@ -929,6 +938,36 @@
                     "UUID": 92886248,
                     "ComponentType": 11,
                     "Active": true
+=======
+            "UUIDS": [
+                {
+                    "UUID": 3335175199,
+                    "OriginalUUID": 81171893
+                },
+                {
+                    "UUID": 4248416307,
+                    "OriginalUUID": 81171899
+                },
+                {
+                    "UUID": 992010771,
+                    "OriginalUUID": 81171898
+                },
+                {
+                    "UUID": 1224636043,
+                    "OriginalUUID": 81171897
+                },
+                {
+                    "UUID": 1806058565,
+                    "OriginalUUID": 81171896
+                },
+                {
+                    "UUID": 578325595,
+                    "OriginalUUID": 81171895
+                },
+                {
+                    "UUID": 1441176879,
+                    "OriginalUUID": 81171894
+>>>>>>> release/v1.3
                 }
             ]
         },
@@ -939,7 +978,11 @@
             "IsStatic": false,
             "Active": true,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 1470118286,
+=======
+                "UUID": 2935762139,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1010,7 +1053,11 @@
             "IsStatic": false,
             "Active": true,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 3497823889,
+=======
+                "UUID": 690564705,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1029,6 +1076,7 @@
                     1.0
                 ]
             },
+<<<<<<< HEAD
             "Transform2D": {
                 "UUID": 517874660,
                 "ComponentType": 7,
@@ -1061,6 +1109,134 @@
                     "ComponentType": 12,
                     "Active": true,
                     "Color": [
+=======
+            "UUIDS": [
+                {
+                    "UUID": 2917641285,
+                    "OriginalUUID": 197215350
+                },
+                {
+                    "UUID": 1568274649,
+                    "OriginalUUID": 0
+                },
+                {
+                    "UUID": 2667062691,
+                    "OriginalUUID": 0
+                }
+            ]
+        }
+    ],
+    "PrefabsComponents": [
+        {
+            "RemovedComponents": [],
+            "Components": [
+                {
+                    "UUID": 2132626039,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 4,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": true,
+                    "Collision": true,
+                    "Visualize": false,
+                    "Attached": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "UUID": 299268297
+        },
+        {
+            "RemovedComponents": [],
+            "Components": [
+                {
+                    "UUID": 2899772861,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 4,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": true,
+                    "Collision": true,
+                    "Visualize": false,
+                    "Attached": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "UUID": 3420948497
+        },
+        {
+            "RemovedComponents": [],
+            "Components": [
+                {
+                    "UUID": 387952792,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 4,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": false,
+                    "Collision": true,
+                    "Visualize": false,
+                    "Attached": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "UUID": 1367554656
+        },
+        {
+            "RemovedComponents": [],
+            "Components": [
+                {
+                    "UUID": 4117584551,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 4,
+                    "Mass": 0.0,
+                    "Scale": [
+>>>>>>> release/v1.3
                         1.0,
                         1.0,
                         1.0
@@ -1068,6 +1244,7 @@
                     "TextureUUID": 3092987197
                 },
                 {
+<<<<<<< HEAD
                     "UUID": 2222091869,
                     "ComponentType": 10,
                     "Active": true
@@ -1076,10 +1253,71 @@
                     "UUID": 743355395,
                     "ComponentType": 11,
                     "Active": true
+=======
+                    "UUID": 2008771200,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 4,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": false,
+                    "Collision": true,
+                    "Visualize": false,
+                    "Attached": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "UUID": 2122564851
+        },
+        {
+            "RemovedComponents": [],
+            "Components": [
+                {
+                    "UUID": 1874460943,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 4,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": false,
+                    "Collision": true,
+                    "Visualize": false,
+                    "Attached": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+>>>>>>> release/v1.3
                 }
             ]
         },
         {
+<<<<<<< HEAD
             "UUID": 3704827322,
             "ParentUUID": 3053128562,
             "Name": "Buttons",
@@ -1087,6 +1325,75 @@
             "Active": true,
             "Transform": {
                 "UUID": 3544591725,
+=======
+            "RemovedComponents": [],
+            "Components": [
+                {
+                    "UUID": 2907332931,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 4,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": false,
+                    "Collision": true,
+                    "Visualize": false,
+                    "Attached": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": false,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "UUID": 3774483745
+        },
+        {
+            "Transform": {
+                "UUID": 3333158521,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "RemovedComponents": [],
+            "Components": [],
+            "UUID": 3335175199
+        }
+    ],
+    "GameObjects": [
+        {
+            "UUID": 660713151,
+            "ParentUUID": 0,
+            "Name": "Mushdoom",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2831710886,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1106,7 +1413,11 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 869690872,
+=======
+                "UUID": 2378273007,
+>>>>>>> release/v1.3
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
@@ -1118,6 +1429,7 @@
                     0.5
                 ],
                 "AnchoredPos": [
+<<<<<<< HEAD
                     489.0,
                     0.0
                 ],
@@ -1132,6 +1444,62 @@
             },
             "Transform2DEnabled": true,
             "Components": []
+=======
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 1272613086,
+                    "ComponentType": 8,
+                    "Active": true,
+                    "StateMachineResource": 927869490
+                },
+                {
+                    "UUID": 110682064,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "Mushdoom"
+                },
+                {
+                    "UUID": 2407668496,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 0,
+                    "Mass": 1.0,
+                    "Scale": [
+                        0.4099999964237213,
+                        0.3199999928474426,
+                        0.3400000035762787
+                    ],
+                    "Static": false,
+                    "Collision": true,
+                    "Visualize": true,
+                    "Attached": true,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": true,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ]
+>>>>>>> release/v1.3
         },
         {
             "UUID": 3956219888,
@@ -1140,7 +1508,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 3446216789,
+=======
+                "UUID": 3715891772,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1160,12 +1532,21 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 590913424,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     960.0,
                     540.0
+=======
+                "UUID": 2836053780,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
@@ -1184,6 +1565,7 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -1192,6 +1574,49 @@
                     "Active": false,
                     "Color": [
                         1.0,
+=======
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 3273322402,
+                    "ComponentType": 8,
+                    "Active": true,
+                    "StateMachineResource": 2258225
+                },
+                {
+                    "UUID": 891602066,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerAttack",
+                    "Name0": "FakeCollider",
+                    "FakeCollider": 2406842806
+                },
+                {
+                    "UUID": 1816450749,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerController",
+                    "Player": 1
+                },
+                {
+                    "UUID": 2457128993,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerMovement",
+                    "Name0": "Main Camera",
+                    "Main Camera": 172714554,
+                    "Name1": "Player2",
+                    "Player2": 2381648264
+                },
+                {
+                    "UUID": 3308507368,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 1,
+                    "Mass": 10.0,
+                    "Scale": [
+                        0.4099999964237213,
+>>>>>>> release/v1.3
                         1.0,
                         1.0
                     ],
@@ -1211,7 +1636,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 1889799698,
+=======
+                "UUID": 3739135852,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1231,18 +1660,28 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 3349931896,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     12.0,
                     40.0
+=======
+                "UUID": 1943234394,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
+<<<<<<< HEAD
                     -409.5,
                     -211.0
                 ],
@@ -1250,12 +1689,25 @@
                     0.5,
                     0.5
                 ],
+=======
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+>>>>>>> release/v1.3
                 "MaxAnchor": [
                     0.5,
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
+=======
+            "Transform2DEnabled": false,
+>>>>>>> release/v1.3
             "Components": [
                 {
                     "UUID": 78061716,
@@ -1282,7 +1734,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 3385779712,
+=======
+                "UUID": 413308189,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1302,7 +1758,11 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 2803847846,
+=======
+                "UUID": 99309110,
+>>>>>>> release/v1.3
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
@@ -1326,7 +1786,11 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
+=======
+            "Transform2DEnabled": false,
+>>>>>>> release/v1.3
             "Components": [
                 {
                     "UUID": 3529982493,
@@ -1351,7 +1815,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 1782470902,
+=======
+                "UUID": 3496398659,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1371,12 +1839,21 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 4079626339,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     960.0,
                     540.0
+=======
+                "UUID": 1336400664,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
@@ -1395,6 +1872,7 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -1404,6 +1882,23 @@
                     "Color": [
                         1.0,
                         1.0,
+=======
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 286315968,
+                    "ComponentType": 1,
+                    "Active": false,
+                    "FrustumType": 2,
+                    "NearPlaneDistance": 1.0,
+                    "FarPlaneDistance": 300.0,
+                    "VerticalFOV": 0.7853981852531433,
+                    "ClearMode": 1,
+                    "ClearColor": [
+                        0.0,
+                        0.0,
+                        0.0,
+>>>>>>> release/v1.3
                         1.0
                     ],
                     "TextureUUID": 3206638576
@@ -1422,7 +1917,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 1705797953,
+=======
+                "UUID": 237110301,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1442,12 +1941,21 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 2143638847,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     960.0,
                     540.0
+=======
+                "UUID": 3907163040,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
@@ -1466,7 +1974,11 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
+=======
+            "Transform2DEnabled": false,
+>>>>>>> release/v1.3
             "Components": [
                 {
                     "UUID": 2286449215,
@@ -1493,7 +2005,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 186617059,
+=======
+                "UUID": 3749479261,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1513,12 +2029,21 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 2090294588,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     960.0,
                     540.0
+=======
+                "UUID": 1012207212,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
@@ -1537,7 +2062,11 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
+=======
+            "Transform2DEnabled": false,
+>>>>>>> release/v1.3
             "Components": [
                 {
                     "UUID": 3519686083,
@@ -1564,7 +2093,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 2259457585,
+=======
+                "UUID": 1527511923,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1584,20 +2117,34 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 2786041527,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     150.5,
                     41.5
+=======
+                "UUID": 3894984641,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
+<<<<<<< HEAD
                     -344.0,
                     -244.0
+=======
+                    0.0,
+                    0.0
+>>>>>>> release/v1.3
                 ],
                 "MinAnchor": [
                     0.5,
@@ -1608,7 +2155,11 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
+=======
+            "Transform2DEnabled": false,
+>>>>>>> release/v1.3
             "Components": [
                 {
                     "UUID": 2180782996,
@@ -1635,7 +2186,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 293102178,
+=======
+                "UUID": 1610106642,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1655,20 +2210,34 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 2918162109,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     268.5,
                     41.5
+=======
+                "UUID": 1332059736,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
+<<<<<<< HEAD
                     333.0,
                     -245.0
+=======
+                    0.0,
+                    0.0
+>>>>>>> release/v1.3
                 ],
                 "MinAnchor": [
                     0.5,
@@ -1679,7 +2248,11 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
+=======
+            "Transform2DEnabled": false,
+>>>>>>> release/v1.3
             "Components": [
                 {
                     "UUID": 343823521,
@@ -1706,7 +2279,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 1970301554,
+=======
+                "UUID": 2995579521,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1726,20 +2303,34 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 2856228361,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     12.5,
                     40.0
+=======
+                "UUID": 856773045,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
+<<<<<<< HEAD
                     -440.0,
                     -245.0
+=======
+                    0.0,
+                    0.0
+>>>>>>> release/v1.3
                 ],
                 "MinAnchor": [
                     0.5,
@@ -1750,7 +2341,11 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
+=======
+            "Transform2DEnabled": false,
+>>>>>>> release/v1.3
             "Components": [
                 {
                     "UUID": 3304550399,
@@ -1805,7 +2400,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 3266247399,
+=======
+                "UUID": 2202236262,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1825,20 +2424,34 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 218508915,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     78.5,
                     97.0
+=======
+                "UUID": 315976873,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
+<<<<<<< HEAD
                     -181.5,
                     30.0
+=======
+                    0.0,
+                    0.0
+>>>>>>> release/v1.3
                 ],
                 "MinAnchor": [
                     0.5,
@@ -1849,6 +2462,7 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -1868,6 +2482,10 @@
                     "Active": false
                 }
             ]
+=======
+            "Transform2DEnabled": false,
+            "Components": []
+>>>>>>> release/v1.3
         },
         {
             "UUID": 2067935765,
@@ -1876,7 +2494,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 3035100960,
+=======
+                "UUID": 1907172869,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1896,21 +2518,38 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 1371180759,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     65.0,
                     77.0
+=======
+                "UUID": 1336090793,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
+<<<<<<< HEAD
                 ],
                 "AnchoredPos": [
                     194.0,
                     30.0
                 ],
+=======
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+>>>>>>> release/v1.3
                 "MinAnchor": [
                     0.5,
                     0.5
@@ -1920,6 +2559,7 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -1939,6 +2579,10 @@
                     "Active": false
                 }
             ]
+=======
+            "Transform2DEnabled": false,
+            "Components": []
+>>>>>>> release/v1.3
         },
         {
             "UUID": 3292514778,
@@ -1947,7 +2591,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 1591747943,
+=======
+                "UUID": 3302465632,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -1967,18 +2615,28 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 1210541450,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     53.5,
                     54.0
+=======
+                "UUID": 2906101956,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
+<<<<<<< HEAD
                     -171.0,
                     -143.0
                 ],
@@ -1986,11 +2644,21 @@
                     0.5,
                     0.5
                 ],
+=======
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+>>>>>>> release/v1.3
                 "MaxAnchor": [
                     0.5,
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -1999,6 +2667,49 @@
                     "Active": false,
                     "Color": [
                         1.0,
+=======
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 3273322402,
+                    "ComponentType": 8,
+                    "Active": true,
+                    "StateMachineResource": 2258225
+                },
+                {
+                    "UUID": 3168858910,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerAttack",
+                    "Name0": "FakeCollider(1)",
+                    "FakeCollider(1)": 2439136978
+                },
+                {
+                    "UUID": 1445660833,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerController",
+                    "Player": 2
+                },
+                {
+                    "UUID": 3462575723,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "PlayerMovement",
+                    "Name0": "Main Camera",
+                    "Main Camera": 172714554,
+                    "Name1": "Player1",
+                    "Player1": 248855188
+                },
+                {
+                    "UUID": 864854195,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 1,
+                    "Mass": 10.0,
+                    "Scale": [
+                        0.4099999964237213,
+>>>>>>> release/v1.3
                         1.0,
                         1.0
                     ],
@@ -2018,7 +2729,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 2177584080,
+=======
+                "UUID": 358820948,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2038,18 +2753,28 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 1548038280,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     53.0,
                     57.5
+=======
+                "UUID": 109143591,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
+<<<<<<< HEAD
                     171.0,
                     -142.0
                 ],
@@ -2057,11 +2782,21 @@
                     0.5,
                     0.5
                 ],
+=======
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+>>>>>>> release/v1.3
                 "MaxAnchor": [
                     0.5,
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -2072,6 +2807,20 @@
                         1.0,
                         1.0,
                         1.0
+=======
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 2157790054,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 0,
+                    "Mass": 1.0,
+                    "Scale": [
+                        0.49000000953674319,
+                        0.9100000262260437,
+                        0.1899999976158142
+>>>>>>> release/v1.3
                     ],
                     "TextureUUID": 4191093259
                 },
@@ -2089,7 +2838,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 324300502,
+=======
+                "UUID": 296806345,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2109,18 +2862,28 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 3126074354,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     53.5,
                     52.0
+=======
+                "UUID": 4198757374,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
+<<<<<<< HEAD
                     -171.0,
                     -143.0
                 ],
@@ -2128,11 +2891,21 @@
                     0.5,
                     0.5
                 ],
+=======
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+>>>>>>> release/v1.3
                 "MaxAnchor": [
                     0.5,
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -2140,6 +2913,18 @@
                     "ComponentType": 12,
                     "Active": false,
                     "Color": [
+=======
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 3375522699,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 0,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+>>>>>>> release/v1.3
                         1.0,
                         0.9999899864196777,
                         0.9999899864196777
@@ -2160,7 +2945,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 1475959688,
+=======
+                "UUID": 443536660,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2180,21 +2969,38 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 3244443585,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     53.0,
                     57.0
+=======
+                "UUID": 244035800,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
+<<<<<<< HEAD
                 ],
                 "AnchoredPos": [
                     171.0,
                     -142.0
                 ],
+=======
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+>>>>>>> release/v1.3
                 "MinAnchor": [
                     0.5,
                     0.5
@@ -2204,6 +3010,7 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -2211,6 +3018,17 @@
                     "ComponentType": 12,
                     "Active": false,
                     "Color": [
+=======
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 2953936883,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 0,
+                    "Mass": 0.0,
+                    "Scale": [
+>>>>>>> release/v1.3
                         1.0,
                         1.0,
                         1.0
@@ -2226,7 +3044,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 3106863086,
+=======
+                "UUID": 189478561,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2246,21 +3068,38 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 3336502538,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     155.0,
                     55.0
+=======
+                "UUID": 1682671304,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
+<<<<<<< HEAD
                 ],
                 "AnchoredPos": [
                     342.0,
                     222.0
                 ],
+=======
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+>>>>>>> release/v1.3
                 "MinAnchor": [
                     0.5,
                     0.5
@@ -2270,6 +3109,7 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -2277,6 +3117,17 @@
                     "ComponentType": 12,
                     "Active": false,
                     "Color": [
+=======
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 1930359033,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 0,
+                    "Mass": 0.0,
+                    "Scale": [
+>>>>>>> release/v1.3
                         1.0,
                         1.0,
                         1.0
@@ -2297,7 +3148,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 1188514885,
+=======
+                "UUID": 1484344217,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2317,20 +3172,34 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 3036559215,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     155.0,
                     55.0
+=======
+                "UUID": 726417321,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
+<<<<<<< HEAD
                     342.0,
                     222.0
+=======
+                    0.0,
+                    0.0
+>>>>>>> release/v1.3
                 ],
                 "MinAnchor": [
                     0.5,
@@ -2341,6 +3210,7 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -2360,6 +3230,10 @@
                     "Active": false
                 }
             ]
+=======
+            "Transform2DEnabled": false,
+            "Components": []
+>>>>>>> release/v1.3
         },
         {
             "UUID": 3727245760,
@@ -2368,7 +3242,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 754208504,
+=======
+                "UUID": 2896634242,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2388,12 +3266,21 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 3326711354,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     960.0,
                     540.0
+=======
+                "UUID": 2364309244,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
@@ -2412,6 +3299,7 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -2431,6 +3319,10 @@
                     "Active": false
                 }
             ]
+=======
+            "Transform2DEnabled": false,
+            "Components": []
+>>>>>>> release/v1.3
         },
         {
             "UUID": 3411494713,
@@ -2439,7 +3331,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 2066659367,
+=======
+                "UUID": 2884434592,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2459,20 +3355,34 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 3463461891,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     239.0,
                     41.5
+=======
+                "UUID": 2766484853,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
+<<<<<<< HEAD
                     -289.0,
                     -241.0
+=======
+                    0.0,
+                    0.0
+>>>>>>> release/v1.3
                 ],
                 "MinAnchor": [
                     0.5,
@@ -2483,6 +3393,7 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -2502,6 +3413,10 @@
                     "Active": false
                 }
             ]
+=======
+            "Transform2DEnabled": false,
+            "Components": []
+>>>>>>> release/v1.3
         },
         {
             "UUID": 3311260837,
@@ -2510,7 +3425,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 3173768596,
+=======
+                "UUID": 3771470882,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2530,21 +3449,38 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 1544508567,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     85.0,
                     115.5
+=======
+                "UUID": 4028733339,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
+<<<<<<< HEAD
                 ],
                 "AnchoredPos": [
                     -274.0,
                     -122.0
                 ],
+=======
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+>>>>>>> release/v1.3
                 "MinAnchor": [
                     0.5,
                     0.5
@@ -2554,6 +3490,7 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -2593,6 +3530,10 @@
                     "Back_cursor": 172169170
                 }
             ]
+=======
+            "Transform2DEnabled": false,
+            "Components": []
+>>>>>>> release/v1.3
         },
         {
             "UUID": 2944641222,
@@ -2601,7 +3542,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 60941702,
+=======
+                "UUID": 87633618,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2621,21 +3566,38 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 1672511166,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     85.0,
                     136.0
+=======
+                "UUID": 2541904614,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
+<<<<<<< HEAD
                 ],
                 "AnchoredPos": [
                     -276.0,
                     -122.0
                 ],
+=======
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+>>>>>>> release/v1.3
                 "MinAnchor": [
                     0.5,
                     0.5
@@ -2645,6 +3607,7 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -2659,6 +3622,10 @@
                     "TextureUUID": 1670969248
                 }
             ]
+=======
+            "Transform2DEnabled": false,
+            "Components": []
+>>>>>>> release/v1.3
         },
         {
             "UUID": 1431973882,
@@ -2667,7 +3634,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 2970429743,
+=======
+                "UUID": 1749737093,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2687,21 +3658,38 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 1478466220,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     85.0,
                     136.0
+=======
+                "UUID": 1134039658,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
+<<<<<<< HEAD
                 ],
                 "AnchoredPos": [
                     -10.0,
                     -122.0
                 ],
+=======
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+>>>>>>> release/v1.3
                 "MinAnchor": [
                     0.5,
                     0.5
@@ -2711,6 +3699,7 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
             "Components": [
                 {
@@ -2721,6 +3710,20 @@
                         1.0,
                         1.0,
                         1.0
+=======
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 2240086239,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 0,
+                    "Mass": 1.0,
+                    "Scale": [
+                        0.49000000953674319,
+                        0.9100000262260437,
+                        0.1899999976158142
+>>>>>>> release/v1.3
                     ],
                     "TextureUUID": 1670969248
                 }
@@ -2733,7 +3736,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 1023272796,
+=======
+                "UUID": 2005581366,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2753,20 +3760,34 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 3355087005,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     85.0,
                     136.0
+=======
+                "UUID": 2318228778,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
+<<<<<<< HEAD
                     282.0,
                     -126.0
+=======
+                    0.0,
+                    0.0
+>>>>>>> release/v1.3
                 ],
                 "MinAnchor": [
                     0.5,
@@ -2777,7 +3798,11 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
+=======
+            "Transform2DEnabled": false,
+>>>>>>> release/v1.3
             "Components": [
                 {
                     "UUID": 3857650893,
@@ -2799,7 +3824,11 @@
             "IsStatic": false,
             "Active": false,
             "Transform": {
+<<<<<<< HEAD
                 "UUID": 2158537483,
+=======
+                "UUID": 3343725425,
+>>>>>>> release/v1.3
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2819,20 +3848,34 @@
                 ]
             },
             "Transform2D": {
+<<<<<<< HEAD
                 "UUID": 53562378,
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
                     12.5,
                     40.0
+=======
+                "UUID": 4025212848,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+>>>>>>> release/v1.3
                 ],
                 "Pivot": [
                     0.5,
                     0.5
                 ],
                 "AnchoredPos": [
+<<<<<<< HEAD
                     -432.0,
                     -241.0
+=======
+                    0.0,
+                    0.0
+>>>>>>> release/v1.3
                 ],
                 "MinAnchor": [
                     0.5,
@@ -2843,7 +3886,11 @@
                     0.5
                 ]
             },
+<<<<<<< HEAD
             "Transform2DEnabled": true,
+=======
+            "Transform2DEnabled": false,
+>>>>>>> release/v1.3
             "Components": [
                 {
                     "UUID": 2313887479,
