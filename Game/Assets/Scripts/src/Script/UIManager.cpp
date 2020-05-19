@@ -44,9 +44,9 @@ void UIManager::Start()
 // Update is called once per frame
 void UIManager::Update()
 {
-	if (App->input->GetKeyDown(KeyCode::Space))
+	if (transitioning && App->input->GetKeyDown(KeyCode::Space))
 	{
-		SpawnDamageIndicator(10, float3(0.f, 0.f, 0.f));
+		App->scene->LoadScene(0);
 	}
 }
 
@@ -63,6 +63,23 @@ void UIManager::SetPlayer2Health(float percentage)
 void UIManager::SpawnDamageIndicator(int damage, float3 position)
 {
 	damage_indicator_spawner->SpawnDamageIndicator(damage, position);
+}
+
+void UIManager::SetSecondPlayerUI()
+{
+	second_player_hud->SetEnabled(true);
+}
+
+void UIManager::SetWinScreen()
+{
+	win_screen->SetEnabled(true);
+	transitioning = true;
+}
+
+void UIManager::SetLoseScreen()
+{
+	lose_screen->SetEnabled(true);
+	transitioning = true;
 }
 
 // Use this for showing variables on inspector
@@ -86,6 +103,15 @@ void UIManager::InitPublicGameObjects()
 
 	public_gameobjects.push_back(&damage_indicator_spawner_game_object);
 	variable_names.push_back(GET_VARIABLE_NAME(damage_indicator_spawner_game_object));
+
+	public_gameobjects.push_back(&second_player_hud);
+	variable_names.push_back(GET_VARIABLE_NAME(second_player_hud));
+
+	public_gameobjects.push_back(&win_screen);
+	variable_names.push_back(GET_VARIABLE_NAME(win_screen));
+
+	public_gameobjects.push_back(&lose_screen);
+	variable_names.push_back(GET_VARIABLE_NAME(lose_screen));
 
 	for (int i = 0; i < public_gameobjects.size(); ++i)
 	{

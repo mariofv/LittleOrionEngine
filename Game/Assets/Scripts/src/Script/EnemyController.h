@@ -4,9 +4,11 @@
 #include "Script.h"
 
 #include "EnemyManager.h"
+#include "PlayerController.h"
 
 class ComponentAnimation;
 class ComponentCollider;
+class PlayerController;
 
 enum class EnemyType
 {
@@ -29,35 +31,72 @@ public:
 
 	bool PlayerInSight();
 	bool PlayerInRange();
-	void MoveTowardsPlayer();
+
+	void SeekPlayer();
+	void SeekPlayerWithSeparation();
+
+	/* ai*/
+	PlayerController* GetClosestTarget();
+	void BattleCircleAI();
+	void Seek(float3& velocity);
+	void Avoid(float3& velocity);
+	void Strafe(float3& velocity, float direction);
+	void CancelAttack();
+	void GetOutOfAttackRange();
+	/* ai*/
+
+	bool PlayerHit();
+	void Attack();
+
 	void TakeDamage(float damage);
+	bool SlotsAvailable();
 
 	virtual void ResetEnemy() {}
 
+	bool IsGrounded() const;
+
 protected:
-	void Die();
+	virtual void OnDeath() {}
 
 public:
 	ComponentAnimation* animation = nullptr;
 	ComponentCollider* collider = nullptr;
 
+	PlayerController* current_target = nullptr;
+	GameObject* target_on_idle = nullptr;
+
 	bool is_alive = true;
 	bool is_attacking = false;
+	bool engage_player = false;
+	bool get_out = false;
+	EnemyManager* enemy_manager = nullptr;
+	int seconds_to_disappear = 1;
+	bool activate_timer = false;
 
 protected:
 	EnemyType type;
 
-	GameObject* player = nullptr;
-	EnemyManager* enemy_manager = nullptr;
+	GameObject* player1 = nullptr;
+	GameObject* player2 = nullptr;
+
+	PlayerController* player1_controller = nullptr;
+	PlayerController* player2_controller = nullptr;
 
 	float move_speed = 1.f;
-	float rotate_speed = 0.01f;
+	float rotate_speed = 1.f;
 	float attack_speed = 1.f;
 	float attack_power = 10.f;
-	float attack_range = 1.4f;
 	const float MAX_HEALTH_POINTS = 100.f;
 	float health_points = MAX_HEALTH_POINTS;
 	float detect_distance = 50.f;
+
+	float attack_range = 2.4f;
+	float switch_target_distance = 1.f;
+	float separation_distance = 2.f;
+	float danger_distance = 8.f;
+	float attack_distance = 5.f;
+
+	float attack_damage = 15.f;
 
 	bool move_with_physics = true;
 
@@ -65,7 +104,5 @@ protected:
 	Quat init_rotation;
 	float3 init_scale;
 };
-
 extern "C" SCRIPT_API EnemyController* EnemyControllerDLL(); //This is how we are going to load the script
-
 #endif

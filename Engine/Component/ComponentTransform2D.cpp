@@ -180,11 +180,6 @@ void ComponentTransform2D::Translate(const float3& translation)
 	SetTranslation(this->translation + translation);
 }
 
-float ComponentTransform2D::GetWidth() const
-{
-	return size.x;
-}
-
 void ComponentTransform2D::SetWidth(float new_width)
 {
 	size.x = new_width;
@@ -192,9 +187,9 @@ void ComponentTransform2D::SetWidth(float new_width)
 	OnTransformChange();
 }
 
-float ComponentTransform2D::GetHeight() const
+float ComponentTransform2D::GetWidth() const
 {
-	return size.y;
+	return size.x;
 }
 
 void ComponentTransform2D::SetHeight(float new_height)
@@ -202,6 +197,11 @@ void ComponentTransform2D::SetHeight(float new_height)
 	size.y = new_height;
 	ComputeSizeDelta();
 	OnTransformChange();
+}
+
+float ComponentTransform2D::GetHeight() const
+{
+	return size.y;
 }
 
 void ComponentTransform2D::SetSize(float2 new_size)
@@ -422,8 +422,8 @@ AABB2D ComponentTransform2D::GetGlobalRectAABB2D() const
 
 void ComponentTransform2D::ComputeRectAABB2D()
 {
-	float2 rect_aabb_2d_min_point = float2((GetSizedGlobalModelMatrix() * float4(-0.5f, -0.5f, 0.f, 1.f)).xy());
-	float2 rect_aabb_2d_max_point = float2((GetSizedGlobalModelMatrix() * float4(0.5f, 0.5f, 0.f, 1.f)).xy());
+	float2 rect_aabb_2d_min_point = float2((model_matrix * float4x4::Scale(float3(size, 1.f)) * float4(-0.5f, -0.5f, 0.f, 1.f)).xy());
+	float2 rect_aabb_2d_max_point = float2((model_matrix * float4x4::Scale(float3(size, 1.f))* float4(0.5f, 0.5f, 0.f, 1.f)).xy());
 	rect_aabb_2d = AABB2D(rect_aabb_2d_min_point, rect_aabb_2d_max_point);
 }
 

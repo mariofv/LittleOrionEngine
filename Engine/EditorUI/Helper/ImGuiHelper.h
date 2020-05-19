@@ -15,6 +15,7 @@ class Skeleton;
 class Skybox;
 class StateMachine;
 class Texture;
+class SoundBank;
 
 namespace ImGui
 {
@@ -190,6 +191,25 @@ namespace ImGui
 				assert(payload->DataSize == sizeof(Metafile*));
 				Metafile* incoming_resource_metafile = *(Metafile**)payload->Data;
 				if (incoming_resource_metafile->resource_type == ResourceType::TEXTURE)
+				{
+					return incoming_resource_metafile->uuid;
+				}
+			}
+			ImGui::EndDragDropTarget();
+		}
+		return 0;
+	};
+
+	template<>
+	static uint32_t ResourceDropper<SoundBank>()
+	{
+		if (ImGui::BeginDragDropTarget())
+		{
+			if (const ImGuiPayload* payload = ImGui::AcceptDragDropPayload("DND_Resource"))
+			{
+				assert(payload->DataSize == sizeof(Metafile*));
+				Metafile* incoming_resource_metafile = *(Metafile**)payload->Data;
+				if (incoming_resource_metafile->resource_type == ResourceType::SOUND)
 				{
 					return incoming_resource_metafile->uuid;
 				}

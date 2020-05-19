@@ -1,5 +1,6 @@
 #include "PlayerController.h"
 
+#include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 
@@ -74,6 +75,7 @@ void PlayerController::OnInspector(ImGuiContext* context)
 
 		ImGui::EndCombo();
 	}
+	ImGui::DragFloat("Health", &health_points);
 }
 
 //Use this for linking GO automatically
@@ -91,5 +93,12 @@ void PlayerController::Load(const Config& config)
 void PlayerController::TakeDamage(float damage)
 {
 	health_points -= damage;
+	//UPDATE HEALTH_BAR HERE
+	//also addforce here
+}
+
+ComponentCollider* PlayerController::GetCollider()
+{
+	return static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
 }
 

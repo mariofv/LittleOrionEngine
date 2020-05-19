@@ -12,8 +12,8 @@
 #include "Helper/Utils.h"
 
 #include "Component/ComponentAnimation.h"
-#include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentAudioSource.h"
+#include "Component/ComponentBoxCollider.h"
 #include "Component/ComponentButton.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
@@ -568,7 +568,7 @@ void PanelComponent::ShowComponentTextWindow(ComponentText* text)
 }
 void PanelComponent::ShowComponentButtonWindow(ComponentButton *button)
 {
-	if (ImGui::CollapsingHeader(ICON_FA_PALETTE " Button", ImGuiTreeNodeFlags_DefaultOpen))
+	if (ImGui::CollapsingHeader(ICON_FA_TOGGLE_ON " Button", ImGuiTreeNodeFlags_DefaultOpen))
 	{
 		ShowCommonComponentWindow(button);
 		bool clicked = button->IsClicked();
@@ -748,11 +748,16 @@ void PanelComponent::ShowAddNewComponentButton()
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_IMAGE);
 		}
 
+		sprintf_s(tmp_string, "%s UI Button", ICON_FA_TOGGLE_ON);
+		if (ImGui::Selectable(tmp_string))
+		{
+			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::UI_BUTTON);
+		}
+
 		sprintf_s(tmp_string, "%s Event System", ICON_FA_BULLHORN);
 		if (ImGui::Selectable(tmp_string))
 		{
 			component = App->editor->selected_game_object->CreateComponent(Component::ComponentType::EVENT_SYSTEM);
-
 		}
 		ImGui::Separator();
 
@@ -878,22 +883,26 @@ bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 	{
 		collider->SetCollisionDetection();
 	}
-	if (ImGui::Checkbox("Disable Physics", &collider->disable_physics))
+	if (ImGui::Checkbox("Active Physics", &collider->active_physics))
 	{
 		collider->SwitchPhysics();
 	}
-	ImGui::Text("Axis Rotation");
-	if (ImGui::Checkbox("X Axis", &collider->x_axis))
+	ImGui::Text("Freeze Axis Rotation");
+	if (ImGui::Checkbox("X Axis", &collider->freeze_rotation_x))
 	{
 		collider->SetRotationAxis();
 	}
-	if (ImGui::Checkbox("Y Axis", &collider->y_axis))
+	if (ImGui::Checkbox("Y Axis", &collider->freeze_rotation_y))
 	{
 		collider->SetRotationAxis();
 	}
-	if (ImGui::Checkbox("Z Axis", &collider->z_axis))
+	if (ImGui::Checkbox("Z Axis", &collider->freeze_rotation_z))
 	{
 		collider->SetRotationAxis();
+	}
+	if (ImGui::DragFloat3("Center", collider->center.ptr(), 0.01F))
+	{
+		collider->SetColliderCenter(collider->center);
 	}
 	return true;
 }
@@ -905,7 +914,7 @@ void PanelComponent::ShowComponentBoxColliderWindow(ComponentBoxCollider* box_co
 	{
 		if (ShowCommonColliderWindow(box_collider))
 		{
-			if (ImGui::DragFloat3("Scale", box_collider->scale.ptr(), 0.01f))
+			if (ImGui::DragFloat3("Scale", box_collider->scale.ptr(), 0.01F, 0.1F, 10.0F))
 			{
 				box_collider->Scale();
 			}
@@ -919,11 +928,11 @@ void PanelComponent::ShowComponentCapsuleColliderWindow(ComponentCapsuleCollider
 	{
 		if(ShowCommonColliderWindow(capsule_collider))
 		{
-			if (ImGui::DragFloat("Radius", &capsule_collider->scale.x, 0.01f))
+			if (ImGui::DragFloat("Radius", &capsule_collider->scale.x, 0.01F, 0.1F, 10.0F))
 			{
 				capsule_collider->Scale();
 			}
-			if (ImGui::DragFloat("Height", &capsule_collider->scale.y, 0.01f))
+			if (ImGui::DragFloat("Height", &capsule_collider->scale.y, 0.01F, 0.1F, 10.0F))
 			{
 				capsule_collider->Scale();
 			}
@@ -937,7 +946,7 @@ void PanelComponent::ShowComponentSphereColliderWindow(ComponentSphereCollider* 
 	{
 		if (ShowCommonColliderWindow(sphere_collider))
 		{
-			if (ImGui::DragFloat("Radius", &sphere_collider->scale.x, 0.01f))
+			if (ImGui::DragFloat("Radius", &sphere_collider->scale.x, 0.01F, 0.1F, 10.0F))
 			{
 				sphere_collider->Scale();
 			}
@@ -951,11 +960,11 @@ void PanelComponent::ShowComponentCylinderColliderWindow(ComponentCylinderCollid
 	{
 		if(ShowCommonColliderWindow(cylinder_collider))
 		{
-			if (ImGui::DragFloat("Radius", &cylinder_collider->scale.x, 0.01f))
+			if (ImGui::DragFloat("Radius", &cylinder_collider->scale.x, 0.01F, 0.1F, 10.0F))
 			{
 				cylinder_collider->Scale();
 			}
-			if (ImGui::DragFloat("Height", &cylinder_collider->scale.y, 0.01f))
+			if (ImGui::DragFloat("Height", &cylinder_collider->scale.y, 0.01F, 0.1F, 10.0F))
 			{
 				cylinder_collider->Scale();
 			}
@@ -969,7 +978,7 @@ void PanelComponent::ShowComponentMeshColliderWindow(ComponentMeshCollider* mesh
 	{
 		if (ShowCommonColliderWindow(mesh_collider))
 		{
-			if (ImGui::DragFloat3("Scale", mesh_collider->scale.ptr(), 0.01f))
+			if (ImGui::DragFloat3("Scale", mesh_collider->scale.ptr(), 0.01F))
 			{
 				mesh_collider->Scale();
 			}

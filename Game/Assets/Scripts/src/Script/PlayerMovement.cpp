@@ -8,6 +8,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleAI.h"
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTime.h"
@@ -57,8 +58,9 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 	ShowDraggedObjects();
 	ImGui::Checkbox("Is Inside Frustum", &is_inside);
 	ImGui::Checkbox("Is Grounded", &is_grounded);
-	ImGui::DragFloat3("VELOCITY", velocity.ptr(), 0.1f, 0.f, 300.f);
-
+	ImGui::DragFloat3("Velocity", velocity.ptr(), 0.1f, 0.f, 300.f);
+	ImGui::Checkbox("Future AABB", &visualize_future_aabb);
+	ImGui::DragFloat3("Distance", distance.ptr(), 0.1f, 0.f, 300.f);
 }
 
 void PlayerMovement::Move(int player)
@@ -72,18 +74,18 @@ void PlayerMovement::Move(int player)
 	float x_axis = App->input->GetHorizontal(player_id);
 	float y_axis = App->input->GetVertical(player_id);
 
-	if (!IsGrounded() && is_jumping)
+	if (abs(velocity.y) < 0.01 && is_jumping)
 	{
 		is_jumping = false;
 	}
 
 	direction = float3(x_axis, 0.0f, y_axis); // not add just assing
-	if (abs(velocity.y) < 0.01 && !is_jumping)
+	if (IsGrounded() && !is_jumping)
 	{
 		is_grounded = true;
 		if (!direction.Equals(float3::zero))
 		{
-			is_inside = IsInside(transform + direction * speed / 10);
+			is_inside = IsInside(transform + direction  * speed);
 			if (is_inside)
 			{
 				collider->SetVelocity(direction, speed * App->time->delta_time);
@@ -95,7 +97,7 @@ void PlayerMovement::Move(int player)
 				collider->SetVelocity(direction, 0);
 			}
 		}
-		if (App->input->GetKeyDown(KeyCode::Space))
+		if (App->input->GetGameInputDown("Jump", player_id))
 		{
 			is_jumping = true;
 			Jump(direction);
@@ -143,10 +145,18 @@ bool PlayerMovement::IsGrounded()
 
 bool PlayerMovement::IsInside(float3 future_transform)
 {
-	float3 distance = future_transform - owner->transform.GetTranslation();
-	AABB future_position = AABB(owner->aabb.bounding_box.minPoint + distance, owner->aabb.bounding_box.maxPoint + distance);
-	
-	if(second_player != nullptr && App->input->singleplayer_input)
+	distance = (future_transform) - owner->transform.GetTranslation();
+	//Harcoded distance in order to camera works
+	distance.x = distance.x * 10.f;
+	distance.y = distance.y * 10.f;
+	distance.z = distance.z * 10.f;
+	AABB future_position = AABB(owner->aabb.global_bounding_box.minPoint + distance, owner->aabb.global_bounding_box.maxPoint + distance);
+	if(visualize_future_aabb)
+	{
+		App->debug_draw->RenderSingleAABB(future_position);
+	}
+
+	if(second_player != nullptr && !App->input->singleplayer_input)
 	{
 		float3 go_distance = second_player->transform.GetTranslation() - future_transform;
 		return game_camera->IsInsideFrustum(future_position) && go_distance.x < 18;

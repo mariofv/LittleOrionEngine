@@ -388,7 +388,11 @@ void PanelConfiguration::ShowInputOptions()
 			ImGui::Text("NavInputs pressed:"); for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputsDownDuration[i] == 0.0f) { ImGui::SameLine(); ImGui::Text("[%d]", i); }
 			ImGui::Text("NavInputs duration:"); for (int i = 0; i < IM_ARRAYSIZE(io.NavInputs); i++) if (io.NavInputsDownDuration[i] >= 0.0f) { ImGui::SameLine(); ImGui::Text("[%d] %.2f", i, io.NavInputsDownDuration[i]); }
 
+			ImGui::Separator();
 
+			ImGui::Text("Number of controllers connected: %d", App->input->total_game_controllers);
+
+			ImGui::Separator();
 			ImGui::Text("Controller 1:");
 			ImGui::Text("A: %d", App->input->GetControllerButton(ControllerCode::A, ControllerID::ONE));
 			ImGui::Text("B: %d", App->input->GetControllerButton(ControllerCode::B, ControllerID::ONE));
@@ -417,6 +421,8 @@ void PanelConfiguration::ShowInputOptions()
 
 			ImGui::Text("Left Raw Trigger : %.3f", App->input->GetTriggerControllerRaw(ControllerAxis::LEFT_TRIGGER_RAW, ControllerID::ONE));
 			ImGui::Text("Right Raw Trigger : %.3f", App->input->GetTriggerControllerRaw(ControllerAxis::RIGHT_TRIGGER_RAW, ControllerID::ONE));
+
+			ImGui::Separator();
 
 			ImGui::Text("Controller 2:");
 			ImGui::Text("A: %d", App->input->GetControllerButton(ControllerCode::A, ControllerID::TWO));

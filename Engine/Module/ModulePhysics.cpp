@@ -60,7 +60,7 @@ update_status ModulePhysics::Update()
 	for (auto collider : colliders)
 	{
 		
-		if (App->time->isGameRunning() && !collider->disable_physics && collider->IsEnabled())
+		if (App->time->isGameRunning() && collider->active_physics && collider->IsEnabled())
 		{
 			if (collider->collider_type != ComponentCollider::ColliderType::MESH)
 			{
@@ -104,7 +104,7 @@ void ModulePhysics::SetGravity(float3& newGravity)
 	world->setGravity(btVector3(newGravity.x, newGravity.y, newGravity.z));
 }
 
-float3 ModulePhysics::GetGravity()
+float3 ModulePhysics::GetGravity() const
 {
 	return gravity;
 }
@@ -147,23 +147,12 @@ void ModulePhysics::RemoveComponentCollider(ComponentCollider* collider_to_remov
 	}
 }
 
-void DebugDrawer::drawLine(const btVector3 & from, const btVector3 & to, const btVector3 & color)
+void DebugDrawer::drawLine(const btVector3& from, const btVector3& to, const btVector3& color)
 {
 	
 	dd::line(float3(from.getX(), from.getY(), from.getZ()), float3(to.getX(), to.getY(), to.getZ()), float3(1.0f, 0.0f, 0.0f));
 	
 }
-
-void DebugDrawer::drawContactPoint(const btVector3 & PointOnB, const btVector3 & normalOnB, btScalar distance, int lifeTime, const btVector3 & color)
-{}
-
-void DebugDrawer::reportErrorWarning(const char * warningString)
-{
-	//printf(warningString);
-}
-
-void DebugDrawer::draw3dText(const btVector3 & location, const char * textString)
-{}
 
 void DebugDrawer::setDebugMode(int debugMode)
 {
@@ -180,6 +169,8 @@ bool ModulePhysics::RaycastWorld(const btVector3 &Start, btVector3 &End, btVecto
 
 	btCollisionWorld::ClosestRayResultCallback RayCallback(Start, End);
 	//btCollisionWorld::RayResultCallback RayCallback(Start, End);
+	//Magic Line for not jumping on enemies
+	//RayCallback.m_collisionFilterMask = btBroadphaseProxy::StaticFilter;
 	
 	world->rayTest(Start, End, RayCallback);
 	if (RayCallback.hasHit())

@@ -21,12 +21,22 @@ public:
 	//void Save(Config& config) const override;
 	//void Load(const Config& config) override;
 
+	void SetSecondPlayerUI();
+
 	void SetPlayer1Health(float percentage);
 	void SetPlayer2Health(float percentage);
 
 	void SpawnDamageIndicator(int damage, float3 position);
 
+	void SetWinScreen();
+	void SetLoseScreen();
+
 private:
+	GameObject* second_player_hud = nullptr;
+
+	GameObject* win_screen = nullptr;
+	GameObject* lose_screen = nullptr;
+
 	GameObject* player1_progress_bar_game_object = nullptr;
 	ProgressBar* player1_progress_bar = nullptr;
 
@@ -35,6 +45,8 @@ private:
 
 	GameObject* damage_indicator_spawner_game_object = nullptr;
 	DamageIndicatorSpawner* damage_indicator_spawner = nullptr;
+
+	bool transitioning = false;
 };
 extern "C" SCRIPT_API UIManager* UIManagerDLL(); //This is how we are going to load the script
 #endif
