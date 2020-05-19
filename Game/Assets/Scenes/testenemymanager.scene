@@ -1415,7 +1415,9 @@
                     "Name0": "EnemyManager",
                     "EnemyManager": 418290945,
                     "Name1": "Player1",
-                    "Player1": 248855188
+                    "Player1": 248855188,
+                    "Name2": "Player2",
+                    "Player2": 35252321
                 },
                 {
                     "UUID": 4103893942,

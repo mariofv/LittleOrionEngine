@@ -29,10 +29,12 @@ public:
 	bool debug_enabled = false;
 	bool render_wireframe = false;
 	bool is_player_invincible = false;
-	bool is_warping_player = false;
+	bool is_warping_player_one = false;
+	bool is_warping_player_two = false;
 
 	GameObject* enemy_manager_obj;
-	GameObject* player_obj;
+	GameObject* player_one_obj;
+	GameObject* player_two_obj;
 private:
 	std::string base_str_tris = "#Tris: ";
 	std::string base_str_verts = "#Verts: ";

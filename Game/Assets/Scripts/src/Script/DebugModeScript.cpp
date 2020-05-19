@@ -62,7 +62,7 @@ void DebugModeScript::Update()
 
 	if (debug_enabled)
 	{
-		if (is_warping_player)
+		if (is_warping_player_one || is_warping_player_two)
 		{
 			if (App->input->GetMouseButtonDown(MouseButton::Left))
 			{
@@ -72,11 +72,18 @@ void DebugModeScript::Update()
 
 				if (hit->game_object != nullptr)
 				{
-					ComponentCapsuleCollider* collider = (ComponentCapsuleCollider*)player_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
+					ComponentCapsuleCollider* collider = nullptr;
+					
+					if(is_warping_player_one) collider = (ComponentCapsuleCollider*)player_one_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
+					else collider = (ComponentCapsuleCollider*)player_two_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
 					
 					collider->active_physics = false;
-					player_obj->transform.SetTranslation(hit->hit_point);
-					is_warping_player = false;
+					
+					if(is_warping_player_one) player_one_obj->transform.SetTranslation(hit->hit_point);
+					else player_two_obj->transform.SetTranslation(hit->hit_point);
+					
+					is_warping_player_one = false;
+					is_warping_player_two = false;
 					has_warped_player_recently = true;
 				}
 			}
@@ -85,11 +92,11 @@ void DebugModeScript::Update()
 		if (has_warped_player_recently)
 		{
 			warp_cooldown += (App->time->delta_time / 1000);
-			if (warp_cooldown >= 2.5f)//Half a second cooldown
+			if (warp_cooldown >= 1.5f)//Half a second cooldown
 			{
 				warp_cooldown = 0.0f;
 				has_warped_player_recently = false;
-				ComponentCapsuleCollider* collider = (ComponentCapsuleCollider*)player_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
+				ComponentCapsuleCollider* collider = (ComponentCapsuleCollider*)player_one_obj->GetComponent(ComponentCollider::ColliderType::CAPSULE);
 				collider->active_physics = true;
 			}
 
@@ -137,13 +144,21 @@ void DebugModeScript::UpdateWithImGui(ImGuiContext* context)
 				enemy_manager->SpawnWave(0, 5);
 			}
 
-			if (is_warping_player)
+			if (is_warping_player_one || is_warping_player_two)
 			{
 				ImGui::LabelText("", "Please touch somewhere to warp the character");
 			}
-			else if (ImGui::Button("Warp Player"))
+			else if(!has_warped_player_recently)
 			{
-				is_warping_player = true;
+				if (ImGui::Button("Warp Player One"))
+				{
+					is_warping_player_one = true;
+				}
+				ImGui::SameLine();
+				if (ImGui::Button("Warp Player Two"))
+				{
+					is_warping_player_two = true;
+				}
 			}
 
 			ImGui::End();
@@ -166,8 +181,11 @@ void DebugModeScript::InitPublicGameObjects()
 	public_gameobjects.push_back(&enemy_manager_obj);
 	variable_names.push_back(GET_VARIABLE_NAME(enemy_manager_obj));
 	
-	public_gameobjects.push_back(&player_obj);
-	variable_names.push_back(GET_VARIABLE_NAME(player_obj));
+	public_gameobjects.push_back(&player_one_obj);
+	variable_names.push_back(GET_VARIABLE_NAME(player_one_obj));
+	
+	public_gameobjects.push_back(&player_two_obj);
+	variable_names.push_back(GET_VARIABLE_NAME(player_two_obj));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
