@@ -73,11 +73,13 @@ void CharacterSelectionMenuController::Update()
 	if (UIMainMenuInputController::ConfirmMovedUp(*App->input))
 	{
 		selecting_character = true;
+		cursor->SetEnabled(false);
 	}
 
 	if (UIMainMenuInputController::ConfirmMovedDown(*App->input))
 	{
 		selecting_character = false;
+		cursor->SetEnabled(true);
 	}
 
 	if (selecting_character && (UIMainMenuInputController::ConfirmMovedLeft(*App->input) || UIMainMenuInputController::ConfirmMovedRight(*App->input)))
@@ -121,6 +123,7 @@ void CharacterSelectionMenuController::Open()
 	enabled = true;
 	just_opened = true;
 	character_selection_panel->SetEnabled(true);
+	SwitchMultiplayer(false);
 }
 
 void CharacterSelectionMenuController::Close()

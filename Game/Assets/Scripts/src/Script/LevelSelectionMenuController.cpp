@@ -13,7 +13,7 @@
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
-#include "MainMenuController.h"
+#include "CharacterSelectionMenuController.h"
 
 #include "imgui.h"
 
@@ -35,7 +35,7 @@ void LevelSelectionMenuController::Awake()
 	buttons.push_back(level2);
 	buttons.push_back(level3);
 
-	main_menu_controller = static_cast<MainMenuController*>(main_menu_game_object->GetComponentScript("MainMenuController")->script);
+	character_menu_controller = static_cast<CharacterSelectionMenuController*>(character_menu_game_object->GetComponentScript("CharacterSelectionMenuController")->script);
 	audio_source = (ComponentAudioSource*)audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
 }
 
@@ -110,7 +110,7 @@ void LevelSelectionMenuController::Close()
 {
 	enabled = false;
 	level_selection_panel->SetEnabled(false);
-	main_menu_controller->Open();
+	character_menu_controller->Open();
 	audio_source->PlayEvent("Click_backward");
 }
 
@@ -136,8 +136,8 @@ void LevelSelectionMenuController::InitPublicGameObjects()
 	public_gameobjects.push_back(&back);
 	variable_names.push_back(GET_VARIABLE_NAME(back));
 	
-	public_gameobjects.push_back(&main_menu_game_object);
-	variable_names.push_back(GET_VARIABLE_NAME(main_menu_game_object));
+	public_gameobjects.push_back(&character_menu_game_object);
+	variable_names.push_back(GET_VARIABLE_NAME(character_menu_game_object));
 
 	public_gameobjects.push_back(&level_selection_panel);
 	variable_names.push_back(GET_VARIABLE_NAME(level_selection_panel));

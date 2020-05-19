@@ -4,7 +4,7 @@
 #include "Script.h"
 
 class ComponentAudioSource;
-class MainMenuController;
+class CharacterSelectionMenuController;
 
 class LevelSelectionMenuController : public Script
 {
@@ -32,8 +32,8 @@ private:
 
 	GameObject* level_selection_panel = nullptr;
 
-	GameObject* main_menu_game_object = nullptr;
-	MainMenuController* main_menu_controller = nullptr;
+	GameObject* character_menu_game_object = nullptr;
+	CharacterSelectionMenuController* character_menu_controller = nullptr;
 
 	GameObject* level1 = nullptr;
 	GameObject* level2 = nullptr;

@@ -186,8 +186,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    1075.0,
-                    706.0
+                    1097.0,
+                    667.0
                 ],
                 "Pivot": [
                     0.5,
@@ -781,8 +781,8 @@
                     "level3_position": 1401462934,
                     "Name3": "Back_button",
                     "Back_button": 3411494713,
-                    "Name4": "Main_Menu",
-                    "Main_Menu": 4031375053,
+                    "Name4": "Character_selection",
+                    "Character_selection": 4152763998,
                     "Name5": "Level Selection Panel",
                     "Level Selection Panel": 1586329215,
                     "Name6": "Audio_controller",
@@ -2206,77 +2206,6 @@
                 {
                     "UUID": 3496489484,
                     "ComponentType": 11,
-                    "Active": false
-                }
-            ]
-        },
-        {
-            "UUID": 2634243702,
-            "ParentUUID": 4143080280,
-            "Name": "Level_selection_button",
-            "IsStatic": false,
-            "Active": false,
-            "Transform": {
-                "UUID": 293102178,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2918162109,
-                "ComponentType": 7,
-                "Active": true,
-                "SizeDelta": [
-                    268.5,
-                    41.5
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
-                "AnchoredPos": [
-                    333.0,
-                    -245.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": true,
-            "Components": [
-                {
-                    "UUID": 343823521,
-                    "ComponentType": 12,
-                    "Active": false,
-                    "Color": [
-                        1.0,
-                        1.0,
-                        1.0
-                    ],
-                    "TextureUUID": 4103083892
-                },
-                {
-                    "UUID": 275819551,
-                    "ComponentType": 10,
                     "Active": false
                 }
             ]
