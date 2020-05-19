@@ -36,10 +36,8 @@ WorldManager::WorldManager()
 // Use this for initialization before Start()
 void WorldManager::Awake()
 {
-	if(!on_main_menu)
+	if(on_main_menu)
 	{
-		
-
 		return;
 	}
 
@@ -109,6 +107,11 @@ void WorldManager::Start()
 // Update is called once per frame
 void WorldManager::Update()
 {
+	if (on_main_menu)
+	{
+		return;
+	}
+
 	CheckTriggers();
 	/*
 	if(health_component->percentage <= 0.0f)

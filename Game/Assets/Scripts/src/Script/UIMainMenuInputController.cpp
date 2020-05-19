@@ -19,7 +19,6 @@ bool UIMainMenuInputController::ComfirmButtonPressed( ModuleInput& input)
 	return (input.GetKeyDown(KeyCode::Space) || input.GetControllerButtonDown(ControllerCode::A, ControllerID::ONE));
 }
 
-
 bool UIMainMenuInputController::ConfirmMovedRight( ModuleInput& input)
 {
 	return (input.GetKeyDown(KeyCode::D) || input.GetControllerButtonDown(ControllerCode::RightDpad, ControllerID::ONE));

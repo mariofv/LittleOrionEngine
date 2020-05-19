@@ -186,8 +186,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "SizeDelta": [
-                    1075.0,
-                    706.0
+                    1097.0,
+                    667.0
                 ],
                 "Pivot": [
                     0.5,
@@ -341,6 +341,67 @@
                     "UUID": 2561659513,
                     "ComponentType": 15,
                     "Active": true
+                }
+            ]
+        },
+        {
+            "UUID": 3621575298,
+            "ParentUUID": 0,
+            "Name": "World Manager",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 3715180448,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 3797784027,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 356707812,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "WorldManager"
                 }
             ]
         },
@@ -637,8 +698,8 @@
                     "Level Selection": 3300806217,
                     "Name3": "Back",
                     "Back": 3739545748,
-                    "Name4": "Level_selection_button",
-                    "Level_selection_button": 2634243702,
+                    "Name4": "World Manager",
+                    "World Manager": 3621575298,
                     "Name5": "Audio_controller",
                     "Audio_controller": 285203001,
                     "Name6": "p1_position",
@@ -2140,6 +2201,11 @@
                 {
                     "UUID": 235993928,
                     "ComponentType": 10,
+                    "Active": false
+                },
+                {
+                    "UUID": 3496489484,
+                    "ComponentType": 11,
                     "Active": false
                 }
             ]

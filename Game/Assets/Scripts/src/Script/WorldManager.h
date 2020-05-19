@@ -31,6 +31,13 @@ private:
 	void InitTriggers();
 	void CheckTriggers();
 
+public:
+	static bool singleplayer;
+
+	//Which player is each one
+	static bool player1_choice;
+	static bool player2_choice;
+
 private:
 	GameObject* health_bar = nullptr;
 	GameObject* lose_screen = nullptr;
@@ -47,15 +54,6 @@ private:
 	unsigned current_event_trigger = 0;
 	bool transition = false;
 	bool on_main_menu = true;
-	
-
-
-	static bool singleplayer;
-
-	//Which player is each one
-	static bool player1_choice;
-	static bool player2_choice;
-
 
 };
 extern "C" SCRIPT_API WorldManager* WorldManagerDLL(); //This is how we are going to load the script

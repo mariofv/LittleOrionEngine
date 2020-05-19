@@ -4,10 +4,12 @@
 #include "Script.h"
 
 class ComponentAudioSource;
+class ComponentButton;
 class ComponentTransform2D;
 
 class LevelSelectionMenuController;
 class MainMenuController;
+class WorldManager;
 
 class CharacterSelectionMenuController : public Script
 {
@@ -23,17 +25,17 @@ public:
 	void InitPublicGameObjects() override;
 
 	void SelectCharacter();
-	void OpenSubMenu(int index);
+	void SwitchMultiplayer(bool enabled);
 
 	void Open();
 	void Close();
 
 private:
-	std::vector<GameObject*> buttons;
 	unsigned current = 0;
 
-	bool player1_choice = true; //TODO: CHANGE THIS FOR THE WORLDMANAGER VARIABLE
 	bool selecting_character = false;
+	bool player1_choice = false;
+	bool multiplayer = false;
 
 	bool enabled = false;
 	bool just_opened = false;
@@ -46,17 +48,20 @@ private:
 	GameObject* level_selection_game_object = nullptr;
 	LevelSelectionMenuController* level_selection_controller = nullptr;
 
-	GameObject* p1_position = nullptr;
-	GameObject* p2_position = nullptr;
+	GameObject* male_character_position = nullptr;
+	GameObject* female_character_position = nullptr;
 
 	GameObject* character_selector1= nullptr;
 	GameObject* character_selector2 = nullptr;
 
-	GameObject* back_button = nullptr;
-	GameObject* level_selection_button = nullptr;
+	GameObject* back_button_game_object = nullptr;
+	ComponentButton* back_button = nullptr;
 
 	GameObject* cursor;
 	ComponentTransform2D* cursor_transform;
+
+	GameObject* world_manager_game_object = nullptr;
+	WorldManager* world_manager = nullptr;
 
 	GameObject* audio_controller = nullptr;
 	ComponentAudioSource* audio_source = nullptr;
