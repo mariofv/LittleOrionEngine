@@ -21,7 +21,7 @@ public:
 	void SpecializedLoad(const Config& config) override;
 
 	void SetClicked(bool clicked);
-	bool IsClicked() const;
+	ENGINE_API bool IsClicked() const;
 
 private:
 	bool clicked = false;

@@ -203,6 +203,10 @@ bool ModuleFileSystem::Remove(const std::string& path)
 
 Path* ModuleFileSystem::MakeDirectory(const std::string& new_directory_full_path)
 {
+	if (Exists(new_directory_full_path))
+	{
+		return App->filesystem->GetPath(new_directory_full_path);
+	}
 	if (PHYSFS_mkdir(new_directory_full_path.c_str()) == 0)
 	{
 		APP_LOG_ERROR("Error creating directory %s : %s", new_directory_full_path.c_str(), PHYSFS_getLastError());

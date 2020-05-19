@@ -79,6 +79,9 @@ public:
 	void ComputeSize();
 	void ComputeSizeDelta();
 
+	ENGINE_API float GetWidth() const;
+	ENGINE_API float GetHeight() const;
+
 	void SetPivot(const float2& new_pivot);
 	void ChangePivotSpace(const float2& new_pivot_position);
 
