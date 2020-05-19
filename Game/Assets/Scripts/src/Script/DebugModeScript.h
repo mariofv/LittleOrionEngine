@@ -2,6 +2,9 @@
 #define  __DEBUGMODESCRIPT_H__
 
 #include "Script.h"
+#include "Module/ModuleInput.h"
+#include "Component/ComponentCamera.h"
+#include "Module/ModuleCamera.h"
 
 class ComponentImage;
 class ComponentText;
@@ -25,7 +28,6 @@ public:
 	//void Load(const Config& config) override;
 	bool debug_enabled = false;
 	bool render_wireframe = false;
-	bool render_AABB = false;
 	bool is_player_invincible = false;
 	bool is_warping_player = false;
 

@@ -41,8 +41,6 @@ void SceneCamerasController::Awake()
 
 	ComponentScript* component_debug = debug->GetComponentScript("DebugModeScript");
 	debug_mode = (DebugModeScript*)component_debug->script;
-
-	App->cameras->current_camera = camera_rendering;
 }
 
 // Use this for initialization
@@ -85,8 +83,6 @@ void SceneCamerasController::UpdateCameraRendering()
 	camera_rendering->Disable();
 	camera_rendering = (ComponentCamera*)camera_list[index]->GetComponent(Component::ComponentType::CAMERA);
 	camera_rendering->Enable();
-
-	App->cameras->current_camera = camera_rendering;
 }
 
 void SceneCamerasController::SetMainCameraRendering()
@@ -95,8 +91,6 @@ void SceneCamerasController::SetMainCameraRendering()
 	camera_rendering = (ComponentCamera*)camera_list[0]->GetComponent(Component::ComponentType::CAMERA);
 	camera_rendering->Enable();
 	index = 0;
-
-	App->cameras->current_camera = camera_rendering;
 }
 
 

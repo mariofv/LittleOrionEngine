@@ -41,6 +41,7 @@ bool ModuleDebug::CleanUp()
 void ModuleDebug::Render(ComponentCamera* cam)
 {
 	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
+
 	if (show_navmesh)
 	{
 		App->debug_draw->RenderNavMesh(*cam);
@@ -61,8 +62,6 @@ void ModuleDebug::Render(ComponentCamera* cam)
 		App->debug_draw->RenderAABBTree();
 	}
 
-	App->debug_draw->RenderSelectedGameObjectHelpers();
-
 	if (show_bounding_boxes)
 	{
 		App->debug_draw->RenderBoundingBoxes();
@@ -78,17 +77,19 @@ void ModuleDebug::Render(ComponentCamera* cam)
 		App->debug_draw->RenderPathfinding();
 	}
 
+#if !GAME
+	App->debug_draw->RenderSelectedGameObjectHelpers();
 	App->debug_draw->RenderBillboards();
 
 	if (show_grid)
 	{
 		App->debug_draw->RenderGrid();
 	}
-
 	if (show_axis && App->renderer->meshes_to_render.size() != 0)
 	{
 		App->debug_draw->RenderTangentsAndBitangents();
 	}
+#endif
 
 	App->debug_draw->RenderDebugDraws(*cam);
 }

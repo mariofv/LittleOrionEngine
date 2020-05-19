@@ -40,7 +40,6 @@ private:
 public:
 	ComponentCamera *scene_camera = nullptr;
 	ComponentCamera* main_camera = nullptr;
-	ComponentCamera* current_camera = nullptr;
 
 	std::shared_ptr<Skybox> world_skybox = nullptr;
 

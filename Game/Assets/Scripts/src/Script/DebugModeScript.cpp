@@ -4,6 +4,7 @@
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
 #include "Component/ComponentText.h"
+#include "Component/ComponentCamera.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -60,18 +61,13 @@ void DebugModeScript::Update()
 
 	if (debug_enabled)
 	{
-		if (render_AABB)
-		{
-			App->space_partitioning->DrawAABBTree();
-		}
-
 		if (is_warping_player)
 		{
 			if (App->input->GetMouseButtonDown(MouseButton::Left))
 			{
 				LineSegment ray;
-				//App->cameras->scene_camera->GetRay(window_mouse_position_normalized, ray);
-				RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->current_camera);
+				App->cameras->main_camera->GetRay(App->input->GetMousePosition(), ray);
+				RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->main_camera);
 
 				if (hit->game_object != nullptr)
 				{
@@ -108,7 +104,13 @@ void DebugModeScript::UpdateWithImGui(ImGuiContext* context)
 				App->renderer->SetDrawMode(render_wireframe ? ModuleRender::DrawMode::WIREFRAME : ModuleRender::DrawMode::SHADED);
 			}
 
-			ImGui::Checkbox("Draw AABB? ", &render_AABB);
+			ImGui::Checkbox("Draw AABBTree? ", &App->debug->show_aabbtree);
+			ImGui::Checkbox("Draw Navmesh? ", &App->debug->show_navmesh);
+			ImGui::Checkbox("Draw QuadTree? ", &App->debug->show_quadtree);
+			ImGui::Checkbox("Draw OctTree? ", &App->debug->show_octtree);
+			ImGui::Checkbox("Draw Bounding boxes? ", &App->debug->show_bounding_boxes);
+			ImGui::Checkbox("Draw Global bounding boxes? ", &App->debug->show_global_bounding_boxes);
+			ImGui::Checkbox("Draw Pathfinding? ", &App->debug->show_pathfind_points);
 			
 			ImGui::Checkbox("Toggle Invincible mode ", &is_player_invincible);
 

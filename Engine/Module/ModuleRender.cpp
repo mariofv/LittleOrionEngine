@@ -149,7 +149,6 @@ void ModuleRender::Render() const
 		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
 	}
 	
-	//This allows to expose ImGui in game mode so wecan have debug tools
 	App->editor->Render();
 
 	BROFILER_CATEGORY("Swap Window (VSYNC)", Profiler::Color::Aquamarine);

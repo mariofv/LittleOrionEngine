@@ -45,9 +45,7 @@ Application::Application()
 	modules.emplace_back(cameras = new ModuleCamera());
 	modules.emplace_back(debug = new ModuleDebug());
 	modules.emplace_back(audio = new ModuleAudio());
-#if !GAME
 	modules.emplace_back(debug_draw = new ModuleDebugDraw());
-#endif
 	modules.emplace_back(lights = new ModuleLight());
 	modules.emplace_back(scene = new ModuleScene());
 	modules.emplace_back(space_partitioning = new ModuleSpacePartitioning());

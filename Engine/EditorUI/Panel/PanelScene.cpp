@@ -60,7 +60,7 @@ void PanelScene::Render()
 		scene_window_content_area_height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
 
 		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
-		App->cameras->scene_camera->RecordDebugDraws(scene_window_content_area_width, scene_window_content_area_height);
+		//App->cameras->scene_camera->RecordDebugDraws(scene_window_content_area_width, scene_window_content_area_height);
 		ImGui::Image(
 			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
 			ImVec2(scene_window_content_area_width, scene_window_content_area_height),
@@ -299,13 +299,8 @@ void PanelScene::MousePicking(const float2& mouse_position)
 		return;
 	}
 
-	float2 window_center_pos = scene_window_content_area_pos + float2(scene_window_content_area_width, scene_window_content_area_height) / 2;
-
-	float2 window_mouse_position = mouse_position - window_center_pos;
-	float2 window_mouse_position_normalized = float2(window_mouse_position.x * 2 / scene_window_content_area_width, -window_mouse_position.y * 2 / scene_window_content_area_height);
-
 	LineSegment ray;
-	App->cameras->scene_camera->GetRay(window_mouse_position_normalized, ray);
+	App->cameras->scene_camera->GetRay(mouse_position, ray);
 	RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->scene_camera);
 	App->editor->selected_game_object = hit->game_object;
 	//App->renderer->GetRaycastIntertectedObject(ray, App->editor->selected_position);

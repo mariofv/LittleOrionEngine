@@ -7,6 +7,7 @@
 #include "Component/ComponentAABB.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 #include "EditorUI/Panel/PanelScene.h"
+#include "EditorUI/Panel/PanelGame.h"
 #include "ResourceManagement/Resources/Skybox.h"
 
 #include "MathGeoLib.h"
@@ -107,7 +108,7 @@ public:
 	ENGINE_API bool IsInsideFrustum(const AABB2D& aabb) const;
 	ComponentAABB::CollisionState CheckAABB2DCollision(const AABB2D& reference_AABB) const;
 
-	void GetRay(const float2& normalized_position, LineSegment &return_value) const;
+	ENGINE_API void GetRay(const float2 &mouse_position, LineSegment &return_value) const;
 
 	AABB GetMinimalEnclosingAABB() const;
 
