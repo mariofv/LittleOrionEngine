@@ -36,10 +36,8 @@ WorldManager::WorldManager()
 // Use this for initialization before Start()
 void WorldManager::Awake()
 {
-	if(!on_main_menu)
+	if(on_main_menu)
 	{
-		
-
 		return;
 	}
 
@@ -52,6 +50,9 @@ void WorldManager::Awake()
 	player2_go = App->scene->GetGameObjectByName("Player2");
 	ComponentScript* player2_controller_component = (ComponentScript*)player2_go->GetComponentScript("PlayerController");
 	player2_controller = static_cast<PlayerController*>(player2_controller_component->script);
+
+	GameObject* hole_go = App->scene->GetGameObjectByName("Mesh collider HOLE_0");
+	hole = static_cast<ComponentCollider*>(hole_go->GetComponent(Component::ComponentType::COLLIDER));
 	
 	singleplayer = true;
 	player1_choice = false;
@@ -111,11 +112,14 @@ void WorldManager::Start()
 // Update is called once per frame
 void WorldManager::Update()
 {
-	if(on_main_menu)
+	if (on_main_menu)
 	{
 		return;
 	}
-
+	if(!disable_hole)
+	{
+		CheckHole();
+	}
 	CheckTriggers();
 	/*
 	if(health_component->percentage <= 0.0f)
@@ -159,6 +163,7 @@ void WorldManager::OnInspector(ImGuiContext* context)
 
 	ImGui::Checkbox("Singleplayer", &App->input->singleplayer_input);
 	ImGui::Checkbox("Main menu", &on_main_menu);
+	ImGui::Checkbox("Fire in the hole", &disable_hole);
 }
 
 //Use this for linking JUST GO automatically
@@ -181,7 +186,6 @@ void WorldManager::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
-
 
 bool WorldManager::LoadLevel() const
 {
@@ -212,6 +216,7 @@ void WorldManager::InitTriggers()
 		event_triggers[i] = static_cast<ComponentCollider*>(trigger_go_dad->children[i]->GetComponent(ComponentCollider::ColliderType::BOX));
 	}
 }
+
 void WorldManager::CheckTriggers()
 {
 	if(current_event_trigger > 2)
@@ -225,6 +230,32 @@ void WorldManager::CheckTriggers()
 		{
 			++current_event_trigger;
 		}
+	}
+
+}
+
+void WorldManager::CheckHole()
+{
+	if (singleplayer)
+	{
+		if(!player1_choice)
+		{
+			disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
+		}
+		else
+		{
+			disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER)));
+		}
+	}
+	else
+	{
+		disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER))) &&
+			hole->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
+	}
+
+	if (disable_hole)
+	{
+		hole->owner->SetEnabled(false);
 	}
 
 }

@@ -64,7 +64,7 @@
                 "Translation": [
                     0.0,
                     0.0,
-                    0.01842975616455078
+                    0.0
                 ],
                 "Rotation": [
                     -0.0,
@@ -301,16 +301,26 @@
     ],
     "PrefabsComponents": [
         {
+            "RemovedComponents": [
+                {
+                    "Removed": 571396198
+                }
+            ],
+            "Components": [],
+            "UUID": 4106274841
+        },
+        {
+            "RemovedComponents": [
+                {
+                    "Removed": 571396198
+                }
+            ],
+            "Components": [],
+            "UUID": 4012452726
+        },
+        {
             "RemovedComponents": [],
             "Components": [
-                {
-                    "UUID": 833751351,
-                    "ComponentType": 2,
-                    "Active": false,
-                    "Mesh": 3348717978,
-                    "Material": 1582005317,
-                    "Skeleton": 0
-                },
                 {
                     "UUID": 1250248877,
                     "ComponentType": 2,
@@ -338,7 +348,7 @@
                     "Freeze_rotation_y": true,
                     "Freeze_rotation_z": true,
                     "Active_Physics": true,
-                    "Friction": 3.0,
+                    "Friction": 1.0,
                     "Rolling_friction": 1.0,
                     "Center_deviation": [
                         0.0,
@@ -388,18 +398,37 @@
                 {
                     "UUID": 3608248042,
                     "ComponentType": 2,
-                    "Active": false,
+                    "Active": true,
                     "Mesh": 3854408602,
                     "Material": 2868425841,
                     "Skeleton": 0
                 },
                 {
-                    "UUID": 1795937623,
-                    "ComponentType": 2,
-                    "Active": false,
-                    "Mesh": 3854408602,
-                    "Material": 2868425841,
-                    "Skeleton": 0
+                    "UUID": 4246124459,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 4,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": false,
+                    "Collision": true,
+                    "Visualize": true,
+                    "Attached": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": true,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ],
             "UUID": 3119106838
@@ -581,7 +610,7 @@
                 "Active": true,
                 "Translation": [
                     -51.97651290893555,
-                    -1.813460350036621,
+                    -5.017028331756592,
                     -3.99362850189209
                 ],
                 "Rotation": [
@@ -658,7 +687,7 @@
                 {
                     "UUID": 3132349959,
                     "ComponentType": 6,
-                    "Active": true,
+                    "Active": false,
                     "ScriptName": "Mushdoom"
                 }
             ]
@@ -860,8 +889,8 @@
                 "Active": true,
                 "Translation": [
                     0.0,
-                    2.0,
-                    -26.916725158691408
+                    0.0,
+                    -26.099430084228517
                 ],
                 "Rotation": [
                     -0.0,
@@ -967,9 +996,9 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    -57.00803756713867,
-                    0.6112798452377319,
-                    -1.7560734748840333
+                    76.67255401611328,
+                    6.670755386352539,
+                    -6.710150718688965
                 ],
                 "Rotation": [
                     -0.0,
@@ -1081,7 +1110,7 @@
                 "Active": true,
                 "Translation": [
                     -59.080482482910159,
-                    -2.3619232177734377,
+                    -4.909248352050781,
                     -4.433545112609863
                 ],
                 "Rotation": [
