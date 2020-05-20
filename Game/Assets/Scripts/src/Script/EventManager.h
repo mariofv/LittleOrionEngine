@@ -32,6 +32,7 @@ private:
 	unsigned waves_left = 0;
 	unsigned enemies_per_wave = 0;
 	unsigned current_event = 0;
+	int current_event_beated = -1;
 
 	friend WorldManager;
 

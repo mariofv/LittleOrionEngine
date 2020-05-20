@@ -182,7 +182,7 @@ void EnemyManager::OnInspector(ImGuiContext* context)
 	ImGui::Text("total_enemies_killed: %d", total_enemies_killed);
 	ImGui::Text("enemies: %d", enemies.size());
 	ImGui::DragInt("MAX_DOUBLE_Z_RANGE:", &max_double_z_spawn);
-
+	
 	ImGui::Separator();
 	for(const auto& enemy : enemies)
 	{

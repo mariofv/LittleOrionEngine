@@ -15,6 +15,7 @@
 #include "imgui.h"
 
 #include "PlayerController.h"
+#include "UIManager.h"
 
 
 bool WorldManager::singleplayer;
@@ -100,6 +101,10 @@ void WorldManager::Awake()
 	ComponentScript* event_manager_component = event_manager_go->GetComponentScript("EventManager");
 	event_manager = static_cast<EventManager*>(event_manager_component->script);
 
+	GameObject* ui_manager_go = App->scene->GetGameObjectByName("UIManager");
+	ComponentScript* ui_manager_component = ui_manager_go->GetComponentScript("UIManager");
+	ui_manager = static_cast<UIManager*>(ui_manager_component->script);
+
 	InitTriggers();
 }
 
@@ -144,13 +149,20 @@ void WorldManager::Update()
 	}
 	*/
 
-	if(event_manager->current_event > 2)
+	if(event_manager->current_event_beated == 2)
 	{
 		//We won the level!
 		player1_controller->owner->SetEnabled(false);
 		player2_controller->owner->SetEnabled(false);
-		//win_component->Enable();
-		transition = true;
+		ui_manager->SetWinScreen();
+	}
+
+
+	if(CheckLose())
+	{
+		player1_controller->owner->SetEnabled(false);
+		player2_controller->owner->SetEnabled(false);
+		ui_manager->SetLoseScreen();
 	}
 }
 
@@ -276,6 +288,39 @@ void WorldManager::CheckHole()
 		
 	}
 
+}
+
+bool WorldManager::CheckLose()
+{
+	if (singleplayer)
+	{
+		//If player1_choice == 0 he is chosing male model
+		if (!player1_choice)
+		{
+			if (!player1_controller->is_alive)
+			{
+				return true;
+			}
+		}
+		//Chosing female model
+		else
+		{
+			if (!player2_controller->is_alive)
+			{
+				return true;
+			}
+		}
+	}
+	//Multiplayer
+	else
+	{
+		if (!player1_controller->is_alive && !player2_controller->is_alive)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 //Use this for linking GO AND VARIABLES automatically if you need to save variables
