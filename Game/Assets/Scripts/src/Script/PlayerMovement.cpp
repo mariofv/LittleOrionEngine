@@ -96,10 +96,9 @@ void PlayerMovement::Move(int player)
 			is_inside = IsInside(transform + direction  * speed);
 			if (is_inside)
 			{
-				//collider->SwitchPhysics(false);
-				//owner->transform.LookAt(direction + transform);
-				//collider->SwitchPhysics(true);
 				collider->SetVelocity(direction, speed * App->time->delta_time);
+
+				
 				animation->ActiveAnimation("run");
 			}
 			else

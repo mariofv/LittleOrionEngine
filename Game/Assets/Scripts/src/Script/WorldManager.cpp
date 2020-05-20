@@ -14,6 +14,7 @@
 
 #include "imgui.h"
 
+#include "CameraController.h"
 #include "PlayerController.h"
 #include "UIManager.h"
 
@@ -102,6 +103,10 @@ void WorldManager::Awake()
 	GameObject* ui_manager_go = App->scene->GetGameObjectByName("UIManager");
 	ComponentScript* ui_manager_component = ui_manager_go->GetComponentScript("UIManager");
 	ui_manager = static_cast<UIManager*>(ui_manager_component->script);
+
+	GameObject* camera_manager_go = App->scene->GetGameObjectByName("Main Camera");
+	ComponentScript* camera_manager_component = camera_manager_go->GetComponentScript("CameraController");
+	camera_manager = static_cast<CameraController*>(camera_manager_component->script);
 
 	if(!singleplayer)
 	{
@@ -222,13 +227,11 @@ bool WorldManager::LoadLevel() const
 	}
 	else
 	{
-		//If players are different
-		if(player1_choice ^ player2_choice)
-		{
-			//Get players
-			App->scene->LoadScene(0);
-			return true;
-		}
+
+		//Get players
+		App->scene->LoadScene(0);
+		return true;
+		
 	}
 
 	return false;
@@ -303,7 +306,7 @@ void WorldManager::CheckHole()
 
 bool WorldManager::CheckLose()
 {
-	if (singleplayer)
+	if (singleplayer && !was_multiplayer)
 	{
 		//If player1_choice == 0 he is chosing male model
 		if (!player1_choice)
@@ -325,6 +328,16 @@ bool WorldManager::CheckLose()
 	//Multiplayer
 	else
 	{
+		if ((!player1_controller->is_alive || !player2_controller->is_alive) && !was_multiplayer)
+		{
+			camera_manager->MultiplayerToSingleplayer();
+			singleplayer = true;
+			was_multiplayer = true;
+
+
+			return false;
+		}
+
 		if (!player1_controller->is_alive && !player2_controller->is_alive)
 		{
 			return true;

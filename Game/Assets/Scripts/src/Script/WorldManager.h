@@ -4,9 +4,10 @@
 #include "Script.h"
 #include "EventManager.h"
 
+class CameraController;
 class ComponentCollider;
-class PlayerController;
 class ComponentImage;
+class PlayerController;
 class UIManager;
 
 
@@ -63,8 +64,10 @@ private:
 
 	ComponentCollider* hole = nullptr;
 	UIManager* ui_manager = nullptr;
+	CameraController* camera_manager = nullptr;
 	bool disable_hole = false;
 	float3 fall = float3(3.f, -10000.f, 0.f);
+	bool was_multiplayer = false;
 	
 
 
