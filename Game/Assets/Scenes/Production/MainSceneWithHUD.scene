@@ -325,24 +325,6 @@
     ],
     "PrefabsComponents": [
         {
-            "RemovedComponents": [
-                {
-                    "Removed": 999990596
-                }
-            ],
-            "Components": [],
-            "UUID": 4235302750
-        },
-        {
-            "RemovedComponents": [
-                {
-                    "Removed": 999990596
-                }
-            ],
-            "Components": [],
-            "UUID": 1242193472
-        },
-        {
             "RemovedComponents": [],
             "Components": [
                 {
@@ -731,8 +713,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    0.0,
-                    0.0
+                    752.0,
+                    351.5
                 ],
                 "Rotation": [
                     0.0,
@@ -753,8 +735,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    1002.0,
-                    675.0
+                    1504.0,
+                    703.0
                 ],
                 "Pivot": [
                     0.5,
