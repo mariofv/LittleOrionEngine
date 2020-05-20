@@ -27,6 +27,8 @@ public:
 	void FollowPlayer();
 
 	void MultiplayerCamera();
+	//Useless on future iterations because of the mechanic of "Don't die alone"
+	void MultiplayerToSingleplayer();
 
 	void SetFreeze();
 
@@ -62,6 +64,8 @@ private:
 	float distance_z = 0.f;
 
 	bool freeze = false;
+
+	GameObject* current_target = nullptr;
 
 };
 extern "C" SCRIPT_API CameraController* CameraControllerDLL(); //This is how we are going to load the script
