@@ -59,7 +59,7 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ImGui::InputFloat("Move Speed", &move_speed);
 	ImGui::InputFloat("Rotate Speed", &rotate_speed);
 	ImGui::InputFloat("Attack Speed", &attack_speed);
-	ImGui::InputFloat("Attack Power", &attack_power);
+	ImGui::InputFloat("Attack Power", &attack_damage);
 	ImGui::InputFloat("Attack Range", &attack_range);
 	ImGui::InputFloat("Max Health", const_cast<float*>(&MAX_HEALTH_POINTS));
 	ImGui::InputFloat("Health Points", &health_points);
