@@ -59,43 +59,37 @@ void ModuleCamera::SetDirectionalLightFrustums()
 {
 	dir_light_game_object = App->scene->CreateGameObject();
 	dir_light_game_object->transform.SetTranslation(float3(0, 0, 0));
-
 	dir_light_game_object_mid = App->scene->CreateGameObject();
 	dir_light_game_object_mid->transform.SetTranslation(float3(0, 0, 0));
-
 	dir_light_game_object_far = App->scene->CreateGameObject();
 	dir_light_game_object_far->transform.SetTranslation(float3(0, 0, 0));
+
 
 	directional_light_camera = (ComponentCamera*)dir_light_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	directional_light_camera->depth = -1;
 	directional_light_camera->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
-
 	directional_light_camera->owner = dir_light_game_object;
 	directional_light_camera->camera_frustum.type = FrustumType::OrthographicFrustum;
 
-	directional_light_camera->SetFarDistance(50);
-	directional_light_camera->SetNearDistance(25);
 
 	directional_light_mid = (ComponentCamera*)dir_light_game_object_mid->CreateComponent(Component::ComponentType::CAMERA);
 	directional_light_mid->depth = -1;
 	directional_light_mid->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
-
 	directional_light_mid->owner = dir_light_game_object;
 	directional_light_mid->camera_frustum.type = FrustumType::OrthographicFrustum;
-
-	directional_light_mid->SetFarDistance(75);
-	directional_light_mid->SetNearDistance(50);
 
 
 	directional_light_far = (ComponentCamera*)dir_light_game_object_far->CreateComponent(Component::ComponentType::CAMERA);
 	directional_light_far->depth = -1;
 	directional_light_far->SetClearMode(ComponentCamera::ClearMode::SKYBOX);
-
 	directional_light_far->owner = dir_light_game_object;
 	directional_light_far->camera_frustum.type = FrustumType::OrthographicFrustum;
 
-	directional_light_far->SetFarDistance(100);
-	directional_light_far->SetNearDistance(75);
+
+	App->cameras->directional_light_camera->SetNearDistance(0);
+	App->cameras->directional_light_mid->SetNearDistance(0);
+	App->cameras->directional_light_far->SetNearDistance(0);
+
 
 	light_aabb = new ComponentAABB(dir_light_game_object);
 	light_aabb->global_bounding_box.SetNegativeInfinity();
@@ -105,27 +99,22 @@ void ModuleCamera::SetDirectionalLightFrustums()
 void ModuleCamera::UpdateDirectionalLightFrustums()
 {
 	//Set Position from AABB
-	//dir_light_game_object->transform.SetTranslation(float3((light_aabb->bounding_box.maxPoint.x + light_aabb->bounding_box.minPoint.x)*0.5,(light_aabb->bounding_box.maxPoint.y + light_aabb->bounding_box.minPoint.y)*0.5,light_aabb->bounding_box.maxPoint.z));
+	dir_light_game_object->transform.SetTranslation(float3((light_aabb->bounding_box.maxPoint.x + light_aabb->bounding_box.minPoint.x)*0.5,(light_aabb->bounding_box.maxPoint.y + light_aabb->bounding_box.minPoint.y)*0.5, light_aabb->bounding_box.maxPoint.z ));
 	
 	//Setting Ortho width and height from AABB
-	App->cameras->directional_light_camera->camera_frustum.orthographicWidth = App->cameras->aux_width;
-	App->cameras->directional_light_camera->camera_frustum.orthographicHeight = App->cameras->aux_height;
+	App->cameras->directional_light_camera->camera_frustum.orthographicWidth =  (light_aabb->bounding_box.maxPoint.x - light_aabb->bounding_box.minPoint.x);
+	App->cameras->directional_light_camera->camera_frustum.orthographicHeight = (light_aabb->bounding_box.maxPoint.y - light_aabb->bounding_box.minPoint.y);
 
-	App->cameras->directional_light_mid->camera_frustum.orthographicWidth = App->cameras->aux_width;
-	App->cameras->directional_light_mid->camera_frustum.orthographicHeight = App->cameras->aux_height;
+	App->cameras->directional_light_mid->camera_frustum.orthographicWidth = light_aabb->bounding_box.maxPoint.x - light_aabb->bounding_box.minPoint.x;
+	App->cameras->directional_light_mid->camera_frustum.orthographicHeight = light_aabb->bounding_box.maxPoint.y - light_aabb->bounding_box.minPoint.y;
 
-	App->cameras->directional_light_far->camera_frustum.orthographicWidth = App->cameras->aux_width;
-	App->cameras->directional_light_far->camera_frustum.orthographicHeight = App->cameras->aux_height;
+	App->cameras->directional_light_far->camera_frustum.orthographicWidth = light_aabb->bounding_box.maxPoint.x - light_aabb->bounding_box.minPoint.x;
+	App->cameras->directional_light_far->camera_frustum.orthographicHeight = light_aabb->bounding_box.maxPoint.y - light_aabb->bounding_box.minPoint.y;
 
-	//Setting close and far planes also from AABB 
-	App->cameras->directional_light_camera->SetNearDistance(App->cameras->close_mid_separation / 2);
-	App->cameras->directional_light_camera->SetFarDistance(App->cameras->close_mid_separation);
-
-	App->cameras->directional_light_mid->SetNearDistance(App->cameras->mid_far_separation / 2);
-	App->cameras->directional_light_mid->SetFarDistance(App->cameras->mid_far_separation);
-
-	App->cameras->directional_light_far->SetNearDistance(App->cameras->far_plane / 2);
-	App->cameras->directional_light_far->SetFarDistance(App->cameras->far_plane);
+	//Setting far planes also from AABB 
+	App->cameras->directional_light_camera->SetFarDistance(light_aabb->bounding_box.maxPoint.z - light_aabb->bounding_box.minPoint.z);
+	App->cameras->directional_light_mid->SetFarDistance(light_aabb->bounding_box.maxPoint.z - light_aabb->bounding_box.minPoint.z);
+	App->cameras->directional_light_far->SetFarDistance(light_aabb->bounding_box.maxPoint.z - light_aabb->bounding_box.minPoint.z);
 
 	directional_light_camera->Update();
 	directional_light_mid->Update();

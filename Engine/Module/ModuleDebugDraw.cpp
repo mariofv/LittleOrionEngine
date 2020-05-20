@@ -481,16 +481,16 @@ void ModuleDebugDraw::Render()
 		dd::aabb(App->cameras->main_camera->GetMinimalEnclosingAABB().minPoint, App->cameras->main_camera->GetMinimalEnclosingAABB().maxPoint, float3(1, 1, 0));
 	}
 
-	//dd::frustum(App->cameras->directional_light_camera->GetInverseClipMatrix(), float3(1, 0, 0));
+	dd::frustum(App->cameras->directional_light_camera->GetInverseClipMatrix(), float3(1, 0, 0));
 	//dd::frustum(App->cameras->directional_light_mid->GetInverseClipMatrix(), float3(0, 1, 0));
 	//dd::frustum(App->cameras->directional_light_far->GetInverseClipMatrix(), float3(0, 0, 1));
 
 	dd::aabb(App->cameras->main_camera->GetMinimalEnclosingAABB().minPoint, App->cameras->main_camera->GetMinimalEnclosingAABB().maxPoint, float3(1, 1, 0));
-	dd::aabb(App->cameras->light_aabb->bounding_box.minPoint, App->cameras->light_aabb->bounding_box.maxPoint, float3(1, 1, 1));
+	//dd::aabb(App->cameras->light_aabb->bounding_box.minPoint, App->cameras->light_aabb->bounding_box.maxPoint, float3(1, 1, 1));
 
 
-	dd::frustum(App->cameras->camera_close->GetInverseClipMatrix(), float3(1, 1, 0));
-	dd::frustum(App->cameras->camera_mid->GetInverseClipMatrix(), float3(0, 1, 1));
+	//dd::frustum(App->cameras->camera_close->GetInverseClipMatrix(), float3(1, 1, 0));
+	//dd::frustum(App->cameras->camera_mid->GetInverseClipMatrix(), float3(0, 1, 1));
 	dd::frustum(App->cameras->camera_far->GetInverseClipMatrix(), float3(1, 0, 1));
 
 	

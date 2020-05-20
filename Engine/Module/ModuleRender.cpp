@@ -185,7 +185,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			mesh.second->Render();
 			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
 			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-			App->cameras->UpdateLightAABB(mesh.second->owner->aabb.bounding_box);
+			App->cameras->UpdateLightAABB(mesh.second->owner->aabb.global_bounding_box);
 			glUseProgram(0);
 
 		}
@@ -198,6 +198,8 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			mesh.second->Render();
 			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
 			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
+			App->cameras->UpdateLightAABB(mesh.second->owner->aabb.global_bounding_box);
+
 			glUseProgram(0);
 			
 		}
