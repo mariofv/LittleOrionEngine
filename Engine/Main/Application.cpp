@@ -88,6 +88,7 @@ update_status Application::Update()
 	if (App->scene->HasPendingSceneToLoad())
 	{
 		App->scene->OpenPendingScene();
+		App->physics->UpdateAllDimensions();
 	}
 
 	for (auto& module : modules) 

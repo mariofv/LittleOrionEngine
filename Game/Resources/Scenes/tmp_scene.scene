@@ -260,7 +260,7 @@
                 "Translation": [
                     0.0,
                     0.0,
-                    0.0
+                    -19.04599952697754
                 ],
                 "Rotation": [
                     0.0,
@@ -489,7 +489,7 @@
                         1.0
                     ],
                     "Static": false,
-                    "Collision": false,
+                    "Collision": true,
                     "Visualize": false,
                     "Attached": false,
                     "Freeze_rotation_x": true,
@@ -797,8 +797,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    528.0,
-                    306.0
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     0.0,
@@ -819,8 +819,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    1056.0,
-                    612.0
+                    1137.0,
+                    717.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1056,7 +1056,8 @@
                     "UUID": 585789314,
                     "ComponentType": 6,
                     "Active": true,
-                    "ScriptName": "WorldManager"
+                    "ScriptName": "WorldManager",
+                    "Main Menu": false
                 }
             ]
         },
@@ -1280,15 +1281,15 @@
                     "StateMachineResource": 927869490
                 },
                 {
-                    "UUID": 1451849866,
+                    "UUID": 3477169875,
                     "ComponentType": 9,
                     "Active": true,
-                    "ColliderType": 0,
+                    "ColliderType": 1,
                     "Mass": 1.0,
                     "Scale": [
-                        0.8899999856948853,
-                        0.7900000214576721,
-                        0.4699999988079071
+                        0.49000000953674319,
+                        0.9900000095367432,
+                        1.0
                     ],
                     "Static": false,
                     "Collision": true,
@@ -1302,8 +1303,8 @@
                     "Rolling_friction": 1.0,
                     "Center": [
                         0.0,
-                        0.8100000023841858,
-                        0.0
+                        0.8299999833106995,
+                        0.019999999552965165
                     ]
                 }
             ]
@@ -1511,9 +1512,9 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    33.102115631103519,
-                    6.390443325042725,
-                    0.5945010185241699
+                    -94.86555480957031,
+                    -1.1913976669311524,
+                    -2.1504435539245607
                 ],
                 "Rotation": [
                     -0.0,
@@ -1638,7 +1639,7 @@
                 "Translation": [
                     0.0,
                     0.0,
-                    -19.046016693115236
+                    0.0
                 ],
                 "Rotation": [
                     -0.0,
@@ -1797,13 +1798,13 @@
                         1.0
                     ],
                     "Static": false,
-                    "Collision": true,
+                    "Collision": false,
                     "Visualize": true,
                     "Attached": true,
                     "Freeze_rotation_x": true,
                     "Freeze_rotation_y": true,
                     "Freeze_rotation_z": true,
-                    "Active_Physics": true,
+                    "Active_Physics": false,
                     "Friction": 1.0,
                     "Rolling_friction": 1.0,
                     "Center": [
@@ -2314,7 +2315,7 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    219.7213897705078,
+                    217.4905242919922,
                     -3.8502659797668459,
                     -20.165035247802736
                 ],
@@ -2378,7 +2379,7 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    256.5808410644531,
+                    244.2530059814453,
                     -2.2448508739471437,
                     -20.165000915527345
                 ],
@@ -3923,8 +3924,9 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "DamageIndicator",
-                    "Speed": 1.0,
-                    "Duration": 500.0
+                    "Speed": 0.05000000074505806,
+                    "Duration": 1000.0,
+                    "Offset Y": 40.0
                 }
             ]
         },
@@ -4016,8 +4018,9 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "DamageIndicator",
-                    "Speed": 1.0,
-                    "Duration": 500.0
+                    "Speed": 0.05000000074505806,
+                    "Duration": 1000.0,
+                    "Offset Y": 40.0
                 }
             ]
         },
@@ -4109,8 +4112,9 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "DamageIndicator",
-                    "Speed": 1.0,
-                    "Duration": 500.0
+                    "Speed": 0.05000000074505806,
+                    "Duration": 1000.0,
+                    "Offset Y": 40.0
                 }
             ]
         },
@@ -4202,8 +4206,9 @@
                     "ComponentType": 6,
                     "Active": false,
                     "ScriptName": "DamageIndicator",
-                    "Speed": 1.0,
-                    "Duration": 500.0
+                    "Speed": 0.05000000074505806,
+                    "Duration": 1000.0,
+                    "Offset Y": 40.0
                 }
             ]
         },
@@ -4295,8 +4300,9 @@
                     "ComponentType": 6,
                     "Active": false,
                     "ScriptName": "DamageIndicator",
-                    "Speed": 1.0,
-                    "Duration": 500.0
+                    "Speed": 0.05000000074505806,
+                    "Duration": 1000.0,
+                    "Offset Y": 40.0
                 }
             ]
         },

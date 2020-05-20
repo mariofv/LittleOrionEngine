@@ -51,6 +51,8 @@ public:
 	bool RaycastWorld(const btVector3 &Start, btVector3 &End, btVector3 &Normal);
 	ENGINE_API int GetRaycastWorldId(const btVector3& start, btVector3& end, btVector3& normal);
 
+	void UpdateAllDimensions();
+
 public:
 
 	btDefaultCollisionConfiguration* collision_conf = nullptr;

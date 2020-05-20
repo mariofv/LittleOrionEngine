@@ -145,7 +145,7 @@ void CharacterSelectionMenuController::SwitchMultiplayer(bool enabled)
 	multiplayer = enabled;
 	if (multiplayer)
 	{
-		App->input->singleplayer_input = true;
+		App->input->singleplayer_input = false;
 		character_selector2->SetEnabled(true);
 		const float3& translation_p2 = player1_choice ? male_character_position->transform_2d.GetTranslation() : female_character_position->transform_2d.GetTranslation();
 		character_selector2->transform_2d.SetTranslation(translation_p2);
@@ -154,7 +154,7 @@ void CharacterSelectionMenuController::SwitchMultiplayer(bool enabled)
 	}
 	else
 	{
-		App->input->singleplayer_input = false;
+		App->input->singleplayer_input = true;
 		character_selector2->SetEnabled(false);
 
 		player2_press_start_text->SetEnabled(character_selection_status == CharacterSelectionStatus::SELECTING_PLAYER);

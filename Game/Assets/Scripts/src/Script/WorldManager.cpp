@@ -55,8 +55,6 @@ void WorldManager::Awake()
 	GameObject* hole_go = App->scene->GetGameObjectByName("Mesh collider HOLE_0");
 	hole = static_cast<ComponentCollider*>(hole_go->GetComponent(Component::ComponentType::COLLIDER));
 	
-	singleplayer = true;
-	player1_choice = false;
 	//Logic of choosing character and single/multi player
 	//Singleplayer
 	if(singleplayer)
@@ -173,7 +171,8 @@ void WorldManager::OnInspector(ImGuiContext* context)
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
 
-	ImGui::Checkbox("Singleplayer", &App->input->singleplayer_input);
+	ImGui::Checkbox("Singleplayer", &singleplayer);
+	ImGui::Checkbox("Player 1 female", &player1_choice);
 	ImGui::Checkbox("Main menu", &on_main_menu);
 	ImGui::Checkbox("Fire in the hole", &disable_hole);
 }
