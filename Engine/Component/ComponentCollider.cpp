@@ -55,6 +55,7 @@ void ComponentCollider::CommonAssign(const ComponentCollider& component_to_copy)
 	is_attached = component_to_copy.is_attached;
 	is_static = component_to_copy.is_static;
 	active_physics = component_to_copy.active_physics;
+	center = component_to_copy.center;
 	AddBody();
 }
 
