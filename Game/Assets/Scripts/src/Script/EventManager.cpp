@@ -66,6 +66,7 @@ void EventManager::Update()
 				event_triggered = false;
 				camera_controller->SetFreeze();
 				waves_left = 0;
+				current_event_beated = current_event;
 			}
 			else
 			{
@@ -87,6 +88,8 @@ void EventManager::OnInspector(ImGuiContext* context)
 
 	ImGui::Text("enemies_killed_on_wave: %d", enemies_killed_on_wave);
 	ImGui::Text("enemies_per_wave: %d", enemies_per_wave);
+	ImGui::Text("Current Event Beated: %d", current_event_beated);
+
 }
 
 
