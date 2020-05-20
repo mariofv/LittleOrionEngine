@@ -7,6 +7,7 @@
 class ComponentCollider;
 class PlayerController;
 class ComponentImage;
+class UIManager;
 
 
 class WorldManager : public Script
@@ -31,6 +32,7 @@ private:
 	void InitTriggers();
 	void CheckTriggers();
 	void CheckHole();
+	bool CheckLose();
 
 public:
 	static bool singleplayer;
@@ -60,6 +62,7 @@ private:
 	bool on_main_menu = false;
 
 	ComponentCollider* hole = nullptr;
+	UIManager* ui_manager = nullptr;
 	bool disable_hole = false;
 	float3 fall = float3(3.f, -10000.f, 0.f);
 	
