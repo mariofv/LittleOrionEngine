@@ -214,9 +214,9 @@
         },
         {
             "ParentUUID": 521044214,
-            "Prefab": 197215350,
+            "Prefab": 1371745936,
             "Transform": {
-                "UUID": 3875411937,
+                "UUID": 2744285836,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -237,16 +237,12 @@
             },
             "UUIDS": [
                 {
-                    "UUID": 4235302750,
-                    "OriginalUUID": 197215350
+                    "UUID": 1064172743,
+                    "OriginalUUID": 1371745936
                 },
                 {
-                    "UUID": 3562459722,
-                    "OriginalUUID": 197215352
-                },
-                {
-                    "UUID": 625998456,
-                    "OriginalUUID": 197215351
+                    "UUID": 1595876417,
+                    "OriginalUUID": 1371745937
                 }
             ]
         },
@@ -324,24 +320,6 @@
         }
     ],
     "PrefabsComponents": [
-        {
-            "RemovedComponents": [
-                {
-                    "Removed": 999990596
-                }
-            ],
-            "Components": [],
-            "UUID": 4235302750
-        },
-        {
-            "RemovedComponents": [
-                {
-                    "Removed": 999990596
-                }
-            ],
-            "Components": [],
-            "UUID": 1242193472
-        },
         {
             "RemovedComponents": [],
             "Components": [
@@ -543,6 +521,14 @@
         {
             "RemovedComponents": [],
             "Components": [
+                {
+                    "UUID": 4153653938,
+                    "ComponentType": 2,
+                    "Active": false,
+                    "Mesh": 40916008,
+                    "Material": 2483162031,
+                    "Skeleton": 0
+                },
                 {
                     "UUID": 230039466,
                     "ComponentType": 2,
@@ -819,8 +805,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    1137.0,
-                    717.0
+                    1207.0,
+                    569.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1285,7 +1271,7 @@
                     "ComponentType": 9,
                     "Active": true,
                     "ColliderType": 1,
-                    "Mass": 1.0,
+                    "Mass": 3.0,
                     "Scale": [
                         0.49000000953674319,
                         0.9900000095367432,
@@ -1299,7 +1285,7 @@
                     "Freeze_rotation_y": true,
                     "Freeze_rotation_z": true,
                     "Active_Physics": true,
-                    "Friction": 0.10000000149011612,
+                    "Friction": 0.30000001192092898,
                     "Rolling_friction": 1.0,
                     "Center": [
                         0.0,
@@ -1569,9 +1555,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "PlayerController",
-                    "Player": 1,
-                    "Name0": "Player 1 HealthBar",
-                    "Player 1 HealthBar": 1518932593
+                    "Player": 1
                 },
                 {
                     "UUID": 3074688169,
@@ -1590,12 +1574,6 @@
                     "ScriptName": "PlayerAttack",
                     "Name0": "Attack Collider",
                     "Attack Collider": 2107586753
-                },
-                {
-                    "UUID": 142797357,
-                    "ComponentType": 8,
-                    "Active": true,
-                    "StateMachineResource": 2258225
                 },
                 {
                     "UUID": 1484556941,
@@ -1621,8 +1599,14 @@
                     "Center": [
                         0.0,
                         1.0,
-                        0.0
+                        -0.1899999976158142
                     ]
+                },
+                {
+                    "UUID": 1633507961,
+                    "ComponentType": 8,
+                    "Active": true,
+                    "StateMachineResource": 2029464165
                 }
             ]
         },
@@ -1758,9 +1742,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "PlayerController",
-                    "Player": 1,
-                    "Name0": "Player 2 HealthBar",
-                    "Player 2 HealthBar": 3981025267
+                    "Player": 1
                 },
                 {
                     "UUID": 3072380237,
@@ -1791,20 +1773,20 @@
                     "ComponentType": 9,
                     "Active": true,
                     "ColliderType": 1,
-                    "Mass": 1.0,
+                    "Mass": 10.0,
                     "Scale": [
                         0.3499999940395355,
                         0.7200000286102295,
                         1.0
                     ],
                     "Static": false,
-                    "Collision": false,
+                    "Collision": true,
                     "Visualize": true,
                     "Attached": true,
                     "Freeze_rotation_x": true,
                     "Freeze_rotation_y": true,
                     "Freeze_rotation_z": true,
-                    "Active_Physics": false,
+                    "Active_Physics": true,
                     "Friction": 1.0,
                     "Rolling_friction": 1.0,
                     "Center": [
@@ -2873,7 +2855,7 @@
                         0.999995768070221,
                         1.0
                     ],
-                    "Intensity": 1.0,
+                    "Intensity": 0.5,
                     "LightType": 0,
                     "PointLightRange": 1.0,
                     "PointLightConstant": 1.0,
@@ -2979,6 +2961,96 @@
                         0.0,
                         0.0
                     ]
+                }
+            ]
+        },
+        {
+            "UUID": 151201263,
+            "ParentUUID": 734635377,
+            "Name": "Point Light",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2577047017,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 356584526,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 2381642658,
+                    "ComponentType": 4,
+                    "Active": true,
+                    "LightColor": [
+                        1.0,
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Intensity": 0.5,
+                    "LightType": 0,
+                    "PointLightRange": 10.0,
+                    "PointLightConstant": 1.0,
+                    "PointLightLinear": 0.04500000178813934,
+                    "PointLightQuadratic": 0.007499999832361937,
+                    "SpotLightRange": 1.0,
+                    "SpotLightConstant": 1.0,
+                    "SpotLightLinear": 0.04500000178813934,
+                    "SpotLightQuadratic": 0.007499999832361937,
+                    "SpotLightSpotAngle": 30.0,
+                    "SpotLightCutoff": 0.9659258127212524,
+                    "SpotLightSoftness": 0.10000000149011612,
+                    "SpotLightOuterCutoff": 0.9588197469711304
                 }
             ]
         },
