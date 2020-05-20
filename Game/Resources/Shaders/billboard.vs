@@ -82,12 +82,6 @@ subroutine (alignment_subroutine) vec4 axial_alignment()
 	return matrices.proj*(matrices.view*vec4(billboard.center_pos,1.0) + vec4(billboard.width*vertex_position.x, billboard.height*vertex_position.y, 0.0, 0.0));
 }
 
-subroutine (alignment_subroutine) vec4 hola()
-{
-	return vec4(0, 0, 0, 0);
-}
-
-
 
 
 

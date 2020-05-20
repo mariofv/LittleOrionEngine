@@ -60,6 +60,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 	float random_z = (rand() % ((max_range_random_z - min_range_random_z) + 1) + min_range_random_z) / 100.f;
 	float rColor = 0.5f + ((rand() % 100) / 100.0f);
 	particle.position = owner->transform.GetGlobalTranslation();
+	particle.rotation = owner->transform.GetGlobalRotation();
 	if (enabled_random_x)
 	{
 		particle.position.x += random_x;
@@ -120,6 +121,7 @@ void ComponentParticleSystem::Render()
 	}
 	glDisable(GL_BLEND);
 }
+
 void ComponentParticleSystem::SetParticleTexture(uint32_t texture_uuid)
 {
 	this->texture_uuid = texture_uuid;

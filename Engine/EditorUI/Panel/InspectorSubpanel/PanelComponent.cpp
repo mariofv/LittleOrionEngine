@@ -233,9 +233,14 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 
 void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* particle_system)
 {
-	ImGui::ShowDemoWindow();
+	
 	if (ImGui::CollapsingHeader(ICON_FA_SQUARE " Particle System", ImGuiTreeNodeFlags_DefaultOpen))
 	{
+		if (ImGui::Button("Delete"))
+		{
+			App->actions->DeleteComponentUndo(particle_system);
+			return;
+		}
 		if (ImGui::CollapsingHeader("Particle Values", ImGuiTreeNodeFlags_DefaultOpen))
 		{
 			ImGui::Text("Texture");
@@ -257,6 +262,30 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			if (selected_resource_uuid != 0)
 			{
 				particle_system->billboard->ChangeTexture(selected_resource_uuid);
+			}
+			int alignment_type = static_cast<int>(particle_system->billboard->alignment_type);
+			if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) {
+				switch (alignment_type)
+				{
+				case 0:
+					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::VIEW_POINT);
+					break;
+				case 1:
+					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::AXIAL);
+					break;
+				case 2:
+					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::SPRITESHEET);
+					break;
+				case 3:
+					particle_system->billboard->ChangeBillboardType(ComponentBillboard::AlignmentType::CROSSED);
+					break;
+				}
+			}
+			if (particle_system->billboard->alignment_type == ComponentBillboard::AlignmentType::SPRITESHEET) {
+				ImGui::InputInt("Rows", &particle_system->billboard->x_tiles, 1);
+				ImGui::InputInt("Columns", &particle_system->billboard->y_tiles, 1);
+				ImGui::InputFloat("Speed", &particle_system->billboard->sheet_speed, 1);
+				ImGui::Checkbox("Oriented to camera", &particle_system->billboard->oriented_to_camera);
 			}
 			ImGui::Checkbox("Loop", &particle_system->loop);
 			ImGui::Spacing();
@@ -306,7 +335,7 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 		}
 		if (ImGui::CollapsingHeader(ICON_FA_SQUARE "Color Over Time"))
 		{
-			ImGui::Checkbox("Color Fade", &particle_system->color_fade);
+			ImGui::Checkbox("Fade", &particle_system->color_fade);
 			if (particle_system->color_fade)
 			{
 				ImGui::DragFloat("Fade time", &particle_system->color_fade_time, 0.01f, 0.0f, 10.0F);

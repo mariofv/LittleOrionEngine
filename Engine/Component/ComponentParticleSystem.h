@@ -15,6 +15,7 @@ public:
 	struct Particle {
 		float3 position;
 		float3 velocity;
+		Quat rotation;
 		float4 color;
 		float time_counter;
 		float  life;
@@ -53,7 +54,7 @@ public:
 	
 	//standard values
 	bool loop = true;
-	int max_particles = 50;
+	int max_particles = 500;
 	unsigned int last_used_particle = 0;
 	unsigned int nr_new_particles = 2;
 
