@@ -14,6 +14,7 @@
 #include "imgui.h"
 
 #include "EnemyController.h"
+#include "UIManager.h"
 
 
 PlayerAttack* PlayerAttackDLL()
@@ -39,6 +40,11 @@ void PlayerAttack::Awake()
 
 	animation = (ComponentAnimation*) owner->GetComponent(Component::ComponentType::ANIMATION);
 	collider_component = static_cast<ComponentCollider*>(collider->GetComponent(ComponentCollider::ColliderType::BOX));
+
+	GameObject* ui = App->scene->GetGameObjectByName("UIManager");
+	ComponentScript* component_ui = ui->GetComponentScript("UIManager");
+	ui_manager = static_cast<UIManager*>(component_ui->script);
+
 }
 // Use this for initialization
 
@@ -89,7 +95,9 @@ void PlayerAttack::ComputeCollisions() const
 
 		if (collider_component->DetectCollisionWith(enemy->collider))
 		{
+
 			enemy->TakeDamage(current_damage_power);
+			ui_manager->SpawnDamageIndicator(current_damage_power, enemy->owner->transform.GetGlobalTranslation());
 		}
 	}
 }

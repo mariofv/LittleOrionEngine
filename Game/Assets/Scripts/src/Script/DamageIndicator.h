@@ -27,10 +27,12 @@ private:
 	ComponentText* damage_indicator_text = nullptr;
 
 	bool alive = false;
-	float speed = 1.f;
+	float speed = 0.5f;
 	
-	float duration = 500.f;
+	float duration = 1000.f;
 	float current_time = 0.f;
+
+	float offset_y = 40.f;
 };
 extern "C" SCRIPT_API DamageIndicator* DamageIndicatorDLL(); //This is how we are going to load the script
 #endif

@@ -232,7 +232,7 @@ void ComponentCollider::SetCollisionDetection()
 
 	if (detect_collision && active)
 	{		
-		flags -= body->CF_NO_CONTACT_RESPONSE;
+		flags &= ~(body->CF_NO_CONTACT_RESPONSE);
 	}
 
 	body->setCollisionFlags(flags);

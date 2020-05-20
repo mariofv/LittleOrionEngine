@@ -5,7 +5,7 @@
 
 class ComponentAnimation;
 class ComponentCollider;
-
+class UIManager;
 
 
 class PlayerAttack : public Script
@@ -28,6 +28,7 @@ private:
 	ComponentAnimation* animation = nullptr;
 	GameObject* collider = nullptr;
 	ComponentCollider* collider_component = nullptr;
+	UIManager* ui_manager = nullptr;
 	unsigned current_damage_power = 0;
 	bool is_attacking = false;
 	bool raycast_cast = false;
