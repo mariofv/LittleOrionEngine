@@ -27,7 +27,6 @@ public:
 	ComponentCollider* GetCollider();
 	void MakePlayerFall(float3& direction) const;
 
-	void InitPublicGameObjects() override;
 
 public:
 	unsigned int player = 1;

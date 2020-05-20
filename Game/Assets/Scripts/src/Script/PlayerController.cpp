@@ -85,6 +85,8 @@ void PlayerController::OnInspector(ImGuiContext* context)
 	}
 	ImGui::DragFloat("Health", &health_points);
 	ImGui::Checkbox("Invincible", &invincible);
+	ImGui::Checkbox("Is Alive", &is_alive);
+	
 }
 
 
@@ -107,11 +109,6 @@ void PlayerController::TakeDamage(float damage)
 	if (invincible) return;
 
 	health_points -= damage;
-	if (health_points <= 0)
-	{
-		health_points = 0;
-		is_alive = false;
-	}
 	if(player == 1)
 	{
 		ui_manager->SetPlayer1Health(health_points / total_health);
@@ -119,6 +116,13 @@ void PlayerController::TakeDamage(float damage)
 	else
 	{
 		ui_manager->SetPlayer2Health(health_points / total_health);
+	}
+
+	if (health_points <= 0)
+	{
+		health_points = 0;
+		is_alive = false;
+		owner->SetEnabled(false);
 	}
 }
 
