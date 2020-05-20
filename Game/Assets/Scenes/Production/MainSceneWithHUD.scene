@@ -1515,7 +1515,7 @@
                     "ComponentType": 9,
                     "Active": true,
                     "ColliderType": 1,
-                    "Mass": 1.0,
+                    "Mass": 10.0,
                     "Scale": [
                         1.0,
                         1.0,
@@ -1638,7 +1638,7 @@
                     "ComponentType": 9,
                     "Active": true,
                     "ColliderType": 1,
-                    "Mass": 1.0,
+                    "Mass": 11.0,
                     "Scale": [
                         1.0,
                         1.0,
