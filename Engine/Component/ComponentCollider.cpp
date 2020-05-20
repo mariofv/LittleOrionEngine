@@ -73,12 +73,12 @@ void ComponentCollider::SpecializedSave(Config & config) const
 	config.AddBool(visualize, "Visualize");
 	config.AddBool(is_attached, "Attached");
 	config.AddBool(freeze_rotation_x, "Freeze_rotation_x");
-	config.AddBool(freeze_rotation_z, "Freeze_rotation_y");
-	config.AddBool(freeze_rotation_y, "Freeze_rotation_z");
+	config.AddBool(freeze_rotation_y, "Freeze_rotation_y");
+	config.AddBool(freeze_rotation_z, "Freeze_rotation_z");
 	config.AddBool(active_physics, "Active_Physics");
 	config.AddFloat(friction, "Friction");
 	config.AddFloat(rolling_friction, "Rolling_friction");
-	config.AddFloat3(center_deviation, "Center_deviation");
+	config.AddFloat3(center, "Center_deviation");
 }
 
 void ComponentCollider::SpecializedLoad(const Config & config)
@@ -95,7 +95,7 @@ void ComponentCollider::SpecializedLoad(const Config & config)
 	active_physics = config.GetBool("Active_Physics", false);
 	friction = config.GetFloat("Friction", 1.0F);
 	rolling_friction = config.GetFloat("Rolling_friction", 1.0F);
-	config.GetFloat3("Center_deviation", center_deviation, float3::zero);
+	config.GetFloat3("Center_deviation", center, float3::zero);
 	AddBody();
 	SetConfiguration();
 
@@ -126,15 +126,20 @@ btRigidBody* ComponentCollider::AddBody()
 	col_shape->setLocalScaling(btVector3(global_scale.x * scale.x, global_scale.y * scale.y, global_scale.z * scale.z));
 
 	float3 global_translation = owner->transform.GetGlobalTranslation();
-	if (is_attached)
-	{
-		deviation = owner->aabb.global_bounding_box.CenterPoint() - global_translation;
-		global_translation = owner->aabb.global_bounding_box.CenterPoint();
-	}
-
 	Quat global_rotation = owner->transform.GetGlobalRotation();
-	motion_state = new btDefaultMotionState(btTransform(btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w), btVector3(global_translation.x, global_translation.y, global_translation.z)));
-	
+
+	btTransform new_body_transformation = btTransform(
+		btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w),
+		btVector3(global_translation.x, global_translation.y, global_translation.z)
+	);
+
+	btTransform center_of_mass = btTransform(
+		btQuaternion::getIdentity(),
+		btVector3(center.x, center.y, center.z)
+	);
+
+	motion_state = new btDefaultMotionState(new_body_transformation * center_of_mass);
+
 	if (mass != 0.f) col_shape->calculateLocalInertia(mass, local_inertia);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motion_state, col_shape, local_inertia);
 	body = new btRigidBody(rbInfo);
@@ -145,7 +150,7 @@ btRigidBody* ComponentCollider::AddBody()
 	if (collider_type == ComponentCollider::ColliderType::MESH) {
 		SetVisualization();
 	}
-	center = float3(body->getWorldTransform().getOrigin());
+	//center = float3(body->getWorldTransform().getOrigin());
 	
 	return body;
 }
@@ -153,46 +158,47 @@ btRigidBody* ComponentCollider::AddBody()
 
 void ComponentCollider::MoveBody()
 {
-	btTransform trans;
-	motion_state->getWorldTransform(trans);
-	center_deviation = owner->aabb.global_bounding_box.CenterPoint() - center;
+	btTransform trans = body->getWorldTransform();
 
-	owner->transform.SetGlobalMatrixTranslation(float3(trans.getOrigin().getX(),
-		trans.getOrigin().getY(),
-		trans.getOrigin().getZ()) - deviation + center_deviation);
+	float4x4 center_offset = float4x4::Translate(center);
 
-	owner->transform.SetRotation(Quat(trans.getRotation().x(),
-		trans.getRotation().y(),
-		trans.getRotation().z(),
-		trans.getRotation().w()));
+	float4x4 new_global_matrix = float4x4::FromTRS(
+		float3(
+			trans.getOrigin().getX(),
+			trans.getOrigin().getY(),
+			trans.getOrigin().getZ()
+		),
+		Quat(
+			trans.getRotation().x(),
+			trans.getRotation().y(),
+			trans.getRotation().z(),
+			trans.getRotation().w()
+		),
+		float3::one
+	) * center_offset.Inverted();
 
-	if (is_attached)
-	{
-		deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
-	}
-
-	center = float3(body->getWorldTransform().getOrigin());
+	owner->transform.SetGlobalModelMatrix(new_global_matrix);
 }
 
 void ComponentCollider::UpdateCommonDimensions()
 {
-	
-	float3 global_translation = owner->transform.GetGlobalTranslation() - center_deviation;
-	if (is_attached)
-	{
-		global_translation = owner->aabb.global_bounding_box.CenterPoint() - center_deviation;
-	}
+	float3 global_translation = owner->transform.GetGlobalTranslation();
 	Quat global_rotation = owner->transform.GetGlobalRotation();
-	motion_state->setWorldTransform(btTransform(btQuaternion(global_rotation.x , global_rotation.y , global_rotation.z , global_rotation.w ), btVector3(global_translation.x, global_translation.y, global_translation.z)));
+
+	btTransform new_body_transformation = btTransform(
+		btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w),
+		btVector3(global_translation.x, global_translation.y, global_translation.z)
+	);
+
+	btTransform center_of_mass = btTransform(
+		btQuaternion::getIdentity(),
+		btVector3(center.x, center.y, center.z)
+	);
+
+	motion_state->setWorldTransform(new_body_transformation * center_of_mass);
 	body->setMotionState(motion_state);
-	
-	if (is_attached)
-	{
-		deviation = owner->aabb.global_bounding_box.CenterPoint() - owner->transform.GetGlobalTranslation();
-	}
+
 	App->physics->world->updateSingleAabb(body);
-	
-	center = float3(body->getWorldTransform().getOrigin());
 }
 
 void ComponentCollider::SetMass(float new_mass)
@@ -399,7 +405,7 @@ void ComponentCollider::SetConfiguration()
 
 void ComponentCollider::SetColliderCenter(float3& new_center)
 {
-	center_deviation = owner->aabb.global_bounding_box.CenterPoint() - center;
+	//center_deviation = owner->aabb.global_bounding_box.CenterPoint() - center;
 	UpdateCommonDimensions();
 	
 }

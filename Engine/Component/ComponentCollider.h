@@ -78,9 +78,7 @@ public:
 	btVector3 local_inertia = btVector3(0.F, 0.F, 0.F);
 	float friction = 1.0F;
 	float rolling_friction = 1.0F;
-	float3 center;
-	float3 center_deviation = float3::zero;
-	float3 deviation = float3::zero;
+	float3 center = float3::zero;
 	bool visualize = true;
 	bool detect_collision = true;
 	bool is_attached = false;
