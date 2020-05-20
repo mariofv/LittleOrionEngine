@@ -27,10 +27,13 @@ public:
 	void CreateFrustumCullingDebugScene() const;
 	
 public:
+	bool show_imgui_demo = false;
 	bool show_debug_metrics = true;
 	bool show_bounding_boxes = false;
 	bool show_global_bounding_boxes = false;
 	bool show_grid = true;
+	bool show_transform_2d = true;
+	bool show_canvas = true;
 	bool show_camera_frustum = true;
 	bool show_quadtree = false;
 	bool show_octtree = false;

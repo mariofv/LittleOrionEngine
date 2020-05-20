@@ -22,9 +22,6 @@ struct SDL_Cursor;
 typedef int32_t Sint32;
 typedef unsigned __int8 Uint8;
 
-const int MAX_KEYS = 286;
-const int MAX_MOUSE_BUTTONS = 5;
-const int MAX_CONTROLLER_BUTTONS = 15;
 const int MAX_PLAYERS = 2;
 
 enum class KeyState : Uint8
@@ -288,6 +285,7 @@ enum class KeyCode : short
 
 enum class MouseButton : Uint8
 {
+	None = 0,
 	Left = SDL_BUTTON_LEFT,
 	Middle = SDL_BUTTON_MIDDLE,
 	Right = SDL_BUTTON_RIGHT,
@@ -327,9 +325,15 @@ enum class ControllerAxis
 	RIGHT_TRIGGER_RAW
 };
 
-enum class PlayerID
+enum class PlayerID : Uint8
 {
 	ONE, 
+	TWO
+};
+
+enum class ControllerID : Uint8
+{
+	ONE,
 	TWO
 };
 
@@ -340,31 +344,61 @@ struct GameInput
 	std::array<MouseButton, 8> mouse_buttons;
 	std::array<ControllerCode, 8> controller_buttons;
 
+	GameInput() 
+	{
+		for(size_t i = 0; i < 8; ++i)
+		{
+			keys[i] = KeyCode::None;
+			mouse_buttons[i] = MouseButton::None;
+			controller_buttons[i] = ControllerCode::Invalid;
+		}
+	}
+
 	void Save(Config &config)
 	{
 		config.AddString(name, "Name");
 		//KeyCodes
-		config.AddUInt(keys.size(), "SizeKeys");
+		unsigned real_size_keys = 0;
+		unsigned real_size_mouse = 0;
+		unsigned real_size_controller = 0;
+
 		for(unsigned int i = 0; i < keys.size(); ++i)
 		{
+			if((uint64_t)keys[i] <= 0)
+			{		
+				continue;
+			}
 			std::string name_k("k" + std::to_string(i));
-			
 			config.AddUInt((uint64_t)keys[i], name_k);
+			++real_size_keys;
 		}
+		config.AddUInt(real_size_keys, "SizeKeys");
+
 		//MouseButtons
-		config.AddUInt(mouse_buttons.size(), "SizeMouse");
 		for (unsigned int j = 0; j < mouse_buttons.size(); ++j)
 		{
+			if ((uint64_t)mouse_buttons[j] <= 0)
+			{
+				continue;
+			}
 			std::string name_m("m" + std::to_string(j));
 			config.AddUInt((uint64_t)mouse_buttons[j], name_m);
+			++real_size_mouse;
 		}
+		config.AddUInt(real_size_mouse, "SizeMouse");
+
 		//ControllerCodes
-		config.AddUInt(controller_buttons.size(), "SizeController");
 		for (unsigned int k = 0; k < controller_buttons.size(); ++k)
 		{
+			if ((uint64_t)controller_buttons[k] > 17)
+			{
+				continue;
+			}
 			std::string name_c("c" + std::to_string(k));
 			config.AddUInt((uint64_t)controller_buttons[k], name_c);
+			++real_size_controller;
 		}
+		config.AddUInt(real_size_controller, "SizeController");
 	}
 
 	void Load(Config &config)
@@ -413,13 +447,13 @@ public:
 	ENGINE_API bool GetMouseButtonDown(MouseButton button);
 	ENGINE_API bool GetMouseButtonUp(MouseButton button);
 
-	ENGINE_API bool GetControllerButton(ControllerCode code, PlayerID player_id = PlayerID::ONE);
-	ENGINE_API bool GetControllerButtonDown(ControllerCode code, PlayerID player_id = PlayerID::ONE);
-	ENGINE_API bool GetControllerButtonUp(ControllerCode code, PlayerID player_id = PlayerID::ONE);
+	ENGINE_API bool GetControllerButton(ControllerCode code, ControllerID controller_id);
+	ENGINE_API bool GetControllerButtonDown(ControllerCode code, ControllerID controller_id);
+	ENGINE_API bool GetControllerButtonUp(ControllerCode code, ControllerID controller_id);
 
-	ENGINE_API bool GetGameInput(const char* name, PlayerID player_id = PlayerID::ONE);
-	ENGINE_API bool GetGameInputDown(const char* name, PlayerID player_id = PlayerID::ONE);
-	ENGINE_API bool GetGameInputUp(const char* name, PlayerID player_id = PlayerID::ONE);
+	ENGINE_API bool GetGameInput(const char* name, PlayerID player_id);
+	ENGINE_API bool GetGameInputDown(const char* name, PlayerID player_id);
+	ENGINE_API bool GetGameInputUp(const char* name, PlayerID player_id);
 
 	ENGINE_API bool GetAnyKeyPressedDown() const;
 
@@ -433,11 +467,17 @@ public:
 	Uint8 GetMouseClicks() const;
 	bool IsMouseMoving() const;
 
-	ENGINE_API float2 GetAxisController(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
-	ENGINE_API Sint16 GetTriggerController(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
+	ENGINE_API float2 GetAxisController(ControllerAxis type, ControllerID controller_id) const;
+	ENGINE_API Sint16 GetTriggerController(ControllerAxis type, ControllerID controller_id) const;
 
-	ENGINE_API float2 GetAxisControllerRaw(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
-	ENGINE_API float GetTriggerControllerRaw(ControllerAxis type, PlayerID player_id = PlayerID::ONE) const;
+	ENGINE_API float2 GetAxisControllerRaw(ControllerAxis type, ControllerID controller_id) const;
+	ENGINE_API float GetTriggerControllerRaw(ControllerAxis type, ControllerID controller_id) const;
+
+	ENGINE_API float GetVerticalRaw(PlayerID player_id);
+	ENGINE_API float GetHorizontalRaw(PlayerID player_id);
+
+	ENGINE_API float GetVertical(PlayerID player_id);
+	ENGINE_API float GetHorizontal(PlayerID player_id);
 
 private:
 	void SaveGameInputs(Config &config);
@@ -445,9 +485,20 @@ private:
 
 	float2 Filter2D(Sint16 input_x, Sint16 input_y) const;
 
+	bool DetectedKeyboardInput(const GameInput& button, KeyState state);
+	bool DetectedGameControllerInput(const GameInput& button, KeyState state, ControllerID controller_id);
 
 public:
 	const float MAX_SDL_CONTROLLER_RANGE = 32767.0f;
+	const float MIN_SDL_CONTROLLER_RANGE = -32768.0f;
+	const float MAX_RAW_RANGE = 1.f;
+
+	const int MAX_KEYS = 286;
+	const int MAX_MOUSE_BUTTONS = 5;
+	const int MAX_CONTROLLER_BUTTONS = 15;
+
+	bool singleplayer_input = true;
+	int total_game_controllers = 0;
 
 private:
 	std::map<KeyCode, KeyState> key_bible;

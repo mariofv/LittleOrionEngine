@@ -20,6 +20,14 @@ out vec3 normal;
 out vec3 tangent;
 out mat3 TBN;
 
+//Without tangent modification
+out vec3 view_pos;
+out vec3 view_dir;
+
+//With tangent modification
+out vec3 t_view_pos;
+out vec3 t_frag_pos;
+
 //Normal mapping
 mat3 CreateTangentSpace(const vec3 normal, const vec3 tangent);
 

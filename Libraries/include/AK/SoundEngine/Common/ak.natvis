@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<AutoVisualizer xmlns="http://schemas.microsoft.com/vstudio/debugger/natvis/2010">
+
+<Type Name="AkListBare&lt;*,AK::StreamMgr::AkListBareNextMemBlock,AkCountPolicyWithCount,*&gt;">
+    <DisplayString>{{ size={m_ulNumListItems} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <HeadPointer>m_pFirst</HeadPointer>
+            <NextPointer>pNextBlock</NextPointer>
+            <ValueNode>this</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<Type Name="AkListBare&lt;*,*,AkCountPolicyWithCount,*&gt;">
+    <DisplayString>{{ size={m_ulNumListItems} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <Size>m_ulNumListItems</Size>
+            <HeadPointer>m_pFirst</HeadPointer>
+            <NextPointer>pNextItem</NextPointer>
+            <ValueNode>this</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<Type Name="AkListBare&lt;*,AkListBareLightNextItem,AkCountPolicyNoCount,*&gt;">
+    <DisplayString>{{ first={m_pFirst} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <HeadPointer>m_pFirst</HeadPointer>
+            <NextPointer>pNextLightItem</NextPointer>
+            <ValueNode>this</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<Type Name="AkListBare&lt;*,AK::StreamMgr::AkListBareNextMemView,AkCountPolicyNoCount,*&gt;">
+    <DisplayString>{{ first={m_pFirst} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <HeadPointer>m_pFirst</HeadPointer>
+            <NextPointer>pNextView</NextPointer>
+            <ValueNode>this</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<Type Name="AkListBare&lt;*,*,AkCountPolicyNoCount,*&gt;">
+    <DisplayString>{{ first={m_pFirst} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <HeadPointer>m_pFirst</HeadPointer>
+            <NextPointer>pNextItem</NextPointer>
+            <ValueNode>this</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<Type Name="AkArray&lt;*&gt;">
+    <DisplayString>{{ size={m_uLength} reserved={m_ulReserved} }}</DisplayString>
+    <Expand>
+      <ArrayItems>
+        <Size>m_uLength</Size>
+        <ValuePointer>m_pItems</ValuePointer>
+      </ArrayItems>
+    </Expand>
+</Type>
+
+<Type Name="CAkList2&lt;*&gt;">
+    <DisplayString>{{ size={m_ulNumListItems} }}</DisplayString>
+    <Expand>
+        <LinkedListItems>
+            <Size>m_ulNumListItems</Size>
+            <HeadPointer>m_pFirst</HeadPointer>
+            <NextPointer>pNextListItem</NextPointer>
+            <ValueNode>Item</ValueNode>
+        </LinkedListItems>
+    </Expand>
+</Type>
+
+<Type Name="AK::StreamMgr::CAkAutoStmDeferredLinedUp">
+    <DisplayString>{{ StreamID={m_uStreamID} IsFileOpen={m_bIsFileOpen} IsToBeDestroyed={m_bIsToBeDestroyed} PendingXfers={m_listPendingXfers} CancelledXfers={m_listCancelledXfers} }}</DisplayString>
+</Type>
+
+<Type Name="AK::StreamMgr::CAkStmTask">
+    <DisplayString>{{ StreamID={m_uStreamID} IsFileOpen={m_bIsFileOpen} IsToBeDestroyed={m_bIsToBeDestroyed} }}</DisplayString>
+</Type>
+
+</AutoVisualizer>

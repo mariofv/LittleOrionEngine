@@ -64,7 +64,7 @@ void PanelScene::Render()
 		App->cameras->directional_light_far->RecordFrame(scene_window_content_area_width/8, scene_window_content_area_height/8);
 
 
-		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
+		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height, true);
 		App->cameras->scene_camera->RecordDebugDraws(scene_window_content_area_width, scene_window_content_area_height);
 
 
@@ -164,7 +164,16 @@ void PanelScene::RenderEditorDraws()
 
 void PanelScene::RenderGizmo()
 {
-	float4x4 model_global_matrix_transposed = App->editor->selected_game_object->transform.GetGlobalModelMatrix().Transposed();
+	ComponentTransform* selected_object_transform = nullptr;
+	if (App->editor->selected_game_object->GetTransformType() == Component::ComponentType::TRANSFORM)
+	{
+		selected_object_transform = &App->editor->selected_game_object->transform;
+	}
+	else
+	{
+		selected_object_transform = &App->editor->selected_game_object->transform_2d;
+	}
+	float4x4 model_global_matrix_transposed = selected_object_transform->GetGlobalModelMatrix().Transposed();
 
 	if (!gizmo_released && !App->actions->clicked)
 	{
@@ -200,9 +209,8 @@ void PanelScene::RenderGizmo()
 	if (ImGuizmo::IsUsing())
 	{
 		gizmo_released = true;
-
-		App->editor->selected_game_object->transform.SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
-		App->editor->selected_game_object->transform.modified_by_user = true;
+		selected_object_transform->SetGlobalModelMatrix(model_global_matrix_transposed.Transposed());
+		selected_object_transform->modified_by_user = true;
 	}
 	else if (gizmo_released)
 	{

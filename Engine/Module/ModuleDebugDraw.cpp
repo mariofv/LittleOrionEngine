@@ -2,6 +2,7 @@
 
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
+#include "Component/ComponentCanvas.h"
 #include "Component/ComponentLight.h"
 #include "Component/ComponentMeshRenderer.h"
 
@@ -21,6 +22,7 @@
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 #include "ModuleSpacePartitioning.h"
+#include "ModuleUI.h"
 
 #include "SpacePartition/OLQuadTree.h"
 #include "SpacePartition/OLOctTree.h"
@@ -29,8 +31,9 @@
 #define DEBUG_DRAW_IMPLEMENTATION
 #include "EditorUI/DebugDraw.h"     // Debug Draw API. Notice that we need the DEBUG_DRAW_IMPLEMENTATION macro here!
 
-#include <GL/glew.h>
+#include <array>
 #include <assert.h>
+#include <GL/glew.h>
 #include <Brofiler/Brofiler.h>
 
 class IDebugDrawOpenGLImplementation final : public dd::RenderInterface
@@ -402,6 +405,12 @@ void ModuleDebugDraw::Render()
 #endif
 
 	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
+
+	if (App->debug->show_canvas && App->ui->main_canvas != nullptr)
+	{
+		RenderRectTransform(App->ui->main_canvas->owner);
+	}
+
 	if(App->debug->show_navmesh)
 	{
 		App->artificial_intelligence->RenderNavMesh(*App->cameras->scene_camera);
@@ -428,6 +437,7 @@ void ModuleDebugDraw::Render()
 			dd::aabb(octtree_node_min, octtree_node_max, float3::one);
 		}
 	}
+	
 
 	if(App->debug->show_aabbtree)
 	{
@@ -437,7 +447,7 @@ void ModuleDebugDraw::Render()
 	if (App->editor->selected_game_object != nullptr)
 	{
 		BROFILER_CATEGORY("Render Selected GameObject DebugDraws", Profiler::Color::Lavender);
-
+		RenderRectTransform(App->editor->selected_game_object);
 		RenderCameraFrustum();
 		RenderLightGizmo();
 		//RenderBones();
@@ -512,6 +522,30 @@ void ModuleDebugDraw::RenderTangentsAndBitangents() const
 			dd::axisTriad(axis_transform, 0.1F, 1.0F);
 		}	
 	}
+}
+
+void ModuleDebugDraw::RenderRectTransform(const GameObject* rect_owner) const
+{
+	BROFILER_CATEGORY("Render Rect Transform", Profiler::Color::Lavender);
+
+	if (!App->debug->show_transform_2d || rect_owner->GetTransformType() == Component::ComponentType::TRANSFORM)
+	{
+		return;
+	}
+
+	float4x4 selected_game_object_global_2d_model_matrix = rect_owner->transform_2d.GetSizedGlobalModelMatrix();
+	std::array<float3, 4> rect_points = 
+	{
+		(selected_game_object_global_2d_model_matrix * float4(-0.5f, -0.5f, 0.f, 1.f)).xyz(),
+		(selected_game_object_global_2d_model_matrix * float4(-0.5f, 0.5f, 0.f, 1.f)).xyz(),
+		(selected_game_object_global_2d_model_matrix * float4(0.5f, 0.5f, 0.f, 1.f)).xyz(),
+		(selected_game_object_global_2d_model_matrix * float4(0.5f, -0.5f, 0.f, 1.f)).xyz()
+	};
+
+	dd::line(rect_points[1], rect_points[2], float3::one);
+	dd::line(rect_points[2], rect_points[3], float3::one);
+	dd::line(rect_points[3], rect_points[0], float3::one);
+	dd::line(rect_points[0], rect_points[1], float3::one);
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
@@ -734,6 +768,11 @@ void ModuleDebugDraw::RenderPathfinding() const
 	{
 		dd::point(point, float3(0, 0, 255), 10.0f);
 	}
+}
+
+ENGINE_API void ModuleDebugDraw::RenderSingleAABB(AABB& aabb) const
+{
+	dd::aabb(aabb.minPoint, aabb.maxPoint, float3::one);
 }
 
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)

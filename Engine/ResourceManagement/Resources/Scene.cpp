@@ -210,12 +210,18 @@ GameObject* Scene::LoadPrefab(const Config & config) const
 
 bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_to_save) const
 {
+	GameObject * original = gameobject_to_save->prefab_reference->GetOriginalGameObject(gameobject_to_save->original_UUID);
 	bool modified = false;
 	if (gameobject_to_save->transform.modified_by_user)
 	{
 		Config transform_config;
 		gameobject_to_save->transform.Save(transform_config);
 		config.AddChildConfig(transform_config, "Transform");
+		modified = true;
+	}
+	if (gameobject_to_save->modified_by_user)
+	{
+		config.AddString(gameobject_to_save->name, "Name");
 		modified = true;
 	}
 	std::vector<Config> gameobject_components_config;
@@ -229,8 +235,31 @@ bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_
 			modified = true;
 		}
 	}
+
+
+	std::vector<Component*> removed_components;
+	std::copy_if(
+		original->components.begin(),
+		original->components.end(),
+		std::back_inserter(removed_components),
+		[gameobject_to_save](const auto& component)
+	{
+		return gameobject_to_save->GetComponent(component->type) == nullptr && !component->added_by_user;
+	}
+	);
+
+	std::vector<Config> removed_components_config;
+	for (const auto& removed_component : removed_components)
+	{
+		Config removed_config;
+		removed_config.AddUInt(removed_component->UUID, "Removed");
+		removed_components_config.push_back(removed_config);
+		modified = true;
+	}
+
 	if (modified)
 	{
+		config.AddChildrenConfig(removed_components_config, "RemovedComponents");
 		config.AddChildrenConfig(gameobject_components_config, "Components");
 		config.AddUInt(gameobject_to_save->UUID, "UUID");
 	}
@@ -239,8 +268,12 @@ bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_
 
 void Scene::LoadPrefabModifiedComponents(const Config& config) const
 {
-
 	GameObject * prefab_child = App->scene->GetGameObject(config.GetUInt("UUID", 0));
+	if (!prefab_child)
+	{
+		APP_LOG_ERROR("Missing prefab");
+		return;
+	}
 	if (config.config_document.HasMember("Transform"))
 	{
 		Config transform_config;
@@ -248,17 +281,22 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 
 		prefab_child->transform.Load(transform_config);
 	}
+	if (config.config_document.HasMember("Name"))
+	{
+		config.GetString("Name", prefab_child->name, prefab_child->name);
+		prefab_child->modified_by_user = true;
+	}
 
 	std::vector<Config> prefab_components_config;
 	config.GetChildrenConfig("Components", prefab_components_config);
 	for (auto & component_config : prefab_components_config)
 	{
-		uint64_t component_type_uint = component_config.GetUInt("ComponentType", 0);
-		assert(component_type_uint != 0);
+		Component::ComponentType component_type_uint = static_cast<Component::ComponentType>(component_config.GetUInt("ComponentType", 0));
+		assert(static_cast<uint64_t>(component_type_uint) != 0);
 
 		uint64_t UUID = component_config.GetUInt("UUID", 0);
 
-		Component * component = prefab_child->GetComponent(static_cast<Component::ComponentType>(component_type_uint));
+		Component * component = prefab_child->GetComponent(component_type_uint);
 		if (component != nullptr && component->UUID == UUID)
 		{
 			component->Load(component_config);
@@ -266,10 +304,27 @@ void Scene::LoadPrefabModifiedComponents(const Config& config) const
 		}
 		else
 		{
-			Component* created_component = prefab_child->CreateComponent(static_cast<Component::ComponentType>(component_type_uint));
+			Component* created_component;
+			if (component_type_uint == Component::ComponentType::COLLIDER)
+			{
+				ComponentCollider::ColliderType collider_type = static_cast<ComponentCollider::ColliderType>(component_config.GetUInt("ColliderType", 0));
+				created_component = prefab_child->CreateComponent(collider_type);
+			}
+			else
+			{
+				created_component = prefab_child->CreateComponent(static_cast<Component::ComponentType>(component_type_uint));
+			}
 			created_component->Load(component_config);
 			created_component->added_by_user = true;
 		}
+	}
+
+	std::vector<Config> removed_components_config;
+	config.GetChildrenConfig("RemovedComponents", removed_components_config);
+	for (auto & removed_config : removed_components_config)
+	{
+		uint64_t removed_uuid = removed_config.GetUInt( "Removed", 0);
+		prefab_child->RemoveComponent(removed_uuid);
 	}
 }
 

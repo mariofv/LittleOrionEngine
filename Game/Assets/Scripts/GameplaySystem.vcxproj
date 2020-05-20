@@ -207,7 +207,7 @@
       <GenerateDebugInformation>true</GenerateDebugInformation>
       <EnableUAC>false</EnableUAC>
       <AdditionalLibraryDirectories>..\..\..\Libraries\lib\x86;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
-      <AdditionalDependencies>MathGeoLibRelease.lib;imguiRelease.lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;TwinlightSouls.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>MathGeoLibRelease.lib;imguiRelease.lib;SDL2.lib;glew32.lib;glew32s.lib;opengl32.lib;BulletCollision.lib;BulletDynamics.lib;LinearMath.lib;TwinlightSouls.lib;%(AdditionalDependencies)</AdditionalDependencies>
     </Link>
     <PostBuildEvent>
       <Command>xcopy /y /d "$(OutDir)$(ProjectName).dll" "..\..\Resources\Scripts"</Command>
@@ -254,32 +254,70 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClInclude Include="src\Script\DamageScript.h" />
+    <ClInclude Include="src\Script\LevelSelectionMenuController.h" />
+    <ClInclude Include="src\Script\CharacterSelectionMenuController.h" />
+    <ClInclude Include="src\Script\CreditsMenuController.h" />
+    <ClInclude Include="src\Script\UIMainMenuInputController.h" />
+    <ClInclude Include="src\Script\PauseMenuController.h" />
+    <ClInclude Include="src\Script\HelpMenuController.h" />
     <ClInclude Include="src\Script\DebugModeScript.h" />
-    <ClInclude Include="src\Script\EndOfLevelScript.h" />
+    <ClInclude Include="src\Script\DamageIndicator.h" />
+    <ClInclude Include="src\Script\DamageIndicatorSpawner.h" />
+    <ClInclude Include="src\Script\UIManager.h" />
+    <ClInclude Include="src\Script\ProgressBar.h" />
+    <ClInclude Include="src\Script\DieEnemyState.h" />
+    <ClInclude Include="src\Script\GodCamera.h" />
+    <ClInclude Include="src\Script\AttackEnemyState.h" />
+    <ClInclude Include="src\Script\PursueEnemyState.h" />
+    <ClInclude Include="src\Script\ScreamEnemyState.h" />
+    <ClInclude Include="src\Script\IdleEnemyState.h" />
+    <ClInclude Include="src\Script\EnemyState.h" />
+    <ClInclude Include="src\Script\EventManager.h" />
+    <ClInclude Include="src\Script\Mushdoom.h" />
+    <ClInclude Include="src\Script\EnemyManager.h" />
+    <ClInclude Include="src\Script\EnemyController.h" />
+    <ClInclude Include="src\Script\PlayerAttack.h" />
     <ClInclude Include="src\Script\ExampleScript.h" />
-    <ClInclude Include="src\Script\MenuLogic.h" />
+    <ClInclude Include="src\Script\MainMenuController.h" />
     <ClInclude Include="src\Script\PlayerController.h" />
     <ClInclude Include="src\Script\PlayerMovement.h" />
     <ClInclude Include="src\Script\CameraController.h" />
     <ClInclude Include="src\Script\SceneCamerasController.h" />
     <ClInclude Include="src\Script\Script.h" />
-    <ClInclude Include="src\Script\TriggerActionScript.h" />
     <ClInclude Include="src\Script\TriggerGravity.h" />
     <ClInclude Include="src\Script\WorldManager.h" />
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="src\Script\DamageScript.cpp" />
+    <ClCompile Include="src\Script\DamageIndicator.cpp" />
+    <ClCompile Include="src\Script\DamageIndicatorSpawner.cpp" />
+    <ClCompile Include="src\Script\UIManager.cpp" />
+    <ClCompile Include="src\Script\ProgressBar.cpp" />
+    <ClCompile Include="src\Script\DieEnemyState.cpp" />
+    <ClCompile Include="src\Script\CreditsMenuController.cpp" />
+    <ClCompile Include="src\Script\LevelSelectionMenuController.cpp" />
+    <ClCompile Include="src\Script\CharacterSelectionMenuController.cpp" />
+    <ClCompile Include="src\Script\UIMainMenuInputController.cpp" />
+    <ClCompile Include="src\Script\PauseMenuController.cpp" />
+    <ClCompile Include="src\Script\HelpMenuController.cpp" />
+    <ClCompile Include="src\Script\GodCamera.cpp" />
+    <ClCompile Include="src\Script\AttackEnemyState.cpp" />
+    <ClCompile Include="src\Script\PursueEnemyState.cpp" />
+    <ClCompile Include="src\Script\ScreamEnemyState.cpp" />
+    <ClCompile Include="src\Script\IdleEnemyState.cpp" />
+    <ClCompile Include="src\Script\EnemyState.cpp" />
+    <ClCompile Include="src\Script\EventManager.cpp" />
+    <ClCompile Include="src\Script\Mushdoom.cpp" />
+    <ClCompile Include="src\Script\EnemyManager.cpp" />
+    <ClCompile Include="src\Script\EnemyController.cpp" />
+    <ClCompile Include="src\Script\PlayerAttack.cpp" />
     <ClCompile Include="src\Script\DebugModeScript.cpp" />
-    <ClCompile Include="src\Script\EndOfLevelScript.cpp" />
     <ClCompile Include="src\Script\ExampleScript.cpp" />
-    <ClCompile Include="src\Script\MenuLogic.cpp" />
+    <ClCompile Include="src\Script\MainMenuController.cpp" />
     <ClCompile Include="src\Script\PlayerController.cpp" />
     <ClCompile Include="src\Script\PlayerMovement.cpp" />
     <ClCompile Include="src\Script\CameraController.cpp" />
     <ClCompile Include="src\Script\SceneCamerasController.cpp" />
     <ClCompile Include="src\Script\Script.cpp" />
-    <ClCompile Include="src\Script\TriggerActionScript.cpp" />
     <ClCompile Include="src\Script\TriggerGravity.cpp" />
     <ClCompile Include="src\Script\WorldManager.cpp" />
   </ItemGroup>

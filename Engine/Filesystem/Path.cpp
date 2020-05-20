@@ -224,6 +224,7 @@ bool Path::IsImportable() const
 	FileType file_type = file->GetFileType();
 	return
 		file_type == FileType::ANIMATION
+		|| file_type == FileType::FONT
 		|| file_type == FileType::MATERIAL
 		|| file_type == FileType::MESH
 		|| file_type == FileType::MODEL
@@ -232,7 +233,8 @@ bool Path::IsImportable() const
 		|| file_type == FileType::SKELETON
 		|| file_type == FileType::SKYBOX
 		|| file_type == FileType::STATE_MACHINE
-		|| file_type == FileType::TEXTURE;
+		|| file_type == FileType::TEXTURE
+		|| file_type == FileType::SOUND;
 }
 
 bool Path::IsBinary() const

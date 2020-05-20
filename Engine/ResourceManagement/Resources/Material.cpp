@@ -85,12 +85,17 @@ void Material::Load(const Config& config)
 	show_checkerboard_texture = config.GetBool("Checkboard", true);
 	config.GetString("ShaderProgram", shader_program, "Blinn phong");
 
+	material_type = static_cast<MaterialType>(config.GetInt("MaterialType", 0));
+
 	//k
 	k_ambient = config.GetFloat("kAmbient", 1.0f);
 	k_specular = config.GetFloat("kSpecular", 1.0f);
 	k_diffuse = config.GetFloat("kDiffuse", 1.0f);
 
 	transparency = config.GetFloat("Transparency", 1.f);
+
+	tiling_x = config.GetFloat("Tiling X", 1.0f);
+	tiling_y = config.GetFloat("Tiling Y", 1.0f);
 
 	//colors
 	float4 diffuse;

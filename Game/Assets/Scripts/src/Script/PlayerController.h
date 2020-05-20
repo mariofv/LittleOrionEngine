@@ -2,7 +2,11 @@
 #define  __PLAYERCONTROLLER_H__
 
 #include "Script.h"
+
+class ComponentCollider;
 class PlayerMovement;
+class PlayerAttack;
+class ProgressBar;
 
 class PlayerController : public Script
 {
@@ -19,12 +23,26 @@ public:
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
+	void TakeDamage(float damage);
+	ComponentCollider* GetCollider();
+	void MakePlayerFall(float3& direction) const;
+
+	void InitPublicGameObjects() override;
+
 public:
-	bool on_gravity = false;
+	unsigned int player = 1;
+	bool is_alive = true;
 
 private:
 	PlayerMovement* player_movement = nullptr;
-	unsigned player = 0;
+	PlayerAttack* player_attack = nullptr;
+
+	GameObject* progress_bar = nullptr;
+	ProgressBar* health_bar = nullptr;
+	bool invincible = false;
+	//unsigned player = 0;
+	float total_health = 1000.f;
+	float health_points = 1000.f;
 };
 extern "C" SCRIPT_API PlayerController* PlayerControllerDLL(); //This is how we are going to load the script
 #endif
