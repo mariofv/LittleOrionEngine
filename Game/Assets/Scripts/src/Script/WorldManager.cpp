@@ -103,6 +103,11 @@ void WorldManager::Awake()
 	ComponentScript* ui_manager_component = ui_manager_go->GetComponentScript("UIManager");
 	ui_manager = static_cast<UIManager*>(ui_manager_component->script);
 
+	if(!singleplayer)
+	{
+		ui_manager->SetSecondPlayerUI();
+	}
+
 	InitTriggers();
 }
 
