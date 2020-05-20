@@ -4,6 +4,7 @@
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
+#include "Component/ComponentAudioSource.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -35,6 +36,7 @@ void PlayerMovement::Awake()
 {
 	game_camera = (ComponentCamera*)camera->GetComponent(Component::ComponentType::CAMERA);
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
+	audio_source = static_cast<ComponentAudioSource*>(owner->GetComponent(Component::ComponentType::AUDIO_SOURCE));
 }
 
 // Use this for initialization
@@ -129,6 +131,7 @@ void PlayerMovement::Move(int player)
 
 void PlayerMovement::Jump(float3& direction)
 {
+	audio_source->PlayEvent("play_jump_player");
 	direction += float3(0.0f, jump_power * App->time->delta_time, 0.0f);
 	collider->AddForce(direction);
 }

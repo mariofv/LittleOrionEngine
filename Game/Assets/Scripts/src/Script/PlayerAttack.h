@@ -5,6 +5,7 @@
 
 class ComponentAnimation;
 class ComponentCollider;
+class ComponentAudioSource;
 
 const float PUNCH_DAMAGE = 33.0f;
 const float KICK_DAMAGE = 45.0f;
@@ -29,6 +30,7 @@ private:
 	ComponentAnimation* animation = nullptr;
 	GameObject* collider = nullptr;
 	ComponentCollider* collider_component = nullptr;
+	ComponentAudioSource* audio_source = nullptr;
 	unsigned current_damage_power = 0;
 	bool is_attacking = false;
 	bool raycast_cast = false;

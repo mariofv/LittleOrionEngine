@@ -7,6 +7,7 @@
 
 class ComponentCamera;
 class ComponentCollider;
+class ComponentAudioSource;
 
 class PlayerMovement : public Script
 {
@@ -37,6 +38,7 @@ private:
 	float3 movement_vector;
 	float3 gravity_vector;
 	ComponentCollider* collider = nullptr;
+	ComponentAudioSource* audio_source = nullptr;
 
 	GameObject* camera = nullptr;
 	ComponentCamera* game_camera = nullptr;
