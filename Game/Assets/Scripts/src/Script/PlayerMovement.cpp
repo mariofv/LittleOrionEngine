@@ -158,7 +158,7 @@ bool PlayerMovement::IsGrounded()
 	btVector3 origin = collider->body->getWorldTransform().getOrigin();
 
 	btVector3 end = collider->body->getWorldTransform().getOrigin();
-	end.setY(end.getY() - 1.7f);
+	end.setY(end.getY() - collider->box_size.getY());
 
 	return collider->RaycastHit(origin,end);
 }

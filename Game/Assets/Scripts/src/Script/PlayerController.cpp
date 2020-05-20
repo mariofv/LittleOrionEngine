@@ -83,6 +83,7 @@ void PlayerController::OnInspector(ImGuiContext* context)
 		ImGui::EndCombo();
 	}
 	ImGui::DragFloat("Health", &health_points);
+	ImGui::Checkbox("Invincible", &invincible);
 }
 
 void PlayerController::InitPublicGameObjects()
@@ -116,7 +117,9 @@ void PlayerController::Load(const Config& config)
 }
 
 void PlayerController::TakeDamage(float damage)
-{
+{ 
+	if (invincible) return;
+
 	health_points -= damage;
 	if (health_points <= 0)
 	{
@@ -133,6 +136,7 @@ ComponentCollider* PlayerController::GetCollider()
 
 void PlayerController::MakePlayerFall(float3& direction) const
 {
-	player_movement->Jump(direction);
+	player_movement->collider->ClearForces();
+	//player_movement->Jump(direction);
 }
 
