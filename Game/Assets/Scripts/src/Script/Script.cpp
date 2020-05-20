@@ -20,7 +20,7 @@ void Script::AddReferences(GameObject *owner, Application *App)
 	this->owner = owner;
 }
 
-void Script::Save(Config & config) const
+void Script::Save(Config& config) const
 {
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
@@ -36,7 +36,7 @@ void Script::Save(Config & config) const
 	}
 }
 
-void Script::Load(const Config & config)
+void Script::Load(const Config& config)
 {
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{
