@@ -1,14 +1,14 @@
 #include "SceneCamerasController.h"
 
+#include "Component/ComponentCamera.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentCamera.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
-#include "Module/ModuleCamera.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 

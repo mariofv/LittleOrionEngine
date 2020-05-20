@@ -1,28 +1,28 @@
 #include "DebugModeScript.h"
 
-#include "Component/ComponentImage.h"
-#include "Component/ComponentScript.h"
-#include "Component/ComponentTransform.h"
-#include "Component/ComponentText.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCapsuleCollider.h"
+#include "Component/ComponentImage.h"
+#include "Component/ComponentScript.h"
+#include "Component/ComponentText.h"
+#include "Component/ComponentTransform.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
+#include "Module/ModuleCamera.h"
+#include "Module/ModuleDebug.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleInput.h"
+#include "Module/ModulePhysics.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
-#include "Module/ModuleTime.h"
-#include "Module/ModuleDebug.h"
 #include "Module/ModuleSpacePartitioning.h"
-#include "Module/ModuleCamera.h"
-#include "Module/ModulePhysics.h"
+#include "Module/ModuleTime.h"
 
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
 
-#include "SceneCamerasController.h"
 #include "EnemyManager.h"
+#include "SceneCamerasController.h"
 
 #include "imgui.h"
 #include <imgui_internal.h>

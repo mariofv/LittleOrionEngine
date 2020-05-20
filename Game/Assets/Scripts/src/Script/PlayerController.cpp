@@ -13,9 +13,9 @@
 
 #include "imgui.h"
 
+#include "DebugModeScript.h"
 #include "PlayerAttack.h"
 #include "PlayerMovement.h"
-#include "DebugModeScript.h"
 
 PlayerController* PlayerControllerDLL()
 {

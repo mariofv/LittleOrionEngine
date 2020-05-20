@@ -6,18 +6,18 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleAI.h"
 #include "Module/ModuleCamera.h"
-#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleDebug.h"
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleProgram.h"
-#include "Module/ModuleTime.h"
 #include "Module/ModuleRender.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleTime.h"
 #include "Module/ModuleUI.h"
 #include "Module/ModuleWindow.h"
 
-#include "ResourceManagement/ResourcesDB/CoreResources.h"
 #include "ResourceManagement/Resources/Skybox.h"
+#include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 ComponentCamera::ComponentCamera() : Component(nullptr, ComponentType::CAMERA)
 {
