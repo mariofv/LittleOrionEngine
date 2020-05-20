@@ -41,7 +41,7 @@ void CameraController::Awake()
 	player2_movement_component = player2->GetComponentScript("PlayerController");
 	player2_movement_script = (PlayerController*)player2_movement_component->script;
 
-	rotation = owner->transform.GetRotation();
+	owner->transform.SetRotation(rotation);
 
 	selected_offset = offset_near;
 
@@ -54,7 +54,6 @@ void CameraController::Awake()
 // Use this for initialization
 void CameraController::Start()
 {
-	//camera_component->SetOrthographicView();
 	//Dirty AF but hope it works
 	if(player_movement_script->player == 2)
 	{
