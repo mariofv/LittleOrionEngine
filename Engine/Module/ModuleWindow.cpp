@@ -34,7 +34,7 @@ bool ModuleWindow::Init()
 		*/
 		width = 1280;
 		height = 720;
-		uint32_t flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;// | SDL_WINDOW_MAXIMIZED;
+		uint32_t flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_MAXIMIZED;
 
 		if(FULLSCREEN)
 		{
