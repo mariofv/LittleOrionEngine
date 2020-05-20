@@ -6,7 +6,7 @@
 class ComponentCollider;
 class PlayerMovement;
 class PlayerAttack;
-class ProgressBar;
+class UIManager;
 
 class PlayerController : public Script
 {
@@ -37,8 +37,7 @@ private:
 	PlayerMovement* player_movement = nullptr;
 	PlayerAttack* player_attack = nullptr;
 
-	GameObject* progress_bar = nullptr;
-	ProgressBar* health_bar = nullptr;
+	UIManager* ui_manager = nullptr;
 	bool invincible = false;
 	//unsigned player = 0;
 	float total_health = 1000.f;
