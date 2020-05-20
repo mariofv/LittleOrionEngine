@@ -71,6 +71,7 @@ update_status ModulePhysics::Update()
 		{			
 			collider->UpdateDimensions();			
 		}
+
 		if(collider->collider_type != ComponentCollider::ColliderType::MESH)
 		{
 			world->synchronizeSingleMotionState(collider->body);
