@@ -106,7 +106,11 @@ void AnimController::StartNextState(const std::string& trigger)
 	std::shared_ptr<State> next_state;
 	active_transition = next_transition;
 	next_state = state_machine->GetState(active_transition->target_hash);
-	playing_clips[ClipType::NEXT] ={ next_state->clip, 0, true};
+	playing_clips[ClipType::NEXT] = { next_state->clip, 0, true };
+	if (!playing_clips[ClipType::ACTIVE].playing)
+	{
+		FinishActiveState();
+	}
 }
 
 bool AnimController::IsOnState(const std::string& state)
