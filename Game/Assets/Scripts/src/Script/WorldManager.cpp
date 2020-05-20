@@ -231,19 +231,16 @@ void WorldManager::InitTriggers()
 
 void WorldManager::CheckTriggers()
 {
-	if(current_event_trigger > 2)
+	for(size_t i = 0; i < 3; ++i)
 	{
-		return;
-	}
-
-	if(static_cast<ComponentCollider*>(player1_go->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[current_event_trigger]))
-	{
-		if(event_manager->TriggerEvent(current_event_trigger))
+		if (static_cast<ComponentCollider*>(player1_go->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[i]))
 		{
-			++current_event_trigger;
+			if(!event_manager->events_triggered[i])
+			{
+				event_manager->TriggerEvent(i);
+			}
 		}
 	}
-
 }
 
 void WorldManager::CheckHole()

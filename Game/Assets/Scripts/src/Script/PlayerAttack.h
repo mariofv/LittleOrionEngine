@@ -6,8 +6,7 @@
 class ComponentAnimation;
 class ComponentCollider;
 
-const float PUNCH_DAMAGE = 33.0f;
-const float KICK_DAMAGE = 45.0f;
+
 
 class PlayerAttack : public Script
 {
@@ -32,6 +31,8 @@ private:
 	unsigned current_damage_power = 0;
 	bool is_attacking = false;
 	bool raycast_cast = false;
+	float PUNCH_DAMAGE = 33.0f;
+	float KICK_DAMAGE = 45.0f;
 };
 extern "C" SCRIPT_API PlayerAttack* PlayerAttackDLL(); //This is how we are going to load the script
 #endif

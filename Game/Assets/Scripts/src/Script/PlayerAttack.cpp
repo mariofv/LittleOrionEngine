@@ -100,6 +100,8 @@ void PlayerAttack::OnInspector(ImGuiContext* context)
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
+	ImGui::DragFloat("Punch Damage", &PUNCH_DAMAGE);
+	ImGui::DragFloat("Kick Damage", &KICK_DAMAGE);
 }
 
 //Use this for linking JUST GO automatically 

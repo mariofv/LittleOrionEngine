@@ -137,6 +137,7 @@ bool EventManager::TriggerEvent(unsigned event)
 	}
 
 	event_triggered = true;
+	events_triggered[event] = true;
 	camera_controller->SetFreeze();
 
 	return true;

@@ -58,10 +58,6 @@ void PlayerController::Update()
 		player_movement->Move(player);
 	}
 
-	if(health_points <= 0)
-	{
-		is_alive = false;
-	}
 }
 
 // Use this for showing variables on inspector
@@ -122,6 +118,11 @@ void PlayerController::Load(const Config& config)
 void PlayerController::TakeDamage(float damage)
 {
 	health_points -= damage;
+	if (health_points <= 0)
+	{
+		health_points = 0;
+		is_alive = false;
+	}
 	health_bar->SetProgress(health_points / total_health);
 }
 
