@@ -15,6 +15,7 @@
 #include "imgui.h"
 
 #include "EnemyController.h"
+#include "UIManager.h"
 
 
 PlayerAttack* PlayerAttackDLL()
@@ -41,6 +42,11 @@ void PlayerAttack::Awake()
 	animation = (ComponentAnimation*) owner->GetComponent(Component::ComponentType::ANIMATION);
 	collider_component = static_cast<ComponentCollider*>(collider->GetComponent(ComponentCollider::ColliderType::BOX));
 	audio_source = static_cast<ComponentAudioSource*>(owner->GetComponent(Component::ComponentType::AUDIO_SOURCE));
+
+	GameObject* ui = App->scene->GetGameObjectByName("UIManager");
+	ComponentScript* component_ui = ui->GetComponentScript("UIManager");
+	ui_manager = static_cast<UIManager*>(component_ui->script);
+
 }
 // Use this for initialization
 
@@ -94,11 +100,15 @@ void PlayerAttack::ComputeCollisions() const
 		if (collider_component->DetectCollisionWith(enemy->collider))
 		{
 			if (current_damage_power == PUNCH_DAMAGE)
+			{
 				audio_source->PlayEvent("play_punch1_hit_player");
+			}
 			else
+			{
 				audio_source->PlayEvent("play_kick1_hit_player");
-			
+			}
 			enemy->TakeDamage(current_damage_power);
+			ui_manager->SpawnDamageIndicator(current_damage_power, enemy->owner->transform.GetGlobalTranslation());
 		}
 	}
 }
@@ -109,9 +119,11 @@ void PlayerAttack::OnInspector(ImGuiContext* context)
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
+	ImGui::DragFloat("Punch Damage", &PUNCH_DAMAGE);
+	ImGui::DragFloat("Kick Damage", &KICK_DAMAGE);
 }
 
-//Use this for linking JUST GO automatically 
+//Use this for linking JUST GO automatically
 void PlayerAttack::InitPublicGameObjects()
 {
 	public_gameobjects.push_back(&collider);
@@ -124,4 +136,3 @@ void PlayerAttack::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
-

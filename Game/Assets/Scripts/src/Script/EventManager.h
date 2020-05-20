@@ -25,6 +25,7 @@ public:
 public:
 	unsigned enemies_killed_on_wave = 0;
 	bool event_triggered = false;
+	bool events_triggered[3]{false,false,false};
 
 private:
 	EnemyManager* enemy_manager = nullptr;
@@ -32,6 +33,7 @@ private:
 	unsigned waves_left = 0;
 	unsigned enemies_per_wave = 0;
 	unsigned current_event = 0;
+	int current_event_beated = -1;
 
 	friend WorldManager;
 

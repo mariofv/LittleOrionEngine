@@ -5,6 +5,7 @@
 
 #include "MathGeoLib.h"
 
+class ComponentAnimation;
 class ComponentCamera;
 class ComponentCollider;
 class ComponentAudioSource;
@@ -28,6 +29,9 @@ public:
 
 	void InitPublicGameObjects();
 
+public:
+	ComponentCollider* collider = nullptr;
+
 private:
 	float speed = 0.2f;
 	float rotation_speed = 0.01f;
@@ -39,12 +43,15 @@ private:
 	float3 gravity_vector;
 	ComponentCollider* collider = nullptr;
 	ComponentAudioSource* audio_source = nullptr;
+	ComponentAnimation* animation = nullptr;
 
 	GameObject* camera = nullptr;
 	ComponentCamera* game_camera = nullptr;
 	bool is_inside = true;
 	bool is_grounded = false;
+	bool is_second_jump = false;
 	bool visualize_future_aabb = false;
+	bool turning_back = false;
 
 	float3 direction = float3::zero;
 	float3 distance = float3::zero;

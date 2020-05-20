@@ -268,8 +268,12 @@ bool Scene::SaveModifiedPrefabComponents(Config& config, GameObject* gameobject_
 
 void Scene::LoadPrefabModifiedComponents(const Config& config) const
 {
-
 	GameObject * prefab_child = App->scene->GetGameObject(config.GetUInt("UUID", 0));
+	if (!prefab_child)
+	{
+		APP_LOG_ERROR("Missing prefab");
+		return;
+	}
 	if (config.config_document.HasMember("Transform"))
 	{
 		Config transform_config;

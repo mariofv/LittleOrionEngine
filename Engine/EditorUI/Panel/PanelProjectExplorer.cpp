@@ -120,14 +120,14 @@ void PanelProjectExplorer::ShowFoldersHierarchy(const Path& path)
 			}
 			bool expanded = ImGui::TreeNodeEx(filename.c_str(), flags);
 			ResourceDropTarget(path_child);
+			ImGui::PushID(filename.c_str());
+			ProcessMouseInput(path_child);
 			if (expanded)
 			{
-				ImGui::PushID(filename.c_str());
-				ProcessMouseInput(path_child);
 				ShowFoldersHierarchy(*path_child);
-				ImGui::PopID();
 				ImGui::TreePop();
 			}
+			ImGui::PopID();
 		}
 	}
 }
@@ -267,11 +267,11 @@ void PanelProjectExplorer::ProcessMouseInput(Path* file_path)
 	{
 		if (ImGui::IsMouseClicked(0))
 		{
-			selected_folder = file_path;
+			//selected_folder = file_path;
 			selected_file = nullptr;
 			ApplyRename();
 		}
-		else if (ImGui::IsMouseDoubleClicked(0))
+		if (ImGui::IsMouseDoubleClicked(0))
 		{
 			selected_folder = file_path;
 		}

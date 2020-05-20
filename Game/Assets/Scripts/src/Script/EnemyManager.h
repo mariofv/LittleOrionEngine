@@ -51,6 +51,7 @@ private:
 	std::vector<float3> enemies_spawning_queue;
 	unsigned total_enemies_killed = 0;
 	float3 spawn_points[5];
+	int max_double_z_spawn = 10;
 
 	std::list<EnemyController*> attackers;
 	int simultaneousAttackers = 2;

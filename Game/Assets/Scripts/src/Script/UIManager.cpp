@@ -44,7 +44,7 @@ void UIManager::Start()
 // Update is called once per frame
 void UIManager::Update()
 {
-	if (transitioning && App->input->GetKeyDown(KeyCode::Space))
+	if (transitioning && App->input->GetAnyKeyPressedDown())
 	{
 		App->scene->LoadScene(0);
 	}
@@ -88,6 +88,8 @@ void UIManager::OnInspector(ImGuiContext* context)
 	//Necessary to be able to write with imgui
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
+
+	ImGui::Checkbox("Transitioning", &transitioning);
 }
 
 //Use this for linking JUST GO automatically 

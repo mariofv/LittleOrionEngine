@@ -104,7 +104,9 @@ void EnemyManager::SpawnEnemy(const unsigned type, const float3& spawn_position)
 			enemy->ResetEnemy();
 
 			enemy->Start();
-			enemy->owner->transform.SetTranslation(spawn_position);
+			float different_z = spawn_position.z + (rand() % max_double_z_spawn) - (max_double_z_spawn / 2.f);
+			float3 real_spawn_position(spawn_position.x, spawn_position.y, different_z);
+			enemy->owner->transform.SetTranslation(real_spawn_position);
 			enemy->collider->UpdateDimensions();
 			enemy->collider->active_physics = true;
 			enemy->owner->SetEnabled(true);
@@ -150,7 +152,8 @@ void EnemyManager::SpawnWave(unsigned event, unsigned enemies_per_wave)
 void EnemyManager::CreateEnemies()
 {
 	//static_cast<ComponentCollider*>(mushdoom_go->GetComponent(Component::ComponentType::COLLIDER))->SwitchPhysics(true);
-
+	ComponentScript* original_component = mushdoom_go->GetComponentScript("Mushdoom");
+	Mushdoom* original_script = static_cast<Mushdoom*>(original_component->script);
 	//For now we only have mushdoom enemy
 	size_t number_of_instances = MAX_NUMBER_OF_MUSHDOOM - enemies.size();
 	for (size_t i = 0; i < number_of_instances; ++i)
@@ -160,6 +163,7 @@ void EnemyManager::CreateEnemies()
 		const ComponentScript* componnet_enemy = duplicated_go->GetComponentScript("Mushdoom");
 		Mushdoom* enemy = (Mushdoom*)componnet_enemy->script;
 		enemy->InitMembers();
+		enemy->SetProperties(original_script);
 		enemy->is_alive = false;
 		enemy->collider->active_physics = false;
 		enemy->owner->SetEnabled(false);
@@ -179,7 +183,8 @@ void EnemyManager::OnInspector(ImGuiContext* context)
 	ImGui::Text("current_number_of_enemies_alive: %d", current_number_of_enemies_alive);
 	ImGui::Text("total_enemies_killed: %d", total_enemies_killed);
 	ImGui::Text("enemies: %d", enemies.size());
-
+	ImGui::DragInt("MAX_DOUBLE_Z_RANGE:", &max_double_z_spawn);
+	
 	ImGui::Separator();
 	for(const auto& enemy : enemies)
 	{
@@ -262,7 +267,7 @@ bool EnemyManager::CheckSpawnAvailability(float3& spawn_position)
 			continue;
 		}
 
-		if(enemy->owner->transform.GetTranslation().Distance(spawn_position) <= 2.5f)
+		if(enemy->owner->transform.GetTranslation().Distance(spawn_position) <= 6.f)
 		{
 			return false;
 		}

@@ -15,6 +15,7 @@
 #include "imgui.h"
 
 #include "PlayerController.h"
+#include "UIManager.h"
 
 
 bool WorldManager::singleplayer;
@@ -50,9 +51,10 @@ void WorldManager::Awake()
 	player2_go = App->scene->GetGameObjectByName("Player2");
 	ComponentScript* player2_controller_component = (ComponentScript*)player2_go->GetComponentScript("PlayerController");
 	player2_controller = static_cast<PlayerController*>(player2_controller_component->script);
+
+	GameObject* hole_go = App->scene->GetGameObjectByName("Mesh collider HOLE_0");
+	hole = static_cast<ComponentCollider*>(hole_go->GetComponent(Component::ComponentType::COLLIDER));
 	
-	singleplayer = true;
-	player1_choice = false;
 	//Logic of choosing character and single/multi player
 	//Singleplayer
 	if(singleplayer)
@@ -61,6 +63,7 @@ void WorldManager::Awake()
 		if(!player1_choice)
 		{
 			player1_controller->player = 1;
+			player2_controller->player = 2;
 			player2_controller->is_alive = false;
 			player2_go->SetEnabled(false);
 			player2_go->transform.SetTranslation(float3(100.f, 100.f, 100.f));
@@ -69,6 +72,7 @@ void WorldManager::Awake()
 		else
 		{
 			player2_controller->player = 1;
+			player1_controller->player = 2;
 			player1_controller->is_alive = false;
 			player1_go->SetEnabled(false);
 			player1_go->transform.SetTranslation(float3(100.f, 100.f, 100.f));
@@ -95,6 +99,10 @@ void WorldManager::Awake()
 	ComponentScript* event_manager_component = event_manager_go->GetComponentScript("EventManager");
 	event_manager = static_cast<EventManager*>(event_manager_component->script);
 
+	GameObject* ui_manager_go = App->scene->GetGameObjectByName("UIManager");
+	ComponentScript* ui_manager_component = ui_manager_go->GetComponentScript("UIManager");
+	ui_manager = static_cast<UIManager*>(ui_manager_component->script);
+
 	InitTriggers();
 }
 
@@ -111,7 +119,10 @@ void WorldManager::Update()
 	{
 		return;
 	}
-
+	if(!disable_hole)
+	{
+		CheckHole();
+	}
 	CheckTriggers();
 	/*
 	if(health_component->percentage <= 0.0f)
@@ -136,13 +147,20 @@ void WorldManager::Update()
 	}
 	*/
 
-	if(event_manager->current_event > 2)
+	if(event_manager->current_event_beated == 2)
 	{
 		//We won the level!
 		player1_controller->owner->SetEnabled(false);
 		player2_controller->owner->SetEnabled(false);
-		//win_component->Enable();
-		transition = true;
+		ui_manager->SetWinScreen();
+	}
+
+
+	if(CheckLose())
+	{
+		player1_controller->owner->SetEnabled(false);
+		player2_controller->owner->SetEnabled(false);
+		ui_manager->SetLoseScreen();
 	}
 }
 
@@ -153,8 +171,10 @@ void WorldManager::OnInspector(ImGuiContext* context)
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
 
-	ImGui::Checkbox("Singleplayer", &App->input->singleplayer_input);
+	ImGui::Checkbox("Singleplayer", &singleplayer);
+	ImGui::Checkbox("Player 1 female", &player1_choice);
 	ImGui::Checkbox("Main menu", &on_main_menu);
+	ImGui::Checkbox("Fire in the hole", &disable_hole);
 }
 
 //Use this for linking JUST GO automatically
@@ -178,6 +198,15 @@ void WorldManager::InitPublicGameObjects()
 	}
 }
 
+void WorldManager::Save(Config& config) const
+{
+	config.AddBool(on_main_menu, "Main Menu");
+}
+
+void WorldManager::Load(const Config& config)
+{
+	on_main_menu = config.GetBool("Main Menu", false);
+}
 
 bool WorldManager::LoadLevel() const
 {
@@ -208,21 +237,96 @@ void WorldManager::InitTriggers()
 		event_triggers[i] = static_cast<ComponentCollider*>(trigger_go_dad->children[i]->GetComponent(ComponentCollider::ColliderType::BOX));
 	}
 }
+
 void WorldManager::CheckTriggers()
 {
-	if(current_event_trigger > 2)
+	for(size_t i = 0; i < 3; ++i)
 	{
-		return;
+		if (static_cast<ComponentCollider*>(player1_go->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[i]))
+		{
+			if(!event_manager->events_triggered[i])
+			{
+				event_manager->TriggerEvent(i);
+			}
+		}
+	}
+}
+
+void WorldManager::CheckHole()
+{
+	if (singleplayer)
+	{
+		if(!player1_choice)
+		{
+			disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
+		}
+		else
+		{
+			disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER)));
+		}
+	}
+	else
+	{
+		disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER))) &&
+			hole->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
 	}
 
-	if(static_cast<ComponentCollider*>(player1_go->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[current_event_trigger]))
+	if (disable_hole)
 	{
-		if(event_manager->TriggerEvent(current_event_trigger))
+		hole->owner->SetEnabled(false);
+		if (singleplayer)
 		{
-			++current_event_trigger;
+			if (!player1_choice)
+			{
+				player1_controller->MakePlayerFall(fall);
+			}
+			else
+			{
+				player2_controller->MakePlayerFall(fall);
+			}
+		}
+		else
+		{
+			player1_controller->MakePlayerFall(fall);
+			player2_controller->MakePlayerFall(fall);
+
+		}
+		
+	}
+
+}
+
+bool WorldManager::CheckLose()
+{
+	if (singleplayer)
+	{
+		//If player1_choice == 0 he is chosing male model
+		if (!player1_choice)
+		{
+			if (!player1_controller->is_alive)
+			{
+				return true;
+			}
+		}
+		//Chosing female model
+		else
+		{
+			if (!player2_controller->is_alive)
+			{
+				return true;
+			}
+		}
+	}
+	//Multiplayer
+	else
+	{
+		if (!player1_controller->is_alive && !player2_controller->is_alive)
+		{
+			return true;
 		}
 	}
 
+	return false;
 }
 
 //Use this for linking GO AND VARIABLES automatically if you need to save variables
