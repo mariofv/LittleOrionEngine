@@ -32,8 +32,8 @@ private:
 	unsigned current_damage_power = 0;
 	bool is_attacking = false;
 	bool raycast_cast = false;
-	float PUNCH_DAMAGE = 33.0f;
-	float KICK_DAMAGE = 45.0f;
+	float PUNCH_DAMAGE = 50.f;
+	float KICK_DAMAGE = 100.f;
 };
 extern "C" SCRIPT_API PlayerAttack* PlayerAttackDLL(); //This is how we are going to load the script
 #endif

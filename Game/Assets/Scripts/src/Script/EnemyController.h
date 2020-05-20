@@ -79,7 +79,7 @@ public:
 	float rotate_speed = 1.f;
 	float attack_speed = 1.f;
 	float attack_damage = 15.f;
-	float MAX_HEALTH_POINTS = 100.f;
+	float MAX_HEALTH_POINTS = 125.f;
 	float health_points = MAX_HEALTH_POINTS;
 	float detect_distance = 50.f;
 

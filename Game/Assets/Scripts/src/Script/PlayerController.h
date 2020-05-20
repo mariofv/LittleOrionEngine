@@ -41,8 +41,8 @@ private:
 	ProgressBar* health_bar = nullptr;
 	bool invincible = false;
 	//unsigned player = 0;
-	float total_health = 600.0f;
-	float health_points = 600.0f;
+	float total_health = 1000.f;
+	float health_points = 1000.f;
 };
 extern "C" SCRIPT_API PlayerController* PlayerControllerDLL(); //This is how we are going to load the script
 #endif

@@ -28,9 +28,13 @@ bool ModuleWindow::Init()
 		screen_height = DM.h;
 		
 		//Create window
+		/*
 		width = static_cast<int>(screen_width * 0.9f);
 		height = static_cast<int>(screen_height * 0.9f);
-		uint32_t flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL | SDL_WINDOW_MAXIMIZED;
+		*/
+		width = 1280;
+		height = 720;
+		uint32_t flags = SDL_WINDOW_SHOWN | SDL_WINDOW_OPENGL;// | SDL_WINDOW_MAXIMIZED;
 
 		if(FULLSCREEN)
 		{
@@ -39,7 +43,7 @@ bool ModuleWindow::Init()
 
 		if (RESIZABLE)
 		{
-			flags |= SDL_WINDOW_RESIZABLE;
+			//flags |= SDL_WINDOW_RESIZABLE;
 		}
 
 		if (!BORDERED)

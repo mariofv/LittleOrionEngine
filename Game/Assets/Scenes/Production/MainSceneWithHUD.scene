@@ -656,7 +656,7 @@
                         1.0,
                         1.0
                     ],
-                    "Intensity": 1.0,
+                    "Intensity": 0.0,
                     "LightType": 2,
                     "PointLightRange": 16.0,
                     "PointLightConstant": 1.0,
@@ -797,8 +797,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    568.5,
-                    358.5
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     0.0,
@@ -2098,7 +2098,7 @@
                         0.9999899864196777,
                         1.0
                     ],
-                    "TextureUUID": 3158198334
+                    "TextureUUID": 4032566479
                 },
                 {
                     "UUID": 4001080316,
@@ -2797,6 +2797,96 @@
                         0.0,
                         0.0
                     ]
+                }
+            ]
+        },
+        {
+            "UUID": 3438915835,
+            "ParentUUID": 521044214,
+            "Name": "Point Light",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 1030056456,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 2418978519,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 1653390176,
+                    "ComponentType": 4,
+                    "Active": true,
+                    "LightColor": [
+                        0.9999899864196777,
+                        1.0,
+                        0.999995768070221,
+                        1.0
+                    ],
+                    "Intensity": 1.0,
+                    "LightType": 0,
+                    "PointLightRange": 1.0,
+                    "PointLightConstant": 1.0,
+                    "PointLightLinear": 0.04500000178813934,
+                    "PointLightQuadratic": 0.75,
+                    "SpotLightRange": 1.0,
+                    "SpotLightConstant": 1.0,
+                    "SpotLightLinear": 0.04500000178813934,
+                    "SpotLightQuadratic": 0.007499999832361937,
+                    "SpotLightSpotAngle": 30.0,
+                    "SpotLightCutoff": 0.9659258127212524,
+                    "SpotLightSoftness": 0.10000000149011612,
+                    "SpotLightOuterCutoff": 0.9588197469711304
                 }
             ]
         },
