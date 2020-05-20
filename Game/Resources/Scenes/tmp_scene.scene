@@ -1298,7 +1298,7 @@
                     "Freeze_rotation_y": true,
                     "Freeze_rotation_z": true,
                     "Active_Physics": true,
-                    "Friction": 1.0,
+                    "Friction": 0.10000000149011612,
                     "Rolling_friction": 1.0,
                     "Center": [
                         0.0,
@@ -2314,7 +2314,7 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    215.16903686523438,
+                    219.7213897705078,
                     -3.8502659797668459,
                     -20.165035247802736
                 ],
