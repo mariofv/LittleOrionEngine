@@ -111,7 +111,6 @@ public:
 
 	PointLight point_light_parameters;
 	SpotLight spot_light_parameters;
-	DirectionalLight directional_light_parameters;
 
 private:
 	friend class PanelComponent;

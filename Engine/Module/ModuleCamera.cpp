@@ -96,10 +96,18 @@ void ModuleCamera::SetDirectionalLightFrustums()
 
 	directional_light_far->SetFarDistance(100);
 	directional_light_far->SetNearDistance(75);
+
+	light_aabb = new ComponentAABB(dir_light_game_object);
+	light_aabb->global_bounding_box.SetNegativeInfinity();
+	light_aabb->GenerateBoundingBox();
+
 }
 void ModuleCamera::UpdateDirectionalLightFrustums()
 {
-	//Setting Ortho width and height
+	//Set Position from AABB
+	//dir_light_game_object->transform.SetTranslation(float3((light_aabb->bounding_box.maxPoint.x + light_aabb->bounding_box.minPoint.x)*0.5,(light_aabb->bounding_box.maxPoint.y + light_aabb->bounding_box.minPoint.y)*0.5,light_aabb->bounding_box.maxPoint.z));
+	
+	//Setting Ortho width and height from AABB
 	App->cameras->directional_light_camera->camera_frustum.orthographicWidth = App->cameras->aux_width;
 	App->cameras->directional_light_camera->camera_frustum.orthographicHeight = App->cameras->aux_height;
 
@@ -109,7 +117,7 @@ void ModuleCamera::UpdateDirectionalLightFrustums()
 	App->cameras->directional_light_far->camera_frustum.orthographicWidth = App->cameras->aux_width;
 	App->cameras->directional_light_far->camera_frustum.orthographicHeight = App->cameras->aux_height;
 
-	//Setting close and far planes
+	//Setting close and far planes also from AABB 
 	App->cameras->directional_light_camera->SetNearDistance(App->cameras->close_mid_separation / 2);
 	App->cameras->directional_light_camera->SetFarDistance(App->cameras->close_mid_separation);
 
@@ -182,6 +190,13 @@ void ModuleCamera::UpdateMainCameraFrustums()
 	camera_far->Update();
 
 }
+
+void ModuleCamera::UpdateLightAABB(AABB& object_aabb)
+{
+	object_aabb.TransformAsAABB(dir_light_game_object->transform.GetRotation().Inverted());
+	light_aabb->bounding_box.Enclose(object_aabb);
+}
+
 
 bool ModuleCamera::CleanUp()
 {

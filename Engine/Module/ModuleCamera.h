@@ -29,6 +29,8 @@ public:
 
 	bool IsSceneCameraMoving() const;
 
+	void UpdateLightAABB(AABB& object_aabb);
+
 private:
 	void SelectMainCamera();
 
@@ -62,6 +64,8 @@ public:
 	GameObject*		 main_close= nullptr;
 	GameObject*		 main_mid = nullptr;
 	GameObject*		 main_far = nullptr;
+
+	ComponentAABB* light_aabb = nullptr;
 
 	float aux_width = 25;
 	float aux_height = 25;

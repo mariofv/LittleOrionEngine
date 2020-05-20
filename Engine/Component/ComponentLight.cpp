@@ -39,7 +39,6 @@ void ComponentLight::Copy(Component * component_to_copy) const
 void ComponentLight::Delete()
 {
 	App->lights->RemoveComponentLight(this);
-	glDeleteFramebuffers(1, &directional_light_parameters.fbo);
 
 }
 
