@@ -44,7 +44,7 @@ void UIManager::Start()
 // Update is called once per frame
 void UIManager::Update()
 {
-	if (transitioning && App->input->GetKeyDown(KeyCode::Space))
+	if (transitioning && App->input->GetAnyKeyPressedDown())
 	{
 		App->scene->LoadScene(0);
 	}

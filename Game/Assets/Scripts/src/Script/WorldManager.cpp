@@ -199,6 +199,16 @@ void WorldManager::InitPublicGameObjects()
 	}
 }
 
+void WorldManager::Save(Config& config) const
+{
+	config.AddBool(on_main_menu, "Main Menu");
+}
+
+void WorldManager::Load(const Config& config)
+{
+	on_main_menu = config.GetBool("Main Menu", false);
+}
+
 bool WorldManager::LoadLevel() const
 {
 	if(singleplayer)

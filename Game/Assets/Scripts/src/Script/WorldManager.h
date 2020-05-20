@@ -23,8 +23,8 @@ public:
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();
 
-	//void Save(Config& config) const override;
-	//void Load(const Config& config) override;
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
 
 	bool LoadLevel() const;
 
