@@ -163,7 +163,11 @@ void CameraController::FollowPlayer()
 	if (is_focusing)
 	{
 		float3 current_position = player1->transform.GetTranslation();
-		float3 position_to_focus = float3(current_position.x, current_position.y + selected_offset.y, (current_position.z * 0.5) + selected_offset.z);
+		if (current_position.z > 2.2)
+		{
+			current_position.z = 2.2f;
+		}
+		float3 position_to_focus = float3(current_position.x, current_position.y + selected_offset.y, current_position.z + selected_offset.z);
 		Focus(position_to_focus);
 	}
 
