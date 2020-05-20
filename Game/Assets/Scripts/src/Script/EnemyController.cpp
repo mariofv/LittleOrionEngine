@@ -444,3 +444,20 @@ bool EnemyController::IsGrounded() const
 
 	return collider->RaycastHit(origin, end);
 }
+
+void EnemyController::SetProperties(EnemyController* original_enemy)
+{
+	move_speed = original_enemy->move_speed;
+	rotate_speed = original_enemy->rotate_speed;
+	attack_speed = original_enemy->attack_speed;
+	attack_damage = original_enemy->attack_damage;
+	MAX_HEALTH_POINTS = original_enemy->MAX_HEALTH_POINTS;
+	health_points = MAX_HEALTH_POINTS;
+	detect_distance = original_enemy->detect_distance;
+	attack_range = original_enemy->attack_range;
+	switch_target_distance = original_enemy->switch_target_distance;
+	separation_distance = original_enemy->separation_distance;
+	danger_distance = original_enemy->danger_distance;
+	attack_distance = original_enemy->attack_damage;
+	move_with_physics = original_enemy->move_with_physics;
+}
