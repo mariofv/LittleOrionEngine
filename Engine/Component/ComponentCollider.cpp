@@ -74,8 +74,8 @@ void ComponentCollider::SpecializedSave(Config & config) const
 	config.AddBool(visualize, "Visualize");
 	config.AddBool(is_attached, "Attached");
 	config.AddBool(freeze_rotation_x, "Freeze_rotation_x");
-	config.AddBool(freeze_rotation_z, "Freeze_rotation_y");
-	config.AddBool(freeze_rotation_y, "Freeze_rotation_z");
+	config.AddBool(freeze_rotation_y, "Freeze_rotation_y");
+	config.AddBool(freeze_rotation_z, "Freeze_rotation_z");
 	config.AddBool(active_physics, "Active_Physics");
 	config.AddFloat(friction, "Friction");
 	config.AddFloat(rolling_friction, "Rolling_friction");
@@ -128,13 +128,19 @@ btRigidBody* ComponentCollider::AddBody()
 
 	float3 global_translation = owner->transform.GetGlobalTranslation();
 	Quat global_rotation = owner->transform.GetGlobalRotation();
-	motion_state = new btDefaultMotionState(
-		btTransform(
-			btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w),
-			btVector3(global_translation.x, global_translation.y, global_translation.z)
-		)
+
+	btTransform new_body_transformation = btTransform(
+		btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w),
+		btVector3(global_translation.x, global_translation.y, global_translation.z)
 	);
-	
+
+	btTransform center_of_mass = btTransform(
+		btQuaternion::getIdentity(),
+		btVector3(center.x, center.y, center.z)
+	);
+
+	motion_state = new btDefaultMotionState(new_body_transformation * center_of_mass);
+
 	if (mass != 0.f) col_shape->calculateLocalInertia(mass, local_inertia);
 	btRigidBody::btRigidBodyConstructionInfo rbInfo(mass, motion_state, col_shape, local_inertia);
 	body = new btRigidBody(rbInfo);
@@ -152,8 +158,7 @@ btRigidBody* ComponentCollider::AddBody()
 
 void ComponentCollider::MoveBody()
 {
-	btTransform trans;
-	motion_state->getWorldTransform(trans);
+	btTransform trans = body->getWorldTransform();
 
 	float4x4 center_offset = float4x4::Translate(center);
 
