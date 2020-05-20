@@ -16,7 +16,8 @@ ComponentCollider::ComponentCollider(GameObject* owner, ColliderType collider_ty
 		ComponentMeshRenderer* mesh = static_cast<ComponentMeshRenderer*>(owner->GetComponent(Component::ComponentType::MESH_RENDERER));
 		if (mesh)
 		{
-			box_size = btVector3(owner->aabb.original_box.Size().x / 2,
+			box_size = btVector3(
+				owner->aabb.original_box.Size().x / 2,
 				owner->aabb.original_box.Size().y / 2,
 				owner->aabb.original_box.Size().z / 2);
 			
@@ -78,7 +79,7 @@ void ComponentCollider::SpecializedSave(Config & config) const
 	config.AddBool(active_physics, "Active_Physics");
 	config.AddFloat(friction, "Friction");
 	config.AddFloat(rolling_friction, "Rolling_friction");
-	config.AddFloat3(center, "Center_deviation");
+	config.AddFloat3(center, "Center");
 }
 
 void ComponentCollider::SpecializedLoad(const Config & config)
@@ -95,7 +96,7 @@ void ComponentCollider::SpecializedLoad(const Config & config)
 	active_physics = config.GetBool("Active_Physics", false);
 	friction = config.GetFloat("Friction", 1.0F);
 	rolling_friction = config.GetFloat("Rolling_friction", 1.0F);
-	config.GetFloat3("Center_deviation", center, float3::zero);
+	config.GetFloat3("Center", center, float3::zero);
 	AddBody();
 	SetConfiguration();
 
@@ -150,7 +151,6 @@ btRigidBody* ComponentCollider::AddBody()
 	if (collider_type == ComponentCollider::ColliderType::MESH) {
 		SetVisualization();
 	}
-	//center = float3(body->getWorldTransform().getOrigin());
 	
 	return body;
 }
@@ -186,7 +186,7 @@ void ComponentCollider::UpdateCommonDimensions()
 	Quat global_rotation = owner->transform.GetGlobalRotation();
 
 	btTransform new_body_transformation = btTransform(
-		btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w),
+		btQuaternion(global_rotation.x, global_rotation.y, global_rotation.z, global_rotation.w), 
 		btVector3(global_translation.x, global_translation.y, global_translation.z)
 	);
 
@@ -197,7 +197,7 @@ void ComponentCollider::UpdateCommonDimensions()
 
 	motion_state->setWorldTransform(new_body_transformation * center_of_mass);
 	body->setMotionState(motion_state);
-
+	
 	App->physics->world->updateSingleAabb(body);
 }
 
@@ -341,6 +341,7 @@ void ComponentCollider::AddForce(float3& force)
 {
 	body->applyCentralForce(btVector3(force.x, force.y, force.z));
 
+	
 	if (abs(force.x) > 0 || abs(force.z) > 0) {
 
 		float3 direction = float3(force.x, 0, force.z);
@@ -405,9 +406,7 @@ void ComponentCollider::SetConfiguration()
 
 void ComponentCollider::SetColliderCenter(float3& new_center)
 {
-	//center_deviation = owner->aabb.global_bounding_box.CenterPoint() - center;
 	UpdateCommonDimensions();
-	
 }
 
 float3 ComponentCollider::GetColliderCenter() const
@@ -435,6 +434,7 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 		velocity.Normalize();
 		body->setLinearVelocity(speed * btVector3(velocity.x, -SignOrZero(velocity.x)* SignOrZero(normal.x)*abs(vector_vel.y), velocity.z));
 		
+		
 		//rotate collider
 		float3 direction = velocity.Normalized();
 		Quat new_rotation = Quat::LookAt(owner->transform.GetFrontVector(), direction, owner->transform.GetUpVector(), float3::unitY);
@@ -446,8 +446,9 @@ void ComponentCollider::SetVelocity(float3& velocity, float speed)
 		quat *= transrot;
 		trans.setRotation(quat);
 		body->setWorldTransform(trans);
+		
 	}
-
+	
 }
 
 void ComponentCollider::SetVelocityEnemy(float3 & velocity, float speed)
