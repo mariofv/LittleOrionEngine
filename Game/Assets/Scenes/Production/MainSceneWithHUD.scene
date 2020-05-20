@@ -541,6 +541,31 @@
             "UUID": 3356857563
         },
         {
+            "Transform": {
+                "UUID": 3230617488,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "RemovedComponents": [],
+            "Components": [],
+            "UUID": 625998456
+        },
+        {
             "RemovedComponents": [],
             "Components": [
                 {
@@ -564,7 +589,7 @@
                     ],
                     "Static": false,
                     "Collision": true,
-                    "Visualize": true,
+                    "Visualize": false,
                     "Attached": false,
                     "Freeze_rotation_x": true,
                     "Freeze_rotation_y": true,
@@ -797,8 +822,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    429.5,
-                    291.0
+                    0.0,
+                    0.0
                 ],
                 "Rotation": [
                     0.0,
@@ -1286,7 +1311,7 @@
                     "ColliderType": 0,
                     "Mass": 1.0,
                     "Scale": [
-                        1.0,
+                        0.8899999856948853,
                         0.7900000214576721,
                         0.4699999988079071
                     ],
@@ -2123,8 +2148,8 @@
                 "Active": true,
                 "Translation": [
                     73.30445861816406,
-                    -1.1018370389938355,
-                    0.0
+                    0.3351333737373352,
+                    0.9483526945114136
                 ],
                 "Rotation": [
                     -0.0,
@@ -2186,8 +2211,8 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    136.71945190429688,
-                    -27.604934692382814,
+                    135.2121124267578,
+                    -24.539636611938478,
                     -0.8443360328674316
                 ],
                 "Rotation": [
@@ -2250,9 +2275,9 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    172.20083618164063,
-                    -25.391082763671876,
-                    0.0
+                    172.30416870117188,
+                    -24.925905227661134,
+                    -0.3895670771598816
                 ],
                 "Rotation": [
                     -0.0,
@@ -2315,8 +2340,8 @@
                 "Active": true,
                 "Translation": [
                     215.16903686523438,
-                    0.0,
-                    -16.881858825683595
+                    -3.8502659797668459,
+                    -20.165035247802736
                 ],
                 "Rotation": [
                     -0.0,
@@ -2378,9 +2403,9 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    263.1722717285156,
-                    0.0,
-                    -16.36248779296875
+                    256.5808410644531,
+                    -2.2448508739471437,
+                    -20.165000915527345
                 ],
                 "Rotation": [
                     -0.0,
