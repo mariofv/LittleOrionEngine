@@ -59,13 +59,15 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ImGui::InputFloat("Move Speed", &move_speed);
 	ImGui::InputFloat("Rotate Speed", &rotate_speed);
 	ImGui::InputFloat("Attack Speed", &attack_speed);
-	ImGui::InputFloat("Attack Power", &attack_power);
+	ImGui::InputFloat("Attack Damage", &attack_damage);
 	ImGui::InputFloat("Attack Range", &attack_range);
 	ImGui::InputFloat("Max Health", const_cast<float*>(&MAX_HEALTH_POINTS));
 	ImGui::InputFloat("Health Points", &health_points);
 	ImGui::InputFloat("Detect Distance", &detect_distance);
 	ImGui::InputFloat("Target Distance", &switch_target_distance);
 	ImGui::InputFloat("Separation Distance", &separation_distance);
+	ImGui::InputFloat("Danger Distance", &danger_distance);
+	ImGui::InputFloat("Attack Distance", &attack_distance);
 
 	ImGui::NewLine();
 	ImGui::Text("Enemy Flags");
@@ -73,11 +75,6 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ImGui::Checkbox("Is Attacking", &is_attacking);
 	ImGui::Checkbox("Move with Physics", &move_with_physics);
 
-	ImGui::InputFloat("attack_range", &attack_range);
-	ImGui::InputFloat("switch_target_distance", &switch_target_distance);
-	ImGui::InputFloat("separation_distance", &separation_distance);
-	ImGui::InputFloat("danger_distance", &danger_distance);
-	ImGui::InputFloat("attack_distance", &attack_distance);
 }
 
 //Use this for linking JUST GO automatically 
