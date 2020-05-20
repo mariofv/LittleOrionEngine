@@ -25,6 +25,7 @@ public:
 public:
 	unsigned enemies_killed_on_wave = 0;
 	bool event_triggered = false;
+	bool events_triggered[3]{false,false,false};
 
 private:
 	EnemyManager* enemy_manager = nullptr;
