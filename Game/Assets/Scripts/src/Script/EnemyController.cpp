@@ -1,10 +1,10 @@
 #include "EnemyController.h"
 
+#include "Component/ComponentAnimation.h"
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentAnimation.h"
-#include "Component/ComponentCollider.h"
+
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -440,7 +440,7 @@ bool EnemyController::IsGrounded() const
 	btVector3 origin = collider->body->getWorldTransform().getOrigin();
 
 	btVector3 end = collider->body->getWorldTransform().getOrigin();
-	end.setY(end.getY() - (collider->box_size.getY()) * 5);
+	end.setY(end.getY() - (collider->box_size.getY()));
 
 	return collider->RaycastHit(origin, end);
 }
@@ -458,6 +458,6 @@ void EnemyController::SetProperties(EnemyController* original_enemy)
 	switch_target_distance = original_enemy->switch_target_distance;
 	separation_distance = original_enemy->separation_distance;
 	danger_distance = original_enemy->danger_distance;
-	attack_distance = original_enemy->attack_damage;
+	attack_distance = original_enemy->attack_distance;
 	move_with_physics = original_enemy->move_with_physics;
 }

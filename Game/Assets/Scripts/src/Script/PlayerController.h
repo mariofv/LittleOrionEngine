@@ -39,7 +39,7 @@ private:
 
 	GameObject* progress_bar = nullptr;
 	ProgressBar* health_bar = nullptr;
-
+	bool invincible = false;
 	//unsigned player = 0;
 	float total_health = 100.0f;
 	float health_points = 100.0f;

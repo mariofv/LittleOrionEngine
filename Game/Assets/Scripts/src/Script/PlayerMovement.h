@@ -28,6 +28,9 @@ public:
 
 	void InitPublicGameObjects();
 
+public:
+	ComponentCollider* collider = nullptr;
+
 private:
 	float speed = 0.2f;
 	float rotation_speed = 0.01f;
@@ -37,7 +40,6 @@ private:
 	float jump_power = 130.0f;
 	float3 movement_vector;
 	float3 gravity_vector;
-	ComponentCollider* collider = nullptr;
 	ComponentAnimation* animation = nullptr;
 	GameObject* camera = nullptr;
 	ComponentCamera* game_camera = nullptr;
