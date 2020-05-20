@@ -55,6 +55,8 @@ public:
 
 	bool IsGrounded() const;
 
+	void SetProperties(EnemyController * original_enemy);
+
 protected:
 	virtual void OnDeath() {}
 
@@ -73,20 +75,11 @@ public:
 	int seconds_to_disappear = 1;
 	bool activate_timer = false;
 
-protected:
-	EnemyType type;
-
-	GameObject* player1 = nullptr;
-	GameObject* player2 = nullptr;
-
-	PlayerController* player1_controller = nullptr;
-	PlayerController* player2_controller = nullptr;
-
 	float move_speed = 1.f;
 	float rotate_speed = 1.f;
 	float attack_speed = 1.f;
-	float attack_power = 10.f;
-	const float MAX_HEALTH_POINTS = 100.f;
+	float attack_damage = 15.f;
+	float MAX_HEALTH_POINTS = 125.f;
 	float health_points = MAX_HEALTH_POINTS;
 	float detect_distance = 50.f;
 
@@ -96,9 +89,17 @@ protected:
 	float danger_distance = 8.f;
 	float attack_distance = 5.f;
 
-	float attack_damage = 15.f;
-
 	bool move_with_physics = true;
+
+protected:
+	EnemyType type;
+
+	GameObject* player1 = nullptr;
+	GameObject* player2 = nullptr;
+
+	PlayerController* player1_controller = nullptr;
+	PlayerController* player2_controller = nullptr;
+
 
 	float3 init_translation;
 	Quat init_rotation;

@@ -7,6 +7,7 @@
 class ComponentCollider;
 class PlayerController;
 class ComponentImage;
+class UIManager;
 
 
 class WorldManager : public Script
@@ -22,8 +23,8 @@ public:
 	void OnInspector(ImGuiContext*) override;
 	void InitPublicGameObjects();
 
-	//void Save(Config& config) const override;
-	//void Load(const Config& config) override;
+	void Save(Config& config) const override;
+	void Load(const Config& config) override;
 
 	bool LoadLevel() const;
 
@@ -31,6 +32,7 @@ private:
 	void InitTriggers();
 	void CheckTriggers();
 	void CheckHole();
+	bool CheckLose();
 
 public:
 	static bool singleplayer;
@@ -60,7 +62,9 @@ private:
 	bool on_main_menu = false;
 
 	ComponentCollider* hole = nullptr;
+	UIManager* ui_manager = nullptr;
 	bool disable_hole = false;
+	float3 fall = float3(3.f, -10000.f, 0.f);
 	
 
 

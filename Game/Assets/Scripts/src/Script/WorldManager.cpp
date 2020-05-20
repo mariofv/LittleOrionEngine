@@ -15,6 +15,7 @@
 #include "imgui.h"
 
 #include "PlayerController.h"
+#include "UIManager.h"
 
 
 bool WorldManager::singleplayer;
@@ -54,8 +55,6 @@ void WorldManager::Awake()
 	GameObject* hole_go = App->scene->GetGameObjectByName("Mesh collider HOLE_0");
 	hole = static_cast<ComponentCollider*>(hole_go->GetComponent(Component::ComponentType::COLLIDER));
 	
-	singleplayer = true;
-	player1_choice = false;
 	//Logic of choosing character and single/multi player
 	//Singleplayer
 	if(singleplayer)
@@ -99,6 +98,10 @@ void WorldManager::Awake()
 	GameObject* event_manager_go = App->scene->GetGameObjectByName("EventManager");
 	ComponentScript* event_manager_component = event_manager_go->GetComponentScript("EventManager");
 	event_manager = static_cast<EventManager*>(event_manager_component->script);
+
+	GameObject* ui_manager_go = App->scene->GetGameObjectByName("UIManager");
+	ComponentScript* ui_manager_component = ui_manager_go->GetComponentScript("UIManager");
+	ui_manager = static_cast<UIManager*>(ui_manager_component->script);
 
 	InitTriggers();
 }
@@ -144,13 +147,20 @@ void WorldManager::Update()
 	}
 	*/
 
-	if(event_manager->current_event > 2)
+	if(event_manager->current_event_beated == 2)
 	{
 		//We won the level!
 		player1_controller->owner->SetEnabled(false);
 		player2_controller->owner->SetEnabled(false);
-		//win_component->Enable();
-		transition = true;
+		ui_manager->SetWinScreen();
+	}
+
+
+	if(CheckLose())
+	{
+		player1_controller->owner->SetEnabled(false);
+		player2_controller->owner->SetEnabled(false);
+		ui_manager->SetLoseScreen();
 	}
 }
 
@@ -161,7 +171,8 @@ void WorldManager::OnInspector(ImGuiContext* context)
 	ImGui::SetCurrentContext(context);
 	ShowDraggedObjects();
 
-	ImGui::Checkbox("Singleplayer", &App->input->singleplayer_input);
+	ImGui::Checkbox("Singleplayer", &singleplayer);
+	ImGui::Checkbox("Player 1 female", &player1_choice);
 	ImGui::Checkbox("Main menu", &on_main_menu);
 	ImGui::Checkbox("Fire in the hole", &disable_hole);
 }
@@ -185,6 +196,16 @@ void WorldManager::InitPublicGameObjects()
 		name_gameobjects.push_back(is_object);
 		go_uuids.push_back(0);
 	}
+}
+
+void WorldManager::Save(Config& config) const
+{
+	config.AddBool(on_main_menu, "Main Menu");
+}
+
+void WorldManager::Load(const Config& config)
+{
+	on_main_menu = config.GetBool("Main Menu", false);
 }
 
 bool WorldManager::LoadLevel() const
@@ -219,19 +240,16 @@ void WorldManager::InitTriggers()
 
 void WorldManager::CheckTriggers()
 {
-	if(current_event_trigger > 2)
+	for(size_t i = 0; i < 3; ++i)
 	{
-		return;
-	}
-
-	if(static_cast<ComponentCollider*>(player1_go->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[current_event_trigger]))
-	{
-		if(event_manager->TriggerEvent(current_event_trigger))
+		if (static_cast<ComponentCollider*>(player1_go->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[i]))
 		{
-			++current_event_trigger;
+			if(!event_manager->events_triggered[i])
+			{
+				event_manager->TriggerEvent(i);
+			}
 		}
 	}
-
 }
 
 void WorldManager::CheckHole()
@@ -256,8 +274,59 @@ void WorldManager::CheckHole()
 	if (disable_hole)
 	{
 		hole->owner->SetEnabled(false);
+		if (singleplayer)
+		{
+			if (!player1_choice)
+			{
+				player1_controller->MakePlayerFall(fall);
+			}
+			else
+			{
+				player2_controller->MakePlayerFall(fall);
+			}
+		}
+		else
+		{
+			player1_controller->MakePlayerFall(fall);
+			player2_controller->MakePlayerFall(fall);
+
+		}
+		
 	}
 
+}
+
+bool WorldManager::CheckLose()
+{
+	if (singleplayer)
+	{
+		//If player1_choice == 0 he is chosing male model
+		if (!player1_choice)
+		{
+			if (!player1_controller->is_alive)
+			{
+				return true;
+			}
+		}
+		//Chosing female model
+		else
+		{
+			if (!player2_controller->is_alive)
+			{
+				return true;
+			}
+		}
+	}
+	//Multiplayer
+	else
+	{
+		if (!player1_controller->is_alive && !player2_controller->is_alive)
+		{
+			return true;
+		}
+	}
+
+	return false;
 }
 
 //Use this for linking GO AND VARIABLES automatically if you need to save variables

@@ -9,6 +9,7 @@
 #include "Main/Application.h"
 #include "Main/GameObject.h"
 #include "Module/ModuleAI.h"
+#include "Module/ModuleCamera.h"
 #include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModuleScene.h"
@@ -65,6 +66,8 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 	ImGui::Checkbox("Future AABB", &visualize_future_aabb);
 	ImGui::DragFloat3("Distance", distance.ptr(), 0.1f, 0.f, 300.f);
 	ImGui::DragFloat3("Direction", direction.ptr(), 0.1f, 0.f, 300.f);
+
+	ImGui::Checkbox("SinglePlayer Input", &App->input->singleplayer_input);
 }
 
 void PlayerMovement::Move(int player)
@@ -123,7 +126,7 @@ void PlayerMovement::Move(int player)
 		is_grounded = false;
 		if (!direction.Equals(float3::zero))
 		{
-			is_inside = IsInside(transform + direction * speed / 10);
+			is_inside = IsInside(transform + direction * speed);
 
 			if (is_inside)
 			{
@@ -158,7 +161,7 @@ bool PlayerMovement::IsGrounded()
 	btVector3 origin = collider->body->getWorldTransform().getOrigin();
 
 	btVector3 end = collider->body->getWorldTransform().getOrigin();
-	end.setY(end.getY() - 1.7f);
+	end.setY(end.getY() - collider->box_size.getY() * 2);
 
 	return collider->RaycastHit(origin,end);
 }
@@ -166,10 +169,6 @@ bool PlayerMovement::IsGrounded()
 bool PlayerMovement::IsInside(float3 future_transform)
 {
 	distance = (future_transform) - owner->transform.GetTranslation();
-	//Harcoded distance in order to camera works
-	distance.x = distance.x * 10.f;
-	distance.y = distance.y * 10.f;
-	distance.z = distance.z * 10.f;
 	AABB future_position = AABB(owner->aabb.global_bounding_box.minPoint + distance, owner->aabb.global_bounding_box.maxPoint + distance);
 	if(visualize_future_aabb)
 	{

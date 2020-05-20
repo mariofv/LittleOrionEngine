@@ -75,6 +75,7 @@ update_status ModulePhysics::Update()
 		{			
 			collider->UpdateDimensions();			
 		}
+
 		if(collider->collider_type != ComponentCollider::ColliderType::MESH)
 		{
 			world->synchronizeSingleMotionState(collider->body);
@@ -96,6 +97,20 @@ update_status ModulePhysics::Update()
 	
 
 	return update_status::UPDATE_CONTINUE;
+}
+
+void ModulePhysics::UpdateAllDimensions()
+{
+	for (auto collider : colliders)
+	{
+		collider->UpdateDimensions();
+		
+
+		if (collider->collider_type != ComponentCollider::ColliderType::MESH)
+		{
+			world->synchronizeSingleMotionState(collider->body);
+		}
+	}
 }
 
 bool ModulePhysics::CleanUp()

@@ -98,6 +98,7 @@ public:
 	void SetViewMatrix(const float4x4& view_matrix);
 	float4x4 GetViewMatrix() const;
 	float4x4 GetProjectionMatrix() const;
+	ENGINE_API float4x4 GetClipMatrix() const;
 	float4x4 GetInverseClipMatrix() const;
 
 	std::vector<float> GetFrustumVertices() const;
