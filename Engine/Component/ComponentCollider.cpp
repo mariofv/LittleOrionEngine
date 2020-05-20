@@ -107,12 +107,14 @@ void ComponentCollider::Disable()
 {
 	active = false;
 	SwitchPhysics();
+	SetCollisionDetection();
 }
 
 void ComponentCollider::Enable()
 {
 	active = true;
 	SwitchPhysics();
+	SetCollisionDetection();
 }
 
 btRigidBody* ComponentCollider::AddBody()
@@ -226,14 +228,11 @@ void ComponentCollider::SetVisualization()
 void ComponentCollider::SetCollisionDetection()
 {
 	int flags = body->getCollisionFlags();
+	flags |= body->CF_NO_CONTACT_RESPONSE;
 
-	if (!detect_collision)
-	{
-		flags |= body->CF_NO_CONTACT_RESPONSE;
-	}
-	else
-	{
-		flags &= ~(body->CF_NO_CONTACT_RESPONSE);
+	if (detect_collision && active)
+	{		
+		flags -= body->CF_NO_CONTACT_RESPONSE;
 	}
 
 	body->setCollisionFlags(flags);
