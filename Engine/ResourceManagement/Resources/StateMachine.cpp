@@ -130,14 +130,6 @@ void StateMachine::RemoveState(const std::shared_ptr<State>& state)
 void StateMachine::RemoveClip(const std::shared_ptr<Clip>& clip)
 {
 	bool is_being_use = false;
-	for (auto & state : states)
-	{
-		is_being_use = state->clip && state->clip->name_hash == clip->name_hash;
-		if (is_being_use)
-		{
-			break;
-		}
-	}
 	if (!is_being_use)
 	{
 		uint64_t clip_hash = clip->name_hash;
