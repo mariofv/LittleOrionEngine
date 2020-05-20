@@ -541,31 +541,6 @@
             "UUID": 3356857563
         },
         {
-            "Transform": {
-                "UUID": 3230617488,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    -0.0,
-                    0.0,
-                    -0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "RemovedComponents": [],
-            "Components": [],
-            "UUID": 625998456
-        },
-        {
             "RemovedComponents": [],
             "Components": [
                 {
@@ -822,8 +797,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    0.0,
-                    0.0
+                    514.5,
+                    306.0
                 ],
                 "Rotation": [
                     0.0,
@@ -844,8 +819,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    859.0,
-                    582.0
+                    1029.0,
+                    612.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1305,15 +1280,15 @@
                     "StateMachineResource": 927869490
                 },
                 {
-                    "UUID": 1451849866,
+                    "UUID": 3477169875,
                     "ComponentType": 9,
                     "Active": true,
-                    "ColliderType": 0,
+                    "ColliderType": 1,
                     "Mass": 1.0,
                     "Scale": [
-                        0.8899999856948853,
-                        0.7900000214576721,
-                        0.4699999988079071
+                        0.49000000953674319,
+                        0.9900000095367432,
+                        1.0
                     ],
                     "Static": false,
                     "Collision": true,
@@ -1323,12 +1298,12 @@
                     "Freeze_rotation_y": true,
                     "Freeze_rotation_z": true,
                     "Active_Physics": true,
-                    "Friction": 1.0,
+                    "Friction": 0.10000000149011612,
                     "Rolling_friction": 1.0,
                     "Center": [
                         0.0,
-                        0.8100000023841858,
-                        0.0
+                        0.8299999833106995,
+                        0.019999999552965165
                     ]
                 }
             ]
@@ -1536,9 +1511,9 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    210.45240783691407,
-                    6.390443325042725,
-                    -20.285301208496095
+                    215.2816162109375,
+                    -1.1913976669311524,
+                    -19.574424743652345
                 ],
                 "Rotation": [
                     -0.0,
