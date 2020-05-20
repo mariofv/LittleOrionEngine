@@ -19,27 +19,18 @@
     <Filter Include="src\Script\Enemy\States">
       <UniqueIdentifier>{ebdb1ed7-f4d7-4356-a775-004e150837bb}</UniqueIdentifier>
     </Filter>
-    <Filter Include="src\Script\Cameras">
-      <UniqueIdentifier>{7066949a-eca8-446d-9e3d-c45bb0fdc694}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Script\Debug">
-      <UniqueIdentifier>{365c417a-54ed-4237-a116-0adce494d4cf}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Script\Managers">
-      <UniqueIdentifier>{db227a01-3da9-4052-ac08-686b849df9c8}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Script\Helpers">
-      <UniqueIdentifier>{5a4551b0-fcc4-443e-9931-b0c963159f3d}</UniqueIdentifier>
-    </Filter>
-    <Filter Include="src\Script\Main">
-      <UniqueIdentifier>{2284cb59-4717-4be4-9791-4275e0889d99}</UniqueIdentifier>
-    </Filter>
     <Filter Include="src\Script\UI">
-      <UniqueIdentifier>{f8b36467-937a-4783-91b6-e811ad7ce990}</UniqueIdentifier>
+      <UniqueIdentifier>{730085b1-319b-41f8-ae9c-13fed5bc7d53}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="src\Script\TriggerGravity.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\DebugModeScript.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\WorldManager.h">
       <Filter>src\Script</Filter>
     </ClInclude>
     <ClInclude Include="src\Script\PlayerController.h">
@@ -75,39 +66,61 @@
     <ClInclude Include="src\Script\DieEnemyState.h">
       <Filter>src\Script\Enemy\States</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\CameraController.h">
-      <Filter>src\Script\Cameras</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Script\SceneCamerasController.h">
-      <Filter>src\Script\Cameras</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Script\GodCamera.h">
-      <Filter>src\Script\Cameras</Filter>
-    </ClInclude>
     <ClInclude Include="src\Script\DebugModeScript.h">
       <Filter>src\Script\Debug</Filter>
-    </ClInclude>
-    <ClInclude Include="src\Script\EventManager.h">
-      <Filter>src\Script\Managers</Filter>
     </ClInclude>
     <ClInclude Include="src\Script\WorldManager.h">
       <Filter>src\Script\Managers</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\EnemyManager.h">
-      <Filter>src\Script\Managers</Filter>
+    <ClInclude Include="src\Script\GodCamera.h" />
+    <ClInclude Include="src\Script\EventManager.h" />
+    <ClInclude Include="src\Script\EnemyManager.h" />
+    <ClInclude Include="src\Script\ExampleScript.h" />
+    <ClInclude Include="src\Script\CameraController.h" />
+    <ClInclude Include="src\Script\SceneCamerasController.h" />
+    <ClInclude Include="src\Script\Script.h" />
+    <ClInclude Include="src\Script\CharacterSelectionMenuController.h">
+      <Filter>src\Script\UI</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\ExampleScript.h">
-      <Filter>src\Script\Helpers</Filter>
+    <ClInclude Include="src\Script\HelpMenuController.h">
+      <Filter>src\Script\UI</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\Script.h">
-      <Filter>src\Script\Main</Filter>
+    <ClInclude Include="src\Script\LevelSelectionMenuController.h">
+      <Filter>src\Script\UI</Filter>
     </ClInclude>
-    <ClInclude Include="src\Script\MenuLogic.h">
+    <ClInclude Include="src\Script\MainMenuController.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\UIMainMenuInputController.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\PauseMenuController.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\CreditsMenuController.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\ProgressBar.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\UIManager.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\DamageIndicatorSpawner.h">
+      <Filter>src\Script\UI</Filter>
+    </ClInclude>
+    <ClInclude Include="src\Script\DamageIndicator.h">
       <Filter>src\Script\UI</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\TriggerGravity.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\DebugModeScript.cpp">
+      <Filter>src\Script</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\WorldManager.cpp">
       <Filter>src\Script</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\PlayerController.cpp">
@@ -140,38 +153,54 @@
     <ClCompile Include="src\Script\ScreamEnemyState.cpp">
       <Filter>src\Script\Enemy\States</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\DieEnemyState.cpp">
-      <Filter>src\Script\Enemy\States</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\CameraController.cpp">
-      <Filter>src\Script\Cameras</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\SceneCamerasController.cpp">
-      <Filter>src\Script\Cameras</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\GodCamera.cpp">
-      <Filter>src\Script\Cameras</Filter>
-    </ClCompile>
     <ClCompile Include="src\Script\DebugModeScript.cpp">
       <Filter>src\Script\Debug</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\EventManager.cpp">
-      <Filter>src\Script\Managers</Filter>
     </ClCompile>
     <ClCompile Include="src\Script\WorldManager.cpp">
       <Filter>src\Script\Managers</Filter>
     </ClCompile>
-    <ClCompile Include="src\Script\EnemyManager.cpp">
-      <Filter>src\Script\Managers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\ExampleScript.cpp">
-      <Filter>src\Script\Helpers</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\Script.cpp">
-      <Filter>src\Script\Main</Filter>
-    </ClCompile>
-    <ClCompile Include="src\Script\MenuLogic.cpp">
+    <ClCompile Include="src\Script\GodCamera.cpp" />
+    <ClCompile Include="src\Script\EventManager.cpp" />
+    <ClCompile Include="src\Script\EnemyManager.cpp" />
+    <ClCompile Include="src\Script\ExampleScript.cpp" />
+    <ClCompile Include="src\Script\CameraController.cpp" />
+    <ClCompile Include="src\Script\SceneCamerasController.cpp" />
+    <ClCompile Include="src\Script\Script.cpp" />
+    <ClCompile Include="src\Script\CharacterSelectionMenuController.cpp">
       <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\HelpMenuController.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\LevelSelectionMenuController.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\MainMenuController.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\UIMainMenuInputController.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\PauseMenuController.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\CreditsMenuController.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\ProgressBar.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\UIManager.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\DamageIndicatorSpawner.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\DamageIndicator.cpp">
+      <Filter>src\Script\UI</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\DieEnemyState.cpp">
+      <Filter>src\Script\Enemy\States</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

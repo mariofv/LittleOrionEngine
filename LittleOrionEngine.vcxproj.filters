@@ -891,15 +891,6 @@
     <ClInclude Include="Engine\Module\ModuleSpacePartitioning.h">
       <Filter>Engine\Module</Filter>
     </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentButton.h">
-      <Filter>Engine\Component\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentCanvas.h">
-      <Filter>Engine\Component\UI</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\Component\ComponentImage.h">
-      <Filter>Engine\Component\UI</Filter>
-    </ClInclude>
     <ClInclude Include="Engine\Component\ComponentCanvasRenderer.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
@@ -982,6 +973,15 @@
       <Filter>Engine\Component</Filter>
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentCanvas.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentButton.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentCanvas.h">
+      <Filter>Engine\Component</Filter>
+    </ClInclude>
+    <ClInclude Include="Engine\Component\ComponentImage.h">
       <Filter>Engine\Component</Filter>
     </ClInclude>
   </ItemGroup>

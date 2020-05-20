@@ -66,7 +66,7 @@ void ComponentImage::Render(float4x4* projection)
 		glUniformMatrix4fv(glGetUniformLocation(program, "projection"), 1, GL_TRUE, projection->ptr());
 		glUniform1i(glGetUniformLocation(program, "image"), 0);
 		glUniformMatrix4fv(glGetUniformLocation(program, "model"), 1, GL_TRUE, model->ptr());
-		glUniform3fv(glGetUniformLocation(program, "spriteColor"), 1, color.ptr());
+		glUniform4fv(glGetUniformLocation(program, "spriteColor"), 1, color.ptr());
 		glActiveTexture(GL_TEXTURE0);
 		glBindTexture(GL_TEXTURE_2D, texture_to_render->opengl_texture);
 
@@ -108,13 +108,13 @@ void ComponentImage::Delete()
 
 void ComponentImage::SpecializedSave(Config& config) const
 {
-	config.AddFloat3(color, "Color");
+	config.AddColor(color, "ImageColor");
 	config.AddUInt(texture_uuid, "TextureUUID");
 }
 
 void ComponentImage::SpecializedLoad(const Config& config)
 {
-	config.GetFloat3("Color", color, float3::one);
+	config.GetColor("ImageColor", color, float4::one);
 	texture_uuid = config.GetUInt("TextureUUID", 0);
 	if (texture_uuid != 0)
 	{
@@ -126,4 +126,9 @@ void ComponentImage::SetTextureToRender(uint32_t texture_uuid)
 {
 	this->texture_uuid = texture_uuid;
 	texture_to_render = App->resources->Load<Texture>(texture_uuid);
+}
+
+void ComponentImage::SetColor(float4 color)
+{
+	this->color = color;
 }
