@@ -70,7 +70,8 @@ void DamageIndicator::Spawn(int number, float2 position)
 {
 	alive = true;
 	damage_indicator_text->SetText(std::to_string(number));
-	owner->transform_2d.SetTranslation(float3(position, 0.f));
+	position.y += offset_y;
+	owner->transform_2d.SetTranslation(float3(position,0.f));
 	static_cast<ComponentText*>(owner->GetComponent(Component::ComponentType::CANVAS_RENDERER))->Enable();
 
 	current_time = 0.f;
@@ -85,6 +86,7 @@ void DamageIndicator::OnInspector(ImGuiContext* context)
 
 	ImGui::InputFloat("Speed", &speed);
 	ImGui::InputFloat("Duration", &duration);
+	ImGui::InputFloat("Offset Y", &offset_y);
 }
 
 //Use this for linking JUST GO automatically 
@@ -107,13 +109,15 @@ void DamageIndicator::Save(Config& config) const
 {
 	config.AddFloat(speed, "Speed");
 	config.AddFloat(duration, "Duration");
+	config.AddFloat(offset_y, "Offset Y");
 	Script::Save(config);
 }
 
 // //Use this for linking GO AND VARIABLES automatically
 void DamageIndicator::Load(const Config& config)
 {
-	speed = config.GetFloat("Speed", 1.f);
-	duration = config.GetFloat("Duration", 500.f);
+	speed = config.GetFloat("Speed", 0.5f);
+	duration = config.GetFloat("Duration", 1000.f);
+	offset_y = config.GetFloat("Offset Y", 40.f);
 	Script::Load(config);
 }

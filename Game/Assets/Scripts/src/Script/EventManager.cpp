@@ -15,10 +15,6 @@
 #include "imgui.h"
 
 
-
-
-
-
 EventManager* EventManagerDLL()
 {
 	EventManager* instance = new EventManager();
@@ -33,7 +29,6 @@ EventManager::EventManager()
 }
 
 
-
 // Use this for initialization before Start()
 void EventManager::Awake()
 {
@@ -46,7 +41,6 @@ void EventManager::Awake()
 	ComponentScript* camera_controller_component = camera_controller_go->GetComponentScript("CameraController");
 	camera_controller = static_cast<CameraController*>(camera_controller_component->script);
 }
-
 
 
 // Use this for initialization
@@ -72,6 +66,7 @@ void EventManager::Update()
 				event_triggered = false;
 				camera_controller->SetFreeze();
 				waves_left = 0;
+				current_event_beated = current_event;
 			}
 			else
 			{
@@ -93,8 +88,9 @@ void EventManager::OnInspector(ImGuiContext* context)
 
 	ImGui::Text("enemies_killed_on_wave: %d", enemies_killed_on_wave);
 	ImGui::Text("enemies_per_wave: %d", enemies_per_wave);
-}
+	ImGui::Text("Current Event Beated: %d", current_event_beated);
 
+}
 
 
 //Use this for linking JUST GO automatically 
@@ -141,6 +137,7 @@ bool EventManager::TriggerEvent(unsigned event)
 	}
 
 	event_triggered = true;
+	events_triggered[event] = true;
 	camera_controller->SetFreeze();
 
 	return true;

@@ -256,6 +256,7 @@
   <ItemGroup>
     <ClInclude Include="src\Script\LevelSelectionMenuController.h" />
     <ClInclude Include="src\Script\CharacterSelectionMenuController.h" />
+    <ClInclude Include="src\Script\AudioController.h" />
     <ClInclude Include="src\Script\CreditsMenuController.h" />
     <ClInclude Include="src\Script\UIMainMenuInputController.h" />
     <ClInclude Include="src\Script\PauseMenuController.h" />
@@ -289,6 +290,7 @@
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\DamageIndicator.cpp" />
+    <ClCompile Include="src\Script\AudioController.cpp" />
     <ClCompile Include="src\Script\DamageIndicatorSpawner.cpp" />
     <ClCompile Include="src\Script\UIManager.cpp" />
     <ClCompile Include="src\Script\ProgressBar.cpp" />

@@ -3,6 +3,7 @@
 #include "Mushdoom.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioSource.h"
 
 #include "Main/GameObject.h"
 
@@ -57,6 +58,13 @@ void PursueEnemyState::OnStateUpdate()
 	if (enemy->is_attacking)
 	{
 		Exit(enemy->attack_state);
+	}
+
+	//Animation has 60 frames, steps each 15 frames (1,15,30,45)
+	float current_percentage = enemy->animation->GetCurrentClipPercentatge();
+	if ((int)(current_percentage * 100) % 25 == 0 && current_percentage != 1)
+	{
+		enemy->audio_source->PlayEvent("play_footstep");
 	}
 }
 

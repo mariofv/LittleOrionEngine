@@ -44,10 +44,14 @@ public:
 
 	void SetGravity(float3& newGgravity);
 	float3 GetGravity() const;
+
 	ComponentCollider* CreateComponentCollider(const ComponentCollider::ColliderType collider_type, GameObject* owner);
 	void RemoveComponentCollider(ComponentCollider* collider_to_remove);
+
 	bool RaycastWorld(const btVector3 &Start, btVector3 &End, btVector3 &Normal);
 	ENGINE_API int GetRaycastWorldId(const btVector3& start, btVector3& end, btVector3& normal);
+
+	void UpdateAllDimensions();
 
 public:
 
@@ -58,9 +62,11 @@ public:
 	btDiscreteDynamicsWorld* world = nullptr;
 
 	bool show_physics = true;
+
 	Timer* physics_timer = nullptr;
 	float ms = 0;
 	std::vector<float> ms_info;
+
 	std::vector<ComponentCollider*> colliders;
 	math::float3 gravity = float3(0.0f, -10.0f, 0.0f); //gravity world
 

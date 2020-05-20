@@ -32,23 +32,33 @@
                 "UUID": 1012207212,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -112,23 +122,33 @@
                 "UUID": 3894984641,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -185,23 +205,33 @@
                 "UUID": 3662009528,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    1106.0,
-                    721.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    1137.0,
+                    717.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -251,23 +281,33 @@
                 "UUID": 1738656269,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -314,23 +354,33 @@
                 "UUID": 1594682912,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -374,23 +424,33 @@
                 "UUID": 3797784027,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -401,7 +461,8 @@
                     "UUID": 356707812,
                     "ComponentType": 6,
                     "Active": true,
-                    "ScriptName": "WorldManager"
+                    "ScriptName": "WorldManager",
+                    "Main Menu": true
                 }
             ]
         },
@@ -435,23 +496,33 @@
                 "UUID": 3182345439,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    0.0,
-                    0.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -516,23 +587,33 @@
                 "UUID": 3121515641,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    0.0,
-                    0.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -585,23 +666,33 @@
                 "UUID": 4241230447,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    0.0,
-                    0.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -662,17 +753,19 @@
                 "UUID": 2475606426,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    0.0,
-                    0.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.0,
@@ -681,6 +774,14 @@
                 "MaxAnchor": [
                     1.0,
                     1.0
+                ],
+                "SizeDelta": [
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
                 ]
             },
             "Transform2DEnabled": true,
@@ -749,23 +850,33 @@
                 "UUID": 60551251,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -828,23 +939,33 @@
                 "UUID": 100409714,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    1089.0,
-                    710.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    1089.0,
+                    710.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -882,23 +1003,33 @@
                 "UUID": 3909787182,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    0.0,
-                    0.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -936,23 +1067,33 @@
                 "UUID": 1694757936,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -990,23 +1131,33 @@
                 "UUID": 2106287300,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -1044,17 +1195,19 @@
                 "UUID": 425787492,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    0.0,
-                    0.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.0,
@@ -1063,6 +1216,14 @@
                 "MaxAnchor": [
                     1.0,
                     1.0
+                ],
+                "SizeDelta": [
+                    0.0,
+                    0.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
                 ]
             },
             "Transform2DEnabled": true,
@@ -1098,23 +1259,33 @@
                 "UUID": 1974725782,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    1280.0,
-                    720.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    1280.0,
+                    720.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -1170,23 +1341,33 @@
                 "UUID": 2698545445,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    16.0,
-                    56.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -530.0,
                     63.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    16.0,
+                    56.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -1242,23 +1423,33 @@
                 "UUID": 3404759824,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -402.0,
                     -48.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -1296,23 +1487,33 @@
                 "UUID": 590913424,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    1280.0,
-                    720.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    1280.0,
+                    720.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -1368,23 +1569,33 @@
                 "UUID": 3850462225,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    200.0,
-                    54.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -406.44903564453127,
                     -283.3291015625
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    200.0,
+                    54.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -1433,23 +1644,33 @@
                 "UUID": 4079626339,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    1280.0,
-                    720.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    1280.0,
+                    720.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -1505,23 +1726,33 @@
                 "UUID": 2143638847,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    1280.0,
-                    720.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    1280.0,
+                    720.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -1577,23 +1808,33 @@
                 "UUID": 2410198223,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    200.0,
-                    54.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -406.45001220703127,
                     -283.3290100097656
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    200.0,
+                    54.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -1654,23 +1895,33 @@
                 "UUID": 2012998430,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    249.0,
-                    56.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     15.0,
                     206.35000610351563
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    249.0,
+                    56.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -1719,23 +1970,33 @@
                 "UUID": 3086516120,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    249.0,
-                    56.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     264.0,
                     206.35000610351563
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    249.0,
+                    56.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -1784,23 +2045,33 @@
                 "UUID": 2090294588,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    1280.0,
-                    720.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    1280.0,
+                    720.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -1856,23 +2127,33 @@
                 "UUID": 2786041527,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    200.0,
-                    54.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -406.45001220703127,
                     -283.3290100097656
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    200.0,
+                    54.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -1933,23 +2214,33 @@
                 "UUID": 1210541450,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    53.5,
-                    54.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -228.0,
                     -190.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    53.5,
+                    54.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2005,23 +2296,33 @@
                 "UUID": 1548038280,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    53.0,
-                    54.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     228.0,
                     -190.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    53.0,
+                    54.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2077,23 +2378,33 @@
                 "UUID": 3126074354,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    53.5,
-                    52.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -228.0,
                     -190.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    53.5,
+                    52.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2149,23 +2460,33 @@
                 "UUID": 3244443585,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    53.0,
-                    57.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     228.0,
                     -190.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    53.0,
+                    57.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2216,23 +2537,33 @@
                 "UUID": 855772981,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    1280.0,
-                    720.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    1280.0,
+                    720.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2288,23 +2619,33 @@
                 "UUID": 409525358,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    1280.0,
-                    720.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    1280.0,
+                    720.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2360,23 +2701,33 @@
                 "UUID": 3326711354,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    1280.0,
-                    720.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    1280.0,
+                    720.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2432,23 +2783,33 @@
                 "UUID": 3463461891,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    318.0,
-                    55.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -427.0,
                     -283.3299865722656
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    318.0,
+                    55.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2509,23 +2870,33 @@
                 "UUID": 1672511166,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    85.0,
-                    136.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -274.0,
                     -54.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    85.0,
+                    136.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2576,23 +2947,33 @@
                 "UUID": 1478466220,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    85.0,
-                    136.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -10.0,
                     -54.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    85.0,
+                    136.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2643,23 +3024,33 @@
                 "UUID": 3355087005,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    85.0,
-                    136.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     282.0,
                     -54.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    85.0,
+                    136.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2710,23 +3101,33 @@
                 "UUID": 1544508567,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    32.0,
-                    32.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -366.0,
                     -73.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    32.0,
+                    32.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2788,23 +3189,33 @@
                 "UUID": 3704972992,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    200.0,
-                    54.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     111.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    200.0,
+                    54.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2865,23 +3276,33 @@
                 "UUID": 2363242214,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    200.0,
-                    54.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     37.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    200.0,
+                    54.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -2942,23 +3363,33 @@
                 "UUID": 465548265,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    200.0,
-                    54.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     -37.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    200.0,
+                    54.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -3019,23 +3450,33 @@
                 "UUID": 517874660,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    200.0,
-                    54.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     0.0,
                     -111.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    200.0,
+                    54.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -3096,23 +3537,33 @@
                 "UUID": 3349931896,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    16.0,
-                    56.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -114.82026672363281,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    16.0,
+                    56.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -3168,23 +3619,33 @@
                 "UUID": 2803847846,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    16.0,
-                    56.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -118.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    16.0,
+                    56.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -3240,23 +3701,33 @@
                 "UUID": 2856228361,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    16.0,
-                    56.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -120.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    16.0,
+                    56.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]
@@ -3312,23 +3783,33 @@
                 "UUID": 53562378,
                 "ComponentType": 7,
                 "Active": true,
-                "SizeDelta": [
-                    16.0,
-                    56.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ],
                 "AnchoredPos": [
                     -179.0,
                     0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
                     0.5
                 ],
                 "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    16.0,
+                    56.0
+                ],
+                "Pivot": [
                     0.5,
                     0.5
                 ]

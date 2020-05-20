@@ -879,7 +879,7 @@ bool PanelComponent::ShowCommonColliderWindow(ComponentCollider* collider)
 	{
 		collider->SetStatic();
 	}
-	if (ImGui::Checkbox("Collision animation", &collider->detect_collision))
+	if (ImGui::Checkbox("Collision Detection", &collider->detect_collision))
 	{
 		collider->SetCollisionDetection();
 	}

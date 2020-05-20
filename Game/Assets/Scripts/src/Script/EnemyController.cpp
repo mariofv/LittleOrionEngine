@@ -1,10 +1,10 @@
 #include "EnemyController.h"
 
+#include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioSource.h"
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentAnimation.h"
-#include "Component/ComponentCollider.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -59,13 +59,15 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ImGui::InputFloat("Move Speed", &move_speed);
 	ImGui::InputFloat("Rotate Speed", &rotate_speed);
 	ImGui::InputFloat("Attack Speed", &attack_speed);
-	ImGui::InputFloat("Attack Power", &attack_power);
+	ImGui::InputFloat("Attack Damage", &attack_damage);
 	ImGui::InputFloat("Attack Range", &attack_range);
 	ImGui::InputFloat("Max Health", const_cast<float*>(&MAX_HEALTH_POINTS));
 	ImGui::InputFloat("Health Points", &health_points);
 	ImGui::InputFloat("Detect Distance", &detect_distance);
 	ImGui::InputFloat("Target Distance", &switch_target_distance);
 	ImGui::InputFloat("Separation Distance", &separation_distance);
+	ImGui::InputFloat("Danger Distance", &danger_distance);
+	ImGui::InputFloat("Attack Distance", &attack_distance);
 
 	ImGui::NewLine();
 	ImGui::Text("Enemy Flags");
@@ -73,14 +75,9 @@ void EnemyController::OnInspector(ImGuiContext* context)
 	ImGui::Checkbox("Is Attacking", &is_attacking);
 	ImGui::Checkbox("Move with Physics", &move_with_physics);
 
-	ImGui::InputFloat("attack_range", &attack_range);
-	ImGui::InputFloat("switch_target_distance", &switch_target_distance);
-	ImGui::InputFloat("separation_distance", &separation_distance);
-	ImGui::InputFloat("danger_distance", &danger_distance);
-	ImGui::InputFloat("attack_distance", &attack_distance);
 }
 
-//Use this for linking JUST GO automatically 
+//Use this for linking JUST GO automatically
 void EnemyController::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
@@ -99,6 +96,7 @@ void EnemyController::InitMembers()
 
 	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
+	audio_source = static_cast<ComponentAudioSource*>(owner->GetComponent(Component::ComponentType::AUDIO_SOURCE));
 
 	player1 = App->scene->GetGameObjectByName("Player1");
 	if (player1 != nullptr)
@@ -443,7 +441,24 @@ bool EnemyController::IsGrounded() const
 	btVector3 origin = collider->body->getWorldTransform().getOrigin();
 
 	btVector3 end = collider->body->getWorldTransform().getOrigin();
-	end.setY(end.getY() - (collider->box_size.getY()) * 5);
+	end.setY(end.getY() - (collider->box_size.getY()));
 
 	return collider->RaycastHit(origin, end);
+}
+
+void EnemyController::SetProperties(EnemyController* original_enemy)
+{
+	move_speed = original_enemy->move_speed;
+	rotate_speed = original_enemy->rotate_speed;
+	attack_speed = original_enemy->attack_speed;
+	attack_damage = original_enemy->attack_damage;
+	MAX_HEALTH_POINTS = original_enemy->MAX_HEALTH_POINTS;
+	health_points = MAX_HEALTH_POINTS;
+	detect_distance = original_enemy->detect_distance;
+	attack_range = original_enemy->attack_range;
+	switch_target_distance = original_enemy->switch_target_distance;
+	separation_distance = original_enemy->separation_distance;
+	danger_distance = original_enemy->danger_distance;
+	attack_distance = original_enemy->attack_distance;
+	move_with_physics = original_enemy->move_with_physics;
 }

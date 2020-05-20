@@ -49,9 +49,9 @@ private:
 	GameObject* audio_controller = nullptr;
 	ComponentAudioSource* audio_source = nullptr;
 
-	const size_t LEVEL1_BUILD_OPTIONS_POSITION = 0;
-	const size_t LEVEL2_BUILD_OPTIONS_POSITION = 1;
-	const size_t LEVEL3_BUILD_OPTIONS_POSITION = 2;
+	const size_t LEVEL1_BUILD_OPTIONS_POSITION = 1;
+	const size_t LEVEL2_BUILD_OPTIONS_POSITION = 2;
+	const size_t LEVEL3_BUILD_OPTIONS_POSITION = 3;
 
 };
 extern "C" SCRIPT_API LevelSelectionMenuController* LevelSelectionMenuControllerDLL(); //This is how we are going to load the script
