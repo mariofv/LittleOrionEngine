@@ -41,7 +41,7 @@ private:
 	float jump_power = 130.0f;
 	float3 movement_vector;
 	float3 gravity_vector;
-	ComponentCollider* collider = nullptr;
+
 	ComponentAudioSource* audio_source = nullptr;
 	ComponentAnimation* animation = nullptr;
 
