@@ -52,6 +52,11 @@ void PlayerController::Update()
 	{
 		player_movement->Move(player);
 	}
+
+	if(health_points <= 0)
+	{
+		is_alive = false;
+	}
 }
 
 // Use this for showing variables on inspector
