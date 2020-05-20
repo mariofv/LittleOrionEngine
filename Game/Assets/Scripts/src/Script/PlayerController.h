@@ -19,7 +19,6 @@ public:
 	void Update() override;
 
 	void OnInspector(ImGuiContext*) override;
-
 	void Save(Config& config) const override;
 	void Load(const Config& config) override;
 
@@ -29,7 +28,6 @@ public:
 public:
 	unsigned int player = 1;
 	bool is_alive = true;
-
 private:
 	PlayerMovement* player_movement = nullptr;
 	PlayerAttack* player_attack = nullptr;

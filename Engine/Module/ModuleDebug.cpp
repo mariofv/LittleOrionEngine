@@ -11,6 +11,7 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleUI.h"
 
 #include "ResourceManagement/Importer/Importer.h"
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
@@ -41,6 +42,11 @@ bool ModuleDebug::CleanUp()
 void ModuleDebug::Render(ComponentCamera* cam)
 {
 	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
+
+	if (App->debug->show_canvas && App->ui->main_canvas != nullptr)
+	{
+		App->debug_draw->RenderRectTransform(App->ui->main_canvas->owner);
+	}
 
 	if (show_navmesh)
 	{

@@ -400,6 +400,33 @@
                     "Mesh": 3854408602,
                     "Material": 2868425841,
                     "Skeleton": 0
+                },
+                {
+                    "UUID": 1516935514,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 0,
+                    "Mass": 1.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": false,
+                    "Collision": true,
+                    "Visualize": true,
+                    "Attached": true,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": true,
+                    "Friction": 1.0,
+                    "Rolling_friction": 1.0,
+                    "Center_deviation": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
                 }
             ],
             "UUID": 3119106838
@@ -1281,6 +1308,73 @@
                         0.0,
                         -0.799837589263916
                     ]
+                }
+            ]
+        },
+        {
+            "UUID": 3459380382,
+            "ParentUUID": 0,
+            "Name": "DebugSystem",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 853165621,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 1232015965,
+                "ComponentType": 7,
+                "Active": true,
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ],
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 3500148295,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DebugModeScript",
+                    "Name0": "EnemyManager",
+                    "EnemyManager": 1432989333,
+                    "Name1": "Player1",
+                    "Player1": 3966630548,
+                    "Name2": "Player2",
+                    "Player2": 2296910557
                 }
             ]
         },
