@@ -35,7 +35,7 @@ public:
 	bool god_mode = false;
 
 private:
-	Quat rotation = Quat::identity;
+	Quat rotation = Quat::FromEulerXYZ(2.742f, 0.f, -3.142f);
 	float rotation_speed = 1.f;
 
 	GameObject* player1 = nullptr;
@@ -48,6 +48,7 @@ private:
 	WorldManager* world_manager = nullptr;
 
 	const float CENTER_TIME = 30000.f;
+
 	float3 offset_near = float3(0.f, 5.5f, 11.f);
 	float3 offset_far = float3(0.f, 8.5f, 17.5f);
 	float3 selected_offset = float3::zero;;

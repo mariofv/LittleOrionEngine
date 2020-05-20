@@ -41,7 +41,7 @@ void CameraController::Awake()
 	player2_movement_component = player2->GetComponentScript("PlayerController");
 	player2_movement_script = (PlayerController*)player2_movement_component->script;
 
-	rotation = owner->transform.GetRotation();
+	owner->transform.SetRotation(rotation);
 
 	selected_offset = offset_near;
 
@@ -54,7 +54,6 @@ void CameraController::Awake()
 // Use this for initialization
 void CameraController::Start()
 {
-	//camera_component->SetOrthographicView();
 	//Dirty AF but hope it works
 	if(player_movement_script->player == 2)
 	{
@@ -164,7 +163,11 @@ void CameraController::FollowPlayer()
 	if (is_focusing)
 	{
 		float3 current_position = player1->transform.GetTranslation();
-		float3 position_to_focus = float3(current_position.x, current_position.y + selected_offset.y, (current_position.z * 0.5) + selected_offset.z);
+		if (current_position.z > 2.2)
+		{
+			current_position.z = 2.2f;
+		}
+		float3 position_to_focus = float3(current_position.x, current_position.y + selected_offset.y, current_position.z + selected_offset.z);
 		Focus(position_to_focus);
 	}
 

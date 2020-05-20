@@ -325,6 +325,24 @@
     ],
     "PrefabsComponents": [
         {
+            "RemovedComponents": [
+                {
+                    "Removed": 999990596
+                }
+            ],
+            "Components": [],
+            "UUID": 4235302750
+        },
+        {
+            "RemovedComponents": [
+                {
+                    "Removed": 999990596
+                }
+            ],
+            "Components": [],
+            "UUID": 1242193472
+        },
+        {
             "RemovedComponents": [],
             "Components": [
                 {
@@ -379,7 +397,7 @@
                     "Freeze_rotation_y": true,
                     "Freeze_rotation_z": true,
                     "Active_Physics": true,
-                    "Friction": 0.30000001192092898,
+                    "Friction": 0.10000000149011612,
                     "Rolling_friction": 1.0,
                     "Center": [
                         0.0,
@@ -389,6 +407,72 @@
                 }
             ],
             "UUID": 4024651988
+        },
+        {
+            "RemovedComponents": [],
+            "Components": [
+                {
+                    "UUID": 169401498,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 4,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": true,
+                    "Collision": true,
+                    "Visualize": false,
+                    "Attached": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": true,
+                    "Friction": 0.10000000149011612,
+                    "Rolling_friction": 1.0,
+                    "Center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "UUID": 4181468422
+        },
+        {
+            "RemovedComponents": [],
+            "Components": [
+                {
+                    "UUID": 1831072083,
+                    "ComponentType": 9,
+                    "Active": true,
+                    "ColliderType": 4,
+                    "Mass": 0.0,
+                    "Scale": [
+                        1.0,
+                        1.0,
+                        1.0
+                    ],
+                    "Static": true,
+                    "Collision": true,
+                    "Visualize": false,
+                    "Attached": false,
+                    "Freeze_rotation_x": true,
+                    "Freeze_rotation_y": true,
+                    "Freeze_rotation_z": true,
+                    "Active_Physics": true,
+                    "Friction": 0.10000000149011612,
+                    "Rolling_friction": 1.0,
+                    "Center": [
+                        0.0,
+                        0.0,
+                        0.0
+                    ]
+                }
+            ],
+            "UUID": 4017986150
         },
         {
             "RemovedComponents": [],
@@ -605,14 +689,14 @@
                     46.31583786010742
                 ],
                 "Rotation": [
-                    169.46929931640626,
-                    -9.154366580332862e-7,
-                    -179.99998474121095
+                    0.0,
+                    0.0,
+                    0.0
                 ],
                 "Scale": [
-                    1.000035285949707,
-                    1.0,
-                    1.0000303983688355
+                    1.000074028968811,
+                    0.9999998807907105,
+                    1.0000683069229127
                 ]
             },
             "Transform2D": {
@@ -713,8 +797,8 @@
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
-                    752.0,
-                    351.5
+                    429.5,
+                    291.0
                 ],
                 "Rotation": [
                     0.0,
@@ -735,8 +819,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    1504.0,
-                    703.0
+                    859.0,
+                    582.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1427,9 +1511,9 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    -95.49423217773438,
-                    1.4201853275299073,
-                    -1.798616647720337
+                    210.45240783691407,
+                    6.390443325042725,
+                    -20.285301208496095
                 ],
                 "Rotation": [
                     -0.0,
