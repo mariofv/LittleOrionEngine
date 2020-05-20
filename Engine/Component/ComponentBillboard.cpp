@@ -63,7 +63,7 @@ void ComponentBillboard::SwitchFrame() {
 		}
 
 		if ((int)current_sprite_y <= 0) {
-			current_sprite_y = y_tiles - 1;
+			current_sprite_y = y_tiles;
 		}
 		self_timer.Stop();
 		self_timer.Start();
