@@ -109,6 +109,7 @@ in vec4 close_pos_from_light;
 in vec4 mid_pos_from_light;
 in vec4 far_pos_from_light;
 in vec4 pos_from_main_camera;
+
 uniform float main_cam_far_plane;
 
 uniform sampler2DShadow close_depth_map;
@@ -338,6 +339,9 @@ float ShadowCalculation(vec3 frag_normal)
 
 
 	vec2 depth_map_size = 1.0 / textureSize(close_depth_map, 0); //Represents the size of a texel
+	vec2 mid_depth_map_size = 1.0 / textureSize(mid_depth_map, 0); 
+	vec2 far_depth_map_size = 1.0 / textureSize(far_depth_map, 0); 
+
 
 	for(int x = -1; x <= 1; ++x) //PCF, solution for edgy shadoWs
     {
@@ -354,13 +358,13 @@ float ShadowCalculation(vec3 frag_normal)
 
 			if(normalized_main_cam_pos.z >= main_cam_far_plane/3 && normalized_main_cam_pos.z < (2 * main_cam_far_plane)/3) // Until depth detection is fixed (stops calculating at 50% depth)
 			{
-				mid_coords.xy = normalized_mid_depth.xy + vec2(x, y)*depth_map_size;
+				mid_coords.xy = normalized_mid_depth.xy + vec2(x, y)*mid_depth_map_size;
 				factor += texture(mid_depth_map, mid_coords);
 			}
 
 			if(normalized_main_cam_pos.z >= (2 * main_cam_far_plane)/3 && normalized_main_cam_pos.z < main_cam_far_plane) // Looks weird, but works
 			{
-				far_coords.xy = normalized_far_depth.xy + vec2(x, y)*depth_map_size;
+				far_coords.xy = normalized_far_depth.xy + vec2(x, y)*far_depth_map_size;
 				factor += texture(far_depth_map, far_coords);
 			}
 			
