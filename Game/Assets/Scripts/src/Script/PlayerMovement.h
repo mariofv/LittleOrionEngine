@@ -50,6 +50,9 @@ private:
 	float3 distance = float3::zero;
 	GameObject* second_player = nullptr;
 	float3 velocity = float3::zero;
+
+	//TODO:uncomment next line
+	//float next_step_percentage = 0.21f;
 };
 extern "C" SCRIPT_API PlayerMovement* PlayerMovementDLL(); //This is how we are going to load the script
 #endif

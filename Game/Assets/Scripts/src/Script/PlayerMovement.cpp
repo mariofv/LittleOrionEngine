@@ -127,6 +127,29 @@ void PlayerMovement::Move(int player)
 		}
 	}
 	
+	//TODO: move to where the move animation is confirmed to be playing and character is moving
+	/*
+	//Animation has 75 frames, steps at 15, 35, 50 and 70 frames
+	float current_percentage = animation->GetCurrentClipPercentatge();
+	if (current_percentage >= next_step_percentage && current_percentage <= 0.94)
+	{
+		audio_source->PlayEvent("play_footstep_player");
+		if (next_step_percentage == 0.21f)
+			next_step_percentage = 0.46f;
+		else if (next_step_percentage == 0.46f)
+			next_step_percentage = 0.66f;
+		else if (next_step_percentage == 0.66f)
+			next_step_percentage = 0.93f;
+		else if (next_step_percentage == 0.93f)
+			next_step_percentage = 0.21f;
+	}
+	*/
+
+
+	//TODO: move to where the move animation is stopped (changed for another animation)
+	/*
+	next_step_percentage = 0.21f;
+	*/
 }
 
 void PlayerMovement::Jump(float3& direction)
