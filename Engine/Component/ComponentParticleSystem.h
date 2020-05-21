@@ -16,6 +16,7 @@ public:
 		float3 position;
 		float3 velocity;
 		Quat rotation;
+		float2 particle_size;
 		float4 color;
 		float time_counter;
 		float  life;
@@ -57,6 +58,11 @@ public:
 	int max_particles = 500;
 	unsigned int last_used_particle = 0;
 	unsigned int nr_new_particles = 2;
+
+	//size
+	int min_size_of_particle = 2;
+	int max_size_of_particle = 10;
+	bool size_random = false;
 
 	float velocity_particles = 1.0F;
 
