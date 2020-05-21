@@ -649,7 +649,7 @@
                 {
                     "UUID": 2143224420,
                     "ComponentType": 4,
-                    "Active": false,
+                    "Active": true,
                     "LightColor": [
                         1.0,
                         1.0,
@@ -819,8 +819,8 @@
                     0.5
                 ],
                 "SizeDelta": [
-                    1081.0,
-                    709.0
+                    1137.0,
+                    717.0
                 ],
                 "Pivot": [
                     0.5,
@@ -1306,14 +1306,6 @@
                         0.8299999833106995,
                         0.019999999552965165
                     ]
-                },
-                {
-                    "UUID": 1119085296,
-                    "ComponentType": 14,
-                    "Active": true,
-                    "Volume": 0.4480000138282776,
-                    "SoundBank": 2802727032,
-                    "3DSound": false
                 }
             ]
         },
@@ -1631,14 +1623,6 @@
                         1.0,
                         0.0
                     ]
-                },
-                {
-                    "UUID": 1663392924,
-                    "ComponentType": 14,
-                    "Active": true,
-                    "Volume": 1.0,
-                    "SoundBank": 3284503534,
-                    "3DSound": false
                 }
             ]
         },
@@ -1774,7 +1758,7 @@
                     "ComponentType": 6,
                     "Active": true,
                     "ScriptName": "PlayerController",
-                    "Player": 2,
+                    "Player": 1,
                     "Name0": "Player 2 HealthBar",
                     "Player 2 HealthBar": 3981025267
                 },
@@ -1814,13 +1798,13 @@
                         1.0
                     ],
                     "Static": false,
-                    "Collision": true,
+                    "Collision": false,
                     "Visualize": true,
                     "Attached": true,
                     "Freeze_rotation_x": true,
                     "Freeze_rotation_y": true,
                     "Freeze_rotation_z": true,
-                    "Active_Physics": true,
+                    "Active_Physics": false,
                     "Friction": 1.0,
                     "Rolling_friction": 1.0,
                     "Center": [
@@ -1828,93 +1812,6 @@
                         1.0,
                         0.0
                     ]
-                },
-                {
-                    "UUID": 940337640,
-                    "ComponentType": 14,
-                    "Active": true,
-                    "Volume": 1.0,
-                    "SoundBank": 3284503534,
-                    "3DSound": false
-                }
-            ]
-        },
-        {
-            "UUID": 1395053282,
-            "ParentUUID": 0,
-            "Name": "Ambient Music",
-            "IsStatic": false,
-            "Active": true,
-            "Transform": {
-                "UUID": 142967446,
-                "ComponentType": 3,
-                "Active": true,
-                "Translation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ]
-            },
-            "Transform2D": {
-                "UUID": 2608376369,
-                "ComponentType": 7,
-                "Active": true,
-                "AnchoredPos": [
-                    0.0,
-                    0.0
-                ],
-                "Rotation": [
-                    0.0,
-                    0.0,
-                    0.0
-                ],
-                "Scale": [
-                    1.0,
-                    1.0,
-                    1.0
-                ],
-                "MinAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "MaxAnchor": [
-                    0.5,
-                    0.5
-                ],
-                "SizeDelta": [
-                    100.0,
-                    100.0
-                ],
-                "Pivot": [
-                    0.5,
-                    0.5
-                ]
-            },
-            "Transform2DEnabled": false,
-            "Components": [
-                {
-                    "UUID": 4084654635,
-                    "ComponentType": 14,
-                    "Active": true,
-                    "Volume": 1.0,
-                    "SoundBank": 4208404416,
-                    "3DSound": false
-                },
-                {
-                    "UUID": 147412495,
-                    "ComponentType": 6,
-                    "Active": true,
-                    "ScriptName": "AudioController"
                 }
             ]
         },
@@ -2201,7 +2098,7 @@
                         0.9999899864196777,
                         1.0
                     ],
-                    "TextureUUID": 3158198334
+                    "TextureUUID": 4032566479
                 },
                 {
                     "UUID": 4001080316,
@@ -2418,7 +2315,7 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    215.16903686523438,
+                    217.4905242919922,
                     -3.8502659797668459,
                     -20.165035247802736
                 ],
@@ -2482,7 +2379,7 @@
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
-                    256.5808410644531,
+                    244.2530059814453,
                     -2.2448508739471437,
                     -20.165000915527345
                 ],
@@ -2904,13 +2801,13 @@
             ]
         },
         {
-            "UUID": 4180590218,
+            "UUID": 3438915835,
             "ParentUUID": 521044214,
             "Name": "Point Light",
             "IsStatic": false,
             "Active": true,
             "Transform": {
-                "UUID": 3946305925,
+                "UUID": 1030056456,
                 "ComponentType": 3,
                 "Active": true,
                 "Translation": [
@@ -2930,7 +2827,7 @@
                 ]
             },
             "Transform2D": {
-                "UUID": 3361790850,
+                "UUID": 2418978519,
                 "ComponentType": 7,
                 "Active": true,
                 "AnchoredPos": [
@@ -2967,13 +2864,13 @@
             "Transform2DEnabled": false,
             "Components": [
                 {
-                    "UUID": 2901354198,
+                    "UUID": 1653390176,
                     "ComponentType": 4,
                     "Active": true,
                     "LightColor": [
+                        0.9999899864196777,
                         1.0,
-                        1.0,
-                        1.0,
+                        0.999995768070221,
                         1.0
                     ],
                     "Intensity": 1.0,

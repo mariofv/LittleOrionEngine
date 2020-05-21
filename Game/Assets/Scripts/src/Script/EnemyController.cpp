@@ -1,10 +1,10 @@
 #include "EnemyController.h"
 
 #include "Component/ComponentAnimation.h"
-#include "Component/ComponentAudioSource.h"
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
+
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -77,7 +77,7 @@ void EnemyController::OnInspector(ImGuiContext* context)
 
 }
 
-//Use this for linking JUST GO automatically
+//Use this for linking JUST GO automatically 
 void EnemyController::InitPublicGameObjects()
 {
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
@@ -96,7 +96,6 @@ void EnemyController::InitMembers()
 
 	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
-	audio_source = static_cast<ComponentAudioSource*>(owner->GetComponent(Component::ComponentType::AUDIO_SOURCE));
 
 	player1 = App->scene->GetGameObjectByName("Player1");
 	if (player1 != nullptr)

@@ -5,7 +5,6 @@
 #include "Component/ComponentCollider.h"
 #include "Component/ComponentScript.h"
 #include "Component/ComponentTransform.h"
-#include "Component/ComponentAudioSource.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -38,7 +37,6 @@ void PlayerMovement::Awake()
 {
 	game_camera = (ComponentCamera*)camera->GetComponent(Component::ComponentType::CAMERA);
 	collider = static_cast<ComponentCollider*>(owner->GetComponent(Component::ComponentType::COLLIDER));
-	audio_source = static_cast<ComponentAudioSource*>(owner->GetComponent(Component::ComponentType::AUDIO_SOURCE));
 	animation = static_cast<ComponentAnimation*>(owner->GetComponent(Component::ComponentType::ANIMATION));
 }
 
@@ -74,10 +72,10 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 
 void PlayerMovement::Move(int player)
 {
-
+	
 	velocity = collider->GetCurrentVelocity();
 	float3 transform = owner->transform.GetTranslation();
-	direction = float3::zero;
+	direction = float3::zero; 
 	PlayerID player_id = static_cast<PlayerID>(player - 1);
 
 	float x_axis = App->input->GetHorizontal(player_id);
@@ -115,7 +113,7 @@ void PlayerMovement::Move(int player)
 		{
 			animation->ActiveAnimation("idle");
 		}
-
+		
 		if (App->input->GetGameInputDown("Jump", player_id))
 		{
 			is_jumping = true;
@@ -149,35 +147,11 @@ void PlayerMovement::Move(int player)
 			Jump(direction);
 		}
 	}
-
-	//TODO: move to where the move animation is confirmed to be playing and character is moving
-	/*
-	//Animation has 75 frames, steps at 15, 35, 50 and 70 frames
-	float current_percentage = animation->GetCurrentClipPercentatge();
-	if (current_percentage >= next_step_percentage && current_percentage <= 0.94)
-	{
-		audio_source->PlayEvent("play_footstep_player");
-		if (next_step_percentage == 0.21f)
-			next_step_percentage = 0.46f;
-		else if (next_step_percentage == 0.46f)
-			next_step_percentage = 0.66f;
-		else if (next_step_percentage == 0.66f)
-			next_step_percentage = 0.93f;
-		else if (next_step_percentage == 0.93f)
-			next_step_percentage = 0.21f;
-	}
-	*/
-
-
-	//TODO: move to where the move animation is stopped (changed for another animation)
-	/*
-	next_step_percentage = 0.21f;
-	*/
+	
 }
 
 void PlayerMovement::Jump(float3& direction)
 {
-	audio_source->PlayEvent("play_jump_player");
 	direction += float3(0.0f, jump_power * App->time->delta_time, 0.0f);
 	collider->AddForce(direction);
 }
