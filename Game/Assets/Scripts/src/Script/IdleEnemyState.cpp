@@ -3,6 +3,7 @@
 #include "Mushdoom.h"
 
 #include "Component/ComponentAnimation.h"
+#include "Component/ComponentAudioSource.h"
 
 IdleEnemyState* IdleEnemyStateDLL()
 {
@@ -23,6 +24,7 @@ void IdleEnemyState::OnStateEnter()
 {
 	if (!enemy->animation->IsOnState("Idle"))
 	{
+		enemy->audio_source->PlayEvent("play_idle");
 		enemy->animation->ActiveAnimation("idle");
 	}
 

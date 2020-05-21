@@ -141,6 +141,9 @@
     <ClInclude Include="src\Script\Script.h">
       <Filter>src\Script\Main</Filter>
     </ClInclude>
+    <ClInclude Include="src\Script\AudioController.h">
+      <Filter>src\Script</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="src\Script\TriggerGravity.cpp">
@@ -244,6 +247,9 @@
     </ClCompile>
     <ClCompile Include="src\Script\Script.cpp">
       <Filter>src\Script\Main</Filter>
+    </ClCompile>
+    <ClCompile Include="src\Script\AudioController.cpp">
+      <Filter>src\Script</Filter>
     </ClCompile>
   </ItemGroup>
 </Project>

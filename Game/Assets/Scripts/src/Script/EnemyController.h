@@ -8,6 +8,7 @@
 
 class ComponentAnimation;
 class ComponentCollider;
+class ComponentAudioSource;
 class PlayerController;
 
 enum class EnemyType
@@ -63,6 +64,7 @@ protected:
 public:
 	ComponentAnimation* animation = nullptr;
 	ComponentCollider* collider = nullptr;
+	ComponentAudioSource* audio_source = nullptr;
 
 	PlayerController* current_target = nullptr;
 	GameObject* target_on_idle = nullptr;
