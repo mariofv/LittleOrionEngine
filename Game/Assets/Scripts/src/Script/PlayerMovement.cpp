@@ -94,9 +94,9 @@ void PlayerMovement::Move(int player)
 	if (IsGrounded() && !is_jumping)
 	{
 		is_grounded = true;
+		is_inside = IsInside(transform + direction * speed);
 		if (!direction.Equals(float3::zero))
 		{
-			is_inside = IsInside(transform + direction * speed);
 			if (is_inside)
 			{
 				collider->SetVelocity(direction, speed * App->time->delta_time);
@@ -116,7 +116,7 @@ void PlayerMovement::Move(int player)
 			animation->ActiveAnimation("idle");
 		}
 		
-		if (App->input->GetGameInputDown("Jump", player_id))
+		if (App->input->GetGameInputDown("Jump", player_id) && is_inside)
 		{
 			is_jumping = true;
 			Jump(direction);
