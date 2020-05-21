@@ -95,6 +95,7 @@ void CameraController::Update()
 		}
 	}
 }
+
 // Use this for showing variables on inspector
 void CameraController::OnInspector(ImGuiContext* context)
 {
@@ -135,7 +136,7 @@ void CameraController::ActivePlayer()
 void CameraController::Focus(float3 position_to_focus)
 {
 	current_time += App->time->delta_time;
-	float focus_progress = math::Min((current_time - start_focus_time) / CENTER_TIME, 1.f);
+	float focus_progress = math::Min((current_time - start_focus_time) / CENTER_TIME * App->time->delta_time, 1.f);
 	float3 new_camera_position = owner->transform.GetTranslation().Lerp(position_to_focus, focus_progress);
 	owner->transform.SetTranslation(new_camera_position);
 	is_focusing = focus_progress != 1;
@@ -172,6 +173,7 @@ void CameraController::FollowPlayer()
 	}
 
 }
+
 void CameraController::MultiplayerCamera()
 {
 	float x_distance = abs(player1->transform.GetTranslation().x - player2->transform.GetTranslation().x);

@@ -49,7 +49,7 @@ private:
 	ComponentScript* player2_movement_component = nullptr;
 	WorldManager* world_manager = nullptr;
 
-	const float CENTER_TIME = 30000.f;
+	const float CENTER_TIME = 1000000.f;
 
 	float3 offset_near = float3(0.f, 5.5f, 11.f);
 	float3 offset_far = float3(0.f, 8.5f, 17.5f);
