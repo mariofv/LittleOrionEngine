@@ -325,24 +325,6 @@
     ],
     "PrefabsComponents": [
         {
-            "RemovedComponents": [
-                {
-                    "Removed": 999990596
-                }
-            ],
-            "Components": [],
-            "UUID": 4235302750
-        },
-        {
-            "RemovedComponents": [
-                {
-                    "Removed": 999990596
-                }
-            ],
-            "Components": [],
-            "UUID": 1242193472
-        },
-        {
             "RemovedComponents": [],
             "Components": [
                 {
@@ -475,6 +457,45 @@
             "UUID": 4017986150
         },
         {
+            "Transform": {
+                "UUID": 3776937002,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "RemovedComponents": [],
+            "Components": [],
+            "UUID": 1708720425
+        },
+        {
+            "RemovedComponents": [],
+            "Components": [
+                {
+                    "UUID": 2069189823,
+                    "ComponentType": 2,
+                    "Active": false,
+                    "Mesh": 519665247,
+                    "Material": 1132714541,
+                    "Skeleton": 0
+                }
+            ],
+            "UUID": 164235662
+        },
+        {
             "RemovedComponents": [],
             "Components": [
                 {
@@ -543,6 +564,14 @@
         {
             "RemovedComponents": [],
             "Components": [
+                {
+                    "UUID": 4079190893,
+                    "ComponentType": 2,
+                    "Active": false,
+                    "Mesh": 40916008,
+                    "Material": 2483162031,
+                    "Skeleton": 0
+                },
                 {
                     "UUID": 230039466,
                     "ComponentType": 2,
@@ -1812,6 +1841,83 @@
                         1.0,
                         0.0
                     ]
+                }
+            ]
+        },
+        {
+            "UUID": 3490548114,
+            "ParentUUID": 0,
+            "Name": "DebugSystem",
+            "IsStatic": false,
+            "Active": true,
+            "Transform": {
+                "UUID": 2730613413,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "Transform2D": {
+                "UUID": 558045667,
+                "ComponentType": 7,
+                "Active": true,
+                "AnchoredPos": [
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ],
+                "MinAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "MaxAnchor": [
+                    0.5,
+                    0.5
+                ],
+                "SizeDelta": [
+                    100.0,
+                    100.0
+                ],
+                "Pivot": [
+                    0.5,
+                    0.5
+                ]
+            },
+            "Transform2DEnabled": false,
+            "Components": [
+                {
+                    "UUID": 675369869,
+                    "ComponentType": 6,
+                    "Active": true,
+                    "ScriptName": "DebugModeScript",
+                    "Name0": "EnemyManager",
+                    "EnemyManager": 4006264594,
+                    "Name1": "Player1",
+                    "Player1": 521044214,
+                    "Name2": "Player2",
+                    "Player2": 734635377
                 }
             ]
         },
@@ -3966,9 +4072,9 @@
                     0.0
                 ],
                 "Scale": [
-                    0.3499999940395355,
-                    0.3499999940395355,
-                    0.3499999940395355
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -4060,9 +4166,9 @@
                     0.0
                 ],
                 "Scale": [
-                    0.3499999940395355,
-                    0.3499999940395355,
-                    0.3499999940395355
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -4154,9 +4260,9 @@
                     0.0
                 ],
                 "Scale": [
-                    0.3499999940395355,
-                    0.3499999940395355,
-                    0.3499999940395355
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -4248,9 +4354,9 @@
                     0.0
                 ],
                 "Scale": [
-                    0.3499999940395355,
-                    0.3499999940395355,
-                    0.3499999940395355
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,
@@ -4342,9 +4448,9 @@
                     0.0
                 ],
                 "Scale": [
-                    0.3499999940395355,
-                    0.3499999940395355,
-                    0.3499999940395355
+                    1.0,
+                    1.0,
+                    1.0
                 ],
                 "MinAnchor": [
                     0.5,

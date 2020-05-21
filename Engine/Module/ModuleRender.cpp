@@ -378,6 +378,9 @@ RaycastHit* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, co
 	{
 		if (mesh->owner->aabb.bounding_box.Intersects(ray))
 		{
+			//Allow non touchable meshes to be ignored from mouse picking in game mode
+			if (cam != App->cameras->scene_camera && !mesh->is_raycastable) continue;
+
 			intersected_meshes.push_back(mesh);
 		}
 	}

@@ -731,7 +731,7 @@ void ComponentCamera::GetRay(const float2 &mouse_position, LineSegment &return_v
 	float2 window_mouse_position = mouse_position - float2(App->window->GetWidth()/2, App->window->GetHeight()/2);
 	normalized_position = float2(window_mouse_position.x * 2 / App->window->GetWidth(), -window_mouse_position.y * 2 / App->window->GetHeight());
 #else
-	if (App->time->isGameRunning())
+	if (App->time->isGameRunning() && App->editor->game_panel->IsHovered())
 	{
 		float2 window_center_pos = App->editor->game_panel->game_window_content_area_pos + float2(App->editor->game_panel->game_window_content_area_width, App->editor->game_panel->game_window_content_area_height) / 2;
 

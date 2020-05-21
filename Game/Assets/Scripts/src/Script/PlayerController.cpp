@@ -84,7 +84,6 @@ void PlayerController::OnInspector(ImGuiContext* context)
 		ImGui::EndCombo();
 	}
 	ImGui::DragFloat("Health", &health_points);
-	ImGui::Checkbox("Invincible", &invincible);
 }
 
 void PlayerController::InitPublicGameObjects()
