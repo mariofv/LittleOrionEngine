@@ -41,6 +41,7 @@ private:
 	//unsigned player = 0;
 	float total_health = 1000.f;
 	float health_points = 1000.f;
+	bool is_attacking = false;
 };
 extern "C" SCRIPT_API PlayerController* PlayerControllerDLL(); //This is how we are going to load the script
 #endif

@@ -52,13 +52,13 @@ void PlayerController::Start()
 // Update is called once per frame
 void PlayerController::Update()
 {
-	bool is_attacking = player_attack->Attack(player);
 
 	if(!is_attacking)
 	{
 		player_movement->Move(player);
 	}
 
+	is_attacking = player_attack->Attack(player);
 }
 
 // Use this for showing variables on inspector
