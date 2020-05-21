@@ -303,12 +303,12 @@ void PanelConfiguration::ShowRenderOptions()
 
 		ImGui::Separator();
 
-		//ImGui::TextColored(ImVec4(1, 1, 0, 1), "Ortho frustum settings - Directional Light");
-		//ImGui::SliderFloat("Frustum width", &App->cameras->aux_width, 0, 100);
-		//ImGui::SliderFloat("Frustum height", &App->cameras->aux_height, 0, 100);
-		//ImGui::SliderFloat("Close - Mid Separation", &App->cameras->close_mid_separation, 0, App->cameras->mid_far_separation);
-		//ImGui::SliderFloat("Mid - Far Separation", &App->cameras->mid_far_separation, App->cameras->close_mid_separation, App->cameras->far_plane);
-		//ImGui::SliderFloat("Far Plane", &App->cameras->far_plane, App->cameras->mid_far_separation, App->cameras->mid_far_separation + 100);
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Ortho frustum settings - Directional Light");
+		ImGui::SliderFloat("Frustum width", &App->cameras->aux_width, 0, 100);
+		ImGui::SliderFloat("Frustum height", &App->cameras->aux_height, 0, 100);
+		ImGui::SliderFloat("Close - Mid Separation", &App->cameras->close_mid_separation, 0, App->cameras->mid_far_separation);
+		ImGui::SliderFloat("Mid - Far Separation", &App->cameras->mid_far_separation, App->cameras->close_mid_separation, App->cameras->far_plane);
+		ImGui::SliderFloat("Far Plane", &App->cameras->far_plane, App->cameras->mid_far_separation, App->cameras->mid_far_separation + 100);
 
 		
 

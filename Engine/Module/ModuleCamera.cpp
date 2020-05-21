@@ -88,11 +88,15 @@ void ModuleCamera::SetDirectionalLightFrustums()
 	directional_light_far->owner = dir_light_game_object;
 	directional_light_far->camera_frustum.type = FrustumType::OrthographicFrustum;
 
+
+	App->cameras->directional_light_camera->SetNearDistance(0);
+	App->cameras->directional_light_mid->SetNearDistance(0);
+	App->cameras->directional_light_far->SetNearDistance(0);
+
+
 	light_aabb = new ComponentAABB(dir_light_game_object);
 	light_aabb->global_bounding_box.SetNegativeInfinity();
 	light_aabb->GenerateBoundingBox();
-
-	
 
 }
 void ModuleCamera::UpdateDirectionalLightFrustums()
@@ -114,10 +118,6 @@ void ModuleCamera::UpdateDirectionalLightFrustums()
 	App->cameras->directional_light_camera->SetFarDistance(light_aabb->bounding_box.maxPoint.z - light_aabb->bounding_box.minPoint.z);
 	App->cameras->directional_light_mid->SetFarDistance(light_aabb->bounding_box.maxPoint.z - light_aabb->bounding_box.minPoint.z);
 	App->cameras->directional_light_far->SetFarDistance(light_aabb->bounding_box.maxPoint.z - light_aabb->bounding_box.minPoint.z);
-
-	App->cameras->directional_light_camera->SetNearDistance(0);
-	App->cameras->directional_light_mid->SetNearDistance(0);
-	App->cameras->directional_light_far->SetNearDistance(0);
 
 	directional_light_camera->Update();
 	directional_light_mid->Update();
@@ -165,8 +165,8 @@ void ModuleCamera::UpdateMainCameraFrustums()
 	if (main_camera != nullptr)
 	{
 
-		camera_close->SetFarDistance(main_camera->camera_frustum.farPlaneDistance *0.33);
-		camera_mid->SetFarDistance(main_camera->camera_frustum.farPlaneDistance * 0.67);
+		camera_close->SetFarDistance(main_camera->camera_frustum.farPlaneDistance / 3);
+		camera_mid->SetFarDistance(main_camera->camera_frustum.farPlaneDistance * 2 / 3);
 		camera_far->SetFarDistance(main_camera->camera_frustum.farPlaneDistance);
 
 		camera_close->SetAspectRatio(main_camera->camera_frustum.AspectRatio());

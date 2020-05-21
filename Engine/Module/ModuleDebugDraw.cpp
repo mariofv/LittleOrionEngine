@@ -488,18 +488,20 @@ void ModuleDebugDraw::Render()
 
 	//Main camera frustum test
 	{
-		//dd::aabb(App->cameras->main_camera->GetMinimalEnclosingAABB().minPoint, App->cameras->main_camera->GetMinimalEnclosingAABB().maxPoint, float3(1, 1, 0));
+		dd::aabb(App->cameras->main_camera->GetMinimalEnclosingAABB().minPoint, App->cameras->main_camera->GetMinimalEnclosingAABB().maxPoint, float3(1, 1, 0));
 	}
 
-	//dd::frustum(App->cameras->directional_light_camera->GetInverseClipMatrix(), float3(1, 0, 0));
+	dd::frustum(App->cameras->directional_light_camera->GetInverseClipMatrix(), float3(1, 0, 0));
 	//dd::frustum(App->cameras->directional_light_mid->GetInverseClipMatrix(), float3(0, 1, 0));
 	//dd::frustum(App->cameras->directional_light_far->GetInverseClipMatrix(), float3(0, 0, 1));
 
-	//dd::aabb(App->cameras->main_camera->GetMinimalEnclosingAABB().minPoint, App->cameras->main_camera->GetMinimalEnclosingAABB().maxPoint, float3(1, 1, 0));
-	//dd::aabb(App->cameras->light_aabb->bounding_box.minPoint, App->cameras->light_aabb->bounding_box.maxPoint, float3(1, 0, 0));
+	dd::aabb(App->cameras->main_camera->GetMinimalEnclosingAABB().minPoint, App->cameras->main_camera->GetMinimalEnclosingAABB().maxPoint, float3(1, 1, 0));
+	//dd::aabb(App->cameras->light_aabb->bounding_box.minPoint, App->cameras->light_aabb->bounding_box.maxPoint, float3(1, 1, 1));
 
 
-	
+	//dd::frustum(App->cameras->camera_close->GetInverseClipMatrix(), float3(1, 1, 0));
+	//dd::frustum(App->cameras->camera_mid->GetInverseClipMatrix(), float3(0, 1, 1));
+	dd::frustum(App->cameras->camera_far->GetInverseClipMatrix(), float3(1, 0, 1));
 
 	
 }
@@ -561,15 +563,7 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 	if (selected_camera_component != nullptr) {
 		ComponentCamera* selected_camera = static_cast<ComponentCamera*>(selected_camera_component);
 
-		if(selected_camera != App->cameras->main_camera)
-			dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
-		else
-		{
-			dd::frustum(App->cameras->camera_close->GetInverseClipMatrix(), float3(1, 1, 0));
-			dd::frustum(App->cameras->camera_mid->GetInverseClipMatrix(), float3(0, 1, 1));
-			dd::frustum(App->cameras->camera_far->GetInverseClipMatrix(), float3(1, 0, 1));
-		}
-	
+		dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
 	}	
 }
 
