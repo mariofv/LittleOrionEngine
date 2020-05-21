@@ -34,7 +34,9 @@ public:
 
 
 	void InitPublicGameObjects();
+	void SetPosition(float3 position);
 	bool god_mode = false;
+	bool freeze = false;
 
 private:
 	Quat rotation = Quat::FromEulerXYZ(2.742f, 0.f, -3.142f);
@@ -52,7 +54,7 @@ private:
 	const float CENTER_TIME = 1000000.f;
 
 	float3 offset_near = float3(0.f, 5.5f, 11.f);
-	float3 offset_far = float3(0.f, 8.5f, 17.5f);
+	float3 offset_far = float3(0.f, 8.5f, 20.5f);
 	float3 selected_offset = float3::zero;;
 
 	bool is_focusing = false;
@@ -63,7 +65,6 @@ private:
 	float distance_x = 0.f;
 	float distance_z = 0.f;
 
-	bool freeze = false;
 
 	GameObject* current_target = nullptr;
 

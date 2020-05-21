@@ -55,6 +55,12 @@ void WorldManager::Awake()
 
 	GameObject* hole_go = App->scene->GetGameObjectByName("Mesh collider HOLE_0");
 	hole = static_cast<ComponentCollider*>(hole_go->GetComponent(Component::ComponentType::COLLIDER));
+
+	GameObject* platform = App->scene->GetGameObjectByName("Platform In");
+	platform_zone = static_cast<ComponentCollider*>(platform->GetComponent(Component::ComponentType::COLLIDER));
+
+	GameObject* out_platform = App->scene->GetGameObjectByName("Platform Out");
+	out_platform_zone = static_cast<ComponentCollider*>(out_platform->GetComponent(Component::ComponentType::COLLIDER));
 	
 	//Logic of choosing character and single/multi player
 	//Singleplayer
@@ -129,11 +135,23 @@ void WorldManager::Update()
 	{
 		return;
 	}
+
 	if(!disable_hole)
 	{
 		CheckHole();
 	}
+
+	if(!on_platforms)
+	{
+		CheckPlatform();
+	}
+	if (on_platforms)
+	{
+		CheckOutPlatform();
+	}
+
 	CheckTriggers();
+
 	/*
 	if(health_component->percentage <= 0.0f)
 	{
@@ -307,6 +325,33 @@ void WorldManager::CheckHole()
 
 }
 
+void WorldManager::CheckPlatform()
+{
+	if (!singleplayer){
+		on_platforms = platform_zone->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER))) &&
+			platform_zone->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
+		if (on_platforms)
+		{
+			SetCameraPlatformZone();
+			camera_manager->freeze = true;
+		}
+	}
+}
+
+void WorldManager::CheckOutPlatform()
+{
+	if (!singleplayer) {
+		out_platform = out_platform_zone->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER))) &&
+			out_platform_zone->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
+
+		if (out_platform)
+		{
+			camera_manager->freeze = false;
+		}
+	}
+
+}
+
 bool WorldManager::CheckLose()
 {
 	if (singleplayer && !was_multiplayer)
@@ -348,6 +393,12 @@ bool WorldManager::CheckLose()
 	}
 
 	return false;
+}
+
+void WorldManager::SetCameraPlatformZone()
+{
+	float3 platform_position(184.917f,-0.715f,37.085f);
+	camera_manager->SetPosition(platform_position);
 }
 
 //Use this for linking GO AND VARIABLES automatically if you need to save variables

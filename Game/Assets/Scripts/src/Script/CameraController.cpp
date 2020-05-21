@@ -241,3 +241,8 @@ void CameraController::InitPublicGameObjects()
 		go_uuids.push_back(0);
 	}
 }
+
+void CameraController::SetPosition(float3 position)
+{
+	owner->transform.SetTranslation(position);
+}
