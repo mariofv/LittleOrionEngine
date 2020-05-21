@@ -250,7 +250,8 @@ void WorldManager::CheckTriggers()
 {
 	for(size_t i = 0; i < 3; ++i)
 	{
-		if (static_cast<ComponentCollider*>(player1_go->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[i]))
+		if (static_cast<ComponentCollider*>(player1_go->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[i]) ||
+			static_cast<ComponentCollider*>(player2_go->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[i]))
 		{
 			if(!event_manager->events_triggered[i])
 			{
