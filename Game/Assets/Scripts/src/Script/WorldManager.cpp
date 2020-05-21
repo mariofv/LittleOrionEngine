@@ -397,7 +397,7 @@ bool WorldManager::CheckLose()
 
 void WorldManager::SetCameraPlatformZone()
 {
-	float3 platform_position(184.917f,-0.715f,37.085f);
+	float3 platform_position(190.0f,-2.0f,28.f);
 	camera_manager->SetPosition(platform_position);
 }
 

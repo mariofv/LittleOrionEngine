@@ -103,7 +103,7 @@ void ModuleFileSystem::RemovePath(Path* path)
 
 Path* ModuleFileSystem::GetPath(const std::string& path)
 {
-	assert(Exists(path));
+ 	assert(Exists(path));
 	assert(paths.find(path) != paths.end());
 	return paths[path];
 }

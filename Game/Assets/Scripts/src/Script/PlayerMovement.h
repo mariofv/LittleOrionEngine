@@ -44,7 +44,6 @@ private:
 	float current_y = 0.0f;
 
 	bool turning_back = false;
-	float jump_power = 130.0f;
 	float3 movement_vector;
 	float3 gravity_vector;
 

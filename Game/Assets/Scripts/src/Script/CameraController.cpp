@@ -55,6 +55,8 @@ void CameraController::Awake()
 // Use this for initialization
 void CameraController::Start()
 {
+	SetPosition(float3(-116.f, 40.f, 40.f));
+
 	//Dirty AF but hope it works
 	if(player_movement_script->player == 2)
 	{

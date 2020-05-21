@@ -113,6 +113,10 @@ void EnemyController::InitMembers()
 	}
 
 	current_target = player1_controller;
+	if(player1_controller->player == 2)
+	{
+		current_target = player2_controller;
+	}
 
 	init_translation = owner->transform.GetTranslation();
 	init_rotation = owner->transform.GetRotation();
