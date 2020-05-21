@@ -5,6 +5,7 @@
 
 class ComponentAnimation;
 class ComponentCollider;
+class ComponentAudioSource;
 class UIManager;
 
 
@@ -23,12 +24,14 @@ public:
 	void InitPublicGameObjects();
 	//void Save(Config& config) const override;
 	//void Load(const Config& config) override;
-private:	
+private:
 	EnemyManager* enemy_manager = nullptr;
 	ComponentAnimation* animation = nullptr;
 	GameObject* collider = nullptr;
 	ComponentCollider* collider_component = nullptr;
+	ComponentAudioSource* audio_source = nullptr;
 	UIManager* ui_manager = nullptr;
+
 	unsigned current_damage_power = 0;
 	bool is_attacking = false;
 	bool raycast_cast = false;

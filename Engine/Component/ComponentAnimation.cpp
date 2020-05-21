@@ -125,7 +125,6 @@ ENGINE_API float ComponentAnimation::GetCurrentClipPercentatge() const
 	}
 }
 
-
 void ComponentAnimation::Update()
 {
 	if (!active)
