@@ -264,14 +264,16 @@ void WorldManager::CheckHole()
 {
 	if (singleplayer)
 	{
-		if(!player1_choice)
-		{
-			disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
-		}
-		else
-		{
-			disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER)));
-		}
+		//if(!player1_choice)
+		//{
+		//	disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
+		//}
+		//else
+		//{
+		//	disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER)));
+		//}
+		disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER))) ||
+			hole->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
 	}
 	else
 	{
@@ -284,7 +286,7 @@ void WorldManager::CheckHole()
 		hole->owner->SetEnabled(false);
 		if (singleplayer)
 		{
-			if (!player1_choice)
+			if (!player1_choice && player1_controller->is_alive)
 			{
 				player1_controller->MakePlayerFall(fall);
 			}
