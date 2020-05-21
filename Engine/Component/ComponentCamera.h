@@ -106,6 +106,7 @@ public:
 	ComponentAABB::CollisionState CheckAABBCollision(const AABB& reference_AABB) const;
 
 	ENGINE_API bool IsInsideFrustum(const AABB2D& aabb) const;
+	ENGINE_API bool IsCompletlyInsideFrustum(const AABB & aabb) const;
 	ComponentAABB::CollisionState CheckAABB2DCollision(const AABB2D& reference_AABB) const;
 
 	void GetRay(const float2& normalized_position, LineSegment &return_value) const;
