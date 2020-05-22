@@ -6,7 +6,7 @@
 class ComponentCollider;
 class PlayerMovement;
 class PlayerAttack;
-class ProgressBar;
+class UIManager;
 
 class PlayerController : public Script
 {
@@ -27,7 +27,6 @@ public:
 	ComponentCollider* GetCollider();
 	void MakePlayerFall(float3& direction) const;
 
-	void InitPublicGameObjects() override;
 
 public:
 	unsigned int player = 1;
@@ -37,12 +36,12 @@ private:
 	PlayerMovement* player_movement = nullptr;
 	PlayerAttack* player_attack = nullptr;
 
-	GameObject* progress_bar = nullptr;
-	ProgressBar* health_bar = nullptr;
+	UIManager* ui_manager = nullptr;
 	bool invincible = false;
 	//unsigned player = 0;
 	float total_health = 1000.f;
 	float health_points = 1000.f;
+	bool is_attacking = false;
 };
 extern "C" SCRIPT_API PlayerController* PlayerControllerDLL(); //This is how we are going to load the script
 #endif

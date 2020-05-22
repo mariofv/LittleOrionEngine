@@ -49,7 +49,7 @@ void CharacterSelectionMenuController::Update()
 
 	if (!multiplayer && App->input->GetControllerButtonDown(ControllerCode::Start, ControllerID::ONE) || App->input->GetControllerButtonDown(ControllerCode::Start, ControllerID::TWO))
 	{
-		//(SwitchMultiplayer(true);
+		SwitchMultiplayer(true);
 	}
 
 	if (multiplayer &&  App->input->GetControllerButtonDown(ControllerCode::B, ControllerID::ONE) || App->input->GetControllerButtonDown(ControllerCode::B, ControllerID::TWO))

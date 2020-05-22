@@ -4,9 +4,10 @@
 #include "Script.h"
 #include "EventManager.h"
 
+class CameraController;
 class ComponentCollider;
-class PlayerController;
 class ComponentImage;
+class PlayerController;
 class UIManager;
 
 
@@ -32,7 +33,11 @@ private:
 	void InitTriggers();
 	void CheckTriggers();
 	void CheckHole();
+	void CheckPlatform();
+	void CheckOutPlatform();
 	bool CheckLose();
+
+	void SetCameraPlatformZone();
 
 public:
 	static bool singleplayer;
@@ -62,13 +67,15 @@ private:
 	bool on_main_menu = false;
 
 	ComponentCollider* hole = nullptr;
+	ComponentCollider* platform_zone = nullptr;
+	ComponentCollider* out_platform_zone = nullptr;
+	bool out_platform = false;
 	UIManager* ui_manager = nullptr;
+	CameraController* camera_manager = nullptr;
 	bool disable_hole = false;
+	bool on_platforms = false;
 	float3 fall = float3(3.f, -10000.f, 0.f);
-	
-
-
-
+	bool was_multiplayer = false;
 
 };
 extern "C" SCRIPT_API WorldManager* WorldManagerDLL(); //This is how we are going to load the script

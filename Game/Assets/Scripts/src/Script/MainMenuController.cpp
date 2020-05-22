@@ -55,6 +55,9 @@ void MainMenuController::Awake()
 
 	audio_source = (ComponentAudioSource*) audio_controller->GetComponent(Component::ComponentType::AUDIO_SOURCE);
 	audio_source->PlayEvent("Play_ingame_music");
+
+	cursor->SetEnabled(false);
+
 }
 
 
@@ -87,20 +90,33 @@ void MainMenuController::Update()
 
 	if(UIMainMenuInputController::ConfirmMovedUp(*App->input))
 	{
+		if (!cursor_initialized)
+		{
+			cursor_initialized = true;
+			cursor->SetEnabled(true);
+		}
+
+
 		current_highlighted_button -= 1;
 		current_highlighted_button = current_highlighted_button % 4;
 		cursor->transform_2d.SetTranslation(float3(
-				cursor->transform_2d.GetTranslation().x,
-				buttons_transforms[current_highlighted_button]->GetGlobalTranslation().y,
-				0.0f
+			buttons_transforms[current_highlighted_button]->GetGlobalTranslation().x - buttons_transforms[current_highlighted_button]->GetWidth() / 2 - 10.f,
+			buttons_transforms[current_highlighted_button]->GetGlobalTranslation().y,
+			0.0f
 		));
 	}
 	else if(UIMainMenuInputController::ConfirmMovedDown(*App->input))
 	{
+		if (!cursor_initialized)
+		{
+			cursor_initialized = true;
+			cursor->SetEnabled(true);
+		}
+
 		current_highlighted_button += 1;
 		current_highlighted_button = current_highlighted_button % 4;
 		cursor->transform_2d.SetTranslation(float3(
-			cursor->transform_2d.GetTranslation().x,
+			buttons_transforms[current_highlighted_button]->GetGlobalTranslation().x - buttons_transforms[current_highlighted_button]->GetWidth()/2 - 10.f,
 			buttons_transforms[current_highlighted_button]->GetGlobalTranslation().y,
 			0.0f
 		));

@@ -55,6 +55,7 @@ private:
 
 	bool enabled = true;
 	bool just_opened = false;
+	bool cursor_initialized = false;
 };
 extern "C" SCRIPT_API MainMenuController* MainMenuControllerDLL(); //This is how we are going to load the script
 #endif

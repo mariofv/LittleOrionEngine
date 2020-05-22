@@ -14,6 +14,7 @@
 
 #include "imgui.h"
 
+#include "CameraController.h"
 #include "PlayerController.h"
 #include "UIManager.h"
 
@@ -54,6 +55,12 @@ void WorldManager::Awake()
 
 	GameObject* hole_go = App->scene->GetGameObjectByName("Mesh collider HOLE_0");
 	hole = static_cast<ComponentCollider*>(hole_go->GetComponent(Component::ComponentType::COLLIDER));
+
+	GameObject* platform = App->scene->GetGameObjectByName("Platform In");
+	platform_zone = static_cast<ComponentCollider*>(platform->GetComponent(Component::ComponentType::COLLIDER));
+
+	GameObject* out_platform = App->scene->GetGameObjectByName("Platform Out");
+	out_platform_zone = static_cast<ComponentCollider*>(out_platform->GetComponent(Component::ComponentType::COLLIDER));
 	
 	//Logic of choosing character and single/multi player
 	//Singleplayer
@@ -103,6 +110,15 @@ void WorldManager::Awake()
 	ComponentScript* ui_manager_component = ui_manager_go->GetComponentScript("UIManager");
 	ui_manager = static_cast<UIManager*>(ui_manager_component->script);
 
+	GameObject* camera_manager_go = App->scene->GetGameObjectByName("Main Camera");
+	ComponentScript* camera_manager_component = camera_manager_go->GetComponentScript("CameraController");
+	camera_manager = static_cast<CameraController*>(camera_manager_component->script);
+
+	if(!singleplayer)
+	{
+		ui_manager->SetSecondPlayerUI();
+	}
+
 	InitTriggers();
 }
 
@@ -119,11 +135,23 @@ void WorldManager::Update()
 	{
 		return;
 	}
+
 	if(!disable_hole)
 	{
 		CheckHole();
 	}
+
+	if(!on_platforms)
+	{
+		CheckPlatform();
+	}
+	if (on_platforms)
+	{
+		CheckOutPlatform();
+	}
+
 	CheckTriggers();
+
 	/*
 	if(health_component->percentage <= 0.0f)
 	{
@@ -217,13 +245,11 @@ bool WorldManager::LoadLevel() const
 	}
 	else
 	{
-		//If players are different
-		if(player1_choice ^ player2_choice)
-		{
-			//Get players
-			App->scene->LoadScene(0);
-			return true;
-		}
+
+		//Get players
+		App->scene->LoadScene(0);
+		return true;
+		
 	}
 
 	return false;
@@ -242,7 +268,8 @@ void WorldManager::CheckTriggers()
 {
 	for(size_t i = 0; i < 3; ++i)
 	{
-		if (static_cast<ComponentCollider*>(player1_go->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[i]))
+		if (static_cast<ComponentCollider*>(player1_go->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[i]) ||
+			static_cast<ComponentCollider*>(player2_go->GetComponent(ComponentCollider::ColliderType::CAPSULE))->DetectCollisionWith(event_triggers[i]))
 		{
 			if(!event_manager->events_triggered[i])
 			{
@@ -256,14 +283,16 @@ void WorldManager::CheckHole()
 {
 	if (singleplayer)
 	{
-		if(!player1_choice)
-		{
-			disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
-		}
-		else
-		{
-			disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER)));
-		}
+		//if(!player1_choice)
+		//{
+		//	disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
+		//}
+		//else
+		//{
+		//	disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER)));
+		//}
+		disable_hole = hole->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER))) ||
+			hole->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
 	}
 	else
 	{
@@ -276,7 +305,7 @@ void WorldManager::CheckHole()
 		hole->owner->SetEnabled(false);
 		if (singleplayer)
 		{
-			if (!player1_choice)
+			if (!player1_choice && player1_controller->is_alive)
 			{
 				player1_controller->MakePlayerFall(fall);
 			}
@@ -296,9 +325,36 @@ void WorldManager::CheckHole()
 
 }
 
+void WorldManager::CheckPlatform()
+{
+	if (!singleplayer){
+		on_platforms = platform_zone->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER))) &&
+			platform_zone->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
+		if (on_platforms)
+		{
+			SetCameraPlatformZone();
+			camera_manager->freeze = true;
+		}
+	}
+}
+
+void WorldManager::CheckOutPlatform()
+{
+	if (!singleplayer) {
+		out_platform = out_platform_zone->DetectCollisionWith(static_cast<ComponentCollider*>(player2_go->GetComponent(Component::ComponentType::COLLIDER))) &&
+			out_platform_zone->DetectCollisionWith(static_cast<ComponentCollider*>(player1_go->GetComponent(Component::ComponentType::COLLIDER)));
+
+		if (out_platform)
+		{
+			camera_manager->freeze = false;
+		}
+	}
+
+}
+
 bool WorldManager::CheckLose()
 {
-	if (singleplayer)
+	if (singleplayer && !was_multiplayer)
 	{
 		//If player1_choice == 0 he is chosing male model
 		if (!player1_choice)
@@ -320,6 +376,16 @@ bool WorldManager::CheckLose()
 	//Multiplayer
 	else
 	{
+		if ((!player1_controller->is_alive || !player2_controller->is_alive) && !was_multiplayer)
+		{
+			camera_manager->MultiplayerToSingleplayer();
+			singleplayer = true;
+			was_multiplayer = true;
+
+
+			return false;
+		}
+
 		if (!player1_controller->is_alive && !player2_controller->is_alive)
 		{
 			return true;
@@ -327,6 +393,12 @@ bool WorldManager::CheckLose()
 	}
 
 	return false;
+}
+
+void WorldManager::SetCameraPlatformZone()
+{
+	float3 platform_position(190.0f,-2.0f,28.f);
+	camera_manager->SetPosition(platform_position);
 }
 
 //Use this for linking GO AND VARIABLES automatically if you need to save variables

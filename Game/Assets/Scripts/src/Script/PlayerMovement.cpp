@@ -21,6 +21,8 @@
 
 #include "imgui.h"
 
+#include "WorldManager.h"
+
 
 PlayerMovement* PlayerMovementDLL()
 {
@@ -45,9 +47,10 @@ void PlayerMovement::Awake()
 // Use this for initialization
 void PlayerMovement::Start()
 {
-	gravity_vector = float3(0.0f, -9.8f, 0.0f);
+	GameObject* world_go = App->scene->GetGameObjectByName("World Manager");
+	ComponentScript* world_component = world_go->GetComponentScript("WorldManager");
+	world = static_cast<WorldManager*>(world_component->script);
 }
-
 
 // Use this for showing variables on inspector
 void PlayerMovement::OnInspector(ImGuiContext* context)
@@ -57,7 +60,6 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 	ImGui::Text("Player Movement Script Inspector");
 	//Example Showing variables and being able to modify it on Runtime.
 	ImGui::DragFloat("Speed", &speed, 0.1f, 0.f, 0.5f);
-	ImGui::DragFloat("Rotation Speed", &rotation_speed, 0.01f, 0.f, 0.5f);
 	ImGui::DragFloat("Jump Power", &jump_power, 2.0f, 2.0f, 10.0f);
 	ImGui::Text("Variables: ");
 	ShowDraggedObjects();
@@ -68,6 +70,7 @@ void PlayerMovement::OnInspector(ImGuiContext* context)
 	ImGui::Checkbox("Future AABB", &visualize_future_aabb);
 	ImGui::DragFloat3("Distance", distance.ptr(), 0.1f, 0.f, 300.f);
 	ImGui::DragFloat3("Direction", direction.ptr(), 0.1f, 0.f, 300.f);
+	ImGui::DragFloat3("Device Coordinates", device_coordinates.ptr());
 
 	ImGui::Checkbox("SinglePlayer Input", &App->input->singleplayer_input);
 }
@@ -76,8 +79,8 @@ void PlayerMovement::Move(int player)
 {
 
 	velocity = collider->GetCurrentVelocity();
-	float3 transform = owner->transform.GetTranslation();
-	direction = float3::zero;
+	float3 transform = owner->transform.GetGlobalTranslation();
+	direction = float3::zero; 
 	PlayerID player_id = static_cast<PlayerID>(player - 1);
 
 	float x_axis = App->input->GetHorizontal(player_id);
@@ -93,30 +96,29 @@ void PlayerMovement::Move(int player)
 	if (IsGrounded() && !is_jumping)
 	{
 		is_grounded = true;
+		is_inside = IsInside(transform + direction * speed);
 		if (!direction.Equals(float3::zero))
 		{
-			is_inside = IsInside(transform + direction  * speed);
 			if (is_inside)
 			{
-				//collider->SwitchPhysics(false);
-				//owner->transform.LookAt(direction + transform);
-				//collider->SwitchPhysics(true);
 				collider->SetVelocity(direction, speed * App->time->delta_time);
 				animation->ActiveAnimation("run");
 			}
 			else
 			{
-				direction = float3::zero;
+				//direction = float3::zero;
+				direction.x = direction.x * -speed;
+				direction.z = direction.z * -speed;
 				collider->AddForce(direction);
-				collider->SetVelocity(direction, 0);
+				collider->SetVelocity(direction, -speed);
 			}
 		}
 		else
 		{
 			animation->ActiveAnimation("idle");
 		}
-
-		if (App->input->GetGameInputDown("Jump", player_id))
+		
+		if (App->input->GetGameInputDown("Jump", player_id) && is_inside)
 		{
 			is_jumping = true;
 			Jump(direction);
@@ -145,7 +147,7 @@ void PlayerMovement::Move(int player)
 		if (App->input->GetGameInputDown("Jump", player_id) && !is_second_jump)
 		{
 			is_second_jump = true;
-			direction.y = -1000;
+			direction.y = second_jump_factor;
 			Jump(direction);
 		}
 	}
@@ -187,27 +189,36 @@ bool PlayerMovement::IsGrounded()
 	btVector3 origin = collider->body->getWorldTransform().getOrigin();
 
 	btVector3 end = collider->body->getWorldTransform().getOrigin();
-	end.setY(end.getY() - collider->box_size.getY() * 2);
+	end.setY(end.getY() - collider->box_size.getY() * 1.5);
 
 	return collider->RaycastHit(origin,end);
 }
 
 bool PlayerMovement::IsInside(float3 future_transform)
 {
-	distance = (future_transform) - owner->transform.GetTranslation();
-	AABB future_position = AABB(owner->aabb.global_bounding_box.minPoint + distance, owner->aabb.global_bounding_box.maxPoint + distance);
-	if(visualize_future_aabb)
-	{
-		App->debug_draw->RenderSingleAABB(future_position);
-	}
+	bool inside = false;
+	distance = (future_transform)-owner->transform.GetGlobalTranslation();
+	float4 position_float4 = float4(future_transform, 1.f);
+	float4 clip_coordinates = App->cameras->main_camera->GetClipMatrix() * position_float4;
+	device_coordinates = clip_coordinates.xyz() / clip_coordinates.w;
 
-	if(second_player != nullptr && !App->input->singleplayer_input)
+	if(device_coordinates.x < 1 && device_coordinates.x > -1 && device_coordinates.y < 1 && device_coordinates.y > -1)
 	{
-		float3 go_distance = second_player->transform.GetTranslation() - future_transform;
-		return game_camera->IsInsideFrustum(future_position) && go_distance.x < 18;
+		inside = true;
 	}
+	if(other_player != nullptr && !world->singleplayer)
+	{
+		float4 position_float4_other_player = float4(other_player->transform.GetGlobalTranslation() - distance, 1.f);
+		float4 clip_coordinates_other_player = game_camera->GetClipMatrix() * position_float4_other_player;
+		float3 device_coordinates_other_player = clip_coordinates_other_player.xyz() / clip_coordinates_other_player.w;
 
-	return game_camera->IsInsideFrustum(future_position);
+		if (device_coordinates_other_player.x > 1 || device_coordinates_other_player.x < -1 
+			|| device_coordinates_other_player.y > 1 || device_coordinates_other_player.y < -1)
+		{
+			inside = false;
+		}
+	}
+	return inside;
 }
 
 void PlayerMovement::InitPublicGameObjects()
@@ -215,10 +226,10 @@ void PlayerMovement::InitPublicGameObjects()
 	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
 
 	public_gameobjects.push_back(&camera);
-	public_gameobjects.push_back(&second_player);
+	public_gameobjects.push_back(&other_player);
 
 	variable_names.push_back(GET_VARIABLE_NAME(camera));
-	variable_names.push_back(GET_VARIABLE_NAME(second_player));
+	variable_names.push_back(GET_VARIABLE_NAME(other_player));
 
 	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
 	{

@@ -44,6 +44,7 @@ void CameraController::Awake()
 	owner->transform.SetRotation(rotation);
 
 	selected_offset = offset_near;
+	current_target = player1;
 
 	GameObject* world_manager_go = App->scene->GetGameObjectByName("World Manager");
 	ComponentScript* world_manager_component = world_manager_go->GetComponentScript("WorldManager");
@@ -54,16 +55,17 @@ void CameraController::Awake()
 // Use this for initialization
 void CameraController::Start()
 {
+	SetPosition(float3(-116.f, 40.f, 40.f));
+
 	//Dirty AF but hope it works
 	if(player_movement_script->player == 2)
 	{
-		std::swap(player1, player2);
-		std::swap(player2_movement_script, player_movement_script);
+		current_target = player2;
 	}
 
 	if (world_manager->singleplayer)
 	{
-		float3 current_position = player1->transform.GetTranslation();
+		float3 current_position = current_target->transform.GetTranslation();
 		float3 position_to_focus = float3(current_position.x, current_position.y + selected_offset.y, (current_position.z * 0.5) + selected_offset.z);
 		Focus(position_to_focus);
 	}
@@ -95,6 +97,7 @@ void CameraController::Update()
 		}
 	}
 }
+
 // Use this for showing variables on inspector
 void CameraController::OnInspector(ImGuiContext* context)
 {
@@ -135,7 +138,7 @@ void CameraController::ActivePlayer()
 void CameraController::Focus(float3 position_to_focus)
 {
 	current_time += App->time->delta_time;
-	float focus_progress = math::Min((current_time - start_focus_time) / CENTER_TIME, 1.f);
+	float focus_progress = math::Min((current_time - start_focus_time) / CENTER_TIME * App->time->delta_time, 1.f);
 	float3 new_camera_position = owner->transform.GetTranslation().Lerp(position_to_focus, focus_progress);
 	owner->transform.SetTranslation(new_camera_position);
 	is_focusing = focus_progress != 1;
@@ -144,7 +147,7 @@ void CameraController::Focus(float3 position_to_focus)
 
 void CameraController::FollowPlayer() 
 {
-	distance_x = abs(player1->transform.GetTranslation().x - owner->transform.GetTranslation().x);
+	distance_x = abs(current_target->transform.GetTranslation().x - owner->transform.GetTranslation().x);
 	if ( distance_x > 1.f && !is_focusing)
 	{
 		start_focus_time = App->time->delta_time;
@@ -152,7 +155,7 @@ void CameraController::FollowPlayer()
 		is_focusing = true;
 	}
 
-	distance_z = abs(player1->transform.GetTranslation().z);
+	distance_z = abs(current_target->transform.GetTranslation().z);
 	if (distance_z > 1.f && !is_focusing)
 	{
 		start_focus_time = App->time->delta_time;
@@ -162,7 +165,7 @@ void CameraController::FollowPlayer()
 
 	if (is_focusing)
 	{
-		float3 current_position = player1->transform.GetTranslation();
+		float3 current_position = current_target->transform.GetTranslation();
 		if (current_position.z > 2.2)
 		{
 			current_position.z = 2.2f;
@@ -172,6 +175,7 @@ void CameraController::FollowPlayer()
 	}
 
 }
+
 void CameraController::MultiplayerCamera()
 {
 	float x_distance = abs(player1->transform.GetTranslation().x - player2->transform.GetTranslation().x);
@@ -209,6 +213,16 @@ void CameraController::MultiplayerCamera()
 
 }
 
+void CameraController::MultiplayerToSingleplayer()
+{
+	if(!player1->IsEnabled())
+	{
+		current_target = player2;
+		selected_offset = offset_near;
+	}
+
+}
+
 void CameraController::SetFreeze()
 {
 	freeze = !freeze;
@@ -228,4 +242,9 @@ void CameraController::InitPublicGameObjects()
 		name_gameobjects.push_back(is_object);
 		go_uuids.push_back(0);
 	}
+}
+
+void CameraController::SetPosition(float3 position)
+{
+	owner->transform.SetTranslation(position);
 }

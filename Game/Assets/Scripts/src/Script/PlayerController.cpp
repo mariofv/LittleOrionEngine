@@ -15,7 +15,7 @@
 
 #include "PlayerAttack.h"
 #include "PlayerMovement.h"
-#include "ProgressBar.h"
+#include "UIManager.h"
 
 PlayerController* PlayerControllerDLL()
 {
@@ -37,8 +37,9 @@ void PlayerController::Awake()
 	const ComponentScript* component_attack = owner->GetComponentScript("PlayerAttack");
 	player_attack = static_cast<PlayerAttack*>(component_attack->script);
 
-	const ComponentScript* component_progress = progress_bar->GetComponentScript("ProgressBar");
-	health_bar = static_cast<ProgressBar*>(component_progress->script);
+	GameObject* ui = App->scene->GetGameObjectByName("UIManager");
+	ComponentScript* component_ui = ui->GetComponentScript("UIManager");
+	ui_manager = static_cast<UIManager*>(component_ui->script);
 
 }
 
@@ -51,13 +52,13 @@ void PlayerController::Start()
 // Update is called once per frame
 void PlayerController::Update()
 {
-	bool is_attacking = player_attack->Attack(player);
 
 	if(!is_attacking)
 	{
 		player_movement->Move(player);
 	}
 
+	is_attacking = player_attack->Attack(player);
 }
 
 // Use this for showing variables on inspector
@@ -84,23 +85,10 @@ void PlayerController::OnInspector(ImGuiContext* context)
 	}
 	ImGui::DragFloat("Health", &health_points);
 	ImGui::Checkbox("Invincible", &invincible);
+	ImGui::Checkbox("Is Alive", &is_alive);
+	
 }
 
-void PlayerController::InitPublicGameObjects()
-{
-	//IMPORTANT, public gameobjects, name_gameobjects and go_uuids MUST have same size
-
-	public_gameobjects.push_back(&progress_bar);
-
-	variable_names.push_back(GET_VARIABLE_NAME(progress_bar));
-
-
-	for (unsigned int i = 0; i < public_gameobjects.size(); ++i)
-	{
-		name_gameobjects.push_back(is_object);
-		go_uuids.push_back(0);
-	}
-}
 
 //Use this for linking GO automatically
 void PlayerController::Save(Config& config) const
@@ -121,12 +109,21 @@ void PlayerController::TakeDamage(float damage)
 	if (invincible) return;
 
 	health_points -= damage;
+	if(player == 1)
+	{
+		ui_manager->SetPlayer1Health(health_points / total_health);
+	}
+	else
+	{
+		ui_manager->SetPlayer2Health(health_points / total_health);
+	}
+
 	if (health_points <= 0)
 	{
 		health_points = 0;
 		is_alive = false;
+		owner->SetEnabled(false);
 	}
-	health_bar->SetProgress(health_points / total_health);
 }
 
 ComponentCollider* PlayerController::GetCollider()

@@ -27,12 +27,16 @@ public:
 	void FollowPlayer();
 
 	void MultiplayerCamera();
+	//Useless on future iterations because of the mechanic of "Don't die alone"
+	void MultiplayerToSingleplayer();
 
 	void SetFreeze();
 
 
 	void InitPublicGameObjects();
+	void SetPosition(float3 position);
 	bool god_mode = false;
+	bool freeze = false;
 
 private:
 	Quat rotation = Quat::FromEulerXYZ(2.742f, 0.f, -3.142f);
@@ -47,10 +51,10 @@ private:
 	ComponentScript* player2_movement_component = nullptr;
 	WorldManager* world_manager = nullptr;
 
-	const float CENTER_TIME = 30000.f;
+	const float CENTER_TIME = 1000000.f;
 
 	float3 offset_near = float3(0.f, 5.5f, 11.f);
-	float3 offset_far = float3(0.f, 8.5f, 17.5f);
+	float3 offset_far = float3(0.f, 8.5f, 20.5f);
 	float3 selected_offset = float3::zero;;
 
 	bool is_focusing = false;
@@ -61,7 +65,8 @@ private:
 	float distance_x = 0.f;
 	float distance_z = 0.f;
 
-	bool freeze = false;
+
+	GameObject* current_target = nullptr;
 
 };
 extern "C" SCRIPT_API CameraController* CameraControllerDLL(); //This is how we are going to load the script
