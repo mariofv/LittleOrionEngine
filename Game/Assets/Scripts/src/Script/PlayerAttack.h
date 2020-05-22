@@ -34,7 +34,7 @@ private:
 
 	unsigned current_damage_power = 0;
 	bool is_attacking = false;
-	bool raycast_cast = false;
+	bool attack_activated = false;
 	float PUNCH_DAMAGE = 50.f;
 	float KICK_DAMAGE = 100.f;
 };

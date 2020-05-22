@@ -60,14 +60,14 @@ bool PlayerAttack::Attack(int player)
 {
 	is_attacking = animation->IsOnState("Punch") || animation->IsOnState("Kick");
 
-	if(!is_attacking && !raycast_cast)
+	if(!is_attacking)
 	{
 		if (App->input->GetGameInputDown("Punch", static_cast<PlayerID>(player - 1)))
 		{
 			audio_source->PlayEvent("play_punch1_player");
 			animation->ActiveAnimation("punch");
 			//Active colliders of hands
-			raycast_cast = true;
+			attack_activated = true;
 			current_damage_power = PUNCH_DAMAGE;
 		}
 		else if (App->input->GetGameInputDown("Kick", static_cast<PlayerID>(player - 1)))
@@ -75,15 +75,15 @@ bool PlayerAttack::Attack(int player)
 			audio_source->PlayEvent("play_kick1_player");
 			animation->ActiveAnimation("kick");
 			//Active colliders of kick
-			raycast_cast = true;
+			attack_activated = true;
 			current_damage_power = KICK_DAMAGE;
 		}
 	}
 
-	if (raycast_cast && animation->GetCurrentClipPercentatge() > 0.5f)
+	if (attack_activated && animation->GetCurrentClipPercentatge() > 0.5f)
 	{
 		ComputeCollisions();
-		raycast_cast = false;
+		attack_activated = false;
 	}
 
 	return is_attacking;
@@ -121,6 +121,9 @@ void PlayerAttack::OnInspector(ImGuiContext* context)
 	ShowDraggedObjects();
 	ImGui::DragFloat("Punch Damage", &PUNCH_DAMAGE);
 	ImGui::DragFloat("Kick Damage", &KICK_DAMAGE);
+	ImGui::Checkbox("Raycasting", &attack_activated);
+	ImGui::Checkbox("Is Attacking", &is_attacking);
+
 }
 
 //Use this for linking JUST GO automatically
