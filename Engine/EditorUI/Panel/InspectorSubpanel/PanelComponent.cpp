@@ -289,22 +289,21 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			}
 			ImGui::Checkbox("Loop", &particle_system->loop);
 			ImGui::Spacing();
+			
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+			ImGui::DragFloat("Width", &particle_system->particles_width, 0.01f, 0.0f, 100.0F);
+			ImGui::SameLine();
+			ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
+			ImGui::DragFloat("Height", &particle_system->particles_height, 0.01f, 0.0f, 100.0F);
+			ImGui::SameLine();
 			if (particle_system->size_random)
 			{
+				ImGui::Spacing();
 				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragInt("Width", &particle_system->min_size_of_particle,1, 0, 999);
+				ImGui::DragInt("Min size", &particle_system->min_size_of_particle, 1, 0, 999);
 				ImGui::SameLine();
 				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragInt("Height", &particle_system->max_size_of_particle, 1, 1, 1000);
-				ImGui::SameLine();
-			}
-			else 
-			{
-				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragFloat("Width", &particle_system->billboard->width, 0.01f, 0.0f, 100.0F);
-				ImGui::SameLine();
-				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragFloat("Height", &particle_system->billboard->height, 0.01f, 0.0f, 100.0F);
+				ImGui::DragInt("Max size", &particle_system->max_size_of_particle, 1, 1, 1000);
 				ImGui::SameLine();
 			}
 			
