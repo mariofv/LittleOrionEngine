@@ -34,13 +34,12 @@ void PanelMetaFile::Render(Metafile * metafile)
 	ImGui::Text(metafile->imported_file_path.c_str());
 
 	ImGui::Text("TimeStamp:"); ImGui::SameLine();
-	ImGui::InputScalar("###TimeStamp", ImGuiDataType_S64, &(metafile->timestamp), nullptr, nullptr, nullptr, ImGuiInputTextFlags_ReadOnly);
 	ShowSpecializedMetaFile(metafile);
 
 	ImGui::Separator();
 	if (ImGui::Button("Apply"))
 	{
-		App->resources->metafile_manager->TouchMetafileTimestamp(*metafile);
+		App->resources->metafile_manager->UpdateMetafile(*metafile);
 		Path* imported_file_path = App->filesystem->GetPath(metafile->imported_file_path);
 		App->resources->Import(*imported_file_path, true);
 		App->resources->CleanResourceCache();

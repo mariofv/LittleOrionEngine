@@ -30,7 +30,7 @@ public:
 	static std::string GetMetafileExportedFile(const Metafile& metafile);
 	static std::string GetUUIDExportedFile(uint32_t uuid);
 
-	static void TouchMetafileTimestamp(Metafile& metafile);
+	static void UpdateMetafile(Metafile& metafile);
 
 	/*
 		A metafile is consistent when both imported path and exported path exist
