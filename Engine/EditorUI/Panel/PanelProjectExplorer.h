@@ -31,7 +31,8 @@ public:
 private:
 	void InitResourceExplorerDockspace();
 
-	void ShowMetafileIcon(Path* file);
+	void ShowMetafile(Path* file);
+	void ShowMetafileIcon(Metafile* metafile);
 	void ApplyRename();
 
 private:

@@ -150,7 +150,7 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 		if (child_path != nullptr && child_path->IsMeta())
 		{
 			ImGui::PushID(current_line * files_per_line + current_file_in_line);
-			ShowMetafileIcon(child_path);
+			ShowMetafile(child_path);
 			ImGui::PopID();
 
 			++current_file_in_line;
@@ -167,7 +167,7 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 	}
 }
 
-void PanelProjectExplorer::ShowMetafileIcon(Path* metafile_path)
+void PanelProjectExplorer::ShowMetafile(Path* metafile_path)
 {
 	Metafile* metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
 
@@ -181,7 +181,7 @@ void PanelProjectExplorer::ShowMetafileIcon(Path* metafile_path)
 		ProcessResourceMouseInput(metafile_path, metafile);
 
 		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * file_size_width) * 0.5f);
-		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*file_size_width, 0.75*file_size_width)); // TODO: Substitute this with resouce thumbnail
+		ShowMetafileIcon(metafile);
 		ImGui::Spacing();
 
 		if (renaming_file && metafile_path == renaming_file)
@@ -207,6 +207,59 @@ void PanelProjectExplorer::ShowMetafileIcon(Path* metafile_path)
 		}
 	}
 	ImGui::EndChild();
+}
+
+void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
+{
+
+	ImGui::SetWindowFontScale(2);
+
+	if (metafile->resource_type == ResourceType::MODEL 
+		|| metafile->resource_type == ResourceType::MESH 
+		|| metafile->resource_type == ResourceType::PREFAB 
+		|| metafile->resource_type == ResourceType::MATERIAL)
+	{
+		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+	}
+	else
+	{
+		
+		switch (metafile->resource_type)
+		{
+		case ResourceType::TEXTURE:
+			ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			break;
+		case ResourceType::ANIMATION:
+			ImGui::Button(ICON_FA_PLAY_CIRCLE, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			break;
+		case ResourceType::SOUND:
+			ImGui::Button(ICON_FA_VOLUME_UP, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			break;
+		case ResourceType::SCENE:
+			ImGui::Button(ICON_FA_SIMPLYBUILT, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			break;
+		case ResourceType::NAVMESH:
+			ImGui::Button(ICON_FA_BRAIN, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			break;
+		case ResourceType::FONT:
+			ImGui::Button(ICON_FA_FONT, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			break;
+		case ResourceType::SKYBOX:
+			ImGui::Button(ICON_FA_CLOUD_MOON, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			break;
+		case ResourceType::SKELETON:
+			ImGui::Button(ICON_FA_USER, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			break;
+		case ResourceType::STATE_MACHINE:
+			ImGui::Button(ICON_FA_PROJECT_DIAGRAM, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			break;
+		default:
+			ImGui::Button(ICON_FA_FILE, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			break;
+		}
+	}
+	
+	ImGui::SetWindowFontScale(1);
 }
 
 void PanelProjectExplorer::ApplyRename()
