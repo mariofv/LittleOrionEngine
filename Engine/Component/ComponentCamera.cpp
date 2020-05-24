@@ -214,11 +214,7 @@ void ComponentCamera::RecordFrame(float width, float height, bool scene_mode)
 		GenerateFrameBuffers(width, height);
 		toggle_msaa = false;
 
-		if (camera_frustum.type == FrustumType::OrthographicFrustum) //No cameras should be ortho but the directional light one
-		{
-			camera_frustum.orthographicWidth = 100;
-			camera_frustum.orthographicHeight = 100;
-		}
+
 	}
 
 #if !GAME

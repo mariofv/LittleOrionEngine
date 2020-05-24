@@ -50,12 +50,20 @@ update_status ModuleCamera::Update()
 	BROFILER_CATEGORY("Scene Camera Update", Profiler::Color::Lavender);
 	SelectMainCamera();
 	scene_camera->Update();
-	UpdateDirectionalLightFrustums();
 	UpdateMainCameraFrustums();
+	UpdateDirectionalLightFrustums();
 
 
 
 	return update_status::UPDATE_CONTINUE;
+}
+
+update_status ModuleCamera::PostUpdate()
+{
+	light_aabb->bounding_box.SetNegativeInfinity();
+
+	return update_status::UPDATE_CONTINUE;
+
 }
 
 void ModuleCamera::SetDirectionalLightFrustums()
