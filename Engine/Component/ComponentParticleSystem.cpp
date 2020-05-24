@@ -63,7 +63,7 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 
 	float random_z = (rand() % ((max_range_random_z - min_range_random_z) + 1) + min_range_random_z) / 100.f;
 
-	float scale = (rand() % ((max_size_of_particle - min_size_of_particle) + 1) + min_size_of_particle) / 10.f;
+	float scale = (rand() % ((max_size_of_particle - min_size_of_particle) + 1) + min_size_of_particle) / 100.f;
 
 	if (size_random)
 	{
@@ -74,31 +74,51 @@ void ComponentParticleSystem::RespawnParticle(Particle& particle)
 		particle.particle_scale = 1.0f;
 	}
 
-	float rColor = 0.5f + ((rand() % 100) / 100.0f);
-
 	particle.position = owner->transform.GetGlobalTranslation();
 	particle.rotation = owner->transform.GetGlobalRotation();
 
-	if (enabled_random_x)
+	switch (type_of_particle_system)
 	{
-		particle.position.x += random_x;
-	}
-	else
-	{
-		particle.position.x += position_x /100.0F;
-	}
-	if (enabled_random_z)
-	{
-		particle.position.z += random_z;
-	}
-	else
-	{
-		particle.position.z += position_z / 100.0F;
+		case SPHERE:
+			particle.velocity = float3::RandomDir(LCG(), velocity_particles) / 1000;
+		break;
+		case BOX:
+			particle.velocity.y = velocity_particles / 1000;
+			if (enabled_random_x)
+			{
+				particle.position.x += random_x;
+			}
+			else
+			{
+				particle.position.x += position_x / 100.0F;
+			}
+			if (enabled_random_z)
+			{
+				particle.position.z += random_z;
+			}
+			else
+			{
+				particle.position.z += position_z / 100.0F;
+			}
+		break;
 	}
 	
 	particle.color = float4(1.0f, 1.0f, 1.0f, 1.0f);
 	particle.life = particles_life_time*1000;
-	particle.velocity.y = velocity_particles/1000.F;
+
+	float4 aux_velocity(particle.velocity, 1.0F);
+	aux_velocity = particle.rotation * aux_velocity;
+	particle.velocity = aux_velocity.xyz();
+
+	/*float u = (rand() % 100) / 100.0f;
+	float v = (rand() % 100) / 100.0f;
+	float theta = 2.0f * 3.1415f *u;
+	float phi = acos(2 * v - 1);
+	particle.position.x += (sin(phi)*cos(theta)) /10.0f;
+	particle.position.y += (sin(phi)*cos(theta)) / 10.0f;
+	particle.position.z += (sin(phi)) / 10.0f;
+	APP_LOG_INFO("%f, %f, %f", particle.position.x, particle.position.y, particle.position.z);*/
+
 }
 
 void ComponentParticleSystem::Render()
@@ -122,8 +142,8 @@ void ComponentParticleSystem::Render()
 		Particle& p = particles[i];
 		p.life -= App->time->real_time_delta_time; // reduce life
 		if (p.life > 0.0f)
-		{	// particle is alive, thus update
-			p.position.y += p.velocity.y*App->time->real_time_delta_time;
+		{	
+			p.position += p.velocity * App->time->real_time_delta_time;
 			p.color.w -= App->time->real_time_delta_time * (color_fade_time/1000);
 			if (color_fade)
 			{

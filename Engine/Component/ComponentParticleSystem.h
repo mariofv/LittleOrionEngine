@@ -21,7 +21,12 @@ public:
 		float time_counter;
 		float  life;
 	};
-
+	enum TypeOfParticleSystem
+	{
+		SPHERE,
+		BOX,
+		CONE
+	};
 	ComponentParticleSystem();
 	~ComponentParticleSystem() = default;
 
@@ -50,6 +55,8 @@ public:
 
 	uint32_t texture_uuid;
 	ComponentBillboard* billboard;
+
+	TypeOfParticleSystem type_of_particle_system = BOX;
 
 	std::vector<Particle> particles;
 	

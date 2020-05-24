@@ -264,7 +264,8 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 				particle_system->billboard->ChangeTexture(selected_resource_uuid);
 			}
 			int alignment_type = static_cast<int>(particle_system->billboard->alignment_type);
-			if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) {
+			if (ImGui::Combo("Billboard type", &alignment_type, "View point\0Axial\0Spritesheet\0Not aligned")) 
+			{
 				switch (alignment_type)
 				{
 				case 0:
@@ -287,6 +288,24 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 				ImGui::InputFloat("Speed", &particle_system->billboard->sheet_speed, 1);
 				ImGui::Checkbox("Oriented to camera", &particle_system->billboard->oriented_to_camera);
 			}
+
+			int particle_shape = static_cast<int>(particle_system->type_of_particle_system);
+			if (ImGui::Combo("Shape", &particle_shape, "Sphere\0Box\0Cone\0"))
+			{
+				switch (particle_shape)
+				{
+				case 0:
+					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::SPHERE;
+					break;
+				case 1:
+					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::BOX;
+					break;
+				case 2:
+					particle_system->type_of_particle_system = ComponentParticleSystem::TypeOfParticleSystem::CONE;
+					break;
+				}
+			}
+		
 			ImGui::Checkbox("Loop", &particle_system->loop);
 			ImGui::Spacing();
 			
@@ -300,10 +319,10 @@ void PanelComponent::ShowComponentParticleSystem(ComponentParticleSystem* partic
 			{
 				ImGui::Spacing();
 				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragInt("Min size", &particle_system->min_size_of_particle, 1, 0, 999);
+				ImGui::DragInt("Min size", &particle_system->min_size_of_particle, 10, 0, 999);
 				ImGui::SameLine();
 				ImGui::SetNextItemWidth(ImGui::GetWindowWidth() / 5);
-				ImGui::DragInt("Max size", &particle_system->max_size_of_particle, 1, 1, 1000);
+				ImGui::DragInt("Max size", &particle_system->max_size_of_particle, 100, 1, 1000);
 				ImGui::SameLine();
 			}
 			

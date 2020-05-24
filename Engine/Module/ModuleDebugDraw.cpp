@@ -3,6 +3,7 @@
 #include "Component/ComponentAnimation.h"
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentLight.h"
+#include "Component/ComponentParticleSystem.h"
 #include "Component/ComponentMeshRenderer.h"
 
 #include "EditorUI/Helper/Grid.h"
@@ -440,6 +441,7 @@ void ModuleDebugDraw::Render()
 
 		RenderCameraFrustum();
 		RenderLightGizmo();
+		RenderParticleSystem();
 		//RenderBones();
 		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
@@ -511,14 +513,39 @@ void ModuleDebugDraw::RenderCameraFrustum() const
 		dd::frustum(selected_camera->GetInverseClipMatrix(), float3::one);
 	}	
 }
+void ModuleDebugDraw::RenderParticleSystem() const 
+{
+	BROFILER_CATEGORY("Render Selected GameObject Particle System Gizmo", Profiler::Color::Lavender);
 
+	Component* particle_system = App->editor->selected_game_object->GetComponent(Component::ComponentType::PARTICLE_SYSTEM);
+	if (particle_system != nullptr)
+	{
+		ComponentParticleSystem* selected_particle_system = static_cast<ComponentParticleSystem*>(particle_system);
+	/*	ComponentTransform* selected_light_transform = &selected_particle_system->owner->transform;*/
+		float gizmo_radius = 2.5F;
+		switch (selected_particle_system->type_of_particle_system)
+		{
+			case ComponentParticleSystem::TypeOfParticleSystem::SPHERE:
+			/*	dd::sphere(App->editor->selected_game_object->transform.GetGlobalTranslation(), ddVec3(1.0f, 1.0f, 1.0f), 10.0f);*/
+				dd::point_light(App->editor->selected_game_object->transform.GetGlobalTranslation(), float3(1.f, 1.f, 0.f),selected_particle_system->particles_life_time*selected_particle_system->velocity_particles);
+			break;
+			case ComponentParticleSystem::TypeOfParticleSystem::BOX:
+				dd::box(App->editor->selected_game_object->transform.GetGlobalTranslation(), ddVec3(1.f, 1.f, 0.f),
+					(selected_particle_system->max_range_random_x - selected_particle_system->min_range_random_x)/100,
+					selected_particle_system->particles_life_time,
+					(selected_particle_system->max_range_random_z - selected_particle_system->min_range_random_z)/100
+				);
+				break;
+		}
+	}
+}
 void ModuleDebugDraw::RenderLightGizmo() const	
 {	
 	BROFILER_CATEGORY("Render Selected GameObject Light Gizmo", Profiler::Color::Lavender);
 
 	Component* selected_light_component = App->editor->selected_game_object->GetComponent(Component::ComponentType::LIGHT);	
 	if (selected_light_component != nullptr)
-  {	
+	{	
 		ComponentLight* selected_light = static_cast<ComponentLight*>(selected_light_component);	
 		ComponentTransform* selected_light_transform = &selected_light->owner->transform;
 		float gizmo_radius = 2.5F;	
