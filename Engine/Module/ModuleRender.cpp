@@ -293,10 +293,6 @@ void ModuleRender::SetBlending(bool gl_blend)
 
 }
 
-void ModuleRender::SetRenderShadows(bool render)
-{
-	render_shadows = render;
-}
 
 void ModuleRender::SetFaceCulling(bool gl_cull_face)
 {

@@ -215,13 +215,6 @@ void PanelConfiguration::ShowRenderOptions()
 			App->cameras->main_camera->toggle_msaa = true;
 		}
 
-		ImGui::SameLine();
-
-		if (ImGui::Checkbox("Render shadows", &App->renderer->render_shadows))
-		{
-			App->renderer->SetRenderShadows(App->renderer->render_shadows);
-		}
-
 		ImGui::Separator();
 
 		if (ImGui::Checkbox("Face culling", &App->renderer->gl_cull_face))
@@ -303,15 +296,16 @@ void PanelConfiguration::ShowRenderOptions()
 
 		ImGui::Separator();
 
-		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Ortho frustum settings - Directional Light");
-		ImGui::SliderFloat("Frustum width", &App->cameras->aux_width, 0, 100);
-		ImGui::SliderFloat("Frustum height", &App->cameras->aux_height, 0, 100);
-		ImGui::SliderFloat("Close - Mid Separation", &App->cameras->close_mid_separation, 0, App->cameras->mid_far_separation);
-		ImGui::SliderFloat("Mid - Far Separation", &App->cameras->mid_far_separation, App->cameras->close_mid_separation, App->cameras->far_plane);
-		ImGui::SliderFloat("Far Plane", &App->cameras->far_plane, App->cameras->mid_far_separation, App->cameras->mid_far_separation + 100);
+		ImGui::TextColored(ImVec4(1, 1, 0, 1), "Lighting");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(1, 1, 1, 1), "and");
+		ImGui::SameLine();
+		ImGui::TextColored(ImVec4(0.3, 0.3, 0.3, 1), "Shadows");
 
-		
-
+		ImGui::Checkbox("Toggle directional camera frustum", &App->renderer->toggle_ortho_frustum);
+		ImGui::Checkbox("Toggle directional light AABB", &App->renderer->toggle_directional_light_aabb);
+		ImGui::Checkbox("Toggle sub frustums", &App->renderer->toggle_perspective_sub_frustums);
+		ImGui::Checkbox("Render shadows", &App->renderer->render_shadows);
 
 	}
 }

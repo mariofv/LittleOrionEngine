@@ -485,26 +485,25 @@ void ModuleDebugDraw::Render()
 	RenderDebugDraws(*App->cameras->scene_camera);
 
 	if (App->cameras->main_camera != nullptr)
-
-	//Main camera frustum test
 	{
-		dd::aabb(App->cameras->main_camera->GetMinimalEnclosingAABB().minPoint, App->cameras->main_camera->GetMinimalEnclosingAABB().maxPoint, float3(1, 1, 0));
+		//dd::aabb(App->cameras->main_camera->GetMinimalEnclosingAABB().minPoint, App->cameras->main_camera->GetMinimalEnclosingAABB().maxPoint, float3(1, 1, 0));
 	}
 
-	//Ortho frustums
-	dd::frustum(App->cameras->directional_light_camera->GetInverseClipMatrix(), float3(1, 0, 0));
-	//dd::frustum(App->cameras->directional_light_mid->GetInverseClipMatrix(), float3(0, 1, 0));
-	//dd::frustum(App->cameras->directional_light_far->GetInverseClipMatrix(), float3(0, 0, 1));
-
-	//Light and Camera AABB
-	//dd::aabb(App->cameras->main_camera->GetMinimalEnclosingAABB().minPoint, App->cameras->main_camera->GetMinimalEnclosingAABB().maxPoint, float3(1, 1, 0));
-	//dd::aabb(App->cameras->light_aabb->bounding_box.minPoint, App->cameras->light_aabb->bounding_box.maxPoint, float3(1, 1, 1));
+	if(App->renderer->toggle_ortho_frustum)
+		dd::frustum(App->cameras->directional_light_camera->GetInverseClipMatrix(), float3(1, 0, 0)); //Its the same for all three 
 
 
-	//Perspective frustums
-	dd::frustum(App->cameras->camera_close->GetInverseClipMatrix(), float3(1, 1, 0));
-	dd::frustum(App->cameras->camera_mid->GetInverseClipMatrix(), float3(0, 1, 1));
-	dd::frustum(App->cameras->camera_far->GetInverseClipMatrix(), float3(1, 0, 1));
+	if(App->renderer->toggle_directional_light_aabb)
+		dd::aabb(App->cameras->light_aabb->bounding_box.minPoint, App->cameras->light_aabb->bounding_box.maxPoint, float3(1, 1, 1));
+
+
+	if (App->renderer->toggle_perspective_sub_frustums)
+	{
+		dd::frustum(App->cameras->camera_close->GetInverseClipMatrix(), float3(1, 1, 0));
+		dd::frustum(App->cameras->camera_mid->GetInverseClipMatrix(), float3(0, 1, 1));
+		dd::frustum(App->cameras->camera_far->GetInverseClipMatrix(), float3(1, 0, 1));
+	}
+
 
 	
 }
