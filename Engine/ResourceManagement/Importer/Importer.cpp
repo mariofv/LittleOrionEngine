@@ -57,11 +57,12 @@ bool Importer::ImportRequired(const Path& file_path)
 		Metafile* metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
 		assert(App->resources->metafile_manager->IsMetafileConsistent(*metafile));
 
-		if (metafile->version < Importer::IMPORTER_VERSION || !App->filesystem->Exists(metafile->exported_file_path))
+		bool exported_file_exist = App->filesystem->Exists(metafile->exported_file_path);
+		if (metafile->version < Importer::IMPORTER_VERSION || !exported_file_exist)
 		{
 			return true;
 		}
-		else if (App->filesystem->Exists(metafile->exported_file_path))
+		else if (exported_file_exist)
 		{
 			Path* library_path = App->filesystem->GetPath(metafile->exported_file_path);
 			return  file_path.GetModificationTimestamp() > library_path->GetModificationTimestamp();

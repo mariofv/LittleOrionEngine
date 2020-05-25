@@ -33,7 +33,6 @@ void PanelMetaFile::Render(Metafile * metafile)
 	ImGui::Text("Imported path:"); ImGui::SameLine();
 	ImGui::Text(metafile->imported_file_path.c_str());
 
-	ImGui::Text("TimeStamp:"); ImGui::SameLine();
 	ShowSpecializedMetaFile(metafile);
 
 	ImGui::Separator();
