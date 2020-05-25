@@ -263,8 +263,14 @@ void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
 			icon = ICON_FA_FILE;
 			break;
 		}
+
 		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+
+		static ImVec4 color = ImVec4(0, 0.4, 0.6, 1);
+		ImGui::PushStyleColor(ImGuiCol_Button, color);
+
 		ImGui::Button(icon.c_str(),ImVec2(0.75*file_size_width, 0.75*file_size_width));
+		ImGui::PopStyleColor(1);
 	}
 	
 	ImGui::SetWindowFontScale(1);
