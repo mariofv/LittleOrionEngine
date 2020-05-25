@@ -221,45 +221,63 @@ void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
 	{
 		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*file_size_width, 0.75*file_size_width));
 	}
+	else if(metafile->resource_type == ResourceType::TEXTURE)
+	{
+		ImGui::Image((void *)GetResourcePreviewImage(metafile->uuid), ImVec2(0.75*file_size_width, 0.75*file_size_width));
+	}
 	else
 	{
-		
+		std::string icon;
 		switch (metafile->resource_type)
 		{
-		case ResourceType::TEXTURE:
-			ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*file_size_width, 0.75*file_size_width));
-			break;
 		case ResourceType::ANIMATION:
-			ImGui::Button(ICON_FA_PLAY_CIRCLE, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			icon = ICON_FA_PLAY_CIRCLE;
 			break;
 		case ResourceType::SOUND:
-			ImGui::Button(ICON_FA_VOLUME_UP, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			icon = ICON_FA_VOLUME_UP;
 			break;
 		case ResourceType::SCENE:
-			ImGui::Button(ICON_FA_SIMPLYBUILT, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			icon = ICON_FA_SIMPLYBUILT;
 			break;
 		case ResourceType::NAVMESH:
-			ImGui::Button(ICON_FA_BRAIN, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			icon = ICON_FA_BRAIN;
 			break;
 		case ResourceType::FONT:
-			ImGui::Button(ICON_FA_FONT, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			icon = ICON_FA_FONT;
 			break;
 		case ResourceType::SKYBOX:
-			ImGui::Button(ICON_FA_CLOUD_MOON, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			icon = ICON_FA_CLOUD_MOON;
 			break;
 		case ResourceType::SKELETON:
-			ImGui::Button(ICON_FA_USER, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			icon = ICON_FA_USER;
 			break;
 		case ResourceType::STATE_MACHINE:
-			ImGui::Button(ICON_FA_PROJECT_DIAGRAM, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			icon = ICON_FA_PROJECT_DIAGRAM;
 			break;
 		default:
-			ImGui::Button(ICON_FA_FILE, ImVec2(0.75*file_size_width, 0.75*file_size_width));
+			icon = ICON_FA_FILE;
 			break;
 		}
+		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+		ImGui::Button(icon.c_str(),ImVec2(0.75*file_size_width, 0.75*file_size_width));
 	}
 	
 	ImGui::SetWindowFontScale(1);
+}
+
+size_t PanelProjectExplorer::GetResourcePreviewImage(uint32_t uuid)
+{
+	size_t opengl_id = 0;
+	if (project_explorer_icon_cache.find(uuid) == project_explorer_icon_cache.end())
+	{
+		opengl_id = (project_explorer_icon_cache[uuid] = App->resources->Load<Texture>(uuid))->opengl_texture;
+	}
+	else
+	{
+		opengl_id = project_explorer_icon_cache[uuid]->opengl_texture;
+	}
+
+	return opengl_id;
 }
 
 void PanelProjectExplorer::ApplyRename()
@@ -327,6 +345,7 @@ void PanelProjectExplorer::ProcessMouseInput(Path* file_path)
 		if (ImGui::IsMouseDoubleClicked(0))
 		{
 			selected_folder = file_path;
+			project_explorer_icon_cache.clear();
 		}
 	}
 }

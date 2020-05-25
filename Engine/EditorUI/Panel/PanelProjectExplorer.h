@@ -3,9 +3,9 @@
 
 #include "EditorUI/Panel/Panel.h"
 #include "Module/ModuleFileSystem.h"
-
+#include <unordered_map>
 class Metafile;
-
+class Texture;
 class PanelProjectExplorer : public Panel
 {
 
@@ -33,6 +33,8 @@ private:
 
 	void ShowMetafile(Path* file);
 	void ShowMetafileIcon(Metafile* metafile);
+
+	size_t GetResourcePreviewImage(uint32_t uuid);
 	void ApplyRename();
 
 private:
@@ -43,6 +45,9 @@ private:
 	Path* selected_file = nullptr;
 	Path* renaming_file = nullptr;
 
+
 	ImGuiID project_explorer_dockspace_id;
+
+	std::unordered_map<uint32_t,std::shared_ptr<Texture>> project_explorer_icon_cache;
 };
 #endif //_PANELPROJECTEXPLORER_H_
