@@ -176,6 +176,7 @@ private:
 	friend class PanelComponent;
 	friend class PanelScene;
 	friend class ModuleRender;
+	friend class PreviewImageManager;
 };
 
 #endif //_COMPONENTCAMERA_H_

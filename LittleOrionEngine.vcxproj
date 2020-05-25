@@ -298,6 +298,7 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\SoundBank.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h" />
+    <ClInclude Include="Engine\ResourceManagement\Manager\PreviewImageManager.h" />
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp" />
@@ -459,6 +460,7 @@
     <ClCompile Include="Libraries\include\SoundEngine\AkFilePackageLUT.cpp" />
     <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp" />
     <ClCompile Include="Libraries\include\SoundEngine\stdafx.cpp" />
+    <ClCompile Include="Engine\ResourceManagement\Manager\PreviewImageManager.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
