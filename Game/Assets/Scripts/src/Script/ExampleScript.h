@@ -3,8 +3,6 @@
 #include "Script.h"
 
 
-class TestScriptRuntime;
-
 class ExampleScript : public Script
 {
 public:
@@ -26,7 +24,6 @@ public:
 
 public:
 	GameObject* example = nullptr;
-	TestScriptRuntime* example_script = nullptr;
 	ComponentScript* example_component = nullptr;
 	float speed = 0.01f;
 	float rotation_speed = 0.01f;

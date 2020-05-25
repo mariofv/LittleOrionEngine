@@ -188,6 +188,10 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 
 		}
 	}
+
+	glEnable(GL_BLEND);
+	glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+	glBlendEquation(GL_FUNC_ADD);
 	for (auto &mesh : transparent_mesh_to_render)
 	{
 		BROFILER_CATEGORY("Render Mesh", Profiler::Color::Aquamarine);
@@ -200,12 +204,11 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			
 		}
 	}
+	glDisable(GL_BLEND);
 	
-	BROFILER_CATEGORY("Canvas", Profiler::Color::AliceBlue);
-	App->ui->Render(&camera);
-
 	rendering_measure_timer->Stop();
 	App->debug->rendering_time = rendering_measure_timer->Read();
+	
 }
 
 void ModuleRender::GetMeshesToRender(const ComponentCamera* camera)

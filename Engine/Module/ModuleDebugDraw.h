@@ -1,6 +1,8 @@
 #ifndef _MODULEDEBUGDRAW_H_
 #define _MODULEDEBUGDRAW_H_
 
+#define ENGINE_EXPORTS
+
 #include "Module.h"
 
 #include <GL/glew.h>
@@ -23,12 +25,14 @@ public:
 
 	void Render();
 	void RenderDebugDraws(const ComponentCamera& camera);
+	ENGINE_API void RenderSingleAABB(AABB& aabb) const;
 
 private:
 	void RenderOutline() const;
 
 	void RenderTangentsAndBitangents() const;
 
+	void RenderRectTransform(const GameObject* rect_owner) const;
 	void RenderCameraFrustum() const;
 	void RenderLightGizmo() const;
 	void RenderBones() const;
@@ -38,6 +42,7 @@ private:
 	void RenderGlobalBoundingBoxes() const;
 	void RenderBillboards() const;
 	void RenderPathfinding() const;
+
 
 
 private:

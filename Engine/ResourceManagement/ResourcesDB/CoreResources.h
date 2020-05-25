@@ -25,7 +25,9 @@ enum class CoreResource
 	BILLBOARD_CAMERA_TEXTURE = 14,
 	BILLBOARD_LIGHT_TEXTURE = 15,
 
-	NUM_CORE_RESOURCES = 16
+	DEFAULT_FONT = 16,
+
+	NUM_CORE_RESOURCES = 17
 };
 
 static const uint32_t NUM_CORE_RESOURCES = (uint32_t)CoreResource::NUM_CORE_RESOURCES;
@@ -50,6 +52,7 @@ static std::unordered_map<std::string, CoreResource> core_resources_uuid_mapping
 	{ "/Resources/Textures/video-solid.png", CoreResource::BILLBOARD_CAMERA_TEXTURE },
 	{ "/Resources/Textures/lightbulb-solid.png", CoreResource::BILLBOARD_LIGHT_TEXTURE },
 
+	{ "/Resources/Fonts/Montserrat-Light.ttf", CoreResource::DEFAULT_FONT }
 });
 
 #endif // !_CORERESOURCES_H_

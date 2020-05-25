@@ -14,6 +14,7 @@
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #include <algorithm>
+#include <Brofiler/Brofiler.h>
 #include <SDL/SDL.h>
 
 bool ModuleCamera::Init()
@@ -22,8 +23,9 @@ bool ModuleCamera::Init()
 	int windowWidth, windowHeight;
 	SDL_GetWindowSize(App->window->window, &windowWidth, &windowHeight);
 
-	scene_camera_game_object = App->scene->CreateGameObject();
-	scene_camera_game_object->transform.SetTranslation(float3(0.5f, 2.f, -15.f));
+	scene_camera_game_object = new GameObject();
+	scene_camera_game_object->transform.SetTranslation(float3(0.f, 2.f, 15.f));
+	scene_camera_game_object->transform.SetRotation(float3(0.f, 180.f, 0.f));
 	scene_camera = (ComponentCamera*)scene_camera_game_object->CreateComponent(Component::ComponentType::CAMERA);
 	scene_camera->SetFarDistance(5000);
 	scene_camera->depth = -1;
@@ -44,6 +46,7 @@ update_status ModuleCamera::PreUpdate()
 // Called every draw update
 update_status ModuleCamera::Update()
 {
+	BROFILER_CATEGORY("Scene Camera Update", Profiler::Color::Lavender);
 	SelectMainCamera();
 	scene_camera->Update();
 	return update_status::UPDATE_CONTINUE;
@@ -57,6 +60,9 @@ bool ModuleCamera::CleanUp()
 	}
 	cameras.clear();
 	main_camera = nullptr;
+
+	delete scene_camera_game_object;
+
 	return true;
 }
 

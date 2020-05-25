@@ -65,12 +65,12 @@ void main()
 	gl_Position = matrices.proj * matrices.view * matrices.model * skinning_matrix * vec4(vertex_position, 1.0);
 	texCoord = vertex_uv0;
 	position = (matrices.model * skinning_matrix * vec4(vertex_position, 1.0)).xyz;
-	normal = (matrices.model * skinning_matrix * vec4(vertex_normal, 0.0)).xyz;
+	normal = (matrices.model * skinning_matrix * vec4(vertex_normal, 0.0)).xyz;	
 	tangent = (matrices.model*vec4(vertex_tangent, 0.0)).xyz;
 
 	view_pos    = transpose(mat3(matrices.view)) * (-matrices.view[3].xyz);
 	view_dir    = normalize(view_pos - position);
-
+	
 	//Tangent space matrix
 	mat3 normalMatrix = mat3(matrices.model);
 	vec3 T = normalize(normalMatrix * vertex_tangent);
@@ -78,7 +78,7 @@ void main()
 	T = normalize(T - dot(T, N) * N);
 	vec3 B = cross(N, T);
 
-	TBN = transpose(mat3(T, B, N));
+	TBN = transpose(mat3(T, B, N));  
 
 	//Computing tangent variables for normal mapping
 	t_view_pos = TBN * view_pos;

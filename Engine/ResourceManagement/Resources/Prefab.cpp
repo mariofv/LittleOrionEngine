@@ -11,8 +11,20 @@
 
 #include <algorithm>
 
-Prefab::Prefab(uint32_t uuid, std::vector<std::unique_ptr<GameObject>> && gameObjects) : Resource(uuid), prefab(std::move(gameObjects))
+Prefab::Prefab(uint32_t uuid, std::vector<std::unique_ptr<GameObject>> && gameObjects, bool overwritable) : Resource(uuid), prefab(std::move(gameObjects)), overwritable(overwritable)
 {
+}
+
+Prefab::~Prefab()
+{
+	for (auto & gameobject : prefab)
+	{
+		for (auto & component : gameobject->components)
+		{
+			delete component;
+		}
+		gameobject->components.clear();
+	}
 }
 
 GameObject* Prefab::Instantiate(GameObject* prefab_parent, std::unordered_map<int64_t, int64_t>* UUIDS_pairs)

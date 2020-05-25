@@ -46,6 +46,7 @@ out mat3 TBN;
 //Without tangent modification
 out vec3 view_pos;
 out vec3 view_dir;
+out vec3 half_dir;
 
 //With tangent modification
 out vec3 t_view_pos;

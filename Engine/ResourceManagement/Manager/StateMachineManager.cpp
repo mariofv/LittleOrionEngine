@@ -47,7 +47,11 @@ std::shared_ptr<StateMachine> StateMachineManager::Load(uint32_t uuid, const Fil
 		cursor += bytes;
 		if (animation_uuid != 0)
 		{
-			clip->SetAnimation(App->resources->Load<Animation>(animation_uuid));
+			auto & animation_resource = App->resources->Load<Animation>(animation_uuid);
+			if (animation_resource)
+			{
+				clip->SetAnimation(App->resources->Load<Animation>(animation_uuid));
+			}
 		}
 
 		bytes = sizeof(bool);

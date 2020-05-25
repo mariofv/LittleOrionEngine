@@ -6,8 +6,10 @@
 #include "Helper/Timer.h"
 
 #include "Main/GameObject.h"
+#include "Module/ModuleTime.h"
 
 #include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/Importer/FontImporter.h"
 #include "ResourceManagement/Importer/MaterialImporter.h"
 #include "ResourceManagement/Importer/ModelImporter.h"
 #include "ResourceManagement/Importer/ModelImporters/AnimationImporter.h"
@@ -20,12 +22,19 @@
 #include "ResourceManagement/Importer/SoundImporter.h"
 #include "ResourceManagement/Importer/TextureImporter.h"
 
+#include "ResourceManagement/Manager/AnimationManager.h"
+#include "ResourceManagement/Manager/FontManager.h"
+#include "ResourceManagement/Manager/MaterialManager.h"
+#include "ResourceManagement/Manager/MeshManager.h"
+#include "ResourceManagement/Manager/PrefabManager.h"
+
 #include "ResourceManagement/Manager/SceneManager.h"
 
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/Metafile/MetafileManager.h"
 
 #include <algorithm>
+#include <Brofiler/Brofiler.h>
 #include <functional> //for std::hash
 
 ModuleResourceManager::ModuleResourceManager()
@@ -38,6 +47,7 @@ bool ModuleResourceManager::Init()
 	APP_LOG_SECTION("************ Module Resource Manager Init ************");
 
 	animation_importer = std::make_unique<AnimationImporter>();
+	font_importer = std::make_unique<FontImporter>();
 	material_importer = std::make_unique<MaterialImporter>();
 	mesh_importer = std::make_unique<MeshImporter>();
 	model_importer = std::make_unique<ModelImporter>();
@@ -65,12 +75,21 @@ bool ModuleResourceManager::Init()
 
 update_status ModuleResourceManager::PreUpdate()
 {
-	if (last_imported_time > 0.0f && (thread_timer->Read() - last_imported_time) >= importer_interval_millis)
+	BROFILER_CATEGORY("PreUpdate ResourceManager", Profiler::Color::Lavender);
+#if !GAME
+	if (!App->time->isGameRunning() && last_imported_time > 0.0f && (thread_timer->Read() - last_imported_time) >= importer_interval_millis)
 	{
 		importing_thread.join();
 		importing_thread = std::thread(&ModuleResourceManager::StartThread, this);
-		CleanResourceCache();
 	}
+#endif
+
+	if(cache_time > 0.0f && (thread_timer->Read() - cache_time) >= cache_interval_millis)
+	{
+		cache_time = thread_timer->Read();
+		RefreshResourceCache();
+	}
+
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -80,6 +99,7 @@ bool ModuleResourceManager::CleanUp()
 	 thread_comunication.stop_thread = true;
 	 importing_thread.join();
 #endif
+	 CleanResourceCache();
 	return true;
 }
 
@@ -200,6 +220,10 @@ uint32_t ModuleResourceManager::InternalImport(Path& file_path, bool force) cons
 		{
 		case FileType::ANIMATION:
 			asset_metafile = animation_importer->Import(file_path);
+			break;
+
+		case FileType::FONT:
+			asset_metafile = font_importer->Import(file_path);
 			break;
 		
 		case FileType::MATERIAL:

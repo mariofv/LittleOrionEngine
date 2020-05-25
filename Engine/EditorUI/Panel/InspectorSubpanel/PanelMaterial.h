@@ -11,7 +11,7 @@ public:
 	~PanelMaterial() = default;
 	
 	void Render(std::shared_ptr<Material> material);
-	void ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type);
+	bool ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type);
 
 private:
 	std::string GetTypeName(Material::MaterialTextureType type);

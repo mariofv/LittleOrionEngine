@@ -1,0 +1,5 @@
+﻿  Building Custom Rule C:/Users/meler/Downloads/bullet3-2.89/bullet3-2.89/src/Bullet3Geometry/CMakeLists.txt
+  b3ConvexHullComputer.cpp
+  b3GeometryUtil.cpp
+  Generando código...
+  Bullet3Geometry.vcxproj -> C:\Users\meler\Downloads\bullet3-2.89\bullet3-2.89\lib\Debug\Bullet3Geometry_Debug.lib

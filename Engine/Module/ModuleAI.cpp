@@ -3,6 +3,7 @@
 #include "Main/Application.h"
 #include "ModuleInput.h"
 
+#include <Brofiler/Brofiler.h>
 
 bool ModuleAI::Init()
 {
@@ -12,6 +13,7 @@ bool ModuleAI::Init()
 
 update_status ModuleAI::Update()
 {
+	BROFILER_CATEGORY("Module AI Update", Profiler::Color::Lavender);
 	nav_mesh.Update();
 
 	return update_status::UPDATE_CONTINUE;
