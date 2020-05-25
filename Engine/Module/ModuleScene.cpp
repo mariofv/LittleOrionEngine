@@ -26,7 +26,6 @@
 #include <stack>
 #include <Brofiler/Brofiler.h>
 
-#include "ResourceManagement/Manager/PreviewImageManager.h"
 bool ModuleScene::Init()
 {
 	root = new GameObject(0);
@@ -237,8 +236,6 @@ void ModuleScene::OpenScene()
 	App->space_partitioning->GenerateQuadTree();
 	App->space_partitioning->GenerateOctTree();
 	App->actions->ClearUndoStack();
-
-	PreviewImageManager::TakeScreenShot("Assets/test.png");
 }
 
 inline void ModuleScene::GetSceneResource()

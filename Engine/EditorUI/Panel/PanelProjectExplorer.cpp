@@ -214,14 +214,7 @@ void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
 
 	ImGui::SetWindowFontScale(2);
 
-	if (metafile->resource_type == ResourceType::MODEL 
-		|| metafile->resource_type == ResourceType::MESH 
-		|| metafile->resource_type == ResourceType::PREFAB 
-		|| metafile->resource_type == ResourceType::MATERIAL)
-	{
-		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*file_size_width, 0.75*file_size_width));
-	}
-	else if(metafile->resource_type == ResourceType::TEXTURE)
+	if(metafile->resource_type == ResourceType::TEXTURE)
 	{
 		ImGui::Image((void *)GetResourcePreviewImage(metafile->uuid), ImVec2(0.75*file_size_width, 0.75*file_size_width));
 	}
@@ -232,6 +225,18 @@ void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
 		{
 		case ResourceType::ANIMATION:
 			icon = ICON_FA_PLAY_CIRCLE;
+			break;
+		case ResourceType::MODEL:
+			icon = ICON_FA_BOX;
+			break;
+		case ResourceType::MESH:
+			icon = ICON_FA_DRAW_POLYGON;
+			break;
+		case ResourceType::PREFAB:
+			icon = ICON_FA_BOX_OPEN;
+			break;
+		case ResourceType::MATERIAL:
+			icon = ICON_FA_ADJUST;
 			break;
 		case ResourceType::SOUND:
 			icon = ICON_FA_VOLUME_UP;
@@ -438,15 +443,12 @@ void PanelProjectExplorer::FilesDrop() const
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			if (incoming_game_object->prefab_reference == nullptr)
+			uint32_t prefab_uuid = PrefabManager::CreateFromGameObject(*selected_folder, *incoming_game_object);
+			if (prefab_uuid != 0)
 			{
-				uint32_t prefab_uuid = PrefabManager::CreateFromGameObject(*selected_folder, *incoming_game_object);
-				if (prefab_uuid != 0)
-				{
-					App->scene->RemoveGameObject(incoming_game_object);
-					std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_uuid);
-					App->editor->selected_game_object = prefab->Instantiate(App->scene->GetRoot());
-				}
+				App->scene->RemoveGameObject(incoming_game_object);
+				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_uuid);
+				App->editor->selected_game_object = prefab->Instantiate(App->scene->GetRoot());
 			}
 		}
 		ImGui::EndDragDropTarget();

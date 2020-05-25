@@ -499,9 +499,6 @@
     <ClCompile Include="Engine\Component\ComponentEventSystem.cpp">
       <Filter>Engine\Component</Filter>
     </ClCompile>
-    <ClCompile Include="Engine\ResourceManagement\Manager\PreviewImageManager.cpp">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
-    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Engine\Component\Component.h">
@@ -986,9 +983,6 @@
     </ClInclude>
     <ClInclude Include="Engine\Component\ComponentImage.h">
       <Filter>Engine\Component</Filter>
-    </ClInclude>
-    <ClInclude Include="Engine\ResourceManagement\Manager\PreviewImageManager.h">
-      <Filter>Engine\ResourceManagement\Importer</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
