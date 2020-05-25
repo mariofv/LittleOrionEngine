@@ -116,6 +116,13 @@ void ModuleLight::SendShadowMatricesToShader(GLuint program)
 	{
 		glUniformMatrix4fv(glGetUniformLocation(program, "main_cam_view"), 1, GL_TRUE, &App->cameras->main_camera->GetViewMatrix()[0][0]);
 		glUniformMatrix4fv(glGetUniformLocation(program, "main_cam_proj"), 1, GL_TRUE, &App->cameras->main_camera->GetProjectionMatrix()[0][0]);
+
+		glUniformMatrix4fv(glGetUniformLocation(program, "close_cam_view"), 1, GL_TRUE, &App->cameras->camera_close->GetViewMatrix()[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(program, "close_cam_proj"), 1, GL_TRUE, &App->cameras->camera_close->GetProjectionMatrix()[0][0]);
+
+		glUniformMatrix4fv(glGetUniformLocation(program, "mid_cam_view"), 1, GL_TRUE, &App->cameras->camera_mid->GetViewMatrix()[0][0]);
+		glUniformMatrix4fv(glGetUniformLocation(program, "mid_cam_proj"), 1, GL_TRUE, &App->cameras->camera_mid->GetProjectionMatrix()[0][0]);
+
 		glUniform1f(glGetUniformLocation(program, "main_cam_far_plane"), App->cameras->camera_close->camera_frustum.farPlaneDistance);
 
 	}
