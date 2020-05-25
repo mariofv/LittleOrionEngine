@@ -127,6 +127,8 @@ void DebugModeScript::Update()
 				}
 			}
 
+			ImGui::LabelText(last_touched_game_object, "Last touched gameobject");
+
 			ImGui::End();
 		}
 
@@ -159,11 +161,11 @@ void DebugModeScript::Update()
 				{
 					LineSegment ray;
 					App->cameras->main_camera->GetRay(App->input->GetMousePosition(), ray);
-					RaycastHit* hit = App->renderer->GetRaycastIntersection(ray, App->cameras->main_camera);
-
 					enemy_manager->SpawnEnemy(0, hit->hit_point);
 					is_spawning_enemy = false;
 				}
+
+				last_touched_game_object = hit->game_object->name.c_str();
 			}
 		}
 

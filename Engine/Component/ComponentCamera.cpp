@@ -748,6 +748,7 @@ void ComponentCamera::GetRay(const float2 &mouse_position, LineSegment &return_v
 	}
 #endif
 	return_value = camera_frustum.UnProjectLineSegment(normalized_position.x, normalized_position.y);
+	App->debug_draw->RenderLine(return_value.a, return_value.b);
 }
 
 AABB ComponentCamera::GetMinimalEnclosingAABB() const

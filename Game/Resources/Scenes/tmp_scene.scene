@@ -358,6 +358,31 @@
             "UUID": 2364056566
         },
         {
+            "Transform": {
+                "UUID": 3176093925,
+                "ComponentType": 3,
+                "Active": true,
+                "Translation": [
+                    0.0,
+                    0.0,
+                    0.0
+                ],
+                "Rotation": [
+                    -0.0,
+                    0.0,
+                    -0.0
+                ],
+                "Scale": [
+                    1.0,
+                    1.0,
+                    1.0
+                ]
+            },
+            "RemovedComponents": [],
+            "Components": [],
+            "UUID": 4166904086
+        },
+        {
             "RemovedComponents": [],
             "Components": [
                 {

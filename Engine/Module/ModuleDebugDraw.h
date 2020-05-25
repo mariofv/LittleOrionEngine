@@ -38,6 +38,7 @@ public:
 	void RenderBillboards() const;
 	void RenderTangentsAndBitangents() const;
 	void RenderRectTransform(const GameObject* rect_owner) const;
+	void RenderLine(float3& a, float3& b) const;
 
 private:
 	void RenderOutline() const;

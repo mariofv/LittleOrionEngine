@@ -46,6 +46,7 @@ private:
 	float warp_cooldown = 0.0f;
 	int selected_spawner = 0;
 	bool is_spawning_enemy = false;
+	const char* last_touched_game_object = "";
 };
 extern "C" SCRIPT_API DebugModeScript* DebugModeScriptDLL(); //This is how we are going to load the script
 #endif
