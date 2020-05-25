@@ -369,7 +369,7 @@ void ModuleRender::RemoveComponentMesh(ComponentMeshRenderer* mesh_to_remove)
 }
 
 
-RaycastHit* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, const ComponentCamera* cam)
+RaycastHit* ModuleRender::GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam)
 {
 	BROFILER_CATEGORY("Do Raycast", Profiler::Color::HotPink);
 	App->space_partitioning->GetCullingMeshes(cam);
@@ -412,47 +412,6 @@ RaycastHit* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, co
 			if (intersected && distance < min_distance)
 			{
 				selected = mesh->owner;
-				min_distance = distance;
-
-				result->game_object = mesh->owner;
-				result->hit_distance = distance;
-				result->hit_point = intersected_point;
-			}
-		}
-	}
-	return result;
-}
-
-RaycastHit* ModuleRender::GetRaycastIntertectedObject(const LineSegment& ray, float3& position)
-{
-	App->space_partitioning->GetCullingMeshes(App->cameras->scene_camera);
-	std::vector<ComponentMeshRenderer*> intersected_meshes;
-	for (const auto&  mesh : meshes_to_render)
-	{
-		if (mesh->owner->aabb.bounding_box.Intersects(ray))
-		{
-			intersected_meshes.push_back(mesh);
-		}
-	}
-
-	bool intersected = false;
-	float min_distance = INFINITY;
-	
-	RaycastHit* result = new RaycastHit();
-
-	for (const auto&  mesh : intersected_meshes)
-	{
-		LineSegment transformed_ray = ray;
-		transformed_ray.Transform(mesh->owner->transform.GetGlobalModelMatrix().Inverted());
-		std::vector<Triangle> triangles = mesh->mesh_to_render->GetTriangles();
-		for (const auto&  triangle : triangles)
-		{
-			float distance;
-			float3 intersected_point;
-			intersected = triangle.Intersects(transformed_ray, &distance, &intersected_point);
-			if (intersected && distance < min_distance)
-			{
-				position = intersected_point;
 				min_distance = distance;
 
 				result->game_object = mesh->owner;

@@ -241,11 +241,12 @@ void ComponentCamera::RecordFrame(float width, float height, bool scene_mode)
 #endif
 
 	RecordDebugDraws(width, height);
-	
 }
 
 void ComponentCamera::RecordDebugDraws(float width, float height)
 {
+	if (!App->debug->CanRenderDebugDraws(this)) return;
+
 	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
 
 	glViewport(0, 0, width, height);

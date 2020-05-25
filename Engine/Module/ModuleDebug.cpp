@@ -118,3 +118,12 @@ void ModuleDebug::CreateFrustumCullingDebugScene() const
 	}
 	cubes->SetStatic(true);
 }
+
+bool ModuleDebug::CanRenderDebugDraws(ComponentCamera * cam) const
+{
+#if GAME
+	return true;
+#else
+	return cam == App->cameras->scene_camera;
+#endif
+}

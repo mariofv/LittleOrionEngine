@@ -52,8 +52,7 @@ public:
 	ENGINE_API int GetRenderedTris() const;
 	ENGINE_API int GetRenderedVerts() const;
 
-	ENGINE_API RaycastHit* GetRaycastIntertectedObject(const LineSegment& ray, const ComponentCamera* cam);
-	RaycastHit* GetRaycastIntertectedObject(const LineSegment& ray, float3& position);
+	ENGINE_API RaycastHit* GetRaycastIntersection(const LineSegment& ray, const ComponentCamera* cam);
 	ENGINE_API void SetDrawMode(DrawMode draw_mode);
 
 private:

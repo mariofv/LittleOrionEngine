@@ -60,9 +60,7 @@ void PanelScene::Render()
 		scene_window_content_area_height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
 
 		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
-#if !GAME
-		App->cameras->scene_camera->RecordDebugDraws(scene_window_content_area_width, scene_window_content_area_height);
-#endif
+
 		ImGui::Image(
 			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),
 			ImVec2(scene_window_content_area_width, scene_window_content_area_height),
@@ -311,9 +309,9 @@ void PanelScene::MousePicking(const float2& mouse_position)
 
 	LineSegment ray;
 	App->cameras->scene_camera->GetRay(mouse_position, ray);
-	RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->scene_camera);
+	RaycastHit* hit = App->renderer->GetRaycastIntersection(ray, App->cameras->scene_camera);
 	App->editor->selected_game_object = hit->game_object;
-	//App->renderer->GetRaycastIntertectedObject(ray, App->editor->selected_position);
+	delete(hit);
 }
 
 

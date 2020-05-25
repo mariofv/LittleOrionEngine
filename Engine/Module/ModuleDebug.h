@@ -27,7 +27,7 @@ public:
 	void Render(ComponentCamera* cam);
 	
 	void CreateFrustumCullingDebugScene() const;
-	
+	bool CanRenderDebugDraws(ComponentCamera* cam) const;
 public:
 	bool show_imgui_demo = false;
 	bool show_debug_metrics = true;

@@ -51,7 +51,7 @@ void ProgressBar::SetProgress(float new_progress)
 	}
 
 	progress = new_progress;
-w	float progress_bar_width = progress_bar_transform->GetWidth();
+	float progress_bar_width = progress_bar_transform->GetWidth();
 	float fill_bar_padding = progress_bar_width * (1 - progress);
 
 	if (!inverted)

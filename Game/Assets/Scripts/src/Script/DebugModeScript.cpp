@@ -134,7 +134,7 @@ void DebugModeScript::Update()
 		{
 			LineSegment ray;
 			App->cameras->main_camera->GetRay(App->input->GetMousePosition(), ray);
-			RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->main_camera);
+			RaycastHit* hit = App->renderer->GetRaycastIntersection(ray, App->cameras->main_camera);
 
 			if (hit->game_object != nullptr)
 			{
@@ -159,7 +159,7 @@ void DebugModeScript::Update()
 				{
 					LineSegment ray;
 					App->cameras->main_camera->GetRay(App->input->GetMousePosition(), ray);
-					RaycastHit* hit = App->renderer->GetRaycastIntertectedObject(ray, App->cameras->main_camera);
+					RaycastHit* hit = App->renderer->GetRaycastIntersection(ray, App->cameras->main_camera);
 
 					enemy_manager->SpawnEnemy(0, hit->hit_point);
 					is_spawning_enemy = false;
