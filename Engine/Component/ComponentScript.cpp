@@ -39,6 +39,16 @@ void ComponentScript::Copy(Component * component_to_copy) const
 	*static_cast<ComponentScript*>(component_to_copy) = *this;
 }
 
+void ComponentScript::Enable()
+{
+	active = true;
+	if(!awaken)
+	{
+		AwakeScript();
+		StartScript();
+	}
+}
+
 void ComponentScript::LoadName(std::string& script_name) 
 {
 	this->name = script_name;
@@ -47,7 +57,7 @@ void ComponentScript::LoadName(std::string& script_name)
 
 void ComponentScript::Update()
 {
-	if (script && active) 
+	if (script && active && awaken) 
 	{
 		script->Update();
 	}
@@ -58,12 +68,13 @@ void ComponentScript::AwakeScript()
 	if (script && active)
 	{
 		script->Awake();
+		awaken = true;
 	}
 }
 
 void ComponentScript::StartScript()
 {
-	if (script && active)
+	if (script && active && awaken)
 	{
 		script->Start();
 	}

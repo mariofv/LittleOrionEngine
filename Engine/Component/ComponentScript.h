@@ -27,6 +27,8 @@ public:
 	Component* Clone(bool original_prefab = false) const override;
 	void Copy(Component* component_to_copy) const override;
 
+	void Enable() override;
+
 	void LoadName(std::string& script_name);
 
 	void Update();
@@ -42,6 +44,7 @@ public:
 public:
 	std::string name;
 	Script* script = nullptr;
+	bool awaken = false;
 
 private:
 	friend class PanelComponent;
