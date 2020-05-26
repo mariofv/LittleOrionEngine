@@ -647,6 +647,11 @@ ENGINE_API bool ComponentCamera::IsInsideFrustum(const AABB2D& aabb) const
 	return CheckAABB2DCollision(aabb) != ComponentAABB::CollisionState::OUTSIDE;
 }
 
+ENGINE_API bool ComponentCamera::IsCompletlyInsideFrustum(const AABB& aabb) const
+{
+	return CheckAABBCollision(aabb) == ComponentAABB::CollisionState::INSIDE;
+}
+
 ComponentAABB::CollisionState ComponentCamera::CheckAABBCollision(const AABB& reference_AABB) const
 {
 	static const size_t number_of_corners = 8;

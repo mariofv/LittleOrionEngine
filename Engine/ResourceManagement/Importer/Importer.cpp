@@ -17,6 +17,10 @@ Metafile* Importer::Import(Path& assets_file_path)
 	if (App->filesystem->Exists(metafile_path_string))
 	{
 		metafile = App->resources->metafile_manager->GetMetafile(*App->filesystem->GetPath(metafile_path_string));
+		if (metafile->version < Importer::IMPORTER_VERSION)
+		{
+			MetafileManager::UpdateMetafile(*metafile);
+		}
 	}
 	else
 	{
@@ -40,8 +44,6 @@ Metafile* Importer::Import(Path& assets_file_path)
 	FileData imported_data = ExtractData(assets_file_path, *metafile);
 	metafile_exported_folder_path->Save(std::to_string(metafile->uuid).c_str(), imported_data);
 
-	MetafileManager::TouchMetafileTimestamp(*metafile);
-
 	return metafile;
 }
 
@@ -54,10 +56,21 @@ bool Importer::ImportRequired(const Path& file_path)
 
 		Metafile* metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
 		assert(App->resources->metafile_manager->IsMetafileConsistent(*metafile));
-		return
-			metafile_path->GetModificationTimestamp() < file_path.GetModificationTimestamp()
-			|| metafile->version < Importer::IMPORTER_VERSION
-			|| !App->filesystem->Exists(metafile->exported_file_path);
+
+		bool exported_file_exist = App->filesystem->Exists(metafile->exported_file_path);
+		if (metafile->version < Importer::IMPORTER_VERSION || !exported_file_exist)
+		{
+			return true;
+		}
+		else if (exported_file_exist)
+		{
+			Path* library_path = App->filesystem->GetPath(metafile->exported_file_path);
+			return  file_path.GetModificationTimestamp() > library_path->GetModificationTimestamp();
+		}
+		else
+		{
+			return false;
+		}
 	}
 
 	return true;
