@@ -189,7 +189,7 @@ void ModuleCamera::UpdateMainCameraFrustums()
 
 void ModuleCamera::UpdateLightAABB(AABB& object_aabb)
 {
-	object_aabb.TransformAsAABB(dir_light_game_object->transform.GetRotation().Inverted());
+	//object_aabb.TransformAsAABB(dir_light_game_object->transform.GetRotation().Inverted());
 	light_aabb->bounding_box.Enclose(object_aabb);
 }
 

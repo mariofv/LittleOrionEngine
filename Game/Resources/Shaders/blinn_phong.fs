@@ -227,7 +227,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(-directional_light.direction );
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
-	float shadow	 = ShadowCalculation(normalized_normal);
+	float shadow	 = 1.0 - ShadowCalculation(normalized_normal);
 	float specular = NormalizedSpecular(normalized_normal, half_dir);
 
 
@@ -349,43 +349,53 @@ float ShadowCalculation(vec3 frag_normal)
 	vec3 mid_coords = vec3(normalized_mid_depth.xy, normalized_mid_depth.z - bias);
 	vec3 far_coords = vec3(normalized_far_depth.xy, normalized_far_depth.z - bias);
 
+	//vec4 test = texture(close_depth_map, close_coords.xy);
+	
+	float close_texture_depth = texture(close_depth_map, close_coords).r;
+	float mid_texture_depth = texture(mid_depth_map, mid_coords).r;
+	float far_texture_depth = texture(far_depth_map, far_coords).r;
 
-	vec2 depth_map_size = 1.0 / textureSize(close_depth_map, 0); //Represents the size of a texel
-
-	for(int x = -1; x <= 1; ++x) //PCF, solution for edgy shadoWs
-    {
-        for(int y = -1; y <= 1; ++y)
-        {
-			//We sample the texture given from the light camera
-			//A few times at different texture coordinates
-
-			if(normalized_close_cam_pos.z > 0 && normalized_close_cam_pos.z < 1)
-			{
-				close_coords.xy = normalized_close_depth.xy + vec2(x, y)*depth_map_size;
-				factor += texture(close_depth_map, close_coords);
-			}
-
-			if(normalized_close_cam_pos.z >= 1 && normalized_mid_cam_pos.z < 1) // Until depth detection is fixed (stops calculating at 50% depth)
-			{
-				mid_coords.xy = normalized_mid_depth.xy + vec2(x, y)*depth_map_size;
-				factor += texture(mid_depth_map, mid_coords);
-			}
-
-			if(normalized_mid_cam_pos.z >= 1 && normalized_main_cam_pos.z < 1) // Looks weird, but works
-			{
-				far_coords.xy = normalized_far_depth.xy + vec2(x, y)*depth_map_size;
-				factor += texture(far_depth_map, far_coords);
-			}
-			
-        }    
-    }
-    factor /= 9.0;
-
-	if(normalized_main_cam_pos.z > 1.0)
+	if(normalized_close_cam_pos.z > 0 && normalized_close_cam_pos.z < 1)
 	{
-		factor = 1;
+		if(normalized_close_cam_pos.z < close_texture_depth)
+		{
+			factor = 0;	
+		}
+
+		else
+		{
+			factor = 1;
+		}
+			
 	}
 
+	if(normalized_close_cam_pos.z > 1 && normalized_mid_cam_pos.z < 1)
+	{
+		if(normalized_mid_cam_pos.z < mid_texture_depth)
+		{
+			factor = 0;	
+		}
+
+		else
+		{
+			factor = 1;
+		}
+	}
+
+	
+	if(normalized_mid_cam_pos.z >= 1 && normalized_main_cam_pos.z < 1)
+	{
+		if(normalized_main_cam_pos.z < far_texture_depth)
+		{
+			factor = 0;	
+		}
+
+		else
+		{
+			factor = 1;
+		}
+	}
+	
 	return factor;
 
 }
@@ -407,12 +417,12 @@ vec3 FrustumsCheck()
 		result = vec3(100, 0, 0);
 	}
 
-	if(normalized_close_cam_pos.z >= 1 && normalized_mid_cam_pos.z < 1) // Until depth detection is fixed (stops calculating at 50% depth)
+	if(normalized_close_cam_pos.z >= 1 && normalized_mid_cam_pos.z < 1) 
 	{
 		result = vec3(0, 100, 0);
 	}
 //
-	if(normalized_mid_cam_pos.z >= 1 && normalized_main_cam_pos.z < 1) // Looks weird, but works
+	if(normalized_mid_cam_pos.z >= 1 && normalized_main_cam_pos.z < 1) 
 	{
 		result = vec3(0, 0, 100);
 	}
