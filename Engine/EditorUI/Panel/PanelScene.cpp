@@ -59,7 +59,9 @@ void PanelScene::Render()
 		scene_window_content_area_width = scene_window_content_area_max_point.x - scene_window_content_area_pos.x;
 		scene_window_content_area_height = scene_window_content_area_max_point.y - scene_window_content_area_pos.y;
 
-		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
+		App->cameras->scene_camera->RecordFrame(scene_window_content_area_width, scene_window_content_area_height, true);
+		App->debug->Render(App->cameras->scene_camera);
+		App->cameras->scene_camera->RecordDebugDraws(true);
 
 		ImGui::Image(
 			(void *)App->cameras->scene_camera->GetLastRecordedFrame(),

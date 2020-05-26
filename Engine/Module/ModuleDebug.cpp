@@ -48,11 +48,6 @@ void ModuleDebug::Render(ComponentCamera* cam)
 		App->debug_draw->RenderRectTransform(App->ui->main_canvas->owner);
 	}
 
-	if (show_navmesh)
-	{
-		App->debug_draw->RenderNavMesh(*cam);
-	}
-
 	if (show_quadtree)
 	{
 		App->debug_draw->RenderQuadTree();
@@ -88,17 +83,7 @@ void ModuleDebug::Render(ComponentCamera* cam)
 		App->debug_draw->RenderTangentsAndBitangents();
 	}
 
-#if !GAME
 	App->debug_draw->RenderSelectedGameObjectHelpers();
-	App->debug_draw->RenderBillboards();
-
-	if (show_grid)
-	{
-		App->debug_draw->RenderGrid();
-	}
-
-	App->debug_draw->RenderDebugDraws(*cam);
-#endif
 }
 
 void ModuleDebug::CreateFrustumCullingDebugScene() const
@@ -117,13 +102,4 @@ void ModuleDebug::CreateFrustumCullingDebugScene() const
 		loaded_cube->transform.SetTranslation(float3(x, 0, z));
 	}
 	cubes->SetStatic(true);
-}
-
-bool ModuleDebug::CanRenderDebugDraws(ComponentCamera * cam) const
-{
-#if GAME
-	return true;
-#else
-	return cam == App->cameras->scene_camera;
-#endif
 }

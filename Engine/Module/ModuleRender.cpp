@@ -148,13 +148,12 @@ void ModuleRender::Render() const
 	if (App->cameras->main_camera != nullptr) 
 	{
 		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
-		App->debug_draw->RenderDebugDraws(*App->cameras->main_camera);
+		App->cameras->main_camera->RecordDebugDraws();
 	}
-
 #endif
 
 	App->editor->Render();
-	
+
 	BROFILER_CATEGORY("Swap Window (VSYNC)", Profiler::Color::Aquamarine);
 	SDL_GL_SwapWindow(App->window->window);
 }

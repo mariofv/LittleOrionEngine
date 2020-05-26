@@ -47,6 +47,15 @@ private:
 	int selected_spawner = 0;
 	bool is_spawning_enemy = false;
 	const char* last_touched_game_object = "";
+
+	bool show_aabbtree = false;
+	bool show_navmesh = false;
+	bool show_quadtree = false;
+	bool show_octtree = false;
+	bool show_bounding_boxes = false;
+	bool show_global_bounding_boxes = false;
+	bool show_pathfind_points = false;
+	bool show_physics = false;
 };
 extern "C" SCRIPT_API DebugModeScript* DebugModeScriptDLL(); //This is how we are going to load the script
 #endif

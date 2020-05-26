@@ -11,6 +11,7 @@
 #include "Main/GameObject.h"
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleDebug.h"
+#include "Module/ModuleDebugDraw.h"
 #include "Module/ModuleEditor.h"
 #include "Module/ModuleInput.h"
 #include "Module/ModulePhysics.h"
@@ -89,15 +90,52 @@ void DebugModeScript::Update()
 				App->renderer->SetDrawMode(render_wireframe ? ModuleRender::DrawMode::WIREFRAME : ModuleRender::DrawMode::SHADED);
 			}
 
-			ImGui::Checkbox("Draw AABBTree? ", &App->debug->show_aabbtree);
-			ImGui::Checkbox("Draw Navmesh? ", &App->debug->show_navmesh);
-			ImGui::Checkbox("Draw QuadTree? ", &App->debug->show_quadtree);
-			ImGui::Checkbox("Draw OctTree? ", &App->debug->show_octtree);
-			ImGui::Checkbox("Draw Bounding boxes? ", &App->debug->show_bounding_boxes);
-			ImGui::Checkbox("Draw Global bounding boxes? ", &App->debug->show_global_bounding_boxes);
-			ImGui::Checkbox("Draw Pathfinding? ", &App->debug->show_pathfind_points);
-			ImGui::Checkbox("Draw Physics? ", &App->physics->show_physics);
+			ImGui::Checkbox("Draw AABBTree? ", &show_aabbtree);
+			if (show_aabbtree)
+			{
+				App->debug_draw->RenderAABBTree();
+			}
 
+			ImGui::Checkbox("Draw Navmesh? ", &show_navmesh);
+			if (show_navmesh)
+			{
+				App->debug_draw->RenderNavMesh(*App->cameras->main_camera);
+			}
+
+			ImGui::Checkbox("Draw QuadTree? ", &show_quadtree);
+			if (show_quadtree)
+			{
+				App->debug_draw->RenderQuadTree();
+			}
+
+			ImGui::Checkbox("Draw OctTree? ", &show_octtree);
+			if (show_octtree)
+			{
+				App->debug_draw->RenderOcTree();
+			}
+
+			ImGui::Checkbox("Draw Bounding boxes? ", &show_bounding_boxes);
+			if (show_bounding_boxes)
+			{
+				App->debug_draw->RenderBoundingBoxes();
+			}
+
+			ImGui::Checkbox("Draw Global bounding boxes? ", &show_global_bounding_boxes);
+			if (show_global_bounding_boxes)
+			{
+				App->debug_draw->RenderGlobalBoundingBoxes();
+			}
+
+			ImGui::Checkbox("Draw Pathfinding? ", &show_pathfind_points);
+			if (show_pathfind_points)
+			{
+				App->debug_draw->RenderPathfinding();
+			}
+
+			if(ImGui::Checkbox("Draw Physics? ", &show_physics))
+			{
+				App->physics->show_physics = show_physics;
+			}
 			
 			ImGui::Checkbox("Toggle Invincible mode ", &is_player_invincible);
 			
@@ -127,8 +165,8 @@ void DebugModeScript::Update()
 				}
 			}
 
-			ImGui::LabelText(last_touched_game_object, "Last touched gameobject");
 
+			ImGui::LabelText(last_touched_game_object, "Last touched gameobject");
 			ImGui::End();
 		}
 

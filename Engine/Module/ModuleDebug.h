@@ -27,13 +27,11 @@ public:
 	void Render(ComponentCamera* cam);
 	
 	void CreateFrustumCullingDebugScene() const;
-	bool CanRenderDebugDraws(ComponentCamera* cam) const;
 public:
 	bool show_imgui_demo = false;
 	bool show_debug_metrics = true;
 	bool show_bounding_boxes = false;
 	bool show_global_bounding_boxes = false;
-	bool show_grid = true;
 	bool show_transform_2d = true;
 	bool show_canvas = true;
 	bool show_camera_frustum = true;

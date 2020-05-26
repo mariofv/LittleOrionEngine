@@ -50,7 +50,7 @@ public:
 	float GetHeight() const;
 
 	void RecordFrame(float width, float height, bool scene_mode = false);
-	void RecordDebugDraws(float width, float height);
+	ENGINE_API void RecordDebugDraws(bool scene_mode = false);
 	GLuint GetLastRecordedFrame() const;
 
 	void SetFOV(float fov);

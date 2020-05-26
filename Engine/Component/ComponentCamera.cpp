@@ -239,28 +239,36 @@ void ComponentCamera::RecordFrame(float width, float height, bool scene_mode)
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
 #endif
-
-	RecordDebugDraws(width, height);
 }
 
-void ComponentCamera::RecordDebugDraws(float width, float height)
+void ComponentCamera::RecordDebugDraws(bool scene_mode)
 {
-	if (!App->debug->CanRenderDebugDraws(this)) return;
-
+#if !GAME
 	App->renderer->anti_aliasing ? glBindFramebuffer(GL_FRAMEBUFFER, msfbo) : glBindFramebuffer(GL_FRAMEBUFFER, fbo);
+#endif
+	glViewport(0, 0, last_width, last_height);
 
-	glViewport(0, 0, width, height);
+	if (scene_mode)
+	{
+		App->debug_draw->RenderGrid();
+		if (App->debug->show_navmesh)
+		{
+			App->debug_draw->RenderNavMesh(*this);
+		}
+		App->debug_draw->RenderBillboards();
+	}
 
-	App->debug->Render(this);
-
+	App->debug_draw->RenderDebugDraws(*this);
+#if !GAME
 	if (App->renderer->anti_aliasing)
 	{
 		glBindFramebuffer(GL_READ_FRAMEBUFFER, msfbo);
 		glBindFramebuffer(GL_DRAW_FRAMEBUFFER, fbo);
-		glBlitFramebuffer(0, 0, width, height, 0, 0, width, height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
+		glBlitFramebuffer(0, 0, last_width, last_height, 0, 0, last_width, last_height, GL_COLOR_BUFFER_BIT, GL_NEAREST);
 	}
 
 	glBindFramebuffer(GL_FRAMEBUFFER, 0);
+#endif
 }
 
 GLuint ComponentCamera::GetLastRecordedFrame() const

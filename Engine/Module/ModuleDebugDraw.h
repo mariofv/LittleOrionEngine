@@ -23,17 +23,17 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	void RenderDebugDraws(const ComponentCamera& camera);
+	ENGINE_API void RenderDebugDraws(const ComponentCamera& camera);
 	ENGINE_API void RenderSingleAABB(AABB& aabb) const;
 
-	void RenderNavMesh(ComponentCamera& cam) const;
-	void RenderQuadTree() const;
-	void RenderOcTree() const;
-	void RenderAABBTree() const;
+	ENGINE_API void RenderNavMesh(ComponentCamera& cam) const;
+	ENGINE_API void RenderQuadTree() const;
+	ENGINE_API void RenderOcTree() const;
+	ENGINE_API void RenderAABBTree() const;
 	void RenderSelectedGameObjectHelpers() const;
-	void RenderBoundingBoxes() const;
-	void RenderGlobalBoundingBoxes() const;
-	void RenderPathfinding() const;
+	ENGINE_API void RenderBoundingBoxes() const;
+	ENGINE_API void RenderGlobalBoundingBoxes() const;
+	ENGINE_API void RenderPathfinding() const;
 	void RenderGrid() const;
 	void RenderBillboards() const;
 	void RenderTangentsAndBitangents() const;
