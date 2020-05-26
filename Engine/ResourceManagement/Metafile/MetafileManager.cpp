@@ -101,12 +101,8 @@ std::string MetafileManager::GetMetafilePath(const std::string& file_path_string
 	return file_path_string + ".meta";
 }
 
-void MetafileManager::TouchMetafileTimestamp(Metafile& metafile)
+void MetafileManager::UpdateMetafile(Metafile& metafile)
 {
-	using namespace std::chrono;
-	seconds current_timestamp = duration_cast<seconds>(system_clock::now().time_since_epoch());
-	long long timestamp = current_timestamp.count();
-	metafile.timestamp = timestamp;
 	metafile.version = Importer::IMPORTER_VERSION;
 
 	Config metafile_config;
