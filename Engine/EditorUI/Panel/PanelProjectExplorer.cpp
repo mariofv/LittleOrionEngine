@@ -150,7 +150,7 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 		if (child_path != nullptr && child_path->IsMeta())
 		{
 			ImGui::PushID(current_line * files_per_line + current_file_in_line);
-			ShowMetafileIcon(child_path);
+			ShowMetafile(child_path);
 			ImGui::PopID();
 
 			++current_file_in_line;
@@ -167,7 +167,7 @@ void PanelProjectExplorer::ShowFilesInExplorer()
 	}
 }
 
-void PanelProjectExplorer::ShowMetafileIcon(Path* metafile_path)
+void PanelProjectExplorer::ShowMetafile(Path* metafile_path)
 {
 	Metafile* metafile = App->resources->metafile_manager->GetMetafile(*metafile_path);
 
@@ -181,7 +181,7 @@ void PanelProjectExplorer::ShowMetafileIcon(Path* metafile_path)
 		ProcessResourceMouseInput(metafile_path, metafile);
 
 		ImGui::SetCursorPosX((ImGui::GetWindowWidth() - 0.75 * file_size_width) * 0.5f);
-		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(0.75*file_size_width, 0.75*file_size_width)); // TODO: Substitute this with resouce thumbnail
+		ShowMetafileIcon(metafile);
 		ImGui::Spacing();
 
 		if (renaming_file && metafile_path == renaming_file)
@@ -207,6 +207,88 @@ void PanelProjectExplorer::ShowMetafileIcon(Path* metafile_path)
 		}
 	}
 	ImGui::EndChild();
+}
+
+void PanelProjectExplorer::ShowMetafileIcon(Metafile * metafile)
+{
+
+	ImGui::SetWindowFontScale(2);
+
+	if(metafile->resource_type == ResourceType::TEXTURE)
+	{
+		ImGui::Image((void *)GetResourcePreviewImage(metafile->uuid), ImVec2(0.75*file_size_width, 0.75*file_size_width));
+	}
+	else
+	{
+		std::string icon;
+		switch (metafile->resource_type)
+		{
+		case ResourceType::ANIMATION:
+			icon = ICON_FA_PLAY_CIRCLE;
+			break;
+		case ResourceType::MODEL:
+			icon = ICON_FA_BOX;
+			break;
+		case ResourceType::MESH:
+			icon = ICON_FA_DRAW_POLYGON;
+			break;
+		case ResourceType::PREFAB:
+			icon = ICON_FA_BOX_OPEN;
+			break;
+		case ResourceType::MATERIAL:
+			icon = ICON_FA_ADJUST;
+			break;
+		case ResourceType::SOUND:
+			icon = ICON_FA_VOLUME_UP;
+			break;
+		case ResourceType::SCENE:
+			icon = ICON_FA_SIMPLYBUILT;
+			break;
+		case ResourceType::NAVMESH:
+			icon = ICON_FA_BRAIN;
+			break;
+		case ResourceType::FONT:
+			icon = ICON_FA_FONT;
+			break;
+		case ResourceType::SKYBOX:
+			icon = ICON_FA_CLOUD_MOON;
+			break;
+		case ResourceType::SKELETON:
+			icon = ICON_FA_USER;
+			break;
+		case ResourceType::STATE_MACHINE:
+			icon = ICON_FA_PROJECT_DIAGRAM;
+			break;
+		default:
+			icon = ICON_FA_FILE;
+			break;
+		}
+
+		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
+
+		static ImVec4 color = ImVec4(0, 0.4, 0.6, 1);
+		ImGui::PushStyleColor(ImGuiCol_Button, color);
+
+		ImGui::Button(icon.c_str(),ImVec2(0.75*file_size_width, 0.75*file_size_width));
+		ImGui::PopStyleColor(1);
+	}
+	
+	ImGui::SetWindowFontScale(1);
+}
+
+size_t PanelProjectExplorer::GetResourcePreviewImage(uint32_t uuid)
+{
+	size_t opengl_id = 0;
+	if (project_explorer_icon_cache.find(uuid) == project_explorer_icon_cache.end())
+	{
+		opengl_id = (project_explorer_icon_cache[uuid] = App->resources->Load<Texture>(uuid))->opengl_texture;
+	}
+	else
+	{
+		opengl_id = project_explorer_icon_cache[uuid]->opengl_texture;
+	}
+
+	return opengl_id;
 }
 
 void PanelProjectExplorer::ApplyRename()
@@ -274,6 +356,7 @@ void PanelProjectExplorer::ProcessMouseInput(Path* file_path)
 		if (ImGui::IsMouseDoubleClicked(0))
 		{
 			selected_folder = file_path;
+			project_explorer_icon_cache.clear();
 		}
 	}
 }
@@ -366,15 +449,12 @@ void PanelProjectExplorer::FilesDrop() const
 		{
 			assert(payload->DataSize == sizeof(GameObject*));
 			GameObject *incoming_game_object = *(GameObject**)payload->Data;
-			if (incoming_game_object->prefab_reference == nullptr)
+			uint32_t prefab_uuid = PrefabManager::CreateFromGameObject(*selected_folder, *incoming_game_object);
+			if (prefab_uuid != 0)
 			{
-				uint32_t prefab_uuid = PrefabManager::CreateFromGameObject(*selected_folder, *incoming_game_object);
-				if (prefab_uuid != 0)
-				{
-					App->scene->RemoveGameObject(incoming_game_object);
-					std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_uuid);
-					App->editor->selected_game_object = prefab->Instantiate(App->scene->GetRoot());
-				}
+				App->scene->RemoveGameObject(incoming_game_object);
+				std::shared_ptr<Prefab> prefab = App->resources->Load<Prefab>(prefab_uuid);
+				App->editor->selected_game_object = prefab->Instantiate(App->scene->GetRoot());
 			}
 		}
 		ImGui::EndDragDropTarget();
