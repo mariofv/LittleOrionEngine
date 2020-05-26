@@ -95,7 +95,7 @@ Path* Path::Save(const char* file_name, const FileData& data, bool append)
 		saved_file_path = App->filesystem->GetPath(saved_file_path_string);
 	}
 
-	delete[] data.buffer;
+	free((void*)data.buffer);
 
 	return saved_file_path;
 }
@@ -203,8 +203,11 @@ void Path::GetAllFilesInPath(std::vector<Path*>& path_children)
 	char **filename;
 	for (filename = files_array; *filename != NULL; filename++)
 	{
-		Path* child_path = App->filesystem->AddPath(file_path + '/' +  *filename);
-		path_children.push_back(child_path);
+		if (*filename[0] != '.')
+		{
+			Path* child_path = App->filesystem->AddPath(file_path + '/' + *filename);
+			path_children.push_back(child_path);
+		}
 	}
 	PHYSFS_freeList(files_array);
 }
