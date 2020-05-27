@@ -35,10 +35,6 @@ bool ModulePhysics::Init()
 	debug_draw = new DebugDrawer();
 	debug_draw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
 	world->setDebugDrawer(debug_draw);
-	
-#if GAME
-	show_physics = false; //Try not showing physics when in game mode
-#endif
 
 	return true;
 }
