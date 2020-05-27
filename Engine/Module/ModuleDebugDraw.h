@@ -23,7 +23,7 @@ public:
 	bool Init() override;
 	bool CleanUp() override;
 
-	ENGINE_API void RenderDebugDraws(const ComponentCamera& camera);
+	void RenderDebugDraws(const ComponentCamera& camera);
 	ENGINE_API void RenderSingleAABB(AABB& aabb) const;
 
 	ENGINE_API void RenderNavMesh(ComponentCamera& cam) const;
