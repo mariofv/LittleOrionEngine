@@ -57,7 +57,7 @@ void ComponentScript::LoadName(std::string& script_name)
 
 void ComponentScript::Update()
 {
-	if (script && active && awaken) 
+	if (script && active && awaken && started)
 	{
 		script->Update();
 	}
@@ -74,8 +74,9 @@ void ComponentScript::AwakeScript()
 
 void ComponentScript::StartScript()
 {
-	if (script && active && awaken)
+	if (script && awaken && active)
 	{
+		started = true;
 		script->Start();
 	}
 }

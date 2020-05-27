@@ -256,6 +256,10 @@ void ComponentCamera::RecordDebugDraws(bool scene_mode)
 			App->debug_draw->RenderNavMesh(*this);
 		}
 		App->debug_draw->RenderBillboards();
+		if (App->editor->selected_game_object != nullptr)
+		{
+			App->debug_draw->RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
+		}
 	}
 
 	App->debug_draw->RenderDebugDraws(*this);
