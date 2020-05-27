@@ -55,11 +55,6 @@ update_status ModulePhysics::Update()
 		
 	//update the world
 	world->stepSimulation(App->time->delta_time, 2);
-
-	if (show_physics)
-	{
-		world->debugDrawWorld();
-	}
 		
 	for (auto collider : colliders)
 	{

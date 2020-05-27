@@ -24,21 +24,28 @@ public:
 	bool CleanUp() override;
 
 	void RenderDebugDraws(const ComponentCamera& camera);
+
 	ENGINE_API void RenderSingleAABB(AABB& aabb) const;
+	ENGINE_API void RenderBoundingBoxes() const;
+	ENGINE_API void RenderGlobalBoundingBoxes() const;
 
 	ENGINE_API void RenderNavMesh(ComponentCamera& cam) const;
+
+	ENGINE_API void RenderPathfinding() const;
 	ENGINE_API void RenderQuadTree() const;
 	ENGINE_API void RenderOcTree() const;
 	ENGINE_API void RenderAABBTree() const;
+	
 	void RenderSelectedGameObjectHelpers() const;
-	ENGINE_API void RenderBoundingBoxes() const;
-	ENGINE_API void RenderGlobalBoundingBoxes() const;
-	ENGINE_API void RenderPathfinding() const;
+	
 	void RenderGrid() const;
 	void RenderBillboards() const;
 	void RenderTangentsAndBitangents() const;
+	
 	void RenderRectTransform(const GameObject* rect_owner) const;
 	void RenderLine(float3& a, float3& b) const;
+
+	ENGINE_API void RenderPhysics() const;
 
 private:
 	void RenderOutline() const;

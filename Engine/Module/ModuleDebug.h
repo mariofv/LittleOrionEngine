@@ -41,6 +41,7 @@ public:
 	bool show_navmesh = false;
 	bool show_pathfind_points = true;
 	bool show_axis = false;
+	bool show_physics = true;
 
 #if !GAME
 	bool culling_scene_mode = false;

@@ -19,6 +19,7 @@
 #include "ModuleDebug.h"
 #include "ModuleEditor.h"
 #include "ModuleProgram.h"
+#include "ModulePhysics.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 #include "ModuleSpacePartitioning.h"
@@ -702,6 +703,11 @@ void ModuleDebugDraw::RenderOcTree() const
 void ModuleDebugDraw::RenderAABBTree() const
 {
 	App->space_partitioning->DrawAABBTree();
+}
+
+void ModuleDebugDraw::RenderPhysics() const
+{
+	App->physics->world->debugDrawWorld();
 }
 
 void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const

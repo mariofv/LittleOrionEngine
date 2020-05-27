@@ -83,6 +83,11 @@ void ModuleDebug::Render(ComponentCamera* cam)
 		App->debug_draw->RenderTangentsAndBitangents();
 	}
 
+	if (show_physics)
+	{
+		App->debug_draw->RenderPhysics();
+	}
+
 	App->debug_draw->RenderSelectedGameObjectHelpers();
 }
 
