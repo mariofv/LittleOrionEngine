@@ -48,6 +48,7 @@ void PanelGameObject::Render(GameObject* game_object)
 	if (ImGui::Checkbox("###State", &game_object->active))
 	{
 		game_object->SetEnabled(game_object->active);
+		game_object->modified_by_user = true;
 	}
 
 	ImGui::SameLine();
@@ -62,6 +63,7 @@ void PanelGameObject::Render(GameObject* game_object)
 	if (ImGui::Checkbox("Static", &game_object->is_static))
 	{
 		game_object->SetStatic(game_object->is_static);
+		game_object->modified_by_user = true;
 	}
 
 	ImGui::Spacing();

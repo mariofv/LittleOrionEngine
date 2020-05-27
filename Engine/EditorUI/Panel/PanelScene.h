@@ -18,7 +18,7 @@ public:
 public:
 	float scene_window_content_area_width = 0;
 	float scene_window_content_area_height = 0;
-
+	float2 scene_window_content_area_pos = float2::zero;
 
 private:
 	void RenderSceneBar();
@@ -34,7 +34,6 @@ private:
 private:
 	bool scene_camera_gizmo_hovered = false;
 	bool gizmo_released = false;
-	float2 scene_window_content_area_pos = float2::zero;
 };
 
 #endif //_PANELSCENE_H_

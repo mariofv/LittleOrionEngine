@@ -53,7 +53,7 @@ public:
 	void Render();
 
 	ImFont* GetFont(const Fonts & font) const;
-
+	ENGINE_API ImGuiContext* GetImGuiContext() const;
 private:
 	void InitEditorDockspace();
 	void RenderEditorDockspace();
@@ -91,6 +91,7 @@ public:
 private:
 	std::vector<Panel*> panels;
 	ImGuiID editor_dockspace_id;
+	ImGuiContext* imgui_context = nullptr;
 };
 
 #endif //_MODULEEDITOR_H_

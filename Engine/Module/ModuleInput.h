@@ -460,7 +460,7 @@ public:
 	void CreateGameInput(const GameInput& game_input);
 	void DeleteGameInput(const GameInput& game_input);
 
-	float2 GetMousePosition() const;
+	ENGINE_API float2 GetMousePosition() const;
 	float2 GetMouseMotion() const;
 	Sint32 GetMouseWheelMotion() const;
 

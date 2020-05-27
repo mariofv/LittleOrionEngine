@@ -84,6 +84,7 @@ update_status ModuleResourceManager::PreUpdate()
 	}
 #endif
 
+	float t = thread_timer->Read();
 	if(cache_time > 0.0f && (thread_timer->Read() - cache_time) >= cache_interval_millis)
 	{
 		cache_time = thread_timer->Read();
@@ -114,6 +115,7 @@ bool ModuleResourceManager::CleanUp()
 
 	 thread_comunication.finished_loading = true;
 	 last_imported_time = thread_timer->Read();
+	 cache_time = thread_timer->Read();
  }
 
 void ModuleResourceManager::CleanMetafilesInDirectory(const Path& directory_path)

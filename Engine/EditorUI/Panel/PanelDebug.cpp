@@ -24,7 +24,6 @@ void PanelDebug::Render()
 		focused = ImGui::IsWindowFocused();
 
 		ImGui::Checkbox("ImGui Demo", &App->debug->show_imgui_demo);
-		ImGui::Checkbox("Grid", &App->debug->show_grid);
 		ImGui::Checkbox("Bounding boxes", &App->debug->show_bounding_boxes);
 		ImGui::Checkbox("Global bounding boxes", &App->debug->show_global_bounding_boxes);
 		ImGui::Checkbox("Canvas", &App->debug->show_canvas);
@@ -35,6 +34,7 @@ void PanelDebug::Render()
 		ImGui::Checkbox("AABBTree", &App->debug->show_aabbtree);
 		ImGui::Checkbox("Show Navmesh", &App->debug->show_navmesh);
 		ImGui::Checkbox("Show Axis", &App->debug->show_axis);
+		ImGui::Checkbox("Show Physics", &App->debug->show_physics);
 		ImGui::Separator();
 
 		ImGui::DragFloat("Rendering time ", &App->debug->rendering_time, NULL, NULL);

@@ -61,8 +61,6 @@ public:
 	btSequentialImpulseConstraintSolver* solver = nullptr;
 	btDiscreteDynamicsWorld* world = nullptr;
 
-	bool show_physics = true;
-
 	Timer* physics_timer = nullptr;
 	float ms = 0;
 	std::vector<float> ms_info;
