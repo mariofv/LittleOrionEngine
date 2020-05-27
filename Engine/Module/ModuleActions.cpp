@@ -231,5 +231,14 @@ void ModuleActions::HandleInput()
 		}
 		
 	}
+	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::D))
+	{
+		GameObject* selected_game_object = App->editor->selected_game_object;
+		if (selected_game_object)
+		{
+			action_game_object = App->scene->DuplicateGameObject(selected_game_object, selected_game_object->parent);
+			AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
+		}
+	}
 }
 
