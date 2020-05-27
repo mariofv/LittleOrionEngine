@@ -1,6 +1,8 @@
 #ifndef _MODULESPACEPARTITIONING_H_
 #define _MODULESPACEPARTITIONING_H_
 
+#define ENGINE_EXPORTS
+
 #include "Module.h"
 
 #include "SpacePartition/OLQuadTree.h"
@@ -28,7 +30,7 @@ public:
 	void RemoveAABBTree(GameObject* game_object);
 	void UpdateAABBTree(GameObject* game_object);
 	void ResetAABBTree();
-	void DrawAABBTree() const;
+	ENGINE_API void DrawAABBTree() const;
 	void GetCullingMeshes(const ComponentCamera* camera) const;
 
 private:

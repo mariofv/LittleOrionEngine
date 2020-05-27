@@ -5,6 +5,7 @@
 #include "Module/ModuleAnimation.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleResourceManager.h"
+#include "Module/ModuleScriptManager.h"
 
 #include "ResourceManagement/Manager/PrefabManager.h"
 #include "ResourceManagement/Metafile/Metafile.h"
@@ -61,6 +62,7 @@ GameObject* Prefab::Instantiate(GameObject* prefab_parent, std::unordered_map<in
 	}
 	parent_prefab->SetParent(prefab_parent);
 	App->animations->UpdateAnimationMeshes();
+	App->scripts->ReLink();
 	return parent_prefab;
 }
 

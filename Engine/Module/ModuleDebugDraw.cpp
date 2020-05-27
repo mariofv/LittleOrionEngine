@@ -19,6 +19,7 @@
 #include "ModuleDebug.h"
 #include "ModuleEditor.h"
 #include "ModuleProgram.h"
+#include "ModulePhysics.h"
 #include "ModuleRender.h"
 #include "ModuleScene.h"
 #include "ModuleSpacePartitioning.h"
@@ -396,95 +397,8 @@ bool ModuleDebugDraw::Init()
     APP_LOG_SUCCESS("Module Debug Draw initialized correctly.")
 
 	return true;
-}
-
-void ModuleDebugDraw::Render()
-{
-#if GAME
-	return;
-#endif
-
-	BROFILER_CATEGORY("Render Debug Draws", Profiler::Color::Lavender);
-
-	if (App->debug->show_canvas && App->ui->main_canvas != nullptr)
-	{
-		RenderRectTransform(App->ui->main_canvas->owner);
-	}
-
-	if(App->debug->show_navmesh)
-	{
-		App->artificial_intelligence->RenderNavMesh(*App->cameras->scene_camera);
-	}
-
-	if (App->debug->show_quadtree)
-	{
-		BROFILER_CATEGORY("Render QuadTree", Profiler::Color::Lavender);
-
-		for (auto& ol_quadtree_node : App->space_partitioning->ol_quadtree->flattened_tree)
-		{
-			float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
-			float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
-			dd::aabb(quadtree_node_min, quadtree_node_max, float3::one);
-		}
-	}
-
-	if (App->debug->show_octtree)
-	{
-		for (auto& ol_octtree_node : App->space_partitioning->ol_octtree->flattened_tree)
-		{
-			float3 octtree_node_min = float3(ol_octtree_node->box.minPoint.x, ol_octtree_node->box.minPoint.y, ol_octtree_node->box.minPoint.z);
-			float3 octtree_node_max = float3(ol_octtree_node->box.maxPoint.x, ol_octtree_node->box.maxPoint.y, ol_octtree_node->box.maxPoint.z);
-			dd::aabb(octtree_node_min, octtree_node_max, float3::one);
-		}
-	}
+}	
 	
-
-	if(App->debug->show_aabbtree)
-	{
-		App->space_partitioning->DrawAABBTree();
-	}
-
-	if (App->editor->selected_game_object != nullptr)
-	{
-		BROFILER_CATEGORY("Render Selected GameObject DebugDraws", Profiler::Color::Lavender);
-		RenderRectTransform(App->editor->selected_game_object);
-		RenderCameraFrustum();
-		RenderLightGizmo();
-		//RenderBones();
-		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
-	}
-
-	if (App->debug->show_bounding_boxes)
-	{
-		RenderBoundingBoxes();
-	}
-
-	if (App->debug->show_global_bounding_boxes)
-	{
-		RenderGlobalBoundingBoxes();
-	}
-
-	if(App->debug->show_pathfind_points)
-	{
-		RenderPathfinding();
-	}
-
-	RenderBillboards();
-
-	if (App->debug->show_grid)
-	{
-		float scene_camera_height = App->cameras->scene_camera->owner->transform.GetGlobalTranslation().y;
-		grid->ScaleOnDistance(scene_camera_height);
-		grid->Render();
-	}
-	if (App->debug->show_axis && App->renderer->meshes_to_render.size() != 0 )
-	{
-		RenderTangentsAndBitangents();
-	}
-
-	RenderDebugDraws(*App->cameras->scene_camera);
-	
-}
 
 void ModuleDebugDraw::RenderTangentsAndBitangents() const
 {
@@ -528,6 +442,11 @@ void ModuleDebugDraw::RenderRectTransform(const GameObject* rect_owner) const
 	dd::line(rect_points[2], rect_points[3], float3::one);
 	dd::line(rect_points[3], rect_points[0], float3::one);
 	dd::line(rect_points[0], rect_points[1], float3::one);
+}
+
+void ModuleDebugDraw::RenderLine(float3 & a, float3 & b) const
+{
+	dd::line(a, b, float3::unitY);
 }
 
 void ModuleDebugDraw::RenderCameraFrustum() const
@@ -744,9 +663,64 @@ void ModuleDebugDraw::RenderPathfinding() const
 	}
 }
 
+void ModuleDebugDraw::RenderGrid() const
+{
+	float scene_camera_height = App->cameras->scene_camera->owner->transform.GetGlobalTranslation().y;
+	grid->ScaleOnDistance(scene_camera_height);
+	grid->Render();
+}
+
 ENGINE_API void ModuleDebugDraw::RenderSingleAABB(AABB& aabb) const
 {
 	dd::aabb(aabb.minPoint, aabb.maxPoint, float3::one);
+}
+
+void ModuleDebugDraw::RenderNavMesh(ComponentCamera & cam) const
+{
+	App->artificial_intelligence->RenderNavMesh(cam);
+}
+
+void ModuleDebugDraw::RenderQuadTree() const
+{
+	for (auto& ol_quadtree_node : App->space_partitioning->ol_quadtree->flattened_tree)
+	{
+		float3 quadtree_node_min = float3(ol_quadtree_node->box.minPoint.x, 0, ol_quadtree_node->box.minPoint.y);
+		float3 quadtree_node_max = float3(ol_quadtree_node->box.maxPoint.x, 0, ol_quadtree_node->box.maxPoint.y);
+		dd::aabb(quadtree_node_min, quadtree_node_max, float3::one);
+	}
+}
+
+void ModuleDebugDraw::RenderOcTree() const
+{
+	for (auto& ol_octtree_node : App->space_partitioning->ol_octtree->flattened_tree)
+	{
+		float3 octtree_node_min = float3(ol_octtree_node->box.minPoint.x, ol_octtree_node->box.minPoint.y, ol_octtree_node->box.minPoint.z);
+		float3 octtree_node_max = float3(ol_octtree_node->box.maxPoint.x, ol_octtree_node->box.maxPoint.y, ol_octtree_node->box.maxPoint.z);
+		dd::aabb(octtree_node_min, octtree_node_max, float3::one);
+	}
+}
+
+void ModuleDebugDraw::RenderAABBTree() const
+{
+	App->space_partitioning->DrawAABBTree();
+}
+
+void ModuleDebugDraw::RenderPhysics() const
+{
+	App->physics->world->debugDrawWorld();
+}
+
+void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
+{
+	if (App->editor->selected_game_object != nullptr)
+	{
+		BROFILER_CATEGORY("Render Selected GameObject DebugDraws", Profiler::Color::Lavender);
+
+		RenderCameraFrustum();
+		RenderLightGizmo();
+		//RenderBones();
+		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
+	}
 }
 
 void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
@@ -761,7 +735,6 @@ void ModuleDebugDraw::RenderDebugDraws(const ComponentCamera& camera)
 	dd_interface_implementation->mvpMatrix = proj * view;
 
 	dd::flush();
-
 }
 
 // Called before quitting
