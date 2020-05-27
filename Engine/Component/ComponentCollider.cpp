@@ -222,7 +222,6 @@ void ComponentCollider::SetVisualization()
 		
 	}
 	body->setCollisionFlags(flags);
-
 }
 
 void ComponentCollider::SetCollisionDetection()

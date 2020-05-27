@@ -714,7 +714,6 @@ void PanelConfiguration::ShowPhysicsOptions()
 		{
 			App->physics->SetGravity(App->physics->GetGravity());
 		}
-		ImGui::Checkbox("Draw physics", &App->physics->show_physics);
 
 		ImGui::Text("Consumption (ms)");
 		ImGui::PlotLines("Miliseconds", &App->physics->ms_info[0], App->physics->ms_info.size(), 0, nullptr, 0, 80);

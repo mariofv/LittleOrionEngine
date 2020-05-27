@@ -145,6 +145,8 @@ void PanelComponent::ShowComponentMeshRendererWindow(ComponentMeshRenderer *mesh
 			sprintf_s(tmp_string, "%d", mesh_renderer->mesh_to_render->vertices.size());
 			ImGui::Button(tmp_string);
 		}
+
+		ImGui::Checkbox("Is Raycastable", &mesh_renderer->is_raycastable);
 	}
 }
 

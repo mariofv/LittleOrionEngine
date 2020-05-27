@@ -529,7 +529,6 @@ ENGINE_API ComponentScript* GameObject::GetComponentScript(const char* name) con
 {
 	for (unsigned int i = 0; i < components.size(); ++i)
 	{
-
 		if (components[i]->type == Component::ComponentType::SCRIPT)
 		{
 			ComponentScript* script = (ComponentScript* )components[i];
