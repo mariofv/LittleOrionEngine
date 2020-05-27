@@ -35,7 +35,7 @@ bool ModulePhysics::Init()
 	debug_draw = new DebugDrawer();
 	debug_draw->setDebugMode(btIDebugDraw::DBG_DrawWireframe);
 	world->setDebugDrawer(debug_draw);
-	
+
 	return true;
 }
 
@@ -51,11 +51,6 @@ update_status ModulePhysics::Update()
 		
 	//update the world
 	world->stepSimulation(App->time->delta_time, 2);
-
-	if (show_physics)
-	{
-		world->debugDrawWorld();
-	}
 		
 	for (auto collider : colliders)
 	{

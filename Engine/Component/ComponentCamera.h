@@ -6,6 +6,7 @@
 #include "Component.h"
 #include "Component/ComponentAABB.h"
 #include "EditorUI/Panel/InspectorSubpanel/PanelComponent.h"
+#include "EditorUI/Panel/PanelGame.h"
 #include "EditorUI/Panel/PanelScene.h"
 #include "ResourceManagement/Resources/Skybox.h"
 
@@ -49,7 +50,7 @@ public:
 	float GetHeight() const;
 
 	void RecordFrame(float width, float height, bool scene_mode = false);
-	void RecordDebugDraws(float width, float height) const;
+	ENGINE_API void RecordDebugDraws(bool scene_mode = false);
 	GLuint GetLastRecordedFrame() const;
 
 	void SetFOV(float fov);
@@ -109,7 +110,7 @@ public:
 	ENGINE_API bool IsCompletlyInsideFrustum(const AABB & aabb) const;
 	ComponentAABB::CollisionState CheckAABB2DCollision(const AABB2D& reference_AABB) const;
 
-	void GetRay(const float2& normalized_position, LineSegment &return_value) const;
+	ENGINE_API void GetRay(const float2 &mouse_position, LineSegment &return_value) const;
 
 	AABB GetMinimalEnclosingAABB() const;
 
