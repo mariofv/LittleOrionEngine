@@ -9,6 +9,8 @@
 
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
+#include <queue>
+
 ComponentText::ComponentText() : Component(ComponentType::UI_TEXT)
 {
 	InitData();
@@ -146,18 +148,37 @@ void ComponentText::ComputeTextLines()
 	float cursor_x = 0;
 	float cursor_y = 0;
 
-	// Iterate through all characters
+	float2 owner_rect_aabb_min_point(0.f,0.f);
+	float2 owner_rect_aabb_max_point(owner->transform_2d.GetWidth(), owner->transform_2d.GetHeight());
+	AABB2D owner_rect(owner_rect_aabb_min_point, owner_rect_aabb_max_point);
+
+	std::queue<Font::Character> pending_characters;
 	for (unsigned int i = 0; i < text.size(); ++i)
 	{
 		char const &c = text[i];
 		Font::Character character = font->GetCharacter(c);
+		pending_characters.push(character);
+	}
 
-		float next_cursor_x = cursor_x + (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
-	
-		if (next_cursor_x > owner->transform_2d.size.x)
+	while(!pending_characters.empty())
+	{
+		Font::Character character = pending_characters.front();
+
+		float character_width = (character.advance >> 6) * scale_factor; // Bitshift by 6 to get value in pixels (2^6 = 64 (divide amount of 1/64th pixels by 64 to get amount of pixels))
+		float character_height = font->GetMaxHeight() * scale_factor;
+
+		float2 character_rect_min_point(cursor_x, cursor_y);
+		float2 character_rect_max_point(cursor_x + character_width, cursor_y + character_height);
+		AABB2D character_rect_aabb(character_rect_min_point, character_rect_max_point);
+
+		if (owner_rect.Contains(character_rect_aabb))
 		{
-			float next_cursor_y = cursor_y + font->GetMaxHeight() * scale_factor;
-			if (next_cursor_y > owner->transform_2d.size.x)
+			cursor_x += character_width;
+			pending_characters.pop();
+		}
+		else
+		{
+			if (character_rect_aabb.maxPoint.y > owner_rect.maxPoint.y)
 			{
 				return;
 			}
@@ -165,15 +186,10 @@ void ComponentText::ComputeTextLines()
 			{
 				line_sizes.push_back(cursor_x);
 				cursor_x = 0;
-
-				cursor_y = next_cursor_y;
+				cursor_y += character_height;
 			}
-		}
-		else
-		{
-			cursor_x = next_cursor_x;
-		}
-		
+
+		}		
 	}
 
 	line_sizes.push_back(cursor_x);

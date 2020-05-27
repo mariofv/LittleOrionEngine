@@ -230,7 +230,6 @@ void ModuleScene::OpenScene()
 
 	if (App->time->isGameRunning())
 	{
-		App->scripts->InitScripts();
 		App->animations->PlayAnimations();
 	}
 	App->space_partitioning->GenerateQuadTree();

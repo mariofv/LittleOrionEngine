@@ -30,10 +30,29 @@ bool ModuleScriptManager::Init()
 update_status ModuleScriptManager::Update()
 {
 	
-	if (!scripts.empty() && App->time->isGameRunning()) 
+	if (App->time->isGameRunning()) 
 	{
+		for (size_t i = 0; i < scripts.size(); ++i)
+		{
+			BROFILER_CATEGORY("AwakeScript", Profiler::Color::Lavender);
+			if (!scripts[i]->awaken)
+			{
+				scripts[i]->AwakeScript();
+			}
+		}
+
+		for (size_t i = 0; i < scripts.size(); ++i)
+		{
+			BROFILER_CATEGORY("StartScript", Profiler::Color::Lavender);
+			if (scripts[i]->awaken && !scripts[i]->started)
+			{
+				scripts[i]->StartScript();
+			}
+		}
+
 		RunScripts();
 	}
+
 #if !GAME
 	if (!App->time->isGameRunning()) 
 	{
@@ -44,6 +63,7 @@ update_status ModuleScriptManager::Update()
 		}
 	}
 #endif
+
 	return update_status::UPDATE_CONTINUE;
 }
 

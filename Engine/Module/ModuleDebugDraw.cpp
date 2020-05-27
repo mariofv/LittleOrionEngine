@@ -719,7 +719,6 @@ void ModuleDebugDraw::RenderSelectedGameObjectHelpers() const
 		RenderCameraFrustum();
 		RenderLightGizmo();
 		//RenderBones();
-		RenderOutline(); // This function tries to render again the selected game object. It will fail because depth buffer
 	}
 }
 
