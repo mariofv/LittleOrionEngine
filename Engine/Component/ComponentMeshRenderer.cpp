@@ -251,7 +251,7 @@ void ComponentMeshRenderer::SetSkeleton(uint32_t skeleton_uuid)
 	if (skeleton_uuid != 0)
 	{
 		skeleton = App->resources->Load<Skeleton>(skeleton_uuid);
-		palette.resize(skeleton->skeleton.size());
+		palette.resize(skeleton ? skeleton->skeleton.size() : 0 );
 		for (auto & matrix : palette)
 		{
 			matrix = float4x4::identity;
