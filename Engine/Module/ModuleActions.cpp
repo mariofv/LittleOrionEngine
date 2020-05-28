@@ -1,6 +1,7 @@
 #include "ModuleActions.h"
 #include "ModuleEditor.h"
 #include "ModuleInput.h"
+#include "ModuleScene.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -215,6 +216,29 @@ void ModuleActions::HandleInput()
 	{
 		Redo();
 		control_key_down = false;
+	}
+	if (App->input->GetKeyDown(KeyCode::Delete))
+	{
+		GameObject* selected_game_object = App->editor->selected_game_object;
+		if (selected_game_object)
+		{
+			action_game_object = selected_game_object;
+			AddUndoAction(ModuleActions::UndoActionType::DELETE_GAMEOBJECT);
+
+			App->scene->RemoveGameObject(selected_game_object);
+
+			App->editor->selected_game_object = nullptr;
+		}
+		
+	}
+	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::D))
+	{
+		GameObject* selected_game_object = App->editor->selected_game_object;
+		if (selected_game_object)
+		{
+			action_game_object = App->scene->DuplicateGameObject(selected_game_object, selected_game_object->parent);
+			AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
+		}
 	}
 }
 
