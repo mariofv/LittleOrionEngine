@@ -1,4 +1,5 @@
 #include "ModuleUI.h"
+#include "Module/ModuleTime.h"
 
 #include "Component/ComponentCamera.h"
 #include "Component/ComponentCanvas.h"
@@ -8,8 +9,10 @@
 #include "Component/ComponentText.h"
 #include "Component/ComponentButton.h"
 
+#include "Main/Application.h"
 #include "Main/Globals.h"
 #include "Main/GameObject.h"
+#include "Animation/Tween/LOTween.h"
 
 #include <algorithm>
 #include <Brofiler/Brofiler.h>
@@ -28,6 +31,8 @@ bool ModuleUI::Init()
 // Called every draw update
 update_status ModuleUI::Update()
 {
+	LOTween::Update(App->time->delta_time);
+
 	SelectMainCanvas();
 	return update_status::UPDATE_CONTINUE;
 }

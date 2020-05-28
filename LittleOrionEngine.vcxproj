@@ -149,6 +149,8 @@
     </PostBuildEvent>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClInclude Include="Engine\Animation\Tween\TweenSequence.h" />
+    <ClInclude Include="Engine\Animation\Tween\Tween.h" />
     <ClInclude Include="Engine\Component\ComponentCanvasRenderer.h" />
     <ClInclude Include="Engine\Component\ComponentBoxCollider.h" />
     <ClInclude Include="Engine\Component\ComponentCapsuleCollider.h" />
@@ -298,8 +300,11 @@
     <ClInclude Include="Engine\ResourceManagement\Resources\SoundBank.h" />
     <ClInclude Include="Engine\ResourceManagement\Importer\SoundImporter.h" />
     <ClInclude Include="Engine\ResourceManagement\Manager\SoundManager.h" />
+    <ClInclude Include="LOTween.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Engine\Animation\Tween\TweenSequence.cpp" />
+    <ClCompile Include="Engine\Animation\Tween\Tween.cpp" />
     <ClCompile Include="Engine\Component\ComponentCanvasRenderer.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddComponent.cpp" />
     <ClCompile Include="Engine\Actions\EditorActionAddGameObject.cpp" />
@@ -459,6 +464,7 @@
     <ClCompile Include="Libraries\include\SoundEngine\AkFilePackageLUT.cpp" />
     <ClCompile Include="Libraries\include\SoundEngine\AkMultipleFileLocation.cpp" />
     <ClCompile Include="Libraries\include\SoundEngine\stdafx.cpp" />
+    <ClCompile Include="LOTween.cpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
