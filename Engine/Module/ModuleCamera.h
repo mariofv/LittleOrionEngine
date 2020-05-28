@@ -29,8 +29,8 @@ public:
 	void RemoveComponentCamera(ComponentCamera* camera_to_remove);
 
 	bool IsSceneCameraMoving() const;
+	void UpdateDirectionalLightFrustums(AABB& light_aabb);
 
-	void UpdateLightAABB(AABB& object_aabb);
 
 private:
 	void SelectMainCamera();
@@ -41,7 +41,6 @@ private:
 	void HandleSceneCameraMovements();
 	void SetMainCameraFrustums();
 	void SetDirectionalLightFrustums();
-	void UpdateDirectionalLightFrustums();
 	void UpdateMainCameraFrustums();
 	
 public:
@@ -62,12 +61,13 @@ public:
 	GameObject*		 dir_light_game_object_mid = nullptr;
 	GameObject*		 dir_light_game_object_far = nullptr;
 
+
 	GameObject*		 main_close= nullptr;
 	GameObject*		 main_mid = nullptr;
 	GameObject*		 main_far = nullptr;
 
-	ComponentAABB* light_aabb = nullptr;
 
+	
 	float aux_width = 25;
 	float aux_height = 25;
 

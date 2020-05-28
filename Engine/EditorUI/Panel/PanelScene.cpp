@@ -62,8 +62,8 @@ void PanelScene::Render()
 		if (App->renderer->render_shadows)
 		{
 			App->cameras->directional_light_camera->RecordFrame(scene_window_content_area_width * 4, scene_window_content_area_height * 4);
-			App->cameras->directional_light_mid->RecordFrame(scene_window_content_area_width * 2, scene_window_content_area_height);
-			App->cameras->directional_light_far->RecordFrame(scene_window_content_area_width / 2, scene_window_content_area_height / 2);
+			App->cameras->directional_light_mid->RecordFrame(scene_window_content_area_width, scene_window_content_area_height);
+			App->cameras->directional_light_far->RecordFrame(scene_window_content_area_width / 4, scene_window_content_area_height / 4);
 		}
 		
 

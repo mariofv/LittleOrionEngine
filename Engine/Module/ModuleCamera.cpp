@@ -51,14 +51,13 @@ update_status ModuleCamera::Update()
 	SelectMainCamera();
 	scene_camera->Update();
 	UpdateMainCameraFrustums();
-	UpdateDirectionalLightFrustums();
 
 	return update_status::UPDATE_CONTINUE;
 }
 
 update_status ModuleCamera::PostUpdate()
 {
-	light_aabb->bounding_box.SetNegativeInfinity();
+
 	return update_status::UPDATE_CONTINUE;
 }
 
@@ -70,6 +69,7 @@ void ModuleCamera::SetDirectionalLightFrustums()
 	dir_light_game_object_mid->transform.SetTranslation(float3(0, 0, 0));
 	dir_light_game_object_far = App->scene->CreateGameObject();
 	dir_light_game_object_far->transform.SetTranslation(float3(0, 0, 0));
+	
 
 
 	directional_light_camera = (ComponentCamera*)dir_light_game_object->CreateComponent(Component::ComponentType::CAMERA);
@@ -98,30 +98,29 @@ void ModuleCamera::SetDirectionalLightFrustums()
 	App->cameras->directional_light_far->SetNearDistance(0);
 
 
-	light_aabb = new ComponentAABB(dir_light_game_object);
-	light_aabb->global_bounding_box.SetNegativeInfinity();
-	light_aabb->GenerateBoundingBox();
+	
 
 }
-void ModuleCamera::UpdateDirectionalLightFrustums()
+void ModuleCamera::UpdateDirectionalLightFrustums(AABB& light_aabb)
 {
-	//Set Position from AABB
-	dir_light_game_object->transform.SetTranslation(float3((light_aabb->bounding_box.maxPoint.x + light_aabb->bounding_box.minPoint.x)*0.5,(light_aabb->bounding_box.maxPoint.y + light_aabb->bounding_box.minPoint.y)*0.5, light_aabb->bounding_box.maxPoint.z ));
-	
-	//Setting Ortho width and height from AABB
-	App->cameras->directional_light_camera->camera_frustum.orthographicWidth =  (light_aabb->bounding_box.maxPoint.x - light_aabb->bounding_box.minPoint.x);
-	App->cameras->directional_light_camera->camera_frustum.orthographicHeight = (light_aabb->bounding_box.maxPoint.y - light_aabb->bounding_box.minPoint.y);
-
-	App->cameras->directional_light_mid->camera_frustum.orthographicWidth = light_aabb->bounding_box.maxPoint.x - light_aabb->bounding_box.minPoint.x;
-	App->cameras->directional_light_mid->camera_frustum.orthographicHeight = light_aabb->bounding_box.maxPoint.y - light_aabb->bounding_box.minPoint.y;
-
-	App->cameras->directional_light_far->camera_frustum.orthographicWidth = light_aabb->bounding_box.maxPoint.x - light_aabb->bounding_box.minPoint.x;
-	App->cameras->directional_light_far->camera_frustum.orthographicHeight = light_aabb->bounding_box.maxPoint.y - light_aabb->bounding_box.minPoint.y;
-
 	//Setting far planes also from AABB 
-	App->cameras->directional_light_camera->SetFarDistance(light_aabb->bounding_box.maxPoint.z - light_aabb->bounding_box.minPoint.z);
-	App->cameras->directional_light_mid->SetFarDistance(light_aabb->bounding_box.maxPoint.z - light_aabb->bounding_box.minPoint.z);
-	App->cameras->directional_light_far->SetFarDistance(light_aabb->bounding_box.maxPoint.z - light_aabb->bounding_box.minPoint.z);
+	App->cameras->directional_light_camera->SetFarDistance(light_aabb.maxPoint.z - light_aabb.minPoint.z);
+	App->cameras->directional_light_mid->SetFarDistance(light_aabb.maxPoint.z - light_aabb.minPoint.z);
+	App->cameras->directional_light_far->SetFarDistance(light_aabb.maxPoint.z - light_aabb.minPoint.z);
+
+	//Setting frustums' width and height
+
+	App->cameras->directional_light_camera->camera_frustum.orthographicWidth =  light_aabb.maxPoint.x - light_aabb.minPoint.x;
+	App->cameras->directional_light_camera->camera_frustum.orthographicHeight = light_aabb.maxPoint.y - light_aabb.minPoint.y;
+
+	App->cameras->directional_light_mid->camera_frustum.orthographicWidth = light_aabb.maxPoint.x - light_aabb.minPoint.x;
+	App->cameras->directional_light_mid->camera_frustum.orthographicHeight = light_aabb.maxPoint.y - light_aabb.minPoint.y;
+
+	App->cameras->directional_light_far->camera_frustum.orthographicWidth = light_aabb.maxPoint.x - light_aabb.minPoint.x;
+	App->cameras->directional_light_far->camera_frustum.orthographicHeight = light_aabb.maxPoint.y - light_aabb.minPoint.y;
+
+	
+
 
 	directional_light_camera->Update();
 	directional_light_mid->Update();
@@ -187,11 +186,7 @@ void ModuleCamera::UpdateMainCameraFrustums()
 
 }
 
-void ModuleCamera::UpdateLightAABB(AABB& object_aabb)
-{
-	//object_aabb.TransformAsAABB(dir_light_game_object->transform.GetRotation().Inverted());
-	light_aabb->bounding_box.Enclose(object_aabb);
-}
+
 
 
 bool ModuleCamera::CleanUp()

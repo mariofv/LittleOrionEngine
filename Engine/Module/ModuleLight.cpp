@@ -4,6 +4,7 @@
 #include "Module/ModuleCamera.h"
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleRender.h"
+#include "Module/ModuleScene.h"
 
 #include <Brofiler/Brofiler.h>
 #include <algorithm>
@@ -16,7 +17,26 @@ ModuleLight::~ModuleLight()
 bool ModuleLight::Init()
 {
 	APP_LOG_SECTION("************ Module Light Init ************");
+	directional_light_rotation = Quat::identity;
+
+	light_aabb_game_object = App->scene->CreateGameObject();
+	light_aabb_game_object->transform.SetTranslation(float3(0, 0, 0));
+
+	light_transform = App->scene->CreateGameObject();
+	light_transform->transform.SetTranslation(float3(0, 0, 0));
+
+	light_aabb = new ComponentAABB(light_aabb_game_object);
+	light_aabb->bounding_box.SetNegativeInfinity();
+	light_aabb->GenerateBoundingBox();
+
 	return true;
+}
+
+update_status ModuleLight::PostUpdate()
+{
+	light_aabb->bounding_box.SetNegativeInfinity();
+	return update_status::UPDATE_CONTINUE;
+
 }
 
 bool ModuleLight::CleanUp()
@@ -57,9 +77,11 @@ void ModuleLight::RenderDirectionalLight(const float3& mesh_position)
 
 		size_t light_direction_offset = App->program->uniform_buffer.lights_uniform_offset + 4 * sizeof(float);
 		glBufferSubData(GL_UNIFORM_BUFFER, light_direction_offset, sizeof(float3), light->owner->transform.GetFrontVector().ptr());
-
-		App->cameras->dir_light_game_object->transform.SetRotation(light->owner->transform.GetGlobalRotation()); //Directional light rotation
-		
+	
+		directional_light_rotation = directional_light_rotation.LookAt(float3::unitZ, light->owner->transform.GetFrontVector(), light->owner->transform.GetUpVector(), float3::unitY);
+		light_transform->transform.SetRotation(directional_light_rotation);
+		//App->cameras->light_aabb_game_object->transform.SetRotation(directional_light_rotation); //Directional light rotation
+		//light->owner->transform.SetTranslation(App->cameras->dir_light_game_object->transform.GetTranslation());
 
 		glBindBuffer(GL_UNIFORM_BUFFER, 0);
 
@@ -127,6 +149,24 @@ void ModuleLight::SendShadowMatricesToShader(GLuint program)
 
 	}
 
+}
+
+void ModuleLight::UpdateLightAABB(AABB& object_aabb)
+{
+
+	//Light aabb will enclose every object in the scene
+	AABB temp;
+	temp = object_aabb;
+	temp.TransformAsAABB(directional_light_rotation);
+	light_aabb->bounding_box.Enclose(temp);
+
+	//Light position at the far plane of the aabb, in the middle
+	light_position = float3((light_aabb->bounding_box.maxPoint.x + light_aabb->bounding_box.minPoint.x) * 0.5, (light_aabb->bounding_box.maxPoint.y + light_aabb->bounding_box.minPoint.y) * 0.5, light_aabb->bounding_box.maxPoint.z);
+	light_transform->transform.SetTranslation(light_position);
+	App->cameras->dir_light_game_object->transform.SetRotation(directional_light_rotation);
+	App->cameras->dir_light_game_object->transform.SetTranslation(light_position);
+
+	App->cameras->UpdateDirectionalLightFrustums(light_aabb->bounding_box);
 }
 
 void ModuleLight::RenderPointLights(const float3& mesh_position, GLuint program)

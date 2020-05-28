@@ -149,11 +149,13 @@ void ModuleRender::Render() const
 	{
 		App->cameras->main_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
 		App->cameras->directional_light_camera->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
+		App->cameras->directional_light_mid->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
+		App->cameras->directional_light_far->RecordFrame(App->window->GetWidth(), App->window->GetHeight());
+
 	}
 #else
 	App->editor->Render();
 #endif
-
 	BROFILER_CATEGORY("Swap Window (VSYNC)", Profiler::Color::Aquamarine);
 	SDL_GL_SwapWindow(App->window->window);
 }
@@ -185,7 +187,7 @@ void ModuleRender::RenderFrame(const ComponentCamera &camera)
 			mesh.second->Render();
 			num_rendered_tris += mesh.second->mesh_to_render->GetNumTriangles();
 			num_rendered_verts += mesh.second->mesh_to_render->GetNumVerts();
-			App->cameras->UpdateLightAABB(mesh.second->owner->aabb.global_bounding_box);
+			App->lights->UpdateLightAABB(mesh.second->owner->aabb.bounding_box);
 			glUseProgram(0);
 
 		}

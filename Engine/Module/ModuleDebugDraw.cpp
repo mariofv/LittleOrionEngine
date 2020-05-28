@@ -494,7 +494,7 @@ void ModuleDebugDraw::Render()
 
 
 	if(App->renderer->toggle_directional_light_aabb)
-		dd::aabb(App->cameras->light_aabb->bounding_box.minPoint, App->cameras->light_aabb->bounding_box.maxPoint, float3(1, 1, 1));
+		dd::aabb(App->lights->light_aabb->bounding_box.minPoint, App->lights->light_aabb->bounding_box.maxPoint, float3(1, 1, 0));
 
 
 	if (App->renderer->toggle_perspective_sub_frustums)

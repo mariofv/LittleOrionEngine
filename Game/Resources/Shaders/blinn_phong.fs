@@ -102,7 +102,7 @@ vec3 NormalizedDiffuse(vec3 diffuse_color, vec3 specular_color);
 float NormalizedSpecular(vec3 normal, vec3 half_dir);
 
 //SHADOW MAPS
-float ShadowCalculation(vec3 frag_normal);
+float ShadowCalculation();
 uniform float render_depth_from_light;
 
 in vec4 close_pos_from_light;
@@ -227,7 +227,7 @@ vec3 CalculateDirectionalLight(const vec3 normalized_normal, vec4 diffuse_color,
 	vec3 view_dir    = normalize(view_pos - position);
 	vec3 light_dir   = normalize(-directional_light.direction );
 	vec3 half_dir 	 = normalize(light_dir + view_dir);
-	float shadow	 = 1.0 - ShadowCalculation(normalized_normal);
+	float shadow	 = ShadowCalculation();
 	float specular = NormalizedSpecular(normalized_normal, half_dir);
 
 
@@ -322,8 +322,9 @@ float NormalizedSpecular(vec3 normal, vec3 half_dir) // Old refference: http://w
 	return spec* normalization_factor;
 }
 
-float ShadowCalculation(vec3 frag_normal)
+float ShadowCalculation()
 {
+//Light frustums
 	vec3 normalized_close_depth = close_pos_from_light.xyz / close_pos_from_light.w;
 	normalized_close_depth = normalized_close_depth * 0.5 + 0.5;
 
@@ -333,6 +334,7 @@ float ShadowCalculation(vec3 frag_normal)
 	vec3 normalized_far_depth = far_pos_from_light.xyz / far_pos_from_light.w;
 	normalized_far_depth = normalized_far_depth * 0.5 + 0.5;
 
+//Perspective camera
 	vec3 normalized_close_cam_pos = pos_from_close_camera.xyz/pos_from_close_camera.w;
 	normalized_close_cam_pos = normalized_close_cam_pos * 0.5 + 0.5;
 
@@ -349,53 +351,44 @@ float ShadowCalculation(vec3 frag_normal)
 	vec3 mid_coords = vec3(normalized_mid_depth.xy, normalized_mid_depth.z - bias);
 	vec3 far_coords = vec3(normalized_far_depth.xy, normalized_far_depth.z - bias);
 
-	//vec4 test = texture(close_depth_map, close_coords.xy);
-	
+
+	vec2 close_size = 1.0 / textureSize(close_depth_map, 0); //Represents the size of a texel
+	vec2 mid_size = 1.0 / textureSize(mid_depth_map, 0); 
+	vec2 far_size = 1.0 / textureSize(far_depth_map, 0); 
+
 	float close_texture_depth = texture(close_depth_map, close_coords).r;
 	float mid_texture_depth = texture(mid_depth_map, mid_coords).r;
 	float far_texture_depth = texture(far_depth_map, far_coords).r;
 
-	if(normalized_close_cam_pos.z > 0 && normalized_close_cam_pos.z < 1)
-	{
-		if(normalized_close_cam_pos.z < close_texture_depth)
-		{
-			factor = 0;	
-		}
+	for(int x = -1; x <= 1; ++x) //PCF, solution for edgy shadoWs
+    {
+        for(int y = -1; y <= 1; ++y)
+        {
+			//We sample the texture given from the light camera
+			//A few times at different texture coordinates
 
-		else
-		{
-			factor = 1;
-		}
+			if(normalized_close_cam_pos.z > 0 && normalized_close_cam_pos.z < 1)
+			{
+				close_coords.xy = normalized_close_depth.xy + vec2(x, y)*close_size;
+				factor += texture(close_depth_map, close_coords);
+			}
+
+			if(normalized_close_cam_pos.z >= 1 && normalized_mid_cam_pos.z < 1) // Until depth detection is fixed (stops calculating at 50% depth)
+			{
+				mid_coords.xy = normalized_mid_depth.xy + vec2(x, y)*mid_size;
+				factor += texture(mid_depth_map, mid_coords);
+			}
+
+			if(normalized_mid_cam_pos.z >= 1 && normalized_main_cam_pos.z < 1) // Looks weird, but works
+			{
+				far_coords.xy = normalized_far_depth.xy + vec2(x, y)*far_size;
+				factor += texture(far_depth_map, far_coords);
+			}
 			
-	}
+        }    
+    }
+    factor /= 9.0;
 
-	if(normalized_close_cam_pos.z > 1 && normalized_mid_cam_pos.z < 1)
-	{
-		if(normalized_mid_cam_pos.z < mid_texture_depth)
-		{
-			factor = 0;	
-		}
-
-		else
-		{
-			factor = 1;
-		}
-	}
-
-	
-	if(normalized_mid_cam_pos.z >= 1 && normalized_main_cam_pos.z < 1)
-	{
-		if(normalized_main_cam_pos.z < far_texture_depth)
-		{
-			factor = 0;	
-		}
-
-		else
-		{
-			factor = 1;
-		}
-	}
-	
 	return factor;
 
 }

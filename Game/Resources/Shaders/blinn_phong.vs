@@ -90,12 +90,13 @@ void main()
 	TBN = transpose(mat3(T, B, N));  
 
 //Light space
-	close_pos_from_light = close_lightSpaceMatrix*matrices.model*vec4(vertex_position, 1.0);
-	mid_pos_from_light = mid_lightSpaceMatrix*matrices.model*vec4(vertex_position, 1.0);
-	far_pos_from_light = far_lightSpaceMatrix*matrices.model*vec4(vertex_position, 1.0);
-	pos_from_main_camera = main_cam_space * matrices.model*vec4(vertex_position, 1.0);
-	pos_from_close_camera = close_cam_space * matrices.model*vec4(vertex_position, 1.0);
-	pos_from_mid_camera = mid_cam_space * matrices.model*vec4(vertex_position, 1.0);
+	close_pos_from_light = close_lightSpaceMatrix*vec4(position, 1.0);
+	mid_pos_from_light = mid_lightSpaceMatrix*vec4(position, 1.0);
+	far_pos_from_light = far_lightSpaceMatrix*vec4(position, 1.0);
+
+	pos_from_main_camera = main_cam_space*vec4(position, 1.0);
+	pos_from_close_camera = close_cam_space*vec4(position, 1.0);
+	pos_from_mid_camera = mid_cam_space*vec4(position, 1.0);
 
 	gl_Position = matrices.proj*matrices.view*vec4(position, 1.0);
 

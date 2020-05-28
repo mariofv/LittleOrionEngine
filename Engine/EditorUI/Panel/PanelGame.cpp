@@ -44,7 +44,12 @@ void PanelGame::Render()
 			game_window_content_area_width = game_window_content_area_max_point.x - game_window_content_area_pos.x;
 			game_window_content_area_height = game_window_content_area_max_point.y - game_window_content_area_pos.y;
 
-			App->cameras->directional_light_camera->RecordFrame(game_window_content_area_width, game_window_content_area_height);
+			if (App->renderer->render_shadows)
+			{
+				App->cameras->directional_light_camera->RecordFrame(game_window_content_area_width * 4, game_window_content_area_width * 4);
+				App->cameras->directional_light_mid->RecordFrame(game_window_content_area_width, game_window_content_area_width);
+				App->cameras->directional_light_far->RecordFrame(game_window_content_area_width / 4, game_window_content_area_width / 4);
+			}			
 			App->cameras->main_camera->RecordFrame(game_window_content_area_width, game_window_content_area_height);
 
 
