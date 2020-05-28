@@ -48,6 +48,7 @@ Component* ComponentMeshCollider::Clone(GameObject* owner, bool original_prefab)
 	}
 	*created_component = *this;
 	created_component->SetConfiguration();
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 }
 

@@ -86,6 +86,7 @@ Component* ComponentAABB::Clone(bool original_prefab) const
 	ComponentAABB * created_component;
 	created_component = new ComponentAABB();
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 }
 

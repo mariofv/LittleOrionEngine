@@ -222,6 +222,7 @@ Component* ComponentText::Clone(bool original_prefab) const
 		created_component = App->ui->CreateComponentUI<ComponentText>();
 	}
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 };
 

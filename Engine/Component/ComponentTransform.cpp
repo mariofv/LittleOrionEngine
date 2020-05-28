@@ -270,5 +270,6 @@ Component* ComponentTransform::Clone(bool original_prefab) const
 	ComponentTransform * created_component;
 	created_component = new ComponentTransform(nullptr);
 	*created_component = *this;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 }

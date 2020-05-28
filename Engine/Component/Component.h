@@ -66,6 +66,7 @@ public:
 	{
 		return nullptr;
 	}
+	void CloneBase(Component* component) const;
 	virtual void Copy(Component * component_to_copy) const = 0;
 
 	void Save(Config& config) const;

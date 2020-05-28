@@ -29,6 +29,7 @@ Component* ComponentCapsuleCollider::Clone(GameObject* owner, bool original_pref
 	*created_component = *this;
 	created_component->SetConfiguration();
 	created_component->center = center;
+	CloneBase(static_cast<Component*>(created_component));
 	return created_component;
 }
 
