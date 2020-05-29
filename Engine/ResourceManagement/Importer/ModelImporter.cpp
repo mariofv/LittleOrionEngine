@@ -16,7 +16,6 @@
 #include "ResourceManagement/Importer/PrefabImporter.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Material.h"
-#include "ResourceManagement/Metafile/ModelMetafile.h"
 
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
@@ -42,7 +41,7 @@ ModelImporter::~ModelImporter()
 
 FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& metafile) const
 {
-	const ModelMetafile& model_metafile = static_cast<const ModelMetafile&>(metafile);
+	ModelMetafile& model_metafile = static_cast<ModelMetafile&>(const_cast<Metafile&>(metafile));
 	FileData model_data{NULL, 0};
 
 	// LOAD ASSIMP SCENE
@@ -116,6 +115,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 
 
 	model_data = App->resources->prefab_importer->ExtractFromModel(model, metafile);
+	App->resources->metafile_manager->SaveMetafile(static_cast<Metafile*>(&model_metafile), assets_file_path);
 	return model_data;
 }
 
@@ -175,7 +175,27 @@ uint32_t ModelImporter::ExtractMaterialFromNode(size_t mesh_index, const std::st
 	int mesh_material_index = current_model_data.scene->mMeshes[mesh_index]->mMaterialIndex;
 	aiMaterial* assimp_mesh_material = current_model_data.scene->mMaterials[mesh_material_index];
 	FileData mesh_material_data = App->resources->material_importer->ExtractMaterialFromAssimp(assimp_mesh_material, *current_model_data.asset_file_folder_path);
-	uint32_t extracted_material_uuid = App->resources->CreateFromData(mesh_material_data, *current_model_data.asset_file_folder_path, mesh_name + ".mat");
+
+	ModelMetafile::ModelNode node { ResourceType::MATERIAL, mesh_name};
+	return SaveDataInLibrary( node, mesh_material_data);
+}
+
+uint32_t ModelImporter::SaveDataInLibrary( ModelMetafile::ModelNode &node, FileData &mesh_material_data) const
+{
+	current_model_data.model_metafile->GetModelNode(node);
+	uint32_t extracted_material_uuid = 0;
+	if (node.uuid == 0)
+	{
+		node.uuid = pcg32_random();
+		current_model_data.model_metafile->nodes.push_back(node);
+	}
+	std::string metafile_exported_folder = App->resources->metafile_manager->GetUUIDExportedFolder(extracted_material_uuid);
+	if (!App->filesystem->Exists(metafile_exported_folder))
+	{
+		App->filesystem->MakeDirectory(metafile_exported_folder);
+	}
+	Path* metafile_exported_folder_path = App->filesystem->GetPath(metafile_exported_folder);
+	metafile_exported_folder_path->Save(std::to_string(extracted_material_uuid).c_str(), mesh_material_data);
 	return extracted_material_uuid;
 }
 

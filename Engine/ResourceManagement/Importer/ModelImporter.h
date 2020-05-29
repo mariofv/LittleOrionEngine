@@ -2,6 +2,7 @@
 #define _MODELIMPORTER_H_
 
 #include "ResourceManagement/Importer/Importer.h"
+#include "ResourceManagement/Metafile/ModelMetafile.h"
 
 #include "Helper/Timer.h"
 
@@ -17,7 +18,6 @@ struct aiMesh;
 
 class Config;
 class Path;
-class ModelMetafile;
 
 class ModelImporter : public Importer
 {
@@ -28,7 +28,7 @@ struct CurrentModelData
 	Path* asset_file_folder_path = nullptr;
 	float scale = 1.f;
 	std::map<std::string, uint32_t> skeleton_cache;
-	const ModelMetafile* model_metafile;
+ ModelMetafile* model_metafile;
 };
 
 public:
@@ -40,6 +40,7 @@ public:
 private:
 	std::vector<Config> ExtractDataFromNode(const aiNode* root_node, const aiMatrix4x4& parent_transformation) const;
 	uint32_t ExtractMaterialFromNode(size_t mesh_index, const std::string& mesh_name) const;
+    uint32_t SaveDataInLibrary(ModelMetafile::ModelNode &node, FileData &mesh_material_data) const;
 	uint32_t ExtractMeshFromNode(const aiMesh* asssimp_mesh, std::string mesh_name, const aiMatrix4x4& mesh_transformation, uint32_t mesh_skeleton_uuid) const;
 	uint32_t ExtractSkeletonFromNode(const aiMesh* asssimp_mesh, std::string mesh_name) const;
 	uint32_t ExtractAnimationFromNode(const aiAnimation* assimp_animation, std::string animation_name) const;
