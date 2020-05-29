@@ -1,10 +1,4 @@
 #include "ModuleActions.h"
-#include "ModuleEditor.h"
-#include "ModuleInput.h"
-#include "ModuleScene.h"
-
-#include "Main/Application.h"
-#include "Main/GameObject.h"
 
 #include "Actions/EditorActionEnableDisableComponent.h"
 #include "Actions/EditorActionModifyCamera.h"
@@ -17,6 +11,15 @@
 #include "Actions/EditorActionRotation.h"
 #include "Actions/EditorActionScale.h"
 #include "Actions/EditorAction.h"
+
+#include "EditorUI/Panel/PanelPopups.h"
+#include "ModuleEditor.h"
+#include "ModuleInput.h"
+#include "ModuleScene.h"
+#include "ModuleTime.h"
+#include "Main/Application.h"
+#include "Main/GameObject.h"
+
 
 
 bool ModuleActions::Init()
@@ -238,6 +241,24 @@ void ModuleActions::HandleInput()
 		{
 			action_game_object = App->scene->DuplicateGameObject(selected_game_object, selected_game_object->parent);
 			AddUndoAction(ModuleActions::UndoActionType::ADD_GAMEOBJECT);
+		}
+	}
+
+	if(App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::S))
+	{
+		//Differenciate when we have to save as or save normally
+		if(App->editor->current_scene_path != "")
+		{
+			//Save Scene normally
+			App->editor->SaveScene(App->editor->current_scene_path);
+		}
+		else
+		{
+			if (!App->time->isGameRunning())
+			{
+				App->editor->popups->scene_saver_popup.popup_shown = true;
+			}
+			APP_LOG_INFO("You must stop play mode to save scene.");
 		}
 	}
 }
