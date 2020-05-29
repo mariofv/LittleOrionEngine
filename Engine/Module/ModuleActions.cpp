@@ -283,5 +283,10 @@ void ModuleActions::HandleInput()
 		App->editor->current_scene_path = "";
 		App->editor->OpenScene(DEFAULT_SCENE_PATH);
 	}
+
+	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::O))
+	{
+		App->editor->popups->scene_loader_popup.popup_shown = true;
+	}
 }
 
