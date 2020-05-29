@@ -288,5 +288,18 @@ void ModuleActions::HandleInput()
 	{
 		App->editor->popups->scene_loader_popup.popup_shown = true;
 	}
+
+	if(App->input->GetKeyDown(KeyCode::W) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
+	{
+		App->editor->gizmo_operation = ImGuizmo::TRANSLATE;
+	}
+	if(App->input->GetKeyDown(KeyCode::E) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
+	{
+		App->editor->gizmo_operation = ImGuizmo::ROTATE;
+	}
+	if(App->input->GetKeyDown(KeyCode::R) && !App->input->GetMouseButton(MouseButton::Right) && !App->time->isGameRunning())
+	{
+		App->editor->gizmo_operation = ImGuizmo::SCALE;
+	}
 }
 
