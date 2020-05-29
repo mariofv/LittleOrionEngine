@@ -13,13 +13,13 @@
 #include "Actions/EditorAction.h"
 
 #include "EditorUI/Panel/PanelPopups.h"
+#include "Filesystem/PathAtlas.h"
 #include "ModuleEditor.h"
 #include "ModuleInput.h"
 #include "ModuleScene.h"
 #include "ModuleTime.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
-
 
 
 bool ModuleActions::Init()
@@ -276,6 +276,12 @@ void ModuleActions::HandleInput()
 			APP_LOG_INFO("You must stop play mode to save scene.");
 		}
 
+	}
+
+	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::N))
+	{
+		App->editor->current_scene_path = "";
+		App->editor->OpenScene(DEFAULT_SCENE_PATH);
 	}
 }
 
