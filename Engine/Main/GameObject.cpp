@@ -12,6 +12,7 @@
 #include "Module/ModuleRender.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleSpacePartitioning.h"
+#include "Module/ModuleTime.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleUI.h"
 #include "Module/ModulePhysics.h"
@@ -130,9 +131,11 @@ void GameObject::Duplicate(const GameObject & gameobject_to_copy)
 		//gameobject_to_copy.transform.modified_by_user = false;
 	}
 	transform.SetScale(gameobject_to_copy.transform.GetScale());
+	transform_2d = gameobject_to_copy.transform_2d;
 	CopyComponents(gameobject_to_copy);
 	this->name = gameobject_to_copy.name;
 	this->active = gameobject_to_copy.active;
+	this->transform_2d_enabled = gameobject_to_copy.transform_2d_enabled;
 	this->SetStatic(gameobject_to_copy.is_static);
 	this->hierarchy_depth = gameobject_to_copy.hierarchy_depth;
 	this->hierarchy_branch = gameobject_to_copy.hierarchy_branch;
@@ -141,6 +144,22 @@ void GameObject::Duplicate(const GameObject & gameobject_to_copy)
 	{
 		this->original_UUID = 0;
 		this->prefab_reference = nullptr;
+	}
+
+	if (App->time->isGameRunning())
+	{
+		for (unsigned int i = 0; i < components.size(); ++i)
+		{
+			if (components[i]->type == Component::ComponentType::SCRIPT)
+			{
+				ComponentScript* script = (ComponentScript*)components[i];
+				if (!script->awaken)
+				{
+					script->AwakeScript();
+					script->StartScript();
+				}
+			}
+		}
 	}
 
 	return;
@@ -152,6 +171,7 @@ void GameObject::SetTransform(GameObject* game_object)
 	transform.SetRotation(game_object->transform.GetRotationRadiants());
 	transform.SetScale(game_object->transform.GetScale());
 }
+
 bool GameObject::IsEnabled() const
 {
 	return active;
@@ -689,8 +709,8 @@ void GameObject::CopyComponents(const GameObject& gameobject_to_copy)
 		if(component->type == Component::ComponentType::SCRIPT)
 		{
 			copy = new ComponentScript(this, static_cast<ComponentScript*>(component)->name);
-			static_cast<ComponentScript*>(copy)->name = static_cast<ComponentScript*>(component)->name;
-
+			ComponentScript* copied_script = static_cast<ComponentScript*>(copy);
+			copied_script->name = static_cast<ComponentScript*>(component)->name;
 		}
 		else if (component->type == Component::ComponentType::COLLIDER)
 		{

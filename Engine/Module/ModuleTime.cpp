@@ -121,7 +121,6 @@ void ModuleTime::Play()
 		App->scene->SaveTmpScene();
 		game_time_clock->Start();
 		frame_start_time = game_time_clock->Read();
-		App->scripts->InitScripts();
 		App->animations->PlayAnimations();
 	}
 	else

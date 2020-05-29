@@ -38,6 +38,7 @@ public:
 	
 	void RenderSelectedGameObjectHelpers() const;
 	
+	void RenderOutline() const;
 	void RenderGrid() const;
 	void RenderBillboards() const;
 	void RenderTangentsAndBitangents() const;
@@ -48,7 +49,6 @@ public:
 	ENGINE_API void RenderPhysics() const;
 
 private:
-	void RenderOutline() const;
 
 	void RenderCameraFrustum() const;
 	void RenderLightGizmo() const;

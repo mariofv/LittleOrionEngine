@@ -45,6 +45,7 @@ public:
 	std::string name;
 	Script* script = nullptr;
 	bool awaken = false;
+	bool started = false;
 
 private:
 	friend class PanelComponent;
