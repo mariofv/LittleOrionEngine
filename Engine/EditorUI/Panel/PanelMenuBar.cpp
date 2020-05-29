@@ -71,7 +71,11 @@ void PanelMenuBar::ShowFileMenu()
 		ImGui::Separator();
 		if (App->editor->current_scene_path != "" && ImGui::MenuItem(ICON_FA_SAVE " Save Scene"))
 		{
-			App->editor->SaveScene(App->editor->current_scene_path);
+			if (!App->time->isGameRunning())
+			{
+				App->editor->SaveScene(App->editor->current_scene_path);
+			}
+			APP_LOG_INFO("You must stop play mode to save scene.");
 		}
 		if (ImGui::MenuItem(ICON_FA_SAVE " Save Scene as"))
 		{
