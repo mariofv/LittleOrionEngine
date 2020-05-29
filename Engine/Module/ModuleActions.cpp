@@ -244,7 +244,7 @@ void ModuleActions::HandleInput()
 		}
 	}
 
-	if(App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::S))
+	if(App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::S) && !App->input->GetKey(KeyCode::LeftShift))
 	{
 		//Differenciate when we have to save as or save normally
 		if(App->editor->current_scene_path != "")
@@ -260,6 +260,15 @@ void ModuleActions::HandleInput()
 			}
 			APP_LOG_INFO("You must stop play mode to save scene.");
 		}
+	}
+
+	if (App->input->GetKey(KeyCode::LeftControl) && App->input->GetKeyDown(KeyCode::S) && App->input->GetKey(KeyCode::LeftShift))
+	{
+		if (!App->time->isGameRunning())
+		{
+			App->editor->popups->scene_saver_popup.popup_shown = true;
+		}
+		APP_LOG_INFO("You must stop play mode to save scene.");
 	}
 }
 
