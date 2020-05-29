@@ -258,7 +258,10 @@ void ModuleActions::HandleInput()
 			{
 				App->editor->popups->scene_saver_popup.popup_shown = true;
 			}
-			APP_LOG_INFO("You must stop play mode to save scene.");
+			else
+			{
+				APP_LOG_INFO("You must stop play mode to save scene.");
+			}
 		}
 	}
 
@@ -268,7 +271,11 @@ void ModuleActions::HandleInput()
 		{
 			App->editor->popups->scene_saver_popup.popup_shown = true;
 		}
-		APP_LOG_INFO("You must stop play mode to save scene.");
+		else
+		{
+			APP_LOG_INFO("You must stop play mode to save scene.");
+		}
+
 	}
 }
 
