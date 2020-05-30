@@ -2,6 +2,8 @@
 #define _MODELMETAFILE_H_
 #include "Metafile.h"
 #include <vector>
+
+class Path;
 class ModelMetafile : public Metafile
 {
 
@@ -11,7 +13,10 @@ public:
 	~ModelMetafile() = default;
 
 	void Save(Config& config) const override;
+	void SaveExtractedNodes() const;
+	void LoadExtractedNodes();
 	void Load(const Config& config) override;
+
 
 	void GetModelNode(Metafile& model_node_metafile ) const;
 	//Model
@@ -26,8 +31,12 @@ public:
 	//Skeleton
 	bool complex_skeleton = false;
 
+	//Extracted Nodes
 	std::vector<std::unique_ptr<Metafile>> nodes;
 
+private:
 
+	Path* GetExtractedNodesFolder() const;
+	Path* GetExtractedNodesPath() const;
 };
 #endif // _MODELMETAFILE_H_

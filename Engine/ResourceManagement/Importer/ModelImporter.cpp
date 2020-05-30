@@ -249,7 +249,7 @@ uint32_t ModelImporter::ExtractAnimationFromNode(const aiAnimation* assimp_anima
 	FileData animation_data = App->resources->animation_importer->ExtractAnimationFromAssimp(current_model_data.scene, assimp_animation, current_model_data.scale);
 
 	Metafile node;
-	node.resource_type = ResourceType::MESH;
+	node.resource_type = ResourceType::ANIMATION;
 	node.resource_name = animation_name + ".anim";
 	return SaveDataInLibrary(node, animation_data);
 }
