@@ -123,7 +123,6 @@ public:
 	void CleanMetafilesInDirectory(const Path& directory_path);
 	void ImportAssetsInDirectory(const Path& directory_path, bool force = false);
 	void CleanBinariesInDirectory(const Path& directory_path);
-	void CleanEmptyDirectories(const Path& directory_path);
 
 	void CleanResourceCache();
 	uint32_t CreateFromData(FileData data, Path& creation_folder_path, const std::string& created_resource_name);
@@ -148,22 +147,22 @@ public:
 	} thread_comunication;
 
 	//Importers
-	std::unique_ptr<AnimationImporter> animation_importer = nullptr;
-	std::unique_ptr<FontImporter> font_importer = nullptr;
-	std::unique_ptr<MaterialImporter> material_importer = nullptr;
-	std::unique_ptr<MeshImporter> mesh_importer = nullptr;
-	std::unique_ptr<ModelImporter> model_importer = nullptr;
-	std::unique_ptr<PrefabImporter> prefab_importer = nullptr;
-	std::unique_ptr<SceneImporter> scene_importer = nullptr;
-	std::unique_ptr<SkeletonImporter> skeleton_importer = nullptr;
-	std::unique_ptr<SkyboxImporter> skybox_importer = nullptr;
-	std::unique_ptr<StateMachineImporter> state_machine_importer = nullptr;
-	std::unique_ptr<TextureImporter> texture_importer = nullptr;
-	std::unique_ptr<SoundImporter> sound_importer = nullptr;
+	std::unique_ptr<AnimationImporter> animation_importer;
+	std::unique_ptr<FontImporter> font_importer;
+	std::unique_ptr<MaterialImporter> material_importer;
+	std::unique_ptr<MeshImporter> mesh_importer;
+	std::unique_ptr<ModelImporter> model_importer;
+	std::unique_ptr<PrefabImporter> prefab_importer;
+	std::unique_ptr<SceneImporter> scene_importer;
+	std::unique_ptr<SkeletonImporter> skeleton_importer;
+	std::unique_ptr<SkyboxImporter> skybox_importer;
+	std::unique_ptr<StateMachineImporter> state_machine_importer;
+	std::unique_ptr<TextureImporter> texture_importer;
+	std::unique_ptr<SoundImporter> sound_importer;
 
-	std::unique_ptr<MetafileManager> metafile_manager = nullptr;
-	std::unique_ptr<SceneManager> scene_manager = nullptr;
-	std::unique_ptr<ResourceDataBase> resource_DB = nullptr;
+	std::unique_ptr<MetafileManager> metafile_manager;
+	std::unique_ptr<SceneManager> scene_manager;
+	std::unique_ptr<ResourceDataBase> resource_DB;
 
 private:
 	const size_t importer_interval_millis = 15 * 1000;
