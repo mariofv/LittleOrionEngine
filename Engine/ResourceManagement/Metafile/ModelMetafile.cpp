@@ -100,6 +100,7 @@ void ModelMetafile::SaveExtractedNodes() const
 	Config config;
 	std::vector<Config> nodes_config;
 	nodes_config.reserve(nodes.size());
+	Path* library_path = GetExtractedNodesFolder();
 	for (const auto & node : nodes)
 	{
 		assert(node->resource_type != ResourceType::UNKNOWN);
@@ -112,6 +113,5 @@ void ModelMetafile::SaveExtractedNodes() const
 
 	std::string serialized_string;
 	config.GetSerializedString(serialized_string);
-	Path* library_path = GetExtractedNodesFolder();
 	library_path->Save(std::to_string(uuid).c_str(), serialized_string);
 }

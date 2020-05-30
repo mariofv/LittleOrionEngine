@@ -5,6 +5,7 @@
 #include "Module/ModuleFileSystem.h"
 #include <unordered_map>
 class Metafile;
+class ModelMetafile;
 class Texture;
 class PanelProjectExplorer : public Panel
 {
@@ -21,17 +22,19 @@ public:
 	void ProcessResourceMouseInput(Path* metafile_path, Metafile* metafile);
 	void ShowFilesInExplorer();
 
+	void CalculateNextLinePosition(int &current_file_in_line, int files_per_line, int &current_line);
+
 	void ShowFileSystemActionsMenu(Path* path);
 
 	void FilesDrop() const;
-	void ResourceDragSource(Metafile* file) const;
+	void ResourceDragSource(const Metafile* file) const;
 
 	void ResourceDropTarget(Path* folder_path) const;
 
 private:
 	void InitResourceExplorerDockspace();
 
-	void ShowMetafile(Path* file);
+	void ShowMetafile(Path* file, Metafile* metafile, const std::string& filename);
 	void ShowMetafileIcon(Metafile* metafile);
 
 	size_t GetResourcePreviewImage(uint32_t uuid);
@@ -44,6 +47,7 @@ private:
 	Path* selected_folder = nullptr;
 	Path* selected_file = nullptr;
 	Path* renaming_file = nullptr;
+	ModelMetafile* opened_model = nullptr;
 
 
 	ImGuiID project_explorer_dockspace_id;
