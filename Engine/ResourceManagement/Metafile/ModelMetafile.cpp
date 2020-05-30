@@ -14,16 +14,16 @@ void ModelMetafile::Save(Config& config) const
 	config.AddBool(import_material, "ImportMaterial");
 
 	config.AddBool(complex_skeleton, "ComplexSkeleton");
-	std::vector<Config> nodes_config (nodes.size());
+	std::vector<Config> nodes_config;
+	nodes_config.reserve(nodes.size());
 	for (const auto & node : nodes)
 	{
+		assert(node->resource_type != ResourceType::UNKNOWN);
 		Config node_config;
-		node_config.AddUInt(node.uuid, "UUID");
-		node_config.AddString(node.unique_name, "Name");
-		node_config.AddInt(static_cast<int>(node.type), "Type");
-		nodes_config.push_back(node_config);
+		node->Save(node_config);
+		nodes_config.emplace_back(node_config);
 	}
-
+	assert(nodes_config.size() == nodes.size());
 	config.AddChildrenConfig(nodes_config, "Nodes");
 
 }
@@ -47,22 +47,21 @@ void ModelMetafile::Load(const Config& config)
 	config.GetChildrenConfig("Nodes", nodes_config);
 	for (const auto & node_config : nodes_config)
 	{
-		ModelNode node;
-		node.uuid = node_config.GetUInt("UUID", 0);
-		node_config.GetString("Name", node.unique_name, {});
-		node.type = static_cast<ResourceType>(node_config.GetInt("Type", static_cast<int>(ResourceType::UNKNOWN)));
-		nodes.push_back(node);
+		std::unique_ptr<Metafile> node = std::make_unique<Metafile>();
+		node->Load(node_config);
+		assert(node->resource_type != ResourceType::UNKNOWN);
+		nodes.push_back(std::move(node));
 	}
 
 }
 
-void ModelMetafile::GetModelNode(ModelNode& model_node) const
+void ModelMetafile::GetModelNode(Metafile& model_node_metafile) const
 {
-	const auto it = std::find_if(nodes.begin(), nodes.end(), [&model_node](const auto & node) {
-		return node.unique_name == model_node.unique_name && model_node.type == node.type;
+	const auto it = std::find_if(nodes.begin(), nodes.end(), [&model_node_metafile](const auto & node) {
+		return node->resource_name == model_node_metafile.resource_name && model_node_metafile.resource_type == node->resource_type;
 	});
 	if (it != nodes.end())
 	{
-		model_node = *it;
+		model_node_metafile = *((*it).get());
 	}
 }

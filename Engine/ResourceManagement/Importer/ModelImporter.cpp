@@ -16,6 +16,7 @@
 #include "ResourceManagement/Importer/PrefabImporter.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Material.h"
+#include "ResourceManagement/Metafile/ModelMetafile.h"
 
 #include <assimp/cimport.h>
 #include <assimp/postprocess.h>
@@ -176,27 +177,32 @@ uint32_t ModelImporter::ExtractMaterialFromNode(size_t mesh_index, const std::st
 	aiMaterial* assimp_mesh_material = current_model_data.scene->mMaterials[mesh_material_index];
 	FileData mesh_material_data = App->resources->material_importer->ExtractMaterialFromAssimp(assimp_mesh_material, *current_model_data.asset_file_folder_path);
 
-	ModelMetafile::ModelNode node { ResourceType::MATERIAL, mesh_name};
+	Metafile node;
+	node.resource_type = ResourceType::MATERIAL;
+	node.resource_name = mesh_name + ".mat";
 	return SaveDataInLibrary( node, mesh_material_data);
 }
 
-uint32_t ModelImporter::SaveDataInLibrary( ModelMetafile::ModelNode &node, FileData &mesh_material_data) const
+uint32_t ModelImporter::SaveDataInLibrary( Metafile &node_metafile, FileData & file_data) const
 {
-	current_model_data.model_metafile->GetModelNode(node);
-	uint32_t extracted_material_uuid = 0;
-	if (node.uuid == 0)
+	node_metafile.metafile_path = current_model_data.model_metafile->metafile_path;
+	node_metafile.imported_file_path = current_model_data.model_metafile->imported_file_path;
+	current_model_data.model_metafile->GetModelNode(node_metafile);
+	bool is_new_node = node_metafile.uuid == 0;
+	node_metafile.uuid = is_new_node ? pcg32_random() : node_metafile.uuid;
+	node_metafile.exported_file_path = App->resources->metafile_manager->GetUUIDExportedFolder(node_metafile.uuid);
+	if (!App->filesystem->Exists(node_metafile.exported_file_path))
 	{
-		node.uuid = pcg32_random();
-		current_model_data.model_metafile->nodes.push_back(node);
+		App->filesystem->MakeDirectory(node_metafile.exported_file_path);
 	}
-	std::string metafile_exported_folder = App->resources->metafile_manager->GetUUIDExportedFolder(extracted_material_uuid);
-	if (!App->filesystem->Exists(metafile_exported_folder))
+	Path* metafile_exported_folder_path = App->filesystem->GetPath(node_metafile.exported_file_path);
+	
+	node_metafile.exported_file_path = metafile_exported_folder_path->Save(std::to_string(node_metafile.uuid).c_str(), file_data)->GetFullPath();
+	if (is_new_node)
 	{
-		App->filesystem->MakeDirectory(metafile_exported_folder);
+		current_model_data.model_metafile->nodes.push_back(std::make_unique<Metafile>(node_metafile));
 	}
-	Path* metafile_exported_folder_path = App->filesystem->GetPath(metafile_exported_folder);
-	metafile_exported_folder_path->Save(std::to_string(extracted_material_uuid).c_str(), mesh_material_data);
-	return extracted_material_uuid;
+	return node_metafile.uuid;
 }
 
 uint32_t ModelImporter::ExtractMeshFromNode(const aiMesh* asssimp_mesh, std::string mesh_name, const aiMatrix4x4& mesh_transformation, uint32_t mesh_skeleton_uuid) const
@@ -207,8 +213,10 @@ uint32_t ModelImporter::ExtractMeshFromNode(const aiMesh* asssimp_mesh, std::str
 		return 0;
 	}
 
-	uint32_t extracted_mesh_uuid = App->resources->CreateFromData(mesh_data, *current_model_data.asset_file_folder_path, mesh_name + ".mesh");
-	return extracted_mesh_uuid;
+	Metafile node;
+	node.resource_type = ResourceType::MESH;
+	node.resource_name = mesh_name + ".mesh";
+	return SaveDataInLibrary(node, mesh_data);
 }
 
 uint32_t ModelImporter::ExtractSkeletonFromNode(const aiMesh* asssimp_mesh, std::string mesh_name) const
@@ -222,8 +230,11 @@ uint32_t ModelImporter::ExtractSkeletonFromNode(const aiMesh* asssimp_mesh, std:
 	else
 	{
 		FileData skeleton_data = App->resources->skeleton_importer->ExtractSkeletonFromAssimp(current_model_data.scene, asssimp_mesh, current_model_data.scale, current_model_data.model_metafile->complex_skeleton);
-		skeleton_uuid = App->resources->CreateFromData(skeleton_data, *current_model_data.asset_file_folder_path, mesh_name + "_skeleton.sk");
 
+		Metafile node;
+		node.resource_type = ResourceType::SKELETON;
+		node.resource_name = mesh_name + ".sk";
+		skeleton_uuid =  SaveDataInLibrary(node, skeleton_data);
 		if (skeleton_uuid != 0)
 		{
 			current_model_data.skeleton_cache[main_bone_name] = skeleton_uuid;
@@ -236,6 +247,9 @@ uint32_t ModelImporter::ExtractSkeletonFromNode(const aiMesh* asssimp_mesh, std:
 uint32_t ModelImporter::ExtractAnimationFromNode(const aiAnimation* assimp_animation, std::string animation_name) const
 {
 	FileData animation_data = App->resources->animation_importer->ExtractAnimationFromAssimp(current_model_data.scene, assimp_animation, current_model_data.scale);
-	uint32_t extracted_animation_uuid = App->resources->CreateFromData(animation_data, *current_model_data.asset_file_folder_path, animation_name + ".anim");
-	return extracted_animation_uuid;
+
+	Metafile node;
+	node.resource_type = ResourceType::MESH;
+	node.resource_name = animation_name + ".anim";
+	return SaveDataInLibrary(node, animation_data);
 }
