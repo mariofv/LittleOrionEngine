@@ -211,13 +211,12 @@ update_status ModuleInput::PreUpdate()
 		break;
 
 		case SDL_DROPFILE:
-			/* TODO: This
+		{
 			char* dropped_filedir = event.drop.file;
-			App->editor->project_explorer->CopyFileToSelectedFolder(dropped_filedir);
+			App->editor->project_explorer->ResourceDropFromOutside(dropped_filedir);
 			SDL_free(dropped_filedir);
-			*/
 			break;
-
+		}
 		case SDL_CONTROLLERDEVICEADDED:
 		{
 			int which = event.cdevice.which;

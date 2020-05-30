@@ -324,6 +324,24 @@ void PanelProjectExplorer::ResourceDropTarget(Path * folder_path) const
 		ImGui::EndDragDropTarget();
 	}
 }
+void PanelProjectExplorer::ResourceDropFromOutside(const std::string& dropped_filedir)
+{
+	if (!selected_folder)
+	{
+		return;
+	}
+	FileData data = App->filesystem->LoadFromSystem(dropped_filedir);
+	if (data.buffer)
+	{
+		std::string full_path = selected_folder->GetFullPath() + "/"+dropped_filedir.substr(dropped_filedir.find_last_of("\\") +1 );
+		Path* new_file = App->filesystem->Save(full_path, data);
+
+		if (new_file && new_file->IsImportable())
+		{
+			App->resources->Import(*new_file);
+		}
+	}
+}
 void PanelProjectExplorer::ProcessResourceMouseInput(Path* metafile_path, Metafile* metafile)
 {
 	if (ImGui::IsWindowHovered() && ImGui::IsMouseReleased(0))
