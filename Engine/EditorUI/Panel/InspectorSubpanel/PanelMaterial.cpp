@@ -27,7 +27,9 @@ PanelMaterial::PanelMaterial()
 
 void PanelMaterial::Render(std::shared_ptr<Material> material)
 {
-	if (material->IsCoreResource())
+	Metafile * metafile = App->resources->resource_DB->GetEntry(material->GetUUID());
+	bool extracted = metafile->exported_file_path.find("Extracted");
+	if (material->IsCoreResource() || extracted);
 	{
 		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
@@ -40,7 +42,7 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 		ImGui::Image((void *)App->texture->whitefall_texture_id, ImVec2(50, 50)); // TODO: Substitute this with resouce thumbnail
 		ImGui::SameLine();
 		ImGui::AlignTextToFramePadding();
-		ImGui::Text(App->resources->resource_DB->GetEntry(material->GetUUID())->resource_name.c_str());
+		ImGui::Text(metafile->resource_name.c_str());
 		ImGui::Spacing();
 
 		if (ImGui::BeginCombo("Shader", material->shader_program.c_str()))
@@ -113,7 +115,7 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 	{
 		App->resources->Save<Material>(material);
 	}
-	if (material->IsCoreResource())
+	if (material->IsCoreResource() || extracted)
 	{
 		ImGui::PopItemFlag();
 		ImGui::PopStyleVar();
