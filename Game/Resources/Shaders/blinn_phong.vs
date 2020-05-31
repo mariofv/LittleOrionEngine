@@ -63,7 +63,7 @@ void main()
 {
 
 //Skinning
-	mat4 skinning_matrix = mat4(1);
+	mat4 skinning_matrix = mat4(0);
     for(uint i=0; i<4; i++)
 	{
 		skinning_matrix += vertex_weights[i] * palette[vertex_joints[i]];
