@@ -18,6 +18,7 @@ public:
 	void Load(const Config& config) override;
 
 
+	Path* GetExtractedNodesPath() const;
 	void GetModelNode(Metafile& model_node_metafile ) const;
 	//Model
 	float scale_factor = 0.01f;
@@ -40,6 +41,5 @@ public:
 private:
 
 	Path* GetExtractedNodesFolder() const;
-	Path* GetExtractedNodesPath() const;
 };
 #endif // _MODELMETAFILE_H_

@@ -5,6 +5,7 @@
 #include "Module/ModuleResourceManager.h"
 
 #include "ResourceManagement/Metafile/MetafileManager.h"
+#include "ResourceManagement/Metafile/ModelMetafile.h"
 #include "ResourceManagement/ResourcesDB/CoreResources.h"
 
 #include <pcg_basic.h>
@@ -65,7 +66,14 @@ bool Importer::ImportRequired(const Path& file_path)
 		else if (exported_file_exist)
 		{
 			Path* library_path = App->filesystem->GetPath(metafile->exported_file_path);
-			return  file_path.GetModificationTimestamp() > library_path->GetModificationTimestamp();
+			bool extracted_nodes_need_import = false;
+			if (metafile->resource_type == ResourceType::MODEL)
+			{
+				ModelMetafile* model_metafile = static_cast<ModelMetafile*>(metafile);
+				Path * extracted_nodes_path = model_metafile->GetExtractedNodesPath();
+				extracted_nodes_need_import = extracted_nodes_path == nullptr;
+			}
+			return  file_path.GetModificationTimestamp() > library_path->GetModificationTimestamp() || extracted_nodes_need_import;
 		}
 		else
 		{
