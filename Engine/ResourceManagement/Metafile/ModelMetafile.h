@@ -2,7 +2,7 @@
 #define _MODELMETAFILE_H_
 #include "Metafile.h"
 #include <vector>
-
+#include <unordered_map>
 class Path;
 class ModelMetafile : public Metafile
 {
@@ -30,6 +30,9 @@ public:
 
 	//Skeleton
 	bool complex_skeleton = false;
+
+	//Material
+	std::unordered_map<std::string, uint32_t> remapped_materials;
 
 	//Extracted Nodes
 	std::vector<std::unique_ptr<Metafile>> nodes;

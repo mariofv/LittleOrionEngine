@@ -21,7 +21,16 @@ void ModelMetafile::Save(Config& config) const
 	config.AddBool(import_material, "ImportMaterial");
 
 	config.AddBool(complex_skeleton, "ComplexSkeleton");
-	config.AddBool(complex_skeleton, "ComplexSkeleton");
+	std::vector<Config> remapped_materials_config;
+	remapped_materials_config.reserve(remapped_materials.size());
+	for (auto & pair : remapped_materials)
+	{
+		Config pair_config;
+		pair_config.AddString(pair.first, "Material");
+		pair_config.AddUInt(pair.second, "UUID");
+		remapped_materials_config.emplace_back(pair_config);
+	}
+	config.AddChildrenConfig(remapped_materials_config, "RemappedMaterials");
 	SaveExtractedNodes();
 
 }
@@ -40,6 +49,16 @@ void ModelMetafile::Load(const Config& config)
 	import_material = config.GetBool( "ImportMaterial", true);
 
 	complex_skeleton = config.GetBool("ComplexSkeleton", false);
+
+	std::vector<Config> remapped_materials_config;
+	config.GetChildrenConfig("RemappedMaterials", remapped_materials_config);
+	for (const auto & pair_config : remapped_materials_config)
+	{
+		std::string first;
+		pair_config.GetString("Material", first, {});
+		remapped_materials[first] =  pair_config.GetUInt("UUID", 0);
+	}
+
 	LoadExtractedNodes();
 }
 

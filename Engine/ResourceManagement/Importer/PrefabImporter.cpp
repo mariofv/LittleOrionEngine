@@ -12,6 +12,7 @@
 #include "ResourceManagement/Resources/Material.h"
 #include "ResourceManagement/Resources/Mesh.h"
 #include "ResourceManagement/Resources/Skeleton.h"
+#include "ResourceManagement/Metafile/ModelMetafile.h"
 
 #include <stack>
 
@@ -20,7 +21,7 @@ FileData PrefabImporter::ExtractData(Path& file_path, const Metafile& metafile) 
 	return file_path.GetFile()->Load();
 }
 
-FileData PrefabImporter::ExtractFromModel(const Config& model_config, const Metafile& metafile) const
+FileData PrefabImporter::ExtractFromModel(const Config& model_config, const ModelMetafile& metafile) const
 {
 	std::vector<std::unique_ptr<GameObject>> game_objects;
 	std::vector<std::unique_ptr<ComponentMeshRenderer>> mesh_renderer_components;
@@ -37,7 +38,7 @@ FileData PrefabImporter::ExtractFromModel(const Config& model_config, const Meta
 	model_config.GetChildrenConfig("Node", game_objects_config);
 	for (unsigned int i = 0; i < game_objects_config.size(); ++i)
 	{
-		ExtractGameObjectFromNode(model_root_node, game_objects_config[i], game_objects, mesh_renderer_components, loaded_skeletons);
+		ExtractGameObjectFromNode(model_root_node, game_objects_config[i], game_objects, mesh_renderer_components, loaded_skeletons, metafile);
 	}
 	size_t gameobject_index = 1;
 	for (auto & game_object : game_objects)
@@ -96,7 +97,8 @@ void PrefabImporter::ExtractGameObjectFromNode
 	const Config& node_config,
 	std::vector<std::unique_ptr<GameObject>>& game_objects,
 	std::vector<std::unique_ptr<ComponentMeshRenderer>>& mesh_renderer_components,
-	std::vector<uint32_t>& loaded_skeletons
+	std::vector<uint32_t>& loaded_skeletons,
+	const ModelMetafile& metafile
 ) {
 	game_objects.emplace_back(std::make_unique<GameObject>());
 	GameObject * node_game_object = game_objects.back().get();
@@ -106,7 +108,10 @@ void PrefabImporter::ExtractGameObjectFromNode
 	node_config.GetString("Name", node_game_object->name, "");
 	node_game_object->original_UUID = node_game_object->UUID;
 
-	uint32_t material_uuid = node_config.GetUInt("Material", 0);
+	auto& remapped_material = metafile.remapped_materials;
+	assert(remapped_material.find(node_game_object->name) != remapped_material.end());
+	uint32_t remapped_material_uuid =  remapped_material.at(node_game_object->name);
+	uint32_t material_uuid = remapped_material_uuid == 0 ? node_config.GetUInt("Material", 0) : remapped_material_uuid;
 	uint32_t mesh_uuid = node_config.GetUInt("Mesh", 0);
 	uint32_t skeleton_uuid = node_config.GetUInt("Skeleton", 0);
 

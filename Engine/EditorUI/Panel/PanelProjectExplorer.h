@@ -47,11 +47,12 @@ private:
 	Path* selected_folder = nullptr;
 	Path* selected_file = nullptr;
 	Path* renaming_file = nullptr;
-	ModelMetafile* opened_model = nullptr;
 
 
 	ImGuiID project_explorer_dockspace_id;
 
 	std::unordered_map<uint32_t,std::shared_ptr<Texture>> project_explorer_icon_cache;
+public:
+	ModelMetafile* opened_model = nullptr;
 };
 #endif //_PANELPROJECTEXPLORER_H_

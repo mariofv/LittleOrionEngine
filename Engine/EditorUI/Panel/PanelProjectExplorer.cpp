@@ -1,5 +1,8 @@
 #include "PanelProjectExplorer.h"
 
+#include "EditorUI/Panel/PanelInspector.h"
+#include "EditorUI/Panel/InspectorSubpanel/PanelMetaFile.h"
+
 #include "Filesystem/PathAtlas.h"
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -7,7 +10,7 @@
 #include "Module/ModuleResourceManager.h"
 #include "Module/ModuleScene.h"
 #include "Module/ModuleTexture.h"
-#include "ResourceManagement/Manager/PrefabManager.h"
+
 #include "ResourceManagement/Manager/SkyboxManager.h"
 #include "ResourceManagement/Metafile/Metafile.h"
 #include "ResourceManagement/Metafile/ModelMetafile.h"
@@ -427,19 +430,12 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 			}
 			ImGui::EndMenu();
 		}
-		if (ImGui::Selectable("Reimport"))
+
+		if (selected_file != nullptr )
 		{
-			App->resources->ImportAssetsInDirectory(*selected_folder, true);
-			App->resources->CleanResourceCache();
-		}
-		if (ImGui::Selectable("Reimport All"))
-		{
-			App->resources->ImportAssetsInDirectory(*App->filesystem->GetRootPath(), true);
-			App->resources->CleanResourceCache();
-		}
-		if (selected_file != nullptr)
-		{
-			if (ImGui::Selectable("Delete"))
+			std::string filename_no_extension = selected_file->GetFilenameWithoutExtension();
+			bool has_uuid = std::all_of(filename_no_extension.begin(), filename_no_extension.end(), ::isdigit);
+			if (!has_uuid && ImGui::Selectable("Delete"))
 			{
 				bool success = App->filesystem->Remove(selected_file);
 				if (success)
@@ -449,18 +445,45 @@ void PanelProjectExplorer::ShowFileSystemActionsMenu(Path* path)
 					opened_model = nullptr;
 				}
 			}
-			if (App->editor->selected_meta_file && App->editor->selected_meta_file->resource_type == ResourceType::MODEL && ImGui::Selectable("Extract Prefab"))
-			{
-				std::string original_model_name = selected_file->GetFilenameWithoutExtension();
-				std::string new_prefab_name = original_model_name.substr(0, original_model_name.find_last_of(".")) + ".prefab";
-				Path * new_prefab = App->filesystem->Copy(App->editor->selected_meta_file->exported_file_path.c_str(), selected_folder->GetFullPath(),new_prefab_name.c_str());
-				App->resources->Import(*new_prefab);
-			}
-			if (ImGui::Selectable("Rename"))
+			if (has_uuid && ImGui::Selectable("Rename"))
 			{
 				renaming_file = selected_file;
 				new_name_file = selected_file->GetFilename();
 			}
+			ImGui::Separator();
+			Metafile * selected_metafile = App->editor->selected_meta_file;
+			if (selected_metafile && selected_metafile->resource_type == ResourceType::MODEL && ImGui::Selectable("Extract Prefab"))
+			{
+				std::string new_prefab_name = filename_no_extension.substr(0, filename_no_extension.find_last_of(".")) + ".prefab";
+				Path * new_prefab = App->filesystem->Copy(selected_metafile->exported_file_path.c_str(), selected_folder->GetFullPath(),new_prefab_name.c_str());
+				App->resources->Import(*new_prefab);
+				ImGui::Separator();
+			}
+
+			if (has_uuid && selected_metafile->resource_type == ResourceType::MATERIAL && ImGui::Selectable("Extract from prefab"))
+			{
+				auto& remapped_materials = opened_model->remapped_materials;
+				std::string material_key = selected_metafile->resource_name.substr(0,selected_metafile->resource_name.find_last_of('.'));
+				assert(opened_model);
+				assert(remapped_materials.find(material_key) != remapped_materials.end());
+
+				Path* new_extracted_material = App->filesystem->Copy(selected_metafile->exported_file_path, selected_folder->GetFullPath(), selected_metafile->resource_name);
+				assert(new_extracted_material);
+				remapped_materials[material_key]  = App->resources->Import(*new_extracted_material);
+
+				App->editor->inspector->metafile_panel.ApplyMetafileChanges(opened_model);
+				ImGui::Separator();
+			}
+		}
+		if (ImGui::Selectable("Reimport"))
+		{
+			App->resources->ImportAssetsInDirectory(*selected_folder, true);
+			App->resources->CleanResourceCache();
+		}
+		if (ImGui::Selectable("Reimport All"))
+		{
+			App->resources->ImportAssetsInDirectory(*App->filesystem->GetRootPath(), true);
+			App->resources->CleanResourceCache();
 		}
 		ImGui::EndPopup();
 	}

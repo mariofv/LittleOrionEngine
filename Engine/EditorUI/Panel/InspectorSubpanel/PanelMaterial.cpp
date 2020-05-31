@@ -3,6 +3,7 @@
 #include "EditorUI/Helper/ImGuiHelper.h"
 #include "EditorUI/Panel/PanelPopups.h"
 #include "EditorUI/Panel/PopupsPanel/PanelPopupResourceSelector.h"
+#include "EditorUI/Panel/PanelProjectExplorer.h"
 
 #include "Main/Application.h"
 #include "Main/GameObject.h"
@@ -12,6 +13,8 @@
 #include "Module/ModuleProgram.h"
 #include "Module/ModuleTexture.h"
 #include "Module/ModuleResourceManager.h"
+
+#include "ResourceManagement/Metafile/ModelMetafile.h"
 
 #include <imgui.h>
 #include <imgui_internal.h>
@@ -27,9 +30,13 @@ PanelMaterial::PanelMaterial()
 
 void PanelMaterial::Render(std::shared_ptr<Material> material)
 {
+	
 	Metafile * metafile = App->resources->resource_DB->GetEntry(material->GetUUID());
-	bool extracted = metafile->exported_file_path.find("Extracted");
-	if (material->IsCoreResource() || extracted);
+	bool extracted = IsMaterialExtracted(material);
+
+	bool is_core = material->IsCoreResource();
+
+	if (is_core || extracted)
 	{
 		ImGui::PushItemFlag(ImGuiItemFlags_Disabled, true);
 		ImGui::PushStyleVar(ImGuiStyleVar_Alpha, ImGui::GetStyle().Alpha * 0.5f);
@@ -115,11 +122,17 @@ void PanelMaterial::Render(std::shared_ptr<Material> material)
 	{
 		App->resources->Save<Material>(material);
 	}
-	if (material->IsCoreResource() || extracted)
+	if (is_core || extracted)
 	{
 		ImGui::PopItemFlag();
 		ImGui::PopStyleVar();
 	}
+}
+
+bool PanelMaterial::IsMaterialExtracted(const std::shared_ptr<Material> &material)
+{
+	Metafile * meta = App->resources->resource_DB->GetEntry(material->GetUUID());
+	return meta->version == 0;
 }
 
 bool PanelMaterial::ShowMaterialTextureMap(std::shared_ptr<Material> material, Material::MaterialTextureType type)

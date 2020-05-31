@@ -115,7 +115,7 @@ FileData ModelImporter::ExtractData(Path& assets_file_path, const Metafile& meta
 	aiReleaseImport(scene);
 
 
-	model_data = App->resources->prefab_importer->ExtractFromModel(model, metafile);
+	model_data = App->resources->prefab_importer->ExtractFromModel(model, model_metafile);
 	App->resources->metafile_manager->SaveMetafile(static_cast<Metafile*>(&model_metafile), assets_file_path);
 	return model_data;
 }
@@ -138,6 +138,11 @@ std::vector<Config> ModelImporter::ExtractDataFromNode(const aiNode* root_node, 
 		if (current_model_data.model_metafile->import_material)
 		{
 			uint32_t extracted_material_uuid = ExtractMaterialFromNode(mesh_index, mesh_name);
+			auto & remapped_materials = current_model_data.model_metafile->remapped_materials;
+			if (remapped_materials.find(mesh_name) == remapped_materials.end() || remapped_materials[mesh_name] == extracted_material_uuid)
+			{
+				remapped_materials[mesh_name] = 0;
+			}
 			node.AddUInt(extracted_material_uuid, "Material");
 		}
 		
