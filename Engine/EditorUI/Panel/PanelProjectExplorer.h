@@ -30,6 +30,7 @@ public:
 	void ResourceDragSource(const Metafile* file) const;
 
 	void ResourceDropTarget(Path* folder_path) const;
+	void ResourceDropFromOutside(const std::string& dropped_filedir);
 
 private:
 	void InitResourceExplorerDockspace();
